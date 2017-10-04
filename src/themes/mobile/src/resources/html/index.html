@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<link href="//cdn.muicss.com/mui-0.4.7/css/mui.min.css" rel="stylesheet" type="text/css">
+<script src="tinymce.min.js"></script>
+<meta name="viewport" content="initial-scale=1.0">
+
+<script>
+  var run = function () {
+    tinymce.init({
+      selector: 'textarea',
+      plugins: [
+        'lists', // Required for list functionality (commands),
+        'autolink', // Required for turning pasted text into hyperlinks
+        'autosave', // Required to prevent users losing content when they press back,
+        'paste',
+        'image'
+      ],
+      mobile: {
+        theme: 'mobile'
+      },
+
+      setup: function (ed) {
+        ed.on('skinLoaded', function () {
+          // Notification fields for equality: type, text, progressBar, timeout
+          ed.notificationManager.open({
+            text: 'You have loaded this page on a desktop (Mobile does not support notifications)',
+            type: 'info'
+          });
+        });
+      },
+
+      style_formats: [
+       
+          {
+            title: 'Headers',
+            items: [
+              { title: 'Header 1', format: 'h1' },
+              { title: 'Header 2', format: 'h2' },
+              { title: 'Header 3', format: 'h3' },
+              { title: 'Header 4', format: 'h4' },
+              { title: 'Header 5', format: 'h5' },
+              { title: 'Header 6', format: 'h6' }
+            ]
+          },
+          {
+            title: 'Inline',
+            items: [
+              { inline: 'span', title: 'Red text', icon: 'red', styles: { color: 'red' } },
+              { title: 'Bold text', inline: 'strong' },
+              { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+              { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+              { title: 'Badge', inline: 'span', styles: { display: 'inline-block', border: '1px solid #2276d2', 'border-radius': '5px', padding: '2px 5px', margin: '0 2px', color: '#2276d2' } },
+              { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' },
+              { title: 'Bold', icon: 'bold', format: 'bold' },
+              { title: 'Italic', icon: 'italic', format: 'italic' },
+              { title: 'Underline', icon: 'underline', format: 'underline' },
+              { title: 'Strikethrough', icon: 'strikethrough', format: 'strikethrough' },
+              { title: 'Superscript', icon: 'superscript', format: 'superscript' },
+              { title: 'Subscript', icon: 'subscript', format: 'subscript' },
+              { title: 'Code', icon: 'code', format: 'code' }
+              
+            ]
+          },
+          {
+            title: 'Blocks',
+            items: [
+              { title: 'Paragraph', format: 'p' },
+              { title: 'Blockquote', format: 'blockquote' },
+              { title: 'Div', format: 'div' },
+              { title: 'Pre', format: 'pre' }
+            ]
+          },
+          {
+            title: 'Alignment',
+            items: [
+              { title: 'Left', icon: 'alignleft', format: 'alignleft' },
+              { title: 'Center', icon: 'aligncenter', format: 'aligncenter' },
+              { title: 'Right', icon: 'alignright', format: 'alignright' },
+              { title: 'Justify', icon: 'alignjustify', format: 'alignjustify' }
+            ]
+          }
+        ]
+    })
+  };
+</script>
+
+</head>
+<body onload="run();">
+  <textarea class='tiny-text' style="height: 500px;">
+ 
+<p><a href="http://www.baconipsum.com">Bacon</a> eatsum dolor amet <a href="http://www.baconipsum.com">Bacon</a> sausage bresaola salami porchetta short ribs andouille cow ribeye rump meatball sirloin ham pancetta pork belly. Sausage hamburger beef ribs sirloin, turducken filet mignon fatback shank biltong cow landjaeger. Drumstick pastrami tail venison cow kevin sirloin picanha porchetta short loin hamburger. Shoulder chicken prosciutto turkey pork belly drumstick doner hamburger. Cow tail alcatra pork loin biltong pancetta. Cow cupim tri-tip pancetta brisket hamburger ham, ball tip kielbasa capicola. Pancetta alcatra capicola pork.</p>
+<blockquote><p><a href="http://www.baconipsum.com">Bacon</a> eatsum dolor amet <a href="http://www.baconipsum.com">Bacon</a> sausage bresaola salami porchetta short ribs andouille cow ribeye rump meatball sirloin ham pancetta pork belly. Sausage hamburger beef ribs sirloin, turducken filet mignon fatback shank biltong cow landjaeger. Drumstick pastrami tail venison cow kevin sirloin picanha porchetta short loin hamburger. Shoulder chicken prosciutto turkey pork belly drumstick doner hamburger. Cow tail alcatra pork loin biltong pancetta. Cow cupim tri-tip pancetta brisket hamburger ham, ball tip kielbasa capicola. Pancetta alcatra capicola pork.</p></blockquote>
+<table style="width: 100%">
+<tbody>
+<tr>
+<th colspan="2"><h1><u><a href="http://www.baconipsum.com">Bacon</a> eatsum</u>&sup1;</h1></th>
+</tr>
+<tr>
+<td><h3>Krispy Bacon&#8482;</h3></td><td><h3>Bacon Krispies<small>&reg;</small></h3></td>
+</tr>
+</tbody>
+</table>
+<p>Bacon eatsum dolor amet bacon sausage bresaola salami porchetta short ribs andouille cow ribeye rump meatball sirloin ham pancetta pork belly. Sausage hamburger beef ribs sirloin, turducken filet mignon fatback shank biltong cow landjaeger. Drumstick pastrami tail venison cow kevin sirloin picanha porchetta short loin hamburger. Shoulder chicken prosciutto turkey pork belly drumstick doner hamburger. Cow tail alcatra pork loin biltong pancetta. Cow cupim tri-tip pancetta brisket hamburger ham, ball tip kielbasa capicola. Pancetta alcatra capicola pork.</p>
+<table style="width: 100%">
+<tbody>
+  <tr><th><br/></th><th><br/></th></tr>
+  <tr><td><br/></td><td><br/></td></tr>
+  <tr><td><br/></td><td><br/></td></tr>
+</tbody>
+</table>
+<p>Bacon eatsum dolor amet bacon sausage bresaola salami porchetta short ribs andouille cow ribeye rump meatball sirloin ham pancetta pork belly. Sausage hamburger beef ribs sirloin, turducken filet mignon fatback shank biltong cow landjaeger. Drumstick pastrami tail venison cow kevin sirloin picanha porchetta short loin hamburger. Shoulder chicken prosciutto turkey pork belly drumstick doner hamburger. Cow tail alcatra pork loin biltong pancetta. Cow cupim tri-tip pancetta brisket hamburger ham, ball tip kielbasa capicola. Pancetta alcatra capicola pork.</p>
+<ul>
+<li>
+<h1><u>Bacon eatsum</u>&sup1;</h1>
+<ol>
+<li><h3>Krispy Bacon&#8482;</h3></li>
+<li><h3>Bacon Krispies<small>&reg;</small></h3></li>
+</ol>
+</li>
+</ul>
+<p>Bacon eatsum dolor amet bacon sausage bresaola salami porchetta short ribs andouille cow ribeye rump meatball sirloin ham pancetta pork belly. Sausage hamburger beef ribs sirloin, turducken filet mignon fatback shank biltong cow landjaeger. Drumstick pastrami tail venison cow kevin sirloin picanha porchetta short loin hamburger. Shoulder chicken prosciutto turkey pork belly drumstick doner hamburger. Cow tail alcatra pork loin biltong pancetta. Cow cupim tri-tip pancetta brisket hamburger ham, ball tip kielbasa capicola. Pancetta alcatra capicola pork.</p>
+<p><br/></p>
+
+    </textarea>
+<hr />
+<p>Using MUI Framework</p>
+
+<div style="margin: 20px;">
+  @@MOBILE_THEME_CHANGELOG
+</div>
+
+<div>
+
+
+</body>
+</html>

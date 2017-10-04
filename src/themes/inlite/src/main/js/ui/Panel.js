@@ -15,16 +15,15 @@ define(
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ui.Factory',
     'tinymce.core.util.Tools',
-    'tinymce.themes.inlite.alien.EditorSettings',
+    'tinymce.themes.inlite.api.Events',
+    'tinymce.themes.inlite.api.Settings',
     'tinymce.themes.inlite.core.Layout',
     'tinymce.themes.inlite.core.Measure',
     'tinymce.themes.inlite.ui.Forms',
     'tinymce.themes.inlite.ui.Toolbar'
   ],
-  function (document, DOMUtils, Factory, Tools, EditorSettings, Layout, Measure, Forms, Toolbar) {
+  function (document, DOMUtils, Factory, Tools, Events, Settings, Layout, Measure, Forms, Toolbar) {
     return function () {
-      var DEFAULT_TEXT_SELECTION_ITEMS = ['bold', 'italic', '|', 'quicklink', 'h2', 'h3', 'blockquote'];
-      var DEFAULT_INSERT_TOOLBAR_ITEMS = ['quickimage', 'quicktable'];
       var panel, currentRect;
 
       var createToolbars = function (editor, toolbars) {
@@ -33,22 +32,14 @@ define(
         });
       };
 
-      var getTextSelectionToolbarItems = function (editor) {
-        return EditorSettings.getToolbarItemsOr(editor, 'selection_toolbar', DEFAULT_TEXT_SELECTION_ITEMS);
-      };
-
-      var getInsertToolbarItems = function (editor) {
-        return EditorSettings.getToolbarItemsOr(editor, 'insert_toolbar', DEFAULT_INSERT_TOOLBAR_ITEMS);
-      };
-
       var hasToolbarItems = function (toolbar) {
         return toolbar.items().length > 0;
       };
 
       var create = function (editor, toolbars) {
         var items = createToolbars(editor, toolbars).concat([
-          Toolbar.create(editor, 'text', getTextSelectionToolbarItems(editor)),
-          Toolbar.create(editor, 'insert', getInsertToolbarItems(editor)),
+          Toolbar.create(editor, 'text', Settings.getTextSelectionToolbarItems(editor)),
+          Toolbar.create(editor, 'insert', Settings.getInsertToolbarItems(editor)),
           Forms.createQuickLinkForm(editor, hide)
         ]);
 
@@ -123,7 +114,7 @@ define(
       var repositionPanelAt = function (panel, id, editor, targetRect) {
         var contentAreaRect, panelRect, result, userConstainHandler;
 
-        userConstainHandler = EditorSettings.getHandlerOr(editor, 'inline_toolbar_position_handler', Layout.defaultHandler);
+        userConstainHandler = Settings.getPositionHandler(editor);
         contentAreaRect = Measure.getContentAreaRect(editor);
         panelRect = DOMUtils.DOM.getRect(panel.getEl());
 
@@ -177,7 +168,7 @@ define(
           panel.items().hide();
           showToolbar(panel, id);
 
-          userConstainHandler = EditorSettings.getHandlerOr(editor, 'inline_toolbar_position_handler', Layout.defaultHandler);
+          userConstainHandler = Settings.getPositionHandler(editor);
           contentAreaRect = Measure.getContentAreaRect(editor);
           panelRect = DOMUtils.DOM.getRect(panel.getEl());
 
@@ -193,6 +184,7 @@ define(
 
       var show = function (editor, id, targetRect, toolbars) {
         if (!panel) {
+          Events.fireBeforeRenderUI(editor);
           panel = create(editor, toolbars);
           panel.renderTo(document.body).reflow().moveTo(targetRect.x, targetRect.y);
           editor.nodeChanged();

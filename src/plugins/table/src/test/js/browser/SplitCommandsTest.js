@@ -30,7 +30,8 @@ asynctest(
       return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
     };
 
-    suite.test("mceSplitColsBefore", function () {
+    suite.test("mceSplitColsBefore", function (editor) {
+      editor.focus();
       testCommand('mceSplitColsBefore', [
         {
           message: 'Should not change anything these is no table cell selection',

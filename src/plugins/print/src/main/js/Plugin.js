@@ -8,37 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * This class contains all core logic for the print plugin.
- *
- * @class tinymce.print.Plugin
- * @private
- */
 define(
   'tinymce.plugins.print.Plugin',
   [
-    'tinymce.core.PluginManager'
+    'tinymce.core.PluginManager',
+    'tinymce.plugins.print.api.Commands',
+    'tinymce.plugins.print.ui.Buttons'
   ],
-  function (PluginManager) {
+  function (PluginManager, Commands, Buttons) {
     PluginManager.add('print', function (editor) {
-      editor.addCommand('mcePrint', function () {
-        editor.getWin().print();
-      });
-
-      editor.addButton('print', {
-        title: 'Print',
-        cmd: 'mcePrint'
-      });
-
+      Commands.register(editor);
+      Buttons.register(editor);
       editor.addShortcut('Meta+P', '', 'mcePrint');
-
-      editor.addMenuItem('print', {
-        text: 'Print',
-        cmd: 'mcePrint',
-        icon: 'print',
-        shortcut: 'Meta+P',
-        context: 'file'
-      });
     });
 
     return function () { };

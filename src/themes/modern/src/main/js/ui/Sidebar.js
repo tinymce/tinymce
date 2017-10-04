@@ -11,11 +11,12 @@
 define(
   'tinymce.themes.modern.ui.Sidebar',
   [
-    'tinymce.core.util.Tools',
+    'tinymce.core.Env',
     'tinymce.core.ui.Factory',
-    'tinymce.core.Env'
+    'tinymce.core.util.Tools',
+    'tinymce.themes.modern.api.Events'
   ],
-  function (Tools, Factory, Env) {
+  function (Env, Factory, Tools, Events) {
     var api = function (elm) {
       return {
         element: function () {
@@ -89,7 +90,7 @@ define(
           btnCtrl.active(true);
         }
 
-        editor.fire('ResizeEditor');
+        Events.fireResizeEditor(editor);
       };
     };
 

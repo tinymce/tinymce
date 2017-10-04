@@ -11,46 +11,14 @@
 define(
   'tinymce.plugins.wordcount.Plugin',
   [
-    "tinymce.core.PluginManager",
-    "tinymce.core.util.Delay",
-    "tinymce.plugins.wordcount.text.WordGetter"
+    'tinymce.core.PluginManager',
+    'tinymce.plugins.wordcount.api.Api',
+    'tinymce.plugins.wordcount.ui.Statusbar'
   ],
-  function (PluginManager, Delay, WordGetter) {
+  function (PluginManager, Api, Statusbar) {
     PluginManager.add('wordcount', function (editor) {
-      var getTextContent = function (editor) {
-        return editor.removed ? '' : editor.getBody().innerText;
-      };
-
-      var getCount = function () {
-        return WordGetter.getWords(getTextContent(editor)).length;
-      };
-
-      var update = function () {
-        editor.theme.panel.find('#wordcount').text(['Words: {0}', getCount()]);
-      };
-
-      editor.on('init', function () {
-        var statusbar = editor.theme.panel && editor.theme.panel.find('#statusbar')[0];
-        var debouncedUpdate = Delay.debounce(update, 300);
-
-        if (statusbar) {
-          Delay.setEditorTimeout(editor, function () {
-            statusbar.insert({
-              type: 'label',
-              name: 'wordcount',
-              text: ['Words: {0}', getCount()],
-              classes: 'wordcount',
-              disabled: editor.settings.readonly
-            }, 0);
-
-            editor.on('setcontent beforeaddundo undo redo keyup', debouncedUpdate);
-          }, 0);
-        }
-      });
-
-      return {
-        getCount: getCount
-      };
+      Statusbar.setup(editor);
+      return Api.get(editor);
     });
 
     return function () { };

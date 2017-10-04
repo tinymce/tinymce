@@ -1,7 +1,6 @@
 asynctest(
   'browser.tinymce.plugins.table.TableCloneElementsTest',
   [
-    'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
@@ -9,10 +8,10 @@ asynctest(
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
     'tinymce.plugins.table.Plugin',
-    'tinymce.themes.modern.Theme',
-    'tinymce.plugins.table.test.TableTestUtils'
+    'tinymce.plugins.table.test.TableTestUtils',
+    'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, GeneralSteps, Logger, Pipeline, TinyApis, TinyLoader, TinyUi, TablePlugin, ModernTheme, TableTestUtils) {
+  function (GeneralSteps, Logger, Pipeline, TinyApis, TinyLoader, TinyUi, TablePlugin, TableTestUtils, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

@@ -3,19 +3,44 @@
 module.exports = function (grunt) {
   grunt.initConfig({
     less: {
-      modern: {
+      desktop: {
+        options: {
+          cleancss: true,
+          strictImports: true,
+          compress: true,
+          yuicompress: true,
+          sourceMap: true,
+          sourceMapRootpath: '../../',
+          optimization: 2
+        },
+        files: {
+          'dist/lightgray/skin.min.css': 'src/main/less/desktop/Skin.less' // destination file and source file
+        }
+      },
+
+      mobile: {
+        options: {
+          plugins : [ new (require('less-plugin-autoprefix'))({ browsers : [ 'last 2 versions', /* for phantom */'safari >= 4' ] }) ],
+          compress: true,
+          yuicompress: true,
+          sourceMap: true,
+          sourceMapRootpath: '../../',
+          optimization: 2
+        },
+        files: {
+          'dist/lightgray/skin.mobile.min.css': 'src/main/less/mobile/app/mobile-less.less' // destination file and source file
+        }
+      },
+
+      'content-mobile': {
         options: {
           cleancss: true,
           strictImports: true,
           compress: true
         },
-
-        expand: true,
-        rename: function () {
-          return "dist/lightgray/skin.min.css";
-        },
-        src: ["src/main/less/Skin.less"],
-        dest: "dist/lightgray"
+        files: {
+          'dist/lightgray/content.mobile.min.css': 'src/main/less/mobile/content.less' // destination file and source file
+        }
       },
 
       content: {
@@ -24,12 +49,9 @@ module.exports = function (grunt) {
           strictImports: true,
           compress: true
         },
-        expand: true,
-        rename: function () {
-          return "dist/lightgray/content.min.css";
-        },
-        src: ["src/main/less/Content.less"],
-        dest: "dist/lightgray"
+        files: {
+          'dist/lightgray/content.min.css': 'src/main/less/desktop/Content.less' // destination file and source file
+        }
       },
 
       "content-inline": {
@@ -38,12 +60,9 @@ module.exports = function (grunt) {
           strictImports: true,
           compress: true
         },
-        expand: true,
-        rename: function () {
-          return "dist/lightgray/content.inline.min.css";
-        },
-        src: ["src/main/less/Content.Inline.less"],
-        dest: "dist/lightgray"
+        files: {
+          'dist/lightgray/content.inline.min.css': 'src/main/less/desktop/Content.Inline.less' // destination file and source file
+        }
       }
     },
 

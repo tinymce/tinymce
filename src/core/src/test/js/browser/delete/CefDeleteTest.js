@@ -12,11 +12,9 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.sugar.api.node.Element',
-    'tinymce.core.Env',
-    'tinymce.core.text.Zwsp',
     'tinymce.themes.modern.Theme'
   ],
-  function (ApproxStructure, GeneralSteps, Keyboard, Keys, Logger, Pipeline, Step, TinyActions, TinyApis, TinyLoader, Element, Env, Zwsp, Theme) {
+  function (ApproxStructure, GeneralSteps, Keyboard, Keys, Logger, Pipeline, Step, TinyActions, TinyApis, TinyLoader, Element, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -38,6 +36,7 @@ asynctest(
 
     var sTestDeletePadd = function (editor, tinyApis, tinyActions) {
       return GeneralSteps.sequence([
+        tinyApis.sFocus,
         Logger.t('Should padd empty ce=true inside ce=false when everything is deleted', GeneralSteps.sequence([
           tinyApis.sSetContent('<div contenteditable="false">a<p contenteditable="true">a</p>b</div>'),
           tinyApis.sSetSelection([0, 1, 0], 0, [0, 1, 0], 1),

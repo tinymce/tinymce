@@ -34,15 +34,16 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
+    'tinymce.core.selection.SelectionBookmark',
     'tinymce.core.ui.WindowManagerImpl'
   ],
-  function (Arr, Option, WindowManagerImpl) {
+  function (Arr, Option, SelectionBookmark, WindowManagerImpl) {
     return function (editor) {
       var windows = [];
 
       var getImplementation = function () {
         var theme = editor.theme;
-        return theme.getWindowManagerImpl ? theme.getWindowManagerImpl() : WindowManagerImpl();
+        return theme && theme.getWindowManagerImpl ? theme.getWindowManagerImpl() : WindowManagerImpl();
       };
 
       var funcBind = function (scope, f) {
@@ -85,16 +86,12 @@ define(
       };
 
       var getTopWindow = function () {
-        return Option.from(windows[0]);
+        return Option.from(windows[windows.length - 1]);
       };
 
       var open = function (args, params) {
         editor.editorManager.setActive(editor);
-
-        // Takes a snapshot in the FocusManager of the selection before focus is lost to dialog
-        if (windows.length === 0) {
-          editor.nodeChanged();
-        }
+        SelectionBookmark.store(editor);
 
         var win = getImplementation().open(args, params, closeWindow);
         addWindow(win);

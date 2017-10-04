@@ -1,5 +1,5 @@
 /**
- * Plugin.js
+ * Nodes.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
@@ -10,7 +10,6 @@
 
 define(
   'tinymce.plugins.visualchars.core.Nodes',
-
   [
     'ephox.katamari.api.Arr',
     'ephox.sugar.api.node.Element',
@@ -18,7 +17,6 @@ define(
     'tinymce.plugins.visualchars.core.Data',
     'tinymce.plugins.visualchars.core.Html'
   ],
-
   function (Arr, Element, Node, Data, Html) {
     var isMatch = function (n) {
       return Node.isText(n) &&

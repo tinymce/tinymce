@@ -20,6 +20,8 @@ asynctest(
     suite.test('getContent', function (editor) {
       var rng, eventObj;
 
+      editor.focus();
+
       // Get selected contents
       editor.setContent('<p>text</p>');
       rng = editor.dom.createRng();

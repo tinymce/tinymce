@@ -13,19 +13,18 @@ asynctest(
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
-    'tinymce.themes.inlite.test.Toolbar',
-    'tinymce.themes.inlite.Theme',
+    'tinymce.plugins.contextmenu.Plugin',
     'tinymce.plugins.image.Plugin',
-    'tinymce.plugins.table.Plugin',
     'tinymce.plugins.link.Plugin',
     'tinymce.plugins.paste.Plugin',
-    'tinymce.plugins.contextmenu.Plugin',
-    'tinymce.plugins.textpattern.Plugin'
+    'tinymce.plugins.table.Plugin',
+    'tinymce.plugins.textpattern.Plugin',
+    'tinymce.themes.inlite.Theme',
+    'tinymce.themes.inlite.test.Toolbar'
   ],
   function (
-    Chain, FocusTools, GeneralSteps, Keyboard, Keys, Pipeline, UiControls, UiFinder, TinyActions,
-    TinyApis, TinyDom, TinyLoader, Toolbar, Theme, ImagePlugin, LinkPlugin, PastePlugin,
-    ContextMenuPlugin, TextpatternPlugin
+    Chain, FocusTools, GeneralSteps, Keyboard, Keys, Pipeline, UiControls, UiFinder, TinyActions, TinyApis, TinyDom, TinyLoader, ContextMenuPlugin, ImagePlugin,
+    LinkPlugin, PastePlugin, TablePlugin, TextpatternPlugin, Theme, Toolbar
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -34,6 +33,7 @@ asynctest(
     LinkPlugin();
     PastePlugin();
     ContextMenuPlugin();
+    TablePlugin();
     TextpatternPlugin();
     Theme();
 
@@ -77,10 +77,12 @@ asynctest(
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyApis = TinyApis(editor);
+      var tinyActions = TinyActions(editor);
 
       Pipeline.async({}, [
         tinyApis.sFocus,
         sSetupLinkableContent(tinyApis),
+        tinyActions.sContentKeystroke(Keys.space(), {}),
         sSelectAutoCompleteLink(tinyApis, 'a'),
         tinyApis.sAssertContent(
           '<h1 id="a"><a href="#b">a</a>bc</h1>\n' +

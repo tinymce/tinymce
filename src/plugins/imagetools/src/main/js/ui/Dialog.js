@@ -58,7 +58,7 @@ define(
         newHeight = parseInt(heightCtrl.value(), 10);
 
         if (win.find('#constrain')[0].checked() && width && height && newWidth && newHeight) {
-          if (e.control.settings.name == 'w') {
+          if (e.control.settings.name === 'w') {
             newHeight = Math.round(newWidth * ratioW);
             heightCtrl.value(newHeight);
           } else {
@@ -95,7 +95,7 @@ define(
       function switchPanel(targetPanel) {
         return function () {
           var hidePanels = Tools.grep(panels, function (panel) {
-            return panel.settings.name != targetPanel;
+            return panel.settings.name !== targetPanel;
           });
 
           Tools.each(hidePanels, function (panel) {
@@ -357,7 +357,7 @@ define(
         { type: 'spacer', flex: 1 },
         { text: 'Apply', subtype: 'primary', onclick: crop }
       ]).hide().on('show hide', function (e) {
-        imagePanel.toggleCropRect(e.type == 'show');
+        imagePanel.toggleCropRect(e.type === 'show');
       }).on('show', disableUndoRedo);
 
       function toggleConstrain(e) {

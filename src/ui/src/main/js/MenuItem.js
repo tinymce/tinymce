@@ -118,10 +118,12 @@ define(
             if (menu.length) {
               menu = {
                 type: 'menu',
+                animate: true,
                 items: menu
               };
             } else {
               menu.type = menu.type || 'menu';
+              menu.animate = true;
             }
 
             if (parent.settings.itemDefaults) {

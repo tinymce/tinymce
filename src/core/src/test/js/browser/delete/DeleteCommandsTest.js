@@ -33,6 +33,7 @@ asynctest(
       var tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
+        tinyApis.sFocus,
         Logger.t('Delete should merge blocks', GeneralSteps.sequence([
           tinyApis.sSetContent('<h1>a</h1><p><span style="color: red;">b</span></p>'),
           tinyApis.sSetCursor([1, 0, 0], 0),

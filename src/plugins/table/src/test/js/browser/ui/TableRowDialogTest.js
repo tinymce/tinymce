@@ -39,6 +39,7 @@ asynctest(
     };
 
     suite.test("Table row properties dialog (get data from plain cell)", function (editor) {
+      editor.focus();
       editor.setContent('<table><tr><td>X</td></tr></table>');
       LegacyUnit.setSelection(editor, 'td', 0);
       editor.execCommand('mceTableRowProps');

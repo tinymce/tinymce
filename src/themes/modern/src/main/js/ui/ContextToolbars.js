@@ -17,9 +17,10 @@ define(
     'tinymce.core.ui.Factory',
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools',
+    'tinymce.themes.modern.api.Settings',
     'tinymce.themes.modern.ui.Toolbar'
   ],
-  function (document, DOMUtils, Rect, Factory, Delay, Tools, Toolbar) {
+  function (document, DOMUtils, Rect, Factory, Delay, Tools, Settings, Toolbar) {
     var DOM = DOMUtils.DOM;
 
     var toClientRect = function (geomRect) {
@@ -78,7 +79,7 @@ define(
     };
 
     var addContextualToolbars = function (editor) {
-      var scrollContainer, settings = editor.settings;
+      var scrollContainer;
 
       var getContextToolbars = function () {
         return editor.contextToolbars || [];
@@ -105,7 +106,7 @@ define(
 
       var reposition = function (match, shouldShow) {
         var relPos, panelRect, elementRect, contentAreaRect, panel, relRect, testPositions, smallElementWidthThreshold;
-        var handler = settings.inline_toolbar_position_handler;
+        var handler = Settings.getInlineToolbarPositionHandler(editor);
 
         if (editor.removed) {
           return;

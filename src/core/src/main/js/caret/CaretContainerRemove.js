@@ -15,10 +15,9 @@ define(
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.NodeType',
-    'tinymce.core.text.Zwsp',
-    'tinymce.core.util.Tools'
+    'tinymce.core.text.Zwsp'
   ],
-  function (Arr, CaretContainer, CaretPosition, NodeType, Zwsp, Tools) {
+  function (Arr, CaretContainer, CaretPosition, NodeType, Zwsp) {
     var isElement = NodeType.isElement;
     var isText = NodeType.isText;
 

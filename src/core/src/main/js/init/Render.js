@@ -11,6 +11,7 @@
 define(
   'tinymce.core.init.Render',
   [
+    'ephox.katamari.api.Type',
     'global!window',
     'tinymce.core.api.NotificationManager',
     'tinymce.core.api.WindowManager',
@@ -24,33 +25,48 @@ define(
     'tinymce.core.ThemeManager',
     'tinymce.core.util.Tools'
   ],
-  function (window, NotificationManager, WindowManager, DOMUtils, EventUtils, ScriptLoader, Env, ErrorReporter, Init, PluginManager, ThemeManager, Tools) {
+  function (Type, window, NotificationManager, WindowManager, DOMUtils, EventUtils, ScriptLoader, Env, ErrorReporter, Init, PluginManager, ThemeManager, Tools) {
     var DOM = DOMUtils.DOM;
 
-    var loadScripts = function (editor, suffix) {
-      var settings = editor.settings, scriptLoader = ScriptLoader.ScriptLoader;
+    var hasSkipLoadPrefix = function (name) {
+      return name.charAt(0) === '-';
+    };
 
-      if (settings.language && settings.language != 'en' && !settings.language_url) {
+    var loadLanguage = function (scriptLoader, editor) {
+      var settings = editor.settings;
+
+      if (settings.language && settings.language !== 'en' && !settings.language_url) {
         settings.language_url = editor.editorManager.baseURL + '/langs/' + settings.language + '.js';
       }
 
       if (settings.language_url) {
         scriptLoader.add(settings.language_url);
       }
+    };
 
-      if (settings.theme && typeof settings.theme != "function" &&
-        settings.theme.charAt(0) != '-' && !ThemeManager.urls[settings.theme]) {
-        var themeUrl = settings.theme_url;
+    var loadTheme = function (scriptLoader, editor, suffix, callback) {
+      var settings = editor.settings, theme = settings.theme;
 
-        if (themeUrl) {
-          themeUrl = editor.documentBaseURI.toAbsolute(themeUrl);
-        } else {
-          themeUrl = 'themes/' + settings.theme + '/theme' + suffix + '.js';
+      if (Type.isString(theme)) {
+        if (!hasSkipLoadPrefix(theme) && !ThemeManager.urls.hasOwnProperty(theme)) {
+          var themeUrl = settings.theme_url;
+
+          if (themeUrl) {
+            ThemeManager.load(theme, editor.documentBaseURI.toAbsolute(themeUrl));
+          } else {
+            ThemeManager.load(theme, 'themes/' + theme + '/theme' + suffix + '.js');
+          }
         }
 
-        ThemeManager.load(settings.theme, themeUrl);
+        scriptLoader.loadQueue(function () {
+          ThemeManager.waitFor(theme, callback);
+        });
+      } else {
+        callback();
       }
+    };
 
+    var loadPlugins = function (settings, suffix) {
       if (Tools.isArray(settings.plugins)) {
         settings.plugins = settings.plugins.join(' ');
       }
@@ -64,7 +80,7 @@ define(
         plugin = Tools.trim(plugin);
 
         if (plugin && !PluginManager.urls[plugin]) {
-          if (plugin.charAt(0) === '-') {
+          if (hasSkipLoadPrefix(plugin)) {
             plugin = plugin.substr(1, plugin.length);
 
             var dependencies = PluginManager.dependencies(plugin);
@@ -88,17 +104,26 @@ define(
           }
         }
       });
+    };
 
-      scriptLoader.loadQueue(function () {
-        if (!editor.removed) {
-          Init.init(editor);
-        }
-      }, editor, function (urls) {
-        ErrorReporter.pluginLoadError(editor, urls[0]);
+    var loadScripts = function (editor, suffix) {
+      var scriptLoader = ScriptLoader.ScriptLoader;
 
-        if (!editor.removed) {
-          Init.init(editor);
-        }
+      loadTheme(scriptLoader, editor, suffix, function () {
+        loadLanguage(scriptLoader, editor);
+        loadPlugins(editor.settings, suffix);
+
+        scriptLoader.loadQueue(function () {
+          if (!editor.removed) {
+            Init.init(editor);
+          }
+        }, editor, function (urls) {
+          ErrorReporter.pluginLoadError(editor, urls[0]);
+
+          if (!editor.removed) {
+            Init.init(editor);
+          }
+        });
       });
     };
 

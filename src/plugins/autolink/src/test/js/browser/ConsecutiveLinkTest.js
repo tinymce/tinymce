@@ -24,6 +24,7 @@ asynctest(
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyApis = TinyApis(editor);
       var steps = Env.ie ? [] : [
+        tinyApis.sFocus,
         Logger.t('Chrome adds a nbsp between link and text', GeneralSteps.sequence([
           tinyApis.sSetContent('<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;www.domain.com</p>'),
           tinyApis.sSetCursor([0, 1], 15),

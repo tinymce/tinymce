@@ -32,7 +32,7 @@ define(
       showPanel: function () {
         var self = this, settings = self.settings;
 
-        self.active(true);
+        self.classes.add('opened');
 
         if (!self.panel) {
           var panelSettings = settings.panel;
@@ -52,7 +52,7 @@ define(
           panelSettings.ariaRoot = true;
 
           self.panel = new FloatPanel(panelSettings).on('hide', function () {
-            self.active(false);
+            self.classes.remove('opened');
           }).on('cancel', function (e) {
             e.stopPropagation();
             self.focus();

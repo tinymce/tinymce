@@ -11,9 +11,9 @@
 define(
   'tinymce.plugins.wordcount.text.WordGetter',
   [
-    "tinymce.plugins.wordcount.text.UnicodeData",
-    "tinymce.plugins.wordcount.text.StringMapper",
-    "tinymce.plugins.wordcount.text.WordBoundary"
+    'tinymce.plugins.wordcount.text.UnicodeData',
+    'tinymce.plugins.wordcount.text.StringMapper',
+    'tinymce.plugins.wordcount.text.WordBoundary'
   ],
   function (UnicodeData, StringMapper, WordBoundary) {
     var EMPTY_STRING = UnicodeData.EMPTY_STRING;

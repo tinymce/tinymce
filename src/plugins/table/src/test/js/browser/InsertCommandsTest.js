@@ -20,6 +20,7 @@ asynctest(
     };
 
     suite.test("mceTableInsertColAfter command", function (editor) {
+      editor.focus();
       editor.setContent('<table><tr><td>1</td></tr><tr><td>2</td></tr></table>');
       LegacyUnit.setSelection(editor, 'td', 0);
       editor.execCommand('mceTableInsertColAfter');

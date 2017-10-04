@@ -33,6 +33,7 @@ asynctest(
       };
 
       Pipeline.async({}, [
+        tinyApis.sFocus,
         Logger.t('Test normalization for floated images', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a<img src="about:blank" style="float: right"></p>'),
           tinyApis.sSetSelection([0], 1, [0], 2),

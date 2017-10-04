@@ -17,14 +17,15 @@
 define(
   'tinymce.plugins.paste.core.WordFilter',
   [
-    'tinymce.core.util.Tools',
     'tinymce.core.html.DomParser',
+    'tinymce.core.html.Node',
     'tinymce.core.html.Schema',
     'tinymce.core.html.Serializer',
-    'tinymce.core.html.Node',
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.paste.api.Settings',
     'tinymce.plugins.paste.core.Utils'
   ],
-  function (Tools, DomParser, Schema, Serializer, Node, Utils) {
+  function (DomParser, Node, Schema, Serializer, Tools, Settings, Utils) {
     /**
      * Checks if the specified content is from any of the following sources: MS Word/Office 365/Google docs.
      */
@@ -128,7 +129,7 @@ define(
         var level = paragraphNode._listLevel || lastLevel;
 
         // Handle list nesting
-        if (level != lastLevel) {
+        if (level !== lastLevel) {
           if (level < lastLevel) {
             // Move to parent list
             if (currentListNode) {
@@ -141,7 +142,7 @@ define(
           }
         }
 
-        if (!currentListNode || currentListNode.name != listName) {
+        if (!currentListNode || currentListNode.name !== listName) {
           prevListNode = prevListNode || currentListNode;
           currentListNode = new Node(listName, 1);
 
@@ -187,7 +188,7 @@ define(
       for (var i = 0; i < elements.length; i++) {
         node = elements[i];
 
-        if (node.name == 'p' && node.firstChild) {
+        if (node.name === 'p' && node.firstChild) {
           // Find first text node in paragraph
           var nodeText = getText(node);
 
@@ -270,7 +271,7 @@ define(
 
           case "font-weight":
           case "font-style":
-            if (value != "normal") {
+            if (value !== "normal") {
               outputStyles[name] = value;
             }
             return;
@@ -296,7 +297,7 @@ define(
         }
 
         // Output only valid styles
-        if (editor.settings.paste_retain_style_properties == "all" || (validStyles && validStyles[name])) {
+        if (Settings.getRetainStyleProps(editor) === "all" || (validStyles && validStyles[name])) {
           outputStyles[name] = value;
         }
       });
@@ -325,7 +326,7 @@ define(
     var filterWordContent = function (editor, content) {
       var retainStyleProperties, validStyles;
 
-      retainStyleProperties = editor.settings.paste_retain_style_properties;
+      retainStyleProperties = Settings.getRetainStyleProps(editor);
       if (retainStyleProperties) {
         validStyles = Tools.makeMap(retainStyleProperties.split(/[, ]/));
       }
@@ -361,14 +362,7 @@ define(
         ]
       ]);
 
-      var validElements = editor.settings.paste_word_valid_elements;
-      if (!validElements) {
-        validElements = (
-          '-strong/b,-em/i,-u,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
-          '-p/div,-a[href|name],sub,sup,strike,br,del,table[width],tr,' +
-          'td[colspan|rowspan|width],th[colspan|rowspan|width],thead,tfoot,tbody'
-        );
-      }
+      var validElements = Settings.getWordValidElements(editor);
 
       // Setup strict schema
       var schema = new Schema({
@@ -403,7 +397,7 @@ define(
           node.attr('style', filterStyles(editor, validStyles, node, node.attr('style')));
 
           // Remove pointess spans
-          if (node.name == 'span' && node.parent && !node.attributes.length) {
+          if (node.name === 'span' && node.parent && !node.attributes.length) {
             node.unwrap();
           }
         }
@@ -443,7 +437,7 @@ define(
           href = node.attr('href');
           name = node.attr('name');
 
-          if (href && href.indexOf('#_msocom_') != -1) {
+          if (href && href.indexOf('#_msocom_') !== -1) {
             node.remove();
             continue;
           }
@@ -476,7 +470,7 @@ define(
       var rootNode = domParser.parse(content);
 
       // Process DOM
-      if (editor.settings.paste_convert_word_fake_lists !== false) {
+      if (Settings.shouldConvertWordFakeLists(editor)) {
         convertFakeListsToProperLists(rootNode);
       }
 
@@ -489,7 +483,7 @@ define(
     };
 
     var preProcess = function (editor, content) {
-      return editor.settings.paste_enable_default_filters === false ? content : filterWordContent(editor, content);
+      return Settings.shouldUseDefaultFilters(editor) ? filterWordContent(editor, content) : content;
     };
 
     return {

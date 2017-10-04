@@ -1,5 +1,5 @@
 /**
- * Plugin.js
+ * VisualChars.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
@@ -10,7 +10,6 @@
 
 define(
   'tinymce.plugins.visualchars.core.VisualChars',
-
   [
     'tinymce.plugins.visualchars.core.Data',
     'tinymce.plugins.visualchars.core.Nodes',
@@ -18,7 +17,6 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node'
   ],
-
   function (Data, Nodes, Arr, Element, Node) {
     var show = function (editor, rootElm) {
       var node, div;
@@ -57,7 +55,6 @@ define(
 
       editor.selection.moveToBookmark(bookmark);
     };
-
 
     return {
       show: show,

@@ -11,6 +11,7 @@
 define(
   'tinymce.core.init.Init',
   [
+    'ephox.katamari.api.Type',
     'global!document',
     'global!window',
     'tinymce.core.dom.DOMUtils',
@@ -21,7 +22,7 @@ define(
     'tinymce.core.util.Tools',
     'tinymce.core.util.Uuid'
   ],
-  function (document, window, DOMUtils, Env, InitContentBody, PluginManager, ThemeManager, Tools, Uuid) {
+  function (Type, document, window, DOMUtils, Env, InitContentBody, PluginManager, ThemeManager, Tools, Uuid) {
     var DOM = DOMUtils.DOM;
 
     var initPlugin = function (editor, initializedPlugins, plugin) {
@@ -63,81 +64,106 @@ define(
     };
 
     var initTheme = function (editor) {
-      var Theme, settings = editor.settings;
+      var Theme, theme = editor.settings.theme;
 
-      if (settings.theme) {
-        if (typeof settings.theme != "function") {
-          settings.theme = trimLegacyPrefix(settings.theme);
+      if (Type.isString(theme)) {
+        editor.settings.theme = trimLegacyPrefix(theme);
 
-          Theme = ThemeManager.get(settings.theme);
-          editor.theme = new Theme(editor, ThemeManager.urls[settings.theme]);
+        Theme = ThemeManager.get(theme);
+        editor.theme = new Theme(editor, ThemeManager.urls[theme]);
 
-          if (editor.theme.init) {
-            editor.theme.init(editor, ThemeManager.urls[settings.theme] || editor.documentBaseUrl.replace(/\/$/, ''), editor.$);
-          }
-        } else {
-          editor.theme = settings.theme;
+        if (editor.theme.init) {
+          editor.theme.init(editor, ThemeManager.urls[theme] || editor.documentBaseUrl.replace(/\/$/, ''), editor.$);
         }
+      } else {
+        // Theme set to false or null doesn't produce a theme api
+        editor.theme = {};
       }
     };
 
-    var measueBox = function (editor) {
-      var w, h, minHeight, re, o, settings = editor.settings, elm = editor.getElement();
+    var renderFromLoadedTheme = function (editor) {
+      var w, h, minHeight, re, info, settings = editor.settings, elm = editor.getElement();
 
-      // Measure box
-      if (settings.render_ui && editor.theme) {
-        editor.orgDisplay = elm.style.display;
+      w = settings.width || DOM.getStyle(elm, 'width') || '100%';
+      h = settings.height || DOM.getStyle(elm, 'height') || elm.offsetHeight;
+      minHeight = settings.min_height || 100;
+      re = /^[0-9\.]+(|px)$/i;
 
-        if (typeof settings.theme != "function") {
-          w = settings.width || DOM.getStyle(elm, 'width') || '100%';
-          h = settings.height || DOM.getStyle(elm, 'height') || elm.offsetHeight;
-          minHeight = settings.min_height || 100;
-          re = /^[0-9\.]+(|px)$/i;
-
-          if (re.test('' + w)) {
-            w = Math.max(parseInt(w, 10), 100);
-          }
-
-          if (re.test('' + h)) {
-            h = Math.max(parseInt(h, 10), minHeight);
-          }
-
-          // Render UI
-          o = editor.theme.renderUI({
-            targetNode: elm,
-            width: w,
-            height: h,
-            deltaWidth: settings.delta_width,
-            deltaHeight: settings.delta_height
-          });
-
-          // Resize editor
-          if (!settings.content_editable) {
-            h = (o.iframeHeight || h) + (typeof h === 'number' ? (o.deltaHeight || 0) : '');
-            if (h < minHeight) {
-              h = minHeight;
-            }
-          }
-        } else {
-          o = settings.theme(editor, elm);
-
-          if (o.editorContainer.nodeType) {
-            o.editorContainer.id = o.editorContainer.id || editor.id + "_parent";
-          }
-
-          if (o.iframeContainer.nodeType) {
-            o.iframeContainer.id = o.iframeContainer.id || editor.id + "_iframecontainer";
-          }
-
-          // Use specified iframe height or the targets offsetHeight
-          h = o.iframeHeight || elm.offsetHeight;
-        }
-
-        editor.editorContainer = o.editorContainer;
-        o.height = h;
+      if (re.test('' + w)) {
+        w = Math.max(parseInt(w, 10), 100);
       }
 
-      return o;
+      if (re.test('' + h)) {
+        h = Math.max(parseInt(h, 10), minHeight);
+      }
+
+      // Render UI
+      info = editor.theme.renderUI({
+        targetNode: elm,
+        width: w,
+        height: h,
+        deltaWidth: settings.delta_width,
+        deltaHeight: settings.delta_height
+      });
+
+      // Resize editor
+      if (!settings.content_editable) {
+        h = (info.iframeHeight || h) + (typeof h === 'number' ? (info.deltaHeight || 0) : '');
+        if (h < minHeight) {
+          h = minHeight;
+        }
+      }
+
+      editor.editorContainer = info.editorContainer;
+      info.height = h;
+
+      return info;
+    };
+
+    var renderFromThemeFunc = function (editor) {
+      var info, elm = editor.getElement();
+
+      info = editor.settings.theme(editor, elm);
+
+      if (info.editorContainer.nodeType) {
+        info.editorContainer.id = info.editorContainer.id || editor.id + "_parent";
+      }
+
+      if (info.iframeContainer.nodeType) {
+        info.iframeContainer.id = info.iframeContainer.id || editor.id + "_iframecontainer";
+      }
+
+      info.height = info.iframeHeight ? info.iframeHeight : elm.offsetHeight;
+      editor.editorContainer = info.editorContainer;
+
+      return info;
+    };
+
+    var renderThemeFalse = function (editor) {
+      var iframeContainer = DOM.create('div');
+
+      DOM.insertAfter(iframeContainer, editor.getElement());
+
+      editor.editorContainer = iframeContainer;
+
+      return {
+        editorContainer: iframeContainer,
+        iframeContainer: iframeContainer
+      };
+    };
+
+    var renderThemeUi = function (editor) {
+      var settings = editor.settings, elm = editor.getElement();
+
+      editor.orgDisplay = elm.style.display;
+
+      if (Type.isString(settings.theme)) {
+        return renderFromLoadedTheme(editor);
+      } else if (Type.isFunction(settings.theme)) {
+        return renderFromThemeFunc(editor);
+      } else {
+        return renderThemeFalse(editor);
+      }
     };
 
     var relaxDomain = function (editor, ifr) {
@@ -244,7 +270,7 @@ define(
 
       initTheme(editor);
       initPlugins(editor);
-      boxInfo = measueBox(editor);
+      boxInfo = renderThemeUi(editor);
 
       // Load specified content CSS last
       if (settings.content_css) {

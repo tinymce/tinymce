@@ -208,6 +208,7 @@ asynctest(
       var tinyActions = TinyActions(editor);
 
       Pipeline.async({}, [
+        tinyApis.sFocus,
         sTestEnterAtStartOfAnchorZwsp(tinyApis, tinyActions),
         sTestEnterAtEndOfAnchorZwsp(tinyApis, tinyActions),
         sTestEnterAtStartOfAnchorZwspWithAdjacentContent(tinyApis, tinyActions),

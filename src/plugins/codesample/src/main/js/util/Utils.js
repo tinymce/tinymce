@@ -8,19 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * Various utility functions.
- *
- * @class tinymce.codesample.Utils
- * @private
- */
 define(
   'tinymce.plugins.codesample.util.Utils',
   [
   ],
   function () {
     function isCodeSample(elm) {
-      return elm && elm.nodeName == 'PRE' && elm.className.indexOf('language-') !== -1;
+      return elm && elm.nodeName === 'PRE' && elm.className.indexOf('language-') !== -1;
     }
 
     function trimArg(predicateFn) {
