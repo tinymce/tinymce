@@ -1,18 +1,11 @@
 /**
- * SplitCols.js
+ * TableActions.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
- */
-
-/**
- * Contains logic for handling splitting of merged rows.
- *
- * @class tinymce.table.model.SplitCols
- * @private
  */
 define(
   'tinymce.plugins.table.actions.TableActions',
