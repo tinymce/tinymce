@@ -7,10 +7,11 @@ define(
     'ephox.boulder.format.PrettyPrinter',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Result',
+    'ephox.katamari.api.Type',
     'global!Error'
   ],
 
-  function (ChoiceProcessor, ValueProcessor, PrettyPrinter, Fun, Result, Error) {
+  function (ChoiceProcessor, ValueProcessor, PrettyPrinter, Fun, Result, Type, Error) {
     var anyValue = ValueProcessor.value(Result.value);
 
     var arrOfObj = function (objFields) {
@@ -30,7 +31,10 @@ define(
     var setOf = ValueProcessor.setOf;
 
     var valueOf = function (validator) {
-      return ValueProcessor.value(validator);
+      return ValueProcessor.value(function (v) {
+        // Intentionally not exposing "strength" at the API level
+        return validator(v);
+      });
     };
 
     var extract = function (label, prop, strength, obj) {
@@ -80,16 +84,17 @@ define(
       return ValueProcessor.thunk(desc, schema);
     };
 
-    var func = function (args, schema) {
+    var funcOrDie = function (args, schema) {
       return ValueProcessor.value(function (f, strength) {
-        return Result.value(function () {
+        return Type.isFunction(f) ? Result.value(function () {
           var gArgs = Array.prototype.slice.call(arguments, 0);
           var allowedArgs = gArgs.slice(0, args.length);
           var response = f.apply(null, allowedArgs);
+          console.log('response', response);
           return getOrDie(
             extract('()', schema, strength, response)
           );
-        });
+        }) : Result.error('Not a function');
       }); 
     };
 
@@ -119,7 +124,7 @@ define(
 
       thunkOf: thunkOf,
 
-      func: func
+      funcOrDie: funcOrDie
     };
   }
 );

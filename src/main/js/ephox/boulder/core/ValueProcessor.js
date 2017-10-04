@@ -115,7 +115,8 @@ define(
 
     var value = function (validator) {
       var extract = function (path, strength, val) {
-        return validator(val).fold(function (err) {
+        // NOTE: Intentionally allowing strength to be passed through internally
+        return validator(val, strength).fold(function (err) {
           return SchemaError.custom(path, err);
         }, Result.value); // ignore strength
       };
