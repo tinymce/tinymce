@@ -19,8 +19,6 @@ define(
       return function (e) {
         var ctrl = e.control;
 
-        ctrl.disabled(editor.readonly || !Toc.hasHeaders(editor));
-
         editor.on('LoadContent SetContent change', function () {
           ctrl.disabled(editor.readonly || !Toc.hasHeaders(editor));
         });

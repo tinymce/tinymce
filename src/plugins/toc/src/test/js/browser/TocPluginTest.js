@@ -185,6 +185,7 @@ asynctest(
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
       plugins: 'toc',
+      toolbar: 'toc',
       add_unload_trigger: false,
       indent: false,
       toc_class: 'tst-toc',
