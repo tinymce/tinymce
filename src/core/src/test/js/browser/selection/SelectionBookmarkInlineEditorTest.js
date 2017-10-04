@@ -123,6 +123,18 @@ asynctest(
           focusDiv();
 
           assertSelection(editor, [1, 0], 1, [1, 0], 1);
+        })),
+        Logger.t('assert selection after touchend, should restore', Step.sync(function () {
+          editor.setContent('<p>a</p><p>b</p>');
+
+          setSelection(editor, [0], 0, [0], 0);
+          editor.nodeChanged();
+
+          setSelection(editor, [1, 0], 1, [1, 0], 1);
+          editor.fire('touchend', { });
+          focusDiv();
+
+          assertSelection(editor, [1, 0], 1, [1, 0], 1);
         }))
       ], onSuccess, onFailure);
     }, {

@@ -55,10 +55,18 @@ define(
     //   return rng;
     // };
 
+    var readRange = function (win) {
+      var selection = win.getSelection();
+      var rng = selection.rangeCount === 0 ? Option.none() : Option.from(selection.getRangeAt(0));
+      return rng.map(function (r) {
+        return Selection.range(Element.fromDom(r.startContainer), r.startOffset, Element.fromDom(r.endContainer), r.endOffset);
+      });
+    };
+
     var getBookmark = function (root) {
       var win = Traverse.defaultView(root);
 
-      return WindowSelection.getExact(win.dom())
+      return readRange(win.dom())
         .filter(isRngInRoot(root));
     };
 
