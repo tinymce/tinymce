@@ -11,24 +11,28 @@
 /*eslint no-console:0 */
 
 define(
-  'tinymce.plugins.table.demo.Demo',
+  'tinymce.plugins.tablenew.demo.Demo',
   [
     'tinymce.core.EditorManager',
     'tinymce.plugins.code.Plugin',
-    'tinymce.plugins.table.Plugin',
+    'tinymce.plugins.tablenew.Plugin',
+    'tinymce.plugins.contextmenu.Plugin',
+    'tinymce.plugins.paste.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (EditorManager, CodePlugin, TablePlugin, ModernTheme) {
+  function (EditorManager, CodePlugin, TablePlugin, ContextMenuPlugin, PastePlugin, ModernTheme) {
     return function () {
       CodePlugin();
       TablePlugin();
+      ContextMenuPlugin();
       ModernTheme();
+      PastePlugin();
 
       EditorManager.init({
-        selector: "textarea.tinymce",
+        selector: "div.tinymce",
         theme: "modern",
         skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        plugins: "table code",
+        plugins: "table code, contextmenu paste",
         toolbar: "table code",
         media_dimensions: false,
         // media_live_embeds: false,
@@ -36,7 +40,8 @@ define(
         // resolve({
         //   html: '<iframe src="' + data.url + '" width="560" height="314" allowfullscreen="allowfullscreen"></iframe>'});
         // },
-        height: 600
+        height: 600,
+        inline: true
       });
     };
   }
