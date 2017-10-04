@@ -17,6 +17,18 @@ asynctest(
 
     ModernTheme();
 
+    var sSetRawContent = function (editor, content) {
+      return Step.sync(function () {
+        editor.getBody().innerHTML = content;
+      });
+    };
+
+    var sAssertRawContent = function (editor, expectedContent) {
+      return Step.sync(function () {
+        Assertions.assertHtml('Should be expected contents', expectedContent, editor.getBody().innerHTML);
+      });
+    };
+
     var sDelete = function (editor) {
       return Step.sync(function () {
         var returnVal = TableDelete.backspaceDelete(editor, true);
@@ -51,84 +63,133 @@ asynctest(
       Pipeline.async({}, [
         tinyApis.sFocus,
 
-        Logger.t('Collapsed range should be noop', GeneralSteps.sequence([
-          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
-          tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
-          sDeleteNoop(editor),
-          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
-          tinyApis.sAssertSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0)
+        Logger.t('Delete selected cells or cell ranges', GeneralSteps.sequence([
+          Logger.t('Collapsed range should be noop', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+            tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
+            sDeleteNoop(editor),
+            tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+            tinyApis.sAssertSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0)
+          ])),
+
+          Logger.t('Range in only one cell should be noop', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+            tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),
+            sDeleteNoop(editor),
+            tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+            tinyApis.sAssertSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1)
+          ])),
+
+          Logger.t('Select all content in all cells removes table', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+            tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 1, 0], 1),
+            sDelete(editor),
+            tinyApis.sAssertContent('')
+          ])),
+
+          Logger.t('Select some cells should empty cells', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td><td>c</td></tr></tbody></table>'),
+            tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 1, 0], 1),
+            sDelete(editor),
+            tinyApis.sAssertContent('<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>c</td></tr></tbody></table>')
+          ])),
+
+          Logger.t('Select some cells between rows should empty cells', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><tbody><tr><th>a</th><th>b</th><th>c</th></tr><tr><td>d</td><td>e</td><td>f</td></tr></tbody></table>'),
+            tinyApis.sSetSelection([0, 0, 0, 1, 0], 0, [0, 0, 1, 0, 0], 1),
+            sDelete(editor),
+            tinyApis.sAssertContent('<table><tbody><tr><th>a</th><th>&nbsp;</th><th>&nbsp;</th></tr><tr><td>&nbsp;</td><td>e</td><td>f</td></tr></tbody></table>'),
+            tinyApis.sAssertSelection([0, 0, 0, 1], 0, [0, 0, 0, 1], 0)
+          ])),
+
+          Logger.t('delete weird selection with only tds', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><tbody><tr><td>a</td><td data-mce-selected="1">b</td><td>c</td></tr><tr><td>d</td><td data-mce-selected="1">e</td><td>f</td></tr></tbody></table>'),
+            tinyApis.sSetSelection([0, 0, 0, 1, 0], 0, [0, 0, 0, 1, 0], 1),
+            sDelete(editor),
+            tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>&nbsp;</td><td>c</td></tr><tr><td>d</td><td>&nbsp;</td><td>f</td></tr></tbody></table>')
+          ])),
+
+          Logger.t('delete weird selection with th', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><tbody><tr><th>a</th><th data-mce-selected="1">b</th><th>c</th></tr><tr><td>d</td><td data-mce-selected="1">e</td><td>f</td></tr></tbody></table>'),
+            tinyApis.sSetSelection([0, 0, 0, 1, 0], 0, [0, 0, 0, 1, 0], 1),
+            sDelete(editor),
+            tinyApis.sAssertContent('<table><tbody><tr><th>a</th><th>&nbsp;</th><th>c</th></tr><tr><td>d</td><td>&nbsp;</td><td>f</td></tr></tbody></table>')
+          ])),
+
+          Logger.t('Delete and empty cells', GeneralSteps.sequence([
+            Logger.t('delete weird selection with th', GeneralSteps.sequence([
+              sSetRawContent(editor, '<table><tbody><tr><td><h1><br></h1></td></tr></tbody></table>'),
+              tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
+              sDelete(editor),
+              sAssertRawContent(editor, '<table><tbody><tr><td><br data-mce-bogus="1"></td></tr></tbody></table>')
+            ]))
+          ]))
         ])),
 
-        Logger.t('Range in only one cell should be noop', GeneralSteps.sequence([
-          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),
-          sDeleteNoop(editor),
-          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
-          tinyApis.sAssertSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1)
+        Logger.t('Delete between cells as caret', GeneralSteps.sequence([
+          Logger.t('Delete between cells as a caret', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+            tinyApis.sSetSelection([0, 0, 0, 0, 0], 1, [0, 0, 0, 0, 0], 1),
+            sDelete(editor),
+            tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
+          ])),
+
+          Logger.t('Backspace between cells as a caret', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+            tinyApis.sSetSelection([0, 0, 0, 1, 0], 0, [0, 0, 0, 1, 0], 0),
+            sBackspace(editor),
+            tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
+          ])),
+
+          Logger.t('Delete in middle of contents in cells as a caret', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+            tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
+            sDeleteNoop(editor),
+            tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
+          ])),
+
+          Logger.t('Backspace in middle of contents in cells as a caret', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+            tinyApis.sSetSelection([0, 0, 0, 1, 0], 1, [0, 0, 0, 1, 0], 1),
+            sBackspaceNoop(editor),
+            tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
+          ]))
         ])),
 
-        Logger.t('Select all content in all cells removes table', GeneralSteps.sequence([
-          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 1, 0], 1),
-          sDelete(editor),
-          tinyApis.sAssertContent('')
-        ])),
+        Logger.t('Delete inside table caption', GeneralSteps.sequence([
+          Logger.t('Simulate result of the triple click (selection beyond caption)', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><caption>abc</caption><tbody><tr><td>a</td></tr></tbody></table>'),
+            tinyApis.sSetSelection([0, 0, 0], 0, [0, 1, 0, 0], 0),
+            sDelete(editor),
+            sAssertRawContent(editor, '<table class="mce-item-table"><caption><br data-mce-bogus="1"></caption><tbody><tr><td>a</td></tr></tbody></table>')
+          ])),
 
-        Logger.t('Select some cells should empty cells', GeneralSteps.sequence([
-          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td><td>c</td></tr></tbody></table>'),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 1, 0], 1),
-          sDelete(editor),
-          tinyApis.sAssertContent('<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>c</td></tr></tbody></table>')
-        ])),
+          Logger.t('Deletion at the left edge', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><caption>abc</caption><tbody><tr><td>a</td></tr></tbody></table>'),
+            tinyApis.sSetCursor([0, 0, 0], 0),
+            sBackspace(editor),
+            tinyApis.sAssertContent('<table><caption>abc</caption><tbody><tr><td>a</td></tr></tbody></table>')
+          ])),
 
-        Logger.t('Select some cells between rows should empty cells', GeneralSteps.sequence([
-          tinyApis.sSetContent('<table><tbody><tr><th>a</th><th>b</th><th>c</th></tr><tr><td>d</td><td>e</td><td>f</td></tr></tbody></table>'),
-          tinyApis.sSetSelection([0, 0, 0, 1, 0], 0, [0, 0, 1, 0, 0], 1),
-          sDelete(editor),
-          tinyApis.sAssertContent('<table><tbody><tr><th>a</th><th>&nbsp;</th><th>&nbsp;</th></tr><tr><td>&nbsp;</td><td>e</td><td>f</td></tr></tbody></table>'),
-          tinyApis.sAssertSelection([0, 0, 0, 1], 0, [0, 0, 0, 1], 0)
-        ])),
+          Logger.t('Deletion at the right edge', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><caption>abc</caption><tbody><tr><td>a</td></tr></tbody></table>'),
+            tinyApis.sSetCursor([0, 0, 0], 3),
+            sDelete(editor),
+            tinyApis.sAssertContent('<table><caption>abc</caption><tbody><tr><td>a</td></tr></tbody></table>')
+          ])),
 
-        Logger.t('delete weird selection with only tds', GeneralSteps.sequence([
-          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td data-mce-selected="1">b</td><td>c</td></tr><tr><td>d</td><td data-mce-selected="1">e</td><td>f</td></tr></tbody></table>'),
-          tinyApis.sSetSelection([0, 0, 0, 1, 0], 0, [0, 0, 0, 1, 0], 1),
-          sDelete(editor),
-          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>&nbsp;</td><td>c</td></tr><tr><td>d</td><td>&nbsp;</td><td>f</td></tr></tbody></table>')
-        ])),
+          Logger.t('Caret in caption with blocks', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><caption><p>abc</p></caption><tbody><tr><td>a</td></tr></tbody></table>'),
+            tinyApis.sSetCursor([0, 0, 0, 0], 1),
+            sDeleteNoop(editor)
+          ])),
 
-        Logger.t('delete weird selection with th', GeneralSteps.sequence([
-          tinyApis.sSetContent('<table><tbody><tr><th>a</th><th data-mce-selected="1">b</th><th>c</th></tr><tr><td>d</td><td data-mce-selected="1">e</td><td>f</td></tr></tbody></table>'),
-          tinyApis.sSetSelection([0, 0, 0, 1, 0], 0, [0, 0, 0, 1, 0], 1),
-          sDelete(editor),
-          tinyApis.sAssertContent('<table><tbody><tr><th>a</th><th>&nbsp;</th><th>c</th></tr><tr><td>d</td><td>&nbsp;</td><td>f</td></tr></tbody></table>')
-        ])),
-
-        Logger.t('Delete between cells as a caret', GeneralSteps.sequence([
-          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 1, [0, 0, 0, 0, 0], 1),
-          sDelete(editor),
-          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
-        ])),
-
-        Logger.t('Backspace between cells as a caret', GeneralSteps.sequence([
-          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
-          tinyApis.sSetSelection([0, 0, 0, 1, 0], 0, [0, 0, 0, 1, 0], 0),
-          sBackspace(editor),
-          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
-        ])),
-
-        Logger.t('Delete between cells as a caret', GeneralSteps.sequence([
-          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
-          sDeleteNoop(editor),
-          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
-        ])),
-
-        Logger.t('Backspace between cells as a caret', GeneralSteps.sequence([
-          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
-          tinyApis.sSetSelection([0, 0, 0, 1, 0], 1, [0, 0, 0, 1, 0], 1),
-          sBackspaceNoop(editor),
-          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>')
+          Logger.t('Debris like empty nodes and brs constitute an empty caption', GeneralSteps.sequence([
+            tinyApis.sSetContent('<table><caption><p><br></p><p data-mce-caret="after" data-mce-bogus="all"><br data-mce-bogus="1"></p></caption><tbody><tr><td>a</td></tr></tbody></table>'),
+            tinyApis.sSetCursor([0, 0], 0),
+            sDelete(editor),
+            sAssertRawContent(editor, '<table class="mce-item-table"><caption><br data-mce-bogus="1"></caption><tbody><tr><td>a</td></tr></tbody></table>')
+          ]))
         ]))
       ], onSuccess, onFailure);
     }, {
