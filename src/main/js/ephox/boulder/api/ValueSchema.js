@@ -80,6 +80,19 @@ define(
       return ValueProcessor.thunk(desc, schema);
     };
 
+    var func = function (args, schema) {
+      return ValueProcessor.value(function (f, strength) {
+        return Result.value(function () {
+          var gArgs = Array.prototype.slice.call(arguments, 0);
+          var allowedArgs = gArgs.slice(0, args.length);
+          var response = f.apply(null, allowedArgs);
+          return getOrDie(
+            extract('()', schema, strength, response)
+          );
+        });
+      }); 
+    };
+
     return {
       anyValue: Fun.constant(anyValue),
 
@@ -104,7 +117,9 @@ define(
 
       choose: choose,
 
-      thunkOf: thunkOf
+      thunkOf: thunkOf,
+
+      func: func
     };
   }
 );
