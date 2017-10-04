@@ -19,6 +19,7 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
+    'ephox.snooker.api.CellMutations',
     'ephox.snooker.api.TableDirection',
     'ephox.snooker.api.TableFill',
     'ephox.snooker.api.TableOperations',
@@ -27,7 +28,7 @@ define(
     'ephox.sugar.api.search.SelectorFilter',
     'tinymce.plugins.tablenew.queries.Direction'
   ],
-  function (Arr, Fun, TableDirection, TableFill, TableOperations, Element, Attr, SelectorFilter, Direction) {
+  function (Arr, Fun, CellMutations, TableDirection, TableFill, TableOperations, Element, Attr, SelectorFilter, Direction) {
     return function (editor, lazyWire) {
       var fireNewRow = function (node) {
         editor.fire('newrow', {
@@ -78,9 +79,9 @@ define(
 
       var insertRowsAfter = execute(TableOperations.insertRowsAfter, Fun.noop, lazyWire);
 
-      var insertColumnsBefore = execute(TableOperations.insertColumnsBefore, Fun.noop, lazyWire);
+      var insertColumnsBefore = execute(TableOperations.insertColumnsBefore, CellMutations.halve, lazyWire);
 
-      var insertColumnsAfter = execute(TableOperations.insertColumnsAfter, Fun.noop, lazyWire);
+      var insertColumnsAfter = execute(TableOperations.insertColumnsAfter, CellMutations.halve, lazyWire);
 
       var mergeCells = execute(TableOperations.mergeCells, Fun.noop, lazyWire);
 

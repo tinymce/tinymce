@@ -29,7 +29,7 @@ define(
       PastePlugin();
 
       EditorManager.init({
-        selector: "textarea.tinymce",
+        selector: "div.tinymce",
         theme: "modern",
         skin_url: "../../../../../skins/lightgray/dist/lightgray",
         plugins: "table code, contextmenu paste",
@@ -40,7 +40,8 @@ define(
         // resolve({
         //   html: '<iframe src="' + data.url + '" width="560" height="314" allowfullscreen="allowfullscreen"></iframe>'});
         // },
-        height: 600
+        height: 600,
+        inline: true
       });
     };
   }
