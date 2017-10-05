@@ -94,16 +94,8 @@ define(
 
       editor.on('PreInit', function () {
         // Remove internal data attributes
-        var attributes = Ephemera.firstSelected() + ',' + Ephemera.lastSelected();
-        editor.serializer.addAttributeFilter(attributes,
-          function (nodes, name) {
-
-            var i = nodes.length;
-
-            while (i--) {
-              nodes[i].attr(name, null);
-            }
-          });
+        editor.serializer.addTempAttr(Ephemera.firstSelected());
+        editor.serializer.addTempAttr(Ephemera.lastSelected());
       });
 
       // Enable tab key cell navigation
