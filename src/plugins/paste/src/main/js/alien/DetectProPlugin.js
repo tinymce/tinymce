@@ -9,7 +9,7 @@
  */
 
 define(
-  'tinymce.plugins.spellchecker.core.DetectProPlugin',
+  'tinymce.plugins.paste.alien.DetectProPlugin',
   [
     'global!window',
     'tinymce.core.PluginManager'

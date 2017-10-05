@@ -13,14 +13,14 @@ define(
   [
     'ephox.katamari.api.Cell',
     'tinymce.core.PluginManager',
+    'tinymce.plugins.spellchecker.alien.DetectProPlugin',
     'tinymce.plugins.spellchecker.api.Api',
     'tinymce.plugins.spellchecker.api.Commands',
     'tinymce.plugins.spellchecker.api.Settings',
-    'tinymce.plugins.spellchecker.core.DetectProPlugin',
     'tinymce.plugins.spellchecker.ui.Buttons',
     'tinymce.plugins.spellchecker.ui.SuggestionsMenu'
   ],
-  function (Cell, PluginManager, Api, Commands, Settings, DetectProPlugin, Buttons, SuggestionsMenu) {
+  function (Cell, PluginManager, DetectProPlugin, Api, Commands, Settings, Buttons, SuggestionsMenu) {
     PluginManager.add('spellchecker', function (editor, pluginUrl) {
       var startedState = Cell(false);
       var currentLanguageState = Cell(Settings.getLanguage(editor));
