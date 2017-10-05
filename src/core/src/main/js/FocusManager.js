@@ -61,7 +61,7 @@ define(
         var editor = e.editor;
 
         editor.on('init', function () {
-          editor.on('keyup mouseup nodechange', function (e) {
+          editor.on('keyup mouseup touchend nodechange', function (e) {
             if (e.type === 'nodechange' && e.selectionChange) {
               return;
             }

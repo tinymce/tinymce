@@ -97,6 +97,20 @@ asynctest(
       });
     };
 
+    var cAssertBookmark = function (startPath, startOffset, finishPath, finishOffset) {
+      return Chain.op(function (input) {
+        var sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
+        var fc = Hierarchy.follow(Element.fromDom(viewBlock.get()), finishPath).getOrDie();
+
+        var bookmarkRng = input.getOrDie('no bookmark!');
+
+        Assertions.assertDomEq('sc', sc, bookmarkRng.start());
+        Assertions.assertEq('soffset', startOffset, bookmarkRng.soffset());
+        Assertions.assertDomEq('fc', fc, bookmarkRng.finish());
+        Assertions.assertEq('foffset', finishOffset, bookmarkRng.foffset());
+      });
+    };
+
     var cSetSelectionFromBookmark = Chain.op(function (bookmark) {
       bookmark.each(function (b) {
         var root = Element.fromDom(viewBlock.get());
@@ -178,6 +192,22 @@ asynctest(
         cValidateBookmark([]),
         cSetSelectionFromBookmark,
         cAssertSelection([0, 0], 0, [1, 0], 1)
+      ])),
+      Logger.t('backwards selection should set a non-backwards bookmark, one p tag', Chain.asStep(viewBlock, [
+        cSetHtml('<p>hello</p>'),
+        cSetSelection([0, 0], 5, [0, 0], 0),
+        cGetBookmark([]),
+        cAssertSome,
+        cValidateBookmark([]),
+        cAssertBookmark([0, 0], 0, [0, 0], 5)
+      ])),
+      Logger.t('backwards selection should set a non-backwards bookmark, two p tags', Chain.asStep(viewBlock, [
+        cSetHtml('<p>hello</p><p>world</p>'),
+        cSetSelection([1, 0], 3, [0, 0], 2),
+        cGetBookmark([]),
+        cAssertSome,
+        cValidateBookmark([]),
+        cAssertBookmark([0, 0], 2, [1, 0], 3)
       ]))
     ], function () {
       viewBlock.detach();
