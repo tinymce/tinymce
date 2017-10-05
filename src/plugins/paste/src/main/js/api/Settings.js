@@ -53,6 +53,10 @@ define(
       return editor.getParam('smart_paste', true);
     };
 
+    var isPasteAsTextEnabled = function (editor) {
+      return editor.getParam('paste_as_text', false);
+    };
+
     var getRetainStyleProps = function (editor) {
       return editor.getParam('paste_retain_style_properties');
     };
@@ -86,6 +90,7 @@ define(
       shouldRemoveWebKitStyles: shouldRemoveWebKitStyles,
       shouldMergeFormats: shouldMergeFormats,
       isSmartPasteEnabled: isSmartPasteEnabled,
+      isPasteAsTextEnabled: isPasteAsTextEnabled,
       getRetainStyleProps: getRetainStyleProps,
       getWordValidElements: getWordValidElements,
       shouldConvertWordFakeLists: shouldConvertWordFakeLists,
