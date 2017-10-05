@@ -156,11 +156,6 @@ td[data-mce-selected], th[data-mce-selected] {
   outline: 1px dotted #333;
 }
 
-.mce-resize-bar-dragging {
-  background-color: @content-selection-bg;
-  .opacity(0.25);
-}
-
 .mce-content-body {
   *[contentEditable=false] *[contentEditable=true]:focus {
     outline: 2px solid @content-block-focus;
@@ -191,7 +186,7 @@ td[data-mce-selected], th[data-mce-selected] {
 
 /* Table Resizing */
 .ephox-snooker-resizer-bar {
-  background-color: #3498db;
+  background-color: @content-selection-bg;
   opacity: 0.0;
 }
 
