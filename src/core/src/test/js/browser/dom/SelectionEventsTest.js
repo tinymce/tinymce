@@ -68,7 +68,7 @@ asynctest(
 
     var sGetRng = function (editor, forward) {
       return Step.sync(function () {
-        var rng = editor.selection.getRng(rng, forward);
+        editor.selection.getRng();
       });
     };
 

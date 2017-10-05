@@ -29,7 +29,7 @@ define(
       var blobCache = new BlobCache(), uploader, imageScanner, settings = editor.settings;
       var uploadStatus = new UploadStatus();
 
-      function aliveGuard(callback) {
+      var aliveGuard = function (callback) {
         return function (result) {
           if (editor.selection) {
             return callback(result);
@@ -37,14 +37,14 @@ define(
 
           return [];
         };
-      }
+      };
 
-      function cacheInvalidator() {
+      var cacheInvalidator = function () {
         return '?' + (new Date()).getTime();
-      }
+      };
 
       // Replaces strings without regexps to avoid FF regexp to big issue
-      function replaceString(content, search, replace) {
+      var replaceString = function (content, search, replace) {
         var index = 0;
 
         do {
@@ -57,16 +57,16 @@ define(
         } while (index !== -1);
 
         return content;
-      }
+      };
 
-      function replaceImageUrl(content, targetUrl, replacementUrl) {
+      var replaceImageUrl = function (content, targetUrl, replacementUrl) {
         content = replaceString(content, 'src="' + targetUrl + '"', 'src="' + replacementUrl + '"');
         content = replaceString(content, 'data-mce-src="' + targetUrl + '"', 'data-mce-src="' + replacementUrl + '"');
 
         return content;
-      }
+      };
 
-      function replaceUrlInUndoStack(targetUrl, replacementUrl) {
+      var replaceUrlInUndoStack = function (targetUrl, replacementUrl) {
         Arr.each(editor.undoManager.data, function (level) {
           if (level.type === 'fragmented') {
             level.fragments = Arr.map(level.fragments, function (fragment) {
@@ -76,18 +76,18 @@ define(
             level.content = replaceImageUrl(level.content, targetUrl, replacementUrl);
           }
         });
-      }
+      };
 
-      function openNotification() {
+      var openNotification = function () {
         return editor.notificationManager.open({
           text: editor.translate('Image uploading...'),
           type: 'info',
           timeout: -1,
           progressBar: true
         });
-      }
+      };
 
-      function replaceImageUri(image, resultUri) {
+      var replaceImageUri = function (image, resultUri) {
         blobCache.removeByUri(image.src);
         replaceUrlInUndoStack(image.src, resultUri);
 
@@ -95,9 +95,9 @@ define(
           src: settings.images_reuse_filename ? resultUri + cacheInvalidator() : resultUri,
           'data-mce-src': editor.convertURL(resultUri, 'src')
         });
-      }
+      };
 
-      function uploadImages(callback) {
+      var uploadImages = function (callback) {
         if (!uploader) {
           uploader = new Uploader(uploadStatus, {
             url: settings.images_upload_url,
@@ -137,19 +137,19 @@ define(
             return filteredResult;
           }));
         }));
-      }
+      };
 
-      function uploadImagesAuto(callback) {
+      var uploadImagesAuto = function (callback) {
         if (settings.automatic_uploads !== false) {
           return uploadImages(callback);
         }
-      }
+      };
 
-      function isValidDataUriImage(imgElm) {
+      var isValidDataUriImage = function (imgElm) {
         return settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
-      }
+      };
 
-      function scanForImages() {
+      var scanForImages = function () {
         if (!imageScanner) {
           imageScanner = new ImageScanner(uploadStatus, blobCache);
         }
@@ -173,15 +173,15 @@ define(
 
           return result;
         }));
-      }
+      };
 
-      function destroy() {
+      var destroy = function () {
         blobCache.destroy();
         uploadStatus.destroy();
         imageScanner = uploader = null;
-      }
+      };
 
-      function replaceBlobUris(content) {
+      var replaceBlobUris = function (content) {
         return content.replace(/src="(blob:[^"]+)"/g, function (match, blobUri) {
           var resultUri = uploadStatus.getResultUri(blobUri);
 
@@ -203,7 +203,7 @@ define(
 
           return match;
         });
-      }
+      };
 
       editor.on('setContent', function () {
         if (editor.settings.automatic_uploads !== false) {

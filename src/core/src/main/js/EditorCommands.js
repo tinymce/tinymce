@@ -56,7 +56,7 @@ define(
        * @param {Object} args Optional extra arguments to the execCommand.
        * @return {Boolean} true/false if the command was found or not.
        */
-      function execCommand(command, ui, value, args) {
+      var execCommand = function (command, ui, value, args) {
         var func, customCommand, state = 0;
 
         if (editor.removed) {
@@ -113,7 +113,7 @@ define(
         }
 
         return false;
-      }
+      };
 
       /**
        * Queries the current state for a command for example if the current selection is "bold".
@@ -122,7 +122,7 @@ define(
        * @param {String} command Command to check the state of.
        * @return {Boolean/Number} true/false if the selected contents is bold or not, -1 if it's not found.
        */
-      function queryCommandState(command) {
+      var queryCommandState = function (command) {
         var func;
 
         if (editor.quirks.isHidden() || editor.removed) {
@@ -142,7 +142,7 @@ define(
         }
 
         return false;
-      }
+      };
 
       /**
        * Queries the command value for example the current fontsize.
@@ -151,7 +151,7 @@ define(
        * @param {String} command Command to check the value of.
        * @return {Object} Command value of false if it's not found.
        */
-      function queryCommandValue(command) {
+      var queryCommandValue = function (command) {
         var func;
 
         if (editor.quirks.isHidden() || editor.removed) {
@@ -169,7 +169,7 @@ define(
         } catch (ex) {
           // Fails sometimes see bug: 1896577
         }
-      }
+      };
 
       /**
        * Adds commands to the command collection.
@@ -178,7 +178,7 @@ define(
        * @param {Object} commandList Name/value collection with commands to add, the names can also be comma separated.
        * @param {String} type Optional type to add, defaults to exec. Can be value or state as well.
        */
-      function addCommands(commandList, type) {
+      var addCommands = function (commandList, type) {
         type = type || 'exec';
 
         each(commandList, function (callback, command) {
@@ -186,14 +186,14 @@ define(
             commands[type][command] = callback;
           });
         });
-      }
+      };
 
-      function addCommand(command, callback, scope) {
+      var addCommand = function (command, callback, scope) {
         command = command.toLowerCase();
         commands.exec[command] = function (command, ui, value, args) {
           return callback.call(scope || editor, ui, value, args);
         };
-      }
+      };
 
       /**
        * Returns true/false if the command is supported or not.
@@ -202,7 +202,7 @@ define(
        * @param {String} command Command that we check support for.
        * @return {Boolean} true/false if the command is supported or not.
        */
-      function queryCommandSupported(command) {
+      var queryCommandSupported = function (command) {
         command = command.toLowerCase();
 
         if (commands.exec[command]) {
@@ -217,26 +217,26 @@ define(
         }
 
         return false;
-      }
+      };
 
-      function addQueryStateHandler(command, callback, scope) {
+      var addQueryStateHandler = function (command, callback, scope) {
         command = command.toLowerCase();
         commands.state[command] = function () {
           return callback.call(scope || editor);
         };
-      }
+      };
 
-      function addQueryValueHandler(command, callback, scope) {
+      var addQueryValueHandler = function (command, callback, scope) {
         command = command.toLowerCase();
         commands.value[command] = function () {
           return callback.call(scope || editor);
         };
-      }
+      };
 
-      function hasCustomCommand(command) {
+      var hasCustomCommand = function (command) {
         command = command.toLowerCase();
         return !!commands.exec[command];
-      }
+      };
 
       // Expose public methods
       extend(this, {
@@ -253,7 +253,7 @@ define(
 
       // Private methods
 
-      function execNativeCommand(command, ui, value) {
+      var execNativeCommand = function (command, ui, value) {
         if (ui === undefined) {
           ui = FALSE;
         }
@@ -263,24 +263,24 @@ define(
         }
 
         return editor.getDoc().execCommand(command, ui, value);
-      }
+      };
 
-      function isFormatMatch(name) {
+      var isFormatMatch = function (name) {
         return formatter.match(name);
-      }
+      };
 
-      function toggleFormat(name, value) {
+      var toggleFormat = function (name, value) {
         formatter.toggle(name, value ? { value: value } : undefined);
         editor.nodeChanged();
-      }
+      };
 
-      function storeSelection(type) {
+      var storeSelection = function (type) {
         bookmark = selection.getBookmark(type);
-      }
+      };
 
-      function restoreSelection() {
+      var restoreSelection = function () {
         selection.moveToBookmark(bookmark);
-      }
+      };
 
       // Add execCommand overrides
       addCommands({
@@ -608,7 +608,7 @@ define(
           }
 
           // Walks the parent block to the right and look for BR elements
-          function hasRightSideContent() {
+          var hasRightSideContent = function () {
             var walker = new TreeWalker(container, parentBlock), node;
             var nonEmptyElementsMap = editor.schema.getNonEmptyElements();
 
@@ -617,7 +617,7 @@ define(
                 return true;
               }
             }
-          }
+          };
 
           if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
             // Insert extra BR element at the end block elements

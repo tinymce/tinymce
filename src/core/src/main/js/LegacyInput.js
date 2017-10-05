@@ -29,7 +29,7 @@ define(
         editor.on('preInit', function () {
           var filters, fontSizes, dom, settings = editor.settings;
 
-          function replaceWithSpan(node, styles) {
+          var replaceWithSpan = function (node, styles) {
             each(styles, function (value, name) {
               if (value) {
                 dom.setStyle(node, name, value);
@@ -37,9 +37,9 @@ define(
             });
 
             dom.rename(node, 'span');
-          }
+          };
 
-          function convert(e) {
+          var convert = function (e) {
             dom = editor.dom;
 
             if (settings.convert_fonts_to_spans) {
@@ -47,7 +47,7 @@ define(
                 filters[node.nodeName.toLowerCase()](dom, node);
               });
             }
-          }
+          };
 
           if (settings.inline_styles) {
             fontSizes = explode(settings.font_size_legacy_values);

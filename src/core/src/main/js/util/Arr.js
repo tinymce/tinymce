@@ -23,7 +23,7 @@ define(
       return Object.prototype.toString.call(obj) === "[object Array]";
     };
 
-    function toArray(obj) {
+    var toArray = function (obj) {
       var array = obj, i, l;
 
       if (!isArray(obj)) {
@@ -34,9 +34,9 @@ define(
       }
 
       return array;
-    }
+    };
 
-    function each(o, cb, s) {
+    var each = function (o, cb, s) {
       var n, l;
 
       if (!o) {
@@ -64,9 +64,9 @@ define(
       }
 
       return 1;
-    }
+    };
 
-    function map(array, callback) {
+    var map = function (array, callback) {
       var out = [];
 
       each(array, function (item, index) {
@@ -74,9 +74,9 @@ define(
       });
 
       return out;
-    }
+    };
 
-    function filter(a, f) {
+    var filter = function (a, f) {
       var o = [];
 
       each(a, function (v, index) {
@@ -86,9 +86,9 @@ define(
       });
 
       return o;
-    }
+    };
 
-    function indexOf(a, v) {
+    var indexOf = function (a, v) {
       var i, l;
 
       if (a) {
@@ -100,9 +100,9 @@ define(
       }
 
       return -1;
-    }
+    };
 
-    function reduce(collection, iteratee, accumulator, thisArg) {
+    var reduce = function (collection, iteratee, accumulator, thisArg) {
       var i = 0;
 
       if (arguments.length < 3) {
@@ -114,9 +114,9 @@ define(
       }
 
       return accumulator;
-    }
+    };
 
-    function findIndex(array, predicate, thisArg) {
+    var findIndex = function (array, predicate, thisArg) {
       var i, l;
 
       for (i = 0, l = array.length; i < l; i++) {
@@ -126,9 +126,9 @@ define(
       }
 
       return -1;
-    }
+    };
 
-    function find(array, predicate, thisArg) {
+    var find = function (array, predicate, thisArg) {
       var idx = findIndex(array, predicate, thisArg);
 
       if (idx !== -1) {
@@ -136,11 +136,11 @@ define(
       }
 
       return undefined;
-    }
+    };
 
-    function last(collection) {
+    var last = function (collection) {
       return collection[collection.length - 1];
-    }
+    };
 
     return {
       isArray: isArray,

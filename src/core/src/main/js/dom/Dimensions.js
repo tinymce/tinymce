@@ -23,16 +23,15 @@ define(
     "tinymce.core.geom.ClientRect"
   ],
   function (Arr, NodeType, ClientRect) {
-
-    function getClientRects(node) {
-      function toArrayWithNode(clientRects) {
+    var getClientRects = function (node) {
+      var toArrayWithNode = function (clientRects) {
         return Arr.map(clientRects, function (clientRect) {
           clientRect = ClientRect.clone(clientRect);
           clientRect.node = node;
 
           return clientRect;
         });
-      }
+      };
 
       if (Arr.isArray(node)) {
         return Arr.reduce(node, function (result, node) {
@@ -52,7 +51,7 @@ define(
 
         return toArrayWithNode(rng.getClientRects());
       }
-    }
+    };
 
     return {
       /**

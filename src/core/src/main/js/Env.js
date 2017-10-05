@@ -29,9 +29,9 @@ define(
     var nav = navigator, userAgent = nav.userAgent;
     var opera, webkit, ie, ie11, ie12, gecko, mac, iDevice, android, fileApi, phone, tablet, windowsPhone;
 
-    function matchMediaQuery(query) {
+    var matchMediaQuery = function (query) {
       return "matchMedia" in window ? matchMedia(query).matches : false;
-    }
+    };
 
     opera = window.opera && window.opera.buildNumber;
     android = /Android/.test(userAgent);

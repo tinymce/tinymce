@@ -130,10 +130,10 @@ define(
     var render = function (editor) {
       var settings = editor.settings, id = editor.id;
 
-      function readyHandler() {
+      var readyHandler = function () {
         DOM.unbind(window, 'ready', readyHandler);
         editor.render();
-      }
+      };
 
       // Page is not loaded yet, wait for it
       if (!EventUtils.Event.domLoaded) {

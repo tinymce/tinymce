@@ -38,7 +38,7 @@ define(
     return function (editor) {
       var self = this, shortcuts = {}, pendingPatterns = [];
 
-      function parseShortcut(pattern) {
+      var parseShortcut = function (pattern) {
         var id, key, shortcut = {};
 
         // Parse modifiers and keys ctrl+alt+b for example
@@ -89,9 +89,9 @@ define(
         }
 
         return shortcut;
-      }
+      };
 
-      function createShortcut(pattern, desc, cmdFunc, scope) {
+      var createShortcut = function (pattern, desc, cmdFunc, scope) {
         var shortcuts;
 
         shortcuts = Tools.map(explode(pattern, '>'), parseShortcut);
@@ -104,17 +104,17 @@ define(
           desc: editor.translate(desc),
           subpatterns: shortcuts.slice(1)
         });
-      }
+      };
 
-      function hasModifier(e) {
+      var hasModifier = function (e) {
         return e.altKey || e.ctrlKey || e.metaKey;
-      }
+      };
 
-      function isFunctionKey(e) {
+      var isFunctionKey = function (e) {
         return e.type === "keydown" && e.keyCode >= 112 && e.keyCode <= 123;
-      }
+      };
 
-      function matchShortcut(e, shortcut) {
+      var matchShortcut = function (e, shortcut) {
         if (!shortcut) {
           return false;
         }
@@ -133,11 +133,11 @@ define(
         }
 
         return false;
-      }
+      };
 
-      function executeShortcutAction(shortcut) {
+      var executeShortcutAction = function (shortcut) {
         return shortcut.func ? shortcut.func.call(shortcut.scope) : null;
-      }
+      };
 
       editor.on('keyup keypress keydown', function (e) {
         if ((hasModifier(e) || isFunctionKey(e)) && !e.isDefaultPrevented()) {

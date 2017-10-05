@@ -35,9 +35,9 @@ define(
       settings = settings || {};
       maxLoadTime = settings.maxLoadTime || 5000;
 
-      function appendToHead(node) {
+      var appendToHead = function (node) {
         document.getElementsByTagName('head')[0].appendChild(node);
-      }
+      };
 
       /**
        * Loads the specified css style sheet file and call the loadedCallback once it's finished loading.
@@ -47,10 +47,10 @@ define(
        * @param {Function} loadedCallback Callback to be executed when loaded.
        * @param {Function} errorCallback Callback to be executed when failed loading.
        */
-      function load(url, loadedCallback, errorCallback) {
+      var load = function (url, loadedCallback, errorCallback) {
         var link, style, startTime, state;
 
-        function passed() {
+        var passed = function () {
           var callbacks = state.passed, i = callbacks.length;
 
           while (i--) {
@@ -60,9 +60,9 @@ define(
           state.status = 2;
           state.passed = [];
           state.failed = [];
-        }
+        };
 
-        function failed() {
+        var failed = function () {
           var callbacks = state.failed, i = callbacks.length;
 
           while (i--) {
@@ -72,16 +72,16 @@ define(
           state.status = 3;
           state.passed = [];
           state.failed = [];
-        }
+        };
 
         // Sniffs for older WebKit versions that have the link.onload but a broken one
-        function isOldWebKit() {
+        var isOldWebKit = function () {
           var webKitChunks = navigator.userAgent.match(/WebKit\/(\d*)/);
           return !!(webKitChunks && webKitChunks[1] < 536);
-        }
+        };
 
         // Calls the waitCallback until the test returns true or the timeout occurs
-        function wait(testCallback, waitCallback) {
+        var wait = function (testCallback, waitCallback) {
           if (!testCallback()) {
             // Wait for timeout
             if ((new Date().getTime()) - startTime < maxLoadTime) {
@@ -90,11 +90,11 @@ define(
               failed();
             }
           }
-        }
+        };
 
         // Workaround for WebKit that doesn't properly support the onload event for link elements
         // Or WebKit that fires the onload event before the StyleSheet is added to the document
-        function waitForWebKitLinkLoaded() {
+        var waitForWebKitLinkLoaded = function () {
           wait(function () {
             var styleSheets = document.styleSheets, styleSheet, i = styleSheets.length, owner;
 
@@ -107,10 +107,10 @@ define(
               }
             }
           }, waitForWebKitLinkLoaded);
-        }
+        };
 
         // Workaround for older Geckos that doesn't have any onload event for StyleSheets
-        function waitForGeckoLinkLoaded() {
+        var waitForGeckoLinkLoaded = function () {
           wait(function () {
             try {
               // Accessing the cssRules will throw an exception until the CSS file is loaded
@@ -121,7 +121,7 @@ define(
               // Ignore
             }
           }, waitForGeckoLinkLoaded);
-        }
+        };
 
         url = Tools._addCacheSuffix(url);
 
@@ -192,7 +192,7 @@ define(
 
         appendToHead(link);
         link.href = url;
-      }
+      };
 
       var loadF = function (url) {
         return Future.nu(function (resolve) {

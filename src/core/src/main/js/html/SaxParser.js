@@ -79,7 +79,7 @@ define(
      * @param {Number} startIndex Indext to start searching at should be after the start tag.
      * @return {Number} Index of the end tag.
      */
-    function findEndTag(schema, html, startIndex) {
+    var findEndTag = function (schema, html, startIndex) {
       var count = 1, index, matches, tokenRegExp, shortEndedElements;
 
       shortEndedElements = schema.getShortEndedElements();
@@ -105,7 +105,7 @@ define(
       }
 
       return index;
-    }
+    };
 
     /**
      * Constructs a new SaxParser instance.
@@ -115,10 +115,10 @@ define(
      * @param {Object} settings Name/value collection of settings. comment, cdata, text, start and end are callbacks.
      * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
      */
-    function SaxParser(settings, schema) {
+    var SaxParser = function (settings, schema) {
       var self = this;
 
-      function noop() { }
+      var noop = function () { };
 
       settings = settings || {};
       self.schema = schema = schema || new Schema();
@@ -151,7 +151,7 @@ define(
         var decode = Entities.decode, fixSelfClosing, filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster');
         var scriptUriRegExp = /((java|vb)script|mhtml):/i, dataUriRegExp = /^data:/i;
 
-        function processEndTag(name) {
+        var processEndTag = function (name) {
           var pos, i;
 
           // Find position of parent of the same type
@@ -176,9 +176,9 @@ define(
             // Remove the open elements from the stack
             stack.length = pos;
           }
-        }
+        };
 
-        function parseAttribute(match, name, value, val2, val3) {
+        var parseAttribute = function (match, name, value, val2, val3) {
           var attrRule, i, trimRegExp = /[\s\u0000-\u001F]+/g;
 
           name = name.toLowerCase();
@@ -247,7 +247,7 @@ define(
             name: name,
             value: value
           });
-        }
+        };
 
         // Precompile RegExps and map objects
         tokenRegExp = new RegExp('<(?:' +
@@ -491,7 +491,7 @@ define(
           }
         }
       };
-    }
+    };
 
     SaxParser.findEndTag = findEndTag;
 

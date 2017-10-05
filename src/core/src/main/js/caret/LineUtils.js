@@ -30,18 +30,18 @@ define(
       findNode = CaretUtils.findNode,
       curry = Fun.curry;
 
-    function distanceToRectLeft(clientRect, clientX) {
+    var distanceToRectLeft = function (clientRect, clientX) {
       return Math.abs(clientRect.left - clientX);
-    }
+    };
 
-    function distanceToRectRight(clientRect, clientX) {
+    var distanceToRectRight = function (clientRect, clientX) {
       return Math.abs(clientRect.right - clientX);
-    }
+    };
 
-    function findClosestClientRect(clientRects, clientX) {
-      function isInside(clientX, clientRect) {
+    var findClosestClientRect = function (clientRects, clientX) {
+      var isInside = function (clientX, clientRect) {
         return clientX >= clientRect.left && clientX <= clientRect.right;
-      }
+      };
 
       return Arr.reduce(clientRects, function (oldClientRect, clientRect) {
         var oldDistance, newDistance;
@@ -68,20 +68,20 @@ define(
 
         return oldClientRect;
       });
-    }
+    };
 
-    function walkUntil(direction, rootNode, predicateFn, node) {
+    var walkUntil = function (direction, rootNode, predicateFn, node) {
       while ((node = findNode(node, direction, CaretCandidate.isEditableCaretCandidate, rootNode))) {
         if (predicateFn(node)) {
           return;
         }
       }
-    }
+    };
 
-    function findLineNodeRects(rootNode, targetNodeRect) {
+    var findLineNodeRects = function (rootNode, targetNodeRect) {
       var clientRects = [];
 
-      function collect(checkPosFn, node) {
+      var collect = function (checkPosFn, node) {
         var lineRects;
 
         lineRects = Arr.filter(Dimensions.getClientRects(node), function (clientRect) {
@@ -91,27 +91,27 @@ define(
         clientRects = clientRects.concat(lineRects);
 
         return lineRects.length === 0;
-      }
+      };
 
       clientRects.push(targetNodeRect);
       walkUntil(-1, rootNode, curry(collect, ClientRect.isAbove), targetNodeRect.node);
       walkUntil(1, rootNode, curry(collect, ClientRect.isBelow), targetNodeRect.node);
 
       return clientRects;
-    }
+    };
 
-    function getContentEditableFalseChildren(rootNode) {
+    var getContentEditableFalseChildren = function (rootNode) {
       return Arr.filter(Arr.toArray(rootNode.getElementsByTagName('*')), isContentEditableFalse);
-    }
+    };
 
-    function caretInfo(clientRect, clientX) {
+    var caretInfo = function (clientRect, clientX) {
       return {
         node: clientRect.node,
         before: distanceToRectLeft(clientRect, clientX) < distanceToRectRight(clientRect, clientX)
       };
-    }
+    };
 
-    function closestCaret(rootNode, clientX, clientY) {
+    var closestCaret = function (rootNode, clientX, clientY) {
       var contentEditableFalseNodeRects, closestNodeRect;
 
       contentEditableFalseNodeRects = Dimensions.getClientRects(getContentEditableFalseChildren(rootNode));
@@ -128,7 +128,7 @@ define(
       }
 
       return null;
-    }
+    };
 
     return {
       findClosestClientRect: findClosestClientRect,

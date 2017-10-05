@@ -42,15 +42,15 @@ define(
       nodeIndex = DOMUtils.nodeIndex,
       resolveIndex = RangeUtils.getNode;
 
-    function createRange(doc) {
+    var createRange = function (doc) {
       return "createRange" in doc ? doc.createRange() : DOMUtils.DOM.createRng();
-    }
+    };
 
-    function isWhiteSpace(chr) {
+    var isWhiteSpace = function (chr) {
       return chr && /[\r\n\t ]/.test(chr);
-    }
+    };
 
-    function isHiddenWhiteSpaceRange(range) {
+    var isHiddenWhiteSpaceRange = function (range) {
       var container = range.startContainer,
         offset = range.startOffset,
         text;
@@ -64,14 +64,14 @@ define(
       }
 
       return false;
-    }
+    };
 
-    function getCaretPositionClientRects(caretPosition) {
+    var getCaretPositionClientRects = function (caretPosition) {
       var clientRects = [], beforeNode, node;
 
       // Hack for older WebKit versions that doesn't
       // support getBoundingClientRect on BR elements
-      function getBrClientRect(brNode) {
+      var getBrClientRect = function (brNode) {
         var doc = brNode.ownerDocument,
           rng = createRange(doc),
           nbsp = doc.createTextNode('\u00a0'),
@@ -85,9 +85,9 @@ define(
         parentNode.removeChild(nbsp);
 
         return clientRect;
-      }
+      };
 
-      function getBoundingClientRect(item) {
+      var getBoundingClientRect = function (item) {
         var clientRect, clientRects;
 
         clientRects = item.getClientRects();
@@ -102,17 +102,17 @@ define(
         }
 
         return clientRect;
-      }
+      };
 
-      function collapseAndInflateWidth(clientRect, toStart) {
+      var collapseAndInflateWidth = function (clientRect, toStart) {
         clientRect = ClientRect.collapse(clientRect, toStart);
         clientRect.width = 1;
         clientRect.right = clientRect.left + 1;
 
         return clientRect;
-      }
+      };
 
-      function addUniqueAndValidRect(clientRect) {
+      var addUniqueAndValidRect = function (clientRect) {
         if (clientRect.height === 0) {
           return;
         }
@@ -124,9 +124,9 @@ define(
         }
 
         clientRects.push(clientRect);
-      }
+      };
 
-      function addCharacterOffset(container, offset) {
+      var addCharacterOffset = function (container, offset) {
         var range = createRange(container.ownerDocument);
 
         if (offset < container.data.length) {
@@ -164,7 +164,7 @@ define(
             addUniqueAndValidRect(collapseAndInflateWidth(getBoundingClientRect(range), true));
           }
         }
-      }
+      };
 
       if (isText(caretPosition.container())) {
         addCharacterOffset(caretPosition.container(), caretPosition.offset());
@@ -206,7 +206,7 @@ define(
       }
 
       return clientRects;
-    }
+    };
 
     /**
      * Represents a location within the document by a container and an offset.
@@ -216,24 +216,24 @@ define(
      * @param {Number} offset Offset within that container node.
      * @param {Array} clientRects Optional client rects array for the position.
      */
-    function CaretPosition(container, offset, clientRects) {
-      function isAtStart() {
+    var CaretPosition = function (container, offset, clientRects) {
+      var isAtStart = function () {
         if (isText(container)) {
           return offset === 0;
         }
 
         return offset === 0;
-      }
+      };
 
-      function isAtEnd() {
+      var isAtEnd = function () {
         if (isText(container)) {
           return offset >= container.data.length;
         }
 
         return offset >= container.childNodes.length;
-      }
+      };
 
-      function toRange() {
+      var toRange = function () {
         var range;
 
         range = createRange(container.ownerDocument);
@@ -241,27 +241,27 @@ define(
         range.setEnd(container, offset);
 
         return range;
-      }
+      };
 
-      function getClientRects() {
+      var getClientRects = function () {
         if (!clientRects) {
           clientRects = getCaretPositionClientRects(new CaretPosition(container, offset));
         }
 
         return clientRects;
-      }
+      };
 
-      function isVisible() {
+      var isVisible = function () {
         return getClientRects().length > 0;
-      }
+      };
 
-      function isEqual(caretPosition) {
+      var isEqual = function (caretPosition) {
         return caretPosition && container === caretPosition.container() && offset === caretPosition.offset();
-      }
+      };
 
-      function getNode(before) {
+      var getNode = function (before) {
         return resolveIndex(container, before ? offset - 1 : offset);
-      }
+      };
 
       return {
         /**
@@ -340,7 +340,7 @@ define(
          */
         getNode: getNode
       };
-    }
+    };
 
     /**
      * Creates a caret position from the start of a range.

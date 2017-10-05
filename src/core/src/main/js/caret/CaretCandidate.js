@@ -32,7 +32,7 @@ define(
       isTable = NodeType.matchNodeNames('table'),
       isCaretContainer = CaretContainer.isCaretContainer;
 
-    function isCaretCandidate(node) {
+    var isCaretCandidate = function (node) {
       if (isCaretContainer(node)) {
         return false;
       }
@@ -46,9 +46,9 @@ define(
       }
 
       return isAtomicInline(node) || isBr(node) || isTable(node) || isContentEditableFalse(node);
-    }
+    };
 
-    function isInEditable(node, rootNode) {
+    var isInEditable = function (node, rootNode) {
       for (node = node.parentNode; node && node != rootNode; node = node.parentNode) {
         if (isContentEditableFalse(node)) {
           return false;
@@ -60,9 +60,9 @@ define(
       }
 
       return true;
-    }
+    };
 
-    function isAtomicContentEditableFalse(node) {
+    var isAtomicContentEditableFalse = function (node) {
       if (!isContentEditableFalse(node)) {
         return false;
       }
@@ -70,15 +70,15 @@ define(
       return Arr.reduce(node.getElementsByTagName('*'), function (result, elm) {
         return result || isContentEditableTrue(elm);
       }, false) !== true;
-    }
+    };
 
-    function isAtomic(node) {
+    var isAtomic = function (node) {
       return isAtomicInline(node) || isAtomicContentEditableFalse(node);
-    }
+    };
 
-    function isEditableCaretCandidate(node, rootNode) {
+    var isEditableCaretCandidate = function (node, rootNode) {
       return isCaretCandidate(node) && isInEditable(node, rootNode);
-    }
+    };
 
     return {
       isCaretCandidate: isCaretCandidate,

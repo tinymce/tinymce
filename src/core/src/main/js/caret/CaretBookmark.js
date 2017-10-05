@@ -40,7 +40,7 @@ define(
       isBogus = NodeType.isBogus,
       nodeIndex = DomUtils.nodeIndex;
 
-    function normalizedParent(node) {
+    var normalizedParent = function (node) {
       var parentNode = node.parentNode;
 
       if (isBogus(parentNode)) {
@@ -48,9 +48,9 @@ define(
       }
 
       return parentNode;
-    }
+    };
 
-    function getChildNodes(node) {
+    var getChildNodes = function (node) {
       if (!node) {
         return [];
       }
@@ -64,9 +64,9 @@ define(
 
         return result;
       }, []);
-    }
+    };
 
-    function normalizedTextOffset(textNode, offset) {
+    var normalizedTextOffset = function (textNode, offset) {
       while ((textNode = textNode.previousSibling)) {
         if (!isText(textNode)) {
           break;
@@ -76,15 +76,15 @@ define(
       }
 
       return offset;
-    }
+    };
 
-    function equal(targetValue) {
+    var equal = function (targetValue) {
       return function (value) {
         return targetValue === value;
       };
-    }
+    };
 
-    function normalizedNodeIndex(node) {
+    var normalizedNodeIndex = function (node) {
       var nodes, index, numTextFragments;
 
       nodes = getChildNodes(normalizedParent(node));
@@ -102,9 +102,9 @@ define(
       index = Arr.findIndex(nodes, equal(node), node);
 
       return index - numTextFragments;
-    }
+    };
 
-    function createPathItem(node) {
+    var createPathItem = function (node) {
       var name;
 
       if (isText(node)) {
@@ -114,9 +114,9 @@ define(
       }
 
       return name + '[' + normalizedNodeIndex(node) + ']';
-    }
+    };
 
-    function parentsUntil(rootNode, node, predicate) {
+    var parentsUntil = function (rootNode, node, predicate) {
       var parents = [];
 
       for (node = node.parentNode; node != rootNode; node = node.parentNode) {
@@ -128,9 +128,9 @@ define(
       }
 
       return parents;
-    }
+    };
 
-    function create(rootNode, caretPosition) {
+    var create = function (rootNode, caretPosition) {
       var container, offset, path = [],
         outputOffset, childNodes, parents;
 
@@ -159,9 +159,9 @@ define(
       }));
 
       return path.reverse().join('/') + ',' + outputOffset;
-    }
+    };
 
-    function resolvePathItem(node, name, index) {
+    var resolvePathItem = function (node, name, index) {
       var nodes = getChildNodes(node);
 
       nodes = Arr.filter(nodes, function (node, index) {
@@ -170,9 +170,9 @@ define(
 
       nodes = Arr.filter(nodes, NodeType.matchNodeNames(name));
       return nodes[index];
-    }
+    };
 
-    function findTextPosition(container, offset) {
+    var findTextPosition = function (container, offset) {
       var node = container, targetOffset = 0, dataLen;
 
       while (isText(node)) {
@@ -199,9 +199,9 @@ define(
       }
 
       return new CaretPosition(container, offset);
-    }
+    };
 
-    function resolve(rootNode, path) {
+    var resolve = function (rootNode, path) {
       var parts, container, offset;
 
       if (!path) {
@@ -240,7 +240,7 @@ define(
       }
 
       return findTextPosition(container, parseInt(offset, 10));
-    }
+    };
 
     return {
       /**

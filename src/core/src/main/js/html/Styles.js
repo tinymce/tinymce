@@ -53,15 +53,15 @@ define(
         encodingLookup[invisibleChar + i] = encodingItems[i];
       }
 
-      function toHex(match, r, g, b) {
-        function hex(val) {
+      var toHex = function (match, r, g, b) {
+        var hex = function (val) {
           val = parseInt(val, 10).toString(16);
 
           return val.length > 1 ? val : '0' + val; // 0 -> 00
-        }
+        };
 
         return '#' + hex(r) + hex(g) + hex(b);
-      }
+      };
 
       return {
         /**
@@ -88,7 +88,7 @@ define(
           var styles = {}, matches, name, value, isEncoded, urlConverter = settings.url_converter;
           var urlConverterScope = settings.url_converter_scope || this;
 
-          function compress(prefix, suffix, noJoin) {
+          var compress = function (prefix, suffix, noJoin) {
             var top, right, bottom, left;
 
             top = styles[prefix + '-top' + suffix];
@@ -128,12 +128,12 @@ define(
             delete styles[prefix + '-right' + suffix];
             delete styles[prefix + '-bottom' + suffix];
             delete styles[prefix + '-left' + suffix];
-          }
+          };
 
           /**
            * Checks if the specific style can be compressed in other words if all border-width are equal.
            */
-          function canCompress(key) {
+          var canCompress = function (key) {
             var value = styles[key], i;
 
             if (!value) {
@@ -151,12 +151,12 @@ define(
             styles[key] = value[0];
 
             return true;
-          }
+          };
 
           /**
            * Compresses multiple styles into one style.
            */
-          function compress2(target, a, b, c) {
+          var compress2 = function (target, a, b, c) {
             if (!canCompress(a)) {
               return;
             }
@@ -174,18 +174,18 @@ define(
             delete styles[a];
             delete styles[b];
             delete styles[c];
-          }
+          };
 
           // Encodes the specified string by replacing all \" \' ; : with _<num>
-          function encode(str) {
+          var encode = function (str) {
             isEncoded = true;
 
             return encodingLookup[str];
-          }
+          };
 
           // Decodes the specified string by replacing all _<num> with it's original value \" \' etc
           // It will also decode the \" \' if keepSlashes is set to fale or omitted
-          function decode(str, keepSlashes) {
+          var decode = function (str, keepSlashes) {
             if (isEncoded) {
               str = str.replace(/\uFEFF[0-9]/g, function (str) {
                 return encodingLookup[str];
@@ -197,17 +197,17 @@ define(
             }
 
             return str;
-          }
+          };
 
-          function decodeSingleHexSequence(escSeq) {
+          var decodeSingleHexSequence = function (escSeq) {
             return String.fromCharCode(parseInt(escSeq.slice(1), 16));
-          }
+          };
 
-          function decodeHexSequences(value) {
+          var decodeHexSequences = function (value) {
             return value.replace(/\\[0-9a-f]+/gi, decodeSingleHexSequence);
-          }
+          };
 
-          function processUrl(match, url, url2, url3, str, str2) {
+          var processUrl = function (match, url, url2, url3, str, str2) {
             str = str || str2;
 
             if (str) {
@@ -238,7 +238,7 @@ define(
 
             // Output new URL format
             return "url('" + url.replace(/\'/g, "\\'") + "')";
-          }
+          };
 
           if (css) {
             css = css.replace(/[\u0000-\u001F]/g, '');
@@ -321,7 +321,7 @@ define(
         serialize: function (styles, elementName) {
           var css = '', name, value;
 
-          function serializeStyles(name) {
+          var serializeStyles = function (name) {
             var styleList, i, l, value;
 
             styleList = validStyles[name];
@@ -335,9 +335,9 @@ define(
                 }
               }
             }
-          }
+          };
 
-          function isValid(name, elementName) {
+          var isValid = function (name, elementName) {
             var styleMap;
 
             styleMap = invalidStyles['*'];
@@ -351,7 +351,7 @@ define(
             }
 
             return true;
-          }
+          };
 
           // Serialize styles according to schema
           if (elementName && validStyles) {

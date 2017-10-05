@@ -19,15 +19,15 @@ define(
   [
   ],
   function () {
-    function setEditorCommandState(editor, cmd, state) {
+    var setEditorCommandState = function (editor, cmd, state) {
       try {
         editor.getDoc().execCommand(cmd, false, state);
       } catch (ex) {
         // Ignore
       }
-    }
+    };
 
-    function clickBlocker(editor) {
+    var clickBlocker = function (editor) {
       var target, handler;
 
       target = editor.getBody();
@@ -45,9 +45,9 @@ define(
           editor.dom.unbind(target, 'click', handler);
         }
       };
-    }
+    };
 
-    function toggleReadOnly(editor, state) {
+    var toggleReadOnly = function (editor, state) {
       if (editor._clickBlocker) {
         editor._clickBlocker.unbind();
         editor._clickBlocker = null;
@@ -67,9 +67,9 @@ define(
         editor.focus();
         editor.nodeChanged();
       }
-    }
+    };
 
-    function setMode(editor, mode) {
+    var setMode = function (editor, mode) {
       var currentMode = editor.readonly ? 'readonly' : 'design';
 
       if (mode == currentMode) {
@@ -86,7 +86,7 @@ define(
 
       // Event is NOT preventable
       editor.fire('SwitchMode', { mode: mode });
-    }
+    };
 
     return {
       setMode: setMode

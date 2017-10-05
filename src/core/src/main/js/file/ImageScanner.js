@@ -93,7 +93,7 @@ define(
     return function (uploadStatus, blobCache) {
       var cachedPromises = {};
 
-      function findAll(elm, predicate) {
+      var findAll = function (elm, predicate) {
         var images, promises;
 
         if (!predicate) {
@@ -165,7 +165,7 @@ define(
         });
 
         return Promise.all(promises);
-      }
+      };
 
       return {
         findAll: findAll

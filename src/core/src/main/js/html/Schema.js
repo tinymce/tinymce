@@ -31,10 +31,10 @@ define(
     var mapCache = {}, dummyObj = {};
     var makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
 
-    function split(items, delim) {
+    var split = function (items, delim) {
       items = Tools.trim(items);
       return items ? items.split(delim || ' ') : [];
-    }
+    };
 
     /**
      * Builds a schema lookup table
@@ -43,14 +43,14 @@ define(
      * @param {String} type html4, html5 or html5-strict schema type.
      * @return {Object} Schema lookup table.
      */
-    function compileSchema(type) {
+    var compileSchema = function (type) {
       var schema = {}, globalAttributes, blockContent;
       var phrasingContent, flowContent, html4BlockContent, html4PhrasingContent;
 
-      function add(name, attributes, children) {
+      var add = function (name, attributes, children) {
         var ni, attributesOrder, element;
 
-        function arrayToMap(array, obj) {
+        var arrayToMap = function (array, obj) {
           var map = {}, i, l;
 
           for (i = 0, l = array.length; i < l; i++) {
@@ -58,7 +58,7 @@ define(
           }
 
           return map;
-        }
+        };
 
         children = children || [];
         attributes = attributes || "";
@@ -80,9 +80,9 @@ define(
 
           schema[name[ni]] = element;
         }
-      }
+      };
 
-      function addAttrs(name, attributes) {
+      var addAttrs = function (name, attributes) {
         var ni, schemaItem, i, l;
 
         name = split(name);
@@ -95,7 +95,7 @@ define(
             schemaItem.attributesOrder.push(attributes[i]);
           }
         }
-      }
+      };
 
       // Use cached schema
       if (mapCache[type]) {
@@ -314,9 +314,9 @@ define(
       mapCache[type] = schema;
 
       return schema;
-    }
+    };
 
-    function compileElementMap(value, mode) {
+    var compileElementMap = function (value, mode) {
       var styles;
 
       if (value) {
@@ -335,7 +335,7 @@ define(
       }
 
       return styles;
-    }
+    };
 
     /**
      * Constructs a new Schema instance.
@@ -351,7 +351,7 @@ define(
       var customElementsMap = {}, specialElements = {};
 
       // Creates an lookup table map object for the specified option or the default value
-      function createLookupTable(option, defaultValue, extendWith) {
+      var createLookupTable = function (option, defaultValue, extendWith) {
         var value = settings[option];
 
         if (!value) {
@@ -370,7 +370,7 @@ define(
         }
 
         return value;
-      }
+      };
 
       settings = settings || {};
       schemaItems = compileSchema(settings.schema);
@@ -410,13 +410,13 @@ define(
       });
 
       // Converts a wildcard expression string to a regexp for example *a will become /.*a/.
-      function patternToRegExp(str) {
+      var patternToRegExp = function (str) {
         return new RegExp('^' + str.replace(/([?+*])/g, '.$1') + '$');
-      }
+      };
 
       // Parses the specified valid_elements string and adds to the current rules
       // This function is a bit hard to read since it's heavily optimized for speed
-      function addValidElements(validElements) {
+      var addValidElements = function (validElements) {
         var ei, el, ai, al, matches, element, attr, attrData, elementName, attrName, attrType, attributes, attributesOrder,
           prefix, outputName, globalAttributes, globalAttributesOrder, key, value,
           elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)\])?$/,
@@ -563,9 +563,9 @@ define(
             }
           }
         }
-      }
+      };
 
-      function setValidElements(validElements) {
+      var setValidElements = function (validElements) {
         elements = {};
         patternElements = [];
 
@@ -574,10 +574,10 @@ define(
         each(schemaItems, function (element, name) {
           children[name] = element.children;
         });
-      }
+      };
 
       // Adds custom non HTML elements to the schema
-      function addCustomElements(customElements) {
+      var addCustomElements = function (customElements) {
         var customElementRegExp = /^(~)?(.+)$/;
 
         if (customElements) {
@@ -619,10 +619,10 @@ define(
             });
           });
         }
-      }
+      };
 
       // Adds valid children to the schema object
-      function addValidChildren(validChildren) {
+      var addValidChildren = function (validChildren) {
         var childRuleRegExp = /^([+\-]?)(\w+)\[([^\]]+)\]$/;
 
         // Invalidate the schema cache if the schema is mutated
@@ -654,9 +654,9 @@ define(
             }
           });
         }
-      }
+      };
 
-      function getElementRule(name) {
+      var getElementRule = function (name) {
         var element = elements[name], i;
 
         // Exact match found
@@ -673,7 +673,7 @@ define(
             return element;
           }
         }
-      }
+      };
 
       if (!settings.valid_elements) {
         // No valid elements defined then clone the elements from the schema spec

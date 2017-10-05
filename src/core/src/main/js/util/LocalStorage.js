@@ -56,7 +56,7 @@ define(
     /**
      * Gets the keys names and updates LocalStorage.length property. Since IE7 doesn't have any getters/setters.
      */
-    function updateKeys() {
+    var updateKeys = function () {
       keys = [];
 
       for (var key in items) {
@@ -64,12 +64,12 @@ define(
       }
 
       LocalStorage.length = keys.length;
-    }
+    };
 
     /**
      * Loads the userData string and parses it into the items structure.
      */
-    function load() {
+    var load = function () {
       var key, data, value, pos = 0;
 
       items = {};
@@ -79,7 +79,7 @@ define(
         return;
       }
 
-      function next(end) {
+      var next = function (end) {
         var value, nextPos;
 
         nextPos = end !== undefined ? pos + end : data.indexOf(',', pos);
@@ -91,7 +91,7 @@ define(
         pos = nextPos + 1;
 
         return value;
-      }
+      };
 
       storageElm.load(userDataKey);
       data = storageElm.getAttribute(userDataKey) || '';
@@ -118,12 +118,12 @@ define(
       } while (key !== null);
 
       updateKeys();
-    }
+    };
 
     /**
      * Saves the items structure into a the userData format.
      */
-    function save() {
+    var save = function () {
       var value, data = '';
 
       // localStorage can be disabled on WebKit/Gecko so make a dummy storage
@@ -145,7 +145,7 @@ define(
       }
 
       updateKeys();
-    }
+    };
 
     LocalStorage = {
       /**

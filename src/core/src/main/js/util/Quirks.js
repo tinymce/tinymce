@@ -46,13 +46,13 @@ define(
       /**
        * Executes a command with a specific state this can be to enable/disable browser editing features.
        */
-      function setEditorCommandState(cmd, state) {
+      var setEditorCommandState = function (cmd, state) {
         try {
           editor.getDoc().execCommand(cmd, false, state);
         } catch (ex) {
           // Ignore
         }
-      }
+      };
 
       /**
        * Returns true/false if the event is prevented or not.
@@ -61,9 +61,9 @@ define(
        * @param {Event} e Event object.
        * @return {Boolean} true/false if the event is prevented or not.
        */
-      function isDefaultPrevented(e) {
+      var isDefaultPrevented = function (e) {
         return e.isDefaultPrevented();
-      }
+      };
 
       /**
        * Sets Text/URL data on the event's dataTransfer object to a special data:text/mce-internal url.
@@ -73,7 +73,7 @@ define(
        * @private
        * @param {DragEvent} e Event object
        */
-      function setMceInternalContent(e) {
+      var setMceInternalContent = function (e) {
         var selectionHtml, internalContent;
 
         if (e.dataTransfer) {
@@ -89,7 +89,7 @@ define(
             e.dataTransfer.setData(mceInternalDataType, internalContent);
           }
         }
-      }
+      };
 
       /**
        * Gets content of special data:text/mce-internal url on the event's dataTransfer object.
@@ -100,7 +100,7 @@ define(
        * @param {DragEvent} e Event object
        * @returns {String} mce-internal content
        */
-      function getMceInternalContent(e) {
+      var getMceInternalContent = function (e) {
         var internalContent;
 
         if (e.dataTransfer) {
@@ -117,7 +117,7 @@ define(
         }
 
         return null;
-      }
+      };
 
       /**
        * Inserts contents using the paste clipboard command if it's available if it isn't it will fallback
@@ -127,13 +127,13 @@ define(
        * @param {String} content Content to insert at selection.
        * @param {Boolean} internal State if the paste is to be considered internal or external.
        */
-      function insertClipboardContents(content, internal) {
+      var insertClipboardContents = function (content, internal) {
         if (editor.queryCommandSupported('mceInsertClipboardContent')) {
           editor.execCommand('mceInsertClipboardContent', false, { content: content, internal: internal });
         } else {
           editor.execCommand('mceInsertContent', false, content);
         }
-      }
+      };
 
       /**
        * Makes sure that the editor body becomes empty when backspace or delete is pressed in empty editors.
@@ -147,15 +147,15 @@ define(
        * Or:
        * [<h1></h1>]
        */
-      function emptyEditorWhenDeleting() {
-        function serializeRng(rng) {
+      var emptyEditorWhenDeleting = function () {
+        var serializeRng = function (rng) {
           var body = dom.create("body");
           var contents = rng.cloneContents();
           body.appendChild(contents);
           return selection.serializer.serialize(body, { format: 'html' });
-        }
+        };
 
-        function allContentsSelected(rng) {
+        var allContentsSelected = function (rng) {
           var selection = serializeRng(rng);
 
           var allRng = dom.createRng();
@@ -163,7 +163,7 @@ define(
 
           var allSelection = serializeRng(allRng);
           return selection === allSelection;
-        }
+        };
 
         editor.on('keydown', function (e) {
           var keyCode = e.keyCode, isCollapsed, body;
@@ -196,16 +196,16 @@ define(
             editor.nodeChanged();
           }
         });
-      }
+      };
 
       /**
        * WebKit doesn't select all the nodes in the body when you press Ctrl+A.
        * IE selects more than the contents <body>[<p>a</p>]</body> instead of <body><p>[a]</p]</body> see bug #6438
        * This selects the whole body so that backspace/delete logic will delete everything
        */
-      function selectAll() {
+      var selectAll = function () {
         editor.shortcuts.add('meta+a', null, 'SelectAll');
-      }
+      };
 
       /**
        * WebKit has a weird issue where it some times fails to properly convert keypresses to input method keystrokes.
@@ -218,7 +218,7 @@ define(
        *
        * See: https://bugs.webkit.org/show_bug.cgi?id=83566
        */
-      function inputMethodFocus() {
+      var inputMethodFocus = function () {
         if (!editor.settings.content_editable) {
           // Case 1 IME doesn't initialize if you focus the document
           // Disabled since it was interferring with the cE=false logic
@@ -249,7 +249,7 @@ define(
             }
           });
         }
-      }
+      };
 
       /**
        * Backspacing in FireFox/IE from a paragraph into a horizontal rule results in a floating text node because the
@@ -260,7 +260,7 @@ define(
        *
        * It also fixes a bug on Firefox where it's impossible to delete HR elements.
        */
-      function removeHrOnBackspace() {
+      var removeHrOnBackspace = function () {
         editor.on('keydown', function (e) {
           if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
             // Check if there is any HR elements this is faster since getRng on IE 7 & 8 is slow
@@ -285,13 +285,13 @@ define(
             }
           }
         });
-      }
+      };
 
       /**
        * Firefox 3.x has an issue where the body element won't get proper focus if you click out
        * side it's rectangle.
        */
-      function focusBody() {
+      var focusBody = function () {
         // Fix for a focus bug in FF 3.x where the body element
         // wouldn't get proper focus if the user clicked on the HTML element
         if (!window.Range.prototype.getClientRects) { // Detect getClientRects got introduced in FF 4
@@ -309,13 +309,13 @@ define(
             }
           });
         }
-      }
+      };
 
       /**
        * WebKit has a bug where it isn't possible to select image, hr or anchor elements
        * by clicking on them so we need to fake that.
        */
-      function selectControlElements() {
+      var selectControlElements = function () {
         editor.on('click', function (e) {
           var target = e.target;
 
@@ -333,7 +333,7 @@ define(
             selection.select(target);
           }
         });
-      }
+      };
 
       /**
        * Fixes a Gecko bug where the style attribute gets added to the wrong element when deleting between two block elements.
@@ -347,8 +347,8 @@ define(
        * Instead of:
        * <p style="color:red">bla|ed</p>
        */
-      function removeStylesWhenDeletingAcrossBlockElements() {
-        function getAttributeApplyFunction() {
+      var removeStylesWhenDeletingAcrossBlockElements = function () {
+        var getAttributeApplyFunction = function () {
           var template = dom.getAttribs(selection.getStart().cloneNode(false));
 
           return function () {
@@ -362,12 +362,12 @@ define(
               });
             }
           };
-        }
+        };
 
-        function isSelectionAcrossElements() {
+        var isSelectionAcrossElements = function () {
           return !selection.isCollapsed() &&
             dom.getParent(selection.getStart(), dom.isBlock) != dom.getParent(selection.getEnd(), dom.isBlock);
-        }
+        };
 
         editor.on('keypress', function (e) {
           var applyAttributes;
@@ -392,13 +392,13 @@ define(
             });
           }
         });
-      }
+      };
 
       /**
        * Backspacing into a table behaves differently depending upon browser type.
        * Therefore, disable Backspace when cursor immediately follows a table.
        */
-      function disableBackspaceIntoATable() {
+      var disableBackspaceIntoATable = function () {
         editor.on('keydown', function (e) {
           if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
             if (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {
@@ -410,7 +410,7 @@ define(
             }
           }
         });
-      }
+      };
 
       /**
        * Removes a blockquote when backspace is pressed at the beginning of it.
@@ -421,7 +421,7 @@ define(
        * Becomes:
        * <p>|x</p>
        */
-      function removeBlockQuoteOnBackSpace() {
+      var removeBlockQuoteOnBackSpace = function () {
         // Add block quote deletion handler
         editor.on('keydown', function (e) {
           var rng, container, offset, root, parent;
@@ -456,13 +456,13 @@ define(
             selection.setRng(rng);
           }
         });
-      }
+      };
 
       /**
        * Sets various Gecko editing options on mouse down and before a execCommand to disable inline table editing that is broken etc.
        */
-      function setGeckoEditingOptions() {
-        function setOpts() {
+      var setGeckoEditingOptions = function () {
+        var setOpts = function () {
           refreshContentEditable();
 
           setEditorCommandState("StyleWithCSS", false);
@@ -471,12 +471,12 @@ define(
           if (!settings.object_resizing) {
             setEditorCommandState("enableObjectResizing", false);
           }
-        }
+        };
 
         if (!settings.readonly) {
           editor.on('BeforeExecCommand MouseDown', setOpts);
         }
-      }
+      };
 
       /**
        * Fixes a gecko link bug, when a link is placed at the end of block elements there is
@@ -488,8 +488,8 @@ define(
        * Becomes this:
        * <p><b><a href="#">x</a></b><br></p>
        */
-      function addBrAfterLastLinks() {
-        function fixLinks() {
+      var addBrAfterLastLinks = function () {
+        var fixLinks = function () {
           each(dom.select('a'), function (node) {
             var parentNode = node.parentNode, root = dom.getRoot();
 
@@ -505,32 +505,32 @@ define(
               dom.add(parentNode, 'br', { 'data-mce-bogus': 1 });
             }
           });
-        }
+        };
 
         editor.on('SetContent ExecCommand', function (e) {
           if (e.type == "setcontent" || e.command === 'mceInsertLink') {
             fixLinks();
           }
         });
-      }
+      };
 
       /**
        * WebKit will produce DIV elements here and there by default. But since TinyMCE uses paragraphs by
        * default we want to change that behavior.
        */
-      function setDefaultBlockType() {
+      var setDefaultBlockType = function () {
         if (settings.forced_root_block) {
           editor.on('init', function () {
             setEditorCommandState('DefaultParagraphSeparator', settings.forced_root_block);
           });
         }
-      }
+      };
 
       /**
        * Fixes selection issues where the caret can be placed between two inline elements like <b>a</b>|<b>b</b>
        * this fix will lean the caret right into the closest inline element.
        */
-      function normalizeSelection() {
+      var normalizeSelection = function () {
         // Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i> except for Ctrl+A since it selects everything
         editor.on('keyup focusin mouseup', function (e) {
           if (e.keyCode != 65 || !VK.metaKeyPressed(e)) {
@@ -541,12 +541,12 @@ define(
             }
           }
         }, true);
-      }
+      };
 
       /**
        * Forces Gecko to render a broken image icon if it fails to load an image.
        */
-      function showBrokenImageIcon() {
+      var showBrokenImageIcon = function () {
         editor.contentStyles.push(
           'img:-moz-broken {' +
           '-moz-force-broken-image-icon:1;' +
@@ -554,7 +554,7 @@ define(
           'min-height:24px' +
           '}'
         );
-      }
+      };
 
       /**
        * iOS has a bug where it's impossible to type if the document has a touchstart event
@@ -563,7 +563,7 @@ define(
        * The touch event moves the focus to the parent document while having the caret inside the iframe
        * this fix moves the focus back into the iframe document.
        */
-      function restoreFocusOnKeyDown() {
+      var restoreFocusOnKeyDown = function () {
         if (!editor.inline) {
           editor.on('keydown', function () {
             if (document.activeElement == document.body) {
@@ -571,7 +571,7 @@ define(
             }
           });
         }
-      }
+      };
 
       /**
        * IE 11 has an annoying issue where you can't move focus into the editor
@@ -582,7 +582,7 @@ define(
        * we simply move the focus into the first paragraph. Not ideal since you loose the
        * positioning of the caret but goot enough for most cases.
        */
-      function bodyHeight() {
+      var bodyHeight = function () {
         if (!editor.inline) {
           editor.contentStyles.push('body {min-height: 150px}');
           editor.on('click', function (e) {
@@ -605,13 +605,13 @@ define(
             }
           });
         }
-      }
+      };
 
       /**
        * Firefox on Mac OS will move the browser back to the previous page if you press CMD+Left arrow.
        * You might then loose all your work so we need to block that behavior and replace it with our own.
        */
-      function blockCmdArrowNavigation() {
+      var blockCmdArrowNavigation = function () {
         if (Env.mac) {
           editor.on('keydown', function (e) {
             if (VK.metaKeyPressed(e) && !e.shiftKey && (e.keyCode == 37 || e.keyCode == 39)) {
@@ -620,21 +620,21 @@ define(
             }
           });
         }
-      }
+      };
 
       /**
        * Disables the autolinking in IE 9+ this is then re-enabled by the autolink plugin.
        */
-      function disableAutoUrlDetect() {
+      var disableAutoUrlDetect = function () {
         setEditorCommandState("AutoUrlDetect", false);
-      }
+      };
 
       /**
        * iOS 7.1 introduced two new bugs:
        * 1) It's possible to open links within a contentEditable area by clicking on them.
        * 2) If you hold down the finger it will display the link/image touch callout menu.
        */
-      function tapLinksAndImages() {
+      var tapLinksAndImages = function () {
         editor.on('click', function (e) {
           var elm = e.target;
 
@@ -647,7 +647,7 @@ define(
         });
 
         editor.contentStyles.push('.mce-content-body {-webkit-touch-callout: none}');
-      }
+      };
 
       /**
        * iOS Safari and possible other browsers have a bug where it won't fire
@@ -710,13 +710,13 @@ define(
        * WebKit has a bug where it will allow forms to be submitted if they are inside a contentEditable element.
        * For example this: <form><button></form>
        */
-      function blockFormSubmitInsideEditor() {
+      var blockFormSubmitInsideEditor = function () {
         editor.on('init', function () {
           editor.dom.bind(editor.getBody(), 'submit', function (e) {
             e.preventDefault();
           });
         });
-      }
+      };
 
       /**
        * Sometimes WebKit/Blink generates BR elements with the Apple-interchange-newline class.
@@ -726,7 +726,7 @@ define(
        *  2) Select and copy cells A2-B2.
        *  3) Paste and it will add BR element to table cell.
        */
-      function removeAppleInterchangeBrs() {
+      var removeAppleInterchangeBrs = function () {
         parser.addNodeFilter('br', function (nodes) {
           var i = nodes.length;
 
@@ -736,13 +736,13 @@ define(
             }
           }
         });
-      }
+      };
 
       /**
        * IE cannot set custom contentType's on drag events, and also does not properly drag/drop between
        * editors. This uses a special data:text/mce-internal URL to pass data when drag/drop between editors.
        */
-      function ieInternalDragAndDrop() {
+      var ieInternalDragAndDrop = function () {
         editor.on('dragstart', function (e) {
           setMceInternalContent(e);
         });
@@ -760,13 +760,13 @@ define(
             }
           }
         });
-      }
+      };
 
-      function refreshContentEditable() {
+      var refreshContentEditable = function () {
         // No-op since Mozilla seems to have fixed the caret repaint issues
-      }
+      };
 
-      function isHidden() {
+      var isHidden = function () {
         var sel;
 
         if (!isGecko || editor.removed) {
@@ -776,7 +776,7 @@ define(
         // Weird, wheres that cursor selection?
         sel = editor.selection.getSel();
         return (!sel || !sel.rangeCount || sel.rangeCount === 0);
-      }
+      };
 
       // All browsers
       removeBlockQuoteOnBackSpace();

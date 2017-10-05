@@ -26,7 +26,7 @@ define(
     return function () {
       var cache = [], constant = Fun.constant;
 
-      function mimeToExt(mime) {
+      var mimeToExt = function (mime) {
         var mimes = {
           'image/jpeg': 'jpg',
           'image/jpg': 'jpg',
@@ -35,18 +35,18 @@ define(
         };
 
         return mimes[mime.toLowerCase()] || 'dat';
-      }
+      };
 
-      function create(o, blob, base64, filename) {
+      var create = function (o, blob, base64, filename) {
         return typeof o === 'object' ? toBlobInfo(o) : toBlobInfo({
           id: o,
           name: filename,
           blob: blob,
           base64: base64
         });
-      }
+      };
 
-      function toBlobInfo(o) {
+      var toBlobInfo = function (o) {
         var id, name;
 
         if (!o.blob || !o.base64) {
@@ -65,31 +65,31 @@ define(
           blobUri: constant(o.blobUri || URL.createObjectURL(o.blob)),
           uri: constant(o.uri)
         };
-      }
+      };
 
-      function add(blobInfo) {
+      var add = function (blobInfo) {
         if (!get(blobInfo.id())) {
           cache.push(blobInfo);
         }
-      }
+      };
 
-      function get(id) {
+      var get = function (id) {
         return findFirst(function (cachedBlobInfo) {
           return cachedBlobInfo.id() === id;
         });
-      }
+      };
 
-      function findFirst(predicate) {
+      var findFirst = function (predicate) {
         return Arr.filter(cache, predicate)[0];
-      }
+      };
 
-      function getByUri(blobUri) {
+      var getByUri = function (blobUri) {
         return findFirst(function (blobInfo) {
           return blobInfo.blobUri() == blobUri;
         });
-      }
+      };
 
-      function removeByUri(blobUri) {
+      var removeByUri = function (blobUri) {
         cache = Arr.filter(cache, function (blobInfo) {
           if (blobInfo.blobUri() === blobUri) {
             URL.revokeObjectURL(blobInfo.blobUri());
@@ -98,15 +98,15 @@ define(
 
           return true;
         });
-      }
+      };
 
-      function destroy() {
+      var destroy = function () {
         Arr.each(cache, function (cachedBlobInfo) {
           URL.revokeObjectURL(cachedBlobInfo.blobUri());
         });
 
         cache = [];
-      }
+      };
 
       return {
         create: create,

@@ -47,9 +47,9 @@ define(
       "\uAAEC-\uAAED\uAAF6\uABE5\uABE8\uABED\uFB1E\uFE00-\uFE0F\uFE20-\uFE2F\uFF9E-\uFF9F]"
     );
 
-    function isExtendingChar(ch) {
+    var isExtendingChar = function (ch) {
       return typeof ch == "string" && ch.charCodeAt(0) >= 768 && extendingChars.test(ch);
-    }
+    };
 
     return {
       isExtendingChar: isExtendingChar

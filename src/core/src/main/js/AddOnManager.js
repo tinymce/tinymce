@@ -23,14 +23,14 @@ define(
   function (Arr, ScriptLoader, Tools) {
     var each = Tools.each;
 
-    function AddOnManager() {
+    var AddOnManager = function () {
       var self = this;
 
       self.items = [];
       self.urls = {};
       self.lookup = {};
       self._listeners = [];
-    }
+    };
 
     AddOnManager.prototype = {
       /**
@@ -178,7 +178,7 @@ define(
       load: function (name, addOnUrl, success, scope, failure) {
         var self = this, url = addOnUrl;
 
-        function loadDependencies() {
+        var loadDependencies = function () {
           var dependencies = self.dependencies(name);
 
           each(dependencies, function (dep) {
@@ -194,7 +194,7 @@ define(
               success.call(ScriptLoader);
             }
           }
-        }
+        };
 
         if (self.urls[name]) {
           return;

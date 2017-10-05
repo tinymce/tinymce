@@ -70,7 +70,7 @@ define(
       settings.root_name = settings.root_name || 'body';
       self.schema = schema = schema || new Schema();
 
-      function fixInvalidChildren(nodes) {
+      var fixInvalidChildren = function (nodes) {
         var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
         var nonEmptyElements, whitespaceElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;
 
@@ -187,7 +187,7 @@ define(
             }
           }
         }
-      }
+      };
 
       /**
        * Runs the specified node though the element and attributes filters.
@@ -315,12 +315,12 @@ define(
         allWhiteSpaceRegExp = /[ \t\r\n]+/g;
         isAllWhiteSpaceRegExp = /^[ \t\r\n]+$/;
 
-        function addRootBlocks() {
+        var addRootBlocks = function () {
           var node = rootNode.firstChild, next, rootBlockNode;
 
           // Removes whitespace at beginning and end of block so:
           // <p> x </p> -> <p>x</p>
-          function trim(rootBlockNode) {
+          var trim = function (rootBlockNode) {
             if (rootBlockNode) {
               node = rootBlockNode.firstChild;
               if (node && node.type == 3) {
@@ -332,7 +332,7 @@ define(
                 node.value = node.value.replace(endWhiteSpaceRegExp, '');
               }
             }
-          }
+          };
 
           // Check if rootBlock is valid within rootNode for example if P is valid in H1 if H1 is the contentEditabe root
           if (!schema.isValidChild(rootNode.name, rootBlockName.toLowerCase())) {
@@ -362,9 +362,9 @@ define(
           }
 
           trim(rootBlockNode);
-        }
+        };
 
-        function createNode(name, type) {
+        var createNode = function (name, type) {
           var node = new Node(name, type), list;
 
           if (name in nodeFilters) {
@@ -378,9 +378,9 @@ define(
           }
 
           return node;
-        }
+        };
 
-        function removeWhitespaceBefore(node) {
+        var removeWhitespaceBefore = function (node) {
           var textNode, textNodeNext, textVal, sibling, blockElements = schema.getBlockElements();
 
           for (textNode = node.prev; textNode && textNode.type === 3;) {
@@ -412,9 +412,9 @@ define(
             textNode.remove();
             textNode = sibling;
           }
-        }
+        };
 
-        function cloneAndExcludeBlocks(input) {
+        var cloneAndExcludeBlocks = function (input) {
           var name, output = {};
 
           for (name in input) {
@@ -424,7 +424,7 @@ define(
           }
 
           return output;
-        }
+        };
 
         parser = new SaxParser({
           validate: validate,

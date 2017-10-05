@@ -60,16 +60,16 @@ define(
       var textInlineElements = editor.schema.getTextInlineElements();
       var selection = editor.selection, dom = editor.dom;
 
-      function trimOrPaddLeftRight(html) {
+      var trimOrPaddLeftRight = function (html) {
         var rng, container, offset;
 
         rng = selection.getRng(true);
         container = rng.startContainer;
         offset = rng.startOffset;
 
-        function hasSiblingText(siblingName) {
+        var hasSiblingText = function (siblingName) {
           return container[siblingName] && container[siblingName].nodeType == 3;
-        }
+        };
 
         if (container.nodeType == 3) {
           if (offset > 0) {
@@ -86,10 +86,10 @@ define(
         }
 
         return html;
-      }
+      };
 
       // Removes &nbsp; from a [b] c -> a &nbsp;c -> a c
-      function trimNbspAfterDeleteAndPaddValue() {
+      var trimNbspAfterDeleteAndPaddValue = function () {
         var rng, container, offset;
 
         rng = selection.getRng(true);
@@ -111,9 +111,9 @@ define(
             }
           }
         }
-      }
+      };
 
-      function reduceInlineTextElements() {
+      var reduceInlineTextElements = function () {
         if (merge) {
           var root = editor.getBody(), elementUtils = new ElementUtils(dom);
 
@@ -125,9 +125,9 @@ define(
             }
           });
         }
-      }
+      };
 
-      function markFragmentElements(fragment) {
+      var markFragmentElements = function (fragment) {
         var node = fragment;
 
         while ((node = node.walk())) {
@@ -135,26 +135,26 @@ define(
             node.attr('data-mce-fragment', '1');
           }
         }
-      }
+      };
 
-      function umarkFragmentElements(elm) {
+      var umarkFragmentElements = function (elm) {
         Tools.each(elm.getElementsByTagName('*'), function (elm) {
           elm.removeAttribute('data-mce-fragment');
         });
-      }
+      };
 
-      function isPartOfFragment(node) {
+      var isPartOfFragment = function (node) {
         return !!node.getAttribute('data-mce-fragment');
-      }
+      };
 
-      function canHaveChildren(node) {
+      var canHaveChildren = function (node) {
         return node && !editor.schema.getShortEndedElements()[node.nodeName];
-      }
+      };
 
-      function moveSelectionToMarker(marker) {
+      var moveSelectionToMarker = function (marker) {
         var parentEditableFalseElm, parentBlock, nextRng;
 
-        function getContentEditableFalseParent(node) {
+        var getContentEditableFalseParent = function (node) {
           var root = editor.getBody();
 
           for (; node && node !== root; node = node.parentNode) {
@@ -164,7 +164,7 @@ define(
           }
 
           return null;
-        }
+        };
 
         if (!marker) {
           return;
@@ -202,7 +202,7 @@ define(
           rng.setEndBefore(marker);
         }
 
-        function findNextCaretRng(rng) {
+        var findNextCaretRng = function (rng) {
           var caretPos = CaretPosition.fromRangeStart(rng);
           var caretWalker = new CaretWalker(editor.getBody());
 
@@ -210,7 +210,7 @@ define(
           if (caretPos) {
             return caretPos.toRange();
           }
-        }
+        };
 
         // Remove the marker node and set the new range
         parentBlock = dom.getParent(marker, dom.isBlock);
@@ -231,7 +231,7 @@ define(
         }
 
         selection.setRng(rng);
-      }
+      };
 
       // Check for whitespace before/after value
       if (/^ | $/.test(value)) {

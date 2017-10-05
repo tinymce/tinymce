@@ -23,46 +23,46 @@ define(
       var PENDING = 1, UPLOADED = 2;
       var blobUriStatuses = {};
 
-      function createStatus(status, resultUri) {
+      var createStatus = function (status, resultUri) {
         return {
           status: status,
           resultUri: resultUri
         };
-      }
+      };
 
-      function hasBlobUri(blobUri) {
+      var hasBlobUri = function (blobUri) {
         return blobUri in blobUriStatuses;
-      }
+      };
 
-      function getResultUri(blobUri) {
+      var getResultUri = function (blobUri) {
         var result = blobUriStatuses[blobUri];
 
         return result ? result.resultUri : null;
-      }
+      };
 
-      function isPending(blobUri) {
+      var isPending = function (blobUri) {
         return hasBlobUri(blobUri) ? blobUriStatuses[blobUri].status === PENDING : false;
-      }
+      };
 
-      function isUploaded(blobUri) {
+      var isUploaded = function (blobUri) {
         return hasBlobUri(blobUri) ? blobUriStatuses[blobUri].status === UPLOADED : false;
-      }
+      };
 
-      function markPending(blobUri) {
+      var markPending = function (blobUri) {
         blobUriStatuses[blobUri] = createStatus(PENDING, null);
-      }
+      };
 
-      function markUploaded(blobUri, resultUri) {
+      var markUploaded = function (blobUri, resultUri) {
         blobUriStatuses[blobUri] = createStatus(UPLOADED, resultUri);
-      }
+      };
 
-      function removeFailed(blobUri) {
+      var removeFailed = function (blobUri) {
         delete blobUriStatuses[blobUri];
-      }
+      };
 
-      function destroy() {
+      var destroy = function () {
         blobUriStatuses = {};
-      }
+      };
 
       return {
         hasBlobUri: hasBlobUri,

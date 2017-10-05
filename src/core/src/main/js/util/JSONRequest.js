@@ -45,10 +45,10 @@ define(
   function (JSON, XHR, Tools) {
     var extend = Tools.extend;
 
-    function JSONRequest(settings) {
+    var JSONRequest = function (settings) {
       this.settings = extend({}, settings);
       this.count = 0;
-    }
+    };
 
     /**
      * Simple helper function to send a JSON-RPC request without the need to initialize an object.

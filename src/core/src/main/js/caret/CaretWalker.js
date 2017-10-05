@@ -43,7 +43,7 @@ define(
       isAtomic = CaretCandidate.isAtomic,
       isEditableCaretCandidate = CaretCandidate.isEditableCaretCandidate;
 
-    function getParents(node, rootNode) {
+    var getParents = function (node, rootNode) {
       var parents = [];
 
       while (node && node != rootNode) {
@@ -52,17 +52,17 @@ define(
       }
 
       return parents;
-    }
+    };
 
-    function nodeAtIndex(container, offset) {
+    var nodeAtIndex = function (container, offset) {
       if (container.hasChildNodes() && offset < container.childNodes.length) {
         return container.childNodes[offset];
       }
 
       return null;
-    }
+    };
 
-    function getCaretCandidatePosition(direction, node) {
+    var getCaretCandidatePosition = function (direction, node) {
       if (isForwards(direction)) {
         if (isCaretCandidate(node.previousSibling) && !isText(node.previousSibling)) {
           return CaretPosition.before(node);
@@ -92,10 +92,10 @@ define(
       }
 
       return CaretPosition.before(node);
-    }
+    };
 
     // Jumps over BR elements <p>|<br></p><p>a</p> -> <p><br></p><p>|a</p>
-    function isBrBeforeBlock(node, rootNode) {
+    var isBrBeforeBlock = function (node, rootNode) {
       var next;
 
       if (!NodeType.isBr(node)) {
@@ -108,9 +108,9 @@ define(
       }
 
       return !CaretUtils.isInSameBlock(CaretPosition.before(node), CaretPosition.before(next), rootNode);
-    }
+    };
 
-    function findCaretPosition(direction, startCaretPosition, rootNode) {
+    var findCaretPosition = function (direction, startCaretPosition, rootNode) {
       var container, offset, node, nextNode, innerNode,
         rootContentEditableFalseElm, caretPosition;
 
@@ -217,7 +217,7 @@ define(
       }
 
       return null;
-    }
+    };
 
     return function (rootNode) {
       return {
