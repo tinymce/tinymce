@@ -32,7 +32,7 @@ define(
         selector: "div.tinymce",
         theme: "modern",
         skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        plugins: "table code, contextmenu paste",
+        plugins: "table code contextmenu paste",
         toolbar: "table code",
         media_dimensions: false,
         // media_live_embeds: false,

@@ -24,6 +24,7 @@ define(
     'ephox.sugar.api.node.Element',
     'tinymce.core.PluginManager',
     'tinymce.plugins.table.actions.Clipboard',
+    'tinymce.plugins.table.actions.InsertTable',
     'tinymce.plugins.table.actions.TableActions',
     'tinymce.plugins.table.actions.TableCommands',
     'tinymce.plugins.table.actions.TableWire',
@@ -36,7 +37,7 @@ define(
     'tinymce.plugins.table.ui.Dialogs',
     'tinymce.plugins.table.ui.MenuItems'
   ],
-  function (Option, ResizeWire, TableDirection, TableResize, Element, PluginManager, Clipboard, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Ephemera, Selections, Buttons, Dialogs, MenuItems) {
+  function (Option, ResizeWire, TableDirection, TableResize, Element, PluginManager, Clipboard, InsertTable, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Ephemera, Selections, Buttons, Dialogs, MenuItems) {
     function Plugin(editor) {
       var self = this;
 
@@ -112,6 +113,9 @@ define(
         cellSelection.destroy();
       });
 
+      self.insertTable = function (columns, rows) {
+        InsertTable.insert(editor, columns, rows);
+      };
       self.setClipboardRows = TableCommands.setClipboardRows;
       self.getClipboardRows = TableCommands.getClipboardRows;
     }
