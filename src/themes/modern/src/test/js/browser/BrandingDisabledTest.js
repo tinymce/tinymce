@@ -1,17 +1,14 @@
 asynctest(
-  'tinymce.themes.modern.test.browser.BradingDisabledTest',
+  'browser.tinymce.themes.modern.test.BradingDisabledTest',
   [
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
     'ephox.mcagar.api.TinyLoader',
     'ephox.sugar.api.node.Element',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, GeneralSteps, Logger, Pipeline, Step, UiFinder, TinyLoader, Element, Theme) {
+  function (Logger, Pipeline, UiFinder, TinyLoader, Element, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
