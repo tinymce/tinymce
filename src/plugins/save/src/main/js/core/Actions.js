@@ -12,11 +12,10 @@ define(
   'tinymce.plugins.save.core.Actions',
   [
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.EditorManager',
     'tinymce.core.util.Tools',
     'tinymce.plugins.save.api.Settings'
   ],
-  function (DOMUtils, EditorManager, Tools, Settings) {
+  function (DOMUtils, Tools, Settings) {
     var displayErrorMessage = function (editor, message) {
       editor.notificationManager.open({
         text: editor.translate(message),
@@ -33,8 +32,7 @@ define(
         return;
       }
 
-      // TODO: This should only save the specific editor not all editors
-      EditorManager.triggerSave();
+      editor.save();
 
       // Use callback instead
       if (Settings.hasOnSaveCallback(editor)) {
