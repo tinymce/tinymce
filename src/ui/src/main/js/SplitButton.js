@@ -73,7 +73,7 @@ define(
        * @return {String} HTML representing the control.
        */
       renderHtml: function () {
-        var self = this, id = self._id, prefix = self.classPrefix, image;
+        var self = this, id = self._id, prefix = self.classPrefix, image, label = self._aria.label;
         var icon = self.state.get('icon'), text = self.state.get('text'),
           textHtml = '';
 
@@ -100,11 +100,11 @@ define(
 
         return (
           '<div id="' + id + '" class="' + self.classes + '" role="button" tabindex="-1">' +
-          '<button type="button" hidefocus="1" tabindex="-1">' +
+          '<button type="button" hidefocus="1" tabindex="-1" aria-label="' + label + '">' +
           (icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
           textHtml +
           '</button>' +
-          '<button type="button" class="' + prefix + 'open" hidefocus="1" tabindex="-1">' +
+          '<button type="button" class="' + prefix + 'open" hidefocus="1" tabindex="-1" aria-label="More">' +
           //(icon ? '<i class="' + icon + '"></i>' : '') +
           (self._menuBtnText ? (icon ? '\u00a0' : '') + self._menuBtnText : '') +
           ' <i class="' + prefix + 'caret"></i>' +
