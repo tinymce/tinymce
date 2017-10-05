@@ -8,10 +8,11 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Result',
     'ephox.katamari.api.Type',
+    'global!Array',
     'global!Error'
   ],
 
-  function (ChoiceProcessor, ValueProcessor, PrettyPrinter, Fun, Result, Type, Error) {
+  function (ChoiceProcessor, ValueProcessor, PrettyPrinter, Fun, Result, Type, Array, Error) {
     var anyValue = ValueProcessor.value(Result.value);
 
     var arrOfObj = function (objFields) {
@@ -90,7 +91,6 @@ define(
           var gArgs = Array.prototype.slice.call(arguments, 0);
           var allowedArgs = gArgs.slice(0, args.length);
           var response = f.apply(null, allowedArgs);
-          console.log('response', response);
           return getOrDie(
             extract('()', schema, strength, response)
           );

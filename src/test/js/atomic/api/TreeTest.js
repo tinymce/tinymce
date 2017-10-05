@@ -56,7 +56,10 @@ test(
             });
           });
         },
-        function () { }
+        function () { },
+        function (args, outputSchema) {
+          processType(outputSchema.toDsl());
+        }
       );
     };
     processType(treeDsl);

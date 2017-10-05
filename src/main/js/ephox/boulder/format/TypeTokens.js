@@ -12,7 +12,8 @@ define(
       { objOf: [ 'fields' ] },
       { itemOf: [ 'validator' ] },
       { choiceOf: [ 'key', 'branches' ] },
-      { thunk: [ 'description' ] }
+      { thunk: [ 'description' ] },
+      { func: [ 'args', 'outputSchema' ] }
     ]);
 
     var fieldAdt = Adt.generate([
