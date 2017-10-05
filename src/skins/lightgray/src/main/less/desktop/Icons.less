@@ -22,15 +22,13 @@
   font-style: normal;
 }
 
-@iconSize: 16px;
-
 .@{prefix}-ico {
   font-family: 'tinymce', Arial;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
-  font-size: @iconSize;
-  line-height: 16px;
+  font-size: @icon-size;
+  line-height: @icon-size;
   speak: none;
   vertical-align: text-top;
   -webkit-font-smoothing: antialiased;
@@ -39,8 +37,8 @@
   display: inline-block;
   background: transparent center center;
   background-size: cover;
-  width: 16px;
-  height: 16px;
+  width: @icon-box;
+  height: @icon-box;
   color: @btn-text;
 }
 
