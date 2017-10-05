@@ -86,16 +86,12 @@ define(
     };
 
     var funcOrDie = function (args, schema) {
-      return ValueProcessor.value(function (f, strength) {
-        return Type.isFunction(f) ? Result.value(function () {
-          var gArgs = Array.prototype.slice.call(arguments, 0);
-          var allowedArgs = gArgs.slice(0, args.length);
-          var response = f.apply(null, allowedArgs);
-          return getOrDie(
-            extract('()', schema, strength, response)
-          );
-        }) : Result.error('Not a function');
-      }); 
+      var retriever = function (output, strength) {
+        return getOrDie(
+          extract('()', schema, strength, output)
+        );
+      };
+      return ValueProcessor.func(args, schema, retriever);
     };
 
     return {

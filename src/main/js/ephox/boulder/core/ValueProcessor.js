@@ -17,10 +17,11 @@ define(
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Result',
     'ephox.katamari.api.Thunk',
-    'ephox.katamari.api.Type'
+    'ephox.katamari.api.Type',
+    'global!Array'
   ],
 
-  function (FieldPresence, Objects, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Adt, Arr, Fun, Merger, Obj, Option, Result, Thunk, Type) {
+  function (FieldPresence, Objects, ResultCombine, ObjReader, ObjWriter, SchemaError, TypeTokens, Adt, Arr, Fun, Merger, Obj, Option, Result, Thunk, Type, Array) {
     var adt = Adt.generate([
       { field: [ 'key', 'okey', 'presence', 'prop' ] },
       { state: [ 'okey', 'instantiator' ] }
@@ -259,6 +260,28 @@ define(
       };
     };
 
+    // retriever is passed in. See funcOrDie in ValueSchema
+    var func = function (args, schema, retriever) {
+      var delegate = value(function (f, strength) {
+        return Type.isFunction(f) ? Result.value(function () {
+          var gArgs = Array.prototype.slice.call(arguments, 0);
+          var allowedArgs = gArgs.slice(0, args.length);
+          var o = f.apply(null, allowedArgs);
+          return retriever(o, strength);
+        }) : Result.error('Not a function');
+      }); 
+
+      return {
+        extract: delegate.extract,
+        toString: function () {
+          return 'function';
+        },
+        toDsl: function () {
+          return TypeTokens.typeAdt.func(args, schema);
+        }
+      };
+    };
+
     var thunk = function (desc, processor) {
       var getP = Thunk.cached(function () {
         return processor();
@@ -305,7 +328,8 @@ define(
       output: output,
       snapshot: snapshot,
 
-      thunk: thunk
+      thunk: thunk,
+      func: func
     };
   }
 );
