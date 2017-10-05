@@ -2,18 +2,16 @@ asynctest(
   'browser.tinymce.plugins.textpattern.TriggerInlinePatternBeginningTest',
   [
     'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Keys',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
-    'ephox.mcagar.api.TinyActions',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.plugins.textpattern.Plugin',
     'tinymce.plugins.textpattern.test.Utils',
     'tinymce.themes.modern.Theme'
   ],
-  function (GeneralSteps, Keys, Logger, Pipeline, Step, TinyActions, TinyApis, TinyLoader, TextpatternPlugin, Utils, ModernTheme) {
+  function (GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, TextpatternPlugin, Utils, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

@@ -18,7 +18,7 @@ define(
     function handleEnter(editor, patterns) {
       var rng, wrappedTextNode;
 
-      wrappedTextNode = Formatter.applyInlineFormat(editor, patterns, false);
+      wrappedTextNode = Formatter.applyInlineFormatEnter(editor, patterns);
       if (wrappedTextNode) {
         rng = editor.dom.createRng();
         rng.setStart(wrappedTextNode, wrappedTextNode.data.length);
@@ -32,7 +32,7 @@ define(
     function handleInlineKey(editor, patterns) {
       var wrappedTextNode, lastChar, lastCharNode, rng, dom;
 
-      wrappedTextNode = Formatter.applyInlineFormat(editor, patterns, true);
+      wrappedTextNode = Formatter.applyInlineFormatSpace(editor, patterns);
       if (wrappedTextNode) {
         dom = editor.dom;
         lastChar = wrappedTextNode.data.slice(-1);

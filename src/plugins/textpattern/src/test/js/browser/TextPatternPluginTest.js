@@ -34,6 +34,27 @@ asynctest(
           Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**a**'),
           tinyApis.sAssertContentStructure(Utils.inlineStructHelper('strong', 'a'))
         ])),
+        Logger.t('Bold/italic format on single word using space', GeneralSteps.sequence([
+          Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '***a***'),
+          tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+            return Utils.bodyStruct([
+              s.element('p', {
+                children: [
+                  s.element('em', {
+                    children: [
+                      s.element('strong', {
+                        children: [
+                          s.text(str.is('a'))
+                        ]
+                      })
+                    ]
+                  }),
+                  s.text(str.is('\u00A0'))
+                ]
+              })
+            ]);
+          }))
+        ])),
         Logger.t('Bold format on multiple words using space', GeneralSteps.sequence([
           Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**a b**'),
           tinyApis.sAssertContentStructure(Utils.inlineStructHelper('strong', 'a b'))
@@ -41,6 +62,28 @@ asynctest(
         Logger.t('Bold format on single word using enter', GeneralSteps.sequence([
           Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '**a**'),
           tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('strong', 'a'))
+        ])),
+        Logger.t('Bold/italic format on single word using enter', GeneralSteps.sequence([
+          Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '***a***'),
+          tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+            return Utils.bodyStruct([
+              s.element('p', {
+                children: [
+                  s.element('em', {
+                    children: [
+                      s.element('strong', {
+                        children: [
+                          s.text(str.is('a')),
+                          s.anything()
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              }),
+              s.anything()
+            ]);
+          }))
         ])),
         Logger.t('H1 format on single word node using enter', GeneralSteps.sequence([
           Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '# a'),
