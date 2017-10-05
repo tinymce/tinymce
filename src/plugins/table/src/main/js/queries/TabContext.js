@@ -12,6 +12,7 @@ define(
   'tinymce.plugins.table.queries.TabContext',
 
   [
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
     'ephox.snooker.api.CellNavigation',
     'ephox.snooker.api.TableLookup',
@@ -25,7 +26,7 @@ define(
     'tinymce.plugins.table.queries.TableTargets'
   ],
 
-  function (Option, CellNavigation, TableLookup, Compare, Element, Node, SelectorFilter, SelectorFind, CursorPosition, VK, TableTargets) {
+  function (Arr, Option, CellNavigation, TableLookup, Compare, Element, Node, SelectorFilter, SelectorFind, CursorPosition, VK, TableTargets) {
     var forward = function (editor, isRoot, cell, lazyWire) {
       return go(editor, isRoot, CellNavigation.next(cell), lazyWire);
     };
@@ -60,11 +61,14 @@ define(
       });
     };
 
+    var rootElements = ['table', 'li', 'dl'];
+
     var handle = function (event, editor, actions, lazyWire) {
       if (event.keyCode === VK.TAB) {
         var body = Element.fromDom(editor.getBody());
         var isRoot = function (element) {
-          return Compare.eq(element, body) || Node.name(element) === 'table';
+          var name = Node.name(element);
+          return Compare.eq(element, body) || Arr.contains(rootElements, name);
         };
 
         var rng = editor.selection.getRng();
