@@ -26,6 +26,19 @@ define(
   function (Widget, Factory, Env, Delay) {
     "use strict";
 
+    var toggleTextStyle = function (ctrl, state) {
+      var textStyle = ctrl._textStyle;
+      if (textStyle) {
+        var textElm = ctrl.getEl('text');
+        textElm.setAttribute('style', textStyle);
+
+        if (state) {
+          textElm.style.color = '';
+          textElm.style.backgroundColor = '';
+        }
+      }
+    };
+
     return Widget.extend({
       Defaults: {
         border: 0,
@@ -296,7 +309,7 @@ define(
         var self = this, settings = self.settings;
 
         var textStyle = settings.textStyle;
-        if (typeof textStyle == "function") {
+        if (typeof textStyle === "function") {
           textStyle = textStyle.call(this);
         }
 
@@ -304,6 +317,7 @@ define(
           var textElm = self.getEl('text');
           if (textElm) {
             textElm.setAttribute('style', textStyle);
+            self._textStyle = textStyle;
           }
         }
 
@@ -344,6 +358,8 @@ define(
       },
 
       active: function (state) {
+        toggleTextStyle(this, state);
+
         if (typeof state != "undefined") {
           this.aria('checked', state);
         }
