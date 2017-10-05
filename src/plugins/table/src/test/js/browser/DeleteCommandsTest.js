@@ -31,7 +31,7 @@ asynctest(
       editor.setContent('<table><tr><td>1</td><td>2</td></tr></table>');
       LegacyUnit.setSelection(editor, 'td', 0);
       editor.execCommand('mceTableDeleteCol');
-      LegacyUnit.equal(cleanTableHtml(editor.getContent()), '<table><tbody><tr><td>2</td></tr></tbody></table>');
+      LegacyUnit.equal(cleanTableHtml(editor.getContent()), '<table style="width: 8px;"><tbody><tr><td style="width: 8px;">2</td></tr></tbody></table>');
     });
 
     suite.test("mceTableDeleteRow command", function (editor) {

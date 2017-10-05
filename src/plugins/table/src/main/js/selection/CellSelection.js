@@ -14,14 +14,11 @@ define(
     'ephox.darwin.api.InputHandlers',
     'ephox.darwin.api.SelectionAnnotation',
     'ephox.darwin.api.SelectionKeys',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
+    'ephox.katamari.api.Struct',
     'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.dom.Compare',
-    'ephox.sugar.api.events.DomEvent',
-    'ephox.sugar.api.events.MouseEvent',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.selection.core.SelectionDirection',
@@ -29,9 +26,10 @@ define(
     'tinymce.plugins.table.selection.Ephemera'
   ],
 
-  function (InputHandlers, SelectionAnnotation, SelectionKeys, Arr, Cell, Fun, Option, TableLookup, Compare, DomEvent, MouseEvent, Element, Selection, SelectionDirection, Direction, Ephemera) {
+  function (InputHandlers, SelectionAnnotation, SelectionKeys, Fun, Option, Struct, TableLookup, Compare, Element, Selection, SelectionDirection, Direction, Ephemera) {
     return function (editor, lazyResize) {
-      var inputHandlers = Cell([]);
+      var handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
+      var handlers = Option.none();
 
       var annotations = SelectionAnnotation.byAttr(Ephemera);
 
@@ -73,18 +71,20 @@ define(
         };
 
         var keyup = function (event) {
+          var wrappedEvent = wrapEvent(event);
           // Note, this is an optimisation.
-          if (event.raw().shiftKey && SelectionKeys.isNavigation(event.raw().which)) {
+          if (wrappedEvent.raw().shiftKey && SelectionKeys.isNavigation(wrappedEvent.raw().which)) {
             var rng = editor.selection.getRng();
             var start = Element.fromDom(rng.startContainer);
             var end = Element.fromDom(rng.endContainer);
-            keyHandlers.keyup(event, start, rng.startOffset, end, rng.endOffset).each(function (response) {
-              handleResponse(event, response);
+            keyHandlers.keyup(wrappedEvent, start, rng.startOffset, end, rng.endOffset).each(function (response) {
+              handleResponse(wrappedEvent, response);
             });
           }
         };
 
         var keydown = function (event) {
+          var wrappedEvent = wrapEvent(event);
           lazyResize().each(function (resize) {
             resize.hideBars();
           });
@@ -93,29 +93,73 @@ define(
           var start = Element.fromDom(rng.startContainer);
           var end = Element.fromDom(rng.endContainer);
           var direction = Direction.directionAt(startContainer).isRtl() ? SelectionKeys.rtl : SelectionKeys.ltr;
-          keyHandlers.keydown(event, start, rng.startOffset, end, rng.endOffset, direction).each(function (response) {
-            handleResponse(event, response);
+          keyHandlers.keydown(wrappedEvent, start, rng.startOffset, end, rng.endOffset, direction).each(function (response) {
+            handleResponse(wrappedEvent, response);
           });
           lazyResize().each(function (resize) {
             resize.showBars();
           });
         };
-        inputHandlers.set([
-          MouseEvent.leftDown.bind(body, mouseHandlers.mousedown),
-          MouseEvent.leftPressedOver.bind(body, mouseHandlers.mouseover),
-          MouseEvent.leftUp.bind(body, mouseHandlers.mouseup),
-          DomEvent.bind(body, 'keyup', keyup),
-          DomEvent.bind(body, 'keydown', keydown)
-        ]);
 
+        var wrapEvent = function (event) {
+          // IE9 minimum
+          var target = Element.fromDom(event.target);
+
+          var stop = function () {
+            event.stopPropagation();
+          };
+
+          var prevent = function () {
+            event.preventDefault();
+          };
+
+          var kill = Fun.compose(prevent, stop); // more of a sequence than a compose, but same effect
+
+          // FIX: Don't just expose the raw event. Need to identify what needs standardisation.
+          return {
+            'target':  Fun.constant(target),
+            'x':       Fun.constant(event.x),
+            'y':       Fun.constant(event.y),
+            'stop':    stop,
+            'prevent': prevent,
+            'kill':    kill,
+            'raw':     Fun.constant(event)
+          };
+        };
+
+        var mouseDown = function (e) {
+          mouseHandlers.mousedown(wrapEvent(e));
+        };
+        var mouseOver = function (e) {
+          mouseHandlers.mouseover(wrapEvent(e));
+        };
+        var mouseUp = function (e) {
+          mouseHandlers.mouseup(wrapEvent(e));
+        };
+
+        editor.on('mousedown', mouseDown);
+        editor.on('mouseover', mouseOver);
+        editor.on('mouseup', mouseUp);
+        editor.on('keyup', keyup);
+        editor.on('keydown', keydown);
         editor.on('nodechange', syncSelection);
 
+        handlers = Option.some(handlerStruct({
+          mousedown: mouseDown,
+          mouseover: mouseOver,
+          mouseup: mouseUp,
+          keyup: keyup,
+          keydown: keydown
+        }));
       });
 
       var destroy = function () {
-        var handlers = inputHandlers.get();
-        Arr.each(handlers, function (h) {
-          h.unbind();
+        handlers.each(function (handlers) {
+          // editor.off('mousedown', handlers.mousedown());
+          // editor.off('mouseover', handlers.mouseover());
+          // editor.off('mouseup', handlers.mouseup());
+          // editor.off('keyup', handlers.keyup());
+          // editor.off('keydown', handlers.keydown());
         });
       };
 

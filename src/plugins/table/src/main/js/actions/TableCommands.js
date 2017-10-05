@@ -30,6 +30,21 @@ define(
 
     var clipboardRows = Option.none();
 
+    var getClipboardRows = function () {
+      return clipboardRows.fold(function () {
+        return;
+      }, function (rows) {
+        return Arr.map(rows, function (row) {
+          return row.dom();
+        });
+      });
+    };
+
+    var setClipboardRows = function (rows) {
+      var sugarRows = Arr.map(rows, Element.fromDom);
+      clipboardRows = Option.from(sugarRows);
+    };
+
     var registerCommands = function (editor, dialogs, actions, cellSelection, selections) {
       var eraseTable = function () {
         var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
@@ -170,7 +185,9 @@ define(
     };
 
     return {
-      registerCommands: registerCommands
+      registerCommands: registerCommands,
+      getClipboardRows: getClipboardRows,
+      setClipboardRows: setClipboardRows
     };
   }
 );

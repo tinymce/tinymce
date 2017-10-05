@@ -38,6 +38,7 @@ define(
   ],
   function (Option, ResizeWire, TableDirection, TableResize, Element, PluginManager, Clipboard, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Ephemera, Selections, Buttons, Dialogs, MenuItems) {
     function Plugin(editor) {
+      var self = this;
 
       var lazyResize = function () {
         return resize;
@@ -118,6 +119,9 @@ define(
         });
         cellSelection.destroy();
       });
+
+      self.setClipboardRows = TableCommands.setClipboardRows;
+      self.getClipboardRows = TableCommands.getClipboardRows;
     }
 
     PluginManager.add('table', Plugin);
