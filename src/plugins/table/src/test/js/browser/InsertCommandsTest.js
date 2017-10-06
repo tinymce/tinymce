@@ -26,7 +26,7 @@ asynctest(
       editor.execCommand('mceTableInsertColAfter');
       LegacyUnit.equal(
         cleanTableHtml(editor.getContent()),
-        '<table><tbody><tr><td>1</td><td>&nbsp;</td></tr><tr><td>2</td><td>&nbsp;</td></tr></tbody></table>'
+        '<table><tbody><tr><td style="width: 4px;">1</td><td style="width: 4px;">&nbsp;</td></tr><tr><td style="width: 4px;">2</td><td style="width: 4px;">&nbsp;</td></tr></tbody></table>'
       );
     });
 

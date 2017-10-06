@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+ /*eslint no-bitwise:0 */
+
 define(
   'tinymce.plugins.table.selection.CellSelection',
 
@@ -128,14 +130,36 @@ define(
           };
         };
 
+        var isLeftMouse = function (raw) {
+          return raw.button === 0;
+        };
+
+        // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
+        var isLeftButtonPressed = function (raw) {
+          // Only added by Chrome/Firefox in June 2015.
+          // This is only to fix a 1px bug (TBIO-2836) so return true if we're on an older browser
+          if (raw.buttons === undefined) {
+            return true;
+          }
+
+          // use bitwise & for optimal comparison
+          return (raw.buttons & 1) !== 0;
+        };
+
         var mouseDown = function (e) {
-          mouseHandlers.mousedown(wrapEvent(e));
+          if (isLeftMouse(e)) {
+            mouseHandlers.mousedown(wrapEvent(e));
+          }
         };
         var mouseOver = function (e) {
-          mouseHandlers.mouseover(wrapEvent(e));
+          if (isLeftButtonPressed(e)) {
+            mouseHandlers.mouseover(wrapEvent(e));
+          }
         };
         var mouseUp = function (e) {
-          mouseHandlers.mouseup(wrapEvent(e));
+          if (isLeftMouse) {
+            mouseHandlers.mouseup(wrapEvent(e));
+          }
         };
 
         editor.on('mousedown', mouseDown);
