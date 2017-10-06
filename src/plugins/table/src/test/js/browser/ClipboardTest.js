@@ -23,8 +23,8 @@ asynctest(
     var selectOne = function (editor, start) {
       start = editor.$(start)[0];
 
-      editor.fire('mousedown', { target: start });
-      editor.fire('mouseup', { target: start });
+      editor.fire('mousedown', { target: start, button: 0 });
+      editor.fire('mouseup', { target: start, button: 0 });
 
       LegacyUnit.setSelection(editor, start, 0);
     };
@@ -33,9 +33,9 @@ asynctest(
       start = editor.$(start)[0];
       end = editor.$(end)[0];
 
-      editor.fire('mousedown', { target: start });
-      editor.fire('mouseover', { target: end });
-      editor.fire('mouseup', { target: end });
+      editor.fire('mousedown', { target: start, button: 0 });
+      editor.fire('mouseover', { target: end, button: 0 });
+      editor.fire('mouseup', { target: end, button: 0 });
 
       LegacyUnit.setSelection(editor, end, 0);
     };

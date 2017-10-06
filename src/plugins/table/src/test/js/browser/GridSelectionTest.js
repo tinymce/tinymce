@@ -18,9 +18,9 @@ asynctest(
 
     var assertTableSelection = function (editor, tableHtml, selectCells, cellContents) {
       function selectRangeXY(table, startTd, endTd) {
-        editor.fire('mousedown', { target: startTd });
-        editor.fire('mouseover', { target: endTd });
-        editor.fire('mouseup', { target: endTd });
+        editor.fire('mousedown', { target: startTd, button: 0 });
+        editor.fire('mouseover', { target: endTd, button: 0 });
+        editor.fire('mouseup', { target: endTd, button: 0 });
       }
 
       function getCells(table) {
