@@ -25,7 +25,7 @@ define(
     'tinymce.core.util.Promise'
   ],
   function (Blob, FileReader, Uint8Array, Window, XMLHttpRequest, Promise) {
-    function blobUriToBlob(url) {
+    var blobUriToBlob = function (url) {
       return new Promise(function (resolve, reject) {
 
         var rejectWithError = function () {
@@ -56,9 +56,9 @@ define(
           rejectWithError();
         }
       });
-    }
+    };
 
-    function parseDataUri(uri) {
+    var parseDataUri = function (uri) {
       var type, matches;
 
       uri = decodeURIComponent(uri).split(',');
@@ -72,9 +72,9 @@ define(
         type: type,
         data: uri[1]
       };
-    }
+    };
 
-    function dataUriToBlob(uri) {
+    var dataUriToBlob = function (uri) {
       return new Promise(function (resolve) {
         var str, arr, i;
 
@@ -96,9 +96,9 @@ define(
 
         resolve(new Blob([arr], { type: uri.type }));
       });
-    }
+    };
 
-    function uriToBlob(url) {
+    var uriToBlob = function (url) {
       if (url.indexOf('blob:') === 0) {
         return blobUriToBlob(url);
       }
@@ -108,9 +108,9 @@ define(
       }
 
       return null;
-    }
+    };
 
-    function blobToDataUri(blob) {
+    var blobToDataUri = function (blob) {
       return new Promise(function (resolve) {
         var reader = new FileReader();
 
@@ -120,7 +120,7 @@ define(
 
         reader.readAsDataURL(blob);
       });
-    }
+    };
 
     return {
       uriToBlob: uriToBlob,

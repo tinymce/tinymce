@@ -46,8 +46,8 @@ define(
      * @constructor FocusManager
      * @param {tinymce.EditorManager} editorManager Editor manager instance to handle focus for.
      */
-    function FocusManager(editorManager) {
-      function getActiveElement() {
+    var FocusManager = function (editorManager) {
+      var getActiveElement = function () {
         try {
           return document.activeElement;
         } catch (ex) {
@@ -55,9 +55,9 @@ define(
           // TODO: Investigate this
           return document.body;
         }
-      }
+      };
 
-      function registerEvents(e) {
+      var registerEvents = function (e) {
         var editor = e.editor;
 
         editor.on('init', function () {
@@ -115,9 +115,9 @@ define(
 
           DOM.bind(document, 'focusin', documentFocusInHandler);
         }
-      }
+      };
 
-      function unregisterDocumentEvents(e) {
+      var unregisterDocumentEvents = function (e) {
         if (editorManager.focusedEditor == e.editor) {
           editorManager.focusedEditor = null;
         }
@@ -128,11 +128,11 @@ define(
           DOM.unbind(document, 'mouseup', documentMouseUpHandler);
           selectionChangeHandler = documentFocusInHandler = documentMouseUpHandler = null;
         }
-      }
+      };
 
       editorManager.on('AddEditor', registerEvents);
       editorManager.on('RemoveEditor', unregisterDocumentEvents);
-    }
+    };
 
     /**
      * Returns true if the specified element is part of the UI for example an button or text input.

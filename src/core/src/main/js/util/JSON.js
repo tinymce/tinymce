@@ -26,7 +26,7 @@ define(
     'global!window'
   ],
   function (window) {
-    function serialize(o, quote) {
+    var serialize = function (o, quote) {
       var i, v, t, name;
 
       quote = quote || '"';
@@ -81,7 +81,7 @@ define(
       }
 
       return '' + o;
-    }
+    };
 
     return {
       /**

@@ -20,7 +20,7 @@ define(
     "tinymce.core.dom.DOMUtils"
   ],
   function (DOMUtils) {
-    function create(rootNode, targetNode, normalized) {
+    var create = function (rootNode, targetNode, normalized) {
       var path = [];
 
       for (; targetNode && targetNode != rootNode; targetNode = targetNode.parentNode) {
@@ -28,9 +28,9 @@ define(
       }
 
       return path;
-    }
+    };
 
-    function resolve(rootNode, path) {
+    var resolve = function (rootNode, path) {
       var i, node, children;
 
       for (node = rootNode, i = path.length - 1; i >= 0; i--) {
@@ -44,7 +44,7 @@ define(
       }
 
       return node;
-    }
+    };
 
     return {
       create: create,

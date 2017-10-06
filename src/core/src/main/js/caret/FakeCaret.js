@@ -35,7 +35,7 @@ define(
     return function (rootNode, isBlock) {
       var cursorInterval, $lastVisualCaret = null, caretContainerNode;
 
-      function getAbsoluteClientRect(node, before) {
+      var getAbsoluteClientRect = function (node, before) {
         var clientRect = ClientRect.collapse(node.getBoundingClientRect(), before),
           docElm, scrollX, scrollY, margin, rootRect;
 
@@ -67,9 +67,9 @@ define(
         }
 
         return clientRect;
-      }
+      };
 
-      function trimInlineCaretContainers() {
+      var trimInlineCaretContainers = function () {
         var contentEditableFalseNodes, node, sibling, i, data;
 
         contentEditableFalseNodes = DomQuery('*[contentEditable=false]', rootNode);
@@ -100,9 +100,9 @@ define(
         }
 
         return null;
-      }
+      };
 
-      function show(before, node) {
+      var show = function (before, node) {
         var clientRect, rng;
 
         hide();
@@ -143,9 +143,9 @@ define(
         }
 
         return rng;
-      }
+      };
 
-      function hide() {
+      var hide = function () {
         trimInlineCaretContainers();
 
         if (caretContainerNode) {
@@ -159,13 +159,13 @@ define(
         }
 
         clearInterval(cursorInterval);
-      }
+      };
 
       var hasFocus = function () {
         return rootNode.ownerDocument.activeElement === rootNode;
       };
 
-      function startBlink() {
+      var startBlink = function () {
         cursorInterval = Delay.setInterval(function () {
           if (hasFocus()) {
             DomQuery('div.mce-visual-caret', rootNode).toggleClass('mce-visual-caret-hidden');
@@ -173,13 +173,13 @@ define(
             DomQuery('div.mce-visual-caret', rootNode).addClass('mce-visual-caret-hidden');
           }
         }, 500);
-      }
+      };
 
-      function destroy() {
+      var destroy = function () {
         Delay.clearInterval(cursorInterval);
-      }
+      };
 
-      function getCss() {
+      var getCss = function () {
         return (
           '.mce-visual-caret {' +
           'position: absolute;' +
@@ -198,7 +198,7 @@ define(
           'padding: 0;' +
           '}'
         );
-      }
+      };
 
       return {
         show: show,

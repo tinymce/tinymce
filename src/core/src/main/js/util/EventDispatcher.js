@@ -33,16 +33,16 @@ define(
       ' '
     );
 
-    function Dispatcher(settings) {
+    var Dispatcher = function (settings) {
       var self = this, scope, bindings = {}, toggleEvent;
 
-      function returnFalse() {
+      var returnFalse = function () {
         return false;
-      }
+      };
 
-      function returnTrue() {
+      var returnTrue = function () {
         return true;
-      }
+      };
 
       settings = settings || {};
       scope = settings.scope || self;
@@ -58,7 +58,7 @@ define(
        * @example
        * instance.fire('event', {...});
        */
-      function fire(name, args) {
+      var fire = function (name, args) {
         var handlers, i, l, callback;
 
         name = name.toLowerCase();
@@ -122,7 +122,7 @@ define(
         }
 
         return args;
-      }
+      };
 
       /**
        * Binds an event listener to a specific event by name.
@@ -137,7 +137,7 @@ define(
        *     // Callback logic
        * });
        */
-      function on(name, callback, prepend, extra) {
+      var on = function (name, callback, prepend, extra) {
         var handlers, names, i;
 
         if (callback === false) {
@@ -172,7 +172,7 @@ define(
         }
 
         return self;
-      }
+      };
 
       /**
        * Unbinds an event listener to a specific event by name.
@@ -191,7 +191,7 @@ define(
        * // Unbind all events
        * instance.off();
        */
-      function off(name, callback) {
+      var off = function (name, callback) {
         var i, handlers, bindingName, names, hi;
 
         if (name) {
@@ -241,7 +241,7 @@ define(
         }
 
         return self;
-      }
+      };
 
       /**
        * Binds an event listener to a specific event by name
@@ -257,9 +257,9 @@ define(
        *     // Callback logic
        * });
        */
-      function once(name, callback, prepend) {
+      var once = function (name, callback, prepend) {
         return on(name, callback, prepend, { once: true });
-      }
+      };
 
       /**
        * Returns true/false if the dispatcher has a event of the specified name.
@@ -268,10 +268,10 @@ define(
        * @param {String} name Name of the event to check for.
        * @return {Boolean} true/false if the event exists or not.
        */
-      function has(name) {
+      var has = function (name) {
         name = name.toLowerCase();
         return !(!bindings[name] || bindings[name].length === 0);
-      }
+      };
 
       // Expose
       self.fire = fire;
@@ -279,7 +279,7 @@ define(
       self.off = off;
       self.once = once;
       self.has = has;
-    }
+    };
 
     /**
      * Returns true/false if the specified event name is a native browser event or not.

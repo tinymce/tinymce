@@ -19,15 +19,15 @@ define(
   [
   ],
   function () {
-    function isNodeType(type) {
+    var isNodeType = function (type) {
       return function (node) {
         return !!node && node.nodeType == type;
       };
-    }
+    };
 
     var isElement = isNodeType(1);
 
-    function matchNodeNames(names) {
+    var matchNodeNames = function (names) {
       names = names.toLowerCase().split(' ');
 
       return function (node) {
@@ -45,9 +45,9 @@ define(
 
         return false;
       };
-    }
+    };
 
-    function matchStyleValues(name, values) {
+    var matchStyleValues = function (name, values) {
       values = values.toLowerCase().split(' ');
 
       return function (node) {
@@ -64,31 +64,31 @@ define(
 
         return false;
       };
-    }
+    };
 
-    function hasPropValue(propName, propValue) {
+    var hasPropValue = function (propName, propValue) {
       return function (node) {
         return isElement(node) && node[propName] === propValue;
       };
-    }
+    };
 
-    function hasAttribute(attrName, attrValue) {
+    var hasAttribute = function (attrName, attrValue) {
       return function (node) {
         return isElement(node) && node.hasAttribute(attrName);
       };
-    }
+    };
 
-    function hasAttributeValue(attrName, attrValue) {
+    var hasAttributeValue = function (attrName, attrValue) {
       return function (node) {
         return isElement(node) && node.getAttribute(attrName) === attrValue;
       };
-    }
+    };
 
-    function isBogus(node) {
+    var isBogus = function (node) {
       return isElement(node) && node.hasAttribute('data-mce-bogus');
-    }
+    };
 
-    function hasContentEditableState(value) {
+    var hasContentEditableState = function (value) {
       return function (node) {
         if (isElement(node)) {
           if (node.contentEditable === value) {
@@ -102,7 +102,7 @@ define(
 
         return false;
       };
-    }
+    };
 
     return {
       isText: isNodeType(3),

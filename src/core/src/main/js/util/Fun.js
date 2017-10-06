@@ -21,25 +21,25 @@ define(
   function () {
     var slice = [].slice;
 
-    function constant(value) {
+    var constant = function (value) {
       return function () {
         return value;
       };
-    }
+    };
 
-    function negate(predicate) {
+    var negate = function (predicate) {
       return function (x) {
         return !predicate(x);
       };
-    }
+    };
 
-    function compose(f, g) {
+    var compose = function (f, g) {
       return function (x) {
         return f(g(x));
       };
-    }
+    };
 
-    function or() {
+    var or = function () {
       var args = slice.call(arguments);
 
       return function (x) {
@@ -51,9 +51,9 @@ define(
 
         return false;
       };
-    }
+    };
 
-    function and() {
+    var and = function () {
       var args = slice.call(arguments);
 
       return function (x) {
@@ -65,9 +65,9 @@ define(
 
         return true;
       };
-    }
+    };
 
-    function curry(fn) {
+    var curry = function (fn) {
       var args = slice.call(arguments);
 
       if (args.length - 1 >= fn.length) {
@@ -78,10 +78,10 @@ define(
         var tempArgs = args.concat([].slice.call(arguments));
         return curry.apply(this, tempArgs);
       };
-    }
+    };
 
-    function noop() {
-    }
+    var noop = function () {
+    };
 
     return {
       constant: constant,

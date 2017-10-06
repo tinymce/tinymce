@@ -42,7 +42,7 @@ define(
     var simpleSelectorRe = /^([a-z0-9],?)+$/i;
     var whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
-    function setupAttrHooks(domUtils, settings) {
+    var setupAttrHooks = function (domUtils, settings) {
       var attrHooks = {}, keepValues = settings.keep_values, keepUrlHook;
 
       keepUrlHook = {
@@ -89,9 +89,9 @@ define(
       }
 
       return attrHooks;
-    }
+    };
 
-    function updateInternalStyleAttr(domUtils, $elm) {
+    var updateInternalStyleAttr = function (domUtils, $elm) {
       var value = $elm.attr('style');
 
       value = domUtils.serializeStyle(domUtils.parseStyle(value), $elm[0].nodeName);
@@ -101,9 +101,9 @@ define(
       }
 
       $elm.attr('data-mce-style', value);
-    }
+    };
 
-    function nodeIndex(node, normalized) {
+    var nodeIndex = function (node, normalized) {
       var idx = 0, lastNodeType, nodeType;
 
       if (node) {
@@ -122,7 +122,7 @@ define(
       }
 
       return idx;
-    }
+    };
 
     /**
      * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
@@ -132,7 +132,7 @@ define(
      * @param {Document} doc Document reference to bind the utility class to.
      * @param {settings} settings Optional settings collection.
      */
-    function DOMUtils(doc, settings) {
+    var DOMUtils = function (doc, settings) {
       var self = this, blockElementsMap;
 
       self.doc = doc;
@@ -184,7 +184,7 @@ define(
 
         return !!blockElementsMap[node];
       };
-    }
+    };
 
     DOMUtils.prototype = {
       $$: function (elm) {
@@ -1579,14 +1579,14 @@ define(
         //   <p>text 1<span></span></p><b>CHOP</b><p><span></span>text 2</p>
         // this function will then trim off empty edges and produce:
         //   <p>text 1</p><b>CHOP</b><p>text 2</p>
-        function trimNode(node) {
+        var trimNode = function (node) {
           var i, children = node.childNodes, type = node.nodeType;
 
-          function surroundedBySpans(node) {
+          var surroundedBySpans = function (node) {
             var previousIsSpan = node.previousSibling && node.previousSibling.nodeName == 'SPAN';
             var nextIsSpan = node.nextSibling && node.nextSibling.nodeName == 'SPAN';
             return previousIsSpan && nextIsSpan;
-          }
+          };
 
           if (type == 1 && node.getAttribute('data-mce-type') == 'bookmark') {
             return;
@@ -1626,7 +1626,7 @@ define(
           }
 
           return node;
-        }
+        };
 
         if (parentElm && splitElm) {
           // Get before chunk

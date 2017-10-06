@@ -60,17 +60,17 @@ define(
     };
 
     // Decodes text by using the browser
-    function nativeDecode(text) {
+    var nativeDecode = function (text) {
       var elm;
 
       elm = Element.fromTag("div").dom();
       elm.innerHTML = text;
 
       return elm.textContent || elm.innerText || text;
-    }
+    };
 
     // Build a two way lookup table for the entities
-    function buildEntitiesLookup(items, radix) {
+    var buildEntitiesLookup = function (items, radix) {
       var i, chr, entity, lookup = {};
 
       if (items) {
@@ -91,7 +91,7 @@ define(
 
         return lookup;
       }
-    }
+    };
 
     // Unpack entities lookup where the numbers are in radix 32 to reduce the size
     namedEntities = buildEntitiesLookup(
@@ -200,7 +200,7 @@ define(
       getEncodeFunc: function (name, entities) {
         entities = buildEntitiesLookup(entities) || namedEntities;
 
-        function encodeNamedAndNumeric(text, attr) {
+        var encodeNamedAndNumeric = function (text, attr) {
           return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
             if (baseEntities[chr] !== undefined) {
               return baseEntities[chr];
@@ -217,11 +217,11 @@ define(
 
             return '&#' + chr.charCodeAt(0) + ';';
           });
-        }
+        };
 
-        function encodeCustomNamed(text, attr) {
+        var encodeCustomNamed = function (text, attr) {
           return Entities.encodeNamed(text, attr, entities);
-        }
+        };
 
         // Replace + with , to be compatible with previous TinyMCE versions
         name = makeMap(name.replace(/\+/g, ','));

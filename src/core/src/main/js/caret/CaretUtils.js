@@ -34,15 +34,15 @@ define(
       isElement = NodeType.isElement,
       isCaretCandidate = CaretCandidate.isCaretCandidate;
 
-    function isForwards(direction) {
+    var isForwards = function (direction) {
       return direction > 0;
-    }
+    };
 
-    function isBackwards(direction) {
+    var isBackwards = function (direction) {
       return direction < 0;
-    }
+    };
 
-    function skipCaretContainers(walk, shallow) {
+    var skipCaretContainers = function (walk, shallow) {
       var node;
 
       while ((node = walk(shallow))) {
@@ -52,9 +52,9 @@ define(
       }
 
       return null;
-    }
+    };
 
-    function findNode(node, direction, predicateFn, rootNode, shallow) {
+    var findNode = function (node, direction, predicateFn, rootNode, shallow) {
       var walker = new TreeWalker(node, rootNode);
 
       if (isBackwards(direction)) {
@@ -88,9 +88,9 @@ define(
       }
 
       return null;
-    }
+    };
 
-    function getEditingHost(node, rootNode) {
+    var getEditingHost = function (node, rootNode) {
       for (node = node.parentNode; node && node != rootNode; node = node.parentNode) {
         if (isContentEditableTrue(node)) {
           return node;
@@ -98,9 +98,9 @@ define(
       }
 
       return rootNode;
-    }
+    };
 
-    function getParentBlock(node, rootNode) {
+    var getParentBlock = function (node, rootNode) {
       while (node && node != rootNode) {
         if (isBlockLike(node)) {
           return node;
@@ -110,17 +110,17 @@ define(
       }
 
       return null;
-    }
+    };
 
-    function isInSameBlock(caretPosition1, caretPosition2, rootNode) {
+    var isInSameBlock = function (caretPosition1, caretPosition2, rootNode) {
       return getParentBlock(caretPosition1.container(), rootNode) == getParentBlock(caretPosition2.container(), rootNode);
-    }
+    };
 
-    function isInSameEditingHost(caretPosition1, caretPosition2, rootNode) {
+    var isInSameEditingHost = function (caretPosition1, caretPosition2, rootNode) {
       return getEditingHost(caretPosition1.container(), rootNode) == getEditingHost(caretPosition2.container(), rootNode);
-    }
+    };
 
-    function getChildNodeAtRelativeOffset(relativeOffset, caretPosition) {
+    var getChildNodeAtRelativeOffset = function (relativeOffset, caretPosition) {
       var container, offset;
 
       if (!caretPosition) {
@@ -135,9 +135,9 @@ define(
       }
 
       return container.childNodes[offset + relativeOffset];
-    }
+    };
 
-    function beforeAfter(before, node) {
+    var beforeAfter = function (before, node) {
       var range = node.ownerDocument.createRange();
 
       if (before) {
@@ -149,13 +149,13 @@ define(
       }
 
       return range;
-    }
+    };
 
-    function isNodesInSameBlock(rootNode, node1, node2) {
+    var isNodesInSameBlock = function (rootNode, node1, node2) {
       return getParentBlock(node1, rootNode) == getParentBlock(node2, rootNode);
-    }
+    };
 
-    function lean(left, rootNode, node) {
+    var lean = function (left, rootNode, node) {
       var sibling, siblingName;
 
       if (left) {
@@ -187,12 +187,12 @@ define(
       }
 
       return null;
-    }
+    };
 
     var before = curry(beforeAfter, true);
     var after = curry(beforeAfter, false);
 
-    function normalizeRange(direction, rootNode, range) {
+    var normalizeRange = function (direction, rootNode, range) {
       var node, container, offset, location;
       var leanLeft = curry(lean, true, rootNode);
       var leanRight = curry(lean, false, rootNode);
@@ -297,11 +297,11 @@ define(
       }
 
       return range;
-    }
+    };
 
-    function isNextToContentEditableFalse(relativeOffset, caretPosition) {
+    var isNextToContentEditableFalse = function (relativeOffset, caretPosition) {
       return isContentEditableFalse(getChildNodeAtRelativeOffset(relativeOffset, caretPosition));
-    }
+    };
 
     return {
       isForwards: isForwards,

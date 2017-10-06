@@ -21,7 +21,7 @@ define(
   function () {
     var round = Math.round;
 
-    function clone(rect) {
+    var clone = function (rect) {
       if (!rect) {
         return { left: 0, top: 0, bottom: 0, right: 0, width: 0, height: 0 };
       }
@@ -34,9 +34,9 @@ define(
         width: round(rect.width),
         height: round(rect.height)
       };
-    }
+    };
 
-    function collapse(clientRect, toStart) {
+    var collapse = function (clientRect, toStart) {
       clientRect = clone(clientRect);
 
       if (toStart) {
@@ -49,23 +49,23 @@ define(
       clientRect.width = 0;
 
       return clientRect;
-    }
+    };
 
-    function isEqual(rect1, rect2) {
+    var isEqual = function (rect1, rect2) {
       return (
         rect1.left === rect2.left &&
         rect1.top === rect2.top &&
         rect1.bottom === rect2.bottom &&
         rect1.right === rect2.right
       );
-    }
+    };
 
-    function isValidOverflow(overflowY, clientRect1, clientRect2) {
+    var isValidOverflow = function (overflowY, clientRect1, clientRect2) {
       return overflowY >= 0 && overflowY <= Math.min(clientRect1.height, clientRect2.height) / 2;
 
-    }
+    };
 
-    function isAbove(clientRect1, clientRect2) {
+    var isAbove = function (clientRect1, clientRect2) {
       if ((clientRect1.bottom - clientRect1.height / 2) < clientRect2.top) {
         return true;
       }
@@ -75,9 +75,9 @@ define(
       }
 
       return isValidOverflow(clientRect2.top - clientRect1.bottom, clientRect1, clientRect2);
-    }
+    };
 
-    function isBelow(clientRect1, clientRect2) {
+    var isBelow = function (clientRect1, clientRect2) {
       if (clientRect1.top > clientRect2.bottom) {
         return true;
       }
@@ -87,17 +87,17 @@ define(
       }
 
       return isValidOverflow(clientRect2.bottom - clientRect1.top, clientRect1, clientRect2);
-    }
+    };
 
-    function isLeft(clientRect1, clientRect2) {
+    var isLeft = function (clientRect1, clientRect2) {
       return clientRect1.left < clientRect2.left;
-    }
+    };
 
-    function isRight(clientRect1, clientRect2) {
+    var isRight = function (clientRect1, clientRect2) {
       return clientRect1.right > clientRect2.right;
-    }
+    };
 
-    function compare(clientRect1, clientRect2) {
+    var compare = function (clientRect1, clientRect2) {
       if (isAbove(clientRect1, clientRect2)) {
         return -1;
       }
@@ -115,16 +115,16 @@ define(
       }
 
       return 0;
-    }
+    };
 
-    function containsXY(clientRect, clientX, clientY) {
+    var containsXY = function (clientRect, clientX, clientY) {
       return (
         clientX >= clientRect.left &&
         clientX <= clientRect.right &&
         clientY >= clientRect.top &&
         clientY <= clientRect.bottom
       );
-    }
+    };
 
     return {
       clone: clone,

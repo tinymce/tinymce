@@ -34,21 +34,21 @@ define(
         }
       };
 
-      function setDirty(state) {
+      var setDirty = function (state) {
         editor.setDirty(state);
-      }
+      };
 
-      function addNonTypingUndoLevel(e) {
+      var addNonTypingUndoLevel = function (e) {
         setTyping(false);
         self.add({}, e);
-      }
+      };
 
-      function endTyping() {
+      var endTyping = function () {
         if (self.typing) {
           setTyping(false);
           self.add();
         }
-      }
+      };
 
       // Add initial undo level when the editor is initialized
       editor.on('init', function () {

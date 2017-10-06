@@ -102,22 +102,22 @@ define(
          * @param obj
          * @returns {string}
          */
-        function toString(obj) {
+        var toString = function (obj) {
           if (Tools.is(obj, 'function')) {
             return Object.prototype.toString.call(obj);
           }
           return !isEmpty(obj) ? '' + obj : '';
-        }
+        };
 
-        function isEmpty(text) {
+        var isEmpty = function (text) {
           return text === '' || text === null || Tools.is(text, 'undefined');
-        }
+        };
 
-        function getLangData(text) {
+        var getLangData = function (text) {
           // make sure we work on a string and return a string
           text = toString(text);
           return Tools.hasOwn(langData, text) ? toString(langData[text]) : text;
-        }
+        };
 
 
         if (isEmpty(text)) {

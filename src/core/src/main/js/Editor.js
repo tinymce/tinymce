@@ -80,7 +80,7 @@ define(
      * @param {Object} settings Settings for the editor.
      * @param {tinymce.EditorManager} editorManager EditorManager instance.
      */
-    function Editor(id, settings, editorManager) {
+    var Editor = function (id, settings, editorManager) {
       var self = this, documentBaseUrl, baseUri;
 
       documentBaseUrl = self.documentBaseUrl = editorManager.documentBaseURL;
@@ -212,7 +212,7 @@ define(
           element: self.getBody()
         };
       });
-    }
+    };
 
     Editor.prototype = {
       /**

@@ -267,7 +267,7 @@ define(
 
       // Moves the caret to a suitable position within the root for example in the first non
       // pure whitespace text node or before an image
-      function moveToCaretPosition(root) {
+      var moveToCaretPosition = function (root) {
         var walker, node, rng, lastNode = root, tempElm;
         var moveCaretBeforeOnEnterElementsMap = schema.getMoveCaretBeforeOnEnterElements();
 
@@ -330,11 +330,11 @@ define(
         // Remove tempElm created for old IE:s
         dom.remove(tempElm);
         selection.scrollIntoView(root);
-      }
+      };
 
       // Creates a new block element by cloning the current one or creating a new one if the name is specified
       // This function will also copy any text formatting from the parent block and add it to the new one
-      function createNewBlock(name) {
+      var createNewBlock = function (name) {
         var node = container, block, clonedNode, caretNode, textInlineElements = schema.getTextInlineElements();
 
         if (name || parentBlockName == "TABLE" || parentBlockName == "HR") {
@@ -375,10 +375,10 @@ define(
         emptyBlock(caretNode);
 
         return block;
-      }
+      };
 
       // Returns true/false if the caret is at the start/end of the parent block element
-      function isCaretAtStartOrEndOfBlock(start) {
+      var isCaretAtStartOrEndOfBlock = function (start) {
         var walker, node, name, normalizedOffset;
 
         normalizedOffset = normalizeZwspOffset(start, container, offset);
@@ -437,10 +437,10 @@ define(
         }
 
         return true;
-      }
+      };
 
       // Inserts a block or br before/after or in the middle of a split list of the LI is empty
-      function handleEmptyListItem() {
+      var handleEmptyListItem = function () {
         if (containerBlock == editor.getBody()) {
           return;
         }
@@ -492,9 +492,9 @@ define(
 
         dom.remove(parentBlock);
         moveToCaretPosition(newBlock);
-      }
+      };
 
-      function insertNewBlockAfter() {
+      var insertNewBlockAfter = function () {
         // If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
         if (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName != 'HGROUP') {
           newBlock = createNewBlock(newBlockName);
@@ -511,7 +511,7 @@ define(
         }
 
         moveToCaretPosition(newBlock);
-      }
+      };
 
       // Setup range items and newBlockName
       new RangeUtils(dom).normalize(rng);

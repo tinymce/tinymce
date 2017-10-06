@@ -33,7 +33,7 @@ define(
     var isContentEditableFalse = NodeType.isContentEditableFalse;
     var isContentEditableTrue = NodeType.isContentEditableTrue;
 
-    function getContentEditableRoot(root, node) {
+    var getContentEditableRoot = function (root, node) {
       while (node && node != root) {
         if (isContentEditableTrue(node) || isContentEditableFalse(node)) {
           return node;
@@ -43,7 +43,7 @@ define(
       }
 
       return null;
-    }
+    };
 
     var isImage = function (elm) {
       return elm && elm.nodeName === 'IMG';
@@ -126,7 +126,7 @@ define(
         '}'
       );
 
-      function isResizable(elm) {
+      var isResizable = function (elm) {
         var selector = editor.settings.object_resizing;
 
         if (selector === false || Env.iOS) {
@@ -146,9 +146,9 @@ define(
         }
 
         return Selectors.is(Element.fromDom(elm), selector);
-      }
+      };
 
-      function resizeGhostElement(e) {
+      var resizeGhostElement = function (e) {
         var deltaX, deltaY, proportional;
         var resizeHelperX, resizeHelperY;
 
@@ -227,12 +227,12 @@ define(
           editor.fire('ObjectResizeStart', { target: selectedElm, width: startW, height: startH });
           resizeStarted = true;
         }
-      }
+      };
 
-      function endGhostResize() {
+      var endGhostResize = function () {
         resizeStarted = false;
 
-        function setSizeProp(name, value) {
+        var setSizeProp = function (name, value) {
           if (value) {
             // Resize by using style or attribute
             if (selectedElm.style[name] || !editor.schema.isValid(selectedElm.nodeName.toLowerCase(), name)) {
@@ -241,7 +241,7 @@ define(
               dom.setAttrib(selectedElm, name, value);
             }
           }
-        }
+        };
 
         // Set width/height properties
         setSizeProp('width', width);
@@ -266,9 +266,9 @@ define(
         editor.fire('ObjectResized', { target: selectedElm, width: width, height: height });
         dom.setAttrib(selectedElm, 'style', dom.getAttrib(selectedElm, 'style'));
         editor.nodeChanged();
-      }
+      };
 
-      function showResizeRect(targetElm, mouseDownHandleName, mouseDownEvent) {
+      var showResizeRect = function (targetElm, mouseDownHandleName, mouseDownEvent) {
         var position, targetWidth, targetHeight, e, rect;
 
         hideResizeRect();
@@ -296,7 +296,7 @@ define(
           each(resizeHandles, function (handle, name) {
             var handleElm;
 
-            function startDrag(e) {
+            var startDrag = function (e) {
               startX = e.screenX;
               startY = e.screenY;
               startW = selectedElm.clientWidth;
@@ -338,7 +338,7 @@ define(
                 'class': 'mce-resize-helper',
                 'data-mce-bogus': 'all'
               }, startW + ' &times; ' + startH);
-            }
+            };
 
             if (mouseDownHandleName) {
               // Drag started by IE native resizestart
@@ -388,9 +388,9 @@ define(
         }
 
         selectedElm.setAttribute('data-mce-selected', '1');
-      }
+      };
 
-      function hideResizeRect() {
+      var hideResizeRect = function () {
         var name, handleElm;
 
         unbindResizeHandleEvents();
@@ -406,12 +406,12 @@ define(
             dom.remove(handleElm);
           }
         }
-      }
+      };
 
-      function updateResizeRect(e) {
+      var updateResizeRect = function (e) {
         var startElm, controlElm;
 
-        function isChildOrEqual(node, parent) {
+        var isChildOrEqual = function (node, parent) {
           if (node) {
             do {
               if (node === parent) {
@@ -419,7 +419,7 @@ define(
               }
             } while ((node = node.parentNode));
           }
-        }
+        };
 
         // Ignore all events while resizing or if the editor instance was removed
         if (resizeStarted || editor.removed) {
@@ -447,21 +447,21 @@ define(
         }
 
         hideResizeRect();
-      }
+      };
 
-      function attachEvent(elm, name, func) {
+      var attachEvent = function (elm, name, func) {
         if (elm && elm.attachEvent) {
           elm.attachEvent('on' + name, func);
         }
-      }
+      };
 
-      function detachEvent(elm, name, func) {
+      var detachEvent = function (elm, name, func) {
         if (elm && elm.detachEvent) {
           elm.detachEvent('on' + name, func);
         }
-      }
+      };
 
-      function resizeNativeStart(e) {
+      var resizeNativeStart = function (e) {
         var target = e.srcElement, pos, name, corner, cornerX, cornerY, relativeX, relativeY;
 
         pos = target.getBoundingClientRect();
@@ -490,21 +490,21 @@ define(
         });
         editor.getDoc().selection.empty();
         showResizeRect(target, name, lastMouseDownEvent);
-      }
+      };
 
-      function preventDefault(e) {
+      var preventDefault = function (e) {
         if (e.preventDefault) {
           e.preventDefault();
         } else {
           e.returnValue = false; // IE
         }
-      }
+      };
 
-      function isWithinContentEditableFalse(elm) {
+      var isWithinContentEditableFalse = function (elm) {
         return isContentEditableFalse(getContentEditableRoot(editor.getBody(), elm));
-      }
+      };
 
-      function nativeControlSelect(e) {
+      var nativeControlSelect = function (e) {
         var target = e.srcElement;
 
         if (isWithinContentEditableFalse(target)) {
@@ -527,13 +527,13 @@ define(
             attachEvent(target, 'resizestart', resizeNativeStart);
           }
         }
-      }
+      };
 
-      function detachResizeStartListener() {
+      var detachResizeStartListener = function () {
         detachEvent(selectedElm, 'resizestart', resizeNativeStart);
-      }
+      };
 
-      function unbindResizeHandleEvents() {
+      var unbindResizeHandleEvents = function () {
         for (var name in resizeHandles) {
           var handle = resizeHandles[name];
 
@@ -542,18 +542,18 @@ define(
             delete handle.elm;
           }
         }
-      }
+      };
 
-      function disableGeckoResize() {
+      var disableGeckoResize = function () {
         try {
           // Disable object resizing on Gecko
           editor.getDoc().execCommand('enableObjectResizing', false, false);
         } catch (ex) {
           // Ignore
         }
-      }
+      };
 
-      function controlSelect(elm) {
+      var controlSelect = function (elm) {
         var ctrlRng;
 
         if (!isIE) {
@@ -569,7 +569,7 @@ define(
         } catch (ex) {
           // Ignore since the element can't be control selected for example a P tag
         }
-      }
+      };
 
       editor.on('init', function () {
         if (isIE) {
@@ -609,11 +609,11 @@ define(
             });
 
             editor.dom.bind(rootElement, 'mscontrolselect', function (e) {
-              function delayedSelect(node) {
+              var delayedSelect = function (node) {
                 Delay.setEditorTimeout(editor, function () {
                   editor.selection.select(node);
                 });
-              }
+              };
 
               if (isWithinContentEditableFalse(e.target)) {
                 e.preventDefault();
@@ -659,14 +659,14 @@ define(
 
       editor.on('remove', unbindResizeHandleEvents);
 
-      function destroy() {
+      var destroy = function () {
         selectedElm = selectedElmGhost = null;
 
         if (isIE) {
           detachResizeStartListener();
           detachEvent(rootElement, 'controlselect', nativeControlSelect);
         }
-      }
+      };
 
       return {
         isResizable: isResizable,

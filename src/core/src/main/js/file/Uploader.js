@@ -40,15 +40,15 @@ define(
     return function (uploadStatus, settings) {
       var pendingPromises = {};
 
-      function pathJoin(path1, path2) {
+      var pathJoin = function (path1, path2) {
         if (path1) {
           return path1.replace(/\/$/, '') + '/' + path2.replace(/^\//, '');
         }
 
         return path2;
-      }
+      };
 
-      function defaultHandler(blobInfo, success, failure, progress) {
+      var defaultHandler = function (blobInfo, success, failure, progress) {
         var xhr, formData;
 
         xhr = new XMLHttpRequest();
@@ -85,40 +85,40 @@ define(
         formData.append('file', blobInfo.blob(), blobInfo.filename());
 
         xhr.send(formData);
-      }
+      };
 
-      function noUpload() {
+      var noUpload = function () {
         return new Promise(function (resolve) {
           resolve([]);
         });
-      }
+      };
 
-      function handlerSuccess(blobInfo, url) {
+      var handlerSuccess = function (blobInfo, url) {
         return {
           url: url,
           blobInfo: blobInfo,
           status: true
         };
-      }
+      };
 
-      function handlerFailure(blobInfo, error) {
+      var handlerFailure = function (blobInfo, error) {
         return {
           url: '',
           blobInfo: blobInfo,
           status: false,
           error: error
         };
-      }
+      };
 
-      function resolvePending(blobUri, result) {
+      var resolvePending = function (blobUri, result) {
         Tools.each(pendingPromises[blobUri], function (resolve) {
           resolve(result);
         });
 
         delete pendingPromises[blobUri];
-      }
+      };
 
-      function uploadBlobInfo(blobInfo, handler, openNotification) {
+      var uploadBlobInfo = function (blobInfo, handler, openNotification) {
         uploadStatus.markPending(blobInfo.blobUri());
 
         return new Promise(function (resolve) {
@@ -166,22 +166,22 @@ define(
             resolve(handlerFailure(blobInfo, ex.message));
           }
         });
-      }
+      };
 
-      function isDefaultHandler(handler) {
+      var isDefaultHandler = function (handler) {
         return handler === defaultHandler;
-      }
+      };
 
-      function pendingUploadBlobInfo(blobInfo) {
+      var pendingUploadBlobInfo = function (blobInfo) {
         var blobUri = blobInfo.blobUri();
 
         return new Promise(function (resolve) {
           pendingPromises[blobUri] = pendingPromises[blobUri] || [];
           pendingPromises[blobUri].push(resolve);
         });
-      }
+      };
 
-      function uploadBlobs(blobInfos, openNotification) {
+      var uploadBlobs = function (blobInfos, openNotification) {
         blobInfos = Tools.grep(blobInfos, function (blobInfo) {
           return !uploadStatus.isUploaded(blobInfo.blobUri());
         });
@@ -190,11 +190,11 @@ define(
           return uploadStatus.isPending(blobInfo.blobUri()) ?
             pendingUploadBlobInfo(blobInfo) : uploadBlobInfo(blobInfo, settings.handler, openNotification);
         }));
-      }
+      };
 
-      function upload(blobInfos, openNotification) {
+      var upload = function (blobInfos, openNotification) {
         return (!settings.url && isDefaultHandler(settings.handler)) ? noUpload() : uploadBlobs(blobInfos, openNotification);
-      }
+      };
 
       settings = Tools.extend({
         credentials: false,

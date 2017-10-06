@@ -36,7 +36,7 @@ define(
      * @param {String} url URI string to parse.
      * @param {Object} settings Optional settings object.
      */
-    function URI(url, settings) {
+    var URI = function (url, settings) {
       var self = this, baseUri, baseUrl;
 
       url = trim(url);
@@ -111,7 +111,7 @@ define(
       }
 
       //t.path = t.path || '/';
-    }
+    };
 
     URI.prototype = {
       /**

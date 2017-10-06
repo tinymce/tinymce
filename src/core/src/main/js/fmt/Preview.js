@@ -28,18 +28,18 @@ define(
     var each = Tools.each;
     var dom = DOMUtils.DOM;
 
-    function parsedSelectorToHtml(ancestry, editor) {
+    var parsedSelectorToHtml = function (ancestry, editor) {
       var elm, item, fragment;
       var schema = editor && editor.schema || new Schema({});
 
-      function decorate(elm, item) {
+      var decorate = function (elm, item) {
         if (item.classes.length) {
           dom.addClass(elm, item.classes.join(' '));
         }
         dom.setAttribs(elm, item.attrs);
-      }
+      };
 
-      function createElement(sItem) {
+      var createElement = function (sItem) {
         var elm;
 
         item = typeof sItem === 'string' ? {
@@ -51,9 +51,9 @@ define(
         elm = dom.create(item.name);
         decorate(elm, item);
         return elm;
-      }
+      };
 
-      function getRequiredParent(elm, candidate) {
+      var getRequiredParent = function (elm, candidate) {
         var name = typeof elm !== 'string' ? elm.nodeName.toLowerCase() : elm;
         var elmRule = schema.getElementRule(name);
         var parentsRequired = elmRule && elmRule.parentsRequired;
@@ -63,9 +63,9 @@ define(
         } else {
           return false;
         }
-      }
+      };
 
-      function wrapInHtml(elm, ancestry, siblings) {
+      var wrapInHtml = function (elm, ancestry, siblings) {
         var parent, parentCandidate, parentRequired;
         var ancestor = ancestry.length > 0 && ancestry[0];
         var ancestorName = ancestor && ancestor.name;
@@ -105,7 +105,7 @@ define(
         }
 
         return wrapInHtml(parent, ancestry, parentCandidate && parentCandidate.siblings);
-      }
+      };
 
       if (ancestry && ancestry.length) {
         item = ancestry[0];
@@ -116,15 +116,13 @@ define(
       } else {
         return '';
       }
-    }
+    };
 
-
-    function selectorToHtml(selector, editor) {
+    var selectorToHtml = function (selector, editor) {
       return parsedSelectorToHtml(parseSelector(selector), editor);
-    }
+    };
 
-
-    function parseSelectorItem(item) {
+    var parseSelectorItem = function (item) {
       var tagName;
       var obj = {
         classes: [],
@@ -166,10 +164,9 @@ define(
 
       obj.name = tagName || 'div';
       return obj;
-    }
+    };
 
-
-    function parseSelector(selector) {
+    var parseSelector = function (selector) {
       if (!selector || typeof selector !== 'string') {
         return [];
       }
@@ -191,10 +188,9 @@ define(
         }
         return obj;
       }).reverse();
-    }
+    };
 
-
-    function getCssText(editor, format) {
+    var getCssText = function (editor, format) {
       var name, previewFrag, previewElm, items;
       var previewCss = '', parentFontSize, previewStyles;
 
@@ -212,9 +208,9 @@ define(
       }
 
       // Removes any variables since these can't be previewed
-      function removeVars(val) {
+      var removeVars = function (val) {
         return val.replace(/%(\w+)/g, '');
-      }
+      };
 
       // Create block/inline element to use for preview
       if (typeof format === "string") {
@@ -336,7 +332,7 @@ define(
       dom.remove(previewFrag);
 
       return previewCss;
-    }
+    };
 
     return {
       getCssText: getCssText,

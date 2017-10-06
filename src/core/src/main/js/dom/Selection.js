@@ -67,7 +67,7 @@ define(
      * @param {tinymce.Editor} editor Editor instance of the selection.
      * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
      */
-    function Selection(dom, win, serializer, editor) {
+    var Selection = function (dom, win, serializer, editor) {
       var self = this;
 
       self.dom = dom;
@@ -76,7 +76,7 @@ define(
       self.editor = editor;
       self.bookmarkManager = new BookmarkManager(self);
       self.controlSelection = new ControlSelection(self, editor);
-    }
+    };
 
     Selection.prototype = {
       /**
@@ -320,7 +320,7 @@ define(
       getRng: function (w3c) {
         var self = this, selection, rng, elm, doc;
 
-        function tryCompareBoundaryPoints(how, sourceRange, destinationRange) {
+        var tryCompareBoundaryPoints = function (how, sourceRange, destinationRange) {
           try {
             return sourceRange.compareBoundaryPoints(how, destinationRange);
           } catch (ex) {
@@ -331,7 +331,7 @@ define(
             // For performance reasons just return -1
             return -1;
           }
-        }
+        };
 
         if (!self.win) {
           return null;
@@ -363,7 +363,7 @@ define(
           // IE throws unspecified error here if TinyMCE is placed in a frame/iframe
         }
 
-        rng = EventProcessRanges.processRanges(self.editor, [ rng ])[0];
+        rng = EventProcessRanges.processRanges(self.editor, [rng])[0];
 
         // No range found then create an empty one
         // This can occur when the editor is placed in a hidden container element on Gecko
@@ -505,7 +505,7 @@ define(
         var self = this, rng = self.getRng(), elm;
         var startContainer, endContainer, startOffset, endOffset, root = self.dom.getRoot();
 
-        function skipEmptyTextNodes(node, forwards) {
+        var skipEmptyTextNodes = function (node, forwards) {
           var orig = node;
 
           while (node && node.nodeType === 3 && node.length === 0) {
@@ -513,7 +513,7 @@ define(
           }
 
           return node || orig;
-        }
+        };
 
         // Range maybe lost after the editor is made visible again
         if (!rng) {

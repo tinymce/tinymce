@@ -44,19 +44,19 @@ define(
     var Event = EventUtils.Event, undef;
     var skipUniques = Tools.makeMap('children,contents,next,prev');
 
-    function isDefined(obj) {
+    var isDefined = function (obj) {
       return typeof obj !== 'undefined';
-    }
+    };
 
-    function isString(obj) {
+    var isString = function (obj) {
       return typeof obj === 'string';
-    }
+    };
 
-    function isWindow(obj) {
+    var isWindow = function (obj) {
       return obj && obj == obj.window;
-    }
+    };
 
-    function createFragment(html, fragDoc) {
+    var createFragment = function (html, fragDoc) {
       var frag, node, container;
 
       fragDoc = fragDoc || doc;
@@ -69,9 +69,9 @@ define(
       }
 
       return frag;
-    }
+    };
 
-    function domManipulate(targetNodes, sourceItem, callback, reverse) {
+    var domManipulate = function (targetNodes, sourceItem, callback, reverse) {
       var i;
 
       if (isString(sourceItem)) {
@@ -100,13 +100,13 @@ define(
       }
 
       return targetNodes;
-    }
+    };
 
-    function hasClass(node, className) {
+    var hasClass = function (node, className) {
       return node && className && (' ' + node.className + ' ').indexOf(' ' + className + ' ') !== -1;
-    }
+    };
 
-    function wrap(elements, wrapper, all) {
+    var wrap = function (elements, wrapper, all) {
       var lastParent, newWrapper;
 
       wrapper = DomQuery(wrapper)[0];
@@ -125,7 +125,7 @@ define(
       });
 
       return elements;
-    }
+    };
 
     var numericCssMap = Tools.makeMap('fillOpacity fontWeight lineHeight opacity orphans widows zIndex zoom', ' ');
     var booleanMap = Tools.makeMap('checked compact declare defer disabled ismap multiple nohref noshade nowrap readonly selected', ' ');
@@ -140,12 +140,12 @@ define(
 
     var attrHooks = {}, cssHooks = {};
 
-    function DomQuery(selector, context) {
+    var DomQuery = function (selector, context) {
       /*eslint new-cap:0 */
       return new DomQuery.fn.init(selector, context);
-    }
+    };
 
-    function inArray(item, array) {
+    var inArray = function (item, array) {
       var i;
 
       if (array.indexOf) {
@@ -160,15 +160,15 @@ define(
       }
 
       return -1;
-    }
+    };
 
     var whiteSpaceRegExp = /^\s*|\s*$/g;
 
-    function trim(str) {
+    var trim = function (str) {
       return (str === null || str === undef) ? '' : ("" + str).replace(whiteSpaceRegExp, '');
-    }
+    };
 
-    function each(obj, callback) {
+    var each = function (obj, callback) {
       var length, key, i, undef, value;
 
       if (obj) {
@@ -196,9 +196,9 @@ define(
       }
 
       return obj;
-    }
+    };
 
-    function grep(array, callback) {
+    var grep = function (array, callback) {
       var out = [];
 
       each(array, function (i, item) {
@@ -208,9 +208,9 @@ define(
       });
 
       return out;
-    }
+    };
 
-    function getElementDocument(element) {
+    var getElementDocument = function (element) {
       if (!element) {
         return doc;
       }
@@ -220,7 +220,7 @@ define(
       }
 
       return element.ownerDocument;
-    }
+    };
 
     DomQuery.fn = DomQuery.prototype = {
       constructor: DomQuery,
@@ -473,17 +473,17 @@ define(
       css: function (name, value) {
         var self = this, elm, hook;
 
-        function camel(name) {
+        var camel = function (name) {
           return name.replace(/-(\D)/g, function (a, b) {
             return b.toUpperCase();
           });
-        }
+        };
 
-        function dashed(name) {
+        var dashed = function (name) {
           return name.replace(/[A-Z]/g, function (a) {
             return '-' + a;
           });
-        }
+        };
 
         if (typeof name === "object") {
           each(name, function (name, value) {
@@ -1223,7 +1223,7 @@ define(
       }
     });
 
-    function dir(el, prop, until) {
+    var dir = function (el, prop, until) {
       var matched = [], cur = el[prop];
 
       if (typeof until != 'string' && until instanceof DomQuery) {
@@ -1249,9 +1249,9 @@ define(
       }
 
       return matched;
-    }
+    };
 
-    function sibling(node, siblingName, nodeType, until) {
+    var sibling = function (node, siblingName, nodeType, until) {
       var result = [];
 
       if (until instanceof DomQuery) {
@@ -1277,9 +1277,9 @@ define(
       }
 
       return result;
-    }
+    };
 
-    function firstSibling(node, siblingName, nodeType) {
+    var firstSibling = function (node, siblingName, nodeType) {
       for (node = node[siblingName]; node; node = node[siblingName]) {
         if (node.nodeType == nodeType) {
           return node;
@@ -1287,7 +1287,7 @@ define(
       }
 
       return null;
-    }
+    };
 
     each({
       /**
@@ -1482,7 +1482,7 @@ define(
     DomQuery.overrideDefaults = function (callback) {
       var defaults;
 
-      function sub(selector, context) {
+      var sub = function (selector, context) {
         defaults = defaults || callback();
 
         if (arguments.length === 0) {
@@ -1494,19 +1494,19 @@ define(
         }
 
         return new sub.fn.init(selector, context);
-      }
+      };
 
       DomQuery.extend(sub, this);
 
       return sub;
     };
 
-    function appendHooks(targetHooks, prop, hooks) {
+    var appendHooks = function (targetHooks, prop, hooks) {
       each(hooks, function (name, func) {
         targetHooks[name] = targetHooks[name] || {};
         targetHooks[name][prop] = func;
       });
-    }
+    };
 
     if (Env.ie && Env.ie < 8) {
       appendHooks(attrHooks, 'get', {

@@ -42,41 +42,41 @@ define(
       isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse,
       isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse;
 
-    function SelectionOverrides(editor) {
+    var SelectionOverrides = function (editor) {
+      var isBlock = function (node) {
+        return editor.dom.isBlock(node);
+      };
+
       var rootNode = editor.getBody();
       var fakeCaret = new FakeCaret(editor.getBody(), isBlock),
         realSelectionId = 'sel-' + editor.dom.uniqueId(),
         selectedContentEditableNode;
 
-      function isFakeSelectionElement(elm) {
+      var isFakeSelectionElement = function (elm) {
         return editor.dom.hasClass(elm, 'mce-offscreen-selection');
-      }
+      };
 
-      function getRealSelectionElement() {
+      var getRealSelectionElement = function () {
         var container = editor.dom.get(realSelectionId);
         return container ? container.getElementsByTagName('*')[0] : container;
-      }
+      };
 
-      function isBlock(node) {
-        return editor.dom.isBlock(node);
-      }
-
-      function setRange(range) {
+      var setRange = function (range) {
         //console.log('setRange', range);
         if (range) {
           editor.selection.setRng(range);
         }
-      }
+      };
 
-      function getRange() {
+      var getRange = function () {
         return editor.selection.getRng();
-      }
+      };
 
-      function scrollIntoView(node, alignToTop) {
+      var scrollIntoView = function (node, alignToTop) {
         editor.selection.scrollIntoView(node, alignToTop);
-      }
+      };
 
-      function showCaret(direction, node, before) {
+      var showCaret = function (direction, node, before) {
         var e;
 
         e = editor.fire('ShowCaret', {
@@ -92,9 +92,9 @@ define(
         scrollIntoView(node, direction === -1);
 
         return fakeCaret.show(before, node);
-      }
+      };
 
-      function getNormalizedRangeEndPoint(direction, range) {
+      var getNormalizedRangeEndPoint = function (direction, range) {
         range = CaretUtils.normalizeRange(direction, rootNode, range);
 
         if (direction == -1) {
@@ -102,18 +102,18 @@ define(
         }
 
         return CaretPosition.fromRangeEnd(range);
-      }
+      };
 
-      function showBlockCaretContainer(blockCaretContainer) {
+      var showBlockCaretContainer = function (blockCaretContainer) {
         if (blockCaretContainer.hasAttribute('data-mce-caret')) {
           CaretContainer.showCaretContainerBlock(blockCaretContainer);
           setRange(getRange()); // Removes control rect on IE
           scrollIntoView(blockCaretContainer[0]);
         }
-      }
+      };
 
-      function registerEvents() {
-        function getContentEditableRoot(node) {
+      var registerEvents = function () {
+        var getContentEditableRoot = function (node) {
           var root = editor.getBody();
 
           while (node && node != root) {
@@ -125,7 +125,7 @@ define(
           }
 
           return null;
-        }
+        };
 
         // Some browsers (Chrome) lets you place the caret after a cE=false
         // Make sure we render the caret container in this case
@@ -161,7 +161,7 @@ define(
           removeContentEditableSelection();
         });
 
-        function handleTouchSelect(editor) {
+        var handleTouchSelect = function (editor) {
           var moved = false;
 
           editor.on('touchstart', function () {
@@ -182,7 +182,7 @@ define(
               }
             }
           });
-        }
+        };
 
         var hasNormalCaretPosition = function (elm) {
           var caretWalker = new CaretWalker(elm);
@@ -326,9 +326,9 @@ define(
         });
 
         DragDropOverrides.init(editor);
-      }
+      };
 
-      function addCss() {
+      var addCss = function () {
         var styles = editor.contentStyles, rootClass = '.mce-content-body';
 
         styles.push(fakeCaret.getCss());
@@ -345,21 +345,21 @@ define(
           'cursor: text;' +
           '}'
         );
-      }
+      };
 
-      function isWithinCaretContainer(node) {
+      var isWithinCaretContainer = function (node) {
         return (
           CaretContainer.isCaretContainer(node) ||
           CaretContainer.startsWithCaretContainer(node) ||
           CaretContainer.endsWithCaretContainer(node)
         );
-      }
+      };
 
-      function isRangeInCaretContainer(rng) {
+      var isRangeInCaretContainer = function (rng) {
         return isWithinCaretContainer(rng.startContainer) || isWithinCaretContainer(rng.endContainer);
-      }
+      };
 
-      function setContentEditableSelection(range, forward) {
+      var setContentEditableSelection = function (range, forward) {
         var node, $ = editor.$, dom = editor.dom, $realSelectionContainer, sel,
           startContainer, startOffset, endOffset, e, caretPosition, targetClone, origTargetClone;
 
@@ -475,24 +475,24 @@ define(
         hideFakeCaret();
 
         return range;
-      }
+      };
 
-      function removeContentEditableSelection() {
+      var removeContentEditableSelection = function () {
         if (selectedContentEditableNode) {
           selectedContentEditableNode.removeAttribute('data-mce-selected');
           SelectorFind.descendant(Element.fromDom(editor.getBody()), '#' + realSelectionId).each(Remove.remove);
           selectedContentEditableNode = null;
         }
-      }
+      };
 
-      function destroy() {
+      var destroy = function () {
         fakeCaret.destroy();
         selectedContentEditableNode = null;
-      }
+      };
 
-      function hideFakeCaret() {
+      var hideFakeCaret = function () {
         fakeCaret.hide();
-      }
+      };
 
       if (Env.ceFalse) {
         registerEvents();
@@ -505,7 +505,7 @@ define(
         hideFakeCaret: hideFakeCaret,
         destroy: destroy
       };
-    }
+    };
 
     return SelectionOverrides;
   }

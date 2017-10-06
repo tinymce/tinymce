@@ -52,7 +52,7 @@ define(
      * @method BookmarkManager
      * @param {tinymce.dom.Selection} selection Selection instance to handle bookmarks for.
      */
-    function BookmarkManager(selection) {
+    var BookmarkManager = function (selection) {
       var dom = selection.dom;
 
       /**
@@ -75,7 +75,7 @@ define(
       this.getBookmark = function (type, normalized) {
         var rng, rng2, id, collapsed, name, element, chr = '&#xFEFF;', styles;
 
-        function findIndex(name, element) {
+        var findIndex = function (name, element) {
           var count = 0;
 
           Tools.each(dom.select(name), function (node) {
@@ -91,10 +91,10 @@ define(
           });
 
           return count;
-        }
+        };
 
-        function normalizeTableCellSelection(rng) {
-          function moveEndPoint(start) {
+        var normalizeTableCellSelection = function (rng) {
+          var moveEndPoint = function (start) {
             var container, offset, childNodes, prefix = start ? 'start' : 'end';
 
             container = rng[prefix + 'Container'];
@@ -108,18 +108,18 @@ define(
                 rng['set' + (start ? 'Start' : 'End')](container, offset);
               }
             }
-          }
+          };
 
           moveEndPoint(true);
           moveEndPoint();
 
           return rng;
-        }
+        };
 
-        function getLocation(rng) {
+        var getLocation = function (rng) {
           var root = dom.getRoot(), bookmark = {};
 
-          function getPoint(rng, start) {
+          var getPoint = function (rng, start) {
             var container = rng[start ? 'startContainer' : 'endContainer'],
               offset = rng[start ? 'startOffset' : 'endOffset'], point = [], childNodes, after = 0;
 
@@ -141,7 +141,7 @@ define(
             }
 
             return point;
-          }
+          };
 
           bookmark.start = getPoint(rng, true);
 
@@ -150,10 +150,10 @@ define(
           }
 
           return bookmark;
-        }
+        };
 
-        function findAdjacentContentEditableFalseElm(rng) {
-          function findSibling(node, offset) {
+        var findAdjacentContentEditableFalseElm = function (rng) {
+          var findSibling = function (node, offset) {
             var sibling;
 
             if (NodeType.isElement(node)) {
@@ -178,10 +178,10 @@ define(
                 return sibling;
               }
             }
-          }
+          };
 
           return findSibling(rng.startContainer, rng.startOffset) || findSibling(rng.endContainer, rng.endOffset);
-        }
+        };
 
         if (type == 2) {
           element = selection.getNode();
@@ -265,7 +265,7 @@ define(
       this.moveToBookmark = function (bookmark) {
         var rng, root, startContainer, endContainer, startOffset, endOffset;
 
-        function setEndPoint(start) {
+        var setEndPoint = function (start) {
           var point = bookmark[start ? 'start' : 'end'], i, node, offset, children;
 
           if (point) {
@@ -301,9 +301,9 @@ define(
           }
 
           return true;
-        }
+        };
 
-        function restoreEndPoint(suffix) {
+        var restoreEndPoint = function (suffix) {
           var marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev, keep = bookmark.keep;
 
           if (marker) {
@@ -367,18 +367,18 @@ define(
               }
             }
           }
-        }
+        };
 
-        function addBogus(node) {
+        var addBogus = function (node) {
           // Adds a bogus BR element for empty block elements
           if (dom.isBlock(node) && !node.innerHTML && !Env.ie) {
             node.innerHTML = '<br data-mce-bogus="1" />';
           }
 
           return node;
-        }
+        };
 
-        function resolveCaretPositionBookmark() {
+        var resolveCaretPositionBookmark = function () {
           var rng, pos;
 
           rng = dom.createRng();
@@ -389,7 +389,7 @@ define(
           rng.setEnd(pos.container(), pos.offset());
 
           return rng;
-        }
+        };
 
         if (bookmark) {
           if (Tools.isArray(bookmark.start)) {
@@ -419,7 +419,7 @@ define(
           }
         }
       };
-    }
+    };
 
     /**
      * Returns true/false if the specified node is a bookmark node or not.

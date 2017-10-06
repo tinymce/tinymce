@@ -32,10 +32,10 @@ define(
      * @method Color
      * @param {String} value Optional initial value to parse.
      */
-    function Color(value) {
+    var Color = function (value) {
       var self = this, r = 0, g = 0, b = 0;
 
-      function rgb2hsv(r, g, b) {
+      var rgb2hsv = function (r, g, b) {
         var h, s, v, d, minRGB, maxRGB;
 
         h = 0;
@@ -70,9 +70,9 @@ define(
           s: round(s * 100),
           v: round(v * 100)
         };
-      }
+      };
 
-      function hsvToRgb(hue, saturation, brightness) {
+      var hsvToRgb = function (hue, saturation, brightness) {
         var side, chroma, x, match;
 
         hue = (parseInt(hue, 10) || 0) % 360;
@@ -135,7 +135,7 @@ define(
         r = round(255 * (r + match));
         g = round(255 * (g + match));
         b = round(255 * (b + match));
-      }
+      };
 
       /**
        * Returns the hex string of the current color. For example: #ff00ff
@@ -143,15 +143,15 @@ define(
        * @method toHex
        * @return {String} Hex string of current color.
        */
-      function toHex() {
-        function hex(val) {
+      var toHex = function () {
+        var hex = function (val) {
           val = parseInt(val, 10).toString(16);
 
           return val.length > 1 ? val : '0' + val;
-        }
+        };
 
         return '#' + hex(r) + hex(g) + hex(b);
-      }
+      };
 
       /**
        * Returns the r, g, b values of the color. Each channel has a range from 0-255.
@@ -159,13 +159,13 @@ define(
        * @method toRgb
        * @return {Object} Object with r, g, b fields.
        */
-      function toRgb() {
+      var toRgb = function () {
         return {
           r: r,
           g: g,
           b: b
         };
-      }
+      };
 
       /**
        * Returns the h, s, v values of the color. Ranges: h=0-360, s=0-100, v=0-100.
@@ -173,9 +173,9 @@ define(
        * @method toHsv
        * @return {Object} Object with h, s, v fields.
        */
-      function toHsv() {
+      var toHsv = function () {
         return rgb2hsv(r, g, b);
-      }
+      };
 
       /**
        * Parses the specified value and populates the color instance.
@@ -191,7 +191,7 @@ define(
        * @param {Object/String} value Color value to parse.
        * @return {tinymce.util.Color} Current color instance.
        */
-      function parse(value) {
+      var parse = function (value) {
         var matches;
 
         if (typeof value == 'object') {
@@ -223,7 +223,7 @@ define(
         b = b < 0 ? 0 : (b > 255 ? 255 : b);
 
         return self;
-      }
+      };
 
       if (value) {
         parse(value);
@@ -233,7 +233,7 @@ define(
       self.toHsv = toHsv;
       self.toHex = toHex;
       self.parse = parse;
-    }
+    };
 
     return Color;
   }

@@ -52,29 +52,29 @@ define(
     /**
      * Binds a native event to a callback on the speified target.
      */
-    function addEvent(target, name, callback, capture) {
+    var addEvent = function (target, name, callback, capture) {
       if (target.addEventListener) {
         target.addEventListener(name, callback, capture || false);
       } else if (target.attachEvent) {
         target.attachEvent('on' + name, callback);
       }
-    }
+    };
 
     /**
      * Unbinds a native event callback on the specified target.
      */
-    function removeEvent(target, name, callback, capture) {
+    var removeEvent = function (target, name, callback, capture) {
       if (target.removeEventListener) {
         target.removeEventListener(name, callback, capture || false);
       } else if (target.detachEvent) {
         target.detachEvent('on' + name, callback);
       }
-    }
+    };
 
     /**
      * Gets the event target based on shadow dom properties like path and deepPath.
      */
-    function getTargetFromShadowDom(event, defaultTarget) {
+    var getTargetFromShadowDom = function (event, defaultTarget) {
       var path, target = defaultTarget;
 
       // When target element is inside Shadow DOM we need to take first element from path
@@ -95,12 +95,12 @@ define(
       }
 
       return target;
-    }
+    };
 
     /**
      * Normalizes a native event object or just adds the event specific methods on a custom event.
      */
-    function fix(originalEvent, data) {
+    var fix = function (originalEvent, data) {
       var name, event = data || {}, undef;
 
       // Copy all properties from the original event
@@ -181,13 +181,13 @@ define(
       }
 
       return event;
-    }
+    };
 
     /**
      * Bind a DOMContentLoaded event across browsers and executes the callback once the page DOM is initialized.
      * It will also set/check the domLoaded state of the event_utils instance so ready isn't called multiple times.
      */
-    function bindOnReady(win, callback, eventUtils) {
+    var bindOnReady = function (win, callback, eventUtils) {
       var doc = win.document, event = { type: 'ready' };
 
       if (eventUtils.domLoaded) {
@@ -195,28 +195,28 @@ define(
         return;
       }
 
-      function isDocReady() {
+      var isDocReady = function () {
         // Check complete or interactive state if there is a body
         // element on some iframes IE 8 will produce a null body
         return doc.readyState === "complete" || (doc.readyState === "interactive" && doc.body);
-      }
+      };
 
       // Gets called when the DOM is ready
-      function readyHandler() {
+      var readyHandler = function () {
         if (!eventUtils.domLoaded) {
           eventUtils.domLoaded = true;
           callback(event);
         }
-      }
+      };
 
-      function waitForDomLoaded() {
+      var waitForDomLoaded = function () {
         if (isDocReady()) {
           removeEvent(doc, "readystatechange", waitForDomLoaded);
           readyHandler();
         }
-      }
+      };
 
-      function tryScroll() {
+      var tryScroll = function () {
         try {
           // If IE is used, use the trick by Diego Perini licensed under MIT by request to the author.
           // http://javascript.nwbox.com/IEContentLoaded/
@@ -227,7 +227,7 @@ define(
         }
 
         readyHandler();
-      }
+      };
 
       // Use W3C method (exclude IE 9,10 - readyState "interactive" became valid only in IE 11)
       if (doc.addEventListener && !(Env.ie && Env.ie < 11)) {
@@ -248,12 +248,12 @@ define(
 
       // Fallback if any of the above methods should fail for some odd reason
       addEvent(win, 'load', readyHandler);
-    }
+    };
 
     /**
      * This class enables you to bind/unbind native events to elements and normalize it's behavior across browsers.
      */
-    function EventUtils() {
+    var EventUtils = function () {
       var self = this, events = {}, count, expando, hasFocusIn, hasMouseEnterLeave, mouseEnterLeave;
 
       expando = eventExpandoPrefix + (+new Date()).toString(32);
@@ -273,7 +273,7 @@ define(
        * @param {Event} evt Event object.
        * @param {String} id Expando id value to look for.
        */
-      function executeHandlers(evt, id) {
+      var executeHandlers = function (evt, id) {
         var callbackList, i, l, callback, container = events[id];
 
         callbackList = container && container[evt.type];
@@ -292,7 +292,7 @@ define(
             }
           }
         }
-      }
+      };
 
       /**
        * Binds a callback to an event on the specified target.
@@ -308,9 +308,9 @@ define(
         var id, callbackList, i, name, fakeName, nativeHandler, capture, win = window;
 
         // Native event handler function patches the event and executes the callbacks for the expando
-        function defaultNativeHandler(evt) {
+        var defaultNativeHandler = function (evt) {
           executeHandlers(fix(evt || win.event), id);
-        }
+        };
 
         // Don't bind to text nodes or comments
         if (!target || target.nodeType === 3 || target.nodeType === 8) {
@@ -610,7 +610,7 @@ define(
 
         return false;
       };
-    }
+    };
 
     EventUtils.Event = new EventUtils();
     EventUtils.Event.bind(window, 'ready', function () { });

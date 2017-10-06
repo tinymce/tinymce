@@ -24,7 +24,7 @@ define(
   function (Arr, NodeType, $) {
     var postProcessHooks = {}, filter = Arr.filter, each = Arr.each;
 
-    function addPostProcessHook(name, hook) {
+    var addPostProcessHook = function (name, hook) {
       var hooks = postProcessHooks[name];
 
       if (!hooks) {
@@ -32,25 +32,25 @@ define(
       }
 
       postProcessHooks[name].push(hook);
-    }
+    };
 
-    function postProcess(name, editor) {
+    var postProcess = function (name, editor) {
       each(postProcessHooks[name], function (hook) {
         hook(editor);
       });
-    }
+    };
 
     addPostProcessHook("pre", function (editor) {
       var rng = editor.selection.getRng(), isPre, blocks;
 
-      function hasPreSibling(pre) {
+      var hasPreSibling = function (pre) {
         return isPre(pre.previousSibling) && Arr.indexOf(blocks, pre.previousSibling) !== -1;
-      }
+      };
 
-      function joinPre(pre1, pre2) {
+      var joinPre = function (pre1, pre2) {
         $(pre2).remove();
         $(pre1).append('<br><br>').append(pre2.childNodes);
-      }
+      };
 
       isPre = NodeType.matchNodeNames('pre');
 

@@ -42,12 +42,12 @@ define(
      *
      * Example of what happens: <body>text</body> becomes <body>text<br><br></body>
      */
-    function trimTrailingBr(rootNode) {
+    var trimTrailingBr = function (rootNode) {
       var brNode1, brNode2;
 
-      function isBr(node) {
+      var isBr = function (node) {
         return node && node.name === 'br';
-      }
+      };
 
       brNode1 = rootNode.lastChild;
       if (isBr(brNode1)) {
@@ -58,7 +58,7 @@ define(
           brNode2.remove();
         }
       }
-    }
+    };
 
     /**
      * Constructs a new DOM serializer class.
@@ -76,7 +76,7 @@ define(
         schema = editor.schema;
       }
 
-      function trimHtml(html) {
+      var trimHtml = function (html) {
         var trimContentRegExp = new RegExp([
           '<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\\/span>', // Trim bogus spans like caret containers
           '\\s?(' + tempAttrs.join('|') + ')="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
@@ -85,9 +85,9 @@ define(
         html = Zwsp.trim(html.replace(trimContentRegExp, ''));
 
         return html;
-      }
+      };
 
-      function trimContent(html) {
+      var trimContent = function (html) {
         var content = html;
         var bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
         var endTagIndex, index, matchLength, matches, shortEndedElements, schema = editor.schema;
@@ -111,7 +111,7 @@ define(
         }
 
         return content;
-      }
+      };
 
       /**
        * Returns a trimmed version of the editor contents to be used for the undo level. This
@@ -123,11 +123,11 @@ define(
        * @private
        * @return {String} HTML contents of the editor excluding some internal bogus elements.
        */
-      function getTrimmedContent() {
+      var getTrimmedContent = function () {
         return trimContent(editor.getBody().innerHTML);
-      }
+      };
 
-      function addTempAttr(name) {
+      var addTempAttr = function (name) {
         if (Tools.inArray(tempAttrs, name) === -1) {
           htmlParser.addAttributeFilter(name, function (nodes, name) {
             var i = nodes.length;
@@ -139,7 +139,7 @@ define(
 
           tempAttrs.push(name);
         }
-      }
+      };
 
       // Default DOM and Schema if they are undefined
       dom = dom || DOM;
@@ -232,14 +232,14 @@ define(
       htmlParser.addNodeFilter('script,style', function (nodes, name) {
         var i = nodes.length, node, value, type;
 
-        function trim(value) {
+        var trim = function (value) {
           /*jshint maxlen:255 */
           /*eslint max-len:0 */
           return value.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n')
             .replace(/^[\r\n]*|[\r\n]*$/g, '')
             .replace(/^\s*((<!--)?(\s*\/\/)?\s*<!\[CDATA\[|(<!--\s*)?\/\*\s*<!\[CDATA\[\s*\*\/|(\/\/)?\s*<!--|\/\*\s*<!--\s*\*\/)\s*[\r\n]*/gi, '')
             .replace(/\s*(\/\*\s*\]\]>\s*\*\/(-->)?|\s*\/\/\s*\]\]>(-->)?|\/\/\s*(-->)?|\]\]>|\/\*\s*-->\s*\*\/|\s*-->\s*)\s*$/g, '');
-        }
+        };
 
         while (i--) {
           node = nodes[i];

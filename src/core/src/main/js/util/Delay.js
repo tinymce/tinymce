@@ -27,12 +27,12 @@ define(
   function (clearInterval, clearTimeout, document, setInterval, setTimeout, window, Promise) {
     var requestAnimationFramePromise;
 
-    function requestAnimationFrame(callback, element) {
+    var requestAnimationFrame = function (callback, element) {
       var i, requestAnimationFrameFunc = window.requestAnimationFrame, vendors = ['ms', 'moz', 'webkit'];
 
-      function featurefill(callback) {
+      var featurefill = function (callback) {
         window.setTimeout(callback, 0);
-      }
+      };
 
       for (i = 0; i < vendors.length && !requestAnimationFrameFunc; i++) {
         requestAnimationFrameFunc = window[vendors[i] + 'RequestAnimationFrame'];
@@ -43,33 +43,33 @@ define(
       }
 
       requestAnimationFrameFunc(callback, element);
-    }
+    };
 
-    function wrappedSetTimeout(callback, time) {
+    var wrappedSetTimeout = function (callback, time) {
       if (typeof time != 'number') {
         time = 0;
       }
 
       return setTimeout(callback, time);
-    }
+    };
 
-    function wrappedSetInterval(callback, time) {
+    var wrappedSetInterval = function (callback, time) {
       if (typeof time != 'number') {
         time = 1; // IE 8 needs it to be > 0
       }
 
       return setInterval(callback, time);
-    }
+    };
 
-    function wrappedClearTimeout(id) {
+    var wrappedClearTimeout = function (id) {
       return clearTimeout(id);
-    }
+    };
 
-    function wrappedClearInterval(id) {
+    var wrappedClearInterval = function (id) {
       return clearInterval(id);
-    }
+    };
 
-    function debounce(callback, time) {
+    var debounce = function (callback, time) {
       var timer, func;
 
       func = function () {
@@ -87,7 +87,7 @@ define(
       };
 
       return func;
-    }
+    };
 
     return {
       /**

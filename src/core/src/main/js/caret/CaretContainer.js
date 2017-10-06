@@ -26,27 +26,27 @@ define(
     var isElement = NodeType.isElement,
       isText = NodeType.isText;
 
-    function isCaretContainerBlock(node) {
+    var isCaretContainerBlock = function (node) {
       if (isText(node)) {
         node = node.parentNode;
       }
 
       return isElement(node) && node.hasAttribute('data-mce-caret');
-    }
+    };
 
-    function isCaretContainerInline(node) {
+    var isCaretContainerInline = function (node) {
       return isText(node) && Zwsp.isZwsp(node.data);
-    }
+    };
 
-    function isCaretContainer(node) {
+    var isCaretContainer = function (node) {
       return isCaretContainerBlock(node) || isCaretContainerInline(node);
-    }
+    };
 
     var hasContent = function (node) {
       return node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
     };
 
-    function insertInline(node, before) {
+    var insertInline = function (node, before) {
       var doc, sibling, textNode, parentNode;
 
       doc = node.ownerDocument;
@@ -87,7 +87,7 @@ define(
       }
 
       return textNode;
-    }
+    };
 
     var prependInline = function (node) {
       if (NodeType.isText(node)) {
@@ -121,13 +121,13 @@ define(
       return pos && NodeType.isText(pos.container()) && pos.container().data.charAt(pos.offset() - 1) === Zwsp.ZWSP;
     };
 
-    function createBogusBr() {
+    var createBogusBr = function () {
       var br = document.createElement('br');
       br.setAttribute('data-mce-bogus', '1');
       return br;
-    }
+    };
 
-    function insertBlock(blockName, node, before) {
+    var insertBlock = function (blockName, node, before) {
       var doc, blockNode, parentNode;
 
       doc = node.ownerDocument;
@@ -148,25 +148,25 @@ define(
       }
 
       return blockNode;
-    }
+    };
 
-    function startsWithCaretContainer(node) {
+    var startsWithCaretContainer = function (node) {
       return isText(node) && node.data[0] == Zwsp.ZWSP;
-    }
+    };
 
-    function endsWithCaretContainer(node) {
+    var endsWithCaretContainer = function (node) {
       return isText(node) && node.data[node.data.length - 1] == Zwsp.ZWSP;
-    }
+    };
 
-    function trimBogusBr(elm) {
+    var trimBogusBr = function (elm) {
       var brs = elm.getElementsByTagName('br');
       var lastBr = brs[brs.length - 1];
       if (NodeType.isBogus(lastBr)) {
         lastBr.parentNode.removeChild(lastBr);
       }
-    }
+    };
 
-    function showCaretContainerBlock(caretContainer) {
+    var showCaretContainerBlock = function (caretContainer) {
       if (caretContainer && caretContainer.hasAttribute('data-mce-caret')) {
         trimBogusBr(caretContainer);
         caretContainer.removeAttribute('data-mce-caret');
@@ -177,7 +177,7 @@ define(
       }
 
       return null;
-    }
+    };
 
     return {
       isCaretContainer: isCaretContainer,

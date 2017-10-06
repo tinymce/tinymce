@@ -34,7 +34,7 @@ define(
     };
 
     // Walks the tree left/right
-    function walk(node, rootNode, prev) {
+    var walk = function (node, rootNode, prev) {
       var sibling, parent, startName = prev ? 'lastChild' : 'firstChild', siblingName = prev ? 'prev' : 'next';
 
       // Walk into nodes if it has a start
@@ -59,7 +59,7 @@ define(
           }
         }
       }
-    }
+    };
 
     /**
      * Constructs a new Node instance.
@@ -69,7 +69,7 @@ define(
      * @param {String} name Name of the node type.
      * @param {Number} type Numeric type representing the node.
      */
-    function Node(name, type) {
+    var Node = function (name, type) {
       this.name = name;
       this.type = type;
 
@@ -77,7 +77,7 @@ define(
         this.attributes = [];
         this.attributes.map = {};
       }
-    }
+    };
 
     Node.prototype = {
       /**

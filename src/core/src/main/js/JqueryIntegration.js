@@ -49,7 +49,7 @@ define(
 
         self.css('visibility', 'hidden'); // Hide textarea to avoid flicker
 
-        function init() {
+        var init = function () {
           var editors = [], initCount = 0;
 
           // Apply patches to the jQuery object, only once
@@ -104,7 +104,7 @@ define(
           $.each(editors, function (i, ed) {
             ed.render();
           });
-        }
+        };
 
         // Load TinyMCE on demand, if we need to
         if (!win.tinymce && !lazyLoading && (url = settings.script_url)) {
@@ -129,16 +129,16 @@ define(
           if (url.indexOf('gzip') != -1) {
             lang = settings.language || "en";
             url = url + (/\?/.test(url) ? '&' : '?') + "js=true&core=true&suffix=" + escape(suffix) +
-            "&themes=" + escape(settings.theme || 'modern') + "&plugins=" +
-            escape(settings.plugins || '') + "&languages=" + (lang || '');
+              "&themes=" + escape(settings.theme || 'modern') + "&plugins=" +
+              escape(settings.plugins || '') + "&languages=" + (lang || '');
 
             // Check if compressor script is already loaded otherwise setup a basic one
             if (!win.tinyMCE_GZ) {
               win.tinyMCE_GZ = {
                 start: function () {
-                  function load(url) {
+                  var load = function (url) {
                     getTinymce().ScriptLoader.markDone(getTinymce().baseURI.toAbsolute(url));
-                  }
+                  };
 
                   // Add core languages
                   load("langs/" + lang + ".js");
@@ -218,9 +218,9 @@ define(
       // This function patches internal jQuery functions so that if
       // you for example remove an div element containing an editor it's
       // automatically destroyed by the TinyMCE API
-      function applyPatch() {
+      var applyPatch = function () {
         // Removes any child editor instances by looking for editor wrapper elements
-        function removeEditors(name) {
+        var removeEditors = function (name) {
           // If the function is remove
           if (name === "remove") {
             this.each(function (i, node) {
@@ -239,11 +239,11 @@ define(
               ed.remove();
             }
           });
-        }
+        };
 
         // Loads or saves contents from/to textarea if the value
         // argument is defined it will set the TinyMCE internal contents
-        function loadOrSave(value) {
+        var loadOrSave = function (value) {
           var self = this, ed;
 
           // Handle set value
@@ -265,10 +265,10 @@ define(
               return ed.getContent();
             }
           }
-        }
+        };
 
         // Returns tinymce instance for the specified element or null if it wasn't found
-        function tinyMCEInstance(element) {
+        var tinyMCEInstance = function (element) {
           var ed = null;
 
           if (element && element.id && win.tinymce) {
@@ -276,12 +276,12 @@ define(
           }
 
           return ed;
-        }
+        };
 
         // Checks if the specified set contains tinymce instances
-        function containsTinyMCE(matchedSet) {
+        var containsTinyMCE = function (matchedSet) {
           return !!((matchedSet) && (matchedSet.length) && (win.tinymce) && (matchedSet.is(":tinymce")));
-        }
+        };
 
         // Patch various jQuery functions
         var jQueryFn = {};
@@ -390,7 +390,7 @@ define(
 
           return ed ? ed.getContent({ save: true }) : jQueryFn.attr.apply($(node), args);
         };
-      }
+      };
     };
   }
 );

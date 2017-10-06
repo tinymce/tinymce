@@ -23,7 +23,7 @@ define(
   function (BookmarkManager, Tools) {
     var each = Tools.each;
 
-    function ElementUtils(dom) {
+    var ElementUtils = function (dom) {
       /**
        * Compares two nodes and checks if it's attributes and styles matches.
        * This doesn't compare classes as items since their order is significant.
@@ -46,7 +46,7 @@ define(
          * @param {Node} node Node to get attributes from.
          * @return {Object} Name/value object with attributes and attribute values.
          */
-        function getAttribs(node) {
+        var getAttribs = function (node) {
           var attribs = {};
 
           each(dom.getAttribs(node), function (attr) {
@@ -59,7 +59,7 @@ define(
           });
 
           return attribs;
-        }
+        };
 
         /**
          * Compares two objects checks if it's key + value exists in the other one.
@@ -69,7 +69,7 @@ define(
          * @param {Object} obj2 Second object to compare.
          * @return {boolean} True/false if the objects matches or not.
          */
-        function compareObjects(obj1, obj2) {
+        var compareObjects = function (obj1, obj2) {
           var value, name;
 
           for (name in obj1) {
@@ -101,7 +101,7 @@ define(
           }
 
           return true;
-        }
+        };
 
         // Attribs are not the same
         if (!compareObjects(getAttribs(node1), getAttribs(node2))) {
@@ -115,7 +115,7 @@ define(
 
         return !BookmarkManager.isBookmarkNode(node1) && !BookmarkManager.isBookmarkNode(node2);
       };
-    }
+    };
 
     return ElementUtils;
   }

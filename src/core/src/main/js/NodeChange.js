@@ -31,7 +31,7 @@ define(
        * @private
        * @return {Boolean} True if the element path is the same false if it's not.
        */
-      function isSameElementPath(startElm) {
+      var isSameElementPath = function (startElm) {
         var i, currentPath;
 
         currentPath = editor.$(startElm).parentsUntil(editor.getBody()).add(startElm);
@@ -51,7 +51,7 @@ define(
         lastPath = currentPath;
 
         return false;
-      }
+      };
 
       // Gecko doesn't support the "selectionchange" event
       if (!('onselectionchange' in editor.getDoc())) {
