@@ -114,7 +114,6 @@ define(
         }
       }
 
-      editor.editorContainer = info.editorContainer;
       info.height = h;
 
       return info;
@@ -134,22 +133,28 @@ define(
       }
 
       info.height = info.iframeHeight ? info.iframeHeight : elm.offsetHeight;
-      editor.editorContainer = info.editorContainer;
 
       return info;
     };
 
-    var renderThemeFalse = function (editor) {
+    var createThemeFalseResult = function (element) {
+      return {
+        editorContainer: element,
+        iframeContainer: element
+      };
+    };
+
+    var renderThemeFalseIframe = function (targetElement) {
       var iframeContainer = DOM.create('div');
 
-      DOM.insertAfter(iframeContainer, editor.getElement());
+      DOM.insertAfter(iframeContainer, targetElement);
 
-      editor.editorContainer = iframeContainer;
+      return createThemeFalseResult(iframeContainer);
+    };
 
-      return {
-        editorContainer: iframeContainer,
-        iframeContainer: iframeContainer
-      };
+    var renderThemeFalse = function (editor) {
+      var targetElement = editor.getElement();
+      return editor.inline ? createThemeFalseResult(targetElement) : renderThemeFalseIframe(targetElement);
     };
 
     var renderThemeUi = function (editor) {
@@ -271,6 +276,7 @@ define(
       initTheme(editor);
       initPlugins(editor);
       boxInfo = renderThemeUi(editor);
+      editor.editorContainer = boxInfo.editorContainer;
 
       // Load specified content CSS last
       if (settings.content_css) {
