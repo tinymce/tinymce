@@ -112,8 +112,16 @@ define(
       fakeEvent(startElm, 'keyup', evt);
     };
 
+
+    var typeString = function (editor, str) {
+      for (var i = 0; i < str.length; i++) {
+        type(editor, str[i]);
+      }
+    };
+
     return {
-      type: type
+      type: type,
+      typeString: typeString
     };
   }
 );

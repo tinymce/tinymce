@@ -100,6 +100,18 @@ asynctest(
       );
     });
 
+    suite.test("Url inside blank formatting wrapper", function (editor) {
+      editor.focus();
+      editor.setContent('');
+      editor.execCommand('Bold');
+      // inserting url via typeUrl() results in different behaviour, so lets simply type it in, char by char
+      KeyUtils.typeString(editor, 'http://www.domain.com ');
+      LegacyUnit.equal(
+        editor.getContent().replace(/<p>&nbsp;<\/p>$/, ''),
+        '<p><strong><a href="http://www.domain.com">http://www.domain.com</a> </strong></p>'
+      );
+    });
+
     suite.test("default_link_target='_self'", function (editor) {
       editor.settings.default_link_target = '_self';
       LegacyUnit.equal(
