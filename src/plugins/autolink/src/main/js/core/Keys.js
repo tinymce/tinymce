@@ -152,7 +152,7 @@ define(
         setEnd(rng, endContainer, start - 1);
       }
 
-      text = rng.toString();
+      text = rng.toString().trim();
       matches = text.match(autoLinkPattern);
 
       if (matches) {
