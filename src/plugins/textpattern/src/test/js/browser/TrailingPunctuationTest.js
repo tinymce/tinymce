@@ -3,21 +3,16 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Keys',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.Waiter',
-    'ephox.mcagar.api.TinyActions',
     'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyDom',
     'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyUi',
     'tinymce.plugins.textpattern.Plugin',
-    'tinymce.plugins.textpattern.test.Utils',
     'tinymce.themes.modern.Theme'
   ],
-  function (ApproxStructure, GeneralSteps, Keys, Logger, Pipeline, Step, Waiter, TinyActions, TinyApis, TinyDom, TinyLoader, TinyUi, TextpatternPlugin, Utils, ModernTheme) {
+  function (ApproxStructure, GeneralSteps, Logger, Pipeline, Step, Waiter, TinyApis, TinyLoader, TextpatternPlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

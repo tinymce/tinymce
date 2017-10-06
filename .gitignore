@@ -5,6 +5,7 @@ tmp
 .idea
 .project
 .vscode
+.nyc_output
 *.sublime-*
 .externalToolBuilders
 *~
@@ -17,6 +18,7 @@ yarn.lock
 package-lock.json
 .DS_Store
 .project
+coverage
 node_modules
 js/**/*
 imagemanager
