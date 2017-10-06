@@ -312,7 +312,7 @@ asynctest(
       });
       LegacyUnit.equal(
         cleanTableHtml(editor.getContent()),
-        '<table style=\"border: 1px solid green;\"><tbody><tr><td style=\"border: 1px solid green;\">X</td>' +
+        '<table style=\"border: 1px solid green;\" data-mce-border=\"1px solid green\"><tbody><tr><td style=\"border: 1px solid green;\">X</td>' +
         '<td style=\"border: 1px solid green;\">Z</td></tr></tbody></table>'
       );
 
