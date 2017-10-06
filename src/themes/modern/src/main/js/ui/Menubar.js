@@ -28,7 +28,9 @@ define(
       help: { title: 'Help' }
     };
 
-    var delimiterMenuNamePair = Fun.constant({ name: '|', item: { text: '|' } });
+    var delimiterMenuNamePair = function () {
+      return { name: '|', item: { text: '|' } };
+    };
 
     var createMenuNameItemPair = function (name, item) {
       var menuItem = item ? { name: name, item: item } : null;
@@ -45,13 +47,17 @@ define(
       return namedMenuItem && namedMenuItem.item.text === '|';
     };
 
-    var cleanupMenu = function (namedMenuItems) {
-      return Arr.filter(namedMenuItems, function (namedMenuItem, i, namedMenuItems) {
-        if (isSeparator(namedMenuItem)) {
-          return i > 0 && i < namedMenuItems.length - 1 && !isSeparator(namedMenuItems[i - 1]);
-        } else {
-          return true;
-        }
+    var cleanupMenu = function (namedMenuItems, removedMenuItems) {
+      var menuItemsPass1 = Arr.filter(namedMenuItems, function (namedMenuItem) {
+        return removedMenuItems.hasOwnProperty(namedMenuItem.name) === false;
+      });
+
+      var menuItemsPass2 = Arr.filter(menuItemsPass1, function (namedMenuItem, i, namedMenuItems) {
+        return !isSeparator(namedMenuItem) || !isSeparator(namedMenuItems[i - 1]);
+      });
+
+      return Arr.filter(menuItemsPass2, function (namedMenuItem, i, namedMenuItems) {
+        return !isSeparator(namedMenuItem) || i > 0 && i < namedMenuItems.length - 1;
       });
     };
 
@@ -74,7 +80,7 @@ define(
         Tools.each((menu.items || '').split(/[ ,]/), function (name) {
           var namedMenuItem = createMenuNameItemPair(name, editorMenuItems[name]);
 
-          if (namedMenuItem && !removedMenuItems[name]) {
+          if (namedMenuItem) {
             namedMenuItems.push(namedMenuItem);
           }
         });
@@ -100,7 +106,7 @@ define(
           });
         }
 
-        menuButton.menu = Arr.map(cleanupMenu(namedMenuItems), function (menuItem) {
+        menuButton.menu = Arr.map(cleanupMenu(namedMenuItems, removedMenuItems), function (menuItem) {
           return menuItem.item;
         });
 
