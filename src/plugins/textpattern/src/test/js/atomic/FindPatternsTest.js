@@ -22,12 +22,21 @@ test(
       RawAssertions.assertEq('Assert correct pattern', expectedPattern, actual.start);
     };
 
+    var testFindStartPatternUndefined = function (text) {
+      var actual = Patterns.findPattern(defaultPatterns, text);
+
+      RawAssertions.assertEq('Assert correct pattern', undefined, actual);
+    };
+
     testFindEndPattern('y **x** ', 8, true, '**');
     testFindEndPattern('y **x**', 7, false, '**');
     testFindEndPattern('y *x* ', 6, true, '*');
     testFindEndPattern('y *x*', 5, false, '*');
+
     testFindStartPattern('*x*', '*');
     testFindStartPattern('**x**', '**');
+    testFindStartPattern('***x***', '***');
+    testFindStartPatternUndefined('*x* ');
 
     testFindStartPattern('#x', '#');
     testFindStartPattern('##x', '##');

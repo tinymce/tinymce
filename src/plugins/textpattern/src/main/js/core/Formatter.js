@@ -99,7 +99,7 @@ define(
       var foundPattern = patternFromRng(patterns, rng, space);
 
       if (foundPattern) {
-        splitAndApply(editor, rng.startContainer, foundPattern, space);
+        return splitAndApply(editor, rng.startContainer, foundPattern, space);
       }
     };
 

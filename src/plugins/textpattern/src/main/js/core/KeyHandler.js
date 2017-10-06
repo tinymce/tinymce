@@ -16,7 +16,7 @@ define(
   ],
   function (VK, Formatter) {
     function handleEnter(editor, patterns) {
-      var rng, wrappedTextNode;
+      var wrappedTextNode, rng;
 
       wrappedTextNode = Formatter.applyInlineFormatEnter(editor, patterns);
       if (wrappedTextNode) {
@@ -42,11 +42,7 @@ define(
           wrappedTextNode.deleteData(wrappedTextNode.data.length - 1, 1);
           lastCharNode = dom.doc.createTextNode(lastChar);
 
-          if (wrappedTextNode.nextSibling) {
-            dom.insertAfter(lastCharNode, wrappedTextNode.nextSibling);
-          } else {
-            wrappedTextNode.parentNode.appendChild(lastCharNode);
-          }
+          dom.insertAfter(lastCharNode, wrappedTextNode.parentNode);
 
           rng = dom.createRng();
           rng.setStart(lastCharNode, 1);

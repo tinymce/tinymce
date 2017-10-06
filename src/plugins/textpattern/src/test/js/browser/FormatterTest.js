@@ -27,6 +27,17 @@ asynctest(
       return rng;
     };
 
+    var createParagraphElementRng = function (text, startOffset, endOffset) {
+      var p = document.createElement('p');
+      var textNode = document.createTextNode(text);
+      p.appendChild(textNode);
+      var rng = document.createRange();
+      rng.setStart(p, startOffset);
+      rng.setEnd(p, endOffset);
+
+      return rng;
+    };
+
     var cGetInlinePattern = function (patterns, space) {
       return Chain.mapper(function (input) {
         var x = Formatter.patternFromRng(patterns, input, space);
@@ -39,6 +50,17 @@ asynctest(
       Logger.t('run on text without pattern returns undefined', Chain.asStep(createRng('text', 4, 4), [
         cGetInlinePattern(defaultPatterns, false),
         Assertions.cAssertEq('is undefined', 'undefined')
+      ])),
+      Logger.t('run on range that is not on a text node without pattern returns undefined', Chain.asStep(
+        createParagraphElementRng('text', 1, 1),
+        [
+          cGetInlinePattern(defaultPatterns, false),
+          Assertions.cAssertEq('is undefined', 'undefined')
+        ]
+      )),
+      Logger.t('inline * with uncollapsed range returns undefined', Chain.asStep(createRng('*x***', 5, 5), [
+        cGetInlinePattern(defaultPatterns, false),
+        Assertions.cAssertEq('is correct pattern and offset', 'undefined')
       ])),
       Logger.t('inline * with uncollapsed range returns undefined', Chain.asStep(createRng('*x* ', 3, 4), [
         cGetInlinePattern(defaultPatterns, false),
