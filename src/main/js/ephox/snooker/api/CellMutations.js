@@ -7,7 +7,7 @@ define(
 
   function (Sizes) {
     var halve = function (main, other) {
-      var width = Sizes.getWidth(main);
+      var width = Sizes.getPixelWidth(main);
       Sizes.setWidth(main, width/2);
       Sizes.setWidth(other, width/2);
     };

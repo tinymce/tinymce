@@ -71,7 +71,7 @@ define(
 
     return {
       setWidth: Sizes.setWidth,
-      getWidth: Sizes.getWidth,
+      getWidth: Sizes.getPixelWidth,
       setHeight: Sizes.setHeight,
       getHeight: Sizes.getHeight,
       redistribute: redistribute

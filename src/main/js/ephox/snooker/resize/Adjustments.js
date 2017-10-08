@@ -29,6 +29,7 @@ define(
     };
 
     var adjustWidth = function (table, delta, index, direction) {
+      var tableSize = Sizes.getTableSize(table);
       var warehouse = getTableWarehouse(table);
       var widths = ColumnSizes.getPixelWidths(warehouse, direction);
 

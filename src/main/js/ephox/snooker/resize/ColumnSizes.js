@@ -21,7 +21,7 @@ define(
     };
 
     var getRawW = function (cell) {
-      return getRaw(cell, 'width', Sizes.getWidth);
+      return getRaw(cell, 'width', Sizes.getPixelWidth);
     };
 
     var getRawH = function (cell) {
@@ -29,7 +29,7 @@ define(
     };
 
     var getPixelsW = function (cell) {
-      return Sizes.getWidth(cell);
+      return Sizes.getPixelWidth(cell);
     };
 
     var getWidthFrom = function (warehouse, direction, getWidth, fallback) {
@@ -58,6 +58,16 @@ define(
 
     var getRawWidths = function (warehouse, direction) {
       return getWidthFrom(warehouse, direction, getRawW, getDeduced);
+    };
+
+    var getWidths = function (warehouse, direction) {
+      return getObjWidthFrom(warehouse, direction, Sizes.getEitherWidth, getDeduced);
+    };
+
+    var getPercentageWidths = function (warehouse, direction) {
+      return getWidthFrom(warehouse, direction, getEitherWidth, function (deduced) {
+        return deduced.getOrThunk(CellUtils.minWidth);
+      });
     };
 
     var getPixelWidths = function (warehouse, direction) {
