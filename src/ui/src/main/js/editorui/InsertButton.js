@@ -15,19 +15,13 @@ define(
     'tinymce.core.util.Tools'
   ],
   function (Arr, Tools) {
-    var flatten = function (ar) {
-      return Arr.foldl(ar, function (result, item) {
-        return result.concat(item);
-      }, []);
-    };
-
     var createCustomMenuItems = function (editor, names) {
       var items, nameList;
 
       if (typeof names === 'string') {
         nameList = names.split(' ');
       } else if (Tools.isArray(names)) {
-        return flatten(Tools.map(names, function (names) {
+        return Arr.flatten(Tools.map(names, function (names) {
           return createCustomMenuItems(editor, names);
         }));
       }
@@ -41,18 +35,18 @@ define(
       });
     };
 
+    var isSeparator = function (menuItem) {
+      return menuItem && menuItem.text === '-';
+    };
+
     var trimMenuItems = function (menuItems) {
-      var outputMenuItems = menuItems;
+      var menuItems2 = Arr.filter(menuItems, function (menuItem, i, menuItems) {
+        return !isSeparator(menuItem) || !isSeparator(menuItems[i - 1]);
+      });
 
-      if (outputMenuItems.length > 0 && outputMenuItems[0].text === '-') {
-        outputMenuItems = outputMenuItems.slice(1);
-      }
-
-      if (outputMenuItems.length > 0 && outputMenuItems[outputMenuItems.length - 1].text === '-') {
-        outputMenuItems = outputMenuItems.slice(0, outputMenuItems.length - 1);
-      }
-
-      return outputMenuItems;
+      return Arr.filter(menuItems2, function (menuItem, i, menuItems) {
+        return !isSeparator(menuItem) || i > 0 && i < menuItems.length - 1;
+      });
     };
 
     var createContextMenuItems = function (editor, context) {

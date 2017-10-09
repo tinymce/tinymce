@@ -19,30 +19,35 @@ define(
       return fontFamily ? fontFamily.split(',')[0] : '';
     };
 
+    var findMatchingValue = function (items, fontFamily) {
+      var value;
+
+      Tools.each(items, function (item) {
+        if (item.value.toLowerCase() === fontFamily.toLowerCase()) {
+          value = item.value;
+        }
+      });
+
+      Tools.each(items, function (item) {
+        if (!value && getFirstFont(item.value).toLowerCase() === getFirstFont(fontFamily).toLowerCase()) {
+          value = item.value;
+        }
+      });
+
+      return value;
+    };
+
     var createFontNameListBoxChangeHandler = function (editor, items) {
       return function () {
         var self = this;
 
         editor.on('init nodeChange', function (e) {
-          var fontFamily, value = null;
+          var fontFamily = FontInfo.getFontFamily(editor.getBody(), e.element);
+          var match = findMatchingValue(items, fontFamily);
 
-          fontFamily = FontInfo.getFontFamily(editor.getBody(), e.element);
+          self.value(match ? match : null);
 
-          Tools.each(items, function (item) {
-            if (item.value.toLowerCase() === fontFamily.toLowerCase()) {
-              value = item.value;
-            }
-          });
-
-          Tools.each(items, function (item) {
-            if (!value && getFirstFont(item.value).toLowerCase() === getFirstFont(fontFamily).toLowerCase()) {
-              value = item.value;
-            }
-          });
-
-          self.value(value);
-
-          if (!value && fontFamily) {
+          if (!match && fontFamily) {
             self.text(getFirstFont(fontFamily));
           }
         });

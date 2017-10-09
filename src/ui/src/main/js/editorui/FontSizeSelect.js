@@ -15,27 +15,34 @@ define(
     'tinymce.ui.fmt.FontInfo'
   ],
   function (Tools, FontInfo) {
+    var findMatchingValue = function (items, pt, px) {
+      var value ;
+
+      Tools.each(items, function (item) {
+        if (item.value === px) {
+          value = px;
+        } else if (item.value === pt) {
+          value = pt;
+        }
+      });
+
+      return value;
+    };
+
     var createFontSizeListBoxChangeHandler = function (editor, items) {
       return function () {
         var self = this;
 
         editor.on('init nodeChange', function (e) {
-          var px, pt, value = null;
+          var px, pt;
 
           px = FontInfo.getFontSize(editor.getBody(), e.element);
           pt = FontInfo.toPt(px);
 
-          Tools.each(items, function (item) {
-            if (item.value === px) {
-              value = px;
-            } else if (item.value === pt) {
-              value = pt;
-            }
-          });
+          var match = findMatchingValue(items, pt, px);
+          self.value(match ? match : null);
 
-          self.value(value);
-
-          if (!value) {
+          if (!match) {
             self.text(pt);
           }
         });
