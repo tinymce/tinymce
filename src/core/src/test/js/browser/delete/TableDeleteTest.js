@@ -6,12 +6,19 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.katamari.api.Arr',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.dom.Replication',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.search.SelectorFilter',
     'tinymce.core.delete.TableDelete',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, TableDelete, ModernTheme) {
+  function (Assertions, GeneralSteps, Logger, Pipeline, Step, Arr, TinyApis, TinyLoader, Remove, Replication, Element, Attr, Html, SelectorFilter, TableDelete, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -23,9 +30,17 @@ asynctest(
       });
     };
 
-    var sAssertRawContent = function (editor, expectedContent) {
+    var sAssertRawNormalizedContent = function (editor, expectedContent) {
       return Step.sync(function () {
-        Assertions.assertHtml('Should be expected contents', expectedContent, editor.getBody().innerHTML);
+        var element = Replication.deep(Element.fromDom(editor.getBody()));
+
+        // Remove internal selection dom items
+        Arr.each(SelectorFilter.descendants(element, '*[data-mce-bogus="all"]'), Remove.remove);
+        Arr.each(SelectorFilter.descendants(element, '*'), function (elm) {
+          Attr.remove(elm, 'data-mce-selected');
+        });
+
+        Assertions.assertHtml('Should be expected contents', expectedContent, Html.get(element));
       });
     };
 
@@ -121,7 +136,7 @@ asynctest(
               sSetRawContent(editor, '<table><tbody><tr><td><h1><br></h1></td></tr></tbody></table>'),
               tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
               sDelete(editor),
-              sAssertRawContent(editor, '<table><tbody><tr><td><br data-mce-bogus="1"></td></tr></tbody></table>')
+              sAssertRawNormalizedContent(editor, '<table><tbody><tr><td><br data-mce-bogus="1"></td></tr></tbody></table>')
             ]))
           ]))
         ])),
@@ -161,7 +176,7 @@ asynctest(
             tinyApis.sSetContent('<table><caption>abc</caption><tbody><tr><td>a</td></tr></tbody></table>'),
             tinyApis.sSetSelection([0, 0, 0], 0, [0, 1, 0, 0], 0),
             sDelete(editor),
-            sAssertRawContent(editor, '<table class="mce-item-table"><caption><br data-mce-bogus="1"></caption><tbody><tr><td>a</td></tr></tbody></table>')
+            sAssertRawNormalizedContent(editor, '<table class="mce-item-table"><caption><br data-mce-bogus="1"></caption><tbody><tr><td>a</td></tr></tbody></table>')
           ])),
 
           Logger.t('Deletion at the left edge', GeneralSteps.sequence([
@@ -182,14 +197,14 @@ asynctest(
             tinyApis.sSetContent('<table><caption>a</caption><tbody><tr><td>a</td></tr></tbody></table>'),
             tinyApis.sSetCursor([0, 0, 0], 1),
             sBackspace(editor),
-            sAssertRawContent(editor, '<table class="mce-item-table"><caption><br data-mce-bogus="1"></caption><tbody><tr><td>a</td></tr></tbody></table>')
+            sAssertRawNormalizedContent(editor, '<table class="mce-item-table"><caption><br data-mce-bogus="1"></caption><tbody><tr><td>a</td></tr></tbody></table>')
           ])),
 
           Logger.t('Delete at last character positon', GeneralSteps.sequence([
             tinyApis.sSetContent('<table><caption>a</caption><tbody><tr><td>a</td></tr></tbody></table>'),
             tinyApis.sSetCursor([0, 0, 0], 0),
             sDelete(editor),
-            sAssertRawContent(editor, '<table class="mce-item-table"><caption><br data-mce-bogus="1"></caption><tbody><tr><td>a</td></tr></tbody></table>')
+            sAssertRawNormalizedContent(editor, '<table class="mce-item-table"><caption><br data-mce-bogus="1"></caption><tbody><tr><td>a</td></tr></tbody></table>')
           ])),
 
           Logger.t('Backspace at character positon in middle of caption', GeneralSteps.sequence([
@@ -214,7 +229,7 @@ asynctest(
             tinyApis.sSetContent('<table><caption><p><br></p><p data-mce-caret="after" data-mce-bogus="all"><br data-mce-bogus="1"></p></caption><tbody><tr><td>a</td></tr></tbody></table>'),
             tinyApis.sSetCursor([0, 0], 0),
             sDelete(editor),
-            sAssertRawContent(editor, '<table class="mce-item-table"><caption><br data-mce-bogus="1"></caption><tbody><tr><td>a</td></tr></tbody></table>')
+            sAssertRawNormalizedContent(editor, '<table class="mce-item-table"><caption><br data-mce-bogus="1"></caption><tbody><tr><td>a</td></tr></tbody></table>')
           ]))
         ]))
       ], onSuccess, onFailure);
