@@ -1,3 +1,14 @@
+Version 4.7.1 (2017-10-09)
+    Fixed bug where theme set to false on an inline editor produced an extra div element after the target element.
+    Fixed bug where the editor drag icon was misaligned with the branding set to false.
+    Fixed bug where doubled menu items were not being removed as expected with the removed_menuitems setting.
+    Fixed bug where the Table of contents plugin threw an error when initialized.
+    Fixed bug where it wasn't possible to add inline formats to text selected right to left.
+    Fixed bug where the paste from plain text mode did not work as expected.
+    Fixed so the style previews do not set color and background color when selected.
+    Fixed bug where the Autolink plugin didn't work as expected with some formats applied on an empty editor.
+    Fixed bug where the Textpattern plugin were throwing errors on some patterns.
+    Fixed bug where the Save plugin saved all editors instead of only the active editor. Patch contributed by dannoe.
 Version 4.7.0 (2017-10-03)
     Added new mobile ui that is specifically designed for mobile devices.
     Updated the default skin to be more modern and white since white is preferred by most implementations.
