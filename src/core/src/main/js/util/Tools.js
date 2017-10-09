@@ -17,10 +17,11 @@
 define(
   'tinymce.core.util.Tools',
   [
-    "tinymce.core.Env",
-    "tinymce.core.util.Arr"
+    'global!window',
+    'tinymce.core.Env',
+    'tinymce.core.util.Arr'
   ],
-  function (Env, Arr) {
+  function (window, Env, Arr) {
     /**
      * Removes whitespace from the beginning and end of a string.
      *
@@ -30,9 +31,9 @@ define(
      */
     var whiteSpaceRegExp = /^\s*|\s*$/g;
 
-    function trim(str) {
+    var trim = function (str) {
       return (str === null || str === undefined) ? '' : ("" + str).replace(whiteSpaceRegExp, '');
-    }
+    };
 
     /**
      * Checks if a object is of a specific type for example an array.
@@ -42,7 +43,7 @@ define(
      * @param {string} type Optional type to check for.
      * @return {Boolean} true/false if the object is of the specified type.
      */
-    function is(obj, type) {
+    var is = function (obj, type) {
       if (!type) {
         return obj !== undefined;
       }
@@ -52,7 +53,7 @@ define(
       }
 
       return typeof obj == type;
-    }
+    };
 
     /**
      * Makes a name/object map out of an array with names.
@@ -63,7 +64,7 @@ define(
      * @param {Object} map Optional map to add items to.
      * @return {Object} Name/value map of items.
      */
-    function makeMap(items, delim, map) {
+    var makeMap = function (items, delim, map) {
       var i;
 
       items = items || [];
@@ -81,7 +82,7 @@ define(
       }
 
       return map;
-    }
+    };
 
     /**
      * JavaScript does not protect hasOwnProperty method, so it is possible to overwrite it. This is
@@ -91,9 +92,9 @@ define(
      * @param {String} prop
      * @returns {Boolean}
      */
-    function hasOwnProperty(obj, prop) {
+    var hasOwnProperty = function (obj, prop) {
       return Object.prototype.hasOwnProperty.call(obj, prop);
-    }
+    };
 
     /**
      * Creates a class, subclass or static singleton.
@@ -141,7 +142,7 @@ define(
      *     }
      * });
      */
-    function create(s, p, root) {
+    var create = function (s, p, root) {
       var self = this, sp, ns, cn, scn, c, de = 0;
 
       // Parse : <prefix> <class>:<super class>
@@ -225,9 +226,9 @@ define(
       self.each(p['static'], function (f, n) {
         ns[cn][n] = f;
       });
-    }
+    };
 
-    function extend(obj, ext) {
+    var extend = function (obj, ext) {
       var i, l, name, args = arguments, value;
 
       for (i = 1, l = args.length; i < l; i++) {
@@ -244,7 +245,7 @@ define(
       }
 
       return obj;
-    }
+    };
 
     /**
      * Executed the specified function for each item in a object tree.
@@ -255,7 +256,7 @@ define(
      * @param {String} n Optional name of collection inside the objects to walk for example childNodes.
      * @param {String} s Optional scope to execute the function in.
      */
-    function walk(o, f, n, s) {
+    var walk = function (o, f, n, s) {
       s = s || this;
 
       if (o) {
@@ -271,7 +272,7 @@ define(
           walk(o, f, n, s);
         });
       }
-    }
+    };
 
     /**
      * Creates a namespace on a specific object.
@@ -291,7 +292,7 @@ define(
      *     }
      * };
      */
-    function createNS(n, o) {
+    var createNS = function (n, o) {
       var i, v;
 
       o = o || window;
@@ -308,7 +309,7 @@ define(
       }
 
       return o;
-    }
+    };
 
     /**
      * Resolves a string and returns the object from a specific structure.
@@ -321,7 +322,7 @@ define(
      * // Resolve a path into an object reference
      * var obj = tinymce.resolve('a.b.c.d');
      */
-    function resolve(n, o) {
+    var resolve = function (n, o) {
       var i, l;
 
       o = o || window;
@@ -336,7 +337,7 @@ define(
       }
 
       return o;
-    }
+    };
 
     /**
      * Splits a string but removes the whitespace before and after each value.
@@ -348,15 +349,15 @@ define(
      * // Split a string into an array with a,b,c
      * var arr = tinymce.explode('a, b,   c');
      */
-    function explode(s, d) {
+    var explode = function (s, d) {
       if (!s || is(s, 'array')) {
         return s;
       }
 
       return Arr.map(s.split(d || ','), trim);
-    }
+    };
 
-    function _addCacheSuffix(url) {
+    var _addCacheSuffix = function (url) {
       var cacheSuffix = Env.cacheSuffix;
 
       if (cacheSuffix) {
@@ -364,7 +365,7 @@ define(
       }
 
       return url;
-    }
+    };
 
     return {
       trim: trim,

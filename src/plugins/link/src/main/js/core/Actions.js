@@ -12,12 +12,12 @@ define(
   'tinymce.plugins.link.core.Actions',
   [
     'tinymce.core.util.VK',
-    'tinymce.plugins.link.ui.Dialog',
+    'tinymce.plugins.link.api.Settings',
     'tinymce.plugins.link.core.OpenUrl',
     'tinymce.plugins.link.core.Utils',
-    'tinymce.plugins.link.core.Settings'
+    'tinymce.plugins.link.ui.Dialog'
   ],
-  function (VK, Dialog, OpenUrl, Utils, Settings) {
+  function (VK, Settings, OpenUrl, Utils, Dialog) {
     var getLink = function (editor, elm) {
       return editor.dom.getParent(elm, 'a[href]');
     };
@@ -75,7 +75,7 @@ define(
           rng = sel.getRng();
           node = rng.startContainer;
           // ignore cursor positions at the beginning/end (to make context toolbar less noisy)
-          if (node.nodeType == 3 && sel.isCollapsed() && rng.startOffset > 0 && rng.startOffset < node.data.length) {
+          if (node.nodeType === 3 && sel.isCollapsed() && rng.startOffset > 0 && rng.startOffset < node.data.length) {
             return true;
           }
         }
@@ -101,11 +101,46 @@ define(
       });
     };
 
+    var toggleActiveState = function (editor) {
+      return function () {
+        var self = this;
+        editor.on('nodechange', function (e) {
+          self.active(!editor.readonly && !!Utils.getAnchorElement(editor, e.element));
+        });
+      };
+    };
+
+    var toggleViewLinkState = function (editor) {
+      return function () {
+        var self = this;
+
+        var toggleVisibility = function (e) {
+          if (Utils.hasLinks(e.parents)) {
+            self.show();
+          } else {
+            self.hide();
+          }
+        };
+
+        if (!Utils.hasLinks(editor.dom.getParents(editor.selection.getStart()))) {
+          self.hide();
+        }
+
+        editor.on('nodechange', toggleVisibility);
+
+        self.on('remove', function () {
+          editor.off('nodechange', toggleVisibility);
+        });
+      };
+    };
+
     return {
       openDialog: openDialog,
       gotoSelectedLink: gotoSelectedLink,
       leftClickedOnAHref: leftClickedOnAHref,
-      setupGotoLinks: setupGotoLinks
+      setupGotoLinks: setupGotoLinks,
+      toggleActiveState: toggleActiveState,
+      toggleViewLinkState: toggleViewLinkState
     };
   }
 );

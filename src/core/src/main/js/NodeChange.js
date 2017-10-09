@@ -31,7 +31,7 @@ define(
        * @private
        * @return {Boolean} True if the element path is the same false if it's not.
        */
-      function isSameElementPath(startElm) {
+      var isSameElementPath = function (startElm) {
         var i, currentPath;
 
         currentPath = editor.$(startElm).parentsUntil(editor.getBody()).add(startElm);
@@ -51,7 +51,7 @@ define(
         lastPath = currentPath;
 
         return false;
-      }
+      };
 
       // Gecko doesn't support the "selectionchange" event
       if (!('onselectionchange' in editor.getDoc())) {
@@ -88,9 +88,10 @@ define(
       editor.on('SelectionChange', function () {
         var startElm = editor.selection.getStart(true);
 
+        // When focusout from after cef element to other input element the startelm can be undefined.
         // IE 8 will fire a selectionchange event with an incorrect selection
         // when focusing out of table cells. Click inside cell -> toolbar = Invalid SelectionChange event
-        if (!Env.range && editor.selection.isCollapsed()) {
+        if (!startElm || (!Env.range && editor.selection.isCollapsed())) {
           return;
         }
 

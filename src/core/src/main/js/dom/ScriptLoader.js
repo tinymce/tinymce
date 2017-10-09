@@ -38,10 +38,11 @@
 define(
   'tinymce.core.dom.ScriptLoader',
   [
-    "tinymce.core.dom.DOMUtils",
-    "tinymce.core.util.Tools"
+    'global!document',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.util.Tools'
   ],
-  function (DOMUtils, Tools) {
+  function (document, DOMUtils, Tools) {
     var DOM = DOMUtils.DOM;
     var each = Tools.each, grep = Tools.grep;
 
@@ -49,7 +50,7 @@ define(
       return typeof f === 'function';
     };
 
-    function ScriptLoader() {
+    var ScriptLoader = function () {
       var QUEUED = 0,
         LOADING = 1,
         LOADED = 2,
@@ -69,11 +70,11 @@ define(
        * @param {function} callback Optional success callback function when the script loaded successfully.
        * @param {function} callback Optional failure callback function when the script failed to load.
        */
-      function loadScript(url, success, failure) {
+      var loadScript = function (url, success, failure) {
         var dom = DOM, elm, id;
 
         // Execute callback when script is loaded
-        function done() {
+        var done = function () {
           dom.remove(id);
 
           if (elm) {
@@ -81,9 +82,9 @@ define(
           }
 
           success();
-        }
+        };
 
-        function error() {
+        var error = function () {
           /*eslint no-console:0 */
 
           // We can't mark it as done if there is a load error since
@@ -99,7 +100,7 @@ define(
               console.log("Failed to load script: " + url);
             }
           }
-        }
+        };
 
         id = dom.uniqueId();
 
@@ -125,7 +126,7 @@ define(
 
         // Add script to document
         (document.getElementsByTagName('head')[0] || document.body).appendChild(elm);
-      }
+      };
 
       /**
        * Returns true/false if a script has been loaded or not.
@@ -211,7 +212,7 @@ define(
       this.loadScripts = function (scripts, success, scope, failure) {
         var loadScripts, failures = [];
 
-        function execCallbacks(name, url) {
+        var execCallbacks = function (name, url) {
           // Execute URL callback functions
           each(scriptLoadedCallbacks[url], function (callback) {
             if (isFunction(callback[name])) {
@@ -220,7 +221,7 @@ define(
           });
 
           scriptLoadedCallbacks[url] = undef;
-        }
+        };
 
         queueLoadedCallbacks.push({
           success: success,
@@ -275,7 +276,11 @@ define(
 
           // No scripts are currently loading then execute all pending queue loaded callbacks
           if (!loading) {
-            each(queueLoadedCallbacks, function (callback) {
+            // We need to clone the notifications and empty the pending callbacks so that callbacks can load more resources
+            var notifyCallbacks = queueLoadedCallbacks.slice(0);
+            queueLoadedCallbacks.length = 0;
+
+            each(notifyCallbacks, function (callback) {
               if (failures.length === 0) {
                 if (isFunction(callback.success)) {
                   callback.success.call(callback.scope);
@@ -286,14 +291,12 @@ define(
                 }
               }
             });
-
-            queueLoadedCallbacks.length = 0;
           }
         };
 
         loadScripts();
       };
-    }
+    };
 
     ScriptLoader.ScriptLoader = new ScriptLoader();
 

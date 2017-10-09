@@ -39,6 +39,12 @@ define(
       return trimmedOffset;
     };
 
+    var trimEmptyTextNode = function (node) {
+      if (NodeType.isText(node) && node.data.length === 0) {
+        node.parentNode.removeChild(node);
+      }
+    };
+
     /**
      * Constructs a new BookmarkManager instance for a specific selection instance.
      *
@@ -46,7 +52,7 @@ define(
      * @method BookmarkManager
      * @param {tinymce.dom.Selection} selection Selection instance to handle bookmarks for.
      */
-    function BookmarkManager(selection) {
+    var BookmarkManager = function (selection) {
       var dom = selection.dom;
 
       /**
@@ -69,7 +75,7 @@ define(
       this.getBookmark = function (type, normalized) {
         var rng, rng2, id, collapsed, name, element, chr = '&#xFEFF;', styles;
 
-        function findIndex(name, element) {
+        var findIndex = function (name, element) {
           var count = 0;
 
           Tools.each(dom.select(name), function (node) {
@@ -85,10 +91,10 @@ define(
           });
 
           return count;
-        }
+        };
 
-        function normalizeTableCellSelection(rng) {
-          function moveEndPoint(start) {
+        var normalizeTableCellSelection = function (rng) {
+          var moveEndPoint = function (start) {
             var container, offset, childNodes, prefix = start ? 'start' : 'end';
 
             container = rng[prefix + 'Container'];
@@ -102,18 +108,18 @@ define(
                 rng['set' + (start ? 'Start' : 'End')](container, offset);
               }
             }
-          }
+          };
 
           moveEndPoint(true);
           moveEndPoint();
 
           return rng;
-        }
+        };
 
-        function getLocation(rng) {
+        var getLocation = function (rng) {
           var root = dom.getRoot(), bookmark = {};
 
-          function getPoint(rng, start) {
+          var getPoint = function (rng, start) {
             var container = rng[start ? 'startContainer' : 'endContainer'],
               offset = rng[start ? 'startOffset' : 'endOffset'], point = [], childNodes, after = 0;
 
@@ -135,7 +141,7 @@ define(
             }
 
             return point;
-          }
+          };
 
           bookmark.start = getPoint(rng, true);
 
@@ -144,10 +150,10 @@ define(
           }
 
           return bookmark;
-        }
+        };
 
-        function findAdjacentContentEditableFalseElm(rng) {
-          function findSibling(node, offset) {
+        var findAdjacentContentEditableFalseElm = function (rng) {
+          var findSibling = function (node, offset) {
             var sibling;
 
             if (NodeType.isElement(node)) {
@@ -172,10 +178,10 @@ define(
                 return sibling;
               }
             }
-          }
+          };
 
           return findSibling(rng.startContainer, rng.startOffset) || findSibling(rng.endContainer, rng.endOffset);
-        }
+        };
 
         if (type == 2) {
           element = selection.getNode();
@@ -184,10 +190,6 @@ define(
 
           if (isContentEditableFalse(element) || name == 'IMG') {
             return { name: name, index: findIndex(name, element) };
-          }
-
-          if (selection.tridentSel) {
-            return selection.tridentSel.getBookmark(type);
           }
 
           element = findAdjacentContentEditableFalseElm(rng);
@@ -217,62 +219,28 @@ define(
         id = dom.uniqueId();
         collapsed = selection.isCollapsed();
         styles = 'overflow:hidden;line-height:0px';
-
-        // Explorer method
-        if (rng.duplicate || rng.item) {
-          // Text selection
-          if (!rng.item) {
-            rng2 = rng.duplicate();
-
-            try {
-              // Insert start marker
-              rng.collapse();
-              rng.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_start" style="' + styles + '">' + chr + '</span>');
-
-              // Insert end marker
-              if (!collapsed) {
-                rng2.collapse(false);
-
-                // Detect the empty space after block elements in IE and move the
-                // end back one character <p></p>] becomes <p>]</p>
-                rng.moveToElementText(rng2.parentElement());
-                if (rng.compareEndPoints('StartToEnd', rng2) === 0) {
-                  rng2.move('character', -1);
-                }
-
-                rng2.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_end" style="' + styles + '">' + chr + '</span>');
-              }
-            } catch (ex) {
-              // IE might throw unspecified error so lets ignore it
-              return null;
-            }
-          } else {
-            // Control selection
-            element = rng.item(0);
-            name = element.nodeName;
-
-            return { name: name, index: findIndex(name, element) };
-          }
-        } else {
-          element = selection.getNode();
-          name = element.nodeName;
-          if (name == 'IMG') {
-            return { name: name, index: findIndex(name, element) };
-          }
-
-          // W3C method
-          rng2 = normalizeTableCellSelection(rng.cloneRange());
-
-          // Insert end marker
-          if (!collapsed) {
-            rng2.collapse(false);
-            rng2.insertNode(dom.create('span', { 'data-mce-type': "bookmark", id: id + '_end', style: styles }, chr));
-          }
-
-          rng = normalizeTableCellSelection(rng);
-          rng.collapse(true);
-          rng.insertNode(dom.create('span', { 'data-mce-type': "bookmark", id: id + '_start', style: styles }, chr));
+        element = selection.getNode();
+        name = element.nodeName;
+        if (name == 'IMG') {
+          return { name: name, index: findIndex(name, element) };
         }
+
+        // W3C method
+        rng2 = normalizeTableCellSelection(rng.cloneRange());
+
+        // Insert end marker
+        if (!collapsed) {
+          rng2.collapse(false);
+          var endBookmarkNode = dom.create('span', { 'data-mce-type': "bookmark", id: id + '_end', style: styles }, chr);
+          rng2.insertNode(endBookmarkNode);
+          trimEmptyTextNode(endBookmarkNode.nextSibling);
+        }
+
+        rng = normalizeTableCellSelection(rng);
+        rng.collapse(true);
+        var startBookmarkNode = dom.create('span', { 'data-mce-type': "bookmark", id: id + '_start', style: styles }, chr);
+        rng.insertNode(startBookmarkNode);
+        trimEmptyTextNode(startBookmarkNode.previousSibling);
 
         selection.moveToBookmark({ id: id, keep: 1 });
 
@@ -297,7 +265,7 @@ define(
       this.moveToBookmark = function (bookmark) {
         var rng, root, startContainer, endContainer, startOffset, endOffset;
 
-        function setEndPoint(start) {
+        var setEndPoint = function (start) {
           var point = bookmark[start ? 'start' : 'end'], i, node, offset, children;
 
           if (point) {
@@ -333,9 +301,9 @@ define(
           }
 
           return true;
-        }
+        };
 
-        function restoreEndPoint(suffix) {
+        var restoreEndPoint = function (suffix) {
           var marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev, keep = bookmark.keep;
 
           if (marker) {
@@ -399,18 +367,18 @@ define(
               }
             }
           }
-        }
+        };
 
-        function addBogus(node) {
+        var addBogus = function (node) {
           // Adds a bogus BR element for empty block elements
           if (dom.isBlock(node) && !node.innerHTML && !Env.ie) {
             node.innerHTML = '<br data-mce-bogus="1" />';
           }
 
           return node;
-        }
+        };
 
-        function resolveCaretPositionBookmark() {
+        var resolveCaretPositionBookmark = function () {
           var rng, pos;
 
           rng = dom.createRng();
@@ -421,16 +389,12 @@ define(
           rng.setEnd(pos.container(), pos.offset());
 
           return rng;
-        }
+        };
 
         if (bookmark) {
           if (Tools.isArray(bookmark.start)) {
             rng = dom.createRng();
             root = dom.getRoot();
-
-            if (selection.tridentSel) {
-              return selection.tridentSel.moveToBookmark(bookmark);
-            }
 
             if (setEndPoint(true) && setEndPoint()) {
               selection.setRng(rng);
@@ -455,7 +419,7 @@ define(
           }
         }
       };
-    }
+    };
 
     /**
      * Returns true/false if the specified node is a bookmark node or not.

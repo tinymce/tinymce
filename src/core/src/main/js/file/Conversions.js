@@ -17,10 +17,15 @@
 define(
   'tinymce.core.file.Conversions',
   [
-    "tinymce.core.util.Promise"
+    'ephox.sand.api.Blob',
+    'ephox.sand.api.FileReader',
+    'ephox.sand.api.Uint8Array',
+    'ephox.sand.api.Window',
+    'ephox.sand.api.XMLHttpRequest',
+    'tinymce.core.util.Promise'
   ],
-  function (Promise) {
-    function blobUriToBlob(url) {
+  function (Blob, FileReader, Uint8Array, Window, XMLHttpRequest, Promise) {
+    var blobUriToBlob = function (url) {
       return new Promise(function (resolve, reject) {
 
         var rejectWithError = function () {
@@ -51,9 +56,9 @@ define(
           rejectWithError();
         }
       });
-    }
+    };
 
-    function parseDataUri(uri) {
+    var parseDataUri = function (uri) {
       var type, matches;
 
       uri = decodeURIComponent(uri).split(',');
@@ -67,9 +72,9 @@ define(
         type: type,
         data: uri[1]
       };
-    }
+    };
 
-    function dataUriToBlob(uri) {
+    var dataUriToBlob = function (uri) {
       return new Promise(function (resolve) {
         var str, arr, i;
 
@@ -77,7 +82,7 @@ define(
 
         // Might throw error if data isn't proper base64
         try {
-          str = atob(uri.data);
+          str = Window.atob(uri.data);
         } catch (e) {
           resolve(new Blob([]));
           return;
@@ -91,9 +96,9 @@ define(
 
         resolve(new Blob([arr], { type: uri.type }));
       });
-    }
+    };
 
-    function uriToBlob(url) {
+    var uriToBlob = function (url) {
       if (url.indexOf('blob:') === 0) {
         return blobUriToBlob(url);
       }
@@ -103,9 +108,9 @@ define(
       }
 
       return null;
-    }
+    };
 
-    function blobToDataUri(blob) {
+    var blobToDataUri = function (blob) {
       return new Promise(function (resolve) {
         var reader = new FileReader();
 
@@ -115,7 +120,7 @@ define(
 
         reader.readAsDataURL(blob);
       });
-    }
+    };
 
     return {
       uriToBlob: uriToBlob,

@@ -1,17 +1,19 @@
 asynctest(
   'browser.tinymce.core.InsertListTest',
   [
-    'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
-    'tinymce.core.InsertList',
-    'tinymce.core.html.Node',
+    'ephox.mcagar.api.LegacyUnit',
+    'tinymce.core.dom.DOMUtils',
     'tinymce.core.html.DomParser',
-    'tinymce.core.dom.DOMUtils'
+    'tinymce.core.html.Node',
+    'tinymce.core.html.Schema',
+    'tinymce.core.InsertList'
   ],
-  function (LegacyUnit, Pipeline, InsertList, Node, DomParser, DOMUtils) {
+  function (Pipeline, LegacyUnit, DOMUtils, DomParser, Node, Schema, InsertList) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+    var schema = new Schema({});
 
     var createFragment = function (html) {
       var parser = new DomParser({ validate: false });
@@ -25,11 +27,15 @@ asynctest(
     };
 
     suite.test('isListFragment', function () {
-      LegacyUnit.equal(InsertList.isListFragment(createFragment('<ul><li>x</li></ul>')), true);
-      LegacyUnit.equal(InsertList.isListFragment(createFragment('<ol><li>x</li></ol>')), true);
-      LegacyUnit.equal(InsertList.isListFragment(createFragment('<meta><ul><li>x</li></ul>')), true);
-      LegacyUnit.equal(InsertList.isListFragment(createFragment('<ul><li>x</li></ul><span id="mce_marker"></span>')), true);
-      LegacyUnit.equal(InsertList.isListFragment(createFragment('<div></div>')), false);
+      LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul>')), true);
+      LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ol><li>x</li></ol>')), true);
+      LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<meta><ul><li>x</li></ul>')), true);
+      LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><span id="mce_marker"></span>')), true);
+      LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><p><br></p>')), true);
+      LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><p></p>')), true);
+      LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><p>\u00a0</p>')), true);
+      LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><p>x</p>')), false);
+      LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<div></div>')), false);
     });
 
     suite.test('listItems', function () {

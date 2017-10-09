@@ -17,14 +17,16 @@
 define(
   'tinymce.core.EditorCommands',
   [
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.dom.RangeUtils",
-    "tinymce.core.dom.TreeWalker",
-    "tinymce.core.InsertContent",
-    "tinymce.core.dom.NodeType"
+    'tinymce.core.Env',
+    'tinymce.core.InsertContent',
+    'tinymce.core.delete.DeleteCommands',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.selection.SelectionBookmark',
+    'tinymce.core.util.Tools'
   ],
-  function (Env, Tools, RangeUtils, TreeWalker, InsertContent, NodeType) {
+  function (Env, InsertContent, DeleteCommands, NodeType, RangeUtils, TreeWalker, SelectionBookmark, Tools) {
     // Added for compression purposes
     var each = Tools.each, extend = Tools.extend;
     var map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
@@ -54,11 +56,17 @@ define(
        * @param {Object} args Optional extra arguments to the execCommand.
        * @return {Boolean} true/false if the command was found or not.
        */
-      function execCommand(command, ui, value, args) {
+      var execCommand = function (command, ui, value, args) {
         var func, customCommand, state = 0;
+
+        if (editor.removed) {
+          return;
+        }
 
         if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(command) && (!args || !args.skip_focus)) {
           editor.focus();
+        } else {
+          SelectionBookmark.restore(editor);
         }
 
         args = editor.fire('BeforeExecCommand', { command: command, ui: ui, value: value });
@@ -105,7 +113,7 @@ define(
         }
 
         return false;
-      }
+      };
 
       /**
        * Queries the current state for a command for example if the current selection is "bold".
@@ -114,11 +122,10 @@ define(
        * @param {String} command Command to check the state of.
        * @return {Boolean/Number} true/false if the selected contents is bold or not, -1 if it's not found.
        */
-      function queryCommandState(command) {
+      var queryCommandState = function (command) {
         var func;
 
-        // Is hidden then return undefined
-        if (editor.quirks.isHidden()) {
+        if (editor.quirks.isHidden() || editor.removed) {
           return;
         }
 
@@ -135,7 +142,7 @@ define(
         }
 
         return false;
-      }
+      };
 
       /**
        * Queries the command value for example the current fontsize.
@@ -144,11 +151,10 @@ define(
        * @param {String} command Command to check the value of.
        * @return {Object} Command value of false if it's not found.
        */
-      function queryCommandValue(command) {
+      var queryCommandValue = function (command) {
         var func;
 
-        // Is hidden then return undefined
-        if (editor.quirks.isHidden()) {
+        if (editor.quirks.isHidden() || editor.removed) {
           return;
         }
 
@@ -163,7 +169,7 @@ define(
         } catch (ex) {
           // Fails sometimes see bug: 1896577
         }
-      }
+      };
 
       /**
        * Adds commands to the command collection.
@@ -172,7 +178,7 @@ define(
        * @param {Object} commandList Name/value collection with commands to add, the names can also be comma separated.
        * @param {String} type Optional type to add, defaults to exec. Can be value or state as well.
        */
-      function addCommands(commandList, type) {
+      var addCommands = function (commandList, type) {
         type = type || 'exec';
 
         each(commandList, function (callback, command) {
@@ -180,14 +186,14 @@ define(
             commands[type][command] = callback;
           });
         });
-      }
+      };
 
-      function addCommand(command, callback, scope) {
+      var addCommand = function (command, callback, scope) {
         command = command.toLowerCase();
         commands.exec[command] = function (command, ui, value, args) {
           return callback.call(scope || editor, ui, value, args);
         };
-      }
+      };
 
       /**
        * Returns true/false if the command is supported or not.
@@ -196,7 +202,7 @@ define(
        * @param {String} command Command that we check support for.
        * @return {Boolean} true/false if the command is supported or not.
        */
-      function queryCommandSupported(command) {
+      var queryCommandSupported = function (command) {
         command = command.toLowerCase();
 
         if (commands.exec[command]) {
@@ -211,26 +217,26 @@ define(
         }
 
         return false;
-      }
+      };
 
-      function addQueryStateHandler(command, callback, scope) {
+      var addQueryStateHandler = function (command, callback, scope) {
         command = command.toLowerCase();
         commands.state[command] = function () {
           return callback.call(scope || editor);
         };
-      }
+      };
 
-      function addQueryValueHandler(command, callback, scope) {
+      var addQueryValueHandler = function (command, callback, scope) {
         command = command.toLowerCase();
         commands.value[command] = function () {
           return callback.call(scope || editor);
         };
-      }
+      };
 
-      function hasCustomCommand(command) {
+      var hasCustomCommand = function (command) {
         command = command.toLowerCase();
         return !!commands.exec[command];
-      }
+      };
 
       // Expose public methods
       extend(this, {
@@ -247,7 +253,7 @@ define(
 
       // Private methods
 
-      function execNativeCommand(command, ui, value) {
+      var execNativeCommand = function (command, ui, value) {
         if (ui === undefined) {
           ui = FALSE;
         }
@@ -257,24 +263,24 @@ define(
         }
 
         return editor.getDoc().execCommand(command, ui, value);
-      }
+      };
 
-      function isFormatMatch(name) {
+      var isFormatMatch = function (name) {
         return formatter.match(name);
-      }
+      };
 
-      function toggleFormat(name, value) {
+      var toggleFormat = function (name, value) {
         formatter.toggle(name, value ? { value: value } : undefined);
         editor.nodeChanged();
-      }
+      };
 
-      function storeSelection(type) {
+      var storeSelection = function (type) {
         bookmark = selection.getBookmark(type);
-      }
+      };
 
-      function restoreSelection() {
+      var restoreSelection = function () {
         selection.moveToBookmark(bookmark);
-      }
+      };
 
       // Add execCommand overrides
       addCommands({
@@ -546,45 +552,20 @@ define(
         },
 
         selectAll: function () {
-          var root = dom.getRoot(), rng;
-
-          if (selection.getRng().setStart) {
-            var editingHost = dom.getParent(selection.getStart(), NodeType.isContentEditableTrue);
-            if (editingHost) {
-              rng = dom.createRng();
-              rng.selectNodeContents(editingHost);
-              selection.setRng(rng);
-            }
-          } else {
-            // IE will render it's own root level block elements and sometimes
-            // even put font elements in them when the user starts typing. So we need to
-            // move the selection to a more suitable element from this:
-            // <body>|<p></p></body> to this: <body><p>|</p></body>
-            rng = selection.getRng();
-            if (!rng.item) {
-              rng.moveToElementText(root);
-              rng.select();
-            }
+          var editingHost = dom.getParent(selection.getStart(), NodeType.isContentEditableTrue);
+          if (editingHost) {
+            var rng = dom.createRng();
+            rng.selectNodeContents(editingHost);
+            selection.setRng(rng);
           }
         },
 
         "delete": function () {
-          execNativeCommand("Delete");
+          DeleteCommands.deleteCommand(editor);
+        },
 
-          // Check if body is empty after the delete call if so then set the contents
-          // to an empty string and move the caret to any block produced by that operation
-          // this fixes the issue with root blocks not being properly produced after a delete call on IE
-          var body = editor.getBody();
-
-          if (dom.isEmpty(body)) {
-            editor.setContent('');
-
-            if (body.firstChild && dom.isBlock(body.firstChild)) {
-              editor.selection.setCursorLocation(body.firstChild, 0);
-            } else {
-              editor.selection.setCursorLocation(body, 0);
-            }
-          }
+        "forwardDelete": function () {
+          DeleteCommands.forwardDeleteCommand(editor);
         },
 
         mceNewDocument: function () {
@@ -627,7 +608,7 @@ define(
           }
 
           // Walks the parent block to the right and look for BR elements
-          function hasRightSideContent() {
+          var hasRightSideContent = function () {
             var walker = new TreeWalker(container, parentBlock), node;
             var nonEmptyElementsMap = editor.schema.getNonEmptyElements();
 
@@ -636,7 +617,7 @@ define(
                 return true;
               }
             }
-          }
+          };
 
           if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
             // Insert extra BR element at the end block elements

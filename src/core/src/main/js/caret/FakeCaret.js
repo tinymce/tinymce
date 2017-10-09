@@ -17,22 +17,25 @@
 define(
   'tinymce.core.caret.FakeCaret',
   [
+    'global!clearInterval',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretContainerRemove',
-    'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.DomQuery',
     'tinymce.core.dom.NodeType',
-    'tinymce.core.dom.RangeUtils',
     'tinymce.core.geom.ClientRect',
     'tinymce.core.util.Delay'
   ],
-  function (CaretContainer, CaretContainerRemove, CaretPosition, DomQuery, NodeType, RangeUtils, ClientRect, Delay) {
+  function (clearInterval, CaretContainer, CaretContainerRemove, DomQuery, NodeType, ClientRect, Delay) {
     var isContentEditableFalse = NodeType.isContentEditableFalse;
 
-    return function (rootNode, isBlock) {
-      var cursorInterval, $lastVisualCaret, caretContainerNode;
+    var isTableCell = function (node) {
+      return node && /^(TD|TH)$/i.test(node.nodeName);
+    };
 
-      function getAbsoluteClientRect(node, before) {
+    return function (rootNode, isBlock) {
+      var cursorInterval, $lastVisualCaret = null, caretContainerNode;
+
+      var getAbsoluteClientRect = function (node, before) {
         var clientRect = ClientRect.collapse(node.getBoundingClientRect(), before),
           docElm, scrollX, scrollY, margin, rootRect;
 
@@ -64,9 +67,9 @@ define(
         }
 
         return clientRect;
-      }
+      };
 
-      function trimInlineCaretContainers() {
+      var trimInlineCaretContainers = function () {
         var contentEditableFalseNodes, node, sibling, i, data;
 
         contentEditableFalseNodes = DomQuery('*[contentEditable=false]', rootNode);
@@ -97,12 +100,16 @@ define(
         }
 
         return null;
-      }
+      };
 
-      function show(before, node) {
+      var show = function (before, node) {
         var clientRect, rng;
 
         hide();
+
+        if (isTableCell(node)) {
+          return null;
+        }
 
         if (isBlock(node)) {
           caretContainerNode = CaretContainer.insertBlock('p', node, before);
@@ -136,9 +143,9 @@ define(
         }
 
         return rng;
-      }
+      };
 
-      function hide() {
+      var hide = function () {
         trimInlineCaretContainers();
 
         if (caretContainerNode) {
@@ -152,19 +159,27 @@ define(
         }
 
         clearInterval(cursorInterval);
-      }
+      };
 
-      function startBlink() {
+      var hasFocus = function () {
+        return rootNode.ownerDocument.activeElement === rootNode;
+      };
+
+      var startBlink = function () {
         cursorInterval = Delay.setInterval(function () {
-          DomQuery('div.mce-visual-caret', rootNode).toggleClass('mce-visual-caret-hidden');
+          if (hasFocus()) {
+            DomQuery('div.mce-visual-caret', rootNode).toggleClass('mce-visual-caret-hidden');
+          } else {
+            DomQuery('div.mce-visual-caret', rootNode).addClass('mce-visual-caret-hidden');
+          }
         }, 500);
-      }
+      };
 
-      function destroy() {
+      var destroy = function () {
         Delay.clearInterval(cursorInterval);
-      }
+      };
 
-      function getCss() {
+      var getCss = function () {
         return (
           '.mce-visual-caret {' +
           'position: absolute;' +
@@ -183,7 +198,7 @@ define(
           'padding: 0;' +
           '}'
         );
-      }
+      };
 
       return {
         show: show,

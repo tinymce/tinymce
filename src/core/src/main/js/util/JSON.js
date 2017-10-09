@@ -23,9 +23,10 @@
 define(
   'tinymce.core.util.JSON',
   [
+    'global!window'
   ],
-  function () {
-    function serialize(o, quote) {
+  function (window) {
+    var serialize = function (o, quote) {
       var i, v, t, name;
 
       quote = quote || '"';
@@ -80,7 +81,7 @@ define(
       }
 
       return '' + o;
-    }
+    };
 
     return {
       /**

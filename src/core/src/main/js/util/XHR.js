@@ -30,10 +30,12 @@
 define(
   'tinymce.core.util.XHR',
   [
-    "tinymce.core.util.Observable",
-    "tinymce.core.util.Tools"
+    'ephox.sand.api.XMLHttpRequest',
+    'global!setTimeout',
+    'tinymce.core.util.Observable',
+    'tinymce.core.util.Tools'
   ],
-  function (Observable, Tools) {
+  function (XMLHttpRequest, setTimeout, Observable, Tools) {
     var XHR = {
       /**
        * Sends a XMLHTTPRequest.
@@ -45,7 +47,7 @@ define(
       send: function (settings) {
         var xhr, count = 0;
 
-        function ready() {
+        var ready = function () {
           if (!settings.async || xhr.readyState == 4 || count++ > 10000) {
             if (settings.success && count < 10000 && xhr.status == 200) {
               settings.success.call(settings.success_scope, '' + xhr.responseText, xhr, settings);
@@ -57,7 +59,7 @@ define(
           } else {
             setTimeout(ready, 10);
           }
-        }
+        };
 
         // Default settings
         settings.scope = settings.scope || this;

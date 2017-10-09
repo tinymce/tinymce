@@ -88,6 +88,18 @@ asynctest(
       assertSelection(editor, 'li:nth-child(3) strong', 1);
     });
 
+    suite.test('insertAtCaret - ul with trailing empty block in middle of li', function (editor) {
+      editor.setContent('<ul><li>a</li><li>d</li></ul>');
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'li:nth-child(1)', 1);
+      InsertContent.insertAtCaret(editor, { content: '<ul><li>b</li><li>c</li></ul><p>\u00a0</p>', paste: true });
+      LegacyUnit.equal(
+        editor.getContent(),
+        '<ul><li>a</li><li>b</li><li>c</li><li>d</li></ul>'
+      );
+      assertSelection(editor, 'li:nth-child(4)', 1);
+    });
+
     suite.test('insertAtCaret - ul at beginning of li with empty end li', function (editor) {
       editor.setContent('<ul><li>12</li></ul>');
       editor.focus();
@@ -103,6 +115,48 @@ asynctest(
       LegacyUnit.setSelection(editor, 'em', 1);
       InsertContent.insertAtCaret(editor, { content: '<em><strong>123</strong></em>', merge: true });
       LegacyUnit.equal(editor.getContent(), '<p><strong><em>a123bc</em></strong></p>');
+    });
+
+    suite.test('insertAtCaret - list into empty table cell with invalid contents #TINY-1231', function (editor) {
+      editor.getBody().innerHTML = '<table class="mce-item-table"><tbody><tr><td><br></td></tr></tbody></table>';
+      editor.focus();
+      var rng = editor.dom.createRng();
+      rng.setStart(editor.dom.select('td')[0], 0);
+      rng.setEnd(editor.dom.select('td')[0], 0);
+      editor.selection.setRng(rng);
+      InsertContent.insertAtCaret(editor, { content: '<meta http-equiv="content-type" content="text/html; charset=utf-8"><ul><li>a</li></ul>', paste: true });
+      LegacyUnit.equal(editor.getBody().innerHTML, '<table class="mce-item-table"><tbody><tr><td><ul><li>a</li></ul></td></tr></tbody></table>');
+      assertSelection(editor, 'li', 1);
+    });
+
+    suite.test('insertAtCaret prevent default of beforeSetContent', function (editor) {
+      var args;
+
+      var handler = function (e) {
+        if (e.selection === true) {
+          e.preventDefault();
+          e.content = '<h1>b</h1>';
+          editor.getBody().innerHTML = '<h1>c</h1>';
+        }
+      };
+
+      var collector = function (e) {
+        args = e;
+      };
+
+      editor.on('BeforeSetContent', handler);
+      editor.on('SetContent', collector);
+
+      editor.setContent('<p>a</p>');
+      LegacyUnit.setSelection(editor, 'p', 0);
+      InsertContent.insertAtCaret(editor, { content: '<p>b</p>', paste: true });
+      LegacyUnit.equal(editor.getContent(), '<h1>c</h1>');
+      LegacyUnit.equal(args.content, '<h1>b</h1>');
+      LegacyUnit.equal(args.type, 'setcontent');
+      LegacyUnit.equal(args.paste, true);
+
+      editor.off('BeforeSetContent', handler);
+      editor.on('BeforeSetContent', collector);
     });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {

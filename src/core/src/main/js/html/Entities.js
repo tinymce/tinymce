@@ -21,9 +21,10 @@
 define(
   'tinymce.core.html.Entities',
   [
-    "tinymce.core.util.Tools"
+    'ephox.sugar.api.node.Element',
+    'tinymce.core.util.Tools'
   ],
-  function (Tools) {
+  function (Element, Tools) {
     var makeMap = Tools.makeMap;
 
     var namedEntities, baseEntities, reverseEntities,
@@ -59,17 +60,17 @@ define(
     };
 
     // Decodes text by using the browser
-    function nativeDecode(text) {
+    var nativeDecode = function (text) {
       var elm;
 
-      elm = document.createElement("div");
+      elm = Element.fromTag("div").dom();
       elm.innerHTML = text;
 
       return elm.textContent || elm.innerText || text;
-    }
+    };
 
     // Build a two way lookup table for the entities
-    function buildEntitiesLookup(items, radix) {
+    var buildEntitiesLookup = function (items, radix) {
       var i, chr, entity, lookup = {};
 
       if (items) {
@@ -90,7 +91,7 @@ define(
 
         return lookup;
       }
-    }
+    };
 
     // Unpack entities lookup where the numbers are in radix 32 to reduce the size
     namedEntities = buildEntitiesLookup(
@@ -199,15 +200,28 @@ define(
       getEncodeFunc: function (name, entities) {
         entities = buildEntitiesLookup(entities) || namedEntities;
 
-        function encodeNamedAndNumeric(text, attr) {
+        var encodeNamedAndNumeric = function (text, attr) {
           return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
-            return baseEntities[chr] || entities[chr] || '&#' + chr.charCodeAt(0) + ';' || chr;
-          });
-        }
+            if (baseEntities[chr] !== undefined) {
+              return baseEntities[chr];
+            }
 
-        function encodeCustomNamed(text, attr) {
+            if (entities[chr] !== undefined) {
+              return entities[chr];
+            }
+
+            // Convert multi-byte sequences to a single entity.
+            if (chr.length > 1) {
+              return '&#' + (((chr.charCodeAt(0) - 0xD800) * 0x400) + (chr.charCodeAt(1) - 0xDC00) + 0x10000) + ';';
+            }
+
+            return '&#' + chr.charCodeAt(0) + ';';
+          });
+        };
+
+        var encodeCustomNamed = function (text, attr) {
           return Entities.encodeNamed(text, attr, entities);
-        }
+        };
 
         // Replace + with , to be compatible with previous TinyMCE versions
         name = makeMap(name.replace(/\+/g, ','));

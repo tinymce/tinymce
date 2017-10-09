@@ -1,8 +1,10 @@
 define(
   'tinymce.plugins.autolink.test.KeyUtils',
   [
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Arr'
   ],
-  function () {
+  function (Fun, Arr) {
     var charCodeToKeyCode = function (charCode) {
       var lookup = {
         '0': 48, '1': 49, '2': 50, '3': 51, '4': 52, '5': 53, '6': 54, '7': 55, '8': 56, '9': 57, 'a': 65, 'b': 66, 'c': 67,
@@ -112,8 +114,14 @@ define(
       fakeEvent(startElm, 'keyup', evt);
     };
 
+
+    var typeString = function (editor, str) {
+      Arr.each(str.split(''), Fun.curry(type, editor));
+    };
+
     return {
-      type: type
+      type: type,
+      typeString: typeString
     };
   }
 );

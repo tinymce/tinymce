@@ -17,11 +17,12 @@
 define(
   'tinymce.core.undo.Fragments',
   [
-    "tinymce.core.util.Arr",
-    "tinymce.core.html.Entities",
-    "tinymce.core.undo.Diff"
+    'global!document',
+    'tinymce.core.html.Entities',
+    'tinymce.core.undo.Diff',
+    'tinymce.core.util.Arr'
   ],
-  function (Arr, Entities, Diff) {
+  function (document, Entities, Diff, Arr) {
     var getOuterHtml = function (elm) {
       if (elm.nodeType === 1) {
         return elm.outerHTML;
@@ -83,7 +84,9 @@ define(
     };
 
     var read = function (elm) {
-      return Arr.map(elm.childNodes, getOuterHtml);
+      return Arr.filter(Arr.map(elm.childNodes, getOuterHtml), function (item) {
+        return item.length > 0;
+      });
     };
 
     var write = function (fragments, elm) {

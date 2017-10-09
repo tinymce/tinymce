@@ -34,7 +34,7 @@ define(
      * @param {String} eventName Name of the event for example "click".
      * @return {Element/Document} HTML Element or document target to bind on.
      */
-    function getEventTarget(editor, eventName) {
+    var getEventTarget = function (editor, eventName) {
       if (eventName == 'selectionchange') {
         return editor.getDoc();
       }
@@ -55,7 +55,7 @@ define(
       }
 
       return editor.getBody();
-    }
+    };
 
     /**
      * Binds a event delegate for the specified name this delegate will fire
@@ -65,20 +65,22 @@ define(
      * @param {tinymce.Editor} editor Editor instance to get event target from.
      * @param {String} eventName Name of the event for example "click".
      */
-    function bindEventDelegate(editor, eventName) {
-      var eventRootElm = getEventTarget(editor, eventName), delegate;
+    var bindEventDelegate = function (editor, eventName) {
+      var eventRootElm, delegate;
 
-      function isListening(editor) {
+      var isListening = function (editor) {
         return !editor.hidden && !editor.readonly;
-      }
+      };
 
       if (!editor.delegates) {
         editor.delegates = {};
       }
 
-      if (editor.delegates[eventName]) {
+      if (editor.delegates[eventName] || editor.removed) {
         return;
       }
+
+      eventRootElm = getEventTarget(editor, eventName);
 
       if (editor.settings.event_root) {
         if (!customEventRootDelegates) {
@@ -103,7 +105,7 @@ define(
         }
 
         delegate = function (e) {
-          var target = e.target, editors = editor.editorManager.editors, i = editors.length;
+          var target = e.target, editors = editor.editorManager.get(), i = editors.length;
 
           while (i--) {
             var body = editors[i].getBody();
@@ -128,7 +130,7 @@ define(
         DOM.bind(eventRootElm, eventName, delegate);
         editor.delegates[eventName] = delegate;
       }
-    }
+    };
 
     var EditorObservable = {
       /**

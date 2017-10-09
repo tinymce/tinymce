@@ -20,6 +20,7 @@ asynctest(
     };
 
     suite.test("mceTableDelete command", function (editor) {
+      editor.focus();
       editor.setContent('<table><tr><td>X</td></tr></table>');
       LegacyUnit.setSelection(editor, 'td', 0);
       editor.execCommand('mceTableDelete');

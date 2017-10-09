@@ -24,6 +24,7 @@ asynctest(
     };
 
     suite.test('Wrap single root text node in P', function (editor) {
+      editor.focus();
       editor.getBody().innerHTML = 'abcd';
       LegacyUnit.setSelection(editor, 'body', 2);
       pressArrowKey(editor);

@@ -42,5 +42,31 @@
       "status": 404,
       "json": {}
     }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/403"
+    },
+    "response": {
+      "status": 403,
+      "json": {}
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/403data"
+    },
+    "response": {
+      "status": 403,
+      "json": {
+        "error": {
+          "type": "error"
+          }
+        }
+      }
   }
 ]

@@ -10,12 +10,13 @@
 
 define(
   'tinymce.themes.modern.ui.SkinLoaded', [
+    'tinymce.themes.modern.api.Events'
   ],
-  function () {
+  function (Events) {
     var fireSkinLoaded = function (editor) {
       var done = function () {
         editor._skinLoaded = true;
-        editor.fire('SkinLoaded');
+        Events.fireSkinLoaded(editor);
       };
 
       return function () {

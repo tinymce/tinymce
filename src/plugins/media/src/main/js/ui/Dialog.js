@@ -11,16 +11,17 @@
 define(
   'tinymce.plugins.media.ui.Dialog',
   [
+    'tinymce.core.Env',
     'tinymce.core.util.Delay',
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.media.api.Settings',
     'tinymce.plugins.media.core.HtmlToData',
-    'tinymce.plugins.media.core.UpdateHtml',
     'tinymce.plugins.media.core.Service',
     'tinymce.plugins.media.core.Size',
-    'tinymce.core.util.Tools',
-    'tinymce.core.Env',
+    'tinymce.plugins.media.core.UpdateHtml',
     'tinymce.plugins.media.ui.SizeManager'
   ],
-  function (Delay, HtmlToData, UpdateHtml, Service, Size, Tools, Env, SizeManager) {
+  function (Env, Delay, Tools, Settings, HtmlToData, Service, Size, UpdateHtml, SizeManager) {
     var embedChange = (Env.ie && Env.ie <= 8) ? 'onChange' : 'onInput';
 
     var handleError = function (editor) {
@@ -46,7 +47,7 @@ define(
       }
 
       return element.getAttribute('data-mce-object') ?
-        HtmlToData.htmlToData(editor.settings.media_scripts, editor.serializer.serialize(element, { selection: true })) :
+        HtmlToData.htmlToData(Settings.getScripts(editor), editor.serializer.serialize(element, { selection: true })) :
         {};
     };
 
@@ -62,7 +63,7 @@ define(
       return function (response) {
         var html = response.html;
         var embed = win.find('#embed')[0];
-        var data = Tools.extend(HtmlToData.htmlToData(editor.settings.media_scripts, html), { source1: response.url });
+        var data = Tools.extend(HtmlToData.htmlToData(Settings.getScripts(editor), html), { source1: response.url });
         win.fromJSON(data);
 
         if (embed) {
@@ -160,15 +161,15 @@ define(
         win.find('#embed').value(UpdateHtml.updateHtml(data.embed, data));
       };
 
-      if (editor.settings.media_alt_source !== false) {
+      if (Settings.hasAltSource(editor)) {
         advancedFormItems.push({ name: 'source2', type: 'filepicker', filetype: 'media', size: 40, label: 'Alternative source' });
       }
 
-      if (editor.settings.media_poster !== false) {
+      if (Settings.hasPoster(editor)) {
         advancedFormItems.push({ name: 'poster', type: 'filepicker', filetype: 'image', size: 40, label: 'Poster' });
       }
 
-      if (editor.settings.media_dimensions !== false) {
+      if (Settings.hasDimensions(editor)) {
         var control = SizeManager.createUi(reserialise);
         generalFormItems.push(control);
       }
@@ -187,7 +188,7 @@ define(
       };
 
       var updateValueOnChange = function () {
-        data = Tools.extend({}, HtmlToData.htmlToData(editor.settings.media_scripts, this.value()));
+        data = Tools.extend({}, HtmlToData.htmlToData(Settings.getScripts(editor), this.value()));
         this.parent().parent().fromJSON(data);
       };
 

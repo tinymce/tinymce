@@ -93,7 +93,7 @@ define(
 
         writer.reset();
 
-        function walk(node) {
+        var walk = function (node) {
           var handler = handlers[node.type], name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
 
           if (!handler) {
@@ -146,7 +146,7 @@ define(
           } else {
             handler(node);
           }
-        }
+        };
 
         // Serialize element and treat all non elements as fragments
         if (node.type == 1 && !settings.inner) {

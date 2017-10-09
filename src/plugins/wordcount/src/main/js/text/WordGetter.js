@@ -11,9 +11,9 @@
 define(
   'tinymce.plugins.wordcount.text.WordGetter',
   [
-    "tinymce.plugins.wordcount.text.UnicodeData",
-    "tinymce.plugins.wordcount.text.StringMapper",
-    "tinymce.plugins.wordcount.text.WordBoundary"
+    'tinymce.plugins.wordcount.text.UnicodeData',
+    'tinymce.plugins.wordcount.text.StringMapper',
+    'tinymce.plugins.wordcount.text.WordBoundary'
   ],
   function (UnicodeData, StringMapper, WordBoundary) {
     var EMPTY_STRING = UnicodeData.EMPTY_STRING;
@@ -52,7 +52,7 @@ define(
       };
     };
 
-    var getWords = function (string, options) {
+    var doGetWords = function (string, options) {
       var i = 0;
       var map = StringMapper.classify(string);
       var len = map.length;
@@ -105,6 +105,10 @@ define(
       }
 
       return words;
+    };
+
+    var getWords = function (string, options) {
+      return doGetWords(string.replace(/\ufeff/g, ''), options);
     };
 
     return {

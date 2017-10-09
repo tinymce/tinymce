@@ -13,12 +13,13 @@
 define(
   'tinymce.plugins.bbcode.demo.Demo',
   [
+    'global!document',
     'tinymce.core.EditorManager',
     'tinymce.plugins.bbcode.Plugin',
     'tinymce.plugins.code.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (EditorManager, BbCodePlugin, CodePlugin, ModernTheme) {
+  function (document, EditorManager, BbCodePlugin, CodePlugin, ModernTheme) {
     BbCodePlugin();
     CodePlugin();
     ModernTheme();

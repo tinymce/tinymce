@@ -13,12 +13,13 @@
 define(
   'tinymce.plugins.paste.demo.Demo',
   [
+    'global!console',
     'tinymce.core.EditorManager',
     'tinymce.plugins.code.Plugin',
     'tinymce.plugins.paste.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (EditorManager, CodePlugin, PastePlugin, ModernTheme) {
+  function (console, EditorManager, CodePlugin, PastePlugin, ModernTheme) {
     return function () {
       CodePlugin();
       PastePlugin();
@@ -29,7 +30,7 @@ define(
         theme: "modern",
         skin_url: "../../../../../skins/lightgray/dist/lightgray",
         plugins: "paste code",
-        toolbar: "pastetext code",
+        toolbar: "undo redo | pastetext code",
         init_instance_callback: function (editor) {
           editor.on('PastePreProcess', function (evt) {
             console.log(evt);

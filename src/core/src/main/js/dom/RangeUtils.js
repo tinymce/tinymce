@@ -16,23 +16,22 @@
 define(
   'tinymce.core.dom.RangeUtils',
   [
-    "tinymce.core.util.Tools",
-    "tinymce.core.dom.TreeWalker",
-    "tinymce.core.dom.NodeType",
-    "tinymce.core.dom.Range",
-    "tinymce.core.caret.CaretContainer"
+    'tinymce.core.util.Tools',
+    'tinymce.core.dom.TreeWalker',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.caret.CaretContainer'
   ],
-  function (Tools, TreeWalker, NodeType, Range, CaretContainer) {
+  function (Tools, TreeWalker, NodeType, CaretContainer) {
     var each = Tools.each,
       isContentEditableTrue = NodeType.isContentEditableTrue,
       isContentEditableFalse = NodeType.isContentEditableFalse,
       isCaretContainer = CaretContainer.isCaretContainer;
 
-    function hasCeProperty(node) {
+    var hasCeProperty = function (node) {
       return isContentEditableTrue(node) || isContentEditableFalse(node);
-    }
+    };
 
-    function getEndChild(container, index) {
+    var getEndChild = function (container, index) {
       var childNodes = container.childNodes;
 
       index--;
@@ -44,9 +43,9 @@ define(
       }
 
       return childNodes[index] || container;
-    }
+    };
 
-    function findParent(node, rootNode, predicate) {
+    var findParent = function (node, rootNode, predicate) {
       while (node && node !== rootNode) {
         if (predicate(node)) {
           return node;
@@ -56,27 +55,27 @@ define(
       }
 
       return null;
-    }
+    };
 
-    function hasParent(node, rootNode, predicate) {
+    var hasParent = function (node, rootNode, predicate) {
       return findParent(node, rootNode, predicate) !== null;
-    }
+    };
 
-    function hasParentWithName(node, rootNode, name) {
+    var hasParentWithName = function (node, rootNode, name) {
       return hasParent(node, rootNode, function (node) {
         return node.nodeName === name;
       });
-    }
+    };
 
-    function isFormatterCaret(node) {
+    var isFormatterCaret = function (node) {
       return node.id === '_mce_caret';
-    }
+    };
 
-    function isCeFalseCaretContainer(node, rootNode) {
+    var isCeFalseCaretContainer = function (node, rootNode) {
       return isCaretContainer(node) && hasParent(node, rootNode, isFormatterCaret) === false;
-    }
+    };
 
-    function RangeUtils(dom) {
+    var RangeUtils = function (dom) {
       /**
        * Walks the specified range like object and executes the callback for each sibling collection it finds.
        *
@@ -111,7 +110,7 @@ define(
          * @param {Array} nodes Nodes to exclude items from.
          * @return {Array} Array with nodes excluding the start/end container if needed.
          */
-        function exclude(nodes) {
+        var exclude = function (nodes) {
           var node;
 
           // First node is excluded
@@ -127,7 +126,7 @@ define(
           }
 
           return nodes;
-        }
+        };
 
         /**
          * Collects siblings
@@ -138,7 +137,7 @@ define(
          * @param {Node} endNode
          * @return {Array} Array of collected siblings.
          */
-        function collectSiblings(node, name, endNode) {
+        var collectSiblings = function (node, name, endNode) {
           var siblings = [];
 
           for (; node && node != endNode; node = node[name]) {
@@ -146,7 +145,7 @@ define(
           }
 
           return siblings;
-        }
+        };
 
         /**
          * Find an end point this is the node just before the common ancestor root.
@@ -156,7 +155,7 @@ define(
          * @param {Node} root Root/ancestor element to stop just before.
          * @return {Node} Node just before the root element.
          */
-        function findEndPoint(node, root) {
+        var findEndPoint = function (node, root) {
           do {
             if (node.parentNode == root) {
               return node;
@@ -164,9 +163,9 @@ define(
 
             node = node.parentNode;
           } while (node);
-        }
+        };
 
-        function walkBoundary(startNode, endNode, next) {
+        var walkBoundary = function (startNode, endNode, next) {
           var siblingName = next ? 'nextSibling' : 'previousSibling';
 
           for (node = startNode, parent = node.parentNode; node && node != endNode; node = parent) {
@@ -181,7 +180,7 @@ define(
               callback(exclude(siblings));
             }
           }
-        }
+        };
 
         // If index based start position then resolve it
         if (startContainer.nodeType == 1 && startContainer.hasChildNodes()) {
@@ -258,9 +257,9 @@ define(
           endContainer = rng.endContainer,
           endOffset = rng.endOffset;
 
-        function splitText(node, offset) {
+        var splitText = function (node, offset) {
           return node.splitText(offset);
-        }
+        };
 
         // Handle single text node
         if (startContainer == endContainer && startContainer.nodeType == 3) {
@@ -309,15 +308,15 @@ define(
       this.normalize = function (rng) {
         var normalized = false, collapsed;
 
-        function normalizeEndPoint(start) {
+        var normalizeEndPoint = function (start) {
           var container, offset, walker, body = dom.getRoot(), node, nonEmptyElementsMap;
           var directionLeft, isAfterNode;
 
-          function isTableCell(node) {
+          var isTableCell = function (node) {
             return node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
-          }
+          };
 
-          function hasBrBeforeAfter(node, left) {
+          var hasBrBeforeAfter = function (node, left) {
             var walker = new TreeWalker(node, dom.getParent(node.parentNode, dom.isBlock) || body);
 
             while ((node = walker[left ? 'prev' : 'next']())) {
@@ -325,9 +324,9 @@ define(
                 return true;
               }
             }
-          }
+          };
 
-          function hasContentEditableFalseParent(node) {
+          var hasContentEditableFalseParent = function (node) {
             while (node && node != body) {
               if (isContentEditableFalse(node)) {
                 return true;
@@ -337,15 +336,15 @@ define(
             }
 
             return false;
-          }
+          };
 
-          function isPrevNode(node, name) {
+          var isPrevNode = function (node, name) {
             return node.previousSibling && node.previousSibling.nodeName == name;
-          }
+          };
 
           // Walks the dom left/right to find a suitable text node to move the endpoint into
           // It will only walk within the current parent block or body and will stop if it hits a block or a BR/IMG
-          function findTextNodeRelative(left, startNode) {
+          var findTextNodeRelative = function (left, startNode) {
             var walker, lastInlineElement, parentBlockContainer;
 
             startNode = startNode || container;
@@ -393,7 +392,7 @@ define(
               normalized = true;
               offset = 0;
             }
-          }
+          };
 
           container = rng[(start ? 'start' : 'end') + 'Container'];
           offset = rng[(start ? 'start' : 'end') + 'Offset'];
@@ -466,13 +465,13 @@ define(
                     break;
                   }
 
-                  // Found a BR/IMG element that we can place the caret before
+                  // Found a BR/IMG/PRE element that we can place the caret before
                   if (nonEmptyElementsMap[node.nodeName.toLowerCase()] && !isTableCell(node)) {
                     offset = dom.nodeIndex(node);
                     container = node.parentNode;
 
-                    // Put caret after image when moving the end point
-                    if (node.nodeName == "IMG" && !directionLeft) {
+                    // Put caret after image and pre tag when moving the end point
+                    if ((node.nodeName === "IMG" || node.nodeName === "PRE") && !directionLeft) {
                       offset++;
                     }
 
@@ -525,7 +524,7 @@ define(
           if (normalized) {
             rng['set' + (start ? 'Start' : 'End')](container, offset);
           }
-        }
+        };
 
         collapsed = rng.collapsed;
 
@@ -542,7 +541,7 @@ define(
 
         return normalized;
       };
-    }
+    };
 
     /**
      * Compares two ranges and checks if they are equal.
@@ -554,31 +553,15 @@ define(
      * @return {Boolean} true/false if the ranges are equal.
      */
     RangeUtils.compareRanges = function (rng1, rng2) {
-      if (rng1 && rng2) {
-        // Compare native IE ranges
-        if (rng1.item || rng1.duplicate) {
-          // Both are control ranges and the selected element matches
-          if (rng1.item && rng2.item && rng1.item(0) === rng2.item(0)) {
-            return true;
-          }
-
-          // Both are text ranges and the range matches
-          if (rng1.isEqual && rng2.isEqual && rng2.isEqual(rng1)) {
-            return true;
-          }
-        } else {
-          // Compare w3c ranges
-          return rng1.startContainer == rng2.startContainer && rng1.startOffset == rng2.startOffset;
-        }
-      }
-
-      return false;
+      return rng1 && rng2 &&
+        (rng1.startContainer === rng2.startContainer && rng1.startOffset === rng2.startOffset) &&
+        (rng1.endContainer === rng2.endContainer && rng1.endOffset === rng2.endOffset);
     };
 
     /**
      * Finds the closest selection rect tries to get the range from that.
      */
-    function findClosestIeRange(clientX, clientY, doc) {
+    var findClosestIeRange = function (clientX, clientY, doc) {
       var element, rng, rects;
 
       element = doc.elementFromPoint(clientX, clientY);
@@ -612,12 +595,12 @@ define(
       }
 
       return null;
-    }
+    };
 
-    function moveOutOfContentEditableFalse(rng, rootNode) {
+    var moveOutOfContentEditableFalse = function (rng, rootNode) {
       var parentElement = rng && rng.parentElement ? rng.parentElement() : null;
       return isContentEditableFalse(findParent(parentElement, rootNode, hasCeProperty)) ? null : rng;
-    }
+    };
 
     /**
      * Gets the caret range for the given x/y location.
@@ -667,7 +650,7 @@ define(
     };
 
     RangeUtils.getNode = function (container, offset) {
-      if (container.nodeType == 1 && container.hasChildNodes()) {
+      if (container.nodeType === 1 && container.hasChildNodes()) {
         if (offset >= container.childNodes.length) {
           offset = container.childNodes.length - 1;
         }

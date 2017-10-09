@@ -1,0 +1,52 @@
+/* Note, this file is imported inside .tinymce-mobile-context-toolbar, so that prefix is on everything here. */
+
+.tinymce-mobile-toolbar-group {
+    @import "serialised-dialogs.less";
+    @import "slider.less";
+    .mixin-flex-bar;
+    flex: 1;
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+
+    .tinymce-mobile-serializer-wrapper,
+    &>div {
+        .mixin-flex-bar;
+        flex: 1;
+    }
+
+    .tinymce-mobile-serializer-wrapper {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* For widgets like the colour picker, use the whole height */
+    .tinymce-mobile-toolbar-group-item:not(.tinymce-mobile-serialised-dialog) {
+        height: 100%;
+    }
+
+    /* Make any buttons appearing on the left and right display in the centre (e.g. color edges) */
+    .tinymce-mobile-toolbar-group-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .tinymce-mobile-dot-container {
+        display: flex;
+    }
+
+    input {
+        padding-top: 0.1em;
+        padding-bottom: 0.1em;
+        padding-left: 5px;
+        font-size: 0.85em;
+        flex-grow: 1;
+        background: @toolstrip-input-background-color;
+        border: none;
+        border-radius: 0px;
+        color: @toolstrip-input-foreground-color;
+        &::placeholder {
+            /* WebKit, Blink, Edge */
+            color: @toolstrip-input-placeholder-foreground-color;
+        }
+    }
+}

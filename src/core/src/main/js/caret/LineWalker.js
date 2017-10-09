@@ -30,18 +30,18 @@ define(
   function (Fun, Arr, Dimensions, CaretCandidate, CaretUtils, CaretWalker, CaretPosition, ClientRect) {
     var curry = Fun.curry;
 
-    function findUntil(direction, rootNode, predicateFn, node) {
+    var findUntil = function (direction, rootNode, predicateFn, node) {
       while ((node = CaretUtils.findNode(node, direction, CaretCandidate.isEditableCaretCandidate, rootNode))) {
         if (predicateFn(node)) {
           return;
         }
       }
-    }
+    };
 
-    function walkUntil(direction, isAboveFn, isBeflowFn, rootNode, predicateFn, caretPosition) {
+    var walkUntil = function (direction, isAboveFn, isBeflowFn, rootNode, predicateFn, caretPosition) {
       var line = 0, node, result = [], targetClientRect;
 
-      function add(node) {
+      var add = function (node) {
         var i, clientRect, clientRects;
 
         clientRects = Dimensions.getClientRects(node);
@@ -67,7 +67,7 @@ define(
 
           result.push(clientRect);
         }
-      }
+      };
 
       targetClientRect = Arr.last(caretPosition.getClientRects());
       if (!targetClientRect) {
@@ -79,30 +79,30 @@ define(
       findUntil(direction, rootNode, add, node);
 
       return result;
-    }
+    };
 
-    function aboveLineNumber(lineNumber, clientRect) {
+    var aboveLineNumber = function (lineNumber, clientRect) {
       return clientRect.line > lineNumber;
-    }
+    };
 
-    function isLine(lineNumber, clientRect) {
+    var isLine = function (lineNumber, clientRect) {
       return clientRect.line === lineNumber;
-    }
+    };
 
     var upUntil = curry(walkUntil, -1, ClientRect.isAbove, ClientRect.isBelow);
     var downUntil = curry(walkUntil, 1, ClientRect.isBelow, ClientRect.isAbove);
 
-    function positionsUntil(direction, rootNode, predicateFn, node) {
+    var positionsUntil = function (direction, rootNode, predicateFn, node) {
       var caretWalker = new CaretWalker(rootNode), walkFn, isBelowFn, isAboveFn,
         caretPosition, result = [], line = 0, clientRect, targetClientRect;
 
-      function getClientRect(caretPosition) {
+      var getClientRect = function (caretPosition) {
         if (direction == 1) {
           return Arr.last(caretPosition.getClientRects());
         }
 
         return Arr.last(caretPosition.getClientRects());
-      }
+      };
 
       if (direction == 1) {
         walkFn = caretWalker.next;
@@ -145,7 +145,7 @@ define(
       } while ((caretPosition = walkFn(caretPosition)));
 
       return result;
-    }
+    };
 
     return {
       upUntil: upUntil,

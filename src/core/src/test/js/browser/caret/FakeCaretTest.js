@@ -106,6 +106,22 @@ asynctest(
       LegacyUnit.equal(fakeCaret.getCss().length > 10, true);
     });
 
+    suite.test('show before TD', function () {
+      var rng;
+
+      getRoot().innerHTML = '<table><tr><td contenteditable="false">x</td></tr></table>';
+      rng = fakeCaret.show(false, $('td', getRoot())[0]);
+      LegacyUnit.equal(true, rng === null, 'Should be null since TD is not a valid caret target');
+    });
+
+    suite.test('show before TH', function () {
+      var rng;
+
+      getRoot().innerHTML = '<table><tr><th contenteditable="false">x</th></tr></table>';
+      rng = fakeCaret.show(false, $('th', getRoot())[0]);
+      LegacyUnit.equal(true, rng === null, 'Should be null since TH is not a valid caret target');
+    });
+
     viewBlock.attach();
     setup();
 

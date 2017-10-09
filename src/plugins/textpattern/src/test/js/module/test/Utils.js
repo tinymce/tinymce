@@ -89,6 +89,7 @@ define(
       sSetContentAndPressSpace: sSetContentAndPressKey(Keys.space()),
       sSetContentAndPressEnter: sSetContentAndPressKey(Keys.enter()),
       withTeardown: withTeardown,
+      bodyStruct: bodyStruct,
       inlineStructHelper: inlineStructHelper,
       inlineBlockStructHelper: inlineBlockStructHelper,
       blockStructHelper: blockStructHelper

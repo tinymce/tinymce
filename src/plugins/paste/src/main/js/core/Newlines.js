@@ -17,14 +17,16 @@
 define(
   'tinymce.plugins.paste.core.Newlines',
   [
+    'tinymce.core.util.Tools',
     'tinymce.core.html.Entities'
   ],
-  function (Entities) {
+  function (Tools, Entities) {
 
     var isPlainText = function (text) {
-      // so basically any tag that is not one of the "p, div, br", or is one of them, but is followed
+      // so basically any tag that is not one of the "p, div, span, br", or is one of them, but is followed
       // by some additional characters qualifies the text as not a plain text (having some HTML tags)
-      return !/<(?:(?!\/?(?:div|p|br))[^>]*|(?:div|p|br)\s+\w[^>]+)>/.test(text);
+      // <span style="white-space:pre"> and <br /> are added as separate exceptions to the rule
+      return !/<(?:\/?(?!(?:div|p|br|span)>)\w+|(?:(?!(?:span style="white-space:\s?pre;?">)|br\s?\/>))\w+\s[^>]+)>/i.test(text);
     };
 
 
@@ -53,37 +55,19 @@ define(
 
 
     var toBlockElements = function (text, rootTag, rootAttrs) {
-      var pieces = text.split(/\r?\n/);
-      var i = 0, len = pieces.length;
-      var stack = [];
-      var blocks = [];
+      var blocks = text.split(/\n\n/);
       var tagOpen = openContainer(rootTag, rootAttrs);
       var tagClose = '</' + rootTag + '>';
-      var isLast, newlineFollows, isSingleNewline;
 
-      // if single-line text then nothing to do
-      if (pieces.length === 1) {
-        return text;
-      }
+      var paragraphs = Tools.map(blocks, function (p) {
+        return p.split(/\n/).join('<br />');
+      });
 
-      for (; i < len; i++) {
-        isLast = i === len - 1;
-        newlineFollows = !isLast && !pieces[i + 1];
-        isSingleNewline = !pieces[i] && !stack.length;
+      var stitch = function (p) {
+        return tagOpen + p + tagClose;
+      };
 
-        stack.push(pieces[i] ? pieces[i] : '&nbsp;');
-
-        if (isLast || newlineFollows || isSingleNewline) {
-          blocks.push(stack.join('<br>'));
-          stack = [];
-        }
-
-        if (newlineFollows) {
-          i++; // extra progress for extra newline
-        }
-      }
-
-      return blocks.length === 1 ? blocks[0] : tagOpen + blocks.join(tagClose + tagOpen) + tagClose;
+      return paragraphs.length === 1 ? paragraphs[0] : Tools.map(paragraphs, stitch).join('');
     };
 
 

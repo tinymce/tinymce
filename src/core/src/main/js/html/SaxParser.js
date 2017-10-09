@@ -64,6 +64,10 @@ define(
       return name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
     };
 
+    var trimComments = function (text) {
+      return text.replace(/<!--|-->/g, '');
+    };
+
     /**
      * Returns the index of the end tag for a specific start tag. This can be
      * used to skip all children of a parent element from being processed.
@@ -75,7 +79,7 @@ define(
      * @param {Number} startIndex Indext to start searching at should be after the start tag.
      * @return {Number} Index of the end tag.
      */
-    function findEndTag(schema, html, startIndex) {
+    var findEndTag = function (schema, html, startIndex) {
       var count = 1, index, matches, tokenRegExp, shortEndedElements;
 
       shortEndedElements = schema.getShortEndedElements();
@@ -101,7 +105,7 @@ define(
       }
 
       return index;
-    }
+    };
 
     /**
      * Constructs a new SaxParser instance.
@@ -111,10 +115,10 @@ define(
      * @param {Object} settings Name/value collection of settings. comment, cdata, text, start and end are callbacks.
      * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
      */
-    function SaxParser(settings, schema) {
+    var SaxParser = function (settings, schema) {
       var self = this;
 
-      function noop() { }
+      var noop = function () { };
 
       settings = settings || {};
       self.schema = schema = schema || new Schema();
@@ -142,12 +146,12 @@ define(
         var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, i, text, name;
         var isInternalElement, removeInternalElements, shortEndedElements, fillAttrsMap, isShortEnded;
         var validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
-        var attributesRequired, attributesDefault, attributesForced;
+        var attributesRequired, attributesDefault, attributesForced, processHtml;
         var anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
         var decode = Entities.decode, fixSelfClosing, filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster');
         var scriptUriRegExp = /((java|vb)script|mhtml):/i, dataUriRegExp = /^data:/i;
 
-        function processEndTag(name) {
+        var processEndTag = function (name) {
           var pos, i;
 
           // Find position of parent of the same type
@@ -172,9 +176,9 @@ define(
             // Remove the open elements from the stack
             stack.length = pos;
           }
-        }
+        };
 
-        function parseAttribute(match, name, value, val2, val3) {
+        var parseAttribute = function (match, name, value, val2, val3) {
           var attrRule, i, trimRegExp = /[\s\u0000-\u001F]+/g;
 
           name = name.toLowerCase();
@@ -232,13 +236,18 @@ define(
             }
           }
 
+          // Block data or event attributes on elements marked as internal
+          if (isInternalElement && (name in filteredUrlAttrs || name.indexOf('on') === 0)) {
+            return;
+          }
+
           // Add attribute to list and map
           attrList.map[name] = value;
           attrList.push({
             name: name,
             value: value
           });
-        }
+        };
 
         // Precompile RegExps and map objects
         tokenRegExp = new RegExp('<(?:' +
@@ -246,8 +255,8 @@ define(
           '(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + // CDATA
           '(?:!DOCTYPE([\\w\\W]*?)>)|' + // DOCTYPE
           '(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + // PI
-          '(?:\\/([^>]+)>)|' + // End element
-          '(?:([A-Za-z0-9\\-_\\:\\.]+)((?:\\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\\/|\\s+)>)' + // Start element
+          '(?:\\/([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)>)|' + // End element
+          '(?:([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)((?:\\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\\/|\\s+)>)' + // Start element
           ')', 'g');
 
         attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:[^\"])*)\")|(?:\'((?:[^\'])*)\')|([^>\s]+)))?/g;
@@ -260,8 +269,9 @@ define(
         removeInternalElements = settings.remove_internals;
         fixSelfClosing = settings.fix_self_closing;
         specialElements = schema.getSpecialElements();
+        processHtml = html + '>';
 
-        while ((matches = tokenRegExp.exec(html))) {
+        while ((matches = tokenRegExp.exec(processHtml))) { // Adds and extra '>' to keep regexps from doing catastrofic backtracking on malformed html
           // Text
           if (index < matches.index) {
             self.text(decode(html.substr(index, matches.index - index)));
@@ -277,6 +287,14 @@ define(
 
             processEndTag(value);
           } else if ((value = matches[7])) { // Start element
+            // Did we consume the extra character then treat it as text
+            // This handles the case with html like this: "text a<b text"
+            if (matches.index + matches[0].length > html.length) {
+              self.text(decode(html.substr(matches.index)));
+              index = matches.index + matches[0].length;
+              continue;
+            }
+
             value = value.toLowerCase();
 
             // IE will add a ":" in front of elements it doesn't understand like custom elements or HTML5 elements
@@ -449,7 +467,7 @@ define(
 
             self.comment(value);
           } else if ((value = matches[2])) { // CDATA
-            self.cdata(value);
+            self.cdata(trimComments(value));
           } else if ((value = matches[3])) { // DOCTYPE
             self.doctype(value);
           } else if ((value = matches[4])) { // PI
@@ -473,7 +491,7 @@ define(
           }
         }
       };
-    }
+    };
 
     SaxParser.findEndTag = findEndTag;
 

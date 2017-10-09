@@ -17,16 +17,20 @@
 define(
   'tinymce.core.InsertContent',
   [
-    "tinymce.core.Env",
-    "tinymce.core.util.Tools",
-    "tinymce.core.html.Serializer",
-    "tinymce.core.caret.CaretWalker",
-    "tinymce.core.caret.CaretPosition",
-    "tinymce.core.dom.ElementUtils",
-    "tinymce.core.dom.NodeType",
-    "tinymce.core.InsertList"
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.node.Element',
+    'tinymce.core.caret.CaretPosition',
+    'tinymce.core.caret.CaretWalker',
+    'tinymce.core.dom.ElementUtils',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.PaddingBr',
+    'tinymce.core.dom.RangeNormalizer',
+    'tinymce.core.Env',
+    'tinymce.core.html.Serializer',
+    'tinymce.core.InsertList',
+    'tinymce.core.util.Tools'
   ],
-  function (Env, Tools, Serializer, CaretWalker, CaretPosition, ElementUtils, NodeType, InsertList) {
+  function (Option, Element, CaretPosition, CaretWalker, ElementUtils, NodeType, PaddingBr, RangeNormalizer, Env, Serializer, InsertList, Tools) {
     var isTableCell = NodeType.matchNodeNames('td th');
 
     var validInsertion = function (editor, value, parentNode) {
@@ -46,22 +50,26 @@ define(
       }
     };
 
+    var trimBrsFromTableCell = function (dom, elm) {
+      Option.from(dom.getParent(elm, 'td,th')).map(Element.fromDom).each(PaddingBr.trimBlockTrailingBr);
+    };
+
     var insertHtmlAtCaret = function (editor, value, details) {
       var parser, serializer, parentNode, rootNode, fragment, args;
       var marker, rng, node, node2, bookmarkHtml, merge;
       var textInlineElements = editor.schema.getTextInlineElements();
       var selection = editor.selection, dom = editor.dom;
 
-      function trimOrPaddLeftRight(html) {
+      var trimOrPaddLeftRight = function (html) {
         var rng, container, offset;
 
         rng = selection.getRng(true);
         container = rng.startContainer;
         offset = rng.startOffset;
 
-        function hasSiblingText(siblingName) {
+        var hasSiblingText = function (siblingName) {
           return container[siblingName] && container[siblingName].nodeType == 3;
-        }
+        };
 
         if (container.nodeType == 3) {
           if (offset > 0) {
@@ -78,10 +86,10 @@ define(
         }
 
         return html;
-      }
+      };
 
       // Removes &nbsp; from a [b] c -> a &nbsp;c -> a c
-      function trimNbspAfterDeleteAndPaddValue() {
+      var trimNbspAfterDeleteAndPaddValue = function () {
         var rng, container, offset;
 
         rng = selection.getRng(true);
@@ -103,9 +111,9 @@ define(
             }
           }
         }
-      }
+      };
 
-      function reduceInlineTextElements() {
+      var reduceInlineTextElements = function () {
         if (merge) {
           var root = editor.getBody(), elementUtils = new ElementUtils(dom);
 
@@ -117,9 +125,9 @@ define(
             }
           });
         }
-      }
+      };
 
-      function markFragmentElements(fragment) {
+      var markFragmentElements = function (fragment) {
         var node = fragment;
 
         while ((node = node.walk())) {
@@ -127,26 +135,26 @@ define(
             node.attr('data-mce-fragment', '1');
           }
         }
-      }
+      };
 
-      function umarkFragmentElements(elm) {
+      var umarkFragmentElements = function (elm) {
         Tools.each(elm.getElementsByTagName('*'), function (elm) {
           elm.removeAttribute('data-mce-fragment');
         });
-      }
+      };
 
-      function isPartOfFragment(node) {
+      var isPartOfFragment = function (node) {
         return !!node.getAttribute('data-mce-fragment');
-      }
+      };
 
-      function canHaveChildren(node) {
+      var canHaveChildren = function (node) {
         return node && !editor.schema.getShortEndedElements()[node.nodeName];
-      }
+      };
 
-      function moveSelectionToMarker(marker) {
+      var moveSelectionToMarker = function (marker) {
         var parentEditableFalseElm, parentBlock, nextRng;
 
-        function getContentEditableFalseParent(node) {
+        var getContentEditableFalseParent = function (node) {
           var root = editor.getBody();
 
           for (; node && node !== root; node = node.parentNode) {
@@ -156,7 +164,7 @@ define(
           }
 
           return null;
-        }
+        };
 
         if (!marker) {
           return;
@@ -194,7 +202,7 @@ define(
           rng.setEndBefore(marker);
         }
 
-        function findNextCaretRng(rng) {
+        var findNextCaretRng = function (rng) {
           var caretPos = CaretPosition.fromRangeStart(rng);
           var caretWalker = new CaretWalker(editor.getBody());
 
@@ -202,7 +210,7 @@ define(
           if (caretPos) {
             return caretPos.toRange();
           }
-        }
+        };
 
         // Remove the marker node and set the new range
         parentBlock = dom.getParent(marker, dom.isBlock);
@@ -223,7 +231,7 @@ define(
         }
 
         selection.setRng(rng);
-      }
+      };
 
       // Check for whitespace before/after value
       if (/^ | $/.test(value)) {
@@ -240,8 +248,13 @@ define(
       bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
 
       // Run beforeSetContent handlers on the HTML to be inserted
-      args = { content: value, format: 'html', selection: true };
-      editor.fire('BeforeSetContent', args);
+      args = { content: value, format: 'html', selection: true, paste: details.paste };
+      args = editor.fire('BeforeSetContent', args);
+      if (args.isDefaultPrevented()) {
+        editor.fire('SetContent', { content: args.content, format: 'html', selection: true, paste: details.paste });
+        return;
+      }
+
       value = args.content;
 
       // Add caret at end of contents if it's missing
@@ -269,7 +282,7 @@ define(
       if (!selection.isCollapsed()) {
         // Fix for #2595 seems that delete removes one extra character on
         // WebKit for some odd reason if you double click select a word
-        editor.selection.setRng(editor.selection.getRng());
+        editor.selection.setRng(RangeNormalizer.normalize(editor.selection.getRng()));
         editor.getDoc().execCommand('Delete', false, null);
         trimNbspAfterDeleteAndPaddValue();
       }
@@ -281,7 +294,7 @@ define(
       fragment = parser.parse(value, parserArgs);
 
       // Custom handling of lists
-      if (details.paste === true && InsertList.isListFragment(fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
+      if (details.paste === true && InsertList.isListFragment(editor.schema, fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
         rng = InsertList.insertAtCaret(serializer, dom, editor.selection.getRng(true), fragment);
         editor.selection.setRng(rng);
         editor.fire('SetContent', args);
@@ -355,6 +368,8 @@ define(
       reduceInlineTextElements();
       moveSelectionToMarker(dom.get('mce_marker'));
       umarkFragmentElements(editor.getBody());
+      trimBrsFromTableCell(editor.dom, editor.selection.getStart());
+
       editor.fire('SetContent', args);
       editor.addVisual();
     };

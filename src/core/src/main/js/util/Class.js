@@ -29,15 +29,15 @@ define(
 
     var extendClass, initializing;
 
-    function Class() {
-    }
+    var Class = function () {
+    };
 
     // Provides classical inheritance, based on code made by John Resig
     Class.extend = extendClass = function (prop) {
       var self = this, _super = self.prototype, prototype, name, member;
 
       // The dummy class constructor
-      function Class() {
+      var Class = function () {
         var i, mixins, mixin, self = this;
 
         // All construction is actually done in the init method
@@ -59,16 +59,16 @@ define(
             }
           }
         }
-      }
+      };
 
       // Dummy function, needs to be extended in order to provide functionality
-      function dummy() {
+      var dummy = function () {
         return this;
-      }
+      };
 
       // Creates a overloaded method for the class
       // this enables you to use this._super(); to call the super function
-      function createMethod(name, fn) {
+      var createMethod = function (name, fn) {
         return function () {
           var self = this, tmp = self._super, ret;
 
@@ -78,7 +78,7 @@ define(
 
           return ret;
         };
-      }
+      };
 
       // Instantiate a base class (but only create the instance,
       // don't run the init constructor)

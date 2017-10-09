@@ -14,6 +14,7 @@ define(
   'tinymce.core.demo.CommandsDemo',
   [
     'ephox.katamari.api.Arr',
+    'global!document',
     'tinymce.core.EditorManager',
     'tinymce.core.PluginManager',
     'tinymce.plugins.advlist.Plugin',
@@ -60,14 +61,12 @@ define(
     'tinymce.plugins.wordcount.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Arr, EditorManager, PluginManager, AdvListPlugin, AnchorPlugin, AutoLinkPlugin, AutoResizePlugin,
-    AutoSavePlugin, BbCodePlugin, CharMapPlugin, CodePlugin, CodeSamplePlugin, ColorPickerPlugin,
-    ContextMenuPlugin, DirectionalityPlugin, EmoticonsPlugin, FullPagePlugin, FullScreenPlugin,
-    HrPlugin, ImagePlugin, ImageToolsPlugin, ImportCssPlugin, InsertDatetimePlugin, LegacyOutputPlugin,
-    LinkPlugin, ListsPlugin, MediaPlugin, NonBreakingPlugin, NonEditablePlugin, PageBreakPlugin,
-    PastePlugin, PreviewPlugin, PrintPlugin, SavePlugin, SearchReplacePlugin, SpellCheckerPlugin,
-    TabFocusPlugin, TablePlugin, TemplatePlugin, TextColorPlugin, TextPatternPlugin, TocPlugin,
-    VisualBlocksPlugin, VisualCharsPlugin, WordCountPlugin, ModernTheme
+  function (
+    Arr, document, EditorManager, PluginManager, AdvListPlugin, AnchorPlugin, AutoLinkPlugin, AutoResizePlugin, AutoSavePlugin, BbCodePlugin, CharMapPlugin,
+    CodePlugin, CodeSamplePlugin, ColorPickerPlugin, ContextMenuPlugin, DirectionalityPlugin, EmoticonsPlugin, FullPagePlugin, FullScreenPlugin, HrPlugin, ImagePlugin,
+    ImageToolsPlugin, ImportCssPlugin, InsertDatetimePlugin, LegacyOutputPlugin, LinkPlugin, ListsPlugin, MediaPlugin, NonBreakingPlugin, NonEditablePlugin,
+    PageBreakPlugin, PastePlugin, PreviewPlugin, PrintPlugin, SavePlugin, SearchReplacePlugin, SpellCheckerPlugin, TabFocusPlugin, TablePlugin, TemplatePlugin,
+    TextColorPlugin, TextPatternPlugin, TocPlugin, VisualBlocksPlugin, VisualCharsPlugin, WordCountPlugin, ModernTheme
   ) {
     AdvListPlugin();
     AnchorPlugin();

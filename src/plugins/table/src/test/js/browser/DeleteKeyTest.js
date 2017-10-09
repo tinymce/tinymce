@@ -16,6 +16,7 @@ asynctest(
     Theme();
 
     suite.test("Delete empty like table cell contents", function (editor) {
+      editor.focus();
       editor.getBody().innerHTML = (
         '<table><tbody>' +
         '<tr><td><p><br></p></td><td><p>a</p></td>' +

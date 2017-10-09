@@ -1,16 +1,24 @@
+/**
+ * KeyHandler.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
 define(
   'tinymce.plugins.textpattern.core.KeyHandler',
-
   [
     'tinymce.core.util.VK',
     'tinymce.plugins.textpattern.core.Formatter'
   ],
-
   function (VK, Formatter) {
     function handleEnter(editor, patterns) {
-      var rng, wrappedTextNode;
+      var wrappedTextNode, rng;
 
-      wrappedTextNode = Formatter.applyInlineFormat(editor, patterns, false);
+      wrappedTextNode = Formatter.applyInlineFormatEnter(editor, patterns);
       if (wrappedTextNode) {
         rng = editor.dom.createRng();
         rng.setStart(wrappedTextNode, wrappedTextNode.data.length);
@@ -24,7 +32,7 @@ define(
     function handleInlineKey(editor, patterns) {
       var wrappedTextNode, lastChar, lastCharNode, rng, dom;
 
-      wrappedTextNode = Formatter.applyInlineFormat(editor, patterns, true);
+      wrappedTextNode = Formatter.applyInlineFormatSpace(editor, patterns);
       if (wrappedTextNode) {
         dom = editor.dom;
         lastChar = wrappedTextNode.data.slice(-1);
@@ -34,11 +42,7 @@ define(
           wrappedTextNode.deleteData(wrappedTextNode.data.length - 1, 1);
           lastCharNode = dom.doc.createTextNode(lastChar);
 
-          if (wrappedTextNode.nextSibling) {
-            dom.insertAfter(lastCharNode, wrappedTextNode.nextSibling);
-          } else {
-            wrappedTextNode.parentNode.appendChild(lastCharNode);
-          }
+          dom.insertAfter(lastCharNode, wrappedTextNode.parentNode);
 
           rng = dom.createRng();
           rng.setStart(lastCharNode, 1);

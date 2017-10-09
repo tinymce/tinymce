@@ -11,15 +11,19 @@
 define(
   'tinymce.core.init.InitContentBody',
   [
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
     'global!document',
     'global!window',
+    'tinymce.core.api.Formatter',
+    'tinymce.core.caret.CaretContainerInput',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.Selection',
     'tinymce.core.dom.Serializer',
     'tinymce.core.EditorUpload',
     'tinymce.core.ErrorReporter',
     'tinymce.core.ForceBlocks',
-    'tinymce.core.Formatter',
     'tinymce.core.html.DomParser',
     'tinymce.core.html.Node',
     'tinymce.core.html.Schema',
@@ -32,10 +36,18 @@ define(
     'tinymce.core.util.Tools'
   ],
   function (
-    document, window, DOMUtils, Selection, Serializer, EditorUpload, ErrorReporter, ForceBlocks, Formatter, DomParser, Node, Schema, KeyboardOverrides,
-    NodeChange, SelectionOverrides, UndoManager, Delay, Quirks, Tools
+    Insert, Element, Attr, document, window, Formatter, CaretContainerInput, DOMUtils, Selection, Serializer, EditorUpload, ErrorReporter, ForceBlocks, DomParser,
+    Node, Schema, KeyboardOverrides, NodeChange, SelectionOverrides, UndoManager, Delay, Quirks, Tools
   ) {
     var DOM = DOMUtils.DOM;
+
+    var appendStyle = function (editor, text) {
+      var head = Element.fromDom(editor.getDoc().head);
+      var tag = Element.fromTag('style');
+      Attr.set(tag, 'type', 'text/css');
+      Insert.append(tag, Element.fromText(text));
+      Insert.append(head, tag);
+    };
 
     var createParser = function (editor) {
       var parser = new DomParser(editor.settings, editor.schema);
@@ -142,6 +154,10 @@ define(
       autoFocus(editor);
     };
 
+    var getStyleSheetLoader = function (editor) {
+      return editor.inline ? DOM.styleSheetLoader : editor.dom.styleSheetLoader;
+    };
+
     var initContentBody = function (editor, skipWrite) {
       var settings = editor.settings, targetElm = editor.getElement(), doc = editor.getDoc(), body, contentCssText;
 
@@ -215,10 +231,12 @@ define(
       editor.selection = new Selection(editor.dom, editor.getWin(), editor.serializer, editor);
       editor.formatter = new Formatter(editor);
       editor.undoManager = new UndoManager(editor);
-      editor.forceBlocks = new ForceBlocks(editor);
-      KeyboardOverrides.setup(editor);
       editor._nodeChangeDispatcher = new NodeChange(editor);
       editor._selectionOverrides = new SelectionOverrides(editor);
+
+      CaretContainerInput.setup(editor);
+      KeyboardOverrides.setup(editor);
+      ForceBlocks.setup(editor);
 
       editor.fire('PreInit');
 
@@ -277,16 +295,20 @@ define(
         editor.dom.addStyle(contentCssText);
       }
 
-      editor.dom.styleSheetLoader.loadAll(
+      getStyleSheetLoader(editor).loadAll(
         editor.contentCSS,
         function (_) {
           initEditor(editor);
         },
         function (urls) {
           initEditor(editor);
-          ErrorReporter.contentCssError(editor, urls);
         }
       );
+
+      // Append specified content CSS last
+      if (settings.content_style) {
+        appendStyle(editor, settings.content_style);
+      }
     };
 
     return {

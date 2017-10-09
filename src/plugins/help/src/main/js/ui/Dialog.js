@@ -1,3 +1,13 @@
+/**
+ * Dialog.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
 define(
   'tinymce.plugins.help.ui.Dialog',
   [
@@ -7,7 +17,7 @@ define(
     'tinymce.plugins.help.ui.ButtonsRow'
   ],
   function (EditorManager, KeyboardShortcutsTab, PluginsTab, ButtonsRow) {
-    var openDialog = function (editor, url) {
+    var open = function (editor, pluginUrl) {
       return function () {
         editor.windowManager.open({
           title: 'Help',
@@ -15,18 +25,18 @@ define(
           layout: 'flex',
           body: [
             KeyboardShortcutsTab.makeTab(),
-            PluginsTab.makeTab(editor, url)
+            PluginsTab.makeTab(editor, pluginUrl)
           ],
           buttons: ButtonsRow.makeRow(),
           onPostRender: function () {
             var title = this.getEl('title');
-            title.innerHTML = '<img src="' + url + '/img/logo.png" alt="TinyMCE Logo" style="width: 200px">';
+            title.innerHTML = '<img src="' + pluginUrl + '/img/logo.png" alt="TinyMCE Logo" style="display: inline-block; width: 200px; height: 50px">';
           }
         });
       };
     };
 
     return {
-      openDialog: openDialog
+      open: open
     };
   });

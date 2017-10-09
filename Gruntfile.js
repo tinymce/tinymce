@@ -258,7 +258,7 @@ module.exports = function (grunt) {
 
             zip.addFile(
               "jquery.tinymce.js",
-              "src/core/src/main/js/JqueryIntegration.js"
+              "js/tinymce/jquery.tinymce.min.js"
             );
 
             var getDirs = zipUtils.getDirectories(grunt, this.excludes);
@@ -444,7 +444,7 @@ module.exports = function (grunt) {
       core: {
         config: 'config/bolt/browser.js',
         projectdir: '.',
-        testfiles: ["**/src/test/js/**/*Test.js"],
+        testfiles: ["src/**/src/test/js/browser/**/*Test.js"],
         customRoutes: 'src/core/src/test/json/routes.json'
       }
     },
@@ -453,7 +453,7 @@ module.exports = function (grunt) {
       phantomjs: {
         browser: 'phantomjs',
         config: 'config/bolt/browser.js',
-        testfiles: ['**/src/test/js/**/*Test.js'],
+        testfiles: ['src/**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
@@ -463,7 +463,7 @@ module.exports = function (grunt) {
       chrome: {
         browser: 'chrome',
         config: 'config/bolt/browser.js',
-        testfiles: ['**/src/test/js/**/*Test.js'],
+        testfiles: ['src/**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
@@ -473,7 +473,7 @@ module.exports = function (grunt) {
       firefox: {
         browser: 'firefox',
         config: 'config/bolt/browser.js',
-        testfiles: ['**/src/test/js/**/*Test.js'],
+        testfiles: ['src/**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
@@ -483,7 +483,7 @@ module.exports = function (grunt) {
       MicrosoftEdge: {
         browser: 'MicrosoftEdge',
         config: 'config/bolt/browser.js',
-        testfiles: ['**/src/test/js/**/*Test.js'],
+        testfiles: ['src/**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
@@ -493,7 +493,7 @@ module.exports = function (grunt) {
       ie: {
         browser: 'ie',
         config: 'config/bolt/browser.js',
-        testfiles: ['**/src/test/js/**/*Test.js'],
+        testfiles: ['src/**/src/test/js/**/*Test.js'],
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
@@ -503,6 +503,7 @@ module.exports = function (grunt) {
 
     subgrunt: {
       'core': { path: 'src/core' },
+      'ui': { path: 'src/ui' },
       'advlist-plugin': { path: 'src/plugins/advlist' },
       'anchor-plugin': { path: 'src/plugins/anchor' },
       'autolink-plugin': { path: 'src/plugins/autolink' },
@@ -549,6 +550,7 @@ module.exports = function (grunt) {
       'wordcount-plugin': { path: 'src/plugins/wordcount' },
       'inlite-theme': { path: 'src/themes/inlite' },
       'modern-theme': { path: 'src/themes/modern' },
+      'mobile-theme': { path: 'src/themes/mobile' },
       'lightgray-skin': { path: 'src/skins/lightgray' }
     },
 
@@ -605,7 +607,9 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: 'src/themes',
-            src: ['*/dist/**'],
+            src: [
+              '*/dist/**'
+            ],
             dest: 'js/tinymce/themes/',
             filter: function (filePath) {
               return filePath.endsWith('dist') === false;
@@ -623,7 +627,10 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: 'src/skins',
-            src: ['*/dist/**'],
+            src: [
+              '*/dist/**',
+              '!**/*.map'
+            ],
             dest: 'js/tinymce/skins/',
             filter: function (filePath) {
               return filePath.endsWith('dist') === false;
@@ -642,10 +649,18 @@ module.exports = function (grunt) {
     grunt.file.write('tmp/version.txt', BUILD_VERSION);
   });
 
+  grunt.registerTask('build-headers', 'Appends build headers to js files', function () {
+    var header = '// ' + packageData.version + ' (' + packageData.date + ')\n';
+    grunt.file.write('js/tinymce/tinymce.js', header + grunt.file.read('js/tinymce/tinymce.js'));
+    grunt.file.write('js/tinymce/tinymce.min.js', header + grunt.file.read('js/tinymce/tinymce.min.js'));
+  });
+
   require("load-grunt-tasks")(grunt);
   grunt.loadTasks("tools/tasks");
   grunt.loadNpmTasks('@ephox/bolt');
   grunt.loadNpmTasks('@ephox/bedrock');
 
-  grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
+  grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "build-headers", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
+
+  grunt.registerTask("test", ["bedrock-auto:phantomjs"]);
 };

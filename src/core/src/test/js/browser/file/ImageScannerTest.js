@@ -1,17 +1,17 @@
 asynctest(
   'browser.tinymce.core.file.ImageScannerTest',
   [
-    'ephox.mcagar.api.LegacyUnit',
     'ephox.agar.api.Pipeline',
-    'tinymce.core.file.ImageScanner',
-    'tinymce.core.file.UploadStatus',
+    'ephox.mcagar.api.LegacyUnit',
+    'ephox.sand.api.URL',
+    'tinymce.core.Env',
     'tinymce.core.file.BlobCache',
     'tinymce.core.file.Conversions',
-    'tinymce.core.Env',
-    'global!URL',
+    'tinymce.core.file.ImageScanner',
+    'tinymce.core.file.UploadStatus',
     'tinymce.core.test.ViewBlock'
   ],
-  function (LegacyUnit, Pipeline, ImageScanner, UploadStatus, BlobCache, Conversions, Env, URL, ViewBlock) {
+  function (Pipeline, LegacyUnit, URL, Env, BlobCache, Conversions, ImageScanner, UploadStatus, ViewBlock) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();

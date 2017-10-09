@@ -28,18 +28,18 @@ define(
     var each = Tools.each;
     var dom = DOMUtils.DOM;
 
-    function parsedSelectorToHtml(ancestry, editor) {
+    var parsedSelectorToHtml = function (ancestry, editor) {
       var elm, item, fragment;
       var schema = editor && editor.schema || new Schema({});
 
-      function decorate(elm, item) {
+      var decorate = function (elm, item) {
         if (item.classes.length) {
           dom.addClass(elm, item.classes.join(' '));
         }
         dom.setAttribs(elm, item.attrs);
-      }
+      };
 
-      function createElement(sItem) {
+      var createElement = function (sItem) {
         var elm;
 
         item = typeof sItem === 'string' ? {
@@ -51,29 +51,29 @@ define(
         elm = dom.create(item.name);
         decorate(elm, item);
         return elm;
-      }
+      };
 
-      function getRequiredParent(elm, candidate) {
+      var getRequiredParent = function (elm, candidate) {
         var name = typeof elm !== 'string' ? elm.nodeName.toLowerCase() : elm;
         var elmRule = schema.getElementRule(name);
-        var parentsRequired = elmRule.parentsRequired;
+        var parentsRequired = elmRule && elmRule.parentsRequired;
 
         if (parentsRequired && parentsRequired.length) {
           return candidate && Tools.inArray(parentsRequired, candidate) !== -1 ? candidate : parentsRequired[0];
         } else {
           return false;
         }
-      }
+      };
 
-      function wrapInHtml(elm, ancestry, siblings) {
+      var wrapInHtml = function (elm, ancestry, siblings) {
         var parent, parentCandidate, parentRequired;
-        var ancestor = ancestry.length && ancestry[0];
+        var ancestor = ancestry.length > 0 && ancestry[0];
         var ancestorName = ancestor && ancestor.name;
 
         parentRequired = getRequiredParent(elm, ancestorName);
 
         if (parentRequired) {
-          if (ancestorName == parentRequired) {
+          if (ancestorName === parentRequired) {
             parentCandidate = ancestry[0];
             ancestry = ancestry.slice(1);
           } else {
@@ -105,7 +105,7 @@ define(
         }
 
         return wrapInHtml(parent, ancestry, parentCandidate && parentCandidate.siblings);
-      }
+      };
 
       if (ancestry && ancestry.length) {
         item = ancestry[0];
@@ -116,15 +116,13 @@ define(
       } else {
         return '';
       }
-    }
+    };
 
-
-    function selectorToHtml(selector, editor) {
+    var selectorToHtml = function (selector, editor) {
       return parsedSelectorToHtml(parseSelector(selector), editor);
-    }
+    };
 
-
-    function parseSelectorItem(item) {
+    var parseSelectorItem = function (item) {
       var tagName;
       var obj = {
         classes: [],
@@ -153,7 +151,7 @@ define(
           }
 
           // atribute matched
-          if ($3 == '[') {
+          if ($3 === '[') {
             var m = $4.match(/([\w\-]+)(?:\=\"([^\"]+))?/);
             if (m) {
               obj.attrs[m[1]] = m[2];
@@ -166,10 +164,9 @@ define(
 
       obj.name = tagName || 'div';
       return obj;
-    }
+    };
 
-
-    function parseSelector(selector) {
+    var parseSelector = function (selector) {
       if (!selector || typeof selector !== 'string') {
         return [];
       }
@@ -191,10 +188,9 @@ define(
         }
         return obj;
       }).reverse();
-    }
+    };
 
-
-    function getCssText(editor, format) {
+    var getCssText = function (editor, format) {
       var name, previewFrag, previewElm, items;
       var previewCss = '', parentFontSize, previewStyles;
 
@@ -212,12 +208,12 @@ define(
       }
 
       // Removes any variables since these can't be previewed
-      function removeVars(val) {
+      var removeVars = function (val) {
         return val.replace(/%(\w+)/g, '');
-      }
+      };
 
       // Create block/inline element to use for preview
-      if (typeof format == "string") {
+      if (typeof format === "string") {
         format = editor.formatter.get(format);
         if (!format) {
           return;
@@ -291,26 +287,26 @@ define(
         var value = dom.getStyle(previewElm, name, true);
 
         // If background is transparent then check if the body has a background color we can use
-        if (name == 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
+        if (name === 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
           value = dom.getStyle(editor.getBody(), name, true);
 
           // Ignore white since it's the default color, not the nicest fix
           // TODO: Fix this by detecting runtime style
-          if (dom.toHex(value).toLowerCase() == '#ffffff') {
+          if (dom.toHex(value).toLowerCase() === '#ffffff') {
             return;
           }
         }
 
-        if (name == 'color') {
+        if (name === 'color') {
           // Ignore black since it's the default color, not the nicest fix
           // TODO: Fix this by detecting runtime style
-          if (dom.toHex(value).toLowerCase() == '#000000') {
+          if (dom.toHex(value).toLowerCase() === '#000000') {
             return;
           }
         }
 
         // Old IE won't calculate the font size so we need to do that manually
-        if (name == 'font-size') {
+        if (name === 'font-size') {
           if (/em|%$/.test(value)) {
             if (parentFontSize === 0) {
               return;
@@ -322,7 +318,7 @@ define(
           }
         }
 
-        if (name == "border" && value) {
+        if (name === "border" && value) {
           previewCss += 'padding:0 2px;';
         }
 
@@ -336,7 +332,7 @@ define(
       dom.remove(previewFrag);
 
       return previewCss;
-    }
+    };
 
     return {
       getCssText: getCssText,

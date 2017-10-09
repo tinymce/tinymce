@@ -1,32 +1,12 @@
 {
   "env": {
-    "browser": false,
-    "amd": true
+    "browser": false
   },
 
   "globals": {
-    "escape": true,
-    "unescape": true,
-    "Uint8Array": true,
+    "define": true,
     "asynctest": true,
-    "test": true,
-    "document": true,
-    "window": true,
-    "setTimeout": true,
-    "clearTimeout": true,
-    "navigator": true,
-    "FormData": true,
-    "Blob": true,
-    "URL": true,
-    "clearInterval": true,
-    "setInterval": true,
-    "XMLHttpRequest": true,
-    "matchMedia": true,
-    "atob": true,
-    "FileReader": true,
-    "localStorage": true,
-    "console": true,
-    "Image": true
+    "test": true
   },
 
   "rules": {
@@ -47,7 +27,6 @@
     "no-bitwise": 2,
     "max-depth": [1, 8],
     "max-statements": [2, 150],
-    "max-len": [1, 160, 4],
     "eol-last": 0,
     "quotes": 0,
     "no-trailing-spaces": 2,

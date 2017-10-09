@@ -35,7 +35,7 @@ define(
     return function (startNode, rootNode) {
       var node = startNode;
 
-      function findSibling(node, startName, siblingName, shallow) {
+      var findSibling = function (node, startName, siblingName, shallow) {
         var sibling, parent;
 
         if (node) {
@@ -60,9 +60,9 @@ define(
             }
           }
         }
-      }
+      };
 
-      function findPreviousNode(node, startName, siblingName, shallow) {
+      var findPreviousNode = function (node, startName, siblingName, shallow) {
         var sibling, parent, child;
 
         if (node) {
@@ -89,7 +89,7 @@ define(
             return parent;
           }
         }
-      }
+      };
 
       /**
        * Returns the current node.

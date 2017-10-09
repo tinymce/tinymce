@@ -3,16 +3,19 @@ asynctest(
   [
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
-    'tinymce.plugins.image.Plugin',
     'ephox.mcagar.api.TinyLoader',
+    'global!document',
     'tinymce.core.Env',
+    'tinymce.plugins.image.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, Plugin, TinyLoader, Env, Theme) {
+  function (Pipeline, LegacyUnit, TinyLoader, document, Env, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
+
     Theme();
+    Plugin();
 
     var teardown = function (editor) {
       delete editor.settings.image_dimensions;
@@ -244,7 +247,7 @@ asynctest(
       );
     });
 
-    suite.test('Advanced image dialog border option on empty editor', function (editor) {
+    suite.test('Advanced image dialog border option on editor with content', function (editor) {
       editor.settings.image_advtab = true;
       editor.settings.image_dimensions = false;
 

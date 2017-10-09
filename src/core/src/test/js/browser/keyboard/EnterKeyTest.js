@@ -209,8 +209,16 @@ asynctest(
       editor.setContent('<h1>abcd</h1><p>efgh</p>');
       LegacyUnit.setSelection(editor, 'h1', 2, 'p', 2);
       pressEnter(editor);
-      LegacyUnit.equal(editor.getContent(), '<h1>abgh</h1>');
+      LegacyUnit.equal(editor.getContent(), '<h1>ab</h1><h1>gh</h1>');
       LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
+    });
+
+    suite.test('Enter at a range between LI elements', function (editor) {
+      editor.setContent('<ul><li>abcd</li><li>efgh</li></ul>');
+      LegacyUnit.setSelection(editor, 'li:nth-child(1)', 2, 'li:nth-child(2)', 2);
+      pressEnter(editor);
+      LegacyUnit.equal(editor.getContent(), '<ul><li>ab</li><li>gh</li></ul>');
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
     });
 
     suite.test('Enter at end of H1 in HGROUP', function (editor) {
@@ -650,6 +658,27 @@ asynctest(
       var rng = editor.selection.getRng(true);
       LegacyUnit.equal(rng.startContainer.nodeName, 'B');
       LegacyUnit.equal(rng.startContainer.data !== ' ', true);
+    });
+
+    suite.test('Enter inside first li with block inside', function (editor) {
+      editor.getBody().innerHTML = '<ul><li><p><br /></p></li><li><p>b</p></><li>c</></ul>';
+      LegacyUnit.setSelection(editor, 'p', 0);
+      pressEnter(editor);
+      LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p><ul><li><p>b</p></li><li>c</li></ul>');
+    });
+
+    suite.test('Enter inside middle li with block inside', function (editor) {
+      editor.getBody().innerHTML = '<ul><li>a</><li><p><br /></p></><li>c</></ul>';
+      LegacyUnit.setSelection(editor, 'p', 0);
+      pressEnter(editor);
+      LegacyUnit.equal(editor.getContent(), '<ul><li>a</li></ul><p>\u00a0</p><ul><li>c</li></ul>');
+    });
+
+    suite.test('Enter inside last li with block inside', function (editor) {
+      editor.getBody().innerHTML = '<ul><li>a</li><li>b</><li><p><br /></p></li></ul>';
+      LegacyUnit.setSelection(editor, 'p', 0);
+      pressEnter(editor);
+      LegacyUnit.equal(editor.getContent(), '<ul><li>a</li><li>b</li></ul><p>\u00a0</p>');
     });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {

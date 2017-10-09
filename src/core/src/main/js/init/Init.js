@@ -11,6 +11,7 @@
 define(
   'tinymce.core.init.Init',
   [
+    'ephox.katamari.api.Type',
     'global!document',
     'global!window',
     'tinymce.core.dom.DOMUtils',
@@ -21,7 +22,7 @@ define(
     'tinymce.core.util.Tools',
     'tinymce.core.util.Uuid'
   ],
-  function (document, window, DOMUtils, Env, InitContentBody, PluginManager, ThemeManager, Tools, Uuid) {
+  function (Type, document, window, DOMUtils, Env, InitContentBody, PluginManager, ThemeManager, Tools, Uuid) {
     var DOM = DOMUtils.DOM;
 
     var initPlugin = function (editor, initializedPlugins, plugin) {
@@ -49,93 +50,152 @@ define(
       }
     };
 
+    var trimLegacyPrefix = function (name) {
+      // Themes and plugins can be prefixed with - to prevent them from being lazy loaded
+      return name.replace(/^\-/, '');
+    };
+
     var initPlugins = function (editor) {
       var initializedPlugins = [];
 
-      Tools.each(editor.settings.plugins.replace(/\-/g, '').split(/[ ,]/), function (name) {
-        initPlugin(editor, initializedPlugins, name);
+      Tools.each(editor.settings.plugins.split(/[ ,]/), function (name) {
+        initPlugin(editor, initializedPlugins, trimLegacyPrefix(name));
       });
     };
 
     var initTheme = function (editor) {
-      var Theme, settings = editor.settings;
+      var Theme, theme = editor.settings.theme;
 
-      if (settings.theme) {
-        if (typeof settings.theme != "function") {
-          settings.theme = settings.theme.replace(/-/, '');
-          Theme = ThemeManager.get(settings.theme);
-          editor.theme = new Theme(editor, ThemeManager.urls[settings.theme]);
+      if (Type.isString(theme)) {
+        editor.settings.theme = trimLegacyPrefix(theme);
 
-          if (editor.theme.init) {
-            editor.theme.init(editor, ThemeManager.urls[settings.theme] || editor.documentBaseUrl.replace(/\/$/, ''), editor.$);
-          }
-        } else {
-          editor.theme = settings.theme;
+        Theme = ThemeManager.get(theme);
+        editor.theme = new Theme(editor, ThemeManager.urls[theme]);
+
+        if (editor.theme.init) {
+          editor.theme.init(editor, ThemeManager.urls[theme] || editor.documentBaseUrl.replace(/\/$/, ''), editor.$);
         }
+      } else {
+        // Theme set to false or null doesn't produce a theme api
+        editor.theme = {};
       }
     };
 
-    var measueBox = function (editor) {
-      var w, h, minHeight, re, o, settings = editor.settings, elm = editor.getElement();
+    var renderFromLoadedTheme = function (editor) {
+      var w, h, minHeight, re, info, settings = editor.settings, elm = editor.getElement();
 
-      // Measure box
-      if (settings.render_ui && editor.theme) {
-        editor.orgDisplay = elm.style.display;
+      w = settings.width || DOM.getStyle(elm, 'width') || '100%';
+      h = settings.height || DOM.getStyle(elm, 'height') || elm.offsetHeight;
+      minHeight = settings.min_height || 100;
+      re = /^[0-9\.]+(|px)$/i;
 
-        if (typeof settings.theme != "function") {
-          w = settings.width || DOM.getStyle(elm, 'width') || '100%';
-          h = settings.height || DOM.getStyle(elm, 'height') || elm.offsetHeight;
-          minHeight = settings.min_height || 100;
-          re = /^[0-9\.]+(|px)$/i;
-
-          if (re.test('' + w)) {
-            w = Math.max(parseInt(w, 10), 100);
-          }
-
-          if (re.test('' + h)) {
-            h = Math.max(parseInt(h, 10), minHeight);
-          }
-
-          // Render UI
-          o = editor.theme.renderUI({
-            targetNode: elm,
-            width: w,
-            height: h,
-            deltaWidth: settings.delta_width,
-            deltaHeight: settings.delta_height
-          });
-
-          // Resize editor
-          if (!settings.content_editable) {
-            h = (o.iframeHeight || h) + (typeof h === 'number' ? (o.deltaHeight || 0) : '');
-            if (h < minHeight) {
-              h = minHeight;
-            }
-          }
-        } else {
-          o = settings.theme(editor, elm);
-
-          if (o.editorContainer.nodeType) {
-            o.editorContainer.id = o.editorContainer.id || editor.id + "_parent";
-          }
-
-          if (o.iframeContainer.nodeType) {
-            o.iframeContainer.id = o.iframeContainer.id || editor.id + "_iframecontainer";
-          }
-
-          // Use specified iframe height or the targets offsetHeight
-          h = o.iframeHeight || elm.offsetHeight;
-        }
-
-        editor.editorContainer = o.editorContainer;
-        o.height = h;
+      if (re.test('' + w)) {
+        w = Math.max(parseInt(w, 10), 100);
       }
 
-      return o;
+      if (re.test('' + h)) {
+        h = Math.max(parseInt(h, 10), minHeight);
+      }
+
+      // Render UI
+      info = editor.theme.renderUI({
+        targetNode: elm,
+        width: w,
+        height: h,
+        deltaWidth: settings.delta_width,
+        deltaHeight: settings.delta_height
+      });
+
+      // Resize editor
+      if (!settings.content_editable) {
+        h = (info.iframeHeight || h) + (typeof h === 'number' ? (info.deltaHeight || 0) : '');
+        if (h < minHeight) {
+          h = minHeight;
+        }
+      }
+
+      info.height = h;
+
+      return info;
+    };
+
+    var renderFromThemeFunc = function (editor) {
+      var info, elm = editor.getElement();
+
+      info = editor.settings.theme(editor, elm);
+
+      if (info.editorContainer.nodeType) {
+        info.editorContainer.id = info.editorContainer.id || editor.id + "_parent";
+      }
+
+      if (info.iframeContainer && info.iframeContainer.nodeType) {
+        info.iframeContainer.id = info.iframeContainer.id || editor.id + "_iframecontainer";
+      }
+
+      info.height = info.iframeHeight ? info.iframeHeight : elm.offsetHeight;
+
+      return info;
+    };
+
+    var createThemeFalseResult = function (element) {
+      return {
+        editorContainer: element,
+        iframeContainer: element
+      };
+    };
+
+    var renderThemeFalseIframe = function (targetElement) {
+      var iframeContainer = DOM.create('div');
+
+      DOM.insertAfter(iframeContainer, targetElement);
+
+      return createThemeFalseResult(iframeContainer);
+    };
+
+    var renderThemeFalse = function (editor) {
+      var targetElement = editor.getElement();
+      return editor.inline ? createThemeFalseResult(targetElement) : renderThemeFalseIframe(targetElement);
+    };
+
+    var renderThemeUi = function (editor) {
+      var settings = editor.settings, elm = editor.getElement();
+
+      editor.orgDisplay = elm.style.display;
+
+      if (Type.isString(settings.theme)) {
+        return renderFromLoadedTheme(editor);
+      } else if (Type.isFunction(settings.theme)) {
+        return renderFromThemeFunc(editor);
+      } else {
+        return renderThemeFalse(editor);
+      }
+    };
+
+    var relaxDomain = function (editor, ifr) {
+      // Domain relaxing is required since the user has messed around with document.domain
+      // This only applies to IE 11 other browsers including Edge seems to handle document.domain
+      if (document.domain !== window.location.hostname && Env.ie && Env.ie < 12) {
+        var bodyUuid = Uuid.uuid('mce');
+
+        editor[bodyUuid] = function () {
+          InitContentBody.initContentBody(editor);
+        };
+
+        /*eslint no-script-url:0 */
+        var domainRelaxUrl = 'javascript:(function(){' +
+          'document.open();document.domain="' + document.domain + '";' +
+          'var ed = window.parent.tinymce.get("' + editor.id + '");document.write(ed.iframeHTML);' +
+          'document.close();ed.' + bodyUuid + '(true);})()';
+
+        DOM.setAttrib(ifr, 'src', domainRelaxUrl);
+        return true;
+      }
+
+      return false;
     };
 
     var createIframe = function (editor, o) {
-      var settings = editor.settings, bodyId, bodyClass, url;
+      var settings = editor.settings, bodyId, bodyClass;
 
       editor.iframeHTML = settings.doctype + '<html><head>';
 
@@ -172,31 +232,10 @@ define(
         '" class="mce-content-body ' + bodyClass +
         '" data-id="' + editor.id + '"><br></body></html>';
 
-      var bodyUuid = Uuid.uuid('mce');
-
-      editor[bodyUuid] = function () {
-        InitContentBody.initContentBody(editor);
-      };
-
-      /*eslint no-script-url:0 */
-      var domainRelaxUrl = 'javascript:(function(){' +
-        'document.open();document.domain="' + document.domain + '";' +
-        'var ed = window.parent.tinymce.get("' + editor.id + '");document.write(ed.iframeHTML);' +
-        'document.close();ed.' + bodyUuid + '(true);})()';
-
-      // Domain relaxing is required since the user has messed around with document.domain
-      if (document.domain != window.location.hostname) {
-        // Edge seems to be able to handle domain relaxing
-        if (Env.ie && Env.ie < 12) {
-          url = domainRelaxUrl;
-        }
-      }
-
       // Create iframe
       // TODO: ACC add the appropriate description on this.
       var ifr = DOM.create('iframe', {
         id: editor.id + "_ifr",
-        //src: url || 'javascript:""', // Workaround for HTTPS warning in IE6/7
         frameBorder: '0',
         allowTransparency: "true",
         title: editor.editorManager.translate(
@@ -215,29 +254,18 @@ define(
         editor.fire("load");
       };
 
-      DOM.setAttrib(ifr, "src", url || 'javascript:""');
+      var isDomainRelaxed = relaxDomain(editor, ifr);
 
       editor.contentAreaContainer = o.iframeContainer;
       editor.iframeElement = ifr;
 
       DOM.add(o.iframeContainer, ifr);
 
-      // Try accessing the document this will fail on IE when document.domain is set to the same as location.hostname
-      // Then we have to force domain relaxing using the domainRelaxUrl approach very ugly!!
-      if (Env.ie) {
-        try {
-          editor.getDoc();
-        } catch (e) {
-          ifr.src = url = domainRelaxUrl;
-        }
-      }
-
-      return url;
+      return isDomainRelaxed;
     };
 
     var init = function (editor) {
-      var settings = editor.settings, elm = editor.getElement();
-      var boxInfo, url;
+      var settings = editor.settings, elm = editor.getElement(), boxInfo;
 
       editor.rtl = settings.rtl_ui || editor.editorManager.i18n.rtl;
       editor.editorManager.i18n.setCode(settings.language);
@@ -247,7 +275,8 @@ define(
 
       initTheme(editor);
       initPlugins(editor);
-      boxInfo = measueBox(editor);
+      boxInfo = renderThemeUi(editor);
+      editor.editorContainer = boxInfo.editorContainer;
 
       // Load specified content CSS last
       if (settings.content_css) {
@@ -256,17 +285,12 @@ define(
         });
       }
 
-      // Load specified content CSS last
-      if (settings.content_style) {
-        editor.contentStyles.push(settings.content_style);
-      }
-
       // Content editable mode ends here
       if (settings.content_editable) {
         return InitContentBody.initContentBody(editor);
       }
 
-      url = createIframe(editor, boxInfo);
+      var isDomainRelaxed = createIframe(editor, boxInfo);
 
       if (boxInfo.editorContainer) {
         DOM.get(boxInfo.editorContainer).style.display = editor.orgDisplay;
@@ -276,7 +300,7 @@ define(
       editor.getElement().style.display = 'none';
       DOM.setAttrib(editor.id, 'aria-hidden', true);
 
-      if (!url) {
+      if (!isDomainRelaxed) {
         InitContentBody.initContentBody(editor);
       }
     };

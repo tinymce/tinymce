@@ -9,6 +9,14 @@ configure({
       if (parts[2] === 'demo') return ['src/demo/js'].concat(suffix).join('/');
       else return ['src/main/js'].concat(suffix).join('/');
     }),
+    source('amd', 'tinymce.ui', '../../src/ui', function (id) {
+      var parts = id.split('.');
+      var suffix = parts.slice(2);
+
+      if (parts[2] === 'test') return ['src/test/js/module'].concat(suffix).join('/');
+      if (parts[2] === 'demo') return ['src/demo/js'].concat(suffix).join('/');
+      else return ['src/main/js'].concat(suffix).join('/');
+    }),
     source('amd', 'tinymce.plugins', '../../src/plugins', function (id) {
       var parts = id.split('.');
       var suffix = parts.slice(3);

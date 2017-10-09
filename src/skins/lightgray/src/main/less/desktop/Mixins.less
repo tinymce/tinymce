@@ -1,0 +1,65 @@
+// Mixins
+
+.opacity(@opacity) {
+  opacity: @opacity;
+  @opacityie: @opacity * 100;
+  filter: ~"alpha(opacity=@{opacityie})";
+  zoom: 1;
+}
+
+.vertical-gradient(@startColor, @endColor) when (@has-gradients = true) {
+  background-color: mix(@startColor, @endColor, 60%);
+  background-image: -moz-linear-gradient(top, @startColor, @endColor); // FF 3.6+
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@startColor), to(@endColor)); // Safari 4+, Chrome 2+
+  background-image: -webkit-linear-gradient(top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+  background-image: -o-linear-gradient(top, @startColor, @endColor); // Opera 11.10
+  background-image: linear-gradient(to bottom, @startColor, @endColor); // Standard, IE10
+  background-repeat: repeat-x;
+  filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)", argb(@startColor), argb(@endColor)));
+  zoom: 1;
+}
+
+.vertical-gradient(@startColor, @endColor) when (@has-gradients = false) {
+  background-color: mix(@startColor, @endColor, 60%);
+}
+
+.border-radius(@radius) when (@has-radius = true) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.box-shadow(@shadowA, @shadowB:X, ...) when (@has-boxshadow = true) {
+  // Multiple shadow solution from http://toekneestuck.com/blog/2012/05/15/less-css-arguments-variable/
+  @props: ~`"@{arguments}".replace(/[\[\]]|\,\sX/g, '')`;
+  -webkit-box-shadow: @props;
+  -moz-box-shadow: @props;
+  box-shadow: @props;
+}
+
+.transition(@transition) {
+  -webkit-transition: @transition;
+  transition: @transition;
+}
+
+.inline-block() {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+
+.reset-gradient() {
+  filter: e(%("progid:DXImageTransform.Microsoft.gradient(enabled = false)"));
+  background: transparent;
+}
+
+.word-wrap {
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}

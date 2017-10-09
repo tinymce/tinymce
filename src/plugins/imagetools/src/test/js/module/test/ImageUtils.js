@@ -4,9 +4,10 @@ define(
     'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
     'ephox.agar.api.Waiter',
-    'ephox.katamari.api.Cell'
+    'ephox.katamari.api.Cell',
+    'global!Image'
   ],
-  function (RawAssertions, Step, Waiter, Cell) {
+  function (RawAssertions, Step, Waiter, Cell, Image) {
     var sExecCommand = function (editor, cmd, value) {
       return Step.sync(function () {
         editor.execCommand(cmd, false, value);
@@ -19,6 +20,7 @@ define(
 
         img.onload = function () {
           editor.setContent('<p><img src="' + url + '" /></p>');
+          editor.focus();
           done();
         };
 

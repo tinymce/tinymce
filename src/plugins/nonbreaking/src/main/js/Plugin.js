@@ -17,49 +17,16 @@
 define(
   'tinymce.plugins.nonbreaking.Plugin',
   [
-    'tinymce.core.PluginManager'
+    'tinymce.core.PluginManager',
+    'tinymce.plugins.nonbreaking.api.Commands',
+    'tinymce.plugins.nonbreaking.core.Keyboard',
+    'tinymce.plugins.nonbreaking.ui.Buttons'
   ],
-  function (PluginManager) {
+  function (PluginManager, Commands, Keyboard, Buttons) {
     PluginManager.add('nonbreaking', function (editor) {
-      var setting = editor.getParam('nonbreaking_force_tab');
-
-      editor.addCommand('mceNonBreaking', function () {
-        editor.insertContent(
-          (editor.plugins.visualchars && editor.plugins.visualchars.state) ?
-            '<span class="mce-nbsp">&nbsp;</span>' : '&nbsp;'
-        );
-
-        editor.dom.setAttrib(editor.dom.select('span.mce-nbsp'), 'data-mce-bogus', '1');
-      });
-
-      editor.addButton('nonbreaking', {
-        title: 'Nonbreaking space',
-        cmd: 'mceNonBreaking'
-      });
-
-      editor.addMenuItem('nonbreaking', {
-        text: 'Nonbreaking space',
-        cmd: 'mceNonBreaking',
-        context: 'insert'
-      });
-
-      if (setting) {
-        var spaces = +setting > 1 ? +setting : 3;  // defaults to 3 spaces if setting is true (or 1)
-
-        editor.on('keydown', function (e) {
-          if (e.keyCode == 9) {
-
-            if (e.shiftKey) {
-              return;
-            }
-
-            e.preventDefault();
-            for (var i = 0; i < spaces; i++) {
-              editor.execCommand('mceNonBreaking');
-            }
-          }
-        });
-      }
+      Commands.register(editor);
+      Buttons.register(editor);
+      Keyboard.setup(editor);
     });
 
     return function () { };

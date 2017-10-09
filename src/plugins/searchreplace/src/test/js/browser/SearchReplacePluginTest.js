@@ -15,6 +15,7 @@ asynctest(
     Theme();
 
     suite.test('Find no match', function (editor) {
+      editor.focus();
       editor.setContent('a');
       LegacyUnit.equal(0, editor.plugins.searchreplace.find('x'));
     });
@@ -56,6 +57,20 @@ asynctest(
       editor.plugins.searchreplace.find('a');
       LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), true);
       LegacyUnit.equal("<p>x b a</p>", editor.getContent());
+    });
+
+    suite.test('Find and replace two consecutive spaces', function (editor) {
+      editor.setContent('a&nbsp; b');
+      editor.plugins.searchreplace.find('a  ');
+      LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), false);
+      LegacyUnit.equal("<p>xb</p>", editor.getContent());
+    });
+
+    suite.test('Find and replace consecutive spaces', function (editor) {
+      editor.setContent('a&nbsp; &nbsp;b');
+      editor.plugins.searchreplace.find('a   ');
+      LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), false);
+      LegacyUnit.equal("<p>xb</p>", editor.getContent());
     });
 
     suite.test('Find and replace all in multiple matches', function (editor) {

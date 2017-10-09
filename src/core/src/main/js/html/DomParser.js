@@ -43,6 +43,17 @@ define(
       return node && node.firstChild === node.lastChild && node.firstChild.name === name;
     };
 
+    var isPadded = function (schema, node) {
+      var rule = schema.getElementRule(node.name);
+      return rule && rule.paddEmpty;
+    };
+
+    var isEmpty = function (schema, nonEmptyElements, whitespaceElements, node) {
+      return node.isEmpty(nonEmptyElements, whitespaceElements, function (node) {
+        return isPadded(schema, node);
+      });
+    };
+
     /**
      * Constructs a new DomParser instance.
      *
@@ -59,7 +70,7 @@ define(
       settings.root_name = settings.root_name || 'body';
       self.schema = schema = schema || new Schema();
 
-      function fixInvalidChildren(nodes) {
+      var fixInvalidChildren = function (nodes) {
         var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
         var nonEmptyElements, whitespaceElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;
 
@@ -132,7 +143,7 @@ define(
               currentNode = tempNode;
             }
 
-            if (!newParent.isEmpty(nonEmptyElements, whitespaceElements)) {
+            if (!isEmpty(schema, nonEmptyElements, whitespaceElements, newParent)) {
               parent.insert(newParent, parents[0], true);
               parent.insert(node, newParent);
             } else {
@@ -141,7 +152,7 @@ define(
 
             // Check if the element is empty by looking through it's contents and special treatment for <p><br /></p>
             parent = parents[0];
-            if (parent.isEmpty(nonEmptyElements, whitespaceElements) || hasOnlyChild(parent, 'br')) {
+            if (isEmpty(schema, nonEmptyElements, whitespaceElements, parent) || hasOnlyChild(parent, 'br')) {
               parent.empty().remove();
             }
           } else if (node.parent) {
@@ -176,7 +187,7 @@ define(
             }
           }
         }
-      }
+      };
 
       /**
        * Runs the specified node though the element and attributes filters.
@@ -304,12 +315,12 @@ define(
         allWhiteSpaceRegExp = /[ \t\r\n]+/g;
         isAllWhiteSpaceRegExp = /^[ \t\r\n]+$/;
 
-        function addRootBlocks() {
+        var addRootBlocks = function () {
           var node = rootNode.firstChild, next, rootBlockNode;
 
           // Removes whitespace at beginning and end of block so:
           // <p> x </p> -> <p>x</p>
-          function trim(rootBlockNode) {
+          var trim = function (rootBlockNode) {
             if (rootBlockNode) {
               node = rootBlockNode.firstChild;
               if (node && node.type == 3) {
@@ -321,7 +332,7 @@ define(
                 node.value = node.value.replace(endWhiteSpaceRegExp, '');
               }
             }
-          }
+          };
 
           // Check if rootBlock is valid within rootNode for example if P is valid in H1 if H1 is the contentEditabe root
           if (!schema.isValidChild(rootNode.name, rootBlockName.toLowerCase())) {
@@ -351,9 +362,9 @@ define(
           }
 
           trim(rootBlockNode);
-        }
+        };
 
-        function createNode(name, type) {
+        var createNode = function (name, type) {
           var node = new Node(name, type), list;
 
           if (name in nodeFilters) {
@@ -367,9 +378,9 @@ define(
           }
 
           return node;
-        }
+        };
 
-        function removeWhitespaceBefore(node) {
+        var removeWhitespaceBefore = function (node) {
           var textNode, textNodeNext, textVal, sibling, blockElements = schema.getBlockElements();
 
           for (textNode = node.prev; textNode && textNode.type === 3;) {
@@ -401,9 +412,9 @@ define(
             textNode.remove();
             textNode = sibling;
           }
-        }
+        };
 
-        function cloneAndExcludeBlocks(input) {
+        var cloneAndExcludeBlocks = function (input) {
           var name, output = {};
 
           for (name in input) {
@@ -413,7 +424,7 @@ define(
           }
 
           return output;
-        }
+        };
 
         parser = new SaxParser({
           validate: validate,
@@ -600,7 +611,7 @@ define(
 
               // Handle empty nodes
               if (elementRule.removeEmpty || elementRule.paddEmpty) {
-                if (node.isEmpty(nonEmptyElements, whiteSpaceElements)) {
+                if (isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
                   if (elementRule.paddEmpty) {
                     paddEmptyNode(settings, node);
                   } else {
@@ -735,7 +746,7 @@ define(
                 node.remove();
 
                 // Is the parent to be considered empty after we removed the BR
-                if (parent.isEmpty(nonEmptyElements, whiteSpaceElements)) {
+                if (isEmpty(schema, nonEmptyElements, whiteSpaceElements, parent)) {
                   elementRule = schema.getElementRule(parent.name);
 
                   // Remove or padd the element depending on schema rule
@@ -772,37 +783,35 @@ define(
         });
       }
 
-      if (!settings.allow_unsafe_link_target) {
-        self.addAttributeFilter('href', function (nodes) {
-          var i = nodes.length, node, rel;
-          var rules = 'noopener noreferrer';
 
-          function addTargetRules(rel) {
-            rel = removeTargetRules(rel);
-            return rel ? [rel, rules].join(' ') : rules;
+      self.addAttributeFilter('href', function (nodes) {
+        var i = nodes.length, node;
+
+        var appendRel = function (rel) {
+          var parts = rel.split(' ').filter(function (p) {
+            return p.length > 0;
+          });
+          return parts.concat(['noopener']).sort().join(' ');
+        };
+
+        var addNoOpener = function (rel) {
+          var newRel = rel ? Tools.trim(rel) : '';
+          if (!/\b(noopener)\b/g.test(newRel)) {
+            return appendRel(newRel);
+          } else {
+            return newRel;
           }
+        };
 
-          function removeTargetRules(rel) {
-            var regExp = new RegExp('(' + rules.replace(' ', '|') + ')', 'g');
-            if (rel) {
-              rel = Tools.trim(rel.replace(regExp, ''));
-            }
-            return rel ? rel : null;
-          }
-
-          function toggleTargetRules(rel, isUnsafe) {
-            return isUnsafe ? addTargetRules(rel) : removeTargetRules(rel);
-          }
-
+        if (!settings.allow_unsafe_link_target) {
           while (i--) {
             node = nodes[i];
-            rel = node.attr('rel');
-            if (node.name === 'a') {
-              node.attr('rel', toggleTargetRules(rel, node.attr('target') == '_blank'));
+            if (node.name === 'a' && node.attr('target') === '_blank') {
+              node.attr('rel', addNoOpener(node.attr('rel')));
             }
           }
-        });
-      }
+        }
+      });
 
       // Force anchor names closed, unless the setting "allow_html_in_named_anchor" is explicitly included.
       if (!settings.allow_html_in_named_anchor) {

@@ -91,6 +91,63 @@ asynctest(
       closeTopMostWindow(editor);
     });
 
+    suite.test("Table cell properties dialog (get/set data from/to plain table, no adv tab)", function (editor) {
+      editor.settings.table_cell_advtab = false;
+
+      editor.setContent('<table><tr><td>X</td></tr></table>');
+      LegacyUnit.setSelection(editor, 'td', 0);
+      editor.execCommand('mceTableCellProps');
+
+      LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
+        "width": "",
+        "height": "",
+        "type": "td",
+        "scope": "",
+        "align": "",
+        "valign": ""
+      });
+
+      fillAndSubmitWindowForm(editor, {
+        width: "100",
+        height: "101"
+      });
+
+      LegacyUnit.equal(
+        cleanTableHtml(editor.getContent()),
+        '<table><tbody><tr><td style="width: 100px; height: 101px;">X</td></tr></tbody></table>'
+      );
+
+      delete editor.settings.table_cell_advtab;
+      closeTopMostWindow(editor);
+    });
+
+    suite.test("Table row properties dialog (get/set data from/to plain table, no adv tab)", function (editor) {
+      editor.settings.table_row_advtab = false;
+
+      editor.setContent('<table><tr><td>X</td></tr></table>');
+      LegacyUnit.setSelection(editor, 'td', 0);
+      editor.execCommand('mceTableRowProps');
+
+      LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
+        "type": "tbody",
+        "align": "",
+        "height": ""
+      });
+
+      fillAndSubmitWindowForm(editor, {
+        width: "100",
+        height: "101"
+      });
+
+      LegacyUnit.equal(
+        cleanTableHtml(editor.getContent()),
+        '<table><tbody><tr style="height: 101px;"><td>X</td></tr></tbody></table>'
+      );
+
+      delete editor.settings.table_row_advtab;
+      closeTopMostWindow(editor);
+    });
+
     suite.test("Table properties dialog (get/set data from/to plain table, class list)", function (editor) {
       editor.settings.table_class_list = [{ title: 'Class1', value: 'class1' }];
 

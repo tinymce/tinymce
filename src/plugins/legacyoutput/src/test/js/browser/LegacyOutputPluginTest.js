@@ -16,6 +16,7 @@ asynctest(
     Theme();
 
     suite.test("Font color", function (editor) {
+      editor.focus();
       editor.setContent('<p>text</p>');
       LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
       editor.execCommand('forecolor', false, '#FF0000');

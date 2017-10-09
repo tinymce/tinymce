@@ -11,17 +11,42 @@
 define(
   'tinymce.plugins.lists.core.Selection',
   [
+    'tinymce.core.dom.DomQuery',
     'tinymce.core.util.Tools',
     'tinymce.plugins.lists.core.NodeType'
   ],
-  function (Tools, NodeType) {
+  function (DomQuery, Tools, NodeType) {
+    var getParentList = function (editor) {
+      return editor.dom.getParent(editor.selection.getStart(true), 'OL,UL,DL');
+    };
+
+    var getSelectedSubLists = function (editor) {
+      var parentList = getParentList(editor);
+      return Tools.grep(editor.selection.getSelectedBlocks(), function (elm) {
+        return NodeType.isListNode(elm) && parentList !== elm;
+      });
+    };
+
+    var findParentListItemsNodes = function (editor, elms) {
+      var listItemsElms = Tools.map(elms, function (elm) {
+        var parentLi = editor.dom.getParent(elm, 'li,dd,dt', editor.getBody());
+
+        return parentLi ? parentLi : elm;
+      });
+
+      return DomQuery.unique(listItemsElms);
+    };
+
     var getSelectedListItems = function (editor) {
-      return Tools.grep(editor.selection.getSelectedBlocks(), function (block) {
+      var selectedBlocks = editor.selection.getSelectedBlocks();
+      return Tools.grep(findParentListItemsNodes(editor, selectedBlocks), function (block) {
         return NodeType.isListItemNode(block);
       });
     };
 
     return {
+      getParentList: getParentList,
+      getSelectedSubLists: getSelectedSubLists,
       getSelectedListItems: getSelectedListItems
     };
   }

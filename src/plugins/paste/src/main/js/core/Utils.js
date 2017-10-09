@@ -16,14 +16,15 @@
 define(
   'tinymce.plugins.paste.core.Utils',
   [
-    'tinymce.core.util.Tools',
+    'global!navigator',
     'tinymce.core.html.DomParser',
-    'tinymce.core.html.Schema'
+    'tinymce.core.html.Schema',
+    'tinymce.core.util.Tools'
   ],
-  function (Tools, DomParser, Schema) {
+  function (navigator, DomParser, Schema, Tools) {
     function filter(content, items) {
       Tools.each(items, function (v) {
-        if (v.constructor == RegExp) {
+        if (v.constructor === RegExp) {
           content = content.replace(v, '');
         } else {
           content = content.replace(v[0], v[1]);
@@ -65,7 +66,7 @@ define(
           return;
         }
 
-        if (node.type == 3) {
+        if (node.type === 3) {
           text += node.value;
         }
 
@@ -82,7 +83,7 @@ define(
         if (blockElements[name] && currentNode.next) {
           text += '\n';
 
-          if (name == 'p') {
+          if (name === 'p') {
             text += '\n';
           }
         }
@@ -115,7 +116,7 @@ define(
       }
 
       html = filter(html, [
-        /^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/g, // Remove anything but the contents within the BODY element
+        /^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/ig, // Remove anything but the contents within the BODY element
         /<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
         [/( ?)<span class="Apple-converted-space">\u00a0<\/span>( ?)/g, trimSpaces],
         /<br class="Apple-interchange-newline">/g,
@@ -134,11 +135,16 @@ define(
       };
     }
 
+    var isMsEdge = function () {
+      return navigator.userAgent.indexOf(' Edge/') !== -1;
+    };
+
     return {
       filter: filter,
       innerText: innerText,
       trimHtml: trimHtml,
-      createIdGenerator: createIdGenerator
+      createIdGenerator: createIdGenerator,
+      isMsEdge: isMsEdge
     };
   }
 );

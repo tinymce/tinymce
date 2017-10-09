@@ -5,10 +5,11 @@ asynctest(
     'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyLoader',
+    'tinymce.plugins.spellchecker.api.Settings',
     'tinymce.plugins.spellchecker.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, RawAssertions, Step, TinyLoader, SpellcheckerPlugin, ModernTheme) {
+  function (Pipeline, RawAssertions, Step, TinyLoader, Settings, SpellcheckerPlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -17,8 +18,7 @@ asynctest(
 
     var sTestDefaultLanguage = function (editor) {
       return Step.sync(function () {
-        var mainLanguage = editor.settings.language || 'en';
-        RawAssertions.assertEq('should be same', editor.settings.spellchecker_language, mainLanguage);
+        RawAssertions.assertEq('should be same', Settings.getLanguage(editor), 'en');
       });
     };
 

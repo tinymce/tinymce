@@ -19,7 +19,7 @@ define(
     "tinymce.core.util.EventDispatcher"
   ],
   function (EventDispatcher) {
-    function getEventDispatcher(obj) {
+    var getEventDispatcher = function (obj) {
       if (!obj._eventDispatcher) {
         obj._eventDispatcher = new EventDispatcher({
           scope: obj,
@@ -32,7 +32,7 @@ define(
       }
 
       return obj._eventDispatcher;
-    }
+    };
 
     return {
       /**

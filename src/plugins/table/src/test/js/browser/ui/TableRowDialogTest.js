@@ -39,6 +39,7 @@ asynctest(
     };
 
     suite.test("Table row properties dialog (get data from plain cell)", function (editor) {
+      editor.focus();
       editor.setContent('<table><tr><td>X</td></tr></table>');
       LegacyUnit.setSelection(editor, 'td', 0);
       editor.execCommand('mceTableRowProps');
@@ -90,6 +91,23 @@ asynctest(
       LegacyUnit.equal(
         cleanTableHtml(editor.getContent()),
         '<table><thead><tr style="height: 10px; text-align: right;"><td>X</td></tr></thead></table>'
+      );
+
+      closeTopMostWindow(editor);
+    });
+
+    suite.test("Caption should always stay the firstChild of the table (see TINY-1167)", function (editor) {
+      editor.setContent('<table><caption>CAPTION</caption><tbody><tr><td>X</td></tr><tr><td>Y</td></tr></tbody></table>');
+      LegacyUnit.setSelection(editor, 'td', 0);
+      editor.execCommand('mceTableRowProps');
+
+      fillAndSubmitWindowForm(editor, {
+        "type": "thead"
+      });
+
+      LegacyUnit.equal(
+        cleanTableHtml(editor.getContent()),
+        '<table><caption>CAPTION</caption><thead><tr><td>X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>'
       );
 
       closeTopMostWindow(editor);

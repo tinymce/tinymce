@@ -61,11 +61,12 @@ asynctest(
       };
 
       Pipeline.async({}, [
+        api.sFocus,
         Logger.t('simulate result of the triple click (selection beyond caption)', GeneralSteps.sequence([
           api.sSetContent(tableWith('<caption>one two three</caption>')),
           api.sSetSelection([0, 0, 0], 0, [0, 1, 0, 0], 0),
           act.sContentKeystroke(DELETE, {}),
-          sAssertContent(tableWith('<caption></caption>'))
+          sAssertContent(tableWith('<caption>&nbsp;</caption>'))
         ])),
 
         Logger.t('test for cursor springing off in IE', GeneralSteps.sequence([
@@ -97,7 +98,7 @@ asynctest(
           api.sSetContent(tableWith('<caption><p><br></p><p data-mce-caret="after" data-mce-bogus="all"><br data-mce-bogus="1"></p></caption>')),
           api.sSetCursor([0, 0], 0),
           act.sContentKeystroke(DELETE, {}),
-          sAssertContent(tableWith('<caption></caption>'))
+          sAssertContent(tableWith('<caption>&nbsp;</caption>'))
         ]))
       ], onSuccess, onFailure);
 

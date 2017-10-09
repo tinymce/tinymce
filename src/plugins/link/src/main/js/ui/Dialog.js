@@ -14,23 +14,23 @@ define(
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools',
     'tinymce.core.util.XHR',
-    'tinymce.plugins.link.core.Utils',
-    'tinymce.plugins.link.core.Settings'
+    'tinymce.plugins.link.api.Settings',
+    'tinymce.plugins.link.core.Utils'
   ],
-  function (Delay, Tools, XHR, Utils, Settings) {
+  function (Delay, Tools, XHR, Settings, Utils) {
     var attachState = {};
 
     var createLinkList = function (editor, callback) {
       var linkList = Settings.getLinkList(editor.settings);
 
-      if (typeof linkList == "string") {
+      if (typeof linkList === "string") {
         XHR.send({
           url: linkList,
           success: function (text) {
             callback(editor, JSON.parse(text));
           }
         });
-      } else if (typeof linkList == "function") {
+      } else if (typeof linkList === "function") {
         linkList(function (list) {
           callback(editor, list);
         });
@@ -77,33 +77,14 @@ define(
       });
     };
 
-    var toggleTargetRules = function (rel, isUnsafe) {
-      var rules = 'noopener noreferrer';
-
-      var addTargetRules = function (rel) {
-        rel = removeTargetRules(rel);
-        return rel ? [rel, rules].join(' ') : rules;
-      };
-
-      var removeTargetRules = function (rel) {
-        var regExp = new RegExp('(' + rules.replace(' ', '|') + ')', 'g');
-        if (rel) {
-          rel = Tools.trim(rel.replace(regExp, ''));
-        }
-        return rel ? rel : null;
-      };
-
-      return isUnsafe ? addTargetRules(rel) : removeTargetRules(rel);
-    };
-
     var showDialog = function (editor, linkList) {
-      var data = {}, selection = editor.selection, dom = editor.dom, selectedElm, anchorElm, initialText;
+      var data = {}, selection = editor.selection, dom = editor.dom, anchorElm, initialText;
       var win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, value;
 
       var linkListChangeHandler = function (e) {
         var textCtrl = win.find('#text');
 
-        if (!textCtrl.value() || (e.lastControl && textCtrl.value() == e.lastControl.text())) {
+        if (!textCtrl.value() || (e.lastControl && textCtrl.value() === e.lastControl.text())) {
           textCtrl.value(e.control.text());
         }
 
@@ -120,7 +101,7 @@ define(
             anchorList.push({
               text: id,
               value: '#' + id,
-              selected: url.indexOf('#' + id) != -1
+              selected: url.indexOf('#' + id) !== -1
             });
           }
         });
@@ -139,7 +120,7 @@ define(
       };
 
       var updateText = function () {
-        if (!initialText && data.text.length === 0 && onlyText) {
+        if (!initialText && onlyText && !data.text) {
           this.parent().parent().find('#text')[0].value(this.value());
         }
       };
@@ -180,9 +161,8 @@ define(
         e.meta = win.toJSON();
       };
 
-      selectedElm = selection.getStart();
-      anchorElm = dom.getParent(selectedElm, 'a[href]');
       onlyText = Utils.isOnlyTextSelected(selection.getContent());
+      anchorElm = Utils.getAnchorElement(editor);
 
       data.text = initialText = Utils.getAnchorText(editor.selection, anchorElm);
       data.href = anchorElm ? dom.getAttrib(anchorElm, 'href') : '';
@@ -258,7 +238,14 @@ define(
           name: 'rel',
           type: 'listbox',
           label: 'Rel',
-          values: buildListItems(Settings.getRelList(editor.settings))
+          values: buildListItems(
+            Settings.getRelList(editor.settings),
+            function (item) {
+              if (Settings.allowUnsafeLinkTarget(editor.settings) === false) {
+                item.value = Utils.toggleTargetRules(item.value, data.target === '_blank');
+              }
+            }
+          )
         };
       }
 
@@ -313,81 +300,37 @@ define(
           classListCtrl
         ],
         onSubmit: function (e) {
+          var assumeExternalTargets = Settings.assumeExternalTargets(editor.settings);
+          var insertLink = Utils.link(editor, attachState);
+          var removeLink = Utils.unlink(editor);
+
+          var resultData = Tools.extend({}, data, e.data);
           /*eslint dot-notation: 0*/
-          var href;
-
-          data = Tools.extend(data, e.data);
-          href = data.href;
-
-          var createLink = function () {
-            var linkAttrs = {
-              href: href,
-              target: data.target ? data.target : null,
-              rel: data.rel ? data.rel : null,
-              "class": data["class"] ? data["class"] : null,
-              title: data.title ? data.title : null
-            };
-
-            if (Settings.allowUnsafeLinkTarget(editor.settings) === false) {
-              linkAttrs.rel = toggleTargetRules(linkAttrs.rel, linkAttrs.target == '_blank');
-            }
-
-            if (href === attachState.href) {
-              attachState.attach();
-              attachState = {};
-            }
-
-            if (anchorElm) {
-              editor.focus();
-
-              if (onlyText && data.text != initialText) {
-                if ("innerText" in anchorElm) {
-                  anchorElm.innerText = data.text;
-                } else {
-                  anchorElm.textContent = data.text;
-                }
-              }
-
-              dom.setAttribs(anchorElm, linkAttrs);
-
-              selection.select(anchorElm);
-              editor.undoManager.add();
-            } else {
-              if (onlyText) {
-                editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(data.text)));
-              } else {
-                editor.execCommand('mceInsertLink', false, linkAttrs);
-              }
-            }
-          };
-
-          var insertLink = function (editor) {
-            editor.undoManager.transact(createLink);
-          };
+          var href = resultData.href;
 
           if (!href) {
-            editor.execCommand('unlink');
+            removeLink();
             return;
           }
 
+          if (!onlyText || resultData.text === initialText) {
+            delete resultData.text;
+          }
+
           // Is email and not //user@domain.com
-          if (href.indexOf('@') > 0 && href.indexOf('//') == -1 && href.indexOf('mailto:') == -1) {
+          if (href.indexOf('@') > 0 && href.indexOf('//') === -1 && href.indexOf('mailto:') === -1) {
             delayedConfirm(
               editor,
               'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?',
               function (state) {
                 if (state) {
-                  href = 'mailto:' + href;
+                  resultData.href = 'mailto:' + href;
                 }
-
-                insertLink(editor);
+                insertLink(resultData);
               }
             );
-
             return;
           }
-
-          var assumeExternalTargets = Settings.assumeExternalTargets(editor.settings);
 
           // Is not protocol prefixed
           if ((assumeExternalTargets === true && !/^\w+:/i.test(href)) ||
@@ -397,17 +340,15 @@ define(
               'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?',
               function (state) {
                 if (state) {
-                  href = 'http://' + href;
+                  resultData.href = 'http://' + href;
                 }
-
-                insertLink(editor);
+                insertLink(resultData);
               }
             );
-
             return;
           }
 
-          insertLink(editor);
+          insertLink(resultData);
         }
       });
     };

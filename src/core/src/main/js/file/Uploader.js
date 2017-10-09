@@ -30,47 +30,25 @@
 define(
   'tinymce.core.file.Uploader',
   [
-    "tinymce.core.util.Promise",
-    "tinymce.core.util.Tools",
-    "tinymce.core.util.Fun"
+    'ephox.sand.api.XMLHttpRequest',
+    'global!window',
+    'tinymce.core.util.Fun',
+    'tinymce.core.util.Promise',
+    'tinymce.core.util.Tools'
   ],
-  function (Promise, Tools, Fun) {
+  function (XMLHttpRequest, window, Fun, Promise, Tools) {
     return function (uploadStatus, settings) {
       var pendingPromises = {};
 
-      function filename(blobInfo) {
-        var ext, extensions;
-
-        extensions = {
-          'image/jpeg': 'jpg',
-          'image/jpg': 'jpg',
-          'image/gif': 'gif',
-          'image/png': 'png'
-        };
-
-        ext = extensions[blobInfo.blob().type.toLowerCase()] || 'dat';
-
-        return blobInfo.filename() + '.' + ext;
-      }
-
-      function pathJoin(path1, path2) {
+      var pathJoin = function (path1, path2) {
         if (path1) {
           return path1.replace(/\/$/, '') + '/' + path2.replace(/^\//, '');
         }
 
         return path2;
-      }
+      };
 
-      function blobInfoToData(blobInfo) {
-        return {
-          id: blobInfo.id,
-          blob: blobInfo.blob,
-          base64: blobInfo.base64,
-          filename: Fun.constant(filename(blobInfo))
-        };
-      }
-
-      function defaultHandler(blobInfo, success, failure, progress) {
+      var defaultHandler = function (blobInfo, success, failure, progress) {
         var xhr, formData;
 
         xhr = new XMLHttpRequest();
@@ -88,7 +66,7 @@ define(
         xhr.onload = function () {
           var json;
 
-          if (xhr.status != 200) {
+          if (xhr.status < 200 || xhr.status >= 300) {
             failure("HTTP Error: " + xhr.status);
             return;
           }
@@ -103,44 +81,44 @@ define(
           success(pathJoin(settings.basePath, json.location));
         };
 
-        formData = new FormData();
+        formData = new window.FormData(); // TODO: Stick this in sand
         formData.append('file', blobInfo.blob(), blobInfo.filename());
 
         xhr.send(formData);
-      }
+      };
 
-      function noUpload() {
+      var noUpload = function () {
         return new Promise(function (resolve) {
           resolve([]);
         });
-      }
+      };
 
-      function handlerSuccess(blobInfo, url) {
+      var handlerSuccess = function (blobInfo, url) {
         return {
           url: url,
           blobInfo: blobInfo,
           status: true
         };
-      }
+      };
 
-      function handlerFailure(blobInfo, error) {
+      var handlerFailure = function (blobInfo, error) {
         return {
           url: '',
           blobInfo: blobInfo,
           status: false,
           error: error
         };
-      }
+      };
 
-      function resolvePending(blobUri, result) {
+      var resolvePending = function (blobUri, result) {
         Tools.each(pendingPromises[blobUri], function (resolve) {
           resolve(result);
         });
 
         delete pendingPromises[blobUri];
-      }
+      };
 
-      function uploadBlobInfo(blobInfo, handler, openNotification) {
+      var uploadBlobInfo = function (blobInfo, handler, openNotification) {
         uploadStatus.markPending(blobInfo.blobUri());
 
         return new Promise(function (resolve) {
@@ -183,27 +161,27 @@ define(
               notification.progressBar.value(percent);
             };
 
-            handler(blobInfoToData(blobInfo), success, failure, progress);
+            handler(blobInfo, success, failure, progress);
           } catch (ex) {
             resolve(handlerFailure(blobInfo, ex.message));
           }
         });
-      }
+      };
 
-      function isDefaultHandler(handler) {
+      var isDefaultHandler = function (handler) {
         return handler === defaultHandler;
-      }
+      };
 
-      function pendingUploadBlobInfo(blobInfo) {
+      var pendingUploadBlobInfo = function (blobInfo) {
         var blobUri = blobInfo.blobUri();
 
         return new Promise(function (resolve) {
           pendingPromises[blobUri] = pendingPromises[blobUri] || [];
           pendingPromises[blobUri].push(resolve);
         });
-      }
+      };
 
-      function uploadBlobs(blobInfos, openNotification) {
+      var uploadBlobs = function (blobInfos, openNotification) {
         blobInfos = Tools.grep(blobInfos, function (blobInfo) {
           return !uploadStatus.isUploaded(blobInfo.blobUri());
         });
@@ -212,11 +190,11 @@ define(
           return uploadStatus.isPending(blobInfo.blobUri()) ?
             pendingUploadBlobInfo(blobInfo) : uploadBlobInfo(blobInfo, settings.handler, openNotification);
         }));
-      }
+      };
 
-      function upload(blobInfos, openNotification) {
+      var upload = function (blobInfos, openNotification) {
         return (!settings.url && isDefaultHandler(settings.handler)) ? noUpload() : uploadBlobs(blobInfos, openNotification);
-      }
+      };
 
       settings = Tools.extend({
         credentials: false,

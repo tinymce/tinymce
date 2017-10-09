@@ -88,7 +88,7 @@ asynctest(
         var links = editor.getDoc().getElementsByTagName('link');
 
         for (var i = 0; i < links.length; i++) {
-          if (links[i].href.indexOf('/' + href) != -1) {
+          if (links[i].href.indexOf('/' + href) !== -1) {
             return true;
           }
         }
@@ -145,10 +145,46 @@ asynctest(
       ]);
     };
 
+    var sProtectConditionalCommentsInHeadFoot = function (editor) {
+      return GeneralSteps.sequence([
+        Step.sync(function () {
+          editor.setContent([
+            '<!DOCTYPE html>',
+            '<html>',
+            '<!--[if mso]>',
+            '<body class="mso-container" style="background-color:#FFFFFF;">',
+            '<![endif]-->',
+            '<!--[if !mso]><!-->',
+            '<body class="clean-body" style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #FFFFFF">',
+            '<!--<![endif]--><p>text</p>',
+            '</body>',
+            '</html>'
+          ].join('\n'));
+        }),
+        Step.sync(function () {
+          var expectedContent = [
+            '<!DOCTYPE html>',
+            '<html>',
+            '<!--[if mso]>',
+            '<body class="mso-container" style="background-color:#FFFFFF;">',
+            '<![endif]-->',
+            '<!--[if !mso]><!-->',
+            '<body class="clean-body" style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #FFFFFF">',
+            '<!--<![endif]--><p>text</p>',
+            '</body>',
+            '</html>'
+          ].join('\n');
+
+          Assertions.assertHtml('Styles added to iframe document', expectedContent, editor.getContent());
+        })
+      ]);
+    };
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, Arr.flatten([
         [
-          sParseStyles(editor)
+          sParseStyles(editor),
+          sProtectConditionalCommentsInHeadFoot(editor)
         ],
         suite.toSteps(editor)
       ]), onSuccess, onFailure);
@@ -157,7 +193,10 @@ asynctest(
     }, {
       plugins: 'fullpage',
       indent: false,
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      skin_url: '/project/src/skins/lightgray/dist/lightgray',
+      protect: [
+        /<!--([\s\S]*?)-->/g
+      ]
     }, success, failure);
   }
 );
