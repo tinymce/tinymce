@@ -38,6 +38,11 @@ define(
         fireSkinLoaded(editor, callback);
       };
 
+      if (settings.skin === false) {
+        done();
+        return;
+      }
+
       DOMUtils.DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', done);
       editor.contentCSS.push(skinUrl + '/content.inline.min.css');
     };
