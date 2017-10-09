@@ -96,8 +96,8 @@ define(
       });
     };
 
-    var normalizePercentageWidth = function (width, tableSize) {
-      return cellWidth / tableSize.pixelWidth;
+    var normalizePercentageWidth = function (cellWidth, tableSize) {
+      return cellWidth / tableSize.pixelWidth();
     };
 
     var choosePercentageSize = function (element, width, tableSize) {
