@@ -9,12 +9,13 @@ define(
     'ephox.snooker.resize.ColumnSizes',
     'ephox.snooker.resize.Recalculations',
     'ephox.snooker.resize.Sizes',
+    'ephox.snooker.resize.TableSize',
     'ephox.snooker.util.CellUtils',
     'ephox.sugar.api.search.SelectorFind',
     'global!Math'
   ],
 
-  function (Arr, Deltas, DetailsList, Warehouse, ColumnSizes, Recalculations, Sizes, CellUtils, SelectorFind, Math) {
+  function (Arr, Deltas, DetailsList, Warehouse, ColumnSizes, Recalculations, Sizes, TableSize, CellUtils, SelectorFind, Math) {
     var getWarehouse = function (list) {
       return Warehouse.generate(list);
     };
@@ -29,12 +30,14 @@ define(
     };
 
     var adjustWidth = function (table, delta, index, direction) {
-      var tableSize = Sizes.getTableSize(table);
+      var tableSize = TableSize.getTableSize(table);
+      var step = tableSize.getCellDelta(delta);
       var warehouse = getTableWarehouse(table);
-      var widths = ColumnSizes.getPixelWidths(warehouse, direction);
+      var widths = tableSize.getWidths(warehouse, direction);
+      //var widths = ColumnSizes.getPixelWidths(warehouse, direction);
 
       // Calculate all of the new widths for columns
-      var deltas = Deltas.determine(widths, index, delta, CellUtils.minWidth());
+      var deltas = Deltas.determine(widths, index, step, tableSize);
       var newWidths = Arr.map(deltas, function (dx, i) {
         return dx + widths[i];
       });
@@ -42,12 +45,13 @@ define(
       // Set the width of each cell based on the column widths
       var newSizes = Recalculations.recalculateWidth(warehouse, newWidths);
       Arr.each(newSizes, function (cell) {
-        Sizes.setWidth(cell.element(), cell.width());
+        tableSize.setCellWidth(cell.element(), cell.width());
       });
 
       // Set the overall width of the table.
-      var total = sumUp(newWidths);
-      Sizes.setWidth(table, total);
+      if (index === warehouse.grid().columns() - 1) {
+        tableSize.setTableWidth(table, newWidths, step);
+      }
     };
 
     var adjustHeight = function (table, delta, index, direction) {
@@ -81,13 +85,13 @@ define(
       // Set the width of each cell based on the column widths
       var newSizes = Recalculations.recalculateWidth(warehouse, widths);
       Arr.each(newSizes, function (cell) {
-        Sizes.setWidth(cell.element(), cell.width());
+        Sizes.setPixelWidth(cell.element(), cell.width());
       });
 
       var total = Arr.foldr(widths, function (b, a) { return a + b; }, 0);
       if (newSizes.length > 0) {
         SelectorFind.ancestor(newSizes[0].element(), 'table').each(function (table) {
-          Sizes.setWidth(table, total);
+          Sizes.setPixelWidth(table, total);
         });
       }
     };

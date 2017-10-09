@@ -8,8 +8,8 @@ define(
   function (Sizes) {
     var halve = function (main, other) {
       var width = Sizes.getPixelWidth(main);
-      Sizes.setWidth(main, width/2);
-      Sizes.setWidth(other, width/2);
+      Sizes.setPixelWidth(main, width/2);
+      Sizes.setPixelWidth(other, width/2);
     };
 
     return {

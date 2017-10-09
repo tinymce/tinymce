@@ -60,12 +60,8 @@ define(
       return getWidthFrom(warehouse, direction, getRawW, getDeduced);
     };
 
-    var getWidths = function (warehouse, direction) {
-      return getObjWidthFrom(warehouse, direction, Sizes.getEitherWidth, getDeduced);
-    };
-
     var getPercentageWidths = function (warehouse, direction) {
-      return getWidthFrom(warehouse, direction, getEitherWidth, function (deduced) {
+      return getWidthFrom(warehouse, direction, Sizes.getPercentageWidth, function (deduced) {
         return deduced.getOrThunk(CellUtils.minWidth);
       });
     };
@@ -113,6 +109,7 @@ define(
     return {
       getRawWidths: getRawWidths,
       getPixelWidths: getPixelWidths,
+      getPercentageWidths: getPercentageWidths,
       getPixelHeights: getPixelHeights,
       getRawHeights: getRawHeights
     };

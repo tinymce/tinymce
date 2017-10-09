@@ -2,26 +2,29 @@ define(
   'ephox.snooker.resize.Sizes',
 
   [
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Strings',
     'ephox.snooker.api.TableLookup',
+    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.view.Width',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option',
-    'ephox.katamari.api.Strings',
     'global!Math',
     'global!parseInt'
   ],
 
-  function (TableLookup, Attr, Css, Height, Node, Width, Fun, Option, Strings, Math, parseInt) {
-    
+  function (Option, Strings, TableLookup, Node, Attr, Css, Height, Width, Math, parseInt) {
+
     var percentageBasedSizeRegex = new RegExp(/(\d+(\.\d+)?)%/);
     var pixelBasedSizeRegex = new RegExp(/(\d+(\.\d+)?)px|em/);
 
-    var setWidth = function (cell, amount) {
+    var setPixelWidth = function (cell, amount) {
       Css.set(cell, 'width', amount + 'px');
+    };
+
+    var setPercentageWidth = function (cell, amount) {
+      Css.set(cell, 'width', amount + '%');
     };
 
     var setHeight = function (cell, amount) {
@@ -51,7 +54,7 @@ define(
       return newSize;
     };
 
-    var normalizeSize = function (value, cell, getter, setter) {
+    var normalizePixelSize = function (value, cell, getter, setter) {
       var number = parseInt(value, 10);
       return Strings.endsWith(value, '%') && Node.name(cell) !== 'table' ? convert(cell, number, getter, setter) : number;
     };
@@ -60,7 +63,7 @@ define(
       var value = getWidthPixelValue(cell);
       // Note, Firefox doesn't calculate the width for you with Css.get
       if (!value) return Width.get(cell);
-      return normalizePixelSize(value, cell, Width.get, setWidth);
+      return normalizePixelSize(value, cell, Width.get, setPixelWidth);
     };
 
     var getTotalHeight = function (cell) {
@@ -93,33 +96,17 @@ define(
       });
     };
 
-    var percentageSize = function (width) {
-      return {
-        percentageBased: Fun.constant(true),
-        width: Fun.constant(intWidth)
-      };
-    };
-
-    var pixelSize = function (width) {
-      var intWidth = parseInt(width, 10);
-      return {
-        percentageBased: Fun.constant(false),
-        width: Fun.constant(intWidth)
-      };
-    };
-
     var normalizePercentageWidth = function (width, tableSize) {
-      var percentage = cellWidth / tableSize.pixelWidth;
-      return percentageSize(percentage);
+      return cellWidth / tableSize.pixelWidth;
     };
 
     var choosePercentageSize = function (element, width, tableSize) {
       if (percentageBasedSizeRegex.test(width)) {
         var percentMatch = percentageBasedSizeRegex.exec(width);
-        return percentageSize(percentMatch[1]);
+        return parseFloat(percentMatch[1], 10);
       } else if (pixelBasedSizeRegex.test(width)) {
         var pixelMatch = pixelBasedSizeRegex.exec(width);
-        var cellWidth = pixelMatch[1];
+        var cellWidth = parseInt(pixelMatch[1], 10);
         return normalizePercentageWidth(cellWidth, tableSize);
       } else {
         var fallbackWidth = Width.get(element);
@@ -128,12 +115,12 @@ define(
       }
     };
     // Get a percentage size for a percentage parent table
-    var getPercentageWidthSize = function (cell, tableSize) {
+    var getPercentageWidth = function (cell, tableSize) {
       var width = getRawWidth(cell);
       return width.fold(function () {
         var width = Width.get();
         var intWidth = parseInt(width, 10);
-        return normalizePercentageWidth(intWidth)
+        return normalizePercentageWidth(intWidth);
       }, function (width) {
         return choosePercentageSize(cell, width, tableSize);
       });
@@ -141,12 +128,14 @@ define(
 
     var getHeight = function (cell) {
       return get(cell, 'rowspan', getTotalHeight);
-    };    
+    };
 
     return {
-      setWidth: setWidth,
+      setPixelWidth: setPixelWidth,
+      setPercentageWidth: setPercentageWidth,
       setHeight: setHeight,
       getPixelWidth: getPixelWidth,
+      getPercentageWidth: getPercentageWidth,
       getHeight: getHeight,
       getRawWidth: getRawWidth
     };

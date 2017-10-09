@@ -70,7 +70,7 @@ define(
     };
 
     return {
-      setWidth: Sizes.setWidth,
+      setWidth: Sizes.setPixelWidth,
       getWidth: Sizes.getPixelWidth,
       setHeight: Sizes.setHeight,
       getHeight: Sizes.getHeight,
