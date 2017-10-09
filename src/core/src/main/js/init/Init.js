@@ -128,7 +128,7 @@ define(
         info.editorContainer.id = info.editorContainer.id || editor.id + "_parent";
       }
 
-      if (info.iframeContainer.nodeType) {
+      if (info.iframeContainer && info.iframeContainer.nodeType) {
         info.iframeContainer.id = info.iframeContainer.id || editor.id + "_iframecontainer";
       }
 
