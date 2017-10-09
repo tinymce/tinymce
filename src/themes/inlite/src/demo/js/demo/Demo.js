@@ -53,7 +53,7 @@ define(
 
         success({
           status: valid ? 'valid' : 'invalid',
-          message: valid ? 'Url seems to be valid' : 'Are you use that this url is valid?'
+          message: valid ? 'Url seems to be valid' : 'Are you sure that this url is valid?'
         });
       },
       file_picker_callback: function () { }
