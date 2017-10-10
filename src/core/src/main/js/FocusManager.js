@@ -20,13 +20,14 @@
 define(
   'tinymce.core.FocusManager',
   [
-    'ephox.sugar.api.node.Element',
+    'ephox.katamari.api.Type',
     'global!document',
     'tinymce.core.dom.DOMUtils',
+    'tinymce.core.dom.RangeUtils',
     'tinymce.core.selection.SelectionBookmark',
     'tinymce.core.util.Delay'
   ],
-  function (Element, document, DOMUtils, SelectionBookmark, Delay) {
+  function (Type, document, DOMUtils, RangeUtils, SelectionBookmark, Delay) {
     var selectionChangeHandler, documentFocusInHandler, documentMouseUpHandler, DOM = DOMUtils.DOM;
 
     var isUIElement = function (editor, elm) {
@@ -38,6 +39,14 @@ define(
         );
       });
       return parent !== null;
+    };
+
+    var storeSelectionFromEventCoords = function (editor, e) {
+      var event = e.type === 'touchend' && e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches[0] : e;
+      if (Type.isNumber(event.clientX) && Type.isNumber(event.clientY)) {
+        var rng = RangeUtils.getCaretRangeFromPoint(event.clientX, event.clientY, editor.getDoc());
+        SelectionBookmark.storeNative(editor, rng);
+      }
     };
 
     /**
@@ -61,7 +70,14 @@ define(
         var editor = e.editor;
 
         editor.on('init', function () {
-          editor.on('keyup mouseup touchend nodechange', function (e) {
+          editor.on('mouseup touchend', function (e) {
+            if (editor.selection.isCollapsed()) {
+              SelectionBookmark.store(editor);
+            } else {
+              storeSelectionFromEventCoords(editor, e);
+            }
+          });
+          editor.on('keyup nodechange', function (e) {
             if (e.type === 'nodechange' && e.selectionChange) {
               return;
             }

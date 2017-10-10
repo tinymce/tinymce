@@ -55,12 +55,14 @@ define(
     //   return rng;
     // };
 
+    var nativeRangeToSelectionRange = function (r) {
+      return Selection.range(Element.fromDom(r.startContainer), r.startOffset, Element.fromDom(r.endContainer), r.endOffset);
+    };
+
     var readRange = function (win) {
       var selection = win.getSelection();
       var rng = selection.rangeCount === 0 ? Option.none() : Option.from(selection.getRangeAt(0));
-      return rng.map(function (r) {
-        return Selection.range(Element.fromDom(r.startContainer), r.startOffset, Element.fromDom(r.endContainer), r.endOffset);
-      });
+      return rng.map(nativeRangeToSelectionRange);
     };
 
     var getBookmark = function (root) {
@@ -90,6 +92,16 @@ define(
       editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
     };
 
+    var storeNative = function (editor, rng) {
+      var root = Element.fromDom(editor.getBody());
+
+      var newBookmark = Option.from(rng)
+        .map(nativeRangeToSelectionRange)
+        .filter(isRngInRoot(root));
+
+      editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
+    };
+
     var getRng = function (editor) {
       var bookmark = editor.bookmark ? editor.bookmark : Option.none();
 
@@ -106,6 +118,7 @@ define(
 
     return {
       store: store,
+      storeNative: storeNative,
       restore: restore,
       getRng: getRng,
       getBookmark: getBookmark,

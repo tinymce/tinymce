@@ -617,9 +617,11 @@ define(
 
       if (doc.caretPositionFromPoint) {
         point = doc.caretPositionFromPoint(clientX, clientY);
-        rng = doc.createRange();
-        rng.setStart(point.offsetNode, point.offset);
-        rng.collapse(true);
+        if (point) {
+          rng = doc.createRange();
+          rng.setStart(point.offsetNode, point.offset);
+          rng.collapse(true);
+        }
       } else if (doc.caretRangeFromPoint) {
         rng = doc.caretRangeFromPoint(clientX, clientY);
       } else if (doc.body.createTextRange) {
