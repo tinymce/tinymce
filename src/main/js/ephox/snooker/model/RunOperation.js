@@ -75,7 +75,7 @@ define(
           return Option.none();
         }, function (out) {
           var newElements = Redraw.render(table, out.grid());
-          adjustment(out.grid(), direction);
+          adjustment(table, out.grid(), direction);
           postAction(table);
           Bars.refresh(wire, table, BarPositions.height, direction);
           return Option.some({

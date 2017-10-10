@@ -85,7 +85,7 @@ define(
       var width = Sizes.getRawWidth(element);
       // If we have no width still, return a pixel width at least.
       return width.fold(function () {
-        var fallbackWidth = Width.get(cell);
+        var fallbackWidth = Width.get(element);
         return pixelSize(fallbackWidth);
       }, function (width) {
         return chooseSize(element, width);

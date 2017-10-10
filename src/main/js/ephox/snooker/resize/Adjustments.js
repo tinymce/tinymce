@@ -77,14 +77,15 @@ define(
     };
 
     // Ensure that the width of table cells match the passed in table information.
-    var adjustWidthTo = function (list, direction) {
+    var adjustWidthTo = function (table, list, direction) {
+      var tableSize = TableSize.getTableSize(table);
       var warehouse = getWarehouse(list);
-      var widths = ColumnSizes.getPixelWidths(warehouse, direction);
+      var widths = tableSize.getWidths(warehouse, direction, tableSize);
 
       // Set the width of each cell based on the column widths
       var newSizes = Recalculations.recalculateWidth(warehouse, widths);
       Arr.each(newSizes, function (cell) {
-        Sizes.setPixelWidth(cell.element(), cell.width());
+        tableSize.setCellWidth(cell.element(), cell.width());
       });
 
       var total = Arr.foldr(widths, function (b, a) { return a + b; }, 0);

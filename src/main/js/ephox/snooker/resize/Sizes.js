@@ -117,7 +117,7 @@ define(
     var getPercentageWidth = function (cell, tableSize) {
       var width = getRawWidth(cell);
       return width.fold(function () {
-        var width = Width.get();
+        var width = Width.get(cell);
         var intWidth = parseInt(width, 10);
         return normalizePercentageWidth(intWidth);
       }, function (width) {
@@ -147,7 +147,7 @@ define(
     var getPixellWidth = function (cell, tableSize) {
       var width = getRawWidth(cell);
       return width.fold(function () {
-        var width = Width.get();
+        var width = Width.get(cell);
         var intWidth = parseInt(width, 10);
         return intWidth;
       }, function (width) {
