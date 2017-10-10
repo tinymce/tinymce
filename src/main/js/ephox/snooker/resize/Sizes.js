@@ -97,17 +97,13 @@ define(
     };
 
     var normalizePercentageWidth = function (cellWidth, tableSize) {
-      return cellWidth / tableSize.pixelWidth();
+      return cellWidth / tableSize.pixelWidth() * 100;
     };
 
     var choosePercentageSize = function (element, width, tableSize) {
       if (percentageBasedSizeRegex.test(width)) {
         var percentMatch = percentageBasedSizeRegex.exec(width);
         return parseFloat(percentMatch[1], 10);
-      } else if (pixelBasedSizeRegex.test(width)) {
-        var pixelMatch = pixelBasedSizeRegex.exec(width);
-        var cellWidth = parseInt(pixelMatch[1], 10);
-        return normalizePercentageWidth(cellWidth, tableSize);
       } else {
         var fallbackWidth = Width.get(element);
         var intWidth = parseInt(fallbackWidth, 10);
