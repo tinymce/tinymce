@@ -539,6 +539,7 @@ module.exports = function (grunt) {
       'save-plugin': { path: 'src/plugins/save' },
       'searchreplace-plugin': { path: 'src/plugins/searchreplace' },
       'spellchecker-plugin': { path: 'src/plugins/spellchecker' },
+      'stripnbsp-plugin': { path: 'src/plugins/stripnbsp' },
       'tabfocus-plugin': { path: 'src/plugins/tabfocus' },
       'table-plugin': { path: 'src/plugins/table' },
       'template-plugin': { path: 'src/plugins/template' },

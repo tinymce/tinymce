@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Plugin: stripnbsp Demo Page</title>
+    <script src="../../../config/bolt/bootstrap-demo.js"></script>
+    <script>
+      ephox.bolt.module.api.main('tinymce.plugins.stripnbsp.demo.Demo');
+    </script>
+  </head>
+
+  <body>
+  <h2>Plugin: stripnbsp Demo Page</h2>
+    <div id="ephox-ui">
+      <h3>Without the <code>stripnbsp</code> Plugin:</h3>
+      <textarea name="" id="elm1" cols="30" rows="10" class="tinymce">
+        <p>A&nbsp;B</p>
+        <p>A&nbsp;<span class="a">B</span></p>
+        <p>A<span class="a">&nbsp;B</span></p>
+        <p>A<span class="a">B&nbsp;</span></p>
+        <p>A<span class="a">B</span>&nbsp;</p>
+        <p>A&nbsp;&nbsp;B</p>
+        <p>A &nbsp;B</p>
+        <p>A&nbsp; B</p>
+        <p>A</p><p>&nbsp;</p><p>B</p>
+        <table><tbody><tr><td>&nbsp;</td></tr></tbody></table>
+      </textarea>
+      <h3>With the <code>stripnbsp</code> plugin (click “source code”):</h3>
+      <textarea name="" id="elm2" cols="30" rows="10" class="tinymce">
+        <p>A&nbsp;B</p>
+        <p>A&nbsp;<span class="a">B</span></p>
+        <p>A<span class="a">&nbsp;B</span></p>
+        <p>A<span class="a">B&nbsp;</span></p>
+        <p>A<span class="a">B</span>&nbsp;</p>
+        <p>A&nbsp;&nbsp;B</p>
+        <p>A &nbsp;B</p>
+        <p>A&nbsp; B</p>
+        <p>A</p><p>&nbsp;</p><p>B</p>
+        <table><tbody><tr><td>&nbsp;</td></tr></tbody></table>
+      </textarea>
+      <h3>With <code>stripnbsp_force</code> activated (click “source code”):</h3>
+      <textarea name="" id="elm3" cols="30" rows="10" class="tinymce">
+        <p>A&nbsp;B</p>
+        <p>A&nbsp;<span class="a">B</span></p>
+        <p>A<span class="a">&nbsp;B</span></p>
+        <p>A<span class="a">B&nbsp;</span></p>
+        <p>A<span class="a">B</span>&nbsp;</p>
+        <p>A&nbsp;&nbsp;B</p>
+        <p>A &nbsp;B</p>
+        <p>A&nbsp; B</p>
+        <p>A</p><p>&nbsp;</p><p>B</p>
+        <table><tbody><tr><td>&nbsp;</td></tr></tbody></table>
+      </textarea>
+    </div>
+  </body>
+</html>

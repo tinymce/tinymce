@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Plugin stripnbsp</title>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+<script src="../../js/tinymce/tinymce.dev.js"></script>
+<script src="../../js/tinymce/plugins/stripnbsp/plugin.dev.js"></script>
+<script>
+	tinymce.init({
+		selector: "textarea#elm1",
+		theme: "modern",
+		plugins: ["code link"],
+		toolbar: "link code",
+	});
+	tinymce.init({
+		selector: "textarea#elm2",
+		theme: "modern",
+		plugins: ["code link stripnbsp"],
+		toolbar: "link code",
+	});
+	tinymce.init({
+		selector: "textarea#elm3",
+		theme: "modern",
+		plugins: ["code link stripnbsp"],
+		toolbar: "link code",
+		stripnbsp_force: true,
+	});
+</script>
+<style>
+	button {
+		margin: 0;
+		padding: 0;
+		font-size: 11px;
+	}
+</style>
+</head>
+<body>
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">
+	<h3>Without the <code>stripnbsp</code> Plugin:</h3>
+	<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">
+		<p>A&nbsp;B</p>
+		<p>A&nbsp;<span class="a">B</span></p>
+		<p>A<span class="a">&nbsp;B</span></p>
+		<p>A<span class="a">B&nbsp;</span></p>
+		<p>A<span class="a">B</span>&nbsp;</p>
+		<p>A&nbsp;&nbsp;B</p>
+		<p>A &nbsp;B</p>
+		<p>A&nbsp; B</p>
+		<p>A</p><p>&nbsp;</p><p>B</p>
+		<table><tbody><tr><td>&nbsp;</td></tr></tbody></table>
+	</textarea>
+	<h3>With the <code>stripnbsp</code> plugin (click “source code”):</h3>
+	<textarea id="elm2" name="elm2" rows="15" cols="80" style="width: 80%">
+		<p>A&nbsp;B</p>
+		<p>A&nbsp;<span class="a">B</span></p>
+		<p>A<span class="a">&nbsp;B</span></p>
+		<p>A<span class="a">B&nbsp;</span></p>
+		<p>A<span class="a">B</span>&nbsp;</p>
+		<p>A&nbsp;&nbsp;B</p>
+		<p>A &nbsp;B</p>
+		<p>A&nbsp; B</p>
+		<p>A</p><p>&nbsp;</p><p>B</p>
+		<table><tbody><tr><td>&nbsp;</td></tr></tbody></table>
+	</textarea>
+	<h3>With <code>stripnbsp_force</code> activated (click “source code”):</h3>
+	<textarea id="elm3" name="elm3" rows="15" cols="80" style="width: 80%">
+		<p>A&nbsp;B</p>
+		<p>A&nbsp;<span class="a">B</span></p>
+		<p>A<span class="a">&nbsp;B</span></p>
+		<p>A<span class="a">B&nbsp;</span></p>
+		<p>A<span class="a">B</span>&nbsp;</p>
+		<p>A&nbsp;&nbsp;B</p>
+		<p>A &nbsp;B</p>
+		<p>A&nbsp; B</p>
+		<p>A</p><p>&nbsp;</p><p>B</p>
+		<table><tbody><tr><td>&nbsp;</td></tr></tbody></table>
+	</textarea>
+</form>
+
+</body>
+</html>
