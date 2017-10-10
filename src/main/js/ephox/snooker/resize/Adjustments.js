@@ -34,7 +34,6 @@ define(
       var step = tableSize.getCellDelta(delta);
       var warehouse = getTableWarehouse(table);
       var widths = tableSize.getWidths(warehouse, direction, tableSize);
-      //var widths = ColumnSizes.getPixelWidths(warehouse, direction);
 
       // Calculate all of the new widths for columns
       var deltas = Deltas.determine(widths, index, step, tableSize);

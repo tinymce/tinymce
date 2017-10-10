@@ -28,10 +28,6 @@ define(
       return getRaw(cell, 'height', Sizes.getHeight);
     };
 
-    var getPixelsW = function (cell) {
-      return Sizes.getPixelWidth(cell);
-    };
-
     var getWidthFrom = function (warehouse, direction, getWidth, fallback, tableSize) {
       var columns = Blocks.columns(warehouse);
 
@@ -71,14 +67,10 @@ define(
     };
 
     var getPixelWidths = function (warehouse, direction, tableSize) {
-      return getWidthFrom(warehouse, direction, getPixelsW, function (deduced) {
+      return getWidthFrom(warehouse, direction, Sizes.getPixellWidth, function (deduced) {
         // Minimum cell width when all else fails.
         return deduced.getOrThunk(tableSize.minCellWidth);
       }, tableSize);
-    };
-
-    var getPixelsH = function (cell) {
-      return Sizes.getHeight(cell);
     };
 
     var getHeightFrom = function (warehouse, direction, getHeight, fallback) {
@@ -101,7 +93,7 @@ define(
     };
 
     var getPixelHeights = function (warehouse, direction) {
-      return getHeightFrom(warehouse, direction, getPixelsH, function (deduced) {
+      return getHeightFrom(warehouse, direction, Sizes.getHeight, function (deduced) {
         return deduced.getOrThunk(CellUtils.minHeight);
       });
     };

@@ -2,6 +2,7 @@ define(
   'ephox.snooker.resize.Sizes',
 
   [
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Strings',
     'ephox.snooker.api.TableLookup',
@@ -14,10 +15,11 @@ define(
     'global!parseInt'
   ],
 
-  function (Option, Strings, TableLookup, Node, Attr, Css, Height, Width, Math, parseInt) {
+  function (Fun, Option, Strings, TableLookup, Node, Attr, Css, Height, Width, Math, parseInt) {
 
-    var percentageBasedSizeRegex = new RegExp(/(\d+(\.\d+)?)%/);
-    var pixelBasedSizeRegex = new RegExp(/(\d+(\.\d+)?)px|em/);
+    var genericSizeRegex = /(\d+(\.\d+)?)(px|em|%)/;
+    var percentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
+    var pixelBasedSizeRegex = /(\d+(\.\d+)?)px|em/;
 
     var setPixelWidth = function (cell, amount) {
       Css.set(cell, 'width', amount + 'px');
@@ -110,6 +112,7 @@ define(
         return normalizePercentageWidth(intWidth, tableSize);
       }
     };
+
     // Get a percentage size for a percentage parent table
     var getPercentageWidth = function (cell, tableSize) {
       var width = getRawWidth(cell);
@@ -122,8 +125,57 @@ define(
       });
     };
 
+    var normalizePixelWidth = function (cellWidth, tableSize) {
+      return cellWidth / 100 * tableSize.pixelWidth();
+    };
+
+    var choosePixelSize = function (element, width, tableSize) {
+      if (pixelBasedSizeRegex.test(width)) {
+        var pixelMatch = pixelBasedSizeRegex.exec(width);
+        return parseInt(pixelMatch[1], 10);
+      } else if (percentageBasedSizeRegex.test(width)) {
+        var percentMatch = percentageBasedSizeRegex.exec(width);
+        var floatWidth = parseFloat(percentMatch[1], 10);
+        return normalizePixelWidth(floatWidth, tableSize);
+      } else {
+        var fallbackWidth = Width.get(element);
+        var intWidth = parseInt(fallbackWidth, 10);
+        return normalizePercentageWidth(intWidth, tableSize);
+      }
+    };
+
+    var getPixellWidth = function (cell, tableSize) {
+      var width = getRawWidth(cell);
+      return width.fold(function () {
+        var width = Width.get();
+        var intWidth = parseInt(width, 10);
+        return intWidth;
+      }, function (width) {
+        return choosePixelSize(cell, width, tableSize);
+      });
+    };
+
     var getHeight = function (cell) {
       return get(cell, 'rowspan', getTotalHeight);
+    };
+
+    var getGenericWidth = function (cell) {
+      var width = getRawWidth(cell);
+      return width.bind(function (width) {
+        if (genericSizeRegex.test(width)) {
+          var match = genericSizeRegex.exec(width);
+          return Option.some({
+            width: Fun.constant(match[1]),
+            unit: Fun.constant(match[3])
+          });
+        } else {
+          return Option.none();
+        }
+      });
+    };
+
+    var setGenericWidth = function (cell, amount, unit) {
+      Css.set(cell, 'width', amount + unit);
     };
 
     return {
@@ -131,7 +183,10 @@ define(
       setPercentageWidth: setPercentageWidth,
       setHeight: setHeight,
       getPixelWidth: getPixelWidth,
+      getPixellWidth: getPixellWidth,
       getPercentageWidth: getPercentageWidth,
+      getGenericWidth: getGenericWidth,
+      setGenericWidth: setGenericWidth,
       getHeight: getHeight,
       getRawWidth: getRawWidth
     };
