@@ -67,7 +67,7 @@ define(
     };
 
     var getPixelWidths = function (warehouse, direction, tableSize) {
-      return getWidthFrom(warehouse, direction, Sizes.getPixellWidth, function (deduced) {
+      return getWidthFrom(warehouse, direction, Sizes.getPixelWidth, function (deduced) {
         // Minimum cell width when all else fails.
         return deduced.getOrThunk(tableSize.minCellWidth);
       }, tableSize);

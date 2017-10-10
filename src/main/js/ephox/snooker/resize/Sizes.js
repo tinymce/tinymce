@@ -84,10 +84,6 @@ define(
       return Attr.has(cell, type) ? parseInt(Attr.get(cell, type), 10) : 1;
     };
 
-    var getPixelWidth = function (cell) {
-      return get(cell, 'colspan', getTotalPixelWidth);
-    };
-
     var getRawWidth = function (element) {
       // Try to use the style width first, otherwise attempt to get attribute width
       var cssWidth = Css.getRaw(element, 'width');
@@ -144,7 +140,7 @@ define(
       }
     };
 
-    var getPixellWidth = function (cell, tableSize) {
+    var getPixelWidth = function (cell, tableSize) {
       var width = getRawWidth(cell);
       return width.fold(function () {
         var width = Width.get(cell);
@@ -183,7 +179,6 @@ define(
       setPercentageWidth: setPercentageWidth,
       setHeight: setHeight,
       getPixelWidth: getPixelWidth,
-      getPixellWidth: getPixellWidth,
       getPercentageWidth: getPercentageWidth,
       getGenericWidth: getGenericWidth,
       setGenericWidth: setGenericWidth,
