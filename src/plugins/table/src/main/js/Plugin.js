@@ -17,11 +17,14 @@
 define(
   'tinymce.plugins.table.Plugin',
   [
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
     'ephox.snooker.api.ResizeWire',
     'ephox.snooker.api.TableDirection',
     'ephox.snooker.api.TableResize',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.search.SelectorFilter',
     'tinymce.core.PluginManager',
     'tinymce.plugins.table.actions.Clipboard',
     'tinymce.plugins.table.actions.InsertTable',
@@ -37,7 +40,7 @@ define(
     'tinymce.plugins.table.ui.Dialogs',
     'tinymce.plugins.table.ui.MenuItems'
   ],
-  function (Option, ResizeWire, TableDirection, TableResize, Element, PluginManager, Clipboard, InsertTable, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Ephemera, Selections, Buttons, Dialogs, MenuItems) {
+  function (Arr, Option, ResizeWire, TableDirection, TableResize, Element, Attr, SelectorFilter, PluginManager, Clipboard, InsertTable, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Ephemera, Selections, Buttons, Dialogs, MenuItems) {
     function Plugin(editor) {
       var self = this;
 
@@ -78,10 +81,15 @@ define(
           (editor.settings.object_resizing === true || editor.settings.object_resizing === 'table')) {
           var sz = TableResize(rawWire, direction);
           sz.on();
-          sz.events.startDrag.bind(function () {
+          sz.events.startDrag.bind(function (event) {
             selectionRng = Option.some(editor.selection.getRng());
           });
-          sz.events.afterResize.bind(function () {
+          sz.events.afterResize.bind(function (event) {
+            var table = event.table();
+            var dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
+            Arr.each(dataStyleCells, function (cell) {
+              Attr.remove(cell, 'data-mce-style');
+            });
             editor.focus();
             selectionRng.each(function (rng) {
               editor.selection.setRng(rng);
