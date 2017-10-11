@@ -31,7 +31,6 @@ define(
 
       editor.addButton('searchreplace', {
         tooltip: 'Find and replace',
-        shortcut: 'Meta+F',
         onclick: showDialog(editor, currentIndexState)
       });
 
