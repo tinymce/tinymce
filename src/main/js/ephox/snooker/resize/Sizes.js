@@ -175,6 +175,8 @@ define(
     };
 
     return {
+      percentageBasedSizeRegex: Fun.constant(percentageBasedSizeRegex),
+      pixelBasedSizeRegex: Fun.constant(pixelBasedSizeRegex),
       setPixelWidth: setPixelWidth,
       setPercentageWidth: setPercentageWidth,
       setHeight: setHeight,

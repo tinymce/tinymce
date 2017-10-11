@@ -12,9 +12,6 @@ define(
   ],
 
   function (Arr, Fun, ColumnSizes, Sizes, CellUtils, Width, Math) {
-    var percentageBasedSizeRegex = new RegExp(/(\d+(\.\d+)?)%/);
-    var pixelBasedSizeRegex = new RegExp(/(\d+(\.\d+)?)px|em/);
-
     var percentageSize = function (width, element) {
       var floatWidth = parseFloat(width, 10);
       var pixelWidth = Width.get(element);
@@ -69,11 +66,11 @@ define(
     };
 
     var chooseSize = function (element, width) {
-      if (percentageBasedSizeRegex.test(width)) {
-        var percentMatch = percentageBasedSizeRegex.exec(width);
+      if (Sizes.percentageBasedSizeRegex().test(width)) {
+        var percentMatch = Sizes.percentageBasedSizeRegex().exec(width);
         return percentageSize(percentMatch[1], element);
-      } else if (pixelBasedSizeRegex.test(width)) {
-        var pixelMatch = pixelBasedSizeRegex.exec(width);
+      } else if (Sizes.pixelBasedSizeRegex().test(width)) {
+        var pixelMatch = Sizes.pixelBasedSizeRegex().exec(width);
         return pixelSize(pixelMatch[1]);
       } else {
         var fallbackWidth = Width.get(element);
