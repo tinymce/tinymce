@@ -40,7 +40,7 @@ asynctest(
             s.text(str.is('a')),
             s.element('a', {
               attrs: {
-                'data-mce-selected': str.is('1'),
+                'data-mce-selected': str.is('inline-boundary'),
                 'data-mce-href': str.is('#'),
                 'href': str.is('#')
               },
@@ -65,7 +65,7 @@ asynctest(
             s.text(str.is('a' + (before ? Zwsp.ZWSP : ''))),
             s.element('a', {
               attrs: {
-                'data-mce-selected': str.none('1'),
+                'data-mce-selected': str.none('inline-boundary'),
                 'data-mce-href': str.is('#'),
                 'href': str.is('#')
               },
@@ -89,7 +89,7 @@ asynctest(
                 'a',
                 {
                   attrs: {
-                    'data-mce-selected': str.none('1'),
+                    'data-mce-selected': str.none('inline-boundary'),
                     'data-mce-href': str.is('#'),
                     'href': str.is('#')
                   },
@@ -118,7 +118,7 @@ asynctest(
             'a',
             {
               attrs: {
-                'data-mce-selected': i === index ? str.is('1') : str.none('1'),
+                'data-mce-selected': i === index ? str.is('inline-boundary') : str.none('1'),
                 'data-mce-href': str.is('#'),
                 'href': str.is('#')
               },

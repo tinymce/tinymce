@@ -34,9 +34,9 @@ define(
 
     var setSelected = function (state, elm) {
       if (state) {
-        elm.setAttribute('data-mce-selected', '1');
+        elm.setAttribute('data-mce-selected', 'inline-boundary');
       } else {
-        elm.removeAttribute('data-mce-selected', '1');
+        elm.removeAttribute('data-mce-selected');
       }
     };
 
@@ -58,7 +58,7 @@ define(
     };
 
     var toggleInlines = function (isInlineTarget, dom, elms) {
-      var selectedInlines = Arr.filter(dom.select('*[data-mce-selected]'), isInlineTarget);
+      var selectedInlines = Arr.filter(dom.select('*[data-mce-selected="inline-boundary"]'), isInlineTarget);
       var targetInlines = Arr.filter(elms, isInlineTarget);
       Arr.each(Arr.difference(selectedInlines, targetInlines), Fun.curry(setSelected, false));
       Arr.each(Arr.difference(targetInlines, selectedInlines), Fun.curry(setSelected, true));
