@@ -21,9 +21,14 @@ define(
       return parseInt(editor.getParam('plugin_preview_height', '500'), 10);
     };
 
+    var getContentStyle = function (editor) {
+      return editor.getParam('content_style', '');
+    };
+
     return {
       getPreviewDialogWidth: getPreviewDialogWidth,
-      getPreviewDialogHeight: getPreviewDialogHeight
+      getPreviewDialogHeight: getPreviewDialogHeight,
+      getContentStyle: getContentStyle
     };
   }
 );
