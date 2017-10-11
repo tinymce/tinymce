@@ -35,7 +35,6 @@ define(
 
       editor.addButton('fullscreen', {
         tooltip: 'Fullscreen',
-        shortcut: 'Ctrl+Shift+F',
         cmd: 'mceFullScreen',
         onPostRender: postRender(editor)
       });
