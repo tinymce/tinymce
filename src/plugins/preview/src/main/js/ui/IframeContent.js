@@ -41,31 +41,31 @@ define(
       }
 
       var preventClicksOnLinksScript = (
-              '<script>' +
-              'document.addEventListener && document.addEventListener("click", function(e) {' +
-              'for (var elm = e.target; elm; elm = elm.parentNode) {' +
-              'if (elm.nodeName === "A") {' +
-              'e.preventDefault();' +
-              '}' +
-              '}' +
-              '}, false);' +
-              '</script> '
-            );
+        '<script>' +
+        'document.addEventListener && document.addEventListener("click", function(e) {' +
+        'for (var elm = e.target; elm; elm = elm.parentNode) {' +
+        'if (elm.nodeName === "A") {' +
+        'e.preventDefault();' +
+        '}' +
+        '}' +
+        '}, false);' +
+        '</script> '
+      );
 
       var dirAttr = editor.settings.directionality ? ' dir="' + editor.settings.directionality + '"' : '';
 
       previewHtml = (
-              '<!DOCTYPE html>' +
-              '<html>' +
-              '<head>' +
-              headHtml +
-              '</head>' +
-              '<body id="' + encode(bodyId) + '" class="mce-content-body ' + encode(bodyClass) + '"' + encode(dirAttr) + '>' +
-              editor.getContent() +
-              preventClicksOnLinksScript +
-              '</body>' +
-              '</html>'
-            );
+        '<!DOCTYPE html>' +
+        '<html>' +
+        '<head>' +
+        headHtml +
+        '</head>' +
+        '<body id="' + encode(bodyId) + '" class="mce-content-body ' + encode(bodyClass) + '"' + encode(dirAttr) + '>' +
+        editor.getContent() +
+        preventClicksOnLinksScript +
+        '</body>' +
+        '</html>'
+      );
 
       return previewHtml;
     };
