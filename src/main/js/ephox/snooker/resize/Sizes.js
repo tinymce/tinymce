@@ -115,7 +115,7 @@ define(
       return width.fold(function () {
         var width = Width.get(cell);
         var intWidth = parseInt(width, 10);
-        return normalizePercentageWidth(intWidth);
+        return normalizePercentageWidth(intWidth, tableSize);
       }, function (width) {
         return choosePercentageSize(cell, width, tableSize);
       });
