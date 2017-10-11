@@ -37,7 +37,7 @@ define(
         getCellDelta: getCellDelta,
         singleColumnWidth: singleColumnWidth,
         minCellWidth: minCellWidth,
-        setCellWidth: Sizes.setPercentageWidth,
+        setElementWidth: Sizes.setPercentageWidth,
         setTableWidth: setTableWidth
       };
     };
@@ -60,7 +60,7 @@ define(
         getCellDelta: getCellDelta,
         singleColumnWidth: singleColumnWidth,
         minCellWidth: CellUtils.minWidth,
-        setCellWidth: Sizes.setPixelWidth,
+        setElementWidth: Sizes.setPixelWidth,
         setTableWidth: setTableWidth
       };
     };

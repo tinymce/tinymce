@@ -44,7 +44,7 @@ define(
       // Set the width of each cell based on the column widths
       var newSizes = Recalculations.recalculateWidth(warehouse, newWidths);
       Arr.each(newSizes, function (cell) {
-        tableSize.setCellWidth(cell.element(), cell.width());
+        tableSize.setElementWidth(cell.element(), cell.width());
       });
 
       // Set the overall width of the table.
@@ -85,14 +85,12 @@ define(
       // Set the width of each cell based on the column widths
       var newSizes = Recalculations.recalculateWidth(warehouse, widths);
       Arr.each(newSizes, function (cell) {
-        tableSize.setCellWidth(cell.element(), cell.width());
+        tableSize.setElementWidth(cell.element(), cell.width());
       });
 
       var total = Arr.foldr(widths, function (b, a) { return a + b; }, 0);
       if (newSizes.length > 0) {
-        SelectorFind.ancestor(newSizes[0].element(), 'table').each(function (table) {
-          Sizes.setPixelWidth(table, total);
-        });
+        tableSize.setElementWidth(table, total);
       }
     };
 
