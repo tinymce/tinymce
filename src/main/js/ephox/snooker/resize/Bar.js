@@ -19,6 +19,7 @@ define(
       });
 
       Attr.set(blocker, 'data-column', column);
+      Attr.set(blocker, 'data-mce-bogus', 'all');
       return blocker;
     };
 
@@ -33,6 +34,7 @@ define(
       });
 
       Attr.set(blocker, 'data-row', row);
+      Attr.set(blocker, 'data-mce-bogus', 'all');
       return blocker;
     };
 
