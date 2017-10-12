@@ -2,17 +2,21 @@ define(
   'ephox.snooker.api.TableFill',
 
   [
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Replication',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.node.Node',
-    'ephox.sugar.api.dom.Replication',
-    'ephox.sugar.api.search.Traverse'
+    'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.CursorPosition'
   ],
 
-  function (Obj, Attr, Css, Element, Insert, Node, Replication, Traverse) {
+  function (Arr, Obj, Compare, Insert, Replication, Element, Node, Attr, Css, SelectorFilter, Traverse, CursorPosition) {
     // NOTE: This may create a td instead of a th, but it is for irregular table handling.
     var cell = function () {
       var td = Element.fromTag('td');
@@ -41,11 +45,30 @@ define(
       };
     };
 
-    var cellOperations = function (mutate, doc) {
+    var cellOperations = function (mutate, doc, cloneFormats) {
       var newCell = function (prev) {
         var doc = Traverse.owner(prev.element());
         var td = Element.fromTag(Node.name(prev.element()), doc.dom());
-        Insert.append(td, Element.fromTag('br'));
+
+        // If we aren't cloning the child formatting, we can just give back the new td immediately.
+        var lastNode = cloneFormats.bind(function (formats) {
+          // Get the first text node of the example cell.
+          var first = CursorPosition.first(prev.element());
+          return first.map(function (firstText) {
+            var formatSelector = formats.join(',');
+            // Find the ancestors of the first text node that match the given formats.
+            var parents = SelectorFilter.ancestors(firstText, formatSelector, function (element) {
+              return Compare.eq(element, prev.element());
+            });
+            // Add the matched ancestors to the new cell, then return the new cell.
+            return Arr.foldr(parents, function (last, parent) {
+              var clonedFormat = Replication.shallow(parent);
+              Insert.append(last, clonedFormat);
+              return clonedFormat;
+            }, td);
+          });
+        });
+        Insert.append(lastNode.getOr(td), Element.fromTag('br'))
         // inherit the style and width, dont inherit the row height
         Css.copy(prev.element(), td);
         Css.remove(td, 'height');

@@ -135,8 +135,7 @@ define(
         return normalizePixelWidth(floatWidth, tableSize);
       } else {
         var fallbackWidth = Width.get(element);
-        var intWidth = parseInt(fallbackWidth, 10);
-        return normalizePercentageWidth(intWidth, tableSize);
+        return parseInt(fallbackWidth, 10);
       }
     };
 
