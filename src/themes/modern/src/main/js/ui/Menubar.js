@@ -12,11 +12,10 @@ define(
   'tinymce.themes.modern.ui.Menubar',
   [
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
     'tinymce.core.util.Tools',
     'tinymce.themes.modern.api.Settings'
   ],
-  function (Arr, Fun, Tools, Settings) {
+  function (Arr, Tools, Settings) {
     var defaultMenus = {
       file: { title: 'File', items: 'newdocument restoredraft | preview | print' },
       edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },

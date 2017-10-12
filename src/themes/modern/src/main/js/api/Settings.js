@@ -100,6 +100,10 @@ define(
       return skinUrl;
     };
 
+    var isSkinDisabled = function (editor) {
+      return editor.settings.skin === false;
+    };
+
     var isInline = function (editor) {
       return editor.getParam('inline', false);
     };
@@ -153,6 +157,7 @@ define(
       getMaxWidth: getMaxWidth,
       getMaxHeight: getMaxHeight,
       getSkinUrl: getSkinUrl,
+      isSkinDisabled: isSkinDisabled,
       isInline: isInline,
       getToolbars: getToolbars
     };
