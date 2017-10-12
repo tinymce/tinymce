@@ -60,8 +60,10 @@ define(
     var render = function (editor, theme, args) {
       var panel, resizeHandleCtrl, startSize;
 
-      if (args.skinUiCss) {
+      if (Settings.isSkinDisabled(editor) === false && args.skinUiCss) {
         DOM.styleSheetLoader.load(args.skinUiCss, SkinLoaded.fireSkinLoaded(editor));
+      } else {
+        SkinLoaded.fireSkinLoaded(editor)();
       }
 
       panel = theme.panel = Factory.create({

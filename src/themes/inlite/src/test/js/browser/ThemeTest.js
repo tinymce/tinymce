@@ -7,7 +7,6 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
     'ephox.agar.api.UiControls',
     'ephox.agar.api.UiFinder',
     'ephox.agar.api.Waiter',
@@ -24,8 +23,8 @@ asynctest(
     'tinymce.themes.inlite.Theme',
     'tinymce.themes.inlite.test.Toolbar'
   ], function (
-    Chain, FocusTools, GeneralSteps, Keys, Mouse, Pipeline, Step, UiControls, UiFinder, Waiter, TinyActions, TinyApis, TinyDom, TinyLoader, ContextMenuPlugin,
-    ImagePlugin, LinkPlugin, PastePlugin, TablePlugin, TextPatternPlugin, InliteTheme, Toolbar
+    Chain, FocusTools, GeneralSteps, Keys, Mouse, Pipeline, UiControls, UiFinder, Waiter, TinyActions, TinyApis, TinyDom, TinyLoader, ContextMenuPlugin, ImagePlugin,
+    LinkPlugin, PastePlugin, TablePlugin, TextPatternPlugin, InliteTheme, Toolbar
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];

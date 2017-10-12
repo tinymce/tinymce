@@ -20,7 +20,7 @@ define(
     var renderUI = function (editor, theme, args) {
       var skinUrl = Settings.getSkinUrl(editor);
 
-      if (Settings.isSkinDisabled(editor) === false && skinUrl) {
+      if (skinUrl) {
         args.skinUiCss = skinUrl + '/skin.min.css';
         editor.contentCSS.push(skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
       }

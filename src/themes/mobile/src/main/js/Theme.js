@@ -45,6 +45,8 @@ define(
         if (Settings.isSkinDisabled(editor) === false) {
           editor.contentCSS.push(cssUrls.content);
           DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
+        } else {
+          SkinLoaded.fireSkinLoaded(editor)();
         }
 
         var doScrollIntoView = function () {

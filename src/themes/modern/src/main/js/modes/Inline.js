@@ -122,7 +122,7 @@ define(
 
       editor.on('focus', function () {
         // Render only when the CSS file has been loaded
-        if (args.skinUiCss) {
+        if (Settings.isSkinDisabled(editor) === false && args.skinUiCss) {
           DOM.styleSheetLoader.load(args.skinUiCss, render, render);
         } else {
           render();
@@ -140,8 +140,10 @@ define(
       });
 
       // Preload skin css
-      if (args.skinUiCss) {
+      if (Settings.isSkinDisabled(editor) === false && args.skinUiCss) {
         DOM.styleSheetLoader.load(args.skinUiCss, SkinLoaded.fireSkinLoaded(editor));
+      } else {
+        SkinLoaded.fireSkinLoaded(editor)();
       }
 
       return {};
