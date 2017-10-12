@@ -21,9 +21,10 @@ define(
     'tinymce.core.fmt.MatchFormat',
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Fun',
-    'tinymce.core.util.Tools'
+    'tinymce.core.util.Tools',
+    'tinymce.core.dom.DomQuery'
   ],
-  function (Arr, Element, PaddingBr, RangeUtils, TreeWalker, ExpandRange, FormatUtils, MatchFormat, Zwsp, Fun, Tools) {
+  function (Arr, Element, PaddingBr, RangeUtils, TreeWalker, ExpandRange, FormatUtils, MatchFormat, Zwsp, Fun, Tools, $) {
     var ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret', DEBUG = false;
 
     var isCaretNode = function (node) {
@@ -321,9 +322,9 @@ define(
       if (!editor._hasCaretEvents) {
         var markCaretContainersBogus, disableCaretContainer;
 
-        editor.on('BeforeGetContent', function (e) {
+        editor.on('PreProcess', function (e) {
           if (markCaretContainersBogus && e.format !== 'raw') {
-            markCaretContainersBogus();
+            markCaretContainersBogus(e.node);
           }
         });
 
@@ -333,17 +334,14 @@ define(
           }
         });
 
-        // Mark current caret container elements as bogus when getting the contents so we don't end up with empty elements
-        markCaretContainersBogus = function () {
-          var nodes = [], i;
-
-          if (isCaretContainerEmpty(getParentCaretContainer(selection.getStart()), nodes)) {
-            // Mark children
-            i = nodes.length;
-            while (i--) {
-              dom.setAttrib(nodes[i], 'data-mce-bogus', '1');
+        // Mark caret container elements as bogus when getting the contents so we don't end up with empty elements
+        markCaretContainersBogus = function (context) {
+          $('#' + CARET_ID, context).each(function (i, node) {
+            var nodes = [];
+            if (isCaretContainerEmpty(node, nodes)) {
+              $(nodes).attr('data-mce-bogus', '1');
             }
-          }
+          });
         };
 
         disableCaretContainer = function (e) {
