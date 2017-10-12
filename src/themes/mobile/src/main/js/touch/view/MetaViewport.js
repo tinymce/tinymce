@@ -34,8 +34,15 @@ define(
         if (backup !== undefined && backup !== null && backup.length > 0) {
           Attr.set(element, 'content', backup);
         } else {
-          // TODO: user-scalable is left as disabled when the editor closes
-          Attr.remove(element, 'content');
+          // According to apple docs the default is:
+          //  width=980
+          //  height=<calculated>
+          //  initial-scale=<calculated>
+          //  minimum-scale=0.25
+          //  maximum-scale=5.0
+          //  user-scalable yes
+          // However just setting user-scalable seems to fix pinch zoom and who knows these defaults might change
+          Attr.set(element, 'content', 'user-scalable=yes');
         }
       };
 
