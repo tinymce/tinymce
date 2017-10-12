@@ -11,11 +11,10 @@ define(
     'ephox.snooker.resize.Sizes',
     'ephox.snooker.resize.TableSize',
     'ephox.snooker.util.CellUtils',
-    'ephox.sugar.api.search.SelectorFind',
     'global!Math'
   ],
 
-  function (Arr, Deltas, DetailsList, Warehouse, ColumnSizes, Recalculations, Sizes, TableSize, CellUtils, SelectorFind, Math) {
+  function (Arr, Deltas, DetailsList, Warehouse, ColumnSizes, Recalculations, Sizes, TableSize, CellUtils, Math) {
     var getWarehouse = function (list) {
       return Warehouse.generate(list);
     };
