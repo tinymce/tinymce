@@ -20,14 +20,14 @@
 define(
   'tinymce.core.FocusManager',
   [
-    'ephox.katamari.api.Type',
+    'ephox.katamari.api.Throttler',
+    'ephox.sand.api.PlatformDetection',
     'global!document',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.dom.RangeUtils',
     'tinymce.core.selection.SelectionBookmark',
     'tinymce.core.util.Delay'
   ],
-  function (Type, document, DOMUtils, RangeUtils, SelectionBookmark, Delay) {
+  function (Throttler, PlatformDetection, document, DOMUtils, SelectionBookmark, Delay) {
     var selectionChangeHandler, documentFocusInHandler, documentMouseUpHandler, DOM = DOMUtils.DOM;
 
     var isUIElement = function (editor, elm) {
@@ -41,12 +41,30 @@ define(
       return parent !== null;
     };
 
-    var storeSelectionFromEventCoords = function (editor, e) {
-      var event = e.type === 'touchend' && e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches[0] : e;
-      if (Type.isNumber(event.clientX) && Type.isNumber(event.clientY)) {
-        var rng = RangeUtils.getCaretRangeFromPoint(event.clientX, event.clientY, editor.getDoc());
-        SelectionBookmark.storeNative(editor, rng);
-      }
+    var registerSelectionRestore = function (editor) {
+      var throttledStore = Throttler.first(function () {
+        SelectionBookmark.store(editor);
+      }, 0);
+
+      editor.on('init', function () {
+        var browser = PlatformDetection.detect().browser;
+        if (browser.isIE() || browser.isEdge()) {
+          editor.on('focusout', function () {
+            SelectionBookmark.store(editor);
+          });
+        } else {
+          editor.on('mouseup touchend', function (e) {
+            throttledStore.throttle();
+          });
+        }
+
+        editor.on('keyup nodechange', function (e) {
+          if (e.type === 'nodechange' && e.selectionChange) {
+            return;
+          }
+          SelectionBookmark.store(editor);
+        });
+      });
     };
 
     /**
@@ -69,21 +87,7 @@ define(
       var registerEvents = function (e) {
         var editor = e.editor;
 
-        editor.on('init', function () {
-          editor.on('mouseup touchend', function (e) {
-            if (editor.selection.isCollapsed()) {
-              SelectionBookmark.store(editor);
-            } else {
-              storeSelectionFromEventCoords(editor, e);
-            }
-          });
-          editor.on('keyup nodechange', function (e) {
-            if (e.type === 'nodechange' && e.selectionChange) {
-              return;
-            }
-            SelectionBookmark.store(editor);
-          });
-        });
+        registerSelectionRestore(editor);
 
         editor.on('focusin', function () {
           var focusedEditor = editorManager.focusedEditor;

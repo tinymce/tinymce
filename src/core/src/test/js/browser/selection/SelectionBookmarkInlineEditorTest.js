@@ -3,10 +3,13 @@ asynctest(
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Cursors',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.agar.api.Waiter',
     'ephox.mcagar.api.TinyLoader',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Html',
@@ -14,7 +17,7 @@ asynctest(
     'global!window',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Cursors, Logger, Pipeline, Step, TinyLoader, Hierarchy, Element, Html, document, window, ModernTheme) {
+  function (Assertions, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter, TinyLoader, PlatformDetection, Hierarchy, Element, Html, document, window, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -22,10 +25,10 @@ asynctest(
 
     var testDivId = 'testDiv1234';
 
-    var removeTestDiv = function () {
+    var sRemoveTestDiv = Step.sync(function () {
       var input = document.querySelector('#' + testDivId);
       input.parentNode.removeChild(input);
-    };
+    });
 
     var sAddTestDiv = Step.sync(function () {
       var div = document.createElement('div');
@@ -69,10 +72,43 @@ asynctest(
       assertPath('finish', root, finishPath, foffset, actual.endContainer, actual.endOffset);
     };
 
+    var assertBookmark = function (editor, startPath, soffset, finishPath, foffset) {
+      var actual = editor.bookmark.getOrDie('no bookmark');
+      var root = Element.fromDom(editor.getBody());
+      assertPath('start', root, startPath, soffset, actual.start().dom(), actual.soffset());
+      assertPath('finish', root, finishPath, foffset, actual.finish().dom(), actual.foffset());
+    };
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      window.activeEditor = editor;
-      Pipeline.async({}, [
+      var browser = PlatformDetection.detect().browser;
+
+      Pipeline.async({}, browser.isIE() || browser.isEdge() ? [ // On edge and ie it restores on focusout only
         sAddTestDiv,
+        Logger.t('restore even without second nodechange, restores on focusout', Step.sync(function () {
+          editor.setContent('<p>a</p><p>b</p>');
+
+          setSelection(editor, [0, 0], 0, [0, 0], 0);
+          editor.nodeChanged();
+
+          setSelection(editor, [1, 0], 1, [1, 0], 1);
+          focusDiv();
+
+          assertSelection(editor, [0, 0], 0, [0, 0], 0);
+        })),
+        Logger.t('restore with second nodechange, restores on focusout', Step.sync(function () {
+          editor.setContent('<p>a</p><p>b</p>');
+
+          setSelection(editor, [0, 0], 0, [0, 0], 0);
+          editor.nodeChanged();
+
+          setSelection(editor, [1, 0], 1, [1, 0], 1);
+          editor.nodeChanged();
+          focusDiv();
+
+          assertSelection(editor, [1, 0], 1, [1, 0], 1);
+        })),
+        sRemoveTestDiv
+      ] : [ // On the other browsers we test for bookmark saved on nodechange, keyup, mouseup and touchend events
         Logger.t('assert selection after no nodechanged, should not restore', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
           editor.undoManager.add();
@@ -84,58 +120,56 @@ asynctest(
           editor.nodeChanged();
 
           setSelection(editor, [1, 0], 1, [1, 0], 1);
-          focusDiv();
-
-          assertSelection(editor, [0, 0], 0, [0, 0], 0);
+          assertBookmark(editor, [0, 0], 0, [0, 0], 0);
         })),
         Logger.t('assert selection after nodechanged, should restore', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
 
-          setSelection(editor, [0], 0, [0], 0);
+          setSelection(editor, [0, 0], 0, [0, 0], 0);
           editor.nodeChanged();
 
           setSelection(editor, [1, 0], 1, [1, 0], 1);
           editor.nodeChanged();
-          focusDiv();
-
-          assertSelection(editor, [1, 0], 1, [1, 0], 1);
+          assertBookmark(editor, [1, 0], 1, [1, 0], 1);
         })),
         Logger.t('assert selection after keyup, should restore', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
 
-          setSelection(editor, [0], 0, [0], 0);
+          setSelection(editor, [0, 0], 0, [0, 0], 0);
           editor.nodeChanged();
 
           setSelection(editor, [1, 0], 1, [1, 0], 1);
           editor.fire('keyup', { });
-          focusDiv();
-
-          assertSelection(editor, [1, 0], 1, [1, 0], 1);
+          assertBookmark(editor, [1, 0], 1, [1, 0], 1);
         })),
-        Logger.t('assert selection after mouseup, should restore', Step.sync(function () {
-          editor.setContent('<p>a</p><p>b</p>');
+        Logger.t('assert selection after touchend, should restore', GeneralSteps.sequence([
+          Step.sync(function () {
+            editor.setContent('<p>a</p><p>b</p>');
 
-          setSelection(editor, [0], 0, [0], 0);
-          editor.nodeChanged();
+            setSelection(editor, [0, 0], 0, [0, 0], 0);
+            editor.nodeChanged();
 
-          setSelection(editor, [1, 0], 1, [1, 0], 1);
-          editor.fire('mouseup', { });
-          focusDiv();
+            setSelection(editor, [1, 0], 1, [1, 0], 1);
+            editor.fire('mouseup', { });
+          }),
+          Waiter.sTryUntil('wait for selection', Step.sync(function () {
+            assertBookmark(editor, [1, 0], 1, [1, 0], 1);
+          }), 100, 3000)
+        ])),
+        Logger.t('assert selection after touchend, should restore', GeneralSteps.sequence([
+          Step.sync(function () {
+            editor.setContent('<p>a</p><p>b</p>');
 
-          assertSelection(editor, [1, 0], 1, [1, 0], 1);
-        })),
-        Logger.t('assert selection after touchend, should restore', Step.sync(function () {
-          editor.setContent('<p>a</p><p>b</p>');
+            setSelection(editor, [0, 0], 0, [0, 0], 0);
+            editor.nodeChanged();
 
-          setSelection(editor, [0], 0, [0], 0);
-          editor.nodeChanged();
-
-          setSelection(editor, [1, 0], 1, [1, 0], 1);
-          editor.fire('touchend', { });
-          focusDiv();
-
-          assertSelection(editor, [1, 0], 1, [1, 0], 1);
-        }))
+            setSelection(editor, [1, 0], 1, [1, 0], 1);
+            editor.fire('touchend', { });
+          }),
+          Waiter.sTryUntil('wait for selection', Step.sync(function () {
+            assertBookmark(editor, [1, 0], 1, [1, 0], 1);
+          }), 100, 3000)
+        ]))
       ], onSuccess, onFailure);
     }, {
       inline: true,
@@ -144,7 +178,6 @@ asynctest(
       toolbar: '',
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, function () {
-      removeTestDiv();
       success();
     }, failure);
   }
