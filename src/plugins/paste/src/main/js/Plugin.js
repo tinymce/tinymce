@@ -27,19 +27,19 @@ define(
     var userIsInformedState = Cell(false);
 
     PluginManager.add('paste', function (editor) {
-      var clipboard = new Clipboard(editor);
-      var quirks = Quirks.setup(editor);
-      var draggingInternallyState = Cell(false);
-
       if (DetectProPlugin.hasProPlugin(editor) === false) {
+        var clipboard = new Clipboard(editor);
+        var quirks = Quirks.setup(editor);
+        var draggingInternallyState = Cell(false);
+
         Buttons.register(editor, clipboard);
         Commands.register(editor, clipboard, userIsInformedState);
         PrePostProcess.setup(editor);
         CutCopy.register(editor);
         DragDrop.setup(editor, clipboard, draggingInternallyState);
-      }
 
-      return Api.get(clipboard, quirks);
+        return Api.get(clipboard, quirks);
+      }
     });
 
     return function () { };

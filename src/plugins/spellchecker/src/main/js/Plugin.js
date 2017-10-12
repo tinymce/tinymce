@@ -22,18 +22,18 @@ define(
   ],
   function (Cell, PluginManager, DetectProPlugin, Api, Commands, Settings, Buttons, SuggestionsMenu) {
     PluginManager.add('spellchecker', function (editor, pluginUrl) {
-      var startedState = Cell(false);
-      var currentLanguageState = Cell(Settings.getLanguage(editor));
-      var textMatcherState = Cell(null);
-      var lastSuggestionsState = Cell({});
-
       if (DetectProPlugin.hasProPlugin(editor) === false) {
+        var startedState = Cell(false);
+        var currentLanguageState = Cell(Settings.getLanguage(editor));
+        var textMatcherState = Cell(null);
+        var lastSuggestionsState = Cell({});
+
         Buttons.register(editor, pluginUrl, startedState, textMatcherState, currentLanguageState, lastSuggestionsState);
         SuggestionsMenu.setup(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState);
         Commands.register(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
-      }
 
-      return Api.get(editor, startedState, lastSuggestionsState, textMatcherState, pluginUrl);
+        return Api.get(editor, startedState, lastSuggestionsState, textMatcherState, pluginUrl);
+      }
     });
 
     return function () { };
