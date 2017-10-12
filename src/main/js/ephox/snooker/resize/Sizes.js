@@ -17,7 +17,7 @@ define(
 
   function (Fun, Option, Strings, TableLookup, Node, Attr, Css, Height, Width, Math, parseInt) {
 
-    var genericSizeRegex = /(\d+(\.\d+)?)(px|em|%)/;
+    var genericSizeRegex = /(\d+(\.\d+)?)(\w|%)*/;
     var percentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
     var pixelBasedSizeRegex = /(\d+(\.\d+)?)px|em/;
 
