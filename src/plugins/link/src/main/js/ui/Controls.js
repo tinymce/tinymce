@@ -20,7 +20,6 @@ define(
       editor.addButton('link', {
         icon: 'link',
         tooltip: 'Insert/edit link',
-        shortcut: 'Meta+K',
         onclick: Actions.openDialog(editor),
         onpostrender: Actions.toggleActiveState(editor)
       });
