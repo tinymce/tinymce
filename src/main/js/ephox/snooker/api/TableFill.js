@@ -62,12 +62,12 @@ define(
       }).getOr(newCell);
     };
 
-    var cellOperations = function (mutate, doc, formats) {
+    var cellOperations = function (mutate, doc, formatsToClone) {
       var newCell = function (prev) {
         var doc = Traverse.owner(prev.element());
         var td = Element.fromTag(Node.name(prev.element()), doc.dom());
 
-        var formats = formats.getOr(['strong', 'em', 'b', 'i', 'span', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div']);
+        var formats = formatsToClone.getOr(['strong', 'em', 'b', 'i', 'span', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div']);
 
         // If we aren't cloning the child formatting, we can just give back the new td immediately.
         var lastNode = formats.length > 0 ? cloneDemFormats(prev.element(), td, formats) : td;
