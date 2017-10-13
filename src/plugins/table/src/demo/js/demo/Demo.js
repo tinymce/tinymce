@@ -2,7 +2,7 @@
  * Demo.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -16,19 +16,23 @@ define(
     'tinymce.core.EditorManager',
     'tinymce.plugins.code.Plugin',
     'tinymce.plugins.table.Plugin',
+    'tinymce.plugins.contextmenu.Plugin',
+    'tinymce.plugins.paste.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (EditorManager, CodePlugin, TablePlugin, ModernTheme) {
+  function (EditorManager, CodePlugin, TablePlugin, ContextMenuPlugin, PastePlugin, ModernTheme) {
     return function () {
       CodePlugin();
       TablePlugin();
+      ContextMenuPlugin();
       ModernTheme();
+      PastePlugin();
 
       EditorManager.init({
-        selector: "textarea.tinymce",
+        selector: "div.tinymce",
         theme: "modern",
         skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        plugins: "table code",
+        plugins: "table code contextmenu paste",
         toolbar: "table code",
         media_dimensions: false,
         // media_live_embeds: false,

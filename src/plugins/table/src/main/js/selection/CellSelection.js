@@ -8,213 +8,189 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * This class handles table cell selection by faking it using a css class that gets applied
- * to cells when dragging the mouse from one cell to another.
- *
- * @class tinymce.table.selection.CellSelection
- * @private
- */
+ /*eslint no-bitwise:0 */
+
 define(
   'tinymce.plugins.table.selection.CellSelection',
+
   [
-    'tinymce.plugins.table.model.TableGrid',
-    'tinymce.core.dom.TreeWalker',
-    'tinymce.core.util.Tools'
+    'ephox.darwin.api.InputHandlers',
+    'ephox.darwin.api.SelectionAnnotation',
+    'ephox.darwin.api.SelectionKeys',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.katamari.api.Struct',
+    'ephox.snooker.api.TableLookup',
+    'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.selection.Selection',
+    'ephox.sugar.selection.core.SelectionDirection',
+    'tinymce.plugins.table.queries.Direction',
+    'tinymce.plugins.table.selection.Ephemera'
   ],
-  function (TableGrid, TreeWalker, Tools) {
-    return function (editor, selectionChange) {
-      var dom = editor.dom, tableGrid, startCell, startTable, lastMouseOverTarget, hasCellSelection = true, resizing, dragging;
 
-      function clear(force) {
-        // Restore selection possibilities
-        editor.getBody().style.webkitUserSelect = '';
+  function (InputHandlers, SelectionAnnotation, SelectionKeys, Fun, Option, Struct, TableLookup, Compare, Element, Selection, SelectionDirection, Direction, Ephemera) {
+    return function (editor, lazyResize) {
+      var handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
+      var handlers = Option.none();
 
-        if (force || hasCellSelection) {
-          editor.$('td[data-mce-selected],th[data-mce-selected]').removeAttr('data-mce-selected');
-          hasCellSelection = false;
-        }
-      }
+      var annotations = SelectionAnnotation.byAttr(Ephemera);
 
-      var endSelection = function () {
-        startCell = tableGrid = startTable = lastMouseOverTarget = null;
-        selectionChange(false);
+      editor.on('init', function (e) {
+        var win = editor.getWin();
+        var body = Element.fromDom(editor.getBody());
+        var isRoot = function (element) {
+          Compare.eq(element, body);
+        };
+
+        var syncSelection = function () {
+          var sel = editor.selection;
+          var start = Element.fromDom(sel.getStart());
+          var end = Element.fromDom(sel.getEnd());
+          var startTable = TableLookup.table(start);
+          var endTable = TableLookup.table(end);
+          var sameTable = startTable.bind(function (tableStart) {
+            return endTable.bind(function (tableEnd) {
+              return Compare.eq(tableStart, tableEnd) ? Option.some(true) : Option.none();
+            });
+          });
+          sameTable.fold(function () {
+            annotations.clear(body);
+          }, Fun.noop);
+        };
+
+        var mouseHandlers = InputHandlers.mouse(win, body, isRoot, annotations);
+        var keyHandlers = InputHandlers.keyboard(win, body, isRoot, annotations);
+
+        var handleResponse = function (event, response) {
+          if (response.kill()) {
+            event.kill();
+          }
+          response.selection().each(function (ns) {
+            var relative = Selection.relative(ns.start(), ns.finish());
+            var rng = SelectionDirection.asLtrRange(win, relative);
+            editor.selection.setRng(rng);
+          });
+        };
+
+        var keyup = function (event) {
+          var wrappedEvent = wrapEvent(event);
+          // Note, this is an optimisation.
+          if (wrappedEvent.raw().shiftKey && SelectionKeys.isNavigation(wrappedEvent.raw().which)) {
+            var rng = editor.selection.getRng();
+            var start = Element.fromDom(rng.startContainer);
+            var end = Element.fromDom(rng.endContainer);
+            keyHandlers.keyup(wrappedEvent, start, rng.startOffset, end, rng.endOffset).each(function (response) {
+              handleResponse(wrappedEvent, response);
+            });
+          }
+        };
+
+        var keydown = function (event) {
+          var wrappedEvent = wrapEvent(event);
+          lazyResize().each(function (resize) {
+            resize.hideBars();
+          });
+          var rng = editor.selection.getRng();
+          var startContainer = Element.fromDom(editor.selection.getStart());
+          var start = Element.fromDom(rng.startContainer);
+          var end = Element.fromDom(rng.endContainer);
+          var direction = Direction.directionAt(startContainer).isRtl() ? SelectionKeys.rtl : SelectionKeys.ltr;
+          keyHandlers.keydown(wrappedEvent, start, rng.startOffset, end, rng.endOffset, direction).each(function (response) {
+            handleResponse(wrappedEvent, response);
+          });
+          lazyResize().each(function (resize) {
+            resize.showBars();
+          });
+        };
+
+        var wrapEvent = function (event) {
+          // IE9 minimum
+          var target = Element.fromDom(event.target);
+
+          var stop = function () {
+            event.stopPropagation();
+          };
+
+          var prevent = function () {
+            event.preventDefault();
+          };
+
+          var kill = Fun.compose(prevent, stop); // more of a sequence than a compose, but same effect
+
+          // FIX: Don't just expose the raw event. Need to identify what needs standardisation.
+          return {
+            'target':  Fun.constant(target),
+            'x':       Fun.constant(event.x),
+            'y':       Fun.constant(event.y),
+            'stop':    stop,
+            'prevent': prevent,
+            'kill':    kill,
+            'raw':     Fun.constant(event)
+          };
+        };
+
+        var isLeftMouse = function (raw) {
+          return raw.button === 0;
+        };
+
+        // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
+        var isLeftButtonPressed = function (raw) {
+          // Only added by Chrome/Firefox in June 2015.
+          // This is only to fix a 1px bug (TBIO-2836) so return true if we're on an older browser
+          if (raw.buttons === undefined) {
+            return true;
+          }
+
+          // use bitwise & for optimal comparison
+          return (raw.buttons & 1) !== 0;
+        };
+
+        var mouseDown = function (e) {
+          if (isLeftMouse(e)) {
+            mouseHandlers.mousedown(wrapEvent(e));
+          }
+        };
+        var mouseOver = function (e) {
+          if (isLeftButtonPressed(e)) {
+            mouseHandlers.mouseover(wrapEvent(e));
+          }
+        };
+        var mouseUp = function (e) {
+          if (isLeftMouse) {
+            mouseHandlers.mouseup(wrapEvent(e));
+          }
+        };
+
+        editor.on('mousedown', mouseDown);
+        editor.on('mouseover', mouseOver);
+        editor.on('mouseup', mouseUp);
+        editor.on('keyup', keyup);
+        editor.on('keydown', keydown);
+        editor.on('nodechange', syncSelection);
+
+        handlers = Option.some(handlerStruct({
+          mousedown: mouseDown,
+          mouseover: mouseOver,
+          mouseup: mouseUp,
+          keyup: keyup,
+          keydown: keydown
+        }));
+      });
+
+      var destroy = function () {
+        handlers.each(function (handlers) {
+          // editor.off('mousedown', handlers.mousedown());
+          // editor.off('mouseover', handlers.mouseover());
+          // editor.off('mouseup', handlers.mouseup());
+          // editor.off('keyup', handlers.keyup());
+          // editor.off('keydown', handlers.keydown());
+        });
       };
 
-      function isCellInTable(table, cell) {
-        if (!table || !cell) {
-          return false;
-        }
-
-        return table === dom.getParent(cell, 'table');
-      }
-
-      function cellSelectionHandler(e) {
-        var sel, target = e.target, currentCell;
-
-        if (resizing || dragging) {
-          return;
-        }
-
-        // Fake mouse enter by keeping track of last mouse over
-        if (target === lastMouseOverTarget) {
-          return;
-        }
-
-        lastMouseOverTarget = target;
-
-        if (startTable && startCell) {
-          currentCell = dom.getParent(target, 'td,th');
-
-          if (!isCellInTable(startTable, currentCell)) {
-            currentCell = dom.getParent(startTable, 'td,th');
-          }
-
-          // Selection inside first cell is normal until we have expanted
-          if (startCell === currentCell && !hasCellSelection) {
-            return;
-          }
-
-          selectionChange(true);
-
-          if (isCellInTable(startTable, currentCell)) {
-            e.preventDefault();
-
-            if (!tableGrid) {
-              tableGrid = new TableGrid(editor, startTable, startCell);
-              editor.getBody().style.webkitUserSelect = 'none';
-            }
-
-            tableGrid.setEndCell(currentCell);
-            hasCellSelection = true;
-
-            // Remove current selection
-            sel = editor.selection.getSel();
-
-            try {
-              if (sel.removeAllRanges) {
-                sel.removeAllRanges();
-              } else {
-                sel.empty();
-              }
-            } catch (ex) {
-              // IE9 might throw errors here
-            }
-          }
-        }
-      }
-
-      editor.on('SelectionChange', function (e) {
-        if (hasCellSelection) {
-          e.stopImmediatePropagation();
-        }
-      }, true);
-
-      // Add cell selection logic
-      editor.on('MouseDown', function (e) {
-        if (e.button != 2 && !resizing && !dragging) {
-          clear();
-
-          startCell = dom.getParent(e.target, 'td,th');
-          startTable = dom.getParent(startCell, 'table');
-        }
-      });
-
-      editor.on('mouseover', cellSelectionHandler);
-
-      editor.on('remove', function () {
-        dom.unbind(editor.getDoc(), 'mouseover', cellSelectionHandler);
-        clear();
-      });
-
-      editor.on('MouseUp', function () {
-        var rng, sel = editor.selection, selectedCells, walker, node, lastNode;
-
-        function setPoint(node, start) {
-          var walker = new TreeWalker(node, node);
-
-          do {
-            // Text node
-            if (node.nodeType == 3 && Tools.trim(node.nodeValue).length !== 0) {
-              if (start) {
-                rng.setStart(node, 0);
-              } else {
-                rng.setEnd(node, node.nodeValue.length);
-              }
-
-              return;
-            }
-
-            // BR element
-            if (node.nodeName == 'BR') {
-              if (start) {
-                rng.setStartBefore(node);
-              } else {
-                rng.setEndBefore(node);
-              }
-
-              return;
-            }
-          } while ((node = (start ? walker.next() : walker.prev())));
-        }
-
-        // Move selection to startCell
-        if (startCell) {
-          if (tableGrid) {
-            editor.getBody().style.webkitUserSelect = '';
-          }
-
-          // Try to expand text selection as much as we can only Gecko supports cell selection
-          selectedCells = dom.select('td[data-mce-selected],th[data-mce-selected]');
-          if (selectedCells.length > 0) {
-            rng = dom.createRng();
-            node = selectedCells[0];
-            rng.setStartBefore(node);
-            rng.setEndAfter(node);
-
-            setPoint(node, 1);
-            walker = new TreeWalker(node, dom.getParent(selectedCells[0], 'table'));
-
-            do {
-              if (node.nodeName == 'TD' || node.nodeName == 'TH') {
-                if (!dom.getAttrib(node, 'data-mce-selected')) {
-                  break;
-                }
-
-                lastNode = node;
-              }
-            } while ((node = walker.next()));
-
-            setPoint(lastNode);
-
-            sel.setRng(rng);
-          }
-
-          editor.nodeChanged();
-          endSelection();
-        }
-      });
-
-      editor.on('KeyUp Drop SetContent', function (e) {
-        clear(e.type == 'setcontent');
-        endSelection();
-        resizing = false;
-      });
-
-      editor.on('ObjectResizeStart ObjectResized', function (e) {
-        resizing = e.type != 'objectresized';
-      });
-
-      editor.on('dragstart', function () {
-        dragging = true;
-      });
-
-      editor.on('drop dragend', function () {
-        dragging = false;
-      });
-
       return {
-        clear: clear
+        clear: annotations.clear,
+        destroy: destroy
       };
     };
   }

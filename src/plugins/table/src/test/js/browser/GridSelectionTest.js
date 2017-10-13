@@ -16,48 +16,11 @@ asynctest(
     Plugin();
     Theme();
 
-    suite.test("Delete selected cells", function (editor) {
-      editor.focus();
-      editor.getBody().innerHTML = (
-        '<table><tbody>' +
-        '<tr><td data-mce-selected="1">A1</td><td>A2</td></tr>' +
-        '<tr><td data-mce-selected="1">B1</td><td>B2</td></tr>' +
-        '</tbody></table>' +
-        '<p>x</p>'
-      );
-
-      LegacyUnit.setSelection(editor, 'td', 0, 'td', 2);
-      editor.fire('keydown', { keyCode: 46 });
-
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<table><tbody><tr><td>&nbsp;</td><td>A2</td></tr><tr><td>&nbsp;</td><td>B2</td></tr></tbody></table><p>x</p>'
-      );
-    });
-
-    suite.test("Delete all cells", function (editor) {
-      editor.getBody().innerHTML = (
-        '<table><tbody>' +
-        '<tr><td data-mce-selected="1">A1</td><td data-mce-selected="1">A2</td></tr>' +
-        '<tr><td data-mce-selected="1">B1</td><td data-mce-selected="1">B2</td></tr>' +
-        '</tbody></table>' +
-        '<p>x</p>'
-      );
-
-      LegacyUnit.setSelection(editor, 'td', 0, 'td', 2);
-      editor.fire('keydown', { keyCode: 46 });
-
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<p>x</p>'
-      );
-    });
-
     var assertTableSelection = function (editor, tableHtml, selectCells, cellContents) {
       function selectRangeXY(table, startTd, endTd) {
-        editor.fire('mousedown', { target: startTd });
-        editor.fire('mouseover', { target: endTd });
-        editor.fire('mouseup', { target: endTd });
+        editor.fire('mousedown', { target: startTd, button: 0 });
+        editor.fire('mouseover', { target: endTd, button: 0 });
+        editor.fire('mouseup', { target: endTd, button: 0 });
       }
 
       function getCells(table) {

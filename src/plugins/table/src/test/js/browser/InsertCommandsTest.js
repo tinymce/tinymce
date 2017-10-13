@@ -26,7 +26,7 @@ asynctest(
       editor.execCommand('mceTableInsertColAfter');
       LegacyUnit.equal(
         cleanTableHtml(editor.getContent()),
-        '<table><tbody><tr><td>1</td><td>&nbsp;</td></tr><tr><td>2</td><td>&nbsp;</td></tr></tbody></table>'
+        '<table style="width: 16px;"><tbody><tr><td style="width: 12px;">1</td><td style="width: 4px;">&nbsp;</td></tr><tr><td style="width: 12px;">2</td><td style="width: 4px;">&nbsp;</td></tr></tbody></table>'
       );
     });
 
@@ -39,8 +39,7 @@ asynctest(
       editor.execCommand('mceTableInsertColAfter');
       LegacyUnit.equal(
         cleanTableHtml(editor.getContent()),
-        '<table><tbody><tr><td>1</td><td>2</td><td>&nbsp;</td><td>&nbsp;</td><td>3</td></tr>' +
-        '<tr><td>4</td><td>5</td><td>&nbsp;</td><td>&nbsp;</td><td>6</td></tr></tbody></table>'
+        '<table style="width: 34px;"><tbody><tr><td style="width: 10px;">1</td><td style="width: 10px;">2</td><td style="width: 2px;">&nbsp;</td><td style="width: 2px;">&nbsp;</td><td style="width: 10px;">3</td></tr><tr><td style="width: 10px;">4</td><td style="width: 10px;">5</td><td style="width: 2px;">&nbsp;</td><td style="width: 2px;">&nbsp;</td><td style="width: 10px;">6</td></tr></tbody></table>'
       );
     });
 
@@ -50,7 +49,7 @@ asynctest(
       editor.execCommand('mceTableInsertColBefore');
       LegacyUnit.equal(
         cleanTableHtml(editor.getContent()),
-        '<table><tbody><tr><td>&nbsp;</td><td>1</td></tr><tr><td>&nbsp;</td><td>2</td></tr></tbody></table>'
+        '<table style="width: 16px;"><tbody><tr><td style="width: 4px;">&nbsp;</td><td style="width: 12px;">1</td></tr><tr><td style="width: 4px;">&nbsp;</td><td style="width: 12px;">2</td></tr></tbody></table>'
       );
     });
 
@@ -63,8 +62,7 @@ asynctest(
       editor.execCommand('mceTableInsertColBefore');
       LegacyUnit.equal(
         cleanTableHtml(editor.getContent()),
-        '<table><tbody><tr><td>1</td><td>&nbsp;</td><td>&nbsp;</td><td>2</td><td>3</td>' +
-        '</tr><tr><td>4</td><td>&nbsp;</td><td>&nbsp;</td><td>5</td><td>6</td></tr></tbody></table>'
+        '<table style="width: 34px;"><tbody><tr><td style="width: 10px;">1</td><td style="width: 2px;">&nbsp;</td><td style="width: 2px;">&nbsp;</td><td style="width: 10px;">2</td><td style="width: 10px;">3</td></tr><tr><td style="width: 10px;">4</td><td style="width: 2px;">&nbsp;</td><td style="width: 2px;">&nbsp;</td><td style="width: 10px;">5</td><td style="width: 10px;">6</td></tr></tbody></table>'
       );
     });
 

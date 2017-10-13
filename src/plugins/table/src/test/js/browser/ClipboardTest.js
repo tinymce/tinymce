@@ -20,13 +20,22 @@ asynctest(
       return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
     };
 
+    var selectOne = function (editor, start) {
+      start = editor.$(start)[0];
+
+      editor.fire('mousedown', { target: start, button: 0 });
+      editor.fire('mouseup', { target: start, button: 0 });
+
+      LegacyUnit.setSelection(editor, start, 0);
+    };
+
     var selectRangeXY = function (editor, start, end) {
       start = editor.$(start)[0];
       end = editor.$(end)[0];
 
-      editor.fire('mousedown', { target: start });
-      editor.fire('mouseover', { target: end });
-      editor.fire('mouseup', { target: end });
+      editor.fire('mousedown', { target: start, button: 0 });
+      editor.fire('mouseover', { target: end, button: 0 });
+      editor.fire('mouseup', { target: end, button: 0 });
 
       LegacyUnit.setSelection(editor, end, 0);
     };
@@ -40,9 +49,9 @@ asynctest(
         '</table>'
       );
 
-      LegacyUnit.setSelection(editor, 'tr:nth-child(1) td', 0);
+      selectOne(editor, 'tr:nth-child(1) td');
       editor.execCommand('mceTableCopyRow');
-      LegacyUnit.setSelection(editor, 'tr:nth-child(2) td', 0);
+      selectOne(editor, 'tr:nth-child(2) td');
       editor.execCommand('mceTablePasteRowBefore');
 
       LegacyUnit.equal(
@@ -57,7 +66,7 @@ asynctest(
         '</table>'
       );
 
-      LegacyUnit.setSelection(editor, 'tr:nth-child(2) td', 0);
+      selectOne(editor, 'tr:nth-child(2) td');
       editor.execCommand('mceTablePasteRowBefore');
 
       LegacyUnit.equal(
@@ -82,9 +91,9 @@ asynctest(
         '</table>'
       );
 
-      LegacyUnit.setSelection(editor, 'tr:nth-child(1) td', 0);
+      selectOne(editor, 'tr:nth-child(1) td');
       editor.execCommand('mceTableCopyRow');
-      LegacyUnit.setSelection(editor, 'tr:nth-child(2) td', 0);
+      selectOne(editor, 'tr:nth-child(2) td');
       editor.execCommand('mceTablePasteRowAfter');
 
       LegacyUnit.equal(
@@ -99,7 +108,7 @@ asynctest(
         '</table>'
       );
 
-      LegacyUnit.setSelection(editor, 'tr:nth-child(2) td', 0);
+      selectOne(editor, 'tr:nth-child(2) td');
       editor.execCommand('mceTablePasteRowAfter');
 
       LegacyUnit.equal(
@@ -126,9 +135,9 @@ asynctest(
         '</table>'
       );
 
-      LegacyUnit.setSelection(editor, 'tr:nth-child(1) td', 0);
+      selectOne(editor, 'tr:nth-child(1) td');
       editor.execCommand('mceTableCopyRow');
-      LegacyUnit.setSelection(editor, 'tr:nth-child(2) td:nth-child(2)', 0);
+      selectOne(editor, 'tr:nth-child(2) td:nth-child(2)');
       editor.execCommand('mceTablePasteRowAfter');
 
       LegacyUnit.equal(
@@ -154,9 +163,9 @@ asynctest(
         '</table>'
       );
 
-      LegacyUnit.setSelection(editor, 'tr:nth-child(1) td', 0);
+      selectOne(editor, 'tr:nth-child(1) td');
       editor.execCommand('mceTableCopyRow');
-      LegacyUnit.setSelection(editor, 'tr:nth-child(1) td', 0);
+      selectOne(editor, 'tr:nth-child(1) td');
       editor.execCommand('mceTablePasteRowAfter');
 
       LegacyUnit.equal(
@@ -187,10 +196,10 @@ asynctest(
         '</table>'
       );
 
-      LegacyUnit.setSelection(editor, 'table:nth-child(1) tr:nth-child(1) td', 0);
+      selectOne(editor, 'table:nth-child(1) tr:nth-child(1) td');
       editor.execCommand('mceTableCopyRow');
 
-      LegacyUnit.setSelection(editor, 'table:nth-child(2) td', 0);
+      selectOne(editor, 'table:nth-child(2) td');
       editor.execCommand('mceTablePasteRowAfter');
 
       LegacyUnit.equal(
@@ -230,7 +239,7 @@ asynctest(
       selectRangeXY(editor, 'table:nth-child(1) tr:nth-child(1) td:nth-child(1)', 'table:nth-child(1) tr:nth-child(2) td:nth-child(3)');
       editor.execCommand('mceTableCopyRow');
 
-      LegacyUnit.setSelection(editor, 'table:nth-child(2) tr td', 0);
+      selectOne(editor, 'table:nth-child(2) tr td');
       editor.execCommand('mceTablePasteRowAfter');
 
       LegacyUnit.equal(
@@ -245,9 +254,9 @@ asynctest(
 
         '<table>' +
         '<tbody>' +
-        '<tr><td>1b</td><td>2b</td><td>3b</td></tr>' +
-        '<tr><td>1a</td><td>2a</td><td>3a</td></tr>' +
-        '<tr><td>1a</td><td colspan="2">2a</td></tr>' +
+        '<tr><td>1b</td><td>2b</td><td>3b</td><td>&nbsp;</td><td>&nbsp;</td></tr>' +
+        '<tr><td>1a</td><td>2a</td><td>3a</td><td>4a</td><td>5a</td></tr>' +
+        '<tr><td>1a</td><td colspan="3">2a</td><td>5a</td></tr>' +
         '</tbody>' +
         '</table>'
       );
@@ -269,7 +278,7 @@ asynctest(
       selectRangeXY(editor, 'table tr:nth-child(1) td:nth-child(1)', 'table tr:nth-child(3) td:nth-child(2)');
       editor.execCommand('mceTableCopyRow');
 
-      LegacyUnit.setSelection(editor, 'table tr:nth-child(4) td', 0);
+      selectOne(editor, 'table tr:nth-child(4) td');
       editor.execCommand('mceTablePasteRowAfter');
 
       LegacyUnit.equal(
