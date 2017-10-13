@@ -42,11 +42,16 @@ define(
       return settings.skin_url ? toAbsoluteUrl(editor, settings.skin_url) : urlFromName(settings.skin);
     };
 
+    var isSkinDisabled = function (editor) {
+      return editor.settings.skin === false;
+    };
+
     return {
       getTextSelectionToolbarItems: getTextSelectionToolbarItems,
       getInsertToolbarItems: getInsertToolbarItems,
       getPositionHandler: getPositionHandler,
-      getSkinUrl: getSkinUrl
+      getSkinUrl: getSkinUrl,
+      isSkinDisabled: isSkinDisabled
     };
   }
 );

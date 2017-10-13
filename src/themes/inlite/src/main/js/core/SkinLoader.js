@@ -12,11 +12,10 @@ define(
   'tinymce.themes.inlite.core.SkinLoader',
   [
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.EditorManager',
     'tinymce.themes.inlite.api.Events',
     'tinymce.themes.inlite.api.Settings'
   ],
-  function (DOMUtils, EditorManager, Events, Settings) {
+  function (DOMUtils, Events, Settings) {
     var fireSkinLoaded = function (editor, callback) {
       var done = function () {
         editor._skinLoaded = true;
@@ -38,8 +37,12 @@ define(
         fireSkinLoaded(editor, callback);
       };
 
-      DOMUtils.DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', done);
-      editor.contentCSS.push(skinUrl + '/content.inline.min.css');
+      if (Settings.isSkinDisabled(editor)) {
+        done();
+      } else {
+        DOMUtils.DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', done);
+        editor.contentCSS.push(skinUrl + '/content.inline.min.css');
+      }
     };
 
     return {

@@ -13,9 +13,10 @@ define(
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
-    'tinymce.core.dom.DOMUtils',
     'tinymce.core.ThemeManager',
+    'tinymce.core.dom.DOMUtils',
     'tinymce.themes.mobile.alien.TinyCodeDupe',
+    'tinymce.themes.mobile.api.Settings',
     'tinymce.themes.mobile.channels.TinyChannels',
     'tinymce.themes.mobile.features.Features',
     'tinymce.themes.mobile.style.Styles',
@@ -30,8 +31,8 @@ define(
 
 
   function (
-    Swapping, AlloyTriggers, Attachment, Debugging, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, DOMUtils, ThemeManager, TinyCodeDupe, TinyChannels,
-    Features, Styles, Orientation, AndroidRealm, Buttons, IosRealm, CssUrls, FormatChangers, SkinLoaded
+    Swapping, AlloyTriggers, Attachment, Debugging, Cell, Fun, PlatformDetection, Focus, Insert, Element, Node, ThemeManager, DOMUtils, TinyCodeDupe, Settings,
+    TinyChannels, Features, Styles, Orientation, AndroidRealm, Buttons, IosRealm, CssUrls, FormatChangers, SkinLoaded
   ) {
     /// not to be confused with editor mode
     var READING = Fun.constant('toReading'); /// 'hide the keyboard'
@@ -41,8 +42,12 @@ define(
       var renderUI = function (args) {
         var cssUrls = CssUrls.derive(editor);
 
-        editor.contentCSS.push(cssUrls.content);
-        DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
+        if (Settings.isSkinDisabled(editor) === false) {
+          editor.contentCSS.push(cssUrls.content);
+          DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
+        } else {
+          SkinLoaded.fireSkinLoaded(editor)();
+        }
 
         var doScrollIntoView = function () {
           editor.fire('scrollIntoView');
@@ -69,7 +74,9 @@ define(
         });
 
         var setReadOnly = function (readOnlyGroups, mainGroups, ro) {
-          if (ro === false) editor.selection.collapse();
+          if (ro === false) {
+            editor.selection.collapse();
+          }
           realm.setToolbarGroups(ro ? readOnlyGroups.get() : mainGroups.get());
           editor.setMode(ro === true ? 'readonly' : 'design');
           editor.fire(ro === true ? READING() : EDITING());
@@ -141,7 +148,7 @@ define(
                   editor.selection.select(target.dom());
                   // Prevent the default behaviour from firing so that the image stays selected
                   evt.kill();
-                } else if (Node.name(target) === 'a')  {
+                } else if (Node.name(target) === 'a') {
                   var component = realm.system().getByDom(Element.fromDom(editor.editorContainer));
                   component.each(function (container) {
                     /// view mode
@@ -202,7 +209,7 @@ define(
 
           var features = Features.setup(realm, editor);
           var items = Features.detect(editor.settings, features);
-          
+
           var actionGroup = {
             label: 'the action group',
             scrollable: true,
