@@ -13,6 +13,7 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.SelectorFind',
     'tinymce.core.dom.PaddingBr',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
@@ -21,10 +22,9 @@ define(
     'tinymce.core.fmt.MatchFormat',
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Fun',
-    'tinymce.core.util.Tools',
-    'tinymce.core.dom.DomQuery'
+    'tinymce.core.util.Tools'
   ],
-  function (Arr, Element, PaddingBr, RangeUtils, TreeWalker, ExpandRange, FormatUtils, MatchFormat, Zwsp, Fun, Tools, $) {
+  function (Arr, Element, SelectorFind, PaddingBr, RangeUtils, TreeWalker, ExpandRange, FormatUtils, MatchFormat, Zwsp, Fun, Tools) {
     var ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret', DEBUG = false;
 
     var isCaretNode = function (node) {
@@ -335,11 +335,15 @@ define(
         });
 
         // Mark caret container elements as bogus when getting the contents so we don't end up with empty elements
-        markCaretContainersBogus = function (context) {
-          $('#' + CARET_ID, context).each(function (i, node) {
-            var nodes = [];
-            if (isCaretContainerEmpty(node, nodes)) {
-              $(nodes).attr('data-mce-bogus', '1');
+        markCaretContainersBogus = function (scope) {
+          SelectorFind.descendant(Element.fromDom(scope), '#' + CARET_ID).fold(Fun.noop, function (node) {
+            var i, nodes = [];
+            if (isCaretContainerEmpty(node.dom(), nodes)) {
+              // Mark children
+              i = nodes.length;
+              while (i--) {
+                dom.setAttrib(nodes[i], 'data-mce-bogus', '1');
+              }
             }
           });
         };
