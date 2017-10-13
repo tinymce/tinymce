@@ -2,13 +2,22 @@ test(
   'Deltas',
 
   [
+    'ephox.katamari.api.Fun',
     'ephox.snooker.calc.Deltas'
   ],
 
-  function (Deltas) {
+  function (Fun, Deltas) {
     var min = 10;
     var check = function (expected, input, column, step) {
-      var actual = Deltas.determine(input, column, step, min);
+      var singleColumnWidth = function (width, _delta) {
+        var newNext = Math.max(min, width + step);
+        return [ newNext - width ];
+      };
+      var tableSize = {
+        minCellWidth: Fun.constant(10),
+        singleColumnWidth: singleColumnWidth
+      };
+      var actual = Deltas.determine(input, column, step, tableSize);
       assert.eq(expected, actual);
     };
 
