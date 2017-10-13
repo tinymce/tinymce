@@ -70,7 +70,7 @@ define(
         var formats = formatsToClone.getOr(['strong', 'em', 'b', 'i', 'span', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div']);
 
         // If we aren't cloning the child formatting, we can just give back the new td immediately.
-        var lastNode = formats.length > 0 ? cloneDemFormats(prev.element(), td, formats) : td;
+        var lastNode = formats.length > 0 ? cloneFormats(prev.element(), td, formats) : td;
 
         Insert.append(lastNode, Element.fromTag('br'))
         // inherit the style and width, dont inherit the row height
