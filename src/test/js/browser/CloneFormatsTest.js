@@ -12,8 +12,8 @@ test(
 
   function (Fun, Option, TableFill, Insert, Element, Html) {
     var doc = document;
-    var cloneFormats = Option.some(['strong', 'em', 'b', 'i', 'span', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div']);
-    var noCloneFormats = Option.none();
+    var cloneFormats = Option.none();
+    var noCloneFormats = Option.some([]);
     var cloneTableFill = TableFill.cellOperations(Fun.noop, doc, cloneFormats);
     var noCloneTableFill = TableFill.cellOperations(Fun.noop, doc, noCloneFormats);
 

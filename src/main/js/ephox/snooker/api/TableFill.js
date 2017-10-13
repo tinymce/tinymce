@@ -45,30 +45,34 @@ define(
       };
     };
 
-    var cellOperations = function (mutate, doc, cloneFormats) {
+    var cloneFormats = function (oldCell, newCell, formats) {
+      var first = CursorPosition.first(oldCell);
+      return first.map(function (firstText) {
+        var formatSelector = formats.join(',');
+        // Find the ancestors of the first text node that match the given formats.
+        var parents = SelectorFilter.ancestors(firstText, formatSelector, function (element) {
+          return Compare.eq(element, oldCell);
+        });
+        // Add the matched ancestors to the new cell, then return the new cell.
+        return Arr.foldr(parents, function (last, parent) {
+          var clonedFormat = Replication.shallow(parent);
+          Insert.append(last, clonedFormat);
+          return clonedFormat;
+        }, newCell);
+      }).getOr(newCell);
+    };
+
+    var cellOperations = function (mutate, doc, formats) {
       var newCell = function (prev) {
         var doc = Traverse.owner(prev.element());
         var td = Element.fromTag(Node.name(prev.element()), doc.dom());
 
+        var formats = formats.getOr(['strong', 'em', 'b', 'i', 'span', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div']);
+
         // If we aren't cloning the child formatting, we can just give back the new td immediately.
-        var lastNode = cloneFormats.bind(function (formats) {
-          // Get the first text node of the example cell.
-          var first = CursorPosition.first(prev.element());
-          return first.map(function (firstText) {
-            var formatSelector = formats.join(',');
-            // Find the ancestors of the first text node that match the given formats.
-            var parents = SelectorFilter.ancestors(firstText, formatSelector, function (element) {
-              return Compare.eq(element, prev.element());
-            });
-            // Add the matched ancestors to the new cell, then return the new cell.
-            return Arr.foldr(parents, function (last, parent) {
-              var clonedFormat = Replication.shallow(parent);
-              Insert.append(last, clonedFormat);
-              return clonedFormat;
-            }, td);
-          });
-        });
-        Insert.append(lastNode.getOr(td), Element.fromTag('br'))
+        var lastNode = formats.length > 0 ? cloneDemFormats(prev.element(), td, formats) : td;
+
+        Insert.append(lastNode, Element.fromTag('br'))
         // inherit the style and width, dont inherit the row height
         Css.copy(prev.element(), td);
         Css.remove(td, 'height');
