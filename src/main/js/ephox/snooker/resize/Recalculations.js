@@ -16,7 +16,7 @@ define(
     var total = function (start, end, measures) {
       var r = 0;
       for (var i = start; i < end; i++) {
-        r += measures[i] !== undefined ? parseInt(measures[i], 10) : 0;
+        r += measures[i] !== undefined ? measures[i] : 0;
       }
       return r;
     };

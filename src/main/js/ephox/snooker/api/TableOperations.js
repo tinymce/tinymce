@@ -231,7 +231,7 @@ define(
 
     var pasteRowsAfter = function (grid, pasteDetails, comparator, genWrappers) {
       var example = grid[pasteDetails.cells.length - 1];
-      var index = pasteDetails.cells[pasteDetails.cells.length - 1].row() + pasteDetails.cells[pasteDetails.cells.length - 1].colspan();
+      var index = pasteDetails.cells[pasteDetails.cells.length - 1].row() + pasteDetails.cells[pasteDetails.cells.length - 1].rowspan();
       var gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
       var mergedGrid = TableMerge.insert(index, grid, gridB, pasteDetails.generators(), comparator);
       var cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row(), pasteDetails.cells[0].column());
@@ -247,9 +247,9 @@ define(
       insertRowAfter:  RunOperation.run(insertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
       insertRowsAfter: RunOperation.run(insertRowsAfter, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification),
       insertColumnBefore:  RunOperation.run(insertColumnBefore, RunOperation.onCell, resize, Fun.noop, Generators.modification),
-      insertColumnsBefore: RunOperation.run(insertColumnsBefore, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification),
+      insertColumnsBefore: RunOperation.run(insertColumnsBefore, RunOperation.onCells, resize, Fun.noop, Generators.modification),
       insertColumnAfter:  RunOperation.run(insertColumnAfter, RunOperation.onCell, resize, Fun.noop, Generators.modification),
-      insertColumnsAfter: RunOperation.run(insertColumnsAfter, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification),
+      insertColumnsAfter: RunOperation.run(insertColumnsAfter, RunOperation.onCells, resize, Fun.noop, Generators.modification),
       splitCellIntoColumns:  RunOperation.run(splitCellIntoColumns, RunOperation.onCell, resize, Fun.noop, Generators.modification),
       splitCellIntoRows:  RunOperation.run(splitCellIntoRows, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification),
       eraseColumns:  RunOperation.run(eraseColumns, RunOperation.onCells, resize, prune, Generators.modification),

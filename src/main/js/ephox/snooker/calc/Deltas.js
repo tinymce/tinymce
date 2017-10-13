@@ -25,7 +25,7 @@ define(
      * Calculate the offsets to apply to each column width (not the absolute widths themselves)
      * based on a resize at column: column of step: step. The minimum column width allowed is min
      */
-    var determine = function (input, column, step, min) {
+    var determine = function (input, column, step, tableSize) {
       var result = input.slice(0);
       var context = neighbours(input, column);
 
@@ -35,16 +35,15 @@ define(
 
       var onNone = Fun.constant(zero(result));
       var onOnly = function (index) {
-        var newNext = Math.max(min, result[index] + step);
-        return [ newNext - result[index] ];
+        return tableSize.singleColumnWidth(result[index], step);
       };
 
       var onChange = function (index, next) {
         if (step >= 0) {
-          var newNext = Math.max(min, result[next] - step);
+          var newNext = Math.max(tableSize.minCellWidth(), result[next] - step);
           return zero(result.slice(0, index)).concat([ step, newNext-result[next] ]).concat(zero(result.slice(next + 1)));
         } else {
-          var newThis = Math.max(min, result[index] + step);
+          var newThis = Math.max(tableSize.minCellWidth(), result[index] + step);
           var diffx = result[index] - newThis;
           return zero(result.slice(0, index)).concat([ newThis - result[index], diffx ]).concat(zero(result.slice(next + 1)));
         }
@@ -60,7 +59,7 @@ define(
         if (step >= 0) {
           return zero(result.slice(0, index)).concat([ step ]);
         } else {
-          var size = Math.max(min, result[index] + step);
+          var size = Math.max(tableSize.minCellWidth(), result[index] + step);
           return zero(result.slice(0, index)).concat([ size - result[index] ]);
         }
       };

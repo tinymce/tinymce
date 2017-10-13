@@ -9,14 +9,13 @@ define(
     'ephox.snooker.resize.BarPositions',
     'ephox.snooker.resize.ColumnSizes',
     'ephox.snooker.resize.Redistribution',
-    'ephox.snooker.resize.Sizes',
     'ephox.snooker.util.CellUtils',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.view.Height',
     'ephox.sugar.api.view.Width'
   ],
 
-  function (Arr, Fun, DetailsList, Warehouse, BarPositions, ColumnSizes, Redistribution, Sizes, CellUtils, Css, Height, Width) {
+  function (Arr, Fun, DetailsList, Warehouse, BarPositions, ColumnSizes, Redistribution, CellUtils, Css, Height, Width) {
     var redistributeToW = function (newWidths, cells, unit) {
       Arr.each(cells, function (cell) {
         var widths = newWidths.slice(cell.column(), cell.colspan() + cell.column());
@@ -70,10 +69,6 @@ define(
     };
 
     return {
-      setWidth: Sizes.setWidth,
-      getWidth: Sizes.getWidth,
-      setHeight: Sizes.setHeight,
-      getHeight: Sizes.getHeight,
       redistribute: redistribute
     };
   }

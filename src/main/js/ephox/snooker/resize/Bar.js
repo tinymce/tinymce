@@ -19,6 +19,8 @@ define(
       });
 
       Attr.set(blocker, 'data-column', column);
+      // TODO: Remove these when we find a better way to get the bars available in inline mode than putting them in the content of TinyMCE.
+      Attr.set(blocker, 'data-mce-bogus', 'all');
       return blocker;
     };
 
@@ -33,6 +35,8 @@ define(
       });
 
       Attr.set(blocker, 'data-row', row);
+      // TODO: Remove these when we find a better way to get the bars available in inline mode than putting them in the content of TinyMCE.
+      Attr.set(blocker, 'data-mce-bogus', 'all');
       return blocker;
     };
 
