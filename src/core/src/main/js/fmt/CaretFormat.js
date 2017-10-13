@@ -80,22 +80,24 @@ define(
       return caretContainer;
     };
 
-    var getParentCaretContainer = function (node) {
-      while (node) {
+    var getParentCaretContainer = function (body, node) {
+      while (node && node !== body) {
         if (node.id === CARET_ID) {
           return node;
         }
 
         node = node.parentNode;
       }
+
+      return null;
     };
 
     // Checks if the parent caret container node isn't empty if that is the case it
     // will remove the bogus state on all children that isn't empty
-    var unmarkBogusCaretParents = function (dom, selection) {
+    var unmarkBogusCaretParents = function (body, dom, selection) {
       var caretContainer;
 
-      caretContainer = getParentCaretContainer(selection.getStart());
+      caretContainer = getParentCaretContainer(body, selection.getStart());
       if (caretContainer && !dom.isEmpty(caretContainer)) {
         Tools.walk(caretContainer, function (node) {
           if (node.nodeType === 1 && node.id !== CARET_ID && !dom.isEmpty(node)) {
@@ -148,9 +150,9 @@ define(
     };
 
     // Removes the caret container for the specified node or all on the current document
-    var removeCaretContainer = function (dom, selection, node, moveCaret) {
+    var removeCaretContainer = function (body, dom, selection, node, moveCaret) {
       if (!node) {
-        node = getParentCaretContainer(selection.getStart());
+        node = getParentCaretContainer(body, selection.getStart());
 
         if (!node) {
           while ((node = dom.get(CARET_ID))) {
@@ -198,6 +200,15 @@ define(
       }
     };
 
+    // Mark caret container elements as bogus when getting the contents so we don't end up with empty elements
+    var markCaretContainersBogus = function (dom, scope) {
+      SelectorFind.descendant(Element.fromDom(scope), '#' + CARET_ID).fold(Fun.noop, function (node) {
+        Arr.each(getEmptyCaretContainers(node.dom()), function (node) {
+          dom.setAttrib(node, 'data-mce-bogus', '1');
+        });
+      });
+    };
+
     var applyCaretFormat = function (editor, name, vars) {
       var rng, caretContainer, textNode, offset, bookmark, container, text;
       var dom = editor.dom, selection = editor.selection;
@@ -209,7 +220,7 @@ define(
       container = rng.startContainer;
       text = container.nodeValue;
 
-      caretContainer = getParentCaretContainer(selection.getStart());
+      caretContainer = getParentCaretContainer(editor.getBody(), selection.getStart());
       if (caretContainer) {
         textNode = findFirstTextNode(caretContainer);
       }
@@ -303,7 +314,7 @@ define(
         editor.formatter.remove(name, vars, rng);
         selection.moveToBookmark(bookmark);
       } else {
-        caretContainer = getParentCaretContainer(formatNode);
+        caretContainer = getParentCaretContainer(editor.getBody(), formatNode);
         var newCaretContainer = createCaretContainer(dom, false);
         var caretNode = insertFormatNodesIntoCaretContainer(parents, newCaretContainer);
 
@@ -324,13 +335,14 @@ define(
 
     var bindEvents = function (editor) {
       var dom = editor.dom, selection = editor.selection;
+      var body = editor.getBody();
 
       if (!editor._hasCaretEvents) {
-        var markCaretContainersBogus, disableCaretContainer;
+        var disableCaretContainer;
 
         editor.on('PreProcess', function (e) {
-          if (markCaretContainersBogus && e.format !== 'raw') {
-            markCaretContainersBogus(e.node);
+          if (e.format !== 'raw') {
+            markCaretContainersBogus(dom, e.node);
           }
         });
 
@@ -340,37 +352,28 @@ define(
           }
         });
 
-        // Mark caret container elements as bogus when getting the contents so we don't end up with empty elements
-        markCaretContainersBogus = function (scope) {
-          SelectorFind.descendant(Element.fromDom(scope), '#' + CARET_ID).fold(Fun.noop, function (node) {
-            Arr.each(getEmptyCaretContainers(node.dom()), function (node) {
-              dom.setAttrib(node, 'data-mce-bogus', '1');
-            });
-          });
-        };
-
         disableCaretContainer = function (e) {
           var keyCode = e.keyCode;
 
-          removeCaretContainer(dom, selection, null, false);
+          removeCaretContainer(body, dom, selection, null, false);
 
           // Remove caret container if it's empty
           if (keyCode === 8 && selection.isCollapsed() && selection.getStart().innerHTML === ZWSP) {
-            removeCaretContainer(dom, selection, getParentCaretContainer(selection.getStart()));
+            removeCaretContainer(body, dom, selection, getParentCaretContainer(body, selection.getStart()));
           }
 
           // Remove caret container on keydown and it's left/right arrow keys
           if (keyCode === 37 || keyCode === 39) {
-            removeCaretContainer(dom, selection, getParentCaretContainer(selection.getStart()));
+            removeCaretContainer(body, dom, selection, getParentCaretContainer(body, selection.getStart()));
           }
 
-          unmarkBogusCaretParents(dom, selection);
+          unmarkBogusCaretParents(body, dom, selection);
         };
 
         // Remove bogus state if they got filled by contents using editor.selection.setContent
         editor.on('SetContent', function (e) {
           if (e.selection) {
-            unmarkBogusCaretParents(dom, selection);
+            unmarkBogusCaretParents(body, dom, selection);
           }
         });
         editor._hasCaretEvents = true;
@@ -380,7 +383,8 @@ define(
     return {
       applyCaretFormat: applyCaretFormat,
       removeCaretFormat: removeCaretFormat,
-      isCaretNode: isCaretNode
+      isCaretNode: isCaretNode,
+      getParentCaretContainer: getParentCaretContainer
     };
   }
 );

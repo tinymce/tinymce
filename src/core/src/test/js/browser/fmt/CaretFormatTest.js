@@ -319,7 +319,6 @@ asynctest(
           Assertions.assertEq('Should be false since it is not a caret node', false, CaretFormat.isCaretNode(editor.dom.create('b')));
           Assertions.assertEq('Should be false since it ia caret node', true, CaretFormat.isCaretNode(editor.dom.create('span', { id: '_mce_caret' })));
         })),
-
         Logger.t("Apply some format to the empty editor and make sure that the content didn't mutate after serialization (TINY-1288)", GeneralSteps.sequence([
           tinyApis.sSetContent(''),
           tinyApis.sSetCursor([0], 0),
@@ -353,7 +352,16 @@ asynctest(
               ]
             });
           }))
-        ]))
+        ])),
+        Logger.t('getParentCaretContainer', Step.sync(function () {
+          var body = Element.fromHtml('<div><span id="_mce_caret">a</span></div>');
+          var caret = Element.fromDom(body.dom().firstChild);
+
+          Assertions.assertDomEq('Should be caret element on child', caret, Element.fromDom(CaretFormat.getParentCaretContainer(body.dom(), caret.dom().firstChild)));
+          Assertions.assertDomEq('Should be caret element on self', caret, Element.fromDom(CaretFormat.getParentCaretContainer(body.dom(), caret.dom())));
+          Assertions.assertEq('Should not be caret element', null, CaretFormat.getParentCaretContainer(body, Element.fromTag('span').dom()));
+          Assertions.assertEq('Should not be caret element', null, CaretFormat.getParentCaretContainer(caret.dom(), caret.dom()));
+        }))
       ], onSuccess, onFailure);
     }, {
       plugins: '',

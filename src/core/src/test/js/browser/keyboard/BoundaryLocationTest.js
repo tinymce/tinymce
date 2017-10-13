@@ -160,6 +160,11 @@ asynctest(
       Logger.t('anchor + code locations', GeneralSteps.sequence([
         sTestInvalidLocation('<p><a href="#">a<code>b</code>c</a></p>', [0, 0, 0], 1),
         sTestInvalidLocation('<p><a href="#">a<code>b</code>c</a></p>', [0, 0, 2], 0)
+      ])),
+
+      Logger.t('format caret parent', GeneralSteps.sequence([
+        sTestInvalidLocation('<p><span id="_mce_caret">a</span></p>', [0, 0, 0], 0),
+        sTestInvalidLocation('<p><span id="_mce_caret"><code>a</code></span></p>', [0, 0, 0, 0], 0)
       ]))
     ]));
 
