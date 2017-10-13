@@ -108,6 +108,7 @@ define(
       isText: isNodeType(3),
       isElement: isElement,
       isComment: isNodeType(8),
+      isDocument: isNodeType(9),
       isBr: matchNodeNames('br'),
       isContentEditableTrue: hasContentEditableState('true'),
       isContentEditableFalse: hasContentEditableState('false'),
