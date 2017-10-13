@@ -20,10 +20,11 @@ define(
     };
 
     var getAutoSavePrefix = function (editor) {
-      var prefix = editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}-{id}-');
+      var prefix = editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-');
 
       prefix = prefix.replace(/\{path\}/g, document.location.pathname);
       prefix = prefix.replace(/\{query\}/g, document.location.search);
+      prefix = prefix.replace(/\{hash\}/g, document.location.hash);
       prefix = prefix.replace(/\{id\}/g, editor.id);
 
       return prefix;
