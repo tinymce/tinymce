@@ -88,7 +88,7 @@ define(
         return table.bind(function (table) {
           var doc = Element.fromDom(editor.getDoc());
           var targets = TableTargets.forMenu(selections, table, cell);
-          var generators = TableFill.cellOperations(Fun.noop, doc);
+          var generators = TableFill.cellOperations(Fun.noop, doc, Option.none());
           return CopyRows.copyRows(table, targets, generators);
         });
       };

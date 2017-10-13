@@ -13,6 +13,7 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
     'ephox.snooker.api.CellMutations',
     'ephox.snooker.api.TableDirection',
     'ephox.snooker.api.TableFill',
@@ -22,7 +23,7 @@ define(
     'ephox.sugar.api.search.SelectorFilter',
     'tinymce.plugins.table.queries.Direction'
   ],
-  function (Arr, Fun, CellMutations, TableDirection, TableFill, TableOperations, Element, Attr, SelectorFilter, Direction) {
+  function (Arr, Fun, Option, CellMutations, TableDirection, TableFill, TableOperations, Element, Attr, SelectorFilter, Direction) {
     return function (editor, lazyWire) {
       var fireNewRow = function (node) {
         editor.fire('newrow', {
@@ -38,6 +39,17 @@ define(
         return node.dom();
       };
 
+      var cloneFormatsArray;
+      if (editor.settings.table_clone_elements !== false) {
+        if (typeof editor.settings.table_clone_elements == 'string') {
+          cloneFormatsArray = editor.settings.table_clone_elements.split(/[ ,]/);
+        } else if (Array.isArray(editor.settings.table_clone_elements)) {
+          cloneFormatsArray = editor.settings.table_clone_elements;
+        }
+      }
+      // Option.none gives the default cloneFormats.
+      var cloneFormats = Option.from(cloneFormatsArray);
+
       var execute = function (operation, mutate, lazyWire) {
         return function (table, target) {
           var dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
@@ -47,7 +59,7 @@ define(
           var wire = lazyWire();
           var doc = Element.fromDom(editor.getDoc());
           var direction = TableDirection(Direction.directionAt);
-          var generators = TableFill.cellOperations(mutate, doc);
+          var generators = TableFill.cellOperations(mutate, doc, cloneFormats);
           return operation(wire, table, target, generators, direction).bind(function (result) {
             Arr.each(result.newRows(), function (row) {
               fireNewRow(row);
