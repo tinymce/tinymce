@@ -39,7 +39,7 @@ define(
         settings.language_url = editor.editorManager.baseURL + '/langs/' + settings.language + '.js';
       }
 
-      if (settings.language_url) {
+      if (settings.language_url && !editor.editorManager.i18n.data[settings.language]) {
         scriptLoader.add(settings.language_url);
       }
     };
