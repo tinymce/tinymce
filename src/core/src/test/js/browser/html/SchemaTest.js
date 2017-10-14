@@ -177,6 +177,20 @@ asynctest(
       );
     });
 
+    suite.test("addValidElements when there's a colon in an attribute name", function () {
+      var schema;
+
+      schema = new Schema({ valid_elements: '@[xml\\:space]' });
+      schema.addValidElements('pre[xml\\:lang]');
+      LegacyUnit.deepEqual(
+        schema.getElementRule('pre'),
+        {
+          "attributes": { "xml:space":{}, "xml:lang": {} },
+          "attributesOrder": ["xml:space", "xml:lang"]
+        }
+      );
+    });
+
     suite.test('setValidElements', function () {
       var schema;
 
