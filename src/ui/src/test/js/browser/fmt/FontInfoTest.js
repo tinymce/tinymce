@@ -47,10 +47,11 @@ asynctest(
     };
 
     suite.test('toPt', function () {
-      LegacyUnit.equal(FontInfo.toPt('10px'), '8pt');
-      LegacyUnit.equal(FontInfo.toPt('11px'), '8pt');
+      LegacyUnit.equal(FontInfo.toPt('10px'), '7.5pt');
+      LegacyUnit.equal(FontInfo.toPt('11px'), '8.5pt');
       LegacyUnit.equal(FontInfo.toPt('12.5px'), '9pt');
       LegacyUnit.equal(FontInfo.toPt('13px'), '10pt');
+      LegacyUnit.equal(FontInfo.toPt('14px'), '10.5pt');
       LegacyUnit.equal(FontInfo.toPt('36px'), '27pt');
     });
 
