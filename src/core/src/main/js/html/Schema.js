@@ -420,7 +420,7 @@ define(
         var ei, el, ai, al, matches, element, attr, attrData, elementName, attrName, attrType, attributes, attributesOrder,
           prefix, outputName, globalAttributes, globalAttributesOrder, key, value,
           elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)\])?$/,
-          attrRuleRegExp = /^([!\-])?(\w+::\w+|[^=:<]+)?(?:([=:<])(.*))?$/,
+          attrRuleRegExp = /^([!\-])?(\w+[\\:]:\w+|[^=:<]+)?(?:([=:<])(.*))?$/,
           hasPatternsRegExp = /[*?+]/;
 
         if (validElements) {
@@ -484,7 +484,7 @@ define(
                   if (matches) {
                     attr = {};
                     attrType = matches[1];
-                    attrName = matches[2].replace(/::/g, ':');
+                    attrName = matches[2].replace(/[\\:]:/g, ':');
                     prefix = matches[3];
                     value = matches[4];
 
