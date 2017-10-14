@@ -35,7 +35,7 @@ asynctest(
 
       Pipeline.async({}, [
         Logger.t('Font family and font size on initial page load', GeneralSteps.sequence([
-          sAssertSelectBoxDisplayValue(editor, 'Font Sizes', '32pt'),
+          sAssertSelectBoxDisplayValue(editor, 'Font Sizes', '31.5pt'),
           sAssertSelectBoxDisplayValue(editor, 'Font Family', 'Helvetica')
         ])),
 
