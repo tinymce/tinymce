@@ -235,9 +235,11 @@ define(
               });
               if (tableElm.children) {
                 for (var i = 0; i < tableElm.children.length; i++) {
-                  styleTDTH(tableElm.children[i], 'border-width', addSizeSuffix(data.border));
-                  styleTDTH(tableElm.children[i], 'border-color', data.borderColor);
-                  styleTDTH(tableElm.children[i], 'padding', addSizeSuffix(data.cellpadding));
+                  styleTDTH(tableElm.children[i], {
+                    'border-width': addSizeSuffix(data.border),
+                    'border-color': data.borderColor,
+                    'padding': addSizeSuffix(data.cellpadding)
+                  });
                 }
               }
             } else {
