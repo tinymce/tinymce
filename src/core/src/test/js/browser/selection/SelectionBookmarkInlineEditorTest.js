@@ -15,9 +15,10 @@ asynctest(
     'ephox.sugar.api.properties.Html',
     'global!document',
     'global!window',
+    'tinymce.core.dom.DOMUtils',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter, TinyLoader, PlatformDetection, Hierarchy, Element, Html, document, window, ModernTheme) {
+  function (Assertions, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter, TinyLoader, PlatformDetection, Hierarchy, Element, Html, document, window, DOMUtils, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -37,6 +38,12 @@ asynctest(
       div.id = testDivId;
       document.body.appendChild(div);
     });
+
+    var sWaitForBookmark = function (editor, startPath, startOffset, endPath, endOffset) {
+      return Waiter.sTryUntil('wait for selection', Step.sync(function () {
+        assertBookmark(editor, startPath, startOffset, endPath, endOffset);
+      }), 100, 3000);
+    };
 
     var focusDiv = function () {
       var input = document.querySelector('#' + testDivId);
@@ -152,9 +159,7 @@ asynctest(
             setSelection(editor, [1, 0], 1, [1, 0], 1);
             editor.fire('mouseup', { });
           }),
-          Waiter.sTryUntil('wait for selection', Step.sync(function () {
-            assertBookmark(editor, [1, 0], 1, [1, 0], 1);
-          }), 100, 3000)
+          sWaitForBookmark(editor, [1, 0], 1, [1, 0], 1)
         ])),
         Logger.t('assert selection after touchend, should restore', GeneralSteps.sequence([
           Step.sync(function () {
@@ -166,9 +171,15 @@ asynctest(
             setSelection(editor, [1, 0], 1, [1, 0], 1);
             editor.fire('touchend', { });
           }),
-          Waiter.sTryUntil('wait for selection', Step.sync(function () {
-            assertBookmark(editor, [1, 0], 1, [1, 0], 1);
-          }), 100, 3000)
+          sWaitForBookmark(editor, [1, 0], 1, [1, 0], 1)
+        ])),
+        Logger.t('selection with mouseup outside editor body', GeneralSteps.sequence([
+          Step.sync(function () {
+            editor.setContent('<p>ab</p>');
+            setSelection(editor, [0, 0], 0, [0, 0], 1);
+            DOMUtils.DOM.fire(document, 'mouseup');
+          }),
+          sWaitForBookmark(editor, [0, 0], 0, [0, 0], 1)
         ]))
       ], onSuccess, onFailure);
     }, {
