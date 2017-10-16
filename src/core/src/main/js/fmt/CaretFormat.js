@@ -202,7 +202,7 @@ define(
 
     // Mark caret container elements as bogus when getting the contents so we don't end up with empty elements
     var markCaretContainersBogus = function (dom, scope) {
-      SelectorFind.descendant(Element.fromDom(scope), '#' + CARET_ID).fold(Fun.noop, function (node) {
+      SelectorFind.descendant(Element.fromDom(scope), '#' + CARET_ID).each(function (node) {
         Arr.each(getEmptyCaretContainers(node.dom()), function (node) {
           dom.setAttrib(node, 'data-mce-bogus', '1');
         });
