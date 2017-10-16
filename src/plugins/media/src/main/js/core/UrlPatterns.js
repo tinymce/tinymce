@@ -55,6 +55,12 @@ define(
         type: 'iframe', w: 480, h: 270,
         url: '//www.dailymotion.com/embed/video/$1',
         allowFullscreen: true
+      },
+      {
+        regex: /dai\.ly\/([^_]+)/,
+        type: 'iframe', w: 480, h: 270,
+        url: '//www.dailymotion.com/embed/video/$1',
+        allowFullscreen: true
       }
     ];
 
