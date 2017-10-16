@@ -7,23 +7,24 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyLoader',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Html',
     'global!document',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Cursors, Logger, Pipeline, Step, TinyLoader, Hierarchy, Element, Html, document, ModernTheme) {
+  function (Assertions, Cursors, Logger, Pipeline, Step, TinyLoader, PlatformDetection, Hierarchy, Element, Html, document, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     ModernTheme();
     var testDivId = 'testDiv1234';
 
-    var removeTestDiv = function () {
+    var sRemoveTestDiv = Step.sync(function () {
       var input = document.querySelector('#' + testDivId);
       input.parentNode.removeChild(input);
-    };
+    });
 
     var sAddTestDiv = Step.sync(function () {
       var div = document.createElement('div');
@@ -68,7 +69,8 @@ asynctest(
     };
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      Pipeline.async({}, [
+      var browser = PlatformDetection.detect().browser;
+      Pipeline.async({}, browser.isIE() ? [ // Only run on IE
         sAddTestDiv,
         Logger.t('assert selection after no nodechanged, should not restore', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
@@ -117,26 +119,13 @@ asynctest(
 
           assertSelection(editor, [1, 0], 1, [1, 0], 1);
         })),
-        Logger.t('assert selection after touchend, should restore', Step.sync(function () {
-          editor.setContent('<p>a</p><p>b</p>');
-
-          setSelection(editor, [0], 0, [0], 0);
-          editor.nodeChanged();
-
-          setSelection(editor, [1, 0], 1, [1, 0], 1);
-          editor.fire('touchend', { });
-          focusDiv();
-
-          assertSelection(editor, [1, 0], 1, [1, 0], 1);
-        }))
-
-      ], onSuccess, onFailure);
+        sRemoveTestDiv
+      ] : [], onSuccess, onFailure);
     }, {
       plugins: '',
       toolbar: '',
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, function () {
-      removeTestDiv();
       success();
     }, failure);
   }

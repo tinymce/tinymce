@@ -4,18 +4,19 @@ define(
   [
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.node.Text',
     'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.Selection',
-    'ephox.sugar.api.selection.WindowSelection',
-    'global!document',
-    'tinymce.core.caret.CaretFinder'
+    'global!document'
   ],
 
-  function (Fun, Option, Compare, Element, Node, Text, Traverse, Selection, WindowSelection, document, CaretFinder) {
+  function (Fun, Option, PlatformDetection, Compare, Element, Node, Text, Traverse, Selection, document) {
+    var browser = PlatformDetection.detect().browser;
+
     var clamp = function (offset, element) {
       var max = Node.isText(element) ? Text.get(element).length : Traverse.children(element).length + 1;
 
@@ -55,12 +56,18 @@ define(
     //   return rng;
     // };
 
+    var shouldStore = function (editor) {
+      return editor.inline === true || browser.isIE();
+    };
+
+    var nativeRangeToSelectionRange = function (r) {
+      return Selection.range(Element.fromDom(r.startContainer), r.startOffset, Element.fromDom(r.endContainer), r.endOffset);
+    };
+
     var readRange = function (win) {
       var selection = win.getSelection();
       var rng = selection.rangeCount === 0 ? Option.none() : Option.from(selection.getRangeAt(0));
-      return rng.map(function (r) {
-        return Selection.range(Element.fromDom(r.startContainer), r.startOffset, Element.fromDom(r.endContainer), r.endOffset);
-      });
+      return rng.map(nativeRangeToSelectionRange);
     };
 
     var getBookmark = function (root) {
@@ -85,7 +92,17 @@ define(
     };
 
     var store = function (editor) {
-      var newBookmark = getBookmark(Element.fromDom(editor.getBody()));
+      var newBookmark = shouldStore(editor) ? getBookmark(Element.fromDom(editor.getBody())) : Option.none();
+
+      editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
+    };
+
+    var storeNative = function (editor, rng) {
+      var root = Element.fromDom(editor.getBody());
+      var range = shouldStore(editor) ? Option.from(rng) : Option.none();
+
+      var newBookmark = range.map(nativeRangeToSelectionRange)
+        .filter(isRngInRoot(root));
 
       editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
     };
@@ -106,6 +123,7 @@ define(
 
     return {
       store: store,
+      storeNative: storeNative,
       restore: restore,
       getRng: getRng,
       getBookmark: getBookmark,
