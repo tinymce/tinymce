@@ -1,16 +1,14 @@
 asynctest(
   'browser.tinymce.core.dom.TrimNodeTest',
   [
-    'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
-    'ephox.sugar.api.node.Element',
     'global!document',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.TrimNode'
   ],
-  function (Assertions, Pipeline, RawAssertions, Step, Element, document, DOMUtils, TrimNode) {
+  function (Pipeline, RawAssertions, Step, document, DOMUtils, TrimNode) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
