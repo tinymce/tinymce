@@ -31,21 +31,27 @@ define(
       return node.nodeType === 1 && node.id === CARET_ID;
     };
 
-    var isCaretContainerEmpty = function (node, nodes) {
+    var getEmptyCaretContainers = function (node) {
+      var nodes = [];
+
       while (node) {
         if ((node.nodeType === 3 && node.nodeValue !== ZWSP) || node.childNodes.length > 1) {
-          return false;
+          return [];
         }
 
         // Collect nodes
-        if (nodes && node.nodeType === 1) {
+        if (node.nodeType === 1) {
           nodes.push(node);
         }
 
         node = node.firstChild;
       }
 
-      return true;
+      return nodes;
+    };
+
+    var isCaretContainerEmpty = function (node) {
+      return getEmptyCaretContainers(node).length > 0;
     };
 
     var findFirstTextNode = function (node) {
@@ -337,14 +343,9 @@ define(
         // Mark caret container elements as bogus when getting the contents so we don't end up with empty elements
         markCaretContainersBogus = function (scope) {
           SelectorFind.descendant(Element.fromDom(scope), '#' + CARET_ID).fold(Fun.noop, function (node) {
-            var i, nodes = [];
-            if (isCaretContainerEmpty(node.dom(), nodes)) {
-              // Mark children
-              i = nodes.length;
-              while (i--) {
-                dom.setAttrib(nodes[i], 'data-mce-bogus', '1');
-              }
-            }
+            Arr.each(getEmptyCaretContainers(node.dom()), function (node) {
+              dom.setAttrib(node, 'data-mce-bogus', '1');
+            });
           });
         };
 
