@@ -5,17 +5,15 @@ asynctest(
     'ephox.mcagar.api.LegacyUnit',
     'global!document',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.dom.ScriptLoader',
     'tinymce.core.Editor',
     'tinymce.core.EditorManager',
     'tinymce.core.PluginManager',
     'tinymce.core.test.ViewBlock',
-    'tinymce.core.ThemeManager',
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, document, DOMUtils, ScriptLoader, Editor, EditorManager, PluginManager, ViewBlock, ThemeManager, Delay, Tools, Theme) {
+  function (Pipeline, LegacyUnit, document, DOMUtils, Editor, EditorManager, PluginManager, ViewBlock, Delay, Tools, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -75,6 +73,36 @@ asynctest(
 
       LegacyUnit.equal(EditorManager.translate('from'), 'to');
     });
+
+
+    suite.asyncTest("Do not reload language pack if it was already loaded or registered manually.", function (_, done) {
+      var langCode = 'mce_lang';
+      var langUrl = 'http://example.com/language/' + langCode + '.js';
+
+      EditorManager.addI18n(langCode, {
+        'from': 'to'
+      });
+
+      viewBlock.update('<textarea></textarea>');
+
+      EditorManager.init({
+        selector: "textarea",
+        skin_url: '/project/src/skins/lightgray/dist/lightgray',
+        language: langCode,
+        language_url: langUrl,
+        init_instance_callback: function (ed) {
+          var scripts = Tools.grep(document.getElementsByTagName('script'), function (script) {
+            return script.src === langUrl;
+          });
+
+          LegacyUnit.equal(scripts.length, 0);
+
+          teardown(done);
+        }
+      });
+    });
+
+
 
     suite.asyncTest('Externally destroyed editor', function (_, done) {
       EditorManager.remove();
