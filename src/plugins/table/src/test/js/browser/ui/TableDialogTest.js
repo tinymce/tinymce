@@ -308,12 +308,13 @@ asynctest(
       LegacyUnit.setSelection(editor, 'td', 0);
       editor.execCommand('mceTableProps');
       fillAndSubmitWindowForm(editor, {
-        border: "1px solid green"
+        border: "1",
+        borderColor: 'green'
       });
       LegacyUnit.equal(
         cleanTableHtml(editor.getContent()),
-        '<table style=\"border: 1px solid green;\" data-mce-border=\"1px solid green\"><tbody><tr><td style=\"border: 1px solid green;\">X</td>' +
-        '<td style=\"border: 1px solid green;\">Z</td></tr></tbody></table>'
+        '<table style=\"border-color: green; border-width: 1px;\" data-mce-border-color=\"green\" data-mce-border=\"1\"><tbody><tr><td style=\"border-color: green; border-width: 1px;\">X</td>' +
+        '<td style=\"border-color: green; border-width: 1px;\">Z</td></tr></tbody></table>'
       );
 
       delete editor.settings.table_style_by_css;
@@ -326,7 +327,7 @@ asynctest(
       plugins: 'table',
       indent: false,
       valid_styles: {
-        '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
+        '*': 'width,height,vertical-align,text-align,float,border-color,border-width,background-color,border,padding,border-spacing,border-collapse'
       },
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
