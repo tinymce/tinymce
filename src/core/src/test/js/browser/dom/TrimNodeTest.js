@@ -28,9 +28,10 @@ asynctest(
     };
 
     var sTestTrimDocumentNode = Step.sync(function () {
-      var returnNode = TrimNode.trimNode(dom, document);
+      var expected = document.implementation.createHTMLDocument('test');
+      var actual = TrimNode.trimNode(dom, expected);
 
-      RawAssertions.assertEq('Should return document as is', document, returnNode);
+      RawAssertions.assertEq('Should return document as is', true, actual === expected);
     });
 
     Pipeline.async({}, [
