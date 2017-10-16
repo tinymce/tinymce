@@ -318,7 +318,42 @@ asynctest(
         Logger.t('isCaretNode', Step.sync(function () {
           Assertions.assertEq('Should be false since it is not a caret node', false, CaretFormat.isCaretNode(editor.dom.create('b')));
           Assertions.assertEq('Should be false since it ia caret node', true, CaretFormat.isCaretNode(editor.dom.create('span', { id: '_mce_caret' })));
-        }))
+        })),
+
+        Logger.t("Apply some format to the empty editor and make sure that the content didn't mutate after serialization (TINY-1288)", GeneralSteps.sequence([
+          tinyApis.sSetContent(''),
+          tinyApis.sSetCursor([0], 0),
+          tinyApis.sExecCommand('fontname', 'Arial'),
+          tinyApis.sAssertContent(''),
+          sAssertNormalizedContentStructure(editor, ApproxStructure.build(function (s, str) {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.element('span', {
+                      attrs: {
+                        'id': str.is('_mce_caret'),
+                        'data-mce-bogus': str.is('1')
+                      },
+                      children: [
+                        s.element('span', {
+                          attrs: {
+                            'style': str.is('font-family: Arial;'),
+                            'data-mce-bogus': str.none('1') // shouldn't be set
+                          },
+                          children: [
+                            s.text(str.is(Zwsp.ZWSP))
+                          ]
+                        })
+                      ]
+                    }),
+                    s.element('br', {})
+                  ]
+                })
+              ]
+            });
+          }))
+        ]))
       ], onSuccess, onFailure);
     }, {
       plugins: '',

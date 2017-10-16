@@ -13,6 +13,7 @@ define(
   [
     'ephox.katamari.api.Arr',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.SelectorFind',
     'tinymce.core.dom.PaddingBr',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
@@ -23,28 +24,34 @@ define(
     'tinymce.core.util.Fun',
     'tinymce.core.util.Tools'
   ],
-  function (Arr, Element, PaddingBr, RangeUtils, TreeWalker, ExpandRange, FormatUtils, MatchFormat, Zwsp, Fun, Tools) {
+  function (Arr, Element, SelectorFind, PaddingBr, RangeUtils, TreeWalker, ExpandRange, FormatUtils, MatchFormat, Zwsp, Fun, Tools) {
     var ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret', DEBUG = false;
 
     var isCaretNode = function (node) {
       return node.nodeType === 1 && node.id === CARET_ID;
     };
 
-    var isCaretContainerEmpty = function (node, nodes) {
+    var getEmptyCaretContainers = function (node) {
+      var nodes = [];
+
       while (node) {
         if ((node.nodeType === 3 && node.nodeValue !== ZWSP) || node.childNodes.length > 1) {
-          return false;
+          return [];
         }
 
         // Collect nodes
-        if (nodes && node.nodeType === 1) {
+        if (node.nodeType === 1) {
           nodes.push(node);
         }
 
         node = node.firstChild;
       }
 
-      return true;
+      return nodes;
+    };
+
+    var isCaretContainerEmpty = function (node) {
+      return getEmptyCaretContainers(node).length > 0;
     };
 
     var findFirstTextNode = function (node) {
@@ -321,9 +328,9 @@ define(
       if (!editor._hasCaretEvents) {
         var markCaretContainersBogus, disableCaretContainer;
 
-        editor.on('BeforeGetContent', function (e) {
+        editor.on('PreProcess', function (e) {
           if (markCaretContainersBogus && e.format !== 'raw') {
-            markCaretContainersBogus();
+            markCaretContainersBogus(e.node);
           }
         });
 
@@ -333,17 +340,13 @@ define(
           }
         });
 
-        // Mark current caret container elements as bogus when getting the contents so we don't end up with empty elements
-        markCaretContainersBogus = function () {
-          var nodes = [], i;
-
-          if (isCaretContainerEmpty(getParentCaretContainer(selection.getStart()), nodes)) {
-            // Mark children
-            i = nodes.length;
-            while (i--) {
-              dom.setAttrib(nodes[i], 'data-mce-bogus', '1');
-            }
-          }
+        // Mark caret container elements as bogus when getting the contents so we don't end up with empty elements
+        markCaretContainersBogus = function (scope) {
+          SelectorFind.descendant(Element.fromDom(scope), '#' + CARET_ID).fold(Fun.noop, function (node) {
+            Arr.each(getEmptyCaretContainers(node.dom()), function (node) {
+              dom.setAttrib(node, 'data-mce-bogus', '1');
+            });
+          });
         };
 
         disableCaretContainer = function (e) {
