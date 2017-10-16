@@ -2,11 +2,13 @@ define(
   'tinymce.core.dom.TrimNode',
 
   [
+    'ephox.sugar.api.node.Element',
+    'tinymce.core.dom.ElementType',
     'tinymce.core.dom.NodeType',
     'tinymce.core.util.Tools'
   ],
 
-  function (NodeType, Tools) {
+  function (Element, ElementType, NodeType, Tools) {
     var surroundedBySpans = function (node) {
       var previousIsSpan = node.previousSibling && node.previousSibling.nodeName === 'SPAN';
       var nextIsSpan = node.nextSibling && node.nextSibling.nodeName === 'SPAN';
@@ -36,11 +38,10 @@ define(
         trimNode(dom, children[i]);
       }
 
-      // if (type !== 9) {
       if (NodeType.isDocument(node) === false) {
         // Keep non whitespace text nodes
         if (NodeType.isText(node) && node.nodeValue.length > 0) {
-          // If parent element isn't a block or there isn't any useful contents for example "<p>   </p>"
+          // Keep if parent element is a block or if there is some useful content
           var trimmedLength = Tools.trim(node.nodeValue).length;
           if (dom.isBlock(node.parentNode) || trimmedLength > 0) {
             return;
@@ -58,8 +59,8 @@ define(
             node.parentNode.insertBefore(children[0], node);
           }
 
-          // Keep non empty elements or img, hr etc
-          if (children.length || /^(br|hr|input|img)$/i.test(node.nodeName)) {
+          // Keep non empty elements and void elements
+          if (children.length || ElementType.isVoid(Element.fromDom(node))) {
             return;
           }
         }
