@@ -360,6 +360,15 @@ asynctest(
       editor.settings.forced_root_block = 'p';
     });
 
+    suite.test('Enter in empty P at in the middle of a blockquote and end_container_on_empty_block: true', function (editor) {
+      editor.settings.end_container_on_empty_block = true;
+      editor.getBody().innerHTML = '<blockquote><p>abc</p><p>\u00a0</p><p><br></p><p>123</p></blockquote>';
+      LegacyUnit.setSelection(editor, 'p:nth-child(3)', 0);
+      pressEnter(editor);
+      LegacyUnit.equal(editor.getContent(), '<blockquote><p>abc</p><p>\u00a0</p></blockquote><p>\u00a0</p><blockquote><p>123</p></blockquote>');
+      editor.settings.forced_root_block = 'p';
+    });
+
     suite.test('Enter inside empty P with empty P siblings', function (editor) {
       // Tests that a workaround for an IE bug is working correctly
       editor.getBody().innerHTML = '<p></p><p></p><p>X</p>';
