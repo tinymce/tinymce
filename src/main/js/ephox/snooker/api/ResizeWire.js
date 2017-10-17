@@ -36,9 +36,18 @@ define(
       };
     };
 
+    var body = function (editable, chrome) {
+      return {
+        parent: Fun.constant(chrome),
+        view: Fun.constant(editable),
+        origin: Fun.constant(Position(0, 0))
+      };
+    };
+
     return {
       only: only,
-      detached: detached
+      detached: detached,
+      body: body
     };
   }
 );
