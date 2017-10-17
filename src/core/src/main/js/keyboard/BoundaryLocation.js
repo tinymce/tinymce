@@ -15,15 +15,13 @@ define(
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Options',
-    'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretFinder',
-    'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretUtils',
-    'tinymce.core.dom.NodeType',
+    'tinymce.core.fmt.CaretFormat',
     'tinymce.core.keyboard.InlineUtils',
     'tinymce.core.util.LazyEvaluator'
   ],
-  function (Adt, Fun, Option, Options, CaretContainer, CaretFinder, CaretPosition, CaretUtils, NodeType, InlineUtils, LazyEvaluator) {
+  function (Adt, Fun, Option, Options, CaretFinder, CaretUtils, CaretFormat, InlineUtils, LazyEvaluator) {
     var Location = Adt.generate([
       { before: [ 'element' ] },
       { start: [ 'element' ] },
@@ -51,9 +49,17 @@ define(
       );
     };
 
+    var isNotInsideFormatCaretContainer = function (rootNode, elm) {
+      return CaretFormat.getParentCaretContainer(rootNode, elm) === null;
+    };
+
+    var findInsideRootInline = function (isInlineTarget, rootNode, pos) {
+      return InlineUtils.findRootInline(isInlineTarget, rootNode, pos).filter(Fun.curry(isNotInsideFormatCaretContainer, rootNode));
+    };
+
     var start = function (isInlineTarget, rootNode, pos) {
       var nPos = InlineUtils.normalizeBackwards(pos);
-      return InlineUtils.findRootInline(isInlineTarget, rootNode, nPos).bind(function (inline) {
+      return findInsideRootInline(isInlineTarget, rootNode, nPos).bind(function (inline) {
         var prevPos = CaretFinder.prevPosition(inline, nPos);
         return prevPos.isNone() ? Option.some(Location.start(inline)) : Option.none();
       });
@@ -61,7 +67,7 @@ define(
 
     var end = function (isInlineTarget, rootNode, pos) {
       var nPos = InlineUtils.normalizeForwards(pos);
-      return InlineUtils.findRootInline(isInlineTarget, rootNode, nPos).bind(function (inline) {
+      return findInsideRootInline(isInlineTarget, rootNode, nPos).bind(function (inline) {
         var nextPos = CaretFinder.nextPosition(inline, nPos);
         return nextPos.isNone() ? Option.some(Location.end(inline)) : Option.none();
       });
