@@ -22,7 +22,6 @@ define(
   [
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
-    'tinymce.core.EditorFocus',
     'tinymce.core.Env',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.BookmarkManager',
@@ -30,6 +29,7 @@ define(
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.ScrollIntoView',
     'tinymce.core.dom.TreeWalker',
+    'tinymce.core.focus.EditorFocus',
     'tinymce.core.selection.EventProcessRanges',
     'tinymce.core.selection.GetSelectionContent',
     'tinymce.core.selection.MultiRange',
@@ -38,7 +38,7 @@ define(
     'tinymce.core.util.Tools'
   ],
   function (
-    Compare, Element, EditorFocus, Env, CaretPosition, BookmarkManager, ControlSelection, RangeUtils, ScrollIntoView, TreeWalker, EventProcessRanges, GetSelectionContent,
+    Compare, Element, Env, CaretPosition, BookmarkManager, ControlSelection, RangeUtils, ScrollIntoView, TreeWalker, EditorFocus, EventProcessRanges, GetSelectionContent,
     MultiRange, SelectionBookmark, SetSelectionContent, Tools
   ) {
     var each = Tools.each, trim = Tools.trim;

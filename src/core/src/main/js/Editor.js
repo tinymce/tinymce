@@ -39,24 +39,24 @@ define(
   'tinymce.core.Editor',
   [
     'tinymce.core.AddOnManager',
-    'tinymce.core.dom.DomQuery',
-    'tinymce.core.dom.DOMUtils',
     'tinymce.core.EditorCommands',
-    'tinymce.core.EditorFocus',
     'tinymce.core.EditorObservable',
     'tinymce.core.EditorSettings',
     'tinymce.core.Env',
-    'tinymce.core.html.Serializer',
-    'tinymce.core.init.Render',
     'tinymce.core.Mode',
     'tinymce.core.Shortcuts',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.dom.DomQuery',
+    'tinymce.core.focus.EditorFocus',
+    'tinymce.core.html.Serializer',
+    'tinymce.core.init.Render',
     'tinymce.core.ui.Sidebar',
     'tinymce.core.util.Tools',
     'tinymce.core.util.URI',
     'tinymce.core.util.Uuid'
   ],
   function (
-    AddOnManager, DomQuery, DOMUtils, EditorCommands, EditorFocus, EditorObservable, EditorSettings, Env, Serializer, Render, Mode, Shortcuts, Sidebar, Tools,
+    AddOnManager, EditorCommands, EditorObservable, EditorSettings, Env, Mode, Shortcuts, DOMUtils, DomQuery, EditorFocus, Serializer, Render, Sidebar, Tools,
     URI, Uuid
   ) {
     // Shorten these names

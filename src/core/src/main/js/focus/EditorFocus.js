@@ -9,7 +9,7 @@
  */
 
 define(
-  'tinymce.core.EditorFocus',
+  'tinymce.core.focus.EditorFocus',
   [
     'ephox.katamari.api.Option',
     'ephox.sugar.api.dom.Compare',
