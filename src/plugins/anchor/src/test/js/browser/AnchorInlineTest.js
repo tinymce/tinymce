@@ -5,19 +5,17 @@ asynctest(
     'ephox.agar.api.Keys',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
     'ephox.agar.api.UiControls',
     'ephox.agar.api.UiFinder',
     'ephox.mcagar.api.TinyActions',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyUi',
     'ephox.sugar.api.node.Element',
     'global!document',
     'tinymce.plugins.anchor.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Chain, Keys, Mouse, Pipeline, Step, UiControls, UiFinder, TinyActions, TinyApis, TinyLoader, TinyUi, Element, document, AnchorPlugin, ModernTheme) {
+  function (Chain, Keys, Mouse, Pipeline, UiControls, UiFinder, TinyActions, TinyApis, TinyLoader, Element, document, AnchorPlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

@@ -27,7 +27,7 @@ asynctest(
       return GeneralSteps.sequence([
         Utils.sOpenDialog(ui),
         Utils.sSetFormItemNoEvent(ui, url),
-        ui.sClickOnUi('click checkbox', 'div.mce-primary > button'),
+        ui.sClickOnUi('click ok button', 'div.mce-primary > button'),
         Utils.sAssertEditorContent(apis, editor, expected)
       ]);
     };
@@ -40,9 +40,7 @@ asynctest(
         sTestEmbedContentSubmit(ui, editor, apis, 'https://www.youtube.com/watch?v=IcgmSRJHu_8',
           '<p><span id="fake">https://www.youtube.com/watch?v=IcgmSRJHu_8</span></p>'),
         apis.sSetContent(''),
-        Utils.sSetSetting(editor.settings, 'media_url_resolver', function (data, resolve) {
-          resolve({ html: '' });
-        }),
+        apis.sDeleteSetting('media_url_resolver'),
         sTestEmbedContentSubmit(ui, editor, apis, 'https://www.youtube.com/watch?v=IcgmSRJHu_8',
           '<p><iframe src="//www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" ' +
           'allowfullscreen="allowfullscreen"></iframe></p>'),
