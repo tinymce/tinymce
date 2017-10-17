@@ -4,10 +4,13 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
+    'global!document',
+    'global!history',
+    'global!window',
     'tinymce.plugins.autosave.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, TinyLoader, Plugin, Theme) {
+  function (Pipeline, LegacyUnit, TinyLoader, document, history, window, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -69,6 +72,21 @@ asynctest(
 
       editor.plugins.autosave.restoreDraft();
       LegacyUnit.equal(editor.getContent(), '<p>X</p>');
+      editor.plugins.autosave.removeDraft();
+    });
+
+    suite.test("recognises location hash change", function (editor) {
+      LegacyUnit.equal(editor.plugins.autosave.hasDraft(), false);
+
+      editor.setContent('X');
+      editor.undoManager.add();
+      editor.plugins.autosave.storeDraft();
+
+      window.location.hash = "test";
+
+      LegacyUnit.equal(editor.plugins.autosave.hasDraft(), false);
+
+      history.replaceState("", document.title, window.location.pathname + window.location.search);
     });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
