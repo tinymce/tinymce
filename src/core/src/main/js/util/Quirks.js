@@ -531,14 +531,13 @@ define(
        * this fix will lean the caret right into the closest inline element.
        */
       var normalizeSelection = function () {
-        // Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i> except for Ctrl+A since it selects everything
+        // Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i>
         editor.on('keyup focusin mouseup', function (e) {
-          if (e.keyCode != 65 || !VK.metaKeyPressed(e)) {
-            // We can't normalize on non collapsed ranges on keyboard events since that would cause
-            // issues with moving the selection over empty paragraphs. See #TINY-1130
-            if (e.type !== 'keyup' || editor.selection.isCollapsed()) {
-              selection.normalize();
-            }
+          // no point to exclude Ctrl+A, since normalization will still run after Ctrl will be unpressed
+          // better exclude any key combinations with the modifiers to avoid double normalization
+          // (also addresses TINY-1130)
+          if (!VK.modifierPressed(e)) {
+            selection.normalize();
           }
         }, true);
       };
