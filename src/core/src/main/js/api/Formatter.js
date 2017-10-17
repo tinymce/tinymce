@@ -28,6 +28,7 @@ define(
     'ephox.katamari.api.Cell',
     'ephox.katamari.api.Fun',
     'tinymce.core.fmt.ApplyFormat',
+    'tinymce.core.fmt.CaretFormat',
     'tinymce.core.fmt.FormatChanged',
     'tinymce.core.fmt.FormatRegistry',
     'tinymce.core.fmt.MatchFormat',
@@ -36,7 +37,7 @@ define(
     'tinymce.core.fmt.ToggleFormat',
     'tinymce.core.keyboard.FormatShortcuts'
   ],
-  function (Cell, Fun, ApplyFormat, FormatChanged, FormatRegistry, MatchFormat, Preview, RemoveFormat, ToggleFormat, FormatShortcuts) {
+  function (Cell, Fun, ApplyFormat, CaretFormat, FormatChanged, FormatRegistry, MatchFormat, Preview, RemoveFormat, ToggleFormat, FormatShortcuts) {
     /**
      * Constructs a new formatter instance.
      *
@@ -48,6 +49,7 @@ define(
       var formatChangeState = Cell(null);
 
       FormatShortcuts.setup(editor);
+      CaretFormat.setup(editor);
 
       return {
         /**
