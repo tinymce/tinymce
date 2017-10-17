@@ -225,7 +225,7 @@ define(
 
             if (editor.settings.table_style_by_css) {
               stylesToMerge = [];
-              stylesToMerge.push({ name: 'border', value: data.border });
+              stylesToMerge.push({ name: 'border-width', value: addSizeSuffix(data.border) });
               stylesToMerge.push({ name: 'border-spacing', value: addSizeSuffix(data.cellspacing) });
               mergeStyles(dom, tableElm, stylesToMerge);
               dom.setAttribs(tableElm, {
@@ -235,8 +235,11 @@ define(
               });
               if (tableElm.children) {
                 for (var i = 0; i < tableElm.children.length; i++) {
-                  styleTDTH(tableElm.children[i], 'border', data.border);
-                  styleTDTH(tableElm.children[i], 'padding', addSizeSuffix(data.cellpadding));
+                  styleTDTH(tableElm.children[i], {
+                    'border-width': addSizeSuffix(data.border),
+                    'border-color': data.borderColor,
+                    'padding': addSizeSuffix(data.cellpadding)
+                  });
                 }
               }
             } else {
