@@ -74,7 +74,6 @@ asynctest(
       LegacyUnit.equal(EditorManager.translate('from'), 'to');
     });
 
-
     suite.asyncTest("Do not reload language pack if it was already loaded or registered manually.", function (_, done) {
       var langCode = 'mce_lang';
       var langUrl = 'http://example.com/language/' + langCode + '.js';
@@ -101,8 +100,6 @@ asynctest(
         }
       });
     });
-
-
 
     suite.asyncTest('Externally destroyed editor', function (_, done) {
       EditorManager.remove();

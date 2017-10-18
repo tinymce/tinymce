@@ -31,7 +31,7 @@ define(
     'tinymce.core.EditorManager',
     'tinymce.core.EditorObservable',
     'tinymce.core.Env',
-    'tinymce.core.FocusManager',
+    'tinymce.core.api.FocusManager',
     'tinymce.core.geom.Rect',
     'tinymce.core.html.DomParser',
     'tinymce.core.html.Entities',

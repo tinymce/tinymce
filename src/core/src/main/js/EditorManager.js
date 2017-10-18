@@ -26,20 +26,23 @@ define(
     'global!document',
     'global!window',
     'tinymce.core.AddOnManager',
-    'tinymce.core.dom.DomQuery',
-    'tinymce.core.dom.DOMUtils',
     'tinymce.core.Editor',
     'tinymce.core.Env',
     'tinymce.core.ErrorReporter',
-    'tinymce.core.FocusManager',
     'tinymce.core.LegacyInput',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.dom.DomQuery',
+    'tinymce.core.focus.FocusController',
     'tinymce.core.util.I18n',
     'tinymce.core.util.Observable',
     'tinymce.core.util.Promise',
     'tinymce.core.util.Tools',
     'tinymce.core.util.URI'
   ],
-  function (Arr, Type, document, window, AddOnManager, DomQuery, DOMUtils, Editor, Env, ErrorReporter, FocusManager, LegacyInput, I18n, Observable, Promise, Tools, URI) {
+  function (
+    Arr, Type, document, window, AddOnManager, Editor, Env, ErrorReporter, LegacyInput, DOMUtils, DomQuery, FocusController, I18n, Observable, Promise, Tools,
+    URI
+  ) {
     var DOM = DOMUtils.DOM;
     var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
     var instanceCounter = 0, beforeUnloadDelegate, EditorManager, boundGlobalEvents = false;
@@ -265,7 +268,7 @@ define(
          */
         self.suffix = suffix;
 
-        self.focusManager = new FocusManager(self);
+        FocusController.setup(self);
       },
 
       /**

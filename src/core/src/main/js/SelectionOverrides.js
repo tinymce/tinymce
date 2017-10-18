@@ -29,13 +29,13 @@ define(
     'tinymce.core.dom.ElementType',
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangePoint',
+    'tinymce.core.focus.CefFocus',
     'tinymce.core.keyboard.CefUtils',
-    'tinymce.core.util.Delay',
     'tinymce.core.util.VK'
   ],
   function (
     Arr, Remove, Element, Attr, SelectorFilter, SelectorFind, DragDropOverrides, EditorView, Env, CaretContainer, CaretPosition, CaretUtils, CaretWalker, FakeCaret,
-    LineUtils, ElementType, NodeType, RangePoint, CefUtils, Delay, VK
+    LineUtils, ElementType, NodeType, RangePoint, CefFocus, CefUtils, VK
   ) {
     var isContentEditableTrue = NodeType.isContentEditableTrue,
       isContentEditableFalse = NodeType.isContentEditableFalse,
@@ -302,13 +302,6 @@ define(
           }
         });
 
-        editor.on('focus', function () {
-          // Make sure we have a proper fake caret on focus
-          Delay.setEditorTimeout(editor, function () {
-            editor.selection.setRng(CefUtils.renderRangeCaret(editor, editor.selection.getRng()));
-          }, 0);
-        });
-
         editor.on('copy', function (e) {
           var clipboardData = e.clipboardData;
 
@@ -326,6 +319,7 @@ define(
         });
 
         DragDropOverrides.init(editor);
+        CefFocus.setup(editor);
       };
 
       var addCss = function () {
