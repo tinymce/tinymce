@@ -12,8 +12,14 @@ define(
   'tinymce.core.fmt.CaretFormat',
   [
     'ephox.katamari.api.Arr',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.SelectorFind',
+    'tinymce.core.caret.CaretPosition',
+    'tinymce.core.dom.NodeType',
     'tinymce.core.dom.PaddingBr',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
@@ -24,8 +30,11 @@ define(
     'tinymce.core.util.Fun',
     'tinymce.core.util.Tools'
   ],
-  function (Arr, Element, SelectorFind, PaddingBr, RangeUtils, TreeWalker, ExpandRange, FormatUtils, MatchFormat, Zwsp, Fun, Tools) {
-    var ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret', DEBUG = false;
+  function (
+    Arr, Insert, Remove, Element, Node, Attr, SelectorFind, CaretPosition, NodeType, PaddingBr, RangeUtils, TreeWalker, ExpandRange, FormatUtils, MatchFormat,
+    Zwsp, Fun, Tools
+  ) {
+    var ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret';
 
     var isCaretNode = function (node) {
       return node.nodeType === 1 && node.id === CARET_ID;
@@ -70,11 +79,17 @@ define(
       return null;
     };
 
-    var createCaretContainer = function (dom, fill) {
-      var caretContainer = dom.create('span', { id: CARET_ID, 'data-mce-bogus': '1', style: DEBUG ? 'color:red' : '' });
+    var createCaretContainer = function (fill) {
+      var caretContainer = Element.fromTag('span');
+
+      Attr.setAll(caretContainer, {
+        //style: 'color:red',
+        id: CARET_ID,
+        'data-mce-bogus': '1'
+      });
 
       if (fill) {
-        caretContainer.appendChild(dom.doc.createTextNode(ZWSP));
+        Insert.append(caretContainer, Element.fromText(ZWSP));
       }
 
       return caretContainer;
@@ -237,7 +252,7 @@ define(
         selection.moveToBookmark(bookmark);
       } else {
         if (!caretContainer || textNode.nodeValue !== ZWSP) {
-          caretContainer = createCaretContainer(dom, true);
+          caretContainer = createCaretContainer(true).dom();
           textNode = caretContainer.firstChild;
 
           rng.insertNode(caretContainer);
@@ -304,7 +319,7 @@ define(
         selection.moveToBookmark(bookmark);
       } else {
         caretContainer = getParentCaretContainer(editor.getBody(), formatNode);
-        var newCaretContainer = createCaretContainer(dom, false);
+        var newCaretContainer = createCaretContainer(false).dom();
         var caretNode = insertFormatNodesIntoCaretContainer(parents, newCaretContainer);
 
         if (caretContainer) {
@@ -360,12 +375,28 @@ define(
       });
     };
 
+    var replaceWithCaretFormat = function (targetNode, formatNodes) {
+      var caretContainer = createCaretContainer(false);
+      var innerMost = insertFormatNodesIntoCaretContainer(formatNodes, caretContainer.dom());
+      Insert.before(Element.fromDom(targetNode), caretContainer);
+      Remove.remove(Element.fromDom(targetNode));
+
+      return CaretPosition(innerMost, 0);
+    };
+
+    var isFormatElement = function (editor, element) {
+      var inlineElements = editor.schema.getTextInlineElements();
+      return inlineElements.hasOwnProperty(Node.name(element)) && !isCaretNode(element.dom()) && !NodeType.isBogus(element.dom());
+    };
+
     return {
       setup: setup,
       applyCaretFormat: applyCaretFormat,
       removeCaretFormat: removeCaretFormat,
       isCaretNode: isCaretNode,
-      getParentCaretContainer: getParentCaretContainer
+      getParentCaretContainer: getParentCaretContainer,
+      replaceWithCaretFormat: replaceWithCaretFormat,
+      isFormatElement: isFormatElement
     };
   }
 );

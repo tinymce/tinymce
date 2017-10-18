@@ -15,11 +15,12 @@ define(
     'tinymce.core.delete.BlockRangeDelete',
     'tinymce.core.delete.CefDelete',
     'tinymce.core.delete.InlineBoundaryDelete',
+    'tinymce.core.delete.InlineFormatDelete',
     'tinymce.core.delete.TableDelete',
     'tinymce.core.keyboard.MatchKeys',
     'tinymce.core.util.VK'
   ],
-  function (BlockBoundaryDelete, BlockRangeDelete, CefDelete, InlineBoundaryDelete, TableDelete, MatchKeys, VK) {
+  function (BlockBoundaryDelete, BlockRangeDelete, CefDelete, InlineBoundaryDelete, InlineFormatDelete, TableDelete, MatchKeys, VK) {
     var executeKeydownOverride = function (editor, caret, evt) {
       MatchKeys.execute([
         { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, false) },
@@ -31,7 +32,9 @@ define(
         { keyCode: VK.BACKSPACE, action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, false) },
         { keyCode: VK.DELETE, action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, true) },
         { keyCode: VK.BACKSPACE, action: MatchKeys.action(TableDelete.backspaceDelete, editor, false) },
-        { keyCode: VK.DELETE, action: MatchKeys.action(TableDelete.backspaceDelete, editor, true) }
+        { keyCode: VK.DELETE, action: MatchKeys.action(TableDelete.backspaceDelete, editor, true) },
+        { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, false) },
+        { keyCode: VK.DELETE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, true) }
       ], evt).each(function (_) {
         evt.preventDefault();
       });
