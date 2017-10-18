@@ -13,10 +13,11 @@ define(
 
   [
     'ephox.snooker.api.ResizeWire',
-    'ephox.sugar.api.node.Element'
+    'ephox.sugar.api.node.Element',
+    'global!document'
   ],
 
-  function (ResizeWire, Element) {
+  function (ResizeWire, Element, document) {
     var get = function (editor) {
       return editor.inline ? ResizeWire.body(Element.fromDom(editor.getBody()), Element.fromDom(document.body)) : ResizeWire.only(Element.fromDom(editor.getDoc()));
     };
