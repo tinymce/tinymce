@@ -210,10 +210,11 @@ module.exports = function (grunt) {
               "name": "tinymce",
               "version": packageData.version,
               "description": "Web based JavaScript HTML WYSIWYG editor control.",
+              "author": "Ephox",
               "main": "tinymce.js",
               "license": "LGPL-2.1",
               "keywords": ["editor", "wysiwyg", "tinymce", "richtext", "javascript", "html"],
-              "bugs": { "url": "http://www.tinymce.com/develop/bugtracker.php" }
+              "bugs": { "url": "https://github.com/tinymce/tinymce/issues" }
             }));
 
             zip.addData("composer.json", jsonToBuffer({
