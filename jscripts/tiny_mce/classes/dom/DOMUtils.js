@@ -73,7 +73,7 @@
 				keep_values : false,
 				hex_colors : 1
 			}, s);
-			
+
 			t.schema = s.schema;
 			t.styles = new tinymce.html.Styles({
 				url_converter : s.url_converter,
@@ -595,7 +595,7 @@
 					case 'float':
 						(isIE && ! tinymce.isIE11) ? s.styleFloat = v : s.cssFloat = v;
 						break;
-					
+
 					default:
 						s[na] = v || '';
 				}
@@ -1920,6 +1920,20 @@
 
 			// Check for real content editable
 			return node.contentEditable !== "inherit" ? node.contentEditable : null;
+		},
+
+		getContentEditableParent: function (node) {
+			var root = this.getRoot(), state = null;
+
+			for (; node && node !== root; node = node.parentNode) {
+				state = this.getContentEditable(node);
+
+				if (state !== null) {
+		  			break;
+				}
+			}
+
+			return state;
 		},
 
 		// #ifdef debug

@@ -140,7 +140,7 @@ tinymce.util.Quirks = function(editor) {
 
 		editor.addCommand('Delete', function() {removeMergedFormatSpans();});
 	};
-	
+
 	/**
 	 * Makes sure that the editor body becomes empty when backspace or delete is pressed in empty editors.
 	 *
@@ -295,20 +295,21 @@ tinymce.util.Quirks = function(editor) {
 	 */
 	function selectControlElements() {
 		editor.onClick.add(function(editor, e) {
-			e = e.target;
+		target = e.target;
 
-			// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
-			// WebKit can't even do simple things like selecting an image
-			// Needs tobe the setBaseAndExtend or it will fail to select floated images
-			if (/^(IMG|HR)$/.test(e.nodeName)) {
-				selection.getSel().setBaseAndExtent(e, 0, e, 1);
-			}
-
-			if (e.nodeName == 'A' && dom.hasClass(e, 'mceItemAnchor')) {
-				selection.select(e);
-			}
-
+		// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
+		// WebKit can't even do simple things like selecting an image
+		// Needs tobe the setBaseAndExtend or it will fail to select floated images
+		if (/^(IMG|HR)$/.test(target.nodeName) && dom.getContentEditableParent(target) !== "false") {
+			e.preventDefault();
+			editor.selection.select(target);
 			editor.nodeChanged();
+		}
+
+		if (target.nodeName == 'A' && dom.hasClass(target, 'mceItemAnchor')) {
+			e.preventDefault();
+			selection.select(target);
+		}
 		});
 	};
 
