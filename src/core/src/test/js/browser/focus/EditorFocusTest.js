@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.EditorFocusTest',
+  'browser.tinymce.core.focus.EditorFocusTest',
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
@@ -9,12 +9,12 @@ asynctest(
     'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
-    'tinymce.core.EditorFocus',
     'tinymce.core.EditorManager',
+    'tinymce.core.focus.EditorFocus',
     'tinymce.core.test.ViewBlock',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Focus, Hierarchy, Element, EditorFocus, EditorManager, ViewBlock, Theme) {
+  function (Assertions, Chain, GeneralSteps, Logger, Pipeline, Focus, Hierarchy, Element, EditorManager, EditorFocus, ViewBlock, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var viewBlock = new ViewBlock();

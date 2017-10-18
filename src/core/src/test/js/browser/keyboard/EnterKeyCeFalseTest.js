@@ -5,12 +5,11 @@ asynctest(
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.core.Env',
-    'tinymce.core.FocusManager',
     'tinymce.core.test.HtmlUtils',
     'tinymce.core.util.Tools',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, TinyLoader, Env, FocusManager, HtmlUtils, Tools, Theme) {
+  function (Pipeline, LegacyUnit, TinyLoader, Env, HtmlUtils, Tools, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
