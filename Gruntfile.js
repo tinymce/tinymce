@@ -210,7 +210,7 @@ module.exports = function (grunt) {
               "name": "tinymce",
               "version": packageData.version,
               "description": "Web based JavaScript HTML WYSIWYG editor control.",
-              "author": "Ephox",
+              "author": "Ephox Corporation",
               "main": "tinymce.js",
               "license": "LGPL-2.1",
               "keywords": ["editor", "wysiwyg", "tinymce", "richtext", "javascript", "html"],
