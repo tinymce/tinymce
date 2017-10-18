@@ -42,21 +42,35 @@ define(
       }, interval);
     };
 
+    var toggleScrolling = function (editor, state) {
+      var body = editor.getBody();
+      if (body) {
+        body.style.overflowY = state ? '' : 'hidden';
+        if (!state) {
+          body.scrollTop = 0;
+        }
+      }
+    };
+
     /**
      * This method gets executed each time the editor needs to resize.
      */
     var resize = function (editor, oldSize) {
-      var deltaSize, doc, body, docElm, resizeHeight, myHeight;
+      var deltaSize, doc, body, resizeHeight, myHeight;
       var marginTop, marginBottom, paddingTop, paddingBottom, borderTop, borderBottom;
       var dom = editor.dom;
 
       doc = editor.getDoc();
-      if (!doc || isFullscreen(editor)) {
+      if (!doc) {
+        return;
+      }
+
+      if (isFullscreen(editor)) {
+        toggleScrolling(editor, true);
         return;
       }
 
       body = doc.body;
-      docElm = doc.documentElement;
       resizeHeight = Settings.getAutoResizeMinHeight(editor);
 
       // Calculate outer height of the body element using CSS styles
@@ -86,12 +100,9 @@ define(
       var maxHeight = Settings.getAutoResizeMaxHeight(editor);
       if (maxHeight && myHeight > maxHeight) {
         resizeHeight = maxHeight;
-        body.style.overflowY = "auto";
-        docElm.style.overflowY = "auto"; // Old IE
+        toggleScrolling(editor, true);
       } else {
-        body.style.overflowY = "hidden";
-        docElm.style.overflowY = "hidden"; // Old IE
-        body.scrollTop = 0;
+        toggleScrolling(editor, false);
       }
 
       // Resize content element
@@ -129,7 +140,7 @@ define(
         }
       });
 
-      editor.on("nodechange setcontent keyup FullscreenStateChanged", function () {
+      editor.on('nodechange setcontent keyup FullscreenStateChanged', function (e) {
         resize(editor, oldSize);
       });
 

@@ -16,7 +16,7 @@ define(
   function (Actions) {
     var register = function (editor, fullscreenState) {
       editor.addCommand('mceFullScreen', function () {
-        fullscreenState.set(Actions.toggleFullscreen(editor, fullscreenState.get()));
+        Actions.toggleFullscreen(editor, fullscreenState);
       });
     };
 

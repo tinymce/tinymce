@@ -22,6 +22,11 @@ asynctest(
     suite.test('Fullscreen class on html and body tag', function (editor) {
       var bodyTag = document.body;
       var htmlTag = document.documentElement;
+      var lastEventArgs;
+
+      editor.on('FullscreenStateChanged', function (e) {
+        lastEventArgs = e;
+      });
 
       LegacyUnit.equal(
         DOMUtils.DOM.hasClass(bodyTag, "mce-fullscreen"),
@@ -35,6 +40,9 @@ asynctest(
       );
 
       editor.execCommand('mceFullScreen');
+
+      LegacyUnit.equal(editor.plugins.fullscreen.isFullscreen(), true, 'Should be true');
+      LegacyUnit.equal(lastEventArgs.state, true, 'Should be true');
 
       LegacyUnit.equal(
         DOMUtils.DOM.hasClass(bodyTag, "mce-fullscreen"),
@@ -70,6 +78,19 @@ asynctest(
       );
 
       editor.execCommand('mceFullScreen');
+
+      LegacyUnit.equal(editor.plugins.fullscreen.isFullscreen(), false, 'Should be false');
+      LegacyUnit.equal(lastEventArgs.state, false, 'Should be false');
+      LegacyUnit.equal(
+        DOMUtils.DOM.hasClass(bodyTag, "mce-fullscreen"),
+        false,
+        'Body tag should have "mce-fullscreen" class after fullscreen command'
+      );
+      LegacyUnit.equal(
+        DOMUtils.DOM.hasClass(htmlTag, "mce-fullscreen"),
+        false,
+        'Html tag should have "mce-fullscreen" class after fullscreen command'
+      );
     });
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
