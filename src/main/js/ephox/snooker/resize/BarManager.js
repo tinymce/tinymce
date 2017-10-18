@@ -27,8 +27,6 @@ define(
     Dragger, Fun, Option, Event, Events, BarMutation, Bars, Styles, CellUtils, Compare, DomEvent, Body, Node, Attr, Class, Css, SelectorExists, SelectorFind,
     parseInt
   ) {
-    var dragsterBlocker = 'ephox-dragster-blocker';
-    var resizeBar = Styles.resolve('resizer-bar');
     var resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
     return function (wire, direction, hdirection) {
@@ -100,14 +98,14 @@ define(
 
       var isRoot = function (e) { return Compare.eq(e, wire.view()); };
 
-      /* mouseover on table: When the mouse moves within the table, refresh the bars. */
+      /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
       var mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
         if (Node.name(event.target()) === 'table' || SelectorExists.ancestor(event.target(), 'table', isRoot)) {
           hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table', isRoot);
           hoverTable.each(function (ht) {
             Bars.refresh(wire, ht, hdirection, direction);
           });
-        } else if (Body.inBody(event.target()) && !Class.has(event.target(), resizeBar) && !Class.has(event.target(), dragsterBlocker)) {
+        } else if (Body.inBody(event.target())) {
           /*
            * mouseout is not reliable within ContentEditable, so for all other mouseover events we clear bars.
            * This is fairly safe to do frequently; it's a single querySelectorAll() on the content and Arr.map on the result.
