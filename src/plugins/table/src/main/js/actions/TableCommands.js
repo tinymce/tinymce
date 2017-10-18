@@ -18,6 +18,7 @@ define(
     'ephox.snooker.api.CopyRows',
     'ephox.snooker.api.TableFill',
     'ephox.snooker.api.TableLookup',
+    'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.dom.Replication',
@@ -26,7 +27,7 @@ define(
     'tinymce.plugins.table.queries.TableTargets'
   ],
 
-  function (Arr, Fun, Option, CopyRows, TableFill, TableLookup, Insert, Remove, Replication, Element, Tools, TableTargets) {
+  function (Arr, Fun, Option, CopyRows, TableFill, TableLookup, Compare, Insert, Remove, Replication, Element, Tools, TableTargets) {
     var each = Tools.each;
 
     var clipboardRows = Option.none();
@@ -47,10 +48,16 @@ define(
     };
 
     var registerCommands = function (editor, dialogs, actions, cellSelection, selections) {
+      var getBody = function () {
+        return Element.fromDom(editor.getBody());
+      };
+      var isRoot = function (element) {
+        return Compare.eq(element, getBody());
+      };
       var eraseTable = function () {
         var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
-        var table = TableLookup.table(cell);
-        table.bind(function (table) {
+        var table = TableLookup.table(cell, isRoot);
+        table.filter(Fun.not(isRoot)).bind(function (table) {
           var cursor = Element.fromText('');
           Insert.after(table, cursor);
           Remove.remove(table);
@@ -66,7 +73,7 @@ define(
       };
 
       var getTableFromCell = function (cell) {
-        return TableLookup.table(cell);
+        return TableLookup.table(cell, isRoot);
       };
 
       var actOnSelection = function (execute) {
