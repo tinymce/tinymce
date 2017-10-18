@@ -18,7 +18,7 @@ define(
 
   function (ResizeWire, Element) {
     var get = function (editor) {
-      return editor.inline ? ResizeWire.detached(Element.fromDom(editor.getBody()), Element.fromDom(editor.getBody())) : ResizeWire.only(Element.fromDom(editor.getDoc()));
+      return editor.inline ? ResizeWire.body(Element.fromDom(editor.getBody()), Element.fromDom(document.body)) : ResizeWire.only(Element.fromDom(editor.getDoc()));
     };
 
     return {
