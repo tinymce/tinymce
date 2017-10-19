@@ -23,10 +23,11 @@ define(
     'ephox.sugar.api.dom.Replication',
     'ephox.sugar.api.node.Element',
     'tinymce.core.util.Tools',
+    'tinymce.plugins.table.alien.Util',
     'tinymce.plugins.table.queries.TableTargets'
   ],
 
-  function (Arr, Fun, Option, CopyRows, TableFill, TableLookup, Insert, Remove, Replication, Element, Tools, TableTargets) {
+  function (Arr, Fun, Option, CopyRows, TableFill, TableLookup, Insert, Remove, Replication, Element, Tools, Util, TableTargets) {
     var each = Tools.each;
 
     var clipboardRows = Option.none();
@@ -47,10 +48,11 @@ define(
     };
 
     var registerCommands = function (editor, dialogs, actions, cellSelection, selections) {
+      var isRoot = Util.getIsRoot(editor);
       var eraseTable = function () {
         var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
-        var table = TableLookup.table(cell);
-        table.bind(function (table) {
+        var table = TableLookup.table(cell, isRoot);
+        table.filter(Fun.not(isRoot)).each(function (table) {
           var cursor = Element.fromText('');
           Insert.after(table, cursor);
           Remove.remove(table);
@@ -66,13 +68,13 @@ define(
       };
 
       var getTableFromCell = function (cell) {
-        return TableLookup.table(cell);
+        return TableLookup.table(cell, isRoot);
       };
 
       var actOnSelection = function (execute) {
         var cell = getSelectionStartCell();
         var table = getTableFromCell(cell);
-        table.bind(function (table) {
+        table.each(function (table) {
           var targets = TableTargets.forMenu(selections, table, cell);
           execute(table, targets).each(function (rng) {
             editor.selection.setRng(rng);
