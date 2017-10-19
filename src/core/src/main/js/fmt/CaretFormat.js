@@ -193,13 +193,6 @@ define(
       return appendNode(innerMostFormatNode, innerMostFormatNode.ownerDocument.createTextNode(ZWSP));
     };
 
-    var setupCaretEvents = function (editor) {
-      if (!editor._hasCaretEvents) {
-        bindEvents(editor);
-        editor._hasCaretEvents = true;
-      }
-    };
-
     // Mark caret container elements as bogus when getting the contents so we don't end up with empty elements
     var markCaretContainersBogus = function (dom, scope) {
       SelectorFind.descendant(Element.fromDom(scope), '#' + CARET_ID).each(function (node) {
@@ -212,8 +205,6 @@ define(
     var applyCaretFormat = function (editor, name, vars) {
       var rng, caretContainer, textNode, offset, bookmark, container, text;
       var dom = editor.dom, selection = editor.selection;
-
-      setupCaretEvents(editor);
 
       rng = selection.getRng(true);
       offset = rng.startOffset;
@@ -266,8 +257,6 @@ define(
       var dom = editor.dom, selection = editor.selection;
       var rng = selection.getRng(true), container, offset, bookmark;
       var hasContentAfter, node, formatNode, parents = [], caretContainer;
-
-      setupCaretEvents(editor);
 
       container = rng.startContainer;
       offset = rng.startOffset;
@@ -333,54 +322,46 @@ define(
       }
     };
 
-    var bindEvents = function (editor) {
+    var disableCaretContainer = function (body, dom, selection, keyCode) {
+      removeCaretContainer(body, dom, selection, null, false);
+
+      // Remove caret container if it's empty
+      if (keyCode === 8 && selection.isCollapsed() && selection.getStart().innerHTML === ZWSP) {
+        removeCaretContainer(body, dom, selection, getParentCaretContainer(body, selection.getStart()));
+      }
+
+      // Remove caret container on keydown and it's left/right arrow keys
+      if (keyCode === 37 || keyCode === 39) {
+        removeCaretContainer(body, dom, selection, getParentCaretContainer(body, selection.getStart()));
+      }
+
+      unmarkBogusCaretParents(body, dom, selection);
+    };
+
+    var setup = function (editor) {
       var dom = editor.dom, selection = editor.selection;
       var body = editor.getBody();
 
-      if (!editor._hasCaretEvents) {
-        var disableCaretContainer;
+      editor.on('PreProcess', function (e) {
+        if (e.format !== 'raw') {
+          markCaretContainersBogus(dom, e.node);
+        }
+      });
 
-        editor.on('PreProcess', function (e) {
-          if (e.format !== 'raw') {
-            markCaretContainersBogus(dom, e.node);
-          }
-        });
+      editor.on('mouseup keydown', function (e) {
+        disableCaretContainer(body, dom, selection, e.keyCode);
+      });
 
-        editor.on('mouseup keydown', function (e) {
-          if (disableCaretContainer) {
-            disableCaretContainer(e);
-          }
-        });
-
-        disableCaretContainer = function (e) {
-          var keyCode = e.keyCode;
-
-          removeCaretContainer(body, dom, selection, null, false);
-
-          // Remove caret container if it's empty
-          if (keyCode === 8 && selection.isCollapsed() && selection.getStart().innerHTML === ZWSP) {
-            removeCaretContainer(body, dom, selection, getParentCaretContainer(body, selection.getStart()));
-          }
-
-          // Remove caret container on keydown and it's left/right arrow keys
-          if (keyCode === 37 || keyCode === 39) {
-            removeCaretContainer(body, dom, selection, getParentCaretContainer(body, selection.getStart()));
-          }
-
+      // Remove bogus state if they got filled by contents using editor.selection.setContent
+      editor.on('SetContent', function (e) {
+        if (e.selection) {
           unmarkBogusCaretParents(body, dom, selection);
-        };
-
-        // Remove bogus state if they got filled by contents using editor.selection.setContent
-        editor.on('SetContent', function (e) {
-          if (e.selection) {
-            unmarkBogusCaretParents(body, dom, selection);
-          }
-        });
-        editor._hasCaretEvents = true;
-      }
+        }
+      });
     };
 
     return {
+      setup: setup,
       applyCaretFormat: applyCaretFormat,
       removeCaretFormat: removeCaretFormat,
       isCaretNode: isCaretNode,

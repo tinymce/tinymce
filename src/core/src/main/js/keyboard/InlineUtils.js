@@ -14,24 +14,17 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
-    'ephox.katamari.api.Options',
-    'ephox.katamari.api.Type',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.search.Selectors',
+    'tinymce.core.EditorSettings',
     'tinymce.core.caret.CaretContainer',
-    'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretUtils',
-    'tinymce.core.caret.CaretWalker',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.NodeType',
-    'tinymce.core.EditorSettings',
     'tinymce.core.text.Bidi'
   ],
-  function (
-    Arr, Fun, Option, Options, Type, Element, Selectors, CaretContainer, CaretFinder, CaretPosition, CaretUtils, CaretWalker, DOMUtils, NodeType, EditorSettings,
-    Bidi
-  ) {
+  function (Arr, Fun, Option, Element, Selectors, EditorSettings, CaretContainer, CaretPosition, CaretUtils, DOMUtils, NodeType, Bidi) {
     var isInlineTarget = function (editor, elm) {
       var selector = EditorSettings.getString(editor, 'inline_boundaries_selector').getOr('a[href],code');
       return Selectors.is(Element.fromDom(elm), selector);
