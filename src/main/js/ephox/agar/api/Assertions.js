@@ -2,6 +2,7 @@ define(
   'ephox.agar.api.Assertions',
 
   [
+    'ephox.agar.api.RawAssertions',
     'ephox.agar.alien.Truncate',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Logger',
@@ -16,7 +17,6 @@ define(
     'global!window'
   ],
 
-  function (Truncate, Chain, Logger, Step, UiFinder, Differ, Obj, Json, Compare, Array, Error, window) {
     // Note, this requires changes to tunic
     var textError = function (label, expected, actual) {
       var err = new Error(label);
@@ -32,6 +32,7 @@ define(
         message: err.message
       });
     };
+  function (RawAssertions, Truncate, Chain, Logger, Step, UiFinder, Differ, Obj, Json, Compare, Array, Error, window) {
 
     var assertHtml = function (label, expected, actual) {
       if (expected !== actual) throw textError(label, expected, actual);
@@ -68,23 +69,7 @@ define(
       );
     };
 
-    var assertEq = function (label, a, b) {
-      var stringify = function (v) {
-        try {
-          return Json.stringify(v);
-        } catch (_) {
-          return v;
-        }
-      };
-
-      var extra = function () {
-        return '.\n  Expected: ' + stringify(a) + '\n  Actual: ' + stringify(b);
-      };
-
-      if (window.assertEq) window.assertEq(a, b, label + extra());
-      else if (window.assert && window.assert.eq) window.assert.eq(a, b, label + extra());
-      else if (a !== b) throw new Error('[Equality]: ' + label + extra());
-    };
+    var assertEq = RawAssertions.windowAssertEq;
 
     var sAssertEq = function (label, a, b) {
       return Step.sync(function () {
