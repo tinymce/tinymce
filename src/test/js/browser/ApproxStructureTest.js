@@ -64,7 +64,7 @@ asynctest(
       });
     }), html);
 
-    check(ApproxStructure.toStructure(html), html);
+    check(ApproxStructure.fromHtml(html), html);
 
     success();
   }

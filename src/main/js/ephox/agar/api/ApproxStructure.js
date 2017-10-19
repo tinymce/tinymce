@@ -49,15 +49,13 @@ define(
     var getCss = function (node) {
       var css = {};
       var dom = node.dom();
-      var cssStr = dom.style ? dom.style.cssText.toLowerCase() : '';
+      var i, ruleName;
 
-      if (cssStr) {
-        Arr.each(cssStr.split(/\s*;\s*/), function (ruleStr) {
-          if (ruleStr) {
-            var rules = ruleStr.split(/\s*:\s*/);
-            css[rules[0]] = rules[1];
-          }
-        });
+      if (dom.style) {
+        for (i = 0; i < dom.style.length; i++) {
+          ruleName = dom.style.item(i);
+          css[ruleName] = dom.style[ruleName];
+        }
       }
       return css;
     };
@@ -74,7 +72,7 @@ define(
       });
     };
 
-    var nodeToStructure = function (node) {
+    var fromElement = function (node) {
       if (Node.isElement(node)) {
         var attrs = getAttrs(node);
 
@@ -83,7 +81,7 @@ define(
         delete attrs['class'];
 
         return ApproxStructures.element(Node.name(node), {
-          children: Arr.map(Traverse.children(node), nodeToStructure),
+          children: Arr.map(Traverse.children(node), fromElement),
           attrs: toAssertableObj(attrs),
           styles: toAssertableObj(getCss(node)),
           classes: Attr.has(node, 'class') ? toAssertableArr(Classes.get(node)) : []
@@ -93,13 +91,14 @@ define(
       }
     };
 
-    var toStructure = function (html) {
-      return nodeToStructure(Element.fromHtml(html));
+    var fromHtml = function (html) {
+      return fromElement(Element.fromHtml(html));
     };
 
     return {
       build: build,
-      toStructure: toStructure
+      fromHtml: fromHtml,
+      fromElement: fromElement
     };
   }
 );
