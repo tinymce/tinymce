@@ -8,34 +8,22 @@ define(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
-    'ephox.agar.assertions.Differ',
+    'ephox.agar.api.ApproxStructure',
     'ephox.katamari.api.Obj',
-    'ephox.sand.api.JSON',
     'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.node.Element',
     'global!Array',
     'global!Error',
     'global!window'
   ],
 
-    // Note, this requires changes to tunic
-    var textError = function (label, expected, actual) {
-      var err = new Error(label);
-      return ({
-        diff: {
-          expected: expected,
-          actual: actual,
-          comparison: Differ.htmlDiff(expected, actual)
-        },
-        label: label,
-        stack: err.stack,
-        name: 'HtmlAssertion',
-        message: err.message
-      });
-    };
-  function (RawAssertions, Truncate, Chain, Logger, Step, UiFinder, Differ, Obj, Json, Compare, Array, Error, window) {
+  function (RawAssertions, Truncate, Chain, Logger, Step, UiFinder, ApproxStructure, Obj, Compare, Element, Array, Error, window) {
 
     var assertHtml = function (label, expected, actual) {
-      if (expected !== actual) throw textError(label, expected, actual);
+      var wrapHtml = function (html) {
+        return '<div>' + html + '</div>'; // make sure that there's a single root element
+      };
+      return assertStructure(label, ApproxStructure.fromHtml(wrapHtml(expected)), Element.fromHtml(wrapHtml(actual)));
     };
 
     var assertPresence = function (label, expected, container) {
@@ -63,8 +51,8 @@ define(
 
     var assertDomEq = function (label, expected, actual) {
       assert.eq(
-        true, 
-        Compare.eq(expected, actual), 
+        true,
+        Compare.eq(expected, actual),
         label + '\nExpected : ' + Truncate.getHtml(expected) + '\nActual: ' + Truncate.getHtml(actual)
       );
     };
