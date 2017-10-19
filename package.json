@@ -6,10 +6,11 @@
     "url": "https://github.com/tinymce/tinymce.git"
   },
   "description": "TinyMCE rich text editor",
-  "author": "Johan Sörlin <spocke@moxiecode.com>",
+  "author": "Ephox Corporation",
   "bugs": {
-    "url": "http://www.tinymce.com/develop/bugtracker.php"
+    "url": "https://github.com/tinymce/tinymce/issues"
   },
+  "license": "LGPL-2.1",
   "private": true,
   "engines": {
     "node": ">=0.10.26"
