@@ -123,7 +123,7 @@ define(
       // If index based end position then resolve it
       if (endContainer.nodeType === 1 && endContainer.hasChildNodes()) {
         lastIdx = endContainer.childNodes.length - 1;
-        endContainer = endContainer.childNodes[endOffset > lastIdx ? lastIdx : endOffset - 1];
+        endContainer = endContainer.childNodes[endOffset > lastIdx ? lastIdx : Math.max(endOffset - 1, 0)];
 
         if (endContainer.nodeType === 3) {
           endOffset = endContainer.nodeValue.length;
