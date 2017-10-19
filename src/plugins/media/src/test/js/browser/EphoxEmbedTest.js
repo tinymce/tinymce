@@ -5,6 +5,7 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'ephox.agar.api.Waiter',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
@@ -13,10 +14,7 @@ asynctest(
     'tinymce.plugins.media.test.Utils',
     'tinymce.themes.modern.Theme'
   ],
-  function (
-    ApproxStructure, Assertions, Pipeline, Step, TinyApis, TinyLoader, TinyUi, Element,
-    Plugin, Utils, Theme
-  ) {
+  function (ApproxStructure, Assertions, Pipeline, Step, Waiter, TinyApis, TinyLoader, TinyUi, Element, Plugin, Utils, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -45,7 +43,8 @@ asynctest(
 
     var sAssertDivStructure = function (editor, expected) {
       return Step.sync(function () {
-        var actual = Element.fromHtml(editor.dom.select('div')[0].outerHTML);
+        var div = editor.dom.select('div')[0];
+        var actual = div ? Element.fromHtml(div.outerHTML) : Element.FromHtml('');
         return Assertions.sAssertStructure('Should be the same structure', expected, actual);
       });
     };
@@ -67,10 +66,10 @@ asynctest(
           '</div>'
         ),
         Utils.sSubmitDialog(ui),
-        sAssertDivStructure(editor, ephoxEmbedStructure)
+        Waiter.sTryUntil('wait for div struture', sAssertDivStructure(editor, ephoxEmbedStructure), 100, 3000)
       ], onSuccess, onFailure);
     }, {
-      plugins: ["media"],
+      plugins: "media",
       toolbar: "media",
       media_url_resolver: function (data, resolve) {
         resolve({

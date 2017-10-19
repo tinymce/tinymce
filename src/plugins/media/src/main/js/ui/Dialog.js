@@ -12,7 +12,6 @@ define(
   'tinymce.plugins.media.ui.Dialog',
   [
     'tinymce.core.Env',
-    'tinymce.core.util.Delay',
     'tinymce.core.util.Tools',
     'tinymce.plugins.media.api.Settings',
     'tinymce.plugins.media.core.HtmlToData',
@@ -21,7 +20,7 @@ define(
     'tinymce.plugins.media.core.UpdateHtml',
     'tinymce.plugins.media.ui.SizeManager'
   ],
-  function (Env, Delay, Tools, Settings, HtmlToData, Service, Size, UpdateHtml, SizeManager) {
+  function (Env, Tools, Settings, HtmlToData, Service, Size, UpdateHtml, SizeManager) {
     var embedChange = (Env.ie && Env.ie <= 8) ? 'onChange' : 'onInput';
 
     var handleError = function (editor) {
@@ -103,7 +102,7 @@ define(
 
       data.embed = UpdateHtml.updateHtml(data.embed, data);
 
-      if (data.embed) {
+      if (data.embed && Service.isCached(data.source1)) {
         handleInsert(editor, data.embed);
       } else {
         Service.getEmbedHtml(editor, data)

@@ -16,8 +16,8 @@ define(
     'tinymce.plugins.media.core.DataToHtml'
   ],
   function (Promise, Settings, DataToHtml) {
+    var cache = {};
     var embedPromise = function (data, dataToHtml, handler) {
-      var cache = {};
       return new Promise(function (res, rej) {
         var wrappedResolve = function (response) {
           if (response.html) {
@@ -54,8 +54,13 @@ define(
       return embedHandler ? embedPromise(data, loadedData(editor), embedHandler) : defaultPromise(data, loadedData(editor));
     };
 
+    var isCached = function (url) {
+      return cache.hasOwnProperty(url);
+    };
+
     return {
-      getEmbedHtml: getEmbedHtml
+      getEmbedHtml: getEmbedHtml,
+      isCached: isCached
     };
   }
 );

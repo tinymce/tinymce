@@ -190,7 +190,7 @@ define(
       return document.getElementById(value.dom().htmlFor);
     });
 
-    var cSetFormItem = function (ui, value) {
+    var cSetSourceInput = function (ui, value) {
       return Chain.fromChains([
         cFindFilepickerInput(ui, 'Source'),
         UiControls.cSetValue(value)
@@ -232,7 +232,7 @@ define(
 
     var sSetFormItemNoEvent = function (ui, value) {
       return Chain.asStep({}, [
-        cSetFormItem(ui, value)
+        cSetSourceInput(ui, value)
       ]);
     };
 
@@ -263,7 +263,8 @@ define(
     };
 
     return {
-      cSetFormItem: cSetFormItem,
+      cSetSourceInput: cSetSourceInput,
+      cFindTextare: cFindTextarea,
       cFakeEvent: cFakeEvent,
       cFindInDialog: cFindInDialog,
       sOpenDialog: sOpenDialog,
