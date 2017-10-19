@@ -13,15 +13,15 @@ define(
 
   [
     'ephox.darwin.api.TableSelection',
-    'ephox.sugar.api.node.Element',
+    'tinymce.plugins.table.alien.Util',
     'tinymce.plugins.table.selection.Ephemera',
     'tinymce.plugins.table.selection.SelectionTypes'
   ],
 
-  function (TableSelection, Element, Ephemera, SelectionTypes) {
+  function (TableSelection, Util, Ephemera, SelectionTypes) {
     return function (editor) {
       var get = function () {
-        var body = Element.fromDom(editor.getBody());
+        var body = Util.getBody(editor);
 
         return TableSelection.retrieve(body, Ephemera.selectedSelector()).fold(function () {
           if (editor.selection.getStart() === undefined) {

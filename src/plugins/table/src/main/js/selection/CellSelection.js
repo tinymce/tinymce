@@ -25,11 +25,12 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.selection.core.SelectionDirection',
+    'tinymce.plugins.table.alien.Util',
     'tinymce.plugins.table.queries.Direction',
     'tinymce.plugins.table.selection.Ephemera'
   ],
 
-  function (InputHandlers, SelectionAnnotation, SelectionKeys, Fun, Option, Struct, TableLookup, Compare, Element, Selection, SelectionDirection, Direction, Ephemera) {
+  function (InputHandlers, SelectionAnnotation, SelectionKeys, Fun, Option, Struct, TableLookup, Compare, Element, Selection, SelectionDirection, Util, Direction, Ephemera) {
     return function (editor, lazyResize) {
       var handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
       var handlers = Option.none();
@@ -38,10 +39,8 @@ define(
 
       editor.on('init', function (e) {
         var win = editor.getWin();
-        var body = Element.fromDom(editor.getBody());
-        var isRoot = function (element) {
-          Compare.eq(element, body);
-        };
+        var body = Util.getBody(editor);
+        var isRoot = Util.getIsRoot(editor);
 
         var syncSelection = function () {
           var sel = editor.selection;

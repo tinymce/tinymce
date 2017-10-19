@@ -23,10 +23,11 @@ define(
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.selection.CursorPosition',
     'tinymce.core.util.VK',
+    'tinymce.plugins.table.alien.Util',
     'tinymce.plugins.table.queries.TableTargets'
   ],
 
-  function (Arr, Option, CellNavigation, TableLookup, Compare, Element, Node, SelectorFilter, SelectorFind, CursorPosition, VK, TableTargets) {
+  function (Arr, Option, CellNavigation, TableLookup, Compare, Element, Node, SelectorFilter, SelectorFind, CursorPosition, VK, Util, TableTargets) {
     var forward = function (editor, isRoot, cell, lazyWire) {
       return go(editor, isRoot, CellNavigation.next(cell), lazyWire);
     };
@@ -65,7 +66,7 @@ define(
 
     var handle = function (event, editor, actions, lazyWire) {
       if (event.keyCode === VK.TAB) {
-        var body = Element.fromDom(editor.getBody());
+        var body = Util.getBody(editor);
         var isRoot = function (element) {
           var name = Node.name(element);
           return Compare.eq(element, body) || Arr.contains(rootElements, name);
