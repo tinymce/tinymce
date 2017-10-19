@@ -904,6 +904,23 @@ asynctest(
       LegacyUnit.equal(editor.getBody().innerHTML, '<ul><li>a</li></ul><ol><li>b</li></ol><ul><li>c</li></ul>');
     });
 
+    suite.test('Apply unordered list on children on a fully selected ordered list', function (editor) {
+      editor.getBody().innerHTML = (
+        '<ol>' +
+          '<li>a' +
+            '<ol>' +
+              '<li>b</li>' +
+            '</ol>' +
+          '</li>' +
+          '<li>c</li>' +
+        '</ol>'
+      );
+
+      editor.execCommand('SelectAll');
+      LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+      LegacyUnit.equal(editor.getBody().innerHTML, '<ul><li>a<ul><li>b</li></ul></li><li>c</li></ul>');
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {

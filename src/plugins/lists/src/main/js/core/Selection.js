@@ -20,11 +20,27 @@ define(
       return editor.dom.getParent(editor.selection.getStart(true), 'OL,UL,DL');
     };
 
+    var isParentListSelected = function (parentList, selectedBlocks) {
+      return parentList && selectedBlocks.length === 1 && selectedBlocks[0] === parentList;
+    };
+
+    var findSubLists = function (parentList) {
+      return Tools.grep(parentList.querySelectorAll('ol,ul,dl'), function (elm) {
+        return NodeType.isListNode(elm);
+      });
+    };
+
     var getSelectedSubLists = function (editor) {
       var parentList = getParentList(editor);
-      return Tools.grep(editor.selection.getSelectedBlocks(), function (elm) {
-        return NodeType.isListNode(elm) && parentList !== elm;
-      });
+      var selectedBlocks = editor.selection.getSelectedBlocks();
+
+      if (isParentListSelected(parentList, selectedBlocks)) {
+        return findSubLists(parentList);
+      } else {
+        return Tools.grep(selectedBlocks, function (elm) {
+          return NodeType.isListNode(elm) && parentList !== elm;
+        });
+      }
     };
 
     var findParentListItemsNodes = function (editor, elms) {
