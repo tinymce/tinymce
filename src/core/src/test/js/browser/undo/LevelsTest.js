@@ -81,7 +81,6 @@ asynctest(
         'fragments':[
           "<iframe src=\"about:blank\"></iframe>",
           " ",
-          "",
           " ",
           "<span>b</span>"
         ],
