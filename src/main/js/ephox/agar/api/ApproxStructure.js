@@ -2,6 +2,7 @@ define(
   'ephox.agar.api.ApproxStructure',
 
   [
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
     'ephox.sugar.api.node.Node',
@@ -13,7 +14,7 @@ define(
     'ephox.agar.assertions.ApproxStructures'
   ],
 
-  function (Arr, Obj, Node, Element, Attr, Classes, Traverse, ApproxComparisons, ApproxStructures) {
+  function (Fun, Arr, Obj, Node, Element, Attr, Classes, Traverse, ApproxComparisons, ApproxStructures) {
     var build = function (f) {
       var strApi = {
         is: ApproxComparisons.is,
@@ -38,12 +39,10 @@ define(
       );
     };
 
-    var getAttrs = function (node) {
-      var attrs = {};
-      Arr.each(node.dom().attributes, function (attr) {
-        attrs[attr.name] = attr.value;
-      });
-      return attrs;
+    var getAttrsExcept = function (node, exclude) {
+      return Obj.bifilter(Attr.clone(node), function (value, key) {
+        return !Arr.contains(exclude, key);
+      }).t;
     };
 
     var getCss = function (node) {
@@ -74,17 +73,11 @@ define(
 
     var fromElement = function (node) {
       if (Node.isElement(node)) {
-        var attrs = getAttrs(node);
-
-        // styles and classes are fed separately
-        delete attrs.style;
-        delete attrs['class'];
-
         return ApproxStructures.element(Node.name(node), {
           children: Arr.map(Traverse.children(node), fromElement),
-          attrs: toAssertableObj(attrs),
+          attrs: toAssertableObj(getAttrsExcept(node, ['style', 'class'])),
           styles: toAssertableObj(getCss(node)),
-          classes: Attr.has(node, 'class') ? toAssertableArr(Classes.get(node)) : []
+          classes: toAssertableArr(Classes.get(node))
         });
       } else {
         return ApproxStructures.text(ApproxComparisons.is(Node.value(node)));
