@@ -20,6 +20,9 @@ define(
     'global!document'
   ],
   function (Tools, Math, document) {
+    var parseIntAndGetMax = function (val1, val2) {
+      return Math.max(parseInt(val1, 10), parseInt(val2, 10));
+    };
 
     var getImageSize = function (url, callback) {
       var img = document.createElement('img');
@@ -33,7 +36,9 @@ define(
       }
 
       img.onload = function () {
-        done(Math.max(img.width, img.clientWidth), Math.max(img.height, img.clientHeight));
+        var width = parseIntAndGetMax(img.width, img.clientWidth);
+        var height = parseIntAndGetMax(img.height, img.clientHeight);
+        done(width, height);
       };
 
       img.onerror = function () {

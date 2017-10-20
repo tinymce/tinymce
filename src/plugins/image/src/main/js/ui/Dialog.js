@@ -16,10 +16,8 @@ define(
   'tinymce.plugins.image.ui.Dialog',
   [
     'ephox.sand.api.URL',
-    'global!document',
     'global!Math',
     'global!RegExp',
-    'tinymce.core.Env',
     'tinymce.core.ui.Factory',
     'tinymce.core.util.JSON',
     'tinymce.core.util.Tools',
@@ -28,7 +26,7 @@ define(
     'tinymce.plugins.image.core.Uploader',
     'tinymce.plugins.image.core.Utils'
   ],
-  function (URL, document, Math, RegExp, Env, Factory, JSON, Tools, XHR, Settings, Uploader, Utils) {
+  function (URL, Math, RegExp, Factory, JSON, Tools, XHR, Settings, Uploader, Utils) {
     return function (editor) {
       function createImageList(callback) {
         var imageList = Settings.getImageList(editor);
@@ -104,8 +102,8 @@ define(
             return;
           }
 
-          newWidth = widthCtrl.value();
-          newHeight = heightCtrl.value();
+          newWidth = parseInt(widthCtrl.value(), 10);
+          newHeight = parseInt(heightCtrl.value(), 10);
 
           if (win.find('#constrain')[0].checked() && width && height && newWidth && newHeight) {
             if (width !== newWidth) {

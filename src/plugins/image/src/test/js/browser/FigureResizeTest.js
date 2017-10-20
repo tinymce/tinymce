@@ -5,7 +5,6 @@ asynctest(
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
-    'ephox.agar.api.NamedChain',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
@@ -21,8 +20,8 @@ asynctest(
     'tinymce.themes.modern.Theme'
   ],
   function (
-    Chain, GeneralSteps, Logger, Mouse, NamedChain, Pipeline, RawAssertions, Step, UiControls, UiFinder, Waiter, TinyApis, TinyDom, TinyLoader, TinyUi, document,
-    ImagePlugin, ModernTheme
+    Chain, GeneralSteps, Logger, Mouse, Pipeline, RawAssertions, Step, UiControls, UiFinder, Waiter, TinyApis, TinyDom, TinyLoader, TinyUi, document, ImagePlugin,
+    ModernTheme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -40,32 +39,33 @@ asynctest(
         Logger.t('image added with caption should show resize handles when clicked', GeneralSteps.sequence([
           tinyUi.sClickOnToolbar('click image button', 'div[aria-label="Insert/edit image"] button'),
           Chain.asStep({}, [
-            NamedChain.asChain([
-              NamedChain.write('dialog', tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]')),
-              NamedChain.direct('dialog', Chain.fromChains([
-                UiFinder.cFindIn('label:contains("Source")'),
-                Chain.mapper(function (val) {
-                  var inputElm = document.getElementById(val.dom().htmlFor).querySelector('input');
-                  return TinyDom.fromDom(inputElm);
-                }),
-                UiControls.cSetValue('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')
-              ]), 'scratch'),
-              NamedChain.direct('dialog', Chain.fromChains([
-                UiFinder.cFindIn('input[aria-label="Width"]'),
-                UiControls.cSetValue('100')
-              ]), 'scratch'),
-              NamedChain.direct('dialog', Chain.fromChains([
-                UiFinder.cFindIn('input[aria-label="Height"]'),
-                UiControls.cSetValue('100')
-              ]), 'scratch'),
-              NamedChain.direct('dialog', Chain.fromChains([
-                UiFinder.cFindIn('label:contains("Caption")'),
-                Chain.mapper(function (val) {
-                  return TinyDom.fromDom(document.getElementById(val.dom().htmlFor));
-                }),
-                Mouse.cClick
-              ]), 'scratch')
-            ])
+            Chain.fromParent(tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
+              [
+                Chain.fromChains([
+                  UiFinder.cFindIn('label:contains("Source")'),
+                  Chain.mapper(function (val) {
+                    var inputElm = document.getElementById(val.dom().htmlFor).querySelector('input');
+                    return TinyDom.fromDom(inputElm);
+                  }),
+                  UiControls.cSetValue('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')
+                ]),
+                Chain.fromChains([
+                  UiFinder.cFindIn('input[aria-label="Width"]'),
+                  UiControls.cSetValue('100')
+                ]),
+                Chain.fromChains([
+                  UiFinder.cFindIn('input[aria-label="Height"]'),
+                  UiControls.cSetValue('100')
+                ]),
+                Chain.fromChains([
+                  UiFinder.cFindIn('label:contains("Caption")'),
+                  Chain.mapper(function (val) {
+                    return TinyDom.fromDom(document.getElementById(val.dom().htmlFor));
+                  }),
+                  Mouse.cClick
+                ])
+              ]
+            )
           ]),
           tinyUi.sClickOnUi('click on ok button', 'button:contains("Ok")'),
           Chain.asStep({}, [
