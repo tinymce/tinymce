@@ -19,7 +19,7 @@ define(
 
     var assertOnBool = function (c, label, value) {
       var strValue = value === missing ? '{missing}' : value;
-      RawAssertions.windowAssertEq(
+      RawAssertions.assertEq(
         label + ', Actual value: ' + Json.stringify(strValue),
         true,
         c

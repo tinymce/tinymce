@@ -74,7 +74,7 @@ define(
       );
     };
 
-    var assertEq = RawAssertions.windowAssertEq;
+    var assertEq = RawAssertions.assertEq;
 
     var sAssertEq = function (label, a, b) {
       return Step.sync(function () {
