@@ -113,6 +113,20 @@ define(
       return Option.from(raw).filter(function (r) { return r.length > 0; });
     };
 
+    var getAllRaw = function (element) {
+      var css = {};
+      var dom = element.dom();
+      var i, ruleName;
+
+      if (Style.isSupported(dom)) {
+        for (i = 0; i < dom.style.length; i++) {
+          ruleName = dom.style.item(i);
+          css[ruleName] = dom.style[ruleName];
+        }
+      }
+      return css;
+    };
+
     var isValidValue = function (tag, property, value) {
       var element = Element.fromTag(tag);
       set(element, property, value);
@@ -178,6 +192,7 @@ define(
       remove: remove,
       get: get,
       getRaw: getRaw,
+      getAllRaw: getAllRaw,
       isValidValue: isValidValue,
       reflow: reflow,
       transfer: transfer

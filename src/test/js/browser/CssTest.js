@@ -79,6 +79,17 @@ test(
       assert.eq('rgb(12, 213, 12)', Css.getRaw(d, 'background-color').getOrDie('Option expecting: rgb(12,213,12)'));
       Css.remove(d, 'background-color');
 
+      // getAllRaw
+      var bulkStyles = {
+        'display': 'inline-block',
+        'font-size': '12px',
+        'background-color': 'rgb(12, 213, 12)'
+      };
+
+      Css.setAll(d, bulkStyles);
+      assert.eq(bulkStyles, Css.getAllRaw(d));
+      Attr.remove(d, 'style');
+
       // validate
       assert.eq(true, Css.isValidValue('span', 'font-size', 'small'));
       assert.eq(true, Css.isValidValue('span', 'font-size', '12px'));
