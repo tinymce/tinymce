@@ -75,7 +75,7 @@ test(
 
       var html = '<div id="container" style="{{style}}"><p class="{{class}}">some text</p></div>';
 
-      Assertions.assertHtml('html is the same, although styles & classes are in different order', replaceTokens(html, v1), replaceTokens(html, v2));
+      Assertions.assertHtmlStructure('html is the same, although styles & classes are in different order', replaceTokens(html, v1), replaceTokens(html, v2));
     } catch (err) {
       assert.fail('Unexpected error: ' + err.message);
     }
