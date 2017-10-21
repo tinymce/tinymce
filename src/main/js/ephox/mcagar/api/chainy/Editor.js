@@ -20,7 +20,7 @@ define(
     var cFromSettings = function (settings, html) {
       return Chain.on(function (_, next, die) {
         var randomId = Id.generate('tiny-loader');
-        var settings = settings || {};
+        settings = settings || {};
         var target = html ? Element.fromHtml(html) : Element.fromTag(settings.inline ? 'div' : 'textarea');
 
         Attr.set(target, 'id', randomId);
