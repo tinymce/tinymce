@@ -7,11 +7,12 @@ define(
     'ephox.agar.pipe.AsyncActions',
     'ephox.agar.pipe.GeneralActions',
     'ephox.agar.pipe.Pipe',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Arr',
     'global!Error'
   ],
 
-  function (Pipeline, Step, AsyncActions, GeneralActions, Pipe, Arr, Error) {
+  function (Pipeline, Step, AsyncActions, GeneralActions, Pipe, Fun, Arr, Error) {
     // TODO: Add generic step validation later.
     var on = function (f) {
       var runChain = Pipe(function (input, next, die) {
@@ -49,6 +50,8 @@ define(
         next(wrap(fx(input)));
       });
     };
+
+    var identity = mapper(Fun.identity);
 
     var binder = function (fx) {
       return on(function (input, next, die) {
@@ -153,6 +156,7 @@ define(
       op: op,
       control: control,
       mapper: mapper,
+      identity: identity,
       binder: binder,
 
       inject: inject,
