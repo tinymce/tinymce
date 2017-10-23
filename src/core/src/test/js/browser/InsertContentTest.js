@@ -129,6 +129,15 @@ asynctest(
       assertSelection(editor, 'li', 1);
     });
 
+    suite.test('insertAtCaret - empty paragraph pad the empty element with br on insert and nbsp on save', function (editor) {
+      editor.setContent('<p>ab</p>');
+      editor.focus();
+      LegacyUnit.setSelection(editor, 'p', 1);
+      InsertContent.insertAtCaret(editor, { content: '<p></p>', merge: true });
+      LegacyUnit.equal(editor.getContent({ format: 'raw' }), '<p>a</p><p><br data-mce-bogus="1"></p><p>b</p>');
+      LegacyUnit.equal(editor.getContent(), '<p>a</p><p>\u00a0</p><p>b</p>');
+    });
+
     suite.test('insertAtCaret prevent default of beforeSetContent', function (editor) {
       var args;
 

@@ -705,7 +705,7 @@ define(
         });
 
         // Padd these by default
-        each(split('p h1 h2 h3 h4 h5 h6 th td pre div address caption'), function (name) {
+        each(split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li'), function (name) {
           elements[name].paddEmpty = true;
         });
 

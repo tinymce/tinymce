@@ -582,20 +582,28 @@ asynctest(
       LegacyUnit.equal(serializer.serialize(root), '<p class="classA classB"><strong class="classA classB classC">a</strong></p>');
     });
 
-    suite.test('Remove empty list blocks', function () {
+    suite.test('Pad empty list blocks', function () {
       var parser, root, schema = new Schema();
 
       parser = new DomParser({}, schema);
       root = parser.parse('<ul><li></li></ul><ul><li> </li></ul>');
-      LegacyUnit.equal(serializer.serialize(root), '');
+      LegacyUnit.equal(serializer.serialize(root), '<ul><li>\u00a0</li></ul><ul><li>\u00a0</li></ul>');
     });
 
-    suite.test('Padd empty with br', function () {
+    suite.test('Pad empty with br', function () {
       var schema = new Schema();
       var parser = new DomParser({ padd_empty_with_br: true }, schema);
       var serializer = new Serializer({ padd_empty_with_br: true }, schema);
       var root = parser.parse('<p>a</p><p></p>');
       LegacyUnit.equal(serializer.serialize(root), '<p>a</p><p><br /></p>');
+    });
+
+    suite.test('Pad empty and preffer br on insert', function () {
+      var parser, root, schema = new Schema();
+
+      parser = new DomParser({}, schema);
+      root = parser.parse('<ul><li></li><li> </li><li><br /></li><li>\u00a0</li><li>a</li></ul>', { insert: true });
+      LegacyUnit.equal(serializer.serialize(root), '<ul><li><br /></li><li><br /></li><li><br /></li><li><br /></li><li>a</li></ul>');
     });
 
     suite.test('Preserve space in inline span', function () {

@@ -31,16 +31,22 @@ define(
   function (Node, Schema, SaxParser, Tools) {
     var makeMap = Tools.makeMap, each = Tools.each, explode = Tools.explode, extend = Tools.extend;
 
-    var paddEmptyNode = function (settings, node) {
-      if (settings.padd_empty_with_br) {
+    var paddEmptyNode = function (settings, args, blockElements, node) {
+      var brPreferred = settings.padd_empty_with_br || args.insert;
+
+      if (brPreferred && blockElements[node.name]) {
         node.empty().append(new Node('br', '1')).shortEnded = true;
       } else {
         node.empty().append(new Node('#text', '3')).value = '\u00a0';
       }
     };
 
+    var isPaddedWithNbsp = function (node) {
+      return hasOnlyChild(node, '#text') && node.firstChild.value === '\u00a0';
+    };
+
     var hasOnlyChild = function (node, name) {
-      return node && node.firstChild === node.lastChild && node.firstChild.name === name;
+      return node && node.firstChild && node.firstChild === node.lastChild && node.firstChild.name === name;
     };
 
     var isPadded = function (schema, node) {
@@ -609,27 +615,24 @@ define(
                 isInWhiteSpacePreservedElement = false;
               }
 
-              // Handle empty nodes
-              if (elementRule.removeEmpty || elementRule.paddEmpty) {
-                if (isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
-                  if (elementRule.paddEmpty) {
-                    paddEmptyNode(settings, node);
+              if (elementRule.removeEmpty && isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
+                // Leave nodes that have a name like <a name="name">
+                if (!node.attributes.map.name && !node.attributes.map.id) {
+                  tempNode = node.parent;
+
+                  if (blockElements[node.name]) {
+                    node.empty().remove();
                   } else {
-                    // Leave nodes that have a name like <a name="name">
-                    if (!node.attributes.map.name && !node.attributes.map.id) {
-                      tempNode = node.parent;
-
-                      if (blockElements[node.name]) {
-                        node.empty().remove();
-                      } else {
-                        node.unwrap();
-                      }
-
-                      node = tempNode;
-                      return;
-                    }
+                    node.unwrap();
                   }
+
+                  node = tempNode;
+                  return;
                 }
+              }
+
+              if (elementRule.paddEmpty && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
+                paddEmptyNode(settings, args, blockElements, node);
               }
 
               node = node.parent;
@@ -704,7 +707,7 @@ define(
       // make it possible to place the caret inside empty blocks. This logic tries to remove
       // these elements and keep br elements that where intended to be there intact
       if (settings.remove_trailing_brs) {
-        self.addNodeFilter('br', function (nodes) {
+        self.addNodeFilter('br', function (nodes, _, args) {
           var i, l = nodes.length, node, blockElements = extend({}, schema.getBlockElements());
           var nonEmptyElements = schema.getNonEmptyElements(), parent, lastParent, prev, prevName;
           var whiteSpaceElements = schema.getNonEmptyElements();
@@ -754,7 +757,7 @@ define(
                     if (elementRule.removeEmpty) {
                       parent.remove();
                     } else if (elementRule.paddEmpty) {
-                      paddEmptyNode(settings, parent);
+                      paddEmptyNode(settings, args, blockElements, parent);
                     }
                   }
                 }
