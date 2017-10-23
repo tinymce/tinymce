@@ -116,11 +116,10 @@ define(
     var getAllRaw = function (element) {
       var css = {};
       var dom = element.dom();
-      var i, ruleName;
 
       if (Style.isSupported(dom)) {
-        for (i = 0; i < dom.style.length; i++) {
-          ruleName = dom.style.item(i);
+        for (var i = 0; i < dom.style.length; i++) {
+          var ruleName = dom.style.item(i);
           css[ruleName] = dom.style[ruleName];
         }
       }
