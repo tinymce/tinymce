@@ -9,7 +9,7 @@ define(
   function (Global, Json) {
     var stringify = function (v) {
       try {
-        return Json.stringify(v);
+        return Json.stringify(v, null, 2);
       } catch (_) {
         return v;
       }
