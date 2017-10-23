@@ -22,12 +22,14 @@ define(
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.selection.CursorPosition',
+    'ephox.sugar.api.selection.Selection',
+    'ephox.sugar.api.selection.WindowSelection',
     'tinymce.core.util.VK',
     'tinymce.plugins.table.alien.Util',
     'tinymce.plugins.table.queries.TableTargets'
   ],
 
-  function (Arr, Option, CellNavigation, TableLookup, Compare, Element, Node, SelectorFilter, SelectorFind, CursorPosition, VK, Util, TableTargets) {
+  function (Arr, Option, CellNavigation, TableLookup, Compare, Element, Node, SelectorFilter, SelectorFind, CursorPosition, Selection, WindowSelection, VK, Util, TableTargets) {
     var forward = function (editor, isRoot, cell, lazyWire) {
       return go(editor, isRoot, CellNavigation.next(cell), lazyWire);
     };
@@ -36,28 +38,32 @@ define(
       return go(editor, isRoot, CellNavigation.prev(cell), lazyWire);
     };
 
+    var getCellFirstCursorPosition = function (editor, cell) {
+      var selection = Selection.exact(cell, 0, cell, 0);
+      return WindowSelection.getDomRangeFromSelection(selection);
+    };
+
+    var getNewRowCursorPosition = function (editor, table) {
+      var rows = SelectorFilter.descendants(table, 'tr');
+      return Arr.last(rows).bind(function (last) {
+        return SelectorFind.descendant(last, 'td,th').map(function (first) {
+          return getCellFirstCursorPosition(editor, first);
+        });
+      });
+    };
+
     var go = function (editor, isRoot, cell, actions, lazyWire) {
       return cell.fold(Option.none, Option.none, function (current, next) {
-        return CursorPosition.first(next).bind(function (cursor) {
-          var rng = editor.dom.createRng();
-          rng.setStart(cursor.dom(), 0);
-          rng.setEnd(cursor.dom(), 0);
-          return Option.some(rng);
+        return CursorPosition.first(next).map(function (cell) {
+          return getCellFirstCursorPosition(editor, cell);
         });
       }, function (current) {
         return TableLookup.table(current, isRoot).bind(function (table) {
           var targets = TableTargets.noMenu(current);
-          actions.insertRowsAfter(table, targets);
-          var allRows = SelectorFilter.descendants(table, 'tr');
-          if (allRows.length > 0) {
-            var last = allRows[allRows.length - 1];
-            return SelectorFind.descendant(last, 'td,th').map(function (first) {
-              var rng = editor.dom.createRng();
-              rng.setStart(first.dom(), 0);
-              rng.setEnd(first.dom(), 0);
-              return rng;
-            });
-          }
+          editor.undoManager.transact(function () {
+            actions.insertRowsAfter(table, targets);
+          });
+          return getNewRowCursorPosition(editor, table);
         });
       });
     };
