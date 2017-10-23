@@ -6,8 +6,8 @@ define(
     'ephox.sugar.api.dom.DocumentPosition',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Fragment',
+    'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.Selection',
-    'ephox.sugar.api.selection.Situ',
     'ephox.sugar.selection.core.NativeRange',
     'ephox.sugar.selection.core.SelectionDirection',
     'ephox.sugar.selection.query.CaretRange',
@@ -15,7 +15,7 @@ define(
     'ephox.sugar.selection.quirks.Prefilter'
   ],
 
-  function (Option, DocumentPosition, Element, Fragment, Selection, Situ, NativeRange, SelectionDirection, CaretRange, Within, Prefilter) {
+  function (Option, DocumentPosition, Element, Fragment, Traverse, Selection, NativeRange, SelectionDirection, CaretRange, Within, Prefilter) {
     var doSetNativeRange = function (win, rng) {
       var selection = win.getSelection();
       selection.removeAllRanges();
@@ -65,15 +65,15 @@ define(
       setRangeFromRelative(win, relative);
     };
 
-    var getDomRangeFromSelection = function (win, selection) {
+    var getDomRangeFromSelection = function (selection) {
+      var win = Selection.getWin(selection).dom();
+      var getDomRange = function (start, soffset, finish, foffset) {
+        return doGetRange(win, start, soffset, finish, foffset);
+      };
       var filtered = Prefilter.preprocess(selection);
       return SelectionDirection.diagnose(win, filtered).match({
-        ltr: function (start, soffset, finish, foffset) {
-          return doGetRange(win, start, soffset, finish, foffset);
-        },
-        rtl: function (start, soffset, finish, foffset) {
-          return doGetRange(win, start, soffset, finish, foffset);
-        }
+        ltr: getDomRange,
+        rtl: getDomRange
       });
     };
 

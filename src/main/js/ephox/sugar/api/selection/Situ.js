@@ -2,10 +2,11 @@ define(
   'ephox.sugar.api.selection.Situ',
 
   [
-    'ephox.katamari.api.Adt'
+    'ephox.katamari.api.Adt',
+    'ephox.katamari.api.Fun'
   ],
 
-  function (Adt) {
+  function (Adt, Fun) {
     var adt = Adt.generate([
       { 'before': [ 'element' ] },
       { 'on': [ 'element', 'offset' ] },
@@ -17,11 +18,16 @@ define(
       return subject.fold(onBefore, onOn, onAfter);
     };
 
+    var getStart = function (situ) {
+      return situ.fold(Fun.identity, Fun.identity, Fun.identity)
+    };
+
     return {
       before: adt.before,
       on: adt.on,
       after: adt.after,
-      cata: cata
+      cata: cata,
+      getStart: getStart
     };
   }
 );
