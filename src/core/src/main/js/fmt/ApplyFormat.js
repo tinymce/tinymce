@@ -13,7 +13,6 @@ define(
   [
     'tinymce.core.dom.BookmarkManager',
     'tinymce.core.dom.NodeType',
-    'tinymce.core.dom.RangeNormalizer',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.fmt.CaretFormat',
     'tinymce.core.fmt.ExpandRange',
@@ -21,9 +20,10 @@ define(
     'tinymce.core.fmt.Hooks',
     'tinymce.core.fmt.MatchFormat',
     'tinymce.core.fmt.MergeFormats',
+    'tinymce.core.selection.RangeNormalizer',
     'tinymce.core.util.Tools'
   ],
-  function (BookmarkManager, NodeType, RangeNormalizer, RangeUtils, CaretFormat, ExpandRange, FormatUtils, Hooks, MatchFormat, MergeFormats, Tools) {
+  function (BookmarkManager, NodeType, RangeUtils, CaretFormat, ExpandRange, FormatUtils, Hooks, MatchFormat, MergeFormats, RangeNormalizer, Tools) {
     var each = Tools.each;
 
     var isElementNode = function (node) {
