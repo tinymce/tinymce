@@ -22,8 +22,12 @@ define(
       selection.addRange(rng);
     };
 
+    var doGetRange = function (win, start, soffset, finish, foffset) {
+      return NativeRange.exactToNative(win, start, soffset, finish, foffset);
+    };
+
     var doSetRange = function (win, start, soffset, finish, foffset) {
-      var rng = NativeRange.exactToNative(win, start, soffset, finish, foffset);
+      var rng = doGetRange(win, start, soffset, finish, foffset);
       doSetNativeRange(win, rng);
     };
 
@@ -31,13 +35,7 @@ define(
       return Within.find(win, selection, selector);
     };
 
-    var setExact = function (win, start, soffset, finish, foffset) {
-      setRelative(win, Situ.on(start, soffset), Situ.on(finish, foffset));
-    };
-
-    var setRelative = function (win, startSitu, finishSitu) {
-      var relative = Prefilter.preprocess(startSitu, finishSitu);
-
+    var setRangeFromRelative = function (win, relative) {
       return SelectionDirection.diagnose(win, relative).match({
         ltr: function (start, soffset, finish, foffset) {
           doSetRange(win, start, soffset, finish, foffset);
@@ -51,6 +49,30 @@ define(
           } else {
             doSetRange(win, finish, foffset, start, soffset);
           }
+        }
+      });
+    };
+
+    var setExact = function (win, start, soffset, finish, foffset) {
+      var relative = Prefilter.preprocessExact(start, soffset, finish, foffset);
+
+      setRangeFromRelative(win, relative);
+    };
+
+    var setRelative = function (win, startSitu, finishSitu) {
+      var relative = Prefilter.preprocessRelative(startSitu, finishSitu);
+
+      setRangeFromRelative(win, relative);
+    };
+
+    var getDomRangeFromSelection = function (win, selection) {
+      var filtered = Prefilter.preprocess(selection);
+      return SelectionDirection.diagnose(win, filtered).match({
+        ltr: function (start, soffset, finish, foffset) {
+          return doGetRange(win, start, soffset, finish, foffset);
+        },
+        rtl: function (start, soffset, finish, foffset) {
+          return doGetRange(win, start, soffset, finish, foffset);
         }
       });
     };
@@ -86,7 +108,7 @@ define(
     var forElement = function (win, element) {
       var rng = NativeRange.selectNodeContents(win, element);
       return Selection.range(
-        Element.fromDom(rng.startContainer), rng.startOffset, 
+        Element.fromDom(rng.startContainer), rng.startOffset,
         Element.fromDom(rng.endContainer), rng.endOffset
       );
     };
@@ -149,6 +171,7 @@ define(
       getExact: getExact,
       get: get,
       setRelative: setRelative,
+      getDomRangeFromSelection: getDomRangeFromSelection,
       setToElement: setToElement,
       clear: clear,
 
