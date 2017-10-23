@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.EditorCustomThemeTest',
+  'browser.tinymce.core.init.EditorCustomThemeTest',
   [
     'ephox.agar.api.Pipeline',
     'ephox.mcagar.api.LegacyUnit',

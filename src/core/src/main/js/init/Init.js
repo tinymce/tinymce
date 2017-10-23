@@ -14,15 +14,14 @@ define(
     'ephox.katamari.api.Type',
     'global!document',
     'global!window',
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.core.Env',
-    'tinymce.core.init.InitContentBody',
     'tinymce.core.PluginManager',
     'tinymce.core.ThemeManager',
-    'tinymce.core.util.Tools',
-    'tinymce.core.util.Uuid'
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.init.InitContentBody',
+    'tinymce.core.init.InitIframe',
+    'tinymce.core.util.Tools'
   ],
-  function (Type, document, window, DOMUtils, Env, InitContentBody, PluginManager, ThemeManager, Tools, Uuid) {
+  function (Type, document, window, PluginManager, ThemeManager, DOMUtils, InitContentBody, InitIframe, Tools) {
     var DOM = DOMUtils.DOM;
 
     var initPlugin = function (editor, initializedPlugins, plugin) {
@@ -171,99 +170,6 @@ define(
       }
     };
 
-    var relaxDomain = function (editor, ifr) {
-      // Domain relaxing is required since the user has messed around with document.domain
-      // This only applies to IE 11 other browsers including Edge seems to handle document.domain
-      if (document.domain !== window.location.hostname && Env.ie && Env.ie < 12) {
-        var bodyUuid = Uuid.uuid('mce');
-
-        editor[bodyUuid] = function () {
-          InitContentBody.initContentBody(editor);
-        };
-
-        /*eslint no-script-url:0 */
-        var domainRelaxUrl = 'javascript:(function(){' +
-          'document.open();document.domain="' + document.domain + '";' +
-          'var ed = window.parent.tinymce.get("' + editor.id + '");document.write(ed.iframeHTML);' +
-          'document.close();ed.' + bodyUuid + '(true);})()';
-
-        DOM.setAttrib(ifr, 'src', domainRelaxUrl);
-        return true;
-      }
-
-      return false;
-    };
-
-    var createIframe = function (editor, o) {
-      var settings = editor.settings, bodyId, bodyClass;
-
-      editor.iframeHTML = settings.doctype + '<html><head>';
-
-      // We only need to override paths if we have to
-      // IE has a bug where it remove site absolute urls to relative ones if this is specified
-      if (settings.document_base_url != editor.documentBaseUrl) {
-        editor.iframeHTML += '<base href="' + editor.documentBaseURI.getURI() + '" />';
-      }
-
-      // IE8 doesn't support carets behind images setting ie7_compat would force IE8+ to run in IE7 compat mode.
-      if (!Env.caretAfter && settings.ie7_compat) {
-        editor.iframeHTML += '<meta http-equiv="X-UA-Compatible" content="IE=7" />';
-      }
-
-      editor.iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
-
-      bodyId = settings.body_id || 'tinymce';
-      if (bodyId.indexOf('=') != -1) {
-        bodyId = editor.getParam('body_id', '', 'hash');
-        bodyId = bodyId[editor.id] || bodyId;
-      }
-
-      bodyClass = settings.body_class || '';
-      if (bodyClass.indexOf('=') != -1) {
-        bodyClass = editor.getParam('body_class', '', 'hash');
-        bodyClass = bodyClass[editor.id] || '';
-      }
-
-      if (settings.content_security_policy) {
-        editor.iframeHTML += '<meta http-equiv="Content-Security-Policy" content="' + settings.content_security_policy + '" />';
-      }
-
-      editor.iframeHTML += '</head><body id="' + bodyId +
-        '" class="mce-content-body ' + bodyClass +
-        '" data-id="' + editor.id + '"><br></body></html>';
-
-      // Create iframe
-      // TODO: ACC add the appropriate description on this.
-      var ifr = DOM.create('iframe', {
-        id: editor.id + "_ifr",
-        frameBorder: '0',
-        allowTransparency: "true",
-        title: editor.editorManager.translate(
-          "Rich Text Area. Press ALT-F9 for menu. " +
-          "Press ALT-F10 for toolbar. Press ALT-0 for help"
-        ),
-        style: {
-          width: '100%',
-          height: o.height,
-          display: 'block' // Important for Gecko to render the iframe correctly
-        }
-      });
-
-      ifr.onload = function () {
-        ifr.onload = null;
-        editor.fire("load");
-      };
-
-      var isDomainRelaxed = relaxDomain(editor, ifr);
-
-      editor.contentAreaContainer = o.iframeContainer;
-      editor.iframeElement = ifr;
-
-      DOM.add(o.iframeContainer, ifr);
-
-      return isDomainRelaxed;
-    };
-
     var init = function (editor) {
       var settings = editor.settings, elm = editor.getElement(), boxInfo;
 
@@ -288,20 +194,8 @@ define(
       // Content editable mode ends here
       if (settings.content_editable) {
         return InitContentBody.initContentBody(editor);
-      }
-
-      var isDomainRelaxed = createIframe(editor, boxInfo);
-
-      if (boxInfo.editorContainer) {
-        DOM.get(boxInfo.editorContainer).style.display = editor.orgDisplay;
-        editor.hidden = DOM.isHidden(boxInfo.editorContainer);
-      }
-
-      editor.getElement().style.display = 'none';
-      DOM.setAttrib(editor.id, 'aria-hidden', true);
-
-      if (!isDomainRelaxed) {
-        InitContentBody.initContentBody(editor);
+      } else {
+        return InitIframe.init(editor, boxInfo);
       }
     };
 

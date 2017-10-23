@@ -445,7 +445,10 @@ module.exports = function (grunt) {
       core: {
         config: 'config/bolt/browser.js',
         projectdir: '.',
-        testfiles: ["src/**/src/test/js/browser/**/*Test.js"],
+        testfiles: [
+          'src/**/src/test/js/atomic/**/*Test.js',
+          'src/**/src/test/js/browser/**/*Test.js'
+        ],
         customRoutes: 'src/core/src/test/json/routes.json'
       }
     },

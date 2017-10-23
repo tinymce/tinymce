@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.EditorInitializationTest',
+  'browser.tinymce.core.init.EditorInitializationTest',
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Pipeline',

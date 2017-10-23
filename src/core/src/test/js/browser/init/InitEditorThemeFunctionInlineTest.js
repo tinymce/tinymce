@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.InitEditorThemeFunctionInlineTest',
+  'browser.tinymce.core.init.InitEditorThemeFunctionInlineTest',
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',

@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.InitCspTest',
+  'browser.tinymce.core.init.InitCspTest',
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',
@@ -19,7 +19,7 @@ asynctest(
     var viewBlock = new ViewBlock();
     var csp = "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self';";
     var tinymceScriptUrl = '/project/js/tinymce/tinymce.js';
-    var tinymceInitUrl = '/project/src/core/src/test/js/browser/InitCspIframeScript.js';
+    var tinymceInitUrl = '/project/src/core/src/test/js/browser/init/InitCspIframeScript.js';
 
     Theme();
 
