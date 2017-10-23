@@ -15,10 +15,11 @@ define(
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
+    'tinymce.core.fmt.CaretFormat',
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Tools'
   ],
-  function (CaretContainer, NodeType, RangeUtils, TreeWalker, Zwsp, Tools) {
+  function (CaretContainer, NodeType, RangeUtils, TreeWalker, CaretFormat, Zwsp, Tools) {
     var isEmptyAnchor = function (elm) {
       return elm && elm.nodeName === "A" && Tools.trim(Zwsp.trim(elm.innerText || elm.textContent)).length === 0;
     };
@@ -353,8 +354,7 @@ define(
           // Clone any parent styles
           do {
             if (textInlineElements[node.nodeName]) {
-              // Never clone a caret containers
-              if (node.id == '_mce_caret') {
+              if (CaretFormat.isCaretNode(node)) {
                 continue;
               }
 

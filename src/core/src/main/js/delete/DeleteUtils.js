@@ -12,12 +12,15 @@ define(
   'tinymce.core.delete.DeleteUtils',
   [
     'ephox.katamari.api.Option',
+    'ephox.katamari.api.Options',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.search.PredicateFind',
-    'tinymce.core.dom.ElementType'
+    'tinymce.core.caret.CaretFinder',
+    'tinymce.core.dom.ElementType',
+    'tinymce.core.keyboard.InlineUtils'
   ],
-  function (Option, Compare, Element, PredicateFind, ElementType) {
+  function (Option, Options, Compare, Element, PredicateFind, CaretFinder, ElementType, InlineUtils) {
     var isBeforeRoot = function (rootNode) {
       return function (elm) {
         return Compare.eq(rootNode, Element.fromDom(elm.dom().parentNode));
@@ -43,9 +46,31 @@ define(
       }
     };
 
+    var willDeleteLastPositionInElement = function (forward, fromPos, elm) {
+      return Options.liftN([
+        CaretFinder.firstPositionIn(elm),
+        CaretFinder.lastPositionIn(elm)
+      ], function (firstPos, lastPos) {
+        var normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
+        var normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
+        var normalizedFromPos = InlineUtils.normalizePosition(false, fromPos);
+
+        if (forward) {
+          return CaretFinder.nextPosition(elm, normalizedFromPos).map(function (nextPos) {
+            return nextPos.isEqual(normalizedLastPos) && fromPos.isEqual(normalizedFirstPos);
+          }).getOr(false);
+        } else {
+          return CaretFinder.prevPosition(elm, normalizedFromPos).map(function (prevPos) {
+            return prevPos.isEqual(normalizedFirstPos) && fromPos.isEqual(normalizedLastPos);
+          }).getOr(false);
+        }
+      }).getOr(true);
+    };
+
     return {
       getParentBlock: getParentBlock,
-      paddEmptyBody: paddEmptyBody
+      paddEmptyBody: paddEmptyBody,
+      willDeleteLastPositionInElement: willDeleteLastPositionInElement
     };
   }
 );
