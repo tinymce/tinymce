@@ -16,7 +16,7 @@ define(
   ],
   function (Tools, FontInfo) {
     var findMatchingValue = function (items, pt, px) {
-      var value ;
+      var value;
 
       Tools.each(items, function (item) {
         if (item.value === px) {
@@ -34,12 +34,17 @@ define(
         var self = this;
 
         editor.on('init nodeChange', function (e) {
-          var px, pt;
+          var px, pt, precision, match;
 
           px = FontInfo.getFontSize(editor.getBody(), e.element);
-          pt = FontInfo.toPt(px);
+          if (px) {
+            // checking for three digits after decimal point, should be precise enough
+            for (precision = 3; !match && precision >= 0; precision--) {
+              pt = FontInfo.toPt(px, precision);
+              match = findMatchingValue(items, pt, px);
+            }
+          }
 
-          var match = findMatchingValue(items, pt, px);
           self.value(match ? match : null);
 
           if (!match) {
