@@ -21,17 +21,17 @@ define(
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.PaddingBr',
-    'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.fmt.ExpandRange',
     'tinymce.core.fmt.FormatUtils',
     'tinymce.core.fmt.MatchFormat',
+    'tinymce.core.selection.SplitRange',
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Fun',
     'tinymce.core.util.Tools'
   ],
   function (
-    Arr, Insert, Remove, Element, Node, Attr, SelectorFind, CaretPosition, NodeType, PaddingBr, RangeUtils, TreeWalker, ExpandRange, FormatUtils, MatchFormat,
+    Arr, Insert, Remove, Element, Node, Attr, SelectorFind, CaretPosition, NodeType, PaddingBr, TreeWalker, ExpandRange, FormatUtils, MatchFormat, SplitRange,
     Zwsp, Fun, Tools
   ) {
     var ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret';
@@ -223,7 +223,7 @@ define(
 
     var applyCaretFormat = function (editor, name, vars) {
       var rng, caretContainer, textNode, offset, bookmark, container, text;
-      var dom = editor.dom, selection = editor.selection;
+      var selection = editor.selection;
 
       rng = selection.getRng(true);
       offset = rng.startOffset;
@@ -247,7 +247,7 @@ define(
 
         // Expand the range to the closest word and split it at those points
         rng = ExpandRange.expandRng(editor, rng, editor.formatter.get(name));
-        rng = new RangeUtils(dom).split(rng);
+        rng = SplitRange.split(rng);
 
         // Apply the format to the range
         editor.formatter.apply(name, vars, rng);
@@ -318,7 +318,7 @@ define(
 
         // Expand the range to the closest word and split it at those points
         rng = ExpandRange.expandRng(editor, rng, editor.formatter.get(name), true);
-        rng = new RangeUtils(dom).split(rng);
+        rng = SplitRange.split(rng);
 
         editor.formatter.remove(name, vars, rng);
         selection.moveToBookmark(bookmark);

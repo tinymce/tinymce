@@ -22,15 +22,15 @@
 define(
   'tinymce.core.caret.CaretPosition',
   [
-    "tinymce.core.util.Fun",
-    "tinymce.core.dom.NodeType",
-    "tinymce.core.dom.DOMUtils",
-    "tinymce.core.dom.RangeUtils",
-    "tinymce.core.caret.CaretCandidate",
-    "tinymce.core.geom.ClientRect",
-    "tinymce.core.text.ExtendingChar"
+    'tinymce.core.caret.CaretCandidate',
+    'tinymce.core.dom.DOMUtils',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.geom.ClientRect',
+    'tinymce.core.selection.RangeNodes',
+    'tinymce.core.text.ExtendingChar',
+    'tinymce.core.util.Fun'
   ],
-  function (Fun, NodeType, DOMUtils, RangeUtils, CaretCandidate, ClientRect, ExtendingChar) {
+  function (CaretCandidate, DOMUtils, NodeType, ClientRect, RangeNodes, ExtendingChar, Fun) {
     var isElement = NodeType.isElement,
       isCaretCandidate = CaretCandidate.isCaretCandidate,
       isBlock = NodeType.matchStyleValues('display', 'block table'),
@@ -40,7 +40,7 @@ define(
       isText = NodeType.isText,
       isBr = NodeType.isBr,
       nodeIndex = DOMUtils.nodeIndex,
-      resolveIndex = RangeUtils.getNode;
+      resolveIndex = RangeNodes.getNode;
 
     var createRange = function (doc) {
       return "createRange" in doc ? doc.createRange() : DOMUtils.DOM.createRng();
