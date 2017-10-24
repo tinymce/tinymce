@@ -2,6 +2,8 @@ asynctest(
   'browser.tinymce.core.init.EditorInitializationTest',
   [
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.katamari.api.Arr',
@@ -17,7 +19,10 @@ asynctest(
     'tinymce.core.util.Tools',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, Pipeline, Step, Arr, LegacyUnit, Element, Attr, SelectorFilter, document, window, EditorManager, Env, ViewBlock, Tools, Theme) {
+  function (
+    Assertions, GeneralSteps, Logger, Pipeline, Step, Arr, LegacyUnit, Element, Attr, SelectorFilter, document, window, EditorManager, Env, ViewBlock, Tools,
+    Theme
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -156,6 +161,8 @@ asynctest(
     var mAssertEditors = Step.stateful(function (editors, next, die) {
       Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
       Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
+      Assertions.assertEq('Editor container should be null', null, editors[0].editorContainer);
+      Assertions.assertEq('Editor container should be null', null, editors[1].editorContainer);
 
       Assertions.assertEq(
         'Should only be two skin files the skin and the content for inline mode',
@@ -163,19 +170,38 @@ asynctest(
         getSkinCssFilenames()
       );
 
-      next({});
+      var targets = Arr.map(editors, function (editor) {
+        return editor.getElement();
+      });
+
+      Assertions.assertEq('Targets should be two since there are two editors', 2, targets.length);
+
+      next(targets);
     });
 
     var sRemoveAllEditors = Step.sync(function () {
       EditorManager.remove();
     });
 
+    var mAssertTargets = Step.stateful(function (targets, next, die) {
+      Assertions.assertEq('Targets should be two since there are two editors', 2, targets.length);
+
+      Arr.each(targets, function (target) {
+        Assertions.assertEq('Target parent should not be null', true, target.parentNode !== null);
+      });
+
+      next({});
+    });
+
     setup();
-    Pipeline.async({}, ([
-      mCreateInlineModeMultipleInstances,
-      mAssertEditors,
-      sRemoveAllEditors
-    ]), function () {
+    Pipeline.async({}, [
+      Logger.t('Initialize multiple inline editors and remove them', GeneralSteps.sequence([
+        mCreateInlineModeMultipleInstances,
+        mAssertEditors,
+        sRemoveAllEditors,
+        mAssertTargets
+      ]))
+    ], function () {
       viewBlock.detach();
       success();
     }, failure);

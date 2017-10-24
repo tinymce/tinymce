@@ -30,7 +30,7 @@ asynctest(
           var targetElement = SelectorFind.descendant(body, '#' + editor.id).getOrDie('No elm');
           var nextElement = Traverse.nextSibling(targetElement);
 
-          Assertions.assertDomEq('Should be expected editor container element', targetElement, Element.fromDom(editor.editorContainer));
+          Assertions.assertEq('Should be null since inline has no editorContainer', null, editor.editorContainer);
           Assertions.assertDomEq('Should be expected editor body element', targetElement, Element.fromDom(editor.getBody()));
           Assertions.assertDomEq('Should be expected editor target element', targetElement, Element.fromDom(editor.getElement()));
           Assertions.assertEq('Should be undefined for inline mode', undefined, editor.contentAreaContainer);

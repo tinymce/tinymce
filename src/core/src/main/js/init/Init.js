@@ -153,7 +153,7 @@ define(
 
     var renderThemeFalse = function (editor) {
       var targetElement = editor.getElement();
-      return editor.inline ? createThemeFalseResult(targetElement) : renderThemeFalseIframe(targetElement);
+      return editor.inline ? createThemeFalseResult(null) : renderThemeFalseIframe(targetElement);
     };
 
     var renderThemeUi = function (editor) {
@@ -182,7 +182,7 @@ define(
       initTheme(editor);
       initPlugins(editor);
       boxInfo = renderThemeUi(editor);
-      editor.editorContainer = boxInfo.editorContainer;
+      editor.editorContainer = boxInfo.editorContainer ? boxInfo.editorContainer : null;
 
       // Load specified content CSS last
       if (settings.content_css) {
