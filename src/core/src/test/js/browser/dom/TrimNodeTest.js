@@ -34,7 +34,7 @@ asynctest(
 
     Pipeline.async({}, [
       sTestTrim('<p><span></span>x</p>', '<p>x</p>'),
-      sTestTrim('<p><span>x</span>&nbsp;</p>', '<p><span>x</span></p>'),
+      sTestTrim('<p><span>x</span>&nbsp;</p>', '<p><span>x</span>&nbsp;</p>'),
       sTestTrim('<p><span>x</span>&nbsp;<span>x</span></p>', '<p><span>x</span>&nbsp;<span>x</span></p>'),
       sTestTrim('<p><span data-mce-type="bookmark"></span> y</p>', '<p><span data-mce-type="bookmark"></span> y</p>'),
       sTestTrim('<p>a <span>b <span data-mce-type="bookmark"></span> c</span></p>', '<p>a <span>b <span data-mce-type="bookmark"></span> c</span></p>'),
