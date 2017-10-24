@@ -16,6 +16,7 @@
 define(
   'tinymce.core.dom.RangeUtils',
   [
+    'ephox.katamari.api.Fun',
     'tinymce.core.selection.CaretRangeFromPoint',
     'tinymce.core.selection.NormalizeRange',
     'tinymce.core.selection.RangeCompare',
@@ -23,7 +24,7 @@ define(
     'tinymce.core.selection.RangeWalk',
     'tinymce.core.selection.SplitRange'
   ],
-  function (CaretRangeFromPoint, NormalizeRange, RangeCompare, RangeNodes, RangeWalk, SplitRange) {
+  function (Fun, CaretRangeFromPoint, NormalizeRange, RangeCompare, RangeNodes, RangeWalk, SplitRange) {
     var RangeUtils = function (dom) {
       /**
        * Walks the specified range like object and executes the callback for each sibling collection it finds.
@@ -54,7 +55,14 @@ define(
        * @return {Boolean} True/false if the specified range was normalized or not.
        */
       var normalize = function (rng) {
-        return NormalizeRange.normalize(dom, rng);
+        return NormalizeRange.normalize(dom, rng).fold(
+          Fun.constant(false),
+          function (normalizedRng) {
+            rng.setStart(normalizedRng.startContainer, normalizedRng.startOffset);
+            rng.setEnd(normalizedRng.endContainer, normalizedRng.endOffset);
+            return true;
+          }
+        );
       };
 
       return {
