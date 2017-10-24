@@ -2,7 +2,7 @@ define(
   'ephox.agar.assertions.ApproxComparisons',
 
   [
-    'ephox.agar.api.Assertions',
+    'ephox.agar.api.RawAssertions',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Id',
     'ephox.sand.api.JSON',
@@ -10,7 +10,7 @@ define(
     'ephox.katamari.api.Strings'
   ],
 
-  function (Assertions, Arr, Id, Json, Fun, Strings) {
+  function (RawAssertions, Arr, Id, Json, Fun, Strings) {
     var missing = Id.generate('missing');
 
     var dieWith = function (message) {
@@ -19,7 +19,7 @@ define(
 
     var assertOnBool = function (c, label, value) {
       var strValue = value === missing ? '{missing}' : value;
-      Assertions.assertEq(
+      RawAssertions.assertEq(
         label + ', Actual value: ' + Json.stringify(strValue),
         true,
         c

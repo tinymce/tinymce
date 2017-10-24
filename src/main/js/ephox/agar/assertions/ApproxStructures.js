@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.agar.alien.Truncate',
-    'ephox.agar.api.Assertions',
+    'ephox.agar.api.RawAssertions',
     'ephox.agar.assertions.ApproxComparisons',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
@@ -21,10 +21,10 @@ define(
     'global!Error'
   ],
 
-  function (Truncate, Assertions, ApproxComparisons, Arr, Obj, Json, Fun, Option, Attr, Classes, Css, Html, Node, Text, Traverse, Value, Error) {
+  function (Truncate, RawAssertions, ApproxComparisons, Arr, Obj, Json, Fun, Option, Attr, Classes, Css, Html, Node, Text, Traverse, Value, Error) {
     var element = function (tag, fields) {
       var doAssert = function (actual) {
-        Assertions.assertEq('Incorrect node name for: ' + Truncate.getHtml(actual), tag, Node.name(actual));
+        RawAssertions.assertEq('Incorrect node name for: ' + Truncate.getHtml(actual), tag, Node.name(actual));
         var attrs = fields.attrs !== undefined ? fields.attrs : { };
         var classes = fields.classes !== undefined ? fields.classes : [ ];
         var styles = fields.styles !== undefined ? fields.styles : { };
@@ -115,7 +115,7 @@ define(
     var assertChildren = function (expectedChildren, actual) {
       expectedChildren.each(function (expected) {
         var children = Traverse.children(actual);
-        Assertions.assertEq(
+        RawAssertions.assertEq(
           'Checking number of children of: ' + Truncate.getHtml(actual) + '\nComplete Structure: \n' + Html.getOuter(actual),
           expected.length,
           children.length

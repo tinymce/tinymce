@@ -11,6 +11,14 @@ test(
       if (a !== b) throw new Error('window.assert.eq error: ' + message);
     };
 
+
+    var replaceTokens = function (str, values) {
+      return str.replace(/\{\{(\w+)\}\}/gi, function ($0, $1) {
+        return values[$1] ? values[$1] : '';
+      });
+    };
+
+
     try {
       Assertions.assertEq('test 1 (assertEq)', 10, 5);
     } catch (err) {
@@ -53,5 +61,23 @@ test(
     }
 
     window.assert.eq = boltAssert;
+
+    try {
+      var v1 = {
+        'style': 'display: block; float: left;',
+        'class': 'class1 class2'
+      };
+
+      var v2 = {
+        'style': 'float: left; display: block;',
+        'class': 'class2 class1'
+      };
+
+      var html = '<div id="container" style="{{style}}"><p class="{{class}}">some text</p></div>';
+
+      Assertions.assertHtmlStructure('html is the same, although styles & classes are in different order', replaceTokens(html, v1), replaceTokens(html, v2));
+    } catch (err) {
+      assert.fail('Unexpected error: ' + err.message);
+    }
   }
 );
