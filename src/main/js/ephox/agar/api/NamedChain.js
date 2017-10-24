@@ -3,10 +3,11 @@ define(
 
   [
     'ephox.agar.api.Chain',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Merger'
   ],
 
-  function (Chain, Merger) {
+  function (Chain, Arr, Merger) {
     var asChain = function (chains) {
       return Chain.fromChainsWith({}, chains);  
     };
@@ -74,6 +75,17 @@ define(
       });
     };
 
+    var merge = function (names, combinedName) {
+      return Chain.mapper(function (input) {
+        var r = {};
+        r[combinedName] = {};
+        Arr.each(names, function (name) {
+          r[combinedName][name] = input[name];
+        });
+        return Merger.deepMerge(input, r);
+      });
+    };
+
     var bundle = function (f) {
       return Chain.binder(f);
     };
@@ -84,6 +96,7 @@ define(
       direct: direct,
       writeValue: writeValue,
       overwrite: overwrite,
+      merge: merge,
       bundle: bundle
     };
   }

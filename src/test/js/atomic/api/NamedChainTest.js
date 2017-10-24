@@ -44,6 +44,9 @@ asynctest(
 
             NamedChain.overwrite('x', doubleNum),
             NamedChain.direct('y', mult10, '10y'),
+
+            NamedChain.merge(['x', 'y', 'z'], 'xyz'),
+
             NamedChain.bundle(function (input) {
               RawAssertions.assertEq('Checking bundled chain output', {
                 x: 5 * 2,
@@ -51,8 +54,12 @@ asynctest(
                 '10y': 80,
                 z: 10,
                 description: 'Q1. What are the answers',
-                shouting: 'Q1. What are the answers!'
-
+                shouting: 'Q1. What are the answers!',
+                xyz: {
+                  x: 10,
+                  y: 8,
+                  z: 10
+                }
               }, input);
               return Result.value(input);
             })
