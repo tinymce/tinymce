@@ -36,6 +36,10 @@ define(
   ) {
     var ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret';
 
+    var importNode = function (ownerDocument, node) {
+      return ownerDocument.importNode(node, true);
+    };
+
     var isCaretNode = function (node) {
       return node.nodeType === 1 && node.id === CARET_ID;
     };
@@ -252,7 +256,8 @@ define(
         selection.moveToBookmark(bookmark);
       } else {
         if (!caretContainer || textNode.nodeValue !== ZWSP) {
-          caretContainer = createCaretContainer(true).dom();
+          // Need to import the node into the document on IE or we get a lovely WrongDocument exception
+          caretContainer = importNode(dom.doc, createCaretContainer(true).dom());
           textNode = caretContainer.firstChild;
 
           rng.insertNode(caretContainer);
