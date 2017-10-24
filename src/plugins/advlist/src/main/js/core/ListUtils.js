@@ -17,6 +17,10 @@ define(
       return editor.$.contains(editor.getBody(), elm);
     };
 
+    var isTableCellNode = function (node) {
+      return node && /^(TH|TD)$/.test(node.nodeName);
+    };
+
     var isListNode = function (editor) {
       return function (node) {
         return node && (/^(OL|UL|DL)$/).test(node.nodeName) && isChildOfBody(editor, node);
@@ -29,6 +33,7 @@ define(
     };
 
     return {
+      isTableCellNode: isTableCellNode,
       isListNode: isListNode,
       getSelectedStyleType: getSelectedStyleType
     };

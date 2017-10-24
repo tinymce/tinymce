@@ -44,8 +44,8 @@ define(
       updateListAttrs(dom, el, detail);
     };
 
-    var getEndPointNode = function (editor, rng, start) {
-      var container, offset, root = editor.getBody();
+    var getEndPointNode = function (editor, rng, start, root) {
+      var container, offset;
 
       container = rng[start ? 'startContainer' : 'endContainer'];
       offset = rng[start ? 'startOffset' : 'endOffset'];
@@ -70,11 +70,11 @@ define(
       return container;
     };
 
-    var getSelectedTextBlocks = function (editor, rng) {
-      var textBlocks = [], root = editor.getBody(), dom = editor.dom;
+    var getSelectedTextBlocks = function (editor, rng, root) {
+      var textBlocks = [], dom = editor.dom;
 
-      var startNode = getEndPointNode(editor, rng, true);
-      var endNode = getEndPointNode(editor, rng, false);
+      var startNode = getEndPointNode(editor, rng, true, root);
+      var endNode = getEndPointNode(editor, rng, false, root);
       var block, siblings = [];
 
       for (var node = startNode; node; node = node.nextSibling) {
@@ -123,6 +123,7 @@ define(
 
     var applyList = function (editor, listName, detail) {
       var rng = editor.selection.getRng(true), bookmark, listItemName = 'LI';
+      var root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
       var dom = editor.dom;
 
       detail = detail ? detail : {};
@@ -139,7 +140,7 @@ define(
 
       bookmark = Bookmark.createBookmark(rng);
 
-      Tools.each(getSelectedTextBlocks(editor, rng), function (block) {
+      Tools.each(getSelectedTextBlocks(editor, rng, root), function (block) {
         var listBlock, sibling;
 
         var hasCompatibleStyle = function (sib) {
@@ -171,7 +172,8 @@ define(
     };
 
     var removeList = function (editor) {
-      var bookmark = Bookmark.createBookmark(editor.selection.getRng(true)), root = editor.getBody();
+      var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
+      var root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
       var listItems = Selection.getSelectedListItems(editor);
       var emptyListItems = Tools.grep(listItems, function (li) {
         return editor.dom.isEmpty(li);

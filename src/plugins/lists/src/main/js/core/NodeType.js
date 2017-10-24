@@ -25,6 +25,10 @@ define(
       return node && /^(LI|DT|DD)$/.test(node.nodeName);
     };
 
+    var isTableCellNode = function (node) {
+      return node && /^(TH|TD)$/.test(node.nodeName);
+    };
+
     var isBr = function (node) {
       return node && node.nodeName === 'BR';
     };
@@ -75,6 +79,7 @@ define(
       isTextNode: isTextNode,
       isListNode: isListNode,
       isListItemNode: isListItemNode,
+      isTableCellNode: isTableCellNode,
       isBr: isBr,
       isFirstChild: isFirstChild,
       isLastChild: isLastChild,

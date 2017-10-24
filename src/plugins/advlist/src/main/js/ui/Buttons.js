@@ -18,12 +18,24 @@ define(
     'tinymce.plugins.advlist.ui.ListStyles'
   ],
   function (Tools, Settings, Actions, ListUtils, ListStyles) {
+    var findIndex = function (list, predicate) {
+      for (var index = 0; index < list.length; index++) {
+        var element = list[index];
+
+        if (predicate(element)) {
+          return index;
+        }
+      }
+      return -1;
+    };
     var listState = function (editor, listName) {
       return function (e) {
         var ctrl = e.control;
 
         editor.on('NodeChange', function (e) {
-          var lists = Tools.grep(e.parents, ListUtils.isListNode(editor));
+          var tableCellIndex = findIndex(e.parents, ListUtils.isTableCellNode);
+          var parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
+          var lists = Tools.grep(parents, ListUtils.isListNode(editor));
           ctrl.active(lists.length > 0 && lists[0].nodeName === listName);
         });
       };
