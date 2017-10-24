@@ -74,6 +74,10 @@ define(
       editor.on('init', function () {
         registerEditorEvents(editor, throttledStore);
       });
+
+      editor.on('remove', function () {
+        throttledStore.cancel();
+      });
     };
 
     return {
