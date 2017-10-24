@@ -2,11 +2,11 @@ define(
   'ephox.agar.api.ApproxStructure',
 
   [
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Obj',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Classes',
     'ephox.sugar.api.search.Traverse',
@@ -14,7 +14,7 @@ define(
     'ephox.agar.assertions.ApproxStructures'
   ],
 
-  function (Fun, Arr, Obj, Node, Element, Attr, Classes, Traverse, ApproxComparisons, ApproxStructures) {
+  function (Arr, Obj, Node, Element, Css, Attr, Classes, Traverse, ApproxComparisons, ApproxStructures) {
     var build = function (f) {
       var strApi = {
         is: ApproxComparisons.is,
@@ -45,20 +45,6 @@ define(
       }).t;
     };
 
-    var getCss = function (node) {
-      var css = {};
-      var dom = node.dom();
-      var i, ruleName;
-
-      if (dom.style) {
-        for (i = 0; i < dom.style.length; i++) {
-          ruleName = dom.style.item(i);
-          css[ruleName] = dom.style[ruleName];
-        }
-      }
-      return css;
-    };
-
     var toAssertableObj = function (obj) {
       return Obj.map(obj, function (value) {
         return ApproxComparisons.is(value);
@@ -76,7 +62,7 @@ define(
         return ApproxStructures.element(Node.name(node), {
           children: Arr.map(Traverse.children(node), fromElement),
           attrs: toAssertableObj(getAttrsExcept(node, ['style', 'class'])),
-          styles: toAssertableObj(getCss(node)),
+          styles: toAssertableObj(Css.getAllRaw(node)),
           classes: toAssertableArr(Classes.get(node))
         });
       } else {
