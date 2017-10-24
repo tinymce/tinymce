@@ -478,6 +478,15 @@ asynctest(
       editor.settings.forced_root_block = 'p';
     });
 
+    suite.test('Remove format from first position in table cell', function (editor) {
+      editor.formatter.register('format', { inline: 'b' });
+      editor.getBody().innerHTML = '<table><tbody><tr><td><b>ab</b> cd</td></tr></tbody></table>';
+      LegacyUnit.setSelection(editor, 'b', 0, 'b', 2);
+      editor.formatter.remove('format');
+      LegacyUnit.equal(getContent(editor), '<table><tbody><tr><td>ab cd</td></tr></tbody></table>', 'Should have removed format.');
+      editor.settings.forced_root_block = 'p';
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {

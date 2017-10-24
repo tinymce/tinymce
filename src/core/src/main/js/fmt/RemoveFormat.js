@@ -11,8 +11,8 @@
 define(
   'tinymce.core.fmt.RemoveFormat',
   [
-    'ephox.katamari.api.Fun',
     'tinymce.core.dom.BookmarkManager',
+    'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.fmt.CaretFormat',
@@ -21,7 +21,7 @@ define(
     'tinymce.core.fmt.MatchFormat',
     'tinymce.core.util.Tools'
   ],
-  function (Fun, BookmarkManager, RangeUtils, TreeWalker, CaretFormat, ExpandRange, FormatUtils, MatchFormat, Tools) {
+  function (BookmarkManager, NodeType, RangeUtils, TreeWalker, CaretFormat, ExpandRange, FormatUtils, MatchFormat, Tools) {
     var MCE_ATTR_RE = /^(src|href|style)$/;
     var each = Tools.each;
     var isEq = FormatUtils.isEq;
@@ -36,7 +36,7 @@ define(
       container = rng[start ? 'startContainer' : 'endContainer'];
       offset = rng[start ? 'startOffset' : 'endOffset'];
 
-      if (container.nodeType === 1) {
+      if (NodeType.isElement(container)) {
         lastIdx = container.childNodes.length - 1;
 
         if (!start && offset) {
@@ -47,12 +47,12 @@ define(
       }
 
       // If start text node is excluded then walk to the next node
-      if (container.nodeType === 3 && start && offset >= container.nodeValue.length) {
+      if (NodeType.isText(container) && start && offset >= container.nodeValue.length) {
         container = new TreeWalker(container, ed.getBody()).next() || container;
       }
 
       // If end text node is excluded then walk to the previous node
-      if (container.nodeType === 3 && !start && offset === 0) {
+      if (NodeType.isText(container) && !start && offset === 0) {
         container = new TreeWalker(container, ed.getBody()).prev() || container;
       }
 
@@ -89,7 +89,7 @@ define(
 
       // Check for selector match
       if (format.selector) {
-        return node.nodeType === 1 && dom.is(node, format.selector);
+        return NodeType.isElement(node) && dom.is(node, format.selector);
       }
     };
 
@@ -362,7 +362,7 @@ define(
         var children, i, l, lastContentEditable, hasContentEditableState;
 
         // Node has a contentEditable value
-        if (node.nodeType === 1 && dom.getContentEditable(node)) {
+        if (NodeType.isElement(node) && dom.getContentEditable(node)) {
           lastContentEditable = contentEditable;
           contentEditable = dom.getContentEditable(node) === "true";
           hasContentEditableState = true; // We don't want to wrap the container only it's children
@@ -406,7 +406,7 @@ define(
         }
 
         // Since dom.remove removes empty text nodes then we need to try to find a better node
-        if (out.nodeType === 3 && out.data.length === 0) {
+        if (NodeType.isText(out) && out.data.length === 0) {
           out = start ? node.previousSibling || node.nextSibling : node.nextSibling || node.previousSibling;
         }
 
@@ -444,8 +444,7 @@ define(
               endContainer = endContainer.firstChild || endContainer;
             }
 
-            if (dom.isChildOf(startContainer, endContainer) && !dom.isBlock(endContainer) &&
-              !isTableCell(startContainer) && !isTableCell(endContainer)) {
+            if (dom.isChildOf(startContainer, endContainer) && startContainer !== endContainer && !dom.isBlock(endContainer) && !isTableCell(startContainer) && !isTableCell(endContainer)) {
               startContainer = wrap(dom, startContainer, 'span', { id: '_start', 'data-mce-type': 'bookmark' });
               splitToFormatRoot(startContainer);
               startContainer = unwrap(true);
@@ -480,7 +479,7 @@ define(
             process(node);
 
             // Remove parent span if it only contains text-decoration: underline, yet a parent node is also underlined.
-            if (node.nodeType === 1 && ed.dom.getStyle(node, 'text-decoration') === 'underline' &&
+            if (NodeType.isElement(node) && ed.dom.getStyle(node, 'text-decoration') === 'underline' &&
               node.parentNode && FormatUtils.getTextDecoration(dom, node.parentNode) === 'underline') {
               removeFormat(ed, {
                 'deep': false,
