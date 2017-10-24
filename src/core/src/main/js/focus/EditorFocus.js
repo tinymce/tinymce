@@ -18,10 +18,10 @@ define(
     'tinymce.core.Env',
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.dom.ElementType',
-    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.selection.RangeNodes',
     'tinymce.core.selection.SelectionBookmark'
   ],
-  function (Option, Compare, Focus, Element, Env, CaretFinder, ElementType, RangeUtils, SelectionBookmark) {
+  function (Option, Compare, Focus, Element, Env, CaretFinder, ElementType, RangeNodes, SelectionBookmark) {
     var getContentEditableHost = function (editor, node) {
       return editor.dom.getParent(node, function (node) {
         return editor.dom.getContentEditable(node) === "true";
@@ -29,7 +29,7 @@ define(
     };
 
     var getCollapsedNode = function (rng) {
-      return rng.collapsed ? Option.from(RangeUtils.getNode(rng.startContainer, rng.startOffset)).map(Element.fromDom) : Option.none();
+      return rng.collapsed ? Option.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(Element.fromDom) : Option.none();
     };
 
     var getFocusInElement = function (root, rng) {

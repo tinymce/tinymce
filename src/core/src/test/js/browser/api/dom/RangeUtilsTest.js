@@ -1,16 +1,16 @@
 asynctest(
-  'browser.tinymce.core.dom.RangeUtilsTest',
+  'browser.tinymce.core.api.dom.RangeUtilsTest',
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
+    'tinymce.core.api.dom.RangeUtils',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.dom.RangeUtils',
     'tinymce.core.test.ViewBlock'
   ],
-  function (Assertions, GeneralSteps, Logger, Pipeline, Step, DOMUtils, RangeUtils, ViewBlock) {
+  function (Assertions, GeneralSteps, Logger, Pipeline, Step, RangeUtils, DOMUtils, ViewBlock) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var DOM = DOMUtils.DOM;

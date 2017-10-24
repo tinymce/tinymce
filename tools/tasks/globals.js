@@ -60,13 +60,19 @@ var generateGlobaliserModule = function (templateFile, filePath, targetId, globa
   }));
 };
 
+var replacePrefixes = function (id, search, replace) {
+  return search.reduce(function (id, item) {
+    return id.replace(item, replace);
+  }, id);
+};
+
 var replacePrefix = function (grunt, templateFile, outputPath, config) {
   var search = required(config, 'search');
   var replace = required(config, 'replace');
   var targets = required(config, 'targets');
 
   targets
-    .map(targetIdToTargetInfo(outputPath, id => id.replace(search, replace)))
+    .map(targetIdToTargetInfo(outputPath, id => replacePrefixes(id, search, replace)))
     .forEach(function (targetInfo) {
       mkdirp(grunt, path.dirname(targetInfo.filePath));
       generateGlobaliserModule(templateFile, targetInfo.filePath, targetInfo.targetId, targetInfo.globalId);

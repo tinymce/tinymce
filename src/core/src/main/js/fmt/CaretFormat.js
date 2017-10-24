@@ -257,7 +257,7 @@ define(
       } else {
         if (!caretContainer || textNode.nodeValue !== ZWSP) {
           // Need to import the node into the document on IE or we get a lovely WrongDocument exception
-          caretContainer = importNode(dom.doc, createCaretContainer(true).dom());
+          caretContainer = importNode(editor.getDoc(), createCaretContainer(true).dom());
           textNode = caretContainer.firstChild;
 
           rng.insertNode(caretContainer);

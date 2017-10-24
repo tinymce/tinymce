@@ -21,20 +21,14 @@ define(
   [
     'global!document',
     'global!window',
-    'tinymce.core.caret.CaretContainer',
-    'tinymce.core.caret.CaretPosition',
-    'tinymce.core.caret.CaretWalker',
-    'tinymce.core.dom.NodePath',
-    'tinymce.core.dom.RangeUtils',
-    'tinymce.core.dom.TreeWalker',
     'tinymce.core.Env',
-    'tinymce.core.html.Entities',
-    'tinymce.core.html.Node',
+    'tinymce.core.caret.CaretContainer',
+    'tinymce.core.selection.CaretRangeFromPoint',
     'tinymce.core.util.Delay',
     'tinymce.core.util.Tools',
     'tinymce.core.util.VK'
   ],
-  function (document, window, CaretContainer, CaretPosition, CaretWalker, NodePath, RangeUtils, TreeWalker, Env, Entities, Node, Delay, Tools, VK) {
+  function (document, window, Env, CaretContainer, CaretRangeFromPoint, Delay, Tools, VK) {
     return function (editor) {
       var each = Tools.each;
       var BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection,
@@ -753,7 +747,7 @@ define(
             if (internalContent && internalContent.id != editor.id) {
               e.preventDefault();
 
-              var rng = RangeUtils.getCaretRangeFromPoint(e.x, e.y, editor.getDoc());
+              var rng = CaretRangeFromPoint.fromPoint(e.x, e.y, editor.getDoc());
               selection.setRng(rng);
               insertClipboardContents(internalContent.html, true);
             }

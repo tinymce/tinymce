@@ -11,7 +11,7 @@
 define(
   'tinymce.plugins.paste.core.DragDrop',
   [
-    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.api.dom.RangeUtils',
     'tinymce.core.util.Delay',
     'tinymce.plugins.paste.api.Settings',
     'tinymce.plugins.paste.core.InternalHtml',

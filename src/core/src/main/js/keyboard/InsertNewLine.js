@@ -13,13 +13,13 @@ define(
   [
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.dom.NodeType',
-    'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.fmt.CaretFormat',
+    'tinymce.core.selection.NormalizeRange',
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Tools'
   ],
-  function (CaretContainer, NodeType, RangeUtils, TreeWalker, CaretFormat, Zwsp, Tools) {
+  function (CaretContainer, NodeType, TreeWalker, CaretFormat, NormalizeRange, Zwsp, Tools) {
     var isEmptyAnchor = function (elm) {
       return elm && elm.nodeName === "A" && Tools.trim(Zwsp.trim(elm.innerText || elm.textContent)).length === 0;
     };
@@ -514,7 +514,11 @@ define(
       };
 
       // Setup range items and newBlockName
-      new RangeUtils(dom).normalize(rng);
+      NormalizeRange.normalize(dom, rng).each(function (normRng) {
+        rng.setStart(normRng.startContainer, normRng.startOffset);
+        rng.setEnd(normRng.endContainer, normRng.endOffset);
+      });
+
       container = rng.startContainer;
       offset = rng.startOffset;
       newBlockName = (settings.force_p_newlines ? 'p' : '') || settings.forced_root_block;

@@ -14,7 +14,7 @@
  * @class tinymce.dom.RangeUtils
  */
 define(
-  'tinymce.core.dom.RangeUtils',
+  'tinymce.core.api.dom.RangeUtils',
   [
     'ephox.katamari.api.Fun',
     'tinymce.core.selection.CaretRangeFromPoint',

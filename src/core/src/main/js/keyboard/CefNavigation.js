@@ -11,6 +11,7 @@
 define(
   'tinymce.core.keyboard.CefNavigation',
   [
+    'tinymce.core.Env',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.caret.CaretUtils',
@@ -18,15 +19,14 @@ define(
     'tinymce.core.caret.LineUtils',
     'tinymce.core.caret.LineWalker',
     'tinymce.core.dom.NodeType',
-    'tinymce.core.dom.RangeUtils',
-    'tinymce.core.Env',
     'tinymce.core.keyboard.CefUtils',
+    'tinymce.core.selection.RangeNodes',
     'tinymce.core.util.Arr',
     'tinymce.core.util.Fun'
   ],
-  function (CaretContainer, CaretPosition, CaretUtils, CaretWalker, LineUtils, LineWalker, NodeType, RangeUtils, Env, CefUtils, Arr, Fun) {
+  function (Env, CaretContainer, CaretPosition, CaretUtils, CaretWalker, LineUtils, LineWalker, NodeType, CefUtils, RangeNodes, Arr, Fun) {
     var isContentEditableFalse = NodeType.isContentEditableFalse;
-    var getSelectedNode = RangeUtils.getSelectedNode;
+    var getSelectedNode = RangeNodes.getSelectedNode;
     var isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse;
     var isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse;
 

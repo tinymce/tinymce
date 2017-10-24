@@ -20,7 +20,7 @@ define(
     'tinymce.themes.inlite.alien.Bookmark',
     'tinymce.core.util.Tools',
     'tinymce.core.dom.TreeWalker',
-    'tinymce.core.dom.RangeUtils'
+    'tinymce.core.api.dom.RangeUtils'
   ],
   function (Bookmark, Tools, TreeWalker, RangeUtils) {
     var getSelectedElements = function (rootElm, startNode, endNode) {

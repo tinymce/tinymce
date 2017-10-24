@@ -13,15 +13,15 @@ define(
   [
     'tinymce.core.dom.BookmarkManager',
     'tinymce.core.dom.NodeType',
-    'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.fmt.CaretFormat',
     'tinymce.core.fmt.ExpandRange',
     'tinymce.core.fmt.FormatUtils',
     'tinymce.core.fmt.MatchFormat',
+    'tinymce.core.selection.RangeWalk',
     'tinymce.core.util.Tools'
   ],
-  function (BookmarkManager, NodeType, RangeUtils, TreeWalker, CaretFormat, ExpandRange, FormatUtils, MatchFormat, Tools) {
+  function (BookmarkManager, NodeType, TreeWalker, CaretFormat, ExpandRange, FormatUtils, MatchFormat, RangeWalk, Tools) {
     var MCE_ATTR_RE = /^(src|href|style)$/;
     var each = Tools.each;
     var isEq = FormatUtils.isEq;
@@ -474,7 +474,7 @@ define(
         }
 
         // Remove items between start/end
-        new RangeUtils(dom).walk(rng, function (nodes) {
+        RangeWalk.walk(dom, rng, function (nodes) {
           each(nodes, function (node) {
             process(node);
 

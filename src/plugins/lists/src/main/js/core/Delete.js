@@ -11,7 +11,7 @@
 define(
   'tinymce.plugins.lists.core.Delete',
   [
-    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.api.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.util.VK',
     'tinymce.plugins.lists.actions.ToggleList',
