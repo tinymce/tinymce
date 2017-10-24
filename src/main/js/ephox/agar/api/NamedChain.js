@@ -45,9 +45,7 @@ define(
     };
 
     var combine = function (input, name, value) {
-      var r = {};
-      r[name] = value;
-      return Merger.deepMerge(input, r);
+      return Merger.deepMerge(input, wrapSingle(name, value));
     };
 
     var read = function (name, chain) {
