@@ -41,7 +41,7 @@ node ("primary") {
         git([branch: "master", url:'ssh://git@stash:7999/van/agar.git', credentialsId: credentialsId])  
         
         echo "Fetching Slave Dependencies"
-        extExec("npm install")
+        extExec("npm install && npm update")
         
         echo "Browser Tests for " + permutation.name
         def webdriverTests = permutation.browser == "firefox" ? "" : " src/test/js/webdriver"

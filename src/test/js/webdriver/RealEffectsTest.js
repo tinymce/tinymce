@@ -12,27 +12,34 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.agar.api.UiControls',
     'ephox.agar.api.UiFinder',
+    'ephox.agar.api.Waiter',
     'ephox.sand.api.PlatformDetection',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Class',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Html',
-    'ephox.sugar.api.dom.Insert',
     'global!document'
   ],
 
-  function (Assertions, Chain, Guard, Pipeline, RealClipboard, RealKeys, RealMouse, Step, UiControls, UiFinder, PlatformDetection, Class, Css, Element, Html, Insert, document) {
+  function (
+    Assertions, Chain, Guard, Pipeline, RealClipboard, RealKeys, RealMouse, Step, UiControls, UiFinder, Waiter, PlatformDetection, Insert, Remove, Element, Class,
+    Css, Html, document
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
     var head = Element.fromDom(document.head);
     var body = Element.fromDom(document.body);
 
+    var container = Element.fromTag('div');
+
     var platform = PlatformDetection.detect();
 
     var sCreateWorld = Step.sync(function () {
       var input = Element.fromTag('input');
-      Insert.append(body, input);
+      Insert.append(container, input);
 
       var css = Element.fromTag('style');
       Html.set(css, 'button { border: 1px solid black; }\nbutton.test:hover { border: 1px solid white }');
@@ -41,7 +48,8 @@ asynctest(
       var button = Element.fromTag('button');
       Class.add(button, 'test');
       Html.set(button, 'Mouse over me');
-      Insert.append(body, button);
+      Insert.append(container, button);
+      Insert.append(body, container);
     });
 
     var sCheckInput = function (label, expected) {
@@ -101,11 +109,18 @@ asynctest(
       RealClipboard.sPaste('input'),
       sCheckInput('Post paste', 'I am typing this'),
       Step.wait(1000),
+      RealMouse.sMoveToOn('input'),
       sCheckButtonBorder('Checking initial state of button border', 'rgb(0, 0, 0)'),
 
       RealMouse.sMoveToOn('button.test'),
-      sCheckButtonBorder('Checking hovered state of button border', 'rgb(255, 255, 255)')
+      Waiter.sTryUntil(
+        'Waiting for hovered state',
+        sCheckButtonBorder('Checking hovered state of button border', 'rgb(255, 255, 255)'),
+        100,
+        1000
+      )
     ], function () {
+      Remove.remove(container);
       success();
     }, failure);
   }
