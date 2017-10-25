@@ -87,6 +87,13 @@ asynctest(
       LegacyUnit.equal(body.childNodes.length, 2);
     });
 
+    suite.test('Wrap single root text node in P but not table sibling', function (editor) {
+      editor.getBody().innerHTML = '<span data-mce-type="bookmark">a</span>';
+      LegacyUnit.setSelection(editor, 'body', 0);
+      pressArrowKey(editor);
+      LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<span data-mce-type="bookmark">a</span>');
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
