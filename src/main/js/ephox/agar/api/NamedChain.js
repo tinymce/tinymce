@@ -76,11 +76,10 @@ define(
     var merge = function (names, combinedName) {
       return Chain.mapper(function (input) {
         var r = {};
-        r[combinedName] = {};
         Arr.each(names, function (name) {
-          r[combinedName][name] = input[name];
+          r[name] = input[name];
         });
-        return Merger.deepMerge(input, r);
+        return Merger.deepMerge(input, wrapSingle(combinedName, r));
       });
     };
 
