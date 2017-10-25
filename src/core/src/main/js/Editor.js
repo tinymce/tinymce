@@ -873,8 +873,8 @@ define(
             content = new Serializer({
               validate: self.validate
             }, self.schema).serialize(
-              self.parser.parse(content, { isRootContent: true })
-              );
+              self.parser.parse(content, { isRootContent: true, insert: true })
+            );
           }
 
           // Set the new cleaned contents to the editor

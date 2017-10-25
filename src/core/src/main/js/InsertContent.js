@@ -290,7 +290,7 @@ define(
       parentNode = selection.getNode();
 
       // Parse the fragment within the context of the parent node
-      var parserArgs = { context: parentNode.nodeName.toLowerCase(), data: details.data };
+      var parserArgs = { context: parentNode.nodeName.toLowerCase(), data: details.data, insert: true };
       fragment = parser.parse(value, parserArgs);
 
       // Custom handling of lists

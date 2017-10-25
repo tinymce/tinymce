@@ -17,11 +17,12 @@
 define(
   'tinymce.core.InsertList',
   [
-    "tinymce.core.util.Tools",
-    "tinymce.core.caret.CaretWalker",
-    "tinymce.core.caret.CaretPosition"
+    'tinymce.core.caret.CaretPosition',
+    'tinymce.core.caret.CaretWalker',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.util.Tools'
   ],
-  function (Tools, CaretWalker, CaretPosition) {
+  function (CaretPosition, CaretWalker, NodeType, Tools) {
     var hasOnlyOneChild = function (node) {
       return node.firstChild && node.firstChild === node.lastChild;
     };
@@ -95,12 +96,20 @@ define(
       });
     };
 
-    var isEmpty = function (elm) {
-      return !elm.firstChild;
+    var isPadding = function (node) {
+      return node.data === '\u00a0' || NodeType.isBr(node);
+    };
+
+    var isListItemPadded = function (node) {
+      return node && node.firstChild && node.firstChild === node.lastChild && isPadding(node.firstChild);
+    };
+
+    var isEmptyOrPadded = function (elm) {
+      return !elm.firstChild || isListItemPadded(elm);
     };
 
     var trimListItems = function (elms) {
-      return elms.length > 0 && isEmpty(elms[elms.length - 1]) ? elms.slice(0, -1) : elms;
+      return elms.length > 0 && isEmptyOrPadded(elms[elms.length - 1]) ? elms.slice(0, -1) : elms;
     };
 
     var getParentLi = function (dom, node) {
