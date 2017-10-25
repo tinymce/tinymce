@@ -40,13 +40,13 @@ asynctest(
 
       Pipeline.async({}, [
         Logger.t('replace on of three found, undo and redo and there be no matcher spans in editor', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p>lorem lorem lorem</p>'),
+          tinyApis.sSetContent('<p>cats cats cats</p>'),
           tinyUi.sClickOnToolbar('click on searchreplace button', 'div[aria-label="Find and replace"] button'),
           Chain.asStep({}, [
             Chain.fromParent(tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'), [
               Chain.fromChains([
                 UiFinder.cFindIn('label:contains("Find") + input'),
-                UiControls.cSetValue('lorem')
+                UiControls.cSetValue('cats')
               ]),
               Chain.fromChains([
                 UiFinder.cFindIn('label:contains("Replace with") + input'),
@@ -70,8 +70,10 @@ asynctest(
             ])
           ]),
           sUndo(editor),
+          tinyApis.sAssertContent('<p>cats cats cats</p>'),
           sRedo(editor),
-          tinyApis.sAssertContentPresence({ 'span.mce-match-marker': 0 })
+          tinyApis.sAssertContentPresence({ 'span.mce-match-marker': 0 }),
+          tinyApis.sAssertContent('hello')
         ]))
       ], onSuccess, onFailure);
     }, {
