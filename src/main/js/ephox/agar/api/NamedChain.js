@@ -79,7 +79,7 @@ define(
         Arr.each(names, function (name) {
           r[name] = input[name];
         });
-        return Merger.deepMerge(input, wrapSingle(combinedName, r));
+        return combine(input, combinedName, r);
       });
     };
 
