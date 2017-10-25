@@ -1,7 +1,6 @@
 asynctest(
   'browser.tinymce.plugins.table.TableDialogTest',
   [
-    'ephox.katamari.api.Fun',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
@@ -17,7 +16,7 @@ asynctest(
     'tinymce.plugins.table.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Fun, Pipeline, GeneralSteps, Logger, Chain, Step, Assertions, ApproxStructure, SelectorFind, TinyLoader, TinyApis, TinyUi, Element, Plugin, Theme) {
+  function (Pipeline, GeneralSteps, Logger, Chain, Step, Assertions, ApproxStructure, SelectorFind, TinyLoader, TinyApis, TinyUi, Element, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -36,7 +35,7 @@ asynctest(
           Assertions.assertStructure(
             "Asserting HTML structure of the element: " + selector,
             ApproxStructure.fromHtml(expected),
-            SelectorFind.descendant(Element.fromDom(body), selector).fold(Fun.noop, Fun.identity)
+            SelectorFind.descendant(Element.fromDom(body), selector).flatten()
           );
         });
       };
@@ -318,6 +317,22 @@ asynctest(
             '</table>'
           ),
           api.sDeleteSetting('table_style_by_css')
+        ])),
+
+        Logger.t("Css from the style field of the Advanced Tab should always have priority", GeneralSteps.sequence([
+          api.sSetContent('<table><tr><td>X</td></tr></table>'),
+          api.sSetCursor([0, 0, 0], 0),
+          api.sExecCommand('mceTableProps'),
+          Chain.asStep({}, [
+            cWaitForDialog("Table properties"),
+            ui.cFillDialogWith({
+              width: 100,
+              height: 101,
+              style: "width: 200px; height: 201px;"
+            }),
+            ui.cSubmitDialog()
+          ]),
+          sAssertElementStructure('table', '<table style="width: 200px; height: 201px;"><tbody><tr><td>X</td></tr></tbody></table>')
         ]))
 
       ], onSuccess, onFailure);
