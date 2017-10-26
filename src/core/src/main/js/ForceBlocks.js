@@ -17,9 +17,35 @@
 define(
   'tinymce.core.ForceBlocks',
   [
-    'ephox.katamari.api.Fun'
+    'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.sugar.api.node.Element',
+    'tinymce.core.dom.BookmarkManager',
+    'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.Parents',
+    'tinymce.core.focus.EditorFocus'
   ],
-  function (Fun) {
+  function (Arr, Fun, Element, BookmarkManager, NodeType, Parents, EditorFocus) {
+    var isBlockElement = function (blockElements, node) {
+      return blockElements.hasOwnProperty(node.nodeName);
+    };
+
+    var isValidTarget = function (blockElements, node) {
+      if (NodeType.isText(node)) {
+        return true;
+      } else if (NodeType.isElement(node)) {
+        return !isBlockElement(blockElements, node) && !BookmarkManager.isBookmarkNode(node);
+      } else {
+        return false;
+      }
+    };
+
+    var hasBlockParent = function (blockElements, root, node) {
+      return Arr.exists(Parents.parents(Element.fromDom(node), Element.fromDom(root)), function (elm) {
+        return isBlockElement(blockElements, elm.dom());
+      });
+    };
+
     var addRootBlocks = function (editor) {
       var settings = editor.settings, dom = editor.dom, selection = editor.selection;
       var schema = editor.schema, blockElements = schema.getBlockElements();
@@ -30,17 +56,13 @@ define(
 
       forcedRootBlock = settings.forced_root_block;
 
-      if (!node || node.nodeType !== 1 || !forcedRootBlock) {
+      if (!node || !NodeType.isElement(node) || !forcedRootBlock) {
         return;
       }
 
-      // Check if node is wrapped in block
-      while (node && node !== rootNode) {
-        if (blockElements[node.nodeName]) {
-          return;
-        }
-
-        node = node.parentNode;
+      rootNodeName = rootNode.nodeName.toLowerCase();
+      if (!schema.isValidChild(rootNodeName, forcedRootBlock.toLowerCase()) || hasBlockParent(blockElements, rootNode, node)) {
+        return;
       }
 
       // Get current selection
@@ -49,22 +71,14 @@ define(
       startOffset = rng.startOffset;
       endContainer = rng.endContainer;
       endOffset = rng.endOffset;
-
-      try {
-        restoreSelection = editor.getDoc().activeElement === rootNode;
-      } catch (ex) {
-        // IE throws unspecified error here sometimes
-      }
+      restoreSelection = EditorFocus.hasFocus(editor);
 
       // Wrap non block elements and text nodes
       node = rootNode.firstChild;
-      rootNodeName = rootNode.nodeName.toLowerCase();
       while (node) {
-        // TODO: Break this up, too complex
-        if (((node.nodeType === 3 || (node.nodeType == 1 && !blockElements[node.nodeName]))) &&
-          schema.isValidChild(rootNodeName, forcedRootBlock.toLowerCase())) {
+        if (isValidTarget(blockElements, node)) {
           // Remove empty text nodes
-          if (node.nodeType === 3 && node.nodeValue.length === 0) {
+          if (NodeType.isText(node) && node.nodeValue.length === 0) {
             tempNode = node;
             node = node.nextSibling;
             dom.remove(tempNode);
