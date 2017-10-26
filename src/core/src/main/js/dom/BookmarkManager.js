@@ -16,16 +16,16 @@
 define(
   'tinymce.core.dom.BookmarkManager',
   [
+    'tinymce.core.Env',
     'tinymce.core.caret.CaretBookmark',
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.NodeType',
-    'tinymce.core.dom.RangeUtils',
-    'tinymce.core.Env',
+    'tinymce.core.selection.RangeNodes',
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Tools'
   ],
-  function (CaretBookmark, CaretContainer, CaretPosition, NodeType, RangeUtils, Env, Zwsp, Tools) {
+  function (Env, CaretBookmark, CaretContainer, CaretPosition, NodeType, RangeNodes, Zwsp, Tools) {
     var isContentEditableFalse = NodeType.isContentEditableFalse;
 
     var getNormalizedTextOffset = function (container, offset) {
@@ -157,7 +157,7 @@ define(
             var sibling;
 
             if (NodeType.isElement(node)) {
-              node = RangeUtils.getNode(node, offset);
+              node = RangeNodes.getNode(node, offset);
               if (isContentEditableFalse(node)) {
                 return node;
               }

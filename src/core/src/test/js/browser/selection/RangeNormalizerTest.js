@@ -1,19 +1,18 @@
 asynctest(
-  'browser.tinymce.core.dom.RangeNormalizerTest',
+  'browser.tinymce.core.selection.RangeNormalizerTest',
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Keys',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
     'global!document',
-    'tinymce.core.dom.RangeNormalizer',
+    'tinymce.core.selection.RangeNormalizer',
     'tinymce.core.test.ViewBlock'
   ],
-  function (Assertions, GeneralSteps, Keys, Logger, Pipeline, Step, Hierarchy, Element, document, RangeNormalizer, ViewBlock) {
+  function (Assertions, GeneralSteps, Logger, Pipeline, Step, Hierarchy, Element, document, RangeNormalizer, ViewBlock) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var viewBlock = ViewBlock();

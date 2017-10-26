@@ -11,7 +11,7 @@
 define(
   'tinymce.plugins.lists.core.Range',
   [
-    'tinymce.core.dom.RangeUtils',
+    'tinymce.core.api.dom.RangeUtils',
     'tinymce.plugins.lists.core.NodeType'
   ],
   function (RangeUtils, NodeType) {

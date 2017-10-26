@@ -12,11 +12,11 @@ define(
   'tinymce.core.fmt.ExpandRange',
   [
     'tinymce.core.dom.BookmarkManager',
-    'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
-    'tinymce.core.fmt.FormatUtils'
+    'tinymce.core.fmt.FormatUtils',
+    'tinymce.core.selection.RangeNodes'
   ],
-  function (BookmarkManager, RangeUtils, TreeWalker, FormatUtils) {
+  function (BookmarkManager, TreeWalker, FormatUtils, RangeNodes) {
     var isBookmarkNode = BookmarkManager.isBookmarkNode;
     var getParents = FormatUtils.getParents, isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode, isTextBlock = FormatUtils.isTextBlock;
 
@@ -259,7 +259,7 @@ define(
 
       // If index based start position then resolve it
       if (startContainer.nodeType === 1 && startContainer.hasChildNodes()) {
-        startContainer = RangeUtils.getNode(startContainer, startOffset);
+        startContainer = RangeNodes.getNode(startContainer, startOffset);
         if (startContainer.nodeType === 3) {
           startOffset = 0;
         }
@@ -267,7 +267,7 @@ define(
 
       // If index based end position then resolve it
       if (endContainer.nodeType === 1 && endContainer.hasChildNodes()) {
-        endContainer = RangeUtils.getNode(endContainer, rng.collapsed ? endOffset : endOffset - 1);
+        endContainer = RangeNodes.getNode(endContainer, rng.collapsed ? endOffset : endOffset - 1);
         if (endContainer.nodeType === 3) {
           endOffset = endContainer.nodeValue.length;
         }

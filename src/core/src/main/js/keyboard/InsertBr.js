@@ -17,12 +17,12 @@ define(
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.NodeType',
-    'tinymce.core.dom.RangeUtils',
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.keyboard.BoundaryLocation',
-    'tinymce.core.keyboard.InlineUtils'
+    'tinymce.core.keyboard.InlineUtils',
+    'tinymce.core.selection.NormalizeRange'
   ],
-  function (Fun, Insert, Element, CaretFinder, CaretPosition, NodeType, RangeUtils, TreeWalker, BoundaryLocation, InlineUtils) {
+  function (Fun, Insert, Element, CaretFinder, CaretPosition, NodeType, TreeWalker, BoundaryLocation, InlineUtils, NormalizeRange) {
     // Walks the parent block to the right and look for BR elements
     var hasRightSideContent = function (schema, container, parentBlock) {
       var walker = new TreeWalker(container, parentBlock), node;
@@ -63,7 +63,11 @@ define(
       var selection = editor.selection, dom = editor.dom;
       var brElm, extraBr;
       var rng = selection.getRng(true);
-      new RangeUtils(dom).normalize(rng);
+
+      NormalizeRange.normalize(dom, rng).each(function (normRng) {
+        rng.setStart(normRng.startContainer, normRng.startOffset);
+        rng.setEnd(normRng.endContainer, normRng.endOffset);
+      });
 
       var offset = rng.startOffset;
       var container = rng.startContainer;

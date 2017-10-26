@@ -9,7 +9,7 @@
  */
 
 define(
-  'tinymce.core.dom.RangeNormalizer',
+  'tinymce.core.selection.RangeNormalizer',
   [
     'global!document',
     'tinymce.core.caret.CaretFinder',

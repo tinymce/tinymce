@@ -17,11 +17,11 @@
 define(
   'tinymce.core.NodeChange',
   [
-    "tinymce.core.dom.RangeUtils",
-    "tinymce.core.Env",
-    "tinymce.core.util.Delay"
+    'tinymce.core.Env',
+    'tinymce.core.selection.RangeCompare',
+    'tinymce.core.util.Delay'
   ],
-  function (RangeUtils, Env, Delay) {
+  function (Env, RangeCompare, Delay) {
     return function (editor) {
       var lastRng, lastPath = [];
 
@@ -70,7 +70,7 @@ define(
 
           // Always treat nodechange as a selectionchange since applying
           // formatting to the current range wouldn't update the range but it's parent
-          if (e.type == 'nodechange' || !RangeUtils.compareRanges(fakeRng, lastRng)) {
+          if (e.type == 'nodechange' || !RangeCompare.isEq(fakeRng, lastRng)) {
             editor.fire('SelectionChange');
           }
 

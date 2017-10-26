@@ -13,17 +13,17 @@ define(
   [
     'tinymce.core.dom.BookmarkManager',
     'tinymce.core.dom.NodeType',
-    'tinymce.core.dom.RangeNormalizer',
-    'tinymce.core.dom.RangeUtils',
     'tinymce.core.fmt.CaretFormat',
     'tinymce.core.fmt.ExpandRange',
     'tinymce.core.fmt.FormatUtils',
     'tinymce.core.fmt.Hooks',
     'tinymce.core.fmt.MatchFormat',
     'tinymce.core.fmt.MergeFormats',
+    'tinymce.core.selection.RangeNormalizer',
+    'tinymce.core.selection.RangeWalk',
     'tinymce.core.util.Tools'
   ],
-  function (BookmarkManager, NodeType, RangeNormalizer, RangeUtils, CaretFormat, ExpandRange, FormatUtils, Hooks, MatchFormat, MergeFormats, Tools) {
+  function (BookmarkManager, NodeType, CaretFormat, ExpandRange, FormatUtils, Hooks, MatchFormat, MergeFormats, RangeNormalizer, RangeWalk, Tools) {
     var each = Tools.each;
 
     var isElementNode = function (node) {
@@ -115,7 +115,7 @@ define(
         wrapElm = dom.create(wrapName);
         setElementFormat(wrapElm);
 
-        new RangeUtils(dom).walk(rng, function (nodes) {
+        RangeWalk.walk(dom, rng, function (nodes) {
           var currentWrapElm;
 
           /**

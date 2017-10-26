@@ -154,7 +154,7 @@ define(
       self.fixDoc(doc);
       self.events = settings.ownEvents ? new EventUtils(settings.proxy) : EventUtils.Event;
       self.attrHooks = setupAttrHooks(self, settings);
-      blockElementsMap = settings.schema ? settings.schema.getBlockElements() : {};
+      blockElementsMap = self.schema.getBlockElements();
       self.$ = DomQuery.overrideDefaults(function () {
         return {
           context: doc,
