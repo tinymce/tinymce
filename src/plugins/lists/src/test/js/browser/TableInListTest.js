@@ -47,11 +47,27 @@ asynctest(
           tinyApis.sSetContent('<ul><li><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></li></ul>'),
           tinyApis.sSetCursor([0, 0, 0, 0, 0, 0, 0], 0),
           UiFinder.sNotExists(TinyDom.fromDom(editor.getContainer()), 'div[aria-label="Bullet list"][aria-pressed="true"]')
+        ])),
+        Logger.t('indent and outdent li in ul in list in table in list', GeneralSteps.sequence([
+          tinyApis.sSetContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li><li><p>b</p></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>'),
+          tinyApis.sSetSelection([0, 0, 0, 0, 0, 0, 0, 1, 0, 0], 0, [0, 0, 0, 0, 0, 0, 0, 1, 0, 0], 1),
+          tinyUi.sClickOnToolbar('click increase indent', 'div[aria-label="Increase indent"] button'),
+          tinyApis.sAssertContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p><ul><li><p>b</p></li></ul></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>'),
+          tinyUi.sClickOnToolbar('click decrease indent', 'div[aria-label="Decrease indent"] button'),
+          tinyApis.sAssertContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li><li><p>b</p></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>'),
+          tinyUi.sClickOnToolbar('click decrease indent', 'div[aria-label="Decrease indent"] button'),
+          tinyApis.sAssertContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li></ul><p>b</p></td><td><p>b</p></td></tr></tbody></table></li></ul>')
+        ])),
+        Logger.t('toggle from UL to OL in list in table in list only changes inner list', GeneralSteps.sequence([
+          tinyApis.sSetContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li><li><p>b</p></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>'),
+          tinyApis.sSetSelection([0, 0, 0, 0, 0, 0, 0, 1, 0, 0], 0, [0, 0, 0, 0, 0, 0, 0, 1, 0, 0], 1),
+          tinyUi.sClickOnToolbar('click numlist button', 'div[aria-label="Numbered list"] button'),
+          tinyApis.sAssertContent('<ul><li><table><tbody><tr><td><ol><li><p>a</p></li><li><p>b</p></li></ol></td><td><p>b</p></td></tr></tbody></table></li></ul>')
         ]))
       ], onSuccess, onFailure);
     }, {
       plugins: 'lists',
-      toolbar: 'bullist',
+      toolbar: 'bullist numlist indent outdent',
       indent: false,
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
