@@ -13,12 +13,13 @@ test(
     'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.Selection',
+    'ephox.sugar.api.selection.Situ',
     'ephox.sugar.api.selection.WindowSelection',
     'global!setTimeout',
     'global!window'
   ],
 
-  function (PlatformDetection, Compare, Hierarchy, InsertAll, Remove, Body, Element, Elements, Html, Traverse, Selection, WindowSelection, setTimeout, window) {
+  function (PlatformDetection, Compare, Hierarchy, InsertAll, Remove, Body, Element, Elements, Html, Traverse, Selection, Situ, WindowSelection, setTimeout, window) {
     var p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
     var p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
 
@@ -86,8 +87,29 @@ test(
     Remove.remove(p1);
     Remove.remove(p2);
 
+    var assertRng = function (selection, expStart, expSoffset, expFinish, expFoffset) {
+      var rng = WindowSelection.getDomRangeFromSelection(selection);
+
+      assert.eq(expStart.dom(), rng.startContainer, 'Start Container should be: ' + Html.getOuter(expStart));
+      assert.eq(expSoffset, rng.startOffset, 'Start offset should be: ' + expSoffset);
+      assert.eq(expFinish.dom(), rng.endContainer, 'End Container should be: ' + Html.getOuter(expFinish));
+      assert.eq(expFoffset, rng.endOffset, 'End offset should be: ' + expFoffset);
+
+      return rng;
+    };
+
     var exact = Selection.exact(p1text, 1, p2text, 1);
-    var start = Selection.getStart(exact);
-    assert.eq(true, Compare.eq(start, p1text), 'Start container should be: ' + Html.getOuter(p1text));
+    assertRng(exact, p1text, 1, p2text, 1);
+
+    var startSitu = Situ.on(p1text, 1);
+    var finishSitu = Situ.on(p2text, 1);
+    var relative = Selection.relative(startSitu, finishSitu);
+
+    var rng = assertRng(relative, p1text, 1, p2text, 1);
+
+    var domRng = Selection.domRange(rng);
+
+    assertRng(domRng, p1text, 1, p2text, 1);
+
   }
 );

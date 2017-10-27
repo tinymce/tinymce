@@ -37,8 +37,8 @@ define(
       return selection.match({
         domRange: function (rng) {
           var start = Element.fromDom(rng.startContainer);
-          var finish = Element.fromDom(rng.finishContainer);
-          return preprocessExact(start, rng.startoffset, finish, rng.finishOffset);
+          var finish = Element.fromDom(rng.endContainer);
+          return preprocessExact(start, rng.startOffset, finish, rng.endOffset);
         },
         relative: preprocessRelative,
         exact: preprocessExact
