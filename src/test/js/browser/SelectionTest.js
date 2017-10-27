@@ -63,7 +63,7 @@ test(
       var div = Element.fromTag('div');
       InsertAll.append(div, Traverse.children(fragment));
       assert.eq(expected, Html.get(div));
-    }
+    };
 
     var p1Selected = WindowSelection.forElement(window, p1);
     var clone = WindowSelection.clone(window, Selection.exactFromRange(p1Selected));
@@ -72,7 +72,7 @@ test(
     WindowSelection.replace(window, Selection.exactFromRange(p1Selected), Elements.fromHtml('<a>link</a><span>word</span>'));
     assert.eq('<a>link</a><span>word</span>', Html.get(p1));
 
-    WindowSelection.deleteAt(window, 
+    WindowSelection.deleteAt(window,
       Selection.exact(
         Hierarchy.follow(p1, [ 0, 0 ]).getOrDie('looking for text in a'),
         'li'.length,
@@ -85,5 +85,9 @@ test(
 
     Remove.remove(p1);
     Remove.remove(p2);
+
+    var exact = Selection.exact(p1text, 1, p2text, 1);
+    var start = Selection.getStart(exact);
+    assert.eq(true, Compare.eq(start, p1text), 'Start container should be: ' + Html.getOuter(p1text));
   }
 );
