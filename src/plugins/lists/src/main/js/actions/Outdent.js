@@ -99,7 +99,8 @@ define(
 
       if (listElements.length) {
         var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
-        var i, y, root = editor.getBody();
+        var i, y;
+        var root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
 
         i = listElements.length;
         while (i--) {

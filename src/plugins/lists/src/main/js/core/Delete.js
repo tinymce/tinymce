@@ -22,7 +22,7 @@ define(
     'tinymce.plugins.lists.core.Selection'
   ],
   function (RangeUtils, TreeWalker, VK, ToggleList, Bookmark, NodeType, NormalizeLists, Range, Selection) {
-    var findNextCaretContainer = function (editor, rng, isForward) {
+    var findNextCaretContainer = function (editor, rng, isForward, root) {
       var node = rng.startContainer, offset = rng.startOffset;
       var nonEmptyBlocks, walker;
 
@@ -35,7 +35,7 @@ define(
         node = RangeUtils.getNode(node, offset);
       }
 
-      walker = new TreeWalker(node, editor.getBody());
+      walker = new TreeWalker(node, root);
 
       // Delete at <li>|<br></li> then jump over the bogus br
       if (isForward) {
@@ -143,12 +143,16 @@ define(
     var mergeBackward = function (editor, rng, fromLi, toLi) {
       var bookmark = Bookmark.createBookmark(rng);
       mergeLiElements(editor.dom, fromLi, toLi);
-      editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+      var resolvedBookmark = Bookmark.resolveBookmark(bookmark);
+      editor.selection.setRng(resolvedBookmark);
     };
 
     var backspaceDeleteFromListToListCaret = function (editor, isForward) {
       var dom = editor.dom, selection = editor.selection;
-      var li = dom.getParent(selection.getStart(), 'LI'), ul, rng, otherLi;
+      var selectionStartElm = selection.getStart();
+      var root = Selection.getClosestListRootElm(editor, selectionStartElm);
+      var li = dom.getParent(selection.getStart(), 'LI', root);
+      var ul, rng, otherLi;
 
       if (li) {
         ul = li.parentNode;
@@ -157,7 +161,7 @@ define(
         }
 
         rng = Range.normalizeRange(selection.getRng(true));
-        otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward), 'LI');
+        otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root);
 
         if (otherLi && otherLi !== li) {
           if (isForward) {
@@ -177,8 +181,8 @@ define(
       return false;
     };
 
-    var removeBlock = function (dom, block) {
-      var parentBlock = dom.getParent(block.parentNode, dom.isBlock);
+    var removeBlock = function (dom, block, root) {
+      var parentBlock = dom.getParent(block.parentNode, dom.isBlock, root);
 
       dom.remove(block);
       if (parentBlock && dom.isEmpty(parentBlock)) {
@@ -188,15 +192,17 @@ define(
 
     var backspaceDeleteIntoListCaret = function (editor, isForward) {
       var dom = editor.dom;
-      var block = dom.getParent(editor.selection.getStart(), dom.isBlock);
+      var selectionStartElm = editor.selection.getStart();
+      var root = Selection.getClosestListRootElm(editor, selectionStartElm);
+      var block = dom.getParent(selectionStartElm, dom.isBlock, root);
 
       if (block && dom.isEmpty(block)) {
         var rng = Range.normalizeRange(editor.selection.getRng(true));
-        var otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward), 'LI');
+        var otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root);
 
         if (otherLi) {
           editor.undoManager.transact(function () {
-            removeBlock(dom, block);
+            removeBlock(dom, block, root);
             ToggleList.mergeWithAdjacentLists(dom, otherLi.parentNode);
             editor.selection.select(otherLi, true);
             editor.selection.collapse(isForward);
@@ -214,7 +220,9 @@ define(
     };
 
     var backspaceDeleteRange = function (editor) {
-      var startListParent = editor.dom.getParent(editor.selection.getStart(), 'LI,DT,DD');
+      var selectionStartElm = editor.selection.getStart();
+      var root = Selection.getClosestListRootElm(editor, selectionStartElm);
+      var startListParent = editor.dom.getParent(selectionStartElm, 'LI,DT,DD', root);
 
       if (startListParent || Selection.getSelectedListItems(editor).length > 0) {
         editor.undoManager.transact(function () {
