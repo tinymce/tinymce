@@ -35,7 +35,7 @@ asynctest(
           Assertions.assertStructure(
             "Asserting HTML structure of the element: " + selector,
             ApproxStructure.fromHtml(expected),
-            SelectorFind.descendant(Element.fromDom(body), selector).flatten()
+            SelectorFind.descendant(Element.fromDom(body), selector).getOrDie("Nothing in the Editor matches selector: " + selector)
           );
         });
       };
