@@ -158,6 +158,77 @@ define(
         win.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
       }
 
+      //Explore the layers of the table till we find the first layer of tds or ths
+      function styleTDTH(dom, elm, name, value) {
+        if (elm.tagName === "TD" || elm.tagName === "TH") {
+          dom.setStyle(elm, name, value);
+        } else {
+          if (elm.children) {
+            for (var i = 0; i < elm.children.length; i++) {
+              styleTDTH(dom, elm.children[i], name, value);
+            }
+          }
+        }
+      }
+
+      function applyStylesToTable(editor, tableElm, data) {
+        var dom = editor.dom;
+        var attrs = {}, styles = {};
+
+        attrs['class'] = data['class'];
+
+        styles.height = addSizeSuffix(data.height);
+
+        if (dom.getAttrib(tableElm, 'width') && !editor.settings.table_style_by_css) {
+          attrs.width = removePxSuffix(data.width);
+        } else {
+          styles.width = addSizeSuffix(data.width);
+        }
+
+        if (editor.settings.table_style_by_css) {
+          styles['border-width'] = addSizeSuffix(data.border);
+          styles['border-spacing'] = addSizeSuffix(data.cellspacing);
+
+          Tools.extend(attrs, {
+            'data-mce-border-color': data.borderColor,
+            'data-mce-cell-padding': data.cellpadding,
+            'data-mce-border': data.border
+          });
+        } else {
+          Tools.extend(attrs, {
+            border: data.border,
+            cellpadding: data.cellpadding,
+            cellspacing: data.cellspacing
+          });
+        }
+
+        // TODO: this has to be reworked somehow, for example by introducing dedicated option, which
+        // will control whether child TD/THs should be processed or not
+        if (editor.settings.table_style_by_css) {
+          if (tableElm.children) {
+            for (var i = 0; i < tableElm.children.length; i++) {
+              styleTDTH(dom, tableElm.children[i], {
+                'border-width': addSizeSuffix(data.border),
+                'border-color': data.borderColor,
+                'padding': addSizeSuffix(data.cellpadding)
+              });
+            }
+          }
+        }
+
+        if (data.style) {
+          // merge the styles from Advanced tab on top
+          Tools.extend(styles, dom.parseStyle(data.style));
+        } else {
+          // ... otherwise take styles from original elm and update them
+          Tools.extend({}, dom.parseStyle(dom.getAttrib(tableElm, 'style')), styles);
+        }
+
+        attrs.style = dom.serializeStyle(styles);
+
+        dom.setAttribs(tableElm, attrs);
+      }
+
       function appendStylesToData(dom, data, elm) {
         var css = dom.parseStyle(dom.getAttrib(elm, 'style'));
 
@@ -172,41 +243,18 @@ define(
         data.style = dom.serializeStyle(css);
       }
 
-      function mergeStyles(dom, elm, styles) {
-        var css = dom.parseStyle(dom.getAttrib(elm, 'style'));
-
-        each(styles, function (style) {
-          css[style.name] = style.value;
-        });
-
-        dom.setAttrib(elm, 'style', dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
-      }
-
       self.tableProps = function () {
         self.table(true);
       };
 
       self.table = function (isProps) {
-        var dom = editor.dom, tableElm, colsCtrl, rowsCtrl, classListCtrl, data = {}, generalTableForm, stylesToMerge;
+        var dom = editor.dom, tableElm, colsCtrl, rowsCtrl, classListCtrl, data = {}, generalTableForm;
 
         function onSubmitTableForm() {
-
-          //Explore the layers of the table till we find the first layer of tds or ths
-          function styleTDTH(elm, name, value) {
-            if (elm.tagName === "TD" || elm.tagName === "TH") {
-              dom.setStyle(elm, name, value);
-            } else {
-              if (elm.children) {
-                for (var i = 0; i < elm.children.length; i++) {
-                  styleTDTH(elm.children[i], name, value);
-                }
-              }
-            }
-          }
-
           var captionElm;
 
           updateStyle(dom, this);
+
           data = Tools.extend(data, this.toJSON());
 
           if (data["class"] === false) {
@@ -218,45 +266,7 @@ define(
               tableElm = InsertTable.insert(editor, data.cols || 1, data.rows || 1);
             }
 
-            editor.dom.setAttribs(tableElm, {
-              style: data.style,
-              'class': data['class']
-            });
-
-            if (editor.settings.table_style_by_css) {
-              stylesToMerge = [];
-              stylesToMerge.push({ name: 'border-width', value: addSizeSuffix(data.border) });
-              stylesToMerge.push({ name: 'border-spacing', value: addSizeSuffix(data.cellspacing) });
-              mergeStyles(dom, tableElm, stylesToMerge);
-              dom.setAttribs(tableElm, {
-                'data-mce-border-color': data.borderColor,
-                'data-mce-cell-padding': data.cellpadding,
-                'data-mce-border': data.border
-              });
-              if (tableElm.children) {
-                for (var i = 0; i < tableElm.children.length; i++) {
-                  styleTDTH(tableElm.children[i], {
-                    'border-width': addSizeSuffix(data.border),
-                    'border-color': data.borderColor,
-                    'padding': addSizeSuffix(data.cellpadding)
-                  });
-                }
-              }
-            } else {
-              editor.dom.setAttribs(tableElm, {
-                border: data.border,
-                cellpadding: data.cellpadding,
-                cellspacing: data.cellspacing
-              });
-            }
-
-            if (dom.getAttrib(tableElm, 'width') && !editor.settings.table_style_by_css) {
-              dom.setAttrib(tableElm, 'width', removePxSuffix(data.width));
-            } else {
-              dom.setStyle(tableElm, 'width', addSizeSuffix(data.width));
-            }
-
-            dom.setStyle(tableElm, 'height', addSizeSuffix(data.height));
+            applyStylesToTable(editor, tableElm, data);
 
             // Toggle caption on/off
             captionElm = dom.select('caption', tableElm)[0];
@@ -270,6 +280,7 @@ define(
               captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : '\u00a0';
               tableElm.insertBefore(captionElm, tableElm.firstChild);
             }
+
             unApplyAlign(tableElm);
             if (data.align) {
               editor.formatter.apply('align' + data.align, {}, tableElm);
