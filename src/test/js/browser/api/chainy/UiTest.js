@@ -25,13 +25,14 @@ asynctest(
         Api.cAssertContent('<p><strong>some</strong> text</p>'),
 
         Ui.cClickOnToolbar("click Link button", '[role="button"][aria-label="Insert/edit link"]'),
-        Ui.cFillDialog({
+        Ui.cFillActiveDialog({
           href: 'http://example.com',
           title: "Example URL",
           target: '_blank'
         }),
+        // selector is optional, if not specified current active popup will be processed
         Ui.cSubmitDialog(),
-        Api.cAssertContent('<p><a title="Example URL" href="http://example.com" target="_blank" rel="noopener noreferrer"><strong>some</strong></a> text</p>'),
+        Api.cAssertContent('<p><a title="Example URL" href="http://example.com" target="_blank" rel="noopener"><strong>some</strong></a> text</p>'),
 
         Editor.cRemove
       ])

@@ -4,35 +4,21 @@ define(
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
-    'ephox.agar.api.Pipeline',
+    'ephox.agar.api.NamedChain',
     'ephox.agar.api.Mouse',
     'ephox.agar.api.UiFinder',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Result',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.view.Visibility',
     'global!document'
   ],
 
-  function (Assertions, Chain, Pipeline, Mouse, UiFinder, Fun, Arr, Merger, Element, Visibility, document) {
-
-    // would be great to have something like thins in Chain API, it's basically
-    // like Chain.on, but from inside one can return another chain
-    Chain.disrupt = function (callback) {
-      return Chain.on(function (input, next, die) {
-        Pipeline.async({}, [
-          Chain.asStep({}, [callback(input)])
-        ], function () {
-          next(Chain.wrap(input));
-        }, die);
-      });
-    };
+  function (Assertions, Chain, NamedChain, Mouse, UiFinder, Fun, Arr, Merger, Result, Element, Visibility, document) {
 
     var dialogRoot = Element.fromDom(document.body);
-
-    // does nothing but retains the context
-    var cNoop = Chain.op(Fun.noop);
 
     var cToolstripRoot = Chain.mapper(function (editor) {
       return Element.fromDom(editor.getContainer());
@@ -62,7 +48,7 @@ define(
     };
 
     var cClickOnToolbar = function (label, selector) {
-      return Chain.fromParent(cNoop, [
+      return Chain.fromParent(Chain.identity, [
         Chain.fromChains([
           cGetToolbarRoot,
           UiFinder.cFindIn(selector),
@@ -72,7 +58,7 @@ define(
     };
 
     var cClickOnMenu = function (label, selector) {
-      return Chain.fromParent(cNoop, [
+      return Chain.fromParent(Chain.identity, [
         Chain.fromChains([
           cGetMenuRoot,
           UiFinder.cFindIn(selector),
@@ -82,7 +68,7 @@ define(
     };
 
     var cClickOnUi = function (label, selector) {
-      return Chain.fromParent(cNoop, [
+      return Chain.fromParent(Chain.identity, [
         Chain.fromChains([
           cDialogRoot,
           UiFinder.cFindIn(selector),
@@ -131,55 +117,74 @@ define(
       ]);
     };
 
-    var cDialogByPopup = function (editor) {
-      return Chain.on(function (popup, next, die) {
-        return Arr.find(editor.windowManager.getWindows(), function (dialog) {
-          return popup.dom().id === dialog._id;
-        }).fold(die, function (dialog) {
-          next(Chain.wrap(dialog));
-        });
+    var cDialogByPopup = Chain.binder(function (input) {
+      var wins = input.editor.windowManager.getWindows();
+      var popupId = input.popupNode.dom().id;
+      var dialogs =  Arr.filter(wins, function (dialog) {
+        return popupId === dialog._id;
       });
-    };
+      return dialogs.length ? Result.value(dialogs[0]) : Result.error("dialog with id of: " + popupId + " was not found");
+    });
 
-    var cWaitForDialog = function (editor, selector) {
-      selector = selector || '[role="dialog"]';
-      return Chain.fromChains([
-        cWaitForPopup('waiting for: ' + selector, selector),
-        cDialogByPopup(editor)
+    var cWaitForDialog = function (selector) {
+      return NamedChain.asChain([
+        NamedChain.write('editor', Chain.identity),
+        NamedChain.write('popupNode', cWaitForPopup('waiting for popup: ' + selector, selector)),
+        NamedChain.merge(['editor', 'popupNode'], 'dialogInputs'),
+        NamedChain.direct('dialogInputs', cDialogByPopup, 'dialog'),
+        NamedChain.bundle(function (input) {
+          return Result.value(input.dialog);
+        })
       ]);
     };
 
-    var cAssertDialogContents = function (data, selector) {
-      return Chain.disrupt(function (editor) {
-        return Chain.fromChains([
-          cWaitForDialog(editor, selector),
+    var cAssertDialogContents = function (selector, data) {
+      return Chain.fromParent(Chain.identity, [
+        Chain.fromChains([
+          cWaitForDialog(selector),
           Chain.op(function (dialog) {
             Assertions.assertEq('asserting contents of: ' + selector, data, dialog.toJSON());
           })
-        ]);
-      });
+        ])
+      ]);
     };
 
-    var cFillDialog = function (data, selector) {
-      return Chain.disrupt(function (editor) {
-        return Chain.fromChains([
-          cWaitForDialog(editor, selector),
+    var cAssertActiveDialogContents = function (data) {
+      return cAssertDialogContents('[role="dialog"]', data);
+    };
+
+    var cFillDialog = function (selector, data) {
+      return Chain.fromParent(Chain.identity, [
+        Chain.fromChains([
+          cWaitForDialog(selector),
           Chain.op(function (dialog) {
             dialog.fromJSON(Merger.merge(dialog.toJSON(), data));
           })
-        ]);
-      });
+        ])
+      ]);
+    };
+
+    var cFillActiveDialog = function (data) {
+      return cFillDialog('[role="dialog"]', data);
+    };
+
+    var cClickPopupButton = function (popupSelector, btnSelector) {
+      popupSelector = popupSelector || '[role="dialog"]';
+      return  Chain.fromParent(Chain.identity, [
+        Chain.fromChains([
+          cWaitForPopup('waiting for: ' + popupSelector, popupSelector),
+          UiFinder.cFindIn(btnSelector),
+          Mouse.cClick
+        ])
+      ]);
+    };
+
+    var cCloseDialog = function (selector) {
+      return cClickPopupButton(selector, 'div[role="button"]:contains(Cancel)');
     };
 
     var cSubmitDialog = function (selector) {
-      return Chain.disrupt(function (editor) {
-        selector = selector || '[role="dialog"]';
-        return Chain.fromChains([
-          cWaitForPopup('waiting for: ' + selector, selector),
-          UiFinder.cFindIn('div.mce-primary > button'),
-          Mouse.cClick
-        ]);
-      });
+      return cClickPopupButton(selector, 'div[role="button"].mce-primary');
     };
 
     return {
@@ -195,8 +200,11 @@ define(
       cWaitForState: cWaitForState,
 
       cFillDialog: cFillDialog,
+      cFillActiveDialog: cFillActiveDialog,
+      cCloseDialog: cCloseDialog,
       cSubmitDialog: cSubmitDialog,
       cAssertDialogContents: cAssertDialogContents,
+      cAssertActiveDialogContents: cAssertActiveDialogContents,
 
       cTriggerContextMenu: cTriggerContextMenu,
 
