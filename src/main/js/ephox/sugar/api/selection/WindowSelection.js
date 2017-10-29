@@ -61,7 +61,7 @@ define(
       setRangeFromRelative(win, relative);
     };
 
-    var getDomRangeFromSelection = function (selection) {
+    var toNative = function (selection) {
       var win = Selection.getWin(selection).dom();
       var getDomRange = function (start, soffset, finish, foffset) {
         return NativeRange.exactToNative(win, start, soffset, finish, foffset);
@@ -167,7 +167,7 @@ define(
       getExact: getExact,
       get: get,
       setRelative: setRelative,
-      getDomRangeFromSelection: getDomRangeFromSelection,
+      toNative: toNative,
       setToElement: setToElement,
       clear: clear,
 
