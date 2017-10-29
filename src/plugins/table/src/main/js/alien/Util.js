@@ -26,9 +26,22 @@ define(
       };
     };
 
+    var removePxSuffix = function (size) {
+      return size ? size.replace(/px$/, '') : "";
+    };
+
+    var addSizeSuffix = function (size) {
+      if (/^[0-9]+$/.test(size)) {
+        size += "px";
+      }
+      return size;
+    };
+
     return {
       getBody: getBody,
-      getIsRoot: getIsRoot
+      getIsRoot: getIsRoot,
+      addSizeSuffix: addSizeSuffix,
+      removePxSuffix: removePxSuffix
     };
   }
 );
