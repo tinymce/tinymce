@@ -9,7 +9,7 @@ define(
 
   function (Chain, Arr, Merger) {
     var asChain = function (chains) {
-      return Chain.fromChainsWith({}, chains);  
+      return Chain.fromChains(chains);
     };
 
     // Write merges in its output into input because it knows that it was
