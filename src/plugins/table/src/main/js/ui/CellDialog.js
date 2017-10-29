@@ -65,13 +65,13 @@ define(
       var data;
 
       function setAttrib(elm, name, value) {
-        if (cells.length === 1 || value) {
+        if (value) {
           dom.setAttrib(elm, name, value);
         }
       }
 
       function setStyle(elm, name, value) {
-        if (cells.length === 1 || value) {
+        if (value) {
           dom.setStyle(elm, name, value);
         }
       }
