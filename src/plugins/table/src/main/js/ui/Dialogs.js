@@ -221,7 +221,7 @@ define(
           Tools.extend(styles, dom.parseStyle(data.style));
         } else {
           // ... otherwise take styles from original elm and update them
-          Tools.extend({}, dom.parseStyle(dom.getAttrib(tableElm, 'style')), styles);
+          styles = Tools.extend({}, dom.parseStyle(dom.getAttrib(tableElm, 'style')), styles);
         }
 
         attrs.style = dom.serializeStyle(styles);
