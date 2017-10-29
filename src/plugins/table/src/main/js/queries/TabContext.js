@@ -40,7 +40,7 @@ define(
 
     var getCellFirstCursorPosition = function (editor, cell) {
       var selection = Selection.exact(cell, 0, cell, 0);
-      return WindowSelection.getDomRangeFromSelection(selection);
+      return WindowSelection.toNative(selection);
     };
 
     var getNewRowCursorPosition = function (editor, table) {
