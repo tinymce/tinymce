@@ -62,6 +62,7 @@ asynctest(
               "width": "",
               "backgroundColor": "",
               "borderColor": "",
+              "borderStyle": "",
               "style": ""
             }),
             ui.cSubmitDialog()
@@ -158,6 +159,7 @@ asynctest(
               "width": "",
               "backgroundColor": "",
               "borderColor": "",
+              "borderStyle": "",
               "style": "",
               "class": ""
             }),
@@ -196,6 +198,7 @@ asynctest(
               "width": "100",
               "backgroundColor": "",
               "borderColor": "",
+              "borderStyle": "",
               "style": "width: 100px; height: 101px;"
             }),
             ui.cSubmitDialog()
