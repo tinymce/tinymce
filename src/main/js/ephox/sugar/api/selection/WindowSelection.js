@@ -6,8 +6,8 @@ define(
     'ephox.sugar.api.dom.DocumentPosition',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Fragment',
+    'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.Selection',
-    'ephox.sugar.api.selection.Situ',
     'ephox.sugar.selection.core.NativeRange',
     'ephox.sugar.selection.core.SelectionDirection',
     'ephox.sugar.selection.query.CaretRange',
@@ -15,7 +15,7 @@ define(
     'ephox.sugar.selection.quirks.Prefilter'
   ],
 
-  function (Option, DocumentPosition, Element, Fragment, Selection, Situ, NativeRange, SelectionDirection, CaretRange, Within, Prefilter) {
+  function (Option, DocumentPosition, Element, Fragment, Traverse, Selection, NativeRange, SelectionDirection, CaretRange, Within, Prefilter) {
     var doSetNativeRange = function (win, rng) {
       var selection = win.getSelection();
       selection.removeAllRanges();
@@ -31,13 +31,7 @@ define(
       return Within.find(win, selection, selector);
     };
 
-    var setExact = function (win, start, soffset, finish, foffset) {
-      setRelative(win, Situ.on(start, soffset), Situ.on(finish, foffset));
-    };
-
-    var setRelative = function (win, startSitu, finishSitu) {
-      var relative = Prefilter.preprocess(startSitu, finishSitu);
-
+    var setRangeFromRelative = function (win, relative) {
       return SelectionDirection.diagnose(win, relative).match({
         ltr: function (start, soffset, finish, foffset) {
           doSetRange(win, start, soffset, finish, foffset);
@@ -52,6 +46,30 @@ define(
             doSetRange(win, finish, foffset, start, soffset);
           }
         }
+      });
+    };
+
+    var setExact = function (win, start, soffset, finish, foffset) {
+      var relative = Prefilter.preprocessExact(start, soffset, finish, foffset);
+
+      setRangeFromRelative(win, relative);
+    };
+
+    var setRelative = function (win, startSitu, finishSitu) {
+      var relative = Prefilter.preprocessRelative(startSitu, finishSitu);
+
+      setRangeFromRelative(win, relative);
+    };
+
+    var toNative = function (selection) {
+      var win = Selection.getWin(selection).dom();
+      var getDomRange = function (start, soffset, finish, foffset) {
+        return NativeRange.exactToNative(win, start, soffset, finish, foffset);
+      };
+      var filtered = Prefilter.preprocess(selection);
+      return SelectionDirection.diagnose(win, filtered).match({
+        ltr: getDomRange,
+        rtl: getDomRange
       });
     };
 
@@ -86,7 +104,7 @@ define(
     var forElement = function (win, element) {
       var rng = NativeRange.selectNodeContents(win, element);
       return Selection.range(
-        Element.fromDom(rng.startContainer), rng.startOffset, 
+        Element.fromDom(rng.startContainer), rng.startOffset,
         Element.fromDom(rng.endContainer), rng.endOffset
       );
     };
@@ -149,6 +167,7 @@ define(
       getExact: getExact,
       get: get,
       setRelative: setRelative,
+      toNative: toNative,
       setToElement: setToElement,
       clear: clear,
 
