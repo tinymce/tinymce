@@ -35,11 +35,16 @@ define(
       return Option.none();
     };
 
-    var toPt = function (fontSize) {
-      if (/[0-9.]+px$/.test(fontSize)) {
-        return Math.round(parseInt(fontSize, 10) * 72 / 96) + 'pt';
-      }
+    var round = function (number, precision) {
+      var factor = Math.pow(10, precision);
+      return Math.round(number * factor) / factor;
+    };
 
+    var toPt = function (fontSize, precision) {
+      if (/[0-9.]+px$/.test(fontSize)) {
+        // Round to the nearest 0.5
+        return round(parseInt(fontSize, 10) * 72 / 96, precision || 0) + 'pt';
+      }
       return fontSize;
     };
 
