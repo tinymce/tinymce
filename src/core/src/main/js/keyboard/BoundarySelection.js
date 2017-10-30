@@ -18,9 +18,10 @@ define(
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.keyboard.BoundaryCaret',
     'tinymce.core.keyboard.BoundaryLocation',
-    'tinymce.core.keyboard.InlineUtils'
+    'tinymce.core.keyboard.InlineUtils',
+    'tinymce.core.selection.WordSelection'
   ],
-  function (Arr, Cell, Fun, CaretContainerRemove, CaretPosition, BoundaryCaret, BoundaryLocation, InlineUtils) {
+  function (Arr, Cell, Fun, CaretContainerRemove, CaretPosition, BoundaryCaret, BoundaryLocation, InlineUtils, WordSelection) {
     var setCaretPosition = function (editor, pos) {
       var rng = editor.dom.createRng();
       rng.setStart(pos.container(), pos.offset());
@@ -92,6 +93,12 @@ define(
       };
     };
 
+    var moveWord = function (forward, editor, caret) {
+      return function () {
+        return isFeatureEnabled(editor) ? WordSelection.moveByWord(forward, editor) : false;
+      };
+    };
+
     var setupSelectedState = function (editor) {
       var caret = new Cell(null);
       var isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
@@ -109,6 +116,8 @@ define(
 
     return {
       move: move,
+      moveNextWord: Fun.curry(moveWord, true),
+      movePrevWord: Fun.curry(moveWord, false),
       setupSelectedState: setupSelectedState,
       setCaretPosition: setCaretPosition
     };
