@@ -46,15 +46,7 @@ define(
       });
 
       if (editor.settings.table_cell_advtab !== false) {
-        var css = dom.parseStyle(dom.getAttrib(elm, 'style'));
-        if (css["border-color"]) {
-          data.borderColor = css["border-color"];
-        }
-
-        if (css["background-color"]) {
-          data.backgroundColor = css["background-color"];
-        }
-        data.style = dom.serializeStyle(css);
+        Tools.extend(data, Helpers.extractAdvancedStyles(dom, elm));
       }
 
       return data;

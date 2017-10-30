@@ -37,7 +37,7 @@ define(
       }
     }
 
-    var extractDataFromTable = function (editor, tableElm) {
+    var extractDataFromElement = function (editor, tableElm) {
       var dom = editor.dom;
       var data = {
         width: Util.removePxSuffix(dom.getStyle(tableElm, 'width') || dom.getAttrib(tableElm, 'width')),
@@ -57,20 +57,12 @@ define(
       });
 
       if (editor.settings.table_advtab !== false) {
-        var css = dom.parseStyle(dom.getAttrib(tableElm, 'style'));
-        if (css["border-color"]) {
-          data.borderColor = css["border-color"];
-        }
-
-        if (css["background-color"]) {
-          data.backgroundColor = css["background-color"];
-        }
-        data.style = dom.serializeStyle(css);
+        Tools.extend(data, Helpers.extractAdvancedStyles(dom, tableElm));
       }
       return data;
     };
 
-    var applyDataToTable = function (editor, tableElm, data) {
+    var applyDataToElement = function (editor, tableElm, data) {
       var dom = editor.dom;
       var attrs = {}, styles = {};
 
@@ -145,7 +137,7 @@ define(
           tableElm = InsertTable.insert(editor, data.cols || 1, data.rows || 1);
         }
 
-        applyDataToTable(editor, tableElm, data);
+        applyDataToElement(editor, tableElm, data);
 
         // Toggle caption on/off
         captionElm = dom.select('caption', tableElm)[0];
@@ -176,7 +168,7 @@ define(
       if (isProps === true) {
         tableElm = dom.getParent(editor.selection.getStart(), 'table');
         if (tableElm) {
-          data = extractDataFromTable(editor, tableElm);
+          data = extractDataFromElement(editor, tableElm);
         }
       } else {
         colsCtrl = { label: 'Cols', name: 'cols' };

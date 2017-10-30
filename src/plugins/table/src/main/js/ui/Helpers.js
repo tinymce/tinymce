@@ -50,9 +50,11 @@ define(
       var css = dom.parseStyle(data.style);
 
       if (isStyleCtrl) {
+        win.find('#borderStyle').value(css["border-style"] || '')[0].fire('change');
         win.find('#borderColor').value(css["border-color"] || '')[0].fire('change');
         win.find('#backgroundColor').value(css["background-color"] || '')[0].fire('change');
       } else {
+        css["border-style"] = data.borderStyle;
         css["border-color"] = data.borderColor;
         css["background-color"] = data.backgroundColor;
       }
@@ -60,7 +62,31 @@ define(
       win.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
     };
 
+    var extractAdvancedStyles = function (dom, elm) {
+      var css = dom.parseStyle(dom.getAttrib(elm, 'style'));
+      var data = {};
+
+      if (css["border-style"]) {
+        data.borderStyle = css["border-style"];
+      }
+
+      if (css["border-color"]) {
+        data.borderColor = css["border-color"];
+      }
+
+      if (css["background-color"]) {
+        data.backgroundColor = css["background-color"];
+      }
+
+      data.style = dom.serializeStyle(css);
+      return data;
+    };
+
     var createStyleForm = function (editor) {
+      var onChange = function () {
+        updateStyleField(editor, this.parents().reverse()[0], this.name() == "style");
+      };
+
       var createColorPickAction = function () {
         var colorPickerCallback = editor.settings.color_picker_callback;
         if (colorPickerCallback) {
@@ -81,9 +107,7 @@ define(
         title: 'Advanced',
         type: 'form',
         defaults: {
-          onchange: function () {
-            updateStyleField(editor, this.parents().reverse()[0], this.name() == "style");
-          }
+          onchange: onChange
         },
         items: [
           {
@@ -104,12 +128,31 @@ define(
             },
             items: [
               {
+                label: 'Border style',
+                type: 'listbox',
+                name: 'borderStyle',
+                width: 90,
+                onselect: onChange,
+                values: [
+                  { text: 'Select...', value: '' },
+                  { text: 'Solid', value: 'solid' },
+                  { text: 'Dotted', value: 'dotted' },
+                  { text: 'Dashed', value: 'dashed' },
+                  { text: 'Double', value: 'double' },
+                  { text: 'Groove', value: 'groove' },
+                  { text: 'Ridge', value: 'ridge' },
+                  { text: 'Inset', value: 'inset' },
+                  { text: 'Outset', value: 'outset' },
+                  { text: 'None', value: 'none' },
+                  { text: 'Hidden', value: 'hidden' }
+                ]
+              },
+              {
                 label: 'Border color',
                 type: 'colorbox',
                 name: 'borderColor',
                 onaction: createColorPickAction()
               },
-
               {
                 label: 'Background color',
                 type: 'colorbox',
@@ -125,7 +168,8 @@ define(
     return {
       createStyleForm: createStyleForm,
       buildListItems: buildListItems,
-      updateStyleField: updateStyleField
+      updateStyleField: updateStyleField,
+      extractAdvancedStyles: extractAdvancedStyles
     };
   }
 );
