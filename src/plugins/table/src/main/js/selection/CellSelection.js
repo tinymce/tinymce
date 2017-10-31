@@ -23,6 +23,10 @@ define(
     'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.node.Text',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.selection.core.SelectionDirection',
     'tinymce.plugins.table.alien.Util',
@@ -30,7 +34,7 @@ define(
     'tinymce.plugins.table.selection.Ephemera'
   ],
 
-  function (InputHandlers, SelectionAnnotation, SelectionKeys, Fun, Option, Struct, TableLookup, Compare, Element, Selection, SelectionDirection, Util, Direction, Ephemera) {
+  function (InputHandlers, SelectionAnnotation, SelectionKeys, Fun, Option, Struct, TableLookup, Compare, Element, Node, Text, Attr, Traverse, Selection, SelectionDirection, Util, Direction, Ephemera) {
     return function (editor, lazyResize) {
       var handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
       var handlers = Option.none();
@@ -85,11 +89,49 @@ define(
           }
         };
 
+        var checkLast = function (last) {
+          return !Attr.has(last, 'data-mce-bogus') && Node.name(last) !== 'br' && !(Node.isText(last) && Text.get(last).length === 0);
+        };
+
+        var getLast = function () {
+          var body = Element.fromDom(editor.getBody());
+
+          var lastChild = Traverse.lastChild(body);
+
+          var getPrevLast = function (last) {
+            return Traverse.prevSibling(last).bind(function (prevLast) {
+              return checkLast(prevLast) ? Option.some(prevLast) : getPrevLast(prevLast);
+            });
+          };
+
+          return lastChild.bind(function (last) {
+            return checkLast(last) ? Option.some(last) : getPrevLast(last);
+          });
+        };
+
         var keydown = function (event) {
           var wrappedEvent = wrapEvent(event);
           lazyResize().each(function (resize) {
             resize.hideBars();
           });
+
+          if (event.which === 40) {
+            getLast().each(function (last) {
+              if (Node.name(last) === 'table') {
+                if (editor.settings.forced_root_block) {
+                  editor.dom.add(
+                    editor.getBody(),
+                    editor.settings.forced_root_block,
+                    editor.settings.forced_root_block_attrs,
+                    '<br/>'
+                  );
+                } else {
+                  editor.dom.add(editor.getBody(), 'br');
+                }
+              }
+            });
+          }
+
           var rng = editor.selection.getRng();
           var startContainer = Element.fromDom(editor.selection.getStart());
           var start = Element.fromDom(rng.startContainer);
