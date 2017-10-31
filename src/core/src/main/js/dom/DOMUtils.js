@@ -27,6 +27,7 @@ define(
     'tinymce.core.Env',
     'tinymce.core.dom.DomQuery',
     'tinymce.core.dom.EventUtils',
+    'tinymce.core.dom.Position',
     'tinymce.core.dom.Sizzle',
     'tinymce.core.dom.StyleSheetLoader',
     'tinymce.core.dom.TreeWalker',
@@ -36,7 +37,7 @@ define(
     'tinymce.core.html.Styles',
     'tinymce.core.util.Tools'
   ],
-  function (document, window, Env, DomQuery, EventUtils, Sizzle, StyleSheetLoader, TreeWalker, TrimNode, Entities, Schema, Styles, Tools) {
+  function (document, window, Env, DomQuery, EventUtils, Position, Sizzle, StyleSheetLoader, TreeWalker, TrimNode, Entities, Schema, Styles, Tools) {
     // Shorten names
     var each = Tools.each, is = Tools.is, grep = Tools.grep;
     var isIE = Env.ie;
@@ -860,42 +861,7 @@ define(
        * @return {object} Absolute position of the specified element object with x, y fields.
        */
       getPos: function (elm, rootElm) {
-        var self = this, x = 0, y = 0, offsetParent, doc = self.doc, body = doc.body, pos;
-
-        elm = self.get(elm);
-        rootElm = rootElm || body;
-
-        if (elm) {
-          // Use getBoundingClientRect if it exists since it's faster than looping offset nodes
-          // Fallback to offsetParent calculations if the body isn't static better since it stops at the body root
-          if (rootElm === body && elm.getBoundingClientRect && DomQuery(body).css('position') === 'static') {
-            pos = elm.getBoundingClientRect();
-            rootElm = self.boxModel ? doc.documentElement : body;
-
-            // Add scroll offsets from documentElement or body since IE with the wrong box model will use d.body and so do WebKit
-            // Also remove the body/documentelement clientTop/clientLeft on IE 6, 7 since they offset the position
-            x = pos.left + (doc.documentElement.scrollLeft || body.scrollLeft) - rootElm.clientLeft;
-            y = pos.top + (doc.documentElement.scrollTop || body.scrollTop) - rootElm.clientTop;
-
-            return { x: x, y: y };
-          }
-
-          offsetParent = elm;
-          while (offsetParent && offsetParent != rootElm && offsetParent.nodeType) {
-            x += offsetParent.offsetLeft || 0;
-            y += offsetParent.offsetTop || 0;
-            offsetParent = offsetParent.offsetParent;
-          }
-
-          offsetParent = elm.parentNode;
-          while (offsetParent && offsetParent != rootElm && offsetParent.nodeType) {
-            x -= offsetParent.scrollLeft || 0;
-            y -= offsetParent.scrollTop || 0;
-            offsetParent = offsetParent.parentNode;
-          }
-        }
-
-        return { x: x, y: y };
+        return Position.getPos(this.doc.body, this.get(elm), rootElm);
       },
 
       /**
