@@ -73,7 +73,7 @@ asynctest(
           tinyApis.sAssertContent('<p>cats cats cats</p>'),
           sRedo(editor),
           tinyApis.sAssertContentPresence({ 'span.mce-match-marker': 0 }),
-          tinyApis.sAssertContent('hello')
+          tinyApis.sAssertContent('<p>dogs cats cats</p>')
         ]))
       ], onSuccess, onFailure);
     }, {
