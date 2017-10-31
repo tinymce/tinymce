@@ -5,13 +5,11 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Assertions',
-    'ephox.mcagar.api.chainy.Api',
-    'ephox.mcagar.api.chainy.Ui',
     'ephox.mcagar.api.chainy.Actions',
     'ephox.mcagar.api.chainy.Editor'
   ],
 
-  function (Pipeline, Chain, Assertions, Api, Ui, Actions, Editor) {
+  function (Pipeline, Chain, Assertions, Actions, Editor) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 

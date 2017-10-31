@@ -51,6 +51,7 @@ define(
 
     return {
       cCreate: cFromSettings({}),
+      cCreateInline: cFromSettings({ inline: true }),
       cFromHtml: cFromHtml,
       cFromSettings: cFromSettings,
       cRemove: cRemove
