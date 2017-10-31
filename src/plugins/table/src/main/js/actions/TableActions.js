@@ -19,12 +19,29 @@ define(
     'ephox.snooker.api.TableFill',
     'ephox.snooker.api.TableOperations',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.SelectorFilter',
-    'tinymce.plugins.table.queries.Direction'
+    'tinymce.plugins.table.alien.Util',
+    'tinymce.plugins.table.queries.Direction',
+    'tinymce.plugins.table.queries.TableGridSize'
   ],
-  function (Arr, Fun, Option, CellMutations, TableDirection, TableFill, TableOperations, Element, Attr, SelectorFilter, Direction) {
+  function (Arr, Fun, Option, CellMutations, TableDirection, TableFill, TableOperations, Element, Node, Attr, SelectorFilter, Util, Direction, TableGridSize) {
     return function (editor, lazyWire) {
+      var isTableBody = function (editor) {
+        return Node.name(Util.getBody(editor)) === 'table';
+      };
+
+      var lastRowGuard = function (table) {
+        var size = TableGridSize.getGridSize(table);
+        return isTableBody(editor) === false || size.rows() > 1;
+      };
+
+      var lastColumnGuard = function (table) {
+        var size = TableGridSize.getGridSize(table);
+        return isTableBody(editor) === false || size.columns() > 1;
+      };
+
       var fireNewRow = function (node) {
         editor.fire('newrow', {
           node: node.dom()
@@ -50,7 +67,7 @@ define(
       // Option.none gives the default cloneFormats.
       var cloneFormats = Option.from(cloneFormatsArray);
 
-      var execute = function (operation, mutate, lazyWire) {
+      var execute = function (operation, guard, mutate, lazyWire) {
         return function (table, target) {
           var dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
           Arr.each(dataStyleCells, function (cell) {
@@ -60,7 +77,7 @@ define(
           var doc = Element.fromDom(editor.getDoc());
           var direction = TableDirection(Direction.directionAt);
           var generators = TableFill.cellOperations(mutate, doc, cloneFormats);
-          return operation(wire, table, target, generators, direction).bind(function (result) {
+          return guard(table) ? operation(wire, table, target, generators, direction).bind(function (result) {
             Arr.each(result.newRows(), function (row) {
               fireNewRow(row);
             });
@@ -73,31 +90,31 @@ define(
               rng.setEnd(cell.dom(), 0);
               return rng;
             });
-          });
+          }) : Option.none();
         };
       };
 
-      var deleteRow = execute(TableOperations.eraseRows, Fun.noop, lazyWire);
+      var deleteRow = execute(TableOperations.eraseRows, lastRowGuard, Fun.noop, lazyWire);
 
-      var deleteColumn = execute(TableOperations.eraseColumns, Fun.noop, lazyWire);
+      var deleteColumn = execute(TableOperations.eraseColumns, lastColumnGuard, Fun.noop, lazyWire);
 
-      var insertRowsBefore = execute(TableOperations.insertRowsBefore, Fun.noop, lazyWire);
+      var insertRowsBefore = execute(TableOperations.insertRowsBefore, Fun.always, Fun.noop, lazyWire);
 
-      var insertRowsAfter = execute(TableOperations.insertRowsAfter, Fun.noop, lazyWire);
+      var insertRowsAfter = execute(TableOperations.insertRowsAfter, Fun.always, Fun.noop, lazyWire);
 
-      var insertColumnsBefore = execute(TableOperations.insertColumnsBefore, CellMutations.halve, lazyWire);
+      var insertColumnsBefore = execute(TableOperations.insertColumnsBefore, Fun.always, CellMutations.halve, lazyWire);
 
-      var insertColumnsAfter = execute(TableOperations.insertColumnsAfter, CellMutations.halve, lazyWire);
+      var insertColumnsAfter = execute(TableOperations.insertColumnsAfter, Fun.always, CellMutations.halve, lazyWire);
 
-      var mergeCells = execute(TableOperations.mergeCells, Fun.noop, lazyWire);
+      var mergeCells = execute(TableOperations.mergeCells, Fun.always, Fun.noop, lazyWire);
 
-      var unmergeCells = execute(TableOperations.unmergeCells, Fun.noop, lazyWire);
+      var unmergeCells = execute(TableOperations.unmergeCells, Fun.always, Fun.noop, lazyWire);
 
-      var pasteRowsBefore = execute(TableOperations.pasteRowsBefore, Fun.noop, lazyWire);
+      var pasteRowsBefore = execute(TableOperations.pasteRowsBefore, Fun.always, Fun.noop, lazyWire);
 
-      var pasteRowsAfter = execute(TableOperations.pasteRowsAfter, Fun.noop, lazyWire);
+      var pasteRowsAfter = execute(TableOperations.pasteRowsAfter, Fun.always, Fun.noop, lazyWire);
 
-      var pasteCells = execute(TableOperations.pasteCells, Fun.noop, lazyWire);
+      var pasteCells = execute(TableOperations.pasteCells, Fun.always, Fun.noop, lazyWire);
 
       return {
         deleteRow: deleteRow,
