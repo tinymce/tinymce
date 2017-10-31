@@ -111,10 +111,6 @@ define(
       });
     };
 
-    var cAssertSelectionFrom = function (expected) {
-      // TODO
-    };
-
     var assertPath = function (label, root, expPath, expOffset, actElement, actOffset) {
       var expected = Cursors.calculateOne(root, expPath);
       var message = function () {
@@ -165,7 +161,6 @@ define(
       cAssertContent: cAssertContent,
       cAssertContentPresence: cAssertContentPresence,
       cAssertContentStructure: cAssertContentStructure,
-      cAssertSelectionFrom: cAssertSelectionFrom,
       cAssertSelection: cAssertSelection,
       sTryAssertFocus: sTryAssertFocus
     };
