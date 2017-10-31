@@ -20,7 +20,6 @@ define(
     var cFromSettings = function (settings, html) {
       return Chain.on(function (_, next, die) {
         var randomId = Id.generate('tiny-loader');
-        settings = settings || {};
         var target = html ? Element.fromHtml(html) : Element.fromTag(settings.inline ? 'div' : 'textarea');
 
         Attr.set(target, 'id', randomId);
@@ -51,6 +50,7 @@ define(
     });
 
     return {
+      cCreate: cFromSettings({}),
       cFromHtml: cFromHtml,
       cFromSettings: cFromSettings,
       cRemove: cRemove

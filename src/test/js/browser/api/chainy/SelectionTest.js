@@ -14,7 +14,7 @@ asynctest(
 
     Pipeline.async({}, [
       Chain.asStep({}, [
-        Editor.cFromSettings(),
+        Editor.cCreate,
         Api.cFocus,
         Api.cSetContent('<p>this is one paragraph</p><p>This is another</p>'),
         Api.cSetSelection([ 0, 0 ], 'this'.length, [ 1, 0 ], 'This is'.length),

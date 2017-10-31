@@ -43,7 +43,7 @@ asynctest(
 
     Pipeline.async({}, [
       Chain.asStep({}, [
-        Editor.cFromSettings(),
+        Editor.cCreate,
         cAssertContentKeyboardEvent(Actions.cContentKeypress, {
           type: 'keypress',
           code: 88,
