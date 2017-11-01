@@ -50,7 +50,7 @@ define(
       var css = dom.parseStyle(data.style);
 
       if (isStyleCtrl) {
-        win.find('#borderStyle').value(css["border-style"] || '')[0].fire('change');
+        win.find('#borderStyle').value(css["border-style"] || '')[0].fire('select');
         win.find('#borderColor').value(css["border-color"] || '')[0].fire('change');
         win.find('#backgroundColor').value(css["background-color"] || '')[0].fire('change');
       } else {
