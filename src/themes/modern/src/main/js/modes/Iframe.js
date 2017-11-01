@@ -13,6 +13,7 @@ define(
   [
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ui.Factory',
+    'tinymce.core.util.I18n',
     'tinymce.core.util.Tools',
     'tinymce.themes.modern.api.Events',
     'tinymce.themes.modern.api.Settings',
@@ -24,7 +25,7 @@ define(
     'tinymce.themes.modern.ui.SkinLoaded',
     'tinymce.themes.modern.ui.Toolbar'
   ],
-  function (DOMUtils, Factory, Tools, Events, Settings, A11y, ContextToolbars, Menubar, Resize, Sidebar, SkinLoaded, Toolbar) {
+  function (DOMUtils, Factory, I18n, Tools, Events, Settings, A11y, ContextToolbars, Menubar, Resize, Sidebar, SkinLoaded, Toolbar) {
     var DOM = DOMUtils.DOM;
 
     var switchMode = function (panel) {
@@ -111,7 +112,9 @@ define(
       }
 
       if (Settings.hasStatusbar(editor)) {
-        var brandingLabel = Settings.isBrandingEnabled(editor) ? { type: 'label', classes: 'branding', html: ' powered by <a href="https://www.tinymce.com/?utm_campaign=editor_referral&utm_medium=poweredby&utm_source=tinymce" rel="noopener" target="_blank">tinymce</a>' } : null;
+        var linkHtml = '<a href="https://www.tinymce.com/?utm_campaign=editor_referral&utm_medium=poweredby&utm_source=tinymce" rel="noopener" target="_blank">tinymce</a>';
+        var html = I18n.translate(['Powered by {0}', linkHtml]);
+        var brandingLabel = Settings.isBrandingEnabled(editor) ? { type: 'label', classes: 'branding', html: ' ' + html } : null;
 
         panel.add({
           type: 'panel', name: 'statusbar', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', ariaRoot: true, items: [
