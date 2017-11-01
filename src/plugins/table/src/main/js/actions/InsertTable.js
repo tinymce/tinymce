@@ -12,12 +12,24 @@ define(
   'tinymce.plugins.table.actions.InsertTable',
 
   [
+    'ephox.katamari.api.Fun',
     'ephox.snooker.api.TableRender',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.properties.Html'
+    'ephox.sugar.api.properties.Html',
+    'ephox.sugar.api.search.SelectorFind'
   ],
 
-  function (TableRender, Attr, Html) {
+  function (Fun, TableRender, Element, Attr, Html, SelectorFind) {
+    var placeCaretInCell = function (editor, cell) {
+      editor.selection.select(cell.dom(), true);
+      editor.selection.collapse(true);
+    };
+
+    var selectFirstCellInTable = function (editor, tableElm) {
+      SelectorFind.descendant(tableElm, 'td,th').each(Fun.curry(placeCaretInCell, editor));
+    };
+
     var insert = function (editor, columns, rows) {
       var tableElm;
 
@@ -46,6 +58,8 @@ define(
 
       editor.dom.setAttribs(tableElm, editor.settings.table_default_attributes || {});
       editor.dom.setStyles(tableElm, editor.settings.table_default_styles || {});
+
+      selectFirstCellInTable(editor, Element.fromDom(tableElm));
 
       return tableElm;
     };
