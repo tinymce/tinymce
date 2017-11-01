@@ -125,6 +125,68 @@ asynctest(
       );
     });
 
+    suite.test("mceTablePasteRowAfter command with thead and tfoot", function (editor) {
+      editor.setContent(
+        '<table>' +
+        '<thead>' +
+          '<tr><td>Head1</td><td>Head2</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+          '<tr><td>a</td><td>b</td></tr>' +
+          '<tr><td>c</td><td>d</td></tr>' +
+        '</tbody>' +
+        '<tfoot>' +
+          '<tr><td>Foot1</td><td>Foot2</td></tr>' +
+        '</tfoot>' +
+        '</table>'
+      );
+
+      selectOne(editor, 'tbody tr:nth-child(1) td');
+      editor.execCommand('mceTableCopyRow');
+      selectOne(editor, 'tbody tr:nth-child(2) td');
+      editor.execCommand('mceTablePasteRowAfter');
+
+      LegacyUnit.equal(
+        cleanTableHtml(editor.getContent()),
+
+        '<table>' +
+        '<thead>' +
+          '<tr><td>Head1</td><td>Head2</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+          '<tr><td>a</td><td>b</td></tr>' +
+          '<tr><td>c</td><td>d</td></tr>' +
+          '<tr><td>a</td><td>b</td></tr>' +
+        '</tbody>' +
+        '<tfoot>' +
+          '<tr><td>Foot1</td><td>Foot2</td></tr>' +
+        '</tfoot>' +
+        '</table>'
+      );
+
+      selectOne(editor, 'tbody tr:nth-child(2) td');
+      editor.execCommand('mceTablePasteRowAfter');
+
+      LegacyUnit.equal(
+        cleanTableHtml(editor.getContent()),
+
+        '<table>' +
+        '<thead>' +
+          '<tr><td>Head1</td><td>Head2</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+          '<tr><td>a</td><td>b</td></tr>' +
+          '<tr><td>c</td><td>d</td></tr>' +
+          '<tr><td>a</td><td>b</td></tr>' +
+          '<tr><td>a</td><td>b</td></tr>' +
+        '</tbody>' +
+        '<tfoot>' +
+          '<tr><td>Foot1</td><td>Foot2</td></tr>' +
+        '</tfoot>' +
+        '</table>'
+      );
+    });
+
     suite.test("mceTablePasteRowAfter from merged row source", function (editor) {
       editor.setContent(
         '<table>' +
