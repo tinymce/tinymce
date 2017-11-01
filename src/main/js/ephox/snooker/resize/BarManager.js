@@ -118,15 +118,9 @@ define(
       var destroy = function () {
         mousedown.unbind();
         mouseover.unbind();
-        firefoxDrag.unbind();
         resizing.destroy();
         Bars.destroy(wire);
       };
-
-      /* This is required on Firefox to stop the default drag behaviour interfering with dragster */
-      var firefoxDrag = DomEvent.bind(wire.view(), 'dragstart', function (event) {
-        event.raw().preventDefault();
-      });
 
       var refresh = function (tbl) {
         Bars.refresh(wire, tbl, hdirection, direction);
