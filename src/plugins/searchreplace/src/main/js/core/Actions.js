@@ -179,7 +179,6 @@ define(
         }
       }
 
-      editor.undoManager.add();
       currentIndexState.set(nextIndex);
 
       if (forward) {

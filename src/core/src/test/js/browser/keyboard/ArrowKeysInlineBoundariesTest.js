@@ -10,12 +10,15 @@ asynctest(
     'ephox.mcagar.api.TinyActions',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
+    'ephox.sand.api.PlatformDetection',
+    'tinymce.core.selection.WordSelection',
     'tinymce.core.text.Zwsp',
     'tinymce.themes.modern.Theme'
   ],
-  function (Assertions, GeneralSteps, Keys, Logger, Pipeline, Step, TinyActions, TinyApis, TinyLoader, Zwsp, Theme) {
+  function (Assertions, GeneralSteps, Keys, Logger, Pipeline, Step, TinyActions, TinyApis, TinyLoader, PlatformDetection, WordSelection, Zwsp, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+    var os = PlatformDetection.detect().os;
 
     Theme();
 
@@ -267,7 +270,26 @@ asynctest(
               tinyApis.sAssertSelection([0, 0, 0, 0], 1, [0, 0, 0, 0], 1),
               sAssertCaretAfterZwsp(editor)
             ]))
-          ]))
+          ])),
+
+          Logger.t('Ctrl+arrow keys at anchor', GeneralSteps.sequence(
+            WordSelection.hasSelectionModifyApi(editor) ? [
+              Logger.t('Ctrl+Arrow right from inline boundary to next word', GeneralSteps.sequence([
+                sSetRawContent(editor, '<p>aa <a href="#">bb</a> cc</p>'),
+                tinyApis.sSetCursor([0, 1, 0], 2),
+                tinyApis.sNodeChanged,
+                tinyActions.sContentKeystroke(Keys.right(), { ctrl: !os.isOSX(), alt: os.isOSX() }),
+                tinyApis.sAssertSelection([0, 2], 3, [0, 2], 3)
+              ])),
+              Logger.t('Ctrl+Arrow left from inline boundary to previous word', GeneralSteps.sequence([
+                sSetRawContent(editor, '<p>aa <a href="#">bb</a> cc</p>'),
+                tinyApis.sSetCursor([0, 1, 0], 0),
+                tinyApis.sNodeChanged,
+                tinyActions.sContentKeystroke(Keys.left(), { ctrl: !os.isOSX(), alt: os.isOSX() }),
+                tinyApis.sAssertSelection([0, 0], 0, [0, 0], 0)
+              ]))
+            ] : []
+          ))
         ]))
       ], onSuccess, onFailure);
     }, {
