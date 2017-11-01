@@ -88,7 +88,7 @@ define(
         rootClass + ' div.mce-resizehandle {' +
         'position: absolute;' +
         'border: 1px solid black;' +
-        'box-sizing: box-sizing;' +
+        'box-sizing: content-box;' +
         'background: #FFF;' +
         'width: 7px;' +
         'height: 7px;' +
