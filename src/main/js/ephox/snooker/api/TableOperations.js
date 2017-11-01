@@ -230,7 +230,7 @@ define(
     };
 
     var pasteRowsAfter = function (grid, pasteDetails, comparator, genWrappers) {
-      var example = grid[pasteDetails.cells.length - 1];
+      var example = grid[pasteDetails.cells[0].row()];
       var index = pasteDetails.cells[pasteDetails.cells.length - 1].row() + pasteDetails.cells[pasteDetails.cells.length - 1].rowspan();
       var gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
       var mergedGrid = TableMerge.insert(index, grid, gridB, pasteDetails.generators(), comparator);
