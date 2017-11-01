@@ -2,13 +2,13 @@ test(
   'DimensionTest',
 
   [
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.node.Body',
-    'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.view.Height',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.view.Height',
     'ephox.sugar.api.view.Width',
     'ephox.sugar.impl.Dimension',
     'ephox.sugar.test.Div',
@@ -17,7 +17,7 @@ test(
     'global!window'
   ],
 
-  function (Attr, Body, Css, Element, Height, Insert, Remove, Width, Dimension, Div, MathElement, document, window) {
+  function (Insert, Remove, Body, Element, Attr, Css, Height, Width, Dimension, Div, MathElement, document, window) {
     /* Remember, these checks are run 4 times */
     var runChecks = function (dimension, borderBox) {
       // dupe with BorderBox - please apply any changes to both.
@@ -235,6 +235,10 @@ test(
     var boundsWidth = Width.get(bounds);
     assert.eq(true, boundsWidth > maxWidth);
 
+    // Table height test Firefox will exclude caption from offsetHeight
+    var tbl = Element.fromHtml('<table><caption style="height: 300px"></caption><tbody><tr><td style="height: 10px"></td></tr></tbody></table>');
+    Insert.append(bounds, tbl);
+    assert.eq(true, Height.getOuter(tbl) > 300, 'Height should be more than 300');
 
     // This test is broken in ie10, we don't understand exactly how it calculates max-width, every other platform passes.
     // Since we are not using the Width.setMax method in out codebase, commenting it out till then.

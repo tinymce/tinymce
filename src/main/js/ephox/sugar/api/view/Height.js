@@ -9,7 +9,13 @@ define(
   function (Css, Dimension) {
     var api = Dimension('height', function (element) {
       // IMO passing this function is better than using dom['offset' + 'height']
-      return element.dom().offsetHeight;
+      try {
+        // IE will throw an error here if the node is detached from dom
+        // Using getBoundingClientRect().height gives the right result on Firefox on tables with caption
+        return element.dom().getBoundingClientRect().height;
+      } catch (e) {
+        return element.dom().offsetHeight;
+      }
     });
 
     var set = function (element, h) {
