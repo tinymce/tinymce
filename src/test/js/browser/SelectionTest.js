@@ -88,7 +88,7 @@ test(
     Remove.remove(p2);
 
     var assertRng = function (selection, expStart, expSoffset, expFinish, expFoffset) {
-      var rng = WindowSelection.getDomRangeFromSelection(selection);
+      var rng = WindowSelection.toNative(selection);
 
       assert.eq(expStart.dom(), rng.startContainer, 'Start Container should be: ' + Html.getOuter(expStart));
       assert.eq(expSoffset, rng.startOffset, 'Start offset should be: ' + expSoffset);
