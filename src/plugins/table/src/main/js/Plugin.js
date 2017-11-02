@@ -37,10 +37,9 @@ define(
     'tinymce.plugins.table.selection.Ephemera',
     'tinymce.plugins.table.selection.Selections',
     'tinymce.plugins.table.ui.Buttons',
-    'tinymce.plugins.table.ui.Dialogs',
     'tinymce.plugins.table.ui.MenuItems'
   ],
-  function (Arr, Option, ResizeWire, TableDirection, TableResize, Element, Attr, SelectorFilter, PluginManager, Clipboard, InsertTable, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Ephemera, Selections, Buttons, Dialogs, MenuItems) {
+  function (Arr, Option, ResizeWire, TableDirection, TableResize, Element, Attr, SelectorFilter, PluginManager, Clipboard, InsertTable, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Ephemera, Selections, Buttons, MenuItems) {
     function Plugin(editor) {
       var self = this;
 
@@ -54,18 +53,16 @@ define(
 
       var cellSelection = CellSelection(editor, lazyResize);
 
-      var dialogs = new Dialogs(editor);
-
       var actions = TableActions(editor, lazyWire);
 
       var selections = Selections(editor);
 
-      TableCommands.registerCommands(editor, dialogs, actions, cellSelection, selections);
+      TableCommands.registerCommands(editor, actions, cellSelection, selections);
 
       Clipboard.registerEvents(editor, selections, actions, cellSelection);
 
-      MenuItems.addMenuItems(editor, dialogs, selections);
-      Buttons.addButtons(editor, dialogs);
+      MenuItems.addMenuItems(editor, selections);
+      Buttons.addButtons(editor);
       Buttons.addToolbars(editor);
 
       var resize = Option.none();

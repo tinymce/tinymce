@@ -24,10 +24,13 @@ define(
     'ephox.sugar.api.node.Element',
     'tinymce.core.util.Tools',
     'tinymce.plugins.table.alien.Util',
-    'tinymce.plugins.table.queries.TableTargets'
+    'tinymce.plugins.table.queries.TableTargets',
+    'tinymce.plugins.table.ui.TableDialog',
+    'tinymce.plugins.table.ui.RowDialog',
+    'tinymce.plugins.table.ui.CellDialog'
   ],
 
-  function (Arr, Fun, Option, CopyRows, TableFill, TableLookup, Insert, Remove, Replication, Element, Tools, Util, TableTargets) {
+  function (Arr, Fun, Option, CopyRows, TableFill, TableLookup, Insert, Remove, Replication, Element, Tools, Util, TableTargets, TableDialog, RowDialog, CellDialog) {
     var each = Tools.each;
 
     var clipboardRows = Option.none();
@@ -47,7 +50,7 @@ define(
       clipboardRows = Option.from(sugarRows);
     };
 
-    var registerCommands = function (editor, dialogs, actions, cellSelection, selections) {
+    var registerCommands = function (editor, actions, cellSelection, selections) {
       var isRoot = Util.getIsRoot(editor);
       var eraseTable = function () {
         var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
@@ -174,12 +177,10 @@ define(
 
       // Register dialog commands
       each({
-        mceInsertTable: dialogs.table,
-        mceTableProps: function () {
-          dialogs.table(true);
-        },
-        mceTableRowProps: dialogs.row,
-        mceTableCellProps: dialogs.cell
+        mceInsertTable: Fun.curry(TableDialog.open, editor),
+        mceTableProps: Fun.curry(TableDialog.open, editor, true),
+        mceTableRowProps: Fun.curry(RowDialog.open, editor),
+        mceTableCellProps: Fun.curry(CellDialog.open, editor)
       }, function (func, name) {
         editor.addCommand(name, function (ui, val) {
           func(val);
