@@ -72,7 +72,6 @@ define(
       var wire = Option.none();
       var selectionRng = Option.none();
 
-
       editor.on('init', function () {
         var direction = TableDirection(Direction.directionAt);
         var rawWire = TableWire.get(editor);
