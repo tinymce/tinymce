@@ -240,6 +240,10 @@ test(
     Insert.append(bounds, tbl);
     assert.eq(true, Height.getOuter(tbl) > 300, 'Height should be more than 300');
 
+    // Height on detached node
+    var detachedElm = Element.fromHtml('<div>a</div>');
+    assert.eq(0, Height.getOuter(detachedElm), 'Should be zero for a detached element');
+
     // This test is broken in ie10, we don't understand exactly how it calculates max-width, every other platform passes.
     // Since we are not using the Width.setMax method in out codebase, commenting it out till then.
 
