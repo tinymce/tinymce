@@ -4,16 +4,17 @@ define(
   [
     'ephox.darwin.keyboard.Carets',
     'ephox.darwin.keyboard.Rectangles',
+    'ephox.katamari.api.Adt',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.phoenix.api.dom.DomGather',
     'ephox.robin.api.dom.DomStructure',
-    'ephox.katamari.api.Adt',
+    'ephox.sugar.api.node.Node',
     'ephox.sugar.api.search.PredicateFind',
     'global!Math'
   ],
 
-  function (Carets, Rectangles, Fun, Option, DomGather, DomStructure, Adt, PredicateFind, Math) {
+  function (Carets, Rectangles, Adt, Fun, Option, DomGather, DomStructure, Node, PredicateFind, Math) {
     var JUMP_SIZE = 5;
     var NUM_RETRIES = 100;
 
@@ -85,8 +86,20 @@ define(
       gather: DomGather.after
     };
 
+    var isAtTable = function (bridge, x, y) {
+      return bridge.elementFromPoint(x, y).map(function (elm) {
+        return Node.name(elm) === 'table';
+      }).getOr(false);
+    };
+
+    var adjustForTable = function (bridge, movement, original, caret, numRetries) {
+      return adjustTil(bridge, movement, original, movement.move(caret, JUMP_SIZE), numRetries);
+    };
+
     var adjustTil = function (bridge, movement, original, caret, numRetries) {
       if (numRetries === 0) return Option.some(caret);
+      if (isAtTable(bridge, caret.left(), movement.point(caret))) return adjustForTable(bridge, movement, original, caret, numRetries-1);
+
       return bridge.situsFromPoint(caret.left(), movement.point(caret)).bind(function (guess) {
         return guess.start().fold(Option.none, function (element, offset) {
           return Rectangles.getEntireBox(bridge, element, offset).bind(function (guessBox) {

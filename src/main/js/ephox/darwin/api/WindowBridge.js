@@ -5,13 +5,19 @@ define(
     'ephox.darwin.selection.Util',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Obj',
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.Situ',
     'ephox.sugar.api.selection.WindowSelection'
   ],
 
-  function (Util, Fun, Obj, Selection, Situ, WindowSelection) {
+  function (Util, Fun, Obj, Option, Element, Selection, Situ, WindowSelection) {
     return function (win) {
+      var elementFromPoint = function (x, y) {
+        return Option.from(win.document.elementFromPoint(x, y)).map(Element.fromDom);
+      };
+
       var getRect = function (element) {
         return element.dom().getBoundingClientRect();
       };
@@ -72,6 +78,7 @@ define(
       };
 
       return {
+        elementFromPoint: elementFromPoint,
         getRect: getRect,
         getRangedRect: getRangedRect,
         getSelection: getSelection,
