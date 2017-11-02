@@ -45,8 +45,8 @@ define(
     var pixelSize = function (width) {
       var intWidth = parseInt(width, 10);
       var getCellDelta = Fun.identity;
-      var singleColumnWidth = function (width, _delta) {
-        var newNext = Math.max(CellUtils.minWidth(), width + step);
+      var singleColumnWidth = function (width, delta) {
+        var newNext = Math.max(CellUtils.minWidth(), width + delta);
         return [ newNext - width ];
       };
       var setTableWidth = function (table, newWidths, _delta) {
