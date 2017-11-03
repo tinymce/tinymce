@@ -12,13 +12,15 @@ define(
   'tinymce.plugins.table.ui.Buttons',
 
   [
-    'tinymce.core.util.Tools'
+    'ephox.katamari.api.Fun',
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.table.ui.TableDialog'
   ],
 
-  function (Tools) {
+  function (Fun, Tools, TableDialog) {
     var each = Tools.each;
 
-    var addButtons = function (editor, dialogs) {
+    var addButtons = function (editor) {
       var menuItems = [];
       each("inserttable tableprops deletetable | cell row column".split(' '), function (name) {
         if (name == '|') {
@@ -42,7 +44,7 @@ define(
 
       editor.addButton('tableprops', {
         title: 'Table properties',
-        onclick: dialogs.tableProps,
+        onclick: Fun.curry(TableDialog.open, editor, true),
         icon: 'table'
       });
 

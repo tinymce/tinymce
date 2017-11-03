@@ -53,6 +53,7 @@ asynctest(
         "width": "",
         "backgroundColor": "",
         "borderColor": "",
+        "borderStyle": "",
         "style": ""
       });
 
@@ -92,7 +93,7 @@ asynctest(
     suite.test("Table cell properties dialog (get data from complex cell)", function (editor) {
       editor.setContent(
         '<table><tr><th style="text-align: right; vertical-align: top; width: 10px; height: 11px; ' +
-        'border-color: red; background-color: blue" scope="row">X</th></tr></table>'
+        'border-color: red; background-color: blue; border-style: dashed;" scope="row">X</th></tr></table>'
       );
       LegacyUnit.setSelection(editor, 'th', 0);
       editor.execCommand('mceTableCellProps');
@@ -106,7 +107,8 @@ asynctest(
         "width": "10",
         "backgroundColor": "blue",
         "borderColor": "red",
-        "style": "width: 10px; height: 11px; vertical-align: top; text-align: right; border-color: red; background-color: blue;"
+        "borderStyle": "dashed",
+        "style": "width: 10px; height: 11px; vertical-align: top; text-align: right; border-color: red; border-style: dashed; background-color: blue;"
       });
 
       closeTopMostWindow(editor);
@@ -156,6 +158,7 @@ asynctest(
         "width": "",
         "backgroundColor": "",
         "borderColor": "",
+        "borderStyle": "",
         "style": ""
       }, 'Should not contain width');
 
@@ -187,7 +190,7 @@ asynctest(
       plugins: 'table',
       indent: false,
       valid_styles: {
-        '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
+        '*': 'width,height,vertical-align,text-align,float,border-color,border-style,background-color,border,padding,border-spacing,border-collapse'
       },
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);

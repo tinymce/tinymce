@@ -49,6 +49,7 @@ asynctest(
         "height": "",
         "type": "tbody",
         "backgroundColor": "",
+        "borderStyle": "",
         "borderColor": "",
         "style": ""
       });
@@ -71,6 +72,7 @@ asynctest(
         "type": "thead",
         "backgroundColor": "blue",
         "borderColor": "red",
+        "borderStyle": "",
         "style": "height: 10px; text-align: right; border-color: red; background-color: blue;"
       });
 
@@ -137,6 +139,7 @@ asynctest(
         "type": "tbody",
         "backgroundColor": "",
         "borderColor": "",
+        "borderStyle": "",
         "style": ""
       }, 'Should not contain height');
 
@@ -172,7 +175,7 @@ asynctest(
       plugins: 'table',
       indent: false,
       valid_styles: {
-        '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
+        '*': 'width,height,vertical-align,text-align,float,border-color,border-style,background-color,border,padding,border-spacing,border-collapse'
       },
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);

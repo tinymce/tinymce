@@ -12,16 +12,18 @@ define(
   'tinymce.plugins.table.ui.MenuItems',
 
   [
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
     'ephox.snooker.api.TableLookup',
     'ephox.sugar.api.node.Element',
     'tinymce.plugins.table.actions.InsertTable',
-    'tinymce.plugins.table.queries.TableTargets'
+    'tinymce.plugins.table.queries.TableTargets',
+    'tinymce.plugins.table.ui.TableDialog'
   ],
 
-  function (Arr, Option, TableLookup, Element, InsertTable, TableTargets) {
-    var addMenuItems = function (editor, dialogs, selections) {
+  function (Fun, Arr, Option, TableLookup, Element, InsertTable, TableTargets, TableDialog) {
+    var addMenuItems = function (editor, selections) {
       var targets = Option.none();
 
       var tableCtrls = [];
@@ -164,7 +166,7 @@ define(
         text: 'Table',
         icon: 'table',
         context: 'table',
-        onclick: dialogs.table
+        onclick: Fun.curry(TableDialog.open, editor)
       } : {
         text: 'Table',
         icon: 'table',
@@ -174,7 +176,7 @@ define(
           if (e.aria) {
             this.parent().hideAll();
             e.stopImmediatePropagation();
-            dialogs.table();
+            TableDialog.open(editor);
           }
         },
         onshow: function () {
@@ -243,7 +245,7 @@ define(
         text: 'Table properties',
         context: 'table',
         onPostRender: pushTable,
-        onclick: dialogs.tableProps
+        onclick: Fun.curry(TableDialog.open, editor, true)
       };
 
       var deleteTable = {
