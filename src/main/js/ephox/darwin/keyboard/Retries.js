@@ -87,9 +87,9 @@ define(
     };
 
     var isAtTable = function (bridge, x, y) {
-      return bridge.elementFromPoint(x, y).map(function (elm) {
+      return bridge.elementFromPoint(x, y).filter(function (elm) {
         return Node.name(elm) === 'table';
-      }).getOr(false);
+      }).isSome();
     };
 
     var adjustForTable = function (bridge, movement, original, caret, numRetries) {
