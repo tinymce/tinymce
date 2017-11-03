@@ -12,6 +12,7 @@ define(
   'tinymce.themes.modern.ui.ContextToolbars',
   [
     'global!document',
+    'tinymce.core.Env',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.geom.Rect',
     'tinymce.core.ui.Factory',
@@ -20,7 +21,7 @@ define(
     'tinymce.themes.modern.api.Settings',
     'tinymce.themes.modern.ui.Toolbar'
   ],
-  function (document, DOMUtils, Rect, Factory, Delay, Tools, Settings, Toolbar) {
+  function (document, Env, DOMUtils, Rect, Factory, Delay, Tools, Settings, Toolbar) {
     var DOM = DOMUtils.DOM;
 
     var toClientRect = function (geomRect) {
@@ -32,6 +33,28 @@ define(
         right: geomRect.x + geomRect.w,
         bottom: geomRect.y + geomRect.h
       };
+    };
+
+    var transposeUiContainer = function (rect) {
+      var uiContainer = Env.container;
+      if (uiContainer && DOMUtils.DOM.getStyle(uiContainer, 'position', true) !== 'static') {
+        var containerPos = DOMUtils.DOM.getPos(uiContainer);
+        var dx = containerPos.x - uiContainer.scrollLeft;
+        var dy = containerPos.y - uiContainer.scrollTop;
+        return {
+          x: rect.x - dx,
+          y: rect.y - dy,
+          w: rect.w,
+          h: rect.h
+        };
+      } else {
+        return {
+          x: rect.x,
+          y: rect.y,
+          w: rect.w,
+          h: rect.h
+        };
+      }
     };
 
     var hideAllFloatingPanels = function (editor) {
@@ -130,9 +153,9 @@ define(
           panel.show();
         }
 
-        elementRect = getElementRect(match.element);
-        panelRect = DOM.getRect(panel.getEl());
-        contentAreaRect = DOM.getRect(editor.getContentAreaContainer() || editor.getBody());
+        elementRect = transposeUiContainer(getElementRect(match.element));
+        panelRect = transposeUiContainer(DOM.getRect(panel.getEl()));
+        contentAreaRect = transposeUiContainer(DOM.getRect(editor.getContentAreaContainer() || editor.getBody()));
         smallElementWidthThreshold = 25;
 
         if (DOM.getStyle(match.element, 'display', true) !== 'inline') {
@@ -202,11 +225,15 @@ define(
 
       var bindScrollEvent = function () {
         if (!scrollContainer) {
+          var reposition = repositionHandler(true);
+
           scrollContainer = editor.selection.getScrollContainer() || editor.getWin();
-          DOM.bind(scrollContainer, 'scroll', repositionHandler(true));
+          DOM.bind(scrollContainer, 'scroll', reposition);
+          DOM.bind(Env.container, 'scroll', reposition);
 
           editor.on('remove', function () {
-            DOM.unbind(scrollContainer, 'scroll');
+            DOM.unbind(scrollContainer, 'scroll', reposition);
+            DOM.unbind(Env.container, 'scroll', reposition);
           });
         }
       };
@@ -241,7 +268,7 @@ define(
         });
 
         match.toolbar.panel = panel;
-        panel.renderTo(document.body).reflow();
+        panel.renderTo().reflow();
         reposition(match);
       };
 

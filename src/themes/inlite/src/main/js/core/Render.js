@@ -11,6 +11,8 @@
 define(
   'tinymce.themes.inlite.core.Render',
   [
+    'tinymce.core.Env',
+    'tinymce.core.dom.DOMUtils',
     'tinymce.core.util.Delay',
     'tinymce.themes.inlite.alien.Arr',
     'tinymce.themes.inlite.core.ElementMatcher',
@@ -19,7 +21,7 @@ define(
     'tinymce.themes.inlite.core.SelectionMatcher',
     'tinymce.themes.inlite.core.SkinLoader'
   ],
-  function (Delay, Arr, ElementMatcher, Matcher, PredicateId, SelectionMatcher, SkinLoader) {
+  function (Env, DOMUtils, Delay, Arr, ElementMatcher, Matcher, PredicateId, SelectionMatcher, SkinLoader) {
     var getSelectionElements = function (editor) {
       var node = editor.selection.getNode();
       var elms = editor.dom.getParents(node);
@@ -104,13 +106,19 @@ define(
     var bindContextualToolbarsEvents = function (editor, panel) {
       var throttledTogglePanel = Delay.throttle(togglePanel(editor, panel), 0);
       var throttledTogglePanelWhenNotInForm = Delay.throttle(ignoreWhenFormIsVisible(editor, panel, togglePanel(editor, panel)), 0);
+      var reposition = repositionPanel(editor, panel);
 
       editor.on('blur hide ObjectResizeStart', panel.hide);
       editor.on('click', throttledTogglePanel);
       editor.on('nodeChange mouseup', throttledTogglePanelWhenNotInForm);
       editor.on('ResizeEditor keyup', throttledTogglePanel);
-      editor.on('ResizeWindow', repositionPanel(editor, panel));
-      editor.on('remove', panel.remove);
+      editor.on('ResizeWindow', reposition);
+
+      DOMUtils.DOM.bind(Env.container, 'scroll', reposition);
+      editor.on('remove', function () {
+        DOMUtils.DOM.unbind(Env.container, 'scroll', reposition);
+        panel.remove();
+      });
 
       editor.shortcuts.add('Alt+F10,F10', '', panel.focus);
     };
