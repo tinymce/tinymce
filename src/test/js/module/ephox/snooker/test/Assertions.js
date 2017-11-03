@@ -11,19 +11,23 @@ define(
     'ephox.snooker.api.TableOperations',
     'ephox.snooker.resize.Bars',
     'ephox.snooker.test.Bridge',
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.node.Body',
-    'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.dom.Hierarchy',
-    'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.properties.Html',
     'ephox.sugar.api.search.SelectorFilter',
+    'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.search.Traverse'
   ],
 
-  function (Arr, Fun, Option, Options, ResizeDirection, ResizeWire, TableOperations, Bars, Bridge, Attr, Body, Css, Element, Hierarchy, Html, Insert, Remove, SelectorFilter, Traverse) {
+  function (
+    Arr, Fun, Option, Options, ResizeDirection, ResizeWire, TableOperations, Bars, Bridge, Hierarchy, Insert, Remove, Body, Element, Attr, Css, Html, SelectorFilter,
+    SelectorFind, Traverse
+  ) {
     var assertInfo = function (expected, actual) {
       var cleaner = Arr.map(actual, function (row) {
         var cells = Arr.map(row.cells(), function (c) {
@@ -49,6 +53,34 @@ define(
       // Let's get rid of size information.
       var all = [ table ].concat(SelectorFilter.descendants(table, 'td,th'));
       Arr.each(all, function (elem) { Css.remove(elem, 'width'); });
+
+      assert.eq(expectedHtml, Html.getOuter(table));
+      Remove.remove(table);
+      // Ensure all the resize bars are destroyed before of running the next test.
+      Bars.destroy(wire);
+    };
+
+    var checkPaste = function (expectedHtml, input, pasteHtml, operation, section, row, column, _direction) {
+      var table = Element.fromHtml(input);
+      Insert.append(Body.body(), table);
+      var wire = ResizeWire.only(Body.body());
+      var direction = _direction === undefined ? ResizeDirection.ltr : _direction;
+
+      var pasteTable = Element.fromHtml('<table><tbody>' + pasteHtml + '</tbody></table>')
+      var result = operation(
+        wire, 
+        table, 
+        { 
+          element: Fun.constant(Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()), 
+          selection: Fun.constant([Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()]),
+          clipboard: Fun.constant([SelectorFind.descendant(pasteTable, 'tr').getOrDie()]),
+          generators: Fun.constant(Bridge.generators)
+        }, 
+        Bridge.generators, 
+        direction, 
+        Fun.noop, 
+        Fun.noop
+      );
 
       assert.eq(expectedHtml, Html.getOuter(table));
       Remove.remove(table);
@@ -176,6 +208,7 @@ define(
     return {
       assertInfo: assertInfo,
       checkOld: checkOld,
+      checkPaste: checkPaste,
       checkStructure: checkStructure,
       checkDelete: checkDelete,
       checkMerge: checkMerge,

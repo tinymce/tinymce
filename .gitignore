@@ -5,3 +5,4 @@
 /node_modules
 /scratch
 /config/bolt/bootstrap*.js
+package-lock.json
