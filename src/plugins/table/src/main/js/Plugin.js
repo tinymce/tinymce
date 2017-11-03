@@ -26,6 +26,7 @@ define(
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.SelectorFilter',
     'tinymce.core.PluginManager',
+    'tinymce.core.util.Tools',
     'tinymce.plugins.table.actions.Clipboard',
     'tinymce.plugins.table.actions.InsertTable',
     'tinymce.plugins.table.actions.TableActions',
@@ -39,7 +40,7 @@ define(
     'tinymce.plugins.table.ui.Buttons',
     'tinymce.plugins.table.ui.MenuItems'
   ],
-  function (Arr, Option, ResizeWire, TableDirection, TableResize, Element, Attr, SelectorFilter, PluginManager, Clipboard, InsertTable, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Ephemera, Selections, Buttons, MenuItems) {
+  function (Arr, Option, ResizeWire, TableDirection, TableResize, Element, Attr, SelectorFilter, PluginManager, Tools, Clipboard, InsertTable, TableActions, TableCommands, TableWire, Direction, TabContext, CellSelection, Ephemera, Selections, Buttons, MenuItems) {
     function Plugin(editor) {
       var self = this;
 
@@ -94,6 +95,27 @@ define(
           });
 
           resize = Option.some(sz);
+        }
+      });
+
+      // If we're updating the table width via the old mechanic, we need to update the constituent cells' widths/heights too.
+      editor.on('ObjectResized', function (e) {
+        var table = e.target;
+        if (table.nodeName === 'TABLE') {
+          var newCellSizes = [];
+          Tools.each(table.rows, function (row) {
+            Tools.each(row.cells, function (cell) {
+              var width = editor.dom.getStyle(cell, 'width', true);
+              newCellSizes.push({
+                cell: cell,
+                width: width
+              });
+            });
+          });
+          Tools.each(newCellSizes, function (newCellSize) {
+            editor.dom.setStyle(newCellSize.cell, 'width', newCellSize.width);
+            editor.dom.setAttrib(newCellSize.cell, 'width', null);
+          });
         }
       });
 
