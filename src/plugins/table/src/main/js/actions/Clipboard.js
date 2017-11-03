@@ -22,13 +22,12 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Elements',
     'ephox.sugar.api.node.Node',
-    'ephox.sugar.api.properties.Html',
     'tinymce.plugins.table.queries.TableTargets',
     'tinymce.plugins.table.selection.Ephemera',
     'tinymce.plugins.table.selection.SelectionTypes'
   ],
 
-  function (Arr, Fun, Option, CopySelected, TableFill, TableLookup, Replication, Element, Elements, Node, Html, TableTargets, Ephemera, SelectionTypes) {
+  function (Arr, Fun, Option, CopySelected, TableFill, TableLookup, Replication, Element, Elements, Node, TableTargets, Ephemera, SelectionTypes) {
     var extractSelected = function (cells) {
       // Assume for now that we only have one table (also handles the case where we multi select outside a table)
       return TableLookup.table(cells[0]).map(Replication.deep).map(function (replica) {
@@ -36,12 +35,18 @@ define(
       });
     };
 
+    var serializeElement = function (editor, elm) {
+      return editor.selection.serializer.serialize(elm.dom(), {});
+    };
+
     var registerEvents = function (editor, selections, actions, cellSelection) {
       editor.on('BeforeGetContent', function (e) {
         var multiCellContext = function (cells) {
           e.preventDefault();
           extractSelected(cells).each(function (elements) {
-            e.content = Arr.map(elements, Html.getOuter).join('');
+            e.content = Arr.map(elements, function (elm) {
+              return serializeElement(editor, elm);
+            }).join('');
           });
         };
 

@@ -1,14 +1,18 @@
 asynctest(
   'browser.tinymce.plugins.table.GridSelectionTest',
   [
+    'ephox.agar.api.Assertions',
+    'ephox.agar.api.GeneralSteps',
+    'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
+    'ephox.agar.api.Step',
     'ephox.mcagar.api.LegacyUnit',
     'ephox.mcagar.api.TinyLoader',
     'tinymce.core.util.Tools',
     'tinymce.plugins.table.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, LegacyUnit, TinyLoader, Tools, Plugin, Theme) {
+  function (Assertions, GeneralSteps, Logger, Pipeline, Step, LegacyUnit, TinyLoader, Tools, Plugin, Theme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -81,8 +85,25 @@ asynctest(
       );
     });
 
+    var sSetRawContent = function (editor, html) {
+      return Step.sync(function () {
+        editor.getBody().innerHTML = html;
+      });
+    };
+
+    var sAssertSelectionContent = function (editor, expectedHtml) {
+      return Step.sync(function () {
+        Assertions.assertHtml('Should be expected content', expectedHtml, editor.selection.getContent());
+      });
+    };
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
+      Pipeline.async({}, suite.toSteps(editor).concat([
+        Logger.t('Extracted selection contents should be without internal attributes', GeneralSteps.sequence([
+          sSetRawContent(editor, '<table><tr><td data-mce-selected="1">a</td><td>b</td></tr><tr><td data-mce-selected="1">c</td><td>d</td></tr></table>'),
+          sAssertSelectionContent(editor, '<table><tbody><tr><td>a</td></tr><tr><td>c</td></tr></tbody></table>')
+        ]))
+      ]), onSuccess, onFailure);
     }, {
       plugins: 'table',
       indent: false,
