@@ -2,14 +2,15 @@ define(
   'ephox.sugar.api.view.Height',
 
   [
+    'ephox.sugar.api.node.Body',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.impl.Dimension'
   ],
 
-  function (Css, Dimension) {
+  function (Body, Css, Dimension) {
     var api = Dimension('height', function (element) {
-      // IMO passing this function is better than using dom['offset' + 'height']
-      return element.dom().offsetHeight;
+      // getBoundingClientRect gives better results than offsetHeight for tables with captions on Firefox
+      return Body.inBody(element) ? element.dom().getBoundingClientRect().height : element.dom().offsetHeight;
     });
 
     var set = function (element, h) {

@@ -39,7 +39,7 @@ test(
       assert.eq(true, Compare.eq(expected, actual), 'Incorrect element. \nExpected: ' + Html.getOuter(expected) + '\nWas: ' + Html.getOuter(actual));
     }
 
-    checkFirst('First of container (should skip empty container)', child2, container);
+    checkFirst('First of container (should skip empty container)', child3a, container);
     checkFirst('First of span', child3a, child3);
     checkLast('Last of container (should be <br>)', child4, container);
     checkLast('Last of span (should be <br>)', child3d, child3);
@@ -54,7 +54,7 @@ test(
     assert.eq(true, Awareness.isStart(container, 0));
     assert.eq(false, Awareness.isStart(container, 1));
 
-    assert.eq(true, Edge.isAtLeftEdge(container, child2, 0));
+    assert.eq(true, Edge.isAtLeftEdge(container, child3a, 0));
     assert.eq(false, Edge.isAtLeftEdge(container, child2, 1));
 
     // INVESTIGATE: Not sure if offset here should be 0 or 1.

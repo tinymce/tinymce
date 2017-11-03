@@ -121,6 +121,12 @@ test(
           finish: [ 0, 1, 0 ],
           foffset: 'w'.length
         },
+        chrome: {
+          start: [ 0 ],
+          soffset: 2,
+          finish: [ 0, 1, 0 ],
+          foffset: 'w'.length
+        },
         ie: {
           finish: [ 0 ],
           foffset: 2,
@@ -184,8 +190,8 @@ test(
         chrome: {
           start: [ 0 ],
           soffset: 7,
-          finish: [ 0, 0 ],
-          foffset: ''.length
+          finish: [ 0 ],
+          foffset: 0
         },
         safari: {
           start: [ 0 ],
@@ -230,6 +236,12 @@ test(
           soffset: 6
         },
         firefox: {
+          finish: [ 0, 3, 1 ],
+          foffset: 1,
+          start: [ 0 ],
+          soffset: 6
+        },
+        chrome: {
           finish: [ 0, 3, 1 ],
           foffset: 1,
           start: [ 0 ],
