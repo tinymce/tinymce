@@ -66,7 +66,7 @@ define(
 
     var readRange = function (win) {
       var selection = win.getSelection();
-      var rng = selection.rangeCount === 0 ? Option.none() : Option.from(selection.getRangeAt(0));
+      var rng = !selection || selection.rangeCount === 0 ? Option.none() : Option.from(selection.getRangeAt(0));
       return rng.map(nativeRangeToSelectionRange);
     };
 
@@ -124,6 +124,7 @@ define(
     return {
       store: store,
       storeNative: storeNative,
+      readRange: readRange,
       restore: restore,
       getRng: getRng,
       getBookmark: getBookmark,
