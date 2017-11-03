@@ -10,7 +10,7 @@ define(
   function (Body, Css, Dimension) {
     var api = Dimension('height', function (element) {
       // getBoundingClientRect gives better results than offsetHeight for tables with captions on Firefox
-      return Body.inBody(element) ? element.dom().getBoundingClientRect().height : 0;
+      return Body.inBody(element) ? element.dom().getBoundingClientRect().height : element.dom().offsetHeight;
     });
 
     var set = function (element, h) {
