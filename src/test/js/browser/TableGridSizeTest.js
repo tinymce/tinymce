@@ -8,12 +8,12 @@ test(
   ],
 
   function (TableGridSize, Remove, Element) {
-    var testGridSize = function (html, expectedColumnCount, expecedRowCount) {
+    var testGridSize = function (html, expectedColumnCount, expectedRowCount) {
       var tbl = Element.fromHtml(html);
       var size = TableGridSize.getGridSize(tbl);
 
       assert.eq(expectedColumnCount, size.columns(), 'Should be expected column count');
-      assert.eq(expecedRowCount, size.rows(), 'Should be expected row count');
+      assert.eq(expectedRowCount, size.rows(), 'Should be expected row count');
 
       Remove.remove(tbl);
     };
