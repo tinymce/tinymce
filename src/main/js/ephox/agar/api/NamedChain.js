@@ -4,10 +4,11 @@ define(
   [
     'ephox.agar.api.Chain',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Merger'
+    'ephox.katamari.api.Merger',
+    'ephox.katamari.api.Result'
   ],
 
-  function (Chain, Arr, Merger) {
+  function (Chain, Arr, Merger, Result) {
     var asChain = function (chains) {
       return Chain.fromChains(chains);
     };
@@ -87,6 +88,12 @@ define(
       return Chain.binder(f);
     };
 
+    var output = function (name) {
+      return bundle(function (input) {
+        return input.hasOwnProperty(name) ? Result.value(input[name]) : Result.error(name + ' is not a field in the index object.');
+      });
+    };
+
     return {
       asChain: asChain,
       write: write,
@@ -94,7 +101,8 @@ define(
       writeValue: writeValue,
       overwrite: overwrite,
       merge: merge,
-      bundle: bundle
+      bundle: bundle,
+      output: output
     };
   }
 );
