@@ -168,8 +168,8 @@ define(
       return cFillDialog('[role="dialog"]', data);
     };
 
-    var cClickPopupButton = function (popupSelector, btnSelector) {
-      popupSelector = popupSelector || '[role="dialog"]';
+    var cClickPopupButton = function (btnSelector, selector) {
+      popupSelector = selector || '[role="dialog"]';
       return  Chain.fromParent(Chain.identity, [
         Chain.fromChains([
           cWaitForPopup('waiting for: ' + popupSelector, popupSelector),
@@ -180,11 +180,11 @@ define(
     };
 
     var cCloseDialog = function (selector) {
-      return cClickPopupButton(selector, 'div[role="button"]:contains(Cancel)');
+      return cClickPopupButton('div[role="button"]:contains(Cancel)', selector);
     };
 
     var cSubmitDialog = function (selector) {
-      return cClickPopupButton(selector, 'div[role="button"].mce-primary');
+      return cClickPopupButton('div[role="button"].mce-primary', selector);
     };
 
     return {
