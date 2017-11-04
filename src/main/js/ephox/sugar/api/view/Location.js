@@ -25,17 +25,19 @@ define(
       var body = doc.body;
       var win = Dom.windowOf(Element.fromDom(doc));
       var html = doc.documentElement;
+      // TBIO-5098 - iframe content scroller moved to body so need to use scrollTop, scrollHeight etc from body (and win.scrollTo() will not work)
+      //             NB. body style has: margin:0; box-sizing: border-box;
+      var iframeRtlScroller = win.frameElement && win.getComputedStyle(html).overflowY === 'hidden';
 
-
-      var scrollTop = firstDefinedOrZero(win.pageYOffset, html.scrollTop);
+      var scrollTop = iframeRtlScroller ? firstDefinedOrZero(body.scrollTop, undefined) : firstDefinedOrZero(win.pageYOffset, html.scrollTop);
       var scrollLeft = firstDefinedOrZero(win.pageXOffset, html.scrollLeft);
 
-      var clientTop = firstDefinedOrZero(html.clientTop, body.clientTop);
+      var clientTop = iframeRtlScroller ? firstDefinedOrZero(body.clientTop, undefined) : firstDefinedOrZero(html.clientTop, body.clientTop);
       var clientLeft = firstDefinedOrZero(html.clientLeft, body.clientLeft);
 
       return viewport(element).translate(
-          scrollLeft - clientLeft,
-          scrollTop - clientTop);
+        scrollLeft - clientLeft,
+        scrollTop - clientTop);
     };
 
     // This is the old $.position(), but JQuery does nonsense calculations.
