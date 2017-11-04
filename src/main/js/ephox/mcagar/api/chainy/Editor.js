@@ -48,7 +48,7 @@ define(
     var cRemove = Chain.op(function (editor) {
       var id = editor.id;
       editor.remove();
-      Selectors.one('#' + id).bind(Remove.remove);
+      Selectors.one('#' + id).each(Remove.remove);
     });
 
     return {
