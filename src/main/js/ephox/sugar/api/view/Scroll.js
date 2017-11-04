@@ -2,16 +2,20 @@ define(
   'ephox.sugar.api.view.Scroll',
 
   [
+    'ephox.katamari.api.Option',
     'ephox.katamari.api.Type',
     'ephox.sand.api.PlatformDetection',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.view.Location',
     'ephox.sugar.api.view.Position',
     'global!document'
   ],
 
-  function (Type, PlatformDetection, Location, Position, document) {
+  function (Option, Type, PlatformDetection, Element, Css, Location, Position, document) {
     var isSafari = PlatformDetection.detect().browser.isSafari();
 
+    // get scroll position (x,y) relative to document _doc (or global if not supplied)
     var get = function (_doc) {
       var doc = _doc !== undefined ? _doc.dom() : document;
 
@@ -22,9 +26,56 @@ define(
       return Position(x, y);
     };
 
+    // Scroll content to (x,y) relative to document _doc (or global if not supplied)
+    var set = function (x, y, _doc) {
+      var doc = _doc !== undefined ? _doc.dom() : document;
+      var win = doc.defaultView;
+      var html = Element.fromDom(doc.documentElement);
+      var iframeRtlScroller = win.frameElement && Css.getRaw(html, 'overflow-y').is('hidden');
+      if (!iframeRtlScroller) {
+        win.scrollTo(x, y);
+      } else { // TBIO-5098 - win.scrollTo() does not work on iframe if html overflow-y is hidden
+        doc.body.scrollLeft = x;
+        doc.body.scrollTop = y;
+      }
+    };
+
+    // Set the window scroll position to the element
     var setToElement = function (win, element) {
-      var location = Location.absolute(element);
-      win.scrollTo(location.left(), location.top());
+      var pos = Location.absolute(element);
+      var doc = Element.fromDom(win.document);
+      set(pos.left(), pos.top(), doc);
+    };
+
+    // call f() preserving the original scroll position relative to document doc
+    // NOTE: Dupe with hare. It's also very similar to Transaction.
+    var preserve = function (doc, f) {
+      var before = get(doc);
+      f();
+      var after = get(doc);
+      if (before.top() !== after.top() || before.left() !== after.left()) {
+        set(before.left(), before.top(), doc);
+      }
+    };
+
+    var capture = function (doc) {
+      var previous = Option.none();
+
+      var save = function () {
+        previous = Option.some(get(doc));
+      };
+
+      // TODO: this is quite similar to the code in nomad.
+      var restore = function () {
+        previous.each(function (p) {
+          set(p.left(), p.top(), doc);
+        });
+      };
+
+      return {
+        save: save,      /* Saves the current page scroll position */
+        restore: restore /* Restores the page scroll to its former position when invoked */
+      };
     };
 
 
@@ -81,6 +132,9 @@ define(
 
     return {
       get: get,
+      set: set,
+      preserve: preserve,
+      capture: capture,
       // top: top,
       // bottom: bottom,
       // left: left,
