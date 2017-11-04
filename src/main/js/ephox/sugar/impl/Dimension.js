@@ -2,13 +2,14 @@ define(
   'ephox.sugar.impl.Dimension',
 
   [
-    'ephox.katamari.api.Type',
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Type',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.impl.Style'
+    'ephox.sugar.impl.Style',
+    'global!Math'
   ],
 
-  function (Type, Arr, Css, Style) {
+  function (Arr, Type, Css, Style, Math) {
     return function (name, getOffset) {
       var set = function (element, h) {
         if (!Type.isNumber(h) && !h.match(/^[0-9]+$/)) throw name + '.set accepts only positive integer values. Value was ' + h;
@@ -66,7 +67,7 @@ define(
       var aggregate = function (element, properties) {
         return Arr.foldl(properties, function (acc, property) {
           var val = Css.get(element, property);
-          var value = val === undefined ? 0: parseInt(val, 10);
+          var value = Math.round(parseFloat(val) || 0);
           return isNaN(value) ? acc : acc + value;
         }, 0);
       };
