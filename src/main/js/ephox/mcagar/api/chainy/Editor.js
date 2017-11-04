@@ -2,7 +2,6 @@ define(
   'ephox.mcagar.api.chainy.Editor',
 
   [
-    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Id',
     'ephox.katamari.api.Merger',
     'ephox.sugar.api.dom.Insert',
@@ -15,19 +14,17 @@ define(
     'tinymce.core.EditorManager'
   ],
 
-  function (Fun, Id, Merger, Insert, Remove, Element, Attr, Selectors, Chain, document, EditorManager) {
+  function (Id, Merger, Insert, Remove, Element, Attr, Selectors, Chain, document, EditorManager) {
 
-    var cFromSettings = function (settings, html) {
+    var cFromElement = function (element, settings) {
       return Chain.on(function (_, next, die) {
         var randomId = Id.generate('tiny-loader');
-        var target = html ? Element.fromHtml(html) : Element.fromTag(settings.inline ? 'div' : 'textarea');
 
-        Attr.set(target, 'id', randomId);
-        Insert.append(Element.fromDom(document.body), target);
+        Attr.set(element, 'id', randomId);
+        Insert.append(Element.fromDom(document.body), element);
 
         EditorManager.init(Merger.merge(settings, {
           selector: '#' + randomId,
-          //skin_url: '/project/src/skins/lightgray/dist/lightgray',
           setup: function (editor) {
             editor.on('SkinLoaded', function () {
               setTimeout(function () {
@@ -39,8 +36,13 @@ define(
       });
     };
 
-    var cFromHtml = function (html) {
-      return cFromSettings({}, html);
+    var cFromHtml = function (html, settings) {
+      var element = html ? Element.fromHtml(html) : Element.fromTag(settings.inline ? 'div' : 'textarea')
+      return cFromElement(element, settings);
+    };
+
+    var cFromSettings = function (settings) {
+      return cFromHtml(null, settings);
     };
 
     var cRemove = Chain.op(function (editor) {
@@ -50,10 +52,11 @@ define(
     });
 
     return {
+      cFromHtml: cFromHtml,
+      cFromElement: cFromElement,
+      cFromSettings: cFromSettings,
       cCreate: cFromSettings({}),
       cCreateInline: cFromSettings({ inline: true }),
-      cFromHtml: cFromHtml,
-      cFromSettings: cFromSettings,
       cRemove: cRemove
     };
   }
