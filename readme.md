@@ -1,4 +1,4 @@
-TinyMCE - the World's Most Popular JavaScript Library for Rich Text Editing
+TinyMCE - JavaScript Library for Rich Text Editing
 ==========================================
 
 Building TinyMCE
