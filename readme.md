@@ -1,4 +1,4 @@
-TinyMCE - The JavaScript Rich Text editor
+TinyMCE - the World's Most Popular JavaScript Library for Rich Text Editing
 ==========================================
 
 Building TinyMCE
@@ -47,10 +47,10 @@ TinyMCE is an open source software project and we encourage developers to contri
 
 __Basic Rules__
 
-* Contributed code will be licensed under the LGPL license but not limited to LGPL.
-* Copyright notices will be changed to Ephox Corporation, contributors will get credit for their work.
-* All third party code will be reviewed, tested and possibly modified before being released.
-* All contributors will have to have signed the Contributor License Agreement.
+* Contributed code will be licensed under the LGPL license but not limited to LGPL
+* Copyright notices will be changed to Ephox Corporation, contributors will get credit for their work
+* All third party code will be reviewed, tested and possibly modified before being released
+* All contributors will have to have signed the Contributor License Agreement
 
 These basic rules ensures that the contributed code remains open source and under the LGPL license.
 
