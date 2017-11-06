@@ -13,18 +13,35 @@ define(
 
   [
     'ephox.snooker.api.ResizeWire',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
     'tinymce.plugins.table.alien.Util'
   ],
 
-  function (ResizeWire, Body, Element, Util) {
-    var get = function (editor) {
-      return editor.inline ? ResizeWire.body(Util.getBody(editor), Body.body()) : ResizeWire.only(Element.fromDom(editor.getDoc()));
+  function (ResizeWire, Insert, Remove, Body, Element, Util) {
+    var createContainer = function () {
+      var container = Element.fromTag('div');
+
+      Insert.append(Body.body(), container);
+
+      return container;
+    };
+
+    var get = function (editor, container) {
+      return editor.inline ? ResizeWire.body(Util.getBody(editor), createContainer()) : ResizeWire.only(Element.fromDom(editor.getDoc()));
+    };
+
+    var remove = function (editor, wire) {
+      if (editor.inline) {
+        Remove.remove(wire.parent());
+      }
     };
 
     return {
-      get: get
+      get: get,
+      remove: remove
     };
   }
 );
