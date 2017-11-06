@@ -219,7 +219,7 @@ define(
         add("mark rt rp summary bdi", "", phrasingContent);
         add("canvas", "width height", flowContent);
         add("video", "src crossorigin poster preload autoplay mediagroup loop " +
-          "muted controls width height buffered", [flowContent, "track source"].join(' '));
+          "muted controls width height buffered playsinline", [flowContent, "track source"].join(' '));
         add("audio", "src crossorigin preload autoplay mediagroup loop muted controls " +
           "buffered volume", [flowContent, "track source"].join(' '));
         add("picture", "", "img source");
@@ -393,7 +393,7 @@ define(
       shortEndedElementsMap = createLookupTable('short_ended_elements', 'area base basefont br col frame hr img input isindex link ' +
         'meta param embed source wbr track');
       boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize ' +
-        'noshade nowrap readonly selected autoplay loop controls');
+        'noshade nowrap readonly selected autoplay loop controls playsinline');
       nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object ' +
         'script pre code', shortEndedElementsMap);
       moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', 'table', nonEmptyElementsMap);
