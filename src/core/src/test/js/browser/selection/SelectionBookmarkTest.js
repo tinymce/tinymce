@@ -7,6 +7,7 @@ asynctest(
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.RawAssertions',
+    'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
@@ -17,7 +18,7 @@ asynctest(
     'tinymce.core.test.ViewBlock'
   ],
 
-  function (Assertions, Chain, Logger, Pipeline, RawAssertions, Hierarchy, Remove, Element, Traverse, Selection, WindowSelection, SelectionBookmark, ViewBlock) {
+  function (Assertions, Chain, Logger, Pipeline, RawAssertions, Fun, Hierarchy, Remove, Element, Traverse, Selection, WindowSelection, SelectionBookmark, ViewBlock) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -208,6 +209,13 @@ asynctest(
         cAssertSome,
         cValidateBookmark([]),
         cAssertBookmark([0, 0], 2, [1, 0], 3)
+      ])),
+      Logger.t('readRange with with win without getSelection should return Option.none', Chain.asStep({}, [
+        Chain.mapper(function () {
+          var mockWin = { getSelection: Fun.constant(null) };
+          return SelectionBookmark.readRange(mockWin);
+        }),
+        cAssertNone
       ]))
     ], function () {
       viewBlock.detach();
