@@ -17,16 +17,16 @@ define(
     'ephox.snooker.api.CellMutations',
     'ephox.snooker.api.TableDirection',
     'ephox.snooker.api.TableFill',
+    'ephox.snooker.api.TableGridSize',
     'ephox.snooker.api.TableOperations',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.search.SelectorFilter',
     'tinymce.plugins.table.alien.Util',
-    'tinymce.plugins.table.queries.Direction',
-    'tinymce.plugins.table.queries.TableGridSize'
+    'tinymce.plugins.table.queries.Direction'
   ],
-  function (Arr, Fun, Option, CellMutations, TableDirection, TableFill, TableOperations, Element, Node, Attr, SelectorFilter, Util, Direction, TableGridSize) {
+  function (Arr, Fun, Option, CellMutations, TableDirection, TableFill, TableGridSize, TableOperations, Element, Node, Attr, SelectorFilter, Util, Direction) {
     return function (editor, lazyWire) {
       var isTableBody = function (editor) {
         return Node.name(Util.getBody(editor)) === 'table';
