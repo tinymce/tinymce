@@ -21,7 +21,7 @@
   "dependencies": {
     "@ephox/alloy": "0.8.4",
     "@ephox/boulder": "1.1.0",
-    "@ephox/darwin": "*",
+    "@ephox/darwin": "^2.0.1",
     "@ephox/katamari": "^1.1.0",
     "@ephox/sand": "^1.1.1",
     "@ephox/snooker": "^3.0.6",
