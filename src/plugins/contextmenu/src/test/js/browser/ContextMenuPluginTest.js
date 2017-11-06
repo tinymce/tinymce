@@ -64,13 +64,6 @@ asynctest(
           }))
         ])),
 
-        Logger.t('Select image by right click + context menu on it', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==" width="100" height="100"></p>'),
-          tinyApis.sSetCursor([0], 0),
-          sContextMenuClickInMiddleOf(editor, [0, 0]),
-          tinyApis.sAssertSelection([0], 0, [0], 1)
-        ])),
-
         Logger.t('Do not select image if the context menu click is inside the currently selected range', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==" width="100" height="100"></p>'),
           tinyApis.sSetSelection([0, 0], 0, [0], 2),
