@@ -13,12 +13,11 @@ test(
     'ephox.sugar.impl.Dimension',
     'ephox.sugar.test.Div',
     'ephox.sugar.test.MathElement',
-    'global!Math',
     'global!document',
     'global!window'
   ],
 
-  function (Insert, Remove, Body, Element, Attr, Css, Height, Width, Dimension, Div, MathElement, Math, document, window) {
+  function (Insert, Remove, Body, Element, Attr, Css, Height, Width, Dimension, Div, MathElement, document, window) {
     /* Remember, these checks are run 4 times */
     var runChecks = function (dimension, borderBox) {
       // dupe with BorderBox - please apply any changes to both.
@@ -56,13 +55,13 @@ test(
 
       Css.set(c, 'border', '2px solid #fff');
       // border + padding
-      assert.eq(44, Math.round(dimension.get(c)));        // jQuery === 0  | Linux/Chrome gives Height 43.98
-      assert.eq(44, Math.round(dimension.getOuter(c)));   //               | Linux/Chrome gives Height 43.98
+      assert.eq(44, dimension.get(c));        // jQuery === 0
+      assert.eq(44, dimension.getOuter(c));
 
       Css.set(c, 'margin', '3px');
       // border + padding + margin
-      assert.eq(44, Math.round(dimension.get(c)));        // jQuery === 0  | Linux/Chrome gives Height 43.98
-      assert.eq(44, Math.round(dimension.getOuter(c)));   //               | Linux/Chrome gives Height 43.98
+      assert.eq(44, dimension.get(c));        // jQuery === 0
+      assert.eq(44, dimension.getOuter(c));
 
       // COMPLETE MADNESS: With border-sizing: border-box JQuery does WEIRD SHIT when you set width.
       // This is all so that when you request a width, it gives the same value.
@@ -70,19 +69,19 @@ test(
       dimension.set(c, 20);
       // border + padding + width + margin
       var bpwm = borderBox ? 44 : 64;
-      assert.eq(bpwm, Math.round(dimension.get(c)));      // jQuery === 20 in both cases
-      assert.eq(bpwm, Math.round(dimension.getOuter(c))); // jQuery === 64 in both cases
+      assert.eq(bpwm, dimension.get(c));      // jQuery === 20 in both cases
+      assert.eq(bpwm, dimension.getOuter(c)); // jQuery === 64 in both cases
 
       Css.remove(c, 'padding');
       // border + mad JQuery width + margin
       var bwmSize = borderBox ? 16 : 20;
-      assert.eq(bwmSize + 4, Math.round(dimension.get(c))); // jQuery === +0
-      assert.eq(bwmSize + 4, Math.round(dimension.getOuter(c)));
+      assert.eq(bwmSize + 4, dimension.get(c)); // jQuery === +0
+      assert.eq(bwmSize + 4, dimension.getOuter(c));
 
       dimension.set(c, 20);
       // border + width + margin
-      assert.eq(bwmSize + 4, Math.round(dimension.get(c)));          // jQuery === 20
-      assert.eq(bwmSize + 4, Math.round(dimension.getOuter(c)));
+      assert.eq(bwmSize + 4, dimension.get(c));          // jQuery === 20
+      assert.eq(bwmSize + 4, dimension.getOuter(c));
 
 
       Css.remove(c, 'border');
@@ -111,12 +110,12 @@ test(
       });
 
       var allSize = borderBox ? 30 : 34;        // jQuery === 26 : 30
-      assert.eq(allSize, Math.round(dimension.get(c)));
-      assert.eq(allSize, Math.round(dimension.getOuter(c)));
+      assert.eq(allSize, dimension.get(c));
+      assert.eq(allSize, dimension.getOuter(c));
       Css.set(c, 'padding', '20px');
       var allSizePlusPadding = borderBox ? 44 : 74; // jQuery === 40 : 70
-      assert.eq(allSizePlusPadding, Math.round(dimension.get(c)));
-      assert.eq(allSizePlusPadding, Math.round(dimension.getOuter(c)));
+      assert.eq(allSizePlusPadding, dimension.get(c));
+      assert.eq(allSizePlusPadding, dimension.getOuter(c));
 
       // TODO: Far more extensive tests involving combinations of border, margin and padding.
 
@@ -200,13 +199,13 @@ test(
     Css.set(container, 'max-height', maxHeight + 'px');
 
     var innerHeight = Height.get(inner);
-    assert.eq(1 + 40 + 1, Math.round(innerHeight));
+    assert.eq(1 + 40 + 1, innerHeight);
 
     // native max-height proof of failure
     var containerHeight = Height.get(container);
     assert.eq(true, containerHeight > maxHeight, 'failing case the parent boundary should be greater than the allowed maximum');
     // we use the innerHeight value here because it has yet to hit the maxHeight
-    assert.eq( Math.round(borderWidth + paddingTop + innerHeight + borderWidth ), Math.round(containerHeight), ' failing case true calculation does not match' );
+    assert.eq( (borderWidth + paddingTop + innerHeight + borderWidth ), containerHeight, ' failing case true calculation does not match' );
 
     var boundsHeight = Height.get(bounds);
     assert.eq(true, boundsHeight > maxHeight, 'failing case the parent boundary should be greater than the allowed maximum');
@@ -218,7 +217,7 @@ test(
     Height.setMax(container, maxHeight);
     // The bounds should not exceed 50 (maxHeight), it should not be forced to scroll
     var boundsAbsHeight = Height.get(bounds);
-    assert.eq(Math.round(boundsAbsHeight), maxHeight);
+    assert.eq(boundsAbsHeight, maxHeight);
 
     // the max-height property should be a compensated value.
     var cssMaxHeight = Css.get(container, 'max-height');
@@ -228,7 +227,7 @@ test(
     Css.set(container, 'max-width', maxWidth + 'px');
 
     var innerWidth = Width.get(inner);
-    assert.eq(true, 1 + 350 + 1 === innerWidth || innerWidth === 351 /* Linux/Chrome */ );
+    assert.eq(1 + 350 + 1, innerWidth);
 
     var containerWidth = Width.get(container);
     assert.eq(true, containerWidth > maxWidth);
