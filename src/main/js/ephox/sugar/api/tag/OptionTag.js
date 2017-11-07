@@ -1,5 +1,5 @@
 define(
-  'ephox.sugar.api.tag.OptionTagTag',
+  'ephox.sugar.api.tag.OptionTag',
 
   [
 
