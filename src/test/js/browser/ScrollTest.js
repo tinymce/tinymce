@@ -40,13 +40,13 @@ asynctest(
     };
 
     testOne('<iframe style="height:200px; width:500px; border: 1px dashed chartreuse;" src="project/src/test/data/scrollTest.html"></iframe>',  // vanilla HTML-scroll iframe
-    function () {
-      testOne('<iframe style="height:200px; width:500px; border: 1px dashed aquamarine;" src="project/src/test/data/scrollTestBodyScrollerLtrTest.html"></iframe>',  // body-scroll ltr iframe
-      //     function () {
-      //       testOne('<iframe style="height:200px; width:500px; border: 1px dashed turquoise;" src="project/src/test/data/locationBodyScrollerRtlTest.html"></iframe>',  // body-scroll rtl iframe
-      success);
-    //     });
-    });
+      function () {
+        testOne('<iframe style="height:200px; width:500px; border: 1px dashed aquamarine;" src="project/src/test/data/scrollTestBodyScrollerLtrTest.html"></iframe>',  // body-scroll ltr iframe
+          function () {
+            testOne('<iframe style="height:200px; width:500px; border: 1px dashed turquoise;" src="project/src/test/data/scrollTestBodyScrollerRtlTest.html"></iframe>',  // body-scroll rtl iframe
+              success);
+          });
+      });
 
     var checks = function (iframe) {
       var iframeWin = iframe.dom().contentWindow;
@@ -55,6 +55,7 @@ asynctest(
         rawWin: iframeWin,
         rawDoc: Element.fromDom(iframeDoc),
         body: Element.fromDom(iframeDoc.body),
+        rtl: iframeDoc.body.dir === 'rtl',
         byId: function (str) {
           return Option.from(iframeDoc.getElementById(str))
             .map(Element.fromDom)
@@ -77,9 +78,10 @@ asynctest(
         var mar = parseInt(Css.get(doc.body, 'margin'), 10);
         var x = 2500;
         var y = 2600;
+        var left = doc.rtl ? 5000 - 500 + 25 : 0;
 
         var scr0 = Scroll.get(doc.rawDoc);
-        assert.eq(0, scr0.left());
+        assert.eq(left, scr0.left());
         assert.eq(0, scr0.top());
 
         scrollTo(x, y, doc);
