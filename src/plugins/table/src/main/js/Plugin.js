@@ -87,10 +87,12 @@ define(
             Arr.each(dataStyleCells, function (cell) {
               Attr.remove(cell, 'data-mce-style');
             });
-            editor.focus();
+
             selectionRng.each(function (rng) {
               editor.selection.setRng(rng);
+              editor.focus();
             });
+
             editor.undoManager.add();
           });
 
