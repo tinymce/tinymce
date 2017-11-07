@@ -34,9 +34,23 @@ define(
       var iframeRtlScroller = win.frameElement && Css.getRaw(html, 'overflow-y').is('hidden');
       if (!iframeRtlScroller) {
         win.scrollTo(x, y);
-      } else { // TBIO-5098 - win.scrollTo() does not work on iframe if html overflow-y is hidden
+      } else { // TBIO-5098 - win.scrollTo()/win.scrollBy()/..etc does not work on iframe if html overflow-y is hidden
         doc.body.scrollLeft = x;
         doc.body.scrollTop = y;
+      }
+    };
+
+    // Scroll content by (x,y) relative to document _doc (or global if not supplied)
+    var by = function (x, y, _doc) {
+      var doc = _doc !== undefined ? _doc.dom() : document;
+      var win = doc.defaultView;
+      var html = Element.fromDom(doc.documentElement);
+      var iframeRtlScroller = win.frameElement && Css.getRaw(html, 'overflow-y').is('hidden');
+      if (!iframeRtlScroller) {
+        win.scrollBy(x, y);
+      } else { // TBIO-5098 - win.scrollTo()/win.scrollBy()/..etc does not work on iframe if html overflow-y is hidden
+        doc.body.scrollLeft += x;
+        doc.body.scrollTop += y;
       }
     };
 
@@ -58,6 +72,7 @@ define(
       }
     };
 
+    // capture the current scroll location and provide save and restore methods
     var capture = function (doc) {
       var previous = Option.none();
 
@@ -72,6 +87,7 @@ define(
         });
       };
 
+      save();
       return {
         save: save,      /* Saves the current page scroll position */
         restore: restore /* Restores the page scroll to its former position when invoked */
@@ -133,6 +149,7 @@ define(
     return {
       get: get,
       set: set,
+      by: by,
       preserve: preserve,
       capture: capture,
       // top: top,
