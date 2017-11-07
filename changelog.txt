@@ -1,3 +1,42 @@
+Version 4.7.2 (2017-11-0?)
+    Added newly rewritten Table Plugin.
+    Added support for attributes with colon in valid_elements and addValidElements.
+    Added support for dailymotion short url in the Media Plugin. Patch contributed by maat8.
+    Added support for converting to half pt when converting font size from px to pt. Patch contributed by danny6514.
+    Added support for location hash to the Autosave plugin to make it work better with SPAs using hash routing.
+    Added support for merging table cells when pasting a table into another table.
+    Changed so the language packs are only loaded once. Patch contributed by 0xor1.
+    Simplified the css for inline boundaries selection by switching to an attribute selector.
+    Fixed bug where an error would be thrown on editor initialization if the window.getSelection() returned null.
+    Fixed bug where holding down control or alt keys made the keyboard navigation inside an inline boundary not work as expected.
+    Fixed bug where applying formats in IE11 produced extra, empty paragraphs in the editor.
+    Fixed bug where the Word Count Plugin didn't count some mathematical operators correctly.
+    Fixed bug where removing an inline editor removed the element that the editor had been initialized on.
+    Fixed bug where setting the selection to the end of an editable container caused some formatting problems.
+    Fixed bug where an error would be thrown sometimes when an editor was removed because of the selection bookmark was being stored asynchronously.
+    Fixed a bug where an editor initialized on an empty list did not contain any valid cursor positions.
+    Fixed a bug with the Context Menu Plugin and webkit browsers on Mac where right-clicking inside a table would produce an incorrect selection.
+    Fixed bug where the Image Plugin constrain proportions setting wasn't working as expected.
+    Fixed bug where deleting the last character in a span with decorations produced an incorrect element when typing.
+    Fixed bug where focusing on inline editors made the toolbar flicker when moving between elements quickly.
+    Fixed bug where the selection would be stored incorrectly in inline editors when the mouseup event was fired outside the editor body.
+    Fixed bug where toggling bold at the end of an inline boundary would toggle off the whole word.
+    Fixed bug where setting the skin to false would not stop the loading of some skin css files.
+    Fixed bug in mobile theme where pinch-to-zoom would break after exiting the editor.
+    Fixed bug where sublists of a fully selected list would not be switched correctly when changing list style.
+    Fixed bug where inserting media by source would break the UndoManager.
+    Fixed bug where inserting some content into the editor with a specific selection would replace some content incorrectly.
+    Fixed bug where selecting all content with ctrl+a in IE11 caused problems with untoggling some formatting.
+    Fixed bug where the Search and Replace Plugin left some marker spans in the editor when undoing and redoing after replacing some content.
+    Fixed bug where the editor would not get a scrollbar when using the Fullscreen and Autoresize plugins together.
+    Fixed bug where the font selector would stop working correctly after selecting fonts three times.
+    Fixed so pressing the enter key inside of an inline boundary inserts a br after the inline boundary element.
+    Fixed a bug where it wasn't possible to use tab navigation inside of a table that was inside of a list.
+    Fixed bug where end_container_on_empty_block would incorrectly remove elements.
+    Fixed bug where content_styles weren't added to the Preview Plugin iframe.
+    Fixed so the beforeSetContent/beforeGetContent events are preventable.
+    Fixed bug where changing height value in Table Plugin advanced tab didn't do anything.
+    Fixed bug where it wasn't possible to remove formatting from content in beginning of table cell.
 Version 4.7.1 (2017-10-09)
     Fixed bug where theme set to false on an inline editor produced an extra div element after the target element.
     Fixed bug where the editor drag icon was misaligned with the branding set to false.
