@@ -1,4 +1,4 @@
-Version 4.7.2 (2017-11-0?)
+Version 4.7.2 (2017-11-07)
     Added newly rewritten Table Plugin.
     Added support for attributes with colon in valid_elements and addValidElements.
     Added support for dailymotion short url in the Media Plugin. Patch contributed by maat8.
