@@ -40,13 +40,13 @@ asynctest(
     };
 
     testOne('<iframe style="height:200px; width:500px; border: 1px dashed chartreuse;" src="project/src/test/data/scrollTest.html"></iframe>',  // vanilla HTML-scroll iframe
-      // function () {
-      //   testOne('<iframe style="height:100px; width:500px;" src="project/src/test/data/locationBodyScrollerLtrTest.html"></iframe>',  // body-scroll ltr iframe
+    function () {
+      testOne('<iframe style="height:200px; width:500px; border: 1px dashed aquamarine;" src="project/src/test/data/scrollTestBodyScrollerLtrTest.html"></iframe>',  // body-scroll ltr iframe
       //     function () {
-      //       testOne('<iframe style="height:100px; width:500px;" src="project/src/test/data/locationBodyScrollerRtlTest.html"></iframe>',  // body-scroll rtl iframe
+      //       testOne('<iframe style="height:200px; width:500px; border: 1px dashed turquoise;" src="project/src/test/data/locationBodyScrollerRtlTest.html"></iframe>',  // body-scroll rtl iframe
       success);
     //     });
-    // });
+    });
 
     var checks = function (iframe) {
       var iframeWin = iframe.dom().contentWindow;
