@@ -136,6 +136,11 @@ define(
         resize.each(function (sz) {
           sz.destroy();
         });
+
+        wire.each(function (w) {
+          TableWire.remove(editor, w);
+        });
+
         cellSelection.destroy();
       });
 
