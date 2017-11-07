@@ -43,8 +43,9 @@ define(
         - "apply" operation on the Option Apply/Applicative.
         - Equivalent to <*> in Haskell/PureScript.
 
-      each :: this Option a -> (a -> b) -> Option b
-        - same as 'map'
+      each :: this Option a -> (a -> b) -> undefined
+        - similar to 'map', but doesn't return a value.
+        - intended for clarity when performing side effects.
 
       bind :: this Option a -> (a -> Option b) -> Option b
         - "bind"/"flatMap" operation on the Option Bind/Monad.
