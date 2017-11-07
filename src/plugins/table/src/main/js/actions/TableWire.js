@@ -17,12 +17,22 @@ define(
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Css',
     'tinymce.plugins.table.alien.Util'
   ],
 
-  function (ResizeWire, Insert, Remove, Body, Element, Util) {
+  function (ResizeWire, Insert, Remove, Body, Element, Css, Util) {
     var createContainer = function () {
       var container = Element.fromTag('div');
+
+      Css.setAll(container, {
+        position: 'static',
+        height: '0',
+        width: '0',
+        padding: '0',
+        margin: '0',
+        border: '0'
+      });
 
       Insert.append(Body.body(), container);
 
