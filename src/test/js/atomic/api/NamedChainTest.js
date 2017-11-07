@@ -2,6 +2,8 @@ asynctest(
   'NamedChainTest',
 
   [
+    'ephox.agar.api.Logger',
+    'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Chain',
     'ephox.agar.api.NamedChain',
     'ephox.agar.api.Pipeline',
@@ -10,9 +12,16 @@ asynctest(
     'ephox.katamari.api.Result'
   ],
 
-  function (Chain, NamedChain, Pipeline, RawAssertions, StepAssertions, Result) {
+  function (Logger, GeneralSteps, Chain, NamedChain, Pipeline, RawAssertions, StepAssertions, Result) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    var cIsEqual = function (expected) {
+      return Chain.on(function (actual, next, die) {
+        if (expected === actual) next(Chain.wrap(actual));
+        else die('Unexpected input.');
+      });
+    };
 
     var addLetters = function (s) {
       return Chain.mapper(function (input) {
@@ -29,9 +38,7 @@ asynctest(
     });
 
     Pipeline.async({}, [
-      StepAssertions.testStepsPass({
-
-      }, [
+      StepAssertions.testStepsPass({}, [
         Chain.asStep('.', [
           NamedChain.asChain([
             NamedChain.write('x', Chain.inject(5)),
@@ -65,7 +72,31 @@ asynctest(
             })
           ])
         ])
-      ])
+      ]),
+
+      Logger.t("Testing NamedChain.output()", GeneralSteps.sequence([
+        StepAssertions.testStepsPass({}, [
+          Chain.asStep({}, [
+            NamedChain.asChain([
+              NamedChain.write('x', Chain.inject(5)),
+              NamedChain.write('y', Chain.inject(8)),
+              NamedChain.output('y')
+            ]),
+            cIsEqual(8)
+          ])
+        ]),
+
+        StepAssertions.testStepsFail('z is not a field in the index object.', [
+          Chain.asStep({}, [
+            NamedChain.asChain([
+              NamedChain.write('x', Chain.inject(5)),
+              NamedChain.write('y', Chain.inject(8)),
+              NamedChain.output('z')
+            ]),
+            cIsEqual(8)
+          ])
+        ])
+      ]))
     ], function () {
       success();
     }, failure);
