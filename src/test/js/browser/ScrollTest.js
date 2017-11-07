@@ -2,21 +2,17 @@ asynctest(
   'LocationTest',
 
   [
-    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Option',
-    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Insert',
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.events.DomEvent',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.view.Location',
     'ephox.sugar.api.view.Scroll'
   ],
 
-  function (Arr, Option, PlatformDetection, Insert, Remove, DomEvent, Body, Element, Attr, Css, Location, Scroll) {
+  function (Option, Insert, Remove, DomEvent, Body, Element, Css, Scroll) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -115,7 +111,17 @@ asynctest(
         });
         scrollCheck(x, y, doc);
 
-
+        // Back to center
+        scrollTo(x, y, doc);
+        var c1 = Scroll.capture(doc.rawDoc);
+        scrollTo(3000, 4000, doc);
+        c1.restore();
+        scrollCheck(x, y, doc);
+        scrollTo(500, 400, doc);
+        c1.save();
+        scrollTo(900, 900, doc);
+        c1.restore();
+        scrollCheck(500, 400, doc);
 
       };
 
