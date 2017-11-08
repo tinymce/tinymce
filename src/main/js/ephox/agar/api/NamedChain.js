@@ -11,12 +11,12 @@ define(
   ],
 
   function (Chain, Arr, Fun, Id, Merger, Result) {
-    var originalKey = Id.generate('original-key');
+    var inputName = Id.generate('input-name');
 
     var asChain = function (chains) {
       return Chain.fromChains([
         Chain.mapper(function (input) {
-          return wrapSingle(originalKey, input);
+          return wrapSingle(inputName, input);
         })
       ].concat(chains));
     };
@@ -103,7 +103,7 @@ define(
     };
 
     return {
-      originalKey: Fun.constant(originalKey),
+      inputName: Fun.constant(inputName),
       asChain: asChain,
       write: write,
       direct: direct,

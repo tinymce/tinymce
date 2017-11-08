@@ -77,7 +77,7 @@ asynctest(
                   }
                 },
                 // Also check original value
-                wrapObj(NamedChain.originalKey(), '.')
+                wrapObj(NamedChain.inputName(), '.')
               ), input);
               return Result.value(input);
             })
@@ -98,25 +98,25 @@ asynctest(
         ]),
 
         StepAssertions.testStepsPass({}, [
-          Chain.asStep('original.key.value', [
+          Chain.asStep('input.name.value', [
             NamedChain.asChain([
               NamedChain.write('x', Chain.inject(5)),
               NamedChain.write('y', Chain.inject(8)),
-              NamedChain.output(NamedChain.originalKey())
+              NamedChain.output(NamedChain.inputName())
             ]),
-            cIsEqual('original.key.value')
+            cIsEqual('input.name.value')
           ])
         ]),
 
         StepAssertions.testStepsPass({}, [
           Chain.asStep({ }, [
-            Chain.inject('original.key.value'),
+            Chain.inject('input.name.value'),
             NamedChain.asChain([
               NamedChain.write('x', Chain.inject(5)),
               NamedChain.write('y', Chain.inject(8)),
-              NamedChain.output(NamedChain.originalKey())
+              NamedChain.output(NamedChain.inputName())
             ]),
-            cIsEqual('original.key.value')
+            cIsEqual('input.name.value')
           ])
         ]),
 
