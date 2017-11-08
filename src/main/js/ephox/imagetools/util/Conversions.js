@@ -47,7 +47,7 @@ define(
         }
 
         return imageToCanvas(image).then(function (canvas) {
-          return dataUriToBlob(canvas.toDataURL(Mime.guessMimeType(src)));
+          return canvasToBlob(canvas, Mime.guessMimeType(src));
         });
       });
     }

@@ -7,13 +7,20 @@ define(
     'ephox.imagetools.util.Canvas'
   ],
   function (Promise, Conversions, Mime, Canvas) {
-    function create(canvas, initialType) {
+    function create(canvas, blob) {
+      var initialType = blob.type;
       function getType() {
         return initialType;
       }
 
       function toBlob(type, quality) {
-        return Conversions.canvasToBlob(canvas, type || initialType, quality);
+        // Shortcut to not lose the blob filename when we haven't edited the image
+        var resultType = type || initialType;
+        if (type === initialType && quality === undefined) {
+          return Promise.resolve(blob);
+        } else {
+          return Conversions.canvasToBlob(canvas, resultType, quality);
+        }
       }
 
       function toDataURL(type, quality) {
@@ -45,20 +52,20 @@ define(
           return result;
         })
         .then(function (canvas) {
-          return create(canvas, blob.type);
+          return create(canvas, blob);
         });
     }
 
     function fromCanvas(canvas, type) {
-      return new Promise(function (resolve) {
-        resolve(create(canvas, type));
+      return Conversions.canvasToBlob(canvas, type).then(function (blob) {
+        return create(canvas, blob);
       });
     }
 
     function fromImage(image) {
       var type = Mime.guessMimeType(image.src);
       return Conversions.imageToCanvas(image).then(function (canvas) {
-        return create(canvas, type);
+        return fromCanvas(canvas, type);
       });
     }
 
