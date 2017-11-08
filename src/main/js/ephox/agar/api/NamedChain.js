@@ -4,13 +4,21 @@ define(
   [
     'ephox.agar.api.Chain',
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Id',
     'ephox.katamari.api.Merger',
     'ephox.katamari.api.Result'
   ],
 
-  function (Chain, Arr, Merger, Result) {
+  function (Chain, Arr, Fun, Id, Merger, Result) {
+    var inputName = Id.generate('input-name');
+
     var asChain = function (chains) {
-      return Chain.fromChains(chains);
+      return Chain.fromChains([
+        Chain.mapper(function (input) {
+          return wrapSingle(inputName, input);
+        })
+      ].concat(chains));
     };
 
     // Write merges in its output into input because it knows that it was
@@ -95,6 +103,7 @@ define(
     };
 
     return {
+      inputName: Fun.constant(inputName),
       asChain: asChain,
       write: write,
       direct: direct,
