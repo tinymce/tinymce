@@ -58,6 +58,7 @@ asynctest(
       var doc = {
         rawWin: iframeWin,
         rawDoc: Element.fromDom(iframeDoc),
+        body: Element.fromDom(iframeDoc.body),
         byId: function (str) {
           return Option.from(iframeDoc.getElementById(str))
                        .map(Element.fromDom)
@@ -112,31 +113,31 @@ asynctest(
       var tests = [
         {
           id: 'absolute-1',
-          absolute: { top: 1, left: { ltr: 1, rtl: 4508 } },
+          absolute: { top: 1, left: { ltr: 1, rtl: 4506 } },
           relative: { top: 1, left: { ltr: 1, rtl:    1 } }, // JQuery returns 0/0
           viewport: { top: 1, left: { ltr: 1, rtl:    1 } }
         },
         {
           id: 'absolute-1-1',
-          absolute: { top: 5, left: { ltr: 5, rtl: 4512 } },
+          absolute: { top: 5, left: { ltr: 5, rtl: 4510 } },
           relative: { top: 2, left: { ltr: 2, rtl:    2 } }, // JQuery returns 1/1
           viewport: { top: 5, left: { ltr: 5, rtl:    5 } }
         },
         {
           id: 'absolute-1-1-1',
-          absolute: { top: 9, left: { ltr: 9, rtl: 4516 } },
+          absolute: { top: 9, left: { ltr: 9, rtl: 4514 } },
           relative: { top: 2, left: { ltr: 2, rtl:    2 } }, // JQuery returns 1/1
           viewport: { top: 9, left: { ltr: 9, rtl:    9 } }
         },
         {
           id: 'absolute-2',
-          absolute: { top: 20, left: { ltr: 20, rtl: 4527 } },
+          absolute: { top: 20, left: { ltr: 20, rtl: 4525 } },
           relative: { top: 20, left: { ltr: 20, rtl:   20 } }, // JQuery returns 19/19
           viewport: { top: 20, left: { ltr: 20, rtl:   20 } }
         },
         {
           id: 'positionTest',
-          absolute: { top: 10, left: { ltr: 10, rtl: 4517 } },
+          absolute: { top: 10, left: { ltr: 10, rtl: 4515 } },
           relative: { top: 10, left: { ltr: 10, rtl:   10 } },
           viewport: { top: 10, left: { ltr: 10, rtl:   10 } }
         }
@@ -149,36 +150,36 @@ asynctest(
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var tests = [
         { id: 'relative-1',
-          absolute: { top: 7, left: { ltr: 7, rtl: 4886 } },
-          relative: { top: 7, left: { ltr: 7, rtl:  379 } }, // JQuery returns 6/6
-          viewport: { top: 7, left: { ltr: 7, rtl:  379 } }
+          absolute: { top: 6, left: { ltr: 6, rtl: 4885 } },
+          relative: { top: 6, left: { ltr: 6, rtl:  380 } }, // JQuery returns 6/6
+          viewport: { top: 6, left: { ltr: 6, rtl:  380 } }
         },
         { id: 'relative-1-1',
-          absolute: { top: 15, left: { ltr: 15, rtl: 4878 } },
+          absolute: { top: 14, left: { ltr: 14, rtl: 4877 } },
           relative: { top:  6, left: { ltr:  6, rtl:  -10 } }, // JQuery returns 5/5
-          viewport: { top: 15, left: { ltr: 15, rtl:  371 } }
+          viewport: { top: 14, left: { ltr: 14, rtl:  372 } }
         },
         { id: 'relative-1-1-1',
-          absolute: { top: 23, left: { ltr: 23, rtl: 4870 } },
+          absolute: { top: 22, left: { ltr: 22, rtl: 4869 } },
           relative: { top:  6, left: { ltr:  6, rtl:  -10 } }, // JQuery returns 5/5
-          viewport: { top: 23, left: { ltr: 23, rtl:  363 } }
+          viewport: { top: 22, left: { ltr: 22, rtl:  364 } }
         },
         { id: 'relative-2',
-          absolute: { top: 142, left: { ltr: 27, rtl: 4906 } },
-          relative: { top: 142, left: { ltr: 27, rtl:  399 } }, // JQuery returns 141/26
-          viewport: { top: 142, left: { ltr: 27, rtl:  399 } }
+          absolute: { top: 141, left: { ltr: 26, rtl: 4905 } },
+          relative: { top: 141, left: { ltr: 26, rtl:  400 } }, // JQuery returns 141/26
+          viewport: { top: 141, left: { ltr: 26, rtl:  400 } }
         },
 
         // This simulates a docked ego state for the toolbars
         { id: 'relative-toolbar-container',
-          absolute: { top: 685, left: { ltr: 6, rtl: 4901 } },
-          relative: { top: 685, left: { ltr: 6, rtl:  394 } },
-          viewport: { top: 685, left: { ltr: 6, rtl:  394 } }
+          absolute: { top: 684, left: { ltr: 5, rtl: 4900 } },
+          relative: { top: 684, left: { ltr: 5, rtl:  395 } },
+          viewport: { top: 684, left: { ltr: 5, rtl:  395 } }
         },
         { id: 'relative-toolbar',
-          absolute: { top: 685 - 40, left: { ltr: 6, rtl: 4901 } },
+          absolute: { top: 684 - 40, left: { ltr: 5, rtl: 4900 } },
           relative: { top: -40,      left: { ltr: 0, rtl:    0 } },
-          viewport: { top: 685 - 40, left: { ltr: 6, rtl:  394 } }
+          viewport: { top: 684 - 40, left: { ltr: 5, rtl:  395 } }
         }
       ];
 
@@ -190,24 +191,24 @@ asynctest(
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var tests = [
         { id: 'static-1',
-          absolute: { top: extraHeight + 7, left: { ltr: 7, rtl: 4886 } },
-          relative: { top: extraHeight + 7, left: { ltr: 7, rtl:  379 } }, // JQuery returns +6/6
-          viewport: { top: extraHeight + 7, left: { ltr: 7, rtl:  379 } }
+          absolute: { top: extraHeight + 6, left: { ltr: 6, rtl: 4885 } },
+          relative: { top: extraHeight + 6, left: { ltr: 6, rtl:  380 } }, // JQuery returns +6/6
+          viewport: { top: extraHeight + 6, left: { ltr: 6, rtl:  380 } }
         },
         { id: 'static-1-1',
-          absolute: { top: extraHeight + 15, left: { ltr: 15, rtl: 4878 } },
-          relative: { top: extraHeight + 15, left: { ltr: 15, rtl:  371 } }, // JQuery returns +14/14
-          viewport: { top: extraHeight + 15, left: { ltr: 15, rtl:  371 } }
+          absolute: { top: extraHeight + 14, left: { ltr: 14, rtl: 4877 } },
+          relative: { top: extraHeight + 14, left: { ltr: 14, rtl:  372 } }, // JQuery returns +14/14
+          viewport: { top: extraHeight + 14, left: { ltr: 14, rtl:  372 } }
         },
         { id: 'static-1-1-1',
-          absolute: { top: extraHeight + 23, left: { ltr: 23, rtl: 4870 } },
-          relative: { top: extraHeight + 23, left: { ltr: 23, rtl:  363 } }, // JQuery returns +22/22
-          viewport: { top: extraHeight + 23, left: { ltr: 23, rtl:  363 } }
+          absolute: { top: extraHeight + 22, left: { ltr: 22, rtl: 4869 } },
+          relative: { top: extraHeight + 22, left: { ltr: 22, rtl:  364 } }, // JQuery returns +22/22
+          viewport: { top: extraHeight + 22, left: { ltr: 22, rtl:  364 } }
         },
         { id: 'static-2',
-          absolute: { top: extraHeight + 122, left: { ltr: 7, rtl: 4886 } },
-          relative: { top: extraHeight + 122, left: { ltr: 7, rtl:  379 } }, // JQuery returns +121/6
-          viewport: { top: extraHeight + 122, left: { ltr: 7, rtl:  379 } }
+          absolute: { top: extraHeight + 121, left: { ltr: 6, rtl: 4885 } },
+          relative: { top: extraHeight + 121, left: { ltr: 6, rtl:  380 } }, // JQuery returns +121/6
+          viewport: { top: extraHeight + 121, left: { ltr: 6, rtl:  380 } }
         }
       ];
 
@@ -224,29 +225,29 @@ asynctest(
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var tests = [
         { id: 'table-1',
-          absolute: { top: extraHeight + 7, left: { ltr: 6, rtl: 4677 } },
-          relative: { top: extraHeight + 7, left: { ltr: 6, rtl:  170 } },
-          viewport: { top: extraHeight + 7, left: { ltr: 6, rtl:  170 } }
+          absolute: { top: extraHeight + 6, left: { ltr: 5, rtl: 4676 } },
+          relative: { top: extraHeight + 6, left: { ltr: 5, rtl:  171 } },
+          viewport: { top: extraHeight + 6, left: { ltr: 5, rtl:  171 } }
         },
         { id: 'th-1',
-          absolute: { top: extraHeight + 11, left: { ltr: 10, rtl: 4893 } },
-          relative: { top: 4,                left: { ltr:  4, rtl:  214 } },  // JQuery returns extraHeight + 11/10, but that's nonsense
-          viewport: { top: extraHeight + 11, left: { ltr: 10, rtl:  386 } }
+          absolute: { top: extraHeight + 10, left: { ltr: 9, rtl: 4892 } },
+          relative: { top: 4,                left: { ltr: 4, rtl:  214 } },  // JQuery returns extraHeight + 11/10, but that's nonsense
+          viewport: { top: extraHeight + 10, left: { ltr: 9, rtl:  387 } }
         },
         { id: 'th-3',
-          absolute: { top: extraHeight + 11, left: { ltr: 222, rtl: 4681 } },
+          absolute: { top: extraHeight + 10, left: { ltr: 221, rtl: 4680 } },
           relative: { top: 4,                left: { ltr: 216, rtl:    2 } },  // JQuery returns extraHeight + 11/222, but that's nonsense
-          viewport: { top: extraHeight + 11, left: { ltr: 222, rtl:  174 } }
+          viewport: { top: extraHeight + 10, left: { ltr: 221, rtl:  175 } }
         },
         { id: 'td-1',
-          absolute: { top: extraHeight + 117, left: { ltr: 10, rtl: 4893 } },
-          relative: { top: 110,               left: { ltr:  4, rtl:  214 } },  // JQuery returns extraHeight + 117/10, but that's nonsense
-          viewport: { top: extraHeight + 117, left: { ltr: 10, rtl:  386 } }
+          absolute: { top: extraHeight + 116, left: { ltr: 9, rtl: 4892 } },
+          relative: { top: 110,               left: { ltr: 4, rtl:  214 } },  // JQuery returns extraHeight + 117/10, but that's nonsense
+          viewport: { top: extraHeight + 116, left: { ltr: 9, rtl:  387 } }
         },
         { id: 'td-3',
-          absolute: { top: extraHeight + 117, left: { ltr: 222, rtl: 4681 } },
+          absolute: { top: extraHeight + 116, left: { ltr: 221, rtl: 4680 } },
           relative: { top: 110,               left: { ltr: 216, rtl:    2 } },  // JQuery returns extraHeight + 117/222, but that's nonsense
-          viewport: { top: extraHeight + 117, left: { ltr: 222, rtl:  174 } }
+          viewport: { top: extraHeight + 116, left: { ltr: 221, rtl:  175 } }
         }
       ];
 
@@ -270,19 +271,19 @@ asynctest(
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var noScroll = [
         { id: 'fixed-1',
-          absolute: { top: 1, left: { ltr: 1, rtl: 4508 } },
+          absolute: { top: 1, left: { ltr: 1, rtl: 4506 } },
           relative: { top: 1, left: { ltr: 1, rtl:    1 } }, // JQuery returns 0/0
           viewport: { top: 1, left: { ltr: 1, rtl:    1 } }
         },
         { id: 'fixed-2',
-          absolute: { top: 21, left: { ltr: 21, rtl: 4528 } },
+          absolute: { top: 21, left: { ltr: 21, rtl: 4526 } },
           relative: { top: 21, left: { ltr: 21, rtl:   21 } }, // JQuery returns 20/20
           viewport: { top: 21, left: { ltr: 21, rtl:   21 } }
         },
         { id: 'fixed-no-top-left',
-          absolute: { top: 7, left: { ltr: 7, rtl: 4871 } },
-          relative: { top: 7, left: { ltr: 7, rtl:  364 } }, // JQuery returns 6/6
-          viewport: { top: 7, left: { ltr: 7, rtl:  364 } }
+          absolute: { top: 6, left: { ltr: 6, rtl: 4870 } },
+          relative: { top: 6, left: { ltr: 6, rtl:  365 } }, // JQuery returns 6/6
+          viewport: { top: 6, left: { ltr: 6, rtl:  365 } }
         }
       ];
 
@@ -301,9 +302,9 @@ asynctest(
           viewport: { top: 21, left: { ltr: 21, rtl: 21 } }
         },
         { id: 'fixed-no-top-left',
-          absolute: { top: topScroll + 7, left: { ltr: leftScroll + 7, rtl: leftScroll + 7 - 15 + 357 } },
-          relative: { top: 7, left: { ltr: 7, rtl: 364 } }, // JQuery returns 6/6
-          viewport: { top: 7, left: { ltr: 7, rtl: 364 } }
+          absolute: { top: topScroll + 6, left: { ltr: leftScroll + 6, rtl: leftScroll + 7 - 15 + 358 } },
+          relative: { top: 6, left: { ltr: 6, rtl: 365 } }, // JQuery returns 6/6
+          viewport: { top: 6, left: { ltr: 6, rtl: 365 } }
         }
       ];
 
@@ -326,8 +327,7 @@ asynctest(
 
     /* Simple verification logic */
     var runChecks = function (doc, tests) {
-      var body = Body.getBody(doc.rawDoc);
-      var dir = Attr.get(body, 'dir') || 'ltr';
+      var dir = Attr.get(doc.body, 'dir') || 'ltr';
 
       Arr.each(tests, function (t) {
         var div = doc.byId(t.id);
