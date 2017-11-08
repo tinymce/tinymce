@@ -163,7 +163,8 @@ asynctest(
       }, 'Should not contain width');
 
       fillAndSubmitWindowForm(editor, {
-        "height": "20"
+        "height": "20",
+        "valign": "bottom"
       });
 
       LegacyUnit.equal(
@@ -172,8 +173,8 @@ asynctest(
           '<table>' +
           '<tbody>' +
           '<tr>' +
-          '<td style="width: 10px; height: 20px;">a</td>' +
-          '<td style="width: 20px; height: 20px;">b</td>' +
+          '<td style="width: 10px; height: 20px; vertical-align: bottom;">a</td>' +
+          '<td style="width: 20px; height: 20px; vertical-align: bottom;">b</td>' +
           '</tr>' +
           '</tbody>' +
           '</table>'

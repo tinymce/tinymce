@@ -97,7 +97,7 @@ define(
 
           // Apply vertical alignment
           if (data.valign) {
-            Styles.applyVAlign(editor, cellElm, data.align);
+            Styles.applyVAlign(editor, cellElm, data.valign);
           }
         });
 
