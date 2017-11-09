@@ -1,12 +1,17 @@
 define(
   'ephox.imagetools.util.Conversions',
   [
-    'ephox.imagetools.util.Promise',
     'ephox.imagetools.util.Canvas',
+    'ephox.imagetools.util.ImageSize',
     'ephox.imagetools.util.Mime',
-    'ephox.imagetools.util.ImageSize'
+    'ephox.imagetools.util.Promise',
+    'ephox.sand.api.Blob',
+    'ephox.sand.api.Uint8Array',
+    'ephox.sand.api.Window',
+    'global!Array',
+    'global!Math'
   ],
-  function (Promise, Canvas, Mime, ImageSize) {
+  function (Canvas, ImageSize, Mime, Promise, Blob, Uint8Array, Window, Array, Math) {
     function loadImage(image) {
       return new Promise(function (resolve) {
         function loaded() {
@@ -87,41 +92,39 @@ define(
       });
     }
 
-    function dataUriToBlobSync(uri) {
-      var str, arr, i, matches, type, blobBuilder;
+    function dataUriToBlobSync(base64, mimetype) {
+      // al gore rhythm via http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+      var sliceSize = 1024;
+      var byteCharacters = Window.atob(base64);
+      var bytesLength = byteCharacters.length;
+      var slicesCount = Math.ceil(bytesLength / sliceSize);
+      var byteArrays = new Array(slicesCount);
 
-      uri = uri.split(',');
+      for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+          var begin = sliceIndex * sliceSize;
+          var end = Math.min(begin + sliceSize, bytesLength);
 
-      matches = /data:([^;]+)/.exec(uri[0]);
-      if (matches) {
-        type = matches[1];
+          var bytes = new Array(end - begin);
+          for (var offset = begin, i = 0 ; offset < end; ++i, ++offset) {
+              bytes[i] = byteCharacters[offset].charCodeAt(0);
+          }
+          byteArrays[sliceIndex] = Uint8Array(bytes);
       }
-
-      str = atob(uri[1]);
-
-      if (window.WebKitBlobBuilder) {
-        /*globals WebKitBlobBuilder:false */
-        blobBuilder = new WebKitBlobBuilder();
-
-        arr = new ArrayBuffer(str.length);
-        for (i = 0; i < arr.length; i++) {
-          arr[i] = str.charCodeAt(i);
-        }
-
-        blobBuilder.append(arr);
-        return blobBuilder.getBlob(type);
-      }
-
-      arr = new Uint8Array(str.length);
-      for (i = 0; i < arr.length; i++) {
-        arr[i] = str.charCodeAt(i);
-      }
-      return new Blob([arr], { type: type });
+      return Blob(byteArrays, {type: mimetype});
     }
 
     function dataUriToBlob(uri) {
-      return new Promise(function (resolve) {
-        resolve(dataUriToBlobSync(uri));
+      return new Promise(function (resolve, reject) {
+        var data = uri.split(',');
+
+        var matches = /data:([^;]+)/.exec(data[0]);
+        if (matches) {
+          var type = matches[1];
+          resolve(dataUriToBlobSync(data[1], type));
+        } else {
+          // uri isn't valid
+          reject('uri is not base64: ' + uri);
+        }
       });
     }
 
@@ -190,8 +193,6 @@ define(
       // helper method
       revokeImageUrl: revokeImageUrl,
       // helper method
-      uriToBlob: uriToBlob,
-      // helper method
-      dataUriToBlobSync: dataUriToBlobSync
+      uriToBlob: uriToBlob
     };
   });

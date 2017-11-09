@@ -9,9 +9,10 @@
   ],
   "devDependencies": {
     "@ephox/bolt": "^1.6.1",
+    "@ephox/sand": "^1.1.1",
     "grunt": "^1.0.1"
   },
-  "scripts":{
+  "scripts": {
     "test": "bedrock -c config/bolt/browser.js -d src/test"
   },
   "repository": {
