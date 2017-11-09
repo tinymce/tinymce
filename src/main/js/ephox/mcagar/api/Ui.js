@@ -47,34 +47,25 @@ define(
       ]);
     };
 
+    var cClickOnWithin = function (label, selector, cContext) {
+       return NamedChain.asChain([
+         NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
+         NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
+         NamedChain.direct('ui', Mouse.cClick, '_'),
+         NamedChain.output(NamedChain.inputName())
+       ]);
+     };
+
+    var cClickOnUi = function (label, selector) {
+     return cClickOnWithin(label, selector, cDialogRoot);
+    };
+
     var cClickOnToolbar = function (label, selector) {
-      return Chain.fromParent(Chain.identity, [
-        Chain.fromChains([
-          cGetToolbarRoot,
-          UiFinder.cFindIn(selector),
-          Mouse.cClick
-        ])
-      ]);
+      return cClickOnWithin(label, selector, cGetToolbarRoot);
     };
 
     var cClickOnMenu = function (label, selector) {
-      return Chain.fromParent(Chain.identity, [
-        Chain.fromChains([
-          cGetMenuRoot,
-          UiFinder.cFindIn(selector),
-          Mouse.cClick
-        ])
-      ]);
-    };
-
-    var cClickOnUi = function (label, selector) {
-      return Chain.fromParent(Chain.identity, [
-        Chain.fromChains([
-          cDialogRoot,
-          UiFinder.cFindIn(selector),
-          Mouse.cClick
-        ])
-      ]);
+      return cClickOnWithin(label, selector, cGetMenuRoot);
     };
 
     var sWaitForUi = function (label, selector) {
@@ -128,24 +119,21 @@ define(
 
     var cWaitForDialog = function (selector) {
       return NamedChain.asChain([
-        NamedChain.write('editor', Chain.identity),
+        NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
         NamedChain.write('popupNode', cWaitForPopup('waiting for popup: ' + selector, selector)),
         NamedChain.merge(['editor', 'popupNode'], 'dialogInputs'),
         NamedChain.direct('dialogInputs', cDialogByPopup, 'dialog'),
-        NamedChain.bundle(function (input) {
-          return Result.value(input.dialog);
-        })
+        NamedChain.output('dialog')
       ]);
     };
 
     var cAssertDialogContents = function (selector, data) {
-      return Chain.fromParent(Chain.identity, [
-        Chain.fromChains([
-          cWaitForDialog(selector),
-          Chain.op(function (dialog) {
-            Assertions.assertEq('asserting contents of: ' + selector, data, dialog.toJSON());
-          })
-        ])
+      return NamedChain.asChain([
+        NamedChain.direct(NamedChain.inputName(), cWaitForDialog(selector), 'dialog'),
+        NamedChain.direct('dialog', Chain.op(function (dialog) {
+          Assertions.assertEq('asserting contents of: ' + selector, data, dialog.toJSON());
+        }), '_'),
+        NamedChain.output(NamedChain.inputName())
       ]);
     };
 
@@ -154,13 +142,12 @@ define(
     };
 
     var cFillDialog = function (selector, data) {
-      return Chain.fromParent(Chain.identity, [
-        Chain.fromChains([
-          cWaitForDialog(selector),
-          Chain.op(function (dialog) {
-            dialog.fromJSON(Merger.merge(dialog.toJSON(), data));
-          })
-        ])
+      return NamedChain.asChain([
+        NamedChain.direct(NamedChain.inputName(), cWaitForDialog(selector), 'dialog'),
+        NamedChain.direct('dialog', Chain.op(function (dialog) {
+          dialog.fromJSON(Merger.merge(dialog.toJSON(), data));
+        }), '_'),
+        NamedChain.output(NamedChain.inputName())
       ]);
     };
 
@@ -170,12 +157,12 @@ define(
 
     var cClickPopupButton = function (btnSelector, selector) {
       popupSelector = selector || '[role="dialog"]';
-      return  Chain.fromParent(Chain.identity, [
-        Chain.fromChains([
-          cWaitForPopup('waiting for: ' + popupSelector, popupSelector),
-          UiFinder.cFindIn(btnSelector),
-          Mouse.cClick
-        ])
+
+      return NamedChain.asChain([
+        NamedChain.direct(NamedChain.inputName(), cWaitForPopup('waiting for: ' + popupSelector, popupSelector), 'popup'),
+        NamedChain.direct('popup', UiFinder.cFindIn(btnSelector), 'button'),
+        NamedChain.direct('button', Mouse.cClick, '_'),
+        NamedChain.output(NamedChain.inputName())
       ]);
     };
 
