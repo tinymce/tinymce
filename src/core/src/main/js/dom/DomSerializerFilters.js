@@ -181,8 +181,36 @@ define(
       );
     };
 
+    /**
+     * IE 11 has a fantastic bug where it will produce two trailing BR elements to iframe bodies when
+     * the iframe is hidden by display: none on a parent container. The DOM is actually out of sync
+     * with innerHTML in this case. It's like IE adds shadow DOM BR elements that appears on innerHTML
+     * but not as the lastChild of the body. So this fix simply removes the last two
+     * BR elements at the end of the document.
+     *
+     * Example of what happens: <body>text</body> becomes <body>text<br><br></body>
+     */
+    var trimTrailingBr = function (rootNode) {
+      var brNode1, brNode2;
+
+      var isBr = function (node) {
+        return node && node.name === 'br';
+      };
+
+      brNode1 = rootNode.lastChild;
+      if (isBr(brNode1)) {
+        brNode2 = brNode1.prev;
+
+        if (isBr(brNode2)) {
+          brNode1.remove();
+          brNode2.remove();
+        }
+      }
+    };
+
     return {
-      register: register
+      register: register,
+      trimTrailingBr: trimTrailingBr
     };
   }
 );

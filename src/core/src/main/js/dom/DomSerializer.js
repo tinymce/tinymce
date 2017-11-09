@@ -13,7 +13,6 @@ define(
   [
     'ephox.katamari.api.Fun',
     'global!document',
-    'tinymce.core.Env',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.DomSerializerFilters',
     'tinymce.core.html.DomParser',
@@ -22,34 +21,7 @@ define(
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Tools'
   ],
-  function (Fun, document, Env, DOMUtils, DomSerializerFilters, DomParser, Schema, Serializer, Zwsp, Tools) {
-    /**
-     * IE 11 has a fantastic bug where it will produce two trailing BR elements to iframe bodies when
-     * the iframe is hidden by display: none on a parent container. The DOM is actually out of sync
-     * with innerHTML in this case. It's like IE adds shadow DOM BR elements that appears on innerHTML
-     * but not as the lastChild of the body. So this fix simply removes the last two
-     * BR elements at the end of the document.
-     *
-     * Example of what happens: <body>text</body> becomes <body>text<br><br></body>
-     */
-    var trimTrailingBr = function (rootNode) {
-      var brNode1, brNode2;
-
-      var isBr = function (node) {
-        return node && node.name === 'br';
-      };
-
-      brNode1 = rootNode.lastChild;
-      if (isBr(brNode1)) {
-        brNode2 = brNode1.prev;
-
-        if (isBr(brNode2)) {
-          brNode1.remove();
-          brNode2.remove();
-        }
-      }
-    };
-
+  function (Fun, document, DOMUtils, DomSerializerFilters, DomParser, Schema, Serializer, Zwsp, Tools) {
     var firePreProcess = function (editor, args) {
       if (editor) {
         editor.fire('PreProcess', args);
@@ -90,15 +62,7 @@ define(
       var serialize = function (node, args) {
         var impl, doc, oldDoc, htmlSerializer, content, rootNode;
 
-        // Explorer won't clone contents of script and style and the
-        // selected index of select elements are cleared on a clone operation.
-        if (Env.ie && dom.select('script,style,select,map').length > 0) {
-          content = node.innerHTML;
-          node = node.cloneNode(false);
-          dom.setHTML(node, content);
-        } else {
-          node = node.cloneNode(true);
-        }
+        node = node.cloneNode(true);
 
         // Nodes needs to be attached to something in WebKit/Opera
         // This fix will make DOM ranges and make Sizzle happy!
@@ -141,7 +105,7 @@ define(
         // Parse HTML
         content = Zwsp.trim(Tools.trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node)));
         rootNode = htmlParser.parse(content, args);
-        trimTrailingBr(rootNode);
+        DomSerializerFilters.trimTrailingBr(rootNode);
 
         // Serialize HTML
         htmlSerializer = new Serializer(settings, schema);
