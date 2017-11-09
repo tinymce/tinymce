@@ -24,6 +24,7 @@ define(
     'tinymce.core.api.NotificationManager',
     'tinymce.core.api.WindowManager',
     'tinymce.core.api.dom.RangeUtils',
+    'tinymce.core.api.dom.Serializer',
     'tinymce.core.dom.BookmarkManager',
     'tinymce.core.dom.ControlSelection',
     'tinymce.core.dom.DOMUtils',
@@ -31,7 +32,6 @@ define(
     'tinymce.core.dom.EventUtils',
     'tinymce.core.dom.ScriptLoader',
     'tinymce.core.dom.Selection',
-    'tinymce.core.dom.Serializer',
     'tinymce.core.dom.Sizzle',
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.geom.Rect',
@@ -62,7 +62,7 @@ define(
   ],
   function (
     AddOnManager, Editor, EditorCommands, EditorManager, EditorObservable, Env, Shortcuts, UndoManager, FocusManager, Formatter, NotificationManager, WindowManager,
-    RangeUtils, BookmarkManager, ControlSelection, DOMUtils, DomQuery, EventUtils, ScriptLoader, Selection, DomSerializer, Sizzle, TreeWalker, Rect, DomParser,
+    RangeUtils, DomSerializer, BookmarkManager, ControlSelection, DOMUtils, DomQuery, EventUtils, ScriptLoader, Selection, Sizzle, TreeWalker, Rect, DomParser,
     Entities, Node, SaxParser, Schema, HtmlSerializer, Styles, Writer, Factory, Class, Color, Delay, EventDispatcher, I18n, JSON, JSONP, JSONRequest, LocalStorage,
     Observable, Promise, Tools, URI, VK, XHR
   ) {

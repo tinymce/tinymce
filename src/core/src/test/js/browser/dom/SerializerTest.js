@@ -6,12 +6,14 @@ asynctest(
     'ephox.katamari.api.Arr',
     'ephox.mcagar.api.LegacyUnit',
     'global!document',
+    'tinymce.core.Editor',
+    'tinymce.core.EditorManager',
+    'tinymce.core.api.dom.Serializer',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.dom.Serializer',
     'tinymce.core.test.ViewBlock',
     'tinymce.core.text.Zwsp'
   ],
-  function (Pipeline, Step, Arr, LegacyUnit, document, DOMUtils, Serializer, ViewBlock, Zwsp) {
+  function (Pipeline, Step, Arr, LegacyUnit, document, Editor, EditorManager, Serializer, DOMUtils, ViewBlock, Zwsp) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -330,25 +332,30 @@ asynctest(
     });
 
     suite.test('Pre/post process events', function () {
-      var ser = new Serializer({ fix_list_elements : true });
+      var editor = new Editor('id', {}, EditorManager);
+      var ser = new Serializer({ fix_list_elements : true }, editor);
+      var preProcessArgs, postProcessArgs;
 
       ser.setRules('div[id],span[id|class],a[href],b[class]');
 
-      ser.onPreProcess = function (o) {
-        LegacyUnit.equal(o.test, 'abc');
-        DOM.setAttrib(o.node.getElementsByTagName('span')[0], 'class', 'abc');
-      };
+      editor.on('PreProcess', function (o) {
+        preProcessArgs = o;
+        DOM.setAttrib(preProcessArgs.node.getElementsByTagName('span')[0], 'class', 'abc');
+      });
 
-      ser.onPostProcess = function (o) {
-        LegacyUnit.equal(o.test, 'abc');
+      editor.on('PostProcess', function (o) {
         o.content = o.content.replace(/<b>/g, '<b class="123">');
-      };
+        postProcessArgs = o;
+      });
 
       DOM.setHTML('test', '<span id="test2"><b>abc</b></span>123<a href="file.html" data-mce-href="file.html">link</a>');
       LegacyUnit.equal(
         ser.serialize(DOM.get('test'), { test : 'abc' }),
         '<div id="test"><span id="test2" class="abc"><b class="123">abc</b></span>123<a href="file.html">link</a></div>'
       );
+
+      LegacyUnit.equal(preProcessArgs.test, 'abc');
+      LegacyUnit.equal(postProcessArgs.test, 'abc');
     });
 
     suite.test('Script with non JS type attribute', function () {

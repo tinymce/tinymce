@@ -1,5 +1,5 @@
 /**
- * Serializer.js
+ * DomSerializer.js
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
@@ -15,7 +15,7 @@
  * @class tinymce.dom.Serializer
  */
 define(
-  'tinymce.core.dom.Serializer',
+  'tinymce.core.dom.DomSerializer',
   [
     'global!document',
     'tinymce.core.Env',
@@ -56,6 +56,18 @@ define(
           brNode1.remove();
           brNode2.remove();
         }
+      }
+    };
+
+    var firePreProcess = function (editor, args) {
+      if (editor) {
+        editor.fire('PreProcess', args);
+      }
+    };
+
+    var firePostProcess = function (editor, args) {
+      if (editor) {
+        editor.fire('PostProcess', args);
       }
     };
 
@@ -363,7 +375,7 @@ define(
          * @param {Object} args Arguments option that gets passed to event handlers.
          */
         serialize: function (node, args) {
-          var self = this, impl, doc, oldDoc, htmlSerializer, content, rootNode;
+          var impl, doc, oldDoc, htmlSerializer, content, rootNode;
 
           // Explorer won't clone contents of script and style and the
           // selected index of select elements are cleared on a clone operation.
@@ -410,7 +422,7 @@ define(
           // Pre process
           if (!args.no_events) {
             args.node = node;
-            self.onPreProcess(args);
+            firePreProcess(editor, args);
           }
 
           // Parse HTML
@@ -424,7 +436,7 @@ define(
 
           // Post process
           if (!args.no_events) {
-            self.onPostProcess(args);
+            firePostProcess(editor, args);
           }
 
           // Restore the old document if it was changed
@@ -459,18 +471,6 @@ define(
          */
         setRules: function (rules) {
           schema.setValidElements(rules);
-        },
-
-        onPreProcess: function (args) {
-          if (editor) {
-            editor.fire('PreProcess', args);
-          }
-        },
-
-        onPostProcess: function (args) {
-          if (editor) {
-            editor.fire('PostProcess', args);
-          }
         },
 
         /**
