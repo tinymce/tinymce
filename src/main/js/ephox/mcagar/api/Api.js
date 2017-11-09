@@ -1,5 +1,5 @@
 define(
-  'ephox.mcagar.api.chainy.Api',
+  'ephox.mcagar.api.Api',
 
   [
     'ephox.agar.api.Assertions',
@@ -33,10 +33,6 @@ define(
         editor.setContent(html);
       });
     };
-
-    var cSetDomSelection = Chain.op(function (range) {
-      editor.selection.setRng(range);
-    });
 
     var cSetSelectionFrom = function (spec) {
       var path = Cursors.pathFrom(spec);
@@ -134,17 +130,6 @@ define(
       editor.focus();
     });
 
-    var sTryAssertFocus = Waiter.sTryUntil(
-      'Waiting for focus on tinymce editor',
-      FocusTools.sIsOnSelector(
-        'iframe focus',
-        Element.fromDom(document),
-        'iframe'
-      ),
-      100,
-      1000
-    );
-
     return {
       cSetContent: cSetContent,
       cGetContent: cGetContent,
@@ -161,8 +146,7 @@ define(
       cAssertContent: cAssertContent,
       cAssertContentPresence: cAssertContentPresence,
       cAssertContentStructure: cAssertContentStructure,
-      cAssertSelection: cAssertSelection,
-      sTryAssertFocus: sTryAssertFocus
+      cAssertSelection: cAssertSelection
     };
   }
 );

@@ -1,5 +1,5 @@
 define(
-  'ephox.mcagar.api.chainy.Editor',
+  'ephox.mcagar.api.Editor',
 
   [
     'ephox.katamari.api.Id',

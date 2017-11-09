@@ -5,8 +5,8 @@ asynctest(
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Assertions',
-    'ephox.mcagar.api.chainy.Api',
-    'ephox.mcagar.api.chainy.Editor'
+    'ephox.mcagar.api.Api',
+    'ephox.mcagar.api.Editor'
   ],
 
   function (Pipeline, Chain, Assertions, Api, Editor) {
