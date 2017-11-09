@@ -11,18 +11,18 @@
 define(
   'tinymce.core.dom.DomSerializer',
   [
+    'ephox.katamari.api.Fun',
     'global!document',
     'tinymce.core.Env',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.DomSerializerFilters',
     'tinymce.core.html.DomParser',
-    'tinymce.core.html.SaxParser',
     'tinymce.core.html.Schema',
     'tinymce.core.html.Serializer',
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Tools'
   ],
-  function (document, Env, DOMUtils, DomSerializerFilters, DomParser, SaxParser, Schema, Serializer, Zwsp, Tools) {
+  function (Fun, document, Env, DOMUtils, DomSerializerFilters, DomParser, Schema, Serializer, Zwsp, Tools) {
     /**
      * IE 11 has a fantastic bug where it will produce two trailing BR elements to iframe bodies when
      * the iframe is hidden by display: none on a parent container. The DOM is actually out of sync
@@ -62,63 +62,22 @@ define(
       }
     };
 
+    var addTempAttr = function (htmlParser, tempAttrs, name) {
+      if (Tools.inArray(tempAttrs, name) === -1) {
+        htmlParser.addAttributeFilter(name, function (nodes, name) {
+          var i = nodes.length;
+
+          while (i--) {
+            nodes[i].attr(name, null);
+          }
+        });
+
+        tempAttrs.push(name);
+      }
+    };
+
     return function (settings, editor) {
       var dom, schema, htmlParser, tempAttrs = ["data-mce-selected"];
-
-      var trimHtml = function (html) {
-        var trimContentRegExp = new RegExp([
-          '<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\\/span>', // Trim bogus spans like caret containers
-          '\\s?(' + tempAttrs.join('|') + ')="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
-        ].join('|'), 'gi');
-
-        html = Zwsp.trim(html.replace(trimContentRegExp, ''));
-
-        return html;
-      };
-
-      var trimContent = function (html) {
-        var content = html;
-        var bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
-        var endTagIndex, index, matchLength, matches, shortEndedElements, schema = editor.schema;
-
-        content = trimHtml(content);
-        shortEndedElements = schema.getShortEndedElements();
-
-        // Remove all bogus elements marked with "all"
-        while ((matches = bogusAllRegExp.exec(content))) {
-          index = bogusAllRegExp.lastIndex;
-          matchLength = matches[0].length;
-
-          if (shortEndedElements[matches[1]]) {
-            endTagIndex = index;
-          } else {
-            endTagIndex = SaxParser.findEndTag(schema, content, index);
-          }
-
-          content = content.substring(0, index - matchLength) + content.substring(endTagIndex);
-          bogusAllRegExp.lastIndex = index - matchLength;
-        }
-
-        return content;
-      };
-
-      var getTrimmedContent = function () {
-        return trimContent(editor.getBody().innerHTML);
-      };
-
-      var addTempAttr = function (name) {
-        if (Tools.inArray(tempAttrs, name) === -1) {
-          htmlParser.addAttributeFilter(name, function (nodes, name) {
-            var i = nodes.length;
-
-            while (i--) {
-              nodes[i].attr(name, null);
-            }
-          });
-
-          tempAttrs.push(name);
-        }
-      };
 
       dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
       schema = editor && editor.schema ? editor.schema : new Schema(settings);
@@ -214,12 +173,10 @@ define(
         setRules: function (rules) {
           schema.setValidElements(rules);
         },
-        addTempAttr: addTempAttr,
-
-        // Internal
-        trimHtml: trimHtml,
-        getTrimmedContent: getTrimmedContent,
-        trimContent: trimContent
+        addTempAttr: Fun.curry(addTempAttr, htmlParser, tempAttrs),
+        getTempAttrs: function () {
+          return tempAttrs;
+        }
       };
     };
   }

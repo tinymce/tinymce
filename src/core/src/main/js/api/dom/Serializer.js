@@ -111,10 +111,13 @@ define(
          */
         addTempAttr: domSerializer.addTempAttr,
 
-        // Internal
-        trimHtml: domSerializer.trimHtml,
-        getTrimmedContent: domSerializer.getTrimmedContent,
-        trimContent: domSerializer.trimContent
+        /**
+         * Returns an array of all added temp attrs names.
+         *
+         * @method getTempAttrs
+         * @return {String[]} Array with attribute names.
+         */
+        getTempAttrs: domSerializer.getTempAttrs
       };
     };
   }
