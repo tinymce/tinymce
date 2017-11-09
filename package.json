@@ -9,6 +9,7 @@
   ],
   "devDependencies": {
     "@ephox/bolt": "^1.6.1",
+    "@ephox/katamari": "^1.1.5",
     "@ephox/sand": "^1.1.1",
     "grunt": "^1.0.1"
   },

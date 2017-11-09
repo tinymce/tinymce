@@ -20,12 +20,17 @@ define(
       return Conversions.blobToBase64(blob);
     };
 
+    var dataUriToBlobSync = function (uri) {
+      return Conversions.dataUriToBlobSync(uri);
+    };
+
     return {
       // used outside
       blobToImage: blobToImage,
       imageToBlob: imageToBlob,
       blobToDataUri: blobToDataUri,
-      blobToBase64: blobToBase64
+      blobToBase64: blobToBase64,
+      dataUriToBlobSync: dataUriToBlobSync
     };
   }
 );

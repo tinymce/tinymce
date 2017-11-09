@@ -5,13 +5,14 @@ define(
     'ephox.imagetools.util.ImageSize',
     'ephox.imagetools.util.Mime',
     'ephox.imagetools.util.Promise',
+    'ephox.katamari.api.Option',
     'ephox.sand.api.Blob',
     'ephox.sand.api.Uint8Array',
     'ephox.sand.api.Window',
     'global!Array',
     'global!Math'
   ],
-  function (Canvas, ImageSize, Mime, Promise, Blob, Uint8Array, Window, Array, Math) {
+  function (Canvas, ImageSize, Mime, Promise, Option, Blob, Uint8Array, Window, Array, Math) {
     function loadImage(image) {
       return new Promise(function (resolve) {
         function loaded() {
@@ -92,7 +93,15 @@ define(
       });
     }
 
-    function dataUriToBlobSync(base64, mimetype) {
+    function dataUriToBlobSync(uri) {
+      var data = uri.split(',');
+
+      var matches = /data:([^;]+)/.exec(data[0]);
+      if (!matches) return Option.none();
+
+      var mimetype = matches[1];
+      var base64 = data[1];
+
       // al gore rhythm via http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
       var sliceSize = 1024;
       var byteCharacters = Window.atob(base64);
@@ -110,21 +119,15 @@ define(
           }
           byteArrays[sliceIndex] = Uint8Array(bytes);
       }
-      return Blob(byteArrays, {type: mimetype});
+      return Option.some(Blob(byteArrays, {type: mimetype}));
     }
 
     function dataUriToBlob(uri) {
       return new Promise(function (resolve, reject) {
-        var data = uri.split(',');
-
-        var matches = /data:([^;]+)/.exec(data[0]);
-        if (matches) {
-          var type = matches[1];
-          resolve(dataUriToBlobSync(data[1], type));
-        } else {
+        dataUriToBlobSync(uri).fold(function () {
           // uri isn't valid
           reject('uri is not base64: ' + uri);
-        }
+        }, resolve);
       });
     }
 
@@ -176,23 +179,25 @@ define(
       URL.revokeObjectURL(image.src);
     }
 
+    var isDataUrl = function (uri) {
+      var data = uri.split(',');
+
+      return /data:([^;]+)/.exec(data[0]) !== null;
+    };
+
     return {
       // used outside
       blobToImage: blobToImage,
-      // used outside
       imageToBlob: imageToBlob,
-      // used outside
       blobToDataUri: blobToDataUri,
-      // used outside
       blobToBase64: blobToBase64,
 
       // helper method
       imageToCanvas: imageToCanvas,
-      // helper method
       canvasToBlob: canvasToBlob,
-      // helper method
       revokeImageUrl: revokeImageUrl,
-      // helper method
-      uriToBlob: uriToBlob
+      uriToBlob: uriToBlob,
+      dataUriToBlobSync: dataUriToBlobSync,
+      isDataUrl: isDataUrl
     };
   });

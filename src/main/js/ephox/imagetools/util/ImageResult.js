@@ -1,12 +1,14 @@
 define(
   'ephox.imagetools.util.ImageResult',
   [
-    'ephox.imagetools.util.Promise',
+    'ephox.imagetools.util.Canvas',
     'ephox.imagetools.util.Conversions',
     'ephox.imagetools.util.Mime',
-    'ephox.imagetools.util.Canvas'
+    'ephox.imagetools.util.Promise',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
-  function (Promise, Conversions, Mime, Canvas) {
+  function (Canvas, Conversions, Mime, Promise, Fun, Option) {
     function create(canvas, blob) {
       var initialType = blob.type;
       function getType() {
@@ -69,9 +71,38 @@ define(
       });
     }
 
+    /*
+      This copy doesn't support changing type or quality, but
+      it's used by TBIO on load which won't ask for changes.
+
+      TODO: Make toCanvas return a promise so this can be inlined with create above
+     */
+    var fromBlobAndUrlSync = function (blob, url) {
+      var backgroundCanvas = Option.none();
+      Conversions.blobToImage(blob).then(function (image) {
+        var result = Conversions.imageToCanvas(image);
+        Conversions.revokeImageUrl(image);
+        backgroundCanvas = Option.some(result);
+      });
+      return {
+        getType: Fun.constant(blob.type),
+        toBlob: function () {
+          return Promise.resolve(blob);
+        },
+        toDataURL: Fun.constant(url),
+        toBase64: function () {
+          return url.split(',')[1];
+        },
+        toCanvas: function () {
+          return backgroundCanvas.getOrDie('image has not loaded yet')
+        }
+      };
+    }
+
     return {
       fromBlob: fromBlob,
       fromCanvas: fromCanvas,
-      fromImage: fromImage
+      fromImage: fromImage,
+      fromBlobAndUrlSync: fromBlobAndUrlSync
     };
   });

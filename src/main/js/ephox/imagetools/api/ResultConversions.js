@@ -2,18 +2,18 @@ define(
   'ephox.imagetools.api.ResultConversions',
 
   [
-    'ephox.imagetools.util.Conversions',
     'ephox.imagetools.util.ImageResult'
   ],
 
-  function (Conversions, ImageResult) {
+  function (ImageResult) {
 
     var blobToImageResult = function (blob) {
       return ImageResult.fromBlob(blob);
     };
 
-    var dataUriToImageResult = function (uri) {
-      return Conversions.uriToBlob(uri).then(ImageResult.fromBlob);
+    var fromBlobAndUrlSync = function (blob, uri) {
+      // we have no reason to doubt the uri is valid
+      return ImageResult.fromBlobAndUrlSync(blob, uri);
     };
 
     var imageToImageResult = function (image) {
@@ -37,7 +37,7 @@ define(
     return {
       // used outside
       blobToImageResult: blobToImageResult,
-      dataUriToImageResult: dataUriToImageResult,
+      fromBlobAndUrlSync: fromBlobAndUrlSync,
       imageToImageResult: imageToImageResult,
       imageResultToBlob: imageResultToBlob,
       imageResultToOriginalBlob: imageResultToOriginalBlob,
