@@ -4,7 +4,6 @@ asynctest(
   [
     'ephox.agar.api.ApproxStructure',
     'ephox.agar.api.Pipeline',
-    'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
     'ephox.agar.api.Waiter',
     'ephox.mcagar.api.TinyApis',
@@ -15,7 +14,7 @@ asynctest(
     'tinymce.themes.modern.Theme'
   ],
 
-  function (ApproxStructure, Pipeline, RawAssertions, Step, Waiter, TinyApis, TinyLoader, TinyUi, document, CodePlugin, ModernTheme) {
+  function (ApproxStructure, Pipeline, Step, Waiter, TinyApis, TinyLoader, TinyUi, document, CodePlugin, ModernTheme) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
