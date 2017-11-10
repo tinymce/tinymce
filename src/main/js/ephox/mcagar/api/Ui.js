@@ -68,18 +68,6 @@ define(
       return cClickOnWithin(label, selector, cGetMenuRoot);
     };
 
-    var sWaitForUi = function (label, selector) {
-      return Chain.asStep({}, [
-        cWaitForUi(label, selector)
-      ]);
-    };
-
-    var sWaitForPopup = function (label, selector) {
-      return Chain.asStep({}, [
-        cWaitForPopup(label, selector)
-      ]);
-    };
-
     var cWaitForState = function (hasState) {
       return function (label, selector) {
         return Chain.fromChains([
@@ -193,10 +181,7 @@ define(
       cAssertDialogContents: cAssertDialogContents,
       cAssertActiveDialogContents: cAssertActiveDialogContents,
 
-      cTriggerContextMenu: cTriggerContextMenu,
-
-      sWaitForUi: sWaitForUi,
-      sWaitForPopup: sWaitForPopup
+      cTriggerContextMenu: cTriggerContextMenu
     };
   }
 );
