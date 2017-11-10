@@ -60,6 +60,11 @@ define(
       return htmlSerializer.serialize(node);
     };
 
+    var toHtml = function (editor, settings, schema, rootNode, args) {
+      var content = serializeNode(settings, schema, rootNode);
+      return postProcess(editor, args, content);
+    };
+
     return function (settings, editor) {
       var dom, schema, htmlParser, tempAttrs = ['data-mce-selected'];
 
@@ -75,8 +80,7 @@ define(
         var args = Merger.merge({ format: 'html' }, parserArgs ? parserArgs : {});
         var targetNode = DomSerializerPreProcess.process(editor, node, args);
         var rootNode = parseHtml(htmlParser, dom, targetNode, args);
-        var content = serializeNode(settings, schema, rootNode);
-        return postProcess(editor, args, content);
+        return args.format === 'tree' ? rootNode : toHtml(editor, settings, schema, rootNode, args);
       };
 
       return {
