@@ -128,6 +128,16 @@ asynctest(
       );
     });
 
+    suite.test('format tree', function () {
+      var ser = new Serializer({ });
+
+      DOM.setHTML('test', 'a');
+      LegacyUnit.equal(
+        ser.serialize(DOM.get('test'), { format: 'tree' }).name,
+        'body'
+      );
+    });
+
     suite.test('Entity encoding', function () {
       var ser;
 

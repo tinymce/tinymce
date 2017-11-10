@@ -47,8 +47,12 @@ define(
       }
     };
 
-    var parseHtml = function (htmlParser, dom, node, args) {
-      var html = Zwsp.trim(Tools.trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node)));
+    var getHtmlFromNode = function (dom, node, args) {
+      var html = Zwsp.trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node));
+      return args.selection ? html : Tools.trim(html);
+    };
+
+    var parseHtml = function (htmlParser, dom, html, args) {
       var parserArgs = args.selection ? Merger.merge({ forced_root_block: false }, args) : args;
       var rootNode = htmlParser.parse(html, parserArgs);
       DomSerializerFilters.trimTrailingBr(rootNode);
@@ -79,7 +83,8 @@ define(
       var serialize = function (node, parserArgs) {
         var args = Merger.merge({ format: 'html' }, parserArgs ? parserArgs : {});
         var targetNode = DomSerializerPreProcess.process(editor, node, args);
-        var rootNode = parseHtml(htmlParser, dom, targetNode, args);
+        var html = getHtmlFromNode(dom, targetNode, args);
+        var rootNode = parseHtml(htmlParser, dom, html, args);
         return args.format === 'tree' ? rootNode : toHtml(editor, settings, schema, rootNode, args);
       };
 

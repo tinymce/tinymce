@@ -20,11 +20,10 @@ define(
   function (Element, EventProcessRanges, FragmentReader, MultiRange, Zwsp) {
     var getContent = function (editor, args) {
       var rng = editor.selection.getRng(), tmpElm = editor.dom.create("body");
-      var sel = editor.selection.getSel(), whiteSpaceBefore, whiteSpaceAfter, fragment;
+      var sel = editor.selection.getSel(), fragment;
       var ranges = EventProcessRanges.processRanges(editor, MultiRange.getRanges(sel));
 
       args = args || {};
-      whiteSpaceBefore = whiteSpaceAfter = '';
       args.get = true;
       args.format = args.format || 'html';
       args.selection = true;
@@ -54,18 +53,14 @@ define(
         tmpElm.innerHTML = rng.toString();
       }
 
-      // Keep whitespace before and after
-      if (/^\s/.test(tmpElm.innerHTML)) {
-        whiteSpaceBefore = ' ';
-      }
-
-      if (/\s+$/.test(tmpElm.innerHTML)) {
-        whiteSpaceAfter = ' ';
-      }
-
       args.getInner = true;
 
-      args.content = editor.selection.isCollapsed() ? '' : whiteSpaceBefore + editor.selection.serializer.serialize(tmpElm, args) + whiteSpaceAfter;
+      var content = editor.selection.serializer.serialize(tmpElm, args);
+      if (args.format === 'tree') {
+        return content;
+      }
+
+      args.content = editor.selection.isCollapsed() ? '' : content;
       editor.fire('GetContent', args);
 
       return args.content;
