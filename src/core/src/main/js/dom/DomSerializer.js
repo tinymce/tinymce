@@ -12,28 +12,17 @@ define(
   'tinymce.core.dom.DomSerializer',
   [
     'ephox.katamari.api.Fun',
-    'global!document',
+    'tinymce.core.api.Events',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.DomSerializerFilters',
+    'tinymce.core.dom.DomSerializerPreProcess',
     'tinymce.core.html.DomParser',
     'tinymce.core.html.Schema',
     'tinymce.core.html.Serializer',
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Tools'
   ],
-  function (Fun, document, DOMUtils, DomSerializerFilters, DomParser, Schema, Serializer, Zwsp, Tools) {
-    var firePreProcess = function (editor, args) {
-      if (editor) {
-        editor.fire('PreProcess', args);
-      }
-    };
-
-    var firePostProcess = function (editor, args) {
-      if (editor) {
-        editor.fire('PostProcess', args);
-      }
-    };
-
+  function (Fun, Events, DOMUtils, DomSerializerFilters, DomSerializerPreProcess, DomParser, Schema, Serializer, Zwsp, Tools) {
     var addTempAttr = function (htmlParser, tempAttrs, name) {
       if (Tools.inArray(tempAttrs, name) === -1) {
         htmlParser.addAttributeFilter(name, function (nodes, name) {
@@ -48,6 +37,28 @@ define(
       }
     };
 
+    var postProcess = function (editor, args, content) {
+      if (!args.no_events && editor) {
+        args.content = content;
+        Events.firePostProcess(editor, args);
+        return args.content;
+      } else {
+        return content;
+      }
+    };
+
+    var parseHtml = function (htmlParser, dom, node, args) {
+      var html = Zwsp.trim(Tools.trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node)));
+      var rootNode = htmlParser.parse(html, args);
+      DomSerializerFilters.trimTrailingBr(rootNode);
+      return rootNode;
+    };
+
+    var serializeNode = function (settings, schema, node) {
+      var htmlSerializer = new Serializer(settings, schema);
+      return htmlSerializer.serialize(node);
+    };
+
     return function (settings, editor) {
       var dom, schema, htmlParser, tempAttrs = ["data-mce-selected"];
 
@@ -59,71 +70,12 @@ define(
       htmlParser = new DomParser(settings, schema);
       DomSerializerFilters.register(htmlParser, settings, dom);
 
-      var serialize = function (node, args) {
-        var impl, doc, oldDoc, htmlSerializer, content, rootNode;
-
-        node = node.cloneNode(true);
-
-        // Nodes needs to be attached to something in WebKit/Opera
-        // This fix will make DOM ranges and make Sizzle happy!
-        impl = document.implementation;
-        if (impl.createHTMLDocument) {
-          // Create an empty HTML document
-          doc = impl.createHTMLDocument("");
-
-          // Add the element or it's children if it's a body element to the new document
-          Tools.each(node.nodeName === 'BODY' ? node.childNodes : [node], function (node) {
-            doc.body.appendChild(doc.importNode(node, true));
-          });
-
-          // Grab first child or body element for serialization
-          if (node.nodeName !== 'BODY') {
-            node = doc.body.firstChild;
-          } else {
-            node = doc.body;
-          }
-
-          // set the new document in DOMUtils so createElement etc works
-          oldDoc = dom.doc;
-          dom.doc = doc;
-        }
-
-        args = args || {};
-        args.format = args.format || 'html';
-
-        // Don't wrap content if we want selected html
-        if (args.selection) {
-          args.forced_root_block = '';
-        }
-
-        // Pre process
-        if (!args.no_events) {
-          args.node = node;
-          firePreProcess(editor, args);
-        }
-
-        // Parse HTML
-        content = Zwsp.trim(Tools.trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node)));
-        rootNode = htmlParser.parse(content, args);
-        DomSerializerFilters.trimTrailingBr(rootNode);
-
-        // Serialize HTML
-        htmlSerializer = new Serializer(settings, schema);
-        args.content = htmlSerializer.serialize(rootNode);
-
-        // Post process
-        if (!args.no_events) {
-          firePostProcess(editor, args);
-        }
-
-        // Restore the old document if it was changed
-        if (oldDoc) {
-          dom.doc = oldDoc;
-        }
-
-        args.node = null;
-
-        return args.content;
+      var serialize = function (node, parserArgs) {
+        var args = parserArgs ? parserArgs : {};
+        var targetNode = DomSerializerPreProcess.process(editor, node, parserArgs);
+        var rootNode = parseHtml(htmlParser, dom, targetNode, args);
+        var content = serializeNode(settings, schema, rootNode);
+        return postProcess(editor, args, content);
       };
 
       return {
