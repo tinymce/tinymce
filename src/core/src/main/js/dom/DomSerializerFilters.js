@@ -11,9 +11,10 @@
 define(
   'tinymce.core.dom.DomSerializerFilters',
   [
+    'ephox.katamari.api.Arr',
     'tinymce.core.html.Entities'
   ],
-  function (Entities) {
+  function (Arr, Entities) {
     var register = function (htmlParser, settings, dom) {
       // Convert tabindex back to elements when serializing contents
       htmlParser.addAttributeFilter('data-mce-tabindex', function (nodes, name) {
@@ -163,6 +164,18 @@ define(
             }
           }
         }
+      });
+
+      htmlParser.addAttributeFilter('data-mce-type', function (nodes) {
+        Arr.each(nodes, function (node) {
+          if (node.attr('data-mce-type') === 'format-caret') {
+            if (node.isEmpty(htmlParser.schema.getNonEmptyElements())) {
+              node.remove();
+            } else {
+              node.unwrap();
+            }
+          }
+        });
       });
 
       // Remove internal data attributes
