@@ -97,35 +97,20 @@ define(
       };
     };
 
-
     // CLIPPY: It looks like you're trying to write a Scroll library :)
     //
     // If this is actually required, just browse the JQuery codebase. That's all I did for the other modules.
     // Looks like it's using window.pageXOffset, window.pageYOffset, and win.scrollTo().
-
+    //
     // var top = function (element) {
     //   $(element.dom()).scrollTop(0);
     // };
-
-    // var bottom = function (element) {
-
-    // };
-
-    // var left = function (element) {
-
-    // };
-
-    // var right = function (element) {
-
-    // };
-
-    // var fromTop = function (element, v) {
-
-    // };
-
-    // var fromLeft = function (element, v) {
-
-    // };
+    //
+    // var bottom = function (element) {};
+    // var left = function (element) {};
+    // var right = function (element) {};
+    // var fromTop = function (element, v) {};
+    // var fromLeft = function (element, v) {};
 
     // TBIO-4472 Safari 10 - Scrolling typeahead with keyboard scrolls page
     var intoView = function (element, alignToTop) {
@@ -155,12 +140,6 @@ define(
       by: by,
       preserve: preserve,
       capture: capture,
-      // top: top,
-      // bottom: bottom,
-      // left: left,
-      // right: right,
-      // fromTop: fromTop,
-      // fromLeft: fromLeft,
       intoView: intoView,
       intoViewIfNeeded: intoViewIfNeeded,
       setToElement: setToElement
