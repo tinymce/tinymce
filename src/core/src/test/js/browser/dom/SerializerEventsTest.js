@@ -37,8 +37,16 @@ asynctest(
             editor.serializer.serialize(editor.getBody(), { test : 'abc', getInner: true })
           );
 
-          Assertions.assertEq('Should be exptected preprocess arg', preProcessArgs.test, 'abc');
-          Assertions.assertEq('Should be exptected postprocess arg', postProcessArgs.test, 'abc');
+          Assertions.assertEq('Should be expected preprocess custom arg', 'abc', preProcessArgs.test);
+          Assertions.assertEq('Should be expected preprocess format', 'html', preProcessArgs.format);
+          Assertions.assertEq('Should be expected element child', 'P', preProcessArgs.node.firstChild.tagName);
+          Assertions.assertEq('Should be expected postprocess custom arg', 'abc', postProcessArgs.test);
+          Assertions.assertEq('Should be expected postprocess format', 'html', postProcessArgs.format);
+          Assertions.assertEq(
+            'Should be expected postprocess format',
+            '<p><span id="test2" class="abc"><em class="123">abc</em></span>123<a href="file.html">link</a></p>',
+            postProcessArgs.content
+          );
         }))
       ], onSuccess, onFailure);
     }, {

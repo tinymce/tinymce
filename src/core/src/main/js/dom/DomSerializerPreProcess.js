@@ -11,12 +11,13 @@
 define(
   'tinymce.core.dom.DomSerializerPreProcess',
   [
+    'ephox.katamari.api.Merger',
     'global!document',
     'tinymce.core.api.Events',
     'tinymce.core.util.Tools'
   ],
-  function (document, Events, Tools) {
-    var processNode = function (editor, node, args) {
+  function (Merger, document, Events, Tools) {
+    var preProcess = function (editor, node, args) {
       var impl, doc, oldDoc;
       var dom = editor.dom;
 
@@ -27,7 +28,7 @@ define(
       impl = document.implementation;
       if (impl.createHTMLDocument) {
         // Create an empty HTML document
-        doc = impl.createHTMLDocument("");
+        doc = impl.createHTMLDocument('');
 
         // Add the element or it's children if it's a body element to the new document
         Tools.each(node.nodeName === 'BODY' ? node.childNodes : [node], function (node) {
@@ -46,26 +47,8 @@ define(
         dom.doc = doc;
       }
 
-      args = args || {};
-      args.format = args.format || 'html';
+      Events.firePreProcess(editor, Merger.merge(args, { node: node }));
 
-      // Don't wrap content if we want selected html
-      if (args.selection) {
-        args.forced_root_block = '';
-      }
-
-      // Pre process
-      if (!args.no_events) {
-        args.node = node;
-
-        if (editor) {
-          Events.firePreProcess(editor, args);
-        }
-
-        args.node = null;
-      }
-
-      // Restore the old document if it was changed
       if (oldDoc) {
         dom.doc = oldDoc;
       }
@@ -73,8 +56,12 @@ define(
       return node;
     };
 
+    var shouldFireEvent = function (editor, args) {
+      return editor && editor.hasEventListeners('PreProcess') && !args.no_events;
+    };
+
     var process = function (editor, node, args) {
-      return editor ? processNode(editor, node, args) : node;
+      return shouldFireEvent(editor, args) ? preProcess(editor, node, args) : node;
     };
 
     return {

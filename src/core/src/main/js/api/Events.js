@@ -14,11 +14,11 @@ define(
   ],
   function () {
     var firePreProcess = function (editor, args) {
-      editor.fire('PreProcess', args);
+      return editor.fire('PreProcess', args);
     };
 
     var firePostProcess = function (editor, args) {
-      editor.fire('PostProcess', args);
+      return editor.fire('PostProcess', args);
     };
 
     return {

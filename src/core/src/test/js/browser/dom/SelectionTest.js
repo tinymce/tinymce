@@ -957,7 +957,7 @@ asynctest(
     suite.test('normalize caret after trailing BR', function (editor) {
       var rng;
 
-      editor.setContent('<p>a<br /></p>');
+      editor.getBody().innerHTML = '<p>a<br /></p>';
       rng = editor.dom.createRng();
       rng.setStart(editor.getBody().firstChild, 2);
       rng.setEnd(editor.getBody().firstChild, 2);

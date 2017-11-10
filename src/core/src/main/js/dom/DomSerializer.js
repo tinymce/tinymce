@@ -12,6 +12,7 @@ define(
   'tinymce.core.dom.DomSerializer',
   [
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Merger',
     'tinymce.core.api.Events',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.DomSerializerFilters',
@@ -22,7 +23,7 @@ define(
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Tools'
   ],
-  function (Fun, Events, DOMUtils, DomSerializerFilters, DomSerializerPreProcess, DomParser, Schema, Serializer, Zwsp, Tools) {
+  function (Fun, Merger, Events, DOMUtils, DomSerializerFilters, DomSerializerPreProcess, DomParser, Schema, Serializer, Zwsp, Tools) {
     var addTempAttr = function (htmlParser, tempAttrs, name) {
       if (Tools.inArray(tempAttrs, name) === -1) {
         htmlParser.addAttributeFilter(name, function (nodes, name) {
@@ -39,9 +40,8 @@ define(
 
     var postProcess = function (editor, args, content) {
       if (!args.no_events && editor) {
-        args.content = content;
-        Events.firePostProcess(editor, args);
-        return args.content;
+        var outArgs = Events.firePostProcess(editor, Merger.merge(args, { content: content }));
+        return outArgs.content;
       } else {
         return content;
       }
@@ -49,7 +49,8 @@ define(
 
     var parseHtml = function (htmlParser, dom, node, args) {
       var html = Zwsp.trim(Tools.trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node)));
-      var rootNode = htmlParser.parse(html, args);
+      var parserArgs = args.selection ? Merger.merge({ forced_root_block: false }, args) : args;
+      var rootNode = htmlParser.parse(html, parserArgs);
       DomSerializerFilters.trimTrailingBr(rootNode);
       return rootNode;
     };
@@ -60,7 +61,7 @@ define(
     };
 
     return function (settings, editor) {
-      var dom, schema, htmlParser, tempAttrs = ["data-mce-selected"];
+      var dom, schema, htmlParser, tempAttrs = ['data-mce-selected'];
 
       dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
       schema = editor && editor.schema ? editor.schema : new Schema(settings);
@@ -71,8 +72,8 @@ define(
       DomSerializerFilters.register(htmlParser, settings, dom);
 
       var serialize = function (node, parserArgs) {
-        var args = parserArgs ? parserArgs : {};
-        var targetNode = DomSerializerPreProcess.process(editor, node, parserArgs);
+        var args = Merger.merge({ format: 'html' }, parserArgs ? parserArgs : {});
+        var targetNode = DomSerializerPreProcess.process(editor, node, args);
         var rootNode = parseHtml(htmlParser, dom, targetNode, args);
         var content = serializeNode(settings, schema, rootNode);
         return postProcess(editor, args, content);
