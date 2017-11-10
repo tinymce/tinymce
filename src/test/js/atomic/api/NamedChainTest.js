@@ -120,6 +120,18 @@ asynctest(
           ])
         ]),
 
+        StepAssertions.testStepsPass({}, [
+          Chain.asStep({ }, [
+            Chain.inject('input.name.value'),
+            NamedChain.asChain([
+              NamedChain.write('x', Chain.inject(5)),
+              NamedChain.write('y', Chain.inject(8)),
+              NamedChain.outputInput
+            ]),
+            cIsEqual('input.name.value')
+          ])
+        ]),
+
         StepAssertions.testStepsFail('z is not a field in the index object.', [
           Chain.asStep({}, [
             NamedChain.asChain([
