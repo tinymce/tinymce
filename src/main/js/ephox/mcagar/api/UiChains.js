@@ -1,5 +1,5 @@
 define(
-  'ephox.mcagar.api.Ui',
+  'ephox.mcagar.api.UiChains',
 
   [
     'ephox.agar.api.Assertions',

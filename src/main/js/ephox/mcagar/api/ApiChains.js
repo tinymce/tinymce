@@ -1,13 +1,11 @@
 define(
-  'ephox.mcagar.api.Api',
+  'ephox.mcagar.api.ApiChains',
 
   [
     'ephox.agar.api.Assertions',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Cursors',
-    'ephox.agar.api.FocusTools',
     'ephox.agar.api.UiFinder',
-    'ephox.agar.api.Waiter',
     'ephox.mcagar.selection.TinySelections',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
@@ -15,10 +13,7 @@ define(
     'global!JSON'
   ],
 
-  function (
-    Assertions, Chain, Cursors, FocusTools, UiFinder, Waiter, TinySelections, Hierarchy,
-    Element, Html, JSON
-  ) {
+  function (Assertions, Chain, Cursors, UiFinder, TinySelections, Hierarchy, Element, Html, JSON) {
 
     var lazyBody = function (editor) {
       return Element.fromDom(editor.getBody());

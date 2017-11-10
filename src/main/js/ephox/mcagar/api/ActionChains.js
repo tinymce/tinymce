@@ -1,5 +1,5 @@
 define(
-  'ephox.mcagar.api.Actions',
+  'ephox.mcagar.api.ActionChains',
 
   [
     'ephox.agar.api.Chain',

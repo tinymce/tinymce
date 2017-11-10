@@ -1,15 +1,15 @@
 asynctest(
-  'ActionsTest',
+  'ActionChainsTest',
 
   [
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Chain',
     'ephox.agar.api.Assertions',
-    'ephox.mcagar.api.Actions',
+    'ephox.mcagar.api.ActionChains',
     'ephox.mcagar.api.Editor'
   ],
 
-  function (Pipeline, Chain, Assertions, Actions, Editor) {
+  function (Pipeline, Chain, Assertions, ActionChains, Editor) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -42,7 +42,7 @@ asynctest(
     Pipeline.async({}, [
       Chain.asStep({}, [
         Editor.cCreate,
-        cAssertContentKeyboardEvent(Actions.cContentKeypress, {
+        cAssertContentKeyboardEvent(ActionChains.cContentKeypress, {
           type: 'keypress',
           code: 88,
           modifiers: {
@@ -52,7 +52,7 @@ asynctest(
             meta: true
           }
         }),
-        cAssertContentKeyboardEvent(Actions.cContentKeydown, {
+        cAssertContentKeyboardEvent(ActionChains.cContentKeydown, {
           type: 'keydown',
           code: 65,
           modifiers: {
