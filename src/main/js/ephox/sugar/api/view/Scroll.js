@@ -15,12 +15,19 @@ define(
   function (Option, Type, PlatformDetection, Element, Css, Location, Position, document) {
     var isSafari = PlatformDetection.detect().browser.isSafari();
 
+    // True if doc is our our fix for Rtl scrolling of iframe content
+    // (TBIO-5098: overflow turned off the HTML, set on BODY for desktop FF, Cr)
+    var isIframeBodyScroller = function (doc) {
+      var win = doc.defaultView;
+      var html = Element.fromDom(doc.documentElement);
+      return win.frameElement && Css.getRaw(html, 'overflow').is('hidden');
+    };
+
     // get scroll position (x,y) relative to document _doc (or global if not supplied)
     var get = function (_doc) {
       var doc = _doc !== undefined ? _doc.dom() : document;
 
-      // ASSUMPTION: This is for cross-browser support. The doc.body.scrollLeft reports 0 in FF in standards mode,
-      // so you need to use the document element. The body works for Chrome, IE (?) and FF in Quirks mode.
+      // ASSUMPTION: This is for cross-browser support, body works for Safari & EDGE, and when we have an iframe body scroller
       var x = doc.body.scrollLeft || doc.documentElement.scrollLeft;
       var y = doc.body.scrollTop || doc.documentElement.scrollTop;
       return Position(x, y);
@@ -30,9 +37,7 @@ define(
     var set = function (x, y, _doc) {
       var doc = _doc !== undefined ? _doc.dom() : document;
       var win = doc.defaultView;
-      var html = Element.fromDom(doc.documentElement);
-      var iframeRtlScroller = win.frameElement && Css.getRaw(html, 'overflow-y').is('hidden');
-      if (!iframeRtlScroller) {
+      if (!isIframeBodyScroller(doc)) {
         win.scrollTo(x, y);
       } else { // TBIO-5098 - win.scrollTo()/win.scrollBy()/..etc does not work on iframe if html overflow-y is hidden
         doc.body.scrollLeft = x;
@@ -44,9 +49,7 @@ define(
     var by = function (x, y, _doc) {
       var doc = _doc !== undefined ? _doc.dom() : document;
       var win = doc.defaultView;
-      var html = Element.fromDom(doc.documentElement);
-      var iframeRtlScroller = win.frameElement && Css.getRaw(html, 'overflow-y').is('hidden');
-      if (!iframeRtlScroller) {
+      if (!isIframeBodyScroller(doc)) {
         win.scrollBy(x, y);
       } else { // TBIO-5098 - win.scrollTo()/win.scrollBy()/..etc does not work on iframe if html overflow-y is hidden
         doc.body.scrollLeft += x;
