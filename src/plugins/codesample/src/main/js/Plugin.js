@@ -24,7 +24,7 @@ define(
     PluginManager.add('codesample', function (editor, pluginUrl) {
       var addedCss = Cell(false);
 
-      FilterContent.setup(editor);
+      FilterContent.setup(editor, pluginUrl);
       Buttons.register(editor);
       Commands.register(editor);
 

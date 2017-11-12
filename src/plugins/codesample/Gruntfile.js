@@ -34,6 +34,10 @@ module.exports = function (grunt) {
           {
             src: "src/main/css/prism.css",
             dest: "dist/codesample/css/prism.css"
+          },
+          {
+            src: "src/main/components/readme.md",
+            dest: "dist/codesample/components/readme.md"
           }
         ]
       }
