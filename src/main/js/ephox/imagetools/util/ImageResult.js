@@ -11,9 +11,8 @@ define(
   function (Canvas, Conversions, Mime, Promise, Fun, Option) {
     function create(canvas, blob) {
       var initialType = blob.type;
-      function getType() {
-        return initialType;
-      }
+
+      var getType = Fun.constant(initialType);
 
       function toBlob(type, quality) {
         // Shortcut to not lose the blob filename when we haven't edited the image
