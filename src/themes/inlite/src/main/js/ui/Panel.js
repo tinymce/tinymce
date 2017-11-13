@@ -11,10 +11,10 @@
 define(
   'tinymce.themes.inlite.ui.Panel',
   [
-    'global!document',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.ui.Factory',
     'tinymce.core.util.Tools',
+    'tinymce.themes.inlite.alien.UiContainer',
     'tinymce.themes.inlite.api.Events',
     'tinymce.themes.inlite.api.Settings',
     'tinymce.themes.inlite.core.Layout',
@@ -22,7 +22,7 @@ define(
     'tinymce.themes.inlite.ui.Forms',
     'tinymce.themes.inlite.ui.Toolbar'
   ],
-  function (document, DOMUtils, Factory, Tools, Events, Settings, Layout, Measure, Forms, Toolbar) {
+  function (DOMUtils, Factory, Tools, UiContainer, Events, Settings, Layout, Measure, Forms, Toolbar) {
     return function () {
       var panel, currentRect;
 
@@ -125,9 +125,10 @@ define(
         }
 
         if (result) {
-          panelRect = result.rect;
+          var delta = UiContainer.getUiContainerDelta().getOr({ x: 0, y: 0 });
+          var transposedPanelRect = { x: result.rect.x - delta.x, y: result.rect.y - delta.y, w: result.rect.w, h: result.rect.h };
           currentRect = targetRect;
-          movePanelTo(panel, Layout.userConstrain(userConstainHandler, targetRect, contentAreaRect, panelRect));
+          movePanelTo(panel, Layout.userConstrain(userConstainHandler, targetRect, contentAreaRect, transposedPanelRect));
           togglePositionClass(panel, result.position);
           return true;
         } else {
@@ -186,7 +187,7 @@ define(
         if (!panel) {
           Events.fireBeforeRenderUI(editor);
           panel = create(editor, toolbars);
-          panel.renderTo(document.body).reflow().moveTo(targetRect.x, targetRect.y);
+          panel.renderTo().reflow().moveTo(targetRect.x, targetRect.y);
           editor.nodeChanged();
         }
 

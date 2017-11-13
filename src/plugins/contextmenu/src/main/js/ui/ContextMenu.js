@@ -61,14 +61,14 @@ define(
       return menu;
     };
 
-    var show = function (editor, x, y, visibleState, menu) {
+    var show = function (editor, pos, visibleState, menu) {
       if (menu.get() === null) {
         menu.set(renderMenu(editor, visibleState));
       } else {
         menu.get().show();
       }
 
-      menu.get().moveTo(x, y);
+      menu.get().moveTo(pos.x, pos.y);
       visibleState.set(true);
     };
 
