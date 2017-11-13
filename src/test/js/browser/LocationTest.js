@@ -3,6 +3,7 @@ asynctest(
 
   [
     'ephox.katamari.api.Arr',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Insert',
@@ -16,7 +17,7 @@ asynctest(
     'ephox.sugar.api.view.Scroll'
   ],
 
-  function (Arr, Option, PlatformDetection, Insert, Remove, DomEvent, Body, Element, Attr, Css, Location, Scroll) {
+  function (Arr, Fun, Option, PlatformDetection, Insert, Remove, DomEvent, Body, Element, Attr, Css, Location, Scroll) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -26,14 +27,35 @@ asynctest(
       assert.eq(expected, actual, m);
     };
 
-    var testOne = function (ifr, next) {
+    var testOne = function (ifr, attrMap, next) {
       var iframe = Element.fromHtml(ifr);
+      Attr.setAll(iframe, attrMap.iframe);
       Insert.append(Body.body(), iframe);
 
       var run = DomEvent.bind(iframe, 'load', function () {
         run.unbind();
         try {
-          checks(iframe);
+          var iframeWin = iframe.dom().contentWindow;
+          var iframeDoc = iframeWin.document;
+          var html = Element.fromDom(iframeDoc.documentElement);
+          var body = Element.fromDom(iframeDoc.body);
+          attrMap.html.each(Fun.curry(Attr.setAll, html));
+          attrMap.body.each(Fun.curry(Attr.setAll, body));
+          var doc = {
+            iframe: iframe,
+            rawWin: iframeWin,
+            rawDoc: Element.fromDom(iframeDoc),
+            body: body,
+            rtl: iframeDoc.body.dir === 'rtl',
+            dir: Attr.get(body, 'dir') || 'ltr',
+            byId: function (str) {
+              return Option.from(iframeDoc.getElementById(str))
+                .map(Element.fromDom)
+                .getOrDie('cannot find element with id ' + str);
+            }
+          };
+
+          checks(doc);
           Remove.remove(iframe);
           next();
         } catch (e) {
@@ -43,28 +65,30 @@ asynctest(
       });
     };
 
-    testOne('<iframe style="height:100px; width:500px;" src="project/src/test/data/locationTest.html"></iframe>',  // vanilla HTML-scroll iframe
+    var ifr = '<iframe src="project/src/test/data/locationTest.html"></iframe>';
+
+    testOne(ifr, { // vanilla iframe
+      iframe: { id: 'vanilla', style: 'height:200px; width:500px; border: 1px dashed chartreuse;' },
+      html: Option.none(),
+      body: Option.some({ style: 'margin: 0; padding: 5px;' })
+    },
       function () {
-        testOne('<iframe style="height:100px; width:500px;" src="project/src/test/data/locationBodyScrollerLtrTest.html"></iframe>',  // body-scroll ltr iframe
+        testOne(ifr, { // body-scroll ltr iframe
+          iframe: { id: 'bodyScrollerLtr', style: 'height:200px; width:500px; border: 1px dashed aquamarine;' },
+          html: Option.some({ style: 'overflow: hidden;' }),
+          body: Option.some({ contenteditable: 'true', dir: 'ltr', style: 'margin: 0; padding: 5px; height: 200px; overflow: auto; box-sizing: border-box;' }) //
+        },
           function () {
-            testOne('<iframe style="height:100px; width:500px;" src="project/src/test/data/locationBodyScrollerRtlTest.html"></iframe>',  // body-scroll rtl iframe
+            testOne(ifr, { // body-scroll rtl iframe
+              iframe: { id: 'bodyScrollerRtl', style: 'height:200px; width:500px; border: 1px dashed turquoise;' },
+              html: Option.some({ style: 'overflow: hidden;' }),
+              body: Option.some({ contenteditable: 'true', dir: 'rtl', style: 'margin: 0; padding: 5px; height: 200px; overflow: auto; box-sizing: border-box;' })
+            },
               success);
           });
       });
 
-    var checks = function (iframe) {
-      var iframeWin = iframe.dom().contentWindow;
-      var iframeDoc = iframeWin.document;
-      var doc = {
-        rawWin: iframeWin,
-        rawDoc: Element.fromDom(iframeDoc),
-        body: Element.fromDom(iframeDoc.body),
-        byId: function (str) {
-          return Option.from(iframeDoc.getElementById(str))
-                       .map(Element.fromDom)
-                       .getOrDie('cannot find element with id ' + str);
-        }
-      };
+    var checks = function (doc) {
 
       Arr.each([
         baseChecks,
@@ -114,32 +138,32 @@ asynctest(
         {
           id: 'absolute-1',
           absolute: { top: 1, left: { ltr: 1, rtl: 4506 } },
-          relative: { top: 1, left: { ltr: 1, rtl:    1 } }, // JQuery returns 0/0
-          viewport: { top: 1, left: { ltr: 1, rtl:    1 } }
+          relative: { top: 1, left: { ltr: 1, rtl: 1 } }, // JQuery returns 0/0
+          viewport: { top: 1, left: { ltr: 1, rtl: 1 } }
         },
         {
           id: 'absolute-1-1',
           absolute: { top: 5, left: { ltr: 5, rtl: 4510 } },
-          relative: { top: 2, left: { ltr: 2, rtl:    2 } }, // JQuery returns 1/1
-          viewport: { top: 5, left: { ltr: 5, rtl:    5 } }
+          relative: { top: 2, left: { ltr: 2, rtl: 2 } }, // JQuery returns 1/1
+          viewport: { top: 5, left: { ltr: 5, rtl: 5 } }
         },
         {
           id: 'absolute-1-1-1',
           absolute: { top: 9, left: { ltr: 9, rtl: 4514 } },
-          relative: { top: 2, left: { ltr: 2, rtl:    2 } }, // JQuery returns 1/1
-          viewport: { top: 9, left: { ltr: 9, rtl:    9 } }
+          relative: { top: 2, left: { ltr: 2, rtl: 2 } }, // JQuery returns 1/1
+          viewport: { top: 9, left: { ltr: 9, rtl: 9 } }
         },
         {
           id: 'absolute-2',
           absolute: { top: 20, left: { ltr: 20, rtl: 4525 } },
-          relative: { top: 20, left: { ltr: 20, rtl:   20 } }, // JQuery returns 19/19
-          viewport: { top: 20, left: { ltr: 20, rtl:   20 } }
+          relative: { top: 20, left: { ltr: 20, rtl: 20 } }, // JQuery returns 19/19
+          viewport: { top: 20, left: { ltr: 20, rtl: 20 } }
         },
         {
           id: 'positionTest',
           absolute: { top: 10, left: { ltr: 10, rtl: 4515 } },
-          relative: { top: 10, left: { ltr: 10, rtl:   10 } },
-          viewport: { top: 10, left: { ltr: 10, rtl:   10 } }
+          relative: { top: 10, left: { ltr: 10, rtl: 10 } },
+          viewport: { top: 10, left: { ltr: 10, rtl: 10 } }
         }
       ];
 
@@ -149,37 +173,43 @@ asynctest(
     var relativeChecks = function (doc) {
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var tests = [
-        { id: 'relative-1',
+        {
+          id: 'relative-1',
           absolute: { top: 6, left: { ltr: 6, rtl: 4885 } },
-          relative: { top: 6, left: { ltr: 6, rtl:  380 } }, // JQuery returns 6/6
-          viewport: { top: 6, left: { ltr: 6, rtl:  380 } }
+          relative: { top: 6, left: { ltr: 6, rtl: 380 } }, // JQuery returns 6/6
+          viewport: { top: 6, left: { ltr: 6, rtl: 380 } }
         },
-        { id: 'relative-1-1',
+        {
+          id: 'relative-1-1',
           absolute: { top: 14, left: { ltr: 14, rtl: 4877 } },
-          relative: { top:  6, left: { ltr:  6, rtl:  -10 } }, // JQuery returns 5/5
-          viewport: { top: 14, left: { ltr: 14, rtl:  372 } }
+          relative: { top: 6, left: { ltr: 6, rtl: -10 } }, // JQuery returns 5/5
+          viewport: { top: 14, left: { ltr: 14, rtl: 372 } }
         },
-        { id: 'relative-1-1-1',
+        {
+          id: 'relative-1-1-1',
           absolute: { top: 22, left: { ltr: 22, rtl: 4869 } },
-          relative: { top:  6, left: { ltr:  6, rtl:  -10 } }, // JQuery returns 5/5
-          viewport: { top: 22, left: { ltr: 22, rtl:  364 } }
+          relative: { top: 6, left: { ltr: 6, rtl: -10 } }, // JQuery returns 5/5
+          viewport: { top: 22, left: { ltr: 22, rtl: 364 } }
         },
-        { id: 'relative-2',
+        {
+          id: 'relative-2',
           absolute: { top: 141, left: { ltr: 26, rtl: 4905 } },
-          relative: { top: 141, left: { ltr: 26, rtl:  400 } }, // JQuery returns 141/26
-          viewport: { top: 141, left: { ltr: 26, rtl:  400 } }
+          relative: { top: 141, left: { ltr: 26, rtl: 400 } }, // JQuery returns 141/26
+          viewport: { top: 141, left: { ltr: 26, rtl: 400 } }
         },
 
         // This simulates a docked ego state for the toolbars
-        { id: 'relative-toolbar-container',
+        {
+          id: 'relative-toolbar-container',
           absolute: { top: 684, left: { ltr: 5, rtl: 4900 } },
-          relative: { top: 684, left: { ltr: 5, rtl:  395 } },
-          viewport: { top: 684, left: { ltr: 5, rtl:  395 } }
+          relative: { top: 684, left: { ltr: 5, rtl: 395 } },
+          viewport: { top: 684, left: { ltr: 5, rtl: 395 } }
         },
-        { id: 'relative-toolbar',
+        {
+          id: 'relative-toolbar',
           absolute: { top: 684 - 40, left: { ltr: 5, rtl: 4900 } },
-          relative: { top: -40,      left: { ltr: 0, rtl:    0 } },
-          viewport: { top: 684 - 40, left: { ltr: 5, rtl:  395 } }
+          relative: { top: -40, left: { ltr: 0, rtl: 0 } },
+          viewport: { top: 684 - 40, left: { ltr: 5, rtl: 395 } }
         }
       ];
 
@@ -190,25 +220,29 @@ asynctest(
       var extraHeight = 230; // because all tests are in one page
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var tests = [
-        { id: 'static-1',
+        {
+          id: 'static-1',
           absolute: { top: extraHeight + 6, left: { ltr: 6, rtl: 4885 } },
-          relative: { top: extraHeight + 6, left: { ltr: 6, rtl:  380 } }, // JQuery returns +6/6
-          viewport: { top: extraHeight + 6, left: { ltr: 6, rtl:  380 } }
+          relative: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 } }, // JQuery returns +6/6
+          viewport: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 } }
         },
-        { id: 'static-1-1',
+        {
+          id: 'static-1-1',
           absolute: { top: extraHeight + 14, left: { ltr: 14, rtl: 4877 } },
-          relative: { top: extraHeight + 14, left: { ltr: 14, rtl:  372 } }, // JQuery returns +14/14
-          viewport: { top: extraHeight + 14, left: { ltr: 14, rtl:  372 } }
+          relative: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 } }, // JQuery returns +14/14
+          viewport: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 } }
         },
-        { id: 'static-1-1-1',
+        {
+          id: 'static-1-1-1',
           absolute: { top: extraHeight + 22, left: { ltr: 22, rtl: 4869 } },
-          relative: { top: extraHeight + 22, left: { ltr: 22, rtl:  364 } }, // JQuery returns +22/22
-          viewport: { top: extraHeight + 22, left: { ltr: 22, rtl:  364 } }
+          relative: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 } }, // JQuery returns +22/22
+          viewport: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 } }
         },
-        { id: 'static-2',
+        {
+          id: 'static-2',
           absolute: { top: extraHeight + 121, left: { ltr: 6, rtl: 4885 } },
-          relative: { top: extraHeight + 121, left: { ltr: 6, rtl:  380 } }, // JQuery returns +121/6
-          viewport: { top: extraHeight + 121, left: { ltr: 6, rtl:  380 } }
+          relative: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 } }, // JQuery returns +121/6
+          viewport: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 } }
         }
       ];
 
@@ -224,30 +258,35 @@ asynctest(
 
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var tests = [
-        { id: 'table-1',
+        {
+          id: 'table-1',
           absolute: { top: extraHeight + 6, left: { ltr: 5, rtl: 4676 } },
-          relative: { top: extraHeight + 6, left: { ltr: 5, rtl:  171 } },
-          viewport: { top: extraHeight + 6, left: { ltr: 5, rtl:  171 } }
+          relative: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 } },
+          viewport: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 } }
         },
-        { id: 'th-1',
+        {
+          id: 'th-1',
           absolute: { top: extraHeight + 10, left: { ltr: 9, rtl: 4892 } },
-          relative: { top: 4,                left: { ltr: 4, rtl:  214 } },  // JQuery returns extraHeight + 11/10, but that's nonsense
-          viewport: { top: extraHeight + 10, left: { ltr: 9, rtl:  387 } }
+          relative: { top: 4, left: { ltr: 4, rtl: 214 } },  // JQuery returns extraHeight + 11/10, but that's nonsense
+          viewport: { top: extraHeight + 10, left: { ltr: 9, rtl: 387 } }
         },
-        { id: 'th-3',
+        {
+          id: 'th-3',
           absolute: { top: extraHeight + 10, left: { ltr: 221, rtl: 4680 } },
-          relative: { top: 4,                left: { ltr: 216, rtl:    2 } },  // JQuery returns extraHeight + 11/222, but that's nonsense
-          viewport: { top: extraHeight + 10, left: { ltr: 221, rtl:  175 } }
+          relative: { top: 4, left: { ltr: 216, rtl: 2 } },  // JQuery returns extraHeight + 11/222, but that's nonsense
+          viewport: { top: extraHeight + 10, left: { ltr: 221, rtl: 175 } }
         },
-        { id: 'td-1',
+        {
+          id: 'td-1',
           absolute: { top: extraHeight + 116, left: { ltr: 9, rtl: 4892 } },
-          relative: { top: 110,               left: { ltr: 4, rtl:  214 } },  // JQuery returns extraHeight + 117/10, but that's nonsense
-          viewport: { top: extraHeight + 116, left: { ltr: 9, rtl:  387 } }
+          relative: { top: 110, left: { ltr: 4, rtl: 214 } },  // JQuery returns extraHeight + 117/10, but that's nonsense
+          viewport: { top: extraHeight + 116, left: { ltr: 9, rtl: 387 } }
         },
-        { id: 'td-3',
+        {
+          id: 'td-3',
           absolute: { top: extraHeight + 116, left: { ltr: 221, rtl: 4680 } },
-          relative: { top: 110,               left: { ltr: 216, rtl:    2 } },  // JQuery returns extraHeight + 117/222, but that's nonsense
-          viewport: { top: extraHeight + 116, left: { ltr: 221, rtl:  175 } }
+          relative: { top: 110, left: { ltr: 216, rtl: 2 } },  // JQuery returns extraHeight + 117/222, but that's nonsense
+          viewport: { top: extraHeight + 116, left: { ltr: 221, rtl: 175 } }
         }
       ];
 
@@ -270,20 +309,23 @@ asynctest(
     var fixedChecks = function (doc) {
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var noScroll = [
-        { id: 'fixed-1',
+        {
+          id: 'fixed-1',
           absolute: { top: 1, left: { ltr: 1, rtl: 4506 } },
-          relative: { top: 1, left: { ltr: 1, rtl:    1 } }, // JQuery returns 0/0
-          viewport: { top: 1, left: { ltr: 1, rtl:    1 } }
+          relative: { top: 1, left: { ltr: 1, rtl: 1 } }, // JQuery returns 0/0
+          viewport: { top: 1, left: { ltr: 1, rtl: 1 } }
         },
-        { id: 'fixed-2',
+        {
+          id: 'fixed-2',
           absolute: { top: 21, left: { ltr: 21, rtl: 4526 } },
-          relative: { top: 21, left: { ltr: 21, rtl:   21 } }, // JQuery returns 20/20
-          viewport: { top: 21, left: { ltr: 21, rtl:   21 } }
+          relative: { top: 21, left: { ltr: 21, rtl: 21 } }, // JQuery returns 20/20
+          viewport: { top: 21, left: { ltr: 21, rtl: 21 } }
         },
-        { id: 'fixed-no-top-left',
+        {
+          id: 'fixed-no-top-left',
           absolute: { top: 6, left: { ltr: 6, rtl: 4870 } },
-          relative: { top: 6, left: { ltr: 6, rtl:  365 } }, // JQuery returns 6/6
-          viewport: { top: 6, left: { ltr: 6, rtl:  365 } }
+          relative: { top: 6, left: { ltr: 6, rtl: 365 } }, // JQuery returns 6/6
+          viewport: { top: 6, left: { ltr: 6, rtl: 365 } }
         }
       ];
 
@@ -291,17 +333,20 @@ asynctest(
       var topScroll = 2000;
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var withScroll = [
-        { id: 'fixed-1',
+        {
+          id: 'fixed-1',
           absolute: { top: topScroll + 1, left: { ltr: leftScroll + 1, rtl: leftScroll + 1 - 15 } },
           relative: { top: 1, left: { ltr: 1, rtl: 1 } }, // JQuery returns 0/0
           viewport: { top: 1, left: { ltr: 1, rtl: 1 } }
         },
-        { id: 'fixed-2',
+        {
+          id: 'fixed-2',
           absolute: { top: topScroll + 21, left: { ltr: leftScroll + 21, rtl: leftScroll + 21 - 15 } },
           relative: { top: 21, left: { ltr: 21, rtl: 21 } }, // JQuery returns 20/20
           viewport: { top: 21, left: { ltr: 21, rtl: 21 } }
         },
-        { id: 'fixed-no-top-left',
+        {
+          id: 'fixed-no-top-left',
           absolute: { top: topScroll + 6, left: { ltr: leftScroll + 6, rtl: leftScroll + 7 - 15 + 358 } },
           relative: { top: 6, left: { ltr: 6, rtl: 365 } }, // JQuery returns 6/6
           viewport: { top: 6, left: { ltr: 6, rtl: 365 } }
@@ -309,7 +354,8 @@ asynctest(
       ];
 
       var afterSetPosition = [
-        { id: 'fixed-no-top-left',
+        {
+          id: 'fixed-no-top-left',
           absolute: { top: topScroll + 11, left: { ltr: leftScroll + 21, rtl: leftScroll + 21 - 15 } },
           relative: { top: 11, left: { ltr: 21, rtl: 21 } }, // JQuery returns 10/20
           viewport: { top: 11, left: { ltr: 21, rtl: 21 } }
@@ -327,20 +373,19 @@ asynctest(
 
     /* Simple verification logic */
     var runChecks = function (doc, tests) {
-      var dir = Attr.get(doc.body, 'dir') || 'ltr';
-
+      console.log('> testing iframe id=', doc.iframe.dom().id, ', dir=', doc.dir);
       Arr.each(tests, function (t) {
         var div = doc.byId(t.id);
 
         var pos = Location.absolute(div);
-        asserteq(t.absolute.top,  pos.top(),  '.absolute().top  ' + t.id);
-        asserteq(t.absolute.left[dir] , pos.left(), '.absolute().left.' + dir + ' ' + t.id);
+        asserteq(t.absolute.top, pos.top(), '.absolute().top  ' + t.id);
+        asserteq(t.absolute.left[doc.dir], pos.left(), '.absolute().left.' + doc.dir + ' ' + t.id);
         pos = Location.relative(div);
-        asserteq(t.relative.top,  pos.top(),  '.relative().top  ' + t.id);
-        asserteq(t.relative.left[dir], pos.left(), '.relative().left.' + dir + ' ' + t.id);
+        asserteq(t.relative.top, pos.top(), '.relative().top  ' + t.id);
+        asserteq(t.relative.left[doc.dir], pos.left(), '.relative().left.' + doc.dir + ' ' + t.id);
         pos = Location.viewport(div);
-        asserteq(t.viewport.top,  pos.top(),  '.viewport().top  ' + t.id);
-        asserteq(t.viewport.left[dir], pos.left(), '.viewport().left.' + dir + ' ' + t.id);
+        asserteq(t.viewport.top, pos.top(), '.viewport().top  ' + t.id);
+        asserteq(t.viewport.left[doc.dir], pos.left(), '.viewport().left.' + doc.dir + ' ' + t.id);
       });
     };
   }
