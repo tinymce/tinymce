@@ -20,6 +20,8 @@ asynctest(
   function (Arr, Fun, Option, PlatformDetection, Insert, Remove, DomEvent, Body, Element, Attr, Css, Location, Scroll) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+    var browser = PlatformDetection.detect().browser;
+    var checkBodyScroller = browser.isFirefox() || browser.isChrome(); // TBIO-5098
 
     var asserteq = function (expected, actual, message) {
       // I wish assert.eq printed expected and actual on failure
@@ -72,21 +74,24 @@ asynctest(
       html: Option.none(),
       body: Option.some({ style: 'margin: 0; padding: 5px;' })
     },
-      function () {
-        testOne(ifr, { // body-scroll ltr iframe
-          iframe: { id: 'bodyScrollerLtr', style: 'height:200px; width:500px; border: 1px dashed aquamarine;' },
-          html: Option.some({ style: 'overflow: hidden;' }),
-          body: Option.some({ contenteditable: 'true', dir: 'ltr', style: 'margin: 0; padding: 5px; height: 200px; overflow: auto; box-sizing: border-box;' }) //
-        },
-          function () {
-            testOne(ifr, { // body-scroll rtl iframe
-              iframe: { id: 'bodyScrollerRtl', style: 'height:200px; width:500px; border: 1px dashed turquoise;' },
-              html: Option.some({ style: 'overflow: hidden;' }),
-              body: Option.some({ contenteditable: 'true', dir: 'rtl', style: 'margin: 0; padding: 5px; height: 200px; overflow: auto; box-sizing: border-box;' })
-            },
-              success);
-          });
-      });
+      checkBodyScroller ?
+        function () {
+          testOne(ifr, { // body-scroll ltr iframe
+            iframe: { id: 'bodyScrollerLtr', style: 'height:200px; width:500px; border: 1px dashed aquamarine;' },
+            html: Option.some({ style: 'overflow: hidden;' }),
+            body: Option.some({ contenteditable: 'true', dir: 'ltr', style: 'margin: 0; padding: 5px; height: 200px; overflow: auto; box-sizing: border-box;' }) //
+          },
+            function () {
+              testOne(ifr, { // body-scroll rtl iframe
+                iframe: { id: 'bodyScrollerRtl', style: 'height:200px; width:500px; border: 1px dashed turquoise;' },
+                html: Option.some({ style: 'overflow: hidden;' }),
+                body: Option.some({ contenteditable: 'true', dir: 'rtl', style: 'margin: 0; padding: 5px; height: 200px; overflow: auto; box-sizing: border-box;' })
+              },
+                success);
+            });
+        }
+        : success);
+
 
     var checks = function (doc) {
 
