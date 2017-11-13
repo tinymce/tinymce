@@ -1,5 +1,5 @@
 asynctest(
-  'LocationTest',
+  'ScrollTest',
 
   [
     'ephox.katamari.api.Fun',
