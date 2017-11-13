@@ -33,7 +33,7 @@ define(
       return Position(x, y);
     };
 
-    // Scroll content to (x,y) relative to document _doc (or global if not supplied)
+      // Scroll content to (x,y) relative to document _doc (or global if not supplied)
     var set = function (x, y, _doc) {
       var doc = _doc !== undefined ? _doc.dom() : document;
       var win = doc.defaultView;
@@ -132,7 +132,7 @@ define(
         // element bottom is below the viewport bottom, scroll so it's at the bottom
         intoView(element, false);
       }
-    }
+    };
 
     return {
       get: get,
