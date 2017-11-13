@@ -21,20 +21,26 @@ define(
              0;
     };
 
+    // True if doc is our our fix for Rtl scrolling of iframe content
+    // (TBIO-5098: overflow turned off the HTML, set on BODY for desktop FF, Cr)
+    var isIframeBodyScroller = function (doc) {
+      var win = doc.defaultView;
+      var html = Element.fromDom(doc.documentElement);
+      return win.frameElement && Css.getRaw(html, 'overflow').is('hidden');
+    };
+
     var absolute = function (element) {
       var doc = element.dom().ownerDocument;
       var body = doc.body;
       var win = Dom.windowOf(Element.fromDom(doc));
       var html = doc.documentElement;
-      // TBIO-5098 - iframe content scroller moved to body so need to use scrollTop, scrollHeight etc from body (and win.scrollTo() will not work)
-      //             NB. body style has: margin:0; box-sizing: border-box;
-      var iframeRtlScroller = win.frameElement && Css.getRaw(Element.fromDom(html), 'overflow-y').is('hidden');
+      var bodyScroller = isIframeBodyScroller(doc);
 
-      var scrollTop = iframeRtlScroller  ? firstDefinedOrZero(body.scrollTop, undefined)  : firstDefinedOrZero(win.pageYOffset, html.scrollTop);
-      var scrollLeft = iframeRtlScroller ? firstDefinedOrZero(body.scrollLeft, undefined) : firstDefinedOrZero(win.pageXOffset, html.scrollLeft);
+      var scrollTop = bodyScroller  ? firstDefinedOrZero(body.scrollTop, undefined)  : firstDefinedOrZero(win.pageYOffset, html.scrollTop);
+      var scrollLeft = bodyScroller ? firstDefinedOrZero(body.scrollLeft, undefined) : firstDefinedOrZero(win.pageXOffset, html.scrollLeft);
 
-      var clientTop = iframeRtlScroller  ? firstDefinedOrZero(body.clientTop, undefined)  : firstDefinedOrZero(html.clientTop, body.clientTop);
-      var clientLeft = iframeRtlScroller ? firstDefinedOrZero(body.clientLeft, undefined) : firstDefinedOrZero(html.clientLeft, body.clientLeft);
+      var clientTop = bodyScroller  ? firstDefinedOrZero(body.clientTop, undefined)  : firstDefinedOrZero(html.clientTop, body.clientTop);
+      var clientLeft = bodyScroller ? firstDefinedOrZero(body.clientLeft, undefined) : firstDefinedOrZero(html.clientLeft, body.clientLeft);
 
       return viewport(element).translate(
         scrollLeft - clientLeft,
