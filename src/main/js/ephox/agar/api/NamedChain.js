@@ -102,6 +102,8 @@ define(
       });
     };
 
+    var outputInput = output(inputName);
+
     return {
       inputName: Fun.constant(inputName),
       asChain: asChain,
@@ -111,7 +113,8 @@ define(
       overwrite: overwrite,
       merge: merge,
       bundle: bundle,
-      output: output
+      output: output,
+      outputInput: outputInput
     };
   }
 );
