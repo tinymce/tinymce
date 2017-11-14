@@ -40,6 +40,9 @@ define(
               width: imgSize.w + (newFigureSize.w - figureSize.w) + 'px',
               height: imgSize.h + (newFigureSize.h - figureSize.h) + 'px'
             });
+
+            // remove width/height from a figure, otherwise if caption changes in size, it cannot auto-resize the figure
+            editor.dom.setStyles(e.target, { width: null, height: null });
           }
         }
       });
