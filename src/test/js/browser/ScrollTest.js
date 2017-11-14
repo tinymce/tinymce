@@ -38,7 +38,7 @@ asynctest(
       return w;
     };
 
-    var rtlLeftIsZero = function () {
+    var rtlMaxLeftIsZero = function () {
       var scrollDiv = Element.fromHtml('<div dir=rtl style="width: 10px; height: 10px; overflow: scroll; position: absolute; top: -9999px;">XXX</div>');
       Insert.after(Body.body(), scrollDiv);
       var l = scrollDiv.dom().scrollLeft;
@@ -141,17 +141,17 @@ asynctest(
       // centre element (x,y)
       var x = Math.round(cA.left());
       var y = Math.round(cA.top());
-      // FF: rtlLeftIsZero() === true (per the spec)
+      // FF: rtlMaxLeftIsZero() === true (per the spec)
       // FF, rightmost:  0           body.scrollLeft, body.scrollWidth , body.clientWidth  (0 5015 485)
       // FF, leftmost:   -4527..0:   body.scrollLeft = body.clientWidth - body.scrollWidth (-4527 = 488 - 5015)
-      // Chrome: rtlLeftIsZero() === false
+      // Chrome: rtlMaxLeftIsZero() === false
       // Chrome, leftmost:  0        body.scrollLeft, body.scrollWidth , body.clientWidth  (0 5015 485)
       // Chrome, rightmost: 0..4530: body.scrollLeft = body.scrollWidth - body.clientWidth (4530 = 5015 - 485)
       var bodySW = doc.body.dom().scrollWidth;
       var bodyCW = doc.body.dom().clientWidth;
-      var left = doc.rtl && !rtlLeftIsZero() ? bodySW /* 5010 + pad */ - bodyCW /* (doc.rawWin.innerWidth - scrollW) */ : 0; // most-left x val
+      var left = doc.rtl && !rtlMaxLeftIsZero() ? bodySW /* 5010 + pad */ - bodyCW /* (doc.rawWin.innerWidth - scrollW) */ : 0; // most-left x val
       var scrollL = doc.rtl ?
-        (rtlLeftIsZero() ?
+        (rtlMaxLeftIsZero() ?
           -(bodySW /* (5010 + pad) */ - bodyCW /* (doc.rawWin.innerWidth - scrollW) */)
           : 0)
         : (mar + pad);
@@ -178,21 +178,21 @@ asynctest(
       // Back to center
       scrollTo(x, y, doc);
       Scroll.preserve(doc.rawDoc, function () {
-        scrollTo((doc.rtl && rtlLeftIsZero() ? -30 : 30), 40, doc);
+        scrollTo((doc.rtl && rtlMaxLeftIsZero() ? -30 : 30), 40, doc);
       });
       scrollCheck(x, y, doc, 'preserve');
 
       // Back to center
       scrollTo(x, y, doc);
       var c1 = Scroll.capture(doc.rawDoc);
-      scrollTo((doc.rtl && rtlLeftIsZero() ? -3000 : 3000), 4000, doc);
+      scrollTo((doc.rtl && rtlMaxLeftIsZero() ? -3000 : 3000), 4000, doc);
       c1.restore();
       scrollCheck(x, y, doc, 'restore #1');
-      scrollTo((doc.rtl && rtlLeftIsZero() ? -500 : 500), 400, doc);
+      scrollTo((doc.rtl && rtlMaxLeftIsZero() ? -500 : 500), 400, doc);
       c1.save();
-      scrollTo((doc.rtl && rtlLeftIsZero() ? -900 : 900), 900, doc);
+      scrollTo((doc.rtl && rtlMaxLeftIsZero() ? -900 : 900), 900, doc);
       c1.restore();
-      scrollCheck((doc.rtl && rtlLeftIsZero() ? -500 : 500), 400, doc, 'restore #2');
+      scrollCheck((doc.rtl && rtlMaxLeftIsZero() ? -500 : 500), 400, doc, 'restore #2');
     };
   }
 );
