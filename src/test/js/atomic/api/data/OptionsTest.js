@@ -23,6 +23,9 @@ test(
     var arr1 = [Option.some(1), Option.none(), Option.some(2), Option.some(3), Option.none(), Option.none(), Option.none(), Option.none(), Option.some(4)];
     assert.eq([1, 2, 3, 4], Options.cat(arr1));
 
+    assert.eq(undefined, Option.some(1).each(Fun.identity), 'each returns undefined');
+    assert.eq(undefined, Option.none().each(Fun.identity), 'each returns undefined');
+
     Jsc.property(
       'Options.cat of only nones should be an empty array',
       Jsc.array(ArbDataTypes.optionNone),
