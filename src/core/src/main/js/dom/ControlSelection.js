@@ -134,7 +134,7 @@ define(
         }
 
         if (typeof selector != 'string') {
-          selector = 'table,img,div';
+          selector = 'table,img,figure.image,div';
         }
 
         if (elm.getAttribute('data-mce-resize') === 'false') {
@@ -420,7 +420,7 @@ define(
         });
 
         controlElm = e.type == 'mousedown' ? e.target : selection.getNode();
-        controlElm = dom.$(controlElm).closest('table,img,hr')[0];
+        controlElm = dom.$(controlElm).closest('table,img,figure.image,hr')[0];
 
         if (isChildOrEqual(controlElm, rootElement)) {
           disableGeckoResize();
