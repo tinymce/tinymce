@@ -9,10 +9,11 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.selection.Selection',
     'ephox.sugar.api.selection.Situ',
-    'ephox.sugar.api.selection.WindowSelection'
+    'ephox.sugar.api.selection.WindowSelection',
+    'ephox.sugar.api.view.Scroll'
   ],
 
-  function (Util, Fun, Obj, Option, Element, Selection, Situ, WindowSelection) {
+  function (Util, Fun, Obj, Option, Element, Selection, Situ, WindowSelection, Scroll) {
     return function (win) {
       var elementFromPoint = function (x, y) {
         return Option.from(win.document.elementFromPoint(x, y)).map(Element.fromDom);
@@ -70,11 +71,12 @@ define(
       };
 
       var getScrollY = function () {
-        return win.scrollY;
+        var pos = Scroll.get(Element.fromDom(win.document));
+        return pos.top();
       };
 
       var scrollBy = function (x, y) {
-        win.scrollBy(x, y);
+        Scroll.by(x, y, Element.fromDom(win.document));
       };
 
       return {
