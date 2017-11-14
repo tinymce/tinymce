@@ -23,6 +23,14 @@ asynctest(
     var browser = PlatformDetection.detect().browser;
     var checkBodyScroller = browser.isFirefox() || browser.isChrome(); // TBIO-5098
 
+    var rtlMaxLeftIsZero = function () {
+      var scrollDiv = Element.fromHtml('<div dir=rtl style="width: 10px; height: 10px; overflow: scroll; position: absolute; top: -9999px;">XXX</div>');
+      Insert.after(Body.body(), scrollDiv);
+      var l = scrollDiv.dom().scrollLeft;
+      Remove.remove(scrollDiv);
+      return l === 0;
+    };
+
     var asserteq = function (expected, actual, message) {
       // I wish assert.eq printed expected and actual on failure
       var m = message === undefined ? undefined : 'expected ' + expected + ', was ' + actual + ': ' + message;
@@ -139,34 +147,37 @@ asynctest(
       // This one has position absolute, but no values set initially
       Css.setAll(doc.byId('positionTest'), { top: '10px', left: '10px' });
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
+      var scrollLeft = doc.body.dom().scrollLeft;
+      var clientLeft = doc.body.dom().clientLeft;
+
       var tests = [
         {
           id: 'absolute-1',
-          absolute: { top: 1, left: { ltr: 1, rtl: 4506 } },
+          absolute: { top: 1, left: { ltr: 1, rtl: 1 + scrollLeft - clientLeft /* FF -11, Cr 4506*/ } },
           relative: { top: 1, left: { ltr: 1, rtl: 1 } }, // JQuery returns 0/0
           viewport: { top: 1, left: { ltr: 1, rtl: 1 } }
         },
         {
           id: 'absolute-1-1',
-          absolute: { top: 5, left: { ltr: 5, rtl: 4510 } },
+          absolute: { top: 5, left: { ltr: 5, rtl: 5 + scrollLeft - clientLeft /* FF -7, Cr 4510 */ } },
           relative: { top: 2, left: { ltr: 2, rtl: 2 } }, // JQuery returns 1/1
           viewport: { top: 5, left: { ltr: 5, rtl: 5 } }
         },
         {
           id: 'absolute-1-1-1',
-          absolute: { top: 9, left: { ltr: 9, rtl: 4514 } },
+          absolute: { top: 9, left: { ltr: 9, rtl: 9 + scrollLeft - clientLeft /* FF -3,  4514 */ } },
           relative: { top: 2, left: { ltr: 2, rtl: 2 } }, // JQuery returns 1/1
           viewport: { top: 9, left: { ltr: 9, rtl: 9 } }
         },
         {
           id: 'absolute-2',
-          absolute: { top: 20, left: { ltr: 20, rtl: 4525 } },
+          absolute: { top: 20, left: { ltr: 20, rtl: 20 + scrollLeft - clientLeft } },
           relative: { top: 20, left: { ltr: 20, rtl: 20 } }, // JQuery returns 19/19
           viewport: { top: 20, left: { ltr: 20, rtl: 20 } }
         },
         {
           id: 'positionTest',
-          absolute: { top: 10, left: { ltr: 10, rtl: 4515 } },
+          absolute: { top: 10, left: { ltr: 10, rtl: 10 + scrollLeft - clientLeft } },
           relative: { top: 10, left: { ltr: 10, rtl: 10 } },
           viewport: { top: 10, left: { ltr: 10, rtl: 10 } }
         }
@@ -177,28 +188,31 @@ asynctest(
 
     var relativeChecks = function (doc) {
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
+      var scrollLeft = doc.body.dom().scrollLeft;
+      var clientLeft = doc.body.dom().clientLeft;
+
       var tests = [
         {
           id: 'relative-1',
-          absolute: { top: 6, left: { ltr: 6, rtl: 4885 } },
+          absolute: { top: 6, left: { ltr: 6, rtl: 380 + scrollLeft - clientLeft } },
           relative: { top: 6, left: { ltr: 6, rtl: 380 } }, // JQuery returns 6/6
           viewport: { top: 6, left: { ltr: 6, rtl: 380 } }
         },
         {
           id: 'relative-1-1',
-          absolute: { top: 14, left: { ltr: 14, rtl: 4877 } },
+          absolute: { top: 14, left: { ltr: 14, rtl: 372 + scrollLeft - clientLeft } },
           relative: { top: 6, left: { ltr: 6, rtl: -10 } }, // JQuery returns 5/5
           viewport: { top: 14, left: { ltr: 14, rtl: 372 } }
         },
         {
           id: 'relative-1-1-1',
-          absolute: { top: 22, left: { ltr: 22, rtl: 4869 } },
+          absolute: { top: 22, left: { ltr: 22, rtl: 364 + scrollLeft - clientLeft } },
           relative: { top: 6, left: { ltr: 6, rtl: -10 } }, // JQuery returns 5/5
           viewport: { top: 22, left: { ltr: 22, rtl: 364 } }
         },
         {
           id: 'relative-2',
-          absolute: { top: 141, left: { ltr: 26, rtl: 4905 } },
+          absolute: { top: 141, left: { ltr: 26, rtl: 400 + scrollLeft - clientLeft } },
           relative: { top: 141, left: { ltr: 26, rtl: 400 } }, // JQuery returns 141/26
           viewport: { top: 141, left: { ltr: 26, rtl: 400 } }
         },
@@ -206,13 +220,13 @@ asynctest(
         // This simulates a docked ego state for the toolbars
         {
           id: 'relative-toolbar-container',
-          absolute: { top: 684, left: { ltr: 5, rtl: 4900 } },
+          absolute: { top: 684, left: { ltr: 5, rtl: 395 + scrollLeft - clientLeft } },
           relative: { top: 684, left: { ltr: 5, rtl: 395 } },
           viewport: { top: 684, left: { ltr: 5, rtl: 395 } }
         },
         {
           id: 'relative-toolbar',
-          absolute: { top: 684 - 40, left: { ltr: 5, rtl: 4900 } },
+          absolute: { top: 684 - 40, left: { ltr: 5, rtl: 395 + scrollLeft - clientLeft } },
           relative: { top: -40, left: { ltr: 0, rtl: 0 } },
           viewport: { top: 684 - 40, left: { ltr: 5, rtl: 395 } }
         }
@@ -222,30 +236,32 @@ asynctest(
     };
 
     var staticChecks = function (doc) {
+      var scrollLeft = doc.body.dom().scrollLeft;
+      var clientLeft = doc.body.dom().clientLeft;
       var extraHeight = 230; // because all tests are in one page
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var tests = [
         {
           id: 'static-1',
-          absolute: { top: extraHeight + 6, left: { ltr: 6, rtl: 4885 } },
+          absolute: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 + scrollLeft - clientLeft } },
           relative: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 } }, // JQuery returns +6/6
           viewport: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 } }
         },
         {
           id: 'static-1-1',
-          absolute: { top: extraHeight + 14, left: { ltr: 14, rtl: 4877 } },
+          absolute: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 + scrollLeft - clientLeft } },
           relative: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 } }, // JQuery returns +14/14
           viewport: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 } }
         },
         {
           id: 'static-1-1-1',
-          absolute: { top: extraHeight + 22, left: { ltr: 22, rtl: 4869 } },
+          absolute: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 + scrollLeft - clientLeft } },
           relative: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 } }, // JQuery returns +22/22
           viewport: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 } }
         },
         {
           id: 'static-2',
-          absolute: { top: extraHeight + 121, left: { ltr: 6, rtl: 4885 } },
+          absolute: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 + scrollLeft - clientLeft } },
           relative: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 } }, // JQuery returns +121/6
           viewport: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 } }
         }
@@ -255,6 +271,8 @@ asynctest(
     };
 
     var tableChecks = function (doc) {
+      var scrollLeft = doc.body.dom().scrollLeft;
+      var clientLeft = doc.body.dom().clientLeft;
       var extraHeight = 460; // because all tests are in one page
 
       // JQUERY BUG:
@@ -265,32 +283,32 @@ asynctest(
       var tests = [
         {
           id: 'table-1',
-          absolute: { top: extraHeight + 6, left: { ltr: 5, rtl: 4676 } },
+          absolute: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 + scrollLeft - clientLeft } },
           relative: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 } },
           viewport: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 } }
         },
         {
           id: 'th-1',
-          absolute: { top: extraHeight + 10, left: { ltr: 9, rtl: 4892 } },
-          relative: { top: 4, left: { ltr: 4, rtl: 214 } },  // JQuery returns extraHeight + 11/10, but that's nonsense
+          absolute: { top: extraHeight + 10, left: { ltr: 9, rtl: 387 + scrollLeft - clientLeft } },
+          relative: { top: 4, left: { ltr: 4, rtl: 216 } },  // JQuery returns extraHeight + 11/10, but that's nonsense
           viewport: { top: extraHeight + 10, left: { ltr: 9, rtl: 387 } }
         },
         {
           id: 'th-3',
-          absolute: { top: extraHeight + 10, left: { ltr: 221, rtl: 4680 } },
-          relative: { top: 4, left: { ltr: 216, rtl: 2 } },  // JQuery returns extraHeight + 11/222, but that's nonsense
+          absolute: { top: extraHeight + 10, left: { ltr: 221, rtl: 175 + scrollLeft - clientLeft } },
+          relative: { top: 4, left: { ltr: 216, rtl: 4 } },  // JQuery returns extraHeight + 11/222, but that's nonsense
           viewport: { top: extraHeight + 10, left: { ltr: 221, rtl: 175 } }
         },
         {
           id: 'td-1',
-          absolute: { top: extraHeight + 116, left: { ltr: 9, rtl: 4892 } },
-          relative: { top: 110, left: { ltr: 4, rtl: 214 } },  // JQuery returns extraHeight + 117/10, but that's nonsense
+          absolute: { top: extraHeight + 116, left: { ltr: 9, rtl: 387 + scrollLeft - clientLeft } },
+          relative: { top: 110, left: { ltr: 4, rtl: 216 } },  // JQuery returns extraHeight + 117/10, but that's nonsense
           viewport: { top: extraHeight + 116, left: { ltr: 9, rtl: 387 } }
         },
         {
           id: 'td-3',
-          absolute: { top: extraHeight + 116, left: { ltr: 221, rtl: 4680 } },
-          relative: { top: 110, left: { ltr: 216, rtl: 2 } },  // JQuery returns extraHeight + 117/222, but that's nonsense
+          absolute: { top: extraHeight + 116, left: { ltr: 221, rtl: 175 + scrollLeft - clientLeft } },
+          relative: { top: 110, left: { ltr: 216, rtl: 4 } },  // JQuery returns extraHeight + 117/222, but that's nonsense
           viewport: { top: extraHeight + 116, left: { ltr: 221, rtl: 175 } }
         }
       ];
@@ -302,8 +320,10 @@ asynctest(
         var chromeDifference = -2;
         Arr.each(tests, function (t) {
           if (t.id !== 'table-1') {
+            console.log('> Note - fix for Chrome bug - subtracting from relative top and left: ', chromeDifference);
             t.relative.top += chromeDifference;
             t.relative.left.ltr += chromeDifference;
+            t.relative.left.rtl += chromeDifference;
           }
         });
       }
@@ -312,56 +332,60 @@ asynctest(
     };
 
     var fixedChecks = function (doc) {
+      var scrollWidth = doc.body.dom().scrollWidth;
+      var scrollLeft = doc.body.dom().scrollLeft;
+      var clientLeft = doc.body.dom().clientLeft;
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var noScroll = [
         {
           id: 'fixed-1',
-          absolute: { top: 1, left: { ltr: 1, rtl: 4506 } },
+          absolute: { top: 1, left: { ltr: 1, rtl: 1 + scrollLeft - clientLeft } },
           relative: { top: 1, left: { ltr: 1, rtl: 1 } }, // JQuery returns 0/0
           viewport: { top: 1, left: { ltr: 1, rtl: 1 } }
         },
         {
           id: 'fixed-2',
-          absolute: { top: 21, left: { ltr: 21, rtl: 4526 } },
+          absolute: { top: 21, left: { ltr: 21, rtl: 21 + scrollLeft - clientLeft } },
           relative: { top: 21, left: { ltr: 21, rtl: 21 } }, // JQuery returns 20/20
           viewport: { top: 21, left: { ltr: 21, rtl: 21 } }
         },
         {
           id: 'fixed-no-top-left',
-          absolute: { top: 6, left: { ltr: 6, rtl: 4870 } },
-          relative: { top: 6, left: { ltr: 6, rtl: 365 } }, // JQuery returns 6/6
-          viewport: { top: 6, left: { ltr: 6, rtl: 365 } }
+          absolute: { top: 6, left: { ltr: 6, rtl: 380 - (browser.isChrome() ? clientLeft : 0) + scrollLeft - clientLeft } }, // RTL chrome puts this in a different spot to firefox
+          relative: { top: 6, left: { ltr: 6, rtl: 380 - (browser.isChrome() ? clientLeft : 0) } }, // JQuery returns 6/6
+          viewport: { top: 6, left: { ltr: 6, rtl: 380 - (browser.isChrome() ? clientLeft : 0) } }
         }
       ];
 
-      var leftScroll = 1000;
+      // could instead do a relative scroll
+      var leftScroll = doc.rtl && rtlMaxLeftIsZero() ? (-scrollWidth + clientLeft) + 1000 : 1000; // RTL scrollLeft 1000 in Chrome is (-scrollWidth + clientWidth) + 1000 in FF
       var topScroll = 2000;
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var withScroll = [
         {
           id: 'fixed-1',
-          absolute: { top: topScroll + 1, left: { ltr: leftScroll + 1, rtl: leftScroll + 1 - 15 } },
+          absolute: { top: topScroll + 1, left: { ltr: leftScroll + 1, rtl: leftScroll + 1 - clientLeft } },
           relative: { top: 1, left: { ltr: 1, rtl: 1 } }, // JQuery returns 0/0
           viewport: { top: 1, left: { ltr: 1, rtl: 1 } }
         },
         {
           id: 'fixed-2',
-          absolute: { top: topScroll + 21, left: { ltr: leftScroll + 21, rtl: leftScroll + 21 - 15 } },
+          absolute: { top: topScroll + 21, left: { ltr: leftScroll + 21, rtl: leftScroll + 21 - clientLeft } },
           relative: { top: 21, left: { ltr: 21, rtl: 21 } }, // JQuery returns 20/20
           viewport: { top: 21, left: { ltr: 21, rtl: 21 } }
         },
         {
           id: 'fixed-no-top-left',
-          absolute: { top: topScroll + 6, left: { ltr: leftScroll + 6, rtl: leftScroll + 7 - 15 + 358 } },
-          relative: { top: 6, left: { ltr: 6, rtl: 365 } }, // JQuery returns 6/6
-          viewport: { top: 6, left: { ltr: 6, rtl: 365 } }
+          absolute: { top: topScroll + 6, left: { ltr: leftScroll + 6, rtl: leftScroll - clientLeft + 380 - (browser.isChrome() ? clientLeft : 0) } },
+          relative: { top: 6, left: { ltr: 6, rtl: 380 - (browser.isChrome() ? clientLeft : 0) } }, // JQuery returns 6/6
+          viewport: { top: 6, left: { ltr: 6, rtl: 380 - (browser.isChrome() ? clientLeft : 0) } }
         }
       ];
 
       var afterSetPosition = [
         {
           id: 'fixed-no-top-left',
-          absolute: { top: topScroll + 11, left: { ltr: leftScroll + 21, rtl: leftScroll + 21 - 15 } },
+          absolute: { top: topScroll + 11, left: { ltr: leftScroll + 21, rtl: leftScroll + 21 - clientLeft } },
           relative: { top: 11, left: { ltr: 21, rtl: 21 } }, // JQuery returns 10/20
           viewport: { top: 11, left: { ltr: 21, rtl: 21 } }
         }
@@ -395,3 +419,38 @@ asynctest(
     };
   }
 );
+/*
+
+ cr el: DOMRect {x: 1, y: 1, width: 114, height: 114, top: 1, …}
+ ff el: DOMRect { x: 1, y: 1, width: 114, height: 114, top: 1, right: 115, bottom: 115, left: 1 }
+       FF  Cr
+ rtl: -11 4506
+
+ Formula: left+scrollLeft-clientLeft
+  CR: 1 + 4520 - 15 = 4506
+  FF: 1 + 0 - 12    = -11
+
+  CR body   $0.scrollWidth-$0.scrollLeft-$0.clientWidth = 0
+    $0.scrollWidth
+    5005
+    $0.scrollLeft
+    4520
+    $0.clientLeft
+    15
+    $0.clientWidth
+    485
+    $0.offsetWidth
+    500
+
+  FF body
+    $0.scrollWidth
+    5005
+    $0.scrollLeft
+    0
+    $0.clientLeft
+    12
+    $0.clientWidth
+    488
+    $0.offsetWidth
+    500
+*/
