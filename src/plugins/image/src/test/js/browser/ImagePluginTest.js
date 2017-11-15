@@ -122,6 +122,7 @@ asynctest(
         LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
           "alt": "",
           "class": "class1",
+          "image-list": "",
           "constrain": true,
           "caption": false,
           "height": "",
