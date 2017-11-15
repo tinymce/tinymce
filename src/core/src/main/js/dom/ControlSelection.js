@@ -45,23 +45,6 @@ define(
       return null;
     };
 
-    var isImage = function (elm) {
-      return elm && elm.nodeName === 'IMG';
-    };
-
-    var isEventOnImageOutsideRange = function (evt, range) {
-      return isImage(evt.target) && !RangePoint.isXYWithinRange(evt.clientX, evt.clientY, range);
-    };
-
-    var contextMenuSelectImage = function (editor, evt) {
-      var target = evt.target;
-
-      if (isEventOnImageOutsideRange(evt, editor.selection.getRng()) && !evt.isDefaultPrevented()) {
-        evt.preventDefault();
-        editor.selection.select(target);
-      }
-    };
-
     return function (selection, editor) {
       var dom = editor.dom, each = Tools.each;
       var selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
@@ -126,6 +109,23 @@ define(
         '}'
       );
 
+      var isImage = function (elm) {
+        return elm && (elm.nodeName === 'IMG' || editor.dom.is(elm, 'figure.image'));
+      };
+
+      var isEventOnImageOutsideRange = function (evt, range) {
+        return isImage(evt.target) && !RangePoint.isXYWithinRange(evt.clientX, evt.clientY, range);
+      };
+
+      var contextMenuSelectImage = function (evt) {
+        var target = evt.target;
+
+        if (isEventOnImageOutsideRange(evt, editor.selection.getRng()) && !evt.isDefaultPrevented()) {
+          evt.preventDefault();
+          editor.selection.select(target);
+        }
+      };
+
       var isResizable = function (elm) {
         var selector = editor.settings.object_resizing;
 
@@ -164,10 +164,10 @@ define(
         width = width < 5 ? 5 : width;
         height = height < 5 ? 5 : height;
 
-        if (selectedElm.nodeName == "IMG" && editor.settings.resize_img_proportional !== false) {
+        if (isImage(selectedElm) && editor.settings.resize_img_proportional !== false) {
           proportional = !VK.modifierPressed(e);
         } else {
-          proportional = VK.modifierPressed(e) || (selectedElm.nodeName == "IMG" && selectedHandle[2] * selectedHandle[3] !== 0);
+          proportional = VK.modifierPressed(e) || (isImage(selectedElm) && selectedHandle[2] * selectedHandle[3] !== 0);
         }
 
         // Constrain proportions
@@ -523,7 +523,7 @@ define(
         });
 
         editor.on('hide blur', hideResizeRect);
-        editor.on('contextmenu', Fun.curry(contextMenuSelectImage, editor));
+        editor.on('contextmenu', contextMenuSelectImage);
 
         // Hide rect on focusout since it would float on top of windows otherwise
         //editor.on('focusout', hideResizeRect);
