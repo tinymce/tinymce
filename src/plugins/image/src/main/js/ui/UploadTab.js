@@ -3,24 +3,23 @@ define(
 
   [
     'ephox.sand.api.URL',
-    'tinymce.plugins.image.core.Uploader',
-    'tinymce.core.ui.Factory'
+    'tinymce.core.ui.Factory',
+    'tinymce.plugins.image.api.Settings',
+    'tinymce.plugins.image.core.Uploader'
   ],
 
-  function (URL, Uploader, Factory) {
+  function (URL, Factory, Settings, Uploader) {
     var onFileInput = function (editor) {
       return function () {
         var Throbber = Factory.get('Throbber');
         var rootControl = this.rootControl;
         var throbber = new Throbber(rootControl.getEl());
         var file = this.value();
-        var settings = editor.settings;
-
         var uploader = new Uploader({
-          url: settings.images_upload_url,
-          basePath: settings.images_upload_base_path,
-          credentials: settings.images_upload_credentials,
-          handler: settings.images_upload_handler
+          url: Settings.getUploadUrl(editor),
+          basePath: Settings.getUploadBasePath(editor),
+          credentials: Settings.getUploadCredentials(editor),
+          handler: Settings.getUploadHandler(editor)
         });
 
         // we do not need to add this to editors blobCache, so we fake bare minimum

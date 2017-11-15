@@ -87,7 +87,7 @@ define(
       };
 
       var upload = function (blobInfo) {
-        return (!settings.url && isDefaultHandler(settings.handler)) ? Promise.reject('Upload url missng from the settings.') : uploadBlob(blobInfo, settings.handler);
+        return (!settings.url && isDefaultHandler(settings.handler)) ? Promise.reject('Upload url missing from the settings.') : uploadBlob(blobInfo, settings.handler);
       };
 
       settings = Tools.extend({

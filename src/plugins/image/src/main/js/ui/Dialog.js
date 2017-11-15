@@ -266,7 +266,7 @@ define(
           };
         }
 
-        if (Settings.hasAdvTab(editor) || editor.settings.images_upload_url || editor.settings.images_upload_handler) {
+        if (Settings.hasAdvTab(editor) || Settings.hasUploadUrl(editor) || Settings.hasUploadHandler(editor)) {
           var body = [
             MainTab.makeTab(editor, imageListCtrl)
           ];
@@ -290,7 +290,7 @@ define(
             body.push(AdvTab.makeTab(editor, updateStyle));
           }
 
-          if (editor.settings.images_upload_url || editor.settings.images_upload_handler) {
+          if (Settings.hasUploadUrl(editor) || Settings.hasUploadHandler(editor)) {
             body.push(UploadTab.makeTab(editor));
           }
 

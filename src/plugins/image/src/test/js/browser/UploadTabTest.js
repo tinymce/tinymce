@@ -79,7 +79,7 @@ asynctest(
         return Chain.asStep({}, [
           cPopupToDialog('div[role="dialog"][aria-label="Insert/edit image"]'),
           Chain.op(function (win) {
-            Assertions.assertEq("Assert field " + src + " value ", win.find('#' + fieldName).value(), value);
+            Assertions.assertEq("Assert field " + src + " value ", value, win.find('#' + fieldName).value());
           })
         ]);
       };
@@ -99,12 +99,12 @@ asynctest(
           sAssertImageTab('Upload', true),
           sAssertImageTab('Advanced', false),
           api.sSetSetting('image_advtab', true),
-          api.sSetSetting('images_upload_url', null),
+          api.sDeleteSetting('images_upload_url'),
           sAssertImageTab('Upload', false),
           sAssertImageTab('Advanced', true)
         ])),
 
-        Logger.t("Upload tab should be present when images_upload_url is set to some truthy value", GeneralSteps.sequence([
+        Logger.t("Upload tab should be present when images_upload_handler is set to some truthy value", GeneralSteps.sequence([
           api.sSetContent('<p><img src="' + src + '" /></p>'),
           api.sSelect('img', []),
           api.sSetSetting('image_advtab', false), // make sure that Advanced tab appears separately
@@ -120,20 +120,19 @@ asynctest(
         ])),
 
         Logger.t("Image uploader test with custom route", GeneralSteps.sequence([
-          api.sSetContent('<p><img src="' + src + '" /></p>'),
-          api.sSelect('img', []),
+          api.sSetContent(''),
           api.sSetSetting('images_upload_url', '/custom/imageUpload'),
           ui.sClickOnToolbar("Trigger Image dialog", 'div[aria-label="Insert/edit image"]'),
           ui.sWaitForPopup("Wait for Image dialog", 'div[role="dialog"][aria-label="Insert/edit image"]'),
           ui.sClickOnUi("Switch to Upload tab", '.mce-tab:contains("Upload")'),
           sTriggerUpload,
           ui.sWaitForUi("Wait for General tab to activate", '.mce-tab.mce-active:contains("General")'),
-          sAssertTextValue('src', 'uploaded_image.jpg')
+          sAssertTextValue('src', 'uploaded_image.jpg'),
+          api.sDeleteSetting('images_upload_url')
         ])),
 
         Logger.t("Image uploader test with images_upload_handler", GeneralSteps.sequence([
-          api.sSetContent('<p><img src="' + src + '" /></p>'),
-          api.sSelect('img', []),
+          api.sSetContent(''),
           api.sSetSetting('images_upload_handler', function (blobInfo, success) {
             return success('file.jpg');
           }),
