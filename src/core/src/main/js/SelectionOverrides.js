@@ -26,7 +26,6 @@ define(
     'tinymce.core.caret.CaretWalker',
     'tinymce.core.caret.FakeCaret',
     'tinymce.core.caret.LineUtils',
-    'tinymce.core.dom.ElementType',
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.RangePoint',
     'tinymce.core.focus.CefFocus',
@@ -35,7 +34,7 @@ define(
   ],
   function (
     Arr, Remove, Element, Attr, SelectorFilter, SelectorFind, DragDropOverrides, EditorView, Env, CaretContainer, CaretPosition, CaretUtils, CaretWalker, FakeCaret,
-    LineUtils, ElementType, NodeType, RangePoint, CefFocus, CefUtils, VK
+    LineUtils, NodeType, RangePoint, CefFocus, CefUtils, VK
   ) {
     var isContentEditableTrue = NodeType.isContentEditableTrue,
       isContentEditableFalse = NodeType.isContentEditableFalse,
@@ -232,7 +231,7 @@ define(
 
               // Check that we're not attempting a shift + click select within a contenteditable='true' element
               if (!(isContentEditableTrue(contentEditableRoot) && e.shiftKey) && !RangePoint.isXYWithinRange(e.clientX, e.clientY, editor.selection.getRng())) {
-                ElementType.isVoid(Element.fromDom(e.target)) ? editor.selection.select(e.target) : editor.selection.placeCaretAt(e.clientX, e.clientY);
+                editor.selection.placeCaretAt(e.clientX, e.clientY);
               }
             }
           } else {
@@ -394,7 +393,7 @@ define(
         endOffset = range.endOffset;
 
         // Normalizes <span cE=false>[</span>] to [<span cE=false></span>]
-        if (startContainer.nodeType == 3 && startOffset == 0 && isContentEditableFalse(startContainer.parentNode)) {
+        if (startContainer.nodeType === 3 && startOffset === 0 && isContentEditableFalse(startContainer.parentNode)) {
           startContainer = startContainer.parentNode;
           startOffset = dom.nodeIndex(startContainer);
           startContainer = startContainer.parentNode;

@@ -31,7 +31,7 @@ asynctest(
       Pipeline.async({}, [
         tinyApis.sFocus,
         Logger.t('removing src in dialog should remove figure element', GeneralSteps.sequence([
-          tinyApis.sSetContent('<figure class="image"><img contenteditable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>'),
+          tinyApis.sSetContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>'),
           tinyApis.sSetSelection([0], 0, [0], 1),
           tinyUi.sClickOnToolbar('click on image button', 'div[aria-label="Insert/edit image"] button'),
           Chain.asStep({}, [
@@ -48,7 +48,7 @@ asynctest(
         ])),
 
         Logger.t('clicking caption textbox removes figure and adds image only', GeneralSteps.sequence([
-          tinyApis.sSetContent('<figure class="image"><img contenteditable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>'),
+          tinyApis.sSetContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>'),
           tinyApis.sSetSelection([0], 0, [0], 1),
           tinyUi.sClickOnToolbar('click on image button', 'div[aria-label="Insert/edit image"] button'),
           Chain.asStep({}, [
@@ -60,7 +60,7 @@ asynctest(
             Mouse.cClick
           ]),
           tinyUi.sClickOnUi('click on ok button', 'button:contains("Ok")'),
-          tinyApis.sAssertContentPresence({ 'img[contenteditable="true"]': 0 })
+          tinyApis.sAssertContentPresence({ 'figure.image': 0 })
         ]))
 
       ], onSuccess, onFailure);

@@ -284,11 +284,8 @@ define(
             if (data.caption === false) {
               if (dom.is(imgElm.parentNode, 'figure.image')) {
                 figureElm = imgElm.parentNode;
-                dom.setAttrib(imgElm, 'contenteditable', null);
                 dom.insertAfter(imgElm, figureElm);
                 dom.remove(figureElm);
-                editor.selection.select(imgElm);
-                editor.nodeChanged();
               }
             }
 
@@ -296,7 +293,6 @@ define(
               if (!dom.is(imgElm.parentNode, 'figure.image')) {
                 oldImg = imgElm;
                 imgElm = imgElm.cloneNode(true);
-                imgElm.contentEditable = true;
                 figureElm = dom.create('figure', { 'class': 'image' });
                 figureElm.appendChild(imgElm);
                 figureElm.appendChild(dom.create('figcaption', { contentEditable: true }, 'Caption'));

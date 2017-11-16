@@ -45,28 +45,11 @@ define(
       return null;
     };
 
-    var isImage = function (elm) {
-      return elm && elm.nodeName === 'IMG';
-    };
-
-    var isEventOnImageOutsideRange = function (evt, range) {
-      return isImage(evt.target) && !RangePoint.isXYWithinRange(evt.clientX, evt.clientY, range);
-    };
-
-    var contextMenuSelectImage = function (editor, evt) {
-      var target = evt.target;
-
-      if (isEventOnImageOutsideRange(evt, editor.selection.getRng()) && !evt.isDefaultPrevented()) {
-        evt.preventDefault();
-        editor.selection.select(target);
-      }
-    };
-
     return function (selection, editor) {
       var dom = editor.dom, each = Tools.each;
-      var selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle, lastMouseDownEvent;
+      var selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
       var startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
-      var width, height, editableDoc = editor.getDoc(), rootDocument = document, isIE = Env.ie && Env.ie < 11;
+      var width, height, editableDoc = editor.getDoc(), rootDocument = document;
       var abs = Math.abs, round = Math.round, rootElement = editor.getBody(), startScrollWidth, startScrollHeight;
 
       // Details about each resize handle how to scale etc
@@ -126,6 +109,27 @@ define(
         '}'
       );
 
+      var isImage = function (elm) {
+        return elm && (elm.nodeName === 'IMG' || editor.dom.is(elm, 'figure.image'));
+      };
+
+      var isEventOnImageOutsideRange = function (evt, range) {
+        return isImage(evt.target) && !RangePoint.isXYWithinRange(evt.clientX, evt.clientY, range);
+      };
+
+      var contextMenuSelectImage = function (evt) {
+        var target = evt.target;
+
+        if (isEventOnImageOutsideRange(evt, editor.selection.getRng()) && !evt.isDefaultPrevented()) {
+          evt.preventDefault();
+          editor.selection.select(target);
+        }
+      };
+
+      var getResizeTarget = function (elm) {
+        return editor.dom.is(elm, 'figure.image') ? elm.querySelector('img') : elm;
+      };
+
       var isResizable = function (elm) {
         var selector = editor.settings.object_resizing;
 
@@ -134,7 +138,7 @@ define(
         }
 
         if (typeof selector != 'string') {
-          selector = 'table,img,div';
+          selector = 'table,img,figure.image,div';
         }
 
         if (elm.getAttribute('data-mce-resize') === 'false') {
@@ -164,10 +168,10 @@ define(
         width = width < 5 ? 5 : width;
         height = height < 5 ? 5 : height;
 
-        if (selectedElm.nodeName == "IMG" && editor.settings.resize_img_proportional !== false) {
+        if (isImage(selectedElm) && editor.settings.resize_img_proportional !== false) {
           proportional = !VK.modifierPressed(e);
         } else {
-          proportional = VK.modifierPressed(e) || (selectedElm.nodeName == "IMG" && selectedHandle[2] * selectedHandle[3] !== 0);
+          proportional = VK.modifierPressed(e) || (isImage(selectedElm) && selectedHandle[2] * selectedHandle[3] !== 0);
         }
 
         // Constrain proportions
@@ -182,7 +186,7 @@ define(
         }
 
         // Update ghost size
-        dom.setStyles(selectedElmGhost, {
+        dom.setStyles(getResizeTarget(selectedElmGhost), {
           width: width,
           height: height
         });
@@ -236,9 +240,9 @@ define(
           if (value) {
             // Resize by using style or attribute
             if (selectedElm.style[name] || !editor.schema.isValid(selectedElm.nodeName.toLowerCase(), name)) {
-              dom.setStyle(selectedElm, name, value);
+              dom.setStyle(getResizeTarget(selectedElm), name, value);
             } else {
-              dom.setAttrib(selectedElm, name, value);
+              dom.setAttrib(getResizeTarget(selectedElm), name, value);
             }
           }
         };
@@ -259,16 +263,14 @@ define(
         dom.remove(selectedElmGhost);
         dom.remove(resizeHelper);
 
-        if (!isIE || selectedElm.nodeName == "TABLE") {
-          showResizeRect(selectedElm);
-        }
+        showResizeRect(selectedElm);
 
         editor.fire('ObjectResized', { target: selectedElm, width: width, height: height });
         dom.setAttrib(selectedElm, 'style', dom.getAttrib(selectedElm, 'style'));
         editor.nodeChanged();
       };
 
-      var showResizeRect = function (targetElm, mouseDownHandleName, mouseDownEvent) {
+      var showResizeRect = function (targetElm) {
         var position, targetWidth, targetHeight, e, rect;
 
         hideResizeRect();
@@ -284,7 +286,6 @@ define(
 
         // Reset width/height if user selects a new image/table
         if (selectedElm != targetElm) {
-          detachResizeStartListener();
           selectedElm = targetElm;
           width = height = 0;
         }
@@ -299,8 +300,8 @@ define(
             var startDrag = function (e) {
               startX = e.screenX;
               startY = e.screenY;
-              startW = selectedElm.clientWidth;
-              startH = selectedElm.clientHeight;
+              startW = getResizeTarget(selectedElm).clientWidth;
+              startH = getResizeTarget(selectedElm).clientHeight;
               ratio = startH / startW;
               selectedHandle = handle;
 
@@ -339,15 +340,6 @@ define(
                 'data-mce-bogus': 'all'
               }, startW + ' &times; ' + startH);
             };
-
-            if (mouseDownHandleName) {
-              // Drag started by IE native resizestart
-              if (name == mouseDownHandleName) {
-                startDrag(mouseDownEvent);
-              }
-
-              return;
-            }
 
             // Get existing or render resize handle
             handleElm = dom.get('mceResizeHandle' + name);
@@ -432,105 +424,23 @@ define(
         });
 
         controlElm = e.type == 'mousedown' ? e.target : selection.getNode();
-        controlElm = dom.$(controlElm).closest(isIE ? 'table' : 'table,img,hr')[0];
+        controlElm = dom.$(controlElm).closest('table,img,figure.image,hr')[0];
 
         if (isChildOrEqual(controlElm, rootElement)) {
           disableGeckoResize();
           startElm = selection.getStart(true);
 
           if (isChildOrEqual(startElm, controlElm) && isChildOrEqual(selection.getEnd(true), controlElm)) {
-            if (!isIE || (controlElm != startElm && startElm.nodeName !== 'IMG')) {
-              showResizeRect(controlElm);
-              return;
-            }
+            showResizeRect(controlElm);
+            return;
           }
         }
 
         hideResizeRect();
       };
 
-      var attachEvent = function (elm, name, func) {
-        if (elm && elm.attachEvent) {
-          elm.attachEvent('on' + name, func);
-        }
-      };
-
-      var detachEvent = function (elm, name, func) {
-        if (elm && elm.detachEvent) {
-          elm.detachEvent('on' + name, func);
-        }
-      };
-
-      var resizeNativeStart = function (e) {
-        var target = e.srcElement, pos, name, corner, cornerX, cornerY, relativeX, relativeY;
-
-        pos = target.getBoundingClientRect();
-        relativeX = lastMouseDownEvent.clientX - pos.left;
-        relativeY = lastMouseDownEvent.clientY - pos.top;
-
-        // Figure out what corner we are draging on
-        for (name in resizeHandles) {
-          corner = resizeHandles[name];
-
-          cornerX = target.offsetWidth * corner[0];
-          cornerY = target.offsetHeight * corner[1];
-
-          if (abs(cornerX - relativeX) < 8 && abs(cornerY - relativeY) < 8) {
-            selectedHandle = corner;
-            break;
-          }
-        }
-
-        // Remove native selection and let the magic begin
-        resizeStarted = true;
-        editor.fire('ObjectResizeStart', {
-          target: selectedElm,
-          width: selectedElm.clientWidth,
-          height: selectedElm.clientHeight
-        });
-        editor.getDoc().selection.empty();
-        showResizeRect(target, name, lastMouseDownEvent);
-      };
-
-      var preventDefault = function (e) {
-        if (e.preventDefault) {
-          e.preventDefault();
-        } else {
-          e.returnValue = false; // IE
-        }
-      };
-
       var isWithinContentEditableFalse = function (elm) {
         return isContentEditableFalse(getContentEditableRoot(editor.getBody(), elm));
-      };
-
-      var nativeControlSelect = function (e) {
-        var target = e.srcElement;
-
-        if (isWithinContentEditableFalse(target)) {
-          preventDefault(e);
-          return;
-        }
-
-        if (target != selectedElm) {
-          editor.fire('ObjectSelected', { target: target });
-          detachResizeStartListener();
-
-          if (target.id.indexOf('mceResizeHandle') === 0) {
-            e.returnValue = false;
-            return;
-          }
-
-          if (target.nodeName == 'IMG' || target.nodeName == 'TABLE') {
-            hideResizeRect();
-            selectedElm = target;
-            attachEvent(target, 'resizestart', resizeNativeStart);
-          }
-        }
-      };
-
-      var detachResizeStartListener = function () {
-        detachEvent(selectedElm, 'resizestart', resizeNativeStart);
       };
 
       var unbindResizeHandleEvents = function () {
@@ -553,85 +463,51 @@ define(
         }
       };
 
-      var controlSelect = function (elm) {
-        var ctrlRng;
-
-        if (!isIE) {
-          return;
-        }
-
-        ctrlRng = editableDoc.body.createControlRange();
-
-        try {
-          ctrlRng.addElement(elm);
-          ctrlRng.select();
-          return true;
-        } catch (ex) {
-          // Ignore since the element can't be control selected for example a P tag
-        }
-      };
-
       editor.on('init', function () {
-        if (isIE) {
-          // Hide the resize rect on resize and reselect the image
-          editor.on('ObjectResized', function (e) {
-            if (e.target.nodeName != 'TABLE') {
-              hideResizeRect();
-              controlSelect(e.target);
+        disableGeckoResize();
+
+        // Sniff sniff, hard to feature detect this stuff
+        if (Env.ie && Env.ie >= 11) {
+          // Needs to be mousedown for drag/drop to work on IE 11
+          // Needs to be click on Edge to properly select images
+          editor.on('mousedown click', function (e) {
+            var target = e.target, nodeName = target.nodeName;
+
+            if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName) && !isWithinContentEditableFalse(target)) {
+              if (e.button !== 2) {
+                editor.selection.select(target, nodeName == 'TABLE');
+              }
+
+              // Only fire once since nodeChange is expensive
+              if (e.type == 'mousedown') {
+                editor.nodeChanged();
+              }
             }
           });
 
-          attachEvent(rootElement, 'controlselect', nativeControlSelect);
+          editor.dom.bind(rootElement, 'mscontrolselect', function (e) {
+            var delayedSelect = function (node) {
+              Delay.setEditorTimeout(editor, function () {
+                editor.selection.select(node);
+              });
+            };
 
-          editor.on('mousedown', function (e) {
-            lastMouseDownEvent = e;
-          });
-        } else {
-          disableGeckoResize();
+            if (isWithinContentEditableFalse(e.target)) {
+              e.preventDefault();
+              delayedSelect(e.target);
+              return;
+            }
 
-          // Sniff sniff, hard to feature detect this stuff
-          if (Env.ie >= 11) {
-            // Needs to be mousedown for drag/drop to work on IE 11
-            // Needs to be click on Edge to properly select images
-            editor.on('mousedown click', function (e) {
-              var target = e.target, nodeName = target.nodeName;
+            if (/^(TABLE|IMG|HR)$/.test(e.target.nodeName)) {
+              e.preventDefault();
 
-              if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName) && !isWithinContentEditableFalse(target)) {
-                if (e.button !== 2) {
-                  editor.selection.select(target, nodeName == 'TABLE');
-                }
-
-                // Only fire once since nodeChange is expensive
-                if (e.type == 'mousedown') {
-                  editor.nodeChanged();
-                }
-              }
-            });
-
-            editor.dom.bind(rootElement, 'mscontrolselect', function (e) {
-              var delayedSelect = function (node) {
-                Delay.setEditorTimeout(editor, function () {
-                  editor.selection.select(node);
-                });
-              };
-
-              if (isWithinContentEditableFalse(e.target)) {
-                e.preventDefault();
+              // This moves the selection from being a control selection to a text like selection like in WebKit #6753
+              // TODO: Fix this the day IE works like other browsers without this nasty native ugly control selections.
+              if (e.target.tagName == 'IMG') {
                 delayedSelect(e.target);
-                return;
               }
-
-              if (/^(TABLE|IMG|HR)$/.test(e.target.nodeName)) {
-                e.preventDefault();
-
-                // This moves the selection from being a control selection to a text like selection like in WebKit #6753
-                // TODO: Fix this the day IE works like other browsers without this nasty native ugly control selections.
-                if (e.target.tagName == 'IMG') {
-                  delayedSelect(e.target);
-                }
-              }
-            });
-          }
+            }
+          });
         }
 
         var throttledUpdateResizeRect = Delay.throttle(function (e) {
@@ -651,7 +527,7 @@ define(
         });
 
         editor.on('hide blur', hideResizeRect);
-        editor.on('contextmenu', Fun.curry(contextMenuSelectImage, editor));
+        editor.on('contextmenu', contextMenuSelectImage);
 
         // Hide rect on focusout since it would float on top of windows otherwise
         //editor.on('focusout', hideResizeRect);
@@ -661,11 +537,6 @@ define(
 
       var destroy = function () {
         selectedElm = selectedElmGhost = null;
-
-        if (isIE) {
-          detachResizeStartListener();
-          detachEvent(rootElement, 'controlselect', nativeControlSelect);
-        }
       };
 
       return {
@@ -673,7 +544,6 @@ define(
         showResizeRect: showResizeRect,
         hideResizeRect: hideResizeRect,
         updateResizeRect: updateResizeRect,
-        controlSelect: controlSelect,
         destroy: destroy
       };
     };

@@ -33,7 +33,6 @@ define(
           if (hasImageClass(node)) {
             node.attr('contenteditable', state ? 'false' : null);
             Tools.each(node.getAll('figcaption'), toggleContentEditable);
-            Tools.each(node.getAll('img'), toggleContentEditable);
           }
         }
       };

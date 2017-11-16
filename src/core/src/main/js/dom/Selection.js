@@ -243,10 +243,6 @@ define(
         var self = this, dom = self.dom, rng = dom.createRng(), idx;
 
         if (node) {
-          if (!content && self.controlSelection.controlSelect(node)) {
-            return;
-          }
-
           idx = dom.nodeIndex(node);
           rng.setStart(node.parentNode, idx);
           rng.setEnd(node.parentNode, idx + 1);
