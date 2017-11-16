@@ -126,6 +126,10 @@ define(
         }
       };
 
+      var getResizeTarget = function (elm) {
+        return editor.dom.is(elm, 'figure.image') ? elm.querySelector('img') : elm;
+      };
+
       var isResizable = function (elm) {
         var selector = editor.settings.object_resizing;
 
@@ -182,7 +186,7 @@ define(
         }
 
         // Update ghost size
-        dom.setStyles(selectedElmGhost, {
+        dom.setStyles(getResizeTarget(selectedElmGhost), {
           width: width,
           height: height
         });
@@ -236,9 +240,9 @@ define(
           if (value) {
             // Resize by using style or attribute
             if (selectedElm.style[name] || !editor.schema.isValid(selectedElm.nodeName.toLowerCase(), name)) {
-              dom.setStyle(selectedElm, name, value);
+              dom.setStyle(getResizeTarget(selectedElm), name, value);
             } else {
-              dom.setAttrib(selectedElm, name, value);
+              dom.setAttrib(getResizeTarget(selectedElm), name, value);
             }
           }
         };
@@ -296,8 +300,8 @@ define(
             var startDrag = function (e) {
               startX = e.screenX;
               startY = e.screenY;
-              startW = selectedElm.clientWidth;
-              startH = selectedElm.clientHeight;
+              startW = getResizeTarget(selectedElm).clientWidth;
+              startH = getResizeTarget(selectedElm).clientHeight;
               ratio = startH / startW;
               selectedHandle = handle;
 
