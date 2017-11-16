@@ -68,5 +68,20 @@
           }
         }
       }
+  },
+
+  {
+    "request": {
+      "method": "post",
+      "path": "/custom/imageUpload"
+    },
+
+    "response": {
+      "status" : 200,
+      "json": {
+        "location": "uploaded_image.jpg"
+      }
+
+    }
   }
 ]
