@@ -251,9 +251,15 @@ define(
           editor.undoManager.transact(function () {
             if (!data.src) {
               if (imgElm) {
-                dom.remove(imgElm);
+                var elm = dom.is(imgElm.parentNode, 'figure.image') ? imgElm.parentNode : imgElm;
+                dom.remove(elm);
                 editor.focus();
                 editor.nodeChanged();
+
+                if (dom.isEmpty(editor.getBody())) {
+                  editor.setContent('');
+                  editor.selection.setCursorLocation();
+                }
               }
 
               return;
