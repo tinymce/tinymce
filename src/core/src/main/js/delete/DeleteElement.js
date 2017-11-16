@@ -166,14 +166,19 @@ define(
       var parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
       var normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos);
 
-      parentBlock.bind(paddEmptyBlock).fold(
-        function () {
-          setSelection(editor, forward, normalizedAfterDeletePos);
-        },
-        function (paddPos) {
-          setSelection(editor, forward, Option.some(paddPos));
-        }
-      );
+      if (editor.dom.isEmpty(editor.getBody())) {
+        editor.setContent('');
+        editor.selection.setCursorLocation();
+      } else {
+        parentBlock.bind(paddEmptyBlock).fold(
+          function () {
+            setSelection(editor, forward, normalizedAfterDeletePos);
+          },
+          function (paddPos) {
+            setSelection(editor, forward, Option.some(paddPos));
+          }
+        );
+      }
     };
 
     return {

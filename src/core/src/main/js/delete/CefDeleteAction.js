@@ -69,6 +69,24 @@ define(
       }
     };
 
+    var skipMoveToActionFromInlineCefToContent = function (root, from, deleteAction) {
+      return deleteAction.fold(
+        function (elm) {
+          return Option.some(DeleteAction.remove(elm));
+        },
+        function (elm) {
+          return Option.some(DeleteAction.moveToElement(elm));
+        },
+        function (to) {
+          if (CaretUtils.isInSameBlock(from, to, root)) {
+            return Option.none();
+          } else {
+            return Option.some(DeleteAction.moveToPosition(to));
+          }
+        }
+      );
+    };
+
     var getContentEditableAction = function (rootNode, forward, from) {
       if (isAtContentEditableBlockCaret(forward, from)) {
         return getContentEditableBlockAction(forward, from.getNode(forward === false))
@@ -79,7 +97,9 @@ define(
             Option.some
           );
       } else {
-        return findCefPosition(rootNode, forward, from);
+        return findCefPosition(rootNode, forward, from).bind(function (deleteAction) {
+          return skipMoveToActionFromInlineCefToContent(rootNode, from, deleteAction);
+        });
       }
     };
 
