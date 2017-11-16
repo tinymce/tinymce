@@ -10,11 +10,11 @@ define(
 
   function (URL, Factory, Settings, Uploader) {
     var onFileInput = function (editor) {
-      return function () {
+      return function (evt) {
         var Throbber = Factory.get('Throbber');
-        var rootControl = this.rootControl;
+        var rootControl = evt.control.rootControl;
         var throbber = new Throbber(rootControl.getEl());
-        var file = this.value();
+        var file = evt.control.value();
         var uploader = new Uploader({
           url: Settings.getUploadUrl(editor),
           basePath: Settings.getUploadBasePath(editor),

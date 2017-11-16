@@ -14,11 +14,11 @@ define(
   ],
   function () {
     var hasDimensions = function (editor) {
-      return editor.getParam('image_dimensions', true);
+      return editor.settings.image_dimensions === false ? false : true;
     };
 
     var hasAdvTab = function (editor) {
-      return editor.getParam('image_advtab', false);
+      return editor.settings.image_advtab === true ? true : false;
     };
 
     var getPrependUrl = function (editor) {
@@ -30,15 +30,15 @@ define(
     };
 
     var hasDescription = function (editor) {
-      return editor.getParam('image_description', true);
+      return editor.settings.image_description === false ? false : true;
     };
 
     var hasImageTitle = function (editor) {
-      return editor.getParam('image_title', false);
+      return editor.settings.image_title === true ? true : false;
     };
 
     var hasImageCaption = function (editor) {
-      return editor.getParam('image_caption', false);
+      return editor.settings.image_caption === true ? true : false;
     };
 
     var getImageList = function (editor) {

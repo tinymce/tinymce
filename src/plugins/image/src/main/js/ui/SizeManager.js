@@ -9,6 +9,7 @@ define(
       widthCtrl.state.set('oldVal', widthCtrl.value());
       heightCtrl.state.set('oldVal', heightCtrl.value());
     };
+
     var doSizeControls = function (win, f) {
       var widthCtrl = win.find('#width')[0];
       var heightCtrl = win.find('#height')[0];
@@ -52,8 +53,8 @@ define(
     };
 
     var createUi = function () {
-      var recalcSize = function () {
-        updateSize(this.rootControl);
+      var recalcSize = function (evt) {
+        updateSize(evt.control.rootControl);
       };
 
       return {

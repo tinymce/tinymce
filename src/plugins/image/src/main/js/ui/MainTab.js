@@ -9,13 +9,14 @@ define(
   ],
 
   function (Tools, Settings, Utils, SizeManager) {
-    var onSrcChange = function (e, editor, ctx) {
-      var srcURL, prependURL, absoluteURLPattern, meta = e.meta || {};
-      var rootControl = ctx.rootControl;
+    var onSrcChange = function (evt, editor) {
+      var srcURL, prependURL, absoluteURLPattern, meta = evt.meta || {};
+      var control = evt.control;
+      var rootControl = control.rootControl;
       var imageListCtrl = rootControl.find('#image-list')[0];
 
       if (imageListCtrl) {
-        imageListCtrl.value(editor.convertURL(ctx.value(), 'src'));
+        imageListCtrl.value(editor.convertURL(control.value(), 'src'));
       }
 
       Tools.each(meta, function (value, key) {
@@ -23,7 +24,7 @@ define(
       });
 
       if (!meta.width && !meta.height) {
-        srcURL = editor.convertURL(ctx.value(), 'src');
+        srcURL = editor.convertURL(control.value(), 'src');
 
         // Pattern test the src url and make sure we haven't already prepended the url
         prependURL = Settings.getPrependUrl(editor);
@@ -32,9 +33,9 @@ define(
           srcURL = prependURL + srcURL;
         }
 
-        ctx.value(srcURL);
+        control.value(srcURL);
 
-        Utils.getImageSize(editor.documentBaseURI.toAbsolute(ctx.value()), function (data) {
+        Utils.getImageSize(editor.documentBaseURI.toAbsolute(control.value()), function (data) {
           if (data.width && data.height && Settings.hasDimensions(editor)) {
             rootControl.find('#width').value(data.width);
             rootControl.find('#height').value(data.height);
@@ -44,8 +45,8 @@ define(
       }
     };
 
-    var onBeforeCall = function (e, rootControl) {
-      e.meta = rootControl.toJSON();
+    var onBeforeCall = function (evt) {
+      evt.meta = evt.control.rootControl.toJSON();
     };
 
     var getGeneralItems = function (editor, imageListCtrl) {
@@ -56,12 +57,10 @@ define(
           filetype: 'image',
           label: 'Source',
           autofocus: true,
-          onchange: function (e) {
-            onSrcChange(e, editor, this);
+          onchange: function (evt) {
+            onSrcChange(evt, editor);
           },
-          onbeforecall: function (e) {
-            onBeforeCall(e, this.rootControl);
-          }
+          onbeforecall: onBeforeCall
         },
         imageListCtrl
       ];

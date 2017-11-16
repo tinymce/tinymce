@@ -17,9 +17,7 @@ define(
   [
     'global!Math',
     'global!RegExp',
-    'tinymce.core.util.JSON',
     'tinymce.core.util.Tools',
-    'tinymce.core.util.XHR',
     'tinymce.plugins.image.api.Settings',
     'tinymce.plugins.image.core.Utils',
     'tinymce.plugins.image.ui.AdvTab',
@@ -27,25 +25,8 @@ define(
     'tinymce.plugins.image.ui.SizeManager',
     'tinymce.plugins.image.ui.UploadTab'
   ],
-  function (Math, RegExp, JSON, Tools, XHR, Settings, Utils, AdvTab, MainTab, SizeManager, UploadTab) {
+  function (Math, RegExp, Tools, Settings, Utils, AdvTab, MainTab, SizeManager, UploadTab) {
     return function (editor) {
-      function createImageList(callback) {
-        var imageList = Settings.getImageList(editor);
-
-        if (typeof imageList === "string") {
-          XHR.send({
-            url: imageList,
-            success: function (text) {
-              callback(JSON.parse(text));
-            }
-          });
-        } else if (typeof imageList === "function") {
-          imageList(callback);
-        } else {
-          callback(imageList);
-        }
-      }
-
       var updateStyle = function (editor, rootControl) {
         if (!Settings.hasAdvTab(editor)) {
           return;
@@ -72,30 +53,6 @@ define(
       function showDialog(imageList) {
         var win, data = {}, imgElm, figureElm, dom = editor.dom;
         var imageListCtrl;
-
-        function waitLoad(imgElm) {
-          function selectImage() {
-            imgElm.onload = imgElm.onerror = null;
-
-            if (editor.selection) {
-              editor.selection.select(imgElm);
-              editor.nodeChanged();
-            }
-          }
-
-          imgElm.onload = function () {
-            if (!data.width && !data.height && Settings.hasDimensions(editor)) {
-              dom.setAttribs(imgElm, {
-                width: imgElm.clientWidth,
-                height: imgElm.clientHeight
-              });
-            }
-
-            selectImage();
-          };
-
-          imgElm.onerror = selectImage;
-        }
 
         function onSubmitForm() {
           var figureElm, oldImg;
@@ -208,7 +165,7 @@ define(
               return;
             }
 
-            waitLoad(imgElm);
+            Utils.waitLoadImage(editor, data, imgElm);
           });
         }
 
@@ -316,7 +273,7 @@ define(
       }
 
       function open() {
-        createImageList(showDialog);
+        Utils.createImageList(editor, showDialog);
       }
 
       return {

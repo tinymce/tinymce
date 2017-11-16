@@ -15,11 +15,13 @@
 define(
   'tinymce.plugins.image.core.Utils',
   [
-    'tinymce.core.util.Tools',
     'global!Math',
-    'global!document'
+    'global!document',
+    'tinymce.core.util.Tools',
+    'tinymce.core.util.XHR',
+    'tinymce.plugins.image.api.Settings'
   ],
-  function (Tools, Math, document) {
+  function (Math, document, Tools, XHR, Settings) {
     var parseIntAndGetMax = function (val1, val2) {
       return Math.max(parseInt(val1, 10), parseInt(val2, 10));
     };
@@ -128,12 +130,55 @@ define(
       return css;
     };
 
+    var createImageList = function (editor, callback) {
+      var imageList = Settings.getImageList(editor);
+
+      if (typeof imageList === "string") {
+        XHR.send({
+          url: imageList,
+          success: function (text) {
+            callback(JSON.parse(text));
+          }
+        });
+      } else if (typeof imageList === "function") {
+        imageList(callback);
+      } else {
+        callback(imageList);
+      }
+    };
+
+    var waitLoadImage = function (editor, data, imgElm) {
+      function selectImage() {
+        imgElm.onload = imgElm.onerror = null;
+
+        if (editor.selection) {
+          editor.selection.select(imgElm);
+          editor.nodeChanged();
+        }
+      }
+
+      imgElm.onload = function () {
+        if (!data.width && !data.height && Settings.hasDimensions(editor)) {
+          editor.dom.setAttribs(imgElm, {
+            width: imgElm.clientWidth,
+            height: imgElm.clientHeight
+          });
+        }
+
+        selectImage();
+      };
+
+      imgElm.onerror = selectImage;
+    };
+
     return {
       getImageSize: getImageSize,
       buildListItems: buildListItems,
       removePixelSuffix: removePixelSuffix,
       addPixelSuffix: addPixelSuffix,
-      mergeMargins: mergeMargins
+      mergeMargins: mergeMargins,
+      createImageList: createImageList,
+      waitLoadImage: waitLoadImage
     };
   }
 );
