@@ -15,17 +15,18 @@
 define(
   'tinymce.plugins.table.ui.RowDialog',
   [
+    'ephox.katamari.api.Fun',
     'tinymce.core.util.Tools',
-    'tinymce.plugins.table.alien.Util',
     'tinymce.plugins.table.actions.Styles',
+    'tinymce.plugins.table.alien.Util',
     'tinymce.plugins.table.ui.Helpers'
   ],
-  function (Tools, Util, Styles, Helpers) {
+  function (Fun, Tools, Styles, Util, Helpers) {
 
     var extractDataFromElement = function (editor, elm) {
       var dom = editor.dom;
       var data = {
-        height: Util.removePxSuffix(dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height')),
+        height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
         scope: dom.getAttrib(elm, 'scope'),
         'class': dom.getAttrib(elm, 'class')
       };
@@ -71,7 +72,7 @@ define(
       }
     };
 
-    function onSubmitRowForm(editor, win, rows) {
+    function onSubmitRowForm(editor, rows, evt) {
       var dom = editor.dom;
       var data;
 
@@ -87,8 +88,8 @@ define(
         }
       }
 
-      Helpers.updateStyleField(dom, win);
-      data = win.toJSON();
+      Helpers.updateStyleField(editor, evt);
+      data = evt.control.rootControl.toJSON();
 
       editor.undoManager.transact(function () {
         Tools.each(rows, function (rowElm) {
@@ -217,18 +218,14 @@ define(
             },
             Helpers.createStyleForm(dom)
           ],
-          onsubmit: function () {
-            onSubmitRowForm(editor, this, rows);
-          }
+          onsubmit: Fun.curry(onSubmitRowForm, editor, rows)
         });
       } else {
         editor.windowManager.open({
           title: "Row properties",
           data: data,
           body: generalRowForm,
-          onsubmit: function () {
-            onSubmitRowForm(editor, this, rows);
-          }
+          onsubmit: Fun.curry(onSubmitRowForm, editor, rows)
         });
       }
     };

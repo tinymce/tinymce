@@ -15,9 +15,11 @@
 define(
   'tinymce.plugins.table.ui.Helpers',
   [
-    'tinymce.core.util.Tools'
+    'ephox.katamari.api.Fun',
+    'tinymce.core.util.Tools',
+    'tinymce.plugins.table.alien.Util'
   ],
-  function (Tools) {
+  function (Fun, Tools, Util) {
 
     var buildListItems = function (inputList, itemCallback, startItems) {
       var appendItems = function (values, output) {
@@ -45,29 +47,27 @@ define(
       return appendItems(inputList, startItems || []);
     };
 
-    var updateStyleField = function (editor) {
-      return function (evt) {
-        var dom = editor.dom;
-        var rootControl = evt.control.rootControl;
-        var data = rootControl.toJSON();
-        var css = dom.parseStyle(data.style);
+    var updateStyleField = function (editor, evt) {
+      var dom = editor.dom;
+      var rootControl = evt.control.rootControl;
+      var data = rootControl.toJSON();
+      var css = dom.parseStyle(data.style);
 
-        if (evt.control.name() === 'style') {
-          rootControl.find('#borderStyle').value(css["border-style"] || '')[0].fire('select');
-          rootControl.find('#borderColor').value(css["border-color"] || '')[0].fire('change');
-          rootControl.find('#backgroundColor').value(css["background-color"] || '')[0].fire('change');
-          rootControl.find('#width').value(css.width || '').fire('change');
-          rootControl.find('#height').value(css.height || '').fire('change');
-        } else {
-          css["border-style"] = data.borderStyle;
-          css["border-color"] = data.borderColor;
-          css["background-color"] = data.backgroundColor;
-          css.width = data.width || '';
-          css.height = data.height || '';
-        }
+      if (evt.control.name() === 'style') {
+        rootControl.find('#borderStyle').value(css["border-style"] || '')[0].fire('select');
+        rootControl.find('#borderColor').value(css["border-color"] || '')[0].fire('change');
+        rootControl.find('#backgroundColor').value(css["background-color"] || '')[0].fire('change');
+        rootControl.find('#width').value(css.width || '').fire('change');
+        rootControl.find('#height').value(css.height || '').fire('change');
+      } else {
+        css["border-style"] = data.borderStyle;
+        css["border-color"] = data.borderColor;
+        css["background-color"] = data.backgroundColor;
+        css.width = data.width ? Util.addSizeSuffix(data.width) : '';
+        css.height = data.height ? Util.addSizeSuffix(data.height) : '';
+      }
 
-        rootControl.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
-      };
+      rootControl.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
     };
 
     var extractAdvancedStyles = function (dom, elm) {
@@ -91,23 +91,16 @@ define(
     };
 
     var createStyleForm = function (editor) {
-      var onChange = function () {
-        updateStyleField(editor.dom, this.parents().reverse()[0], this.name() == "style");
-      };
-
-      var createColorPickAction = function () {
+      var createColorPickAction = function (evt) {
         var colorPickerCallback = editor.settings.color_picker_callback;
         if (colorPickerCallback) {
-          return function () {
-            var self = this;
-            colorPickerCallback.call(
-              editor,
-              function (value) {
-                self.value(value).fire('change');
-              },
-              self.value()
-            );
-          };
+          return colorPickerCallback.call(
+            editor,
+            function (value) {
+              evt.control.value(value).fire('change');
+            },
+            evt.control.value()
+          );
         }
       };
 
@@ -115,7 +108,7 @@ define(
         title: 'Advanced',
         type: 'form',
         defaults: {
-          onchange: onChange
+          onchange: Fun.curry(updateStyleField, editor)
         },
         items: [
           {
@@ -140,7 +133,7 @@ define(
                 type: 'listbox',
                 name: 'borderStyle',
                 width: 90,
-                onselect: onChange,
+                onselect: Fun.curry(updateStyleField, editor),
                 values: [
                   { text: 'Select...', value: '' },
                   { text: 'Solid', value: 'solid' },
@@ -159,13 +152,13 @@ define(
                 label: 'Border color',
                 type: 'colorbox',
                 name: 'borderColor',
-                onaction: createColorPickAction()
+                onaction: createColorPickAction
               },
               {
                 label: 'Background color',
                 type: 'colorbox',
                 name: 'backgroundColor',
-                onaction: createColorPickAction()
+                onaction: createColorPickAction
               }
             ]
           }
