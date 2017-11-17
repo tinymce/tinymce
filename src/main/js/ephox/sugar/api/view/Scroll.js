@@ -6,22 +6,14 @@ define(
     'ephox.katamari.api.Type',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.view.Location',
     'ephox.sugar.api.view.Position',
+    'ephox.sugar.impl.ViewScroll',
     'global!document'
   ],
 
-  function (Option, Type, PlatformDetection, Element, Css, Location, Position, document) {
+  function (Option, Type, PlatformDetection, Element, Location, Position, ViewScroll, document) {
     var isSafari = PlatformDetection.detect().browser.isSafari();
-
-    // True if doc is our our fix for Rtl scrolling of iframe content
-    // (TBIO-5098: overflow turned off the HTML, set on BODY for desktop FF, Cr)
-    var isIframeBodyScroller = function (doc) {
-      var win = doc.defaultView;
-      var html = Element.fromDom(doc.documentElement);
-      return win.frameElement && Css.getRaw(html, 'overflow').is('hidden');
-    };
 
     // get scroll position (x,y) relative to document _doc (or global if not supplied)
     var get = function (_doc) {
@@ -37,7 +29,7 @@ define(
     var set = function (x, y, _doc) {
       var doc = _doc !== undefined ? _doc.dom() : document;
       var win = doc.defaultView;
-      if (!isIframeBodyScroller(doc)) {
+      if (!ViewScroll.isIframeBodyScroller(doc)) {
         win.scrollTo(x, y);
       } else { // TBIO-5098 - win.scrollTo()/win.scrollBy()/..etc does not work on iframe if html overflow-y is hidden
         doc.body.scrollLeft = x;
@@ -49,7 +41,7 @@ define(
     var by = function (x, y, _doc) {
       var doc = _doc !== undefined ? _doc.dom() : document;
       var win = doc.defaultView;
-      if (!isIframeBodyScroller(doc)) {
+      if (!ViewScroll.isIframeBodyScroller(doc)) {
         win.scrollBy(x, y);
       } else { // TBIO-5098 - win.scrollTo()/win.scrollBy()/..etc does not work on iframe if html overflow-y is hidden
         doc.body.scrollLeft += x;

@@ -4,11 +4,11 @@ define(
   [
     'ephox.sugar.api.dom.Dom',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.view.Position'
+    'ephox.sugar.api.view.Position',
+    'ephox.sugar.impl.ViewScroll'
   ],
 
-  function (Dom, Element, Css, Position) {
+  function (Dom, Element, Position, ViewScroll) {
     var boxPosition = function (dom) {
       var box = dom.getBoundingClientRect();
       return Position(box.left, box.top);
@@ -21,20 +21,12 @@ define(
              0;
     };
 
-    // True if doc is our our fix for Rtl scrolling of iframe content
-    // (TBIO-5098: overflow turned off the HTML, set on BODY for desktop FF, Cr)
-    var isIframeBodyScroller = function (doc) {
-      var win = doc.defaultView;
-      var html = Element.fromDom(doc.documentElement);
-      return win.frameElement && Css.getRaw(html, 'overflow').is('hidden');
-    };
-
     var absolute = function (element) {
       var doc = element.dom().ownerDocument;
       var body = doc.body;
       var win = Dom.windowOf(Element.fromDom(doc));
       var html = doc.documentElement;
-      var bodyScroller = isIframeBodyScroller(doc);
+      var bodyScroller = ViewScroll.isIframeBodyScroller(doc);
 
       var scrollTop = bodyScroller  ? firstDefinedOrZero(body.scrollTop, undefined)  : firstDefinedOrZero(win.pageYOffset, html.scrollTop);
       var scrollLeft = bodyScroller ? firstDefinedOrZero(body.scrollLeft, undefined) : firstDefinedOrZero(win.pageXOffset, html.scrollLeft);
