@@ -45,21 +45,29 @@ define(
       return appendItems(inputList, startItems || []);
     };
 
-    var updateStyleField = function (dom, win, isStyleCtrl) {
-      var data = win.toJSON();
-      var css = dom.parseStyle(data.style);
+    var updateStyleField = function (editor) {
+      return function (evt) {
+        var dom = editor.dom;
+        var rootControl = evt.control.rootControl;
+        var data = rootControl.toJSON();
+        var css = dom.parseStyle(data.style);
 
-      if (isStyleCtrl) {
-        win.find('#borderStyle').value(css["border-style"] || '')[0].fire('select');
-        win.find('#borderColor').value(css["border-color"] || '')[0].fire('change');
-        win.find('#backgroundColor').value(css["background-color"] || '')[0].fire('change');
-      } else {
-        css["border-style"] = data.borderStyle;
-        css["border-color"] = data.borderColor;
-        css["background-color"] = data.backgroundColor;
-      }
+        if (evt.control.name() === 'style') {
+          rootControl.find('#borderStyle').value(css["border-style"] || '')[0].fire('select');
+          rootControl.find('#borderColor').value(css["border-color"] || '')[0].fire('change');
+          rootControl.find('#backgroundColor').value(css["background-color"] || '')[0].fire('change');
+          rootControl.find('#width').value(css.width || '').fire('change');
+          rootControl.find('#height').value(css.height || '').fire('change');
+        } else {
+          css["border-style"] = data.borderStyle;
+          css["border-color"] = data.borderColor;
+          css["background-color"] = data.backgroundColor;
+          css.width = data.width || '';
+          css.height = data.height || '';
+        }
 
-      win.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
+        rootControl.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
+      };
     };
 
     var extractAdvancedStyles = function (dom, elm) {
