@@ -19,8 +19,10 @@ define(
     var getRanges = function (selection) {
       var ranges = [];
 
-      for (var i = 0; i < selection.rangeCount; i++) {
-        ranges.push(selection.getRangeAt(i));
+      if (selection) {
+        for (var i = 0; i < selection.rangeCount; i++) {
+          ranges.push(selection.getRangeAt(i));
+        }
       }
 
       return ranges;
