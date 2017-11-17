@@ -74,12 +74,17 @@ define(
           var defaultView = document.defaultView;
 
           if (defaultView) {
-            // Remove camelcase
-            name = name.replace(/[A-Z]/g, function (a) {
-              return '-' + a;
-            });
+            var computedStyle = defaultView.getComputedStyle(elm, null);
+            if (computedStyle) {
+              // Remove camelcase
+              name = name.replace(/[A-Z]/g, function (a) {
+                return '-' + a;
+              });
 
-            return defaultView.getComputedStyle(elm, null).getPropertyValue(name);
+              return computedStyle.getPropertyValue(name);
+            } else {
+              return null;
+            }
           }
 
           return elm.currentStyle[name];
