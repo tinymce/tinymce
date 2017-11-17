@@ -84,7 +84,7 @@ define(
 
     var createStyleForm = function (editor) {
       var onChange = function () {
-        updateStyleField(editor, this.parents().reverse()[0], this.name() == "style");
+        updateStyleField(editor.dom, this.parents().reverse()[0], this.name() == "style");
       };
 
       var createColorPickAction = function () {
