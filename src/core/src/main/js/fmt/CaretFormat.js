@@ -17,7 +17,6 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.search.SelectorFind',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.PaddingBr',
@@ -27,13 +26,9 @@ define(
     'tinymce.core.fmt.MatchFormat',
     'tinymce.core.selection.SplitRange',
     'tinymce.core.text.Zwsp',
-    'tinymce.core.util.Fun',
-    'tinymce.core.util.Tools'
+    'tinymce.core.util.Fun'
   ],
-  function (
-    Arr, Insert, Remove, Element, Node, Attr, SelectorFind, CaretPosition, NodeType, PaddingBr, TreeWalker, ExpandRange, FormatUtils, MatchFormat, SplitRange,
-    Zwsp, Fun, Tools
-  ) {
+  function (Arr, Insert, Remove, Element, Node, Attr, CaretPosition, NodeType, PaddingBr, TreeWalker, ExpandRange, FormatUtils, MatchFormat, SplitRange, Zwsp, Fun) {
     var ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret';
 
     var importNode = function (ownerDocument, node) {
@@ -89,7 +84,8 @@ define(
       Attr.setAll(caretContainer, {
         //style: 'color:red',
         id: CARET_ID,
-        'data-mce-bogus': '1'
+        'data-mce-bogus': '1',
+        'data-mce-type': 'format-caret'
       });
 
       if (fill) {
@@ -109,21 +105,6 @@ define(
       }
 
       return null;
-    };
-
-    // Checks if the parent caret container node isn't empty if that is the case it
-    // will remove the bogus state on all children that isn't empty
-    var unmarkBogusCaretParents = function (body, dom, selection) {
-      var caretContainer;
-
-      caretContainer = getParentCaretContainer(body, selection.getStart());
-      if (caretContainer && !dom.isEmpty(caretContainer)) {
-        Tools.walk(caretContainer, function (node) {
-          if (node.nodeType === 1 && node.id !== CARET_ID && !dom.isEmpty(node)) {
-            dom.setAttrib(node, 'data-mce-bogus', null);
-          }
-        }, 'childNodes');
-      }
     };
 
     var trimZwspFromCaretContainer = function (caretContainerNode) {
@@ -210,15 +191,6 @@ define(
       }, caretContainer);
 
       return appendNode(innerMostFormatNode, innerMostFormatNode.ownerDocument.createTextNode(ZWSP));
-    };
-
-    // Mark caret container elements as bogus when getting the contents so we don't end up with empty elements
-    var markCaretContainersBogus = function (dom, scope) {
-      SelectorFind.descendant(Element.fromDom(scope), '#' + CARET_ID).each(function (node) {
-        Arr.each(getEmptyCaretContainers(node.dom()), function (node) {
-          dom.setAttrib(node, 'data-mce-bogus', '1');
-        });
-      });
     };
 
     var applyCaretFormat = function (editor, name, vars) {
@@ -354,29 +326,14 @@ define(
       if (keyCode === 37 || keyCode === 39) {
         removeCaretContainer(body, dom, selection, getParentCaretContainer(body, selection.getStart()));
       }
-
-      unmarkBogusCaretParents(body, dom, selection);
     };
 
     var setup = function (editor) {
       var dom = editor.dom, selection = editor.selection;
       var body = editor.getBody();
 
-      editor.on('PreProcess', function (e) {
-        if (e.format !== 'raw') {
-          markCaretContainersBogus(dom, e.node);
-        }
-      });
-
       editor.on('mouseup keydown', function (e) {
         disableCaretContainer(body, dom, selection, e.keyCode);
-      });
-
-      // Remove bogus state if they got filled by contents using editor.selection.setContent
-      editor.on('SetContent', function (e) {
-        if (e.selection) {
-          unmarkBogusCaretParents(body, dom, selection);
-        }
       });
     };
 

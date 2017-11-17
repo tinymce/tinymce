@@ -47,6 +47,7 @@ define(
     'tinymce.core.Shortcuts',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.DomQuery',
+    'tinymce.core.dom.TrimHtml',
     'tinymce.core.focus.EditorFocus',
     'tinymce.core.html.Serializer',
     'tinymce.core.init.Render',
@@ -56,8 +57,8 @@ define(
     'tinymce.core.util.Uuid'
   ],
   function (
-    AddOnManager, EditorCommands, EditorObservable, EditorSettings, Env, Mode, Shortcuts, DOMUtils, DomQuery, EditorFocus, Serializer, Render, Sidebar, Tools,
-    URI, Uuid
+    AddOnManager, EditorCommands, EditorObservable, EditorSettings, Env, Mode, Shortcuts, DOMUtils, DomQuery, TrimHtml, EditorFocus, Serializer, Render, Sidebar,
+    Tools, URI, Uuid
   ) {
     // Shorten these names
     var DOM = DOMUtils.DOM;
@@ -932,16 +933,18 @@ define(
         }
 
         // Get raw contents or by default the cleaned contents
-        if (args.format == 'raw') {
-          content = Tools.trim(self.serializer.getTrimmedContent());
-        } else if (args.format == 'text') {
+        if (args.format === 'raw') {
+          content = Tools.trim(TrimHtml.trim(self.serializer, body.innerHTML));
+        } else if (args.format === 'text') {
           content = body.innerText || body.textContent;
+        } else if (args.format === 'tree') {
+          return self.serializer.serialize(body, args);
         } else {
           content = self.serializer.serialize(body, args);
         }
 
         // Trim whitespace in beginning/end of HTML
-        if (args.format != 'text') {
+        if (args.format !== 'text') {
           args.content = trim(content);
         } else {
           args.content = content;

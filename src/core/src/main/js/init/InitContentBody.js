@@ -16,28 +16,27 @@ define(
     'ephox.sugar.api.properties.Attr',
     'global!document',
     'global!window',
+    'tinymce.core.EditorUpload',
+    'tinymce.core.ForceBlocks',
+    'tinymce.core.NodeChange',
+    'tinymce.core.SelectionOverrides',
+    'tinymce.core.UndoManager',
     'tinymce.core.api.Formatter',
+    'tinymce.core.api.dom.Serializer',
     'tinymce.core.caret.CaretContainerInput',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.Selection',
-    'tinymce.core.dom.Serializer',
-    'tinymce.core.EditorUpload',
-    'tinymce.core.ErrorReporter',
-    'tinymce.core.ForceBlocks',
     'tinymce.core.html.DomParser',
     'tinymce.core.html.Node',
     'tinymce.core.html.Schema',
     'tinymce.core.keyboard.KeyboardOverrides',
-    'tinymce.core.NodeChange',
-    'tinymce.core.SelectionOverrides',
-    'tinymce.core.UndoManager',
     'tinymce.core.util.Delay',
     'tinymce.core.util.Quirks',
     'tinymce.core.util.Tools'
   ],
   function (
-    Insert, Element, Attr, document, window, Formatter, CaretContainerInput, DOMUtils, Selection, Serializer, EditorUpload, ErrorReporter, ForceBlocks, DomParser,
-    Node, Schema, KeyboardOverrides, NodeChange, SelectionOverrides, UndoManager, Delay, Quirks, Tools
+    Insert, Element, Attr, document, window, EditorUpload, ForceBlocks, NodeChange, SelectionOverrides, UndoManager, Formatter, Serializer, CaretContainerInput,
+    DOMUtils, Selection, DomParser, Node, Schema, KeyboardOverrides, Delay, Quirks, Tools
   ) {
     var DOM = DOMUtils.DOM;
 
