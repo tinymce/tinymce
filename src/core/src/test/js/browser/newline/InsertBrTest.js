@@ -1,5 +1,5 @@
 asynctest(
-  'browser.tinymce.core.keyboard.InsertBrTest',
+  'browser.tinymce.core.newline.InsertBrTest',
   [
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
@@ -7,7 +7,7 @@ asynctest(
     'ephox.agar.api.Step',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
-    'tinymce.core.keyboard.InsertBr',
+    'tinymce.core.newline.InsertBr',
     'tinymce.themes.modern.Theme'
   ],
   function (GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, InsertBr, Theme) {

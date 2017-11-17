@@ -21,7 +21,7 @@ define(
     'tinymce.core.InsertContent',
     'tinymce.core.delete.DeleteCommands',
     'tinymce.core.dom.NodeType',
-    'tinymce.core.keyboard.InsertBr',
+    'tinymce.core.newline.InsertBr',
     'tinymce.core.selection.SelectionBookmark',
     'tinymce.core.util.Tools'
   ],

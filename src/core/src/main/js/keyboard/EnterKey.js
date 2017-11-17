@@ -11,7 +11,7 @@
 define(
   'tinymce.core.keyboard.EnterKey',
   [
-    'tinymce.core.keyboard.InsertNewLine',
+    'tinymce.core.newline.InsertNewLine',
     'tinymce.core.util.VK'
   ],
   function (InsertNewLine, VK) {

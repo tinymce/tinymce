@@ -9,7 +9,7 @@
  */
 
 define(
-  'tinymce.core.keyboard.InsertNewLine',
+  'tinymce.core.newline.InsertNewLine',
   [
     'tinymce.core.caret.CaretContainer',
     'tinymce.core.dom.NodeType',

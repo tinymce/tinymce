@@ -9,7 +9,7 @@
  */
 
 define(
-  'tinymce.core.keyboard.InsertBr',
+  'tinymce.core.newline.InsertBr',
   [
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.dom.Insert',
