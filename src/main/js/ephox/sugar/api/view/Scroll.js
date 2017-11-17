@@ -33,7 +33,7 @@ define(
       return Position(x, y);
     };
 
-      // Scroll content to (x,y) relative to document _doc (or global if not supplied)
+    // Scroll content to (x,y) relative to document _doc (or global if not supplied)
     var set = function (x, y, _doc) {
       var doc = _doc !== undefined ? _doc.dom() : document;
       var win = doc.defaultView;
@@ -65,7 +65,6 @@ define(
     };
 
     // call f() preserving the original scroll position relative to document doc
-    // NOTE: Dupe with hare. It's also very similar to Transaction.
     var preserve = function (doc, f) {
       var before = get(doc);
       f();
