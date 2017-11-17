@@ -5,16 +5,19 @@ define(
     'ephox.sand.api.URL',
     'tinymce.core.ui.Factory',
     'tinymce.plugins.image.api.Settings',
+    'tinymce.plugins.image.core.Utils',
     'tinymce.plugins.image.core.Uploader'
   ],
 
-  function (URL, Factory, Settings, Uploader) {
+  function (URL, Factory, Settings, Utils, Uploader) {
     var onFileInput = function (editor) {
       return function (evt) {
         var Throbber = Factory.get('Throbber');
         var rootControl = evt.control.rootControl;
         var throbber = new Throbber(rootControl.getEl());
         var file = evt.control.value();
+        var blobUri = URL.createObjectURL(file);
+
         var uploader = new Uploader({
           url: Settings.getUploadUrl(editor),
           basePath: Settings.getUploadBasePath(editor),
@@ -22,28 +25,29 @@ define(
           handler: Settings.getUploadHandler(editor)
         });
 
-        // we do not need to add this to editors blobCache, so we fake bare minimum
-        var blobInfo = editor.editorUpload.blobCache.create({
-          blob: file,
-          name: file.name ? file.name.replace(/\.[^\.]+$/, '') : null, // strip extension
-          base64: 'data:image/fake;base64,=' // without this create() will throw exception
-        });
-
         var finalize = function () {
           throbber.hide();
-          URL.revokeObjectURL(blobInfo.blobUri()); // in theory we could fake blobUri too, but until it's legitimate, we have too revoke it manually
+          URL.revokeObjectURL(blobUri);
         };
 
         throbber.show();
 
-        return uploader.upload(blobInfo).then(function (url) {
-          var src = rootControl.find('#src');
-          src.value(url);
-          rootControl.find('tabpanel')[0].activateTab(0); // switch to General tab
-          src.fire('change'); // this will invoke onSrcChange (and any other handlers, if any).
-          finalize();
-          return url;
-        }, function (err) {
+        return Utils.blobToDataUri(file).then(function (dataUrl) {
+          var blobInfo = editor.editorUpload.blobCache.create({
+            blob: file,
+            blobUri: blobUri,
+            name: file.name ? file.name.replace(/\.[^\.]+$/, '') : null, // strip extension
+            base64: dataUrl.split(',')[1]
+          });
+          return uploader.upload(blobInfo).then(function (url) {
+            var src = rootControl.find('#src');
+            src.value(url);
+            rootControl.find('tabpanel')[0].activateTab(0); // switch to General tab
+            src.fire('change'); // this will invoke onSrcChange (and any other handlers, if any).
+            finalize();
+            return url;
+          });
+        })['catch'](function (err) {
           editor.windowManager.alert(err);
           finalize();
         });
