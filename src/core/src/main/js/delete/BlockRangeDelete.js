@@ -11,15 +11,18 @@
 define(
   'tinymce.core.delete.BlockRangeDelete',
   [
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Options',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.PredicateFind',
     'tinymce.core.caret.CaretFinder',
     'tinymce.core.caret.CaretPosition',
     'tinymce.core.delete.DeleteUtils',
-    'tinymce.core.delete.MergeBlocks'
+    'tinymce.core.delete.MergeBlocks',
+    'tinymce.core.dom.ElementType'
   ],
-  function (Options, Compare, Element, CaretFinder, CaretPosition, DeleteUtils, MergeBlocks) {
+  function (Fun, Options, Compare, Element, PredicateFind, CaretFinder, CaretPosition, DeleteUtils, MergeBlocks, ElementType) {
     var deleteRangeMergeBlocks = function (rootNode, selection) {
       var rng = selection.getRng();
 
@@ -41,10 +44,20 @@ define(
       }).getOr(false);
     };
 
-    var isEverythingSelected = function (rootNode, rng) {
-      var noPrevious = CaretFinder.prevPosition(rootNode.dom(), CaretPosition.fromRangeStart(rng)).isNone();
-      var noNext = CaretFinder.nextPosition(rootNode.dom(), CaretPosition.fromRangeEnd(rng)).isNone();
-      return noPrevious && noNext;
+    var isRawNodeInTable = function (root, rawNode) {
+      var node = Element.fromDom(rawNode);
+      var isRoot = Fun.curry(Compare.eq, root);
+      return PredicateFind.ancestor(node, ElementType.isTableCell, isRoot).isSome();
+    };
+
+    var isSelectionInTable = function (root, rng) {
+      return isRawNodeInTable(root, rng.startContainer) || isRawNodeInTable(root, rng.endContainer);
+    };
+
+    var isEverythingSelected = function (root, rng) {
+      var noPrevious = CaretFinder.prevPosition(root.dom(), CaretPosition.fromRangeStart(rng)).isNone();
+      var noNext = CaretFinder.nextPosition(root.dom(), CaretPosition.fromRangeEnd(rng)).isNone();
+      return !isSelectionInTable(root, rng) && noPrevious && noNext;
     };
 
     var emptyEditor = function (editor) {
