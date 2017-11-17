@@ -7,12 +7,13 @@ define(
     'ephox.imagetools.util.Promise',
     'ephox.katamari.api.Option',
     'ephox.sand.api.Blob',
+    'ephox.sand.api.FileReader',
     'ephox.sand.api.Uint8Array',
     'ephox.sand.api.Window',
     'global!Array',
     'global!Math'
   ],
-  function (Canvas, ImageSize, Mime, Promise, Option, Blob, Uint8Array, Window, Array, Math) {
+  function (Canvas, ImageSize, Mime, Promise, Option, Blob, FileReader, Uint8Array, Window, Array, Math) {
     function loadImage(image) {
       return new Promise(function (resolve) {
         function loaded() {
@@ -110,16 +111,16 @@ define(
       var byteArrays = new Array(slicesCount);
 
       for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
-          var begin = sliceIndex * sliceSize;
-          var end = Math.min(begin + sliceSize, bytesLength);
+        var begin = sliceIndex * sliceSize;
+        var end = Math.min(begin + sliceSize, bytesLength);
 
-          var bytes = new Array(end - begin);
-          for (var offset = begin, i = 0 ; offset < end; ++i, ++offset) {
-              bytes[i] = byteCharacters[offset].charCodeAt(0);
-          }
-          byteArrays[sliceIndex] = Uint8Array(bytes);
+        var bytes = new Array(end - begin);
+        for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
+          bytes[i] = byteCharacters[offset].charCodeAt(0);
+        }
+        byteArrays[sliceIndex] = Uint8Array(bytes);
       }
-      return Option.some(Blob(byteArrays, {type: mimetype}));
+      return Option.some(Blob(byteArrays, { type: mimetype }));
     }
 
     function dataUriToBlob(uri) {

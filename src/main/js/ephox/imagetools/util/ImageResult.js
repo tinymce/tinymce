@@ -9,7 +9,7 @@ define(
     'ephox.katamari.api.Option'
   ],
   function (Canvas, Conversions, Mime, Promise, Fun, Option) {
-    function create(canvas, blob) {
+    function create(canvas, blob, maybeUri) {
       var initialType = blob.type;
 
       var getType = Fun.constant(initialType);
@@ -24,8 +24,15 @@ define(
         }
       }
 
-      function toDataURL(type, quality) {
-        return canvas.toDataURL(type || initialType, quality);
+      function toDataURL(_type, quality) {
+        var type = _type || initialType;
+        var canvasOutput = function () {
+          return canvas.toDataURL(type, quality);
+        };
+        return maybeUri.fold(canvasOutput, function (uri) {
+          // if we have data and aren't converting, use it - canvas tends to convert even when you tell it not to.
+          return (quality === undefined && type === initialType) ? uri : canvasOutput();
+        });
       }
 
       function toBase64(type, quality) {
@@ -53,20 +60,24 @@ define(
           return result;
         })
         .then(function (canvas) {
-          return create(canvas, blob);
+          return Conversions.blobToDataUri(blob).then(function (uri) {
+            return create(canvas, blob, Option.some(uri));
+          });
         });
     }
 
     function fromCanvas(canvas, type) {
       return Conversions.canvasToBlob(canvas, type).then(function (blob) {
-        return create(canvas, blob);
+        return create(canvas, blob, Option.none());
       });
     }
 
     function fromImage(image) {
       var type = Mime.guessMimeType(image.src);
       return Conversions.imageToCanvas(image).then(function (canvas) {
-        return fromCanvas(canvas, type);
+        return Conversions.canvasToBlob(canvas, type).then(function (blob) {
+          return fromCanvas(canvas, blob, Option.none());
+        });
       });
     }
 
