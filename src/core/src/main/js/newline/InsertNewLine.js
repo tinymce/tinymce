@@ -15,11 +15,13 @@ define(
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.fmt.CaretFormat',
+    'tinymce.core.newline.InsertLi',
+    'tinymce.core.newline.NewLineUtils',
     'tinymce.core.selection.NormalizeRange',
     'tinymce.core.text.Zwsp',
     'tinymce.core.util.Tools'
   ],
-  function (CaretContainer, NodeType, TreeWalker, CaretFormat, NormalizeRange, Zwsp, Tools) {
+  function (CaretContainer, NodeType, TreeWalker, CaretFormat, InsertLi, NewLineUtils, NormalizeRange, Zwsp, Tools) {
     var isEmptyAnchor = function (elm) {
       return elm && elm.nodeName === "A" && Tools.trim(Zwsp.trim(elm.innerText || elm.textContent)).length === 0;
     };
@@ -28,28 +30,12 @@ define(
       return node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
     };
 
-    var hasFirstChild = function (elm, name) {
-      return elm.firstChild && elm.firstChild.nodeName == name;
-    };
-
-    var hasParent = function (elm, parentName) {
-      return elm && elm.parentNode && elm.parentNode.nodeName === parentName;
-    };
-
     var emptyBlock = function (elm) {
       elm.innerHTML = '<br data-mce-bogus="1">';
     };
 
     var containerAndSiblingName = function (container, nodeName) {
       return container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
-    };
-
-    var isListBlock = function (elm) {
-      return elm && /^(OL|UL|LI)$/.test(elm.nodeName);
-    };
-
-    var isNestedList = function (elm) {
-      return isListBlock(elm) && isListBlock(elm.parentNode);
     };
 
     // Returns true if the block can be split into two blocks or not
@@ -108,16 +94,6 @@ define(
       newRng.setStart(rng.startContainer, normalizeZwspOffset(true, rng.startContainer, rng.startOffset));
       newRng.setEnd(rng.endContainer, normalizeZwspOffset(false, rng.endContainer, rng.endOffset));
       return newRng;
-    };
-
-    var firstNonWhiteSpaceNodeSibling = function (node) {
-      while (node) {
-        if (node.nodeType === 1 || (node.nodeType === 3 && node.data && /[\r\n\s]/.test(node.data))) {
-          return node;
-        }
-
-        node = node.nextSibling;
-      }
     };
 
     // Inserts a BR element if the forced_root_block option is set to false or empty string
@@ -234,104 +210,12 @@ define(
       }
     };
 
-    var getContainerBlock = function (containerBlock) {
-      var containerBlockParent = containerBlock.parentNode;
-
-      if (/^(LI|DT|DD)$/.test(containerBlockParent.nodeName)) {
-        return containerBlockParent;
-      }
-
-      return containerBlock;
-    };
-
-    var isFirstOrLastLi = function (containerBlock, parentBlock, first) {
-      var node = containerBlock[first ? 'firstChild' : 'lastChild'];
-
-      // Find first/last element since there might be whitespace there
-      while (node) {
-        if (node.nodeType == 1) {
-          break;
-        }
-
-        node = node[first ? 'nextSibling' : 'previousSibling'];
-      }
-
-      return node === parentBlock;
-    };
-
     var insert = function (editor, evt) {
       var tmpRng, editableRoot, container, offset, parentBlock, shiftKey;
       var newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
-      var dom = editor.dom, selection = editor.selection, settings = editor.settings;
+      var dom = editor.dom, settings = editor.settings;
       var schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements();
       var rng = editor.selection.getRng();
-
-      // Moves the caret to a suitable position within the root for example in the first non
-      // pure whitespace text node or before an image
-      var moveToCaretPosition = function (root) {
-        var walker, node, rng, lastNode = root, tempElm;
-        var moveCaretBeforeOnEnterElementsMap = schema.getMoveCaretBeforeOnEnterElements();
-
-        if (!root) {
-          return;
-        }
-
-        if (/^(LI|DT|DD)$/.test(root.nodeName)) {
-          var firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);
-
-          if (firstChild && /^(UL|OL|DL)$/.test(firstChild.nodeName)) {
-            root.insertBefore(dom.doc.createTextNode('\u00a0'), root.firstChild);
-          }
-        }
-
-        rng = dom.createRng();
-        root.normalize();
-
-        if (root.hasChildNodes()) {
-          walker = new TreeWalker(root, root);
-
-          while ((node = walker.current())) {
-            if (node.nodeType == 3) {
-              rng.setStart(node, 0);
-              rng.setEnd(node, 0);
-              break;
-            }
-
-            if (moveCaretBeforeOnEnterElementsMap[node.nodeName.toLowerCase()]) {
-              rng.setStartBefore(node);
-              rng.setEndBefore(node);
-              break;
-            }
-
-            lastNode = node;
-            node = walker.next();
-          }
-
-          if (!node) {
-            rng.setStart(lastNode, 0);
-            rng.setEnd(lastNode, 0);
-          }
-        } else {
-          if (root.nodeName == 'BR') {
-            if (root.nextSibling && dom.isBlock(root.nextSibling)) {
-              rng.setStartBefore(root);
-              rng.setEndBefore(root);
-            } else {
-              rng.setStartAfter(root);
-              rng.setEndAfter(root);
-            }
-          } else {
-            rng.setStart(root, 0);
-            rng.setEnd(root, 0);
-          }
-        }
-
-        selection.setRng(rng);
-
-        // Remove tempElm created for old IE:s
-        dom.remove(tempElm);
-        selection.scrollIntoView(root);
-      };
 
       // Creates a new block element by cloning the current one or creating a new one if the name is specified
       // This function will also copy any text formatting from the parent block and add it to the new one
@@ -439,61 +323,6 @@ define(
         return true;
       };
 
-      // Inserts a block or br before/after or in the middle of a split list of the LI is empty
-      var handleEmptyListItem = function () {
-        if (containerBlock == editor.getBody()) {
-          return;
-        }
-
-        if (isNestedList(containerBlock)) {
-          newBlockName = 'LI';
-        }
-
-        newBlock = newBlockName ? createNewBlock(newBlockName) : dom.create('BR');
-
-        if (isFirstOrLastLi(containerBlock, parentBlock, true) && isFirstOrLastLi(containerBlock, parentBlock, false)) {
-          if (hasParent(containerBlock, 'LI')) {
-            // Nested list is inside a LI
-            dom.insertAfter(newBlock, getContainerBlock(containerBlock));
-          } else {
-            // Is first and last list item then replace the OL/UL with a text block
-            dom.replace(newBlock, containerBlock);
-          }
-        } else if (isFirstOrLastLi(containerBlock, parentBlock, true)) {
-          if (hasParent(containerBlock, 'LI')) {
-            // List nested in an LI then move the list to a new sibling LI
-            dom.insertAfter(newBlock, getContainerBlock(containerBlock));
-            newBlock.appendChild(dom.doc.createTextNode(' ')); // Needed for IE so the caret can be placed
-            newBlock.appendChild(containerBlock);
-          } else {
-            // First LI in list then remove LI and add text block before list
-            containerBlock.parentNode.insertBefore(newBlock, containerBlock);
-          }
-        } else if (isFirstOrLastLi(containerBlock, parentBlock, false)) {
-          // Last LI in list then remove LI and add text block after list
-          dom.insertAfter(newBlock, getContainerBlock(containerBlock));
-        } else {
-          // Middle LI in list the split the list and insert a text block in the middle
-          // Extract after fragment and insert it after the current block
-          containerBlock = getContainerBlock(containerBlock);
-          tmpRng = rng.cloneRange();
-          tmpRng.setStartAfter(parentBlock);
-          tmpRng.setEndAfter(containerBlock);
-          fragment = tmpRng.extractContents();
-
-          if (newBlockName === 'LI' && hasFirstChild(fragment, 'LI')) {
-            newBlock = fragment.firstChild;
-            dom.insertAfter(fragment, containerBlock);
-          } else {
-            dom.insertAfter(fragment, containerBlock);
-            dom.insertAfter(newBlock, containerBlock);
-          }
-        }
-
-        dom.remove(parentBlock);
-        moveToCaretPosition(newBlock);
-      };
-
       var insertNewBlockAfter = function () {
         // If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
         if (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName != 'HGROUP') {
@@ -510,7 +339,7 @@ define(
           dom.insertAfter(newBlock, parentBlock);
         }
 
-        moveToCaretPosition(newBlock);
+        NewLineUtils.moveToCaretPosition(editor, newBlock);
       };
 
       // Setup range items and newBlockName
@@ -585,7 +414,7 @@ define(
 
         // Handle enter inside an empty list item
         if (dom.isEmpty(parentBlock)) {
-          handleEmptyListItem();
+          InsertLi.insert(editor, createNewBlock, containerBlock, parentBlock, newBlockName);
           return;
         }
       }
@@ -618,15 +447,13 @@ define(
         if (dom.isEmpty(parentBlock)) {
           emptyBlock(parentBlock);
         }
-        moveToCaretPosition(newBlock);
+        NewLineUtils.moveToCaretPosition(editor, newBlock);
       } else if (isCaretAtStartOrEndOfBlock()) {
         insertNewBlockAfter();
       } else if (isCaretAtStartOrEndOfBlock(true)) {
         // Insert new block before
         newBlock = parentBlock.parentNode.insertBefore(createNewBlock(), parentBlock);
-
-        // Adjust caret position if HR
-        containerAndSiblingName(parentBlock, 'HR') ? moveToCaretPosition(newBlock) : moveToCaretPosition(parentBlock);
+        NewLineUtils.moveToCaretPosition(editor, containerAndSiblingName(parentBlock, 'HR') ? newBlock : parentBlock);
       } else {
         // Extract after fragment and insert it after the current block
         tmpRng = includeZwspInRange(rng).cloneRange();
@@ -649,7 +476,7 @@ define(
           dom.remove(newBlock);
           insertNewBlockAfter();
         } else {
-          moveToCaretPosition(newBlock);
+          NewLineUtils.moveToCaretPosition(editor, newBlock);
         }
       }
 
