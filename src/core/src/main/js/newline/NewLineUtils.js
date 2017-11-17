@@ -11,9 +11,14 @@
 define(
   'tinymce.core.newline.NewLineUtils',
   [
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option',
+    'ephox.sugar.api.node.Element',
+    'tinymce.core.dom.ElementType',
+    'tinymce.core.dom.NodeType',
     'tinymce.core.dom.TreeWalker'
   ],
-  function (TreeWalker) {
+  function (Fun, Option, Element, ElementType, NodeType, TreeWalker) {
     var firstNonWhiteSpaceNodeSibling = function (node) {
       while (node) {
         if (node.nodeType === 1 || (node.nodeType === 3 && node.data && /[\r\n\s]/.test(node.data))) {
@@ -47,7 +52,7 @@ define(
         walker = new TreeWalker(root, root);
 
         while ((node = walker.current())) {
-          if (node.nodeType == 3) {
+          if (NodeType.isText(node)) {
             rng.setStart(node, 0);
             rng.setEnd(node, 0);
             break;
@@ -68,7 +73,7 @@ define(
           rng.setEnd(lastNode, 0);
         }
       } else {
-        if (root.nodeName == 'BR') {
+        if (NodeType.isBr(root)) {
           if (root.nextSibling && dom.isBlock(root.nextSibling)) {
             rng.setStartBefore(root);
             rng.setEndBefore(root);
@@ -89,8 +94,47 @@ define(
       editor.selection.scrollIntoView(root);
     };
 
+    var getEditableRoot = function (dom, node) {
+      var root = dom.getRoot(), parent, editableRoot;
+
+      // Get all parents until we hit a non editable parent or the root
+      parent = node;
+      while (parent !== root && dom.getContentEditable(parent) !== "false") {
+        if (dom.getContentEditable(parent) === "true") {
+          editableRoot = parent;
+        }
+
+        parent = parent.parentNode;
+      }
+
+      return parent !== root ? editableRoot : root;
+    };
+
+    var getParentBlock = function (editor) {
+      return Option.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
+    };
+
+    var getParentBlockName = function (editor) {
+      return getParentBlock(editor).fold(
+        Fun.constant(''),
+        function (parentBlock) {
+          return parentBlock.nodeName.toUpperCase();
+        }
+      );
+    };
+
+    var isListItemParentBlock = function (editor) {
+      return getParentBlock(editor).filter(function (elm) {
+        return ElementType.isListItem(Element.fromDom(elm));
+      }).isSome();
+    };
+
     return {
-      moveToCaretPosition: moveToCaretPosition
+      moveToCaretPosition: moveToCaretPosition,
+      getEditableRoot: getEditableRoot,
+      getParentBlock: getParentBlock,
+      getParentBlockName: getParentBlockName,
+      isListItemParentBlock: isListItemParentBlock
     };
   }
 );

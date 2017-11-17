@@ -571,7 +571,7 @@ define(
         },
 
         InsertLineBreak: function (command, ui, value) {
-          InsertBr.insertBr(editor, value);
+          InsertBr.insert(editor, value);
           return true;
         }
       });

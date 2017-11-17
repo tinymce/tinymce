@@ -26,90 +26,39 @@ asynctest(
       dom.fire(target, 'keyup', evt);
     };
 
-    suite.test('Enter in div inside contentEditable:false div', function (editor) {
-      editor.getBody().innerHTML = '<div data-mce-contenteditable="false"><div>abcd</div></div>';
-      LegacyUnit.setSelection(editor, 'div div', 2);
-      pressEnter(editor);
-      LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<div data-mce-contenteditable="false"><div>abcd</div></div>');
-    });
-
-    suite.test('Enter in div with contentEditable:true inside contentEditable:false div', function (editor) {
-      editor.getBody().innerHTML = '<div data-mce-contenteditable="false"><div data-mce-contenteditable="true">abcd</div></div>';
-      LegacyUnit.setSelection(editor, 'div div', 2);
+    suite.test('Enter in text within contentEditable:true h1 inside contentEditable:false div', function (editor) {
+      editor.getBody().innerHTML = '<div contenteditable="false"><h1 contenteditable="true">ab</h1></div>';
+      LegacyUnit.setSelection(editor, 'div h1', 1);
       pressEnter(editor);
       LegacyUnit.equal(
         HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-        '<div data-mce-contenteditable="false"><div data-mce-contenteditable="true"><p>ab</p><p>cd</p></div></div>'
+        '<div contenteditable="false"><h1 contenteditable="true">ab</h1></div>'
       );
     });
 
-    suite.test('Enter in span with contentEditable:true inside contentEditable:false div', function (editor) {
-      editor.getBody().innerHTML = '<div data-mce-contenteditable="false"><span data-mce-contenteditable="true">abcd</span></div>';
-      LegacyUnit.setSelection(editor, 'span', 2);
+    suite.test('Enter before cE=false div', function (editor) {
+      editor.getBody().innerHTML = '<div contenteditable="false">x</div>';
+      editor.selection.select(editor.dom.select('div')[0]);
+      editor.selection.collapse(true);
       pressEnter(editor);
       LegacyUnit.equal(
         HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-        '<div data-mce-contenteditable="false"><span data-mce-contenteditable="true">abcd</span></div>'
+        '<p><br data-mce-bogus="1"></p><div contenteditable="false">x</div>'
       );
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
     });
 
-    suite.test('Shift+Enter in span with contentEditable:true inside contentEditable:false div', function (editor) {
-      editor.getBody().innerHTML = '<div data-mce-contenteditable="false"><span data-mce-contenteditable="true">abcd</span></div>';
-      LegacyUnit.setSelection(editor, 'span', 2);
-      pressEnter(editor, { shiftKey: true });
-      LegacyUnit.equal(
-        HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-        '<div data-mce-contenteditable="false"><span data-mce-contenteditable="true">ab<br>cd</span></div>'
-      );
-    });
-
-    suite.test('Enter in span with contentEditable:true inside contentEditable:false div and forced_root_block: false', function (editor) {
-      editor.settings.forced_root_block = false;
-      editor.getBody().innerHTML = '<div data-mce-contenteditable="false"><span data-mce-contenteditable="true">abcd</span></div>';
-      LegacyUnit.setSelection(editor, 'span', 2);
+    suite.test('Enter after cE=false div', function (editor) {
+      editor.getBody().innerHTML = '<div contenteditable="false">x</div>';
+      editor.selection.select(editor.dom.select('div')[0]);
+      editor.selection.collapse(false);
       pressEnter(editor);
       LegacyUnit.equal(
         HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-        '<div data-mce-contenteditable="false"><span data-mce-contenteditable="true">ab<br>cd</span></div>'
+        '<div contenteditable="false">x</div><p><br data-mce-bogus="1"></p>'
       );
-      editor.settings.forced_root_block = 'p';
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
     });
-
-    suite.test('Enter in em within contentEditable:true div inside contentEditable:false div', function (editor) {
-      editor.getBody().innerHTML = '<div data-mce-contenteditable="false"><div data-mce-contenteditable="true"><em>abcd</em></div></div>';
-      LegacyUnit.setSelection(editor, 'em', 2);
-      pressEnter(editor);
-      LegacyUnit.equal(
-        HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-        '<div data-mce-contenteditable="false"><div data-mce-contenteditable="true"><p><em>ab</em></p><p><em>cd</em></p></div></div>'
-      );
-    });
-
-    if (Env.ceFalse) {
-      suite.test('Enter before cE=false div', function (editor) {
-        editor.getBody().innerHTML = '<div contenteditable="false">x</div>';
-        editor.selection.select(editor.dom.select('div')[0]);
-        editor.selection.collapse(true);
-        pressEnter(editor);
-        LegacyUnit.equal(
-          HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-          '<p><br data-mce-bogus="1"></p><div contenteditable="false">x</div>'
-        );
-        LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
-      });
-
-      suite.test('Enter after cE=false div', function (editor) {
-        editor.getBody().innerHTML = '<div contenteditable="false">x</div>';
-        editor.selection.select(editor.dom.select('div')[0]);
-        editor.selection.collapse(false);
-        pressEnter(editor);
-        LegacyUnit.equal(
-          HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-          '<div contenteditable="false">x</div><p><br data-mce-bogus="1"></p>'
-        );
-        LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
-      });
-    }
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);

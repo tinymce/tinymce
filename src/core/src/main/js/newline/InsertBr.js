@@ -173,7 +173,7 @@ define(
       );
     };
 
-    var insertBr = function (editor, evt) {
+    var insert = function (editor, evt) {
       var anchorLocation = readInlineAnchorLocation(editor);
 
       if (anchorLocation.isSome()) {
@@ -184,7 +184,7 @@ define(
     };
 
     return {
-      insertBr: insertBr
+      insert: insert
     };
   }
 );

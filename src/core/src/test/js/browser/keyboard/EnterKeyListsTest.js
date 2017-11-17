@@ -18,7 +18,7 @@ asynctest(
     var pressEnter = function (editor, evt) {
       var dom = editor.dom, target = editor.selection.getNode();
 
-      evt = Tools.extend({ keyCode: 13 }, evt);
+      evt = Tools.extend({ keyCode: 13, shiftKey: false }, evt);
 
       dom.fire(target, 'keydown', evt);
       dom.fire(target, 'keypress', evt);
@@ -47,34 +47,34 @@ asynctest(
 
     suite.test('Shift+Enter inside empty li in the middle of ol', function (editor) {
       editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
-      LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
+      editor.selection.setCursorLocation(editor.dom.select('li:nth-child(2)')[0], 0);
       pressEnter(editor, { shiftKey: true });
-      LegacyUnit.equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p><ol><li>b</li></ol>');
-      LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+      LegacyUnit.equal(editor.getBody().innerHTML, '<ol><li>a</li><li><br><br></li><li>b</li></ol>');
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
     });
 
     suite.test('Shift+Enter inside empty li in beginning of ol', function (editor) {
       editor.getBody().innerHTML = '<ol><li><br></li><li>a</li></ol>';
-      LegacyUnit.setSelection(editor, 'li', 0);
+      editor.selection.setCursorLocation(editor.dom.select('li')[0], 0);
       pressEnter(editor, { shiftKey: true });
-      LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p><ol><li>a</li></ol>');
-      LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+      LegacyUnit.equal(editor.getBody().innerHTML, '<ol><li><br><br></li><li>a</li></ol>');
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
     });
 
     suite.test('Shift+Enter inside empty li at the end of ol', function (editor) {
       editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
-      LegacyUnit.setSelection(editor, 'li:last', 0);
+      editor.selection.setCursorLocation(editor.dom.select('li')[1], 0);
       pressEnter(editor, { shiftKey: true });
-      LegacyUnit.equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p>');
-      LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+      LegacyUnit.equal(editor.getBody().innerHTML, '<ol><li>a</li><li><br><br></li></ol>');
+      LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
     });
 
     suite.test('Enter inside empty li in the middle of ol with forced_root_block: false', function (editor) {
       editor.settings.forced_root_block = false;
       editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
-      LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
+      editor.selection.setCursorLocation(editor.dom.select('li:nth-child(2)')[0], 0);
       pressEnter(editor);
-      LegacyUnit.equal(editor.getContent(), '<ol><li>a</li></ol><br /><ol><li>b</li></ol>');
+      LegacyUnit.equal(editor.getBody().innerHTML, '<ol><li>a</li></ol><br><ol><li>b</li></ol>');
       LegacyUnit.equal(editor.selection.getNode().nodeName, 'BODY');
       editor.settings.forced_root_block = 'p';
     });
@@ -82,9 +82,9 @@ asynctest(
     suite.test('Enter inside empty li in beginning of ol with forced_root_block: false', function (editor) {
       editor.settings.forced_root_block = false;
       editor.getBody().innerHTML = '<ol><li><br></li><li>a</li></ol>';
-      LegacyUnit.setSelection(editor, 'li', 0);
+      editor.selection.setCursorLocation(editor.dom.select('li')[0], 0);
       pressEnter(editor);
-      LegacyUnit.equal(editor.getContent(), '<br /><ol><li>a</li></ol>');
+      LegacyUnit.equal(editor.getBody().innerHTML, '<br><ol><li>a</li></ol>');
       LegacyUnit.equal(editor.selection.getNode().nodeName, 'BODY');
       editor.settings.forced_root_block = 'p';
     });
@@ -92,9 +92,9 @@ asynctest(
     suite.test('Enter inside empty li at the end of ol with forced_root_block: false', function (editor) {
       editor.settings.forced_root_block = false;
       editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
-      LegacyUnit.setSelection(editor, 'li:last', 0);
+      editor.selection.setCursorLocation(editor.dom.select('li')[1], 0);
       pressEnter(editor);
-      LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<ol><li>a</li></ol><br>');
+      LegacyUnit.equal(editor.getBody().innerHTML, '<ol><li>a</li></ol><br>');
       LegacyUnit.equal(editor.selection.getNode().nodeName, 'BODY');
       editor.settings.forced_root_block = 'p';
     });

@@ -18,7 +18,7 @@ asynctest(
 
     var sInsertBr = function (editor) {
       return Step.sync(function () {
-        InsertBr.insertBr(editor);
+        InsertBr.insert(editor);
       });
     };
 
