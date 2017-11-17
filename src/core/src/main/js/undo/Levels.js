@@ -18,9 +18,10 @@ define(
   'tinymce.core.undo.Levels',
   [
     'ephox.katamari.api.Arr',
+    'tinymce.core.dom.TrimHtml',
     'tinymce.core.undo.Fragments'
   ],
-  function (Arr, Fragments) {
+  function (Arr, TrimHtml, Fragments) {
     var hasIframes = function (html) {
       return html.indexOf('</iframe>') !== -1;
     };
@@ -50,7 +51,7 @@ define(
 
       fragments = Fragments.read(editor.getBody());
       trimmedFragments = Arr.bind(fragments, function (html) {
-        var trimmed = editor.serializer.trimContent(html);
+        var trimmed = TrimHtml.trim(editor.serializer, html);
         return trimmed.length > 0 ? [trimmed] : [];
       });
       content = trimmedFragments.join('');

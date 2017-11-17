@@ -23,12 +23,13 @@
 define(
   'tinymce.core.html.DomParser',
   [
-    "tinymce.core.html.Node",
-    "tinymce.core.html.Schema",
-    "tinymce.core.html.SaxParser",
-    "tinymce.core.util.Tools"
+    'tinymce.core.html.LegacyFilter',
+    'tinymce.core.html.Node',
+    'tinymce.core.html.SaxParser',
+    'tinymce.core.html.Schema',
+    'tinymce.core.util.Tools'
   ],
-  function (Node, Schema, SaxParser, Tools) {
+  function (LegacyFilter, Node, SaxParser, Schema, Tools) {
     var makeMap = Tools.makeMap, each = Tools.each, explode = Tools.explode, extend = Tools.extend;
 
     var paddEmptyNode = function (settings, args, blockElements, node) {
@@ -900,6 +901,8 @@ define(
           }
         });
       }
+
+      LegacyFilter.register(this, settings);
     };
   }
 );

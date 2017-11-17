@@ -259,7 +259,7 @@ define(
               type: 'form',
               items: generalTableForm
             },
-            Helpers.createStyleForm(dom)
+            Helpers.createStyleForm(editor)
           ],
           onsubmit: function () {
             onSubmitTableForm(editor, this, tableElm);

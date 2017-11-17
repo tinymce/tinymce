@@ -6,12 +6,13 @@ asynctest(
     'ephox.katamari.api.Arr',
     'ephox.mcagar.api.LegacyUnit',
     'global!document',
+    'tinymce.core.api.dom.Serializer',
     'tinymce.core.dom.DOMUtils',
-    'tinymce.core.dom.Serializer',
+    'tinymce.core.dom.TrimHtml',
     'tinymce.core.test.ViewBlock',
     'tinymce.core.text.Zwsp'
   ],
-  function (Pipeline, Step, Arr, LegacyUnit, document, DOMUtils, Serializer, ViewBlock, Zwsp) {
+  function (Pipeline, Step, Arr, LegacyUnit, document, Serializer, DOMUtils, TrimHtml, ViewBlock, Zwsp) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -124,6 +125,16 @@ asynctest(
       LegacyUnit.equal(
         ser.serialize(DOM.get('test'), { getInner: true }),
         '<a href="a" target="_blank">a</a><a href="b" target="_blank">b</a>'
+      );
+    });
+
+    suite.test('format tree', function () {
+      var ser = new Serializer({ });
+
+      DOM.setHTML('test', 'a');
+      LegacyUnit.equal(
+        ser.serialize(DOM.get('test'), { format: 'tree' }).name,
+        'body'
       );
     });
 
@@ -327,28 +338,6 @@ asynctest(
 
       DOM.setHTML('test', '<p>test</p><p></p>');
       LegacyUnit.equal(ser.serialize(DOM.get('test')), '<p>test</p>');
-    });
-
-    suite.test('Pre/post process events', function () {
-      var ser = new Serializer({ fix_list_elements : true });
-
-      ser.setRules('div[id],span[id|class],a[href],b[class]');
-
-      ser.onPreProcess = function (o) {
-        LegacyUnit.equal(o.test, 'abc');
-        DOM.setAttrib(o.node.getElementsByTagName('span')[0], 'class', 'abc');
-      };
-
-      ser.onPostProcess = function (o) {
-        LegacyUnit.equal(o.test, 'abc');
-        o.content = o.content.replace(/<b>/g, '<b class="123">');
-      };
-
-      DOM.setHTML('test', '<span id="test2"><b>abc</b></span>123<a href="file.html" data-mce-href="file.html">link</a>');
-      LegacyUnit.equal(
-        ser.serialize(DOM.get('test'), { test : 'abc' }),
-        '<div id="test"><span id="test2" class="abc"><b class="123">abc</b></span>123<a href="file.html">link</a></div>'
-      );
     });
 
     suite.test('Script with non JS type attribute', function () {
@@ -757,7 +746,7 @@ asynctest(
 
       DOM.setHTML('test', '<p data-x="1" data-y="2" data-z="3">a</p>');
       LegacyUnit.equal(ser.serialize(DOM.get('test'), { getInner: 1 }), '<p data-z="3">a</p>');
-      LegacyUnit.equal(ser.trimHtml('<p data-x="1" data-y="2" data-z="3">a</p>'), '<p data-z="3">a</p>');
+      LegacyUnit.equal(TrimHtml.trim(ser, '<p data-x="1" data-y="2" data-z="3">a</p>'), '<p data-z="3">a</p>');
     });
 
     suite.test('addTempAttr same attr twice', function () {
@@ -769,9 +758,17 @@ asynctest(
 
       DOM.setHTML('test', '<p data-x="1" data-z="3">a</p>');
       LegacyUnit.equal(ser1.serialize(DOM.get('test'), { getInner: 1 }), '<p data-z="3">a</p>');
-      LegacyUnit.equal(ser1.trimHtml('<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
+      LegacyUnit.equal(TrimHtml.trim(ser1, '<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
       LegacyUnit.equal(ser2.serialize(DOM.get('test'), { getInner: 1 }), '<p data-z="3">a</p>');
-      LegacyUnit.equal(ser2.trimHtml('<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
+      LegacyUnit.equal(TrimHtml.trim(ser2, '<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
+    });
+
+    suite.test('trim data-mce-bougs="all"', function () {
+      var ser = new Serializer({});
+
+      DOM.setHTML('test', 'a<p data-mce-bogus="all">b</p>c');
+      LegacyUnit.equal(ser.serialize(DOM.get('test'), { getInner: 1 }), 'ac');
+      LegacyUnit.equal(TrimHtml.trim(ser, 'a<p data-mce-bogus="all">b</p>c'), 'ac');
     });
 
     suite.test('zwsp should not be treated as contents', function () {

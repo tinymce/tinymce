@@ -29,7 +29,6 @@ define(
     'tinymce.core.Editor',
     'tinymce.core.Env',
     'tinymce.core.ErrorReporter',
-    'tinymce.core.LegacyInput',
     'tinymce.core.dom.DOMUtils',
     'tinymce.core.dom.DomQuery',
     'tinymce.core.focus.FocusController',
@@ -39,10 +38,7 @@ define(
     'tinymce.core.util.Tools',
     'tinymce.core.util.URI'
   ],
-  function (
-    Arr, Type, document, window, AddOnManager, Editor, Env, ErrorReporter, LegacyInput, DOMUtils, DomQuery, FocusController, I18n, Observable, Promise, Tools,
-    URI
-  ) {
+  function (Arr, Type, document, window, AddOnManager, Editor, Env, ErrorReporter, DOMUtils, DomQuery, FocusController, I18n, Observable, Promise, Tools, URI) {
     var DOM = DOMUtils.DOM;
     var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
     var instanceCounter = 0, beforeUnloadDelegate, EditorManager, boundGlobalEvents = false;
@@ -786,7 +782,6 @@ define(
     extend(EditorManager, Observable);
 
     EditorManager.setup();
-    LegacyInput.register(EditorManager);
 
     return EditorManager;
   }
