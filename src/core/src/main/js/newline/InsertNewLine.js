@@ -61,7 +61,7 @@ define(
           return;
         }
 
-        if (node.nodeType == 1 && !nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
+        if (NodeType.isElement(node) && !nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
           firstChilds.push(node);
         }
       }
@@ -104,7 +104,7 @@ define(
     // Trims any linebreaks at the beginning of node user for example when pressing enter in a PRE element
     var trimLeadingLineBreaks = function (node) {
       do {
-        if (node.nodeType === 3) {
+        if (NodeType.isText(node)) {
           node.nodeValue = node.nodeValue.replace(/^[\r\n]+/, '');
         }
 
@@ -268,7 +268,7 @@ define(
         normalizedOffset = normalizeZwspOffset(start, container, offset);
 
         // Caret is in the middle of a text node like "a|b"
-        if (container.nodeType == 3 && (start ? normalizedOffset > 0 : normalizedOffset < container.nodeValue.length)) {
+        if (NodeType.isText(container) && (start ? normalizedOffset > 0 : normalizedOffset < container.nodeValue.length)) {
           return false;
         }
 
@@ -278,7 +278,7 @@ define(
         }
 
         // If the caret if before the first element in parentBlock
-        if (start && container.nodeType == 1 && container == parentBlock.firstChild) {
+        if (start && NodeType.isElement(container) && container == parentBlock.firstChild) {
           return true;
         }
 
@@ -291,7 +291,7 @@ define(
         walker = new TreeWalker(container, parentBlock);
 
         // If caret is in beginning or end of a text block then jump to the next/previous node
-        if (container.nodeType == 3) {
+        if (NodeType.isText(container)) {
           if (start && normalizedOffset === 0) {
             walker.prev();
           } else if (!start && normalizedOffset == container.nodeValue.length) {
@@ -300,7 +300,7 @@ define(
         }
 
         while ((node = walker.current())) {
-          if (node.nodeType === 1) {
+          if (NodeType.isElement(node)) {
             // Ignore bogus elements
             if (!node.getAttribute('data-mce-bogus')) {
               // Keep empty elements like <img /> <input /> but not trailing br:s like <p>text|<br></p>
@@ -309,7 +309,7 @@ define(
                 return false;
               }
             }
-          } else if (node.nodeType === 3 && !/^[ \t\r\n]*$/.test(node.nodeValue)) {
+          } else if (NodeType.isText(node) && !/^[ \t\r\n]*$/.test(node.nodeValue)) {
             return false;
           }
 
@@ -355,11 +355,11 @@ define(
       shiftKey = evt.shiftKey;
 
       // Resolve node index
-      if (container.nodeType == 1 && container.hasChildNodes()) {
+      if (NodeType.isElement(container) && container.hasChildNodes()) {
         isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
 
         container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
-        if (isAfterLastNodeInContainer && container.nodeType == 3) {
+        if (isAfterLastNodeInContainer && NodeType.isText(container)) {
           offset = container.nodeValue.length;
         } else {
           offset = 0;

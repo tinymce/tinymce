@@ -11,11 +11,12 @@
 define(
   'tinymce.core.newline.InsertLi',
   [
+    'tinymce.core.dom.NodeType',
     'tinymce.core.newline.NewLineUtils'
   ],
-  function (NewLineUtils) {
+  function (NodeType, NewLineUtils) {
     var hasFirstChild = function (elm, name) {
-      return elm.firstChild && elm.firstChild.nodeName == name;
+      return elm.firstChild && elm.firstChild.nodeName === name;
     };
 
     var hasParent = function (elm, parentName) {
@@ -45,7 +46,7 @@ define(
 
       // Find first/last element since there might be whitespace there
       while (node) {
-        if (node.nodeType == 1) {
+        if (NodeType.isElement(node)) {
           break;
         }
 
