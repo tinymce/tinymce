@@ -1,7 +1,7 @@
 {
   "name": "@ephox/polaris",
   "description": "This project does data manipulation on arrays and strings.",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/polaris"
@@ -10,10 +10,10 @@
     "@ephox/katamari": "*"
   },
   "devDependencies": {
-    "@ephox/bolt": "*"
+    "@ephox/bedrock": "^1.4.0"
   },
   "scripts": {
-    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)"
+    "test": "bedrock-auto -b phantomjs --testdir src/test/js/atomic"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0"
