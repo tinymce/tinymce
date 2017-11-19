@@ -104,6 +104,10 @@ define(
 
     var outputInput = output(inputName);
 
+    var pipeline = function (namedChains, onSuccess, onFailure, delay, dontWrapSuccess) {
+      Chain.pipeline([asChain(namedChains)], onSuccess, onFailure, delay, dontWrapSuccess);
+    };
+
     return {
       inputName: Fun.constant(inputName),
       asChain: asChain,
@@ -114,7 +118,9 @@ define(
       merge: merge,
       bundle: bundle,
       output: output,
-      outputInput: outputInput
+      outputInput: outputInput,
+
+      pipeline: pipeline
     };
   }
 );

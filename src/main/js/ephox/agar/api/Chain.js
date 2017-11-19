@@ -151,6 +151,12 @@ define(
       return v.chain !== undefined;
     };
 
+    var pipeline = function (chains, onSuccess, onFailure, delay, dontWrapSuccess) {
+      Pipeline.async(wrap({}), Arr.map(chains, extract), function (input) {
+        dontWrapSuccess ? onSuccess(unwrap(input)) : onSuccess();
+      }, onFailure, delay);
+    };
+
     return {
       on: on,
       op: op,
@@ -168,7 +174,9 @@ define(
       unwrap: unwrap,
       wait: wait,
       debugging: debugging,
-      log: log
+      log: log,
+
+      pipeline: pipeline
     };
   }
 );
