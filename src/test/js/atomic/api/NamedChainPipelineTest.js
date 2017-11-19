@@ -30,6 +30,6 @@ asynctest(
           } catch (err) {
               failure(err);
           }
-      }, failure, null, true);
+      }, failure, 0, true);
     }
   );
