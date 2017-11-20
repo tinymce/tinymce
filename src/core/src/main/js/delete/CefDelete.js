@@ -24,6 +24,7 @@ define(
   function (Arr, Remove, Element, SelectorFilter, CaretPosition, CefDeleteAction, DeleteElement, DeleteUtils, NodeType) {
     var deleteElement = function (editor, forward) {
       return function (element) {
+        editor._selectionOverrides.hideFakeCaret();
         DeleteElement.deleteElement(editor, forward, Element.fromDom(element));
         return true;
       };

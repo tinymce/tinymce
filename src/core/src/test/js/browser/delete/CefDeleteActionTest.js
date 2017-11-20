@@ -126,12 +126,12 @@ asynctest(
           cReadAction(false, [1, 0], 1),
           cAssertActionNone
         ])),
-        Logger.t('Should be moveToElement action since it next to a ce=false', Chain.asStep(viewBlock, [
+        Logger.t('Should be no action since it is after the last ce=false', Chain.asStep(viewBlock, [
           cSetHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>'),
           cReadAction(true, [], 2),
           cAssertActionNone
         ])),
-        Logger.t('Should be moveToElement action since it next to a ce=false', Chain.asStep(viewBlock, [
+        Logger.t('Should be no action since it is before the first ce=false', Chain.asStep(viewBlock, [
           cSetHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>'),
           cReadAction(false, [], 0),
           cAssertActionNone
@@ -214,7 +214,7 @@ asynctest(
         ]))
       ])),
 
-      Logger.t('moveToPosition actions where caret is to be moved from cef to normal content', GeneralSteps.sequence([
+      Logger.t('moveToPosition actions where caret is to be moved from cef to normal content between blocks', GeneralSteps.sequence([
         Logger.t('Should be moveToPosition action since we are after a ce=false and moving forwards to normal content', Chain.asStep(viewBlock, [
           cSetHtml('<p contenteditable="false">a</p><p>b</p>'),
           cReadAction(true, [], 1),
@@ -224,6 +224,32 @@ asynctest(
           cSetHtml('<p>a</p><p contenteditable="false">b</p>'),
           cReadAction(false, [], 1),
           cAssertMoveToPositionAction([0, 0], 1)
+        ]))
+      ])),
+
+      Logger.t('Delete after inline cef should not do anything', GeneralSteps.sequence([
+        Logger.t('Should be no action since it is a delete after cef to text', Chain.asStep(viewBlock, [
+          cSetHtml('<p><b contenteditable="false">a</b>b</p>'),
+          cReadAction(true, [0], 1),
+          cAssertActionNone
+        ])),
+        Logger.t('Should be no action since it is a delete after cef to no position', Chain.asStep(viewBlock, [
+          cSetHtml('<p><b contenteditable="false">a</b></p>'),
+          cReadAction(true, [0], 1),
+          cAssertActionNone
+        ]))
+      ])),
+
+      Logger.t('Backspace before inline cef should not do anything', GeneralSteps.sequence([
+        Logger.t('Should be no action since it is a backspace before cef to text', Chain.asStep(viewBlock, [
+          cSetHtml('<p>a<b contenteditable="false">b</b></p>'),
+          cReadAction(false, [0, 0], 1),
+          cAssertActionNone
+        ])),
+        Logger.t('Should be no action since it is a backspace before cef to no position', Chain.asStep(viewBlock, [
+          cSetHtml('<p><b contenteditable="false">a</b></p>'),
+          cReadAction(false, [0], 0),
+          cAssertActionNone
         ]))
       ]))
     ], function () {
