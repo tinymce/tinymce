@@ -90,5 +90,7 @@ test(
     assert.eq(0, Traverse.childNodesCount(c1));
     assert.eq(0, Traverse.childNodesCount(t1));
     assert.eq(5, Traverse.childNodesCount(n));
+    assert.eq(false, Traverse.hasChildNodes(t1));
+    assert.eq(true, Traverse.hasChildNodes(n));
   }
 );
