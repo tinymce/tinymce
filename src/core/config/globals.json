@@ -6,7 +6,7 @@
       "tinymce.core.AddOnManager",
       "tinymce.core.api.dom.RangeUtils",
       "tinymce.core.Compat",
-      "tinymce.core.dom.BookmarkManager",
+      "tinymce.core.api.dom.BookmarkManager",
       "tinymce.core.dom.ControlSelection",
       "tinymce.core.dom.DomQuery",
       "tinymce.core.dom.DOMUtils",

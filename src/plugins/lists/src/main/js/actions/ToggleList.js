@@ -11,7 +11,7 @@
 define(
   'tinymce.plugins.lists.actions.ToggleList',
   [
-    'tinymce.core.dom.BookmarkManager',
+    'tinymce.core.api.dom.BookmarkManager',
     'tinymce.core.util.Tools',
     'tinymce.plugins.lists.actions.Outdent',
     'tinymce.plugins.lists.core.Bookmark',
