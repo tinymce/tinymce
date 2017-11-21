@@ -42,7 +42,7 @@ define(
     var searchFromPoint = function (doc, x, y) {
       // elementFromPoint is defined to return null when there is no element at the point
       // This often happens when using IE10 event.y instead of event.clientY
-      return Option.from(doc.dom().elementFromPoint(x, y)).map(Element.fromDom).bind(function (elem) {
+      return Option.from(Element.fromPoint(doc, x, y)).map(Element.fromDom).bind(function (elem) {
         // used when the x,y position points to an image, or outside the bounds
         var fallback = function () {
           return EdgePoint.search(doc, elem, x);

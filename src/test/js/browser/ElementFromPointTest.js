@@ -1,5 +1,5 @@
 test(
-  'ElementPointTest',
+  'ElementFromPointTest',
 
   [
     'ephox.katamari.api.Arr',
@@ -8,11 +8,11 @@ test(
     'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Body',
     'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.view.ElementFromPoint',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.test.Div'
   ],
 
-  function (Arr, Compare, Insert, Remove, Body, Css, ElementFromPoint, Div) {
+  function (Arr, Compare, Insert, Remove, Body, Css, Element, Div) {
     var a = Div();
     var bg = Div();
     
@@ -29,7 +29,7 @@ test(
 
     var getAt = function (elm, placeX, placeY, testX, testY) {
       placeElm(elm, placeX, placeY, 100, 50);
-      return ElementFromPoint.elementFromPoint(window, testX, testY);
+      return Element.fromPoint(Element.fromDom(document), testX, testY);
     };
 
     var checkMatch = function (placeElm, placeX, placeY, expectedElm, testX, testY) {
