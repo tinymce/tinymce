@@ -20,7 +20,8 @@
     "@ephox/sand": "*",
     "chromedriver": "*",
     "grunt": "*",
-    "grunt-npm": "*"
+    "grunt-npm": "*",
+    "jsdom": "*"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0"

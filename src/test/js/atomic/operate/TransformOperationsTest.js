@@ -1,10 +1,5 @@
-test(
+domtest(
   'TransformOperationsTest',
-
-  {
-    'ephox.sugar.api.properties.Css': '../mock/ephox/syrup/api/Css',
-    'ephox.sugar.api.properties.Attr': '../mock/ephox/syrup/api/Attr'
-  },
 
   [
     'ephox.katamari.api.Arr',
@@ -16,7 +11,7 @@ test(
   ],
 
   function (Arr, Fun, Generators, Structs, TransformOperations, TestGenerator) {
-
+    return new Promise(function (resolve) {
     var en = Structs.elementnew;
 
     var mapToStructGrid = function (grid) {
@@ -150,5 +145,7 @@ test(
         [ en('a', false), en('a', false), en('d', false), en('f', false) ]
       ], 0);
     })();
+  resolve();
+  });
   }
 );
