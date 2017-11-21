@@ -16,11 +16,11 @@
 define(
   'tinymce.core.UndoManager',
   [
-    "tinymce.core.util.VK",
-    "tinymce.core.util.Tools",
-    "tinymce.core.undo.Levels"
+    'tinymce.core.dom.GetBookmark',
+    'tinymce.core.undo.Levels',
+    'tinymce.core.util.Tools'
   ],
-  function (VK, Tools, Levels) {
+  function (GetBookmark, Levels, Tools) {
     return function (editor) {
       var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;
 
@@ -177,7 +177,7 @@ define(
          */
         beforeChange: function () {
           if (isUnlocked()) {
-            beforeBookmark = editor.selection.getBookmark(2, true);
+            beforeBookmark = GetBookmark.getUndoBookmark(editor.selection);
           }
         },
 
@@ -228,7 +228,7 @@ define(
           }
 
           // Get a non intrusive normalized bookmark
-          level.bookmark = editor.selection.getBookmark(2, true);
+          level.bookmark = GetBookmark.getUndoBookmark(editor.selection);
 
           // Crop array if needed
           if (index < data.length - 1) {
