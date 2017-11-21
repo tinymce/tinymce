@@ -68,7 +68,7 @@ define(
       var forcedRootBlock = Settings.getForcedRootBlock(editor);
       var rootEditable = NewLineUtils.getEditableRoot(editor.dom, editor.selection.getStart());
 
-      return forcedRootBlock ? rootEditable && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock) : true;
+      return rootEditable && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock ? forcedRootBlock : 'P');
     };
 
     var match = function (predicates, action) {
@@ -90,7 +90,7 @@ define(
         match([inPreBlock(true), shouldPutBrInPre(true)], newLineAction.br()),
         match([inListBlock(true), hasShiftKey], newLineAction.br()),
         match([inListBlock(true)], newLineAction.block()),
-        match([isBrMode(true), hasShiftKey], newLineAction.block()),
+        match([isBrMode(true), hasShiftKey, canInsertIntoEditableRoot], newLineAction.block()),
         match([isBrMode(true)], newLineAction.br()),
         match([inBrContext], newLineAction.br()),
         match([isBrMode(false), hasShiftKey], newLineAction.br()),
