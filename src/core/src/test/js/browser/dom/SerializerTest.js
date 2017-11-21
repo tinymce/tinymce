@@ -746,7 +746,7 @@ asynctest(
 
       DOM.setHTML('test', '<p data-x="1" data-y="2" data-z="3">a</p>');
       LegacyUnit.equal(ser.serialize(DOM.get('test'), { getInner: 1 }), '<p data-z="3">a</p>');
-      LegacyUnit.equal(TrimHtml.trim(ser, '<p data-x="1" data-y="2" data-z="3">a</p>'), '<p data-z="3">a</p>');
+      LegacyUnit.equal(TrimHtml.trimExternal(ser, '<p data-x="1" data-y="2" data-z="3">a</p>'), '<p data-z="3">a</p>');
     });
 
     suite.test('addTempAttr same attr twice', function () {
@@ -758,9 +758,9 @@ asynctest(
 
       DOM.setHTML('test', '<p data-x="1" data-z="3">a</p>');
       LegacyUnit.equal(ser1.serialize(DOM.get('test'), { getInner: 1 }), '<p data-z="3">a</p>');
-      LegacyUnit.equal(TrimHtml.trim(ser1, '<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
+      LegacyUnit.equal(TrimHtml.trimExternal(ser1, '<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
       LegacyUnit.equal(ser2.serialize(DOM.get('test'), { getInner: 1 }), '<p data-z="3">a</p>');
-      LegacyUnit.equal(TrimHtml.trim(ser2, '<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
+      LegacyUnit.equal(TrimHtml.trimExternal(ser2, '<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
     });
 
     suite.test('trim data-mce-bougs="all"', function () {
@@ -768,7 +768,7 @@ asynctest(
 
       DOM.setHTML('test', 'a<p data-mce-bogus="all">b</p>c');
       LegacyUnit.equal(ser.serialize(DOM.get('test'), { getInner: 1 }), 'ac');
-      LegacyUnit.equal(TrimHtml.trim(ser, 'a<p data-mce-bogus="all">b</p>c'), 'ac');
+      LegacyUnit.equal(TrimHtml.trimExternal(ser, 'a<p data-mce-bogus="all">b</p>c'), 'ac');
     });
 
     suite.test('zwsp should not be treated as contents', function () {
