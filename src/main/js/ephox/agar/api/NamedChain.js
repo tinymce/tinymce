@@ -104,8 +104,8 @@ define(
 
     var outputInput = output(inputName);
 
-    var pipeline = function (namedChains, onSuccess, onFailure, delay, dontWrapSuccess) {
-      Chain.pipeline([asChain(namedChains)], onSuccess, onFailure, delay, dontWrapSuccess);
+    var pipeline = function (namedChains, onSuccess, onFailure, delay) {
+      Chain.pipeline([asChain(namedChains)], onSuccess, onFailure, delay);
     };
 
     return {
