@@ -23,7 +23,8 @@ test(
       'https://icmobile4.rtp.raleigh.ibm.com/files/app#/file/d0f8ed3e-f6d2-4577-8989-fa21ac332a20',
       "https://www.google.com.aa/test.htm?$-_.+!*'()test,test;test:test@=&",
       "http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com?-.~_!$&'()*+,;=:%40:80%2f::::::@e#-.~_!$&'()*+,;=:%40:80%2f::::::@e",
-      'http://xn--domain.com'
+      'http://xn--domain.com',
+      'www.google.ca/index.htm?id=/bla/bla'
     ];
 
     // More cases, http://formvalidation.io/validators/uri/

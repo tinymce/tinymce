@@ -23,8 +23,8 @@ define(
         Modified to:
         - include port numbers
         - allow full stops in email addresses
-        - allow [-.~*+=!&;:'%@?^${}(),\w] after the #
-        - allow [-.~*+=!&;:'%@?^${}(),\w] after the ?
+        - allow [-.~*+=!&;:'%@?^${}(),\/\w] after the #
+        - allow [-.~*+=!&;:'%@?^${}(),\/\w] after the ?
         - move allow -_.~*+=!&;:'%@?^${}() in email usernames to the first @ match (TBIO-4809)
         - enforce domains to be [A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)* so they can't end in a period (TBIO-4809)
         - removed a bunch of escaping, made every group non-capturing (during TBIO-4809)
@@ -49,7 +49,7 @@ define(
       (?:
         \?
         (?:
-          [-.~*+=!&;:'%@?^${}(),\w]+
+          [-.~*+=!&;:'%@?^${}(),\/\w]+
         )
       )?
       (?:
@@ -61,7 +61,7 @@ define(
 
       */
 
-      return /(?:(?:[A-Za-z]{3,9}:(?:\/\/))(?:[-.~*+=!&;:'%@?^${}(),\w]+@)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*|(?:www\.|[-;:&=+$,.\w]+@)[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*)(?::[0-9]+)?(?:\/[-+~%.()\/\w]*)?(?:\?(?:[-.~*+=!&;:'%@?^${}(),\w]+))?(?:#(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?/g;
+      return /(?:(?:[A-Za-z]{3,9}:(?:\/\/))(?:[-.~*+=!&;:'%@?^${}(),\w]+@)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*|(?:www\.|[-;:&=+$,.\w]+@)[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*)(?::[0-9]+)?(?:\/[-+~%.()\/\w]*)?(?:\?(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?(?:#(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?/g;
     };
 
     var autolink = function () {
