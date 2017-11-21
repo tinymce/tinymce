@@ -34,143 +34,165 @@ define(
       return trimmedOffset;
     };
 
+    var getLocation = function (selection, normalized, rng) {
+      var dom = selection.dom, root = dom.getRoot(), bookmark = {};
+
+      var getPoint = function (rng, start) {
+        var container = rng[start ? 'startContainer' : 'endContainer'],
+          offset = rng[start ? 'startOffset' : 'endOffset'], point = [], childNodes, after = 0;
+
+        if (container.nodeType === 3) {
+          point.push(normalized ? getNormalizedTextOffset(container, offset) : offset);
+        } else {
+          childNodes = container.childNodes;
+
+          if (offset >= childNodes.length && childNodes.length) {
+            after = 1;
+            offset = Math.max(0, childNodes.length - 1);
+          }
+
+          point.push(dom.nodeIndex(childNodes[offset], normalized) + after);
+        }
+
+        for (; container && container != root; container = container.parentNode) {
+          point.push(dom.nodeIndex(container, normalized));
+        }
+
+        return point;
+      };
+
+      bookmark.start = getPoint(rng, true);
+
+      if (!selection.isCollapsed()) {
+        bookmark.end = getPoint(rng);
+      }
+
+      return bookmark;
+    };
+
     var trimEmptyTextNode = function (node) {
       if (NodeType.isText(node) && node.data.length === 0) {
         node.parentNode.removeChild(node);
       }
     };
 
+    var findIndex = function (dom, name, element) {
+      var count = 0;
+
+      Tools.each(dom.select(name), function (node) {
+        if (node.getAttribute('data-mce-bogus') === 'all') {
+          return;
+        }
+
+        if (node === element) {
+          return false;
+        }
+
+        count++;
+      });
+
+      return count;
+    };
+
+    var normalizeTableCellSelection = function (rng) {
+      var moveEndPoint = function (start) {
+        var container, offset, childNodes, prefix = start ? 'start' : 'end';
+
+        container = rng[prefix + 'Container'];
+        offset = rng[prefix + 'Offset'];
+
+        if (NodeType.isElement(container) && container.nodeName === "TR") {
+          childNodes = container.childNodes;
+          container = childNodes[Math.min(start ? offset : offset - 1, childNodes.length - 1)];
+          if (container) {
+            offset = start ? 0 : container.childNodes.length;
+            rng['set' + (start ? 'Start' : 'End')](container, offset);
+          }
+        }
+      };
+
+      moveEndPoint(true);
+      moveEndPoint();
+
+      return rng;
+    };
+
+    var findAdjacentContentEditableFalseElm = function (rng) {
+      var findSibling = function (node, offset) {
+        var sibling;
+
+        if (NodeType.isElement(node)) {
+          node = RangeNodes.getNode(node, offset);
+          if (isContentEditableFalse(node)) {
+            return node;
+          }
+        }
+
+        if (CaretContainer.isCaretContainer(node)) {
+          if (NodeType.isText(node) && CaretContainer.isCaretContainerBlock(node)) {
+            node = node.parentNode;
+          }
+
+          sibling = node.previousSibling;
+          if (isContentEditableFalse(sibling)) {
+            return sibling;
+          }
+
+          sibling = node.nextSibling;
+          if (isContentEditableFalse(sibling)) {
+            return sibling;
+          }
+        }
+      };
+
+      return findSibling(rng.startContainer, rng.startOffset) || findSibling(rng.endContainer, rng.endOffset);
+    };
+
+    var addBogus = function (dom, node) {
+      // Adds a bogus BR element for empty block elements
+      if (dom.isBlock(node) && !node.innerHTML && !Env.ie) {
+        node.innerHTML = '<br data-mce-bogus="1" />';
+      }
+
+      return node;
+    };
+
+    var resolveCaretPositionBookmark = function (dom, bookmark) {
+      var rng, pos;
+
+      rng = dom.createRng();
+      pos = CaretBookmark.resolve(dom.getRoot(), bookmark.start);
+      rng.setStart(pos.container(), pos.offset());
+
+      pos = CaretBookmark.resolve(dom.getRoot(), bookmark.end);
+      rng.setEnd(pos.container(), pos.offset());
+
+      return rng;
+    };
+
     var getBookmark = function (selection, type, normalized) {
       var rng, rng2, id, collapsed, name, element, chr = '&#xFEFF;', styles;
       var dom = selection.dom;
 
-      var findIndex = function (name, element) {
-        var count = 0;
-
-        Tools.each(dom.select(name), function (node) {
-          if (node.getAttribute('data-mce-bogus') === 'all') {
-            return;
-          }
-
-          if (node == element) {
-            return false;
-          }
-
-          count++;
-        });
-
-        return count;
-      };
-
-      var normalizeTableCellSelection = function (rng) {
-        var moveEndPoint = function (start) {
-          var container, offset, childNodes, prefix = start ? 'start' : 'end';
-
-          container = rng[prefix + 'Container'];
-          offset = rng[prefix + 'Offset'];
-
-          if (container.nodeType == 1 && container.nodeName == "TR") {
-            childNodes = container.childNodes;
-            container = childNodes[Math.min(start ? offset : offset - 1, childNodes.length - 1)];
-            if (container) {
-              offset = start ? 0 : container.childNodes.length;
-              rng['set' + (start ? 'Start' : 'End')](container, offset);
-            }
-          }
-        };
-
-        moveEndPoint(true);
-        moveEndPoint();
-
-        return rng;
-      };
-
-      var getLocation = function (rng) {
-        var root = dom.getRoot(), bookmark = {};
-
-        var getPoint = function (rng, start) {
-          var container = rng[start ? 'startContainer' : 'endContainer'],
-            offset = rng[start ? 'startOffset' : 'endOffset'], point = [], childNodes, after = 0;
-
-          if (container.nodeType === 3) {
-            point.push(normalized ? getNormalizedTextOffset(container, offset) : offset);
-          } else {
-            childNodes = container.childNodes;
-
-            if (offset >= childNodes.length && childNodes.length) {
-              after = 1;
-              offset = Math.max(0, childNodes.length - 1);
-            }
-
-            point.push(dom.nodeIndex(childNodes[offset], normalized) + after);
-          }
-
-          for (; container && container != root; container = container.parentNode) {
-            point.push(dom.nodeIndex(container, normalized));
-          }
-
-          return point;
-        };
-
-        bookmark.start = getPoint(rng, true);
-
-        if (!selection.isCollapsed()) {
-          bookmark.end = getPoint(rng);
-        }
-
-        return bookmark;
-      };
-
-      var findAdjacentContentEditableFalseElm = function (rng) {
-        var findSibling = function (node, offset) {
-          var sibling;
-
-          if (NodeType.isElement(node)) {
-            node = RangeNodes.getNode(node, offset);
-            if (isContentEditableFalse(node)) {
-              return node;
-            }
-          }
-
-          if (CaretContainer.isCaretContainer(node)) {
-            if (NodeType.isText(node) && CaretContainer.isCaretContainerBlock(node)) {
-              node = node.parentNode;
-            }
-
-            sibling = node.previousSibling;
-            if (isContentEditableFalse(sibling)) {
-              return sibling;
-            }
-
-            sibling = node.nextSibling;
-            if (isContentEditableFalse(sibling)) {
-              return sibling;
-            }
-          }
-        };
-
-        return findSibling(rng.startContainer, rng.startOffset) || findSibling(rng.endContainer, rng.endOffset);
-      };
-
-      if (type == 2) {
+      if (type === 2) {
         element = selection.getNode();
         name = element ? element.nodeName : null;
         rng = selection.getRng();
 
-        if (isContentEditableFalse(element) || name == 'IMG') {
-          return { name: name, index: findIndex(name, element) };
+        if (isContentEditableFalse(element) || name === 'IMG') {
+          return { name: name, index: findIndex(dom, name, element) };
         }
 
         element = findAdjacentContentEditableFalseElm(rng);
         if (element) {
           name = element.tagName;
-          return { name: name, index: findIndex(name, element) };
+          return { name: name, index: findIndex(dom, name, element) };
         }
 
-        return getLocation(rng);
+        return getLocation(selection, normalized, rng);
       }
 
-      if (type == 3) {
+      if (type === 3) {
         rng = selection.getRng();
 
         return {
@@ -190,8 +212,8 @@ define(
       styles = 'overflow:hidden;line-height:0px';
       element = selection.getNode();
       name = element.nodeName;
-      if (name == 'IMG') {
-        return { name: name, index: findIndex(name, element) };
+      if (name === 'IMG') {
+        return { name: name, index: findIndex(dom, name, element) };
       }
 
       // W3C method
@@ -216,47 +238,47 @@ define(
       return { id: id };
     };
 
-    var moveToBookmark = function (selection, bookmark) {
-      var rng, root, startContainer, endContainer, startOffset, endOffset;
-      var dom = selection.dom;
+    var setEndPoint = function (dom, start, bookmark, rng) {
+      var point = bookmark[start ? 'start' : 'end'], i, node, offset, children, root = dom.getRoot();
 
-      var setEndPoint = function (start) {
-        var point = bookmark[start ? 'start' : 'end'], i, node, offset, children;
+      if (point) {
+        offset = point[0];
 
-        if (point) {
-          offset = point[0];
+        // Find container node
+        for (node = root, i = point.length - 1; i >= 1; i--) {
+          children = node.childNodes;
 
-          // Find container node
-          for (node = root, i = point.length - 1; i >= 1; i--) {
-            children = node.childNodes;
-
-            if (point[i] > children.length - 1) {
-              return;
-            }
-
-            node = children[point[i]];
+          if (point[i] > children.length - 1) {
+            return;
           }
 
-          // Move text offset to best suitable location
-          if (node.nodeType === 3) {
-            offset = Math.min(point[0], node.nodeValue.length);
-          }
-
-          // Move element offset to best suitable location
-          if (node.nodeType === 1) {
-            offset = Math.min(point[0], node.childNodes.length);
-          }
-
-          // Set offset within container node
-          if (start) {
-            rng.setStart(node, offset);
-          } else {
-            rng.setEnd(node, offset);
-          }
+          node = children[point[i]];
         }
 
-        return true;
-      };
+        // Move text offset to best suitable location
+        if (node.nodeType === 3) {
+          offset = Math.min(point[0], node.nodeValue.length);
+        }
+
+        // Move element offset to best suitable location
+        if (node.nodeType === 1) {
+          offset = Math.min(point[0], node.childNodes.length);
+        }
+
+        // Set offset within container node
+        if (start) {
+          rng.setStart(node, offset);
+        } else {
+          rng.setEnd(node, offset);
+        }
+      }
+
+      return true;
+    };
+
+    var moveToBookmark = function (selection, bookmark) {
+      var rng, startContainer, endContainer, startOffset, endOffset;
+      var dom = selection.dom;
 
       var restoreEndPoint = function (suffix) {
         var marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev, keep = bookmark.keep;
@@ -264,7 +286,7 @@ define(
         if (marker) {
           node = marker.parentNode;
 
-          if (suffix == 'start') {
+          if (suffix === 'start') {
             if (!keep) {
               idx = dom.nodeIndex(marker);
             } else {
@@ -292,7 +314,7 @@ define(
 
             // Remove all marker text nodes
             Tools.each(Tools.grep(marker.childNodes), function (node) {
-              if (node.nodeType == 3) {
+              if (NodeType.isText(node)) {
                 node.nodeValue = node.nodeValue.replace(/\uFEFF/g, '');
               }
             });
@@ -307,12 +329,12 @@ define(
             // If siblings are text nodes then merge them unless it's Opera since it some how removes the node
             // and we are sniffing since adding a lot of detection code for a browser with 3% of the market
             // isn't worth the effort. Sorry, Opera but it's just a fact
-            if (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3 && !Env.opera) {
+            if (prev && next && prev.nodeType === next.nodeType && NodeType.isText(prev) && !Env.opera) {
               idx = prev.nodeValue.length;
               prev.appendData(next.nodeValue);
               dom.remove(next);
 
-              if (suffix == 'start') {
+              if (suffix === 'start') {
                 startContainer = endContainer = prev;
                 startOffset = endOffset = idx;
               } else {
@@ -324,38 +346,15 @@ define(
         }
       };
 
-      var addBogus = function (node) {
-        // Adds a bogus BR element for empty block elements
-        if (dom.isBlock(node) && !node.innerHTML && !Env.ie) {
-          node.innerHTML = '<br data-mce-bogus="1" />';
-        }
-
-        return node;
-      };
-
-      var resolveCaretPositionBookmark = function () {
-        var rng, pos;
-
-        rng = dom.createRng();
-        pos = CaretBookmark.resolve(dom.getRoot(), bookmark.start);
-        rng.setStart(pos.container(), pos.offset());
-
-        pos = CaretBookmark.resolve(dom.getRoot(), bookmark.end);
-        rng.setEnd(pos.container(), pos.offset());
-
-        return rng;
-      };
-
       if (bookmark) {
         if (Tools.isArray(bookmark.start)) {
           rng = dom.createRng();
-          root = dom.getRoot();
 
-          if (setEndPoint(true) && setEndPoint()) {
+          if (setEndPoint(dom, true, bookmark, rng) && setEndPoint(dom, false, bookmark, rng)) {
             selection.setRng(rng);
           }
-        } else if (typeof bookmark.start == 'string') {
-          selection.setRng(resolveCaretPositionBookmark(bookmark));
+        } else if (typeof bookmark.start === 'string') {
+          selection.setRng(resolveCaretPositionBookmark(dom, bookmark));
         } else if (bookmark.id) {
           // Restore start/end points
           restoreEndPoint('start');
@@ -363,8 +362,8 @@ define(
 
           if (startContainer) {
             rng = dom.createRng();
-            rng.setStart(addBogus(startContainer), startOffset);
-            rng.setEnd(addBogus(endContainer), endOffset);
+            rng.setStart(addBogus(dom, startContainer), startOffset);
+            rng.setEnd(addBogus(dom, endContainer), endOffset);
             selection.setRng(rng);
           }
         } else if (bookmark.name) {
