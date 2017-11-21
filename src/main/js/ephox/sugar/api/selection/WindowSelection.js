@@ -77,10 +77,19 @@ define(
     // than using the anchorNode and focusNode. I'm not sure if this behaviour is any
     // better or worse; it's just different.
     var readRange = function (selection) {
-      var rng = Option.from(selection.getRangeAt(0));
-      return rng.map(function (r) {
-        return Selection.range(Element.fromDom(r.startContainer), r.startOffset, Element.fromDom(r.endContainer), r.endOffset);
-      });
+      if (selection.rangeCount > 0) {
+        var firstRng = selection.getRangeAt(0);
+        var lastRng = selection.getRangeAt(selection.rangeCount - 1);
+
+        return Option.some(Selection.range(
+          Element.fromDom(firstRng.startContainer), 
+          firstRng.startOffset,
+          Element.fromDom(lastRng.endContainer),
+          lastRng.endOffset
+        ));
+      } else {
+        return Option.none();
+      }
     };
 
     var doGetExact = function (selection) {
