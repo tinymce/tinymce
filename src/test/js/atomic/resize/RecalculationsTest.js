@@ -1,13 +1,5 @@
-test(
+domtest(
   'RecalculationsTest',
-
-  {
-    'ephox.sugar.api.properties.Css': '../mock/ephox/syrup/api/Css',
-    'ephox.sugar.api.properties.Attr': '../mock/ephox/syrup/api/Attr',
-    'ephox.sugar.api.search.SelectorFind': '../mock/ephox/syrup/api/SelectorFind',
-    'ephox.snooker.model.DetailsList': '../mock/ephox/snooker/model/DetailsList',
-    'ephox.snooker.resize.Sizes': '../mock/ephox/snooker/resize/Sizes'
-  },
 
   [
     'ephox.katamari.api.Arr',
@@ -18,6 +10,7 @@ test(
   ],
 
   function (Arr, Struct, Structs, Warehouse, Recalculations) {
+    return new Promise(function (resolve) {
     var dimensions = Structs.dimensions; // Struct.immutable('width', 'height');
 
     var assertParts = Struct.immutable('widths', 'heights');
@@ -103,5 +96,7 @@ test(
       r('r1', [ d('l',1,1), d('m',3,2), d('n',1,1), d('o',1,1), d('p',1,1), d('q',1,1) ], 'tbody'),
       r('r2', [ d('r',2,1), d('s',1,1), d('t',2,1), d('u',1,1), d('v',1,1) ], 'tbody')
     ], dimensions([ 10, 10, 10, 10, 10, 10, 10 ], [ 20, 15, 10 ]));
+  resolve();
+  });
   }
 );
