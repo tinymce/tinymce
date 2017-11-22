@@ -214,8 +214,12 @@ test(
       };
     };
 
+    console.log("running " + CYCLES + " measure tests...");
     inVariantRunner('measure', measureIVTest, CYCLES);
+    console.log("running " + CYCLES + " tailor tests...");
     inVariantRunner('tailor', tailorTestIVTest, CYCLES);
+    console.log("running " + CYCLES + " merge tests...");
     inVariantRunner('merge', mergeGridsIVTest, CYCLES);
+    console.log("FitmentIVTest done.");
   }
 );
