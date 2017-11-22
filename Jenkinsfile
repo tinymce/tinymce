@@ -16,10 +16,7 @@ node("primary") {
   def extExec = load("jenkins-plumbing/exec.groovy")
 
   stage("Building") {
-    dir('node_modules') {
-      deleteDir()
-    }
-    extExec("npm install")
+    extNpmInstall()
     extExec ("grunt")
   }
 
