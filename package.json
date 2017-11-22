@@ -1,6 +1,6 @@
 {
   "name": "@ephox/imagetools",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Image tools for tinymce and textbox.io",
   "keywords": [
     "image",
@@ -9,9 +9,11 @@
   ],
   "devDependencies": {
     "@ephox/bolt": "^1.6.1",
+    "@ephox/katamari": "^1.1.5",
+    "@ephox/sand": "^1.1.1",
     "grunt": "^1.0.1"
   },
-  "scripts":{
+  "scripts": {
     "test": "bedrock -c config/bolt/browser.js -d src/test"
   },
   "repository": {

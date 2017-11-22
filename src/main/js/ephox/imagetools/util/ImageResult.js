@@ -1,23 +1,38 @@
 define(
   'ephox.imagetools.util.ImageResult',
   [
-    'ephox.imagetools.util.Promise',
+    'ephox.imagetools.util.Canvas',
     'ephox.imagetools.util.Conversions',
     'ephox.imagetools.util.Mime',
-    'ephox.imagetools.util.Canvas'
+    'ephox.imagetools.util.Promise',
+    'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Option'
   ],
-  function (Promise, Conversions, Mime, Canvas) {
-    function create(canvas, initialType) {
-      function getType() {
-        return initialType;
-      }
+  function (Canvas, Conversions, Mime, Promise, Fun, Option) {
+    function create(canvas, blob, maybeUri) {
+      var initialType = blob.type;
+
+      var getType = Fun.constant(initialType);
 
       function toBlob(type, quality) {
-        return Conversions.canvasToBlob(canvas, type || initialType, quality);
+        // Shortcut to not lose the blob filename when we haven't edited the image
+        var resultType = type || initialType;
+        if (type === initialType && quality === undefined) {
+          return Promise.resolve(blob);
+        } else {
+          return Conversions.canvasToBlob(canvas, resultType, quality);
+        }
       }
 
-      function toDataURL(type, quality) {
-        return canvas.toDataURL(type || initialType, quality);
+      function toDataURL(_type, quality) {
+        var type = _type || initialType;
+        var canvasOutput = function () {
+          return canvas.toDataURL(type, quality);
+        };
+        return maybeUri.fold(canvasOutput, function (uri) {
+          // if we have data and aren't converting, use it - canvas tends to convert even when you tell it not to.
+          return (quality === undefined && type === initialType) ? uri : canvasOutput();
+        });
       }
 
       function toBase64(type, quality) {
@@ -45,26 +60,59 @@ define(
           return result;
         })
         .then(function (canvas) {
-          return create(canvas, blob.type);
+          return Conversions.blobToDataUri(blob).then(function (uri) {
+            return create(canvas, blob, Option.some(uri));
+          });
         });
     }
 
     function fromCanvas(canvas, type) {
-      return new Promise(function (resolve) {
-        resolve(create(canvas, type));
+      return Conversions.canvasToBlob(canvas, type).then(function (blob) {
+        return create(canvas, blob, Option.none());
       });
     }
 
     function fromImage(image) {
       var type = Mime.guessMimeType(image.src);
       return Conversions.imageToCanvas(image).then(function (canvas) {
-        return create(canvas, type);
+        return Conversions.canvasToBlob(canvas, type).then(function (blob) {
+          return fromCanvas(canvas, blob, Option.none());
+        });
       });
+    }
+
+    /*
+      This copy doesn't support changing type or quality, but
+      it's used by TBIO on load which won't ask for changes.
+
+      TODO: Make toCanvas return a promise so this can be inlined with create above
+     */
+    var fromBlobAndUrlSync = function (blob, url) {
+      var backgroundCanvas = Option.none();
+      Conversions.blobToImage(blob).then(function (image) {
+        var result = Conversions.imageToCanvas(image);
+        Conversions.revokeImageUrl(image);
+        backgroundCanvas = Option.some(result);
+      });
+      return {
+        getType: Fun.constant(blob.type),
+        toBlob: function () {
+          return Promise.resolve(blob);
+        },
+        toDataURL: Fun.constant(url),
+        toBase64: function () {
+          return url.split(',')[1];
+        },
+        toCanvas: function () {
+          return backgroundCanvas.getOrDie('image has not loaded yet')
+        }
+      };
     }
 
     return {
       fromBlob: fromBlob,
       fromCanvas: fromCanvas,
-      fromImage: fromImage
+      fromImage: fromImage,
+      fromBlobAndUrlSync: fromBlobAndUrlSync
     };
   });

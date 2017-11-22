@@ -1,12 +1,19 @@
 define(
   'ephox.imagetools.util.Conversions',
   [
-    'ephox.imagetools.util.Promise',
     'ephox.imagetools.util.Canvas',
+    'ephox.imagetools.util.ImageSize',
     'ephox.imagetools.util.Mime',
-    'ephox.imagetools.util.ImageSize'
+    'ephox.imagetools.util.Promise',
+    'ephox.katamari.api.Option',
+    'ephox.sand.api.Blob',
+    'ephox.sand.api.FileReader',
+    'ephox.sand.api.Uint8Array',
+    'ephox.sand.api.Window',
+    'global!Array',
+    'global!Math'
   ],
-  function (Promise, Canvas, Mime, ImageSize) {
+  function (Canvas, ImageSize, Mime, Promise, Option, Blob, FileReader, Uint8Array, Window, Array, Math) {
     function loadImage(image) {
       return new Promise(function (resolve) {
         function loaded() {
@@ -47,7 +54,7 @@ define(
         }
 
         return imageToCanvas(image).then(function (canvas) {
-          return dataUriToBlob(canvas.toDataURL(Mime.guessMimeType(src)));
+          return canvasToBlob(canvas, Mime.guessMimeType(src));
         });
       });
     }
@@ -88,40 +95,40 @@ define(
     }
 
     function dataUriToBlobSync(uri) {
-      var str, arr, i, matches, type, blobBuilder;
+      var data = uri.split(',');
 
-      uri = uri.split(',');
+      var matches = /data:([^;]+)/.exec(data[0]);
+      if (!matches) return Option.none();
 
-      matches = /data:([^;]+)/.exec(uri[0]);
-      if (matches) {
-        type = matches[1];
-      }
+      var mimetype = matches[1];
+      var base64 = data[1];
 
-      str = atob(uri[1]);
+      // al gore rhythm via http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+      var sliceSize = 1024;
+      var byteCharacters = Window.atob(base64);
+      var bytesLength = byteCharacters.length;
+      var slicesCount = Math.ceil(bytesLength / sliceSize);
+      var byteArrays = new Array(slicesCount);
 
-      if (window.WebKitBlobBuilder) {
-        /*globals WebKitBlobBuilder:false */
-        blobBuilder = new WebKitBlobBuilder();
+      for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+        var begin = sliceIndex * sliceSize;
+        var end = Math.min(begin + sliceSize, bytesLength);
 
-        arr = new ArrayBuffer(str.length);
-        for (i = 0; i < arr.length; i++) {
-          arr[i] = str.charCodeAt(i);
+        var bytes = new Array(end - begin);
+        for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
+          bytes[i] = byteCharacters[offset].charCodeAt(0);
         }
-
-        blobBuilder.append(arr);
-        return blobBuilder.getBlob(type);
+        byteArrays[sliceIndex] = Uint8Array(bytes);
       }
-
-      arr = new Uint8Array(str.length);
-      for (i = 0; i < arr.length; i++) {
-        arr[i] = str.charCodeAt(i);
-      }
-      return new Blob([arr], { type: type });
+      return Option.some(Blob(byteArrays, { type: mimetype }));
     }
 
     function dataUriToBlob(uri) {
-      return new Promise(function (resolve) {
-        resolve(dataUriToBlobSync(uri));
+      return new Promise(function (resolve, reject) {
+        dataUriToBlobSync(uri).fold(function () {
+          // uri isn't valid
+          reject('uri is not base64: ' + uri);
+        }, resolve);
       });
     }
 
@@ -173,25 +180,25 @@ define(
       URL.revokeObjectURL(image.src);
     }
 
+    var isDataUrl = function (uri) {
+      var data = uri.split(',');
+
+      return /data:([^;]+)/.exec(data[0]) !== null;
+    };
+
     return {
       // used outside
       blobToImage: blobToImage,
-      // used outside
       imageToBlob: imageToBlob,
-      // used outside
       blobToDataUri: blobToDataUri,
-      // used outside
       blobToBase64: blobToBase64,
 
       // helper method
       imageToCanvas: imageToCanvas,
-      // helper method
       canvasToBlob: canvasToBlob,
-      // helper method
       revokeImageUrl: revokeImageUrl,
-      // helper method
       uriToBlob: uriToBlob,
-      // helper method
-      dataUriToBlobSync: dataUriToBlobSync
+      dataUriToBlobSync: dataUriToBlobSync,
+      isDataUrl: isDataUrl
     };
   });
