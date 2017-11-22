@@ -21,7 +21,7 @@ define(
     'tinymce.core.InsertContent',
     'tinymce.core.delete.DeleteCommands',
     'tinymce.core.dom.NodeType',
-    'tinymce.core.keyboard.InsertBr',
+    'tinymce.core.newline.InsertBr',
     'tinymce.core.selection.SelectionBookmark',
     'tinymce.core.util.Tools'
   ],
@@ -571,7 +571,7 @@ define(
         },
 
         InsertLineBreak: function (command, ui, value) {
-          InsertBr.insertBr(editor, value);
+          InsertBr.insert(editor, value);
           return true;
         }
       });
