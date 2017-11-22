@@ -11,8 +11,8 @@
 define(
   'tinymce.plugins.imagetools.ui.Dialog',
   [
-    'ephox.imagetools.api.BlobConversions',
     'ephox.imagetools.api.ImageTransformations',
+    'ephox.imagetools.api.ResultConversions',
     'ephox.sand.api.URL',
     'global!Math',
     'global!setTimeout',
@@ -23,7 +23,7 @@ define(
     'tinymce.plugins.imagetools.core.UndoStack',
     'tinymce.plugins.imagetools.ui.ImagePanel'
   ],
-  function (BlobConversions, ImageTransformations, URL, Math, setTimeout, DOMUtils, Factory, Promise, Tools, UndoStack, ImagePanel) {
+  function (ImageTransformations, ResultConversions, URL, Math, setTimeout, DOMUtils, Factory, Promise, Tools, UndoStack, ImagePanel) {
     function createState(blob) {
       return {
         blob: blob,
@@ -122,7 +122,7 @@ define(
       function crop() {
         var rect = imagePanel.selection();
 
-        BlobConversions.blobToImageResult(currentState.blob).
+        ResultConversions.blobToImageResult(currentState.blob).
           then(function (ir) {
             ImageTransformations.crop(ir, rect.x, rect.y, rect.w, rect.h).
               then(imageResultToBlob).
@@ -139,7 +139,7 @@ define(
         return function () {
           var state = tempState || currentState;
 
-          BlobConversions.blobToImageResult(state.blob).
+          ResultConversions.blobToImageResult(state.blob).
             then(function (ir) {
               fn.apply(this, [ir].concat(args)).then(imageResultToBlob).then(addTempState);
             });
@@ -150,7 +150,7 @@ define(
         var args = [].slice.call(arguments, 1);
 
         return function () {
-          BlobConversions.blobToImageResult(currentState.blob).
+          ResultConversions.blobToImageResult(currentState.blob).
             then(function (ir) {
               fn.apply(this, [ir].concat(args)).then(imageResultToBlob).then(addBlobState);
             });
@@ -256,7 +256,7 @@ define(
         ]).hide().on('show', function () {
           disableUndoRedo();
 
-          BlobConversions.blobToImageResult(currentState.blob).
+          ResultConversions.blobToImageResult(currentState.blob).
             then(function (ir) {
               return filter(ir);
             }).
@@ -273,7 +273,7 @@ define(
 
       function createVariableFilterPanel(title, filter, value, min, max) {
         function update(value) {
-          BlobConversions.blobToImageResult(currentState.blob).
+          ResultConversions.blobToImageResult(currentState.blob).
             then(function (ir) {
               return filter(ir, value);
             }).
@@ -316,7 +316,7 @@ define(
           g = win.find('#g')[0].value();
           b = win.find('#b')[0].value();
 
-          BlobConversions.blobToImageResult(currentState.blob).
+          ResultConversions.blobToImageResult(currentState.blob).
           then(function (ir) {
             return filter(ir, r, g, b);
           }).
