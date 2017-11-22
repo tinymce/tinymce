@@ -104,6 +104,10 @@ define(
           offset = nodeIndex(container);
           container = container.parentNode;
           DOM.remove(node);
+
+          if (!container.hasChildNodes() && DOM.isBlock(container)) {
+            container.appendChild(DOM.create('br'));
+          }
         }
 
         bookmark[start ? 'startContainer' : 'endContainer'] = container;
