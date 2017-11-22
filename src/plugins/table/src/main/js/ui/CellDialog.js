@@ -15,18 +15,19 @@
 define(
   'tinymce.plugins.table.ui.CellDialog',
   [
+    'ephox.katamari.api.Fun',
     'tinymce.core.util.Tools',
-    'tinymce.plugins.table.alien.Util',
     'tinymce.plugins.table.actions.Styles',
+    'tinymce.plugins.table.alien.Util',
     'tinymce.plugins.table.ui.Helpers'
   ],
-  function (Tools, Util, Styles, Helpers) {
+  function (Fun, Tools, Styles, Util, Helpers) {
 
     var extractDataFromElement = function (editor, elm) {
       var dom = editor.dom;
       var data = {
-        width: Util.removePxSuffix(dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width')),
-        height: Util.removePxSuffix(dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height')),
+        width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
+        height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
         scope: dom.getAttrib(elm, 'scope'),
         'class': dom.getAttrib(elm, 'class')
       };
@@ -52,7 +53,7 @@ define(
       return data;
     };
 
-    var onSubmitCellForm = function (editor, win, cells) {
+    var onSubmitCellForm = function (editor, cells, evt) {
       var dom = editor.dom;
       var data;
 
@@ -68,8 +69,8 @@ define(
         }
       }
 
-      Helpers.updateStyleField(dom, win);
-      data = win.toJSON();
+      Helpers.updateStyleField(editor, evt);
+      data = evt.control.rootControl.toJSON();
 
       editor.undoManager.transact(function () {
         Tools.each(cells, function (cellElm) {
@@ -106,7 +107,7 @@ define(
     };
 
     var open = function (editor) {
-      var dom = editor.dom, cellElm, data, classListCtrl, cells = [];
+      var cellElm, data, classListCtrl, cells = [];
 
       // Get selected cells or the current cell
       cells = editor.dom.select('td[data-mce-selected],th[data-mce-selected]');
@@ -172,8 +173,8 @@ define(
               maxWidth: 50
             },
             items: [
-              { label: 'Width', name: 'width' },
-              { label: 'Height', name: 'height' },
+              { label: 'Width', name: 'width', onchange: Fun.curry(Helpers.updateStyleField, editor) },
+              { label: 'Height', name: 'height', onchange: Fun.curry(Helpers.updateStyleField, editor) },
               {
                 label: 'Cell type',
                 name: 'type',
@@ -247,20 +248,16 @@ define(
               type: 'form',
               items: generalCellForm
             },
-            Helpers.createStyleForm(dom)
+            Helpers.createStyleForm(editor)
           ],
-          onsubmit: function () {
-            onSubmitCellForm(editor, this, cells);
-          }
+          onsubmit: Fun.curry(onSubmitCellForm, editor, cells)
         });
       } else {
         editor.windowManager.open({
           title: "Cell properties",
           data: data,
           body: generalCellForm,
-          onsubmit: function () {
-            onSubmitCellForm(editor, this, cells);
-          }
+          onsubmit: Fun.curry(onSubmitCellForm, editor, cells)
         });
       }
     };
