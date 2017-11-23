@@ -267,5 +267,19 @@ test(
 
       TableOperations.unmakeRowHeader, 1, 0, 1
     );
+
+    Assertions.checkOld({ section: 0, row: 0, column: 1 },
+      '<table><tbody>' +
+        '<tr><th scope="col">A1</th><th scope="col">B1</th><th scope="col">C1</th><th scope="col">D1</th></tr>' +
+        '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      '<table><tbody>' +
+        '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+        '<tr><td rowspan="2">A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.makeRowHeader, 0, 0, 1
+    );
   }
 );

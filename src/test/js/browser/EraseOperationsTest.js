@@ -591,5 +591,50 @@ test(
       ],
       platform
     );
+
+    var deleteExpectedContent23 = '<table><tbody>' +
+        '<tr><td>B1</td><td>C1</td><td>D1</td></tr>' +
+        '<tr><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>';
+    var deleteExpected23 = {
+      normal: deleteExpectedContent23,
+      ie: deleteExpectedContent23
+    };
+
+    Assertions.checkDelete(Option.some({ section: 0, row: 1, column: 0 }),
+      Option.some(deleteExpected23),
+
+      '<table><tbody>' +
+        '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
+        '<tr><th>A2</th><td rowspan="2">B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.eraseColumns, [
+        { section: 0, row: 1, column: 0 }
+      ],
+      platform
+    );
+
+    var deleteExpectedContent24 = '<table><tbody>' +
+        '<tr><th>A2</th><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>';
+    var deleteExpected24 = {
+      normal: deleteExpectedContent24,
+      ie: deleteExpectedContent24
+    };
+    Assertions.checkDelete(Option.some({ section: 0, row: 0, column: 0 }),
+      Option.some(deleteExpected24),
+
+      '<table><tbody>' +
+        '<tr><th>A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
+        '<tr><th>A2</th><td rowspan="2">B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.eraseRows, [
+        { section: 0, row: 0, column: 0 }
+      ],
+      platform
+    );
+
   }
 );
