@@ -59,12 +59,14 @@ define(
 
       if (!hasPlugin(editor, 'advlist')) {
         editor.addButton('numlist', {
+          active: false,
           title: 'Numbered list',
           cmd: 'InsertOrderedList',
           onPostRender: listState(editor, 'OL')
         });
 
         editor.addButton('bullist', {
+          active: false,
           title: 'Bullet list',
           cmd: 'InsertUnorderedList',
           onPostRender: listState(editor, 'UL')
