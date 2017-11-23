@@ -68,7 +68,7 @@ asynctest(
 
       LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
         "align": "right",
-        "height": "10",
+        "height": "10px",
         "type": "thead",
         "backgroundColor": "blue",
         "borderColor": "red",

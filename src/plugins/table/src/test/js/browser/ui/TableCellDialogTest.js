@@ -101,10 +101,10 @@ asynctest(
       LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
         "align": "right",
         "valign": "top",
-        "height": "11",
+        "height": "11px",
         "scope": "row",
         "type": "th",
-        "width": "10",
+        "width": "10px",
         "backgroundColor": "blue",
         "borderColor": "red",
         "borderStyle": "dashed",
@@ -171,12 +171,12 @@ asynctest(
         cleanTableHtml(editor.getContent()),
         (
           '<table>' +
-          '<tbody>' +
-          '<tr>' +
-          '<td style="width: 10px; height: 20px; vertical-align: bottom;">a</td>' +
-          '<td style="width: 20px; height: 20px; vertical-align: bottom;">b</td>' +
-          '</tr>' +
-          '</tbody>' +
+            '<tbody>' +
+              '<tr>' +
+                '<td style="width: 10px; height: 20px; vertical-align: bottom;">a</td>' +
+                '<td style="width: 20px; height: 20px; vertical-align: bottom;">b</td>' +
+              '</tr>' +
+            '</tbody>' +
           '</table>'
         ),
         'Width should be retained height should be changed'

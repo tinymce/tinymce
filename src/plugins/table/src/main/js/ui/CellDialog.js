@@ -69,7 +69,6 @@ define(
         }
       }
 
-      Helpers.updateStyleField(editor, evt);
       data = evt.control.rootControl.toJSON();
 
       editor.undoManager.transact(function () {
