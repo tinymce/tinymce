@@ -100,23 +100,46 @@ define(
         }
       });
 
+      editor.on('ObjectResizeStart', function (e) {
+        function resizePercentage(table) {
+          Tools.each(table.rows, function (row) {
+            var rowHeight = editor.dom.getSize(row);
+            Tools.each(row.cells, function (cell) {
+              var tableSizes = editor.dom.getSize(table);
+              var cellSizes = editor.dom.getSize(cell);
+              var cellPercentages = {
+                h: (cellSizes.h || rowHeight) * 100 / tableSizes.h,
+                w: cellSizes.w * 100 / tableSizes.w
+              };
+              editor.dom.setStyle(row, 'height', cellPercentages.h.toFixed(2) + '%');
+              editor.dom.setAttrib(row, 'height', null);
+              editor.dom.setStyle(cell, 'width', cellPercentages.w.toFixed(2) + '%');
+              editor.dom.setAttrib(cell, 'width', null);
+              editor.dom.setStyle(cell, 'height', cellPercentages.h.toFixed(2) + '%');
+              editor.dom.setAttrib(cell, 'height', null);
+            });
+          });
+        }
+        var table = e.target;
+        if (table.nodeName === 'TABLE') {
+          var tableClone = editor.dom.select('table.mce-clonedresizable')[0];
+          resizePercentage(table);
+          resizePercentage(tableClone);
+        }
+      });
+
       // If we're updating the table width via the old mechanic, we need to update the constituent cells' widths/heights too.
       editor.on('ObjectResized', function (e) {
         var table = e.target;
         if (table.nodeName === 'TABLE') {
-          var newCellSizes = [];
           Tools.each(table.rows, function (row) {
+            editor.dom.setStyle(row, 'height', editor.dom.getStyle(row, 'height', true));
+            editor.dom.setAttrib(row, 'height', null);
             Tools.each(row.cells, function (cell) {
               var width = editor.dom.getStyle(cell, 'width', true);
-              newCellSizes.push({
-                cell: cell,
-                width: width
-              });
+              editor.dom.setStyle(cell, 'width', width);
+              editor.dom.setAttrib(cell, 'width', null);
             });
-          });
-          Tools.each(newCellSizes, function (newCellSize) {
-            editor.dom.setStyle(newCellSize.cell, 'width', newCellSize.width);
-            editor.dom.setAttrib(newCellSize.cell, 'width', null);
           });
         }
       });
