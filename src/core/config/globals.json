@@ -4,9 +4,11 @@
     "replace": "tinymce",
     "targets": [
       "tinymce.core.AddOnManager",
+      "tinymce.core.api.dom.BookmarkManager",
       "tinymce.core.api.dom.RangeUtils",
-      "tinymce.core.Compat",
-      "tinymce.core.dom.BookmarkManager",
+      "tinymce.core.api.FocusManager",
+      "tinymce.core.api.Formatter",
+      "tinymce.core.api.WindowManager",
       "tinymce.core.dom.ControlSelection",
       "tinymce.core.dom.DomQuery",
       "tinymce.core.dom.DOMUtils",
@@ -21,8 +23,6 @@
       "tinymce.core.EditorManager",
       "tinymce.core.EditorObservable",
       "tinymce.core.Env",
-      "tinymce.core.FocusManager",
-      "tinymce.core.Formatter",
       "tinymce.core.geom.Rect",
       "tinymce.core.html.DomParser",
       "tinymce.core.html.Entities",
@@ -52,8 +52,7 @@
       "tinymce.core.util.Tools",
       "tinymce.core.util.URI",
       "tinymce.core.util.VK",
-      "tinymce.core.util.XHR",
-      "tinymce.core.WindowManager"
+      "tinymce.core.util.XHR"
     ]
   }
 }

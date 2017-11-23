@@ -20,12 +20,12 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.sugar.api.node.Element',
-    'tinymce.core.dom.BookmarkManager',
+    'tinymce.core.dom.Bookmarks',
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.Parents',
     'tinymce.core.focus.EditorFocus'
   ],
-  function (Arr, Fun, Element, BookmarkManager, NodeType, Parents, EditorFocus) {
+  function (Arr, Fun, Element, Bookmarks, NodeType, Parents, EditorFocus) {
     var isBlockElement = function (blockElements, node) {
       return blockElements.hasOwnProperty(node.nodeName);
     };
@@ -34,7 +34,7 @@ define(
       if (NodeType.isText(node)) {
         return true;
       } else if (NodeType.isElement(node)) {
-        return !isBlockElement(blockElements, node) && !BookmarkManager.isBookmarkNode(node);
+        return !isBlockElement(blockElements, node) && !Bookmarks.isBookmarkNode(node);
       } else {
         return false;
       }

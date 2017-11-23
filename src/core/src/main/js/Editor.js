@@ -934,7 +934,7 @@ define(
 
         // Get raw contents or by default the cleaned contents
         if (args.format === 'raw') {
-          content = Tools.trim(TrimHtml.trim(self.serializer, body.innerHTML));
+          content = Tools.trim(TrimHtml.trimExternal(self.serializer, body.innerHTML));
         } else if (args.format === 'text') {
           content = body.innerText || body.textContent;
         } else if (args.format === 'tree') {
