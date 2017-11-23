@@ -17,9 +17,10 @@ define(
 
   function (Option, DocumentPosition, Element, Fragment, Traverse, Selection, NativeRange, SelectionDirection, CaretRange, Within, Prefilter) {
     var doSetNativeRange = function (win, rng) {
-      var selection = win.getSelection();
-      selection.removeAllRanges();
-      selection.addRange(rng);
+      Option.from(win.getSelection()).each(function(selection) {
+        selection.removeAllRanges();
+        selection.addRange(rng);
+      });      
     };
 
     var doSetRange = function (win, start, soffset, finish, foffset) {
