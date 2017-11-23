@@ -49,7 +49,7 @@ define(
       var access = {};
       var cells = [];
 
-      var maxRows = 0;
+      var maxRows = list.length;
       var maxColumns = 0;
 
       Arr.each(list, function (details, r) {
@@ -71,7 +71,6 @@ define(
               var cc = start + i;
               var newpos = key(cr, cc);
               access[newpos] = current;
-              maxRows = Math.max(maxRows, cr + 1);
               maxColumns = Math.max(maxColumns, cc + 1);
             }
           }

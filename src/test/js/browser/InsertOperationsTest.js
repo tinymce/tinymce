@@ -374,5 +374,39 @@ test(
 
       TableOperations.insertRowAfter, 1, 0, 0
     );
+
+    Assertions.checkOld({ section: 0, row: 0, column: 0 },
+      '<table><tbody>' +
+        '<tr><td>?</td><td>?</td></tr>' +
+        '<tr><td>A1</td><td>B1</td></tr>' +
+        '<tr><td>A2</td><td>B2</td></tr>' +
+      '</tbody></table>',
+
+      '<table><tbody>' +
+        '<tr><td>A1</td><td>B1</td></tr>' +
+        '<tr><td rowspan="2">A2</td><td>B2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.insertRowBefore, 0, 0, 0
+    );
+
+    Assertions.checkOld({ section: 1, row: 1, column: 1 },
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td>A2</td><td>B2</td></tr>' +
+        '<tr><td>?</td><td>?</td></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+        '<tr><td>A1</td><td>B1</td></tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<tr><td rowspan="2">A2</td><td>B2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.insertRowAfter, 1, 0, 1
+    );
   }
 );
