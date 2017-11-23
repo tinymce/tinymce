@@ -423,6 +423,7 @@ module.exports = function (grunt) {
       core: {
         config: 'config/bolt/browser.js',
         projectdir: '.',
+        stopOnFailure: true,
         testfiles: [
           'src/**/src/test/js/atomic/**/*Test.js',
           'src/**/src/test/js/browser/**/*Test.js'
@@ -436,6 +437,7 @@ module.exports = function (grunt) {
         browser: 'phantomjs',
         config: 'config/bolt/browser.js',
         testfiles: ['src/**/src/test/js/**/*Test.js'],
+        stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
@@ -446,6 +448,7 @@ module.exports = function (grunt) {
         browser: 'chrome',
         config: 'config/bolt/browser.js',
         testfiles: ['src/**/src/test/js/**/*Test.js'],
+        stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
@@ -456,6 +459,7 @@ module.exports = function (grunt) {
         browser: 'firefox',
         config: 'config/bolt/browser.js',
         testfiles: ['src/**/src/test/js/**/*Test.js'],
+        stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
@@ -466,6 +470,7 @@ module.exports = function (grunt) {
         browser: 'MicrosoftEdge',
         config: 'config/bolt/browser.js',
         testfiles: ['src/**/src/test/js/**/*Test.js'],
+        stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
@@ -476,6 +481,7 @@ module.exports = function (grunt) {
         browser: 'ie',
         config: 'config/bolt/browser.js',
         testfiles: ['src/**/src/test/js/**/*Test.js'],
+        stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
         customRoutes: 'src/core/src/test/json/routes.json',
