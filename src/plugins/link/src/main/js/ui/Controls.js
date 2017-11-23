@@ -18,6 +18,7 @@ define(
 
     var setupButtons = function (editor) {
       editor.addButton('link', {
+        active: false,
         icon: 'link',
         tooltip: 'Insert/edit link',
         onclick: Actions.openDialog(editor),
@@ -25,6 +26,7 @@ define(
       });
 
       editor.addButton('unlink', {
+        active: false,
         icon: 'unlink',
         tooltip: 'Remove link',
         onclick: Utils.unlink(editor),

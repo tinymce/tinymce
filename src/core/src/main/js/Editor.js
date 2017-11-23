@@ -387,6 +387,10 @@ define(
           };
         }
 
+        if (settings.stateSelector && typeof settings.active === 'undefined') {
+          settings.active = false;
+        }
+
         if (!settings.text && !settings.icon) {
           settings.icon = name;
         }

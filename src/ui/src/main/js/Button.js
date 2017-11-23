@@ -120,8 +120,9 @@ define(
       renderHtml: function () {
         var self = this, id = self._id, prefix = self.classPrefix;
         var icon = self.state.get('icon'), image, text = self.state.get('text'), textHtml = '';
+        var ariaPressed, settings = self.settings;
 
-        image = self.settings.image;
+        image = settings.image;
         if (image) {
           icon = 'none';
 
@@ -141,9 +142,10 @@ define(
         }
 
         icon = icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
+        ariaPressed = typeof settings.active === 'boolean' ? ' aria-pressed="' + settings.active + '"' : '';
 
         return (
-          '<div id="' + id + '" class="' + self.classes + '" tabindex="-1">' +
+          '<div id="' + id + '" class="' + self.classes + '" tabindex="-1"' + ariaPressed + '>' +
           '<button id="' + id + '-button" role="presentation" type="button" tabindex="-1">' +
           (icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
           textHtml +

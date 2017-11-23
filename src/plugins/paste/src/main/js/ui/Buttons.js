@@ -28,6 +28,7 @@ define(
       var postRender = Fun.curry(stateChange, editor, clipboard);
 
       editor.addButton('pastetext', {
+        active: false,
         icon: 'pastetext',
         tooltip: 'Paste as text',
         cmd: 'mceTogglePlainTextPaste',

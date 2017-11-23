@@ -25,6 +25,7 @@ define(
         superscript: 'Superscript'
       }, function (text, name) {
         editor.addButton(name, {
+          active: false,
           tooltip: text,
           onPostRender: FormatUtils.postRenderFormat(editor, name),
           onclick: FormatUtils.toggleFormat(editor, name)
@@ -60,6 +61,7 @@ define(
         superscript: ['Superscript', 'Superscript']
       }, function (item, name) {
         editor.addButton(name, {
+          active: false,
           tooltip: item[0],
           cmd: item[1],
           onPostRender: FormatUtils.postRenderFormat(editor, name)
