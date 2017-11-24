@@ -1,6 +1,6 @@
 {
   "name": "tinymce",
-  "version": "4.7.2",
+  "version": "4.7.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git"
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@ephox/bedrock": "^1.5.0",
     "@ephox/bolt": "^1.6.0",
-    "@ephox/imagetools": "2.0.0",
+    "@ephox/imagetools": "^2.0.0",
     "@ephox/mcagar": "^1.1.1",
     "grunt": "~1.0.1",
     "grunt-contrib-clean": "~1.0.0",

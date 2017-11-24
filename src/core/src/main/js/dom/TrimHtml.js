@@ -17,16 +17,13 @@ define(
   function (SaxParser, Zwsp) {
     var trimHtml = function (tempAttrs, html) {
       var trimContentRegExp = new RegExp([
-        '<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\\/span>', // Trim bogus spans like caret containers
         '\\s?(' + tempAttrs.join('|') + ')="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
       ].join('|'), 'gi');
 
-      html = Zwsp.trim(html.replace(trimContentRegExp, ''));
-
-      return html;
+      return html.replace(trimContentRegExp, '');
     };
 
-    var trim = function (serializer, html) {
+    var trimInternal = function (serializer, html) {
       var content = html;
       var bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
       var endTagIndex, index, matchLength, matches, shortEndedElements;
@@ -53,8 +50,13 @@ define(
       return content;
     };
 
+    var trimExternal = function (serializer, html) {
+      return Zwsp.trim(trimInternal(serializer, html));
+    };
+
     return {
-      trim: trim
+      trimExternal: trimExternal,
+      trimInternal: trimInternal
     };
   }
 );

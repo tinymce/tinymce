@@ -19,7 +19,7 @@ asynctest(
     var pressEnter = function (editor, evt) {
       var dom = editor.dom, target = editor.selection.getNode();
 
-      evt = Tools.extend({ keyCode: 13 }, evt);
+      evt = Tools.extend({ keyCode: 13, shiftKey: false }, evt);
 
       dom.fire(target, 'keydown', evt);
       dom.fire(target, 'keypress', evt);

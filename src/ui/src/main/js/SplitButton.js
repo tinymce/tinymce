@@ -74,10 +74,10 @@ define(
        */
       renderHtml: function () {
         var self = this, id = self._id, prefix = self.classPrefix, image;
-        var icon = self.state.get('icon'), text = self.state.get('text'),
-          textHtml = '';
+        var icon = self.state.get('icon'), text = self.state.get('text');
+        var settings = self.settings, textHtml = '', ariaPressed;
 
-        image = self.settings.image;
+        image = settings.image;
         if (image) {
           icon = 'none';
 
@@ -91,15 +91,17 @@ define(
           image = '';
         }
 
-        icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
+        icon = settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
 
         if (text) {
           self.classes.add('btn-has-text');
           textHtml = '<span class="' + prefix + 'txt">' + self.encode(text) + '</span>';
         }
 
+        ariaPressed = typeof settings.active === 'boolean' ? ' aria-pressed="' + settings.active + '"' : '';
+
         return (
-          '<div id="' + id + '" class="' + self.classes + '" role="button" tabindex="-1">' +
+          '<div id="' + id + '" class="' + self.classes + '" role="button"' + ariaPressed + ' tabindex="-1">' +
           '<button type="button" hidefocus="1" tabindex="-1">' +
           (icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
           textHtml +

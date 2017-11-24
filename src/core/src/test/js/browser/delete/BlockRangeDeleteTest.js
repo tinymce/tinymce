@@ -134,6 +134,20 @@ asynctest(
               ]
             });
           }))
+        ])),
+        Logger.t('Backspace selected paragraphs in td should produce an padded empty cell and also not delete the whole table', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>'),
+          tinyApis.sSetSelection([0, 0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 1, 0], 1),
+          sBackspace(editor),
+          tinyApis.sAssertContent('<table><tbody><tr><td><p>&nbsp;</p></td></tr></tbody></table>'),
+          tinyApis.sAssertSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0)
+        ])),
+        Logger.t('Delete selected paragraphs in td should produce an padded empty cell and also not delete the whole table', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>'),
+          tinyApis.sSetSelection([0, 0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 1, 0], 1),
+          sDelete(editor),
+          tinyApis.sAssertContent('<table><tbody><tr><td><p>&nbsp;</p></td></tr></tbody></table>'),
+          tinyApis.sAssertSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0)
         ]))
       ], onSuccess, onFailure);
     }, {

@@ -11,7 +11,7 @@
 define(
   'tinymce.core.fmt.RemoveFormat',
   [
-    'tinymce.core.dom.BookmarkManager',
+    'tinymce.core.dom.Bookmarks',
     'tinymce.core.dom.NodeType',
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.fmt.CaretFormat',
@@ -21,7 +21,7 @@ define(
     'tinymce.core.selection.RangeWalk',
     'tinymce.core.util.Tools'
   ],
-  function (BookmarkManager, NodeType, TreeWalker, CaretFormat, ExpandRange, FormatUtils, MatchFormat, RangeWalk, Tools) {
+  function (Bookmarks, NodeType, TreeWalker, CaretFormat, ExpandRange, FormatUtils, MatchFormat, RangeWalk, Tools) {
     var MCE_ATTR_RE = /^(src|href|style)$/;
     var each = Tools.each;
     var isEq = FormatUtils.isEq;
@@ -401,7 +401,7 @@ define(
         // If the end is placed within the start the result will be removed
         // So this checks if the out node is a bookmark node if it is it
         // checks for another more suitable node
-        if (BookmarkManager.isBookmarkNode(out)) {
+        if (Bookmarks.isBookmarkNode(out)) {
           out = out[start ? 'firstChild' : 'lastChild'];
         }
 

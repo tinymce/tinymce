@@ -51,7 +51,7 @@ define(
 
       fragments = Fragments.read(editor.getBody());
       trimmedFragments = Arr.bind(fragments, function (html) {
-        var trimmed = TrimHtml.trim(editor.serializer, html);
+        var trimmed = TrimHtml.trimInternal(editor.serializer, html);
         return trimmed.length > 0 ? [trimmed] : [];
       });
       content = trimmedFragments.join('');

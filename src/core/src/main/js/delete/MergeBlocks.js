@@ -23,9 +23,10 @@ define(
     'tinymce.core.dom.ElementType',
     'tinymce.core.dom.Empty',
     'tinymce.core.dom.NodeType',
+    'tinymce.core.dom.PaddingBr',
     'tinymce.core.dom.Parents'
   ],
-  function (Arr, Option, Compare, Insert, Remove, Element, Traverse, CaretFinder, CaretPosition, ElementType, Empty, NodeType, Parents) {
+  function (Arr, Option, Compare, Insert, Remove, Element, Traverse, CaretFinder, CaretPosition, ElementType, Empty, NodeType, PaddingBr, Parents) {
     var getChildrenUntilBlockBoundary = function (block) {
       var children = Traverse.children(block);
       return Arr.findIndex(children, ElementType.isBlock).fold(
@@ -83,6 +84,11 @@ define(
     var mergeBlockInto = function (rootNode, fromBlock, toBlock) {
       if (Empty.isEmpty(toBlock)) {
         Remove.remove(toBlock);
+
+        if (Empty.isEmpty(fromBlock)) {
+          PaddingBr.fillWithPaddingBr(fromBlock);
+        }
+
         return CaretFinder.firstPositionIn(fromBlock.dom());
       } else {
         trimBr(true, fromBlock);

@@ -1,22 +1,31 @@
 asynctest(
   'browser.tinymce.plugins.table.TableDialogTest',
   [
-    'ephox.agar.api.Pipeline',
+    'ephox.agar.api.ApproxStructure',
+    'ephox.agar.api.Assertions',
+    'ephox.agar.api.Chain',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
-    'ephox.agar.api.Chain',
+    'ephox.agar.api.Mouse',
+    'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.ApproxStructure',
-    'ephox.sugar.api.search.SelectorFind',
-    'ephox.mcagar.api.TinyLoader',
+    'ephox.agar.api.UiControls',
+    'ephox.agar.api.UiFinder',
     'ephox.mcagar.api.TinyApis',
+    'ephox.mcagar.api.TinyDom',
+    'ephox.mcagar.api.TinyLoader',
     'ephox.mcagar.api.TinyUi',
     'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.search.SelectorFind',
+    'global!document',
+    'tinymce.core.dom.DOMUtils',
     'tinymce.plugins.table.Plugin',
     'tinymce.themes.modern.Theme'
   ],
-  function (Pipeline, GeneralSteps, Logger, Chain, Step, Assertions, ApproxStructure, SelectorFind, TinyLoader, TinyApis, TinyUi, Element, Plugin, Theme) {
+  function (
+    ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiControls, UiFinder, TinyApis, TinyDom, TinyLoader, TinyUi, Element, SelectorFind,
+    document, DOMUtils, Plugin, Theme
+  ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -43,6 +52,12 @@ asynctest(
       var cWaitForDialog = function (label) {
         // looking for dialogs by aria-label
         return ui.cWaitForPopup('wait for ' + label + ' dialog', 'div[aria-label="' + label + '"][role="dialog"]');
+      };
+
+      var cFakeEventOn = function (event) {
+        return Chain.op(function (elm) {
+          DOMUtils.DOM.fire(elm.dom(), event);
+        });
       };
 
       Pipeline.async({}, [
@@ -148,28 +163,49 @@ asynctest(
           api.sSetCursor([0, 0, 0], 0),
           api.sExecCommand('mceTableProps'),
           Chain.asStep({}, [
-            cWaitForDialog("Table properties"),
-            ui.cAssertDialogContents({
-              "align": "",
-              "border": "",
-              "caption": false,
-              "cellpadding": "",
-              "cellspacing": "",
-              "height": "",
-              "width": "",
-              "backgroundColor": "",
-              "borderColor": "",
-              "borderStyle": "",
-              "style": "",
-              "class": ""
-            }),
-            ui.cFillDialogWith({
-              width: "100",
-              height: "101"
-            }),
-            ui.cSubmitDialog()
+            Chain.fromParent(cWaitForDialog("Table properties"), [
+              Chain.fromChains([
+                ui.cAssertDialogContents({
+                  "align": "",
+                  "border": "",
+                  "caption": false,
+                  "cellpadding": "",
+                  "cellspacing": "",
+                  "height": "",
+                  "width": "",
+                  "backgroundColor": "",
+                  "borderColor": "",
+                  "borderStyle": "",
+                  "style": "",
+                  "class": ""
+                })
+              ]),
+              Chain.fromChains([
+                UiFinder.cFindIn('label:contains("Width") + input'),
+                UiControls.cSetValue('100px'),
+                cFakeEventOn('change')
+              ]),
+              Chain.fromChains([
+                UiFinder.cFindIn('label:contains("Height") + input'),
+                UiControls.cSetValue('101px'),
+                cFakeEventOn('change')
+              ]),
+              Chain.fromChains([
+                UiFinder.cFindIn('label:contains("Class") + div > button'),
+                Mouse.cClick
+              ])
+            ])
           ]),
-          sAssertElementStructure('table', '<table style="width: 100px; height: 101px;"><tbody><tr><td>X</td></tr></tbody></table>'),
+          Chain.asStep(TinyDom.fromDom(document.body), [
+            UiFinder.cFindIn('div[role="menuitem"] > span:contains("Class1")'),
+            Mouse.cClick
+          ]),
+          Chain.asStep({}, [
+            cWaitForDialog("Table properties"),
+            UiFinder.cFindIn('button:contains("Ok")'),
+            Mouse.cClick
+          ]),
+          sAssertElementStructure('table', '<table class="class1" style="width: 100px; height: 101px;"><tbody><tr><td>X</td></tr></tbody></table>'),
           api.sDeleteSetting('table_class_list')
         ])),
 
@@ -194,8 +230,8 @@ asynctest(
               "caption": true,
               "cellpadding": "3",
               "cellspacing": "2",
-              "height": "101",
-              "width": "100",
+              "height": "101px",
+              "width": "100px",
               "backgroundColor": "",
               "borderColor": "",
               "borderStyle": "",
@@ -231,21 +267,6 @@ asynctest(
             ui.cSubmitDialog()
           ]),
           sAssertElementStructure('table', '<table><tbody><tr><td>X</td></tr></tbody></table>')
-        ])),
-
-        Logger.t("Table properties dialog (change size in pixels)", GeneralSteps.sequence([
-          api.sSetContent('<table><tr><td>X</td></tr></table>'),
-          api.sSetCursor([0, 0, 0], 0),
-          api.sExecCommand('mceTableProps'),
-          Chain.asStep({}, [
-            cWaitForDialog("Table properties"),
-            ui.cFillDialogWith({
-              width: 100,
-              height: 101
-            }),
-            ui.cSubmitDialog()
-          ]),
-          sAssertElementStructure('table', '<table style="width: 100px; height: 101px;"><tbody><tr><td>X</td></tr></tbody></table>')
         ])),
 
         Logger.t("Table properties dialog (change size in pixels)", GeneralSteps.sequence([
@@ -322,18 +343,44 @@ asynctest(
           api.sDeleteSetting('table_style_by_css')
         ])),
 
-        Logger.t("Css from the style field of the Advanced Tab should always have priority", GeneralSteps.sequence([
+        Logger.t("changing the style field on adv tab changes the height and width", GeneralSteps.sequence([
           api.sSetContent('<table><tr><td>X</td></tr></table>'),
           api.sSetCursor([0, 0, 0], 0),
           api.sExecCommand('mceTableProps'),
           Chain.asStep({}, [
-            cWaitForDialog("Table properties"),
-            ui.cFillDialogWith({
-              width: 100,
-              height: 101,
-              style: "width: 200px; height: 201px;"
-            }),
-            ui.cSubmitDialog()
+            Chain.fromParent(cWaitForDialog("Table properties"),
+              [
+                Chain.fromChains([
+                  UiFinder.cFindIn('label:contains("Width") + input'),
+                  UiControls.cGetValue,
+                  Assertions.cAssertEq('should be changed automatically on style change', '')
+                ]),
+                Chain.fromChains([
+                  UiFinder.cFindIn('label:contains("Height") + input'),
+                  UiControls.cGetValue,
+                  Assertions.cAssertEq('should be changed automatically on style change', '')
+                ]),
+                Chain.fromChains([
+                  UiFinder.cFindIn('label:contains("Style") + input'),
+                  UiControls.cSetValue('width: 200px; height: 201px;'),
+                  cFakeEventOn('change')
+                ]),
+                Chain.fromChains([
+                  UiFinder.cFindIn('label:contains("Width") + input'),
+                  UiControls.cGetValue,
+                  Assertions.cAssertEq('should be changed automatically on style change', '200px')
+                ]),
+                Chain.fromChains([
+                  UiFinder.cFindIn('label:contains("Height") + input'),
+                  UiControls.cGetValue,
+                  Assertions.cAssertEq('should be changed automatically on style change', '201px')
+                ]),
+                Chain.fromChains([
+                  UiFinder.cFindIn('button:contains("Ok")'),
+                  Mouse.cClick
+                ])
+              ]
+            )
           ]),
           sAssertElementStructure('table', '<table style="width: 200px; height: 201px;"><tbody><tr><td>X</td></tr></tbody></table>')
         ]))

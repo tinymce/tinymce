@@ -13,6 +13,7 @@ define(
   [
     'ephox.imagetools.api.BlobConversions',
     'ephox.imagetools.api.ImageTransformations',
+    'ephox.imagetools.api.ResultConversions',
     'ephox.katamari.api.Fun',
     'ephox.sand.api.URL',
     'global!clearTimeout',
@@ -25,7 +26,7 @@ define(
     'tinymce.plugins.imagetools.core.Proxy',
     'tinymce.plugins.imagetools.ui.Dialog'
   ],
-  function (BlobConversions, ImageTransformations, Fun, URL, clearTimeout, Delay, Promise, Tools, URI, Settings, ImageSize, Proxy, Dialog) {
+  function (BlobConversions, ImageTransformations, ResultConversions, Fun, URL, clearTimeout, Delay, Promise, Tools, URI, Settings, ImageSize, Proxy, Dialog) {
     var count = 0;
 
     var isEditableImage = function (editor, img) {
@@ -166,7 +167,7 @@ define(
       return function () {
         return editor._scanForImages().
           then(Fun.curry(findSelectedBlob, editor)).
-          then(BlobConversions.blobToImageResult).
+          then(ResultConversions.blobToImageResult).
           then(fn).
           then(function (imageResult) {
             return updateSelectedImage(editor, imageResult, false, imageUploadTimerState);
@@ -225,7 +226,7 @@ define(
 
         var openDialog = function (editor, imageResult) {
           return Dialog.edit(editor, imageResult).then(handleDialogBlob).
-            then(BlobConversions.blobToImageResult).
+            then(ResultConversions.blobToImageResult).
             then(function (imageResult) {
               return updateSelectedImage(editor, imageResult, true, imageUploadTimerState);
             }, function () {
@@ -234,7 +235,7 @@ define(
         };
 
         findSelectedBlob(editor).
-          then(BlobConversions.blobToImageResult).
+          then(ResultConversions.blobToImageResult).
           then(Fun.curry(openDialog, editor), function (error) {
             displayError(editor, error);
           });

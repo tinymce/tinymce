@@ -34,6 +34,7 @@ define(
         alignnone: ['No alignment', 'JustifyNone']
       }, function (item, name) {
         editor.addButton(name, {
+          active: false,
           tooltip: item[0],
           cmd: item[1],
           onPostRender: FormatUtils.postRenderFormat(editor, name)

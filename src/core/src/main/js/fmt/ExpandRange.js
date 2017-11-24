@@ -11,13 +11,13 @@
 define(
   'tinymce.core.fmt.ExpandRange',
   [
-    'tinymce.core.dom.BookmarkManager',
+    'tinymce.core.dom.Bookmarks',
     'tinymce.core.dom.TreeWalker',
     'tinymce.core.fmt.FormatUtils',
     'tinymce.core.selection.RangeNodes'
   ],
-  function (BookmarkManager, TreeWalker, FormatUtils, RangeNodes) {
-    var isBookmarkNode = BookmarkManager.isBookmarkNode;
+  function (Bookmarks, TreeWalker, FormatUtils, RangeNodes) {
+    var isBookmarkNode = Bookmarks.isBookmarkNode;
     var getParents = FormatUtils.getParents, isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode, isTextBlock = FormatUtils.isTextBlock;
 
     // This function walks down the tree to find the leaf at the selection.

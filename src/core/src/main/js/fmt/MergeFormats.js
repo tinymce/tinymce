@@ -12,7 +12,7 @@ define(
   'tinymce.core.fmt.MergeFormats',
   [
     'ephox.katamari.api.Fun',
-    'tinymce.core.dom.BookmarkManager',
+    'tinymce.core.dom.Bookmarks',
     'tinymce.core.dom.ElementUtils',
     'tinymce.core.dom.NodeType',
     'tinymce.core.fmt.CaretFormat',
@@ -21,11 +21,11 @@ define(
     'tinymce.core.fmt.RemoveFormat',
     'tinymce.core.util.Tools'
   ],
-  function (Fun, BookmarkManager, ElementUtils, NodeType, CaretFormat, FormatUtils, MatchFormat, RemoveFormat, Tools) {
+  function (Fun, Bookmarks, ElementUtils, NodeType, CaretFormat, FormatUtils, MatchFormat, RemoveFormat, Tools) {
     var each = Tools.each;
 
     var isElementNode = function (node) {
-      return node && node.nodeType === 1 && !BookmarkManager.isBookmarkNode(node) && !CaretFormat.isCaretNode(node) && !NodeType.isBogus(node);
+      return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !CaretFormat.isCaretNode(node) && !NodeType.isBogus(node);
     };
 
     var findElementSibling = function (node, siblingName) {
@@ -36,7 +36,7 @@ define(
           return node;
         }
 
-        if (sibling.nodeType === 1 && !BookmarkManager.isBookmarkNode(sibling)) {
+        if (sibling.nodeType === 1 && !Bookmarks.isBookmarkNode(sibling)) {
           return sibling;
         }
       }

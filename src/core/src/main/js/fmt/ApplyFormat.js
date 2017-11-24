@@ -11,7 +11,7 @@
 define(
   'tinymce.core.fmt.ApplyFormat',
   [
-    'tinymce.core.dom.BookmarkManager',
+    'tinymce.core.dom.Bookmarks',
     'tinymce.core.dom.NodeType',
     'tinymce.core.fmt.CaretFormat',
     'tinymce.core.fmt.ExpandRange',
@@ -23,11 +23,11 @@ define(
     'tinymce.core.selection.RangeWalk',
     'tinymce.core.util.Tools'
   ],
-  function (BookmarkManager, NodeType, CaretFormat, ExpandRange, FormatUtils, Hooks, MatchFormat, MergeFormats, RangeNormalizer, RangeWalk, Tools) {
+  function (Bookmarks, NodeType, CaretFormat, ExpandRange, FormatUtils, Hooks, MatchFormat, MergeFormats, RangeNormalizer, RangeWalk, Tools) {
     var each = Tools.each;
 
     var isElementNode = function (node) {
-      return node && node.nodeType === 1 && !BookmarkManager.isBookmarkNode(node) && !CaretFormat.isCaretNode(node) && !NodeType.isBogus(node);
+      return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !CaretFormat.isCaretNode(node) && !NodeType.isBogus(node);
     };
 
     var processChildElements = function (node, filter, process) {
@@ -234,7 +234,7 @@ define(
             var count = 0;
 
             each(node.childNodes, function (node) {
-              if (!FormatUtils.isWhiteSpaceNode(node) && !BookmarkManager.isBookmarkNode(node)) {
+              if (!FormatUtils.isWhiteSpaceNode(node) && !Bookmarks.isBookmarkNode(node)) {
                 count++;
               }
             });
@@ -259,7 +259,7 @@ define(
             child = getChildElementNode(node);
 
             // If child was found and of the same type as the current node
-            if (child && !BookmarkManager.isBookmarkNode(child) && MatchFormat.matchName(dom, child, format)) {
+            if (child && !Bookmarks.isBookmarkNode(child) && MatchFormat.matchName(dom, child, format)) {
               clone = dom.clone(child, false);
               setElementFormat(clone);
 

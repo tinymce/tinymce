@@ -17,11 +17,13 @@ define(
   [
     'global!Math',
     'global!document',
+    'ephox.sand.api.FileReader',
+    'tinymce.core.util.Promise',
     'tinymce.core.util.Tools',
     'tinymce.core.util.XHR',
     'tinymce.plugins.image.api.Settings'
   ],
-  function (Math, document, Tools, XHR, Settings) {
+  function (Math, document, FileReader, Promise, Tools, XHR, Settings) {
     var parseIntAndGetMax = function (val1, val2) {
       return Math.max(parseInt(val1, 10), parseInt(val2, 10));
     };
@@ -171,6 +173,19 @@ define(
       imgElm.onerror = selectImage;
     };
 
+    var blobToDataUri = function (blob) {
+      return new Promise(function (resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function () {
+          resolve(reader.result);
+        };
+        reader.onerror = function () {
+          reject(FileReader.error.message);
+        };
+        reader.readAsDataURL(blob);
+      });
+    };
+
     return {
       getImageSize: getImageSize,
       buildListItems: buildListItems,
@@ -178,7 +193,8 @@ define(
       addPixelSuffix: addPixelSuffix,
       mergeMargins: mergeMargins,
       createImageList: createImageList,
-      waitLoadImage: waitLoadImage
+      waitLoadImage: waitLoadImage,
+      blobToDataUri: blobToDataUri
     };
   }
 );

@@ -15,14 +15,15 @@
 define(
   'tinymce.plugins.table.ui.TableDialog',
   [
-    'tinymce.core.util.Tools',
+    'ephox.katamari.api.Fun',
     'tinymce.core.Env',
-    'tinymce.plugins.table.alien.Util',
-    'tinymce.plugins.table.actions.Styles',
+    'tinymce.core.util.Tools',
     'tinymce.plugins.table.actions.InsertTable',
+    'tinymce.plugins.table.actions.Styles',
+    'tinymce.plugins.table.alien.Util',
     'tinymce.plugins.table.ui.Helpers'
   ],
-  function (Tools, Env, Util, Styles, InsertTable, Helpers) {
+  function (Fun, Env, Tools, InsertTable, Styles, Util, Helpers) {
 
     //Explore the layers of the table till we find the first layer of tds or ths
     function styleTDTH(dom, elm, name, value) {
@@ -40,9 +41,9 @@ define(
     var extractDataFromElement = function (editor, tableElm) {
       var dom = editor.dom;
       var data = {
-        width: Util.removePxSuffix(dom.getStyle(tableElm, 'width') || dom.getAttrib(tableElm, 'width')),
-        height: Util.removePxSuffix(dom.getStyle(tableElm, 'height') || dom.getAttrib(tableElm, 'height')),
-        cellspacing: Util.removePxSuffix(dom.getStyle(tableElm, 'border-spacing') || dom.getAttrib(tableElm, 'cellspacing')),
+        width: dom.getStyle(tableElm, 'width') || dom.getAttrib(tableElm, 'width'),
+        height: dom.getStyle(tableElm, 'height') || dom.getAttrib(tableElm, 'height'),
+        cellspacing: dom.getStyle(tableElm, 'border-spacing') || dom.getAttrib(tableElm, 'cellspacing'),
         cellpadding: dom.getAttrib(tableElm, 'data-mce-cell-padding') || dom.getAttrib(tableElm, 'cellpadding') || Styles.getTDTHOverallStyle(editor.dom, tableElm, 'padding'),
         border: dom.getAttrib(tableElm, 'data-mce-border') || dom.getAttrib(tableElm, 'border') || Styles.getTDTHOverallStyle(editor.dom, tableElm, 'border'),
         borderColor: dom.getAttrib(tableElm, 'data-mce-border-color'),
@@ -116,17 +117,16 @@ define(
       }
 
       attrs.style = dom.serializeStyle(styles);
-
       dom.setAttribs(tableElm, attrs);
     };
 
-    var onSubmitTableForm = function (editor, win, tableElm) {
+    var onSubmitTableForm = function (editor, tableElm, evt) {
       var dom = editor.dom;
       var captionElm;
       var data;
 
-      Helpers.updateStyleField(dom, win);
-      data = win.toJSON();
+      Helpers.updateStyleField(editor, evt);
+      data = evt.control.rootControl.toJSON();
 
       if (data["class"] === false) {
         delete data["class"];
@@ -217,8 +217,8 @@ define(
             items: (editor.settings.table_appearance_options !== false) ? [
               colsCtrl,
               rowsCtrl,
-              { label: 'Width', name: 'width' },
-              { label: 'Height', name: 'height' },
+              { label: 'Width', name: 'width', onchange: Fun.curry(Helpers.updateStyleField, editor) },
+              { label: 'Height', name: 'height', onchange: Fun.curry(Helpers.updateStyleField, editor) },
               { label: 'Cell spacing', name: 'cellspacing' },
               { label: 'Cell padding', name: 'cellpadding' },
               { label: 'Border', name: 'border' },
@@ -226,8 +226,8 @@ define(
             ] : [
               colsCtrl,
               rowsCtrl,
-                { label: 'Width', name: 'width' },
-                { label: 'Height', name: 'height' }
+                { label: 'Width', name: 'width', onchange: Fun.curry(Helpers.updateStyleField, editor) },
+                { label: 'Height', name: 'height', onchange: Fun.curry(Helpers.updateStyleField, editor) }
             ]
           },
 
@@ -261,18 +261,14 @@ define(
             },
             Helpers.createStyleForm(editor)
           ],
-          onsubmit: function () {
-            onSubmitTableForm(editor, this, tableElm);
-          }
+          onsubmit: Fun.curry(onSubmitTableForm, editor, tableElm)
         });
       } else {
         editor.windowManager.open({
           title: "Table properties",
           data: data,
           body: generalTableForm,
-          onsubmit: function () {
-            onSubmitTableForm(editor, this, tableElm);
-          }
+          onsubmit: Fun.curry(onSubmitTableForm, editor, tableElm)
         });
       }
     };

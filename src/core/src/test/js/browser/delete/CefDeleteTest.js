@@ -113,6 +113,50 @@ asynctest(
               });
             })
           )
+        ])),
+
+        Logger.t('Should padd editor with empty paragraph if we delete last element', GeneralSteps.sequence([
+          tinyApis.sSetContent('<div contenteditable="false">a</div>'),
+          tinyApis.sSetSelection([], 1, [], 1),
+          tinyActions.sContentKeystroke(Keys.backspace(), {}),
+          tinyApis.sAssertSelection([0], 0, [0], 0),
+          tinyApis.sAssertContentStructure(
+            ApproxStructure.build(function (s, str, arr) {
+              return s.element('body', {
+                children: [
+                  s.element('p', {
+                    children: [
+                      s.element('br', {
+                        attrs: {
+                          'data-mce-bogus': str.is('1')
+                        }
+                      })
+                    ]
+                  })
+                ]
+              });
+            })
+          )
+        ])),
+
+        Logger.t('Should remove fake caret if we delete block cef', GeneralSteps.sequence([
+          tinyApis.sSetContent('<div contenteditable="false">a</div><p>b</p>'),
+          tinyApis.sSetSelection([], 1, [], 1),
+          tinyActions.sContentKeystroke(Keys.backspace(), {}),
+          tinyApis.sAssertSelection([0, 0], 0, [0, 0], 0),
+          tinyApis.sAssertContentStructure(
+            ApproxStructure.build(function (s, str, arr) {
+              return s.element('body', {
+                children: [
+                  s.element('p', {
+                    children: [
+                      s.text(str.is('b'))
+                    ]
+                  })
+                ]
+              });
+            })
+          )
         ]))
       ]);
     };

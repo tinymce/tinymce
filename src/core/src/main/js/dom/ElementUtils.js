@@ -17,10 +17,10 @@
 define(
   'tinymce.core.dom.ElementUtils',
   [
-    "tinymce.core.dom.BookmarkManager",
+    "tinymce.core.dom.Bookmarks",
     "tinymce.core.util.Tools"
   ],
-  function (BookmarkManager, Tools) {
+  function (Bookmarks, Tools) {
     var each = Tools.each;
 
     var ElementUtils = function (dom) {
@@ -113,7 +113,7 @@ define(
           return false;
         }
 
-        return !BookmarkManager.isBookmarkNode(node1) && !BookmarkManager.isBookmarkNode(node2);
+        return !Bookmarks.isBookmarkNode(node1) && !Bookmarks.isBookmarkNode(node2);
       };
     };
 
