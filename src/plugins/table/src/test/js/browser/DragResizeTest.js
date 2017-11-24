@@ -4,6 +4,7 @@ asynctest(
     'ephox.agar.api.Assertions',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
+    'ephox.agar.api.Mouse',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step',
     'ephox.agar.api.UiFinder',
@@ -24,7 +25,7 @@ asynctest(
     'tinymce.themes.modern.Theme'
   ],
   function (
-    Assertions, GeneralSteps, Logger, Pipeline, Step, UiFinder, Waiter, Cell, TinyApis, TinyLoader, Focus, Hierarchy, Element, SelectorFind, Height, Location,
+    Assertions, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, Cell, TinyApis, TinyLoader, Focus, Hierarchy, Element, SelectorFind, Height, Location,
     Width, document, window, TablePlugin, ModernTheme
   ) {
     var success = arguments[arguments.length - 2];
@@ -32,20 +33,6 @@ asynctest(
 
     ModernTheme();
     TablePlugin();
-
-    var point = function (type, element, x, y) {
-      // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-      var ev = document.createEvent("MouseEvent");
-      ev.initMouseEvent(
-          type,
-          true /* bubble */, true /* cancelable */,
-          window, null,
-          x, y, x, y, /* coordinates */
-          false, false, false, false, /* modifier keys */
-          0 /*left*/, null
-      );
-      element.dom().dispatchEvent(ev);
-    };
 
     var sDragDrop = function (container, selector, dx, dy, blocked) {
       return Step.sync(function () {
@@ -55,16 +42,16 @@ asynctest(
         var position = Location.absolute(element);
         var x = position.left();
         var y = position.top();
-        point('mousedown', element, x, y);
+        Mouse.mousedown(element, x, y);
 
         if (blocked) {
           var blocker = SelectorFind.child(container, 'div.ephox-dragster-blocker').getOrDie('oh no blocker');
-          point('mousemove', blocker, x, y);
-          point('mousemove', blocker, x + dx, y + dy);
-          point('mouseup', blocker, x + dx, y + dy);
+          Mouse.mousemove(blocker, x, y);
+          Mouse.mousemove(blocker, x + dx, y + dy);
+          Mouse.mouseup(blocker, x + dy, y + dy);
         } else {
-          point('mousemove', element, x + dx, y + dy);
-          point('mouseup', element, x + dx, y + dy);
+          Mouse.mousemove(element, x + dx, y + dy);
+          Mouse.mouseup(element, x + dy, y + dy);
         }
       });
     };
@@ -74,8 +61,7 @@ asynctest(
         var element = UiFinder.findIn(container, selector).getOrDie('oh no');
 
         Focus.focus(element);
-        var position = Location.absolute(element);
-        point('mouseover', element, position.left(), position.top());
+        Mouse.mouseover(element);
       });
     };
 
@@ -99,10 +85,7 @@ asynctest(
     });
 
     var looseEqual = function (exp, act, loose) {
-      var exp1 = exp - loose;
-      var exp2 = exp + loose;
-
-      return act >= exp1 && act <= exp2;
+      return Math.abs(exp - act) <= loose;
     };
 
     var sAssertSizeChange = function (editor, path, change) {
@@ -120,18 +103,28 @@ asynctest(
     };
 
     var tableHtml = '<table style="border-collapse: collapse; width: 367px; height: 90px;" border="1">' +
-                  '<tbody>' +
-                    '<tr>' +
-                      '<td style="width: 180px;">a</td>' +
-                      '<td style="width: 180px;">b</td>' +
-                    '</tr>' +
-                    '<tr>' +
-                      '<td style="width: 180px;">1</td>' +
-                      '<td style="width: 180px;">2</td>' +
-                    '</tr>' +
-                  '</tbody>' +
-                '</table>';
+                      '<tbody>' +
+                        '<tr>' +
+                          '<td style="width: 180px;">a</td>' +
+                          '<td style="width: 180px;">b</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                          '<td style="width: 180px;">1</td>' +
+                          '<td style="width: 180px;">2</td>' +
+                        '</tr>' +
+                      '</tbody>' +
+                    '</table>';
 
+    var sWaitForSelection = function (editor, tinyApis) {
+      return GeneralSteps.sequence([
+        tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
+        Waiter.sTryUntil(
+          'wait for resize handles',
+          UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese'),
+          10, 1000
+        )
+      ]);
+    };
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       var tinyApis = TinyApis(editor);
@@ -141,12 +134,7 @@ asynctest(
         Logger.t('resize table height by dragging bottom', GeneralSteps.sequence([
           tinyApis.sSetContent('<table style="border-collapse: collapse;border: 0;"><tbody><tr><td style="height:45px;">a</td></tr><tr><td style="height:45px;">a</td></tr></tbody></table>'),
           sSetStateFrom(editor, [0, 0, 0, 0]),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
-          Waiter.sTryUntil(
-            'wait for resize handles',
-            UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese'),
-            10, 1000
-          ),
+          sWaitForSelection(editor, tinyApis),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
           sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50, true),
           sAssertSizeChange(editor, [0, 0, 0, 0], { h: 50, w: 0 }),
@@ -156,12 +144,7 @@ asynctest(
         Logger.t('resize table width by dragging right side', GeneralSteps.sequence([
           tinyApis.sSetContent('<table style="border-collapse: collapse;border: 0;"><tbody><tr><td style="height:45px;">a</td></tr><tr><td style="height:45px;">a</td></tr></tbody></table>'),
           sSetStateFrom(editor, [0, 0, 0, 0]),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
-          Waiter.sTryUntil(
-            'wait for resize handles',
-            UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese'),
-            10, 1000
-          ),
+          sWaitForSelection(editor, tinyApis),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
           sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0, true),
           sAssertSizeChange(editor, [0, 0, 0, 0], { h: 0, w: 50 }),
@@ -171,12 +154,7 @@ asynctest(
         Logger.t('Resize table bigger with handle, then resize row height bigger by dragging middle border', GeneralSteps.sequence([
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
-          Waiter.sTryUntil(
-            'wait for resize handles',
-            UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese'),
-            10, 1000
-          ),
+          sWaitForSelection(editor, tinyApis),
           sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50, false),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
           sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50, true),
@@ -187,12 +165,7 @@ asynctest(
         Logger.t('Resize table bigger with handle, then resize row height smaller by dragging middle border', GeneralSteps.sequence([
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
-          Waiter.sTryUntil(
-            'wait for resize handles',
-            UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese'),
-            10, 1000
-          ),
+          sWaitForSelection(editor, tinyApis),
           sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50, false),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
           sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -30, true),
@@ -203,12 +176,7 @@ asynctest(
         Logger.t('Resize table bigger with handle, then resize column width bigger by dragging middle border', GeneralSteps.sequence([
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
-          Waiter.sTryUntil(
-            'wait for resize handles',
-            UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese'),
-            10, 1000
-          ),
+          sWaitForSelection(editor, tinyApis),
           sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50, false),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
           sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0, true),
@@ -219,12 +187,7 @@ asynctest(
         Logger.t('Resize table bigger with handle, then resize column width smaller by dragging middle border', GeneralSteps.sequence([
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
-          Waiter.sTryUntil(
-            'wait for resize handles',
-            UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese'),
-            10, 1000
-          ),
+          sWaitForSelection(editor, tinyApis),
           sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50, false),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
           sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -30, 0, true),
@@ -235,12 +198,7 @@ asynctest(
         Logger.t('Resize table smaller with handle, then resize row height bigger by dragging middle border', GeneralSteps.sequence([
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
-          Waiter.sTryUntil(
-            'wait for resize handles',
-            UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese'),
-            10, 1000
-          ),
+          sWaitForSelection(editor, tinyApis),
           sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10, false),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
           sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50, true),
@@ -251,12 +209,7 @@ asynctest(
         Logger.t('Resize table smaller with handle, then resize row height smaller by dragging middle border', GeneralSteps.sequence([
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
-          Waiter.sTryUntil(
-            'wait for resize handles',
-            UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese'),
-            10, 1000
-          ),
+          sWaitForSelection(editor, tinyApis),
           sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10, false),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
           sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -20, true),
@@ -267,12 +220,7 @@ asynctest(
         Logger.t('Resize table smaller with handle, then resize column width bigger by dragging middle border', GeneralSteps.sequence([
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
-          Waiter.sTryUntil(
-            'wait for resize handles',
-            UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese'),
-            10, 1000
-          ),
+          sWaitForSelection(editor, tinyApis),
           sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10, false),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
           sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0, true),
@@ -283,12 +231,7 @@ asynctest(
         Logger.t('Resize table smaller with handle, then resize column width smaller by dragging middle border', GeneralSteps.sequence([
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
-          tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
-          Waiter.sTryUntil(
-            'wait for resize handles',
-            UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese'),
-            10, 1000
-          ),
+          sWaitForSelection(editor, tinyApis),
           sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10, false),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
           sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -20, 0, true),
@@ -299,7 +242,6 @@ asynctest(
     }, {
       plugins: 'table',
       content_style: 'table {border: 0;padding:0;} td {border: 0;padding:0;}',
-      toolbar: '',
       height: 400,
       skin_url: '/project/src/skins/lightgray/dist/lightgray'
     }, success, failure);
