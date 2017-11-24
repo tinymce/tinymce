@@ -81,7 +81,14 @@ define(
       cClick: cClick,
       cClickOn: cClickOn,
       cTrueClick: cTrueClick,
-      cContextMenu: cContextMenu
+      cContextMenu: cContextMenu,
+
+      mousedown: Clicks.mousedown,
+      mouseup: Clicks.mouseup,
+      mousemove: Clicks.mousemove,
+      mouseover: Clicks.mouseover,
+      mouseout: Clicks.mouseout,
+      contextmenu: Clicks.contextmenu
     };
   }
 );
