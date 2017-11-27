@@ -42,6 +42,7 @@ define(
       var tbody = tableBody();
       Insert.append(table, tbody);
 
+      // Setting initial widths on cells to avoid jumpy stretching of the active cell and shrinkage of the surrounding ones (see TINY-1398).
       var trs = [];
       for (var i = 0; i < rows; i++) {
         var tr = tableRow();
