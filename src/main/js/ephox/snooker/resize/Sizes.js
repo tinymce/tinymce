@@ -6,6 +6,7 @@ define(
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Strings',
     'ephox.snooker.api.TableLookup',
+    'ephox.snooker.resize.RuntimeSize',
     'ephox.sugar.api.node.Node',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Css',
@@ -15,7 +16,7 @@ define(
     'global!parseInt'
   ],
 
-  function (Fun, Option, Strings, TableLookup, Node, Attr, Css, Height, Width, Math, parseInt) {
+  function (Fun, Option, Strings, TableLookup, RuntimeSize, Node, Attr, Css, Height, Width, Math, parseInt) {
 
     var genericSizeRegex = /(\d+(\.\d+)?)(\w|%)*/;
     var percentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
@@ -33,18 +34,10 @@ define(
       Css.set(cell, 'height', amount + 'px');
     };
 
-    var getValue = function (cell, property) {
-      return Css.getRaw(cell, property).getOrThunk(function () {
-        return Css.get(cell, property);
-      });
-    };
-
-    var getWidthPixelValue = function (cell) {
-      return getValue(cell, 'width');
-    };
-
     var getHeightValue = function (cell) {
-      return getValue(cell, 'height');
+      return Css.getRaw(cell, 'height').getOrThunk(function () {
+        return RuntimeSize.getHeight(cell) + 'px';
+      });
     };
 
     var convert = function (cell, number, getter, setter) {
@@ -59,13 +52,6 @@ define(
     var normalizePixelSize = function (value, cell, getter, setter) {
       var number = parseInt(value, 10);
       return Strings.endsWith(value, '%') && Node.name(cell) !== 'table' ? convert(cell, number, getter, setter) : number;
-    };
-
-    var getTotalPixelWidth = function (cell) {
-      var value = getWidthPixelValue(cell);
-      // Note, Firefox doesn't calculate the width for you with Css.get
-      if (!value) return Width.get(cell);
-      return normalizePixelSize(value, cell, Width.get, setPixelWidth);
     };
 
     var getTotalHeight = function (cell) {
