@@ -31,9 +31,15 @@ define(
       var selectionRng = Option.none();
       var resize = Option.none();
       var wire = Option.none();
+      var percentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
+      var startW, startRawW;
 
       var isTable = function (elm) {
         return elm.nodeName === 'TABLE';
+      };
+
+      var getRawWidth = function (elm) {
+        return editor.dom.getStyle(elm, 'width') || editor.dom.getAttrib(elm, 'width');
       };
 
       var lazyResize = function () {
@@ -85,25 +91,38 @@ define(
       });
 
       // If we're updating the table width via the old mechanic, we need to update the constituent cells' widths/heights too.
+      editor.on('ObjectResizeStart', function (e) {
+        if (isTable(e.target)) {
+          startW = e.width;
+          startRawW = getRawWidth(e.target);
+        }
+      });
+
       editor.on('ObjectResized', function (e) {
         if (isTable(e.target)) {
           var table = e.target;
 
-          var newCellSizes = [];
-          Tools.each(table.rows, function (row) {
-            Tools.each(row.cells, function (cell) {
-              var width = editor.dom.getStyle(cell, 'width', true);
-              newCellSizes.push({
-                cell: cell,
-                width: width
+          if (percentageBasedSizeRegex.test(startRawW)) {
+            var percentW = parseFloat(percentageBasedSizeRegex.exec(startRawW)[1], 10);
+            var targetPercentW = e.width * percentW / startW;
+            editor.dom.setStyle(table, 'width', targetPercentW + '%');
+          } else {
+            var newCellSizes = [];
+            Tools.each(table.rows, function (row) {
+              Tools.each(row.cells, function (cell) {
+                var width = editor.dom.getStyle(cell, 'width', true);
+                newCellSizes.push({
+                  cell: cell,
+                  width: width
+                });
               });
             });
-          });
 
-          Tools.each(newCellSizes, function (newCellSize) {
-            editor.dom.setStyle(newCellSize.cell, 'width', newCellSize.width);
-            editor.dom.setAttrib(newCellSize.cell, 'width', null);
-          });
+            Tools.each(newCellSizes, function (newCellSize) {
+              editor.dom.setStyle(newCellSize.cell, 'width', newCellSize.width);
+              editor.dom.setAttrib(newCellSize.cell, 'width', null);
+            });
+          }
         }
       });
 
