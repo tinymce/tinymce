@@ -2,6 +2,7 @@ asynctest(
   'browser.tinymce.plugins.table.DragResizeTest',
   [
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.Chain',
     'ephox.agar.api.GeneralSteps',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Mouse',
@@ -12,12 +13,9 @@ asynctest(
     'ephox.katamari.api.Cell',
     'ephox.mcagar.api.TinyApis',
     'ephox.mcagar.api.TinyLoader',
-    'ephox.sugar.api.dom.Focus',
     'ephox.sugar.api.dom.Hierarchy',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.view.Location',
     'ephox.sugar.api.view.Width',
     'global!document',
     'global!window',
@@ -25,8 +23,8 @@ asynctest(
     'tinymce.themes.modern.Theme'
   ],
   function (
-    Assertions, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, Cell, TinyApis, TinyLoader, Focus, Hierarchy, Element, SelectorFind, Height, Location,
-    Width, document, window, TablePlugin, ModernTheme
+    Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, Cell, TinyApis, TinyLoader, Hierarchy, Element, Height, Width, document,
+    window, TablePlugin, ModernTheme
   ) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
@@ -34,35 +32,37 @@ asynctest(
     ModernTheme();
     TablePlugin();
 
-    var sDragDrop = function (container, selector, dx, dy, blocked) {
-      return Step.sync(function () {
-        var element = SelectorFind.child(container, selector).getOrDie('oh no element');
+    var sDragDrop = function (container, selector, dx, dy) {
+      return Chain.asStep(container, [
+        UiFinder.cFindIn(selector),
+        Mouse.cMouseDown,
+        Mouse.cMouseMoveTo(dx, dy),
+        Mouse.cMouseUpTo(dx, dy)
+      ]);
+    };
 
-        Focus.focus(element);
-        var position = Location.absolute(element);
-        var x = position.left();
-        var y = position.top();
-        Mouse.mousedown(element, x, y);
-
-        if (blocked) {
-          var blocker = SelectorFind.child(container, 'div.ephox-dragster-blocker').getOrDie('oh no blocker');
-          Mouse.mousemove(blocker, x, y);
-          Mouse.mousemove(blocker, x + dx, y + dy);
-          Mouse.mouseup(blocker, x + dy, y + dy);
-        } else {
-          Mouse.mousemove(element, x + dx, y + dy);
-          Mouse.mouseup(element, x + dy, y + dy);
-        }
-      });
+    var sDragDropBlocker = function (container, selector, dx, dy) {
+      return Chain.asStep({}, [
+        Chain.fromParent(Chain.inject(container), [
+          Chain.fromChains([
+            UiFinder.cFindIn(selector),
+            Mouse.cMouseDown
+          ]),
+          Chain.fromChains([
+            UiFinder.cFindIn('div.ephox-dragster-blocker'),
+            Mouse.cMouseMove,
+            Mouse.cMouseMoveTo(dx, dy),
+            Mouse.cMouseUpTo(dx, dy)
+          ])
+        ])
+      ]);
     };
 
     var sMouseover = function (container, selector) {
-      return Step.sync(function () {
-        var element = UiFinder.findIn(container, selector).getOrDie('oh no');
-
-        Focus.focus(element);
-        Mouse.mouseover(element);
-      });
+      return Chain.asStep(container, [
+        UiFinder.cFindIn(selector),
+        Mouse.cMouseOver
+      ]);
     };
 
     var state = Cell(null);
@@ -94,8 +94,8 @@ asynctest(
         var height = Height.get(element);
         var width = Width.get(element);
 
-        var changedHeight = state.get().h + change.h;
-        var changedWidth = state.get().w + change.w;
+        var changedHeight = state.get().h + change.dh;
+        var changedWidth = state.get().w + change.dw;
 
         Assertions.assertEq('height has changed as expected', true, looseEqual(changedHeight, height, 2));
         Assertions.assertEq('width has changed as expected', true, looseEqual(changedWidth, width, 2));
@@ -136,8 +136,8 @@ asynctest(
           sSetStateFrom(editor, [0, 0, 0, 0]),
           sWaitForSelection(editor, tinyApis),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
-          sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50, true),
-          sAssertSizeChange(editor, [0, 0, 0, 0], { h: 50, w: 0 }),
+          sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
+          sAssertSizeChange(editor, [0, 0, 0, 0], { dh: 50, dw: 0 }),
           sResetState
         ])),
 
@@ -146,8 +146,8 @@ asynctest(
           sSetStateFrom(editor, [0, 0, 0, 0]),
           sWaitForSelection(editor, tinyApis),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
-          sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0, true),
-          sAssertSizeChange(editor, [0, 0, 0, 0], { h: 0, w: 50 }),
+          sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
+          sAssertSizeChange(editor, [0, 0, 0, 0], { dh: 0, dw: 50 }),
           sResetState
         ])),
 
@@ -155,10 +155,10 @@ asynctest(
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
           sWaitForSelection(editor, tinyApis),
-          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50, false),
+          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
-          sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50, true),
-          sAssertSizeChange(editor, [0], { h: 100, w: 50 }),
+          sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
+          sAssertSizeChange(editor, [0], { dh: 100, dw: 50 }),
           sResetState
         ])),
 
@@ -166,10 +166,10 @@ asynctest(
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
           sWaitForSelection(editor, tinyApis),
-          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50, false),
+          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
-          sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -30, true),
-          sAssertSizeChange(editor, [0], { h: 20, w: 50 }),
+          sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -30),
+          sAssertSizeChange(editor, [0], { dh: 20, dw: 50 }),
           sResetState
         ])),
 
@@ -177,10 +177,10 @@ asynctest(
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
           sWaitForSelection(editor, tinyApis),
-          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50, false),
+          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
-          sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0, true),
-          sAssertSizeChange(editor, [0], { h: 50, w: 50 }),
+          sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
+          sAssertSizeChange(editor, [0], { dh: 50, dw: 50 }),
           sResetState
         ])),
 
@@ -188,10 +188,10 @@ asynctest(
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
           sWaitForSelection(editor, tinyApis),
-          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50, false),
+          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
-          sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -30, 0, true),
-          sAssertSizeChange(editor, [0], { h: 50, w: 50 }),
+          sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -30, 0),
+          sAssertSizeChange(editor, [0], { dh: 50, dw: 50 }),
           sResetState
         ])),
 
@@ -199,10 +199,10 @@ asynctest(
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
           sWaitForSelection(editor, tinyApis),
-          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10, false),
+          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
-          sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50, true),
-          sAssertSizeChange(editor, [0], { h: 40, w: -10 }),
+          sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
+          sAssertSizeChange(editor, [0], { dh: 40, dw: -10 }),
           sResetState
         ])),
 
@@ -210,10 +210,10 @@ asynctest(
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
           sWaitForSelection(editor, tinyApis),
-          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10, false),
+          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
-          sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -20, true),
-          sAssertSizeChange(editor, [0], { h: -30, w: -10 }),
+          sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -20),
+          sAssertSizeChange(editor, [0], { dh: -30, dw: -10 }),
           sResetState
         ])),
 
@@ -221,10 +221,10 @@ asynctest(
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
           sWaitForSelection(editor, tinyApis),
-          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10, false),
+          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
-          sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0, true),
-          sAssertSizeChange(editor, [0], { h: -10, w: -10 }),
+          sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
+          sAssertSizeChange(editor, [0], { dh: -10, dw: -10 }),
           sResetState
         ])),
 
@@ -232,10 +232,10 @@ asynctest(
           tinyApis.sSetContent(tableHtml),
           sSetStateFrom(editor, [0]),
           sWaitForSelection(editor, tinyApis),
-          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10, false),
+          sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
           sMouseover(Element.fromDom(editor.getBody()), 'td'),
-          sDragDrop(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -20, 0, true),
-          sAssertSizeChange(editor, [0], { h: -10, w: -10 }),
+          sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -20, 0),
+          sAssertSizeChange(editor, [0], { dh: -10, dw: -10 }),
           sResetState
         ]))
       ], onSuccess, onFailure);
