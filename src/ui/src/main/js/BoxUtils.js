@@ -17,9 +17,9 @@
 define(
   'tinymce.ui.BoxUtils',
   [
-    'global!document'
+
   ],
-  function (document) {
+  function () {
     "use strict";
 
     return {
@@ -71,7 +71,7 @@ define(
 
       measureBox: function (elm, prefix) {
         function getStyle(name) {
-          var defaultView = document.defaultView;
+          var defaultView = elm.ownerDocument.defaultView;
 
           if (defaultView) {
             var computedStyle = defaultView.getComputedStyle(elm, null);
