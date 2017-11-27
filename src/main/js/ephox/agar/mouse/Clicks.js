@@ -2,14 +2,13 @@ define(
   'ephox.agar.mouse.Clicks',
 
   [
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option',
-    'ephox.sugar.api.node.Node',
-    'ephox.sugar.api.view.Location',
-    'ephox.sugar.api.view.Position'
+    'ephox.sugar.api.view.Location'
   ],
 
-  function (Fun, Option, Node, Location, Position) {
+  function (Location) {
+    var LEFT_CLICK = 0;
+    var RIGHT_CLICK = 2;
+
     // Note: This can be used for phantomjs.
     var trigger = function (element) {
       if (element.dom().click !== undefined) return element.dom().click();
@@ -17,41 +16,46 @@ define(
       point('click', 0, element);
     };
 
-    var getCoords = function (element) {
-      return Node.isElement(element) ? Option.some(Location.absolute(element)) : Option.none();
-    };
-
-    var getFromCoords = function (x, y) {
-      return x !== undefined && y !== undefined ? Option.some(Position(x, y)) : Option.none();
-    };
-
     var point = function (type, button, element, x, y) {
-      var position = getFromCoords(x, y).getOrThunk(function () {
-        return getCoords(element).getOr(Position(0, 0));
-      });
-      var mouseX = position.left();
-      var mouseY = position.top();
       // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
       var ev = element.dom().ownerDocument.createEvent('MouseEvents');
       ev.initMouseEvent(
           type,
           true /* bubble */, true /* cancelable */,
           window, null,
-          mouseX, mouseY, mouseX, mouseY, /* coordinates */
+          x, y, x, y, /* coordinates */
           false, false, false, false, /* modifier keys */
           button, null
       );
       element.dom().dispatchEvent(ev);
     };
 
+    var click = function (eventType, button) {
+      return function (element) {
+        var position = Location.absolute(element);
+        point(eventType, button, element, position.left(), position.top());
+      }
+    }
+
+    var clickAt = function (eventType, button) {
+      return function (dx, dy) {
+        return function (element) {
+          var position = Location.absolute(element);
+          point(eventType, button, element, position.left() + dx, position.top() + dy);
+        }
+      }
+    }
+
     return {
       trigger: trigger,
-      mousedown: Fun.curry(point, 'mousedown', 0),
-      mouseup: Fun.curry(point, 'mouseup', 0),
-      mousemove: Fun.curry(point, 'mousemove', 0),
-      mouseover: Fun.curry(point, 'mouseover', 0),
-      mouseout: Fun.curry(point, 'mouseout', 0),
-      contextmenu: Fun.curry(point, 'contextmenu', 2)
+      mousedown: click('mousedown', LEFT_CLICK),
+      mouseup: click('mouseup', LEFT_CLICK),
+      mouseupTo: clickAt('mouseup', LEFT_CLICK),
+      mousemove:click('mousemove', LEFT_CLICK),
+      mousemoveTo:clickAt('mousemove', LEFT_CLICK),
+      mouseover: click('mouseover', LEFT_CLICK),
+      mouseout: click('mouseout', LEFT_CLICK),
+      contextmenu: click('contextmenu', RIGHT_CLICK)
     };
   }
 );
