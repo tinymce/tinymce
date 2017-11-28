@@ -62,15 +62,13 @@ define(
       });
     };
 
-    var cTrueClick = Chain.on(function (element, next, die) {
-      trueClick(element);
-      next(Chain.wrap(element));
-    });
+    var cMouseUpTo = function (dx, dy) {
+      return Chain.op(Clicks.mouseupTo(dx, dy));
+    };
 
-    var cContextMenu = Chain.on(function (element, next, die) {
-      Clicks.contextmenu(element);
-      next(Chain.wrap(element));
-    });
+    var cMouseMoveTo = function (dx, dy) {
+      return Chain.op(Clicks.mousemoveTo(dx, dy));
+    };
 
     return {
       sClickOn: sClickOn,
@@ -80,8 +78,15 @@ define(
 
       cClick: cClick,
       cClickOn: cClickOn,
-      cTrueClick: cTrueClick,
-      cContextMenu: cContextMenu
+      cTrueClick: Chain.op(trueClick),
+      cContextMenu: Chain.op(Clicks.contextmenu),
+      cMouseOver: Chain.op(Clicks.mouseover),
+      cMouseDown: Chain.op(Clicks.mousedown),
+      cMouseUp: Chain.op(Clicks.mouseup),
+      cMouseUpTo: cMouseUpTo,
+      cMouseMove: Chain.op(Clicks.mousemove),
+      cMouseMoveTo: cMouseMoveTo,
+      cMouseOut: Chain.op(Clicks.mouseout)
     };
   }
 );

@@ -6,128 +6,56 @@ define(
   ],
 
   function (Location) {
+    var LEFT_CLICK = 0;
+    var RIGHT_CLICK = 2;
+
     // Note: This can be used for phantomjs.
     var trigger = function (element) {
       if (element.dom().click !== undefined) return element.dom().click();
       // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-      var ev = document.createEvent("MouseEvent");
-      ev.initMouseEvent(
-          "click",
-          true /* bubble */, true /* cancelable */,
-          window, null,
-          0, 0, 0, 0, /* coordinates */
-          false, false, false, false, /* modifier keys */
-          0 /*left*/, null
-      );
-      element.dom().dispatchEvent(ev);
+      point('click', 0, element);
     };
 
-    var point = function (element, x, y) {
+    var point = function (type, button, element, x, y) {
       // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-      var ev = document.createEvent("MouseEvent");
+      var ev = element.dom().ownerDocument.createEvent('MouseEvents');
       ev.initMouseEvent(
-          "click",
+          type,
           true /* bubble */, true /* cancelable */,
           window, null,
           x, y, x, y, /* coordinates */
           false, false, false, false, /* modifier keys */
-          0 /*left*/, null
+          button, null
       );
       element.dom().dispatchEvent(ev);
     };
 
-    var mousedown = function (element) {
-      // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-      var ev = document.createEvent("MouseEvent");
-      ev.initMouseEvent(
-          "mousedown",
-          true /* bubble */, true /* cancelable */,
-          window, null,
-          0, 0, 0, 0, /* coordinates */
-          false, false, false, false, /* modifier keys */
-          0 /*left*/, null
-      );
-      element.dom().dispatchEvent(ev);
-    };
+    var click = function (eventType, button) {
+      return function (element) {
+        var position = Location.absolute(element);
+        point(eventType, button, element, position.left(), position.top());
+      }
+    }
 
-    var mouseup = function (element) {
-      // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-      var ev = document.createEvent("MouseEvent");
-      ev.initMouseEvent(
-          "mouseup",
-          true /* bubble */, true /* cancelable */,
-          window, null,
-          0, 0, 0, 0, /* coordinates */
-          false, false, false, false, /* modifier keys */
-          0 /*left*/, null
-      );
-      element.dom().dispatchEvent(ev);
-    };
-
-    var mousemove = function (element, x, y) {
-      // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-      var ev = document.createEvent("MouseEvent");
-      ev.initMouseEvent(
-          "mousemove",
-          true /* bubble */, true /* cancelable */,
-          window, null,
-          x, y, x, y, /* coordinates */
-          false, false, false, false, /* modifier keys */
-          0 /*left*/, null
-      );
-      element.dom().dispatchEvent(ev);
-    };
-
-    var mouseover = function (element, x, y) {
-      // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-      var ev = document.createEvent("MouseEvent");
-      ev.initMouseEvent(
-          "mouseover",
-          true /* bubble */, true /* cancelable */,
-          window, null,
-          x, y, x, y, /* coordinates */
-          false, false, false, false, /* modifier keys */
-          0 /*left*/, null
-      );
-      element.dom().dispatchEvent(ev);
-    };
-
-    var mouseout = function (element, x, y) {
-      // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-      var ev = document.createEvent("MouseEvent");
-      ev.initMouseEvent(
-          "mouseout",
-          true /* bubble */, true /* cancelable */,
-          window, null,
-          x, y, x, y, /* coordinates */
-          false, false, false, false, /* modifier keys */
-          0 /*left*/, null
-      );
-      console.error(ev);
-      element.dom().dispatchEvent(ev);
-    };
-
-    var contextmenu = function (element) {
-      // Adapted from http://stackoverflow.com/questions/433919/javascript-simulate-right-click-through-code
-      var evt = element.dom().ownerDocument.createEvent('MouseEvents');
-      var RIGHT_CLICK = 2;
-      var position = Location.absolute(element);
-      var x = position.left();
-      var y = position.top();
-      evt.initMouseEvent('contextmenu', true, true,
-        element.dom().ownerDocument.defaultView, 1, x, y, x, y, false,
-        false, false, false, RIGHT_CLICK, null);
-      element.dom().dispatchEvent(evt);
-    };
+    var clickAt = function (eventType, button) {
+      return function (dx, dy) {
+        return function (element) {
+          var position = Location.absolute(element);
+          point(eventType, button, element, position.left() + dx, position.top() + dy);
+        }
+      }
+    }
 
     return {
       trigger: trigger,
-      mousedown: mousedown,
-      mousemove: mousemove,
-      mouseup: mouseup,
-      mouseover: mouseover,
-      mouseout: mouseout,
-      contextmenu: contextmenu
+      mousedown: click('mousedown', LEFT_CLICK),
+      mouseup: click('mouseup', LEFT_CLICK),
+      mouseupTo: clickAt('mouseup', LEFT_CLICK),
+      mousemove:click('mousemove', LEFT_CLICK),
+      mousemoveTo:clickAt('mousemove', LEFT_CLICK),
+      mouseover: click('mouseover', LEFT_CLICK),
+      mouseout: click('mouseout', LEFT_CLICK),
+      contextmenu: click('contextmenu', RIGHT_CLICK)
     };
   }
 );
