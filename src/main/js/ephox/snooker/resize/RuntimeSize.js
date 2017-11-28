@@ -16,7 +16,7 @@ define(
     };
 
     var toNumber = function (px, fallback) {
-      var num = parseFloat(px.replace(/px/, ''));
+      var num = parseFloat(px); // parseFloat removes suffixes like px
       return isNaN(num) ? fallback : num;
     };
 
