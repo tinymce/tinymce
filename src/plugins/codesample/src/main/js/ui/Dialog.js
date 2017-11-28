@@ -20,9 +20,10 @@ define(
       open: function (editor) {
         var minWidth = Settings.getDialogMinWidth(editor);
         var minHeight = Settings.getDialogMinHeight(editor);
-        var currentLanguage = Languages.getCurrentLanguage(editor);
+        // var currentLanguage = Languages.getCurrentLanguage(editor);
         var currentLanguages = Languages.getLanguages(editor);
-        var currentCode = CodeSample.getCurrentCode(editor);
+        // var currentCode = CodeSample.getCurrentCode(editor);
+        var datas = CodeSample.getDatas(editor);
 
         editor.windowManager.open({
           title: "Insert/Edit code sample",
@@ -37,8 +38,58 @@ define(
               name: 'language',
               label: 'Language',
               maxWidth: 200,
-              value: currentLanguage,
+              value: datas.language,
               values: currentLanguages
+            },
+
+            {
+              type: 'checkbox',
+              name: 'isLineNumbers',
+              label: 'Line numbers',
+              checked: datas.isLineNumbers,
+              values: currentLanguages
+            },
+
+            {
+              type: 'textbox',
+              name: 'highlightedLines',
+              label: 'Highligth lines',
+              placeholder: 'For example:  2,5-8,12, ...',
+              multiline: false,
+              spellcheck: false,
+              classes: 'monospace',
+              value: datas.highlightedLines
+            },
+
+            /*
+            {
+              type: 'textbox',
+              name: 'dataSrc',
+              label: 'File',
+              multiline: false,
+              spellcheck: false,
+              classes: 'monospace',
+              value: datas.dataSrc
+            },
+             * */
+            {
+              type: 'filepicker',
+              filetype: 'codesample',
+              name: 'dataSrc',
+              label: 'File',
+              placeholder: 'On this server',
+              value: datas.dataSrc
+            },
+
+            {
+              type: 'textbox',
+              name: 'url',
+              label: 'Url',
+              placeholder: 'From Github, Gist, Bitbucket,...',
+              multiline: false,
+              spellcheck: false,
+              classes: 'monospace',
+              value: datas.url
             },
 
             {
@@ -50,12 +101,12 @@ define(
               flex: 1,
               style: 'direction: ltr; text-align: left',
               classes: 'monospace',
-              value: currentCode,
+              value: datas.code,
               autofocus: true
             }
           ],
           onSubmit: function (e) {
-            CodeSample.insertCodeSample(editor, e.data.language, e.data.code);
+            CodeSample.insertCodeSample(editor, e.data);
           }
         });
       }
