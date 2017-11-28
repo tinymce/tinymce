@@ -24,18 +24,16 @@ define(
       return toNumber(Css.get(elm, name), fallback);
     };
 
-    var getHeight = function (cell) {
-      return needManualCalc() ? getCalculatedHeight(cell) : getProp(cell, 'height', Height.get(cell));
-    };
-
     var getCalculatedHeight = function (cell) {
       var paddingTop = getProp(cell, 'padding-top', 0);
       var paddingBottom = getProp(cell, 'padding-bottom', 0);
       var borderTop = getProp(cell, 'border-top-width', 0);
       var borderBottom = getProp(cell, 'border-bottom-width', 0);
       var height = cell.dom().getBoundingClientRect().height;
+      var boxSizing = Css.get(cell, 'box-sizing');
+      var borders = borderTop + borderBottom;
 
-      return height - paddingTop - paddingBottom - borderTop - borderBottom;
+      return boxSizing === 'border-box' ? height : height - paddingTop - paddingBottom - borders;
     };
 
     var getWidth = function (cell) {

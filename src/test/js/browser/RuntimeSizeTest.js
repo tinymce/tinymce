@@ -74,6 +74,11 @@ test(
       });
     };
 
+    var randomValue = function (values) {
+      var idx = random(0, values.length - 1);
+      return values[idx];
+    };
+
     var randomSize = function (min, max) {
       var n = random(min, max);
       return n > 0 ? n + 'px' : '0';
@@ -154,6 +159,7 @@ test(
         Css.setAll(cell, {
           'width': '10px',
           'height': randomSize(1, 100),
+          'box-sizing': randomValue(['content-box', 'border-box']),
           'padding-top': randomSize(0, 5),
           'padding-bottom': randomSize(0, 5),
           'border-top': randomBorder(0, 5, 'green'),
