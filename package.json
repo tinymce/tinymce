@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/Shopify/tinymce#readme",
   "dependencies": {
-    "@types/tinymce": "^4.5.14"
+    "@types/tinymce": "^4.5.15"
   }
 }
