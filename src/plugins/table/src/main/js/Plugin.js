@@ -67,7 +67,7 @@ define(
       });
 
       self.insertTable = function (columns, rows) {
-        InsertTable.insert(editor, columns, rows);
+        return InsertTable.insert(editor, columns, rows);
       };
       self.setClipboardRows = TableCommands.setClipboardRows;
       self.getClipboardRows = TableCommands.getClipboardRows;
