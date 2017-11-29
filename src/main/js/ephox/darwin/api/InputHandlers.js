@@ -55,11 +55,11 @@ define(
           }
           // Down should predict the movement and set the cursor
           else if (SelectionKeys.isDown(keycode)) {
-            return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.down, finish, start);
+            return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.down, finish, start, VerticalMovement.lastDownCheck);
           }
           // Up should predict the movement and set the cursor
           else if (SelectionKeys.isUp(keycode)) {
-            return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.up, finish, start);
+            return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.up, finish, start, VerticalMovement.firstUpCheck);
           }
           else {
             return Option.none;

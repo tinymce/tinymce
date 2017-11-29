@@ -6,16 +6,23 @@ define(
     'ephox.darwin.keyboard.KeySelection',
     'ephox.darwin.keyboard.TableKeys',
     'ephox.darwin.selection.Util',
+    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.search.PredicateExists',
+    'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
-    'ephox.sugar.api.search.Traverse'
+    'ephox.sugar.api.search.Traverse',
+    'ephox.sugar.api.selection.Awareness',
+    'ephox.sugar.api.selection.CursorPosition'
   ],
 
-  function (Responses, KeySelection, TableKeys, Util, Fun, Option, PlatformDetection, Compare, PredicateExists, SelectorFind, Traverse) {
+  function (
+    Responses, KeySelection, TableKeys, Util, Arr, Fun, Option, PlatformDetection, Compare, PredicateExists, SelectorFilter, SelectorFind, Traverse, Awareness,
+    CursorPosition
+  ) {
     var detection = PlatformDetection.detect();
 
     var inSameTable = function (elem, table) {
@@ -45,7 +52,9 @@ define(
       });
     };
 
-    var navigate = function (bridge, isRoot, direction, initial, anchor) {
+    var navigate = function (bridge, isRoot, direction, initial, anchor, precheck) {
+      var check = precheck(initial, isRoot);
+      if (check.isSome()) return check;
       // Do not override the up/down keys on IE.
       if (detection.browser.isIE()) return Option.none();
       return simulate(bridge, isRoot, direction, initial, anchor).map(function (info) {
@@ -57,6 +66,43 @@ define(
       });
     };
 
+    var firstUpCheck = function (initial, isRoot) {
+      return SelectorFind.closest(initial, 'tr', isRoot).bind(function (startRow) {
+        return SelectorFind.closest(startRow, 'table', isRoot).bind(function (table) {
+          var rows = SelectorFilter.descendants(table, 'tr');
+          if (Compare.eq(startRow, rows[0])) {
+            return Traverse.prevSibling(table).bind(CursorPosition.last).map(function (last) {
+              var lastOffset = Awareness.getEnd(last);
+              return Responses.response(
+                Option.some(Util.makeSitus(last, lastOffset, last, lastOffset)),
+                true
+              );
+            });
+          } else {
+            return Option.none();
+          }
+        });
+      });
+    };
+
+    var lastDownCheck = function (initial, isRoot) {
+      return SelectorFind.closest(initial, 'tr', isRoot).bind(function (startRow) {
+        return SelectorFind.closest(startRow, 'table', isRoot).bind(function (table) {
+          var rows = SelectorFilter.descendants(table, 'tr');
+          if (Compare.eq(startRow, rows[rows.length - 1])) {
+            return Traverse.nextSibling(table).bind(CursorPosition.first).map(function (first) {
+              return Responses.response(
+                Option.some(Util.makeSitus(first, 0, first, 0)),
+                true
+              );
+            });
+          } else {
+            return Option.none();
+          }
+        });
+      });
+    };
+
     var select = function (bridge, container, isRoot, direction, initial, anchor, selectRange) {
       return simulate(bridge, isRoot, direction, initial, anchor).bind(function (info) {
         return KeySelection.detect(container, isRoot, info.start(), info.finish(), selectRange);
@@ -65,7 +111,9 @@ define(
 
     return {
       navigate: navigate,
-      select: select
+      select: select,
+      firstUpCheck: firstUpCheck,
+      lastDownCheck: lastDownCheck
     };
   }
 );
