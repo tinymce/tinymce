@@ -16,7 +16,7 @@ define(
     var getKeyboardSpaces = function (editor) {
       var spaces = editor.getParam('nonbreaking_force_tab', 0);
 
-      if (typeof tabs === 'boolean') {
+      if (typeof spaces === 'boolean') {
         return spaces === true ? 3 : 0;
       } else {
         return spaces;
