@@ -53,10 +53,10 @@ define(
     };
 
     var navigate = function (bridge, isRoot, direction, initial, anchor, precheck) {
-      var check = precheck(initial, isRoot);
-      if (check.isSome()) return check;
       // Do not override the up/down keys on IE.
       if (detection.browser.isIE()) return Option.none();
+      var check = precheck(initial, isRoot);
+      if (check.isSome()) return check;
       return simulate(bridge, isRoot, direction, initial, anchor).map(function (info) {
         var range = info.range();
         return Responses.response(
