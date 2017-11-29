@@ -51,7 +51,7 @@ test(
     try {
       Assertions.assertEq('test 1 (nothing defined)', 10, 5);
     } catch (err) {
-      boltAssert('[Equality]: test 1 (nothing defined).\n  Expected: 10\n  Actual: 5', err.message);
+      boltAssert('test 1 (nothing defined).\n  Expected: 10\n  Actual: 5', err.message);
     }
 
     try {

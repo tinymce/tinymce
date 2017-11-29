@@ -2,11 +2,12 @@ define(
   'ephox.agar.api.RawAssertions',
 
   [
+    'ephox.agar.api.LegacyAssert',
     'ephox.katamari.api.Global',
     'ephox.sand.api.JSON'
   ],
 
-  function (Global, Json) {
+  function (LegacyAssert, Global, Json) {
     var stringify = function (v) {
       try {
         return Json.stringify(v, null, 2);
@@ -22,7 +23,7 @@ define(
     var assertEq = function (label, a, b) {
       if (Global.assertEq) Global.assertEq(a, b, label + extra(a, b));
       else if (Global.assert && Global.assert.eq) Global.assert.eq(a, b, label + extra(a, b));
-      else if (a !== b) throw new Error('[Equality]: ' + label + extra(a, b));
+      else if (a !== b) LegacyAssert.eq(a, b, label + extra(a, b))
     };
 
     return {
