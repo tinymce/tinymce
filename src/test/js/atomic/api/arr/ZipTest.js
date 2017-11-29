@@ -21,9 +21,8 @@ test('Zip',
       var lt = -1;
       var gt = 1;
 
-      var sortTuples = function(a) {
-      return a;     
-        return  sort(a, function(a, b) {
+      var sortTuples = function(a) {  
+        return sort(a, function(a, b) {
           return (
             a.k === b.k ? a.v === b.v ? eq
                                       : a.v > b.v ? gt
