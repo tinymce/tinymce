@@ -46,21 +46,21 @@ define(
         var src = image.src;
 
         if (src.indexOf('blob:') === 0) {
-          return blobUriToBlob(src);
+          return anyUriToBlob(src);
         }
 
         if (src.indexOf('data:') === 0) {
           return dataUriToBlob(src);
         }
 
-        return imageToCanvas(image).then(function (canvas) {
-          return canvasToBlob(canvas, Mime.guessMimeType(src));
-        });
+        return anyUriToBlob(src);
       });
     }
 
     function blobToImage(blob) {
-      return new Promise(function (resolve) {
+      return new Promise(function (resolve, reject) {
+        var blobUrl = URL.createObjectURL(blob);
+
         var image = new Image();
 
         function loaded() {
@@ -68,8 +68,14 @@ define(
           resolve(image);
         }
 
+        function error() {
+          image.removeEventListener('error', error);
+          reject('unable to load blob of type ' + blob.type + ': ' + blobUrl);
+        }
+
         image.addEventListener('load', loaded);
-        image.src = URL.createObjectURL(blob);
+        image.addEventListener('error', error);
+        image.src = blobUrl;
 
         if (image.complete) {
           loaded();
@@ -77,11 +83,13 @@ define(
       });
     }
 
-    function blobUriToBlob(url) {
+    function anyUriToBlob(url) {
       return new Promise(function (resolve) {
         var xhr = new XMLHttpRequest();
 
         xhr.open('GET', url, true);
+
+        // works with IE10+
         xhr.responseType = 'blob';
 
         xhr.onload = function () {
@@ -134,7 +142,7 @@ define(
 
     function uriToBlob(url) {
       if (url.indexOf('blob:') === 0) {
-        return blobUriToBlob(url);
+        return anyUriToBlob(url);
       }
 
       if (url.indexOf('data:') === 0) {
@@ -144,18 +152,31 @@ define(
       return null;
     }
 
-    function canvasToBlob(canvas, type, quality) {
+    function canvasToBlob(getCanvas, type, quality) {
       type = type || 'image/png';
 
       if (HTMLCanvasElement.prototype.toBlob) {
-        return new Promise(function (resolve) {
-          canvas.toBlob(function (blob) {
-            resolve(blob);
-          }, type, quality);
+        return getCanvas.then(function (canvas) {
+          return new Promise(function (resolve) {
+            canvas.toBlob(function (blob) {
+              resolve(blob);
+            }, type, quality);
+          });
         });
       } else {
-        return dataUriToBlob(canvas.toDataURL(type, quality));
+        return getCanvas.then(function (canvas) {
+          return canvas.toDataURL(type, quality);
+        }).then(dataUriToBlob);
       }
+    }
+
+    function blobToCanvas(blob) {
+      return blobToImage(blob)
+        .then(function (image) {
+          var result = imageToCanvas(image);
+          revokeImageUrl(image);
+          return result;
+        });
     }
 
     function blobToDataUri(blob) {
@@ -196,6 +217,7 @@ define(
       // helper method
       imageToCanvas: imageToCanvas,
       canvasToBlob: canvasToBlob,
+      blobToCanvas: blobToCanvas,
       revokeImageUrl: revokeImageUrl,
       uriToBlob: uriToBlob,
       dataUriToBlobSync: dataUriToBlobSync,
