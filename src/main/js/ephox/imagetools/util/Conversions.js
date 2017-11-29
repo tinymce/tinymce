@@ -162,6 +162,13 @@ define(
       }
     }
 
+    function canvasToDataURL(getCanvas, type, quality) {
+      type = type || 'image/png';
+      return getCanvas.then(function (canvas) {
+        return canvas.toDataURL(type, quality);
+      });
+    }
+
     function blobToCanvas(blob) {
       return blobToImage(blob).then(function (image) {
         // we aren't retaining the image, so revoke the URL immediately
@@ -209,6 +216,7 @@ define(
 
       // helper method
       canvasToBlob: canvasToBlob,
+      canvasToDataURL: canvasToDataURL,
       blobToCanvas: blobToCanvas,
       uriToBlob: uriToBlob
     };

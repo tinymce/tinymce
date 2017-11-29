@@ -12,14 +12,8 @@ define(
 
       var getType = Fun.constant(initialType);
 
-      function toBlob(_type, quality) {
-        // Shortcut to not lose the blob filename when we haven't edited the image
-        var type = _type || initialType;
-        if (type === initialType && quality === undefined) {
-          return Promise.resolve(blob);
-        } else {
-          return Conversions.canvasToBlob(getCanvas, type, quality);
-        }
+      function toBlob() {
+        return Promise.resolve(blob);
       }
 
       function toDataURL() {
@@ -30,12 +24,12 @@ define(
         return uri.split(',')[1];
       }
 
-      function toAdjustedDataURL(_type, quality) {
-        var type = _type || initialType;
-        // if we have data and aren't converting, use it - canvas tends to convert even when you tell it not to.
-        return (quality === undefined && type === initialType) ? Promise.resolve(uri) : getCanvas.then(function (canvas) {
-          return canvas.toDataURL(type, quality);
-        });
+      function toAdjustedBlob(type, quality) {
+        return Conversions.canvasToBlob(getCanvas, type, quality);
+      }
+
+      function toAdjustedDataURL(type, quality) {
+        return Conversions.canvasToDataURL(getCanvas, type, quality);
       }
 
       function toAdjustedBase64(type, quality) {
@@ -53,6 +47,7 @@ define(
         toBlob: toBlob,
         toDataURL: toDataURL,
         toBase64: toBase64,
+        toAdjustedBlob: toAdjustedBlob,
         toAdjustedDataURL: toAdjustedDataURL,
         toAdjustedBase64: toAdjustedBase64,
         toCanvas: toCanvas

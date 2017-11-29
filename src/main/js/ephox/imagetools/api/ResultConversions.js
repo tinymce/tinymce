@@ -22,16 +22,20 @@ define(
     };
 
     var imageResultToBlob = function (ir, type, quality) {
-      return ir.toBlob(type, quality);
+      // Shortcut to not lose the blob filename when we aren't editing the image
+      if (type === undefined && quality === undefined) {
+        return imageResultToOriginalBlob(ir);
+      } else {
+        return ir.toAdjustedBlob(type, quality);
+      }
     };
 
     var imageResultToOriginalBlob = function (ir) {
-      // implementation detail - undefined type/quality returns original blob
       return ir.toBlob();
     };
 
-    var imageResultToDataURL = function (ir, type, quality) {
-      return ir.toDataURL(type, quality);
+    var imageResultToDataURL = function (ir) {
+      return ir.toDataURL();
     };
 
     return {
