@@ -3,10 +3,11 @@ asynctest(
 
     [
     'ephox.agar.api.Chain',
+    'ephox.agar.api.RawAssertions',
     'global!setTimeout'
   ],
 
-    function (Chain, setTimeout) {
+    function (Chain, RawAssertions, setTimeout) {
       var success = arguments[arguments.length-2];
       var failure = arguments[arguments.length-1];
 

@@ -3,11 +3,12 @@ asynctest(
   
   [
     'ephox.agar.api.Pipeline',
+    'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
     'global!setTimeout'
   ],
 
-  function (Pipeline, Step, setTimeout) {
+  function (Pipeline, RawAssertions, Step, setTimeout) {
     var success = arguments[arguments.length-2];
     var failure = arguments[arguments.length-1];
 
