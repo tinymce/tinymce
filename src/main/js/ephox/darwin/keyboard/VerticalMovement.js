@@ -54,16 +54,19 @@ define(
 
     var navigate = function (bridge, isRoot, direction, initial, anchor, precheck) {
       // Do not override the up/down keys on IE.
-      if (detection.browser.isIE()) return Option.none();
-      var check = precheck(initial, isRoot);
-      if (check.isSome()) return check;
-      return simulate(bridge, isRoot, direction, initial, anchor).map(function (info) {
-        var range = info.range();
-        return Responses.response(
-          Option.some(Util.makeSitus(range.start(), range.soffset(), range.finish(), range.foffset())),
-          true
-        );
-      });
+      if (detection.browser.isIE()) {
+        return Option.none();
+      } else {
+        return precheck(initial, isRoot).orThunk(function () {
+          return simulate(bridge, isRoot, direction, initial, anchor).map(function (info) {
+            var range = info.range();
+            return Responses.response(
+              Option.some(Util.makeSitus(range.start(), range.soffset(), range.finish(), range.foffset())),
+              true
+            );
+          });
+        });
+      }
     };
 
     var firstUpCheck = function (initial, isRoot) {
