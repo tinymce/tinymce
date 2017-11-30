@@ -12,7 +12,7 @@ define(
 
     var arity0 = function (f) {
       return function () {
-        f();
+        return f();
       };
     };
 
@@ -76,7 +76,7 @@ define(
 
     var never = constant(false);
     var always = constant(true);
-    
+
 
     return {
       noop: noop,
