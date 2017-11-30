@@ -67,7 +67,7 @@ test(
           oEpsilon: 'e'
         });
 
-        assert.fail('Expected failure: ' + blah);
+        assert.fail('Expected failure.');
       } catch (err) {
         assert.eq(expected, err.message);
       }      
