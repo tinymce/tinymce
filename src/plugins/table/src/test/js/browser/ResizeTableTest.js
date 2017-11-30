@@ -86,13 +86,13 @@ asynctest(
         skin_url: '/project/src/skins/lightgray/dist/lightgray'
       })),
       NamedChain.direct('editor', cInsertTable(5, 2), 'element'),
-      NamedChain.direct('element', Mouse.cTrueClick, '_'),
+      NamedChain.read('element', Mouse.cTrueClick),
       NamedChain.write('widthBefore', cGetWidth),
-      NamedChain.direct('editor', cDragHandle('se', -100, 0), '_'),
+      NamedChain.read('editor', cDragHandle('se', -100, 0)),
       NamedChain.write('widthAfter', cGetWidth),
       NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
-      NamedChain.direct('widths', cAssertWidths, '_'),
-      NamedChain.direct('editor', Editor.cRemove, '_')
+      NamedChain.read('widths', cAssertWidths),
+      NamedChain.read('editor', Editor.cRemove)
     ], function () {
       success();
     }, failure);
