@@ -17,9 +17,9 @@
 define(
   'tinymce.ui.BoxUtils',
   [
-    'global!document'
+
   ],
-  function (document) {
+  function () {
     "use strict";
 
     return {
@@ -71,15 +71,20 @@ define(
 
       measureBox: function (elm, prefix) {
         function getStyle(name) {
-          var defaultView = document.defaultView;
+          var defaultView = elm.ownerDocument.defaultView;
 
           if (defaultView) {
-            // Remove camelcase
-            name = name.replace(/[A-Z]/g, function (a) {
-              return '-' + a;
-            });
+            var computedStyle = defaultView.getComputedStyle(elm, null);
+            if (computedStyle) {
+              // Remove camelcase
+              name = name.replace(/[A-Z]/g, function (a) {
+                return '-' + a;
+              });
 
-            return defaultView.getComputedStyle(elm, null).getPropertyValue(name);
+              return computedStyle.getPropertyValue(name);
+            } else {
+              return null;
+            }
           }
 
           return elm.currentStyle[name];
