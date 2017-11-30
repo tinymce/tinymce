@@ -10,6 +10,12 @@ define(
 
     var noop = function () { };
 
+    var arity0 = function (f) {
+      return function () {
+        f();
+      };
+    };
+
     var compose = function (fa, fb) {
       return function () {
         return fa(fb.apply(null, arguments));
@@ -74,6 +80,7 @@ define(
 
     return {
       noop: noop,
+      arity0: arity0,
       compose: compose,
       constant: constant,
       identity: identity,
