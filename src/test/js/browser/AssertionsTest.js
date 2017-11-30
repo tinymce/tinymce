@@ -3,10 +3,11 @@ test(
 
   [
     'ephox.agar.api.Assertions',
+    'ephox.agar.api.LegacyAssert',
     'global!window'
   ],
 
-  function (Assertions, window) {
+  function (Assertions, LegacyAssert, window) {
     var replaceTokens = function (str, values) {
       return str.replace(/\{\{(\w+)\}\}/gi, function ($0, $1) {
         return values[$1] ? values[$1] : '';
@@ -16,19 +17,19 @@ test(
     try {
       Assertions.assertEq('test 2 (assertEq)', 5, 5);
     } catch (err) {
-      assert.fail('Unexpected error: ' + err.message);
+      LegacyAssert.fail('Unexpected error: ' + err.message);
     }
 
     try {
       Assertions.assertEq('test 1 (assert.eq)', 10, 5);
     } catch (err) {
-      assert.eq('test 1 (assert.eq).\n  Expected: 10\n  Actual: 5', err.message);
+      LegacyAssert.eq('test 1 (assert.eq).\n  Expected: 10\n  Actual: 5', err.message);
     }
 
     try {
       Assertions.assertEq('test 2 (assert.eq)', 5, 5);
     } catch (err) {
-      assert.fail('Unexpected error: ' + err.message);
+      LegacyAssert.fail('Unexpected error: ' + err.message);
     }
 
     try {
@@ -46,7 +47,7 @@ test(
 
       Assertions.assertHtmlStructure('html is the same, although styles & classes are in different order', replaceTokens(html, v1), replaceTokens(html, v2));
     } catch (err) {
-      assert.fail('Unexpected error: ' + err.message);
+      LegacyAssert.fail('Unexpected error: ' + err.message);
     }
   }
 );

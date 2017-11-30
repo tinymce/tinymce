@@ -18,7 +18,6 @@ test(
 
     try {
       LegacyAssert.fail('fail');
-      RawAssertions.assertEq('Should be expected message', 'fail', e.message);
     } catch (e) {
       RawAssertions.assertEq('Should be expected message', 'fail', e.message);
     }

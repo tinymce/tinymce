@@ -2,12 +2,11 @@ asynctest(
     'ChainPipelineTest',
 
     [
-      'ephox.agar.api.Pipeline',
-      'ephox.agar.api.Chain',
-      'global!setTimeout'
-    ],
+    'ephox.agar.api.Chain',
+    'global!setTimeout'
+  ],
 
-    function (Pipeline, Chain, setTimeout) {
+    function (Chain, setTimeout) {
       var success = arguments[arguments.length-2];
       var failure = arguments[arguments.length-1];
 
@@ -23,7 +22,7 @@ asynctest(
         cAcc(3)
       ], function (result) {
           try {
-            assert.eq(6, result);
+            RawAssertions.assertEq('Expected result to be the sum', 6, result);
             success();
           } catch (err) {
               failure(err);

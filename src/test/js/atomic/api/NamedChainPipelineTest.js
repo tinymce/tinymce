@@ -2,13 +2,13 @@ asynctest(
     'NamedChainPipelineTest',
 
     [
-      'ephox.agar.api.Pipeline',
-      'ephox.agar.api.Chain',
-      'ephox.agar.api.NamedChain',
-      'global!setTimeout'
-    ],
+    'ephox.agar.api.Chain',
+    'ephox.agar.api.NamedChain',
+    'ephox.agar.api.RawAssertions',
+    'global!setTimeout'
+  ],
 
-    function (Pipeline, Chain, NamedChain, setTimeout) {
+    function (Chain, NamedChain, RawAssertions, setTimeout) {
       var success = arguments[arguments.length-2];
       var failure = arguments[arguments.length-1];
 
@@ -25,7 +25,7 @@ asynctest(
         NamedChain.output('value')
       ], function (result) {
           try {
-            assert.eq(6, result);
+            RawAssertions.assertEq('Expected result to be the sum', 6, result);
             success();
           } catch (err) {
               failure(err);

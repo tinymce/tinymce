@@ -7,6 +7,7 @@ asynctest(
     'ephox.agar.api.FocusTools',
     'ephox.agar.api.Guard',
     'ephox.agar.api.Pipeline',
+    'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
     'ephox.agar.test.DomContainers',
     'ephox.sugar.api.node.Element',
@@ -14,7 +15,7 @@ asynctest(
     'global!document'
   ],
  
-  function (Assertions, Chain, FocusTools, Guard, Pipeline, Step, DomContainers, Element, Value, document) {
+  function (Assertions, Chain, FocusTools, Guard, Pipeline, RawAssertions, Step, DomContainers, Element, Value, document) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -37,7 +38,7 @@ asynctest(
         FocusTools.cGetFocused,
         Chain.control(
           Chain.on(function (active, next, die) {
-            assert.eq('new value', Value.get(active));
+            RawAssertions.assertEq('Should be expected value', 'new value', Value.get(active));
             next(Chain.wrap(active));
           }),
           Guard.addLogging('Asserting the value of the input field after it has been set.')

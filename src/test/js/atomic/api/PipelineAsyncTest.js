@@ -25,7 +25,7 @@ asynctest(
       mutator('purpose', 'unknown'),
       mutator('correctness', 'tbd')
     ], function (result) { 
-      assert.eq({
+      RawAssertions.assertEq('Should have all state properties', {
         name: 'testfile',
         purpose: 'unknown',
         correctness: 'tbd'

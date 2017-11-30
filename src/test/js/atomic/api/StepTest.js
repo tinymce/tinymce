@@ -2,13 +2,13 @@ asynctest(
   'StepTest',
  
   [
-    'ephox.agar.api.Chain',
+    'ephox.agar.api.LegacyAssert',
     'ephox.agar.api.Logger',
     'ephox.agar.api.Pipeline',
     'ephox.agar.api.Step'
   ],
  
-  function (Chain, Logger, Pipeline, Step) {
+  function (LegacyAssert, Logger, Pipeline, Step) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -33,12 +33,12 @@ asynctest(
         Step.fail('last test')
       )
     ], function () {
-      assert.fail('The last test should have failed, so the pipeline should have failed.\n' +
+      LegacyAssert.fail('The last test should have failed, so the pipeline should have failed.\n' +
         'Expected: Fake failure: last test'
       );
     }, function (err) {
       var expected = '[Basic API: Step.fail]\n\nFake failure: last test';
-      assert.eq(expected, err, '\nFailure incorrect. \nExpected:\n' + expected + '\nActual: ' + err);
+      LegacyAssert.eq(expected, err, '\nFailure incorrect. \nExpected:\n' + expected + '\nActual: ' + err);
       success();
     });
   }
