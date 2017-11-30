@@ -35,20 +35,16 @@ asynctest(
       return NamedChain.asChain([
         NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
         NamedChain.direct('editor', cGetBody, 'editorBody'),
-        NamedChain.direct('editorBody', Chain.control(
+        NamedChain.read('editorBody', Chain.control(
           UiFinder.cFindIn('#mceResizeHandle' + id),
           Guard.tryUntil('wait for resize handlers', 100, 40000)
-        ), '_'),
-        NamedChain.direct('editorBody', UiFinder.cFindIn('#mceResizeHandle' + id), 'resizeHandle'),
-        NamedChain.merge(['editor', 'resizeHandle'], 'resizeParams'),
-        NamedChain.direct('resizeParams', Chain.op(function (input) {
-          var dom = input.editor.dom;
-          var target = input.resizeHandle.dom();
-          var pos = dom.getPos(target);
-          dom.fire(target, 'mousedown', { screenX: pos.x, screenY: pos.y });
-          dom.fire(target, 'mousemove', { screenX: pos.x + deltaH, screenY: pos.y + deltaV });
-          dom.fire(target, 'mouseup');
-        }), '_'),
+        )),
+        NamedChain.read('editorBody', Chain.fromChains([
+          UiFinder.cFindIn('#mceResizeHandle' + id),
+          Mouse.cMouseDown,
+          Mouse.cMouseMoveTo(deltaH, deltaV),
+          Mouse.cMouseUp
+        ])),
         NamedChain.outputInput
       ]);
     };
@@ -86,8 +82,8 @@ asynctest(
         skin_url: '/project/src/skins/lightgray/dist/lightgray'
       })),
       NamedChain.direct('editor', cInsertTable(5, 2), 'element'),
-      NamedChain.read('element', Mouse.cTrueClick),
       NamedChain.write('widthBefore', cGetWidth),
+      NamedChain.read('element', Mouse.cTrueClick),
       NamedChain.read('editor', cDragHandle('se', -100, 0)),
       NamedChain.write('widthAfter', cGetWidth),
       NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
