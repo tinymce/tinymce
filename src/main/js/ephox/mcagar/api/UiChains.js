@@ -80,6 +80,13 @@ define(
       };
     };
 
+    var cWaitForVisible = function (label, selector) {
+      return Chain.fromChains([
+        cDialogRoot,
+        UiFinder.cWaitForState(label, selector, Visibility.isVisible)
+      ]);
+    };
+
     var cWaitForPopup = function (label, selector) {
       return cWaitForState(Visibility.isVisible)(label, selector);
     };
@@ -111,7 +118,7 @@ define(
     var cWaitForDialog = function (selector) {
       return NamedChain.asChain([
         NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        NamedChain.write('popupNode', cWaitForPopup('waiting for popup: ' + selector, selector)),
+        NamedChain.write('popupNode', cWaitForVisible('waiting for popup: ' + selector, selector)),
         NamedChain.merge(['editor', 'popupNode'], 'dialogInputs'),
         NamedChain.direct('dialogInputs', cDialogByPopup, 'dialog'),
         NamedChain.output('dialog')
@@ -150,7 +157,7 @@ define(
       popupSelector = selector || '[role="dialog"]';
 
       return NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), cWaitForPopup('waiting for: ' + popupSelector, popupSelector), 'popup'),
+        NamedChain.direct(NamedChain.inputName(), cWaitForVisible('waiting for: ' + popupSelector, popupSelector), 'popup'),
         NamedChain.direct('popup', UiFinder.cFindIn(btnSelector), 'button'),
         NamedChain.direct('button', Mouse.cClick, '_'),
         NamedChain.outputInput
