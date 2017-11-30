@@ -117,6 +117,15 @@ test(
 
       return Jsc.eq(undefined, output) && Jsc.eq(x, hack);
     });
+
+    Jsc.property('Check arity0', function () {
+      var f = function () {
+        return Jsc.eq(0, arguments.length);
+      };
+
+      var f0 = Fun.arity0(f);
+      return f0(1, 2, 3);
+    });
   };
 
   testSanity();
