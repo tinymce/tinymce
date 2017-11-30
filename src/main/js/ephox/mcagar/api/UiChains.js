@@ -52,7 +52,7 @@ define(
          NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
          NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
          NamedChain.direct('ui', Mouse.cClick, '_'),
-         NamedChain.output(NamedChain.inputName())
+         NamedChain.outputInput
        ]);
      };
 
@@ -70,9 +70,12 @@ define(
 
     var cWaitForState = function (hasState) {
       return function (label, selector) {
-        return Chain.fromChains([
-          cDialogRoot,
-          UiFinder.cWaitForState(label, selector, hasState)
+        return NamedChain.asChain([
+          NamedChain.write('element', Chain.fromChains([
+            cDialogRoot,
+            UiFinder.cWaitForState(label, selector, hasState)
+          ])),
+          NamedChain.outputInput
         ]);
       };
     };
@@ -121,7 +124,7 @@ define(
         NamedChain.direct('dialog', Chain.op(function (dialog) {
           Assertions.assertEq('asserting contents of: ' + selector, data, dialog.toJSON());
         }), '_'),
-        NamedChain.output(NamedChain.inputName())
+        NamedChain.outputInput
       ]);
     };
 
@@ -135,7 +138,7 @@ define(
         NamedChain.direct('dialog', Chain.op(function (dialog) {
           dialog.fromJSON(Merger.merge(dialog.toJSON(), data));
         }), '_'),
-        NamedChain.output(NamedChain.inputName())
+        NamedChain.outputInput
       ]);
     };
 
@@ -150,7 +153,7 @@ define(
         NamedChain.direct(NamedChain.inputName(), cWaitForPopup('waiting for: ' + popupSelector, popupSelector), 'popup'),
         NamedChain.direct('popup', UiFinder.cFindIn(btnSelector), 'button'),
         NamedChain.direct('button', Mouse.cClick, '_'),
-        NamedChain.output(NamedChain.inputName())
+        NamedChain.outputInput
       ]);
     };
 
