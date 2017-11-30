@@ -57,7 +57,7 @@ define(
       return Merger.deepMerge(input, wrapSingle(name, value));
     };
 
-    var read = function (name, chain) {
+    var process = function (name, chain) {
       return Chain.on(function (input, next, die) {
         var part = Chain.wrap(input[name]);
         chain.runChain(part, function (other) {
@@ -68,7 +68,7 @@ define(
     };
 
     var direct = function (inputName, chain, outputName) {
-      return read(inputName, partialWrite(outputName, chain));
+      return process(inputName, partialWrite(outputName, chain));
     };
 
     var overwrite = function (inputName, chain) {
@@ -79,6 +79,14 @@ define(
       return Chain.mapper(function (input) {
         var wv = combine(input, name, value);
         return wv;
+      });
+    };
+
+    var read = function (name, chain) {
+      return Chain.on(function (input, next, die) {
+        chain.runChain(Chain.wrap(input[name]), function () {
+          return next(Chain.wrap(input));
+        }, die);
       });
     };
 
@@ -115,6 +123,7 @@ define(
       direct: direct,
       writeValue: writeValue,
       overwrite: overwrite,
+      read: read,
       merge: merge,
       bundle: bundle,
       output: output,
