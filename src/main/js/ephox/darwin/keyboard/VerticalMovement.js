@@ -6,7 +6,6 @@ define(
     'ephox.darwin.keyboard.KeySelection',
     'ephox.darwin.keyboard.TableKeys',
     'ephox.darwin.selection.Util',
-    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
     'ephox.phoenix.api.dom.DomGather',
@@ -21,8 +20,8 @@ define(
   ],
 
   function (
-    Responses, KeySelection, TableKeys, Util, Arr, Fun, Option, DomGather, PlatformDetection, Compare, PredicateExists, SelectorFilter, SelectorFind, Traverse,
-    Awareness, CursorPosition
+    Responses, KeySelection, TableKeys, Util, Fun, Option, DomGather, PlatformDetection, Compare, PredicateExists, SelectorFilter, SelectorFind, Traverse, Awareness,
+    CursorPosition
   ) {
     var detection = PlatformDetection.detect();
 
