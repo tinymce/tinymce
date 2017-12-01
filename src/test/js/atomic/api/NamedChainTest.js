@@ -61,6 +61,8 @@ asynctest(
 
             NamedChain.merge(['x', 'y', 'z'], 'xyz'),
 
+            NamedChain.read('x', cIsEqual(10)),
+
             NamedChain.bundle(function (input) {
               RawAssertions.assertEq('Checking bundled chain output', Merger.deepMerge(
                 {
