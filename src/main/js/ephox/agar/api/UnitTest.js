@@ -20,8 +20,12 @@ define(
 
     var test = function (name, test) {
       register(name, function (success, failure) {
-        test();
-        success();
+        try {
+          test();
+          success();
+        } catch (e) {
+          failure(e);
+        }
       });
     };
 

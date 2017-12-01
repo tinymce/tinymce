@@ -27,21 +27,29 @@ asynctest(
       RawAssertions.assertEq('label', true, false);
     });
 
-    UnitTest.asynctest('test3 async fail', function (success, failure) {
+    UnitTest.test('test3 fail', function () {
+      throw new Error('fail');
+    });
+
+    UnitTest.asynctest('test4 async fail', function (success, failure) {
       failure(new Error('Failed async test'));
     });
 
-    UnitTest.asynctest('test3 async pass', function (success, failure) {
+    UnitTest.asynctest('test5 async pass', function (success, failure) {
       success();
     });
 
-    UnitTest.domtest('test3 domtest fail', function () {
+    UnitTest.asynctest('test6 async fail', function (success, failure) {
+      throw new Error('fail');
+    });
+
+    UnitTest.domtest('test7 domtest fail', function () {
       return new Promise(function (resolve, reject) {
         reject(new Error('Failed dom test'));
       });
     });
 
-    UnitTest.domtest('test3 domtest pass', function () {
+    UnitTest.domtest('test8 domtest pass', function () {
       return new Promise(function (resolve, reject) {
         resolve();
       });
@@ -96,7 +104,7 @@ asynctest(
       });
 
       try {
-        RawAssertions.assertEq('Should be expected test result', [
+        RawAssertions.assertEq('Should be expected test result', Actual: [
           {
             "name": "test1 pass",
             "result": "pass"
@@ -106,19 +114,27 @@ asynctest(
             "result": "label.\n  Expected: true\n  Actual: false"
           },
           {
-            "name": "test3 async fail",
+            "name": "test3 fail",
+            "result": "fail"
+          },
+          {
+            "name": "test4 async fail",
             "result": "Failed async test"
           },
           {
-            "name": "test3 async pass",
+            "name": "test5 async pass",
             "result": "pass"
           },
           {
-            "name": "test3 domtest fail",
+            "name": "test6 async fail",
+            "result": "fail"
+          },
+          {
+            "name": "test7 domtest fail",
             "result": "Failed dom test"
           },
           {
-            "name": "test3 domtest pass",
+            "name": "test8 domtest pass",
             "result": "pass"
           }
         ], resultJson);
