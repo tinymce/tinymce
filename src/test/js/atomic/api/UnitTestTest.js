@@ -104,7 +104,7 @@ asynctest(
       });
 
       try {
-        RawAssertions.assertEq('Should be expected test result', Actual: [
+        RawAssertions.assertEq('Should be expected test result', [
           {
             "name": "test1 pass",
             "result": "pass"
