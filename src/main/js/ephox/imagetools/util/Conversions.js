@@ -3,7 +3,6 @@ define(
   [
     'ephox.imagetools.util.Canvas',
     'ephox.imagetools.util.ImageSize',
-    'ephox.imagetools.util.Mime',
     'ephox.imagetools.util.Promise',
     'ephox.katamari.api.Option',
     'ephox.sand.api.Blob',
@@ -13,7 +12,7 @@ define(
     'global!Array',
     'global!Math'
   ],
-  function (Canvas, ImageSize, Mime, Promise, Option, Blob, FileReader, Uint8Array, Window, Array, Math) {
+  function (Canvas, ImageSize, Promise, Option, Blob, FileReader, Uint8Array, Window, Array, Math) {
     function loadImage(image) {
       return new Promise(function (resolve) {
         function loaded() {
@@ -29,47 +28,46 @@ define(
       });
     }
 
-    function imageToCanvas(image) {
-      return loadImage(image).then(function (image) {
-        var context, canvas;
-
-        canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image));
-        context = Canvas.get2dContext(canvas);
-        context.drawImage(image, 0, 0);
-
-        return canvas;
-      });
-    }
-
     function imageToBlob(image) {
       return loadImage(image).then(function (image) {
         var src = image.src;
 
         if (src.indexOf('blob:') === 0) {
-          return blobUriToBlob(src);
+          return anyUriToBlob(src);
         }
 
         if (src.indexOf('data:') === 0) {
           return dataUriToBlob(src);
         }
 
-        return imageToCanvas(image).then(function (canvas) {
-          return canvasToBlob(canvas, Mime.guessMimeType(src));
-        });
+        return anyUriToBlob(src);
       });
     }
 
     function blobToImage(blob) {
-      return new Promise(function (resolve) {
+      return new Promise(function (resolve, reject) {
+        var blobUrl = URL.createObjectURL(blob);
+
         var image = new Image();
 
-        function loaded() {
+        var removeListeners = function () {
           image.removeEventListener('load', loaded);
+          image.removeEventListener('error', error);
+        };
+
+        function loaded() {
+          removeListeners();
           resolve(image);
         }
 
+        function error() {
+          removeListeners();
+          reject('Unable to load data of type ' + blob.type + ': ' + blobUrl);
+        }
+
         image.addEventListener('load', loaded);
-        image.src = URL.createObjectURL(blob);
+        image.addEventListener('error', error);
+        image.src = blobUrl;
 
         if (image.complete) {
           loaded();
@@ -77,11 +75,13 @@ define(
       });
     }
 
-    function blobUriToBlob(url) {
+    function anyUriToBlob(url) {
       return new Promise(function (resolve) {
         var xhr = new XMLHttpRequest();
 
         xhr.open('GET', url, true);
+
+        // works with IE10+
         xhr.responseType = 'blob';
 
         xhr.onload = function () {
@@ -134,7 +134,7 @@ define(
 
     function uriToBlob(url) {
       if (url.indexOf('blob:') === 0) {
-        return blobUriToBlob(url);
+        return anyUriToBlob(url);
       }
 
       if (url.indexOf('data:') === 0) {
@@ -144,18 +144,44 @@ define(
       return null;
     }
 
-    function canvasToBlob(canvas, type, quality) {
+    function canvasToBlob(getCanvas, type, quality) {
       type = type || 'image/png';
 
       if (HTMLCanvasElement.prototype.toBlob) {
-        return new Promise(function (resolve) {
-          canvas.toBlob(function (blob) {
-            resolve(blob);
-          }, type, quality);
+        return getCanvas.then(function (canvas) {
+          return new Promise(function (resolve) {
+            canvas.toBlob(function (blob) {
+              resolve(blob);
+            }, type, quality);
+          });
         });
       } else {
-        return dataUriToBlob(canvas.toDataURL(type, quality));
+        return getCanvas.then(function (canvas) {
+          return canvas.toDataURL(type, quality);
+        }).then(dataUriToBlob);
       }
+    }
+
+    function canvasToDataURL(getCanvas, type, quality) {
+      type = type || 'image/png';
+      return getCanvas.then(function (canvas) {
+        return canvas.toDataURL(type, quality);
+      });
+    }
+
+    function blobToCanvas(blob) {
+      return blobToImage(blob).then(function (image) {
+        // we aren't retaining the image, so revoke the URL immediately
+        revokeImageUrl(image);
+
+        var context, canvas;
+
+        canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image));
+        context = Canvas.get2dContext(canvas);
+        context.drawImage(image, 0, 0);
+
+        return canvas;
+      });
     }
 
     function blobToDataUri(blob) {
@@ -180,25 +206,18 @@ define(
       URL.revokeObjectURL(image.src);
     }
 
-    var isDataUrl = function (uri) {
-      var data = uri.split(',');
-
-      return /data:([^;]+)/.exec(data[0]) !== null;
-    };
-
     return {
       // used outside
       blobToImage: blobToImage,
       imageToBlob: imageToBlob,
       blobToDataUri: blobToDataUri,
       blobToBase64: blobToBase64,
+      dataUriToBlobSync: dataUriToBlobSync,
 
       // helper method
-      imageToCanvas: imageToCanvas,
       canvasToBlob: canvasToBlob,
-      revokeImageUrl: revokeImageUrl,
-      uriToBlob: uriToBlob,
-      dataUriToBlobSync: dataUriToBlobSync,
-      isDataUrl: isDataUrl
+      canvasToDataURL: canvasToDataURL,
+      blobToCanvas: blobToCanvas,
+      uriToBlob: uriToBlob
     };
   });

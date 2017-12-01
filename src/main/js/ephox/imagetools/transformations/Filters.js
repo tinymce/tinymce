@@ -7,7 +7,12 @@ define(
   ],
   function (Canvas, ImageResult, ColorMatrix) {
     function colorFilter(ir, matrix) {
-      var canvas = ir.toCanvas();
+      return ir.toCanvas().then(function (canvas) {
+        return applyColorFilter(canvas, ir.getType(), matrix);
+      });
+    }
+
+    function applyColorFilter(canvas, type, matrix) {
       var context = Canvas.get2dContext(canvas);
       var pixels;
 
@@ -36,11 +41,16 @@ define(
       pixels = applyMatrix(context.getImageData(0, 0, canvas.width, canvas.height), matrix);
       context.putImageData(pixels, 0, 0);
 
-      return ImageResult.fromCanvas(canvas, ir.getType());
+      return ImageResult.fromCanvas(canvas, type);
     }
 
     function convoluteFilter(ir, matrix) {
-      var canvas = ir.toCanvas();
+      return ir.toCanvas().then(function (canvas) {
+        return applyConvoluteFilter(canvas, ir.getType(), matrix);
+      });
+    }
+
+    function applyConvoluteFilter(canvas, type, matrix) {
       var context = Canvas.get2dContext(canvas);
       var pixelsIn, pixelsOut;
 
@@ -106,8 +116,7 @@ define(
     }
 
     function functionColorFilter(colorFn) {
-      return function (ir, value) {
-        var canvas = ir.toCanvas();
+      var filterImpl = function (canvas, type, value) {
         var context = Canvas.get2dContext(canvas);
         var pixels, i, lookup = new Array(256);
 
@@ -130,7 +139,13 @@ define(
         pixels = applyLookup(context.getImageData(0, 0, canvas.width, canvas.height), lookup);
         context.putImageData(pixels, 0, 0);
 
-        return ImageResult.fromCanvas(canvas, ir.getType());
+        return ImageResult.fromCanvas(canvas, type);
+      };
+
+      return function (ir, value) {
+        return ir.toCanvas().then(function (canvas) {
+          return filterImpl(canvas, ir.getType(), value);
+        });
       };
     }
 

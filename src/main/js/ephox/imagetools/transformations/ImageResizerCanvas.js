@@ -1,12 +1,11 @@
 define(
   'ephox.imagetools.transformations.ImageResizerCanvas',
   [
-    'ephox.imagetools.util.Promise',
-    'ephox.imagetools.util.Conversions',
     'ephox.imagetools.util.Canvas',
-    'ephox.imagetools.util.ImageSize'
+    'ephox.imagetools.util.ImageSize',
+    'ephox.imagetools.util.Promise'
   ],
-  function (Promise, Conversions, Canvas, ImageSize) {
+  function (Canvas, ImageSize, Promise) {
     /**
      * @method scale
      * @static

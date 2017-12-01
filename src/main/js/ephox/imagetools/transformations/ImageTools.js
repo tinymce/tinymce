@@ -7,7 +7,11 @@ define(
   ],
   function (Canvas, ImageResult, ImageResizerCanvas) {
     function rotate(ir, angle) {
-      var image = ir.toCanvas();
+      return ir.toCanvas().then(function (canvas) {
+        return applyRotate(canvas, ir.getType(), angle);
+      });
+    }
+    function applyRotate(image, type, angle) {
       var canvas = Canvas.create(image.width, image.height);
       var context = Canvas.get2dContext(canvas);
       var translateX = 0, translateY = 0;
@@ -30,11 +34,15 @@ define(
       context.rotate(angle * Math.PI / 180);
       context.drawImage(image, 0, 0);
 
-      return ImageResult.fromCanvas(canvas, ir.getType());
+      return ImageResult.fromCanvas(canvas, type);
     }
 
     function flip(ir, axis) {
-      var image = ir.toCanvas();
+      return ir.toCanvas().then(function (canvas) {
+        return applyFlip(canvas, ir.getType(), axis);
+      });
+    }
+    function applyFlip(image, type, axis) {
       var canvas = Canvas.create(image.width, image.height);
       var context = Canvas.get2dContext(canvas);
 
@@ -46,25 +54,31 @@ define(
         context.drawImage(image, -canvas.width, 0);
       }
 
-      return ImageResult.fromCanvas(canvas, ir.getType());
+      return ImageResult.fromCanvas(canvas, type);
     }
 
     function crop(ir, x, y, w, h) {
-      var image = ir.toCanvas();
+      return ir.toCanvas().then(function (canvas) {
+        return applyCrop(canvas, ir.getType(), x, y, w, h);
+      });
+    }
+    function applyCrop(image, type, x, y, w, h) {
       var canvas = Canvas.create(w, h);
       var context = Canvas.get2dContext(canvas);
 
       context.drawImage(image, -x, -y);
 
-      return ImageResult.fromCanvas(canvas, ir.getType());
+      return ImageResult.fromCanvas(canvas, type);
     }
 
 
     function resize(ir, w, h) {
-      return ImageResizerCanvas.scale(ir.toCanvas(), w, h)
-        .then(function (canvas) {
-          return ImageResult.fromCanvas(canvas, ir.getType());
-        });
+      return ir.toCanvas().then(function (canvas) {
+        return ImageResizerCanvas.scale(canvas, w, h)
+          .then(function (newCanvas) {
+            return ImageResult.fromCanvas(newCanvas, ir.getType());
+          });
+      });
     }
 
     return {
