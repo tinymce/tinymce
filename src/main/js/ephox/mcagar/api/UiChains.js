@@ -154,7 +154,7 @@ define(
     };
 
     var cClickPopupButton = function (btnSelector, selector) {
-      popupSelector = selector || '[role="dialog"]';
+      var popupSelector = selector ? selector : '[role="dialog"]';
 
       return NamedChain.asChain([
         NamedChain.direct(NamedChain.inputName(), cWaitForVisible('waiting for: ' + popupSelector, popupSelector), 'popup'),

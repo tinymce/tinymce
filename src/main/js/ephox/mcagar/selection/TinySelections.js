@@ -30,9 +30,9 @@ define(
     var createDomCursor = function (container, elementPath, offset) {
       var elm = Cursors.calculateOne(container, elementPath);
       return toDomRange(Cursors.range({
-        start: element,
+        start: elm,
         soffset: offset,
-        finish: element,
+        finish: elm,
         foffset: offset
       }));
     };
