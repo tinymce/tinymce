@@ -112,7 +112,7 @@ define(
       pixelsOut = applyMatrix(pixelsIn, pixelsOut, matrix);
       context.putImageData(pixelsOut, 0, 0);
 
-      return ImageResult.fromCanvas(canvas, ir.getType());
+      return ImageResult.fromCanvas(canvas, type);
     }
 
     function functionColorFilter(colorFn) {
