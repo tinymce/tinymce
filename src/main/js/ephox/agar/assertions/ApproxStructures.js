@@ -3,25 +3,26 @@ define(
 
   [
     'ephox.agar.alien.Truncate',
+    'ephox.agar.api.LegacyAssert',
     'ephox.agar.api.RawAssertions',
     'ephox.agar.assertions.ApproxComparisons',
     'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Obj',
-    'ephox.sand.api.JSON',
     'ephox.katamari.api.Fun',
+    'ephox.katamari.api.Obj',
     'ephox.katamari.api.Option',
+    'ephox.sand.api.JSON',
+    'ephox.sugar.api.node.Node',
+    'ephox.sugar.api.node.Text',
     'ephox.sugar.api.properties.Attr',
     'ephox.sugar.api.properties.Classes',
     'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.properties.Html',
-    'ephox.sugar.api.node.Node',
-    'ephox.sugar.api.node.Text',
-    'ephox.sugar.api.search.Traverse',
     'ephox.sugar.api.properties.Value',
+    'ephox.sugar.api.search.Traverse',
     'global!Error'
   ],
 
-  function (Truncate, RawAssertions, ApproxComparisons, Arr, Obj, Json, Fun, Option, Attr, Classes, Css, Html, Node, Text, Traverse, Value, Error) {
+  function (Truncate, LegacyAssert, RawAssertions, ApproxComparisons, Arr, Fun, Obj, Option, Json, Node, Text, Attr, Classes, Css, Html, Value, Traverse, Error) {
     var element = function (tag, fields) {
       var doAssert = function (actual) {
         RawAssertions.assertEq('Incorrect node name for: ' + Truncate.getHtml(actual), tag, Node.name(actual));
@@ -48,7 +49,7 @@ define(
     var text = function (s) {
       var doAssert = function (actual) {
         Text.getOption(actual).fold(function () {
-          assert.fail(Truncate.getHtml(actual) + ' is not a text node, so cannot check if its text is: ' + s.show());
+          LegacyAssert.fail(Truncate.getHtml(actual) + ' is not a text node, so cannot check if its text is: ' + s.show());
         }, function (t) {
           if (s.strAssert === undefined) throw new Error(Json.stringify(s) + ' is not a *string assertion*');
           s.strAssert('Checking text content', t);  

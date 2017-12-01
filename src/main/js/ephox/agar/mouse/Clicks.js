@@ -13,7 +13,7 @@ define(
     var trigger = function (element) {
       if (element.dom().click !== undefined) return element.dom().click();
       // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-      point('click', 0, element);
+      point('click', LEFT_CLICK, element, 0, 0);
     };
 
     var point = function (type, button, element, x, y) {

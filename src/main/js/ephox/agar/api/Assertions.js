@@ -18,6 +18,7 @@ define(
     'global!window'
   ],
   function (RawAssertions, Truncate, Chain, Logger, Step, UiFinder, ApproxStructure, Differ, Obj, Compare, Element, Array, Error, window) {
+    var assertEq = RawAssertions.assertEq;
 
     // Note, this requires changes to tunic
     var textError = function (label, expected, actual) {
@@ -46,7 +47,7 @@ define(
     var assertPresence = function (label, expected, container) {
       Obj.each(expected, function (num, selector) {
         var actual = UiFinder.findAllIn(container, selector).length;
-        assert.eq(num, actual, 'Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ' + label);
+        assertEq('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ' + label, num, actual);
       });
     };
 
@@ -67,14 +68,12 @@ define(
     };
 
     var assertDomEq = function (label, expected, actual) {
-      assert.eq(
+      assertEq(
+        label + '\nExpected : ' + Truncate.getHtml(expected) + '\nActual: ' + Truncate.getHtml(actual),
         true,
-        Compare.eq(expected, actual),
-        label + '\nExpected : ' + Truncate.getHtml(expected) + '\nActual: ' + Truncate.getHtml(actual)
+        Compare.eq(expected, actual)
       );
     };
-
-    var assertEq = RawAssertions.assertEq;
 
     var sAssertEq = function (label, a, b) {
       return Step.sync(function () {

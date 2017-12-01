@@ -3,11 +3,12 @@ asynctest(
   
   [
     'ephox.agar.api.Pipeline',
+    'ephox.agar.api.RawAssertions',
     'ephox.agar.api.Step',
     'global!setTimeout'
   ],
 
-  function (Pipeline, Step, setTimeout) {
+  function (Pipeline, RawAssertions, Step, setTimeout) {
     var success = arguments[arguments.length-2];
     var failure = arguments[arguments.length-1];
 
@@ -25,7 +26,7 @@ asynctest(
       mutator('purpose', 'unknown'),
       mutator('correctness', 'tbd')
     ], function (result) { 
-      assert.eq({
+      RawAssertions.assertEq('Should have all state properties', {
         name: 'testfile',
         purpose: 'unknown',
         correctness: 'tbd'
