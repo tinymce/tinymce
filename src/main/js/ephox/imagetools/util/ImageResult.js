@@ -25,11 +25,15 @@ define(
       }
 
       function toAdjustedBlob(type, quality) {
-        return Conversions.canvasToBlob(getCanvas, type, quality);
+        return getCanvas.then(function (canvas) {
+          return Conversions.canvasToBlob(canvas, type, quality);
+        });
       }
 
       function toAdjustedDataURL(type, quality) {
-        return Conversions.canvasToDataURL(getCanvas, type, quality);
+        return getCanvas.then(function (canvas) {
+          return Conversions.canvasToDataURL(canvas, type, quality);
+        });
       }
 
       function toAdjustedBase64(type, quality) {

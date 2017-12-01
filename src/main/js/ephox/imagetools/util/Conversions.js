@@ -144,21 +144,17 @@ define(
       return null;
     }
 
-    function canvasToBlob(getCanvas, type, quality) {
+    function canvasToBlob(canvas, type, quality) {
       type = type || 'image/png';
 
       if (HTMLCanvasElement.prototype.toBlob) {
-        return getCanvas.then(function (canvas) {
-          return new Promise(function (resolve) {
-            canvas.toBlob(function (blob) {
-              resolve(blob);
-            }, type, quality);
-          });
+        return new Promise(function (resolve) {
+          canvas.toBlob(function (blob) {
+            resolve(blob);
+          }, type, quality);
         });
       } else {
-        return getCanvas.then(function (canvas) {
-          return canvas.toDataURL(type, quality);
-        }).then(dataUriToBlob);
+        return dataUriToBlob(canvas.toDataURL(type, quality));
       }
     }
 
