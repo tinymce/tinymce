@@ -10,7 +10,7 @@ define(
 
     var noop = function () { };
 
-    var arity0 = function (f) {
+    var noarg = function (f) {
       return function () {
         return f();
       };
@@ -80,7 +80,7 @@ define(
 
     return {
       noop: noop,
-      arity0: arity0,
+      noarg: noarg,
       compose: compose,
       constant: constant,
       identity: identity,
