@@ -30,19 +30,6 @@ asynctest(
       UiChains.cWaitForPopup('looking for ColorPicker in color fields', '[role="dialog"][aria-label="Table properties"]')
     ]);
 
-    var cElementExists = function (selector) {
-      return Chain.op(function () {
-        Assertions.assertEq("Element: " + selector + " exists in DOM", true, UiFinder.findIn(TinyDom.fromDom(document.body), selector).isValue());
-      });
-    };
-
-    var cElementNotExist = function (selector) {
-      return Chain.op(function () {
-        Assertions.assertEq("Element: " + selector + " doesn't exist in DOM", true, UiFinder.findIn(TinyDom.fromDom(document.body), selector).isError());
-      });
-    };
-
-
     var settings = {
       plugins: 'table colorpicker',
       indent: false,
@@ -56,12 +43,16 @@ asynctest(
     Chain.pipeline([
       Editor.cFromSettings(settings),
       cTriggerTablePropertiesDialog,
-      cElementExists('.mce-colorbox .mce-i-none'),
+      Chain.op(function () {
+        Assertions.assertPresence("Color picker exists in the DOM", { '.mce-colorbox i.mce-i-none': 2 }, TinyDom.fromDom(document.body));
+      }),
       Editor.cRemove,
 
       Editor.cFromSettings(Merger.merge(settings, { plugins: 'table' })),
       cTriggerTablePropertiesDialog,
-      cElementNotExist('.mce-colorbox .mce-i-none'),
+      Chain.op(function () {
+        Assertions.assertPresence("Color picker doesn't exist in the DOM", { '.mce-colorbox i.mce-i-none': 0 }, TinyDom.fromDom(document.body));
+      }),
       Editor.cRemove
     ], function () {
       success();
