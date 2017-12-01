@@ -75,7 +75,7 @@ define(
         return SelectorFind.closest(startRow, 'table', isRoot).bind(function (table) {
           var rows = SelectorFilter.descendants(table, 'tr');
           if (Compare.eq(startRow, rows[0])) {
-            return DomGather.seekLeft(tailEdge.element(), function (element) {
+            return DomGather.seekLeft(table, function (element) {
               return CursorPosition.last(element).isSome();
             }, isRoot).map(function (last) {
               var lastOffset = Awareness.getEnd(last);
@@ -96,7 +96,9 @@ define(
         return SelectorFind.closest(startRow, 'table', isRoot).bind(function (table) {
           var rows = SelectorFilter.descendants(table, 'tr');
           if (Compare.eq(startRow, rows[rows.length - 1])) {
-            return Traverse.nextSibling(table).bind(CursorPosition.first).map(function (first) {
+            return DomGather.seekRight(table, function (element) {
+              return CursorPosition.first(element).isSome();
+            }, isRoot).map(function (first) {
               return Responses.response(
                 Option.some(Util.makeSitus(first, 0, first, 0)),
                 true
