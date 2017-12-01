@@ -19,6 +19,9 @@ asynctest(
       { fail: [ 'name', 'error' ] }
     ]);
 
+    var oldTests = Global.__tests;
+    Global.__tests = [];
+  
     UnitTest.test('test1 pass', function () {
       RawAssertions.assertEq('label', true, true);
     });
@@ -139,6 +142,7 @@ asynctest(
           }
         ], resultJson);
 
+        Global.__tests = oldTests;
         success();
       } catch (ex) {
         failure(ex);
