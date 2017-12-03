@@ -6,9 +6,9 @@ define(
     'ephox.darwin.keyboard.KeySelection',
     'ephox.darwin.keyboard.TableKeys',
     'ephox.darwin.selection.Util',
-    'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
+    'ephox.phoenix.api.dom.DomGather',
     'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Compare',
     'ephox.sugar.api.search.PredicateExists',
@@ -20,7 +20,7 @@ define(
   ],
 
   function (
-    Responses, KeySelection, TableKeys, Util, Arr, Fun, Option, PlatformDetection, Compare, PredicateExists, SelectorFilter, SelectorFind, Traverse, Awareness,
+    Responses, KeySelection, TableKeys, Util, Fun, Option, DomGather, PlatformDetection, Compare, PredicateExists, SelectorFilter, SelectorFind, Traverse, Awareness,
     CursorPosition
   ) {
     var detection = PlatformDetection.detect();
@@ -74,7 +74,9 @@ define(
         return SelectorFind.closest(startRow, 'table', isRoot).bind(function (table) {
           var rows = SelectorFilter.descendants(table, 'tr');
           if (Compare.eq(startRow, rows[0])) {
-            return Traverse.prevSibling(table).bind(CursorPosition.last).map(function (last) {
+            return DomGather.seekLeft(table, function (element) {
+              return CursorPosition.last(element).isSome();
+            }, isRoot).map(function (last) {
               var lastOffset = Awareness.getEnd(last);
               return Responses.response(
                 Option.some(Util.makeSitus(last, lastOffset, last, lastOffset)),
@@ -93,7 +95,9 @@ define(
         return SelectorFind.closest(startRow, 'table', isRoot).bind(function (table) {
           var rows = SelectorFilter.descendants(table, 'tr');
           if (Compare.eq(startRow, rows[rows.length - 1])) {
-            return Traverse.nextSibling(table).bind(CursorPosition.first).map(function (first) {
+            return DomGather.seekRight(table, function (element) {
+              return CursorPosition.first(element).isSome();
+            }, isRoot).map(function (first) {
               return Responses.response(
                 Option.some(Util.makeSitus(first, 0, first, 0)),
                 true
