@@ -24,7 +24,7 @@ define(
         safari(type, doc, value, modifiers, dispatcher);
       } else {
 
-        if (platform.browser.isChrome() || platform.browser.isEdge()) {
+        if (platform.browser.isChrome() || platform.browser.isEdge() || platform.browser.isFirefox()) {
           defineGetter(oEvent, 'keyCode', getter);
           defineGetter(oEvent, 'which', getter);
           defineGetter(oEvent, 'shiftKey', function () { return modifiers.shift === true; });
