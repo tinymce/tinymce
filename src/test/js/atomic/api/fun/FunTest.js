@@ -20,6 +20,11 @@ test(
 
     var add2squared = Fun.compose(squared, add2);
 
+    var f0 = function () {
+      return assert.eq(0, arguments.length);
+    };
+    Fun.noarg(f0)(1, 2, 3);
+
     assert.eq(16, add2squared(2));
 
     assert.eq(undefined, Fun.identity(undefined));
