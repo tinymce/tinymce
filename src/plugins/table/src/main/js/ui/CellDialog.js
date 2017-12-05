@@ -78,7 +78,13 @@ define(
       editor.undoManager.transact(function () {
         Tools.each(cells, function (cellElm) {
           setAttrib(cellElm, 'scope', data.scope);
-          updateStyles(cellElm, data.style);
+
+          if (cells.length === 1) {
+            setAttrib(cellElm, 'style', data.style);
+          } else {
+            updateStyles(cellElm, data.style);
+          }
+
           setAttrib(cellElm, 'class', data['class']);
           setStyle(cellElm, 'width', Util.addSizeSuffix(data.width));
           setStyle(cellElm, 'height', Util.addSizeSuffix(data.height));
