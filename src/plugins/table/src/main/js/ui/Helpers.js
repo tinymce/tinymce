@@ -91,16 +91,18 @@ define(
     };
 
     var createStyleForm = function (editor) {
-      var createColorPickAction = function (evt) {
+      var createColorPickAction = function () {
         var colorPickerCallback = editor.settings.color_picker_callback;
         if (colorPickerCallback) {
-          return colorPickerCallback.call(
-            editor,
-            function (value) {
-              evt.control.value(value).fire('change');
-            },
-            evt.control.value()
-          );
+          return function (evt) {
+            return colorPickerCallback.call(
+              editor,
+              function (value) {
+                evt.control.value(value).fire('change');
+              },
+              evt.control.value()
+            );
+          };
         }
       };
 
@@ -152,13 +154,13 @@ define(
                 label: 'Border color',
                 type: 'colorbox',
                 name: 'borderColor',
-                onaction: createColorPickAction
+                onaction: createColorPickAction()
               },
               {
                 label: 'Background color',
                 type: 'colorbox',
                 name: 'backgroundColor',
-                onaction: createColorPickAction
+                onaction: createColorPickAction()
               }
             ]
           }
