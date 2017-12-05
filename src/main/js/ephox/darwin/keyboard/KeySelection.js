@@ -28,7 +28,7 @@ define(
     // If the cells are different, and there is a rectangle to connect them, select the cells.
     var detect = function (container, isRoot, start, finish, selectRange) {
       if (! Compare.eq(start, finish)) {
-        var cellSel = CellSelection.identify(start, finish, isRoot).each(function (cellSel) {
+        return CellSelection.identify(start, finish, isRoot).bind(function (cellSel) {
           var boxes = cellSel.boxes().getOr([]);
           if (boxes.length > 0) {
             selectRange(container, boxes, cellSel.start(), cellSel.finish());
@@ -36,11 +36,11 @@ define(
               Option.some(Util.makeSitus(start, 0, start, Awareness.getEnd(start))),
               true
             ));
+          } else {
+            return Option.none();
           }
         });
       }
-
-      return Option.none();
     };
 
     var update = function (rows, columns, container, selected, annotations) {

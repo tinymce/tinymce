@@ -107,12 +107,12 @@ define(
     var expandTo = function (finish, firstSelectedSelector) {
       return SelectorFind.ancestor(finish, 'table').bind(function (table) {
         return SelectorFind.descendant(table, firstSelectedSelector).bind(function (start) {
-          return identify(start, finish).map(function (boxes) {
-            return {
-              boxes: Fun.constant(boxes),
-              start: Fun.constant(start),
-              finish: Fun.constant(finish)
-            };
+          return identify(start, finish).bind(function (identified) {
+            return identified.boxes().isSome() ? Option.some({
+              boxes: Fun.constant(identified.boxes().getOrDie()),
+              start: Fun.constant(identified.start()),
+              finish: Fun.constant(identified.finish())
+            }) : Option.none();
           });
         });
       });

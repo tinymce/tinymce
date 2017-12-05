@@ -30,7 +30,7 @@ define(
         cursor.each(function (start) {
           annotations.clear(container);
           findCell(event.target(), isRoot).each(function (finish) {
-            var cellSel = CellSelection.identify(start, finish, isRoot).each(function (cellSel) {
+            CellSelection.identify(start, finish, isRoot).each(function (cellSel) {
               var boxes = cellSel.boxes().getOr([]);
               // Wait until we have more than one, otherwise you can't do text selection inside a cell.
               // Alternatively, if the one cell selection starts in one cell and ends in a different cell,
