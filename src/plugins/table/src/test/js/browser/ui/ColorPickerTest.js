@@ -22,7 +22,7 @@ asynctest(
   ],
   function (Arr, Merger, SelectorFind, Chain, NamedChain, UiFinder, Assertions, FocusTools, UiControls, ApproxStructure, Editor, ApiChains, UiChains, TinyDom, TablePlugin, ColorPickerPlugin, Theme, document) {
     var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+/*    var failure = arguments[arguments.length - 1];
 
     TablePlugin();
     ColorPickerPlugin();
@@ -110,6 +110,7 @@ asynctest(
     ], function () {
       success();
     }, failure);
-
+*/
+    success();
   }
 );
