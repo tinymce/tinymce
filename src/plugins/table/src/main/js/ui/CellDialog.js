@@ -22,6 +22,9 @@ define(
     'tinymce.plugins.table.ui.Helpers'
   ],
   function (Fun, Tools, Styles, Util, Helpers) {
+    var updateStyles = function (elm, cssText) {
+      elm.style.cssText += ';' + cssText;
+    };
 
     var extractDataFromElement = function (editor, elm) {
       var dom = editor.dom;
@@ -75,7 +78,7 @@ define(
       editor.undoManager.transact(function () {
         Tools.each(cells, function (cellElm) {
           setAttrib(cellElm, 'scope', data.scope);
-          setAttrib(cellElm, 'style', data.style);
+          updateStyles(cellElm, data.style);
           setAttrib(cellElm, 'class', data['class']);
           setStyle(cellElm, 'width', Util.addSizeSuffix(data.width));
           setStyle(cellElm, 'height', Util.addSizeSuffix(data.height));

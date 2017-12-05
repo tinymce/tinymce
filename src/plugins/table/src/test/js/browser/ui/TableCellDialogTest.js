@@ -37,7 +37,7 @@ asynctest(
     var cleanTableHtml = function (html) {
       return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
     };
-
+/*
     suite.test("Table cell properties dialog (get data from plain cell)", function (editor) {
       editor.focus();
       editor.setContent('<table><tr><td>X</td></tr></table>');
@@ -134,7 +134,7 @@ asynctest(
 
       closeTopMostWindow(editor);
     });
-
+*/
     suite.test("Table cell properties dialog update multiple cells", function (editor) {
       editor.getBody().innerHTML = (
         '<table>' +
