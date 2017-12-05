@@ -5,36 +5,72 @@ define(
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
+    'ephox.katamari.api.Struct',
     'ephox.robin.api.dom.DomParent',
     'ephox.snooker.api.TablePositions',
     'ephox.sugar.api.dom.Compare',
+    'ephox.sugar.api.search.PredicateFind',
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.search.Selectors'
   ],
 
-  function (Arr, Fun, Option, DomParent, TablePositions, Compare, SelectorFilter, SelectorFind, Selectors) {
+  function (Arr, Fun, Option, Struct, DomParent, TablePositions, Compare, PredicateFind, SelectorFilter, SelectorFind, Selectors) {
     var lookupTable = function (container, isRoot) {
       return SelectorFind.ancestor(container, 'table');
     };
 
+    var identified = Struct.immutableBag(['boxes', 'start', 'finish'], []);
+
     var identify = function (start, finish, isRoot) {
       // Optimisation: If the cells are equal, it's a single cell array
       if (Compare.eq(start, finish)) {
-        return Option.some([ start ]);
+        return Option.some(identified({
+          boxes: Option.some([ start ]),
+          start: start,
+          finish: finish
+        }));
       } else {
         return lookupTable(start, isRoot).bind(function (startTable) {
           return lookupTable(finish, isRoot).bind(function (finishTable) {
             if (Compare.eq(startTable, finishTable)) { // Selecting from within the same table.
-              return TablePositions.intercepts(startTable, start, finish);
+              return Option.some(identified({
+                boxes: TablePositions.intercepts(startTable, start, finish),
+                start: start,
+                finish: finish
+              }));
             } else if (Compare.contains(startTable, finishTable)) { // Selecting from the parent table to the nested table.
-              return TablePositions.nestedIntercepts(startTable, start, startTable, finish, finishTable);
+              var finishCell = PredicateFind.descendant(startTable, function (element) {
+                return Selectors.is(element, 'td,th') && Compare.contains(element, finish);
+              }).getOrThunk(finish);
+              return Option.some(identified({
+                boxes: TablePositions.nestedIntercepts(startTable, start, startTable, finish, finishTable),
+                start: start,
+                finish: finishCell
+              }));
             } else if (Compare.contains(finishTable, startTable)) { // Selecting from the nested table to the parent table.
-              return TablePositions.nestedIntercepts(finishTable, start, startTable, finish, finishTable);
+              var startCell = PredicateFind.descendant(finishTable, function (element) {
+                return Selectors.is(element, 'td,th') && Compare.contains(element, start);
+              }).getOrThunk(start);
+              return Option.some(identified({
+                boxes: TablePositions.nestedIntercepts(finishTable, start, startTable, finish, finishTable),
+                start: start,
+                finish: startCell
+              }));
             } else { // Selecting from a nested table to a different nested table.
               return DomParent.ancestors(start, finish).shared().bind(function (lca) {
                 return SelectorFind.closest(lca, 'table', isRoot).bind(function (lcaTable) {
-                  return TablePositions.nestedIntercepts(lcaTable, start, startTable, finish, finishTable);
+                  var startCell = PredicateFind.descendant(lcaTable, function (element) {
+                    return Selectors.is(element, 'td,th') && Compare.contains(element, start);
+                  }).getOrThunk(start);
+                  var finishCell = PredicateFind.descendant(lcaTable, function (element) {
+                    return Selectors.is(element, 'td,th') && Compare.contains(element, finish);
+                  }).getOrThunk(finish);
+                  return Option.some(identified({
+                    boxes: TablePositions.nestedIntercepts(lcaTable, start, startTable, finish, finishTable),
+                    start: startCell,
+                    finish: finishCell
+                  }));
                 });
               });
             }
