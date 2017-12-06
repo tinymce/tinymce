@@ -124,7 +124,6 @@ asynctest(
       var cX = Math.round(center.left());
       var cY = Math.round(center.top());
 
-      console.log('> testing ' + doc.iframe.dom().id + ', rtl=' + doc.rtl);
       assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50, 'scroll bar width, got=' + scrollBarWidth);
 
       scrollCheck(0, 0, 0, 0, doc, 'start pos');
@@ -170,7 +169,6 @@ asynctest(
         scrollBy(50, 50, doc);
         c1.restore();
         scrollCheck(x - 100, cY - 100, 0, 0, doc, 'restore #2');
-        console.log('> done ' + doc.iframe.dom().id + ', rtl=' + doc.rtl);
       }
     };
   }
