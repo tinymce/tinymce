@@ -9,13 +9,12 @@ define(
     'ephox.robin.api.dom.DomParent',
     'ephox.snooker.api.TablePositions',
     'ephox.sugar.api.dom.Compare',
-    'ephox.sugar.api.search.PredicateFind',
     'ephox.sugar.api.search.SelectorFilter',
     'ephox.sugar.api.search.SelectorFind',
     'ephox.sugar.api.search.Selectors'
   ],
 
-  function (Arr, Fun, Option, Struct, DomParent, TablePositions, Compare, PredicateFind, SelectorFilter, SelectorFind, Selectors) {
+  function (Arr, Fun, Option, Struct, DomParent, TablePositions, Compare, SelectorFilter, SelectorFind, Selectors) {
     var lookupTable = function (container, isRoot) {
       return SelectorFind.ancestor(container, 'table');
     };
@@ -23,6 +22,12 @@ define(
     var identified = Struct.immutableBag(['boxes', 'start', 'finish'], []);
 
     var identify = function (start, finish, isRoot) {
+      var getIsRoot = function (rootTable) {
+        return function (element) {
+          return isRoot(element) || Compare.eq(element, rootTable);
+        };
+      };
+
       // Optimisation: If the cells are equal, it's a single cell array
       if (Compare.eq(start, finish)) {
         return Option.some(identified({
@@ -40,18 +45,16 @@ define(
                 finish: finish
               }));
             } else if (Compare.contains(startTable, finishTable)) { // Selecting from the parent table to the nested table.
-              var finishCell = PredicateFind.descendant(startTable, function (element) {
-                return Selectors.is(element, 'td,th') && Compare.contains(element, finish);
-              }).getOr(finish);
+              var ancestorCells = SelectorFilter.ancestors(finish, 'td,th', getIsRoot(startTable));
+              var finishCell = ancestorCells.length > 0 ? ancestorCells[ancestorCells.length - 1] : finish;
               return Option.some(identified({
                 boxes: TablePositions.nestedIntercepts(startTable, start, startTable, finish, finishTable),
                 start: start,
                 finish: finishCell
               }));
             } else if (Compare.contains(finishTable, startTable)) { // Selecting from the nested table to the parent table.
-              var startCell = PredicateFind.descendant(finishTable, function (element) {
-                return Selectors.is(element, 'td,th') && Compare.contains(element, start);
-              }).getOr(start);
+              var ancestorCells = SelectorFilter.ancestors(start, 'td,th', getIsRoot(finishTable));
+              var startCell = ancestorCells.length > 0 ? ancestorCells[ancestorCells.length - 1] : start;
               return Option.some(identified({
                 boxes: TablePositions.nestedIntercepts(finishTable, start, startTable, finish, finishTable),
                 start: start,
@@ -60,12 +63,10 @@ define(
             } else { // Selecting from a nested table to a different nested table.
               return DomParent.ancestors(start, finish).shared().bind(function (lca) {
                 return SelectorFind.closest(lca, 'table', isRoot).bind(function (lcaTable) {
-                  var startCell = PredicateFind.descendant(lcaTable, function (element) {
-                    return Selectors.is(element, 'td,th') && Compare.contains(element, start);
-                  }).getOr(start);
-                  var finishCell = PredicateFind.descendant(lcaTable, function (element) {
-                    return Selectors.is(element, 'td,th') && Compare.contains(element, finish);
-                  }).getOr(finish);
+                  var finishAncestorCells = SelectorFilter.ancestors(finish, 'td,th', getIsRoot(lcaTable));
+                  var finishCell = finishAncestorCells.length > 0 ? finishAncestorCells[finishAncestorCells.length - 1] : finish;
+                  var startAncestorCells = SelectorFilter.ancestors(start, 'td,th', getIsRoot(lcaTable));
+                  var startCell = startAncestorCells.length > 0 ? startAncestorCells[startAncestorCells.length - 1] : start;
                   return Option.some(identified({
                     boxes: TablePositions.nestedIntercepts(lcaTable, start, startTable, finish, finishTable),
                     start: startCell,
@@ -108,11 +109,13 @@ define(
       return SelectorFind.ancestor(finish, 'table').bind(function (table) {
         return SelectorFind.descendant(table, firstSelectedSelector).bind(function (start) {
           return identify(start, finish).bind(function (identified) {
-            return identified.boxes().isSome() ? Option.some({
-              boxes: Fun.constant(identified.boxes().getOrDie()),
-              start: Fun.constant(identified.start()),
-              finish: Fun.constant(identified.finish())
-            }) : Option.none();
+            return identified.boxes().map(function (boxes) {
+              return {
+                boxes: Fun.constant(boxes),
+                start: Fun.constant(identified.start()),
+                finish: Fun.constant(identified.finish())
+              }
+            });
           });
         });
       });
