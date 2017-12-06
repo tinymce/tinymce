@@ -30,15 +30,6 @@ asynctest(
       };
     }
 
-    var scrollBarWidth = function () {
-      // From https://davidwalsh.name/detect-scrollbar-width
-      var scrollDiv = Element.fromHtml('<div style="width: 100px; height: 100px; overflow: scroll; position: absolute; top: -9999px;"></div>');
-      Insert.after(Body.body(), scrollDiv);
-      var w = scrollDiv.dom().offsetWidth - scrollDiv.dom().clientWidth;
-      Remove.remove(scrollDiv);
-      return w;
-    };
-
     var testOne = function (ifr, attrMap, next) {
       var iframe = Element.fromHtml(ifr);
       Attr.setAll(iframe, attrMap.iframe);
@@ -127,13 +118,15 @@ asynctest(
       var bodyBorder = parseInt(bod0, 10) || 0;
       var mar = parseInt(mar0, 10) || 0;
       var hgt = doc.body.dom().scrollHeight;
-      var scrollW = scrollBarWidth();
+      var scrollBarWidth = Scroll.scrollBarWidth();
       var cEl = doc.byId('centre1');
       var center = Location.absolute(cEl);
       var cX = Math.round(center.left());
       var cY = Math.round(center.top());
 
       console.log('> testing ' + doc.iframe.dom().id + ', rtl=' + doc.rtl);
+      assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50, 'scroll bar width, got=' + scrollBarWidth);
+
       scrollCheck(0, 0, 0, 0, doc, 'start pos');
 
       //  TBIO-5131 - skip tests for IE and EDGE RTL (x coords go -ve from left to right on the screen in RTL mode)
@@ -159,7 +152,7 @@ asynctest(
 
         // scroll to bottom el
         var bot1Pos = Location.absolute(doc.byId('top1'));
-        var bot = hgt + 2 * bodyBorder + 2 * mar - (doc.rawWin.innerHeight - scrollW); // content height minus viewport-excluding-the-bottom-scrollbar
+        var bot = hgt + 2 * bodyBorder + 2 * mar - (doc.rawWin.innerHeight - scrollBarWidth); // content height minus viewport-excluding-the-bottom-scrollbar
         setToElement(doc, doc.byId('bot1'), bot1Pos.left(), bot, 0, 20, 'set to bottom');
 
         scrollTo(x, cY, doc); // scroll back to centre

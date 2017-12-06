@@ -5,13 +5,16 @@ define(
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Type',
     'ephox.sand.api.PlatformDetection',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Body',
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.view.Location',
     'ephox.sugar.api.view.Position',
     'global!document'
   ],
 
-  function (Option, Type, PlatformDetection, Element, Location, Position, document) {
+  function (Option, Type, PlatformDetection, Insert, Remove, Body, Element, Location, Position, document) {
     var isSafari = PlatformDetection.detect().browser.isSafari();
 
     // get scroll position (x,y) relative to document _doc (or global if not supplied)
@@ -99,6 +102,16 @@ define(
       }
     };
 
+    // Return the scroll bar width (calculated by temporarily inserting an element into the dom)
+    var scrollBarWidth = function () {
+      // From https://davidwalsh.name/detect-scrollbar-width
+      var scrollDiv = Element.fromHtml('<div style="width: 100px; height: 100px; overflow: scroll; position: absolute; top: -9999px;"></div>');
+      Insert.after(Body.body(), scrollDiv);
+      var w = scrollDiv.dom().offsetWidth - scrollDiv.dom().clientWidth;
+      Remove.remove(scrollDiv);
+      return w;
+    };
+
     return {
       get: get,
       set: set,
@@ -107,7 +120,8 @@ define(
       capture: capture,
       intoView: intoView,
       intoViewIfNeeded: intoViewIfNeeded,
-      setToElement: setToElement
+      setToElement: setToElement,
+      scrollBarWidth: scrollBarWidth
     };
   }
 );
