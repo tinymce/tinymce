@@ -30,14 +30,9 @@ define(
       });
     };
 
-    var retrieveLast = function (container, lastSelectedSelector) {
-      return SelectorFind.descendant(container, lastSelectedSelector);
-    };
-
     return {
       retrieve: retrieve,
-      retrieveBox: retrieveBox,
-      retrieveLast: retrieveLast
+      retrieveBox: retrieveBox
     };
   }
 );
