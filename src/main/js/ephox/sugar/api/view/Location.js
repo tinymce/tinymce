@@ -4,11 +4,10 @@ define(
   [
     'ephox.sugar.api.dom.Dom',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.view.Position',
-    'ephox.sugar.impl.ViewScroll'
+    'ephox.sugar.api.view.Position'
   ],
 
-  function (Dom, Element, Position, ViewScroll) {
+  function (Dom, Element, Position) {
     var boxPosition = function (dom) {
       var box = dom.getBoundingClientRect();
       return Position(box.left, box.top);
@@ -26,13 +25,12 @@ define(
       var body = doc.body;
       var win = Dom.windowOf(Element.fromDom(doc));
       var html = doc.documentElement;
-      var bodyScroller = ViewScroll.isIframeBodyScroller(doc);
 
-      var scrollTop = bodyScroller  ? firstDefinedOrZero(body.scrollTop, undefined)  : firstDefinedOrZero(win.pageYOffset, html.scrollTop);
-      var scrollLeft = bodyScroller ? firstDefinedOrZero(body.scrollLeft, undefined) : firstDefinedOrZero(win.pageXOffset, html.scrollLeft);
+      var scrollTop = firstDefinedOrZero(win.pageYOffset, html.scrollTop);
+      var scrollLeft = firstDefinedOrZero(win.pageXOffset, html.scrollLeft);
 
-      var clientTop = bodyScroller  ? firstDefinedOrZero(body.clientTop, undefined)  : firstDefinedOrZero(html.clientTop, body.clientTop);
-      var clientLeft = bodyScroller ? firstDefinedOrZero(body.clientLeft, undefined) : firstDefinedOrZero(html.clientLeft, body.clientLeft);
+      var clientTop = firstDefinedOrZero(html.clientTop, body.clientTop);
+      var clientLeft = firstDefinedOrZero(html.clientLeft, body.clientLeft);
 
       return viewport(element).translate(
         scrollLeft - clientLeft,

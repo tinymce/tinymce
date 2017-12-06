@@ -8,11 +8,10 @@ define(
     'ephox.sugar.api.node.Element',
     'ephox.sugar.api.view.Location',
     'ephox.sugar.api.view.Position',
-    'ephox.sugar.impl.ViewScroll',
     'global!document'
   ],
 
-  function (Option, Type, PlatformDetection, Element, Location, Position, ViewScroll, document) {
+  function (Option, Type, PlatformDetection, Element, Location, Position, document) {
     var isSafari = PlatformDetection.detect().browser.isSafari();
 
     // get scroll position (x,y) relative to document _doc (or global if not supplied)
@@ -29,24 +28,14 @@ define(
     var set = function (x, y, _doc) {
       var doc = _doc !== undefined ? _doc.dom() : document;
       var win = doc.defaultView;
-      if (!ViewScroll.isIframeBodyScroller(doc)) {
-        win.scrollTo(x, y);
-      } else { // TBIO-5098 - win.scrollTo()/win.scrollBy()/..etc does not work on iframe if html overflow-y is hidden
-        doc.body.scrollLeft = x;
-        doc.body.scrollTop = y;
-      }
+      win.scrollTo(x, y);
     };
 
     // Scroll content by (x,y) relative to document _doc (or global if not supplied)
     var by = function (x, y, _doc) {
       var doc = _doc !== undefined ? _doc.dom() : document;
       var win = doc.defaultView;
-      if (!ViewScroll.isIframeBodyScroller(doc)) {
-        win.scrollBy(x, y);
-      } else { // TBIO-5098 - win.scrollTo()/win.scrollBy()/..etc does not work on iframe if html overflow-y is hidden
-        doc.body.scrollLeft += x;
-        doc.body.scrollTop += y;
-      }
+      win.scrollBy(x, y);
     };
 
     // Set the window scroll position to the element
