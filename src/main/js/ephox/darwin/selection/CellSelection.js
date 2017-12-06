@@ -42,7 +42,7 @@ define(
             } else if (Compare.contains(startTable, finishTable)) { // Selecting from the parent table to the nested table.
               var finishCell = PredicateFind.descendant(startTable, function (element) {
                 return Selectors.is(element, 'td,th') && Compare.contains(element, finish);
-              }).getOrThunk(finish);
+              }).getOr(finish);
               return Option.some(identified({
                 boxes: TablePositions.nestedIntercepts(startTable, start, startTable, finish, finishTable),
                 start: start,
@@ -51,7 +51,7 @@ define(
             } else if (Compare.contains(finishTable, startTable)) { // Selecting from the nested table to the parent table.
               var startCell = PredicateFind.descendant(finishTable, function (element) {
                 return Selectors.is(element, 'td,th') && Compare.contains(element, start);
-              }).getOrThunk(start);
+              }).getOr(start);
               return Option.some(identified({
                 boxes: TablePositions.nestedIntercepts(finishTable, start, startTable, finish, finishTable),
                 start: start,
@@ -62,10 +62,10 @@ define(
                 return SelectorFind.closest(lca, 'table', isRoot).bind(function (lcaTable) {
                   var startCell = PredicateFind.descendant(lcaTable, function (element) {
                     return Selectors.is(element, 'td,th') && Compare.contains(element, start);
-                  }).getOrThunk(start);
+                  }).getOr(start);
                   var finishCell = PredicateFind.descendant(lcaTable, function (element) {
                     return Selectors.is(element, 'td,th') && Compare.contains(element, finish);
-                  }).getOrThunk(finish);
+                  }).getOr(finish);
                   return Option.some(identified({
                     boxes: TablePositions.nestedIntercepts(lcaTable, start, startTable, finish, finishTable),
                     start: startCell,
