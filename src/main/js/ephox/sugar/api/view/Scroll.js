@@ -28,7 +28,7 @@ define(
     };
 
     // Scroll content to (x,y) relative to document _doc (or global if not supplied)
-    var set = function (x, y, _doc) {
+    var to = function (x, y, _doc) {
       var doc = _doc !== undefined ? _doc.dom() : document;
       var win = doc.defaultView;
       win.scrollTo(x, y);
@@ -45,7 +45,7 @@ define(
     var setToElement = function (win, element) {
       var pos = Location.absolute(element);
       var doc = Element.fromDom(win.document);
-      set(pos.left(), pos.top(), doc);
+      to(pos.left(), pos.top(), doc);
     };
 
     // call f() preserving the original scroll position relative to document doc
@@ -54,7 +54,7 @@ define(
       f();
       var after = get(doc);
       if (before.top() !== after.top() || before.left() !== after.left()) {
-        set(before.left(), before.top(), doc);
+        to(before.left(), before.top(), doc);
       }
     };
 
@@ -69,7 +69,7 @@ define(
       // TODO: this is quite similar to the code in nomad.
       var restore = function () {
         previous.each(function (p) {
-          set(p.left(), p.top(), doc);
+          to(p.left(), p.top(), doc);
         });
       };
 
@@ -114,7 +114,7 @@ define(
 
     return {
       get: get,
-      set: set,
+      to: to,
       by: by,
       preserve: preserve,
       capture: capture,

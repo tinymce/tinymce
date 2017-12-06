@@ -96,7 +96,7 @@ asynctest(
 
     // scroll to (x,y) and check position
     var scrollTo = function (x, y, doc) {
-      Scroll.set(x, y, doc.rawDoc);
+      Scroll.to(x, y, doc.rawDoc);
       scrollCheck(x, y, 0, 0, doc, 'scrollTo(' + x + ',' + y + ')');
     };
 
