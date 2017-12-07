@@ -8,22 +8,21 @@ define(
 
   function (Fun, Option) {
     var generate = function (cType, rType, creds, custom) {
-      var contentType = cType.match({
-        none: function () {
-          return 'text/html';
-        },
-        form: function (data) {
-          return 'application/x-www-form-urlencoded; charset=UTF-8';
-        },
-        json: function (data) {
-          return 'application/json';
-        },
-        plain: function (data) {
-          return 'text/plain';
-        },
-        html: function (data) {
-          return 'text/html';
-        }
+      var contentType = cType.map(function (adt) {
+        return adt.match({
+          form: function () {
+            return 'application/x-www-form-urlencoded; charset=UTF-8';
+          },
+          json: function () {
+            return 'application/json';
+          },
+          plain: function () {
+            return 'text/plain';
+          },
+          html: function () {
+            return 'text/html';
+          }
+        });
       });
 
       var credentials = creds.match({
