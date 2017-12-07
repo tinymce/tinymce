@@ -28,7 +28,7 @@ define(
 
       var credentials = creds.match({
         none: Option.none,
-        xhr: Option.some(true)
+        xhr: Fun.constant(Option.some(true))
       });
 
       var responseType = rType.match({
