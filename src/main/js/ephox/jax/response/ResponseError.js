@@ -4,12 +4,11 @@ define(
   [
     'ephox.jax.response.BlobError',
     'ephox.katamari.api.Future',
-    'ephox.katamari.api.FutureResult',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Struct'
   ],
 
-  function (BlobError, Future, FutureResult, Option, Struct) {
+  function (BlobError, Future, Option, Struct) {
     var getBlobError = function (request) {
       // can't get responseText of a blob, throws a DomException. Need to use FileReader.
       // request.response can be null if the server provided no content in the error response.
@@ -17,7 +16,7 @@ define(
     };
 
     // Returns a future, not a future result
-    var handle = function (responseType, request) {
+    var handle = function (url, responseType, request) {
       var fallback = function () {
         return Future.pure(request.response);
       };
@@ -33,7 +32,7 @@ define(
       });
 
       return asyncResText.map(function (responseText) {
-        var message = request.status === 0 ? 'Unknown HTTP error (possible cross-domain request)' :  'Could not load url "' + request.url + '": ' + request.statusText;
+        var message = request.status === 0 ? 'Unknown HTTP error (possible cross-domain request)' :  'Could not load url "' + url + '": ' + request.statusText;
         return nu({
           message: message,
           status: request.status,

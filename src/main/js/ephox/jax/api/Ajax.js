@@ -36,7 +36,7 @@ define(
         RequestUpdate.mutate(request, options);
 
         var onError = function () {
-          ResponseError.handle(responseType, request).get(function (err) {
+          ResponseError.handle(url, responseType, request).get(function (err) {
             callback(Result.error(err));
           });
         };
@@ -53,13 +53,14 @@ define(
         request.onerror = onError;
 
         // We could use method here again, but then we'd have to nest a pattern match.
-        var data = type === 'get' ? undefined : contentType.match({
-          none: Fun.constant(undefined),
-          form: Fun.identity,
-          json: Json.stringify,
-          plain: Fun.identity,
-          html: Fun.identity
-        });
+        var data = contentType.map(function (cType) {
+          return cType.match({
+            form: Fun.identity,
+            json: Json.stringify,
+            plain: Fun.identity,
+            html: Fun.identity
+          });
+        }).getOr(undefined);
 
         request.send(data);
       }).toLazy();
