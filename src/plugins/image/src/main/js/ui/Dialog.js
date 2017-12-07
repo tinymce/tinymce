@@ -81,6 +81,8 @@ define(
           if (!data.style) {
             data.style = null;
           }
+          
+          data.src = editor.convertURL(data.src, 'src');
 
           // Setup new data excluding style properties
           /*eslint dot-notation: 0*/
