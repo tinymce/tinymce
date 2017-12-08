@@ -8,19 +8,22 @@ define(
 
   function (Fun, Option) {
     var generate = function (cType, rType, creds, custom) {
-      var contentType = cType.map(function (adt) {
+      var contentType = cType.bind(function (adt) {
         return adt.match({
+          file: function () {
+            return Option.none(); // browser sets this automatically
+          },
           form: function () {
-            return 'application/x-www-form-urlencoded; charset=UTF-8';
+            return Option.some('application/x-www-form-urlencoded; charset=UTF-8');
           },
           json: function () {
-            return 'application/json';
+            return Option.some('application/json');
           },
           plain: function () {
-            return 'text/plain';
+            return Option.some('text/plain');
           },
           html: function () {
-            return 'text/html';
+            return Option.some('text/html');
           }
         });
       });

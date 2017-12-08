@@ -55,6 +55,7 @@ define(
         // We could use method here again, but then we'd have to nest a pattern match.
         var data = contentType.map(function (cType) {
           return cType.match({
+            file: Fun.identity,
             form: Fun.identity,
             json: Json.stringify,
             plain: Fun.identity,
