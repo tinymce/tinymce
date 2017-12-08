@@ -4,19 +4,21 @@ define(
   [
     'ephox.dragster.style.Styles',
     'ephox.katamari.api.Merger',
-    'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.properties.Css',
+    'ephox.sugar.api.dom.Remove',
     'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.Remove'
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Class',
+    'ephox.sugar.api.properties.Css'
   ],
 
-  function (Styles, Merger, Class, Css, Element, Remove) {
+  function (Styles, Merger, Remove, Element, Attr, Class, Css) {
     return function (options) {
       var settings = Merger.merge({
         'layerClass': Styles.resolve('blocker')
       }, options);
 
       var div = Element.fromTag('div');
+      Attr.set(div, 'role', 'presentation');
       Css.setAll(div, {
         position: 'fixed',
         left: '0px',
