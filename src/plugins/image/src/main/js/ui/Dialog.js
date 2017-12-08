@@ -82,6 +82,9 @@ define(
             data.style = null;
           }
 
+          // if configured, call the custom url converter (configuration option "convert_urls")
+          data.src = editor.convertURL(data.src, 'src');
+          
           // Setup new data excluding style properties
           /*eslint dot-notation: 0*/
           data = {
