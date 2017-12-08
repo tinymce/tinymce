@@ -3,26 +3,29 @@ define(
 
   [
     'ephox.jax.response.BlobError',
+    'ephox.jax.response.JsonResponse',
     'ephox.katamari.api.Future',
     'ephox.katamari.api.Option',
     'ephox.katamari.api.Struct'
   ],
 
-  function (BlobError, Future, Option, Struct) {
+  function (BlobError, JsonResponse, Future, Option, Struct) {
     var getBlobError = function (request) {
       // can't get responseText of a blob, throws a DomException. Need to use FileReader.
       // request.response can be null if the server provided no content in the error response.
       return Option.from(request.response).map(BlobError).getOr(Future.pure('no response content'));
     };
 
-    // Returns a future, not a future result
     var handle = function (url, responseType, request) {
       var fallback = function () {
         return Future.pure(request.response);
       };
 
       var asyncResText = responseType.match({
-        json: fallback,
+        json: function () {
+          // for errors, the responseText is json if it can be, fallback if it can't
+          return JsonResponse.parse(request.response).fold(fallback, Future.pure);
+        },
         blob: function () {
           return getBlobError(request);
         },
