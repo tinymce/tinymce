@@ -3,20 +3,26 @@ asynctest(
 
   [
     'ephox.katamari.api.Arr',
-    'ephox.sand.api.PlatformDetection',
+    'ephox.katamari.api.Fun',
     'ephox.katamari.api.Option',
-    'ephox.sugar.api.node.Body',
-    'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.events.DomEvent',
-    'ephox.sugar.api.node.Element',
+    'ephox.sand.api.PlatformDetection',
     'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.events.DomEvent',
+    'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.properties.Attr',
+    'ephox.sugar.api.properties.Css',
     'ephox.sugar.api.view.Location',
-    'ephox.sugar.api.dom.Remove'
+    'ephox.sugar.api.view.Scroll'
   ],
 
-  function (Arr, PlatformDetection, Option, Body, Css, DomEvent, Element, Insert, Location, Remove) {
+  function (Arr, Fun, Option, PlatformDetection, Insert, Remove, DomEvent, Body, Element, Attr, Css, Location, Scroll) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
+
+    var browser = PlatformDetection.detect().browser;
+    var scrollBarWidth = Scroll.scrollBarWidth();
 
     var asserteq = function (expected, actual, message) {
       // I wish assert.eq printed expected and actual on failure
@@ -24,32 +30,62 @@ asynctest(
       assert.eq(expected, actual, m);
     };
 
-    var iframe = Element.fromHtml('<iframe style="height:100px; width:500px;" src="project/src/test/data/locationTest.html"></iframe>');
-    Insert.append(Body.body(), iframe);
-    var run = DomEvent.bind(iframe, 'load', function () {
-      run.unbind();
-      try {
-        checks();
-        success();
-      } catch (e) {
-        failure(e);
-      } finally {
-        Remove.remove(iframe);
-      }
-    });
+    var testOne = function (ifr, attrMap, next) {
+      var iframe = Element.fromHtml(ifr);
+      Attr.setAll(iframe, attrMap.iframe);
 
-    var checks = function () {
-      var iframeWin = iframe.dom().contentWindow;
-      var iframeDoc = iframeWin.document;
-      var doc = {
-        rawWin: iframeWin,
-        rawDoc: Element.fromDom(iframeDoc),
-        byId: function (str) {
-          return Option.from(iframeDoc.getElementById(str))
-                       .map(Element.fromDom)
-                       .getOrDie('cannot find element with id ' + str);
+      var run = DomEvent.bind(iframe, 'load', function () {
+        run.unbind();
+        try {
+          var iframeWin = iframe.dom().contentWindow;
+          var iframeDoc = iframeWin.document;
+          var html = Element.fromDom(iframeDoc.documentElement);
+          var body = Element.fromDom(iframeDoc.body);
+          attrMap.html.each(Fun.curry(Attr.setAll, html));
+          attrMap.body.each(Fun.curry(Attr.setAll, body));
+          var doc = {
+            iframe: iframe,
+            rawWin: iframeWin,
+            rawDoc: Element.fromDom(iframeDoc),
+            body: body,
+            rtl: iframeDoc.body.dir === 'rtl',
+            dir: Attr.get(body, 'dir') || 'ltr',
+            byId: function (str) {
+              return Option.from(iframeDoc.getElementById(str))
+                .map(Element.fromDom)
+                .getOrDie('cannot find element with id ' + str);
+            }
+          };
+
+          checks(doc);
+          Remove.remove(iframe);
+          next();
+        } catch (e) {
+          // Remove.remove(iframe);
+          failure(e);
         }
-      };
+      });
+
+      Insert.append(Body.body(), iframe);
+    };
+
+    var ifr = '<iframe src="project/src/test/data/locationTest.html"></iframe>';
+
+    testOne(ifr, { // vanilla iframe
+      iframe: { id: 'vanilla', style: 'height:200px; width:500px; border: 1px dashed chartreuse;' },
+      html: Option.none(),
+      body: Option.some({ contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+    },
+      function () {
+        testOne(ifr, { // rtl iframe
+          iframe: { id: 'ifrRtl', style: 'height:200px; width:500px; border: 1px dashed turquoise;' },
+          html: Option.none(),
+          body: Option.some({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+        },
+          success);
+      });
+
+    var checks = function (doc) {
 
       Arr.each([
         baseChecks,
@@ -76,6 +112,8 @@ asynctest(
       pos = Location.viewport(body);
       assert.eq(0, pos.top());
       assert.eq(0, pos.left());
+      assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50, 'scroll bar width, got=' + scrollBarWidth);
+
     };
 
     var disconnectedChecks = function () {
@@ -95,31 +133,37 @@ asynctest(
       // This one has position absolute, but no values set initially
       Css.setAll(doc.byId('positionTest'), { top: '10px', left: '10px' });
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
+
       var tests = [
-        { id: 'absolute-1',
-          absolute: { top: 1, left: 1 },
-          relative: { top: 1, left: 1 }, // JQuery returns 0/0
-          viewport: { top: 1, left: 1 }
+        {
+          id: 'absolute-1',
+          absolute: { top: 1, left: { ltr: 1, rtl: 1 } },
+          relative: { top: 1, left: { ltr: 1, rtl: 1 } }, // JQuery returns 0/0
+          viewport: { top: 1, left: { ltr: 1, rtl: 1 } }
         },
-        { id: 'absolute-1-1',
-          absolute: { top: 5, left: 5 },
-          relative: { top: 2, left: 2 }, // JQuery returns 1/1
-          viewport: { top: 5, left: 5 }
+        {
+          id: 'absolute-1-1',
+          absolute: { top: 5, left: { ltr: 5, rtl: 5 } },
+          relative: { top: 2, left: { ltr: 2, rtl: 2 } }, // JQuery returns 1/1
+          viewport: { top: 5, left: { ltr: 5, rtl: 5 } }
         },
-        { id: 'absolute-1-1-1',
-          absolute: { top: 9, left: 9 },
-          relative: { top: 2, left: 2 }, // JQuery returns 1/1
-          viewport: { top: 9, left: 9 }
+        {
+          id: 'absolute-1-1-1',
+          absolute: { top: 9, left: { ltr: 9, rtl: 9 } },
+          relative: { top: 2, left: { ltr: 2, rtl: 2 } }, // JQuery returns 1/1
+          viewport: { top: 9, left: { ltr: 9, rtl: 9 } }
         },
-        { id: 'absolute-2',
-          absolute: { top: 20, left: 20 },
-          relative: { top: 20, left: 20 }, // JQuery returns 19/19
-          viewport: { top: 20, left: 20 }
+        {
+          id: 'absolute-2',
+          absolute: { top: 20, left: { ltr: 20, rtl: 20 } },
+          relative: { top: 20, left: { ltr: 20, rtl: 20 } }, // JQuery returns 19/19
+          viewport: { top: 20, left: { ltr: 20, rtl: 20 } }
         },
-        { id: 'positionTest',
-          absolute: { top: 10, left: 10 },
-          relative: { top: 10, left: 10 },
-          viewport: { top: 10, left: 10 }
+        {
+          id: 'positionTest',
+          absolute: { top: 10, left: { ltr: 10, rtl: 10 } },
+          relative: { top: 10, left: { ltr: 10, rtl: 10 } },
+          viewport: { top: 10, left: { ltr: 10, rtl: 10 } }
         }
       ];
 
@@ -128,38 +172,45 @@ asynctest(
 
     var relativeChecks = function (doc) {
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
+
       var tests = [
-        { id: 'relative-1',
-          absolute: { top: 7, left: 7 },
-          relative: { top: 7, left: 7 }, // JQuery returns 6/6
-          viewport: { top: 7, left: 7 }
+        {
+          id: 'relative-1',
+          absolute: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth } },
+          relative: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth } }, // JQuery returns 6/6
+          viewport: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth } }
         },
-        { id: 'relative-1-1',
-          absolute: { top: 15, left: 15 },
-          relative: { top:  6, left:  6 }, // JQuery returns 5/5
-          viewport: { top: 15, left: 15 }
+        {
+          id: 'relative-1-1',
+          absolute: { top: 14, left: { ltr: 14, rtl: 372 - scrollBarWidth } },
+          relative: { top: 6, left: { ltr: 6, rtl: -10 } }, // JQuery returns 5/5
+          viewport: { top: 14, left: { ltr: 14, rtl: 372 - scrollBarWidth } }
         },
-        { id: 'relative-1-1-1',
-          absolute: { top: 23, left: 23 },
-          relative: { top:  6, left:  6 }, // JQuery returns 5/5
-          viewport: { top: 23, left: 23 }
+        {
+          id: 'relative-1-1-1',
+          absolute: { top: 22, left: { ltr: 22, rtl: 364 - scrollBarWidth } },
+          relative: { top: 6, left: { ltr: 6, rtl: -10 } }, // JQuery returns 5/5
+          viewport: { top: 22, left: { ltr: 22, rtl: 364 - scrollBarWidth } }
         },
-        { id: 'relative-2',
-          absolute: { top: 142, left: 27 },
-          relative: { top: 142, left: 27 }, // JQuery returns 141/26
-          viewport: { top: 142, left: 27 }
+        {
+          id: 'relative-2',
+          absolute: { top: 141, left: { ltr: 26, rtl: 400 - scrollBarWidth } },
+          relative: { top: 141, left: { ltr: 26, rtl: 400 - scrollBarWidth } }, // JQuery returns 141/26
+          viewport: { top: 141, left: { ltr: 26, rtl: 400 - scrollBarWidth } }
         },
 
         // This simulates a docked ego state for the toolbars
-        { id: 'relative-toolbar-container',
-          absolute: { top: 685, left: 6 },
-          relative: { top: 685, left: 6 },
-          viewport: { top: 685, left: 6 }
+        {
+          id: 'relative-toolbar-container',
+          absolute: { top: 684, left: { ltr: 5, rtl: 395 - scrollBarWidth } },
+          relative: { top: 684, left: { ltr: 5, rtl: 395 - scrollBarWidth } },
+          viewport: { top: 684, left: { ltr: 5, rtl: 395 - scrollBarWidth } }
         },
-        { id: 'relative-toolbar',
-          absolute: { top: 685 - 40, left: 6 },
-          relative: { top: -40, left: 0 },
-          viewport: { top: 685 - 40, left: 6 }
+        {
+          id: 'relative-toolbar',
+          absolute: { top: 684 - 40, left: { ltr: 5, rtl: 395 - scrollBarWidth } },
+          relative: { top: -40, left: { ltr: 0, rtl: 0 } },
+          viewport: { top: 684 - 40, left: { ltr: 5, rtl: 395 - scrollBarWidth } }
         }
       ];
 
@@ -170,25 +221,29 @@ asynctest(
       var extraHeight = 230; // because all tests are in one page
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var tests = [
-        { id: 'static-1',
-          absolute: { top: extraHeight + 7, left: 7 },
-          relative: { top: extraHeight + 7, left: 7 }, // JQuery returns +6/6
-          viewport: { top: extraHeight + 7, left: 7 }
+        {
+          id: 'static-1',
+          absolute: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 - scrollBarWidth } },
+          relative: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 - scrollBarWidth } }, // JQuery returns +6/6
+          viewport: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 - scrollBarWidth } }
         },
-        { id: 'static-1-1',
-          absolute: { top: extraHeight + 15, left: 15 },
-          relative: { top: extraHeight + 15, left: 15 }, // JQuery returns +14/14
-          viewport: { top: extraHeight + 15, left: 15 }
+        {
+          id: 'static-1-1',
+          absolute: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 - scrollBarWidth } },
+          relative: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 - scrollBarWidth } }, // JQuery returns +14/14
+          viewport: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 - scrollBarWidth } }
         },
-        { id: 'static-1-1-1',
-          absolute: { top: extraHeight + 23, left: 23 },
-          relative: { top: extraHeight + 23, left: 23 }, // JQuery returns +22/22
-          viewport: { top: extraHeight + 23, left: 23 }
+        {
+          id: 'static-1-1-1',
+          absolute: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 - scrollBarWidth } },
+          relative: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 - scrollBarWidth } }, // JQuery returns +22/22
+          viewport: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 - scrollBarWidth } }
         },
-        { id: 'static-2',
-          absolute: { top: extraHeight + 122, left: 7 },
-          relative: { top: extraHeight + 122, left: 7 }, // JQuery returns +121/6
-          viewport: { top: extraHeight + 122, left: 7 }
+        {
+          id: 'static-2',
+          absolute: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 - scrollBarWidth } },
+          relative: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 - scrollBarWidth } }, // JQuery returns +121/6
+          viewport: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 - scrollBarWidth } }
         }
       ];
 
@@ -204,30 +259,35 @@ asynctest(
 
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var tests = [
-        { id: 'table-1',
-          absolute: { top: extraHeight + 7, left: 6 },
-          relative: { top: extraHeight + 7, left: 6 },
-          viewport: { top: extraHeight + 7, left: 6 }
+        {
+          id: 'table-1',
+          absolute: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 - scrollBarWidth } },
+          relative: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 - scrollBarWidth } },
+          viewport: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 - scrollBarWidth } }
         },
-        { id: 'th-1',
-          absolute: { top: extraHeight + 11, left: 10 },
-          relative: { top: 4,                left: 4 },  // JQuery returns extraHeight + 11/10, but that's nonsense
-          viewport: { top: extraHeight + 11, left: 10 }
+        {
+          id: 'th-1',
+          absolute: { top: extraHeight + 10, left: { ltr: 9, rtl: 387 - scrollBarWidth } },
+          relative: { top: 4, left: { ltr: 4, rtl: 216 } },  // JQuery returns extraHeight + 11/10, but that's nonsense
+          viewport: { top: extraHeight + 10, left: { ltr: 9, rtl: 387 - scrollBarWidth } }
         },
-        { id: 'th-3',
-          absolute: { top: extraHeight + 11, left: 222 },
-          relative: { top: 4,                left: 216 },  // JQuery returns extraHeight + 11/222, but that's nonsense
-          viewport: { top: extraHeight + 11, left: 222 }
+        {
+          id: 'th-3',
+          absolute: { top: extraHeight + 10, left: { ltr: 221, rtl: 175 - scrollBarWidth } },
+          relative: { top: 4, left: { ltr: 216, rtl: 4 } },  // JQuery returns extraHeight + 11/222, but that's nonsense
+          viewport: { top: extraHeight + 10, left: { ltr: 221, rtl: 175 - scrollBarWidth } }
         },
-        { id: 'td-1',
-          absolute: { top: extraHeight + 117, left: 10 },
-          relative: { top: 110,               left: 4 },  // JQuery returns extraHeight + 117/10, but that's nonsense
-          viewport: { top: extraHeight + 117, left: 10 }
+        {
+          id: 'td-1',
+          absolute: { top: extraHeight + 116, left: { ltr: 9, rtl: 387 - scrollBarWidth } },
+          relative: { top: 110, left: { ltr: 4, rtl: 216 } },  // JQuery returns extraHeight + 117/10, but that's nonsense
+          viewport: { top: extraHeight + 116, left: { ltr: 9, rtl: 387 - scrollBarWidth } }
         },
-        { id: 'td-3',
-          absolute: { top: extraHeight + 117, left: 222 },
-          relative: { top: 110,               left: 216 },  // JQuery returns extraHeight + 117/222, but that's nonsense
-          viewport: { top: extraHeight + 117, left: 222 }
+        {
+          id: 'td-3',
+          absolute: { top: extraHeight + 116, left: { ltr: 221, rtl: 175 - scrollBarWidth } },
+          relative: { top: 110, left: { ltr: 216, rtl: 4 } },  // JQuery returns extraHeight + 117/222, but that's nonsense
+          viewport: { top: extraHeight + 116, left: { ltr: 221, rtl: 175 - scrollBarWidth } }
         }
       ];
 
@@ -238,8 +298,10 @@ asynctest(
         var chromeDifference = -2;
         Arr.each(tests, function (t) {
           if (t.id !== 'table-1') {
+            console.log('> Note - fix for Chrome bug - subtracting from relative top and left: ', chromeDifference);
             t.relative.top += chromeDifference;
-            t.relative.left += chromeDifference;
+            t.relative.left.ltr += chromeDifference;
+            t.relative.left.rtl += chromeDifference;
           }
         });
       }
@@ -248,57 +310,70 @@ asynctest(
     };
 
     var fixedChecks = function (doc) {
+
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var noScroll = [
-        { id: 'fixed-1',
-          absolute: { top: 1, left: 1 },
-          relative: { top: 1, left: 1 }, // JQuery returns 0/0
-          viewport: { top: 1, left: 1 }
+        {
+          id: 'fixed-1',
+          absolute: { top: 1, left: { ltr: 1, rtl: 1 } },
+          relative: { top: 1, left: { ltr: 1, rtl: 1 } }, // JQuery returns 0/0
+          viewport: { top: 1, left: { ltr: 1, rtl: 1 } }
         },
-        { id: 'fixed-2',
-          absolute: { top: 21, left: 21 },
-          relative: { top: 21, left: 21 }, // JQuery returns 20/20
-          viewport: { top: 21, left: 21 }
+        {
+          id: 'fixed-2',
+          absolute: { top: 21, left: { ltr: 21, rtl: 21 } },
+          relative: { top: 21, left: { ltr: 21, rtl: 21 } }, // JQuery returns 20/20
+          viewport: { top: 21, left: { ltr: 21, rtl: 21 } }
         },
-        { id: 'fixed-no-top-left',
-          absolute: { top: 7, left: 7 },
-          relative: { top: 7, left: 7 }, // JQuery returns 6/6
-          viewport: { top: 7, left: 7 }
+        {
+          id: 'fixed-no-top-left',
+          absolute: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth } },
+          relative: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth } }, // JQuery returns 6/6
+          viewport: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth } }
         }
       ];
 
-      var leftScroll = 1000;
+      // relative scroll
+      var leftScroll = (doc.rtl && (browser.isIE() || browser.isEdge())) ? -1000 : 1000; // IE has RTL -ve direction from left to right
       var topScroll = 2000;
       // GUESS: 1px differences from JQuery is due to the 1px margin on the body
       var withScroll = [
-        { id: 'fixed-1',
-          absolute: { top: topScroll + 1, left: leftScroll + 1 },
-          relative: { top: 1, left: 1 }, // JQuery returns 0/0
-          viewport: { top: 1, left: 1 }
+        {
+          id: 'fixed-1',
+          absolute: { top: topScroll + 1, left: { ltr: leftScroll + 1, rtl: 1 } },
+          relative: { top: 1, left: { ltr: 1, rtl: 1 } }, // JQuery returns 0/0
+          viewport: { top: 1, left: { ltr: 1, rtl: 1 } }
         },
-        { id: 'fixed-2',
-          absolute: { top: topScroll + 21, left: leftScroll + 21 },
-          relative: { top: 21, left: 21 }, // JQuery returns 20/20
-          viewport: { top: 21, left: 21 }
+        {
+          id: 'fixed-2',
+          absolute: { top: topScroll + 21, left: { ltr: leftScroll + 21, rtl: 21 } },
+          relative: { top: 21, left: { ltr: 21, rtl: 21 } }, // JQuery returns 20/20
+          viewport: { top: 21, left: { ltr: 21, rtl: 21 } }
         },
-        { id: 'fixed-no-top-left',
-          absolute: { top: topScroll + 7, left: leftScroll + 7 },
-          relative: { top: 7, left: 7 }, // JQuery returns 6/6
-          viewport: { top: 7, left: 7 }
+        {
+          id: 'fixed-no-top-left',
+          absolute: { top: topScroll + 6, left: { ltr: leftScroll + 6, rtl: 380 - scrollBarWidth } },
+          relative: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth } }, // JQuery returns 6/6
+          viewport: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth } }
         }
       ];
 
       var afterSetPosition = [
-        { id: 'fixed-no-top-left',
-          absolute: { top: topScroll + 11, left: leftScroll + 21 },
-          relative: { top: 11, left: 21 }, // JQuery returns 10/20
-          viewport: { top: 11, left: 21 }
+        {
+          id: 'fixed-no-top-left',
+          absolute: { top: topScroll + 11, left: { ltr: leftScroll + 21, rtl: 21 } },
+          relative: { top: 11, left: { ltr: 21, rtl: 21 } }, // JQuery returns 10/20
+          viewport: { top: 11, left: { ltr: 21, rtl: 21 } }
         }
       ];
 
       runChecks(doc, noScroll);
 
-      doc.rawWin.scrollTo(leftScroll,topScroll);
+      var scr = Scroll.get(doc.rawDoc);
+      assert.eq(0, scr.left(), 'expected 0, left is=' + scr.left());
+      assert.eq(0, scr.top(), 'expected 0, top is ' + scr.top());
+
+      Scroll.by(leftScroll, topScroll, doc.rawDoc);
       runChecks(doc, withScroll);
 
       Css.setAll(doc.byId('fixed-no-top-left'), { top: '10px', left: '20px' });
@@ -311,14 +386,14 @@ asynctest(
         var div = doc.byId(t.id);
 
         var pos = Location.absolute(div);
-        asserteq(t.absolute.top,  pos.top(),  '.absolute().top  ' + t.id);
-        asserteq(t.absolute.left, pos.left(), '.absolute().left ' + t.id);
+        asserteq(t.absolute.top, pos.top(), '.absolute().top  ' + t.id);
+        asserteq(t.absolute.left[doc.dir], pos.left(), '.absolute().left.' + doc.dir + ' ' + t.id);
         pos = Location.relative(div);
-        asserteq(t.relative.top,  pos.top(),  '.relative().top  ' + t.id);
-        asserteq(t.relative.left, pos.left(), '.relative().left ' + t.id);
+        asserteq(t.relative.top, pos.top(), '.relative().top  ' + t.id);
+        asserteq(t.relative.left[doc.dir], pos.left(), '.relative().left.' + doc.dir + ' ' + t.id);
         pos = Location.viewport(div);
-        asserteq(t.viewport.top,  pos.top(),  '.viewport().top  ' + t.id);
-        asserteq(t.viewport.left, pos.left(), '.viewport().left ' + t.id);
+        asserteq(t.viewport.top, pos.top(), '.viewport().top  ' + t.id);
+        asserteq(t.viewport.left[doc.dir], pos.left(), '.viewport().left.' + doc.dir + ' ' + t.id);
       });
     };
   }

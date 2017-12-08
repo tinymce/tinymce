@@ -46,9 +46,9 @@ test(
 
 
     // setting a non-simple value
-    checkErr(Attr.set, c, 'id', undefined);
-    checkErr(Attr.set, c, 'id', null);
-    checkErr(Attr.set, c, 'id', {});
+    checkErr(Attr.set, c, 'expect-console-error--value-undefined', undefined);
+    checkErr(Attr.set, c, 'expect-console-error--value-null', null);
+    checkErr(Attr.set, c, 'expect-console-error--value-object', {});
 
     // passing things that don't have attributes
     checkTypeErr(Element.fromText(''));

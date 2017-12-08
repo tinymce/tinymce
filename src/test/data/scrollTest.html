@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+  <style>
+    td.c1 { width: 1500px; background: wheat; }
+    td.c2 { width: 1500px; background: lightcyan; }
+    td.c3 { width: 1500px; background: thistle; }
+    #centre1 { border: 5px dotted limegreen; background: hotpink; }
+    body { border: 10px dashed green; }
+    body[dir="rtl"] { border: 5px solid red; }
+  </style>
+</head>
+<body id="b1">
+    <div id="top1" style="height:100px; width: 5000px; border: 5px dashed plum; background: papayawhip;">--TOP--</div>
+    <table id="t1" style="height:5000px; width: 5000px; border: 5px dashed peachpuff; background: aliceblue;">
+      <tbody>
+          <tr><td class="c1">r1c1</td><td class="c2">r1c2</td><td class="c3">r1c3</td></tr>
+          <tr><td class="c1">r2c1</td><td class="c2"><div id=centre1>r2c2 HELLO HELLO HELLO<br/>HELLO I SEE YOU!!!!!!</div></td><td class="c3">r2c3</td></tr>
+          <tr><td class="c1">r3c1</td><td class="c2">r3c2</td><td class="c3">r3c3</td></tr>
+        </tbody>
+    </table>
+    <div id="bot1" style="height:100px; width: 5000px; border: 5px dashed salmon; background: lavender;">--BOTTOM--</div>
+  </body>
+</html>

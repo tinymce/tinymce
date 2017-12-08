@@ -60,7 +60,7 @@ asynctest(
 
         var range = WindowSelection.getExact(iframeWin).getOrDie('Could not get window selection after setting it');
         var starts = Compare.eq(expected.start(), range.start());
-        assert.eq(true, starts, 'start elements were not equal, was ' + Node.name(range.start()));
+        assert.eq(true, starts, 'start elements were not equal, was ' + Node.name(range.start()) + ', expected ' + Node.name(expected.start()));
         assert.eq(expected.soffset(), range.soffset());
         assert.eq(true, Compare.eq(expected.finish(), range.finish()), 'finish elements were not equal, was ' + Node.name(range.finish()));
         assert.eq(expected.foffset(), range.foffset());
@@ -89,7 +89,12 @@ asynctest(
       var one = Traverse.children(get('.one'))[0];
       check(100, 100, Selection.range(one, 1, one, 1));
       check(150, 100, Selection.range(one, 1, one, 1));
-      check(500, 100, Selection.range(div, 11, div, 11)); // Ideally should be (one, 4)
+
+      // This (500,100) test fails using of IE (11.1770/11.0.47, win10), and now returns element 'eight'
+      // - the breaking change was TBIO-4984: update sugar's version of oath's awareness, commit: cb191c42cb6ec66323c65bebd41de00136937e4a (2017-09-19)
+      // check(500, 100, Selection.range(div, 11, div, 11)); // Ideally should be (one, 4)
+      check(500, 100, Selection.range(get('.eight'), 1, get('.eight'), 1)); // at the end of the text inside span 'eight' (end of the content)
+
       check(150, 150, Selection.range(one, 1, one, 1));
       check(180, 160, Selection.range(one, 3, one, 3));
 

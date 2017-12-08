@@ -2,12 +2,12 @@ define(
   'ephox.sugar.api.view.Location',
 
   [
-    'ephox.sugar.api.view.Position',
     'ephox.sugar.api.dom.Dom',
-    'ephox.sugar.api.node.Element'
+    'ephox.sugar.api.node.Element',
+    'ephox.sugar.api.view.Position'
   ],
 
-  function (Position, Dom, Element) {
+  function (Dom, Element, Position) {
     var boxPosition = function (dom) {
       var box = dom.getBoundingClientRect();
       return Position(box.left, box.top);
@@ -26,7 +26,6 @@ define(
       var win = Dom.windowOf(Element.fromDom(doc));
       var html = doc.documentElement;
 
-
       var scrollTop = firstDefinedOrZero(win.pageYOffset, html.scrollTop);
       var scrollLeft = firstDefinedOrZero(win.pageXOffset, html.scrollLeft);
 
@@ -34,8 +33,8 @@ define(
       var clientLeft = firstDefinedOrZero(html.clientLeft, body.clientLeft);
 
       return viewport(element).translate(
-          scrollLeft - clientLeft,
-          scrollTop - clientTop);
+        scrollLeft - clientLeft,
+        scrollTop - clientTop);
     };
 
     // This is the old $.position(), but JQuery does nonsense calculations.

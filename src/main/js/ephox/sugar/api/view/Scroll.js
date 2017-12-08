@@ -2,60 +2,83 @@ define(
   'ephox.sugar.api.view.Scroll',
 
   [
+    'ephox.katamari.api.Option',
     'ephox.katamari.api.Type',
     'ephox.sand.api.PlatformDetection',
+    'ephox.sugar.api.dom.Insert',
+    'ephox.sugar.api.dom.Remove',
+    'ephox.sugar.api.node.Body',
+    'ephox.sugar.api.node.Element',
     'ephox.sugar.api.view.Location',
     'ephox.sugar.api.view.Position',
     'global!document'
   ],
 
-  function (Type, PlatformDetection, Location, Position, document) {
+  function (Option, Type, PlatformDetection, Insert, Remove, Body, Element, Location, Position, document) {
     var isSafari = PlatformDetection.detect().browser.isSafari();
 
+    // get scroll position (x,y) relative to document _doc (or global if not supplied)
     var get = function (_doc) {
       var doc = _doc !== undefined ? _doc.dom() : document;
 
-      // ASSUMPTION: This is for cross-browser support. The doc.body.scrollLeft reports 0 in FF in standards mode,
-      // so you need to use the document element. The body works for Chrome, IE (?) and FF in Quirks mode.
+      // ASSUMPTION: This is for cross-browser support, body works for Safari & EDGE, and when we have an iframe body scroller
       var x = doc.body.scrollLeft || doc.documentElement.scrollLeft;
       var y = doc.body.scrollTop || doc.documentElement.scrollTop;
       return Position(x, y);
     };
 
-    var setToElement = function (win, element) {
-      var location = Location.absolute(element);
-      win.scrollTo(location.left(), location.top());
+    // Scroll content to (x,y) relative to document _doc (or global if not supplied)
+    var to = function (x, y, _doc) {
+      var doc = _doc !== undefined ? _doc.dom() : document;
+      var win = doc.defaultView;
+      win.scrollTo(x, y);
     };
 
+    // Scroll content by (x,y) relative to document _doc (or global if not supplied)
+    var by = function (x, y, _doc) {
+      var doc = _doc !== undefined ? _doc.dom() : document;
+      var win = doc.defaultView;
+      win.scrollBy(x, y);
+    };
 
-    // CLIPPY: It looks like you're trying to write a Scroll library :)
-    //
-    // If this is actually required, just browse the JQuery codebase. That's all I did for the other modules.
-    // Looks like it's using window.pageXOffset, window.pageYOffset, and win.scrollTo().
+    // Set the window scroll position to the element
+    var setToElement = function (win, element) {
+      var pos = Location.absolute(element);
+      var doc = Element.fromDom(win.document);
+      to(pos.left(), pos.top(), doc);
+    };
 
-    // var top = function (element) {
-    //   $(element.dom()).scrollTop(0);
-    // };
+    // call f() preserving the original scroll position relative to document doc
+    var preserve = function (doc, f) {
+      var before = get(doc);
+      f();
+      var after = get(doc);
+      if (before.top() !== after.top() || before.left() !== after.left()) {
+        to(before.left(), before.top(), doc);
+      }
+    };
 
-    // var bottom = function (element) {
+    // capture the current scroll location and provide save and restore methods
+    var capture = function (doc) {
+      var previous = Option.none();
 
-    // };
+      var save = function () {
+        previous = Option.some(get(doc));
+      };
 
-    // var left = function (element) {
+      // TODO: this is quite similar to the code in nomad.
+      var restore = function () {
+        previous.each(function (p) {
+          to(p.left(), p.top(), doc);
+        });
+      };
 
-    // };
-
-    // var right = function (element) {
-
-    // };
-
-    // var fromTop = function (element, v) {
-
-    // };
-
-    // var fromLeft = function (element, v) {
-
-    // };
+      save();
+      return {
+        save: save,      /* Saves the current page scroll position */
+        restore: restore /* Restores the page scroll to its former position when invoked */
+      };
+    };
 
     // TBIO-4472 Safari 10 - Scrolling typeahead with keyboard scrolls page
     var intoView = function (element, alignToTop) {
@@ -77,19 +100,28 @@ define(
         // element bottom is below the viewport bottom, scroll so it's at the bottom
         intoView(element, false);
       }
-    }
+    };
+
+    // Return the scroll bar width (calculated by temporarily inserting an element into the dom)
+    var scrollBarWidth = function () {
+      // From https://davidwalsh.name/detect-scrollbar-width
+      var scrollDiv = Element.fromHtml('<div style="width: 100px; height: 100px; overflow: scroll; position: absolute; top: -9999px;"></div>');
+      Insert.after(Body.body(), scrollDiv);
+      var w = scrollDiv.dom().offsetWidth - scrollDiv.dom().clientWidth;
+      Remove.remove(scrollDiv);
+      return w;
+    };
 
     return {
       get: get,
-      // top: top,
-      // bottom: bottom,
-      // left: left,
-      // right: right,
-      // fromTop: fromTop,
-      // fromLeft: fromLeft,
+      to: to,
+      by: by,
+      preserve: preserve,
+      capture: capture,
       intoView: intoView,
       intoViewIfNeeded: intoViewIfNeeded,
-      setToElement: setToElement
+      setToElement: setToElement,
+      scrollBarWidth: scrollBarWidth
     };
   }
 );
