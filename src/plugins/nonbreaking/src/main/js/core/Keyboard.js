@@ -11,21 +11,23 @@
 define(
   'tinymce.plugins.nonbreaking.core.Keyboard',
   [
+    'tinymce.core.util.VK',
     'tinymce.plugins.nonbreaking.api.Settings',
     'tinymce.plugins.nonbreaking.core.Actions'
   ],
-  function (Settings, Actions) {
+  function (VK, Settings, Actions) {
     var setup = function (editor) {
       var spaces = Settings.getKeyboardSpaces(editor);
 
       if (spaces > 0) {
         editor.on('keydown', function (e) {
-          if (e.keyCode === 9) {
+          if (e.keyCode === VK.TAB && !e.isDefaultPrevented()) {
             if (e.shiftKey) {
               return;
             }
 
             e.preventDefault();
+            e.stopImmediatePropagation();
             Actions.insertNbsp(editor, spaces);
           }
         });
