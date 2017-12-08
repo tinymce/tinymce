@@ -18,7 +18,7 @@ define(
         width: w + 'px'
       });
 
-      Attr.set(blocker, 'data-column', column);
+      Attr.setAll(blocker, { 'data-column': column, 'role': 'presentation' });
       return blocker;
     };
 
@@ -32,7 +32,7 @@ define(
         width: w + 'px'
       });
 
-      Attr.set(blocker, 'data-row', row);
+      Attr.setAll(blocker, { 'data-row': row, 'role': 'presentation' });
       return blocker;
     };
 
