@@ -15,6 +15,7 @@ define(
         return Result.error('Response was not JSON');
       }
     };
+
     return {
       parse: parse
     };
