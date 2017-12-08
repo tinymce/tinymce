@@ -22,7 +22,13 @@
     "@ephox/sand": "^1.0.0"
   },
   "devDependencies": {
-    "@ephox/bedrock": "^1.3.7",
-    "@ephox/bolt": "^1.8.0"
+    "@ephox/bedrock": "*",
+    "@ephox/bolt": "*",
+    "chromedriver": "*",
+    "grunt": "*",
+    "grunt-npm": "*"
+  },
+  "publishConfig": {
+    "registry": "http://nexus:8081/repository/ephox-npm/"
   }
 }
