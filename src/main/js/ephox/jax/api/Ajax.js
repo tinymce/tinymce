@@ -52,18 +52,21 @@ define(
         request.onload = onLoad;
         request.onerror = onError;
 
-        // We could use method here again, but then we'd have to nest a pattern match.
-        var data = contentType.map(function (cType) {
-          return cType.match({
+        // There isn't really a nice way to unwrap this
+        contentType.fold(function () {
+          request.send();
+        }, function (cType) {
+          var data = cType.match({
             file: Fun.identity,
             form: Fun.identity,
             json: Json.stringify,
             plain: Fun.identity,
             html: Fun.identity
           });
-        }).getOr(undefined);
+          request.send(data);
+        });
 
-        request.send(data);
+
       }).toLazy();
     };
 
