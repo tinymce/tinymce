@@ -18,8 +18,8 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/katamari": "^1.0.0",
-    "@ephox/sand": "^1.0.0"
+    "@ephox/katamari": "*",
+    "@ephox/sand": "*"
   },
   "devDependencies": {
     "@ephox/bedrock": "*",
