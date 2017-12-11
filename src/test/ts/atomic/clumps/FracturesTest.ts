@@ -42,7 +42,7 @@ UnitTest.test('FracturesTest', function() {
     return item.name === 'root';
   };
 
-  var check = function (expected, startId, finishId, _doc) {
+  var check = function (expected, startId, finishId, _doc?) {
     var doc = _doc !== undefined ? _doc : regen();
     var start = doc.find(doc.get(), startId).getOrDie();
     var finish = doc.find(doc.get(), finishId).getOrDie();

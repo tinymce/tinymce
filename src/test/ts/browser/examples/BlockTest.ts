@@ -39,7 +39,7 @@ UnitTest.test('---- example :: BlockTest ----', function() {
   BrowserCheck.run('<p>this<span class="child"> is it </span></p>', function (node) {
     var actual = DomParent.sharedOne(DomLook.exact(Traverse.parent(node).getOrDie()), [ node ]);
     actual.fold(function () {
-      assert.fail('Expected a common ' + expected + ' tag');
+      assert.fail('Expected a common tag');
     }, function (act) {
       assert.eq('span', Node.name(act));
     });

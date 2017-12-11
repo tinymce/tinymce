@@ -16,7 +16,7 @@ UnitTest.test('StructureTest', function() {
     Gene('strong1', 'strong', [])
   ]));
 
-  var check = function (expected, id, look) {
+  var check = function (expected, id) {
     var item = doc.find(doc.get(), id).getOrDie();
     var actual = Structure.isInline(doc, item);
     assert.eq(expected, actual);

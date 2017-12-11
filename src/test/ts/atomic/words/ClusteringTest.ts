@@ -219,7 +219,7 @@ UnitTest.test('ClusteringTest', function() {
     });
   };
 
-  var propertyTest = function (label, universe, x) {
+  var propertyTest = function (label, universe) {
     Logger.sync(
       label,
       function () {
