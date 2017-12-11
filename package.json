@@ -7,16 +7,24 @@
     "url": "https://github.com/ephox/mcagar"
   },
   "scripts": {
-    "test": "bedrock-auto -b chrome --testdir src/test/js/browser"
+    "test": "bedrock-auto -b chrome --testdir src/test/js/browser",
+    "prepublishOnly": "tsc"
   },
   "devDependencies": {
     "@ephox/bedrock": "^1.4.0",
-    "@ephox/bolt": "^1.8.1",
-    "tinymce": "latest"
+    "@ephox/refute": "*",
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "tinymce": "latest",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/agar": "^2.0.0"
-  }
+  },
+  "main": "./lib/main/ts/ephox/mcagar/api/Main.js",
+  "module": "./lib/main/ts/ephox/mcagar/api/Main.js",
+  "types": "./lib/main/ts/ephox/mcagar/api/Main.d.ts"
 }
