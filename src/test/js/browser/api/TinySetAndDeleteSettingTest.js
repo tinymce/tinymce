@@ -1,63 +1,57 @@
-asynctest(
-  'TinySetAndDeleteSettingTest',
+import { Assertions } from '@ephox/agar';
+import { GeneralSteps } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import TinyApis from 'ephox/mcagar/api/TinyApis';
+import TinyLoader from 'ephox/mcagar/api/TinyLoader';
+import { UnitTest } from '@ephox/refute';
 
-  [
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Logger',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyLoader'
-  ],
+UnitTest.asynctest('TinySetAndDeleteSettingTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
 
-  function (Assertions, GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+  var sAssertSetting = function (editor, key, expected) {
+    return Step.sync(function () {
+      var actual = editor.settings[key];
 
-    var sAssertSetting = function (editor, key, expected) {
-      return Step.sync(function () {
-        var actual = editor.settings[key];
+      return Assertions.assertEq('should have expected val at key', expected, actual);
+    });
+  };
 
-        return Assertions.assertEq('should have expected val at key', expected, actual);
-      });
-    };
+  var sAssertSettingType = function (editor, key, expected) {
+    return Step.sync(function () {
+      var actual = typeof editor.settings[key];
 
-    var sAssertSettingType = function (editor, key, expected) {
-      return Step.sync(function () {
-        var actual = typeof editor.settings[key];
+      return Assertions.assertEq('should have expected type', expected, actual);
+    });
+  };
 
-        return Assertions.assertEq('should have expected type', expected, actual);
-      });
-    };
+  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    var apis = TinyApis(editor);
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var apis = TinyApis(editor);
+    Pipeline.async({}, [
+      Logger.t('set and change setting', GeneralSteps.sequence([
+        apis.sSetSetting('a', 'b'),
+        sAssertSetting(editor, 'a', 'b'),
+        apis.sSetSetting('a', 'c'),
+        sAssertSetting(editor, 'a', 'c')
+      ])),
 
-      Pipeline.async({}, [
-        Logger.t('set and change setting', GeneralSteps.sequence([
-          apis.sSetSetting('a', 'b'),
-          sAssertSetting(editor, 'a', 'b'),
-          apis.sSetSetting('a', 'c'),
-          sAssertSetting(editor, 'a', 'c')
-        ])),
+      Logger.t('set setting to function', GeneralSteps.sequence([
+        apis.sSetSetting('a', function (a) {
+          return a;
+        }),
+        sAssertSettingType(editor, 'a', 'function')
+      ])),
 
-        Logger.t('set setting to function', GeneralSteps.sequence([
-          apis.sSetSetting('a', function (a) {
-            return a;
-          }),
-          sAssertSettingType(editor, 'a', 'function')
-        ])),
+      Logger.t('delete setting', GeneralSteps.sequence([
+        apis.sDeleteSetting('a'),
+        sAssertSetting(editor, 'a', undefined)
+      ]))
 
-        Logger.t('delete setting', GeneralSteps.sequence([
-          apis.sDeleteSetting('a'),
-          sAssertSetting(editor, 'a', undefined)
-        ]))
+    ], onSuccess, onFailure);
 
-      ], onSuccess, onFailure);
+  }, { }, success, failure);
+});
 
-    }, { }, success, failure);
-
-
-  }
-);

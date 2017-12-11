@@ -1,197 +1,187 @@
-define(
-  'ephox.mcagar.api.UiChains',
+import { Assertions } from '@ephox/agar';
+import { Chain } from '@ephox/agar';
+import { NamedChain } from '@ephox/agar';
+import { Mouse } from '@ephox/agar';
+import { UiFinder } from '@ephox/agar';
+import { Fun } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
+import { Merger } from '@ephox/katamari';
+import { Result } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+import { Visibility } from '@ephox/sugar';
 
-  [
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.NamedChain',
-    'ephox.agar.api.Mouse',
-    'ephox.agar.api.UiFinder',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Merger',
-    'ephox.katamari.api.Result',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.view.Visibility',
-    'global!document'
-  ],
+var dialogRoot = Element.fromDom(document.body);
 
-  function (Assertions, Chain, NamedChain, Mouse, UiFinder, Fun, Arr, Merger, Result, Element, Visibility, document) {
+var cToolstripRoot = Chain.mapper(function (editor) {
+  return Element.fromDom(editor.getContainer());
+});
 
-    var dialogRoot = Element.fromDom(document.body);
+var cEditorRoot = Chain.mapper(function (editor) {
+  return Element.fromDom(editor.getBody());
+});
 
-    var cToolstripRoot = Chain.mapper(function (editor) {
-      return Element.fromDom(editor.getContainer());
-    });
+var cDialogRoot = Chain.inject(dialogRoot);
 
-    var cEditorRoot = Chain.mapper(function (editor) {
-      return Element.fromDom(editor.getBody());
-    });
+var cGetToolbarRoot = Chain.fromChains([
+  cToolstripRoot,
+  UiFinder.cFindIn('.mce-toolbar-grp')
+]);
 
-    var cDialogRoot = Chain.inject(dialogRoot);
+var cGetMenuRoot = Chain.fromChains([
+  cToolstripRoot,
+  UiFinder.cFindIn('.mce-menubar')
+]);
 
-    var cGetToolbarRoot = Chain.fromChains([
-      cToolstripRoot,
-      UiFinder.cFindIn('.mce-toolbar-grp')
-    ]);
+var cFindIn = function (cRoot, selector) {
+  return Chain.fromChains([
+    cRoot,
+    UiFinder.cFindIn(selector)
+  ]);
+};
 
-    var cGetMenuRoot = Chain.fromChains([
-      cToolstripRoot,
-      UiFinder.cFindIn('.mce-menubar')
-    ]);
+var cClickOnWithin = function (label, selector, cContext) {
+   return NamedChain.asChain([
+     NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
+     NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
+     NamedChain.direct('ui', Mouse.cClick, '_'),
+     NamedChain.outputInput
+   ]);
+ };
 
-    var cFindIn = function (cRoot, selector) {
-      return Chain.fromChains([
-        cRoot,
-        UiFinder.cFindIn(selector)
-      ]);
-    };
+var cClickOnUi = function (label, selector) {
+ return cClickOnWithin(label, selector, cDialogRoot);
+};
 
-    var cClickOnWithin = function (label, selector, cContext) {
-       return NamedChain.asChain([
-         NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
-         NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
-         NamedChain.direct('ui', Mouse.cClick, '_'),
-         NamedChain.outputInput
-       ]);
-     };
+var cClickOnToolbar = function (label, selector) {
+  return cClickOnWithin(label, selector, cGetToolbarRoot);
+};
 
-    var cClickOnUi = function (label, selector) {
-     return cClickOnWithin(label, selector, cDialogRoot);
-    };
+var cClickOnMenu = function (label, selector) {
+  return cClickOnWithin(label, selector, cGetMenuRoot);
+};
 
-    var cClickOnToolbar = function (label, selector) {
-      return cClickOnWithin(label, selector, cGetToolbarRoot);
-    };
-
-    var cClickOnMenu = function (label, selector) {
-      return cClickOnWithin(label, selector, cGetMenuRoot);
-    };
-
-    var cWaitForState = function (hasState) {
-      return function (label, selector) {
-        return NamedChain.asChain([
-          NamedChain.write('element', Chain.fromChains([
-            cDialogRoot,
-            UiFinder.cWaitForState(label, selector, hasState)
-          ])),
-          NamedChain.outputInput
-        ]);
-      };
-    };
-
-    var cWaitForVisible = function (label, selector) {
-      return Chain.fromChains([
+var cWaitForState = function (hasState) {
+  return function (label, selector) {
+    return NamedChain.asChain([
+      NamedChain.write('element', Chain.fromChains([
         cDialogRoot,
-        UiFinder.cWaitForState(label, selector, Visibility.isVisible)
-      ]);
-    };
+        UiFinder.cWaitForState(label, selector, hasState)
+      ])),
+      NamedChain.outputInput
+    ]);
+  };
+};
 
-    var cWaitForPopup = function (label, selector) {
-      return cWaitForState(Visibility.isVisible)(label, selector);
-    };
+var cWaitForVisible = function (label, selector) {
+  return Chain.fromChains([
+    cDialogRoot,
+    UiFinder.cWaitForState(label, selector, Visibility.isVisible)
+  ]);
+};
 
-    var cWaitForUi = function (label, selector) {
-      return cWaitForState(Fun.constant(true))(label, selector);
-    };
+var cWaitForPopup = function (label, selector) {
+  return cWaitForState(Visibility.isVisible)(label, selector);
+};
 
-    var cTriggerContextMenu = function (label, target, menu) {
-      return Chain.fromChains([
-        cEditorRoot,
-        UiFinder.cFindIn(target),
-        Mouse.cContextMenu,
+var cWaitForUi = function (label, selector) {
+  return cWaitForState(Fun.constant(true))(label, selector);
+};
 
-        // Ignores input
-        cWaitForPopup(label, menu)
-      ]);
-    };
+var cTriggerContextMenu = function (label, target, menu) {
+  return Chain.fromChains([
+    cEditorRoot,
+    UiFinder.cFindIn(target),
+    Mouse.cContextMenu,
 
-    var cDialogByPopup = Chain.binder(function (input) {
-      var wins = input.editor.windowManager.getWindows();
-      var popupId = input.popupNode.dom().id;
-      var dialogs =  Arr.filter(wins, function (dialog) {
-        return popupId === dialog._id;
-      });
-      return dialogs.length ? Result.value(dialogs[0]) : Result.error("dialog with id of: " + popupId + " was not found");
-    });
+    // Ignores input
+    cWaitForPopup(label, menu)
+  ]);
+};
 
-    var cWaitForDialog = function (selector) {
-      return NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        NamedChain.write('popupNode', cWaitForVisible('waiting for popup: ' + selector, selector)),
-        NamedChain.merge(['editor', 'popupNode'], 'dialogInputs'),
-        NamedChain.direct('dialogInputs', cDialogByPopup, 'dialog'),
-        NamedChain.output('dialog')
-      ]);
-    };
+var cDialogByPopup = Chain.binder(function (input) {
+  var wins = input.editor.windowManager.getWindows();
+  var popupId = input.popupNode.dom().id;
+  var dialogs =  Arr.filter(wins, function (dialog) {
+    return popupId === dialog._id;
+  });
+  return dialogs.length ? Result.value(dialogs[0]) : Result.error("dialog with id of: " + popupId + " was not found");
+});
 
-    var cAssertDialogContents = function (selector, data) {
-      return NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), cWaitForDialog(selector), 'dialog'),
-        NamedChain.direct('dialog', Chain.op(function (dialog) {
-          Assertions.assertEq('asserting contents of: ' + selector, data, dialog.toJSON());
-        }), '_'),
-        NamedChain.outputInput
-      ]);
-    };
+var cWaitForDialog = function (selector) {
+  return NamedChain.asChain([
+    NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+    NamedChain.write('popupNode', cWaitForVisible('waiting for popup: ' + selector, selector)),
+    NamedChain.merge(['editor', 'popupNode'], 'dialogInputs'),
+    NamedChain.direct('dialogInputs', cDialogByPopup, 'dialog'),
+    NamedChain.output('dialog')
+  ]);
+};
 
-    var cAssertActiveDialogContents = function (data) {
-      return cAssertDialogContents('[role="dialog"]', data);
-    };
+var cAssertDialogContents = function (selector, data) {
+  return NamedChain.asChain([
+    NamedChain.direct(NamedChain.inputName(), cWaitForDialog(selector), 'dialog'),
+    NamedChain.direct('dialog', Chain.op(function (dialog) {
+      Assertions.assertEq('asserting contents of: ' + selector, data, dialog.toJSON());
+    }), '_'),
+    NamedChain.outputInput
+  ]);
+};
 
-    var cFillDialog = function (selector, data) {
-      return NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), cWaitForDialog(selector), 'dialog'),
-        NamedChain.direct('dialog', Chain.op(function (dialog) {
-          dialog.fromJSON(Merger.merge(dialog.toJSON(), data));
-        }), '_'),
-        NamedChain.outputInput
-      ]);
-    };
+var cAssertActiveDialogContents = function (data) {
+  return cAssertDialogContents('[role="dialog"]', data);
+};
 
-    var cFillActiveDialog = function (data) {
-      return cFillDialog('[role="dialog"]', data);
-    };
+var cFillDialog = function (selector, data) {
+  return NamedChain.asChain([
+    NamedChain.direct(NamedChain.inputName(), cWaitForDialog(selector), 'dialog'),
+    NamedChain.direct('dialog', Chain.op(function (dialog) {
+      dialog.fromJSON(Merger.merge(dialog.toJSON(), data));
+    }), '_'),
+    NamedChain.outputInput
+  ]);
+};
 
-    var cClickPopupButton = function (btnSelector, selector) {
-      var popupSelector = selector ? selector : '[role="dialog"]';
+var cFillActiveDialog = function (data) {
+  return cFillDialog('[role="dialog"]', data);
+};
 
-      return NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), cWaitForVisible('waiting for: ' + popupSelector, popupSelector), 'popup'),
-        NamedChain.direct('popup', UiFinder.cFindIn(btnSelector), 'button'),
-        NamedChain.direct('button', Mouse.cClick, '_'),
-        NamedChain.outputInput
-      ]);
-    };
+var cClickPopupButton = function (btnSelector, selector) {
+  var popupSelector = selector ? selector : '[role="dialog"]';
 
-    var cCloseDialog = function (selector) {
-      return cClickPopupButton('div[role="button"]:contains(Cancel)', selector);
-    };
+  return NamedChain.asChain([
+    NamedChain.direct(NamedChain.inputName(), cWaitForVisible('waiting for: ' + popupSelector, popupSelector), 'popup'),
+    NamedChain.direct('popup', UiFinder.cFindIn(btnSelector), 'button'),
+    NamedChain.direct('button', Mouse.cClick, '_'),
+    NamedChain.outputInput
+  ]);
+};
 
-    var cSubmitDialog = function (selector) {
-      return cClickPopupButton('div[role="button"].mce-primary', selector);
-    };
+var cCloseDialog = function (selector) {
+  return cClickPopupButton('div[role="button"]:contains(Cancel)', selector);
+};
 
-    return {
-      cClickOnToolbar: cClickOnToolbar,
-      cClickOnMenu: cClickOnMenu,
-      cClickOnUi: cClickOnUi,
+var cSubmitDialog = function (selector) {
+  return cClickPopupButton('div[role="button"].mce-primary', selector);
+};
 
-      // Popups need to be visible.
-      cWaitForPopup: cWaitForPopup,
-      // UI does not need to be visible
-      cWaitForUi: cWaitForUi,
-      // General state predicate
-      cWaitForState: cWaitForState,
+export default <any> {
+  cClickOnToolbar: cClickOnToolbar,
+  cClickOnMenu: cClickOnMenu,
+  cClickOnUi: cClickOnUi,
 
-      cFillDialog: cFillDialog,
-      cFillActiveDialog: cFillActiveDialog,
-      cCloseDialog: cCloseDialog,
-      cSubmitDialog: cSubmitDialog,
-      cAssertDialogContents: cAssertDialogContents,
-      cAssertActiveDialogContents: cAssertActiveDialogContents,
+  // Popups need to be visible.
+  cWaitForPopup: cWaitForPopup,
+  // UI does not need to be visible
+  cWaitForUi: cWaitForUi,
+  // General state predicate
+  cWaitForState: cWaitForState,
 
-      cTriggerContextMenu: cTriggerContextMenu
-    };
-  }
-);
+  cFillDialog: cFillDialog,
+  cFillActiveDialog: cFillActiveDialog,
+  cCloseDialog: cCloseDialog,
+  cSubmitDialog: cSubmitDialog,
+  cAssertDialogContents: cAssertDialogContents,
+  cAssertActiveDialogContents: cAssertActiveDialogContents,
+
+  cTriggerContextMenu: cTriggerContextMenu
+};

@@ -1,63 +1,53 @@
-define(
-  'ephox.mcagar.api.Editor',
+import { Id } from '@ephox/katamari';
+import { Merger } from '@ephox/katamari';
+import { Insert } from '@ephox/sugar';
+import { Remove } from '@ephox/sugar';
+import { Element } from '@ephox/sugar';
+import { Attr } from '@ephox/sugar';
+import { Selectors } from '@ephox/sugar';
+import { Chain } from '@ephox/agar';
+import EditorManager from 'tinymce/core/EditorManager';
 
-  [
-    'ephox.katamari.api.Id',
-    'ephox.katamari.api.Merger',
-    'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.dom.Remove',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.search.Selectors',
-    'ephox.agar.api.Chain',
-    'global!document',
-    'tinymce.core.EditorManager'
-  ],
+var cFromElement = function (element, settings) {
+  return Chain.on(function (_, next, die) {
+    var randomId = Id.generate('tiny-loader');
 
-  function (Id, Merger, Insert, Remove, Element, Attr, Selectors, Chain, document, EditorManager) {
+    Attr.set(element, 'id', randomId);
+    Insert.append(Element.fromDom(document.body), element);
 
-    var cFromElement = function (element, settings) {
-      return Chain.on(function (_, next, die) {
-        var randomId = Id.generate('tiny-loader');
+    EditorManager.init(Merger.merge(settings, {
+      selector: '#' + randomId,
+      setup: function (editor) {
+        editor.on('SkinLoaded', function () {
+          setTimeout(function () {
+            next(Chain.wrap(editor));
+          }, 0);
+        });
+      }
+    }));
+  });
+};
 
-        Attr.set(element, 'id', randomId);
-        Insert.append(Element.fromDom(document.body), element);
+var cFromHtml = function (html, settings) {
+  var element = html ? Element.fromHtml(html) : Element.fromTag(settings.inline ? 'div' : 'textarea')
+  return cFromElement(element, settings);
+};
 
-        EditorManager.init(Merger.merge(settings, {
-          selector: '#' + randomId,
-          setup: function (editor) {
-            editor.on('SkinLoaded', function () {
-              setTimeout(function () {
-                next(Chain.wrap(editor));
-              }, 0);
-            });
-          }
-        }));
-      });
-    };
+var cFromSettings = function (settings) {
+  return cFromHtml(null, settings);
+};
 
-    var cFromHtml = function (html, settings) {
-      var element = html ? Element.fromHtml(html) : Element.fromTag(settings.inline ? 'div' : 'textarea')
-      return cFromElement(element, settings);
-    };
+var cRemove = Chain.op(function (editor) {
+  var id = editor.id;
+  editor.remove();
+  Selectors.one('#' + id).each(Remove.remove);
+});
 
-    var cFromSettings = function (settings) {
-      return cFromHtml(null, settings);
-    };
-
-    var cRemove = Chain.op(function (editor) {
-      var id = editor.id;
-      editor.remove();
-      Selectors.one('#' + id).each(Remove.remove);
-    });
-
-    return {
-      cFromHtml: cFromHtml,
-      cFromElement: cFromElement,
-      cFromSettings: cFromSettings,
-      cCreate: cFromSettings({}),
-      cCreateInline: cFromSettings({ inline: true }),
-      cRemove: cRemove
-    };
-  }
-);
+export default <any> {
+  cFromHtml: cFromHtml,
+  cFromElement: cFromElement,
+  cFromSettings: cFromSettings,
+  cCreate: cFromSettings({}),
+  cCreateInline: cFromSettings({ inline: true }),
+  cRemove: cRemove
+};

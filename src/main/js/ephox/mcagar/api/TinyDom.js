@@ -1,30 +1,22 @@
-define(
-  'ephox.mcagar.api.TinyDom',
+import { Struct } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 
-  [
-    'ephox.katamari.api.Struct',
-    'ephox.sugar.api.node.Element'
-  ],
+var range = Struct.immutableBag([ 'start', 'soffset', 'finish', 'foffset' ], [ ]);
 
-  function (Struct, Element) {
-    var range = Struct.immutableBag([ 'start', 'soffset', 'finish', 'foffset' ], [ ]);
+var fromDom = function (elm) {
+  return Element.fromDom(elm);
+};
 
-    var fromDom = function (elm) {
-      return Element.fromDom(elm);
-    };
+var fromRange = function (rng) {
+  return range({
+    start: rng.startContainer,
+    soffset: rng.startOffset,
+    finish: rng.endContainer,
+    foffset: rng.endOffset
+  });
+};
 
-    var fromRange = function (rng) {
-      return range({
-        start: rng.startContainer,
-        soffset: rng.startOffset,
-        finish: rng.endContainer,
-        foffset: rng.endOffset
-      });
-    };
-
-    return {
-      fromDom: fromDom,
-      fromRange: fromRange
-    };
-  }
-);
+export default <any> {
+  fromDom: fromDom,
+  fromRange: fromRange
+};

@@ -1,41 +1,33 @@
-define(
-  'ephox.mcagar.api.ActionChains',
+import { Chain } from '@ephox/agar';
+import { NamedChain } from '@ephox/agar';
+import { Keyboard } from '@ephox/agar';
+import { FocusTools } from '@ephox/agar';
+import { Fun } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 
-  [
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.NamedChain',
-    'ephox.agar.api.Keyboard',
-    'ephox.agar.api.FocusTools',
-    'ephox.katamari.api.Fun',
-    'ephox.sugar.api.node.Element'
-  ],
+var cIDoc = Chain.mapper(function (editor) {
+  return Element.fromDom(editor.getDoc());
+});
 
-  function (Chain, NamedChain, Keyboard, FocusTools, Fun, Element) {
-    var cIDoc = Chain.mapper(function (editor) {
-      return Element.fromDom(editor.getDoc());
-    });
+var cUiDoc = Chain.mapper(function (editor) {
+  return Element.fromDom(document);
+});
 
-    var cUiDoc = Chain.mapper(function (editor) {
-      return Element.fromDom(document);
-    });
+var cTriggerKeyEvent = function (cTarget, evtType, code, modifiers) {
+  return NamedChain.asChain([
+    NamedChain.direct(NamedChain.inputName(), cTarget, 'doc'),
+    NamedChain.direct('doc', FocusTools.cGetFocused, 'activeElement'),
+    NamedChain.direct('activeElement', Chain.op(function (dispatcher) {
+      Keyboard[evtType](code, modifiers !== undefined ? modifiers : {}, dispatcher);
+    }), '_'),
+    NamedChain.output(NamedChain.inputName())
+  ]);
+};
 
-    var cTriggerKeyEvent = function (cTarget, evtType, code, modifiers) {
-      return NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), cTarget, 'doc'),
-        NamedChain.direct('doc', FocusTools.cGetFocused, 'activeElement'),
-        NamedChain.direct('activeElement', Chain.op(function (dispatcher) {
-          Keyboard[evtType](code, modifiers !== undefined ? modifiers : {}, dispatcher);
-        }), '_'),
-        NamedChain.output(NamedChain.inputName())
-      ]);
-    };
+export default <any> {
+  cContentKeypress: Fun.curry(cTriggerKeyEvent, cIDoc, 'keypress'),
+  cContentKeydown: Fun.curry(cTriggerKeyEvent, cIDoc, 'keydown'),
+  cContentKeystroke: Fun.curry(cTriggerKeyEvent, cIDoc, 'keystroke'),
 
-    return {
-      cContentKeypress: Fun.curry(cTriggerKeyEvent, cIDoc, 'keypress'),
-      cContentKeydown: Fun.curry(cTriggerKeyEvent, cIDoc, 'keydown'),
-      cContentKeystroke: Fun.curry(cTriggerKeyEvent, cIDoc, 'keystroke'),
-
-      cUiKeydown: Fun.curry(cTriggerKeyEvent, cUiDoc, 'keydown')
-    };
-  }
-);
+  cUiKeydown: Fun.curry(cTriggerKeyEvent, cUiDoc, 'keydown')
+};
