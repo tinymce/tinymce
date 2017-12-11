@@ -7,3 +7,6 @@
 /scratch
 /dependency
 /config/bolt/bootstrap*.js
+
+package-lock.json
+/lib
