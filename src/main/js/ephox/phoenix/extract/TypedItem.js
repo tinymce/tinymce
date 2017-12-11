@@ -1,83 +1,66 @@
-define(
-  'ephox.phoenix.extract.TypedItem',
+import { Fun } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option'
-  ],
+var no = Fun.constant(false);
+var yes = Fun.constant(true);
 
-  /**
-   * Church encoded ADT representing whether an element is:
-   * - boundary (block tag or inline tag with block CSS display)
-   * - empty
-   * - text
-   *
-   * TODO: for TBIO-470 for Multi-Language spell checking: deal with the element LANG, adding language to typeditem so this nested information is not lost
-   */
+var boundary = function (item, universe) {
+  return folder(function (b, e, t) {
+    return b(item, universe);
+  });
+};
 
-  function (Fun, Option) {
-    var no = Fun.constant(false);
-    var yes = Fun.constant(true);
+var empty = function (item, universe) {
+  return folder(function (b, e, t) {
+    return e(item, universe);
+  });
+};
 
-    var boundary = function (item, universe) {
-      return folder(function (b, e, t) {
-        return b(item, universe);
-      });
-    };
+var text = function (item, universe) {
+  return folder(function (b, e, t) {
+    return t(item, universe);
+  });
+};
 
-    var empty = function (item, universe) {
-      return folder(function (b, e, t) {
-        return e(item, universe);
-      });
-    };
+var folder = function (fold) {
+  var isBoundary = function () {
+    return fold(yes, no, no);
+  };
 
-    var text = function (item, universe) {
-      return folder(function (b, e, t) {
-        return t(item, universe);
-      });
-    };
+  var toText = function () {
+    return fold(Option.none, Option.none, function (item, universe) {
+      return Option.some(item);
+    });
+  };
 
-    var folder = function (fold) {
-      var isBoundary = function () {
-        return fold(yes, no, no);
-      };
+  var is = function (other) {
+    return fold(no, no, function (item, universe) {
+      return universe.eq(item, other);
+    });
+  };
 
-      var toText = function () {
-        return fold(Option.none, Option.none, function (item, universe) {
-          return Option.some(item);
-        });
-      };
+  var len = function () {
+    return fold(Fun.constant(0), Fun.constant(1), function (item, universe) {
+      return universe.property().getText(item).length;
+    });
+  };
 
-      var is = function (other) {
-        return fold(no, no, function (item, universe) {
-          return universe.eq(item, other);
-        });
-      };
+  return {
+    isBoundary: isBoundary,
+    fold: fold,
+    toText: toText,
+    is: is,
+    len: len
+  };
+};
 
-      var len = function () {
-        return fold(Fun.constant(0), Fun.constant(1), function (item, universe) {
-          return universe.property().getText(item).length;
-        });
-      };
+var cata = function (subject, onBoundary, onEmpty, onText) {
+  return subject.fold(onBoundary, onEmpty, onText);
+};
 
-      return {
-        isBoundary: isBoundary,
-        fold: fold,
-        toText: toText,
-        is: is,
-        len: len
-      };
-    };
-
-    var cata = function (subject, onBoundary, onEmpty, onText) {
-      return subject.fold(onBoundary, onEmpty, onText);
-    };
-
-    return {
-      text: text,
-      boundary: boundary,
-      empty: empty,
-      cata: cata
-    };
-  }
-);
+export default <any> {
+  text: text,
+  boundary: boundary,
+  empty: empty,
+  cata: cata
+};

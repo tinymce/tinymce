@@ -1,11 +1,5 @@
-define(
-  'ephox.phoenix.api.data.GatherResult',
+import { Struct } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Struct'
-  ],
 
-  function (Struct) {
-    return Struct.immutable('result', 'pruned');
-  }
-);
+
+export default <any> Struct.immutable('result', 'pruned');

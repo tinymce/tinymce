@@ -1,54 +1,46 @@
-define(
-  'ephox.phoenix.api.data.InjectPosition',
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun'
-  ],
+var before = function (element) {
+  return folder(function (b, a, r, l, i) {
+    return b(element);
+  }, 'before');
+};
 
-  function (Fun) {
-    var before = function (element) {
-      return folder(function (b, a, r, l, i) {
-        return b(element);
-      }, 'before');
-    };
+var after = function (element) {
+  return folder(function (b, a, r, l, i) {
+    return a(element);
+  }, 'after');
+};
 
-    var after = function (element) {
-      return folder(function (b, a, r, l, i) {
-        return a(element);
-      }, 'after');
-    };
+var rest = function (element) {
+  return folder(function (b, a, r, l, i) {
+    return r(element);
+  }, 'rest');
+};
 
-    var rest = function (element) {
-      return folder(function (b, a, r, l, i) {
-        return r(element);
-      }, 'rest');
-    };
+var last = function (parent) {
+  return folder(function (b, a, r, l, i) {
+    return l(parent);
+  }, 'last');
+};
 
-    var last = function (parent) {
-      return folder(function (b, a, r, l, i) {
-        return l(parent);
-      }, 'last');
-    };
+var invalid = function (element, offset) {
+  return folder(function (b, a, r, l, i) {
+    return i(element, offset);
+  }, 'invalid');
+};
 
-    var invalid = function (element, offset) {
-      return folder(function (b, a, r, l, i) {
-        return i(element, offset);
-      }, 'invalid');
-    };
+var folder = function (fold, label) {
+  return {
+    fold: fold,
+    label: Fun.constant(label)
+  };
+};
 
-    var folder = function (fold, label) {
-      return {
-        fold: fold,
-        label: Fun.constant(label)
-      };
-    };
-
-    return {
-      before: before,
-      after: after,
-      rest: rest,
-      last: last,
-      invalid: invalid
-    };
-  }
-);
+export default <any> {
+  before: before,
+  after: after,
+  rest: rest,
+  last: last,
+  invalid: invalid
+};

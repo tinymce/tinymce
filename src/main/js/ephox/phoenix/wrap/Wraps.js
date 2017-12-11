@@ -1,24 +1,14 @@
-define(
-  'ephox.phoenix.wrap.Wraps',
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun'
-  ],
 
-  function (Fun) {
 
-    /**
-     * Returns an object with a function that wraps nodes with the item
-     */
-    return function (universe, item) {
-      var wrap = function (contents) {
-        universe.insert().append(item, contents);
-      };
+export default <any> function (universe, item) {
+  var wrap = function (contents) {
+    universe.insert().append(item, contents);
+  };
 
-      return {
-        element: Fun.constant(item),
-        wrap: wrap
-      };
-    };
-  }
-);
+  return {
+    element: Fun.constant(item),
+    wrap: wrap
+  };
+};

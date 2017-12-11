@@ -1,83 +1,78 @@
-test(
-  'SearcherTest',
+import { Gene } from '@ephox/boss';
+import { TestUniverse } from '@ephox/boss';
+import { TextGene } from '@ephox/boss';
+import { Arr } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
+import Searcher from 'ephox/phoenix/search/Searcher';
+import Finder from 'ephox/phoenix/test/Finder';
+import TestRenders from 'ephox/phoenix/test/TestRenders';
+import { UnitTest, assert } from '@ephox/refute';
 
-  [
-    'ephox.boss.api.Gene',
-    'ephox.boss.api.TestUniverse',
-    'ephox.boss.api.TextGene',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
-    'ephox.phoenix.search.Searcher',
-    'ephox.phoenix.test.Finder',
-    'ephox.phoenix.test.TestRenders'
-  ],
+UnitTest.test('SearcherTest', function() {
+  /*
+    An example of some <b>test</b> data. The word being looked for will be word and for.
 
-  function (Gene, TestUniverse, TextGene, Arr, Fun, Searcher, Finder, TestRenders) {
-    /*
-      An example of some <b>test</b> data. The word being looked for will be word and for.
+    There will be a couple of paragraphs. Some ending with fo
 
-      There will be a couple of paragraphs. Some ending with fo
+    r and more.
 
-      r and more.
-
-      <p>An example of some <span>test</span>data. The words being looked for will be word and for and test.</p>
-      <p>There will be three paragraphs. This one ends with partial fo</p>
-      <p>r and more.</p>
-    */
-    var data = function () {
-      return Gene('root', 'root', [
-        Gene('p1', 'p', [
-          TextGene('p1-a', 'An example of some '),
-          Gene('span1', 'span', [
-            TextGene('span1-a', 'test')
-          ]),
-          TextGene('p1-b', ' data. The word being looked for will be w'),
-          Gene('span1b', 'span', [
-            Gene('span1ba', 'span', [
-              TextGene('p1-c', 'or')
-            ])
-          ]),
-          TextGene('p1-d', 'd and for.')
+    <p>An example of some <span>test</span>data. The words being looked for will be word and for and test.</p>
+    <p>There will be three paragraphs. This one ends with partial fo</p>
+    <p>r and more.</p>
+  */
+  var data = function () {
+    return Gene('root', 'root', [
+      Gene('p1', 'p', [
+        TextGene('p1-a', 'An example of some '),
+        Gene('span1', 'span', [
+          TextGene('span1-a', 'test')
         ]),
-        Gene('p2', 'p', [
-          TextGene('p2-a', 'There will be some tes'),
-          Gene('span2', 'span', [
-            TextGene('span2-a', 't')
-          ]),
-          TextGene('p2-b', ' paragraphs. This one ends with a partial fo')
+        TextGene('p1-b', ' data. The word being looked for will be w'),
+        Gene('span1b', 'span', [
+          Gene('span1ba', 'span', [
+            TextGene('p1-c', 'or')
+          ])
         ]),
-        Gene('p3', 'p', [
-          TextGene('p3-a', 'r and more.')
-        ])
-      ]);
-    };
+        TextGene('p1-d', 'd and for.')
+      ]),
+      Gene('p2', 'p', [
+        TextGene('p2-a', 'There will be some tes'),
+        Gene('span2', 'span', [
+          TextGene('span2-a', 't')
+        ]),
+        TextGene('p2-b', ' paragraphs. This one ends with a partial fo')
+      ]),
+      Gene('p3', 'p', [
+        TextGene('p3-a', 'r and more.')
+      ])
+    ]);
+  };
 
-    var checkWords = function (expected, itemIds, words, input) {
-      var universe = TestUniverse(input);
-      var items = Finder.getAll(universe, itemIds);
-      var actual = Searcher.safeWords(universe, items, words, Fun.constant(false));
+  var checkWords = function (expected, itemIds, words, input) {
+    var universe = TestUniverse(input);
+    var items = Finder.getAll(universe, itemIds);
+    var actual = Searcher.safeWords(universe, items, words, Fun.constant(false));
 
-      var processed = Arr.map(actual, function (match) {
-        return {
-          items: TestRenders.texts(match.elements()),
-          word: match.word(),
-          exact: match.exact()
-        };
-      });
-      assert.eq(expected, processed);
-    };
+    var processed = Arr.map(actual, function (match) {
+      return {
+        items: TestRenders.texts(match.elements()),
+        word: match.word(),
+        exact: match.exact()
+      };
+    });
+    assert.eq(expected, processed);
+  };
 
-    //An example of some <test> data. The <word> being looked <for> will be <w_or_d> and <for>.|There will be some <tes_t>
-    //paragraphs. This one ends with a partial fo|r and more.
+  //An example of some <test> data. The <word> being looked <for> will be <w_or_d> and <for>.|There will be some <tes_t>
+  //paragraphs. This one ends with a partial fo|r and more.
 
-    checkWords( [
-      { items: [ 'test' ], word: 'test', exact: 'test' },
-      { items: [ 'word' ], word: 'word', exact: 'word' },
-      { items: [ 'for' ], word: 'for', exact: 'for' },
-      { items: [ 'w', 'or', 'd' ], word: 'word', exact: 'word' },
-      { items: [ 'for' ], word: 'for', exact: 'for' },
-      { items: [ 'tes', 't' ], word: 'test', exact: 'test' }
-    ], [ 'p1', 'p2', 'p3' ], [ 'for', 'test', 'word' ], data());
+  checkWords( [
+    { items: [ 'test' ], word: 'test', exact: 'test' },
+    { items: [ 'word' ], word: 'word', exact: 'word' },
+    { items: [ 'for' ], word: 'for', exact: 'for' },
+    { items: [ 'w', 'or', 'd' ], word: 'word', exact: 'word' },
+    { items: [ 'for' ], word: 'for', exact: 'for' },
+    { items: [ 'tes', 't' ], word: 'test', exact: 'test' }
+  ], [ 'p1', 'p2', 'p3' ], [ 'for', 'test', 'word' ], data());
+});
 
-  }
-);

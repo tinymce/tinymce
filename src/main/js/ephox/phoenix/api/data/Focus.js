@@ -1,11 +1,5 @@
-define(
-  'ephox.phoenix.api.data.Focus',
+import { Struct } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Struct'
-  ],
 
-  function (Struct) {
-    return Struct.immutable('left', 'element', 'right');
-  }
-);
+
+export default <any> Struct.immutable('left', 'element', 'right');

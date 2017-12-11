@@ -1,28 +1,17 @@
-define(
-  'ephox.phoenix.api.dom.DomFamily',
+import { DomUniverse } from '@ephox/boss';
+import Family from '../general/Family';
 
-  [
-    'ephox.boss.api.DomUniverse',
-    'ephox.phoenix.api.general.Family'
-  ],
+var universe = DomUniverse();
 
-  /**
-   * Documentation is in the actual implementations.
-   */
-  function (DomUniverse, Family) {
-    var universe = DomUniverse();
+var range = function (start, startDelta, finish, finishDelta) {
+  return Family.range(universe, start, startDelta, finish, finishDelta);
+};
 
-    var range = function (start, startDelta, finish, finishDelta) {
-      return Family.range(universe, start, startDelta, finish, finishDelta);
-    };
+var group = function (elements, optimise) {
+  return Family.group(universe, elements, optimise);
+};
 
-    var group = function (elements, optimise) {
-      return Family.group(universe, elements, optimise);
-    };
-
-    return {
-      range: range,
-      group: group
-    };
-  }
-);
+export default <any> {
+  range: range,
+  group: group
+};

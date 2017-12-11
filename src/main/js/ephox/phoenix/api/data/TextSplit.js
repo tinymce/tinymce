@@ -1,11 +1,5 @@
-define(
-  'ephox.phoenix.api.data.TextSplit',
+import { Struct } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Struct'
-  ],
 
-  function (Struct) {
-    return Struct.immutable('before', 'after');
-  }
-);
+
+export default <any> Struct.immutable('before', 'after');

@@ -1,24 +1,16 @@
-define(
-  'ephox.phoenix.test.Finder',
+import { Arr } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Arr'
-  ],
+var get = function (universe, id) {
+  return universe.find(universe.get(), id).getOrDie();
+};
 
-  function (Arr) {
-    var get = function (universe, id) {
-      return universe.find(universe.get(), id).getOrDie();
-    };
+var getAll = function (universe, ids) {
+  return Arr.map(ids, function (id) {
+    return get(universe, id);
+  });
+};
 
-    var getAll = function (universe, ids) {
-      return Arr.map(ids, function (id) {
-        return get(universe, id);
-      });
-    };
-
-    return {
-      get: get,
-      getAll: getAll
-    };
-  }
-);
+export default <any> {
+  get: get,
+  getAll: getAll
+};

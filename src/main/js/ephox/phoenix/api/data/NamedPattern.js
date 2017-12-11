@@ -1,11 +1,5 @@
-define(
-  'ephox.phoenix.api.data.NamedPattern',
+import { Struct } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Struct'
-  ],
 
-  function (Struct) {
-    return Struct.immutable('word', 'pattern');
-  }
-);
+
+export default <any> Struct.immutable('word', 'pattern');

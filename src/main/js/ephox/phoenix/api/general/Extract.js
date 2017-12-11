@@ -1,48 +1,36 @@
-define(
-  'ephox.phoenix.api.general.Extract',
+import Extract from '../../extract/Extract';
+import ExtractText from '../../extract/ExtractText';
+import Find from '../../extract/Find';
 
-  [
-    'ephox.phoenix.extract.Extract',
-    'ephox.phoenix.extract.ExtractText',
-    'ephox.phoenix.extract.Find'
-  ],
+var from = function (universe, item, optimise) {
+  return Extract.typed(universe, item, optimise);
+};
 
-  /**
-   * Documentation is in the actual implementations.
-   */
-  function (Extract, ExtractText, Find) {
+var all = function (universe, item, optimise) {
+  return Extract.items(universe, item, optimise);
+};
 
-    var from = function (universe, item, optimise) {
-      return Extract.typed(universe, item, optimise);
-    };
+var extract = function (universe, child, offset, optimise) {
+  return Extract.extract(universe, child, offset, optimise);
+};
 
-    var all = function (universe, item, optimise) {
-      return Extract.items(universe, item, optimise);
-    };
+var extractTo = function (universe, child, offset, pred, optimise) {
+  return Extract.extractTo(universe, child, offset, pred, optimise);
+};
 
-    var extract = function (universe, child, offset, optimise) {
-      return Extract.extract(universe, child, offset, optimise);
-    };
+var find = function (universe, parent, offset, optimise) {
+  return Find.find(universe, parent, offset, optimise);
+};
 
-    var extractTo = function (universe, child, offset, pred, optimise) {
-      return Extract.extractTo(universe, child, offset, pred, optimise);
-    };
+var toText = function (universe, item, optimise) {
+  return ExtractText.from(universe, item, optimise);
+};
 
-    var find = function (universe, parent, offset, optimise) {
-      return Find.find(universe, parent, offset, optimise);
-    };
-
-    var toText = function (universe, item, optimise) {
-      return ExtractText.from(universe, item, optimise);
-    };
-
-    return {
-      extract: extract,
-      extractTo: extractTo,
-      all: all,
-      from: from,
-      find: find,
-      toText: toText
-    };
-  }
-);
+export default <any> {
+  extract: extract,
+  extractTo: extractTo,
+  all: all,
+  from: from,
+  find: find,
+  toText: toText
+};

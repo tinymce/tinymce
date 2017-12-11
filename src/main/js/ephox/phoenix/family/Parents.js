@@ -1,28 +1,19 @@
-define(
-  'ephox.phoenix.family.Parents',
+import { Arr } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Arr'
-  ],
+/**
+ * Search the parents of both items for a common element
+ */
+var common = function (universe, item1, item2) {
+  var item1parents = [item1].concat(universe.up().all(item1));
+  var item2parents = [item2].concat(universe.up().all(item2));
 
-  function (Arr) {
-    /**
-     * Search the parents of both items for a common element
-     */
-    var common = function (universe, item1, item2) {
-      var item1parents = [item1].concat(universe.up().all(item1));
-      var item2parents = [item2].concat(universe.up().all(item2));
+  return Arr.find(item1parents, function (x) {
+    return Arr.exists(item2parents, function (y) {
+      return universe.eq(y, x);
+    });
+  });
+};
 
-      return Arr.find(item1parents, function (x) {
-        return Arr.exists(item2parents, function (y) {
-          return universe.eq(y, x);
-        });
-      });
-    };
-
-    return {
-      common: common
-    };
-
-  }
-);
+export default <any> {
+  common: common
+};

@@ -1,27 +1,15 @@
-define(
-  'ephox.phoenix.api.general.Family',
+import Group from '../../family/Group';
+import Range from '../../family/Range';
 
-  [
-    'ephox.phoenix.family.Group',
-    'ephox.phoenix.family.Range'
-  ],
+var range = function (universe, start, startDelta, finish, finishDelta) {
+  return Range.range(universe, start, startDelta, finish, finishDelta);
+};
 
-  /**
-   * Documentation is in the actual implementations.
-   */
-  function (Group, Range) {
-    var range = function (universe, start, startDelta, finish, finishDelta) {
-      return Range.range(universe, start, startDelta, finish, finishDelta);
-    };
+var group = function (universe, items, optimise) {
+  return Group.group(universe, items, optimise);
+};
 
-    var group = function (universe, items, optimise) {
-      return Group.group(universe, items, optimise);
-    };
-
-    return {
-      range: range,
-      group: group
-    };
-
-  }
-);
+export default <any> {
+  range: range,
+  group: group
+};
