@@ -1,3 +1,4 @@
+/*
 import { JQuery as $ } from '@ephox/wrap';
 import { Console } from '@ephox/exhibition';
 import { Examples } from '@ephox/exhibition';
@@ -17,3 +18,4 @@ export default <any> function () {
     $('body').append(examples, consoleUI);
   });
 };
+*/
