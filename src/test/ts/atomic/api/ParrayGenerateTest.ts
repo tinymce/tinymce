@@ -15,8 +15,8 @@ UnitTest.test('api.PositionArray.generate', function() {
     });
   };
 
-  var check = function (expected, input, _start) {
-    var result = PositionArray.generate(input, generator, _start);
+  var check = function (expected, input, start?) {
+    var result = PositionArray.generate(input, generator, start);
     assert.eq(expected, Arr.map(result, function (item) {
       return item.start() + '->' + item.finish() + '@ ' + item.item();
     }));
