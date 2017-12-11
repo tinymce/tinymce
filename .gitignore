@@ -40,3 +40,4 @@ mentions
 **/lib
 **/dependency
 **/instrumented_*
+.rpt2_cache

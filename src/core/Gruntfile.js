@@ -94,7 +94,7 @@ module.exports = function (grunt) {
     "globals": {
       options: {
         outputDir: 'dist/globals',
-        templateFile: 'src/main/js/api/ResolveGlobal.js'
+        templateFile: 'config/GlobalsTemplate.ts'
       }
     }
   });

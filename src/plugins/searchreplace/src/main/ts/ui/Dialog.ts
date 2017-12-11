@@ -12,7 +12,7 @@ import Tools from 'tinymce/core/util/Tools';
 import Actions from '../core/Actions';
 
 var open = function (editor, currentIndexState) {
-  var last = {}, selectedText;
+  var last: any = {}, selectedText;
   editor.undoManager.add();
 
   selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));

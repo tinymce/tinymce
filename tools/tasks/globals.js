@@ -54,7 +54,7 @@ var replaceVariables = function (str, variables) {
 
 var generateGlobaliserModule = function (templateFile, filePath, targetId, globalId) {
   var template = readFile(templateFile);
-  writeFile(filePath + '.js', replaceVariables(template, {
+  writeFile(filePath + '.ts', replaceVariables(template, {
     targetId: targetId,
     globalId: globalId
   }));

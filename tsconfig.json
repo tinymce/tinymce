@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "es2015",
+    "lib": ["es2015", "dom"],
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "lib",
+    "baseUrl": ".",
+    "paths": {
+      "tinymce/core/*": ["src/core/dist/globals/tinymce/core/*"]
+    }
+  },
+  "include": [
+    "src/plugins/*/src/main/ts",
+    "src/core/dist/globals/tinymce/core/",
+    "src/core/dist/globals/**/*.ts",
+    "node_modules/@ephox/**/*/api/Main.d.ts"
+  ]
+}
