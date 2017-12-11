@@ -21,7 +21,9 @@ UnitTest.asynctest('ScrollTest', function() {
 
   if (!Math.sign) { // For IE: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sign
     Math.sign = function(x) {
-      return ((x > 0) - (x < 0)) || +x;
+      var a = x > 0 ? 1 : 0;
+      var b = x < 0 ? 1 : 0;
+      return (a - b) || +x;
     };
   }
 
@@ -151,17 +153,17 @@ UnitTest.asynctest('ScrollTest', function() {
 
       scrollTo(x, cY, doc); // scroll back to centre
       Scroll.preserve(doc.rawDoc, function () {
-        scrollBy( 100, 100, doc); // scroll some where else
+        scrollBy( 100, 100, doc, 'scroll 1'); // scroll some where else
       });
       scrollCheck(x, cY, 0, 0, doc, 'preserve'); // scroll back at centre
 
       var c1 = Scroll.capture(doc.rawDoc);
-      scrollBy( 100, 100, doc); // scroll some where else
+      scrollBy( 100, 100, doc, 'scroll 2'); // scroll some where else
       c1.restore();
       scrollCheck(x, cY, 0, 0, doc, 'restore #1');
-      scrollBy( -100, -100, doc);
+      scrollBy( -100, -100, doc, 'scroll 3');
       c1.save();
-      scrollBy(50, 50, doc);
+      scrollBy(50, 50, doc, 'scroll 4');
       c1.restore();
       scrollCheck(x - 100, cY - 100, 0, 0, doc, 'restore #2');
     }

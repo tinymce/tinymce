@@ -4,6 +4,8 @@ import { Window } from '@ephox/sand';
 import Traverse from '../search/Traverse';
 import Visibility from '../view/Visibility';
 
+declare const window: any;
+
 /*
  * Long term it's probably worth looking at using a single event per page the way Resize does.
  * This could get a bit slow with a lot of editors in a heavy page.

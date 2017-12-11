@@ -5,6 +5,8 @@ import Selection from '../../api/selection/Selection';
 import ContainerPoint from './ContainerPoint';
 import EdgePoint from './EdgePoint';
 
+declare const document: any;
+
 var caretPositionFromPoint = function (doc, x, y) {
   return Option.from(doc.dom().caretPositionFromPoint(x, y)).bind(function (pos) {
     // It turns out that Firefox can return null for pos.offsetNode

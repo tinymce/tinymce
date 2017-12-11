@@ -23,14 +23,14 @@ UnitTest.test('CommentTest', function() {
 
   try {
     Comment.get(notComment);
-    fail('get on non-comment did not throw');
+    assert.fail('get on non-comment did not throw');
   } catch (e) {
     // pass
   }
 
   try {
     Comment.set(notComment, 'bogus');
-    fail('set on non-comment did not throw');
+    assert.fail('set on non-comment did not throw');
   } catch (e) {
     // pass
   }

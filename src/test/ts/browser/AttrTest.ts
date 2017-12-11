@@ -6,7 +6,7 @@ import { UnitTest, assert } from '@ephox/refute';
 UnitTest.test('AttrTest', function() {
   var c = Div();
 
-  var checkErr = function (f, element, k, v) {
+  var checkErr = function (f, element, k, v?) {
     try {
       f(element, k, v);
     } catch (e) {

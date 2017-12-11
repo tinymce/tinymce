@@ -131,7 +131,7 @@ UnitTest.test('ElementAddressTest', function() {
   );
 
   checkNoneInParentOfSelector(
-    [ 1, 1, 1, 2], 'th'
+    [ 1, 1, 1, 2], 'th', 'th'
   );
 
   checkInParentOfAny(
