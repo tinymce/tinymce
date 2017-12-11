@@ -8,18 +8,26 @@
     "ephox"
   ],
   "devDependencies": {
-    "@ephox/bolt": "^1.6.1",
     "@ephox/katamari": "^1.1.5",
+    "@ephox/refute": "*",
     "@ephox/sand": "^1.1.1",
-    "grunt": "^1.0.1"
+    "awesome-typescript-loader": "^3.4.1",
+    "grunt": "^1.0.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "bedrock -c config/bolt/browser.js -d src/test"
+    "test": "bedrock -c config/bolt/browser.js -d src/test",
+    "prepublishOnly": "tsc"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/imagetools-js"
   },
   "author": "Ephox Corporation",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/imagetools/api/Main.js",
+  "module": "./lib/main/ts/ephox/imagetools/api/Main.js",
+  "types": "./lib/main/ts/ephox/imagetools/api/Main.d.ts"
 }
