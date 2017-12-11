@@ -10,11 +10,19 @@
     "@ephox/katamari": "*"
   },
   "devDependencies": {
-    "@ephox/bolt": "*"
+    "@ephox/refute": "*",
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)"
+    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)",
+    "prepublishOnly": "tsc"
   },
   "author": "Ephox Corporation",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/porkbun/api/Main.js",
+  "module": "./lib/main/ts/ephox/porkbun/api/Main.js",
+  "types": "./lib/main/ts/ephox/porkbun/api/Main.d.ts"
 }
