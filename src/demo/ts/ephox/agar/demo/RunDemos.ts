@@ -5,18 +5,11 @@ import GeneralStepsDemo from 'ephox/agar/demo/GeneralStepsDemo';
 import HtmlAssertionDemo from 'ephox/agar/demo/HtmlAssertionDemo';
 import KeyboardDemo from 'ephox/agar/demo/KeyboardDemo';
 import MouseDemo from 'ephox/agar/demo/MouseDemo';
-import TestUtils from 'ephox/agar/demo/TestUtils';
 
-
-
-export default <any> function () {
-  TestUtils();
-
-  GeneralStepsDemo();
-  FocusDemos();
-  KeyboardDemo();
-  MouseDemo();
-  ApproxStructureDemo();
-  HtmlAssertionDemo();
-  FormDemo();
-};
+GeneralStepsDemo();
+FocusDemos();
+KeyboardDemo();
+MouseDemo();
+ApproxStructureDemo();
+HtmlAssertionDemo();
+FormDemo();
