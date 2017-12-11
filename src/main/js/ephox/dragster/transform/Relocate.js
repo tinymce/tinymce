@@ -1,36 +1,28 @@
-define(
-  'ephox.dragster.transform.Relocate',
+import { Event } from '@ephox/porkbun';
+import { Events } from '@ephox/porkbun';
+import { Css } from '@ephox/sugar';
+import { Location } from '@ephox/sugar';
 
-  [
-    'ephox.porkbun.Event',
-    'ephox.porkbun.Events',
-    'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.view.Location'
-  ],
+var both = function (element) {
+  var mutate = function (x, y) {
+    var location = Location.absolute(element);
+    Css.setAll(element, {
+      left: (location.left() + x) + 'px',
+      top: (location.top() + y) + 'px'
+    });
+    events.trigger.relocate(x, y);
+  };
 
-  function (Event, Events, Css, Location) {
-    var both = function (element) {
-      var mutate = function (x, y) {
-        var location = Location.absolute(element);
-        Css.setAll(element, {
-          left: (location.left() + x) + 'px',
-          top: (location.top() + y) + 'px'
-        });
-        events.trigger.relocate(x, y);
-      };
+  var events = Events.create({
+    'relocate': Event(['x', 'y'])
+  });
 
-      var events = Events.create({
-        'relocate': Event(['x', 'y'])
-      });
+  return {
+    mutate: mutate,
+    events: events.registry
+  };
+};
 
-      return {
-        mutate: mutate,
-        events: events.registry
-      };
-    };
-
-    return {
-      both: both
-    };
-  }
-);
+export default <any> {
+  both: both
+};

@@ -1,36 +1,28 @@
-define(
-  'ephox.dragster.api.DragApis',
+import { Contracts } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Contracts'
-  ],
+var mode = Contracts.exactly([
+  'compare',
+  'extract',
+  'mutate',
+  'sink'
+]);
 
-  function (Contracts) {
-    var mode = Contracts.exactly([
-      'compare',
-      'extract',
-      'mutate',
-      'sink'
-    ]);
+var sink = Contracts.exactly([
+  'element',
+  'start',
+  'stop',
+  'destroy'
+]);
 
-    var sink = Contracts.exactly([
-      'element',
-      'start',
-      'stop',
-      'destroy'
-    ]);
+var api = Contracts.exactly([
+  'forceDrop',
+  'drop',
+  'move',
+  'delayDrop'
+]);
 
-    var api = Contracts.exactly([
-      'forceDrop',
-      'drop',
-      'move',
-      'delayDrop'
-    ]);
-
-    return {
-      mode: mode,
-      sink: sink,
-      api: api
-    };
-  }
-);
+export default <any> {
+  mode: mode,
+  sink: sink,
+  api: api
+};

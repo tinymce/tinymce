@@ -1,47 +1,41 @@
-define(
-  'ephox.dragster.detect.Blocker',
+import Styles from '../style/Styles';
+import { Merger } from '@ephox/katamari';
+import { Remove } from '@ephox/sugar';
+import { Element } from '@ephox/sugar';
+import { Attr } from '@ephox/sugar';
+import { Class } from '@ephox/sugar';
+import { Css } from '@ephox/sugar';
 
-  [
-    'ephox.dragster.style.Styles',
-    'ephox.katamari.api.Merger',
-    'ephox.sugar.api.dom.Remove',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.properties.Css'
-  ],
 
-  function (Styles, Merger, Remove, Element, Attr, Class, Css) {
-    return function (options) {
-      var settings = Merger.merge({
-        'layerClass': Styles.resolve('blocker')
-      }, options);
 
-      var div = Element.fromTag('div');
-      Attr.set(div, 'role', 'presentation');
-      Css.setAll(div, {
-        position: 'fixed',
-        left: '0px',
-        top: '0px',
-        width: '100%',
-        height: '100%'
-      });
+export default <any> function (options) {
+  var settings = Merger.merge({
+    'layerClass': Styles.resolve('blocker')
+  }, options);
 
-      Class.add(div, Styles.resolve('blocker'));
-      Class.add(div, settings.layerClass);
+  var div = Element.fromTag('div');
+  Attr.set(div, 'role', 'presentation');
+  Css.setAll(div, {
+    position: 'fixed',
+    left: '0px',
+    top: '0px',
+    width: '100%',
+    height: '100%'
+  });
 
-      var element = function () {
-        return div;
-      };
+  Class.add(div, Styles.resolve('blocker'));
+  Class.add(div, settings.layerClass);
 
-      var destroy = function () {
-        Remove.remove(div);
-      };
+  var element = function () {
+    return div;
+  };
 
-      return {
-        element: element,
-        destroy: destroy
-      };
-    };
-  }
-);
+  var destroy = function () {
+    Remove.remove(div);
+  };
+
+  return {
+    element: element,
+    destroy: destroy
+  };
+};

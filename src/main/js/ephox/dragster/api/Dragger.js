@@ -1,21 +1,12 @@
-define(
-  'ephox.dragster.api.Dragger',
+import MouseDrag from './MouseDrag';
+import Dragging from '../core/Dragging';
 
-  [
-    'ephox.dragster.api.MouseDrag',
-    'ephox.dragster.core.Dragging',
-    'global!Array'
-  ],
+var transform = function (mutation, options) {
+  var settings = options !== undefined ? options : {};
+  var mode = settings.mode !== undefined ? settings.mode : MouseDrag;
+  return Dragging.setup(mutation, mode, options);
+};
 
-  function (MouseDrag, Dragging, Array) {
-    var transform = function (mutation, options) {
-      var settings = options !== undefined ? options : {};
-      var mode = settings.mode !== undefined ? settings.mode : MouseDrag;
-      return Dragging.setup(mutation, mode, options);
-    };
-      
-    return {
-      transform: transform
-    };
-  }
-);
+export default <any> {
+  transform: transform
+};

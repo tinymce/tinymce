@@ -1,18 +1,12 @@
-define(
-  'ephox.dragster.detect.NoDrag',
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun'
-  ],
 
-  function (Fun) {
-    return function (anchor) {
-      var onEvent = function (event, mode) { };
 
-      return {
-        onEvent: onEvent,
-        reset: Fun.noop
-      };
-    };
-  }
-);
+export default <any> function (anchor) {
+  var onEvent = function (event, mode) { };
+
+  return {
+    onEvent: onEvent,
+    reset: Fun.noop
+  };
+};
