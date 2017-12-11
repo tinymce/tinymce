@@ -1,15 +1,7 @@
-define(
-  'ephox.echo.api.Styles',
+import { Namespace } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Namespace'
-  ],
+var styles = Namespace.css('ephox-echo');
 
-  function (Namespace) {
-    var styles = Namespace.css('ephox-echo');
-
-    return {
-      resolve: styles.resolve
-    };
-  }
-);
+export default <any> {
+  resolve: styles.resolve
+};

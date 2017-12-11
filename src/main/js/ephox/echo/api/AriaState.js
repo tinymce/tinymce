@@ -1,87 +1,78 @@
-define(
-  'ephox.echo.api.AriaState',
+import { Arr } from '@ephox/katamari';
+import { Attr } from '@ephox/sugar';
 
-  [
-    'ephox.katamari.api.Arr',
-    'ephox.sugar.api.properties.Attr',
-    'global!String'
-  ],
+var expanded = function (element) {
+  Attr.set(element, 'aria-expanded', 'true');
+};
 
-  function (Arr, Attr, String) {
-    var expanded = function (element) {
-      Attr.set(element, 'aria-expanded', 'true');
-    };
+var collapsed = function (element) {
+  Attr.set(element, 'aria-expanded', 'false');
+};
 
-    var collapsed = function (element) {
-      Attr.set(element, 'aria-expanded', 'false');
-    };
+var checked = function (element, state) {
+  Attr.set(element, 'aria-checked', String(state));
+};
 
-    var checked = function (element, state) {
-      Attr.set(element, 'aria-checked', String(state));
-    };
+/* aria-pressed */
+var setPressed = function (element, isPressed) {
+  Attr.set(element, 'aria-pressed', isPressed ? 'true' : 'false');
+};
 
-    /* aria-pressed */
-    var setPressed = function (element, isPressed) {
-      Attr.set(element, 'aria-pressed', isPressed ? 'true' : 'false');
-    };
+var press = function (element) {
+  setPressed(element, true);
+};
 
-    var press = function (element) {
-      setPressed(element, true);
-    };
+var release = function (element) {
+  setPressed(element, false);
+};
 
-    var release = function (element) {
-      setPressed(element, false);
-    };
+var pressed = function (button) {
+  setPressed(button.element(), button.selected());
+};
 
-    var pressed = function (button) {
-      setPressed(button.element(), button.selected());
-    };
+var enable = function (element) {
+  Attr.set(element, 'aria-disabled', 'false');
+};
 
-    var enable = function (element) {
-      Attr.set(element, 'aria-disabled', 'false');
-    };
+var disable = function (element) {
+  Attr.set(element, 'aria-disabled', 'true');
+};
 
-    var disable = function (element) {
-      Attr.set(element, 'aria-disabled', 'true');
-    };
+var tabSelected = function (on, offs) {
+  Attr.setAll(on, {
+    'aria-selected': 'true',    // JAWS
+    'aria-pressed': 'true'      // VoiceOver
+  });
 
-    var tabSelected = function (on, offs) {
-      Attr.setAll(on, {
-        'aria-selected': 'true',    // JAWS
-        'aria-pressed': 'true'      // VoiceOver
-      });
+  Arr.each(offs, function (off) {
+    Attr.setAll(off, {
+      'aria-selected': 'false', // JAWS
+      'aria-pressed': 'false'   // VoiceOver
+    });
+  });
+};
 
-      Arr.each(offs, function (off) {
-        Attr.setAll(off, {
-          'aria-selected': 'false', // JAWS
-          'aria-pressed': 'false'   // VoiceOver
-        });
-      });
-    };
+var showPanel = function (element) {
+  Attr.set(element, 'aria-selected', 'true');
+  Attr.set(element, 'aria-hidden', 'false');
+};
 
-    var showPanel = function (element) {
-      Attr.set(element, 'aria-selected', 'true');
-      Attr.set(element, 'aria-hidden', 'false');
-    };
+var hidePanel = function (element) {
+  Attr.set(element, 'aria-selected', 'false');
+  Attr.set(element, 'aria-hidden', 'true');
+};
 
-    var hidePanel = function (element) {
-      Attr.set(element, 'aria-selected', 'false');
-      Attr.set(element, 'aria-hidden', 'true');
-    };
-
-    return {
-      expanded: expanded,
-      collapsed: collapsed,
-      checked: checked,
-      setPressed: setPressed,
-      press: press,
-      release: release,
-      pressed: pressed,
-      enable: enable,
-      disable: disable,
-      tabSelected: tabSelected,
-      showPanel: showPanel,
-      hidePanel: hidePanel
-    };
-  }
-);
+export default <any> {
+  expanded: expanded,
+  collapsed: collapsed,
+  checked: checked,
+  setPressed: setPressed,
+  press: press,
+  release: release,
+  pressed: pressed,
+  enable: enable,
+  disable: disable,
+  tabSelected: tabSelected,
+  showPanel: showPanel,
+  hidePanel: hidePanel
+};

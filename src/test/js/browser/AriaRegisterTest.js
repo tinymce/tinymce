@@ -1,84 +1,79 @@
-test(
-  'AriaRegisterTest',
- 
-  [
-    'ephox.agar.api.ApproxStructure',
-    'ephox.agar.api.Assertions',
-    'ephox.echo.api.AriaRegister',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Html'
-  ],
- 
-  function (ApproxStructure, Assertions, AriaRegister, Element, Html) {
+import { ApproxStructure } from '@ephox/agar';
+import { Assertions } from '@ephox/agar';
+import AriaRegister from 'ephox/echo/api/AriaRegister';
+import { Element } from '@ephox/sugar';
+import { Html } from '@ephox/sugar';
+import { UnitTest, assert } from '@ephox/refute';
 
-    var checkTextButton = function (expectedElement, expectedContent, element, contentElement) {
-      AriaRegister.textButton(element, contentElement);
-      Assertions.assertStructure(
-        'Checking dialog button attributes',
-        expectedElement,
-        element
-      );
-      Assertions.assertStructure(
-        'Checking dialog button label attributes',
-        expectedContent,
-        contentElement
-      );
-    };
-
-    checkTextButton(ApproxStructure.build(
-        function (s, str, arr) {
-          return s.element('span', { attrs: { 'role': str.is('button') } });
-        }),
-      ApproxStructure.build(
-        function (s, str, arr) {
-          return s.element('span', { attrs: { 'role': str.is('presentation') } });
-        }),
-      Element.fromTag('span'), // representing the button
-      Element.fromTag('span')  // representing the label span which normally is inside the button span
+UnitTest.test('AriaRegisterTest', function() {
+  var checkTextButton = function (expectedElement, expectedContent, element, contentElement) {
+    AriaRegister.textButton(element, contentElement);
+    Assertions.assertStructure(
+      'Checking dialog button attributes',
+      expectedElement,
+      element
     );
+    Assertions.assertStructure(
+      'Checking dialog button label attributes',
+      expectedContent,
+      contentElement
+    );
+  };
 
-    var checkLabelledField = function (expectedDom, expectedHtmlPrefix, field, name, labelText) {
-      var element = AriaRegister.labelledField(field, name, labelText);
-      assert.eq('function', typeof(element.element), 'expecting element method');
-      assert.eq('function', typeof(element.field), 'expecting field method');
-      assert.eq(expectedHtmlPrefix, Html.getOuter(element.element()).substr(0,expectedHtmlPrefix.length));
-      Assertions.assertStructure('Checking labelledField structure',
-        expectedDom,
-        element.element());
-    };
-
-    checkLabelledField(
-      ApproxStructure.build(
+  checkTextButton(ApproxStructure.build(
       function (s, str, arr) {
-        return s.element('div', {
-          children: [ 
-            s.element('label', { 
-                attrs: {'for': str.startsWith('bob_')},
-                html: str.is('Bob Text')
-              }), 
-            s.element('input', { attrs: {'id': str.startsWith('bob_')} })
-            ]
-          }
-        );
+        return s.element('span', { attrs: { 'role': str.is('button') } });
       }),
-      '<div role="presentation"><label for="bob_',
-      Element.fromTag('input'), 'bob', 'Bob Text');
-
-    checkLabelledField(
-      ApproxStructure.build(
+    ApproxStructure.build(
       function (s, str, arr) {
-        return s.element('div', {
-          children: [ 
-            s.element('label', { 
-                attrs: {'for': str.startsWith('rob_')},
-                html: str.is('Rob Text')
-              }), 
-            s.element('select', { attrs: {'id': str.startsWith('rob_')} })
-            ]
-          }
-        );
+        return s.element('span', { attrs: { 'role': str.is('presentation') } });
       }),
-      '<div role="presentation"><label for="rob_',
-      Element.fromTag('select'), 'rob', 'Rob Text');
-  }
-);
+    Element.fromTag('span'), // representing the button
+    Element.fromTag('span')  // representing the label span which normally is inside the button span
+  );
+
+  var checkLabelledField = function (expectedDom, expectedHtmlPrefix, field, name, labelText) {
+    var element = AriaRegister.labelledField(field, name, labelText);
+    assert.eq('function', typeof(element.element), 'expecting element method');
+    assert.eq('function', typeof(element.field), 'expecting field method');
+    assert.eq(expectedHtmlPrefix, Html.getOuter(element.element()).substr(0,expectedHtmlPrefix.length));
+    Assertions.assertStructure('Checking labelledField structure',
+      expectedDom,
+      element.element());
+  };
+
+  checkLabelledField(
+    ApproxStructure.build(
+    function (s, str, arr) {
+      return s.element('div', {
+        children: [ 
+          s.element('label', { 
+              attrs: {'for': str.startsWith('bob_')},
+              html: str.is('Bob Text')
+            }), 
+          s.element('input', { attrs: {'id': str.startsWith('bob_')} })
+          ]
+        }
+      );
+    }),
+    '<div role="presentation"><label for="bob_',
+    Element.fromTag('input'), 'bob', 'Bob Text');
+
+  checkLabelledField(
+    ApproxStructure.build(
+    function (s, str, arr) {
+      return s.element('div', {
+        children: [ 
+          s.element('label', { 
+              attrs: {'for': str.startsWith('rob_')},
+              html: str.is('Rob Text')
+            }), 
+          s.element('select', { attrs: {'id': str.startsWith('rob_')} })
+          ]
+        }
+      );
+    }),
+    '<div role="presentation"><label for="rob_',
+    Element.fromTag('select'), 'rob', 'Rob Text');
+});
+
