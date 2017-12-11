@@ -1,20 +1,12 @@
-define(
-  'ephox.snooker.api.TableGridSize',
+import DetailsList from '../model/DetailsList';
+import Warehouse from '../model/Warehouse';
 
-  [
-    'ephox.snooker.model.DetailsList',
-    'ephox.snooker.model.Warehouse'
-  ],
+var getGridSize = function (table) {
+  var input = DetailsList.fromTable(table);
+  var warehouse = Warehouse.generate(input);
+  return warehouse.grid();
+};
 
-  function (DetailsList, Warehouse) {
-    var getGridSize = function (table) {
-      var input = DetailsList.fromTable(table);
-      var warehouse = Warehouse.generate(input);
-      return warehouse.grid();
-    };
-
-    return {
-      getGridSize: getGridSize
-    };
-  }
-);
+export default <any> {
+  getGridSize: getGridSize
+};

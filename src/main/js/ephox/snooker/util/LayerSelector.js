@@ -1,29 +1,21 @@
-define(
-  'ephox.snooker.util.LayerSelector',
+import { Arr } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
+import { Selectors } from '@ephox/sugar';
+import { Traverse } from '@ephox/sugar';
 
-  [
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
-    'ephox.sugar.api.search.Selectors',
-    'ephox.sugar.api.search.Traverse'
-  ],
+var firstLayer = function (scope, selector) {
+  return filterFirstLayer(scope, selector, Fun.constant(true));
+};
 
-  function (Arr, Fun, Selectors, Traverse) {
-    var firstLayer = function (scope, selector) {
-      return filterFirstLayer(scope, selector, Fun.constant(true));
-    };
+var filterFirstLayer = function (scope, selector, predicate) {
+  return Arr.bind(Traverse.children(scope), function (x) {
+    return Selectors.is(x, selector) ?
+      predicate(x) ? [ x ] : [ ]
+      : filterFirstLayer(x, selector, predicate);
+  });
+};
 
-    var filterFirstLayer = function (scope, selector, predicate) {
-      return Arr.bind(Traverse.children(scope), function (x) {
-        return Selectors.is(x, selector) ?
-          predicate(x) ? [ x ] : [ ]
-          : filterFirstLayer(x, selector, predicate);
-      });
-    };
-
-    return {
-      firstLayer: firstLayer,
-      filterFirstLayer: filterFirstLayer
-    };
-  }
-);
+export default <any> {
+  firstLayer: firstLayer,
+  filterFirstLayer: filterFirstLayer
+};

@@ -1,38 +1,30 @@
-define(
-  'ephox.snooker.test.Stringify',
+import { Arr } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Arr'
-  ],
+var celltype = function (subject) {
+  return subject.fold(function () {
+    return 'none';
+  }, function (info) {
+    return 'whole-' + info.element();
+  }, function (info, offset) {
+    return 'partial-' + info.element() + '-' + offset;
+  });
+};
 
-  function (Arr) {
-    var celltype = function (subject) {
-      return subject.fold(function () {
-        return 'none';
-      }, function (info) {
-        return 'whole-' + info.element();
-      }, function (info, offset) {
-        return 'partial-' + info.element() + '-' + offset;
-      });
-    };
+var celltypes = function (subject) {
+  return Arr.map(subject, celltype);
+};
 
-    var celltypes = function (subject) {
-      return Arr.map(subject, celltype);
-    };
+var detail = function (subject) {
+  return subject.element() + '---' + subject.rowspan() + 'x' + subject.colspan();
+};
 
-    var detail = function (subject) {
-      return subject.element() + '---' + subject.rowspan() + 'x' + subject.colspan();
-    };
+var it = function (subject) {
+  return subject.element();
+};
 
-    var it = function (subject) {
-      return subject.element();
-    };
-
-    return {
-      celltype: celltype,
-      celltypes: celltypes,
-      detail: detail,
-      it: it
-    };
-  }
-);
+export default <any> {
+  celltype: celltype,
+  celltypes: celltypes,
+  detail: detail,
+  it: it
+};

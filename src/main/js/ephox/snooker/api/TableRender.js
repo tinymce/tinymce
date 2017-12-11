@@ -1,13 +1,7 @@
-define(
-  'ephox.snooker.api.TableRender',
+import Render from '../operate/Render';
 
-  [
-    'ephox.snooker.operate.Render'
-  ],
 
-  function (Render) {
-    return {
-      render: Render.render
-    };
-  }
-);
+
+export default <any> {
+  render: Render.render
+};

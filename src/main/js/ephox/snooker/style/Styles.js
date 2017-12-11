@@ -1,15 +1,7 @@
-define(
-  'ephox.snooker.style.Styles',
+import { Namespace } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Namespace'
-  ],
+var styles = Namespace.css('ephox-snooker');
 
-  function (Namespace) {
-    var styles = Namespace.css('ephox-snooker');
-
-    return {
-      resolve: styles.resolve
-    };
-  }
-);
+export default <any> {
+  resolve: styles.resolve
+};

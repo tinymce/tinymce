@@ -1,21 +1,16 @@
-test(
-  'SizingTest',
+import Structs from 'ephox/snooker/api/Structs';
+import Sizing from 'ephox/snooker/picker/Sizing';
+import { UnitTest, assert } from '@ephox/refute';
 
-  [
-    'ephox.snooker.api.Structs',
-    'ephox.snooker.picker.Sizing'
-  ],
+UnitTest.test('SizingTest', function() {
+  var check = function (selRow, selCol, fullRow, fullCol, address, settings) {
+    var actual = Sizing.resize(address, settings);
+    assert.eq(selRow, actual.selection().row());
+    assert.eq(selCol, actual.selection().column());
+    assert.eq(fullRow, actual.full().row());
+    assert.eq(fullCol, actual.full().column());
+  };
 
-  function (Structs, Sizing) {
-    var check = function (selRow, selCol, fullRow, fullCol, address, settings) {
-      var actual = Sizing.resize(address, settings);
-      assert.eq(selRow, actual.selection().row());
-      assert.eq(selCol, actual.selection().column());
-      assert.eq(fullRow, actual.full().row());
-      assert.eq(fullCol, actual.full().column());
-    };
+  check(1, 1, 2, 2, Structs.address(0, 0), { minCols: 1, maxCols: 5, minRows: 1, maxRows: 5 });
+});
 
-    check(1, 1, 2, 2, Structs.address(0, 0), { minCols: 1, maxCols: 5, minRows: 1, maxRows: 5 });
-
-  }
-);

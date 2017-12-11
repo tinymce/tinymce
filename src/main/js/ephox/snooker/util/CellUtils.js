@@ -1,36 +1,27 @@
-define(
-  'ephox.snooker.util.CellUtils',
+import { Fun } from '@ephox/katamari';
+import { Attr } from '@ephox/sugar';
+import { Css } from '@ephox/sugar';
 
-  [
-    'ephox.katamari.api.Fun',
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.properties.Css',
-    'global!parseInt'
-  ],
+var getSpan = function (cell, type) {
+  return Attr.has(cell, type) && parseInt(Attr.get(cell, type), 10) > 1;
+};
 
-  function (Fun, Attr, Css, parseInt) {
-    var getSpan = function (cell, type) {
-      return Attr.has(cell, type) && parseInt(Attr.get(cell, type), 10) > 1;
-    };
+var hasColspan = function (cell) {
+  return getSpan(cell, 'colspan');
+};
 
-    var hasColspan = function (cell) {
-      return getSpan(cell, 'colspan');
-    };
+var hasRowspan = function (cell) {
+  return getSpan(cell, 'rowspan');
+};
 
-    var hasRowspan = function (cell) {
-      return getSpan(cell, 'rowspan');
-    };
+var getInt = function (element, property) {
+  return parseInt(Css.get(element, property), 10);
+};
 
-    var getInt = function (element, property) {
-      return parseInt(Css.get(element, property), 10);
-    };
-
-    return {
-      hasColspan: hasColspan,
-      hasRowspan: hasRowspan,
-      minWidth: Fun.constant(10),
-      minHeight: Fun.constant(10),
-      getInt: getInt
-    };
-  }
-);
+export default <any> {
+  hasColspan: hasColspan,
+  hasRowspan: hasRowspan,
+  minWidth: Fun.constant(10),
+  minHeight: Fun.constant(10),
+  getInt: getInt
+};

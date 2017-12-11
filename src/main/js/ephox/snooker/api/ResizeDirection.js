@@ -1,14 +1,8 @@
-define(
-  'ephox.snooker.api.ResizeDirection',
+import BarPositions from '../resize/BarPositions';
 
-  [
-    'ephox.snooker.resize.BarPositions'
-  ],
 
-  function (BarPositions) {
-    return {
-      ltr: BarPositions.ltr,
-      rtl: BarPositions.rtl
-    };
-  }
-);
+
+export default <any> {
+  ltr: BarPositions.ltr,
+  rtl: BarPositions.rtl
+};

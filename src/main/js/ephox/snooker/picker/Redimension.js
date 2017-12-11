@@ -1,74 +1,67 @@
-define(
-  'ephox.snooker.picker.Redimension',
+import Structs from '../api/Structs';
+import Sizing from './Sizing';
+import { Focus } from '@ephox/sugar';
+import { Height } from '@ephox/sugar';
+import { Location } from '@ephox/sugar';
+import { Width } from '@ephox/sugar';
 
-  [
-    'ephox.snooker.api.Structs',
-    'ephox.snooker.picker.Sizing',
-    'ephox.sugar.api.dom.Focus',
-    'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.view.Location',
-    'ephox.sugar.api.view.Width',
-    'global!Math'
-  ],
 
-  function (Structs, Sizing, Focus, Height, Location, Width, Math) {
-    return function (direction, settings) {
-      var active = false;
 
-      var on = function () {
-        active = true;
-      };
+export default <any> function (direction, settings) {
+  var active = false;
 
-      var off = function () {
-        active = false;
-      };
+  var on = function () {
+    active = true;
+  };
 
-      var getDimensions = function (table) {
-        var width = Width.get(table.element());
-        var height = Height.get(table.element());
-        return Structs.dimensions(width, height);
-      };
+  var off = function () {
+    active = false;
+  };
 
-      var getPosition = function (table) {
-        var position = Location.absolute(table.element());
-        return Structs.coords(position.left(), position.top());
-      };
+  var getDimensions = function (table) {
+    var width = Width.get(table.element());
+    var height = Height.get(table.element());
+    return Structs.dimensions(width, height);
+  };
 
-      var updateSelection = function (table, grid, changes) {
-        var full = changes.full();
-        if (full.row() !== grid.rows() || full.column() !== grid.columns()) table.setSize(full.row(), full.column());
-        var last = table.setSelection(changes.selection().row(), changes.selection().column());
-        Focus.focus(last);
-      };
+  var getPosition = function (table) {
+    var position = Location.absolute(table.element());
+    return Structs.coords(position.left(), position.top());
+  };
 
-      /*
-       * Based on the mouse position (x, y), identify whether the picker table needs to be resized
-       * and update its selection
-       */
-      var mousemove = function (table, grid, x, y) {
-        if (active) {
-          var dimensions = getDimensions(table);
-          var position = getPosition(table);
-          var mouse = Structs.coords(x, y);
-          var address = direction.pickerCell(position, dimensions, grid, mouse);
-          var changes = Sizing.resize(address, settings);
-          updateSelection(table, grid, changes);
-        }
-      };
+  var updateSelection = function (table, grid, changes) {
+    var full = changes.full();
+    if (full.row() !== grid.rows() || full.column() !== grid.columns()) table.setSize(full.row(), full.column());
+    var last = table.setSelection(changes.selection().row(), changes.selection().column());
+    Focus.focus(last);
+  };
 
-      var manual = function (table, selected, xDelta, yDelta) {
-        if (active) {
-          var changes = Sizing.grow(selected, xDelta, yDelta, settings);
-          updateSelection(table, selected, changes);
-        }
-      };
+  /*
+   * Based on the mouse position (x, y), identify whether the picker table needs to be resized
+   * and update its selection
+   */
+  var mousemove = function (table, grid, x, y) {
+    if (active) {
+      var dimensions = getDimensions(table);
+      var position = getPosition(table);
+      var mouse = Structs.coords(x, y);
+      var address = direction.pickerCell(position, dimensions, grid, mouse);
+      var changes = Sizing.resize(address, settings);
+      updateSelection(table, grid, changes);
+    }
+  };
 
-      return {
-        on: on,
-        off: off,
-        mousemove: mousemove,
-        manual: manual
-      };
-    };
-  }
-);
+  var manual = function (table, selected, xDelta, yDelta) {
+    if (active) {
+      var changes = Sizing.grow(selected, xDelta, yDelta, settings);
+      updateSelection(table, selected, changes);
+    }
+  };
+
+  return {
+    on: on,
+    off: off,
+    mousemove: mousemove,
+    manual: manual
+  };
+};

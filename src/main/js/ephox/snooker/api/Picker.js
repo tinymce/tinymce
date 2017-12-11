@@ -1,13 +1,7 @@
-define(
-  'ephox.snooker.api.Picker',
+import PickerUi from '../picker/PickerUi';
 
-  [
-    'ephox.snooker.picker.PickerUi'
-  ],
 
-  function (PickerUi) {
-    return function (direction, settings, helpReference) {
-      return PickerUi(direction, settings, helpReference);
-    };
-  }
-);
+
+export default <any> function (direction, settings, helpReference) {
+  return PickerUi(direction, settings, helpReference);
+};

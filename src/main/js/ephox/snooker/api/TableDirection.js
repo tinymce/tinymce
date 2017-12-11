@@ -1,33 +1,27 @@
-define(
-  'ephox.snooker.api.TableDirection',
+import ResizeDirection from './ResizeDirection';
 
-  [
-    'ephox.snooker.api.ResizeDirection'
-  ],
 
-  function (ResizeDirection) {
-    return function (directionAt) {
-      var auto = function (table) {
-        return directionAt(table).isRtl() ? ResizeDirection.rtl : ResizeDirection.ltr;
-      };
 
-      var delta = function (amount, table) {
-        return auto(table).delta(amount, table);
-      };
+export default <any> function (directionAt) {
+  var auto = function (table) {
+    return directionAt(table).isRtl() ? ResizeDirection.rtl : ResizeDirection.ltr;
+  };
 
-      var positions = function (cols, table) {
-        return auto(table).positions(cols, table);
-      };
+  var delta = function (amount, table) {
+    return auto(table).delta(amount, table);
+  };
 
-      var edge = function (cell) {
-        return auto(cell).edge(cell);
-      };
+  var positions = function (cols, table) {
+    return auto(table).positions(cols, table);
+  };
 
-      return {
-        delta: delta,
-        edge: edge,
-        positions: positions
-      };
-    };
-  }
-);
+  var edge = function (cell) {
+    return auto(cell).edge(cell);
+  };
+
+  return {
+    delta: delta,
+    edge: edge,
+    positions: positions
+  };
+};

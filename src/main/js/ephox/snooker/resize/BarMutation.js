@@ -1,44 +1,38 @@
-define(
-  'ephox.snooker.resize.BarMutation',
+import { Option } from '@ephox/katamari';
+import { Event } from '@ephox/porkbun';
+import { Events } from '@ephox/porkbun';
+import Mutation from './Mutation';
 
-  [
-    'ephox.katamari.api.Option',
-    'ephox.porkbun.Event',
-    'ephox.porkbun.Events',
-    'ephox.snooker.resize.Mutation'
-  ],
 
-  function (Option, Event, Events, Mutation) {
-    return function () {
-      var events = Events.create({
-        drag: Event(['xDelta', 'yDelta', 'target'])
-      });
 
-      var target = Option.none();
+export default <any> function () {
+  var events = Events.create({
+    drag: Event(['xDelta', 'yDelta', 'target'])
+  });
 
-      var delegate = Mutation();
+  var target = Option.none();
 
-      delegate.events.drag.bind(function (event) {
-        target.each(function (t) {
-          // There is always going to be this padding / border collapse / margin problem with widths. I'll have to resolve that.
-          events.trigger.drag(event.xDelta(), event.yDelta(), t);
-        });
-      });
+  var delegate = Mutation();
 
-      var assign = function (t) {
-        target = Option.some(t);
-      };
+  delegate.events.drag.bind(function (event) {
+    target.each(function (t) {
+      // There is always going to be this padding / border collapse / margin problem with widths. I'll have to resolve that.
+      events.trigger.drag(event.xDelta(), event.yDelta(), t);
+    });
+  });
 
-      var get = function () {
-        return target;
-      };
+  var assign = function (t) {
+    target = Option.some(t);
+  };
 
-      return {
-        assign: assign,
-        get: get,
-        mutate: delegate.mutate,
-        events: events.registry
-      };
-    };
-  }
-);
+  var get = function () {
+    return target;
+  };
+
+  return {
+    assign: assign,
+    get: get,
+    mutate: delegate.mutate,
+    events: events.registry
+  };
+};

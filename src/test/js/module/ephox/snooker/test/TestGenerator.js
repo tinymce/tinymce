@@ -1,33 +1,27 @@
-define(
-  'ephox.snooker.test.TestGenerator',
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun'
-  ],
 
-  function (Fun) {
-    return function () {
-      var cellCounter = 0;
-      var replaceCounter = 0;
 
-      var cell = function () {
-        var r = '?_' + cellCounter;
-        cellCounter++;
-        return r;
-      };
+export default <any> function () {
+  var cellCounter = 0;
+  var replaceCounter = 0;
 
-      var replace = function (name) {
-        var r = 'h(' + name + ')_' + replaceCounter;
-        replaceCounter++;
-        return r;
-      };
+  var cell = function () {
+    var r = '?_' + cellCounter;
+    cellCounter++;
+    return r;
+  };
 
-      return {
-        cell: cell,
-        gap: Fun.constant('*'),
-        row: Fun.constant('tr'),
-        replace: replace
-      };
-    };
-  }
-);
+  var replace = function (name) {
+    var r = 'h(' + name + ')_' + replaceCounter;
+    replaceCounter++;
+    return r;
+  };
+
+  return {
+    cell: cell,
+    gap: Fun.constant('*'),
+    row: Fun.constant('tr'),
+    replace: replace
+  };
+};

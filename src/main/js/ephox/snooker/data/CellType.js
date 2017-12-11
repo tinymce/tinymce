@@ -1,38 +1,29 @@
-define(
-  'ephox.snooker.data.CellType',
+var none = function () {
+  return cellType(function (n, w, p) {
+    return n();
+  });
+};
 
-  [
-  ],
+var whole = function (info) {
+  return cellType(function (n, w, p) {
+    return w(info);
+  });
+};
 
-  function () {
-    var none = function () {
-      return cellType(function (n, w, p) {
-        return n();
-      });
-    };
+var partial = function (info, offset) {
+  return cellType(function (n, w, p) {
+    return p(info, offset);
+  });
+};
 
-    var whole = function (info) {
-      return cellType(function (n, w, p) {
-        return w(info);
-      });
-    };
+var cellType = function (fold) {
+  return {
+    fold: fold
+  };
+};
 
-    var partial = function (info, offset) {
-      return cellType(function (n, w, p) {
-        return p(info, offset);
-      });
-    };
-
-    var cellType = function (fold) {
-      return {
-        fold: fold
-      };
-    };
-
-    return {
-      none: none,
-      whole: whole,
-      partial: partial
-    };
-  }
-);
+export default <any> {
+  none: none,
+  whole: whole,
+  partial: partial
+};
