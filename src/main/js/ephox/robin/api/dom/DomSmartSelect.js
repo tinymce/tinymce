@@ -1,20 +1,12 @@
-define(
-  'ephox.robin.api.dom.DomSmartSelect',
+import { DomUniverse } from '@ephox/boss';
+import SmartSelect from '../general/SmartSelect';
 
-  [
-    'ephox.boss.api.DomUniverse',
-    'ephox.robin.api.general.SmartSelect'
-  ],
+var universe = DomUniverse();
 
-  function (DomUniverse, SmartSelect) {
-    var universe = DomUniverse();
+var word = function (element, offset, optimise) {
+  return SmartSelect.word(universe, element, offset, optimise);
+};
 
-    var word = function (element, offset, optimise) {
-      return SmartSelect.word(universe, element, offset, optimise);
-    };
-
-    return {
-      word: word
-    };
-  }
-);
+export default <any> {
+  word: word
+};

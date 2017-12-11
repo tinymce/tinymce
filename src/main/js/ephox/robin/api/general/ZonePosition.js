@@ -1,26 +1,18 @@
-define(
-  'ephox.robin.api.general.ZonePosition',
+import { Adt } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Adt'
-  ],
+var adt = Adt.generate([
+  { aboveView: [ 'item' ] },
+  { inView: [ 'item' ] },
+  { belowView: [ 'item' ] }
+]);
 
-  function (Adt) {
-    var adt = Adt.generate([
-      { aboveView: [ 'item' ] },
-      { inView: [ 'item' ] },
-      { belowView: [ 'item' ] }
-    ]);
+var cata = function (subject, onAbove, onIn, onBelow) {
+  return subject.fold(onAbove, onIn, onBelow);
+};
 
-    var cata = function (subject, onAbove, onIn, onBelow) {
-      return subject.fold(onAbove, onIn, onBelow);
-    };
-
-    return {
-      aboveView: adt.aboveView,
-      inView: adt.inView,
-      belowView: adt.belowView,
-      cata: cata
-    };
-  }
-);
+export default <any> {
+  aboveView: adt.aboveView,
+  inView: adt.inView,
+  belowView: adt.belowView,
+  cata: cata
+};

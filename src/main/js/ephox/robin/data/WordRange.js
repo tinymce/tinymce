@@ -1,11 +1,5 @@
-define(
-  'ephox.robin.data.WordRange',
+import { Struct } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Struct'
-  ],
 
-  function (Struct) {
-    return Struct.immutable('startContainer', 'startOffset', 'endContainer', 'endOffset');
-  }
-);
+
+export default <any> Struct.immutable('startContainer', 'startOffset', 'endContainer', 'endOffset');

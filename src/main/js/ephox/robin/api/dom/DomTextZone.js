@@ -1,25 +1,17 @@
-define(
-  'ephox.robin.api.dom.DomTextZone',
+import { DomUniverse } from '@ephox/boss';
+import TextZone from '../general/TextZone';
 
-  [
-    'ephox.boss.api.DomUniverse',
-    'ephox.robin.api.general.TextZone'
-  ],
+var universe = DomUniverse();
 
-  function (DomUniverse, TextZone) {
-    var universe = DomUniverse();
+var single = function (element, envLang, onlyLang) {
+  return TextZone.single(universe, element, envLang, onlyLang);
+};
 
-    var single = function (element, envLang, onlyLang) {
-      return TextZone.single(universe, element, envLang, onlyLang);
-    };
+var range = function (start, soffset, finish, foffset, envLang, onlyLang) {
+  return TextZone.range(universe, start, soffset, finish, foffset, envLang, onlyLang);
+};
 
-    var range = function (start, soffset, finish, foffset, envLang, onlyLang) {
-      return TextZone.range(universe, start, soffset, finish, foffset, envLang, onlyLang);
-    };
-
-    return {
-      single: single,
-      range: range
-    };
-  }
-);
+export default <any> {
+  single: single,
+  range: range
+};

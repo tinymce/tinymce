@@ -1,44 +1,36 @@
-define(
-  'ephox.robin.parent.Shared',
+import { Arr } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option'
-  ],
+var all = function (universe, look, elements, f) {
+  var head = elements[0];
+  var tail = elements.slice(1);
+  return f(universe, look, head, tail);
+};
 
-  function (Arr, Fun, Option) {
-    var all = function (universe, look, elements, f) {
-      var head = elements[0];
-      var tail = elements.slice(1);
-      return f(universe, look, head, tail);
-    };
+/**
+ * Check if look returns the same element for all elements, and return it if it exists.
+ */
+var oneAll = function (universe, look, elements) {
+  return elements.length > 0 ?
+    all(universe, look, elements, unsafeOne) :
+    Option.none();
+};
 
-    /**
-     * Check if look returns the same element for all elements, and return it if it exists.
-     */
-    var oneAll = function (universe, look, elements) {
-      return elements.length > 0 ?
-        all(universe, look, elements, unsafeOne) :
-        Option.none();
-    };
+var unsafeOne = function (universe, look, head, tail) {
+  var start = look(universe, head);
+  return Arr.foldr(tail, function (b, a) {
+    var current = look(universe, a);
+    return commonElement(universe, b, current);
+  }, start);
+};
 
-    var unsafeOne = function (universe, look, head, tail) {
-      var start = look(universe, head);
-      return Arr.foldr(tail, function (b, a) {
-        var current = look(universe, a);
-        return commonElement(universe, b, current);
-      }, start);
-    };
+var commonElement = function (universe, start, end) {
+  return start.bind(function (s) {
+    return end.filter(Fun.curry(universe.eq, s));
+  });
+};
 
-    var commonElement = function (universe, start, end) {
-      return start.bind(function (s) {
-        return end.filter(Fun.curry(universe.eq, s));
-      });
-    };
-
-    return {
-      oneAll: oneAll
-    };
-  }
-);
+export default <any> {
+  oneAll: oneAll
+};

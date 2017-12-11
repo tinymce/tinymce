@@ -1,33 +1,22 @@
-define(
-  'ephox.robin.api.general.Look',
+import { Fun } from '@ephox/katamari';
+import Look from '../../look/Look';
 
-  [
-    'ephox.katamari.api.Fun',
-    'ephox.robin.look.Look'
-  ],
+var selector = function (universe, sel) {
+  return Look.selector(sel);
+};
 
-  /**
-   * Documentation is in the actual implementations.
-   */
-  function (Fun, Look) {
-    var selector = function (universe, sel) {
-      return Look.selector(sel);
-    };
+var predicate = function (universe, pred) {
+  return Look.predicate(pred);
+};
 
-    var predicate = function (universe, pred) {
-      return Look.predicate(pred);
-    };
+var exact = function (universe, item) {
+  var itemMatch = Fun.curry(universe.eq, item);
 
-    var exact = function (universe, item) {
-      var itemMatch = Fun.curry(universe.eq, item);
+  return Look.predicate(itemMatch);
+};
 
-      return Look.predicate(itemMatch);
-    };
-
-    return {
-      selector: selector,
-      predicate: predicate,
-      exact: exact
-    };
-  }
-);
+export default <any> {
+  selector: selector,
+  predicate: predicate,
+  exact: exact
+};

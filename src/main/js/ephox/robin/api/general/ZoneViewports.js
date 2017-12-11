@@ -1,18 +1,10 @@
-define(
-  'ephox.robin.api.general.ZoneViewports',
+import { Fun } from '@ephox/katamari';
+import ZonePosition from './ZonePosition';
 
-  [
-    'ephox.katamari.api.Fun',
-    'ephox.robin.api.general.ZonePosition'
-  ],
+var anything = {
+  assess: ZonePosition.inView
+};
 
-  function (Fun, ZonePosition) {
-    var anything = {
-      assess: ZonePosition.inView
-    };
-
-    return {
-      anything: Fun.constant(anything)
-    };
-  }
-);
+export default <any> {
+  anything: Fun.constant(anything)
+};

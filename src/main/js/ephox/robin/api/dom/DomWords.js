@@ -1,29 +1,17 @@
-define(
-  'ephox.robin.api.dom.DomWords',
+import { DomUniverse } from '@ephox/boss';
+import Words from '../general/Words';
 
-  [
-    'ephox.boss.api.DomUniverse',
-    'ephox.robin.api.general.Words'
-  ],
+var universe = DomUniverse();
 
-  /**
-   * Documentation is in the actual implementations.
-   */
-  function (DomUniverse, Words) {
-    var universe = DomUniverse();
+var identify = function (allText) {
+  return Words.identify(allText);
+};
 
-    var identify = function (allText) {
-      return Words.identify(allText);
-    };
+var isWord = function (text) {
+  return Words.isWord(universe, text);
+};
 
-    var isWord = function (text) {
-      return Words.isWord(universe, text);
-    };
-
-    return {
-      identify: identify,
-      isWord: isWord
-    };
-
-  }
-);
+export default <any> {
+  identify: identify,
+  isWord: isWord
+};

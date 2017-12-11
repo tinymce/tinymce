@@ -1,23 +1,12 @@
-define(
-  'ephox.robin.api.dom.DomTextdata',
+import { DomUniverse } from '@ephox/boss';
+import Textdata from '../general/Textdata';
 
-  [
-    'ephox.boss.api.DomUniverse',
-    'ephox.robin.api.general.Textdata'
-  ],
+var universe = DomUniverse();
 
-  /**
-   * Documentation is in the actual implementations.
-   */
-  function (DomUniverse, Textdata) {
-    var universe = DomUniverse();
+var from = function (elements, current, offset) {
+  return Textdata.from(universe, elements, current, offset);
+};
 
-    var from = function (elements, current, offset) {
-      return Textdata.from(universe, elements, current, offset);
-    };
-
-    return {
-      from: from
-    };
-  }
-);
+export default <any> {
+  from: from
+};

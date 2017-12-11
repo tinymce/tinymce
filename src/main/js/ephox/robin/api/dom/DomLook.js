@@ -1,34 +1,23 @@
-define(
-  'ephox.robin.api.dom.DomLook',
+import { DomUniverse } from '@ephox/boss';
+import { Fun } from '@ephox/katamari';
+import Look from '../general/Look';
 
-  [
-    'ephox.boss.api.DomUniverse',
-    'ephox.katamari.api.Fun',
-    'ephox.robin.api.general.Look'
-  ],
+var universe = DomUniverse();
 
-  /**
-   * Documentation is in the actual implementations.
-   */
-  function (DomUniverse, Fun, Look) {
-    var universe = DomUniverse();
+var selector = function (sel) {
+  return Fun.curry(Look.selector(universe, sel), universe);
+};
 
-    var selector = function (sel) {
-      return Fun.curry(Look.selector(universe, sel), universe);
-    };
+var predicate = function (pred) {
+  return Fun.curry(Look.predicate(universe, pred), universe);
+};
 
-    var predicate = function (pred) {
-      return Fun.curry(Look.predicate(universe, pred), universe);
-    };
+var exact = function (element) {
+  return Fun.curry(Look.exact(universe, element), universe);
+};
 
-    var exact = function (element) {
-      return Fun.curry(Look.exact(universe, element), universe);
-    };
-
-    return {
-      selector: selector,
-      predicate: predicate,
-      exact: exact
-    };
-  }
-);
+export default <any> {
+  selector: selector,
+  predicate: predicate,
+  exact: exact
+};

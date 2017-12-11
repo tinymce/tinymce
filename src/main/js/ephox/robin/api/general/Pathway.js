@@ -1,20 +1,12 @@
-define(
-  'ephox.robin.api.general.Pathway',
+import Simplify from '../../pathway/Simplify';
 
-  [
-    'ephox.robin.pathway.Simplify'
-  ],
+/**
+ * @see Simplify.simplify()
+ */
+var simplify = function (universe, elements) {
+  return Simplify.simplify(universe, elements);
+};
 
-  function (Simplify) {
-    /**
-     * @see Simplify.simplify()
-     */
-    var simplify = function (universe, elements) {
-      return Simplify.simplify(universe, elements);
-    };
-
-    return {
-      simplify: simplify
-    };
-  }
-);
+export default <any> {
+  simplify: simplify
+};

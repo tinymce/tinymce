@@ -1,28 +1,17 @@
-define(
-  'ephox.robin.api.dom.DomPathway',
+import { DomUniverse } from '@ephox/boss';
+import Pathway from '../general/Pathway';
 
-  [
-    'ephox.boss.api.DomUniverse',
-    'ephox.robin.api.general.Pathway'
-  ],
+var universe = DomUniverse();
 
-  /**
-   * Documentation is in the actual implementations.
-   */
-  function (DomUniverse, Pathway) {
-    var universe = DomUniverse();
+var simplify = function (elements) {
+  return Pathway.simplify(universe, elements);
+};
 
-    var simplify = function (elements) {
-      return Pathway.simplify(universe, elements);
-    };
+var transform = function () {
+  return Pathway.transform(universe);
+};
 
-    var transform = function () {
-      return Pathway.transform(universe);
-    };
-
-    return {
-      simplify: simplify,
-      transform: transform
-    };
-  }
-);
+export default <any> {
+  simplify: simplify,
+  transform: transform
+};

@@ -1,44 +1,36 @@
-define(
-  'ephox.robin.pathway.Simplify',
+import { Arr } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun'
-  ],
+var eq = function (universe, e1) {
+  return Fun.curry(universe.eq, e1);
+};
 
-  function (Arr, Fun) {
-    var eq = function (universe, e1) {
-      return Fun.curry(universe.eq, e1);
-    };
+var isDuplicate = function (universe, rest, item) {
+  return Arr.exists(rest, eq(universe, item));
+};
 
-    var isDuplicate = function (universe, rest, item) {
-      return Arr.exists(rest, eq(universe, item));
-    };
+var isChild = function (universe, rest, item) {
+  var parents = universe.up().all(item);
+  return Arr.exists(parents, function (p) {
+    return isDuplicate(universe, rest, p);
+  });
+};
 
-    var isChild = function (universe, rest, item) {
-      var parents = universe.up().all(item);
-      return Arr.exists(parents, function (p) {
-        return isDuplicate(universe, rest, p);
-      });
-    };
+/**
+ * Flattens the item list into just the top-most elements in the tree.
+ *
+ * In other words, removes duplicates and children.
+ */
+var simplify = function (universe, items) {
+// FIX: Horribly inefficient.
+  return Arr.filter(items, function (x, i) {
+    var left = items.slice(0, i);
+    var right = items.slice(i + 1);
+    var rest = left.concat(right);
+    return !(isDuplicate(universe, right, x) || isChild(universe, rest, x));
+  });
+};
 
-    /**
-     * Flattens the item list into just the top-most elements in the tree.
-     *
-     * In other words, removes duplicates and children.
-     */
-    var simplify = function (universe, items) {
-    // FIX: Horribly inefficient.
-      return Arr.filter(items, function (x, i) {
-        var left = items.slice(0, i);
-        var right = items.slice(i + 1);
-        var rest = left.concat(right);
-        return !(isDuplicate(universe, right, x) || isChild(universe, rest, x));
-      });
-    };
-
-    return {
-      simplify: simplify
-    };
-  }
-);
+export default <any> {
+  simplify: simplify
+};

@@ -1,11 +1,5 @@
-define(
-  'ephox.robin.data.WordScope',
+import { Struct } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Struct'
-  ],
 
-  function (Struct) {
-    return Struct.immutable('word', 'left', 'right');
-  }
-);
+
+export default <any> Struct.immutable('word', 'left', 'right');

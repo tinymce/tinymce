@@ -1,17 +1,9 @@
-define(
-  'ephox.robin.api.general.SmartSelect',
+import Selection from '../../smartselect/Selection';
 
-  [
-    'ephox.robin.smartselect.Selection'
-  ],
+var word = function (universe, item, offset, optimise) {
+  return Selection.word(universe, item, offset, optimise);
+};
 
-  function (Selection) {
-    var word = function (universe, item, offset, optimise) {
-      return Selection.word(universe, item, offset, optimise);
-    };
-
-    return {
-      word: word
-    };
-  }
-);
+export default <any> {
+  word: word
+};

@@ -1,28 +1,17 @@
-define(
-  'ephox.robin.api.dom.DomLeftBlock',
+import { DomUniverse } from '@ephox/boss';
+import LeftBlock from '../general/LeftBlock';
 
-  [
-    'ephox.boss.api.DomUniverse',
-    'ephox.robin.api.general.LeftBlock'
-  ],
+var universe = DomUniverse();
 
-  /**
-   * Documentation is in the actual implementations.
-   */
-  function (DomUniverse, LeftBlock) {
-    var universe = DomUniverse();
+var top = function (item) {
+  return LeftBlock.top(universe, item);
+};
 
-    var top = function (item) {
-      return LeftBlock.top(universe, item);
-    };
+var all = function (item) {
+  return LeftBlock.all(universe, item);
+};
 
-    var all = function (item) {
-      return LeftBlock.all(universe, item);
-    };
-
-    return {
-      top: top,
-      all: all
-    };
-  }
-);
+export default <any> {
+  top: top,
+  all: all
+};

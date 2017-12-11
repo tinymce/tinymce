@@ -1,45 +1,37 @@
-define(
-  'ephox.robin.zone.Zones',
+import { Arr } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
+import { Struct } from '@ephox/katamari';
+import Identify from '../words/Identify';
 
-  [
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Struct',
-    'ephox.robin.words.Identify'
-  ],
+var nu = Struct.immutableBag([ 'elements', 'lang', 'words' ], [ ]);
 
-  function (Arr, Fun, Struct, Identify) {
-    var nu = Struct.immutableBag([ 'elements', 'lang', 'words' ], [ ]);
+var fromWalking = function (universe, groups) {
+  var zones = Arr.map(groups, function (group) {
+    var details = group.details();
+    var lang = group.lang();
 
-    var fromWalking = function (universe, groups) {
-      var zones = Arr.map(groups, function (group) {
-        var details = group.details();
-        var lang = group.lang();
+    var line = Arr.map(details, function (x) {
+      return x.text();
+    }).join('');
 
-        var line = Arr.map(details, function (x) {
-          return x.text();
-        }).join('');
+    var elements = Arr.map(details, function (x) {
+      return x.item();
+    });
 
-        var elements = Arr.map(details, function (x) {
-          return x.item();
-        });
+    var words = Identify.words(line);
 
-        var words = Identify.words(line);
+    return nu({
+      lang: lang,
+      words: words,
+      elements: elements
+    });
+  });
 
-        return nu({
-          lang: lang,
-          words: words,
-          elements: elements
-        });
-      });
+  return {
+    zones: Fun.constant(zones)
+  };
+};
 
-      return {
-        zones: Fun.constant(zones)
-      };
-    };
-
-    return {
-      fromWalking: fromWalking
-    };
-  }
-);
+export default <any> {
+  fromWalking: fromWalking
+};
