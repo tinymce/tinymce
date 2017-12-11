@@ -2,7 +2,11 @@ const { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loade
 const path = require('path');
 
 module.exports = {
-  entry: './src/demo/ts/ephox/phoenix/demo/Demo.ts',
+  entry: {
+    latin: './src/demo/ts/ephox/phoenix/demo/LatinDemo.ts',
+    reuse: './src/demo/ts/ephox/phoenix/demo/ReuseDemo.ts',
+    search: './src/demo/ts/ephox/phoenix/demo/SearchDemo.ts'
+  },
   devtool: 'source-map',
 
   resolve: {
@@ -35,7 +39,7 @@ module.exports = {
   ],
 
   output: {
-    filename: 'demo.js',
+    filename: '[name]-demo.js',
     path: path.resolve(__dirname, './scratch/compiled')
   }
 };
