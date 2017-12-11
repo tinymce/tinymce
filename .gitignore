@@ -8,3 +8,4 @@
 /config/bolt/bootstrap*.js
 *~
 /node_modules
+package-lock.json
