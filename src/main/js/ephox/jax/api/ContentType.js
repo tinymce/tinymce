@@ -1,25 +1,17 @@
-define(
-  'ephox.jax.api.ContentType',
+import { Adt } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Adt'
-  ],
+var adt = Adt.generate([
+  { file: [ 'data' ] },
+  { form: [ 'data' ] },
+  { json: [ 'data' ] },
+  { plain: [ 'data' ] },
+  { html: [ 'data' ] }
+]);
 
-  function (Adt) {
-    var adt = Adt.generate([
-      { file: [ 'data' ] },
-      { form: [ 'data' ] },
-      { json: [ 'data' ] },
-      { plain: [ 'data' ] },
-      { html: [ 'data' ] }
-    ]);
-
-    return {
-      file: adt.file,
-      form: adt.form,
-      json: adt.json,
-      plain: adt.plain,
-      html: adt.html
-    };
-  }
-);
+export default <any> {
+  file: adt.file,
+  form: adt.form,
+  json: adt.json,
+  plain: adt.plain,
+  html: adt.html
+};

@@ -1,23 +1,15 @@
-define(
-  'ephox.jax.api.Methods',
+import { Adt } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Adt'
-  ],
+var adt = Adt.generate([
+  { get: [ ] },
+  { post: [ ] },
+  { put: [ ] },
+  { del: [ ] }
+]);
 
-  function (Adt) {
-    var adt = Adt.generate([
-      { get: [ ] },
-      { post: [ ] },
-      { put: [ ] },
-      { del: [ ] }
-    ]);
-
-    return {
-      get: adt.get,
-      post: adt.post,
-      put: adt.put,
-      del: adt.del
-    };
-  }
-);
+export default <any> {
+  get: adt.get,
+  post: adt.post,
+  put: adt.put,
+  del: adt.del
+};

@@ -1,19 +1,11 @@
-define(
-  'ephox.jax.api.Credentials',
+import { Adt } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Adt'
-  ],
+var adt = Adt.generate([
+  { none: [ ] },
+  { xhr: [ ] }
+]);
 
-  function (Adt) {
-    var adt = Adt.generate([
-      { none: [ ] },
-      { xhr: [ ] }
-    ]);
-
-    return {
-      none: adt.none,
-      xhr: adt.xhr
-    };
-  }
-);
+export default <any> {
+  none: adt.none,
+  xhr: adt.xhr
+};
