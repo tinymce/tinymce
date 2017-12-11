@@ -1,61 +1,57 @@
-test(
-  'Binder',
+import Binder from 'ephox/porkbun/Binder';
+import Event from 'ephox/porkbun/Event';
+import Events from 'ephox/porkbun/Events';
+import { UnitTest, assert } from '@ephox/refute';
 
-  [
-    'ephox.porkbun.Binder',
-    'ephox.porkbun.Event',
-    'ephox.porkbun.Events'
-  ],
+UnitTest.test('Binder', function() {
+  var events = Events.create({
+    myEvent: Event([ ]),
+    secondEvent: Event([ ])
+  });
 
-  function (Binder, Event, Events) {
-    var events = Events.create({
-      myEvent: Event([ ]),
-      secondEvent: Event([ ])
-    });
+  var binder = Binder.create();
 
-    var binder = Binder.create();
+  var called = false;
 
-    var called = false;
+  binder.bind(events.registry.myEvent, function(event) {
+    called = true;
+  });
 
+  assert.throws(function () {
     binder.bind(events.registry.myEvent, function(event) {
       called = true;
     });
+  });
 
-    assert.throws(function () {
-      binder.bind(events.registry.myEvent, function(event) {
-        called = true;
-      });
-    });
+  events.trigger.myEvent();
+  assert.eq(true, called);
 
-    events.trigger.myEvent();
-    assert.eq(true, called);
+  called = false;
 
-    called = false;
+  binder.unbind(events.registry.myEvent);
 
+  events.trigger.myEvent();
+  assert.eq(false, called);
+
+  assert.throws(function () {
     binder.unbind(events.registry.myEvent);
+  });
 
-    events.trigger.myEvent();
-    assert.eq(false, called);
+  var count = 0;
 
-    assert.throws(function () {
-      binder.unbind(events.registry.myEvent);
-    });
+  binder.bind(events.registry.myEvent, function(event) {
+    count++;
+  });
 
-    var count = 0;
+  binder.bind(events.registry.secondEvent, function(event) {
+    count++;
+  });
 
-    binder.bind(events.registry.myEvent, function(event) {
-      count++;
-    });
+  binder.unbindAll();
 
-    binder.bind(events.registry.secondEvent, function(event) {
-      count++;
-    });
+  events.trigger.myEvent();
+  events.trigger.secondEvent();
 
-    binder.unbindAll();
+  assert.eq(0, count);
+});
 
-    events.trigger.myEvent();
-    events.trigger.secondEvent();
-
-    assert.eq(0, count);
-  }
-);

@@ -1,109 +1,104 @@
-test(
-  'Events',
+import Event from 'ephox/porkbun/Event';
+import Events from 'ephox/porkbun/Events';
+import SourceEvent from 'ephox/porkbun/SourceEvent';
+import { Struct } from '@ephox/katamari';
+import { UnitTest, assert } from '@ephox/refute';
 
-  [
-    'ephox.porkbun.Event',
-    'ephox.porkbun.Events',
-    'ephox.porkbun.SourceEvent',
-    'ephox.katamari.api.Struct'
-  ],
+UnitTest.test('Events', function() {
+  (function() {
+    var events = Events.create({
+      myEvent: Event(["name"])
+    });
 
-  function(Event, Events, SourceEvent, Struct) {
+    var called = false;
+    var calledEvent = {};
 
-    (function() {
-      var events = Events.create({
-        myEvent: Event(["name"])
-      });
+    var handler = function(event) {
+      calledEvent = event;
+      called = true;
+    };
 
-      var called = false;
-      var calledEvent = {};
+    events.registry.myEvent.bind(handler)
+    events.trigger.myEvent("something");
 
-      var handler = function(event) {
-        calledEvent = event;
-        called = true;
-      };
+    assert.eq(true, called);
+    assert.eq(true, calledEvent.hasOwnProperty("name"));
+    assert.eq("something", calledEvent.name());
 
-      events.registry.myEvent.bind(handler)
-      events.trigger.myEvent("something");
+    called = false;
+    calledEvent = {};
 
-      assert.eq(true, called);
-      assert.eq(true, calledEvent.hasOwnProperty("name"));
-      assert.eq("something", calledEvent.name());
+    events.registry.myEvent.unbind(handler);
+    events.trigger.myEvent("something");
 
-      called = false;
-      calledEvent = {};
+    assert.eq(false, called);
+    assert.eq(false, calledEvent.hasOwnProperty("name"));
 
-      events.registry.myEvent.unbind(handler);
-      events.trigger.myEvent("something");
+    // This should not throw an error
+    events.registry.myEvent.unbind(handler);
+  })();
 
-      assert.eq(false, called);
-      assert.eq(false, calledEvent.hasOwnProperty("name"));
+  (function() {
+    var events = Events.create({
+      emptyEvent: Event([])
+    });
 
-      // This should not throw an error
-      events.registry.myEvent.unbind(handler);
-    })();
+    assert.throws(
+      function() { events.registry.emptyEvent.bind(undefined); },
+      'Event bind error: undefined handler'
+    );
+  })();
 
-    (function() {
-      var events = Events.create({
-        emptyEvent: Event([])
-      });
+  (function() {
+    var ea = Events.create({
+      chook: Event(['a' ,'b', 'c'])
+    });
 
-      assert.throws(
-        function() { events.registry.emptyEvent.bind(undefined); },
-        'Event bind error: undefined handler'
-      );
-    })();
+    var eb = Events.create({
+      quack: SourceEvent(['a', 'b', 'c'], ea.registry.chook)
+    });
 
-    (function() {
-      var ea = Events.create({
-        chook: Event(['a' ,'b', 'c'])
-      });
+    assert.throws(
+      function() { 
+        try {
+          eb.trigger.quack('hay', 'bee', 'quee');
+        } catch (ex) {
+         throw ex.message;
+        }
+      },
+      'Cannot trigger a source event.'
+    );
 
-      var eb = Events.create({
-        quack: SourceEvent(['a', 'b', 'c'], ea.registry.chook)
-      });
+    var called = false;
+    eb.registry.quack.bind(function(evt) {
+      called = true;
+      assert.eq('ay', evt.a());
+      assert.eq('bee', evt.b());
+      assert.eq('sea', evt.c());
+    });
+    ea.trigger.chook('ay', 'bee', 'sea');
 
-      assert.throws(
-        function() { 
-          try {
-            eb.trigger.quack('hay', 'bee', 'quee');
-          } catch (ex) {
-           throw ex.message;
-          }
-        },
-        'Cannot trigger a source event.'
-      );
-
-      var called = false;
-      eb.registry.quack.bind(function(evt) {
-        called = true;
-        assert.eq('ay', evt.a());
-        assert.eq('bee', evt.b());
-        assert.eq('sea', evt.c());
-      });
-      ea.trigger.chook('ay', 'bee', 'sea');
-
-    })();
+  })();
 
 
-    (function() {
-      var ea = Events.create({
-        chook: Event(['a' ,'b', 'c', 'd', 'e']) // superset of arguments
-      });
+  (function() {
+    var ea = Events.create({
+      chook: Event(['a' ,'b', 'c', 'd', 'e']) // superset of arguments
+    });
 
-      var eb = Events.create({
-        quack: SourceEvent(['a', 'b', 'c'], ea.registry.chook)
-      });
+    var eb = Events.create({
+      quack: SourceEvent(['a', 'b', 'c'], ea.registry.chook)
+    });
 
-      var called = false;
-      eb.registry.quack.bind(function(evt) {
-        called = true;
-        assert.eq('ay', evt.a());
-        assert.eq('bee', evt.b());
-        assert.eq('sea', evt.c());
-      });
-      ea.trigger.chook('ay', 'bee', 'sea', 'dee', 'eee');
+    var called = false;
+    eb.registry.quack.bind(function(evt) {
+      called = true;
+      assert.eq('ay', evt.a());
+      assert.eq('bee', evt.b());
+      assert.eq('sea', evt.c());
+    });
+    ea.trigger.chook('ay', 'bee', 'sea', 'dee', 'eee');
 
-    })();
-  }
-);
+  })();
+});
+

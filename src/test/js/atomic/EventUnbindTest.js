@@ -1,20 +1,16 @@
-test(
-  'EventUnbindTest',
+import Event from 'ephox/porkbun/Event';
+import { UnitTest } from '@ephox/refute';
 
-  [
-    'ephox.porkbun.Event'
-  ],
+UnitTest.test('EventUnbindTest', function() {
+  var event = Event([]);
 
-  function (Event) {
-    var event = Event([]);
+  var first = function () { event.unbind(first); };
+  var second = function () {};
 
-    var first = function () { event.unbind(first); };
-    var second = function () {};
+  event.bind(first);
+  event.bind(second);
 
-    event.bind(first);
-    event.bind(second);
+  // ensure unbind during trigger does not cause problems
+  event.trigger();
+});
 
-    // ensure unbind during trigger does not cause problems
-    event.trigger();
-  }
-);
