@@ -1,26 +1,18 @@
-define(
-  'ephox.polaris.api.Splitting',
+import { Adt } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Adt'
-  ],
+var adt = Adt.generate([
+  { include: [ 'item' ] },
+  { excludeWith: [ 'item' ] },
+  { excludeWithout: [ 'item' ] }
+]);
 
-  function (Adt) {
-    var adt = Adt.generate([
-      { include: [ 'item' ] },
-      { excludeWith: [ 'item' ] },
-      { excludeWithout: [ 'item' ] }
-    ]);
+var cata = function (subject, onInclude, onExcludeWith, onExcludeWithout) {
+  return subject.fold(onInclude, onExcludeWith, onExcludeWithout);
+};
 
-    var cata = function (subject, onInclude, onExcludeWith, onExcludeWithout) {
-      return subject.fold(onInclude, onExcludeWith, onExcludeWithout);
-    };
-
-    return {
-      include: adt.include,
-      excludeWith: adt.excludeWith,
-      excludeWithout: adt.excludeWithout,
-      cata: cata
-    };
-  }
-);
+export default <any> {
+  include: adt.include,
+  excludeWith: adt.excludeWith,
+  excludeWithout: adt.excludeWithout,
+  cata: cata
+};

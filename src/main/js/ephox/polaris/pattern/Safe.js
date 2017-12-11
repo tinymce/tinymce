@@ -1,31 +1,22 @@
-define(
-  'ephox.polaris.pattern.Safe',
+import Unsafe from './Unsafe';
 
-  [
-    'ephox.polaris.pattern.Unsafe'
-  ],
+/** Escapes regex characters in a string */
+var sanitise = function (input) {
+  return input.replace(/[-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
+};
 
-  /** Sanitises all inputs to Unsafe */
-  function (Unsafe) {
-    /** Escapes regex characters in a string */
-    var sanitise = function (input) {
-      return input.replace(/[-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
-    };
+var word = function (input) {
+  var value = sanitise(input);
+  return Unsafe.word(value);
+};
 
-    var word = function (input) {
-      var value = sanitise(input);
-      return Unsafe.word(value);
-    };
+var token = function (input) {
+  var value = sanitise(input);
+  return Unsafe.token(value);
+};
 
-    var token = function (input) {
-      var value = sanitise(input);
-      return Unsafe.token(value);
-    };
-
-    return {
-      sanitise: sanitise,
-      word: word,
-      token: token
-    };
-  }
-);
+export default <any> {
+  sanitise: sanitise,
+  word: word,
+  token: token
+};

@@ -1,28 +1,20 @@
-define(
-  'ephox.polaris.pattern.Chars',
+import { Unicode } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Unicode',
-    'ephox.katamari.api.Fun'
-  ],
+// \w is a word character
+// \' is an apostrophe
+// '-' is a hyphen
 
-  function (Unicode, Fun) {
-    // \w is a word character
-    // \' is an apostrophe
-    // '-' is a hyphen
+// (https://en.wikipedia.org/wiki/List_of_Unicode_characters#Latin_Extended-A)
+// \u00C0 - \u00FF are various language characters (Latin-1)
+// \u0100 - \u017F are various language characters (Latin Extended-A)
+// \u2018 and \u2019 are the smart quote characters
+var chars = '\\w' + '\'' + '\\-' + '\\u0100-\\u017F\\u00C0-\\u00FF' + Unicode.zeroWidth() + '\\u2018\\u2019';
+var wordbreak = '[^' + chars + ']';
+var wordchar = '[' + chars + ']';
 
-    // (https://en.wikipedia.org/wiki/List_of_Unicode_characters#Latin_Extended-A)
-    // \u00C0 - \u00FF are various language characters (Latin-1)
-    // \u0100 - \u017F are various language characters (Latin Extended-A)
-    // \u2018 and \u2019 are the smart quote characters
-    var chars = '\\w' + '\'' + '\\-' + '\\u0100-\\u017F\\u00C0-\\u00FF' + Unicode.zeroWidth() + '\\u2018\\u2019';
-    var wordbreak = '[^' + chars + ']';
-    var wordchar = '[' + chars + ']';
-
-    return {
-      chars: Fun.constant(chars),
-      wordbreak: Fun.constant(wordbreak),
-      wordchar: Fun.constant(wordchar)
-    };
-  }
-);
+export default <any> {
+  chars: Fun.constant(chars),
+  wordbreak: Fun.constant(wordbreak),
+  wordchar: Fun.constant(wordchar)
+};

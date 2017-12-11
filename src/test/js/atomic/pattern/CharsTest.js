@@ -1,124 +1,119 @@
-test(
-  'CharsTest',
+import { Arr } from '@ephox/katamari';
+import Chars from 'ephox/polaris/pattern/Chars';
+import { UnitTest, assert } from '@ephox/refute';
 
-  [
-    'ephox.katamari.api.Arr',
-    'ephox.polaris.pattern.Chars',
-    'global!RegExp'
-  ],
+UnitTest.test('CharsTest', function() {
+  var supported = [ 'fr','en_au','pt','it','nl','en_uk','pt_pt','de','nb','en_br','sv','da','en','es','en_gb','fi','en_us' ];
 
-  function (Arr, Chars, RegExp) {
-    var supported = [ 'fr','en_au','pt','it','nl','en_uk','pt_pt','de','nb','en_br','sv','da','en','es','en_gb','fi','en_us' ];
+  var extras = {
+    fr: {
+      label: 'French language',
+      html: 'http://character-code.com/french-html-codes.php || https://www.cs.tut.fi/~jkorpela/html/french.html',
+      chars: 'àÀâÂèÈéÉêÊëËîÎïÏôÔùÙûÛüÜÿŸçÇœŒ' +
+             'ÀàÂâÆæÇçÈèÉéÊêËëÎîÏïÔôŒœÙùÛûÜü'
+    },
+    en_au: {
+      label: 'English (Aus)',
+      html: '<known>',
+      chars: ''
+    },
+    pt: {
+      label: 'Brazilian Portuguese',
+      html: 'http://www.geocities.ws/click2speak/unicode/chars_pt.html',
+      chars: 'ÀàÁáÂâÃãÉéÊêÍíÒòÓóÔôÕõÚúÜüÇç'
 
-    var extras = {
-      fr: {
-        label: 'French language',
-        html: 'http://character-code.com/french-html-codes.php || https://www.cs.tut.fi/~jkorpela/html/french.html',
-        chars: 'àÀâÂèÈéÉêÊëËîÎïÏôÔùÙûÛüÜÿŸçÇœŒ' +
-               'ÀàÂâÆæÇçÈèÉéÊêËëÎîÏïÔôŒœÙùÛûÜü'
-      },
-      en_au: {
-        label: 'English (Aus)',
-        html: '<known>',
-        chars: ''
-      },
-      pt: {
-        label: 'Brazilian Portuguese',
-        html: 'http://www.geocities.ws/click2speak/unicode/chars_pt.html',
-        chars: 'ÀàÁáÂâÃãÉéÊêÍíÒòÓóÔôÕõÚúÜüÇç'
+    },
+    it: {
+      label: 'Italian',
+      html: 'https://mcaboni.wordpress.com/2012/01/09/107/',
+      chars: 'àÈèéìòù'
+    },
+    nl: {
+      label: 'Dutch',
+      html: 'http://symbolcodes.tlt.psu.edu/bylanguage/dutch.html',
+      chars: 'ÁÉÍÓÚÝ áéíóúý ÄËÏÖÜŸ äëïöüÿ ÀÈÌÒÙ àèìòù ÂÊÎÔÛ âêîôû'
+    },
+    en_uk: {
+      label: 'English (UK)',
+      html: '<known>',
+      chars: ''
+    },
+    pt_pt: {
+      label: 'European Portuguese',
+      html: 'http://www.geocities.ws/click2speak/unicode/chars_pt.html',
+      chars: 'ÀàÁáÂâÃãÉéÊêÍíÓóÔôÕõÚúÇç'
+    },
+    de: {
+      label: 'German',
+      html: 'http://character-code.com/german-html-codes.php',
+      chars: 'ÄäÉéÖöÜüß'
+    },
+    nb: {
+      label: 'Norwegian',
+      html: 'http://symbolcodes.tlt.psu.edu/bylanguage/nordic.html',
+      chars: 'ÅåÆæØø'
+    },
+    en_br: {
+      label: 'English (British)',
+      html: '<known>',
+      chars: ''
+    },
+    sv: {
+      label: 'Swedish',
+      html: 'http://symbolcodes.tlt.psu.edu/bylanguage/nordic.html',
+      chars: 'ÅåÄäÖö'
+    },
+    da: {
+      label: 'Danish',
+      html: 'http://symbolcodes.tlt.psu.edu/bylanguage/nordic.html',
+      chars: 'ÅåÆæØø'
+    },
+    en: {
+      label: 'English',
+      html: '<known>',
+      chars: ''
+    },
+    es: {
+      label: 'Spanish',
+      html: 'http://character-code.com/spanish-html-codes.php',
+      chars: 'ÁáÉéÍíÑñÓóÚúÜü'
+    },
+    en_gb: {
+      label: 'English (GB)',
+      html: '<known>',
+      chars: ''
+    },
+    fi: {
+      label: 'Finnish',
+      html: 'http://symbolcodes.tlt.psu.edu/bylanguage/nordic.html',
+      chars: 'ÅåÄäÖö'
+    },
+    en_us: {
+      label: 'English (US)',
+      html: '<known>',
+      chars: ''
+    }
+  };
 
-      },
-      it: {
-        label: 'Italian',
-        html: 'https://mcaboni.wordpress.com/2012/01/09/107/',
-        chars: 'àÈèéìòù'
-      },
-      nl: {
-        label: 'Dutch',
-        html: 'http://symbolcodes.tlt.psu.edu/bylanguage/dutch.html',
-        chars: 'ÁÉÍÓÚÝ áéíóúý ÄËÏÖÜŸ äëïöüÿ ÀÈÌÒÙ àèìòù ÂÊÎÔÛ âêîôû'
-      },
-      en_uk: {
-        label: 'English (UK)',
-        html: '<known>',
-        chars: ''
-      },
-      pt_pt: {
-        label: 'European Portuguese',
-        html: 'http://www.geocities.ws/click2speak/unicode/chars_pt.html',
-        chars: 'ÀàÁáÂâÃãÉéÊêÍíÓóÔôÕõÚúÇç'
-      },
-      de: {
-        label: 'German',
-        html: 'http://character-code.com/german-html-codes.php',
-        chars: 'ÄäÉéÖöÜüß'
-      },
-      nb: {
-        label: 'Norwegian',
-        html: 'http://symbolcodes.tlt.psu.edu/bylanguage/nordic.html',
-        chars: 'ÅåÆæØø'
-      },
-      en_br: {
-        label: 'English (British)',
-        html: '<known>',
-        chars: ''
-      },
-      sv: {
-        label: 'Swedish',
-        html: 'http://symbolcodes.tlt.psu.edu/bylanguage/nordic.html',
-        chars: 'ÅåÄäÖö'
-      },
-      da: {
-        label: 'Danish',
-        html: 'http://symbolcodes.tlt.psu.edu/bylanguage/nordic.html',
-        chars: 'ÅåÆæØø'
-      },
-      en: {
-        label: 'English',
-        html: '<known>',
-        chars: ''
-      },
-      es: {
-        label: 'Spanish',
-        html: 'http://character-code.com/spanish-html-codes.php',
-        chars: 'ÁáÉéÍíÑñÓóÚúÜü'
-      },
-      en_gb: {
-        label: 'English (GB)',
-        html: '<known>',
-        chars: ''
-      },
-      fi: {
-        label: 'Finnish',
-        html: 'http://symbolcodes.tlt.psu.edu/bylanguage/nordic.html',
-        chars: 'ÅåÄäÖö'
-      },
-      en_us: {
-        label: 'English (US)',
-        html: '<known>',
-        chars: ''
-      }
-    };
+  var regex = new RegExp(Chars.wordchar(), '');
 
-    var regex = new RegExp(Chars.wordchar(), '');
-
-    var checkAllKnown = function (label, str) {
-      var chars = str.split('');
-      var breaks = Arr.filter(chars, function (c) {
-        return !regex.test(c);
-      });
-
-      var leftovers = breaks.join('').trim();
-      assert.eq(
-        0,
-        leftovers.length,
-        'Test: ' + label + '\nExpected all characters in: \n\n"' + str + '" to be known. \nUnknown: ' + leftovers
-      );
-    };
-
-    Arr.each(supported, function (code) {
-      var info = extras[code];
-      checkAllKnown(info.label, info.chars);
+  var checkAllKnown = function (label, str) {
+    var chars = str.split('');
+    var breaks = Arr.filter(chars, function (c) {
+      return !regex.test(c);
     });
-  }
-);
+
+    var leftovers = breaks.join('').trim();
+    assert.eq(
+      0,
+      leftovers.length,
+      'Test: ' + label + '\nExpected all characters in: \n\n"' + str + '" to be known. \nUnknown: ' + leftovers
+    );
+  };
+
+  Arr.each(supported, function (code) {
+    var info = extras[code];
+    checkAllKnown(info.label, info.chars);
+  });
+});
+

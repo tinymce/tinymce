@@ -1,45 +1,36 @@
-define(
-  'ephox.polaris.pattern.Unsafe',
+import { Fun } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
+import Chars from './Chars';
+import Custom from './Custom';
 
-  [
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option',
-    'ephox.polaris.pattern.Chars',
-    'ephox.polaris.pattern.Custom'
-  ],
+/**
+ * Tokens have no prefix or suffix
+ */
+var token = function (input) {
+  return Custom(input, Fun.constant(0), Fun.constant(0), Option.none());
+};
 
-  function (Fun, Option, Chars, Custom) {
+/**
+ * Words have complex rules as to what a "word break" actually is.
+ *
+ * These are consumed by the regex and then excluded by prefix/suffix lengths.
+ */
+var word = function (input) {
+  var regex = '((?:^\'?)|(?:' + Chars.wordbreak() + '+\'?))' + input + '((?:\'?$)|(?:\'?' + Chars.wordbreak() + '+))';
 
-    /**
-     * Tokens have no prefix or suffix
-     */
-    var token = function (input) {
-      return Custom(input, Fun.constant(0), Fun.constant(0), Option.none());
-    };
+  // ASSUMPTION: There are no groups in their input
+  var prefix = function (match) {
+    return match.length > 1 ? match[1].length : 0;
+  };
 
-    /**
-     * Words have complex rules as to what a "word break" actually is.
-     *
-     * These are consumed by the regex and then excluded by prefix/suffix lengths.
-     */
-    var word = function (input) {
-      var regex = '((?:^\'?)|(?:' + Chars.wordbreak() + '+\'?))' + input + '((?:\'?$)|(?:\'?' + Chars.wordbreak() + '+))';
+  var suffix = function (match) {
+    return match.length > 2 ? match[2].length : 0;
+  };
 
-      // ASSUMPTION: There are no groups in their input
-      var prefix = function (match) {
-        return match.length > 1 ? match[1].length : 0;
-      };
+  return Custom(regex, prefix, suffix, Option.none());
+};
 
-      var suffix = function (match) {
-        return match.length > 2 ? match[2].length : 0;
-      };
-
-      return Custom(regex, prefix, suffix, Option.none());
-    };
-
-    return {
-      token: token,
-      word: word
-    };
-  }
-);
+export default <any> {
+  token: token,
+  word: word
+};

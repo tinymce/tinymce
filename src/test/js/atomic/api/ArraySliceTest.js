@@ -1,25 +1,21 @@
-test(
-  'api.Arrays.sliceby',
+import Arrays from 'ephox/polaris/api/Arrays';
+import { UnitTest, assert } from '@ephox/refute';
 
-  [
-    'ephox.polaris.api.Arrays'
-  ],
+UnitTest.test('api.Arrays.sliceby', function() {
+  var check = function (expected, input, pred) {
+    var actual = Arrays.sliceby(input, pred);
+    assert.eq(expected, actual);
+  };
 
-  function (Arrays) {
-    var check = function (expected, input, pred) {
-      var actual = Arrays.sliceby(input, pred);
-      assert.eq(expected, actual);
+  var is = function (value) {
+    return function (x) {
+      return x === value;
     };
+  };
 
-    var is = function (value) {
-      return function (x) {
-        return x === value;
-      };
-    };
+  check([ ], [ ], is(0));
+  check([ ], [ 1 ], is(1));
+  check([ 1 ], [ 1, 2 ], is(2));
+  check([ 1, 2, 3 ], [1, 2, 3, 4 ], is(4));
+});
 
-    check([ ], [ ], is(0));
-    check([ ], [ 1 ], is(1));
-    check([ 1 ], [ 1, 2 ], is(2));
-    check([ 1, 2, 3 ], [1, 2, 3, 4 ], is(4));
-  }
-);

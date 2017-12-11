@@ -1,26 +1,15 @@
-define(
-  'ephox.polaris.api.Strings',
+import Sanitise from '../string/Sanitise';
+import Split from '../string/Split';
 
-  [
-    'ephox.polaris.string.Sanitise',
-    'ephox.polaris.string.Split'
-  ],
+var splits = function (text, points) {
+  return Split.splits(text, points);
+};
 
-  /**
-   * Documentation is in the actual implementations.
-   */
-  function (Sanitise, Split) {
-    var splits = function (text, points) {
-      return Split.splits(text, points);
-    };
+var cssSanitise = function (str) {
+  return Sanitise.css(str);
+};
 
-    var cssSanitise = function (str) {
-      return Sanitise.css(str);
-    };
-
-    return {
-      cssSanitise: cssSanitise,
-      splits: splits
-    };
-  }
-);
+export default <any> {
+  cssSanitise: cssSanitise,
+  splits: splits
+};

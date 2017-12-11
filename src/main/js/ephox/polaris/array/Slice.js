@@ -1,22 +1,13 @@
-define(
-  'ephox.polaris.array.Slice',
+import { Arr } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Arr'
-  ],
+/**
+ * Slice an array at the first item matched by the predicate
+ */
+var sliceby = function (list, pred) {
+  var index = Arr.findIndex(list, pred).getOr(-1);
+  return list.slice(0, index);
+};
 
-  function (Arr) {
-    /**
-     * Slice an array at the first item matched by the predicate
-     */
-    var sliceby = function (list, pred) {
-      var index = Arr.findIndex(list, pred).getOr(-1);
-      return list.slice(0, index);
-    };
-
-    return {
-      sliceby: sliceby
-    };
-
-  }
-);
+export default <any> {
+  sliceby: sliceby
+};
