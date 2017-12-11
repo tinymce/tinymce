@@ -11,7 +11,7 @@ UnitTest.test('Events', function() {
     });
 
     var called = false;
-    var calledEvent = {};
+    var calledEvent:any = {};
 
     var handler = function(event) {
       calledEvent = event;
