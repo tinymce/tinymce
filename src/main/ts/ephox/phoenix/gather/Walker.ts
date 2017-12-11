@@ -40,8 +40,8 @@ var successors = [
   { current: advance, next: advance, fallback: Option.some(sidestep) }
 ];
 
-var go = function (universe, item, mode, direction, _rules) {
-  var rules = _rules !== undefined ? _rules : successors;
+var go = function (universe, item, mode, direction, rules?) {
+  var rules = rules !== undefined ? rules : successors;
   // INVESTIGATE: Find a way which doesn't require an array search first to identify the current mode.
   var ruleOpt = Arr.find(rules, function (succ) {
     return succ.current === mode;
