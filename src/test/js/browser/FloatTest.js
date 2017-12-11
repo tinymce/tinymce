@@ -1,57 +1,52 @@
-test(
-  'FloatTest',
+import { Fun } from '@ephox/katamari';
+import Body from 'ephox/sugar/api/node/Body';
+import Css from 'ephox/sugar/api/properties/Css';
+import Element from 'ephox/sugar/api/node/Element';
+import Float from 'ephox/sugar/api/properties/Float';
+import Insert from 'ephox/sugar/api/dom/Insert';
+import Remove from 'ephox/sugar/api/dom/Remove';
+import MathElement from 'ephox/sugar/test/MathElement';
+import { UnitTest, assert } from '@ephox/refute';
 
-  [
-    'ephox.katamari.api.Fun',
-    'ephox.sugar.api.node.Body',
-    'ephox.sugar.api.properties.Css',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Float',
-    'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.dom.Remove',
-    'ephox.sugar.test.MathElement'
-  ],
+UnitTest.test('FloatTest', function() {
+  var image = Element.fromTag('table');
+  var m = MathElement();
+  assert.eq(null, Float.getRaw(image));
+  Float.getRaw(m);
 
-  function (Fun, Body, Css, Element, Float, Insert, Remove, MathElement) {
+  Insert.append(Body.body(), image);
+  Insert.append(Body.body(), m);
+  Css.setAll(image, {
+    'margin-left': 'auto',
+    'margin-right': 'auto'
+  });
 
-    var image = Element.fromTag('table');
-    var m = MathElement();
-    assert.eq(null, Float.getRaw(image));
-    Float.getRaw(m);
+  assert.eq('center', Float.divine(image).getOrDie());
 
-    Insert.append(Body.body(), image);
-    Insert.append(Body.body(), m);
-    Css.setAll(image, {
-      'margin-left': 'auto',
-      'margin-right': 'auto'
-    });
+  Float.divine(m);
+  Float.getRaw(m);
+  Css.remove(m, 'margin-right');
+  assert.eq(false, Float.isCentered(m));
+  Css.set(m, 'float', 'none');
 
-    assert.eq('center', Float.divine(image).getOrDie());
+  assert.eq(true, Float.isCentered(image));
 
-    Float.divine(m);
-    Float.getRaw(m);
-    Css.remove(m, 'margin-right');
-    assert.eq(false, Float.isCentered(m));
-    Css.set(m, 'float', 'none');
+  Css.remove(image, 'margin-left');
+  Css.remove(image, 'margin-right');
 
-    assert.eq(true, Float.isCentered(image));
+  assert.eq('none', Float.divine(image).getOrDie());
 
-    Css.remove(image, 'margin-left');
-    Css.remove(image, 'margin-right');
+  Css.set(image, 'float', 'none');
+  assert.eq('none', Float.divine(image).getOrDie());
+  assert.eq('none', Float.getRaw(image));
 
-    assert.eq('none', Float.divine(image).getOrDie());
+  Css.set(image, 'float', 'right');
+  assert.eq('right', Float.divine(image).getOrDie());
 
-    Css.set(image, 'float', 'none');
-    assert.eq('none', Float.divine(image).getOrDie());
-    assert.eq('none', Float.getRaw(image));
+  assert.eq(false, Float.isCentered(image));
+  Float.setCentered(image);
+  assert.eq(true, Float.isCentered(image));
 
-    Css.set(image, 'float', 'right');
-    assert.eq('right', Float.divine(image).getOrDie());
+  Remove.remove(image);
+});
 
-    assert.eq(false, Float.isCentered(image));
-    Float.setCentered(image);
-    assert.eq(true, Float.isCentered(image));
-
-    Remove.remove(image);
-  }
-);

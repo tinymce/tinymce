@@ -1,24 +1,15 @@
-define(
-  'ephox.sugar.api.node.Fragment',
+import { Arr } from '@ephox/katamari';
+import Element from './Element';
 
-  [
-    'ephox.katamari.api.Arr',
-    'ephox.sugar.api.node.Element',
-    'global!document'
-  ],
+var fromElements = function (elements, scope) {
+  var doc = scope || document;
+  var fragment = doc.createDocumentFragment();
+  Arr.each(elements, function (element) {
+    fragment.appendChild(element.dom());
+  });
+  return Element.fromDom(fragment);
+};
 
-  function (Arr, Element, document) {
-    var fromElements = function (elements, scope) {
-      var doc = scope || document;
-      var fragment = doc.createDocumentFragment();
-      Arr.each(elements, function (element) {
-        fragment.appendChild(element.dom());
-      });
-      return Element.fromDom(fragment);
-    };
-
-    return {
-      fromElements: fromElements
-    };
-  }
-);
+export default <any> {
+  fromElements: fromElements
+};

@@ -1,23 +1,15 @@
-define(
-  'ephox.sugar.api.view.Position',
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun'
-  ],
+var r = function (left, top) {
+  var translate = function (x, y) {
+    return r(left + x, top + y);
+  };
 
-  function (Fun) {
-    var r = function (left, top) {
-      var translate = function (x, y) {
-        return r(left + x, top + y);
-      };
+  return {
+    left: Fun.constant(left),
+    top: Fun.constant(top),
+    translate: translate
+  };
+};
 
-      return {
-        left: Fun.constant(left),
-        top: Fun.constant(top),
-        translate: translate
-      };
-    };
-
-    return r;
-  }
-);
+export default <any> r;

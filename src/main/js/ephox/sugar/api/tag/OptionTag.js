@@ -1,19 +1,9 @@
-define(
-  'ephox.sugar.api.tag.OptionTag',
+var setValue = function (option, value, text) {
+  var optionDom = option.dom();
+  optionDom.value = value;
+  optionDom.text = text;
+};
 
-  [
-
-  ],
-
-  function () {
-    var setValue = function (option, value, text) {
-      var optionDom = option.dom();
-      optionDom.value = value;
-      optionDom.text = text;
-    };
-
-    return {
-      setValue: setValue
-    };
-  }
-);
+export default <any> {
+  setValue: setValue
+};

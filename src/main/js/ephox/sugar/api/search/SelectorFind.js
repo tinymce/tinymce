@@ -1,53 +1,45 @@
-define(
-  'ephox.sugar.api.search.SelectorFind',
+import PredicateFind from './PredicateFind';
+import Selectors from './Selectors';
+import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
 
-  [
-    'ephox.sugar.api.search.PredicateFind',
-    'ephox.sugar.api.search.Selectors',
-    'ephox.sugar.impl.ClosestOrAncestor'
-  ],
+// TODO: An internal SelectorFilter module that doesn't Element.fromDom() everything
 
-  function (PredicateFind, Selectors, ClosestOrAncestor) {
-    // TODO: An internal SelectorFilter module that doesn't Element.fromDom() everything
+var first = function (selector) {
+  return Selectors.one(selector);
+};
 
-    var first = function (selector) {
-      return Selectors.one(selector);
-    };
+var ancestor = function (scope, selector, isRoot) {
+  return PredicateFind.ancestor(scope, function (e) {
+    return Selectors.is(e, selector);
+  }, isRoot);
+};
 
-    var ancestor = function (scope, selector, isRoot) {
-      return PredicateFind.ancestor(scope, function (e) {
-        return Selectors.is(e, selector);
-      }, isRoot);
-    };
+var sibling = function (scope, selector) {
+  return PredicateFind.sibling(scope, function (e) {
+    return Selectors.is(e, selector);
+  });
+};
 
-    var sibling = function (scope, selector) {
-      return PredicateFind.sibling(scope, function (e) {
-        return Selectors.is(e, selector);
-      });
-    };
+var child = function (scope, selector) {
+  return PredicateFind.child(scope, function (e) {
+    return Selectors.is(e, selector);
+  });
+};
 
-    var child = function (scope, selector) {
-      return PredicateFind.child(scope, function (e) {
-        return Selectors.is(e, selector);
-      });
-    };
+var descendant = function (scope, selector) {
+  return Selectors.one(selector, scope);
+};
 
-    var descendant = function (scope, selector) {
-      return Selectors.one(selector, scope);
-    };
+// Returns Some(closest ancestor element (sugared)) matching 'selector' up to isRoot, or None() otherwise
+var closest = function (scope, selector, isRoot) {
+  return ClosestOrAncestor(Selectors.is, ancestor, scope, selector, isRoot);
+};
 
-    // Returns Some(closest ancestor element (sugared)) matching 'selector' up to isRoot, or None() otherwise
-    var closest = function (scope, selector, isRoot) {
-      return ClosestOrAncestor(Selectors.is, ancestor, scope, selector, isRoot);
-    };
-
-    return {
-      first: first,
-      ancestor: ancestor,
-      sibling: sibling,
-      child: child,
-      descendant: descendant,
-      closest: closest
-    };
-  }
-);
+export default <any> {
+  first: first,
+  ancestor: ancestor,
+  sibling: sibling,
+  child: child,
+  descendant: descendant,
+  closest: closest
+};

@@ -1,30 +1,22 @@
-define(
-  'ephox.sugar.api.node.Comment',
+import Node from './Node';
+import NodeValue from '../../impl/NodeValue';
 
-  [
-    'ephox.sugar.api.node.Node',
-    'ephox.sugar.impl.NodeValue'
-  ],
+var api = NodeValue(Node.isComment, 'comment');
 
-  function (Node, NodeValue) {
-    var api = NodeValue(Node.isComment, 'comment');
+var get = function (element) {
+  return api.get(element);
+};
 
-    var get = function (element) {
-      return api.get(element);
-    };
+var getOption = function (element) {
+  return api.getOption(element);
+};
 
-    var getOption = function (element) {
-      return api.getOption(element);
-    };
+var set = function (element, value) {
+  api.set(element, value);
+};
 
-    var set = function (element, value) {
-      api.set(element, value);
-    };
-
-    return {
-      get: get,
-      getOption: getOption,
-      set: set
-    };
-  }
-);
+export default <any> {
+  get: get,
+  getOption: getOption,
+  set: set
+};

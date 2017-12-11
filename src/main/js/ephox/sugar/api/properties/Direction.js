@@ -1,24 +1,16 @@
-define(
-  'ephox.sugar.api.properties.Direction',
+import Css from './Css';
 
-  [
-    'ephox.sugar.api.properties.Css'
-  ],
+var onDirection = function (isLtr, isRtl) {
+  return function (element) {
+    return getDirection(element) === 'rtl' ? isRtl : isLtr;
+  };
+};
 
-  function (Css) {
-    var onDirection = function (isLtr, isRtl) {
-      return function (element) {
-        return getDirection(element) === 'rtl' ? isRtl : isLtr;
-      };
-    };
+var getDirection = function (element) {
+  return Css.get(element, 'direction') === 'rtl' ? 'rtl' : 'ltr';
+};
 
-    var getDirection = function (element) {
-      return Css.get(element, 'direction') === 'rtl' ? 'rtl' : 'ltr';
-    };
-
-    return {
-      onDirection: onDirection,
-      getDirection: getDirection
-    };
-  }
-);
+export default <any> {
+  onDirection: onDirection,
+  getDirection: getDirection
+};

@@ -1,27 +1,22 @@
-test(
-  'CheckedTest',
+import Checked from 'ephox/sugar/api/properties/Checked';
+import Element from 'ephox/sugar/api/node/Element';
+import InsertAll from 'ephox/sugar/api/dom/InsertAll';
+import Value from 'ephox/sugar/api/properties/Value';
+import { UnitTest, assert } from '@ephox/refute';
 
-  [
-    'ephox.sugar.api.properties.Checked',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.dom.InsertAll',
-    'ephox.sugar.api.properties.Value'
-  ],
+UnitTest.test('CheckedTest', function() {
+  var container = Element.fromTag('div');
 
-  function (Checked, Element, InsertAll, Value) {
-    var container = Element.fromTag('div');
+  var alpha = Element.fromHtml('<input type="radio" value="alpha"></input>');
+  var beta = Element.fromHtml('<input type="radio" value="beta"></input>');
+  var gamma = Element.fromHtml('<input type="radio" value="gamma"></input>');
 
-    var alpha = Element.fromHtml('<input type="radio" value="alpha"></input>');
-    var beta = Element.fromHtml('<input type="radio" value="beta"></input>');
-    var gamma = Element.fromHtml('<input type="radio" value="gamma"></input>');
+  InsertAll.append(container, [ alpha, beta, gamma ]);
 
-    InsertAll.append(container, [ alpha, beta, gamma ]);
+  assert.eq(true, Checked.find(container).isNone());
+  Checked.set(beta, 'true');
+  assert.eq('beta', Value.get(Checked.find(container).getOrDie()));
+  Checked.set(alpha, true);
+  assert.eq('alpha', Value.get(Checked.find(container).getOrDie()));
+});
 
-    assert.eq(true, Checked.find(container).isNone());
-    Checked.set(beta, 'true');
-    assert.eq('beta', Value.get(Checked.find(container).getOrDie()));
-    Checked.set(alpha, true);
-    assert.eq('alpha', Value.get(Checked.find(container).getOrDie()));
-
-  }
-);

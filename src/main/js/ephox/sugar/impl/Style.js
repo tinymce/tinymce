@@ -1,18 +1,8 @@
-define(
-  'ephox.sugar.impl.Style',
+// some elements, such as mathml, don't have style attributes
+var isSupported = function (dom) {
+  return dom.style !== undefined;
+};
 
-  [
-
-  ],
-
-  function () {
-    // some elements, such as mathml, don't have style attributes
-    var isSupported = function (dom) {
-      return dom.style !== undefined;
-    };
-
-    return {
-      isSupported: isSupported
-    };
-  }
-);
+export default <any> {
+  isSupported: isSupported
+};

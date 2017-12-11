@@ -1,24 +1,16 @@
-define(
-  'ephox.sugar.api.properties.Checked',
+import SelectorFind from '../search/SelectorFind';
 
-  [
-    'ephox.sugar.api.search.SelectorFind'
-  ],
+var set = function (element, status) {
+  element.dom().checked = status;
+};
 
-  function (SelectorFind) {
-    var set = function (element, status) {
-      element.dom().checked = status;
-    };
+var find = function (parent) {
+  // :checked selector requires IE9
+  // http://www.quirksmode.org/css/selectors/#t60
+  return SelectorFind.descendant(parent, 'input:checked');
+};
 
-    var find = function (parent) {
-      // :checked selector requires IE9
-      // http://www.quirksmode.org/css/selectors/#t60
-      return SelectorFind.descendant(parent, 'input:checked');
-    };
-
-    return {
-      set: set,
-      find: find
-    };
-  }
-);
+export default <any> {
+  set: set,
+  find: find
+};

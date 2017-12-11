@@ -1,29 +1,23 @@
-define(
-  'ephox.sugar.api.properties.AttributeProperty',
+import Attr from './Attr';
 
-  [
-    'ephox.sugar.api.properties.Attr'
-  ],
 
-  function (Attr) {
-    return function (attribute, value) {
-      var is = function (element) {
-        return Attr.get(element, attribute) === value;
-      };
 
-      var remove = function (element) {
-        Attr.remove(element, attribute);
-      };
+export default <any> function (attribute, value) {
+  var is = function (element) {
+    return Attr.get(element, attribute) === value;
+  };
 
-      var set = function (element) {
-        Attr.set(element, attribute, value);
-      };
+  var remove = function (element) {
+    Attr.remove(element, attribute);
+  };
 
-      return {
-        is: is,
-        remove: remove,
-        set: set
-      };
-    };
-  }
-);
+  var set = function (element) {
+    Attr.set(element, attribute, value);
+  };
+
+  return {
+    is: is,
+    remove: remove,
+    set: set
+  };
+};

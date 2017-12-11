@@ -1,13 +1,7 @@
-define(
-  'ephox.sugar.test.Div',
+import Element from 'ephox/sugar/api/node/Element';
 
-  [
-    'ephox.sugar.api.node.Element'
-  ],
 
-  function (Element) {
-    return function () {
-      return Element.fromTag('div');
-    };
-  }
-);
+
+export default <any> function () {
+  return Element.fromTag('div');
+};

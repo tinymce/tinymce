@@ -1,14 +1,8 @@
-define(
-  'ephox.sugar.test.EphoxElement',
+import Element from 'ephox/sugar/api/node/Element';
 
-  [
-    'ephox.sugar.api.node.Element'
-  ],
 
-  function (Element) {
-    return function (type) {
-      var dom = document.createElement(type);
-      return Element.fromDom(dom);
-    };
-  }
-);
+
+export default <any> function (type) {
+  var dom = document.createElement(type);
+  return Element.fromDom(dom);
+};

@@ -1,23 +1,13 @@
-define(
-  'ephox.sugar.api.properties.TextContent',
+// REQUIRES IE9
+var get = function (element) {
+  return element.dom().textContent;
+};
 
-  [
-    
-  ],
+var set = function (element, value) {
+  element.dom().textContent = value;
+};
 
-  function () {
-    // REQUIRES IE9
-    var get = function (element) {
-      return element.dom().textContent;
-    };
-
-    var set = function (element, value) {
-      element.dom().textContent = value;
-    };
-
-    return {
-      get: get,
-      set: set
-    };
-  }
-);
+export default <any> {
+  get: get,
+  set: set
+};

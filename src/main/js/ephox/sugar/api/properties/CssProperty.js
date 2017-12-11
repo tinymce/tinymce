@@ -1,30 +1,23 @@
-define(
-  'ephox.sugar.api.properties.CssProperty',
+import Css from './Css';
 
-  [
-    'ephox.sugar.api.properties.Css'
-  ],
 
-  function(Css) {
-    return function (property, value) {
-      var is = function (element) {
-        return Css.get(element, property) === value;
-      };
 
-      var remove = function (element) {
-        Css.remove(element, property);
-      };
+export default <any> function (property, value) {
+  var is = function (element) {
+    return Css.get(element, property) === value;
+  };
 
-      var set = function (element) {
-        Css.set(element, property, value);
-      };
+  var remove = function (element) {
+    Css.remove(element, property);
+  };
 
-      return {
-        is: is,
-        remove: remove,
-        set: set
-      };
-    };
+  var set = function (element) {
+    Css.set(element, property, value);
+  };
 
-  }
-);
+  return {
+    is: is,
+    remove: remove,
+    set: set
+  };
+};

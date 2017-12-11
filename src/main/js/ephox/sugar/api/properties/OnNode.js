@@ -1,41 +1,33 @@
-define(
-  'ephox.sugar.api.properties.OnNode',
+import Class from './Class';
+import Classes from './Classes';
 
-  [
-    'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.properties.Classes'
-  ],
+var addClass = function (clazz) {
+ return function (element) {
+   Class.add(element, clazz);
+ };
+};
 
-  function (Class, Classes) {
-     var addClass = function (clazz) {
-      return function (element) {
-        Class.add(element, clazz);
-      };
-    };
+var removeClass = function (clazz) {
+  return function (element) {
+    Class.remove(element, clazz);
+  };
+};
 
-    var removeClass = function (clazz) {
-      return function (element) {
-        Class.remove(element, clazz);
-      };
-    };
+var removeClasses = function (classes) {
+  return function (element) {
+    Classes.remove(element, classes);
+  };
+};
 
-    var removeClasses = function (classes) {
-      return function (element) {
-        Classes.remove(element, classes);
-      };
-    };
+var hasClass = function (clazz) {
+  return function (element) {
+    return Class.has(element, clazz);
+  };
+};
 
-    var hasClass = function (clazz) {
-      return function (element) {
-        return Class.has(element, clazz);
-      };
-    };
-
-    return {
-      addClass: addClass,
-      removeClass: removeClass,
-      removeClasses: removeClasses,
-      hasClass: hasClass
-    };
-  }
-);
+export default <any> {
+  addClass: addClass,
+  removeClass: removeClass,
+  removeClasses: removeClasses,
+  hasClass: hasClass
+};

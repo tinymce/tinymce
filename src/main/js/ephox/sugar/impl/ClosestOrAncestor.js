@@ -1,18 +1,12 @@
-define(
-  'ephox.sugar.impl.ClosestOrAncestor',
+import { Type } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Type',
-    'ephox.katamari.api.Option'
-  ],
 
-  function (Type, Option) {
-    return function (is, ancestor, scope, a, isRoot) {
-      return is(scope, a) ?
-              Option.some(scope) :
-              Type.isFunction(isRoot) && isRoot(scope) ?
-                  Option.none() :
-                  ancestor(scope, a, isRoot);
-    };
-  }
-);
+
+export default <any> function (is, ancestor, scope, a, isRoot) {
+  return is(scope, a) ?
+          Option.some(scope) :
+          Type.isFunction(isRoot) && isRoot(scope) ?
+              Option.none() :
+              ancestor(scope, a, isRoot);
+};
