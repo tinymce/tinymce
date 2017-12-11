@@ -21,6 +21,7 @@ import Injection from './general/Injection';
 import Search from './general/Search';
 import Split from './general/Split';
 import Wrapping from './general/Wrapping';
+import Seeker from '../gather/Seeker';
 
 export {
   Focus,
@@ -45,5 +46,6 @@ export {
   Injection,
   Search,
   Split,
-  Wrapping
+  Wrapping,
+  Seeker
 };
