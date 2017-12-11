@@ -1,7 +1,9 @@
-import { JQuery as $ } from '@ephox/wrap';
 import Binder from 'ephox/porkbun/Binder';
 import Events from 'ephox/porkbun/Events';
+import Event from 'ephox/porkbun/Event';
 import { Struct } from '@ephox/katamari';
+
+declare const $: any;
 
 var create = function () {
   var saloon = $('<div />');

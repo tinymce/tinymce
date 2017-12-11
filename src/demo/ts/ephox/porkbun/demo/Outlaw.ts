@@ -1,7 +1,8 @@
-import { JQuery as $ } from '@ephox/wrap';
 import Event from 'ephox/porkbun/Event';
 import Events from 'ephox/porkbun/Events';
 import { Struct } from '@ephox/katamari';
+
+declare const $: any;
 
 var create = function (name) {
   var container = $('<div />');

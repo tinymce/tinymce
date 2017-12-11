@@ -1,34 +1,28 @@
-import { JQuery as $ } from '@ephox/wrap';
 import Outlaw from 'ephox/porkbun/demo/Outlaw';
 import Saloon from 'ephox/porkbun/demo/Saloon';
 import Sheriff from 'ephox/porkbun/demo/Sheriff';
 
+declare const $: any;
 
+var saloon = Saloon.create();
 
-export default <any> function () {
-  $(document).ready(function () {
+var sheriff = Sheriff.create();
 
-    var saloon = Saloon.create();
+sheriff.watch(saloon);
 
-    var sheriff = Sheriff.create();
+var fred = Outlaw.create("Fred");
+var barney = Outlaw.create("Barney");
 
-    sheriff.watch(saloon);
+fred.addAction("Shoot Barney", function () {
+  fred.shoot(barney);
+});
 
-    var fred = Outlaw.create("Fred");
-    var barney = Outlaw.create("Barney");
+barney.addAction("Shoot Fred", function () {
+  barney.shoot(fred);
+});
 
-    fred.addAction("Shoot Barney", function () {
-      fred.shoot(barney);
-    });
+fred.enter(saloon);
+barney.enter(saloon);
 
-    barney.addAction("Shoot Fred", function () {
-      barney.shoot(fred);
-    });
-
-    fred.enter(saloon);
-    barney.enter(saloon);
-
-    $('body').append(sheriff.getElement());
-    $('body').append(saloon.getElement());
-  });
-};
+$('body').append(sheriff.getElement());
+$('body').append(saloon.getElement());
