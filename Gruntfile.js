@@ -1,12 +1,5 @@
 module.exports = function(grunt) {
     grunt.initConfig({
-        'bolt-test': {
-            atomic: {
-                config: 'config/bolt/atomic.js',
-                files: { src: ['src/test/js/atomic/**/*Test.js'] }
-            }
-        },
-
         'bedrock-manual': {
             'all': {
                 config: 'config/bolt/browser.js',
@@ -31,8 +24,8 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', ['bolt-test']);
-    grunt.registerTask('npmpublish', ['bolt-test', 'npm-publish']);
+    grunt.registerTask('default', ['bedrock-auto']);
+    grunt.registerTask('npmpublish', ['bedrock-auto', 'npm-publish']);
 
     grunt.loadNpmTasks('@ephox/bedrock');
     grunt.loadNpmTasks('@ephox/bolt');
