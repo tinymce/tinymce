@@ -16,13 +16,23 @@
   },
   "devDependencies": {
     "@ephox/bedrock": "*",
-    "@ephox/bolt": "*",
+    "@ephox/refute": "*",
     "@ephox/sand": "*",
+    "awesome-typescript-loader": "^3.4.1",
     "chromedriver": "*",
     "grunt": "*",
     "grunt-npm": "*",
-    "jsdom": "*"
+    "jsdom": "*",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
   },
   "author": "Ephox Corporation",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/snooker/api/Main.js",
+  "module": "./lib/main/ts/ephox/snooker/api/Main.js",
+  "types": "./lib/main/ts/ephox/snooker/api/Main.d.ts",
+  "scripts": {
+    "prepublishOnly": "tsc"
+  }
 }
