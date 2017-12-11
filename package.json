@@ -7,7 +7,8 @@
     "url": "https://github.com/ephox/sand"
   },
   "scripts": {
-    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)"
+    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)",
+    "prepublishOnly": "tsc"
   },
   "keywords": [
     "platform"
@@ -15,9 +16,16 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@ephox/bolt": "^1.8.0"
+    "@ephox/refute": "*",
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
   },
   "dependencies": {
     "@ephox/katamari": "^1.0.0"
-  }
+  },
+  "main": "./lib/main/ts/ephox/sand/api/Main.js",
+  "module": "./lib/main/ts/ephox/sand/api/Main.js",
+  "types": "./lib/main/ts/ephox/sand/api/Main.d.ts"
 }
