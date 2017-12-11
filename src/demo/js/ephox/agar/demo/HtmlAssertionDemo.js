@@ -1,29 +1,22 @@
-define(
-  'ephox.agar.demo.HtmlAssertionDemo',
+import Assertions from 'ephox/agar/api/Assertions';
+import Pipeline from 'ephox/agar/api/Pipeline';
+import DemoContainer from 'ephox/agar/demo/DemoContainer';
 
-  [
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.demo.DemoContainer',
-    'global!Error'
-  ],
 
-  function (Assertions, Pipeline, DemoContainer, Error) {
-    return function () {
-      DemoContainer.init(
-        'HTML Assertions',
-        function (success, failure) {
 
-          Pipeline.async({}, [
-            Assertions.sAssertHtml('Testing HTML', '<p>This sentence is slightly wrong</p>', '<p>This sentence is sightly wrng</p>')
+export default <any> function () {
+  DemoContainer.init(
+    'HTML Assertions',
+    function (success, failure) {
 
-          ], success, function (err) {
-            failure(err);
-          });
+      Pipeline.async({}, [
+        Assertions.sAssertHtml('Testing HTML', '<p>This sentence is slightly wrong</p>', '<p>This sentence is sightly wrng</p>')
 
-          return [ ];
-        }
-      );
-    };
-  }
-);
+      ], success, function (err) {
+        failure(err);
+      });
+
+      return [ ];
+    }
+  );
+};

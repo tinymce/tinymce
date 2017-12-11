@@ -1,29 +1,19 @@
-define(
-  'ephox.agar.pipe.AsyncActions',
+var delay = function (amount) {
+  return function (next, die) {
+    setTimeout(function () {
+      next();
+    }, amount);
+  };
+};
 
-  [
-    'global!setTimeout'
-  ],
+// Not really async, but can fail.
+var fail = function (message) {
+  return function (next, die) {
+    die('Fake failure: ' + message);
+  };
+};
 
-  function (setTimeout) {
-    var delay = function (amount) {
-      return function (next, die) {
-        setTimeout(function () {
-          next();
-        }, amount);
-      };
-    };
-
-    // Not really async, but can fail.
-    var fail = function (message) {
-      return function (next, die) {
-        die('Fake failure: ' + message);
-      };
-    };
-
-    return {
-      delay: delay,
-      fail: fail
-    };
-  }
-);
+export default <any> {
+  delay: delay,
+  fail: fail
+};

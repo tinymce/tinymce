@@ -1,20 +1,14 @@
-define(
-  'ephox.agar.demo.MouseDemo',
+import DemoContainer from 'ephox/agar/demo/DemoContainer';
 
-  [
-    'ephox.agar.demo.DemoContainer'
-  ],
 
-  function (DemoContainer) {
-    return function () {
-      DemoContainer.init(
-        'Mouse testing',
-        function (success, failure) {
-          failure('Not implemented.');
 
-          return [ ];
-        }
-      );
-    };
-  }
-);
+export default <any> function () {
+  DemoContainer.init(
+    'Mouse testing',
+    function (success, failure) {
+      failure('Not implemented.');
+
+      return [ ];
+    }
+  );
+};

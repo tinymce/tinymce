@@ -1,43 +1,34 @@
-define(
-  'ephox.agar.api.UiControls',
+import Chain from './Chain';
+import UiFinder from './UiFinder';
+import { Value } from '@ephox/sugar';
 
-  [
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.UiFinder',
-    'ephox.sugar.api.properties.Value',
-    'global!Array'
-  ],
+var cSetValue = function (newValue) {
+  return Chain.op(function (element) {
+    Value.set(element, newValue);
+  });
+};
 
-  function (Chain, UiFinder, Value, Array) {
-    var cSetValue = function (newValue) {
-      return Chain.op(function (element) {
-        Value.set(element, newValue);
-      });
-    };
+var cGetValue = Chain.mapper(function (element) {
+  return Value.get(element);
+});
 
-    var cGetValue = Chain.mapper(function (element) {
-      return Value.get(element);
-    });
+var sSetValue = function (element, newValue) {
+  return Chain.asStep(element, [
+    cSetValue(newValue)
+  ]);
+};
 
-    var sSetValue = function (element, newValue) {
-      return Chain.asStep(element, [
-        cSetValue(newValue)
-      ]);
-    };
+var sSetValueOn = function (container, selector, newValue) {
+  return Chain.asStep(container, [
+    UiFinder.cFindIn(selector),
+    cSetValue(newValue)
+  ]);
+};
 
-    var sSetValueOn = function (container, selector, newValue) {
-      return Chain.asStep(container, [
-        UiFinder.cFindIn(selector),
-        cSetValue(newValue)
-      ]);
-    };
+export default <any> {
+  sSetValueOn: sSetValueOn,
+  sSetValue: sSetValue,
 
-    return {
-      sSetValueOn: sSetValueOn,
-      sSetValue: sSetValue,
-
-      cSetValue: cSetValue,
-      cGetValue: cGetValue
-    };
-  }
-);
+  cSetValue: cSetValue,
+  cGetValue: cGetValue
+};

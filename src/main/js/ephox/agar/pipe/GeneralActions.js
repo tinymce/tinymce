@@ -1,27 +1,17 @@
-define(
-  'ephox.agar.pipe.GeneralActions',
+var log = function (message) {
+  return function () {
+    console.log(message);
+  };
+};
 
-  [
-    'global!console'
-  ],
+var debug = function () {
+  debugger;
+};
 
-  function (console) {
-    var log = function (message) {
-      return function () {
-        console.log(message);
-      };
-    };
+var pass = function () { };
 
-    var debug = function () {
-      debugger;
-    };
-
-    var pass = function () { };
-
-    return {
-      log: log,
-      debug: debug,
-      pass: pass
-    };
-  }
-);
+export default <any> {
+  log: log,
+  debug: debug,
+  pass: pass
+};

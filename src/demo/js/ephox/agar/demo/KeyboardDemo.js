@@ -1,25 +1,19 @@
-define(
-  'ephox.agar.demo.KeyboardDemo',
-
-  [
-    'ephox.agar.demo.DemoContainer',
-    'ephox.sugar.api.node.Element'
-  ],
-
-  function (DemoContainer, Element) {
-    return function () {
-      DemoContainer.init(
-        'Keyboard testing',
-        function (success, failure) {
-
-          var container = Element.fromTag('div');
+import DemoContainer from 'ephox/agar/demo/DemoContainer';
+import { Element } from '@ephox/sugar';
 
 
-          failure('Not implemented.');
 
-          return [ ];
-        }
-      );
-    };
-  }
-);
+export default <any> function () {
+  DemoContainer.init(
+    'Keyboard testing',
+    function (success, failure) {
+
+      var container = Element.fromTag('div');
+
+
+      failure('Not implemented.');
+
+      return [ ];
+    }
+  );
+};

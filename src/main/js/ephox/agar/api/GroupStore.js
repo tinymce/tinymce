@@ -1,28 +1,22 @@
-define(
-  'ephox.agar.api.GroupStore',
+import { Merger } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Merger'
-  ],
 
-  function (Merger) {
-    return function () {
-      var data = {};
 
-      var record = function (prop, elem) {
-        var d = data[prop] !== undefined ? data[prop] : [ ];
-        d = d.concat(elem);
-        data[prop] = d;
-      };
+export default <any> function () {
+  var data = {};
 
-      var get = function () {
-        return Merger.deepMerge({}, data);
-      };
+  var record = function (prop, elem) {
+    var d = data[prop] !== undefined ? data[prop] : [ ];
+    d = d.concat(elem);
+    data[prop] = d;
+  };
 
-      return {
-        record: record,
-        get: get
-      };
-    };
-  }
-);
+  var get = function () {
+    return Merger.deepMerge({}, data);
+  };
+
+  return {
+    record: record,
+    get: get
+  };
+};

@@ -1,56 +1,47 @@
-define(
-  'ephox.agar.demo.DemoContainer',
+import { Class } from '@ephox/sugar';
+import { Element } from '@ephox/sugar';
+import { Elements } from '@ephox/sugar';
+import { Html } from '@ephox/sugar';
+import { Insert } from '@ephox/sugar';
+import { InsertAll } from '@ephox/sugar';
+import { Remove } from '@ephox/sugar';
 
-  [
-    'ephox.sugar.api.properties.Class',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.node.Elements',
-    'ephox.sugar.api.properties.Html',
-    'ephox.sugar.api.dom.Insert',
-    'ephox.sugar.api.dom.InsertAll',
-    'ephox.sugar.api.dom.Remove',
-    'global!String'
-  ],
+var init = function (name, f) {
+  var container = Element.fromTag('div');
+  Class.add(container, 'demo-container');
+  Html.set(container, '<p>' + name + '</p>');
 
-  function (Class, Element, Elements, Html, Insert, InsertAll, Remove, String) {
-    var init = function (name, f) {
-      var container = Element.fromTag('div');
-      Class.add(container, 'demo-container');
-      Html.set(container, '<p>' + name + '</p>');
+  var outcome = Element.fromTag('div');
+  Html.set(outcome, 'Running ....');
+    
+  var success = function () {
+    Class.add(outcome, 'success');
+    Html.set(outcome, 'Success!');
+  };
 
-      var outcome = Element.fromTag('div');
-      Html.set(outcome, 'Running ....');
-        
-      var success = function () {
-        Class.add(outcome, 'success');
-        Html.set(outcome, 'Success!');
-      };
+  // Taken from tunic
+  var htmlentities = function (str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  };
 
-      // Taken from tunic
-      var htmlentities = function (str) {
-        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-      };
+  var keepMarkers = function (html) {
+    return html.replace(/&lt;del&gt;/g, '<del>').replace(/&lt;\/del&gt;/g, '</del>').replace(/&lt;ins&gt;/g, '<ins>').replace(/&lt;\/ins&gt;/g, '</ins>');
+  };
 
-      var keepMarkers = function (html) {
-        return html.replace(/&lt;del&gt;/g, '<del>').replace(/&lt;\/del&gt;/g, '</del>').replace(/&lt;ins&gt;/g, '<ins>').replace(/&lt;\/ins&gt;/g, '</ins>');
-      };
+  var failure = function (err) {
+    Class.add(outcome, 'failure');
+    Remove.empty(outcome);
+    if (err.diff) InsertAll.append(outcome, Elements.fromHtml(keepMarkers(htmlentities(err.diff.comparison))));
+    else Insert.append(outcome, Element.fromText(err));
+  };
 
-      var failure = function (err) {
-        Class.add(outcome, 'failure');
-        Remove.empty(outcome);
-        if (err.diff) InsertAll.append(outcome, Elements.fromHtml(keepMarkers(htmlentities(err.diff.comparison))));
-        else Insert.append(outcome, Element.fromText(err));
-      };
+  Insert.append(container, outcome);
 
-      Insert.append(container, outcome);
+  var elements = f(success, failure);
+  InsertAll.append(container, elements);
+  Insert.append(Element.fromDom(document.body), container);
+};
 
-      var elements = f(success, failure);
-      InsertAll.append(container, elements);
-      Insert.append(Element.fromDom(document.body), container);
-    };
-
-    return {
-      init: init
-    };
-  }
-);
+export default <any> {
+  init: init
+};

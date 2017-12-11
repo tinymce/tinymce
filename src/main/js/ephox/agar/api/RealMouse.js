@@ -1,39 +1,31 @@
-define(
-  'ephox.agar.api.RealMouse',
+import SeleniumAction from '../server/SeleniumAction';
 
-  [
-    'ephox.agar.server.SeleniumAction'
-  ],
+var sActionOn = function (selector, type) {
+  return SeleniumAction.sPerform('/mouse', {
+    selector: selector,
+    type: type
+  });
+};
 
-  function (SeleniumAction) {
-    var sActionOn = function (selector, type) {
-      return SeleniumAction.sPerform('/mouse', {
-        selector: selector,
-        type: type
-      });
-    };
-    
-    var sMoveToOn = function (selector) {
-      return sActionOn(selector, 'move');
-    };
+var sMoveToOn = function (selector) {
+  return sActionOn(selector, 'move');
+};
 
-    var sDownOn = function (selector) {
-      return sActionOn(selector, 'down');
-    };
+var sDownOn = function (selector) {
+  return sActionOn(selector, 'down');
+};
 
-    var sUpOn = function (selector) {
-      return sActionOn(selector, 'up');
-    };
+var sUpOn = function (selector) {
+  return sActionOn(selector, 'up');
+};
 
-    var sClickOn = function (selector) {
-      return sActionOn(selector, 'click');
-    };
+var sClickOn = function (selector) {
+  return sActionOn(selector, 'click');
+};
 
-    return {
-      sMoveToOn: sMoveToOn,
-      sDownOn: sDownOn,
-      sUpOn: sUpOn,
-      sClickOn: sClickOn
-    };
-  }
-);
+export default <any> {
+  sMoveToOn: sMoveToOn,
+  sDownOn: sDownOn,
+  sUpOn: sUpOn,
+  sClickOn: sClickOn
+};

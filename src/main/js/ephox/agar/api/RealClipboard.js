@@ -1,39 +1,31 @@
-define(
-  'ephox.agar.api.RealClipboard',
+import RealKeys from './RealKeys';
+import SeleniumAction from '../server/SeleniumAction';
+import { PlatformDetection } from '@ephox/sand';
 
-  [
-    'ephox.agar.api.RealKeys',
-    'ephox.agar.server.SeleniumAction',
-    'ephox.sand.api.PlatformDetection'
-  ],
+var platform = PlatformDetection.detect();
 
-  function (RealKeys, SeleniumAction, PlatformDetection) {
-    var platform = PlatformDetection.detect();
+var sImportToClipboard = function (filename) {
+  return SeleniumAction.sPerform('/clipboard', {
+    'import': filename
+  });
+};
 
-    var sImportToClipboard = function (filename) {
-      return SeleniumAction.sPerform('/clipboard', {
-        'import': filename
-      });
-    };
+var sCopy = function (selector) {
+  var modifiers = platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true };
+  return RealKeys.sSendKeysOn(selector, [
+    RealKeys.combo(modifiers, 'c')
+  ]);
+};
 
-    var sCopy = function (selector) {
-      var modifiers = platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true };
-      return RealKeys.sSendKeysOn(selector, [
-        RealKeys.combo(modifiers, 'c')
-      ]);
-    };
+var sPaste = function (selector) {
+  var modifiers = platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true };
+  return RealKeys.sSendKeysOn(selector, [
+    RealKeys.combo(modifiers, 'v')
+  ]);
+};
 
-    var sPaste = function (selector) {
-      var modifiers = platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true };
-      return RealKeys.sSendKeysOn(selector, [
-        RealKeys.combo(modifiers, 'v')
-      ]);
-    };
-
-    return {
-      sImportToClipboard: sImportToClipboard,
-      sCopy: sCopy,
-      sPaste: sPaste
-    };
-  }
-);
+export default <any> {
+  sImportToClipboard: sImportToClipboard,
+  sCopy: sCopy,
+  sPaste: sPaste
+};
