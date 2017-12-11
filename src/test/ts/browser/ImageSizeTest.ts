@@ -12,7 +12,7 @@ UnitTest.asynctest('ImageSizeTest', function() {
   //     QUnit.equal(ImageSize.getWidth(image), 320);
   //   }).then(QUnit.start);
   // });
-  canvas = document.createElement("canvas");
+  var canvas = document.createElement("canvas");
   canvas.width = 320;
   canvas.height = 200;
 
