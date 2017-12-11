@@ -1,4 +1,4 @@
-import LegacyAssert from './LegacyAssert';
+import { assert } from '@ephox/refute';
 import { JSON as Json } from '@ephox/sand';
 
 var stringify = function (v) {
@@ -14,7 +14,7 @@ var extra = function (expected, actual) {
 };
 
 var assertEq = function (label, expected, actual) {
-  if (expected !== actual) LegacyAssert.eq(expected, actual, label + extra(expected, actual));
+  if (expected !== actual) assert.eq(expected, actual, label + extra(expected, actual));
 };
 
 export default <any> {

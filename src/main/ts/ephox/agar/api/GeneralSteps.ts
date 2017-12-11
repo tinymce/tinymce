@@ -2,9 +2,9 @@ import Pipeline from './Pipeline';
 import Step from './Step';
 
 // This module needs tests
-var sequence = function (steps, _delay) {
+var sequence = function (steps, delay?) {
   return Step.stateful(function (value, next, die) {
-    Pipeline.async(value, steps, next, die, _delay);
+    Pipeline.async(value, steps, next, die, delay);
   });
 };
 

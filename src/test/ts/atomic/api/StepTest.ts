@@ -1,8 +1,7 @@
-import LegacyAssert from 'ephox/agar/api/LegacyAssert';
 import Logger from 'ephox/agar/api/Logger';
 import Pipeline from 'ephox/agar/api/Pipeline';
 import Step from 'ephox/agar/api/Step';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/refute';
 
 UnitTest.asynctest('StepTest', function() {
   var success = arguments[arguments.length - 2];
@@ -29,12 +28,12 @@ UnitTest.asynctest('StepTest', function() {
       Step.fail('last test')
     )
   ], function () {
-    LegacyAssert.fail('The last test should have failed, so the pipeline should have failed.\n' +
+    assert.fail('The last test should have failed, so the pipeline should have failed.\n' +
       'Expected: Fake failure: last test'
     );
   }, function (err) {
     var expected = '[Basic API: Step.fail]\n\nFake failure: last test';
-    LegacyAssert.eq(expected, err, '\nFailure incorrect. \nExpected:\n' + expected + '\nActual: ' + err);
+    assert.eq(expected, err, '\nFailure incorrect. \nExpected:\n' + expected + '\nActual: ' + err);
     success();
   });
 });

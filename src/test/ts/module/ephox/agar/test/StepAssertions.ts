@@ -1,5 +1,5 @@
 import Chain from 'ephox/agar/api/Chain';
-import LegacyAssert from 'ephox/agar/api/LegacyAssert';
+import { assert } from '@ephox/refute';
 import Pipeline from 'ephox/agar/api/Pipeline';
 import RawAssertions from 'ephox/agar/api/RawAssertions';
 import Step from 'ephox/agar/api/Step';
@@ -9,10 +9,10 @@ var preserved = '..preserved..';
 var failed = function (label, expected, step) {
   return Step.stateful(function (value, next, die) {
     step(value, function (v) {
-      LegacyAssert.fail(label + '\nExpected failure: ' + expected + '.\nInstead, succeeded with: ' + v);
+      assert.fail(label + '\nExpected failure: ' + expected + '.\nInstead, succeeded with: ' + v);
     }, function (err) {
       var errMessage = err.message !== undefined ? err.message : err;
-      LegacyAssert.eq(expected, errMessage, label + '\nExpected: ' + expected + '\nActual: ' + errMessage);
+      assert.eq(expected, errMessage, label + '\nExpected: ' + expected + '\nActual: ' + errMessage);
       next(value);
     });
   });
@@ -22,11 +22,11 @@ var passed = function (label, expected, step) {
   return Step.stateful(function (value, next, die) {
     step(value, function (v) {
       var exp = expected === preserved ? value : expected;
-      LegacyAssert.eq(exp, v, label + '\nSuccess value incorrect: \nExpected: ' + exp + '\nActual: ' + v);
+      assert.eq(exp, v, label + '\nSuccess value incorrect: \nExpected: ' + exp + '\nActual: ' + v);
       next(value);
     }, function (err) {
       var errMessage = err.message !== undefined ? err.message : err;
-      LegacyAssert.fail(label + '\nExpected success: ' + expected + '.\nInstead, failed: ' + errMessage);
+      assert.fail(label + '\nExpected success: ' + expected + '.\nInstead, failed: ' + errMessage);
     });
   });
 };

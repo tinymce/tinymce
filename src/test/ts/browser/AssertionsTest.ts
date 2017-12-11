@@ -1,6 +1,5 @@
 import Assertions from 'ephox/agar/api/Assertions';
-import LegacyAssert from 'ephox/agar/api/LegacyAssert';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/refute';
 
 UnitTest.test('AssertionsTest', function() {
   var replaceTokens = function (str, values) {
@@ -12,19 +11,19 @@ UnitTest.test('AssertionsTest', function() {
   try {
     Assertions.assertEq('test 2 (assertEq)', 5, 5);
   } catch (err) {
-    LegacyAssert.fail('Unexpected error: ' + err.message);
+    assert.fail('Unexpected error: ' + err.message);
   }
 
   try {
     Assertions.assertEq('test 1 (assert.eq)', 10, 5);
   } catch (err) {
-    LegacyAssert.eq('test 1 (assert.eq).\n  Expected: 10\n  Actual: 5', err.message);
+    assert.eq('test 1 (assert.eq).\n  Expected: 10\n  Actual: 5', err.message);
   }
 
   try {
     Assertions.assertEq('test 2 (assert.eq)', 5, 5);
   } catch (err) {
-    LegacyAssert.fail('Unexpected error: ' + err.message);
+    assert.fail('Unexpected error: ' + err.message);
   }
 
   try {
@@ -42,7 +41,7 @@ UnitTest.test('AssertionsTest', function() {
 
     Assertions.assertHtmlStructure('html is the same, although styles & classes are in different order', replaceTokens(html, v1), replaceTokens(html, v2));
   } catch (err) {
-    LegacyAssert.fail('Unexpected error: ' + err.message);
+    assert.fail('Unexpected error: ' + err.message);
   }
 });
 

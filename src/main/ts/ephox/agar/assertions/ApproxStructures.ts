@@ -1,5 +1,5 @@
 import Truncate from '../alien/Truncate';
-import LegacyAssert from '../api/LegacyAssert';
+import { assert } from '@ephox/refute';
 import RawAssertions from '../api/RawAssertions';
 import ApproxComparisons from './ApproxComparisons';
 import { Arr } from '@ephox/katamari';
@@ -42,7 +42,7 @@ var element = function (tag, fields) {
 var text = function (s) {
   var doAssert = function (actual) {
     Text.getOption(actual).fold(function () {
-      LegacyAssert.fail(Truncate.getHtml(actual) + ' is not a text node, so cannot check if its text is: ' + s.show());
+      assert.fail(Truncate.getHtml(actual) + ' is not a text node, so cannot check if its text is: ' + s.show());
     }, function (t) {
       if (s.strAssert === undefined) throw new Error(Json.stringify(s) + ' is not a *string assertion*');
       s.strAssert('Checking text content', t);  

@@ -10,7 +10,6 @@ import GroupStore from './GroupStore';
 import Guard from './Guard';
 import Keyboard from './Keyboard';
 import Keys from './Keys';
-import LegacyAssert from './LegacyAssert';
 import Logger from './Logger';
 import Monitor from './Monitor';
 import Mouse from './Mouse';
@@ -40,7 +39,6 @@ export {
   Guard,
   Keyboard,
   Keys,
-  LegacyAssert,
   Logger,
   Monitor,
   Mouse,
