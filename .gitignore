@@ -9,3 +9,5 @@
 /config/bolt/bootstrap*.js
 /gen
 /node_modules
+
+package-lock.json
