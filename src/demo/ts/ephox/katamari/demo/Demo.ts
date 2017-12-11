@@ -1,5 +1,3 @@
+import { Arr } from '@ephox/katamari';
 
-
-export default <any> function () {
-  
-};
+Arr.each([1, 2, 3], (a) => console.log(a));
