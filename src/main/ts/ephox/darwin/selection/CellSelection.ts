@@ -15,7 +15,7 @@ var lookupTable = function (container, isRoot) {
 
 var identified = Struct.immutableBag(['boxes', 'start', 'finish'], []);
 
-var identify = function (start, finish, isRoot) {
+var identify:any = function (start, finish, isRoot) {
   var getIsRoot = function (rootTable) {
     return function (element) {
       return isRoot(element) || Compare.eq(element, rootTable);

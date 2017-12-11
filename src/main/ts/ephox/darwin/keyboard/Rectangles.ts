@@ -24,7 +24,7 @@ var getElemBox = function (bridge, element) {
 
 var getBoxAt = function (bridge, element, offset) {
   // Note, we might need to consider this offset and descend.
-  if (Node.isElement(element)) return getElemBox(bridge, element, offset).map(toCaret);
+  if (Node.isElement(element)) return getElemBox(bridge, element).map(toCaret);
   else if (Node.isText(element)) return getPartialBox(bridge, element, offset).map(toCaret);
   else return Option.none();
 };
