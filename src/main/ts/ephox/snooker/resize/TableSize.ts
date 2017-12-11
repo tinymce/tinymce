@@ -6,7 +6,7 @@ import CellUtils from '../util/CellUtils';
 import { Width } from '@ephox/sugar';
 
 var percentageSize = function (width, element) {
-  var floatWidth = parseFloat(width, 10);
+  var floatWidth = parseFloat(width);
   var pixelWidth = Width.get(element);
   var getCellDelta = function (delta) {
     return delta / pixelWidth * 100;

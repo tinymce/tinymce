@@ -78,7 +78,7 @@ var normalizePercentageWidth = function (cellWidth, tableSize) {
 var choosePercentageSize = function (element, width, tableSize) {
   if (percentageBasedSizeRegex.test(width)) {
     var percentMatch = percentageBasedSizeRegex.exec(width);
-    return parseFloat(percentMatch[1], 10);
+    return parseFloat(percentMatch[1]);
   } else {
     var fallbackWidth = Width.get(element);
     var intWidth = parseInt(fallbackWidth, 10);
@@ -108,7 +108,7 @@ var choosePixelSize = function (element, width, tableSize) {
     return parseInt(pixelMatch[1], 10);
   } else if (percentageBasedSizeRegex.test(width)) {
     var percentMatch = percentageBasedSizeRegex.exec(width);
-    var floatWidth = parseFloat(percentMatch[1], 10);
+    var floatWidth = parseFloat(percentMatch[1]);
     return normalizePixelWidth(floatWidth, tableSize);
   } else {
     var fallbackWidth = Width.get(element);

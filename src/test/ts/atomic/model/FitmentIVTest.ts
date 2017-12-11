@@ -57,7 +57,7 @@ UnitTest.test('FitmentIVTest', function() {
     }
   };
 
-  var gridGen = function (isNew, _prefix) {
+  var gridGen = function (isNew, _prefix?) {
     var cols = rand(GRID_MIN, GRID_MAX);
     var rows = rand(GRID_MIN, GRID_MAX);
     return {

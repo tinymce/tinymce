@@ -60,7 +60,7 @@ var refreshGrid = function (wire, table, rows, cols, hdirection, vdirection) {
 };
 
 var refresh = function (wire, table, hdirection, vdirection) {
-  clear(wire, table);
+  clear(wire);
 
   var list = DetailsList.fromTable(table);
   var warehouse = Warehouse.generate(list);

@@ -22,7 +22,7 @@ var getRawH = function (cell) {
   return getRaw(cell, 'height', Sizes.getHeight);
 };
 
-var getWidthFrom = function (warehouse, direction, getWidth, fallback, tableSize) {
+var getWidthFrom:any = function (warehouse, direction, getWidth, fallback, tableSize) {
   var columns = Blocks.columns(warehouse);
 
   var backups = Arr.map(columns, function (cellOption) {

@@ -19,7 +19,7 @@ UnitTest.test('CopySelectedTest', function() {
 
   // data objects for input/expected
   var data = function (selected) {
-    return function (text, rowspan, colspan) {
+    return function (text, rowspan?, colspan?) {
       return {
         selected: selected,
         html: text,
