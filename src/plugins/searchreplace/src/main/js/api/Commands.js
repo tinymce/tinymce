@@ -8,20 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.searchreplace.api.Commands',
-  [
-    'tinymce.plugins.searchreplace.ui.Dialog'
-  ],
-  function (Dialog) {
-    var register = function (editor, currentIndexState) {
-      editor.addCommand('SearchReplace', function () {
-        Dialog.open(editor, currentIndexState);
-      });
-    };
+import Dialog from '../ui/Dialog';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor, currentIndexState) {
+  editor.addCommand('SearchReplace', function () {
+    Dialog.open(editor, currentIndexState);
+  });
+};
+
+export default <any> {
+  register: register
+};

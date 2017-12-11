@@ -8,37 +8,31 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.searchreplace.ui.Buttons',
-  [
-    'tinymce.plugins.searchreplace.ui.Dialog'
-  ],
-  function (Dialog) {
-    var showDialog = function (editor, currentIndexState) {
-      return function () {
-        Dialog.open(editor, currentIndexState);
-      };
-    };
+import Dialog from './Dialog';
 
-    var register = function (editor, currentIndexState) {
-      editor.addMenuItem('searchreplace', {
-        text: 'Find and replace',
-        shortcut: 'Meta+F',
-        onclick: showDialog(editor, currentIndexState),
-        separator: 'before',
-        context: 'edit'
-      });
+var showDialog = function (editor, currentIndexState) {
+  return function () {
+    Dialog.open(editor, currentIndexState);
+  };
+};
 
-      editor.addButton('searchreplace', {
-        tooltip: 'Find and replace',
-        onclick: showDialog(editor, currentIndexState)
-      });
+var register = function (editor, currentIndexState) {
+  editor.addMenuItem('searchreplace', {
+    text: 'Find and replace',
+    shortcut: 'Meta+F',
+    onclick: showDialog(editor, currentIndexState),
+    separator: 'before',
+    context: 'edit'
+  });
 
-      editor.shortcuts.add('Meta+F', '', showDialog(editor, currentIndexState));
-    };
+  editor.addButton('searchreplace', {
+    tooltip: 'Find and replace',
+    onclick: showDialog(editor, currentIndexState)
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.shortcuts.add('Meta+F', '', showDialog(editor, currentIndexState));
+};
+
+export default <any> {
+  register: register
+};

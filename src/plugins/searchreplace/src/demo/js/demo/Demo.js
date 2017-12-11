@@ -8,30 +8,26 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import EditorManager from 'tinymce/core/EditorManager';
+import CodePlugin from 'tinymce/plugins/code/Plugin';
+import SearchReplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
 /*eslint no-console:0 */
 
-define(
-  'tinymce.plugins.searchreplace.demo.Demo',
-  [
-    'tinymce.core.EditorManager',
-    'tinymce.plugins.code.Plugin',
-    'tinymce.plugins.searchreplace.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (EditorManager, CodePlugin, SearchReplacePlugin, ModernTheme) {
-    return function () {
-      CodePlugin();
-      SearchReplacePlugin();
-      ModernTheme();
 
-      EditorManager.init({
-        selector: "textarea.tinymce",
-        theme: "modern",
-        skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        plugins: "searchreplace code",
-        toolbar: "searchreplace code",
-        height: 600
-      });
-    };
-  }
-);
+
+export default <any> function () {
+  CodePlugin();
+  SearchReplacePlugin();
+  ModernTheme();
+
+  EditorManager.init({
+    selector: "textarea.tinymce",
+    theme: "modern",
+    skin_url: "../../../../../skins/lightgray/dist/lightgray",
+    plugins: "searchreplace code",
+    toolbar: "searchreplace code",
+    height: 600
+  });
+};

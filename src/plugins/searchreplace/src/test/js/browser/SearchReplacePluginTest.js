@@ -1,14 +1,14 @@
-asynctest(
+import { Pipeline } from '@ephox/agar';
+import { LegacyUnit } from '@ephox/mcagar';
+import Plugin from 'tinymce/plugins/searchreplace/Plugin';
+import { TinyLoader } from '@ephox/mcagar';
+import HtmlUtils from 'tinymce/plugins/searchreplace/test/HtmlUtils';
+import Theme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
+
+UnitTest.asynctest(
   'browser.tinymce.plugins.searchreplace.SearchReplacePluginTest',
-  [
-    'ephox.agar.api.Pipeline',
-    'ephox.mcagar.api.LegacyUnit',
-    'tinymce.plugins.searchreplace.Plugin',
-    'ephox.mcagar.api.TinyLoader',
-    'tinymce.plugins.searchreplace.test.HtmlUtils',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (Pipeline, LegacyUnit, Plugin, TinyLoader, HtmlUtils, Theme) {
+  function() {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -139,3 +139,4 @@ asynctest(
     }, success, failure);
   }
 );
+

@@ -8,44 +8,38 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.searchreplace.api.Api',
-  [
-    'tinymce.plugins.searchreplace.core.Actions'
-  ],
-  function (Actions) {
-    var get = function (editor, currentIndexState) {
-      var done = function (keepEditorSelection) {
-        return Actions.done(editor, currentIndexState, keepEditorSelection);
-      };
+import Actions from '../core/Actions';
 
-      var find = function (text, matchCase, wholeWord) {
-        return Actions.find(editor, currentIndexState, text, matchCase, wholeWord);
-      };
+var get = function (editor, currentIndexState) {
+  var done = function (keepEditorSelection) {
+    return Actions.done(editor, currentIndexState, keepEditorSelection);
+  };
 
-      var next = function () {
-        return Actions.next(editor, currentIndexState);
-      };
+  var find = function (text, matchCase, wholeWord) {
+    return Actions.find(editor, currentIndexState, text, matchCase, wholeWord);
+  };
 
-      var prev = function () {
-        return Actions.prev(editor, currentIndexState);
-      };
+  var next = function () {
+    return Actions.next(editor, currentIndexState);
+  };
 
-      var replace = function (text, forward, all) {
-        return Actions.replace(editor, currentIndexState, text, forward, all);
-      };
+  var prev = function () {
+    return Actions.prev(editor, currentIndexState);
+  };
 
-      return {
-        done: done,
-        find: find,
-        next: next,
-        prev: prev,
-        replace: replace
-      };
-    };
+  var replace = function (text, forward, all) {
+    return Actions.replace(editor, currentIndexState, text, forward, all);
+  };
 
-    return {
-      get: get
-    };
-  }
-);
+  return {
+    done: done,
+    find: find,
+    next: next,
+    prev: prev,
+    replace: replace
+  };
+};
+
+export default <any> {
+  get: get
+};
