@@ -8,7 +8,6 @@
 *.iws
 *.sublime-*
 /.vscode
-/lib
 /gen
 /dependency
 /npm_output
