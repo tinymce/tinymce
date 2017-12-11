@@ -4,6 +4,7 @@ import DomUniverse from './DomUniverse';
 import Gene from './Gene';
 import TestUniverse from './TestUniverse';
 import TextGene from './TextGene';
+import Logger from '../mutant/Logger';
 
 export {
   BasicPage,
@@ -11,5 +12,6 @@ export {
   DomUniverse,
   Gene,
   TestUniverse,
-  TextGene
+  TextGene,
+  Logger
 };
