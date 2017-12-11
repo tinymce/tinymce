@@ -11,3 +11,5 @@
 /config/bolt/bootstrap*.js
 /node_modules
 /npm_output
+
+package-lock.json
