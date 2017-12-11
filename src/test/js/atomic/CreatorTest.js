@@ -1,11 +1,7 @@
-test(
-  'CreatorTest',
+import Creator from 'ephox/boss/mutant/Creator';
+import { UnitTest, assert } from '@ephox/refute';
 
-  [
-    'ephox.boss.mutant.Creator'
-  ],
+UnitTest.test('CreatorTest', function() {
+  assert.eq({ id: 'clone**<c>', name: 'cat', children: [] }, Creator.clone({ id: 'c', name: 'cat', children: [ 'kittens' ] }));
+});
 
-  function (Creator) {
-    assert.eq({ id: 'clone**<c>', name: 'cat', children: [] }, Creator.clone({ id: 'c', name: 'cat', children: [ 'kittens' ] }));
-  }
-);

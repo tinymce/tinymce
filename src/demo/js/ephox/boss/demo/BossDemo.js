@@ -1,17 +1,11 @@
-define(
-  'ephox.boss.demo.BossDemo',
+import BasicPage from 'ephox/boss/api/BasicPage';
+import { Element } from '@ephox/sugar';
 
-  [
-    'ephox.boss.api.BasicPage',
-    'ephox.sugar.api.node.Element'
-  ],
 
-  function (BasicPage, Element) {
-    return function () {
 
-      var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
-      var boss = BasicPage();
-      boss.connect(ephoxUi);
-    };
-  }
-);
+export default <any> function () {
+
+  var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
+  var boss = BasicPage();
+  boss.connect(ephoxUi);
+};

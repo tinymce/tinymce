@@ -1,49 +1,43 @@
-test(
-  'ComparatorTest',
+import Comparator from 'ephox/boss/mutant/Comparator';
+import { UnitTest, assert } from '@ephox/refute';
 
-  [
-    'ephox.boss.mutant.Comparator'
-  ],
+UnitTest.test('ComparatorTest', function() {
+  var item = {
+    name: 'bob',
+    attrs: {
+      border: '10'
+    }
+  };
 
-  function (Comparator) {
+  var b = {
+    name: 'b name',
+    attrs: {
+      cat: 'dog'
+    }
+  };
 
-    var item = {
-      name: 'bob',
-      attrs: {
-        border: '10'
-      }
-    };
+  var c = {
+    name: 'c',
+    attrs: {}
+  };
 
-    var b = {
-      name: 'b name',
-      attrs: {
-        cat: 'dog'
-      }
-    };
+  // name
+  assert.eq(true,  Comparator.is(item, 'fred,bob,sam'));
+  assert.eq(false, Comparator.is(item, 'fred,sam'));
+  assert.eq(false, Comparator.is(item, 'border'));
 
-    var c = {
-      name: 'c',
-      attrs: {}
-    };
+  assert.eq(true,  Comparator.is(b, 'b name'));
+  assert.eq(false, Comparator.is(b, 'dog'));
 
-    // name
-    assert.eq(true,  Comparator.is(item, 'fred,bob,sam'));
-    assert.eq(false, Comparator.is(item, 'fred,sam'));
-    assert.eq(false, Comparator.is(item, 'border'));
+  // attr
+  assert.eq(true,  Comparator.is(item, '[border]'));
+  assert.eq(false, Comparator.is(item, '[foobar]'));
 
-    assert.eq(true,  Comparator.is(b, 'b name'));
-    assert.eq(false, Comparator.is(b, 'dog'));
+  assert.eq(true,  Comparator.is(b, '[cat]'));
+  assert.eq(false, Comparator.is(b, '[dog]'));
+  assert.eq(false, Comparator.is(b, '[]'));
 
-    // attr
-    assert.eq(true,  Comparator.is(item, '[border]'));
-    assert.eq(false, Comparator.is(item, '[foobar]'));
+  assert.eq(false, Comparator.is(c, '[]'));
+  assert.eq(false, Comparator.is(c, '[bob]'));
+});
 
-    assert.eq(true,  Comparator.is(b, '[cat]'));
-    assert.eq(false, Comparator.is(b, '[dog]'));
-    assert.eq(false, Comparator.is(b, '[]'));
-
-    assert.eq(false, Comparator.is(c, '[]'));
-    assert.eq(false, Comparator.is(c, '[bob]'));
-
-  }
-);
