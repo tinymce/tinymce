@@ -1,24 +1,16 @@
-define(
-  'ephox.sand.util.Global',
+import { Resolve } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Resolve'
-  ],
+var unsafe = function (name, scope) {
+  return Resolve.resolve(name, scope);
+};
 
-  function (Resolve) {
-    var unsafe = function (name, scope) {
-      return Resolve.resolve(name, scope);
-    };
+var getOrDie = function (name, scope) {
+  var actual = unsafe(name, scope);
 
-    var getOrDie = function (name, scope) {
-      var actual = unsafe(name, scope);
+  if (actual === undefined) throw name + ' not available on this browser';
+  return actual;
+};
 
-      if (actual === undefined) throw name + ' not available on this browser';
-      return actual;
-    };
-
-    return {
-      getOrDie: getOrDie
-    };
-  }
-);
+export default <any> {
+  getOrDie: getOrDie
+};

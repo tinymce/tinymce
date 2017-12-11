@@ -1,20 +1,11 @@
-define(
-  'ephox.sand.api.PlatformDetection',
+import { Thunk } from '@ephox/katamari';
+import PlatformDetection from '../core/PlatformDetection';
 
-  [
-    'ephox.katamari.api.Thunk',
-    'ephox.sand.core.PlatformDetection',
-    'global!navigator'
-  ],
+var detect = Thunk.cached(function () {
+  var userAgent = navigator.userAgent;
+  return PlatformDetection.detect(userAgent);
+});
 
-  function (Thunk, PlatformDetection, navigator) {
-    var detect = Thunk.cached(function () {
-      var userAgent = navigator.userAgent;
-      return PlatformDetection.detect(userAgent);
-    });
-
-    return {
-      detect: detect
-    };
-  }
-);
+export default <any> {
+  detect: detect
+};

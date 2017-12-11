@@ -1,22 +1,14 @@
-define(
-  'ephox.sand.test.Asserts',
+import { assert } from '@ephox/refute';
 
-  [
-
-  ],
-
-  function () {
-    var assertEq = function (expected, actual, message) {
-      try {
-        assert.eq(expected, actual);
-      } catch (err) {
-        console.log('** Error during test: ' + message + ' **\n');
-        throw err;
-      }
-    };
-
-    return {
-      assertEq: assertEq
-    };
+var assertEq = function (expected, actual, message) {
+  try {
+    assert.eq(expected, actual);
+  } catch (err) {
+    console.log('** Error during test: ' + message + ' **\n');
+    throw err;
   }
-);
+};
+
+export default <any> {
+  assertEq: assertEq
+};
