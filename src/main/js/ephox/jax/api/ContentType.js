@@ -7,7 +7,7 @@ define(
 
   function (Adt) {
     var adt = Adt.generate([
-      { none: [ ] },
+      { file: [ 'data' ] },
       { form: [ 'data' ] },
       { json: [ 'data' ] },
       { plain: [ 'data' ] },
@@ -15,10 +15,11 @@ define(
     ]);
 
     return {
-      none: adt.none,
+      file: adt.file,
       form: adt.form,
       json: adt.json,
-      plain: adt.plain
+      plain: adt.plain,
+      html: adt.html
     };
   }
 );

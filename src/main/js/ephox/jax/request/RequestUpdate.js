@@ -9,9 +9,10 @@ define(
 
   function (Obj, Type, console) {
     var mutate = function (request, options) {
-      var contentType = options.contentType();
-      request.setRequestHeader('Content-Type', contentType);
-      
+      options.contentType().each(function (contentType) {
+        request.setRequestHeader('Content-Type', contentType);
+      });
+
       var accept = options.accept();
       request.setRequestHeader('Accept', accept);
 
@@ -26,7 +27,7 @@ define(
 
       var extra = options.headers();
       Obj.each(extra, function (v, k) {
-        if (!Type.isString(k) && !Type.isString(v)) console.error('Request header data was not a string: ', k ,' -> ', v);
+        if (!Type.isString(k) && !Type.isString(v)) console.error('Request header data was not a string: ', k, ' -> ', v);
         else request.setRequestHeader(k, v);
       });
     };

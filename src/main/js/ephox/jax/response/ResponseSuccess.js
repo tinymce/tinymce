@@ -2,13 +2,13 @@ define(
   'ephox.jax.response.ResponseSuccess',
 
   [
+    'ephox.jax.response.JsonResponse',
     'ephox.jax.response.ResponseError',
     'ephox.katamari.api.FutureResult',
-    'ephox.katamari.api.Result',
-    'ephox.sand.api.JSON'
+    'ephox.katamari.api.Result'
   ],
 
-  function (ResponseError, FutureResult, Result, Json) {
+  function (JsonResponse, ResponseError, FutureResult, Result) {
     var validate = function (responseType, request) {
       var normal = function () {
         return FutureResult.pure(request.response);
@@ -25,18 +25,13 @@ define(
 
       return responseType.match({
         json: function () {
-          try {
-            var parsed = Json.parse(request.response);
-            return FutureResult.pure(parsed);
-          } catch (err) {
-            return FutureResult.error(
-              ResponseError.nu({
-                message: 'Response was not JSON',
-                status: request.status,
-                responseText: request.responseText
-              })
-            );
-          }
+          return JsonResponse.parse(request.response).fold(function (message) {
+            return FutureResult.error(ResponseError.nu({
+              message: message,
+              status: request.status,
+              responseText: request.responseText
+            }));
+          }, FutureResult.pure);
         },
         blob: normal,
         text: normal,

@@ -1,6 +1,6 @@
 asynctest(
   'AjaxTest',
- 
+
   [
     'ephox.jax.api.Ajax',
     'ephox.jax.api.ContentType',
@@ -8,15 +8,14 @@ asynctest(
     'ephox.jax.api.ResponseType',
     'ephox.katamari.api.Arr',
     'ephox.katamari.api.FutureResult',
-    'ephox.katamari.api.LazyValue',
     'ephox.katamari.api.Result',
     'global!Error'
   ],
- 
-  function (Ajax, ContentType, Credentials, ResponseType, Arr, FutureResult, LazyValue, Result, Error) {
+
+  function (Ajax, ContentType, Credentials, ResponseType, Arr, FutureResult, Result, Error) {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
-   
+
     var expectError = function (label, response) {
       return FutureResult.nu(function (callback) {
         response.get(function (res) {
@@ -42,7 +41,7 @@ asynctest(
               callback(Result.value({}));
             } catch (err) {
               callback(Result.error(new Error(err)));
-            }              
+            }
           });
         });
       });
@@ -50,7 +49,7 @@ asynctest(
 
     var responses = [
       expectError('GET Query parameters incorrect', Ajax.get(
-        '/custom/sample/get/1?word=beta', 
+        '/custom/sample/get/1?word=beta',
         ResponseType.json(),
         Credentials.none(),
         { }
@@ -58,14 +57,14 @@ asynctest(
       expectValue('GET Query parameters correct', {
         results: { good: [ 'alpha' ] }
       }, Ajax.get(
-        '/custom/sample/get/1?word=alpha', 
+        '/custom/sample/get/1?word=alpha',
         ResponseType.json(),
         Credentials.none(),
         { }
       )),
 
       expectError('GET Query parameters incorrect because of custom header value', Ajax.get(
-        '/custom/sample/get/1?word=beta', 
+        '/custom/sample/get/1?word=beta',
         ResponseType.json(),
         Credentials.none(),
         {
@@ -78,7 +77,7 @@ asynctest(
           bad: 'custom-header'
         }
        }, Ajax.get(
-        '/custom/sample/get/1?word=beta', 
+        '/custom/sample/get/1?word=beta',
         ResponseType.json(),
         Credentials.none(),
         {
@@ -131,7 +130,7 @@ asynctest(
       )),
 
       expectError('DELETE Query parameters incorrect', Ajax.del(
-        '/custom/sample/del/1?word=beta', 
+        '/custom/sample/del/1?word=beta',
         ResponseType.json(),
         Credentials.none(),
         { }
@@ -139,14 +138,14 @@ asynctest(
       expectValue('DELETE Query parameters correct', {
         results: { 'del-good': [ 'alpha' ] }
       }, Ajax.del(
-        '/custom/sample/del/1?word=alpha', 
+        '/custom/sample/del/1?word=alpha',
         ResponseType.json(),
         Credentials.none(),
         { }
       )),
 
       expectError('DELETE Query parameters incorrect because of custom header value', Ajax.del(
-        '/custom/sample/del/1?word=beta', 
+        '/custom/sample/del/1?word=beta',
         ResponseType.json(),
         Credentials.none(),
         {
@@ -159,7 +158,7 @@ asynctest(
           'del-bad': 'custom-header'
         }
        }, Ajax.del(
-        '/custom/sample/del/1?word=beta', 
+        '/custom/sample/del/1?word=beta',
         ResponseType.json(),
         Credentials.none(),
         {

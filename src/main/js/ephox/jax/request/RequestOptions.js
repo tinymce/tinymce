@@ -8,27 +8,29 @@ define(
 
   function (Fun, Option) {
     var generate = function (cType, rType, creds, custom) {
-      var contentType = cType.match({
-        none: function () {
-          return 'text/html';
-        },
-        form: function (data) {
-          return 'application/x-www-form-urlencoded; charset=UTF-8';
-        },
-        json: function (data) {
-          return 'application/json';
-        },
-        plain: function (data) {
-          return 'text/plain';
-        },
-        html: function (data) {
-          return 'text/html';
-        }
+      var contentType = cType.bind(function (adt) {
+        return adt.match({
+          file: function () {
+            return Option.none(); // browser sets this automatically
+          },
+          form: function () {
+            return Option.some('application/x-www-form-urlencoded; charset=UTF-8');
+          },
+          json: function () {
+            return Option.some('application/json');
+          },
+          plain: function () {
+            return Option.some('text/plain');
+          },
+          html: function () {
+            return Option.some('text/html');
+          }
+        });
       });
 
       var credentials = creds.match({
         none: Option.none,
-        xhr: Option.some(true)
+        xhr: Fun.constant(Option.some(true))
       });
 
       var responseType = rType.match({
