@@ -51,7 +51,7 @@ define(
           layout: 'flex',
           direction: 'column',
           align: 'stretch',
-          autohide: false,
+          autohide: true,
           autofix: true,
           fixed: true,
           border: 1,
