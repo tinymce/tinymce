@@ -478,7 +478,7 @@ define(
           // Setup indent level
           intentValue = settings.indentation;
           indentUnit = /[a-z%]+$/i.exec(intentValue);
-          intentValue = parseInt(intentValue, 10);
+          intentValue = parseFloat(intentValue);
 
           if (!queryCommandState('InsertUnorderedList') && !queryCommandState('InsertOrderedList')) {
             // If forced_root_blocks is set to false we don't have a block to indent so lets create a div
@@ -497,10 +497,10 @@ define(
                 indentStyleName += dom.getStyle(element, 'direction', true) == 'rtl' ? 'Right' : 'Left';
 
                 if (command == 'outdent') {
-                  value = Math.max(0, parseInt(element.style[indentStyleName] || 0, 10) - intentValue);
+                  value = Math.max(0, parseFloat(element.style[indentStyleName] || 0) - intentValue);
                   dom.setStyle(element, indentStyleName, value ? value + indentUnit : '');
                 } else {
-                  value = (parseInt(element.style[indentStyleName] || 0, 10) + intentValue) + indentUnit;
+                  value = (parseFloat(element.style[indentStyleName] || 0) + intentValue) + indentUnit;
                   dom.setStyle(element, indentStyleName, value);
                 }
               }
@@ -600,11 +600,11 @@ define(
           var node;
 
           if (settings.inline_styles) {
-            if ((node = dom.getParent(selection.getStart(), dom.isBlock)) && parseInt(node.style.paddingLeft, 10) > 0) {
+            if ((node = dom.getParent(selection.getStart(), dom.isBlock)) && parseFloat(node.style.paddingLeft) > 0) {
               return TRUE;
             }
 
-            if ((node = dom.getParent(selection.getEnd(), dom.isBlock)) && parseInt(node.style.paddingLeft, 10) > 0) {
+            if ((node = dom.getParent(selection.getEnd(), dom.isBlock)) && parseFloat(node.style.paddingLeft) > 0) {
               return TRUE;
             }
           }
