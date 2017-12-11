@@ -1,25 +1,15 @@
-define(
-  'ephox.katamari.api.Thunk',
+var cached = function (f) {
+  var called = false;
+  var r;
+  return function() {
+    if (!called) {
+      called = true;
+      r = f.apply(null, arguments);
+    }
+    return r;
+  };
+};
 
-  [
-  ],
-
-  function () {
-
-    var cached = function (f) {
-      var called = false;
-      var r;
-      return function() {
-        if (!called) {
-          called = true;
-          r = f.apply(null, arguments);
-        }
-        return r;
-      };
-    };
-
-    return {
-      cached: cached
-    };
-  }
-);
+export default <any> {
+  cached: cached
+};

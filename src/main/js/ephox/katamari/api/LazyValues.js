@@ -1,19 +1,11 @@
-define(
-  'ephox.katamari.api.LazyValues',
+import LazyValue from './LazyValue';
+import AsyncValues from '../async/AsyncValues';
 
-  [
-    'ephox.katamari.api.LazyValue',
-    'ephox.katamari.async.AsyncValues'
-  ],
+/** par :: [LazyValue a] -> LazyValue [a] */
+var par = function (lazyValues) {
+  return AsyncValues.par(lazyValues, LazyValue.nu);
+};
 
-  function (LazyValue, AsyncValues) {
-    /** par :: [LazyValue a] -> LazyValue [a] */
-    var par = function (lazyValues) {
-      return AsyncValues.par(lazyValues, LazyValue.nu);
-    };
-
-    return {
-      par: par
-    };
-  }
-);
+export default <any> {
+  par: par
+};

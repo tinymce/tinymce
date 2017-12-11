@@ -1,14 +1,5 @@
-define(
-  'ephox.katamari.demo.Demo',
 
-  [
-    
-  ],
 
-  function () {
-    return function () {
-      
-    };
-  }
-);
-
+export default <any> function () {
+  
+};

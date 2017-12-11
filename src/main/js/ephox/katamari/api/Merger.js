@@ -1,48 +1,37 @@
-define(
-  'ephox.katamari.api.Merger',
+import Type from './Type';
 
-  [
-    'ephox.katamari.api.Type',
-    'global!Array',
-    'global!Error'
-  ],
+var shallow = function (old, nu) {
+  return nu;
+};
 
-  function (Type, Array, Error) {
+var deep = function (old, nu) {
+  var bothObjects = Type.isObject(old) && Type.isObject(nu);
+  return bothObjects ? deepMerge(old, nu) : nu;
+};
 
-    var shallow = function (old, nu) {
-      return nu;
-    };
+var baseMerge = function (merger) {
+  return function() {
+    // Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
+    var objects = new Array(arguments.length);
+    for (var i = 0; i < objects.length; i++) objects[i] = arguments[i];
 
-    var deep = function (old, nu) {
-      var bothObjects = Type.isObject(old) && Type.isObject(nu);
-      return bothObjects ? deepMerge(old, nu) : nu;
-    };
+    if (objects.length === 0) throw new Error('Can\'t merge zero objects');
 
-    var baseMerge = function (merger) {
-      return function() {
-        // Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
-        var objects = new Array(arguments.length);
-        for (var i = 0; i < objects.length; i++) objects[i] = arguments[i];
+    var ret = {};
+    for (var j = 0; j < objects.length; j++) {
+      var curObject = objects[j];
+      for (var key in curObject) if (curObject.hasOwnProperty(key)) {
+        ret[key] = merger(ret[key], curObject[key]);
+      }
+    }
+    return ret;
+  };
+};
 
-        if (objects.length === 0) throw new Error('Can\'t merge zero objects');
+var deepMerge = baseMerge(deep);
+var merge = baseMerge(shallow);
 
-        var ret = {};
-        for (var j = 0; j < objects.length; j++) {
-          var curObject = objects[j];
-          for (var key in curObject) if (curObject.hasOwnProperty(key)) {
-            ret[key] = merger(ret[key], curObject[key]);
-          }
-        }
-        return ret;
-      };
-    };
-
-    var deepMerge = baseMerge(deep);
-    var merge = baseMerge(shallow);
-
-    return {
-      deepMerge: deepMerge,
-      merge: merge
-    };
-  }
-);
+export default <any> {
+  deepMerge: deepMerge,
+  merge: merge
+};

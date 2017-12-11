@@ -1,32 +1,23 @@
-define(
-  'ephox.katamari.api.Cell',
+var Cell = function (initial) {
+  var value = initial;
 
-  [
-  ],
+  var get = function () {
+    return value;
+  };
 
-  function () {
-    var Cell = function (initial) {
-      var value = initial;
+  var set = function (v) {
+    value = v;
+  };
 
-      var get = function () {
-        return value;
-      };
+  var clone = function () {
+    return Cell(get());
+  };
 
-      var set = function (v) {
-        value = v;
-      };
+  return {
+    get: get,
+    set: set,
+    clone: clone
+  };
+};
 
-      var clone = function () {
-        return Cell(get());
-      };
-
-      return {
-        get: get,
-        set: set,
-        clone: clone
-      };
-    };
-
-    return Cell;
-  }
-);
+export default <any> Cell;

@@ -1,14 +1,8 @@
-test(
-  'Function tests',
+import Fun from 'ephox/katamari/api/Fun';
+import Jsc from '@ephox/wrap-jsverify';
+import { UnitTest, assert } from '@ephox/refute';
 
-  [
-    'ephox.katamari.api.Fun',
-    'ephox.wrap-jsverify.Jsc',
-    'global!Array'
-  ],
-
-  function (Fun, Jsc, Array) {
-  
+UnitTest.test('Function tests', function() {
   var testSanity = function () {
     var add2 = function (n) {
       return n + 2;
@@ -127,3 +121,4 @@ test(
   testSanity();
   testSpecs();
 });
+

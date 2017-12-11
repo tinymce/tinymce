@@ -1,22 +1,14 @@
-define(
-  'ephox.katamari.api.Unique',
+import Arr from './Arr';
+import Obj from './Obj';
 
-  [
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Obj'
-  ],
+var stringArray = function(a) {
+  var all = {};
+  Arr.each(a, function(key) {
+    all[key] = {};
+  });
+  return Obj.keys(all);
+};
 
-  function (Arr, Obj) {
-    var stringArray = function(a) {
-      var all = {};
-      Arr.each(a, function(key) {
-        all[key] = {};
-      });
-      return Obj.keys(all);
-    };
-
-    return {
-      stringArray: stringArray
-    };
-  }
-);
+export default <any> {
+  stringArray: stringArray
+};

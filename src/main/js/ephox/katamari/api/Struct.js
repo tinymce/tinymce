@@ -1,15 +1,9 @@
-define(
-  'ephox.katamari.api.Struct',
+import Immutable from '../data/Immutable';
+import MixedBag from '../data/MixedBag';
 
-  [
-    'ephox.katamari.data.Immutable',
-    'ephox.katamari.data.MixedBag'
-  ],
 
-  function (Immutable, MixedBag) {
-    return {
-      immutable: Immutable,
-      immutableBag: MixedBag
-    };
-  }
-);
+
+export default <any> {
+  immutable: Immutable,
+  immutableBag: MixedBag
+};

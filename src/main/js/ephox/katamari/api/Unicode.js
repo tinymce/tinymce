@@ -1,17 +1,7 @@
-define(
-  'ephox.katamari.api.Unicode',
+var zeroWidth = function () {
+  return '\uFEFF';
+};
 
-  [
-
-  ],
-
-  function () {
-    var zeroWidth = function () {
-      return '\uFEFF';
-    };
-
-    return {
-      zeroWidth: zeroWidth
-    };
-  }
-);
+export default <any> {
+  zeroWidth: zeroWidth
+};
