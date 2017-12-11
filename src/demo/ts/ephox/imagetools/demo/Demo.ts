@@ -1,4 +1,4 @@
-import BlobConversions from 'ephox/imagetools/api/BlobConversions';
+import ResultConversions from 'ephox/imagetools/api/ResultConversions';
 import ImageTransformations from 'ephox/imagetools/api/ImageTransformations';
 
 function getValue(el) {
@@ -12,7 +12,7 @@ function getValue(el) {
 }
 
 function modify(image, op, args) {
-    BlobConversions.imageToImageResult(image).then(function(ir) {
+    ResultConversions.imageToImageResult(image).then(function(ir) {
         args.unshift(ir);
         return ImageTransformations[op].apply(null, args)
             .then(function (imageResult) {
@@ -23,7 +23,7 @@ function modify(image, op, args) {
 
 var forms = document.querySelectorAll('.options');
 for (var i = 0; i < forms.length; i++) {
-    (function(form) {
+    (function(form:any) {
         form.onsubmit = function (el) {
             var selector = document.getElementById('selector');
             var currOp = getValue(selector);
@@ -40,5 +40,3 @@ for (var i = 0; i < forms.length; i++) {
         }
     }(forms[i]));
 }
-
-export default <any> function() {};
