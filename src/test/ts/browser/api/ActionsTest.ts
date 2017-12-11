@@ -8,10 +8,10 @@ import { UnitTest } from '@ephox/refute';
 UnitTest.asynctest('ActionChainsTest', function() {
   var success = arguments[arguments.length - 2];
   var failure = arguments[arguments.length - 1];
+  var count = 0;
 
-
-  var assertEq = function () {
-    assertEq.count = assertEq.count === undefined ? 1 : assertEq.count + 1;
+  var assertEq:any = function () {
+    count++;
     Assertions.assertEq.apply(this, arguments);
   };
 
@@ -60,7 +60,7 @@ UnitTest.asynctest('ActionChainsTest', function() {
       }),
       Chain.wait(100), // give some time to async ops to finish
       Chain.op(function () {
-        Assertions.assertEq(assertEq.count + ' assertions were run', 2, assertEq.count);
+        Assertions.assertEq(count + ' assertions were run', 2, count);
       }),
       Editor.cRemove
     ])

@@ -6,7 +6,11 @@ import { Element } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
 import { Selectors } from '@ephox/sugar';
 import { Chain } from '@ephox/agar';
-import EditorManager from 'tinymce/core/EditorManager';
+import 'tinymce';
+
+declare const tinymce: any;
+
+tinymce.baseURL = '/project/node_modules/tinymce';
 
 var cFromElement = function (element, settings) {
   return Chain.on(function (_, next, die) {
@@ -15,7 +19,7 @@ var cFromElement = function (element, settings) {
     Attr.set(element, 'id', randomId);
     Insert.append(Element.fromDom(document.body), element);
 
-    EditorManager.init(Merger.merge(settings, {
+    tinymce.init(Merger.merge(settings, {
       selector: '#' + randomId,
       setup: function (editor) {
         editor.on('SkinLoaded', function () {

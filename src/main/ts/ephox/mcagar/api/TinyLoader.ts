@@ -6,7 +6,11 @@ import { Insert } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
-import EditorManager from 'tinymce/core/EditorManager';
+import 'tinymce';
+
+declare const tinymce: any;
+
+tinymce.baseURL = '/project/node_modules/tinymce';
 
 var createTarget = function (inline) {
   var target = Element.fromTag(inline ? 'div' : 'textarea');
@@ -21,7 +25,7 @@ var setup = function (callback, settings, success, failure) {
   Insert.append(Element.fromDom(document.body), target);
 
   var teardown = function () {
-    EditorManager.remove();
+    tinymce.remove();
     Remove.remove(target);
   };
 
@@ -38,7 +42,7 @@ var setup = function (callback, settings, success, failure) {
 
   var settingsSetup = settings.setup !== undefined ? settings.setup : Fun.noop;
 
-  EditorManager.init(Merger.merge(settings, {
+  tinymce.init(Merger.merge(settings, {
     selector: '#' + randomId,
     setup: function(editor) {
       // Execute the setup called by the test.
