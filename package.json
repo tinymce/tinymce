@@ -27,8 +27,5 @@
     "chromedriver": "*",
     "grunt": "*",
     "grunt-npm": "*"
-  },
-  "publishConfig": {
-    "registry": "http://nexus:8081/repository/ephox-npm/"
   }
 }
