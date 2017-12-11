@@ -1,6 +1,6 @@
 {
   "name": "@ephox/sand",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Platform detection library",
   "repository": {
     "type": "git",
