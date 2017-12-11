@@ -7,7 +7,8 @@
     "url": "https://github.com/ephox/sugar"
   },
   "scripts": {
-    "test": "bedrock-auto --testdir src/test/js/browser -b chrome"
+    "test": "bedrock-auto --testdir src/test/js/browser -b chrome",
+    "prepublishOnly": "tsc"
   },
   "keywords": [
     "DOM",
@@ -23,6 +24,13 @@
   },
   "devDependencies": {
     "@ephox/bedrock": "^1.3.7",
-    "@ephox/bolt": "^1.8.0"
-  }
+    "@ephox/refute": "*",
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
+  },
+  "main": "./lib/main/ts/ephox/sugar/api/Main.js",
+  "module": "./lib/main/ts/ephox/sugar/api/Main.js",
+  "types": "./lib/main/ts/ephox/sugar/api/Main.d.ts"
 }
