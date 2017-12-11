@@ -1,7 +1,7 @@
 {
   "name": "@ephox/dragster",
   "description": "This project handles dragging.",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/dragster"
