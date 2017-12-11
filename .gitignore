@@ -4,3 +4,6 @@
 *.sublime-workspace
 /node_modules
 /config/bolt/bootstrap*.js
+
+package-lock.json
+/lib
