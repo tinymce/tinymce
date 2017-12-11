@@ -2,7 +2,7 @@ const { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loade
 const path = require('path');
 
 module.exports = {
-  entry: './src/demo/ts/ephox/boss/demo/Demo.ts',
+  entry: './src/demo/ts/ephox/boss/demo/BossDemo.ts',
   devtool: 'source-map',
 
   resolve: {
