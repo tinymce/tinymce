@@ -10,11 +10,20 @@
     "@ephox/katamari": "*"
   },
   "devDependencies": {
-    "@ephox/bedrock": "^1.4.0"
+    "@ephox/bedrock": "^1.4.0",
+    "@ephox/refute": "*",
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "bedrock-auto -b phantomjs --testdir src/test/js/atomic"
+    "test": "bedrock-auto -b phantomjs --testdir src/test/js/atomic",
+    "prepublishOnly": "tsc"
   },
   "author": "Ephox Corporation",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/polaris/api/Main.js",
+  "module": "./lib/main/ts/ephox/polaris/api/Main.js",
+  "types": "./lib/main/ts/ephox/polaris/api/Main.d.ts"
 }
