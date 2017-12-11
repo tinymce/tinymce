@@ -95,7 +95,7 @@ define(
           autohide: false,
           autofix: isFixed(inlineToolbarContainer),
           fixed: isFixed(inlineToolbarContainer),
-          border: 1,
+          border: Settings.getPanelBorderWidth(editor),
           items: [
             Settings.hasMenubar(editor) === false ? null : { type: 'menubar', border: '0 0 1 0', items: Menubar.createMenuButtons(editor) },
             Toolbar.createToolbars(editor, Settings.getToolbarSize(editor))
@@ -130,7 +130,8 @@ define(
 
       editor.settings.content_editable = true;
 
-      editor.on('focus', function () {
+      var autoHide = Settings.getAutoHide(editor);
+      editor.on(autoHide ? 'focus' : 'init', function () {
         // Render only when the CSS file has been loaded
         if (Settings.isSkinDisabled(editor) === false && args.skinUiCss) {
           DOM.styleSheetLoader.load(args.skinUiCss, render, render);
@@ -139,7 +140,7 @@ define(
         }
       });
 
-      editor.on('blur hide', hide);
+      editor.on(autoHide ? 'blur hide' : 'hide', hide);
 
       // Remove the panel when the editor is removed
       editor.on('remove', function () {

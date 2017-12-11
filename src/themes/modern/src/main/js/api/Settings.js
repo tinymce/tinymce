@@ -140,6 +140,14 @@ define(
       }
     };
 
+    var getAutoHide = function (editor) {
+      return editor.getParam('autohide', false);
+    };
+
+    var getPanelBorderWidth = function (editor) {
+      return editor.getParam('panel_border_width', 1);
+    };
+
     return {
       isBrandingEnabled: isBrandingEnabled,
       hasMenubar: hasMenubar,
@@ -159,7 +167,9 @@ define(
       getSkinUrl: getSkinUrl,
       isSkinDisabled: isSkinDisabled,
       isInline: isInline,
-      getToolbars: getToolbars
+      getToolbars: getToolbars,
+      getAutoHide: getAutoHide,
+      getPanelBorderWidth: getPanelBorderWidth
     };
   }
 );
