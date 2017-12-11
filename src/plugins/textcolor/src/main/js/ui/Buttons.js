@@ -28,9 +28,9 @@ define(
         var ctrl = e.control;
 
         if (ctrl._color) {
-          TextColor.applyFormat(editor, ctrl.settings.format, ctrl._color);
+          editor.execCommand('mceApplyTextcolor', ctrl.settings.format, ctrl._color);
         } else {
-          TextColor.removeFormat(editor, ctrl.settings.format);
+          editor.execCommand('mceRemoveTextcolor', ctrl.settings.format);
         }
       };
     };
@@ -43,13 +43,13 @@ define(
         var selectColor = function (value) {
           buttonCtrl.hidePanel();
           buttonCtrl.color(value);
-          TextColor.applyFormat(editor, buttonCtrl.settings.format, value);
+          editor.execCommand('mceApplyTextcolor', buttonCtrl.settings.format, value);
         };
 
         var resetColor = function () {
           buttonCtrl.hidePanel();
           buttonCtrl.resetColor();
-          TextColor.removeFormat(editor, buttonCtrl.settings.format);
+          editor.execCommand('mceRemoveTextcolor', buttonCtrl.settings.format);
         };
 
         if (DOMUtils.DOM.getParent(e.target, '.mce-custom-color-btn')) {

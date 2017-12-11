@@ -12,10 +12,12 @@ define(
   'tinymce.plugins.textcolor.Plugin',
   [
     'tinymce.core.PluginManager',
+    'tinymce.plugins.textcolor.api.Commands',
     'tinymce.plugins.textcolor.ui.Buttons'
   ],
-  function (PluginManager, Buttons) {
+  function (PluginManager, Commands, Buttons) {
     PluginManager.add('textcolor', function (editor) {
+      Commands.register(editor);
       Buttons.register(editor);
     });
 
