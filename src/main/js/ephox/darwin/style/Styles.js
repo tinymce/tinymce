@@ -1,15 +1,7 @@
-define(
-  'ephox.darwin.style.Styles',
+import { Namespace } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Namespace'
-  ],
+var styles = Namespace.css('ephox-darwin');
 
-  function (Namespace) {
-    var styles = Namespace.css('ephox-darwin');
-
-    return {
-      resolve: styles.resolve
-    };
-  }
-);
+export default <any> {
+  resolve: styles.resolve
+};

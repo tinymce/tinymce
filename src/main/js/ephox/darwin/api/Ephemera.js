@@ -1,26 +1,18 @@
-define(
-  'ephox.darwin.api.Ephemera',
+import Styles from '../style/Styles';
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.darwin.style.Styles',
-    'ephox.katamari.api.Fun'
-  ],
+var selected = Styles.resolve('selected');
+var selectedSelector = '.' + selected;
+var firstSelected = Styles.resolve('first-selected');
+var firstSelectedSelector = '.' + firstSelected;
+var lastSelected = Styles.resolve('last-selected');
+var lastSelectedSelector = '.' + lastSelected;
 
-  function (Styles, Fun) {
-    var selected = Styles.resolve('selected');
-    var selectedSelector = '.' + selected;
-    var firstSelected = Styles.resolve('first-selected');
-    var firstSelectedSelector = '.' + firstSelected;
-    var lastSelected = Styles.resolve('last-selected');
-    var lastSelectedSelector = '.' + lastSelected;
-
-    return {
-      selected: Fun.constant(selected),
-      selectedSelector: Fun.constant(selectedSelector),
-      firstSelected: Fun.constant(firstSelected),
-      firstSelectedSelector: Fun.constant(firstSelectedSelector),
-      lastSelected: Fun.constant(lastSelected),
-      lastSelectedSelector: Fun.constant(lastSelectedSelector)
-    };
-  }
-);
+export default <any> {
+  selected: Fun.constant(selected),
+  selectedSelector: Fun.constant(selectedSelector),
+  firstSelected: Fun.constant(firstSelected),
+  firstSelectedSelector: Fun.constant(firstSelectedSelector),
+  lastSelected: Fun.constant(lastSelected),
+  lastSelectedSelector: Fun.constant(lastSelectedSelector)
+};

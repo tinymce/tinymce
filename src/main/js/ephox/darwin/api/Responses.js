@@ -1,15 +1,7 @@
-define(
-  'ephox.darwin.api.Responses',
+import { Struct } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Struct'
-  ],
+var response = Struct.immutable('selection', 'kill');
 
-  function (Struct) {
-    var response = Struct.immutable('selection', 'kill');
-
-    return {
-      response: response
-    };
-  }
-);
+export default <any> {
+  response: response
+};
