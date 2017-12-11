@@ -28,7 +28,7 @@ var baseMerge = function (merger) {
   };
 };
 
-var deepMerge = baseMerge(deep);
+var deepMerge:any = baseMerge(deep);
 var merge = baseMerge(shallow);
 
 export default <any> {

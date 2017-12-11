@@ -7,7 +7,7 @@ UnitTest.test('ObjResolverTest', function() {
     var survivor = 'i want to survive this namespacing';
     var token = 'i should be set as the [token] attribute on the namespace';
 
-    var data = {
+    var data:any = {
       foo: {
         barney: survivor
       },
