@@ -1,42 +1,36 @@
-define(
-  'ephox.imagetools.api.BlobConversions',
-  [
-    'ephox.imagetools.util.Conversions',
-    'ephox.katamari.api.Option'
-  ],
-  function (Conversions, Option) {
-    var blobToImage = function (image) {
-      return Conversions.blobToImage(image);
-    };
+import Conversions from '../util/Conversions';
+import { Option } from '@ephox/katamari';
 
-    var imageToBlob = function (blob) {
-      return Conversions.imageToBlob(blob);
-    };
+var blobToImage = function (image) {
+  return Conversions.blobToImage(image);
+};
 
-    var blobToDataUri = function (blob) {
-      return Conversions.blobToDataUri(blob);
-    };
+var imageToBlob = function (blob) {
+  return Conversions.imageToBlob(blob);
+};
 
-    var blobToBase64 = function (blob) {
-      return Conversions.blobToBase64(blob);
-    };
+var blobToDataUri = function (blob) {
+  return Conversions.blobToDataUri(blob);
+};
 
-    var dataUriToBlobSync = function (uri) {
-      return Conversions.dataUriToBlobSync(uri);
-    };
+var blobToBase64 = function (blob) {
+  return Conversions.blobToBase64(blob);
+};
 
-    var uriToBlob = function (uri) {
-      return Option.from(Conversions.uriToBlob(uri));
-    };
+var dataUriToBlobSync = function (uri) {
+  return Conversions.dataUriToBlobSync(uri);
+};
 
-    return {
-      // used outside
-      blobToImage: blobToImage,
-      imageToBlob: imageToBlob,
-      blobToDataUri: blobToDataUri,
-      blobToBase64: blobToBase64,
-      dataUriToBlobSync: dataUriToBlobSync,
-      uriToBlob: uriToBlob
-    };
-  }
-);
+var uriToBlob = function (uri) {
+  return Option.from(Conversions.uriToBlob(uri));
+};
+
+export default <any> {
+  // used outside
+  blobToImage: blobToImage,
+  imageToBlob: imageToBlob,
+  blobToDataUri: blobToDataUri,
+  blobToBase64: blobToBase64,
+  dataUriToBlobSync: dataUriToBlobSync,
+  uriToBlob: uriToBlob
+};

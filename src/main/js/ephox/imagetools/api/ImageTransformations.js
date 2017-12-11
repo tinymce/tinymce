@@ -1,92 +1,86 @@
-define(
-  'ephox.imagetools.api.ImageTransformations',
-  [
-    'ephox.imagetools.transformations.Filters',
-    'ephox.imagetools.transformations.ImageTools'
-  ],
-  function (Filters, ImageTools) {
-    var invert = function (ir) {
-      return Filters.invert(ir);
-    };
+import Filters from '../transformations/Filters';
+import ImageTools from '../transformations/ImageTools';
 
-    var sharpen = function (ir) {
-      return Filters.sharpen(ir);
-    };
+var invert = function (ir) {
+  return Filters.invert(ir);
+};
 
-    var emboss = function (ir) {
-      return Filters.emboss(ir);
-    };
+var sharpen = function (ir) {
+  return Filters.sharpen(ir);
+};
 
-    var gamma = function (ir, value) {
-      return Filters.gamma(ir, value);
-    };
+var emboss = function (ir) {
+  return Filters.emboss(ir);
+};
 
-    var exposure = function (ir, value) {
-      return Filters.exposure(ir, value);
-    };
+var gamma = function (ir, value) {
+  return Filters.gamma(ir, value);
+};
 
-    var colorize = function (ir, adjustR, adjustG, adjustB) {
-      return Filters.colorize(ir, adjustR, adjustG, adjustB);
-    };
+var exposure = function (ir, value) {
+  return Filters.exposure(ir, value);
+};
 
-    var brightness = function (ir, adjust) {
-      return Filters.brightness(ir, adjust);
-    };
+var colorize = function (ir, adjustR, adjustG, adjustB) {
+  return Filters.colorize(ir, adjustR, adjustG, adjustB);
+};
 
-    var hue = function (ir, adjust) {
-      return Filters.hue(ir, adjust);
-    };
+var brightness = function (ir, adjust) {
+  return Filters.brightness(ir, adjust);
+};
 
-    var saturate = function (ir, adjust) {
-      return Filters.saturate(ir, adjust);
-    };
+var hue = function (ir, adjust) {
+  return Filters.hue(ir, adjust);
+};
 
-    var contrast = function (ir, adjust) {
-      return Filters.contrast(ir, adjust);
-    };
+var saturate = function (ir, adjust) {
+  return Filters.saturate(ir, adjust);
+};
 
-    var grayscale = function (ir, adjust) {
-      return Filters.grayscale(ir, adjust);
-    };
+var contrast = function (ir, adjust) {
+  return Filters.contrast(ir, adjust);
+};
 
-    var sepia = function (ir, adjust) {
-      return Filters.sepia(ir, adjust);
-    };
+var grayscale = function (ir, adjust) {
+  return Filters.grayscale(ir, adjust);
+};
 
-    var flip = function (ir, axis) {
-      return ImageTools.flip(ir, axis);
-    };
+var sepia = function (ir, adjust) {
+  return Filters.sepia(ir, adjust);
+};
 
-    var crop = function (ir, x, y, w, h) {
-      return ImageTools.crop(ir, x, y, w, h);
-    };
+var flip = function (ir, axis) {
+  return ImageTools.flip(ir, axis);
+};
 
-    var resize = function (ir, w, h) {
-      return ImageTools.resize(ir, w, h);
-    };
+var crop = function (ir, x, y, w, h) {
+  return ImageTools.crop(ir, x, y, w, h);
+};
 
-    var rotate = function (ir, angle) {
-      return ImageTools.rotate(ir, angle);
-    };
+var resize = function (ir, w, h) {
+  return ImageTools.resize(ir, w, h);
+};
 
-    return {
-      invert: invert,
-      sharpen: sharpen,
-      emboss: emboss,
-      brightness: brightness,
-      hue: hue,
-      saturate: saturate,
-      contrast: contrast,
-      grayscale: grayscale,
-      sepia: sepia,
-      colorize: colorize,
-      gamma: gamma,
-      exposure: exposure,
+var rotate = function (ir, angle) {
+  return ImageTools.rotate(ir, angle);
+};
 
-      flip: flip,
-      crop: crop,
-      resize: resize,
-      rotate: rotate
-    };
-  }
-);
+export default <any> {
+  invert: invert,
+  sharpen: sharpen,
+  emboss: emboss,
+  brightness: brightness,
+  hue: hue,
+  saturate: saturate,
+  contrast: contrast,
+  grayscale: grayscale,
+  sepia: sepia,
+  colorize: colorize,
+  gamma: gamma,
+  exposure: exposure,
+
+  flip: flip,
+  crop: crop,
+  resize: resize,
+  rotate: rotate
+};

@@ -1,43 +1,37 @@
-test(
-  'CanvasTest',
+import Assertion from 'ephox/imagetools/test/Assertion';
+import Canvas from 'ephox/imagetools/util/Canvas';
+import { UnitTest } from '@ephox/refute';
 
-  [
-    'ephox.imagetools.test.Assertion',
-    'ephox.imagetools.util.Canvas'
-  ],
+UnitTest.test('CanvasTest', function() {
+  var assertDimensions = function (label, w, h, canvas) {
+    Assertion.assertEq(w, canvas.width, label + ' width');
+    Assertion.assertEq(h, canvas.height, label + ' height');
+  };
 
-  function (Assertion, Canvas) {
+  (function () {
+    var canvas = Canvas.create(320, 200);
 
-    var assertDimensions = function (label, w, h, canvas) {
-      Assertion.assertEq(w, canvas.width, label + ' width');
-      Assertion.assertEq(h, canvas.height, label + ' height');
-    };
+    assertDimensions('create', 320, 200, canvas);
+  })();
 
-    (function () {
-      var canvas = Canvas.create(320, 200);
+  (function () {
+    var canvas = Canvas.create(320, 200);
+    Canvas.resize(canvas, 420, 300);
+    assertDimensions('resize', 420, 300, canvas);
+  })();
 
-      assertDimensions('create', 320, 200, canvas);
-    })();
+  (function () {
+    var canvas = Canvas.create(320, 200);
+    var context = Canvas.get2dContext(canvas);
+    Assertion.assertEq(true, !!context.drawImage, 'Draw image should be defined');
+  })();
 
-    (function () {
-      var canvas = Canvas.create(320, 200);
-      Canvas.resize(canvas, 420, 300);
-      assertDimensions('resize', 420, 300, canvas);
-    })();
+  //   QUnit.test('get2dContext', function() {
+  //     var canvas = imagetools.Canvas.create(320, 200);
+  //     var context = imagetools.Canvas.get2dContext(canvas);
 
-    (function () {
-      var canvas = Canvas.create(320, 200);
-      var context = Canvas.get2dContext(canvas);
-      Assertion.assertEq(true, !!context.drawImage, 'Draw image should be defined');
-    })();
+  //     QUnit.ok(!!context.drawImage);
+  //   });
+  // })();
+});
 
-//   QUnit.test('get2dContext', function() {
-//     var canvas = imagetools.Canvas.create(320, 200);
-//     var context = imagetools.Canvas.get2dContext(canvas);
-
-//     QUnit.ok(!!context.drawImage);
-//   });
-// })();
-
-  }
-);
