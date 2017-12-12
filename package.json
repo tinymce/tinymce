@@ -7,7 +7,7 @@
     "url": "https://github.com/ephox/agar"
   },
   "scripts": {
-    "test": "bedrock-auto -b chrome --testdir src/test/js/browser",
+    "test": "bedrock-auto -b chrome --testdir src/test/ts/browser",
     "prepublishOnly": "tsc"
   },
   "keywords": [
