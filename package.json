@@ -15,6 +15,7 @@
     "webpack": "^3.10.0"
   },
   "scripts": {
+    "test": "bedrock-auto -b chrome -d src/test/ts",
     "prepublishOnly": "tsc"
   },
   "repository": {
