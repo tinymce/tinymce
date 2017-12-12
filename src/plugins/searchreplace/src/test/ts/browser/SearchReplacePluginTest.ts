@@ -2,7 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/searchreplace/Plugin';
 import { TinyLoader } from '@ephox/mcagar';
-import HtmlUtils from 'tinymce/plugins/searchreplace/test/HtmlUtils';
+import HtmlUtils from '../module/test/HtmlUtils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 

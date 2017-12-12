@@ -1,12 +1,9 @@
-import resolve from 'rollup-plugin-node-resolve';
-import typescript from 'rollup-plugin-typescript2';
-import uglify from 'rollup-plugin-uglify';
-import acorn from 'acorn';
-import escodegen from 'escodegen';
+const acorn = require('acorn');
+const escodegen = require('escodegen');
 
 var count = 0;
 
-function myPlugin( options = {} ) {
+module.exports = function ( options = {} ) {
   return {
     transform ( code ) {
       var id = 'uuuid' + (count++);
@@ -69,30 +66,3 @@ function myPlugin( options = {} ) {
     }
   };
 }
-
-export default {
-  input: 'src/main/ts/Plugin.ts',
-  treeshake: false,
-  output: {
-    file: 'dist/searchreplace/plugin.js',
-    format: 'iife',
-    name: 'searchreplace',
-    banner: '(function () {',
-    footer: '})()'
-  },
-  plugins: [
-    resolve(),
-    typescript({
-      include: [
-        '../../**/*.ts'
-      ]
-    }),
-    // myPlugin(),
-    uglify({
-      timings: true,
-      mangle: {
-        properties: true
-      }
-    })
-  ]
-};
