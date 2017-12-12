@@ -1,3 +1,4 @@
+/*
 test(
   'OriginRepositionTest',
 
@@ -15,7 +16,6 @@ test(
   ],
 
   function (Direction, Origins, Reposition, Fun, Option, Type) {
-    /* global assert */
     // Disabled until we remove need for mocking.
 
     var noneOrigin = Origins.none();
@@ -119,3 +119,4 @@ test(
     check(expectedBeyondBottomRight, fixedOrigin, makeDecision(600, 600, 102, 103, Direction.northwest()));
   }
 );
+*/

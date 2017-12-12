@@ -80,11 +80,11 @@ var sketch = function (detail, components, spec, externals) {
   };
 
   var resetToMin = function (slider) {
-    changeValue(slider, detail.min(), Option.none());
+    changeValue(slider, detail.min());
   };
 
   var resetToMax = function (slider) {
-    changeValue(slider, detail.max(), Option.none());
+    changeValue(slider, detail.max());
   };
 
   var uiEventsArr = isTouch ? [

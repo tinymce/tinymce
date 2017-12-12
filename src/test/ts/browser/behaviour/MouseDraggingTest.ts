@@ -2,7 +2,7 @@ import { Chain } from '@ephox/agar';
 import { Guard } from '@ephox/agar';
 import { NamedChain } from '@ephox/agar';
 import { UiFinder } from '@ephox/agar';
-import { Clicks } from '@ephox/agar';
+import { Mouse } from '@ephox/agar';
 import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Memento from 'ephox/alloy/api/component/Memento';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -66,17 +66,6 @@ UnitTest.asynctest('MouseDraggingTest', function() {
       return subject.get(component).element();
     });
 
-    // FIX: Add mousedown to agar API.
-    var cMousedown = Chain.op(Clicks.mousedown);
-
-    var cMouseup = Chain.op(Clicks.mouseup);
-
-    var cMousemoveTo = function (x, y) {
-      return Chain.op(function (elem) {
-        Clicks.mousemove(elem, x, y);
-      });
-    };
-
     var cEnsurePositionChanged = Chain.control(
       Chain.binder(function (all) {
         return all.box_position1.left !== all.box_position2.left &&
@@ -127,21 +116,21 @@ UnitTest.asynctest('MouseDraggingTest', function() {
       Chain.asStep({}, [
         NamedChain.asChain([
           NamedChain.write('box', cSubject),
-          NamedChain.direct('box', cMousedown, '_'),
+          NamedChain.direct('box', Mouse.cMouseDown, '_'),
           NamedChain.writeValue('container', gui.element()),
           NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
 
-          NamedChain.direct('blocker', cMousemoveTo(100, 200), '_'),
-          NamedChain.direct('blocker', cMousemoveTo(120, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(120, 200), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position1'),
 
-          NamedChain.direct('blocker', cMousemoveTo(140, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(140, 200), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position2'),
-          NamedChain.direct('blocker', cMousemoveTo(160, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(160, 200), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position3'),
           NamedChain.write('_', cEnsurePositionChanged),
 
-          NamedChain.direct('blocker', cMouseup, '_'),
+          NamedChain.direct('blocker', Mouse.cMouseUp, '_'),
           NamedChain.direct('container', Chain.control(
             UiFinder.cFindIn('.test-blocker'),
             Guard.tryUntilNot('There should no longer be a blocker', 100, 100)
@@ -156,17 +145,17 @@ UnitTest.asynctest('MouseDraggingTest', function() {
             });
           }), '_'),
 
-          NamedChain.direct('box', cMousedown, '_'),
+          NamedChain.direct('box', Mouse.cMouseDown, '_'),
           NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
 
           // Test pinning.
-          NamedChain.direct('blocker', cMousemoveTo(50, 100), '_'),
-          NamedChain.direct('blocker', cMousemoveTo(50, 100), '_'),
-          NamedChain.direct('blocker', cMousemoveTo(50, 60), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 100), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 100), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 60), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position4'),
-          NamedChain.direct('blocker', cMousemoveTo(50, 30), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 30), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position5_pinned'),
-          NamedChain.direct('blocker', cMousemoveTo(160, 20), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveTo(160, 20), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position6_pinned'),
           NamedChain.write('_', cEnsurePinned),
 

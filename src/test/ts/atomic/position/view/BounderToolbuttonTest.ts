@@ -49,13 +49,13 @@ UnitTest.test('BounderToolbuttonTest', function() {
     label: 'none',
     x: 0,
     y: 0
-  }, [], Bounds(0, 0, 10, 10), Bounds(0, 0, 50, 50), chameleonBubble(0, 0), Bounds(0, 0, 1000, 1000));
+  }, [], Bounds(0, 0, 10, 10), Bounds(0, 0, 50, 50), chameleonBubble(0), Bounds(0, 0, 1000, 1000));
 
   check({
     label: 'none',
     x: 100,
     y: 0
-  }, [], Bounds(100, 0, 200, 50), Bounds(0, 0, 150, 25), chameleonBubble(10, 0), Bounds(0, 0, 1000, 1000));
+  }, [], Bounds(100, 0, 200, 50), Bounds(0, 0, 150, 25), chameleonBubble(10), Bounds(0, 0, 1000, 1000));
 
   var panelBox = Bounds(0, 0, 100, 75);
   var bigPanel = Bounds(0, 0, 75, 500);

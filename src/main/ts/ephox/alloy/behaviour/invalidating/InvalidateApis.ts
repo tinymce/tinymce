@@ -51,7 +51,7 @@ var run = function (component, invalidConfig, invalidState) {
       markInvalid(component, invalidConfig, invalidState, err);
       return Result.error(err);
     }, function (v) {
-      markValid(component, invalidConfig, invalidState);
+      markValid(component, invalidConfig);
       return Result.value(v);
     });
   });

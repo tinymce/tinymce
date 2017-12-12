@@ -8,7 +8,6 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { UiFinder } from '@ephox/agar';
 import { Waiter } from '@ephox/agar';
-import { Clicks } from '@ephox/agar';
 import DomDefinition from 'ephox/alloy/dom/DomDefinition';
 import DomRender from 'ephox/alloy/dom/DomRender';
 import GuiEvents from 'ephox/alloy/events/GuiEvents';
@@ -174,10 +173,7 @@ UnitTest.asynctest('GuiEventsTest', function() {
 
   var sTestMouseOperation = function (eventName, op) {
     return GeneralSteps.sequence([
-      Step.sync(function () {
-        // TODO: Add others clicks to agar.
-        op(page);
-      }),
+      Chain.asStep(page, [ op ]),
       store.sAssertEq(
         'Checking event log after ' + eventName + ' on root',
         [
@@ -255,12 +251,11 @@ UnitTest.asynctest('GuiEventsTest', function() {
     sTestMouseover,
     sTestSelectStart,
 
-    // FIX: Add API support to agar.
-    sTestMouseOperation('mousedown', Clicks.mousedown),
-    sTestMouseOperation('mouseup', Clicks.mouseup),
-    sTestMouseOperation('mousemove', function (elem) { Clicks.mousemove(elem, 10, 10); }),
-    sTestMouseOperation('mouseout', function (elem) { Clicks.mouseout(elem, 10, 10); }),
-    sTestMouseOperation('contextmenu', Clicks.contextmenu),
+    sTestMouseOperation('mousedown', Mouse.cMouseDown),
+    sTestMouseOperation('mouseup', Mouse.cMouseUp),
+    sTestMouseOperation('mousemove', Mouse.cMouseMoveTo(10, 10)),
+    sTestMouseOperation('mouseout', Mouse.cMouseOut),
+    sTestMouseOperation('contextmenu', Mouse.cContextMenu),
 
     // FIX: Add API support to agar
     sTestChange,

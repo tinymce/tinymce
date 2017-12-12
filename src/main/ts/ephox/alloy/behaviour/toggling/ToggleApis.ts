@@ -1,6 +1,6 @@
 import { Class } from '@ephox/sugar';
 
-var updateAriaState = function (component, toggleConfig, toggleState) {
+var updateAriaState = function (component, toggleConfig) {
   var pressed = isOn(component, toggleConfig);
 
   var ariaInfo = toggleConfig.aria();
@@ -22,7 +22,7 @@ var off = function (component, toggleConfig, toggleState) {
   updateAriaState(component, toggleConfig);
 };
 
-var isOn = function (component, toggleConfig, toggleState) {
+var isOn = function (component, toggleConfig) {
   return Class.has(component.element(), toggleConfig.toggleClass());
 };
 

@@ -28,19 +28,19 @@ var fireChange = function (component, value) {
 };
 
 var moveRightFromLedge = function (ledge, detail) {
-  fireChange(ledge, detail.min(), Option.none());
+  fireChange(ledge, detail.min());
 };
 
 var moveLeftFromRedge = function (redge, detail) {
-  fireChange(redge, detail.max(), Option.none());
+  fireChange(redge, detail.max());
 };
 
 var setToRedge = function (redge, detail) {
-  fireChange(redge, detail.max() + 1, Option.none());
+  fireChange(redge, detail.max() + 1);
 };
 
 var setToLedge = function (ledge, detail) {
-  fireChange(ledge, detail.min() - 1, Option.none());
+  fireChange(ledge, detail.min() - 1);
 };
 
 var setToX = function (spectrum, spectrumBounds, detail, xValue) {
@@ -61,12 +61,12 @@ var setXFromEvent = function (spectrum, detail, spectrumBounds, simulatedEvent) 
 
 var moveLeft = function (spectrum, detail) {
   var newValue = SliderModel.reduceBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
-  fireChange(spectrum, newValue, Option.none());
+  fireChange(spectrum, newValue);
 };
 
 var moveRight = function (spectrum, detail) {
   var newValue = SliderModel.increaseBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
-  fireChange(spectrum, newValue, Option.none());
+  fireChange(spectrum, newValue);
 };
 
 export default <any> {

@@ -5,7 +5,7 @@ import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
 
-var combine = function (detail, data, partSpec, partValidated) {
+var combine:any = function (detail, data, partSpec, partValidated) {
   var spec = partSpec;
 
   return Merger.deepMerge(
@@ -38,7 +38,7 @@ var subs = function (owner, detail, parts) {
       function (data) {
         var partSpec = detail.parts()[data.name()]();
         externals[data.name()] = Fun.constant(
-          combine(detail, data, partSpec[PartType.original()]())
+          combine(detail, data, partSpec[PartType.original()]()) // This is missing partValidated
         );
         // no placeholders
       },

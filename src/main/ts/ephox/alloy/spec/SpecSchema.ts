@@ -89,9 +89,9 @@ var base = function (label, partSchemas, partUidsSchemas, spec) {
 };
 
 
-var asRawOrDie = function (label, schema, spec, partSchemas) {
+var asRawOrDie = function (label, schema, spec, partSchemas, partUidsSchemas) {
 
-  var baseS = base(label, partSchemas, spec);
+  var baseS = base(label, partSchemas, spec, partUidsSchemas);
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
