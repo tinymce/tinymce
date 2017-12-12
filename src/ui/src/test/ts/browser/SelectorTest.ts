@@ -1,8 +1,8 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import EventUtils from 'tinymce/core/dom/EventUtils';
-import UiUtils from 'tinymce/ui/test/UiUtils';
-import ViewBlock from 'tinymce/ui/test/ViewBlock';
+import UiUtils from '../module/test/UiUtils';
+import ViewBlock from '../module/test/ViewBlock';
 import Api from 'tinymce/ui/Api';
 import Factory from 'tinymce/core/ui/Factory';
 import { UnitTest } from '@ephox/refute';

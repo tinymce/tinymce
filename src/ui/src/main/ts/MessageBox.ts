@@ -94,7 +94,7 @@ var MessageBox = Window.extend({
     msgBox: function (settings) {
       var buttons, callback = settings.callback || function () { };
 
-      function createButton(text, status, primary) {
+      function createButton(text, status, primary?) {
         return {
           type: "button",
           text: text,

@@ -82,7 +82,7 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.SidebarTest', function() 
   var sAssertPanelVisibility = function (visibleStates) {
     return Step.sync(function () {
       visibleStates.forEach(function (visibleState, i) {
-        var panelElement = getSidebarElement(i).parentNode;
+        var panelElement: any = getSidebarElement(i).parentNode;
         Assertions.assertEq('Visibility need to be equal', visibleState, panelElement.style.display !== 'none');
       });
     });

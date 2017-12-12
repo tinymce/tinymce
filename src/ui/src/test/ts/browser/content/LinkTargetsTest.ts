@@ -1,7 +1,7 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import LinkTargets from 'tinymce/ui/content/LinkTargets';
-import Arr from 'tinymce/core/util/Arr';
+import { Arr } from '@ephox/katamari';
 import { UnitTest } from '@ephox/refute';
 
 UnitTest.asynctest('browser.tinymce.ui.content.LinkTargetsTest', function() {
@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.ui.content.LinkTargetsTest', function() {
 
   var createFromHtml = function (html) {
     var elm = document.createElement('div');
-    elm.contentEditable = true;
+    elm.contentEditable = "true";
     elm.innerHTML = html;
     return elm;
   };
@@ -88,7 +88,7 @@ UnitTest.asynctest('browser.tinymce.ui.content.LinkTargetsTest', function() {
   });
 
   suite.test('Header attach on headers without ids', function () {
-    var elm = createFromHtml('<h1>a</h1><h2>b</h2>');
+    var elm: any = createFromHtml('<h1>a</h1><h2>b</h2>');
     var targets = LinkTargets.find(elm);
 
     targets[0].attach();

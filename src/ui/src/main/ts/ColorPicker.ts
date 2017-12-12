@@ -62,7 +62,7 @@ export default <any> Widget.extend({
       };
     }
 
-    function updateColor(hsv, hueUpdate) {
+    function updateColor(hsv, hueUpdate?) {
       var hue = (360 - hsv.h) / 360;
 
       DomUtils.css(huePointElm, {

@@ -58,7 +58,7 @@ var setup = function (editor) {
   setupRtlMode(editor);
   setupHideFloatPanels(editor);
   setupUiContainer(editor);
-  setupEnvironment(editor);
+  setupEnvironment();
 
   FormatSelect.register(editor);
   Align.register(editor);

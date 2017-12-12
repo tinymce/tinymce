@@ -219,7 +219,7 @@ export default <any> Widget.extend({
     }
 
     // Detect old IE 7+8 add lineHeight to align caret vertically in the middle
-    var doc = document;
+    var doc: any = document;
     if (doc.all && (!doc.documentMode || doc.documentMode <= 8)) {
       lineHeight = (self.layoutRect().h - 2) + 'px';
     }

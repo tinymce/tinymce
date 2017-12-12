@@ -101,7 +101,7 @@ var addContextualToolbars = function (editor) {
     return targetRect;
   };
 
-  var reposition = function (match, shouldShow) {
+  var reposition = function (match, shouldShow?) {
     var relPos, panelRect, elementRect, contentAreaRect, panel, relRect, testPositions, smallElementWidthThreshold;
     var handler = Settings.getInlineToolbarPositionHandler(editor);
 

@@ -193,7 +193,7 @@ export default <any> Widget.extend({
 
     self._super();
 
-    handleKeyboard(minValue, maxValue, self.getEl('handle'));
+    handleKeyboard(minValue, maxValue);
     handleDrag(minValue, maxValue, self.getEl('handle'));
   },
 

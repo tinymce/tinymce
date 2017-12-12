@@ -23,9 +23,9 @@
  * @method Binding
  * @param {Object} settings Settings to the binding.
  */
-function Binding(settings) {
+var Binding: any = function(settings) {
   this.create = settings.create;
-}
+};
 
 /**
  * Creates a binding for a property on a model.
@@ -40,13 +40,13 @@ Binding.create = function (model, name) {
     create: function (otherModel, otherName) {
       var bindings;
 
-      function fromSelfToOther(e) {
+      var fromSelfToOther = function(e) {
         otherModel.set(otherName, e.value);
-      }
+      };
 
-      function fromOtherToSelf(e) {
+      var fromOtherToSelf = function(e) {
         model.set(name, e.value);
-      }
+      };
 
       otherModel.on('change:' + otherName, fromOtherToSelf);
       model.on('change:' + name, fromSelfToOther);

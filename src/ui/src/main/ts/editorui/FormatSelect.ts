@@ -33,7 +33,7 @@ var createFormats = function (formats) {
   return formats;
 };
 
-var createListBoxChangeHandler = function (editor, items, formatName) {
+var createListBoxChangeHandler = function (editor, items, formatName?) {
   return function () {
     var self = this;
 

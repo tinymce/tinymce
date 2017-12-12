@@ -2,8 +2,8 @@ import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import EventUtils from 'tinymce/core/dom/EventUtils';
-import UiUtils from 'tinymce/ui/test/UiUtils';
-import ViewBlock from 'tinymce/ui/test/ViewBlock';
+import UiUtils from '../module/test/UiUtils';
+import ViewBlock from '../module/test/ViewBlock';
 import Api from 'tinymce/ui/Api';
 import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
@@ -103,7 +103,7 @@ UnitTest.asynctest('browser.tinymce.ui.SplitButtonTest', function() {
   });
 
   suite.test("splitbutton click event", function () {
-    var splitButton, clicks = {};
+    var splitButton, clicks: any = {};
 
     splitButton = createSplitButton({
       text: 'X',

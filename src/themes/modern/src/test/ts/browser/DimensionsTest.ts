@@ -8,7 +8,7 @@ import { Element } from '@ephox/sugar';
 import { Width } from '@ephox/sugar';
 import { Height } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/EditorManager';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../module/test/ViewBlock';
 import { UnitTest } from '@ephox/refute';
 
 UnitTest.asynctest('tinymce.themes.modern.test.browser.DimensionsTest', function() {
@@ -17,7 +17,7 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.DimensionsTest', function
 
   var viewBlock = new ViewBlock();
 
-  var cCreateEditorFromSettings = function (settings, html) {
+  var cCreateEditorFromSettings = function (settings, html?) {
     return Chain.on(function (viewBlock, next, die) {
       var randomId = Id.generate('tiny-');
       html = html || '<textarea></textarea>';

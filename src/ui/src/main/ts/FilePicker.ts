@@ -24,6 +24,8 @@ import Tools from 'tinymce/core/util/Tools';
 
 "use strict";
 
+declare let window: any;
+
 var getActiveEditor = function () {
   return window.tinymce ? window.tinymce.activeEditor : EditorManager.activeEditor;
 };

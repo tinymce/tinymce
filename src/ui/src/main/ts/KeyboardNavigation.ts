@@ -44,7 +44,7 @@ export default <any> function (settings) {
    * @param {Element} elm Optional element to get role from.
    * @return {String} Role of specified element.
    */
-  function getRole(elm) {
+  function getRole(elm?) {
     elm = elm || focusedElement;
 
     if (isElement(elm)) {
@@ -62,7 +62,7 @@ export default <any> function (settings) {
    * @param {Element} elm Optional element to get parent role from.
    * @return {String} Role of the first parent that has a role.
    */
-  function getParentRole(elm) {
+  function getParentRole(elm?) {
     var role, parent = elm || focusedElement;
 
     while ((parent = parent.parentNode)) {
@@ -163,7 +163,7 @@ export default <any> function (settings) {
    * @param {tinymce.ui.Control} targetControl Optional target control to find root of.
    * @return {tinymce.ui.Control} Navigation root control.
    */
-  function getNavigationRoot(targetControl) {
+  function getNavigationRoot(targetControl?) {
     var navigationRoot, controls;
 
     targetControl = targetControl || focusedControl;
@@ -229,7 +229,7 @@ export default <any> function (settings) {
    * @param {Number} dir Direction to move in positive means forward, negative means backwards.
    * @param {Array} elements Optional array of elements to move within defaults to the current navigation roots elements.
    */
-  function moveFocus(dir, elements) {
+  function moveFocus(dir, elements?) {
     var idx = -1, navigationRoot = getNavigationRoot();
 
     elements = elements || getFocusElements(navigationRoot.getEl());
@@ -339,7 +339,7 @@ export default <any> function (settings) {
    * @private
    * @param {Object} aria Optional aria data to pass along with the enter event.
    */
-  function enter(aria) {
+  function enter(aria?) {
     aria = aria || {};
     focusedControl.fire('click', { target: focusedElement, aria: aria });
   }
@@ -392,9 +392,8 @@ export default <any> function (settings) {
         break;
 
       case 9: // DOM_VK_TAB
-        if (tab(e) !== false) {
-          e.preventDefault();
-        }
+        tab(e);
+        e.preventDefault();
         break;
     }
   });

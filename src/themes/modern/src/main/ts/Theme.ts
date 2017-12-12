@@ -12,7 +12,7 @@ import ThemeManager from 'tinymce/core/ThemeManager';
 import ThemeApi from './api/ThemeApi';
 import Api from 'tinymce/ui/Api';
 import FormatControls from 'tinymce/ui/FormatControls';
-
+declare let window: any;
 Api.registerToFactory();
 Api.appendTo(window.tinymce ? window.tinymce : {});
 

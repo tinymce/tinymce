@@ -111,7 +111,7 @@ var createFormatMenu = function (editor) {
     }
 
     Tools.each(formats, function (format) {
-      var menuItem = {
+      var menuItem: any = {
         text: format.title,
         icon: format.icon
       };

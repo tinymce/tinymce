@@ -80,7 +80,7 @@ export default <any> Widget.extend({
     lastRepaintRect = self._lastRepaintRect || {};
 
     // Detect old IE 7+8 add lineHeight to align caret vertically in the middle
-    var doc = document;
+    var doc: any = document;
     if (!self.settings.multiline && doc.all && (!doc.documentMode || doc.documentMode <= 8)) {
       style.lineHeight = (rect.h - borderH) + 'px';
     }
