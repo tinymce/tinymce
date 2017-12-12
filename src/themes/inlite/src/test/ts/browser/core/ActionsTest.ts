@@ -26,7 +26,7 @@ UnitTest.asynctest('browser/core/ActionsTest', function() {
 
   var sInsertTableTests = function (editor, tinyApis) {
     var sInsertTableTest = function (cols, rows, expectedHtml, message) {
-      var sInsertTable = wrap(Actions.insertTable, editor);
+      var sInsertTable: any = wrap(Actions.insertTable, editor);
 
       return GeneralSteps.sequence([
         tinyApis.sSetContent(''),
@@ -80,7 +80,7 @@ UnitTest.asynctest('browser/core/ActionsTest', function() {
 
   var sFormatBlockTests = function (editor, tinyApis) {
     var sFormatBlockTest = function (name) {
-      var sFormatBlock = wrap(Actions.formatBlock, editor);
+      var sFormatBlock: any = wrap(Actions.formatBlock, editor);
 
       return GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
@@ -99,7 +99,7 @@ UnitTest.asynctest('browser/core/ActionsTest', function() {
 
   var sCreateLinkTests = function (editor, tinyApis) {
     var sCreateLinkTest = function (inputHtml, url, sPath, sOffset, fPath, fOffset, expectedHtml) {
-      var sCreateLink = wrap(Actions.createLink, editor);
+      var sCreateLink: any = wrap(Actions.createLink, editor);
 
       return GeneralSteps.sequence([
         tinyApis.sSetContent(inputHtml),
@@ -149,7 +149,7 @@ UnitTest.asynctest('browser/core/ActionsTest', function() {
 
   var sInsertBlobTests = function (editor, tinyApis) {
     var sInsertBlobTest = function (inputHtml, path, offset, blob, base64, expectedHtml) {
-      var sInsertBlob = wrap(Actions.insertBlob, editor);
+      var sInsertBlob: any = wrap(Actions.insertBlob, editor);
 
       return GeneralSteps.sequence([
         tinyApis.sSetContent(inputHtml),

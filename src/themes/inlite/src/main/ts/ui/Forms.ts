@@ -60,7 +60,7 @@ var convertLinkToAbsolute = function (editor, href) {
 };
 
 var createQuickLinkForm = function (editor, hide) {
-  var attachState = {};
+  var attachState: any = {};
 
   var unlink = function () {
     editor.focus();

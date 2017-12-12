@@ -22,7 +22,7 @@
 var create = function (dom, rng) {
   var bookmark = {};
 
-  function setupEndPoint(start) {
+  function setupEndPoint(start?) {
     var offsetNode, container, offset;
 
     container = rng[start ? 'startContainer' : 'endContainer'];
@@ -66,7 +66,7 @@ var create = function (dom, rng) {
  * @param {Object} bookmark Bookmark object to move selection to.
  */
 var resolve = function (dom, bookmark) {
-  function restoreEndPoint(start) {
+  function restoreEndPoint(start?) {
     var container, offset, node;
 
     function nodeIndex(container) {

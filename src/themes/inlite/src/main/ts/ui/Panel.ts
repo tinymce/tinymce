@@ -139,12 +139,12 @@ export default <any> function () {
     panel.items().hide();
 
     if (!showToolbar(panel, id)) {
-      hide(panel);
+      hide();
       return;
     }
 
     if (repositionPanelAt(panel, id, editor, targetRect) === false) {
-      hide(panel);
+      hide();
     }
   };
 
@@ -157,7 +157,7 @@ export default <any> function () {
       panel.items().hide();
 
       if (!showToolbar(panel, id)) {
-        hide(panel);
+        hide();
         return;
       }
 
