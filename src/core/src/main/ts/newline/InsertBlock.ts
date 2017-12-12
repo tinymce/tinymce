@@ -211,7 +211,7 @@ var insert = function (editor, evt) {
 
   // Creates a new block element by cloning the current one or creating a new one if the name is specified
   // This function will also copy any text formatting from the parent block and add it to the new one
-  var createNewBlock = function (name) {
+  var createNewBlock = function (name?) {
     var node = container, block, clonedNode, caretNode, textInlineElements = schema.getTextInlineElements();
 
     if (name || parentBlockName === "TABLE" || parentBlockName === "HR") {
@@ -254,7 +254,7 @@ var insert = function (editor, evt) {
   };
 
   // Returns true/false if the caret is at the start/end of the parent block element
-  var isCaretAtStartOrEndOfBlock = function (start) {
+  var isCaretAtStartOrEndOfBlock = function (start?) {
     var walker, node, name, normalizedOffset;
 
     normalizedOffset = normalizeZwspOffset(start, container, offset);

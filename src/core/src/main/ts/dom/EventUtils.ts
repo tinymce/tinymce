@@ -48,7 +48,7 @@ var returnTrue = function () {
 /**
  * Binds a native event to a callback on the speified target.
  */
-var addEvent = function (target, name, callback, capture) {
+var addEvent = function (target, name, callback, capture?) {
   if (target.addEventListener) {
     target.addEventListener(name, callback, capture || false);
   } else if (target.attachEvent) {
@@ -59,7 +59,7 @@ var addEvent = function (target, name, callback, capture) {
 /**
  * Unbinds a native event callback on the specified target.
  */
-var removeEvent = function (target, name, callback, capture) {
+var removeEvent = function (target, name, callback, capture?) {
   if (target.removeEventListener) {
     target.removeEventListener(name, callback, capture || false);
   } else if (target.detachEvent) {
@@ -96,7 +96,7 @@ var getTargetFromShadowDom = function (event, defaultTarget) {
 /**
  * Normalizes a native event object or just adds the event specific methods on a custom event.
  */
-var fix = function (originalEvent, data) {
+var fix = function (originalEvent, data?) {
   var name, event = data || {}, undef;
 
   // Copy all properties from the original event
@@ -249,7 +249,7 @@ var bindOnReady = function (win, callback, eventUtils) {
 /**
  * This class enables you to bind/unbind native events to elements and normalize it's behavior across browsers.
  */
-var EventUtils = function () {
+var EventUtils: any = function () {
   var self = this, events = {}, count, expando, hasFocusIn, hasMouseEnterLeave, mouseEnterLeave;
 
   expando = eventExpandoPrefix + (+new Date()).toString(32);

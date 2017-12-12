@@ -2,7 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/Env';
-import HtmlUtils from 'tinymce/core/test/HtmlUtils';
+import HtmlUtils from '../module/test/HtmlUtils';
 import JSON from 'tinymce/core/util/JSON';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function() {
     return rng;
   };
 
-  var ok = function (value, label) {
+  var ok = function (value, label?) {
     return LegacyUnit.equal(value, true, label);
   };
 

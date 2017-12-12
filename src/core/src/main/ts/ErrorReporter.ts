@@ -64,7 +64,7 @@ var pluginLoadError = function (editor, url) {
 
 var initError = function (message) {
   var console = window.console;
-  if (console && !window.test) { // Skip test env
+  if (console) { // Skip test env
     if (console.error) {
       console.error.apply(console, arguments);
     } else {

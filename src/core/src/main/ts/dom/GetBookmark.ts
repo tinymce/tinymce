@@ -56,7 +56,7 @@ var getPoint = function (dom, trim, normalized, rng, start) {
 };
 
 var getLocation = function (trim, selection, normalized, rng) {
-  var dom = selection.dom, bookmark = {};
+  var dom = selection.dom, bookmark: any = {};
 
   bookmark.start = getPoint(dom, trim, normalized, rng, true);
 

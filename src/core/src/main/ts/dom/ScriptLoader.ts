@@ -46,7 +46,7 @@ var isFunction = function (f) {
   return typeof f === 'function';
 };
 
-var ScriptLoader = function () {
+var ScriptLoader: any = function () {
   var QUEUED = 0,
     LOADING = 1,
     LOADED = 2,

@@ -80,7 +80,7 @@ import Tools from './util/Tools';
 
 var each = Tools.each;
 
-var AddOnManager = function () {
+var AddOnManager: any = function () {
   var self = this;
 
   self.items = [];

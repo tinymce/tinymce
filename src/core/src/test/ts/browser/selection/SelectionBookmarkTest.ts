@@ -11,7 +11,7 @@ import { Traverse } from '@ephox/sugar';
 import { Selection } from '@ephox/sugar';
 import { WindowSelection } from '@ephox/sugar';
 import SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/refute';
 
 UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', function() {

@@ -10,7 +10,7 @@ import { SelectorFind } from '@ephox/sugar';
 import { Selectors } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/refute';
 

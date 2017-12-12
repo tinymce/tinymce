@@ -24,7 +24,7 @@ import Bookmarks from '../../dom/Bookmarks';
  * @method BookmarkManager
  * @param {tinymce.dom.Selection} selection Selection instance to handle bookmarks for.
  */
-var BookmarkManager = function (selection) {
+var BookmarkManager: any = function (selection) {
   return {
     /**
      * Returns a bookmark location for the current selection. This bookmark object

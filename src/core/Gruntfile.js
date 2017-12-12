@@ -1,67 +1,44 @@
 /*eslint-env node */
 
+var resolve = require('rollup-plugin-node-resolve');
+var typescript = require('rollup-plugin-typescript2');
+var patcher = require('../../tools/modules/rollup-patch');
+
 module.exports = function (grunt) {
   grunt.initConfig({
-    "bolt-init": {
-      "core": {
-        config_dir: "config/bolt"
-      }
-    },
-
-    "bolt-build": {
-      "core": {
-        config_js: "config/bolt/prod.js",
-        output_dir: "scratch",
-        main: "tinymce.core.api.Main",
-        filename: "tinymce",
-
-        generate_inline: true,
-        minimise_module_names: true,
-
-        files: {
-          src: ["src/main/js/api/Main.js"]
-        }
+    rollup: {
+      options: {
+        treeshake: true,
+        moduleName: 'tinymce',
+        format: 'iife',
+        banner: '(function () {',
+        footer: '})()',
+        plugins: [
+          resolve(),
+          typescript({
+            include: [
+              '../../**/*.ts'
+            ]
+          }),
+          patcher()
+        ]
       },
-
-      "jquery-plugin": {
-        config_js: "config/bolt/prod.js",
-        output_dir: "scratch",
-        main: "tinymce.core.JqueryIntegration",
-        filename: "jquery.tinymce",
-
-        generate_inline: true,
-        minimise_module_names: true,
-
-        files: {
-          src: ["src/main/js/JqueryIntegration.js"]
-        }
-      }
-    },
-
-    copy: {
-      "core": {
-        files: [
+      core: {
+        files:[
           {
-            src: "scratch/inline/tinymce.raw.js",
-            dest: "dist/tinymce/tinymce.js"
-          },
-
-          {
-            src: "src/main/text/readme_lang.md",
-            dest: "dist/tinymce/langs/readme.md"
+            src: 'src/main/ts/api/Main.ts',
+            dest: 'dist/tinymce/tinymce.js'
           }
         ]
-      }
-    },
-
-    eslint: {
-      options: {
-        config: "../../../.eslintrc"
-      },
-
-      src: [
-        "src"
-      ]
+      }/*,
+      demo: {
+        files: [
+          {
+            src: 'src/demo/ts/demo/Demos.ts',
+            dest: 'scratch/compiled/demo.js'
+          }
+        ]
+      }*/
     },
 
     uglify: {
@@ -76,22 +53,39 @@ module.exports = function (grunt) {
         }
       },
 
-      "tinymce": {
+      'plugin': {
         files: [
           {
-            src: "scratch/inline/tinymce.js",
-            dest: "dist/tinymce/tinymce.min.js"
-          },
-
-          {
-            src: "scratch/inline/jquery.tinymce.js",
-            dest: "dist/tinymce/jquery.tinymce.min.js"
+            src: 'dist/tinymce/tinymce.js',
+            dest: 'dist/tinymce/tinymce.min.js'
           }
         ]
       }
     },
 
-    "globals": {
+    copy: {
+      'core': {
+        files: [
+          {
+            src: 'src/main/text/readme_lang.md',
+            dest: 'dist/tinymce/langs/readme.md'
+          }
+        ]
+      }
+    },
+
+    watch: {
+      demo: {
+        files: ['src/**/*.ts'],
+        tasks: ['rollup:demo'],
+        options: {
+          livereload: true,
+          spawn: false
+        }
+      }
+    },
+
+    'globals': {
       options: {
         outputDir: 'dist/globals',
         templateFile: 'config/GlobalsTemplate.ts'
@@ -99,11 +93,10 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.task.loadTasks("../../node_modules/@ephox/bolt/tasks");
-  grunt.task.loadTasks("../../node_modules/grunt-contrib-copy/tasks");
-  grunt.task.loadTasks("../../node_modules/grunt-contrib-uglify/tasks");
-  grunt.task.loadTasks("../../node_modules/grunt-eslint/tasks");
-  grunt.task.loadTasks("../../tools/tasks");
+  grunt.task.loadTasks('../../node_modules/grunt-rollup/tasks');
+  grunt.task.loadTasks('../../node_modules/grunt-contrib-copy/tasks');
+  grunt.task.loadTasks('../../node_modules/grunt-contrib-uglify/tasks');
+  grunt.task.loadTasks('../../tools/tasks');
 
-  grunt.registerTask("default", ["bolt-init", "bolt-build", "globals", "copy", "eslint", "uglify"]);
+  grunt.registerTask('default', ['globals', 'rollup', 'copy', 'uglify']);
 };

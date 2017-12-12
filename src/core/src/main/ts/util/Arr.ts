@@ -32,7 +32,7 @@ var toArray = function (obj) {
   return array;
 };
 
-var each = function (o, cb, s) {
+var each = function (o, cb, s?) {
   var n, l;
 
   if (!o) {

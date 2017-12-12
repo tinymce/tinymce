@@ -64,7 +64,7 @@ var SelectionOverrides = function (editor) {
     return editor.selection.getRng();
   };
 
-  var scrollIntoView = function (node, alignToTop) {
+  var scrollIntoView = function (node, alignToTop?) {
     editor.selection.scrollIntoView(node, alignToTop);
   };
 
@@ -345,7 +345,7 @@ var SelectionOverrides = function (editor) {
     return isWithinCaretContainer(rng.startContainer) || isWithinCaretContainer(rng.endContainer);
   };
 
-  var setContentEditableSelection = function (range, forward) {
+  var setContentEditableSelection = function (range, forward?) {
     var node, $ = editor.$, dom = editor.dom, $realSelectionContainer, sel,
       startContainer, startOffset, endOffset, e, caretPosition, targetClone, origTargetClone;
 

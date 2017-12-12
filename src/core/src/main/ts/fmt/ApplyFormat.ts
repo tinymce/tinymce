@@ -39,11 +39,11 @@ var processChildElements = function (node, filter, process) {
   });
 };
 
-var applyFormat = function (ed, name, vars, node) {
+var applyFormat = function (ed, name, vars?, node?) {
   var formatList = ed.formatter.get(name), format = formatList[0], bookmark, rng, isCollapsed = !node && ed.selection.isCollapsed();
   var dom = ed.dom, selection = ed.selection;
 
-  var setElementFormat = function (elm, fmt) {
+  var setElementFormat = function (elm, fmt?) {
     fmt = fmt || format;
 
     if (elm) {
@@ -103,7 +103,7 @@ var applyFormat = function (ed, name, vars, node) {
     return found;
   };
 
-  var applyRngStyle = function (dom, rng, bookmark, nodeSpecific) {
+  var applyRngStyle = function (dom, rng, bookmark, nodeSpecific?) {
     var newWrappers = [], wrapName, wrapElm, contentEditable = true;
 
     // Setup wrapper element

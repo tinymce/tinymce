@@ -32,14 +32,14 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function() 
     });
   };
 
-  var sBackspace = function (editor, forward) {
+  var sBackspace = function (editor, forward?) {
     return Step.sync(function () {
       var returnVal = InlineFormatDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  var sBackspaceNoop = function (editor, forward) {
+  var sBackspaceNoop = function (editor, forward?) {
     return Step.sync(function () {
       var returnVal = InlineFormatDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);

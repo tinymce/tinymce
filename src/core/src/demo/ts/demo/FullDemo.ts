@@ -59,6 +59,8 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 /*eslint no-console:0 */
 
+declare const window: any;
+
 AdvListPlugin();
 AnchorPlugin();
 AutoLinkPlugin();

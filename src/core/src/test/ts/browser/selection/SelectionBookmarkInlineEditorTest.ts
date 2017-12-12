@@ -32,7 +32,7 @@ UnitTest.asynctest(
     var sAddTestDiv = Step.sync(function () {
       var div = document.createElement('div');
       div.innerHTML = 'xxx';
-      div.contentEditable = true;
+      div.contentEditable = 'true';
       div.id = testDivId;
       document.body.appendChild(div);
     });
@@ -44,7 +44,7 @@ UnitTest.asynctest(
     };
 
     var focusDiv = function () {
-      var input = document.querySelector('#' + testDivId);
+      var input: any = document.querySelector('#' + testDivId);
       input.focus();
     };
 

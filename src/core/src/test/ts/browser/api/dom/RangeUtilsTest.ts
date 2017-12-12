@@ -5,7 +5,7 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/refute';
 
 UnitTest.asynctest('browser.tinymce.core.api.dom.RangeUtilsTest', function() {

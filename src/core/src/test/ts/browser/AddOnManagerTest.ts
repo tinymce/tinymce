@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', function() {
     };
   };
 
-  var unpatch = function (proto, name) {
+  var unpatch = function (proto, name?) {
     var originalFuncs = proto.__originalFuncs;
 
     if (!originalFuncs) {
@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', function() {
     }
   };
 
-  var getLanguagePackUrl = function (language, languages) {
+  var getLanguagePackUrl = function (language, languages?) {
     languagePackUrl = null;
     AddOnManager.language = language;
     PluginManager.requireLangPack('plugin', languages);

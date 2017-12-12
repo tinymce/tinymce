@@ -18,8 +18,8 @@ import Promise from './Promise';
 
 var requestAnimationFramePromise;
 
-var requestAnimationFrame = function (callback, element) {
-  var i, requestAnimationFrameFunc = window.requestAnimationFrame, vendors = ['ms', 'moz', 'webkit'];
+var requestAnimationFrame = function (callback, element?) {
+  var i, requestAnimationFrameFunc: any = window.requestAnimationFrame, vendors = ['ms', 'moz', 'webkit'];
 
   var featurefill = function (callback) {
     window.setTimeout(callback, 0);

@@ -73,7 +73,7 @@ export default <any> function (document, settings) {
     // Sniffs for older WebKit versions that have the link.onload but a broken one
     var isOldWebKit = function () {
       var webKitChunks = navigator.userAgent.match(/WebKit\/(\d*)/);
-      return !!(webKitChunks && webKitChunks[1] < 536);
+      return !!(webKitChunks && parseInt(webKitChunks[1], 10) < 536);
     };
 
     // Calls the waitCallback until the test returns true or the timeout occurs

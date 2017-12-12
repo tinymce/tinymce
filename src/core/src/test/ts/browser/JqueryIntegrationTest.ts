@@ -6,12 +6,14 @@ import Editor from 'tinymce/core/Editor';
 import EditorManager from 'tinymce/core/EditorManager';
 import JqueryIntegration from 'tinymce/core/JqueryIntegration';
 import PluginManager from 'tinymce/core/PluginManager';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../module/test/ViewBlock';
 import ThemeManager from 'tinymce/core/ThemeManager';
 import Delay from 'tinymce/core/util/Delay';
 import Tools from 'tinymce/core/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
+
+declare const window: any;
 
 UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', function() {
   var success = arguments[arguments.length - 2];

@@ -5,9 +5,12 @@ import { LegacyUnit } from '@ephox/mcagar';
 import Serializer from 'tinymce/core/api/dom/Serializer';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import TrimHtml from 'tinymce/core/dom/TrimHtml';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/refute';
+
+declare const unescape: any;
+declare const escape: any;
 
 UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   var success = arguments[arguments.length - 2];

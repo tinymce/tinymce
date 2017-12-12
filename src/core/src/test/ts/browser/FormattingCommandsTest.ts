@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function() {
 
   Theme();
 
-  var ok = function (value, label) {
+  var ok = function (value, label?) {
     return LegacyUnit.equal(value, true, label);
   };
 

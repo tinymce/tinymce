@@ -42,7 +42,7 @@ import Tools from './Tools';
 
 var extend = Tools.extend;
 
-var JSONRequest = function (settings) {
+var JSONRequest: any = function (settings) {
   this.settings = extend({}, settings);
   this.count = 0;
 };

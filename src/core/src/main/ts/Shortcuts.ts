@@ -36,7 +36,7 @@ export default <any> function (editor) {
   var self = this, shortcuts = {}, pendingPatterns = [];
 
   var parseShortcut = function (pattern) {
-    var id, key, shortcut = {};
+    var id, key, shortcut: any = {};
 
     // Parse modifiers and keys ctrl+alt+b for example
     each(explode(pattern, '+'), function (value) {
@@ -88,7 +88,7 @@ export default <any> function (editor) {
     return shortcut;
   };
 
-  var createShortcut = function (pattern, desc, cmdFunc, scope) {
+  var createShortcut = function (pattern, desc?, cmdFunc?, scope?) {
     var shortcuts;
 
     shortcuts = Tools.map(explode(pattern, '>'), parseShortcut);

@@ -76,7 +76,7 @@ var i,
   arr = [],
   pop = arr.pop,
   push_native = arr.push,
-  push = arr.push,
+  push: any = arr.push,
   slice = arr.slice,
   // Use a stripped-down indexOf if we can't use a native one
   indexOf = arr.indexOf || function (elem) {
@@ -159,7 +159,7 @@ var i,
   // CSS escapes http://www.w3.org/TR/CSS21/syndata.html#escaped-characters
   runescape = new RegExp("\\\\([\\da-f]{1,6}" + whitespace + "?|(" + whitespace + ")|.)", "ig"),
   funescape = function (_, escaped, escapedWhitespace) {
-    var high = "0x" + escaped - 0x10000;
+    var high = (<any>"0x") + escaped - 0x10000;
     // NaN means non-codepoint
     // Support: Firefox<24
     // Workaround erroneous numeric interpretation of +"0x"
@@ -202,7 +202,7 @@ try {
   };
 }
 
-function Sizzle(selector, context, results, seed) {
+var Sizzle: any = function (selector, context, results, seed) {
   var match, elem, m, nodeType,
     // QSA vars
     i, groups, old, nid, newContext, newSelector;
@@ -749,7 +749,7 @@ setDocument = Sizzle.setDocument = function (node) {
       }
 
       // Sort on method existence if only one input has compareDocumentPosition
-      var compare = !a.compareDocumentPosition - !b.compareDocumentPosition;
+      var compare = (<any> (!a.compareDocumentPosition)) - (<any> (!b.compareDocumentPosition));
       if (compare) {
         return compare;
       }
@@ -1027,7 +1027,7 @@ Expr = Sizzle.selectors = {
 
         // numeric x and y parameters for Expr.filter.CHILD
         // remember that false/true cast respectively to 0/1
-        match[4] = +(match[4] ? match[5] + (match[6] || 1) : 2 * (match[3] === "even" || match[3] === "odd"));
+        match[4] = +(match[4] ? match[5] + (match[6] || 1) : 2 * (<any>(match[3] === "even") || match[3] === "odd"));
         match[5] = +((match[7] + match[8]) || match[3] === "odd");
 
         // other types prohibit arguments
@@ -1531,7 +1531,7 @@ function toSelector(tokens) {
   return selector;
 }
 
-function addCombinator(matcher, combinator, base) {
+function addCombinator(matcher, combinator, base?) {
   var dir = combinator.dir,
     checkNonElements = base && dir === "parentNode",
     doneName = done++;
@@ -1607,7 +1607,7 @@ function multipleContexts(selector, contexts, results) {
   return results;
 }
 
-function condense(unmatched, map, filter, context, xml) {
+function condense(unmatched, map?, filter?, context?, xml?) {
   var elem,
     newUnmatched = [],
     i = 0,
@@ -1628,7 +1628,7 @@ function condense(unmatched, map, filter, context, xml) {
   return newUnmatched;
 }
 
-function setMatcher(preFilter, selector, matcher, postFilter, postFinder, postSelector) {
+function setMatcher(preFilter, selector?, matcher?, postFilter?, postFinder?, postSelector?) {
   if (postFilter && !postFilter[expando]) {
     postFilter = setMatcher(postFilter);
   }
@@ -1782,7 +1782,7 @@ function matcherFromGroupMatchers(elementMatchers, setMatchers) {
     superMatcher = function (seed, context, xml, results, outermost) {
       var elem, j, matcher,
         matchedCount = 0,
-        i = "0",
+        i: any = "0",
         unmatched = seed && [],
         setMatched = [],
         contextBackup = outermostContext,

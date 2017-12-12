@@ -67,7 +67,7 @@ var createFragment = function (html, fragDoc) {
   return frag;
 };
 
-var domManipulate = function (targetNodes, sourceItem, callback, reverse) {
+var domManipulate = function (targetNodes, sourceItem, callback, reverse?) {
   var i;
 
   if (isString(sourceItem)) {
@@ -102,7 +102,7 @@ var hasClass = function (node, className) {
   return node && className && (' ' + node.className + ' ').indexOf(' ' + className + ' ') !== -1;
 };
 
-var wrap = function (elements, wrapper, all) {
+var wrap = function (elements, wrapper, all?) {
   var lastParent, newWrapper;
 
   wrapper = DomQuery(wrapper)[0];
@@ -136,7 +136,7 @@ var cssFix = {
 
 var attrHooks = {}, cssHooks = {};
 
-var DomQuery = function (selector, context) {
+var DomQuery: any = function (selector, context) {
   /*eslint new-cap:0 */
   return new DomQuery.fn.init(selector, context);
 };
@@ -491,7 +491,7 @@ DomQuery.fn = DomQuery.prototype = {
 
         // Default px suffix on these
         if (typeof value === 'number' && !numericCssMap[name]) {
-          value += 'px';
+          value = value.toString() + 'px';
         }
 
         self.each(function () {
@@ -1219,7 +1219,7 @@ Tools.extend(DomQuery, {
   }
 });
 
-var dir = function (el, prop, until) {
+var dir = function (el, prop, until?) {
   var matched = [], cur = el[prop];
 
   if (typeof until != 'string' && until instanceof DomQuery) {
@@ -1247,7 +1247,7 @@ var dir = function (el, prop, until) {
   return matched;
 };
 
-var sibling = function (node, siblingName, nodeType, until) {
+var sibling = function (node, siblingName, nodeType, until?) {
   var result = [];
 
   if (until instanceof DomQuery) {
@@ -1478,7 +1478,7 @@ DomQuery.fn.init.prototype = DomQuery.fn;
 DomQuery.overrideDefaults = function (callback) {
   var defaults;
 
-  var sub = function (selector, context) {
+  var sub: any = function (selector, context) {
     defaults = defaults || callback();
 
     if (arguments.length === 0) {

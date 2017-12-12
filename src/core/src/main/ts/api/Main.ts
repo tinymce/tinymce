@@ -10,9 +10,13 @@
 
 import { Fun } from '@ephox/katamari';
 import Tinymce from './Tinymce';
+import { Global } from '@ephox/katamari';
+
+declare const module: any;
+declare const window: any;
 
 /*eslint consistent-this: 0 */
-var context = this || window;
+var context = Global;
 
 var exportToModuleLoaders = function (tinymce) {
   // Bolt
@@ -33,8 +37,5 @@ var exportToWindowGlobal = function (tinymce) {
   window.tinyMCE = tinymce;
 };
 
-export default <any> function () {
-  exportToWindowGlobal(Tinymce);
-  exportToModuleLoaders(Tinymce);
-  return Tinymce;
-};
+exportToWindowGlobal(Tinymce);
+exportToModuleLoaders(Tinymce);

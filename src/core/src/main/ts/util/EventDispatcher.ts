@@ -30,7 +30,7 @@ var nativeEvents = Tools.makeMap(
   ' '
 );
 
-var Dispatcher = function (settings) {
+var Dispatcher: any = function (settings) {
   var self = this, scope, bindings = {}, toggleEvent;
 
   var returnFalse = function () {

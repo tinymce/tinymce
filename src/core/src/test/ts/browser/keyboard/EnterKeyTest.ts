@@ -2,7 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/Env';
-import HtmlUtils from 'tinymce/core/test/HtmlUtils';
+import HtmlUtils from '../../module/test/HtmlUtils';
 import Tools from 'tinymce/core/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
 
   Theme();
 
-  var pressEnter = function (editor, evt) {
+  var pressEnter = function (editor, evt?) {
     var dom = editor.dom, target = editor.selection.getNode();
 
     evt = Tools.extend({ keyCode: 13, shiftKey: false }, evt);

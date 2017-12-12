@@ -23,7 +23,7 @@ import Env from '../Env';
 
 var count = 0;
 
-var uniqueId = function (prefix) {
+var uniqueId = function (prefix?) {
   return (prefix || 'blobid') + (count++);
 };
 

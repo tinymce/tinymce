@@ -6,7 +6,7 @@ import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import Preview from 'tinymce/core/fmt/Preview';
-import HtmlUtils from 'tinymce/core/test/HtmlUtils';
+import HtmlUtils from '../../module/test/HtmlUtils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 

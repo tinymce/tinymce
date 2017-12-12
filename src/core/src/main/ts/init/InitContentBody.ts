@@ -29,6 +29,8 @@ import Delay from '../util/Delay';
 import Quirks from '../util/Quirks';
 import Tools from '../util/Tools';
 
+declare const escape: any;
+
 var DOM = DOMUtils.DOM;
 
 var appendStyle = function (editor, text) {

@@ -4,7 +4,7 @@ import CaretContainer from 'tinymce/core/caret/CaretContainer';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import DomQuery from 'tinymce/core/dom/DomQuery';
 import Env from 'tinymce/core/Env';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/refute';
 

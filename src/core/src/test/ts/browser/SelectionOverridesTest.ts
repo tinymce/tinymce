@@ -5,7 +5,7 @@ import { TinyDom } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/Env';
 import CaretContainer from 'tinymce/core/caret/CaretContainer';
-import KeyUtils from 'tinymce/core/test/KeyUtils';
+import KeyUtils from '../module/test/KeyUtils';
 import VK from 'tinymce/core/util/VK';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';

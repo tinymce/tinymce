@@ -24,7 +24,7 @@ var getPos = function (elm) {
 };
 
 var fireScrollIntoViewEvent = function (editor, elm, alignToTop) {
-  var scrollEvent = { elm: elm, alignToTop: alignToTop };
+  var scrollEvent: any = { elm: elm, alignToTop: alignToTop };
   editor.fire('scrollIntoView', scrollEvent);
   return scrollEvent.isDefaultPrevented();
 };

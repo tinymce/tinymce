@@ -26,7 +26,7 @@ var isTableCell = function (node) {
   return /^(TH|TD)$/.test(node.nodeName);
 };
 
-var getContainer = function (ed, rng, start) {
+var getContainer = function (ed, rng, start?) {
   var container, offset, lastIdx;
 
   container = rng[start ? 'startContainer' : 'endContainer'];
@@ -55,7 +55,7 @@ var getContainer = function (ed, rng, start) {
   return container;
 };
 
-var wrap = function (dom, node, name, attrs) {
+var wrap = function (dom, node, name, attrs?) {
   var wrapper = dom.create(name, attrs);
 
   node.parentNode.insertBefore(wrapper, node);
@@ -93,7 +93,7 @@ var isColorFormatAndAnchor = function (node, format) {
   return format.links && node.tagName === 'A';
 };
 
-var find = function (dom, node, next, inc) {
+var find = function (dom, node, next, inc?) {
   node = FormatUtils.getNonWhiteSpaceSibling(node, next, inc);
   return !node || (node.nodeName === 'BR' || dom.isBlock(node));
 };
@@ -172,7 +172,7 @@ var removeNode = function (ed, node, format) {
  * @param {Node} compareNode Optional compare node, if specified the styles will be compared to that node.
  * @return {Boolean} True/false if the node was removed or not.
  */
-var removeFormat = function (ed, format, vars, node, compareNode) {
+var removeFormat = function (ed, format, vars?, node?, compareNode?) {
   var i, attrs, stylesModified, dom = ed.dom;
 
   // Check if node matches format
@@ -390,7 +390,7 @@ var remove = function (ed, name, vars, node, similar) {
     }
   };
 
-  var unwrap = function (start) {
+  var unwrap = function (start?) {
     var node = dom.get(start ? '_start' : '_end'),
       out = node[start ? 'firstChild' : 'lastChild'];
 

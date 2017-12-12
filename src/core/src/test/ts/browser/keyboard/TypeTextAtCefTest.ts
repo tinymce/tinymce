@@ -7,7 +7,7 @@ import { TinyActions } from '@ephox/mcagar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
-import TypeText from 'tinymce/core/test/TypeText';
+import TypeText from '../../module/test/TypeText';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 

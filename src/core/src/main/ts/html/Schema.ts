@@ -25,10 +25,10 @@ import Tools from '../util/Tools';
  * @version 3.4
  */
 
-var mapCache = {}, dummyObj = {};
+var mapCache: any = {}, dummyObj = {};
 var makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
 
-var split = function (items, delim) {
+var split = function (items, delim?) {
   items = Tools.trim(items);
   return items ? items.split(delim || ' ') : [];
 };
@@ -41,13 +41,13 @@ var split = function (items, delim) {
  * @return {Object} Schema lookup table.
  */
 var compileSchema = function (type) {
-  var schema = {}, globalAttributes, blockContent;
+  var schema: any = {}, globalAttributes, blockContent;
   var phrasingContent, flowContent, html4BlockContent, html4PhrasingContent;
 
-  var add = function (name, attributes, children) {
+  var add = function (name, attributes?, children?) {
     var ni, attributesOrder, element;
 
-    var arrayToMap = function (array, obj) {
+    var arrayToMap = function (array, obj?) {
       var map = {}, i, l;
 
       for (i = 0, l = array.length; i < l; i++) {
@@ -79,7 +79,7 @@ var compileSchema = function (type) {
     }
   };
 
-  var addAttrs = function (name, attributes) {
+  var addAttrs = function (name, attributes?) {
     var ni, schemaItem, i, l;
 
     name = split(name);
@@ -313,7 +313,7 @@ var compileSchema = function (type) {
   return schema;
 };
 
-var compileElementMap = function (value, mode) {
+var compileElementMap = function (value, mode?) {
   var styles;
 
   if (value) {
@@ -341,7 +341,7 @@ export default <any> function (settings) {
   var customElementsMap = {}, specialElements = {};
 
   // Creates an lookup table map object for the specified option or the default value
-  var createLookupTable = function (option, defaultValue, extendWith) {
+  var createLookupTable = function (option, defaultValue?, extendWith?) {
     var value = settings[option];
 
     if (!value) {

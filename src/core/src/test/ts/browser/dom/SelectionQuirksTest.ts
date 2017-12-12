@@ -21,24 +21,25 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function() {
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     var tinyApis = TinyApis(editor);
     var tinyActions = TinyActions(editor);
+    var count;
 
     // hijack editor.selection.normalize() to count how many times it will be invoked
     var backupNormalize = editor.selection.normalize;
     var normalize = function () {
-      normalize.count = normalize.count === undefined ? 1 : normalize.count + 1;
+      count = count === undefined ? 1 : count + 1;
       backupNormalize.apply(this, arguments);
     };
     editor.selection.normalize = normalize;
 
     var sResetNormalizeCounter = function () {
       return Step.sync(function () {
-        normalize.count = 0;
+        count = 0;
       });
     };
 
     var sAssertNormalizeCounter = function (expected) {
       return Step.sync(function () {
-        Assertions.assertEq('checking normalization counter', expected, normalize.count);
+        Assertions.assertEq('checking normalization counter', expected, count);
       });
     };
 

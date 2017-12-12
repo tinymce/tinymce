@@ -52,7 +52,7 @@ export default <any> function (editor) {
    * @return {Boolean} true/false if the command was found or not.
    */
   var execCommand = function (command, ui, value, args) {
-    var func, customCommand, state = 0;
+    var func, customCommand, state = false;
 
     if (editor.removed) {
       return;
@@ -173,7 +173,7 @@ export default <any> function (editor) {
    * @param {Object} commandList Name/value collection with commands to add, the names can also be comma separated.
    * @param {String} type Optional type to add, defaults to exec. Can be value or state as well.
    */
-  var addCommands = function (commandList, type) {
+  var addCommands = function (commandList, type?) {
     type = type || 'exec';
 
     each(commandList, function (callback, command) {
@@ -248,7 +248,7 @@ export default <any> function (editor) {
 
   // Private methods
 
-  var execNativeCommand = function (command, ui, value) {
+  var execNativeCommand = function (command, ui?, value?) {
     if (ui === undefined) {
       ui = FALSE;
     }
@@ -264,12 +264,12 @@ export default <any> function (editor) {
     return formatter.match(name);
   };
 
-  var toggleFormat = function (name, value) {
+  var toggleFormat = function (name, value?) {
     formatter.toggle(name, value ? { value: value } : undefined);
     editor.nodeChanged();
   };
 
-  var storeSelection = function (type) {
+  var storeSelection = function (type?) {
     bookmark = selection.getBookmark(type);
   };
 

@@ -101,7 +101,7 @@ VisualCharsPlugin();
 WordCountPlugin();
 ModernTheme();
 
-var cmd = function (command, value) {
+var cmd = function (command, value?) {
   return { command: command, value: value };
 };
 

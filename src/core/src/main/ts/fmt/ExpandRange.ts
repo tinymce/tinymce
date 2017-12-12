@@ -18,7 +18,7 @@ var getParents = FormatUtils.getParents, isWhiteSpaceNode = FormatUtils.isWhiteS
 
 // This function walks down the tree to find the leaf at the selection.
 // The offset is also returned as if node initially a leaf, the offset may be in the middle of the text node.
-var findLeaf = function (node, offset) {
+var findLeaf = function (node, offset?) {
   if (typeof offset === 'undefined') {
     offset = node.nodeType === 3 ? node.length : node.childNodes.length;
   }
@@ -74,7 +74,7 @@ var findParentContentEditable = function (dom, node) {
   return node;
 };
 
-var findSpace = function (start, remove, node, offset) {
+var findSpace = function (start, remove, node, offset?) {
   var pos, pos2, str = node.nodeValue;
 
   if (typeof offset === "undefined") {

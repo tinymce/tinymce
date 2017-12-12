@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function() {
   var writer = new Writer(), schema = new Schema();
 
   var createCounter = function (writer) {
-    var counts = {};
+    var counts: any = {};
 
     return {
       counts: counts,

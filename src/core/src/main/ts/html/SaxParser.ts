@@ -12,6 +12,9 @@ import Schema from './Schema';
 import Entities from './Entities';
 import Tools from '../util/Tools';
 
+declare const escape: any;
+declare const unescape: any;
+
 /*eslint max-depth:[2, 9] */
 
 /**
@@ -112,7 +115,7 @@ var findEndTag = function (schema, html, startIndex) {
  * @param {Object} settings Name/value collection of settings. comment, cdata, text, start and end are callbacks.
  * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
  */
-var SaxParser = function (settings, schema) {
+var SaxParser: any = function (settings, schema) {
   var self = this;
 
   var noop = function () { };

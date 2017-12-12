@@ -22,7 +22,7 @@ import SplitRange from '../../selection/SplitRange';
  * @class tinymce.dom.RangeUtils
  */
 
-var RangeUtils = function (dom) {
+var RangeUtils: any = function (dom) {
   /**
    * Walks the specified range like object and executes the callback for each sibling collection it finds.
    *

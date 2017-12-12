@@ -17,14 +17,15 @@ import Delay from './Delay';
 import Tools from './Tools';
 import VK from './VK';
 
+declare const escape: any;
+declare const unescape: any;
+
 /**
  * This file includes fixes for various browser quirks it's made to make it easy to add/remove browser specific fixes.
  *
  * @private
  * @class tinymce.util.Quirks
  */
-
-
 
 export default <any> function (editor) {
   var each = Tools.each;
@@ -285,7 +286,7 @@ export default <any> function (editor) {
   var focusBody = function () {
     // Fix for a focus bug in FF 3.x where the body element
     // wouldn't get proper focus if the user clicked on the HTML element
-    if (!window.Range.prototype.getClientRects) { // Detect getClientRects got introduced in FF 4
+    if (!Range.prototype.getClientRects) { // Detect getClientRects got introduced in FF 4
       editor.on('mousedown', function (e) {
         if (!isDefaultPrevented(e) && e.target.nodeName === "HTML") {
           var body = editor.getBody();

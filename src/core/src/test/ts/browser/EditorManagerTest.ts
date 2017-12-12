@@ -4,7 +4,7 @@ import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Editor from 'tinymce/core/Editor';
 import EditorManager from 'tinymce/core/EditorManager';
 import PluginManager from 'tinymce/core/PluginManager';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../module/test/ViewBlock';
 import Delay from 'tinymce/core/util/Delay';
 import Tools from 'tinymce/core/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';

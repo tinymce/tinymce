@@ -15,7 +15,7 @@
  * @private
  */
 
-
+declare const escape: any;
 
 export default <any> function (global) {
   var undef, lazyLoading, patchApplied;
@@ -158,7 +158,7 @@ export default <any> function (global) {
         }
       }
 
-      var script = document.createElement('script');
+      var script: any = document.createElement('script');
       script.type = 'text/javascript';
       script.onload = script.onreadystatechange = function (e) {
         e = e || window.event;
@@ -280,7 +280,7 @@ export default <any> function (global) {
     };
 
     // Patch various jQuery functions
-    var jQueryFn = {};
+    var jQueryFn: any = {};
 
     // Patch some setter/getter functions these will
     // now be able to set/get the contents of editor instances for

@@ -63,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function() {
     });
   };
 
-  var sGetRng = function (editor, forward) {
+  var sGetRng = function (editor, forward?) {
     return Step.sync(function () {
       editor.selection.getRng();
     });

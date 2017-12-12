@@ -4,8 +4,8 @@ import Env from 'tinymce/core/Env';
 import FakeCaret from 'tinymce/core/caret/FakeCaret';
 import $ from 'tinymce/core/dom/DomQuery';
 import Zwsp from 'tinymce/core/text/Zwsp';
-import CaretAsserts from 'tinymce/core/test/CaretAsserts';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import CaretAsserts from '../../module/test/CaretAsserts';
+import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/refute';
 
 UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function() {

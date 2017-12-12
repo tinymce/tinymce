@@ -23,6 +23,8 @@ import Promise from './util/Promise';
 import Tools from './util/Tools';
 import URI from './util/URI';
 
+declare const window: any;
+
 /**
  * This class used as a factory for manager for tinymce.Editor instances.
  *
@@ -217,7 +219,7 @@ EditorManager = {
       // We didn't find any baseURL by looking at the script elements
       // Try to use the document.currentScript as a fallback
       if (!baseURL && document.currentScript) {
-        src = document.currentScript.src;
+        src = (<any> document.currentScript).src;
 
         if (src.indexOf('.min') != -1) {
           suffix = '.min';

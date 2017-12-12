@@ -32,7 +32,7 @@ var DEFAULT_PORTS = {
  * @param {String} url URI string to parse.
  * @param {Object} settings Optional settings object.
  */
-var URI = function (url, settings) {
+var URI: any = function (url, settings?) {
   var self = this, baseUri, baseUrl;
 
   url = trim(url);

@@ -138,7 +138,7 @@ export default <any> function (editor) {
     }));
   };
 
-  var uploadImagesAuto = function (callback) {
+  var uploadImagesAuto = function (callback?) {
     if (settings.automatic_uploads !== false) {
       return uploadImages(callback);
     }

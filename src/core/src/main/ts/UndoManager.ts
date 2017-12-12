@@ -37,7 +37,7 @@ export default <any> function (editor) {
     editor.setDirty(state);
   };
 
-  var addNonTypingUndoLevel = function (e) {
+  var addNonTypingUndoLevel = function (e?) {
     setTyping(false);
     self.add({}, e);
   };

@@ -8,7 +8,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   var failure = arguments[arguments.length - 1];
   var suite = LegacyUnit.createSuite();
 
-  var ok = function (value, label) {
+  var ok = function (value, label?) {
     return LegacyUnit.equal(value, true, label);
   };
 

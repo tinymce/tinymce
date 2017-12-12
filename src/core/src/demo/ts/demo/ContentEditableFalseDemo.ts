@@ -68,6 +68,8 @@ var logPos = function (caretPosition) {
   }
 };
 
+declare const window: any;
+
 window.paintClientRect = paintClientRect;
 window.paintClientRects = paintClientRects;
 window.logPos = logPos;

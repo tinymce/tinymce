@@ -146,7 +146,7 @@ var removeCaretContainerNode = function (dom, selection, node, moveCaret) {
 };
 
 // Removes the caret container for the specified node or all on the current document
-var removeCaretContainer = function (body, dom, selection, node, moveCaret) {
+var removeCaretContainer = function (body, dom, selection, node, moveCaret?) {
   if (!node) {
     node = getParentCaretContainer(body, selection.getStart());
 

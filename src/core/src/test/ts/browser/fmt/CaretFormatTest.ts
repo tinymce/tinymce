@@ -8,7 +8,7 @@ import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import CaretFormat from 'tinymce/core/fmt/CaretFormat';
-import TypeText from 'tinymce/core/test/TypeText';
+import TypeText from '../../module/test/TypeText';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function() {
     });
   };
 
-  var sRemoveCaretFormat = function (editor, name, vars, similar) {
+  var sRemoveCaretFormat = function (editor, name, vars, similar?) {
     return Step.sync(function () {
       CaretFormat.removeCaretFormat(editor, name, vars, similar);
     });

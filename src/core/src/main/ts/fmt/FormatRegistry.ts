@@ -20,7 +20,7 @@ export default <any> function (editor) {
     return name ? formats[name] : formats;
   };
 
-  var register = function (name, format) {
+  var register = function (name, format?) {
     if (name) {
       if (typeof name !== 'string') {
         Tools.each(name, function (format, name) {

@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.util.ObservableTest', function() {
   suite.test("Event bubbling/removed state", function () {
     var lastName, lastState, data = '';
 
-    var Class = function (parentObj) {
+    var Class: any = function (parentObj) {
       this.toggleNativeEvent = function (name, state) {
         lastName = name;
         lastState = state;

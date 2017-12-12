@@ -8,7 +8,7 @@ import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import NormalizeRange from 'tinymce/core/selection/NormalizeRange';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/refute';
 

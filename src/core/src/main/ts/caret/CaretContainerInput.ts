@@ -45,7 +45,7 @@ var handleBlockContainer = function (editor, e) {
   if (e.type === 'compositionstart') {
     e.preventDefault();
     e.stopPropagation();
-    showBlockCaretContainer(blockCaretContainer);
+    showBlockCaretContainer(editor, blockCaretContainer);
     return;
   }
 

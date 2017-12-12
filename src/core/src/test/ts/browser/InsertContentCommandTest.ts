@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
     return rng;
   };
 
-  var ok = function (value, label) {
+  var ok = function (value, label?) {
     return LegacyUnit.equal(value, true, label);
   };
 

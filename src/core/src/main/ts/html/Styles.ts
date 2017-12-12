@@ -83,10 +83,10 @@ export default <any> function (settings, schema) {
      * @return {Object} Object representation of that style like {border: '1px solid red'}
      */
     parse: function (css) {
-      var styles = {}, matches, name, value, isEncoded, urlConverter = settings.url_converter;
+      var styles: any = {}, matches, name, value, isEncoded, urlConverter = settings.url_converter;
       var urlConverterScope = settings.url_converter_scope || this;
 
-      var compress = function (prefix, suffix, noJoin) {
+      var compress = function (prefix, suffix, noJoin?) {
         var top, right, bottom, left;
 
         top = styles[prefix + '-top' + suffix];
@@ -183,7 +183,7 @@ export default <any> function (settings, schema) {
 
       // Decodes the specified string by replacing all _<num> with it's original value \" \' etc
       // It will also decode the \" \' if keepSlashes is set to fale or omitted
-      var decode = function (str, keepSlashes) {
+      var decode = function (str, keepSlashes?) {
         if (isEncoded) {
           str = str.replace(/\uFEFF[0-9]/g, function (str) {
             return encodingLookup[str];

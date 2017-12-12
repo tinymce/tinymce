@@ -11,6 +11,8 @@
 import { Arr } from '@ephox/katamari';
 import Entities from '../html/Entities';
 
+declare const unescape: any;
+
 var register = function (htmlParser, settings, dom) {
   // Convert tabindex back to elements when serializing contents
   htmlParser.addAttributeFilter('data-mce-tabindex', function (nodes, name) {

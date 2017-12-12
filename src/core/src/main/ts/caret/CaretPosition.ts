@@ -213,7 +213,7 @@ var getCaretPositionClientRects = function (caretPosition) {
  * @param {Number} offset Offset within that container node.
  * @param {Array} clientRects Optional client rects array for the position.
  */
-var CaretPosition = function (container, offset, clientRects) {
+var CaretPosition: any = function (container, offset, clientRects) {
   var isAtStart = function () {
     if (isText(container)) {
       return offset === 0;

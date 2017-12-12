@@ -32,7 +32,7 @@ import Tools from './Tools';
  * });
  */
 
-var XHR = {
+var XHR: any = {
   /**
    * Sends a XMLHTTPRequest.
    * Consult the Wiki for details on what settings this method takes.

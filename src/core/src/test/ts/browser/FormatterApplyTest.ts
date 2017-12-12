@@ -3,8 +3,8 @@ import { Pipeline } from '@ephox/agar';
 import { Obj } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import HtmlUtils from 'tinymce/core/test/HtmlUtils';
-import KeyUtils from 'tinymce/core/test/KeyUtils';
+import HtmlUtils from '../module/test/HtmlUtils';
+import KeyUtils from '../module/test/KeyUtils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 

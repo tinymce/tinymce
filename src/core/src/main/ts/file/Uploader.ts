@@ -79,7 +79,7 @@ export default <any> function (uploadStatus, settings) {
       success(pathJoin(settings.basePath, json.location));
     };
 
-    formData = new window.FormData(); // TODO: Stick this in sand
+    formData = new FormData(); // TODO: Stick this in sand
     formData.append('file', blobInfo.blob(), blobInfo.filename());
 
     xhr.send(formData);

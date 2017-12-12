@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   var serializer = new Serializer({}, schema);
   var parser, root;
 
-  var countNodes = function (node, counter) {
+  var countNodes = function (node, counter?) {
     var sibling;
 
     if (!counter) {
@@ -311,7 +311,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('addAttributeFilter multiple', function () {
-    var parser, results = {};
+    var parser, results: any = {};
 
     parser = new DomParser({});
     parser.addAttributeFilter('src,href', function (nodes, name, args) {

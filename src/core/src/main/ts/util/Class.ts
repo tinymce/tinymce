@@ -26,7 +26,7 @@ var each = Tools.each, extend = Tools.extend;
 
 var extendClass, initializing;
 
-var Class = function () {
+var Class: any = function () {
 };
 
 // Provides classical inheritance, based on code made by John Resig
@@ -34,7 +34,7 @@ Class.extend = extendClass = function (prop) {
   var self = this, _super = self.prototype, prototype, name, member;
 
   // The dummy class constructor
-  var Class = function () {
+  var Class: any = function () {
     var i, mixins, mixin, self = this;
 
     // All construction is actually done in the init method

@@ -6,8 +6,8 @@ import CaretUtils from 'tinymce/core/caret/CaretUtils';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import $ from 'tinymce/core/dom/DomQuery';
-import CaretAsserts from 'tinymce/core/test/CaretAsserts';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import CaretAsserts from '../../module/test/CaretAsserts';
+import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/refute';
 
 UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function() {

@@ -7,7 +7,7 @@ import { Fun } from '@ephox/katamari';
 import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import BlockBoundary from 'tinymce/core/delete/BlockBoundary';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/refute';
 
 UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryTest', function() {

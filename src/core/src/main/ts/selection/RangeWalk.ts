@@ -70,7 +70,7 @@ var walk = function (dom, rng, callback) {
     return nodes;
   };
 
-  var collectSiblings = function (node, name, endNode) {
+  var collectSiblings = function (node, name, endNode?) {
     var siblings = [];
 
     for (; node && node != endNode; node = node[name]) {
@@ -90,7 +90,7 @@ var walk = function (dom, rng, callback) {
     } while (node);
   };
 
-  var walkBoundary = function (startNode, endNode, next) {
+  var walkBoundary = function (startNode, endNode, next?) {
     var siblingName = next ? 'nextSibling' : 'previousSibling';
 
     for (node = startNode, parent = node.parentNode; node && node != endNode; node = parent) {

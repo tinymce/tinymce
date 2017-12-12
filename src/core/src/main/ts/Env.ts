@@ -26,7 +26,7 @@ var matchMediaQuery = function (query) {
   return "matchMedia" in window ? matchMedia(query).matches : false;
 };
 
-opera = window.opera && window.opera.buildNumber;
+opera = false;
 android = /Android/.test(userAgent);
 webkit = /WebKit/.test(userAgent);
 ie = !webkit && !opera && (/MSIE/gi).test(userAgent) && (/Explorer/gi).test(nav.appName);
@@ -48,7 +48,7 @@ if (ie12) {
 
 // Is a iPad/iPhone and not on iOS5 sniff the WebKit version since older iOS WebKit versions
 // says it has contentEditable support but there is no visible caret.
-var contentEditable = !iDevice || fileApi || userAgent.match(/AppleWebKit\/(\d*)/)[1] >= 534;
+var contentEditable = !iDevice || fileApi || parseInt(userAgent.match(/AppleWebKit\/(\d*)/)[1]) >= 534;
 
 export default <any> {
   /**
@@ -155,7 +155,7 @@ export default <any> {
    * @property documentMode
    * @type Number
    */
-  documentMode: ie && !ie12 ? (document.documentMode || 7) : 10,
+  documentMode: ie && !ie12 ? ((<any> document).documentMode || 7) : 10,
 
   /**
    * Constant that is true if the browser has a modern file api.

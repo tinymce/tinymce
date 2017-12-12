@@ -113,7 +113,7 @@ var createPathItem = function (node) {
   return name + '[' + normalizedNodeIndex(node) + ']';
 };
 
-var parentsUntil = function (rootNode, node, predicate) {
+var parentsUntil = function (rootNode, node, predicate?) {
   var parents = [];
 
   for (node = node.parentNode; node != rootNode; node = node.parentNode) {

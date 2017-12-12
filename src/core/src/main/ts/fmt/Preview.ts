@@ -121,7 +121,7 @@ var selectorToHtml = function (selector, editor) {
 
 var parseSelectorItem = function (item) {
   var tagName;
-  var obj = {
+  var obj: any = {
     classes: [],
     attrs: {}
   };
@@ -310,7 +310,7 @@ var getCssText = function (editor, format) {
         }
 
         // Convert font size from em/% to px
-        value = parseFloat(value, 10) / (/%$/.test(value) ? 100 : 1);
+        value = parseFloat(value) / (/%$/.test(value) ? 100 : 1);
         value = (value * parentFontSize) + 'px';
       }
     }

@@ -30,7 +30,7 @@ var typeLookup = {
 };
 
 // Walks the tree left/right
-var walk = function (node, rootNode, prev) {
+var walk = function (node, rootNode, prev?) {
   var sibling, parent, startName = prev ? 'lastChild' : 'firstChild', siblingName = prev ? 'prev' : 'next';
 
   // Walk into nodes if it has a start
@@ -65,7 +65,7 @@ var walk = function (node, rootNode, prev) {
  * @param {String} name Name of the node type.
  * @param {Number} type Numeric type representing the node.
  */
-var Node = function (name, type) {
+var Node: any = function (name, type) {
   this.name = name;
   this.type = type;
 

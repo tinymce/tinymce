@@ -68,7 +68,7 @@ var nativeDecode = function (text) {
 };
 
 // Build a two way lookup table for the entities
-var buildEntitiesLookup = function (items, radix) {
+var buildEntitiesLookup = function (items, radix?) {
   var i, chr, entity, lookup = {};
 
   if (items) {

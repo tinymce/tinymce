@@ -7,7 +7,7 @@ import { Waiter } from '@ephox/agar';
 import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/EditorManager';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../../module/test/ViewBlock';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 
@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function() {
 
   Theme();
 
-  var sCreateInlineEditors = function (html, ranges) {
+  var sCreateInlineEditors = function (html) {
     return Step.async(function (done) {
       viewBlock.update(html);
 

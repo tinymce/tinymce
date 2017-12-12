@@ -7,7 +7,7 @@ import { Step } from '@ephox/agar';
 import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import MergeBlocks from 'tinymce/core/delete/MergeBlocks';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/refute';
 
 UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function() {

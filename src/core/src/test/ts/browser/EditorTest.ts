@@ -3,7 +3,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import EditorManager from 'tinymce/core/EditorManager';
 import Env from 'tinymce/core/Env';
-import HtmlUtils from 'tinymce/core/test/HtmlUtils';
+import HtmlUtils from '../module/test/HtmlUtils';
 import URI from 'tinymce/core/util/URI';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
@@ -227,9 +227,10 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
     editor.setContent('xyz');
     editor.hide();
 
+    var elm: any = document.getElementById(editor.id);
     LegacyUnit.equal(hiddenStateWhileSaving, false, 'False isHidden state while saving');
     LegacyUnit.equal(lastEvent.content, '<p>xyz</p>');
-    LegacyUnit.equal(document.getElementById(editor.id).value, '<p>xyz</p>');
+    LegacyUnit.equal(elm.value, '<p>xyz</p>');
 
     editor.show();
   });

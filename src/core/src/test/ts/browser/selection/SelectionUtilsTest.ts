@@ -9,7 +9,7 @@ import { Insert } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 import SelectionUtils from 'tinymce/core/selection/SelectionUtils';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/refute';
 
 UnitTest.asynctest('browser.tinymce.core.selection.SelectionUtilsTest', function() {

@@ -4,7 +4,7 @@ import Env from 'tinymce/core/Env';
 import LineWalker from 'tinymce/core/caret/LineWalker';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import $ from 'tinymce/core/dom/DomQuery';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/refute';
 
 UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function() {

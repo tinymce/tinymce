@@ -5,6 +5,8 @@ import { LegacyUnit } from '@ephox/mcagar';
 import EventUtils from 'tinymce/core/dom/EventUtils';
 import { UnitTest } from '@ephox/refute';
 
+declare const document: any;
+
 UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function() {
   var success = arguments[arguments.length - 2];
   var failure = arguments[arguments.length - 1];
@@ -377,7 +379,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function() {
       result[e.type] = true;e.stopImmediatePropagation();
     });
 
-    var event = {};
+    var event: any = {};
     eventUtils.fire(window, 'keydown', event);
     eventUtils.fire(window, 'keyup', event);
 
@@ -450,7 +452,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function() {
   });
 
   suite.test("isDefaultPrevented", function () {
-    var testObj = {};
+    var testObj: any = {};
     var testCallback = function () {
       return 'hello';
     };

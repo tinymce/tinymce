@@ -40,7 +40,7 @@ var simpleSelectorRe = /^([a-z0-9],?)+$/i;
 var whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
 var setupAttrHooks = function (domUtils, settings) {
-  var attrHooks = {}, keepValues = settings.keep_values, keepUrlHook;
+  var attrHooks: any = {}, keepValues = settings.keep_values, keepUrlHook;
 
   keepUrlHook = {
     set: function ($elm, value, name) {
@@ -129,7 +129,7 @@ var nodeIndex = function (node, normalized) {
  * @param {Document} doc Document reference to bind the utility class to.
  * @param {settings} settings Optional settings collection.
  */
-var DOMUtils = function (doc, settings) {
+var DOMUtils: any = function (doc, settings) {
   var self = this, blockElementsMap;
 
   self.doc = doc;
@@ -195,23 +195,6 @@ DOMUtils.prototype = {
   root: null,
 
   fixDoc: function (doc) {
-    var settings = this.settings, name;
-
-    if (isIE && settings.schema) {
-      // Add missing HTML 4/5 elements to IE
-      ('abbr article aside audio canvas ' +
-        'details figcaption figure footer ' +
-        'header hgroup mark menu meter nav ' +
-        'output progress section summary ' +
-        'time video').replace(/\w+/g, function (name) {
-          doc.createElement(name);
-        });
-
-      // Create all custom elements
-      for (name in settings.schema.getCustomElements()) {
-        doc.createElement(name);
-      }
-    }
   },
 
   clone: function (node, deep) {
