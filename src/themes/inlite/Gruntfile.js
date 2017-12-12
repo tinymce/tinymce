@@ -16,6 +16,7 @@ module.exports = function (grunt) {
         plugins: [
           resolve(),
           typescript({
+            tsconfig: '../../tsconfig.theme.json',
             include: [
               '../../**/*.ts'
             ]
