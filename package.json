@@ -3,11 +3,11 @@
   "version": "2.0.0",
   "description": "Basic javascript object validation",
   "dependencies": {
-    "@ephox/katamari": "^1.0.2",
-    "@ephox/sand": "^1.0.1"
+    "@ephox/katamari": "*",
+    "@ephox/sand": "*"
   },
   "devDependencies": {
-    "@ephox/agar": "^2.0.2",
+    "@ephox/agar": "*",
     "@ephox/refute": "*",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
