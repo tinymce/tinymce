@@ -1,104 +1,95 @@
-define(
-  'ephox.boulder.api.ValueSchema',
+import ChoiceProcessor from '../core/ChoiceProcessor';
+import ValueProcessor from '../core/ValueProcessor';
+import PrettyPrinter from '../format/PrettyPrinter';
+import { Fun } from '@ephox/katamari';
+import { Result } from '@ephox/katamari';
 
-  [
-    'ephox.boulder.core.ChoiceProcessor',
-    'ephox.boulder.core.ValueProcessor',
-    'ephox.boulder.format.PrettyPrinter',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Result',
-    'global!Error'
-  ],
+var anyValue = ValueProcessor.value(Result.value);
 
-  function (ChoiceProcessor, ValueProcessor, PrettyPrinter, Fun, Result, Error) {
-    var anyValue = ValueProcessor.value(Result.value);
+var arrOfObj = function (objFields) {
+  return ValueProcessor.arrOfObj(objFields);
+};
 
-    var arrOfObj = function (objFields) {
-      return ValueProcessor.arrOfObj(objFields);
-    };
+var arrOfVal = function () {
+  return ValueProcessor.arr(anyValue);
+};
 
-    var arrOfVal = function () {
-      return ValueProcessor.arr(anyValue);
-    };
+var arrOf = ValueProcessor.arr;
 
-    var arrOf = ValueProcessor.arr;
+var objOf = ValueProcessor.obj;
 
-    var objOf = ValueProcessor.obj;
+var objOfOnly = ValueProcessor.objOnly;
 
-    var objOfOnly = ValueProcessor.objOnly;
+var setOf = ValueProcessor.setOf;
 
-    var setOf = ValueProcessor.setOf;
+var valueOf = function (validator) {
+  return ValueProcessor.value(validator);
+};
 
-    var valueOf = function (validator) {
-      return ValueProcessor.value(validator);
-    };
+var extract = function (label, prop, strength, obj) {
+  return prop.extract([ label ], strength, obj).fold(function (errs) {
+    return Result.error({
+      input: obj,
+      errors: errs
+    });
+  }, Result.value);
+};
 
-    var extract = function (label, prop, strength, obj) {
-      return prop.extract([ label ], strength, obj).fold(function (errs) {
-        return Result.error({
-          input: obj,
-          errors: errs
-        });
-      }, Result.value);
-    };
+var asStruct = function (label, prop, obj) {
+  return extract(label, prop, Fun.constant, obj);
+};
 
-    var asStruct = function (label, prop, obj) {
-      return extract(label, prop, Fun.constant, obj);
-    };
+var asRaw = function (label, prop, obj) {
+  return extract(label, prop, Fun.identity, obj);
+};
 
-    var asRaw = function (label, prop, obj) {
-      return extract(label, prop, Fun.identity, obj);
-    };
+var getOrDie = function (extraction) {
+  return extraction.fold(function (errInfo) {
+    // A readable version of the error.
+    throw new Error(
+      formatError(errInfo)
+    );
+  }, Fun.identity);
+};
 
-    var getOrDie = function (extraction) {
-      return extraction.fold(function (errInfo) {
-        // A readable version of the error.
-        throw new Error(
-          formatError(errInfo)
-        );
-      }, Fun.identity);
-    };
+var asRawOrDie = function (label, prop, obj) {
+  return getOrDie(asRaw(label, prop, obj));
+};
 
-    var asRawOrDie = function (label, prop, obj) {
-      return getOrDie(asRaw(label, prop, obj));
-    };
+var asStructOrDie = function (label, prop, obj) {
+  return getOrDie(asStruct(label, prop, obj));
+};
 
-    var asStructOrDie = function (label, prop, obj) {
-      return getOrDie(asStruct(label, prop, obj));
-    };
+var formatError = function (errInfo) {
+  return 'Errors: \n' + PrettyPrinter.formatErrors(errInfo.errors) + 
+    '\n\nInput object: ' + PrettyPrinter.formatObj(errInfo.input);
+};
 
-    var formatError = function (errInfo) {
-      return 'Errors: \n' + PrettyPrinter.formatErrors(errInfo.errors) + 
-        '\n\nInput object: ' + PrettyPrinter.formatObj(errInfo.input);
-    };
+var choose = function (key, branches) {
+  return ChoiceProcessor.choose(key, branches);
+};
 
-    var choose = function (key, branches) {
-      return ChoiceProcessor.choose(key, branches);
-    };
+export default <any> {
+  anyValue: Fun.constant(anyValue),
 
-    return {
-      anyValue: Fun.constant(anyValue),
+  arrOfObj: arrOfObj,
+  arrOf: arrOf,
+  arrOfVal: arrOfVal,
 
-      arrOfObj: arrOfObj,
-      arrOf: arrOf,
-      arrOfVal: arrOfVal,
+  valueOf: valueOf,
+  setOf: setOf,
 
-      valueOf: valueOf,
-      setOf: setOf,
+  objOf: objOf,
+  objOfOnly: objOfOnly,
 
-      objOf: objOf,
-      objOfOnly: objOfOnly,
+  asStruct: asStruct,
+  asRaw: asRaw,
 
-      asStruct: asStruct,
-      asRaw: asRaw,
+  asStructOrDie: asStructOrDie,
+  asRawOrDie: asRawOrDie,
 
-      asStructOrDie: asStructOrDie,
-      asRawOrDie: asRawOrDie,
+  getOrDie: getOrDie,
+  formatError: formatError,
 
-      getOrDie: getOrDie,
-      formatError: formatError,
-
-      choose: choose
-    };
-  }
-);
+  choose: choose
+};

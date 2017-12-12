@@ -1,28 +1,20 @@
-define(
-  'ephox.boulder.format.TypeTokens',
+import { Adt } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Adt'
-  ],
-  
-  function (Adt) {
-    var typeAdt = Adt.generate([
-      { setOf: [ 'validator', 'valueType' ] },
-      { arrOf: [ 'valueType' ] },
-      { objOf: [ 'fields' ] },
-      { itemOf: [ 'validator' ] },
-      { choiceOf: [ 'key', 'branches' ] }
+var typeAdt = Adt.generate([
+  { setOf: [ 'validator', 'valueType' ] },
+  { arrOf: [ 'valueType' ] },
+  { objOf: [ 'fields' ] },
+  { itemOf: [ 'validator' ] },
+  { choiceOf: [ 'key', 'branches' ] }
 
-    ]);
+]);
 
-    var fieldAdt = Adt.generate([
-      { field: [ 'name', 'presence', 'type' ] },
-      { state: [ 'name' ] }
-    ]);
+var fieldAdt = Adt.generate([
+  { field: [ 'name', 'presence', 'type' ] },
+  { state: [ 'name' ] }
+]);
 
-    return {
-      typeAdt: typeAdt,
-      fieldAdt: fieldAdt
-    };
-  }
-);
+export default <any> {
+  typeAdt: typeAdt,
+  fieldAdt: fieldAdt
+};

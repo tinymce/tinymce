@@ -1,28 +1,20 @@
-define(
-  'ephox.boulder.core.ObjWriter',
+import { Arr } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Arr'
-  ],
+var wrap = function (key, value) {
+  var r = {};
+  r[key] = value;
+  return r;
+};
 
-  function (Arr) {
-    var wrap = function (key, value) {
-      var r = {};
-      r[key] = value;
-      return r;
-    };
+var wrapAll = function (keyvalues) {
+  var r = {};
+  Arr.each(keyvalues, function (kv) {
+    r[kv.key] = kv.value;
+  });
+  return r;
+};
 
-    var wrapAll = function (keyvalues) {
-      var r = {};
-      Arr.each(keyvalues, function (kv) {
-        r[kv.key] = kv.value;
-      });
-      return r;
-    };
-
-    return {
-      wrap: wrap,
-      wrapAll: wrapAll
-    };
-  }
-);
+export default <any> {
+  wrap: wrap,
+  wrapAll: wrapAll
+};
