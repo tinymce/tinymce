@@ -8,57 +8,51 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.inlite.core.Measure',
-  [
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.themes.inlite.core.Convert'
-  ],
-  function (DOMUtils, Convert) {
-    var toAbsolute = function (rect) {
-      var vp = DOMUtils.DOM.getViewPort();
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import Convert from './Convert';
 
-      return {
-        x: rect.x + vp.x,
-        y: rect.y + vp.y,
-        w: rect.w,
-        h: rect.h
-      };
-    };
+var toAbsolute = function (rect) {
+  var vp = DOMUtils.DOM.getViewPort();
 
-    var measureElement = function (elm) {
-      var clientRect = elm.getBoundingClientRect();
+  return {
+    x: rect.x + vp.x,
+    y: rect.y + vp.y,
+    w: rect.w,
+    h: rect.h
+  };
+};
 
-      return toAbsolute({
-        x: clientRect.left,
-        y: clientRect.top,
-        w: Math.max(elm.clientWidth, elm.offsetWidth),
-        h: Math.max(elm.clientHeight, elm.offsetHeight)
-      });
-    };
+var measureElement = function (elm) {
+  var clientRect = elm.getBoundingClientRect();
 
-    var getElementRect = function (editor, elm) {
-      return measureElement(elm);
-    };
+  return toAbsolute({
+    x: clientRect.left,
+    y: clientRect.top,
+    w: Math.max(elm.clientWidth, elm.offsetWidth),
+    h: Math.max(elm.clientHeight, elm.offsetHeight)
+  });
+};
 
-    var getPageAreaRect = function (editor) {
-      return measureElement(editor.getElement().ownerDocument.body);
-    };
+var getElementRect = function (editor, elm) {
+  return measureElement(elm);
+};
 
-    var getContentAreaRect = function (editor) {
-      return measureElement(editor.getContentAreaContainer() || editor.getBody());
-    };
+var getPageAreaRect = function (editor) {
+  return measureElement(editor.getElement().ownerDocument.body);
+};
 
-    var getSelectionRect = function (editor) {
-      var clientRect = editor.selection.getBoundingClientRect();
-      return clientRect ? toAbsolute(Convert.fromClientRect(clientRect)) : null;
-    };
+var getContentAreaRect = function (editor) {
+  return measureElement(editor.getContentAreaContainer() || editor.getBody());
+};
 
-    return {
-      getElementRect: getElementRect,
-      getPageAreaRect: getPageAreaRect,
-      getContentAreaRect: getContentAreaRect,
-      getSelectionRect: getSelectionRect
-    };
-  }
-);
+var getSelectionRect = function (editor) {
+  var clientRect = editor.selection.getBoundingClientRect();
+  return clientRect ? toAbsolute(Convert.fromClientRect(clientRect)) : null;
+};
+
+export default <any> {
+  getElementRect: getElementRect,
+  getPageAreaRect: getPageAreaRect,
+  getContentAreaRect: getContentAreaRect,
+  getSelectionRect: getSelectionRect
+};

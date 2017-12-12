@@ -1,37 +1,35 @@
-test(
-  'atomic.themes.core.UrlTypeTest',
-  [
-    'tinymce.themes.inlite.core.UrlType'
-  ],
-  function (UrlType) {
-    var testIsDomainLike = function () {
-      var mostUsedTopLevelDomains = [
-        'com', 'org', 'edu', 'gov', 'uk', 'net', 'ca', 'de', 'jp',
-        'fr', 'au', 'us', 'ru', 'ch', 'it', 'nl', 'se', 'no', 'es', 'mil'
-      ];
+import UrlType from 'tinymce/themes/inlite/core/UrlType';
+import { UnitTest, assert } from '@ephox/refute';
 
-      assert.eq(UrlType.isDomainLike('www.site.com'), true);
-      assert.eq(UrlType.isDomainLike('www.site.xyz'), true);
-      assert.eq(UrlType.isDomainLike('   www.site.xyz'), true);
-      assert.eq(UrlType.isDomainLike('site.xyz'), false);
+UnitTest.test('atomic.themes.core.UrlTypeTest', function() {
+  var testIsDomainLike = function () {
+    var mostUsedTopLevelDomains = [
+      'com', 'org', 'edu', 'gov', 'uk', 'net', 'ca', 'de', 'jp',
+      'fr', 'au', 'us', 'ru', 'ch', 'it', 'nl', 'se', 'no', 'es', 'mil'
+    ];
 
-      mostUsedTopLevelDomains.forEach(function (tld) {
-        assert.eq(UrlType.isDomainLike('site.' + tld), true);
-        assert.eq(UrlType.isDomainLike('  site.' + tld), true);
-        assert.eq(UrlType.isDomainLike('site.' + tld + '  '), true);
-      });
+    assert.eq(UrlType.isDomainLike('www.site.com'), true);
+    assert.eq(UrlType.isDomainLike('www.site.xyz'), true);
+    assert.eq(UrlType.isDomainLike('   www.site.xyz'), true);
+    assert.eq(UrlType.isDomainLike('site.xyz'), false);
 
-      assert.eq(UrlType.isDomainLike('/a/b'), false);
-    };
+    mostUsedTopLevelDomains.forEach(function (tld) {
+      assert.eq(UrlType.isDomainLike('site.' + tld), true);
+      assert.eq(UrlType.isDomainLike('  site.' + tld), true);
+      assert.eq(UrlType.isDomainLike('site.' + tld + '  '), true);
+    });
 
-    var testIsAbsoluteUrl = function () {
-      assert.eq(UrlType.isAbsolute('http://www.site.com'), true);
-      assert.eq(UrlType.isAbsolute('https://www.site.com'), true);
-      assert.eq(UrlType.isAbsolute('www.site.com'), false);
-      assert.eq(UrlType.isAbsolute('file.gif'), false);
-    };
+    assert.eq(UrlType.isDomainLike('/a/b'), false);
+  };
 
-    testIsDomainLike();
-    testIsAbsoluteUrl();
-  }
-);
+  var testIsAbsoluteUrl = function () {
+    assert.eq(UrlType.isAbsolute('http://www.site.com'), true);
+    assert.eq(UrlType.isAbsolute('https://www.site.com'), true);
+    assert.eq(UrlType.isAbsolute('www.site.com'), false);
+    assert.eq(UrlType.isAbsolute('file.gif'), false);
+  };
+
+  testIsDomainLike();
+  testIsAbsoluteUrl();
+});
+

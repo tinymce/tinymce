@@ -8,24 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.inlite.api.Events',
-  [
-  ],
-  function () {
-    var fireSkinLoaded = function (editor) {
-      editor.fire('SkinLoaded');
-    };
+var fireSkinLoaded = function (editor) {
+  editor.fire('SkinLoaded');
+};
 
-    var fireBeforeRenderUI = function (editor) {
-      return editor.fire('BeforeRenderUI');
-    };
+var fireBeforeRenderUI = function (editor) {
+  return editor.fire('BeforeRenderUI');
+};
 
-    return {
-      fireSkinLoaded: fireSkinLoaded,
-      fireBeforeRenderUI: fireBeforeRenderUI
-    };
-  }
-);
-
-
+export default <any> {
+  fireSkinLoaded: fireSkinLoaded,
+  fireBeforeRenderUI: fireBeforeRenderUI
+};

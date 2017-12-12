@@ -8,36 +8,29 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.inlite.core.Matcher',
-  [
-  ],
-  function () {
-    // result :: String, Rect -> Matcher.result
-    var result = function (id, rect) {
-      return {
-        id: id,
-        rect: rect
-      };
-    };
+// result :: String, Rect -> Matcher.result
+var result = function (id, rect) {
+  return {
+    id: id,
+    rect: rect
+  };
+};
 
-    // match :: Editor, [(Editor -> Matcher.result | Null)] -> Matcher.result | Null
-    var match = function (editor, matchers) {
-      for (var i = 0; i < matchers.length; i++) {
-        var f = matchers[i];
-        var result = f(editor);
+// match :: Editor, [(Editor -> Matcher.result | Null)] -> Matcher.result | Null
+var match = function (editor, matchers) {
+  for (var i = 0; i < matchers.length; i++) {
+    var f = matchers[i];
+    var result = f(editor);
 
-        if (result) {
-          return result;
-        }
-      }
-
-      return null;
-    };
-
-    return {
-      match: match,
-      result: result
-    };
+    if (result) {
+      return result;
+    }
   }
-);
+
+  return null;
+};
+
+export default <any> {
+  match: match,
+  result: result
+};

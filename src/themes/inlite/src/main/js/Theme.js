@@ -8,30 +8,23 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.inlite.Theme',
-  [
-    'global!window',
-    'tinymce.core.ThemeManager',
-    'tinymce.themes.inlite.api.ThemeApi',
-    'tinymce.themes.inlite.ui.Buttons',
-    'tinymce.themes.inlite.ui.Panel',
-    'tinymce.ui.Api',
-    'tinymce.ui.FormatControls'
-  ],
-  function (window, ThemeManager, ThemeApi, Buttons, Panel, Api, FormatControls) {
-    Api.registerToFactory();
-    Api.appendTo(window.tinymce ? window.tinymce : {});
+import ThemeManager from 'tinymce/core/ThemeManager';
+import ThemeApi from './api/ThemeApi';
+import Buttons from './ui/Buttons';
+import Panel from './ui/Panel';
+import Api from 'tinymce/ui/Api';
+import FormatControls from 'tinymce/ui/FormatControls';
 
-    ThemeManager.add('inlite', function (editor) {
-      var panel = new Panel();
+Api.registerToFactory();
+Api.appendTo(window.tinymce ? window.tinymce : {});
 
-      FormatControls.setup(editor);
-      Buttons.addToEditor(editor, panel);
+ThemeManager.add('inlite', function (editor) {
+  var panel = new Panel();
 
-      return ThemeApi.get(editor, panel);
-    });
+  FormatControls.setup(editor);
+  Buttons.addToEditor(editor, panel);
 
-    return function () { };
-  }
-);
+  return ThemeApi.get(editor, panel);
+});
+
+export default <any> function () { };

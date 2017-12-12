@@ -1,45 +1,39 @@
-define(
-  'tinymce.themes.inlite.test.Toolbar',
-  [
-    'ephox.mcagar.api.TinyDom',
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.UiFinder',
-    'ephox.agar.api.Mouse'
-  ],
-  function (TinyDom, Chain, UiFinder, Mouse) {
-    var dialogRoot = TinyDom.fromDom(document.body);
+import { TinyDom } from '@ephox/mcagar';
+import { Chain } from '@ephox/agar';
+import { UiFinder } from '@ephox/agar';
+import { Mouse } from '@ephox/agar';
 
-    var cWaitForToolbar = Chain.fromChainsWith(dialogRoot, [
-      UiFinder.cWaitForState('Did not find inline toolbar', '.mce-tinymce-inline', function (elm) {
-        return elm.dom().style.display === "";
-      })
-    ]);
+var dialogRoot = TinyDom.fromDom(document.body);
 
-    var sWaitForToolbar = function () {
-      return Chain.asStep({}, [
-        cWaitForToolbar
-      ]);
-    };
+var cWaitForToolbar = Chain.fromChainsWith(dialogRoot, [
+  UiFinder.cWaitForState('Did not find inline toolbar', '.mce-tinymce-inline', function (elm) {
+    return elm.dom().style.display === "";
+  })
+]);
 
-    var cClickButton = function (ariaLabel) {
-      return Chain.fromChains([
-        UiFinder.cFindIn('div[aria-label="' + ariaLabel + '"]'),
-        Mouse.cTrueClick
-      ]);
-    };
+var sWaitForToolbar = function () {
+  return Chain.asStep({}, [
+    cWaitForToolbar
+  ]);
+};
 
-    var sClickButton = function (ariaLabel) {
-      return Chain.asStep({}, [
-        cWaitForToolbar,
-        cClickButton(ariaLabel)
-      ]);
-    };
+var cClickButton = function (ariaLabel) {
+  return Chain.fromChains([
+    UiFinder.cFindIn('div[aria-label="' + ariaLabel + '"]'),
+    Mouse.cTrueClick
+  ]);
+};
 
-    return {
-      cWaitForToolbar: cWaitForToolbar,
-      sWaitForToolbar: sWaitForToolbar,
-      cClickButton: cClickButton,
-      sClickButton: sClickButton
-    };
-  }
-);
+var sClickButton = function (ariaLabel) {
+  return Chain.asStep({}, [
+    cWaitForToolbar,
+    cClickButton(ariaLabel)
+  ]);
+};
+
+export default <any> {
+  cWaitForToolbar: cWaitForToolbar,
+  sWaitForToolbar: sWaitForToolbar,
+  cClickButton: cClickButton,
+  sClickButton: sClickButton
+};

@@ -8,29 +8,21 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.inlite.file.Conversions',
-  [
-    'ephox.sand.api.FileReader',
-    'tinymce.core.util.Promise'
-  ],
-  function (FileReader, Promise) {
-    var blobToBase64 = function (blob) {
-      return new Promise(function (resolve) {
-        var reader = new FileReader();
+import { FileReader } from '@ephox/sand';
+import Promise from 'tinymce/core/util/Promise';
 
-        reader.onloadend = function () {
-          resolve(reader.result.split(',')[1]);
-        };
+var blobToBase64 = function (blob) {
+  return new Promise(function (resolve) {
+    var reader = new FileReader();
 
-        reader.readAsDataURL(blob);
-      });
+    reader.onloadend = function () {
+      resolve(reader.result.split(',')[1]);
     };
 
-    return {
-      blobToBase64: blobToBase64
-    };
-  }
-);
+    reader.readAsDataURL(blob);
+  });
+};
 
-
+export default <any> {
+  blobToBase64: blobToBase64
+};

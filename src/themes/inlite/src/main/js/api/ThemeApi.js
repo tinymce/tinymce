@@ -8,32 +8,26 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.inlite.api.ThemeApi',
-  [
-    'tinymce.themes.inlite.core.Render',
-    'tinymce.ui.NotificationManagerImpl',
-    'tinymce.ui.WindowManagerImpl'
-  ],
-  function (Render, NotificationManagerImpl, WindowManagerImpl) {
-    var get = function (editor, panel) {
-      var renderUI = function () {
-        return Render.renderUI(editor, panel);
-      };
+import Render from '../core/Render';
+import NotificationManagerImpl from 'tinymce/ui/NotificationManagerImpl';
+import WindowManagerImpl from 'tinymce/ui/WindowManagerImpl';
 
-      return {
-        renderUI: renderUI,
-        getNotificationManagerImpl: function () {
-          return NotificationManagerImpl(editor);
-        },
-        getWindowManagerImpl: function () {
-          return WindowManagerImpl(editor);
-        }
-      };
-    };
+var get = function (editor, panel) {
+  var renderUI = function () {
+    return Render.renderUI(editor, panel);
+  };
 
-    return {
-      get: get
-    };
-  }
-);
+  return {
+    renderUI: renderUI,
+    getNotificationManagerImpl: function () {
+      return NotificationManagerImpl(editor);
+    },
+    getWindowManagerImpl: function () {
+      return WindowManagerImpl(editor);
+    }
+  };
+};
+
+export default <any> {
+  get: get
+};

@@ -8,47 +8,39 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.inlite.core.SkinLoader',
-  [
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.themes.inlite.api.Events',
-    'tinymce.themes.inlite.api.Settings'
-  ],
-  function (DOMUtils, Events, Settings) {
-    var fireSkinLoaded = function (editor, callback) {
-      var done = function () {
-        editor._skinLoaded = true;
-        Events.fireSkinLoaded(editor);
-        callback();
-      };
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import Events from '../api/Events';
+import Settings from '../api/Settings';
 
-      if (editor.initialized) {
-        done();
-      } else {
-        editor.on('init', done);
-      }
-    };
+var fireSkinLoaded = function (editor, callback) {
+  var done = function () {
+    editor._skinLoaded = true;
+    Events.fireSkinLoaded(editor);
+    callback();
+  };
 
-    var load = function (editor, callback) {
-      var skinUrl = Settings.getSkinUrl(editor);
-
-      var done = function () {
-        fireSkinLoaded(editor, callback);
-      };
-
-      if (Settings.isSkinDisabled(editor)) {
-        done();
-      } else {
-        DOMUtils.DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', done);
-        editor.contentCSS.push(skinUrl + '/content.inline.min.css');
-      }
-    };
-
-    return {
-      load: load
-    };
+  if (editor.initialized) {
+    done();
+  } else {
+    editor.on('init', done);
   }
-);
+};
 
+var load = function (editor, callback) {
+  var skinUrl = Settings.getSkinUrl(editor);
 
+  var done = function () {
+    fireSkinLoaded(editor, callback);
+  };
+
+  if (Settings.isSkinDisabled(editor)) {
+    done();
+  } else {
+    DOMUtils.DOM.styleSheetLoader.load(skinUrl + '/skin.min.css', done);
+    editor.contentCSS.push(skinUrl + '/content.inline.min.css');
+  }
+};
+
+export default <any> {
+  load: load
+};

@@ -12,27 +12,21 @@
  * Generates unique ids this is the same as in core but since
  * it's not exposed as a global we can't access it.
  */
-define(
-  "tinymce.themes.inlite.alien.Uuid",
-  [
-  ],
-  function () {
-    var count = 0;
 
-    var seed = function () {
-      var rnd = function () {
-        return Math.round(Math.random() * 0xFFFFFFFF).toString(36);
-      };
+var count = 0;
 
-      return 's' + Date.now().toString(36) + rnd() + rnd() + rnd();
-    };
+var seed = function () {
+  var rnd = function () {
+    return Math.round(Math.random() * 0xFFFFFFFF).toString(36);
+  };
 
-    var uuid = function (prefix) {
-      return prefix + (count++) + seed();
-    };
+  return 's' + Date.now().toString(36) + rnd() + rnd() + rnd();
+};
 
-    return {
-      uuid: uuid
-    };
-  }
-);
+var uuid = function (prefix) {
+  return prefix + (count++) + seed();
+};
+
+export default <any> {
+  uuid: uuid
+};

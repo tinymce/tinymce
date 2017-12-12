@@ -8,29 +8,23 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.inlite.core.PredicateId',
-  [
-    'tinymce.core.util.Tools'
-  ],
-  function (Tools) {
-    var create = function (id, predicate) {
-      return {
-        id: id,
-        predicate: predicate
-      };
-    };
+import Tools from 'tinymce/core/util/Tools';
 
-    // fromContextToolbars :: [ContextToolbar] -> [PredicateId]
-    var fromContextToolbars = function (toolbars) {
-      return Tools.map(toolbars, function (toolbar) {
-        return create(toolbar.id, toolbar.predicate);
-      });
-    };
+var create = function (id, predicate) {
+  return {
+    id: id,
+    predicate: predicate
+  };
+};
 
-    return {
-      create: create,
-      fromContextToolbars: fromContextToolbars
-    };
-  }
-);
+// fromContextToolbars :: [ContextToolbar] -> [PredicateId]
+var fromContextToolbars = function (toolbars) {
+  return Tools.map(toolbars, function (toolbar) {
+    return create(toolbar.id, toolbar.predicate);
+  });
+};
+
+export default <any> {
+  create: create,
+  fromContextToolbars: fromContextToolbars
+};

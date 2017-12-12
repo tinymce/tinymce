@@ -8,154 +8,148 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.inlite.core.Render',
-  [
-    'tinymce.core.Env',
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.core.util.Delay',
-    'tinymce.themes.inlite.alien.Arr',
-    'tinymce.themes.inlite.core.ElementMatcher',
-    'tinymce.themes.inlite.core.Matcher',
-    'tinymce.themes.inlite.core.PredicateId',
-    'tinymce.themes.inlite.core.SelectionMatcher',
-    'tinymce.themes.inlite.core.SkinLoader'
-  ],
-  function (Env, DOMUtils, Delay, Arr, ElementMatcher, Matcher, PredicateId, SelectionMatcher, SkinLoader) {
-    var getSelectionElements = function (editor) {
-      var node = editor.selection.getNode();
-      var elms = editor.dom.getParents(node);
-      return elms;
-    };
+import Env from 'tinymce/core/Env';
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import Delay from 'tinymce/core/util/Delay';
+import Arr from '../alien/Arr';
+import ElementMatcher from './ElementMatcher';
+import Matcher from './Matcher';
+import PredicateId from './PredicateId';
+import SelectionMatcher from './SelectionMatcher';
+import SkinLoader from './SkinLoader';
 
-    var createToolbar = function (editor, selector, id, items) {
-      var selectorPredicate = function (elm) {
-        return editor.dom.is(elm, selector);
-      };
+var getSelectionElements = function (editor) {
+  var node = editor.selection.getNode();
+  var elms = editor.dom.getParents(node);
+  return elms;
+};
 
-      return {
-        predicate: selectorPredicate,
-        id: id,
-        items: items
-      };
-    };
+var createToolbar = function (editor, selector, id, items) {
+  var selectorPredicate = function (elm) {
+    return editor.dom.is(elm, selector);
+  };
 
-    var getToolbars = function (editor) {
-      var contextToolbars = editor.contextToolbars;
+  return {
+    predicate: selectorPredicate,
+    id: id,
+    items: items
+  };
+};
 
-      return Arr.flatten([
-        contextToolbars ? contextToolbars : [],
-        createToolbar(editor, 'img', 'image', 'alignleft aligncenter alignright')
-      ]);
-    };
+var getToolbars = function (editor) {
+  var contextToolbars = editor.contextToolbars;
 
-    var findMatchResult = function (editor, toolbars) {
-      var result, elements, contextToolbarsPredicateIds;
+  return Arr.flatten([
+    contextToolbars ? contextToolbars : [],
+    createToolbar(editor, 'img', 'image', 'alignleft aligncenter alignright')
+  ]);
+};
 
-      elements = getSelectionElements(editor);
-      contextToolbarsPredicateIds = PredicateId.fromContextToolbars(toolbars);
+var findMatchResult = function (editor, toolbars) {
+  var result, elements, contextToolbarsPredicateIds;
 
-      result = Matcher.match(editor, [
-        ElementMatcher.element(elements[0], contextToolbarsPredicateIds),
-        SelectionMatcher.textSelection('text'),
-        SelectionMatcher.emptyTextBlock(elements, 'insert'),
-        ElementMatcher.parent(elements, contextToolbarsPredicateIds)
-      ]);
+  elements = getSelectionElements(editor);
+  contextToolbarsPredicateIds = PredicateId.fromContextToolbars(toolbars);
 
-      return result && result.rect ? result : null;
-    };
+  result = Matcher.match(editor, [
+    ElementMatcher.element(elements[0], contextToolbarsPredicateIds),
+    SelectionMatcher.textSelection('text'),
+    SelectionMatcher.emptyTextBlock(elements, 'insert'),
+    ElementMatcher.parent(elements, contextToolbarsPredicateIds)
+  ]);
 
-    var togglePanel = function (editor, panel) {
-      var toggle = function () {
-        var toolbars = getToolbars(editor);
-        var result = findMatchResult(editor, toolbars);
+  return result && result.rect ? result : null;
+};
 
-        if (result) {
-          panel.show(editor, result.id, result.rect, toolbars);
-        } else {
-          panel.hide();
-        }
-      };
+var togglePanel = function (editor, panel) {
+  var toggle = function () {
+    var toolbars = getToolbars(editor);
+    var result = findMatchResult(editor, toolbars);
 
-      return function () {
-        if (!editor.removed) {
-          toggle();
-        }
-      };
-    };
+    if (result) {
+      panel.show(editor, result.id, result.rect, toolbars);
+    } else {
+      panel.hide();
+    }
+  };
 
-    var repositionPanel = function (editor, panel) {
-      return function () {
-        var toolbars = getToolbars(editor);
-        var result = findMatchResult(editor, toolbars);
+  return function () {
+    if (!editor.removed) {
+      toggle();
+    }
+  };
+};
 
-        if (result) {
-          panel.reposition(editor, result.id, result.rect);
-        }
-      };
-    };
+var repositionPanel = function (editor, panel) {
+  return function () {
+    var toolbars = getToolbars(editor);
+    var result = findMatchResult(editor, toolbars);
 
-    var ignoreWhenFormIsVisible = function (editor, panel, f) {
-      return function () {
-        if (!editor.removed && !panel.inForm()) {
-          f();
-        }
-      };
-    };
+    if (result) {
+      panel.reposition(editor, result.id, result.rect);
+    }
+  };
+};
 
-    var bindContextualToolbarsEvents = function (editor, panel) {
-      var throttledTogglePanel = Delay.throttle(togglePanel(editor, panel), 0);
-      var throttledTogglePanelWhenNotInForm = Delay.throttle(ignoreWhenFormIsVisible(editor, panel, togglePanel(editor, panel)), 0);
-      var reposition = repositionPanel(editor, panel);
+var ignoreWhenFormIsVisible = function (editor, panel, f) {
+  return function () {
+    if (!editor.removed && !panel.inForm()) {
+      f();
+    }
+  };
+};
 
-      editor.on('blur hide ObjectResizeStart', panel.hide);
-      editor.on('click', throttledTogglePanel);
-      editor.on('nodeChange mouseup', throttledTogglePanelWhenNotInForm);
-      editor.on('ResizeEditor keyup', throttledTogglePanel);
-      editor.on('ResizeWindow', reposition);
+var bindContextualToolbarsEvents = function (editor, panel) {
+  var throttledTogglePanel = Delay.throttle(togglePanel(editor, panel), 0);
+  var throttledTogglePanelWhenNotInForm = Delay.throttle(ignoreWhenFormIsVisible(editor, panel, togglePanel(editor, panel)), 0);
+  var reposition = repositionPanel(editor, panel);
 
-      DOMUtils.DOM.bind(Env.container, 'scroll', reposition);
-      editor.on('remove', function () {
-        DOMUtils.DOM.unbind(Env.container, 'scroll', reposition);
-        panel.remove();
-      });
+  editor.on('blur hide ObjectResizeStart', panel.hide);
+  editor.on('click', throttledTogglePanel);
+  editor.on('nodeChange mouseup', throttledTogglePanelWhenNotInForm);
+  editor.on('ResizeEditor keyup', throttledTogglePanel);
+  editor.on('ResizeWindow', reposition);
 
-      editor.shortcuts.add('Alt+F10,F10', '', panel.focus);
-    };
+  DOMUtils.DOM.bind(Env.container, 'scroll', reposition);
+  editor.on('remove', function () {
+    DOMUtils.DOM.unbind(Env.container, 'scroll', reposition);
+    panel.remove();
+  });
 
-    var overrideLinkShortcut = function (editor, panel) {
-      editor.shortcuts.remove('meta+k');
-      editor.shortcuts.add('meta+k', '', function () {
-        var toolbars = getToolbars(editor);
-        var result = result = Matcher.match(editor, [
-          SelectionMatcher.textSelection('quicklink')
-        ]);
+  editor.shortcuts.add('Alt+F10,F10', '', panel.focus);
+};
 
-        if (result) {
-          panel.show(editor, result.id, result.rect, toolbars);
-        }
-      });
-    };
+var overrideLinkShortcut = function (editor, panel) {
+  editor.shortcuts.remove('meta+k');
+  editor.shortcuts.add('meta+k', '', function () {
+    var toolbars = getToolbars(editor);
+    var result = result = Matcher.match(editor, [
+      SelectionMatcher.textSelection('quicklink')
+    ]);
 
-    var renderInlineUI = function (editor, panel) {
-      SkinLoader.load(editor, function () {
-        bindContextualToolbarsEvents(editor, panel);
-        overrideLinkShortcut(editor, panel);
-      });
+    if (result) {
+      panel.show(editor, result.id, result.rect, toolbars);
+    }
+  });
+};
 
-      return {};
-    };
+var renderInlineUI = function (editor, panel) {
+  SkinLoader.load(editor, function () {
+    bindContextualToolbarsEvents(editor, panel);
+    overrideLinkShortcut(editor, panel);
+  });
 
-    var fail = function (message) {
-      throw new Error(message);
-    };
+  return {};
+};
 
-    var renderUI = function (editor, panel) {
-      return editor.inline ? renderInlineUI(editor, panel) : fail('inlite theme only supports inline mode.');
-    };
+var fail = function (message) {
+  throw new Error(message);
+};
 
-    return {
-      renderUI: renderUI
-    };
-  }
-);
+var renderUI = function (editor, panel) {
+  return editor.inline ? renderInlineUI(editor, panel) : fail('inlite theme only supports inline mode.');
+};
+
+export default <any> {
+  renderUI: renderUI
+};
