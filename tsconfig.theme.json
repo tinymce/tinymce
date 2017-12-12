@@ -9,10 +9,12 @@
     "outDir": "lib",
     "baseUrl": ".",
     "paths": {
+      "tinymce": ["src/core/dist/tinymce"],
       "tinymce/core/*": ["src/core/dist/globals/tinymce/core/*"],
       "tinymce/ui/*": ["src/ui/src/main/ts/*"],
-      "tinymce/plugins/searchreplace/*": ["src/plugins/searchreplace/src/main/ts/*"],
-      "tinymce/themes/modern/*": ["src/themes/modern/src/main/ts/*"]
+      "tinymce/themes/modern/*": ["src/themes/modern/src/main/ts/*"],
+      "tinymce/themes/inlite/*": ["src/themes/inlite/src/main/ts/*"],
+      "tinymce/plugins/searchreplace/*": ["src/plugins/searchreplace/src/main/ts/*"]
     }
   },
   "include": [
