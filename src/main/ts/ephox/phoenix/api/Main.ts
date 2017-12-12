@@ -21,7 +21,7 @@ import Injection from './general/Injection';
 import Search from './general/Search';
 import Split from './general/Split';
 import Wrapping from './general/Wrapping';
-import Seeker from '../gather/Seeker';
+import Seeker from '../gather/Seeker'; // robin is using this directly
 
 export {
   Focus,
