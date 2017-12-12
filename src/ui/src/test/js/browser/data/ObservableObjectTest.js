@@ -1,65 +1,63 @@
-asynctest(
-  'browser.tinymce.ui.data.ObservableObjectTest',
-  [
-    'ephox.mcagar.api.LegacyUnit',
-    'ephox.agar.api.Pipeline',
-    'tinymce.ui.data.ObservableObject'
-  ],
-  function (LegacyUnit, Pipeline, ObservableObject) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
-    var suite = LegacyUnit.createSuite();
+import { LegacyUnit } from '@ephox/mcagar';
+import { Pipeline } from '@ephox/agar';
+import ObservableObject from 'tinymce/ui/data/ObservableObject';
+import { UnitTest } from '@ephox/refute';
 
-    suite.test("Constructor", function () {
-      var obj;
+UnitTest.asynctest('browser.tinymce.ui.data.ObservableObjectTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
+  var suite = LegacyUnit.createSuite();
 
-      obj = new ObservableObject();
-      LegacyUnit.strictEqual(!obj.has('a'), true);
+  suite.test("Constructor", function () {
+    var obj;
 
-      obj = new ObservableObject({ a: 1, b: 2 });
-      LegacyUnit.strictEqual(obj.get('a'), 1);
-      LegacyUnit.strictEqual(obj.get('b'), 2);
+    obj = new ObservableObject();
+    LegacyUnit.strictEqual(!obj.has('a'), true);
+
+    obj = new ObservableObject({ a: 1, b: 2 });
+    LegacyUnit.strictEqual(obj.get('a'), 1);
+    LegacyUnit.strictEqual(obj.get('b'), 2);
+  });
+
+  suite.test("set/get and observe all", function () {
+    var obj = new ObservableObject(), events = [];
+
+    obj.on('change', function (e) {
+      events.push(e);
     });
 
-    suite.test("set/get and observe all", function () {
-      var obj = new ObservableObject(), events = [];
+    obj.set('a', 'a');
+    obj.set('a', 'a2');
+    obj.set('a', 'a3');
+    obj.set('b', 'b');
+    LegacyUnit.strictEqual(obj.get('a'), 'a3');
 
-      obj.on('change', function (e) {
-        events.push(e);
-      });
+    LegacyUnit.equal(events[0].type, 'change');
+    LegacyUnit.equal(events[0].value, 'a');
+    LegacyUnit.equal(events[1].type, 'change');
+    LegacyUnit.equal(events[1].value, 'a2');
+    LegacyUnit.equal(events[2].type, 'change');
+    LegacyUnit.equal(events[2].value, 'a3');
+    LegacyUnit.equal(events[3].type, 'change');
+    LegacyUnit.equal(events[3].value, 'b');
+  });
 
-      obj.set('a', 'a');
-      obj.set('a', 'a2');
-      obj.set('a', 'a3');
-      obj.set('b', 'b');
-      LegacyUnit.strictEqual(obj.get('a'), 'a3');
+  suite.test("set/get and observe specific", function () {
+    var obj = new ObservableObject(), events = [];
 
-      LegacyUnit.equal(events[0].type, 'change');
-      LegacyUnit.equal(events[0].value, 'a');
-      LegacyUnit.equal(events[1].type, 'change');
-      LegacyUnit.equal(events[1].value, 'a2');
-      LegacyUnit.equal(events[2].type, 'change');
-      LegacyUnit.equal(events[2].value, 'a3');
-      LegacyUnit.equal(events[3].type, 'change');
-      LegacyUnit.equal(events[3].value, 'b');
+    obj.on('change:a', function (e) {
+      events.push(e);
     });
 
-    suite.test("set/get and observe specific", function () {
-      var obj = new ObservableObject(), events = [];
+    obj.set('a', 'a');
+    obj.set('b', 'b');
+    LegacyUnit.equal(events[0].type, 'change');
+    LegacyUnit.equal(events[0].value, 'a');
+    LegacyUnit.equal(events.length, 1);
+  });
 
-      obj.on('change:a', function (e) {
-        events.push(e);
-      });
+  Pipeline.async({}, suite.toSteps({}), function () {
+    success();
+  }, failure);
+});
 
-      obj.set('a', 'a');
-      obj.set('b', 'b');
-      LegacyUnit.equal(events[0].type, 'change');
-      LegacyUnit.equal(events[0].value, 'a');
-      LegacyUnit.equal(events.length, 1);
-    });
-
-    Pipeline.async({}, suite.toSteps({}), function () {
-      success();
-    }, failure);
-  }
-);

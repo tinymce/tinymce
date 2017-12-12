@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Toolbar from './Toolbar';
+
 /**
  * Creates a new menubar.
  *
@@ -15,23 +17,16 @@
  * @class tinymce.ui.MenuBar
  * @extends tinymce.ui.Container
  */
-define(
-  'tinymce.ui.MenuBar',
-  [
-    "tinymce.ui.Toolbar"
-  ],
-  function (Toolbar) {
-    "use strict";
 
-    return Toolbar.extend({
-      Defaults: {
-        role: 'menubar',
-        containerCls: 'menubar',
-        ariaRoot: true,
-        defaults: {
-          type: 'menubutton'
-        }
-      }
-    });
+"use strict";
+
+export default <any> Toolbar.extend({
+  Defaults: {
+    role: 'menubar',
+    containerCls: 'menubar',
+    ariaRoot: true,
+    defaults: {
+      type: 'menubutton'
+    }
   }
-);
+});

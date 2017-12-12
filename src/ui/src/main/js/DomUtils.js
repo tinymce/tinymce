@@ -8,130 +8,124 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import Env from 'tinymce/core/Env';
+import Tools from 'tinymce/core/util/Tools';
+
 /**
  * Private UI DomUtils proxy.
  *
  * @private
  * @class tinymce.ui.DomUtils
  */
-define(
-  'tinymce.ui.DomUtils',
-  [
-    'global!document',
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.core.Env',
-    'tinymce.core.util.Tools'
-  ],
-  function (document, DOMUtils, Env, Tools) {
-    "use strict";
 
-    var count = 0;
+"use strict";
 
-    var funcs = {
-      id: function () {
-        return 'mceu_' + (count++);
-      },
+var count = 0;
 
-      create: function (name, attrs, children) {
-        var elm = document.createElement(name);
+var funcs = {
+  id: function () {
+    return 'mceu_' + (count++);
+  },
 
-        DOMUtils.DOM.setAttribs(elm, attrs);
+  create: function (name, attrs, children) {
+    var elm = document.createElement(name);
 
-        if (typeof children === 'string') {
-          elm.innerHTML = children;
-        } else {
-          Tools.each(children, function (child) {
-            if (child.nodeType) {
-              elm.appendChild(child);
-            }
-          });
+    DOMUtils.DOM.setAttribs(elm, attrs);
+
+    if (typeof children === 'string') {
+      elm.innerHTML = children;
+    } else {
+      Tools.each(children, function (child) {
+        if (child.nodeType) {
+          elm.appendChild(child);
         }
+      });
+    }
 
-        return elm;
-      },
+    return elm;
+  },
 
-      createFragment: function (html) {
-        return DOMUtils.DOM.createFragment(html);
-      },
+  createFragment: function (html) {
+    return DOMUtils.DOM.createFragment(html);
+  },
 
-      getWindowSize: function () {
-        return DOMUtils.DOM.getViewPort();
-      },
+  getWindowSize: function () {
+    return DOMUtils.DOM.getViewPort();
+  },
 
-      getSize: function (elm) {
-        var width, height;
+  getSize: function (elm) {
+    var width, height;
 
-        if (elm.getBoundingClientRect) {
-          var rect = elm.getBoundingClientRect();
+    if (elm.getBoundingClientRect) {
+      var rect = elm.getBoundingClientRect();
 
-          width = Math.max(rect.width || (rect.right - rect.left), elm.offsetWidth);
-          height = Math.max(rect.height || (rect.bottom - rect.bottom), elm.offsetHeight);
-        } else {
-          width = elm.offsetWidth;
-          height = elm.offsetHeight;
-        }
+      width = Math.max(rect.width || (rect.right - rect.left), elm.offsetWidth);
+      height = Math.max(rect.height || (rect.bottom - rect.bottom), elm.offsetHeight);
+    } else {
+      width = elm.offsetWidth;
+      height = elm.offsetHeight;
+    }
 
-        return { width: width, height: height };
-      },
+    return { width: width, height: height };
+  },
 
-      getPos: function (elm, root) {
-        return DOMUtils.DOM.getPos(elm, root || funcs.getContainer());
-      },
+  getPos: function (elm, root) {
+    return DOMUtils.DOM.getPos(elm, root || funcs.getContainer());
+  },
 
-      getContainer: function () {
-        return Env.container ? Env.container : document.body;
-      },
+  getContainer: function () {
+    return Env.container ? Env.container : document.body;
+  },
 
-      getViewPort: function (win) {
-        return DOMUtils.DOM.getViewPort(win);
-      },
+  getViewPort: function (win) {
+    return DOMUtils.DOM.getViewPort(win);
+  },
 
-      get: function (id) {
-        return document.getElementById(id);
-      },
+  get: function (id) {
+    return document.getElementById(id);
+  },
 
-      addClass: function (elm, cls) {
-        return DOMUtils.DOM.addClass(elm, cls);
-      },
+  addClass: function (elm, cls) {
+    return DOMUtils.DOM.addClass(elm, cls);
+  },
 
-      removeClass: function (elm, cls) {
-        return DOMUtils.DOM.removeClass(elm, cls);
-      },
+  removeClass: function (elm, cls) {
+    return DOMUtils.DOM.removeClass(elm, cls);
+  },
 
-      hasClass: function (elm, cls) {
-        return DOMUtils.DOM.hasClass(elm, cls);
-      },
+  hasClass: function (elm, cls) {
+    return DOMUtils.DOM.hasClass(elm, cls);
+  },
 
-      toggleClass: function (elm, cls, state) {
-        return DOMUtils.DOM.toggleClass(elm, cls, state);
-      },
+  toggleClass: function (elm, cls, state) {
+    return DOMUtils.DOM.toggleClass(elm, cls, state);
+  },
 
-      css: function (elm, name, value) {
-        return DOMUtils.DOM.setStyle(elm, name, value);
-      },
+  css: function (elm, name, value) {
+    return DOMUtils.DOM.setStyle(elm, name, value);
+  },
 
-      getRuntimeStyle: function (elm, name) {
-        return DOMUtils.DOM.getStyle(elm, name, true);
-      },
+  getRuntimeStyle: function (elm, name) {
+    return DOMUtils.DOM.getStyle(elm, name, true);
+  },
 
-      on: function (target, name, callback, scope) {
-        return DOMUtils.DOM.bind(target, name, callback, scope);
-      },
+  on: function (target, name, callback, scope) {
+    return DOMUtils.DOM.bind(target, name, callback, scope);
+  },
 
-      off: function (target, name, callback) {
-        return DOMUtils.DOM.unbind(target, name, callback);
-      },
+  off: function (target, name, callback) {
+    return DOMUtils.DOM.unbind(target, name, callback);
+  },
 
-      fire: function (target, name, args) {
-        return DOMUtils.DOM.fire(target, name, args);
-      },
+  fire: function (target, name, args) {
+    return DOMUtils.DOM.fire(target, name, args);
+  },
 
-      innerHtml: function (elm, html) {
-        // Workaround for <div> in <p> bug on IE 8 #6178
-        DOMUtils.DOM.setHTML(elm, html);
-      }
-    };
-
-    return funcs;
+  innerHtml: function (elm, html) {
+    // Workaround for <div> in <p> bug on IE 8 #6178
+    DOMUtils.DOM.setHTML(elm, html);
   }
-);
+};
+
+export default <any> funcs;

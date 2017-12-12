@@ -1,46 +1,43 @@
-asynctest(
-  'browser.tinymce.ui.BoxUtilsMeasureBoxIframeDisplayNoneTest',
-  [
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.Logger',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'global!document',
-    'tinymce.themes.modern.Theme',
-    'tinymce.ui.BoxUtils'
-  ],
-  function (Assertions, Logger, Pipeline, Step, document, ModernTheme, BoxUtils) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+import { Assertions } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import BoxUtils from 'tinymce/ui/BoxUtils';
+import { UnitTest } from '@ephox/refute';
 
-    ModernTheme();
+UnitTest.asynctest('browser.tinymce.ui.BoxUtilsMeasureBoxIframeDisplayNoneTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
 
-    Pipeline.async({}, [
-      Logger.t(
-        'firefox specific test, boxutils should not throw error when used on hidden iframe',
-        Step.async(function (next, die) {
-          var iframe = document.createElement('iframe');
-          iframe.style.display = 'none';
-          document.body.appendChild(iframe);
+  ModernTheme();
 
-          iframe.addEventListener('load', function () {
-            try {
-              var measured = BoxUtils.measureBox(iframe.contentDocument.body.firstChild, 'border');
-              Assertions.assertEq('should return 0', 0, measured.top);
-              iframe.parentNode.removeChild(iframe);
-              next();
-            } catch (e) {
-              die('Should not throw error, ' + e.message);
-            }
-          }, false);
+  Pipeline.async({}, [
+    Logger.t(
+      'firefox specific test, boxutils should not throw error when used on hidden iframe',
+      Step.async(function (next, die) {
+        var iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
 
-          iframe.contentDocument.open();
-          iframe.contentDocument.write('<html><body><div>a</div></body></html>');
-          iframe.contentDocument.close();
-        })
-      )
-    ], function () {
-      success();
-    }, failure);
-  }
-);
+        iframe.addEventListener('load', function () {
+          try {
+            var measured = BoxUtils.measureBox(iframe.contentDocument.body.firstChild, 'border');
+            Assertions.assertEq('should return 0', 0, measured.top);
+            iframe.parentNode.removeChild(iframe);
+            next();
+          } catch (e) {
+            die('Should not throw error, ' + e.message);
+          }
+        }, false);
+
+        iframe.contentDocument.open();
+        iframe.contentDocument.write('<html><body><div>a</div></body></html>');
+        iframe.contentDocument.close();
+      })
+    )
+  ], function () {
+    success();
+  }, failure);
+});
+

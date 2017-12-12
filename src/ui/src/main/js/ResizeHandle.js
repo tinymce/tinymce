@@ -8,6 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Widget from './Widget';
+import DragHelper from './DragHelper';
+
 /**
  * Renders a resize handle that fires ResizeStart, Resize and ResizeEnd events.
  *
@@ -15,76 +18,68 @@
  * @class tinymce.ui.ResizeHandle
  * @extends tinymce.ui.Widget
  */
-define(
-  'tinymce.ui.ResizeHandle',
-  [
-    "tinymce.ui.Widget",
-    "tinymce.ui.DragHelper"
-  ],
-  function (Widget, DragHelper) {
-    "use strict";
 
-    return Widget.extend({
-      /**
-       * Renders the control as a HTML string.
-       *
-       * @method renderHtml
-       * @return {String} HTML representing the control.
-       */
-      renderHtml: function () {
-        var self = this, prefix = self.classPrefix;
+"use strict";
 
-        self.classes.add('resizehandle');
+export default <any> Widget.extend({
+  /**
+   * Renders the control as a HTML string.
+   *
+   * @method renderHtml
+   * @return {String} HTML representing the control.
+   */
+  renderHtml: function () {
+    var self = this, prefix = self.classPrefix;
 
-        if (self.settings.direction == "both") {
-          self.classes.add('resizehandle-both');
-        }
+    self.classes.add('resizehandle');
 
-        self.canFocus = false;
+    if (self.settings.direction == "both") {
+      self.classes.add('resizehandle-both');
+    }
 
-        return (
-          '<div id="' + self._id + '" class="' + self.classes + '">' +
-          '<i class="' + prefix + 'ico ' + prefix + 'i-resize"></i>' +
-          '</div>'
-        );
+    self.canFocus = false;
+
+    return (
+      '<div id="' + self._id + '" class="' + self.classes + '">' +
+      '<i class="' + prefix + 'ico ' + prefix + 'i-resize"></i>' +
+      '</div>'
+    );
+  },
+
+  /**
+   * Called after the control has been rendered.
+   *
+   * @method postRender
+   */
+  postRender: function () {
+    var self = this;
+
+    self._super();
+
+    self.resizeDragHelper = new DragHelper(this._id, {
+      start: function () {
+        self.fire('ResizeStart');
       },
 
-      /**
-       * Called after the control has been rendered.
-       *
-       * @method postRender
-       */
-      postRender: function () {
-        var self = this;
-
-        self._super();
-
-        self.resizeDragHelper = new DragHelper(this._id, {
-          start: function () {
-            self.fire('ResizeStart');
-          },
-
-          drag: function (e) {
-            if (self.settings.direction != "both") {
-              e.deltaX = 0;
-            }
-
-            self.fire('Resize', e);
-          },
-
-          stop: function () {
-            self.fire('ResizeEnd');
-          }
-        });
-      },
-
-      remove: function () {
-        if (this.resizeDragHelper) {
-          this.resizeDragHelper.destroy();
+      drag: function (e) {
+        if (self.settings.direction != "both") {
+          e.deltaX = 0;
         }
 
-        return this._super();
+        self.fire('Resize', e);
+      },
+
+      stop: function () {
+        self.fire('ResizeEnd');
       }
     });
+  },
+
+  remove: function () {
+    if (this.resizeDragHelper) {
+      this.resizeDragHelper.destroy();
+    }
+
+    return this._super();
   }
-);
+});

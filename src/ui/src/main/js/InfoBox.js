@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Widget from './Widget';
+
 /**
  * ....
  *
@@ -15,83 +17,76 @@
  * @class tinymce.ui.InfoBox
  * @extends tinymce.ui.Widget
  */
-define(
-  'tinymce.ui.InfoBox',
-  [
-    "tinymce.ui.Widget"
-  ],
-  function (Widget) {
-    "use strict";
 
-    return Widget.extend({
-      /**
-       * Constructs a instance with the specified settings.
-       *
-       * @constructor
-       * @param {Object} settings Name/value object with settings.
-       * @setting {Boolean} multiline Multiline label.
-       */
-      init: function (settings) {
-        var self = this;
+"use strict";
 
-        self._super(settings);
-        self.classes.add('widget').add('infobox');
-        self.canFocus = false;
-      },
+export default <any> Widget.extend({
+  /**
+   * Constructs a instance with the specified settings.
+   *
+   * @constructor
+   * @param {Object} settings Name/value object with settings.
+   * @setting {Boolean} multiline Multiline label.
+   */
+  init: function (settings) {
+    var self = this;
 
-      severity: function (level) {
-        this.classes.remove('error');
-        this.classes.remove('warning');
-        this.classes.remove('success');
-        this.classes.add(level);
-      },
+    self._super(settings);
+    self.classes.add('widget').add('infobox');
+    self.canFocus = false;
+  },
 
-      help: function (state) {
-        this.state.set('help', state);
-      },
+  severity: function (level) {
+    this.classes.remove('error');
+    this.classes.remove('warning');
+    this.classes.remove('success');
+    this.classes.add(level);
+  },
 
-      /**
-       * Renders the control as a HTML string.
-       *
-       * @method renderHtml
-       * @return {String} HTML representing the control.
-       */
-      renderHtml: function () {
-        var self = this, prefix = self.classPrefix;
+  help: function (state) {
+    this.state.set('help', state);
+  },
 
-        return (
-          '<div id="' + self._id + '" class="' + self.classes + '">' +
-          '<div id="' + self._id + '-body">' +
-          self.encode(self.state.get('text')) +
-          '<button role="button" tabindex="-1">' +
-          '<i class="' + prefix + 'ico ' + prefix + 'i-help"></i>' +
-          '</button>' +
-          '</div>' +
-          '</div>'
-        );
-      },
+  /**
+   * Renders the control as a HTML string.
+   *
+   * @method renderHtml
+   * @return {String} HTML representing the control.
+   */
+  renderHtml: function () {
+    var self = this, prefix = self.classPrefix;
 
-      bindStates: function () {
-        var self = this;
+    return (
+      '<div id="' + self._id + '" class="' + self.classes + '">' +
+      '<div id="' + self._id + '-body">' +
+      self.encode(self.state.get('text')) +
+      '<button role="button" tabindex="-1">' +
+      '<i class="' + prefix + 'ico ' + prefix + 'i-help"></i>' +
+      '</button>' +
+      '</div>' +
+      '</div>'
+    );
+  },
 
-        self.state.on('change:text', function (e) {
-          self.getEl('body').firstChild.data = self.encode(e.value);
+  bindStates: function () {
+    var self = this;
 
-          if (self.state.get('rendered')) {
-            self.updateLayoutRect();
-          }
-        });
+    self.state.on('change:text', function (e) {
+      self.getEl('body').firstChild.data = self.encode(e.value);
 
-        self.state.on('change:help', function (e) {
-          self.classes.toggle('has-help', e.value);
-
-          if (self.state.get('rendered')) {
-            self.updateLayoutRect();
-          }
-        });
-
-        return self._super();
+      if (self.state.get('rendered')) {
+        self.updateLayoutRect();
       }
     });
+
+    self.state.on('change:help', function (e) {
+      self.classes.toggle('has-help', e.value);
+
+      if (self.state.get('rendered')) {
+        self.updateLayoutRect();
+      }
+    });
+
+    return self._super();
   }
-);
+});

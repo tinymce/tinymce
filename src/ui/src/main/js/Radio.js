@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Checkbox from './Checkbox';
+
 /**
  * Creates a new radio button.
  *
@@ -15,19 +17,12 @@
  * @class tinymce.ui.Radio
  * @extends tinymce.ui.Checkbox
  */
-define(
-  'tinymce.ui.Radio',
-  [
-    "tinymce.ui.Checkbox"
-  ],
-  function (Checkbox) {
-    "use strict";
 
-    return Checkbox.extend({
-      Defaults: {
-        classes: "radio",
-        role: "radio"
-      }
-    });
+"use strict";
+
+export default <any> Checkbox.extend({
+  Defaults: {
+    classes: "radio",
+    role: "radio"
   }
-);
+});

@@ -1,51 +1,49 @@
-asynctest(
-  'browser.tinymce.ui.AbsoluteLayoutTest',
-  [
-    'ephox.agar.api.Pipeline',
-    'ephox.mcagar.api.LegacyUnit',
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.core.dom.EventUtils',
-    'tinymce.ui.test.UiUtils',
-    'tinymce.ui.test.ViewBlock',
-    'tinymce.ui.Api',
-    'tinymce.core.ui.Factory',
-    'tinymce.core.util.Tools'
-  ],
-  function (Pipeline, LegacyUnit, DOMUtils, EventUtils, UiUtils, ViewBlock, Api, Factory, Tools) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
-    var suite = LegacyUnit.createSuite();
-    var viewBlock = new ViewBlock();
+import { Pipeline } from '@ephox/agar';
+import { LegacyUnit } from '@ephox/mcagar';
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import EventUtils from 'tinymce/core/dom/EventUtils';
+import UiUtils from 'tinymce/ui/test/UiUtils';
+import ViewBlock from 'tinymce/ui/test/ViewBlock';
+import Api from 'tinymce/ui/Api';
+import Factory from 'tinymce/core/ui/Factory';
+import Tools from 'tinymce/core/util/Tools';
+import { UnitTest } from '@ephox/refute';
 
-    // Registers ui widgets to factory
-    Api.registerToFactory();
+UnitTest.asynctest('browser.tinymce.ui.AbsoluteLayoutTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
+  var suite = LegacyUnit.createSuite();
+  var viewBlock = new ViewBlock();
 
-    var createPanel = function (settings) {
-      return Factory.create(Tools.extend({
-        type: 'panel',
-        layout: 'absolute',
-        width: 200,
-        height: 200
-      }, settings)).renderTo(viewBlock.get()).reflow();
-    };
+  // Registers ui widgets to factory
+  Api.registerToFactory();
 
-    suite.test("spacer x:10, y:20, minWidth: 100, minHeight: 100", function () {
-      var panel = createPanel({
-        items: [
-          { type: 'spacer', x: 10, y: 20, w: 100, h: 120, classes: 'red' }
-        ]
-      });
+  var createPanel = function (settings) {
+    return Factory.create(Tools.extend({
+      type: 'panel',
+      layout: 'absolute',
+      width: 200,
+      height: 200
+    }, settings)).renderTo(viewBlock.get()).reflow();
+  };
 
-      LegacyUnit.deepEqual(UiUtils.rect(viewBlock, panel), [0, 0, 200, 200]);
-      LegacyUnit.deepEqual(UiUtils.rect(viewBlock, panel.find('spacer')[0]), [10, 20, 100, 120]);
+  suite.test("spacer x:10, y:20, minWidth: 100, minHeight: 100", function () {
+    var panel = createPanel({
+      items: [
+        { type: 'spacer', x: 10, y: 20, w: 100, h: 120, classes: 'red' }
+      ]
     });
 
-    UiUtils.loadSkinAndOverride(viewBlock, function () {
-      Pipeline.async({}, suite.toSteps({}), function () {
-        EventUtils.Event.clean(viewBlock.get());
-        viewBlock.detach();
-        success();
-      }, failure);
-    });
-  }
-);
+    LegacyUnit.deepEqual(UiUtils.rect(viewBlock, panel), [0, 0, 200, 200]);
+    LegacyUnit.deepEqual(UiUtils.rect(viewBlock, panel.find('spacer')[0]), [10, 20, 100, 120]);
+  });
+
+  UiUtils.loadSkinAndOverride(viewBlock, function () {
+    Pipeline.async({}, suite.toSteps({}), function () {
+      EventUtils.Event.clean(viewBlock.get());
+      viewBlock.detach();
+      success();
+    }, failure);
+  });
+});
+

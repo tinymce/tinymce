@@ -8,129 +8,125 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.ui.WindowManagerImpl',
-  [
-    "tinymce.ui.Window",
-    "tinymce.ui.MessageBox"
-  ],
-  function (Window, MessageBox) {
-    return function (editor) {
-      var open = function (args, params, closeCallback) {
-        var win;
+import Window from './Window';
+import MessageBox from './MessageBox';
 
-        args.title = args.title || ' ';
 
-        // Handle URL
-        args.url = args.url || args.file; // Legacy
-        if (args.url) {
-          args.width = parseInt(args.width || 320, 10);
-          args.height = parseInt(args.height || 240, 10);
+
+export default <any> function (editor) {
+  var open = function (args, params, closeCallback) {
+    var win;
+
+    args.title = args.title || ' ';
+
+    // Handle URL
+    args.url = args.url || args.file; // Legacy
+    if (args.url) {
+      args.width = parseInt(args.width || 320, 10);
+      args.height = parseInt(args.height || 240, 10);
+    }
+
+    // Handle body
+    if (args.body) {
+      args.items = {
+        defaults: args.defaults,
+        type: args.bodyType || 'form',
+        items: args.body,
+        data: args.data,
+        callbacks: args.commands
+      };
+    }
+
+    if (!args.url && !args.buttons) {
+      args.buttons = [
+        {
+          text: 'Ok', subtype: 'primary', onclick: function () {
+            win.find('form')[0].submit();
+          }
+        },
+
+        {
+          text: 'Cancel', onclick: function () {
+            win.close();
+          }
         }
+      ];
+    }
 
-        // Handle body
-        if (args.body) {
-          args.items = {
-            defaults: args.defaults,
-            type: args.bodyType || 'form',
-            items: args.body,
-            data: args.data,
-            callbacks: args.commands
-          };
-        }
+    win = new Window(args);
 
-        if (!args.url && !args.buttons) {
-          args.buttons = [
-            {
-              text: 'Ok', subtype: 'primary', onclick: function () {
-                win.find('form')[0].submit();
-              }
-            },
+    win.on('close', function () {
+      closeCallback(win);
+    });
 
-            {
-              text: 'Cancel', onclick: function () {
-                win.close();
-              }
-            }
-          ];
-        }
+    // Handle data
+    if (args.data) {
+      win.on('postRender', function () {
+        this.find('*').each(function (ctrl) {
+          var name = ctrl.name();
 
-        win = new Window(args);
-
-        win.on('close', function () {
-          closeCallback(win);
+          if (name in args.data) {
+            ctrl.value(args.data[name]);
+          }
         });
+      });
+    }
 
-        // Handle data
-        if (args.data) {
-          win.on('postRender', function () {
-            this.find('*').each(function (ctrl) {
-              var name = ctrl.name();
+    // store args and parameters
+    win.features = args || {};
+    win.params = params || {};
 
-              if (name in args.data) {
-                ctrl.value(args.data[name]);
-              }
-            });
-          });
-        }
+    win = win.renderTo().reflow();
 
-        // store args and parameters
-        win.features = args || {};
-        win.params = params || {};
+    return win;
+  };
 
-        win = win.renderTo().reflow();
+  var alert = function (message, choiceCallback, closeCallback) {
+    var win;
 
-        return win;
-      };
+    win = MessageBox.alert(message, function () {
+      choiceCallback();
+    });
 
-      var alert = function (message, choiceCallback, closeCallback) {
-        var win;
+    win.on('close', function () {
+      closeCallback(win);
+    });
 
-        win = MessageBox.alert(message, function () {
-          choiceCallback();
-        });
+    return win;
+  };
 
-        win.on('close', function () {
-          closeCallback(win);
-        });
+  var confirm = function (message, choiceCallback, closeCallback) {
+    var win;
 
-        return win;
-      };
+    win = MessageBox.confirm(message, function (state) {
+      choiceCallback(state);
+    });
 
-      var confirm = function (message, choiceCallback, closeCallback) {
-        var win;
+    win.on('close', function () {
+      closeCallback(win);
+    });
 
-        win = MessageBox.confirm(message, function (state) {
-          choiceCallback(state);
-        });
+    return win;
+  };
 
-        win.on('close', function () {
-          closeCallback(win);
-        });
+  var close = function (window) {
+    window.close();
+  };
 
-        return win;
-      };
+  var getParams = function (window) {
+    return window.params;
+  };
 
-      var close = function (window) {
-        window.close();
-      };
+  var setParams = function (window, params) {
+    window.params = params;
+  };
 
-      var getParams = function (window) {
-        return window.params;
-      };
-
-      var setParams = function (window, params) {
-        window.params = params;
-      };
-
-      return {
-        open: open,
-        alert: alert,
-        confirm: confirm,
-        close: close,
-        getParams: getParams,
-        setParams: setParams
-      };
-    };
-  }
-);
+  return {
+    open: open,
+    alert: alert,
+    confirm: confirm,
+    close: close,
+    getParams: getParams,
+    setParams: setParams
+  };
+};

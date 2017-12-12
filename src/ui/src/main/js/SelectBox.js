@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Widget from './Widget';
+
 /**
  * Creates a new select box control.
  *
@@ -15,112 +17,105 @@
  * @class tinymce.ui.SelectBox
  * @extends tinymce.ui.Widget
  */
-define(
-  'tinymce.ui.SelectBox',
-  [
-    "tinymce.ui.Widget"
-  ],
-  function (Widget) {
-    "use strict";
 
-    function createOptions(options) {
-      var strOptions = '';
-      if (options) {
-        for (var i = 0; i < options.length; i++) {
-          strOptions += '<option value="' + options[i] + '">' + options[i] + '</option>';
-        }
-      }
-      return strOptions;
+"use strict";
+
+function createOptions(options) {
+  var strOptions = '';
+  if (options) {
+    for (var i = 0; i < options.length; i++) {
+      strOptions += '<option value="' + options[i] + '">' + options[i] + '</option>';
+    }
+  }
+  return strOptions;
+}
+
+export default <any> Widget.extend({
+  Defaults: {
+    classes: "selectbox",
+    role: "selectbox",
+    options: []
+  },
+  /**
+   * Constructs a instance with the specified settings.
+   *
+   * @constructor
+   * @param {Object} settings Name/value object with settings.
+   * @setting {Array} options Array with options to add to the select box.
+   */
+  init: function (settings) {
+    var self = this;
+
+    self._super(settings);
+
+    if (self.settings.size) {
+      self.size = self.settings.size;
     }
 
-    return Widget.extend({
-      Defaults: {
-        classes: "selectbox",
-        role: "selectbox",
-        options: []
-      },
-      /**
-       * Constructs a instance with the specified settings.
-       *
-       * @constructor
-       * @param {Object} settings Name/value object with settings.
-       * @setting {Array} options Array with options to add to the select box.
-       */
-      init: function (settings) {
-        var self = this;
+    if (self.settings.options) {
+      self._options = self.settings.options;
+    }
 
-        self._super(settings);
+    self.on('keydown', function (e) {
+      var rootControl;
 
-        if (self.settings.size) {
-          self.size = self.settings.size;
-        }
+      if (e.keyCode == 13) {
+        e.preventDefault();
 
-        if (self.settings.options) {
-          self._options = self.settings.options;
-        }
-
-        self.on('keydown', function (e) {
-          var rootControl;
-
-          if (e.keyCode == 13) {
-            e.preventDefault();
-
-            // Find root control that we can do toJSON on
-            self.parents().reverse().each(function (ctrl) {
-              if (ctrl.toJSON) {
-                rootControl = ctrl;
-                return false;
-              }
-            });
-
-            // Fire event on current text box with the serialized data of the whole form
-            self.fire('submit', { data: rootControl.toJSON() });
+        // Find root control that we can do toJSON on
+        self.parents().reverse().each(function (ctrl) {
+          if (ctrl.toJSON) {
+            rootControl = ctrl;
+            return false;
           }
         });
-      },
 
-      /**
-       * Getter/setter function for the options state.
-       *
-       * @method options
-       * @param {Array} [state] State to be set.
-       * @return {Array|tinymce.ui.SelectBox} Array of string options.
-       */
-      options: function (state) {
-        if (!arguments.length) {
-          return this.state.get('options');
-        }
-
-        this.state.set('options', state);
-
-        return this;
-      },
-
-      renderHtml: function () {
-        var self = this, options, size = '';
-
-        options = createOptions(self._options);
-
-        if (self.size) {
-          size = ' size = "' + self.size + '"';
-        }
-
-        return (
-          '<select id="' + self._id + '" class="' + self.classes + '"' + size + '>' +
-          options +
-          '</select>'
-        );
-      },
-
-      bindStates: function () {
-        var self = this;
-
-        self.state.on('change:options', function (e) {
-          self.getEl().innerHTML = createOptions(e.value);
-        });
-
-        return self._super();
+        // Fire event on current text box with the serialized data of the whole form
+        self.fire('submit', { data: rootControl.toJSON() });
       }
     });
+  },
+
+  /**
+   * Getter/setter function for the options state.
+   *
+   * @method options
+   * @param {Array} [state] State to be set.
+   * @return {Array|tinymce.ui.SelectBox} Array of string options.
+   */
+  options: function (state) {
+    if (!arguments.length) {
+      return this.state.get('options');
+    }
+
+    this.state.set('options', state);
+
+    return this;
+  },
+
+  renderHtml: function () {
+    var self = this, options, size = '';
+
+    options = createOptions(self._options);
+
+    if (self.size) {
+      size = ' size = "' + self.size + '"';
+    }
+
+    return (
+      '<select id="' + self._id + '" class="' + self.classes + '"' + size + '>' +
+      options +
+      '</select>'
+    );
+  },
+
+  bindStates: function () {
+    var self = this;
+
+    self.state.on('change:options', function (e) {
+      self.getEl().innerHTML = createOptions(e.value);
+    });
+
+    return self._super();
   }
-);
+});

@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import DomQuery from 'tinymce/core/dom/DomQuery';
+
 /**
  * Drag/drop helper class.
  *
@@ -25,126 +27,117 @@
  *
  * @class tinymce.ui.DragHelper
  */
-define(
-  'tinymce.ui.DragHelper',
-  [
-    'global!document',
-    'global!window',
-    'tinymce.core.dom.DomQuery'
-  ],
-  function (document, window, DomQuery) {
-    "use strict";
 
-    function getDocumentSize(doc) {
-      var documentElement, body, scrollWidth, clientWidth;
-      var offsetWidth, scrollHeight, clientHeight, offsetHeight, max = Math.max;
+"use strict";
 
-      documentElement = doc.documentElement;
-      body = doc.body;
+function getDocumentSize(doc) {
+  var documentElement, body, scrollWidth, clientWidth;
+  var offsetWidth, scrollHeight, clientHeight, offsetHeight, max = Math.max;
 
-      scrollWidth = max(documentElement.scrollWidth, body.scrollWidth);
-      clientWidth = max(documentElement.clientWidth, body.clientWidth);
-      offsetWidth = max(documentElement.offsetWidth, body.offsetWidth);
+  documentElement = doc.documentElement;
+  body = doc.body;
 
-      scrollHeight = max(documentElement.scrollHeight, body.scrollHeight);
-      clientHeight = max(documentElement.clientHeight, body.clientHeight);
-      offsetHeight = max(documentElement.offsetHeight, body.offsetHeight);
+  scrollWidth = max(documentElement.scrollWidth, body.scrollWidth);
+  clientWidth = max(documentElement.clientWidth, body.clientWidth);
+  offsetWidth = max(documentElement.offsetWidth, body.offsetWidth);
 
-      return {
-        width: scrollWidth < offsetWidth ? clientWidth : scrollWidth,
-        height: scrollHeight < offsetHeight ? clientHeight : scrollHeight
-      };
+  scrollHeight = max(documentElement.scrollHeight, body.scrollHeight);
+  clientHeight = max(documentElement.clientHeight, body.clientHeight);
+  offsetHeight = max(documentElement.offsetHeight, body.offsetHeight);
+
+  return {
+    width: scrollWidth < offsetWidth ? clientWidth : scrollWidth,
+    height: scrollHeight < offsetHeight ? clientHeight : scrollHeight
+  };
+}
+
+function updateWithTouchData(e) {
+  var keys, i;
+
+  if (e.changedTouches) {
+    keys = "screenX screenY pageX pageY clientX clientY".split(' ');
+    for (i = 0; i < keys.length; i++) {
+      e[keys[i]] = e.changedTouches[0][keys[i]];
     }
-
-    function updateWithTouchData(e) {
-      var keys, i;
-
-      if (e.changedTouches) {
-        keys = "screenX screenY pageX pageY clientX clientY".split(' ');
-        for (i = 0; i < keys.length; i++) {
-          e[keys[i]] = e.changedTouches[0][keys[i]];
-        }
-      }
-    }
-
-    return function (id, settings) {
-      var $eventOverlay, doc = settings.document || document, downButton, start, stop, drag, startX, startY;
-
-      settings = settings || {};
-
-      function getHandleElm() {
-        return doc.getElementById(settings.handle || id);
-      }
-
-      start = function (e) {
-        var docSize = getDocumentSize(doc), handleElm, cursor;
-
-        updateWithTouchData(e);
-
-        e.preventDefault();
-        downButton = e.button;
-        handleElm = getHandleElm();
-        startX = e.screenX;
-        startY = e.screenY;
-
-        // Grab cursor from handle so we can place it on overlay
-        if (window.getComputedStyle) {
-          cursor = window.getComputedStyle(handleElm, null).getPropertyValue("cursor");
-        } else {
-          cursor = handleElm.runtimeStyle.cursor;
-        }
-
-        $eventOverlay = DomQuery('<div></div>').css({
-          position: "absolute",
-          top: 0, left: 0,
-          width: docSize.width,
-          height: docSize.height,
-          zIndex: 0x7FFFFFFF,
-          opacity: 0.0001,
-          cursor: cursor
-        }).appendTo(doc.body);
-
-        DomQuery(doc).on('mousemove touchmove', drag).on('mouseup touchend', stop);
-
-        settings.start(e);
-      };
-
-      drag = function (e) {
-        updateWithTouchData(e);
-
-        if (e.button !== downButton) {
-          return stop(e);
-        }
-
-        e.deltaX = e.screenX - startX;
-        e.deltaY = e.screenY - startY;
-
-        e.preventDefault();
-        settings.drag(e);
-      };
-
-      stop = function (e) {
-        updateWithTouchData(e);
-
-        DomQuery(doc).off('mousemove touchmove', drag).off('mouseup touchend', stop);
-
-        $eventOverlay.remove();
-
-        if (settings.stop) {
-          settings.stop(e);
-        }
-      };
-
-      /**
-       * Destroys the drag/drop helper instance.
-       *
-       * @method destroy
-       */
-      this.destroy = function () {
-        DomQuery(getHandleElm()).off();
-      };
-
-      DomQuery(getHandleElm()).on('mousedown touchstart', start);
-    };
   }
-);
+}
+
+export default <any> function (id, settings) {
+  var $eventOverlay, doc = settings.document || document, downButton, start, stop, drag, startX, startY;
+
+  settings = settings || {};
+
+  function getHandleElm() {
+    return doc.getElementById(settings.handle || id);
+  }
+
+  start = function (e) {
+    var docSize = getDocumentSize(doc), handleElm, cursor;
+
+    updateWithTouchData(e);
+
+    e.preventDefault();
+    downButton = e.button;
+    handleElm = getHandleElm();
+    startX = e.screenX;
+    startY = e.screenY;
+
+    // Grab cursor from handle so we can place it on overlay
+    if (window.getComputedStyle) {
+      cursor = window.getComputedStyle(handleElm, null).getPropertyValue("cursor");
+    } else {
+      cursor = handleElm.runtimeStyle.cursor;
+    }
+
+    $eventOverlay = DomQuery('<div></div>').css({
+      position: "absolute",
+      top: 0, left: 0,
+      width: docSize.width,
+      height: docSize.height,
+      zIndex: 0x7FFFFFFF,
+      opacity: 0.0001,
+      cursor: cursor
+    }).appendTo(doc.body);
+
+    DomQuery(doc).on('mousemove touchmove', drag).on('mouseup touchend', stop);
+
+    settings.start(e);
+  };
+
+  drag = function (e) {
+    updateWithTouchData(e);
+
+    if (e.button !== downButton) {
+      return stop(e);
+    }
+
+    e.deltaX = e.screenX - startX;
+    e.deltaY = e.screenY - startY;
+
+    e.preventDefault();
+    settings.drag(e);
+  };
+
+  stop = function (e) {
+    updateWithTouchData(e);
+
+    DomQuery(doc).off('mousemove touchmove', drag).off('mouseup touchend', stop);
+
+    $eventOverlay.remove();
+
+    if (settings.stop) {
+      settings.stop(e);
+    }
+  };
+
+  /**
+   * Destroys the drag/drop helper instance.
+   *
+   * @method destroy
+   */
+  this.destroy = function () {
+    DomQuery(getHandleElm()).off();
+  };
+
+  DomQuery(getHandleElm()).on('mousedown touchstart', start);
+};

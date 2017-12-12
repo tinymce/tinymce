@@ -1,40 +1,35 @@
-define(
-  'tinymce.ui.test.ViewBlock',
-  [
-    'tinymce.core.dom.DOMUtils',
-    'global!document'
-  ],
-  function (DOMUtils, document) {
-    return function () {
-      var domElm = DOMUtils.DOM.create('div', {
-        style: 'position: absolute; right: 10px; top: 10px;'
-      });
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-      var attach = function (preventDuplicates) {
-        if (preventDuplicates && domElm.parentNode === document.body) {
-          detach();
-        }
-        document.body.appendChild(domElm);
-      };
 
-      var detach = function () {
-        DOMUtils.DOM.remove(domElm);
-      };
 
-      var update = function (html) {
-        DOMUtils.DOM.setHTML(domElm, html);
-      };
+export default <any> function () {
+  var domElm = DOMUtils.DOM.create('div', {
+    style: 'position: absolute; right: 10px; top: 10px;'
+  });
 
-      var get = function () {
-        return domElm;
-      };
+  var attach = function (preventDuplicates) {
+    if (preventDuplicates && domElm.parentNode === document.body) {
+      detach();
+    }
+    document.body.appendChild(domElm);
+  };
 
-      return {
-        attach: attach,
-        update: update,
-        detach: detach,
-        get: get
-      };
-    };
-  }
-);
+  var detach = function () {
+    DOMUtils.DOM.remove(domElm);
+  };
+
+  var update = function (html) {
+    DOMUtils.DOM.setHTML(domElm, html);
+  };
+
+  var get = function () {
+    return domElm;
+  };
+
+  return {
+    attach: attach,
+    update: update,
+    detach: detach,
+    get: get
+  };
+};

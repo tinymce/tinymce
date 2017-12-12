@@ -8,38 +8,31 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.ui.editorui.VisualAid',
-  [
-  ],
-  function () {
-    var toggleVisualAidState = function (editor) {
-      return function () {
-        var self = this;
+var toggleVisualAidState = function (editor) {
+  return function () {
+    var self = this;
 
-        editor.on('VisualAid', function (e) {
-          self.active(e.hasVisual);
-        });
+    editor.on('VisualAid', function (e) {
+      self.active(e.hasVisual);
+    });
 
-        self.active(editor.hasVisual);
-      };
-    };
+    self.active(editor.hasVisual);
+  };
+};
 
-    var registerMenuItems = function (editor) {
-      editor.addMenuItem('visualaid', {
-        text: 'Visual aids',
-        selectable: true,
-        onPostRender: toggleVisualAidState(editor),
-        cmd: 'mceToggleVisualAid'
-      });
-    };
+var registerMenuItems = function (editor) {
+  editor.addMenuItem('visualaid', {
+    text: 'Visual aids',
+    selectable: true,
+    onPostRender: toggleVisualAidState(editor),
+    cmd: 'mceToggleVisualAid'
+  });
+};
 
-    var register = function (editor) {
-      registerMenuItems(editor);
-    };
+var register = function (editor) {
+  registerMenuItems(editor);
+};
 
-    return {
-      register: register
-    };
-  }
-);
+export default <any> {
+  register: register
+};

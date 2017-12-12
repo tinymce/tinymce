@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Widget from './Widget';
+
 /**
  * Progress control.
  *
@@ -15,71 +17,64 @@
  * @class tinymce.ui.Progress
  * @extends tinymce.ui.Control
  */
-define(
-  'tinymce.ui.Progress',
-  [
-    "tinymce.ui.Widget"
-  ],
-  function (Widget) {
-    "use strict";
 
-    return Widget.extend({
-      Defaults: {
-        value: 0
-      },
+"use strict";
 
-      init: function (settings) {
-        var self = this;
+export default <any> Widget.extend({
+  Defaults: {
+    value: 0
+  },
 
-        self._super(settings);
-        self.classes.add('progress');
+  init: function (settings) {
+    var self = this;
 
-        if (!self.settings.filter) {
-          self.settings.filter = function (value) {
-            return Math.round(value);
-          };
-        }
-      },
+    self._super(settings);
+    self.classes.add('progress');
 
-      renderHtml: function () {
-        var self = this, id = self._id, prefix = this.classPrefix;
+    if (!self.settings.filter) {
+      self.settings.filter = function (value) {
+        return Math.round(value);
+      };
+    }
+  },
 
-        return (
-          '<div id="' + id + '" class="' + self.classes + '">' +
-          '<div class="' + prefix + 'bar-container">' +
-          '<div class="' + prefix + 'bar"></div>' +
-          '</div>' +
-          '<div class="' + prefix + 'text">0%</div>' +
-          '</div>'
-        );
-      },
+  renderHtml: function () {
+    var self = this, id = self._id, prefix = this.classPrefix;
 
-      postRender: function () {
-        var self = this;
+    return (
+      '<div id="' + id + '" class="' + self.classes + '">' +
+      '<div class="' + prefix + 'bar-container">' +
+      '<div class="' + prefix + 'bar"></div>' +
+      '</div>' +
+      '<div class="' + prefix + 'text">0%</div>' +
+      '</div>'
+    );
+  },
 
-        self._super();
-        self.value(self.settings.value);
+  postRender: function () {
+    var self = this;
 
-        return self;
-      },
+    self._super();
+    self.value(self.settings.value);
 
-      bindStates: function () {
-        var self = this;
+    return self;
+  },
 
-        function setValue(value) {
-          value = self.settings.filter(value);
-          self.getEl().lastChild.innerHTML = value + '%';
-          self.getEl().firstChild.firstChild.style.width = value + '%';
-        }
+  bindStates: function () {
+    var self = this;
 
-        self.state.on('change:value', function (e) {
-          setValue(e.value);
-        });
+    function setValue(value) {
+      value = self.settings.filter(value);
+      self.getEl().lastChild.innerHTML = value + '%';
+      self.getEl().firstChild.firstChild.style.width = value + '%';
+    }
 
-        setValue(self.state.get('value'));
-
-        return self._super();
-      }
+    self.state.on('change:value', function (e) {
+      setValue(e.value);
     });
+
+    setValue(self.state.get('value'));
+
+    return self._super();
   }
-);
+});

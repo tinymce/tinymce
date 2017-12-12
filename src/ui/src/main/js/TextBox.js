@@ -8,6 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Tools from 'tinymce/core/util/Tools';
+import DomUtils from './DomUtils';
+import Widget from './Widget';
+
 /**
  * Creates a new textbox.
  *
@@ -15,195 +19,187 @@
  * @class tinymce.ui.TextBox
  * @extends tinymce.ui.Widget
  */
-define(
-  'tinymce.ui.TextBox',
-  [
-    'global!document',
-    'tinymce.core.util.Tools',
-    'tinymce.ui.DomUtils',
-    'tinymce.ui.Widget'
-  ],
-  function (document, Tools, DomUtils, Widget) {
-    return Widget.extend({
-      /**
-       * Constructs a instance with the specified settings.
-       *
-       * @constructor
-       * @param {Object} settings Name/value object with settings.
-       * @setting {Boolean} multiline True if the textbox is a multiline control.
-       * @setting {Number} maxLength Max length for the textbox.
-       * @setting {Number} size Size of the textbox in characters.
-       */
-      init: function (settings) {
-        var self = this;
 
-        self._super(settings);
 
-        self.classes.add('textbox');
 
-        if (settings.multiline) {
-          self.classes.add('multiline');
-        } else {
-          self.on('keydown', function (e) {
-            var rootControl;
+export default <any> Widget.extend({
+  /**
+   * Constructs a instance with the specified settings.
+   *
+   * @constructor
+   * @param {Object} settings Name/value object with settings.
+   * @setting {Boolean} multiline True if the textbox is a multiline control.
+   * @setting {Number} maxLength Max length for the textbox.
+   * @setting {Number} size Size of the textbox in characters.
+   */
+  init: function (settings) {
+    var self = this;
 
-            if (e.keyCode == 13) {
-              e.preventDefault();
+    self._super(settings);
 
-              // Find root control that we can do toJSON on
-              self.parents().reverse().each(function (ctrl) {
-                if (ctrl.toJSON) {
-                  rootControl = ctrl;
-                  return false;
-                }
-              });
+    self.classes.add('textbox');
 
-              // Fire event on current text box with the serialized data of the whole form
-              self.fire('submit', { data: rootControl.toJSON() });
+    if (settings.multiline) {
+      self.classes.add('multiline');
+    } else {
+      self.on('keydown', function (e) {
+        var rootControl;
+
+        if (e.keyCode == 13) {
+          e.preventDefault();
+
+          // Find root control that we can do toJSON on
+          self.parents().reverse().each(function (ctrl) {
+            if (ctrl.toJSON) {
+              rootControl = ctrl;
+              return false;
             }
           });
 
-          self.on('keyup', function (e) {
-            self.state.set('value', e.target.value);
-          });
+          // Fire event on current text box with the serialized data of the whole form
+          self.fire('submit', { data: rootControl.toJSON() });
         }
-      },
+      });
 
-      /**
-       * Repaints the control after a layout operation.
-       *
-       * @method repaint
-       */
-      repaint: function () {
-        var self = this, style, rect, borderBox, borderW, borderH = 0, lastRepaintRect;
+      self.on('keyup', function (e) {
+        self.state.set('value', e.target.value);
+      });
+    }
+  },
 
-        style = self.getEl().style;
-        rect = self._layoutRect;
-        lastRepaintRect = self._lastRepaintRect || {};
+  /**
+   * Repaints the control after a layout operation.
+   *
+   * @method repaint
+   */
+  repaint: function () {
+    var self = this, style, rect, borderBox, borderW, borderH = 0, lastRepaintRect;
 
-        // Detect old IE 7+8 add lineHeight to align caret vertically in the middle
-        var doc = document;
-        if (!self.settings.multiline && doc.all && (!doc.documentMode || doc.documentMode <= 8)) {
-          style.lineHeight = (rect.h - borderH) + 'px';
-        }
+    style = self.getEl().style;
+    rect = self._layoutRect;
+    lastRepaintRect = self._lastRepaintRect || {};
 
-        borderBox = self.borderBox;
-        borderW = borderBox.left + borderBox.right + 8;
-        borderH = borderBox.top + borderBox.bottom + (self.settings.multiline ? 8 : 0);
+    // Detect old IE 7+8 add lineHeight to align caret vertically in the middle
+    var doc = document;
+    if (!self.settings.multiline && doc.all && (!doc.documentMode || doc.documentMode <= 8)) {
+      style.lineHeight = (rect.h - borderH) + 'px';
+    }
 
-        if (rect.x !== lastRepaintRect.x) {
-          style.left = rect.x + 'px';
-          lastRepaintRect.x = rect.x;
-        }
+    borderBox = self.borderBox;
+    borderW = borderBox.left + borderBox.right + 8;
+    borderH = borderBox.top + borderBox.bottom + (self.settings.multiline ? 8 : 0);
 
-        if (rect.y !== lastRepaintRect.y) {
-          style.top = rect.y + 'px';
-          lastRepaintRect.y = rect.y;
-        }
+    if (rect.x !== lastRepaintRect.x) {
+      style.left = rect.x + 'px';
+      lastRepaintRect.x = rect.x;
+    }
 
-        if (rect.w !== lastRepaintRect.w) {
-          style.width = (rect.w - borderW) + 'px';
-          lastRepaintRect.w = rect.w;
-        }
+    if (rect.y !== lastRepaintRect.y) {
+      style.top = rect.y + 'px';
+      lastRepaintRect.y = rect.y;
+    }
 
-        if (rect.h !== lastRepaintRect.h) {
-          style.height = (rect.h - borderH) + 'px';
-          lastRepaintRect.h = rect.h;
-        }
+    if (rect.w !== lastRepaintRect.w) {
+      style.width = (rect.w - borderW) + 'px';
+      lastRepaintRect.w = rect.w;
+    }
 
-        self._lastRepaintRect = lastRepaintRect;
-        self.fire('repaint', {}, false);
+    if (rect.h !== lastRepaintRect.h) {
+      style.height = (rect.h - borderH) + 'px';
+      lastRepaintRect.h = rect.h;
+    }
 
-        return self;
-      },
+    self._lastRepaintRect = lastRepaintRect;
+    self.fire('repaint', {}, false);
 
-      /**
-       * Renders the control as a HTML string.
-       *
-       * @method renderHtml
-       * @return {String} HTML representing the control.
-       */
-      renderHtml: function () {
-        var self = this, settings = self.settings, attrs, elm;
+    return self;
+  },
 
-        attrs = {
-          id: self._id,
-          hidefocus: '1'
-        };
+  /**
+   * Renders the control as a HTML string.
+   *
+   * @method renderHtml
+   * @return {String} HTML representing the control.
+   */
+  renderHtml: function () {
+    var self = this, settings = self.settings, attrs, elm;
 
-        Tools.each([
-          'rows', 'spellcheck', 'maxLength', 'size', 'readonly', 'min',
-          'max', 'step', 'list', 'pattern', 'placeholder', 'required', 'multiple'
-        ], function (name) {
-          attrs[name] = settings[name];
-        });
+    attrs = {
+      id: self._id,
+      hidefocus: '1'
+    };
 
-        if (self.disabled()) {
-          attrs.disabled = 'disabled';
-        }
+    Tools.each([
+      'rows', 'spellcheck', 'maxLength', 'size', 'readonly', 'min',
+      'max', 'step', 'list', 'pattern', 'placeholder', 'required', 'multiple'
+    ], function (name) {
+      attrs[name] = settings[name];
+    });
 
-        if (settings.subtype) {
-          attrs.type = settings.subtype;
-        }
+    if (self.disabled()) {
+      attrs.disabled = 'disabled';
+    }
 
-        elm = DomUtils.create(settings.multiline ? 'textarea' : 'input', attrs);
-        elm.value = self.state.get('value');
-        elm.className = self.classes;
+    if (settings.subtype) {
+      attrs.type = settings.subtype;
+    }
 
-        return elm.outerHTML;
-      },
+    elm = DomUtils.create(settings.multiline ? 'textarea' : 'input', attrs);
+    elm.value = self.state.get('value');
+    elm.className = self.classes;
 
-      value: function (value) {
-        if (arguments.length) {
-          this.state.set('value', value);
-          return this;
-        }
+    return elm.outerHTML;
+  },
 
-        // Make sure the real state is in sync
-        if (this.state.get('rendered')) {
-          this.state.set('value', this.getEl().value);
-        }
+  value: function (value) {
+    if (arguments.length) {
+      this.state.set('value', value);
+      return this;
+    }
 
-        return this.state.get('value');
-      },
+    // Make sure the real state is in sync
+    if (this.state.get('rendered')) {
+      this.state.set('value', this.getEl().value);
+    }
 
-      /**
-       * Called after the control has been rendered.
-       *
-       * @method postRender
-       */
-      postRender: function () {
-        var self = this;
+    return this.state.get('value');
+  },
 
-        self.getEl().value = self.state.get('value');
-        self._super();
+  /**
+   * Called after the control has been rendered.
+   *
+   * @method postRender
+   */
+  postRender: function () {
+    var self = this;
 
-        self.$el.on('change', function (e) {
-          self.state.set('value', e.target.value);
-          self.fire('change', e);
-        });
-      },
+    self.getEl().value = self.state.get('value');
+    self._super();
 
-      bindStates: function () {
-        var self = this;
+    self.$el.on('change', function (e) {
+      self.state.set('value', e.target.value);
+      self.fire('change', e);
+    });
+  },
 
-        self.state.on('change:value', function (e) {
-          if (self.getEl().value != e.value) {
-            self.getEl().value = e.value;
-          }
-        });
+  bindStates: function () {
+    var self = this;
 
-        self.state.on('change:disabled', function (e) {
-          self.getEl().disabled = e.value;
-        });
-
-        return self._super();
-      },
-
-      remove: function () {
-        this.$el.off();
-        this._super();
+    self.state.on('change:value', function (e) {
+      if (self.getEl().value != e.value) {
+        self.getEl().value = e.value;
       }
     });
+
+    self.state.on('change:disabled', function (e) {
+      self.getEl().disabled = e.value;
+    });
+
+    return self._super();
+  },
+
+  remove: function () {
+    this.$el.off();
+    this._super();
   }
-);
+});

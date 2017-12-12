@@ -8,6 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import DomQuery from 'tinymce/core/dom/DomQuery';
+import DomUtils from './DomUtils';
+import MenuButton from './MenuButton';
+
 /**
  * Creates a split button.
  *
@@ -15,139 +19,131 @@
  * @class tinymce.ui.SplitButton
  * @extends tinymce.ui.Button
  */
-define(
-  'tinymce.ui.SplitButton',
-  [
-    'global!window',
-    'tinymce.core.dom.DomQuery',
-    'tinymce.ui.DomUtils',
-    'tinymce.ui.MenuButton'
-  ],
-  function (window, DomQuery, DomUtils, MenuButton) {
-    return MenuButton.extend({
-      Defaults: {
-        classes: "widget btn splitbtn",
-        role: "button"
-      },
 
-      /**
-       * Repaints the control after a layout operation.
-       *
-       * @method repaint
-       */
-      repaint: function () {
-        var self = this, elm = self.getEl(), rect = self.layoutRect(), mainButtonElm, menuButtonElm;
 
-        self._super();
 
-        mainButtonElm = elm.firstChild;
-        menuButtonElm = elm.lastChild;
+export default <any> MenuButton.extend({
+  Defaults: {
+    classes: "widget btn splitbtn",
+    role: "button"
+  },
 
-        DomQuery(mainButtonElm).css({
-          width: rect.w - DomUtils.getSize(menuButtonElm).width,
-          height: rect.h - 2
-        });
+  /**
+   * Repaints the control after a layout operation.
+   *
+   * @method repaint
+   */
+  repaint: function () {
+    var self = this, elm = self.getEl(), rect = self.layoutRect(), mainButtonElm, menuButtonElm;
 
-        DomQuery(menuButtonElm).css({
-          height: rect.h - 2
-        });
+    self._super();
 
-        return self;
-      },
+    mainButtonElm = elm.firstChild;
+    menuButtonElm = elm.lastChild;
 
-      /**
-       * Sets the active menu state.
-       *
-       * @private
-       */
-      activeMenu: function (state) {
-        var self = this;
+    DomQuery(mainButtonElm).css({
+      width: rect.w - DomUtils.getSize(menuButtonElm).width,
+      height: rect.h - 2
+    });
 
-        DomQuery(self.getEl().lastChild).toggleClass(self.classPrefix + 'active', state);
-      },
+    DomQuery(menuButtonElm).css({
+      height: rect.h - 2
+    });
 
-      /**
-       * Renders the control as a HTML string.
-       *
-       * @method renderHtml
-       * @return {String} HTML representing the control.
-       */
-      renderHtml: function () {
-        var self = this, id = self._id, prefix = self.classPrefix, image;
-        var icon = self.state.get('icon'), text = self.state.get('text');
-        var settings = self.settings, textHtml = '', ariaPressed;
+    return self;
+  },
 
-        image = settings.image;
-        if (image) {
-          icon = 'none';
+  /**
+   * Sets the active menu state.
+   *
+   * @private
+   */
+  activeMenu: function (state) {
+    var self = this;
 
-          // Support for [high dpi, low dpi] image sources
-          if (typeof image != "string") {
-            image = window.getSelection ? image[0] : image[1];
-          }
+    DomQuery(self.getEl().lastChild).toggleClass(self.classPrefix + 'active', state);
+  },
 
-          image = ' style="background-image: url(\'' + image + '\')"';
-        } else {
-          image = '';
-        }
+  /**
+   * Renders the control as a HTML string.
+   *
+   * @method renderHtml
+   * @return {String} HTML representing the control.
+   */
+  renderHtml: function () {
+    var self = this, id = self._id, prefix = self.classPrefix, image;
+    var icon = self.state.get('icon'), text = self.state.get('text');
+    var settings = self.settings, textHtml = '', ariaPressed;
 
-        icon = settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
+    image = settings.image;
+    if (image) {
+      icon = 'none';
 
-        if (text) {
-          self.classes.add('btn-has-text');
-          textHtml = '<span class="' + prefix + 'txt">' + self.encode(text) + '</span>';
-        }
+      // Support for [high dpi, low dpi] image sources
+      if (typeof image != "string") {
+        image = window.getSelection ? image[0] : image[1];
+      }
 
-        ariaPressed = typeof settings.active === 'boolean' ? ' aria-pressed="' + settings.active + '"' : '';
+      image = ' style="background-image: url(\'' + image + '\')"';
+    } else {
+      image = '';
+    }
 
-        return (
-          '<div id="' + id + '" class="' + self.classes + '" role="button"' + ariaPressed + ' tabindex="-1">' +
-          '<button type="button" hidefocus="1" tabindex="-1">' +
-          (icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
-          textHtml +
-          '</button>' +
-          '<button type="button" class="' + prefix + 'open" hidefocus="1" tabindex="-1">' +
-          //(icon ? '<i class="' + icon + '"></i>' : '') +
-          (self._menuBtnText ? (icon ? '\u00a0' : '') + self._menuBtnText : '') +
-          ' <i class="' + prefix + 'caret"></i>' +
-          '</button>' +
-          '</div>'
-        );
-      },
+    icon = settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
 
-      /**
-       * Called after the control has been rendered.
-       *
-       * @method postRender
-       */
-      postRender: function () {
-        var self = this, onClickHandler = self.settings.onclick;
+    if (text) {
+      self.classes.add('btn-has-text');
+      textHtml = '<span class="' + prefix + 'txt">' + self.encode(text) + '</span>';
+    }
 
-        self.on('click', function (e) {
-          var node = e.target;
+    ariaPressed = typeof settings.active === 'boolean' ? ' aria-pressed="' + settings.active + '"' : '';
 
-          if (e.control == this) {
-            // Find clicks that is on the main button
-            while (node) {
-              if ((e.aria && e.aria.key != 'down') || (node.nodeName == 'BUTTON' && node.className.indexOf('open') == -1)) {
-                e.stopImmediatePropagation();
+    return (
+      '<div id="' + id + '" class="' + self.classes + '" role="button"' + ariaPressed + ' tabindex="-1">' +
+      '<button type="button" hidefocus="1" tabindex="-1">' +
+      (icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
+      textHtml +
+      '</button>' +
+      '<button type="button" class="' + prefix + 'open" hidefocus="1" tabindex="-1">' +
+      //(icon ? '<i class="' + icon + '"></i>' : '') +
+      (self._menuBtnText ? (icon ? '\u00a0' : '') + self._menuBtnText : '') +
+      ' <i class="' + prefix + 'caret"></i>' +
+      '</button>' +
+      '</div>'
+    );
+  },
 
-                if (onClickHandler) {
-                  onClickHandler.call(this, e);
-                }
+  /**
+   * Called after the control has been rendered.
+   *
+   * @method postRender
+   */
+  postRender: function () {
+    var self = this, onClickHandler = self.settings.onclick;
 
-                return;
-              }
+    self.on('click', function (e) {
+      var node = e.target;
 
-              node = node.parentNode;
+      if (e.control == this) {
+        // Find clicks that is on the main button
+        while (node) {
+          if ((e.aria && e.aria.key != 'down') || (node.nodeName == 'BUTTON' && node.className.indexOf('open') == -1)) {
+            e.stopImmediatePropagation();
+
+            if (onClickHandler) {
+              onClickHandler.call(this, e);
             }
+
+            return;
           }
-        });
 
-        delete self.settings.onclick;
-
-        return self._super();
+          node = node.parentNode;
+        }
       }
     });
+
+    delete self.settings.onclick;
+
+    return self._super();
   }
-);
+});

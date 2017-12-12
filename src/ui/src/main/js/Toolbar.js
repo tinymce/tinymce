@@ -8,53 +8,48 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Container from './Container';
+
 /**
  * Creates a new toolbar.
  *
  * @class tinymce.ui.Toolbar
  * @extends tinymce.ui.Container
  */
-define(
-  'tinymce.ui.Toolbar',
-  [
-    "tinymce.ui.Container"
-  ],
-  function (Container) {
-    "use strict";
 
-    return Container.extend({
-      Defaults: {
-        role: 'toolbar',
-        layout: 'flow'
-      },
+"use strict";
 
-      /**
-       * Constructs a instance with the specified settings.
-       *
-       * @constructor
-       * @param {Object} settings Name/value object with settings.
-       */
-      init: function (settings) {
-        var self = this;
+export default <any> Container.extend({
+  Defaults: {
+    role: 'toolbar',
+    layout: 'flow'
+  },
 
-        self._super(settings);
-        self.classes.add('toolbar');
-      },
+  /**
+   * Constructs a instance with the specified settings.
+   *
+   * @constructor
+   * @param {Object} settings Name/value object with settings.
+   */
+  init: function (settings) {
+    var self = this;
 
-      /**
-       * Called after the control has been rendered.
-       *
-       * @method postRender
-       */
-      postRender: function () {
-        var self = this;
+    self._super(settings);
+    self.classes.add('toolbar');
+  },
 
-        self.items().each(function (ctrl) {
-          ctrl.classes.add('toolbar-item');
-        });
+  /**
+   * Called after the control has been rendered.
+   *
+   * @method postRender
+   */
+  postRender: function () {
+    var self = this;
 
-        return self._super();
-      }
+    self.items().each(function (ctrl) {
+      ctrl.classes.add('toolbar-item');
     });
+
+    return self._super();
   }
-);
+});

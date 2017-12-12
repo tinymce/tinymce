@@ -8,148 +8,143 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Control from './Control';
+import Tooltip from './Tooltip';
+
 /**
  * Widget base class a widget is a control that has a tooltip and some basic states.
  *
  * @class tinymce.ui.Widget
  * @extends tinymce.ui.Control
  */
-define(
-  'tinymce.ui.Widget',
-  [
-    "tinymce.ui.Control",
-    "tinymce.ui.Tooltip"
-  ],
-  function (Control, Tooltip) {
-    "use strict";
 
-    var tooltip;
+"use strict";
 
-    var Widget = Control.extend({
-      /**
-       * Constructs a instance with the specified settings.
-       *
-       * @constructor
-       * @param {Object} settings Name/value object with settings.
-       * @setting {String} tooltip Tooltip text to display when hovering.
-       * @setting {Boolean} autofocus True if the control should be focused when rendered.
-       * @setting {String} text Text to display inside widget.
-       */
-      init: function (settings) {
-        var self = this;
+var tooltip;
 
-        self._super(settings);
-        settings = self.settings;
-        self.canFocus = true;
+var Widget = Control.extend({
+  /**
+   * Constructs a instance with the specified settings.
+   *
+   * @constructor
+   * @param {Object} settings Name/value object with settings.
+   * @setting {String} tooltip Tooltip text to display when hovering.
+   * @setting {Boolean} autofocus True if the control should be focused when rendered.
+   * @setting {String} text Text to display inside widget.
+   */
+  init: function (settings) {
+    var self = this;
 
-        if (settings.tooltip && Widget.tooltips !== false) {
-          self.on('mouseenter', function (e) {
-            var tooltip = self.tooltip().moveTo(-0xFFFF);
+    self._super(settings);
+    settings = self.settings;
+    self.canFocus = true;
 
-            if (e.control == self) {
-              var rel = tooltip.text(settings.tooltip).show().testMoveRel(self.getEl(), ['bc-tc', 'bc-tl', 'bc-tr']);
+    if (settings.tooltip && Widget.tooltips !== false) {
+      self.on('mouseenter', function (e) {
+        var tooltip = self.tooltip().moveTo(-0xFFFF);
 
-              tooltip.classes.toggle('tooltip-n', rel == 'bc-tc');
-              tooltip.classes.toggle('tooltip-nw', rel == 'bc-tl');
-              tooltip.classes.toggle('tooltip-ne', rel == 'bc-tr');
+        if (e.control == self) {
+          var rel = tooltip.text(settings.tooltip).show().testMoveRel(self.getEl(), ['bc-tc', 'bc-tl', 'bc-tr']);
 
-              tooltip.moveRel(self.getEl(), rel);
-            } else {
-              tooltip.hide();
-            }
-          });
+          tooltip.classes.toggle('tooltip-n', rel == 'bc-tc');
+          tooltip.classes.toggle('tooltip-nw', rel == 'bc-tl');
+          tooltip.classes.toggle('tooltip-ne', rel == 'bc-tr');
 
-          self.on('mouseleave mousedown click', function () {
-            self.tooltip().hide();
-          });
+          tooltip.moveRel(self.getEl(), rel);
+        } else {
+          tooltip.hide();
         }
+      });
 
-        self.aria('label', settings.ariaLabel || settings.tooltip);
-      },
+      self.on('mouseleave mousedown click', function () {
+        self.tooltip().hide();
+      });
+    }
 
-      /**
-       * Returns the current tooltip instance.
-       *
-       * @method tooltip
-       * @return {tinymce.ui.Tooltip} Tooltip instance.
-       */
-      tooltip: function () {
-        if (!tooltip) {
-          tooltip = new Tooltip({ type: 'tooltip' });
-          tooltip.renderTo();
-        }
+    self.aria('label', settings.ariaLabel || settings.tooltip);
+  },
 
-        return tooltip;
-      },
+  /**
+   * Returns the current tooltip instance.
+   *
+   * @method tooltip
+   * @return {tinymce.ui.Tooltip} Tooltip instance.
+   */
+  tooltip: function () {
+    if (!tooltip) {
+      tooltip = new Tooltip({ type: 'tooltip' });
+      tooltip.renderTo();
+    }
 
-      /**
-       * Called after the control has been rendered.
-       *
-       * @method postRender
-       */
-      postRender: function () {
-        var self = this, settings = self.settings;
+    return tooltip;
+  },
 
-        self._super();
+  /**
+   * Called after the control has been rendered.
+   *
+   * @method postRender
+   */
+  postRender: function () {
+    var self = this, settings = self.settings;
 
-        if (!self.parent() && (settings.width || settings.height)) {
-          self.initLayoutRect();
-          self.repaint();
-        }
+    self._super();
 
-        if (settings.autofocus) {
-          self.focus();
-        }
-      },
+    if (!self.parent() && (settings.width || settings.height)) {
+      self.initLayoutRect();
+      self.repaint();
+    }
 
-      bindStates: function () {
-        var self = this;
+    if (settings.autofocus) {
+      self.focus();
+    }
+  },
 
-        function disable(state) {
-          self.aria('disabled', state);
-          self.classes.toggle('disabled', state);
-        }
+  bindStates: function () {
+    var self = this;
 
-        function active(state) {
-          self.aria('pressed', state);
-          self.classes.toggle('active', state);
-        }
+    function disable(state) {
+      self.aria('disabled', state);
+      self.classes.toggle('disabled', state);
+    }
 
-        self.state.on('change:disabled', function (e) {
-          disable(e.value);
-        });
+    function active(state) {
+      self.aria('pressed', state);
+      self.classes.toggle('active', state);
+    }
 
-        self.state.on('change:active', function (e) {
-          active(e.value);
-        });
-
-        if (self.state.get('disabled')) {
-          disable(true);
-        }
-
-        if (self.state.get('active')) {
-          active(true);
-        }
-
-        return self._super();
-      },
-
-      /**
-       * Removes the current control from DOM and from UI collections.
-       *
-       * @method remove
-       * @return {tinymce.ui.Control} Current control instance.
-       */
-      remove: function () {
-        this._super();
-
-        if (tooltip) {
-          tooltip.remove();
-          tooltip = null;
-        }
-      }
+    self.state.on('change:disabled', function (e) {
+      disable(e.value);
     });
 
-    return Widget;
+    self.state.on('change:active', function (e) {
+      active(e.value);
+    });
+
+    if (self.state.get('disabled')) {
+      disable(true);
+    }
+
+    if (self.state.get('active')) {
+      active(true);
+    }
+
+    return self._super();
+  },
+
+  /**
+   * Removes the current control from DOM and from UI collections.
+   *
+   * @method remove
+   * @return {tinymce.ui.Control} Current control instance.
+   */
+  remove: function () {
+    this._super();
+
+    if (tooltip) {
+      tooltip.remove();
+      tooltip = null;
+    }
   }
-);
+});
+
+export default <any> Widget;

@@ -8,6 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Env from 'tinymce/core/Env';
+import Delay from 'tinymce/core/util/Delay';
+import Tools from 'tinymce/core/util/Tools';
+import FloatPanel from './FloatPanel';
+import MenuItem from './MenuItem';
+import Throbber from './Throbber';
+
 /**
  * Creates a new menu.
  *
@@ -15,204 +22,192 @@
  * @class tinymce.ui.Menu
  * @extends tinymce.ui.FloatPanel
  */
-define(
-  'tinymce.ui.Menu',
-  [
-    'tinymce.core.Env',
-    'tinymce.core.util.Delay',
-    'tinymce.core.util.Tools',
-    'tinymce.ui.FloatPanel',
-    'tinymce.ui.MenuItem',
-    'tinymce.ui.Throbber'
-  ],
-  function (Env, Delay, Tools, FloatPanel, MenuItem, Throbber) {
-    "use strict";
 
-    return FloatPanel.extend({
-      Defaults: {
-        defaultType: 'menuitem',
-        border: 1,
-        layout: 'stack',
-        role: 'application',
-        bodyRole: 'menu',
-        ariaRoot: true
-      },
+"use strict";
 
-      /**
-       * Constructs a instance with the specified settings.
-       *
-       * @constructor
-       * @param {Object} settings Name/value object with settings.
-       */
-      init: function (settings) {
-        var self = this;
+export default <any> FloatPanel.extend({
+  Defaults: {
+    defaultType: 'menuitem',
+    border: 1,
+    layout: 'stack',
+    role: 'application',
+    bodyRole: 'menu',
+    ariaRoot: true
+  },
 
-        settings.autohide = true;
-        settings.constrainToViewport = true;
+  /**
+   * Constructs a instance with the specified settings.
+   *
+   * @constructor
+   * @param {Object} settings Name/value object with settings.
+   */
+  init: function (settings) {
+    var self = this;
 
-        if (typeof settings.items === 'function') {
-          settings.itemsFactory = settings.items;
-          settings.items = [];
-        }
+    settings.autohide = true;
+    settings.constrainToViewport = true;
 
-        if (settings.itemDefaults) {
-          var items = settings.items, i = items.length;
+    if (typeof settings.items === 'function') {
+      settings.itemsFactory = settings.items;
+      settings.items = [];
+    }
 
-          while (i--) {
-            items[i] = Tools.extend({}, settings.itemDefaults, items[i]);
-          }
-        }
+    if (settings.itemDefaults) {
+      var items = settings.items, i = items.length;
 
-        self._super(settings);
-        self.classes.add('menu');
+      while (i--) {
+        items[i] = Tools.extend({}, settings.itemDefaults, items[i]);
+      }
+    }
 
-        if (settings.animate && Env.ie !== 11) {
-          // IE 11 can't handle transforms it looks horrible and blurry so lets disable that
-          self.classes.add('animate');
-        }
-      },
+    self._super(settings);
+    self.classes.add('menu');
 
-      /**
-       * Repaints the control after a layout operation.
-       *
-       * @method repaint
-       */
-      repaint: function () {
-        this.classes.toggle('menu-align', true);
+    if (settings.animate && Env.ie !== 11) {
+      // IE 11 can't handle transforms it looks horrible and blurry so lets disable that
+      self.classes.add('animate');
+    }
+  },
 
-        this._super();
+  /**
+   * Repaints the control after a layout operation.
+   *
+   * @method repaint
+   */
+  repaint: function () {
+    this.classes.toggle('menu-align', true);
 
-        this.getEl().style.height = '';
-        this.getEl('body').style.height = '';
+    this._super();
 
-        return this;
-      },
+    this.getEl().style.height = '';
+    this.getEl('body').style.height = '';
 
-      /**
-       * Hides/closes the menu.
-       *
-       * @method cancel
-       */
-      cancel: function () {
-        var self = this;
+    return this;
+  },
 
-        self.hideAll();
-        self.fire('select');
-      },
+  /**
+   * Hides/closes the menu.
+   *
+   * @method cancel
+   */
+  cancel: function () {
+    var self = this;
 
-      /**
-       * Loads new items from the factory items function.
-       *
-       * @method load
-       */
-      load: function () {
-        var self = this, time, factory;
+    self.hideAll();
+    self.fire('select');
+  },
 
-        function hideThrobber() {
-          if (self.throbber) {
-            self.throbber.hide();
-            self.throbber = null;
-          }
-        }
+  /**
+   * Loads new items from the factory items function.
+   *
+   * @method load
+   */
+  load: function () {
+    var self = this, time, factory;
 
-        factory = self.settings.itemsFactory;
-        if (!factory) {
-          return;
-        }
+    function hideThrobber() {
+      if (self.throbber) {
+        self.throbber.hide();
+        self.throbber = null;
+      }
+    }
 
-        if (!self.throbber) {
-          self.throbber = new Throbber(self.getEl('body'), true);
+    factory = self.settings.itemsFactory;
+    if (!factory) {
+      return;
+    }
 
-          if (self.items().length === 0) {
-            self.throbber.show();
-            self.fire('loading');
-          } else {
-            self.throbber.show(100, function () {
-              self.items().remove();
-              self.fire('loading');
-            });
-          }
+    if (!self.throbber) {
+      self.throbber = new Throbber(self.getEl('body'), true);
 
-          self.on('hide close', hideThrobber);
-        }
-
-        self.requestTime = time = new Date().getTime();
-
-        self.settings.itemsFactory(function (items) {
-          if (items.length === 0) {
-            self.hide();
-            return;
-          }
-
-          if (self.requestTime !== time) {
-            return;
-          }
-
-          self.getEl().style.width = '';
-          self.getEl('body').style.width = '';
-
-          hideThrobber();
+      if (self.items().length === 0) {
+        self.throbber.show();
+        self.fire('loading');
+      } else {
+        self.throbber.show(100, function () {
           self.items().remove();
-          self.getEl('body').innerHTML = '';
-
-          self.add(items);
-          self.renderNew();
-          self.fire('loaded');
+          self.fire('loading');
         });
-      },
+      }
 
-      /**
-       * Hide menu and all sub menus.
-       *
-       * @method hideAll
-       */
-      hideAll: function () {
-        var self = this;
+      self.on('hide close', hideThrobber);
+    }
 
-        this.find('menuitem').exec('hideMenu');
+    self.requestTime = time = new Date().getTime();
 
-        return self._super();
-      },
+    self.settings.itemsFactory(function (items) {
+      if (items.length === 0) {
+        self.hide();
+        return;
+      }
 
-      /**
-       * Invoked before the menu is rendered.
-       *
-       * @method preRender
-       */
-      preRender: function () {
-        var self = this;
+      if (self.requestTime !== time) {
+        return;
+      }
 
-        self.items().each(function (ctrl) {
-          var settings = ctrl.settings;
+      self.getEl().style.width = '';
+      self.getEl('body').style.width = '';
 
-          if (settings.icon || settings.image || settings.selectable) {
-            self._hasIcons = true;
-            return false;
-          }
-        });
+      hideThrobber();
+      self.items().remove();
+      self.getEl('body').innerHTML = '';
 
-        if (self.settings.itemsFactory) {
-          self.on('postrender', function () {
-            if (self.settings.itemsFactory) {
-              self.load();
-            }
-          });
-        }
+      self.add(items);
+      self.renderNew();
+      self.fire('loaded');
+    });
+  },
 
-        self.on('show hide', function (e) {
-          if (e.control === self) {
-            if (e.type === 'show') {
-              Delay.setTimeout(function () {
-                self.classes.add('in');
-              }, 0);
-            } else {
-              self.classes.remove('in');
-            }
-          }
-        });
+  /**
+   * Hide menu and all sub menus.
+   *
+   * @method hideAll
+   */
+  hideAll: function () {
+    var self = this;
 
-        return self._super();
+    this.find('menuitem').exec('hideMenu');
+
+    return self._super();
+  },
+
+  /**
+   * Invoked before the menu is rendered.
+   *
+   * @method preRender
+   */
+  preRender: function () {
+    var self = this;
+
+    self.items().each(function (ctrl) {
+      var settings = ctrl.settings;
+
+      if (settings.icon || settings.image || settings.selectable) {
+        self._hasIcons = true;
+        return false;
       }
     });
+
+    if (self.settings.itemsFactory) {
+      self.on('postrender', function () {
+        if (self.settings.itemsFactory) {
+          self.load();
+        }
+      });
+    }
+
+    self.on('show hide', function (e) {
+      if (e.control === self) {
+        if (e.type === 'show') {
+          Delay.setTimeout(function () {
+            self.classes.add('in');
+          }, 0);
+        } else {
+          self.classes.remove('in');
+        }
+      }
+    });
+
+    return self._super();
   }
-);
+});

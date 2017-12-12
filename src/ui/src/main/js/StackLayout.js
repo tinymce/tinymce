@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import FlowLayout from './FlowLayout';
+
 /**
  * This layout uses the browsers layout when the items are blocks.
  *
@@ -15,24 +17,17 @@
  * @class tinymce.ui.StackLayout
  * @extends tinymce.ui.FlowLayout
  */
-define(
-  'tinymce.ui.StackLayout',
-  [
-    "tinymce.ui.FlowLayout"
-  ],
-  function (FlowLayout) {
-    "use strict";
 
-    return FlowLayout.extend({
-      Defaults: {
-        containerClass: 'stack-layout',
-        controlClass: 'stack-layout-item',
-        endClass: 'break'
-      },
+"use strict";
 
-      isNative: function () {
-        return true;
-      }
-    });
+export default <any> FlowLayout.extend({
+  Defaults: {
+    containerClass: 'stack-layout',
+    controlClass: 'stack-layout-item',
+    endClass: 'break'
+  },
+
+  isNative: function () {
+    return true;
   }
-);
+});
