@@ -66,7 +66,7 @@ import Position from './view/Position';
 import Scroll from './view/Scroll';
 import Visibility from './view/Visibility';
 import Width from './view/Width';
-import SelectionDirection from '../selection/core/SelectionDirection'; // Used directly by snooker
+import SelectionDirection from '../selection/core/SelectionDirection'; // Used directly by dawin
 
 export {
   Compare,
