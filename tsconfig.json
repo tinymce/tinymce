@@ -21,7 +21,6 @@
   },
   "include": [
     "src/core/src/main/ts",
-    "src/core/src/demo/ts",
     "src/core/src/test/ts",
     "src/ui/src/main/ts",
     "src/ui/src/demo/ts",
