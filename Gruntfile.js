@@ -11,6 +11,17 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: packageData,
 
+    tslint: {
+      options: {
+        configuration: 'tslint.json'
+      },
+      files: {
+        src: [
+          'src/**/*.ts'
+        ]
+      }
+    },
+
     moxiezip: {
       production: {
         options: {
@@ -647,6 +658,7 @@ module.exports = function (grunt) {
   grunt.loadTasks("tools/tasks");
   grunt.loadNpmTasks('@ephox/bolt');
   grunt.loadNpmTasks('@ephox/bedrock');
+  grunt.loadNpmTasks('grunt-tslint');
 
   grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "build-headers", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
 

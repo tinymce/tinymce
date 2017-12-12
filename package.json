@@ -46,6 +46,7 @@
     "grunt-nuget-pack": "^0.0.6",
     "grunt-replace": "^1.0.1",
     "grunt-rollup": "^8.2.0",
+    "grunt-tslint": "^5.0.1",
     "jquery": "~1.11.3",
     "less-plugin-autoprefix": "^1.5.1",
     "load-grunt-tasks": "~3.5.2",
@@ -53,6 +54,7 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-typescript2": "^0.8.4",
     "rollup-plugin-uglify": "^2.0.1",
+    "tslint": "^5.8.0",
     "typescript": "^2.6.2"
   }
 }
