@@ -5,7 +5,7 @@ import Menu from 'ephox/alloy/api/ui/Menu';
 import TouchMenu from 'ephox/alloy/api/ui/TouchMenu';
 import Debugging from 'ephox/alloy/debugging/Debugging';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
-import DemoRenders from 'ephox/alloy/demo/forms/DemoRenders';
+import DemoRenders from './forms/DemoRenders';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { Arr } from '@ephox/katamari';
 import { Future } from '@ephox/katamari';

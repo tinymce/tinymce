@@ -10,7 +10,7 @@ import ExpandableForm from 'ephox/alloy/api/ui/ExpandableForm';
 import Form from 'ephox/alloy/api/ui/Form';
 import DemoDataset from 'ephox/alloy/demo/DemoDataset';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
-import DemoFields from 'ephox/alloy/demo/forms/DemoFields';
+import DemoFields from './forms/DemoFields';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { Obj } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';

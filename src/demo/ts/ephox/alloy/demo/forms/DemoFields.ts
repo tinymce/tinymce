@@ -14,7 +14,7 @@ import HtmlSelect from 'ephox/alloy/api/ui/HtmlSelect';
 import Input from 'ephox/alloy/api/ui/Input';
 import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import Typeahead from 'ephox/alloy/api/ui/Typeahead';
-import DemoRenders from 'ephox/alloy/demo/forms/DemoRenders';
+import DemoRenders from './DemoRenders';
 import Tagger from 'ephox/alloy/registry/Tagger';
 import { Arr } from '@ephox/katamari';
 import { Future } from '@ephox/katamari';

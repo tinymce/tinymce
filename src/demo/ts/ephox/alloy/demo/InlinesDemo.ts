@@ -13,7 +13,7 @@ import InlineView from 'ephox/alloy/api/ui/InlineView';
 import Input from 'ephox/alloy/api/ui/Input';
 import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
-import DemoRenders from 'ephox/alloy/demo/forms/DemoRenders';
+import DemoRenders from './forms/DemoRenders';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';

@@ -7,7 +7,7 @@ import Container from 'ephox/alloy/api/ui/Container';
 import SplitToolbar from 'ephox/alloy/api/ui/SplitToolbar';
 import Toolbar from 'ephox/alloy/api/ui/Toolbar';
 import ToolbarGroup from 'ephox/alloy/api/ui/ToolbarGroup';
-import DemoRenders from 'ephox/alloy/demo/forms/DemoRenders';
+import DemoRenders from './forms/DemoRenders';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { Arr } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
