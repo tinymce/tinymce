@@ -1,4 +1,6 @@
 node("primary") {
+  triggers { upstream(upstreamProjects: 'katamari,sand', threshold: hudson.model.Result.SUCCESS) }
+
   echo "Checkout master branch"
   stage ("Checkout sugar") {
     git([branch: "master", url:'ssh://git@stash:7999/libs/sugar.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
