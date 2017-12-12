@@ -29,10 +29,10 @@
     "webpack": "^3.10.0"
   },
   "dependencies": {
-    "@ephox/jax": "^2.0.0",
-    "@ephox/sugar": "^3.1.0",
-    "@ephox/wrap-jsverify": "^1.0.0",
-    "@ephox/wrap-sizzle": "^3.0.0"
+    "@ephox/jax": "*",
+    "@ephox/sugar": "*",
+    "@ephox/wrap-jsverify": "*",
+    "@ephox/wrap-sizzle": "*"
   },
   "main": "./lib/main/ts/ephox/agar/api/Main.js",
   "module": "./lib/main/ts/ephox/agar/api/Main.js",
