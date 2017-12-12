@@ -8,23 +8,17 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.code.api.Settings',
-  [
-    'tinymce.core.dom.DOMUtils'
-  ],
-  function (DOMUtils) {
-    var getMinWidth = function (editor) {
-      return editor.getParam('code_dialog_width', 600);
-    };
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-    var getMinHeight = function (editor) {
-      return editor.getParam('code_dialog_height', Math.min(DOMUtils.DOM.getViewPort().h - 200, 500));
-    };
+var getMinWidth = function (editor) {
+  return editor.getParam('code_dialog_width', 600);
+};
 
-    return {
-      getMinWidth: getMinWidth,
-      getMinHeight: getMinHeight
-    };
-  }
-);
+var getMinHeight = function (editor) {
+  return editor.getParam('code_dialog_height', Math.min(DOMUtils.DOM.getViewPort().h - 200, 500));
+};
+
+export default <any> {
+  getMinWidth: getMinWidth,
+  getMinHeight: getMinHeight
+};

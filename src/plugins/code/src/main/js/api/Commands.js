@@ -8,20 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.code.api.Commands',
-  [
-    'tinymce.plugins.code.ui.Dialog'
-  ],
-  function (Dialog) {
-    var register = function (editor) {
-      editor.addCommand('mceCodeEditor', function () {
-        Dialog.open(editor);
-      });
-    };
+import Dialog from '../ui/Dialog';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor) {
+  editor.addCommand('mceCodeEditor', function () {
+    Dialog.open(editor);
+  });
+};
+
+export default <any> {
+  register: register
+};
