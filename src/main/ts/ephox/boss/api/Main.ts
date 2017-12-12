@@ -4,7 +4,7 @@ import DomUniverse from './DomUniverse';
 import Gene from './Gene';
 import TestUniverse from './TestUniverse';
 import TextGene from './TextGene';
-import Logger from '../mutant/Logger';
+import Logger from '../mutant/Logger'; // Being used by phoenix directly
 
 export {
   BasicPage,
