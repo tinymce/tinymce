@@ -9,17 +9,13 @@
     "outDir": "lib",
     "baseUrl": ".",
     "paths": {
-      "tinymce": ["src/core/src/main/ts/api/Main"],
-      "tinymce/core/*": ["src/core/src/main/ts/*"],
-      "tinymce/themes/modern/*": ["src/themes/modern/src/main/ts/*"],
-      "tinymce/themes/inlite/*": ["src/themes/inlite/src/main/ts/*"],
-      "tinymce/ui/*": ["src/ui/src/main/ts/*"]
+      "tinymce/core/*": ["src/core/dist/globals/tinymce/core/*"],
+      "tinymce/ui/*": ["src/ui/src/main/ts/*"],
+      "tinymce/plugins/searchreplace/*": ["src/plugins/searchreplace/src/main/ts/*"],
+      "tinymce/themes/modern/*": ["src/themes/modern/src/main/ts/*"]
     }
   },
   "include": [
-    "src/core/src/main/ts",
-    "src/core/src/demo/ts",
-    "src/core/src/test/ts",
     "src/ui/src/main/ts",
     "src/ui/src/demo/ts",
     "src/ui/src/test/ts",
