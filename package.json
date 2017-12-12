@@ -6,6 +6,14 @@
     "type": "git",
     "url": "https://github.com/ephox/robin"
   },
+  "files": [
+    "lib",
+    "src",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
   "dependencies": {
     "@ephox/boss": "*",
     "@ephox/katamari": "*",
