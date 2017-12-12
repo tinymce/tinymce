@@ -8,30 +8,24 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.modern.ui.Render',
-  [
-    'tinymce.themes.modern.api.Settings',
-    'tinymce.themes.modern.modes.Iframe',
-    'tinymce.themes.modern.modes.Inline',
-    'tinymce.themes.modern.ui.ProgressState'
-  ],
-  function (Settings, Iframe, Inline, ProgressState) {
-    var renderUI = function (editor, theme, args) {
-      var skinUrl = Settings.getSkinUrl(editor);
+import Settings from '../api/Settings';
+import Iframe from '../modes/Iframe';
+import Inline from '../modes/Inline';
+import ProgressState from './ProgressState';
 
-      if (skinUrl) {
-        args.skinUiCss = skinUrl + '/skin.min.css';
-        editor.contentCSS.push(skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
-      }
+var renderUI = function (editor, theme, args) {
+  var skinUrl = Settings.getSkinUrl(editor);
 
-      ProgressState.setup(editor, theme);
-
-      return Settings.isInline(editor) ? Inline.render(editor, theme, args) : Iframe.render(editor, theme, args);
-    };
-
-    return {
-      renderUI: renderUI
-    };
+  if (skinUrl) {
+    args.skinUiCss = skinUrl + '/skin.min.css';
+    editor.contentCSS.push(skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
   }
-);
+
+  ProgressState.setup(editor, theme);
+
+  return Settings.isInline(editor) ? Inline.render(editor, theme, args) : Iframe.render(editor, theme, args);
+};
+
+export default <any> {
+  renderUI: renderUI
+};

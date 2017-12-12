@@ -8,24 +8,17 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.modern.Theme',
-  [
-    'global!window',
-    'tinymce.core.ThemeManager',
-    'tinymce.themes.modern.api.ThemeApi',
-    'tinymce.ui.Api',
-    'tinymce.ui.FormatControls'
-  ],
-  function (window, ThemeManager, ThemeApi, Api, FormatControls) {
-    Api.registerToFactory();
-    Api.appendTo(window.tinymce ? window.tinymce : {});
+import ThemeManager from 'tinymce/core/ThemeManager';
+import ThemeApi from './api/ThemeApi';
+import Api from 'tinymce/ui/Api';
+import FormatControls from 'tinymce/ui/FormatControls';
 
-    ThemeManager.add('modern', function (editor) {
-      FormatControls.setup(editor);
-      return ThemeApi.get(editor);
-    });
+Api.registerToFactory();
+Api.appendTo(window.tinymce ? window.tinymce : {});
 
-    return function () { };
-  }
-);
+ThemeManager.add('modern', function (editor) {
+  FormatControls.setup(editor);
+  return ThemeApi.get(editor);
+});
+
+export default <any> function () { };

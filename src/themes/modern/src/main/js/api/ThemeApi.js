@@ -8,47 +8,41 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.modern.api.ThemeApi',
-  [
-    'tinymce.themes.modern.ui.Render',
-    'tinymce.themes.modern.ui.Resize',
-    'tinymce.ui.NotificationManagerImpl',
-    'tinymce.ui.WindowManagerImpl'
-  ],
-  function (Render, Resize, NotificationManagerImpl, WindowManagerImpl) {
-    var get = function (editor) {
-      var renderUI = function (args) {
-        return Render.renderUI(editor, this, args);
-      };
+import Render from '../ui/Render';
+import Resize from '../ui/Resize';
+import NotificationManagerImpl from 'tinymce/ui/NotificationManagerImpl';
+import WindowManagerImpl from 'tinymce/ui/WindowManagerImpl';
 
-      var resizeTo = function (w, h) {
-        return Resize.resizeTo(editor, w, h);
-      };
+var get = function (editor) {
+  var renderUI = function (args) {
+    return Render.renderUI(editor, this, args);
+  };
 
-      var resizeBy = function (dw, dh) {
-        return Resize.resizeBy(editor, dw, dh);
-      };
+  var resizeTo = function (w, h) {
+    return Resize.resizeTo(editor, w, h);
+  };
 
-      var getNotificationManagerImpl = function () {
-        return NotificationManagerImpl(editor);
-      };
+  var resizeBy = function (dw, dh) {
+    return Resize.resizeBy(editor, dw, dh);
+  };
 
-      var getWindowManagerImpl = function () {
-        return WindowManagerImpl(editor);
-      };
+  var getNotificationManagerImpl = function () {
+    return NotificationManagerImpl(editor);
+  };
 
-      return {
-        renderUI: renderUI,
-        resizeTo: resizeTo,
-        resizeBy: resizeBy,
-        getNotificationManagerImpl: getNotificationManagerImpl,
-        getWindowManagerImpl: getWindowManagerImpl
-      };
-    };
+  var getWindowManagerImpl = function () {
+    return WindowManagerImpl(editor);
+  };
 
-    return {
-      get: get
-    };
-  }
-);
+  return {
+    renderUI: renderUI,
+    resizeTo: resizeTo,
+    resizeBy: resizeBy,
+    getNotificationManagerImpl: getNotificationManagerImpl,
+    getWindowManagerImpl: getWindowManagerImpl
+  };
+};
+
+export default <any> {
+  get: get
+};

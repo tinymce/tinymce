@@ -8,31 +8,25 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.modern.alien.UiContainer',
-  [
-    'ephox.katamari.api.Option',
-    'tinymce.core.Env',
-    'tinymce.core.dom.DOMUtils'
-  ],
-  function (Option, Env, DOMUtils) {
-    var getUiContainerDelta = function () {
-      var uiContainer = Env.container;
-      if (uiContainer && DOMUtils.DOM.getStyle(uiContainer, 'position', true) !== 'static') {
-        var containerPos = DOMUtils.DOM.getPos(uiContainer);
-        var dx = uiContainer.scrollLeft - containerPos.x;
-        var dy = uiContainer.scrollTop - containerPos.y;
-        return Option.some({
-          x: dx,
-          y: dy
-        });
-      } else {
-        return Option.none();
-      }
-    };
+import { Option } from '@ephox/katamari';
+import Env from 'tinymce/core/Env';
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-    return {
-      getUiContainerDelta: getUiContainerDelta
-    };
+var getUiContainerDelta = function () {
+  var uiContainer = Env.container;
+  if (uiContainer && DOMUtils.DOM.getStyle(uiContainer, 'position', true) !== 'static') {
+    var containerPos = DOMUtils.DOM.getPos(uiContainer);
+    var dx = uiContainer.scrollLeft - containerPos.x;
+    var dy = uiContainer.scrollTop - containerPos.y;
+    return Option.some({
+      x: dx,
+      y: dy
+    });
+  } else {
+    return Option.none();
   }
-);
+};
+
+export default <any> {
+  getUiContainerDelta: getUiContainerDelta
+};

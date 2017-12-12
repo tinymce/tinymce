@@ -8,28 +8,23 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.themes.modern.ui.SkinLoaded', [
-    'tinymce.themes.modern.api.Events'
-  ],
-  function (Events) {
-    var fireSkinLoaded = function (editor) {
-      var done = function () {
-        editor._skinLoaded = true;
-        Events.fireSkinLoaded(editor);
-      };
+import Events from '../api/Events';
 
-      return function () {
-        if (editor.initialized) {
-          done();
-        } else {
-          editor.on('init', done);
-        }
-      };
-    };
+var fireSkinLoaded = function (editor) {
+  var done = function () {
+    editor._skinLoaded = true;
+    Events.fireSkinLoaded(editor);
+  };
 
-    return {
-      fireSkinLoaded: fireSkinLoaded
-    };
-  }
-);
+  return function () {
+    if (editor.initialized) {
+      done();
+    } else {
+      editor.on('init', done);
+    }
+  };
+};
+
+export default <any> {
+  fireSkinLoaded: fireSkinLoaded
+};
