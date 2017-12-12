@@ -1,21 +1,13 @@
-define(
-  'ephox.alloy.alien.EditableFields',
+import { Attr } from '@ephox/sugar';
+import { Node } from '@ephox/sugar';
 
-  [
-    'ephox.sugar.api.properties.Attr',
-    'ephox.sugar.api.node.Node'
-  ],
+var inside = function (target) {
+  return (
+    (Node.name(target) === 'input' && Attr.get(target, 'type') !== 'radio') ||
+    Node.name(target) === 'textarea'
+  );
+};
 
-  function (Attr, Node) {
-    var inside = function (target) {
-      return (
-        (Node.name(target) === 'input' && Attr.get(target, 'type') !== 'radio') ||
-        Node.name(target) === 'textarea'
-      );
-    };
-
-    return {
-      inside: inside
-    };
-  }
-);
+export default <any> {
+  inside: inside
+};

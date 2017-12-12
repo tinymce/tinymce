@@ -1,40 +1,32 @@
-define(
-  'ephox.alloy.positioning.mode.SubmenuAnchor',
+import Fields from '../../data/Fields';
+import Bubble from '../layout/Bubble';
+import LinkedLayout from '../layout/LinkedLayout';
+import Origins from '../layout/Origins';
+import Anchoring from './Anchoring';
+import AnchorLayouts from './AnchorLayouts';
+import { FieldSchema } from '@ephox/boulder';
+import { Fun } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.data.Fields',
-    'ephox.alloy.positioning.layout.Bubble',
-    'ephox.alloy.positioning.layout.LinkedLayout',
-    'ephox.alloy.positioning.layout.Origins',
-    'ephox.alloy.positioning.mode.Anchoring',
-    'ephox.alloy.positioning.mode.AnchorLayouts',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option'
-  ],
+var placement = function (component, posInfo, submenuInfo, origin) {
+  var anchorBox = Origins.toBox(origin, submenuInfo.item().element());
 
-  function (Fields, Bubble, LinkedLayout, Origins, Anchoring, AnchorLayouts, FieldSchema, Fun, Option) {
-    var placement = function (component, posInfo, submenuInfo, origin) {
-      var anchorBox = Origins.toBox(origin, submenuInfo.item().element());
+  var layouts = AnchorLayouts.get(component, submenuInfo, LinkedLayout.all(), LinkedLayout.allRtl());
 
-      var layouts = AnchorLayouts.get(component, submenuInfo, LinkedLayout.all(), LinkedLayout.allRtl());
+  return Option.some(
+    Anchoring({
+      anchorBox: Fun.constant(anchorBox),
+      bubble: Fun.constant(Bubble(0, 0)),
+      // maxHeightFunction: Fun.constant(MaxHeight.available()),
+      overrides: Fun.constant({ }),
+      layouts: Fun.constant(layouts),
+      placer: Option.none
+    })
+  );
+};
 
-      return Option.some(
-        Anchoring({
-          anchorBox: Fun.constant(anchorBox),
-          bubble: Fun.constant(Bubble(0, 0)),
-          // maxHeightFunction: Fun.constant(MaxHeight.available()),
-          overrides: Fun.constant({ }),
-          layouts: Fun.constant(layouts),
-          placer: Option.none
-        })
-      );
-    };
-
-    return [
-      FieldSchema.strict('item'),
-      AnchorLayouts.schema(),
-      Fields.output('placement', placement)
-    ];
-  }
-);
+export default <any> [
+  FieldSchema.strict('item'),
+  AnchorLayouts.schema(),
+  Fields.output('placement', placement)
+];

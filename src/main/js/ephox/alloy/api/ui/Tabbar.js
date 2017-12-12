@@ -1,73 +1,65 @@
-define(
-  'ephox.alloy.api.ui.Tabbar',
+import Behaviour from '../behaviour/Behaviour';
+import Highlighting from '../behaviour/Highlighting';
+import Keying from '../behaviour/Keying';
+import SketchBehaviours from '../component/SketchBehaviours';
+import Sketcher from './Sketcher';
+import TabbarSchema from '../../ui/schema/TabbarSchema';
+import { Merger } from '@ephox/katamari';
+import { Attr } from '@ephox/sugar';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.Highlighting',
-    'ephox.alloy.api.behaviour.Keying',
-    'ephox.alloy.api.component.SketchBehaviours',
-    'ephox.alloy.api.ui.Sketcher',
-    'ephox.alloy.ui.schema.TabbarSchema',
-    'ephox.katamari.api.Merger',
-    'ephox.sugar.api.properties.Attr'
-  ],
+var factory = function (detail, components, spec, externals) {
+  return {
+    uid: detail.uid(),
+    dom: Merger.deepMerge(
+      {
+        tag: 'div',
+        attributes: {
+          role: 'tablist'
+        }
+      },
+      detail.dom()
+    ),
+    components: components,
+    'debug.sketcher': 'Tabbar',
 
-  function (Behaviour, Highlighting, Keying, SketchBehaviours, Sketcher, TabbarSchema, Merger, Attr) {
-    var factory = function (detail, components, spec, externals) {
-      return {
-        uid: detail.uid(),
-        dom: Merger.deepMerge(
-          {
-            tag: 'div',
-            attributes: {
-              role: 'tablist'
-            }
+    behaviours: Merger.deepMerge(
+      Behaviour.derive([
+        Highlighting.config({
+          highlightClass: detail.markers().selectedClass(),
+          itemClass: detail.markers().tabClass(),
+
+          // https://www.w3.org/TR/2010/WD-wai-aria-practices-20100916/#tabpanel
+          // Consider a more seam-less way of combining highlighting and toggling
+          onHighlight: function (tabbar, tab) {
+            // TODO: Integrate highlighting and toggling in a nice way
+            Attr.set(tab.element(), 'aria-selected', 'true');
           },
-          detail.dom()
-        ),
-        components: components,
-        'debug.sketcher': 'Tabbar',
+          onDehighlight: function (tabbar, tab) {
+            Attr.set(tab.element(), 'aria-selected', 'false');
+          }
+        }),
 
-        behaviours: Merger.deepMerge(
-          Behaviour.derive([
-            Highlighting.config({
-              highlightClass: detail.markers().selectedClass(),
-              itemClass: detail.markers().tabClass(),
+        Keying.config({
+          mode: 'flow',
+          getInitial: function (tabbar) {
+            // Restore focus to the previously highlighted tab.
+            return Highlighting.getHighlighted(tabbar).map(function (tab) {
+              return tab.element();
+            });
+          },
+          selector: '.' + detail.markers().tabClass(),
+          executeOnMove: true
+        })
+      ]),
+      // Add the permitted fields.
+      SketchBehaviours.get(detail.tabbarBehaviours())
+    )
+  };
+};
 
-              // https://www.w3.org/TR/2010/WD-wai-aria-practices-20100916/#tabpanel
-              // Consider a more seam-less way of combining highlighting and toggling
-              onHighlight: function (tabbar, tab) {
-                // TODO: Integrate highlighting and toggling in a nice way
-                Attr.set(tab.element(), 'aria-selected', 'true');
-              },
-              onDehighlight: function (tabbar, tab) {
-                Attr.set(tab.element(), 'aria-selected', 'false');
-              }
-            }),
-
-            Keying.config({
-              mode: 'flow',
-              getInitial: function (tabbar) {
-                // Restore focus to the previously highlighted tab.
-                return Highlighting.getHighlighted(tabbar).map(function (tab) {
-                  return tab.element();
-                });
-              },
-              selector: '.' + detail.markers().tabClass(),
-              executeOnMove: true
-            })
-          ]),
-          // Add the permitted fields.
-          SketchBehaviours.get(detail.tabbarBehaviours())
-        )
-      };
-    };
-
-    return Sketcher.composite({
-      name: 'Tabbar',
-      configFields: TabbarSchema.schema(),
-      partFields: TabbarSchema.parts(),
-      factory: factory
-    });
-  }
-);
+export default <any> Sketcher.composite({
+  name: 'Tabbar',
+  configFields: TabbarSchema.schema(),
+  partFields: TabbarSchema.parts(),
+  factory: factory
+});

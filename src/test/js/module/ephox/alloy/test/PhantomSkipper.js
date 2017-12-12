@@ -1,17 +1,7 @@
-define(
-  'ephox.alloy.test.PhantomSkipper',
+var skip = function () {
+  return navigator.userAgent.indexOf('PhantomJS') > -1;
+};
 
-  [
-
-  ],
-
-  function () {
-    var skip = function () {
-      return navigator.userAgent.indexOf('PhantomJS') > -1;
-    };
-
-    return {
-      skip: skip
-    };
-  }
-);
+export default <any> {
+  skip: skip
+};

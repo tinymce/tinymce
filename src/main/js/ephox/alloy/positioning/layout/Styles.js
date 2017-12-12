@@ -1,17 +1,7 @@
-define(
-  'ephox.alloy.positioning.layout.Styles',
+var resolve = function (rest) {
+  return 'ephox-alloy-position-' + rest;
+};
 
-  [
-
-  ],
-
-  function () {
-    var resolve = function (rest) {
-      return 'ephox-alloy-position-' + rest;
-    };
-
-    return {
-      resolve: resolve
-    };
-  }
-);
+export default <any> {
+  resolve: resolve
+};

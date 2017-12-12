@@ -1,17 +1,11 @@
-define(
-  'ephox.alloy.positioning.mode.Anchoring',
+import { Contracts } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Contracts'
-  ],
 
-  function (Contracts) {
-    return Contracts.exactly([
-      'anchorBox',
-      'bubble',
-      'overrides',
-      'layouts',
-      'placer'
-    ]);
-  }
-);
+
+export default <any> Contracts.exactly([
+  'anchorBox',
+  'bubble',
+  'overrides',
+  'layouts',
+  'placer'
+]);

@@ -1,31 +1,23 @@
-define(
-  'ephox.alloy.dragging.touch.TouchData',
+import { Option } from '@ephox/katamari';
+import { Position } from '@ephox/sugar';
 
-  [
-    'ephox.katamari.api.Option',
-    'ephox.sugar.api.view.Position'
-  ],
+var getDataFrom = function (touches) {
+  var touch = touches[0];
+  return Option.some(Position(touch.clientX, touch.clientY));
+};
 
-  function (Option, Position) {
-    var getDataFrom = function (touches) {
-      var touch = touches[0];
-      return Option.some(Position(touch.clientX, touch.clientY));
-    };
+var getData = function (event) {
+  var touches = event.raw().touches;
+  return touches.length === 1 ? getDataFrom(touches) : Option.none();
+};
 
-    var getData = function (event) {
-      var touches = event.raw().touches;
-      return touches.length === 1 ? getDataFrom(touches) : Option.none();
-    };
+// When dragging the touch, the delta is simply the difference
+// between the two touch positions (previous/old and next/nu)
+var getDelta = function (old, nu) {
+  return Position(nu.left() - old.left(), nu.top() - old.top());
+};
 
-    // When dragging the touch, the delta is simply the difference
-    // between the two touch positions (previous/old and next/nu)
-    var getDelta = function (old, nu) {
-      return Position(nu.left() - old.left(), nu.top() - old.top());
-    };
-
-    return {
-      getData: getData,
-      getDelta: getDelta
-    };
-  }
-);
+export default <any> {
+  getData: getData,
+  getDelta: getDelta
+};

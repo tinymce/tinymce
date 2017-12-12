@@ -1,29 +1,23 @@
-define(
-  'ephox.alloy.api.system.SystemApi',
+import { Contracts } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Contracts'
-  ],
 
-  function (Contracts) {
-    return Contracts.exactly([
-      'debugInfo',
-      'triggerFocus',
-      'triggerEvent',
-      'triggerEscape',
-      // TODO: Implement later. See lab for details.
-      // 'openPopup',
-      // 'closePopup',
-      'addToWorld',
-      'removeFromWorld',
-      'addToGui',
-      'removeFromGui',
-      'build',
-      'getByUid',
-      'getByDom',
 
-      'broadcast',
-      'broadcastOn'
-    ]);
-  }
-);
+export default <any> Contracts.exactly([
+  'debugInfo',
+  'triggerFocus',
+  'triggerEvent',
+  'triggerEscape',
+  // TODO: Implement later. See lab for details.
+  // 'openPopup',
+  // 'closePopup',
+  'addToWorld',
+  'removeFromWorld',
+  'addToGui',
+  'removeFromGui',
+  'build',
+  'getByUid',
+  'getByDom',
+
+  'broadcast',
+  'broadcastOn'
+]);

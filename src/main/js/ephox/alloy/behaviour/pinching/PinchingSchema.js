@@ -1,14 +1,8 @@
-define(
-  'ephox.alloy.behaviour.pinching.PinchingSchema',
+import { FieldSchema } from '@ephox/boulder';
 
-  [
-    'ephox.boulder.api.FieldSchema'
-  ],
 
-  function (FieldSchema) {
-    return [
-      FieldSchema.strict('onPinch'),
-      FieldSchema.strict('onPunch')
-    ];
-  }
-);
+
+export default <any> [
+  FieldSchema.strict('onPinch'),
+  FieldSchema.strict('onPunch')
+];

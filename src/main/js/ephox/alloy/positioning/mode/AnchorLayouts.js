@@ -1,34 +1,26 @@
-define(
-  'ephox.alloy.positioning.mode.AnchorLayouts',
+import { FieldSchema } from '@ephox/boulder';
+import { Direction } from '@ephox/sugar';
 
-  [
-    'ephox.boulder.api.FieldSchema',
-    'ephox.sugar.api.properties.Direction'
-  ],
+var schema = function () {
+  return FieldSchema.optionObjOf('layouts', [
+    FieldSchema.strict('onLtr'),
+    FieldSchema.strict('onRtl')
+  ]);
+};
 
-  function (FieldSchema, Direction) {
-    var schema = function () {
-      return FieldSchema.optionObjOf('layouts', [
-        FieldSchema.strict('onLtr'),
-        FieldSchema.strict('onRtl')
-      ]);
-    };
+var get = function (component, info, defaultLtr, defaultRtl) {
+  var ltr = info.layouts().map(function (ls) {
+    return ls.onLtr();
+  }).getOr(defaultLtr);
 
-    var get = function (component, info, defaultLtr, defaultRtl) {
-      var ltr = info.layouts().map(function (ls) {
-        return ls.onLtr();
-      }).getOr(defaultLtr);
+  var rtl = info.layouts().map(function (ls) {
+    return ls.onRtl();
+  }).getOr(defaultRtl);
 
-      var rtl = info.layouts().map(function (ls) {
-        return ls.onRtl();
-      }).getOr(defaultRtl);
+  return Direction.onDirection(ltr, rtl)(component.element());
+};
 
-      return Direction.onDirection(ltr, rtl)(component.element());
-    };
-
-    return {
-      schema: schema,
-      get: get
-    };
-  }
-);
+export default <any> {
+  schema: schema,
+  get: get
+};

@@ -1,40 +1,32 @@
-define(
-  'ephox.alloy.menu.build.WidgetParts',
+import Behaviour from '../../api/behaviour/Behaviour';
+import Representing from '../../api/behaviour/Representing';
+import PartType from '../../parts/PartType';
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.Representing',
-    'ephox.alloy.parts.PartType',
-    'ephox.katamari.api.Fun'
-  ],
+var owner = 'item-widget';
 
-  function (Behaviour, Representing, PartType, Fun) {
-    var owner = 'item-widget';
+var partTypes = [
+  PartType.required({
+    name: 'widget',
+    overrides: function (detail) {
+      return {
+        behaviours: Behaviour.derive([
+          Representing.config({
+            store: {
+              mode: 'manual',
+              getValue: function (component) {
+                return detail.data();
+              },
+              setValue: function () { }
+            }
+          })
+        ])
+      };
+    }
+  })
+];
 
-    var partTypes = [
-      PartType.required({
-        name: 'widget',
-        overrides: function (detail) {
-          return {
-            behaviours: Behaviour.derive([
-              Representing.config({
-                store: {
-                  mode: 'manual',
-                  getValue: function (component) {
-                    return detail.data();
-                  },
-                  setValue: function () { }
-                }
-              })
-            ])
-          };
-        }
-      })
-    ];
-
-    return {
-      owner: Fun.constant(owner),
-      parts: Fun.constant(partTypes)
-    };
-  }
-);
+export default <any> {
+  owner: Fun.constant(owner),
+  parts: Fun.constant(partTypes)
+};

@@ -1,23 +1,17 @@
-define(
-  'ephox.alloy.behaviour.receiving.ReceivingSchema',
+import Fields from '../../data/Fields';
+import { FieldSchema } from '@ephox/boulder';
+import { ValueSchema } from '@ephox/boulder';
+import { Result } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.data.Fields',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.katamari.api.Result'
-  ],
 
-  function (Fields, FieldSchema, ValueSchema, Result) {
-    return [
-      FieldSchema.strictOf('channels', ValueSchema.setOf(
-        // Allow any keys.
-        Result.value,
-        ValueSchema.objOfOnly([
-          Fields.onStrictHandler('onReceive'),
-          FieldSchema.defaulted('schema', ValueSchema.anyValue())
-        ])
-      ))
-    ];
-  }
-);
+
+export default <any> [
+  FieldSchema.strictOf('channels', ValueSchema.setOf(
+    // Allow any keys.
+    Result.value,
+    ValueSchema.objOfOnly([
+      Fields.onStrictHandler('onReceive'),
+      FieldSchema.defaulted('schema', ValueSchema.anyValue())
+    ])
+  ))
+];

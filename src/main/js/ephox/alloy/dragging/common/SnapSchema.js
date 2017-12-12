@@ -1,34 +1,25 @@
-define(
-  'ephox.alloy.dragging.common.SnapSchema',
+import Fields from '../../data/Fields';
+import { FieldSchema } from '@ephox/boulder';
+import { Fun } from '@ephox/katamari';
+import { Scroll } from '@ephox/sugar';
 
-  [
-    'ephox.alloy.data.Fields',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun',
-    'ephox.sugar.api.view.Scroll',
-    'global!window'
-  ],
+var defaultLazyViewport = function () {
+  var scroll = Scroll.get();
 
-  function (Fields, FieldSchema, Fun, Scroll, window) {
-    var defaultLazyViewport = function () {
-      var scroll = Scroll.get();
+  return {
+    x: scroll.left,
+    y: scroll.top,
+    w: Fun.constant(window.innerWidth),
+    h: Fun.constant(window.innerHeight),
+    fx: Fun.constant(0),
+    fy: Fun.constant(0)
+  };
+};
 
-      return {
-        x: scroll.left,
-        y: scroll.top,
-        w: Fun.constant(window.innerWidth),
-        h: Fun.constant(window.innerHeight),
-        fx: Fun.constant(0),
-        fy: Fun.constant(0)
-      };
-    };
-
-    return FieldSchema.optionObjOf('snaps', [
-      FieldSchema.strict('getSnapPoints'),
-      Fields.onHandler('onSensor'),
-      FieldSchema.strict('leftAttr'),
-      FieldSchema.strict('topAttr'),
-      FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
-    ]);
-  }
-);
+export default <any> FieldSchema.optionObjOf('snaps', [
+  FieldSchema.strict('getSnapPoints'),
+  Fields.onHandler('onSensor'),
+  FieldSchema.strict('leftAttr'),
+  FieldSchema.strict('topAttr'),
+  FieldSchema.defaulted('lazyViewport', defaultLazyViewport)
+]);

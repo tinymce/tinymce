@@ -1,14 +1,8 @@
-define(
-  'ephox.alloy.behaviour.positioning.PositionSchema',
+import { FieldSchema } from '@ephox/boulder';
 
-  [
-    'ephox.boulder.api.FieldSchema'
-  ],
 
-  function (FieldSchema) {
-    return [
-      FieldSchema.defaulted('useFixed', false),
-      FieldSchema.option('bounds')
-    ];
-  }
-);
+
+export default <any> [
+  FieldSchema.defaulted('useFixed', false),
+  FieldSchema.option('bounds')
+];

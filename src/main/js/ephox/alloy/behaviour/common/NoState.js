@@ -1,22 +1,13 @@
-define(
-  'ephox.alloy.behaviour.common.NoState',
+import BehaviourState from './BehaviourState';
 
-  [
-    'ephox.alloy.behaviour.common.BehaviourState',
-    'global!Math'
-  ],
+var init = function () {
+  return BehaviourState({
+    readState: function () {
+      return 'No State required';
+    }
+  });
+};
 
-  function (BehaviourState, Math) {
-    var init = function () {
-      return BehaviourState({
-        readState: function () {
-          return 'No State required';
-        }
-      });
-    };
-
-    return {
-      init: init
-    };
-  }
-);
+export default <any> {
+  init: init
+};

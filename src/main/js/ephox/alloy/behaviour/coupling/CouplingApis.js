@@ -1,17 +1,7 @@
-define(
-  'ephox.alloy.behaviour.coupling.CouplingApis',
+var getCoupled = function (component, coupleConfig, coupleState, name) {
+  return coupleState.getOrCreate(component, coupleConfig, name);
+};
 
-  [
-
-  ],
-
-  function () {
-    var getCoupled = function (component, coupleConfig, coupleState, name) {
-      return coupleState.getOrCreate(component, coupleConfig, name);
-    };
-
-    return {
-      getCoupled: getCoupled
-    };
-  }
-);
+export default <any> {
+  getCoupled: getCoupled
+};

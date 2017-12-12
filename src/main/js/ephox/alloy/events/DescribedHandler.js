@@ -1,33 +1,25 @@
-define(
-  'ephox.alloy.events.DescribedHandler',
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun'
-  ],
+var nu = function (handler, purpose) {
+  return {
+    handler: handler,
+    purpose: Fun.constant(purpose)
+  };
+};
 
-  function (Fun) {
-    var nu = function (handler, purpose) {
-      return {
-        handler: handler,
-        purpose: Fun.constant(purpose)
-      };
-    };
+var curryArgs = function (descHandler, extraArgs) {
+  return {
+    handler: Fun.curry.apply(undefined, [ descHandler.handler ].concat(extraArgs)),
+    purpose: descHandler.purpose
+  };
+};
 
-    var curryArgs = function (descHandler, extraArgs) {
-      return {
-        handler: Fun.curry.apply(undefined, [ descHandler.handler ].concat(extraArgs)),
-        purpose: descHandler.purpose
-      };
-    };
+var getHandler = function (descHandler) {
+  return descHandler.handler;
+};
 
-    var getHandler = function (descHandler) {
-      return descHandler.handler;
-    };
-
-    return {
-      nu: nu,
-      curryArgs: curryArgs,
-      getHandler: getHandler
-    };
-  }
-);
+export default <any> {
+  nu: nu,
+  curryArgs: curryArgs,
+  getHandler: getHandler
+};

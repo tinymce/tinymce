@@ -1,17 +1,9 @@
-define(
-  'ephox.alloy.ephemera.AlloyTags',
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun'
-  ],
+var prefix = 'alloy-id-';
+var idAttr = 'data-alloy-id';
 
-  function (Fun) {
-    var prefix = 'alloy-id-';
-    var idAttr = 'data-alloy-id';
-
-    return {
-      prefix: Fun.constant(prefix),
-      idAttr: Fun.constant(idAttr)
-    };
-  }
-);
+export default <any> {
+  prefix: Fun.constant(prefix),
+  idAttr: Fun.constant(idAttr)
+};

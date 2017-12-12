@@ -1,22 +1,16 @@
-define(
-  'ephox.alloy.behaviour.sandboxing.SandboxSchema',
+import Fields from '../../data/Fields';
+import { FieldSchema } from '@ephox/boulder';
 
-  [
-    'ephox.alloy.data.Fields',
-    'ephox.boulder.api.FieldSchema'
-  ],
 
-  function (Fields, FieldSchema) {
-    return [
-      Fields.onHandler('onOpen'),
-      Fields.onHandler('onClose'),
 
-      // Maybe this should be optional
-      FieldSchema.strict('isPartOf'),
+export default <any> [
+  Fields.onHandler('onOpen'),
+  Fields.onHandler('onClose'),
 
-      FieldSchema.strict('getAttachPoint'),
+  // Maybe this should be optional
+  FieldSchema.strict('isPartOf'),
 
-      FieldSchema.defaulted('cloakVisibilityAttr', 'data-precloak-visibility')
-    ];
-  }
-);
+  FieldSchema.strict('getAttachPoint'),
+
+  FieldSchema.defaulted('cloakVisibilityAttr', 'data-precloak-visibility')
+];

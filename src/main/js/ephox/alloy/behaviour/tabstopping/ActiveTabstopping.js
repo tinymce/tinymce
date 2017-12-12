@@ -1,22 +1,14 @@
-define(
-  'ephox.alloy.behaviour.tabstopping.ActiveTabstopping',
+import DomModification from '../../dom/DomModification';
+import { Objects } from '@ephox/boulder';
 
-  [
-    'ephox.alloy.dom.DomModification',
-    'ephox.boulder.api.Objects'
-  ],
+var exhibit = function (base, tabConfig) {
+  return DomModification.nu({
+    attributes: Objects.wrapAll([
+      { key: tabConfig.tabAttr(), value: 'true' }
+    ])
+  });
+};
 
-  function (DomModification, Objects) {
-    var exhibit = function (base, tabConfig) {
-      return DomModification.nu({
-        attributes: Objects.wrapAll([
-          { key: tabConfig.tabAttr(), value: 'true' }
-        ])
-      });
-    };
-
-    return {
-      exhibit: exhibit
-    };
-  }
-);
+export default <any> {
+  exhibit: exhibit
+};

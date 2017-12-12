@@ -1,19 +1,11 @@
-define(
-  'ephox.alloy.alien.Truncate',
+import { Html } from '@ephox/sugar';
+import { Replication } from '@ephox/sugar';
 
-  [
-    'ephox.sugar.api.properties.Html',
-    'ephox.sugar.api.dom.Replication'
-  ],
+var getHtml = function (element) {
+  var clone = Replication.shallow(element);
+  return Html.getOuter(clone);
+};
 
-  function (Html, Replication) {
-    var getHtml = function (element) {
-      var clone = Replication.shallow(element);
-      return Html.getOuter(clone);
-    };
-
-    return {
-      getHtml: getHtml
-    };
-  }
-);
+export default <any> {
+  getHtml: getHtml
+};

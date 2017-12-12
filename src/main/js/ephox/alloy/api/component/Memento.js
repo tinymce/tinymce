@@ -1,40 +1,32 @@
-define(
-  'ephox.alloy.api.component.Memento',
+import Tagger from '../../registry/Tagger';
+import { Objects } from '@ephox/boulder';
+import { Merger } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.registry.Tagger',
-    'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Merger',
-    'ephox.katamari.api.Option'
-  ],
+var record = function (spec) {
+  var uid = Objects.hasKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');
 
-  function (Tagger, Objects, Merger, Option) {
-    var record = function (spec) {
-      var uid = Objects.hasKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');
+  var get = function (any) {
+    return any.getSystem().getByUid(uid).getOrDie();
+  };
 
-      var get = function (any) {
-        return any.getSystem().getByUid(uid).getOrDie();
-      };
+  var getOpt = function (any) {
+    return any.getSystem().getByUid(uid).fold(Option.none, Option.some);
+  };
 
-      var getOpt = function (any) {
-        return any.getSystem().getByUid(uid).fold(Option.none, Option.some);
-      };
+  var asSpec = function () {
+    return Merger.deepMerge(spec, {
+      uid: uid
+    });
+  };
 
-      var asSpec = function () {
-        return Merger.deepMerge(spec, {
-          uid: uid
-        });
-      };
+  return {
+    get: get,
+    getOpt: getOpt,
+    asSpec: asSpec
+  };
+};
 
-      return {
-        get: get,
-        getOpt: getOpt,
-        asSpec: asSpec
-      };
-    };
-
-    return {
-      record: record
-    };
-  }
-);
+export default <any> {
+  record: record
+};

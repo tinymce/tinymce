@@ -1,41 +1,33 @@
-define(
-  'ephox.alloy.alien.AriaFocus',
+import { Option } from '@ephox/katamari';
+import { Compare } from '@ephox/sugar';
+import { Focus } from '@ephox/sugar';
+import { PredicateFind } from '@ephox/sugar';
+import { Traverse } from '@ephox/sugar';
 
-  [
-    'ephox.katamari.api.Option',
-    'ephox.sugar.api.dom.Compare',
-    'ephox.sugar.api.dom.Focus',
-    'ephox.sugar.api.search.PredicateFind',
-    'ephox.sugar.api.search.Traverse'
-  ],
+var preserve = function (f, container) {
+  var ownerDoc = Traverse.owner(container);
 
-  function (Option, Compare, Focus, PredicateFind, Traverse) {
-    var preserve = function (f, container) {
-      var ownerDoc = Traverse.owner(container);
-
-      var refocus = Focus.active(ownerDoc).bind(function (focused) {
-        var hasFocus = function (elem) {
-          return Compare.eq(focused, elem);
-        };
-        return hasFocus(container) ? Option.some(container) : PredicateFind.descendant(container, hasFocus);
-      });
-
-      var result = f(container);
-
-      // If there is a focussed element, the F function may cause focus to be lost (such as by hiding elements). Restore it afterwards.
-      refocus.each(function (oldFocus) {
-        Focus.active(ownerDoc).filter(function (newFocus) {
-          return Compare.eq(newFocus, oldFocus);
-        }).orThunk(function () {
-          // Only refocus if the focus has changed, otherwise we break IE
-          Focus.focus(oldFocus);
-        });
-      });
-      return result;
+  var refocus = Focus.active(ownerDoc).bind(function (focused) {
+    var hasFocus = function (elem) {
+      return Compare.eq(focused, elem);
     };
+    return hasFocus(container) ? Option.some(container) : PredicateFind.descendant(container, hasFocus);
+  });
 
-    return {
-      preserve: preserve
-    };
-  }
-);
+  var result = f(container);
+
+  // If there is a focussed element, the F function may cause focus to be lost (such as by hiding elements). Restore it afterwards.
+  refocus.each(function (oldFocus) {
+    Focus.active(ownerDoc).filter(function (newFocus) {
+      return Compare.eq(newFocus, oldFocus);
+    }).orThunk(function () {
+      // Only refocus if the focus has changed, otherwise we break IE
+      Focus.focus(oldFocus);
+    });
+  });
+  return result;
+};
+
+export default <any> {
+  preserve: preserve
+};

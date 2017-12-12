@@ -1,18 +1,8 @@
-define(
-  'ephox.alloy.spec.CustomSpec',
+var make = function (spec) {
+  // Maybe default some arguments here
+  return spec;
+};
 
-  [
-
-  ],
-
-  function () {
-    var make = function (spec) {
-      // Maybe default some arguments here
-      return spec;
-    };
-
-    return {
-      make: make
-    };
-  }
-);
+export default <any> {
+  make: make
+};

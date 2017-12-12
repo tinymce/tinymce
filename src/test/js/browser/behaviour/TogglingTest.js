@@ -1,149 +1,145 @@
-asynctest(
-  'TogglingTest',
+import { ApproxStructure } from '@ephox/agar';
+import { Assertions } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import Toggling from 'ephox/alloy/api/behaviour/Toggling';
+import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import Container from 'ephox/alloy/api/ui/Container';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { UnitTest } from '@ephox/refute';
 
-  [
-    'ephox.agar.api.ApproxStructure',
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.Logger',
-    'ephox.agar.api.Step',
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.events.AlloyTriggers',
-    'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.api.ui.Container',
-    'ephox.alloy.test.GuiSetup'
-  ],
+UnitTest.asynctest('TogglingTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
 
-  function (ApproxStructure, Assertions, Logger, Step, Behaviour, Toggling, GuiFactory, AlloyTriggers, SystemEvents, Container, GuiSetup) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
-
-    GuiSetup.setup(function (store, doc, body) {
-      return GuiFactory.build(
-        Container.sketch({
-          dom: {
-            tag: 'div',
-            classes: [ 'custom-component-test'],
-            styles: {
-              background: 'blue',
-              width: '200px',
-              height: '200px'
+  GuiSetup.setup(function (store, doc, body) {
+    return GuiFactory.build(
+      Container.sketch({
+        dom: {
+          tag: 'div',
+          classes: [ 'custom-component-test'],
+          styles: {
+            background: 'blue',
+            width: '200px',
+            height: '200px'
+          }
+        },
+        uid: 'custom-uid',
+        containerBehaviours: Behaviour.derive([
+          Toggling.config({
+            selected: true,
+            toggleClass: 'test-selected',
+            aria: {
+              mode: 'pressed'
             }
-          },
-          uid: 'custom-uid',
-          containerBehaviours: Behaviour.derive([
-            Toggling.config({
-              selected: true,
-              toggleClass: 'test-selected',
-              aria: {
-                mode: 'pressed'
+          })
+        ])
+      })
+    );
+
+  }, function (doc, body, gui, component, store) {
+
+    var testIsSelected = function (label) {
+      return Step.sync(function () {
+        Assertions.assertStructure(
+          'Asserting structure shows selected\n' + label,
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+              classes: [
+                arr.has('test-selected'),
+                arr.not('selected')
+              ],
+              attrs: {
+                'data-alloy-id': str.is('custom-uid'),
+                'aria-pressed': str.is('true'),
+                'aria-expanded': str.none()
               }
-            })
-          ])
+            });
+          }),
+          component.element()
+        );
+      });
+    };
+
+    var testNotSelected = function (label) {
+      return Step.sync(function () {
+        Assertions.assertStructure(
+          'Asserting structure shows not selected\n' + label,
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('div', {
+              classes: [
+                arr.not('test-selected'),
+                arr.not('selected')
+              ],
+              attrs: {
+                'data-alloy-id': str.is('custom-uid'),
+                'aria-pressed': str.is('false'),
+                'aria-expanded': str.none()
+              }
+            });
+          }),
+          component.element()
+        );
+      });
+    };
+
+    var assertIsSelected = function (label, expected) {
+      return Logger.t(
+        'Asserting isSelected()\n' + label,
+        Step.sync(function () {
+          var actual = Toggling.isOn(component);
+          Assertions.assertEq(label, expected, actual);
         })
       );
+    };
 
-    }, function (doc, body, gui, component, store) {
+    var sSelect = Step.sync(function () {
+      Toggling.on(component);
+    });
 
-      var testIsSelected = function (label) {
-        return Step.sync(function () {
-          Assertions.assertStructure(
-            'Asserting structure shows selected\n' + label,
-            ApproxStructure.build(function (s, str, arr) {
-              return s.element('div', {
-                classes: [
-                  arr.has('test-selected'),
-                  arr.not('selected')
-                ],
-                attrs: {
-                  'data-alloy-id': str.is('custom-uid'),
-                  'aria-pressed': str.is('true'),
-                  'aria-expanded': str.none()
-                }
-              });
-            }),
-            component.element()
-          );
-        });
-      };
+    var sDeselect = Step.sync(function () {
+      Toggling.off(component);
+    });
 
-      var testNotSelected = function (label) {
-        return Step.sync(function () {
-          Assertions.assertStructure(
-            'Asserting structure shows not selected\n' + label,
-            ApproxStructure.build(function (s, str, arr) {
-              return s.element('div', {
-                classes: [
-                  arr.not('test-selected'),
-                  arr.not('selected')
-                ],
-                attrs: {
-                  'data-alloy-id': str.is('custom-uid'),
-                  'aria-pressed': str.is('false'),
-                  'aria-expanded': str.none()
-                }
-              });
-            }),
-            component.element()
-          );
-        });
-      };
+    var sToggle = Step.sync(function () {
+      Toggling.toggle(component);
+    });
 
-      var assertIsSelected = function (label, expected) {
-        return Logger.t(
-          'Asserting isSelected()\n' + label,
-          Step.sync(function () {
-            var actual = Toggling.isOn(component);
-            Assertions.assertEq(label, expected, actual);
-          })
-        );
-      };
+    return [
+      testIsSelected('Initial'),
 
-      var sSelect = Step.sync(function () {
-        Toggling.on(component);
-      });
+      sToggle,
+      testNotSelected('selected > toggle'),
+      assertIsSelected('selected > toggle', false),
 
-      var sDeselect = Step.sync(function () {
-        Toggling.off(component);
-      });
+      sToggle,
+      testIsSelected('selected > toggle, toggle'),
+      assertIsSelected('selected > toggle, toggle', true),
 
-      var sToggle = Step.sync(function () {
-        Toggling.toggle(component);
-      });
+      sDeselect,
+      testNotSelected('selected > toggle, toggle, deselect'),
+      assertIsSelected('selected > toggle, toggle, deselect', false),
+      sDeselect,
+      testNotSelected('selected > toggle, toggle, deselect, deselect'),
+      assertIsSelected('selected > toggle, toggle, deslect, deselect', false),
 
-      return [
-        testIsSelected('Initial'),
+      sSelect,
+      testIsSelected('selected > toggle, toggle, deselect, deselect, select'),
+      assertIsSelected('selected > toggle, toggle, deselect, deselect, select', true),
+      sSelect,
+      testIsSelected('selected > toggle, toggle, deselect, deselect, select, select'),
+      assertIsSelected('selected > toggle, toggle, deselect, deselect, select, select', true),
 
-        sToggle,
-        testNotSelected('selected > toggle'),
-        assertIsSelected('selected > toggle', false),
+      Step.sync(function () {
+        AlloyTriggers.emitExecute(component);
+      }),
 
-        sToggle,
-        testIsSelected('selected > toggle, toggle'),
-        assertIsSelected('selected > toggle, toggle', true),
+      testNotSelected('selected > toggle, toggle, deselect, deselect, select, select, event.exec'),
+      assertIsSelected('selected > toggle, toggle, deselect, deselect, select, select, event.exec', false)
+    ];
+  }, success, failure);
+});
 
-        sDeselect,
-        testNotSelected('selected > toggle, toggle, deselect'),
-        assertIsSelected('selected > toggle, toggle, deselect', false),
-        sDeselect,
-        testNotSelected('selected > toggle, toggle, deselect, deselect'),
-        assertIsSelected('selected > toggle, toggle, deslect, deselect', false),
-
-        sSelect,
-        testIsSelected('selected > toggle, toggle, deselect, deselect, select'),
-        assertIsSelected('selected > toggle, toggle, deselect, deselect, select', true),
-        sSelect,
-        testIsSelected('selected > toggle, toggle, deselect, deselect, select, select'),
-        assertIsSelected('selected > toggle, toggle, deselect, deselect, select, select', true),
-
-        Step.sync(function () {
-          AlloyTriggers.emitExecute(component);
-        }),
-
-        testNotSelected('selected > toggle, toggle, deselect, deselect, select, select, event.exec'),
-        assertIsSelected('selected > toggle, toggle, deselect, deselect, select, select, event.exec', false)
-      ];
-    }, success, failure);
-  }
-);

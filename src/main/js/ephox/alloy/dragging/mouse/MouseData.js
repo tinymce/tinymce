@@ -1,25 +1,17 @@
-define(
-  'ephox.alloy.dragging.mouse.MouseData',
+import { Option } from '@ephox/katamari';
+import { Position } from '@ephox/sugar';
 
-  [
-    'ephox.katamari.api.Option',
-    'ephox.sugar.api.view.Position'
-  ],
+var getData = function (event) {
+  return Option.from(Position(event.x(), event.y()));
+};
 
-  function (Option, Position) {
-    var getData = function (event) {
-      return Option.from(Position(event.x(), event.y()));
-    };
+// When dragging with the mouse, the delta is simply the difference
+// between the two position (previous/old and next/nu)
+var getDelta = function (old, nu) {
+  return Position(nu.left() - old.left(), nu.top() - old.top());
+};
 
-    // When dragging with the mouse, the delta is simply the difference
-    // between the two position (previous/old and next/nu)
-    var getDelta = function (old, nu) {
-      return Position(nu.left() - old.left(), nu.top() - old.top());
-    };
-
-    return {
-      getData: getData,
-      getDelta: getDelta
-    };
-  }
-);
+export default <any> {
+  getData: getData,
+  getDelta: getDelta
+};

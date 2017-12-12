@@ -1,18 +1,12 @@
-define(
-  'ephox.alloy.behaviour.highlighting.HighlightSchema',
+import Fields from '../../data/Fields';
+import { FieldSchema } from '@ephox/boulder';
 
-  [
-    'ephox.alloy.data.Fields',
-    'ephox.boulder.api.FieldSchema'
-  ],
 
-  function (Fields, FieldSchema) {
-    return [
-      FieldSchema.strict('highlightClass'),
-      FieldSchema.strict('itemClass'),
 
-      Fields.onHandler('onHighlight'),
-      Fields.onHandler('onDehighlight')
-    ];
-  }
-);
+export default <any> [
+  FieldSchema.strict('highlightClass'),
+  FieldSchema.strict('itemClass'),
+
+  Fields.onHandler('onHighlight'),
+  Fields.onHandler('onDehighlight')
+];

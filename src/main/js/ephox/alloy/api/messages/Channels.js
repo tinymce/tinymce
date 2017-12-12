@@ -1,13 +1,7 @@
-define(
-  'ephox.alloy.api.messages.Channels',
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun'
-  ],
 
-  function (Fun) {
-    return {
-      dismissPopups: Fun.constant('dismiss.popups')
-    };
-  }
-);
+
+export default <any> {
+  dismissPopups: Fun.constant('dismiss.popups')
+};

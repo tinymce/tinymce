@@ -1,58 +1,48 @@
-define(
-  'ephox.alloy.dragging.touch.TouchDragging',
+import AlloyEvents from '../../api/events/AlloyEvents';
+import NativeEvents from '../../api/events/NativeEvents';
+import Fields from '../../data/Fields';
+import DragMovement from '../common/DragMovement';
+import SnapSchema from '../common/SnapSchema';
+import Snappables from '../snap/Snappables';
+import TouchData from './TouchData';
+import { FieldSchema } from '@ephox/boulder';
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.api.events.AlloyEvents',
-    'ephox.alloy.api.events.NativeEvents',
-    'ephox.alloy.data.Fields',
-    'ephox.alloy.dragging.common.DragMovement',
-    'ephox.alloy.dragging.common.SnapSchema',
-    'ephox.alloy.dragging.snap.Snappables',
-    'ephox.alloy.dragging.touch.TouchData',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun',
-    'global!parseInt',
-    'global!window'
-  ],
+var handlers = function (dragConfig, dragState) {
 
-  function (AlloyEvents, NativeEvents, Fields, DragMovement, SnapSchema, Snappables, TouchData, FieldSchema, Fun, parseInt, window) {
-    var handlers = function (dragConfig, dragState) {
+  return AlloyEvents.derive([
+    AlloyEvents.stopper(NativeEvents.touchstart()),
 
-      return AlloyEvents.derive([
-        AlloyEvents.stopper(NativeEvents.touchstart()),
+    AlloyEvents.run(NativeEvents.touchmove(), function (component, simulatedEvent) {
+      simulatedEvent.stop();
 
-        AlloyEvents.run(NativeEvents.touchmove(), function (component, simulatedEvent) {
-          simulatedEvent.stop();
+      var delta = dragState.update(TouchData, simulatedEvent.event());
+      delta.each(function (dlt) {
+        DragMovement.dragBy(component, dragConfig, dlt);
+      });
+    }),
 
-          var delta = dragState.update(TouchData, simulatedEvent.event());
-          delta.each(function (dlt) {
-            DragMovement.dragBy(component, dragConfig, dlt);
-          });
-        }),
+    AlloyEvents.run(NativeEvents.touchend(), function (component, simulatedEvent) {
+      dragConfig.snaps().each(function (snapInfo) {
+        Snappables.stopDrag(component, snapInfo);
+      });
+      var target = dragConfig.getTarget()(component.element());
+      // INVESTIGATE: Should this be in the MouseDragging?
+      dragState.reset();
+      dragConfig.onDrop()(component, target);
+    })
+  ]);
+};
 
-        AlloyEvents.run(NativeEvents.touchend(), function (component, simulatedEvent) {
-          dragConfig.snaps().each(function (snapInfo) {
-            Snappables.stopDrag(component, snapInfo);
-          });
-          var target = dragConfig.getTarget()(component.element());
-          // INVESTIGATE: Should this be in the MouseDragging?
-          dragState.reset();
-          dragConfig.onDrop()(component, target);
-        })
-      ]);
-    };
+var schema = [
+  // Is this used?
+  FieldSchema.defaulted('useFixed', false),
+  FieldSchema.defaulted('getTarget', Fun.identity),
+  FieldSchema.defaulted('onDrop', Fun.noop),
+  SnapSchema,
+  Fields.output('dragger', {
+    handlers: handlers
+  })
+];
 
-    var schema = [
-      // Is this used?
-      FieldSchema.defaulted('useFixed', false),
-      FieldSchema.defaulted('getTarget', Fun.identity),
-      FieldSchema.defaulted('onDrop', Fun.noop),
-      SnapSchema,
-      Fields.output('dragger', {
-        handlers: handlers
-      })
-    ];
-
-    return schema;
-  }
-);
+export default <any> schema;

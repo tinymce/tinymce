@@ -1,22 +1,16 @@
-define(
-  'ephox.alloy.positioning.mode.AnchorSchema',
+import HotspotAnchor from './HotspotAnchor';
+import MakeshiftAnchor from './MakeshiftAnchor';
+import SelectionAnchor from './SelectionAnchor';
+import SubmenuAnchor from './SubmenuAnchor';
+import { ValueSchema } from '@ephox/boulder';
 
-  [
-    'ephox.alloy.positioning.mode.HotspotAnchor',
-    'ephox.alloy.positioning.mode.MakeshiftAnchor',
-    'ephox.alloy.positioning.mode.SelectionAnchor',
-    'ephox.alloy.positioning.mode.SubmenuAnchor',
-    'ephox.boulder.api.ValueSchema'
-  ],
 
-  function (HotspotAnchor, MakeshiftAnchor, SelectionAnchor, SubmenuAnchor, ValueSchema) {
-    return ValueSchema.choose(
-      'anchor', {
-        selection: SelectionAnchor,
-        hotspot: HotspotAnchor,
-        submenu: SubmenuAnchor,
-        makeshift: MakeshiftAnchor
-      }
-    );
+
+export default <any> ValueSchema.choose(
+  'anchor', {
+    selection: SelectionAnchor,
+    hotspot: HotspotAnchor,
+    submenu: SubmenuAnchor,
+    makeshift: MakeshiftAnchor
   }
 );

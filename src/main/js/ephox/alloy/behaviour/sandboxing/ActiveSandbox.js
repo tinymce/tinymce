@@ -1,23 +1,15 @@
-define(
-  'ephox.alloy.behaviour.sandboxing.ActiveSandbox',
+import AlloyEvents from '../../api/events/AlloyEvents';
+import SystemEvents from '../../api/events/SystemEvents';
+import SandboxApis from './SandboxApis';
 
-  [
-    'ephox.alloy.api.events.AlloyEvents',
-    'ephox.alloy.api.events.SystemEvents',
-    'ephox.alloy.behaviour.sandboxing.SandboxApis'
-  ],
+var events = function (sandboxConfig, sandboxState) {
+  return AlloyEvents.derive([
+    AlloyEvents.run(SystemEvents.sandboxClose(), function (sandbox, simulatedEvent) {
+      SandboxApis.close(sandbox, sandboxConfig, sandboxState);
+    })
+  ]);
+};
 
-  function (AlloyEvents, SystemEvents, SandboxApis) {
-    var events = function (sandboxConfig, sandboxState) {
-      return AlloyEvents.derive([
-        AlloyEvents.run(SystemEvents.sandboxClose(), function (sandbox, simulatedEvent) {
-          SandboxApis.close(sandbox, sandboxConfig, sandboxState);
-        })
-      ]);
-    };
-
-    return {
-      events: events
-    };
-  }
-);
+export default <any> {
+  events: events
+};

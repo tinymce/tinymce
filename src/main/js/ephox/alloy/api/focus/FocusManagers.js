@@ -1,51 +1,42 @@
-define(
-  'ephox.alloy.api.focus.FocusManagers',
+import Highlighting from '../behaviour/Highlighting';
+import { Fun } from '@ephox/katamari';
+import { Focus } from '@ephox/sugar';
 
-  [
-    'ephox.alloy.api.behaviour.Highlighting',
-    'ephox.katamari.api.Fun',
-    'ephox.sugar.api.dom.Focus'
-  ],
+var dom = function () {
+  var get = function (component) {
+    return Focus.search(component.element());
+  };
 
-  function (Highlighting, Fun, Focus) {
+  var set = function (component, focusee) {
+    component.getSystem().triggerFocus(focusee, component.element());
+  };
 
-    var dom = function () {
-      var get = function (component) {
-        return Focus.search(component.element());
-      };
+  return {
+    get: get,
+    set: set
+  };
+};
 
-      var set = function (component, focusee) {
-        component.getSystem().triggerFocus(focusee, component.element());
-      };
+var highlights = function () {
+  var get = function (component) {
+    return Highlighting.getHighlighted(component).map(function (item) {
+      return item.element();
+    });
+  };
 
-      return {
-        get: get,
-        set: set
-      };
-    };
+  var set = function (component, element) {
+    component.getSystem().getByDom(element).fold(Fun.noop, function (item) {
+      Highlighting.highlight(component, item);
+    });
+  };
 
-    var highlights = function () {
-      var get = function (component) {
-        return Highlighting.getHighlighted(component).map(function (item) {
-          return item.element();
-        });
-      };
+  return {
+    get: get,
+    set: set
+  };
+};
 
-      var set = function (component, element) {
-        component.getSystem().getByDom(element).fold(Fun.noop, function (item) {
-          Highlighting.highlight(component, item);
-        });
-      };
-
-      return {
-        get: get,
-        set: set
-      };
-    };
-
-    return {
-      dom: dom,
-      highlights: highlights
-    };
-  }
-);
+export default <any> {
+  dom: dom,
+  highlights: highlights
+};

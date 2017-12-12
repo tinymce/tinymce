@@ -1,53 +1,45 @@
-define(
-  'ephox.alloy.ui.schema.DropdownSchema',
+import Coupling from '../../api/behaviour/Coupling';
+import Focusing from '../../api/behaviour/Focusing';
+import Keying from '../../api/behaviour/Keying';
+import Toggling from '../../api/behaviour/Toggling';
+import SketchBehaviours from '../../api/component/SketchBehaviours';
+import Fields from '../../data/Fields';
+import InternalSink from '../../parts/InternalSink';
+import PartType from '../../parts/PartType';
+import { FieldSchema } from '@ephox/boulder';
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.api.behaviour.Coupling',
-    'ephox.alloy.api.behaviour.Focusing',
-    'ephox.alloy.api.behaviour.Keying',
-    'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.component.SketchBehaviours',
-    'ephox.alloy.data.Fields',
-    'ephox.alloy.parts.InternalSink',
-    'ephox.alloy.parts.PartType',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun'
-  ],
+var schema = [
+  FieldSchema.strict('dom'),
+  FieldSchema.strict('fetch'),
+  Fields.onHandler('onOpen'),
+  Fields.onKeyboardHandler('onExecute'),
+  SketchBehaviours.field('dropdownBehaviours', [ Toggling, Coupling, Keying, Focusing ]),
+  FieldSchema.strict('toggleClass'),
+  FieldSchema.defaulted('displayer', Fun.identity),
+  FieldSchema.option('lazySink'),
+  FieldSchema.defaulted('matchWidth', false),
+  FieldSchema.option('role')
+];
 
-  function (Coupling, Focusing, Keying, Toggling, SketchBehaviours, Fields, InternalSink, PartType, FieldSchema, Fun) {
-    var schema = [
-      FieldSchema.strict('dom'),
-      FieldSchema.strict('fetch'),
-      Fields.onHandler('onOpen'),
-      Fields.onKeyboardHandler('onExecute'),
-      SketchBehaviours.field('dropdownBehaviours', [ Toggling, Coupling, Keying, Focusing ]),
-      FieldSchema.strict('toggleClass'),
-      FieldSchema.defaulted('displayer', Fun.identity),
-      FieldSchema.option('lazySink'),
-      FieldSchema.defaulted('matchWidth', false),
-      FieldSchema.option('role')
-    ];
+var partTypes = [
+  PartType.external({
+    schema: [
+      Fields.tieredMenuMarkers()
+    ],
+    name: 'menu',
+    defaults: function (detail) {
+      return {
+        onExecute: detail.onExecute()
+      };
+    }
+  }),
 
-    var partTypes = [
-      PartType.external({
-        schema: [
-          Fields.tieredMenuMarkers()
-        ],
-        name: 'menu',
-        defaults: function (detail) {
-          return {
-            onExecute: detail.onExecute()
-          };
-        }
-      }),
+  InternalSink.partType()
+];
 
-      InternalSink.partType()
-    ];
-
-    return {
-      name: Fun.constant('Dropdown'),
-      schema: Fun.constant(schema),
-      parts: Fun.constant(partTypes)
-    };
-  }
-);
+export default <any> {
+  name: Fun.constant('Dropdown'),
+  schema: Fun.constant(schema),
+  parts: Fun.constant(partTypes)
+};

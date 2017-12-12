@@ -1,23 +1,17 @@
-define(
-  'ephox.alloy.api.component.ComponentApi',
+import { Contracts } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Contracts'
-  ],
 
-  function (Contracts) {
-    return Contracts.exactly([
-      'getSystem',
-      'config',
-      'hasConfigured',
-      'spec',
-      'connect',
-      'disconnect',
-      'element',
-      'syncComponents',
-      'readState',
-      'components',
-      'events'
-    ]);
-  }
-);
+
+export default <any> Contracts.exactly([
+  'getSystem',
+  'config',
+  'hasConfigured',
+  'spec',
+  'connect',
+  'disconnect',
+  'element',
+  'syncComponents',
+  'readState',
+  'components',
+  'events'
+]);

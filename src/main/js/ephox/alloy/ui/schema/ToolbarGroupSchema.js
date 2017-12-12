@@ -1,40 +1,32 @@
-define(
-  'ephox.alloy.ui.schema.ToolbarGroupSchema',
+import Keying from '../../api/behaviour/Keying';
+import SketchBehaviours from '../../api/component/SketchBehaviours';
+import Fields from '../../data/Fields';
+import PartType from '../../parts/PartType';
+import { FieldSchema } from '@ephox/boulder';
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.api.behaviour.Keying',
-    'ephox.alloy.api.component.SketchBehaviours',
-    'ephox.alloy.data.Fields',
-    'ephox.alloy.parts.PartType',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun'
-  ],
+var schema = [
+  FieldSchema.strict('items'),
+  Fields.markers([ 'itemClass' ]),
+  SketchBehaviours.field('tgroupBehaviours', [ Keying ])
+];
 
-  function (Keying, SketchBehaviours, Fields, PartType, FieldSchema, Fun) {
-    var schema = [
-      FieldSchema.strict('items'),
-      Fields.markers([ 'itemClass' ]),
-      SketchBehaviours.field('tgroupBehaviours', [ Keying ])
-    ];
-
-    var partTypes = [
-      PartType.group({
-        name: 'items',
-        unit: 'item',
-        overrides: function (detail) {
-          return {
-            domModification: {
-              classes: [ detail.markers().itemClass() ]
-            }
-          };
+var partTypes = [
+  PartType.group({
+    name: 'items',
+    unit: 'item',
+    overrides: function (detail) {
+      return {
+        domModification: {
+          classes: [ detail.markers().itemClass() ]
         }
-      })
-    ];
+      };
+    }
+  })
+];
 
-    return {
-      name: Fun.constant('ToolbarGroup'),
-      schema: Fun.constant(schema),
-      parts: Fun.constant(partTypes)
-    };
-  }
-);
+export default <any> {
+  name: Fun.constant('ToolbarGroup'),
+  schema: Fun.constant(schema),
+  parts: Fun.constant(partTypes)
+};

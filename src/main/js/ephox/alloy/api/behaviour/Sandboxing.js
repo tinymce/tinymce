@@ -1,22 +1,15 @@
-define(
-  'ephox.alloy.api.behaviour.Sandboxing',
+import Behaviour from './Behaviour';
+import ActiveSandbox from '../../behaviour/sandboxing/ActiveSandbox';
+import SandboxApis from '../../behaviour/sandboxing/SandboxApis';
+import SandboxSchema from '../../behaviour/sandboxing/SandboxSchema';
+import SandboxState from '../../behaviour/sandboxing/SandboxState';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.sandboxing.ActiveSandbox',
-    'ephox.alloy.behaviour.sandboxing.SandboxApis',
-    'ephox.alloy.behaviour.sandboxing.SandboxSchema',
-    'ephox.alloy.behaviour.sandboxing.SandboxState'
-  ],
 
-  function (Behaviour, ActiveSandbox, SandboxApis, SandboxSchema, SandboxState) {
-    return Behaviour.create({
-      fields: SandboxSchema,
-      name: 'sandboxing',
-      active: ActiveSandbox,
-      apis: SandboxApis,
-      state: SandboxState
-    });
-  }
-);
 
+export default <any> Behaviour.create({
+  fields: SandboxSchema,
+  name: 'sandboxing',
+  active: ActiveSandbox,
+  apis: SandboxApis,
+  state: SandboxState
+});

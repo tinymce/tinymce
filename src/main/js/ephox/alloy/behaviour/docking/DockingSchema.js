@@ -1,29 +1,20 @@
-define(
-  'ephox.alloy.behaviour.docking.DockingSchema',
+import Boxes from '../../alien/Boxes';
+import { FieldSchema } from '@ephox/boulder';
+import { Scroll } from '@ephox/sugar';
 
-  [
-    'ephox.alloy.alien.Boxes',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.sugar.api.view.Scroll',
-    'global!window'
-  ],
+var defaultLazyViewport = function (_component) {
+  var scroll = Scroll.get();
+  return Boxes.bounds(scroll.left(), scroll.top(), window.innerWidth, window.innerHeight);
+};
 
-  function (Boxes, FieldSchema, Scroll, window) {
-    var defaultLazyViewport = function (_component) {
-      var scroll = Scroll.get();
-      return Boxes.bounds(scroll.left(), scroll.top(), window.innerWidth, window.innerHeight);
-    };
-
-    return [
-      FieldSchema.optionObjOf('contextual', [
-        FieldSchema.strict('fadeInClass'),
-        FieldSchema.strict('fadeOutClass'),
-        FieldSchema.strict('transitionClass'),
-        FieldSchema.strict('lazyContext')
-      ]),
-      FieldSchema.defaulted('lazyViewport', defaultLazyViewport),
-      FieldSchema.strict('leftAttr'),
-      FieldSchema.strict('topAttr')
-    ];
-  }
-);
+export default <any> [
+  FieldSchema.optionObjOf('contextual', [
+    FieldSchema.strict('fadeInClass'),
+    FieldSchema.strict('fadeOutClass'),
+    FieldSchema.strict('transitionClass'),
+    FieldSchema.strict('lazyContext')
+  ]),
+  FieldSchema.defaulted('lazyViewport', defaultLazyViewport),
+  FieldSchema.strict('leftAttr'),
+  FieldSchema.strict('topAttr')
+];

@@ -1,16 +1,10 @@
-define(
-  'ephox.alloy.api.behaviour.Replacing',
+import Behaviour from './Behaviour';
+import ReplaceApis from '../../behaviour/replacing/ReplaceApis';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.replacing.ReplaceApis'
-  ],
 
-  function (Behaviour, ReplaceApis) {
-    return Behaviour.create({
-      fields: [ ],
-      name: 'replacing',
-      apis: ReplaceApis
-    });
-  }
-);
+
+export default <any> Behaviour.create({
+  fields: [ ],
+  name: 'replacing',
+  apis: ReplaceApis
+});

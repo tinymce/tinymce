@@ -1,14 +1,8 @@
-define(
-  'ephox.alloy.behaviour.swapping.SwapSchema',
+import { FieldSchema } from '@ephox/boulder';
 
-  [
-    'ephox.boulder.api.FieldSchema'
-  ],
 
-  function (FieldSchema) {
-    return [
-      FieldSchema.strict('alpha'),
-      FieldSchema.strict('omega')
-    ];
-  }
-);
+
+export default <any> [
+  FieldSchema.strict('alpha'),
+  FieldSchema.strict('omega')
+];

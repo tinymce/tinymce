@@ -1,22 +1,14 @@
-define(
-  'ephox.alloy.events.EventSource',
+import { Objects } from '@ephox/boulder';
+import { Cell } from '@ephox/katamari';
 
-  [
-    'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Cell'
-  ],
+var derive = function (rawEvent, rawTarget) {
+  var source = Objects.readOptFrom(rawEvent, 'target').map(function (getTarget) {
+    return getTarget();
+  }).getOr(rawTarget);
 
-  function (Objects, Cell) {
-    var derive = function (rawEvent, rawTarget) {
-      var source = Objects.readOptFrom(rawEvent, 'target').map(function (getTarget) {
-        return getTarget();
-      }).getOr(rawTarget);
+  return Cell(source);
+};
 
-      return Cell(source);
-    };
-
-    return {
-      derive: derive
-    };
-  }
-);
+export default <any> {
+  derive: derive
+};

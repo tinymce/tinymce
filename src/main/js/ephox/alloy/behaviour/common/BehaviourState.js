@@ -1,13 +1,7 @@
-define(
-  'ephox.alloy.behaviour.common.BehaviourState',
+import { Contracts } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Contracts'
-  ],
 
-  function (Contracts) {
-    return Contracts.ensure([
-      'readState'
-    ]);
-  }
-);
+
+export default <any> Contracts.ensure([
+  'readState'
+]);

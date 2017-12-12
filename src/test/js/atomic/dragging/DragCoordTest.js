@@ -1,63 +1,58 @@
-test(
-  'DragCoordTest',
+import DragCoord from 'ephox/alloy/api/data/DragCoord';
+import { Arr } from '@ephox/katamari';
+import { Position } from '@ephox/sugar';
+import Jsc from '@ephox/wrap-jsverify';
+import { UnitTest } from '@ephox/refute';
 
-  [
-    'ephox.alloy.api.data.DragCoord',
-    'ephox.katamari.api.Arr',
-    'ephox.sugar.api.view.Position',
-    'ephox.wrap-jsverify.Jsc'
-  ],
+UnitTest.test('DragCoordTest', function() {
+  var assertPt = function (label, expected, actual) {
+    var comparing = label + '\nCoordinate Expected: (' + expected.left() + ', ' + expected.top() + ')' +
+      '\nCoordinate Actual: (' + actual.left() + ', ' + actual.top() + ')';
 
-  function (DragCoord, Arr, Position, Jsc) {
-    var assertPt = function (label, expected, actual) {
-      var comparing = label + '\nCoordinate Expected: (' + expected.left() + ', ' + expected.top() + ')' +
-        '\nCoordinate Actual: (' + actual.left() + ', ' + actual.top() + ')';
+    return Jsc.eq(expected.left(), actual.left()) &&
+      Jsc.eq(expected.top(), actual.top()) ? true : comparing;
+  };
 
-      return Jsc.eq(expected.left(), actual.left()) &&
-        Jsc.eq(expected.top(), actual.top()) ? true : comparing;
-    };
+  var arbConversions = Jsc.elements([
+    { asPoint: DragCoord.asFixed, nu: DragCoord.fixed, mode: 'fixed' },
+    { asPoint: DragCoord.asAbsolute, nu: DragCoord.absolute, mode: 'absolute' },
+    { asPoint: DragCoord.asOffset, nu: DragCoord.offset, mode: 'offset' }
+  ]);
 
-    var arbConversions = Jsc.elements([
-      { asPoint: DragCoord.asFixed, nu: DragCoord.fixed, mode: 'fixed' },
-      { asPoint: DragCoord.asAbsolute, nu: DragCoord.absolute, mode: 'absolute' },
-      { asPoint: DragCoord.asOffset, nu: DragCoord.offset, mode: 'offset' }
-    ]);
+  var arbPosition = function (name) {
+    return Jsc.tuple([ Jsc.integer, Jsc.integer ]).smap(function (arr) {
+      return Position(arr[0], arr[1]);
+    }, function (pos) {
+      return [ pos.left(), pos.top() ];
+    }, function (pos) {
+      return name + ': { left: ' + pos.left() + ', top: ' + pos.top() + '}';
+    });
+  };
 
-    var arbPosition = function (name) {
-      return Jsc.tuple([ Jsc.integer, Jsc.integer ]).smap(function (arr) {
-        return Position(arr[0], arr[1]);
-      }, function (pos) {
-        return [ pos.left(), pos.top() ];
-      }, function (pos) {
-        return name + ': { left: ' + pos.left() + ', top: ' + pos.top() + '}';
-      });
-    };
+  Jsc.property(
+    'round-tripping coordinates',
+    arbConversions,
+    Jsc.array(arbConversions),
+    arbPosition('point'),
+    arbPosition('scroll'),
+    arbPosition('origin'),
+    function (original, transformations, coord, scroll, origin) {
+      var o = original.nu(coord.left(), coord.top());
 
-    Jsc.property(
-      'round-tripping coordinates',
-      arbConversions,
-      Jsc.array(arbConversions),
-      arbPosition('point'),
-      arbPosition('scroll'),
-      arbPosition('origin'),
-      function (original, transformations, coord, scroll, origin) {
-        var o = original.nu(coord.left(), coord.top());
+      var label = [ original.mode ].concat(Arr.map(transformations, function (t) { return t.mode; }));
 
-        var label = [ original.mode ].concat(Arr.map(transformations, function (t) { return t.mode; }));
+      var result = Arr.foldl(transformations, function (b, transformation) {
+        var pt = transformation.asPoint(b, scroll, origin);
+        return transformation.nu(pt.left(), pt.top());
+      }, o);
 
-        var result = Arr.foldl(transformations, function (b, transformation) {
-          var pt = transformation.asPoint(b, scroll, origin);
-          return transformation.nu(pt.left(), pt.top());
-        }, o);
+      var output = original.asPoint(result, scroll, origin);
+      return assertPt(
+        '\n' + label,
+        coord,
+        output
+      );
+    }
+  );
+});
 
-        var output = original.asPoint(result, scroll, origin);
-        return assertPt(
-          '\n' + label,
-          coord,
-          output
-        );
-      }
-    );
-
-  }
-);

@@ -1,29 +1,19 @@
-define(
-  'ephox.alloy.menu.logic.HotspotViews',
+import Focusing from '../../api/behaviour/Focusing';
+import Sandboxing from '../../api/behaviour/Sandboxing';
+import { Fun } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.api.behaviour.Focusing',
-    'ephox.alloy.api.behaviour.Sandboxing',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option'
-  ],
+var onEscape = function (anchor, sandbox) {
 
-  function (Focusing, Sandboxing, Fun, Option) {
-    var onEscape = function (anchor, sandbox) {
-
-      Sandboxing.closeSandbox(sandbox);
-      // TODO: Move.
-      if (anchor.anchor === 'hotspot') Focusing.focus(anchor.hotspot);
-      else if (anchor.anchor === 'makeshift') {
-        anchor.onEscape(sandbox);
-      }
-      return Option.some(true);
-    };
-
-
-
-    return {
-      onEscape: onEscape
-    };
+  Sandboxing.closeSandbox(sandbox);
+  // TODO: Move.
+  if (anchor.anchor === 'hotspot') Focusing.focus(anchor.hotspot);
+  else if (anchor.anchor === 'makeshift') {
+    anchor.onEscape(sandbox);
   }
-);
+  return Option.some(true);
+};
+
+export default <any> {
+  onEscape: onEscape
+};

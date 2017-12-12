@@ -1,40 +1,32 @@
-define(
-  'ephox.alloy.navigation.KeyRules',
+import KeyMatch from './KeyMatch';
+import { Arr } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.navigation.KeyMatch',
-    'ephox.katamari.api.Arr'
-  ],
+var basic = function (key, action) {
+  return {
+    matches: KeyMatch.is(key),
+    classification: action
+  };
+};
 
-  function (KeyMatch, Arr) {
-    var basic = function (key, action) {
-      return {
-        matches: KeyMatch.is(key),
-        classification: action
-      };
-    };
+var rule = function (matches, action) {
+  return {
+    matches: matches,
+    classification: action
+  };
+};
 
-    var rule = function (matches, action) {
-      return {
-        matches: matches,
-        classification: action
-      };
-    };
+var choose = function (transitions, event) {
+  var transition = Arr.find(transitions, function (t) {
+    return t.matches(event);
+  });
 
-    var choose = function (transitions, event) {
-      var transition = Arr.find(transitions, function (t) {
-        return t.matches(event);
-      });
+  return transition.map(function (t) {
+    return t.classification;
+  });
+};
 
-      return transition.map(function (t) {
-        return t.classification;
-      });
-    };
-
-    return {
-      basic: basic,
-      rule: rule,
-      choose: choose
-    };
-  }
-);
+export default <any> {
+  basic: basic,
+  rule: rule,
+  choose: choose
+};

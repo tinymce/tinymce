@@ -1,15 +1,9 @@
-define(
-  'ephox.alloy.behaviour.dragging.DraggingBranches',
+import MouseDragging from '../../dragging/mouse/MouseDragging';
+import TouchDragging from '../../dragging/touch/TouchDragging';
 
-  [
-    'ephox.alloy.dragging.mouse.MouseDragging',
-    'ephox.alloy.dragging.touch.TouchDragging'
-  ],
 
-  function (MouseDragging, TouchDragging) {
-    return {
-      'mouse': MouseDragging,
-      'touch': TouchDragging
-    };
-  }
-);
+
+export default <any> {
+  'mouse': MouseDragging,
+  'touch': TouchDragging
+};

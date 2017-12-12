@@ -1,11 +1,5 @@
-define(
-  'ephox.alloy.positioning.view.SpotInfo',
+import { Struct } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Struct'
-  ],
 
-  function (Struct) {
-    return Struct.immutable('x', 'y', 'bubble', 'direction', 'anchors', 'label');
-  }
-);
+
+export default <any> Struct.immutable('x', 'y', 'bubble', 'direction', 'anchors', 'label');

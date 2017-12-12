@@ -1,17 +1,9 @@
-define(
-  'ephox.alloy.log.AlloyLogger',
+import Truncate from '../alien/Truncate';
 
-  [
-    'ephox.alloy.alien.Truncate'
-  ],
+var element = function (elem) {
+  return Truncate.getHtml(elem);
+};
 
-  function (Truncate) {
-    var element = function (elem) {
-      return Truncate.getHtml(elem);
-    };
-
-    return {
-      element: element
-    };
-  }
-);
+export default <any> {
+  element: element
+};

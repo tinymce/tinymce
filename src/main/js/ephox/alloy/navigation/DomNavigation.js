@@ -1,26 +1,18 @@
-define(
-  'ephox.alloy.navigation.DomNavigation',
+import Cycles from '../alien/Cycles';
+import DomPinpoint from './DomPinpoint';
+import { Fun } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.alien.Cycles',
-    'ephox.alloy.navigation.DomPinpoint',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option'
-  ],
+var horizontal = function (container, selector, current, delta) {
+  // I wonder if this will be a problem when the focused element is invisible (shouldn't happen)
+  return DomPinpoint.locateVisible(container, current, selector, Fun.constant(true)).bind(function (identified) {
+    var index = identified.index();
+    var candidates = identified.candidates();
+    var newIndex = Cycles.cycleBy(index, delta, 0, candidates.length - 1);
+    return Option.from(candidates[newIndex]);
+  });
+};
 
-  function (Cycles, DomPinpoint, Fun, Option) {
-    var horizontal = function (container, selector, current, delta) {
-      // I wonder if this will be a problem when the focused element is invisible (shouldn't happen)
-      return DomPinpoint.locateVisible(container, current, selector, Fun.constant(true)).bind(function (identified) {
-        var index = identified.index();
-        var candidates = identified.candidates();
-        var newIndex = Cycles.cycleBy(index, delta, 0, candidates.length - 1);
-        return Option.from(candidates[newIndex]);
-      });
-    };
-
-    return {
-      horizontal: horizontal
-    };
-  }
-);
+export default <any> {
+  horizontal: horizontal
+};

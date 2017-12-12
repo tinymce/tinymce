@@ -1,18 +1,12 @@
-define(
-  'ephox.alloy.api.ui.Typeahead',
+import Sketcher from './Sketcher';
+import TypeaheadSpec from '../../ui/composite/TypeaheadSpec';
+import TypeaheadSchema from '../../ui/schema/TypeaheadSchema';
 
-  [
-    'ephox.alloy.api.ui.Sketcher',
-    'ephox.alloy.ui.composite.TypeaheadSpec',
-    'ephox.alloy.ui.schema.TypeaheadSchema'
-  ],
 
-  function (Sketcher, TypeaheadSpec, TypeaheadSchema) {
-    return Sketcher.composite({
-      name: 'Typeahead',
-      configFields: TypeaheadSchema.schema(),
-      partFields: TypeaheadSchema.parts(),
-      factory: TypeaheadSpec.make
-    });
-  }
-);
+
+export default <any> Sketcher.composite({
+  name: 'Typeahead',
+  configFields: TypeaheadSchema.schema(),
+  partFields: TypeaheadSchema.parts(),
+  factory: TypeaheadSpec.make
+});

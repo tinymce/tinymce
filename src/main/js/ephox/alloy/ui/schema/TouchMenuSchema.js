@@ -1,78 +1,70 @@
-define(
-  'ephox.alloy.ui.schema.TouchMenuSchema',
+import Coupling from '../../api/behaviour/Coupling';
+import Toggling from '../../api/behaviour/Toggling';
+import Unselecting from '../../api/behaviour/Unselecting';
+import SketchBehaviours from '../../api/component/SketchBehaviours';
+import Fields from '../../data/Fields';
+import InternalSink from '../../parts/InternalSink';
+import PartType from '../../parts/PartType';
+import Layout from '../../positioning/layout/Layout';
+import { FieldSchema } from '@ephox/boulder';
+import { Fun } from '@ephox/katamari';
+import { Height } from '@ephox/sugar';
+import { Location } from '@ephox/sugar';
+import { Width } from '@ephox/sugar';
 
-  [
-    'ephox.alloy.api.behaviour.Coupling',
-    'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.behaviour.Unselecting',
-    'ephox.alloy.api.component.SketchBehaviours',
-    'ephox.alloy.data.Fields',
-    'ephox.alloy.parts.InternalSink',
-    'ephox.alloy.parts.PartType',
-    'ephox.alloy.positioning.layout.Layout',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun',
-    'ephox.sugar.api.view.Height',
-    'ephox.sugar.api.view.Location',
-    'ephox.sugar.api.view.Width'
-  ],
+var anchorAtCentre = function (component) {
+  var pos = Location.absolute(component.element());
+  var w = Width.get(component.element());
+  var h = Height.get(component.element());
+  return {
+    anchor: 'makeshift',
+    x: pos.left() + w / 2,
+    y: pos.top() + h / 2,
+    layouts: [ Layout.southmiddle, Layout.northmiddle ]
+  };
+};
 
-  function (Coupling, Toggling, Unselecting, SketchBehaviours, Fields, InternalSink, PartType, Layout, FieldSchema, Fun, Height, Location, Width) {
-    var anchorAtCentre = function (component) {
-      var pos = Location.absolute(component.element());
-      var w = Width.get(component.element());
-      var h = Height.get(component.element());
-      return {
-        anchor: 'makeshift',
-        x: pos.left() + w / 2,
-        y: pos.top() + h / 2,
-        layouts: [ Layout.southmiddle, Layout.northmiddle ]
-      };
-    };
+// Similar to dropdown.
+var schema = [
+  FieldSchema.strict('dom'),
+  FieldSchema.strict('fetch'),
+  Fields.onHandler('onOpen'),
+  Fields.onKeyboardHandler('onExecute'),
+  Fields.onHandler('onTap'),
+  Fields.onHandler('onHoverOn'),
+  Fields.onHandler('onHoverOff'),
+  Fields.onHandler('onMiss'),
+  SketchBehaviours.field('touchmenuBehaviours', [ Toggling, Unselecting, Coupling ]),
+  FieldSchema.strict('toggleClass'),
+  FieldSchema.option('lazySink'),
+  FieldSchema.option('role'),
+  FieldSchema.defaulted('eventOrder', { }),
 
-    // Similar to dropdown.
-    var schema = [
-      FieldSchema.strict('dom'),
-      FieldSchema.strict('fetch'),
-      Fields.onHandler('onOpen'),
-      Fields.onKeyboardHandler('onExecute'),
-      Fields.onHandler('onTap'),
-      Fields.onHandler('onHoverOn'),
-      Fields.onHandler('onHoverOff'),
-      Fields.onHandler('onMiss'),
-      SketchBehaviours.field('touchmenuBehaviours', [ Toggling, Unselecting, Coupling ]),
-      FieldSchema.strict('toggleClass'),
-      FieldSchema.option('lazySink'),
-      FieldSchema.option('role'),
-      FieldSchema.defaulted('eventOrder', { }),
+  Fields.onHandler('onClosed'),
 
-      Fields.onHandler('onClosed'),
+  FieldSchema.option('menuTransition'),
 
-      FieldSchema.option('menuTransition'),
+  FieldSchema.defaulted('getAnchor', anchorAtCentre)
+];
 
-      FieldSchema.defaulted('getAnchor', anchorAtCentre)
-    ];
+var partTypes = [
+  PartType.external({
+    schema: [
+      Fields.itemMarkers()
+    ],
+    name: 'menu'
+  }),
 
-    var partTypes = [
-      PartType.external({
-        schema: [
-          Fields.itemMarkers()
-        ],
-        name: 'menu'
-      }),
+  PartType.external({
+    schema: [ FieldSchema.strict('dom') ],
+    name: 'view'
+  }),
 
-      PartType.external({
-        schema: [ FieldSchema.strict('dom') ],
-        name: 'view'
-      }),
+  InternalSink.partType()
+];
 
-      InternalSink.partType()
-    ];
-
-    return {
-      name: Fun.constant('TouchMenu'),
-      schema: Fun.constant(schema),
-      parts: Fun.constant(partTypes)
-    };
-  }
-);
+export default <any> {
+  name: Fun.constant('TouchMenu'),
+  schema: Fun.constant(schema),
+  parts: Fun.constant(partTypes)
+};

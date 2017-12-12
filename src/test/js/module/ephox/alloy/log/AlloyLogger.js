@@ -1,18 +1,8 @@
-define(
-  'ephox.alloy.log.AlloyLogger',
+// Used for atomic testing where window is not available.
+var element = function (elem) {
+  return elem;
+};
 
-  [
-
-  ],
-
-  function () {
-    // Used for atomic testing where window is not available.
-    var element = function (elem) {
-      return elem;
-    };
-
-    return {
-      element: element
-    };
-  }
-);
+export default <any> {
+  element: element
+};

@@ -1,11 +1,3 @@
-define(
-  'ephox.alloy.demo.FramedView',
 
-  [
 
-  ],
-
-  function () {
-    return null;
-  }
-);
+export default <any> null;

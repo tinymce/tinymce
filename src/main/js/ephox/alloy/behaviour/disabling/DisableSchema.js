@@ -1,14 +1,8 @@
-define(
-  'ephox.alloy.behaviour.disabling.DisableSchema',
+import { FieldSchema } from '@ephox/boulder';
 
-  [
-    'ephox.boulder.api.FieldSchema'
-  ],
 
-  function (FieldSchema) {
-    return [
-      FieldSchema.defaulted('disabled', false),
-      FieldSchema.option('disableClass')
-    ];
-  }
-);
+
+export default <any> [
+  FieldSchema.defaulted('disabled', false),
+  FieldSchema.option('disableClass')
+];

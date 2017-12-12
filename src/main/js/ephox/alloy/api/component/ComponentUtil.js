@@ -1,22 +1,12 @@
-define(
-  'ephox.alloy.api.component.ComponentUtil',
+var toElem = function (component) {
+  return component.element();
+};
 
-  [
+var getByUid = function (component, uid) {
+  return component.getSystem().getByUid(uid).toOption();
+};
 
-  ],
-
-  function () {
-    var toElem = function (component) {
-      return component.element();
-    };
-
-    var getByUid = function (component, uid) {
-      return component.getSystem().getByUid(uid).toOption();
-    };
-
-    return {
-      toElem: toElem,
-      getByUid: getByUid
-    };
-  }
-);
+export default <any> {
+  toElem: toElem,
+  getByUid: getByUid
+};

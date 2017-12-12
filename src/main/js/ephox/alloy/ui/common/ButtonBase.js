@@ -1,52 +1,44 @@
-define(
-  'ephox.alloy.ui.common.ButtonBase',
+import AlloyEvents from '../../api/events/AlloyEvents';
+import AlloyTriggers from '../../api/events/AlloyTriggers';
+import NativeEvents from '../../api/events/NativeEvents';
+import SystemEvents from '../../api/events/SystemEvents';
+import { Arr } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 
-  [
-    'ephox.alloy.api.events.AlloyEvents',
-    'ephox.alloy.api.events.AlloyTriggers',
-    'ephox.alloy.api.events.NativeEvents',
-    'ephox.alloy.api.events.SystemEvents',
-    'ephox.katamari.api.Arr',
-    'ephox.sand.api.PlatformDetection'
-  ],
+var events = function (optAction) {
+  var executeHandler = function (action) {
+    return AlloyEvents.run(SystemEvents.execute(), function (component, simulatedEvent) {
+      action(component);
+      simulatedEvent.stop();
+    });
+  };
 
-  function (AlloyEvents, AlloyTriggers, NativeEvents, SystemEvents, Arr, PlatformDetection) {
-    var events = function (optAction) {
-      var executeHandler = function (action) {
-        return AlloyEvents.run(SystemEvents.execute(), function (component, simulatedEvent) {
-          action(component);
-          simulatedEvent.stop();
-        });
-      };
+  var onClick = function (component, simulatedEvent) {
+    simulatedEvent.stop();
+    AlloyTriggers.emitExecute(component);
+  };
 
-      var onClick = function (component, simulatedEvent) {
-        simulatedEvent.stop();
-        AlloyTriggers.emitExecute(component);
-      };
+  // Other mouse down listeners above this one should not get mousedown behaviour (like dragging)
+  var onMousedown = function (component, simulatedEvent) {
+    simulatedEvent.cut();
+  };
 
-      // Other mouse down listeners above this one should not get mousedown behaviour (like dragging)
-      var onMousedown = function (component, simulatedEvent) {
-        simulatedEvent.cut();
-      };
+  var pointerEvents = PlatformDetection.detect().deviceType.isTouch() ? [
+    AlloyEvents.run(SystemEvents.tap(), onClick)
+  ] : [
+    AlloyEvents.run(NativeEvents.click(), onClick),
+    AlloyEvents.run(NativeEvents.mousedown(), onMousedown)
+  ];
 
-      var pointerEvents = PlatformDetection.detect().deviceType.isTouch() ? [
-        AlloyEvents.run(SystemEvents.tap(), onClick)
-      ] : [
-        AlloyEvents.run(NativeEvents.click(), onClick),
-        AlloyEvents.run(NativeEvents.mousedown(), onMousedown)
-      ];
+  return AlloyEvents.derive(
+    Arr.flatten([
+      // Only listen to execute if it is supplied
+      optAction.map(executeHandler).toArray(),
+      pointerEvents
+    ])
+  );
+};
 
-      return AlloyEvents.derive(
-        Arr.flatten([
-          // Only listen to execute if it is supplied
-          optAction.map(executeHandler).toArray(),
-          pointerEvents
-        ])
-      );
-    };
-
-    return {
-      events: events
-    };
-  }
-);
+export default <any> {
+  events: events
+};

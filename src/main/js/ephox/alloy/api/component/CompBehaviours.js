@@ -1,38 +1,29 @@
-define(
-  'ephox.alloy.api.component.CompBehaviours',
+import BehaviourBlob from '../../behaviour/common/BehaviourBlob';
+import { Objects } from '@ephox/boulder';
+import { Arr } from '@ephox/katamari';
+import { Obj } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.behaviour.common.BehaviourBlob',
-    'ephox.boulder.api.Objects',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Obj',
-    'global!Error'
-  ],
+var getBehaviours = function (spec) {
+  var behaviours = Objects.readOptFrom(spec, 'behaviours').getOr({ });
+  var keys = Arr.filter(
+    Obj.keys(behaviours),
+    function (k) { return behaviours[k] !== undefined; }
+  );
+  return Arr.map(keys, function (k) {
+    return spec.behaviours[k].me;
+  });
+};
 
-  function (BehaviourBlob, Objects, Arr, Obj, Error) {
-    var getBehaviours = function (spec) {
-      var behaviours = Objects.readOptFrom(spec, 'behaviours').getOr({ });
-      var keys = Arr.filter(
-        Obj.keys(behaviours),
-        function (k) { return behaviours[k] !== undefined; }
-      );
-      return Arr.map(keys, function (k) {
-        return spec.behaviours[k].me;
-      });
-    };
+var generateFrom = function (spec, all) {
+  return BehaviourBlob.generateFrom(spec, all);
+};
 
-    var generateFrom = function (spec, all) {
-      return BehaviourBlob.generateFrom(spec, all);
-    };
+var generate = function (spec) {
+  var all = getBehaviours(spec);
+  return generateFrom(spec, all);
+};
 
-    var generate = function (spec) {
-      var all = getBehaviours(spec);
-      return generateFrom(spec, all);
-    };
-
-    return {
-      generate: generate,
-      generateFrom: generateFrom
-    };
-  }
-);
+export default <any> {
+  generate: generate,
+  generateFrom: generateFrom
+};

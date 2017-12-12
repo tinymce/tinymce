@@ -1,48 +1,40 @@
-define(
-  'ephox.alloy.keying.ExecutionType',
+import EditableFields from '../alien/EditableFields';
+import Keys from '../alien/Keys';
+import NoState from '../behaviour/common/NoState';
+import KeyingType from './KeyingType';
+import KeyingTypes from './KeyingTypes';
+import KeyMatch from '../navigation/KeyMatch';
+import KeyRules from '../navigation/KeyRules';
+import { FieldSchema } from '@ephox/boulder';
+import { Fun } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.alien.EditableFields',
-    'ephox.alloy.alien.Keys',
-    'ephox.alloy.behaviour.common.NoState',
-    'ephox.alloy.keying.KeyingType',
-    'ephox.alloy.keying.KeyingTypes',
-    'ephox.alloy.navigation.KeyMatch',
-    'ephox.alloy.navigation.KeyRules',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option'
-  ],
+var schema = [
+  FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
+  FieldSchema.defaulted('useSpace', false),
+  FieldSchema.defaulted('useEnter', true),
+  FieldSchema.defaulted('useControlEnter', false),
+  FieldSchema.defaulted('useDown', false)
+];
 
-  function (EditableFields, Keys, NoState, KeyingType, KeyingTypes, KeyMatch, KeyRules, FieldSchema, Fun, Option) {
-    var schema = [
-      FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
-      FieldSchema.defaulted('useSpace', false),
-      FieldSchema.defaulted('useEnter', true),
-      FieldSchema.defaulted('useControlEnter', false),
-      FieldSchema.defaulted('useDown', false)
-    ];
+var execute = function (component, simulatedEvent, executeConfig, executeState) {
+  return executeConfig.execute()(component, simulatedEvent, component.element());
+};
 
-    var execute = function (component, simulatedEvent, executeConfig, executeState) {
-      return executeConfig.execute()(component, simulatedEvent, component.element());
-    };
+var getRules = function (component, simulatedEvent, executeConfig, executeState) {
+  var spaceExec = executeConfig.useSpace() && !EditableFields.inside(component.element()) ? Keys.SPACE() : [ ];
+  var enterExec = executeConfig.useEnter() ? Keys.ENTER() : [ ];
+  var downExec = executeConfig.useDown() ? Keys.DOWN() : [ ];
+  var execKeys = spaceExec.concat(enterExec).concat(downExec);
 
-    var getRules = function (component, simulatedEvent, executeConfig, executeState) {
-      var spaceExec = executeConfig.useSpace() && !EditableFields.inside(component.element()) ? Keys.SPACE() : [ ];
-      var enterExec = executeConfig.useEnter() ? Keys.ENTER() : [ ];
-      var downExec = executeConfig.useDown() ? Keys.DOWN() : [ ];
-      var execKeys = spaceExec.concat(enterExec).concat(downExec);
+  return [
+    KeyRules.rule(KeyMatch.inSet(execKeys), execute)
+  ].concat(executeConfig.useControlEnter() ? [
+    KeyRules.rule(KeyMatch.and([ KeyMatch.isControl, KeyMatch.inSet(Keys.ENTER()) ]), execute)
+  ] : [ ]);
+};
 
-      return [
-        KeyRules.rule(KeyMatch.inSet(execKeys), execute)
-      ].concat(executeConfig.useControlEnter() ? [
-        KeyRules.rule(KeyMatch.and([ KeyMatch.isControl, KeyMatch.inSet(Keys.ENTER()) ]), execute)
-      ] : [ ]);
-    };
+var getEvents = Fun.constant({ });
+var getApis = Fun.constant({ });
 
-    var getEvents = Fun.constant({ });
-    var getApis = Fun.constant({ });
-
-    return KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.none());
-  }
-);
+export default <any> KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.none());

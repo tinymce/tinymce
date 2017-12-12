@@ -1,21 +1,13 @@
-define(
-  'ephox.alloy.behaviour.streaming.ActiveStreaming',
+import AlloyEvents from '../../api/events/AlloyEvents';
 
-  [
-    'ephox.alloy.api.events.AlloyEvents'
-  ],
+var events = function (streamConfig) {
+  var streams = streamConfig.stream().streams();
+  var processor = streams.setup(streamConfig);
+  return AlloyEvents.derive([
+    AlloyEvents.run(streamConfig.event(), processor)
+  ]);
+};
 
-  function (AlloyEvents) {
-    var events = function (streamConfig) {
-      var streams = streamConfig.stream().streams();
-      var processor = streams.setup(streamConfig);
-      return AlloyEvents.derive([
-        AlloyEvents.run(streamConfig.event(), processor)
-      ]);
-    };
-
-    return {
-      events: events
-    };
-  }
-);
+export default <any> {
+  events: events
+};

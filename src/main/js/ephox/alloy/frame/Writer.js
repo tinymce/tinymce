@@ -1,25 +1,16 @@
-define(
-  'ephox.alloy.frame.Writer',
+import Reader from './Reader';
+import { Body } from '@ephox/sugar';
 
-  [
-    'ephox.alloy.frame.Reader',
-    'ephox.sugar.api.node.Body'
-  ],
+var write = function (element, content) {
+  if (!Body.inBody(element)) throw 'Internal error: attempted to write to an iframe that is not in the DOM';
 
-  function (Reader, Body) {
+  var doc = Reader.doc(element);
+  var dom = doc.dom();
+  dom.open();
+  dom.writeln(content);
+  dom.close();
+};
 
-    var write = function (element, content) {
-      if (!Body.inBody(element)) throw 'Internal error: attempted to write to an iframe that is not in the DOM';
-
-      var doc = Reader.doc(element);
-      var dom = doc.dom();
-      dom.open();
-      dom.writeln(content);
-      dom.close();
-    };
-
-    return {
-      write: write
-    };
-  }
-);
+export default <any> {
+  write: write
+};

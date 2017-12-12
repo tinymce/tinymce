@@ -1,33 +1,27 @@
-define(
-  'ephox.alloy.behaviour.invalidating.InvalidateSchema',
+import Fields from '../../data/Fields';
+import { FieldSchema } from '@ephox/boulder';
+import { Option } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.data.Fields',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Option'
-  ],
 
-  function (Fields, FieldSchema, Option) {
-    return [
-      FieldSchema.strict('invalidClass'),
-      FieldSchema.defaulted('getRoot', Option.none),
 
-      // TODO: Completely rework the notify API
-      FieldSchema.optionObjOf('notify', [
-        FieldSchema.defaulted('aria', 'alert'),
-        // Maybe we should use something else.
-        FieldSchema.defaulted('getContainer', Option.none),
-        FieldSchema.defaulted('validHtml', ''),
-        Fields.onHandler('onValid'),
-        Fields.onHandler('onInvalid'),
-        Fields.onHandler('onValidate')
-      ]),
+export default <any> [
+  FieldSchema.strict('invalidClass'),
+  FieldSchema.defaulted('getRoot', Option.none),
 
-      FieldSchema.optionObjOf('validator', [
-        FieldSchema.strict('validate'),
-        FieldSchema.defaulted('onEvent', 'input'),
-        FieldSchema.defaulted('validateOnLoad', true)
-      ])
-    ];
-  }
-);
+  // TODO: Completely rework the notify API
+  FieldSchema.optionObjOf('notify', [
+    FieldSchema.defaulted('aria', 'alert'),
+    // Maybe we should use something else.
+    FieldSchema.defaulted('getContainer', Option.none),
+    FieldSchema.defaulted('validHtml', ''),
+    Fields.onHandler('onValid'),
+    Fields.onHandler('onInvalid'),
+    Fields.onHandler('onValidate')
+  ]),
+
+  FieldSchema.optionObjOf('validator', [
+    FieldSchema.strict('validate'),
+    FieldSchema.defaulted('onEvent', 'input'),
+    FieldSchema.defaulted('validateOnLoad', true)
+  ])
+];

@@ -1,19 +1,13 @@
-define(
-  'ephox.alloy.api.behaviour.Streaming',
+import Behaviour from './Behaviour';
+import NoState from '../../behaviour/common/NoState';
+import ActiveStreaming from '../../behaviour/streaming/ActiveStreaming';
+import StreamingSchema from '../../behaviour/streaming/StreamingSchema';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.common.NoState',
-    'ephox.alloy.behaviour.streaming.ActiveStreaming',
-    'ephox.alloy.behaviour.streaming.StreamingSchema'
-  ],
 
-  function (Behaviour, NoState, ActiveStreaming, StreamingSchema) {
-    return Behaviour.create({
-      fields: StreamingSchema,
-      name: 'streaming',
-      active: ActiveStreaming,
-      state: NoState
-    });
-  }
-);
+
+export default <any> Behaviour.create({
+  fields: StreamingSchema,
+  name: 'streaming',
+  active: ActiveStreaming,
+  state: NoState
+});

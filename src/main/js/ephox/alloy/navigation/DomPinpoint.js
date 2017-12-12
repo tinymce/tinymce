@@ -1,38 +1,30 @@
-define(
-  'ephox.alloy.navigation.DomPinpoint',
+import ArrPinpoint from './ArrPinpoint';
+import { Arr } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
+import { Compare } from '@ephox/sugar';
+import { SelectorFilter } from '@ephox/sugar';
+import { Visibility } from '@ephox/sugar';
 
-  [
-    'ephox.alloy.navigation.ArrPinpoint',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
-    'ephox.sugar.api.dom.Compare',
-    'ephox.sugar.api.search.SelectorFilter',
-    'ephox.sugar.api.view.Visibility'
-  ],
+var locateVisible = function (container, current, selector) {
+  var filter = Visibility.isVisible;
+  return locateIn(container, current, selector, filter);
+};
 
-  function (ArrPinpoint, Arr, Fun, Compare, SelectorFilter, Visibility) {
-    var locateVisible = function (container, current, selector) {
-      var filter = Visibility.isVisible;
-      return locateIn(container, current, selector, filter);
-    };
+var locateIn = function (container, current, selector, filter) {
+  var predicate = Fun.curry(Compare.eq, current);
+  var candidates = SelectorFilter.descendants(container, selector);
+  var visible = Arr.filter(candidates, Visibility.isVisible);
+  return ArrPinpoint.locate(visible, predicate);
+};
 
-    var locateIn = function (container, current, selector, filter) {
-      var predicate = Fun.curry(Compare.eq, current);
-      var candidates = SelectorFilter.descendants(container, selector);
-      var visible = Arr.filter(candidates, Visibility.isVisible);
-      return ArrPinpoint.locate(visible, predicate);
-    };
+var findIndex = function (elements, target) {
+  return Arr.findIndex(elements, function (elem) {
+    return Compare.eq(target, elem);
+  });
+};
 
-    var findIndex = function (elements, target) {
-      return Arr.findIndex(elements, function (elem) {
-        return Compare.eq(target, elem);
-      });
-    };
-
-    return {
-      locateVisible: locateVisible,
-      locateIn: locateIn,
-      findIndex: findIndex
-    };
-  }
-);
+export default <any> {
+  locateVisible: locateVisible,
+  locateIn: locateIn,
+  findIndex: findIndex
+};

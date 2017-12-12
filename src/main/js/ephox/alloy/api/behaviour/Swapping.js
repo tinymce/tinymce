@@ -1,17 +1,11 @@
-define(
-  'ephox.alloy.api.behaviour.Swapping',
+import Behaviour from './Behaviour';
+import SwapApis from '../../behaviour/swapping/SwapApis';
+import SwapSchema from '../../behaviour/swapping/SwapSchema';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.swapping.SwapApis',
-    'ephox.alloy.behaviour.swapping.SwapSchema'
-  ],
 
-  function (Behaviour, SwapApis, SwapSchema) {
-    return Behaviour.create({
-      fields: SwapSchema,
-      name: 'swapping',
-      apis: SwapApis
-    });
-  }
-);
+
+export default <any> Behaviour.create({
+  fields: SwapSchema,
+  name: 'swapping',
+  apis: SwapApis
+});

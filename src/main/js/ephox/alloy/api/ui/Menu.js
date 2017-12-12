@@ -1,18 +1,12 @@
-define(
-  'ephox.alloy.api.ui.Menu',
+import Sketcher from './Sketcher';
+import MenuSchema from '../../ui/schema/MenuSchema';
+import MenuSpec from '../../ui/single/MenuSpec';
 
-  [
-    'ephox.alloy.api.ui.Sketcher',
-    'ephox.alloy.ui.schema.MenuSchema',
-    'ephox.alloy.ui.single.MenuSpec'
-  ],
 
-  function (Sketcher, MenuSchema, MenuSpec) {
-    return Sketcher.composite({
-      name: 'Menu',
-      configFields: MenuSchema.schema(),
-      partFields: MenuSchema.parts(),
-      factory: MenuSpec.make
-    });
-  }
-);
+
+export default <any> Sketcher.composite({
+  name: 'Menu',
+  configFields: MenuSchema.schema(),
+  partFields: MenuSchema.parts(),
+  factory: MenuSpec.make
+});

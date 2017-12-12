@@ -1,19 +1,13 @@
-define(
-  'ephox.alloy.api.behaviour.Toggling',
+import Behaviour from './Behaviour';
+import ActiveToggle from '../../behaviour/toggling/ActiveToggle';
+import ToggleApis from '../../behaviour/toggling/ToggleApis';
+import ToggleSchema from '../../behaviour/toggling/ToggleSchema';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.toggling.ActiveToggle',
-    'ephox.alloy.behaviour.toggling.ToggleApis',
-    'ephox.alloy.behaviour.toggling.ToggleSchema'
-  ],
 
-  function (Behaviour, ActiveToggle, ToggleApis, ToggleSchema) {
-    return Behaviour.create({
-      fields: ToggleSchema,
-      name: 'toggling',
-      active: ActiveToggle,
-      apis: ToggleApis
-    });
-  }
-);
+
+export default <any> Behaviour.create({
+  fields: ToggleSchema,
+  name: 'toggling',
+  active: ActiveToggle,
+  apis: ToggleApis
+});

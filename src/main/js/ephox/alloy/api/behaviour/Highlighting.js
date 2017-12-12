@@ -1,18 +1,11 @@
-define(
-  'ephox.alloy.api.behaviour.Highlighting',
+import Behaviour from './Behaviour';
+import HighlightApis from '../../behaviour/highlighting/HighlightApis';
+import HighlightSchema from '../../behaviour/highlighting/HighlightSchema';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.highlighting.HighlightApis',
-    'ephox.alloy.behaviour.highlighting.HighlightSchema',
-    'global!Array'
-  ],
 
-  function (Behaviour, HighlightApis, HighlightSchema, Array) {
-    return Behaviour.create({
-      fields: HighlightSchema,
-      name: 'highlighting',
-      apis: HighlightApis
-    });
-  }
-);
+
+export default <any> Behaviour.create({
+  fields: HighlightSchema,
+  name: 'highlighting',
+  apis: HighlightApis
+});

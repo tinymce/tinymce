@@ -1,19 +1,13 @@
-define(
-  'ephox.alloy.api.behaviour.Pinching',
+import Behaviour from './Behaviour';
+import ActivePinching from '../../behaviour/pinching/ActivePinching';
+import PinchingSchema from '../../behaviour/pinching/PinchingSchema';
+import DragState from '../../dragging/common/DragState';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.pinching.ActivePinching',
-    'ephox.alloy.behaviour.pinching.PinchingSchema',
-    'ephox.alloy.dragging.common.DragState'
-  ],
 
-  function (Behaviour, ActivePinching, PinchingSchema, DragState) {
-    return Behaviour.create({
-      fields: PinchingSchema,
-      name: 'pinching',
-      active: ActivePinching,
-      state: DragState
-    });
-  }
-);
+
+export default <any> Behaviour.create({
+  fields: PinchingSchema,
+  name: 'pinching',
+  active: ActivePinching,
+  state: DragState
+});

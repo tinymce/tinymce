@@ -1,17 +1,9 @@
-define(
-  'ephox.alloy.positioning.view.Reposition',
+import { Struct } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Struct'
-  ],
+var decision = Struct.immutableBag(['x', 'y', 'width', 'height', 'maxHeight', 'direction', 'classes', 'label', 'candidateYforTest'], []);
+var css = Struct.immutable('position', 'left', 'top', 'right', 'bottom');
 
-  function (Struct) {
-    var decision = Struct.immutableBag(['x', 'y', 'width', 'height', 'maxHeight', 'direction', 'classes', 'label', 'candidateYforTest'], []);
-    var css = Struct.immutable('position', 'left', 'top', 'right', 'bottom');
-
-    return {
-      decision: decision,
-      css: css
-    };
-  }
-);
+export default <any> {
+  decision: decision,
+  css: css
+};

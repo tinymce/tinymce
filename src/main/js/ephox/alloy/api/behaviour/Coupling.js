@@ -1,19 +1,13 @@
-define(
-  'ephox.alloy.api.behaviour.Coupling',
+import Behaviour from './Behaviour';
+import CouplingApis from '../../behaviour/coupling/CouplingApis';
+import CouplingSchema from '../../behaviour/coupling/CouplingSchema';
+import CouplingState from '../../behaviour/coupling/CouplingState';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.coupling.CouplingApis',
-    'ephox.alloy.behaviour.coupling.CouplingSchema',
-    'ephox.alloy.behaviour.coupling.CouplingState'
-  ],
 
-  function (Behaviour, CouplingApis, CouplingSchema, CouplingState) {
-    return Behaviour.create({
-      fields: CouplingSchema,
-      name: 'coupling',
-      apis: CouplingApis,
-      state: CouplingState
-    });
-  }
-);
+
+export default <any> Behaviour.create({
+  fields: CouplingSchema,
+  name: 'coupling',
+  apis: CouplingApis,
+  state: CouplingState
+});

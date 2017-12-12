@@ -1,16 +1,10 @@
-define(
-  'ephox.alloy.api.behaviour.Unselecting',
+import Behaviour from './Behaviour';
+import ActiveUnselecting from '../../behaviour/unselecting/ActiveUnselecting';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.unselecting.ActiveUnselecting'
-  ],
 
-  function (Behaviour, ActiveUnselecting) {
-    return Behaviour.create({
-      fields: [ ],
-      name: 'unselecting',
-      active: ActiveUnselecting
-    });
-  }
-);
+
+export default <any> Behaviour.create({
+  fields: [ ],
+  name: 'unselecting',
+  active: ActiveUnselecting
+});

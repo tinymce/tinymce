@@ -1,60 +1,52 @@
-define(
-  'ephox.alloy.test.toolbar.TestPartialToolbarGroup',
+import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import Focusing from 'ephox/alloy/api/behaviour/Focusing';
+import Toolbar from 'ephox/alloy/api/ui/Toolbar';
+import ToolbarGroup from 'ephox/alloy/api/ui/ToolbarGroup';
+import { Arr } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
+import { Merger } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.Focusing',
-    'ephox.alloy.api.ui.Toolbar',
-    'ephox.alloy.api.ui.ToolbarGroup',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Merger'
-  ],
+var mungeItem = function (itemSpec) {
+  return Merger.deepMerge(
+    itemSpec,
+    {
+      behaviours: Behaviour.derive([
+        Focusing.config({ })
+      ])
+    }
+  );
+};
 
-  function (Behaviour, Focusing, Toolbar, ToolbarGroup, Arr, Fun, Merger) {
-    var mungeItem = function (itemSpec) {
-      return Merger.deepMerge(
-        itemSpec,
-        {
-          behaviours: Behaviour.derive([
-            Focusing.config({ })
-          ])
-        }
-      );
-    };
+var markers = {
+  itemClass: 'toolbar-item'
+};
 
-    var markers = {
-      itemClass: 'toolbar-item'
-    };
+var munge = function (spec) {
+  return {
+    dom: {
+      tag: 'div',
+      classes: [ 'test-toolbar-group' ]
+    },
+    components: [
+      ToolbarGroup.parts().items({ })
+    ],
+    items: Arr.map(spec.items, mungeItem),
+    markers: markers
+  };
+};
 
-    var munge = function (spec) {
-      return {
-        dom: {
-          tag: 'div',
-          classes: [ 'test-toolbar-group' ]
-        },
-        components: [
-          ToolbarGroup.parts().items({ })
-        ],
-        items: Arr.map(spec.items, mungeItem),
-        markers: markers
-      };
-    };
+var setGroups = function (tb, gs) {
+  var gps = createGroups(gs);
+  Toolbar.setGroups(tb, gps);
+};
 
-    var setGroups = function (tb, gs) {
-      var gps = createGroups(gs);
-      Toolbar.setGroups(tb, gps);
-    };
+var createGroups = function (gs) {
+  return Arr.map(gs, Fun.compose(ToolbarGroup.sketch, munge));
+};
 
-    var createGroups = function (gs) {
-      return Arr.map(gs, Fun.compose(ToolbarGroup.sketch, munge));
-    };
-
-    return {
-      markers: Fun.constant(markers),
-      munge: munge,
-      setGroups: setGroups,
-      createGroups: createGroups
-    };
-  }
-);
+export default <any> {
+  markers: Fun.constant(markers),
+  munge: munge,
+  setGroups: setGroups,
+  createGroups: createGroups
+};

@@ -1,19 +1,13 @@
-define(
-  'ephox.alloy.api.behaviour.Positioning',
+import Behaviour from './Behaviour';
+import ActivePosition from '../../behaviour/positioning/ActivePosition';
+import PositionApis from '../../behaviour/positioning/PositionApis';
+import PositionSchema from '../../behaviour/positioning/PositionSchema';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.positioning.ActivePosition',
-    'ephox.alloy.behaviour.positioning.PositionApis',
-    'ephox.alloy.behaviour.positioning.PositionSchema'
-  ],
 
-  function (Behaviour, ActivePosition, PositionApis, PositionSchema) {
-    return Behaviour.create({
-      fields: PositionSchema,
-      name: 'positioning',
-      active: ActivePosition,
-      apis: PositionApis
-    });
-  }
-);
+
+export default <any> Behaviour.create({
+  fields: PositionSchema,
+  name: 'positioning',
+  active: ActivePosition,
+  apis: PositionApis
+});

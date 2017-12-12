@@ -1,54 +1,46 @@
-define(
-  'ephox.alloy.sandbox.Manager',
+import { Contracts } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Contracts'
-  ],
+var contract = Contracts.exactly([
+  'clear',
+  'populate',
+  'preview',
+  'enter',
+  'isPartOf'
+]);
 
-  function (Contracts) {
-    var contract = Contracts.exactly([
-      'clear',
-      'populate',
-      'preview',
-      'enter',
-      'isPartOf'
-    ]);
+var clear = function (sandbox, sInfo) {
+  sInfo.state().get().each(function (state) {
+    sInfo.manager().clear(sandbox, state);
+  });
+};
 
-    var clear = function (sandbox, sInfo) {
-      sInfo.state().get().each(function (state) {
-        sInfo.manager().clear(sandbox, state);
-      });
-    };
+var populate = function (sandbox, sInfo, data) {
+  return sInfo.manager().populate(sandbox, data);
+};
 
-    var populate = function (sandbox, sInfo, data) {
-      return sInfo.manager().populate(sandbox, data);
-    };
+var preview = function (sandbox, sInfo) {
+  sInfo.state().get().each(function (state) {
+    sInfo.manager().preview(sandbox, state);
+  });
+};
 
-    var preview = function (sandbox, sInfo) {
-      sInfo.state().get().each(function (state) {
-        sInfo.manager().preview(sandbox, state);
-      });
-    };
+var enter = function (sandbox, sInfo) {
+  sInfo.state().get().each(function (state) {
+    sInfo.manager().enter(sandbox, state);
+  });
+};
 
-    var enter = function (sandbox, sInfo) {
-      sInfo.state().get().each(function (state) {
-        sInfo.manager().enter(sandbox, state);
-      });
-    };
+var isPartOf = function (sandbox, sInfo, queryElem) {
+  return sInfo.state().get().exists(function (state) {
+    return sInfo.manager().isPartOf(sandbox, state, queryElem);
+  });
+};
 
-    var isPartOf = function (sandbox, sInfo, queryElem) {
-      return sInfo.state().get().exists(function (state) {
-        return sInfo.manager().isPartOf(sandbox, state, queryElem);
-      });
-    };
-
-    return {
-      contract: contract,
-      clear: clear,
-      populate: populate,
-      preview: preview,
-      enter: enter,
-      isPartOf: isPartOf
-    };
-  }
-);
+export default <any> {
+  contract: contract,
+  clear: clear,
+  populate: populate,
+  preview: preview,
+  enter: enter,
+  isPartOf: isPartOf
+};

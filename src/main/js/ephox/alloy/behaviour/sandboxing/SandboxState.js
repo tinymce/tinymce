@@ -1,46 +1,38 @@
-define(
-  'ephox.alloy.behaviour.sandboxing.SandboxState',
+import BehaviourState from '../common/BehaviourState';
+import { Cell } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.behaviour.common.BehaviourState',
-    'ephox.katamari.api.Cell',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Option'
-  ],
+var init = function () {
+  var contents = Cell(Option.none());
 
-  function (BehaviourState, Cell, Fun, Option) {
-    var init = function () {
-      var contents = Cell(Option.none());
+  var readState = Fun.constant('not-implemented');
 
-      var readState = Fun.constant('not-implemented');
+  var isOpen = function () {
+    return contents.get().isSome();
+  };
 
-      var isOpen = function () {
-        return contents.get().isSome();
-      };
+  var set = function (c) {
+    contents.set(Option.some(c));
+  };
 
-      var set = function (c) {
-        contents.set(Option.some(c));
-      };
+  var get = function (c) {
+    return contents.get();
+  };
 
-      var get = function (c) {
-        return contents.get();
-      };
+  var clear = function () {
+    contents.set(Option.none());
+  };
 
-      var clear = function () {
-        contents.set(Option.none());
-      };
+  return BehaviourState({
+    readState: readState,
+    isOpen: isOpen,
+    clear: clear,
+    set: set,
+    get: get
+  });
+};
 
-      return BehaviourState({
-        readState: readState,
-        isOpen: isOpen,
-        clear: clear,
-        set: set,
-        get: get
-      });
-    };
-
-    return {
-      init: init
-    };
-  }
-);
+export default <any> {
+  init: init
+};

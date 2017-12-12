@@ -1,51 +1,42 @@
-define(
-  'ephox.alloy.api.ui.ToolbarGroup',
+import Behaviour from '../behaviour/Behaviour';
+import Keying from '../behaviour/Keying';
+import SketchBehaviours from '../component/SketchBehaviours';
+import Sketcher from './Sketcher';
+import ToolbarGroupSchema from '../../ui/schema/ToolbarGroupSchema';
+import { Merger } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.Keying',
-    'ephox.alloy.api.component.SketchBehaviours',
-    'ephox.alloy.api.ui.Sketcher',
-    'ephox.alloy.ui.schema.ToolbarGroupSchema',
-    'ephox.katamari.api.Merger',
-    'global!Error'
-  ],
-
-  function (Behaviour, Keying, SketchBehaviours, Sketcher, ToolbarGroupSchema, Merger, Error) {
-    var factory = function (detail, components, spec, _externals) {
-      return Merger.deepMerge(
-        {
-          dom: {
-            attributes: {
-              role: 'toolbar'
-            }
-          }
-        },
-        {
-          uid: detail.uid(),
-          dom: detail.dom(),
-          components: components,
-
-          behaviours: Merger.deepMerge(
-            Behaviour.derive([
-              Keying.config({
-                mode: 'flow',
-                selector: '.' + detail.markers().itemClass()
-              })
-            ]),
-            SketchBehaviours.get(detail.tgroupBehaviours())
-          ),
-
-          'debug.sketcher': spec['debug.sketcher']
+var factory = function (detail, components, spec, _externals) {
+  return Merger.deepMerge(
+    {
+      dom: {
+        attributes: {
+          role: 'toolbar'
         }
-      );
-    };
+      }
+    },
+    {
+      uid: detail.uid(),
+      dom: detail.dom(),
+      components: components,
 
-    return Sketcher.composite({
-      name: 'ToolbarGroup',
-      configFields: ToolbarGroupSchema.schema(),
-      partFields: ToolbarGroupSchema.parts(),
-      factory: factory
-    });
-  }
-);
+      behaviours: Merger.deepMerge(
+        Behaviour.derive([
+          Keying.config({
+            mode: 'flow',
+            selector: '.' + detail.markers().itemClass()
+          })
+        ]),
+        SketchBehaviours.get(detail.tgroupBehaviours())
+      ),
+
+      'debug.sketcher': spec['debug.sketcher']
+    }
+  );
+};
+
+export default <any> Sketcher.composite({
+  name: 'ToolbarGroup',
+  configFields: ToolbarGroupSchema.schema(),
+  partFields: ToolbarGroupSchema.parts(),
+  factory: factory
+});

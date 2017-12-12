@@ -1,17 +1,11 @@
-define(
-  'ephox.alloy.api.behaviour.Composing',
+import Behaviour from './Behaviour';
+import ComposeApis from '../../behaviour/composing/ComposeApis';
+import ComposeSchema from '../../behaviour/composing/ComposeSchema';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.composing.ComposeApis',
-    'ephox.alloy.behaviour.composing.ComposeSchema'
-  ],
 
-  function (Behaviour, ComposeApis, ComposeSchema) {
-    return Behaviour.create({
-      fields: ComposeSchema,
-      name: 'composing',
-      apis: ComposeApis
-    });
-  }
-);
+
+export default <any> Behaviour.create({
+  fields: ComposeSchema,
+  name: 'composing',
+  apis: ComposeApis
+});

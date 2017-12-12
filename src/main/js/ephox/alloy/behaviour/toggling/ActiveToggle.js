@@ -1,34 +1,26 @@
-define(
-  'ephox.alloy.behaviour.toggling.ActiveToggle',
+import AlloyEvents from '../../api/events/AlloyEvents';
+import Behaviour from '../common/Behaviour';
+import ToggleApis from './ToggleApis';
+import DomModification from '../../dom/DomModification';
+import { Arr } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.api.events.AlloyEvents',
-    'ephox.alloy.behaviour.common.Behaviour',
-    'ephox.alloy.behaviour.toggling.ToggleApis',
-    'ephox.alloy.dom.DomModification',
-    'ephox.katamari.api.Arr'
-  ],
+var exhibit = function (base, toggleConfig, toggleState) {
+  return DomModification.nu({ });
+};
 
-  function (AlloyEvents, Behaviour, ToggleApis, DomModification, Arr) {
-    var exhibit = function (base, toggleConfig, toggleState) {
-      return DomModification.nu({ });
-    };
+var events = function (toggleConfig, toggleState) {
+  var execute = Behaviour.executeEvent(toggleConfig, toggleState, ToggleApis.toggle);
+  var load = Behaviour.loadEvent(toggleConfig, toggleState, ToggleApis.onLoad);
 
-    var events = function (toggleConfig, toggleState) {
-      var execute = Behaviour.executeEvent(toggleConfig, toggleState, ToggleApis.toggle);
-      var load = Behaviour.loadEvent(toggleConfig, toggleState, ToggleApis.onLoad);
+  return AlloyEvents.derive(
+    Arr.flatten([
+      toggleConfig.toggleOnExecute() ? [ execute ] : [ ],
+      [ load ]
+    ])
+  );
+};
 
-      return AlloyEvents.derive(
-        Arr.flatten([
-          toggleConfig.toggleOnExecute() ? [ execute ] : [ ],
-          [ load ]
-        ])
-      );
-    };
-
-    return {
-      exhibit: exhibit,
-      events: events
-    };
-  }
-);
+export default <any> {
+  exhibit: exhibit,
+  events: events
+};

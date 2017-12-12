@@ -1,30 +1,21 @@
-define(
-  'ephox.alloy.frame.Navigation',
+import { Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+import { Traverse } from '@ephox/sugar';
 
-  [
-    'ephox.katamari.api.Option',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.search.Traverse',
-    'global!document'
-  ],
+var view = function (doc) {
+  // Only walk up to the document this script is defined in.
+  // This prevents walking up to the parent window when the editor is in an iframe.
+  var element = doc.dom() === document ?
+                  Option.none()
+                : Option.from(doc.dom().defaultView.frameElement);
+  return element.map(Element.fromDom);
+};
 
-  function (Option, Element, Traverse, document) {
-    var view = function (doc) {
-      // Only walk up to the document this script is defined in.
-      // This prevents walking up to the parent window when the editor is in an iframe.
-      var element = doc.dom() === document ?
-                      Option.none()
-                    : Option.from(doc.dom().defaultView.frameElement);
-      return element.map(Element.fromDom);
-    };
+var owner = function (element) {
+  return Traverse.owner(element);
+};
 
-    var owner = function (element) {
-      return Traverse.owner(element);
-    };
-
-    return {
-      view: view,
-      owner: owner
-    };
-  }
-);
+export default <any> {
+  view: view,
+  owner: owner
+};

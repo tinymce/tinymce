@@ -1,59 +1,52 @@
-define(
-  'ephox.alloy.demo.InspectorDemo',
+import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import Attachment from 'ephox/alloy/api/system/Attachment';
+import Gui from 'ephox/alloy/api/system/Gui';
+import Button from 'ephox/alloy/api/ui/Button';
+import Form from 'ephox/alloy/api/ui/Form';
+import Input from 'ephox/alloy/api/ui/Input';
+import Debugging from 'ephox/alloy/debugging/Debugging';
+import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+import { Body } from '@ephox/sugar';
 
-  [
-    'ephox.alloy.api.component.GuiFactory',
-    'ephox.alloy.api.system.Attachment',
-    'ephox.alloy.api.system.Gui',
-    'ephox.alloy.api.ui.Button',
-    'ephox.alloy.api.ui.Form',
-    'ephox.alloy.api.ui.Input',
-    'ephox.alloy.debugging.Debugging',
-    'ephox.alloy.demo.HtmlDisplay',
-    'ephox.sugar.api.node.Body',
-    'global!console'
-  ],
 
-  function (GuiFactory, Attachment, Gui, Button, Form, Input, Debugging, HtmlDisplay, Body, console) {
-    return function () {
-      var gui = Gui.create();
 
-      var body = Body.body();
-      Attachment.attachSystem(body, gui);
+export default <any> function () {
+  var gui = Gui.create();
 
-      Debugging.registerInspector('inspector-demo', gui);
+  var body = Body.body();
+  Attachment.attachSystem(body, gui);
 
-      HtmlDisplay.section(gui,
-        '<p>Inspect away! "Alloy" will appear in the elements panel in Chrome Developer Tools</p>' +
-        '<p>Note, the inspector is not publically available yet.</p>',
-        {
+  Debugging.registerInspector('inspector-demo', gui);
+
+  HtmlDisplay.section(gui,
+    '<p>Inspect away! "Alloy" will appear in the elements panel in Chrome Developer Tools</p>' +
+    '<p>Note, the inspector is not publically available yet.</p>',
+    {
+      dom: {
+        tag: 'div'
+      },
+      components: [
+        GuiFactory.text('This is just some text'),
+        Button.sketch({
           dom: {
-            tag: 'div'
+            tag: 'button',
+            innerHtml: 'Button'
           },
-          components: [
-            GuiFactory.text('This is just some text'),
-            Button.sketch({
-              dom: {
-                tag: 'button',
-                innerHtml: 'Button'
-              },
-              action: function () {
-                console.log('clicked on a button');
-              }
-            }),
-            Form.sketch(function (parts) {
-              return {
-                dom: {
-                  tag: 'div'
-                },
-                components: [
-                  parts.field('alpha', Input.sketch({ }))
-                ]
-              };
-            })
-          ]
-        }
-      );
-    };
-  }
-);
+          action: function () {
+            console.log('clicked on a button');
+          }
+        }),
+        Form.sketch(function (parts) {
+          return {
+            dom: {
+              tag: 'div'
+            },
+            components: [
+              parts.field('alpha', Input.sketch({ }))
+            ]
+          };
+        })
+      ]
+    }
+  );
+};

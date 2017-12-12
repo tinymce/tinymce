@@ -1,11 +1,5 @@
-define(
-  'ephox.alloy.positioning.layout.Bounds',
+import { Struct } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Struct'
-  ],
 
-  function (Struct) {
-    return Struct.immutable('x', 'y', 'width', 'height');
-  }
-);
+
+export default <any> Struct.immutable('x', 'y', 'width', 'height');

@@ -1,49 +1,41 @@
-define(
-  'ephox.alloy.sandbox.Dismissal',
+import Receiving from '../api/behaviour/Receiving';
+import Sandboxing from '../api/behaviour/Sandboxing';
+import Channels from '../api/messages/Channels';
+import { FieldSchema } from '@ephox/boulder';
+import { Objects } from '@ephox/boulder';
+import { ValueSchema } from '@ephox/boulder';
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.api.behaviour.Receiving',
-    'ephox.alloy.api.behaviour.Sandboxing',
-    'ephox.alloy.api.messages.Channels',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.katamari.api.Fun'
-  ],
+var schema = ValueSchema.objOfOnly([
+  FieldSchema.defaulted('isExtraPart', Fun.constant(false))
+]);
 
-  function (Receiving, Sandboxing, Channels, FieldSchema, Objects, ValueSchema, Fun) {
-    var schema = ValueSchema.objOfOnly([
-      FieldSchema.defaulted('isExtraPart', Fun.constant(false))
-    ]);
+var receivingConfig = function (rawSpec) {
+  var c = receiving(rawSpec);
+  return Receiving.config(c);
+};
 
-    var receivingConfig = function (rawSpec) {
-      var c = receiving(rawSpec);
-      return Receiving.config(c);
-    };
-
-    var receiving = function (rawSpec) {
-      var spec = ValueSchema.asRawOrDie('Dismissal', schema, rawSpec);
-      return {
-        channels: Objects.wrap(
-          Channels.dismissPopups(),
-          {
-            schema: ValueSchema.objOfOnly([
-              FieldSchema.strict('target')
-            ]),
-            onReceive: function (sandbox, data) {
-              if (Sandboxing.isOpen(sandbox)) {
-                var isPart = Sandboxing.isPartOf(sandbox, data.target()) || spec.isExtraPart(sandbox, data.target());
-                if (! isPart) Sandboxing.close(sandbox);
-              }
-            }
+var receiving = function (rawSpec) {
+  var spec = ValueSchema.asRawOrDie('Dismissal', schema, rawSpec);
+  return {
+    channels: Objects.wrap(
+      Channels.dismissPopups(),
+      {
+        schema: ValueSchema.objOfOnly([
+          FieldSchema.strict('target')
+        ]),
+        onReceive: function (sandbox, data) {
+          if (Sandboxing.isOpen(sandbox)) {
+            var isPart = Sandboxing.isPartOf(sandbox, data.target()) || spec.isExtraPart(sandbox, data.target());
+            if (! isPart) Sandboxing.close(sandbox);
           }
-        )
-      };
-    };
+        }
+      }
+    )
+  };
+};
 
-    return {
-      receiving: receiving,
-      receivingConfig: receivingConfig
-    };
-  }
-);
+export default <any> {
+  receiving: receiving,
+  receivingConfig: receivingConfig
+};

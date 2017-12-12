@@ -1,20 +1,14 @@
-define(
-  'ephox.alloy.api.behaviour.Focusing',
+import Behaviour from './Behaviour';
+import ActiveFocus from '../../behaviour/focusing/ActiveFocus';
+import FocusApis from '../../behaviour/focusing/FocusApis';
+import FocusSchema from '../../behaviour/focusing/FocusSchema';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.focusing.ActiveFocus',
-    'ephox.alloy.behaviour.focusing.FocusApis',
-    'ephox.alloy.behaviour.focusing.FocusSchema'
-  ],
 
-  function (Behaviour, ActiveFocus, FocusApis, FocusSchema) {
-    return Behaviour.create({
-      fields: FocusSchema,
-      name: 'focusing',
-      active: ActiveFocus,
-      apis: FocusApis
-      // Consider adding isFocused an an extra
-    });
-  }
-);
+
+export default <any> Behaviour.create({
+  fields: FocusSchema,
+  name: 'focusing',
+  active: ActiveFocus,
+  apis: FocusApis
+  // Consider adding isFocused an an extra
+});

@@ -1,13 +1,7 @@
-define(
-  'ephox.alloy.behaviour.composing.ComposeSchema',
+import { FieldSchema } from '@ephox/boulder';
 
-  [
-    'ephox.boulder.api.FieldSchema'
-  ],
 
-  function (FieldSchema) {
-    return [
-      FieldSchema.strict('find')
-    ];
-  }
-);
+
+export default <any> [
+  FieldSchema.strict('find')
+];

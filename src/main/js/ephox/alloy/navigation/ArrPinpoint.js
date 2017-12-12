@@ -1,25 +1,17 @@
-define(
-  'ephox.alloy.navigation.ArrPinpoint',
+import { Arr } from '@ephox/katamari';
+import { Struct } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Struct'
-  ],
+var indexInfo = Struct.immutableBag([ 'index', 'candidates' ], [ ]);
 
-  function (Arr, Struct) {
-    var indexInfo = Struct.immutableBag([ 'index', 'candidates' ], [ ]);
+var locate = function (candidates, predicate) {
+  return Arr.findIndex(candidates, predicate).map(function (index) {
+    return indexInfo({
+      index: index,
+      candidates: candidates
+    });
+  });
+};
 
-    var locate = function (candidates, predicate) {
-      return Arr.findIndex(candidates, predicate).map(function (index) {
-        return indexInfo({
-          index: index,
-          candidates: candidates
-        });
-      });
-    };
-
-    return {
-      locate: locate
-    };
-  }
-);
+export default <any> {
+  locate: locate
+};

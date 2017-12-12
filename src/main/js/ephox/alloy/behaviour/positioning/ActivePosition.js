@@ -1,20 +1,12 @@
-define(
-  'ephox.alloy.behaviour.positioning.ActivePosition',
+import DomModification from '../../dom/DomModification';
 
-  [
-    'ephox.alloy.dom.DomModification'
-  ],
+var exhibit = function (base, posConfig/*, posState */) {
+  return DomModification.nu({
+    classes: [ ],
+    styles: posConfig.useFixed() ? { } : { position: 'relative' }
+  });
+};
 
-  function (DomModification) {
-    var exhibit = function (base, posConfig/*, posState */) {
-      return DomModification.nu({
-        classes: [ ],
-        styles: posConfig.useFixed() ? { } : { position: 'relative' }
-      });
-    };
-
-    return {
-      exhibit: exhibit
-    };
-  }
-);
+export default <any> {
+  exhibit: exhibit
+};

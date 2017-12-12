@@ -1,25 +1,17 @@
-define(
-  'ephox.alloy.positioning.view.Anchors',
+import Styles from '../layout/Styles';
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.positioning.layout.Styles',
-    'ephox.katamari.api.Fun'
-  ],
+var south = Styles.resolve('caret-top-align');
+var north = Styles.resolve('caret-bottom-align');
+var west = Styles.resolve('caret-right-align');
+var east = Styles.resolve('caret-left-align');
+var middle = Styles.resolve('caret-middle-align');
 
-  function (Styles, Fun) {
-    var south = Styles.resolve('caret-top-align');
-    var north = Styles.resolve('caret-bottom-align');
-    var west = Styles.resolve('caret-right-align');
-    var east = Styles.resolve('caret-left-align');
-    var middle = Styles.resolve('caret-middle-align');
-
-    return {
-      east: Fun.constant(east),
-      south: Fun.constant(south),
-      west: Fun.constant(west),
-      north: Fun.constant(north),
-      middle: Fun.constant(middle),
-      all: Fun.constant([ south, north, east, west, middle ])
-    };
-  }
-);
+export default <any> {
+  east: Fun.constant(east),
+  south: Fun.constant(south),
+  west: Fun.constant(west),
+  north: Fun.constant(north),
+  middle: Fun.constant(middle),
+  all: Fun.constant([ south, north, east, west, middle ])
+};

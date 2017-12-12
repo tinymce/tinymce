@@ -1,17 +1,9 @@
-define(
-  'ephox.alloy.alien.EventRoot',
+import { Compare } from '@ephox/sugar';
 
-  [
-    'ephox.sugar.api.dom.Compare'
-  ],
+var isSource = function (component, simulatedEvent) {
+  return Compare.eq(component.element(), simulatedEvent.event().target());
+};
 
-  function (Compare) {
-    var isSource = function (component, simulatedEvent) {
-      return Compare.eq(component.element(), simulatedEvent.event().target());
-    };
-
-    return {
-      isSource: isSource
-    };
-  }
-);
+export default <any> {
+  isSource: isSource
+};

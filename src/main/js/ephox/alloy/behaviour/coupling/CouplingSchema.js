@@ -1,19 +1,12 @@
-define(
-  'ephox.alloy.behaviour.coupling.CouplingSchema',
+import { FieldSchema } from '@ephox/boulder';
+import { Objects } from '@ephox/boulder';
+import { ValueSchema } from '@ephox/boulder';
+import { Obj } from '@ephox/katamari';
+import { JSON as Json } from '@ephox/sand';
+import { Result } from '@ephox/katamari';
 
-  [
-    'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.katamari.api.Obj',
-    'ephox.sand.api.JSON',
-    'ephox.katamari.api.Result',
-    'global!Error'
-  ],
 
-  function (FieldSchema, Objects, ValueSchema, Obj, Json, Result, Error) {
-    return [
-      FieldSchema.strictOf('others', ValueSchema.setOf(Result.value, ValueSchema.anyValue()))
-    ];
-  }
-);
+
+export default <any> [
+  FieldSchema.strictOf('others', ValueSchema.setOf(Result.value, ValueSchema.anyValue()))
+];

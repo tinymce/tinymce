@@ -1,17 +1,11 @@
-define(
-  'ephox.alloy.api.behaviour.Tabstopping',
+import Behaviour from './Behaviour';
+import ActiveTabstopping from '../../behaviour/tabstopping/ActiveTabstopping';
+import TabstopSchema from '../../behaviour/tabstopping/TabstopSchema';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.tabstopping.ActiveTabstopping',
-    'ephox.alloy.behaviour.tabstopping.TabstopSchema'
-  ],
 
-  function (Behaviour, ActiveTabstopping, TabstopSchema) {
-    return Behaviour.create({
-      fields: TabstopSchema,
-      name: 'tabstopping',
-      active: ActiveTabstopping
-    });
-  }
-);
+
+export default <any> Behaviour.create({
+  fields: TabstopSchema,
+  name: 'tabstopping',
+  active: ActiveTabstopping
+});

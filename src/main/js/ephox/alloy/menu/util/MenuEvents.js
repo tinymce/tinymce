@@ -1,15 +1,7 @@
-define(
-  'ephox.alloy.menu.util.MenuEvents',
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun'
-  ],
+var focusEvent = 'alloy.menu-focus';
 
-  function (Fun) {
-    var focusEvent = 'alloy.menu-focus';
-
-    return {
-      focus: Fun.constant(focusEvent)
-    };
-  }
-);
+export default <any> {
+  focus: Fun.constant(focusEvent)
+};

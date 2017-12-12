@@ -1,106 +1,96 @@
-define(
-  'ephox.alloy.construct.CustomDefinition',
+import Fields from '../data/Fields';
+import DomDefinition from '../dom/DomDefinition';
+import DomModification from '../dom/DomModification';
+import AlloyTags from '../ephemera/AlloyTags';
+import { FieldPresence } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
+import { Objects } from '@ephox/boulder';
+import { ValueSchema } from '@ephox/boulder';
+import { Arr } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
+import { Merger } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.data.Fields',
-    'ephox.alloy.dom.DomDefinition',
-    'ephox.alloy.dom.DomModification',
-    'ephox.alloy.ephemera.AlloyTags',
-    'ephox.boulder.api.FieldPresence',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.boulder.api.Objects',
-    'ephox.boulder.api.ValueSchema',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Merger',
-    'global!Error'
-  ],
+var toInfo = function (spec) {
+  return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([
+    FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOfOnly([
+      // Note, no children.
+      FieldSchema.strict('tag'),
+      FieldSchema.defaulted('styles', {}),
+      FieldSchema.defaulted('classes', []),
+      FieldSchema.defaulted('attributes', {}),
+      FieldSchema.option('value'),
+      FieldSchema.option('innerHtml')
+    ])),
+    FieldSchema.strict('components'),
+    FieldSchema.strict('uid'),
 
-  function (Fields, DomDefinition, DomModification, AlloyTags, FieldPresence, FieldSchema, Objects, ValueSchema, Arr, Fun, Merger, Error) {
+    FieldSchema.defaulted('events', {}),
+    FieldSchema.defaulted('apis', Fun.constant({})),
 
-    var toInfo = function (spec) {
-      return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([
-        FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOfOnly([
-          // Note, no children.
-          FieldSchema.strict('tag'),
-          FieldSchema.defaulted('styles', {}),
-          FieldSchema.defaulted('classes', []),
-          FieldSchema.defaulted('attributes', {}),
-          FieldSchema.option('value'),
-          FieldSchema.option('innerHtml')
-        ])),
-        FieldSchema.strict('components'),
-        FieldSchema.strict('uid'),
+    // Use mergeWith in the future when pre-built behaviours conflict
+    FieldSchema.field(
+      'eventOrder',
+      'eventOrder',
+      FieldPresence.mergeWith({
+        // Note, not using constant behaviour names to avoid code size of unused behaviours
+        'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'toggling' ],
+        'alloy.focus': [ 'alloy.base.behaviour', 'focusing', 'keying' ],
+        'alloy.system.init': [ 'alloy.base.behaviour', 'disabling', 'toggling', 'representing' ],
+        'input': [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating' ],
+        'alloy.system.detached': [ 'alloy.base.behaviour', 'representing' ]
+      }),
+      ValueSchema.anyValue()
+    ),
 
-        FieldSchema.defaulted('events', {}),
-        FieldSchema.defaulted('apis', Fun.constant({})),
+    FieldSchema.option('domModification'),
+    Fields.snapshot('originalSpec'),
 
-        // Use mergeWith in the future when pre-built behaviours conflict
-        FieldSchema.field(
-          'eventOrder',
-          'eventOrder',
-          FieldPresence.mergeWith({
-            // Note, not using constant behaviour names to avoid code size of unused behaviours
-            'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'toggling' ],
-            'alloy.focus': [ 'alloy.base.behaviour', 'focusing', 'keying' ],
-            'alloy.system.init': [ 'alloy.base.behaviour', 'disabling', 'toggling', 'representing' ],
-            'input': [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating' ],
-            'alloy.system.detached': [ 'alloy.base.behaviour', 'representing' ]
-          }),
-          ValueSchema.anyValue()
-        ),
+    // Need to have this initially
+    FieldSchema.defaulted('debug.sketcher', 'unknown')
+  ]), spec);
+};
 
-        FieldSchema.option('domModification'),
-        Fields.snapshot('originalSpec'),
+var getUid = function (info) {
+  return Objects.wrap(AlloyTags.idAttr(), info.uid());
+};
 
-        // Need to have this initially
-        FieldSchema.defaulted('debug.sketcher', 'unknown')
-      ]), spec);
-    };
+var toDefinition = function (info) {
+  var base = {
+    tag: info.dom().tag(),
+    classes: info.dom().classes(),
+    attributes: Merger.deepMerge(
+      getUid(info),
+      info.dom().attributes()
+    ),
+    styles: info.dom().styles(),
+    domChildren: Arr.map(info.components(), function (comp) { return comp.element(); })
+  };
 
-    var getUid = function (info) {
-      return Objects.wrap(AlloyTags.idAttr(), info.uid());
-    };
+  return DomDefinition.nu(Merger.deepMerge(base,
+    info.dom().innerHtml().map(function (h) { return Objects.wrap('innerHtml', h); }).getOr({ }),
+    info.dom().value().map(function (h) { return Objects.wrap('value', h); }).getOr({ })
+  ));
+};
 
-    var toDefinition = function (info) {
-      var base = {
-        tag: info.dom().tag(),
-        classes: info.dom().classes(),
-        attributes: Merger.deepMerge(
-          getUid(info),
-          info.dom().attributes()
-        ),
-        styles: info.dom().styles(),
-        domChildren: Arr.map(info.components(), function (comp) { return comp.element(); })
-      };
+var toModification = function (info) {
+  return info.domModification().fold(function () {
+    return DomModification.nu({ });
+  }, DomModification.nu);
+};
 
-      return DomDefinition.nu(Merger.deepMerge(base,
-        info.dom().innerHtml().map(function (h) { return Objects.wrap('innerHtml', h); }).getOr({ }),
-        info.dom().value().map(function (h) { return Objects.wrap('value', h); }).getOr({ })
-      ));
-    };
+// Probably want to pass info to these at some point.
+var toApis = function (info) {
+  return info.apis();
+};
 
-    var toModification = function (info) {
-      return info.domModification().fold(function () {
-        return DomModification.nu({ });
-      }, DomModification.nu);
-    };
+var toEvents = function (info) {
+  return info.events();
+};
 
-    // Probably want to pass info to these at some point.
-    var toApis = function (info) {
-      return info.apis();
-    };
-
-    var toEvents = function (info) {
-      return info.events();
-    };
-
-    return {
-      toInfo: toInfo,
-      toDefinition: toDefinition,
-      toModification: toModification,
-      toApis: toApis,
-      toEvents: toEvents
-    };
-  }
-);
+export default <any> {
+  toInfo: toInfo,
+  toDefinition: toDefinition,
+  toModification: toModification,
+  toApis: toApis,
+  toEvents: toEvents
+};

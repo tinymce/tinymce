@@ -1,13 +1,7 @@
-define(
-  'ephox.alloy.behaviour.tabstopping.TabstopSchema',
+import { FieldSchema } from '@ephox/boulder';
 
-  [
-    'ephox.boulder.api.FieldSchema'
-  ],
 
-  function (FieldSchema) {
-    return [
-      FieldSchema.defaulted('tabAttr', 'data-alloy-tabstop')
-    ];
-  }
-);
+
+export default <any> [
+  FieldSchema.defaulted('tabAttr', 'data-alloy-tabstop')
+];

@@ -1,15 +1,9 @@
-define(
-  'ephox.alloy.keying.AcyclicType',
+import TabbingTypes from './TabbingTypes';
+import { FieldSchema } from '@ephox/boulder';
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.alloy.keying.TabbingTypes',
-    'ephox.boulder.api.FieldSchema',
-    'ephox.katamari.api.Fun'
-  ],
 
-  function (TabbingTypes, FieldSchema, Fun) {
-    return TabbingTypes.create(
-      FieldSchema.state('cyclic', Fun.constant(false))
-    );
-  }
+
+export default <any> TabbingTypes.create(
+  FieldSchema.state('cyclic', Fun.constant(false))
 );

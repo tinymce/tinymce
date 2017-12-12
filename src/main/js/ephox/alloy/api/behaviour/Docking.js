@@ -1,17 +1,11 @@
-define(
-  'ephox.alloy.api.behaviour.Docking',
+import Behaviour from './Behaviour';
+import ActiveDocking from '../../behaviour/docking/ActiveDocking';
+import DockingSchema from '../../behaviour/docking/DockingSchema';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.behaviour.docking.ActiveDocking',
-    'ephox.alloy.behaviour.docking.DockingSchema'
-  ],
 
-  function (Behaviour, ActiveDocking, DockingSchema) {
-    return Behaviour.create({
-      fields: DockingSchema,
-      name: 'docking',
-      active: ActiveDocking
-    });
-  }
-);
+
+export default <any> Behaviour.create({
+  fields: DockingSchema,
+  name: 'docking',
+  active: ActiveDocking
+});
