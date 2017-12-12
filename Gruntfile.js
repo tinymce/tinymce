@@ -24,6 +24,7 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.registerTask('default', []);
     grunt.registerTask('npmpublish', ['bedrock-auto', 'npm-publish']);
 
     grunt.loadNpmTasks('@ephox/bedrock');
