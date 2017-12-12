@@ -8,30 +8,24 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import EditorManager from 'tinymce/core/EditorManager';
+import CodePlugin from 'tinymce/plugins/code/Plugin';
+import WordCountPlugin from 'tinymce/plugins/wordcount/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
 /*eslint no-console:0 */
 
-define(
-  'tinymce.plugins.wordcount.demo.Demo',
-  [
-    'tinymce.core.EditorManager',
-    'tinymce.plugins.code.Plugin',
-    'tinymce.plugins.wordcount.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (EditorManager, CodePlugin, WordCountPlugin, ModernTheme) {
-    CodePlugin();
-    WordCountPlugin();
-    ModernTheme();
+CodePlugin();
+WordCountPlugin();
+ModernTheme();
 
-    return function () {
+export default <any> function () {
 
-      EditorManager.init({
-        selector: "textarea.tinymce",
-        theme: "modern",
-        skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        plugins: "wordcount code",
-        height: 600
-      });
-    };
-  }
-);
+  EditorManager.init({
+    selector: "textarea.tinymce",
+    theme: "modern",
+    skin_url: "../../../../../skins/lightgray/dist/lightgray",
+    plugins: "wordcount code",
+    height: 600
+  });
+};

@@ -8,19 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.wordcount.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.wordcount.api.Api',
-    'tinymce.plugins.wordcount.ui.Statusbar'
-  ],
-  function (PluginManager, Api, Statusbar) {
-    PluginManager.add('wordcount', function (editor) {
-      Statusbar.setup(editor);
-      return Api.get(editor);
-    });
+import PluginManager from 'tinymce/core/PluginManager';
+import Api from './api/Api';
+import Statusbar from './ui/Statusbar';
 
-    return function () { };
-  }
-);
+PluginManager.add('wordcount', function (editor) {
+  Statusbar.setup(editor);
+  return Api.get(editor);
+});
+
+export default <any> function () { };

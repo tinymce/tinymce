@@ -8,22 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.wordcount.text.WordCount',
-  [
-    'tinymce.plugins.wordcount.text.WordGetter'
-  ],
-  function (WordGetter) {
-    var getTextContent = function (editor) {
-      return editor.removed ? '' : editor.getBody().innerText;
-    };
+import WordGetter from './WordGetter';
 
-    var getCount = function (editor) {
-      return WordGetter.getWords(getTextContent(editor)).length;
-    };
+var getTextContent = function (editor) {
+  return editor.removed ? '' : editor.getBody().innerText;
+};
 
-    return {
-      getCount: getCount
-    };
-  }
-);
+var getCount = function (editor) {
+  return WordGetter.getWords(getTextContent(editor)).length;
+};
+
+export default <any> {
+  getCount: getCount
+};

@@ -8,24 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.wordcount.api.Api',
-  [
-    'tinymce.plugins.wordcount.text.WordCount'
-  ],
-  function (WordCount) {
-    var get = function (editor) {
-      var getCount = function () {
-        return WordCount.getCount(editor);
-      };
+import WordCount from '../text/WordCount';
 
-      return {
-        getCount: getCount
-      };
-    };
+var get = function (editor) {
+  var getCount = function () {
+    return WordCount.getCount(editor);
+  };
 
-    return {
-      get: get
-    };
-  }
-);
+  return {
+    getCount: getCount
+  };
+};
+
+export default <any> {
+  get: get
+};

@@ -7,50 +7,45 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-define(
-  'tinymce.plugins.wordcount.text.StringMapper',
-  [
-    'tinymce.plugins.wordcount.text.UnicodeData',
-    'tinymce.plugins.wordcount.alien.Arr'
-  ],
-  function (UnicodeData, Arr) {
-    var SETS = UnicodeData.SETS;
-    var OTHER = UnicodeData.characterIndices.OTHER;
 
-    var getType = function (char) {
-      var j, set, type = OTHER;
-      var setsLength = SETS.length;
-      for (j = 0; j < setsLength; ++j) {
-        set = SETS[j];
+import UnicodeData from './UnicodeData';
+import Arr from '../alien/Arr';
 
-        if (set && set.test(char)) {
-          type = j;
-          break;
-        }
-      }
-      return type;
-    };
+var SETS = UnicodeData.SETS;
+var OTHER = UnicodeData.characterIndices.OTHER;
 
-    var memoize = function (func) {
-      var cache = {};
-      return function (char) {
-        if (cache[char]) {
-          return cache[char];
-        } else {
-          var result = func(char);
-          cache[char] = result;
-          return result;
-        }
-      };
-    };
+var getType = function (char) {
+  var j, set, type = OTHER;
+  var setsLength = SETS.length;
+  for (j = 0; j < setsLength; ++j) {
+    set = SETS[j];
 
-    var classify = function (string) {
-      var memoized = memoize(getType);
-      return Arr.map(string.split(''), memoized);
-    };
-
-    return {
-      classify: classify
-    };
+    if (set && set.test(char)) {
+      type = j;
+      break;
+    }
   }
-);
+  return type;
+};
+
+var memoize = function (func) {
+  var cache = {};
+  return function (char) {
+    if (cache[char]) {
+      return cache[char];
+    } else {
+      var result = func(char);
+      cache[char] = result;
+      return result;
+    }
+  };
+};
+
+var classify = function (string) {
+  var memoized = memoize(getType);
+  return Arr.map(string.split(''), memoized);
+};
+
+export default <any> {
+  classify: classify
+};
