@@ -8,29 +8,23 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.newline.InsertNewLine',
-  [
-    'ephox.katamari.api.Fun',
-    'tinymce.core.newline.InsertBlock',
-    'tinymce.core.newline.InsertBr',
-    'tinymce.core.newline.NewLineAction'
-  ],
-  function (Fun, InsertBlock, InsertBr, NewLineAction) {
-    var insert = function (editor, evt) {
-      NewLineAction.getAction(editor, evt).fold(
-        function () {
-          InsertBr.insert(editor, evt);
-        },
-        function () {
-          InsertBlock.insert(editor, evt);
-        },
-        Fun.noop
-      );
-    };
+import { Fun } from '@ephox/katamari';
+import InsertBlock from './InsertBlock';
+import InsertBr from './InsertBr';
+import NewLineAction from './NewLineAction';
 
-    return {
-      insert: insert
-    };
-  }
-);
+var insert = function (editor, evt) {
+  NewLineAction.getAction(editor, evt).fold(
+    function () {
+      InsertBr.insert(editor, evt);
+    },
+    function () {
+      InsertBlock.insert(editor, evt);
+    },
+    Fun.noop
+  );
+};
+
+export default <any> {
+  insert: insert
+};

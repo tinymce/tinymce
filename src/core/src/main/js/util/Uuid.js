@@ -14,28 +14,22 @@
  * @class tinymce.util.Uuid
  * @private
  */
-define(
-  'tinymce.core.util.Uuid',
-  [
-  ],
-  function () {
-    var count = 0;
 
-    var seed = function () {
-      var rnd = function () {
-        return Math.round(Math.random() * 0xFFFFFFFF).toString(36);
-      };
+var count = 0;
 
-      var now = new Date().getTime();
-      return 's' + now.toString(36) + rnd() + rnd() + rnd();
-    };
+var seed = function () {
+  var rnd = function () {
+    return Math.round(Math.random() * 0xFFFFFFFF).toString(36);
+  };
 
-    var uuid = function (prefix) {
-      return prefix + (count++) + seed();
-    };
+  var now = new Date().getTime();
+  return 's' + now.toString(36) + rnd() + rnd() + rnd();
+};
 
-    return {
-      uuid: uuid
-    };
-  }
-);
+var uuid = function (prefix) {
+  return prefix + (count++) + seed();
+};
+
+export default <any> {
+  uuid: uuid
+};

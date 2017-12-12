@@ -8,23 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.selection.EventProcessRanges',
-  [
-    'ephox.katamari.api.Arr'
-  ],
-  function (Arr) {
-    var processRanges = function (editor, ranges) {
-      return Arr.map(ranges, function (range) {
-        var evt = editor.fire('GetSelectionRange', { range: range });
-        return evt.range !== range ? evt.range : range;
-      });
-    };
+import { Arr } from '@ephox/katamari';
 
-    return {
-      processRanges: processRanges
-    };
-  }
-);
+var processRanges = function (editor, ranges) {
+  return Arr.map(ranges, function (range) {
+    var evt = editor.fire('GetSelectionRange', { range: range });
+    return evt.range !== range ? evt.range : range;
+  });
+};
 
-
+export default <any> {
+  processRanges: processRanges
+};

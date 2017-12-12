@@ -8,63 +8,58 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Arr from '../util/Arr';
+import NodeType from '../dom/NodeType';
+import $ from '../dom/DomQuery';
+
 /**
  * Internal class for overriding formatting.
  *
  * @private
  * @class tinymce.fmt.Hooks
  */
-define(
-  'tinymce.core.fmt.Hooks',
-  [
-    "tinymce.core.util.Arr",
-    "tinymce.core.dom.NodeType",
-    "tinymce.core.dom.DomQuery"
-  ],
-  function (Arr, NodeType, $) {
-    var postProcessHooks = {}, filter = Arr.filter, each = Arr.each;
 
-    var addPostProcessHook = function (name, hook) {
-      var hooks = postProcessHooks[name];
+var postProcessHooks = {}, filter = Arr.filter, each = Arr.each;
 
-      if (!hooks) {
-        postProcessHooks[name] = hooks = [];
-      }
+var addPostProcessHook = function (name, hook) {
+  var hooks = postProcessHooks[name];
 
-      postProcessHooks[name].push(hook);
-    };
-
-    var postProcess = function (name, editor) {
-      each(postProcessHooks[name], function (hook) {
-        hook(editor);
-      });
-    };
-
-    addPostProcessHook("pre", function (editor) {
-      var rng = editor.selection.getRng(), isPre, blocks;
-
-      var hasPreSibling = function (pre) {
-        return isPre(pre.previousSibling) && Arr.indexOf(blocks, pre.previousSibling) !== -1;
-      };
-
-      var joinPre = function (pre1, pre2) {
-        $(pre2).remove();
-        $(pre1).append('<br><br>').append(pre2.childNodes);
-      };
-
-      isPre = NodeType.matchNodeNames('pre');
-
-      if (!rng.collapsed) {
-        blocks = editor.selection.getSelectedBlocks();
-
-        each(filter(filter(blocks, isPre), hasPreSibling), function (pre) {
-          joinPre(pre.previousSibling, pre);
-        });
-      }
-    });
-
-    return {
-      postProcess: postProcess
-    };
+  if (!hooks) {
+    postProcessHooks[name] = hooks = [];
   }
-);
+
+  postProcessHooks[name].push(hook);
+};
+
+var postProcess = function (name, editor) {
+  each(postProcessHooks[name], function (hook) {
+    hook(editor);
+  });
+};
+
+addPostProcessHook("pre", function (editor) {
+  var rng = editor.selection.getRng(), isPre, blocks;
+
+  var hasPreSibling = function (pre) {
+    return isPre(pre.previousSibling) && Arr.indexOf(blocks, pre.previousSibling) !== -1;
+  };
+
+  var joinPre = function (pre1, pre2) {
+    $(pre2).remove();
+    $(pre1).append('<br><br>').append(pre2.childNodes);
+  };
+
+  isPre = NodeType.matchNodeNames('pre');
+
+  if (!rng.collapsed) {
+    blocks = editor.selection.getSelectedBlocks();
+
+    each(filter(filter(blocks, isPre), hasPreSibling), function (pre) {
+      joinPre(pre.previousSibling, pre);
+    });
+  }
+});
+
+export default <any> {
+  postProcess: postProcess
+};

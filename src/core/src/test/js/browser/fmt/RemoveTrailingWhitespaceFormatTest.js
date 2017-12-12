@@ -1,17 +1,17 @@
-asynctest(
+import { GeneralSteps } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import { TinyUi } from '@ephox/mcagar';
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
+
+UnitTest.asynctest(
   'browser.tinymce.core.fmt.RemoveTrailingWhitespaceFormatTest',
-  [
-    'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Logger',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyUi',
-    'tinymce.plugins.link.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, TinyUi, LinkPlugin, ModernTheme) {
+  function() {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -55,3 +55,4 @@ asynctest(
     }, success, failure);
   }
 );
+

@@ -1,24 +1,22 @@
-asynctest(
+import { Assertions } from '@ephox/agar';
+import { Cursors } from '@ephox/agar';
+import { GeneralSteps } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { Waiter } from '@ephox/agar';
+import { TinyLoader } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
+import { Hierarchy } from '@ephox/sugar';
+import { Element } from '@ephox/sugar';
+import { Html } from '@ephox/sugar';
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
+
+UnitTest.asynctest(
   'browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest',
-  [
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.Cursors',
-    'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Logger',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.agar.api.Waiter',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.sand.api.PlatformDetection',
-    'ephox.sugar.api.dom.Hierarchy',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Html',
-    'global!document',
-    'global!window',
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (Assertions, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter, TinyLoader, PlatformDetection, Hierarchy, Element, Html, document, window, DOMUtils, ModernTheme) {
+  function() {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -193,3 +191,4 @@ asynctest(
     }, failure);
   }
 );
+

@@ -8,98 +8,92 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.newline.NewLineAction',
-  [
-    'ephox.katamari.api.Adt',
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Option',
-    'tinymce.core.api.Settings',
-    'tinymce.core.newline.ContextSelectors',
-    'tinymce.core.newline.NewLineUtils',
-    'tinymce.core.util.LazyEvaluator'
-  ],
-  function (Adt, Arr, Option, Settings, ContextSelectors, NewLineUtils, LazyEvaluator) {
-    var newLineAction = Adt.generate([
-      { br: [ ] },
-      { block: [ ] },
-      { none: [ ] }
-    ]);
+import { Adt } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
+import Settings from '../api/Settings';
+import ContextSelectors from './ContextSelectors';
+import NewLineUtils from './NewLineUtils';
+import LazyEvaluator from '../util/LazyEvaluator';
 
-    var shouldBlockNewLine = function (editor, shiftKey) {
-      return ContextSelectors.shouldBlockNewLine(editor);
-    };
+var newLineAction = Adt.generate([
+  { br: [ ] },
+  { block: [ ] },
+  { none: [ ] }
+]);
 
-    var isBrMode = function (requiredState) {
-      return function (editor, shiftKey) {
-        var brMode = Settings.getForcedRootBlock(editor) === '';
-        return brMode === requiredState;
-      };
-    };
+var shouldBlockNewLine = function (editor, shiftKey) {
+  return ContextSelectors.shouldBlockNewLine(editor);
+};
 
-    var inListBlock = function (requiredState) {
-      return function (editor, shiftKey) {
-        return NewLineUtils.isListItemParentBlock(editor) === requiredState;
-      };
-    };
+var isBrMode = function (requiredState) {
+  return function (editor, shiftKey) {
+    var brMode = Settings.getForcedRootBlock(editor) === '';
+    return brMode === requiredState;
+  };
+};
 
-    var inPreBlock = function (requiredState) {
-      return function (editor, shiftKey) {
-        var inPre = NewLineUtils.getParentBlockName(editor) === 'PRE';
-        return inPre === requiredState;
-      };
-    };
+var inListBlock = function (requiredState) {
+  return function (editor, shiftKey) {
+    return NewLineUtils.isListItemParentBlock(editor) === requiredState;
+  };
+};
 
-    var shouldPutBrInPre = function (requiredState) {
-      return function (editor, shiftKey) {
-        return Settings.shouldPutBrInPre(editor) === requiredState;
-      };
-    };
+var inPreBlock = function (requiredState) {
+  return function (editor, shiftKey) {
+    var inPre = NewLineUtils.getParentBlockName(editor) === 'PRE';
+    return inPre === requiredState;
+  };
+};
 
-    var inBrContext = function (editor, shiftKey) {
-      return ContextSelectors.shouldInsertBr(editor);
-    };
+var shouldPutBrInPre = function (requiredState) {
+  return function (editor, shiftKey) {
+    return Settings.shouldPutBrInPre(editor) === requiredState;
+  };
+};
 
-    var hasShiftKey = function (editor, shiftKey) {
-      return shiftKey;
-    };
+var inBrContext = function (editor, shiftKey) {
+  return ContextSelectors.shouldInsertBr(editor);
+};
 
-    var canInsertIntoEditableRoot = function (editor) {
-      var forcedRootBlock = Settings.getForcedRootBlock(editor);
-      var rootEditable = NewLineUtils.getEditableRoot(editor.dom, editor.selection.getStart());
+var hasShiftKey = function (editor, shiftKey) {
+  return shiftKey;
+};
 
-      return rootEditable && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock ? forcedRootBlock : 'P');
-    };
+var canInsertIntoEditableRoot = function (editor) {
+  var forcedRootBlock = Settings.getForcedRootBlock(editor);
+  var rootEditable = NewLineUtils.getEditableRoot(editor.dom, editor.selection.getStart());
 
-    var match = function (predicates, action) {
-      return function (editor, shiftKey) {
-        var isMatch = Arr.foldl(predicates, function (res, p) {
-          return res && p(editor, shiftKey);
-        }, true);
+  return rootEditable && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock ? forcedRootBlock : 'P');
+};
 
-        return isMatch ? Option.some(action) : Option.none();
-      };
-    };
+var match = function (predicates, action) {
+  return function (editor, shiftKey) {
+    var isMatch = Arr.foldl(predicates, function (res, p) {
+      return res && p(editor, shiftKey);
+    }, true);
 
-    var getAction = function (editor, evt) {
-      return LazyEvaluator.evaluateUntil([
-        match([shouldBlockNewLine], newLineAction.none()),
-        match([inPreBlock(true), shouldPutBrInPre(false), hasShiftKey], newLineAction.br()),
-        match([inPreBlock(true), shouldPutBrInPre(false)], newLineAction.block()),
-        match([inPreBlock(true), shouldPutBrInPre(true), hasShiftKey], newLineAction.block()),
-        match([inPreBlock(true), shouldPutBrInPre(true)], newLineAction.br()),
-        match([inListBlock(true), hasShiftKey], newLineAction.br()),
-        match([inListBlock(true)], newLineAction.block()),
-        match([isBrMode(true), hasShiftKey, canInsertIntoEditableRoot], newLineAction.block()),
-        match([isBrMode(true)], newLineAction.br()),
-        match([inBrContext], newLineAction.br()),
-        match([isBrMode(false), hasShiftKey], newLineAction.br()),
-        match([canInsertIntoEditableRoot], newLineAction.block())
-      ], [editor, evt.shiftKey]).getOr(newLineAction.none());
-    };
+    return isMatch ? Option.some(action) : Option.none();
+  };
+};
 
-    return {
-      getAction: getAction
-    };
-  }
-);
+var getAction = function (editor, evt) {
+  return LazyEvaluator.evaluateUntil([
+    match([shouldBlockNewLine], newLineAction.none()),
+    match([inPreBlock(true), shouldPutBrInPre(false), hasShiftKey], newLineAction.br()),
+    match([inPreBlock(true), shouldPutBrInPre(false)], newLineAction.block()),
+    match([inPreBlock(true), shouldPutBrInPre(true), hasShiftKey], newLineAction.block()),
+    match([inPreBlock(true), shouldPutBrInPre(true)], newLineAction.br()),
+    match([inListBlock(true), hasShiftKey], newLineAction.br()),
+    match([inListBlock(true)], newLineAction.block()),
+    match([isBrMode(true), hasShiftKey, canInsertIntoEditableRoot], newLineAction.block()),
+    match([isBrMode(true)], newLineAction.br()),
+    match([inBrContext], newLineAction.br()),
+    match([isBrMode(false), hasShiftKey], newLineAction.br()),
+    match([canInsertIntoEditableRoot], newLineAction.block())
+  ], [editor, evt.shiftKey]).getOr(newLineAction.none());
+};
+
+export default <any> {
+  getAction: getAction
+};

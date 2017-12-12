@@ -8,59 +8,53 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.keyboard.InsertSpace',
-  [
-    'ephox.katamari.api.Fun',
-    'tinymce.core.caret.CaretPosition',
-    'tinymce.core.dom.NodeType',
-    'tinymce.core.keyboard.BoundaryLocation',
-    'tinymce.core.keyboard.InlineUtils'
-  ],
-  function (Fun, CaretPosition, NodeType, BoundaryLocation, InlineUtils) {
-    var isValidInsertPoint = function (location, caretPosition) {
-      return isAtStartOrEnd(location) && NodeType.isText(caretPosition.container());
-    };
+import { Fun } from '@ephox/katamari';
+import CaretPosition from '../caret/CaretPosition';
+import NodeType from '../dom/NodeType';
+import BoundaryLocation from './BoundaryLocation';
+import InlineUtils from './InlineUtils';
 
-    var insertNbspAtPosition = function (editor, caretPosition) {
-      var container = caretPosition.container();
-      var offset = caretPosition.offset();
+var isValidInsertPoint = function (location, caretPosition) {
+  return isAtStartOrEnd(location) && NodeType.isText(caretPosition.container());
+};
 
-      container.insertData(offset, '\u00a0');
-      editor.selection.setCursorLocation(container, offset + 1);
-    };
+var insertNbspAtPosition = function (editor, caretPosition) {
+  var container = caretPosition.container();
+  var offset = caretPosition.offset();
 
-    var insertAtLocation = function (editor, caretPosition, location) {
-      if (isValidInsertPoint(location, caretPosition)) {
-        insertNbspAtPosition(editor, caretPosition);
-        return true;
-      } else {
-        return false;
-      }
-    };
+  container.insertData(offset, '\u00a0');
+  editor.selection.setCursorLocation(container, offset + 1);
+};
 
-    var insertAtCaret = function (editor) {
-      var isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
-      var caretPosition = CaretPosition.fromRangeStart(editor.selection.getRng());
-      var boundaryLocation = BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), caretPosition);
-      return boundaryLocation.map(Fun.curry(insertAtLocation, editor, caretPosition)).getOr(false);
-    };
-
-    var isAtStartOrEnd = function (location) {
-      return location.fold(
-        Fun.constant(false), // Before
-        Fun.constant(true),  // Start
-        Fun.constant(true),  // End
-        Fun.constant(false)  // After
-      );
-    };
-
-    var insertAtSelection = function (editor) {
-      return editor.selection.isCollapsed() ? insertAtCaret(editor) : false;
-    };
-
-    return {
-      insertAtSelection: insertAtSelection
-    };
+var insertAtLocation = function (editor, caretPosition, location) {
+  if (isValidInsertPoint(location, caretPosition)) {
+    insertNbspAtPosition(editor, caretPosition);
+    return true;
+  } else {
+    return false;
   }
-);
+};
+
+var insertAtCaret = function (editor) {
+  var isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
+  var caretPosition = CaretPosition.fromRangeStart(editor.selection.getRng());
+  var boundaryLocation = BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), caretPosition);
+  return boundaryLocation.map(Fun.curry(insertAtLocation, editor, caretPosition)).getOr(false);
+};
+
+var isAtStartOrEnd = function (location) {
+  return location.fold(
+    Fun.constant(false), // Before
+    Fun.constant(true),  // Start
+    Fun.constant(true),  // End
+    Fun.constant(false)  // After
+  );
+};
+
+var insertAtSelection = function (editor) {
+  return editor.selection.isCollapsed() ? insertAtCaret(editor) : false;
+};
+
+export default <any> {
+  insertAtSelection: insertAtSelection
+};

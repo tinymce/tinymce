@@ -1,73 +1,71 @@
-asynctest(
-  'browser.tinymce.core.util.ObservableTest',
-  [
-    'ephox.mcagar.api.LegacyUnit',
-    'ephox.agar.api.Pipeline',
-    'tinymce.core.util.Observable',
-    'tinymce.core.util.Tools'
-  ],
-  function (LegacyUnit, Pipeline, Observable, Tools) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
-    var suite = LegacyUnit.createSuite();
+import { LegacyUnit } from '@ephox/mcagar';
+import { Pipeline } from '@ephox/agar';
+import Observable from 'tinymce/core/util/Observable';
+import Tools from 'tinymce/core/util/Tools';
+import { UnitTest } from '@ephox/refute';
 
-    suite.test("Event bubbling/removed state", function () {
-      var lastName, lastState, data = '';
+UnitTest.asynctest('browser.tinymce.core.util.ObservableTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
+  var suite = LegacyUnit.createSuite();
 
-      var Class = function (parentObj) {
-        this.toggleNativeEvent = function (name, state) {
-          lastName = name;
-          lastState = state;
-        };
+  suite.test("Event bubbling/removed state", function () {
+    var lastName, lastState, data = '';
 
-        this.parent = function () {
-          return parentObj;
-        };
+    var Class = function (parentObj) {
+      this.toggleNativeEvent = function (name, state) {
+        lastName = name;
+        lastState = state;
       };
 
-      Tools.extend(Class.prototype, Observable);
+      this.parent = function () {
+        return parentObj;
+      };
+    };
 
-      var inst1 = new Class();
+    Tools.extend(Class.prototype, Observable);
 
-      inst1.on('click', function () {
-        data += 'a';
-      });
-      LegacyUnit.strictEqual(lastName, 'click');
-      LegacyUnit.strictEqual(lastState, true);
+    var inst1 = new Class();
 
-      lastName = lastState = null;
-      inst1.on('click', function () {
-        data += 'b';
-      });
-      LegacyUnit.strictEqual(lastName, null);
-      LegacyUnit.strictEqual(lastState, null);
+    inst1.on('click', function () {
+      data += 'a';
+    });
+    LegacyUnit.strictEqual(lastName, 'click');
+    LegacyUnit.strictEqual(lastState, true);
 
-      var inst2 = new Class(inst1);
-      inst2.on('click', function () {
-        data += 'c';
-      });
+    lastName = lastState = null;
+    inst1.on('click', function () {
+      data += 'b';
+    });
+    LegacyUnit.strictEqual(lastName, null);
+    LegacyUnit.strictEqual(lastState, null);
 
-      inst2.fire('click');
-      LegacyUnit.strictEqual(data, 'cab');
-
-      inst2.on('click', function (e) {
-        e.stopPropagation();
-      });
-
-      inst2.fire('click');
-      LegacyUnit.strictEqual(data, 'cabc');
-
-      inst1.on('remove', function () {
-        data += 'r';
-      });
-      inst1.removed = true;
-      inst1.fire('click');
-      inst1.fire('remove');
-      LegacyUnit.strictEqual(data, 'cabcr');
+    var inst2 = new Class(inst1);
+    inst2.on('click', function () {
+      data += 'c';
     });
 
-    Pipeline.async({}, suite.toSteps({}), function () {
-      success();
-    }, failure);
-  }
-);
+    inst2.fire('click');
+    LegacyUnit.strictEqual(data, 'cab');
+
+    inst2.on('click', function (e) {
+      e.stopPropagation();
+    });
+
+    inst2.fire('click');
+    LegacyUnit.strictEqual(data, 'cabc');
+
+    inst1.on('remove', function () {
+      data += 'r';
+    });
+    inst1.removed = true;
+    inst1.fire('click');
+    inst1.fire('remove');
+    LegacyUnit.strictEqual(data, 'cabcr');
+  });
+
+  Pipeline.async({}, suite.toSteps({}), function () {
+    success();
+  }, failure);
+});
+

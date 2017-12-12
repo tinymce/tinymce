@@ -8,12 +8,6 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  '{$targetId}',
-  [
-    'global!tinymce.util.Tools.resolve'
-  ],
-  function (resolve) {
-    return resolve('{$globalId}');
-  }
-);
+
+
+export default <any> resolve('{$globalId}');

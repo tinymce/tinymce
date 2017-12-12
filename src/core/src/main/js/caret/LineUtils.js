@@ -8,132 +8,127 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Fun from '../util/Fun';
+import Arr from '../util/Arr';
+import NodeType from '../dom/NodeType';
+import Dimensions from '../dom/Dimensions';
+import ClientRect from '../geom/ClientRect';
+import CaretUtils from './CaretUtils';
+import CaretCandidate from './CaretCandidate';
+
 /**
  * Utility functions for working with lines.
  *
  * @private
  * @class tinymce.caret.LineUtils
  */
-define(
-  'tinymce.core.caret.LineUtils',
-  [
-    "tinymce.core.util.Fun",
-    "tinymce.core.util.Arr",
-    "tinymce.core.dom.NodeType",
-    "tinymce.core.dom.Dimensions",
-    "tinymce.core.geom.ClientRect",
-    "tinymce.core.caret.CaretUtils",
-    "tinymce.core.caret.CaretCandidate"
-  ],
-  function (Fun, Arr, NodeType, Dimensions, ClientRect, CaretUtils, CaretCandidate) {
-    var isContentEditableFalse = NodeType.isContentEditableFalse,
-      findNode = CaretUtils.findNode,
-      curry = Fun.curry;
 
-    var distanceToRectLeft = function (clientRect, clientX) {
-      return Math.abs(clientRect.left - clientX);
-    };
+var isContentEditableFalse = NodeType.isContentEditableFalse,
+  findNode = CaretUtils.findNode,
+  curry = Fun.curry;
 
-    var distanceToRectRight = function (clientRect, clientX) {
-      return Math.abs(clientRect.right - clientX);
-    };
+var distanceToRectLeft = function (clientRect, clientX) {
+  return Math.abs(clientRect.left - clientX);
+};
 
-    var findClosestClientRect = function (clientRects, clientX) {
-      var isInside = function (clientX, clientRect) {
-        return clientX >= clientRect.left && clientX <= clientRect.right;
-      };
+var distanceToRectRight = function (clientRect, clientX) {
+  return Math.abs(clientRect.right - clientX);
+};
 
-      return Arr.reduce(clientRects, function (oldClientRect, clientRect) {
-        var oldDistance, newDistance;
+var findClosestClientRect = function (clientRects, clientX) {
+  var isInside = function (clientX, clientRect) {
+    return clientX >= clientRect.left && clientX <= clientRect.right;
+  };
 
-        oldDistance = Math.min(distanceToRectLeft(oldClientRect, clientX), distanceToRectRight(oldClientRect, clientX));
-        newDistance = Math.min(distanceToRectLeft(clientRect, clientX), distanceToRectRight(clientRect, clientX));
+  return Arr.reduce(clientRects, function (oldClientRect, clientRect) {
+    var oldDistance, newDistance;
 
-        if (isInside(clientX, clientRect)) {
-          return clientRect;
-        }
+    oldDistance = Math.min(distanceToRectLeft(oldClientRect, clientX), distanceToRectRight(oldClientRect, clientX));
+    newDistance = Math.min(distanceToRectLeft(clientRect, clientX), distanceToRectRight(clientRect, clientX));
 
-        if (isInside(clientX, oldClientRect)) {
-          return oldClientRect;
-        }
+    if (isInside(clientX, clientRect)) {
+      return clientRect;
+    }
 
-        // cE=false has higher priority
-        if (newDistance == oldDistance && isContentEditableFalse(clientRect.node)) {
-          return clientRect;
-        }
+    if (isInside(clientX, oldClientRect)) {
+      return oldClientRect;
+    }
 
-        if (newDistance < oldDistance) {
-          return clientRect;
-        }
+    // cE=false has higher priority
+    if (newDistance == oldDistance && isContentEditableFalse(clientRect.node)) {
+      return clientRect;
+    }
 
-        return oldClientRect;
-      });
-    };
+    if (newDistance < oldDistance) {
+      return clientRect;
+    }
 
-    var walkUntil = function (direction, rootNode, predicateFn, node) {
-      while ((node = findNode(node, direction, CaretCandidate.isEditableCaretCandidate, rootNode))) {
-        if (predicateFn(node)) {
-          return;
-        }
-      }
-    };
+    return oldClientRect;
+  });
+};
 
-    var findLineNodeRects = function (rootNode, targetNodeRect) {
-      var clientRects = [];
-
-      var collect = function (checkPosFn, node) {
-        var lineRects;
-
-        lineRects = Arr.filter(Dimensions.getClientRects(node), function (clientRect) {
-          return !checkPosFn(clientRect, targetNodeRect);
-        });
-
-        clientRects = clientRects.concat(lineRects);
-
-        return lineRects.length === 0;
-      };
-
-      clientRects.push(targetNodeRect);
-      walkUntil(-1, rootNode, curry(collect, ClientRect.isAbove), targetNodeRect.node);
-      walkUntil(1, rootNode, curry(collect, ClientRect.isBelow), targetNodeRect.node);
-
-      return clientRects;
-    };
-
-    var getContentEditableFalseChildren = function (rootNode) {
-      return Arr.filter(Arr.toArray(rootNode.getElementsByTagName('*')), isContentEditableFalse);
-    };
-
-    var caretInfo = function (clientRect, clientX) {
-      return {
-        node: clientRect.node,
-        before: distanceToRectLeft(clientRect, clientX) < distanceToRectRight(clientRect, clientX)
-      };
-    };
-
-    var closestCaret = function (rootNode, clientX, clientY) {
-      var contentEditableFalseNodeRects, closestNodeRect;
-
-      contentEditableFalseNodeRects = Dimensions.getClientRects(getContentEditableFalseChildren(rootNode));
-      contentEditableFalseNodeRects = Arr.filter(contentEditableFalseNodeRects, function (clientRect) {
-        return clientY >= clientRect.top && clientY <= clientRect.bottom;
-      });
-
-      closestNodeRect = findClosestClientRect(contentEditableFalseNodeRects, clientX);
-      if (closestNodeRect) {
-        closestNodeRect = findClosestClientRect(findLineNodeRects(rootNode, closestNodeRect), clientX);
-        if (closestNodeRect && isContentEditableFalse(closestNodeRect.node)) {
-          return caretInfo(closestNodeRect, clientX);
-        }
-      }
-
-      return null;
-    };
-
-    return {
-      findClosestClientRect: findClosestClientRect,
-      findLineNodeRects: findLineNodeRects,
-      closestCaret: closestCaret
-    };
+var walkUntil = function (direction, rootNode, predicateFn, node) {
+  while ((node = findNode(node, direction, CaretCandidate.isEditableCaretCandidate, rootNode))) {
+    if (predicateFn(node)) {
+      return;
+    }
   }
-);
+};
+
+var findLineNodeRects = function (rootNode, targetNodeRect) {
+  var clientRects = [];
+
+  var collect = function (checkPosFn, node) {
+    var lineRects;
+
+    lineRects = Arr.filter(Dimensions.getClientRects(node), function (clientRect) {
+      return !checkPosFn(clientRect, targetNodeRect);
+    });
+
+    clientRects = clientRects.concat(lineRects);
+
+    return lineRects.length === 0;
+  };
+
+  clientRects.push(targetNodeRect);
+  walkUntil(-1, rootNode, curry(collect, ClientRect.isAbove), targetNodeRect.node);
+  walkUntil(1, rootNode, curry(collect, ClientRect.isBelow), targetNodeRect.node);
+
+  return clientRects;
+};
+
+var getContentEditableFalseChildren = function (rootNode) {
+  return Arr.filter(Arr.toArray(rootNode.getElementsByTagName('*')), isContentEditableFalse);
+};
+
+var caretInfo = function (clientRect, clientX) {
+  return {
+    node: clientRect.node,
+    before: distanceToRectLeft(clientRect, clientX) < distanceToRectRight(clientRect, clientX)
+  };
+};
+
+var closestCaret = function (rootNode, clientX, clientY) {
+  var contentEditableFalseNodeRects, closestNodeRect;
+
+  contentEditableFalseNodeRects = Dimensions.getClientRects(getContentEditableFalseChildren(rootNode));
+  contentEditableFalseNodeRects = Arr.filter(contentEditableFalseNodeRects, function (clientRect) {
+    return clientY >= clientRect.top && clientY <= clientRect.bottom;
+  });
+
+  closestNodeRect = findClosestClientRect(contentEditableFalseNodeRects, clientX);
+  if (closestNodeRect) {
+    closestNodeRect = findClosestClientRect(findLineNodeRects(rootNode, closestNodeRect), clientX);
+    if (closestNodeRect && isContentEditableFalse(closestNodeRect.node)) {
+      return caretInfo(closestNodeRect, clientX);
+    }
+  }
+
+  return null;
+};
+
+export default <any> {
+  findClosestClientRect: findClosestClientRect,
+  findLineNodeRects: findLineNodeRects,
+  closestCaret: closestCaret
+};

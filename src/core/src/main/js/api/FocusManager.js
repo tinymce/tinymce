@@ -17,27 +17,20 @@
  *
  * @class tinymce.FocusManager
  */
-define(
-  'tinymce.core.api.FocusManager',
-  [
-    'global!document'
-  ],
-  function (document) {
-    /**
-     * Returns true if the specified element is part of the UI for example an button or text input.
-     *
-     * @static
-     * @method isEditorUIElement
-     * @param  {Element} elm Element to check if it's part of the UI or not.
-     * @return {Boolean} True/false state if the element is part of the UI or not.
-     */
-    var isEditorUIElement = function (elm) {
-      // Needs to be converted to string since svg can have focus: #6776
-      return elm.className.toString().indexOf('mce-') !== -1;
-    };
 
-    return {
-      isEditorUIElement: isEditorUIElement
-    };
-  }
-);
+/**
+ * Returns true if the specified element is part of the UI for example an button or text input.
+ *
+ * @static
+ * @method isEditorUIElement
+ * @param  {Element} elm Element to check if it's part of the UI or not.
+ * @return {Boolean} True/false state if the element is part of the UI or not.
+ */
+var isEditorUIElement = function (elm) {
+  // Needs to be converted to string since svg can have focus: #6776
+  return elm.className.toString().indexOf('mce-') !== -1;
+};
+
+export default <any> {
+  isEditorUIElement: isEditorUIElement
+};

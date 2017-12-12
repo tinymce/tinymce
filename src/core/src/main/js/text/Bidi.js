@@ -8,19 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.text.Bidi',
-  [
-  ],
-  function () {
-    var strongRtl = /[\u0591-\u07FF\uFB1D-\uFDFF\uFE70-\uFEFC]/;
+var strongRtl = /[\u0591-\u07FF\uFB1D-\uFDFF\uFE70-\uFEFC]/;
 
-    var hasStrongRtl = function (text) {
-      return strongRtl.test(text);
-    };
+var hasStrongRtl = function (text) {
+  return strongRtl.test(text);
+};
 
-    return {
-      hasStrongRtl: hasStrongRtl
-    };
-  }
-);
+export default <any> {
+  hasStrongRtl: hasStrongRtl
+};

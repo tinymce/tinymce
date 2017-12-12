@@ -1,21 +1,21 @@
-asynctest(
+import { Assertions } from '@ephox/agar';
+import { GeneralSteps } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { TinyActions } from '@ephox/mcagar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
+import WordSelection from 'tinymce/core/selection/WordSelection';
+import Zwsp from 'tinymce/core/text/Zwsp';
+import Theme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
+
+UnitTest.asynctest(
   'browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest',
-  [
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Keys',
-    'ephox.agar.api.Logger',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.mcagar.api.TinyActions',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.sand.api.PlatformDetection',
-    'tinymce.core.selection.WordSelection',
-    'tinymce.core.text.Zwsp',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (Assertions, GeneralSteps, Keys, Logger, Pipeline, Step, TinyActions, TinyApis, TinyLoader, PlatformDetection, WordSelection, Zwsp, Theme) {
+  function() {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var os = PlatformDetection.detect().os;
@@ -298,3 +298,4 @@ asynctest(
     }, success, failure);
   }
 );
+

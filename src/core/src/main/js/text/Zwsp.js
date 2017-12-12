@@ -18,26 +18,20 @@
  * var isZwsp = Zwsp.isZwsp('\uFEFF');
  * var abc = Zwsp.trim('a\uFEFFc');
  */
-define(
-  'tinymce.core.text.Zwsp',
-  [
-  ],
-  function () {
-    // This is technically not a ZWSP but a ZWNBSP or a BYTE ORDER MARK it used to be a ZWSP
-    var ZWSP = '\uFEFF';
 
-    var isZwsp = function (chr) {
-      return chr === ZWSP;
-    };
+// This is technically not a ZWSP but a ZWNBSP or a BYTE ORDER MARK it used to be a ZWSP
+var ZWSP = '\uFEFF';
 
-    var trim = function (text) {
-      return text.replace(new RegExp(ZWSP, 'g'), '');
-    };
+var isZwsp = function (chr) {
+  return chr === ZWSP;
+};
 
-    return {
-      isZwsp: isZwsp,
-      ZWSP: ZWSP,
-      trim: trim
-    };
-  }
-);
+var trim = function (text) {
+  return text.replace(new RegExp(ZWSP, 'g'), '');
+};
+
+export default <any> {
+  isZwsp: isZwsp,
+  ZWSP: ZWSP,
+  trim: trim
+};

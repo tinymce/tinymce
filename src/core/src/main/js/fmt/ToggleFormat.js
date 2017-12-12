@@ -8,26 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.fmt.ToggleFormat',
-  [
-    'tinymce.core.fmt.ApplyFormat',
-    'tinymce.core.fmt.MatchFormat',
-    'tinymce.core.fmt.RemoveFormat'
-  ],
-  function (ApplyFormat, MatchFormat, RemoveFormat) {
-    var toggle = function (editor, formats, name, vars, node) {
-      var fmt = formats.get(name);
+import ApplyFormat from './ApplyFormat';
+import MatchFormat from './MatchFormat';
+import RemoveFormat from './RemoveFormat';
 
-      if (MatchFormat.match(editor, name, vars, node) && (!('toggle' in fmt[0]) || fmt[0].toggle)) {
-        RemoveFormat.remove(editor, name, vars, node);
-      } else {
-        ApplyFormat.applyFormat(editor, name, vars, node);
-      }
-    };
+var toggle = function (editor, formats, name, vars, node) {
+  var fmt = formats.get(name);
 
-    return {
-      toggle: toggle
-    };
+  if (MatchFormat.match(editor, name, vars, node) && (!('toggle' in fmt[0]) || fmt[0].toggle)) {
+    RemoveFormat.remove(editor, name, vars, node);
+  } else {
+    ApplyFormat.applyFormat(editor, name, vars, node);
   }
-);
+};
+
+export default <any> {
+  toggle: toggle
+};

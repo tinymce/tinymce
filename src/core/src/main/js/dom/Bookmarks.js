@@ -8,31 +8,25 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.dom.Bookmarks',
-  [
-    'tinymce.core.dom.GetBookmark',
-    'tinymce.core.dom.ResolveBookmark'
-  ],
-  function (GetBookmark, ResolveBookmark) {
-    var getBookmark = function (selection, type, normalized) {
-      return GetBookmark.getBookmark(selection, type, normalized);
-    };
+import GetBookmark from './GetBookmark';
+import ResolveBookmark from './ResolveBookmark';
 
-    var moveToBookmark = function (selection, bookmark) {
-      ResolveBookmark.resolve(selection, bookmark).each(function (rng) {
-        selection.setRng(rng);
-      });
-    };
+var getBookmark = function (selection, type, normalized) {
+  return GetBookmark.getBookmark(selection, type, normalized);
+};
 
-    var isBookmarkNode = function (node) {
-      return node && node.tagName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
-    };
+var moveToBookmark = function (selection, bookmark) {
+  ResolveBookmark.resolve(selection, bookmark).each(function (rng) {
+    selection.setRng(rng);
+  });
+};
 
-    return {
-      getBookmark: getBookmark,
-      moveToBookmark: moveToBookmark,
-      isBookmarkNode: isBookmarkNode
-    };
-  }
-);
+var isBookmarkNode = function (node) {
+  return node && node.tagName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
+};
+
+export default <any> {
+  getBookmark: getBookmark,
+  moveToBookmark: moveToBookmark,
+  isBookmarkNode: isBookmarkNode
+};

@@ -1,38 +1,36 @@
-asynctest(
-  'browser.tinymce.core.keyboard.EnterKeyInlineTest',
-  [
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.Keys',
-    'ephox.agar.api.Logger',
-    'ephox.agar.api.Pipeline',
-    'ephox.katamari.api.Merger',
-    'ephox.mcagar.api.ActionChains',
-    'ephox.mcagar.api.ApiChains',
-    'ephox.mcagar.api.Editor',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (Chain, Keys, Logger, Pipeline, Merger, ActionChains, ApiChains, Editor, Theme) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+import { Chain } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Merger } from '@ephox/katamari';
+import { ActionChains } from '@ephox/mcagar';
+import { ApiChains } from '@ephox/mcagar';
+import { Editor } from '@ephox/mcagar';
+import Theme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
 
-    Theme();
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
 
-    var settings = {
-      skin_url: '/project/src/skins/lightgray/dist/lightgray',
-      inline: true
-    };
+  Theme();
 
-    Pipeline.async({}, [
-      Logger.t('Pressing shift+enter in brMode inside a h1 should insert a br', Chain.asStep({}, [
-        Editor.cFromHtml('<h1>ab</h1>', Merger.merge(settings, { forced_root_block: false })),
-        ApiChains.cFocus,
-        ApiChains.cSetCursor([0], 1),
-        ActionChains.cContentKeystroke(Keys.enter(), { shift: true }),
-        ApiChains.cAssertContent('a<br />b'),
-        Editor.cRemove
-      ]))
-    ], function () {
-      success();
-    }, failure);
-  }
-);
+  var settings = {
+    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    inline: true
+  };
+
+  Pipeline.async({}, [
+    Logger.t('Pressing shift+enter in brMode inside a h1 should insert a br', Chain.asStep({}, [
+      Editor.cFromHtml('<h1>ab</h1>', Merger.merge(settings, { forced_root_block: false })),
+      ApiChains.cFocus,
+      ApiChains.cSetCursor([0], 1),
+      ActionChains.cContentKeystroke(Keys.enter(), { shift: true }),
+      ApiChains.cAssertContent('a<br />b'),
+      Editor.cRemove
+    ]))
+  ], function () {
+    success();
+  }, failure);
+});
+

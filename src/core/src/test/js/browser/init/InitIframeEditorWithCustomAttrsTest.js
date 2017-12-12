@@ -1,17 +1,16 @@
-asynctest(
+import { Assertions } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { TinyLoader } from '@ephox/mcagar';
+import { Element } from '@ephox/sugar';
+import { Attr } from '@ephox/sugar';
+import Theme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
+
+UnitTest.asynctest(
   'browser.tinymce.core.init.InitIframeEditorWithCustomAttrsTest',
-  [
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.Logger',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.properties.Attr',
-    'global!document',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (Assertions, Logger, Pipeline, Step, TinyLoader, Element, Attr, document, Theme) {
+  function() {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -37,3 +36,4 @@ asynctest(
     }, success, failure);
   }
 );
+

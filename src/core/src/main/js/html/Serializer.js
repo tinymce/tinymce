@@ -8,6 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import Writer from './Writer';
+import Schema from './Schema';
+
 /**
  * This class is used to serialize down the DOM tree into a string using a Writer instance.
  *
@@ -17,146 +20,132 @@
  * @class tinymce.html.Serializer
  * @version 3.4
  */
-define(
-  'tinymce.core.html.Serializer',
-  [
-    "tinymce.core.html.Writer",
-    "tinymce.core.html.Schema"
-  ],
-  function (Writer, Schema) {
-    /**
-     * Constructs a new Serializer instance.
-     *
-     * @constructor
-     * @method Serializer
-     * @param {Object} settings Name/value settings object.
-     * @param {tinymce.html.Schema} schema Schema instance to use.
-     */
-    return function (settings, schema) {
-      var self = this, writer = new Writer(settings);
 
-      settings = settings || {};
-      settings.validate = "validate" in settings ? settings.validate : true;
 
-      self.schema = schema = schema || new Schema();
-      self.writer = writer;
 
-      /**
-       * Serializes the specified node into a string.
-       *
-       * @example
-       * new tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse('<p>text</p>'));
-       * @method serialize
-       * @param {tinymce.html.Node} node Node instance to serialize.
-       * @return {String} String with HTML based on DOM tree.
-       */
-      self.serialize = function (node) {
-        var handlers, validate;
+export default <any> function (settings, schema) {
+  var self = this, writer = new Writer(settings);
 
-        validate = settings.validate;
+  settings = settings || {};
+  settings.validate = "validate" in settings ? settings.validate : true;
 
-        handlers = {
-          // #text
-          3: function (node) {
-            writer.text(node.value, node.raw);
-          },
+  self.schema = schema = schema || new Schema();
+  self.writer = writer;
 
-          // #comment
-          8: function (node) {
-            writer.comment(node.value);
-          },
+  /**
+   * Serializes the specified node into a string.
+   *
+   * @example
+   * new tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse('<p>text</p>'));
+   * @method serialize
+   * @param {tinymce.html.Node} node Node instance to serialize.
+   * @return {String} String with HTML based on DOM tree.
+   */
+  self.serialize = function (node) {
+    var handlers, validate;
 
-          // Processing instruction
-          7: function (node) {
-            writer.pi(node.name, node.value);
-          },
+    validate = settings.validate;
 
-          // Doctype
-          10: function (node) {
-            writer.doctype(node.value);
-          },
+    handlers = {
+      // #text
+      3: function (node) {
+        writer.text(node.value, node.raw);
+      },
 
-          // CDATA
-          4: function (node) {
-            writer.cdata(node.value);
-          },
+      // #comment
+      8: function (node) {
+        writer.comment(node.value);
+      },
 
-          // Document fragment
-          11: function (node) {
-            if ((node = node.firstChild)) {
-              do {
-                walk(node);
-              } while ((node = node.next));
-            }
-          }
-        };
+      // Processing instruction
+      7: function (node) {
+        writer.pi(node.name, node.value);
+      },
 
-        writer.reset();
+      // Doctype
+      10: function (node) {
+        writer.doctype(node.value);
+      },
 
-        var walk = function (node) {
-          var handler = handlers[node.type], name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
+      // CDATA
+      4: function (node) {
+        writer.cdata(node.value);
+      },
 
-          if (!handler) {
-            name = node.name;
-            isEmpty = node.shortEnded;
-            attrs = node.attributes;
+      // Document fragment
+      11: function (node) {
+        if ((node = node.firstChild)) {
+          do {
+            walk(node);
+          } while ((node = node.next));
+        }
+      }
+    };
 
-            // Sort attributes
-            if (validate && attrs && attrs.length > 1) {
-              sortedAttrs = [];
-              sortedAttrs.map = {};
+    writer.reset();
 
-              elementRule = schema.getElementRule(node.name);
-              if (elementRule) {
-                for (i = 0, l = elementRule.attributesOrder.length; i < l; i++) {
-                  attrName = elementRule.attributesOrder[i];
+    var walk = function (node) {
+      var handler = handlers[node.type], name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
 
-                  if (attrName in attrs.map) {
-                    attrValue = attrs.map[attrName];
-                    sortedAttrs.map[attrName] = attrValue;
-                    sortedAttrs.push({ name: attrName, value: attrValue });
-                  }
-                }
+      if (!handler) {
+        name = node.name;
+        isEmpty = node.shortEnded;
+        attrs = node.attributes;
 
-                for (i = 0, l = attrs.length; i < l; i++) {
-                  attrName = attrs[i].name;
+        // Sort attributes
+        if (validate && attrs && attrs.length > 1) {
+          sortedAttrs = [];
+          sortedAttrs.map = {};
 
-                  if (!(attrName in sortedAttrs.map)) {
-                    attrValue = attrs.map[attrName];
-                    sortedAttrs.map[attrName] = attrValue;
-                    sortedAttrs.push({ name: attrName, value: attrValue });
-                  }
-                }
+          elementRule = schema.getElementRule(node.name);
+          if (elementRule) {
+            for (i = 0, l = elementRule.attributesOrder.length; i < l; i++) {
+              attrName = elementRule.attributesOrder[i];
 
-                attrs = sortedAttrs;
+              if (attrName in attrs.map) {
+                attrValue = attrs.map[attrName];
+                sortedAttrs.map[attrName] = attrValue;
+                sortedAttrs.push({ name: attrName, value: attrValue });
               }
             }
 
-            writer.start(node.name, attrs, isEmpty);
+            for (i = 0, l = attrs.length; i < l; i++) {
+              attrName = attrs[i].name;
 
-            if (!isEmpty) {
-              if ((node = node.firstChild)) {
-                do {
-                  walk(node);
-                } while ((node = node.next));
+              if (!(attrName in sortedAttrs.map)) {
+                attrValue = attrs.map[attrName];
+                sortedAttrs.map[attrName] = attrValue;
+                sortedAttrs.push({ name: attrName, value: attrValue });
               }
-
-              writer.end(name);
             }
-          } else {
-            handler(node);
-          }
-        };
 
-        // Serialize element and treat all non elements as fragments
-        if (node.type == 1 && !settings.inner) {
-          walk(node);
-        } else {
-          handlers[11](node);
+            attrs = sortedAttrs;
+          }
         }
 
-        return writer.getContent();
-      };
+        writer.start(node.name, attrs, isEmpty);
+
+        if (!isEmpty) {
+          if ((node = node.firstChild)) {
+            do {
+              walk(node);
+            } while ((node = node.next));
+          }
+
+          writer.end(name);
+        }
+      } else {
+        handler(node);
+      }
     };
-  }
-);
+
+    // Serialize element and treat all non elements as fragments
+    if (node.type == 1 && !settings.inner) {
+      walk(node);
+    } else {
+      handlers[11](node);
+    }
+
+    return writer.getContent();
+  };
+};

@@ -8,35 +8,31 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.util.JSONP',
-  [
-    "tinymce.core.dom.DOMUtils"
-  ],
-  function (DOMUtils) {
-    return {
-      callbacks: {},
-      count: 0,
+import DOMUtils from '../dom/DOMUtils';
 
-      send: function (settings) {
-        var self = this, dom = DOMUtils.DOM, count = settings.count !== undefined ? settings.count : self.count;
-        var id = 'tinymce_jsonp_' + count;
 
-        self.callbacks[count] = function (json) {
-          dom.remove(id);
-          delete self.callbacks[count];
 
-          settings.callback(json);
-        };
+export default <any> {
+  callbacks: {},
+  count: 0,
 
-        dom.add(dom.doc.body, 'script', {
-          id: id,
-          src: settings.url,
-          type: 'text/javascript'
-        });
+  send: function (settings) {
+    var self = this, dom = DOMUtils.DOM, count = settings.count !== undefined ? settings.count : self.count;
+    var id = 'tinymce_jsonp_' + count;
 
-        self.count++;
-      }
+    self.callbacks[count] = function (json) {
+      dom.remove(id);
+      delete self.callbacks[count];
+
+      settings.callback(json);
     };
+
+    dom.add(dom.doc.body, 'script', {
+      id: id,
+      src: settings.url,
+      type: 'text/javascript'
+    });
+
+    self.count++;
   }
-);
+};

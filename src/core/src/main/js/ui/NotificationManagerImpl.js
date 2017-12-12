@@ -8,22 +8,17 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.ui.NotificationManagerImpl',
-  [
-  ],
-  function () {
-    return function () {
-      var unimplemented = function () {
-        throw new Error('Theme did not provide a NotificationManager implementation.');
-      };
 
-      return {
-        open: unimplemented,
-        close: unimplemented,
-        reposition: unimplemented,
-        getArgs: unimplemented
-      };
-    };
-  }
-);
+
+export default <any> function () {
+  var unimplemented = function () {
+    throw new Error('Theme did not provide a NotificationManager implementation.');
+  };
+
+  return {
+    open: unimplemented,
+    close: unimplemented,
+    reposition: unimplemented,
+    getArgs: unimplemented
+  };
+};

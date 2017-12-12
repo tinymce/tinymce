@@ -8,55 +8,49 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.dom.TrimHtml',
-  [
-    'tinymce.core.html.SaxParser',
-    'tinymce.core.text.Zwsp'
-  ],
-  function (SaxParser, Zwsp) {
-    var trimHtml = function (tempAttrs, html) {
-      var trimContentRegExp = new RegExp([
-        '\\s?(' + tempAttrs.join('|') + ')="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
-      ].join('|'), 'gi');
+import SaxParser from '../html/SaxParser';
+import Zwsp from '../text/Zwsp';
 
-      return html.replace(trimContentRegExp, '');
-    };
+var trimHtml = function (tempAttrs, html) {
+  var trimContentRegExp = new RegExp([
+    '\\s?(' + tempAttrs.join('|') + ')="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
+  ].join('|'), 'gi');
 
-    var trimInternal = function (serializer, html) {
-      var content = html;
-      var bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
-      var endTagIndex, index, matchLength, matches, shortEndedElements;
-      var schema = serializer.schema;
+  return html.replace(trimContentRegExp, '');
+};
 
-      content = trimHtml(serializer.getTempAttrs(), content);
-      shortEndedElements = schema.getShortEndedElements();
+var trimInternal = function (serializer, html) {
+  var content = html;
+  var bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
+  var endTagIndex, index, matchLength, matches, shortEndedElements;
+  var schema = serializer.schema;
 
-      // Remove all bogus elements marked with "all"
-      while ((matches = bogusAllRegExp.exec(content))) {
-        index = bogusAllRegExp.lastIndex;
-        matchLength = matches[0].length;
+  content = trimHtml(serializer.getTempAttrs(), content);
+  shortEndedElements = schema.getShortEndedElements();
 
-        if (shortEndedElements[matches[1]]) {
-          endTagIndex = index;
-        } else {
-          endTagIndex = SaxParser.findEndTag(schema, content, index);
-        }
+  // Remove all bogus elements marked with "all"
+  while ((matches = bogusAllRegExp.exec(content))) {
+    index = bogusAllRegExp.lastIndex;
+    matchLength = matches[0].length;
 
-        content = content.substring(0, index - matchLength) + content.substring(endTagIndex);
-        bogusAllRegExp.lastIndex = index - matchLength;
-      }
+    if (shortEndedElements[matches[1]]) {
+      endTagIndex = index;
+    } else {
+      endTagIndex = SaxParser.findEndTag(schema, content, index);
+    }
 
-      return content;
-    };
-
-    var trimExternal = function (serializer, html) {
-      return Zwsp.trim(trimInternal(serializer, html));
-    };
-
-    return {
-      trimExternal: trimExternal,
-      trimInternal: trimInternal
-    };
+    content = content.substring(0, index - matchLength) + content.substring(endTagIndex);
+    bogusAllRegExp.lastIndex = index - matchLength;
   }
-);
+
+  return content;
+};
+
+var trimExternal = function (serializer, html) {
+  return Zwsp.trim(trimInternal(serializer, html));
+};
+
+export default <any> {
+  trimExternal: trimExternal,
+  trimInternal: trimInternal
+};

@@ -8,32 +8,26 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.keyboard.SpaceKey',
-  [
-    'tinymce.core.keyboard.InsertSpace',
-    'tinymce.core.keyboard.MatchKeys',
-    'tinymce.core.util.VK'
-  ],
-  function (InsertSpace, MatchKeys, VK) {
-    var executeKeydownOverride = function (editor, evt) {
-      MatchKeys.execute([
-        { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertAtSelection, editor) }
-      ], evt).each(function (_) {
-        evt.preventDefault();
-      });
-    };
+import InsertSpace from './InsertSpace';
+import MatchKeys from './MatchKeys';
+import VK from '../util/VK';
 
-    var setup = function (editor) {
-      editor.on('keydown', function (evt) {
-        if (evt.isDefaultPrevented() === false) {
-          executeKeydownOverride(editor, evt);
-        }
-      });
-    };
+var executeKeydownOverride = function (editor, evt) {
+  MatchKeys.execute([
+    { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertAtSelection, editor) }
+  ], evt).each(function (_) {
+    evt.preventDefault();
+  });
+};
 
-    return {
-      setup: setup
-    };
-  }
-);
+var setup = function (editor) {
+  editor.on('keydown', function (evt) {
+    if (evt.isDefaultPrevented() === false) {
+      executeKeydownOverride(editor, evt);
+    }
+  });
+};
+
+export default <any> {
+  setup: setup
+};

@@ -8,80 +8,73 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.selection.SelectionRestore',
-  [
-    'ephox.katamari.api.Throttler',
-    'ephox.sand.api.PlatformDetection',
-    'global!document',
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.core.selection.SelectionBookmark'
-  ],
-  function (Throttler, PlatformDetection, document, DOMUtils, SelectionBookmark) {
-    var isManualNodeChange = function (e) {
-      return e.type === 'nodechange' && e.selectionChange;
-    };
+import { Throttler } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+import DOMUtils from '../dom/DOMUtils';
+import SelectionBookmark from './SelectionBookmark';
 
-    var registerPageMouseUp = function (editor, throttledStore) {
-      var mouseUpPage = function () {
-        throttledStore.throttle();
-      };
+var isManualNodeChange = function (e) {
+  return e.type === 'nodechange' && e.selectionChange;
+};
 
-      DOMUtils.DOM.bind(document, 'mouseup', mouseUpPage);
+var registerPageMouseUp = function (editor, throttledStore) {
+  var mouseUpPage = function () {
+    throttledStore.throttle();
+  };
 
-      editor.on('remove', function () {
-        DOMUtils.DOM.unbind(document, 'mouseup', mouseUpPage);
-      });
-    };
+  DOMUtils.DOM.bind(document, 'mouseup', mouseUpPage);
 
-    var registerFocusOut = function (editor) {
-      editor.on('focusout', function () {
-        SelectionBookmark.store(editor);
-      });
-    };
+  editor.on('remove', function () {
+    DOMUtils.DOM.unbind(document, 'mouseup', mouseUpPage);
+  });
+};
 
-    var registerMouseUp = function (editor, throttledStore) {
-      editor.on('mouseup touchend', function (e) {
-        throttledStore.throttle();
-      });
-    };
+var registerFocusOut = function (editor) {
+  editor.on('focusout', function () {
+    SelectionBookmark.store(editor);
+  });
+};
 
-    var registerEditorEvents = function (editor, throttledStore) {
-      var browser = PlatformDetection.detect().browser;
+var registerMouseUp = function (editor, throttledStore) {
+  editor.on('mouseup touchend', function (e) {
+    throttledStore.throttle();
+  });
+};
 
-      if (browser.isIE() || browser.isEdge()) {
-        registerFocusOut(editor);
-      } else {
-        registerMouseUp(editor, throttledStore);
-      }
+var registerEditorEvents = function (editor, throttledStore) {
+  var browser = PlatformDetection.detect().browser;
 
-      editor.on('keyup nodechange', function (e) {
-        if (!isManualNodeChange(e)) {
-          SelectionBookmark.store(editor);
-        }
-      });
-    };
-
-    var register = function (editor) {
-      var throttledStore = Throttler.first(function () {
-        SelectionBookmark.store(editor);
-      }, 0);
-
-      if (editor.inline) {
-        registerPageMouseUp(editor, throttledStore);
-      }
-
-      editor.on('init', function () {
-        registerEditorEvents(editor, throttledStore);
-      });
-
-      editor.on('remove', function () {
-        throttledStore.cancel();
-      });
-    };
-
-    return {
-      register: register
-    };
+  if (browser.isIE() || browser.isEdge()) {
+    registerFocusOut(editor);
+  } else {
+    registerMouseUp(editor, throttledStore);
   }
-);
+
+  editor.on('keyup nodechange', function (e) {
+    if (!isManualNodeChange(e)) {
+      SelectionBookmark.store(editor);
+    }
+  });
+};
+
+var register = function (editor) {
+  var throttledStore = Throttler.first(function () {
+    SelectionBookmark.store(editor);
+  }, 0);
+
+  if (editor.inline) {
+    registerPageMouseUp(editor, throttledStore);
+  }
+
+  editor.on('init', function () {
+    registerEditorEvents(editor, throttledStore);
+  });
+
+  editor.on('remove', function () {
+    throttledStore.cancel();
+  });
+};
+
+export default <any> {
+  register: register
+};

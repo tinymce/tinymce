@@ -8,32 +8,26 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.focus.CefFocus',
-  [
-    'ephox.katamari.api.Throttler',
-    'tinymce.core.keyboard.CefUtils'
-  ],
-  function (Throttler, CefUtils) {
-    var setup = function (editor) {
-      var renderFocusCaret = Throttler.first(function () {
-        if (!editor.removed) {
-          var caretRange = CefUtils.renderRangeCaret(editor, editor.selection.getRng());
-          editor.selection.setRng(caretRange);
-        }
-      }, 0);
+import { Throttler } from '@ephox/katamari';
+import CefUtils from '../keyboard/CefUtils';
 
-      editor.on('focus', function () {
-        renderFocusCaret.throttle();
-      });
+var setup = function (editor) {
+  var renderFocusCaret = Throttler.first(function () {
+    if (!editor.removed) {
+      var caretRange = CefUtils.renderRangeCaret(editor, editor.selection.getRng());
+      editor.selection.setRng(caretRange);
+    }
+  }, 0);
 
-      editor.on('blur', function () {
-        renderFocusCaret.cancel();
-      });
-    };
+  editor.on('focus', function () {
+    renderFocusCaret.throttle();
+  });
 
-    return {
-      setup: setup
-    };
-  }
-);
+  editor.on('blur', function () {
+    renderFocusCaret.cancel();
+  });
+};
+
+export default <any> {
+  setup: setup
+};

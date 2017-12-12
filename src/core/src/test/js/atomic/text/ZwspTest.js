@@ -1,29 +1,27 @@
-asynctest(
-  'atomic.tinymce.core.text.ZwspTest',
-  [
-    'ephox.mcagar.api.LegacyUnit',
-    'ephox.agar.api.Pipeline',
-    'tinymce.core.text.Zwsp'
-  ],
-  function (LegacyUnit, Pipeline, Zwsp) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
-    var suite = LegacyUnit.createSuite();
+import { LegacyUnit } from '@ephox/mcagar';
+import { Pipeline } from '@ephox/agar';
+import Zwsp from 'tinymce/core/text/Zwsp';
+import { UnitTest } from '@ephox/refute';
 
-    suite.test('ZWSP', function () {
-      LegacyUnit.strictEqual(Zwsp.ZWSP, '\uFEFF');
-    });
+UnitTest.asynctest('atomic.tinymce.core.text.ZwspTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
+  var suite = LegacyUnit.createSuite();
 
-    suite.test('isZwsp', function () {
-      LegacyUnit.strictEqual(Zwsp.isZwsp(Zwsp.ZWSP), true);
-    });
+  suite.test('ZWSP', function () {
+    LegacyUnit.strictEqual(Zwsp.ZWSP, '\uFEFF');
+  });
 
-    suite.test('isZwsp', function () {
-      LegacyUnit.strictEqual(Zwsp.trim('a' + Zwsp.ZWSP + 'b'), 'ab');
-    });
+  suite.test('isZwsp', function () {
+    LegacyUnit.strictEqual(Zwsp.isZwsp(Zwsp.ZWSP), true);
+  });
 
-    Pipeline.async({}, suite.toSteps({}), function () {
-      success();
-    }, failure);
-  }
-);
+  suite.test('isZwsp', function () {
+    LegacyUnit.strictEqual(Zwsp.trim('a' + Zwsp.ZWSP + 'b'), 'ab');
+  });
+
+  Pipeline.async({}, suite.toSteps({}), function () {
+    success();
+  }, failure);
+});
+

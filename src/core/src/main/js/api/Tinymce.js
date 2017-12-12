@@ -8,169 +8,158 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.api.Tinymce',
-  [
-    'tinymce.core.AddOnManager',
-    'tinymce.core.Editor',
-    'tinymce.core.EditorCommands',
-    'tinymce.core.EditorManager',
-    'tinymce.core.EditorObservable',
-    'tinymce.core.Env',
-    'tinymce.core.Shortcuts',
-    'tinymce.core.UndoManager',
-    'tinymce.core.api.FocusManager',
-    'tinymce.core.api.Formatter',
-    'tinymce.core.api.NotificationManager',
-    'tinymce.core.api.WindowManager',
-    'tinymce.core.api.dom.BookmarkManager',
-    'tinymce.core.api.dom.RangeUtils',
-    'tinymce.core.api.dom.Serializer',
-    'tinymce.core.dom.ControlSelection',
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.core.dom.DomQuery',
-    'tinymce.core.dom.EventUtils',
-    'tinymce.core.dom.ScriptLoader',
-    'tinymce.core.dom.Selection',
-    'tinymce.core.dom.Sizzle',
-    'tinymce.core.dom.TreeWalker',
-    'tinymce.core.geom.Rect',
-    'tinymce.core.html.DomParser',
-    'tinymce.core.html.Entities',
-    'tinymce.core.html.Node',
-    'tinymce.core.html.SaxParser',
-    'tinymce.core.html.Schema',
-    'tinymce.core.html.Serializer',
-    'tinymce.core.html.Styles',
-    'tinymce.core.html.Writer',
-    'tinymce.core.ui.Factory',
-    'tinymce.core.util.Class',
-    'tinymce.core.util.Color',
-    'tinymce.core.util.Delay',
-    'tinymce.core.util.EventDispatcher',
-    'tinymce.core.util.I18n',
-    'tinymce.core.util.JSON',
-    'tinymce.core.util.JSONP',
-    'tinymce.core.util.JSONRequest',
-    'tinymce.core.util.LocalStorage',
-    'tinymce.core.util.Observable',
-    'tinymce.core.util.Promise',
-    'tinymce.core.util.Tools',
-    'tinymce.core.util.URI',
-    'tinymce.core.util.VK',
-    'tinymce.core.util.XHR'
-  ],
-  function (
-    AddOnManager, Editor, EditorCommands, EditorManager, EditorObservable, Env, Shortcuts, UndoManager, FocusManager, Formatter, NotificationManager, WindowManager,
-    BookmarkManager, RangeUtils, DomSerializer, ControlSelection, DOMUtils, DomQuery, EventUtils, ScriptLoader, Selection, Sizzle, TreeWalker, Rect, DomParser,
-    Entities, Node, SaxParser, Schema, HtmlSerializer, Styles, Writer, Factory, Class, Color, Delay, EventDispatcher, I18n, JSON, JSONP, JSONRequest, LocalStorage,
-    Observable, Promise, Tools, URI, VK, XHR
-  ) {
-    var tinymce = EditorManager;
+import AddOnManager from '../AddOnManager';
+import Editor from '../Editor';
+import EditorCommands from '../EditorCommands';
+import EditorManager from '../EditorManager';
+import EditorObservable from '../EditorObservable';
+import Env from '../Env';
+import Shortcuts from '../Shortcuts';
+import UndoManager from '../UndoManager';
+import FocusManager from './FocusManager';
+import Formatter from './Formatter';
+import NotificationManager from './NotificationManager';
+import WindowManager from './WindowManager';
+import BookmarkManager from './dom/BookmarkManager';
+import RangeUtils from './dom/RangeUtils';
+import DomSerializer from './dom/Serializer';
+import ControlSelection from '../dom/ControlSelection';
+import DOMUtils from '../dom/DOMUtils';
+import DomQuery from '../dom/DomQuery';
+import EventUtils from '../dom/EventUtils';
+import ScriptLoader from '../dom/ScriptLoader';
+import Selection from '../dom/Selection';
+import Sizzle from '../dom/Sizzle';
+import TreeWalker from '../dom/TreeWalker';
+import Rect from '../geom/Rect';
+import DomParser from '../html/DomParser';
+import Entities from '../html/Entities';
+import Node from '../html/Node';
+import SaxParser from '../html/SaxParser';
+import Schema from '../html/Schema';
+import HtmlSerializer from '../html/Serializer';
+import Styles from '../html/Styles';
+import Writer from '../html/Writer';
+import Factory from '../ui/Factory';
+import Class from '../util/Class';
+import Color from '../util/Color';
+import Delay from '../util/Delay';
+import EventDispatcher from '../util/EventDispatcher';
+import I18n from '../util/I18n';
+import JSON from '../util/JSON';
+import JSONP from '../util/JSONP';
+import JSONRequest from '../util/JSONRequest';
+import LocalStorage from '../util/LocalStorage';
+import Observable from '../util/Observable';
+import Promise from '../util/Promise';
+import Tools from '../util/Tools';
+import URI from '../util/URI';
+import VK from '../util/VK';
+import XHR from '../util/XHR';
 
-    /**
-     * @include ../../../../../../tools/docs/tinymce.js
-     */
-    var publicApi = {
-      geom: {
-        Rect: Rect
-      },
+var tinymce = EditorManager;
 
-      util: {
-        Promise: Promise,
-        Delay: Delay,
-        Tools: Tools,
-        VK: VK,
-        URI: URI,
-        Class: Class,
-        EventDispatcher: EventDispatcher,
-        Observable: Observable,
-        I18n: I18n,
-        XHR: XHR,
-        JSON: JSON,
-        JSONRequest: JSONRequest,
-        JSONP: JSONP,
-        LocalStorage: LocalStorage,
-        Color: Color
-      },
+/**
+ * @include ../../../../../../tools/docs/tinymce.js
+ */
+var publicApi = {
+  geom: {
+    Rect: Rect
+  },
 
-      dom: {
-        EventUtils: EventUtils,
-        Sizzle: Sizzle,
-        DomQuery: DomQuery,
-        TreeWalker: TreeWalker,
-        DOMUtils: DOMUtils,
-        ScriptLoader: ScriptLoader,
-        RangeUtils: RangeUtils,
-        Serializer: DomSerializer,
-        ControlSelection: ControlSelection,
-        BookmarkManager: BookmarkManager,
-        Selection: Selection,
-        Event: EventUtils.Event
-      },
+  util: {
+    Promise: Promise,
+    Delay: Delay,
+    Tools: Tools,
+    VK: VK,
+    URI: URI,
+    Class: Class,
+    EventDispatcher: EventDispatcher,
+    Observable: Observable,
+    I18n: I18n,
+    XHR: XHR,
+    JSON: JSON,
+    JSONRequest: JSONRequest,
+    JSONP: JSONP,
+    LocalStorage: LocalStorage,
+    Color: Color
+  },
 
-      html: {
-        Styles: Styles,
-        Entities: Entities,
-        Node: Node,
-        Schema: Schema,
-        SaxParser: SaxParser,
-        DomParser: DomParser,
-        Writer: Writer,
-        Serializer: HtmlSerializer
-      },
+  dom: {
+    EventUtils: EventUtils,
+    Sizzle: Sizzle,
+    DomQuery: DomQuery,
+    TreeWalker: TreeWalker,
+    DOMUtils: DOMUtils,
+    ScriptLoader: ScriptLoader,
+    RangeUtils: RangeUtils,
+    Serializer: DomSerializer,
+    ControlSelection: ControlSelection,
+    BookmarkManager: BookmarkManager,
+    Selection: Selection,
+    Event: EventUtils.Event
+  },
 
-      ui: {
-        Factory: Factory
-      },
+  html: {
+    Styles: Styles,
+    Entities: Entities,
+    Node: Node,
+    Schema: Schema,
+    SaxParser: SaxParser,
+    DomParser: DomParser,
+    Writer: Writer,
+    Serializer: HtmlSerializer
+  },
 
-      Env: Env,
-      AddOnManager: AddOnManager,
-      Formatter: Formatter,
-      UndoManager: UndoManager,
-      EditorCommands: EditorCommands,
-      WindowManager: WindowManager,
-      NotificationManager: NotificationManager,
-      EditorObservable: EditorObservable,
-      Shortcuts: Shortcuts,
-      Editor: Editor,
-      FocusManager: FocusManager,
-      EditorManager: EditorManager,
+  ui: {
+    Factory: Factory
+  },
 
-      // Global instances
-      DOM: DOMUtils.DOM,
-      ScriptLoader: ScriptLoader.ScriptLoader,
-      PluginManager: AddOnManager.PluginManager,
-      ThemeManager: AddOnManager.ThemeManager,
+  Env: Env,
+  AddOnManager: AddOnManager,
+  Formatter: Formatter,
+  UndoManager: UndoManager,
+  EditorCommands: EditorCommands,
+  WindowManager: WindowManager,
+  NotificationManager: NotificationManager,
+  EditorObservable: EditorObservable,
+  Shortcuts: Shortcuts,
+  Editor: Editor,
+  FocusManager: FocusManager,
+  EditorManager: EditorManager,
 
-      // Global utility functions
-      trim: Tools.trim,
-      isArray: Tools.isArray,
-      is: Tools.is,
-      toArray: Tools.toArray,
-      makeMap: Tools.makeMap,
-      each: Tools.each,
-      map: Tools.map,
-      grep: Tools.grep,
-      inArray: Tools.inArray,
-      extend: Tools.extend,
-      create: Tools.create,
-      walk: Tools.walk,
-      createNS: Tools.createNS,
-      resolve: Tools.resolve,
-      explode: Tools.explode,
-      _addCacheSuffix: Tools._addCacheSuffix,
+  // Global instances
+  DOM: DOMUtils.DOM,
+  ScriptLoader: ScriptLoader.ScriptLoader,
+  PluginManager: AddOnManager.PluginManager,
+  ThemeManager: AddOnManager.ThemeManager,
 
-      // Legacy browser detection
-      isOpera: Env.opera,
-      isWebKit: Env.webkit,
-      isIE: Env.ie,
-      isGecko: Env.gecko,
-      isMac: Env.mac
-    };
+  // Global utility functions
+  trim: Tools.trim,
+  isArray: Tools.isArray,
+  is: Tools.is,
+  toArray: Tools.toArray,
+  makeMap: Tools.makeMap,
+  each: Tools.each,
+  map: Tools.map,
+  grep: Tools.grep,
+  inArray: Tools.inArray,
+  extend: Tools.extend,
+  create: Tools.create,
+  walk: Tools.walk,
+  createNS: Tools.createNS,
+  resolve: Tools.resolve,
+  explode: Tools.explode,
+  _addCacheSuffix: Tools._addCacheSuffix,
 
-    tinymce = Tools.extend(tinymce, publicApi);
+  // Legacy browser detection
+  isOpera: Env.opera,
+  isWebKit: Env.webkit,
+  isIE: Env.ie,
+  isGecko: Env.gecko,
+  isMac: Env.mac
+};
 
-    return tinymce;
-  }
-);
+tinymce = Tools.extend(tinymce, publicApi);
+
+export default <any> tinymce;

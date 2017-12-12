@@ -8,40 +8,34 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.dom.Parents',
-  [
-    'ephox.katamari.api.Fun',
-    'ephox.sugar.api.dom.Compare',
-    'ephox.sugar.api.search.Traverse'
-  ],
-  function (Fun, Compare, Traverse) {
-    var dropLast = function (xs) {
-      return xs.slice(0, -1);
-    };
+import { Fun } from '@ephox/katamari';
+import { Compare } from '@ephox/sugar';
+import { Traverse } from '@ephox/sugar';
 
-    var parentsUntil = function (startNode, rootElm, predicate) {
-      if (Compare.contains(rootElm, startNode)) {
-        return dropLast(Traverse.parents(startNode, function (elm) {
-          return predicate(elm) || Compare.eq(elm, rootElm);
-        }));
-      } else {
-        return [];
-      }
-    };
+var dropLast = function (xs) {
+  return xs.slice(0, -1);
+};
 
-    var parents = function (startNode, rootElm) {
-      return parentsUntil(startNode, rootElm, Fun.constant(false));
-    };
-
-    var parentsAndSelf = function (startNode, rootElm) {
-      return [startNode].concat(parents(startNode, rootElm));
-    };
-
-    return {
-      parentsUntil: parentsUntil,
-      parents: parents,
-      parentsAndSelf: parentsAndSelf
-    };
+var parentsUntil = function (startNode, rootElm, predicate) {
+  if (Compare.contains(rootElm, startNode)) {
+    return dropLast(Traverse.parents(startNode, function (elm) {
+      return predicate(elm) || Compare.eq(elm, rootElm);
+    }));
+  } else {
+    return [];
   }
-);
+};
+
+var parents = function (startNode, rootElm) {
+  return parentsUntil(startNode, rootElm, Fun.constant(false));
+};
+
+var parentsAndSelf = function (startNode, rootElm) {
+  return [startNode].concat(parents(startNode, rootElm));
+};
+
+export default <any> {
+  parentsUntil: parentsUntil,
+  parents: parents,
+  parentsAndSelf: parentsAndSelf
+};

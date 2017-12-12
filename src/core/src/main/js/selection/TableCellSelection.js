@@ -8,40 +8,34 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.selection.TableCellSelection',
-  [
-    'ephox.katamari.api.Arr',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.search.SelectorFilter',
-    'tinymce.core.dom.ElementType',
-    'tinymce.core.selection.MultiRange'
-  ],
-  function (Arr, Element, SelectorFilter, ElementType, MultiRange) {
-    var getCellsFromRanges = function (ranges) {
-      return Arr.filter(MultiRange.getSelectedNodes(ranges), ElementType.isTableCell);
-    };
+import { Arr } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+import { SelectorFilter } from '@ephox/sugar';
+import ElementType from '../dom/ElementType';
+import MultiRange from './MultiRange';
 
-    var getCellsFromElement = function (elm) {
-      var selectedCells = SelectorFilter.descendants(elm, 'td[data-mce-selected],th[data-mce-selected]');
-      return selectedCells;
-    };
+var getCellsFromRanges = function (ranges) {
+  return Arr.filter(MultiRange.getSelectedNodes(ranges), ElementType.isTableCell);
+};
 
-    var getCellsFromElementOrRanges = function (ranges, element) {
-      var selectedCells = getCellsFromElement(element);
-      var rangeCells = getCellsFromRanges(ranges);
-      return selectedCells.length > 0 ? selectedCells : rangeCells;
-    };
+var getCellsFromElement = function (elm) {
+  var selectedCells = SelectorFilter.descendants(elm, 'td[data-mce-selected],th[data-mce-selected]');
+  return selectedCells;
+};
 
-    var getCellsFromEditor = function (editor) {
-      return getCellsFromElementOrRanges(MultiRange.getRanges(editor.selection.getSel()), Element.fromDom(editor.getBody()));
-    };
+var getCellsFromElementOrRanges = function (ranges, element) {
+  var selectedCells = getCellsFromElement(element);
+  var rangeCells = getCellsFromRanges(ranges);
+  return selectedCells.length > 0 ? selectedCells : rangeCells;
+};
 
-    return {
-      getCellsFromRanges: getCellsFromRanges,
-      getCellsFromElement: getCellsFromElement,
-      getCellsFromElementOrRanges: getCellsFromElementOrRanges,
-      getCellsFromEditor: getCellsFromEditor
-    };
-  }
-);
+var getCellsFromEditor = function (editor) {
+  return getCellsFromElementOrRanges(MultiRange.getRanges(editor.selection.getSel()), Element.fromDom(editor.getBody()));
+};
+
+export default <any> {
+  getCellsFromRanges: getCellsFromRanges,
+  getCellsFromElement: getCellsFromElement,
+  getCellsFromElementOrRanges: getCellsFromElementOrRanges,
+  getCellsFromEditor: getCellsFromEditor
+};

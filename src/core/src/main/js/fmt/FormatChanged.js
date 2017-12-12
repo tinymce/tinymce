@@ -8,91 +8,85 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.fmt.FormatChanged',
-  [
-    'ephox.katamari.api.Cell',
-    'tinymce.core.fmt.FormatUtils',
-    'tinymce.core.fmt.MatchFormat',
-    'tinymce.core.util.Tools'
-  ],
-  function (Cell, FormatUtils, MatchFormat, Tools) {
-    var each = Tools.each;
+import { Cell } from '@ephox/katamari';
+import FormatUtils from './FormatUtils';
+import MatchFormat from './MatchFormat';
+import Tools from '../util/Tools';
 
-    var setup = function (formatChangeData, editor) {
-      var currentFormats = {};
+var each = Tools.each;
 
-      formatChangeData.set({});
+var setup = function (formatChangeData, editor) {
+  var currentFormats = {};
 
-      editor.on('NodeChange', function (e) {
-        var parents = FormatUtils.getParents(editor.dom, e.element), matchedFormats = {};
+  formatChangeData.set({});
 
-        // Ignore bogus nodes like the <a> tag created by moveStart()
-        parents = Tools.grep(parents, function (node) {
-          return node.nodeType === 1 && !node.getAttribute('data-mce-bogus');
-        });
+  editor.on('NodeChange', function (e) {
+    var parents = FormatUtils.getParents(editor.dom, e.element), matchedFormats = {};
 
-        // Check for new formats
-        each(formatChangeData.get(), function (callbacks, format) {
-          each(parents, function (node) {
-            if (editor.formatter.matchNode(node, format, {}, callbacks.similar)) {
-              if (!currentFormats[format]) {
-                // Execute callbacks
-                each(callbacks, function (callback) {
-                  callback(true, { node: node, format: format, parents: parents });
-                });
+    // Ignore bogus nodes like the <a> tag created by moveStart()
+    parents = Tools.grep(parents, function (node) {
+      return node.nodeType === 1 && !node.getAttribute('data-mce-bogus');
+    });
 
-                currentFormats[format] = callbacks;
-              }
-
-              matchedFormats[format] = callbacks;
-              return false;
-            }
-
-            if (MatchFormat.matchesUnInheritedFormatSelector(editor, node, format)) {
-              return false;
-            }
-          });
-        });
-
-        // Check if current formats still match
-        each(currentFormats, function (callbacks, format) {
-          if (!matchedFormats[format]) {
-            delete currentFormats[format];
-
+    // Check for new formats
+    each(formatChangeData.get(), function (callbacks, format) {
+      each(parents, function (node) {
+        if (editor.formatter.matchNode(node, format, {}, callbacks.similar)) {
+          if (!currentFormats[format]) {
+            // Execute callbacks
             each(callbacks, function (callback) {
-              callback(false, { node: e.element, format: format, parents: parents });
+              callback(true, { node: node, format: format, parents: parents });
             });
+
+            currentFormats[format] = callbacks;
           }
-        });
-      });
-    };
 
-    var addListeners = function (formatChangeData, formats, callback, similar) {
-      var formatChangeItems = formatChangeData.get();
-
-      each(formats.split(','), function (format) {
-        if (!formatChangeItems[format]) {
-          formatChangeItems[format] = [];
-          formatChangeItems[format].similar = similar;
+          matchedFormats[format] = callbacks;
+          return false;
         }
 
-        formatChangeItems[format].push(callback);
+        if (MatchFormat.matchesUnInheritedFormatSelector(editor, node, format)) {
+          return false;
+        }
       });
+    });
 
-      formatChangeData.set(formatChangeItems);
-    };
+    // Check if current formats still match
+    each(currentFormats, function (callbacks, format) {
+      if (!matchedFormats[format]) {
+        delete currentFormats[format];
 
-    var formatChanged = function (editor, formatChangeState, formats, callback, similar) {
-      if (formatChangeState.get() === null) {
-        setup(formatChangeState, editor);
+        each(callbacks, function (callback) {
+          callback(false, { node: e.element, format: format, parents: parents });
+        });
       }
+    });
+  });
+};
 
-      addListeners(formatChangeState, formats, callback, similar);
-    };
+var addListeners = function (formatChangeData, formats, callback, similar) {
+  var formatChangeItems = formatChangeData.get();
 
-    return {
-      formatChanged: formatChanged
-    };
+  each(formats.split(','), function (format) {
+    if (!formatChangeItems[format]) {
+      formatChangeItems[format] = [];
+      formatChangeItems[format].similar = similar;
+    }
+
+    formatChangeItems[format].push(callback);
+  });
+
+  formatChangeData.set(formatChangeItems);
+};
+
+var formatChanged = function (editor, formatChangeState, formats, callback, similar) {
+  if (formatChangeState.get() === null) {
+    setup(formatChangeState, editor);
   }
-);
+
+  addListeners(formatChangeState, formats, callback, similar);
+};
+
+export default <any> {
+  formatChanged: formatChanged
+};

@@ -8,12 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.core.ThemeManager',
-  [
-    'tinymce.core.AddOnManager'
-  ],
-  function (AddOnManager) {
-    return AddOnManager.ThemeManager;
-  }
-);
+import AddOnManager from './AddOnManager';
+
+
+
+export default <any> AddOnManager.ThemeManager;
