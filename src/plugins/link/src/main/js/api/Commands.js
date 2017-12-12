@@ -8,18 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.link.api.Commands',
-  [
-    'tinymce.plugins.link.core.Actions'
-  ],
-  function (Actions) {
-    var register = function (editor) {
-      editor.addCommand('mceLink', Actions.openDialog(editor));
-    };
+import Actions from '../core/Actions';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor) {
+  editor.addCommand('mceLink', Actions.openDialog(editor));
+};
+
+export default <any> {
+  register: register
+};

@@ -8,18 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.link.core.Keyboard',
-  [
-    'tinymce.plugins.link.core.Actions'
-  ],
-  function (Actions) {
-    var setup = function (editor) {
-      editor.addShortcut('Meta+K', '', Actions.openDialog(editor));
-    };
+import Actions from './Actions';
 
-    return {
-      setup: setup
-    };
-  }
-);
+var setup = function (editor) {
+  editor.addShortcut('Meta+K', '', Actions.openDialog(editor));
+};
+
+export default <any> {
+  setup: setup
+};

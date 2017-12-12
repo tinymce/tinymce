@@ -8,25 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.link.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.link.api.Commands',
-    'tinymce.plugins.link.core.Actions',
-    'tinymce.plugins.link.core.Keyboard',
-    'tinymce.plugins.link.ui.Controls'
-  ],
-  function (PluginManager, Commands, Actions, Keyboard, Controls) {
-    PluginManager.add('link', function (editor) {
-      Controls.setupButtons(editor);
-      Controls.setupMenuItems(editor);
-      Controls.setupContextToolbars(editor);
-      Actions.setupGotoLinks(editor);
-      Commands.register(editor);
-      Keyboard.setup(editor);
-    });
+import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
+import Actions from './core/Actions';
+import Keyboard from './core/Keyboard';
+import Controls from './ui/Controls';
 
-    return function () { };
-  }
-);
+PluginManager.add('link', function (editor) {
+  Controls.setupButtons(editor);
+  Controls.setupMenuItems(editor);
+  Controls.setupContextToolbars(editor);
+  Actions.setupGotoLinks(editor);
+  Commands.register(editor);
+  Keyboard.setup(editor);
+});
+
+export default <any> function () { };
