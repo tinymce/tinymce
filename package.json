@@ -6,6 +6,14 @@
     "type": "git",
     "url": "https://github.com/ephox/darwin"
   },
+  "files": [
+    "lib",
+    "src",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
   "dependencies": {
     "@ephox/sand": "*",
     "@ephox/katamari": "*",
