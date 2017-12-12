@@ -3,8 +3,8 @@
   "description": "This project implements the table model.",
   "version": "4.0.0",
   "files": [
-    "lib",
-    "src",
+    "lib/main",
+    "src/main",
     "readme.md",
     "LEGAL.txt",
     "CHANGELOG.txt",
