@@ -24,8 +24,8 @@
     "webpack": "^3.10.0"
   },
   "dependencies": {
-    "@ephox/katamari": "^1.0.0",
-    "@ephox/sand": "^1.0.0"
+    "@ephox/katamari": "*",
+    "@ephox/sand": "*"
   },
   "main": "./lib/main/ts/ephox/jax/api/Main.js",
   "module": "./lib/main/ts/ephox/jax/api/Main.js",
