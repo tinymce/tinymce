@@ -13,21 +13,15 @@ import CodePlugin from 'tinymce/plugins/code/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 
-/*eslint no-console:0 */
+CodePlugin();
+LinkPlugin();
+ModernTheme();
 
-
-
-export default <any> function () {
-  CodePlugin();
-  LinkPlugin();
-  ModernTheme();
-
-  EditorManager.init({
-    selector: "textarea.tinymce",
-    theme: "modern",
-    skin_url: "../../../../../skins/lightgray/dist/lightgray",
-    plugins: "link code",
-    toolbar: "link code",
-    height: 600
-  });
-};
+EditorManager.init({
+  selector: "textarea.tinymce",
+  theme: "modern",
+  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  plugins: "link code",
+  toolbar: "link code",
+  height: 600
+});

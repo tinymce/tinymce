@@ -35,12 +35,12 @@ var createLinkList = function (editor, callback) {
   }
 };
 
-var buildListItems = function (inputList, itemCallback, startItems) {
-  var appendItems = function (values, output) {
+var buildListItems = function (inputList, itemCallback?, startItems?) {
+  var appendItems = function (values, output?) {
     output = output || [];
 
     Tools.each(values, function (item) {
-      var menuItem = { text: item.text || item.title };
+      var menuItem: any = { text: item.text || item.title };
 
       if (item.menu) {
         menuItem.menu = appendItems(item.menu);
@@ -74,7 +74,7 @@ var delayedConfirm = function (editor, message, callback) {
 };
 
 var showDialog = function (editor, linkList) {
-  var data = {}, selection = editor.selection, dom = editor.dom, anchorElm, initialText;
+  var data: any = {}, selection = editor.selection, dom = editor.dom, anchorElm, initialText;
   var win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, value;
 
   var linkListChangeHandler = function (e) {

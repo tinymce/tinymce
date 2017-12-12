@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', fun
 
   var sEnterUrl = function (url) {
     return Step.sync(function () {
-      var input = document.activeElement;
+      var input: any = document.activeElement;
 
       input.value = url;
       DOMUtils.DOM.fire(input, 'change');

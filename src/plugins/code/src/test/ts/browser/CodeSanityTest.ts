@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', function() {
 
   var sAssertTextareaContent = function (expected) {
     return Step.sync(function () {
-      var textarea = document.querySelector('div[role="dialog"] textarea');
+      var textarea: any = document.querySelector('div[role="dialog"] textarea');
       RawAssertions.assertEq('should have correct value', expected, textarea.value);
     });
   };

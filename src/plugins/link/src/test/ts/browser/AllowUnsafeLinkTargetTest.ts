@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', fun
 
     var sEnterUrl = function (url) {
       return Step.sync(function () {
-        var input = document.activeElement;
+        var input: any = document.activeElement;
 
         input.value = url;
         DOMUtils.DOM.fire(input, 'change');
@@ -62,21 +62,21 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', fun
     Pipeline.async({}, [
       Logger.t("doesn't add rel noopener stuff with allow_unsafe_link_target: true", GeneralSteps.sequence([
         api.sSetSetting('allow_unsafe_link_target', true),
-        sInsertLink(ui, 'http://www.google.com'),
+        sInsertLink('http://www.google.com'),
         api.sAssertContentPresence({ 'a[rel="noopener"]': 0, 'a': 1 }),
         api.sSetContent('')
       ])),
 
       Logger.t("adds if allow_unsafe_link_target: false", GeneralSteps.sequence([
         api.sSetSetting('allow_unsafe_link_target', false),
-        sInsertLink(ui, 'http://www.google.com'),
+        sInsertLink('http://www.google.com'),
         api.sAssertContentPresence({ 'a[rel="noopener"]': 1 }),
         api.sSetContent('')
       ])),
 
       Logger.t("...and if it's undefined", GeneralSteps.sequence([
         api.sSetSetting('allow_unsafe_link_target', undefined),
-        sInsertLink(ui, 'http://www.google.com'),
+        sInsertLink('http://www.google.com'),
         api.sAssertContentPresence({ 'a[rel="noopener"]': 1 })
       ])),
 

@@ -14,7 +14,9 @@
       "tinymce/ui/*": ["src/ui/src/main/ts/*"],
       "tinymce/themes/modern/*": ["src/themes/modern/src/main/ts/*"],
       "tinymce/themes/inlite/*": ["src/themes/inlite/src/main/ts/*"],
-      "tinymce/plugins/searchreplace/*": ["src/plugins/searchreplace/src/main/ts/*"]
+      "tinymce/plugins/searchreplace/*": ["src/plugins/searchreplace/src/main/ts/*"],
+      "tinymce/plugins/link/*": ["src/plugins/link/src/main/ts/*"],
+      "tinymce/plugins/code/*": ["src/plugins/code/src/main/ts/*"]
     }
   },
   "include": [
