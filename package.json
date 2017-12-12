@@ -15,7 +15,6 @@
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "bolt test config/bolt/atomic.js src/test/js/atomic/**/**Test.js",
     "prepublishOnly": "tsc"
   },
   "repository": {
