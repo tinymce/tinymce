@@ -7,7 +7,6 @@
 *.iws
 *.sublime-*
 /.vscode
-/lib
 /gen
 /dependency
 /config/bolt/bootstrap*.js
