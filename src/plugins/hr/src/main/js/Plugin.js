@@ -8,19 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.hr.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.hr.api.Commands',
-    'tinymce.plugins.hr.ui.Buttons'
-  ],
-  function (PluginManager, Commands, Buttons) {
-    PluginManager.add('hr', function (editor) {
-      Commands.register(editor);
-      Buttons.register(editor);
-    });
+import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
+import Buttons from './ui/Buttons';
 
-    return function () { };
-  }
-);
+PluginManager.add('hr', function (editor) {
+  Commands.register(editor);
+  Buttons.register(editor);
+});
+
+export default <any> function () { };

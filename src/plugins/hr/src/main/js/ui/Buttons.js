@@ -8,28 +8,21 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.hr.ui.Buttons',
-  [
-  ],
-  function () {
-    var register = function (editor) {
-      editor.addButton('hr', {
-        icon: 'hr',
-        tooltip: 'Horizontal line',
-        cmd: 'InsertHorizontalRule'
-      });
+var register = function (editor) {
+  editor.addButton('hr', {
+    icon: 'hr',
+    tooltip: 'Horizontal line',
+    cmd: 'InsertHorizontalRule'
+  });
 
-      editor.addMenuItem('hr', {
-        icon: 'hr',
-        text: 'Horizontal line',
-        cmd: 'InsertHorizontalRule',
-        context: 'insert'
-      });
-    };
+  editor.addMenuItem('hr', {
+    icon: 'hr',
+    text: 'Horizontal line',
+    cmd: 'InsertHorizontalRule',
+    context: 'insert'
+  });
+};
 
-    return {
-      register: register
-    };
-  }
-);
+export default <any> {
+  register: register
+};

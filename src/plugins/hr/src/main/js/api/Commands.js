@@ -8,19 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.hr.api.Commands',
-  [
-  ],
-  function () {
-    var register = function (editor) {
-      editor.addCommand('InsertHorizontalRule', function () {
-        editor.execCommand('mceInsertContent', false, '<hr />');
-      });
-    };
+var register = function (editor) {
+  editor.addCommand('InsertHorizontalRule', function () {
+    editor.execCommand('mceInsertContent', false, '<hr />');
+  });
+};
 
-    return {
-      register: register
-    };
-  }
-);
+export default <any> {
+  register: register
+};

@@ -8,30 +8,26 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import EditorManager from 'tinymce/core/EditorManager';
+import CodePlugin from 'tinymce/plugins/code/Plugin';
+import HrPlugin from 'tinymce/plugins/hr/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
 /*eslint no-console:0 */
 
-define(
-  'tinymce.plugins.hr.demo.Demo',
-  [
-    'tinymce.core.EditorManager',
-    'tinymce.plugins.code.Plugin',
-    'tinymce.plugins.hr.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (EditorManager, CodePlugin, HrPlugin, ModernTheme) {
-    return function () {
-      CodePlugin();
-      HrPlugin();
-      ModernTheme();
 
-      EditorManager.init({
-        selector: "textarea.tinymce",
-        theme: "modern",
-        skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        plugins: "hr code",
-        toolbar: "hr code",
-        height: 600
-      });
-    };
-  }
-);
+
+export default <any> function () {
+  CodePlugin();
+  HrPlugin();
+  ModernTheme();
+
+  EditorManager.init({
+    selector: "textarea.tinymce",
+    theme: "modern",
+    skin_url: "../../../../../skins/lightgray/dist/lightgray",
+    plugins: "hr code",
+    toolbar: "hr code",
+    height: 600
+  });
+};
