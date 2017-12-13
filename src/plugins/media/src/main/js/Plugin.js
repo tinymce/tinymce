@@ -8,28 +8,21 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.media.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.media.api.Api',
-    'tinymce.plugins.media.api.Commands',
-    'tinymce.plugins.media.core.FilterContent',
-    'tinymce.plugins.media.core.ResolveName',
-    'tinymce.plugins.media.core.Selection',
-    'tinymce.plugins.media.ui.Buttons'
-  ],
-  function (PluginManager, Api, Commands, FilterContent, ResolveName, Selection, Buttons) {
-    PluginManager.add('media', function (editor) {
-      Commands.register(editor);
-      Buttons.register(editor);
-      ResolveName.setup(editor);
-      FilterContent.setup(editor);
-      Selection.setup(editor);
-      return Api.get(editor);
-    });
+import PluginManager from 'tinymce/core/PluginManager';
+import Api from './api/Api';
+import Commands from './api/Commands';
+import FilterContent from './core/FilterContent';
+import ResolveName from './core/ResolveName';
+import Selection from './core/Selection';
+import Buttons from './ui/Buttons';
 
-    return function () { };
-  }
-);
+PluginManager.add('media', function (editor) {
+  Commands.register(editor);
+  Buttons.register(editor);
+  ResolveName.setup(editor);
+  FilterContent.setup(editor);
+  Selection.setup(editor);
+  return Api.get(editor);
+});
 
+export default <any> function () { };

@@ -8,207 +8,201 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.media.core.UpdateHtml',
-  [
-    'tinymce.core.html.Writer',
-    'tinymce.core.html.SaxParser',
-    'tinymce.core.html.Schema',
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.plugins.media.core.Size'
-  ],
-  function (Writer, SaxParser, Schema, DOMUtils, Size) {
-    var DOM = DOMUtils.DOM;
+import Writer from 'tinymce/core/html/Writer';
+import SaxParser from 'tinymce/core/html/SaxParser';
+import Schema from 'tinymce/core/html/Schema';
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import Size from './Size';
 
-    var setAttributes = function (attrs, updatedAttrs) {
-      var name;
-      var i;
-      var value;
-      var attr;
+var DOM = DOMUtils.DOM;
 
-      for (name in updatedAttrs) {
-        value = "" + updatedAttrs[name];
+var setAttributes = function (attrs, updatedAttrs) {
+  var name;
+  var i;
+  var value;
+  var attr;
 
-        if (attrs.map[name]) {
-          i = attrs.length;
-          while (i--) {
-            attr = attrs[i];
+  for (name in updatedAttrs) {
+    value = "" + updatedAttrs[name];
 
-            if (attr.name === name) {
-              if (value) {
-                attrs.map[name] = value;
-                attr.value = value;
-              } else {
-                delete attrs.map[name];
-                attrs.splice(i, 1);
-              }
-            }
+    if (attrs.map[name]) {
+      i = attrs.length;
+      while (i--) {
+        attr = attrs[i];
+
+        if (attr.name === name) {
+          if (value) {
+            attrs.map[name] = value;
+            attr.value = value;
+          } else {
+            delete attrs.map[name];
+            attrs.splice(i, 1);
           }
-        } else if (value) {
-          attrs.push({
-            name: name,
-            value: value
-          });
-
-          attrs.map[name] = value;
         }
       }
-    };
+    } else if (value) {
+      attrs.push({
+        name: name,
+        value: value
+      });
 
-    var normalizeHtml = function (html) {
-      var writer = new Writer();
-      var parser = new SaxParser(writer);
-      parser.parse(html);
-      return writer.getContent();
-    };
+      attrs.map[name] = value;
+    }
+  }
+};
 
-    var updateHtmlSax = function (html, data, updateAll) {
-      var writer = new Writer();
-      var sourceCount = 0;
-      var hasImage;
+var normalizeHtml = function (html) {
+  var writer = new Writer();
+  var parser = new SaxParser(writer);
+  parser.parse(html);
+  return writer.getContent();
+};
 
-      new SaxParser({
-        validate: false,
-        allow_conditional_comments: true,
-        special: 'script,noscript',
+var updateHtmlSax = function (html, data, updateAll) {
+  var writer = new Writer();
+  var sourceCount = 0;
+  var hasImage;
 
-        comment: function (text) {
-          writer.comment(text);
-        },
+  new SaxParser({
+    validate: false,
+    allow_conditional_comments: true,
+    special: 'script,noscript',
 
-        cdata: function (text) {
-          writer.cdata(text);
-        },
+    comment: function (text) {
+      writer.comment(text);
+    },
 
-        text: function (text, raw) {
-          writer.text(text, raw);
-        },
+    cdata: function (text) {
+      writer.cdata(text);
+    },
 
-        start: function (name, attrs, empty) {
-          switch (name) {
-            case "video":
-            case "object":
-            case "embed":
-            case "img":
-            case "iframe":
-              if (data.height !== undefined && data.width !== undefined) {
-                setAttributes(attrs, {
-                  width: data.width,
-                  height: data.height
-                });
-              }
-              break;
-          }
+    text: function (text, raw) {
+      writer.text(text, raw);
+    },
 
-          if (updateAll) {
-            switch (name) {
-              case "video":
-                setAttributes(attrs, {
-                  poster: data.poster,
-                  src: ""
-                });
-
-                if (data.source2) {
-                  setAttributes(attrs, {
-                    src: ""
-                  });
-                }
-                break;
-
-              case "iframe":
-                setAttributes(attrs, {
-                  src: data.source1
-                });
-                break;
-
-              case "source":
-                sourceCount++;
-
-                if (sourceCount <= 2) {
-                  setAttributes(attrs, {
-                    src: data["source" + sourceCount],
-                    type: data["source" + sourceCount + "mime"]
-                  });
-
-                  if (!data["source" + sourceCount]) {
-                    return;
-                  }
-                }
-                break;
-
-              case "img":
-                if (!data.poster) {
-                  return;
-                }
-
-                hasImage = true;
-                break;
-            }
-          }
-
-          writer.start(name, attrs, empty);
-        },
-
-        end: function (name) {
-          if (name === "video" && updateAll) {
-            for (var index = 1; index <= 2; index++) {
-              if (data["source" + index]) {
-                var attrs = [];
-                attrs.map = {};
-
-                if (sourceCount < index) {
-                  setAttributes(attrs, {
-                    src: data["source" + index],
-                    type: data["source" + index + "mime"]
-                  });
-
-                  writer.start("source", attrs, true);
-                }
-              }
-            }
-          }
-
-          if (data.poster && name === "object" && updateAll && !hasImage) {
-            var imgAttrs = [];
-            imgAttrs.map = {};
-
-            setAttributes(imgAttrs, {
-              src: data.poster,
+    start: function (name, attrs, empty) {
+      switch (name) {
+        case "video":
+        case "object":
+        case "embed":
+        case "img":
+        case "iframe":
+          if (data.height !== undefined && data.width !== undefined) {
+            setAttributes(attrs, {
               width: data.width,
               height: data.height
             });
-
-            writer.start("img", imgAttrs, true);
           }
+          break;
+      }
 
-          writer.end(name);
+      if (updateAll) {
+        switch (name) {
+          case "video":
+            setAttributes(attrs, {
+              poster: data.poster,
+              src: ""
+            });
+
+            if (data.source2) {
+              setAttributes(attrs, {
+                src: ""
+              });
+            }
+            break;
+
+          case "iframe":
+            setAttributes(attrs, {
+              src: data.source1
+            });
+            break;
+
+          case "source":
+            sourceCount++;
+
+            if (sourceCount <= 2) {
+              setAttributes(attrs, {
+                src: data["source" + sourceCount],
+                type: data["source" + sourceCount + "mime"]
+              });
+
+              if (!data["source" + sourceCount]) {
+                return;
+              }
+            }
+            break;
+
+          case "img":
+            if (!data.poster) {
+              return;
+            }
+
+            hasImage = true;
+            break;
         }
-      }, new Schema({})).parse(html);
+      }
 
-      return writer.getContent();
-    };
+      writer.start(name, attrs, empty);
+    },
 
-    var isEphoxEmbed = function (html) {
-      var fragment = DOM.createFragment(html);
-      return DOM.getAttrib(fragment.firstChild, 'data-ephox-embed-iri') !== '';
-    };
+    end: function (name) {
+      if (name === "video" && updateAll) {
+        for (var index = 1; index <= 2; index++) {
+          if (data["source" + index]) {
+            var attrs = [];
+            attrs.map = {};
 
-    var updateEphoxEmbed = function (html, data) {
-      var fragment = DOM.createFragment(html);
-      var div = fragment.firstChild;
+            if (sourceCount < index) {
+              setAttributes(attrs, {
+                src: data["source" + index],
+                type: data["source" + index + "mime"]
+              });
 
-      Size.setMaxWidth(div, data.width);
-      Size.setMaxHeight(div, data.height);
+              writer.start("source", attrs, true);
+            }
+          }
+        }
+      }
 
-      return normalizeHtml(div.outerHTML);
-    };
+      if (data.poster && name === "object" && updateAll && !hasImage) {
+        var imgAttrs = [];
+        imgAttrs.map = {};
 
-    var updateHtml = function (html, data, updateAll) {
-      return isEphoxEmbed(html) ? updateEphoxEmbed(html, data) : updateHtmlSax(html, data, updateAll);
-    };
+        setAttributes(imgAttrs, {
+          src: data.poster,
+          width: data.width,
+          height: data.height
+        });
 
-    return {
-      updateHtml: updateHtml
-    };
-  }
-);
+        writer.start("img", imgAttrs, true);
+      }
+
+      writer.end(name);
+    }
+  }, new Schema({})).parse(html);
+
+  return writer.getContent();
+};
+
+var isEphoxEmbed = function (html) {
+  var fragment = DOM.createFragment(html);
+  return DOM.getAttrib(fragment.firstChild, 'data-ephox-embed-iri') !== '';
+};
+
+var updateEphoxEmbed = function (html, data) {
+  var fragment = DOM.createFragment(html);
+  var div = fragment.firstChild;
+
+  Size.setMaxWidth(div, data.width);
+  Size.setMaxHeight(div, data.height);
+
+  return normalizeHtml(div.outerHTML);
+};
+
+var updateHtml = function (html, data, updateAll) {
+  return isEphoxEmbed(html) ? updateEphoxEmbed(html, data) : updateHtmlSax(html, data, updateAll);
+};
+
+export default <any> {
+  updateHtml: updateHtml
+};

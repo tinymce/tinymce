@@ -8,23 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.media.api.Commands',
-  [
-    'tinymce.plugins.media.ui.Dialog'
-  ],
-  function (Dialog) {
-    var register = function (editor) {
-      var showDialog = function () {
-        Dialog.showDialog(editor);
-      };
+import Dialog from '../ui/Dialog';
 
-      editor.addCommand('mceMedia', showDialog);
-    };
+var register = function (editor) {
+  var showDialog = function () {
+    Dialog.showDialog(editor);
+  };
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addCommand('mceMedia', showDialog);
+};
 
+export default <any> {
+  register: register
+};

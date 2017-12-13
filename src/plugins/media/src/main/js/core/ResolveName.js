@@ -8,24 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.media.core.ResolveName',
-  [
-  ],
-  function () {
-    var setup = function (editor) {
-      editor.on('ResolveName', function (e) {
-        var name;
+var setup = function (editor) {
+  editor.on('ResolveName', function (e) {
+    var name;
 
-        if (e.target.nodeType === 1 && (name = e.target.getAttribute("data-mce-object"))) {
-          e.name = name;
-        }
-      });
-    };
+    if (e.target.nodeType === 1 && (name = e.target.getAttribute("data-mce-object"))) {
+      e.name = name;
+    }
+  });
+};
 
-    return {
-      setup: setup
-    };
-  }
-);
-
+export default <any> {
+  setup: setup
+};

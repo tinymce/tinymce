@@ -8,25 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.media.api.Api',
-  [
-    'tinymce.plugins.media.ui.Dialog'
-  ],
-  function (Dialog) {
-    var get = function (editor) {
-      var showDialog = function () {
-        Dialog.showDialog(editor);
-      };
+import Dialog from '../ui/Dialog';
 
-      return {
-        showDialog: showDialog
-      };
-    };
+var get = function (editor) {
+  var showDialog = function () {
+    Dialog.showDialog(editor);
+  };
 
-    return {
-      get: get
-    };
-  }
-);
+  return {
+    showDialog: showDialog
+  };
+};
 
+export default <any> {
+  get: get
+};

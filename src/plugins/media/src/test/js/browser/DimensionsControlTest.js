@@ -1,46 +1,41 @@
-asynctest(
-  'browser.tinymce.plugins.media.DimensionsControlTest',
-  [
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.agar.api.UiFinder',
-    'ephox.agar.api.Waiter',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyDom',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyUi',
-    'tinymce.plugins.media.Plugin',
-    'tinymce.plugins.media.test.Utils',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (
-    Pipeline, Step, UiFinder, Waiter, TinyApis, TinyDom, TinyLoader, TinyUi, Plugin,
-    Utils, Theme
-  ) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { UiFinder } from '@ephox/agar';
+import { Waiter } from '@ephox/agar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyDom } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import { TinyUi } from '@ephox/mcagar';
+import Plugin from 'tinymce/plugins/media/Plugin';
+import Utils from 'tinymce/plugins/media/test/Utils';
+import Theme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
 
-    Plugin();
-    Theme();
+UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var ui = TinyUi(editor);
+  Plugin();
+  Theme();
 
-      Pipeline.async({}, [
-        Utils.sOpenDialog(ui),
-        ui.sClickOnUi('Click on close button', 'button:contains("Ok")'),
-        Waiter.sTryUntil(
-          'Wait for dialog to close',
-          UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div[aria-label="Insert/edit media"][role="dialog"]'),
-          50, 5000
-        )
+  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    var ui = TinyUi(editor);
 
-      ], onSuccess, onFailure);
-    }, {
-      plugins: ["media"],
-      toolbar: "media",
-      media_dimensions: false,
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
-    }, success, failure);
-  }
-);
+    Pipeline.async({}, [
+      Utils.sOpenDialog(ui),
+      ui.sClickOnUi('Click on close button', 'button:contains("Ok")'),
+      Waiter.sTryUntil(
+        'Wait for dialog to close',
+        UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div[aria-label="Insert/edit media"][role="dialog"]'),
+        50, 5000
+      )
+
+    ], onSuccess, onFailure);
+  }, {
+    plugins: ["media"],
+    toolbar: "media",
+    media_dimensions: false,
+    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+  }, success, failure);
+});
+

@@ -8,103 +8,97 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.media.core.HtmlToData',
-  [
-    'tinymce.core.util.Tools',
-    'tinymce.core.html.SaxParser',
-    'tinymce.core.html.Schema',
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.plugins.media.core.VideoScript',
-    'tinymce.plugins.media.core.Size'
-  ],
-  function (Tools, SaxParser, Schema, DOMUtils, VideoScript, Size) {
-    var DOM = DOMUtils.DOM;
+import Tools from 'tinymce/core/util/Tools';
+import SaxParser from 'tinymce/core/html/SaxParser';
+import Schema from 'tinymce/core/html/Schema';
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import VideoScript from './VideoScript';
+import Size from './Size';
 
-    var getEphoxEmbedIri = function (elm) {
-      return DOM.getAttrib(elm, 'data-ephox-embed-iri');
-    };
+var DOM = DOMUtils.DOM;
 
-    var isEphoxEmbed = function (html) {
-      var fragment = DOM.createFragment(html);
-      return getEphoxEmbedIri(fragment.firstChild) !== '';
-    };
+var getEphoxEmbedIri = function (elm) {
+  return DOM.getAttrib(elm, 'data-ephox-embed-iri');
+};
 
-    var htmlToDataSax = function (prefixes, html) {
-      var data = {};
+var isEphoxEmbed = function (html) {
+  var fragment = DOM.createFragment(html);
+  return getEphoxEmbedIri(fragment.firstChild) !== '';
+};
 
-      new SaxParser({
-        validate: false,
-        allow_conditional_comments: true,
-        special: 'script,noscript',
-        start: function (name, attrs) {
-          if (!data.source1 && name === "param") {
-            data.source1 = attrs.map.movie;
-          }
+var htmlToDataSax = function (prefixes, html) {
+  var data = {};
 
-          if (name === "iframe" || name === "object" || name === "embed" || name === "video" || name === "audio") {
-            if (!data.type) {
-              data.type = name;
-            }
+  new SaxParser({
+    validate: false,
+    allow_conditional_comments: true,
+    special: 'script,noscript',
+    start: function (name, attrs) {
+      if (!data.source1 && name === "param") {
+        data.source1 = attrs.map.movie;
+      }
 
-            data = Tools.extend(attrs.map, data);
-          }
-
-          if (name === "script") {
-            var videoScript = VideoScript.getVideoScriptMatch(prefixes, attrs.map.src);
-            if (!videoScript) {
-              return;
-            }
-
-            data = {
-              type: "script",
-              source1: attrs.map.src,
-              width: videoScript.width,
-              height: videoScript.height
-            };
-          }
-
-          if (name === "source") {
-            if (!data.source1) {
-              data.source1 = attrs.map.src;
-            } else if (!data.source2) {
-              data.source2 = attrs.map.src;
-            }
-          }
-
-          if (name === "img" && !data.poster) {
-            data.poster = attrs.map.src;
-          }
+      if (name === "iframe" || name === "object" || name === "embed" || name === "video" || name === "audio") {
+        if (!data.type) {
+          data.type = name;
         }
-      }).parse(html);
 
-      data.source1 = data.source1 || data.src || data.data;
-      data.source2 = data.source2 || '';
-      data.poster = data.poster || '';
+        data = Tools.extend(attrs.map, data);
+      }
 
-      return data;
-    };
+      if (name === "script") {
+        var videoScript = VideoScript.getVideoScriptMatch(prefixes, attrs.map.src);
+        if (!videoScript) {
+          return;
+        }
 
-    var ephoxEmbedHtmlToData = function (html) {
-      var fragment = DOM.createFragment(html);
-      var div = fragment.firstChild;
+        data = {
+          type: "script",
+          source1: attrs.map.src,
+          width: videoScript.width,
+          height: videoScript.height
+        };
+      }
 
-      return {
-        type: 'ephox-embed-iri',
-        source1: getEphoxEmbedIri(div),
-        source2: '',
-        poster: '',
-        width: Size.getMaxWidth(div),
-        height: Size.getMaxHeight(div)
-      };
-    };
+      if (name === "source") {
+        if (!data.source1) {
+          data.source1 = attrs.map.src;
+        } else if (!data.source2) {
+          data.source2 = attrs.map.src;
+        }
+      }
 
-    var htmlToData = function (prefixes, html) {
-      return isEphoxEmbed(html) ? ephoxEmbedHtmlToData(html) : htmlToDataSax(prefixes, html);
-    };
+      if (name === "img" && !data.poster) {
+        data.poster = attrs.map.src;
+      }
+    }
+  }).parse(html);
 
-    return {
-      htmlToData: htmlToData
-    };
-  }
-);
+  data.source1 = data.source1 || data.src || data.data;
+  data.source2 = data.source2 || '';
+  data.poster = data.poster || '';
+
+  return data;
+};
+
+var ephoxEmbedHtmlToData = function (html) {
+  var fragment = DOM.createFragment(html);
+  var div = fragment.firstChild;
+
+  return {
+    type: 'ephox-embed-iri',
+    source1: getEphoxEmbedIri(div),
+    source2: '',
+    poster: '',
+    width: Size.getMaxWidth(div),
+    height: Size.getMaxHeight(div)
+  };
+};
+
+var htmlToData = function (prefixes, html) {
+  return isEphoxEmbed(html) ? ephoxEmbedHtmlToData(html) : htmlToDataSax(prefixes, html);
+};
+
+export default <any> {
+  htmlToData: htmlToData
+};
