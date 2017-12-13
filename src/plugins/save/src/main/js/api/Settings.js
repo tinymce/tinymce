@@ -8,27 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.save.api.Settings',
-  [
-  ],
-  function () {
-    var enableWhenDirty = function (editor) {
-      return editor.getParam('save_enablewhendirty', true);
-    };
+var enableWhenDirty = function (editor) {
+  return editor.getParam('save_enablewhendirty', true);
+};
 
-    var hasOnSaveCallback = function (editor) {
-      return !!editor.getParam('save_onsavecallback');
-    };
+var hasOnSaveCallback = function (editor) {
+  return !!editor.getParam('save_onsavecallback');
+};
 
-    var hasOnCancelCallback = function (editor) {
-      return !!editor.getParam('save_oncancelcallback');
-    };
+var hasOnCancelCallback = function (editor) {
+  return !!editor.getParam('save_oncancelcallback');
+};
 
-    return {
-      enableWhenDirty: enableWhenDirty,
-      hasOnSaveCallback: hasOnSaveCallback,
-      hasOnCancelCallback: hasOnCancelCallback
-    };
-  }
-);
+export default <any> {
+  enableWhenDirty: enableWhenDirty,
+  hasOnSaveCallback: hasOnSaveCallback,
+  hasOnCancelCallback: hasOnCancelCallback
+};

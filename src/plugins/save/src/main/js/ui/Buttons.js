@@ -8,44 +8,38 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.save.ui.Buttons',
-  [
-    'tinymce.plugins.save.api.Settings'
-  ],
-  function (Settings) {
-    var stateToggle = function (editor) {
-      return function (e) {
-        var ctrl = e.control;
+import Settings from '../api/Settings';
 
-        editor.on('nodeChange dirty', function () {
-          ctrl.disabled(Settings.enableWhenDirty(editor) && !editor.isDirty());
-        });
-      };
-    };
+var stateToggle = function (editor) {
+  return function (e) {
+    var ctrl = e.control;
 
-    var register = function (editor) {
-      editor.addButton('save', {
-        icon: 'save',
-        text: 'Save',
-        cmd: 'mceSave',
-        disabled: true,
-        onPostRender: stateToggle(editor)
-      });
+    editor.on('nodeChange dirty', function () {
+      ctrl.disabled(Settings.enableWhenDirty(editor) && !editor.isDirty());
+    });
+  };
+};
 
-      editor.addButton('cancel', {
-        text: 'Cancel',
-        icon: false,
-        cmd: 'mceCancel',
-        disabled: true,
-        onPostRender: stateToggle(editor)
-      });
+var register = function (editor) {
+  editor.addButton('save', {
+    icon: 'save',
+    text: 'Save',
+    cmd: 'mceSave',
+    disabled: true,
+    onPostRender: stateToggle(editor)
+  });
 
-      editor.addShortcut('Meta+S', '', 'mceSave');
-    };
+  editor.addButton('cancel', {
+    text: 'Cancel',
+    icon: false,
+    cmd: 'mceCancel',
+    disabled: true,
+    onPostRender: stateToggle(editor)
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addShortcut('Meta+S', '', 'mceSave');
+};
+
+export default <any> {
+  register: register
+};

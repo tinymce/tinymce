@@ -8,24 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.save.api.Commands',
-  [
-    'tinymce.plugins.save.core.Actions'
-  ],
-  function (Actions) {
-    var register = function (editor) {
-      editor.addCommand('mceSave', function () {
-        Actions.save(editor);
-      });
+import Actions from '../core/Actions';
 
-      editor.addCommand('mceCancel', function () {
-        Actions.cancel(editor);
-      });
-    };
+var register = function (editor) {
+  editor.addCommand('mceSave', function () {
+    Actions.save(editor);
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addCommand('mceCancel', function () {
+    Actions.cancel(editor);
+  });
+};
+
+export default <any> {
+  register: register
+};

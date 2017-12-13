@@ -8,73 +8,67 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.save.core.Actions',
-  [
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.core.util.Tools',
-    'tinymce.plugins.save.api.Settings'
-  ],
-  function (DOMUtils, Tools, Settings) {
-    var displayErrorMessage = function (editor, message) {
-      editor.notificationManager.open({
-        text: editor.translate(message),
-        type: 'error'
-      });
-    };
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import Tools from 'tinymce/core/util/Tools';
+import Settings from '../api/Settings';
 
-    var save = function (editor) {
-      var formObj;
+var displayErrorMessage = function (editor, message) {
+  editor.notificationManager.open({
+    text: editor.translate(message),
+    type: 'error'
+  });
+};
 
-      formObj = DOMUtils.DOM.getParent(editor.id, 'form');
+var save = function (editor) {
+  var formObj;
 
-      if (Settings.enableWhenDirty(editor) && !editor.isDirty()) {
-        return;
-      }
+  formObj = DOMUtils.DOM.getParent(editor.id, 'form');
 
-      editor.save();
-
-      // Use callback instead
-      if (Settings.hasOnSaveCallback(editor)) {
-        editor.execCallback('save_onsavecallback', editor);
-        editor.nodeChanged();
-        return;
-      }
-
-      if (formObj) {
-        editor.setDirty(false);
-
-        if (!formObj.onsubmit || formObj.onsubmit()) {
-          if (typeof formObj.submit === 'function') {
-            formObj.submit();
-          } else {
-            displayErrorMessage(editor, 'Error: Form submit field collision.');
-          }
-        }
-
-        editor.nodeChanged();
-      } else {
-        displayErrorMessage(editor, 'Error: No form element found.');
-      }
-    };
-
-    var cancel = function (editor) {
-      var h = Tools.trim(editor.startContent);
-
-      // Use callback instead
-      if (Settings.hasOnCancelCallback(editor)) {
-        editor.execCallback('save_oncancelcallback', editor);
-        return;
-      }
-
-      editor.setContent(h);
-      editor.undoManager.clear();
-      editor.nodeChanged();
-    };
-
-    return {
-      save: save,
-      cancel: cancel
-    };
+  if (Settings.enableWhenDirty(editor) && !editor.isDirty()) {
+    return;
   }
-);
+
+  editor.save();
+
+  // Use callback instead
+  if (Settings.hasOnSaveCallback(editor)) {
+    editor.execCallback('save_onsavecallback', editor);
+    editor.nodeChanged();
+    return;
+  }
+
+  if (formObj) {
+    editor.setDirty(false);
+
+    if (!formObj.onsubmit || formObj.onsubmit()) {
+      if (typeof formObj.submit === 'function') {
+        formObj.submit();
+      } else {
+        displayErrorMessage(editor, 'Error: Form submit field collision.');
+      }
+    }
+
+    editor.nodeChanged();
+  } else {
+    displayErrorMessage(editor, 'Error: No form element found.');
+  }
+};
+
+var cancel = function (editor) {
+  var h = Tools.trim(editor.startContent);
+
+  // Use callback instead
+  if (Settings.hasOnCancelCallback(editor)) {
+    editor.execCallback('save_oncancelcallback', editor);
+    return;
+  }
+
+  editor.setContent(h);
+  editor.undoManager.clear();
+  editor.nodeChanged();
+};
+
+export default <any> {
+  save: save,
+  cancel: cancel
+};
