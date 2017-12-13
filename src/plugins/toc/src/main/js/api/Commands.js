@@ -8,24 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.toc.api.Commands',
-  [
-    'tinymce.plugins.toc.core.Toc'
-  ],
-  function (Toc) {
-    var register = function (editor) {
-      editor.addCommand('mceInsertToc', function () {
-        Toc.insertToc(editor);
-      });
+import Toc from '../core/Toc';
 
-      editor.addCommand('mceUpdateToc', function () {
-        Toc.updateToc(editor);
-      });
-    };
+var register = function (editor) {
+  editor.addCommand('mceInsertToc', function () {
+    Toc.insertToc(editor);
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addCommand('mceUpdateToc', function () {
+    Toc.updateToc(editor);
+  });
+};
+
+export default <any> {
+  register: register
+};

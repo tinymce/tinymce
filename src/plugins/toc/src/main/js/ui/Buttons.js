@@ -8,55 +8,49 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.toc.ui.Buttons',
-  [
-    'tinymce.plugins.toc.api.Settings',
-    'tinymce.plugins.toc.core.Toc'
-  ],
-  function (Settings, Toc) {
-    var toggleState = function (editor) {
-      return function (e) {
-        var ctrl = e.control;
+import Settings from '../api/Settings';
+import Toc from '../core/Toc';
 
-        editor.on('LoadContent SetContent change', function () {
-          ctrl.disabled(editor.readonly || !Toc.hasHeaders(editor));
-        });
-      };
-    };
+var toggleState = function (editor) {
+  return function (e) {
+    var ctrl = e.control;
 
-    var isToc = function (editor) {
-      return function (elm) {
-        return elm && editor.dom.is(elm, '.' + Settings.getTocClass(editor)) && editor.getBody().contains(elm);
-      };
-    };
+    editor.on('LoadContent SetContent change', function () {
+      ctrl.disabled(editor.readonly || !Toc.hasHeaders(editor));
+    });
+  };
+};
 
-    var register = function (editor) {
-      editor.addButton('toc', {
-        tooltip: 'Table of Contents',
-        cmd: 'mceInsertToc',
-        icon: 'toc',
-        onPostRender: toggleState(editor)
-      });
+var isToc = function (editor) {
+  return function (elm) {
+    return elm && editor.dom.is(elm, '.' + Settings.getTocClass(editor)) && editor.getBody().contains(elm);
+  };
+};
 
-      editor.addButton('tocupdate', {
-        tooltip: 'Update',
-        cmd: 'mceUpdateToc',
-        icon: 'reload'
-      });
+var register = function (editor) {
+  editor.addButton('toc', {
+    tooltip: 'Table of Contents',
+    cmd: 'mceInsertToc',
+    icon: 'toc',
+    onPostRender: toggleState(editor)
+  });
 
-      editor.addMenuItem('toc', {
-        text: "Table of Contents",
-        context: 'insert',
-        cmd: 'mceInsertToc',
-        onPostRender: toggleState(editor)
-      });
+  editor.addButton('tocupdate', {
+    tooltip: 'Update',
+    cmd: 'mceUpdateToc',
+    icon: 'reload'
+  });
 
-      editor.addContextToolbar(isToc(editor), 'tocupdate');
-    };
+  editor.addMenuItem('toc', {
+    text: "Table of Contents",
+    context: 'insert',
+    cmd: 'mceInsertToc',
+    onPostRender: toggleState(editor)
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addContextToolbar(isToc(editor), 'tocupdate');
+};
+
+export default <any> {
+  register: register
+};

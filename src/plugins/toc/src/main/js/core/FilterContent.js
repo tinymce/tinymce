@@ -8,34 +8,28 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.toc.core.FilterContent',
-  [
-    'tinymce.plugins.toc.api.Settings'
-  ],
-  function (Settings) {
-    var setup = function (editor) {
-      var $ = editor.$, tocClass = Settings.getTocClass(editor);
+import Settings from '../api/Settings';
 
-      editor.on('PreProcess', function (e) {
-        var $tocElm = $('.' + tocClass, e.node);
-        if ($tocElm.length) {
-          $tocElm.removeAttr('contentEditable');
-          $tocElm.find('[contenteditable]').removeAttr('contentEditable');
-        }
-      });
+var setup = function (editor) {
+  var $ = editor.$, tocClass = Settings.getTocClass(editor);
 
-      editor.on('SetContent', function () {
-        var $tocElm = $('.' + tocClass);
-        if ($tocElm.length) {
-          $tocElm.attr('contentEditable', false);
-          $tocElm.children(':first-child').attr('contentEditable', true);
-        }
-      });
-    };
+  editor.on('PreProcess', function (e) {
+    var $tocElm = $('.' + tocClass, e.node);
+    if ($tocElm.length) {
+      $tocElm.removeAttr('contentEditable');
+      $tocElm.find('[contenteditable]').removeAttr('contentEditable');
+    }
+  });
 
-    return {
-      setup: setup
-    };
-  }
-);
+  editor.on('SetContent', function () {
+    var $tocElm = $('.' + tocClass);
+    if ($tocElm.length) {
+      $tocElm.attr('contentEditable', false);
+      $tocElm.children(':first-child').attr('contentEditable', true);
+    }
+  });
+};
+
+export default <any> {
+  setup: setup
+};
