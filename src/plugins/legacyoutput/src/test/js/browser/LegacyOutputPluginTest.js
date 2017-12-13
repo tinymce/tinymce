@@ -1,13 +1,13 @@
-asynctest(
+import { Pipeline } from '@ephox/agar';
+import { LegacyUnit } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import Plugin from 'tinymce/plugins/legacyoutput/Plugin';
+import Theme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
+
+UnitTest.asynctest(
   'browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest',
-  [
-    'ephox.agar.api.Pipeline',
-    'ephox.mcagar.api.LegacyUnit',
-    'ephox.mcagar.api.TinyLoader',
-    'tinymce.plugins.legacyoutput.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (Pipeline, LegacyUnit, TinyLoader, Plugin, Theme) {
+  function() {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
     var suite = LegacyUnit.createSuite();
@@ -102,3 +102,4 @@ asynctest(
     }, success, failure);
   }
 );
+

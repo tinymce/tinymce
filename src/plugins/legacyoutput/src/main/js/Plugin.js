@@ -8,25 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import PluginManager from 'tinymce/core/PluginManager';
+import Formats from './core/Formats';
+import Buttons from './ui/Buttons';
+
 /**
  * This class contains all core logic for the legacyoutput plugin.
  *
  * @class tinymce.legacyoutput.Plugin
  * @private
  */
-define(
-  'tinymce.plugins.legacyoutput.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.legacyoutput.core.Formats',
-    'tinymce.plugins.legacyoutput.ui.Buttons'
-  ],
-  function (PluginManager, Formats, Buttons) {
-    PluginManager.add('legacyoutput', function (editor) {
-      Formats.setup(editor);
-      Buttons.register(editor);
-    });
 
-    return function () { };
-  }
-);
+PluginManager.add('legacyoutput', function (editor) {
+  Formats.setup(editor);
+  Buttons.register(editor);
+});
+
+export default <any> function () { };

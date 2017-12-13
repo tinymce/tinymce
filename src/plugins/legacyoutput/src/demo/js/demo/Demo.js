@@ -8,32 +8,26 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import EditorManager from 'tinymce/core/EditorManager';
+import CodePlugin from 'tinymce/plugins/code/Plugin';
+import LegacyOutputPlugin from 'tinymce/plugins/legacyoutput/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
 /*eslint no-console:0 */
 
-define(
-  'tinymce.plugins.legacyoutput.demo.Demo',
 
-  [
-    'tinymce.core.EditorManager',
-    'tinymce.plugins.code.Plugin',
-    'tinymce.plugins.legacyoutput.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
 
-  function (EditorManager, CodePlugin, LegacyOutputPlugin, ModernTheme) {
-    return function () {
-      CodePlugin();
-      LegacyOutputPlugin();
-      ModernTheme();
+export default <any> function () {
+  CodePlugin();
+  LegacyOutputPlugin();
+  ModernTheme();
 
-      EditorManager.init({
-        selector: "textarea.tinymce",
-        theme: "modern",
-        skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        plugins: "legacyoutput code",
-        toolbar: "legacyoutput fontselect fontsizeselect code",
-        height: 600
-      });
-    };
-  }
-);
+  EditorManager.init({
+    selector: "textarea.tinymce",
+    theme: "modern",
+    skin_url: "../../../../../skins/lightgray/dist/lightgray",
+    plugins: "legacyoutput code",
+    toolbar: "legacyoutput fontselect fontsizeselect code",
+    height: 600
+  });
+};
