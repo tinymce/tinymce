@@ -52,7 +52,7 @@ var compileFilter = function (filter) {
 var getSelectors = function (editor, doc, fileFilter) {
   var selectors = [], contentCSSUrls = {};
 
-  function append(styleSheet, imported) {
+  function append(styleSheet, imported?) {
     var href = styleSheet.href, rules;
 
     href = removeCacheSuffix(href);
@@ -198,7 +198,7 @@ var convertSelectorToFormat = function (editor, plugin, selector, group) {
     selectorConverter = Settings.getSelectorConverter(editor);
   } else {
     selectorConverter = function () {
-      return defaultConvertSelectorToFormat(editor, selector, group);
+      return defaultConvertSelectorToFormat(editor, selector);
     };
   }
 

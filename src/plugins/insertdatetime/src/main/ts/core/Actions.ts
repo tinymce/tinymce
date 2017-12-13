@@ -28,7 +28,7 @@ var addZeros = function (value, len) {
   return value;
 };
 
-var getDateTime = function (editor, fmt, date) {
+var getDateTime = function (editor, fmt, date?) {
   date = date || new Date();
 
   fmt = fmt.replace('%D', '%m/%d/%Y');

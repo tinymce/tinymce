@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
   ModernTheme();
   ImportCssPlugin();
 
-  var fireFormatsMenuEvent = function (editor, styleSheets, items) {
+  var fireFormatsMenuEvent = function (editor, styleSheets, items?) {
     menuCtrl = Factory.create('menu', {
       items: items
     }).renderTo(document.getElementById('view'));

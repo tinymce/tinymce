@@ -261,7 +261,7 @@ var updateList = function (dom, list, listName, detail) {
 
 var toggleMultipleLists = function (editor, parentList, lists, listName, detail) {
   if (parentList.nodeName === listName && !hasListStyleDetail(detail)) {
-    removeList(editor, listName);
+    removeList(editor);
   } else {
     var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
 
@@ -284,7 +284,7 @@ var toggleSingleList = function (editor, parentList, listName, detail) {
 
   if (parentList) {
     if (parentList.nodeName === listName && !hasListStyleDetail(detail)) {
-      removeList(editor, listName);
+      removeList(editor);
     } else {
       var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
       updateListWithDetails(editor.dom, parentList, detail);

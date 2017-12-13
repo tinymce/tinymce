@@ -28,7 +28,7 @@ var DOM = DOMUtils.DOM;
 var createBookmark = function (rng) {
   var bookmark = {};
 
-  var setupEndPoint = function (start) {
+  var setupEndPoint = function (start?) {
     var offsetNode, container, offset;
 
     container = rng[start ? 'startContainer' : 'endContainer'];
@@ -67,7 +67,7 @@ var createBookmark = function (rng) {
 };
 
 var resolveBookmark = function (bookmark) {
-  function restoreEndPoint(start) {
+  function restoreEndPoint(start?) {
     var container, offset, node;
 
     var nodeIndex = function (container) {

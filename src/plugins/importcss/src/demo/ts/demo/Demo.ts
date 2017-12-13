@@ -22,7 +22,8 @@ export default <any> function () {
   ImportCssPlugin();
   ModernTheme();
 
-  document.querySelector('.tinymce').value = 'The format menu should show "red"';
+  var elm: any = document.querySelector('.tinymce');
+  elm.value = 'The format menu should show "red"';
 
   EditorManager.init({
     selector: "textarea.tinymce",

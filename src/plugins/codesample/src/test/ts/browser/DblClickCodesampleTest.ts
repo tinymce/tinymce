@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
 
   var sInsertTextareaContent = function (value) {
     return Step.sync(function () {
-      var textarea = document.querySelector('div[role="dialog"] textarea');
+      var textarea: any = document.querySelector('div[role="dialog"] textarea');
       textarea.value = value;
     });
   };

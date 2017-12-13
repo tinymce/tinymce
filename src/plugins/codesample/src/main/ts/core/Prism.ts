@@ -14,11 +14,15 @@
 
 /*eslint-enable */
 
+declare const WorkerGlobalScope: any;
+declare const module: any;
+declare const global: any;
+
 var window = {};
 // ------------------ Start wrap
 
 /* http://prismjs.com/download.html?themes=prism-dark&languages=markup+css+clike+javascript+c+csharp+cpp+java+php+python+ruby */
-var _self = (typeof window !== 'undefined')
+var _self: any = (typeof window !== 'undefined')
   ? window   // if in browser
   : (
     (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope)
@@ -37,7 +41,7 @@ var Prism = (function () {
   // Private helper vars
   var lang = /\blang(?:uage)?-(?!\*)(\w+)\b/i;
 
-  var _ = _self.Prism = {
+  var _: any = _self.Prism = {
     util: {
       encode: function (tokens) {
         if (tokens instanceof Token) {
@@ -145,7 +149,7 @@ var Prism = (function () {
       },
 
       // Traverse a language definition with Depth First Search
-      DFS: function (o, callback, type) {
+      DFS: <any> function (o, callback, type) {
         for (var i in o) {
           if (o.hasOwnProperty(i)) {
             callback.call(o, i, o[i], type || i);
@@ -195,7 +199,7 @@ var Prism = (function () {
 
       var code = element.textContent;
 
-      var env = {
+      var env: any = {
         element: element,
         language: language,
         grammar: grammar,
@@ -358,7 +362,7 @@ var Prism = (function () {
     }
   };
 
-  var Token = _.Token = function (type, content, alias) {
+  var Token: any = _.Token = function (type, content, alias) {
     this.type = type;
     this.content = content;
     this.alias = alias;

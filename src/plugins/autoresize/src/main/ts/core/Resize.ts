@@ -27,7 +27,7 @@ var isFullscreen = function (editor) {
  * Calls the resize x times in 100ms intervals. We can't wait for load events since
  * the CSS files might load async.
  */
-var wait = function (editor, oldSize, times, interval, callback) {
+var wait = function (editor, oldSize, times, interval, callback?) {
   Delay.setEditorTimeout(editor, function () {
     resize(editor, oldSize);
 
@@ -111,7 +111,7 @@ var resize = function (editor, oldSize) {
     // WebKit doesn't decrease the size of the body element until the iframe gets resized
     // So we need to continue to resize the iframe down until the size gets fixed
     if (Env.webKit && deltaSize < 0) {
-      resize(editor);
+      resize(editor, oldSize);
     }
   }
 };

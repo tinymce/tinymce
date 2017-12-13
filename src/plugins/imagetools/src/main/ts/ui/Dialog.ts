@@ -127,7 +127,7 @@ function open(editor, currentState, resolve, reject) {
       });
   }
 
-  function tempAction(fn) {
+  var tempAction: any = function (fn) {
     var args = [].slice.call(arguments, 1);
 
     return function () {
@@ -138,7 +138,7 @@ function open(editor, currentState, resolve, reject) {
           fn.apply(this, [ir].concat(args)).then(imageResultToBlob).then(addTempState);
         });
     };
-  }
+  };
 
   function action(fn) {
     var args = [].slice.call(arguments, 1);
@@ -375,7 +375,7 @@ function open(editor, currentState, resolve, reject) {
 
     e.preventDefault();
 
-    action(ImageTransformations.resize, width, height)();
+    action(ImageTransformations.resize)();
     cancel();
   }).on('show', disableUndoRedo);
 

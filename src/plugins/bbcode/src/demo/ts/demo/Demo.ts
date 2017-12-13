@@ -20,7 +20,9 @@ CodePlugin();
 ModernTheme();
 
 export default <any> function () {
-  document.querySelector('.tinymce').value = '[b]bbcode plugin[/b]';
+  var elm: any;
+  elm = document.querySelector('.tinymce');
+  elm.value = '[b]bbcode plugin[/b]';
 
   EditorManager.init({
     selector: "textarea.tinymce",

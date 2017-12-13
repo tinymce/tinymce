@@ -4,7 +4,7 @@ import { Mouse } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { UiFinder } from '@ephox/agar';
-import { Clicks } from '@ephox/agar';
+import Clicks from '@ephox/agar/lib/main/ts/ephox/agar/mouse/Clicks';
 import { Fun } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 import { TinyDom } from '@ephox/mcagar';
@@ -14,8 +14,6 @@ import { Attr } from '@ephox/sugar';
 import { PredicateFilter } from '@ephox/sugar';
 import { Selectors } from '@ephox/sugar';
 import { Visibility } from '@ephox/sugar';
-
-
 
 export default <any> function (editor) {
   var ui = TinyUi(editor);

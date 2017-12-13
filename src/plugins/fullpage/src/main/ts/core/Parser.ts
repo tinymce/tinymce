@@ -23,7 +23,7 @@ var parseHeader = function (head) {
 };
 
 var htmlToData = function (editor, head) {
-  var headerFragment = parseHeader(head), data = {}, elm, matches;
+  var headerFragment = parseHeader(head), data: any = {}, elm, matches;
 
   function getAttr(elm, name) {
     var value = elm.attr(name);

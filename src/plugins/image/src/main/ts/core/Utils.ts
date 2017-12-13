@@ -41,13 +41,13 @@ var getImageSize = function (url, callback) {
   };
 
   img.onerror = function () {
-    done();
+    done(0, 0);
   };
 
   var style = img.style;
   style.visibility = 'hidden';
   style.position = 'fixed';
-  style.bottom = style.left = 0;
+  style.bottom = style.left = '0px';
   style.width = style.height = 'auto';
 
   document.body.appendChild(img);
@@ -56,11 +56,11 @@ var getImageSize = function (url, callback) {
 
 
 var buildListItems = function (inputList, itemCallback, startItems) {
-  function appendItems(values, output) {
+  function appendItems(values, output?) {
     output = output || [];
 
     Tools.each(values, function (item) {
-      var menuItem = { text: item.text || item.title };
+      var menuItem: any = { text: item.text || item.title };
 
       if (item.menu) {
         menuItem.menu = appendItems(item.menu);

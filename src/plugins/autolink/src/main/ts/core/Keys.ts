@@ -17,15 +17,15 @@ var rangeEqualsDelimiterOrSpace = function (rangeString, delimiter) {
 };
 
 var handleEclipse = function (editor) {
-  parseCurrentLine(editor, -1, '(', true);
+  parseCurrentLine(editor, -1, '(');
 };
 
 var handleSpacebar = function (editor) {
-  parseCurrentLine(editor, 0, '', true);
+  parseCurrentLine(editor, 0, '');
 };
 
 var handleEnter = function (editor) {
-  parseCurrentLine(editor, -1, '', false);
+  parseCurrentLine(editor, -1, '');
 };
 
 var scopeIndex = function (container, index) {

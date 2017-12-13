@@ -24,7 +24,8 @@ export default <any> function () {
   TablePlugin();
   ModernTheme();
 
-  document.querySelector('.tinymce').value = '<table><tbody><tr><td>One</td></tr></tbody></table>';
+  var elm: any = document.querySelector('.tinymce');
+  elm.value = '<table><tbody><tr><td>One</td></tr></tbody></table>';
 
   EditorManager.init({
     selector: "textarea.tinymce",

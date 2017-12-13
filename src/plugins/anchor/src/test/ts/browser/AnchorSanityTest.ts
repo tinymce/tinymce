@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', functio
 
   var sType = function (text) {
     return Step.sync(function () {
-      var elm = document.querySelector('div[aria-label="Anchor"].mce-floatpanel input');
+      var elm: any = document.querySelector('div[aria-label="Anchor"].mce-floatpanel input');
       elm.value = text;
     });
   };

@@ -48,7 +48,7 @@ export default <any> function (editor) {
   };
 
   function showDialog(imageList) {
-    var win, data = {}, imgElm, figureElm, dom = editor.dom;
+    var win, data: any = {}, imgElm, figureElm, dom = editor.dom;
     var imageListCtrl;
 
     function onSubmitForm() {

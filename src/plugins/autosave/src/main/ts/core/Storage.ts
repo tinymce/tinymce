@@ -13,7 +13,7 @@ import Tools from 'tinymce/core/util/Tools';
 import Events from '../api/Events';
 import Settings from '../api/Settings';
 
-var isEmpty = function (editor, html) {
+var isEmpty = function (editor, html?) {
   var forcedRootBlockName = editor.settings.forced_root_block;
 
   html = Tools.trim(typeof html === "undefined" ? editor.getBody().innerHTML : html);
@@ -34,7 +34,7 @@ var hasDraft = function (editor) {
   return true;
 };
 
-var removeDraft = function (editor, fire) {
+var removeDraft = function (editor, fire?) {
   var prefix = Settings.getAutoSavePrefix(editor);
 
   LocalStorage.removeItem(prefix + "draft");

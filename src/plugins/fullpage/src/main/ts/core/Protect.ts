@@ -10,6 +10,9 @@
 
 import Tools from 'tinymce/core/util/Tools';
 
+declare const escape: any;
+declare const unescape: any;
+
 var protectHtml = function (protect, html) {
   Tools.each(protect, function (pattern) {
     html = html.replace(pattern, function (str) {

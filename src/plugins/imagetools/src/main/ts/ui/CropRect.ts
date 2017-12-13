@@ -250,7 +250,7 @@ export default <any> function (currentRect, viewPortRect, clampRect, containerEl
     dragHelpers = [];
   }
 
-  render(containerElm);
+  render();
 
   instance = Tools.extend({
     toggleVisibility: toggleVisibility,
