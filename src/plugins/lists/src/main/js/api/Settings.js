@@ -8,18 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.lists.api.Settings',
-  [
-  ],
-  function () {
-    var shouldIndentOnTab = function (editor) {
-      return editor.getParam('lists_indent_on_tab', true);
-    };
+var shouldIndentOnTab = function (editor) {
+  return editor.getParam('lists_indent_on_tab', true);
+};
 
-    return {
-      shouldIndentOnTab: shouldIndentOnTab
-    };
-  }
-);
-
+export default <any> {
+  shouldIndentOnTab: shouldIndentOnTab
+};

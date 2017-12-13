@@ -8,134 +8,127 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.lists.actions.Outdent',
-  [
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.plugins.lists.core.Bookmark',
-    'tinymce.plugins.lists.core.NodeType',
-    'tinymce.plugins.lists.core.NormalizeLists',
-    'tinymce.plugins.lists.core.Selection',
-    'tinymce.plugins.lists.core.SplitList',
-    'tinymce.plugins.lists.core.TextBlock'
-  ],
-  function (DOMUtils, Bookmark, NodeType, NormalizeLists, Selection, SplitList, TextBlock) {
-    var DOM = DOMUtils.DOM;
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import Bookmark from '../core/Bookmark';
+import NodeType from '../core/NodeType';
+import NormalizeLists from '../core/NormalizeLists';
+import Selection from '../core/Selection';
+import SplitList from '../core/SplitList';
+import TextBlock from '../core/TextBlock';
 
-    var removeEmptyLi = function (dom, li) {
-      if (NodeType.isEmpty(dom, li)) {
-        DOM.remove(li);
-      }
-    };
+var DOM = DOMUtils.DOM;
 
-    var outdent = function (editor, li) {
-      var ul = li.parentNode, ulParent = ul.parentNode, newBlock;
+var removeEmptyLi = function (dom, li) {
+  if (NodeType.isEmpty(dom, li)) {
+    DOM.remove(li);
+  }
+};
 
-      if (ul === editor.getBody()) {
-        return true;
-      }
+var outdent = function (editor, li) {
+  var ul = li.parentNode, ulParent = ul.parentNode, newBlock;
 
-      if (li.nodeName === 'DD') {
-        DOM.rename(li, 'DT');
-        return true;
-      }
+  if (ul === editor.getBody()) {
+    return true;
+  }
 
-      if (NodeType.isFirstChild(li) && NodeType.isLastChild(li)) {
-        if (ulParent.nodeName === "LI") {
-          DOM.insertAfter(li, ulParent);
-          removeEmptyLi(editor.dom, ulParent);
-          DOM.remove(ul);
-        } else if (NodeType.isListNode(ulParent)) {
-          DOM.remove(ul, true);
-        } else {
-          ulParent.insertBefore(TextBlock.createNewTextBlock(editor, li), ul);
-          DOM.remove(ul);
-        }
+  if (li.nodeName === 'DD') {
+    DOM.rename(li, 'DT');
+    return true;
+  }
 
-        return true;
-      } else if (NodeType.isFirstChild(li)) {
-        if (ulParent.nodeName === "LI") {
-          DOM.insertAfter(li, ulParent);
-          li.appendChild(ul);
-          removeEmptyLi(editor.dom, ulParent);
-        } else if (NodeType.isListNode(ulParent)) {
-          ulParent.insertBefore(li, ul);
-        } else {
-          ulParent.insertBefore(TextBlock.createNewTextBlock(editor, li), ul);
-          DOM.remove(li);
-        }
+  if (NodeType.isFirstChild(li) && NodeType.isLastChild(li)) {
+    if (ulParent.nodeName === "LI") {
+      DOM.insertAfter(li, ulParent);
+      removeEmptyLi(editor.dom, ulParent);
+      DOM.remove(ul);
+    } else if (NodeType.isListNode(ulParent)) {
+      DOM.remove(ul, true);
+    } else {
+      ulParent.insertBefore(TextBlock.createNewTextBlock(editor, li), ul);
+      DOM.remove(ul);
+    }
 
-        return true;
-      } else if (NodeType.isLastChild(li)) {
-        if (ulParent.nodeName === "LI") {
-          DOM.insertAfter(li, ulParent);
-        } else if (NodeType.isListNode(ulParent)) {
-          DOM.insertAfter(li, ul);
-        } else {
-          DOM.insertAfter(TextBlock.createNewTextBlock(editor, li), ul);
-          DOM.remove(li);
-        }
+    return true;
+  } else if (NodeType.isFirstChild(li)) {
+    if (ulParent.nodeName === "LI") {
+      DOM.insertAfter(li, ulParent);
+      li.appendChild(ul);
+      removeEmptyLi(editor.dom, ulParent);
+    } else if (NodeType.isListNode(ulParent)) {
+      ulParent.insertBefore(li, ul);
+    } else {
+      ulParent.insertBefore(TextBlock.createNewTextBlock(editor, li), ul);
+      DOM.remove(li);
+    }
 
-        return true;
-      }
+    return true;
+  } else if (NodeType.isLastChild(li)) {
+    if (ulParent.nodeName === "LI") {
+      DOM.insertAfter(li, ulParent);
+    } else if (NodeType.isListNode(ulParent)) {
+      DOM.insertAfter(li, ul);
+    } else {
+      DOM.insertAfter(TextBlock.createNewTextBlock(editor, li), ul);
+      DOM.remove(li);
+    }
 
-      if (ulParent.nodeName === 'LI') {
-        ul = ulParent;
-        newBlock = TextBlock.createNewTextBlock(editor, li, 'LI');
-      } else if (NodeType.isListNode(ulParent)) {
-        newBlock = TextBlock.createNewTextBlock(editor, li, 'LI');
-      } else {
-        newBlock = TextBlock.createNewTextBlock(editor, li);
-      }
+    return true;
+  }
 
-      SplitList.splitList(editor, ul, li, newBlock);
-      NormalizeLists.normalizeLists(editor.dom, ul.parentNode);
+  if (ulParent.nodeName === 'LI') {
+    ul = ulParent;
+    newBlock = TextBlock.createNewTextBlock(editor, li, 'LI');
+  } else if (NodeType.isListNode(ulParent)) {
+    newBlock = TextBlock.createNewTextBlock(editor, li, 'LI');
+  } else {
+    newBlock = TextBlock.createNewTextBlock(editor, li);
+  }
 
-      return true;
-    };
+  SplitList.splitList(editor, ul, li, newBlock);
+  NormalizeLists.normalizeLists(editor.dom, ul.parentNode);
 
-    var outdentSelection = function (editor) {
-      var listElements = Selection.getSelectedListItems(editor);
+  return true;
+};
 
-      if (listElements.length) {
-        var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
-        var i, y;
-        var root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
+var outdentSelection = function (editor) {
+  var listElements = Selection.getSelectedListItems(editor);
 
-        i = listElements.length;
-        while (i--) {
-          var node = listElements[i].parentNode;
+  if (listElements.length) {
+    var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
+    var i, y;
+    var root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
 
-          while (node && node !== root) {
-            y = listElements.length;
-            while (y--) {
-              if (listElements[y] === node) {
-                listElements.splice(i, 1);
-                break;
-              }
-            }
+    i = listElements.length;
+    while (i--) {
+      var node = listElements[i].parentNode;
 
-            node = node.parentNode;
-          }
-        }
-
-        for (i = 0; i < listElements.length; i++) {
-          if (!outdent(editor, listElements[i]) && i === 0) {
+      while (node && node !== root) {
+        y = listElements.length;
+        while (y--) {
+          if (listElements[y] === node) {
+            listElements.splice(i, 1);
             break;
           }
         }
 
-        editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
-        editor.nodeChanged();
-
-        return true;
+        node = node.parentNode;
       }
-    };
+    }
 
-    return {
-      outdent: outdent,
-      outdentSelection: outdentSelection
-    };
+    for (i = 0; i < listElements.length; i++) {
+      if (!outdent(editor, listElements[i]) && i === 0) {
+        break;
+      }
+    }
+
+    editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+    editor.nodeChanged();
+
+    return true;
   }
-);
+};
 
+export default <any> {
+  outdent: outdent,
+  outdentSelection: outdentSelection
+};

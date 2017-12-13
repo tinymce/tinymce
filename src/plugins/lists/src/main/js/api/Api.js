@@ -8,23 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.lists.api.Api',
-  [
-    'tinymce.plugins.lists.core.Delete'
-  ],
-  function (Delete) {
-    var get = function (editor) {
-      return {
-        backspaceDelete: function (isForward) {
-          Delete.backspaceDelete(editor, isForward);
-        }
-      };
-    };
+import Delete from '../core/Delete';
 
-    return {
-      get: get
-    };
-  }
-);
+var get = function (editor) {
+  return {
+    backspaceDelete: function (isForward) {
+      Delete.backspaceDelete(editor, isForward);
+    }
+  };
+};
 
+export default <any> {
+  get: get
+};

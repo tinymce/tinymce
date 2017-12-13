@@ -8,25 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.lists.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.lists.api.Api',
-    'tinymce.plugins.lists.api.Commands',
-    'tinymce.plugins.lists.core.Keyboard',
-    'tinymce.plugins.lists.ui.Buttons'
-  ],
-  function (PluginManager, Api, Commands, Keyboard, Buttons) {
-    PluginManager.add('lists', function (editor) {
-      Keyboard.setup(editor);
-      Buttons.register(editor);
-      Commands.register(editor);
+import PluginManager from 'tinymce/core/PluginManager';
+import Api from './api/Api';
+import Commands from './api/Commands';
+import Keyboard from './core/Keyboard';
+import Buttons from './ui/Buttons';
 
-      return Api.get(editor);
-    });
+PluginManager.add('lists', function (editor) {
+  Keyboard.setup(editor);
+  Buttons.register(editor);
+  Commands.register(editor);
 
-    return function () { };
-  }
-);
+  return Api.get(editor);
+});
 
+export default <any> function () { };

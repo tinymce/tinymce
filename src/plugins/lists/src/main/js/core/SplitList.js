@@ -8,62 +8,55 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.lists.core.SplitList',
-  [
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.plugins.lists.core.NodeType',
-    'tinymce.plugins.lists.core.TextBlock',
-    'tinymce.core.util.Tools'
-  ],
-  function (DOMUtils, NodeType, TextBlock, Tools) {
-    var DOM = DOMUtils.DOM;
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import NodeType from './NodeType';
+import TextBlock from './TextBlock';
+import Tools from 'tinymce/core/util/Tools';
 
-    var splitList = function (editor, ul, li, newBlock) {
-      var tmpRng, fragment, bookmarks, node;
+var DOM = DOMUtils.DOM;
 
-      var removeAndKeepBookmarks = function (targetNode) {
-        Tools.each(bookmarks, function (node) {
-          targetNode.parentNode.insertBefore(node, li.parentNode);
-        });
+var splitList = function (editor, ul, li, newBlock) {
+  var tmpRng, fragment, bookmarks, node;
 
-        DOM.remove(targetNode);
-      };
+  var removeAndKeepBookmarks = function (targetNode) {
+    Tools.each(bookmarks, function (node) {
+      targetNode.parentNode.insertBefore(node, li.parentNode);
+    });
 
-      bookmarks = DOM.select('span[data-mce-type="bookmark"]', ul);
-      newBlock = newBlock || TextBlock.createNewTextBlock(editor, li);
-      tmpRng = DOM.createRng();
-      tmpRng.setStartAfter(li);
-      tmpRng.setEndAfter(ul);
-      fragment = tmpRng.extractContents();
+    DOM.remove(targetNode);
+  };
 
-      for (node = fragment.firstChild; node; node = node.firstChild) {
-        if (node.nodeName === 'LI' && editor.dom.isEmpty(node)) {
-          DOM.remove(node);
-          break;
-        }
-      }
+  bookmarks = DOM.select('span[data-mce-type="bookmark"]', ul);
+  newBlock = newBlock || TextBlock.createNewTextBlock(editor, li);
+  tmpRng = DOM.createRng();
+  tmpRng.setStartAfter(li);
+  tmpRng.setEndAfter(ul);
+  fragment = tmpRng.extractContents();
 
-      if (!editor.dom.isEmpty(fragment)) {
-        DOM.insertAfter(fragment, ul);
-      }
-
-      DOM.insertAfter(newBlock, ul);
-
-      if (NodeType.isEmpty(editor.dom, li.parentNode)) {
-        removeAndKeepBookmarks(li.parentNode);
-      }
-
-      DOM.remove(li);
-
-      if (NodeType.isEmpty(editor.dom, ul)) {
-        DOM.remove(ul);
-      }
-    };
-
-    return {
-      splitList: splitList
-    };
+  for (node = fragment.firstChild; node; node = node.firstChild) {
+    if (node.nodeName === 'LI' && editor.dom.isEmpty(node)) {
+      DOM.remove(node);
+      break;
+    }
   }
-);
 
+  if (!editor.dom.isEmpty(fragment)) {
+    DOM.insertAfter(fragment, ul);
+  }
+
+  DOM.insertAfter(newBlock, ul);
+
+  if (NodeType.isEmpty(editor.dom, li.parentNode)) {
+    removeAndKeepBookmarks(li.parentNode);
+  }
+
+  DOM.remove(li);
+
+  if (NodeType.isEmpty(editor.dom, ul)) {
+    DOM.remove(ul);
+  }
+};
+
+export default <any> {
+  splitList: splitList
+};
