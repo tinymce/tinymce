@@ -1,0 +1,56 @@
+import { GeneralSteps } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import Plugin from 'tinymce/plugins/table/Plugin';
+import Theme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
+
+UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
+
+  Plugin();
+  Theme();
+
+  var sInsertTable = function (editor, cols, rows) {
+    return Step.sync(function () {
+      editor.plugins.table.insertTable(cols, rows);
+    });
+  };
+
+  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    var tinyApis = TinyApis(editor);
+
+    Pipeline.async({}, [
+      Logger.t('Insert table 2x2', GeneralSteps.sequence([
+        tinyApis.sSetContent(''),
+        sInsertTable(editor, 2, 2),
+        tinyApis.sAssertContent('<table style="width: 100%; border-collapse: collapse;" border="1"><tbody><tr><td style="width: 50%;">&nbsp;</td><td style="width: 50%;">&nbsp;</td></tr><tr><td style="width: 50%;">&nbsp;</td><td style="width: 50%;">&nbsp;</td></tr></tbody></table>'),
+        tinyApis.sAssertSelection([0, 0, 0, 0], 0, [0, 0, 0, 0], 0)
+      ])),
+      Logger.t('Insert table 1x2', GeneralSteps.sequence([
+        tinyApis.sSetContent(''),
+        sInsertTable(editor, 1, 2),
+        tinyApis.sAssertContent('<table style="width: 100%; border-collapse: collapse;" border="1"><tbody><tr><td style="width: 100%;">&nbsp;</td></tr><tr><td style="width: 100%;">&nbsp;</td></tr></tbody></table>'),
+        tinyApis.sAssertSelection([0, 0, 0, 0], 0, [0, 0, 0, 0], 0)
+      ])),
+      Logger.t('Insert table 2x1', GeneralSteps.sequence([
+        tinyApis.sSetContent(''),
+        sInsertTable(editor, 2, 1),
+        tinyApis.sAssertContent('<table style="width: 100%; border-collapse: collapse;" border="1"><tbody><tr><td style="width: 50%;">&nbsp;</td><td style="width: 50%;">&nbsp;</td></tr></tbody></table>'),
+        tinyApis.sAssertSelection([0, 0, 0, 0], 0, [0, 0, 0, 0], 0)
+      ]))
+    ], onSuccess, onFailure);
+  }, {
+    plugins: 'table',
+    indent: false,
+    valid_styles: {
+      '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
+    },
+    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+  }, success, failure);
+});
+

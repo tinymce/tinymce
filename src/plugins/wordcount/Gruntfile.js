@@ -1,48 +1,43 @@
 /*eslint-env node */
 
+var resolve = require('rollup-plugin-node-resolve');
+var typescript = require('rollup-plugin-typescript2');
+
 module.exports = function (grunt) {
   grunt.initConfig({
-    "bolt-init": {
-      "plugin": {
-        config_dir: "config/bolt"
-      }
-    },
-
-    "bolt-build": {
-      "plugin": {
-        config_js: "config/bolt/prod.js",
-        output_dir: "scratch",
-        main: "tinymce.plugins.wordcount.Plugin",
-        filename: "plugin",
-
-        generate_inline: true,
-        minimise_module_names: true,
-
-        files: {
-          src: ["src/main/js/Plugin.js"]
-        }
-      }
-    },
-
-    copy: {
-      "plugin": {
+    rollup: {
+      options: {
+        treeshake: false,
+        moduleName: 'wordcount',
+        format: 'iife',
+        banner: '(function () {',
+        footer: '})()',
+        plugins: [
+          resolve(),
+          typescript({
+            tsconfig: '../../../tsconfig.plugin.json',
+            include: [
+              '../../**/*.ts'
+            ]
+          })
+        ]
+      },
+      plugin: {
+        files:[
+          {
+            dest: 'dist/wordcount/plugin.js',
+            src: 'src/main/ts/Plugin.ts'
+          }
+        ]
+      },
+      demo: {
         files: [
           {
-            src: "scratch/inline/plugin.raw.js",
-            dest: "dist/wordcount/plugin.js"
+            dest: 'scratch/compiled/demo.js',
+            src: 'src/demo/ts/demo/Demo.ts'
           }
         ]
       }
-    },
-
-    eslint: {
-      options: {
-        config: "../../../.eslintrc"
-      },
-
-      src: [
-        "src"
-      ]
     },
 
     uglify: {
@@ -60,18 +55,28 @@ module.exports = function (grunt) {
       "plugin": {
         files: [
           {
-            src: "scratch/inline/plugin.js",
+            src: "dist/wordcount/plugin.js",
             dest: "dist/wordcount/plugin.min.js"
           }
         ]
       }
+    },
+
+    watch: {
+      demo: {
+        files: ["src/**/*.ts"],
+        tasks: ["rollup:demo"],
+        options: {
+          livereload: true,
+          spawn: false
+        }
+      }
     }
   });
 
-  grunt.task.loadTasks("../../../node_modules/@ephox/bolt/tasks");
-  grunt.task.loadTasks("../../../node_modules/grunt-contrib-copy/tasks");
+  grunt.task.loadTasks('../../../node_modules/grunt-rollup/tasks');
   grunt.task.loadTasks("../../../node_modules/grunt-contrib-uglify/tasks");
-  grunt.task.loadTasks("../../../node_modules/grunt-eslint/tasks");
+  grunt.task.loadTasks("../../../node_modules/grunt-contrib-watch/tasks");
 
-  grunt.registerTask("default", ["bolt-init", "bolt-build", "copy", "eslint", "uglify"]);
+  grunt.registerTask("default", ["rollup", "uglify"]);
 };
