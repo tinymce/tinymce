@@ -8,24 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.contextmenu.api.Api',
-  [
-  ],
-  function () {
-    var get = function (visibleState) {
-      var isContextMenuVisible = function () {
-        return visibleState.get();
-      };
+var get = function (visibleState) {
+  var isContextMenuVisible = function () {
+    return visibleState.get();
+  };
 
-      return {
-        isContextMenuVisible: isContextMenuVisible
-      };
-    };
+  return {
+    isContextMenuVisible: isContextMenuVisible
+  };
+};
 
-    return {
-      get: get
-    };
-  }
-);
-
+export default <any> {
+  get: get
+};

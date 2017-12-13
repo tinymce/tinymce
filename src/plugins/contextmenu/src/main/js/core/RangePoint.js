@@ -8,33 +8,27 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.contextmenu.core.RangePoint',
-  [
-    'ephox.katamari.api.Arr'
-  ],
-  function (Arr) {
-    var containsXY = function (clientRect, clientX, clientY) {
-      return (
-        clientX >= clientRect.left &&
-        clientX <= clientRect.right &&
-        clientY >= clientRect.top &&
-        clientY <= clientRect.bottom
-      );
-    };
+import { Arr } from '@ephox/katamari';
 
-    var isXYWithinRange = function (clientX, clientY, range) {
-      if (range.collapsed) {
-        return false;
-      }
+var containsXY = function (clientRect, clientX, clientY) {
+  return (
+    clientX >= clientRect.left &&
+    clientX <= clientRect.right &&
+    clientY >= clientRect.top &&
+    clientY <= clientRect.bottom
+  );
+};
 
-      return Arr.foldl(range.getClientRects(), function (state, rect) {
-        return state || containsXY(rect, clientX, clientY);
-      }, false);
-    };
-
-    return {
-      isXYWithinRange: isXYWithinRange
-    };
+var isXYWithinRange = function (clientX, clientY, range) {
+  if (range.collapsed) {
+    return false;
   }
-);
+
+  return Arr.foldl(range.getClientRects(), function (state, rect) {
+    return state || containsXY(rect, clientX, clientY);
+  }, false);
+};
+
+export default <any> {
+  isXYWithinRange: isXYWithinRange
+};

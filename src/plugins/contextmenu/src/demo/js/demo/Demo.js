@@ -8,31 +8,27 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import EditorManager from 'tinymce/core/EditorManager';
+import CodePlugin from 'tinymce/plugins/code/Plugin';
+import ContextMenuPlugin from 'tinymce/plugins/contextmenu/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
 /*eslint no-console:0 */
 
-define(
-  'tinymce.plugins.contextmenu.demo.Demo',
-  [
-    'tinymce.core.EditorManager',
-    'tinymce.plugins.code.Plugin',
-    'tinymce.plugins.contextmenu.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (EditorManager, CodePlugin, ContextMenuPlugin, ModernTheme) {
-    return function () {
-      CodePlugin();
-      ContextMenuPlugin();
-      ModernTheme();
 
-      EditorManager.init({
-        selector: "textarea.tinymce",
-        theme: "modern",
-        skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        plugins: "contextmenu code",
-        toolbar: "contextmenu code",
-        height: 600,
-        contextmenu: 'code'
-      });
-    };
-  }
-);
+
+export default <any> function () {
+  CodePlugin();
+  ContextMenuPlugin();
+  ModernTheme();
+
+  EditorManager.init({
+    selector: "textarea.tinymce",
+    theme: "modern",
+    skin_url: "../../../../../skins/lightgray/dist/lightgray",
+    plugins: "contextmenu code",
+    toolbar: "contextmenu code",
+    height: 600,
+    contextmenu: 'code'
+  });
+};

@@ -8,23 +8,17 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.contextmenu.Plugin',
-  [
-    'ephox.katamari.api.Cell',
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.contextmenu.api.Api',
-    'tinymce.plugins.contextmenu.core.Bind'
-  ],
-  function (Cell, PluginManager, Api, Bind) {
-    PluginManager.add('contextmenu', function (editor) {
-      var menu = Cell(null), visibleState = Cell(false);
+import { Cell } from '@ephox/katamari';
+import PluginManager from 'tinymce/core/PluginManager';
+import Api from './api/Api';
+import Bind from './core/Bind';
 
-      Bind.setup(editor, visibleState, menu);
+PluginManager.add('contextmenu', function (editor) {
+  var menu = Cell(null), visibleState = Cell(false);
 
-      return Api.get(visibleState);
-    });
+  Bind.setup(editor, visibleState, menu);
 
-    return function () { };
-  }
-);
+  return Api.get(visibleState);
+});
+
+export default <any> function () { };

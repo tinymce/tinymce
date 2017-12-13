@@ -8,31 +8,25 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.contextmenu.core.Bind',
-  [
-    'tinymce.plugins.contextmenu.api.Settings',
-    'tinymce.plugins.contextmenu.core.Coords',
-    'tinymce.plugins.contextmenu.ui.ContextMenu'
-  ],
-  function (Settings, Coords, ContextMenu) {
-    var isNativeOverrideKeyEvent = function (editor, e) {
-      return e.ctrlKey && !Settings.shouldNeverUseNative(editor);
-    };
+import Settings from '../api/Settings';
+import Coords from './Coords';
+import ContextMenu from '../ui/ContextMenu';
 
-    var setup = function (editor, visibleState, menu) {
-      editor.on('contextmenu', function (e) {
-        if (isNativeOverrideKeyEvent(editor, e)) {
-          return;
-        }
+var isNativeOverrideKeyEvent = function (editor, e) {
+  return e.ctrlKey && !Settings.shouldNeverUseNative(editor);
+};
 
-        e.preventDefault();
-        ContextMenu.show(editor, Coords.getPos(editor, e), visibleState, menu);
-      });
-    };
+var setup = function (editor, visibleState, menu) {
+  editor.on('contextmenu', function (e) {
+    if (isNativeOverrideKeyEvent(editor, e)) {
+      return;
+    }
 
-    return {
-      setup: setup
-    };
-  }
-);
+    e.preventDefault();
+    ContextMenu.show(editor, Coords.getPos(editor, e), visibleState, menu);
+  });
+};
+
+export default <any> {
+  setup: setup
+};

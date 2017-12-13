@@ -8,60 +8,54 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.contextmenu.core.Coords',
-  [
-    'tinymce.core.Env',
-    'tinymce.core.dom.DOMUtils'
-  ],
-  function (Env, DOMUtils) {
-    var nu = function (x, y) {
-      return { x: x, y: y };
-    };
+import Env from 'tinymce/core/Env';
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-    var transpose = function (pos, dx, dy) {
-      return nu(pos.x + dx, pos.y + dy);
-    };
+var nu = function (x, y) {
+  return { x: x, y: y };
+};
 
-    var fromPageXY = function (e) {
-      return nu(e.pageX, e.pageY);
-    };
+var transpose = function (pos, dx, dy) {
+  return nu(pos.x + dx, pos.y + dy);
+};
 
-    var fromClientXY = function (e) {
-      return nu(e.clientX, e.clientY);
-    };
+var fromPageXY = function (e) {
+  return nu(e.pageX, e.pageY);
+};
 
-    var transposeUiContainer = function (element, pos) {
-      if (element && DOMUtils.DOM.getStyle(element, 'position', true) !== 'static') {
-        var containerPos = DOMUtils.DOM.getPos(element);
-        var dx = containerPos.x - element.scrollLeft;
-        var dy = containerPos.y - element.scrollTop;
-        return transpose(pos, -dx, -dy);
-      } else {
-        return transpose(pos, 0, 0);
-      }
-    };
+var fromClientXY = function (e) {
+  return nu(e.clientX, e.clientY);
+};
 
-    var transposeContentAreaContainer = function (element, pos) {
-      var containerPos = DOMUtils.DOM.getPos(element);
-      return transpose(pos, containerPos.x, containerPos.y);
-    };
-
-    var getUiContainer = function (editor) {
-      return Env.container;
-    };
-
-    var getPos = function (editor, e) {
-      if (editor.inline) {
-        return transposeUiContainer(getUiContainer(editor), fromPageXY(e));
-      } else {
-        var iframePos = transposeContentAreaContainer(editor.getContentAreaContainer(), fromClientXY(e));
-        return transposeUiContainer(getUiContainer(editor), iframePos);
-      }
-    };
-
-    return {
-      getPos: getPos
-    };
+var transposeUiContainer = function (element, pos) {
+  if (element && DOMUtils.DOM.getStyle(element, 'position', true) !== 'static') {
+    var containerPos = DOMUtils.DOM.getPos(element);
+    var dx = containerPos.x - element.scrollLeft;
+    var dy = containerPos.y - element.scrollTop;
+    return transpose(pos, -dx, -dy);
+  } else {
+    return transpose(pos, 0, 0);
   }
-);
+};
+
+var transposeContentAreaContainer = function (element, pos) {
+  var containerPos = DOMUtils.DOM.getPos(element);
+  return transpose(pos, containerPos.x, containerPos.y);
+};
+
+var getUiContainer = function (editor) {
+  return Env.container;
+};
+
+var getPos = function (editor, e) {
+  if (editor.inline) {
+    return transposeUiContainer(getUiContainer(editor), fromPageXY(e));
+  } else {
+    var iframePos = transposeContentAreaContainer(editor.getContentAreaContainer(), fromClientXY(e));
+    return transposeUiContainer(getUiContainer(editor), iframePos);
+  }
+};
+
+export default <any> {
+  getPos: getPos
+};
