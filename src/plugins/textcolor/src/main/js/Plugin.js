@@ -8,17 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.textcolor.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.textcolor.ui.Buttons'
-  ],
-  function (PluginManager, Buttons) {
-    PluginManager.add('textcolor', function (editor) {
-      Buttons.register(editor);
-    });
+import PluginManager from 'tinymce/core/PluginManager';
+import Buttons from './ui/Buttons';
 
-    return function () { };
-  }
-);
+PluginManager.add('textcolor', function (editor) {
+  Buttons.register(editor);
+});
+
+export default <any> function () { };
