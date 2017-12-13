@@ -2,7 +2,7 @@ import { ApproxStructure } from '@ephox/agar';
 import { Assertions } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { RawAssertions } from '@ephox/agar';
-import { TestStore } from '@ephox/alloy';
+import TestStore from '../../module/test/TestStore';
 import { FieldSchema } from '@ephox/boulder';
 import { Objects } from '@ephox/boulder';
 import { ValueSchema } from '@ephox/boulder';

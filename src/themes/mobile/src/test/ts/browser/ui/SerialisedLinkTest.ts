@@ -11,7 +11,7 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { UiFinder } from '@ephox/agar';
 import { Attachment } from '@ephox/alloy';
-import { GuiSetup } from '@ephox/alloy';
+import GuiSetup from '../../module/test/GuiSetup';
 import { FieldSchema } from '@ephox/boulder';
 import { ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
@@ -21,10 +21,10 @@ import { Body } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Class } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
-import TestEditor from 'tinymce/themes/mobile/test/ui/TestEditor';
-import TestSelectors from 'tinymce/themes/mobile/test/ui/TestSelectors';
-import TestStyles from 'tinymce/themes/mobile/test/ui/TestStyles';
-import TestUi from 'tinymce/themes/mobile/test/ui/TestUi';
+import TestEditor from '../../module/test/ui/TestEditor';
+import TestSelectors from '../../module/test/ui/TestSelectors';
+import TestStyles from '../../module/test/ui/TestStyles';
+import TestUi from '../../module/test/ui/TestUi';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 import LinkButton from 'tinymce/themes/mobile/ui/LinkButton';
 import { UnitTest } from '@ephox/refute';
@@ -120,7 +120,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function() {
 
   var sAssertTitleFocused = GeneralSteps.sequence([
     FocusTools.sTryOnSelector('Focus should be on input with link title', doc, 'input[placeholder="Link title"]'),
-    sAssertNavigation('Checking navigation for link text', true, true)
+    sAssertNavigation('Checking navigation for link title', true, true)
   ]);
 
   var sAssertTargetFocused = GeneralSteps.sequence([

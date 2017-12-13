@@ -70,7 +70,7 @@ var unlinkIfRequired = function (editor, info) {
 };
 
 var getAttrs = function (url, info) {
-  var attrs = { };
+  var attrs: any = { };
   attrs.href = url;
 
   info.title.filter(isNotEmpty).each(function (title) {

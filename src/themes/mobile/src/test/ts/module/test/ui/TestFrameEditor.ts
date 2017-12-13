@@ -5,7 +5,7 @@ import { Focus } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
 import { WindowSelection } from '@ephox/sugar';
-import TestEditor from 'tinymce/themes/mobile/test/ui/TestEditor';
+import TestEditor from './TestEditor';
 
 
 

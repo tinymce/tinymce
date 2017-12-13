@@ -33,7 +33,7 @@ var resume = function (cWin) {
     return Arr.contains([ 'input', 'textarea' ], Node.name(elem));
   });
 
-  var transaction = inInput ? autocompleteHack(iBody) : Fun.apply;
+  var transaction = inInput ? autocompleteHack() : Fun.apply;
 
   transaction(function () {
     // If we don't blur before focusing the content, a previous focus in something like a statebutton

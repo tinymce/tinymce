@@ -10,7 +10,7 @@ var getFromExpandingItem = function (item) {
     }
   );
 
-  var rest = expand(item.items, item.title);
+  var rest = expand(item.items);
 
   var newMenus = Merger.deepMerge(
     rest.menus,

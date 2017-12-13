@@ -1,10 +1,10 @@
 import { GeneralSteps } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { GuiSetup } from '@ephox/alloy';
+import GuiSetup from '../../module/test/GuiSetup';
 import { Body } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
-import TestTheme from 'tinymce/themes/mobile/test/theme/TestTheme';
-import TestUi from 'tinymce/themes/mobile/test/ui/TestUi';
+import TestTheme from '../../module/test/theme/TestTheme';
+import TestUi from '../../module/test/ui/TestUi';
 import { UnitTest } from '@ephox/refute';
 
 UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function() {

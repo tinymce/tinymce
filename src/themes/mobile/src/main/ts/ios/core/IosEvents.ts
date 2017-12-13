@@ -34,7 +34,7 @@ var initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
   var scrollToElement = function (target) {
     var yTop = Location.absolute(target).top();
     var height = Height.get(target);
-    scrollToY(iosApi, socket, yTop, height);
+    scrollToY(iosApi, socket);
   };
 
   var scrollToCursor = function () {
@@ -56,7 +56,7 @@ var initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
   };
 
   var refreshView = function () {
-    scrollToCursor(editorApi, iosApi, socket);
+    scrollToCursor();
     iosApi.run(function (api) {
       api.syncHeight();
     });
@@ -68,8 +68,8 @@ var initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
       api.setViewportOffset(toolbarHeight);
     });
 
-    refreshIosSelection(iosApi);
-    refreshView(editorApi, iosApi, socket);
+    refreshIosSelection();
+    refreshView();
   };
 
   var toEditing = function () {
