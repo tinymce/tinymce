@@ -37,6 +37,7 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', function() {
   }, function (doc, body, gui, component, store) {
     return [
       GuiSetup.mAddStyles(doc, bodyMargin),
+      store.sClear,
       Step.sync(function () {
         window.scrollTo(0, 100);
       }),
@@ -46,6 +47,17 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', function() {
         100,
         1000
       ),
+      store.sClear,
+      Step.sync(function () {
+        window.scrollTo(0, 0);
+      }),
+      Waiter.sTryUntil(
+        'Checking for scrolling message (scrolling back to 0)',
+        store.sAssertEq('Should have scrolled', [ 'scroll' ]),
+        100,
+        1000
+      ),
+      store.sClear,
       GuiSetup.mRemoveStyles
     ];
   }, function () { success(); }, failure);
