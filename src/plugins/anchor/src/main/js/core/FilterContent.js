@@ -8,34 +8,27 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.anchor.core.FilterContent',
-  [
-  ],
-  function () {
-    var isAnchorNode = function (node) {
-      return !node.attr('href') && (node.attr('id') || node.attr('name')) && !node.firstChild;
-    };
+var isAnchorNode = function (node) {
+  return !node.attr('href') && (node.attr('id') || node.attr('name')) && !node.firstChild;
+};
 
-    var setContentEditable = function (state) {
-      return function (nodes) {
-        for (var i = 0; i < nodes.length; i++) {
-          if (isAnchorNode(nodes[i])) {
-            nodes[i].attr('contenteditable', state);
-          }
-        }
-      };
-    };
+var setContentEditable = function (state) {
+  return function (nodes) {
+    for (var i = 0; i < nodes.length; i++) {
+      if (isAnchorNode(nodes[i])) {
+        nodes[i].attr('contenteditable', state);
+      }
+    }
+  };
+};
 
-    var setup = function (editor) {
-      editor.on('PreInit', function () {
-        editor.parser.addNodeFilter('a', setContentEditable('false'));
-        editor.serializer.addNodeFilter('a', setContentEditable(null));
-      });
-    };
+var setup = function (editor) {
+  editor.on('PreInit', function () {
+    editor.parser.addNodeFilter('a', setContentEditable('false'));
+    editor.serializer.addNodeFilter('a', setContentEditable(null));
+  });
+};
 
-    return {
-      setup: setup
-    };
-  }
-);
+export default <any> {
+  setup: setup
+};
