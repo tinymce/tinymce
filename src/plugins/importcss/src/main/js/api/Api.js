@@ -8,24 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.importcss.api.Api',
-  [
-    'tinymce.plugins.importcss.core.ImportCss'
-  ],
-  function (ImportCss) {
-    var get = function (editor) {
-      var convertSelectorToFormat = function (selectorText) {
-        return ImportCss.defaultConvertSelectorToFormat(editor, selectorText);
-      };
+import ImportCss from '../core/ImportCss';
 
-      return {
-        convertSelectorToFormat: convertSelectorToFormat
-      };
-    };
+var get = function (editor) {
+  var convertSelectorToFormat = function (selectorText) {
+    return ImportCss.defaultConvertSelectorToFormat(editor, selectorText);
+  };
 
-    return {
-      get: get
-    };
-  }
-);
+  return {
+    convertSelectorToFormat: convertSelectorToFormat
+  };
+};
+
+export default <any> {
+  get: get
+};

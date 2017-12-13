@@ -8,19 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.importcss.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.importcss.api.Api',
-    'tinymce.plugins.importcss.core.ImportCss'
-  ],
-  function (PluginManager, Api, ImportCss) {
-    PluginManager.add('importcss', function (editor) {
-      ImportCss.setup(editor);
-      return Api.get(editor);
-    });
+import PluginManager from 'tinymce/core/PluginManager';
+import Api from './api/Api';
+import ImportCss from './core/ImportCss';
 
-    return function () { };
-  }
-);
+PluginManager.add('importcss', function (editor) {
+  ImportCss.setup(editor);
+  return Api.get(editor);
+});
+
+export default <any> function () { };
