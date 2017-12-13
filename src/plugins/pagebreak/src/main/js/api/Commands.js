@@ -8,24 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.pagebreak.api.Commands',
-  [
-    'tinymce.plugins.pagebreak.core.FilterContent'
-  ],
-  function (FilterContent) {
-    var register = function (editor) {
-      editor.addCommand('mcePageBreak', function () {
-        if (editor.settings.pagebreak_split_block) {
-          editor.insertContent('<p>' + FilterContent.getPlaceholderHtml() + '</p>');
-        } else {
-          editor.insertContent(FilterContent.getPlaceholderHtml());
-        }
-      });
-    };
+import FilterContent from '../core/FilterContent';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor) {
+  editor.addCommand('mcePageBreak', function () {
+    if (editor.settings.pagebreak_split_block) {
+      editor.insertContent('<p>' + FilterContent.getPlaceholderHtml() + '</p>');
+    } else {
+      editor.insertContent(FilterContent.getPlaceholderHtml());
+    }
+  });
+};
+
+export default <any> {
+  register: register
+};

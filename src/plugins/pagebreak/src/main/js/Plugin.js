@@ -8,24 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.pagebreak.Plugin',
-  [
-    'tinymce.core.Env',
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.pagebreak.api.Commands',
-    'tinymce.plugins.pagebreak.core.FilterContent',
-    'tinymce.plugins.pagebreak.core.ResolveName',
-    'tinymce.plugins.pagebreak.ui.Buttons'
-  ],
-  function (Env, PluginManager, Commands, FilterContent, ResolveName, Buttons) {
-    PluginManager.add('pagebreak', function (editor) {
-      Commands.register(editor);
-      Buttons.register(editor);
-      FilterContent.setup(editor);
-      ResolveName.setup(editor);
-    });
+import Env from 'tinymce/core/Env';
+import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
+import FilterContent from './core/FilterContent';
+import ResolveName from './core/ResolveName';
+import Buttons from './ui/Buttons';
 
-    return function () { };
-  }
-);
+PluginManager.add('pagebreak', function (editor) {
+  Commands.register(editor);
+  Buttons.register(editor);
+  FilterContent.setup(editor);
+  ResolveName.setup(editor);
+});
+
+export default <any> function () { };

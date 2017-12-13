@@ -8,22 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.pagebreak.core.ResolveName',
-  [
-    'tinymce.plugins.pagebreak.core.FilterContent'
-  ],
-  function (FilterContent) {
-    var setup = function (editor) {
-      editor.on('ResolveName', function (e) {
-        if (e.target.nodeName === 'IMG' && editor.dom.hasClass(e.target, FilterContent.getPageBreakClass())) {
-          e.name = 'pagebreak';
-        }
-      });
-    };
+import FilterContent from './FilterContent';
 
-    return {
-      setup: setup
-    };
-  }
-);
+var setup = function (editor) {
+  editor.on('ResolveName', function (e) {
+    if (e.target.nodeName === 'IMG' && editor.dom.hasClass(e.target, FilterContent.getPageBreakClass())) {
+      e.name = 'pagebreak';
+    }
+  });
+};
+
+export default <any> {
+  setup: setup
+};

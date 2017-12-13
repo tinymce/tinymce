@@ -8,27 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.pagebreak.ui.Buttons',
-  [
-  ],
-  function () {
-    var register = function (editor) {
-      editor.addButton('pagebreak', {
-        title: 'Page break',
-        cmd: 'mcePageBreak'
-      });
+var register = function (editor) {
+  editor.addButton('pagebreak', {
+    title: 'Page break',
+    cmd: 'mcePageBreak'
+  });
 
-      editor.addMenuItem('pagebreak', {
-        text: 'Page break',
-        icon: 'pagebreak',
-        cmd: 'mcePageBreak',
-        context: 'insert'
-      });
-    };
+  editor.addMenuItem('pagebreak', {
+    text: 'Page break',
+    icon: 'pagebreak',
+    cmd: 'mcePageBreak',
+    context: 'insert'
+  });
+};
 
-    return {
-      register: register
-    };
-  }
-);
+export default <any> {
+  register: register
+};
