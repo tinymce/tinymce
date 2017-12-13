@@ -8,21 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.colorpicker.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.colorpicker.ui.Dialog'
-  ],
-  function (PluginManager, Dialog) {
-    PluginManager.add('colorpicker', function (editor) {
-      if (!editor.settings.color_picker_callback) {
-        editor.settings.color_picker_callback = function (callback, value) {
-          Dialog.open(editor, callback, value);
-        };
-      }
-    });
+import PluginManager from 'tinymce/core/PluginManager';
+import Dialog from './ui/Dialog';
 
-    return function () { };
+PluginManager.add('colorpicker', function (editor) {
+  if (!editor.settings.color_picker_callback) {
+    editor.settings.color_picker_callback = function (callback, value) {
+      Dialog.open(editor, callback, value);
+    };
   }
-);
+});
+
+export default <any> function () { };
