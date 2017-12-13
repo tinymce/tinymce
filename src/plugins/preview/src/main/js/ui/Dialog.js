@@ -8,41 +8,35 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.preview.ui.Dialog',
-  [
-    'tinymce.core.Env',
-    'tinymce.core.util.Tools',
-    'tinymce.plugins.preview.api.Settings',
-    'tinymce.plugins.preview.ui.IframeContent'
-  ],
-  function (Env, Tools, Settings, IframeContent) {
-    var open = function (editor) {
-      var sandbox = !Env.ie;
-      var dialogHtml = '<iframe src="javascript:\'\'" frameborder="0"' + (sandbox ? ' sandbox="allow-scripts"' : '') + '></iframe>';
-      var dialogWidth = Settings.getPreviewDialogWidth(editor);
-      var dialogHeight = Settings.getPreviewDialogHeight(editor);
+import Env from 'tinymce/core/Env';
+import Tools from 'tinymce/core/util/Tools';
+import Settings from '../api/Settings';
+import IframeContent from './IframeContent';
 
-      editor.windowManager.open({
-        title: 'Preview',
-        width: dialogWidth,
-        height: dialogHeight,
-        html: dialogHtml,
-        buttons: {
-          text: 'Close',
-          onclick: function (e) {
-            e.control.parent().parent().close();
-          }
-        },
-        onPostRender: function (e) {
-          var iframeElm = e.control.getEl('body').firstChild;
-          IframeContent.injectIframeContent(editor, iframeElm, sandbox);
-        }
-      });
-    };
+var open = function (editor) {
+  var sandbox = !Env.ie;
+  var dialogHtml = '<iframe src="javascript:\'\'" frameborder="0"' + (sandbox ? ' sandbox="allow-scripts"' : '') + '></iframe>';
+  var dialogWidth = Settings.getPreviewDialogWidth(editor);
+  var dialogHeight = Settings.getPreviewDialogHeight(editor);
 
-    return {
-      open: open
-    };
-  }
-);
+  editor.windowManager.open({
+    title: 'Preview',
+    width: dialogWidth,
+    height: dialogHeight,
+    html: dialogHtml,
+    buttons: {
+      text: 'Close',
+      onclick: function (e) {
+        e.control.parent().parent().close();
+      }
+    },
+    onPostRender: function (e) {
+      var iframeElm = e.control.getEl('body').firstChild;
+      IframeContent.injectIframeContent(editor, iframeElm, sandbox);
+    }
+  });
+};
+
+export default <any> {
+  open: open
+};

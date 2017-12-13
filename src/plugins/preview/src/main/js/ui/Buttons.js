@@ -8,26 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.preview.ui.Buttons',
-  [
-  ],
-  function () {
-    var register = function (editor) {
-      editor.addButton('preview', {
-        title: 'Preview',
-        cmd: 'mcePreview'
-      });
+var register = function (editor) {
+  editor.addButton('preview', {
+    title: 'Preview',
+    cmd: 'mcePreview'
+  });
 
-      editor.addMenuItem('preview', {
-        text: 'Preview',
-        cmd: 'mcePreview',
-        context: 'view'
-      });
-    };
+  editor.addMenuItem('preview', {
+    text: 'Preview',
+    cmd: 'mcePreview',
+    context: 'view'
+  });
+};
 
-    return {
-      register: register
-    };
-  }
-);
+export default <any> {
+  register: register
+};

@@ -8,19 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.preview.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.preview.api.Commands',
-    'tinymce.plugins.preview.ui.Buttons'
-  ],
-  function (PluginManager, Commands, Buttons) {
-    PluginManager.add('preview', function (editor) {
-      Commands.register(editor);
-      Buttons.register(editor);
-    });
+import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
+import Buttons from './ui/Buttons';
 
-    return function () { };
-  }
-);
+PluginManager.add('preview', function (editor) {
+  Commands.register(editor);
+  Buttons.register(editor);
+});
+
+export default <any> function () { };

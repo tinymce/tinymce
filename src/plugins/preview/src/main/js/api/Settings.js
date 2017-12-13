@@ -8,27 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.preview.api.Settings',
-  [
-  ],
-  function () {
-    var getPreviewDialogWidth = function (editor) {
-      return parseInt(editor.getParam('plugin_preview_width', '650'), 10);
-    };
+var getPreviewDialogWidth = function (editor) {
+  return parseInt(editor.getParam('plugin_preview_width', '650'), 10);
+};
 
-    var getPreviewDialogHeight = function (editor) {
-      return parseInt(editor.getParam('plugin_preview_height', '500'), 10);
-    };
+var getPreviewDialogHeight = function (editor) {
+  return parseInt(editor.getParam('plugin_preview_height', '500'), 10);
+};
 
-    var getContentStyle = function (editor) {
-      return editor.getParam('content_style', '');
-    };
+var getContentStyle = function (editor) {
+  return editor.getParam('content_style', '');
+};
 
-    return {
-      getPreviewDialogWidth: getPreviewDialogWidth,
-      getPreviewDialogHeight: getPreviewDialogHeight,
-      getContentStyle: getContentStyle
-    };
-  }
-);
+export default <any> {
+  getPreviewDialogWidth: getPreviewDialogWidth,
+  getPreviewDialogHeight: getPreviewDialogHeight,
+  getContentStyle: getContentStyle
+};

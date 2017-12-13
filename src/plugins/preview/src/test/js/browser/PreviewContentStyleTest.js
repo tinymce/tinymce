@@ -1,54 +1,52 @@
-asynctest(
-  'browser.tinymce.plugins.preview.PreviewContentStyleTest',
-  [
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.RawAssertions',
-    'ephox.agar.api.Step',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyLoader',
-    'tinymce.plugins.preview.Plugin',
-    'tinymce.plugins.preview.ui.IframeContent',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (Pipeline, RawAssertions, Step, TinyApis, TinyLoader, PreviewPlugin, IframeContent, ModernTheme) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+import { Pipeline } from '@ephox/agar';
+import { RawAssertions } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
+import IframeContent from 'tinymce/plugins/preview/ui/IframeContent';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
 
-    ModernTheme();
-    PreviewPlugin();
+UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
 
-    var assertIframeContains = function (editor, text, expected) {
-      var actual = IframeContent.getPreviewHtml(editor);
-      var regexp = new RegExp(text);
+  ModernTheme();
+  PreviewPlugin();
 
-      RawAssertions.assertEq('Should be same html', expected, regexp.test(actual));
-    };
+  var assertIframeContains = function (editor, text, expected) {
+    var actual = IframeContent.getPreviewHtml(editor);
+    var regexp = new RegExp(text);
 
-    var sAssertIframeHtmlContains = function (editor, text) {
-      return Step.sync(function () {
-        assertIframeContains(editor, text, true);
-      });
-    };
+    RawAssertions.assertEq('Should be same html', expected, regexp.test(actual));
+  };
 
-    var sAssertIframeHtmlNotContains = function (editor, text) {
-      return Step.sync(function () {
-        assertIframeContains(editor, text, false);
-      });
-    };
+  var sAssertIframeHtmlContains = function (editor, text) {
+    return Step.sync(function () {
+      assertIframeContains(editor, text, true);
+    });
+  };
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyApis = TinyApis(editor);
+  var sAssertIframeHtmlNotContains = function (editor, text) {
+    return Step.sync(function () {
+      assertIframeContains(editor, text, false);
+    });
+  };
 
-      Pipeline.async({}, [
-        tinyApis.sSetContent('<p>hello world</p>'),
-        tinyApis.sSetSetting('content_style', 'p {color: blue;}'),
-        sAssertIframeHtmlContains(editor, '<style type="text/css">p {color: blue;}</style>'),
-        tinyApis.sDeleteSetting('content_style'),
-        sAssertIframeHtmlNotContains(editor, '<style type="text/css">p {color: blue;}</style>')
-      ], onSuccess, onFailure);
-    }, {
-      plugins: 'preview',
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
-    }, success, failure);
-  }
-);
+  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    var tinyApis = TinyApis(editor);
+
+    Pipeline.async({}, [
+      tinyApis.sSetContent('<p>hello world</p>'),
+      tinyApis.sSetSetting('content_style', 'p {color: blue;}'),
+      sAssertIframeHtmlContains(editor, '<style type="text/css">p {color: blue;}</style>'),
+      tinyApis.sDeleteSetting('content_style'),
+      sAssertIframeHtmlNotContains(editor, '<style type="text/css">p {color: blue;}</style>')
+    ], onSuccess, onFailure);
+  }, {
+    plugins: 'preview',
+    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+  }, success, failure);
+});
+
