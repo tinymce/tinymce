@@ -8,31 +8,23 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.table.queries.Direction',
+import { Fun } from '@ephox/katamari';
+import { Direction } from '@ephox/sugar';
 
-  [
-    'ephox.katamari.api.Fun',
-    'ephox.sugar.api.properties.Direction'
-  ],
+var ltr = {
+  isRtl: Fun.constant(false)
+};
 
-  function (Fun, Direction) {
-    var ltr = {
-      isRtl: Fun.constant(false)
-    };
+var rtl = {
+  isRtl: Fun.constant(true)
+};
 
-    var rtl = {
-      isRtl: Fun.constant(true)
-    };
+// Get the directionality from the position in the content
+var directionAt = function (element) {
+  var dir = Direction.getDirection(element);
+  return dir === 'rtl' ? rtl : ltr;
+};
 
-    // Get the directionality from the position in the content
-    var directionAt = function (element) {
-      var dir = Direction.getDirection(element);
-      return dir === 'rtl' ? rtl : ltr;
-    };
-
-    return {
-      directionAt: directionAt
-    };
-  }
-);
+export default <any> {
+  directionAt: directionAt
+};

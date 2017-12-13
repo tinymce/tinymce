@@ -8,30 +8,23 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.table.selection.Ephemera',
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun'
-  ],
+var selected = 'data-mce-selected';
+var selectedSelector = 'td[' + selected + '],th[' + selected + ']';
+// used with not selectors
+var attributeSelector = '[' + selected + ']';
+var firstSelected = 'data-mce-first-selected';
+var firstSelectedSelector = 'td[' + firstSelected + '],th[' + firstSelected + ']';
+var lastSelected = 'data-mce-last-selected';
+var lastSelectedSelector = 'td[' + lastSelected + '],th[' + lastSelected + ']';
 
-  function (Fun) {
-    var selected = 'data-mce-selected';
-    var selectedSelector = 'td[' + selected + '],th[' + selected + ']';
-    // used with not selectors
-    var attributeSelector = '[' + selected + ']';
-    var firstSelected = 'data-mce-first-selected';
-    var firstSelectedSelector = 'td[' + firstSelected + '],th[' + firstSelected + ']';
-    var lastSelected = 'data-mce-last-selected';
-    var lastSelectedSelector = 'td[' + lastSelected + '],th[' + lastSelected + ']';
-    return {
-      selected: Fun.constant(selected),
-      selectedSelector: Fun.constant(selectedSelector),
-      attributeSelector: Fun.constant(attributeSelector),
-      firstSelected: Fun.constant(firstSelected),
-      firstSelectedSelector: Fun.constant(firstSelectedSelector),
-      lastSelected: Fun.constant(lastSelected),
-      lastSelectedSelector: Fun.constant(lastSelectedSelector)
-    };
-  }
-);
+export default <any> {
+  selected: Fun.constant(selected),
+  selectedSelector: Fun.constant(selectedSelector),
+  attributeSelector: Fun.constant(attributeSelector),
+  firstSelected: Fun.constant(firstSelected),
+  firstSelectedSelector: Fun.constant(firstSelectedSelector),
+  lastSelected: Fun.constant(lastSelected),
+  lastSelectedSelector: Fun.constant(lastSelectedSelector)
+};

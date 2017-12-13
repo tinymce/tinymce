@@ -8,40 +8,32 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.table.alien.Util',
+import { Compare } from '@ephox/sugar';
+import { Element } from '@ephox/sugar';
 
-  [
-    'ephox.sugar.api.dom.Compare',
-    'ephox.sugar.api.node.Element'
-  ],
+var getBody = function (editor) {
+  return Element.fromDom(editor.getBody());
+};
+var getIsRoot = function (editor) {
+  return function (element) {
+    return Compare.eq(element, getBody(editor));
+  };
+};
 
-  function (Compare, Element) {
-    var getBody = function (editor) {
-      return Element.fromDom(editor.getBody());
-    };
-    var getIsRoot = function (editor) {
-      return function (element) {
-        return Compare.eq(element, getBody(editor));
-      };
-    };
+var removePxSuffix = function (size) {
+  return size ? size.replace(/px$/, '') : "";
+};
 
-    var removePxSuffix = function (size) {
-      return size ? size.replace(/px$/, '') : "";
-    };
-
-    var addSizeSuffix = function (size) {
-      if (/^[0-9]+$/.test(size)) {
-        size += "px";
-      }
-      return size;
-    };
-
-    return {
-      getBody: getBody,
-      getIsRoot: getIsRoot,
-      addSizeSuffix: addSizeSuffix,
-      removePxSuffix: removePxSuffix
-    };
+var addSizeSuffix = function (size) {
+  if (/^[0-9]+$/.test(size)) {
+    size += "px";
   }
-);
+  return size;
+};
+
+export default <any> {
+  getBody: getBody,
+  getIsRoot: getIsRoot,
+  addSizeSuffix: addSizeSuffix,
+  removePxSuffix: removePxSuffix
+};

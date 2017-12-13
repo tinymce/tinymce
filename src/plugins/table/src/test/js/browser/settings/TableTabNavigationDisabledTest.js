@@ -1,18 +1,18 @@
-asynctest(
+import { GeneralSteps } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { TinyActions } from '@ephox/mcagar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import TablePlugin from 'tinymce/plugins/table/Plugin';
+import TableTestUtils from 'tinymce/plugins/table/test/TableTestUtils';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
+
+UnitTest.asynctest(
   'browser.tinymce.plugins.table.TableTablNavigationDisabledTest',
-  [
-    'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Keys',
-    'ephox.agar.api.Logger',
-    'ephox.agar.api.Pipeline',
-    'ephox.mcagar.api.TinyActions',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyLoader',
-    'tinymce.plugins.table.Plugin',
-    'tinymce.plugins.table.test.TableTestUtils',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (GeneralSteps, Keys, Logger, Pipeline, TinyActions, TinyApis, TinyLoader, TablePlugin, TableTestUtils, ModernTheme) {
+  function() {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -41,3 +41,4 @@ asynctest(
     }, success, failure);
   }
 );
+

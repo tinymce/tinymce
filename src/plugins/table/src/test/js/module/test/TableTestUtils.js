@@ -1,27 +1,20 @@
-define(
-  'tinymce.plugins.table.test.TableTestUtils',
-  [
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.Cursors',
-    'ephox.agar.api.Mouse',
-    'ephox.agar.api.UiFinder',
-    'ephox.mcagar.api.TinyDom'
-  ],
-  function (Chain, Cursors, Mouse, UiFinder, TinyDom) {
+import { Chain } from '@ephox/agar';
+import { Cursors } from '@ephox/agar';
+import { Mouse } from '@ephox/agar';
+import { UiFinder } from '@ephox/agar';
+import { TinyDom } from '@ephox/mcagar';
 
-    var sOpenToolbarOn = function (editor, selector, path) {
-      return Chain.asStep(TinyDom.fromDom(editor.getBody()), [
-        UiFinder.cFindIn(selector),
-        Cursors.cFollow(path),
-        Chain.op(function (target) {
-          editor.selection.select(target.dom());
-        }),
-        Mouse.cClick
-      ]);
-    };
+var sOpenToolbarOn = function (editor, selector, path) {
+  return Chain.asStep(TinyDom.fromDom(editor.getBody()), [
+    UiFinder.cFindIn(selector),
+    Cursors.cFollow(path),
+    Chain.op(function (target) {
+      editor.selection.select(target.dom());
+    }),
+    Mouse.cClick
+  ]);
+};
 
-    return {
-      sOpenToolbarOn: sOpenToolbarOn
-    };
-  }
-);
+export default <any> {
+  sOpenToolbarOn: sOpenToolbarOn
+};

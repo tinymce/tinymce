@@ -1,20 +1,20 @@
-asynctest(
+import { Keys } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { RawAssertions } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { Waiter } from '@ephox/agar';
+import { Cell } from '@ephox/katamari';
+import { TinyActions } from '@ephox/mcagar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import Env from 'tinymce/core/Env';
+import TablePlugin from 'tinymce/plugins/table/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
+
+UnitTest.asynctest(
   'browser.tinymce.plugins.table.quirks.KeyboardCellNavigationTest',
-  [
-    'ephox.agar.api.Keys',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.RawAssertions',
-    'ephox.agar.api.Step',
-    'ephox.agar.api.Waiter',
-    'ephox.katamari.api.Cell',
-    'ephox.mcagar.api.TinyActions',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyLoader',
-    'tinymce.core.Env',
-    'tinymce.plugins.table.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (Keys, Pipeline, RawAssertions, Step, Waiter, Cell, TinyActions, TinyApis, TinyLoader, Env, TablePlugin, ModernTheme) {
+  function() {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -56,3 +56,4 @@ asynctest(
     }, success, failure);
   }
 );
+
