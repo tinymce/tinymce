@@ -8,20 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.fullpage.api.Commands',
-  [
-    'tinymce.plugins.fullpage.ui.Dialog'
-  ],
-  function (Dialog) {
-    var register = function (editor, headState) {
-      editor.addCommand('mceFullPageProperties', function () {
-        Dialog.open(editor, headState);
-      });
-    };
+import Dialog from '../ui/Dialog';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor, headState) {
+  editor.addCommand('mceFullPageProperties', function () {
+    Dialog.open(editor, headState);
+  });
+};
+
+export default <any> {
+  register: register
+};

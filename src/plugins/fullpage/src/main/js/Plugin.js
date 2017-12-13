@@ -8,24 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.fullpage.Plugin',
-  [
-    'ephox.katamari.api.Cell',
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.fullpage.api.Commands',
-    'tinymce.plugins.fullpage.core.FilterContent',
-    'tinymce.plugins.fullpage.ui.Buttons'
-  ],
-  function (Cell, PluginManager, Commands, FilterContent, Buttons) {
-    PluginManager.add('fullpage', function (editor) {
-      var headState = Cell(''), footState = Cell('');
+import { Cell } from '@ephox/katamari';
+import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
+import FilterContent from './core/FilterContent';
+import Buttons from './ui/Buttons';
 
-      Commands.register(editor, headState);
-      Buttons.register(editor);
-      FilterContent.setup(editor, headState, footState);
-    });
+PluginManager.add('fullpage', function (editor) {
+  var headState = Cell(''), footState = Cell('');
 
-    return function () { };
-  }
-);
+  Commands.register(editor, headState);
+  Buttons.register(editor);
+  FilterContent.setup(editor, headState, footState);
+});
+
+export default <any> function () { };

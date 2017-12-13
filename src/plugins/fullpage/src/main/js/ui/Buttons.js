@@ -8,26 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.fullpage.ui.Buttons',
-  [
-  ],
-  function () {
-    var register = function (editor) {
-      editor.addButton('fullpage', {
-        title: 'Document properties',
-        cmd: 'mceFullPageProperties'
-      });
+var register = function (editor) {
+  editor.addButton('fullpage', {
+    title: 'Document properties',
+    cmd: 'mceFullPageProperties'
+  });
 
-      editor.addMenuItem('fullpage', {
-        text: 'Document properties',
-        cmd: 'mceFullPageProperties',
-        context: 'file'
-      });
-    };
+  editor.addMenuItem('fullpage', {
+    text: 'Document properties',
+    cmd: 'mceFullPageProperties',
+    context: 'file'
+  });
+};
 
-    return {
-      register: register
-    };
-  }
-);
+export default <any> {
+  register: register
+};
