@@ -8,85 +8,79 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.imagetools.core.Utils',
-  [
-    'ephox.sand.api.FileReader',
-    'ephox.sand.api.XMLHttpRequest',
-    'tinymce.core.util.Promise',
-    'tinymce.core.util.Tools'
-  ],
-  function (FileReader, XMLHttpRequest, Promise, Tools) {
-    var isValue = function (obj) {
-      return obj !== null && obj !== undefined;
-    };
+import { FileReader } from '@ephox/sand';
+import { XMLHttpRequest } from '@ephox/sand';
+import Promise from 'tinymce/core/util/Promise';
+import Tools from 'tinymce/core/util/Tools';
 
-    var traverse = function (json, path) {
-      var value;
+var isValue = function (obj) {
+  return obj !== null && obj !== undefined;
+};
 
-      value = path.reduce(function (result, key) {
-        return isValue(result) ? result[key] : undefined;
-      }, json);
+var traverse = function (json, path) {
+  var value;
 
-      return isValue(value) ? value : null;
-    };
+  value = path.reduce(function (result, key) {
+    return isValue(result) ? result[key] : undefined;
+  }, json);
 
-    var requestUrlAsBlob = function (url, headers) {
-      return new Promise(function (resolve) {
-        var xhr;
+  return isValue(value) ? value : null;
+};
 
-        xhr = new XMLHttpRequest();
+var requestUrlAsBlob = function (url, headers) {
+  return new Promise(function (resolve) {
+    var xhr;
 
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4) {
-            resolve({
-              status: xhr.status,
-              blob: this.response
-            });
-          }
-        };
+    xhr = new XMLHttpRequest();
 
-        xhr.open('GET', url, true);
-
-        Tools.each(headers, function (value, key) {
-          xhr.setRequestHeader(key, value);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        resolve({
+          status: xhr.status,
+          blob: this.response
         });
-
-        xhr.responseType = 'blob';
-        xhr.send();
-      });
-    };
-
-    var readBlob = function (blob) {
-      return new Promise(function (resolve) {
-        var fr = new FileReader();
-
-        fr.onload = function (e) {
-          var data = e.target;
-          resolve(data.result);
-        };
-
-        fr.readAsText(blob);
-      });
-    };
-
-    var parseJson = function (text) {
-      var json;
-
-      try {
-        json = JSON.parse(text);
-      } catch (ex) {
-        // Ignore
       }
-
-      return json;
     };
 
-    return {
-      traverse: traverse,
-      readBlob: readBlob,
-      requestUrlAsBlob: requestUrlAsBlob,
-      parseJson: parseJson
+    xhr.open('GET', url, true);
+
+    Tools.each(headers, function (value, key) {
+      xhr.setRequestHeader(key, value);
+    });
+
+    xhr.responseType = 'blob';
+    xhr.send();
+  });
+};
+
+var readBlob = function (blob) {
+  return new Promise(function (resolve) {
+    var fr = new FileReader();
+
+    fr.onload = function (e) {
+      var data = e.target;
+      resolve(data.result);
     };
+
+    fr.readAsText(blob);
+  });
+};
+
+var parseJson = function (text) {
+  var json;
+
+  try {
+    json = JSON.parse(text);
+  } catch (ex) {
+    // Ignore
   }
-);
+
+  return json;
+};
+
+export default <any> {
+  traverse: traverse,
+  readBlob: readBlob,
+  requestUrlAsBlob: requestUrlAsBlob,
+  parseJson: parseJson
+};

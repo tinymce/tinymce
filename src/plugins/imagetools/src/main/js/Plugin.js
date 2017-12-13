@@ -8,28 +8,22 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.imagetools.Plugin',
-  [
-    'ephox.katamari.api.Cell',
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.imagetools.api.Commands',
-    'tinymce.plugins.imagetools.core.UploadSelectedImage',
-    'tinymce.plugins.imagetools.ui.Buttons',
-    'tinymce.plugins.imagetools.ui.ContextToolbar'
-  ],
-  function (Cell, PluginManager, Commands, UploadSelectedImage, Buttons, ContextToolbar) {
-    PluginManager.add('imagetools', function (editor) {
-      var imageUploadTimerState = Cell(0);
-      var lastSelectedImageState = Cell(null);
+import { Cell } from '@ephox/katamari';
+import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
+import UploadSelectedImage from './core/UploadSelectedImage';
+import Buttons from './ui/Buttons';
+import ContextToolbar from './ui/ContextToolbar';
 
-      Commands.register(editor, imageUploadTimerState);
-      Buttons.register(editor);
-      ContextToolbar.register(editor);
+PluginManager.add('imagetools', function (editor) {
+  var imageUploadTimerState = Cell(0);
+  var lastSelectedImageState = Cell(null);
 
-      UploadSelectedImage.setup(editor, imageUploadTimerState, lastSelectedImageState);
-    });
+  Commands.register(editor, imageUploadTimerState);
+  Buttons.register(editor);
+  ContextToolbar.register(editor);
 
-    return function () { };
-  }
-);
+  UploadSelectedImage.setup(editor, imageUploadTimerState, lastSelectedImageState);
+});
+
+export default <any> function () { };

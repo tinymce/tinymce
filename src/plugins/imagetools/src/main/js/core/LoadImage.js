@@ -8,29 +8,23 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.imagetools.core.LoadImage',
-  [
-    'tinymce.core.util.Promise'
-  ],
-  function (Promise) {
-    var loadImage = function (image) {
-      return new Promise(function (resolve) {
-        var loaded = function () {
-          image.removeEventListener('load', loaded);
-          resolve(image);
-        };
+import Promise from 'tinymce/core/util/Promise';
 
-        if (image.complete) {
-          resolve(image);
-        } else {
-          image.addEventListener('load', loaded);
-        }
-      });
+var loadImage = function (image) {
+  return new Promise(function (resolve) {
+    var loaded = function () {
+      image.removeEventListener('load', loaded);
+      resolve(image);
     };
 
-    return {
-      loadImage: loadImage
-    };
-  }
-);
+    if (image.complete) {
+      resolve(image);
+    } else {
+      image.addEventListener('load', loaded);
+    }
+  });
+};
+
+export default <any> {
+  loadImage: loadImage
+};

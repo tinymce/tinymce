@@ -8,27 +8,21 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.imagetools.api.Commands',
-  [
-    'tinymce.core.util.Tools',
-    'tinymce.plugins.imagetools.core.Actions'
-  ],
-  function (Tools, Actions) {
-    var register = function (editor, imageUploadTimerState) {
-      Tools.each({
-        mceImageRotateLeft: Actions.rotate(editor, imageUploadTimerState, -90),
-        mceImageRotateRight: Actions.rotate(editor, imageUploadTimerState, 90),
-        mceImageFlipVertical: Actions.flip(editor, imageUploadTimerState, 'v'),
-        mceImageFlipHorizontal: Actions.flip(editor, imageUploadTimerState, 'h'),
-        mceEditImage: Actions.editImageDialog(editor, imageUploadTimerState)
-      }, function (fn, cmd) {
-        editor.addCommand(cmd, fn);
-      });
-    };
+import Tools from 'tinymce/core/util/Tools';
+import Actions from '../core/Actions';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor, imageUploadTimerState) {
+  Tools.each({
+    mceImageRotateLeft: Actions.rotate(editor, imageUploadTimerState, -90),
+    mceImageRotateRight: Actions.rotate(editor, imageUploadTimerState, 90),
+    mceImageFlipVertical: Actions.flip(editor, imageUploadTimerState, 'v'),
+    mceImageFlipHorizontal: Actions.flip(editor, imageUploadTimerState, 'h'),
+    mceEditImage: Actions.editImageDialog(editor, imageUploadTimerState)
+  }, function (fn, cmd) {
+    editor.addCommand(cmd, fn);
+  });
+};
+
+export default <any> {
+  register: register
+};

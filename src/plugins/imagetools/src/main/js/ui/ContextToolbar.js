@@ -8,23 +8,17 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.imagetools.ui.ContextToolbar',
-  [
-    'ephox.katamari.api.Fun',
-    'tinymce.plugins.imagetools.api.Settings',
-    'tinymce.plugins.imagetools.core.Actions'
-  ],
-  function (Fun, Settings, Actions) {
-    var register = function (editor) {
-      editor.addContextToolbar(
-        Fun.curry(Actions.isEditableImage, editor),
-        Settings.getToolbarItems(editor)
-      );
-    };
+import { Fun } from '@ephox/katamari';
+import Settings from '../api/Settings';
+import Actions from '../core/Actions';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor) {
+  editor.addContextToolbar(
+    Fun.curry(Actions.isEditableImage, editor),
+    Settings.getToolbarItems(editor)
+  );
+};
+
+export default <any> {
+  register: register
+};
