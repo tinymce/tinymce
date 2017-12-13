@@ -8,39 +8,33 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.codesample.Plugin',
-  [
-    'ephox.katamari.api.Cell',
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.codesample.api.Commands',
-    'tinymce.plugins.codesample.core.FilterContent',
-    'tinymce.plugins.codesample.core.LoadCss',
-    'tinymce.plugins.codesample.ui.Buttons',
-    'tinymce.plugins.codesample.ui.Dialog',
-    'tinymce.plugins.codesample.util.Utils'
-  ],
-  function (Cell, PluginManager, Commands, FilterContent, LoadCss, Buttons, Dialog, Utils) {
-    var addedInlineCss = Cell(false);
+import { Cell } from '@ephox/katamari';
+import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
+import FilterContent from './core/FilterContent';
+import LoadCss from './core/LoadCss';
+import Buttons from './ui/Buttons';
+import Dialog from './ui/Dialog';
+import Utils from './util/Utils';
 
-    PluginManager.add('codesample', function (editor, pluginUrl) {
-      var addedCss = Cell(false);
+var addedInlineCss = Cell(false);
 
-      FilterContent.setup(editor);
-      Buttons.register(editor);
-      Commands.register(editor);
+PluginManager.add('codesample', function (editor, pluginUrl) {
+  var addedCss = Cell(false);
 
-      editor.on('init', function () {
-        LoadCss.loadCss(editor, pluginUrl, addedInlineCss, addedCss);
-      });
+  FilterContent.setup(editor);
+  Buttons.register(editor);
+  Commands.register(editor);
 
-      editor.on('dblclick', function (ev) {
-        if (Utils.isCodeSample(ev.target)) {
-          Dialog.open(editor);
-        }
-      });
-    });
+  editor.on('init', function () {
+    LoadCss.loadCss(editor, pluginUrl, addedInlineCss, addedCss);
+  });
 
-    return function () { };
-  }
-);
+  editor.on('dblclick', function (ev) {
+    if (Utils.isCodeSample(ev.target)) {
+      Dialog.open(editor);
+    }
+  });
+});
+
+export default <any> function () { };

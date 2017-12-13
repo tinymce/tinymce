@@ -8,45 +8,39 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.codesample.core.Languages',
-  [
-    'tinymce.plugins.codesample.api.Settings',
-    'tinymce.plugins.codesample.core.CodeSample'
-  ],
-  function (Settings, CodeSample) {
-    var getLanguages = function (editor) {
-      var defaultLanguages = [
-        { text: 'HTML/XML', value: 'markup' },
-        { text: 'JavaScript', value: 'javascript' },
-        { text: 'CSS', value: 'css' },
-        { text: 'PHP', value: 'php' },
-        { text: 'Ruby', value: 'ruby' },
-        { text: 'Python', value: 'python' },
-        { text: 'Java', value: 'java' },
-        { text: 'C', value: 'c' },
-        { text: 'C#', value: 'csharp' },
-        { text: 'C++', value: 'cpp' }
-      ];
+import Settings from '../api/Settings';
+import CodeSample from './CodeSample';
 
-      var customLanguages = Settings.getLanguages(editor);
-      return customLanguages ? customLanguages : defaultLanguages;
-    };
+var getLanguages = function (editor) {
+  var defaultLanguages = [
+    { text: 'HTML/XML', value: 'markup' },
+    { text: 'JavaScript', value: 'javascript' },
+    { text: 'CSS', value: 'css' },
+    { text: 'PHP', value: 'php' },
+    { text: 'Ruby', value: 'ruby' },
+    { text: 'Python', value: 'python' },
+    { text: 'Java', value: 'java' },
+    { text: 'C', value: 'c' },
+    { text: 'C#', value: 'csharp' },
+    { text: 'C++', value: 'cpp' }
+  ];
 
-    var getCurrentLanguage = function (editor) {
-      var matches, node = CodeSample.getSelectedCodeSample(editor);
+  var customLanguages = Settings.getLanguages(editor);
+  return customLanguages ? customLanguages : defaultLanguages;
+};
 
-      if (node) {
-        matches = node.className.match(/language-(\w+)/);
-        return matches ? matches[1] : '';
-      }
+var getCurrentLanguage = function (editor) {
+  var matches, node = CodeSample.getSelectedCodeSample(editor);
 
-      return '';
-    };
-
-    return {
-      getLanguages: getLanguages,
-      getCurrentLanguage: getCurrentLanguage
-    };
+  if (node) {
+    matches = node.className.match(/language-(\w+)/);
+    return matches ? matches[1] : '';
   }
-);
+
+  return '';
+};
+
+export default <any> {
+  getLanguages: getLanguages,
+  getCurrentLanguage: getCurrentLanguage
+};

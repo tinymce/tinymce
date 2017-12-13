@@ -8,33 +8,27 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.codesample.api.Settings',
-  [
-    'tinymce.core.dom.DOMUtils'
-  ],
-  function (DOMUtils) {
-    var getContentCss = function (editor) {
-      return editor.settings.codesample_content_css;
-    };
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-    var getLanguages = function (editor) {
-      return editor.settings.codesample_languages;
-    };
+var getContentCss = function (editor) {
+  return editor.settings.codesample_content_css;
+};
 
-    var getDialogMinWidth = function (editor) {
-      return Math.min(DOMUtils.DOM.getViewPort().w, editor.getParam('codesample_dialog_width', 800));
-    };
+var getLanguages = function (editor) {
+  return editor.settings.codesample_languages;
+};
 
-    var getDialogMinHeight = function (editor) {
-      return Math.min(DOMUtils.DOM.getViewPort().w, editor.getParam('codesample_dialog_height', 650));
-    };
+var getDialogMinWidth = function (editor) {
+  return Math.min(DOMUtils.DOM.getViewPort().w, editor.getParam('codesample_dialog_width', 800));
+};
 
-    return {
-      getContentCss: getContentCss,
-      getLanguages: getLanguages,
-      getDialogMinWidth: getDialogMinWidth,
-      getDialogMinHeight: getDialogMinHeight
-    };
-  }
-);
+var getDialogMinHeight = function (editor) {
+  return Math.min(DOMUtils.DOM.getViewPort().w, editor.getParam('codesample_dialog_height', 650));
+};
+
+export default <any> {
+  getContentCss: getContentCss,
+  getLanguages: getLanguages,
+  getDialogMinWidth: getDialogMinWidth,
+  getDialogMinHeight: getDialogMinHeight
+};

@@ -8,26 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.codesample.api.Commands',
-  [
-    'tinymce.plugins.codesample.ui.Dialog',
-    'tinymce.plugins.codesample.util.Utils'
-  ],
-  function (Dialog, Utils) {
-    var register = function (editor) {
-      editor.addCommand('codesample', function () {
-        var node = editor.selection.getNode();
-        if (editor.selection.isCollapsed() || Utils.isCodeSample(node)) {
-          Dialog.open(editor);
-        } else {
-          editor.formatter.toggle('code');
-        }
-      });
-    };
+import Dialog from '../ui/Dialog';
+import Utils from '../util/Utils';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor) {
+  editor.addCommand('codesample', function () {
+    var node = editor.selection.getNode();
+    if (editor.selection.isCollapsed() || Utils.isCodeSample(node)) {
+      Dialog.open(editor);
+    } else {
+      editor.formatter.toggle('code');
+    }
+  });
+};
+
+export default <any> {
+  register: register
+};
