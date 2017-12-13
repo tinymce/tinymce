@@ -8,18 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.autolink.Plugin',
-  [
-    'tinymce.core.Env',
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.autolink.core.Keys'
-  ],
-  function (Env, PluginManager, Keys) {
-    PluginManager.add('autolink', function (editor) {
-      Keys.setup(editor);
-    });
+import Env from 'tinymce/core/Env';
+import PluginManager from 'tinymce/core/PluginManager';
+import Keys from './core/Keys';
 
-    return function () { };
-  }
-);
+PluginManager.add('autolink', function (editor) {
+  Keys.setup(editor);
+});
+
+export default <any> function () { };

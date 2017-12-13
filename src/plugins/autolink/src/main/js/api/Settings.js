@@ -8,22 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.autolink.api.Settings',
-  [
-  ],
-  function () {
-    var getAutoLinkPattern = function (editor) {
-      return editor.getParam('autolink_pattern', /^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.|(?:mailto:)?[A-Z0-9._%+\-]+@)(.+)$/i);
-    };
+var getAutoLinkPattern = function (editor) {
+  return editor.getParam('autolink_pattern', /^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.|(?:mailto:)?[A-Z0-9._%+\-]+@)(.+)$/i);
+};
 
-    var getDefaultLinkTarget = function (editor) {
-      return editor.getParam('default_link_target', '');
-    };
+var getDefaultLinkTarget = function (editor) {
+  return editor.getParam('default_link_target', '');
+};
 
-    return {
-      getAutoLinkPattern: getAutoLinkPattern,
-      getDefaultLinkTarget: getDefaultLinkTarget
-    };
-  }
-);
+export default <any> {
+  getAutoLinkPattern: getAutoLinkPattern,
+  getDefaultLinkTarget: getDefaultLinkTarget
+};

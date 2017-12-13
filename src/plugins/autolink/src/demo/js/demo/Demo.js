@@ -8,30 +8,24 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import EditorManager from 'tinymce/core/EditorManager';
+import AutoLinkPlugin from 'tinymce/plugins/autolink/Plugin';
+import CodePlugin from 'tinymce/plugins/code/Plugin';
+import Theme from 'tinymce/themes/modern/Theme';
+
 /*eslint no-console:0 */
 
-define(
-  'tinymce.plugins.autolink.demo.Demo',
-  [
-    'tinymce.core.EditorManager',
-    'tinymce.plugins.autolink.Plugin',
-    'tinymce.plugins.code.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (EditorManager, AutoLinkPlugin, CodePlugin, Theme) {
-    AutoLinkPlugin();
-    CodePlugin();
-    Theme();
+AutoLinkPlugin();
+CodePlugin();
+Theme();
 
-    return function () {
-      EditorManager.init({
-        selector: "textarea.tinymce",
-        theme: "modern",
-        skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        plugins: "autolink code",
-        toolbar: "autolink code",
-        height: 600
-      });
-    };
-  }
-);
+export default <any> function () {
+  EditorManager.init({
+    selector: "textarea.tinymce",
+    theme: "modern",
+    skin_url: "../../../../../skins/lightgray/dist/lightgray",
+    plugins: "autolink code",
+    toolbar: "autolink code",
+    height: 600
+  });
+};
