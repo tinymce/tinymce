@@ -8,24 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.visualblocks.Plugin',
-  [
-    'ephox.katamari.api.Cell',
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.visualblocks.api.Commands',
-    'tinymce.plugins.visualblocks.core.Bindings',
-    'tinymce.plugins.visualblocks.ui.Buttons'
-  ],
-  function (Cell, PluginManager, Commands, Bindings, Buttons) {
-    PluginManager.add('visualblocks', function (editor, pluginUrl) {
-      var enabledState = Cell(false);
+import { Cell } from '@ephox/katamari';
+import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
+import Bindings from './core/Bindings';
+import Buttons from './ui/Buttons';
 
-      Commands.register(editor, pluginUrl, enabledState);
-      Buttons.register(editor, enabledState);
-      Bindings.setup(editor, pluginUrl, enabledState);
-    });
+PluginManager.add('visualblocks', function (editor, pluginUrl) {
+  var enabledState = Cell(false);
 
-    return function () { };
-  }
-);
+  Commands.register(editor, pluginUrl, enabledState);
+  Buttons.register(editor, enabledState);
+  Bindings.setup(editor, pluginUrl, enabledState);
+});
+
+export default <any> function () { };

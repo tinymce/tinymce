@@ -8,34 +8,28 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.visualblocks.core.LoadCss',
-  [
-    'tinymce.core.dom.DOMUtils',
-    'tinymce.core.util.Tools'
-  ],
-  function (DOMUtils, Tools) {
-    var cssId = DOMUtils.DOM.uniqueId();
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import Tools from 'tinymce/core/util/Tools';
 
-    var load = function (doc, url) {
-      var linkElements = Tools.toArray(doc.getElementsByTagName('link'));
-      var matchingLinkElms = Tools.grep(linkElements, function (head) {
-        return head.id === cssId;
-      });
+var cssId = DOMUtils.DOM.uniqueId();
 
-      if (matchingLinkElms.length === 0) {
-        var linkElm = DOMUtils.DOM.create('link', {
-          id: cssId,
-          rel: 'stylesheet',
-          href: url
-        });
+var load = function (doc, url) {
+  var linkElements = Tools.toArray(doc.getElementsByTagName('link'));
+  var matchingLinkElms = Tools.grep(linkElements, function (head) {
+    return head.id === cssId;
+  });
 
-        doc.getElementsByTagName('head')[0].appendChild(linkElm);
-      }
-    };
+  if (matchingLinkElms.length === 0) {
+    var linkElm = DOMUtils.DOM.create('link', {
+      id: cssId,
+      rel: 'stylesheet',
+      href: url
+    });
 
-    return {
-      load: load
-    };
+    doc.getElementsByTagName('head')[0].appendChild(linkElm);
   }
-);
+};
+
+export default <any> {
+  load: load
+};

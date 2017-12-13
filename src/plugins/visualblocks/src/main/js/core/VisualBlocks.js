@@ -8,27 +8,21 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.visualblocks.core.VisualBlocks',
-  [
-    'tinymce.plugins.visualblocks.api.Events',
-    'tinymce.plugins.visualblocks.api.Settings',
-    'tinymce.plugins.visualblocks.core.LoadCss'
-  ],
-  function (Events, Settings, LoadCss) {
-    var toggleVisualBlocks = function (editor, pluginUrl, enabledState) {
-      var dom = editor.dom;
-      var contentCss = Settings.getContentCss(editor);
+import Events from '../api/Events';
+import Settings from '../api/Settings';
+import LoadCss from './LoadCss';
 
-      LoadCss.load(editor.getDoc(), contentCss ? contentCss : pluginUrl + '/css/visualblocks.css');
-      dom.toggleClass(editor.getBody(), 'mce-visualblocks');
-      enabledState.set(!enabledState.get());
+var toggleVisualBlocks = function (editor, pluginUrl, enabledState) {
+  var dom = editor.dom;
+  var contentCss = Settings.getContentCss(editor);
 
-      Events.fireVisualBlocks(editor, enabledState.get());
-    };
+  LoadCss.load(editor.getDoc(), contentCss ? contentCss : pluginUrl + '/css/visualblocks.css');
+  dom.toggleClass(editor.getBody(), 'mce-visualblocks');
+  enabledState.set(!enabledState.get());
 
-    return {
-      toggleVisualBlocks: toggleVisualBlocks
-    };
-  }
-);
+  Events.fireVisualBlocks(editor, enabledState.get());
+};
+
+export default <any> {
+  toggleVisualBlocks: toggleVisualBlocks
+};

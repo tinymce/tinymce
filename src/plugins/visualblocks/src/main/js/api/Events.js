@@ -8,17 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.visualblocks.api.Events',
-  [
-  ],
-  function () {
-    var fireVisualBlocks = function (editor, state) {
-      editor.fire('VisualBlocks', { state: state });
-    };
+var fireVisualBlocks = function (editor, state) {
+  editor.fire('VisualBlocks', { state: state });
+};
 
-    return {
-      fireVisualBlocks: fireVisualBlocks
-    };
-  }
-);
+export default <any> {
+  fireVisualBlocks: fireVisualBlocks
+};

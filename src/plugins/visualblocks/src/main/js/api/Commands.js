@@ -8,20 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.visualblocks.api.Commands',
-  [
-    'tinymce.plugins.visualblocks.core.VisualBlocks'
-  ],
-  function (VisualBlocks) {
-    var register = function (editor, pluginUrl, enabledState) {
-      editor.addCommand('mceVisualBlocks', function () {
-        VisualBlocks.toggleVisualBlocks(editor, pluginUrl, enabledState);
-      });
-    };
+import VisualBlocks from '../core/VisualBlocks';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor, pluginUrl, enabledState) {
+  editor.addCommand('mceVisualBlocks', function () {
+    VisualBlocks.toggleVisualBlocks(editor, pluginUrl, enabledState);
+  });
+};
+
+export default <any> {
+  register: register
+};

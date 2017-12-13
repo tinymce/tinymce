@@ -1,15 +1,15 @@
-asynctest(
+import { ApproxStructure } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import { TinyUi } from '@ephox/mcagar';
+import VisualBlocksPlugin from 'tinymce/plugins/visualblocks/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
+
+UnitTest.asynctest(
   'browser.tinymce.plugins.visualblocks.VisualBlocksSanityTest',
-  [
-    'ephox.agar.api.ApproxStructure',
-    'ephox.agar.api.Pipeline',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyUi',
-    'tinymce.plugins.visualblocks.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (ApproxStructure, Pipeline, TinyApis, TinyLoader, TinyUi, VisualBlocksPlugin, ModernTheme) {
+  function() {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -51,3 +51,4 @@ asynctest(
     }, success, failure);
   }
 );
+

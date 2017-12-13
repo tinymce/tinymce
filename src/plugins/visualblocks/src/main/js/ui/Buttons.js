@@ -8,44 +8,38 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.visualblocks.ui.Buttons',
-  [
-    'tinymce.plugins.visualblocks.core.VisualBlocks'
-  ],
-  function (VisualBlocks) {
-    var toggleActiveState = function (editor, enabledState) {
-      return function (e) {
-        var ctrl = e.control;
+import VisualBlocks from '../core/VisualBlocks';
 
-        ctrl.active(enabledState.get());
+var toggleActiveState = function (editor, enabledState) {
+  return function (e) {
+    var ctrl = e.control;
 
-        editor.on('VisualBlocks', function (e) {
-          ctrl.active(e.state);
-        });
-      };
-    };
+    ctrl.active(enabledState.get());
 
-    var register = function (editor, enabledState) {
-      editor.addButton('visualblocks', {
-        active: false,
-        title: 'Show blocks',
-        cmd: 'mceVisualBlocks',
-        onPostRender: toggleActiveState(editor, enabledState)
-      });
+    editor.on('VisualBlocks', function (e) {
+      ctrl.active(e.state);
+    });
+  };
+};
 
-      editor.addMenuItem('visualblocks', {
-        text: 'Show blocks',
-        cmd: 'mceVisualBlocks',
-        onPostRender: toggleActiveState(editor, enabledState),
-        selectable: true,
-        context: 'view',
-        prependToContext: true
-      });
-    };
+var register = function (editor, enabledState) {
+  editor.addButton('visualblocks', {
+    active: false,
+    title: 'Show blocks',
+    cmd: 'mceVisualBlocks',
+    onPostRender: toggleActiveState(editor, enabledState)
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addMenuItem('visualblocks', {
+    text: 'Show blocks',
+    cmd: 'mceVisualBlocks',
+    onPostRender: toggleActiveState(editor, enabledState),
+    selectable: true,
+    context: 'view',
+    prependToContext: true
+  });
+};
+
+export default <any> {
+  register: register
+};
