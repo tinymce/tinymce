@@ -7,7 +7,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import URI from 'tinymce/core/util/URI';
-import ImageUtils from 'tinymce/plugins/imagetools/test/ImageUtils';
+import ImageUtils from '../module/test/ImageUtils';
 import { UnitTest } from '@ephox/refute';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', function() {

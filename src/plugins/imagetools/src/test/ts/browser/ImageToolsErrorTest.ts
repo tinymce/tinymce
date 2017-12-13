@@ -14,8 +14,8 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Html } from '@ephox/sugar';
 import URI from 'tinymce/core/util/URI';
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
-import ImageOps from 'tinymce/plugins/imagetools/test/ImageOps';
-import ImageUtils from 'tinymce/plugins/imagetools/test/ImageUtils';
+import ImageOps from '../module/test/ImageOps';
+import ImageUtils from '../module/test/ImageUtils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 

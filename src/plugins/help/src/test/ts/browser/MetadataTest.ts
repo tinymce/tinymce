@@ -7,8 +7,8 @@ import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
 import { Html } from '@ephox/sugar';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
-import FakePlugin from 'tinymce/plugins/help/test/FakePlugin';
-import NoMetaFakePlugin from 'tinymce/plugins/help/test/NoMetaFakePlugin';
+import FakePlugin from '../module/test/FakePlugin';
+import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 
