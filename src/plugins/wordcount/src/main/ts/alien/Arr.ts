@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var each = function (o, cb, s) {
+var each = function (o, cb, s?) {
   var n, l;
 
   if (!o) {

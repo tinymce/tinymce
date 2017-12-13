@@ -51,6 +51,7 @@
     "less-plugin-autoprefix": "^1.5.1",
     "load-grunt-tasks": "~3.5.2",
     "moxie-zip": "~0.0.3",
+    "rollup-plugin-ascii": "0.0.3",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-typescript2": "^0.8.4",
     "rollup-plugin-uglify": "^2.0.1",

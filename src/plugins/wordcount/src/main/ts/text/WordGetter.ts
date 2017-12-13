@@ -52,7 +52,7 @@ var doGetWords = function (string, options) {
   var i = 0;
   var map = StringMapper.classify(string);
   var len = map.length;
-  var word = [];
+  var word: any = [];
   var words = [];
   var chr;
   var includePunctuation;

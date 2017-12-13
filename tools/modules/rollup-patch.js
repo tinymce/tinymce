@@ -57,7 +57,8 @@ module.exports = function ( options = {} ) {
               adjustMultilineComment: false
           },
           newline: '',
-          preserveBlankLines: false
+          preserveBlankLines: false,
+          safeConcatenation: true
         }
       });
       //console.log(newCode);
