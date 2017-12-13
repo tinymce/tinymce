@@ -2,14 +2,12 @@
 
 var resolve = require('rollup-plugin-node-resolve');
 var typescript = require('rollup-plugin-typescript2');
-var patcher = require('../../../tools/modules/rollup-patch');
-var ascii = require('rollup-plugin-ascii');
 
 module.exports = function (grunt) {
   grunt.initConfig({
     rollup: {
       options: {
-        treeshake: true,
+        treeshake: false,
         moduleName: 'wordcount',
         format: 'iife',
         banner: '(function () {',
@@ -17,12 +15,11 @@ module.exports = function (grunt) {
         plugins: [
           resolve(),
           typescript({
+            tsconfig: '../../../tsconfig.plugin.json',
             include: [
               '../../**/*.ts'
             ]
-          }),
-          patcher(),
-          ascii()
+          })
         ]
       },
       plugin: {
