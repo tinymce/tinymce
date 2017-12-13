@@ -9,7 +9,7 @@ import ImageOps from '../module/test/ImageOps';
 import ImageUtils from '../module/test/ImageUtils';
 import { UnitTest } from '@ephox/refute';
 
-UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', function() {
+UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', function() {
   var success = arguments[arguments.length - 2];
   var failure = arguments[arguments.length - 1];
 

@@ -12,7 +12,7 @@
       "tinymce": ["src/core/src/main/ts/api/Main"],
       "tinymce/core/*": ["src/core/src/main/ts/*"],
       "tinymce/ui/*": ["src/ui/src/main/ts/*"],
-      "tinymce/core/test/ViewBlock": ["src/core/src/test/ts/module/test/ViewBlock"],
+      "tinymce/core/test/*": ["src/core/src/test/ts/module/test/*"],
       "tinymce/themes/modern/*": ["src/themes/modern/src/main/ts/*"],
       "tinymce/themes/inlite/*": ["src/themes/inlite/src/main/ts/*"],
       "tinymce/plugins/advlist/*": ["src/plugins/advlist/src/main/ts/*"],

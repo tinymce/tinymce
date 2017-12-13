@@ -8,7 +8,7 @@ import { Merger } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/EditorManager';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../module/test/ViewBlock';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import MockDataTransfer from '../module/test/MockDataTransfer';
 import Theme from 'tinymce/themes/modern/Theme';

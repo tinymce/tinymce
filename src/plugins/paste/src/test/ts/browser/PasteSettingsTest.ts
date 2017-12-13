@@ -4,7 +4,7 @@ import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
 import { Merger } from '@ephox/katamari';
 import EditorManager from 'tinymce/core/EditorManager';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../module/test/ViewBlock';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';

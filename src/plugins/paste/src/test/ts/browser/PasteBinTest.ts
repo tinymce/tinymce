@@ -6,7 +6,7 @@ import { Merger } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import EditorManager from 'tinymce/core/EditorManager';
-import ViewBlock from 'tinymce/core/test/ViewBlock';
+import ViewBlock from '../module/test/ViewBlock';
 import PasteBin from 'tinymce/plugins/paste/core/PasteBin';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';

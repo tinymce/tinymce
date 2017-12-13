@@ -18,24 +18,9 @@ declare const window: any;
 /*eslint consistent-this: 0 */
 var context = Global;
 
-var exportToModuleLoaders = function (tinymce) {
-  // Bolt
-  if (typeof context.define === "function" && !context.define.amd) {
-    context.define("ephox/tinymce", [], Fun.constant(tinymce));
-    context.define("tinymce.core.EditorManager", [], Fun.constant(tinymce));
-  }
-
-  // CommonJS
-  if (typeof module === 'object') {
-    /* global module */
-    module.exports = tinymce;
-  }
-};
-
 var exportToWindowGlobal = function (tinymce) {
   window.tinymce = tinymce;
   window.tinyMCE = tinymce;
 };
 
 exportToWindowGlobal(Tinymce);
-exportToModuleLoaders(Tinymce);
