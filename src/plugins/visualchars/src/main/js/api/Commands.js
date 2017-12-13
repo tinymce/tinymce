@@ -8,20 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.visualchars.api.Commands',
-  [
-    'tinymce.plugins.visualchars.core.Actions'
-  ],
-  function (Actions) {
-    var register = function (editor, toggleState) {
-      editor.addCommand('mceVisualChars', function () {
-        Actions.toggleVisualChars(editor, toggleState);
-      });
-    };
+import Actions from '../core/Actions';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor, toggleState) {
+  editor.addCommand('mceVisualChars', function () {
+    Actions.toggleVisualChars(editor, toggleState);
+  });
+};
+
+export default <any> {
+  register: register
+};

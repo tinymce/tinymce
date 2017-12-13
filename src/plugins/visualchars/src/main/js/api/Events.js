@@ -8,17 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.visualchars.api.Events',
-  [
-  ],
-  function () {
-    var fireVisualChars = function (editor, state) {
-      return editor.fire('VisualChars', { state: state });
-    };
+var fireVisualChars = function (editor, state) {
+  return editor.fire('VisualChars', { state: state });
+};
 
-    return {
-      fireVisualChars: fireVisualChars
-    };
-  }
-);
+export default <any> {
+  fireVisualChars: fireVisualChars
+};

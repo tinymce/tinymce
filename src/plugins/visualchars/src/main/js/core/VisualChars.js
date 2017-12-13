@@ -8,58 +8,52 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.visualchars.core.VisualChars',
-  [
-    'tinymce.plugins.visualchars.core.Data',
-    'tinymce.plugins.visualchars.core.Nodes',
-    'ephox.katamari.api.Arr',
-    'ephox.sugar.api.node.Element',
-    'ephox.sugar.api.node.Node'
-  ],
-  function (Data, Nodes, Arr, Element, Node) {
-    var show = function (editor, rootElm) {
-      var node, div;
-      var nodeList = Nodes.filterDescendants(Element.fromDom(rootElm), Nodes.isMatch);
+import Data from './Data';
+import Nodes from './Nodes';
+import { Arr } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+import { Node } from '@ephox/sugar';
 
-      Arr.each(nodeList, function (n) {
-        var withSpans = Nodes.replaceWithSpans(Node.value(n));
+var show = function (editor, rootElm) {
+  var node, div;
+  var nodeList = Nodes.filterDescendants(Element.fromDom(rootElm), Nodes.isMatch);
 
-        div = editor.dom.create('div', null, withSpans);
-        while ((node = div.lastChild)) {
-          editor.dom.insertAfter(node, n.dom());
-        }
+  Arr.each(nodeList, function (n) {
+    var withSpans = Nodes.replaceWithSpans(Node.value(n));
 
-        editor.dom.remove(n.dom());
-      });
-    };
+    div = editor.dom.create('div', null, withSpans);
+    while ((node = div.lastChild)) {
+      editor.dom.insertAfter(node, n.dom());
+    }
 
-    var hide = function (editor, body) {
-      var nodeList = editor.dom.select(Data.selector, body);
+    editor.dom.remove(n.dom());
+  });
+};
 
-      Arr.each(nodeList, function (node) {
-        editor.dom.remove(node, 1);
-      });
-    };
+var hide = function (editor, body) {
+  var nodeList = editor.dom.select(Data.selector, body);
 
-    var toggle = function (editor) {
-      var body = editor.getBody();
-      var bookmark = editor.selection.getBookmark();
-      var parentNode = Nodes.findParentElm(editor.selection.getNode(), body);
+  Arr.each(nodeList, function (node) {
+    editor.dom.remove(node, 1);
+  });
+};
 
-      // if user does select all the parentNode will be undefined
-      parentNode = parentNode !== undefined ? parentNode : body;
+var toggle = function (editor) {
+  var body = editor.getBody();
+  var bookmark = editor.selection.getBookmark();
+  var parentNode = Nodes.findParentElm(editor.selection.getNode(), body);
 
-      hide(editor, parentNode);
-      show(editor, parentNode);
+  // if user does select all the parentNode will be undefined
+  parentNode = parentNode !== undefined ? parentNode : body;
 
-      editor.selection.moveToBookmark(bookmark);
-    };
+  hide(editor, parentNode);
+  show(editor, parentNode);
 
-    return {
-      show: show,
-      hide: hide,
-      toggle: toggle
-    };
-  }
-);
+  editor.selection.moveToBookmark(bookmark);
+};
+
+export default <any> {
+  show: show,
+  hide: hide,
+  toggle: toggle
+};

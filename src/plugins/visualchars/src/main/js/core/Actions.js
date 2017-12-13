@@ -8,32 +8,26 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.visualchars.core.Actions',
-  [
-    'tinymce.plugins.visualchars.api.Events',
-    'tinymce.plugins.visualchars.core.VisualChars'
-  ],
-  function (Events, VisualChars) {
-    var toggleVisualChars = function (editor, toggleState) {
-      var body = editor.getBody(), selection = editor.selection, bookmark;
+import Events from '../api/Events';
+import VisualChars from './VisualChars';
 
-      toggleState.set(!toggleState.get());
-      Events.fireVisualChars(editor, toggleState.get());
+var toggleVisualChars = function (editor, toggleState) {
+  var body = editor.getBody(), selection = editor.selection, bookmark;
 
-      bookmark = selection.getBookmark();
+  toggleState.set(!toggleState.get());
+  Events.fireVisualChars(editor, toggleState.get());
 
-      if (toggleState.get() === true) {
-        VisualChars.show(editor, body);
-      } else {
-        VisualChars.hide(editor, body);
-      }
+  bookmark = selection.getBookmark();
 
-      selection.moveToBookmark(bookmark);
-    };
-
-    return {
-      toggleVisualChars: toggleVisualChars
-    };
+  if (toggleState.get() === true) {
+    VisualChars.show(editor, body);
+  } else {
+    VisualChars.hide(editor, body);
   }
-);
+
+  selection.moveToBookmark(bookmark);
+};
+
+export default <any> {
+  toggleVisualChars: toggleVisualChars
+};
