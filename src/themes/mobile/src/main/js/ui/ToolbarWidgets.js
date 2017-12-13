@@ -1,26 +1,18 @@
-define(
-  'tinymce.themes.mobile.ui.ToolbarWidgets',
+import Buttons from './Buttons';
 
-  [
-    'tinymce.themes.mobile.ui.Buttons'
-  ],
+var button = function (realm, clazz, makeItems) {
+  return Buttons.forToolbar(clazz, function () {
+    var items = makeItems();
+    realm.setContextToolbar([
+      {
+        // FIX: I18n
+        label: clazz + ' group',
+        items: items
+      }
+    ]);
+  }, { });
+};
 
-  function (Buttons) {
-    var button = function (realm, clazz, makeItems) {
-      return Buttons.forToolbar(clazz, function () {
-        var items = makeItems();
-        realm.setContextToolbar([
-          {
-            // FIX: I18n
-            label: clazz + ' group',
-            items: items
-          }
-        ]);
-      }, { });
-    };
-
-    return {
-      button: button
-    };
-  }
-);
+export default <any> {
+  button: button
+};

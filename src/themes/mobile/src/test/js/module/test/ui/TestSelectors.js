@@ -1,14 +1,8 @@
-define(
-  'tinymce.themes.mobile.test.ui.TestSelectors',
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun'
-  ],
 
-  function (Fun) {
-    return {
-      link: Fun.constant('.tinymce-mobile-icon-link'),
-      fontsize: Fun.constant('.tinymce-mobile-icon-font-size')
-    };
-  }
-);
+
+export default <any> {
+  link: Fun.constant('.tinymce-mobile-icon-link'),
+  fontsize: Fun.constant('.tinymce-mobile-icon-font-size')
+};

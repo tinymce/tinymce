@@ -1,20 +1,12 @@
-define(
-  'tinymce.themes.mobile.style.Styles',
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun'
-  ],
+var prefix = 'tinymce-mobile';
 
-  function (Fun) {
-    var prefix = 'tinymce-mobile';
+var resolve = function (p) {
+  return prefix + '-' + p;
+};
 
-    var resolve = function (p) {
-      return prefix + '-' + p;
-    };
-
-    return {
-      resolve: resolve,
-      prefix: Fun.constant(prefix)
-    };
-  }
-);
+export default <any> {
+  resolve: resolve,
+  prefix: Fun.constant(prefix)
+};

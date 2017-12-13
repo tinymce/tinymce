@@ -1,17 +1,7 @@
-define(
-  'tinymce.themes.mobile.api.Settings',
+var isSkinDisabled = function (editor) {
+  return editor.settings.skin === false;
+};
 
-  [
-
-  ],
-
-  function () {
-    var isSkinDisabled = function (editor) {
-      return editor.settings.skin === false;
-    };
-
-    return {
-      isSkinDisabled: isSkinDisabled
-    };
-  }
-);
+export default <any> {
+  isSkinDisabled: isSkinDisabled
+};

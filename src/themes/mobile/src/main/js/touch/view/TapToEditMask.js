@@ -1,64 +1,55 @@
-define(
-  'tinymce.themes.mobile.touch.view.TapToEditMask',
+import { Behaviour } from '@ephox/alloy';
+import { Toggling } from '@ephox/alloy';
+import { Memento } from '@ephox/alloy';
+import { Button } from '@ephox/alloy';
+import { Container } from '@ephox/alloy';
+import { Throttler } from '@ephox/katamari';
+import Styles from '../../style/Styles';
+import UiDomFactory from '../../util/UiDomFactory';
 
-  [
-    'ephox.alloy.api.behaviour.Behaviour',
-    'ephox.alloy.api.behaviour.Toggling',
-    'ephox.alloy.api.component.Memento',
-    'ephox.alloy.api.ui.Button',
-    'ephox.alloy.api.ui.Container',
-    'ephox.katamari.api.Throttler',
-    'global!setTimeout',
-    'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.util.UiDomFactory'
-  ],
+var sketch = function (onView, translate) {
 
-  function (Behaviour, Toggling, Memento, Button, Container, Throttler, setTimeout, Styles, UiDomFactory) {
-    var sketch = function (onView, translate) {
-
-      var memIcon = Memento.record(
-        Container.sketch({
-          dom: UiDomFactory.dom('<div aria-hidden="true" class="${prefix}-mask-tap-icon"></div>'),
-          containerBehaviours: Behaviour.derive([
-            Toggling.config({
-              toggleClass: Styles.resolve('mask-tap-icon-selected'),
-              toggleOnExecute: false
-            })
-          ])
+  var memIcon = Memento.record(
+    Container.sketch({
+      dom: UiDomFactory.dom('<div aria-hidden="true" class="${prefix}-mask-tap-icon"></div>'),
+      containerBehaviours: Behaviour.derive([
+        Toggling.config({
+          toggleClass: Styles.resolve('mask-tap-icon-selected'),
+          toggleOnExecute: false
         })
-      );
+      ])
+    })
+  );
 
-      var onViewThrottle = Throttler.first(onView, 200);
+  var onViewThrottle = Throttler.first(onView, 200);
 
-      return Container.sketch({
-        dom: UiDomFactory.dom('<div class="${prefix}-disabled-mask"></div>'),
+  return Container.sketch({
+    dom: UiDomFactory.dom('<div class="${prefix}-disabled-mask"></div>'),
+    components: [
+      Container.sketch({
+        dom: UiDomFactory.dom('<div class="${prefix}-content-container"></div>'),
         components: [
-          Container.sketch({
-            dom: UiDomFactory.dom('<div class="${prefix}-content-container"></div>'),
+          Button.sketch({
+            dom: UiDomFactory.dom('<div class="${prefix}-content-tap-section"></div>'),
             components: [
-              Button.sketch({
-                dom: UiDomFactory.dom('<div class="${prefix}-content-tap-section"></div>'),
-                components: [
-                  memIcon.asSpec()
-                ],
-                action: function (button) {
-                  onViewThrottle.throttle();
-                },
+              memIcon.asSpec()
+            ],
+            action: function (button) {
+              onViewThrottle.throttle();
+            },
 
-                buttonBehaviours: Behaviour.derive([
-                  Toggling.config({
-                    toggleClass: Styles.resolve('mask-tap-icon-selected')
-                  })
-                ])
+            buttonBehaviours: Behaviour.derive([
+              Toggling.config({
+                toggleClass: Styles.resolve('mask-tap-icon-selected')
               })
-            ]
+            ])
           })
         ]
-      });
-    };
+      })
+    ]
+  });
+};
 
-    return {
-      sketch: sketch
-    };
-  }
-);
+export default <any> {
+  sketch: sketch
+};

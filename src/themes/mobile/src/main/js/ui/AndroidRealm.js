@@ -1,89 +1,82 @@
-define(
-  'tinymce.themes.mobile.ui.AndroidRealm',
-
-  [
-    'ephox.alloy.api.behaviour.Replacing',
-    'ephox.alloy.api.behaviour.Swapping',
-    'ephox.katamari.api.Fun',
-    'ephox.katamari.api.Singleton',
-    'tinymce.themes.mobile.api.AndroidWebapp',
-    'tinymce.themes.mobile.style.Styles',
-    'tinymce.themes.mobile.toolbar.ScrollingToolbar',
-    'tinymce.themes.mobile.ui.CommonRealm',
-    'tinymce.themes.mobile.ui.Dropup',
-    'tinymce.themes.mobile.ui.OuterContainer'
-  ],
+import { Replacing } from '@ephox/alloy';
+import { Swapping } from '@ephox/alloy';
+import { Fun } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
+import AndroidWebapp from '../api/AndroidWebapp';
+import Styles from '../style/Styles';
+import ScrollingToolbar from '../toolbar/ScrollingToolbar';
+import CommonRealm from './CommonRealm';
+import Dropup from './Dropup';
+import OuterContainer from './OuterContainer';
 
 
-  function (Replacing, Swapping, Fun, Singleton, AndroidWebapp, Styles, ScrollingToolbar, CommonRealm, Dropup, OuterContainer) {
-    return function (scrollIntoView) {
-      var alloy = OuterContainer({
-        classes: [ Styles.resolve('android-container') ]
-      });
 
-      var toolbar = ScrollingToolbar();
+export default <any> function (scrollIntoView) {
+  var alloy = OuterContainer({
+    classes: [ Styles.resolve('android-container') ]
+  });
 
-      var webapp = Singleton.api();
+  var toolbar = ScrollingToolbar();
 
-      var switchToEdit = CommonRealm.makeEditSwitch(webapp);
+  var webapp = Singleton.api();
 
-      var socket = CommonRealm.makeSocket();
+  var switchToEdit = CommonRealm.makeEditSwitch(webapp);
 
-      var dropup = Dropup.build(Fun.noop, scrollIntoView);
+  var socket = CommonRealm.makeSocket();
 
-      alloy.add(toolbar.wrapper());
-      alloy.add(socket);
-      alloy.add(dropup.component());
+  var dropup = Dropup.build(Fun.noop, scrollIntoView);
 
-      var setToolbarGroups = function (rawGroups) {
-        var groups = toolbar.createGroups(rawGroups);
-        toolbar.setGroups(groups);
-      };
+  alloy.add(toolbar.wrapper());
+  alloy.add(socket);
+  alloy.add(dropup.component());
 
-      var setContextToolbar = function (rawGroups) {
-        var groups = toolbar.createGroups(rawGroups);
-        toolbar.setContextToolbar(groups);
-      };
+  var setToolbarGroups = function (rawGroups) {
+    var groups = toolbar.createGroups(rawGroups);
+    toolbar.setGroups(groups);
+  };
 
-      // You do not always want to do this.
-      var focusToolbar = function () {
-        toolbar.focus();
-      };
+  var setContextToolbar = function (rawGroups) {
+    var groups = toolbar.createGroups(rawGroups);
+    toolbar.setContextToolbar(groups);
+  };
 
-      var restoreToolbar = function () {
-        toolbar.restoreToolbar();
-      };
+  // You do not always want to do this.
+  var focusToolbar = function () {
+    toolbar.focus();
+  };
 
-      var init = function (spec) {
-        webapp.set(
-          AndroidWebapp.produce(spec)
-        );
-      };
+  var restoreToolbar = function () {
+    toolbar.restoreToolbar();
+  };
 
-      var exit = function () {
-        webapp.run(function (w) {
-          w.exit();
-          Replacing.remove(socket, switchToEdit);
-        });
-      };
+  var init = function (spec) {
+    webapp.set(
+      AndroidWebapp.produce(spec)
+    );
+  };
 
-      var updateMode = function (readOnly) {
-        CommonRealm.updateMode(socket, switchToEdit, readOnly, alloy.root());
-      };
+  var exit = function () {
+    webapp.run(function (w) {
+      w.exit();
+      Replacing.remove(socket, switchToEdit);
+    });
+  };
 
-      return {
-        system: Fun.constant(alloy),
-        element: alloy.element,
-        init: init,
-        exit: exit,
-        setToolbarGroups: setToolbarGroups,
-        setContextToolbar: setContextToolbar,
-        focusToolbar: focusToolbar,
-        restoreToolbar: restoreToolbar,
-        updateMode: updateMode,
-        socket: Fun.constant(socket),
-        dropup: Fun.constant(dropup)
-      };
-    };
-  }
-);
+  var updateMode = function (readOnly) {
+    CommonRealm.updateMode(socket, switchToEdit, readOnly, alloy.root());
+  };
+
+  return {
+    system: Fun.constant(alloy),
+    element: alloy.element,
+    init: init,
+    exit: exit,
+    setToolbarGroups: setToolbarGroups,
+    setContextToolbar: setContextToolbar,
+    focusToolbar: focusToolbar,
+    restoreToolbar: restoreToolbar,
+    updateMode: updateMode,
+    socket: Fun.constant(socket),
+    dropup: Fun.constant(dropup)
+  };
+};

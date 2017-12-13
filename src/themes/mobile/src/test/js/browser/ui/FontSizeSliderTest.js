@@ -1,67 +1,61 @@
-asynctest(
-  'Browser Test: ui.FontSizeSliderTest',
+import { Mouse } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { Attachment } from '@ephox/alloy';
+import { PlatformDetection } from '@ephox/sand';
+import { Body } from '@ephox/sugar';
+import { Class } from '@ephox/sugar';
+import TestFrameEditor from 'tinymce/themes/mobile/test/ui/TestFrameEditor';
+import TestSelectors from 'tinymce/themes/mobile/test/ui/TestSelectors';
+import TestStyles from 'tinymce/themes/mobile/test/ui/TestStyles';
+import FontSizeSlider from 'tinymce/themes/mobile/ui/FontSizeSlider';
+import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
+import { UnitTest } from '@ephox/refute';
 
-  [
-    'ephox.agar.api.Mouse',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.alloy.api.system.Attachment',
-    'ephox.sand.api.PlatformDetection',
-    'ephox.sugar.api.node.Body',
-    'ephox.sugar.api.properties.Class',
-    'tinymce.themes.mobile.test.ui.TestFrameEditor',
-    'tinymce.themes.mobile.test.ui.TestSelectors',
-    'tinymce.themes.mobile.test.ui.TestStyles',
-    'tinymce.themes.mobile.ui.FontSizeSlider',
-    'tinymce.themes.mobile.ui.IosRealm'
-  ],
+UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
+  var detection = PlatformDetection.detect();
 
-  function (Mouse, Pipeline, Step, Attachment, PlatformDetection, Body, Class, TestFrameEditor, TestSelectors, TestStyles, FontSizeSlider, IosRealm) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
-    var detection = PlatformDetection.detect();
+  var realm = IosRealm();
+  // Make toolbar appear
+  Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
 
-    var realm = IosRealm();
-    // Make toolbar appear
-    Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
+  var body = Body.body();
+  Attachment.attachSystem(body, realm.system());
 
-    var body = Body.body();
-    Attachment.attachSystem(body, realm.system());
+  TestStyles.addStyles();
 
-    TestStyles.addStyles();
+  var unload = function () {
+    TestStyles.removeStyles();
+    Attachment.detachSystem(realm.system());
+  };
 
-    var unload = function () {
-      TestStyles.removeStyles();
-      Attachment.detachSystem(realm.system());
-    };
+  var tEditor = TestFrameEditor();
 
-    var tEditor = TestFrameEditor();
-
-    realm.system().add(tEditor.component());
+  realm.system().add(tEditor.component());
 
 
-    realm.setToolbarGroups([
-      {
-        label: 'group1',
-        items: [
-          FontSizeSlider.sketch(realm, tEditor.editor())
-        ]
-      }
-    ]);
+  realm.setToolbarGroups([
+    {
+      label: 'group1',
+      items: [
+        FontSizeSlider.sketch(realm, tEditor.editor())
+      ]
+    }
+  ]);
 
-    Pipeline.async({}, detection.browser.isChrome() ? [
-      TestStyles.sWaitForToolstrip(realm),
-      Step.sync(function () {
-        tEditor.editor().focus();
-      }),
-      Mouse.sClickOn(realm.system().element(), TestSelectors.fontsize()),
-      tEditor.sAssertEq('on first showing, the font size slider should not have fired execCommand', [ ])
+  Pipeline.async({}, detection.browser.isChrome() ? [
+    TestStyles.sWaitForToolstrip(realm),
+    Step.sync(function () {
+      tEditor.editor().focus();
+    }),
+    Mouse.sClickOn(realm.system().element(), TestSelectors.fontsize()),
+    tEditor.sAssertEq('on first showing, the font size slider should not have fired execCommand', [ ])
 
-      // Think about how to do the slider events
-    ] : [], function () {
-      unload(); success();
-    }, failure);
+    // Think about how to do the slider events
+  ] : [], function () {
+    unload(); success();
+  }, failure);
+});
 
-
-  }
-);

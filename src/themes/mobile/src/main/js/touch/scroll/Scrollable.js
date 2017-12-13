@@ -1,32 +1,24 @@
-define(
-  'tinymce.themes.mobile.touch.scroll.Scrollable',
+import { Fun } from '@ephox/katamari';
+import { Class } from '@ephox/sugar';
+import Styles from '../../style/Styles';
 
-  [
-    'ephox.katamari.api.Fun',
-    'ephox.sugar.api.properties.Class',
-    'tinymce.themes.mobile.style.Styles'
-  ],
+var scrollable = Styles.resolve('scrollable');
 
-  function (Fun, Class, Styles) {
-    var scrollable = Styles.resolve('scrollable');
+var register = function (element) {
+/*
+ *  The reason this function exists is to have a
+ *  central place where to set if an element can be explicitly
+ *  scrolled. This is for mobile devices atm.
+ */
+  Class.add(element, scrollable);
+};
 
-    var register = function (element) {
-    /*
-     *  The reason this function exists is to have a
-     *  central place where to set if an element can be explicitly
-     *  scrolled. This is for mobile devices atm.
-     */
-      Class.add(element, scrollable);
-    };
+var deregister = function (element) {
+  Class.remove(element, scrollable);
+};
 
-    var deregister = function (element) {
-      Class.remove(element, scrollable);
-    };
-
-    return {
-      register: register,
-      deregister: deregister,
-      scrollable: Fun.constant(scrollable)
-    };
-  }
-);
+export default <any> {
+  register: register,
+  deregister: deregister,
+  scrollable: Fun.constant(scrollable)
+};

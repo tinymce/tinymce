@@ -1,19 +1,11 @@
-define(
-  'tinymce.themes.mobile.channels.TinyChannels',
+import { Fun } from '@ephox/katamari';
 
-  [
-    'ephox.katamari.api.Fun'
-  ],
+var formatChanged = 'formatChanged';
+var orientationChanged = 'orientationChanged';
+var dropupDismissed = 'dropupDismissed';
 
-  function (Fun) {
-    var formatChanged = 'formatChanged';
-    var orientationChanged = 'orientationChanged';
-    var dropupDismissed = 'dropupDismissed';
-
-    return {
-      formatChanged: Fun.constant(formatChanged),
-      orientationChanged: Fun.constant(orientationChanged),
-      dropupDismissed: Fun.constant(dropupDismissed)
-    };
-  }
-);
+export default <any> {
+  formatChanged: Fun.constant(formatChanged),
+  orientationChanged: Fun.constant(orientationChanged),
+  dropupDismissed: Fun.constant(dropupDismissed)
+};
