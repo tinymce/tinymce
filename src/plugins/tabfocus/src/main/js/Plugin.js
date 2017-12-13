@@ -8,17 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.tabfocus.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.tabfocus.core.Keyboard'
-  ],
-  function (PluginManager, Keyboard) {
-    PluginManager.add('tabfocus', function (editor) {
-      Keyboard.setup(editor);
-    });
+import PluginManager from 'tinymce/core/PluginManager';
+import Keyboard from './core/Keyboard';
 
-    return function () { };
-  }
-);
+PluginManager.add('tabfocus', function (editor) {
+  Keyboard.setup(editor);
+});
+
+export default <any> function () { };

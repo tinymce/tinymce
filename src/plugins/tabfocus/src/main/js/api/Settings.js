@@ -8,21 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.tabfocus.api.Settings',
-  [
-  ],
-  function () {
-    var getTabFocusElements = function (editor) {
-      return editor.getParam('tabfocus_elements', ':prev,:next');
-    };
+var getTabFocusElements = function (editor) {
+  return editor.getParam('tabfocus_elements', ':prev,:next');
+};
 
-    var getTabFocus = function (editor) {
-      return editor.getParam('tab_focus', getTabFocusElements(editor));
-    };
+var getTabFocus = function (editor) {
+  return editor.getParam('tab_focus', getTabFocusElements(editor));
+};
 
-    return {
-      getTabFocus: getTabFocus
-    };
-  }
-);
+export default <any> {
+  getTabFocus: getTabFocus
+};
