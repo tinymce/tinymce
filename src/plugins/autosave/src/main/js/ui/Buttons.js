@@ -8,50 +8,44 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.autosave.ui.Buttons',
-  [
-    'tinymce.plugins.autosave.core.Storage'
-  ],
-  function (Storage) {
-    var postRender = function (editor, started) {
-      return function (e) {
-        var ctrl = e.control;
+import Storage from '../core/Storage';
 
-        ctrl.disabled(!Storage.hasDraft(editor));
+var postRender = function (editor, started) {
+  return function (e) {
+    var ctrl = e.control;
 
-        editor.on('StoreDraft RestoreDraft RemoveDraft', function () {
-          ctrl.disabled(!Storage.hasDraft(editor));
-        });
+    ctrl.disabled(!Storage.hasDraft(editor));
 
-        // TODO: Investigate why this is only done on postrender that would
-        // make the feature broken if only the menu item was rendered since
-        // it is rendered when the menu appears
-        Storage.startStoreDraft(editor, started);
-      };
-    };
+    editor.on('StoreDraft RestoreDraft RemoveDraft', function () {
+      ctrl.disabled(!Storage.hasDraft(editor));
+    });
 
-    var register = function (editor, started) {
-      editor.addButton('restoredraft', {
-        title: 'Restore last draft',
-        onclick: function () {
-          Storage.restoreLastDraft(editor);
-        },
-        onPostRender: postRender(editor, started)
-      });
+    // TODO: Investigate why this is only done on postrender that would
+    // make the feature broken if only the menu item was rendered since
+    // it is rendered when the menu appears
+    Storage.startStoreDraft(editor, started);
+  };
+};
 
-      editor.addMenuItem('restoredraft', {
-        text: 'Restore last draft',
-        onclick: function () {
-          Storage.restoreLastDraft(editor);
-        },
-        onPostRender: postRender(editor, started),
-        context: 'file'
-      });
-    };
+var register = function (editor, started) {
+  editor.addButton('restoredraft', {
+    title: 'Restore last draft',
+    onclick: function () {
+      Storage.restoreLastDraft(editor);
+    },
+    onPostRender: postRender(editor, started)
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addMenuItem('restoredraft', {
+    text: 'Restore last draft',
+    onclick: function () {
+      Storage.restoreLastDraft(editor);
+    },
+    onPostRender: postRender(editor, started),
+    context: 'file'
+  });
+};
+
+export default <any> {
+  register: register
+};

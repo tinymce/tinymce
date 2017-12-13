@@ -8,31 +8,26 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { Cell } from '@ephox/katamari';
+import PluginManager from 'tinymce/core/PluginManager';
+import Api from './api/Api';
+import BeforeUnload from './core/BeforeUnload';
+import Buttons from './ui/Buttons';
+
 /**
  * This class contains all core logic for the autosave plugin.
  *
  * @class tinymce.autosave.Plugin
  * @private
  */
-define(
-  'tinymce.plugins.autosave.Plugin',
-  [
-    'ephox.katamari.api.Cell',
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.autosave.api.Api',
-    'tinymce.plugins.autosave.core.BeforeUnload',
-    'tinymce.plugins.autosave.ui.Buttons'
-  ],
-  function (Cell, PluginManager, Api, BeforeUnload, Buttons) {
-    PluginManager.add('autosave', function (editor) {
-      var started = Cell(false);
 
-      BeforeUnload.setup(editor);
-      Buttons.register(editor, started);
+PluginManager.add('autosave', function (editor) {
+  var started = Cell(false);
 
-      return Api.get(editor);
-    });
+  BeforeUnload.setup(editor);
+  Buttons.register(editor, started);
 
-    return function () { };
-  }
-);
+  return Api.get(editor);
+});
+
+export default <any> function () { };

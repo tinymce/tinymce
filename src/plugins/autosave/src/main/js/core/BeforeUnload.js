@@ -8,39 +8,32 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.autosave.core.BeforeUnload',
-  [
-    'global!window',
-    'tinymce.core.EditorManager',
-    'tinymce.core.util.Tools',
-    'tinymce.plugins.autosave.api.Settings'
-  ],
-  function (window, EditorManager, Tools, Settings) {
-    EditorManager._beforeUnloadHandler = function () {
-      var msg;
+import EditorManager from 'tinymce/core/EditorManager';
+import Tools from 'tinymce/core/util/Tools';
+import Settings from '../api/Settings';
 
-      Tools.each(EditorManager.get(), function (editor) {
-        // Store a draft for each editor instance
-        if (editor.plugins.autosave) {
-          editor.plugins.autosave.storeDraft();
-        }
+EditorManager._beforeUnloadHandler = function () {
+  var msg;
 
-        // Setup a return message if the editor is dirty
-        if (!msg && editor.isDirty() && Settings.shouldAskBeforeUnload(editor)) {
-          msg = editor.translate("You have unsaved changes are you sure you want to navigate away?");
-        }
-      });
+  Tools.each(EditorManager.get(), function (editor) {
+    // Store a draft for each editor instance
+    if (editor.plugins.autosave) {
+      editor.plugins.autosave.storeDraft();
+    }
 
-      return msg;
-    };
+    // Setup a return message if the editor is dirty
+    if (!msg && editor.isDirty() && Settings.shouldAskBeforeUnload(editor)) {
+      msg = editor.translate("You have unsaved changes are you sure you want to navigate away?");
+    }
+  });
 
-    var setup = function (editor) {
-      window.onbeforeunload = EditorManager._beforeUnloadHandler;
-    };
+  return msg;
+};
 
-    return {
-      setup: setup
-    };
-  }
-);
+var setup = function (editor) {
+  window.onbeforeunload = EditorManager._beforeUnloadHandler;
+};
+
+export default <any> {
+  setup: setup
+};

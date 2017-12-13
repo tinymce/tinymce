@@ -8,27 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.autosave.api.Events',
-  [
-  ],
-  function () {
-    var fireRestoreDraft = function (editor) {
-      return editor.fire('RestoreDraft');
-    };
+var fireRestoreDraft = function (editor) {
+  return editor.fire('RestoreDraft');
+};
 
-    var fireStoreDraft = function (editor) {
-      return editor.fire('StoreDraft');
-    };
+var fireStoreDraft = function (editor) {
+  return editor.fire('StoreDraft');
+};
 
-    var fireRemoveDraft = function (editor) {
-      return editor.fire('RemoveDraft');
-    };
+var fireRemoveDraft = function (editor) {
+  return editor.fire('RemoveDraft');
+};
 
-    return {
-      fireRestoreDraft: fireRestoreDraft,
-      fireStoreDraft: fireStoreDraft,
-      fireRemoveDraft: fireRemoveDraft
-    };
-  }
-);
+export default <any> {
+  fireRestoreDraft: fireRestoreDraft,
+  fireStoreDraft: fireStoreDraft,
+  fireRemoveDraft: fireRemoveDraft
+};

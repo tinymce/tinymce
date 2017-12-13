@@ -8,46 +8,39 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.autosave.api.Settings',
-  [
-    'global!document',
-    'tinymce.plugins.autosave.core.Time'
-  ],
-  function (document, Time) {
-    var shouldAskBeforeUnload = function (editor) {
-      return editor.getParam("autosave_ask_before_unload", true);
-    };
+import Time from '../core/Time';
 
-    var getAutoSavePrefix = function (editor) {
-      var prefix = editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-');
+var shouldAskBeforeUnload = function (editor) {
+  return editor.getParam("autosave_ask_before_unload", true);
+};
 
-      prefix = prefix.replace(/\{path\}/g, document.location.pathname);
-      prefix = prefix.replace(/\{query\}/g, document.location.search);
-      prefix = prefix.replace(/\{hash\}/g, document.location.hash);
-      prefix = prefix.replace(/\{id\}/g, editor.id);
+var getAutoSavePrefix = function (editor) {
+  var prefix = editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-');
 
-      return prefix;
-    };
+  prefix = prefix.replace(/\{path\}/g, document.location.pathname);
+  prefix = prefix.replace(/\{query\}/g, document.location.search);
+  prefix = prefix.replace(/\{hash\}/g, document.location.hash);
+  prefix = prefix.replace(/\{id\}/g, editor.id);
 
-    var shouldRestoreWhenEmpty = function (editor) {
-      return editor.getParam('autosave_restore_when_empty', false);
-    };
+  return prefix;
+};
 
-    var getAutoSaveInterval = function (editor) {
-      return Time.parse(editor.settings.autosave_interval, '30s');
-    };
+var shouldRestoreWhenEmpty = function (editor) {
+  return editor.getParam('autosave_restore_when_empty', false);
+};
 
-    var getAutoSaveRetention = function (editor) {
-      return Time.parse(editor.settings.autosave_retention, '20m');
-    };
+var getAutoSaveInterval = function (editor) {
+  return Time.parse(editor.settings.autosave_interval, '30s');
+};
 
-    return {
-      shouldAskBeforeUnload: shouldAskBeforeUnload,
-      getAutoSavePrefix: getAutoSavePrefix,
-      shouldRestoreWhenEmpty: shouldRestoreWhenEmpty,
-      getAutoSaveInterval: getAutoSaveInterval,
-      getAutoSaveRetention: getAutoSaveRetention
-    };
-  }
-);
+var getAutoSaveRetention = function (editor) {
+  return Time.parse(editor.settings.autosave_retention, '20m');
+};
+
+export default <any> {
+  shouldAskBeforeUnload: shouldAskBeforeUnload,
+  getAutoSavePrefix: getAutoSavePrefix,
+  shouldRestoreWhenEmpty: shouldRestoreWhenEmpty,
+  getAutoSaveInterval: getAutoSaveInterval,
+  getAutoSaveRetention: getAutoSaveRetention
+};
