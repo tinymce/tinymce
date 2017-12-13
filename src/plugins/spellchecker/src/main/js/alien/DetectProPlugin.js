@@ -8,31 +8,24 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.spellchecker.alien.DetectProPlugin',
-  [
-    'global!window',
-    'tinymce.core.PluginManager'
-  ],
-  function (window, PluginManager) {
-    var hasProPlugin = function (editor) {
-      // draw back if power version is requested and registered
-      if (/(^|[ ,])tinymcespellchecker([, ]|$)/.test(editor.settings.plugins) && PluginManager.get('tinymcespellchecker')) {
-        /*eslint no-console:0 */
-        if (typeof window.console !== "undefined" && window.console.log) {
-          window.console.log(
-            "Spell Checker Pro is incompatible with Spell Checker plugin! " +
-            "Remove 'spellchecker' from the 'plugins' option."
-          );
-        }
-        return true;
-      } else {
-        return false;
-      }
-    };
+import PluginManager from 'tinymce/core/PluginManager';
 
-    return {
-      hasProPlugin: hasProPlugin
-    };
+var hasProPlugin = function (editor) {
+  // draw back if power version is requested and registered
+  if (/(^|[ ,])tinymcespellchecker([, ]|$)/.test(editor.settings.plugins) && PluginManager.get('tinymcespellchecker')) {
+    /*eslint no-console:0 */
+    if (typeof window.console !== "undefined" && window.console.log) {
+      window.console.log(
+        "Spell Checker Pro is incompatible with Spell Checker plugin! " +
+        "Remove 'spellchecker' from the 'plugins' option."
+      );
+    }
+    return true;
+  } else {
+    return false;
   }
-);
+};
+
+export default <any> {
+  hasProPlugin: hasProPlugin
+};

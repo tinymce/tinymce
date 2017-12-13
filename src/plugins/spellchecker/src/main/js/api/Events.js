@@ -8,22 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.spellchecker.api.Events',
-  [
-  ],
-  function () {
-    var fireSpellcheckStart = function (editor) {
-      return editor.fire('SpellcheckStart');
-    };
+var fireSpellcheckStart = function (editor) {
+  return editor.fire('SpellcheckStart');
+};
 
-    var fireSpellcheckEnd = function (editor) {
-      return editor.fire('SpellcheckEnd');
-    };
+var fireSpellcheckEnd = function (editor) {
+  return editor.fire('SpellcheckEnd');
+};
 
-    return {
-      fireSpellcheckStart: fireSpellcheckStart,
-      fireSpellcheckEnd: fireSpellcheckEnd
-    };
-  }
-);
+export default <any> {
+  fireSpellcheckStart: fireSpellcheckStart,
+  fireSpellcheckEnd: fireSpellcheckEnd
+};

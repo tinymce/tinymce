@@ -8,40 +8,34 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.spellchecker.api.Api',
-  [
-    'tinymce.plugins.spellchecker.api.Settings',
-    'tinymce.plugins.spellchecker.core.Actions'
-  ],
-  function (Settings, Actions) {
-    var get = function (editor, startedState, lastSuggestionsState, textMatcherState, url) {
-      var getLanguage = function () {
-        return Settings.getLanguage(editor);
-      };
+import Settings from './Settings';
+import Actions from '../core/Actions';
 
-      var getWordCharPattern = function () {
-        return Settings.getSpellcheckerWordcharPattern(editor);
-      };
+var get = function (editor, startedState, lastSuggestionsState, textMatcherState, url) {
+  var getLanguage = function () {
+    return Settings.getLanguage(editor);
+  };
 
-      var markErrors = function (data) {
-        Actions.markErrors(editor, startedState, textMatcherState, lastSuggestionsState, data);
-      };
+  var getWordCharPattern = function () {
+    return Settings.getSpellcheckerWordcharPattern(editor);
+  };
 
-      var getTextMatcher = function () {
-        return textMatcherState.get();
-      };
+  var markErrors = function (data) {
+    Actions.markErrors(editor, startedState, textMatcherState, lastSuggestionsState, data);
+  };
 
-      return {
-        getTextMatcher: getTextMatcher,
-        getWordCharPattern: getWordCharPattern,
-        markErrors: markErrors,
-        getLanguage: getLanguage
-      };
-    };
+  var getTextMatcher = function () {
+    return textMatcherState.get();
+  };
 
-    return {
-      get: get
-    };
-  }
-);
+  return {
+    getTextMatcher: getTextMatcher,
+    getWordCharPattern: getWordCharPattern,
+    markErrors: markErrors,
+    getLanguage: getLanguage
+  };
+};
+
+export default <any> {
+  get: get
+};

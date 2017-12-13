@@ -1,44 +1,42 @@
-asynctest(
-  'browser.tinymce.plugins.spellchecker.SpellcheckerTest',
-  [
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.RawAssertions',
-    'ephox.agar.api.Step',
-    'ephox.mcagar.api.TinyLoader',
-    'tinymce.plugins.spellchecker.api.Settings',
-    'tinymce.plugins.spellchecker.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (Pipeline, RawAssertions, Step, TinyLoader, Settings, SpellcheckerPlugin, ModernTheme) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+import { Pipeline } from '@ephox/agar';
+import { RawAssertions } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { TinyLoader } from '@ephox/mcagar';
+import Settings from 'tinymce/plugins/spellchecker/api/Settings';
+import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
 
-    ModernTheme();
-    SpellcheckerPlugin();
+UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
 
-    var sTestDefaultLanguage = function (editor) {
-      return Step.sync(function () {
-        RawAssertions.assertEq('should be same', Settings.getLanguage(editor), 'en');
-      });
-    };
+  ModernTheme();
+  SpellcheckerPlugin();
 
-    var sCheckButtonType = function (editor, expected) {
-      return Step.sync(function () {
-        var button = editor.buttons.spellchecker;
+  var sTestDefaultLanguage = function (editor) {
+    return Step.sync(function () {
+      RawAssertions.assertEq('should be same', Settings.getLanguage(editor), 'en');
+    });
+  };
 
-        RawAssertions.assertEq('should have same type', expected, button.type);
-      });
-    };
+  var sCheckButtonType = function (editor, expected) {
+    return Step.sync(function () {
+      var button = editor.buttons.spellchecker;
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      Pipeline.async({}, [
-        sTestDefaultLanguage(editor),
-        sCheckButtonType(editor, 'splitbutton')
-      ], onSuccess, onFailure);
-    }, {
-      plugins: 'spellchecker',
-      toolbar: 'spellchecker',
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
-    }, success, failure);
-  }
-);
+      RawAssertions.assertEq('should have same type', expected, button.type);
+    });
+  };
+
+  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    Pipeline.async({}, [
+      sTestDefaultLanguage(editor),
+      sCheckButtonType(editor, 'splitbutton')
+    ], onSuccess, onFailure);
+  }, {
+    plugins: 'spellchecker',
+    toolbar: 'spellchecker',
+    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+  }, success, failure);
+});
+

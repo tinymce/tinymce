@@ -8,34 +8,28 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.spellchecker.Plugin',
-  [
-    'ephox.katamari.api.Cell',
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.spellchecker.alien.DetectProPlugin',
-    'tinymce.plugins.spellchecker.api.Api',
-    'tinymce.plugins.spellchecker.api.Commands',
-    'tinymce.plugins.spellchecker.api.Settings',
-    'tinymce.plugins.spellchecker.ui.Buttons',
-    'tinymce.plugins.spellchecker.ui.SuggestionsMenu'
-  ],
-  function (Cell, PluginManager, DetectProPlugin, Api, Commands, Settings, Buttons, SuggestionsMenu) {
-    PluginManager.add('spellchecker', function (editor, pluginUrl) {
-      if (DetectProPlugin.hasProPlugin(editor) === false) {
-        var startedState = Cell(false);
-        var currentLanguageState = Cell(Settings.getLanguage(editor));
-        var textMatcherState = Cell(null);
-        var lastSuggestionsState = Cell({});
+import { Cell } from '@ephox/katamari';
+import PluginManager from 'tinymce/core/PluginManager';
+import DetectProPlugin from './alien/DetectProPlugin';
+import Api from './api/Api';
+import Commands from './api/Commands';
+import Settings from './api/Settings';
+import Buttons from './ui/Buttons';
+import SuggestionsMenu from './ui/SuggestionsMenu';
 
-        Buttons.register(editor, pluginUrl, startedState, textMatcherState, currentLanguageState, lastSuggestionsState);
-        SuggestionsMenu.setup(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState);
-        Commands.register(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
+PluginManager.add('spellchecker', function (editor, pluginUrl) {
+  if (DetectProPlugin.hasProPlugin(editor) === false) {
+    var startedState = Cell(false);
+    var currentLanguageState = Cell(Settings.getLanguage(editor));
+    var textMatcherState = Cell(null);
+    var lastSuggestionsState = Cell({});
 
-        return Api.get(editor, startedState, lastSuggestionsState, textMatcherState, pluginUrl);
-      }
-    });
+    Buttons.register(editor, pluginUrl, startedState, textMatcherState, currentLanguageState, lastSuggestionsState);
+    SuggestionsMenu.setup(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState);
+    Commands.register(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
 
-    return function () { };
+    return Api.get(editor, startedState, lastSuggestionsState, textMatcherState, pluginUrl);
   }
-);
+});
+
+export default <any> function () { };
