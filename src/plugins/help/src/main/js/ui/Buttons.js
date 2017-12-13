@@ -8,28 +8,22 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.help.ui.Buttons',
-  [
-    'tinymce.plugins.help.ui.Dialog'
-  ],
-  function (Dialog) {
-    var register = function (editor, pluginUrl) {
-      editor.addButton('help', {
-        icon: 'help',
-        onclick: Dialog.open(editor, pluginUrl)
-      });
+import Dialog from './Dialog';
 
-      editor.addMenuItem('Help', {
-        text: 'Help',
-        icon: 'help',
-        context: 'help',
-        onclick: Dialog.open(editor, pluginUrl)
-      });
-    };
+var register = function (editor, pluginUrl) {
+  editor.addButton('help', {
+    icon: 'help',
+    onclick: Dialog.open(editor, pluginUrl)
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addMenuItem('Help', {
+    text: 'Help',
+    icon: 'help',
+    context: 'help',
+    onclick: Dialog.open(editor, pluginUrl)
+  });
+};
+
+export default <any> {
+  register: register
+};

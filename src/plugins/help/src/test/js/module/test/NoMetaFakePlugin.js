@@ -1,11 +1,5 @@
-define(
-  'tinymce.plugins.help.test.NoMetaFakePlugin',
-  [
-    'tinymce.core.PluginManager'
-  ],
-  function (PluginManager) {
-    PluginManager.add('nometafake', function () {});
+import PluginManager from 'tinymce/core/PluginManager';
 
-    return function () {};
-  }
-);
+PluginManager.add('nometafake', function () {});
+
+export default <any> function () {};

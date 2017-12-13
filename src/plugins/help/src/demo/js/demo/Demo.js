@@ -8,58 +8,54 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import EditorManager from 'tinymce/core/EditorManager';
+import PluginManager from 'tinymce/core/PluginManager';
+import HelpPlugin from 'tinymce/plugins/help/Plugin';
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import TablePlugin from 'tinymce/plugins/table/Plugin';
+import PastePlugin from 'tinymce/plugins/paste/Plugin';
+import CodePlugin from 'tinymce/plugins/code/Plugin';
+import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
+import FullpagePlugin from 'tinymce/plugins/fullpage/Plugin';
+import PrintPlugin from 'tinymce/plugins/print/Plugin';
+import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
+import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
+import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
+import BBcodePlugin from 'tinymce/plugins/bbcode/Plugin';
+import ColorpickerPlugin from 'tinymce/plugins/colorpicker/Plugin';
+import TextcolorPlugin from 'tinymce/plugins/textcolor/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
 /*eslint no-console:0 */
 
-define(
-  'tinymce.plugins.help.demo.Demo',
-  [
-    'tinymce.core.EditorManager',
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.help.Plugin',
-    'tinymce.plugins.link.Plugin',
-    'tinymce.plugins.table.Plugin',
-    'tinymce.plugins.paste.Plugin',
-    'tinymce.plugins.code.Plugin',
-    'tinymce.plugins.emoticons.Plugin',
-    'tinymce.plugins.fullpage.Plugin',
-    'tinymce.plugins.print.Plugin',
-    'tinymce.plugins.fullscreen.Plugin',
-    'tinymce.plugins.advlist.Plugin',
-    'tinymce.plugins.anchor.Plugin',
-    'tinymce.plugins.bbcode.Plugin',
-    'tinymce.plugins.colorpicker.Plugin',
-    'tinymce.plugins.textcolor.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (EditorManager, PluginManager, HelpPlugin, LinkPlugin, TablePlugin, PastePlugin, CodePlugin, EmoticonsPlugin, FullpagePlugin, PrintPlugin, FullscreenPlugin, AdvListPlugin, AnchorPlugin, BBcodePlugin, ColorpickerPlugin, TextcolorPlugin, ModernTheme) {
-    return function () {
-      HelpPlugin();
-      ModernTheme();
-      LinkPlugin();
-      TablePlugin();
-      PastePlugin();
-      CodePlugin();
-      EmoticonsPlugin();
-      FullpagePlugin();
-      PrintPlugin();
-      FullscreenPlugin();
-      AdvListPlugin();
-      AnchorPlugin();
-      BBcodePlugin();
-      ColorpickerPlugin();
-      TextcolorPlugin();
 
 
-      PluginManager.urls.help = '../../../dist/help';
+export default <any> function () {
+  HelpPlugin();
+  ModernTheme();
+  LinkPlugin();
+  TablePlugin();
+  PastePlugin();
+  CodePlugin();
+  EmoticonsPlugin();
+  FullpagePlugin();
+  PrintPlugin();
+  FullscreenPlugin();
+  AdvListPlugin();
+  AnchorPlugin();
+  BBcodePlugin();
+  ColorpickerPlugin();
+  TextcolorPlugin();
 
-      EditorManager.init({
-        selector: "textarea.tinymce",
-        theme: "modern",
-        skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        plugins: "help link table paste code emoticons fullpage print fullscreen advlist anchor bbcode colorpicker textcolor",
-        toolbar: "help",
-        height: 600
-      });
-    };
-  }
-);
+
+  PluginManager.urls.help = '../../../dist/help';
+
+  EditorManager.init({
+    selector: "textarea.tinymce",
+    theme: "modern",
+    skin_url: "../../../../../skins/lightgray/dist/lightgray",
+    plugins: "help link table paste code emoticons fullpage print fullscreen advlist anchor bbcode colorpicker textcolor",
+    toolbar: "help",
+    height: 600
+  });
+};

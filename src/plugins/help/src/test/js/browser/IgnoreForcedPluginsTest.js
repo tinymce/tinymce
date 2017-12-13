@@ -1,48 +1,45 @@
-asynctest(
-  'browser.plugin.IgnoreForcedPluginsTest',
-  [
-    'ephox.agar.api.Assertions',
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.agar.api.UiFinder',
-    'ephox.mcagar.api.TinyDom',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyUi',
-    'ephox.sugar.api.properties.Html',
-    'global!document',
-    'tinymce.plugins.help.Plugin',
-    'tinymce.plugins.link.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (Assertions, Chain, Pipeline, Step, UiFinder, TinyDom, TinyLoader, TinyUi, Html, document, HelpPlugin, LinkPlugin, Theme) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+import { Assertions } from '@ephox/agar';
+import { Chain } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { UiFinder } from '@ephox/agar';
+import { TinyDom } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import { TinyUi } from '@ephox/mcagar';
+import { Html } from '@ephox/sugar';
+import HelpPlugin from 'tinymce/plugins/help/Plugin';
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import Theme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
 
-    Theme();
-    HelpPlugin();
-    LinkPlugin();
+UnitTest.asynctest('browser.plugin.IgnoreForcedPluginsTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
 
-    var sAssertPluginList = function (html) {
-      return Chain.asStep(TinyDom.fromDom(document.body), [
-        UiFinder.cWaitFor('Could not find notification', 'div.mce-floatpanel ul'),
-        Chain.mapper(Html.get),
-        Assertions.cAssertHtml('Plugin list html does not match', html)
-      ]);
-    };
+  Theme();
+  HelpPlugin();
+  LinkPlugin();
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyUi = TinyUi(editor);
+  var sAssertPluginList = function (html) {
+    return Chain.asStep(TinyDom.fromDom(document.body), [
+      UiFinder.cWaitFor('Could not find notification', 'div.mce-floatpanel ul'),
+      Chain.mapper(Html.get),
+      Assertions.cAssertHtml('Plugin list html does not match', html)
+    ]);
+  };
 
-      Pipeline.async({}, [
-        tinyUi.sClickOnToolbar('click on button', 'button'),
-        sAssertPluginList('<li><a href="https://www.tinymce.com/docs/plugins/help" target="_blank" rel="noopener">Help</a></li>')
-      ], onSuccess, onFailure);
-    }, {
-      plugins: 'help link',
-      toolbar: 'help',
-      forced_plugins: ['link'],
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
-    }, success, failure);
-  }
-);
+  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    var tinyUi = TinyUi(editor);
+
+    Pipeline.async({}, [
+      tinyUi.sClickOnToolbar('click on button', 'button'),
+      sAssertPluginList('<li><a href="https://www.tinymce.com/docs/plugins/help" target="_blank" rel="noopener">Help</a></li>')
+    ], onSuccess, onFailure);
+  }, {
+    plugins: 'help link',
+    toolbar: 'help',
+    forced_plugins: ['link'],
+    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+  }, success, failure);
+});
+
