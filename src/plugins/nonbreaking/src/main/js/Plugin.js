@@ -8,27 +8,22 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
+import Keyboard from './core/Keyboard';
+import Buttons from './ui/Buttons';
+
 /**
  * This class contains all core logic for the nonbreaking plugin.
  *
  * @class tinymce.nonbreaking.Plugin
  * @private
  */
-define(
-  'tinymce.plugins.nonbreaking.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.nonbreaking.api.Commands',
-    'tinymce.plugins.nonbreaking.core.Keyboard',
-    'tinymce.plugins.nonbreaking.ui.Buttons'
-  ],
-  function (PluginManager, Commands, Keyboard, Buttons) {
-    PluginManager.add('nonbreaking', function (editor) {
-      Commands.register(editor);
-      Buttons.register(editor);
-      Keyboard.setup(editor);
-    });
 
-    return function () { };
-  }
-);
+PluginManager.add('nonbreaking', function (editor) {
+  Commands.register(editor);
+  Buttons.register(editor);
+  Keyboard.setup(editor);
+});
+
+export default <any> function () { };

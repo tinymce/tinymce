@@ -1,18 +1,18 @@
-asynctest(
+import { ApproxStructure } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { TinyActions } from '@ephox/mcagar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import { TinyUi } from '@ephox/mcagar';
+import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
+
+UnitTest.asynctest(
   'browser.tinymce.plugins.nonbreaking.NonbreakingForceTabUndoTest',
-  [
-    'ephox.agar.api.ApproxStructure',
-    'ephox.agar.api.Keys',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.mcagar.api.TinyActions',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyUi',
-    'tinymce.plugins.nonbreaking.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (ApproxStructure, Keys, Pipeline, Step, TinyActions, TinyApis, TinyLoader, TinyUi, NonbreakingPlugin, ModernTheme) {
+  function() {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -39,3 +39,4 @@ asynctest(
     }, success, failure);
   }
 );
+

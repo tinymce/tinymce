@@ -8,20 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.nonbreaking.api.Commands',
-  [
-    'tinymce.plugins.nonbreaking.core.Actions'
-  ],
-  function (Actions) {
-    var register = function (editor) {
-      editor.addCommand('mceNonBreaking', function () {
-        Actions.insertNbsp(editor, 1);
-      });
-    };
+import Actions from '../core/Actions';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor) {
+  editor.addCommand('mceNonBreaking', function () {
+    Actions.insertNbsp(editor, 1);
+  });
+};
+
+export default <any> {
+  register: register
+};

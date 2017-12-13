@@ -8,26 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.nonbreaking.ui.Buttons',
-  [
-  ],
-  function () {
-    var register = function (editor) {
-      editor.addButton('nonbreaking', {
-        title: 'Nonbreaking space',
-        cmd: 'mceNonBreaking'
-      });
+var register = function (editor) {
+  editor.addButton('nonbreaking', {
+    title: 'Nonbreaking space',
+    cmd: 'mceNonBreaking'
+  });
 
-      editor.addMenuItem('nonbreaking', {
-        text: 'Nonbreaking space',
-        cmd: 'mceNonBreaking',
-        context: 'insert'
-      });
-    };
+  editor.addMenuItem('nonbreaking', {
+    text: 'Nonbreaking space',
+    cmd: 'mceNonBreaking',
+    context: 'insert'
+  });
+};
 
-    return {
-      register: register
-    };
-  }
-);
+export default <any> {
+  register: register
+};

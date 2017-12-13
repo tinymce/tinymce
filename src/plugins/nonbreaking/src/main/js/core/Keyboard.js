@@ -8,32 +8,26 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.nonbreaking.core.Keyboard',
-  [
-    'tinymce.plugins.nonbreaking.api.Settings',
-    'tinymce.plugins.nonbreaking.core.Actions'
-  ],
-  function (Settings, Actions) {
-    var setup = function (editor) {
-      var spaces = Settings.getKeyboardSpaces(editor);
+import Settings from '../api/Settings';
+import Actions from './Actions';
 
-      if (spaces > 0) {
-        editor.on('keydown', function (e) {
-          if (e.keyCode === 9) {
-            if (e.shiftKey) {
-              return;
-            }
+var setup = function (editor) {
+  var spaces = Settings.getKeyboardSpaces(editor);
 
-            e.preventDefault();
-            Actions.insertNbsp(editor, spaces);
-          }
-        });
+  if (spaces > 0) {
+    editor.on('keydown', function (e) {
+      if (e.keyCode === 9) {
+        if (e.shiftKey) {
+          return;
+        }
+
+        e.preventDefault();
+        Actions.insertNbsp(editor, spaces);
       }
-    };
-
-    return {
-      setup: setup
-    };
+    });
   }
-);
+};
+
+export default <any> {
+  setup: setup
+};
