@@ -8,18 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.bbcode.api.Settings',
-  [
-  ],
-  function () {
-    var getDialect = function (editor) {
-      // Note: This option isn't even used since we only support one dialect
-      return editor.getParam('bbcode_dialect', 'punbb').toLowerCase();
-    };
+var getDialect = function (editor) {
+  // Note: This option isn't even used since we only support one dialect
+  return editor.getParam('bbcode_dialect', 'punbb').toLowerCase();
+};
 
-    return {
-      getDialect: getDialect
-    };
-  }
-);
+export default <any> {
+  getDialect: getDialect
+};

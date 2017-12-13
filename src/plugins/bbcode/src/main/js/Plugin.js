@@ -8,33 +8,27 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.bbcode.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.bbcode.core.Convert'
-  ],
-  function (PluginManager, Convert) {
-    PluginManager.add('bbcode', function () {
-      return {
-        init: function (editor) {
-          editor.on('beforeSetContent', function (e) {
-            e.content = Convert.bbcode2html(e.content);
-          });
+import PluginManager from 'tinymce/core/PluginManager';
+import Convert from './core/Convert';
 
-          editor.on('postProcess', function (e) {
-            if (e.set) {
-              e.content = Convert.bbcode2html(e.content);
-            }
+PluginManager.add('bbcode', function () {
+  return {
+    init: function (editor) {
+      editor.on('beforeSetContent', function (e) {
+        e.content = Convert.bbcode2html(e.content);
+      });
 
-            if (e.get) {
-              e.content = Convert.html2bbcode(e.content);
-            }
-          });
+      editor.on('postProcess', function (e) {
+        if (e.set) {
+          e.content = Convert.bbcode2html(e.content);
         }
-      };
-    });
 
-    return function () { };
-  }
-);
+        if (e.get) {
+          e.content = Convert.html2bbcode(e.content);
+        }
+      });
+    }
+  };
+});
+
+export default <any> function () { };
