@@ -8,26 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.print.ui.Buttons',
-  [
-  ],
-  function () {
-    var register = function (editor) {
-      editor.addButton('print', {
-        title: 'Print',
-        cmd: 'mcePrint'
-      });
+var register = function (editor) {
+  editor.addButton('print', {
+    title: 'Print',
+    cmd: 'mcePrint'
+  });
 
-      editor.addMenuItem('print', {
-        text: 'Print',
-        cmd: 'mcePrint',
-        icon: 'print'
-      });
-    };
+  editor.addMenuItem('print', {
+    text: 'Print',
+    cmd: 'mcePrint',
+    icon: 'print'
+  });
+};
 
-    return {
-      register: register
-    };
-  }
-);
+export default <any> {
+  register: register
+};

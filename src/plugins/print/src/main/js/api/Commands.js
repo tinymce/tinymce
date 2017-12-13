@@ -8,19 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.print.api.Commands',
-  [
-  ],
-  function () {
-    var register = function (editor) {
-      editor.addCommand('mcePrint', function () {
-        editor.getWin().print();
-      });
-    };
+var register = function (editor) {
+  editor.addCommand('mcePrint', function () {
+    editor.getWin().print();
+  });
+};
 
-    return {
-      register: register
-    };
-  }
-);
+export default <any> {
+  register: register
+};

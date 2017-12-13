@@ -8,20 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.print.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.print.api.Commands',
-    'tinymce.plugins.print.ui.Buttons'
-  ],
-  function (PluginManager, Commands, Buttons) {
-    PluginManager.add('print', function (editor) {
-      Commands.register(editor);
-      Buttons.register(editor);
-      editor.addShortcut('Meta+P', '', 'mcePrint');
-    });
+import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
+import Buttons from './ui/Buttons';
 
-    return function () { };
-  }
-);
+PluginManager.add('print', function (editor) {
+  Commands.register(editor);
+  Buttons.register(editor);
+  editor.addShortcut('Meta+P', '', 'mcePrint');
+});
+
+export default <any> function () { };
