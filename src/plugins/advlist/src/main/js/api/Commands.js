@@ -8,25 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.advlist.api.Commands',
-  [
-    'tinymce.plugins.advlist.core.Actions'
-  ],
-  function (Actions) {
-    var register = function (editor) {
-      editor.addCommand('ApplyUnorderedListStyle', function (ui, value) {
-        Actions.applyListFormat(editor, 'UL', value['list-style-type']);
-      });
+import Actions from '../core/Actions';
 
-      editor.addCommand('ApplyOrderedListStyle', function (ui, value) {
-        Actions.applyListFormat(editor, 'OL', value['list-style-type']);
-      });
-    };
+var register = function (editor) {
+  editor.addCommand('ApplyUnorderedListStyle', function (ui, value) {
+    Actions.applyListFormat(editor, 'UL', value['list-style-type']);
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addCommand('ApplyOrderedListStyle', function (ui, value) {
+    Actions.applyListFormat(editor, 'OL', value['list-style-type']);
+  });
+};
 
+export default <any> {
+  register: register
+};

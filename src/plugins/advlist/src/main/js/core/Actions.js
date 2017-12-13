@@ -8,18 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.advlist.core.Actions',
-  [
-  ],
-  function () {
-    var applyListFormat = function (editor, listName, styleValue) {
-      var cmd = listName === 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList';
-      editor.execCommand(cmd, false, styleValue === false ? null : { 'list-style-type': styleValue });
-    };
+var applyListFormat = function (editor, listName, styleValue) {
+  var cmd = listName === 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList';
+  editor.execCommand(cmd, false, styleValue === false ? null : { 'list-style-type': styleValue });
+};
 
-    return {
-      applyListFormat: applyListFormat
-    };
-  }
-);
+export default <any> {
+  applyListFormat: applyListFormat
+};

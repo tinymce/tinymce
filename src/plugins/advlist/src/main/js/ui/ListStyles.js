@@ -8,29 +8,23 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.advlist.ui.ListStyles',
-  [
-    'tinymce.core.util.Tools'
-  ],
-  function (Tools) {
-    var styleValueToText = function (styleValue) {
-      return styleValue.replace(/\-/g, ' ').replace(/\b\w/g, function (chr) {
-        return chr.toUpperCase();
-      });
-    };
+import Tools from 'tinymce/core/util/Tools';
 
-    var toMenuItems = function (styles) {
-      return Tools.map(styles, function (styleValue) {
-        var text = styleValueToText(styleValue);
-        var data = styleValue === 'default' ? '' : styleValue;
+var styleValueToText = function (styleValue) {
+  return styleValue.replace(/\-/g, ' ').replace(/\b\w/g, function (chr) {
+    return chr.toUpperCase();
+  });
+};
 
-        return { text: text, data: data };
-      });
-    };
+var toMenuItems = function (styles) {
+  return Tools.map(styles, function (styleValue) {
+    var text = styleValueToText(styleValue);
+    var data = styleValue === 'default' ? '' : styleValue;
 
-    return {
-      toMenuItems: toMenuItems
-    };
-  }
-);
+    return { text: text, data: data };
+  });
+};
+
+export default <any> {
+  toMenuItems: toMenuItems
+};

@@ -8,27 +8,21 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.advlist.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.core.util.Tools',
-    'tinymce.plugins.advlist.api.Commands',
-    'tinymce.plugins.advlist.ui.Buttons'
-  ],
-  function (PluginManager, Tools, Commands, Buttons) {
-    PluginManager.add('advlist', function (editor) {
-      var hasPlugin = function (editor, plugin) {
-        var plugins = editor.settings.plugins ? editor.settings.plugins : '';
-        return Tools.inArray(plugins.split(/[ ,]/), plugin) !== -1;
-      };
+import PluginManager from 'tinymce/core/PluginManager';
+import Tools from 'tinymce/core/util/Tools';
+import Commands from './api/Commands';
+import Buttons from './ui/Buttons';
 
-      if (hasPlugin(editor, "lists")) {
-        Buttons.register(editor);
-        Commands.register(editor);
-      }
-    });
+PluginManager.add('advlist', function (editor) {
+  var hasPlugin = function (editor, plugin) {
+    var plugins = editor.settings.plugins ? editor.settings.plugins : '';
+    return Tools.inArray(plugins.split(/[ ,]/), plugin) !== -1;
+  };
 
-    return function () { };
+  if (hasPlugin(editor, "lists")) {
+    Buttons.register(editor);
+    Commands.register(editor);
   }
-);
+});
+
+export default <any> function () { };
