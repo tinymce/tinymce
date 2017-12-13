@@ -8,28 +8,21 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.paste.alien.DetectProPlugin',
-  [
-    'global!window',
-    'tinymce.core.PluginManager'
-  ],
-  function (window, PluginManager) {
-    var hasProPlugin = function (editor) {
-      // draw back if power version is requested and registered
-      if (/(^|[ ,])powerpaste([, ]|$)/.test(editor.settings.plugins) && PluginManager.get('powerpaste')) {
-        /*eslint no-console:0 */
-        if (typeof window.console !== "undefined" && window.console.log) {
-          window.console.log("PowerPaste is incompatible with Paste plugin! Remove 'paste' from the 'plugins' option.");
-        }
-        return true;
-      } else {
-        return false;
-      }
-    };
+import PluginManager from 'tinymce/core/PluginManager';
 
-    return {
-      hasProPlugin: hasProPlugin
-    };
+var hasProPlugin = function (editor) {
+  // draw back if power version is requested and registered
+  if (/(^|[ ,])powerpaste([, ]|$)/.test(editor.settings.plugins) && PluginManager.get('powerpaste')) {
+    /*eslint no-console:0 */
+    if (typeof window.console !== "undefined" && window.console.log) {
+      window.console.log("PowerPaste is incompatible with Paste plugin! Remove 'paste' from the 'plugins' option.");
+    }
+    return true;
+  } else {
+    return false;
   }
-);
+};
+
+export default <any> {
+  hasProPlugin: hasProPlugin
+};

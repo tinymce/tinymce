@@ -8,44 +8,38 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.paste.ui.Buttons',
-  [
-    'ephox.katamari.api.Fun'
-  ],
-  function (Fun) {
-    var stateChange = function (editor, clipboard, e) {
-      var ctrl = e.control;
+import { Fun } from '@ephox/katamari';
 
-      ctrl.active(clipboard.pasteFormat === 'text');
+var stateChange = function (editor, clipboard, e) {
+  var ctrl = e.control;
 
-      editor.on('PastePlainTextToggle', function (e) {
-        ctrl.active(e.state);
-      });
-    };
+  ctrl.active(clipboard.pasteFormat === 'text');
 
-    var register = function (editor, clipboard) {
-      var postRender = Fun.curry(stateChange, editor, clipboard);
+  editor.on('PastePlainTextToggle', function (e) {
+    ctrl.active(e.state);
+  });
+};
 
-      editor.addButton('pastetext', {
-        active: false,
-        icon: 'pastetext',
-        tooltip: 'Paste as text',
-        cmd: 'mceTogglePlainTextPaste',
-        onPostRender: postRender
-      });
+var register = function (editor, clipboard) {
+  var postRender = Fun.curry(stateChange, editor, clipboard);
 
-      editor.addMenuItem('pastetext', {
-        text: 'Paste as text',
-        selectable: true,
-        active: clipboard.pasteFormat,
-        cmd: 'mceTogglePlainTextPaste',
-        onPostRender: postRender
-      });
-    };
+  editor.addButton('pastetext', {
+    active: false,
+    icon: 'pastetext',
+    tooltip: 'Paste as text',
+    cmd: 'mceTogglePlainTextPaste',
+    onPostRender: postRender
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addMenuItem('pastetext', {
+    text: 'Paste as text',
+    selectable: true,
+    active: clipboard.pasteFormat,
+    cmd: 'mceTogglePlainTextPaste',
+    onPostRender: postRender
+  });
+};
+
+export default <any> {
+  register: register
+};

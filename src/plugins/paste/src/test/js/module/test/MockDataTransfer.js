@@ -1,68 +1,62 @@
-define(
-  'tinymce.plugins.paste.test.MockDataTransfer',
-  [
-    'ephox.katamari.api.Arr',
-    'ephox.katamari.api.Obj'
-  ],
-  function (Arr, Obj) {
-    var notImplemented = function () {
-      throw new Error('Mockup function is not implemented.');
-    };
+import { Arr } from '@ephox/katamari';
+import { Obj } from '@ephox/katamari';
 
-    var createDataTransferItem = function (mime, content) {
-      return {
-        kind: 'string',
-        type: mime,
-        getAsFile: notImplemented,
-        getAsString: function () {
-          return content;
-        }
-      };
-    };
+var notImplemented = function () {
+  throw new Error('Mockup function is not implemented.');
+};
 
-    var create = function (inputData) {
-      var data = {}, result;
+var createDataTransferItem = function (mime, content) {
+  return {
+    kind: 'string',
+    type: mime,
+    getAsFile: notImplemented,
+    getAsString: function () {
+      return content;
+    }
+  };
+};
 
-      var clearData = function () {
-        data = {};
-        result.items = [];
-        result.types = [];
-      };
+var create = function (inputData) {
+  var data = {}, result;
 
-      var getData = function (mime) {
-        return mime in data ? data[mime] : '';
-      };
+  var clearData = function () {
+    data = {};
+    result.items = [];
+    result.types = [];
+  };
 
-      var setData = function (mime, content) {
-        data[mime] = content;
-        result.types = Obj.keys(data);
-        result.items = Arr.map(result.types, function (type) {
-          return createDataTransferItem(type, data[type]);
-        });
-      };
+  var getData = function (mime) {
+    return mime in data ? data[mime] : '';
+  };
 
-      result = {
-        dropEffect: '',
-        effectAllowed: 'all',
-        files: [],
-        items: [],
-        types: [],
-        clearData: clearData,
-        getData: getData,
-        setData: setData,
-        setDragImage: notImplemented,
-        addElement: notImplemented
-      };
+  var setData = function (mime, content) {
+    data[mime] = content;
+    result.types = Obj.keys(data);
+    result.items = Arr.map(result.types, function (type) {
+      return createDataTransferItem(type, data[type]);
+    });
+  };
 
-      Obj.each(inputData, function (value, key) {
-        setData(key, value);
-      });
+  result = {
+    dropEffect: '',
+    effectAllowed: 'all',
+    files: [],
+    items: [],
+    types: [],
+    clearData: clearData,
+    getData: getData,
+    setData: setData,
+    setDragImage: notImplemented,
+    addElement: notImplemented
+  };
 
-      return result;
-    };
+  Obj.each(inputData, function (value, key) {
+    setData(key, value);
+  });
 
-    return {
-      create: create
-    };
-  }
-);
+  return result;
+};
+
+export default <any> {
+  create: create
+};

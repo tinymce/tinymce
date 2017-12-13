@@ -8,42 +8,36 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.paste.core.ProcessFilters',
-  [
-    'tinymce.plugins.paste.api.Events',
-    'tinymce.plugins.paste.core.WordFilter'
-  ],
-  function (Events, WordFilter) {
-    var processResult = function (content, cancelled) {
-      return { content: content, cancelled: cancelled };
-    };
+import Events from '../api/Events';
+import WordFilter from './WordFilter';
 
-    var postProcessFilter = function (editor, html, internal, isWordHtml) {
-      var tempBody = editor.dom.create('div', { style: 'display:none' }, html);
-      var postProcessArgs = Events.firePastePostProcess(editor, tempBody, internal, isWordHtml);
-      return processResult(postProcessArgs.node.innerHTML, postProcessArgs.isDefaultPrevented());
-    };
+var processResult = function (content, cancelled) {
+  return { content: content, cancelled: cancelled };
+};
 
-    var filterContent = function (editor, content, internal, isWordHtml) {
-      var preProcessArgs = Events.firePastePreProcess(editor, content, internal, isWordHtml);
+var postProcessFilter = function (editor, html, internal, isWordHtml) {
+  var tempBody = editor.dom.create('div', { style: 'display:none' }, html);
+  var postProcessArgs = Events.firePastePostProcess(editor, tempBody, internal, isWordHtml);
+  return processResult(postProcessArgs.node.innerHTML, postProcessArgs.isDefaultPrevented());
+};
 
-      if (editor.hasEventListeners('PastePostProcess') && !preProcessArgs.isDefaultPrevented()) {
-        return postProcessFilter(editor, preProcessArgs.content, internal, isWordHtml);
-      } else {
-        return processResult(preProcessArgs.content, preProcessArgs.isDefaultPrevented());
-      }
-    };
+var filterContent = function (editor, content, internal, isWordHtml) {
+  var preProcessArgs = Events.firePastePreProcess(editor, content, internal, isWordHtml);
 
-    var process = function (editor, html, internal) {
-      var isWordHtml = WordFilter.isWordContent(html);
-      var content = isWordHtml ? WordFilter.preProcess(editor, html) : html;
-
-      return filterContent(editor, content, internal, isWordHtml);
-    };
-
-    return {
-      process: process
-    };
+  if (editor.hasEventListeners('PastePostProcess') && !preProcessArgs.isDefaultPrevented()) {
+    return postProcessFilter(editor, preProcessArgs.content, internal, isWordHtml);
+  } else {
+    return processResult(preProcessArgs.content, preProcessArgs.isDefaultPrevented());
   }
-);
+};
+
+var process = function (editor, html, internal) {
+  var isWordHtml = WordFilter.isWordContent(html);
+  var content = isWordHtml ? WordFilter.preProcess(editor, html) : html;
+
+  return filterContent(editor, content, internal, isWordHtml);
+};
+
+export default <any> {
+  process: process
+};

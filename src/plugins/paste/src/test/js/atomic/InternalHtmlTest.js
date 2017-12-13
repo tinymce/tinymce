@@ -1,31 +1,29 @@
-test(
-  'atomic.tinymce.plugins.paste.InternalHtmlTest',
-  [
-    'tinymce.plugins.paste.core.InternalHtml'
-  ],
-  function (InternalHtml) {
-    var testMark = function () {
-      assert.eq('<!-- x-tinymce/html -->abc', InternalHtml.mark('abc'));
-    };
+import InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
+import { UnitTest, assert } from '@ephox/refute';
 
-    var testUnmark = function () {
-      assert.eq('abc', InternalHtml.unmark('<!-- x-tinymce/html -->abc'));
-      assert.eq('abc', InternalHtml.unmark('abc<!-- x-tinymce/html -->'));
-    };
+UnitTest.test('atomic.tinymce.plugins.paste.InternalHtmlTest', function() {
+  var testMark = function () {
+    assert.eq('<!-- x-tinymce/html -->abc', InternalHtml.mark('abc'));
+  };
 
-    var testIsMarked = function () {
-      assert.eq(true, InternalHtml.isMarked('<!-- x-tinymce/html -->abc'));
-      assert.eq(true, InternalHtml.isMarked('abc<!-- x-tinymce/html -->'));
-      assert.eq(false, InternalHtml.isMarked('abc'));
-    };
+  var testUnmark = function () {
+    assert.eq('abc', InternalHtml.unmark('<!-- x-tinymce/html -->abc'));
+    assert.eq('abc', InternalHtml.unmark('abc<!-- x-tinymce/html -->'));
+  };
 
-    var testInternalHtmlMime = function () {
-      assert.eq('x-tinymce/html', InternalHtml.internalHtmlMime());
-    };
+  var testIsMarked = function () {
+    assert.eq(true, InternalHtml.isMarked('<!-- x-tinymce/html -->abc'));
+    assert.eq(true, InternalHtml.isMarked('abc<!-- x-tinymce/html -->'));
+    assert.eq(false, InternalHtml.isMarked('abc'));
+  };
 
-    testMark();
-    testUnmark();
-    testIsMarked();
-    testInternalHtmlMime();
-  }
-);
+  var testInternalHtmlMime = function () {
+    assert.eq('x-tinymce/html', InternalHtml.internalHtmlMime());
+  };
+
+  testMark();
+  testUnmark();
+  testIsMarked();
+  testInternalHtmlMime();
+});
+

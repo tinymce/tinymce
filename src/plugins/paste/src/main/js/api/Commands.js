@@ -8,30 +8,24 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.paste.api.Commands',
-  [
-    'tinymce.plugins.paste.core.Actions'
-  ],
-  function (Actions) {
-    var register = function (editor, clipboard, userIsInformedState) {
-      editor.addCommand('mceTogglePlainTextPaste', function () {
-        Actions.togglePlainTextPaste(editor, clipboard, userIsInformedState);
-      });
+import Actions from '../core/Actions';
 
-      editor.addCommand('mceInsertClipboardContent', function (ui, value) {
-        if (value.content) {
-          clipboard.pasteHtml(value.content, value.internal);
-        }
+var register = function (editor, clipboard, userIsInformedState) {
+  editor.addCommand('mceTogglePlainTextPaste', function () {
+    Actions.togglePlainTextPaste(editor, clipboard, userIsInformedState);
+  });
 
-        if (value.text) {
-          clipboard.pasteText(value.text);
-        }
-      });
-    };
+  editor.addCommand('mceInsertClipboardContent', function (ui, value) {
+    if (value.content) {
+      clipboard.pasteHtml(value.content, value.internal);
+    }
 
-    return {
-      register: register
-    };
-  }
-);
+    if (value.text) {
+      clipboard.pasteText(value.text);
+    }
+  });
+};
+
+export default <any> {
+  register: register
+};

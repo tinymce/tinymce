@@ -8,43 +8,37 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.paste.core.Actions',
-  [
-    'tinymce.plugins.paste.api.Events',
-    'tinymce.plugins.paste.api.Settings'
-  ],
-  function (Events, Settings) {
-    var shouldInformUserAboutPlainText = function (editor, userIsInformedState) {
-      return userIsInformedState.get() === false && Settings.shouldPlainTextInform(editor);
-    };
+import Events from '../api/Events';
+import Settings from '../api/Settings';
 
-    var displayNotification = function (editor, message) {
-      editor.notificationManager.open({
-        text: editor.translate(message),
-        type: 'info'
-      });
-    };
+var shouldInformUserAboutPlainText = function (editor, userIsInformedState) {
+  return userIsInformedState.get() === false && Settings.shouldPlainTextInform(editor);
+};
 
-    var togglePlainTextPaste = function (editor, clipboard, userIsInformedState) {
-      if (clipboard.pasteFormat === "text") {
-        clipboard.pasteFormat = "html";
-        Events.firePastePlainTextToggle(editor, false);
-      } else {
-        clipboard.pasteFormat = "text";
-        Events.firePastePlainTextToggle(editor, true);
+var displayNotification = function (editor, message) {
+  editor.notificationManager.open({
+    text: editor.translate(message),
+    type: 'info'
+  });
+};
 
-        if (shouldInformUserAboutPlainText(editor, userIsInformedState)) {
-          displayNotification(editor, 'Paste is now in plain text mode. Contents will now be pasted as plain text until you toggle this option off.');
-          userIsInformedState.set(true);
-        }
-      }
+var togglePlainTextPaste = function (editor, clipboard, userIsInformedState) {
+  if (clipboard.pasteFormat === "text") {
+    clipboard.pasteFormat = "html";
+    Events.firePastePlainTextToggle(editor, false);
+  } else {
+    clipboard.pasteFormat = "text";
+    Events.firePastePlainTextToggle(editor, true);
 
-      editor.focus();
-    };
-
-    return {
-      togglePlainTextPaste: togglePlainTextPaste
-    };
+    if (shouldInformUserAboutPlainText(editor, userIsInformedState)) {
+      displayNotification(editor, 'Paste is now in plain text mode. Contents will now be pasted as plain text until you toggle this option off.');
+      userIsInformedState.set(true);
+    }
   }
-);
+
+  editor.focus();
+};
+
+export default <any> {
+  togglePlainTextPaste: togglePlainTextPaste
+};
