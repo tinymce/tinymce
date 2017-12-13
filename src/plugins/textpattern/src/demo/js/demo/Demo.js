@@ -8,29 +8,25 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import EditorManager from 'tinymce/core/EditorManager';
+import CodePlugin from 'tinymce/plugins/code/Plugin';
+import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
 /*eslint no-console:0 */
 
-define(
-  'tinymce.plugins.textpattern.demo.Demo',
-  [
-    'tinymce.core.EditorManager',
-    'tinymce.plugins.code.Plugin',
-    'tinymce.plugins.textpattern.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (EditorManager, CodePlugin, TextPatternPlugin, ModernTheme) {
-    return function () {
-      CodePlugin();
-      TextPatternPlugin();
-      ModernTheme();
 
-      EditorManager.init({
-        selector: "textarea.tinymce",
-        plugins: "textpattern code",
-        skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        toolbar: "code",
-        height: 600
-      });
-    };
-  }
-);
+
+export default <any> function () {
+  CodePlugin();
+  TextPatternPlugin();
+  ModernTheme();
+
+  EditorManager.init({
+    selector: "textarea.tinymce",
+    plugins: "textpattern code",
+    skin_url: "../../../../../skins/lightgray/dist/lightgray",
+    toolbar: "code",
+    height: 600
+  });
+};

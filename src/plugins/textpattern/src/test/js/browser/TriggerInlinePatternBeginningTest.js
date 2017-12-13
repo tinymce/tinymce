@@ -1,17 +1,17 @@
-asynctest(
+import { GeneralSteps } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
+import Utils from 'tinymce/plugins/textpattern/test/Utils';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
+
+UnitTest.asynctest(
   'browser.tinymce.plugins.textpattern.TriggerInlinePatternBeginningTest',
-  [
-    'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Logger',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyLoader',
-    'tinymce.plugins.textpattern.Plugin',
-    'tinymce.plugins.textpattern.test.Utils',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (GeneralSteps, Logger, Pipeline, Step, TinyApis, TinyLoader, TextpatternPlugin, Utils, ModernTheme) {
+  function() {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -51,3 +51,4 @@ asynctest(
     }, success, failure);
   }
 );
+

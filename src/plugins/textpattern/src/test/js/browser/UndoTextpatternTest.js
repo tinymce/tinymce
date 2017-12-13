@@ -1,41 +1,39 @@
-asynctest(
-  'browser.tinymce.plugins.textpattern.UndoTextpatternTest',
-  [
-    'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Logger',
-    'ephox.agar.api.Pipeline',
-    'ephox.mcagar.api.TinyActions',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyLoader',
-    'tinymce.plugins.textpattern.Plugin',
-    'tinymce.plugins.textpattern.test.Utils',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (GeneralSteps, Logger, Pipeline, TinyActions, TinyApis, TinyLoader, TextpatternPlugin, Utils, ModernTheme) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+import { GeneralSteps } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { TinyActions } from '@ephox/mcagar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
+import Utils from 'tinymce/plugins/textpattern/test/Utils';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
 
-    ModernTheme();
-    TextpatternPlugin();
+UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyApis = TinyApis(editor);
-      var tinyActions = TinyActions(editor);
+  ModernTheme();
+  TextpatternPlugin();
 
-      var steps = Utils.withTeardown([
-        Logger.t('inline italic then undo', GeneralSteps.sequence([
-          Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*'),
-          tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a')),
-          tinyApis.sExecCommand('Undo'),
-          tinyApis.sAssertContent('<p>*a*&nbsp;</p>')
-        ]))
-      ], tinyApis.sSetContent(''));
+  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    var tinyApis = TinyApis(editor);
+    var tinyActions = TinyActions(editor);
 
-      Pipeline.async({}, steps, onSuccess, onFailure);
-    }, {
-      plugins: 'textpattern',
-      toolbar: 'textpattern',
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
-    }, success, failure);
-  }
-);
+    var steps = Utils.withTeardown([
+      Logger.t('inline italic then undo', GeneralSteps.sequence([
+        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*'),
+        tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a')),
+        tinyApis.sExecCommand('Undo'),
+        tinyApis.sAssertContent('<p>*a*&nbsp;</p>')
+      ]))
+    ], tinyApis.sSetContent(''));
+
+    Pipeline.async({}, steps, onSuccess, onFailure);
+  }, {
+    plugins: 'textpattern',
+    toolbar: 'textpattern',
+    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+  }, success, failure);
+});
+

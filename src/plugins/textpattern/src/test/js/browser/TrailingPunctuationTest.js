@@ -1,18 +1,18 @@
-asynctest(
+import { ApproxStructure } from '@ephox/agar';
+import { GeneralSteps } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { Waiter } from '@ephox/agar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
+
+UnitTest.asynctest(
   'browser.tinymce.plugins.textpattern.TrailingPunctuationTest',
-  [
-    'ephox.agar.api.ApproxStructure',
-    'ephox.agar.api.GeneralSteps',
-    'ephox.agar.api.Logger',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.Step',
-    'ephox.agar.api.Waiter',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyLoader',
-    'tinymce.plugins.textpattern.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (ApproxStructure, GeneralSteps, Logger, Pipeline, Step, Waiter, TinyApis, TinyLoader, TextpatternPlugin, ModernTheme) {
+  function() {
     var success = arguments[arguments.length - 2];
     var failure = arguments[arguments.length - 1];
 
@@ -80,3 +80,4 @@ asynctest(
     }, success, failure);
   }
 );
+

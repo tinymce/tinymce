@@ -8,28 +8,21 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.textpattern.api.Api',
-  [
-  ],
-  function () {
-    var get = function (patternsState) {
-      var setPatterns = function (newPatterns) {
-        patternsState.set(newPatterns);
-      };
+var get = function (patternsState) {
+  var setPatterns = function (newPatterns) {
+    patternsState.set(newPatterns);
+  };
 
-      var getPatterns = function () {
-        return patternsState.get();
-      };
+  var getPatterns = function () {
+    return patternsState.get();
+  };
 
-      return {
-        setPatterns: setPatterns,
-        getPatterns: getPatterns
-      };
-    };
+  return {
+    setPatterns: setPatterns,
+    getPatterns: getPatterns
+  };
+};
 
-    return {
-      get: get
-    };
-  }
-);
+export default <any> {
+  get: get
+};

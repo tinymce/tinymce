@@ -8,24 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.textpattern.Plugin',
-  [
-    'ephox.katamari.api.Cell',
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.textpattern.api.Api',
-    'tinymce.plugins.textpattern.api.Settings',
-    'tinymce.plugins.textpattern.core.Keyboard'
-  ],
-  function (Cell, PluginManager, Api, Settings, Keyboard) {
-    PluginManager.add('textpattern', function (editor) {
-      var patternsState = Cell(Settings.getPatterns(editor.settings));
+import { Cell } from '@ephox/katamari';
+import PluginManager from 'tinymce/core/PluginManager';
+import Api from './api/Api';
+import Settings from './api/Settings';
+import Keyboard from './core/Keyboard';
 
-      Keyboard.setup(editor, patternsState);
+PluginManager.add('textpattern', function (editor) {
+  var patternsState = Cell(Settings.getPatterns(editor.settings));
 
-      return Api.get(patternsState);
-    });
+  Keyboard.setup(editor, patternsState);
 
-    return function () { };
-  }
-);
+  return Api.get(patternsState);
+});
+
+export default <any> function () { };
