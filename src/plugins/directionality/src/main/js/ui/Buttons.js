@@ -8,38 +8,32 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.directionality.ui.Buttons',
-  [
-    'tinymce.core.util.Tools'
-  ],
-  function (Tools) {
-    var generateSelector = function (dir) {
-      var selector = [];
+import Tools from 'tinymce/core/util/Tools';
 
-      Tools.each('h1 h2 h3 h4 h5 h6 div p'.split(' '), function (name) {
-        selector.push(name + '[dir=' + dir + ']');
-      });
+var generateSelector = function (dir) {
+  var selector = [];
 
-      return selector.join(',');
-    };
+  Tools.each('h1 h2 h3 h4 h5 h6 div p'.split(' '), function (name) {
+    selector.push(name + '[dir=' + dir + ']');
+  });
 
-    var register = function (editor) {
-      editor.addButton('ltr', {
-        title: 'Left to right',
-        cmd: 'mceDirectionLTR',
-        stateSelector: generateSelector('ltr')
-      });
+  return selector.join(',');
+};
 
-      editor.addButton('rtl', {
-        title: 'Right to left',
-        cmd: 'mceDirectionRTL',
-        stateSelector: generateSelector('rtl')
-      });
-    };
+var register = function (editor) {
+  editor.addButton('ltr', {
+    title: 'Left to right',
+    cmd: 'mceDirectionLTR',
+    stateSelector: generateSelector('ltr')
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addButton('rtl', {
+    title: 'Right to left',
+    cmd: 'mceDirectionRTL',
+    stateSelector: generateSelector('rtl')
+  });
+};
+
+export default <any> {
+  register: register
+};

@@ -8,19 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.directionality.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.directionality.api.Commands',
-    'tinymce.plugins.directionality.ui.Buttons'
-  ],
-  function (PluginManager, Commands, Buttons) {
-    PluginManager.add('directionality', function (editor) {
-      Commands.register(editor);
-      Buttons.register(editor);
-    });
+import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
+import Buttons from './ui/Buttons';
 
-    return function () { };
-  }
-);
+PluginManager.add('directionality', function (editor) {
+  Commands.register(editor);
+  Buttons.register(editor);
+});
+
+export default <any> function () { };

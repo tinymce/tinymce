@@ -8,24 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.directionality.api.Commands',
-  [
-    'tinymce.plugins.directionality.core.Direction'
-  ],
-  function (Direction) {
-    var register = function (editor) {
-      editor.addCommand('mceDirectionLTR', function () {
-        Direction.setDir(editor, 'ltr');
-      });
+import Direction from '../core/Direction';
 
-      editor.addCommand('mceDirectionRTL', function () {
-        Direction.setDir(editor, 'rtl');
-      });
-    };
+var register = function (editor) {
+  editor.addCommand('mceDirectionLTR', function () {
+    Direction.setDir(editor, 'ltr');
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addCommand('mceDirectionRTL', function () {
+    Direction.setDir(editor, 'rtl');
+  });
+};
+
+export default <any> {
+  register: register
+};

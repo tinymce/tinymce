@@ -8,32 +8,25 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.directionality.core.Direction',
-  [
-    'tinymce.core.util.Tools'
-  ],
-  function (Tools) {
-    var setDir = function (editor, dir) {
-      var dom = editor.dom, curDir, blocks = editor.selection.getSelectedBlocks();
+import Tools from 'tinymce/core/util/Tools';
 
-      if (blocks.length) {
-        curDir = dom.getAttrib(blocks[0], 'dir');
+var setDir = function (editor, dir) {
+  var dom = editor.dom, curDir, blocks = editor.selection.getSelectedBlocks();
 
-        Tools.each(blocks, function (block) {
-          // Add dir to block if the parent block doesn't already have that dir
-          if (!dom.getParent(block.parentNode, '*[dir="' + dir + '"]', dom.getRoot())) {
-            dom.setAttrib(block, 'dir', curDir !== dir ? dir : null);
-          }
-        });
+  if (blocks.length) {
+    curDir = dom.getAttrib(blocks[0], 'dir');
 
-        editor.nodeChanged();
+    Tools.each(blocks, function (block) {
+      // Add dir to block if the parent block doesn't already have that dir
+      if (!dom.getParent(block.parentNode, '*[dir="' + dir + '"]', dom.getRoot())) {
+        dom.setAttrib(block, 'dir', curDir !== dir ? dir : null);
       }
-    };
+    });
 
-    return {
-      setDir: setDir
-    };
+    editor.nodeChanged();
   }
-);
+};
 
+export default <any> {
+  setDir: setDir
+};
