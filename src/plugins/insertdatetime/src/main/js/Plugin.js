@@ -8,22 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.insertdatetime.Plugin',
-  [
-    'ephox.katamari.api.Cell',
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.insertdatetime.api.Commands',
-    'tinymce.plugins.insertdatetime.ui.Buttons'
-  ],
-  function (Cell, PluginManager, Commands, Buttons) {
-    PluginManager.add('insertdatetime', function (editor) {
-      var lastFormatState = Cell(null);
+import { Cell } from '@ephox/katamari';
+import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
+import Buttons from './ui/Buttons';
 
-      Commands.register(editor);
-      Buttons.register(editor, lastFormatState);
-    });
+PluginManager.add('insertdatetime', function (editor) {
+  var lastFormatState = Cell(null);
 
-    return function () { };
-  }
-);
+  Commands.register(editor);
+  Buttons.register(editor, lastFormatState);
+});
+
+export default <any> function () { };

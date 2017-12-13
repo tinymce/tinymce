@@ -8,26 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.insertdatetime.api.Commands',
-  [
-    'tinymce.plugins.fullpage.api.Settings',
-    'tinymce.plugins.insertdatetime.core.Actions'
-  ],
-  function (Settings, Actions) {
-    var register = function (editor) {
-      editor.addCommand('mceInsertDate', function () {
-        Actions.insertDateTime(editor, Settings.getDateFormat());
-      });
+import Settings from 'tinymce/plugins/fullpage/api/Settings';
+import Actions from '../core/Actions';
 
-      editor.addCommand('mceInsertTime', function () {
-        Actions.insertDateTime(editor, Settings.getTimeFormat());
-      });
-    };
+var register = function (editor) {
+  editor.addCommand('mceInsertDate', function () {
+    Actions.insertDateTime(editor, Settings.getDateFormat());
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addCommand('mceInsertTime', function () {
+    Actions.insertDateTime(editor, Settings.getTimeFormat());
+  });
+};
 
+export default <any> {
+  register: register
+};
