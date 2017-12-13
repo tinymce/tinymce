@@ -8,41 +8,34 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.fullscreen.ui.Buttons',
-  [
-  ],
-  function () {
-    var postRender = function (editor) {
-      return function (e) {
-        var ctrl = e.control;
+var postRender = function (editor) {
+  return function (e) {
+    var ctrl = e.control;
 
-        editor.on('FullscreenStateChanged', function (e) {
-          ctrl.active(e.state);
-        });
-      };
-    };
+    editor.on('FullscreenStateChanged', function (e) {
+      ctrl.active(e.state);
+    });
+  };
+};
 
-    var register = function (editor) {
-      editor.addMenuItem('fullscreen', {
-        text: 'Fullscreen',
-        shortcut: 'Ctrl+Shift+F',
-        selectable: true,
-        cmd: 'mceFullScreen',
-        onPostRender: postRender(editor),
-        context: 'view'
-      });
+var register = function (editor) {
+  editor.addMenuItem('fullscreen', {
+    text: 'Fullscreen',
+    shortcut: 'Ctrl+Shift+F',
+    selectable: true,
+    cmd: 'mceFullScreen',
+    onPostRender: postRender(editor),
+    context: 'view'
+  });
 
-      editor.addButton('fullscreen', {
-        active: false,
-        tooltip: 'Fullscreen',
-        cmd: 'mceFullScreen',
-        onPostRender: postRender(editor)
-      });
-    };
+  editor.addButton('fullscreen', {
+    active: false,
+    tooltip: 'Fullscreen',
+    cmd: 'mceFullScreen',
+    onPostRender: postRender(editor)
+  });
+};
 
-    return {
-      register: register
-    };
-  }
-);
+export default <any> {
+  register: register
+};

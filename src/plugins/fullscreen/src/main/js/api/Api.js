@@ -8,21 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.fullscreen.api.Api',
-  [
-  ],
-  function () {
-    var get = function (fullscreenState) {
-      return {
-        isFullscreen: function () {
-          return fullscreenState.get() !== null;
-        }
-      };
-    };
+var get = function (fullscreenState) {
+  return {
+    isFullscreen: function () {
+      return fullscreenState.get() !== null;
+    }
+  };
+};
 
-    return {
-      get: get
-    };
-  }
-);
+export default <any> {
+  get: get
+};

@@ -8,27 +8,21 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.fullscreen.Plugin',
-  [
-    'ephox.katamari.api.Cell',
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.fullscreen.api.Api',
-    'tinymce.plugins.fullscreen.api.Commands',
-    'tinymce.plugins.fullscreen.ui.Buttons'
-  ],
-  function (Cell, PluginManager, Api, Commands, Buttons) {
-    PluginManager.add('fullscreen', function (editor) {
-      var fullscreenState = Cell(null);
+import { Cell } from '@ephox/katamari';
+import PluginManager from 'tinymce/core/PluginManager';
+import Api from './api/Api';
+import Commands from './api/Commands';
+import Buttons from './ui/Buttons';
 
-      Commands.register(editor, fullscreenState);
-      Buttons.register(editor);
+PluginManager.add('fullscreen', function (editor) {
+  var fullscreenState = Cell(null);
 
-      editor.addShortcut('Ctrl+Shift+F', '', 'mceFullScreen');
+  Commands.register(editor, fullscreenState);
+  Buttons.register(editor);
 
-      return Api.get(fullscreenState);
-    });
+  editor.addShortcut('Ctrl+Shift+F', '', 'mceFullScreen');
 
-    return function () { };
-  }
-);
+  return Api.get(fullscreenState);
+});
+
+export default <any> function () { };

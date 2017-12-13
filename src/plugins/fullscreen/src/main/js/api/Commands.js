@@ -8,20 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.fullscreen.api.Commands',
-  [
-    'tinymce.plugins.fullscreen.core.Actions'
-  ],
-  function (Actions) {
-    var register = function (editor, fullscreenState) {
-      editor.addCommand('mceFullScreen', function () {
-        Actions.toggleFullscreen(editor, fullscreenState);
-      });
-    };
+import Actions from '../core/Actions';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor, fullscreenState) {
+  editor.addCommand('mceFullScreen', function () {
+    Actions.toggleFullscreen(editor, fullscreenState);
+  });
+};
+
+export default <any> {
+  register: register
+};
