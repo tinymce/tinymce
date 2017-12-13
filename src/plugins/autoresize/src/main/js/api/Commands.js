@@ -8,20 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.autoresize.api.Commands',
-  [
-    'tinymce.plugins.autoresize.core.Resize'
-  ],
-  function (Resize) {
-    var register = function (editor, oldSize) {
-      editor.addCommand('mceAutoResize', function () {
-        Resize.resize(editor, oldSize);
-      });
-    };
+import Resize from '../core/Resize';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor, oldSize) {
+  editor.addCommand('mceAutoResize', function () {
+    Resize.resize(editor, oldSize);
+  });
+};
+
+export default <any> {
+  register: register
+};
