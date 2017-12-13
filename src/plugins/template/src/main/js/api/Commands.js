@@ -8,19 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.template.api.Commands',
-  [
-    'ephox.katamari.api.Fun',
-    'tinymce.plugins.template.core.Templates'
-  ],
-  function (Fun, Templates) {
-    var register = function (editor) {
-      editor.addCommand('mceInsertTemplate', Fun.curry(Templates.insertTemplate, editor));
-    };
+import { Fun } from '@ephox/katamari';
+import Templates from '../core/Templates';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor) {
+  editor.addCommand('mceInsertTemplate', Fun.curry(Templates.insertTemplate, editor));
+};
+
+export default <any> {
+  register: register
+};

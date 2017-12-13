@@ -8,35 +8,29 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.template.core.FilterContent',
-  [
-    'tinymce.core.util.Tools',
-    'tinymce.plugins.template.api.Settings',
-    'tinymce.plugins.template.core.DateTimeHelper',
-    'tinymce.plugins.template.core.Templates'
-  ],
-  function (Tools, Settings, DateTimeHelper, Templates) {
-    var setup = function (editor) {
-      editor.on('PreProcess', function (o) {
-        var dom = editor.dom, dateFormat = Settings.getMdateFormat(editor);
+import Tools from 'tinymce/core/util/Tools';
+import Settings from '../api/Settings';
+import DateTimeHelper from './DateTimeHelper';
+import Templates from './Templates';
 
-        Tools.each(dom.select('div', o.node), function (e) {
-          if (dom.hasClass(e, 'mceTmpl')) {
-            Tools.each(dom.select('*', e), function (e) {
-              if (dom.hasClass(e, editor.getParam('template_mdate_classes', 'mdate').replace(/\s+/g, '|'))) {
-                e.innerHTML = DateTimeHelper.getDateTime(editor, dateFormat);
-              }
-            });
+var setup = function (editor) {
+  editor.on('PreProcess', function (o) {
+    var dom = editor.dom, dateFormat = Settings.getMdateFormat(editor);
 
-            Templates.replaceVals(editor, e);
+    Tools.each(dom.select('div', o.node), function (e) {
+      if (dom.hasClass(e, 'mceTmpl')) {
+        Tools.each(dom.select('*', e), function (e) {
+          if (dom.hasClass(e, editor.getParam('template_mdate_classes', 'mdate').replace(/\s+/g, '|'))) {
+            e.innerHTML = DateTimeHelper.getDateTime(editor, dateFormat);
           }
         });
-      });
-    };
 
-    return {
-      setup: setup
-    };
-  }
-);
+        Templates.replaceVals(editor, e);
+      }
+    });
+  });
+};
+
+export default <any> {
+  setup: setup
+};

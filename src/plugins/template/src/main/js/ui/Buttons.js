@@ -8,35 +8,29 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.template.ui.Buttons',
-  [
-    'tinymce.plugins.template.core.Templates',
-    'tinymce.plugins.template.ui.Dialog'
-  ],
-  function (Templates, Dialog) {
-    var showDialog = function (editor) {
-      return function (templates) {
-        Dialog.open(editor, templates);
-      };
-    };
+import Templates from '../core/Templates';
+import Dialog from './Dialog';
 
-    var register = function (editor) {
-      editor.addButton('template', {
-        title: 'Insert template',
-        onclick: Templates.createTemplateList(editor.settings, showDialog(editor))
-      });
+var showDialog = function (editor) {
+  return function (templates) {
+    Dialog.open(editor, templates);
+  };
+};
 
-      editor.addMenuItem('template', {
-        text: 'Template',
-        onclick: Templates.createTemplateList(editor.settings, showDialog(editor)),
-        icon: 'template',
-        context: 'insert'
-      });
-    };
+var register = function (editor) {
+  editor.addButton('template', {
+    title: 'Insert template',
+    onclick: Templates.createTemplateList(editor.settings, showDialog(editor))
+  });
 
-    return {
-      register: register
-    };
-  }
-);
+  editor.addMenuItem('template', {
+    text: 'Template',
+    onclick: Templates.createTemplateList(editor.settings, showDialog(editor)),
+    icon: 'template',
+    context: 'insert'
+  });
+};
+
+export default <any> {
+  register: register
+};

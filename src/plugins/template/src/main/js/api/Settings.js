@@ -8,64 +8,57 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.template.api.Settings',
-  [
-    'tinymce.core.dom.DOMUtils'
-  ],
-  function (DOMUtils) {
-    var getCreationDateClasses = function (editor) {
-      return editor.getParam('template_cdate_classes', 'cdate');
-    };
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-    var getModificationDateClasses = function (editor) {
-      return editor.getParam('template_mdate_classes', 'mdate');
-    };
+var getCreationDateClasses = function (editor) {
+  return editor.getParam('template_cdate_classes', 'cdate');
+};
 
-    var getSelectedContentClasses = function (editor) {
-      return editor.getParam('template_selected_content_classes', 'selcontent');
-    };
+var getModificationDateClasses = function (editor) {
+  return editor.getParam('template_mdate_classes', 'mdate');
+};
 
-    var getPreviewReplaceValues = function (editor) {
-      return editor.getParam('template_preview_replace_values');
-    };
+var getSelectedContentClasses = function (editor) {
+  return editor.getParam('template_selected_content_classes', 'selcontent');
+};
 
-    var getTemplateReplaceValues = function (editor) {
-      return editor.getParam('template_replace_values');
-    };
+var getPreviewReplaceValues = function (editor) {
+  return editor.getParam('template_preview_replace_values');
+};
 
-    var getTemplates = function (editorSettings) {
-      return editorSettings.templates;
-    };
+var getTemplateReplaceValues = function (editor) {
+  return editor.getParam('template_replace_values');
+};
 
-    var getCdateFormat = function (editor) {
-      return editor.getParam('template_cdate_format', editor.getLang('template.cdate_format'));
-    };
+var getTemplates = function (editorSettings) {
+  return editorSettings.templates;
+};
 
-    var getMdateFormat = function (editor) {
-      return editor.getParam("template_mdate_format", editor.getLang("template.mdate_format"));
-    };
+var getCdateFormat = function (editor) {
+  return editor.getParam('template_cdate_format', editor.getLang('template.cdate_format'));
+};
 
-    var getDialogWidth = function (editor) {
-      return editor.getParam('template_popup_width', 600);
-    };
+var getMdateFormat = function (editor) {
+  return editor.getParam("template_mdate_format", editor.getLang("template.mdate_format"));
+};
 
-    var getDialogHeight = function (editor) {
-      return Math.min(DOMUtils.DOM.getViewPort().h, editor.getParam('template_popup_height', 500));
-    };
+var getDialogWidth = function (editor) {
+  return editor.getParam('template_popup_width', 600);
+};
 
-    return {
-      getCreationDateClasses: getCreationDateClasses,
-      getModificationDateClasses: getModificationDateClasses,
-      getSelectedContentClasses: getSelectedContentClasses,
-      getPreviewReplaceValues: getPreviewReplaceValues,
-      getTemplateReplaceValues: getTemplateReplaceValues,
-      getTemplates: getTemplates,
-      getCdateFormat: getCdateFormat,
-      getMdateFormat: getMdateFormat,
-      getDialogWidth: getDialogWidth,
-      getDialogHeight: getDialogHeight
-    };
-  }
-);
+var getDialogHeight = function (editor) {
+  return Math.min(DOMUtils.DOM.getViewPort().h, editor.getParam('template_popup_height', 500));
+};
 
+export default <any> {
+  getCreationDateClasses: getCreationDateClasses,
+  getModificationDateClasses: getModificationDateClasses,
+  getSelectedContentClasses: getSelectedContentClasses,
+  getPreviewReplaceValues: getPreviewReplaceValues,
+  getTemplateReplaceValues: getTemplateReplaceValues,
+  getTemplates: getTemplates,
+  getCdateFormat: getCdateFormat,
+  getMdateFormat: getMdateFormat,
+  getDialogWidth: getDialogWidth,
+  getDialogHeight: getDialogHeight
+};

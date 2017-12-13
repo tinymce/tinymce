@@ -8,21 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.template.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.template.api.Commands',
-    'tinymce.plugins.template.core.FilterContent',
-    'tinymce.plugins.template.ui.Buttons'
-  ],
-  function (PluginManager, Commands, FilterContent, Buttons) {
-    PluginManager.add('template', function (editor) {
-      Buttons.register(editor);
-      Commands.register(editor);
-      FilterContent.setup(editor);
-    });
+import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
+import FilterContent from './core/FilterContent';
+import Buttons from './ui/Buttons';
 
-    return function () { };
-  }
-);
+PluginManager.add('template', function (editor) {
+  Buttons.register(editor);
+  Commands.register(editor);
+  FilterContent.setup(editor);
+});
+
+export default <any> function () { };
