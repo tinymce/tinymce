@@ -8,33 +8,26 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.noneditable.api.Settings',
-  [
-  ],
-  function () {
-    var getNonEditableClass = function (editor) {
-      return editor.getParam('noneditable_noneditable_class', 'mceNonEditable');
-    };
+var getNonEditableClass = function (editor) {
+  return editor.getParam('noneditable_noneditable_class', 'mceNonEditable');
+};
 
-    var getEditableClass = function (editor) {
-      return editor.getParam('noneditable_editable_class', 'mceEditable');
-    };
+var getEditableClass = function (editor) {
+  return editor.getParam('noneditable_editable_class', 'mceEditable');
+};
 
-    var getNonEditableRegExps = function (editor) {
-      var nonEditableRegExps = editor.getParam('noneditable_regexp', []);
+var getNonEditableRegExps = function (editor) {
+  var nonEditableRegExps = editor.getParam('noneditable_regexp', []);
 
-      if (nonEditableRegExps && nonEditableRegExps.constructor === RegExp) {
-        return [nonEditableRegExps];
-      } else {
-        return nonEditableRegExps;
-      }
-    };
-
-    return {
-      getNonEditableClass: getNonEditableClass,
-      getEditableClass: getEditableClass,
-      getNonEditableRegExps: getNonEditableRegExps
-    };
+  if (nonEditableRegExps && nonEditableRegExps.constructor === RegExp) {
+    return [nonEditableRegExps];
+  } else {
+    return nonEditableRegExps;
   }
-);
+};
+
+export default <any> {
+  getNonEditableClass: getNonEditableClass,
+  getEditableClass: getEditableClass,
+  getNonEditableRegExps: getNonEditableRegExps
+};

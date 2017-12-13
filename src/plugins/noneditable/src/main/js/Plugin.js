@@ -8,17 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.noneditable.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.noneditable.core.FilterContent'
-  ],
-  function (PluginManager, FilterContent) {
-    PluginManager.add('noneditable', function (editor) {
-      FilterContent.setup(editor);
-    });
+import PluginManager from 'tinymce/core/PluginManager';
+import FilterContent from './core/FilterContent';
 
-    return function () { };
-  }
-);
+PluginManager.add('noneditable', function (editor) {
+  FilterContent.setup(editor);
+});
+
+export default <any> function () { };
