@@ -8,36 +8,32 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import EditorManager from 'tinymce/core/EditorManager';
+import CodePlugin from 'tinymce/plugins/code/Plugin';
+import ImagePlugin from 'tinymce/plugins/image/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
 /*eslint no-console:0 */
 
-define(
-  'tinymce.plugins.image.demo.Demo',
-  [
-    'tinymce.core.EditorManager',
-    'tinymce.plugins.code.Plugin',
-    'tinymce.plugins.image.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (EditorManager, CodePlugin, ImagePlugin, ModernTheme) {
-    return function () {
-      CodePlugin();
-      ImagePlugin();
-      ModernTheme();
 
-      EditorManager.init({
-        selector: "textarea.tinymce",
-        theme: "modern",
-        skin_url: "../../../../../skins/lightgray/dist/lightgray",
-        plugins: "image code",
-        toolbar: "undo redo | image code",
-        image_caption: true,
-        image_advtab: true,
-        images_upload_url: 'postAcceptor.php',
-        file_picker_callback: function (callback, value, meta) {
-          callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
-        },
-        height: 600
-      });
-    };
-  }
-);
+
+export default <any> function () {
+  CodePlugin();
+  ImagePlugin();
+  ModernTheme();
+
+  EditorManager.init({
+    selector: "textarea.tinymce",
+    theme: "modern",
+    skin_url: "../../../../../skins/lightgray/dist/lightgray",
+    plugins: "image code",
+    toolbar: "undo redo | image code",
+    image_caption: true,
+    image_advtab: true,
+    images_upload_url: 'postAcceptor.php',
+    file_picker_callback: function (callback, value, meta) {
+      callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
+    },
+    height: 600
+  });
+};

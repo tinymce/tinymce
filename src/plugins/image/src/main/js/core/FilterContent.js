@@ -8,45 +8,39 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.image.core.FilterContent',
-  [
-    'tinymce.core.util.Tools'
-  ],
-  function (Tools) {
-    var hasImageClass = function (node) {
-      var className = node.attr('class');
-      return className && /\bimage\b/.test(className);
+import Tools from 'tinymce/core/util/Tools';
+
+var hasImageClass = function (node) {
+  var className = node.attr('class');
+  return className && /\bimage\b/.test(className);
+};
+
+var toggleContentEditableState = function (state) {
+  return function (nodes) {
+    var i = nodes.length, node;
+
+    var toggleContentEditable = function (node) {
+      node.attr('contenteditable', state ? 'true' : null);
     };
 
-    var toggleContentEditableState = function (state) {
-      return function (nodes) {
-        var i = nodes.length, node;
+    while (i--) {
+      node = nodes[i];
 
-        var toggleContentEditable = function (node) {
-          node.attr('contenteditable', state ? 'true' : null);
-        };
+      if (hasImageClass(node)) {
+        node.attr('contenteditable', state ? 'false' : null);
+        Tools.each(node.getAll('figcaption'), toggleContentEditable);
+      }
+    }
+  };
+};
 
-        while (i--) {
-          node = nodes[i];
+var setup = function (editor) {
+  editor.on('preInit', function () {
+    editor.parser.addNodeFilter('figure', toggleContentEditableState(true));
+    editor.serializer.addNodeFilter('figure', toggleContentEditableState(false));
+  });
+};
 
-          if (hasImageClass(node)) {
-            node.attr('contenteditable', state ? 'false' : null);
-            Tools.each(node.getAll('figcaption'), toggleContentEditable);
-          }
-        }
-      };
-    };
-
-    var setup = function (editor) {
-      editor.on('preInit', function () {
-        editor.parser.addNodeFilter('figure', toggleContentEditableState(true));
-        editor.serializer.addNodeFilter('figure', toggleContentEditableState(false));
-      });
-    };
-
-    return {
-      setup: setup
-    };
-  }
-);
+export default <any> {
+  setup: setup
+};

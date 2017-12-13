@@ -8,18 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.image.api.Commands',
-  [
-    'tinymce.plugins.image.ui.Dialog'
-  ],
-  function (Dialog) {
-    var register = function (editor) {
-      editor.addCommand('mceImage', Dialog(editor).open);
-    };
+import Dialog from '../ui/Dialog';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor) {
+  editor.addCommand('mceImage', Dialog(editor).open);
+};
+
+export default <any> {
+  register: register
+};
