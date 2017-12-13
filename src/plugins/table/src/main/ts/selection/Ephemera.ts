@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Fun } from '@ephox/katamari';
+import Fun from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Fun';
 
 var selected = 'data-mce-selected';
 var selectedSelector = 'td[' + selected + '],th[' + selected + ']';

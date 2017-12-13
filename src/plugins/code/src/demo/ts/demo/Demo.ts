@@ -9,10 +9,8 @@
  */
 
 import CodePlugin from 'tinymce/plugins/code/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
 
 CodePlugin();
-ModernTheme();
 
 declare const tinymce: any;
 

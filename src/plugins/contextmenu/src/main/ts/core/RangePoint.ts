@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
+import Arr from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Arr';
 
 var containsXY = function (clientRect, clientX, clientY) {
   return (

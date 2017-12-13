@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Fun } from '@ephox/katamari';
+import Fun from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Fun';
 import Env from 'tinymce/core/Env';
 import Tools from 'tinymce/core/util/Tools';
 import InsertTable from '../actions/InsertTable';

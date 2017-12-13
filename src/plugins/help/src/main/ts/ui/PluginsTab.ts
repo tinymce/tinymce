@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Strings } from '@ephox/katamari';
+import Arr from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Arr';
+import Fun from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Fun';
+import Obj from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Obj';
+import Strings from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Strings';
 import tinymce from 'tinymce/core/EditorManager';
 import I18n from 'tinymce/core/util/I18n';
 import PluginUrls from '../data/PluginUrls';

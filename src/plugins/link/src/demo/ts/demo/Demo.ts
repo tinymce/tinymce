@@ -8,16 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import EditorManager from 'tinymce/core/EditorManager';
-import CodePlugin from 'tinymce/plugins/code/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
 
-CodePlugin();
+declare let tinymce: any;
+
 LinkPlugin();
-ModernTheme();
 
-EditorManager.init({
+tinymce.init({
   selector: "textarea.tinymce",
   theme: "modern",
   skin_url: "../../../../../skins/lightgray/dist/lightgray",

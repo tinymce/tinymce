@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
+import Arr from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Arr';
+import Element from '@ephox/sugar/lib/main/ts/ephox/sugar/api/node/Element';
+import Node from '@ephox/sugar/lib/main/ts/ephox/sugar/api/node/Node';
 import Data from './Data';
 import Html from './Html';
 

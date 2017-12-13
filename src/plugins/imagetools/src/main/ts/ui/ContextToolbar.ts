@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Fun } from '@ephox/katamari';
+import Fun from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Fun';
 import Settings from '../api/Settings';
 import Actions from '../core/Actions';
 

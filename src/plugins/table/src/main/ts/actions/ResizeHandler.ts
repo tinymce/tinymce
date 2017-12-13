@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import Arr from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Arr';
+import Option from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Option';
 import { ResizeWire } from '@ephox/snooker';
 import { TableDirection } from '@ephox/snooker';
 import { TableResize } from '@ephox/snooker';

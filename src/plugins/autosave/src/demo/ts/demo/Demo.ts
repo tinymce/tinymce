@@ -8,26 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import EditorManager from 'tinymce/core/EditorManager';
 import AutoSavePlugin from 'tinymce/plugins/autosave/Plugin';
-import CodePlugin from 'tinymce/plugins/code/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
 
 /*eslint no-console:0 */
 
+declare let tinymce: any;
 
+AutoSavePlugin();
 
-export default <any> function () {
-  AutoSavePlugin();
-  CodePlugin();
-  ModernTheme();
-
-  EditorManager.init({
-    selector: "textarea.tinymce",
-    theme: "modern",
-    skin_url: "../../../../../skins/lightgray/dist/lightgray",
-    plugins: "autosave code",
-    toolbar: "restoredraft code",
-    height: 600
-  });
-};
+tinymce.init({
+  selector: "textarea.tinymce",
+  theme: "modern",
+  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  plugins: "autosave code",
+  toolbar: "restoredraft code",
+  height: 600
+});

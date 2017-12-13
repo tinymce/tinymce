@@ -8,25 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import EditorManager from 'tinymce/core/EditorManager';
-import CodePlugin from 'tinymce/plugins/code/Plugin';
 import TabFocusPlugin from 'tinymce/plugins/tabfocus/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
 
 /*eslint no-console:0 */
 
+declare let tinymce: any;
 
+TabFocusPlugin();
 
-export default <any> function () {
-  CodePlugin();
-  TabFocusPlugin();
-  ModernTheme();
-
-  EditorManager.init({
-    selector: "textarea.tinymce",
-    plugins: "tabfocus code",
-    toolbar: "code",
-    skin_url: "../../../../../skins/lightgray/dist/lightgray",
-    height: 600
-  });
-};
+tinymce.init({
+  selector: "textarea.tinymce",
+  plugins: "tabfocus code",
+  toolbar: "code",
+  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  height: 600
+});

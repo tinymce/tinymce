@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Adt } from '@ephox/katamari';
+import Adt from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Adt';
 
 var type = Adt.generate([
   { none: [] },

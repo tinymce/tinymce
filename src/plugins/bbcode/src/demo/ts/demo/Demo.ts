@@ -8,28 +8,23 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import EditorManager from 'tinymce/core/EditorManager';
 import BbCodePlugin from 'tinymce/plugins/bbcode/Plugin';
-import CodePlugin from 'tinymce/plugins/code/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
 
 /*eslint no-console:0, no-unused-vars: 0 */
 
+declare let tinymce: any;
+
 BbCodePlugin();
-CodePlugin();
-ModernTheme();
 
-export default <any> function () {
-  var elm: any;
-  elm = document.querySelector('.tinymce');
-  elm.value = '[b]bbcode plugin[/b]';
+var elm: any;
+elm = document.querySelector('.tinymce');
+elm.value = '[b]bbcode plugin[/b]';
 
-  EditorManager.init({
-    selector: "textarea.tinymce",
-    theme: "modern",
-    skin_url: "../../../../../skins/lightgray/dist/lightgray",
-    plugins: "bbcode code",
-    toolbar: "bbcode code",
-    height: 600
-  });
-};
+tinymce.init({
+  selector: "textarea.tinymce",
+  theme: "modern",
+  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  plugins: "bbcode code",
+  toolbar: "bbcode code",
+  height: 600
+});

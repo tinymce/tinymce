@@ -1,5 +1,5 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import Arr from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Arr';
+import Fun from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Fun';
 import Promise from 'tinymce/core/util/Promise';
 import Utils from './Utils';
 

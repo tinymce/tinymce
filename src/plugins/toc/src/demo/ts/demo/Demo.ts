@@ -8,25 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import EditorManager from 'tinymce/core/EditorManager';
-import CodePlugin from 'tinymce/plugins/code/Plugin';
 import TocPlugin from 'tinymce/plugins/toc/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
 
 /*eslint no-console:0 */
 
+declare let tinymce: any;
 
+TocPlugin();
 
-export default <any> function () {
-  CodePlugin();
-  TocPlugin();
-  ModernTheme();
-
-  EditorManager.init({
-    selector: "textarea.tinymce",
-    plugins: "toc code",
-    toolbar: "toc code formatselect",
-    skin_url: "../../../../../skins/lightgray/dist/lightgray",
-    height: 600
-  });
-};
+tinymce.init({
+  selector: "textarea.tinymce",
+  plugins: "toc code",
+  toolbar: "toc code formatselect",
+  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  height: 600
+});

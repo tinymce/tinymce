@@ -8,25 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import EditorManager from 'tinymce/core/EditorManager';
-import CodePlugin from 'tinymce/plugins/code/Plugin';
 import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
 
 /*eslint no-console:0 */
 
+declare let tinymce: any;
 
+TextPatternPlugin();
 
-export default <any> function () {
-  CodePlugin();
-  TextPatternPlugin();
-  ModernTheme();
-
-  EditorManager.init({
-    selector: "textarea.tinymce",
-    plugins: "textpattern code",
-    skin_url: "../../../../../skins/lightgray/dist/lightgray",
-    toolbar: "code",
-    height: 600
-  });
-};
+tinymce.init({
+  selector: "textarea.tinymce",
+  plugins: "textpattern code",
+  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  toolbar: "code",
+  height: 600
+});

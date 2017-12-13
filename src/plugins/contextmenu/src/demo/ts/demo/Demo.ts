@@ -8,27 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import EditorManager from 'tinymce/core/EditorManager';
-import CodePlugin from 'tinymce/plugins/code/Plugin';
 import ContextMenuPlugin from 'tinymce/plugins/contextmenu/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
 
 /*eslint no-console:0 */
 
+declare let tinymce: any;
 
+ContextMenuPlugin();
 
-export default <any> function () {
-  CodePlugin();
-  ContextMenuPlugin();
-  ModernTheme();
-
-  EditorManager.init({
-    selector: "textarea.tinymce",
-    theme: "modern",
-    skin_url: "../../../../../skins/lightgray/dist/lightgray",
-    plugins: "contextmenu code",
-    toolbar: "contextmenu code",
-    height: 600,
-    contextmenu: 'code'
-  });
-};
+tinymce.init({
+  selector: "textarea.tinymce",
+  theme: "modern",
+  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  plugins: "contextmenu code",
+  toolbar: "contextmenu code",
+  height: 600,
+  contextmenu: 'code'
+});

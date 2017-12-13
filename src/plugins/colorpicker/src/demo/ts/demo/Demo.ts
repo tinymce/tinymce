@@ -8,31 +8,22 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import EditorManager from 'tinymce/core/EditorManager';
-import CodePlugin from 'tinymce/plugins/code/Plugin';
 import ColorPickerPlugin from 'tinymce/plugins/colorpicker/Plugin';
-import TablePlugin from 'tinymce/plugins/table/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
 
 /*eslint no-console:0 */
 
+declare let tinymce: any;
 
+ColorPickerPlugin();
 
-export default <any> function () {
-  CodePlugin();
-  ColorPickerPlugin();
-  TablePlugin();
-  ModernTheme();
+var elm: any = document.querySelector('.tinymce');
+elm.value = '<table><tbody><tr><td>One</td></tr></tbody></table>';
 
-  var elm: any = document.querySelector('.tinymce');
-  elm.value = '<table><tbody><tr><td>One</td></tr></tbody></table>';
-
-  EditorManager.init({
-    selector: "textarea.tinymce",
-    theme: "modern",
-    skin_url: "../../../../../skins/lightgray/dist/lightgray",
-    plugins: "table colorpicker code",
-    toolbar: "table code",
-    height: 600
-  });
-};
+tinymce.init({
+  selector: "textarea.tinymce",
+  theme: "modern",
+  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  plugins: "table colorpicker code",
+  toolbar: "table code",
+  height: 600
+});

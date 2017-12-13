@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
+import Arr from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Arr';
 import I18n from 'tinymce/core/util/I18n';
 import KeyboardShortcuts from '../data/KeyboardShortcuts';
 

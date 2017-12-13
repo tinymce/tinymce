@@ -5,8 +5,8 @@ var typescript = require('rollup-plugin-typescript2');
 var patcher = require('./rollup-patch');
 var path = require('path');
 
-module.exports = name => grunt => {
-  grunt.initConfig({
+module.exports = (name, copy) => grunt => {
+  var config = {
     rollup: {
       options: {
         treeshake: true,
@@ -52,7 +52,8 @@ module.exports = name => grunt => {
 
         compress: {
           screw_ie8: false
-        }
+        },
+        report: 'gzip'
       },
 
       "plugin": {
@@ -74,12 +75,31 @@ module.exports = name => grunt => {
           spawn: false
         }
       }
+    },
+
+    "bedrock-manual": {
+      "all": {
+        config: "config/bolt/browser.js",
+        // Exclude webdriver tests
+        testfiles: "src/test/js/browser/**/*Test.js",
+        projectdir: "../../..",
+        options: {
+          stopOnFailure: true
+        }
+      }
     }
-  });
+  };
+
+  grunt.initConfig(Object.assign({}, config, copy ? copy : {}))
+
+  if (copy) {
+    grunt.task.loadTasks(path.join(__dirname, '../../node_modules/grunt-contrib-copy/tasks'));
+  }
 
   grunt.task.loadTasks(path.join(__dirname, '../../node_modules/grunt-rollup/tasks'));
+  grunt.task.loadTasks(path.join(__dirname, "../../node_modules/@ephox/bedrock/tasks"));
   grunt.task.loadTasks(path.join(__dirname, '../../node_modules/grunt-contrib-uglify/tasks'));
   grunt.task.loadTasks(path.join(__dirname, '../../node_modules/grunt-contrib-watch/tasks'));
 
-  grunt.registerTask("default", ["rollup", "uglify"]);
+  grunt.registerTask("default", ["rollup", "uglify"].concat(copy ? ['copy'] : []));
 };

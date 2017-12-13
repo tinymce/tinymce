@@ -8,19 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-// import EditorManager from 'tinymce/core/EditorManager';
-// import CodePlugin from 'tinymce/plugins/code/Plugin';
 import SearchReplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
-// import ModernTheme from 'tinymce/themes/modern/Theme';
 
 /*eslint no-console:0 */
 
 declare let tinymce: any;
 
 SearchReplacePlugin();
-
-console.log('hello!');
-
 
 tinymce.init({
   selector: "textarea.tinymce",

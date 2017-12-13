@@ -11,9 +11,9 @@
 import { InputHandlers } from '@ephox/darwin';
 import { SelectionAnnotation } from '@ephox/darwin';
 import { SelectionKeys } from '@ephox/darwin';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
+import Fun from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Fun';
+import Option from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Option';
+import Struct from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Struct';
 import { TableLookup } from '@ephox/snooker';
 import { Compare } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';

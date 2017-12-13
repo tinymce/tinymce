@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Fun } from '@ephox/katamari';
+import Fun from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Fun';
 import { TableRender } from '@ephox/snooker';
 import { Element } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
