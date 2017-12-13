@@ -8,19 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.charmap.core.Actions',
-  [
-    'tinymce.plugins.charmap.api.Events'
-  ],
-  function (Events) {
-    var insertChar = function (editor, chr) {
-      var evtChr = Events.fireInsertCustomChar(editor, chr).chr;
-      editor.execCommand('mceInsertContent', false, evtChr);
-    };
+import Events from '../api/Events';
 
-    return {
-      insertChar: insertChar
-    };
-  }
-);
+var insertChar = function (editor, chr) {
+  var evtChr = Events.fireInsertCustomChar(editor, chr).chr;
+  editor.execCommand('mceInsertContent', false, evtChr);
+};
+
+export default <any> {
+  insertChar: insertChar
+};

@@ -8,20 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.charmap.api.Commands',
-  [
-    'tinymce.plugins.charmap.ui.Dialog'
-  ],
-  function (Dialog) {
-    var register = function (editor) {
-      editor.addCommand('mceShowCharmap', function () {
-        Dialog.open(editor);
-      });
-    };
+import Dialog from '../ui/Dialog';
 
-    return {
-      register: register
-    };
-  }
-);
+var register = function (editor) {
+  editor.addCommand('mceShowCharmap', function () {
+    Dialog.open(editor);
+  });
+};
+
+export default <any> {
+  register: register
+};

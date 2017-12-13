@@ -1,42 +1,40 @@
-asynctest(
-  'browser.tinymce.plugins.charmap.InsertQuotationMarkTest',
-  [
-    'ephox.agar.api.Chain',
-    'ephox.agar.api.Mouse',
-    'ephox.agar.api.Pipeline',
-    'ephox.agar.api.UiFinder',
-    'ephox.mcagar.api.TinyApis',
-    'ephox.mcagar.api.TinyLoader',
-    'ephox.mcagar.api.TinyUi',
-    'tinymce.plugins.charmap.Plugin',
-    'tinymce.themes.modern.Theme'
-  ],
-  function (Chain, Mouse, Pipeline, UiFinder, TinyApis, TinyLoader, TinyUi, CharmapPlugin, ModernTheme) {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+import { Chain } from '@ephox/agar';
+import { Mouse } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { UiFinder } from '@ephox/agar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import { TinyUi } from '@ephox/mcagar';
+import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/refute';
 
-    ModernTheme();
-    CharmapPlugin();
+UnitTest.asynctest('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyApis = TinyApis(editor);
-      var tinyUi = TinyUi(editor);
+  ModernTheme();
+  CharmapPlugin();
 
-      Pipeline.async({}, [
-        tinyApis.sFocus,
-        tinyUi.sClickOnToolbar('click charmap', 'div[aria-label="Special character"] button'),
-        Chain.asStep({}, [
-          tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
-          UiFinder.cFindIn('div[title="quotation mark"]'),
-          Mouse.cClick
-        ]),
-        tinyApis.sAssertContent('<p>"</p>')
+  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    var tinyApis = TinyApis(editor);
+    var tinyUi = TinyUi(editor);
 
-      ], onSuccess, onFailure);
-    }, {
-      plugins: 'charmap',
-      toolbar: 'charmap',
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
-    }, success, failure);
-  }
-);
+    Pipeline.async({}, [
+      tinyApis.sFocus,
+      tinyUi.sClickOnToolbar('click charmap', 'div[aria-label="Special character"] button'),
+      Chain.asStep({}, [
+        tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
+        UiFinder.cFindIn('div[title="quotation mark"]'),
+        Mouse.cClick
+      ]),
+      tinyApis.sAssertContent('<p>"</p>')
+
+    ], onSuccess, onFailure);
+  }, {
+    plugins: 'charmap',
+    toolbar: 'charmap',
+    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+  }, success, failure);
+});
+

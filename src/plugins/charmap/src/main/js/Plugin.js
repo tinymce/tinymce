@@ -8,22 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.charmap.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.charmap.api.Api',
-    'tinymce.plugins.charmap.api.Commands',
-    'tinymce.plugins.charmap.ui.Buttons'
-  ],
-  function (PluginManager, Api, Commands, Buttons) {
-    PluginManager.add('charmap', function (editor) {
-      Commands.register(editor);
-      Buttons.register(editor);
+import PluginManager from 'tinymce/core/PluginManager';
+import Api from './api/Api';
+import Commands from './api/Commands';
+import Buttons from './ui/Buttons';
 
-      return Api.get(editor);
-    });
+PluginManager.add('charmap', function (editor) {
+  Commands.register(editor);
+  Buttons.register(editor);
 
-    return function () { };
-  }
-);
+  return Api.get(editor);
+});
+
+export default <any> function () { };

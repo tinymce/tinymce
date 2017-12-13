@@ -8,17 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.charmap.api.Events',
-  [
-  ],
-  function () {
-    var fireInsertCustomChar = function (editor, chr) {
-      return editor.fire('insertCustomChar', { chr: chr });
-    };
+var fireInsertCustomChar = function (editor, chr) {
+  return editor.fire('insertCustomChar', { chr: chr });
+};
 
-    return {
-      fireInsertCustomChar: fireInsertCustomChar
-    };
-  }
-);
+export default <any> {
+  fireInsertCustomChar: fireInsertCustomChar
+};

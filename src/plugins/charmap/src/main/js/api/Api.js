@@ -8,31 +8,24 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.charmap.api.Api',
-  [
-    'tinymce.plugins.charmap.core.Actions',
-    'tinymce.plugins.charmap.core.CharMap'
-  ],
-  function (Actions, CharMap) {
-    var get = function (editor) {
-      var getCharMap = function () {
-        return CharMap.getCharMap(editor);
-      };
+import Actions from '../core/Actions';
+import CharMap from '../core/CharMap';
 
-      var insertChar = function (chr) {
-        Actions.insertChar(editor, chr);
-      };
+var get = function (editor) {
+  var getCharMap = function () {
+    return CharMap.getCharMap(editor);
+  };
 
-      return {
-        getCharMap: getCharMap,
-        insertChar: insertChar
-      };
-    };
+  var insertChar = function (chr) {
+    Actions.insertChar(editor, chr);
+  };
 
-    return {
-      get: get
-    };
-  }
-);
+  return {
+    getCharMap: getCharMap,
+    insertChar: insertChar
+  };
+};
 
+export default <any> {
+  get: get
+};
