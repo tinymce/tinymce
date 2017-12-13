@@ -6,7 +6,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/Env';
 import Utils from 'tinymce/plugins/paste/core/Utils';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import Strings from 'tinymce/plugins/paste/test/Strings';
+import Strings from '../module/test/Strings';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 

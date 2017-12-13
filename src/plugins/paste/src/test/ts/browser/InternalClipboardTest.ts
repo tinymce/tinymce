@@ -10,7 +10,7 @@ import CutCopy from 'tinymce/plugins/paste/core/CutCopy';
 import InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
 import Utils from 'tinymce/plugins/paste/core/Utils';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import MockDataTransfer from 'tinymce/plugins/paste/test/MockDataTransfer';
+import MockDataTransfer from '../module/test/MockDataTransfer';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 

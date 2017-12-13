@@ -15,7 +15,7 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 /*eslint no-console:0 */
 
-
+declare let window: any;
 
 export default <any> function () {
   CodePlugin();

@@ -27,7 +27,7 @@ var isEphoxEmbed = function (html) {
 };
 
 var htmlToDataSax = function (prefixes, html) {
-  var data = {};
+  var data: any = {};
 
   new SaxParser({
     validate: false,

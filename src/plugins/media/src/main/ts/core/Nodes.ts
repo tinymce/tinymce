@@ -14,6 +14,8 @@ import Settings from '../api/Settings';
 import Sanitize from './Sanitize';
 import VideoScript from './VideoScript';
 
+declare let escape: any;
+
 var createPlaceholderNode = function (editor, node) {
   var placeHolder;
   var name = node.name;

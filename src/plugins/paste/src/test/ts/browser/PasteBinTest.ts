@@ -34,7 +34,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function() {
 
   var viewBlock = new ViewBlock();
 
-  var cCreateEditorFromSettings = function (settings, html) {
+  var cCreateEditorFromSettings = function (settings?, html?) {
     return Chain.on(function (viewBlock, next, die) {
       var randomId = Id.generate('tiny');
       html = html || '<textarea></textarea>';

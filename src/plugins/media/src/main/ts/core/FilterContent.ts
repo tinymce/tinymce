@@ -13,6 +13,8 @@ import Tools from 'tinymce/core/util/Tools';
 import Nodes from './Nodes';
 import Sanitize from './Sanitize';
 
+declare let unescape: any;
+
 var setup = function (editor) {
   editor.on('preInit', function () {
     // Make sure that any messy HTML is retained inside these

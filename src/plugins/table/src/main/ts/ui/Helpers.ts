@@ -18,11 +18,11 @@ import Util from '../alien/Util';
  */
 
 var buildListItems = function (inputList, itemCallback, startItems) {
-  var appendItems = function (values, output) {
+  var appendItems = function (values, output?) {
     output = output || [];
 
     Tools.each(values, function (item) {
-      var menuItem = { text: item.text || item.title };
+      var menuItem: any = { text: item.text || item.title };
 
       if (item.menu) {
         menuItem.menu = appendItems(item.menu);
@@ -68,7 +68,7 @@ var updateStyleField = function (editor, evt) {
 
 var extractAdvancedStyles = function (dom, elm) {
   var css = dom.parseStyle(dom.getAttrib(elm, 'style'));
-  var data = {};
+  var data: any = {};
 
   if (css["border-style"]) {
     data.borderStyle = css["border-style"];

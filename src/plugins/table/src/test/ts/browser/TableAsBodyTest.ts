@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', function() {
     });
   };
 
-  var cExecCommand = function (command, value) {
+  var cExecCommand = function (command, value?) {
     return Chain.op(function (editor) {
       editor.execCommand(command, false, value);
     });

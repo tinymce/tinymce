@@ -98,7 +98,7 @@ export default <any> function (editor) {
       var table = e.target;
 
       if (percentageBasedSizeRegex.test(startRawW)) {
-        var percentW = parseFloat(percentageBasedSizeRegex.exec(startRawW)[1], 10);
+        var percentW = parseFloat(percentageBasedSizeRegex.exec(startRawW)[1]);
         var targetPercentW = e.width * percentW / startW;
         editor.dom.setStyle(table, 'width', targetPercentW + '%');
       } else {

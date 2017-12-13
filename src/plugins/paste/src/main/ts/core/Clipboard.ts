@@ -21,6 +21,8 @@ import ProcessFilters from './ProcessFilters';
 import SmartPaste from './SmartPaste';
 import Utils from './Utils';
 
+declare let window: any;
+
 /**
  * This class contains logic for getting HTML contents out of the clipboard.
  *

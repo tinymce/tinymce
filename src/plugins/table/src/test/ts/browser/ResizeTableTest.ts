@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', function() {
     var rawWidth = editor.dom.getStyle(elm, 'width');
     var pxWidth = editor.dom.getStyle(elm, 'width', true);
     return {
-      raw: parseFloat(rawWidth, 10),
+      raw: parseFloat(rawWidth),
       px: parseInt(pxWidth, 10),
       isPercent: /%$/.test(rawWidth)
     };

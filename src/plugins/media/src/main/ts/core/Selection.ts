@@ -10,6 +10,9 @@
 
 import UpdateHtml from './UpdateHtml';
 
+declare let escape: any;
+declare let unescape: any;
+
 var setup = function (editor) {
   editor.on('click keyup', function () {
     var selectedNode = editor.selection.getNode();

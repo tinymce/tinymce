@@ -6,7 +6,7 @@ import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/Env';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
-import Paste from 'tinymce/plugins/paste/test/Paste';
+import Paste from '../module/test/Paste';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 

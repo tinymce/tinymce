@@ -13,7 +13,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
 import { Html } from '@ephox/sugar';
 import MediaPlugin from 'tinymce/plugins/media/Plugin';
-import Utils from 'tinymce/plugins/media/test/Utils';
+import Utils from '../module/test/Utils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 

@@ -73,7 +73,7 @@ var defaultSpellcheckCallback = function (editor, pluginUrl, currentLanguageStat
   };
 };
 
-var sendRpcCall = function (editor, pluginUrl, currentLanguageState, name, data, successCallback, errorCallback) {
+var sendRpcCall = function (editor, pluginUrl, currentLanguageState, name, data, successCallback, errorCallback?) {
   var userSpellcheckCallback = Settings.getSpellcheckerCallback(editor);
   var spellCheckCallback = userSpellcheckCallback ? userSpellcheckCallback : defaultSpellcheckCallback(editor, pluginUrl, currentLanguageState);
   spellCheckCallback.call(editor.plugins.spellchecker, name, data, successCallback, errorCallback);

@@ -351,7 +351,7 @@ export default <any> function (node, editor) {
   * @param {Object} [match] Optional match object.
   * @return {DomTextMatcher} Current DomTextMatcher instance.
   */
-  function unwrap(match) {
+  function unwrap(match?) {
     var i, elements = getWrappersByIndex(match ? indexOf(match) : null);
 
     i = elements.length;

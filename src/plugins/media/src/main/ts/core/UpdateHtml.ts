@@ -149,7 +149,7 @@ var updateHtmlSax = function (html, data, updateAll) {
       if (name === "video" && updateAll) {
         for (var index = 1; index <= 2; index++) {
           if (data["source" + index]) {
-            var attrs = [];
+            var attrs: any = [];
             attrs.map = {};
 
             if (sourceCount < index) {
@@ -165,7 +165,7 @@ var updateHtmlSax = function (html, data, updateAll) {
       }
 
       if (data.poster && name === "object" && updateAll && !hasImage) {
-        var imgAttrs = [];
+        var imgAttrs: any = [];
         imgAttrs.map = {};
 
         setAttributes(imgAttrs, {

@@ -22,7 +22,7 @@ import Helpers from './Helpers';
  */
 
 //Explore the layers of the table till we find the first layer of tds or ths
-function styleTDTH(dom, elm, name, value) {
+function styleTDTH(dom, elm, name, value?) {
   if (elm.tagName === "TD" || elm.tagName === "TH") {
     dom.setStyle(elm, name, value);
   } else {
@@ -36,7 +36,7 @@ function styleTDTH(dom, elm, name, value) {
 
 var extractDataFromElement = function (editor, tableElm) {
   var dom = editor.dom;
-  var data = {
+  var data: any = {
     width: dom.getStyle(tableElm, 'width') || dom.getAttrib(tableElm, 'width'),
     height: dom.getStyle(tableElm, 'height') || dom.getAttrib(tableElm, 'height'),
     cellspacing: dom.getStyle(tableElm, 'border-spacing') || dom.getAttrib(tableElm, 'cellspacing'),
@@ -61,7 +61,7 @@ var extractDataFromElement = function (editor, tableElm) {
 
 var applyDataToElement = function (editor, tableElm, data) {
   var dom = editor.dom;
-  var attrs = {}, styles = {};
+  var attrs: any = {}, styles: any = {};
 
   attrs['class'] = data['class'];
 

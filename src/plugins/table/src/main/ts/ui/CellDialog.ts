@@ -25,7 +25,7 @@ var updateStyles = function (elm, cssText) {
 
 var extractDataFromElement = function (editor, elm) {
   var dom = editor.dom;
-  var data = {
+  var data: any = {
     width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
     scope: dom.getAttrib(elm, 'scope'),

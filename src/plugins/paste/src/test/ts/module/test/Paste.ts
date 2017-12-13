@@ -1,5 +1,5 @@
 import { Step } from '@ephox/agar';
-import MockDataTransfer from 'tinymce/plugins/paste/test/MockDataTransfer';
+import MockDataTransfer from './MockDataTransfer';
 
 var sPaste = function (editor, data) {
   return Step.sync(function () {

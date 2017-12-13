@@ -13,7 +13,7 @@ var charMap = {
   '\u00ad': 'shy'
 };
 
-var charMapToRegExp = function (charMap, global) {
+var charMapToRegExp = function (charMap, global?) {
   var key, regExp = '';
 
   for (key in charMap) {

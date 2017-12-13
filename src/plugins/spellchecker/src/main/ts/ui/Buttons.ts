@@ -53,7 +53,7 @@ var register = function (editor, pluginUrl, startedState, textMatcherState, curr
     Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
   };
 
-  var buttonArgs = {
+  var buttonArgs: any = {
     tooltip: 'Spellcheck',
     onclick: startSpellchecking,
     onPostRender: function (e) {

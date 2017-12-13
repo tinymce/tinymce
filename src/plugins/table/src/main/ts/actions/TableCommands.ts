@@ -81,7 +81,7 @@ var registerCommands = function (editor, actions, cellSelection, selections) {
     });
   };
 
-  var copyRowSelection = function (execute) {
+  var copyRowSelection = function (execute?) {
     var cell = getSelectionStartCell();
     var table = getTableFromCell(cell);
     return table.bind(function (table) {

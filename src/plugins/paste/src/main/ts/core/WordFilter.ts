@@ -122,7 +122,7 @@ function convertFakeListsToProperLists(node) {
     }
   }
 
-  function convertParagraphToLi(paragraphNode, listName, start) {
+  function convertParagraphToLi(paragraphNode, listName, start?) {
     var level = paragraphNode._listLevel || lastLevel;
 
     // Handle list nesting

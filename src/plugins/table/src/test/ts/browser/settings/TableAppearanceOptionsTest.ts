@@ -7,7 +7,7 @@ import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import TableTestUtils from 'tinymce/plugins/table/test/TableTestUtils';
+import TableTestUtils from '../../module/test/TableTestUtils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 

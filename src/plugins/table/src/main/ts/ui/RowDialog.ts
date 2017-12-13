@@ -21,7 +21,7 @@ import Helpers from './Helpers';
 
 var extractDataFromElement = function (editor, elm) {
   var dom = editor.dom;
-  var data = {
+  var data: any = {
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
     scope: dom.getAttrib(elm, 'scope'),
     'class': dom.getAttrib(elm, 'class')

@@ -28,8 +28,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.MergeCellCommandTest', functio
     return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
   };
 
-  suite.test("mceTableMergeCells", function () {
-    testCommand('mceTableMergeCells', [
+  suite.test("mceTableMergeCells", function (editor) {
+    testCommand(editor, 'mceTableMergeCells', [
       {
         message: 'Should merge all cells into one',
         before: (

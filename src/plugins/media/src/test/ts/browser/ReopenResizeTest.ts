@@ -5,7 +5,7 @@ import { Waiter } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/media/Plugin';
-import Utils from 'tinymce/plugins/media/test/Utils';
+import Utils from '../module/test/Utils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function() 
       sWaitForResizeHandles(editor),
       Waiter.sTryUntil(
         'Try assert content',
-        sRawAssertImagePresence(editor, 1),
+        sRawAssertImagePresence(editor),
         100, 3000
       )
     ], onSuccess, onFailure);

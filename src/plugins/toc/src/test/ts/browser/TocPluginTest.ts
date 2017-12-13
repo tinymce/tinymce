@@ -3,7 +3,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import Tools from 'tinymce/core/util/Tools';
 import Plugin from 'tinymce/plugins/toc/Plugin';
-import HtmlUtils from 'tinymce/plugins/toc/test/HtmlUtils';
+import HtmlUtils from '../module/test/HtmlUtils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/refute';
 

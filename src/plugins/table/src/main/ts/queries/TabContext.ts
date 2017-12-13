@@ -46,7 +46,7 @@ var getNewRowCursorPosition = function (editor, table) {
   });
 };
 
-var go = function (editor, isRoot, cell, actions, lazyWire) {
+var go: any = function (editor, isRoot, cell, actions, lazyWire) { // TODO: forwars/backward is calling without actions
   return cell.fold(Option.none, Option.none, function (current, next) {
     return CursorPosition.first(next).map(function (cell) {
       return getCellFirstCursorPosition(editor, cell);
@@ -77,7 +77,7 @@ var handle = function (event, editor, actions, lazyWire) {
       var start = Element.fromDom(rng.startContainer);
       TableLookup.cell(start, isRoot).each(function (cell) {
         event.preventDefault();
-        var navigation = event.shiftKey ? backward : forward;
+        var navigation: any = event.shiftKey ? backward : forward;
         var rng = navigation(editor, isRoot, cell, actions, lazyWire);
         rng.each(function (range) {
           editor.selection.setRng(range);
