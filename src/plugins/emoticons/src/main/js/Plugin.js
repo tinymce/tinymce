@@ -8,23 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import PluginManager from 'tinymce/core/PluginManager';
+import Buttons from './ui/Buttons';
+
 /**
  * This class contains all core logic for the emoticons plugin.
  *
  * @class tinymce.emoticons.Plugin
  * @private
  */
-define(
-  'tinymce.plugins.emoticons.Plugin',
-  [
-    'tinymce.core.PluginManager',
-    'tinymce.plugins.emoticons.ui.Buttons'
-  ],
-  function (PluginManager, Buttons) {
-    PluginManager.add('emoticons', function (editor, pluginUrl) {
-      Buttons.register(editor, pluginUrl);
-    });
 
-    return function () { };
-  }
-);
+PluginManager.add('emoticons', function (editor, pluginUrl) {
+  Buttons.register(editor, pluginUrl);
+});
+
+export default <any> function () { };

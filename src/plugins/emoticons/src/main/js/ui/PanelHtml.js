@@ -8,45 +8,39 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-define(
-  'tinymce.plugins.emoticons.ui.PanelHtml',
-  [
-    'tinymce.core.util.Tools'
-  ],
-  function (Tools) {
-    var emoticons = [
-      ["cool", "cry", "embarassed", "foot-in-mouth"],
-      ["frown", "innocent", "kiss", "laughing"],
-      ["money-mouth", "sealed", "smile", "surprised"],
-      ["tongue-out", "undecided", "wink", "yell"]
-    ];
+import Tools from 'tinymce/core/util/Tools';
 
-    var getHtml = function (pluginUrl) {
-      var emoticonsHtml;
+var emoticons = [
+  ["cool", "cry", "embarassed", "foot-in-mouth"],
+  ["frown", "innocent", "kiss", "laughing"],
+  ["money-mouth", "sealed", "smile", "surprised"],
+  ["tongue-out", "undecided", "wink", "yell"]
+];
 
-      emoticonsHtml = '<table role="list" class="mce-grid">';
+var getHtml = function (pluginUrl) {
+  var emoticonsHtml;
 
-      Tools.each(emoticons, function (row) {
-        emoticonsHtml += '<tr>';
+  emoticonsHtml = '<table role="list" class="mce-grid">';
 
-        Tools.each(row, function (icon) {
-          var emoticonUrl = pluginUrl + '/img/smiley-' + icon + '.gif';
+  Tools.each(emoticons, function (row) {
+    emoticonsHtml += '<tr>';
 
-          emoticonsHtml += '<td><a href="#" data-mce-url="' + emoticonUrl + '" data-mce-alt="' + icon + '" tabindex="-1" ' +
-            'role="option" aria-label="' + icon + '"><img src="' +
-            emoticonUrl + '" style="width: 18px; height: 18px" role="presentation" /></a></td>';
-        });
+    Tools.each(row, function (icon) {
+      var emoticonUrl = pluginUrl + '/img/smiley-' + icon + '.gif';
 
-        emoticonsHtml += '</tr>';
-      });
+      emoticonsHtml += '<td><a href="#" data-mce-url="' + emoticonUrl + '" data-mce-alt="' + icon + '" tabindex="-1" ' +
+        'role="option" aria-label="' + icon + '"><img src="' +
+        emoticonUrl + '" style="width: 18px; height: 18px" role="presentation" /></a></td>';
+    });
 
-      emoticonsHtml += '</table>';
+    emoticonsHtml += '</tr>';
+  });
 
-      return emoticonsHtml;
-    };
+  emoticonsHtml += '</table>';
 
-    return {
-      getHtml: getHtml
-    };
-  }
-);
+  return emoticonsHtml;
+};
+
+export default <any> {
+  getHtml: getHtml
+};
