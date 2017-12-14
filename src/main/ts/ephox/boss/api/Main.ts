@@ -4,7 +4,12 @@ import DomUniverse from './DomUniverse';
 import Gene from './Gene';
 import TestUniverse from './TestUniverse';
 import TextGene from './TextGene';
-import Logger from '../mutant/Logger'; // Being used by phoenix directly
+
+// NON API USAGE
+// used by phoenix
+import Logger from '../mutant/Logger';
+// used by soldier tests
+import Locator from '../mutant/Locator';
 
 export {
   BasicPage,
@@ -13,5 +18,6 @@ export {
   Gene,
   TestUniverse,
   TextGene,
-  Logger
+  Logger,
+  Locator
 };
