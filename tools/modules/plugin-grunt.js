@@ -7,6 +7,7 @@ var { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader'
 var LiveReloadPlugin = require('webpack-livereload-plugin');
 var path = require('path');
 var fs = require('fs');
+var cachedResolve = require('./cached-resolve');
 
 module.exports = (name, copy) => grunt => {
   const tsConfigPath = path.resolve(__dirname, '../../tsconfig.plugin.json');
@@ -28,7 +29,7 @@ module.exports = (name, copy) => grunt => {
         banner: '(function () {',
         footer: '})()',
         plugins: [
-          resolve(),
+          cachedResolve(),
           typescript({
             tsconfig: tsConfigPath,
             cacheRoot: path.join(scratchDir, 'rts2_cache'),

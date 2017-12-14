@@ -15,9 +15,7 @@
  * @private
  */
 
-declare const escape: any;
-
-export default <any> function (global) {
+(function () {
   var undef, lazyLoading, patchApplied;
   var delayedInits = [], $, win;
 
@@ -158,7 +156,7 @@ export default <any> function (global) {
         }
       }
 
-      var script: any = document.createElement('script');
+      var script = document.createElement('script');
       script.type = 'text/javascript';
       script.onload = script.onreadystatechange = function (e) {
         e = e || window.event;
@@ -280,7 +278,7 @@ export default <any> function (global) {
     };
 
     // Patch various jQuery functions
-    var jQueryFn: any = {};
+    var jQueryFn = {};
 
     // Patch some setter/getter functions these will
     // now be able to set/get the contents of editor instances for
@@ -387,4 +385,4 @@ export default <any> function (global) {
       return ed ? ed.getContent({ save: true }) : jQueryFn.attr.apply($(node), args);
     };
   };
-};
+})();
