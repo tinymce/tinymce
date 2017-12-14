@@ -11,11 +11,13 @@ var fs = require('fs');
 module.exports = (name, copy) => grunt => {
   const tsConfigPath = path.resolve(__dirname, '../../tsconfig.plugin.json');
   const rootPath = '../../../';
+  const resolvedRootPath = path.resolve(rootPath);
   const tsPluginSourceFile = 'src/main/ts/Plugin.ts';
   const jsPluginDestFile = 'dist/' + name + '/plugin.js';
   const jsPluginDestFileMin = 'dist/' + name + '/plugin.min.js';
   const tsDemoSourceFile = path.resolve('src/demo/ts/demo/Demo.ts');
   const jsDemoDestFile = path.resolve('scratch/compiled/demo.js');
+  const scratchDir = path.resolve(__dirname, '../../scratch');
 
   var config = {
     rollup: {
@@ -29,6 +31,7 @@ module.exports = (name, copy) => grunt => {
           resolve(),
           typescript({
             tsconfig: tsConfigPath,
+            cacheRoot: path.join(scratchDir, 'rts2_cache'),
             check: false,
             include: [
               'src/main/ts/**/*.ts',
@@ -61,7 +64,7 @@ module.exports = (name, copy) => grunt => {
         report: 'gzip'
       },
 
-      "plugin": {
+      'plugin': {
         files: [
           {
             src: jsPluginDestFile,
@@ -123,18 +126,6 @@ module.exports = (name, copy) => grunt => {
           path: path.dirname(jsDemoDestFile)
         }
       }
-    },
-
-    "bedrock-manual": {
-      "all": {
-        config: "config/bolt/browser.js",
-        // Exclude webdriver tests
-        testfiles: "src/test/js/browser/**/*Test.js",
-        projectdir: "../../..",
-        options: {
-          stopOnFailure: true
-        }
-      }
     }
   };
 
@@ -145,9 +136,9 @@ module.exports = (name, copy) => grunt => {
   }
 
   grunt.task.loadTasks(path.join(__dirname, '../../node_modules/grunt-rollup/tasks'));
-  grunt.task.loadTasks(path.join(__dirname, "../../node_modules/@ephox/bedrock/tasks"));
+  grunt.task.loadTasks(path.join(__dirname, '../../node_modules/@ephox/bedrock/tasks'));
   grunt.task.loadTasks(path.join(__dirname, '../../node_modules/grunt-contrib-uglify/tasks'));
   grunt.task.loadTasks(path.join(__dirname, '../../node_modules/grunt-webpack/tasks'));
 
-  grunt.registerTask("default", ["rollup", "uglify"].concat(copy ? ['copy'] : []));
+  grunt.registerTask('default', ['rollup', 'uglify'].concat(copy ? ['copy'] : []));
 };

@@ -3,8 +3,17 @@
 var resolve = require('rollup-plugin-node-resolve');
 var typescript = require('rollup-plugin-typescript2');
 var patcher = require('../../tools/modules/rollup-patch');
+var { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
+var LiveReloadPlugin = require('webpack-livereload-plugin');
+var path = require('path');
 
 module.exports = function (grunt) {
+  const scratchDir = path.resolve(__dirname, '../../scratch');
+  const tsConfigPath = path.resolve(__dirname, '../../tsconfig.json');
+  const tsDemoSourceFile = path.resolve('src/demo/ts/demo/Demos.ts');
+  const jsDemoDestFile = path.resolve('scratch/compiled/demo.js');
+  const rootPath = '../../';
+
   grunt.initConfig({
     rollup: {
       options: {
@@ -16,8 +25,11 @@ module.exports = function (grunt) {
         plugins: [
           resolve(),
           typescript({
+            tsconfig: tsConfigPath,
+            check: false,
+            cacheRoot: path.join(scratchDir, 'rts2_cache'),
             include: [
-              '../../**/*.ts'
+              'src/main/ts/**/*.ts'
             ]
           }),
           patcher()
@@ -30,15 +42,7 @@ module.exports = function (grunt) {
             dest: 'dist/tinymce/tinymce.js'
           }
         ]
-      }/*,
-      demo: {
-        files: [
-          {
-            src: 'src/demo/ts/demo/Demos.ts',
-            dest: 'scratch/compiled/demo.js'
-          }
-        ]
-      }*/
+      }
     },
 
     uglify: {
@@ -53,7 +57,7 @@ module.exports = function (grunt) {
         }
       },
 
-      'plugin': {
+      'core': {
         files: [
           {
             src: 'dist/tinymce/tinymce.js',
@@ -74,13 +78,56 @@ module.exports = function (grunt) {
       }
     },
 
-    watch: {
-      demo: {
-        files: ['src/**/*.ts'],
-        tasks: ['rollup:demo'],
-        options: {
-          livereload: true,
-          spawn: false
+    webpack: {
+      options: {
+        watch: true
+      },
+      dev: {
+        entry: tsDemoSourceFile,
+        devtool: 'source-map',
+
+        resolve: {
+          extensions: ['.ts', '.js'],
+          plugins: [
+            new TsConfigPathsPlugin({
+              baseUrl: rootPath,
+              compiler: 'typescript',
+              configFileName: tsConfigPath
+            })
+          ]
+        },
+
+        module: {
+          rules: [
+            {
+              test: /\.js$/,
+              use: ['source-map-loader'],
+              enforce: 'pre'
+            },
+
+            {
+              test: /\.ts$/,
+              use: [
+                {
+                  loader: 'awesome-typescript-loader',
+                  options: {
+                    transpileOnly: true,
+                    configFileName: tsConfigPath
+                  }
+                }
+              ]
+            }
+          ]
+        },
+
+        plugins: [
+          new LiveReloadPlugin(),
+          new CheckerPlugin()
+        ],
+
+        output: {
+          filename: path.basename(jsDemoDestFile),
+          path: path.dirname(jsDemoDestFile)
         }
       }
     },
@@ -96,6 +143,7 @@ module.exports = function (grunt) {
   grunt.task.loadTasks('../../node_modules/grunt-rollup/tasks');
   grunt.task.loadTasks('../../node_modules/grunt-contrib-copy/tasks');
   grunt.task.loadTasks('../../node_modules/grunt-contrib-uglify/tasks');
+  grunt.task.loadTasks('../../node_modules/grunt-webpack/tasks');
   grunt.task.loadTasks('../../tools/tasks');
 
   grunt.registerTask('default', ['globals', 'rollup', 'copy', 'uglify']);

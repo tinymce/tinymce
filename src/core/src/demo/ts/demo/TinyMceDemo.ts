@@ -13,9 +13,9 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 /*eslint no-console:0 */
 
-ModernTheme();
-
 export default <any> function () {
+  ModernTheme();
+
   var textarea = document.createElement('textarea');
   textarea.innerHTML = '<p>Bolt</p>';
 
