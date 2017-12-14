@@ -73,6 +73,9 @@ import ToolbarGroup from './ui/ToolbarGroup';
 import TouchMenu from './ui/TouchMenu';
 import Typeahead from './ui/Typeahead';
 import UiSketcher from './ui/UiSketcher';
+import TapEvent from '../events/TapEvent'; // Used directly by mobile theme
+import AlloyLogger from '../log/AlloyLogger'; // Used directly by mobile theme
+import Debugging from '../debugging/Debugging'; // Used directly by mobile theme
 
 export {
   AddEventsBehaviour,
@@ -149,5 +152,8 @@ export {
   ToolbarGroup,
   TouchMenu,
   Typeahead,
-  UiSketcher
+  UiSketcher,
+  TapEvent,
+  AlloyLogger,
+  Debugging
 };
