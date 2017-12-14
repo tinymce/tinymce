@@ -71,7 +71,6 @@ module.exports = function (grunt) {
           baseDir: "tinymce",
 
           excludes: [
-            "src/**/bolt/bootstrap-*",
             "src/**/dist",
             "src/**/scratch",
             "src/**/lib",
@@ -430,12 +429,12 @@ module.exports = function (grunt) {
 
     'bedrock-manual': {
       core: {
-        config: 'config/bolt/browser.js',
+        config: 'tsconfig.json',
         projectdir: '.',
         stopOnFailure: true,
         testfiles: [
-          'src/**/src/test/js/atomic/**/*Test.js',
-          'src/**/src/test/js/browser/**/*Test.js'
+          'src/**/src/test/ts/atomic/**/*Test.ts',
+          'src/**/src/test/ts/browser/**/*Test.ts'
         ],
         customRoutes: 'src/core/src/test/json/routes.json'
       }
@@ -444,8 +443,8 @@ module.exports = function (grunt) {
     'bedrock-auto': {
       phantomjs: {
         browser: 'phantomjs',
-        config: 'config/bolt/browser.js',
-        testfiles: ['src/**/src/test/js/**/*Test.js'],
+        config: 'tsconfig.json',
+        testfiles: ['src/**/src/test/ts/**/*Test.ts'],
         stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
@@ -453,10 +452,21 @@ module.exports = function (grunt) {
         name: 'phantomjs'
       },
 
+      'chrome-headless': {
+        browser: 'chrome-headless',
+        config: 'tsconfig.json',
+        testfiles: ['src/**/src/test/ts/**/*Test.ts'],
+        stopOnFailure: true,
+        overallTimeout: 600000,
+        singleTimeout: 300000,
+        customRoutes: 'src/core/src/test/json/routes.json',
+        name: 'chrome-headless'
+      },
+
       chrome: {
         browser: 'chrome',
-        config: 'config/bolt/browser.js',
-        testfiles: ['src/**/src/test/js/**/*Test.js'],
+        config: 'tsconfig.json',
+        testfiles: ['src/**/src/test/ts/**/*Test.ts'],
         stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
@@ -466,8 +476,8 @@ module.exports = function (grunt) {
 
       firefox: {
         browser: 'firefox',
-        config: 'config/bolt/browser.js',
-        testfiles: ['src/**/src/test/js/**/*Test.js'],
+        config: 'tsconfig.json',
+        testfiles: ['src/**/src/test/ts/**/*Test.ts'],
         stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
@@ -477,8 +487,8 @@ module.exports = function (grunt) {
 
       MicrosoftEdge: {
         browser: 'MicrosoftEdge',
-        config: 'config/bolt/browser.js',
-        testfiles: ['src/**/src/test/js/**/*Test.js'],
+        config: 'tsconfig.json',
+        testfiles: ['src/**/src/test/ts/**/*Test.ts'],
         stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
@@ -488,8 +498,8 @@ module.exports = function (grunt) {
 
       ie: {
         browser: 'ie',
-        config: 'config/bolt/browser.js',
-        testfiles: ['src/**/src/test/js/**/*Test.js'],
+        config: 'tsconfig.json',
+        testfiles: ['src/**/src/test/ts/**/*Test.ts'],
         stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
@@ -653,7 +663,6 @@ module.exports = function (grunt) {
 
   require("load-grunt-tasks")(grunt);
   grunt.loadTasks("tools/tasks");
-  grunt.loadNpmTasks('@ephox/bolt');
   grunt.loadNpmTasks('@ephox/bedrock');
   grunt.loadNpmTasks('grunt-tslint');
 

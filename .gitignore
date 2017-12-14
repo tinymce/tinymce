@@ -34,7 +34,6 @@ mentions
 *.full.js
 *.min.css
 *.dev.less
-**/bolt/bootstrap*.js
 **/dist
 **/scratch
 **/lib

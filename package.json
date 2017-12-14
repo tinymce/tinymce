@@ -31,7 +31,6 @@
   },
   "devDependencies": {
     "@ephox/bedrock": "^1.5.0",
-    "@ephox/bolt": "^1.6.0",
     "@ephox/imagetools": "^2.0.0",
     "@ephox/mcagar": "^1.1.1",
     "acorn": "^5.2.1",
