@@ -56,146 +56,145 @@ import WordCountPlugin from 'tinymce/plugins/wordcount/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 
 /*eslint no-console:0 */
-
-AdvListPlugin();
-AnchorPlugin();
-AutoLinkPlugin();
-AutoResizePlugin();
-AutoSavePlugin();
-BbCodePlugin();
-CharMapPlugin();
-CodePlugin();
-CodeSamplePlugin();
-ColorPickerPlugin();
-ContextMenuPlugin();
-DirectionalityPlugin();
-EmoticonsPlugin();
-FullPagePlugin();
-FullScreenPlugin();
-HrPlugin();
-ImagePlugin();
-ImageToolsPlugin();
-ImportCssPlugin();
-InsertDatetimePlugin();
-LegacyOutputPlugin();
-LinkPlugin();
-ListsPlugin();
-MediaPlugin();
-NonBreakingPlugin();
-NonEditablePlugin();
-PageBreakPlugin();
-PastePlugin();
-PreviewPlugin();
-PrintPlugin();
-SavePlugin();
-SearchReplacePlugin();
-SpellCheckerPlugin();
-TabFocusPlugin();
-TablePlugin();
-TemplatePlugin();
-TextColorPlugin();
-TextPatternPlugin();
-TocPlugin();
-VisualBlocksPlugin();
-VisualCharsPlugin();
-WordCountPlugin();
-ModernTheme();
-
-var cmd = function (command, value?) {
-  return { command: command, value: value };
-};
-
-var commands = [
-  cmd('Bold'),
-  cmd('Italic'),
-  cmd('Underline'),
-  cmd('Strikethrough'),
-  cmd('Superscript'),
-  cmd('Subscript'),
-  cmd('Cut'),
-  cmd('Copy'),
-  cmd('Paste'),
-  cmd('Unlink'),
-  cmd('JustifyLeft'),
-  cmd('JustifyCenter'),
-  cmd('JustifyRight'),
-  cmd('JustifyFull'),
-  cmd('JustifyNone'),
-  cmd('InsertUnorderedList'),
-  cmd('InsertOrderedList'),
-  cmd('ForeColor', 'red'),
-  cmd('HiliteColor', 'green'),
-  cmd('FontName', 'Arial'),
-  cmd('FontSize', 7),
-  cmd('RemoveFormat'),
-  cmd('mceBlockQuote'),
-  cmd('FormatBlock', 'h1'),
-  cmd('mceInsertContent', 'abc'),
-  cmd('mceToggleFormat', 'bold'),
-  cmd('mceSetContent', 'abc'),
-  cmd('Indent'),
-  cmd('Outdent'),
-  cmd('InsertHorizontalRule'),
-  cmd('mceToggleVisualAid'),
-  cmd('mceInsertLink', 'url'),
-  cmd('selectAll'),
-  cmd('delete'),
-  cmd('mceNewDocument'),
-  cmd('Undo'),
-  cmd('Redo'),
-  cmd('mceAutoResize'),
-  cmd('mceShowCharmap'),
-  cmd('mceCodeEditor'),
-  cmd('mceDirectionLTR'),
-  cmd('mceDirectionRTL'),
-  cmd('mceFullPageProperties'),
-  cmd('mceFullscreen'),
-  cmd('mceImage'),
-  cmd('mceInsertDate'),
-  cmd('mceInsertTime'),
-  cmd('InsertDefinitionList'),
-  cmd('mceNonBreaking'),
-  cmd('mcePageBreak'),
-  cmd('mcePreview'),
-  cmd('mcePrint'),
-  cmd('mceSave'),
-  cmd('SearchReplace'),
-  cmd('mceSpellcheck'),
-  cmd('mceInsertTemplate', '{$user}'),
-  cmd('mceVisualBlocks'),
-  cmd('mceVisualChars'),
-  cmd('mceMedia'),
-  cmd('mceAnchor'),
-  cmd('mceTableSplitCells'),
-  cmd('mceTableMergeCells'),
-  cmd('mceTableInsertRowBefore'),
-  cmd('mceTableInsertRowAfter'),
-  cmd('mceTableInsertColBefore'),
-  cmd('mceTableInsertColAfter'),
-  cmd('mceTableDeleteCol'),
-  cmd('mceTableDeleteRow'),
-  cmd('mceTableCutRow'),
-  cmd('mceTableCopyRow'),
-  cmd('mceTablePasteRowBefore'),
-  cmd('mceTablePasteRowAfter'),
-  cmd('mceTableDelete'),
-  cmd('mceInsertTable'),
-  cmd('mceTableProps'),
-  cmd('mceTableRowProps'),
-  cmd('mceTableCellProps'),
-  cmd('mceEditImage')
-];
-
-Arr.each(commands, function (cmd) {
-  var btn = document.createElement('button');
-  btn.innerHTML = cmd.command;
-  btn.onclick = function () {
-    EditorManager.activeEditor.execCommand(cmd.command, false, cmd.value);
-  };
-  document.querySelector('#ephox-ui').appendChild(btn);
-});
-
 export default <any> function () {
+  AdvListPlugin();
+  AnchorPlugin();
+  AutoLinkPlugin();
+  AutoResizePlugin();
+  AutoSavePlugin();
+  BbCodePlugin();
+  CharMapPlugin();
+  CodePlugin();
+  CodeSamplePlugin();
+  ColorPickerPlugin();
+  ContextMenuPlugin();
+  DirectionalityPlugin();
+  EmoticonsPlugin();
+  FullPagePlugin();
+  FullScreenPlugin();
+  HrPlugin();
+  ImagePlugin();
+  ImageToolsPlugin();
+  ImportCssPlugin();
+  InsertDatetimePlugin();
+  LegacyOutputPlugin();
+  LinkPlugin();
+  ListsPlugin();
+  MediaPlugin();
+  NonBreakingPlugin();
+  NonEditablePlugin();
+  PageBreakPlugin();
+  PastePlugin();
+  PreviewPlugin();
+  PrintPlugin();
+  SavePlugin();
+  SearchReplacePlugin();
+  SpellCheckerPlugin();
+  TabFocusPlugin();
+  TablePlugin();
+  TemplatePlugin();
+  TextColorPlugin();
+  TextPatternPlugin();
+  TocPlugin();
+  VisualBlocksPlugin();
+  VisualCharsPlugin();
+  WordCountPlugin();
+  ModernTheme();
+
+  var cmd = function (command, value?) {
+    return { command: command, value: value };
+  };
+
+  var commands = [
+    cmd('Bold'),
+    cmd('Italic'),
+    cmd('Underline'),
+    cmd('Strikethrough'),
+    cmd('Superscript'),
+    cmd('Subscript'),
+    cmd('Cut'),
+    cmd('Copy'),
+    cmd('Paste'),
+    cmd('Unlink'),
+    cmd('JustifyLeft'),
+    cmd('JustifyCenter'),
+    cmd('JustifyRight'),
+    cmd('JustifyFull'),
+    cmd('JustifyNone'),
+    cmd('InsertUnorderedList'),
+    cmd('InsertOrderedList'),
+    cmd('ForeColor', 'red'),
+    cmd('HiliteColor', 'green'),
+    cmd('FontName', 'Arial'),
+    cmd('FontSize', 7),
+    cmd('RemoveFormat'),
+    cmd('mceBlockQuote'),
+    cmd('FormatBlock', 'h1'),
+    cmd('mceInsertContent', 'abc'),
+    cmd('mceToggleFormat', 'bold'),
+    cmd('mceSetContent', 'abc'),
+    cmd('Indent'),
+    cmd('Outdent'),
+    cmd('InsertHorizontalRule'),
+    cmd('mceToggleVisualAid'),
+    cmd('mceInsertLink', 'url'),
+    cmd('selectAll'),
+    cmd('delete'),
+    cmd('mceNewDocument'),
+    cmd('Undo'),
+    cmd('Redo'),
+    cmd('mceAutoResize'),
+    cmd('mceShowCharmap'),
+    cmd('mceCodeEditor'),
+    cmd('mceDirectionLTR'),
+    cmd('mceDirectionRTL'),
+    cmd('mceFullPageProperties'),
+    cmd('mceFullscreen'),
+    cmd('mceImage'),
+    cmd('mceInsertDate'),
+    cmd('mceInsertTime'),
+    cmd('InsertDefinitionList'),
+    cmd('mceNonBreaking'),
+    cmd('mcePageBreak'),
+    cmd('mcePreview'),
+    cmd('mcePrint'),
+    cmd('mceSave'),
+    cmd('SearchReplace'),
+    cmd('mceSpellcheck'),
+    cmd('mceInsertTemplate', '{$user}'),
+    cmd('mceVisualBlocks'),
+    cmd('mceVisualChars'),
+    cmd('mceMedia'),
+    cmd('mceAnchor'),
+    cmd('mceTableSplitCells'),
+    cmd('mceTableMergeCells'),
+    cmd('mceTableInsertRowBefore'),
+    cmd('mceTableInsertRowAfter'),
+    cmd('mceTableInsertColBefore'),
+    cmd('mceTableInsertColAfter'),
+    cmd('mceTableDeleteCol'),
+    cmd('mceTableDeleteRow'),
+    cmd('mceTableCutRow'),
+    cmd('mceTableCopyRow'),
+    cmd('mceTablePasteRowBefore'),
+    cmd('mceTablePasteRowAfter'),
+    cmd('mceTableDelete'),
+    cmd('mceInsertTable'),
+    cmd('mceTableProps'),
+    cmd('mceTableRowProps'),
+    cmd('mceTableCellProps'),
+    cmd('mceEditImage')
+  ];
+
+  Arr.each(commands, function (cmd) {
+    var btn = document.createElement('button');
+    btn.innerHTML = cmd.command;
+    btn.onclick = function () {
+      EditorManager.activeEditor.execCommand(cmd.command, false, cmd.value);
+    };
+    document.querySelector('#ephox-ui').appendChild(btn);
+  });
+
   EditorManager.init({
     skin_url: '../../../../skins/lightgray/dist/lightgray',
     selector: "textarea.tinymce",

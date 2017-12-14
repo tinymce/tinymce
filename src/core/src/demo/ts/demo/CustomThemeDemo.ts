@@ -12,8 +12,6 @@ import tinymce from 'tinymce/core/api/Tinymce';
 
 /*eslint no-console:0 */
 
-
-
 export default <any> function () {
   var textarea = document.createElement('textarea');
   textarea.rows = 20;

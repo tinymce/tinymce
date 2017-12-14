@@ -61,53 +61,53 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 declare const window: any;
 
-AdvListPlugin();
-AnchorPlugin();
-AutoLinkPlugin();
-AutoResizePlugin();
-AutoSavePlugin();
-BbCodePlugin();
-CharMapPlugin();
-CodePlugin();
-CodeSamplePlugin();
-ColorPickerPlugin();
-ContextMenuPlugin();
-DirectionalityPlugin();
-EmoticonsPlugin();
-FullPagePlugin();
-FullScreenPlugin();
-HrPlugin();
-ImagePlugin();
-ImageToolsPlugin();
-ImportCssPlugin();
-InsertDatetimePlugin();
-LegacyOutputPlugin();
-LinkPlugin();
-ListsPlugin();
-MediaPlugin();
-NonBreakingPlugin();
-NonEditablePlugin();
-PageBreakPlugin();
-PastePlugin();
-PreviewPlugin();
-PrintPlugin();
-SavePlugin();
-SearchReplacePlugin();
-SpellCheckerPlugin();
-TabFocusPlugin();
-TablePlugin();
-TemplatePlugin();
-TextColorPlugin();
-TextPatternPlugin();
-TocPlugin();
-VisualBlocksPlugin();
-VisualCharsPlugin();
-WordCountPlugin();
-ModernTheme();
-MobileTheme();
-HelpPlugin();
-
 export default <any> function () {
+  AdvListPlugin();
+  AnchorPlugin();
+  AutoLinkPlugin();
+  AutoResizePlugin();
+  AutoSavePlugin();
+  BbCodePlugin();
+  CharMapPlugin();
+  CodePlugin();
+  CodeSamplePlugin();
+  ColorPickerPlugin();
+  ContextMenuPlugin();
+  DirectionalityPlugin();
+  EmoticonsPlugin();
+  FullPagePlugin();
+  FullScreenPlugin();
+  HrPlugin();
+  ImagePlugin();
+  ImageToolsPlugin();
+  ImportCssPlugin();
+  InsertDatetimePlugin();
+  LegacyOutputPlugin();
+  LinkPlugin();
+  ListsPlugin();
+  MediaPlugin();
+  NonBreakingPlugin();
+  NonEditablePlugin();
+  PageBreakPlugin();
+  PastePlugin();
+  PreviewPlugin();
+  PrintPlugin();
+  SavePlugin();
+  SearchReplacePlugin();
+  SpellCheckerPlugin();
+  TabFocusPlugin();
+  TablePlugin();
+  TemplatePlugin();
+  TextColorPlugin();
+  TextPatternPlugin();
+  TocPlugin();
+  VisualBlocksPlugin();
+  VisualCharsPlugin();
+  WordCountPlugin();
+  ModernTheme();
+  MobileTheme();
+  HelpPlugin();
+
   PluginManager.urls.emoticons = '../../../../plugins/emoticons/dist/emoticons';
 
   var settings = {
@@ -189,8 +189,6 @@ export default <any> function () {
   };
 
   EditorManager.init(settings);
-
-
   EditorManager.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
 
   window.tinymce = EditorManager;
