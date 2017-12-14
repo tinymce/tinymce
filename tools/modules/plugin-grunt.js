@@ -22,7 +22,7 @@ module.exports = (name, copy) => grunt => {
   var config = {
     rollup: {
       options: {
-        treeshake: false,
+        treeshake: true,
         moduleName: name,
         format: 'iife',
         banner: '(function () {',

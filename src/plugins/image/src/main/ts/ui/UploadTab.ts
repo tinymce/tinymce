@@ -1,4 +1,4 @@
-import { URL } from '@ephox/sand';
+import URL from '@ephox/sand/lib/main/ts/ephox/sand/api/URL';
 import Factory from 'tinymce/core/ui/Factory';
 import Settings from '../api/Settings';
 import Utils from '../core/Utils';

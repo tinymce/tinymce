@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { FileReader } from '@ephox/sand';
+import FileReader from '@ephox/sand/lib/main/ts/ephox/sand/api/FileReader';
 import Promise from 'tinymce/core/util/Promise';
 import Tools from 'tinymce/core/util/Tools';
 import XHR from 'tinymce/core/util/XHR';
