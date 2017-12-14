@@ -244,8 +244,6 @@ module.exports = function (grunt) {
               }
             }));
 
-            var src = grunt.file.read("js/tinymce/tinymce.js").toString();
-
             zip.addFile(
               "jquery.tinymce.js",
               "js/tinymce/jquery.tinymce.min.js"
@@ -502,7 +500,6 @@ module.exports = function (grunt) {
 
     subgrunt: {
       'core': { path: 'src/core' },
-      'ui': { path: 'src/ui' },
       'advlist-plugin': { path: 'src/plugins/advlist' },
       'anchor-plugin': { path: 'src/plugins/anchor' },
       'autolink-plugin': { path: 'src/plugins/autolink' },

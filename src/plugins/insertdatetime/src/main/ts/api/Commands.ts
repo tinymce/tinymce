@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Settings from 'tinymce/plugins/fullpage/api/Settings';
+import Settings from './Settings';
 import Actions from '../core/Actions';
 
 var register = function (editor) {

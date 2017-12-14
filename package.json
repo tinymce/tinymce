@@ -19,15 +19,15 @@
     "test": "grunt bedrock-manual"
   },
   "dependencies": {
-    "@ephox/agar": "^2.4.0",
-    "@ephox/alloy": "0.8.4",
-    "@ephox/boulder": "1.1.0",
-    "@ephox/darwin": "^2.0.1",
-    "@ephox/katamari": "^1.1.0",
-    "@ephox/refute": "^1.1.0",
-    "@ephox/sand": "^1.1.1",
-    "@ephox/snooker": "^3.0.6",
-    "@ephox/sugar": "^3.1.0"
+    "@ephox/agar": "*",
+    "@ephox/alloy": "*",
+    "@ephox/boulder": "*",
+    "@ephox/darwin": "*",
+    "@ephox/katamari": "*",
+    "@ephox/refute": "*",
+    "@ephox/sand": "*",
+    "@ephox/snooker": "*",
+    "@ephox/sugar": "*"
   },
   "devDependencies": {
     "@ephox/bedrock": "^1.5.0",
@@ -35,6 +35,7 @@
     "@ephox/imagetools": "^2.0.0",
     "@ephox/mcagar": "^1.1.1",
     "acorn": "^5.2.1",
+    "awesome-typescript-loader": "^3.4.1",
     "escodegen": "^1.9.0",
     "grunt": "~1.0.1",
     "grunt-contrib-clean": "~1.0.0",
@@ -47,6 +48,7 @@
     "grunt-replace": "^1.0.1",
     "grunt-rollup": "^8.2.0",
     "grunt-tslint": "^5.0.1",
+    "grunt-webpack": "^3.0.2",
     "jquery": "~1.11.3",
     "less-plugin-autoprefix": "^1.5.1",
     "load-grunt-tasks": "~3.5.2",
@@ -55,7 +57,10 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-typescript2": "^0.8.4",
     "rollup-plugin-uglify": "^2.0.1",
+    "source-map-loader": "^0.2.3",
     "tslint": "^5.8.0",
-    "typescript": "^2.6.2"
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0",
+    "webpack-livereload-plugin": "^1.0.0"
   }
 }

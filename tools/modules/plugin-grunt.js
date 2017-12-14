@@ -3,13 +3,24 @@
 var resolve = require('rollup-plugin-node-resolve');
 var typescript = require('rollup-plugin-typescript2');
 var patcher = require('./rollup-patch');
+var { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
+var LiveReloadPlugin = require('webpack-livereload-plugin');
 var path = require('path');
+var fs = require('fs');
 
 module.exports = (name, copy) => grunt => {
+  const tsConfigPath = path.resolve(__dirname, '../../tsconfig.plugin.json');
+  const rootPath = '../../../';
+  const tsPluginSourceFile = 'src/main/ts/Plugin.ts';
+  const jsPluginDestFile = 'dist/' + name + '/plugin.js';
+  const jsPluginDestFileMin = 'dist/' + name + '/plugin.min.js';
+  const tsDemoSourceFile = path.resolve('src/demo/ts/demo/Demo.ts');
+  const jsDemoDestFile = path.resolve('scratch/compiled/demo.js');
+
   var config = {
     rollup: {
       options: {
-        treeshake: true,
+        treeshake: false,
         moduleName: name,
         format: 'iife',
         banner: '(function () {',
@@ -17,9 +28,11 @@ module.exports = (name, copy) => grunt => {
         plugins: [
           resolve(),
           typescript({
-            tsconfig: '../../tsconfig.plugin.json',
+            tsconfig: tsConfigPath,
+            check: false,
             include: [
-              '../../**/*.ts'
+              'src/main/ts/**/*.ts',
+              '../../core/dist/globals/tinymce/core/**/*.ts'
             ]
           }),
           patcher()
@@ -28,16 +41,8 @@ module.exports = (name, copy) => grunt => {
       plugin: {
         files:[
           {
-            dest: 'dist/' + name + '/plugin.js',
-            src: 'src/main/ts/Plugin.ts'
-          }
-        ]
-      },
-      demo: {
-        files: [
-          {
-            dest: 'scratch/compiled/demo.js',
-            src: 'src/demo/ts/demo/Demo.ts'
+            src: tsPluginSourceFile,
+            dest: jsPluginDestFile
           }
         ]
       }
@@ -59,20 +64,63 @@ module.exports = (name, copy) => grunt => {
       "plugin": {
         files: [
           {
-            src: "dist/" + name + "/plugin.js",
-            dest: "dist/" + name + "/plugin.min.js"
+            src: jsPluginDestFile,
+            dest: jsPluginDestFileMin
           }
         ]
       }
     },
 
-    watch: {
-      demo: {
-        files: ["src/**/*.ts"],
-        tasks: ["rollup:demo"],
-        options: {
-          livereload: true,
-          spawn: false
+    webpack: {
+      options: {
+        watch: true
+      },
+      dev: {
+        entry: tsDemoSourceFile,
+        devtool: 'source-map',
+
+        resolve: {
+          extensions: ['.ts', '.js'],
+          plugins: [
+            new TsConfigPathsPlugin({
+              baseUrl: rootPath,
+              compiler: 'typescript',
+              configFileName: tsConfigPath
+            })
+          ]
+        },
+
+        module: {
+          rules: [
+            {
+              test: /\.js$/,
+              use: ['source-map-loader'],
+              enforce: 'pre'
+            },
+
+            {
+              test: /\.ts$/,
+              use: [
+                {
+                  loader: 'awesome-typescript-loader',
+                  options: {
+                    transpileOnly: true,
+                    configFileName: tsConfigPath
+                  }
+                }
+              ]
+            }
+          ]
+        },
+
+        plugins: [
+          new LiveReloadPlugin(),
+          new CheckerPlugin()
+        ],
+
+        output: {
+          filename: path.basename(jsDemoDestFile),
+          path: path.dirname(jsDemoDestFile)
         }
       }
     },
@@ -99,7 +147,7 @@ module.exports = (name, copy) => grunt => {
   grunt.task.loadTasks(path.join(__dirname, '../../node_modules/grunt-rollup/tasks'));
   grunt.task.loadTasks(path.join(__dirname, "../../node_modules/@ephox/bedrock/tasks"));
   grunt.task.loadTasks(path.join(__dirname, '../../node_modules/grunt-contrib-uglify/tasks'));
-  grunt.task.loadTasks(path.join(__dirname, '../../node_modules/grunt-contrib-watch/tasks'));
+  grunt.task.loadTasks(path.join(__dirname, '../../node_modules/grunt-webpack/tasks'));
 
   grunt.registerTask("default", ["rollup", "uglify"].concat(copy ? ['copy'] : []));
 };
