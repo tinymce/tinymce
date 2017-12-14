@@ -14,15 +14,16 @@ module.exports = function () {
         }
 
         fs.stat(file, function (err, stat) {
-            if (!err) {
-              statCache[file] = stat.isFile() || stat.isFIFO();
-                return cb(null, stat.isFile() || stat.isFIFO());
-            }
-            if (err.code === 'ENOENT' || err.code === 'ENOTDIR') {
-              statCache[file] = false;
-              return cb(null, false);
-            }
-            return cb(err);
+          if (!err) {
+            var exists = stat.isFile() || stat.isFIFO();
+            statCache[file] = exists;
+            return cb(null, exists);
+          }
+          if (err.code === 'ENOENT' || err.code === 'ENOTDIR') {
+            statCache[file] = false;
+            return cb(null, false);
+          }
+          return cb(err);
         });
       },
       readFile: function (filePath, callback) {

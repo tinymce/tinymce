@@ -109,7 +109,7 @@ module.exports = function (grunt) {
       },
       dev: {
         entry: tsDemoSourceFile,
-        devtool: 'source-map',
+        //devtool: 'source-map',
 
         resolve: {
           extensions: ['.ts', '.js'],
