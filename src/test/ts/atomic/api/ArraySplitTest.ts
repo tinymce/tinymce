@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import Arrays from 'ephox/polaris/api/Arrays';
 import Splitting from 'ephox/polaris/api/Splitting';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.Arrays.splitby', function() {
   var check = function (expected, input, pred) {

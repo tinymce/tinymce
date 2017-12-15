@@ -1,7 +1,7 @@
 import PositionArray from 'ephox/polaris/api/PositionArray';
 import Strings from 'ephox/polaris/api/Strings';
 import Parrays from 'ephox/polaris/test/Parrays';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.PositionArray.splits', function() {
   var subdivide = function (unit, positions) {

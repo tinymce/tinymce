@@ -1,5 +1,5 @@
 import Boundaries from 'ephox/polaris/array/Boundaries';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('BoundariesTest', function() {
   var comparator = function (a, b) {

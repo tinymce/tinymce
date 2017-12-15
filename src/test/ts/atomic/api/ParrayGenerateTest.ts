@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import PositionArray from 'ephox/polaris/api/PositionArray';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.PositionArray.generate', function() {
   var generator = function (item, start) {

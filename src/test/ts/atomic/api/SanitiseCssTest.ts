@@ -1,5 +1,5 @@
 import Sanitise from 'ephox/polaris/string/Sanitise';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.Sanitise.css', function() {
   var check = function (expected, input) {

@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import Chars from 'ephox/polaris/pattern/Chars';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CharsTest', function() {
   var supported = [ 'fr','en_au','pt','it','nl','en_uk','pt_pt','de','nb','en_br','sv','da','en','es','en_gb','fi','en_us' ];

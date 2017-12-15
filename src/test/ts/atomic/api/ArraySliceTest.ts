@@ -1,5 +1,5 @@
 import Arrays from 'ephox/polaris/api/Arrays';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.Arrays.sliceby', function() {
   var check = function (expected, input, pred) {

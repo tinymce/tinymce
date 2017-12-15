@@ -1,5 +1,5 @@
 import Strings from 'ephox/polaris/api/Strings';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.Strings.splits', function() {
   var check = function (expected, input, points) {

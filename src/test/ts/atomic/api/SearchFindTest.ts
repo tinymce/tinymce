@@ -4,7 +4,7 @@ import Pattern from 'ephox/polaris/api/Pattern';
 import Search from 'ephox/polaris/api/Search';
 import Safe from 'ephox/polaris/pattern/Safe';
 import { Struct } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.Search.findall (using api.Pattern)', function() {
   var checkAll = function (expected, input, pattern) {
