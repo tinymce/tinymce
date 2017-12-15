@@ -4,7 +4,7 @@ import Locator from 'ephox/boss/mutant/Locator';
 import Tracks from 'ephox/boss/mutant/Tracks';
 import { Arr } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('DownTest', function() {
   var family = Tracks.track(

@@ -1,5 +1,5 @@
 import Attribution from 'ephox/boss/mutant/Attribution';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('AttributionTest', function() {
   var item = {

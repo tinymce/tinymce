@@ -3,7 +3,7 @@ import Tracks from 'ephox/boss/mutant/Tracks';
 import Up from 'ephox/boss/mutant/Up';
 import { Arr } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('UpTest', function() {
   var family = Tracks.track({
