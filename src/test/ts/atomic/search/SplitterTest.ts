@@ -6,7 +6,7 @@ import Spot from 'ephox/phoenix/api/data/Spot';
 import Splitter from 'ephox/phoenix/search/Splitter';
 import Finder from 'ephox/phoenix/test/Finder';
 import TestRenders from 'ephox/phoenix/test/TestRenders';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('SplitterTest', function() {
   var checkSubdivide = function (toplevel, expected, id, positions, offset, data) {

@@ -9,7 +9,7 @@ import MatchSplitter from 'ephox/phoenix/search/MatchSplitter';
 import Finder from 'ephox/phoenix/test/Finder';
 import TestRenders from 'ephox/phoenix/test/TestRenders';
 import { PositionArray } from '@ephox/polaris';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('MatchSplitterTest', function() {
   var data = function () {

@@ -4,7 +4,7 @@ import { TextGene } from '@ephox/boss';
 import Split from 'ephox/phoenix/api/general/Split';
 import Finder from 'ephox/phoenix/test/Finder';
 import TestRenders from 'ephox/phoenix/test/TestRenders';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('IdentifyTest', function() {
   var check = function (all, expected, baseid, baseoffset, endid, endoffset, input) {

@@ -20,7 +20,7 @@
     "@ephox/polaris": "*"
   },
   "devDependencies": {
-    "@ephox/refute": "*",
+    "@ephox/bedrock": "*",
     "@ephox/sugar": "*",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",

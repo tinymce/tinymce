@@ -5,7 +5,7 @@ import { Arr } from '@ephox/katamari';
 import Group from 'ephox/phoenix/family/Group';
 import Finder from 'ephox/phoenix/test/Finder';
 import TestRenders from 'ephox/phoenix/test/TestRenders';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('GroupTest', function() {
   var doc = TestUniverse(

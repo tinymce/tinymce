@@ -3,7 +3,7 @@ import { TestUniverse } from '@ephox/boss';
 import Walker from 'ephox/phoenix/gather/Walker';
 import Walkers from 'ephox/phoenix/gather/Walkers';
 import Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('WalkerTest', function() {
   var universe = TestUniverse(

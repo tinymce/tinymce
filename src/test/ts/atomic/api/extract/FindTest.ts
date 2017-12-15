@@ -4,7 +4,7 @@ import { TextGene } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 import Extract from 'ephox/phoenix/api/general/Extract';
 import Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.Extract.find', function() {
   var doc = TestUniverse(

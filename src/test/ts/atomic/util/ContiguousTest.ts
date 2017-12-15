@@ -5,7 +5,7 @@ import { Arr } from '@ephox/katamari';
 import Finder from 'ephox/phoenix/test/Finder';
 import TestRenders from 'ephox/phoenix/test/TestRenders';
 import Contiguous from 'ephox/phoenix/util/Contiguous';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Contiguous Text Nodes Test', function() {
   var doc = TestUniverse(

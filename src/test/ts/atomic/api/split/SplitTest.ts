@@ -4,7 +4,7 @@ import { TextGene } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 import Split from 'ephox/phoenix/api/general/Split';
 import Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.Split.(split,splitByPair)', function() {
   var generate = function (text) {

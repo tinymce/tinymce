@@ -5,7 +5,7 @@ import Finder from 'ephox/phoenix/test/Finder';
 import TestRenders from 'ephox/phoenix/test/TestRenders';
 import Wrapper from 'ephox/phoenix/wrap/Wrapper';
 import Wraps from 'ephox/phoenix/wrap/Wraps';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('WrapperTest', function() {
   var make = function () {

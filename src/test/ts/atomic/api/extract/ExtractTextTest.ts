@@ -3,7 +3,7 @@ import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import Extract from 'ephox/phoenix/api/general/Extract';
 import Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ExtractTextTest', function() {
   var doc = TestUniverse(

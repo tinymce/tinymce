@@ -5,7 +5,7 @@ import { Option } from '@ephox/katamari';
 import Walker from 'ephox/phoenix/gather/Walker';
 import Walkers from 'ephox/phoenix/gather/Walkers';
 import Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('WalkerPathTest', function() {
   var universe = TestUniverse(

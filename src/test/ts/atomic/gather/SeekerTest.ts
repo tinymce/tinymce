@@ -4,7 +4,7 @@ import { TextGene } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 import Gather from 'ephox/phoenix/api/general/Gather';
 import Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Seeker Test', function() {
   var some = Option.some;

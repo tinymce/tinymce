@@ -5,7 +5,7 @@ import { Arr } from '@ephox/katamari';
 import Extract from 'ephox/phoenix/api/general/Extract';
 import Finder from 'ephox/phoenix/test/Finder';
 import TestRenders from 'ephox/phoenix/test/TestRenders';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('api.Extract.(from,all,extract,extractTo)', function() {
   var doc = TestUniverse(

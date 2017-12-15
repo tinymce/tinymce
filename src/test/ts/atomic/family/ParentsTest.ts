@@ -2,7 +2,7 @@ import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import Parents from 'ephox/phoenix/family/Parents';
 import Finder from 'ephox/phoenix/test/Finder';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ParentsTest', function() {
   var doc = TestUniverse(
