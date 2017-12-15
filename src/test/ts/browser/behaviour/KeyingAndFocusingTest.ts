@@ -7,7 +7,7 @@ import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Memento from 'ephox/alloy/api/component/Memento';
 import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', function() {
   var success = arguments[arguments.length - 2];

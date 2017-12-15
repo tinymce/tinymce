@@ -10,7 +10,7 @@ import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Value } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('RepresentingTest (mode: dataset)', function() {
   var success = arguments[arguments.length - 2];

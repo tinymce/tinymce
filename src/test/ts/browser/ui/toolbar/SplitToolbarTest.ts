@@ -9,7 +9,7 @@ import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 import { Arr } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('SplitToolbarTest', function() {
   var success = arguments[arguments.length - 2];

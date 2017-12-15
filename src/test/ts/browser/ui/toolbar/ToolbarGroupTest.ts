@@ -13,7 +13,7 @@ import Container from 'ephox/alloy/api/ui/Container';
 import ToolbarGroup from 'ephox/alloy/api/ui/ToolbarGroup';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Arr } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('ToolbarGroupTest', function() {
   var success = arguments[arguments.length - 2];

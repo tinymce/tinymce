@@ -11,7 +11,7 @@ import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import StepUtils from 'ephox/alloy/test/StepUtils';
 import { Attr } from '@ephox/sugar';
 import { Node } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('CouplingTest', function() {
   var success = arguments[arguments.length - 2];

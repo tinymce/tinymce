@@ -5,7 +5,7 @@ import PartType from 'ephox/alloy/parts/PartType';
 import { FieldSchema } from '@ephox/boulder';
 import { Objects } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('Atomic Test: parts.GenerateTest', function() {
   var schema = [

@@ -14,7 +14,7 @@ import Button from 'ephox/alloy/api/ui/Button';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Focus } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('DisablingTest', function() {
   var success = arguments[arguments.length - 2];

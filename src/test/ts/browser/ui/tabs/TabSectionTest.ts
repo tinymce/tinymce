@@ -12,7 +12,7 @@ import Tabbar from 'ephox/alloy/api/ui/Tabbar';
 import TabSection from 'ephox/alloy/api/ui/TabSection';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Fun } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('TabSection Test', function() {
   var success = arguments[arguments.length - 2];

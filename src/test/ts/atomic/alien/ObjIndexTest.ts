@@ -2,7 +2,7 @@ import { Logger } from '@ephox/agar';
 import { RawAssertions } from '@ephox/agar';
 import ObjIndex from 'ephox/alloy/alien/ObjIndex';
 import { Obj } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('ObjIndexTest', function() {
   var tuple = function (k, v) {

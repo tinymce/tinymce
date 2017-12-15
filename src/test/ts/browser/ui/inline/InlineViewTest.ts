@@ -19,7 +19,7 @@ import { Arr } from '@ephox/katamari';
 import { Future } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('InlineViewTest', function() {
   var success = arguments[arguments.length - 2];

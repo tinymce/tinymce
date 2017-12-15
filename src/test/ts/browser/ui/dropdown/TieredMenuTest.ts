@@ -18,7 +18,7 @@ import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Objects } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('TieredMenuTest', function() {
   var success = arguments[arguments.length - 2];

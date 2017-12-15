@@ -2,7 +2,7 @@ import Bounds from 'ephox/alloy/positioning/layout/Bounds';
 import Layout from 'ephox/alloy/positioning/layout/Layout';
 import Bounder from 'ephox/alloy/positioning/view/Bounder';
 import { Position } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('BounderToolbuttonTest', function() {
   /* global assert */

@@ -20,7 +20,7 @@ import { Node } from '@ephox/sugar';
 import { Text } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('GuiEventsTest', function() {
   var success = arguments[arguments.length - 2];

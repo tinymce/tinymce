@@ -7,7 +7,7 @@ import { Arr } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import { Struct } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('ComponentEventsTest', function() {
   // TODO: This needs to be restructured because events and behaviours have changed.

@@ -14,7 +14,7 @@ import MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Arr } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('MenuTest', function() {
   var success = arguments[arguments.length - 2];

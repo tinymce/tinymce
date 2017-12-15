@@ -14,7 +14,7 @@ import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import Button from 'ephox/alloy/api/ui/Button';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('ButtonSpecTest', function() {
   var success = arguments[arguments.length - 2];

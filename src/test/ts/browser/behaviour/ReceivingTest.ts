@@ -7,7 +7,7 @@ import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { FieldSchema } from '@ephox/boulder';
 import { ValueSchema } from '@ephox/boulder';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('ReceivingTest', function() {
   var success = arguments[arguments.length - 2];

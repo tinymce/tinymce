@@ -12,7 +12,7 @@ import { Element } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 import { SelectorFind } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('TriggersTest', function() {
   var success = arguments[arguments.length - 2];

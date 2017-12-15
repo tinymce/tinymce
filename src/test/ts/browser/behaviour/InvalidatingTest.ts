@@ -18,7 +18,7 @@ import { Future } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('InvalidatingTest', function() {
   var success = arguments[arguments.length - 2];

@@ -17,7 +17,7 @@ import RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('FieldsTest', function() {
   var success = arguments[arguments.length - 2];

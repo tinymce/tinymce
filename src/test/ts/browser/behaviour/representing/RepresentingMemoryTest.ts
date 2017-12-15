@@ -3,7 +3,7 @@ import Representing from 'ephox/alloy/api/behaviour/Representing';
 import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('RepresentingTest (mode: memory)', function() {
   var success = arguments[arguments.length - 2];

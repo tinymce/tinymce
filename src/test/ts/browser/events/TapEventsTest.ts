@@ -8,7 +8,7 @@ import TapEvent from 'ephox/alloy/events/TapEvent';
 import TestStore from 'ephox/alloy/test/TestStore';
 import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser events.TapEventsTest', function() {
   // Needs to be browser because it uses DOM comparison

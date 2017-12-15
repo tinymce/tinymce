@@ -5,7 +5,7 @@ import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', function() {
   var success = arguments[arguments.length - 2];

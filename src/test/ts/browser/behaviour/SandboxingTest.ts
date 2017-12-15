@@ -15,7 +15,7 @@ import Sinks from 'ephox/alloy/test/Sinks';
 import { Fun } from '@ephox/katamari';
 import { LazyValue } from '@ephox/katamari';
 import { Node } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('SandboxingTest', function() {
   var success = arguments[arguments.length - 2];

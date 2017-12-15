@@ -16,7 +16,7 @@ import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import { Fun } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function() {
   var success = arguments[arguments.length - 2];

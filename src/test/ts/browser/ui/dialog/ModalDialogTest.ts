@@ -20,7 +20,7 @@ import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import Sinks from 'ephox/alloy/test/Sinks';
 import { Result } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('ModalDialogTest', function() {
   var success = arguments[arguments.length - 2];

@@ -6,7 +6,7 @@ import Memento from 'ephox/alloy/api/component/Memento';
 import Button from 'ephox/alloy/api/ui/Button';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Attr } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: .ui.button.ButtonTypeTest', function() {
   var success = arguments[arguments.length - 2];

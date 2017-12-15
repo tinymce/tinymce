@@ -1,5 +1,5 @@
 import Overflows from 'ephox/alloy/toolbar/Overflows';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('OverflowTest', function() {
   /* global assert */

@@ -24,7 +24,7 @@ import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import { Focus } from '@ephox/sugar';
 import { Value } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('ExpandableFormTest', function() {
   var success = arguments[arguments.length - 2];

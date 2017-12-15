@@ -1,6 +1,6 @@
 /* global domtest */
 
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.domtest('ToggleModesTest', function() {
   /*

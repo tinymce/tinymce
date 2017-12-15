@@ -15,7 +15,7 @@ import { Option } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('MouseDraggingTest', function() {
   var success = arguments[arguments.length - 2];

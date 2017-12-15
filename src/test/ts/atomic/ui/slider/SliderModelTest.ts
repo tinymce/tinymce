@@ -2,7 +2,7 @@ import { RawAssertions } from '@ephox/agar';
 import SliderModel from 'ephox/alloy/ui/slider/SliderModel';
 import { Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('Atomic Test: ui.slider.SliderModelTest', function() {
   var arb1Up = Jsc.nat.smap(function (num) { return num + 1; }, function (num) { return num - 1; });

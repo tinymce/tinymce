@@ -3,7 +3,7 @@ import { Assertions } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import ToggleModes from 'ephox/alloy/behaviour/toggling/ToggleModes';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('Browser Test: behaviour.ToggleModesTest', function() {
   var mTag = function (name) {

@@ -1,6 +1,6 @@
 import Cycles from 'ephox/alloy/alien/Cycles';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('CyclesTest', function() {
   Jsc.property(

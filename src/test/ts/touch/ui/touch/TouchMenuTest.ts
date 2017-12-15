@@ -14,7 +14,7 @@ import TouchMenu from 'ephox/alloy/api/ui/TouchMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Future } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function() {
   var success = arguments[arguments.length - 2];

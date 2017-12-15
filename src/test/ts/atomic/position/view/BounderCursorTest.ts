@@ -2,7 +2,7 @@ import Bounds from 'ephox/alloy/positioning/layout/Bounds';
 import Bubble from 'ephox/alloy/positioning/layout/Bubble';
 import Layout from 'ephox/alloy/positioning/layout/Layout';
 import Bounder from 'ephox/alloy/positioning/view/Bounder';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('BounderCursorTest', function() {
   /* global assert */

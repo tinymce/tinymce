@@ -15,7 +15,7 @@ import { Arr } from '@ephox/katamari';
 import { Future } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('TypeaheadSpecTest', function() {
   var success = arguments[arguments.length - 2];

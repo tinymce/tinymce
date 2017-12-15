@@ -6,7 +6,7 @@ import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Toggling from 'ephox/alloy/api/behaviour/Toggling';
 import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Element } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', function() {
   var success = arguments[arguments.length - 2];

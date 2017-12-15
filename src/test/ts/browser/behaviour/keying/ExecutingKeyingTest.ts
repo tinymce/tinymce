@@ -10,7 +10,7 @@ import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('ExecutingKeyingTest', function() {
   var success = arguments[arguments.length - 2];

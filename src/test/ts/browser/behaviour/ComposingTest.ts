@@ -7,7 +7,7 @@ import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Memento from 'ephox/alloy/api/component/Memento';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Option } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: behaviour.ComposingTest', function() {
   var success = arguments[arguments.length - 2];

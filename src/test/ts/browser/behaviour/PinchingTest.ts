@@ -6,7 +6,7 @@ import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Fun } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: behaviour.PinchingTest', function() {
   var success = arguments[arguments.length - 2];

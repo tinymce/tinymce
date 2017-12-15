@@ -12,7 +12,7 @@ import { FieldSchema } from '@ephox/boulder';
 import { Objects } from '@ephox/boulder';
 import { Cell } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('CustomComponentTest', function() {
   var success = arguments[arguments.length - 2];

@@ -19,7 +19,7 @@ import { SelectorFind } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 import { WindowSelection } from '@ephox/sugar';
 import { Scroll } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('SelectionInFramePositionTest', function() {
   var success = arguments[arguments.length - 2];

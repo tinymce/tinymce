@@ -24,7 +24,7 @@ import { Future } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('SplitDropdown List', function() {
   var success = arguments[arguments.length - 2];

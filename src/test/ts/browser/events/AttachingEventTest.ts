@@ -12,7 +12,7 @@ import TestStore from 'ephox/alloy/test/TestStore';
 import { Body } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: events.AttachingEventTest', function() {
   var success = arguments[arguments.length - 2];

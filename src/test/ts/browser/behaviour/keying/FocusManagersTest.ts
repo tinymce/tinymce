@@ -18,7 +18,7 @@ import { Arr } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
 import { SelectorFind } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function() {
   var success = arguments[arguments.length - 2];

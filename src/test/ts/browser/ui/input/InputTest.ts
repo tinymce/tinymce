@@ -9,7 +9,7 @@ import Representing from 'ephox/alloy/api/behaviour/Representing';
 import Input from 'ephox/alloy/api/ui/Input';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { PlatformDetection } from '@ephox/sand';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('InputTest', function() {
   var success = arguments[arguments.length - 2];

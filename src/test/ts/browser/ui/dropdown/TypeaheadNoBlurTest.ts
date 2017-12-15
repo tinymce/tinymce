@@ -19,7 +19,7 @@ import { Future } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 import { Value } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', function() {
   var success = arguments[arguments.length - 2];

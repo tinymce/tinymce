@@ -18,7 +18,7 @@ import { Insert } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('EventRegistryTest', function() {
   var success = arguments[arguments.length - 2];

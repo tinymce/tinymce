@@ -17,7 +17,7 @@ import { Body } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Node } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: api.ForeignGuiTest', function() {
   var success = arguments[arguments.length - 2];

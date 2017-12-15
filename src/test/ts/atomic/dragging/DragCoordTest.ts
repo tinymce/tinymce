@@ -2,7 +2,7 @@ import DragCoord from 'ephox/alloy/api/data/DragCoord';
 import { Arr } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('DragCoordTest', function() {
   var assertPt = function (label, expected, actual) {

@@ -5,7 +5,7 @@ import { Objects } from '@ephox/boulder';
 import { ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('Atomic Test: parts.SchemasTest', function() {
   var internal = PartType.required({

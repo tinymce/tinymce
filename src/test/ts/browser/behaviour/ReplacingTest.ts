@@ -9,7 +9,7 @@ import Replacing from 'ephox/alloy/api/behaviour/Replacing';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Objects } from '@ephox/boulder';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('ReplacingTest', function() {
   var success = arguments[arguments.length - 2];

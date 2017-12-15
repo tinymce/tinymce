@@ -11,7 +11,7 @@ import Input from 'ephox/alloy/api/ui/Input';
 import TestForm from 'ephox/alloy/test/form/TestForm';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Value } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Basic Form', function() {
   var success = arguments[arguments.length - 2];

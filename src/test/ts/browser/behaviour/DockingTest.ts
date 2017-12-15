@@ -9,7 +9,7 @@ import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Docking from 'ephox/alloy/api/behaviour/Docking';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('DockingTest', function() {
   var success = arguments[arguments.length - 2];

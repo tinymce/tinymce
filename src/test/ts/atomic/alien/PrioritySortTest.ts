@@ -4,7 +4,7 @@ import PrioritySort from 'ephox/alloy/alien/PrioritySort';
 import { Arr } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import { Struct } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('PrioritySortTest', function() {
   /* global assert */

@@ -6,7 +6,7 @@ import Unselecting from 'ephox/alloy/api/behaviour/Unselecting';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Objects } from '@ephox/boulder';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('UnselectingTest', function() {
   var success = arguments[arguments.length - 2];

@@ -1,7 +1,7 @@
 import { Logger } from '@ephox/agar';
 import DomDefinition from 'ephox/alloy/dom/DomDefinition';
 import DomModification from 'ephox/alloy/dom/DomModification';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('DomDefinitionTest', function() {
   /* global assert */

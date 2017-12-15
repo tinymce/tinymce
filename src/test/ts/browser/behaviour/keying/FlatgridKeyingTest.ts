@@ -12,7 +12,7 @@ import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 import { Objects } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Flat Grid Keying Test', function() {
   var success = arguments[arguments.length - 2];

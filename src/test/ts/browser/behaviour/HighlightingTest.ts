@@ -14,7 +14,7 @@ import { Arr } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 import { Class } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('HighlightingTest', function() {
   var success = arguments[arguments.length - 2];
