@@ -24,7 +24,6 @@
   },
   "devDependencies": {
     "@ephox/bedrock": "*",
-    "@ephox/refute": "*",
     "@ephox/sand": "*",
     "awesome-typescript-loader": "^3.4.1",
     "chromedriver": "*",

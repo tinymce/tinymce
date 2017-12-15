@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 import Structs from 'ephox/snooker/api/Structs';
 import TableMerge from 'ephox/snooker/model/TableMerge';
 import Fitment from 'ephox/snooker/test/Fitment';
-import { assert } from '@ephox/refute';
+import { assert } from '@ephox/bedrock';
 
 var mapToStructGrid = function (grid) {
   return Arr.map(grid, function (row) {

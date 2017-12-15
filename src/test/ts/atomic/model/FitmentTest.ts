@@ -4,7 +4,7 @@ import Structs from 'ephox/snooker/api/Structs';
 import Fitment from 'ephox/snooker/test/Fitment';
 import TableMerge from 'ephox/snooker/test/TableMerge';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('FitmentTest', function() {
   var generator = TestGenerator;

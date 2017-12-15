@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import Structs from 'ephox/snooker/api/Structs';
 import Fitment from 'ephox/snooker/model/Fitment';
-import { assert } from '@ephox/refute';
+import { assert } from '@ephox/bedrock';
 
 var mapToStructGrid = function (grid) {
   return Arr.map(grid, function (row) {

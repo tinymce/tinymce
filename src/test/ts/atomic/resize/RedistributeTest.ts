@@ -1,5 +1,5 @@
 import Redistribution from 'ephox/snooker/resize/Redistribution';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('RedistributeTest', function() {
   var toStr = function (f) {

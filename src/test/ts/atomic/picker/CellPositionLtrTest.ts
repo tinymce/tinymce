@@ -1,6 +1,6 @@
 import Structs from 'ephox/snooker/api/Structs';
 import CellPosition from 'ephox/snooker/picker/CellPosition';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CellPositionLtrTest', function() {
   var check = function (expected, posX, posY, width, height, rows, cols, x, y) {

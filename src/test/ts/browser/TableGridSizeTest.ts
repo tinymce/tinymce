@@ -1,7 +1,7 @@
 import TableGridSize from 'ephox/snooker/api/TableGridSize';
 import { Remove } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Table grid size test', function() {
   var testGridSize = function (html, expectedColumnCount, expectedRowCount) {

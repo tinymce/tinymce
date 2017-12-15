@@ -8,7 +8,7 @@ import { Insert } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
 import { Body } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CloneFormatsTest', function() {
   var getWarehouse = function (table) {

@@ -1,6 +1,6 @@
 import TableOperations from 'ephox/snooker/api/TableOperations';
 import Assertions from 'ephox/snooker/test/Assertions';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('InsertOperationsTest', function() {
   Assertions.checkOld({ section: 0, row: 0, column: 0 },

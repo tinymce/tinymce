@@ -7,7 +7,7 @@ import { Insert } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
 import { SelectorFilter } from '@ephox/sugar';
 import { SelectorFind } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('TableLookupTest', function() {
   var testerFound = function (html, triggerSelector, resultSelector, label) {

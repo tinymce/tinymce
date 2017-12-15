@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import Structs from 'ephox/snooker/api/Structs';
 import Transitions from 'ephox/snooker/model/Transitions';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('TableCounterTest', function() {
   var d = Structs.detail;

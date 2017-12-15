@@ -1,6 +1,6 @@
 import TableOperations from 'ephox/snooker/api/TableOperations';
 import Assertions from 'ephox/snooker/test/Assertions';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('PasteOperationsTest', function() {
   Assertions.checkPaste(

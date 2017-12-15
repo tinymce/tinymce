@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import Structs from 'ephox/snooker/api/Structs';
 import Warehouse from 'ephox/snooker/model/Warehouse';
 import CellBounds from 'ephox/snooker/selection/CellBounds';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CellBounds.isWithin Test', function() {
   var s = Structs.detail;  // 'element', 'rowspan', 'colspan'

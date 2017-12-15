@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import Structs from 'ephox/snooker/api/Structs';
 import MergingOperations from 'ephox/snooker/operate/MergingOperations';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('MergeOperationsTest', function() {
   var b = Structs.bounds;

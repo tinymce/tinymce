@@ -5,7 +5,7 @@ import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 import { Insert } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('TableMergeContentTest', function() {
   var mergeContentTest = function (specs) {

@@ -4,7 +4,7 @@ import Generators from 'ephox/snooker/api/Generators';
 import Structs from 'ephox/snooker/api/Structs';
 import ModificationOperations from 'ephox/snooker/operate/ModificationOperations';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.domtest('ModificationOperationsTest', function() {
   return new Promise(function (resolve) {

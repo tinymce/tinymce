@@ -1,6 +1,6 @@
 import Structs from 'ephox/snooker/api/Structs';
 import Sizing from 'ephox/snooker/picker/Sizing';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('SizingTest', function() {
   var check = function (selRow, selCol, fullRow, fullCol, address, settings) {

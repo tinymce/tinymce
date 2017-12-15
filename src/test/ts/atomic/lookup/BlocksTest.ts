@@ -1,7 +1,7 @@
 import Structs from 'ephox/snooker/api/Structs';
 import Blocks from 'ephox/snooker/lookup/Blocks';
 import Warehouse from 'ephox/snooker/model/Warehouse';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('BlocksTest', function() {
   var s = Structs.detail;

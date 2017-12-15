@@ -18,7 +18,7 @@ import { Html } from '@ephox/sugar';
 import { SelectorFilter } from '@ephox/sugar';
 import { SelectorFind } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
-import { assert } from '@ephox/refute';
+import { assert } from '@ephox/bedrock';
 
 var assertInfo = function (expected, actual) {
   var cleaner = Arr.map(actual, function (row) {

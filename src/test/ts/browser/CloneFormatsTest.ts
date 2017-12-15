@@ -4,7 +4,7 @@ import TableFill from 'ephox/snooker/api/TableFill';
 import { Insert } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CloneFormatsTest', function() {
   var doc = document;

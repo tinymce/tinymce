@@ -10,7 +10,7 @@ import { Attr } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 import { SelectorFilter } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Runtime Size Test', function() {
   var platform = PlatformDetection.detect();

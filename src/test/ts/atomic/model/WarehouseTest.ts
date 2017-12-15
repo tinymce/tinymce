@@ -1,7 +1,7 @@
 import { Obj } from '@ephox/katamari';
 import Structs from 'ephox/snooker/api/Structs';
 import Warehouse from 'ephox/snooker/model/Warehouse';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('WarehouseTest', function() {
   var check = function (expected, input) {

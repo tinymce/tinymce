@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 import Structs from 'ephox/snooker/api/Structs';
 import Fitment from 'ephox/snooker/test/Fitment';
 import TableMerge from 'ephox/snooker/test/TableMerge';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FitmentIVTest', function() {
   // Note: cycles 500, min 1, max 200 ~ 22secs

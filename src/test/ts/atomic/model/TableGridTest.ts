@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import Structs from 'ephox/snooker/api/Structs';
 import TableGrid from 'ephox/snooker/model/TableGrid';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('TableGrid.subgrid test', function() {
   var r = Structs.rowcells;

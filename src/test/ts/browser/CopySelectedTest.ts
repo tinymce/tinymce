@@ -5,7 +5,7 @@ import { Class } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 import { InsertAll } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CopySelectedTest', function() {
   // normally this is darwin ephemera, but doesn't actually matter what it is

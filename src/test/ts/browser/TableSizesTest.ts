@@ -10,7 +10,7 @@ import { Insert } from '@ephox/sugar';
 import { InsertAll } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
 import { SelectorFilter } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Table Sizes Test (fusebox)', function() {
   var percentTable = '<table style="width: 100%;">' +

@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import Util from 'ephox/snooker/util/Util';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('UtilTest', function() {
   var eq = function (a, b) {

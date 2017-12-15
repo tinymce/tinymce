@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import Deltas from 'ephox/snooker/calc/Deltas';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Deltas', function() {
   var min = 10;

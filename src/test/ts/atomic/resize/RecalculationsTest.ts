@@ -3,7 +3,7 @@ import { Struct } from '@ephox/katamari';
 import Structs from 'ephox/snooker/api/Structs';
 import Warehouse from 'ephox/snooker/model/Warehouse';
 import Recalculations from 'ephox/snooker/resize/Recalculations';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.domtest('RecalculationsTest', function() {
   return new Promise(function (resolve) {
