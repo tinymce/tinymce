@@ -2,7 +2,7 @@ import Event from 'ephox/porkbun/Event';
 import Events from 'ephox/porkbun/Events';
 import SourceEvent from 'ephox/porkbun/SourceEvent';
 import { Struct } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Events', function() {
   (function() {

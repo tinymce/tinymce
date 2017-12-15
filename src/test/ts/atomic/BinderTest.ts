@@ -1,7 +1,7 @@
 import Binder from 'ephox/porkbun/Binder';
 import Event from 'ephox/porkbun/Event';
 import Events from 'ephox/porkbun/Events';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Binder', function() {
   var events = Events.create({

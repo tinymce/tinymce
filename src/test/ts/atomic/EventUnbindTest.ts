@@ -1,5 +1,5 @@
 import Event from 'ephox/porkbun/Event';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('EventUnbindTest', function() {
   var event = Event([]);
