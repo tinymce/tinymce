@@ -14,6 +14,8 @@ import { Input } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import Styles from '../style/Styles';
 import UiDomFactory from '../util/UiDomFactory';
+import { Tabstopping } from '@ephox/alloy';
+import { Keying } from '@ephox/alloy';
 
 var clearInputBehaviour = 'input-clearing';
 
@@ -27,6 +29,10 @@ var field = function (name, placeholder) {
     inputBehaviours: Behaviour.derive([
       Composing.config({
         find: Option.some
+      }),
+      Tabstopping.config({ }),
+      Keying.config({
+        mode: 'execution'
       })
     ]),
     selectOnFocus: false
