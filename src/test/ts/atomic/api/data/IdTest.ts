@@ -1,6 +1,6 @@
 import Id from 'ephox/katamari/api/Id';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('IdTest', function() {
   var one = Id.generate('test');

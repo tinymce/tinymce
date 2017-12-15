@@ -2,7 +2,7 @@ import Arr from 'ephox/katamari/api/Arr';
 import Merger from 'ephox/katamari/api/Merger';
 import Obj from 'ephox/katamari/api/Obj';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Merger', function() {
   assert.eq({}, Merger.merge({}, {}));

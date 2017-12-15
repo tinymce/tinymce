@@ -2,7 +2,7 @@ import Arr from 'ephox/katamari/api/Arr';
 import Fun from 'ephox/katamari/api/Fun';
 import Obj from 'ephox/katamari/api/Obj';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('BiFilterTest', function() {
   var even = function (x) {

@@ -1,6 +1,6 @@
 import Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('ArrHeadLastTest', function() {
   Jsc.property('Head and tail on arrays', '[json]', function(xs) {

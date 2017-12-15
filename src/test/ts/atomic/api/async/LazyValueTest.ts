@@ -5,7 +5,7 @@ import LazyValues from 'ephox/katamari/api/LazyValues';
 import Result from 'ephox/katamari/api/Result';
 import AsyncProps from 'ephox/katamari/test/AsyncProps';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('LazyValueTest', function() {
   var success = arguments[arguments.length - 2];

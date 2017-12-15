@@ -1,6 +1,6 @@
 import Strings from 'ephox/katamari/api/Strings';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('startsWith', function() {
   function check(expected, str, prefix) {

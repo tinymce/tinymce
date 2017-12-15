@@ -1,6 +1,6 @@
 import StringMatch from 'ephox/katamari/api/StringMatch';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('StringMatchTest', function() {
   var check = function (testcase) {

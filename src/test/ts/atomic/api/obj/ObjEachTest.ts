@@ -1,6 +1,6 @@
 import Obj from 'ephox/katamari/api/Obj';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ObjEachTest', function() {
   var check = function (expected, input) {

@@ -1,6 +1,6 @@
 import Thunk from 'ephox/katamari/api/Thunk';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ThunkTest', function() {
   var testSanity = function () {

@@ -2,7 +2,7 @@ import Arr from 'ephox/katamari/api/Arr';
 import Fun from 'ephox/katamari/api/Fun';
 import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ArrEqualTest', function() {
   var check = function (expected, a1, a2) {

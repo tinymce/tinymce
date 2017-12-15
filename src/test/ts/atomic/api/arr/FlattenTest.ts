@@ -1,6 +1,6 @@
 import Arr from 'ephox/katamari/api/Arr';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FlattenTest', function() {
   var check = function (expected, input) {

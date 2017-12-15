@@ -4,7 +4,7 @@ import Type from 'ephox/katamari/api/Type';
 import Unique from 'ephox/katamari/api/Unique';
 import MixedBag from 'ephox/katamari/data/MixedBag';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('MixedBagTest', function() {
   var bagger = MixedBag([ 'alpha', 'beta', 'gamma' ], [ 'oDelta', 'oEpsilon' ]);

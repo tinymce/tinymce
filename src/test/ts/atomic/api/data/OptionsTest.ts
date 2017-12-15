@@ -4,7 +4,7 @@ import Option from 'ephox/katamari/api/Option';
 import Options from 'ephox/katamari/api/Options';
 import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('OptionsTest', function() {
   var person = function(name, age, address) {

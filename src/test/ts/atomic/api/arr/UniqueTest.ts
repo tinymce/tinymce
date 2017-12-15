@@ -1,7 +1,7 @@
 import Arr from 'ephox/katamari/api/Arr';
 import Unique from 'ephox/katamari/api/Unique';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Unique', function() {
   var expected = ['three', 'two', 'one'];

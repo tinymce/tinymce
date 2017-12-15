@@ -3,7 +3,7 @@ import Obj from 'ephox/katamari/api/Obj';
 import Unique from 'ephox/katamari/api/Unique';
 import Zip from 'ephox/katamari/api/Zip';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Zip', function() {
   var check1 = function(expectedZipToObject, expectedZipToTuples, keys, values) {

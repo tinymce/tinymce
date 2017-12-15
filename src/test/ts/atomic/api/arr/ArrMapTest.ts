@@ -3,7 +3,7 @@ import Fun from 'ephox/katamari/api/Fun';
 import Obj from 'ephox/katamari/api/Obj';
 import Unique from 'ephox/katamari/api/Unique';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('MapTest', function() {
   var dbl = function (x) {

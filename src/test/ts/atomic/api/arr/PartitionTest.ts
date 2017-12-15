@@ -1,7 +1,7 @@
 import Arr from 'ephox/katamari/api/Arr';
 import Fun from 'ephox/katamari/api/Fun';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Partition Test', function() {
   (function() {

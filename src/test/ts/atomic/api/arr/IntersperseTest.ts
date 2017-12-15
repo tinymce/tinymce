@@ -1,7 +1,7 @@
 import Arr from 'ephox/katamari/api/Arr';
 import Jam from 'ephox/katamari/api/Jam';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Intersperse', function() {
   var check = function (expected, input, delimiter) {

@@ -1,7 +1,7 @@
 import Arr from 'ephox/katamari/api/Arr';
 import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('IndexOfTest', function() {
   var checkNone = function (xs, x) {

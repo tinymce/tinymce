@@ -2,7 +2,7 @@ import Arr from 'ephox/katamari/api/Arr';
 import Obj from 'ephox/katamari/api/Obj';
 import Struct from 'ephox/katamari/api/Struct';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Struct.immutable', function() {
   var Thing = Struct.immutable('fred', 'barney');

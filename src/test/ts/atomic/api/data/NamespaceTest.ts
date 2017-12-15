@@ -1,5 +1,5 @@
 import Namespace from 'ephox/katamari/api/Namespace';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('NamespaceTest', function() {
   var styles = Namespace.css('ephox.test');

@@ -1,5 +1,5 @@
 import Option from 'ephox/katamari/api/Option';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('OptionApiTest', function() {
   var expectedApi = [

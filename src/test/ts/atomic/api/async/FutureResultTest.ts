@@ -5,7 +5,7 @@ import Results from 'ephox/katamari/api/Results';
 import AsyncProps from 'ephox/katamari/test/AsyncProps';
 import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('FutureResultsTest', function() {
   var success = arguments[arguments.length - 2];

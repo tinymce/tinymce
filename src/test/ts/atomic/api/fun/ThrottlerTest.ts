@@ -1,6 +1,6 @@
 import Future from 'ephox/katamari/api/Future';
 import Throttler from 'ephox/katamari/api/Throttler';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('ThrottlerTest', function() {
   var success = arguments[arguments.length - 2];
