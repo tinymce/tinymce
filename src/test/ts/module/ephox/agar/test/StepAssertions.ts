@@ -1,5 +1,5 @@
 import Chain from 'ephox/agar/api/Chain';
-import { assert } from '@ephox/refute';
+import { assert } from '@ephox/bedrock';
 import Pipeline from 'ephox/agar/api/Pipeline';
 import RawAssertions from 'ephox/agar/api/RawAssertions';
 import Step from 'ephox/agar/api/Step';

@@ -1,7 +1,7 @@
 import ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import Assertions from 'ephox/agar/api/Assertions';
 import { Element } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('Approx Structures Tutorial Test', function() {
   var html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +

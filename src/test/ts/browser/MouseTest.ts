@@ -11,7 +11,7 @@ import { Insert } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
 import { DomEvent } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('MouseTest', function() {
   var success = arguments[arguments.length - 2];

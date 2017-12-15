@@ -1,7 +1,7 @@
 import Chain from 'ephox/agar/api/Chain';
 import NamedChain from 'ephox/agar/api/NamedChain';
 import RawAssertions from 'ephox/agar/api/RawAssertions';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('NamedChainPipelineTest', function() {
   var success = arguments[arguments.length-2];

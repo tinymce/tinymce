@@ -3,7 +3,7 @@ import Logger from 'ephox/agar/api/Logger';
 import Pipeline from 'ephox/agar/api/Pipeline';
 import Step from 'ephox/agar/api/Step';
 import StepAssertions from 'ephox/agar/test/StepAssertions';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('ChainTest', function() {
   var success = arguments[arguments.length - 2];

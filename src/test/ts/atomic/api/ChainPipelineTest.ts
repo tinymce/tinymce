@@ -1,6 +1,6 @@
 import Chain from 'ephox/agar/api/Chain';
 import RawAssertions from 'ephox/agar/api/RawAssertions';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('ChainPipelineTest', function() {
   var success = arguments[arguments.length-2];

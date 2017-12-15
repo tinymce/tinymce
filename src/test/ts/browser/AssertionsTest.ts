@@ -1,5 +1,5 @@
 import Assertions from 'ephox/agar/api/Assertions';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('AssertionsTest', function() {
   var replaceTokens = function (str, values) {

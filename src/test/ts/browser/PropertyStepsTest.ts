@@ -3,7 +3,7 @@ import PropertySteps from 'ephox/agar/api/PropertySteps';
 import RawAssertions from 'ephox/agar/api/RawAssertions';
 import Step from 'ephox/agar/api/Step';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('PropertyStepsTest', function() {
   var success = arguments[arguments.length - 2];
