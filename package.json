@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@ephox/agar": "*",
-    "@ephox/refute": "*",
+    "@ephox/bedrock": "*",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2",

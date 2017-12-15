@@ -6,7 +6,7 @@ import Objects from 'ephox/boulder/api/Objects';
 import ValueSchema from 'ephox/boulder/api/ValueSchema';
 import { Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ValueSchemaRawTest', function() {
   var checkErr = function (label, expectedPart, input, processor) {
