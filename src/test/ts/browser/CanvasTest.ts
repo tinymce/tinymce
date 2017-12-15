@@ -1,6 +1,6 @@
 import Assertion from 'ephox/imagetools/test/Assertion';
 import Canvas from 'ephox/imagetools/util/Canvas';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('CanvasTest', function() {
   var assertDimensions = function (label, w, h, canvas) {

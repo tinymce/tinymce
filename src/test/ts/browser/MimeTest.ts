@@ -1,6 +1,6 @@
 import Assertion from 'ephox/imagetools/test/Assertion';
 import Mime from 'ephox/imagetools/util/Mime';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('MimeTest', function() {
   var check = function (expected, input) {

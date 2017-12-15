@@ -1,6 +1,6 @@
 import Assertion from 'ephox/imagetools/test/Assertion';
 import ColorMatrix from 'ephox/imagetools/transformations/ColorMatrix';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('ColorMatrixTest', function() {
   var checkIdentity = function (label, input) {

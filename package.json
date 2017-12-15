@@ -9,7 +9,7 @@
   ],
   "devDependencies": {
     "@ephox/katamari": "^1.1.5",
-    "@ephox/refute": "*",
+    "@ephox/bedrock": "*",
     "@ephox/sand": "^1.1.1",
     "awesome-typescript-loader": "^3.4.1",
     "grunt": "^1.0.1",

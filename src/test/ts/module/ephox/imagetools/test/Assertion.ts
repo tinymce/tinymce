@@ -1,4 +1,4 @@
-import { assert } from '@ephox/refute';
+import { assert } from '@ephox/bedrock';
 
 var assertEq = function (expected, actual, label) {
   assert.eq(expected, actual, 'test: ' + label + ', expected = ' + expected + ', actual = ' + actual);

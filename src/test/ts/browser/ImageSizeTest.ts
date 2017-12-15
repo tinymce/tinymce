@@ -1,7 +1,7 @@
 import Assertion from 'ephox/imagetools/test/Assertion';
 import Conversions from 'ephox/imagetools/util/Conversions';
 import ImageSize from 'ephox/imagetools/util/ImageSize';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('ImageSizeTest', function() {
   var success = arguments[arguments.length - 2];
