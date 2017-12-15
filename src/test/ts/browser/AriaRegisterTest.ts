@@ -3,7 +3,7 @@ import { Assertions } from '@ephox/agar';
 import AriaRegister from 'ephox/echo/api/AriaRegister';
 import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('AriaRegisterTest', function() {
   var checkTextButton = function (expectedElement, expectedContent, element, contentElement) {

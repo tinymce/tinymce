@@ -22,7 +22,6 @@
   "devDependencies": {
     "@ephox/agar": "*",
     "@ephox/bedrock": "*",
-    "@ephox/refute": "*",
     "awesome-typescript-loader": "^3.4.1",
     "grunt": "*",
     "grunt-npm": "*",
