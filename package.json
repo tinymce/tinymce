@@ -11,8 +11,7 @@
     "prepublishOnly": "tsc"
   },
   "devDependencies": {
-    "@ephox/bedrock": "^1.4.0",
-    "@ephox/refute": "*",
+    "@ephox/bedrock": "*",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
     "tinymce": "latest",

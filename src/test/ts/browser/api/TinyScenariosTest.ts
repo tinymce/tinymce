@@ -6,7 +6,7 @@ import TinyApis from 'ephox/mcagar/api/TinyApis';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import TinyScenarios from 'ephox/mcagar/api/TinyScenarios';
 import { Node } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('TinyScenariosTest', function() {
   var success = arguments[arguments.length - 2];

@@ -4,7 +4,7 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import TinyUi from 'ephox/mcagar/api/TinyUi';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('TinyLoaderTest', function() {
   var success = arguments[arguments.length - 2];
