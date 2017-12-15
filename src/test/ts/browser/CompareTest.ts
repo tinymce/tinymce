@@ -2,7 +2,7 @@ import Compare from 'ephox/sugar/api/dom/Compare';
 import Element from 'ephox/sugar/api/node/Element';
 import Remove from 'ephox/sugar/api/dom/Remove';
 import TestPage from 'ephox/sugar/test/TestPage';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CompareTest', function() {
   TestPage.connect(); // description of structure is in TestPage

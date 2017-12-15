@@ -6,7 +6,7 @@ import Insert from 'ephox/sugar/api/dom/Insert';
 import Remove from 'ephox/sugar/api/dom/Remove';
 import Visibility from 'ephox/sugar/api/view/Visibility';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('TogglerTest', function() {
   var runCheck = function (toggler, check) {

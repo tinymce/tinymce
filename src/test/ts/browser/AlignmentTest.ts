@@ -6,7 +6,7 @@ import Insert from 'ephox/sugar/api/dom/Insert';
 import Remove from 'ephox/sugar/api/dom/Remove';
 import Traverse from 'ephox/sugar/api/search/Traverse';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('AlignmentTest', function() {
   var body = Body.body();

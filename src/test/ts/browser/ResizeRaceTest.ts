@@ -7,7 +7,7 @@ import Remove from 'ephox/sugar/api/dom/Remove';
 import Resize from 'ephox/sugar/api/events/Resize';
 import Width from 'ephox/sugar/api/view/Width';
 import Monitors from 'ephox/sugar/impl/Monitors';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('ResizeRaceTest', function() {
   var success = arguments[arguments.length - 2];

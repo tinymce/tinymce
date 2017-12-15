@@ -6,7 +6,7 @@ import Html from 'ephox/sugar/api/properties/Html';
 import Insert from 'ephox/sugar/api/dom/Insert';
 import Remove from 'ephox/sugar/api/dom/Remove';
 import Traverse from 'ephox/sugar/api/search/Traverse';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('CssReflowTest', function() {
   var success = arguments[arguments.length - 2];

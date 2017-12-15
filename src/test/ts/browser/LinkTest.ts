@@ -1,7 +1,7 @@
 import Compare from 'ephox/sugar/api/dom/Compare';
 import Element from 'ephox/sugar/api/node/Element';
 import Link from 'ephox/sugar/api/dom/Link';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('LinkTest', function() {
   var realDoc = Element.fromDom(document);

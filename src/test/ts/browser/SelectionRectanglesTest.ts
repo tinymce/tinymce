@@ -4,7 +4,7 @@ import Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
 import Selection from 'ephox/sugar/api/selection/Selection';
 import WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Browser Test: SelectionRectanglesTest', function() {
   var p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');

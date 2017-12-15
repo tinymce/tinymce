@@ -2,7 +2,7 @@ import Checked from 'ephox/sugar/api/properties/Checked';
 import Element from 'ephox/sugar/api/node/Element';
 import InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import Value from 'ephox/sugar/api/properties/Value';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CheckedTest', function() {
   var container = Element.fromTag('div');

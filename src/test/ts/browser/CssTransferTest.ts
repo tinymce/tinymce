@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
 import Css from 'ephox/sugar/api/properties/Css';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CssTransfer', function() {
   var alpha = function () {

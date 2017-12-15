@@ -5,7 +5,7 @@ import Element from 'ephox/sugar/api/node/Element';
 import Focus from 'ephox/sugar/api/dom/Focus';
 import Insert from 'ephox/sugar/api/dom/Insert';
 import Remove from 'ephox/sugar/api/dom/Remove';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FocusTest', function() {
   var div = Element.fromTag('div');

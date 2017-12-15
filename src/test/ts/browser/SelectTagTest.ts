@@ -1,6 +1,6 @@
 import Element from 'ephox/sugar/api/node/Element';
 import Select from 'ephox/sugar/api/tag/SelectTag';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('SelectTagTest', function() {
   var checkSome = function (opt, expected) {

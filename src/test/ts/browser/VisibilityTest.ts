@@ -7,7 +7,7 @@ import Element from 'ephox/sugar/api/node/Element';
 import Css from 'ephox/sugar/api/properties/Css';
 import Visibility from 'ephox/sugar/api/view/Visibility';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('VisibilityTest', function() {
   var c = Div();

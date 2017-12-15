@@ -8,7 +8,7 @@ import Node from 'ephox/sugar/api/node/Node';
 import Html from 'ephox/sugar/api/properties/Html';
 import Selection from 'ephox/sugar/api/selection/Selection';
 import WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Browser Test: SelectionTest', function() {
   var p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');

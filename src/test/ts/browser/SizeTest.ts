@@ -5,7 +5,7 @@ import Insert from 'ephox/sugar/api/dom/Insert';
 import Remove from 'ephox/sugar/api/dom/Remove';
 import Width from 'ephox/sugar/api/view/Width';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('SizeTest', function() {
   var c = Div();

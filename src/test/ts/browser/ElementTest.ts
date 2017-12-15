@@ -1,5 +1,5 @@
 import Element from 'ephox/sugar/api/node/Element';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ElementTest', function() {
   var checkErr = function (f, val) {

@@ -2,7 +2,7 @@ import { Option } from '@ephox/katamari';
 import Comment from 'ephox/sugar/api/node/Comment';
 import Comments from 'ephox/sugar/api/node/Comments';
 import Element from 'ephox/sugar/api/node/Element';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CommentsTest', function() {
   var testPage = Element.fromHtml('<div><!--one--></head><body><!--two--><p><!--three--></p></div>');

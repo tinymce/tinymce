@@ -1,7 +1,7 @@
 import Css from 'ephox/sugar/api/properties/Css';
 import CssProperty from 'ephox/sugar/api/properties/CssProperty';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CssProperty', function() {
   var propertyName = 'text-align';

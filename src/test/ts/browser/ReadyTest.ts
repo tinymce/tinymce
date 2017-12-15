@@ -1,5 +1,5 @@
 import Ready from 'ephox/sugar/api/events/Ready';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ReadyTest', function() {
   // This isn't really a test. By definition, bolt tests are run after document load.

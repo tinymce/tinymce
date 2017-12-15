@@ -1,7 +1,7 @@
 import Comment from 'ephox/sugar/api/node/Comment';
 import Element from 'ephox/sugar/api/node/Element';
 import Traverse from 'ephox/sugar/api/search/Traverse';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CommentTest', function() {
   var ensureClobberedTextNodeDoesNotThrow = function () {

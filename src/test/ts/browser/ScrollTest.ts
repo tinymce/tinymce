@@ -12,7 +12,7 @@ import Height from 'ephox/sugar/api/view/Height';
 import Location from 'ephox/sugar/api/view/Location';
 import Scroll from 'ephox/sugar/api/view/Scroll';
 import Width from 'ephox/sugar/api/view/Width';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('ScrollTest', function() {
   var success = arguments[arguments.length - 2];

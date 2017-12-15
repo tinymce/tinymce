@@ -1,7 +1,7 @@
 import Attr from 'ephox/sugar/api/properties/Attr';
 import Element from 'ephox/sugar/api/node/Element';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('AttrTest', function() {
   var c = Div();

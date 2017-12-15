@@ -12,7 +12,7 @@ import Html from 'ephox/sugar/api/properties/Html';
 import Traverse from 'ephox/sugar/api/search/Traverse';
 import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('CssTest', function() {
   var runChecks = function (connected) {

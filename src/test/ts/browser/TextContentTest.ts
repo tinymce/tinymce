@@ -1,7 +1,7 @@
 import Element from 'ephox/sugar/api/node/Element';
 import Text from 'ephox/sugar/api/node/Text';
 import TextContent from 'ephox/sugar/api/properties/TextContent';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('TextContentTest', function() {
   var element = Element.fromHtml('<p>Hello <strong>World!</strong></p>');

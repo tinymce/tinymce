@@ -11,7 +11,7 @@ import SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import Traverse from 'ephox/sugar/api/search/Traverse';
 import Checkers from 'ephox/sugar/test/Checkers';
 import TestPage from 'ephox/sugar/test/TestPage';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('IsRootTest', function() {
   TestPage.connect(); // description of structure is in TestPage

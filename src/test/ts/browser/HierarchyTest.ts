@@ -3,7 +3,7 @@ import Element from 'ephox/sugar/api/node/Element';
 import Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
 import Insert from 'ephox/sugar/api/dom/Insert';
 import InsertAll from 'ephox/sugar/api/dom/InsertAll';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('HierarchyTest', function() {
   var div = Element.fromTag('div');

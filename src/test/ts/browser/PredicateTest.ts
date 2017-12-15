@@ -7,7 +7,7 @@ import PredicateFind from 'ephox/sugar/api/search/PredicateFind';
 import Remove from 'ephox/sugar/api/dom/Remove';
 import Checkers from 'ephox/sugar/test/Checkers';
 import TestPage from 'ephox/sugar/test/TestPage';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('PredicateTest', function() {
   TestPage.connect(); // description of structure is in TestPage
