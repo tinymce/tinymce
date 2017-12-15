@@ -1,7 +1,7 @@
 import { RawAssertions } from '@ephox/agar';
 import { Option } from '@ephox/katamari';
 import CurrentWord from 'ephox/robin/util/CurrentWord';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('CurrentWordTest', function() {
   var check = function (expected, text, position) {

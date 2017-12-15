@@ -3,7 +3,7 @@ import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import Clumps from 'ephox/robin/clumps/Clumps';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ClumpsTest', function() {
   var doc = TestUniverse(Gene('root', 'root', [

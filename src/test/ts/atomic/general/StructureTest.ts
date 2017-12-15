@@ -1,7 +1,7 @@
 import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import Structure from 'ephox/robin/api/general/Structure';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('StructureTest', function() {
   var doc = TestUniverse(Gene('root', 'root', [

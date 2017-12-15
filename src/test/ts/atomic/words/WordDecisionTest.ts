@@ -6,7 +6,7 @@ import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import WordDecision from 'ephox/robin/words/WordDecision';
 import WordWalking from 'ephox/robin/words/WordWalking';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('WordDecisionTest', function() {
   var universe = TestUniverse(

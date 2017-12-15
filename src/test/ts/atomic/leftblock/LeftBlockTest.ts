@@ -3,7 +3,7 @@ import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import LeftBlock from 'ephox/robin/api/general/LeftBlock';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('LeftBlockTest', function() {
   var universe = TestUniverse(Gene('root', 'root', [

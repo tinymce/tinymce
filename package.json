@@ -23,7 +23,6 @@
   "devDependencies": {
     "@ephox/agar": "*",
     "@ephox/bedrock": "*",
-    "@ephox/refute": "*",
     "@ephox/sand": "*",
     "@ephox/sugar": "*",
     "@ephox/wrap-jsverify": "*",

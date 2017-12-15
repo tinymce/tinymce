@@ -1,7 +1,7 @@
 import { Unicode } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import WordUtil from 'ephox/robin/util/WordUtil';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Word Util', function() {
   var checkNone = function (text, word) {

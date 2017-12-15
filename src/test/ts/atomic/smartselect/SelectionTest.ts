@@ -3,7 +3,7 @@ import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import Selection from 'ephox/robin/smartselect/Selection';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('SelectionTest', function() {
   var doc1 = TestUniverse(Gene('root', 'root', [

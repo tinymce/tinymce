@@ -2,7 +2,7 @@ import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import Fractures from 'ephox/robin/clumps/Fractures';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FracturesTest', function() {
   var regen = function () {

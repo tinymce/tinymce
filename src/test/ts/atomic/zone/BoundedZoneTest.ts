@@ -7,7 +7,7 @@ import Arbitraries from 'ephox/robin/test/Arbitraries';
 import PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
 import ZoneObjects from 'ephox/robin/test/ZoneObjects';
 import TextZones from 'ephox/robin/zone/TextZones';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('BoundedZoneTest', function() {
   var check = function (universe, expected, id) {

@@ -4,7 +4,7 @@ import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 import LanguageZones from 'ephox/robin/zone/LanguageZones';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('LanguageGetTest', function() {
   var check  = function (doc, id, lang) {

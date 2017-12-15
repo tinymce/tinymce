@@ -4,7 +4,7 @@ import { TextGene } from '@ephox/boss';
 import { Logger } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import Breaker from 'ephox/robin/parent/Breaker';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('BreakerTest', function() {
   var generator = function () {

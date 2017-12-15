@@ -8,7 +8,7 @@ import { Option } from '@ephox/katamari';
 import Look from 'ephox/robin/api/general/Look';
 import Parent from 'ephox/robin/api/general/Parent';
 import Structure from 'ephox/robin/api/general/Structure';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('BlockTest', function() {
   var doc = TestUniverse(Gene('root', 'root', [

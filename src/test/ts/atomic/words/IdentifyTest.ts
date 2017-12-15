@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import WordScope from 'ephox/robin/data/WordScope';
 import Identify from 'ephox/robin/words/Identify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('words :: Identify', function() {
   var none = Option.none();

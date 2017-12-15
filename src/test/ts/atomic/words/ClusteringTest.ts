@@ -9,7 +9,7 @@ import Arbitraries from 'ephox/robin/test/Arbitraries';
 import Clustering from 'ephox/robin/words/Clustering';
 import LanguageZones from 'ephox/robin/zone/LanguageZones';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('ClusteringTest', function() {
   var checkWords  = function (universe, words) {

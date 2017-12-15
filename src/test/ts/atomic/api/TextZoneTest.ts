@@ -10,7 +10,7 @@ import PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
 import ZoneObjects from 'ephox/robin/test/ZoneObjects';
 import { JSON as Json } from '@ephox/sand';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('TextZoneTest', function() {
   var doc1 = TestUniverse(Gene('root', 'root', [

@@ -4,7 +4,7 @@ import { TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import Subset from 'ephox/robin/parent/Subset';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('SubsetTest', function() {
   var universe = TestUniverse(Gene('root', 'root', [

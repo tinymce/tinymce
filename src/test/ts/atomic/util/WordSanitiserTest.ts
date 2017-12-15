@@ -1,7 +1,7 @@
 import { Option } from '@ephox/katamari';
 import WordScope from 'ephox/robin/data/WordScope';
 import WordSanitiser from 'ephox/robin/util/WordSanitiser';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Word Sanitiser', function() {
   var some = Option.some;

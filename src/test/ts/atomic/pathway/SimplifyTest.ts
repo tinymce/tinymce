@@ -2,7 +2,7 @@ import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import Simplify from 'ephox/robin/pathway/Simplify';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('SimplifyTest', function() {
   var doc = TestUniverse(Gene('root', 'root', [

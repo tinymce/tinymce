@@ -3,7 +3,7 @@ import { TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import Shared from 'ephox/robin/parent/Shared';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('SharedTest', function() {
   var data = TestUniverse(Gene('root', 'root', [

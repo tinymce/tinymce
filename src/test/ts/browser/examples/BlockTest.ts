@@ -4,7 +4,7 @@ import DomStructure from 'ephox/robin/api/dom/DomStructure';
 import BrowserCheck from 'ephox/robin/test/BrowserCheck';
 import { Node } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('---- example :: BlockTest ----', function() {
   var check = function (expected, input, look) {
