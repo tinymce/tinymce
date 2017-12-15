@@ -2,7 +2,7 @@ import DragApis from 'ephox/dragster/api/DragApis';
 import Dragging from 'ephox/dragster/core/Dragging';
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('DraggerTest', function() {
   var api = null;
