@@ -13,7 +13,7 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@ephox/refute": "*",
+    "@ephox/bedrock": "*",
     "@ephox/wrap-jsverify": "*",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
