@@ -1,5 +1,5 @@
 import Truncate from '../alien/Truncate';
-import { assert } from '@ephox/refute';
+import { assert } from '@ephox/bedrock';
 import RawAssertions from '../api/RawAssertions';
 import ApproxComparisons from './ApproxComparisons';
 import { Arr } from '@ephox/katamari';
