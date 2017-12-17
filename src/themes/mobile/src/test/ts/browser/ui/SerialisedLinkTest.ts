@@ -27,7 +27,7 @@ import TestStyles from '../../module/test/ui/TestStyles';
 import TestUi from '../../module/test/ui/TestUi';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 import LinkButton from 'tinymce/themes/mobile/ui/LinkButton';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function() {
   var success = arguments[arguments.length - 2];

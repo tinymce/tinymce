@@ -8,7 +8,7 @@ import HtmlUtils from '../../module/test/HtmlUtils';
 import ViewBlock from '../../module/test/ViewBlock';
 import Arr from 'tinymce/core/util/Arr';
 import Tools from 'tinymce/core/util/Tools';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
   var DOM = new DOMUtils(document, { keep_values : true, schema : new Schema() });

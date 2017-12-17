@@ -6,7 +6,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
 import IframeContent from 'tinymce/plugins/preview/ui/IframeContent';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', function() {
   var success = arguments[arguments.length - 2];

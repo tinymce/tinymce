@@ -9,7 +9,7 @@ import { Element } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';
 import EditorView from 'tinymce/core/EditorView';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function() {
   var success = arguments[arguments.length - 2];

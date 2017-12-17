@@ -4,7 +4,7 @@ import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
 import Settings from 'tinymce/plugins/textpattern/api/Settings';
 import Formatter from 'tinymce/plugins/textpattern/core/Formatter';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: .FormatterTest', function() {
   var success = arguments[arguments.length - 2];

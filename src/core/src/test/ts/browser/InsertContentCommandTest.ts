@@ -4,7 +4,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/Env';
 import JSON from 'tinymce/core/util/JSON';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
   var success = arguments[arguments.length - 2];

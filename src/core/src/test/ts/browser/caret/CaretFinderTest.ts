@@ -9,7 +9,7 @@ import { Element } from '@ephox/sugar';
 import CaretFinder from 'tinymce/core/caret/CaretFinder';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function() {
   var success = arguments[arguments.length - 2];

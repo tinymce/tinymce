@@ -15,7 +15,7 @@ import TestStyles from '../../module/test/ui/TestStyles';
 import TestUi from '../../module/test/ui/TestUi';
 import Buttons from 'tinymce/themes/mobile/ui/Buttons';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: ui.ButtonsTest', function() {
   var success = arguments[arguments.length - 2];

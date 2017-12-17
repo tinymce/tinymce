@@ -9,7 +9,7 @@ import { Element } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function() {
   var success = arguments[arguments.length - 2];

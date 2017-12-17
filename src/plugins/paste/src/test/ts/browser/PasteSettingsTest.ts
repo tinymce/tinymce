@@ -7,7 +7,7 @@ import EditorManager from 'tinymce/core/EditorManager';
 import ViewBlock from '../module/test/ViewBlock';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.PasteSettingsTest', function() {
   var success = arguments[arguments.length - 2];

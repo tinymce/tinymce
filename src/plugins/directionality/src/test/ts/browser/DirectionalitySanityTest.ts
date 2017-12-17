@@ -5,7 +5,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
 import DirectionalityPlugin from 'tinymce/plugins/directionality/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.directionality.DirectionalitySanityTest',

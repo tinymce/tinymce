@@ -13,7 +13,7 @@ import Env from 'tinymce/core/Env';
 import ViewBlock from '../../module/test/ViewBlock';
 import Tools from 'tinymce/core/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', function() {
   var success = arguments[arguments.length - 2];

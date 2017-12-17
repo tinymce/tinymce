@@ -7,7 +7,7 @@ import { Step } from '@ephox/agar';
 import { Chain } from '@ephox/agar';
 import { UiFinder } from '@ephox/agar';
 import { Assertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser/core/MeasureTest', function() {
   var success = arguments[arguments.length - 2];

@@ -19,7 +19,7 @@
 // import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 // import InliteTheme from 'tinymce/themes/inlite/Theme';
 // import Toolbar from 'tinymce/themes/inlite/test/Toolbar';
-// import { UnitTest } from '@ephox/refute';
+// import { UnitTest } from '@ephox/bedrock';
 
 // UnitTest.asynctest('browser.core.ThemeTest', function() {
 //   var success = arguments[arguments.length - 2];

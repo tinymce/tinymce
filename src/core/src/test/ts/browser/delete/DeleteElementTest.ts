@@ -9,7 +9,7 @@ import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import DeleteElement from 'tinymce/core/delete/DeleteElement';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function() {
   var success = arguments[arguments.length - 2];

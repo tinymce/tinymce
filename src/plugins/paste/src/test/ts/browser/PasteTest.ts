@@ -8,7 +8,7 @@ import Utils from 'tinymce/plugins/paste/core/Utils';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Strings from '../module/test/Strings';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
   var success = arguments[arguments.length - 2];

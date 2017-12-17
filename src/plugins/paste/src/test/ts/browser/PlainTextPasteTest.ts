@@ -12,7 +12,7 @@ import ViewBlock from '../module/test/ViewBlock';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import MockDataTransfer from '../module/test/MockDataTransfer';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', function() {
   var success = arguments[arguments.length - 2];

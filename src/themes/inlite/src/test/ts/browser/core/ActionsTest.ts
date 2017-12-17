@@ -7,7 +7,7 @@ import { Uint8Array } from '@ephox/sand';
 import { Window } from '@ephox/sand';
 import Actions from 'tinymce/themes/inlite/core/Actions';
 import Theme from 'tinymce/themes/inlite/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser/core/ActionsTest', function() {
   var success = arguments[arguments.length - 2];

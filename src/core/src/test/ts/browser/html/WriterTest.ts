@@ -1,7 +1,7 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Writer from 'tinymce/core/html/Writer';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function() {
   var success = arguments[arguments.length - 2];

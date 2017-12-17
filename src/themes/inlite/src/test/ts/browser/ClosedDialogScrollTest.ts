@@ -9,7 +9,7 @@
 // import LinkPlugin from 'tinymce/plugins/link/Plugin';
 // import InliteTheme from 'tinymce/themes/inlite/Theme';
 // import Toolbar from 'tinymce/themes/inlite/test/Toolbar';
-// import { UnitTest } from '@ephox/refute';
+// import { UnitTest } from '@ephox/bedrock';
 
 // UnitTest.asynctest('browser.ClosedDialogScrollTest', function() {
 //   var success = arguments[arguments.length - 2];

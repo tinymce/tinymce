@@ -4,7 +4,7 @@ import EditorManager from 'tinymce/core/EditorManager';
 import DomSerializer from 'tinymce/core/dom/DomSerializer';
 import TrimHtml from 'tinymce/core/dom/TrimHtml';
 import Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('browser.tinymce.core.dom.TrimHtmlTest', function() {
   var serializer = DomSerializer({}, new Editor('id', {}, EditorManager));

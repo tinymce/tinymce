@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import Protect from 'tinymce/plugins/fullpage/core/Protect';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('atomic.tinymce.plugins.fullpage.ProtectTest', function() {
   var testProtect = function () {

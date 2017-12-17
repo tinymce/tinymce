@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/mobile/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.themes.mobile.SkinFalseTest', function() {
   var success = arguments[arguments.length - 2];

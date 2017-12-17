@@ -11,7 +11,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
 import SearchreplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', function() {
   var success = arguments[arguments.length - 2];

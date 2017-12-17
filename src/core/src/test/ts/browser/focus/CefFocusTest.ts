@@ -9,7 +9,7 @@ import { Element } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/EditorManager';
 import ViewBlock from '../../module/test/ViewBlock';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function() {
   var success = arguments[arguments.length - 2];

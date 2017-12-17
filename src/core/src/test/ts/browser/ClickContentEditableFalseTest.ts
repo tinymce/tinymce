@@ -8,7 +8,7 @@ import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import TypeText from '../module/test/TypeText';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.ClickContentEditableFalseTest', function() {
   var success = arguments[arguments.length - 2];

@@ -6,7 +6,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
 import SavePlugin from 'tinymce/plugins/save/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.save.SaveSanityTest', function() {
   var success = arguments[arguments.length - 2];

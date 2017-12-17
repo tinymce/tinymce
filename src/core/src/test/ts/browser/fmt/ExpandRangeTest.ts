@@ -9,7 +9,7 @@ import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import ExpandRange from 'tinymce/core/fmt/ExpandRange';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function() {
   var success = arguments[arguments.length - 2];

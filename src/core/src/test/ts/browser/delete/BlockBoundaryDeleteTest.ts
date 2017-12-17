@@ -8,7 +8,7 @@ import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import BlockBoundaryDelete from 'tinymce/core/delete/BlockBoundaryDelete';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', function() {
   var success = arguments[arguments.length - 2];

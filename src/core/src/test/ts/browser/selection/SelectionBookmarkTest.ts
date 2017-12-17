@@ -12,7 +12,7 @@ import { Selection } from '@ephox/sugar';
 import { WindowSelection } from '@ephox/sugar';
 import SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', function() {
   var success = arguments[arguments.length - 2];

@@ -7,7 +7,7 @@ import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 import Empty from 'tinymce/core/dom/Empty';
 import PaddingBr from 'tinymce/core/dom/PaddingBr';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function() {
   var success = arguments[arguments.length - 2];

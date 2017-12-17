@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import UploadStatus from 'tinymce/core/file/UploadStatus';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.file.UploadStatusTest', function() {
   var success = arguments[arguments.length - 2];

@@ -8,7 +8,7 @@ import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import MergeBlocks from 'tinymce/core/delete/MergeBlocks';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function() {
   var success = arguments[arguments.length - 2];

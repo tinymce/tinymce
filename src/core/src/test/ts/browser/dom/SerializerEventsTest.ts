@@ -4,7 +4,7 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.dom.SerializerEventsTest', function() {
   var success = arguments[arguments.length - 2];

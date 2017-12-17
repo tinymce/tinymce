@@ -1,7 +1,7 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import I18n from 'tinymce/core/util/I18n';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function() {
   var success = arguments[arguments.length - 2];

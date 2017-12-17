@@ -7,7 +7,7 @@ import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import RangeNormalizer from 'tinymce/core/selection/RangeNormalizer';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', function() {
   var success = arguments[arguments.length - 2];

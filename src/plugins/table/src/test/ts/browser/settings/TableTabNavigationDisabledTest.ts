@@ -8,7 +8,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import TableTestUtils from '../../module/test/TableTestUtils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.table.TableTablNavigationDisabledTest',

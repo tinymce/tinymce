@@ -6,7 +6,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.core.init.InitIframeEditorWithCustomAttrsTest',

@@ -9,7 +9,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import AutoLinkPlugin from 'tinymce/plugins/autolink/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.autolink.EnterKeyTest', function() {
   var success = arguments[arguments.length - 2];

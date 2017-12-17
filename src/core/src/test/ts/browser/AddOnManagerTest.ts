@@ -3,7 +3,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import AddOnManager from 'tinymce/core/AddOnManager';
 import ScriptLoader from 'tinymce/core/dom/ScriptLoader';
 import PluginManager from 'tinymce/core/PluginManager';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', function() {
   var success = arguments[arguments.length - 2];

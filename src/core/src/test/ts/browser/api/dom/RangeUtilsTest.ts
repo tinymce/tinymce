@@ -6,7 +6,7 @@ import { Step } from '@ephox/agar';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import ViewBlock from '../../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.api.dom.RangeUtilsTest', function() {
   var success = arguments[arguments.length - 2];

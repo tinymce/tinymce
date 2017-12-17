@@ -13,7 +13,7 @@ import BoundaryCaret from 'tinymce/core/keyboard/BoundaryCaret';
 import BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
 import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryCaretTest', function() {
   var success = arguments[arguments.length - 2];

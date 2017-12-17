@@ -3,7 +3,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import HtmlUtils from '../module/test/HtmlUtils';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', function() {
   var success = arguments[arguments.length - 2];

@@ -8,7 +8,7 @@ import CaretContainer from 'tinymce/core/caret/CaretContainer';
 import KeyUtils from '../module/test/KeyUtils';
 import VK from 'tinymce/core/util/VK';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function() {
   var success = arguments[arguments.length - 2];

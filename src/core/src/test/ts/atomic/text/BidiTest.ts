@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import Bidi from 'tinymce/core/text/Bidi';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('atomic.tinymce.core.text.BidiTest', function() {
   var success = arguments[arguments.length - 2];

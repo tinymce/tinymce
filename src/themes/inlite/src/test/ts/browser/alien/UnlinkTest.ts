@@ -5,7 +5,7 @@ import Unlink from 'tinymce/themes/inlite/alien/Unlink';
 import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.alien.UnlinkTest', function() {
   var success = arguments[arguments.length - 2];

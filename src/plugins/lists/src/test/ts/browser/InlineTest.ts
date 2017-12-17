@@ -3,7 +3,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('tinymce.lists.browser.IndentTest', function() {
   var success = arguments[arguments.length - 2];

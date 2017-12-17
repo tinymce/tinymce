@@ -7,7 +7,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import Utils from '../module/test/Utils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', function() {
   var success = arguments[arguments.length - 2];

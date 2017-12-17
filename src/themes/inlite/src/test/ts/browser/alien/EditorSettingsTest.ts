@@ -4,7 +4,7 @@ import { Step } from '@ephox/agar';
 import Editor from 'tinymce/core/Editor';
 import EditorManager from 'tinymce/core/EditorManager';
 import EditorSettings from 'tinymce/themes/inlite/alien/EditorSettings';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.alien.EditorSettingsTest', function() {
   var success = arguments[arguments.length - 2];

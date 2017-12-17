@@ -7,7 +7,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import PredicateId from 'tinymce/themes/inlite/core/PredicateId';
 import SelectionMatcher from 'tinymce/themes/inlite/core/SelectionMatcher';
 import InliteTheme from 'tinymce/themes/inlite/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.core.SelectionMatcherTest', function() {
   var success = arguments[arguments.length - 2];

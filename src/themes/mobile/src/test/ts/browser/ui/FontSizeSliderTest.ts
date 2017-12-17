@@ -10,7 +10,7 @@ import TestSelectors from '../../module/test/ui/TestSelectors';
 import TestStyles from '../../module/test/ui/TestStyles';
 import FontSizeSlider from 'tinymce/themes/mobile/ui/FontSizeSlider';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function() {
   var success = arguments[arguments.length - 2];

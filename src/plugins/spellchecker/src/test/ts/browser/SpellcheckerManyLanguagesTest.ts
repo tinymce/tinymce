@@ -4,7 +4,7 @@ import { Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function() {
   var success = arguments[arguments.length - 2];

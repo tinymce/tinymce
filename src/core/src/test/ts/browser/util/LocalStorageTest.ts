@@ -3,7 +3,7 @@ import { Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import LocalStorage from 'tinymce/core/util/LocalStorage';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.util.LocalStorageTest', function() {
   var success = arguments[arguments.length - 2];

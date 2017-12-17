@@ -8,7 +8,7 @@ import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import TabfocusPlugin from 'tinymce/plugins/tabfocus/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', function() {
   var success = arguments[arguments.length - 2];

@@ -6,7 +6,7 @@ import VK from 'tinymce/core/util/VK';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import FilePicker from 'tinymce/ui/FilePicker';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function() {
   var success = arguments[arguments.length - 2];

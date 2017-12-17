@@ -9,7 +9,7 @@ import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function() {
   var success = arguments[arguments.length - 2];

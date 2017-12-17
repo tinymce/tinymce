@@ -12,7 +12,7 @@ import { Html } from '@ephox/sugar';
 import FragmentReader from 'tinymce/core/selection/FragmentReader';
 import TableCellSelection from 'tinymce/core/selection/TableCellSelection';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', function() {
   var success = arguments[arguments.length - 2];

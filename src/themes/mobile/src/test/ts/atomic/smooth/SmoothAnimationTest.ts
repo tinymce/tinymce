@@ -1,5 +1,5 @@
 import SmoothAnimation from 'tinymce/themes/mobile/ios/smooth/SmoothAnimation';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Smooth Animation AdjustTest', function() {
   var checkNone = function (label, value, destination, amount) {

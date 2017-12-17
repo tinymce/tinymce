@@ -6,7 +6,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
 import EmoticonPlugin from 'tinymce/plugins/emoticons/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.emoticons.EmoticonSanityTest', function() {
   var success = arguments[arguments.length - 2];

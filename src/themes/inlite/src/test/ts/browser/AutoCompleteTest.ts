@@ -18,7 +18,7 @@
 // import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 // import Theme from 'tinymce/themes/inlite/Theme';
 // import Toolbar from 'tinymce/themes/inlite/test/Toolbar';
-// import { UnitTest } from '@ephox/refute';
+// import { UnitTest } from '@ephox/bedrock';
 
 // UnitTest.asynctest('browser.AutoCompleteTest', function() {
 //   var success = arguments[arguments.length - 2];

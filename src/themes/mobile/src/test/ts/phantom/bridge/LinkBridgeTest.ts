@@ -11,7 +11,7 @@ import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import LinkBridge from 'tinymce/themes/mobile/bridge/LinkBridge';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function() {
   var store = TestStore();

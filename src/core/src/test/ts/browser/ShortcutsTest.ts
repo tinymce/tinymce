@@ -4,7 +4,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/Env';
 import Tools from 'tinymce/core/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function() {
   var success = arguments[arguments.length - 2];

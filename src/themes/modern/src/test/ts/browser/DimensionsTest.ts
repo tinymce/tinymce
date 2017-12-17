@@ -9,7 +9,7 @@ import { Width } from '@ephox/sugar';
 import { Height } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/EditorManager';
 import ViewBlock from '../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('tinymce.themes.modern.test.browser.DimensionsTest', function() {
   var success = arguments[arguments.length - 2];

@@ -10,7 +10,7 @@ import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import FakePlugin from '../module/test/FakePlugin';
 import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: .MetadataTest', function() {
   var success = arguments[arguments.length - 2];

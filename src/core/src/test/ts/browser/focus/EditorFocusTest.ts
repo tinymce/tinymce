@@ -10,7 +10,7 @@ import EditorManager from 'tinymce/core/EditorManager';
 import EditorFocus from 'tinymce/core/focus/EditorFocus';
 import ViewBlock from '../../module/test/ViewBlock';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function() {
   var success = arguments[arguments.length - 2];

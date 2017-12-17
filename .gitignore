@@ -8,6 +8,7 @@ tmp
 .nyc_output
 *.sublime-*
 .externalToolBuilders
+**/bolt/bootstrap*.js
 *~
 *.diff
 *.patch

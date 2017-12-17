@@ -7,7 +7,7 @@ import { Compare } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Node } from '@ephox/sugar';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', function() {
   var success = arguments[arguments.length - 2];

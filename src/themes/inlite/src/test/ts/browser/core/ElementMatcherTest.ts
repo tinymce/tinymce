@@ -6,7 +6,7 @@ import Theme from 'tinymce/themes/inlite/Theme';
 import ElementMatcher from 'tinymce/themes/inlite/core/ElementMatcher';
 import PredicateId from 'tinymce/themes/inlite/core/PredicateId';
 import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.core.ElementMatcherTest', function() {
   var success = arguments[arguments.length - 2];

@@ -14,7 +14,7 @@ import { Selectors } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/EditorManager';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', function() {
   var success = arguments[arguments.length - 2];

@@ -4,7 +4,7 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import BoxUtils from 'tinymce/ui/BoxUtils';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.ui.BoxUtilsMeasureBoxIframeDisplayNoneTest', function() {
   var success = arguments[arguments.length - 2];

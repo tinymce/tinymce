@@ -17,7 +17,7 @@ import Plugin from 'tinymce/plugins/imagetools/Plugin';
 import ImageOps from '../module/test/ImageOps';
 import ImageUtils from '../module/test/ImageUtils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', function() {
   var success = arguments[arguments.length - 2];

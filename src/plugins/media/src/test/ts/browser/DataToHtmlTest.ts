@@ -9,7 +9,7 @@ import DataToHtml from 'tinymce/plugins/media/core/DataToHtml';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Utils from '../module/test/Utils';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.core.DataToHtmlTest', function() {
   var success = arguments[arguments.length - 2];

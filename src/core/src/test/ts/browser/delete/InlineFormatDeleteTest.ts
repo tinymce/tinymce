@@ -10,7 +10,7 @@ import { Element } from '@ephox/sugar';
 import InlineFormatDelete from 'tinymce/core/delete/InlineFormatDelete';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function() {
   var success = arguments[arguments.length - 2];

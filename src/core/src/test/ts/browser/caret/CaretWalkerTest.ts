@@ -6,7 +6,7 @@ import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import DomQuery from 'tinymce/core/dom/DomQuery';
 import CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', function() {
   var success = arguments[arguments.length - 2];

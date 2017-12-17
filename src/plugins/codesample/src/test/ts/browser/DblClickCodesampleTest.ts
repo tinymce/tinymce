@@ -6,7 +6,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
 import CodePlugin from 'tinymce/plugins/codesample/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', function() {
   var success = arguments[arguments.length - 2];

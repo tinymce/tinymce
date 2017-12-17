@@ -15,7 +15,7 @@ import { TinyDom } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ColorPickerPlugin from 'tinymce/plugins/colorpicker/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.ColorPickerTest', function() {
   var success = arguments[arguments.length - 2];

@@ -11,7 +11,7 @@ import { PlatformDetection } from '@ephox/sand';
 import WordSelection from 'tinymce/core/selection/WordSelection';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest',

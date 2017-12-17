@@ -4,7 +4,7 @@ import CaretBookmark from 'tinymce/core/caret/CaretBookmark';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.CaretBookmarkTest', function() {
   var success = arguments[arguments.length - 2];

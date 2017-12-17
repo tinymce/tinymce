@@ -7,7 +7,7 @@ import { ActionChains } from '@ephox/mcagar';
 import { ApiChains } from '@ephox/mcagar';
 import { Editor } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', function() {
   var success = arguments[arguments.length - 2];

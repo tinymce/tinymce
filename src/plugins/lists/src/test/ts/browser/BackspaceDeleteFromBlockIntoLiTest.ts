@@ -8,7 +8,7 @@ import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: .RemoveTrailingBlockquoteTest', function() {
   var success = arguments[arguments.length - 2];

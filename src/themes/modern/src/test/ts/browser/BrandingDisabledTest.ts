@@ -4,7 +4,7 @@ import { UiFinder } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.themes.modern.test.BradingDisabledTest', function() {
   var success = arguments[arguments.length - 2];

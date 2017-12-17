@@ -8,7 +8,7 @@ import { UiFinder } from '@ephox/agar';
 import { Mouse } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('tinymce.themes.modern.test.browser.SidebarTest', function() {
   var success = arguments[arguments.length - 2];

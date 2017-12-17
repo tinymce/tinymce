@@ -1,5 +1,5 @@
 import Type from 'tinymce/themes/inlite/alien/Type';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('atomic.themes.alien.TypeTest', function() {
   var testIsString = function () {

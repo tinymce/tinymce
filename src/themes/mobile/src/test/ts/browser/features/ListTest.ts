@@ -5,7 +5,7 @@ import { Body } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 import TestTheme from '../../module/test/theme/TestTheme';
 import TestUi from '../../module/test/ui/TestUi';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: features.ListTest', function() {
   var success = arguments[arguments.length - 2];

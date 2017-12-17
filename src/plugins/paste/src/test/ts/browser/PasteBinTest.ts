@@ -10,7 +10,7 @@ import ViewBlock from '../module/test/ViewBlock';
 import PasteBin from 'tinymce/plugins/paste/core/PasteBin';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function() {
   var success = arguments[arguments.length - 2];

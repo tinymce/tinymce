@@ -4,7 +4,7 @@ import I18n from 'tinymce/core/util/I18n';
 import JSONRequest from 'tinymce/core/util/JSONRequest';
 import Tools from 'tinymce/core/util/Tools';
 import XHR from 'tinymce/core/util/XHR';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.util.XhrTest', function() {
   var success = arguments[arguments.length - 2];

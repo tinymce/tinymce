@@ -11,7 +11,7 @@ import CaretFormat from 'tinymce/core/fmt/CaretFormat';
 import TypeText from '../../module/test/TypeText';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function() {
   var success = arguments[arguments.length - 2];

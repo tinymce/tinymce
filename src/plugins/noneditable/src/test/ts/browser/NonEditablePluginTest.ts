@@ -3,7 +3,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/noneditable/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.noneditable.NonEditablePluginTest', function() {
   var success = arguments[arguments.length - 2];

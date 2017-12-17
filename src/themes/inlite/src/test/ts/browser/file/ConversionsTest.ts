@@ -4,7 +4,7 @@ import { Step } from '@ephox/agar';
 import { Uint8Array } from '@ephox/sand';
 import { Window } from '@ephox/sand';
 import Conversions from 'tinymce/themes/inlite/file/Conversions';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('atomic.core.ConvertTest', function() {
   var success = arguments[arguments.length - 2];

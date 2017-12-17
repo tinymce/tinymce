@@ -18,7 +18,7 @@ import { Css } from '@ephox/sugar';
 import { WindowSelection } from '@ephox/sugar';
 import TestUi from '../../module/test/ui/TestUi';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: ios.IosRealmTest', function() {
   var success = arguments[arguments.length - 2];

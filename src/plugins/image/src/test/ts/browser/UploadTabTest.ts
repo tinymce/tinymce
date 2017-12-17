@@ -11,7 +11,7 @@ import { TinyApis } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
 import Conversions from 'tinymce/core/file/Conversions';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
   var success = arguments[arguments.length - 2];

@@ -3,7 +3,7 @@ import Editor from 'tinymce/core/Editor';
 import EditorManager from 'tinymce/core/EditorManager';
 import PluginManager from 'tinymce/core/PluginManager';
 import DetectProPlugin from 'tinymce/plugins/paste/alien/DetectProPlugin';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('browser.tinymce.plugins.paste.alien.DetectProPluginTest', function() {
   // Fake loading of powerpaste

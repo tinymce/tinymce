@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import { Future } from '@ephox/katamari';
 import SmoothAnimation from 'tinymce/themes/mobile/ios/smooth/SmoothAnimation';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('SmoothAnimationTest', function() {
   var success = arguments[arguments.length - 2];

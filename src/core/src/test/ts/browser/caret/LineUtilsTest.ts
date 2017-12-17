@@ -2,7 +2,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Env from 'tinymce/core/Env';
 import LineUtils from 'tinymce/core/caret/LineUtils';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.LineUtilsTest', function() {
   var success = arguments[arguments.length - 2];

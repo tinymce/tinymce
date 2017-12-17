@@ -7,7 +7,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', function() {
   var success = arguments[arguments.length - 2];

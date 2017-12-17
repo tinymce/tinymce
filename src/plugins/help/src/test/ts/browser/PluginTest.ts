@@ -10,7 +10,7 @@ import { Html } from '@ephox/sugar';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.plugin.PluginTest', function() {
   var success = arguments[arguments.length - 2];

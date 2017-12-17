@@ -1,5 +1,5 @@
 import PredicateId from 'tinymce/themes/inlite/core/PredicateId';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('browser.core.PredicateIdTest', function() {
   var testFromContextToolbars = function () {

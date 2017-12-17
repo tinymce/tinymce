@@ -7,7 +7,7 @@ import Conversions from 'tinymce/core/file/Conversions';
 import ImageScanner from 'tinymce/core/file/ImageScanner';
 import UploadStatus from 'tinymce/core/file/UploadStatus';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function() {
   var success = arguments[arguments.length - 2];

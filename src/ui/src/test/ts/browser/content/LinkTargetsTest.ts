@@ -2,7 +2,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import LinkTargets from 'tinymce/ui/content/LinkTargets';
 import { Arr } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.ui.content.LinkTargetsTest', function() {
   var success = arguments[arguments.length - 2];

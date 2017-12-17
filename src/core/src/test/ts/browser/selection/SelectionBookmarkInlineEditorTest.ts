@@ -12,7 +12,7 @@ import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest',

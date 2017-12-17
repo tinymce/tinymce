@@ -8,7 +8,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Insert } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { SelectorFind } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.core.init.InitEditorThemeFunctionInlineTest',

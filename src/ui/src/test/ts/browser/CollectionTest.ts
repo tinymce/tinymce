@@ -5,7 +5,7 @@ import ViewBlock from '../module/test/ViewBlock';
 import Api from 'tinymce/ui/Api';
 import Collection from 'tinymce/ui/Collection';
 import Factory from 'tinymce/core/ui/Factory';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
   var success = arguments[arguments.length - 2];

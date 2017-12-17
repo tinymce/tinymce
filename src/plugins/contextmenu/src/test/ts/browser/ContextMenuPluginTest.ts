@@ -11,7 +11,7 @@ import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import ContextMenuPlugin from 'tinymce/plugins/contextmenu/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.contextmenu.ContextMenuPluginTest', function() {
   var success = arguments[arguments.length - 2];

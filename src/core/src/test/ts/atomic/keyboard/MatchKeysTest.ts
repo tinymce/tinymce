@@ -6,7 +6,7 @@ import { Arr } from '@ephox/katamari';
 import { Cell } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
 import MatchKeys from 'tinymce/core/keyboard/MatchKeys';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function() {
   var success = arguments[arguments.length - 2];

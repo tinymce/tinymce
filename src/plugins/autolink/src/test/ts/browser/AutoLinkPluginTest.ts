@@ -5,7 +5,7 @@ import Env from 'tinymce/core/Env';
 import Plugin from 'tinymce/plugins/autolink/Plugin';
 import KeyUtils from '../module/test/KeyUtils';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', function() {
   var success = arguments[arguments.length - 2];

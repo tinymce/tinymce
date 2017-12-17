@@ -3,7 +3,7 @@ import { Pipeline } from '@ephox/agar';
 import Arr from 'tinymce/core/util/Arr';
 import Dimensions from 'tinymce/core/dom/Dimensions';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.dom.DimensionsTest', function() {
   var success = arguments[arguments.length - 2];

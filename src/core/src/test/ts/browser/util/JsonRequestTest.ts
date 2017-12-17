@@ -2,7 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import I18n from 'tinymce/core/util/I18n';
 import JSONRequest from 'tinymce/core/util/JSONRequest';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function() {
   var success = arguments[arguments.length - 2];

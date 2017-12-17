@@ -6,7 +6,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import Factory from 'tinymce/core/ui/Factory';
 import ImportCssPlugin from 'tinymce/plugins/importcss/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', function() {
   var success = arguments[arguments.length - 2];

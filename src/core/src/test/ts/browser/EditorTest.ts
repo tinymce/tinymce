@@ -6,7 +6,7 @@ import Env from 'tinymce/core/Env';
 import HtmlUtils from '../module/test/HtmlUtils';
 import URI from 'tinymce/core/util/URI';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
   var success = arguments[arguments.length - 2];

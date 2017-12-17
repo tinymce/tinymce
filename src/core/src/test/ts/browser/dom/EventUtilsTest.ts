@@ -3,7 +3,7 @@ import { Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import EventUtils from 'tinymce/core/dom/EventUtils';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 declare const document: any;
 

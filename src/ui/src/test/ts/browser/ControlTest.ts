@@ -9,7 +9,7 @@ import Api from 'tinymce/ui/Api';
 import Container from 'tinymce/ui/Container';
 import Control from 'tinymce/ui/Control';
 import Tools from 'tinymce/core/util/Tools';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.ui.ControlTest', function() {
   var success = arguments[arguments.length - 2];

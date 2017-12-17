@@ -9,7 +9,7 @@ import { Element } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import DeleteUtils from 'tinymce/core/delete/DeleteUtils';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function() {
   var success = arguments[arguments.length - 2];

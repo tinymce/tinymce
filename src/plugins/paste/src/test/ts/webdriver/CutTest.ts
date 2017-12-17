@@ -7,7 +7,7 @@ import { TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('tinymce.plugins.paste.webdriver.CutTest', function() {
   var success = arguments[arguments.length - 2];

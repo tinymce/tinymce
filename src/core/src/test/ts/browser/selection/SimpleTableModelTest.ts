@@ -10,7 +10,7 @@ import { Insert } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 import SimpleTableModel from 'tinymce/core/selection/SimpleTableModel';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function() {
   var success = arguments[arguments.length - 2];

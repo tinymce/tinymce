@@ -1,5 +1,5 @@
 import Arr from 'tinymce/themes/inlite/alien/Arr';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('atomic.themes.alien.ArrTest', function() {
   var testFlatten = function () {

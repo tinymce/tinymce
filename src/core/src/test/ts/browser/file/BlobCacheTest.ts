@@ -4,7 +4,7 @@ import { Uint8Array } from '@ephox/sand';
 import { Window } from '@ephox/sand';
 import BlobCache from 'tinymce/core/file/BlobCache';
 import Conversions from 'tinymce/core/file/Conversions';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function() {
   var uriToBlob = function (base64, type) {

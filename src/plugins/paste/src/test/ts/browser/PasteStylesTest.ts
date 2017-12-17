@@ -8,7 +8,7 @@ import Env from 'tinymce/core/Env';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Paste from '../module/test/Paste';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: .PasteStylesTest', function() {
   var success = arguments[arguments.length - 2];

@@ -8,7 +8,7 @@ import Zwsp from 'tinymce/core/text/Zwsp';
 import $ from 'tinymce/core/dom/DomQuery';
 import CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function() {
   var success = arguments[arguments.length - 2];

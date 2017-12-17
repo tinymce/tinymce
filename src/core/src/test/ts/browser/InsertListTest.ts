@@ -5,7 +5,7 @@ import DomParser from 'tinymce/core/html/DomParser';
 import Node from 'tinymce/core/html/Node';
 import Schema from 'tinymce/core/html/Schema';
 import InsertList from 'tinymce/core/InsertList';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.InsertListTest', function() {
   var success = arguments[arguments.length - 2];

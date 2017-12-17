@@ -9,7 +9,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import TypeText from '../../module/test/TypeText';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', function() {
   var success = arguments[arguments.length - 2];

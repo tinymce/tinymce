@@ -10,7 +10,7 @@ import { Insert } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Node } from '@ephox/sugar';
 import Parents from 'tinymce/core/dom/Parents';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function() {
   var success = arguments[arguments.length - 2];

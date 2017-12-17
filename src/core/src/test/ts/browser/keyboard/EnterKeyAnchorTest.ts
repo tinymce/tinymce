@@ -10,7 +10,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/Env';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
   var success = arguments[arguments.length - 2];

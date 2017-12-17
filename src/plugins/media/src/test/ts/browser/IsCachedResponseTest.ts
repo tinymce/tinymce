@@ -15,7 +15,7 @@ import { Html } from '@ephox/sugar';
 import MediaPlugin from 'tinymce/plugins/media/Plugin';
 import Utils from '../module/test/Utils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', function() {
   var success = arguments[arguments.length - 2];

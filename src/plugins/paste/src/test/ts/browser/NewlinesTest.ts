@@ -4,7 +4,7 @@ import { Arr } from '@ephox/katamari';
 import Theme from 'tinymce/themes/modern/Theme';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Newlines from 'tinymce/plugins/paste/core/Newlines';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('tinymce.plugins.paste.browser.NewlinesTest', function() {
   Theme();

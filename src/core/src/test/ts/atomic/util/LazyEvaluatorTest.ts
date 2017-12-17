@@ -3,7 +3,7 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { Option } from '@ephox/katamari';
 import LazyEvaluator from 'tinymce/core/util/LazyEvaluator';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('atomic.tinymce.core.util.LazyEvaluatorTest', function() {
   var success = arguments[arguments.length - 2];

@@ -8,7 +8,7 @@ import { TinyUi } from '@ephox/mcagar';
 import AdvlistPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.lists.ChangeListStyleTest', function() {
   var success = arguments[arguments.length - 2];

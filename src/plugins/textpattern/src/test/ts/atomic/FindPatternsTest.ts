@@ -1,7 +1,7 @@
 import { RawAssertions } from '@ephox/agar';
 import Settings from 'tinymce/plugins/textpattern/api/Settings';
 import Patterns from 'tinymce/plugins/textpattern/core/Patterns';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('atomic.tinymce.plugins.textpattern.FindPatternTest', function() {
   var defaultPatterns = Settings.getPatterns({});

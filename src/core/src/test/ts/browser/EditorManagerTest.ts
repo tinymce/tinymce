@@ -8,7 +8,7 @@ import ViewBlock from '../module/test/ViewBlock';
 import Delay from 'tinymce/core/util/Delay';
 import Tools from 'tinymce/core/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function() {
   var success = arguments[arguments.length - 2];

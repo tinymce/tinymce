@@ -11,7 +11,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import { TextContent } from '@ephox/sugar';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function() {
   var success = arguments[arguments.length - 2];

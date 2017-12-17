@@ -11,7 +11,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function() {
   var success = arguments[arguments.length - 2];

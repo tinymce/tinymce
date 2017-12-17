@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/Editor';
 import EditorManager from 'tinymce/core/EditorManager';
 import Menubar from 'tinymce/themes/modern/ui/Menubar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('browser.tinymce.themes.modern.test.ui.MenubarTest', function() {
   var menuItems = [

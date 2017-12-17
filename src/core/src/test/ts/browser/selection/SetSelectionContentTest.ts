@@ -8,7 +8,7 @@ import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function() {
   var success = arguments[arguments.length - 2];

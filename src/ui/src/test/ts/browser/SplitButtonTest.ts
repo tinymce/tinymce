@@ -7,7 +7,7 @@ import ViewBlock from '../module/test/ViewBlock';
 import Api from 'tinymce/ui/Api';
 import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.ui.SplitButtonTest', function() {
   var success = arguments[arguments.length - 2];

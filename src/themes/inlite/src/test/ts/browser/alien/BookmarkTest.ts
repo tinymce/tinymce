@@ -5,7 +5,7 @@ import { Pipeline } from '@ephox/agar';
 import { TinyDom } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Bookmark from 'tinymce/themes/inlite/alien/Bookmark';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.alien.BookmarkTest', function() {
   var success = arguments[arguments.length - 2];

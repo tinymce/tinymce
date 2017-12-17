@@ -1,6 +1,6 @@
 import StringMapper from 'tinymce/plugins/wordcount/text/StringMapper';
 import WordBoundary from 'tinymce/plugins/wordcount/text/WordBoundary';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('atomic.core.WordBoundaryTest', function() {
   var iwb = function (str, index) {

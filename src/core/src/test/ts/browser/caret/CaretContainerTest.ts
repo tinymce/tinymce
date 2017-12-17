@@ -6,7 +6,7 @@ import DomQuery from 'tinymce/core/dom/DomQuery';
 import Env from 'tinymce/core/Env';
 import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.CaretContainerTest', function() {
   var success = arguments[arguments.length - 2];

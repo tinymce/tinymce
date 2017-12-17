@@ -14,7 +14,7 @@ import { Html } from '@ephox/sugar';
 import { SelectorFilter } from '@ephox/sugar';
 import TableDelete from 'tinymce/core/delete/TableDelete';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', function() {
   var success = arguments[arguments.length - 2];

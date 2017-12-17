@@ -10,7 +10,7 @@ import { Element } from '@ephox/sugar';
 import { Node } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 import TableDeleteAction from 'tinymce/core/delete/TableDeleteAction';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function() {
   var success = arguments[arguments.length - 2];

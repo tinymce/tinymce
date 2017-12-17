@@ -7,7 +7,7 @@ import InsertContent from 'tinymce/core/InsertContent';
 import Factory from 'tinymce/core/ui/Factory';
 import I18n from 'tinymce/core/util/I18n';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', function() {
   var success = arguments[arguments.length - 2];
