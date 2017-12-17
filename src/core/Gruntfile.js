@@ -1,8 +1,8 @@
 /*eslint-env node */
 
 var resolve = require('rollup-plugin-node-resolve');
-var typescript = require('rollup-plugin-typescript2');
 var patcher = require('../../tools/modules/rollup-patch');
+var prefixResolve = require('../../tools/modules/prefix-resolve');
 var cachedResolve = require('../../tools/modules/cached-resolve');
 var { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
 var LiveReloadPlugin = require('webpack-livereload-plugin');
@@ -15,19 +15,6 @@ module.exports = function (grunt) {
   const jsDemoDestFile = path.resolve('scratch/compiled/demo.js');
   const rootPath = '../../';
 
-  var escapeStr = function (str) {
-    return str.replace(/[\u007f-\uffff]/g, function (ch) {
-      var code = ch.charCodeAt(0).toString(16);
-      if (code.length <= 2) {
-          while (code.length < 2) code = "0" + code;
-          return "\\x" + code;
-      } else {
-          while (code.length < 4) code = "0" + code;
-          return "\\u" + code;
-      }
-    });
-  };
-
   grunt.initConfig({
     rollup: {
       options: {
@@ -38,27 +25,13 @@ module.exports = function (grunt) {
         footer: '})()',
         plugins: [
           cachedResolve(),
-          typescript({
-            tsconfig: tsConfigPath,
-            check: false,
-            cacheRoot: path.join(scratchDir, 'rts2_cache'),
-            include: [
-              'src/main/ts/**/*.ts'
-            ]
-          }),
-          patcher(),
-          {
-            transformBundle: function (source) {
-              // TODO: This is a bit unsafe but escodegen doesn't have a ascii_only option
-              return escapeStr(source);
-            }
-          }
+          patcher()
         ]
       },
       core: {
         files:[
           {
-            src: 'src/main/ts/api/Main.ts',
+            src: '../../lib/core/src/main/ts/api/Main.js',
             dest: 'dist/tinymce/tinymce.js'
           }
         ]

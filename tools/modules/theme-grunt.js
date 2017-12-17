@@ -1,8 +1,8 @@
 /*eslint-env node */
 
-var resolve = require('rollup-plugin-node-resolve');
-var typescript = require('rollup-plugin-typescript2');
 var patcher = require('./rollup-patch');
+var prefixResolve = require('./prefix-resolve');
+var cachedResolve = require('./cached-resolve');
 var { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
 var LiveReloadPlugin = require('webpack-livereload-plugin');
 var path = require('path');
@@ -11,7 +11,6 @@ var fs = require('fs');
 module.exports = (name, copy) => grunt => {
   const tsConfigPath = path.resolve(__dirname, '../../tsconfig.theme.json');
   const rootPath = '../../../';
-  const tsThemeSourceFile = 'src/main/ts/Theme.ts';
   const jsThemeDestFile = 'dist/' + name + '/theme.js';
   const jsThemeDestFileMin = 'dist/' + name + '/theme.min.js';
   const tsDemoSourceFile = path.resolve('src/demo/ts/demo/Demos.ts');
@@ -26,23 +25,15 @@ module.exports = (name, copy) => grunt => {
         banner: '(function () {',
         footer: '})()',
         plugins: [
-          resolve(),
-          typescript({
-            tsconfig: tsConfigPath,
-            check: false,
-            include: [
-              './src/main/ts/**/*.ts',
-              '../../ui/src/main/ts/**/*.ts',
-              '../../core/dist/globals/tinymce/core/**/*.ts'
-            ]
-          }),
+          prefixResolve(),
+          cachedResolve(),
           patcher()
         ]
       },
       plugin: {
         files:[
           {
-            src: tsThemeSourceFile,
+            src: `../../../lib/themes/${name}/src/main/ts/Theme.js`,
             dest: jsThemeDestFile
           }
         ]

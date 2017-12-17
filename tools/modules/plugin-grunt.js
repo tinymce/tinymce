@@ -1,13 +1,12 @@
 /*eslint-env node */
 
-var resolve = require('rollup-plugin-node-resolve');
-var typescript = require('rollup-plugin-typescript2');
 var patcher = require('./rollup-patch');
+var prefixResolve = require('./prefix-resolve');
+var cachedResolve = require('./cached-resolve');
 var { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
 var LiveReloadPlugin = require('webpack-livereload-plugin');
 var path = require('path');
 var fs = require('fs');
-var cachedResolve = require('./cached-resolve');
 
 module.exports = (name, copy) => grunt => {
   const tsConfigPath = path.resolve(__dirname, '../../tsconfig.plugin.json');
@@ -29,23 +28,15 @@ module.exports = (name, copy) => grunt => {
         banner: '(function () {',
         footer: '})()',
         plugins: [
+          prefixResolve(),
           cachedResolve(),
-          typescript({
-            tsconfig: tsConfigPath,
-            cacheRoot: path.join(scratchDir, 'rts2_cache'),
-            check: false,
-            include: [
-              'src/main/ts/**/*.ts',
-              '../../core/dist/globals/tinymce/core/**/*.ts'
-            ]
-          }),
           patcher()
         ]
       },
       plugin: {
         files:[
           {
-            src: tsPluginSourceFile,
+            src: `../../../lib/plugins/${name}/src/main/ts/Plugin.js`,
             dest: jsPluginDestFile
           }
         ]

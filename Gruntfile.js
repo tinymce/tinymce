@@ -11,6 +11,12 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: packageData,
 
+    shell: {
+      tsc: {
+        command: './node_modules/.bin/tsc'
+      }
+    },
+
     tslint: {
       options: {
         configuration: 'tslint.json'
@@ -666,7 +672,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('@ephox/bedrock');
   grunt.loadNpmTasks('grunt-tslint');
 
-  grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "build-headers", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
+  grunt.registerTask("default", ["shell:tsc", "clean:scratch", "subgrunt", "copy", "build-headers", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
 
   grunt.registerTask("test", ["bedrock-auto:phantomjs"]);
 };
