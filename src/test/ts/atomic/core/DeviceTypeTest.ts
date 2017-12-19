@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import PlatformDetection from 'ephox/sand/core/PlatformDetection';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('DeviceTypeTest', function() {
   var noChromeFrame = Fun.constant(false);
