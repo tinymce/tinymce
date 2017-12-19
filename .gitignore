@@ -15,3 +15,5 @@ node_modules
 /*.log
 
 package-lock.json
+
+jenkins-plumbing
