@@ -6,7 +6,7 @@ import Float from 'ephox/sugar/api/properties/Float';
 import Insert from 'ephox/sugar/api/dom/Insert';
 import Remove from 'ephox/sugar/api/dom/Remove';
 import MathElement from 'ephox/sugar/test/MathElement';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FloatTest', function() {
   var image = Element.fromTag('table');

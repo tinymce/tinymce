@@ -4,7 +4,7 @@ import Html from 'ephox/sugar/api/properties/Html';
 import Insert from 'ephox/sugar/api/dom/Insert';
 import Div from 'ephox/sugar/test/Div';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('InsertTest', function() {
   var container = Div();

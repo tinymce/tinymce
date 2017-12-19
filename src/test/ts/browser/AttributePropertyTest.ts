@@ -1,7 +1,7 @@
 import Attr from 'ephox/sugar/api/properties/Attr';
 import AttributeProperty from 'ephox/sugar/api/properties/AttributeProperty';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('AttributePropertyTest', function() {
   var attrName = 'custom';

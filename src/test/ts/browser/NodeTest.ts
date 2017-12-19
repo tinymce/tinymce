@@ -4,7 +4,7 @@ import Node from 'ephox/sugar/api/node/Node';
 import NodeTypes from 'ephox/sugar/api/node/NodeTypes';
 import Traverse from 'ephox/sugar/api/search/Traverse';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('NodeTest', function() {
   var check = function(node, nodeType, nodeName, nodeValue, isElement, isText, isDocument) {

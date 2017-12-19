@@ -1,7 +1,7 @@
 import Replication from 'ephox/sugar/api/dom/Replication';
 import Element from 'ephox/sugar/api/node/Element';
 import Traverse from 'ephox/sugar/api/search/Traverse';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ReplicationTest', function() {
   var checkValues = function (expected, actual) {

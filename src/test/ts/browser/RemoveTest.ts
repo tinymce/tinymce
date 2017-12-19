@@ -9,7 +9,7 @@ import Remove from 'ephox/sugar/api/dom/Remove';
 import Traverse from 'ephox/sugar/api/search/Traverse';
 import Div from 'ephox/sugar/test/Div';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('RemoveTest', function() {
   var runChecks = function (connected) {

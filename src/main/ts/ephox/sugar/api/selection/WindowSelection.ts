@@ -9,12 +9,13 @@ import SelectionDirection from '../../selection/core/SelectionDirection';
 import CaretRange from '../../selection/query/CaretRange';
 import Within from '../../selection/query/Within';
 import Prefilter from '../../selection/quirks/Prefilter';
+import Compare from '../dom/Compare';
 
 var doSetNativeRange = function (win, rng) {
   Option.from(win.getSelection()).each(function(selection) {
     selection.removeAllRanges();
     selection.addRange(rng);
-  });      
+  });
 };
 
 var doSetRange = function (win, start, soffset, finish, foffset) {
@@ -77,7 +78,7 @@ var readRange = function (selection) {
     var lastRng = selection.getRangeAt(selection.rangeCount - 1);
 
     return Option.some(Selection.range(
-      Element.fromDom(firstRng.startContainer), 
+      Element.fromDom(firstRng.startContainer),
       firstRng.startOffset,
       Element.fromDom(lastRng.endContainer),
       lastRng.endOffset
@@ -166,6 +167,10 @@ var deleteAt = function (win, selection) {
   NativeRange.deleteContents(rng);
 };
 
+var isCollapsed = function (start, soffset, finish, foffset) {
+  return Compare.eq(start, finish) && soffset === foffset;
+};
+
 export default <any> {
   setExact: setExact,
   getExact: getExact,
@@ -186,5 +191,7 @@ export default <any> {
   getAtPoint: getAtPoint,
 
   findWithin: findWithin,
-  getAsString: getAsString
+  getAsString: getAsString,
+
+  isCollapsed: isCollapsed
 };

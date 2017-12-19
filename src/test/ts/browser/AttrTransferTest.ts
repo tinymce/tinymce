@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
 import Attr from 'ephox/sugar/api/properties/Attr';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('AttrTransfer', function() {
   var alpha = function () {

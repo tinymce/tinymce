@@ -9,7 +9,7 @@ import Width from 'ephox/sugar/api/view/Width';
 import Dimension from 'ephox/sugar/impl/Dimension';
 import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('DimensionTest', function() {
   /* Remember, these checks are run 4 times */

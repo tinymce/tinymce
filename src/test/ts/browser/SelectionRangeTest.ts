@@ -11,7 +11,7 @@ import Html from 'ephox/sugar/api/properties/Html';
 import Selection from 'ephox/sugar/api/selection/Selection';
 import Situ from 'ephox/sugar/api/selection/Situ';
 import WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('WindowSelectionTest', function() {
   var container = Element.fromTag('div');

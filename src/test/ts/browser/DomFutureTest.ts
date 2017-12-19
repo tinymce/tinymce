@@ -1,7 +1,7 @@
 import Compare from 'ephox/sugar/api/dom/Compare';
 import DomFuture from 'ephox/sugar/api/dom/DomFuture';
 import Element from 'ephox/sugar/api/node/Element';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: .DomFutureTest', function() {
   var success = arguments[arguments.length - 2];

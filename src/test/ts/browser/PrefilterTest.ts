@@ -2,7 +2,7 @@ import Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
 import Element from 'ephox/sugar/api/node/Element';
 import Html from 'ephox/sugar/api/properties/Html';
 import Prefilter from 'ephox/sugar/selection/quirks/Prefilter';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('Browser Test: PrefilterTest', function() {
   var root = Element.fromHtml(

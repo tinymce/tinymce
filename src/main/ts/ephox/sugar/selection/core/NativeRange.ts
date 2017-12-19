@@ -50,10 +50,6 @@ var replaceWith = function (rng, fragment) {
   rng.insertNode(fragment.dom());
 };
 
-var isCollapsed = function (start, soffset, finish, foffset) {
-  return Compare.eq(start, finish) && soffset === foffset;
-};
-
 var relativeToNative = function (win, startSitu, finishSitu) {
   var range = win.document.createRange();
   setStart(range, startSitu);
@@ -109,7 +105,6 @@ export default <any> {
   replaceWith: replaceWith,
   selectNodeContents: selectNodeContents,
   selectNodeContentsUsing: selectNodeContentsUsing,
-  isCollapsed: isCollapsed,
   relativeToNative: relativeToNative,
   exactToNative: exactToNative,
   deleteContents: deleteContents,

@@ -5,7 +5,7 @@ import Classes from 'ephox/sugar/api/properties/Classes';
 import Element from 'ephox/sugar/api/node/Element';
 import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ClassTest', function() {
   var c = Div();

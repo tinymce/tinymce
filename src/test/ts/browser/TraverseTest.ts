@@ -3,7 +3,7 @@ import Attr from 'ephox/sugar/api/properties/Attr';
 import Element from 'ephox/sugar/api/node/Element';
 import InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import Traverse from 'ephox/sugar/api/search/Traverse';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('TraverseTest', function() {
   var node = function (name) {
