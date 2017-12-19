@@ -7,7 +7,7 @@
     "url": "https://github.com/ephox/katamari"
   },
   "scripts": {
-    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)",
+    "test": "bedrock-auto -b chrome-headless -d src/test",
     "prepublishOnly": "tsc"
   },
   "author": "Ephox Corporation",
