@@ -13,3 +13,7 @@
 node_modules
 /config/repl
 /*.log
+
+package-lock.json
+
+jenkins-plumbing
