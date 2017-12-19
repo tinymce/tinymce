@@ -7,7 +7,7 @@
     "url": "https://github.com/ephox/sugar"
   },
   "scripts": {
-    "test": "bedrock-auto --testdir src/test/js/browser -b chrome",
+    "test": "bedrock-auto --testdir src/test/ts/browser -b chrome",
     "prepublishOnly": "tsc"
   },
   "keywords": [
