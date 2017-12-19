@@ -8,9 +8,9 @@
     "ephox"
   ],
   "devDependencies": {
-    "@ephox/katamari": "^1.1.5",
+    "@ephox/katamari": "*",
     "@ephox/bedrock": "*",
-    "@ephox/sand": "^1.1.1",
+    "@ephox/sand": "*",
     "awesome-typescript-loader": "^3.4.1",
     "grunt": "^1.0.1",
     "source-map-loader": "^0.2.3",
