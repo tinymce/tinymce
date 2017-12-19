@@ -7,7 +7,7 @@
     "url": "https://github.com/ephox/jax"
   },
   "scripts": {
-    "test": "bedrock-auto --customRoutes src/test/json/routes.json -b phantomjs --files src/test/ts/browser/AjaxTest.ts",
+    "test": "bedrock-auto -b chrome-headless -d src/test --customRoutes src/test/json/routes.json",
     "prepublishOnly": "tsc"
   },
   "keywords": [
