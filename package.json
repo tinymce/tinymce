@@ -18,7 +18,7 @@
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "bedrock -c config/bolt/browser.js -d src/test",
+    "test": "bedrock-auto -b chrome-headless -d src/test",
     "prepublishOnly": "tsc"
   },
   "repository": {
