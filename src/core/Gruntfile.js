@@ -40,14 +40,10 @@ module.exports = function (grunt) {
 
     uglify: {
       options: {
-        beautify: {
+        output: {
           ascii_only: true,
-          screw_ie8: false
         },
-
-        compress: {
-          screw_ie8: false
-        }
+        ie8: true
       },
 
       'core': {

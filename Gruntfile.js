@@ -654,6 +654,12 @@ module.exports = function (grunt) {
           }
         ]
       }
+    },
+    'globals': {
+      options: {
+        outputDir: 'src/core/dist/globals',
+        templateFile: 'src/core/config/GlobalsTemplate.ts'
+      }
     }
   });
 
@@ -672,7 +678,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('@ephox/bedrock');
   grunt.loadNpmTasks('grunt-tslint');
 
-  grunt.registerTask("default", ["shell:tsc", "clean:scratch", "subgrunt", "copy", "build-headers", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
+  grunt.registerTask("default", ["globals", "shell:tsc", "clean:scratch", "subgrunt", "copy", "build-headers", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
 
   grunt.registerTask("test", ["bedrock-auto:phantomjs"]);
 };

@@ -87,7 +87,7 @@ var executeAction = function (grunt, action, templateFile, outputPath, config) {
 
 module.exports = function (grunt) {
   grunt.registerTask("globals", "Generates a globals layer", function () {
-    var config = parseConfig('config/globals.json');
+    var config = parseConfig(path.join(__dirname, '../../src/core/config/globals.json'));
     var options = grunt.config([this.name]).options;
     var templateFile = required(options, 'templateFile');
     var outputDir = required(options, 'outputDir');
