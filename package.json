@@ -8,27 +8,32 @@
     "@ephox/katamari": "*",
     "@ephox/sand": "*"
   },
+  "files": [
+    "lib/main",
+    "src/main",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
   "devDependencies": {
     "@ephox/agar": "*",
     "@ephox/bedrock": "*",
     "awesome-typescript-loader": "^3.4.1",
-    "grunt": "^1.0.1",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-eslint": "^19.0.0",
-    "grunt-exec": "^2.0.0",
-    "grunt-parallel": "^0.5.1",
-    "load-grunt-tasks": "^3.5.2",
     "source-map-loader": "^0.2.3",
-    "typescript": "^2.6.2",
-    "webpack": "^3.10.0"
+    "typescript": "^2.6.2"
   },
   "scripts": {
-    "test": "grunt tests",
+    "test": "bedrock-auto -b phantomjs --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
+    "test-manual": "bedrock --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
     "prepublishOnly": "tsc"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/alloy"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "keywords": [
     "ui"
