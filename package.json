@@ -28,5 +28,8 @@
   },
   "main": "./lib/main/ts/ephox/sand/api/Main.js",
   "module": "./lib/main/ts/ephox/sand/api/Main.js",
-  "types": "./lib/main/ts/ephox/sand/api/Main.d.ts"
+  "types": "./lib/main/ts/ephox/sand/api/Main.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
 }
