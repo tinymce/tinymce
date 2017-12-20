@@ -26,8 +26,9 @@
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)",
-    "prepublishOnly": "tsc"
+    "prepublishOnly": "tsc",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
