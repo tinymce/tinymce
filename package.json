@@ -28,6 +28,9 @@
     "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)",
     "prepublishOnly": "tsc"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "main": "./lib/main/ts/ephox/porkbun/api/Main.js",
