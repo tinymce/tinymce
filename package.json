@@ -32,5 +32,8 @@
   },
   "main": "./lib/main/ts/ephox/sugar/api/Main.js",
   "module": "./lib/main/ts/ephox/sugar/api/Main.js",
-  "types": "./lib/main/ts/ephox/sugar/api/Main.d.ts"
+  "types": "./lib/main/ts/ephox/sugar/api/Main.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
 }
