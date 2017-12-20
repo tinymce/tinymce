@@ -7,13 +7,16 @@
     "url": "https://github.com/ephox/darwin"
   },
   "files": [
-    "lib",
-    "src",
+    "lib/main",
+    "src/main",
     "readme.md",
     "LEGAL.txt",
     "CHANGELOG.txt",
     "LICENSE.txt"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
     "@ephox/sand": "*",
     "@ephox/katamari": "*",
@@ -35,6 +38,8 @@
   "module": "./lib/main/ts/ephox/darwin/api/Main.js",
   "types": "./lib/main/ts/ephox/darwin/api/Main.d.ts",
   "scripts": {
+    "test": "tsc",
+    "test-manual": "bedrock -d src/test",
     "prepublishOnly": "tsc"
   }
 }
