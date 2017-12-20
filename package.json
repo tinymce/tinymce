@@ -1,17 +1,23 @@
 {
   "name": "@ephox/boulder",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Basic javascript object validation",
   "dependencies": {
-    "@ephox/katamari": "^1.0.2",
-    "@ephox/sand": "^1.0.1"
+    "@ephox/katamari": "*",
+    "@ephox/sand": "*"
   },
   "devDependencies": {
-    "@ephox/agar": "^2.0.2",
-    "@ephox/bolt": "^1.8.1"
+    "@ephox/agar": "*",
+    "@ephox/bedrock": "*",
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "bolt test config/bolt/atomic.js src/test/js/atomic/**/**Test.js"
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts",
+    "prepublishOnly": "tsc"
   },
   "repository": {
     "type": "git",
@@ -20,6 +26,12 @@
   "keywords": [
     "validation"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "author": "Ephox Corporation",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/boulder/api/Main.js",
+  "module": "./lib/main/ts/ephox/boulder/api/Main.js",
+  "types": "./lib/main/ts/ephox/boulder/api/Main.d.ts"
 }
