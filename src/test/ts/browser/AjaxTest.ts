@@ -5,7 +5,7 @@ import ResponseType from 'ephox/jax/api/ResponseType';
 import { Arr } from '@ephox/katamari';
 import { FutureResult } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('AjaxTest', function() {
   var success = arguments[arguments.length - 2];
