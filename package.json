@@ -30,6 +30,14 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "files": [
+    "lib/main",
+    "src/main",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
   "main": "./lib/main/ts/ephox/jax/api/Main.js",
   "module": "./lib/main/ts/ephox/jax/api/Main.js",
   "types": "./lib/main/ts/ephox/jax/api/Main.d.ts"
