@@ -10,9 +10,8 @@
 
 import Data from './Data';
 import Nodes from './Nodes';
-import Arr from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Arr';
-import Element from '@ephox/sugar/lib/main/ts/ephox/sugar/api/node/Element';
-import Node from '@ephox/sugar/lib/main/ts/ephox/sugar/api/node/Node';
+import { Arr } from '@ephox/katamari';
+import { Element, Node } from '@ephox/sugar';
 
 var show = function (editor, rootElm) {
   var node, div;

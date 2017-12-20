@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Cell from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Cell';
+import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/PluginManager';
 import Api from './api/Api';
 import Bind from './core/Bind';

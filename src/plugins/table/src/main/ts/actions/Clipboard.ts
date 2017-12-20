@@ -8,9 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Arr from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Arr';
-import Fun from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Fun';
-import Option from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Option';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { CopySelected } from '@ephox/snooker';
 import { TableFill } from '@ephox/snooker';
 import { TableLookup } from '@ephox/snooker';

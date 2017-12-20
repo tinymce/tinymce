@@ -32,7 +32,7 @@ module.exports = (name, copy) => grunt => {
           swag.remapImports()
         ]
       },
-      plugin: {
+      theme: {
         files:[
           {
             src: `../../../lib/themes/${name}/src/main/ts/Theme.js`,
@@ -50,7 +50,7 @@ module.exports = (name, copy) => grunt => {
         ie8: true
       },
 
-      "plugin": {
+      "theme": {
         files: [
           {
             src: jsThemeDestFile,

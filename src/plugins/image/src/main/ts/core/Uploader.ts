@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import XMLHttpRequest from '@ephox/sand/lib/main/ts/ephox/sand/api/XMLHttpRequest';
+import { XMLHttpRequest } from '@ephox/sand';
 import Promise from 'tinymce/core/util/Promise';
 import Tools from 'tinymce/core/util/Tools';
 

@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Arr from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Arr';
-import Option from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Option';
+import { Arr } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import { CellNavigation } from '@ephox/snooker';
 import { TableLookup } from '@ephox/snooker';
 import { Compare } from '@ephox/sugar';

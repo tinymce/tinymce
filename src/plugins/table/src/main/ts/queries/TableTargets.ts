@@ -8,9 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Fun from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Fun';
-import Option from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Option';
-import Struct from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Struct';
+import { Fun, Option, Struct } from '@ephox/katamari';
 import CellOperations from './CellOperations';
 
 var noMenu = function (cell) {

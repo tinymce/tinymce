@@ -1,5 +1,4 @@
-import Fun from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Fun';
-import Arr from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Arr';
+import { Fun, Arr } from '@ephox/katamari';
 
 var charCodeToKeyCode = function (charCode) {
   var lookup = {

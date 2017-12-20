@@ -11,7 +11,7 @@
 import { BlobConversions } from '@ephox/imagetools';
 import { ImageTransformations } from '@ephox/imagetools';
 import { ResultConversions } from '@ephox/imagetools';
-import Fun from '@ephox/katamari/lib/main/ts/ephox/katamari/api/Fun';
+import { Fun } from '@ephox/katamari';
 import { URL } from '@ephox/sand';
 import Delay from 'tinymce/core/util/Delay';
 import Promise from 'tinymce/core/util/Promise';
