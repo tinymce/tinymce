@@ -7,13 +7,16 @@
     "url": "https://github.com/ephox/phoenix"
   },
   "files": [
-    "lib",
-    "src",
+    "lib/main",
+    "src/main",
     "readme.md",
     "LEGAL.txt",
     "CHANGELOG.txt",
     "LICENSE.txt"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
     "@ephox/boss": "*",
     "@ephox/katamari": "*",
@@ -28,7 +31,8 @@
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)",
+    "test": "bedrock-auto -b phantomjs -d src/test",
+    "test-manual": "bedrock -d src/test",
     "prepublishOnly": "tsc"
   },
   "author": "Ephox Corporation",
