@@ -1,0 +1,92 @@
+import Methods from './Methods';
+import RequestOptions from '../request/RequestOptions';
+import RequestUpdate from '../request/RequestUpdate';
+import ResponseError from '../response/ResponseError';
+import ResponseSuccess from '../response/ResponseSuccess';
+import { Fun } from '@ephox/katamari';
+import { FutureResult } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
+import { Result } from '@ephox/katamari';
+import { Strings } from '@ephox/katamari';
+import { JSON as Json } from '@ephox/sand';
+import { XMLHttpRequest } from '@ephox/sand';
+
+// _custom gets defaulted to an empty object.
+var send = function (url, method, contentType, responseType, credentials, _custom) {
+  var custom = _custom !== undefined ? _custom : { };
+
+  return FutureResult.nu(function (callback) {
+    var type = method.match({
+      get: Fun.constant('get'),
+      put: Fun.constant('put'),
+      post: Fun.constant('post'),
+      del: Fun.constant('delete')
+    });
+
+    var request = XMLHttpRequest();
+    request.open(type, url, true); // enforced async! enforced type as String!
+
+    var options = RequestOptions.generate(contentType, responseType, credentials, custom);
+    RequestUpdate.mutate(request, options);
+
+    var onError = function () {
+      ResponseError.handle(url, responseType, request).get(function (err) {
+        callback(Result.error(err));
+      });
+    };
+
+    var onLoad = function () {
+      // Local files and Cors errors return status 0.
+      // The only way we can decifer a local request is request url starts with 'file:' and allow local files to succeed.
+      if (request.status === 0 && ! Strings.startsWith(url, 'file:')) onError();
+      else if ( request.status < 100 || request.status >= 400) onError();
+      else ResponseSuccess.validate(responseType, request).get(callback);
+    };
+
+    request.onload = onLoad;
+    request.onerror = onError;
+
+    // There isn't really a nice way to unwrap this
+    contentType.fold(function () {
+      request.send();
+    }, function (cType) {
+      var data = cType.match({
+        file: Fun.identity,
+        form: Fun.identity,
+        json: Json.stringify,
+        plain: Fun.identity,
+        html: Fun.identity
+      });
+      request.send(data);
+    });
+
+
+  }).toLazy();
+};
+
+var get = function (url, responseType, credentials, _custom) {
+  var method = Methods.get();
+  return send(url, method, Option.none(), responseType, credentials, _custom);
+};
+
+var post = function (url, contentType, responseType, credentials, _custom) {
+  var method = Methods.post();
+  return send(url, method, Option.some(contentType), responseType, credentials, _custom);
+};
+
+var put = function (url, contentType, responseType, credentials, _custom) {
+  var method = Methods.put();
+  return send(url, method, Option.some(contentType), responseType, credentials, _custom);
+};
+
+var del = function (url, responseType, credentials, _custom) {
+  var method = Methods.del();
+  return send(url, method, Option.none(), responseType, credentials, _custom);
+};
+
+export default <any> {
+  get: get,
+  post: post,
+  put: put,
+  del: del
+};

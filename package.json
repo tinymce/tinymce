@@ -1,13 +1,15 @@
 {
   "name": "@ephox/jax",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "AJAX library",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/jax"
   },
   "scripts": {
-    "test": "bedrock-auto --customRoutes src/test/json/routes.json -b phantomjs --files src/test/js/browser/AjaxTest.js"
+    "test": "bedrock-auto -b phantomjs -d src/test/ts --customRoutes src/test/json/routes.json",
+    "test-manual": "bedrock -d src/test/ts  --customRoutes src/test/json/routes.json",
+    "prepublishOnly": "tsc"
   },
   "keywords": [
     "ajax"
@@ -15,11 +17,20 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@ephox/bedrock": "^1.3.6",
-    "@ephox/bolt": "^1.8.0"
+    "@ephox/bedrock": "*",
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
   },
   "dependencies": {
-    "@ephox/katamari": "^1.0.0",
-    "@ephox/sand": "^1.0.0"
-  }
+    "@ephox/katamari": "*",
+    "@ephox/sand": "*"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "main": "./lib/main/ts/ephox/jax/api/Main.js",
+  "module": "./lib/main/ts/ephox/jax/api/Main.js",
+  "types": "./lib/main/ts/ephox/jax/api/Main.d.ts"
 }
