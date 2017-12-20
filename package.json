@@ -12,18 +12,20 @@
     "@ephox/bedrock": "*",
     "@ephox/sand": "*",
     "awesome-typescript-loader": "^3.4.1",
-    "grunt": "^1.0.1",
     "source-map-loader": "^0.2.3",
-    "typescript": "^2.6.2",
-    "webpack": "^3.10.0"
+    "typescript": "^2.6.2"
   },
   "scripts": {
-    "test": "bedrock-auto -b chrome-headless -d src/test",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts",
     "prepublishOnly": "tsc"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/imagetools-js"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
