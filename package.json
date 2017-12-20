@@ -1,21 +1,41 @@
 {
   "name": "@ephox/boss",
   "description": "Generic wrapper to document models - DomUniverse vs TestUniverse",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/boss"
   },
+  "files": [
+    "lib",
+    "src",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
   "dependencies": {
     "@ephox/katamari": "*",
     "@ephox/sugar": "*"
   },
   "devDependencies": {
-    "@ephox/bolt": "*"
+    "@ephox/bedrock": "*",
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)"
+    "prepublishOnly": "tsc",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "author": "Ephox Corporation",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/boss/api/Main.js",
+  "module": "./lib/main/ts/ephox/boss/api/Main.js",
+  "types": "./lib/main/ts/ephox/boss/api/Main.d.ts"
 }
