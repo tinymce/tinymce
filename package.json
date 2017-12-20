@@ -26,6 +26,9 @@
   "keywords": [
     "validation"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "main": "./lib/main/ts/ephox/boulder/api/Main.js",
