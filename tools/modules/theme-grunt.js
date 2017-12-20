@@ -1,12 +1,9 @@
 /*eslint-env node */
 
-var patcher = require('./rollup-patch');
-var prefixResolve = require('./prefix-resolve');
-var cachedResolve = require('./cached-resolve');
 var { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
 var LiveReloadPlugin = require('webpack-livereload-plugin');
 var path = require('path');
-var fs = require('fs');
+const swag = require('@ephox/swag');
 
 module.exports = (name, copy) => grunt => {
   const tsConfigPath = path.resolve(__dirname, '../../tsconfig.theme.json');
@@ -25,9 +22,14 @@ module.exports = (name, copy) => grunt => {
         banner: '(function () {',
         footer: '})()',
         plugins: [
-          prefixResolve(),
-          cachedResolve(),
-          patcher()
+          swag.nodeResolve({
+            basedir: __dirname,
+            prefixes: {
+              'tinymce/core': '../../lib/globals/tinymce/core',
+              'tinymce/ui': '../../lib/ui/src/main/ts'
+            }
+          }),
+          swag.remapImports()
         ]
       },
       plugin: {

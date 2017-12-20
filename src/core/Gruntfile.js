@@ -1,12 +1,9 @@
 /*eslint-env node */
 
-var resolve = require('rollup-plugin-node-resolve');
-var patcher = require('../../tools/modules/rollup-patch');
-var prefixResolve = require('../../tools/modules/prefix-resolve');
-var cachedResolve = require('../../tools/modules/cached-resolve');
 var { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
 var LiveReloadPlugin = require('webpack-livereload-plugin');
 var path = require('path');
+const swag = require('@ephox/swag');
 
 module.exports = function (grunt) {
   const scratchDir = path.resolve(__dirname, '../../scratch');
@@ -24,8 +21,14 @@ module.exports = function (grunt) {
         banner: '(function () {',
         footer: '})()',
         plugins: [
-          cachedResolve(),
-          patcher()
+          swag.nodeResolve({
+            basedir: __dirname,
+            prefixes: {
+              'tinymce/core': '../../src/core/dist/globals/tinymce/core',
+              'tinymce/ui': '../../lib/ui/main/ts'
+            }
+          }),
+          swag.remapImports()
         ]
       },
       core: {
@@ -124,13 +127,6 @@ module.exports = function (grunt) {
           path: path.dirname(jsDemoDestFile)
         }
       }
-    },
-
-    'globals': {
-      options: {
-        outputDir: 'dist/globals',
-        templateFile: 'config/GlobalsTemplate.ts'
-      }
     }
   });
 
@@ -140,5 +136,5 @@ module.exports = function (grunt) {
   grunt.task.loadTasks('../../node_modules/grunt-webpack/tasks');
   grunt.task.loadTasks('../../tools/tasks');
 
-  grunt.registerTask('default', ['globals', 'rollup', 'copy', 'uglify']);
+  grunt.registerTask('default', ['rollup', 'copy', 'uglify']);
 };

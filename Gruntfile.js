@@ -655,10 +655,11 @@ module.exports = function (grunt) {
         ]
       }
     },
+
     'globals': {
       options: {
-        outputDir: 'src/core/dist/globals',
-        templateFile: 'src/core/config/GlobalsTemplate.ts'
+        outputDir: 'lib/globals',
+        templateFile: 'src/core/config/GlobalsTemplate.js'
       }
     }
   });
