@@ -11,3 +11,5 @@
 /inconsistent.dependencies
 node_modules
 package-lock.json
+
+jenkins-plumbing
