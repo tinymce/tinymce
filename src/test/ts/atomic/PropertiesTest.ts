@@ -2,7 +2,7 @@ import CommentGene from 'ephox/boss/api/CommentGene';
 import Gene from 'ephox/boss/api/Gene';
 import TextGene from 'ephox/boss/api/TextGene';
 import Properties from 'ephox/boss/mutant/Properties';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('PropertiesTest', function() {
   var g = Gene('root', 'root', []);

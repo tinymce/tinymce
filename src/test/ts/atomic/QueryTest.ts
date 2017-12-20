@@ -2,7 +2,7 @@ import Gene from 'ephox/boss/api/Gene';
 import TestUniverse from 'ephox/boss/api/TestUniverse';
 import Query from 'ephox/boss/mutant/Query';
 import { Option } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('QueryTest', function() {
   var universe = TestUniverse(Gene('1', 'root', [

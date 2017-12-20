@@ -1,5 +1,5 @@
 import Styling from 'ephox/boss/mutant/Styling';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('StylingTest', function() {
   var item = {

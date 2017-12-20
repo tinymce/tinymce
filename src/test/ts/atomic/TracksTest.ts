@@ -1,6 +1,6 @@
 import Tracks from 'ephox/boss/mutant/Tracks';
 import { Option } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('TracksTest', function() {
   var family = {
