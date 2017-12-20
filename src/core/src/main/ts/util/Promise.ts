@@ -191,7 +191,7 @@ var promise = function () {
     });
   };
 
-  return;
+  return Promise;
 };
 
 const promiseObj = window.Promise ? window.Promise : promise();
