@@ -1,7 +1,7 @@
 import Pipeline from 'ephox/agar/api/Pipeline';
 import RawAssertions from 'ephox/agar/api/RawAssertions';
 import Step from 'ephox/agar/api/Step';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('PipelineSuite Test', function() {
   var success = arguments[arguments.length-2];

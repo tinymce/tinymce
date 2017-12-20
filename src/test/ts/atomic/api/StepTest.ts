@@ -1,7 +1,7 @@
 import Logger from 'ephox/agar/api/Logger';
 import Pipeline from 'ephox/agar/api/Pipeline';
 import Step from 'ephox/agar/api/Step';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.asynctest('StepTest', function() {
   var success = arguments[arguments.length - 2];

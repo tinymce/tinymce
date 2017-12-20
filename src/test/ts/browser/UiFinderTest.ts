@@ -11,7 +11,7 @@ import { Node } from '@ephox/sugar';
 import { Class } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('UiFinderTest', function() {
   var success = arguments[arguments.length - 2];

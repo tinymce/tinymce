@@ -11,7 +11,7 @@ import { Html } from '@ephox/sugar';
 import { Insert } from '@ephox/sugar';
 import { InsertAll } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Example for Tutorial', function() {
   var success = arguments[arguments.length - 2];

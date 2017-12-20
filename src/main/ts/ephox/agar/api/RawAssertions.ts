@@ -1,4 +1,4 @@
-import { assert } from '@ephox/refute';
+import { assert } from '@ephox/bedrock';
 import { JSON as Json } from '@ephox/sand';
 
 var stringify = function (v) {

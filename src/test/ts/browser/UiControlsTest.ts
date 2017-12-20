@@ -4,7 +4,7 @@ import Pipeline from 'ephox/agar/api/Pipeline';
 import UiControls from 'ephox/agar/api/UiControls';
 import { Element } from '@ephox/sugar';
 import { Insert } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('UiControlsTest', function() {
   var success = arguments[arguments.length - 2];

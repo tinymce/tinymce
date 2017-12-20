@@ -1,5 +1,5 @@
 import Logger from 'ephox/agar/api/Logger';
-import { UnitTest, assert } from '@ephox/refute';
+import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('LoggerTest', function() {
   try {

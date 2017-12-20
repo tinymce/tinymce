@@ -16,7 +16,7 @@ import { SelectorFilter } from '@ephox/sugar';
 import { Text } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('Arbitraries Test', function() {
   var assertProperty = function (label, element, assertion) {

@@ -7,7 +7,7 @@ import RawAssertions from 'ephox/agar/api/RawAssertions';
 import StepAssertions from 'ephox/agar/test/StepAssertions';
 import { Merger } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('NamedChainTest', function() {
   var success = arguments[arguments.length - 2];

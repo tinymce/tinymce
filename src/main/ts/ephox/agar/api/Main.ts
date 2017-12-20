@@ -25,6 +25,7 @@ import UiControls from './UiControls';
 import UiFinder from './UiFinder';
 import UnitTest from './UnitTest';
 import Waiter from './Waiter';
+import Truncate from '../alien/Truncate'; // Used directly by alloy
 
 export {
   ApproxStructure,
@@ -53,5 +54,6 @@ export {
   UiControls,
   UiFinder,
   UnitTest,
-  Waiter
+  Waiter,
+  Truncate
 };

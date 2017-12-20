@@ -7,9 +7,14 @@
     "url": "https://github.com/ephox/agar"
   },
   "scripts": {
+<<<<<<< HEAD
     "prepublishOnly": "tsc",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts"
+=======
+    "test": "bedrock-auto -b chrome --testdir src/test/ts/browser",
+    "prepublishOnly": "tsc"
+>>>>>>> 7f838449b9711500b23ae4778dd52e4de593c693
   },
   "keywords": [
     "testing",
@@ -23,7 +28,10 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@ephox/bedrock": "*",
+<<<<<<< HEAD
     "@ephox/refute": "*",
+=======
+>>>>>>> 7f838449b9711500b23ae4778dd52e4de593c693
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2",
@@ -34,9 +42,12 @@
     "@ephox/sugar": "*",
     "@ephox/wrap-jsverify": "*",
     "@ephox/wrap-sizzle": "*"
+<<<<<<< HEAD
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
+=======
+>>>>>>> 7f838449b9711500b23ae4778dd52e4de593c693
   },
   "main": "./lib/main/ts/ephox/agar/api/Main.js",
   "module": "./lib/main/ts/ephox/agar/api/Main.js",

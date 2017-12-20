@@ -1,7 +1,7 @@
 import ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import Assertions from 'ephox/agar/api/Assertions';
 import { Element } from '@ephox/sugar';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('ApproxStructureTest', function() {
   var success = arguments[arguments.length - 2];
