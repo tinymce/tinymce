@@ -10,7 +10,8 @@ import 'tinymce';
 
 declare const tinymce: any;
 
-tinymce.baseURL = '/project/node_modules/tinymce';
+tinymce.baseURL = document.location.protocol + '//' + document.location.host + '/project/node_modules/tinymce';
+tinymce.baseURI = new tinymce.util.URI(tinymce.baseURL);
 
 var cFromElement = function (element, settings) {
   return Chain.on(function (_, next, die) {

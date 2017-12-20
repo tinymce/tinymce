@@ -10,7 +10,8 @@ import 'tinymce';
 
 declare const tinymce: any;
 
-tinymce.baseURL = '/project/node_modules/tinymce';
+tinymce.baseURL = document.location.protocol + '//' + document.location.host + '/project/node_modules/tinymce';
+tinymce.baseURI = new tinymce.util.URI(tinymce.baseURL);
 
 var createTarget = function (inline) {
   var target = Element.fromTag(inline ? 'div' : 'textarea');
