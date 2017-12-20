@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "es2015",
+    "lib": ["es2015", "dom"],
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "lib",
+    "baseUrl": ".",
+    "paths": {
+      "ephox/imagetools/test/*": ["src/test/ts/module/ephox/imagetools/test/*"],
+      "ephox/imagetools/demo/*": ["src/demo/ts/ephox/imagetools/demo/*"],
+      "ephox/imagetools/*": ["src/main/ts/ephox/imagetools/*"],
+      "@ephox/imagetools": ["src/main/ts/ephox/imagetools/api/Main.ts"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts",
+    "node_modules/@ephox/**/*/api/Main.d.ts"
+  ]
+}

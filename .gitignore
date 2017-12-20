@@ -14,3 +14,7 @@ node_modules/
 npm-debug.log
 .idea/
 /npm_output
+
+package-lock.json
+
+jenkins-plumbing
