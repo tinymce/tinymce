@@ -30,6 +30,14 @@
     "typescript": "^2.6.2",
     "webpack": "^3.10.0"
   },
+  "files": [
+    "lib/main",
+    "src/main",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
   "main": "./lib/main/ts/ephox/sugar/api/Main.js",
   "module": "./lib/main/ts/ephox/sugar/api/Main.js",
   "types": "./lib/main/ts/ephox/sugar/api/Main.d.ts",
