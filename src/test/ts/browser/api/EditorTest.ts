@@ -3,7 +3,7 @@ import { Chain } from '@ephox/agar';
 import { Assertions } from '@ephox/agar';
 import ApiChains from 'ephox/mcagar/api/ApiChains';
 import Editor from 'ephox/mcagar/api/Editor';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('SelectionTest', function() {
   var success = arguments[arguments.length - 2];

@@ -3,7 +3,7 @@ import { Step } from '@ephox/agar';
 import TinyApis from 'ephox/mcagar/api/TinyApis';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import TinyUi from 'ephox/mcagar/api/TinyUi';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('McagarTutorialTest', function() {
   var success = arguments[arguments.length - 2];

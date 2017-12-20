@@ -5,7 +5,7 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import TinyApis from 'ephox/mcagar/api/TinyApis';
 import TinyLoader from 'ephox/mcagar/api/TinyLoader';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('TinySetAndDeleteSettingTest', function() {
   var success = arguments[arguments.length - 2];

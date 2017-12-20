@@ -3,7 +3,7 @@ import { Chain } from '@ephox/agar';
 import { Assertions } from '@ephox/agar';
 import ActionChains from 'ephox/mcagar/api/ActionChains';
 import Editor from 'ephox/mcagar/api/Editor';
-import { UnitTest } from '@ephox/refute';
+import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('ActionChainsTest', function() {
   var success = arguments[arguments.length - 2];
