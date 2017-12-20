@@ -27,6 +27,9 @@
     "@ephox/katamari": "*",
     "@ephox/sand": "*"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "main": "./lib/main/ts/ephox/jax/api/Main.js",
   "module": "./lib/main/ts/ephox/jax/api/Main.js",
   "types": "./lib/main/ts/ephox/jax/api/Main.d.ts"
