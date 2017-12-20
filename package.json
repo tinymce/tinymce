@@ -1,13 +1,15 @@
 {
   "name": "@ephox/sugar",
-  "version": "3.3.1",
+  "version": "4.0.0",
   "description": "Basic DOM manipulation",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/sugar"
   },
   "scripts": {
-    "test": "bedrock-auto --testdir src/test/js/browser -b chrome"
+    "prepublishOnly": "tsc",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts"
   },
   "keywords": [
     "DOM",
@@ -23,9 +25,15 @@
   },
   "devDependencies": {
     "@ephox/bedrock": "*",
-    "@ephox/bolt": "*",
-    "chromedriver": "*",
-    "grunt": "*",
-    "grunt-npm": "*"
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
+  },
+  "main": "./lib/main/ts/ephox/sugar/api/Main.js",
+  "module": "./lib/main/ts/ephox/sugar/api/Main.js",
+  "types": "./lib/main/ts/ephox/sugar/api/Main.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   }
 }

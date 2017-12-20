@@ -1,24 +1,25 @@
-node("primary") {
-  echo "Checkout master branch"
-  stage ("Checkout sugar") {
-    git([branch: "master", url:'ssh://git@stash:7999/libs/sugar.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
-  }
+properties([
+  disableConcurrentBuilds(),
+  pipelineTriggers([
+    upstream(threshold: 'SUCCESS', upstreamProjects:
+      // This list should match package.json
+      'katamari, sand'
+    ),
+    pollSCM('H 0 1 1 1')
+  ])
+])
 
-  stage ("Checkout shared pipelines") {
+node("primary") {
+  stage ("Checkout SCM") {
+    checkout scm
     sh "mkdir -p jenkins-plumbing"
     dir ("jenkins-plumbing") {
       git([branch: "master", url:'ssh://git@stash:7999/van/jenkins-plumbing.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
     }
   }
-
+  
   def extNpmInstall = load("jenkins-plumbing/npm-install.groovy")
   def extBedrock = load("jenkins-plumbing/bedrock-tests.groovy")
-  def extExec = load("jenkins-plumbing/exec.groovy")
-
-  stage("Building") {
-    extNpmInstall ()
-    extExec ("grunt")
-  }
 
   def permutations = [
     [ name: "win10Chrome", os: "windows-10", browser: "chrome" ],
@@ -48,7 +49,10 @@ node("primary") {
     }
   }
 
-  stage ("Parallel Browser Tests") {
+  runTests = { 
     parallel processes
   }
+
+  def runBuild = load("jenkins-plumbing/standard-build.groovy")
+  runBuild(runTests)
 }
