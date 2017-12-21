@@ -7,8 +7,8 @@
     "url": "https://github.com/ephox/polaris"
   },
   "files": [
-    "lib",
-    "src",
+    "lib/main",
+    "src/main",
     "readme.md",
     "LEGAL.txt",
     "CHANGELOG.txt",
@@ -25,8 +25,12 @@
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "bedrock-auto -b chrome-headless -d src/test",
-    "prepublishOnly": "tsc"
+    "prepublishOnly": "tsc",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
