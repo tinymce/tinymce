@@ -3,8 +3,8 @@
   "description": "This project handles ARIA attributes.",
   "version": "3.0.0",
   "files": [
-    "lib",
-    "src",
+    "lib/main",
+    "src/main",
     "readme.md",
     "LEGAL.txt",
     "CHANGELOG.txt",
@@ -24,8 +24,7 @@
     "@ephox/bedrock": "*",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
-    "typescript": "^2.6.2",
-    "webpack": "^3.10.0"
+    "typescript": "^2.6.2"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
@@ -34,7 +33,7 @@
   "types": "./lib/main/ts/ephox/echo/api/Main.d.ts",
   "scripts": {
     "prepublishOnly": "tsc",
-    "test": "bedrock-auto -b chrome-headless -d src/test/ts",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts"
   }
 }
