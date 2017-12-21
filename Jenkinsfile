@@ -1,37 +1,30 @@
+properties([
+  disableConcurrentBuilds(),
+  pipelineTriggers([
+    upstream(threshold: 'SUCCESS', upstreamProjects:
+      // This list should match package.json
+      'katamari, sugar, sand, boulder'
+    ),
+    pollSCM('H 0 1 1 1')
+  ])
+])
+
 node("primary") {
-  def credentialsId = '8aa93893-84cc-45fc-a029-a42f21197bb3'
-
-  stage "Primary: make directories"
-  sh "mkdir -p alloy-project"
-  sh "mkdir -p jenkins-plumbing"
-
-  stage "Primary: load shared pipelines"
-  dir("jenkins-plumbing") {
-     git ([url: "ssh://git@stash:7999/van/jenkins-plumbing.git", credentialsId: credentialsId]) 
+  stage ("Checkout SCM") {
+    checkout scm
+    sh "mkdir -p jenkins-plumbing"
+    dir ("jenkins-plumbing") {
+      git([branch: "master", url:'ssh://git@stash:7999/van/jenkins-plumbing.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
+    }
   }
-  def extBedrock = load("jenkins-plumbing/bedrock-tests.groovy")
-  def exec = load("jenkins-plumbing/exec.groovy")
-   
-  dir("alloy-project") {    
-    stage "Primary: checkout"
-    git([branch: "master", url:'ssh://git@stash:7999/van/alloy.git', credentialsId: credentialsId])
-    
-    stage "Fetching dent dependencies"
-    sh "dent"
-
-    stage "Fetching npm dependencies"
-    sh "npm install"
-
-    stage "Running atomic tests"
-    sh "grunt bolt-test"
-
-    stage "Running phantomjs tests"
-    sh "grunt bedrock-auto:phantomjs"
-  }
-
   stage "Skipping browser tests ... not yet working"
+  def runBuild = load("jenkins-plumbing/standard-build.groovy")
+  runBuild()
+
 
   /*
+  def extBedrock = load("jenkins-plumbing/bedrock-tests.groovy")
+  def exec = load("jenkins-plumbing/exec.groovy")
 
   def permutations = [:]
 
@@ -52,7 +45,7 @@ node("primary") {
       node("bedrock-" + permutation.os) {
         echo "Platform: checkout"
         git([branch: "master", url:'ssh://git@stash:7999/van/alloy.git', credentialsId: credentialsId])
-        
+
         echo "Platform: dependencies"
         exec "dent"
 
@@ -67,7 +60,6 @@ node("primary") {
 
   */
 
-  stage "Skipping publishing ... this will be an npm project"
 }
 
 

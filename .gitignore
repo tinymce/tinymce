@@ -13,3 +13,5 @@ node_modules
 /size-comparisons
 /scratch.size
 /.vscode
+
+package-lock.json
