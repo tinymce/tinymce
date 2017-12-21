@@ -1,11 +1,22 @@
 {
   "name": "@ephox/robin",
   "description": "This project is for grouping sibling DOM nodes together by boundary points, for example the list of elements and nodes representing a word.",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/robin"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "lib/main",
+    "src/main",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
   "dependencies": {
     "@ephox/boss": "*",
     "@ephox/katamari": "*",
@@ -15,14 +26,21 @@
   "devDependencies": {
     "@ephox/agar": "*",
     "@ephox/bedrock": "*",
-    "@ephox/bolt": "*",
     "@ephox/sand": "*",
     "@ephox/sugar": "*",
     "@ephox/wrap-jsverify": "*",
-    "chromedriver": "*",
-    "grunt": "*",
-    "grunt-npm": "*"
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2"
   },
   "author": "Ephox Corporation",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/robin/api/Main.js",
+  "module": "./lib/main/ts/ephox/robin/api/Main.js",
+  "types": "./lib/main/ts/ephox/robin/api/Main.d.ts",
+  "scripts": {
+    "test": "bedrock-auto -b phantomjs -d src/test",
+    "test-manual": "bedrock -d src/test",
+    "prepublishOnly": "tsc"
+  }
 }
