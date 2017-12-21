@@ -6,8 +6,20 @@
     "type": "git",
     "url": "https://github.com/ephox/mcagar"
   },
+  "files": [
+    "lib/main",
+    "src/main",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
-    "test": "bedrock-auto -b chrome --testdir src/test/js/browser",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts",
     "prepublishOnly": "tsc"
   },
   "devDependencies": {
@@ -21,7 +33,11 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/agar": "^2.0.0"
+    "@ephox/agar": "*",
+    "@ephox/sugar": "*",
+    "@ephox/katamari": "*",
+    "@ephox/sand": "*",
+    "@ephox/wrap-jsverify": "*"
   },
   "main": "./lib/main/ts/ephox/mcagar/api/Main.js",
   "module": "./lib/main/ts/ephox/mcagar/api/Main.js",
