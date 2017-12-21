@@ -22,6 +22,9 @@
     "@ephox/robin": "*",
     "@ephox/sugar": "*"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "devDependencies": {
     "@ephox/bedrock": "*",
     "@ephox/sand": "*",
