@@ -30,12 +30,8 @@
     "@ephox/sugar": "*",
     "@ephox/wrap-jsverify": "*",
     "awesome-typescript-loader": "^3.4.1",
-    "chromedriver": "*",
-    "grunt": "*",
-    "grunt-npm": "*",
     "source-map-loader": "^0.2.3",
-    "typescript": "^2.6.2",
-    "webpack": "^3.10.0"
+    "typescript": "^2.6.2"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
