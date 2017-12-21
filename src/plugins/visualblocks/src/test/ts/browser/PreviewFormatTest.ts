@@ -51,8 +51,8 @@ UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', fu
   }, {
     plugins: 'visualblocks',
     toolbar: 'visualblocks',
-    visualblocks_content_css: '/project/src/plugins/visualblocks/dist/visualblocks/css/visualblocks.css',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    visualblocks_content_css: '/project/js/tinymce/plugins/visualblocks/css/visualblocks.css',
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

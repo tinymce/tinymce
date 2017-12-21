@@ -191,7 +191,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
   }, {
     plugins: 'fullpage',
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     protect: [
       /<!--([\s\S]*?)-->/g
     ]

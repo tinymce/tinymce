@@ -139,7 +139,7 @@ UnitTest.asynctest('browser.core.SubmitTest', function() {
         { filter: 'http://media1.tinymce.com' },
         { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
     ],
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

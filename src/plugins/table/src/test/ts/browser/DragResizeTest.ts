@@ -236,7 +236,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function() {
     plugins: 'table',
     content_style: 'table {border: 0;padding:0;} td {border: 0;padding:0;}',
     height: 400,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

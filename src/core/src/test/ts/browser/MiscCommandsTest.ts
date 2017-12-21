@@ -97,7 +97,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function() {
       '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,' +
         'float,margin,margin-top,margin-right,margin-bottom,margin-left,padding-left,text-align,display'
     },
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', function
     plugins: 'table',
     toolbar: 'table',
     table_appearance_options: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

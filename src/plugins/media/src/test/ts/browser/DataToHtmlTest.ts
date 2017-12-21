@@ -78,7 +78,7 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function() {
   }, {
     plugins: ["media"],
     toolbar: "media",
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

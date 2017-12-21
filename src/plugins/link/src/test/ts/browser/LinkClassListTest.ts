@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.LinkClassListTest', function() 
   }, {
     plugins: 'link',
     toolbar: 'link',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

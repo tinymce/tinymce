@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function() 
     toolbar: "media",
     indent: false,
     forced_root_block: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

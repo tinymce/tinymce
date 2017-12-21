@@ -37,7 +37,7 @@ UnitTest.asynctest(
     }, {
       plugins: 'table',
       table_tab_navigation: false,
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      skin_url: '/project/js/tinymce/skins/lightgray'
     }, success, failure);
   }
 );

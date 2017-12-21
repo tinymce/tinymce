@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', functi
   }, {
     plugins: 'tabfocus',
     tabfocus_elements: 'tempinput1',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

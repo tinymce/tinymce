@@ -222,7 +222,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
       '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +
         'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
     },
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

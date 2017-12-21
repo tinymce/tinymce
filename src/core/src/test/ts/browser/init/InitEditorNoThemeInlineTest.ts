@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeInlineTest', func
   }, {
     theme: false,
     inline: true,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     init_instance_callback: function (editor) {
       editor.fire('SkinLoaded');
     }

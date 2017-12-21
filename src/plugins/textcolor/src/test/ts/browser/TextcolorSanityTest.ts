@@ -80,7 +80,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', f
   }, {
     plugins: 'textcolor',
     toolbar: 'forecolor backcolor fontsizeselect',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

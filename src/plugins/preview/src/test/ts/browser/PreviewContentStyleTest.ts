@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', fu
     ], onSuccess, onFailure);
   }, {
     plugins: 'preview',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

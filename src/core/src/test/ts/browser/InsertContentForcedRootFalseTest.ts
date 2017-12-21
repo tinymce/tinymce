@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentForcedRootBlockFalseTest',
     forced_root_block: false,
     entities: 'raw',
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

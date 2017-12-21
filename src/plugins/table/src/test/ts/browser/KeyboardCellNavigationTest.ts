@@ -51,7 +51,7 @@ UnitTest.asynctest(
       ] : [], onSuccess, onFailure);
     }, {
       plugins: 'table',
-      skin_url: '/project/src/skins/lightgray/dist/lightgray',
+      skin_url: '/project/js/tinymce/skins/lightgray',
       height: 300
     }, success, failure);
   }

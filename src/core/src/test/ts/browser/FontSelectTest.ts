@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function() {
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     toolbar: 'fontsizeselect fontselect',
     content_style: [
       '.mce-content-body { font-family: Helvetica; font-size: 42px; }',

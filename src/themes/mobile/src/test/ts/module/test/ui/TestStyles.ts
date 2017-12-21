@@ -17,7 +17,7 @@ var addStyles = function () {
   var link = Element.fromTag('link');
   Attr.setAll(link, {
     rel: 'Stylesheet',
-    href: '/project/src/skins/lightgray/dist/lightgray/skin.mobile.min.css',
+    href: '/project/js/tinymce/skins/lightgray/skin.mobile.min.css',
     type: 'text/css'
   });
   Class.add(link, styleClass);

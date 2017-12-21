@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', function() {
     NamedChain.write('editor', Editor.cFromSettings({
       plugins: 'table',
       width: 400,
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      skin_url: '/project/js/tinymce/skins/lightgray'
     })),
     NamedChain.direct('editor', cInsertTable(5, 2), 'element'),
     NamedChain.write('widthBefore', cGetWidth),

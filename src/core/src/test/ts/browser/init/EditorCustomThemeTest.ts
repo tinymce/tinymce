@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', function()
     automatic_uploads: false,
     entities: 'raw',
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     theme: function (editor, targetnode) {
       var editorContainer = document.createElement('div');
       editorContainer.id = 'editorContainer';

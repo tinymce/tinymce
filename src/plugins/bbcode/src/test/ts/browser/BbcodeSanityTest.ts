@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.bbcode.BbcodeSanityTest', function()
   }, {
     plugins: 'bbcode',
     toolbar: 'bbcode',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     bbcode_dialect: 'punbb'
   }, success, failure);
 });

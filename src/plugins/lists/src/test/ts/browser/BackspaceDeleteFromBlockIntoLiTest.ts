@@ -62,7 +62,7 @@ UnitTest.asynctest('Browser Test: .RemoveTrailingBlockquoteTest', function() {
     indent: false,
     plugins: 'lists',
     toolbar: '',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

@@ -114,7 +114,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', fun
   }, {
     plugins: 'link',
     toolbar: 'link',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     target_list: [
       { title: 'New page', value: '_blank' }
     ]

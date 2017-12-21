@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', funct
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
     plugins: 'autolink',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

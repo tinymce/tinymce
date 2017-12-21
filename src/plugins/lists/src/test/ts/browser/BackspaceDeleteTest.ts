@@ -857,7 +857,7 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', function() {
         'margin-bottom,margin-left,display,position,top,left,list-style-type'
     },
     content_style: '.mce-content-body { line-height: normal; }', // Breaks tests in phantomjs unless we have this
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

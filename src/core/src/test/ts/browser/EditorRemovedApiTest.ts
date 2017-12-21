@@ -111,7 +111,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function() {
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     test_callback: function () {
     }
   }, success, failure);

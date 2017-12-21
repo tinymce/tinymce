@@ -99,7 +99,7 @@ asynctest(
         'compat3x': '/project/src/plugins/compat3x/src/main/js/plugin.js'
       },
       toolbar: 'link',
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      skin_url: '/project/js/tinymce/skins/lightgray'
     }, success, failure);
   }
 );

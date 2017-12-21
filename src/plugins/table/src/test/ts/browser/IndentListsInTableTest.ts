@@ -61,7 +61,7 @@ UnitTest.asynctest('tinymce.plugins.table.IndentListsInTableTest', function() {
     plugins: 'lists table',
     toolbar: 'table numlist',
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

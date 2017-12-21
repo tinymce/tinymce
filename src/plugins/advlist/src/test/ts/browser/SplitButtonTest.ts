@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.SplitButtonTest', function() {
     advlist_bullet_styles: '',
     advlist_number_styles: '',
     toolbar: 'numlist bullist',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

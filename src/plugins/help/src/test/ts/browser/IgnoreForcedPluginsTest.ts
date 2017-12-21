@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.plugin.IgnoreForcedPluginsTest', function() {
     plugins: 'help link',
     toolbar: 'help',
     forced_plugins: ['link'],
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

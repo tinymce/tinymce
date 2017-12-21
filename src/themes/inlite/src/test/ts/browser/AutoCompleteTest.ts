@@ -91,7 +91,7 @@
 //     insert_toolbar: 'quickimage media quicktable',
 //     selection_toolbar: 'bold italic | quicklink h1 h2 blockquote',
 //     inline: true,
-//     skin_url: '/project/src/skins/lightgray/dist/lightgray'
+//     skin_url: '/project/js/tinymce/skins/lightgray'
 //   }, success, failure);
 // });
 

@@ -181,7 +181,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function(
   }, {
     plugins: "media",
     toolbar: "media",
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     live_embeds: false,
     document_base_url: '/tinymce/tinymce/trunk/tests/',
     extended_valid_elements: 'script[src|type]',

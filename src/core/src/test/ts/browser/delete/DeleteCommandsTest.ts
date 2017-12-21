@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteCommandsTest', function() 
       ]))
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     indent: false
   }, success, failure);
 });

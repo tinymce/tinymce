@@ -185,7 +185,7 @@ UnitTest.asynctest(
       indent: false,
       plugins: '',
       toolbar: '',
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      skin_url: '/project/js/tinymce/skins/lightgray'
     }, function () {
       success();
     }, failure);

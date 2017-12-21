@@ -66,7 +66,7 @@ UnitTest.asynctest('browser/core/MeasureTest', function() {
   }, {
     inline: true,
     theme: 'inlite',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

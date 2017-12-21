@@ -42,7 +42,7 @@ UnitTest.asynctest('Browser Test: .MetadataTest', function() {
   }, {
     plugins: 'help fake nometafake',
     toolbar: 'help',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

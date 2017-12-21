@@ -21,7 +21,7 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.BradingEnabledTest', func
     ], onSuccess, onFailure);
   }, {
     theme: 'modern',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

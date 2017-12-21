@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.themes.inlite.SkinFalseTest', function() {
     skin: false,
     inline: true,
     theme: 'inlite',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

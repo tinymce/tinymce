@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', func
     ], onSuccess, onFailure);
   }, {
     theme: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     init_instance_callback: function (editor) {
       editor.fire('SkinLoaded');
     }

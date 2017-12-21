@@ -126,7 +126,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', functi
   }, {
     plugins: 'autolink',
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

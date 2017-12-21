@@ -376,7 +376,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
   }, {
     add_unload_trigger: false,
     plugins: 'importcss',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

@@ -174,7 +174,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function() {
     disable_nodechange: true,
     entities: 'raw',
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

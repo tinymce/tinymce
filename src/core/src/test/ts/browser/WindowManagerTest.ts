@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function() {
     disable_nodechange: true,
     indent: false,
     entities: 'raw',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

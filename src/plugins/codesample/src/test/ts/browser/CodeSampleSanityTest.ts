@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.CodeSampleSanityTest', fu
   }, {
     plugins: 'codesample',
     toolbar: 'codesample',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

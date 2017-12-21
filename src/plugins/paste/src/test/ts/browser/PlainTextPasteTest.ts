@@ -30,7 +30,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', function() {
 
       EditorManager.init(Merger.merge(settings, {
         selector: '#' + randomId,
-        skin_url: '/project/src/skins/lightgray/dist/lightgray',
+        skin_url: '/project/js/tinymce/skins/lightgray',
         indent: false,
         setup: function (editor) {
           editor.on('SkinLoaded', function () {

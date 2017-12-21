@@ -191,7 +191,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', function
     valid_styles: {
       '*': 'width,height,vertical-align,text-align,float,border-color,border-style,background-color,border,padding,border-spacing,border-collapse'
     },
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

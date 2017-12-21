@@ -97,7 +97,7 @@ UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', function() {
   }, {
     entities: 'raw',
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

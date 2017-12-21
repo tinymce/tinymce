@@ -207,7 +207,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function() {
     plugins: 'link',
     add_unload_trigger: false,
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

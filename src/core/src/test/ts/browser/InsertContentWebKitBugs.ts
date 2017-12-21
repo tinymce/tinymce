@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function() {
   }, {
     selector: 'textarea',
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     content_style: 'blockquote { font-size: 12px }' // Needed to produce spans with runtime styles
   }, success, failure);
 });

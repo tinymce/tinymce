@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', fu
   }, {
     plugins: 'charmap',
     toolbar: 'charmap',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

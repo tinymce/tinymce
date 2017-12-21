@@ -72,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageListTest', function() {
   }, {
     plugins: 'image',
     toolbar: 'image',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

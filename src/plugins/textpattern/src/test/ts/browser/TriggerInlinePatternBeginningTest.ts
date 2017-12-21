@@ -47,7 +47,7 @@ UnitTest.asynctest(
       plugins: 'textpattern',
       toolbar: 'textpattern',
       indent: false,
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      skin_url: '/project/js/tinymce/skins/lightgray'
     }, success, failure);
   }
 );

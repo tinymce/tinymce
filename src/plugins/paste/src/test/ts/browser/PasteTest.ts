@@ -854,7 +854,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     add_unload_trigger: false,
     indent: false,
     plugins: 'paste',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

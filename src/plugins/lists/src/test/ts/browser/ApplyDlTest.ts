@@ -128,7 +128,7 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function() {
         'font-style,text-decoration,float,margin,margin-top,margin-right,' +
         'margin-bottom,margin-left,display,position,top,left,list-style-type'
     },
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

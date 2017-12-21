@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.themes.modern.SkinFalseInlineTest', function
   }, {
     skin: false,
     inline: true,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

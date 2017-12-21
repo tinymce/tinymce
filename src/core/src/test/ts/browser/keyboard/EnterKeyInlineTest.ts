@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', function(
   Theme();
 
   var settings = {
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     inline: true
   };
 

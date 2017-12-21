@@ -189,7 +189,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', function() {
     toc_class: 'tst-toc',
     toc_depth: 2,
     toc_header: 'h3',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

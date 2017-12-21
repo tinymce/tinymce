@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.TableInListTest', function() {
     plugins: 'lists',
     toolbar: 'bullist numlist indent outdent',
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

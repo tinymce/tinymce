@@ -132,7 +132,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
     {
       plugins: 'imagetools',
       automatic_uploads: false,
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      skin_url: '/project/js/tinymce/skins/lightgray'
     },
     success,
     failure

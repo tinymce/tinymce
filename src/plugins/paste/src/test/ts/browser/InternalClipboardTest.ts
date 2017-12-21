@@ -215,7 +215,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', functi
         lastPostProcessEvent = evt;
       });
     },
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

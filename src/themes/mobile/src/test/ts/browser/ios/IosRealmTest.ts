@@ -45,7 +45,7 @@ UnitTest.asynctest('Browser Test: ios.IosRealmTest', function() {
 
     var css = Element.fromTag('link');
     Attr.setAll(css, {
-      href: '/project/src/skins/lightgray/dist/lightgray/skin.mobile.min.css',
+      href: '/project/js/tinymce/skins/lightgray/skin.mobile.min.css',
       rel: 'Stylesheet',
       type: 'text/css'
     });

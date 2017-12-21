@@ -27,7 +27,7 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.DimensionsTest', function
 
       EditorManager.init(Merger.merge(settings, {
         selector: '#' + randomId,
-        skin_url: '/project/src/skins/lightgray/dist/lightgray',
+        skin_url: '/project/js/tinymce/skins/lightgray',
         setup: function (editor) {
           editor.on('SkinLoaded', function () {
             setTimeout(function () {

@@ -255,7 +255,7 @@ UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function() {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     plugins: 'link',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     indent: false,
     filepicker_validator_handler: function (query, success) {
       window.setTimeout(function () {

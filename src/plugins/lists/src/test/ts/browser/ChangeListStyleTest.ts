@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ChangeListStyleTest', function
     indent: false,
     plugins: 'lists',
     toolbar: 'numlist bullist',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

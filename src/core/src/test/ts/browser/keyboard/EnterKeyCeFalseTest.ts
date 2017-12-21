@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function
     extended_valid_elements: 'div[id|style|contenteditable],span[id|style|contenteditable],#dt,#dd',
     entities: 'raw',
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

@@ -94,7 +94,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.DatesTest', function() {
     plugins: 'template',
     toolbar: 'template',
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

@@ -166,7 +166,7 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.SidebarTest', function() 
         onhide: storeEvent('mysidebar3:hide')
       });
     },
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

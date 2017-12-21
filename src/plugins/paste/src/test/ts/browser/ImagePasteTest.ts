@@ -190,7 +190,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     indent: false,
     automatic_uploads: false,
     plugins: "paste",
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

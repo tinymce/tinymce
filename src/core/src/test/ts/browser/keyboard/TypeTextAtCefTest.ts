@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', function() {
     ], onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

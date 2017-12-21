@@ -47,7 +47,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function() {
         add_unload_trigger: false,
         indent: false,
         plugins: 'paste',
-        skin_url: '/project/src/skins/lightgray/dist/lightgray',
+        skin_url: '/project/js/tinymce/skins/lightgray',
         setup: function (editor) {
           editor.on('SkinLoaded', function () {
             setTimeout(function () {

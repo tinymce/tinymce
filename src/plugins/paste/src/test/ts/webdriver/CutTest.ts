@@ -37,7 +37,7 @@ UnitTest.asynctest('tinymce.plugins.paste.webdriver.CutTest', function() {
       Waiter.sTryUntil('Cut is async now, so need to wait for content', api.sAssertContent('<p>ac</p>'), 100, 1000)
     ], onSuccess, onFailure);
   }, {
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     plugins: 'paste'
   }, success, failure);
 });

@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', function() 
         indent: false,
         image_caption: true,
         height: 400,
-        skin_url: '/project/src/skins/lightgray/dist/lightgray'
+        skin_url: '/project/js/tinymce/skins/lightgray'
       }),
       UiChains.cClickOnToolbar('click image button', 'div[aria-label="Insert/edit image"]'),
       UiChains.cFillActiveDialog({

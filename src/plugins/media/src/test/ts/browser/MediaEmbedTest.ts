@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.core.MediaEmbedTest', function() {
           'controls="controls">\n<source src="' + data.url + '" />\n</video>'
       });
     },
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

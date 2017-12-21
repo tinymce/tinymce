@@ -76,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', fu
     plugins: 'imagetools',
     automatic_uploads: false,
     images_upload_handler: uploadHandlerState.handler(srcUrl),
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

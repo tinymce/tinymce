@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.noneditable.NonEditablePluginTest', 
     noneditable_regexp: [/\{[^\}]+\}/g],
     plugins: 'noneditable',
     entities: 'raw',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

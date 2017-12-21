@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerEventsTest', function() {
   }, {
     inline: true,
     add_unload_trigger: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

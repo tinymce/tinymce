@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', function
   }, {
     selector: 'textarea',
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

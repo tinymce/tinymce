@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function() {
       EditorManager.init({
         selector: '.tinymce-editor',
         inline: true,
-        skin_url: '/project/src/skins/lightgray/dist/lightgray',
+        skin_url: '/project/js/tinymce/skins/lightgray',
         setup: function (editor) {
           editor.on('SkinLoaded', function () {
             next(Chain.wrap(editor));

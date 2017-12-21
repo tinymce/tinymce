@@ -66,7 +66,7 @@ UnitTest.asynctest('Browser Test: .PasteStylesTest', function() {
     plugins: 'paste',
     toolbar: '',
     valid_styles: 'font-family,color',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

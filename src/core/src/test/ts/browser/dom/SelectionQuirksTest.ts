@@ -100,7 +100,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function() {
     ], onSuccess, onFailure);
   }, {
     theme: 'modern',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

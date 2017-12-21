@@ -45,7 +45,7 @@ UnitTest.asynctest(
           editorContainer: elm.dom()
         };
       },
-      skin_url: '/project/src/skins/lightgray/dist/lightgray',
+      skin_url: '/project/js/tinymce/skins/lightgray',
       inline: true,
       init_instance_callback: function (editor) {
         editor.fire('SkinLoaded');

@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', function() 
   }, {
     plugins: 'visualchars',
     toolbar: 'visualchars',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

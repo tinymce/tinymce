@@ -47,7 +47,7 @@ var loadSkinAndOverride = function (viewBlock, done) {
   viewBlock.attach();
   DOMUtils.DOM.addClass(viewBlock.get(), 'ui-overrides');
   DOMUtils.DOM.styleSheetLoader.loadAll([
-    '/project/src/skins/lightgray/dist/lightgray/skin.min.css',
+    '/project/js/tinymce/skins/lightgray/skin.min.css',
     '/project/src/core/src/test/css/ui-overrides.css'
   ], function () {
     done();

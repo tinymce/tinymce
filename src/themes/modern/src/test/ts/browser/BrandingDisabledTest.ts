@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.themes.modern.test.BradingDisabledTest', fun
     ], onSuccess, onFailure);
   }, {
     theme: 'modern',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     branding: false
   }, success, failure);
 });

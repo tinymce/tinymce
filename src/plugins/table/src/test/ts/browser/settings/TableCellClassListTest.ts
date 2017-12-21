@@ -62,7 +62,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellClassListTest', funct
     ], onSuccess, onFailure);
   }, {
     plugins: 'table',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

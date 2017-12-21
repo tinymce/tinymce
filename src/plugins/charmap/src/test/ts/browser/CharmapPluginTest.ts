@@ -91,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', function
   }, {
     plugins: 'charmap',
     indent: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray'
+    skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
 

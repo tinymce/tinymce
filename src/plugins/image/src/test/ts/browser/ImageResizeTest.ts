@@ -73,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', function() {
   }, {
     plugins: 'image',
     toolbar: 'image',
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     file_picker_callback: function (callback) {
       callback('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
     }

@@ -163,7 +163,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function() {
     Pipeline.async({}, isPhantomJs() ? [ ] : steps(editor, tinyApis), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
-    skin_url: '/project/src/skins/lightgray/dist/lightgray',
+    skin_url: '/project/js/tinymce/skins/lightgray',
     content_style: 'body.mce-content-body  { margin: 0 }'
   }, success, failure);
 });
