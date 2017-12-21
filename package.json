@@ -1,23 +1,43 @@
 {
   "name": "@ephox/dragster",
   "description": "This project handles dragging.",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/dragster"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "lib/main",
+    "src/main",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
   "dependencies": {
     "@ephox/katamari": "*",
     "@ephox/sugar": "*",
     "@ephox/porkbun": "*"
   },
   "devDependencies": {
-    "@ephox/bolt": "*",
-    "@ephox/photon": "*"
+    "@ephox/photon": "*",
+    "@ephox/bedrock": "*",
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "bolt test config/bolt/atomic.js $(find src/test/js/atomic -name *Test.js)"
+    "test": "bedrock-auto -b phantomjs -d src/test",
+    "test-manual": "bedrock -d src/test",
+    "prepublishOnly": "tsc"
   },
   "author": "Ephox Corporation",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/dragster/api/Main.js",
+  "module": "./lib/main/ts/ephox/dragster/api/Main.js",
+  "types": "./lib/main/ts/ephox/dragster/api/Main.d.ts"
 }
