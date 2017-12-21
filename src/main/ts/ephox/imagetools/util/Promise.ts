@@ -184,6 +184,8 @@ let promise = () => {
       }
     });
   };
+
+  return Promise;
 };
 
 declare const window: any;
