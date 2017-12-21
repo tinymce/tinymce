@@ -43,7 +43,7 @@ node("primary") {
           extNpmInstall()
 
           echo "Platform: browser tests for " + permutation.name
-          extBedrock(permutation.name, permutation.browser, "src/test/js/browser")
+          extBedrock(permutation.name, permutation.browser, "src/test/ts/browser")
         }
       }
     }
