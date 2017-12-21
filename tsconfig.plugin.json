@@ -10,7 +10,7 @@
     "baseUrl": ".",
     "paths": {
       "tinymce": ["src/core/dist/tinymce"],
-      "tinymce/core/*": ["src/core/dist/globals/tinymce/core/*"],
+      "tinymce/core/*": ["lib/globals/tinymce/core/*"],
       "tinymce/ui/*": ["src/ui/src/main/ts/*"],
       "tinymce/themes/mobile/*": ["src/themes/mobile/src/main/ts/*"],
       "tinymce/themes/modern/*": ["src/themes/modern/src/main/ts/*"],
