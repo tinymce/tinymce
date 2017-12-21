@@ -18,7 +18,7 @@ import { SelectorFind } from '@ephox/sugar';
 
 
 
-export default <any> function () {
+Ready.execute(function () {
 
   var tester = Element.fromHtml(
     '<table border=1>'+
@@ -250,4 +250,4 @@ export default <any> function () {
   DomEvent.bind(unmakeColumnHeader, 'click', runOperation(TableOperations.unmakeColumnHeader));
   DomEvent.bind(makeRowHeader, 'click', runOperation(TableOperations.makeRowHeader));
   DomEvent.bind(unmakeRowHeader, 'click', runOperation(TableOperations.unmakeRowHeader));
-};
+});

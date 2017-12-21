@@ -2,7 +2,7 @@ import { AriaGrid } from '@ephox/echo';
 import PickerDirection from 'ephox/snooker/api/PickerDirection';
 import DemoTranslations from 'ephox/snooker/demo/DemoTranslations';
 import PickerUi from 'ephox/snooker/picker/PickerUi';
-import { Attr } from '@ephox/sugar';
+import { Attr, Ready } from '@ephox/sugar';
 import { DomEvent } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Focus } from '@ephox/sugar';
@@ -11,7 +11,7 @@ import { Remove } from '@ephox/sugar';
 
 
 
-export default <any> function () {
+Ready.execute(function () {
 
   var picker = PickerUi(PickerDirection.rtl, {
     maxCols: 10,
@@ -51,4 +51,4 @@ export default <any> function () {
 
   Attr.set(ephoxUi, 'tabIndex', '-1');
   Focus.focus(ephoxUi);
-};
+});
