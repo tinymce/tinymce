@@ -26,6 +26,9 @@
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "main": "./lib/main/ts/ephox/echo/api/Main.js",
