@@ -1,7 +1,15 @@
 {
   "name": "@ephox/snooker",
   "description": "This project implements the table model.",
-  "version": "3.0.7",
+  "version": "4.0.0",
+  "files": [
+    "lib/main",
+    "src/main",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/snooker"
@@ -16,13 +24,19 @@
   },
   "devDependencies": {
     "@ephox/bedrock": "*",
-    "@ephox/bolt": "*",
     "@ephox/sand": "*",
-    "chromedriver": "*",
-    "grunt": "*",
-    "grunt-npm": "*",
-    "jsdom": "*"
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2"
   },
   "author": "Ephox Corporation",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/snooker/api/Main.js",
+  "module": "./lib/main/ts/ephox/snooker/api/Main.js",
+  "types": "./lib/main/ts/ephox/snooker/api/Main.d.ts",
+  "scripts": {
+    "prepublishOnly": "tsc",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts"
+  }
 }
