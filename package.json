@@ -1,10 +1,21 @@
 {
   "name": "@ephox/darwin",
   "description": "This project's purpose is to handle selection and cursor navigation.",
-  "version": "2.0.5",
+  "version": "3.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/darwin"
+  },
+  "files": [
+    "lib/main",
+    "src/main",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
     "@ephox/sand": "*",
@@ -15,8 +26,17 @@
     "@ephox/sugar": "*"
   },
   "devDependencies": {
-    "@ephox/bolt": "*"
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2"
   },
   "author": "Ephox Corporation",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/darwin/api/Main.js",
+  "module": "./lib/main/ts/ephox/darwin/api/Main.js",
+  "types": "./lib/main/ts/ephox/darwin/api/Main.d.ts",
+  "scripts": {
+    "test": "tsc",
+    "prepublishOnly": "tsc"
+  }
 }
