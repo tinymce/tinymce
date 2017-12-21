@@ -1,6 +1,6 @@
 {
   "name": "@ephox/sand",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Platform detection library",
   "repository": {
     "type": "git",
@@ -9,9 +9,10 @@
   "files": [
     "lib/main",
     "src/main",
+    "readme.md",
     "LEGAL.txt",
-    "LICENSE.txt",
-    "README.md"
+    "CHANGELOG.txt",
+    "LICENSE.txt"
   ],
   "scripts": {
     "prepublishOnly": "tsc",
@@ -33,14 +34,6 @@
   "dependencies": {
     "@ephox/katamari": "*"
   },
-  "files": [
-    "lib/main",
-    "src/main",
-    "readme.md",
-    "LEGAL.txt",
-    "CHANGELOG.txt",
-    "LICENSE.txt"
-  ],
   "main": "./lib/main/ts/ephox/sand/api/Main.js",
   "module": "./lib/main/ts/ephox/sand/api/Main.js",
   "types": "./lib/main/ts/ephox/sand/api/Main.d.ts",
