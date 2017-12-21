@@ -1,7 +1,15 @@
 {
   "name": "@ephox/echo",
   "description": "This project handles ARIA attributes.",
-  "version": "2.0.0",
+  "version": "3.0.0",
+  "files": [
+    "lib/main",
+    "src/main",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/echo"
@@ -14,10 +22,18 @@
   "devDependencies": {
     "@ephox/agar": "*",
     "@ephox/bedrock": "*",
-    "@ephox/bolt": "*",
-    "grunt": "*",
-    "grunt-npm": "*"
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.2"
   },
   "author": "Ephox Corporation",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "main": "./lib/main/ts/ephox/echo/api/Main.js",
+  "module": "./lib/main/ts/ephox/echo/api/Main.js",
+  "types": "./lib/main/ts/ephox/echo/api/Main.d.ts",
+  "scripts": {
+    "prepublishOnly": "tsc",
+    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts"
+  }
 }
