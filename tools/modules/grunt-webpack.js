@@ -50,11 +50,11 @@ let create = (name, tsConfig, inputTsFile, outFile) => {
 };
 
 let createPlugin = (name) => {
-  return create(name, 'tsconfig.plugin.json', `src/plugins/${name}/src/demo/ts/demo/Demo.ts`, `scratch/demos/plugins/${name}/demo.js`);
+  return create(name, 'tsconfig.plugin.json', `src/plugins/${name}/demo/ts/demo/Demo.ts`, `scratch/demos/plugins/${name}/demo.js`);
 };
 
 let createTheme = (name) => {
-  return create(name, 'tsconfig.theme.json', `src/themes/${name}/src/demo/ts/demo/Demo.ts`, `scratch/demos/themes/${name}/demo.js`);
+  return create(name, 'tsconfig.theme.json', `src/themes/${name}/demo/ts/demo/Demo.ts`, `scratch/demos/themes/${name}/demo.js`);
 };
 
 module.exports = {

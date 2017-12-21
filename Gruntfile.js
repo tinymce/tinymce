@@ -41,9 +41,9 @@ module.exports = function (grunt) {
 
     globals: {
       options: {
-        configFile: 'src/core/src/main/json/globals.json',
+        configFile: 'src/core/main/json/globals.json',
         outputDir: 'lib/globals',
-        templateFile: 'src/core/src/main/js/GlobalsTemplate.js'
+        templateFile: 'src/core/main/js/GlobalsTemplate.js'
       }
     },
 
@@ -66,7 +66,7 @@ module.exports = function (grunt) {
           },
           files:[
             {
-              src: 'lib/core/src/main/ts/api/Main.js',
+              src: 'lib/core/main/ts/api/Main.js',
               dest: 'js/tinymce/tinymce.js'
             }
           ]
@@ -90,7 +90,7 @@ module.exports = function (grunt) {
               swag.remapImports()
             ]
           },
-          files:[ { src: `lib/plugins/${name}/src/main/ts/Plugin.js`, dest: `js/tinymce/plugins/${name}/plugin.js` } ]
+          files:[ { src: `lib/plugins/${name}/main/ts/Plugin.js`, dest: `js/tinymce/plugins/${name}/plugin.js` } ]
         };
       }),
       gruntUtils.generate(themes, 'theme', (name) => {
@@ -106,7 +106,7 @@ module.exports = function (grunt) {
                 basedir: __dirname,
                 prefixes: {
                   'tinymce/core': 'lib/globals/tinymce/core',
-                  'tinymce/ui': 'lib/ui/src/main/ts'
+                  'tinymce/ui': 'lib/ui/main/ts'
                 }
               }),
               swag.remapImports()
@@ -114,7 +114,7 @@ module.exports = function (grunt) {
           },
           files:[
             {
-              src: `lib/themes/${name}/src/main/ts/Theme.js`,
+              src: `lib/themes/${name}/main/ts/Theme.js`,
               dest: `js/tinymce/themes/${name}/theme.js`
             }
           ]
@@ -133,13 +133,13 @@ module.exports = function (grunt) {
         core: {
           files: [
             { src: 'js/tinymce/tinymce.js', dest: 'js/tinymce/tinymce.min.js' },
-            { src: 'src/core/src/main/js/JqueryIntegration.js', dest: 'js/tinymce/jquery.tinymce.min.js' }
+            { src: 'src/core/main/js/JqueryIntegration.js', dest: 'js/tinymce/jquery.tinymce.min.js' }
           ]
         },
         'compat3x-plugin': {
           files: [
             {
-              src: 'src/plugins/compat3x/src/main/js/plugin.js',
+              src: 'src/plugins/compat3x/main/js/plugin.js',
               dest: 'js/tinymce/plugins/compat3x/plugin.min.js'
             }
           ]
@@ -175,7 +175,7 @@ module.exports = function (grunt) {
           optimization: 2
         },
         files: {
-          'js/tinymce/skins/lightgray/skin.min.css': 'src/skins/lightgray/src/main/less/desktop/Skin.less'
+          'js/tinymce/skins/lightgray/skin.min.css': 'src/skins/lightgray/main/less/desktop/Skin.less'
         }
       },
       mobile: {
@@ -188,7 +188,7 @@ module.exports = function (grunt) {
           optimization: 2
         },
         files: {
-          'js/tinymce/skins/lightgray/skin.mobile.min.css': 'src/skins/lightgray/src/main/less/mobile/app/mobile-less.less'
+          'js/tinymce/skins/lightgray/skin.mobile.min.css': 'src/skins/lightgray/main/less/mobile/app/mobile-less.less'
         }
       },
       'content-mobile': {
@@ -198,7 +198,7 @@ module.exports = function (grunt) {
           compress: true
         },
         files: {
-          'js/tinymce/skins/lightgray/content.mobile.min.css': 'src/skins/lightgray/src/main/less/mobile/content.less'
+          'js/tinymce/skins/lightgray/content.mobile.min.css': 'src/skins/lightgray/main/less/mobile/content.less'
         }
       },
       content: {
@@ -208,7 +208,7 @@ module.exports = function (grunt) {
           compress: true
         },
         files: {
-          'js/tinymce/skins/lightgray/content.min.css': 'src/skins/lightgray/src/main/less/desktop/Content.less'
+          'js/tinymce/skins/lightgray/content.min.css': 'src/skins/lightgray/main/less/desktop/Content.less'
         }
       },
       'content-inline': {
@@ -218,7 +218,7 @@ module.exports = function (grunt) {
           compress: true
         },
         files: {
-          'js/tinymce/skins/lightgray/content.inline.min.css': 'src/skins/lightgray/src/main/less/desktop/Content.Inline.less'
+          'js/tinymce/skins/lightgray/content.inline.min.css': 'src/skins/lightgray/main/less/desktop/Content.Inline.less'
         }
       }
     },
@@ -235,7 +235,7 @@ module.exports = function (grunt) {
         },
         files: [
           {
-            src: 'src/core/src/main/text/readme_lang.md',
+            src: 'src/core/main/text/readme_lang.md',
             dest: 'js/tinymce/langs/readme.md'
           },
           {
@@ -249,7 +249,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             flatten: true,
-            cwd: 'src/skins/lightgray/src/main/fonts',
+            cwd: 'src/skins/lightgray/main/fonts',
             src: [
               '**',
               '!*.json',
@@ -260,7 +260,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             flatten: true,
-            cwd: 'src/skins/lightgray/src/main/img',
+            cwd: 'src/skins/lightgray/main/img',
             src: '**',
             dest: 'js/tinymce/skins/lightgray/img'
           }
@@ -268,10 +268,10 @@ module.exports = function (grunt) {
       },
       plugins: {
         files: [
-          { expand: true, cwd: 'src/plugins/compat3x/src/main', src: ['img/**'], dest: 'js/tinymce/plugins/compat3x' },
-          { expand: true, cwd: 'src/plugins/compat3x/src/main', src: ['css/**'], dest: 'js/tinymce/plugins/compat3x' },
-          { expand: true, cwd: 'src/plugins/compat3x/src/main/js', src: ['utils/**', 'plugin.js', 'tiny_mce_popup.js'], dest: 'js/tinymce/plugins/compat3x' },
-          { src: 'src/plugins/codesample/src/main/css/prism.css', dest: 'js/tinymce/plugins/codesample/css/prism.css' }
+          { expand: true, cwd: 'src/plugins/compat3x/main', src: ['img/**'], dest: 'js/tinymce/plugins/compat3x' },
+          { expand: true, cwd: 'src/plugins/compat3x/main', src: ['css/**'], dest: 'js/tinymce/plugins/compat3x' },
+          { expand: true, cwd: 'src/plugins/compat3x/main/js', src: ['utils/**', 'plugin.js', 'tiny_mce_popup.js'], dest: 'js/tinymce/plugins/compat3x' },
+          { src: 'src/plugins/codesample/main/css/prism.css', dest: 'js/tinymce/plugins/codesample/css/prism.css' }
         ]
       },
       'emoticons-plugin': {
@@ -279,7 +279,7 @@ module.exports = function (grunt) {
           {
             flatten: true,
             expand: true,
-            cwd: 'src/plugins/emoticons/src/main/img',
+            cwd: 'src/plugins/emoticons/main/img',
             src: '*.gif',
             dest: 'js/tinymce/plugins/emoticons/img/'
           }
@@ -287,12 +287,12 @@ module.exports = function (grunt) {
       },
       'help-plugin': {
         files: [
-          { src: 'src/plugins/help/src/main/img/logo.png', dest: 'js/tinymce/plugins/help/img/logo.png' }
+          { src: 'src/plugins/help/main/img/logo.png', dest: 'js/tinymce/plugins/help/img/logo.png' }
         ]
       },
       'visualblocks-plugin': {
         files: [
-          { src: 'src/plugins/visualblocks/src/main/css/visualblocks.css', dest: 'js/tinymce/plugins/visualblocks/css/visualblocks.css' }
+          { src: 'src/plugins/visualblocks/main/css/visualblocks.css', dest: 'js/tinymce/plugins/visualblocks/css/visualblocks.css' }
         ]
       }
     },
@@ -658,10 +658,10 @@ module.exports = function (grunt) {
         projectdir: '.',
         stopOnFailure: true,
         testfiles: [
-          'src/**/src/test/ts/atomic/**/*Test.ts',
-          'src/**/src/test/ts/browser/**/*Test.ts'
+          'src/**/test/ts/atomic/**/*Test.ts',
+          'src/**/test/ts/browser/**/*Test.ts'
         ],
-        customRoutes: 'src/core/src/test/json/routes.json'
+        customRoutes: 'src/core/test/json/routes.json'
       }
     },
 
@@ -669,61 +669,61 @@ module.exports = function (grunt) {
       phantomjs: {
         browser: 'phantomjs',
         config: 'tsconfig.json',
-        testfiles: ['src/**/src/test/ts/**/*Test.ts'],
+        testfiles: ['src/**/test/ts/**/*Test.ts'],
         stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
-        customRoutes: 'src/core/src/test/json/routes.json',
+        customRoutes: 'src/core/test/json/routes.json',
         name: 'phantomjs'
       },
       'chrome-headless': {
         browser: 'chrome-headless',
         config: 'tsconfig.json',
-        testfiles: ['src/**/src/test/ts/**/*Test.ts'],
+        testfiles: ['src/**/test/ts/**/*Test.ts'],
         stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
-        customRoutes: 'src/core/src/test/json/routes.json',
+        customRoutes: 'src/core/test/json/routes.json',
         name: 'chrome-headless'
       },
       chrome: {
         browser: 'chrome',
         config: 'tsconfig.json',
-        testfiles: ['src/**/src/test/ts/**/*Test.ts'],
+        testfiles: ['src/**/test/ts/**/*Test.ts'],
         stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
-        customRoutes: 'src/core/src/test/json/routes.json',
+        customRoutes: 'src/core/test/json/routes.json',
         name: 'chrome'
       },
       firefox: {
         browser: 'firefox',
         config: 'tsconfig.json',
-        testfiles: ['src/**/src/test/ts/**/*Test.ts'],
+        testfiles: ['src/**/test/ts/**/*Test.ts'],
         stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
-        customRoutes: 'src/core/src/test/json/routes.json',
+        customRoutes: 'src/core/test/json/routes.json',
         name: 'firefox'
       },
       MicrosoftEdge: {
         browser: 'MicrosoftEdge',
         config: 'tsconfig.json',
-        testfiles: ['src/**/src/test/ts/**/*Test.ts'],
+        testfiles: ['src/**/test/ts/**/*Test.ts'],
         stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
-        customRoutes: 'src/core/src/test/json/routes.json',
+        customRoutes: 'src/core/test/json/routes.json',
         name: 'MicrosoftEdge'
       },
       ie: {
         browser: 'ie',
         config: 'tsconfig.json',
-        testfiles: ['src/**/src/test/ts/**/*Test.ts'],
+        testfiles: ['src/**/test/ts/**/*Test.ts'],
         stopOnFailure: true,
         overallTimeout: 600000,
         singleTimeout: 300000,
-        customRoutes: 'src/core/src/test/json/routes.json',
+        customRoutes: 'src/core/test/json/routes.json',
         name: 'ie'
       }
     },
