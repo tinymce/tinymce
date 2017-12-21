@@ -3,7 +3,7 @@ properties([
   pipelineTriggers([
     upstream(threshold: 'SUCCESS', upstreamProjects:
       // This list should match package.json
-      'darwin, '
+      'sand, katamari, phoenix, robin, snooker, sugar'
     ),
     pollSCM('H 0 1 1 1')
   ])

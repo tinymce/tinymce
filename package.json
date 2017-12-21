@@ -26,11 +26,9 @@
     "@ephox/sugar": "*"
   },
   "devDependencies": {
-    "@ephox/bedrock": "*",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
-    "typescript": "^2.6.2",
-    "webpack": "^3.10.0"
+    "typescript": "^2.6.2"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
@@ -39,7 +37,6 @@
   "types": "./lib/main/ts/ephox/darwin/api/Main.d.ts",
   "scripts": {
     "test": "tsc",
-    "test-manual": "bedrock -d src/test",
     "prepublishOnly": "tsc"
   }
 }
