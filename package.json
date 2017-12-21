@@ -27,6 +27,14 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "files": [
+    "lib/main",
+    "src/main",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "main": "./lib/main/ts/ephox/imagetools/api/Main.js",
