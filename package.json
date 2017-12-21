@@ -37,6 +37,14 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "files": [
+    "lib/main",
+    "src/main",
+    "readme.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
   "main": "./lib/main/ts/ephox/agar/api/Main.js",
   "module": "./lib/main/ts/ephox/agar/api/Main.js",
   "types": "./lib/main/ts/ephox/agar/api/Main.d.ts"
