@@ -10,8 +10,6 @@
 
 import TemplatePlugin from 'tinymce/plugins/template/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 TemplatePlugin();

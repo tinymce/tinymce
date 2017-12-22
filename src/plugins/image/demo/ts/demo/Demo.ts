@@ -10,8 +10,6 @@
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 ImagePlugin();

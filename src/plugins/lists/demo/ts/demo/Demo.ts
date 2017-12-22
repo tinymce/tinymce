@@ -10,8 +10,6 @@
 
 import ListPlugin from 'tinymce/plugins/lists/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 ListPlugin();

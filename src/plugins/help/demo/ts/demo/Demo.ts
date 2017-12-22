@@ -11,8 +11,6 @@
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import PluginManager from 'tinymce/core/PluginManager';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 HelpPlugin();

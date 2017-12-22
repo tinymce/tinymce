@@ -10,8 +10,6 @@
 
 import NonEditablePlugin from 'tinymce/plugins/noneditable/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 NonEditablePlugin();

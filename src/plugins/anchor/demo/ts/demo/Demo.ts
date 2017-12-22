@@ -10,8 +10,6 @@
 
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 AnchorPlugin();

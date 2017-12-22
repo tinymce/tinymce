@@ -10,8 +10,6 @@
 
 import WordCountPlugin from 'tinymce/plugins/wordcount/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 WordCountPlugin();

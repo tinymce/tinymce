@@ -10,8 +10,6 @@
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 TablePlugin();

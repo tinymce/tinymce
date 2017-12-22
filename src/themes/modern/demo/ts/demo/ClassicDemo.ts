@@ -55,8 +55,6 @@ import VisualCharsPlugin from 'tinymce/plugins/visualchars/Plugin';
 import WordCountPlugin from 'tinymce/plugins/wordcount/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 
-/*eslint no-console:0 */
-
 AdvListPlugin();
 AnchorPlugin();
 AutoLinkPlugin();

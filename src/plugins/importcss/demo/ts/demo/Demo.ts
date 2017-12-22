@@ -10,8 +10,6 @@
 
 import ImportCssPlugin from 'tinymce/plugins/importcss/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 ImportCssPlugin();

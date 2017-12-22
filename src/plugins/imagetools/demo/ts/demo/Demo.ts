@@ -11,8 +11,6 @@
 import DomQuery from 'tinymce/core/dom/DomQuery';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 var $ = DomQuery;

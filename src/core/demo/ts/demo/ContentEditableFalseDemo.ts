@@ -15,7 +15,6 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 declare const window: any;
 
-/*eslint no-console:0 */
 export default <any> function () {
   ModernTheme();
   PastePlugin();
@@ -76,7 +75,7 @@ export default <any> function () {
 
   EditorManager.init({
     selector: "textarea.tinymce",
-    skin_url: '../../../../skins/lightgray/dist/lightgray',
+    skin_url: '../../../../js/tinymce/skins/lightgray',
     add_unload_trigger: false,
     toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify" +
     " | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample",
@@ -88,7 +87,7 @@ export default <any> function () {
   EditorManager.init({
     selector: "div.tinymce",
     inline: true,
-    skin_url: '../../../../skins/lightgray/dist/lightgray',
+    skin_url: '../../../../js/tinymce/skins/lightgray',
     add_unload_trigger: false,
     toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify" +
     " | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample",

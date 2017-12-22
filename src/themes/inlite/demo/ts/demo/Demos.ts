@@ -19,8 +19,6 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import InliteTheme from 'tinymce/themes/inlite/Theme';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 AnchorPlugin();

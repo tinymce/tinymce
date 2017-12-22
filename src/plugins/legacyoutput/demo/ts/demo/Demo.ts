@@ -10,8 +10,6 @@
 
 import LegacyOutputPlugin from 'tinymce/plugins/legacyoutput/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 LegacyOutputPlugin();

@@ -10,8 +10,6 @@
 
 import ContextMenuPlugin from 'tinymce/plugins/contextmenu/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 ContextMenuPlugin();

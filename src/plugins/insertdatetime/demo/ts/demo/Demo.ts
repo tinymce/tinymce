@@ -10,8 +10,6 @@
 
 import InsertDateTimePlugin from 'tinymce/plugins/insertdatetime/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 InsertDateTimePlugin();

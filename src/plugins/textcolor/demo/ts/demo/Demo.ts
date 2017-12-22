@@ -10,8 +10,6 @@
 
 import TextColorPlugin from 'tinymce/plugins/textcolor/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 TextColorPlugin();

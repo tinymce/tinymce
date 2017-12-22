@@ -10,8 +10,6 @@
 
 import AutoSavePlugin from 'tinymce/plugins/autosave/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 AutoSavePlugin();

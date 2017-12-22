@@ -57,8 +57,6 @@ import WordCountPlugin from 'tinymce/plugins/wordcount/Plugin';
 import MobileTheme from 'tinymce/themes/mobile/Theme';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 
-/*eslint no-console:0 */
-
 declare const window: any;
 
 export default <any> function () {
@@ -108,12 +106,12 @@ export default <any> function () {
   MobileTheme();
   HelpPlugin();
 
-  PluginManager.urls.emoticons = '../../../../plugins/emoticons/dist/emoticons';
+  PluginManager.urls.emoticons = '../../../../js/tinymce/plugins/emoticons';
 
   var settings = {
-    skin_url: '../../../../skins/lightgray/dist/lightgray',
-    codesample_content_css: '../../../../plugins/codesample/dist/codesample/css/prism.css',
-    visualblocks_content_css: '../../../../plugins/visualblocks/dist/visualblocks/css/visualblocks.css',
+    skin_url: '../../../../js/tinymce/skins/lightgray',
+    codesample_content_css: '../../../../js/tinymce/plugins/codesample/css/prism.css',
+    visualblocks_content_css: '../../../../js/tinymce/plugins/visualblocks/css/visualblocks.css',
     images_upload_url: 'd',
     selector: "textarea",
     //rtl_ui: true,

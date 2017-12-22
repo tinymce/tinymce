@@ -10,8 +10,6 @@
 
 import AutoLinkPlugin from 'tinymce/plugins/autolink/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 AutoLinkPlugin();

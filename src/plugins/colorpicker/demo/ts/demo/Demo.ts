@@ -10,8 +10,6 @@
 
 import ColorPickerPlugin from 'tinymce/plugins/colorpicker/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 ColorPickerPlugin();

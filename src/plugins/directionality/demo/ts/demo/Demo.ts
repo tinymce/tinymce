@@ -10,8 +10,6 @@
 
 import DirectionalityPlugin from 'tinymce/plugins/directionality/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 DirectionalityPlugin();

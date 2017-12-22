@@ -81,7 +81,6 @@ var ScriptLoader: any = function () {
     };
 
     var error = function () {
-      /*eslint no-console:0 */
 
       // We can't mark it as done if there is a load error since
       // A) We don't want to produce 404 errors on the server and

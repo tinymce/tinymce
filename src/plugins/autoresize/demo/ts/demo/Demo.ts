@@ -10,8 +10,6 @@
 
 import AutoResizePlugin from 'tinymce/plugins/autoresize/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 AutoResizePlugin();

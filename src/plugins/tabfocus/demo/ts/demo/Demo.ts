@@ -10,8 +10,6 @@
 
 import TabFocusPlugin from 'tinymce/plugins/tabfocus/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 TabFocusPlugin();

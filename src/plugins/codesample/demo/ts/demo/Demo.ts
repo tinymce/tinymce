@@ -10,8 +10,6 @@
 
 import CodeSamplePlugin from 'tinymce/plugins/codesample/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 CodeSamplePlugin();

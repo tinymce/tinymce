@@ -10,8 +10,6 @@
 
 import TocPlugin from 'tinymce/plugins/toc/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 TocPlugin();

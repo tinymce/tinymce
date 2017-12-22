@@ -10,8 +10,6 @@
 
 import SpellCheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 SpellCheckerPlugin();

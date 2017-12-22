@@ -10,8 +10,6 @@
 
 import PrintPlugin from 'tinymce/plugins/print/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 PrintPlugin();

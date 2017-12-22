@@ -13,7 +13,7 @@ import PluginManager from 'tinymce/core/PluginManager';
 var hasProPlugin = function (editor) {
   // draw back if power version is requested and registered
   if (/(^|[ ,])tinymcespellchecker([, ]|$)/.test(editor.settings.plugins) && PluginManager.get('tinymcespellchecker')) {
-    /*eslint no-console:0 */
+
     if (typeof window.console !== "undefined" && window.console.log) {
       window.console.log(
         "Spell Checker Pro is incompatible with Spell Checker plugin! " +

@@ -10,8 +10,6 @@
 
 import CharMapPlugin from 'tinymce/plugins/charmap/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 CharMapPlugin();

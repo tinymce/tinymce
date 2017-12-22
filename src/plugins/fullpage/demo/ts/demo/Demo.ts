@@ -10,8 +10,6 @@
 
 import FullPagePlugin from 'tinymce/plugins/fullpage/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 FullPagePlugin();

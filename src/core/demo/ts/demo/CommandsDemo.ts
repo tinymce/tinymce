@@ -55,7 +55,6 @@ import VisualCharsPlugin from 'tinymce/plugins/visualchars/Plugin';
 import WordCountPlugin from 'tinymce/plugins/wordcount/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 
-/*eslint no-console:0 */
 export default <any> function () {
   AdvListPlugin();
   AnchorPlugin();
@@ -196,7 +195,7 @@ export default <any> function () {
   });
 
   EditorManager.init({
-    skin_url: '../../../../skins/lightgray/dist/lightgray',
+    skin_url: '../../../../js/tinymce/skins/lightgray',
     selector: "textarea.tinymce",
     plugins: [
       "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc",

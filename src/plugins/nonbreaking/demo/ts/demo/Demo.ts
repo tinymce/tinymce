@@ -10,8 +10,6 @@
 
 import NonBreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 NonBreakingPlugin();

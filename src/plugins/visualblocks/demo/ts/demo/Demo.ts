@@ -11,8 +11,6 @@
 import VisualBlocksPlugin from 'tinymce/plugins/visualblocks/Plugin';
 import PluginManager from 'tinymce/core/PluginManager';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 VisualBlocksPlugin();

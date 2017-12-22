@@ -10,8 +10,6 @@
 
 import SearchReplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 SearchReplacePlugin();

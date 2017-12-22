@@ -10,8 +10,6 @@
 
 import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 
 TextPatternPlugin();

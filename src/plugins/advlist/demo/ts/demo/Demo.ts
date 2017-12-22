@@ -12,8 +12,6 @@ import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 
 declare let tinymce: any;
 
-/*eslint no-console:0 */
-
 AdvListPlugin();
 
 tinymce.init({
