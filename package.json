@@ -1,6 +1,6 @@
 {
   "name": "@ephox/jax",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "AJAX library",
   "repository": {
     "type": "git",
@@ -17,15 +17,15 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@ephox/bedrock": "*",
+    "@ephox/bedrock": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2",
     "webpack": "^3.10.0"
   },
   "dependencies": {
-    "@ephox/katamari": "*",
-    "@ephox/sand": "*"
+    "@ephox/katamari": "latest",
+    "@ephox/sand": "latest"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
