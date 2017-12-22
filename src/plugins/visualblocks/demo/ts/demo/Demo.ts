@@ -24,7 +24,7 @@ tinymce.init({
   plugins: "visualblocks code",
   toolbar: "visualblocks code",
   visualblocks_default_state: true,
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   //end_container_on_empty_block: true,
   // Style formats
   style_formats: [

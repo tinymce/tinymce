@@ -19,7 +19,7 @@ TextPatternPlugin();
 tinymce.init({
   selector: "textarea.tinymce",
   plugins: "textpattern code",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   toolbar: "code",
   height: 600
 });

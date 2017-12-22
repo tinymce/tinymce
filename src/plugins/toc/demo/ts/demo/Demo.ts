@@ -20,6 +20,6 @@ tinymce.init({
   selector: "textarea.tinymce",
   plugins: "toc code",
   toolbar: "toc code formatselect",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   height: 600
 });

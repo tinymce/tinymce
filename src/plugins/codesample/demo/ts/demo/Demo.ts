@@ -19,9 +19,9 @@ CodeSamplePlugin();
 tinymce.init({
   selector: "textarea.tinymce",
   theme: "modern",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   plugins: "codesample code",
   toolbar: "codesample code",
-  codesample_content_css: '../../../dist/codesample/css/prism.css',
+  codesample_content_css: '../../../../../js/tinymce/plugins/codesample/css/prism.css',
   height: 600
 });

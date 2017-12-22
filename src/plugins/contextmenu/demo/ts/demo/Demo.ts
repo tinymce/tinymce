@@ -19,7 +19,7 @@ ContextMenuPlugin();
 tinymce.init({
   selector: "textarea.tinymce",
   theme: "modern",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   plugins: "contextmenu code",
   toolbar: "contextmenu code",
   height: 600,

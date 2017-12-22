@@ -19,7 +19,7 @@ CharMapPlugin();
 tinymce.init({
   selector: "textarea.tinymce",
   theme: "modern",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   plugins: "charmap code",
   toolbar: "charmap code",
   height: 600

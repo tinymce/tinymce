@@ -10,8 +10,6 @@
 
 import MediaPlugin from 'tinymce/plugins/media/Plugin';
 
-/*eslint no-console:0 */
-
 declare let tinymce: any;
 declare let window: any;
 
@@ -20,7 +18,7 @@ MediaPlugin();
 tinymce.init({
   selector: "textarea.tinymce",
   theme: "modern",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   plugins: "media code",
   toolbar: "undo redo | media code",
   // media_dimensions: false,

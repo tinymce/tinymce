@@ -19,7 +19,7 @@ FullscreenPlugin();
 tinymce.init({
   selector: "textarea.tinymce",
   theme: "modern",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   plugins: "fullscreen code",
   toolbar: "fullscreen code",
   height: 600

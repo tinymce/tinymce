@@ -20,7 +20,7 @@ tinymce.init({
   selector: "textarea.tinymce",
   plugins: "template code",
   toolbar: "template code",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   height: 600,
   templates: [
     { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },

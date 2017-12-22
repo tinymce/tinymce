@@ -17,12 +17,12 @@ declare let tinymce: any;
 
 HelpPlugin();
 
-PluginManager.urls.help = '../../../dist/help';
+PluginManager.urls.help = '../../../../../js/tinymce/plugins/help';
 
 tinymce.init({
   selector: "textarea.tinymce",
   theme: "modern",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   plugins: "help link table paste code emoticons fullpage print fullscreen advlist anchor bbcode colorpicker textcolor",
   toolbar: "help",
   height: 600

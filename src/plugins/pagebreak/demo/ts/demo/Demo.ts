@@ -19,7 +19,7 @@ PageBreakPlugin();
 tinymce.init({
   selector: "textarea.tinymce",
   theme: "modern",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   plugins: "pagebreak code",
   toolbar: "pagebreak code",
   height: 600

@@ -19,7 +19,7 @@ TablePlugin();
 tinymce.init({
   selector: "div.tinymce",
   theme: "modern",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   plugins: "table code contextmenu paste",
   toolbar: "table code",
   media_dimensions: false,

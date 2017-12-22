@@ -19,7 +19,7 @@ ListPlugin();
 tinymce.init({
   selector: "textarea.tinymce",
   theme: "modern",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   plugins: "lists code",
   toolbar: "numlist bullist | outdent indent | code",
   height: 600

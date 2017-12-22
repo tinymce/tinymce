@@ -17,7 +17,7 @@ declare const tinymce: any;
 tinymce.init({
   selector: "textarea.tinymce",
   theme: "modern",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   plugins: "code",
   toolbar: "code",
   height: 600

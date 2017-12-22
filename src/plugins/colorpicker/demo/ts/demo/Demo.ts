@@ -22,7 +22,7 @@ elm.value = '<table><tbody><tr><td>One</td></tr></tbody></table>';
 tinymce.init({
   selector: "textarea.tinymce",
   theme: "modern",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   plugins: "table colorpicker code",
   toolbar: "table code",
   height: 600

@@ -19,7 +19,7 @@ LegacyOutputPlugin();
 tinymce.init({
   selector: "textarea.tinymce",
   theme: "modern",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   plugins: "legacyoutput code",
   toolbar: "legacyoutput fontselect fontsizeselect code",
   height: 600

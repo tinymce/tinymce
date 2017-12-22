@@ -20,6 +20,6 @@ tinymce.init({
   selector: "textarea.tinymce",
   plugins: "visualchars code",
   toolbar: "visualchars code",
-  skin_url: "../../../../../skins/lightgray/dist/lightgray",
+  skin_url: "../../../../../js/tinymce/skins/lightgray",
   height: 600
 });
