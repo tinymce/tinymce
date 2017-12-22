@@ -1,6 +1,6 @@
 {
   "name": "@ephox/agar",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Testing infrastructure",
   "repository": {
     "type": "git",
@@ -22,17 +22,17 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@ephox/bedrock": "*",
+    "@ephox/bedrock": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2",
     "webpack": "^3.10.0"
   },
   "dependencies": {
-    "@ephox/jax": "*",
-    "@ephox/sugar": "*",
-    "@ephox/wrap-jsverify": "*",
-    "@ephox/wrap-sizzle": "*"
+    "@ephox/jax": "latest",
+    "@ephox/sugar": "latest",
+    "@ephox/wrap-jsverify": "latest",
+    "@ephox/wrap-sizzle": "latest"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
