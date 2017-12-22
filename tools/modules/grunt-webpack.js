@@ -7,7 +7,7 @@ let path = require('path');
 let create = (name, tsConfig, inputTsFile, outFile) => {
   console.log(`creating ${name} webpack config`)
   return {
-    // watch: true,
+    watch: true,
     entry: inputTsFile,
     devtool: 'source-map',
     resolve: {
@@ -54,7 +54,7 @@ let create = (name, tsConfig, inputTsFile, outFile) => {
 
 let createMany = (entries, tsConfig, outDir) => {
   return {
-    // watch: true,
+    watch: true,
     entry: entries,
     devtool: 'source-map',
     resolve: {
