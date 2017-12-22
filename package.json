@@ -1,7 +1,7 @@
 {
   "name": "@ephox/phoenix",
   "description": "DOM node text gathering library, rose from the ashes of some other projects we can't remember the names of now (edit: seek, sherlock, gift)",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/ephox/phoenix"
@@ -18,13 +18,13 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@ephox/boss": "*",
-    "@ephox/katamari": "*",
-    "@ephox/polaris": "*"
+    "@ephox/boss": "latest",
+    "@ephox/katamari": "latest",
+    "@ephox/polaris": "latest"
   },
   "devDependencies": {
-    "@ephox/bedrock": "*",
-    "@ephox/sugar": "*",
+    "@ephox/bedrock": "latest",
+    "@ephox/sugar": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2",
