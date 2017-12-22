@@ -14,9 +14,6 @@ import AutosavePlugin from 'tinymce/plugins/autosave/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/mobile/Theme';
 
-/*eslint no-console:0 */
-
-
 
 export default <any> function () {
   Theme();
@@ -33,7 +30,7 @@ export default <any> function () {
       'autolink', // Required for turning pasted text into hyperlinks
       'autosave' // Required to prevent users losing content when they press back
     ],
-    skin_url: '../../../../../skins/lightgray/dist/lightgray',
+    skin_url: '../../../../../js/tinymce/skins/lightgray',
 
     setup: function (ed) {
       ed.on('skinLoaded', function () {

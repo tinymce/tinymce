@@ -37,7 +37,7 @@ EditorManager.init({
   selector: 'div.tinymce',
   theme: 'inlite',
   plugins: 'image table link anchor paste contextmenu textpattern autolink',
-  skin_url: '../../../../../skins/lightgray/dist/lightgray',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
   insert_toolbar: 'quickimage quicktable',
   selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
   inline: true,

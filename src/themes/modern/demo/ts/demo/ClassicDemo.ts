@@ -111,7 +111,7 @@ export default <any> function () {
       "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
       "save table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker codesample"
     ],
-    skin_url: '../../../../../skins/lightgray/dist/lightgray',
+    skin_url: '../../../../../js/tinymce/skins/lightgray',
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
 

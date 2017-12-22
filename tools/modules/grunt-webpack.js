@@ -54,7 +54,7 @@ let createPlugin = (name) => {
 };
 
 let createTheme = (name) => {
-  return create(name, 'tsconfig.theme.json', `src/themes/${name}/demo/ts/demo/Demo.ts`, `scratch/demos/themes/${name}/demo.js`);
+  return create(name, 'tsconfig.theme.json', `src/themes/${name}/demo/ts/demo/Demos.ts`, `scratch/demos/themes/${name}/demo.js`);
 };
 
 module.exports = {
