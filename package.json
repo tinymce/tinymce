@@ -23,7 +23,7 @@
     "prepublishOnly": "tsc"
   },
   "devDependencies": {
-    "@ephox/bedrock": "*",
+    "@ephox/bedrock": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
     "tinymce": "latest",
@@ -33,11 +33,11 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/agar": "*",
-    "@ephox/sugar": "*",
-    "@ephox/katamari": "*",
-    "@ephox/sand": "*",
-    "@ephox/wrap-jsverify": "*"
+    "@ephox/agar": "latest",
+    "@ephox/sugar": "latest",
+    "@ephox/katamari": "latest",
+    "@ephox/sand": "latest",
+    "@ephox/wrap-jsverify": "latest"
   },
   "main": "./lib/main/ts/ephox/mcagar/api/Main.js",
   "module": "./lib/main/ts/ephox/mcagar/api/Main.js",
