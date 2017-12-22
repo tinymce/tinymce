@@ -159,6 +159,8 @@ module.exports = function (grunt) {
 
     webpack: Object.assign(
       {core: () => gruntWebPack.create('core', 'tsconfig.json', `src/core/demo/ts/demo/Demos.ts`, `scratch/demos/core/demo.js`)},
+      {plugins: () => gruntWebPack.allPlugins(plugins)},
+      {themes: () => gruntWebPack.allThemes(themes)},
       gruntUtils.generate(plugins, 'plugin', (name) => () => gruntWebPack.createPlugin(name) ),
       gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) ),
     ),
