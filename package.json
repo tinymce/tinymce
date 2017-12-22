@@ -1,6 +1,6 @@
 {
   "name": "@ephox/katamari",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Basic data type library",
   "repository": {
     "type": "git",
@@ -17,8 +17,8 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@ephox/bedrock": "*",
-    "@ephox/wrap-jsverify": "*",
+    "@ephox/bedrock": "latest",
+    "@ephox/wrap-jsverify": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2",
