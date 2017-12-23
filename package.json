@@ -3,10 +3,10 @@
   "version": "1.0.1",
   "description": "Ui Framework",
   "dependencies": {
-    "@ephox/boulder": "*",
-    "@ephox/sugar": "*",
-    "@ephox/katamari": "*",
-    "@ephox/sand": "*"
+    "@ephox/boulder": "latest",
+    "@ephox/sugar": "latest",
+    "@ephox/katamari": "latest",
+    "@ephox/sand": "latest"
   },
   "files": [
     "lib/main",
@@ -17,8 +17,8 @@
     "LICENSE.txt"
   ],
   "devDependencies": {
-    "@ephox/agar": "*",
-    "@ephox/bedrock": "*",
+    "@ephox/agar": "latest",
+    "@ephox/bedrock": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2"
