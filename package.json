@@ -19,20 +19,20 @@
     "test": "grunt bedrock-manual"
   },
   "dependencies": {
-    "@ephox/alloy": "*",
-    "@ephox/boulder": "*",
-    "@ephox/darwin": "*",
-    "@ephox/katamari": "*",
-    "@ephox/sand": "*",
-    "@ephox/snooker": "*",
-    "@ephox/sugar": "*",
-    "@ephox/imagetools": "*"
+    "@ephox/alloy": "latest",
+    "@ephox/boulder": "latest",
+    "@ephox/darwin": "latest",
+    "@ephox/katamari": "latest",
+    "@ephox/sand": "latest",
+    "@ephox/snooker": "latest",
+    "@ephox/sugar": "latest",
+    "@ephox/imagetools": "latest"
   },
   "devDependencies": {
-    "@ephox/bedrock": "*",
-    "@ephox/mcagar": "*",
-    "@ephox/agar": "*",
-    "@ephox/swag": "*",
+    "@ephox/bedrock": "latest",
+    "@ephox/mcagar": "latest",
+    "@ephox/agar": "latest",
+    "@ephox/swag": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "grunt": "~1.0.1",
     "grunt-contrib-clean": "~1.0.0",
