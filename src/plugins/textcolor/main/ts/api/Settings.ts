@@ -95,12 +95,12 @@ var hasColorPicker = function (editor) {
 };
 
 export default <any> {
-  getForeColorMap: getForeColorMap,
-  getBackColorMap: getBackColorMap,
-  getForeColorRows: getForeColorRows,
-  getBackColorRows: getBackColorRows,
-  getForeColorCols: getForeColorCols,
-  getBackColorCols: getBackColorCols,
-  getColorPickerCallback: getColorPickerCallback,
-  hasColorPicker: hasColorPicker
+  getForeColorMap,
+  getBackColorMap,
+  getForeColorRows,
+  getBackColorRows,
+  getForeColorCols,
+  getBackColorCols,
+  getColorPickerCallback,
+  hasColorPicker
 };
