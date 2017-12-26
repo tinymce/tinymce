@@ -78,8 +78,8 @@ function resize(ir, w, h) {
 }
 
 export default <any> {
-  rotate: rotate,
-  flip: flip,
-  crop: crop,
-  resize: resize
+  rotate,
+  flip,
+  crop,
+  resize
 };

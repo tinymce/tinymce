@@ -198,15 +198,15 @@ function revokeImageUrl(image) {
 
 export default <any> {
   // used outside
-  blobToImage: blobToImage,
-  imageToBlob: imageToBlob,
-  blobToDataUri: blobToDataUri,
-  blobToBase64: blobToBase64,
-  dataUriToBlobSync: dataUriToBlobSync,
+  blobToImage,
+  imageToBlob,
+  blobToDataUri,
+  blobToBase64,
+  dataUriToBlobSync,
 
   // helper method
-  canvasToBlob: canvasToBlob,
-  canvasToDataURL: canvasToDataURL,
-  blobToCanvas: blobToCanvas,
-  uriToBlob: uriToBlob
+  canvasToBlob,
+  canvasToDataURL,
+  blobToCanvas,
+  uriToBlob
 };

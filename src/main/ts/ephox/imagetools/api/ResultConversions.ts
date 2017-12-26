@@ -33,10 +33,10 @@ var imageResultToDataURL = function (ir) {
 
 export default <any> {
   // used outside
-  blobToImageResult: blobToImageResult,
-  fromBlobAndUrlSync: fromBlobAndUrlSync,
-  imageToImageResult: imageToImageResult,
-  imageResultToBlob: imageResultToBlob,
-  imageResultToOriginalBlob: imageResultToOriginalBlob,
-  imageResultToDataURL: imageResultToDataURL
+  blobToImageResult,
+  fromBlobAndUrlSync,
+  imageToImageResult,
+  imageResultToBlob,
+  imageResultToOriginalBlob,
+  imageResultToDataURL
 };

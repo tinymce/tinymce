@@ -201,6 +201,6 @@ export default <any> {
     return 255 * (1 - Math.exp(-(color / 255) * value));
   }),
 
-  colorFilter: colorFilter,
-  convoluteFilter: convoluteFilter
+  colorFilter,
+  convoluteFilter
 };
