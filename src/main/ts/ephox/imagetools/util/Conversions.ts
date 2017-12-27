@@ -186,6 +186,18 @@ function blobToDataUri(blob) {
   });
 }
 
+function blobToArrayBuffer(blob) {
+  return new Promise(function (resolve) {
+    var reader = new FileReader();
+
+    reader.onloadend = function () {
+      resolve(reader.result);
+    };
+
+    reader.readAsArrayBuffer(blob);
+  });
+}
+
 function blobToBase64(blob) {
   return blobToDataUri(blob).then(function (dataUri) {
     return dataUri.split(',')[1];
@@ -200,6 +212,7 @@ export default <any> {
   // used outside
   blobToImage,
   imageToBlob,
+  blobToArrayBuffer,
   blobToDataUri,
   blobToBase64,
   dataUriToBlobSync,
