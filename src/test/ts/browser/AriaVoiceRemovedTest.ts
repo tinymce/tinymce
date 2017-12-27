@@ -16,6 +16,7 @@ UnitTest.asynctest('Node Change Test', function (success, failure) {
 
   var checkAriaVoice = function (spec) {
     return Step.async(function(next, err) {
+      console.log(spec.info);
       var p = Element.fromHtml('<p>Bakon eatsum</p>');
       Insert.append(Body.body(), p);
       var cleanup = function() {
