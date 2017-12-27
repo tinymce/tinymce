@@ -5,8 +5,6 @@ import { Insert, Remove, Body, Element, SelectorFind } from "@ephox/sugar";
 import AriaVoice from "ephox/echo/api/AriaVoice";
 import GeneralSteps from "@ephox/agar/lib/main/ts/ephox/agar/api/GeneralSteps";
 
-//     'ephox.petrie.test.alien.Pipeline',
-//     'ephox.petrie.test.oxen.interactions.GeneralActions',
 UnitTest.asynctest('Node Change Test', function (success, failure) {
   // @tunic-tag=aria
 
