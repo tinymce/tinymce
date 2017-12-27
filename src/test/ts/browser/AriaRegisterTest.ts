@@ -1,9 +1,7 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import AriaRegister from 'ephox/echo/api/AriaRegister';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
+import { Assertions, ApproxStructure } from '@ephox/agar';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { Element, Html } from '@ephox/sugar';
+import AriaRegister from 'ephox/echo/api/AriaRegister';
 
 UnitTest.test('AriaRegisterTest', function() {
   var checkTextButton = function (expectedElement, expectedContent, element, contentElement) {
