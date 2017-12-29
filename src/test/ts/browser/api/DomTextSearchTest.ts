@@ -8,7 +8,7 @@ import { InsertAll } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 
-UnitTest.test('robin api dom DomTextSearch', function() {
+UnitTest.test('DomTextSearchTest', function() {
   var wordbreaker = function () {
     return new RegExp(Pattern.wordbreak(), 'i');
   };

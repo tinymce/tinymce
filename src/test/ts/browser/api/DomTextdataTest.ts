@@ -3,7 +3,7 @@ import { Option } from '@ephox/katamari';
 import DomTextdata from 'ephox/robin/api/dom/DomTextdata';
 import { Element } from '@ephox/sugar';
 
-UnitTest.test('ephox.robin.api.dom.DomTextdata.from', function() {
+UnitTest.test('DomTextdataTest', function() {
   var a = Element.fromText('alpha');
   var b = Element.fromText(' beta');
   var c = Element.fromText('');

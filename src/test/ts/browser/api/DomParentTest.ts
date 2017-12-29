@@ -11,7 +11,7 @@ import { Html } from '@ephox/sugar';
 import { SelectorFind } from '@ephox/sugar';
 
 UnitTest.test(
-  'ephox.robin.api.dom.DomParent{breakToLeft, breakToRight, subset}',
+  'DomParentTest',
   function() {
     var check = function (expected, p, c) {
       var container = Element.fromTag('div');

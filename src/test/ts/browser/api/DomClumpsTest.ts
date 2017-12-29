@@ -10,7 +10,7 @@ import { Body } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 
-UnitTest.test('ephox.robin.api.dom.DomClumps{fracture,fractures}', function() {
+UnitTest.test('DomClumpsTest', function() {
   var body = Body.body();
 
   var container = Element.fromTag('div');

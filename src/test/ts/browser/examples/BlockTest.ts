@@ -6,7 +6,7 @@ import { Node } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('---- example :: BlockTest ----', function() {
+UnitTest.test('BlockTest', function() {
   var check = function (expected, input, look) {
     BrowserCheck.run(input, function (node) {
       var actual = DomParent.sharedOne(look, [ node ]);

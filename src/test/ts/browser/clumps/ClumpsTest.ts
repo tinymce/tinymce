@@ -9,7 +9,7 @@ import { Remove } from '@ephox/sugar';
 import { Body } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 
-UnitTest.test('ephox.robin.clump.Clumps.collect', function() {
+UnitTest.test('ClumpsTest', function() {
   /* The purpose of this test is to take a large section of html and test dividing it into
    * inline clumps
    */
