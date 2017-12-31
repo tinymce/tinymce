@@ -255,6 +255,11 @@ define(
             body: body,
             onSubmit: onSubmitForm
           });
+
+          // Set the active tab to the images_active_tab, if exists
+          var activeTab = editor.settings.images_active_tab || 0;
+          win.find('tabpanel')[0].activateTab(activeTab);
+
         } else {
           // Simple default dialog
           win = editor.windowManager.open({
