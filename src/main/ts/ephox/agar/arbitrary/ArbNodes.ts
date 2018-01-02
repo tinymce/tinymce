@@ -38,7 +38,7 @@ var textOf = function (s) {
   return Element.fromText(s);
 };
 
-export default <any> {
+export default {
   elementOfArb: elementOfArb,
   elementOf: elementOf,
   comment: comment,

@@ -16,6 +16,6 @@ var enrichWith = function (label, err) {
   else return err;
 };
 
-export default <any> {
+export default {
   enrichWith: enrichWith
 };

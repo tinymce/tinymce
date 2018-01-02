@@ -68,7 +68,7 @@ var fromHtml = function (html) {
   return fromElement(Element.fromHtml(html));
 };
 
-export default <any> {
+export default {
   build: build,
   fromHtml: fromHtml,
   fromElement: fromElement

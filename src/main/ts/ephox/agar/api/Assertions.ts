@@ -50,7 +50,7 @@ var assertStructure = function (label, expected, container) {
 };
 
 var toStep = function (method) {
-  return function (/* args */) {
+  return function (..._args) {
     var args = arguments;
     return Step.sync(function () {
       var sArgs = Array.prototype.slice.call(args, 0);
@@ -91,7 +91,7 @@ var cAssertDomEq = function (label, expected) {
   });
 };
 
-export default <any> {
+export default {
   assertHtml: assertHtml,
   assertHtmlStructure: assertHtmlStructure,
   assertPresence: assertPresence,

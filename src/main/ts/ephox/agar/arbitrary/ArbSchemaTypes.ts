@@ -38,7 +38,7 @@ var addDecorations = function (detail, element) {
       Css.setAll(element, styles);
       return element;
     });
-  }); 
+  });
 };
 
 var makeTag = function (choice) {
@@ -50,11 +50,11 @@ var makeTag = function (choice) {
   return element;
 };
 
-export default <any> function (construct) {
+export default function (construct) {
   var combine = function (detail, childGenerator) {
     var show = Truncate.getHtml;
     var tags = toTags(conform(detail));
-    
+
     var generator =  WeightedChoice.generator(tags).flatMap(function (choiceOption) {
       var choice = choiceOption.getOrDie('Every entry in tags for: ' + Json.stringify(detail) + ' must have a tag');
       return childGenerator.flatMap(function (children) {
@@ -81,7 +81,7 @@ export default <any> function (construct) {
 
 
   var leaf = function (detail) {
-    return function (_) {          
+    return function (_) {
       return combine(detail, ArbChildrenSchema.none);
     };
   };
@@ -98,7 +98,7 @@ export default <any> function (construct) {
       return arb.component;
     };
   };
- 
+
   return {
     arbitrary: arbitrary,
     leaf: leaf,

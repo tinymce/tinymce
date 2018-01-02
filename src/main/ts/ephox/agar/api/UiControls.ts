@@ -25,7 +25,7 @@ var sSetValueOn = function (container, selector, newValue) {
   ]);
 };
 
-export default <any> {
+export default {
   sSetValueOn: sSetValueOn,
   sSetValue: sSetValue,
 

@@ -5,6 +5,6 @@ var sAsyncProperty = function (name, arbitraries, statefulStep, _options) {
   return PropertySteps.sAsyncProperty(name, arbitraries, statefulStep, _options);
 };
 
-export default <any> {
+export default {
   sAsyncProperty: sAsyncProperty
 };

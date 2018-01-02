@@ -45,7 +45,7 @@ var spec = function (msg) {
   console.log(msg);
 };
 
-export default <any> {
+export default {
   t: t,
   ts: ts,
   sync: sync,

@@ -48,7 +48,7 @@ var combo = function (modifiers, letter) {
   return adt.combo(mods, letter);
 };
 
-export default <any> {
+export default {
   // Needs to preprocess
   combo: combo,
   backspace: adt.backspace,

@@ -41,7 +41,7 @@ var children = function (sugarElement, selector) {
   });
 };
 
-export default <any> {
+export default {
   descendant: descendant,
   descendants: descendants,
   matches: matches,

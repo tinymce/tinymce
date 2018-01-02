@@ -148,6 +148,6 @@ var htmlDiff = (function() {
   };
 })();
 
-export default <any> {
+export default {
   htmlDiff: htmlDiff
 };

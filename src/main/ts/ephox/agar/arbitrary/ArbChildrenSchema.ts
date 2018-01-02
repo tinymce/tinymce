@@ -26,7 +26,7 @@ var composite = function (rawDepth, detail, construct) {
     );
   };
 
-  var repeat = WeightedChoice.generator(components).flatMap(function (choice) {  
+  var repeat = WeightedChoice.generator(components).flatMap(function (choice) {
     return choice.fold(function () {
       return Jsc.constant([]).generator;
     }, function (c) {
@@ -49,7 +49,7 @@ var structure = function (rawDepth, detail, construct) {
   });
 };
 
-export default <any> {
+export default {
   none: none,
   composite: composite,
   structure: structure

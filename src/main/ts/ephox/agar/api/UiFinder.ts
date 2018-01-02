@@ -73,7 +73,7 @@ var cFindAllIn = function (selector) {
   });
 };
 
-export default <any> {
+export default {
   findIn: findIn,
   findAllIn: findAllIn,
 

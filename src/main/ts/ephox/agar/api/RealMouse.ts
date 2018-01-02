@@ -23,7 +23,7 @@ var sClickOn = function (selector) {
   return sActionOn(selector, 'click');
 };
 
-export default <any> {
+export default {
   sMoveToOn: sMoveToOn,
   sDownOn: sDownOn,
   sUpOn: sUpOn,

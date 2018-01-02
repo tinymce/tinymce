@@ -57,6 +57,6 @@ var safari = function (type, doc, value, modifiers, dispatcher) {
   dispatcher.dom().dispatchEvent(oEvent);
 };
 
-export default <any> {
+export default {
   keyevent: keyevent
 };

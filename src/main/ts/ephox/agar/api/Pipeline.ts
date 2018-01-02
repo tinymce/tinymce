@@ -94,7 +94,7 @@ var callAsync = function (f) {
   typeof Promise !== "undefined" ? Promise.resolve().then(f) : setTimeout(f, 0);
 };
 
-var async = function (initial, steps, onSuccess, onFailure, delay) {
+var async = function (initial, steps, onSuccess, onFailure, delay?) {
   assertSteps(steps);
 
   var chain = function (lastLink, index) {
@@ -124,6 +124,6 @@ var async = function (initial, steps, onSuccess, onFailure, delay) {
   chain(initial, 0);
 };
 
-export default <any> {
+export default {
   async: async
 };

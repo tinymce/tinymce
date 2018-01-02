@@ -16,7 +16,7 @@ var derive = function (element, selector) {
   // Not sure if error is what I want here.
   if (selector === undefined) throw new Error('No selector passed through');
   else if (selector.indexOf('root:') === 0) {
-    return targets.self(element, selector.substring('root:'.length)); 
+    return targets.self(element, selector.substring('root:'.length));
   } else if (selector.indexOf('root>') === 0) {
     return targets.children(element, selector.substring('root>'.length));
   } else {
@@ -65,7 +65,7 @@ var findAllIn = function (container, selector) {
   return selectAll(container, selector);
 };
 
-export default <any> {
+export default {
   select: select,
   findIn: findIn,
   findAllIn: findAllIn

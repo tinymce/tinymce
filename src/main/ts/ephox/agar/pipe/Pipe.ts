@@ -1,6 +1,6 @@
 
 
-export default <any> function (f) {
+export default function (f) {
   return function (value, next, die) {
     try {
       f(value, next, die);

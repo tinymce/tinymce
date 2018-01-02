@@ -3,7 +3,7 @@ import Step from './Step';
 
 var sTryUntil = function (label, step, interval, amount) {
   var guard = Guard.tryUntil(label, interval, amount);
-  return Step.control(step, guard);      
+  return Step.control(step, guard);
 };
 
 var sTryUntilNot = function (label, step, interval, amount) {
@@ -16,8 +16,8 @@ var sTimeout = function (label, step, limit) {
   return Step.control(step, guard);
 };
 
-export default <any> {
-  sTryUntil: sTryUntil,
-  sTryUntilNot: sTryUntilNot,
-  sTimeout: sTimeout
+export default {
+  sTryUntil,
+  sTryUntilNot,
+  sTimeout
 };

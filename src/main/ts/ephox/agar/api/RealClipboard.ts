@@ -24,7 +24,7 @@ var sPaste = function (selector) {
   ]);
 };
 
-export default <any> {
+export default {
   sImportToClipboard: sImportToClipboard,
   sCopy: sCopy,
   sPaste: sPaste

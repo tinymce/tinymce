@@ -39,7 +39,7 @@ var keypressTypes = [ 'keypress' ];
 // Should throw an error
 var keystrokeTypes = [ 'keydown', 'keyup' ];
 
-export default <any> {
+export default {
   keydown: Fun.curry(fakeKeys, keydownTypes),
   keyup: Fun.curry(fakeKeys, keyupTypes),
   keypress: Fun.curry(fakeKeys, keypressTypes),
@@ -47,6 +47,6 @@ export default <any> {
 
   sKeydown: sFakeKey(keydownTypes),
   sKeyup: sFakeKey(keyupTypes),
-  sKeypress: sFakeKey(keypressTypes),      
+  sKeypress: sFakeKey(keypressTypes),
   sKeystroke: sFakeKey(keystrokeTypes)
 };

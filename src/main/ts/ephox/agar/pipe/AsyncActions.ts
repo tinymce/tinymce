@@ -13,7 +13,7 @@ var fail = function (message) {
   };
 };
 
-export default <any> {
+export default {
   delay: delay,
   fail: fail
 };

@@ -79,7 +79,7 @@ var addLogging = function (label) {
   });
 };
 
-export default <any> {
+export default {
   timeout: timeout,
   tryUntil: tryUntil,
   tryUntilNot: tryUntilNot,

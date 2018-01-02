@@ -99,7 +99,7 @@ var sSetActiveValue = function (doc, newValue) {
   ]);
 };
 
-export default <any> {
+export default {
   sSetActiveValue: sSetActiveValue,
   sSetFocus: sSetFocus,
   sIsOn: sIsOn,

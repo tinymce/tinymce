@@ -20,6 +20,6 @@ var sPerform = function (path, info) {
   });
 };
 
-export default <any> {
+export default {
   sPerform: sPerform
 };
