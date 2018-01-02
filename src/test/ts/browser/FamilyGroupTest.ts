@@ -4,7 +4,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import Family from 'ephox/phoenix/api/general/Family';
 import { Element, Text } from '@ephox/sugar';
 
-UnitTest.test('DomSplitTest', function () {
+UnitTest.test('FamilyGroupTest', function () {
   var universe = DomUniverse();
   var toStr = function (subject) {
     return subject.fold(function () {

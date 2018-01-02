@@ -3,7 +3,7 @@ import Page from '../module/ephox/phoenix/test/Page';
 import DomGather from 'ephox/phoenix/api/dom/DomGather';
 import { Arr } from '@ephox/katamari';
 
-UnitTest.test('DomExtractTest', function () {
+UnitTest.test('DomGatherTest', function () {
   var page = Page();
 
     var is = function (x) {
