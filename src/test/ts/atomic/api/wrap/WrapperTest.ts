@@ -1,10 +1,10 @@
 import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
-import Logger from 'ephox/phoenix/test/Logger';
 import Wrapping from 'ephox/phoenix/api/general/Wrapping';
 import Finder from 'ephox/phoenix/test/Finder';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { Arr } from '@ephox/katamari';
 
 UnitTest.test('WrapperTest', function() {
   var doc = TestUniverse(
