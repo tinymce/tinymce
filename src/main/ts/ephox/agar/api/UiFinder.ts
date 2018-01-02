@@ -19,6 +19,9 @@ var cWaitFor = function (message, selector) {
   return cWaitForState(message, selector, Fun.constant(true));
 };
 
+var sWaitFor = (message, container, selector) =>
+  Chain.asStep(container, [cWaitFor(message, selector)]);
+
 var cWaitForVisible = function (message, selector) {
   return cWaitForState(message, selector, Visibility.isVisible);
 };
@@ -91,6 +94,7 @@ export default <any>{
   sExists: sExists,
   sNotExists: sNotExists,
 
+  sWaitFor,
   sWaitForVisible,
   sWaitForHidden,
 
