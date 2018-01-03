@@ -17,7 +17,7 @@ node("primary") {
       git([branch: "master", url:'ssh://git@stash:7999/van/jenkins-plumbing.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
     }
   }
-  
+
   def extNpmInstall = load("jenkins-plumbing/npm-install.groovy")
   def extBedrock = load("jenkins-plumbing/bedrock-tests.groovy")
 
@@ -36,7 +36,7 @@ node("primary") {
     processes[name] = {
       node("bedrock-" + permutation.os) {
         echo "Slave checkout"
-        git([branch: "master", url:'ssh://git@stash:7999/libs/sand.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
+        git([branch: "master", url:'ssh://git@stash:7999/van/sand.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
 
         sshagent(credentials: ['8aa93893-84cc-45fc-a029-a42f21197bb3']) {
           echo "Installing tools"
@@ -49,7 +49,7 @@ node("primary") {
     }
   }
 
-  runTests = { 
+  runTests = {
     parallel processes
   }
 
