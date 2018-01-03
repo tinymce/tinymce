@@ -7,7 +7,7 @@ var unsafe = function (name, scope) {
 var getOrDie = function (name, scope) {
   var actual = unsafe(name, scope);
 
-  if (actual === undefined) throw name + ' not available on this browser';
+  if (actual === undefined || actual === null) throw name + ' not available on this browser';
   return actual;
 };
 

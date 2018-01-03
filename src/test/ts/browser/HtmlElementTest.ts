@@ -1,0 +1,11 @@
+import { UnitTest, assert } from "@ephox/bedrock/lib/api/Main";
+import { HTMLElement } from "ephox/sand/api/Main";
+
+UnitTest.test('HtmlElementTest',function () {
+  var span = document.createElement('div');
+  assert.eq(false, HTMLElement.isPrototypeOf(null));
+  assert.eq(false, HTMLElement.isPrototypeOf(undefined));
+  assert.eq(false, HTMLElement.isPrototypeOf('a string'));
+  assert.eq(false, HTMLElement.isPrototypeOf({}));
+  assert.eq(true, HTMLElement.isPrototypeOf(span));
+})
