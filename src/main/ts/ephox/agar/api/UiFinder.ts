@@ -88,21 +88,21 @@ var cFindAllIn = function (selector) {
 };
 
 export default <any>{
-  findIn: findIn,
-  findAllIn: findAllIn,
+  findIn,
+  findAllIn,
 
-  sExists: sExists,
-  sNotExists: sNotExists,
+  sExists,
+  sNotExists,
 
   sWaitFor,
   sWaitForVisible,
   sWaitForHidden,
 
-  cWaitFor: cWaitFor,
-  cWaitForVisible: cWaitForVisible,
-  cWaitForHidden: cWaitForHidden,
-  cWaitForState: cWaitForState,
+  cWaitFor,
+  cWaitForVisible,
+  cWaitForHidden,
+  cWaitForState,
 
-  cFindIn: cFindIn,
-  cFindAllIn: cFindAllIn
+  cFindIn,
+  cFindAllIn
 };
