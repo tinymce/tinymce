@@ -3,8 +3,8 @@ import Step from './Step';
 
 var sTryUntilPredicate = function (label, predicate, interval, amount) {
   var guard = Guard.tryUntil(label, interval, amount);
-  return Step.control(Step.async((next, die) => {
-    predicate() ? next() : die('predicate did not succeed');
+  return Step.control(Step.stateful((value, next, die) => {
+    predicate(value) ? next(value) : die('predicate did not succeed');
   }), guard);
 };
 
