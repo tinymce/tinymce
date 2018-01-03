@@ -6,6 +6,8 @@ import TestUniverse from './TestUniverse';
 import TextGene from './TextGene';
 
 // NON API USAGE
+// used by phoenix
+import Logger from '../mutant/Logger';
 // used by soldier tests
 import Locator from '../mutant/Locator';
 
@@ -16,5 +18,6 @@ export {
   Gene,
   TestUniverse,
   TextGene,
+  Logger,
   Locator
 };
