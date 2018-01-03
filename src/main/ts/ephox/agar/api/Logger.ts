@@ -10,7 +10,7 @@ var t = function (label, f) {
   return function (value, next, die) {
     var dieWith = Fun.compose(die, enrich);
     try {
-      f(value, next, dieWith);
+      return f(value, next, dieWith);
     } catch (err) {
       dieWith(err);
     }
@@ -23,7 +23,7 @@ var sync = function (label, f) {
   };
 
   try {
-    f();
+    return f();
   } catch (err) {
     throw enrich(err);
   }
