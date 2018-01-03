@@ -1,10 +1,10 @@
 import { Gene } from '@ephox/boss';
 import { TestUniverse } from '@ephox/boss';
 import { TextGene } from '@ephox/boss';
+import { Logger } from '@ephox/boss';
 import Wrapping from 'ephox/phoenix/api/general/Wrapping';
 import Finder from 'ephox/phoenix/test/Finder';
 import { UnitTest, assert } from '@ephox/bedrock';
-import { Arr } from '@ephox/katamari';
 
 UnitTest.test('WrapperTest', function() {
   var doc = TestUniverse(
@@ -47,15 +47,7 @@ UnitTest.test('WrapperTest', function() {
   };
 
   var dump = function () {
-    var customLogger = function (item, renderer) {
-      return item.children && item.children.length > 0 ?
-        renderer(item) + '(' + Arr.map(item.children || [], function (c) {
-          return customLogger(c, renderer);
-        }).join(',') + ')'
-        : renderer(item);
-    };
-
-    return customLogger(doc.get(), function (item) {
+    return Logger.custom(doc.get(), function (item) {
       return doc.property().isText(item) ? item.id + '("' + item.text + '")' : item.id;
     });
   };
