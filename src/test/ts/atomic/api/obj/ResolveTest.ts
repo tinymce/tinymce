@@ -58,6 +58,8 @@ UnitTest.test('ObjResolverTest', function() {
     check(undefined, 'c', data);
     check(undefined, 'c.carrot', data);
     check(undefined, 'c.carrot.orange', data);
+
+    check(parseInt, 'parseInt', null);
   };
 
   var testSpecs = function () {

@@ -2,7 +2,7 @@ import Global from './Global';
 
 /** path :: ([String], JsObj?) -> JsObj */
 var path = function (parts, scope) {
-  var o = scope !== undefined ? scope : Global;
+  var o = scope !== undefined && scope !== null ? scope : Global;
   for (var i = 0; i < parts.length && o !== undefined && o !== null; ++i)
     o = o[parts[i]];
   return o;
@@ -23,7 +23,7 @@ var step = function (o, part) {
 
 /** forge :: ([String], JsObj?) -> JsObj */
 var forge = function (parts, target) {
-  var o = target !== undefined ? target : Global;      
+  var o = target !== undefined ? target : Global;
   for (var i = 0; i < parts.length; ++i)
     o = step(o, parts[i]);
   return o;
