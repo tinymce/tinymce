@@ -19,7 +19,7 @@ node("primary") {
   }
 
   def extBedrock = load("jenkins-plumbing/bedrock-browsers.groovy")
-  def runTests = extBedrock()
+  def runTests = extBedrock("src/test/ts")
 
   def runBuild = load("jenkins-plumbing/standard-build.groovy")
   runBuild(runTests)
