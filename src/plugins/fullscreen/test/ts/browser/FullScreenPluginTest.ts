@@ -1,0 +1,100 @@
+import { Pipeline } from '@ephox/agar';
+import { LegacyUnit } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import Plugin from 'tinymce/plugins/fullscreen/Plugin';
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import Theme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/bedrock';
+
+UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
+  var suite = LegacyUnit.createSuite();
+
+  LinkPlugin();
+  Plugin();
+  Theme();
+
+  suite.test('Fullscreen class on html and body tag', function (editor) {
+    var bodyTag = document.body;
+    var htmlTag = document.documentElement;
+    var lastEventArgs;
+
+    editor.on('FullscreenStateChanged', function (e) {
+      lastEventArgs = e;
+    });
+
+    LegacyUnit.equal(
+      DOMUtils.DOM.hasClass(bodyTag, "mce-fullscreen"),
+      false,
+      'Body tag should not have "mce-fullscreen" class before fullscreen command'
+    );
+    LegacyUnit.equal(
+      DOMUtils.DOM.hasClass(htmlTag, "mce-fullscreen"),
+      false,
+      'Html tag should not have "mce-fullscreen" class before fullscreen command'
+    );
+
+    editor.execCommand('mceFullScreen');
+
+    LegacyUnit.equal(editor.plugins.fullscreen.isFullscreen(), true, 'Should be true');
+    LegacyUnit.equal(lastEventArgs.state, true, 'Should be true');
+
+    LegacyUnit.equal(
+      DOMUtils.DOM.hasClass(bodyTag, "mce-fullscreen"),
+      true,
+      'Body tag should have "mce-fullscreen" class after fullscreen command'
+    );
+    LegacyUnit.equal(
+      DOMUtils.DOM.hasClass(htmlTag, "mce-fullscreen"),
+      true,
+      'Html tag should have "mce-fullscreen" class after fullscreen command'
+    );
+
+    editor.execCommand('mceLink', true);
+
+    var windows = editor.windowManager.getWindows();
+    var linkWindow = windows[0];
+
+    LegacyUnit.equal(typeof linkWindow, 'object', 'Link window is an object');
+
+    linkWindow.close();
+
+    LegacyUnit.equal(windows.length, 0, 'No windows exist');
+
+    LegacyUnit.equal(
+      DOMUtils.DOM.hasClass(bodyTag, "mce-fullscreen"),
+      true,
+      'Body tag should still have "mce-fullscreen" class after window is closed'
+    );
+    LegacyUnit.equal(
+      DOMUtils.DOM.hasClass(htmlTag, "mce-fullscreen"),
+      true,
+      'Html tag should still have "mce-fullscreen" class after window is closed'
+    );
+
+    editor.execCommand('mceFullScreen');
+
+    LegacyUnit.equal(editor.plugins.fullscreen.isFullscreen(), false, 'Should be false');
+    LegacyUnit.equal(lastEventArgs.state, false, 'Should be false');
+    LegacyUnit.equal(
+      DOMUtils.DOM.hasClass(bodyTag, "mce-fullscreen"),
+      false,
+      'Body tag should have "mce-fullscreen" class after fullscreen command'
+    );
+    LegacyUnit.equal(
+      DOMUtils.DOM.hasClass(htmlTag, "mce-fullscreen"),
+      false,
+      'Html tag should have "mce-fullscreen" class after fullscreen command'
+    );
+  });
+
+  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
+  }, {
+    plugins: 'fullscreen link',
+    skin_url: '/project/js/tinymce/skins/lightgray'
+  }, success, failure);
+});
+

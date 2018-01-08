@@ -1,0 +1,39 @@
+import { Assertions } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { TinyLoader } from '@ephox/mcagar';
+import { Element } from '@ephox/sugar';
+import { Attr } from '@ephox/sugar';
+import Theme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/bedrock';
+
+UnitTest.asynctest(
+  'browser.tinymce.core.init.InitIframeEditorWithCustomAttrsTest',
+  function() {
+    var success = arguments[arguments.length - 2];
+    var failure = arguments[arguments.length - 1];
+
+    Theme();
+
+    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+      Pipeline.async({}, [
+        Logger.t('Check if iframe has the right custom attributes', Step.sync(function () {
+          var ifr = Element.fromDom(editor.iframeElement);
+
+          Assertions.assertEq('Id should not be the defined x', true, Attr.get(ifr, 'id') !== 'x');
+          Assertions.assertEq('Custom attribute whould have the right value', 'a', Attr.get(ifr, 'data-custom1'));
+          Assertions.assertEq('Custom attribute whould have the right value', 'b', Attr.get(ifr, 'data-custom2'));
+        }))
+      ], onSuccess, onFailure);
+    }, {
+      skin_url: '/project/js/tinymce/skins/lightgray',
+      iframe_attrs: {
+        id: 'x',
+        'data-custom1': 'a',
+        'data-custom2': 'b'
+      }
+    }, success, failure);
+  }
+);
+

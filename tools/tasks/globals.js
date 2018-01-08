@@ -24,7 +24,7 @@ var fail = function (msg) {
 };
 
 var required = function (config, propName) {
-  var failMsg = 'Required property "' + propName + '"not defined in:\n' + JSON.stringify(config, null, '  ');
+  var failMsg = 'Required property \'' + propName + '\' not defined in:\n' + JSON.stringify(config, null, '  ');
   return propName in config ? config[propName] : fail(failMsg);
 };
 
@@ -80,17 +80,18 @@ var replacePrefix = function (grunt, templateFile, outputPath, config) {
 };
 
 var executeAction = function (grunt, action, templateFile, outputPath, config) {
-  if (action === "replace.prefix") {
+  if (action === 'replace.prefix') {
     replacePrefix(grunt, templateFile, outputPath, config);
   }
 };
 
 module.exports = function (grunt) {
-  grunt.registerTask("globals", "Generates a globals layer", function () {
-    var config = parseConfig('config/globals.json');
+  grunt.registerTask('globals', 'Generates a globals layer', function () {
     var options = grunt.config([this.name]).options;
     var templateFile = required(options, 'templateFile');
     var outputDir = required(options, 'outputDir');
+    var configJson = required(options, 'configFile');
+    var config = parseConfig(configJson);
 
     Object.keys(config).forEach(function (action) {
       executeAction(grunt, action, templateFile, outputDir, config[action]);

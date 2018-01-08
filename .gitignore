@@ -8,6 +8,7 @@ tmp
 .nyc_output
 *.sublime-*
 .externalToolBuilders
+**/bolt/bootstrap*.js
 *~
 *.diff
 *.patch
@@ -34,9 +35,9 @@ mentions
 *.full.js
 *.min.css
 *.dev.less
-**/bolt/bootstrap*.js
 **/dist
 **/scratch
 **/lib
 **/dependency
 **/instrumented_*
+.rpt2_cache

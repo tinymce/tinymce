@@ -1,0 +1,219 @@
+import { ApproxStructure } from '@ephox/agar';
+import { GeneralSteps } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
+import { Logger } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { TinyActions } from '@ephox/mcagar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import Env from 'tinymce/core/Env';
+import Zwsp from 'tinymce/core/text/Zwsp';
+import Theme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/bedrock';
+
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
+
+  Theme();
+
+  var sSetup = function (tinyApis, html, elementPath, offset) {
+    return GeneralSteps.sequence([
+      tinyApis.sSetContent(html),
+      tinyApis.sSetCursor(elementPath, offset)
+    ]);
+  };
+
+  var sEnterKey = function (tinyActions) {
+    return tinyActions.sContentKeystroke(Keys.enter(), {});
+  };
+
+  var addGeckoBr = function (s, str, children) {
+    if (Env.gecko) {
+      return [].concat(children).concat(s.element('br', { attrs: { 'data-mce-bogus': str.is("1") } }));
+    } else {
+      return children;
+    }
+  };
+
+  var sTestEnterAtStartOfAnchorZwsp = function (tinyApis, tinyActions) {
+    return Logger.t(
+      'sTestEnterAtStartOfAnchorZwsp',
+      GeneralSteps.sequence([
+        sSetup(tinyApis, '<p><a href="#">' + Zwsp.ZWSP + 'a</a></p>', [0, 0, 0], 1),
+        sEnterKey(tinyActions),
+        tinyApis.sAssertContentStructure(
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.element('br', {
+                      attrs: {
+                        'data-mce-bogus': str.is('1')
+                      }
+                    })
+                  ]
+                }),
+                s.element('p', {
+                  children: addGeckoBr(s, str, [
+                    s.element('a', {
+                      attrs: {
+                        'data-mce-href': str.is('#'),
+                        'href': str.is('#')
+                      },
+                      children: [
+                        s.text(str.is(Zwsp.ZWSP + 'a'))
+                      ]
+                    })
+                  ])
+                })
+              ]
+            });
+          })
+        ),
+        tinyApis.sAssertSelection([1, 0, 0], 1, [1, 0, 0], 1)
+      ])
+    );
+  };
+
+  var sTestEnterAtEndOfAnchorZwsp = function (tinyApis, tinyActions) {
+    return Logger.t(
+      'sTestEnterAtEndOfAnchorZwsp',
+      GeneralSteps.sequence([
+        sSetup(tinyApis, '<p><a href="#">a' + Zwsp.ZWSP + '</a></p>', [0, 0, 0], 1),
+        sEnterKey(tinyActions),
+        tinyApis.sAssertContentStructure(
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: addGeckoBr(s, str, [
+                    s.element('a', {
+                      attrs: {
+                        'data-mce-href': str.is('#'),
+                        'href': str.is('#')
+                      },
+                      children: [
+                        s.text(str.is('a' + Zwsp.ZWSP))
+                      ]
+                    })
+                  ])
+                }),
+                s.element('p', {
+                  children: [
+                    s.element('br', {
+                      attrs: {
+                        'data-mce-bogus': str.is('1')
+                      }
+                    })
+                  ]
+                })
+              ]
+            });
+          })
+        ),
+        tinyApis.sAssertSelection([1], 0, [1], 0)
+      ])
+    );
+  };
+
+  var sTestEnterAtStartOfAnchorZwspWithAdjacentContent = function (tinyApis, tinyActions) {
+    return Logger.t(
+      'sTestEnterAtStartOfAnchorZwspWithAdjacentContent',
+      GeneralSteps.sequence([
+        sSetup(tinyApis, '<p>a<a href="#">' + Zwsp.ZWSP + 'b</a>c</p>', [0, 1, 0], 1),
+        sEnterKey(tinyActions),
+        tinyApis.sAssertContentStructure(
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.text(str.is('a')),
+                    s.element('a', {
+                      attrs: {
+                        'data-mce-href': str.is('#'),
+                        'href': str.is('#')
+                      }
+                    })
+                  ]
+                }),
+                s.element('p', {
+                  children: [
+                    s.element('a', {
+                      attrs: {
+                        'data-mce-href': str.is('#'),
+                        'href': str.is('#')
+                      },
+                      children: [
+                        s.text(str.is(Zwsp.ZWSP + 'b'))
+                      ]
+                    }),
+                    s.text(str.is('c'))
+                  ]
+                })
+              ]
+            });
+          })
+        ),
+        tinyApis.sAssertSelection([1, 0, 0], 1, [1, 0, 0], 1)
+      ])
+    );
+  };
+
+  var sTestEnterAtEndOfAnchorZwspWithAdjacentContent = function (tinyApis, tinyActions) {
+    return Logger.t(
+      'sTestEnterAtStartOfAnchorZwspWithAdjacentContent',
+      GeneralSteps.sequence([
+        sSetup(tinyApis, '<p>a<a href="#">b' + Zwsp.ZWSP + '</a>c</p>', [0, 1, 0], 1),
+        sEnterKey(tinyActions),
+        tinyApis.sAssertContentStructure(
+          ApproxStructure.build(function (s, str, arr) {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.text(str.is('a')),
+                    s.element('a', {
+                      attrs: {
+                        'data-mce-href': str.is('#'),
+                        'href': str.is('#')
+                      },
+                      children: [
+                        s.text(str.is('b'))
+                      ]
+                    })
+                  ]
+                }),
+                s.element('p', {
+                  children: [
+                    s.text(str.is('c'))
+                  ]
+                })
+              ]
+            });
+          })
+        ),
+        tinyApis.sAssertSelection([1, 0], 0, [1, 0], 0)
+      ])
+    );
+  };
+
+  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    var tinyApis = TinyApis(editor);
+    var tinyActions = TinyActions(editor);
+
+    Pipeline.async({}, [
+      tinyApis.sFocus,
+      sTestEnterAtStartOfAnchorZwsp(tinyApis, tinyActions),
+      sTestEnterAtEndOfAnchorZwsp(tinyApis, tinyActions),
+      sTestEnterAtStartOfAnchorZwspWithAdjacentContent(tinyApis, tinyActions),
+      sTestEnterAtEndOfAnchorZwspWithAdjacentContent(tinyApis, tinyActions)
+    ], onSuccess, onFailure);
+  }, {
+    skin_url: '/project/js/tinymce/skins/lightgray'
+  }, success, failure);
+});
+

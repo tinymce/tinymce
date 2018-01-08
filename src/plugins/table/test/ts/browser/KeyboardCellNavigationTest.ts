@@ -1,0 +1,59 @@
+import { Keys } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { RawAssertions } from '@ephox/agar';
+import { Step } from '@ephox/agar';
+import { Waiter } from '@ephox/agar';
+import { Cell } from '@ephox/katamari';
+import { TinyActions } from '@ephox/mcagar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import Env from 'tinymce/core/Env';
+import TablePlugin from 'tinymce/plugins/table/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/bedrock';
+
+UnitTest.asynctest(
+  'browser.tinymce.plugins.table.quirks.KeyboardCellNavigationTest',
+  function() {
+    var success = arguments[arguments.length - 2];
+    var failure = arguments[arguments.length - 1];
+
+    ModernTheme();
+    TablePlugin();
+
+    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+      var tinyApis = TinyApis(editor);
+      var tinyActions = TinyActions(editor);
+
+      var selectionChangeState = Cell(false);
+
+      Pipeline.async({}, Env.webkit ? [
+        tinyApis.sFocus,
+        tinyApis.sSetContent(
+          '<table><tbody><tr><td><ul><li>a</li><li>b</li></ul></td></tr><tr><td><ul><li>c</li><li>d</li></ul></td></tr></tbody></table>'
+        ),
+        tinyApis.sSetCursor([0, 0, 0, 0, 0, 1, 0], 0),
+        tinyActions.sContentKeydown(Keys.down(), {}),
+        tinyApis.sSetCursor([0, 0, 1, 0, 0, 0, 0], 0),
+        Step.sync(function () {
+          editor.on('selectionchange', function () {
+            selectionChangeState.set(true);
+          });
+        }),
+        Waiter.sTryUntil(
+          'editor did not have correct selection',
+          Step.sync(function () {
+            RawAssertions.assertEq('state is true', true, selectionChangeState.get());
+          }),
+          100, 3000
+        ),
+        tinyApis.sAssertSelection([0, 0, 1, 0, 0, 0, 0], 0, [0, 0, 1, 0, 0, 0, 0], 0)
+      ] : [], onSuccess, onFailure);
+    }, {
+      plugins: 'table',
+      skin_url: '/project/js/tinymce/skins/lightgray',
+      height: 300
+    }, success, failure);
+  }
+);
+

@@ -1,0 +1,42 @@
+import { Mouse } from '@ephox/agar';
+import { Pipeline } from '@ephox/agar';
+import { UiFinder } from '@ephox/agar';
+import { TinyApis } from '@ephox/mcagar';
+import { TinyDom } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/mcagar';
+import { TinyUi } from '@ephox/mcagar';
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+import { UnitTest } from '@ephox/bedrock';
+
+UnitTest.asynctest('browser.tinymce.plugins.link.ContextToolbarTest', function() {
+  var success = arguments[arguments.length - 2];
+  var failure = arguments[arguments.length - 1];
+
+  ModernTheme();
+  LinkPlugin();
+
+  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    var tinyApis = TinyApis(editor);
+    var tinyUi = TinyUi(editor);
+
+    Pipeline.async({}, [
+      // no toolbar on by default
+      tinyApis.sSetContent('<a href="http://www.google.com">google</a>'),
+      Mouse.sTrueClickOn(TinyDom.fromDom(editor.getBody()), 'a'),
+      UiFinder.sNotExists(TinyDom.fromDom(editor.getBody()), 'div[aria-label="Open link"]'),
+      tinyApis.sSetContent(''),
+
+      // only after setting set to true
+      tinyApis.sSetSetting('link_context_toolbar', true),
+      tinyApis.sSetContent('<a href="http://www.google.com">google</a>'),
+      Mouse.sTrueClickOn(TinyDom.fromDom(editor.getBody()), 'a'),
+      tinyUi.sWaitForUi('wait for open button', 'div[aria-label="Open link"]')
+    ], onSuccess, onFailure);
+  }, {
+    plugins: 'link',
+    toolbar: 'link',
+    skin_url: '/project/js/tinymce/skins/lightgray'
+  }, success, failure);
+});
+
