@@ -40,7 +40,7 @@ UnitTest.asynctest(
       plugins: 'nonbreaking',
       toolbar: 'nonbreaking',
       nonbreaking_force_tab: 5,
-      skin_url: '/project/src/skins/lightgray/dist/lightgray'
+      skin_url: '/project/js/tinymce/skins/lightgray'
     }, success, failure);
   }
 );
