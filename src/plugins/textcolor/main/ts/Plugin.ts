@@ -9,9 +9,11 @@
  */
 
 import PluginManager from 'tinymce/core/PluginManager';
+import Commands from './api/Commands';
 import Buttons from './ui/Buttons';
 
 PluginManager.add('textcolor', function (editor) {
+  Commands.register(editor);
   Buttons.register(editor);
 });
 

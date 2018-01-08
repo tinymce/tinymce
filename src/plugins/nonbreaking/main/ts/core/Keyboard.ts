@@ -8,6 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import VK from 'tinymce/core/util/VK';
 import Settings from '../api/Settings';
 import Actions from './Actions';
 
@@ -16,12 +17,13 @@ var setup = function (editor) {
 
   if (spaces > 0) {
     editor.on('keydown', function (e) {
-      if (e.keyCode === 9) {
+      if (e.keyCode === VK.TAB && !e.isDefaultPrevented()) {
         if (e.shiftKey) {
           return;
         }
 
         e.preventDefault();
+        e.stopImmediatePropagation();
         Actions.insertNbsp(editor, spaces);
       }
     });
