@@ -1,6 +1,13 @@
 import Guard from './Guard';
 import Step from './Step';
 
+var sTryUntilPredicate = function (label, predicate, interval, amount) {
+  var guard = Guard.tryUntil(label, interval, amount);
+  return Step.control(Step.stateful((value, next, die) => {
+    predicate(value) ? next(value) : die('predicate did not succeed');
+  }), guard);
+};
+
 var sTryUntil = function (label, step, interval, amount) {
   var guard = Guard.tryUntil(label, interval, amount);
   return Step.control(step, guard);
@@ -17,6 +24,7 @@ var sTimeout = function (label, step, limit) {
 };
 
 export default {
+  sTryUntilPredicate,
   sTryUntil,
   sTryUntilNot,
   sTimeout

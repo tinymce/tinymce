@@ -19,9 +19,23 @@ var cWaitFor = function (message, selector) {
   return cWaitForState(message, selector, Fun.constant(true));
 };
 
+var sWaitFor = (message, container, selector) =>
+  Chain.asStep(container, [cWaitFor(message, selector)]);
+
 var cWaitForVisible = function (message, selector) {
   return cWaitForState(message, selector, Visibility.isVisible);
 };
+
+// TODO: Perhaps create cWaitForNoState rather than Fun.not here?
+var cWaitForHidden = function (message, selector) {
+  return cWaitForState(message, selector, Fun.not(Visibility.isVisible));
+};
+
+var sWaitForVisible = (message, container, selector) =>
+  Chain.asStep(container, [cWaitForVisible(message, selector)]);
+
+var sWaitForHidden = (message, container, selector) =>
+  Chain.asStep(container, [cWaitForHidden(message, selector)]);
 
 var cHasState = function (predicate) {
   return Chain.binder(function (element) {
@@ -74,16 +88,21 @@ var cFindAllIn = function (selector) {
 };
 
 export default {
-  findIn: findIn,
-  findAllIn: findAllIn,
+  findIn,
+  findAllIn,
 
-  sExists: sExists,
-  sNotExists: sNotExists,
+  sExists,
+  sNotExists,
 
-  cWaitFor: cWaitFor,
-  cWaitForVisible: cWaitForVisible,
-  cWaitForState: cWaitForState,
+  sWaitFor,
+  sWaitForVisible,
+  sWaitForHidden,
 
-  cFindIn: cFindIn,
-  cFindAllIn: cFindAllIn
+  cWaitFor,
+  cWaitForVisible,
+  cWaitForHidden,
+  cWaitForState,
+
+  cFindIn,
+  cFindAllIn
 };

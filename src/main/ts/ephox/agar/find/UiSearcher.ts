@@ -25,7 +25,7 @@ var derive = function (element, selector) {
 };
 
 var matchesSelf = function (element, selector) {
-  return Selectors.is(element, selector) ? Option.some(element) : Option.none();
+  return SizzleFind.matches(element, selector) ? Option.some(element) : Option.none();
 };
 
 var optToArray = function (opt) {
