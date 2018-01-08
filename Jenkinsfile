@@ -23,7 +23,11 @@ node ("primary") {
   }
 
   def extBedrock = load("jenkins-plumbing/bedrock-browsers.groovy")
-  def runTests = extBedrock()
+  def runTests = extBedrock({ browser ->
+    // Firefox was disabled before, and IE never passes unless watched
+    def webdriverTests = (browser == "ie" || browser == "firefox") ? "" : " src/test/ts/webdriver"
+    return "src/test/ts/atomic src/test/ts/browser" + webdriverTests
+  })
 
   def runBuild = load("jenkins-plumbing/standard-build.groovy")
   runBuild(runTests)
