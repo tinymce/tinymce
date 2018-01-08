@@ -17,6 +17,10 @@ node("primary") {
       git([branch: "master", url:'ssh://git@stash:7999/van/jenkins-plumbing.git', credentialsId: '8aa93893-84cc-45fc-a029-a42f21197bb3'])
     }
   }
+
+  def extBedrock = load("jenkins-plumbing/bedrock-browsers.groovy")
+  def runTests = extBedrock()
+
   def runBuild = load("jenkins-plumbing/standard-build.groovy")
-  runBuild()
+  runBuild(runTests)
 }
