@@ -1,5 +1,6 @@
 import { Assertions, ApproxStructure } from '@ephox/agar';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { Fun } from '@ephox/katamari';
 import { Element, Html } from '@ephox/sugar';
 import AriaRegister from 'ephox/echo/api/AriaRegister';
 
@@ -30,48 +31,91 @@ UnitTest.test('AriaRegisterTest', function() {
     Element.fromTag('span')  // representing the label span which normally is inside the button span
   );
 
-  var checkLabelledField = function (expectedDom, expectedHtmlPrefix, field, name, labelText) {
+  var checkLabelledField = function (expectedDom, field, name, labelText) {
     var element = AriaRegister.labelledField(field, name, labelText);
     assert.eq('function', typeof(element.element), 'expecting element method');
     assert.eq('function', typeof(element.field), 'expecting field method');
-    assert.eq(expectedHtmlPrefix, Html.getOuter(element.element()).substr(0,expectedHtmlPrefix.length));
     Assertions.assertStructure('Checking labelledField structure',
       expectedDom,
       element.element());
   };
 
+  var pair = function(store: object, key: string, baseAssertion, buildAssertion) {
+    var strAssert = function (label, actual) {
+      baseAssertion.strAssert(label, actual);
+      if (store.hasOwnProperty(key)) {
+        store[key].strAssert(label, actual);
+      } else {
+        store[key] = buildAssertion(actual);
+      }
+    };
+
+    var arrAssert = function(label, array) {
+      baseAssertion.arrAssert(label, array);
+      if (store.hasOwnProperty(key)) {
+        store[key].arrAssert(label, array);
+      } else {
+        store[key] = buildAssertion(array);
+      }
+    }
+
+    return {
+      show: Fun.constant('pair("' + key + '", ' + baseAssertion.show() + ')'),
+      strAssert: strAssert,
+      arrAssert: arrAssert
+    };
+  }
+
   checkLabelledField(
     ApproxStructure.build(
     function (s, str, arr) {
+      var store = {};
       return s.element('div', {
+        attrs: {'role': str.is('presentation')},
         children: [ 
           s.element('label', { 
-              attrs: {'for': str.startsWith('bob_')},
+              attrs: {
+                'for': pair(store, 'field-id', str.startsWith('bob_'), str.is),
+                'id': pair(store, 'label-id', str.startsWith('label_'), str.is)
+              },
               html: str.is('Bob Text')
             }), 
-          s.element('input', { attrs: {'id': str.startsWith('bob_')} })
+          s.element('input', {
+              attrs: {
+                'id': pair(store, 'field-id', str.startsWith('bob_'), str.is),
+                'aria-labelledby': pair(store, 'label-id', str.startsWith('label_'), str.is)
+              }
+            })
           ]
         }
       );
     }),
-    '<div role="presentation"><label for="bob_',
     Element.fromTag('input'), 'bob', 'Bob Text');
 
   checkLabelledField(
     ApproxStructure.build(
     function (s, str, arr) {
+      var store = {};
       return s.element('div', {
+        attrs: {'role': str.is('presentation')},
         children: [ 
           s.element('label', { 
-              attrs: {'for': str.startsWith('rob_')},
-              html: str.is('Rob Text')
-            }), 
-          s.element('select', { attrs: {'id': str.startsWith('rob_')} })
+            attrs: {
+              'for': pair(store, 'field-id', str.startsWith('rob_'), str.is),
+              'id': pair(store, 'label-id', str.startsWith('label_'), str.is)
+            },
+            html: str.is('Rob Text')
+          }), 
+          s.element('select', {
+            attrs: {
+              'id': pair(store, 'field-id', str.startsWith('rob_'), str.is),
+              'aria-labelledby': pair(store, 'label-id', str.startsWith('label_'), str.is)
+            } 
+          })
           ]
         }
       );
     }),
-    '<div role="presentation"><label for="rob_',
     Element.fromTag('select'), 'rob', 'Rob Text');
 });
 
