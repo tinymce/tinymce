@@ -1,4 +1,3 @@
-/*
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
@@ -56,4 +55,3 @@ UnitTest.asynctest(
     }, success, failure);
   }
 );
-*/
