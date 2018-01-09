@@ -140,7 +140,7 @@ function open(editor, currentState, resolve, reject) {
     };
   };
 
-  function action(fn) {
+  function action(fn, ...arg): Function {
     var args = [].slice.call(arguments, 1);
 
     return function () {
@@ -375,7 +375,7 @@ function open(editor, currentState, resolve, reject) {
 
     e.preventDefault();
 
-    action(ImageTransformations.resize)();
+    action(ImageTransformations.resize, width, height)();
     cancel();
   }).on('show', disableUndoRedo);
 
