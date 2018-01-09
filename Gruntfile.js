@@ -162,7 +162,7 @@ module.exports = function (grunt) {
       {plugins: () => gruntWebPack.allPlugins(plugins)},
       {themes: () => gruntWebPack.allThemes(themes)},
       gruntUtils.generate(plugins, 'plugin', (name) => () => gruntWebPack.createPlugin(name) ),
-      gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) ),
+      gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) )
     ),
 
     less: {
