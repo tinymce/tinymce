@@ -73,11 +73,11 @@ var isAtomic = function (node) {
   return isAtomicInline(node) || isAtomicContentEditableFalse(node);
 };
 
-var isEditableCaretCandidate = function (node, rootNode) {
+var isEditableCaretCandidate = function (node, rootNode?) {
   return isCaretCandidate(node) && isInEditable(node, rootNode);
 };
 
-export default <any> {
+export default {
   isCaretCandidate: isCaretCandidate,
   isInEditable: isInEditable,
   isAtomic: isAtomic,

@@ -21,7 +21,7 @@
  * var str = tinymce.util.JSON.serialize(obj);
  */
 
-var serialize = function (o, quote) {
+var serialize = function (o, quote?) {
   var i, v, t, name;
 
   quote = quote || '"';
@@ -78,7 +78,7 @@ var serialize = function (o, quote) {
   return '' + o;
 };
 
-export default <any> {
+export default {
   /**
    * Serializes the specified object as a JSON string.
    *

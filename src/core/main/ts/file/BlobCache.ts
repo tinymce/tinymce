@@ -22,7 +22,7 @@ import Uuid from '../util/Uuid';
 
 
 
-export default <any> function () {
+export default function () {
   var cache = [], constant = Fun.constant;
 
   var mimeToExt = function (mime) {
@@ -36,7 +36,7 @@ export default <any> function () {
     return mimes[mime.toLowerCase()] || 'dat';
   };
 
-  var create = function (o, blob, base64, filename) {
+  var create = function (o, blob?, base64?, filename?) {
     return typeof o === 'object' ? toBlobInfo(o) : toBlobInfo({
       id: o,
       name: filename,

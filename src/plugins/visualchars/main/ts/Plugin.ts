@@ -13,7 +13,7 @@ import PluginManager from 'tinymce/core/PluginManager';
 import Api from './api/Api';
 import Commands from './api/Commands';
 import Keyboard from './core/Keyboard';
-import Buttons from './ui/Buttons';
+import * as Buttons from './ui/Buttons';
 
 PluginManager.add('visualchars', function (editor) {
   var toggleState = Cell(false);

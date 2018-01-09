@@ -26,7 +26,7 @@ import Tools from '../util/Tools';
 
 var makeMap = Tools.makeMap;
 
-export default <any> function (settings) {
+export default function (settings?) {
   var html = [], indent, indentBefore, indentAfter, encode, htmlOutput;
 
   settings = settings || {};

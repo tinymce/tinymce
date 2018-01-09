@@ -41,7 +41,7 @@ var match = function (patterns, evt) {
   });
 };
 
-var action = function (f) {
+var action = function (f, ...x: any[]) {
   var args = Array.prototype.slice.call(arguments, 1);
   return function () {
     return f.apply(null, args);
@@ -54,7 +54,7 @@ var execute = function (patterns, evt) {
   });
 };
 
-export default <any> {
+export default {
   match: match,
   action: action,
   execute: execute

@@ -27,7 +27,7 @@ var shouldBlockNewLine = function (editor) {
   return matchesSelector(editor, Settings.getNoNewLineSelector(editor));
 };
 
-export default <any> {
+export default {
   shouldInsertBr: shouldInsertBr,
   shouldBlockNewLine: shouldBlockNewLine
 };

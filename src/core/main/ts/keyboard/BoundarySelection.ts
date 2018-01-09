@@ -110,7 +110,7 @@ var setupSelectedState = function (editor) {
   return caret;
 };
 
-export default <any> {
+export default {
   move: move,
   moveNextWord: Fun.curry(moveWord, true),
   movePrevWord: Fun.curry(moveWord, false),

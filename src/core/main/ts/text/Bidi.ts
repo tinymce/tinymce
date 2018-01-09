@@ -14,6 +14,6 @@ var hasStrongRtl = function (text) {
   return strongRtl.test(text);
 };
 
-export default <any> {
+export default {
   hasStrongRtl: hasStrongRtl
 };

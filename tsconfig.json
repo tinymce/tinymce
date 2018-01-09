@@ -65,10 +65,10 @@
   "include": [
     "src/core/main/ts",
     "src/core/demo/ts",
-    "src/core/src/test/ts",
+    "src/core/test/ts",
     "src/ui/main/ts",
-    "src/ui/src/demo/ts",
-    "src/ui/src/test/ts",
+    "src/ui/demo/ts",
+    "src/ui/test/ts",
     "src/plugins/*/main/ts",
     "src/plugins/*/demo/ts",
     "src/plugins/*/test/ts",

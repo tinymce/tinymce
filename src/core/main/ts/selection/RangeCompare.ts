@@ -14,6 +14,6 @@ var isEq = function (rng1, rng2) {
     (rng1.endContainer === rng2.endContainer && rng1.endOffset === rng2.endOffset);
 };
 
-export default <any> {
+export default {
   isEq: isEq
 };

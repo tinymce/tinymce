@@ -110,6 +110,6 @@ var insert = function (editor, createNewBlock, containerBlock, parentBlock, newB
   NewLineUtils.moveToCaretPosition(editor, newBlock);
 };
 
-export default <any> {
+export default {
   insert: insert
 };

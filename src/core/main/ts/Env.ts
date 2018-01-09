@@ -50,7 +50,7 @@ if (ie12) {
 // says it has contentEditable support but there is no visible caret.
 var contentEditable = !iDevice || fileApi || parseInt(userAgent.match(/AppleWebKit\/(\d*)/)[1]) >= 534;
 
-export default <any> {
+export default {
   /**
    * Constant that is true if the browser is Opera.
    *
@@ -172,6 +172,11 @@ export default <any> {
    * @type Boolean
    */
   ceFalse: (ie === false || ie > 8),
+
+  cacheSuffix: '',
+  container: null,
+  overrideViewPort: null,
+  experimentalShadowDom: false,
 
   /**
    * Constant if CSP mode is possible or not. Meaning we can't use script urls for the iframe.

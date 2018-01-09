@@ -175,7 +175,7 @@ var showCaretContainerBlock = function (caretContainer) {
   return null;
 };
 
-export default <any> {
+export default {
   isCaretContainer: isCaretContainer,
   isCaretContainerBlock: isCaretContainerBlock,
   isCaretContainerInline: isCaretContainerInline,

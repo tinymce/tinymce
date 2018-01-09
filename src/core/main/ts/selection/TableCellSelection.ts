@@ -33,7 +33,7 @@ var getCellsFromEditor = function (editor) {
   return getCellsFromElementOrRanges(MultiRange.getRanges(editor.selection.getSel()), Element.fromDom(editor.getBody()));
 };
 
-export default <any> {
+export default {
   getCellsFromRanges: getCellsFromRanges,
   getCellsFromElement: getCellsFromElement,
   getCellsFromElementOrRanges: getCellsFromElementOrRanges,

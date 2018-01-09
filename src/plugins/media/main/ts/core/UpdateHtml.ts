@@ -52,14 +52,14 @@ var setAttributes = function (attrs, updatedAttrs) {
 };
 
 var normalizeHtml = function (html) {
-  var writer = new Writer();
+  var writer = Writer();
   var parser = new SaxParser(writer);
   parser.parse(html);
   return writer.getContent();
 };
 
 var updateHtmlSax = function (html, data, updateAll) {
-  var writer = new Writer();
+  var writer = Writer();
   var sourceCount = 0;
   var hasImage;
 
@@ -179,7 +179,7 @@ var updateHtmlSax = function (html, data, updateAll) {
 
       writer.end(name);
     }
-  }, new Schema({})).parse(html);
+  }, Schema({})).parse(html);
 
   return writer.getContent();
 };

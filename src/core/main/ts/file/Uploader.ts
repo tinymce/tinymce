@@ -35,7 +35,7 @@ import Tools from '../util/Tools';
 
 
 
-export default <any> function (uploadStatus, settings) {
+export default function (uploadStatus, settings) {
   var pendingPromises = {};
 
   var pathJoin = function (path1, path2) {

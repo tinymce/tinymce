@@ -20,7 +20,7 @@ import Tools from './util/Tools';
 
 
 
-export default <any> function (editor) {
+export default function (editor) {
   var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;
 
   var isUnlocked = function () {

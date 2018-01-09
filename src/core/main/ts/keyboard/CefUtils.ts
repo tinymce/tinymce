@@ -76,7 +76,7 @@ var renderRangeCaret = function (editor, range) {
   return range;
 };
 
-export default <any> {
+export default {
   showCaret: showCaret,
   selectNode: selectNode,
   renderCaretAtRange: renderCaretAtRange,

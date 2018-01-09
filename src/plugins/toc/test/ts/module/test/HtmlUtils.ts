@@ -12,7 +12,7 @@ var cleanHtml = function (html) {
 };
 
 var normalizeHtml = function (html) {
-  var writer = new Writer();
+  var writer = Writer();
 
   new SaxParser({
     validate: false,

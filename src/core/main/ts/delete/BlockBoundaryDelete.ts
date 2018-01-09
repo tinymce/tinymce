@@ -26,6 +26,6 @@ var backspaceDelete = function (editor, forward) {
   return position.isSome();
 };
 
-export default <any> {
+export default {
   backspaceDelete: backspaceDelete
 };

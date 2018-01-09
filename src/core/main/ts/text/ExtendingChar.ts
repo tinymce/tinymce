@@ -47,6 +47,6 @@ var isExtendingChar = function (ch) {
   return typeof ch == "string" && ch.charCodeAt(0) >= 768 && extendingChars.test(ch);
 };
 
-export default <any> {
+export default {
   isExtendingChar: isExtendingChar
 };

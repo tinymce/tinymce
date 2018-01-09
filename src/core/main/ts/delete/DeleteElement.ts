@@ -177,6 +177,6 @@ var deleteElement = function (editor, forward, elm) {
   }
 };
 
-export default <any> {
+export default {
   deleteElement: deleteElement
 };

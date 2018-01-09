@@ -102,7 +102,7 @@ var backspaceDelete = function (editor, forward) {
   }
 };
 
-export default <any> {
+export default {
   backspaceDelete: backspaceDelete,
   paddEmptyElement: paddEmptyElement
 };

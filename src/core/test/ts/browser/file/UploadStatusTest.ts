@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.core.file.UploadStatusTest', function() {
   var suite = LegacyUnit.createSuite();
 
   suite.test('hasBlobUri/markPending', function () {
-    var status = new UploadStatus();
+    var status = UploadStatus();
 
     LegacyUnit.strictEqual(status.hasBlobUri("nonexisting_uri"), false);
     status.markPending("existing_uri");

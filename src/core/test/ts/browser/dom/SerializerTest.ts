@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   };
 
   suite.test('Schema rules', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('@[id|title|class|style],div,img[src|alt|-style|border],span,hr');
     DOM.setHTML('test', '<img title="test" src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" alt="test" ' +
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
       '<img src="tinymce/ui/img/raster.gif" border="0" alt="" /><hr />'
     );
 
-    ser = new Serializer({
+    ser = Serializer({
       valid_elements : 'img[src|border=0|alt=]',
       extended_valid_elements : 'div[id],img[src|alt=]'
     });
@@ -76,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
       '<div id="test"><img src="tinymce/ui/img/raster.gif" alt="" /></div>'
     );
 
-    ser = new Serializer({ invalid_elements : 'hr,br' });
+    ser = Serializer({ invalid_elements : 'hr,br' });
     DOM.setHTML('test', '<img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" /><hr /><br />');
     LegacyUnit.equal(
       ser.serialize(DOM.get('test'), { getInner: true }),
@@ -85,7 +85,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('allow_unsafe_link_target (default)', function () {
-    var ser = new Serializer({ });
+    var ser = Serializer({ });
 
     DOM.setHTML('test', '<a href="a" target="_blank">a</a><a href="b" target="_blank">b</a>');
     LegacyUnit.equal(
@@ -119,7 +119,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('allow_unsafe_link_target (disabled)', function () {
-    var ser = new Serializer({ allow_unsafe_link_target: true });
+    var ser = Serializer({ allow_unsafe_link_target: true });
 
     DOM.setHTML('test', '<a href="a" target="_blank">a</a><a href="b" target="_blank">b</a>');
     LegacyUnit.equal(
@@ -129,7 +129,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('format tree', function () {
-    var ser = new Serializer({ });
+    var ser = Serializer({ });
 
     DOM.setHTML('test', 'a');
     LegacyUnit.equal(
@@ -141,25 +141,25 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   suite.test('Entity encoding', function () {
     var ser;
 
-    ser = new Serializer({ entity_encoding : 'numeric' });
+    ser = Serializer({ entity_encoding : 'numeric' });
     DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;');
     LegacyUnit.equal(ser.serialize(DOM.get('test'), { getInner : true }), '&lt;&gt;&amp;"&#160;&#229;&#228;&#246;');
 
-    ser = new Serializer({ entity_encoding : 'named' });
+    ser = Serializer({ entity_encoding : 'named' });
     DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;');
     LegacyUnit.equal(ser.serialize(DOM.get('test'), { getInner : true }), '&lt;&gt;&amp;"&nbsp;&aring;&auml;&ouml;');
 
-    ser = new Serializer({ entity_encoding : 'named+numeric', entities : '160,nbsp,34,quot,38,amp,60,lt,62,gt' });
+    ser = Serializer({ entity_encoding : 'named+numeric', entities : '160,nbsp,34,quot,38,amp,60,lt,62,gt' });
     DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;');
     LegacyUnit.equal(ser.serialize(DOM.get('test'), { getInner : true }), '&lt;&gt;&amp;"&nbsp;&#229;&#228;&#246;');
 
-    ser = new Serializer({ entity_encoding : 'raw' });
+    ser = Serializer({ entity_encoding : 'raw' });
     DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;');
     LegacyUnit.equal(ser.serialize(DOM.get('test'), { getInner : true }), '&lt;&gt;&amp;"\u00a0\u00e5\u00e4\u00f6');
   });
 
   suite.test('Form elements (general)', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules(
       'form[method],label[for],input[type|name|value|checked|disabled|readonly|length|maxlength],select[multiple],' +
@@ -188,7 +188,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Form elements (checkbox)', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('form[method],label[for],input[type|name|value|checked|disabled|readonly|length|maxlength],select[multiple],option[value|selected]');
 
@@ -206,7 +206,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Form elements (select)', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('form[method],label[for],input[type|name|value|checked|disabled|readonly|length|maxlength],select[multiple],option[value|selected]');
 
@@ -233,7 +233,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('List elements', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('ul[compact],ol,li');
 
@@ -254,7 +254,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Tables', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('table,tr,td[nowrap]');
 
@@ -272,7 +272,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Styles', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('*[*]');
 
@@ -281,7 +281,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Comments', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('*[*]');
 
@@ -290,7 +290,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Non HTML elements and attributes', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('*[*]');
     ser.schema.addValidChildren('+div[prefix:test]');
@@ -303,7 +303,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Padd empty elements', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('#p');
 
@@ -312,7 +312,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Padd empty elements with BR', function () {
-    var ser = new Serializer({ padd_empty_with_br: true });
+    var ser = Serializer({ padd_empty_with_br: true });
 
     ser.setRules('#p,table,tr,#td,br');
 
@@ -323,7 +323,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Do not padd empty elements with padded children', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('#p,#span,b');
 
@@ -332,7 +332,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Remove empty elements', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('-p');
 
@@ -341,7 +341,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with non JS type attribute', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<s' + 'cript type="mylanguage"></s' + 'cript>');
@@ -349,7 +349,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with tags inside a comment with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
@@ -360,7 +360,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with tags inside a comment', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
@@ -371,7 +371,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with less than with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<s' + 'cript>1 < 2;</s' + 'cript>');
@@ -379,7 +379,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with less than', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<s' + 'cript>1 < 2;</s' + 'cript>');
@@ -387,7 +387,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with type attrib and less than with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<s' + 'cript type="text/javascript">1 < 2;</s' + 'cript>');
@@ -395,7 +395,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with type attrib and less than', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<s' + 'cript type="text/javascript">1 < 2;</s' + 'cript>');
@@ -403,7 +403,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with whitespace in beginning/end with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n</s' + 'cript>');
@@ -414,7 +414,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with whitespace in beginning/end', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n</s' + 'cript>');
@@ -425,7 +425,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with a HTML comment and less than with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script><!-- 1 < 2; // --></s' + 'cript>');
@@ -433,7 +433,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with a HTML comment and less than', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script><!-- 1 < 2; // --></s' + 'cript>');
@@ -441,7 +441,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with white space in beginning, comment and less than with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>\n\n<!-- 1 < 2;\n\n--></s' + 'cript>');
@@ -449,7 +449,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with white space in beginning, comment and less than', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>\n\n<!-- 1 < 2;\n\n--></s' + 'cript>');
@@ -457,7 +457,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with comments and cdata with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>// <![CDATA[1 < 2; // ]]></s' + 'cript>');
@@ -465,7 +465,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with comments and cdata', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>// <![CDATA[1 < 2; // ]]></s' + 'cript>');
@@ -473,7 +473,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with cdata with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script><![CDATA[1 < 2; ]]></s' + 'cript>');
@@ -481,7 +481,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with cdata', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script><![CDATA[1 < 2; ]]></s' + 'cript>');
@@ -489,7 +489,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script whitespace in beginning/end and cdata with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>\n\n<![CDATA[\n\n1 < 2;\n\n]]>\n\n</s' + 'cript>');
@@ -497,7 +497,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script whitespace in beginning/end and cdata', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>\n\n<![CDATA[\n\n1 < 2;\n\n]]>\n\n</s' + 'cript>');
@@ -505,7 +505,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Whitespace preserve in pre', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('pre');
 
     DOM.setHTML('test', '<pre>  </pre>');
@@ -513,7 +513,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with src attr', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script src="test.js" data-mce-src="test.js"></s' + 'cript>');
@@ -521,7 +521,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with HTML comment, comment and CDATA with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script><!--// <![CDATA[var hi = "hello";// ]]>--></s' + 'cript>');
@@ -529,7 +529,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with HTML comment, comment and CDATA', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script><!--// <![CDATA[var hi = "hello";// ]]>--></s' + 'cript>');
@@ -537,7 +537,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with block comment around cdata with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>/* <![CDATA[ */\nvar hi = "hello";\n/* ]]> */</s' + 'cript>');
@@ -545,7 +545,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with block comment around cdata', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>/* <![CDATA[ */\nvar hi = "hello";\n/* ]]> */</s' + 'cript>');
@@ -553,7 +553,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with html comment and block comment around cdata with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script><!-- /* <![CDATA[ */\nvar hi = "hello";\n/* ]]>*/--></s' + 'cript>');
@@ -561,7 +561,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with html comment and block comment around cdata', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script><!-- /* <![CDATA[ */\nvar hi = "hello";\n/* ]]>*/--></s' + 'cript>');
@@ -569,7 +569,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with line comment and html comment with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>// <!--\nvar hi = "hello";\n// --></s' + 'cript>');
@@ -577,7 +577,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with line comment and html comment', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>// <!--\nvar hi = "hello";\n// --></s' + 'cript>');
@@ -585,7 +585,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with block comment around html comment with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>/* <!-- */\nvar hi = "hello";\n/*-->*/</s' + 'cript>');
@@ -593,7 +593,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Script with block comment around html comment', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
     ser.setRules('script[type|language|src]');
 
     DOM.setHTML('test', '<script>/* <!-- */\nvar hi = "hello";\n/*-->*/</s' + 'cript>');
@@ -601,7 +601,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Protected blocks', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('noscript[test]');
 
@@ -616,7 +616,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Style with whitespace at beginning with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, valid_children: '+body[style]', element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, valid_children: '+body[style]', element_format: 'xhtml' });
     ser.setRules('style');
 
     DOM.setHTML('test', '<style> body { background:#fff }</style>');
@@ -624,7 +624,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Style with whitespace at beginning', function () {
-    var ser = new Serializer({ fix_list_elements : true, valid_children: '+body[style]' });
+    var ser = Serializer({ fix_list_elements : true, valid_children: '+body[style]' });
     ser.setRules('style');
 
     DOM.setHTML('test', '<style> body { background:#fff }</style>');
@@ -632,7 +632,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Style with cdata with element_format: xhtml', function () {
-    var ser = new Serializer({ fix_list_elements : true, valid_children: '+body[style]', element_format: 'xhtml' });
+    var ser = Serializer({ fix_list_elements : true, valid_children: '+body[style]', element_format: 'xhtml' });
     ser.setRules('style');
 
     DOM.setHTML('test', '<style>\r\n<![CDATA[\r\n   body { background:#fff }]]></style>');
@@ -640,7 +640,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Style with cdata', function () {
-    var ser = new Serializer({ fix_list_elements : true, valid_children: '+body[style]' });
+    var ser = Serializer({ fix_list_elements : true, valid_children: '+body[style]' });
     ser.setRules('style');
 
     DOM.setHTML('test', '<style>\r\n<![CDATA[\r\n   body { background:#fff }]]></style>');
@@ -648,7 +648,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('CDATA', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('span');
 
@@ -660,7 +660,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('BR at end of blocks', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('ul,li,br');
 
@@ -669,7 +669,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Map elements', function () {
-    var ser = new Serializer({ fix_list_elements : true });
+    var ser = Serializer({ fix_list_elements : true });
 
     ser.setRules('map[id|name],area[shape|coords|href|target|alt]');
 
@@ -684,7 +684,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Custom elements', function () {
-    var ser = new Serializer({
+    var ser = Serializer({
       custom_elements: 'custom1,~custom2',
       valid_elements: 'custom1,custom2'
     });
@@ -697,7 +697,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Remove internal classes', function () {
-    var ser = new Serializer({
+    var ser = Serializer({
       valid_elements: 'span[class]'
     });
 
@@ -718,7 +718,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Restore tabindex', function () {
-    var ser = new Serializer({
+    var ser = Serializer({
       valid_elements: 'span[tabindex]'
     });
 
@@ -727,7 +727,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('Trailing BR (IE11)', function () {
-    var ser = new Serializer({
+    var ser = Serializer({
       valid_elements: 'p,br'
     });
 
@@ -739,7 +739,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('addTempAttr', function () {
-    var ser = new Serializer({});
+    var ser = Serializer({});
 
     ser.addTempAttr('data-x');
     ser.addTempAttr('data-y');
@@ -750,8 +750,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('addTempAttr same attr twice', function () {
-    var ser1 = new Serializer({});
-    var ser2 = new Serializer({});
+    var ser1 = Serializer({});
+    var ser2 = Serializer({});
 
     ser1.addTempAttr('data-x');
     ser2.addTempAttr('data-x');
@@ -764,7 +764,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('trim data-mce-bougs="all"', function () {
-    var ser = new Serializer({});
+    var ser = Serializer({});
 
     DOM.setHTML('test', 'a<p data-mce-bogus="all">b</p>c');
     LegacyUnit.equal(ser.serialize(DOM.get('test'), { getInner: 1 }), 'ac');
@@ -772,7 +772,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function() {
   });
 
   suite.test('zwsp should not be treated as contents', function () {
-    var ser = new Serializer({ });
+    var ser = Serializer({ });
 
     DOM.setHTML('test', '<p>' + Zwsp.ZWSP + '</p>');
     LegacyUnit.equal(

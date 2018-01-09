@@ -23,13 +23,13 @@ import Schema from './Schema';
 
 
 
-export default <any> function (settings, schema) {
-  var self = this, writer = new Writer(settings);
+export default function (settings?, schema?) {
+  var self: any = {}, writer = Writer(settings);
 
   settings = settings || {};
   settings.validate = "validate" in settings ? settings.validate : true;
 
-  self.schema = schema = schema || new Schema();
+  self.schema = schema = schema || Schema();
   self.writer = writer;
 
   /**
@@ -148,4 +148,6 @@ export default <any> function (settings, schema) {
 
     return writer.getContent();
   };
+
+  return self;
 };

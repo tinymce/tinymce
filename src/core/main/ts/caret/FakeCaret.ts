@@ -28,7 +28,7 @@ var isTableCell = function (node) {
   return node && /^(TD|TH)$/i.test(node.nodeName);
 };
 
-export default <any> function (rootNode, isBlock) {
+export default function (rootNode, isBlock) {
   var cursorInterval, $lastVisualCaret = null, caretContainerNode;
 
   var getAbsoluteClientRect = function (node, before) {

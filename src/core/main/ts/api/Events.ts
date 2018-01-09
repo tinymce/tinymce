@@ -16,7 +16,7 @@ var firePostProcess = function (editor, args) {
   return editor.fire('PostProcess', args);
 };
 
-export default <any> {
+export default {
   firePreProcess: firePreProcess,
   firePostProcess: firePostProcess
 };

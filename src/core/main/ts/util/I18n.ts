@@ -21,7 +21,7 @@ import Tools from './Tools';
 
 var data = {}, code = "en";
 
-export default <any> {
+export default {
   /**
    * Sets the current language code.
    *

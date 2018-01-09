@@ -25,7 +25,7 @@ import Tools from '../util/Tools';
 
 "use strict";
 
-export default <any> function (document, settings) {
+export default function (document, settings?) {
   var idCount = 0, loadedStates = {}, maxLoadTime;
 
   settings = settings || {};

@@ -195,4 +195,4 @@ var promise = function () {
 };
 
 const promiseObj = window.Promise ? window.Promise : promise();
-export default <any> promiseObj;
+export default promiseObj;

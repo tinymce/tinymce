@@ -208,7 +208,7 @@ var mergeWithParents = function (editor, format, name, vars, node) {
   }
 };
 
-export default <any> {
+export default {
   mergeWithChildren: mergeWithChildren,
   mergeUnderlineAndColor: mergeUnderlineAndColor,
   mergeBackgroundColorAndFontSize: mergeBackgroundColorAndFontSize,

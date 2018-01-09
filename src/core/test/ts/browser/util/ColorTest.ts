@@ -9,12 +9,12 @@ UnitTest.asynctest('browser.tinymce.core.util.ColorTest', function() {
   var suite = LegacyUnit.createSuite();
 
   suite.test("Constructor", function () {
-    LegacyUnit.equal(new Color().toHex(), '#000000');
-    LegacyUnit.equal(new Color('#faebcd').toHex(), '#faebcd');
+    LegacyUnit.equal(Color().toHex(), '#000000');
+    LegacyUnit.equal(Color('#faebcd').toHex(), '#faebcd');
   });
 
   suite.test("parse method", function () {
-    var color = new Color();
+    var color = Color();
 
     LegacyUnit.equal(color.parse('#faebcd').toHex(), '#faebcd');
     LegacyUnit.equal(color.parse('#ccc').toHex(), '#cccccc');
@@ -28,15 +28,15 @@ UnitTest.asynctest('browser.tinymce.core.util.ColorTest', function() {
   });
 
   suite.test("toRgb method", function () {
-    LegacyUnit.deepEqual(new Color('#faebcd').toRgb(), { r: 250, g: 235, b: 205 });
+    LegacyUnit.deepEqual(Color('#faebcd').toRgb(), { r: 250, g: 235, b: 205 });
   });
 
   suite.test("toHsv method", function () {
-    LegacyUnit.deepEqual(new Color('#804041').toHsv(), { h: 359, s: 50, v: 50 });
+    LegacyUnit.deepEqual(Color('#804041').toHsv(), { h: 359, s: 50, v: 50 });
   });
 
   suite.test("toHex method", function () {
-    LegacyUnit.equal(new Color({ r: 255, g: 254, b: 253 }).toHex(), '#fffefd');
+    LegacyUnit.equal(Color({ r: 255, g: 254, b: 253 }).toHex(), '#fffefd');
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {

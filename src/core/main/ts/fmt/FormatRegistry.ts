@@ -13,7 +13,7 @@ import Tools from '../util/Tools';
 
 
 
-export default <any> function (editor) {
+export default function (editor) {
   var formats = {};
 
   var get = function (name) {

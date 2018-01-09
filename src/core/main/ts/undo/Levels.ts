@@ -74,7 +74,7 @@ var isEq = function (level1, level2) {
   return !!level1 && !!level2 && getLevelContent(level1) === getLevelContent(level2);
 };
 
-export default <any> {
+export default {
   createFragmentedLevel: createFragmentedLevel,
   createCompleteLevel: createCompleteLevel,
   createFromEditor: createFromEditor,

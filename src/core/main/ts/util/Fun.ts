@@ -35,7 +35,7 @@ var compose = function (f, g) {
   };
 };
 
-var or = function () {
+var or = function (...x: any[]) {
   var args = slice.call(arguments);
 
   return function (x) {
@@ -49,7 +49,7 @@ var or = function () {
   };
 };
 
-var and = function () {
+var and = function (...x: any[]) {
   var args = slice.call(arguments);
 
   return function (x) {
@@ -63,7 +63,7 @@ var and = function () {
   };
 };
 
-var curry = function (fn) {
+var curry = function (fn, ...x: any[]) {
   var args = slice.call(arguments);
 
   if (args.length - 1 >= fn.length) {
@@ -79,7 +79,7 @@ var curry = function (fn) {
 var noop = function () {
 };
 
-export default <any> {
+export default {
   constant: constant,
   negate: negate,
   and: and,

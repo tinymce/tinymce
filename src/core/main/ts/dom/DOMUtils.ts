@@ -138,11 +138,11 @@ var DOMUtils: any = function (doc, settings) {
   self.counter = 0;
   self.stdMode = !isIE || doc.documentMode >= 8;
   self.boxModel = !isIE || doc.compatMode == "CSS1Compat" || self.stdMode;
-  self.styleSheetLoader = new StyleSheetLoader(doc);
+  self.styleSheetLoader = StyleSheetLoader(doc);
   self.boundEvents = [];
   self.settings = settings = settings || {};
-  self.schema = settings.schema ? settings.schema : new Schema({});
-  self.styles = new Styles({
+  self.schema = settings.schema ? settings.schema : Schema({});
+  self.styles = Styles({
     url_converter: settings.url_converter,
     url_converter_scope: settings.url_converter_scope
   }, settings.schema);
@@ -1755,4 +1755,4 @@ DOMUtils.prototype = {
 DOMUtils.DOM = new DOMUtils(document);
 DOMUtils.nodeIndex = nodeIndex;
 
-export default <any> DOMUtils;
+export default DOMUtils;

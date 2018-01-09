@@ -38,7 +38,7 @@ function filter(content, items) {
  * @return {String} String of text with line feeds.
  */
 function innerText(html) {
-  var schema = new Schema(), domParser = new DomParser({}, schema), text = '';
+  var schema = Schema(), domParser = DomParser({}, schema), text = '';
   var shortEndedElements = schema.getShortEndedElements();
   var ignoreElements = Tools.makeMap('script noscript style textarea video audio iframe object', ' ');
   var blockElements = schema.getBlockElements();

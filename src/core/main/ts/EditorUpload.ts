@@ -24,9 +24,9 @@ import ErrorReporter from './ErrorReporter';
 
 
 
-export default <any> function (editor) {
-  var blobCache = new BlobCache(), uploader, imageScanner, settings = editor.settings;
-  var uploadStatus = new UploadStatus();
+export default function (editor) {
+  var blobCache = BlobCache(), uploader, imageScanner, settings = editor.settings;
+  var uploadStatus = UploadStatus();
 
   var aliveGuard = function (callback) {
     return function (result) {
@@ -98,7 +98,7 @@ export default <any> function (editor) {
 
   var uploadImages = function (callback) {
     if (!uploader) {
-      uploader = new Uploader(uploadStatus, {
+      uploader = Uploader(uploadStatus, {
         url: settings.images_upload_url,
         basePath: settings.images_upload_base_path,
         credentials: settings.images_upload_credentials,
@@ -150,7 +150,7 @@ export default <any> function (editor) {
 
   var scanForImages = function () {
     if (!imageScanner) {
-      imageScanner = new ImageScanner(uploadStatus, blobCache);
+      imageScanner = ImageScanner(uploadStatus, blobCache);
     }
 
     return imageScanner.findAll(editor.getBody(), isValidDataUriImage).then(aliveGuard(function (result) {

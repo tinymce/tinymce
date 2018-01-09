@@ -71,7 +71,7 @@ var isEditorAttachedToDom = function (editor) {
   }).getOr(false);
 };
 
-export default <any> {
+export default {
   isXYInContentArea: isXYInContentArea,
   isEditorAttachedToDom: isEditorAttachedToDom
 };

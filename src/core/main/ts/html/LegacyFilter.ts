@@ -74,6 +74,6 @@ var register = function (domParser, settings) {
   }
 };
 
-export default <any> {
+export default {
   register: register
 };

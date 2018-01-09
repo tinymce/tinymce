@@ -239,7 +239,7 @@ var resolve = function (rootNode, path) {
   return findTextPosition(container, parseInt(offset, 10));
 };
 
-export default <any> {
+export default {
   /**
    * Create a xpath bookmark location for the specified caret position.
    *

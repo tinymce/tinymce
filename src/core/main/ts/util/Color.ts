@@ -28,8 +28,8 @@ var min = Math.min, max = Math.max, round = Math.round;
  * @method Color
  * @param {String} value Optional initial value to parse.
  */
-var Color = function (value) {
-  var self = this, r = 0, g = 0, b = 0;
+var Color = function (value?) {
+  var self: any = {}, r = 0, g = 0, b = 0;
 
   var rgb2hsv = function (r, g, b) {
     var h, s, v, d, minRGB, maxRGB;
@@ -229,6 +229,8 @@ var Color = function (value) {
   self.toHsv = toHsv;
   self.toHex = toHex;
   self.parse = parse;
+
+  return self;
 };
 
-export default <any> Color;
+export default Color;

@@ -25,7 +25,7 @@ var isBookmarkNode = function (node) {
   return node && node.tagName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
 };
 
-export default <any> {
+export default {
   getBookmark: getBookmark,
   moveToBookmark: moveToBookmark,
   isBookmarkNode: isBookmarkNode

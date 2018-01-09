@@ -74,4 +74,4 @@ var BookmarkManager: any = function (selection) {
  */
 BookmarkManager.isBookmarkNode = Bookmarks.isBookmarkNode;
 
-export default <any> BookmarkManager;
+export default BookmarkManager;

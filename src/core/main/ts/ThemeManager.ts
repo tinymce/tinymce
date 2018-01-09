@@ -10,6 +10,4 @@
 
 import AddOnManager from './AddOnManager';
 
-
-
 export default <any> AddOnManager.ThemeManager;

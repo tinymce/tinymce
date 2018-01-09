@@ -59,7 +59,7 @@ var isBr = function (node) {
   return Node.isElement(node) && Node.name(node) === 'br';
 };
 
-export default <any> {
+export default {
   isBlock: isBlock,
   isInline: isInline,
   isHeading: isHeading,

@@ -428,4 +428,4 @@ URI.getDocumentBaseUrl = function (loc) {
   return baseUrl;
 };
 
-export default <any> URI;
+export default URI;

@@ -163,4 +163,4 @@ Class.extend = extendClass = function (prop) {
   return Class;
 };
 
-export default <any> Class;
+export default Class;

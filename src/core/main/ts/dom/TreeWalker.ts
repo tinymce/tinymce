@@ -22,7 +22,7 @@
 
 
 
-export default <any> function (startNode, rootNode) {
+export default function (startNode, rootNode) {
   var node = startNode;
 
   var findSibling = function (node, startName, siblingName, shallow) {

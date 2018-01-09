@@ -123,6 +123,6 @@ var mergeBlocks = function (rootNode, forward, block1, block2) {
   return forward ? mergeBlockInto(rootNode, block2, block1) : mergeBlockInto(rootNode, block1, block2);
 };
 
-export default <any> {
+export default {
   mergeBlocks: mergeBlocks
 };

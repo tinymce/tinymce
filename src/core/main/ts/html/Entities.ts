@@ -128,7 +128,7 @@ var Entities = {
    * @param {Boolean} attr Optional flag to specify if the text is attribute contents.
    * @return {String} Entity encoded text.
    */
-  encodeRaw: function (text, attr) {
+  encodeRaw: function (text, attr?) {
     return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
       return baseEntities[chr] || chr;
     });
@@ -158,7 +158,7 @@ var Entities = {
    * @param {Boolean} attr Optional flag to specify if the text is attribute contents.
    * @return {String} Entity encoded text.
    */
-  encodeNumeric: function (text, attr) {
+  encodeNumeric: function (text, attr?) {
     return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
       // Multi byte sequence convert it to a single entity
       if (chr.length > 1) {
@@ -179,7 +179,7 @@ var Entities = {
    * @param {Object} entities Optional parameter with entities to use.
    * @return {String} Entity encoded text.
    */
-  encodeNamed: function (text, attr, entities) {
+  encodeNamed: function (text, attr?, entities?) {
     entities = entities || namedEntities;
 
     return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
@@ -195,7 +195,7 @@ var Entities = {
    * @param {String} entities Optional parameter with entities to use instead of the built in set.
    * @return {function} Encode function to be used.
    */
-  getEncodeFunc: function (name, entities) {
+  getEncodeFunc: function (name, entities?) {
     entities = buildEntitiesLookup(entities) || namedEntities;
 
     var encodeNamedAndNumeric = function (text, attr) {
@@ -279,4 +279,4 @@ var Entities = {
   }
 };
 
-export default <any> Entities;
+export default Entities;

@@ -37,7 +37,7 @@ import WindowManagerImpl from '../ui/WindowManagerImpl';
 
 
 
-export default <any> function (editor) {
+export default function (editor) {
   var windows = [];
 
   var getImplementation = function () {

@@ -11,10 +11,10 @@ UnitTest.asynctest('browser.tinymce.core.InsertListTest', function() {
   var success = arguments[arguments.length - 2];
   var failure = arguments[arguments.length - 1];
   var suite = LegacyUnit.createSuite();
-  var schema = new Schema({});
+  var schema = Schema({});
 
   var createFragment = function (html) {
-    var parser = new DomParser({ validate: false });
+    var parser = DomParser({ validate: false });
     var fragment = parser.parse(html);
 
     return fragment;

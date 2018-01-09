@@ -67,6 +67,6 @@ var scrollIntoView = function (editor, elm, alignToTop) {
   }
 };
 
-export default <any> {
+export default {
   scrollIntoView: scrollIntoView
 };

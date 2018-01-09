@@ -111,6 +111,6 @@ var read = function (rootNode, ranges) {
   return selectedCells.length > 0 ? getTableFragment(rootNode, selectedCells) : getSelectionFragment(rootNode, ranges);
 };
 
-export default <any> {
+export default {
   read: read
 };

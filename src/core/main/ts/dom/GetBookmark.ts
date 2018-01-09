@@ -224,7 +224,7 @@ var getBookmark = function (selection, type, normalized) {
   }
 };
 
-export default <any> {
+export default {
   getBookmark: getBookmark,
   getUndoBookmark: Fun.curry(getOffsetBookmark, Fun.identity, true)
 };

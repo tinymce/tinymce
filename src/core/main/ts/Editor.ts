@@ -869,7 +869,7 @@ Editor.prototype = {
     } else {
       // Parse and serialize the html
       if (args.format !== 'raw') {
-        content = new Serializer({
+        content = Serializer({
           validate: self.validate
         }, self.schema).serialize(
           self.parser.parse(content, { isRootContent: true, insert: true })
@@ -1319,4 +1319,4 @@ Editor.prototype = {
 
 extend(Editor.prototype, EditorObservable);
 
-export default <any> Editor;
+export default Editor;

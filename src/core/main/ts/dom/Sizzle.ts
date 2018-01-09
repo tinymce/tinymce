@@ -2000,4 +2000,4 @@ setDocument();
 // Detached nodes confoundingly follow *each other*
 support.sortDetached = true;
 
-export default <any> Sizzle;
+export default Sizzle;

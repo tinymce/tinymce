@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function() {
   });
 
   suite.asyncTest("findAll", function (_, done) {
-    var imageScanner = new ImageScanner(new UploadStatus(), new BlobCache());
+    var imageScanner = ImageScanner(UploadStatus(), BlobCache());
 
     viewBlock.update(
       '<img src="' + base64Src + '">' +
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function() {
   });
 
   suite.asyncTest("findAll (filtered)", function (_, done) {
-    var imageScanner = new ImageScanner(new UploadStatus(), new BlobCache());
+    var imageScanner = ImageScanner(UploadStatus(), BlobCache());
 
     var predicate = function (img) {
       return !img.hasAttribute('data-skip');

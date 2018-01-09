@@ -35,7 +35,7 @@ var hasMultipleRanges = function (selection) {
   return getRanges(selection).length > 1;
 };
 
-export default <any> {
+export default {
   getRanges: getRanges,
   getSelectedNodes: getSelectedNodes,
   hasMultipleRanges: hasMultipleRanges

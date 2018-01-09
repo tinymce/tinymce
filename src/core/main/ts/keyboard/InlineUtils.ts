@@ -78,7 +78,7 @@ var normalizePosition = function (forward, pos) {
 var normalizeForwards = Fun.curry(normalizePosition, true);
 var normalizeBackwards = Fun.curry(normalizePosition, false);
 
-export default <any> {
+export default {
   isInlineTarget: isInlineTarget,
   findRootInline: findRootInline,
   isRtl: isRtl,

@@ -34,7 +34,7 @@ var parentsAndSelf = function (startNode, rootElm) {
   return [startNode].concat(parents(startNode, rootElm));
 };
 
-export default <any> {
+export default {
   parentsUntil: parentsUntil,
   parents: parents,
   parentsAndSelf: parentsAndSelf

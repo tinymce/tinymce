@@ -25,13 +25,13 @@ UnitTest.asynctest('browser.tinymce.core.util.LocalStorageTest', function() {
     LegacyUnit.equal(LocalStorage.getItem("a"), "1");
     LocalStorage.setItem("a", "2");
     LegacyUnit.equal(LocalStorage.getItem("a"), "2");
-    LocalStorage.setItem("a", 3);
+    LocalStorage.setItem("a", '3');
     LegacyUnit.equal(LocalStorage.getItem("a"), "3");
     LocalStorage.setItem("a", null);
     LegacyUnit.equal(LocalStorage.getItem("a"), "null");
     LocalStorage.setItem("a", undefined);
     LegacyUnit.equal(LocalStorage.getItem("a"), "undefined");
-    LocalStorage.setItem("a", new Date(0));
+    LocalStorage.setItem("a", new Date(0).toString());
     LegacyUnit.equal(LocalStorage.getItem("a"), new Date(0).toString());
   });
 

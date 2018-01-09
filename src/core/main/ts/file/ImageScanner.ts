@@ -87,10 +87,10 @@ var getAllImages = function (elm) {
   return elm ? elm.getElementsByTagName('img') : [];
 };
 
-export default <any> function (uploadStatus, blobCache) {
+export default function (uploadStatus, blobCache) {
   var cachedPromises = {};
 
-  var findAll = function (elm, predicate) {
+  var findAll = function (elm, predicate?) {
     var images, promises;
 
     if (!predicate) {

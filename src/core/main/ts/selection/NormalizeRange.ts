@@ -291,6 +291,6 @@ var normalize = function (dom, rng) {
   return RangeCompare.isEq(rng, normRng) ? Option.none() : Option.some(normRng);
 };
 
-export default <any> {
+export default {
   normalize: normalize
 };

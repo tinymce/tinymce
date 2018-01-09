@@ -62,6 +62,6 @@ var getContent = function (editor, args) {
   return args.content;
 };
 
-export default <any> {
+export default {
   getContent: getContent
 };

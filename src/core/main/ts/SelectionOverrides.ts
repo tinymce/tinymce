@@ -40,7 +40,7 @@ var SelectionOverrides = function (editor) {
   };
 
   var rootNode = editor.getBody();
-  var fakeCaret = new FakeCaret(editor.getBody(), isBlock),
+  var fakeCaret = FakeCaret(editor.getBody(), isBlock),
     realSelectionId = 'sel-' + editor.dom.uniqueId(),
     selectedContentEditableNode;
 
@@ -177,7 +177,7 @@ var SelectionOverrides = function (editor) {
     };
 
     var hasNormalCaretPosition = function (elm) {
-      var caretWalker = new CaretWalker(elm);
+      var caretWalker = CaretWalker(elm);
 
       if (!elm.firstChild) {
         return false;
@@ -493,4 +493,4 @@ var SelectionOverrides = function (editor) {
   };
 };
 
-export default <any> SelectionOverrides;
+export default SelectionOverrides;

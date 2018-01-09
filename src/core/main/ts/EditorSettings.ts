@@ -164,7 +164,7 @@ var getFiltered = function (predicate, editor, name) {
   return Option.from(editor.settings[name]).filter(predicate);
 };
 
-export default <any> {
+export default {
   getEditorSettings: getEditorSettings,
   get: get,
   getString: Fun.curry(getFiltered, Type.isString),

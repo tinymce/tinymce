@@ -144,7 +144,7 @@ var intersect = function (rect, cropRect) {
  * @param {Boolean} fixedSize True/false if size should be fixed.
  * @return {Rect} Clamped rect.
  */
-var clamp = function (rect, clampRect, fixedSize) {
+var clamp = function (rect, clampRect, fixedSize?) {
   var underflowX1, underflowY1, overflowX2, overflowY2,
     x1, y1, x2, y2, cx2, cy2;
 
@@ -201,7 +201,7 @@ var fromClientRect = function (clientRect) {
   return create(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
 };
 
-export default <any> {
+export default {
   inflate: inflate,
   relativePosition: relativePosition,
   findBestRelativePosition: findBestRelativePosition,

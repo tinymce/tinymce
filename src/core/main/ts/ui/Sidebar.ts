@@ -21,6 +21,6 @@ var add = function (editor, name, settings) {
   editor.sidebars = sidebars;
 };
 
-export default <any> {
+export default {
   add: add
 };

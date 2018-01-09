@@ -27,7 +27,14 @@ import Panel from './Panel';
 
 "use strict";
 
-var windows = [], oldMetaValue = '';
+interface Window {
+  _fullscreen: boolean;
+  layoutRect: any;
+  moveTo: Function;
+  settings: any;
+}
+
+var windows: Window[] = [], oldMetaValue = '';
 
 function toggleFullScreenState(state) {
   var noScaleMetaValue = 'width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0',

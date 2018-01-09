@@ -70,7 +70,7 @@ var Selection = function (dom, win, serializer, editor) {
   self.serializer = serializer;
   self.editor = editor;
   self.bookmarkManager = new BookmarkManager(self);
-  self.controlSelection = new ControlSelection(self, editor);
+  self.controlSelection = ControlSelection(self, editor);
 };
 
 Selection.prototype = {
@@ -770,4 +770,4 @@ Selection.prototype = {
   }
 };
 
-export default <any> Selection;
+export default Selection;

@@ -17,7 +17,7 @@ import DOMUtils from './DOMUtils';
  * @class tinymce.dom.NodePath
  */
 
-var create = function (rootNode, targetNode, normalized) {
+var create = function (rootNode, targetNode, normalized?) {
   var path = [];
 
   for (; targetNode && targetNode != rootNode; targetNode = targetNode.parentNode) {
@@ -43,7 +43,7 @@ var resolve = function (rootNode, path) {
   return node;
 };
 
-export default <any> {
+export default {
   create: create,
   resolve: resolve
 };

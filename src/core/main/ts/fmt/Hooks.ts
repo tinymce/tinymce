@@ -60,6 +60,6 @@ addPostProcessHook("pre", function (editor) {
   }
 });
 
-export default <any> {
+export default {
   postProcess: postProcess
 };

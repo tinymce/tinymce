@@ -290,4 +290,4 @@ Dispatcher.isNative = function (name) {
   return !!nativeEvents[name.toLowerCase()];
 };
 
-export default <any> Dispatcher;
+export default Dispatcher;

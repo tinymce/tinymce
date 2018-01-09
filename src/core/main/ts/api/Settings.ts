@@ -77,7 +77,7 @@ var shouldEndContainerOnEmtpyBlock = function (editor) {
   return editor.getParam('end_container_on_empty_block', false);
 };
 
-export default <any> {
+export default {
   getIframeAttrs: getIframeAttrs,
   getDocType: getDocType,
   getDocumentBaseUrl: getDocumentBaseUrl,

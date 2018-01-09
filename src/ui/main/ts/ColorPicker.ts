@@ -76,7 +76,7 @@ export default <any> Widget.extend({
         });
       }
 
-      svRootElm.style.background = new Color({ s: 100, v: 100, h: hsv.h }).toHex();
+      svRootElm.style.background = Color({ s: 100, v: 100, h: hsv.h }).toHex();
       self.color().parse({ s: hsv.s, v: hsv.v, h: hsv.h });
     }
 
@@ -141,7 +141,7 @@ export default <any> Widget.extend({
 
   color: function () {
     if (!this._color) {
-      this._color = new Color();
+      this._color = Color();
     }
 
     return this._color;

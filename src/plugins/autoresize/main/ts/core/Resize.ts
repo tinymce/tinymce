@@ -110,7 +110,7 @@ var resize = function (editor, oldSize) {
 
     // WebKit doesn't decrease the size of the body element until the iframe gets resized
     // So we need to continue to resize the iframe down until the size gets fixed
-    if (Env.webKit && deltaSize < 0) {
+    if (Env.webkit && deltaSize < 0) {
       resize(editor, oldSize);
     }
   }

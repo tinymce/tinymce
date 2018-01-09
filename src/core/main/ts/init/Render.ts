@@ -188,8 +188,8 @@ var render = function (editor) {
     }
   }
 
-  editor.windowManager = new WindowManager(editor);
-  editor.notificationManager = new NotificationManager(editor);
+  editor.windowManager = WindowManager(editor);
+  editor.notificationManager = NotificationManager(editor);
 
   if (settings.encoding === 'xml') {
     editor.on('GetContent', function (e) {
@@ -221,6 +221,6 @@ var render = function (editor) {
   loadScripts(editor, editor.suffix);
 };
 
-export default <any> {
+export default {
   render: render
 };

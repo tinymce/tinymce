@@ -72,7 +72,7 @@ var map = function (array, callback) {
   return out;
 };
 
-var filter = function (a, f) {
+var filter = function (a, f?) {
   var o = [];
 
   each(a, function (v, index) {
@@ -98,7 +98,7 @@ var indexOf = function (a, v) {
   return -1;
 };
 
-var reduce = function (collection, iteratee, accumulator, thisArg) {
+var reduce = function (collection, iteratee, accumulator?, thisArg?) {
   var i = 0;
 
   if (arguments.length < 3) {
@@ -112,7 +112,7 @@ var reduce = function (collection, iteratee, accumulator, thisArg) {
   return accumulator;
 };
 
-var findIndex = function (array, predicate, thisArg) {
+var findIndex = function (array, predicate, thisArg?) {
   var i, l;
 
   for (i = 0, l = array.length; i < l; i++) {
@@ -124,7 +124,7 @@ var findIndex = function (array, predicate, thisArg) {
   return -1;
 };
 
-var find = function (array, predicate, thisArg) {
+var find = function (array, predicate, thisArg?) {
   var idx = findIndex(array, predicate, thisArg);
 
   if (idx !== -1) {
@@ -138,7 +138,7 @@ var last = function (collection) {
   return collection[collection.length - 1];
 };
 
-export default <any> {
+export default {
   isArray: isArray,
   toArray: toArray,
   each: each,

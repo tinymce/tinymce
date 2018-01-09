@@ -97,7 +97,7 @@ var getActionFromRange = function (rootNode, rng) {
     .map(getAction);
 };
 
-export default <any> {
+export default {
   getActionFromRange: getActionFromRange,
   getActionFromCells: getActionFromCells
 };

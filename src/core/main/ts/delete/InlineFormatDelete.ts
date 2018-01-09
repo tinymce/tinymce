@@ -67,6 +67,6 @@ var backspaceDelete = function (editor, forward) {
   return editor.selection.isCollapsed() ? deleteCaret(editor, forward) : false;
 };
 
-export default <any> {
+export default {
   backspaceDelete: backspaceDelete
 };

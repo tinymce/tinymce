@@ -119,7 +119,7 @@ var blobToDataUri = function (blob) {
   });
 };
 
-export default <any> {
+export default {
   uriToBlob: uriToBlob,
   blobToDataUri: blobToDataUri,
   parseDataUri: parseDataUri

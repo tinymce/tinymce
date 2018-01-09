@@ -21,6 +21,6 @@ var evaluateUntil = function (fns, args) {
   return Option.none();
 };
 
-export default <any> {
+export default {
   evaluateUntil: evaluateUntil
 };

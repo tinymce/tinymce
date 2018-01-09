@@ -201,7 +201,7 @@ var insertHtmlAtCaret = function (editor, value, details) {
 
     var findNextCaretRng = function (rng) {
       var caretPos = CaretPosition.fromRangeStart(rng);
-      var caretWalker = new CaretWalker(editor.getBody());
+      var caretWalker = CaretWalker(editor.getBody());
 
       caretPos = caretWalker.next(caretPos);
       if (caretPos) {
@@ -239,7 +239,7 @@ var insertHtmlAtCaret = function (editor, value, details) {
   parser = editor.parser;
   merge = details.merge;
 
-  serializer = new Serializer({
+  serializer = Serializer({
     validate: editor.settings.validate
   }, editor.schema);
   bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
@@ -399,6 +399,6 @@ var insertAtCaret = function (editor, value) {
   insertHtmlAtCaret(editor, result.content, result.details);
 };
 
-export default <any> {
+export default {
   insertAtCaret: insertAtCaret
 };

@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function() {
   var suite = LegacyUnit.createSuite();
 
   suite.test('Basic parsing/serializing', function () {
-    var styles = new Styles();
+    var styles = Styles();
 
     LegacyUnit.equal(styles.serialize(styles.parse('FONT-SIZE:10px')), "font-size: 10px;");
     LegacyUnit.equal(styles.serialize(styles.parse('FONT-SIZE:10px;COLOR:red')), "font-size: 10px; color: red;");
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function() {
   });
 
   suite.test('Colors force hex and lowercase', function () {
-    var styles = new Styles();
+    var styles = Styles();
 
     LegacyUnit.equal(styles.serialize(styles.parse('color: rgb(1,2,3)')), "color: #010203;");
     LegacyUnit.equal(styles.serialize(styles.parse('color: RGB(1,2,3)')), "color: #010203;");
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function() {
   });
 
   suite.test('Urls convert urls and force format', function () {
-    var styles = new Styles({
+    var styles = Styles({
       url_converter: function (url) {
         return '|' + url + '|';
       }
@@ -71,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function() {
   });
 
   suite.test('Compress styles', function () {
-    var styles = new Styles();
+    var styles = Styles();
 
     LegacyUnit.equal(
       styles.serialize(
@@ -149,13 +149,13 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function() {
   });
 
   suite.test('Font weight', function () {
-    var styles = new Styles();
+    var styles = Styles();
 
     LegacyUnit.equal(styles.serialize(styles.parse('font-weight: 700')), "font-weight: bold;");
   });
 
   suite.test('Valid styles', function () {
-    var styles = new Styles({}, new Schema({ valid_styles: { '*': 'color,font-size', 'a': 'margin-left' } }));
+    var styles = Styles({}, Schema({ valid_styles: { '*': 'color,font-size', 'a': 'margin-left' } }));
 
     LegacyUnit.equal(
       styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; invalid: 1;'), 'b'),
@@ -168,7 +168,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function() {
   });
 
   suite.test('Invalid styles', function () {
-    var styles = new Styles({}, new Schema({ invalid_styles: { '*': 'color,font-size', 'a': 'margin-left' } }));
+    var styles = Styles({}, Schema({ invalid_styles: { '*': 'color,font-size', 'a': 'margin-left' } }));
 
     LegacyUnit.equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px'), 'b'), "margin-left: 10px;");
     LegacyUnit.equal(
@@ -178,7 +178,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function() {
   });
 
   suite.test('Suspicious (XSS) property names', function () {
-    var styles = new Styles();
+    var styles = Styles();
 
     LegacyUnit.equal(styles.serialize(styles.parse('font-fa"on-load\\3dxss\\28\\29\\20mily:\'arial\'')), "");
     LegacyUnit.equal(styles.serialize(styles.parse('font-fa\\"on-load\\3dxss\\28\\29\\20mily:\'arial\'')), "");
@@ -186,7 +186,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function() {
   });
 
   suite.test('Script urls denied', function () {
-    var styles = new Styles();
+    var styles = Styles();
 
     LegacyUnit.equal(styles.serialize(styles.parse('behavior:url(test.htc)')), "");
     LegacyUnit.equal(styles.serialize(styles.parse('b\\65havior:url(test.htc)')), "");
@@ -214,7 +214,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function() {
   });
 
   suite.test('Script urls allowed', function () {
-    var styles = new Styles({ allow_script_urls: true });
+    var styles = Styles({ allow_script_urls: true });
 
     LegacyUnit.equal(styles.serialize(styles.parse('behavior:url(test.htc)')), "behavior: url('test.htc');");
     LegacyUnit.equal(styles.serialize(styles.parse('color:expression(alert(1))')), "color: expression(alert(1));");

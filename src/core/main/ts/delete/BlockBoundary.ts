@@ -86,6 +86,6 @@ var read = function (rootNode, forward, rng) {
   return rng.collapsed ? readFromRange(rootNode, forward, rng) : Option.none();
 };
 
-export default <any> {
+export default {
   read: read
 };

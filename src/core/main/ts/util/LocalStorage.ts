@@ -28,13 +28,6 @@
  * var value = tinymce.util.LocalStorage.getItem('key');
  */
 
-let localStorage = { };
+let localStorage = window.localStorage;
 
-// Check for native support
-try {
-  localStorage = window.localStorage ? window.localStorage : { };
-} catch (ex) {
-  // Ignore
-}
-
-export default <any> localStorage;
+export default localStorage;

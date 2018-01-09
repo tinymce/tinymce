@@ -59,6 +59,6 @@ var process = function (editor, node, args) {
   return shouldFireEvent(editor, args) ? preProcess(editor, node, args) : node;
 };
 
-export default <any> {
+export default {
   process: process
 };

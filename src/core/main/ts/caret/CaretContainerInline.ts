@@ -78,7 +78,7 @@ var insertInline = function (before, node) {
   return before ? insertBefore(node) : insertAfter(node);
 };
 
-export default <any> {
+export default {
   insertInline: insertInline,
   insertInlineBefore: Fun.curry(insertInline, true),
   insertInlineAfter: Fun.curry(insertInline, false)

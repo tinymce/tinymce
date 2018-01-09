@@ -121,7 +121,7 @@ var SaxParser: any = function (settings, schema) {
   var noop = function () { };
 
   settings = settings || {};
-  self.schema = schema = schema || new Schema();
+  self.schema = schema = schema || Schema();
 
   if (settings.fix_self_closing !== false) {
     settings.fix_self_closing = true;
@@ -495,4 +495,4 @@ var SaxParser: any = function (settings, schema) {
 
 SaxParser.findEndTag = findEndTag;
 
-export default <any> SaxParser;
+export default SaxParser;

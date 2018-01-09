@@ -16,7 +16,7 @@ import Settings from '../api/Settings';
 
 var parseHeader = function (head) {
   // Parse the contents with a DOM parser
-  return new DomParser({
+  return DomParser({
     validate: false,
     root_name: '#document'
   }).parse(head);
@@ -289,7 +289,7 @@ var dataToHtml = function (editor, data, head) {
   }
 
   // Serialize header fragment and crop away body part
-  html = new Serializer({
+  html = Serializer({
     validate: false,
     indent: true,
     apply_source_formatting: true,

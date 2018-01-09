@@ -84,6 +84,6 @@ var setMode = function (editor, mode) {
   editor.fire('SwitchMode', { mode: mode });
 };
 
-export default <any> {
+export default {
   setMode: setMode
 };

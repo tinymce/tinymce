@@ -125,7 +125,7 @@ var isListItemParentBlock = function (editor) {
   }).isSome();
 };
 
-export default <any> {
+export default {
   moveToCaretPosition: moveToCaretPosition,
   getEditableRoot: getEditableRoot,
   getParentBlock: getParentBlock,

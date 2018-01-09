@@ -27,7 +27,7 @@ var dom = DOMUtils.DOM;
 
 var parsedSelectorToHtml = function (ancestry, editor) {
   var elm, item, fragment;
-  var schema = editor && editor.schema || new Schema({});
+  var schema = editor && editor.schema || Schema({});
 
   var decorate = function (elm, item) {
     if (item.classes.length) {
@@ -115,7 +115,7 @@ var parsedSelectorToHtml = function (ancestry, editor) {
   }
 };
 
-var selectorToHtml = function (selector, editor) {
+var selectorToHtml = function (selector, editor?) {
   return parsedSelectorToHtml(parseSelector(selector), editor);
 };
 
@@ -331,7 +331,7 @@ var getCssText = function (editor, format) {
   return previewCss;
 };
 
-export default <any> {
+export default {
   getCssText: getCssText,
   parseSelector: parseSelector,
   selectorToHtml: selectorToHtml

@@ -19,8 +19,8 @@ import DomSerializer from '../../dom/DomSerializer';
 
 
 
-export default <any> function (settings, editor) {
-  var domSerializer = new DomSerializer(settings, editor);
+export default function (settings, editor?) {
+  var domSerializer = DomSerializer(settings, editor);
 
   // Return public methods
   return {

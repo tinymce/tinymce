@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function() {
   };
 
   var setup = function () {
-    fakeCaret = new FakeCaret(getRoot(), isBlock);
+    fakeCaret = FakeCaret(getRoot(), isBlock);
   };
 
   var teardown = function () {

@@ -169,6 +169,6 @@ var walk = function (dom, rng, callback) {
   walkBoundary(endContainer, endPoint);
 };
 
-export default <any> {
+export default {
   walk: walk
 };

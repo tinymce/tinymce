@@ -31,6 +31,6 @@ var isEditorUIElement = function (elm) {
   return elm.className.toString().indexOf('mce-') !== -1;
 };
 
-export default <any> {
+export default {
   isEditorUIElement: isEditorUIElement
 };

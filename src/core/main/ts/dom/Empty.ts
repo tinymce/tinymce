@@ -82,6 +82,6 @@ var isEmpty = function (elm) {
   return isEmptyNode(elm.dom());
 };
 
-export default <any> {
+export default {
   isEmpty: isEmpty
 };

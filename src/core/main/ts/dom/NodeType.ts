@@ -68,7 +68,7 @@ var hasPropValue = function (propName, propValue) {
   };
 };
 
-var hasAttribute = function (attrName, attrValue) {
+var hasAttribute = function (attrName, attrValue?) {
   return function (node) {
     return isElement(node) && node.hasAttribute(attrName);
   };
@@ -100,7 +100,7 @@ var hasContentEditableState = function (value) {
   };
 };
 
-export default <any> {
+export default {
   isText: isNodeType(3),
   isElement: isElement,
   isComment: isNodeType(8),

@@ -55,6 +55,6 @@ var insertAtSelection = function (editor) {
   return editor.selection.isCollapsed() ? insertAtCaret(editor) : false;
 };
 
-export default <any> {
+export default {
   insertAtSelection: insertAtSelection
 };

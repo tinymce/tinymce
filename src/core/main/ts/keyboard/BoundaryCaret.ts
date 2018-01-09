@@ -71,6 +71,6 @@ var renderCaret = function (caret, location) {
   );
 };
 
-export default <any> {
+export default {
   renderCaret: renderCaret
 };

@@ -112,6 +112,6 @@ var read = function (rootNode, forward, rng) {
   }
 };
 
-export default <any> {
+export default {
   read: read
 };

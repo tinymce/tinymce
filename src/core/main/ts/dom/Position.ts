@@ -79,6 +79,6 @@ var getPos = function (body, elm, rootElm) {
   return { x: x, y: y };
 };
 
-export default <any> {
+export default {
   getPos: getPos
 };

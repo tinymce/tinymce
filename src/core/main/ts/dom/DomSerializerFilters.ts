@@ -219,7 +219,7 @@ var trimTrailingBr = function (rootNode) {
   }
 };
 
-export default <any> {
+export default {
   register: register,
   trimTrailingBr: trimTrailingBr
 };

@@ -207,7 +207,7 @@ var findLocation = function (forward, isInlineTarget, rootNode, pos) {
   });
 };
 
-export default <any> {
+export default {
   readLocation: readLocation,
   findLocation: findLocation,
   prevLocation: Fun.curry(findLocation, false),

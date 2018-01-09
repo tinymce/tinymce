@@ -286,4 +286,4 @@ AddOnManager.prototype = {
 AddOnManager.PluginManager = new AddOnManager();
 AddOnManager.ThemeManager = new AddOnManager();
 
-export default <any> AddOnManager;
+export default AddOnManager;

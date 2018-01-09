@@ -780,4 +780,4 @@ extend(EditorManager, Observable);
 
 EditorManager.setup();
 
-export default <any> EditorManager;
+export default EditorManager;

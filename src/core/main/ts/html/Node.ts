@@ -507,4 +507,4 @@ Node.create = function (name, attrs) {
   return node;
 };
 
-export default <any> Node;
+export default Node;

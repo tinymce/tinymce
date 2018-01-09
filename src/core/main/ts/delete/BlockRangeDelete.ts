@@ -72,6 +72,6 @@ var backspaceDelete = function (editor, forward) {
   return editor.selection.isCollapsed() ? false : deleteRange(editor);
 };
 
-export default <any> {
+export default {
   backspaceDelete: backspaceDelete
 };

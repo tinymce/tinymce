@@ -611,4 +611,4 @@ var EventUtils: any = function () {
 EventUtils.Event = new EventUtils();
 EventUtils.Event.bind(window, 'ready', function () { });
 
-export default <any> EventUtils;
+export default EventUtils;

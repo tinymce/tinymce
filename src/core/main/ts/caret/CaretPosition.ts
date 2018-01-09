@@ -395,4 +395,4 @@ CaretPosition.isTextPosition = function (pos) {
   return pos ? NodeType.isText(pos.container()) : false;
 };
 
-export default <any> CaretPosition;
+export default CaretPosition;

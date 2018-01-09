@@ -23,6 +23,6 @@ var setup = function (editor) {
   SpaceKey.setup(editor);
 };
 
-export default <any> {
+export default {
   setup: setup
 };

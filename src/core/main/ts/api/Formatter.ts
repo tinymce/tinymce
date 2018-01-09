@@ -37,7 +37,7 @@ import FormatShortcuts from '../keyboard/FormatShortcuts';
 
 
 
-export default <any> function (editor) {
+export default function (editor) {
   var formats = FormatRegistry(editor);
   var formatChangeState = Cell(null);
 

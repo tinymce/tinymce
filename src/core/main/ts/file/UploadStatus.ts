@@ -17,7 +17,7 @@
 
 
 
-export default <any> function () {
+export default function () {
   var PENDING = 1, UPLOADED = 2;
   var blobUriStatuses = {};
 

@@ -12,7 +12,7 @@ import DOMUtils from '../dom/DOMUtils';
 
 
 
-export default <any> {
+export default {
   callbacks: {},
   count: 0,
 

@@ -29,7 +29,7 @@
 
 
 
-export default <any> function (settings, schema) {
+export default function (settings?, schema?) {
   /*jshint maxlen:255 */
   /*eslint max-len:0 */
   var rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi,
@@ -316,7 +316,7 @@ export default <any> function (settings, schema) {
      * @param {String} elementName Optional element name, if specified only the styles that matches the schema will be serialized.
      * @return {String} String representation of the style object for example: border: 1px solid red.
      */
-    serialize: function (styles, elementName) {
+    serialize: function (styles, elementName?) {
       var css = '', name, value;
 
       var serializeStyles = function (name) {

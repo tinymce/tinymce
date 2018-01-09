@@ -162,4 +162,4 @@ var publicApi = {
 
 tinymce = Tools.extend(tinymce, publicApi);
 
-export default <any> tinymce;
+export default tinymce;

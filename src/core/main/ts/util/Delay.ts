@@ -36,7 +36,7 @@ var requestAnimationFrame = function (callback, element?) {
   requestAnimationFrameFunc(callback, element);
 };
 
-var wrappedSetTimeout = function (callback, time) {
+var wrappedSetTimeout = function (callback, time?) {
   if (typeof time != 'number') {
     time = 0;
   }
@@ -44,7 +44,7 @@ var wrappedSetTimeout = function (callback, time) {
   return setTimeout(callback, time);
 };
 
-var wrappedSetInterval = function (callback, time) {
+var wrappedSetInterval = function (callback, time?) {
   if (typeof time != 'number') {
     time = 1; // IE 8 needs it to be > 0
   }
@@ -60,7 +60,7 @@ var wrappedClearInterval = function (id) {
   return clearInterval(id);
 };
 
-var debounce = function (callback, time) {
+var debounce = function (callback, time?) {
   var timer, func;
 
   func = function () {
@@ -80,7 +80,7 @@ var debounce = function (callback, time) {
   return func;
 };
 
-export default <any> {
+export default {
   /**
    * Requests an animation frame and fallbacks to a timeout on older browsers.
    *
@@ -88,7 +88,7 @@ export default <any> {
    * @param {function} callback Callback to execute when a new frame is available.
    * @param {DOMElement} element Optional element to scope it to.
    */
-  requestAnimationFrame: function (callback, element) {
+  requestAnimationFrame: function (callback, element?) {
     if (requestAnimationFramePromise) {
       requestAnimationFramePromise.then(callback);
       return;
@@ -133,7 +133,7 @@ export default <any> {
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
    * @return {Number} Timeout id number.
    */
-  setEditorTimeout: function (editor, callback, time) {
+  setEditorTimeout: function (editor, callback, time?) {
     return wrappedSetTimeout(function () {
       if (!editor.removed) {
         callback();
@@ -150,7 +150,7 @@ export default <any> {
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
    * @return {Number} Timeout id number.
    */
-  setEditorInterval: function (editor, callback, time) {
+  setEditorInterval: function (editor, callback, time?) {
     var timer;
 
     timer = wrappedSetInterval(function () {

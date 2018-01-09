@@ -245,7 +245,7 @@ var findParentContainer = function (dom, format, startContainer, startOffset, en
   return container;
 };
 
-var expandRng = function (editor, rng, format, remove) {
+var expandRng = function (editor, rng, format, remove?) {
   var endPoint,
     startContainer = rng.startContainer,
     startOffset = rng.startOffset,
@@ -372,6 +372,6 @@ var expandRng = function (editor, rng, format, remove) {
   };
 };
 
-export default <any> {
+export default {
   expandRng: expandRng
 };

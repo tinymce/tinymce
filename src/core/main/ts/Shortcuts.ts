@@ -32,7 +32,7 @@ var keyCodeLookup = {
 
 var modifierNames = Tools.makeMap('alt,ctrl,shift,meta,access');
 
-export default <any> function (editor) {
+export default function (editor) {
   var self = this, shortcuts = {}, pendingPatterns = [];
 
   var parseShortcut = function (pattern) {

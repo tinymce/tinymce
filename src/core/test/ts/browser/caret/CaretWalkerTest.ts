@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', function() {
     return CaretPosition(DomQuery(selector, getRoot())[0].firstChild, offset);
   };
 
-  var logicalCaret = new CaretWalker(getRoot());
+  var logicalCaret = CaretWalker(getRoot());
 
   suite.test('inside empty root', function () {
     setupHtml('');

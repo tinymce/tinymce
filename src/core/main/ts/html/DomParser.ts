@@ -58,13 +58,13 @@ var isEmpty = function (schema, nonEmptyElements, whitespaceElements, node) {
   });
 };
 
-export default <any> function (settings, schema) {
-  var self = this, nodeFilters = {}, attributeFilters = [], matchedNodes = {}, matchedAttributes = {};
+export default function (settings?, schema?) {
+  var self: any = {}, nodeFilters = {}, attributeFilters = [], matchedNodes = {}, matchedAttributes = {};
 
   settings = settings || {};
   settings.validate = "validate" in settings ? settings.validate : true;
   settings.root_name = settings.root_name || 'body';
-  self.schema = schema = schema || new Schema();
+  self.schema = schema = schema || Schema();
 
   var fixInvalidChildren = function (nodes) {
     var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
@@ -891,5 +891,7 @@ export default <any> function (settings, schema) {
     });
   }
 
-  LegacyFilter.register(this, settings);
+  LegacyFilter.register(self, settings);
+
+  return self;
 };

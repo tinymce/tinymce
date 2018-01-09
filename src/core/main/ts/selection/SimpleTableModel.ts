@@ -152,7 +152,7 @@ var subsection = function (table, startElement, endElement) {
   });
 };
 
-export default <any> {
+export default {
   fromDom: fromDom,
   toDom: toDom,
   subsection: subsection

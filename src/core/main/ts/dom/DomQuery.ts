@@ -1574,4 +1574,4 @@ if (Env.ie && Env.ie < 9) {
 DomQuery.attrHooks = attrHooks;
 DomQuery.cssHooks = cssHooks;
 
-export default <any> DomQuery;
+export default DomQuery;

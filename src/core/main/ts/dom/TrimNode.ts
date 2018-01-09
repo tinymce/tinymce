@@ -64,6 +64,6 @@ var trimNode = function (dom, node) {
   return node;
 };
 
-export default <any> {
+export default {
   trimNode: trimNode
 };

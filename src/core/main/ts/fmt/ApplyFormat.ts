@@ -348,6 +348,6 @@ var applyFormat = function (ed, name, vars?, node?) {
   }
 };
 
-export default <any> {
+export default {
   applyFormat: applyFormat
 };

@@ -21,7 +21,7 @@
 
 var types = {};
 
-export default <any> {
+export default {
   /**
    * Adds a new control instance type to the factory.
    *
@@ -76,7 +76,7 @@ export default <any> {
    * @param {Object/String} settings Name/Value object with items used to create the type.
    * @return {tinymce.ui.Control} Control instance based on the specified type.
    */
-  create: function (type, settings) {
+  create: function (type, settings?) {
     var ControlType;
 
     // If string is specified then use it as the type

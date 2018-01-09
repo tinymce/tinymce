@@ -25,6 +25,6 @@ var insert = function (editor, evt) {
   );
 };
 
-export default <any> {
+export default {
   insert: insert
 };

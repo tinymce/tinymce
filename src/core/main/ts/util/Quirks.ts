@@ -27,7 +27,7 @@ declare const unescape: any;
  * @class tinymce.util.Quirks
  */
 
-export default <any> function (editor) {
+export default function (editor) {
   var each = Tools.each;
   var BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection,
     settings = editor.settings, parser = editor.parser;

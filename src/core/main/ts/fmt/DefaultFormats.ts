@@ -194,6 +194,6 @@ var get = function (dom) {
   return formats;
 };
 
-export default <any> {
+export default {
   get: get
 };

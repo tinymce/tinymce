@@ -202,4 +202,4 @@ var EditorObservable = {
 
 EditorObservable = Tools.extend({}, Observable, EditorObservable);
 
-export default <any> EditorObservable;
+export default EditorObservable;

@@ -133,7 +133,7 @@ var getSplit = function (parentNode, rng) {
 
 var findFirstIn = function (node, rootNode) {
   var caretPos = CaretPosition.before(node);
-  var caretWalker = new CaretWalker(rootNode);
+  var caretWalker = CaretWalker(rootNode);
   var newCaretPos = caretWalker.next(caretPos);
 
   return newCaretPos ? newCaretPos.toRange() : null;
@@ -141,7 +141,7 @@ var findFirstIn = function (node, rootNode) {
 
 var findLastOf = function (node, rootNode) {
   var caretPos = CaretPosition.after(node);
-  var caretWalker = new CaretWalker(rootNode);
+  var caretWalker = CaretWalker(rootNode);
   var newCaretPos = caretWalker.prev(caretPos);
 
   return newCaretPos ? newCaretPos.toRange() : null;
@@ -185,7 +185,7 @@ var insertAtCaret = function (serializer, dom, rng, fragment) {
 
   var isAt = function (location) {
     var caretPos = CaretPosition.fromRangeStart(rng);
-    var caretWalker = new CaretWalker(dom.getRoot());
+    var caretWalker = CaretWalker(dom.getRoot());
     var newPos = location === BEGINNING ? caretWalker.prev(caretPos) : caretWalker.next(caretPos);
 
     return newPos ? getParentLi(dom, newPos.getNode()) !== liTarget : true;
@@ -200,7 +200,7 @@ var insertAtCaret = function (serializer, dom, rng, fragment) {
   return insertMiddle(liTarget, liElms, rootNode, rng);
 };
 
-export default <any> {
+export default {
   isListFragment: isListFragment,
   insertAtCaret: insertAtCaret,
   isParentBlockLi: isParentBlockLi,

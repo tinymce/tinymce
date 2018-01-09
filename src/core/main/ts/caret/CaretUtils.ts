@@ -39,7 +39,7 @@ var isBackwards = function (direction) {
   return direction < 0;
 };
 
-var skipCaretContainers = function (walk, shallow) {
+var skipCaretContainers = function (walk, shallow?) {
   var node;
 
   while ((node = walk(shallow))) {
@@ -51,7 +51,7 @@ var skipCaretContainers = function (walk, shallow) {
   return null;
 };
 
-var findNode = function (node, direction, predicateFn, rootNode, shallow) {
+var findNode = function (node, direction, predicateFn, rootNode, shallow?) {
   var walker = new TreeWalker(node, rootNode);
 
   if (isBackwards(direction)) {
@@ -97,7 +97,7 @@ var getEditingHost = function (node, rootNode) {
   return rootNode;
 };
 
-var getParentBlock = function (node, rootNode) {
+var getParentBlock = function (node, rootNode?) {
   while (node && node != rootNode) {
     if (isBlockLike(node)) {
       return node;
@@ -109,11 +109,11 @@ var getParentBlock = function (node, rootNode) {
   return null;
 };
 
-var isInSameBlock = function (caretPosition1, caretPosition2, rootNode) {
+var isInSameBlock = function (caretPosition1, caretPosition2, rootNode?) {
   return getParentBlock(caretPosition1.container(), rootNode) == getParentBlock(caretPosition2.container(), rootNode);
 };
 
-var isInSameEditingHost = function (caretPosition1, caretPosition2, rootNode) {
+var isInSameEditingHost = function (caretPosition1, caretPosition2, rootNode?) {
   return getEditingHost(caretPosition1.container(), rootNode) == getEditingHost(caretPosition2.container(), rootNode);
 };
 
@@ -300,7 +300,7 @@ var isNextToContentEditableFalse = function (relativeOffset, caretPosition) {
   return isContentEditableFalse(getChildNodeAtRelativeOffset(relativeOffset, caretPosition));
 };
 
-export default <any> {
+export default {
   isForwards: isForwards,
   isBackwards: isBackwards,
   findNode: findNode,

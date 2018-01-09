@@ -30,7 +30,7 @@ var trim = function (text) {
   return text.replace(new RegExp(ZWSP, 'g'), '');
 };
 
-export default <any> {
+export default {
   isZwsp: isZwsp,
   ZWSP: ZWSP,
   trim: trim

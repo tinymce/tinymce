@@ -49,6 +49,6 @@ var normalize = function (rng) {
   return normalizeBlockSelection(rng);
 };
 
-export default <any> {
+export default {
   normalize: normalize
 };

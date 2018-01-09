@@ -16,7 +16,7 @@ import Env from '../Env';
 
 
 
-export default <any> {
+export default {
   BACKSPACE: 8,
   DELETE: 46,
   DOWN: 40,

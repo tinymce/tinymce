@@ -191,7 +191,7 @@ var findCaretPosition = function (direction, startCaretPosition, rootNode) {
 
   if ((isForwards(direction) && caretPosition.isAtEnd()) || (isBackwards(direction) && caretPosition.isAtStart())) {
     node = CaretUtils.findNode(node, direction, Fun.constant(true), rootNode, true);
-    if (isEditableCaretCandidate(node)) {
+    if (isEditableCaretCandidate(node, rootNode)) {
       return getCaretCandidatePosition(direction, node);
     }
   }
@@ -216,7 +216,7 @@ var findCaretPosition = function (direction, startCaretPosition, rootNode) {
   return null;
 };
 
-export default <any> function (rootNode) {
+export default function (rootNode) {
   return {
     /**
      * Returns the next logical caret position from the specificed input

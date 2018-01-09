@@ -127,7 +127,7 @@ var closestCaret = function (rootNode, clientX, clientY) {
   return null;
 };
 
-export default <any> {
+export default {
   findClosestClientRect: findClosestClientRect,
   findLineNodeRects: findLineNodeRects,
   closestCaret: closestCaret

@@ -204,6 +204,6 @@ var resolve = function (selection, bookmark) {
   return Option.none();
 };
 
-export default <any> {
+export default {
   resolve: resolve
 };

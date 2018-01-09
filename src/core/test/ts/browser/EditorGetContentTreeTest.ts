@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorGetContentTreeTest', function() {
   Theme();
 
   var toHtml = function (node) {
-    var htmlSerializer = new Serializer({});
+    var htmlSerializer = Serializer({});
     return htmlSerializer.serialize(node);
   };
 

@@ -38,7 +38,7 @@ var moveByWord = function (forward, editor) {
   }
 };
 
-export default <any> {
+export default {
   hasSelectionModifyApi: hasSelectionModifyApi,
   moveByWord: moveByWord
 };

@@ -50,7 +50,7 @@ var trimExternal = function (serializer, html) {
   return Zwsp.trim(trimInternal(serializer, html));
 };
 
-export default <any> {
+export default {
   trimExternal: trimExternal,
   trimInternal: trimInternal
 };

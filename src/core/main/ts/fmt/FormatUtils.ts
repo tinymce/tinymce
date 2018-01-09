@@ -64,7 +64,7 @@ var moveStart = function (dom, selection, rng) {
  * @param {boolean} inc (Optional) Include the current node in checking. Defaults to false.
  * @return {Node} Next or previous node or undefined if it wasn't found.
  */
-var getNonWhiteSpaceSibling = function (node, next, inc) {
+var getNonWhiteSpaceSibling = function (node, next?, inc?) {
   if (node) {
     next = next ? 'nextSibling' : 'previousSibling';
 
@@ -164,11 +164,11 @@ var getTextDecoration = function (dom, node) {
   return decoration;
 };
 
-var getParents = function (dom, node, selector) {
+var getParents = function (dom, node, selector?) {
   return dom.getParents(node, selector, dom.getRoot());
 };
 
-export default <any> {
+export default {
   isInlineBlock: isInlineBlock,
   moveStart: moveStart,
   getNonWhiteSpaceSibling: getNonWhiteSpaceSibling,

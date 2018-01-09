@@ -95,4 +95,4 @@ RangeUtils.getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint;
 RangeUtils.getSelectedNode = RangeNodes.getSelectedNode;
 RangeUtils.getNode = RangeNodes.getNode;
 
-export default <any> RangeUtils;
+export default RangeUtils;

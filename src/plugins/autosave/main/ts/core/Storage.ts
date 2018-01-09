@@ -50,7 +50,7 @@ var storeDraft = function (editor) {
 
   if (!isEmpty(editor) && editor.isDirty()) {
     LocalStorage.setItem(prefix + "draft", editor.getContent({ format: 'raw', no_events: true }));
-    LocalStorage.setItem(prefix + "time", new Date().getTime());
+    LocalStorage.setItem(prefix + "time", new Date().getTime().toString());
     Events.fireStoreDraft(editor);
   }
 };

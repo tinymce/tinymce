@@ -31,7 +31,7 @@ var getNode = function (container, offset) {
   return container;
 };
 
-export default <any> {
+export default {
   getSelectedNode: getSelectedNode,
   getNode: getNode
 };

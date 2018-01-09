@@ -60,7 +60,7 @@ var is = function (obj, type) {
  * @param {Object} map Optional map to add items to.
  * @return {Object} Name/value map of items.
  */
-var makeMap = function (items, delim, map) {
+var makeMap = function (items, delim?, map?) {
   var i;
 
   items = items || [];
@@ -224,7 +224,7 @@ var create = function (s, p, root) {
   });
 };
 
-var extend = function (obj, ext) {
+var extend = function (obj, ext, ...x: any[]) {
   var i, l, name, args = arguments, value;
 
   for (i = 1, l = args.length; i < l; i++) {
@@ -252,7 +252,7 @@ var extend = function (obj, ext) {
  * @param {String} n Optional name of collection inside the objects to walk for example childNodes.
  * @param {String} s Optional scope to execute the function in.
  */
-var walk = function (o, f, n, s) {
+var walk = function (o, f, n?, s?) {
   s = s || this;
 
   if (o) {
@@ -318,7 +318,7 @@ var createNS = function (n, o) {
  * // Resolve a path into an object reference
  * var obj = tinymce.resolve('a.b.c.d');
  */
-var resolve = function (n, o) {
+var resolve = function (n, o?) {
   var i, l;
 
   o = o || window;
@@ -345,7 +345,7 @@ var resolve = function (n, o) {
  * // Split a string into an array with a,b,c
  * var arr = tinymce.explode('a, b,   c');
  */
-var explode = function (s, d) {
+var explode = function (s, d?) {
   if (!s || is(s, 'array')) {
     return s;
   }
@@ -363,7 +363,7 @@ var _addCacheSuffix = function (url) {
   return url;
 };
 
-export default <any> {
+export default {
   trim: trim,
 
   /**

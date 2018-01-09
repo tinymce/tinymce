@@ -94,6 +94,6 @@ var getAction = function (editor, evt) {
   ], [editor, evt.shiftKey]).getOr(newLineAction.none());
 };
 
-export default <any> {
+export default {
   getAction: getAction
 };

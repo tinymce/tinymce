@@ -122,7 +122,7 @@ var containsXY = function (clientRect, clientX, clientY) {
   );
 };
 
-export default <any> {
+export default {
   clone: clone,
   collapse: collapse,
   isEqual: isEqual,

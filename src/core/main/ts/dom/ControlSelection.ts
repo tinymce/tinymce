@@ -41,7 +41,7 @@ var getContentEditableRoot = function (root, node) {
   return null;
 };
 
-export default <any> function (selection, editor) {
+export default function (selection, editor) {
   var dom = editor.dom, each = Tools.each;
   var selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
   var startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;

@@ -347,7 +347,7 @@ var isFormatElement = function (editor, element) {
   return inlineElements.hasOwnProperty(Node.name(element)) && !isCaretNode(element.dom()) && !NodeType.isBogus(element.dom());
 };
 
-export default <any> {
+export default {
   setup: setup,
   applyCaretFormat: applyCaretFormat,
   removeCaretFormat: removeCaretFormat,

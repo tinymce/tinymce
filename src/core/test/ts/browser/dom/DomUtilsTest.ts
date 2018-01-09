@@ -11,7 +11,7 @@ import Tools from 'tinymce/core/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
-  var DOM = new DOMUtils(document, { keep_values : true, schema : new Schema() });
+  var DOM = new DOMUtils(document, { keep_values : true, schema : Schema() });
   var success = arguments[arguments.length - 2];
   var failure = arguments[arguments.length - 1];
   var suite = LegacyUnit.createSuite();
@@ -634,7 +634,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
   });
 
   suite.test('isEmpty', function () {
-    DOM.schema = new Schema(); // A schema will be added when used within a editor instance
+    DOM.schema = Schema(); // A schema will be added when used within a editor instance
     DOM.add(document.body, 'div', { id : 'test' }, '');
 
     LegacyUnit.equal(DOM.isEmpty(DOM.get('test')), true, 'No children');

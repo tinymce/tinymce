@@ -50,7 +50,7 @@ var getClientRects = function (node) {
   }
 };
 
-export default <any> {
+export default {
   /**
    * Returns the client rects for a specific node.
    *

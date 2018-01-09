@@ -15,7 +15,7 @@ var showPreview = function (win, hexColor) {
 };
 
 var setColor = function (win, value) {
-  var color = new Color(value), rgb = color.toRgb();
+  var color = Color(value), rgb = color.toRgb();
 
   win.fromJSON({
     r: rgb.r,

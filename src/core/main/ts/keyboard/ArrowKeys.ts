@@ -39,6 +39,6 @@ var setup = function (editor, caret) {
   });
 };
 
-export default <any> {
+export default {
   setup: setup
 };

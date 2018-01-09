@@ -31,7 +31,7 @@ var getEventDispatcher = function (obj) {
   return obj._eventDispatcher;
 };
 
-export default <any> {
+export default {
   /**
    * Fires the specified event by name. Consult the
    * <a href="/docs/advanced/events">event reference</a> for more details on each event.

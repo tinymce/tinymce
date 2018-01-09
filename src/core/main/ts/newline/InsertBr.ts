@@ -169,7 +169,7 @@ var insertBrOutsideAnchor = function (editor, location) {
   );
 };
 
-var insert = function (editor, evt) {
+var insert = function (editor, evt?) {
   var anchorLocation = readInlineAnchorLocation(editor);
 
   if (anchorLocation.isSome()) {
@@ -179,6 +179,6 @@ var insert = function (editor, evt) {
   }
 };
 
-export default <any> {
+export default {
   insert: insert
 };

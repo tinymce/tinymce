@@ -62,7 +62,7 @@ var pluginLoadError = function (editor, url) {
   displayError(editor, pluginUrlToMessage(editor, url));
 };
 
-var initError = function (message) {
+var initError = function (message, ...x: any[]) {
   var console = window.console;
   if (console) { // Skip test env
     if (console.error) {
@@ -73,7 +73,7 @@ var initError = function (message) {
   }
 };
 
-export default <any> {
+export default {
   pluginLoadError: pluginLoadError,
   uploadError: uploadError,
   displayError: displayError,

@@ -10,7 +10,7 @@
 
 
 
-export default <any> function () {
+export default function () {
   var unimplemented = function () {
     throw new Error('Theme did not provide a WindowManager implementation.');
   };

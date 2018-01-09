@@ -19,7 +19,7 @@ var sanitize = function (editor, html) {
     return html;
   }
 
-  var writer = new Writer();
+  var writer = Writer();
   var blocked;
 
   new SaxParser({
@@ -67,7 +67,7 @@ var sanitize = function (editor, html) {
 
       writer.end(name);
     }
-  }, new Schema({})).parse(html);
+  }, Schema({})).parse(html);
 
   return writer.getContent();
 };

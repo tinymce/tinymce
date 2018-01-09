@@ -142,11 +142,11 @@ var deleteCaret = function (editor, forward, startElm) {
   ).getOr(false);
 };
 
-var backspaceDelete = function (editor, forward) {
+var backspaceDelete = function (editor, forward?) {
   var startElm = Element.fromDom(editor.selection.getStart(true));
   return editor.selection.isCollapsed() ? deleteCaret(editor, forward, startElm) : deleteRange(editor, startElm);
 };
 
-export default <any> {
+export default {
   backspaceDelete: backspaceDelete
 };

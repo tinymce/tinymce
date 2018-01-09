@@ -100,7 +100,7 @@ var remove = function (caretContainerNode) {
   }
 };
 
-export default <any> {
+export default {
   removeAndReposition: removeAndReposition,
   remove: remove
 };

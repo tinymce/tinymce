@@ -24,6 +24,6 @@ var setup = function (editor) {
   editor.addShortcut('access+9', '', ['FormatBlock', false, 'address']);
 };
 
-export default <any> {
+export default {
   setup: setup
 };

@@ -344,7 +344,7 @@ var wrapAndSplit = function (editor, formatList, formatRoot, container, target, 
   return container;
 };
 
-var remove = function (ed, name, vars, node, similar) {
+var remove = function (ed, name, vars?, node?, similar?) {
   var formatList = ed.formatter.get(name), format = formatList[0];
   var bookmark, rng, contentEditable = true, dom = ed.dom, selection = ed.selection;
 
@@ -534,7 +534,7 @@ var remove = function (ed, name, vars, node, similar) {
   }
 };
 
-export default <any> {
+export default {
   removeFormat: removeFormat,
   remove: remove
 };

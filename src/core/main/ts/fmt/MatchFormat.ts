@@ -203,7 +203,7 @@ var canApply = function (editor, name) {
   return false;
 };
 
-export default <any> {
+export default {
   matchNode: matchNode,
   matchName: matchName,
   match: match,

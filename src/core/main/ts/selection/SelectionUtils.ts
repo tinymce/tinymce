@@ -68,6 +68,6 @@ var hasAllContentsSelected = function (elm, rng) {
   }).getOr(false);
 };
 
-export default <any> {
+export default {
   hasAllContentsSelected: hasAllContentsSelected
 };

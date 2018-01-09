@@ -91,7 +91,7 @@ var write = function (fragments, elm) {
   return elm;
 };
 
-export default <any> {
+export default {
   read: read,
   write: write
 };

@@ -334,8 +334,8 @@ var compileElementMap = function (value, mode?) {
   return styles;
 };
 
-export default <any> function (settings) {
-  var self = this, elements = {}, children = {}, patternElements = [], validStyles, invalidStyles, schemaItems;
+export default function (settings?) {
+  var self: any = {}, elements = {}, children = {}, patternElements = [], validStyles, invalidStyles, schemaItems;
   var whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap, validClasses;
   var blockElementsMap, nonEmptyElementsMap, moveCaretBeforeOnEnterElementsMap, textBlockElementsMap, textInlineElementsMap;
   var customElementsMap = {}, specialElements = {};
@@ -1014,4 +1014,6 @@ export default <any> function (settings) {
   self.addValidChildren = addValidChildren;
 
   self.elements = elements;
+
+  return self;
 };

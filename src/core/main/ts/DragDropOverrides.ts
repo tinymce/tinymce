@@ -271,6 +271,6 @@ var init = function (editor) {
   blockIeDrop(editor);
 };
 
-export default <any> {
+export default {
   init: init
 };

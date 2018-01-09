@@ -57,6 +57,6 @@ var split = function (rng) {
   };
 };
 
-export default <any> {
+export default {
   split: split
 };

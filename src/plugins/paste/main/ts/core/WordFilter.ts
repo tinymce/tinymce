@@ -362,7 +362,7 @@ var filterWordContent = function (editor, content) {
   var validElements = Settings.getWordValidElements(editor);
 
   // Setup strict schema
-  var schema = new Schema({
+  var schema = Schema({
     valid_elements: validElements,
     valid_children: '-li[p]'
   });
@@ -383,7 +383,7 @@ var filterWordContent = function (editor, content) {
   });
 
   // Parse HTML into DOM structure
-  var domParser = new DomParser({}, schema);
+  var domParser = DomParser({}, schema);
 
   // Filter styles to remove "mso" specific styles and convert some of them
   domParser.addAttributeFilter('style', function (nodes) {
@@ -472,7 +472,7 @@ var filterWordContent = function (editor, content) {
   }
 
   // Serialize DOM back to HTML
-  content = new Serializer({
+  content = Serializer({
     validate: editor.settings.validate
   }, schema).serialize(rootNode);
 

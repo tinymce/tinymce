@@ -63,7 +63,7 @@ var willDeleteLastPositionInElement = function (forward, fromPos, elm) {
   }).getOr(true);
 };
 
-export default <any> {
+export default {
   getParentBlock: getParentBlock,
   paddEmptyBody: paddEmptyBody,
   willDeleteLastPositionInElement: willDeleteLastPositionInElement

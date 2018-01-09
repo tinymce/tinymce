@@ -28,7 +28,7 @@ var each = Tools.each, extend = Tools.extend;
 var map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
 var TRUE = true, FALSE = false;
 
-export default <any> function (editor) {
+export default function (editor) {
   var dom, selection, formatter,
     commands = { state: {}, exec: {}, value: {} },
     settings = editor.settings,

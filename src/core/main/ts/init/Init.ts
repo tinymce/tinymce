@@ -193,6 +193,6 @@ var init = function (editor) {
   }
 };
 
-export default <any> {
+export default {
   init: init
 };

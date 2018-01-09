@@ -52,7 +52,7 @@ var forwardDeleteCommand = function (editor) {
   }
 };
 
-export default <any> {
+export default {
   deleteCommand: deleteCommand,
   forwardDeleteCommand: forwardDeleteCommand
 };

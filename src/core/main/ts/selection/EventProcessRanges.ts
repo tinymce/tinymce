@@ -17,6 +17,6 @@ var processRanges = function (editor, ranges) {
   });
 };
 
-export default <any> {
+export default {
   processRanges: processRanges
 };

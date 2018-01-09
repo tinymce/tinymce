@@ -56,7 +56,7 @@ var parseHtml = function (htmlParser, dom, html, args) {
 };
 
 var serializeNode = function (settings, schema, node) {
-  var htmlSerializer = new Serializer(settings, schema);
+  var htmlSerializer = Serializer(settings, schema);
   return htmlSerializer.serialize(node);
 };
 
@@ -65,18 +65,18 @@ var toHtml = function (editor, settings, schema, rootNode, args) {
   return postProcess(editor, args, content);
 };
 
-export default <any> function (settings, editor) {
+export default function (settings, editor) {
   var dom, schema, htmlParser, tempAttrs = ['data-mce-selected'];
 
   dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
-  schema = editor && editor.schema ? editor.schema : new Schema(settings);
+  schema = editor && editor.schema ? editor.schema : Schema(settings);
   settings.entity_encoding = settings.entity_encoding || 'named';
   settings.remove_trailing_brs = "remove_trailing_brs" in settings ? settings.remove_trailing_brs : true;
 
-  htmlParser = new DomParser(settings, schema);
+  htmlParser = DomParser(settings, schema);
   DomSerializerFilters.register(htmlParser, settings, dom);
 
-  var serialize = function (node, parserArgs) {
+  var serialize = function (node, parserArgs?) {
     var args = Merger.merge({ format: 'html' }, parserArgs ? parserArgs : {});
     var targetNode = DomSerializerPreProcess.process(editor, node, args);
     var html = getHtmlFromNode(dom, targetNode, args);

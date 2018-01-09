@@ -96,6 +96,6 @@ var setContent = function (editor, content, args) {
   }
 };
 
-export default <any> {
+export default {
   setContent: setContent
 };

@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function() {
   var failure = arguments[arguments.length - 1];
   var suite = LegacyUnit.createSuite();
 
-  var writer = new Writer(), schema = new Schema();
+  var writer = Writer(), schema = Schema();
 
   var createCounter = function (writer) {
     var counts: any = {};
@@ -308,7 +308,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function() {
     LegacyUnit.deepEqual(counter.counts, { text: 2, start: 2, end: 2 }, 'Parse empty style element counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(Tools.extend({ validate: true }, counter), new Schema({ invalid_elements: 'style' }));
+    parser = new SaxParser(Tools.extend({ validate: true }, counter), Schema({ invalid_elements: 'style' }));
     writer.reset();
     parser.parse('text1<em><style>text2</st' + 'yle>text3</em>');
     LegacyUnit.equal(writer.getContent(), 'text1<em>text3</em>', 'Parse invalid style element.');
@@ -344,7 +344,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function() {
     LegacyUnit.deepEqual(counter.counts, { text: 2, start: 2, end: 2 }, 'Parse empty script element counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(Tools.extend({ validate: true }, counter), new Schema({ invalid_elements: 'script' }));
+    parser = new SaxParser(Tools.extend({ validate: true }, counter), Schema({ invalid_elements: 'script' }));
     writer.reset();
     parser.parse('text1<em><s' + 'cript>text2</s' + 'cript>text3</em>');
     LegacyUnit.equal(writer.getContent(), 'text1<em>text3</em>', 'Parse invalid script element.');
@@ -533,7 +533,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function() {
   suite.test('Preserve internal elements', function () {
     var counter, parser, schema;
 
-    schema = new Schema({ valid_elements: 'b' });
+    schema = Schema({ valid_elements: 'b' });
     counter = createCounter(writer);
     counter.validate = true;
     parser = new SaxParser(counter, schema);
@@ -545,7 +545,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function() {
       'Preserve internal span element without any span schema rule.'
     );
 
-    schema = new Schema({ valid_elements: 'b,span[class]' });
+    schema = Schema({ valid_elements: 'b,span[class]' });
     counter = createCounter(writer);
     counter.validate = true;
     parser = new SaxParser(counter, schema);
@@ -561,7 +561,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function() {
   suite.test('Remove internal elements', function () {
     var counter, parser, schema;
 
-    schema = new Schema({ valid_elements: 'b' });
+    schema = Schema({ valid_elements: 'b' });
     counter = createCounter(writer);
     counter.validate = true;
     counter.remove_internals = true;
@@ -570,7 +570,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function() {
     parser.parse('<span id="id"><b>text</b></span><span id="id" data-mce-type="something"></span>');
     LegacyUnit.equal(writer.getContent(), '<b>text</b>', 'Remove internal span element without any span schema rule.');
 
-    schema = new Schema({ valid_elements: 'b,span[class]' });
+    schema = Schema({ valid_elements: 'b,span[class]' });
     counter = createCounter(writer);
     counter.validate = true;
     counter.remove_internals = true;

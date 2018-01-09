@@ -30,6 +30,6 @@ var uuid = function (prefix) {
   return prefix + (count++) + seed();
 };
 
-export default <any> {
+export default {
   uuid: uuid
 };

@@ -59,7 +59,7 @@ var shouldSkipPosition = function (forward, from, to) {
 
 // Finds: <p>a|<b>b</b></p> -> <p>a<b>|b</b></p>
 var fromPosition = function (forward, rootNode, position) {
-  var walker = new CaretWalker(rootNode);
+  var walker = CaretWalker(rootNode);
   return Option.from(forward ? walker.next(position) : walker.prev(position));
 };
 
@@ -89,7 +89,7 @@ var positionIn = function (forward, element) {
   }
 };
 
-export default <any> {
+export default {
   fromPosition: fromPosition,
   nextPosition: Fun.curry(fromPosition, true),
   prevPosition: Fun.curry(fromPosition, false),

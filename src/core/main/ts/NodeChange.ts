@@ -21,7 +21,7 @@ import Delay from './util/Delay';
 
 
 
-export default <any> function (editor) {
+export default function (editor) {
   var lastRng, lastPath = [];
 
   /**

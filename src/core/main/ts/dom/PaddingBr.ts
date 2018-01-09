@@ -60,7 +60,7 @@ var trimBlockTrailingBr = function (elm) {
   });
 };
 
-export default <any> {
+export default {
   removeTrailingBr: removeTrailingBr,
   fillWithPaddingBr: fillWithPaddingBr,
   isPaddedElement: isPaddedElement,

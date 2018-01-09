@@ -168,7 +168,7 @@ var createTextBlock = function (editor) {
 
 var exitPreBlock = function (editor, direction, range) {
   var pre, caretPos, newBlock;
-  var caretWalker = new CaretWalker(editor.getBody());
+  var caretWalker = CaretWalker(editor.getBody());
   var getNextVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.next);
   var getPrevVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.prev);
 
@@ -200,7 +200,7 @@ var exitPreBlock = function (editor, direction, range) {
 };
 
 var getHorizontalRange = function (editor, forward) {
-  var caretWalker = new CaretWalker(editor.getBody());
+  var caretWalker = CaretWalker(editor.getBody());
   var getNextVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.next);
   var getPrevVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.prev);
   var newRange, direction = forward ? 1 : -1;
@@ -265,7 +265,7 @@ var moveV = function (editor, down) {
   };
 };
 
-export default <any> {
+export default {
   moveH: moveH,
   moveV: moveV
 };

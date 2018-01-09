@@ -99,6 +99,6 @@ var fromPoint = function (clientX, clientY, doc) {
   return rng;
 };
 
-export default <any> {
+export default {
   fromPoint: fromPoint
 };

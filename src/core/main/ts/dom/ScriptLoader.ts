@@ -295,4 +295,4 @@ var ScriptLoader: any = function () {
 
 ScriptLoader.ScriptLoader = new ScriptLoader();
 
-export default <any> ScriptLoader;
+export default ScriptLoader;

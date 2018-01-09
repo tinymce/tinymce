@@ -138,7 +138,7 @@ var focus = function (editor, skipFocus) {
   skipFocus ? activateEditor(editor) : focusEditor(editor);
 };
 
-export default <any> {
+export default {
   focus: focus,
   hasFocus: hasFocus
 };

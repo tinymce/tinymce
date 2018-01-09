@@ -24,7 +24,7 @@ UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function() {
   var filename = 'blank.png';
   var uri = 'http://localhost/blank.png';
 
-  var blobInfo, blobCache = new BlobCache();
+  var blobInfo, blobCache = BlobCache();
 
   blobInfo = blobCache.create(id, blob, base64, name);
   Assertions.assertEq("Testing original version of create() method",

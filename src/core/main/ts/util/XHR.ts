@@ -107,4 +107,4 @@ var XHR: any = {
 
 Tools.extend(XHR, Observable);
 
-export default <any> XHR;
+export default XHR;

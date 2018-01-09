@@ -449,6 +449,6 @@ var insert = function (editor, evt) {
   editor.fire('NewBlock', { newBlock: newBlock });
 };
 
-export default <any> {
+export default {
   insert: insert
 };

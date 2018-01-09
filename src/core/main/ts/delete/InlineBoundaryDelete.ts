@@ -134,7 +134,7 @@ var backspaceDeleteCollapsed = function (editor, caret, forward, from) {
   });
 };
 
-var backspaceDelete = function (editor, caret, forward) {
+var backspaceDelete = function (editor, caret, forward?) {
   if (editor.selection.isCollapsed() && isFeatureEnabled(editor)) {
     var from = CaretPosition.fromRangeStart(editor.selection.getRng());
     return backspaceDeleteCollapsed(editor, caret, forward, from);
@@ -143,6 +143,6 @@ var backspaceDelete = function (editor, caret, forward) {
   return false;
 };
 
-export default <any> {
+export default {
   backspaceDelete: backspaceDelete
 };

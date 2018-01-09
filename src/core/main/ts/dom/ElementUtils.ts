@@ -114,4 +114,4 @@ var ElementUtils = function (dom) {
   };
 };
 
-export default <any> ElementUtils;
+export default ElementUtils;

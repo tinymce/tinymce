@@ -90,7 +90,7 @@ var upUntil = curry(walkUntil, -1, ClientRect.isAbove, ClientRect.isBelow);
 var downUntil = curry(walkUntil, 1, ClientRect.isBelow, ClientRect.isAbove);
 
 var positionsUntil = function (direction, rootNode, predicateFn, node) {
-  var caretWalker = new CaretWalker(rootNode), walkFn, isBelowFn, isAboveFn,
+  var caretWalker = CaretWalker(rootNode), walkFn, isBelowFn, isAboveFn,
     caretPosition, result = [], line = 0, clientRect, targetClientRect;
 
   var getClientRect = function (caretPosition) {
@@ -144,7 +144,7 @@ var positionsUntil = function (direction, rootNode, predicateFn, node) {
   return result;
 };
 
-export default <any> {
+export default {
   upUntil: upUntil,
   downUntil: downUntil,
 

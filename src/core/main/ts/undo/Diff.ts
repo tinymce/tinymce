@@ -142,7 +142,7 @@ var diff = function (left, right) {
   return script;
 };
 
-export default <any> {
+export default {
   KEEP: KEEP,
   DELETE: DELETE,
   INSERT: INSERT,

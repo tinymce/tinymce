@@ -114,7 +114,7 @@ var restore = function (editor) {
   });
 };
 
-export default <any> {
+export default {
   store: store,
   storeNative: storeNative,
   readRange: readRange,

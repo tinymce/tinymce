@@ -135,6 +135,6 @@ var init = function (editor, boxInfo) {
   }
 };
 
-export default <any> {
+export default {
   init: init
 };

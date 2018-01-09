@@ -42,7 +42,7 @@ var appendStyle = function (editor, text) {
 };
 
 var createParser = function (editor) {
-  var parser = new DomParser(editor.settings, editor.schema);
+  var parser = DomParser(editor.settings, editor.schema);
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', function (nodes, name) {
@@ -150,7 +150,7 @@ var getStyleSheetLoader = function (editor) {
   return editor.inline ? DOM.styleSheetLoader : editor.dom.styleSheetLoader;
 };
 
-var initContentBody = function (editor, skipWrite) {
+var initContentBody = function (editor, skipWrite?) {
   var settings = editor.settings, targetElm = editor.getElement(), doc = editor.getDoc(), body, contentCssText;
 
   // Restore visibility on target element
@@ -201,8 +201,8 @@ var initContentBody = function (editor, skipWrite) {
 
   body.disabled = false;
 
-  editor.editorUpload = new EditorUpload(editor);
-  editor.schema = new Schema(settings);
+  editor.editorUpload = EditorUpload(editor);
+  editor.schema = Schema(settings);
   editor.dom = new DOMUtils(doc, {
     keep_values: true,
     url_converter: editor.convertURL,
@@ -219,12 +219,12 @@ var initContentBody = function (editor, skipWrite) {
   });
 
   editor.parser = createParser(editor);
-  editor.serializer = new Serializer(settings, editor);
+  editor.serializer = Serializer(settings, editor);
   editor.selection = new Selection(editor.dom, editor.getWin(), editor.serializer, editor);
-  editor.formatter = new Formatter(editor);
-  editor.undoManager = new UndoManager(editor);
+  editor.formatter = Formatter(editor);
+  editor.undoManager = UndoManager(editor);
   editor._nodeChangeDispatcher = new NodeChange(editor);
-  editor._selectionOverrides = new SelectionOverrides(editor);
+  editor._selectionOverrides = SelectionOverrides(editor);
 
   CaretContainerInput.setup(editor);
   KeyboardOverrides.setup(editor);
@@ -237,7 +237,7 @@ var initContentBody = function (editor, skipWrite) {
     DOM.setAttrib(body, "spellcheck", "false");
   }
 
-  editor.quirks = new Quirks(editor);
+  editor.quirks = Quirks(editor);
   editor.fire('PostRender');
 
   if (settings.directionality) {
@@ -303,6 +303,6 @@ var initContentBody = function (editor, skipWrite) {
   }
 };
 
-export default <any> {
+export default {
   initContentBody: initContentBody
 };

@@ -87,6 +87,6 @@ var formatChanged = function (editor, formatChangeState, formats, callback, simi
   addListeners(formatChangeState, formats, callback, similar);
 };
 
-export default <any> {
+export default {
   formatChanged: formatChanged
 };

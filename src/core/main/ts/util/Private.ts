@@ -49,6 +49,6 @@ var create = function () {
   };
 };
 
-export default <any> {
+export default {
   create: create
 };

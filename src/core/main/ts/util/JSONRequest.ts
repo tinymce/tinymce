@@ -106,4 +106,4 @@ JSONRequest.prototype = {
   }
 };
 
-export default <any> JSONRequest;
+export default JSONRequest;

@@ -22,6 +22,6 @@ var toggle = function (editor, formats, name, vars, node) {
   }
 };
 
-export default <any> {
+export default {
   toggle: toggle
 };
