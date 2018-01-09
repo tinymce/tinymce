@@ -1,4 +1,3 @@
-import 'promise-polyfill';
 import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import Generators from 'ephox/snooker/api/Generators';
