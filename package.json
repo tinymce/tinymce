@@ -16,7 +16,7 @@
     "node": ">=0.10.26"
   },
   "scripts": {
-    "test": "grunt bedrock-manual"
+    "test": "grunt bedrock-auto:chrome-headless"
   },
   "dependencies": {
     "@ephox/alloy": "latest",
