@@ -71,7 +71,7 @@ var createUi = function () {
   };
 };
 
-export default <any> {
+export default {
   createUi: createUi,
   syncSize: syncSize,
   updateSize: updateSize

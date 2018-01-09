@@ -16,6 +16,6 @@ var register = function (editor, pluginUrl, startedState, textMatcherState, last
   });
 };
 
-export default <any> {
+export default {
   register: register
 };

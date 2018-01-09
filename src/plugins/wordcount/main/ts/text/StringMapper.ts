@@ -46,6 +46,6 @@ var classify = function (string) {
   return Arr.map(string.split(''), memoized);
 };
 
-export default <any> {
+export default {
   classify: classify
 };

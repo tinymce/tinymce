@@ -30,6 +30,6 @@ var load = function (doc, url) {
   }
 };
 
-export default <any> {
+export default {
   load: load
 };

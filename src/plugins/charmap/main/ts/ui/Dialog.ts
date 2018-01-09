@@ -109,6 +109,6 @@ var open = function (editor) {
   });
 };
 
-export default <any> {
+export default {
   open: open
 };

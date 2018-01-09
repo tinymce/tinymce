@@ -19,7 +19,7 @@ var firstSelectedSelector = 'td[' + firstSelected + '],th[' + firstSelected + ']
 var lastSelected = 'data-mce-last-selected';
 var lastSelectedSelector = 'td[' + lastSelected + '],th[' + lastSelected + ']';
 
-export default <any> {
+export default {
   selected: Fun.constant(selected),
   selectedSelector: Fun.constant(selectedSelector),
   attributeSelector: Fun.constant(attributeSelector),

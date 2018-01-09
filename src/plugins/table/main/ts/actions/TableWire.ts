@@ -33,7 +33,7 @@ var createContainer = function () {
   return container;
 };
 
-var get = function (editor, container) {
+var get = function (editor, container?) {
   return editor.inline ? ResizeWire.body(Util.getBody(editor), createContainer()) : ResizeWire.only(Element.fromDom(editor.getDoc()));
 };
 
@@ -43,7 +43,7 @@ var remove = function (editor, wire) {
   }
 };
 
-export default <any> {
+export default {
   get: get,
   remove: remove
 };

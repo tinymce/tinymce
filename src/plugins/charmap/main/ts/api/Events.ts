@@ -12,6 +12,6 @@ var fireInsertCustomChar = function (editor, chr) {
   return editor.fire('insertCustomChar', { chr: chr });
 };
 
-export default <any> {
+export default {
   fireInsertCustomChar: fireInsertCustomChar
 };

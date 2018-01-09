@@ -25,6 +25,6 @@ var toMenuItems = function (styles) {
   });
 };
 
-export default <any> {
+export default {
   toMenuItems: toMenuItems
 };

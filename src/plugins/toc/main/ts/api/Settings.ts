@@ -22,7 +22,7 @@ var getTocDepth = function (editor) {
   return depth >= 1 && depth <= 9 ? depth : 3;
 };
 
-export default <any> {
+export default {
   getTocClass: getTocClass,
   getTocHeader: getTocHeader,
   getTocDepth: getTocDepth

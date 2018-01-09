@@ -72,6 +72,6 @@ var sanitize = function (editor, html) {
   return writer.getContent();
 };
 
-export default <any> {
+export default {
   sanitize: sanitize
 };

@@ -18,6 +18,6 @@ var register = function (editor) {
   editor.addCommand('mceMedia', showDialog);
 };
 
-export default <any> {
+export default {
   register: register
 };

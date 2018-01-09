@@ -40,7 +40,7 @@ var getCurrentLanguage = function (editor) {
   return '';
 };
 
-export default <any> {
+export default {
   getLanguages: getLanguages,
   getCurrentLanguage: getCurrentLanguage
 };

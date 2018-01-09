@@ -19,4 +19,4 @@ PluginManager.add('help', function (editor, pluginUrl) {
   editor.shortcuts.add('Alt+0', 'Open help dialog', 'mceHelp');
 });
 
-export default <any> function () {};
+export default function () {};

@@ -14,7 +14,7 @@ import NodeType from './NodeType';
 
 var DOM = DOMUtils.DOM;
 
-var createNewTextBlock = function (editor, contentNode, blockName) {
+var createNewTextBlock = function (editor, contentNode, blockName?) {
   var node, textBlock, fragment = DOM.createFragment(), hasContentNode;
   var blockElements = editor.schema.getBlockElements();
 
@@ -72,6 +72,6 @@ var createNewTextBlock = function (editor, contentNode, blockName) {
   return fragment;
 };
 
-export default <any> {
+export default {
   createNewTextBlock: createNewTextBlock
 };

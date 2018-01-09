@@ -18,6 +18,6 @@ var getKeyboardSpaces = function (editor) {
   }
 };
 
-export default <any> {
+export default {
   getKeyboardSpaces: getKeyboardSpaces
 };

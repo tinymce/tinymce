@@ -25,4 +25,4 @@ PluginManager.add('fullscreen', function (editor) {
   return Api.get(fullscreenState);
 });
 
-export default <any> function () { };
+export default function () { };

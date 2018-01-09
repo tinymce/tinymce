@@ -37,6 +37,6 @@ var makeRow = function () {
   ];
 };
 
-export default <any> {
+export default {
   makeRow: makeRow
 };

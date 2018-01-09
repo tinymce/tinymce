@@ -237,7 +237,7 @@ var editImageDialog = function (editor, imageUploadTimerState) {
   };
 };
 
-export default <any> {
+export default {
   rotate: rotate,
   flip: flip,
   editImageDialog: editImageDialog,

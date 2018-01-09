@@ -37,6 +37,6 @@ var setup = function (editor, patternsState) {
   });
 };
 
-export default <any> {
+export default {
   setup: setup
 };

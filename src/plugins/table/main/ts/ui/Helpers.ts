@@ -17,7 +17,7 @@ import Util from '../alien/Util';
  * @private
  */
 
-var buildListItems = function (inputList, itemCallback, startItems) {
+var buildListItems = function (inputList, itemCallback, startItems?) {
   var appendItems = function (values, output?) {
     output = output || [];
 
@@ -164,7 +164,7 @@ var createStyleForm = function (editor) {
   };
 };
 
-export default <any> {
+export default {
   createStyleForm: createStyleForm,
   buildListItems: buildListItems,
   updateStyleField: updateStyleField,

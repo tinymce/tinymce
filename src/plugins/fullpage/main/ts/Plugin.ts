@@ -22,4 +22,4 @@ PluginManager.add('fullpage', function (editor) {
   FilterContent.setup(editor, headState, footState);
 });
 
-export default <any> function () { };
+export default function () { };

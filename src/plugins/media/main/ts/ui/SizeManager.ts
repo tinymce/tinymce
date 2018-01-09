@@ -82,7 +82,7 @@ var createUi = function (onChange) {
   };
 };
 
-export default <any> {
+export default {
   createUi: createUi,
   syncSize: syncSize,
   updateSize: updateSize

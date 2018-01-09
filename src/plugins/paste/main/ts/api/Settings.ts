@@ -74,7 +74,7 @@ var shouldUseDefaultFilters = function (editor) {
   return editor.getParam('paste_enable_default_filters', true);
 };
 
-export default <any> {
+export default {
   shouldPlainTextInform: shouldPlainTextInform,
   shouldBlockDrop: shouldBlockDrop,
   shouldPasteDataImages: shouldPasteDataImages,

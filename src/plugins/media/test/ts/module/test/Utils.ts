@@ -258,7 +258,7 @@ var sSetSetting = function (editorSetting, key, value) {
   });
 };
 
-export default <any> {
+export default {
   cSetSourceInput: cSetSourceInput,
   cFindTextare: cFindTextarea,
   cFakeEvent: cFakeEvent,

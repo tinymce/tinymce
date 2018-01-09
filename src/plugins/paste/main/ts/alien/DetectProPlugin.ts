@@ -23,6 +23,6 @@ var hasProPlugin = function (editor) {
   }
 };
 
-export default <any> {
+export default {
   hasProPlugin: hasProPlugin
 };

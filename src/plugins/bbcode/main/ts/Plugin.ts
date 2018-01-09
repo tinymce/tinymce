@@ -31,4 +31,4 @@ PluginManager.add('bbcode', function () {
   };
 });
 
-export default <any> function () { };
+export default function () { };

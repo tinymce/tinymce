@@ -47,6 +47,6 @@ var register = function (editor, lastFormatState) {
   });
 };
 
-export default <any> {
+export default {
   register: register
 };

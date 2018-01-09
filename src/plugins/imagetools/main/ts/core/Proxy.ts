@@ -46,6 +46,6 @@ var getUrl = function (url, apiKey) {
   return apiKey ? requestServiceBlob(url, apiKey) : requestBlob(url);
 };
 
-export default <any> {
+export default {
   getUrl: getUrl
 };

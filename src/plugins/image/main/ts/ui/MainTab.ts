@@ -106,7 +106,7 @@ var makeTab = function (editor, imageListCtrl) {
   };
 };
 
-export default <any> {
+export default {
   makeTab: makeTab,
   getGeneralItems: getGeneralItems
 };

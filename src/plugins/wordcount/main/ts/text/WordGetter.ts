@@ -103,10 +103,10 @@ var doGetWords = function (string, options) {
   return words;
 };
 
-var getWords = function (string, options) {
+var getWords = function (string, options?) {
   return doGetWords(string.replace(/\ufeff/g, ''), options);
 };
 
-export default <any> {
+export default {
   getWords: getWords
 };

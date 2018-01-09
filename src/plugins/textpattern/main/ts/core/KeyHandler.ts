@@ -68,7 +68,7 @@ var checkCharCode = function (chars, event) {
   });
 };
 
-export default <any> {
+export default {
   handleEnter: handleEnter,
   handleInlineKey: handleInlineKey,
   checkCharCode: checkCharCode,

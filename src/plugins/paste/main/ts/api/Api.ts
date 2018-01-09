@@ -15,6 +15,6 @@ var get = function (clipboard, quirks) {
   };
 };
 
-export default <any> {
+export default {
   get: get
 };

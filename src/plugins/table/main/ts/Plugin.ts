@@ -72,4 +72,4 @@ function Plugin(editor) {
 
 PluginManager.add('table', Plugin);
 
-export default <any> function () { };
+export default function () { };

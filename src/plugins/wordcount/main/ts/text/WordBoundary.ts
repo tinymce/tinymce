@@ -117,6 +117,6 @@ var isWordBoundary = function (map, index) {
   return true;
 };
 
-export default <any> {
+export default {
   isWordBoundary: isWordBoundary
 };

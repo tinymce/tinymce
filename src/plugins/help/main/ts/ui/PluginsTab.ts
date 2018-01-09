@@ -89,6 +89,6 @@ var makeTab = function (editor) {
   };
 };
 
-export default <any> {
+export default {
   makeTab: makeTab
 };

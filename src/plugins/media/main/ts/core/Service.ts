@@ -54,7 +54,7 @@ var isCached = function (url) {
   return cache.hasOwnProperty(url);
 };
 
-export default <any> {
+export default {
   getEmbedHtml: getEmbedHtml,
   isCached: isCached
 };

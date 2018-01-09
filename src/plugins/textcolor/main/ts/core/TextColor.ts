@@ -51,7 +51,7 @@ var removeFormat = function (editor, format) {
   });
 };
 
-export default <any> {
+export default {
   getCurrentColor: getCurrentColor,
   mapColors: mapColors,
   applyFormat: applyFormat,

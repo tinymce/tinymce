@@ -16,4 +16,4 @@ PluginManager.add('autolink', function (editor) {
   Keys.setup(editor);
 });
 
-export default <any> function () { };
+export default function () { };

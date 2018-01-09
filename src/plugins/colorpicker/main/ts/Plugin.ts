@@ -19,4 +19,4 @@ PluginManager.add('colorpicker', function (editor) {
   }
 });
 
-export default <any> function () { };
+export default function () { };

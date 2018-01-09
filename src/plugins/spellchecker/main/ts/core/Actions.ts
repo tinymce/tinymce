@@ -17,7 +17,7 @@ import DomTextMatcher from './DomTextMatcher';
 
 var getTextMatcher = function (editor, textMatcherState) {
   if (!textMatcherState.get()) {
-    var textMatcher = new DomTextMatcher(editor.getBody(), editor);
+    var textMatcher = DomTextMatcher(editor.getBody(), editor);
     textMatcherState.set(textMatcher);
   }
 
@@ -118,7 +118,7 @@ var addToDictionary = function (editor, pluginUrl, startedState, textMatcherStat
   });
 };
 
-var ignoreWord = function (editor, startedState, textMatcherState, word, spans, all) {
+var ignoreWord = function (editor, startedState, textMatcherState, word, spans, all?) {
   editor.selection.collapse();
 
   if (all) {
@@ -215,7 +215,7 @@ var markErrors = function (editor, startedState, textMatcherState, lastSuggestio
   Events.fireSpellcheckStart(editor);
 };
 
-export default <any> {
+export default {
   spellcheck: spellcheck,
   checkIfFinished: checkIfFinished,
   addToDictionary: addToDictionary,

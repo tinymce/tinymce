@@ -16,7 +16,7 @@ var fireSpellcheckEnd = function (editor) {
   return editor.fire('SpellcheckEnd');
 };
 
-export default <any> {
+export default {
   fireSpellcheckStart: fireSpellcheckStart,
   fireSpellcheckEnd: fireSpellcheckEnd
 };

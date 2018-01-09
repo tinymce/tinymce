@@ -130,7 +130,7 @@ var toggleViewLinkState = function (editor) {
   };
 };
 
-export default <any> {
+export default {
   openDialog: openDialog,
   gotoSelectedLink: gotoSelectedLink,
   leftClickedOnAHref: leftClickedOnAHref,

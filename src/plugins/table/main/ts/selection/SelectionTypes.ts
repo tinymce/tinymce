@@ -20,7 +20,7 @@ var cata = function (subject, onNone, onMultiple, onSingle) {
   return subject.fold(onNone, onMultiple, onSingle);
 };
 
-export default <any> {
+export default {
   cata: cata,
   none: type.none,
   multiple: type.multiple,

@@ -27,7 +27,7 @@ var pathJoin = function (path1, path2) {
   return path2;
 };
 
-export default <any> function (settings) {
+export default function (settings) {
   var defaultHandler = function (blobInfo, success, failure, progress) {
     var xhr, formData;
 

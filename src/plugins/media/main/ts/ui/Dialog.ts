@@ -118,7 +118,7 @@ var showDialog = function (editor) {
   var win;
   var data;
 
-  var generalFormItems = [
+  var generalFormItems: any[] = [
     {
       name: 'source1',
       type: 'filepicker',
@@ -233,6 +233,6 @@ var showDialog = function (editor) {
   SizeManager.syncSize(win);
 };
 
-export default <any> {
+export default {
   showDialog: showDialog
 };

@@ -25,7 +25,7 @@ import Direction from '../queries/Direction';
 
 
 
-export default <any> function (editor, lazyWire) {
+export default function (editor, lazyWire) {
   var isTableBody = function (editor) {
     return Node.name(Util.getBody(editor)) === 'table';
   };

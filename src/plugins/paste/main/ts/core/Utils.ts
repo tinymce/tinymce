@@ -135,7 +135,7 @@ var isMsEdge = function () {
   return navigator.userAgent.indexOf(' Edge/') !== -1;
 };
 
-export default <any> {
+export default {
   filter: filter,
   innerText: innerText,
   trimHtml: trimHtml,

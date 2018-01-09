@@ -48,7 +48,7 @@ var map = function (array, callback) {
   return out;
 };
 
-export default <any> {
+export default {
   each: each,
   map: map
 };

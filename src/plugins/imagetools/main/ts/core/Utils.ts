@@ -78,7 +78,7 @@ var parseJson = function (text) {
   return json;
 };
 
-export default <any> {
+export default {
   traverse: traverse,
   readBlob: readBlob,
   requestUrlAsBlob: requestUrlAsBlob,

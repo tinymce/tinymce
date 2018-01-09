@@ -37,7 +37,7 @@ var getAutoSaveRetention = function (editor) {
   return Time.parse(editor.settings.autosave_retention, '20m');
 };
 
-export default <any> {
+export default {
   shouldAskBeforeUnload: shouldAskBeforeUnload,
   getAutoSavePrefix: getAutoSavePrefix,
   shouldRestoreWhenEmpty: shouldRestoreWhenEmpty,

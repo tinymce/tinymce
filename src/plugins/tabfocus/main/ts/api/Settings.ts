@@ -16,6 +16,6 @@ var getTabFocus = function (editor) {
   return editor.getParam('tab_focus', getTabFocusElements(editor));
 };
 
-export default <any> {
+export default {
   getTabFocus: getTabFocus
 };

@@ -101,7 +101,7 @@ var insertTemplate = function (editor, ui, html) {
   editor.addVisual();
 };
 
-export default <any> {
+export default {
   createTemplateList: createTemplateList,
   replaceTemplateValues: replaceTemplateValues,
   replaceVals: replaceVals,

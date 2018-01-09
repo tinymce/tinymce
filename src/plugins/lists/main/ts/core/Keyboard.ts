@@ -41,6 +41,6 @@ var setup = function (editor) {
   Delete.setup(editor);
 };
 
-export default <any> {
+export default {
   setup: setup
 };

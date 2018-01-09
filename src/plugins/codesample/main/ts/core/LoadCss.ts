@@ -38,6 +38,6 @@ var loadCss = function (editor, pluginUrl, addedInlineCss, addedCss) {
   }
 };
 
-export default <any> {
+export default {
   loadCss: loadCss
 };

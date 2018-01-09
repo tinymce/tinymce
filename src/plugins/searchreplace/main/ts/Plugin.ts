@@ -23,4 +23,4 @@ PluginManager.add('searchreplace', function (editor) {
   return Api.get(editor, currentIndexState);
 });
 
-export default <any> function () { };
+export default function () { };

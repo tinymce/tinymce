@@ -18,7 +18,7 @@ var getBulletStyles = function (editor) {
   return styles ? styles.split(/[ ,]/) : [];
 };
 
-export default <any> {
+export default {
   getNumberStyles: getNumberStyles,
   getBulletStyles: getBulletStyles
 };

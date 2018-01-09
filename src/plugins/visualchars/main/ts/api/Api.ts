@@ -18,6 +18,6 @@ var get = function (toggleState) {
   };
 };
 
-export default <any> {
+export default {
   get: get
 };

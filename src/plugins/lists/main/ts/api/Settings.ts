@@ -12,6 +12,6 @@ var shouldIndentOnTab = function (editor) {
   return editor.getParam('lists_indent_on_tab', true);
 };
 
-export default <any> {
+export default {
   shouldIndentOnTab: shouldIndentOnTab
 };

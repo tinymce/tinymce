@@ -38,6 +38,6 @@ var process = function (editor, html, internal) {
   return filterContent(editor, content, internal, isWordHtml);
 };
 
-export default <any> {
+export default {
   process: process
 };

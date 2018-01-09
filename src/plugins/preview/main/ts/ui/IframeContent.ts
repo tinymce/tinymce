@@ -82,7 +82,7 @@ var injectIframeContent = function (editor, iframe, sandbox) {
   }
 };
 
-export default <any> {
+export default {
   getPreviewHtml: getPreviewHtml,
   injectIframeContent: injectIframeContent
 };

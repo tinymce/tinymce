@@ -32,4 +32,4 @@ PluginManager.add('spellchecker', function (editor, pluginUrl) {
   }
 });
 
-export default <any> function () { };
+export default function () { };

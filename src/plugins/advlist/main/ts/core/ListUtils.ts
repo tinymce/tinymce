@@ -27,7 +27,7 @@ var getSelectedStyleType = function (editor) {
   return editor.dom.getStyle(listElm, 'listStyleType') || '';
 };
 
-export default <any> {
+export default {
   isTableCellNode: isTableCellNode,
   isListNode: isListNode,
   getSelectedStyleType: getSelectedStyleType

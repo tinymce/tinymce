@@ -55,7 +55,7 @@ var getImageSize = function (url, callback) {
 };
 
 
-var buildListItems = function (inputList, itemCallback, startItems) {
+var buildListItems = function (inputList, itemCallback, startItems?) {
   function appendItems(values, output?) {
     output = output || [];
 
@@ -181,7 +181,7 @@ var blobToDataUri = function (blob) {
   });
 };
 
-export default <any> {
+export default {
   getImageSize: getImageSize,
   buildListItems: buildListItems,
   removePixelSuffix: removePixelSuffix,

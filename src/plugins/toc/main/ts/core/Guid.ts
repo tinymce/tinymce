@@ -17,6 +17,6 @@ var create = function (prefix) {
   };
 };
 
-export default <any> {
+export default {
   create: create
 };

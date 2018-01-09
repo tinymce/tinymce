@@ -18,7 +18,7 @@ function trimArg(predicateFn) {
   };
 }
 
-export default <any> {
+export default {
   isCodeSample: isCodeSample,
   trimArg: trimArg
 };

@@ -64,7 +64,7 @@ var allowUnsafeLinkTarget = function (editorSettings) {
   return typeof editorSettings.allow_unsafe_link_target === 'boolean' ? editorSettings.allow_unsafe_link_target : false;
 };
 
-export default <any> {
+export default {
   assumeExternalTargets: assumeExternalTargets,
   hasContextToolbar: hasContextToolbar,
   getLinkList: getLinkList,

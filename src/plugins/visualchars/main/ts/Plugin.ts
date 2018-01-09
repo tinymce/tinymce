@@ -25,4 +25,4 @@ PluginManager.add('visualchars', function (editor) {
   return Api.get(toggleState);
 });
 
-export default <any> function () {};
+export default function () {};

@@ -26,7 +26,7 @@ var getDialogMinHeight = function (editor) {
   return Math.min(DOMUtils.DOM.getViewPort().w, editor.getParam('codesample_dialog_height', 650));
 };
 
-export default <any> {
+export default {
   getContentCss: getContentCss,
   getLanguages: getLanguages,
   getDialogMinWidth: getDialogMinWidth,

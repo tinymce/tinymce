@@ -77,6 +77,6 @@ var makeTab = function (editor, updateStyle) {
   };
 };
 
-export default <any> {
+export default {
   makeTab: makeTab
 };

@@ -89,6 +89,6 @@ var register = function (editor) {
   addControl(editor, 'bullist', 'Bullet list', 'InsertUnorderedList', 'UL', Settings.getBulletStyles(editor));
 };
 
-export default <any> {
+export default {
   register: register
 };

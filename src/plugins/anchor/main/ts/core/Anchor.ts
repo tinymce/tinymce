@@ -35,7 +35,7 @@ var insert = function (editor, id) {
   }
 };
 
-export default <any> {
+export default {
   isValidId: isValidId,
   getId: getId,
   insert: insert

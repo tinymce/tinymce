@@ -50,7 +50,7 @@ var getDialogHeight = function (editor) {
   return Math.min(DOMUtils.DOM.getViewPort().h, editor.getParam('template_popup_height', 500));
 };
 
-export default <any> {
+export default {
   getCreationDateClasses: getCreationDateClasses,
   getModificationDateClasses: getModificationDateClasses,
   getSelectedContentClasses: getSelectedContentClasses,

@@ -13,14 +13,14 @@ import Actions from '../core/Actions';
 
 var register = function (editor) {
   editor.addCommand('mceInsertDate', function () {
-    Actions.insertDateTime(editor, Settings.getDateFormat());
+    Actions.insertDateTime(editor, Settings.getDateFormat(editor));
   });
 
   editor.addCommand('mceInsertTime', function () {
-    Actions.insertDateTime(editor, Settings.getTimeFormat());
+    Actions.insertDateTime(editor, Settings.getTimeFormat(editor));
   });
 };
 
-export default <any> {
+export default {
   register: register
 };

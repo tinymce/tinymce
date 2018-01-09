@@ -29,6 +29,6 @@ var isXYWithinRange = function (clientX, clientY, range) {
   }, false);
 };
 
-export default <any> {
+export default {
   isXYWithinRange: isXYWithinRange
 };

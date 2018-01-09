@@ -15,7 +15,7 @@ import Tools from 'tinymce/core/util/Tools';
 
 var DOM = DOMUtils.DOM;
 
-var splitList = function (editor, ul, li, newBlock) {
+var splitList = function (editor, ul, li, newBlock?) {
   var tmpRng, fragment, bookmarks, node;
 
   var removeAndKeepBookmarks = function (targetNode) {
@@ -57,6 +57,6 @@ var splitList = function (editor, ul, li, newBlock) {
   }
 };
 
-export default <any> {
+export default {
   splitList: splitList
 };

@@ -16,6 +16,6 @@ var get = function (fullscreenState) {
   };
 };
 
-export default <any> {
+export default {
   get: get
 };

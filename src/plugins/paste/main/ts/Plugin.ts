@@ -38,4 +38,4 @@ PluginManager.add('paste', function (editor) {
   }
 });
 
-export default <any> function () { };
+export default function () { };

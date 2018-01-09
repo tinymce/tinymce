@@ -39,6 +39,6 @@ var togglePlainTextPaste = function (editor, clipboard, userIsInformedState) {
   editor.focus();
 };
 
-export default <any> {
+export default {
   togglePlainTextPaste: togglePlainTextPaste
 };

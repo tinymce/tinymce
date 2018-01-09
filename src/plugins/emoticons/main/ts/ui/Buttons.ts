@@ -35,6 +35,6 @@ var register = function (editor, pluginUrl) {
   });
 };
 
-export default <any> {
+export default {
   register: register
 };

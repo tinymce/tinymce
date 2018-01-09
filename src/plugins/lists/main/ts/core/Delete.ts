@@ -168,7 +168,7 @@ var backspaceDeleteFromListToListCaret = function (editor, isForward) {
 
       return true;
     } else if (!otherLi) {
-      if (!isForward && ToggleList.removeList(editor, ul.nodeName)) {
+      if (!isForward && ToggleList.removeList(editor)) {
         return true;
       }
     }
@@ -250,7 +250,7 @@ var setup = function (editor) {
   });
 };
 
-export default <any> {
+export default {
   setup: setup,
   backspaceDelete: backspaceDelete
 };

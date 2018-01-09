@@ -67,7 +67,7 @@ var EMPTY_STRING = '';
 var PUNCTUATION = new RegExp('^' + regExps.punctuation + '$');
 var WHITESPACE = /^\s+$/;
 
-export default <any> {
+export default {
   characterIndices: characterIndices,
   SETS: SETS,
   EMPTY_STRING: EMPTY_STRING,

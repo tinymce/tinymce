@@ -44,6 +44,6 @@ var makeTab = function () {
   };
 };
 
-export default <any> {
+export default {
   makeTab: makeTab
 };

@@ -25,6 +25,6 @@ var setup = function (editor, toggleState) {
   }
 };
 
-export default <any> {
+export default {
   setup: setup
 };

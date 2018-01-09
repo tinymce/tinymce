@@ -56,7 +56,7 @@ var isBogusBr = function (dom, node) {
   return false;
 };
 
-var isEmpty = function (dom, elm, keepBookmarks) {
+var isEmpty = function (dom, elm, keepBookmarks?) {
   var empty = dom.isEmpty(elm);
 
   if (keepBookmarks && dom.select('span[data-mce-type=bookmark]', elm).length > 0) {
@@ -70,7 +70,7 @@ var isChildOfBody = function (dom, elm) {
   return dom.isChildOf(elm, dom.getRoot());
 };
 
-export default <any> {
+export default {
   isTextNode: isTextNode,
   isListNode: isListNode,
   isListItemNode: isListItemNode,

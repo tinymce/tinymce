@@ -46,7 +46,7 @@ var pasteRows = function (selections, table, cell, clipboard, generators) {
   };
 };
 
-export default <any> {
+export default {
   noMenu: noMenu,
   forMenu: forMenu,
   notCell: notCell,

@@ -16,6 +16,6 @@ var register = function (editor, fullscreenState) {
   });
 };
 
-export default <any> {
+export default {
   register: register
 };

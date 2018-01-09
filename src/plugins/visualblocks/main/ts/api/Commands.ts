@@ -16,6 +16,6 @@ var register = function (editor, pluginUrl, enabledState) {
   });
 };
 
-export default <any> {
+export default {
   register: register
 };

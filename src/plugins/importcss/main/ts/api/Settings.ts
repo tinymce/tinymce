@@ -36,7 +36,7 @@ var getFileFilter = function (editor) {
   return editor.getParam('importcss_file_filter');
 };
 
-export default <any> {
+export default {
   shouldMergeClasses: shouldMergeClasses,
   shouldImportExclusive: shouldImportExclusive,
   getSelectorConverter: getSelectorConverter,

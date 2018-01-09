@@ -14,7 +14,7 @@ import Languages from '../core/Languages';
 
 
 
-export default <any> {
+export default {
   open: function (editor) {
     var minWidth = Settings.getDialogMinWidth(editor);
     var minHeight = Settings.getDialogMinHeight(editor);

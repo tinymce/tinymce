@@ -55,6 +55,6 @@ var urls = [
   { key: 'wordcount', name: 'Word Count' }
 ];
 
-export default <any> {
+export default {
   urls: urls
 };

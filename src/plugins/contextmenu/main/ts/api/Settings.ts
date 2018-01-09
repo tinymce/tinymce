@@ -16,7 +16,7 @@ var getContextMenu = function (editor) {
   return editor.getParam('contextmenu', 'link openlink image inserttable | cell row column deletetable');
 };
 
-export default <any> {
+export default {
   shouldNeverUseNative: shouldNeverUseNative,
   getContextMenu: getContextMenu
 };

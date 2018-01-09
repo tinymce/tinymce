@@ -18,6 +18,6 @@ var setup = function (editor) {
   });
 };
 
-export default <any> {
+export default {
   setup: setup
 };

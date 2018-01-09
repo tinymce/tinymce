@@ -18,7 +18,7 @@ var getMinHeight = function (editor) {
   return editor.getParam('code_dialog_height', Math.min(DOMUtils.DOM.getViewPort().h - 200, 500));
 };
 
-export default <any> {
+export default {
   getMinWidth: getMinWidth,
   getMinHeight: getMinHeight
 };

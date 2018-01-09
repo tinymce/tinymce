@@ -483,7 +483,7 @@ var preProcess = function (editor, content) {
   return Settings.shouldUseDefaultFilters(editor) ? filterWordContent(editor, content) : content;
 };
 
-export default <any> {
+export default {
   preProcess: preProcess,
   isWordContent: isWordContent
 };

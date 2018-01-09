@@ -128,7 +128,7 @@ var outdentSelection = function (editor) {
   }
 };
 
-export default <any> {
+export default {
   outdent: outdent,
   outdentSelection: outdentSelection
 };

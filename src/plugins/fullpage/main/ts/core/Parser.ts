@@ -300,7 +300,7 @@ var dataToHtml = function (editor, data, head) {
   return html.substring(0, html.indexOf('</body>'));
 };
 
-export default <any> {
+export default {
   parseHeader: parseHeader,
   htmlToData: htmlToData,
   dataToHtml: dataToHtml

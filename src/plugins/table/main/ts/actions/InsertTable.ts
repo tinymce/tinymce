@@ -58,6 +58,6 @@ var insert = function (editor, columns, rows) {
   return tableElm;
 };
 
-export default <any> {
+export default {
   insert: insert
 };

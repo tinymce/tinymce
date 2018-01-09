@@ -15,7 +15,7 @@ import { PredicateFilter } from '@ephox/sugar';
 import { Selectors } from '@ephox/sugar';
 import { Visibility } from '@ephox/sugar';
 
-export default <any> function (editor) {
+export default function (editor) {
   var ui = TinyUi(editor);
 
   var cHasState = function (predicate) {

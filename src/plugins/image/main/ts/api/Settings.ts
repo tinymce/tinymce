@@ -64,7 +64,7 @@ var getUploadCredentials = function (editor) {
   return editor.getParam('images_upload_credentials');
 };
 
-export default <any> {
+export default {
   hasDimensions: hasDimensions,
   hasAdvTab: hasAdvTab,
   getPrependUrl: getPrependUrl,

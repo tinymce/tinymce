@@ -18,7 +18,7 @@ import Env from 'tinymce/core/Env';
 
 
 
-export default <any> function (editor) {
+export default function (editor) {
   var lastRng;
   var pasteBinDefaultContent = '%MCEPASTEBIN%';
 

@@ -99,6 +99,6 @@ var htmlToData = function (prefixes, html) {
   return isEphoxEmbed(html) ? ephoxEmbedHtmlToData(html) : htmlToDataSax(prefixes, html);
 };
 
-export default <any> {
+export default {
   htmlToData: htmlToData
 };

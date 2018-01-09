@@ -51,6 +51,6 @@ var register = function (editor) {
   editor.addContextToolbar(isToc(editor), 'tocupdate');
 };
 
-export default <any> {
+export default {
   register: register
 };

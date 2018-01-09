@@ -10,7 +10,7 @@
 
 
 
-export default <any> function () {
+export default function () {
   var data = [], index = -1;
 
   function add(state) {

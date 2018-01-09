@@ -71,7 +71,7 @@ var convert = function (text, rootTag, rootAttrs) {
   return rootTag ? toBlockElements(text, rootTag, rootAttrs) : toBRs(text);
 };
 
-export default <any> {
+export default {
   isPlainText: isPlainText,
   convert: convert,
   toBRs: toBRs,

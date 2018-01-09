@@ -23,6 +23,6 @@ var register = function (editor, imageUploadTimerState) {
   });
 };
 
-export default <any> {
+export default {
   register: register
 };

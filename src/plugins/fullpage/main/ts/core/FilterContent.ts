@@ -182,6 +182,6 @@ var setup = function (editor, headState, footState) {
   });
 };
 
-export default <any> {
+export default {
   setup: setup
 };

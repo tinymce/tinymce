@@ -153,6 +153,6 @@ var dataToHtml = function (editor, dataIn) {
   }
 };
 
-export default <any> {
+export default {
   dataToHtml: dataToHtml
 };

@@ -26,6 +26,6 @@ var register = function (editor, clipboard, userIsInformedState) {
   });
 };
 
-export default <any> {
+export default {
   register: register
 };

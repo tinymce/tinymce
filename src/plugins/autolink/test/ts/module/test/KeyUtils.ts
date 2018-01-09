@@ -114,7 +114,7 @@ var typeString = function (editor, str) {
   Arr.each(str.split(''), Fun.curry(type, editor));
 };
 
-export default <any> {
+export default {
   type: type,
   typeString: typeString
 };

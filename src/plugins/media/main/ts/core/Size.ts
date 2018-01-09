@@ -30,7 +30,7 @@ var setSize = function (name) {
   };
 };
 
-export default <any> {
+export default {
   getMaxWidth: getSize('maxWidth'),
   getMaxHeight: getSize('maxHeight'),
   setMaxWidth: setSize('maxWidth'),

@@ -68,6 +68,6 @@ var show = function (editor, pos, visibleState, menu) {
   visibleState.set(true);
 };
 
-export default <any> {
+export default {
   show: show
 };

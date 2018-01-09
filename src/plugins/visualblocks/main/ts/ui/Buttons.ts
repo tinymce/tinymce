@@ -40,6 +40,6 @@ var register = function (editor, enabledState) {
   });
 };
 
-export default <any> {
+export default {
   register: register
 };

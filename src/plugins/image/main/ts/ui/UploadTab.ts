@@ -12,7 +12,7 @@ var onFileInput = function (editor) {
     var file = evt.control.value();
     var blobUri = URL.createObjectURL(file);
 
-    var uploader = new Uploader({
+    var uploader = Uploader({
       url: Settings.getUploadUrl(editor),
       basePath: Settings.getUploadBasePath(editor),
       credentials: Settings.getUploadCredentials(editor),
@@ -89,6 +89,6 @@ var makeTab = function (editor) {
   };
 };
 
-export default <any> {
+export default {
   makeTab: makeTab
 };

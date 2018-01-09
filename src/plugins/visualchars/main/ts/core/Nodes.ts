@@ -47,7 +47,7 @@ var replaceWithSpans = function (html) {
   return html.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
 };
 
-export default <any> {
+export default {
   isMatch: isMatch,
   filterDescendants: filterDescendants,
   findParentElm: findParentElm,

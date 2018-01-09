@@ -23,7 +23,7 @@ var isMarked = function (html) {
   return html.indexOf(internalMark) !== -1;
 };
 
-export default <any> {
+export default {
   mark: mark,
   unmark: unmark,
   isMarked: isMarked,

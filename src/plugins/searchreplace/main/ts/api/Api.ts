@@ -40,6 +40,6 @@ var get = function (editor, currentIndexState) {
   };
 };
 
-export default <any> {
+export default {
   get: get
 };

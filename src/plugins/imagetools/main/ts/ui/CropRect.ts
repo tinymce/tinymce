@@ -17,7 +17,7 @@ import VK from 'tinymce/core/util/VK';
 
 var count = 0;
 
-export default <any> function (currentRect, viewPortRect, clampRect, containerElm, action) {
+export default function (currentRect, viewPortRect, clampRect, containerElm, action) {
   var instance, handles, dragHelpers, blockers, prefix = 'mce-', id = prefix + 'crid-' + (count++);
 
   handles = [

@@ -309,7 +309,7 @@ var toggleList = function (editor, listName, detail) {
   }
 };
 
-export default <any> {
+export default {
   toggleList: toggleList,
   removeList: removeList,
   mergeWithAdjacentLists: mergeWithAdjacentLists

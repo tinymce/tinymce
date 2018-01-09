@@ -81,7 +81,7 @@ var blockStructHelper = function (tag, content) {
   });
 };
 
-export default <any> {
+export default {
   sSetContentAndPressSpace: sSetContentAndPressKey(Keys.space()),
   sSetContentAndPressEnter: sSetContentAndPressKey(Keys.enter()),
   withTeardown: withTeardown,

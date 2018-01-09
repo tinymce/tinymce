@@ -26,7 +26,7 @@ var getNonEditableRegExps = function (editor) {
   }
 };
 
-export default <any> {
+export default {
   getNonEditableClass: getNonEditableClass,
   getEditableClass: getEditableClass,
   getNonEditableRegExps: getNonEditableRegExps

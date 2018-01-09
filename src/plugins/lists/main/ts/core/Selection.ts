@@ -65,7 +65,7 @@ var getClosestListRootElm = function (editor, elm) {
   return root;
 };
 
-export default <any> {
+export default {
   getParentList: getParentList,
   getSelectedSubLists: getSelectedSubLists,
   getSelectedListItems: getSelectedListItems,

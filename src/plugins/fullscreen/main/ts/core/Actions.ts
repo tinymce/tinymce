@@ -113,6 +113,6 @@ var toggleFullscreen = function (editor, fullscreenState) {
   }
 };
 
-export default <any> {
+export default {
   toggleFullscreen: toggleFullscreen
 };

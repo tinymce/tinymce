@@ -149,7 +149,7 @@ var updateToc = function (editor) {
   }
 };
 
-export default <any> {
+export default {
   hasHeaders: hasHeaders,
   insertToc: insertToc,
   updateToc: updateToc

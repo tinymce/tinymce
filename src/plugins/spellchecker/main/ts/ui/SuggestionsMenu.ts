@@ -112,6 +112,6 @@ var setup = function (editor, pluginUrl, lastSuggestionsState, startedState, tex
   });
 };
 
-export default <any> {
+export default {
   setup: setup
 };

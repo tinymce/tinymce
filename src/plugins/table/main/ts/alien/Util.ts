@@ -31,7 +31,7 @@ var addSizeSuffix = function (size) {
   return size;
 };
 
-export default <any> {
+export default {
   getBody: getBody,
   getIsRoot: getIsRoot,
   addSizeSuffix: addSizeSuffix,

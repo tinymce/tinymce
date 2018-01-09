@@ -108,6 +108,6 @@ var setup = function (editor, clipboard, draggingInternallyState) {
   });
 };
 
-export default <any> {
+export default {
   setup: setup
 };

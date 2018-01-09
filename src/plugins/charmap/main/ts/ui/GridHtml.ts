@@ -45,6 +45,6 @@ var getHtml = function (charmap) {
   return gridHtml;
 };
 
-export default <any> {
+export default {
   getHtml: getHtml
 };

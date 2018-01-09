@@ -166,7 +166,7 @@ var applyBlockFormat = function (editor, patterns) {
   }
 };
 
-export default <any> {
+export default {
   patternFromRng: patternFromRng,
   applyInlineFormatSpace: applyInlineFormatSpace,
   applyInlineFormatEnter: applyInlineFormatEnter,

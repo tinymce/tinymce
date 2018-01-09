@@ -28,4 +28,4 @@ PluginManager.add('autoresize', function (editor) {
   }
 });
 
-export default <any> function () {};
+export default function () {};

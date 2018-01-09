@@ -26,7 +26,7 @@ var getContent = function (editor) {
   return editor.getContent({ source_view: true });
 };
 
-export default <any> {
+export default {
   setContent: setContent,
   getContent: getContent
 };

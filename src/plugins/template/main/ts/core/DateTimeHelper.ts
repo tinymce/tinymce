@@ -20,7 +20,7 @@ var addZeros = function (value, len) {
   return value;
 };
 
-var getDateTime = function (editor, fmt, date) {
+var getDateTime = function (editor, fmt, date?) {
   var daysShort = "Sun Mon Tue Wed Thu Fri Sat Sun".split(' ');
   var daysLong = "Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunday".split(' ');
   var monthsShort = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(' ');
@@ -48,6 +48,6 @@ var getDateTime = function (editor, fmt, date) {
   return fmt;
 };
 
-export default <any> {
+export default {
   getDateTime: getDateTime
 };

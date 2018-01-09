@@ -25,6 +25,6 @@ var loadImage = function (image) {
   });
 };
 
-export default <any> {
+export default {
   loadImage: loadImage
 };

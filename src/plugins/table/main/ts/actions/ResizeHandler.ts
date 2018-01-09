@@ -21,7 +21,7 @@ import Tools from 'tinymce/core/util/Tools';
 
 
 
-export default <any> function (editor) {
+export default function (editor) {
   var selectionRng = Option.none();
   var resize = Option.none();
   var wire = Option.none();

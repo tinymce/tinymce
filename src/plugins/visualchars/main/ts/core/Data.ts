@@ -36,7 +36,7 @@ var charMapToSelector = function (charMap) {
   return selector;
 };
 
-export default <any> {
+export default {
   charMap: charMap,
   regExp: charMapToRegExp(charMap),
   regExpGlobal: charMapToRegExp(charMap, true),

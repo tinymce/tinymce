@@ -28,6 +28,6 @@ var get = function (editor) {
   };
 };
 
-export default <any> {
+export default {
   get: get
 };

@@ -20,7 +20,7 @@ var fireRemoveDraft = function (editor) {
   return editor.fire('RemoveDraft');
 };
 
-export default <any> {
+export default {
   fireRestoreDraft: fireRestoreDraft,
   fireStoreDraft: fireStoreDraft,
   fireRemoveDraft: fireRemoveDraft

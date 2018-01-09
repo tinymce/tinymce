@@ -29,7 +29,7 @@ import Ephemera from './Ephemera';
 
 
 
-export default <any> function (editor, lazyResize) {
+export default function (editor, lazyResize) {
   var handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
   var handlers = Option.none();
 

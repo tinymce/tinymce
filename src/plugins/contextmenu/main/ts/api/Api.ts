@@ -18,6 +18,6 @@ var get = function (visibleState) {
   };
 };
 
-export default <any> {
+export default {
   get: get
 };

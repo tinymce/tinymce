@@ -40,6 +40,6 @@ var register = function (editor) {
   editor.addShortcut('Meta+S', '', 'mceSave');
 };
 
-export default <any> {
+export default {
   register: register
 };

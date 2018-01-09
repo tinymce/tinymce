@@ -36,6 +36,6 @@ var get = function (editor, startedState, lastSuggestionsState, textMatcherState
   };
 };
 
-export default <any> {
+export default {
   get: get
 };

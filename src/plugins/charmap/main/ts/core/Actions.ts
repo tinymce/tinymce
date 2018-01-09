@@ -15,6 +15,6 @@ var insertChar = function (editor, chr) {
   editor.execCommand('mceInsertContent', false, evtChr);
 };
 
-export default <any> {
+export default {
   insertChar: insertChar
 };

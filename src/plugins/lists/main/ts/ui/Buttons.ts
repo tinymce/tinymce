@@ -77,6 +77,6 @@ var register = function (editor) {
   });
 };
 
-export default <any> {
+export default {
   register: register
 };

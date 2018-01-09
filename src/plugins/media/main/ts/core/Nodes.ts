@@ -160,7 +160,7 @@ var placeHolderConverter = function (editor) {
   };
 };
 
-export default <any> {
+export default {
   createPreviewIframeNode: createPreviewIframeNode,
   createPlaceholderNode: createPlaceholderNode,
   placeHolderConverter: placeHolderConverter

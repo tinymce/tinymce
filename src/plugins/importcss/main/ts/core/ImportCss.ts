@@ -266,7 +266,7 @@ var setup = function (editor) {
   });
 };
 
-export default <any> {
+export default {
   defaultConvertSelectorToFormat: defaultConvertSelectorToFormat,
   setup: setup
 };

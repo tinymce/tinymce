@@ -28,7 +28,7 @@ var shouldAutoResizeOnInit = function (editor) {
   return editor.getParam('autoresize_on_init', true);
 };
 
-export default <any> {
+export default {
   getAutoResizeMinHeight: getAutoResizeMinHeight,
   getAutoResizeMaxHeight: getAutoResizeMaxHeight,
   getAutoResizeOverflowPadding: getAutoResizeOverflowPadding,

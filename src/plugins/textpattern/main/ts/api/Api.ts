@@ -23,6 +23,6 @@ var get = function (patternsState) {
   };
 };
 
-export default <any> {
+export default {
   get: get
 };

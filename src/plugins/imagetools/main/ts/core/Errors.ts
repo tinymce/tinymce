@@ -67,7 +67,7 @@ var handleServiceErrorResponse = function (status, blob) {
   return isServiceErrorCode(status) ? handleServiceError(status, blob) : handleHttpError(status);
 };
 
-export default <any> {
+export default {
   handleServiceErrorResponse: handleServiceErrorResponse,
   handleHttpError: handleHttpError,
   getHttpErrorMsg: getHttpErrorMsg,

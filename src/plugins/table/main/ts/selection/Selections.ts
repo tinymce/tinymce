@@ -15,7 +15,7 @@ import SelectionTypes from './SelectionTypes';
 
 
 
-export default <any> function (editor) {
+export default function (editor) {
   var get = function () {
     var body = Util.getBody(editor);
 

@@ -112,6 +112,6 @@ var register = function (editor) {
   editor.on('copy', copy(editor));
 };
 
-export default <any> {
+export default {
   register: register
 };

@@ -83,7 +83,7 @@ var insertContent = function (editor, html) {
   }
 };
 
-export default <any> {
+export default {
   isImageUrl: isImageUrl,
   isAbsoluteUrl: isAbsoluteUrl,
   insertContent: insertContent

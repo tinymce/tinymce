@@ -23,4 +23,4 @@ PluginManager.add('link', function (editor) {
   Keyboard.setup(editor);
 });
 
-export default <any> function () { };
+export default function () { };

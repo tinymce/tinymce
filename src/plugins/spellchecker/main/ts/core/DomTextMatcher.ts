@@ -12,7 +12,7 @@ function isContentEditableFalse(node) {
   return node && node.nodeType === 1 && node.contentEditable === "false";
 }
 
-export default <any> function (node, editor) {
+export default function (node, editor) {
   var m, matches = [], text, dom = editor.dom;
   var blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;
 

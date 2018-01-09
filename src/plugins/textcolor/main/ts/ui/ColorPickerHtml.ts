@@ -85,6 +85,6 @@ var getHtml = function (cols, rows, colorMap, hasColorPicker) {
   return html;
 };
 
-export default <any> {
+export default {
   getHtml: getHtml
 };

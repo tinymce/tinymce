@@ -152,7 +152,7 @@ var setup = function (editor, oldSize) {
   }
 };
 
-export default <any> {
+export default {
   setup: setup,
   resize: resize
 };

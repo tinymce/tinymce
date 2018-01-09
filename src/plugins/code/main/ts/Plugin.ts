@@ -19,4 +19,4 @@ PluginManager.add('code', function (editor) {
   return {};
 });
 
-export default <any> function () { };
+export default function () { };

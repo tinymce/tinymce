@@ -12,6 +12,6 @@ var fireFullscreenStateChanged = function (editor, state) {
   editor.fire('FullscreenStateChanged', { state: state });
 };
 
-export default <any> {
+export default {
   fireFullscreenStateChanged: fireFullscreenStateChanged
 };

@@ -38,7 +38,7 @@ var trimCaretContainers = function (text) {
   return text.replace(/\uFEFF/g, '');
 };
 
-var getAnchorElement = function (editor, selectedElm) {
+var getAnchorElement = function (editor, selectedElm?) {
   selectedElm = selectedElm || editor.selection.getNode();
   if (isImageFigure(selectedElm)) {
     // for an image conained in a figure we look for a link inside the selected element
@@ -160,7 +160,7 @@ var linkImageFigure = function (editor, fig, attrs) {
   }
 };
 
-export default <any> {
+export default {
   link: link,
   unlink: unlink,
   isLink: isLink,

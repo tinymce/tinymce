@@ -54,7 +54,7 @@ var unApplyVAlign = function (editor, elm) {
   });
 };
 
-export default <any> {
+export default {
   applyAlign: applyAlign,
   applyVAlign: applyVAlign,
   unApplyAlign: unApplyAlign,

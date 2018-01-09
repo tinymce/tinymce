@@ -143,7 +143,7 @@ var addToolbars = function (editor) {
   );
 };
 
-export default <any> {
+export default {
   addButtons: addButtons,
   addToolbars: addToolbars
 };

@@ -937,4 +937,4 @@ Prism.languages.python = {
   ];
 }(Prism));
 
-export default <any> Prism;
+export default Prism;

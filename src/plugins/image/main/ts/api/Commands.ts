@@ -14,6 +14,6 @@ var register = function (editor) {
   editor.addCommand('mceImage', Dialog(editor).open);
 };
 
-export default <any> {
+export default {
   register: register
 };

@@ -19,6 +19,6 @@ var getVideoScriptMatch = function (prefixes, src) {
   }
 };
 
-export default <any> {
+export default {
   getVideoScriptMatch: getVideoScriptMatch
 };

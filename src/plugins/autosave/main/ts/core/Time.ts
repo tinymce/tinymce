@@ -19,6 +19,6 @@ var parse = function (time, defaultTime) {
   return (time[2] ? multiples[time[2]] : 1) * parseInt(time, 10);
 };
 
-export default <any> {
+export default {
   parse: parse
 };

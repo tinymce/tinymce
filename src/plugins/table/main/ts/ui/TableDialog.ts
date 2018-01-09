@@ -158,7 +158,7 @@ var onSubmitTableForm = function (editor, tableElm, evt) {
   });
 };
 
-var open = function (editor, isProps) {
+var open = function (editor, isProps?) {
   var dom = editor.dom, tableElm, colsCtrl, rowsCtrl, classListCtrl, data = {}, generalTableForm;
 
   if (isProps === true) {
@@ -269,6 +269,6 @@ var open = function (editor, isProps) {
   }
 };
 
-export default <any> {
+export default {
   open: open
 };

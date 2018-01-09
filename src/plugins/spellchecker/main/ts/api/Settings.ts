@@ -35,7 +35,7 @@ var getSpellcheckerWordcharPattern = function (editor) {
   return editor.getParam('spellchecker_wordchar_pattern', defaultPattern);
 };
 
-export default <any> {
+export default {
   getLanguages: getLanguages,
   getLanguage: getLanguage,
   getRpcUrl: getRpcUrl,

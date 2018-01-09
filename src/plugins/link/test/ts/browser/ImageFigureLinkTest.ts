@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', function(
     var sUnlinkSelection = function () {
       var removeLink = LinkPluginUtils.unlink(editor);
       return Step.sync(function () {
-        removeLink(editor);
+        removeLink();
       });
     };
 

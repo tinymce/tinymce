@@ -87,7 +87,7 @@ var restoreLastDraft = function (editor) {
   editor.focus();
 };
 
-export default <any> {
+export default {
   isEmpty: isEmpty,
   hasDraft: hasDraft,
   removeDraft: removeDraft,

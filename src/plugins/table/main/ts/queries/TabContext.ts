@@ -87,6 +87,6 @@ var handle = function (event, editor, actions, lazyWire) {
   }
 };
 
-export default <any> {
+export default {
   handle: handle
 };

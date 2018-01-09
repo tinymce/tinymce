@@ -15,6 +15,6 @@ var register = function (editor) {
   editor.addCommand('mceInsertTemplate', Fun.curry(Templates.insertTemplate, editor));
 };
 
-export default <any> {
+export default {
   register: register
 };

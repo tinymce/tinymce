@@ -45,9 +45,9 @@ declare let window: any;
 
 
 
-export default <any> function (editor) {
+export default function (editor) {
   var self = this, keyboardPasteTimeStamp = 0;
-  var pasteBin = new PasteBin(editor);
+  var pasteBin = PasteBin(editor);
   var keyboardPastePlainTextState;
   var mceInternalUrlPrefix = 'data:text/mce-internal,';
   var uniqueId = Utils.createIdGenerator("mceclip");

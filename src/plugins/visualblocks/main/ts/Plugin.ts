@@ -22,4 +22,4 @@ PluginManager.add('visualblocks', function (editor, pluginUrl) {
   Bindings.setup(editor, pluginUrl, enabledState);
 });
 
-export default <any> function () { };
+export default function () { };

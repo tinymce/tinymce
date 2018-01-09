@@ -129,6 +129,6 @@ var open = function (editor, currentIndexState) {
   });
 };
 
-export default <any> {
+export default {
   open: open
 };

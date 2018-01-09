@@ -182,7 +182,7 @@ var registerCommands = function (editor, actions, cellSelection, selections) {
   });
 };
 
-export default <any> {
+export default {
   registerCommands: registerCommands,
   getClipboardRows: getClipboardRows,
   setClipboardRows: setClipboardRows

@@ -18,6 +18,6 @@ var getCount = function (editor) {
   return WordGetter.getWords(getTextContent(editor)).length;
 };
 
-export default <any> {
+export default {
   getCount: getCount
 };

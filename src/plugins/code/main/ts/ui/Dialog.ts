@@ -36,6 +36,6 @@ var open = function (editor) {
   win.find('#code').value(Content.getContent(editor));
 };
 
-export default <any> {
+export default {
   open: open
 };

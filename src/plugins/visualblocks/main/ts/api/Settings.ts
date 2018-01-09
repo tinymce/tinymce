@@ -16,7 +16,7 @@ var getContentCss = function (editor) {
   return editor.settings.visualblocks_content_css;
 };
 
-export default <any> {
+export default {
   isEnabledByDefault: isEnabledByDefault,
   getContentCss: getContentCss
 };

@@ -44,6 +44,6 @@ var open = function (url) {
   }
 };
 
-export default <any> {
+export default {
   open: open
 };

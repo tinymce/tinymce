@@ -13,4 +13,4 @@ var Plugin = function (editor, url) {
 
 PluginManager.add('fake', Plugin);
 
-export default <any> function () {};
+export default function () {};

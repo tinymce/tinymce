@@ -68,7 +68,7 @@ var cancel = function (editor) {
   editor.nodeChanged();
 };
 
-export default <any> {
+export default {
   save: save,
   cancel: cancel
 };

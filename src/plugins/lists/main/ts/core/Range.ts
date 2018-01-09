@@ -34,7 +34,7 @@ var normalizeRange = function (rng) {
   return outRng;
 };
 
-export default <any> {
+export default {
   getNormalizedEndPoint: getNormalizedEndPoint,
   normalizeRange: normalizeRange
 };

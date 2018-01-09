@@ -61,7 +61,7 @@ var findEndPattern = function (patterns, text, offset, delta) {
   }
 };
 
-export default <any> {
+export default {
   findPattern: findPattern,
   findEndPattern: findEndPattern
 };

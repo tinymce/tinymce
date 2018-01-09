@@ -41,6 +41,6 @@ var shortcuts = [
   { shortcut: meta + ' + F', action: 'Find (if searchreplace plugin activated)' }
 ];
 
-export default <any> {
+export default {
   shortcuts: shortcuts
 };

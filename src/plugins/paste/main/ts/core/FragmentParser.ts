@@ -56,7 +56,7 @@ var getFragmentHtml = function (html) {
   return validContext.test(fragmentInfo.context) ? unwrapHtml(fragmentInfo.html) : unwrapHtml(html);
 };
 
-export default <any> {
+export default {
   getFragmentInfo: getFragmentInfo,
   getFragmentHtml: getFragmentHtml
 };

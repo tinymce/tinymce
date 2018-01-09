@@ -58,7 +58,7 @@ var normalizeHtml = function (html) {
   return writer.getContent();
 };
 
-var updateHtmlSax = function (html, data, updateAll) {
+var updateHtmlSax = function (html, data, updateAll?) {
   var writer = Writer();
   var sourceCount = 0;
   var hasImage;
@@ -199,10 +199,10 @@ var updateEphoxEmbed = function (html, data) {
   return normalizeHtml(div.outerHTML);
 };
 
-var updateHtml = function (html, data, updateAll) {
+var updateHtml = function (html, data, updateAll?) {
   return isEphoxEmbed(html) ? updateEphoxEmbed(html, data) : updateHtmlSax(html, data, updateAll);
 };
 
-export default <any> {
+export default {
   updateHtml: updateHtml
 };

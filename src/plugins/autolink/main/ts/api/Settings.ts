@@ -16,7 +16,7 @@ var getDefaultLinkTarget = function (editor) {
   return editor.getParam('default_link_target', '');
 };
 
-export default <any> {
+export default {
   getAutoLinkPattern: getAutoLinkPattern,
   getDefaultLinkTarget: getDefaultLinkTarget
 };

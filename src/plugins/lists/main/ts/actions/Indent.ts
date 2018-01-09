@@ -94,6 +94,6 @@ var indentSelection = function (editor) {
   }
 };
 
-export default <any> {
+export default {
   indentSelection: indentSelection
 };

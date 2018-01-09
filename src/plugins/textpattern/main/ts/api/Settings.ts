@@ -29,6 +29,6 @@ var getPatterns = function (editorSettings) {
     defaultPatterns;
 };
 
-export default <any> {
+export default {
   getPatterns: getPatterns
 };

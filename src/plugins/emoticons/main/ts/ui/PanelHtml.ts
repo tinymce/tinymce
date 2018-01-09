@@ -41,6 +41,6 @@ var getHtml = function (pluginUrl) {
   return emoticonsHtml;
 };
 
-export default <any> {
+export default {
   getHtml: getHtml
 };

@@ -56,6 +56,6 @@ var getPos = function (editor, e) {
   }
 };
 
-export default <any> {
+export default {
   getPos: getPos
 };

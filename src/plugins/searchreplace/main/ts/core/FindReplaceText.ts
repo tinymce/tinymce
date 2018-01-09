@@ -265,6 +265,6 @@ function findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schem
   return count;
 }
 
-export default <any> {
+export default {
   findAndReplaceDOMText: findAndReplaceDOMText
 };

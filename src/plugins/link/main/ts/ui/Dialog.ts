@@ -353,6 +353,6 @@ var open = function (editor) {
   createLinkList(editor, showDialog);
 };
 
-export default <any> {
+export default {
   open: open
 };

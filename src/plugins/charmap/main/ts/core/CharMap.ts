@@ -324,6 +324,6 @@ var getCharMap = function (editor) {
   return extendCharMap(editor, getDefaultCharMap());
 };
 
-export default <any> {
+export default {
   getCharMap: getCharMap
 };

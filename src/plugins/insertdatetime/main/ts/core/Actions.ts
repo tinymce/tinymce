@@ -82,7 +82,7 @@ var insertDateTime = function (editor, format) {
   }
 };
 
-export default <any> {
+export default {
   insertDateTime: insertDateTime,
   getDateTime: getDateTime
 };

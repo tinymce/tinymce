@@ -23,6 +23,6 @@ var guess = function (url) {
   return mime ? mime : '';
 };
 
-export default <any> {
+export default {
   guess: guess
 };

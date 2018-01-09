@@ -141,6 +141,6 @@ var open = function (editor, templateList) {
   win.find('listbox')[0].fire('select');
 };
 
-export default <any> {
+export default {
   open: open
 };

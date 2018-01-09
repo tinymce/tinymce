@@ -26,4 +26,4 @@ PluginManager.add('imagetools', function (editor) {
   UploadSelectedImage.setup(editor, imageUploadTimerState, lastSelectedImageState);
 });
 
-export default <any> function () { };
+export default function () { };

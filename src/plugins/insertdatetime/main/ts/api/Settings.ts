@@ -29,7 +29,7 @@ var shouldInsertTimeElement = function (editor) {
   return editor.getParam('insertdatetime_element', false);
 };
 
-export default <any> {
+export default {
   getDateFormat: getDateFormat,
   getTimeFormat: getTimeFormat,
   getFormats: getFormats,

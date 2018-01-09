@@ -25,4 +25,4 @@ PluginManager.add('advlist', function (editor) {
   }
 });
 
-export default <any> function () { };
+export default function () { };

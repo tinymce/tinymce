@@ -105,6 +105,6 @@ var open = function (editor, callback, value) {
   setColor(win, value);
 };
 
-export default <any> {
+export default {
   open: open
 };

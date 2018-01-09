@@ -33,6 +33,6 @@ var register = function (editor, currentIndexState) {
   editor.shortcuts.add('Meta+F', '', showDialog(editor, currentIndexState));
 };
 
-export default <any> {
+export default {
   register: register
 };

@@ -14,6 +14,6 @@ var setup = function (editor) {
   editor.addShortcut('Meta+K', '', Actions.openDialog(editor));
 };
 
-export default <any> {
+export default {
   setup: setup
 };

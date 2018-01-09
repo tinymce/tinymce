@@ -54,7 +54,7 @@ var mergable = function (table, selections) {
   );
 };
 
-export default <any> {
+export default {
   mergable: mergable,
   unmergable: unmergable,
   selection: selection

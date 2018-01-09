@@ -94,7 +94,7 @@ var hasColorPicker = function (editor) {
   return typeof getColorPickerCallback(editor) === 'function';
 };
 
-export default <any> {
+export default {
   getForeColorMap,
   getBackColorMap,
   getForeColorRows,

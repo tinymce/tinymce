@@ -12,6 +12,6 @@ var fireVisualChars = function (editor, state) {
   return editor.fire('VisualChars', { state: state });
 };
 
-export default <any> {
+export default {
   fireVisualChars: fireVisualChars
 };

@@ -27,6 +27,6 @@ var setup = function (editor, visibleState, menu) {
   });
 };
 
-export default <any> {
+export default {
   setup: setup
 };

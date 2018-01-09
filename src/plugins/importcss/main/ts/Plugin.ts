@@ -17,4 +17,4 @@ PluginManager.add('importcss', function (editor) {
   return Api.get(editor);
 });
 
-export default <any> function () { };
+export default function () { };

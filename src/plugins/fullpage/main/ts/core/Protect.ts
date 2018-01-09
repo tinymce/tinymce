@@ -29,7 +29,7 @@ var unprotectHtml = function (html) {
   });
 };
 
-export default <any> {
+export default {
   protectHtml: protectHtml,
   unprotectHtml: unprotectHtml
 };

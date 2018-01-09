@@ -93,6 +93,6 @@ var register = function (editor, pluginUrl, startedState, textMatcherState, curr
   });
 };
 
-export default <any> {
+export default {
   register: register
 };

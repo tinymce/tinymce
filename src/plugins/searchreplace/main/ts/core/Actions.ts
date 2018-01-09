@@ -137,7 +137,7 @@ var isMatchSpan = function (node) {
   return matchIndex !== null && matchIndex.length > 0;
 };
 
-var replace = function (editor, currentIndexState, text, forward, all) {
+var replace = function (editor, currentIndexState, text, forward?, all?) {
   var i, nodes, node, matchIndex, currentMatchIndex, nextIndex = currentIndexState.get(), hasMore;
 
   forward = forward !== false;
@@ -188,7 +188,7 @@ var replace = function (editor, currentIndexState, text, forward, all) {
   return !all && hasMore;
 };
 
-var done = function (editor, currentIndexState, keepEditorSelection) {
+var done = function (editor, currentIndexState, keepEditorSelection?) {
   var i, nodes, startContainer, endContainer;
 
   nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
@@ -229,7 +229,7 @@ var hasPrev = function (editor, currentIndexState) {
   return findSpansByIndex(editor, currentIndexState.get() - 1).length > 0;
 };
 
-export default <any> {
+export default {
   done: done,
   find: find,
   next: next,

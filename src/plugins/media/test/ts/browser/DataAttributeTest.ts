@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.core.DataAttributeTest', function() {
       Utils.sAssertSizeRecalcConstrained(ui),
       Utils.sAssertSizeRecalcUnconstrained(ui),
       api.sSetContent(''),
-      Utils.sAssertSizeRecalcConstrainedReopen(ui, api)
+      Utils.sAssertSizeRecalcConstrainedReopen(ui)
     ], onSuccess, onFailure);
   }, {
     plugins: ["media"],

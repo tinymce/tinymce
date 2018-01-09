@@ -29,6 +29,6 @@ var insertNbsp = function (editor, times) {
   editor.dom.setAttrib(editor.dom.select('span.mce-nbsp'), 'data-mce-bogus', '1');
 };
 
-export default <any> {
+export default {
   insertNbsp: insertNbsp
 };

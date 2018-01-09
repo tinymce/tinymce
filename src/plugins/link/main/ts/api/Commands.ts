@@ -14,6 +14,6 @@ var register = function (editor) {
   editor.addCommand('mceLink', Actions.openDialog(editor));
 };
 
-export default <any> {
+export default {
   register: register
 };

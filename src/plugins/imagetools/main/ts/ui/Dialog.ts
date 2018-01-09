@@ -36,7 +36,7 @@ function destroyStates(states) {
 }
 
 function open(editor, currentState, resolve, reject) {
-  var win, undoStack = new UndoStack(), mainPanel, filtersPanel, tempState,
+  var win, undoStack = UndoStack(), mainPanel, filtersPanel, tempState,
     cropPanel, resizePanel, flipRotatePanel, imagePanel, sidePanel, mainViewContainer,
     invertPanel, brightnessPanel, huePanel, saturatePanel, contrastPanel, grayscalePanel,
     sepiaPanel, colorizePanel, sharpenPanel, embossPanel, gammaPanel, exposurePanel, panels,
@@ -521,6 +521,6 @@ function edit(editor, imageResult) {
   });
 }
 
-export default <any> {
+export default {
   edit: edit
 };

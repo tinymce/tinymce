@@ -124,7 +124,7 @@ var resolveBookmark = function (bookmark) {
   return Range.normalizeRange(rng);
 };
 
-export default <any> {
+export default {
   createBookmark: createBookmark,
   resolveBookmark: resolveBookmark
 };

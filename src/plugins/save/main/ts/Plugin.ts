@@ -17,4 +17,4 @@ PluginManager.add('save', function (editor) {
   Commands.register(editor);
 });
 
-export default <any> function () { };
+export default function () { };

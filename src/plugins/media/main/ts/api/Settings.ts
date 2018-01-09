@@ -44,7 +44,7 @@ var hasDimensions = function (editor) {
   return editor.getParam('media_dimensions', true);
 };
 
-export default <any> {
+export default {
   getScripts: getScripts,
   getAudioTemplateCallback: getAudioTemplateCallback,
   getVideoTemplateCallback: getVideoTemplateCallback,

@@ -15,6 +15,6 @@ var sOpenToolbarOn = function (editor, selector, path) {
   ]);
 };
 
-export default <any> {
+export default {
   sOpenToolbarOn: sOpenToolbarOn
 };

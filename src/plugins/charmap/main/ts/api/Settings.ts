@@ -16,7 +16,7 @@ var getCharMapAppend = function (editor) {
   return editor.settings.charmap_append;
 };
 
-export default <any> {
+export default {
   getCharMap: getCharMap,
   getCharMapAppend: getCharMapAppend
 };

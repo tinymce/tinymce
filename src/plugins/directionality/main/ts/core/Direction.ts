@@ -27,6 +27,6 @@ var setDir = function (editor, dir) {
   }
 };
 
-export default <any> {
+export default {
   setDir: setDir
 };

@@ -57,6 +57,6 @@ var register = function (editor) {
   editor.addQueryStateHandler('InsertDefinitionList', queryListCommandState(editor, 'DL'));
 };
 
-export default <any> {
+export default {
   register: register
 };

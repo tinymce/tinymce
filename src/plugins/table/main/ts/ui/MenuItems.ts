@@ -294,6 +294,6 @@ var addMenuItems = function (editor, selections) {
   editor.addMenuItem('cell', cell);
 };
 
-export default <any> {
+export default {
   addMenuItems: addMenuItems
 };

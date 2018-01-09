@@ -22,4 +22,4 @@ PluginManager.add('pagebreak', function (editor) {
   ResolveName.setup(editor);
 });
 
-export default <any> function () { };
+export default function () { };

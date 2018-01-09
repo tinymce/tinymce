@@ -51,7 +51,7 @@ var toggle = function (editor) {
   editor.selection.moveToBookmark(bookmark);
 };
 
-export default <any> {
+export default {
   show: show,
   hide: hide,
   toggle: toggle

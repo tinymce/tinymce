@@ -24,7 +24,7 @@ var firePaste = function (editor, ieFake) {
   return editor.fire('paste', { ieFake: ieFake });
 };
 
-export default <any> {
+export default {
   firePastePreProcess: firePastePreProcess,
   firePastePostProcess: firePastePostProcess,
   firePastePlainTextToggle: firePastePlainTextToggle,

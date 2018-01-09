@@ -50,7 +50,7 @@ var getCurrentCode = function (editor) {
   return '';
 };
 
-export default <any> {
+export default {
   getSelectedCodeSample: getSelectedCodeSample,
   insertCodeSample: insertCodeSample,
   getCurrentCode: getCurrentCode

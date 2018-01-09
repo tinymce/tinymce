@@ -23,7 +23,7 @@ import UploadTab from './UploadTab';
 
 
 
-export default <any> function (editor) {
+export default function (editor) {
   var updateStyle = function (editor, rootControl) {
     if (!Settings.hasAdvTab(editor)) {
       return;

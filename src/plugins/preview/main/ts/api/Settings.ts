@@ -20,7 +20,7 @@ var getContentStyle = function (editor) {
   return editor.getParam('content_style', '');
 };
 
-export default <any> {
+export default {
   getPreviewDialogWidth: getPreviewDialogWidth,
   getPreviewDialogHeight: getPreviewDialogHeight,
   getContentStyle: getContentStyle

@@ -30,6 +30,6 @@ var setup = function (editor, imageUploadTimerState, lastSelectedImageState) {
   });
 };
 
-export default <any> {
+export default {
   setup: setup
 };

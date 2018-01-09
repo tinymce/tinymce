@@ -13,6 +13,6 @@ var applyListFormat = function (editor, listName, styleValue) {
   editor.execCommand(cmd, false, styleValue === false ? null : { 'list-style-type': styleValue });
 };
 
-export default <any> {
+export default {
   applyListFormat: applyListFormat
 };

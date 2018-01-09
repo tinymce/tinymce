@@ -23,6 +23,6 @@ var toggleVisualBlocks = function (editor, pluginUrl, enabledState) {
   Events.fireVisualBlocks(editor, enabledState.get());
 };
 
-export default <any> {
+export default {
   toggleVisualBlocks: toggleVisualBlocks
 };

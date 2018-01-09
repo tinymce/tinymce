@@ -20,4 +20,4 @@ PluginManager.add('insertdatetime', function (editor) {
   Buttons.register(editor, lastFormatState);
 });
 
-export default <any> function () { };
+export default function () { };

@@ -77,6 +77,6 @@ var registerEvents = function (editor, selections, actions, cellSelection) {
   });
 };
 
-export default <any> {
+export default {
   registerEvents: registerEvents
 };

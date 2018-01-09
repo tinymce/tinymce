@@ -57,6 +57,6 @@ var create = function (inputData) {
   return result;
 };
 
-export default <any> {
+export default {
   create: create
 };

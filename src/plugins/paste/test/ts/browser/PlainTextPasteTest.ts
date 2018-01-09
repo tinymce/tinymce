@@ -18,7 +18,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', function() {
   var success = arguments[arguments.length - 2];
   var failure = arguments[arguments.length - 1];
 
-  var viewBlock = new ViewBlock();
+  var viewBlock = ViewBlock();
 
   var cCreateEditorFromSettings = function (settings, html?) {
     return Chain.on(function (viewBlock, next, die) {

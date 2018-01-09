@@ -30,6 +30,6 @@ var setup = function (editor, pluginUrl, enabledState) {
   });
 };
 
-export default <any> {
+export default {
   setup: setup
 };

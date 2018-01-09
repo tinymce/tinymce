@@ -3,7 +3,7 @@ import { Step } from '@ephox/agar';
 import { Waiter } from '@ephox/agar';
 import { Cell } from '@ephox/katamari';
 
-var sExecCommand = function (editor, cmd, value) {
+var sExecCommand = function (editor, cmd, value?) {
   return Step.sync(function () {
     editor.execCommand(cmd, false, value);
   });
@@ -64,7 +64,7 @@ var createStateContainer = function () {
   };
 };
 
-export default <any> {
+export default {
   sExecCommand: sExecCommand,
   sLoadImage: sLoadImage,
   sUploadImages: sUploadImages,

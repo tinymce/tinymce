@@ -12,7 +12,7 @@ import { UnitTest } from '@ephox/bedrock';
 UnitTest.asynctest('tinymce.plugins.paste.browser.PasteSettingsTest', function() {
   var success = arguments[arguments.length - 2];
   var failure = arguments[arguments.length - 1];
-  var viewBlock = new ViewBlock();
+  var viewBlock = ViewBlock();
 
   Theme();
   Plugin();

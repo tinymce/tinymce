@@ -21,7 +21,7 @@ var open = function (editor, pluginUrl) {
       layout: 'flex',
       body: [
         KeyboardShortcutsTab.makeTab(),
-        PluginsTab.makeTab(editor, pluginUrl)
+        PluginsTab.makeTab(editor)
       ],
       buttons: ButtonsRow.makeRow(),
       onPostRender: function () {
@@ -32,6 +32,6 @@ var open = function (editor, pluginUrl) {
   };
 };
 
-export default <any> {
+export default {
   open: open
 };

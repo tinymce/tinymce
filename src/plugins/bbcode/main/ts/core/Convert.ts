@@ -84,7 +84,7 @@ var bbcode2html = function (s) {
   return s;
 };
 
-export default <any> {
+export default {
   html2bbcode: html2bbcode,
   bbcode2html: bbcode2html
 };

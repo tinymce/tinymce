@@ -22,4 +22,4 @@ PluginManager.add('textpattern', function (editor) {
   return Api.get(patternsState);
 });
 
-export default <any> function () { };
+export default function () { };

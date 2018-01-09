@@ -66,7 +66,7 @@ var setupContextToolbars = function (editor) {
   }
 };
 
-export default <any> {
+export default {
   setupButtons: setupButtons,
   setupMenuItems: setupMenuItems,
   setupContextToolbars: setupContextToolbars

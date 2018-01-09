@@ -34,6 +34,6 @@ var setup = function (editor) {
   window.onbeforeunload = EditorManager._beforeUnloadHandler;
 };
 
-export default <any> {
+export default {
   setup: setup
 };

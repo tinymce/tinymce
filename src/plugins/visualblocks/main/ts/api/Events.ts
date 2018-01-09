@@ -12,6 +12,6 @@ var fireVisualBlocks = function (editor, state) {
   editor.fire('VisualBlocks', { state: state });
 };
 
-export default <any> {
+export default {
   fireVisualBlocks: fireVisualBlocks
 };

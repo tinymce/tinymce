@@ -28,6 +28,6 @@ var toggleVisualChars = function (editor, toggleState) {
   selection.moveToBookmark(bookmark);
 };
 
-export default <any> {
+export default {
   toggleVisualChars: toggleVisualChars
 };

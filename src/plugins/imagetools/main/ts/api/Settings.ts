@@ -16,7 +16,7 @@ var getProxyUrl = function (editor) {
   return editor.getParam('imagetools_proxy');
 };
 
-export default <any> {
+export default {
   getToolbarItems: getToolbarItems,
   getProxyUrl: getProxyUrl
 };

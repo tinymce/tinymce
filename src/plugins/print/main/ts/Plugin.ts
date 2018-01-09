@@ -18,4 +18,4 @@ PluginManager.add('print', function (editor) {
   editor.addShortcut('Meta+P', '', 'mcePrint');
 });
 
-export default <any> function () { };
+export default function () { };

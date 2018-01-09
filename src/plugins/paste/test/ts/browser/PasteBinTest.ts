@@ -32,7 +32,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function() {
     }
   ];
 
-  var viewBlock = new ViewBlock();
+  var viewBlock = ViewBlock();
 
   var cCreateEditorFromSettings = function (settings?, html?) {
     return Chain.on(function (viewBlock, next, die) {
@@ -71,7 +71,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function() {
 
   var cAssertCases = function (cases) {
     return Chain.op(function (editor) {
-      var pasteBin = new PasteBin(editor);
+      var pasteBin = PasteBin(editor);
       Obj.each(cases, function (c, i) {
         editor.getBody().innerHTML = c.content;
         Assertions.assertEq(c.label || "Asserting paste bin case " + i, c.result, pasteBin.getHtml());

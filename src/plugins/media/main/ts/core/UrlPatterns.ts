@@ -59,6 +59,6 @@ var urlPatterns = [
   }
 ];
 
-export default <any> {
+export default {
   urlPatterns: urlPatterns
 };

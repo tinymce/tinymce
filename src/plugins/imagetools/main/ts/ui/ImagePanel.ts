@@ -164,7 +164,7 @@ var create = function (settings) {
       var self = this;
 
       function setupCropRect(rect) {
-        self.cropRect = new CropRect(
+        self.cropRect = CropRect(
           rect,
           self.state.get('viewRect'),
           self.state.get('viewRect'),
@@ -214,6 +214,6 @@ var create = function (settings) {
   return new ImagePanel(settings);
 };
 
-export default <any> {
+export default {
   create: create
 };
