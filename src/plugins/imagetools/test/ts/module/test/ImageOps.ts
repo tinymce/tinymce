@@ -74,7 +74,7 @@ export default <any> function (editor) {
 
   var cExecCommandFromDialog = function (label) {
     var cInteractWithUi;
-console.log(label)
+
     switch (label) {
       case 'Rotate counterclockwise':
       case 'Rotate clockwise':
