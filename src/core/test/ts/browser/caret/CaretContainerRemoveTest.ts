@@ -79,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function() {
       Assertions.assertEq('Should be block container', true, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
 
       var pos = CaretContainerRemove.removeAndReposition(getRoot().childNodes[1], new CaretPosition(getRoot(), 3));
-      Assertions.assertEq('Should be changed offset', 2, pos.offset(), 2);
+      Assertions.assertEq('Should be changed offset', 2, pos.offset());
       Assertions.assertDomEq('Should be unchanged container', Element.fromDom(getRoot()), Element.fromDom(pos.container()));
       Assertions.assertEq('Should not be block container', false, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
     })

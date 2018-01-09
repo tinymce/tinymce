@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.core.ElementMatcherTest', function() {
       ])(editor);
 
       Assertions.assertEq('Should be matching B', 'b', result.id);
-      Assertions.assertEq('Should be have width', true, result.rect.w > 0, true);
+      Assertions.assertEq('Should be have width', true, result.rect.w > 0);
     });
   };
 

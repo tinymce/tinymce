@@ -63,7 +63,7 @@ export default function (editor) {
       }).unbind;
 
       var unbindMouseDown = DomEvent.bind(element, 'mousedown', function (e) {
-        Clicks.mousemove(element, pos.x + 10, pos.y); // not sure if xy actually matters here
+        Clicks.mousemove(element); // not sure if xy actually matters here
         unbindMouseDown();
       }).unbind;
 
