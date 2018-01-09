@@ -386,6 +386,7 @@ module.exports = function (grunt) {
             'js/**/*.less',
             'js/**/*.dev.js',
             'js/**/*.dev.svg',
+            'js/**/*.map',
             'js/tinymce/tinymce.full.min.js',
             'js/tinymce/plugins/moxiemanager',
             'js/tinymce/plugins/visualblocks/img',
@@ -436,6 +437,7 @@ module.exports = function (grunt) {
             'js/**/*.less',
             'js/**/*.dev.svg',
             'js/**/*.dev.js',
+            'js/**/*.map',
             'js/tinymce/tinymce.full.min.js',
             'js/tinymce/plugins/moxiemanager',
             'js/tinymce/plugins/example',
@@ -568,6 +570,7 @@ module.exports = function (grunt) {
             'js/**/*.less',
             'js/**/*.dev.svg',
             'js/**/*.dev.js',
+            'js/**/*.map',
             'js/tinymce/tinymce.full.min.js'
           ],
           outputDir: 'tmp'
@@ -609,6 +612,7 @@ module.exports = function (grunt) {
             'js/**/*.less',
             'js/**/*.dev.svg',
             'js/**/*.dev.js',
+            'js/**/*.map',
             'js/tinymce/tinymce.full.min.js'
           ],
           outputDir: 'tmp'
