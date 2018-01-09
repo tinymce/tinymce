@@ -314,6 +314,7 @@ module.exports = function (grunt) {
           excludes: [
             'js/**/plugin.js',
             'js/**/theme.js',
+            'js/**/*.map',
             'js/tinymce/tinymce.full.min.js',
             'js/tinymce/plugins/moxiemanager',
             'js/tinymce/plugins/compat3x',
