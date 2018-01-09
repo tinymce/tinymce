@@ -237,6 +237,14 @@ module.exports = function (grunt) {
         },
         files: [
           {
+            src: 'js/tinymce/tinymce.js',
+            dest: 'js/tinymce/tinymce.js'
+          },
+          {
+            src: 'js/tinymce/tinymce.min.js',
+            dest: 'js/tinymce/tinymce.min.js'
+          },
+          {
             src: 'src/core/main/text/readme_lang.md',
             dest: 'js/tinymce/langs/readme.md'
           },
