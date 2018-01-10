@@ -459,7 +459,7 @@ const SelectionOverrides = function (editor) {
       Attr.remove(elm, 'data-mce-selected');
     });
 
-    node.setAttribute('data-mce-selected', 1);
+    node.setAttribute('data-mce-selected', '1');
     selectedContentEditableNode = node;
     hideFakeCaret();
 
