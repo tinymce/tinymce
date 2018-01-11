@@ -167,6 +167,40 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', function(
     closeTopMostWindow(editor);
   });
 
+  suite.test("Update advanced styles from row properties dialog", function (editor) {
+    editor.getBody().innerHTML = (
+      '<table>' +
+      '<tbody>' +
+      '<tr>' +
+      '<td>a</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+    LegacyUnit.setSelection(editor, 'tr:nth-child(1) td:nth-child(1)', 0);
+    editor.execCommand('mceTableRowProps');
+
+    fillAndSubmitWindowForm(editor, {
+      "borderStyle": "dotted",
+      "backgroundColor": "#ff0000"
+    });
+
+    LegacyUnit.equal(
+      cleanTableHtml(editor.getContent()),
+      (
+        '<table>' +
+        '<tbody>' +
+        '<tr style="border-style: dotted; background-color: #ff0000;">' +
+        '<td>a</td>' +
+        '</tr>' +
+        '</tbody>' +
+        '</table>'
+      )
+    );
+
+    closeTopMostWindow(editor);
+  });
+
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
