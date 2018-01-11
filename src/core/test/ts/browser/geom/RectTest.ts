@@ -4,13 +4,13 @@ import Rect from 'tinymce/core/geom/Rect';
 import Tools from 'tinymce/core/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   suite.test('relativePosition', function () {
-    var sourceRect = Rect.create(0, 0, 20, 30),
+    const sourceRect = Rect.create(0, 0, 20, 30),
       targetRect = Rect.create(10, 20, 40, 50),
       tests = [
         // Only test a few of them all would be 81
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function() {
   });
 
   suite.test('findBestRelativePosition', function () {
-    var sourceRect = Rect.create(0, 0, 20, 30),
+    const sourceRect = Rect.create(0, 0, 20, 30),
       targetRect = Rect.create(10, 20, 40, 50),
       tests = [
         [['tl-tl'], 5, 15, 100, 100, 'tl-tl'],
@@ -60,14 +60,14 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function() {
   });
 
   suite.test('intersect', function () {
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 20, 30, 40)), { "x": 10, "y": 20, "w": 30, "h": 40 });
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 30, 40)), { "x": 15, "y": 25, "w": 25, "h": 35 });
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 5, 5)), { "x": 15, "y": 25, "w": 5, "h": 5 });
+    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 20, 30, 40)), { x: 10, y: 20, w: 30, h: 40 });
+    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 30, 40)), { x: 15, y: 25, w: 25, h: 35 });
+    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 5, 5)), { x: 15, y: 25, w: 5, h: 5 });
     LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(0, 10, 5, 5)), null);
     LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(45, 20, 5, 5)), null);
     LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 65, 5, 5)), null);
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(40, 20, 30, 40)), { "x": 40, "y": 20, "w": 0, "h": 40 });
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 60, 30, 40)), { "x": 10, "y": 60, "w": 30, "h": 0 });
+    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(40, 20, 30, 40)), { x: 40, y: 20, w: 0, h: 40 });
+    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 60, 30, 40)), { x: 10, y: 60, w: 30, h: 0 });
   });
 
   suite.test('clamp', function () {
@@ -99,4 +99,3 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function() {
     success();
   }, failure);
 });
-

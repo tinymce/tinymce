@@ -18,22 +18,20 @@ import Widget from './Widget';
  * @extends tinymce.ui.Widget
  */
 
-"use strict";
-
 function createOptions(options) {
-  var strOptions = '';
+  let strOptions = '';
   if (options) {
-    for (var i = 0; i < options.length; i++) {
+    for (let i = 0; i < options.length; i++) {
       strOptions += '<option value="' + options[i] + '">' + options[i] + '</option>';
     }
   }
   return strOptions;
 }
 
-export default <any> Widget.extend({
+export default Widget.extend({
   Defaults: {
-    classes: "selectbox",
-    role: "selectbox",
+    classes: 'selectbox',
+    role: 'selectbox',
     options: []
   },
   /**
@@ -43,8 +41,8 @@ export default <any> Widget.extend({
    * @param {Object} settings Name/value object with settings.
    * @setting {Array} options Array with options to add to the select box.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._super(settings);
 
@@ -57,9 +55,9 @@ export default <any> Widget.extend({
     }
 
     self.on('keydown', function (e) {
-      var rootControl;
+      let rootControl;
 
-      if (e.keyCode == 13) {
+      if (e.keyCode === 13) {
         e.preventDefault();
 
         // Find root control that we can do toJSON on
@@ -83,7 +81,7 @@ export default <any> Widget.extend({
    * @param {Array} [state] State to be set.
    * @return {Array|tinymce.ui.SelectBox} Array of string options.
    */
-  options: function (state) {
+  options (state) {
     if (!arguments.length) {
       return this.state.get('options');
     }
@@ -93,8 +91,9 @@ export default <any> Widget.extend({
     return this;
   },
 
-  renderHtml: function () {
-    var self = this, options, size = '';
+  renderHtml () {
+    const self = this;
+    let options, size = '';
 
     options = createOptions(self._options);
 
@@ -109,8 +108,8 @@ export default <any> Widget.extend({
     );
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     self.state.on('change:options', function (e) {
       self.getEl().innerHTML = createOptions(e.value);

@@ -4,39 +4,39 @@ import NodeType from 'tinymce/core/dom/NodeType';
 import $ from 'tinymce/core/dom/DomQuery';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   suite.test('isText/isElement/isComment', function () {
-    LegacyUnit.strictEqual(NodeType.isText(document.createTextNode("x")), true);
+    LegacyUnit.strictEqual(NodeType.isText(document.createTextNode('x')), true);
     LegacyUnit.strictEqual(NodeType.isText(null), false);
-    LegacyUnit.strictEqual(NodeType.isText(document.createElement("div")), false);
-    LegacyUnit.strictEqual(NodeType.isText(document.createComment("x")), false);
+    LegacyUnit.strictEqual(NodeType.isText(document.createElement('div')), false);
+    LegacyUnit.strictEqual(NodeType.isText(document.createComment('x')), false);
 
-    LegacyUnit.strictEqual(NodeType.isElement(document.createElement("div")), true);
+    LegacyUnit.strictEqual(NodeType.isElement(document.createElement('div')), true);
     LegacyUnit.strictEqual(NodeType.isElement(null), false);
-    LegacyUnit.strictEqual(NodeType.isElement(document.createTextNode("x")), false);
-    LegacyUnit.strictEqual(NodeType.isElement(document.createComment("x")), false);
+    LegacyUnit.strictEqual(NodeType.isElement(document.createTextNode('x')), false);
+    LegacyUnit.strictEqual(NodeType.isElement(document.createComment('x')), false);
 
-    LegacyUnit.strictEqual(NodeType.isComment(document.createComment("x")), true);
+    LegacyUnit.strictEqual(NodeType.isComment(document.createComment('x')), true);
     LegacyUnit.strictEqual(NodeType.isComment(null), false);
-    LegacyUnit.strictEqual(NodeType.isComment(document.createTextNode("x")), false);
-    LegacyUnit.strictEqual(NodeType.isComment(document.createElement("div")), false);
+    LegacyUnit.strictEqual(NodeType.isComment(document.createTextNode('x')), false);
+    LegacyUnit.strictEqual(NodeType.isComment(document.createElement('div')), false);
   });
 
   suite.test('isBr', function () {
     LegacyUnit.strictEqual(NodeType.isBr(null), false);
-    LegacyUnit.strictEqual(NodeType.isBr(document.createTextNode("x")), false);
+    LegacyUnit.strictEqual(NodeType.isBr(document.createTextNode('x')), false);
     LegacyUnit.strictEqual(NodeType.isBr(document.createElement('br')), true);
-    LegacyUnit.strictEqual(NodeType.isBr(document.createComment("x")), false);
+    LegacyUnit.strictEqual(NodeType.isBr(document.createComment('x')), false);
   });
 
   suite.test('isContentEditableTrue', function () {
     LegacyUnit.strictEqual(NodeType.isContentEditableTrue(null), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableTrue(document.createComment("x")), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableTrue(document.createTextNode("x")), false);
+    LegacyUnit.strictEqual(NodeType.isContentEditableTrue(document.createComment('x')), false);
+    LegacyUnit.strictEqual(NodeType.isContentEditableTrue(document.createTextNode('x')), false);
     LegacyUnit.strictEqual(NodeType.isContentEditableTrue(document.createElement('div')), false);
     LegacyUnit.strictEqual(NodeType.isContentEditableTrue($('<div contentEditable="true"></div>')[0]), true);
     LegacyUnit.strictEqual(NodeType.isContentEditableTrue($('<div contentEditable="trUe"></div>')[0]), true);
@@ -47,8 +47,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function() {
 
   suite.test('isContentEditableFalse', function () {
     LegacyUnit.strictEqual(NodeType.isContentEditableFalse(null), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableFalse(document.createComment("x")), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableFalse(document.createTextNode("x")), false);
+    LegacyUnit.strictEqual(NodeType.isContentEditableFalse(document.createComment('x')), false);
+    LegacyUnit.strictEqual(NodeType.isContentEditableFalse(document.createTextNode('x')), false);
     LegacyUnit.strictEqual(NodeType.isContentEditableFalse(document.createElement('div')), false);
     LegacyUnit.strictEqual(NodeType.isContentEditableFalse($('<div contentEditable="true"></div>')[0]), false);
     LegacyUnit.strictEqual(NodeType.isContentEditableFalse($('<div contentEditable="trUe"></div>')[0]), false);
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function() {
   });
 
   suite.test('matchNodeNames', function () {
-    var matchNodeNames = NodeType.matchNodeNames('a div #text');
+    const matchNodeNames = NodeType.matchNodeNames('a div #text');
 
     LegacyUnit.strictEqual(matchNodeNames(null), false);
     LegacyUnit.strictEqual(matchNodeNames(document.createTextNode('x')), true);
@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function() {
   });
 
   suite.test('hasPropValue', function () {
-    var hasTabIndex3 = NodeType.hasPropValue('tabIndex', 3);
+    const hasTabIndex3 = NodeType.hasPropValue('tabIndex', 3);
 
     LegacyUnit.strictEqual(hasTabIndex3(null), false);
     LegacyUnit.strictEqual(hasTabIndex3($('<div tabIndex="3"></div>')[0]), true);
@@ -93,4 +93,3 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function() {
     success();
   }, failure);
 });
-

@@ -11,51 +11,51 @@
 import Env from 'tinymce/core/Env';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-var nu = function (x, y) {
-  return { x: x, y: y };
+const nu = function (x, y) {
+  return { x, y };
 };
 
-var transpose = function (pos, dx, dy) {
+const transpose = function (pos, dx, dy) {
   return nu(pos.x + dx, pos.y + dy);
 };
 
-var fromPageXY = function (e) {
+const fromPageXY = function (e) {
   return nu(e.pageX, e.pageY);
 };
 
-var fromClientXY = function (e) {
+const fromClientXY = function (e) {
   return nu(e.clientX, e.clientY);
 };
 
-var transposeUiContainer = function (element, pos) {
+const transposeUiContainer = function (element, pos) {
   if (element && DOMUtils.DOM.getStyle(element, 'position', true) !== 'static') {
-    var containerPos = DOMUtils.DOM.getPos(element);
-    var dx = containerPos.x - element.scrollLeft;
-    var dy = containerPos.y - element.scrollTop;
+    const containerPos = DOMUtils.DOM.getPos(element);
+    const dx = containerPos.x - element.scrollLeft;
+    const dy = containerPos.y - element.scrollTop;
     return transpose(pos, -dx, -dy);
   } else {
     return transpose(pos, 0, 0);
   }
 };
 
-var transposeContentAreaContainer = function (element, pos) {
-  var containerPos = DOMUtils.DOM.getPos(element);
+const transposeContentAreaContainer = function (element, pos) {
+  const containerPos = DOMUtils.DOM.getPos(element);
   return transpose(pos, containerPos.x, containerPos.y);
 };
 
-var getUiContainer = function (editor) {
+const getUiContainer = function (editor) {
   return Env.container;
 };
 
-var getPos = function (editor, e) {
+const getPos = function (editor, e) {
   if (editor.inline) {
     return transposeUiContainer(getUiContainer(editor), fromPageXY(e));
   } else {
-    var iframePos = transposeContentAreaContainer(editor.getContentAreaContainer(), fromClientXY(e));
+    const iframePos = transposeContentAreaContainer(editor.getContentAreaContainer(), fromClientXY(e));
     return transposeUiContainer(getUiContainer(editor), iframePos);
   }
 };
 
 export default {
-  getPos: getPos
+  getPos
 };

@@ -13,18 +13,18 @@ import Utils from '../module/test/Utils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   TextpatternPlugin();
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyActions = TinyActions(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyActions = TinyActions(editor);
 
-    var steps = Utils.withTeardown([
+    const steps = Utils.withTeardown([
       Logger.t('space on ** without content does nothing', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**'),
         tinyApis.sAssertContent('<p>**&nbsp;</p>')
@@ -136,29 +136,29 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       ])),
       Logger.t('OL format on single word node using enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '1. a'),
-        tinyApis.sAssertContentPresence({ 'ol': 1, 'li':2 })
+        tinyApis.sAssertContentPresence({ ol: 1, li: 2 })
       ])),
       Logger.t('UL format on single word node using enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '* a'),
-        tinyApis.sAssertContentPresence({ 'ul': 1, 'li':2 })
+        tinyApis.sAssertContentPresence({ ul: 1, li: 2 })
       ])),
       Logger.t('enter with uncollapsed range does not insert list', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>* ab</p>'),
         tinyApis.sFocus,
         tinyApis.sSetSelection([0, 0], 3, [0, 0], 4),
         tinyActions.sContentKeystroke(Keys.enter(), {}),
-        tinyApis.sAssertContentPresence({ 'ul': 0 })
+        tinyApis.sAssertContentPresence({ ul: 0 })
       ])),
       Logger.t('enter with only pattern does not insert list', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>*</p>'),
         tinyApis.sFocus,
         tinyApis.sSetCursor([0, 0], 1),
         tinyActions.sContentKeystroke(Keys.enter(), {}),
-        tinyApis.sAssertContentPresence({ 'ul': 0 })
+        tinyApis.sAssertContentPresence({ ul: 0 })
       ])),
       Logger.t('test inline and block at the same time', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '* **important list**'),
-        tinyApis.sAssertContentPresence({ 'ul':1, 'strong': 2 })
+        tinyApis.sAssertContentPresence({ ul: 1, strong: 2 })
       ])),
       Logger.t('getPatterns/setPatterns', Step.sync(function () {
         editor.plugins.textpattern.setPatterns([
@@ -172,17 +172,17 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
             editor.plugins.textpattern.getPatterns(),
           [
             {
-              "format": "h1",
-              "start": "#"
+              format: 'h1',
+              start: '#'
             },
             {
-              "format": "h2",
-              "start": "##"
+              format: 'h2',
+              start: '##'
             },
 
             {
-              "format": "h3",
-              "start": "###"
+              format: 'h3',
+              start: '###'
             }
           ]
           );
@@ -195,4 +195,3 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

@@ -12,40 +12,40 @@ import EditorManager from 'tinymce/core/EditorManager';
 import EditorSettings from '../alien/EditorSettings';
 import Layout from '../core/Layout';
 
-var toAbsoluteUrl = function (editor, url) {
+const toAbsoluteUrl = function (editor, url) {
   return editor.documentBaseURI.toAbsolute(url);
 };
 
-var urlFromName = function (name) {
-  var prefix = EditorManager.baseURL + '/skins/';
+const urlFromName = function (name) {
+  const prefix = EditorManager.baseURL + '/skins/';
   return name ? prefix + name : prefix + 'lightgray';
 };
 
-var getTextSelectionToolbarItems = function (editor) {
+const getTextSelectionToolbarItems = function (editor) {
   return EditorSettings.getToolbarItemsOr(editor, 'selection_toolbar', ['bold', 'italic', '|', 'quicklink', 'h2', 'h3', 'blockquote']);
 };
 
-var getInsertToolbarItems = function (editor) {
+const getInsertToolbarItems = function (editor) {
   return EditorSettings.getToolbarItemsOr(editor, 'insert_toolbar', ['quickimage', 'quicktable']);
 };
 
-var getPositionHandler = function (editor) {
+const getPositionHandler = function (editor) {
   return EditorSettings.getHandlerOr(editor, 'inline_toolbar_position_handler', Layout.defaultHandler);
 };
 
-var getSkinUrl = function (editor) {
-  var settings = editor.settings;
+const getSkinUrl = function (editor) {
+  const settings = editor.settings;
   return settings.skin_url ? toAbsoluteUrl(editor, settings.skin_url) : urlFromName(settings.skin);
 };
 
-var isSkinDisabled = function (editor) {
+const isSkinDisabled = function (editor) {
   return editor.settings.skin === false;
 };
 
-export default <any> {
-  getTextSelectionToolbarItems: getTextSelectionToolbarItems,
-  getInsertToolbarItems: getInsertToolbarItems,
-  getPositionHandler: getPositionHandler,
-  getSkinUrl: getSkinUrl,
-  isSkinDisabled: isSkinDisabled
+export default {
+  getTextSelectionToolbarItems,
+  getInsertToolbarItems,
+  getPositionHandler,
+  getSkinUrl,
+  isSkinDisabled
 };

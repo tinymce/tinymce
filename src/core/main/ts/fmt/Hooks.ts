@@ -19,10 +19,10 @@ import $ from '../dom/DomQuery';
  * @class tinymce.fmt.Hooks
  */
 
-var postProcessHooks = {}, filter = Arr.filter, each = Arr.each;
+const postProcessHooks = {}, filter = Arr.filter, each = Arr.each;
 
-var addPostProcessHook = function (name, hook) {
-  var hooks = postProcessHooks[name];
+const addPostProcessHook = function (name, hook) {
+  let hooks = postProcessHooks[name];
 
   if (!hooks) {
     postProcessHooks[name] = hooks = [];
@@ -31,20 +31,21 @@ var addPostProcessHook = function (name, hook) {
   postProcessHooks[name].push(hook);
 };
 
-var postProcess = function (name, editor) {
+const postProcess = function (name, editor) {
   each(postProcessHooks[name], function (hook) {
     hook(editor);
   });
 };
 
-addPostProcessHook("pre", function (editor) {
-  var rng = editor.selection.getRng(), isPre, blocks;
+addPostProcessHook('pre', function (editor) {
+  const rng = editor.selection.getRng();
+  let isPre, blocks;
 
-  var hasPreSibling = function (pre) {
+  const hasPreSibling = function (pre) {
     return isPre(pre.previousSibling) && Arr.indexOf(blocks, pre.previousSibling) !== -1;
   };
 
-  var joinPre = function (pre1, pre2) {
+  const joinPre = function (pre1, pre2) {
     $(pre2).remove();
     $(pre1).append('<br><br>').append(pre2.childNodes);
   };
@@ -61,5 +62,5 @@ addPostProcessHook("pre", function (editor) {
 });
 
 export default {
-  postProcess: postProcess
+  postProcess
 };

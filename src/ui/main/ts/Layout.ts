@@ -17,9 +17,7 @@ import Tools from 'tinymce/core/util/Tools';
  * @class tinymce.ui.Layout
  */
 
-"use strict";
-
-export default <any> Class.extend({
+export default Class.extend({
   Defaults: {
     firstControlClass: 'first',
     lastControlClass: 'last'
@@ -31,7 +29,7 @@ export default <any> Class.extend({
    * @constructor
    * @param {Object} settings Name/value object with settings.
    */
-  init: function (settings) {
+  init (settings) {
     this.settings = Tools.extend({}, this.Defaults, settings);
   },
 
@@ -41,7 +39,7 @@ export default <any> Class.extend({
    * @method preRender
    * @param {tinymce.ui.Container} container Container instance to preRender.
    */
-  preRender: function (container) {
+  preRender (container) {
     container.bodyClasses.add(this.settings.containerClass);
   },
 
@@ -50,8 +48,10 @@ export default <any> Class.extend({
    *
    * @private
    */
-  applyClasses: function (items) {
-    var self = this, settings = self.settings, firstClass, lastClass, firstItem, lastItem;
+  applyClasses (items) {
+    const self = this;
+    const settings = self.settings;
+    let firstClass, lastClass, firstItem, lastItem;
 
     firstClass = settings.firstControlClass;
     lastClass = settings.lastControlClass;
@@ -83,8 +83,9 @@ export default <any> Class.extend({
    * @method renderHtml
    * @param {tinymce.ui.Container} container Container to render HTML for.
    */
-  renderHtml: function (container) {
-    var self = this, html = '';
+  renderHtml (container) {
+    const self = this;
+    let html = '';
 
     self.applyClasses(container.items());
 
@@ -101,7 +102,7 @@ export default <any> Class.extend({
    * @method recalc
    * @param {tinymce.ui.Container} container Container instance to recalc.
    */
-  recalc: function () {
+  recalc () {
   },
 
   /**
@@ -110,10 +111,10 @@ export default <any> Class.extend({
    * @method postRender
    * @param {tinymce.ui.Container} container Container instance to postRender.
    */
-  postRender: function () {
+  postRender () {
   },
 
-  isNative: function () {
+  isNative () {
     return false;
   }
 });

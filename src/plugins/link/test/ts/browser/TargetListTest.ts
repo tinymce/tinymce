@@ -8,19 +8,19 @@ import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.link.TargetListTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.link.TargetListTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   LinkPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
-    var tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      //show target list by default
+      // show target list by default
       tinyUi.sClickOnToolbar('click on link button', 'div[aria-label="Insert/edit link"] > button'),
       tinyUi.sWaitForPopup('wait for link dialog', 'div[aria-label="Insert link"][role="dialog"]'),
       UiFinder.sExists(TinyDom.fromDom(document.body), 'label:contains("Target")'),
@@ -39,4 +39,3 @@ UnitTest.asynctest('browser.tinymce.plugins.link.TargetListTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

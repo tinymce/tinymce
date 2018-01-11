@@ -3,20 +3,19 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import ScriptLoader from 'tinymce/core/dom/ScriptLoader';
 import EditorManager from 'tinymce/core/EditorManager';
-import InsertContent from 'tinymce/core/InsertContent';
 import Factory from 'tinymce/core/ui/Factory';
 import I18n from 'tinymce/core/util/I18n';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var teardown = function () {
+  const teardown = function () {
     I18n.rtl = false;
     I18n.setCode('en');
     Factory.get('Control').rtl = false;
@@ -28,8 +27,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', function() {
   });
 
   EditorManager.addI18n('ar', {
-    "Bold": "Bold test",
-    "_dir": "rtl"
+    Bold: 'Bold test',
+    _dir: 'rtl'
   });
 
   // Prevents the arabic language pack from being loaded
@@ -45,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', function() {
     }, onFailure);
   }, {
     language: 'ar',
-    selector: "textarea",
+    selector: 'textarea',
     add_unload_trigger: false,
     disable_nodechange: true,
     entities: 'raw',
@@ -53,4 +52,3 @@ UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

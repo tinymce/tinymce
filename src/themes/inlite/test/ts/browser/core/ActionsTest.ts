@@ -9,24 +9,24 @@ import Actions from 'tinymce/themes/inlite/core/Actions';
 import Theme from 'tinymce/themes/inlite/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser/core/ActionsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser/core/ActionsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var wrap = function (f, args) {
+  const wrap = function (f, args) {
     return function () {
-      var currentArgs = Array.prototype.slice.call(arguments);
+      const currentArgs = Array.prototype.slice.call(arguments);
       return Step.sync(function () {
         f.apply(null, [].concat(args).concat(currentArgs));
       });
     };
   };
 
-  var sInsertTableTests = function (editor, tinyApis) {
-    var sInsertTableTest = function (cols, rows, expectedHtml, message) {
-      var sInsertTable: any = wrap(Actions.insertTable, editor);
+  const sInsertTableTests = function (editor, tinyApis) {
+    const sInsertTableTest = function (cols, rows, expectedHtml, message) {
+      const sInsertTable: any = wrap(Actions.insertTable, editor);
 
       return GeneralSteps.sequence([
         tinyApis.sSetContent(''),
@@ -78,9 +78,9 @@ UnitTest.asynctest('browser/core/ActionsTest', function() {
     ]);
   };
 
-  var sFormatBlockTests = function (editor, tinyApis) {
-    var sFormatBlockTest = function (name) {
-      var sFormatBlock: any = wrap(Actions.formatBlock, editor);
+  const sFormatBlockTests = function (editor, tinyApis) {
+    const sFormatBlockTest = function (name) {
+      const sFormatBlock: any = wrap(Actions.formatBlock, editor);
 
       return GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
@@ -97,9 +97,9 @@ UnitTest.asynctest('browser/core/ActionsTest', function() {
     ]);
   };
 
-  var sCreateLinkTests = function (editor, tinyApis) {
-    var sCreateLinkTest = function (inputHtml, url, sPath, sOffset, fPath, fOffset, expectedHtml) {
-      var sCreateLink: any = wrap(Actions.createLink, editor);
+  const sCreateLinkTests = function (editor, tinyApis) {
+    const sCreateLinkTest = function (inputHtml, url, sPath, sOffset, fPath, fOffset, expectedHtml) {
+      const sCreateLink: any = wrap(Actions.createLink, editor);
 
       return GeneralSteps.sequence([
         tinyApis.sSetContent(inputHtml),
@@ -116,9 +116,9 @@ UnitTest.asynctest('browser/core/ActionsTest', function() {
     ]);
   };
 
-  var sUnlinkTests = function (editor, tinyApis) {
-    var sUnlinkTest = function (inputHtml, sPath, sOffset, fPath, fOffset, expectedHtml) {
-      var sUnlink = wrap(Actions.unlink, editor);
+  const sUnlinkTests = function (editor, tinyApis) {
+    const sUnlinkTest = function (inputHtml, sPath, sOffset, fPath, fOffset, expectedHtml) {
+      const sUnlink = wrap(Actions.unlink, editor);
 
       return GeneralSteps.sequence([
         tinyApis.sSetContent(inputHtml),
@@ -136,20 +136,20 @@ UnitTest.asynctest('browser/core/ActionsTest', function() {
     ]);
   };
 
-  var base64ToBlob = function (base64, type) {
-    var buff = Window.atob(base64);
-    var bytes = new Uint8Array(buff.length);
+  const base64ToBlob = function (base64, type) {
+    const buff = Window.atob(base64);
+    const bytes = new Uint8Array(buff.length);
 
-    for (var i = 0; i < bytes.length; i++) {
+    for (let i = 0; i < bytes.length; i++) {
       bytes[i] = buff.charCodeAt(i);
     }
 
-    return new Blob([bytes], { type: type });
+    return new Blob([bytes], { type });
   };
 
-  var sInsertBlobTests = function (editor, tinyApis) {
-    var sInsertBlobTest = function (inputHtml, path, offset, blob, base64, expectedHtml) {
-      var sInsertBlob: any = wrap(Actions.insertBlob, editor);
+  const sInsertBlobTests = function (editor, tinyApis) {
+    const sInsertBlobTest = function (inputHtml, path, offset, blob, base64, expectedHtml) {
+      const sInsertBlob: any = wrap(Actions.insertBlob, editor);
 
       return GeneralSteps.sequence([
         tinyApis.sSetContent(inputHtml),
@@ -159,8 +159,8 @@ UnitTest.asynctest('browser/core/ActionsTest', function() {
       ]);
     };
 
-    var base64 = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-    var blob = base64ToBlob(base64, 'image/gif');
+    const base64 = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    const blob = base64ToBlob(base64, 'image/gif');
 
     return GeneralSteps.sequence([
       sInsertBlobTest('<p>a</p>', [0, 0], 0, base64, blob, '<p><img src="data:image/gif;base64,' + base64 + '" />a</p>')
@@ -168,7 +168,7 @@ UnitTest.asynctest('browser/core/ActionsTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       sInsertTableTests(editor, tinyApis),
@@ -183,4 +183,3 @@ UnitTest.asynctest('browser/core/ActionsTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

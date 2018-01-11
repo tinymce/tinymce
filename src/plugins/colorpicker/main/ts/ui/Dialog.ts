@@ -10,12 +10,12 @@
 
 import Color from 'tinymce/core/util/Color';
 
-var showPreview = function (win, hexColor) {
+const showPreview = function (win, hexColor) {
   win.find('#preview')[0].getEl().style.background = hexColor;
 };
 
-var setColor = function (win, value) {
-  var color = Color(value), rgb = color.toRgb();
+const setColor = function (win, value) {
+  const color = Color(value), rgb = color.toRgb();
 
   win.fromJSON({
     r: rgb.r,
@@ -27,8 +27,8 @@ var setColor = function (win, value) {
   showPreview(win, color.toHex());
 };
 
-var open = function (editor, callback, value) {
-  var win = editor.windowManager.open({
+const open = function (editor, callback, value) {
+  const win = editor.windowManager.open({
     title: 'Color',
     items: {
       type: 'container',
@@ -40,9 +40,9 @@ var open = function (editor, callback, value) {
       items: [
         {
           type: 'colorpicker',
-          value: value,
-          onchange: function () {
-            var rgb = this.rgb();
+          value,
+          onchange () {
+            const rgb = this.rgb();
 
             if (win) {
               win.find('#r').value(rgb.r);
@@ -63,14 +63,14 @@ var open = function (editor, callback, value) {
             value: '0',
             flex: 1,
             spellcheck: false,
-            onchange: function () {
-              var colorPickerCtrl = win.find('colorpicker')[0];
-              var name, value;
+            onchange () {
+              const colorPickerCtrl = win.find('colorpicker')[0];
+              let name, value;
 
               name = this.name();
               value = this.value();
 
-              if (name === "hex") {
+              if (name === 'hex') {
                 value = '#' + value;
                 setColor(win, value);
                 colorPickerCtrl.value(value);
@@ -97,7 +97,7 @@ var open = function (editor, callback, value) {
         }
       ]
     },
-    onSubmit: function () {
+    onSubmit () {
       callback('#' + win.toJSON().hex);
     }
   });
@@ -106,5 +106,5 @@ var open = function (editor, callback, value) {
 };
 
 export default {
-  open: open
+  open
 };

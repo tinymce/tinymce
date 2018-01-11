@@ -11,23 +11,23 @@
 import Events from '../api/Events';
 import Settings from '../api/Settings';
 
-var shouldInformUserAboutPlainText = function (editor, userIsInformedState) {
+const shouldInformUserAboutPlainText = function (editor, userIsInformedState) {
   return userIsInformedState.get() === false && Settings.shouldPlainTextInform(editor);
 };
 
-var displayNotification = function (editor, message) {
+const displayNotification = function (editor, message) {
   editor.notificationManager.open({
     text: editor.translate(message),
     type: 'info'
   });
 };
 
-var togglePlainTextPaste = function (editor, clipboard, userIsInformedState) {
-  if (clipboard.pasteFormat === "text") {
-    clipboard.pasteFormat = "html";
+const togglePlainTextPaste = function (editor, clipboard, userIsInformedState) {
+  if (clipboard.pasteFormat === 'text') {
+    clipboard.pasteFormat = 'html';
     Events.firePastePlainTextToggle(editor, false);
   } else {
-    clipboard.pasteFormat = "text";
+    clipboard.pasteFormat = 'text';
     Events.firePastePlainTextToggle(editor, true);
 
     if (shouldInformUserAboutPlainText(editor, userIsInformedState)) {
@@ -40,5 +40,5 @@ var togglePlainTextPaste = function (editor, clipboard, userIsInformedState) {
 };
 
 export default {
-  togglePlainTextPaste: togglePlainTextPaste
+  togglePlainTextPaste
 };

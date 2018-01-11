@@ -22,20 +22,20 @@ import Delay from '../util/Delay';
  * @class tinymce.caret.FakeCaret
  */
 
-var isContentEditableFalse = NodeType.isContentEditableFalse;
+const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-var isTableCell = function (node) {
+const isTableCell = function (node) {
   return node && /^(TD|TH)$/i.test(node.nodeName);
 };
 
 export default function (rootNode, isBlock) {
-  var cursorInterval, $lastVisualCaret = null, caretContainerNode;
+  let cursorInterval, $lastVisualCaret = null, caretContainerNode;
 
-  var getAbsoluteClientRect = function (node, before) {
-    var clientRect = ClientRect.collapse(node.getBoundingClientRect(), before),
-      docElm, scrollX, scrollY, margin, rootRect;
+  const getAbsoluteClientRect = function (node, before) {
+    const clientRect = ClientRect.collapse(node.getBoundingClientRect(), before);
+    let docElm, scrollX, scrollY, margin, rootRect;
 
-    if (rootNode.tagName == 'BODY') {
+    if (rootNode.tagName === 'BODY') {
       docElm = rootNode.ownerDocument.documentElement;
       scrollX = rootNode.scrollLeft || docElm.scrollLeft;
       scrollY = rootNode.scrollTop || docElm.scrollTop;
@@ -65,8 +65,8 @@ export default function (rootNode, isBlock) {
     return clientRect;
   };
 
-  var trimInlineCaretContainers = function () {
-    var contentEditableFalseNodes, node, sibling, i, data;
+  const trimInlineCaretContainers = function () {
+    let contentEditableFalseNodes, node, sibling, i, data;
 
     contentEditableFalseNodes = DomQuery('*[contentEditable=false]', rootNode);
     for (i = 0; i < contentEditableFalseNodes.length; i++) {
@@ -76,7 +76,7 @@ export default function (rootNode, isBlock) {
       if (CaretContainer.endsWithCaretContainer(sibling)) {
         data = sibling.data;
 
-        if (data.length == 1) {
+        if (data.length === 1) {
           sibling.parentNode.removeChild(sibling);
         } else {
           sibling.deleteData(data.length - 1, 1);
@@ -87,7 +87,7 @@ export default function (rootNode, isBlock) {
       if (CaretContainer.startsWithCaretContainer(sibling)) {
         data = sibling.data;
 
-        if (data.length == 1) {
+        if (data.length === 1) {
           sibling.parentNode.removeChild(sibling);
         } else {
           sibling.deleteData(0, 1);
@@ -98,8 +98,8 @@ export default function (rootNode, isBlock) {
     return null;
   };
 
-  var show = function (before, node) {
-    var clientRect, rng;
+  const show = function (before, node) {
+    let clientRect, rng;
 
     hide();
 
@@ -141,7 +141,7 @@ export default function (rootNode, isBlock) {
     return rng;
   };
 
-  var hide = function () {
+  const hide = function () {
     trimInlineCaretContainers();
 
     if (caretContainerNode) {
@@ -157,11 +157,11 @@ export default function (rootNode, isBlock) {
     clearInterval(cursorInterval);
   };
 
-  var hasFocus = function () {
+  const hasFocus = function () {
     return rootNode.ownerDocument.activeElement === rootNode;
   };
 
-  var startBlink = function () {
+  const startBlink = function () {
     cursorInterval = Delay.setInterval(function () {
       if (hasFocus()) {
         DomQuery('div.mce-visual-caret', rootNode).toggleClass('mce-visual-caret-hidden');
@@ -171,11 +171,11 @@ export default function (rootNode, isBlock) {
     }, 500);
   };
 
-  var destroy = function () {
+  const destroy = function () {
     Delay.clearInterval(cursorInterval);
   };
 
-  var getCss = function () {
+  const getCss = function () {
     return (
       '.mce-visual-caret {' +
       'position: absolute;' +
@@ -197,9 +197,9 @@ export default function (rootNode, isBlock) {
   };
 
   return {
-    show: show,
-    hide: hide,
-    getCss: getCss,
-    destroy: destroy
+    show,
+    hide,
+    getCss,
+    destroy
   };
-};
+}

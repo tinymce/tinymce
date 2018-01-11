@@ -10,17 +10,17 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.DisableTableToolbarTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.table.DisableTableToolbarTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   TablePlugin();
 
-  var tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
+  const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('test that table toolbar can be disabled', GeneralSteps.sequence([
@@ -40,4 +40,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DisableTableToolbarTest', func
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

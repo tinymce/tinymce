@@ -21,11 +21,9 @@ import Color from 'tinymce/core/util/Color';
  * @extends tinymce.ui.Widget
  */
 
-"use strict";
-
-export default <any> Widget.extend({
+export default Widget.extend({
   Defaults: {
-    classes: "widget colorpicker"
+    classes: 'widget colorpicker'
   },
 
   /**
@@ -35,12 +33,14 @@ export default <any> Widget.extend({
    * @param {Object} settings Name/value object with settings.
    * @setting {String} color Initial color value.
    */
-  init: function (settings) {
+  init (settings) {
     this._super(settings);
   },
 
-  postRender: function () {
-    var self = this, color = self.color(), hsv, hueRootElm, huePointElm, svRootElm, svPointElm;
+  postRender () {
+    const self = this;
+    const color = self.color();
+    let hsv, hueRootElm, huePointElm, svRootElm, svPointElm;
 
     hueRootElm = self.getEl('h');
     huePointElm = self.getEl('hp');
@@ -48,7 +48,8 @@ export default <any> Widget.extend({
     svPointElm = self.getEl('svp');
 
     function getPos(elm, event) {
-      var pos = DomUtils.getPos(elm), x, y;
+      const pos = DomUtils.getPos(elm);
+      let x, y;
 
       x = event.pageX - pos.x;
       y = event.pageY - pos.y;
@@ -57,13 +58,13 @@ export default <any> Widget.extend({
       y = Math.max(0, Math.min(y / elm.clientHeight, 1));
 
       return {
-        x: x,
-        y: y
+        x,
+        y
       };
     }
 
     function updateColor(hsv, hueUpdate?) {
-      var hue = (360 - hsv.h) / 360;
+      const hue = (360 - hsv.h) / 360;
 
       DomUtils.css(huePointElm, {
         top: (hue * 100) + '%'
@@ -81,7 +82,7 @@ export default <any> Widget.extend({
     }
 
     function updateSaturationAndValue(e) {
-      var pos;
+      let pos;
 
       pos = getPos(svRootElm, e);
       hsv.s = pos.x * 100;
@@ -92,7 +93,7 @@ export default <any> Widget.extend({
     }
 
     function updateHue(e) {
-      var pos;
+      let pos;
 
       pos = getPos(hueRootElm, e);
       hsv = color.toHsv();
@@ -121,12 +122,12 @@ export default <any> Widget.extend({
     self._repaint();
   },
 
-  rgb: function () {
+  rgb () {
     return this.color().toRgb();
   },
 
-  value: function (value) {
-    var self = this;
+  value (value) {
+    const self = this;
 
     if (arguments.length) {
       self.color().parse(value);
@@ -139,7 +140,7 @@ export default <any> Widget.extend({
     }
   },
 
-  color: function () {
+  color () {
     if (!this._color) {
       this._color = Color();
     }
@@ -153,12 +154,15 @@ export default <any> Widget.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, id = self._id, prefix = self.classPrefix, hueHtml;
-    var stops = '#ff0000,#ff0080,#ff00ff,#8000ff,#0000ff,#0080ff,#00ffff,#00ff80,#00ff00,#80ff00,#ffff00,#ff8000,#ff0000';
+  renderHtml () {
+    const self = this;
+    const id = self._id;
+    const prefix = self.classPrefix;
+    let hueHtml;
+    const stops = '#ff0000,#ff0080,#ff00ff,#8000ff,#0000ff,#0080ff,#00ffff,#00ff80,#00ff00,#80ff00,#ffff00,#ff8000,#ff0000';
 
     function getOldIeFallbackHtml() {
-      var i, l, html = '', gradientPrefix, stopsList;
+      let i, l, html = '', gradientPrefix, stopsList;
 
       gradientPrefix = 'filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=';
       stopsList = stops.split(',');
@@ -175,7 +179,7 @@ export default <any> Widget.extend({
       return html;
     }
 
-    var gradientCssText = (
+    const gradientCssText = (
       'background: -ms-linear-gradient(top,' + stops + ');' +
       'background: linear-gradient(to bottom,' + stops + ');'
     );

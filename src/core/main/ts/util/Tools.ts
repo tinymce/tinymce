@@ -25,10 +25,10 @@ import Arr from './Arr';
  * @param {String} s String to remove whitespace from.
  * @return {String} New string with removed whitespace.
  */
-var whiteSpaceRegExp = /^\s*|\s*$/g;
+const whiteSpaceRegExp = /^\s*|\s*$/g;
 
-var trim = function (str) {
-  return (str === null || str === undefined) ? '' : ("" + str).replace(whiteSpaceRegExp, '');
+const trim = function (str) {
+  return (str === null || str === undefined) ? '' : ('' + str).replace(whiteSpaceRegExp, '');
 };
 
 /**
@@ -39,16 +39,16 @@ var trim = function (str) {
  * @param {string} type Optional type to check for.
  * @return {Boolean} true/false if the object is of the specified type.
  */
-var is = function (obj, type) {
+const is = function (obj, type) {
   if (!type) {
     return obj !== undefined;
   }
 
-  if (type == 'array' && Arr.isArray(obj)) {
+  if (type === 'array' && Arr.isArray(obj)) {
     return true;
   }
 
-  return typeof obj == type;
+  return typeof obj === type;
 };
 
 /**
@@ -60,13 +60,13 @@ var is = function (obj, type) {
  * @param {Object} map Optional map to add items to.
  * @return {Object} Name/value map of items.
  */
-var makeMap = function (items, delim?, map?) {
-  var i;
+const makeMap = function (items, delim?, map?) {
+  let i;
 
   items = items || [];
   delim = delim || ',';
 
-  if (typeof items == "string") {
+  if (typeof items === 'string') {
     items = items.split(delim);
   }
 
@@ -88,7 +88,7 @@ var makeMap = function (items, delim?, map?) {
  * @param {String} prop
  * @returns {Boolean}
  */
-var hasOwnProperty = function (obj, prop) {
+const hasOwnProperty = function (obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 };
 
@@ -138,8 +138,9 @@ var hasOwnProperty = function (obj, prop) {
  *     }
  * });
  */
-var create = function (s, p, root) {
-  var self = this, sp, ns, cn, scn, c, de = 0;
+const create = function (s, p, root) {
+  const self = this;
+  let sp, ns, cn, scn, c, de = 0;
 
   // Parse : <prefix> <class>:<super class>
   s = /^((static) )?([\w.]+)(:([\w.]+))?/.exec(s);
@@ -154,7 +155,7 @@ var create = function (s, p, root) {
   }
 
   // Make pure static class
-  if (s[2] == 'static') {
+  if (s[2] === 'static') {
     ns[cn] = p;
 
     if (this.onCreate) {
@@ -209,7 +210,7 @@ var create = function (s, p, root) {
           return f.apply(this, arguments);
         };
       } else {
-        if (n != cn) {
+        if (n !== cn) {
           ns[cn].prototype[n] = f;
         }
       }
@@ -219,13 +220,15 @@ var create = function (s, p, root) {
   // Add static methods
   /*jshint sub:true*/
   /*eslint dot-notation:0*/
-  self.each(p['static'], function (f, n) {
+  self.each(p.static, function (f, n) {
     ns[cn][n] = f;
   });
 };
 
-var extend = function (obj, ext, ...x: any[]) {
-  var i, l, name, args = arguments, value;
+const extend = function (obj, ext, ...x: any[]) {
+  let i, l, name;
+  const args = arguments;
+  let value;
 
   for (i = 1, l = args.length; i < l; i++) {
     ext = args[i];
@@ -252,7 +255,7 @@ var extend = function (obj, ext, ...x: any[]) {
  * @param {String} n Optional name of collection inside the objects to walk for example childNodes.
  * @param {String} s Optional scope to execute the function in.
  */
-var walk = function (o, f, n?, s?) {
+const walk = function (o, f, n?, s?) {
   s = s || this;
 
   if (o) {
@@ -288,8 +291,8 @@ var walk = function (o, f, n?, s?) {
  *     }
  * };
  */
-var createNS = function (n, o) {
-  var i, v;
+const createNS = function (n, o) {
+  let i, v;
 
   o = o || window;
 
@@ -318,8 +321,8 @@ var createNS = function (n, o) {
  * // Resolve a path into an object reference
  * var obj = tinymce.resolve('a.b.c.d');
  */
-var resolve = function (n, o?) {
-  var i, l;
+const resolve = function (n, o?) {
+  let i, l;
 
   o = o || window;
 
@@ -345,7 +348,7 @@ var resolve = function (n, o?) {
  * // Split a string into an array with a,b,c
  * var arr = tinymce.explode('a, b,   c');
  */
-var explode = function (s, d?) {
+const explode = function (s, d?) {
   if (!s || is(s, 'array')) {
     return s;
   }
@@ -353,8 +356,8 @@ var explode = function (s, d?) {
   return Arr.map(s.split(d || ','), trim);
 };
 
-var _addCacheSuffix = function (url) {
-  var cacheSuffix = Env.cacheSuffix;
+const _addCacheSuffix = function (url) {
+  const cacheSuffix = Env.cacheSuffix;
 
   if (cacheSuffix) {
     url += (url.indexOf('?') === -1 ? '?' : '&') + cacheSuffix;
@@ -364,7 +367,7 @@ var _addCacheSuffix = function (url) {
 };
 
 export default {
-  trim: trim,
+  trim,
 
   /**
    * Returns true/false if the object is an array or not.
@@ -375,7 +378,7 @@ export default {
    */
   isArray: Arr.isArray,
 
-  is: is,
+  is,
 
   /**
    * Converts the specified object into a real JavaScript array.
@@ -385,7 +388,7 @@ export default {
    * @return {Array} Array object based in input.
    */
   toArray: Arr.toArray,
-  makeMap: makeMap,
+  makeMap,
 
   /**
    * Performs an iteration of all items in a collection such as an object or array. This method will execure the
@@ -446,11 +449,11 @@ export default {
 
   hasOwn: hasOwnProperty,
 
-  extend: extend,
-  create: create,
-  walk: walk,
-  createNS: createNS,
-  resolve: resolve,
-  explode: explode,
-  _addCacheSuffix: _addCacheSuffix
+  extend,
+  create,
+  walk,
+  createNS,
+  resolve,
+  explode,
+  _addCacheSuffix
 };

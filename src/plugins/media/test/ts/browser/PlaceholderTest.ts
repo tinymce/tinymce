@@ -1,8 +1,6 @@
 import { ApproxStructure } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { Waiter } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
@@ -12,14 +10,14 @@ import Utils from '../module/test/Utils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.core.SubmitTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.core.SubmitTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
   Theme();
 
-  var sTestPlaceholder = function (ui, editor, apis, url, expected, struct) {
+  const sTestPlaceholder = function (ui, editor, apis, url, expected, struct) {
     return GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       Utils.sSetFormItemNoEvent(ui, url),
@@ -32,7 +30,7 @@ UnitTest.asynctest('browser.core.SubmitTest', function() {
     ]);
   };
 
-  var sTestScriptPlaceholder = function (ui, editor, apis, expected, struct) {
+  const sTestScriptPlaceholder = function (ui, editor, apis, expected, struct) {
     return GeneralSteps.sequence([
       apis.sSetContent(
         '<script src="http://media1.tinymce.com/123456"></script>' +
@@ -45,7 +43,7 @@ UnitTest.asynctest('browser.core.SubmitTest', function() {
       apis.sSetContent('')
     ]);
   };
-  var placeholderStructure = ApproxStructure.build(function (s) {
+  const placeholderStructure = ApproxStructure.build(function (s) {
     return s.element('body', {
       children: [
         s.element('p', {
@@ -61,7 +59,7 @@ UnitTest.asynctest('browser.core.SubmitTest', function() {
     });
   });
 
-  var iframeStructure = ApproxStructure.build(function (s) {
+  const iframeStructure = ApproxStructure.build(function (s) {
     return s.element('body', {
       children: [
         s.element('p', {
@@ -79,7 +77,7 @@ UnitTest.asynctest('browser.core.SubmitTest', function() {
     });
   });
 
-  var scriptStruct = ApproxStructure.build(function (s, str, arr) {
+  const scriptStruct = ApproxStructure.build(function (s, str, arr) {
     return s.element('body', {
       children: [
         s.element('p', {
@@ -109,8 +107,8 @@ UnitTest.asynctest('browser.core.SubmitTest', function() {
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var ui = TinyUi(editor);
-    var apis = TinyApis(editor);
+    const ui = TinyUi(editor);
+    const apis = TinyApis(editor);
 
     Pipeline.async({}, [
       Utils.sSetSetting(editor.settings, 'media_live_embeds', false),
@@ -132,8 +130,8 @@ UnitTest.asynctest('browser.core.SubmitTest', function() {
         iframeStructure)
     ], onSuccess, onFailure);
   }, {
-    plugins: ["media"],
-    toolbar: "media",
+    plugins: ['media'],
+    toolbar: 'media',
     extended_valid_elements: 'script[src|type]',
     media_scripts: [
         { filter: 'http://media1.tinymce.com' },
@@ -142,4 +140,3 @@ UnitTest.asynctest('browser.core.SubmitTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

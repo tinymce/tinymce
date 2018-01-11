@@ -1,35 +1,33 @@
 import { Assertions } from '@ephox/agar';
 import { Chain } from '@ephox/agar';
 import { NamedChain } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
 import { Guard } from '@ephox/agar';
 import { Mouse } from '@ephox/agar';
 import { UiFinder } from '@ephox/agar';
 import { Editor } from '@ephox/mcagar';
 import { TinyDom } from '@ephox/mcagar';
-import { ApiChains } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
   Theme();
 
-  var cGetBody = Chain.mapper(function (editor) {
+  const cGetBody = Chain.mapper(function (editor) {
     return TinyDom.fromDom(editor.getBody());
   });
 
-  var cInsertTable = function (cols, rows) {
+  const cInsertTable = function (cols, rows) {
     return Chain.mapper(function (editor) {
       return TinyDom.fromDom(editor.plugins.table.insertTable(cols, rows));
     });
   };
 
-  var cDragHandle = function (id, deltaH, deltaV) {
+  const cDragHandle = function (id, deltaH, deltaV) {
     return NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
       NamedChain.direct('editor', cGetBody, 'editorBody'),
@@ -47,11 +45,11 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', function() {
     ]);
   };
 
-  var cGetWidth = Chain.mapper(function (input) {
-    var editor = input.editor;
-    var elm = input.element.dom();
-    var rawWidth = editor.dom.getStyle(elm, 'width');
-    var pxWidth = editor.dom.getStyle(elm, 'width', true);
+  const cGetWidth = Chain.mapper(function (input) {
+    const editor = input.editor;
+    const elm = input.element.dom();
+    const rawWidth = editor.dom.getStyle(elm, 'width');
+    const pxWidth = editor.dom.getStyle(elm, 'width', true);
     return {
       raw: parseFloat(rawWidth),
       px: parseInt(pxWidth, 10),
@@ -59,13 +57,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', function() {
     };
   });
 
-  var assertWithin = function (value, min, max) {
+  const assertWithin = function (value, min, max) {
     Assertions.assertEq('asserting if value falls within a certain range', true, value >= min && value <= max);
   };
 
-  var cAssertWidths = Chain.op(function (input) {
-    var expectedPx = input.widthBefore.px - 100;
-    var expectedPercent = input.widthAfter.px / input.widthBefore.px * 100;
+  const cAssertWidths = Chain.op(function (input) {
+    const expectedPx = input.widthBefore.px - 100;
+    const expectedPercent = input.widthAfter.px / input.widthBefore.px * 100;
 
     // not able to match the percent exactly - there's always a difference in fractions, so lets assert a small range instead
     assertWithin(input.widthAfter.px, expectedPx - 1, expectedPx + 1);
@@ -91,4 +89,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', function() {
     success();
   }, failure);
 });
-

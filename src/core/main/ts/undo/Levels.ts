@@ -19,36 +19,36 @@ import Fragments from './Fragments';
  * @private
  */
 
-var hasIframes = function (html) {
+const hasIframes = function (html) {
   return html.indexOf('</iframe>') !== -1;
 };
 
-var createFragmentedLevel = function (fragments) {
+const createFragmentedLevel = function (fragments) {
   return {
     type: 'fragmented',
-    fragments: fragments,
+    fragments,
     content: '',
     bookmark: null,
     beforeBookmark: null
   };
 };
 
-var createCompleteLevel = function (content) {
+const createCompleteLevel = function (content) {
   return {
     type: 'complete',
     fragments: null,
-    content: content,
+    content,
     bookmark: null,
     beforeBookmark: null
   };
 };
 
-var createFromEditor = function (editor) {
-  var fragments, content, trimmedFragments;
+const createFromEditor = function (editor) {
+  let fragments, content, trimmedFragments;
 
   fragments = Fragments.read(editor.getBody());
   trimmedFragments = Arr.bind(fragments, function (html) {
-    var trimmed = TrimHtml.trimInternal(editor.serializer, html);
+    const trimmed = TrimHtml.trimInternal(editor.serializer, html);
     return trimmed.length > 0 ? [trimmed] : [];
   });
   content = trimmedFragments.join('');
@@ -56,7 +56,7 @@ var createFromEditor = function (editor) {
   return hasIframes(content) ? createFragmentedLevel(trimmedFragments) : createCompleteLevel(content);
 };
 
-var applyToEditor = function (editor, level, before) {
+const applyToEditor = function (editor, level, before) {
   if (level.type === 'fragmented') {
     Fragments.write(level.fragments, editor.getBody());
   } else {
@@ -66,18 +66,18 @@ var applyToEditor = function (editor, level, before) {
   editor.selection.moveToBookmark(before ? level.beforeBookmark : level.bookmark);
 };
 
-var getLevelContent = function (level) {
+const getLevelContent = function (level) {
   return level.type === 'fragmented' ? level.fragments.join('') : level.content;
 };
 
-var isEq = function (level1, level2) {
+const isEq = function (level1, level2) {
   return !!level1 && !!level2 && getLevelContent(level1) === getLevelContent(level2);
 };
 
 export default {
-  createFragmentedLevel: createFragmentedLevel,
-  createCompleteLevel: createCompleteLevel,
-  createFromEditor: createFromEditor,
-  applyToEditor: applyToEditor,
-  isEq: isEq
+  createFragmentedLevel,
+  createCompleteLevel,
+  createFromEditor,
+  applyToEditor,
+  isEq
 };

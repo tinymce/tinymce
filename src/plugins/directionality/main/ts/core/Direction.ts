@@ -10,8 +10,10 @@
 
 import Tools from 'tinymce/core/util/Tools';
 
-var setDir = function (editor, dir) {
-  var dom = editor.dom, curDir, blocks = editor.selection.getSelectedBlocks();
+const setDir = function (editor, dir) {
+  const dom = editor.dom;
+  let curDir;
+  const blocks = editor.selection.getSelectedBlocks();
 
   if (blocks.length) {
     curDir = dom.getAttrib(blocks[0], 'dir');
@@ -28,5 +30,5 @@ var setDir = function (editor, dir) {
 };
 
 export default {
-  setDir: setDir
+  setDir
 };

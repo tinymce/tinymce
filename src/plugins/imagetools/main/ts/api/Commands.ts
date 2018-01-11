@@ -11,7 +11,7 @@
 import Tools from 'tinymce/core/util/Tools';
 import Actions from '../core/Actions';
 
-var register = function (editor, imageUploadTimerState) {
+const register = function (editor, imageUploadTimerState) {
   Tools.each({
     mceImageRotateLeft: Actions.rotate(editor, imageUploadTimerState, -90),
     mceImageRotateRight: Actions.rotate(editor, imageUploadTimerState, 90),
@@ -24,5 +24,5 @@ var register = function (editor, imageUploadTimerState) {
 };
 
 export default {
-  register: register
+  register
 };

@@ -22,22 +22,23 @@ import Tools from './Tools';
  *  eventDispatcher.fire('click', {data: 123});
  */
 
-var nativeEvents = Tools.makeMap(
-  "focus blur focusin focusout click dblclick mousedown mouseup mousemove mouseover beforepaste paste cut copy selectionchange " +
-  "mouseout mouseenter mouseleave wheel keydown keypress keyup input contextmenu dragstart dragend dragover " +
-  "draggesture dragdrop drop drag submit " +
-  "compositionstart compositionend compositionupdate touchstart touchmove touchend",
+const nativeEvents = Tools.makeMap(
+  'focus blur focusin focusout click dblclick mousedown mouseup mousemove mouseover beforepaste paste cut copy selectionchange ' +
+  'mouseout mouseenter mouseleave wheel keydown keypress keyup input contextmenu dragstart dragend dragover ' +
+  'draggesture dragdrop drop drag submit ' +
+  'compositionstart compositionend compositionupdate touchstart touchmove touchend',
   ' '
 );
 
-var Dispatcher: any = function (settings) {
-  var self = this, scope, bindings = {}, toggleEvent;
+const Dispatcher: any = function (settings) {
+  const self = this;
+  let scope, bindings = {}, toggleEvent;
 
-  var returnFalse = function () {
+  const returnFalse = function () {
     return false;
   };
 
-  var returnTrue = function () {
+  const returnTrue = function () {
     return true;
   };
 
@@ -55,8 +56,8 @@ var Dispatcher: any = function (settings) {
    * @example
    * instance.fire('event', {...});
    */
-  var fire = function (name, args) {
-    var handlers, i, l, callback;
+  const fire = function (name, args) {
+    let handlers, i, l, callback;
 
     name = name.toLowerCase();
     args = args || {};
@@ -134,8 +135,8 @@ var Dispatcher: any = function (settings) {
    *     // Callback logic
    * });
    */
-  var on = function (name, callback, prepend, extra) {
-    var handlers, names, i;
+  const on = function (name, callback, prepend, extra) {
+    let handlers, names, i;
 
     if (callback === false) {
       callback = returnFalse;
@@ -188,8 +189,8 @@ var Dispatcher: any = function (settings) {
    * // Unbind all events
    * instance.off();
    */
-  var off = function (name, callback) {
-    var i, handlers, bindingName, names, hi;
+  const off = function (name, callback) {
+    let i, handlers, bindingName, names, hi;
 
     if (name) {
       names = name.toLowerCase().split(' ');
@@ -254,7 +255,7 @@ var Dispatcher: any = function (settings) {
    *     // Callback logic
    * });
    */
-  var once = function (name, callback, prepend) {
+  const once = function (name, callback, prepend) {
     return on(name, callback, prepend, { once: true });
   };
 
@@ -265,7 +266,7 @@ var Dispatcher: any = function (settings) {
    * @param {String} name Name of the event to check for.
    * @return {Boolean} true/false if the event exists or not.
    */
-  var has = function (name) {
+  const has = function (name) {
     name = name.toLowerCase();
     return !(!bindings[name] || bindings[name].length === 0);
   };

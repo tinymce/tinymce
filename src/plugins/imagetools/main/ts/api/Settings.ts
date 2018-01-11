@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getToolbarItems = function (editor) {
+const getToolbarItems = function (editor) {
   return editor.getParam('imagetools_toolbar', 'rotateleft rotateright | flipv fliph | crop editimage imageoptions');
 };
 
-var getProxyUrl = function (editor) {
+const getProxyUrl = function (editor) {
   return editor.getParam('imagetools_proxy');
 };
 
 export default {
-  getToolbarItems: getToolbarItems,
-  getProxyUrl: getProxyUrl
+  getToolbarItems,
+  getProxyUrl
 };

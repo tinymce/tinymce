@@ -8,20 +8,20 @@ import InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sInsertNewline = function (editor, args) {
+  const sInsertNewline = function (editor, args) {
     return Step.sync(function () {
       InsertNewLine.insert(editor, args);
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -104,4 +104,3 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

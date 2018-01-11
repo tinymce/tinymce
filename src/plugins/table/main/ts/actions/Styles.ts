@@ -10,17 +10,18 @@
 
 import Tools from 'tinymce/core/util/Tools';
 
-var getTDTHOverallStyle = function (dom, elm, name) {
-  var cells = dom.select("td,th", elm), firstChildStyle;
+const getTDTHOverallStyle = function (dom, elm, name) {
+  const cells = dom.select('td,th', elm);
+  let firstChildStyle;
 
-  var checkChildren = function (firstChildStyle, elms) {
-    for (var i = 0; i < elms.length; i++) {
-      var currentStyle = dom.getStyle(elms[i], name);
-      if (typeof firstChildStyle === "undefined") {
+  const checkChildren = function (firstChildStyle, elms) {
+    for (let i = 0; i < elms.length; i++) {
+      const currentStyle = dom.getStyle(elms[i], name);
+      if (typeof firstChildStyle === 'undefined') {
         firstChildStyle = currentStyle;
       }
-      if (firstChildStyle != currentStyle) {
-        return "";
+      if (firstChildStyle !== currentStyle) {
+        return '';
       }
     }
     return firstChildStyle;
@@ -30,34 +31,34 @@ var getTDTHOverallStyle = function (dom, elm, name) {
   return firstChildStyle;
 };
 
-var applyAlign = function (editor, elm, name) {
+const applyAlign = function (editor, elm, name) {
   if (name) {
     editor.formatter.apply('align' + name, {}, elm);
   }
 };
 
-var applyVAlign = function (editor, elm, name) {
+const applyVAlign = function (editor, elm, name) {
   if (name) {
     editor.formatter.apply('valign' + name, {}, elm);
   }
 };
 
-var unApplyAlign = function (editor, elm) {
+const unApplyAlign = function (editor, elm) {
   Tools.each('left center right'.split(' '), function (name) {
     editor.formatter.remove('align' + name, {}, elm);
   });
 };
 
-var unApplyVAlign = function (editor, elm) {
+const unApplyVAlign = function (editor, elm) {
   Tools.each('top middle bottom'.split(' '), function (name) {
     editor.formatter.remove('valign' + name, {}, elm);
   });
 };
 
 export default {
-  applyAlign: applyAlign,
-  applyVAlign: applyVAlign,
-  unApplyAlign: unApplyAlign,
-  unApplyVAlign: unApplyVAlign,
-  getTDTHOverallStyle: getTDTHOverallStyle
+  applyAlign,
+  applyVAlign,
+  unApplyAlign,
+  unApplyVAlign,
+  getTDTHOverallStyle
 };

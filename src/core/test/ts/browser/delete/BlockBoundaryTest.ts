@@ -3,39 +3,38 @@ import { Chain } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Fun } from '@ephox/katamari';
 import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import BlockBoundary from 'tinymce/core/delete/BlockBoundary';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var viewBlock = ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const viewBlock = ViewBlock();
 
-  var cSetHtml = function (html) {
+  const cSetHtml = function (html) {
     return Chain.op(function () {
       viewBlock.update(html);
     });
   };
 
-  var cReadBlockBoundary = function (forward, cursorPath, cursorOffset) {
+  const cReadBlockBoundary = function (forward, cursorPath, cursorOffset) {
     return Chain.mapper(function (viewBlock) {
-      var container = Hierarchy.follow(Element.fromDom(viewBlock.get()), cursorPath).getOrDie();
-      var rng = document.createRange();
+      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), cursorPath).getOrDie();
+      const rng = document.createRange();
       rng.setStart(container.dom(), cursorOffset);
       rng.setEnd(container.dom(), cursorOffset);
       return BlockBoundary.read(viewBlock.get(), forward, rng);
     });
   };
 
-  var cAssertBlockBoundaryPositions = function (fromPath, fromOffset, toPath, toOffset) {
+  const cAssertBlockBoundaryPositions = function (fromPath, fromOffset, toPath, toOffset) {
     return Chain.op(function (blockBoundaryOption) {
-      var fromContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), fromPath).getOrDie();
-      var toContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), toPath).getOrDie();
-      var blockBoundary = blockBoundaryOption.getOrDie();
+      const fromContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), fromPath).getOrDie();
+      const toContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), toPath).getOrDie();
+      const blockBoundary = blockBoundaryOption.getOrDie();
 
       Assertions.assertDomEq('Should be expected from container', fromContainer, Element.fromDom(blockBoundary.from().position().container()));
       Assertions.assertEq('Should be expected from offset', fromOffset, blockBoundary.from().position().offset());
@@ -44,18 +43,18 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryTest', function() {
     });
   };
 
-  var cAssertBlockBoundaryBlocks = function (fromBlockPath, toBlockPath) {
+  const cAssertBlockBoundaryBlocks = function (fromBlockPath, toBlockPath) {
     return Chain.op(function (blockBoundaryOption) {
-      var expectedFromBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), fromBlockPath).getOrDie();
-      var expectedToBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), toBlockPath).getOrDie();
-      var blockBoundary = blockBoundaryOption.getOrDie();
+      const expectedFromBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), fromBlockPath).getOrDie();
+      const expectedToBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), toBlockPath).getOrDie();
+      const blockBoundary = blockBoundaryOption.getOrDie();
 
       Assertions.assertDomEq('Should be expected from block', expectedFromBlock, blockBoundary.from().block());
       Assertions.assertDomEq('Should be expected to block', expectedToBlock, blockBoundary.to().block());
     });
   };
 
-  var cAssertBlockBoundaryNone = Chain.op(function (blockBoundaryOption) {
+  const cAssertBlockBoundaryNone = Chain.op(function (blockBoundaryOption) {
     Assertions.assertEq('BlockBoundary should be none', true, blockBoundaryOption.isNone());
   });
 
@@ -121,4 +120,3 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryTest', function() {
     success();
   }, failure);
 });
-

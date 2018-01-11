@@ -22,13 +22,13 @@ import ErrorReporter from './ErrorReporter';
  * @class tinymce.EditorUpload
  */
 
-
-
 export default function (editor) {
-  var blobCache = BlobCache(), uploader, imageScanner, settings = editor.settings;
-  var uploadStatus = UploadStatus();
+  const blobCache = BlobCache();
+  let uploader, imageScanner;
+  const settings = editor.settings;
+  const uploadStatus = UploadStatus();
 
-  var aliveGuard = function (callback) {
+  const aliveGuard = function (callback) {
     return function (result) {
       if (editor.selection) {
         return callback(result);
@@ -38,13 +38,13 @@ export default function (editor) {
     };
   };
 
-  var cacheInvalidator = function () {
+  const cacheInvalidator = function () {
     return '?' + (new Date()).getTime();
   };
 
   // Replaces strings without regexps to avoid FF regexp to big issue
-  var replaceString = function (content, search, replace) {
-    var index = 0;
+  const replaceString = function (content, search, replace) {
+    let index = 0;
 
     do {
       index = content.indexOf(search, index);
@@ -58,14 +58,14 @@ export default function (editor) {
     return content;
   };
 
-  var replaceImageUrl = function (content, targetUrl, replacementUrl) {
+  const replaceImageUrl = function (content, targetUrl, replacementUrl) {
     content = replaceString(content, 'src="' + targetUrl + '"', 'src="' + replacementUrl + '"');
     content = replaceString(content, 'data-mce-src="' + targetUrl + '"', 'data-mce-src="' + replacementUrl + '"');
 
     return content;
   };
 
-  var replaceUrlInUndoStack = function (targetUrl, replacementUrl) {
+  const replaceUrlInUndoStack = function (targetUrl, replacementUrl) {
     Arr.each(editor.undoManager.data, function (level) {
       if (level.type === 'fragmented') {
         level.fragments = Arr.map(level.fragments, function (fragment) {
@@ -77,7 +77,7 @@ export default function (editor) {
     });
   };
 
-  var openNotification = function () {
+  const openNotification = function () {
     return editor.notificationManager.open({
       text: editor.translate('Image uploading...'),
       type: 'info',
@@ -86,17 +86,17 @@ export default function (editor) {
     });
   };
 
-  var replaceImageUri = function (image, resultUri) {
+  const replaceImageUri = function (image, resultUri) {
     blobCache.removeByUri(image.src);
     replaceUrlInUndoStack(image.src, resultUri);
 
     editor.$(image).attr({
-      src: settings.images_reuse_filename ? resultUri + cacheInvalidator() : resultUri,
+      'src': settings.images_reuse_filename ? resultUri + cacheInvalidator() : resultUri,
       'data-mce-src': editor.convertURL(resultUri, 'src')
     });
   };
 
-  var uploadImages = function (callback) {
+  const uploadImages = function (callback) {
     if (!uploader) {
       uploader = Uploader(uploadStatus, {
         url: settings.images_upload_url,
@@ -107,15 +107,15 @@ export default function (editor) {
     }
 
     return scanForImages().then(aliveGuard(function (imageInfos) {
-      var blobInfos;
+      let blobInfos;
 
       blobInfos = Arr.map(imageInfos, function (imageInfo) {
         return imageInfo.blobInfo;
       });
 
       return uploader.upload(blobInfos, openNotification).then(aliveGuard(function (result) {
-        var filteredResult = Arr.map(result, function (uploadInfo, index) {
-          var image = imageInfos[index].image;
+        const filteredResult = Arr.map(result, function (uploadInfo, index) {
+          const image = imageInfos[index].image;
 
           if (uploadInfo.status && editor.settings.images_replace_blob_uris !== false) {
             replaceImageUri(image, uploadInfo.url);
@@ -138,17 +138,17 @@ export default function (editor) {
     }));
   };
 
-  var uploadImagesAuto = function (callback?) {
+  const uploadImagesAuto = function (callback?) {
     if (settings.automatic_uploads !== false) {
       return uploadImages(callback);
     }
   };
 
-  var isValidDataUriImage = function (imgElm) {
+  const isValidDataUriImage = function (imgElm) {
     return settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
   };
 
-  var scanForImages = function () {
+  const scanForImages = function () {
     if (!imageScanner) {
       imageScanner = ImageScanner(uploadStatus, blobCache);
     }
@@ -174,21 +174,21 @@ export default function (editor) {
     }));
   };
 
-  var destroy = function () {
+  const destroy = function () {
     blobCache.destroy();
     uploadStatus.destroy();
     imageScanner = uploader = null;
   };
 
-  var replaceBlobUris = function (content) {
+  const replaceBlobUris = function (content) {
     return content.replace(/src="(blob:[^"]+)"/g, function (match, blobUri) {
-      var resultUri = uploadStatus.getResultUri(blobUri);
+      const resultUri = uploadStatus.getResultUri(blobUri);
 
       if (resultUri) {
         return 'src="' + resultUri + '"';
       }
 
-      var blobInfo = blobCache.getByUri(blobUri);
+      let blobInfo = blobCache.getByUri(blobUri);
 
       if (!blobInfo) {
         blobInfo = Arr.reduce(editor.editorManager.get(), function (result, editor) {
@@ -217,7 +217,7 @@ export default function (editor) {
   });
 
   editor.on('getContent', function (e) {
-    if (e.source_view || e.format == 'raw') {
+    if (e.source_view || e.format === 'raw') {
       return;
     }
 
@@ -227,13 +227,13 @@ export default function (editor) {
   editor.on('PostRender', function () {
     editor.parser.addNodeFilter('img', function (images) {
       Arr.each(images, function (img) {
-        var src = img.attr('src');
+        const src = img.attr('src');
 
         if (blobCache.getByUri(src)) {
           return;
         }
 
-        var resultUri = uploadStatus.getResultUri(src);
+        const resultUri = uploadStatus.getResultUri(src);
         if (resultUri) {
           img.attr('src', resultUri);
         }
@@ -242,10 +242,10 @@ export default function (editor) {
   });
 
   return {
-    blobCache: blobCache,
-    uploadImages: uploadImages,
-    uploadImagesAuto: uploadImagesAuto,
-    scanForImages: scanForImages,
-    destroy: destroy
+    blobCache,
+    uploadImages,
+    uploadImagesAuto,
+    scanForImages,
+    destroy
   };
-};
+}

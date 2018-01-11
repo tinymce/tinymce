@@ -18,16 +18,14 @@ import FlowLayout from './FlowLayout';
  * @extends tinymce.ui.FlowLayout
  */
 
-"use strict";
-
-export default <any> FlowLayout.extend({
+export default FlowLayout.extend({
   Defaults: {
     containerClass: 'stack-layout',
     controlClass: 'stack-layout-item',
     endClass: 'break'
   },
 
-  isNative: function () {
+  isNative () {
     return true;
   }
 });

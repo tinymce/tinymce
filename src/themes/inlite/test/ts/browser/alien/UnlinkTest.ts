@@ -7,22 +7,22 @@ import { Step } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.alien.UnlinkTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.alien.UnlinkTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sUnlinkSelection = function (editor) {
+  const sUnlinkSelection = function (editor) {
     return Step.sync(function () {
       Unlink.unlinkSelection(editor);
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
-    var sAssertUnlink = function (inputHtml, startPath, startOffset, finishPath, finishOffset, expectedHtml) {
+    const sAssertUnlink = function (inputHtml, startPath, startOffset, finishPath, finishOffset, expectedHtml) {
       return GeneralSteps.sequence([
         tinyApis.sSetContent(inputHtml),
         tinyApis.sSetSelection(startPath, startOffset, finishPath, finishOffset),
@@ -43,4 +43,3 @@ UnitTest.asynctest('browser.alien.UnlinkTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

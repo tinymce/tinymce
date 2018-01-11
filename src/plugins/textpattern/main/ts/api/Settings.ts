@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var defaultPatterns = [
+const defaultPatterns = [
   { start: '*', end: '*', format: 'italic' },
   { start: '**', end: '**', format: 'bold' },
   { start: '***', end: '***', format: ['bold', 'italic'] },
@@ -23,12 +23,12 @@ var defaultPatterns = [
   { start: '- ', cmd: 'InsertUnorderedList' }
 ];
 
-var getPatterns = function (editorSettings) {
+const getPatterns = function (editorSettings) {
   return editorSettings.textpattern_patterns !== undefined ?
     editorSettings.textpattern_patterns :
     defaultPatterns;
 };
 
 export default {
-  getPatterns: getPatterns
+  getPatterns
 };

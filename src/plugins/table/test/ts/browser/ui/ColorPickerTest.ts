@@ -1,24 +1,24 @@
-import { Arr } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { SelectorFind } from '@ephox/sugar';
-import { Chain } from '@ephox/agar';
-import { NamedChain } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { UiControls } from '@ephox/agar';
-import { ApproxStructure } from '@ephox/agar';
-import { Editor } from '@ephox/mcagar';
-import { ApiChains } from '@ephox/mcagar';
-import { UiChains } from '@ephox/mcagar';
-import { TinyDom } from '@ephox/mcagar';
-import TablePlugin from 'tinymce/plugins/table/Plugin';
-import ColorPickerPlugin from 'tinymce/plugins/colorpicker/Plugin';
-import Theme from 'tinymce/themes/modern/Theme';
+// import { Arr } from '@ephox/katamari';
+// import { Merger } from '@ephox/katamari';
+// import { SelectorFind } from '@ephox/sugar';
+// import { Chain } from '@ephox/agar';
+// import { NamedChain } from '@ephox/agar';
+// import { UiFinder } from '@ephox/agar';
+// import { Assertions } from '@ephox/agar';
+// import { FocusTools } from '@ephox/agar';
+// import { UiControls } from '@ephox/agar';
+// import { ApproxStructure } from '@ephox/agar';
+// import { Editor } from '@ephox/mcagar';
+// import { ApiChains } from '@ephox/mcagar';
+// import { UiChains } from '@ephox/mcagar';
+// import { TinyDom } from '@ephox/mcagar';
+// import TablePlugin from 'tinymce/plugins/table/Plugin';
+// import ColorPickerPlugin from 'tinymce/plugins/colorpicker/Plugin';
+// import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.ColorPickerTest', function() {
-  var success = arguments[arguments.length - 2];
+UnitTest.asynctest('browser.tinymce.plugins.table.ColorPickerTest', function () {
+  const success = arguments[arguments.length - 2];
   /*    var failure = arguments[arguments.length - 1];
 
       TablePlugin();
@@ -110,4 +110,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ColorPickerTest', function() {
   */
   success();
 });
-

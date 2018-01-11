@@ -39,24 +39,23 @@ import Tools from '../util/Tools';
  * });
  */
 
-var DOM = DOMUtils.DOM;
-var each = Tools.each, grep = Tools.grep;
+const DOM = DOMUtils.DOM;
+const each = Tools.each, grep = Tools.grep;
 
-var isFunction = function (f) {
+const isFunction = function (f) {
   return typeof f === 'function';
 };
 
-var ScriptLoader: any = function () {
-  var QUEUED = 0,
-    LOADING = 1,
-    LOADED = 2,
-    FAILED = 3,
-    states = {},
-    queue = [],
-    scriptLoadedCallbacks = {},
-    queueLoadedCallbacks = [],
-    loading = 0,
-    undef;
+const ScriptLoader: any = function () {
+  const QUEUED = 0;
+  const LOADING = 1;
+  const LOADED = 2;
+  const FAILED = 3;
+  const states = {};
+  const queue = [];
+  const scriptLoadedCallbacks = {};
+  const queueLoadedCallbacks = [];
+  let loading = 0;
 
   /**
    * Loads a specific script directly without adding it to the load queue.
@@ -66,11 +65,12 @@ var ScriptLoader: any = function () {
    * @param {function} callback Optional success callback function when the script loaded successfully.
    * @param {function} callback Optional failure callback function when the script failed to load.
    */
-  var loadScript = function (url, success, failure) {
-    var dom = DOM, elm, id;
+  const loadScript = function (url, success, failure) {
+    const dom = DOM;
+    let elm, id;
 
     // Execute callback when script is loaded
-    var done = function () {
+    const done = function () {
       dom.remove(id);
 
       if (elm) {
@@ -80,7 +80,7 @@ var ScriptLoader: any = function () {
       success();
     };
 
-    var error = function () {
+    const error = function () {
 
       // We can't mark it as done if there is a load error since
       // A) We don't want to produce 404 errors on the server and
@@ -91,8 +91,8 @@ var ScriptLoader: any = function () {
         failure();
       } else {
         // Report the error so it's easier for people to spot loading errors
-        if (typeof console !== "undefined" && console.log) {
-          console.log("Failed to load script: " + url);
+        if (typeof console !== 'undefined' && console.log) {
+          console.log('Failed to load script: ' + url);
         }
       }
     };
@@ -106,7 +106,7 @@ var ScriptLoader: any = function () {
     elm.src = Tools._addCacheSuffix(url);
 
     // Seems that onreadystatechange works better on IE 10 onload seems to fire incorrectly
-    if ("onreadystatechange" in elm) {
+    if ('onreadystatechange' in elm) {
       elm.onreadystatechange = function () {
         if (/loaded|complete/.test(elm.readyState)) {
           done();
@@ -131,7 +131,7 @@ var ScriptLoader: any = function () {
    * @return {Boolean} true/false if the URL is loaded.
    */
   this.isDone = function (url) {
-    return states[url] == LOADED;
+    return states[url] === LOADED;
   };
 
   /**
@@ -155,10 +155,10 @@ var ScriptLoader: any = function () {
    * @param {function} failure Optional failure callback function to execute when the script failed to load.
    */
   this.add = this.load = function (url, success, scope, failure) {
-    var state = states[url];
+    const state = states[url];
 
     // Add url to load queue
-    if (state == undef) {
+    if (state === undefined) {
       queue.push(url);
       states[url] = QUEUED;
     }
@@ -170,8 +170,8 @@ var ScriptLoader: any = function () {
       }
 
       scriptLoadedCallbacks[url].push({
-        success: success,
-        failure: failure,
+        success,
+        failure,
         scope: scope || this
       });
     }
@@ -205,9 +205,10 @@ var ScriptLoader: any = function () {
    * @param {function} callback Optional callback to execute if scripts failed to load.
    */
   this.loadScripts = function (scripts, success, scope, failure) {
-    var loadScripts, failures = [];
+    let loadScripts;
+    const failures = [];
 
-    var execCallbacks = function (name, url) {
+    const execCallbacks = function (name, url) {
       // Execute URL callback functions
       each(scriptLoadedCallbacks[url], function (callback) {
         if (isFunction(callback[name])) {
@@ -215,17 +216,17 @@ var ScriptLoader: any = function () {
         }
       });
 
-      scriptLoadedCallbacks[url] = undef;
+      scriptLoadedCallbacks[url] = undefined;
     };
 
     queueLoadedCallbacks.push({
-      success: success,
-      failure: failure,
+      success,
+      failure,
       scope: scope || this
     });
 
     loadScripts = function () {
-      var loadingScripts = grep(scripts);
+      const loadingScripts = grep(scripts);
 
       // Current scripts has been handled
       scripts.length = 0;
@@ -272,7 +273,7 @@ var ScriptLoader: any = function () {
       // No scripts are currently loading then execute all pending queue loaded callbacks
       if (!loading) {
         // We need to clone the notifications and empty the pending callbacks so that callbacks can load more resources
-        var notifyCallbacks = queueLoadedCallbacks.slice(0);
+        const notifyCallbacks = queueLoadedCallbacks.slice(0);
         queueLoadedCallbacks.length = 0;
 
         each(notifyCallbacks, function (callback) {

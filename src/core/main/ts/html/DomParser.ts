@@ -27,10 +27,10 @@ import Tools from '../util/Tools';
  * @version 3.4
  */
 
-var makeMap = Tools.makeMap, each = Tools.each, explode = Tools.explode, extend = Tools.extend;
+const makeMap = Tools.makeMap, each = Tools.each, explode = Tools.explode, extend = Tools.extend;
 
-var paddEmptyNode = function (settings, args, blockElements, node) {
-  var brPreferred = settings.padd_empty_with_br || args.insert;
+const paddEmptyNode = function (settings, args, blockElements, node) {
+  const brPreferred = settings.padd_empty_with_br || args.insert;
 
   if (brPreferred && blockElements[node.name]) {
     node.empty().append(new Node('br', '1')).shortEnded = true;
@@ -39,36 +39,40 @@ var paddEmptyNode = function (settings, args, blockElements, node) {
   }
 };
 
-var isPaddedWithNbsp = function (node) {
+const isPaddedWithNbsp = function (node) {
   return hasOnlyChild(node, '#text') && node.firstChild.value === '\u00a0';
 };
 
-var hasOnlyChild = function (node, name) {
+const hasOnlyChild = function (node, name) {
   return node && node.firstChild && node.firstChild === node.lastChild && node.firstChild.name === name;
 };
 
-var isPadded = function (schema, node) {
-  var rule = schema.getElementRule(node.name);
+const isPadded = function (schema, node) {
+  const rule = schema.getElementRule(node.name);
   return rule && rule.paddEmpty;
 };
 
-var isEmpty = function (schema, nonEmptyElements, whitespaceElements, node) {
+const isEmpty = function (schema, nonEmptyElements, whitespaceElements, node) {
   return node.isEmpty(nonEmptyElements, whitespaceElements, function (node) {
     return isPadded(schema, node);
   });
 };
 
 export default function (settings?, schema?) {
-  var self: any = {}, nodeFilters = {}, attributeFilters = [], matchedNodes = {}, matchedAttributes = {};
+  const self: any = {};
+  const nodeFilters = {};
+  const attributeFilters = [];
+  let matchedNodes = {};
+  let matchedAttributes = {};
 
   settings = settings || {};
-  settings.validate = "validate" in settings ? settings.validate : true;
+  settings.validate = 'validate' in settings ? settings.validate : true;
   settings.root_name = settings.root_name || 'body';
   self.schema = schema = schema || Schema();
 
-  var fixInvalidChildren = function (nodes) {
-    var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
-    var nonEmptyElements, whitespaceElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;
+  const fixInvalidChildren = function (nodes) {
+    let ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
+    let nonEmptyElements, whitespaceElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;
 
     nonSplitableElements = makeMap('tr,td,th,tbody,thead,tfoot,table');
     nonEmptyElements = schema.getNonEmptyElements();
@@ -86,7 +90,7 @@ export default function (settings?, schema?) {
 
       // If the invalid element is a text block and the text block is within a parent LI element
       // Then unwrap the first text block and convert other sibling text blocks to LI elements similar to Word/Open Office
-      if (textBlockElements[node.name] && node.parent.name == 'li') {
+      if (textBlockElements[node.name] && node.parent.name === 'li') {
         // Move sibling text blocks after LI element
         sibling = node.next;
         while (sibling) {
@@ -130,7 +134,7 @@ export default function (settings?, schema?) {
             tempNode = currentNode;
           }
 
-          for (childNode = parents[i].firstChild; childNode && childNode != parents[i + 1];) {
+          for (childNode = parents[i].firstChild; childNode && childNode !== parents[i + 1];) {
             nextNode = childNode.next;
             tempNode.append(childNode);
             childNode = nextNode;
@@ -193,7 +197,7 @@ export default function (settings?, schema?) {
    * @return {tinymce.html.Node} The passed in node.
    */
   self.filterNode = function (node) {
-    var i, name, list;
+    let i, name, list;
 
     // Run element filters
     if (name in nodeFilters) {
@@ -241,7 +245,7 @@ export default function (settings?, schema?) {
    */
   self.addNodeFilter = function (name, callback) {
     each(explode(name), function (name) {
-      var list = nodeFilters[name];
+      let list = nodeFilters[name];
 
       if (!list) {
         nodeFilters[name] = list = [];
@@ -267,7 +271,7 @@ export default function (settings?, schema?) {
    */
   self.addAttributeFilter = function (name, callback) {
     each(explode(name), function (name) {
-      var i;
+      let i;
 
       for (i = 0; i < attributeFilters.length; i++) {
         if (attributeFilters[i].name === name) {
@@ -276,7 +280,7 @@ export default function (settings?, schema?) {
         }
       }
 
-      attributeFilters.push({ name: name, callbacks: [callback] });
+      attributeFilters.push({ name, callbacks: [callback] });
     });
   };
 
@@ -291,10 +295,12 @@ export default function (settings?, schema?) {
    * @return {tinymce.html.Node} Root node containing the tree.
    */
   self.parse = function (html, args) {
-    var parser, rootNode, node, nodes, i, l, fi, fl, list, name, validate;
-    var blockElements, startWhiteSpaceRegExp, invalidChildren = [], isInWhiteSpacePreservedElement;
-    var endWhiteSpaceRegExp, allWhiteSpaceRegExp, isAllWhiteSpaceRegExp, whiteSpaceElements;
-    var children, nonEmptyElements, rootBlockName;
+    let parser, rootNode, node, nodes, i, l, fi, fl, list, name, validate;
+    let blockElements, startWhiteSpaceRegExp;
+    const invalidChildren = [];
+    let isInWhiteSpacePreservedElement;
+    let endWhiteSpaceRegExp, allWhiteSpaceRegExp, isAllWhiteSpaceRegExp, whiteSpaceElements;
+    let children, nonEmptyElements, rootBlockName;
 
     args = args || {};
     matchedNodes = {};
@@ -303,7 +309,7 @@ export default function (settings?, schema?) {
     nonEmptyElements = schema.getNonEmptyElements();
     children = schema.children;
     validate = settings.validate;
-    rootBlockName = "forced_root_block" in args ? args.forced_root_block : settings.forced_root_block;
+    rootBlockName = 'forced_root_block' in args ? args.forced_root_block : settings.forced_root_block;
 
     whiteSpaceElements = schema.getWhiteSpaceElements();
     startWhiteSpaceRegExp = /^[ \t\r\n]+/;
@@ -311,20 +317,20 @@ export default function (settings?, schema?) {
     allWhiteSpaceRegExp = /[ \t\r\n]+/g;
     isAllWhiteSpaceRegExp = /^[ \t\r\n]+$/;
 
-    var addRootBlocks = function () {
-      var node = rootNode.firstChild, next, rootBlockNode;
+    const addRootBlocks = function () {
+      let node = rootNode.firstChild, next, rootBlockNode;
 
       // Removes whitespace at beginning and end of block so:
       // <p> x </p> -> <p>x</p>
-      var trim = function (rootBlockNode) {
+      const trim = function (rootBlockNode) {
         if (rootBlockNode) {
           node = rootBlockNode.firstChild;
-          if (node && node.type == 3) {
+          if (node && node.type === 3) {
             node.value = node.value.replace(startWhiteSpaceRegExp, '');
           }
 
           node = rootBlockNode.lastChild;
-          if (node && node.type == 3) {
+          if (node && node.type === 3) {
             node.value = node.value.replace(endWhiteSpaceRegExp, '');
           }
         }
@@ -338,7 +344,7 @@ export default function (settings?, schema?) {
       while (node) {
         next = node.next;
 
-        if (node.type == 3 || (node.type == 1 && node.name !== 'p' &&
+        if (node.type === 3 || (node.type === 1 && node.name !== 'p' &&
           !blockElements[node.name] && !node.attr('data-mce-type'))) {
           if (!rootBlockNode) {
             // Create a new root block element
@@ -360,8 +366,9 @@ export default function (settings?, schema?) {
       trim(rootBlockNode);
     };
 
-    var createNode = function (name, type) {
-      var node = new Node(name, type), list;
+    const createNode = function (name, type) {
+      const node = new Node(name, type);
+      let list;
 
       if (name in nodeFilters) {
         list = matchedNodes[name];
@@ -376,8 +383,9 @@ export default function (settings?, schema?) {
       return node;
     };
 
-    var removeWhitespaceBefore = function (node) {
-      var textNode, textNodeNext, textVal, sibling, blockElements = schema.getBlockElements();
+    const removeWhitespaceBefore = function (node) {
+      let textNode, textNodeNext, textVal, sibling;
+      const blockElements = schema.getBlockElements();
 
       for (textNode = node.prev; textNode && textNode.type === 3;) {
         textVal = textNode.value.replace(endWhiteSpaceRegExp, '');
@@ -393,12 +401,12 @@ export default function (settings?, schema?) {
         // Fix for bug #7543 where bogus nodes would produce empty
         // text nodes and these would be removed if a nested list was before it
         if (textNodeNext) {
-          if (textNodeNext.type == 3 && textNodeNext.value.length) {
+          if (textNodeNext.type === 3 && textNodeNext.value.length) {
             textNode = textNode.prev;
             continue;
           }
 
-          if (!blockElements[textNodeNext.name] && textNodeNext.name != 'script' && textNodeNext.name != 'style') {
+          if (!blockElements[textNodeNext.name] && textNodeNext.name !== 'script' && textNodeNext.name !== 'style') {
             textNode = textNode.prev;
             continue;
           }
@@ -410,11 +418,12 @@ export default function (settings?, schema?) {
       }
     };
 
-    var cloneAndExcludeBlocks = function (input) {
-      var name, output = {};
+    const cloneAndExcludeBlocks = function (input) {
+      let name;
+      const output = {};
 
       for (name in input) {
-        if (name !== 'li' && name != 'p') {
+        if (name !== 'li' && name !== 'p') {
           output[name] = input[name];
         }
       }
@@ -423,19 +432,19 @@ export default function (settings?, schema?) {
     };
 
     parser = new SaxParser({
-      validate: validate,
+      validate,
       allow_script_urls: settings.allow_script_urls,
       allow_conditional_comments: settings.allow_conditional_comments,
 
       // Exclude P and LI from DOM parsing since it's treated better by the DOM parser
       self_closing_elements: cloneAndExcludeBlocks(schema.getSelfClosingElements()),
 
-      cdata: function (text) {
+      cdata (text) {
         node.append(createNode('#cdata', 4)).value = text;
       },
 
-      text: function (text, raw) {
-        var textNode;
+      text (text, raw) {
+        let textNode;
 
         // Trim all redundant whitespace on non white space elements
         if (!isInWhiteSpacePreservedElement) {
@@ -454,25 +463,25 @@ export default function (settings?, schema?) {
         }
       },
 
-      comment: function (text) {
+      comment (text) {
         node.append(createNode('#comment', 8)).value = text;
       },
 
-      pi: function (name, text) {
+      pi (name, text) {
         node.append(createNode(name, 7)).value = text;
         removeWhitespaceBefore(node);
       },
 
-      doctype: function (text) {
-        var newNode;
+      doctype (text) {
+        let newNode;
 
         newNode = node.append(createNode('#doctype', 10));
         newNode.value = text;
         removeWhitespaceBefore(node);
       },
 
-      start: function (name, attrs, empty) {
-        var newNode, attrFiltersLen, elementRule, attrName, parent;
+      start (name, attrs, empty) {
+        let newNode, attrFiltersLen, elementRule, attrName, parent;
 
         elementRule = validate ? schema.getElementRule(name) : {};
         if (elementRule) {
@@ -521,8 +530,8 @@ export default function (settings?, schema?) {
         }
       },
 
-      end: function (name) {
-        var textNode, elementRule, text, sibling, tempNode;
+      end (name) {
+        let textNode, elementRule, text, sibling, tempNode;
 
         elementRule = validate ? schema.getElementRule(name) : {};
         if (elementRule) {
@@ -644,7 +653,7 @@ export default function (settings?, schema?) {
     }
 
     // Wrap nodes in the root into block elements if the root is body
-    if (rootBlockName && (rootNode.name == 'body' || args.isRootContent)) {
+    if (rootBlockName && (rootNode.name === 'body' || args.isRootContent)) {
       addRootBlocks();
     }
 
@@ -698,10 +707,14 @@ export default function (settings?, schema?) {
   // these elements and keep br elements that where intended to be there intact
   if (settings.remove_trailing_brs) {
     self.addNodeFilter('br', function (nodes, _, args) {
-      var i, l = nodes.length, node, blockElements = extend({}, schema.getBlockElements());
-      var nonEmptyElements = schema.getNonEmptyElements(), parent, lastParent, prev, prevName;
-      var whiteSpaceElements = schema.getNonEmptyElements();
-      var elementRule, textNode;
+      let i;
+      const l = nodes.length;
+      let node;
+      const blockElements = extend({}, schema.getBlockElements());
+      const nonEmptyElements = schema.getNonEmptyElements();
+      let parent, lastParent, prev, prevName;
+      const whiteSpaceElements = schema.getNonEmptyElements();
+      let elementRule, textNode;
 
       // Remove brs from body element as well
       blockElements.body = 1;
@@ -719,9 +732,9 @@ export default function (settings?, schema?) {
             prevName = prev.name;
 
             // Ignore bookmarks
-            if (prevName !== "span" || prev.attr('data-mce-type') !== 'bookmark') {
+            if (prevName !== 'span' || prev.attr('data-mce-type') !== 'bookmark') {
               // Found a non BR element
-              if (prevName !== "br") {
+              if (prevName !== 'br') {
                 break;
               }
 
@@ -776,19 +789,18 @@ export default function (settings?, schema?) {
     });
   }
 
-
   self.addAttributeFilter('href', function (nodes) {
-    var i = nodes.length, node;
+    let i = nodes.length, node;
 
-    var appendRel = function (rel) {
-      var parts = rel.split(' ').filter(function (p) {
+    const appendRel = function (rel) {
+      const parts = rel.split(' ').filter(function (p) {
         return p.length > 0;
       });
       return parts.concat(['noopener']).sort().join(' ');
     };
 
-    var addNoOpener = function (rel) {
-      var newRel = rel ? Tools.trim(rel) : '';
+    const addNoOpener = function (rel) {
+      const newRel = rel ? Tools.trim(rel) : '';
       if (!/\b(noopener)\b/g.test(newRel)) {
         return appendRel(newRel);
       } else {
@@ -809,7 +821,7 @@ export default function (settings?, schema?) {
   // Force anchor names closed, unless the setting "allow_html_in_named_anchor" is explicitly included.
   if (!settings.allow_html_in_named_anchor) {
     self.addAttributeFilter('id,name', function (nodes) {
-      var i = nodes.length, sibling, prevSibling, parent, node;
+      let i = nodes.length, sibling, prevSibling, parent, node;
 
       while (i--) {
         node = nodes[i];
@@ -830,7 +842,7 @@ export default function (settings?, schema?) {
 
   if (settings.fix_list_elements) {
     self.addNodeFilter('ul,ol', function (nodes) {
-      var i = nodes.length, node, parentNode;
+      let i = nodes.length, node, parentNode;
 
       while (i--) {
         node = nodes[i];
@@ -840,7 +852,7 @@ export default function (settings?, schema?) {
           if (node.prev && node.prev.name === 'li') {
             node.prev.append(node);
           } else {
-            var li = new Node('li', 1);
+            const li = new Node('li', 1);
             li.attr('style', 'list-style-type: none');
             node.wrap(li);
           }
@@ -851,8 +863,9 @@ export default function (settings?, schema?) {
 
   if (settings.validate && schema.getValidClasses()) {
     self.addAttributeFilter('class', function (nodes) {
-      var i = nodes.length, node, classList, ci, className, classValue;
-      var validClasses = schema.getValidClasses(), validClassesMap, valid;
+      let i = nodes.length, node, classList, ci, className, classValue;
+      const validClasses = schema.getValidClasses();
+      let validClassesMap, valid;
 
       while (i--) {
         node = nodes[i];
@@ -894,4 +907,4 @@ export default function (settings?, schema?) {
   LegacyFilter.register(self, settings);
 
   return self;
-};
+}

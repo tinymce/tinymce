@@ -9,10 +9,9 @@
  */
 
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
-import NodeType from './NodeType';
 import Range from './Range';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
 /**
  * Returns a range bookmark. This will convert indexed bookmarks into temporary span elements with
@@ -25,11 +24,11 @@ var DOM = DOMUtils.DOM;
  * @param  {DOMRange} rng DOM Range to get bookmark on.
  * @return {Object} Bookmark object.
  */
-var createBookmark = function (rng) {
-  var bookmark = {};
+const createBookmark = function (rng) {
+  const bookmark = {};
 
-  var setupEndPoint = function (start?) {
-    var offsetNode, container, offset;
+  const setupEndPoint = function (start?) {
+    let offsetNode, container, offset;
 
     container = rng[start ? 'startContainer' : 'endContainer'];
     offset = rng[start ? 'startOffset' : 'endOffset'];
@@ -66,12 +65,12 @@ var createBookmark = function (rng) {
   return bookmark;
 };
 
-var resolveBookmark = function (bookmark) {
+const resolveBookmark = function (bookmark) {
   function restoreEndPoint(start?) {
-    var container, offset, node;
+    let container, offset, node;
 
-    var nodeIndex = function (container) {
-      var node = container.parentNode.firstChild, idx = 0;
+    const nodeIndex = function (container) {
+      let node = container.parentNode.firstChild, idx = 0;
 
       while (node) {
         if (node === container) {
@@ -113,7 +112,7 @@ var resolveBookmark = function (bookmark) {
   restoreEndPoint(true);
   restoreEndPoint();
 
-  var rng = DOM.createRng();
+  const rng = DOM.createRng();
 
   rng.setStart(bookmark.startContainer, bookmark.startOffset);
 
@@ -125,6 +124,6 @@ var resolveBookmark = function (bookmark) {
 };
 
 export default {
-  createBookmark: createBookmark,
-  resolveBookmark: resolveBookmark
+  createBookmark,
+  resolveBookmark
 };

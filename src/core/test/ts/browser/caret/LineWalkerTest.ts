@@ -7,24 +7,24 @@ import $ from 'tinymce/core/dom/DomQuery';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   if (!Env.ceFalse) {
     return;
   }
 
-  var getRoot = function () {
+  const getRoot = function () {
     return viewBlock.get();
   };
 
   suite.test('positionsUntil', function () {
-    var result, predicateCallCount = 0;
+    let result, predicateCallCount = 0;
 
-    var predicate = function () {
+    const predicate = function () {
       predicateCallCount++;
       return false;
     };
@@ -48,9 +48,9 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function() {
   });
 
   suite.test('upUntil', function () {
-    var caretPosition, result, predicateCallCount = 0;
+    let caretPosition, result, predicateCallCount = 0;
 
-    var predicate = function () {
+    const predicate = function () {
       predicateCallCount++;
       return false;
     };
@@ -68,9 +68,9 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function() {
   });
 
   suite.test('downUntil', function () {
-    var caretPosition, result, predicateCallCount = 0;
+    let caretPosition, result, predicateCallCount = 0;
 
-    var predicate = function () {
+    const predicate = function () {
       predicateCallCount++;
       return false;
     };
@@ -103,4 +103,3 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function() {
     success();
   }, failure);
 });
-

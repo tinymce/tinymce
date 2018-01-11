@@ -26,4 +26,4 @@ PluginManager.add('nonbreaking', function (editor) {
   Keyboard.setup(editor);
 });
 
-export default function () { };
+export default function () { }

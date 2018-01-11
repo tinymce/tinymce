@@ -1,16 +1,14 @@
 import { Cell } from '@ephox/katamari';
 import { LazyValue } from '@ephox/katamari';
 
-
-
-export default <any> function (doAction) {
+export default function (doAction) {
   // Start the activity in idle state.
-  var action = Cell(
+  const action = Cell(
     LazyValue.pure({})
   );
 
-  var start = function (value) {
-    var future = LazyValue.nu(function (callback) {
+  const start = function (value) {
+    const future = LazyValue.nu(function (callback) {
       return doAction(value).get(callback);
     });
 
@@ -19,14 +17,14 @@ export default <any> function (doAction) {
   };
 
   // Idle will fire g once the current action is complete.
-  var idle = function (g) {
+  const idle = function (g) {
     action.get().get(function () {
       g();
     });
   };
 
   return {
-    start: start,
-    idle: idle
+    start,
+    idle
   };
-};
+}

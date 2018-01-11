@@ -11,7 +11,7 @@
 import Tools from 'tinymce/core/util/Tools';
 import FormatUtils from './FormatUtils';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addMenuItem('align', {
     text: 'Align',
     menu: [
@@ -38,6 +38,6 @@ var register = function (editor) {
   });
 };
 
-export default <any> {
-  register: register
+export default {
+  register
 };

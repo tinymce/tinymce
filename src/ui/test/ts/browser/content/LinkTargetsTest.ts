@@ -4,24 +4,24 @@ import LinkTargets from 'tinymce/ui/content/LinkTargets';
 import { Arr } from '@ephox/katamari';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.content.LinkTargetsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.ui.content.LinkTargetsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
-  var createFromHtml = function (html) {
-    var elm = document.createElement('div');
-    elm.contentEditable = "true";
+  const createFromHtml = function (html) {
+    const elm = document.createElement('div');
+    elm.contentEditable = 'true';
     elm.innerHTML = html;
     return elm;
   };
 
-  var targetsIn = function (html) {
+  const targetsIn = function (html) {
     return LinkTargets.find(createFromHtml(html));
   };
 
-  var equalTargets = function (actualTargets, expectedTargets, message) {
-    var nonAttachedTargets = Arr.map(actualTargets, function (target) {
+  const equalTargets = function (actualTargets, expectedTargets, message) {
+    const nonAttachedTargets = Arr.map(actualTargets, function (target) {
       return {
         level: target.level,
         title: target.title,
@@ -72,31 +72,31 @@ UnitTest.asynctest('browser.tinymce.ui.content.LinkTargetsTest', function() {
   });
 
   suite.test('Anchor attach', function () {
-    var elm = createFromHtml('<a id="a"></a>');
-    var targets = LinkTargets.find(elm);
+    const elm = createFromHtml('<a id="a"></a>');
+    const targets = LinkTargets.find(elm);
 
     targets[0].attach();
     LegacyUnit.equal(elm.innerHTML, '<a id="a"></a>', 'Should remain the same as before attach');
   });
 
   suite.test('Header attach on header with id', function () {
-    var elm = createFromHtml('<h1 id="a">a</h1>');
-    var targets = LinkTargets.find(elm);
+    const elm = createFromHtml('<h1 id="a">a</h1>');
+    const targets = LinkTargets.find(elm);
 
     targets[0].attach();
     LegacyUnit.equal(elm.innerHTML, '<h1 id="a">a</h1>', 'Should remain the same as before attach');
   });
 
   suite.test('Header attach on headers without ids', function () {
-    var elm: any = createFromHtml('<h1>a</h1><h2>b</h2>');
-    var targets = LinkTargets.find(elm);
+    const elm: any = createFromHtml('<h1>a</h1><h2>b</h2>');
+    const targets = LinkTargets.find(elm);
 
     targets[0].attach();
     targets[1].attach();
 
-    var idA = elm.firstChild.id;
-    var idB = elm.lastChild.id;
-    var afterAttachHtml = elm.innerHTML;
+    const idA = elm.firstChild.id;
+    const idB = elm.lastChild.id;
+    const afterAttachHtml = elm.innerHTML;
 
     LegacyUnit.equal(afterAttachHtml, '<h1 id="' + idA + '">a</h1><h2 id="' + idB + '">b</h2>', 'Should have unique id:s');
     LegacyUnit.equal(idA === idB, false, 'Should not be equal id:s');
@@ -111,4 +111,3 @@ UnitTest.asynctest('browser.tinymce.ui.content.LinkTargetsTest', function() {
     success();
   }, failure);
 });
-

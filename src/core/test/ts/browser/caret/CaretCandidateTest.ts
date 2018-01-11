@@ -7,26 +7,26 @@ import Zwsp from 'tinymce/core/text/Zwsp';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   if (!Env.ceFalse) {
     return;
   }
 
-  var getRoot = function () {
+  const getRoot = function () {
     return viewBlock.get();
   };
 
-  var setupHtml = function (html) {
+  const setupHtml = function (html) {
     viewBlock.update(html);
   };
 
   suite.test('isCaretCandidate', function () {
-    $.each("img input textarea hr table iframe video audio object".split(' '), function (index, name) {
+    $.each('img input textarea hr table iframe video audio object'.split(' '), function (index, name) {
       LegacyUnit.equal(CaretCandidate.isCaretCandidate(document.createElement(name)), true);
     });
 
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function() {
   });
 
   suite.test('isAtomic', function () {
-    $.each(["img", "input", "textarea", "hr"], function (index, name) {
+    $.each(['img', 'input', 'textarea', 'hr'], function (index, name) {
       LegacyUnit.equal(CaretCandidate.isAtomic(document.createElement(name)), true);
     });
 
@@ -76,4 +76,3 @@ UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function() {
     success();
   }, failure);
 });
-

@@ -10,11 +10,11 @@
 
 import Settings from '../api/Settings';
 
-var setup = function (editor) {
-  var $ = editor.$, tocClass = Settings.getTocClass(editor);
+const setup = function (editor) {
+  const $ = editor.$, tocClass = Settings.getTocClass(editor);
 
   editor.on('PreProcess', function (e) {
-    var $tocElm = $('.' + tocClass, e.node);
+    const $tocElm = $('.' + tocClass, e.node);
     if ($tocElm.length) {
       $tocElm.removeAttr('contentEditable');
       $tocElm.find('[contenteditable]').removeAttr('contentEditable');
@@ -22,7 +22,7 @@ var setup = function (editor) {
   });
 
   editor.on('SetContent', function () {
-    var $tocElm = $('.' + tocClass);
+    const $tocElm = $('.' + tocClass);
     if ($tocElm.length) {
       $tocElm.attr('contentEditable', false);
       $tocElm.children(':first-child').attr('contentEditable', true);
@@ -31,5 +31,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

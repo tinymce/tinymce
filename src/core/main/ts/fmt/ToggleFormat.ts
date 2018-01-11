@@ -12,8 +12,8 @@ import ApplyFormat from './ApplyFormat';
 import MatchFormat from './MatchFormat';
 import RemoveFormat from './RemoveFormat';
 
-var toggle = function (editor, formats, name, vars, node) {
-  var fmt = formats.get(name);
+const toggle = function (editor, formats, name, vars, node) {
+  const fmt = formats.get(name);
 
   if (MatchFormat.match(editor, name, vars, node) && (!('toggle' in fmt[0]) || fmt[0].toggle)) {
     RemoveFormat.remove(editor, name, vars, node);
@@ -23,5 +23,5 @@ var toggle = function (editor, formats, name, vars, node) {
 };
 
 export default {
-  toggle: toggle
+  toggle
 };

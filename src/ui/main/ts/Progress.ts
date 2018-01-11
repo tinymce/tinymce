@@ -18,15 +18,13 @@ import Widget from './Widget';
  * @extends tinymce.ui.Control
  */
 
-"use strict";
-
-export default <any> Widget.extend({
+export default Widget.extend({
   Defaults: {
     value: 0
   },
 
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._super(settings);
     self.classes.add('progress');
@@ -38,8 +36,8 @@ export default <any> Widget.extend({
     }
   },
 
-  renderHtml: function () {
-    var self = this, id = self._id, prefix = this.classPrefix;
+  renderHtml () {
+    const self = this, id = self._id, prefix = this.classPrefix;
 
     return (
       '<div id="' + id + '" class="' + self.classes + '">' +
@@ -51,8 +49,8 @@ export default <any> Widget.extend({
     );
   },
 
-  postRender: function () {
-    var self = this;
+  postRender () {
+    const self = this;
 
     self._super();
     self.value(self.settings.value);
@@ -60,8 +58,8 @@ export default <any> Widget.extend({
     return self;
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     function setValue(value) {
       value = self.settings.filter(value);

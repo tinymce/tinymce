@@ -18,26 +18,26 @@ import PredicateId from './PredicateId';
 import SelectionMatcher from './SelectionMatcher';
 import SkinLoader from './SkinLoader';
 
-var getSelectionElements = function (editor) {
-  var node = editor.selection.getNode();
-  var elms = editor.dom.getParents(node);
+const getSelectionElements = function (editor) {
+  const node = editor.selection.getNode();
+  const elms = editor.dom.getParents(node);
   return elms;
 };
 
-var createToolbar = function (editor, selector, id, items) {
-  var selectorPredicate = function (elm) {
+const createToolbar = function (editor, selector, id, items) {
+  const selectorPredicate = function (elm) {
     return editor.dom.is(elm, selector);
   };
 
   return {
     predicate: selectorPredicate,
-    id: id,
-    items: items
+    id,
+    items
   };
 };
 
-var getToolbars = function (editor) {
-  var contextToolbars = editor.contextToolbars;
+const getToolbars = function (editor) {
+  const contextToolbars = editor.contextToolbars;
 
   return Arr.flatten([
     contextToolbars ? contextToolbars : [],
@@ -45,8 +45,8 @@ var getToolbars = function (editor) {
   ]);
 };
 
-var findMatchResult = function (editor, toolbars) {
-  var result, elements, contextToolbarsPredicateIds;
+const findMatchResult = function (editor, toolbars) {
+  let result, elements, contextToolbarsPredicateIds;
 
   elements = getSelectionElements(editor);
   contextToolbarsPredicateIds = PredicateId.fromContextToolbars(toolbars);
@@ -61,10 +61,10 @@ var findMatchResult = function (editor, toolbars) {
   return result && result.rect ? result : null;
 };
 
-var togglePanel = function (editor, panel) {
-  var toggle = function () {
-    var toolbars = getToolbars(editor);
-    var result = findMatchResult(editor, toolbars);
+const togglePanel = function (editor, panel) {
+  const toggle = function () {
+    const toolbars = getToolbars(editor);
+    const result = findMatchResult(editor, toolbars);
 
     if (result) {
       panel.show(editor, result.id, result.rect, toolbars);
@@ -80,10 +80,10 @@ var togglePanel = function (editor, panel) {
   };
 };
 
-var repositionPanel = function (editor, panel) {
+const repositionPanel = function (editor, panel) {
   return function () {
-    var toolbars = getToolbars(editor);
-    var result = findMatchResult(editor, toolbars);
+    const toolbars = getToolbars(editor);
+    const result = findMatchResult(editor, toolbars);
 
     if (result) {
       panel.reposition(editor, result.id, result.rect);
@@ -91,7 +91,7 @@ var repositionPanel = function (editor, panel) {
   };
 };
 
-var ignoreWhenFormIsVisible = function (editor, panel, f) {
+const ignoreWhenFormIsVisible = function (editor, panel, f) {
   return function () {
     if (!editor.removed && !panel.inForm()) {
       f();
@@ -99,10 +99,10 @@ var ignoreWhenFormIsVisible = function (editor, panel, f) {
   };
 };
 
-var bindContextualToolbarsEvents = function (editor, panel) {
-  var throttledTogglePanel = Delay.throttle(togglePanel(editor, panel), 0);
-  var throttledTogglePanelWhenNotInForm = Delay.throttle(ignoreWhenFormIsVisible(editor, panel, togglePanel(editor, panel)), 0);
-  var reposition = repositionPanel(editor, panel);
+const bindContextualToolbarsEvents = function (editor, panel) {
+  const throttledTogglePanel = Delay.throttle(togglePanel(editor, panel), 0);
+  const throttledTogglePanelWhenNotInForm = Delay.throttle(ignoreWhenFormIsVisible(editor, panel, togglePanel(editor, panel)), 0);
+  const reposition = repositionPanel(editor, panel);
 
   editor.on('blur hide ObjectResizeStart', panel.hide);
   editor.on('click', throttledTogglePanel);
@@ -119,11 +119,11 @@ var bindContextualToolbarsEvents = function (editor, panel) {
   editor.shortcuts.add('Alt+F10,F10', '', panel.focus);
 };
 
-var overrideLinkShortcut = function (editor, panel) {
+const overrideLinkShortcut = function (editor, panel) {
   editor.shortcuts.remove('meta+k');
   editor.shortcuts.add('meta+k', '', function () {
-    var toolbars = getToolbars(editor);
-    var result = result = Matcher.match(editor, [
+    const toolbars = getToolbars(editor);
+    const result = Matcher.match(editor, [
       SelectionMatcher.textSelection('quicklink')
     ]);
 
@@ -133,7 +133,7 @@ var overrideLinkShortcut = function (editor, panel) {
   });
 };
 
-var renderInlineUI = function (editor, panel) {
+const renderInlineUI = function (editor, panel) {
   SkinLoader.load(editor, function () {
     bindContextualToolbarsEvents(editor, panel);
     overrideLinkShortcut(editor, panel);
@@ -142,14 +142,14 @@ var renderInlineUI = function (editor, panel) {
   return {};
 };
 
-var fail = function (message) {
+const fail = function (message) {
   throw new Error(message);
 };
 
-var renderUI = function (editor, panel) {
+const renderUI = function (editor, panel) {
   return editor.inline ? renderInlineUI(editor, panel) : fail('inlite theme only supports inline mode.');
 };
 
-export default <any> {
-  renderUI: renderUI
+export default {
+  renderUI
 };

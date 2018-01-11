@@ -2,9 +2,9 @@ import HtmlToData from 'tinymce/plugins/media/core/HtmlToData';
 import { RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('atomic.core.HtmlToDataTest', function() {
-  var testHtmlToData = function (html, expected) {
-    var actual = HtmlToData.htmlToData([], html);
+UnitTest.test('atomic.core.HtmlToDataTest', function () {
+  const testHtmlToData = function (html, expected) {
+    const actual = HtmlToData.htmlToData([], html);
     RawAssertions.assertEq('Assert equal', expected, actual);
   };
 
@@ -27,14 +27,13 @@ UnitTest.test('atomic.core.HtmlToDataTest', function() {
   });
 
   testHtmlToData('<iframe src="//www.youtube.com/embed/b3XFjWInBog" width="560" height="314" allowFullscreen="1"></iframe>', {
-    src: "//www.youtube.com/embed/b3XFjWInBog",
-    width: "560",
-    height: "314",
-    allowfullscreen: "1",
-    type: "iframe",
-    source1: "//www.youtube.com/embed/b3XFjWInBog",
-    source2: "",
-    poster: ""
+    src: '//www.youtube.com/embed/b3XFjWInBog',
+    width: '560',
+    height: '314',
+    allowfullscreen: '1',
+    type: 'iframe',
+    source1: '//www.youtube.com/embed/b3XFjWInBog',
+    source2: '',
+    poster: ''
   });
 });
-

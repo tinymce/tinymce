@@ -11,19 +11,18 @@
 import MediaPlugin from 'tinymce/plugins/media/Plugin';
 
 declare let tinymce: any;
-declare let window: any;
 
 MediaPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "media code",
-  toolbar: "undo redo | media code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'media code',
+  toolbar: 'undo redo | media code',
   // media_dimensions: false,
   // media_live_embeds: false,
-  file_picker_callback: function (callback, value, meta) {
+  file_picker_callback (callback, value, meta) {
     // Provide alternative source and posted for the media dialog
     if (meta.filetype === 'media') {
       callback('https://youtu.be/a4tNU2jgTZU');

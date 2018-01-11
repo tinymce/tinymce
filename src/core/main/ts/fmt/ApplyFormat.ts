@@ -20,13 +20,13 @@ import RangeNormalizer from '../selection/RangeNormalizer';
 import RangeWalk from '../selection/RangeWalk';
 import Tools from '../util/Tools';
 
-var each = Tools.each;
+const each = Tools.each;
 
-var isElementNode = function (node) {
+const isElementNode = function (node) {
   return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !CaretFormat.isCaretNode(node) && !NodeType.isBogus(node);
 };
 
-var processChildElements = function (node, filter, process) {
+const processChildElements = function (node, filter, process) {
   each(node.childNodes, function (node) {
     if (isElementNode(node)) {
       if (filter(node)) {
@@ -39,11 +39,14 @@ var processChildElements = function (node, filter, process) {
   });
 };
 
-var applyFormat = function (ed, name, vars?, node?) {
-  var formatList = ed.formatter.get(name), format = formatList[0], bookmark, rng, isCollapsed = !node && ed.selection.isCollapsed();
-  var dom = ed.dom, selection = ed.selection;
+const applyFormat = function (ed, name, vars?, node?) {
+  const formatList = ed.formatter.get(name);
+  const format = formatList[0];
+  let bookmark, rng;
+  const isCollapsed = !node && ed.selection.isCollapsed();
+  const dom = ed.dom, selection = ed.selection;
 
-  var setElementFormat = function (elm, fmt?) {
+  const setElementFormat = function (elm, fmt?) {
     fmt = fmt || format;
 
     if (elm) {
@@ -58,7 +61,7 @@ var applyFormat = function (ed, name, vars?, node?) {
       // Needed for the WebKit span spam bug
       // TODO: Remove this once WebKit/Blink fixes this
       if (fmt.styles) {
-        var styleVal = dom.getAttrib(elm, 'style');
+        const styleVal = dom.getAttrib(elm, 'style');
 
         if (styleVal) {
           elm.setAttribute('data-mce-style', styleVal);
@@ -79,8 +82,8 @@ var applyFormat = function (ed, name, vars?, node?) {
     }
   };
 
-  var applyNodeStyle = function (formatList, node) {
-    var found = false;
+  const applyNodeStyle = function (formatList, node) {
+    let found = false;
 
     if (!format.selector) {
       return false;
@@ -103,8 +106,9 @@ var applyFormat = function (ed, name, vars?, node?) {
     return found;
   };
 
-  var applyRngStyle = function (dom, rng, bookmark, nodeSpecific?) {
-    var newWrappers = [], wrapName, wrapElm, contentEditable = true;
+  const applyRngStyle = function (dom, rng, bookmark, nodeSpecific?) {
+    const newWrappers = [];
+    let wrapName, wrapElm, contentEditable = true;
 
     // Setup wrapper element
     wrapName = format.inline || format.block;
@@ -112,13 +116,13 @@ var applyFormat = function (ed, name, vars?, node?) {
     setElementFormat(wrapElm);
 
     RangeWalk.walk(dom, rng, function (nodes) {
-      var currentWrapElm;
+      let currentWrapElm;
 
       /**
        * Process a list of nodes wrap them.
        */
-      var process = function (node) {
-        var nodeName, parentName, hasContentEditableState, lastContentEditable;
+      const process = function (node) {
+        let nodeName, parentName, hasContentEditableState, lastContentEditable;
 
         lastContentEditable = contentEditable;
         nodeName = node.nodeName.toLowerCase();
@@ -127,7 +131,7 @@ var applyFormat = function (ed, name, vars?, node?) {
         // Node has a contentEditable value
         if (node.nodeType === 1 && dom.getContentEditable(node)) {
           lastContentEditable = contentEditable;
-          contentEditable = dom.getContentEditable(node) === "true";
+          contentEditable = dom.getContentEditable(node) === 'true';
           hasContentEditableState = true; // We don't want to wrap the container only it's children
         }
 
@@ -162,7 +166,7 @@ var applyFormat = function (ed, name, vars?, node?) {
 
         // Handle selector patterns
         if (format.selector) {
-          var found = applyNodeStyle(formatList, node);
+          const found = applyNodeStyle(formatList, node);
 
           // Continue processing if a selector match wasn't found and a inline element is defined
           if (!format.inline || found) {
@@ -210,7 +214,7 @@ var applyFormat = function (ed, name, vars?, node?) {
     // Apply formats to links as well to get the color of the underline to change as well
     if (format.links === true) {
       each(newWrappers, function (node) {
-        var process = function (node) {
+        const process = function (node) {
           if (node.nodeName === 'A') {
             setElementFormat(node, format);
           }
@@ -224,10 +228,10 @@ var applyFormat = function (ed, name, vars?, node?) {
 
     // Cleanup
     each(newWrappers, function (node) {
-      var childCount;
+      let childCount;
 
-      var getChildCount = function (node) {
-        var count = 0;
+      const getChildCount = function (node) {
+        let count = 0;
 
         each(node.childNodes, function (node) {
           if (!FormatUtils.isWhiteSpaceNode(node) && !Bookmarks.isBookmarkNode(node)) {
@@ -238,8 +242,8 @@ var applyFormat = function (ed, name, vars?, node?) {
         return count;
       };
 
-      var getChildElementNode = function (root) {
-        var child = false;
+      const getChildElementNode = function (root) {
+        let child = false;
         each(root.childNodes, function (node) {
           if (isElementNode(node)) {
             child = node;
@@ -249,8 +253,8 @@ var applyFormat = function (ed, name, vars?, node?) {
         return child;
       };
 
-      var mergeStyles = function (node) {
-        var child, clone;
+      const mergeStyles = function (node) {
+        let child, clone;
 
         child = getChildElementNode(node);
 
@@ -291,9 +295,9 @@ var applyFormat = function (ed, name, vars?, node?) {
     });
   };
 
-  if (dom.getContentEditable(selection.getNode()) === "false") {
+  if (dom.getContentEditable(selection.getNode()) === 'false') {
     node = selection.getNode();
-    for (var i = 0, l = formatList.length; i < l; i++) {
+    for (let i = 0, l = formatList.length; i < l; i++) {
       if (formatList[i].ceFalseOverride && dom.is(node, formatList[i].selector)) {
         setElementFormat(node, formatList[i]);
         return;
@@ -318,7 +322,7 @@ var applyFormat = function (ed, name, vars?, node?) {
     } else {
       if (!isCollapsed || !format.inline || dom.select('td[data-mce-selected],th[data-mce-selected]').length) {
         // Obtain selection node before selection is unselected by applyRngStyle
-        var curSelNode = ed.selection.getNode();
+        const curSelNode = ed.selection.getNode();
 
         // If the formats have a default block and we can't find a parent block then
         // start wrapping it with a DIV this is for forced_root_blocks: false
@@ -349,5 +353,5 @@ var applyFormat = function (ed, name, vars?, node?) {
 };
 
 export default {
-  applyFormat: applyFormat
+  applyFormat
 };

@@ -6,10 +6,10 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
@@ -637,7 +637,7 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function() {
         '<p>b</p>'
       );
 
-      var rng = editor.dom.createRng();
+      const rng = editor.dom.createRng();
       rng.setStart(editor.getBody().firstChild, 0);
       rng.setEnd(editor.getBody().lastChild.firstChild, 1);
       editor.selection.setRng(rng);
@@ -664,7 +664,7 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function() {
     );
 
     editor.focus();
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild.firstChild, 0);
     rng.setEnd(editor.getBody().lastChild, 1);
     editor.selection.setRng(rng);
@@ -932,7 +932,7 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function() {
       '</table>'
     );
 
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('td')[0], 0);
     rng.setEnd(editor.dom.select('td')[0], 1);
     editor.selection.setRng(rng);
@@ -954,7 +954,7 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function() {
       '</table>'
     );
 
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('td')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('td')[0].firstChild, 0);
     editor.selection.setRng(rng);
@@ -966,7 +966,7 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function() {
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
-    plugins: "lists",
+    plugins: 'lists',
     add_unload_trigger: false,
     disable_nodechange: true,
     indent: false,
@@ -982,4 +982,3 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

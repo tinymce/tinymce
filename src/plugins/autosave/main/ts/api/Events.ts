@@ -8,20 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var fireRestoreDraft = function (editor) {
+const fireRestoreDraft = function (editor) {
   return editor.fire('RestoreDraft');
 };
 
-var fireStoreDraft = function (editor) {
+const fireStoreDraft = function (editor) {
   return editor.fire('StoreDraft');
 };
 
-var fireRemoveDraft = function (editor) {
+const fireRemoveDraft = function (editor) {
   return editor.fire('RemoveDraft');
 };
 
 export default {
-  fireRestoreDraft: fireRestoreDraft,
-  fireStoreDraft: fireStoreDraft,
-  fireRemoveDraft: fireRemoveDraft
+  fireRestoreDraft,
+  fireStoreDraft,
+  fireRemoveDraft
 };

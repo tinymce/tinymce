@@ -7,28 +7,28 @@ import FocusController from 'tinymce/core/focus/FocusController';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.focus.FocusControllerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.focus.FocusControllerTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
   suite.test('isEditorUIElement on valid element', function () {
-    var uiElm = DOMUtils.DOM.create('div', { 'class': 'mce-abc' }, null);
+    const uiElm = DOMUtils.DOM.create('div', { class: 'mce-abc' }, null);
     LegacyUnit.equal(FocusController.isEditorUIElement(uiElm), true, 'Should be true since mce- is a ui prefix');
   });
 
   suite.test('isEditorUIElement on invalid element', function () {
-    var noUiElm = DOMUtils.DOM.create('div', { 'class': 'mcex-abc' }, null);
+    const noUiElm = DOMUtils.DOM.create('div', { class: 'mcex-abc' }, null);
     LegacyUnit.equal(FocusController.isEditorUIElement(noUiElm), false, 'Should be true since mcex- is not a ui prefix');
   });
 
   suite.test('isEditorUIElement when api predicate is overwritten', function () {
-    var customUiElm = DOMUtils.DOM.create('div', { 'class': 'abc' }, null);
-    var customNoUiElm = DOMUtils.DOM.create('div', { 'class': 'x' }, null);
+    const customUiElm = DOMUtils.DOM.create('div', { class: 'abc' }, null);
+    const customNoUiElm = DOMUtils.DOM.create('div', { class: 'x' }, null);
 
-    var oldPredicate = FocusManager.isEditorUIElement;
+    const oldPredicate = FocusManager.isEditorUIElement;
     FocusManager.isEditorUIElement = function (elm) {
       return elm.className === 'abc';
     };
@@ -42,9 +42,9 @@ UnitTest.asynctest('browser.tinymce.focus.FocusControllerTest', function() {
   });
 
   suite.test('isUIElement on valid element', function (editor) {
-    var uiElm1 = DOMUtils.DOM.create('div', { 'class': 'mce-abc' }, null);
-    var uiElm2 = DOMUtils.DOM.create('div', { 'class': 'mcex-abc' }, null);
-    var noUiElm = DOMUtils.DOM.create('div', { 'class': 'mcey-abc' }, null);
+    const uiElm1 = DOMUtils.DOM.create('div', { class: 'mce-abc' }, null);
+    const uiElm2 = DOMUtils.DOM.create('div', { class: 'mcex-abc' }, null);
+    const noUiElm = DOMUtils.DOM.create('div', { class: 'mcey-abc' }, null);
     editor.settings.custom_ui_selector = '.mcex-abc';
     LegacyUnit.equal(FocusController.isUIElement(editor, uiElm1), true, 'Should be true since mce- is a ui prefix');
     LegacyUnit.equal(FocusController.isUIElement(editor, uiElm2), true, 'Should be true since mcex- is a ui prefix');
@@ -63,4 +63,3 @@ UnitTest.asynctest('browser.tinymce.focus.FocusControllerTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

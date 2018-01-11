@@ -8,32 +8,32 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var isType = function (type) {
+const isType = function (type) {
   return function (value) {
     return typeof value === type;
   };
 };
 
-var isArray = function (value) {
+const isArray = function (value) {
   return Array.isArray(value);
 };
 
-var isNull = function (value) {
+const isNull = function (value) {
   return value === null;
 };
 
-var isObject = function (predicate) {
+const isObject = function (predicate) {
   return function (value) {
     return !isNull(value) && !isArray(value) && predicate(value);
   };
 };
 
-export default <any> {
-  isString: isType("string"),
-  isNumber: isType("number"),
-  isBoolean: isType("boolean"),
-  isFunction: isType("function"),
-  isObject: isObject(isType("object")),
-  isNull: isNull,
-  isArray: isArray
+export default {
+  isString: isType('string'),
+  isNumber: isType('number'),
+  isBoolean: isType('boolean'),
+  isFunction: isType('function'),
+  isObject: isObject(isType('object')),
+  isNull,
+  isArray
 };

@@ -17,18 +17,18 @@ import DOMUtils from './DOMUtils';
  * @class tinymce.dom.NodePath
  */
 
-var create = function (rootNode, targetNode, normalized?) {
-  var path = [];
+const create = function (rootNode, targetNode, normalized?) {
+  const path = [];
 
-  for (; targetNode && targetNode != rootNode; targetNode = targetNode.parentNode) {
+  for (; targetNode && targetNode !== rootNode; targetNode = targetNode.parentNode) {
     path.push(DOMUtils.nodeIndex(targetNode, normalized));
   }
 
   return path;
 };
 
-var resolve = function (rootNode, path) {
-  var i, node, children;
+const resolve = function (rootNode, path) {
+  let i, node, children;
 
   for (node = rootNode, i = path.length - 1; i >= 0; i--) {
     children = node.childNodes;
@@ -44,6 +44,6 @@ var resolve = function (rootNode, path) {
 };
 
 export default {
-  create: create,
-  resolve: resolve
+  create,
+  resolve
 };

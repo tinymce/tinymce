@@ -6,25 +6,25 @@ import { Window } from '@ephox/sand';
 import Conversions from 'tinymce/themes/inlite/file/Conversions';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('atomic.core.ConvertTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('atomic.core.ConvertTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var base64ToBlob = function (base64, type) {
-    var buff = Window.atob(base64);
-    var bytes = new Uint8Array(buff.length);
+  const base64ToBlob = function (base64, type) {
+    const buff = Window.atob(base64);
+    const bytes = new Uint8Array(buff.length);
 
-    for (var i = 0; i < bytes.length; i++) {
+    for (let i = 0; i < bytes.length; i++) {
       bytes[i] = buff.charCodeAt(i);
     }
 
-    return new Blob([bytes], { type: type });
+    return new Blob([bytes], { type });
   };
 
-  var sBlobToBase64 = function () {
+  const sBlobToBase64 = function () {
     return Step.async(function (next) {
-      var base64 = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-      var blob = base64ToBlob(base64, 'image/gif');
+      const base64 = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+      const blob = base64ToBlob(base64, 'image/gif');
 
       Conversions.blobToBase64(blob).then(function (convertedBase64) {
         Assertions.assertEq('Not the correct base64', base64, convertedBase64);
@@ -41,4 +41,3 @@ UnitTest.asynctest('atomic.core.ConvertTest', function() {
     failure();
   });
 });
-

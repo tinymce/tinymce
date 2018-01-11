@@ -5,17 +5,17 @@ import Serializer from 'tinymce/core/html/Serializer';
 import DomParser from 'tinymce/core/html/DomParser';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
-  var schema = Schema({ valid_elements: '*[class|title]' });
-  var serializer = Serializer({}, schema);
-  var parser, root;
+  const schema = Schema({ valid_elements: '*[class|title]' });
+  const serializer = Serializer({}, schema);
+  let parser, root;
 
-  var countNodes = function (node, counter?) {
-    var sibling;
+  const countNodes = function (node, counter?) {
+    let sibling;
 
     if (!counter) {
       counter = {};
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   schema.addValidChildren('+body[style]');
 
   suite.test('Parse element', function () {
-    var parser, root;
+    let parser, root;
 
     parser = DomParser({}, schema);
     root = parser.parse('<B title="title" class="class">test</B>');
@@ -49,24 +49,24 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
       { name: 'class', value: 'class' }],
       'Element attributes'
     );
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, b: 1, '#text': 1 }, 'Element attributes (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'b': 1, '#text': 1 }, 'Element attributes (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('  \t\r\n  <SCRIPT>  \t\r\n   a < b > \t\r\n   </S' + 'CRIPT>   \t\r\n  ');
     LegacyUnit.equal(serializer.serialize(root), '<script>  \t\r\n   a < b > \t\r\n   </s' + 'cript>', 'Retain code inside SCRIPT');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, script: 1, '#text': 1 }, 'Retain code inside SCRIPT (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'script': 1, '#text': 1 }, 'Retain code inside SCRIPT (count)');
   });
 
   suite.test('Whitespace', function () {
     parser = DomParser({}, schema);
     root = parser.parse('  \t\r\n  <B>  \t\r\n   test  \t\r\n   </B>   \t\r\n  ');
     LegacyUnit.equal(serializer.serialize(root), ' <b> test </b> ', 'Redundant whitespace (inline element)');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, b: 1, '#text': 3 }, 'Redundant whitespace (inline element) (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'b': 1, '#text': 3 }, 'Redundant whitespace (inline element) (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('  \t\r\n  <P>  \t\r\n   test  \t\r\n   </P>   \t\r\n  ');
     LegacyUnit.equal(serializer.serialize(root), '<p>test</p>', 'Redundant whitespace (block element)');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, p: 1, '#text': 1 }, 'Redundant whitespace (block element) (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'p': 1, '#text': 1 }, 'Redundant whitespace (block element) (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('  \t\r\n  <SCRIPT>  \t\r\n   test  \t\r\n   </S' + 'CRIPT>   \t\r\n  ');
@@ -75,12 +75,12 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
       '<script>  \t\r\n   test  \t\r\n   </s' + 'cript>',
       'Whitespace around and inside SCRIPT'
     );
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, script: 1, '#text': 1 }, 'Whitespace around and inside SCRIPT (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'script': 1, '#text': 1 }, 'Whitespace around and inside SCRIPT (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('  \t\r\n  <STYLE>  \t\r\n   test  \t\r\n   </STYLE>   \t\r\n  ');
     LegacyUnit.equal(serializer.serialize(root), '<style>  \t\r\n   test  \t\r\n   </style>', 'Whitespace around and inside STYLE');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, style: 1, '#text': 1 }, 'Whitespace around and inside STYLE (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'style': 1, '#text': 1 }, 'Whitespace around and inside STYLE (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<ul>\n<li>Item 1\n<ul>\n<li>\n \t Indented \t \n</li>\n</ul>\n</li>\n</ul>\n');
@@ -89,7 +89,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
       '<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>',
       'Whitespace around and inside blocks (ul/li)'
     );
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, li: 2, ul: 2, '#text': 2 }, 'Whitespace around and inside blocks (ul/li) (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'li': 2, 'ul': 2, '#text': 2 }, 'Whitespace around and inside blocks (ul/li) (count)');
 
     parser = DomParser({}, Schema({ invalid_elements: 'hr,br' }));
     root = parser.parse(
@@ -123,14 +123,14 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
     parser = DomParser({}, schema);
     root = parser.parse('  \t\r\n  <PRE>  \t\r\n   test  \t\r\n   </PRE>   \t\r\n  ');
     LegacyUnit.equal(serializer.serialize(root), '<pre>  \t\r\n   test  \t\r\n   </pre>', 'Whitespace around and inside PRE');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, pre: 1, '#text': 1 }, 'Whitespace around and inside PRE (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'pre': 1, '#text': 1 }, 'Whitespace around and inside PRE (count)');
   });
 
   suite.test('Whitespace preserved in PRE', function () {
     parser = DomParser({}, schema);
     root = parser.parse('<PRE>  </PRE>');
     LegacyUnit.equal(serializer.serialize(root), '<pre>  </pre>', 'Whitespace around and inside PRE');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, pre: 1, '#text': 1 }, 'Whitespace around and inside PRE (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'pre': 1, '#text': 1 }, 'Whitespace around and inside PRE (count)');
   });
 
   suite.test('Whitespace preserved in SPAN inside PRE', function () {
@@ -141,30 +141,30 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
       '<pre>  \t\r\n  <span>    test    </span> \t\r\n   </pre>',
       'Whitespace around and inside PRE'
     );
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, pre: 1, span: 1, '#text': 3 }, 'Whitespace around and inside PRE (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'pre': 1, 'span': 1, '#text': 3 }, 'Whitespace around and inside PRE (count)');
   });
 
   suite.test('Whitespace preserved in code', function () {
     parser = DomParser({}, schema);
     root = parser.parse('<code>  a  </code>');
     LegacyUnit.equal(serializer.serialize(root), '<code>  a  </code>', 'Whitespace inside code');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, code: 1, '#text': 1 }, 'Whitespace inside code (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'code': 1, '#text': 1 }, 'Whitespace inside code (count)');
   });
 
   suite.test('Whitespace preserved in code', function () {
     parser = DomParser({}, schema);
     root = parser.parse('<code>  </code>');
     LegacyUnit.equal(serializer.serialize(root), '<code>  </code>', 'Whitespace inside code');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, code: 1, '#text': 1 }, 'Whitespace inside code (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'code': 1, '#text': 1 }, 'Whitespace inside code (count)');
   });
 
   suite.test('Parse invalid contents', function () {
-    var parser, root;
+    let parser, root;
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="a"><p class="b">123</p></p>');
     LegacyUnit.equal(serializer.serialize(root), '<p class="b">123</p>', 'P in P, no nodes before/after');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, p: 1, '#text': 1 }, 'P in P, no nodes before/after (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'p': 1, '#text': 1 }, 'P in P, no nodes before/after (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="a">a<p class="b">b</p><p class="c">c</p>d</p>');
@@ -173,22 +173,22 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
       '<p class="a">a</p><p class="b">b</p><p class="c">c</p><p class="a">d</p>',
       'Two P in P, no nodes before/after'
     );
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, p: 4, '#text': 4 }, 'Two P in P, no nodes before/after (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'p': 4, '#text': 4 }, 'Two P in P, no nodes before/after (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="a">abc<p class="b">def</p></p>');
     LegacyUnit.equal(serializer.serialize(root), '<p class="a">abc</p><p class="b">def</p>', 'P in P with nodes before');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, p: 2, '#text': 2 }, 'P in P with nodes before (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'p': 2, '#text': 2 }, 'P in P with nodes before (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="a"><p class="b">abc</p>def</p>');
     LegacyUnit.equal(serializer.serialize(root), '<p class="b">abc</p><p class="a">def</p>', 'P in P with nodes after');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, p: 2, '#text': 2 }, 'P in P with nodes after (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'p': 2, '#text': 2 }, 'P in P with nodes after (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="a"><p class="b">abc</p><br></p>');
     LegacyUnit.equal(serializer.serialize(root), '<p class="b">abc</p>', 'P in P with BR after');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, p: 1, '#text': 1 }, 'P in P with BR after (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'p': 1, '#text': 1 }, 'P in P with BR after (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="a">a<strong>b<span>c<em>d<p class="b">e</p>f</em>g</span>h</strong>i</p>');
@@ -200,7 +200,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
     );
     LegacyUnit.deepEqual(
       countNodes(root),
-      { "body": 1, "p": 3, "#text": 9, "strong": 2, "span": 2, "em": 2 },
+      { 'body': 1, 'p': 3, '#text': 9, 'strong': 2, 'span': 2, 'em': 2 },
       'P in P wrapped in inline elements (count)'
     );
 
@@ -211,22 +211,22 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
       '<p class="a">a</p><p class="b">b</p><p class="c">c</p><p class="b">d</p><p class="a">e</p>',
       'P in P in P with text before/after'
     );
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, p: 5, '#text': 5 }, 'P in P in P with text before/after (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'p': 5, '#text': 5 }, 'P in P in P with text before/after (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<p>a<ul><li>b</li><li>c</li></ul>d</p>');
     LegacyUnit.equal(serializer.serialize(root), '<p>a</p><ul><li>b</li><li>c</li></ul><p>d</p>', 'UL inside P');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, p: 2, ul: 1, li: 2, '#text': 4 }, 'UL inside P (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'p': 2, 'ul': 1, 'li': 2, '#text': 4 }, 'UL inside P (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<table><tr><td><tr>a</tr></td></tr></table>');
     LegacyUnit.equal(serializer.serialize(root), '<table><tr><td>a</td></tr></table>', 'TR inside TD');
-    LegacyUnit.deepEqual(countNodes(root), { body: 1, table: 1, tr: 1, td: 1, '#text': 1 }, 'TR inside TD (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'table': 1, 'tr': 1, 'td': 1, '#text': 1 }, 'TR inside TD (count)');
 
     parser = DomParser({}, Schema({ valid_elements: 'p,section,div' }));
     root = parser.parse('<div><section><p>a</p></section></div>');
     LegacyUnit.equal(serializer.serialize(root), '<div><section><p>a</p></section></div>', 'P inside SECTION');
-    LegacyUnit.deepEqual(countNodes(root), { "body": 1, "div": 1, "section": 1, "p": 1, "#text": 1 }, 'P inside SECTION (count)');
+    LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'div': 1, 'section': 1, 'p': 1, '#text': 1 }, 'P inside SECTION (count)');
   });
 
   suite.test('Remove empty nodes', function () {
@@ -238,11 +238,11 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('addNodeFilter', function () {
-    var parser, result;
+    let parser, result;
 
     parser = DomParser({}, schema);
     parser.addNodeFilter('#comment', function (nodes, name, args) {
-      result = { nodes: nodes, name: name, args: args };
+      result = { nodes, name, args };
     });
     parser.parse('text<!--text1-->text<!--text2-->');
 
@@ -256,11 +256,12 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('addNodeFilter multiple names', function () {
-    var parser, results = {};
+    let parser;
+    const results = {};
 
     parser = DomParser({}, schema);
     parser.addNodeFilter('#comment,#text', function (nodes, name, args) {
-      results[name] = { nodes: nodes, name: name, args: args };
+      results[name] = { nodes, name, args };
     });
     parser.parse('text1<!--text1-->text2<!--text2-->');
 
@@ -281,11 +282,11 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('addNodeFilter with parser args', function () {
-    var parser, result;
+    let parser, result;
 
     parser = DomParser({}, schema);
     parser.addNodeFilter('#comment', function (nodes, name, args) {
-      result = { nodes: nodes, name: name, args: args };
+      result = { nodes, name, args };
     });
     parser.parse('text<!--text1-->text<!--text2-->', { value: 1 });
 
@@ -293,11 +294,11 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('addAttributeFilter', function () {
-    var parser, result;
+    let parser, result;
 
-  parser = DomParser({});
+    parser = DomParser({});
     parser.addAttributeFilter('src', function (nodes, name, args) {
-      result = { nodes: nodes, name: name, args: args };
+      result = { nodes, name, args };
     });
     parser.parse('<b>a<img src="1.gif" />b<img src="1.gif" />c</b>');
 
@@ -311,11 +312,12 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('addAttributeFilter multiple', function () {
-    var parser, results: any = {};
+    let parser;
+    const results: any = {};
 
     parser = DomParser({});
     parser.addAttributeFilter('src,href', function (nodes, name, args) {
-      results[name] = { nodes: nodes, name: name, args: args };
+      results[name] = { nodes, name, args };
     });
     parser.parse('<b><a href="1.gif">a</a><img src="1.gif" />b<img src="1.gif" /><a href="2.gif">c</a></b>');
 
@@ -336,7 +338,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Fix orphan LI elements', function () {
-    var parser;
+    let parser;
 
     parser = DomParser({}, schema);
     root = parser.parse('<ul><li>a</li></ul><li>b</li>');
@@ -352,7 +354,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Remove empty elements', function () {
-    var parser, schema = Schema({ valid_elements: 'span,-a,img' });
+    let parser;
+    const schema = Schema({ valid_elements: 'span,-a,img' });
 
     parser = DomParser({}, schema);
     root = parser.parse('<span></span><a href="#"></a>');
@@ -372,7 +375,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Self closing list elements', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({}, schema);
     root = parser.parse('<ul><li>1<li><b>2</b><li><em><b>3</b></em></ul>');
@@ -384,7 +388,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Remove redundant br elements', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({ remove_trailing_brs: true }, schema);
     root = parser.parse(
@@ -401,7 +406,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Replace br with nbsp when wrapped in two inline elements and one block', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({ remove_trailing_brs: true }, schema);
     root = parser.parse('<p><strong><em><br /></em></strong></p>');
@@ -409,7 +415,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Replace br with nbsp when wrapped in an inline element and placed in the root', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({ remove_trailing_brs: true }, schema);
     root = parser.parse('<strong><br /></strong>');
@@ -417,7 +424,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Don\'t replace br inside root element when there is multiple brs', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({ remove_trailing_brs: true }, schema);
     root = parser.parse('<strong><br /><br /></strong>');
@@ -425,7 +433,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Don\'t replace br inside root element when there is siblings', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({ remove_trailing_brs: true }, schema);
     root = parser.parse('<strong><br /></strong><em>x</em>');
@@ -433,7 +442,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Remove br in invalid parent bug', function () {
-    var parser, root, schema = Schema({ valid_elements: 'br' });
+    let parser, root;
+    const schema = Schema({ valid_elements: 'br' });
 
     parser = DomParser({ remove_trailing_brs: true }, schema);
     root = parser.parse('<br>');
@@ -441,7 +451,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Forced root blocks', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({ forced_root_block: 'p' }, schema);
     root = parser.parse(
@@ -462,9 +473,10 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Forced root blocks attrs', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
-    parser = DomParser({ forced_root_block: 'p', forced_root_block_attrs: { "class": "class1" } }, schema);
+    parser = DomParser({ forced_root_block: 'p', forced_root_block_attrs: { class: 'class1' } }, schema);
     root = parser.parse(
       '<!-- a -->' +
       'b' +
@@ -484,7 +496,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Parse html4 lists into html5 lists', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({ fix_list_elements: true }, schema);
     root = parser.parse('<ul><ul><li>a</li></ul></ul><ul><li>a</li><ul><li>b</li></ul></ul>');
@@ -495,7 +508,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Parse contents with html4 anchors and allow_html_in_named_anchor: false', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({ allow_html_in_named_anchor: false }, schema);
     root = parser.parse('<a name="x">a</a><a href="x">x</a>');
@@ -503,7 +517,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Parse contents with html5 anchors and allow_html_in_named_anchor: false', function () {
-    var parser, root, schema = Schema({ schema: "html5" });
+    let parser, root;
+    const schema = Schema({ schema: 'html5' });
 
     parser = DomParser({ allow_html_in_named_anchor: false }, schema);
     root = parser.parse('<a id="x">a</a><a href="x">x</a>');
@@ -511,7 +526,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Parse contents with html4 anchors and allow_html_in_named_anchor: true', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({ allow_html_in_named_anchor: true }, schema);
     root = parser.parse('<a name="x">a</a><a href="x">x</a>');
@@ -519,7 +535,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Parse contents with html5 anchors and allow_html_in_named_anchor: true', function () {
-    var parser, root, schema = Schema({ schema: "html5" });
+    let parser, root;
+    const schema = Schema({ schema: 'html5' });
 
     parser = DomParser({ allow_html_in_named_anchor: true }, schema);
     root = parser.parse('<a id="x">a</a><a href="x">x</a>');
@@ -527,7 +544,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Parse contents with html5 self closing datalist options', function () {
-    var parser, root, schema = Schema({ schema: "html5" });
+    let parser, root;
+    const schema = Schema({ schema: 'html5' });
 
     parser = DomParser({}, schema);
     root = parser.parse(
@@ -541,7 +559,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Parse inline contents before block bug #5424', function () {
-    var parser, root, schema = Schema({ schema: "html5" });
+    let parser, root;
+    const schema = Schema({ schema: 'html5' });
 
     parser = DomParser({}, schema);
     root = parser.parse('<b>1</b> 2<p>3</p>');
@@ -549,7 +568,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Invalid text blocks within a li', function () {
-    var parser, root, schema = Schema({ schema: "html5", valid_children: '-li[p]' });
+    let parser, root;
+    const schema = Schema({ schema: 'html5', valid_children: '-li[p]' });
 
     parser = DomParser({}, schema);
     root = parser.parse('<ul><li>1<p>2</p></li><li>a<p>b</p><p>c</p></li></ul>');
@@ -557,7 +577,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Invalid inline element with space before', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({}, schema);
     root = parser.parse('<p><span>1</span> <strong>2</strong></p>');
@@ -565,7 +586,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Valid classes', function () {
-    var parser, root, schema = Schema({ valid_classes: 'classA classB' });
+    let parser, root;
+    const schema = Schema({ valid_classes: 'classA classB' });
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="classA classB classC">a</p>');
@@ -573,7 +595,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Valid classes multiple elements', function () {
-    var parser, root, schema = Schema({ valid_classes: { '*': 'classA classB', 'strong': 'classC' } });
+    let parser, root;
+    const schema = Schema({ valid_classes: { '*': 'classA classB', 'strong': 'classC' } });
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="classA classB classC"><strong class="classA classB classC classD">a</strong></p>');
@@ -581,7 +604,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Pad empty list blocks', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({}, schema);
     root = parser.parse('<ul><li></li></ul><ul><li> </li></ul>');
@@ -589,15 +613,16 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Pad empty with br', function () {
-    var schema = Schema();
-    var parser = DomParser({ padd_empty_with_br: true }, schema);
-    var serializer = Serializer({ padd_empty_with_br: true }, schema);
-    var root = parser.parse('<p>a</p><p></p>');
+    const schema = Schema();
+    const parser = DomParser({ padd_empty_with_br: true }, schema);
+    const serializer = Serializer({ padd_empty_with_br: true }, schema);
+    const root = parser.parse('<p>a</p><p></p>');
     LegacyUnit.equal(serializer.serialize(root), '<p>a</p><p><br /></p>');
   });
 
   suite.test('Pad empty and preffer br on insert', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({}, schema);
     root = parser.parse('<ul><li></li><li> </li><li><br /></li><li>\u00a0</li><li>a</li></ul>', { insert: true });
@@ -605,7 +630,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Preserve space in inline span', function () {
-    var parser, root, schema = Schema();
+    let parser, root;
+    const schema = Schema();
 
     parser = DomParser({}, schema);
     root = parser.parse('a<span> </span>b');
@@ -613,7 +639,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Bug #7543 removes whitespace between bogus elements before a block', function () {
-    var serializer = Serializer();
+    const serializer = Serializer();
 
     LegacyUnit.equal(
       serializer.serialize(DomParser().parse(
@@ -624,7 +650,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
   });
 
   suite.test('Bug #7582 removes whitespace between bogus elements before a block', function () {
-    var serializer = Serializer();
+    const serializer = Serializer();
 
     LegacyUnit.equal(
       serializer.serialize(DomParser().parse(
@@ -638,4 +664,3 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function() {
     success();
   }, failure);
 });
-

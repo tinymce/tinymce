@@ -15,31 +15,31 @@
  * @class tinymce.util.Fun
  */
 
-var slice = [].slice;
+const slice = [].slice;
 
-var constant = function (value) {
+const constant = function (value) {
   return function () {
     return value;
   };
 };
 
-var negate = function (predicate) {
+const negate = function (predicate) {
   return function (x) {
     return !predicate(x);
   };
 };
 
-var compose = function (f, g) {
+const compose = function (f, g) {
   return function (x) {
     return f(g(x));
   };
 };
 
-var or = function (...x: any[]) {
-  var args = slice.call(arguments);
+const or = function (...x: any[]) {
+  const args = slice.call(arguments);
 
   return function (x) {
-    for (var i = 0; i < args.length; i++) {
+    for (let i = 0; i < args.length; i++) {
       if (args[i](x)) {
         return true;
       }
@@ -49,11 +49,11 @@ var or = function (...x: any[]) {
   };
 };
 
-var and = function (...x: any[]) {
-  var args = slice.call(arguments);
+const and = function (...x: any[]) {
+  const args = slice.call(arguments);
 
   return function (x) {
-    for (var i = 0; i < args.length; i++) {
+    for (let i = 0; i < args.length; i++) {
       if (!args[i](x)) {
         return false;
       }
@@ -63,28 +63,28 @@ var and = function (...x: any[]) {
   };
 };
 
-var curry = function (fn, ...x: any[]) {
-  var args = slice.call(arguments);
+const curry = function (fn, ...x: any[]) {
+  const args = slice.call(arguments);
 
   if (args.length - 1 >= fn.length) {
     return fn.apply(this, args.slice(1));
   }
 
   return function () {
-    var tempArgs = args.concat([].slice.call(arguments));
+    const tempArgs = args.concat([].slice.call(arguments));
     return curry.apply(this, tempArgs);
   };
 };
 
-var noop = function () {
+const noop = function () {
 };
 
 export default {
-  constant: constant,
-  negate: negate,
-  and: and,
-  or: or,
-  curry: curry,
-  compose: compose,
-  noop: noop
+  constant,
+  negate,
+  and,
+  or,
+  curry,
+  compose,
+  noop
 };

@@ -1,6 +1,6 @@
 import TextColor from '../core/TextColor';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addCommand('mceApplyTextcolor', function (format, value) {
     TextColor.applyFormat(editor, format, value);
   });

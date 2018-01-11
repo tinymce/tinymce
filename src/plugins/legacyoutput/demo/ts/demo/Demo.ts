@@ -15,10 +15,10 @@ declare let tinymce: any;
 LegacyOutputPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "legacyoutput code",
-  toolbar: "legacyoutput fontselect fontsizeselect code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'legacyoutput code',
+  toolbar: 'legacyoutput fontselect fontsizeselect code',
   height: 600
 });

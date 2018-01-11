@@ -5,26 +5,26 @@ import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import TrimNode from 'tinymce/core/dom/TrimNode';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var dom = new DOMUtils(document, {});
+  const dom = new DOMUtils(document, {});
 
-  var sTestTrim = function (inputHtml, expectedTrimmedHtml) {
+  const sTestTrim = function (inputHtml, expectedTrimmedHtml) {
     return Step.sync(function () {
-      var elm = document.createElement('div');
+      const elm = document.createElement('div');
       elm.innerHTML = inputHtml;
       TrimNode.trimNode(dom, elm.firstChild);
 
-      var actual = elm.innerHTML;
+      const actual = elm.innerHTML;
       RawAssertions.assertEq('is correct trimmed html', expectedTrimmedHtml, actual);
     });
   };
 
-  var sTestTrimDocumentNode = Step.sync(function () {
-    var expected = document.implementation.createHTMLDocument('test');
-    var actual = TrimNode.trimNode(dom, expected);
+  const sTestTrimDocumentNode = Step.sync(function () {
+    const expected = document.implementation.createHTMLDocument('test');
+    const actual = TrimNode.trimNode(dom, expected);
 
     RawAssertions.assertEq('Should return document as is', true, actual === expected);
   });
@@ -40,4 +40,3 @@ UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function() {
     success();
   }, failure);
 });
-

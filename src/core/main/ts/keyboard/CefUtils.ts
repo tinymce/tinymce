@@ -13,22 +13,22 @@ import CaretUtils from '../caret/CaretUtils';
 import NodeType from '../dom/NodeType';
 import Fun from '../util/Fun';
 
-var isContentEditableTrue = NodeType.isContentEditableTrue;
-var isContentEditableFalse = NodeType.isContentEditableFalse;
+const isContentEditableTrue = NodeType.isContentEditableTrue;
+const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-var showCaret = function (direction, editor, node, before) {
+const showCaret = function (direction, editor, node, before) {
   // TODO: Figure out a better way to handle this dependency
   return editor._selectionOverrides.showCaret(direction, node, before);
 };
 
-var getNodeRange = function (node) {
-  var rng = node.ownerDocument.createRange();
+const getNodeRange = function (node) {
+  const rng = node.ownerDocument.createRange();
   rng.selectNode(node);
   return rng;
 };
 
-var selectNode = function (editor, node) {
-  var e;
+const selectNode = function (editor, node) {
+  let e;
 
   e = editor.fire('BeforeObjectSelected', { target: node });
   if (e.isDefaultPrevented()) {
@@ -38,8 +38,8 @@ var selectNode = function (editor, node) {
   return getNodeRange(node);
 };
 
-var renderCaretAtRange = function (editor, range) {
-  var caretPosition, ceRoot;
+const renderCaretAtRange = function (editor, range) {
+  let caretPosition, ceRoot;
 
   range = CaretUtils.normalizeRange(1, editor.getBody(), range);
   caretPosition = CaretPosition.fromRangeStart(range);
@@ -61,8 +61,8 @@ var renderCaretAtRange = function (editor, range) {
   return null;
 };
 
-var renderRangeCaret = function (editor, range) {
-  var caretRange;
+const renderRangeCaret = function (editor, range) {
+  let caretRange;
 
   if (!range || !range.collapsed) {
     return range;
@@ -77,8 +77,8 @@ var renderRangeCaret = function (editor, range) {
 };
 
 export default {
-  showCaret: showCaret,
-  selectNode: selectNode,
-  renderCaretAtRange: renderCaretAtRange,
-  renderRangeCaret: renderRangeCaret
+  showCaret,
+  selectNode,
+  renderCaretAtRange,
+  renderRangeCaret
 };

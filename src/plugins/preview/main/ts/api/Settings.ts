@@ -8,20 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getPreviewDialogWidth = function (editor) {
+const getPreviewDialogWidth = function (editor) {
   return parseInt(editor.getParam('plugin_preview_width', '650'), 10);
 };
 
-var getPreviewDialogHeight = function (editor) {
+const getPreviewDialogHeight = function (editor) {
   return parseInt(editor.getParam('plugin_preview_height', '500'), 10);
 };
 
-var getContentStyle = function (editor) {
+const getContentStyle = function (editor) {
   return editor.getParam('content_style', '');
 };
 
 export default {
-  getPreviewDialogWidth: getPreviewDialogWidth,
-  getPreviewDialogHeight: getPreviewDialogHeight,
-  getContentStyle: getContentStyle
+  getPreviewDialogWidth,
+  getPreviewDialogHeight,
+  getContentStyle
 };

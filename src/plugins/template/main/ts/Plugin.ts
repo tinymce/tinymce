@@ -19,4 +19,4 @@ PluginManager.add('template', function (editor) {
   FilterContent.setup(editor);
 });
 
-export default function () { };
+export default function () { }

@@ -15,13 +15,13 @@ import Tools from './Tools';
  * @class tinymce.util.URI
  */
 
-var each = Tools.each, trim = Tools.trim;
-var queryParts = "source protocol authority userInfo user password host port relative path directory file query anchor".split(' ');
-var DEFAULT_PORTS = {
-  'ftp': 21,
-  'http': 80,
-  'https': 443,
-  'mailto': 25
+const each = Tools.each, trim = Tools.trim;
+const queryParts = 'source protocol authority userInfo user password host port relative path directory file query anchor'.split(' ');
+const DEFAULT_PORTS = {
+  ftp: 21,
+  http: 80,
+  https: 443,
+  mailto: 25
 };
 
 /**
@@ -32,8 +32,9 @@ var DEFAULT_PORTS = {
  * @param {String} url URI string to parse.
  * @param {Object} settings Optional settings object.
  */
-var URI: any = function (url, settings?) {
-  var self = this, baseUri, baseUrl;
+const URI: any = function (url, settings?) {
+  const self = this;
+  let baseUri, baseUrl;
 
   url = trim(url);
   settings = self.settings = settings || {};
@@ -46,7 +47,7 @@ var URI: any = function (url, settings?) {
     return;
   }
 
-  var isProtocolRelative = url.indexOf('//') === 0;
+  const isProtocolRelative = url.indexOf('//') === 0;
 
   // Absolute path with no host, fake host and protocol
   if (url.indexOf('/') === 0 && !isProtocolRelative) {
@@ -56,7 +57,8 @@ var URI: any = function (url, settings?) {
   // Relative path http:// or protocol relative //path
   if (!/^[\w\-]*:?\/\//.test(url)) {
     baseUrl = settings.base_uri ? settings.base_uri.path : new URI(document.location.href).directory;
-    if (settings.base_uri.protocol === "") {
+    // tslint:disable-next-line:triple-equals
+    if (settings.base_uri.protocol == '') {
       url = '//mce_host' + self.toAbsPath(baseUrl, url);
     } else {
       url = /([^#?]*)([#?]?.*)/.exec(url);
@@ -72,7 +74,7 @@ var URI: any = function (url, settings?) {
   url = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@\/]*):?([^:@\/]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/.exec(url);
 
   each(queryParts, function (v, i) {
-    var part = url[i];
+    let part = url[i];
 
     // Zope 3 workaround, they use @@something
     if (part) {
@@ -106,7 +108,7 @@ var URI: any = function (url, settings?) {
     self.protocol = '';
   }
 
-  //t.path = t.path || '/';
+  // t.path = t.path || '/';
 };
 
 URI.prototype = {
@@ -116,8 +118,8 @@ URI.prototype = {
    * @method setPath
    * @param {string} path Path string to set.
    */
-  setPath: function (path) {
-    var self = this;
+  setPath (path) {
+    const self = this;
 
     path = /^(.*?)\/?(\w+)?$/.exec(path);
 
@@ -141,25 +143,26 @@ URI.prototype = {
    * // Converts an absolute URL to an relative URL url will be somedir/somefile.htm
    * var url = new tinymce.util.URI('http://www.site.com/dir/').toRelative('http://www.site.com/dir/somedir/somefile.htm');
    */
-  toRelative: function (uri) {
-    var self = this, output;
+  toRelative (uri) {
+    const self = this;
+    let output;
 
-    if (uri === "./") {
+    if (uri === './') {
       return uri;
     }
 
     uri = new URI(uri, { base_uri: self });
 
     // Not on same domain/port or protocol
-    if ((uri.host != 'mce_host' && self.host != uri.host && uri.host) || self.port != uri.port ||
-      (self.protocol != uri.protocol && uri.protocol !== "")) {
+    if ((uri.host !== 'mce_host' && self.host !== uri.host && uri.host) || self.port !== uri.port ||
+      (self.protocol !== uri.protocol && uri.protocol !== '')) {
       return uri.getURI();
     }
 
-    var tu = self.getURI(), uu = uri.getURI();
+    const tu = self.getURI(), uu = uri.getURI();
 
     // Allow usage of the base_uri when relative_urls = true
-    if (tu == uu || (tu.charAt(tu.length - 1) == "/" && tu.substr(0, tu.length - 1) == uu)) {
+    if (tu === uu || (tu.charAt(tu.length - 1) === '/' && tu.substr(0, tu.length - 1) === uu)) {
       return tu;
     }
 
@@ -189,7 +192,7 @@ URI.prototype = {
    * // Converts an relative URL to an absolute URL url will be http://www.site.com/dir/somedir/somefile.htm
    * var url = new tinymce.util.URI('http://www.site.com/dir/').toAbsolute('somedir/somefile.htm');
    */
-  toAbsolute: function (uri, noHost) {
+  toAbsolute (uri, noHost) {
     uri = new URI(uri, { base_uri: this });
 
     return uri.getURI(noHost && this.isSameOrigin(uri));
@@ -204,13 +207,16 @@ URI.prototype = {
    * @param {tinymce.util.URI} uri Uri instance to compare.
    * @returns {Boolean} True if the origins are the same.
    */
-  isSameOrigin: function (uri) {
+  isSameOrigin (uri) {
+    // tslint:disable-next-line:triple-equals
     if (this.host == uri.host && this.protocol == uri.protocol) {
+      // tslint:disable-next-line:triple-equals
       if (this.port == uri.port) {
         return true;
       }
 
-      var defaultPort = DEFAULT_PORTS[this.protocol];
+      const defaultPort = DEFAULT_PORTS[this.protocol];
+      // tslint:disable-next-line:triple-equals
       if (defaultPort && ((this.port || defaultPort) == (uri.port || defaultPort))) {
         return true;
       }
@@ -226,8 +232,8 @@ URI.prototype = {
    * @param {String} base Base point to convert the path from.
    * @param {String} path Absolute path to convert into a relative path.
    */
-  toRelPath: function (base, path) {
-    var items, breakPoint = 0, out = '', i, l;
+  toRelPath (base, path) {
+    let items, breakPoint = 0, out = '', i, l;
 
     // Split the paths
     base = base.substring(0, base.lastIndexOf('/'));
@@ -236,7 +242,7 @@ URI.prototype = {
 
     if (base.length >= items.length) {
       for (i = 0, l = base.length; i < l; i++) {
-        if (i >= items.length || base[i] != items[i]) {
+        if (i >= items.length || base[i] !== items[i]) {
           breakPoint = i + 1;
           break;
         }
@@ -245,7 +251,7 @@ URI.prototype = {
 
     if (base.length < items.length) {
       for (i = 0, l = items.length; i < l; i++) {
-        if (i >= base.length || base[i] != items[i]) {
+        if (i >= base.length || base[i] !== items[i]) {
           breakPoint = i + 1;
           break;
         }
@@ -257,12 +263,12 @@ URI.prototype = {
     }
 
     for (i = 0, l = base.length - (breakPoint - 1); i < l; i++) {
-      out += "../";
+      out += '../';
     }
 
     for (i = breakPoint - 1, l = items.length; i < l; i++) {
-      if (i != breakPoint - 1) {
-        out += "/" + items[i];
+      if (i !== breakPoint - 1) {
+        out += '/' + items[i];
       } else {
         out += items[i];
       }
@@ -278,8 +284,8 @@ URI.prototype = {
    * @param {String} base Base point to convert the path from.
    * @param {String} path Relative path to convert into an absolute path.
    */
-  toAbsPath: function (base, path) {
-    var i, nb = 0, o = [], tr, outPath;
+  toAbsPath (base, path) {
+    let i, nb = 0, o = [], tr, outPath;
 
     // Split paths
     tr = /\/$/.test(path) ? '/' : '';
@@ -298,7 +304,7 @@ URI.prototype = {
     // Merge relURLParts chunks
     for (i = path.length - 1, o = []; i >= 0; i--) {
       // Ignore empty or .
-      if (path[i].length === 0 || path[i] === ".") {
+      if (path[i].length === 0 || path[i] === '.') {
         continue;
       }
 
@@ -345,8 +351,9 @@ URI.prototype = {
    * @method getURI
    * @param {Boolean} noProtoHost Optional no host and protocol part. Defaults to false.
    */
-  getURI: function (noProtoHost) {
-    var s, self = this;
+  getURI (noProtoHost) {
+    let s;
+    const self = this;
 
     // Rebuild source
     if (!self.source || noProtoHost) {
@@ -392,7 +399,7 @@ URI.prototype = {
 };
 
 URI.parseDataUri = function (uri) {
-  var type, matches;
+  let type, matches;
 
   uri = decodeURIComponent(uri).split(',');
 
@@ -402,13 +409,13 @@ URI.parseDataUri = function (uri) {
   }
 
   return {
-    type: type,
+    type,
     data: uri[1]
   };
 };
 
 URI.getDocumentBaseUrl = function (loc) {
-  var baseUrl;
+  let baseUrl;
 
   // Pass applewebdata:// and other non web protocols though
   if (loc.protocol.indexOf('http') !== 0 && loc.protocol !== 'file:') {

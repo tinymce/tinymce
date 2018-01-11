@@ -5,7 +5,7 @@ import PluginManager from 'tinymce/core/PluginManager';
 import DetectProPlugin from 'tinymce/plugins/paste/alien/DetectProPlugin';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('browser.tinymce.plugins.paste.alien.DetectProPluginTest', function() {
+UnitTest.test('browser.tinymce.plugins.paste.alien.DetectProPluginTest', function () {
   // Fake loading of powerpaste
   PluginManager.add('powerpaste', function () { });
 
@@ -18,4 +18,3 @@ UnitTest.test('browser.tinymce.plugins.paste.alien.DetectProPluginTest', functio
   Assertions.assertEq('Should have pro plugin', true, DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'paste,powerpaste,paste' }, EditorManager)));
   Assertions.assertEq('Should have pro plugin', true, DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'paste  powerpaste  paste' }, EditorManager)));
 });
-

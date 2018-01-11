@@ -13,7 +13,7 @@ import InsertBlock from './InsertBlock';
 import InsertBr from './InsertBr';
 import NewLineAction from './NewLineAction';
 
-var insert = function (editor, evt) {
+const insert = function (editor, evt) {
   NewLineAction.getAction(editor, evt).fold(
     function () {
       InsertBr.insert(editor, evt);
@@ -26,5 +26,5 @@ var insert = function (editor, evt) {
 };
 
 export default {
-  insert: insert
+  insert
 };

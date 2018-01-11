@@ -10,15 +10,15 @@
 
 import Tools from 'tinymce/core/util/Tools';
 
-var emoticons = [
-  ["cool", "cry", "embarassed", "foot-in-mouth"],
-  ["frown", "innocent", "kiss", "laughing"],
-  ["money-mouth", "sealed", "smile", "surprised"],
-  ["tongue-out", "undecided", "wink", "yell"]
+const emoticons = [
+  ['cool', 'cry', 'embarassed', 'foot-in-mouth'],
+  ['frown', 'innocent', 'kiss', 'laughing'],
+  ['money-mouth', 'sealed', 'smile', 'surprised'],
+  ['tongue-out', 'undecided', 'wink', 'yell']
 ];
 
-var getHtml = function (pluginUrl) {
-  var emoticonsHtml;
+const getHtml = function (pluginUrl) {
+  let emoticonsHtml;
 
   emoticonsHtml = '<table role="list" class="mce-grid">';
 
@@ -26,7 +26,7 @@ var getHtml = function (pluginUrl) {
     emoticonsHtml += '<tr>';
 
     Tools.each(row, function (icon) {
-      var emoticonUrl = pluginUrl + '/img/smiley-' + icon + '.gif';
+      const emoticonUrl = pluginUrl + '/img/smiley-' + icon + '.gif';
 
       emoticonsHtml += '<td><a href="#" data-mce-url="' + emoticonUrl + '" data-mce-alt="' + icon + '" tabindex="-1" ' +
         'role="option" aria-label="' + icon + '"><img src="' +
@@ -42,5 +42,5 @@ var getHtml = function (pluginUrl) {
 };
 
 export default {
-  getHtml: getHtml
+  getHtml
 };

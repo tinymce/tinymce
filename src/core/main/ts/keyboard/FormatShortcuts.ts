@@ -8,14 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var setup = function (editor) {
+const setup = function (editor) {
   // Add some inline shortcuts
   editor.addShortcut('meta+b', '', 'Bold');
   editor.addShortcut('meta+i', '', 'Italic');
   editor.addShortcut('meta+u', '', 'Underline');
 
   // BlockFormat shortcuts keys
-  for (var i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 6; i++) {
     editor.addShortcut('access+' + i, '', ['FormatBlock', false, 'h' + i]);
   }
 
@@ -25,5 +25,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

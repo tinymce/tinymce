@@ -14,15 +14,15 @@ import Commands from './api/Commands';
 import Buttons from './ui/Buttons';
 
 PluginManager.add('advlist', function (editor) {
-  var hasPlugin = function (editor, plugin) {
-    var plugins = editor.settings.plugins ? editor.settings.plugins : '';
+  const hasPlugin = function (editor, plugin) {
+    const plugins = editor.settings.plugins ? editor.settings.plugins : '';
     return Tools.inArray(plugins.split(/[ ,]/), plugin) !== -1;
   };
 
-  if (hasPlugin(editor, "lists")) {
+  if (hasPlugin(editor, 'lists')) {
     Buttons.register(editor);
     Commands.register(editor);
   }
 });
 
-export default function () { };
+export default function () { }

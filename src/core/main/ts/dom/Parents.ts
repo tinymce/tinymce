@@ -12,11 +12,11 @@ import { Fun } from '@ephox/katamari';
 import { Compare } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 
-var dropLast = function (xs) {
+const dropLast = function (xs) {
   return xs.slice(0, -1);
 };
 
-var parentsUntil = function (startNode, rootElm, predicate) {
+const parentsUntil = function (startNode, rootElm, predicate) {
   if (Compare.contains(rootElm, startNode)) {
     return dropLast(Traverse.parents(startNode, function (elm) {
       return predicate(elm) || Compare.eq(elm, rootElm);
@@ -26,16 +26,16 @@ var parentsUntil = function (startNode, rootElm, predicate) {
   }
 };
 
-var parents = function (startNode, rootElm) {
+const parents = function (startNode, rootElm) {
   return parentsUntil(startNode, rootElm, Fun.constant(false));
 };
 
-var parentsAndSelf = function (startNode, rootElm) {
+const parentsAndSelf = function (startNode, rootElm) {
   return [startNode].concat(parents(startNode, rootElm));
 };
 
 export default {
-  parentsUntil: parentsUntil,
-  parents: parents,
-  parentsAndSelf: parentsAndSelf
+  parentsUntil,
+  parents,
+  parentsAndSelf
 };

@@ -10,10 +10,10 @@
 
 import Actions from './Actions';
 
-var setup = function (editor) {
+const setup = function (editor) {
   editor.addShortcut('Meta+K', '', Actions.openDialog(editor));
 };
 
 export default {
-  setup: setup
+  setup
 };

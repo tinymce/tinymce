@@ -6,11 +6,11 @@ import { Container } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 import Styles from '../style/Styles';
 
-var READ_ONLY_MODE_CLASS = Fun.constant(Styles.resolve('readonly-mode'));
-var EDIT_MODE_CLASS = Fun.constant(Styles.resolve('edit-mode'));
+const READ_ONLY_MODE_CLASS = Fun.constant(Styles.resolve('readonly-mode'));
+const EDIT_MODE_CLASS = Fun.constant(Styles.resolve('edit-mode'));
 
-export default <any> function (spec) {
-  var root = GuiFactory.build(
+export default function (spec) {
+  const root = GuiFactory.build(
     Container.sketch({
       dom: {
         classes: [ Styles.resolve('outer-container') ].concat(spec.classes)
@@ -26,4 +26,4 @@ export default <any> function (spec) {
   );
 
   return Gui.takeover(root);
-};
+}

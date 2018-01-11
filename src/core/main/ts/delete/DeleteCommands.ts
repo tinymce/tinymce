@@ -15,11 +15,11 @@ import DeleteUtils from './DeleteUtils';
 import BoundaryDelete from './InlineBoundaryDelete';
 import TableDelete from './TableDelete';
 
-var nativeCommand = function (editor, command) {
+const nativeCommand = function (editor, command) {
   editor.getDoc().execCommand(command, false, null);
 };
 
-var deleteCommand = function (editor) {
+const deleteCommand = function (editor) {
   if (CefDelete.backspaceDelete(editor, false)) {
     return;
   } else if (BoundaryDelete.backspaceDelete(editor, false)) {
@@ -36,7 +36,7 @@ var deleteCommand = function (editor) {
   }
 };
 
-var forwardDeleteCommand = function (editor) {
+const forwardDeleteCommand = function (editor) {
   if (CefDelete.backspaceDelete(editor, true)) {
     return;
   } else if (BoundaryDelete.backspaceDelete(editor, true)) {
@@ -53,6 +53,6 @@ var forwardDeleteCommand = function (editor) {
 };
 
 export default {
-  deleteCommand: deleteCommand,
-  forwardDeleteCommand: forwardDeleteCommand
+  deleteCommand,
+  forwardDeleteCommand
 };

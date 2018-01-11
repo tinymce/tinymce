@@ -8,75 +8,75 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var assumeExternalTargets = function (editorSettings) {
+const assumeExternalTargets = function (editorSettings) {
   return typeof editorSettings.link_assume_external_targets === 'boolean' ? editorSettings.link_assume_external_targets : false;
 };
 
-var hasContextToolbar = function (editorSettings) {
+const hasContextToolbar = function (editorSettings) {
   return typeof editorSettings.link_context_toolbar === 'boolean' ? editorSettings.link_context_toolbar : false;
 };
 
-var getLinkList = function (editorSettings) {
+const getLinkList = function (editorSettings) {
   return editorSettings.link_list;
 };
 
-var hasDefaultLinkTarget = function (editorSettings) {
+const hasDefaultLinkTarget = function (editorSettings) {
   return typeof editorSettings.default_link_target === 'string';
 };
 
-var getDefaultLinkTarget = function (editorSettings) {
+const getDefaultLinkTarget = function (editorSettings) {
   return editorSettings.default_link_target;
 };
 
-var getTargetList = function (editorSettings) {
+const getTargetList = function (editorSettings) {
   return editorSettings.target_list;
 };
 
-var setTargetList = function (editor, list) {
+const setTargetList = function (editor, list) {
   editor.settings.target_list = list;
 };
 
-var shouldShowTargetList = function (editorSettings) {
+const shouldShowTargetList = function (editorSettings) {
   return getTargetList(editorSettings) !== false;
 };
 
-var getRelList = function (editorSettings) {
+const getRelList = function (editorSettings) {
   return editorSettings.rel_list;
 };
 
-var hasRelList = function (editorSettings) {
+const hasRelList = function (editorSettings) {
   return getRelList(editorSettings) !== undefined;
 };
 
-var getLinkClassList = function (editorSettings) {
+const getLinkClassList = function (editorSettings) {
   return editorSettings.link_class_list;
 };
 
-var hasLinkClassList = function (editorSettings) {
+const hasLinkClassList = function (editorSettings) {
   return getLinkClassList(editorSettings) !== undefined;
 };
 
-var shouldShowLinkTitle = function (editorSettings) {
+const shouldShowLinkTitle = function (editorSettings) {
   return editorSettings.link_title !== false;
 };
 
-var allowUnsafeLinkTarget = function (editorSettings) {
+const allowUnsafeLinkTarget = function (editorSettings) {
   return typeof editorSettings.allow_unsafe_link_target === 'boolean' ? editorSettings.allow_unsafe_link_target : false;
 };
 
 export default {
-  assumeExternalTargets: assumeExternalTargets,
-  hasContextToolbar: hasContextToolbar,
-  getLinkList: getLinkList,
-  hasDefaultLinkTarget: hasDefaultLinkTarget,
-  getDefaultLinkTarget: getDefaultLinkTarget,
-  getTargetList: getTargetList,
-  setTargetList: setTargetList,
-  shouldShowTargetList: shouldShowTargetList,
-  getRelList: getRelList,
-  hasRelList: hasRelList,
-  getLinkClassList: getLinkClassList,
-  hasLinkClassList: hasLinkClassList,
-  shouldShowLinkTitle: shouldShowLinkTitle,
-  allowUnsafeLinkTarget: allowUnsafeLinkTarget
+  assumeExternalTargets,
+  hasContextToolbar,
+  getLinkList,
+  hasDefaultLinkTarget,
+  getDefaultLinkTarget,
+  getTargetList,
+  setTargetList,
+  shouldShowTargetList,
+  getRelList,
+  hasRelList,
+  getLinkClassList,
+  hasLinkClassList,
+  shouldShowLinkTitle,
+  allowUnsafeLinkTarget
 };

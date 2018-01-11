@@ -29,12 +29,12 @@ import MenuItems from './ui/MenuItems';
  */
 
 function Plugin(editor) {
-  var self = this;
+  const self = this;
 
-  var resizeHandler = ResizeHandler(editor);
-  var cellSelection = CellSelection(editor, resizeHandler.lazyResize);
-  var actions = TableActions(editor, resizeHandler.lazyWire);
-  var selections = Selections(editor);
+  const resizeHandler = ResizeHandler(editor);
+  const cellSelection = CellSelection(editor, resizeHandler.lazyResize);
+  const actions = TableActions(editor, resizeHandler.lazyWire);
+  const selections = Selections(editor);
 
   TableCommands.registerCommands(editor, actions, cellSelection, selections);
 
@@ -43,7 +43,6 @@ function Plugin(editor) {
   MenuItems.addMenuItems(editor, selections);
   Buttons.addButtons(editor);
   Buttons.addToolbars(editor);
-
 
   editor.on('PreInit', function () {
     // Remove internal data attributes
@@ -72,4 +71,4 @@ function Plugin(editor) {
 
 PluginManager.add('table', Plugin);
 
-export default function () { };
+export default function () { }

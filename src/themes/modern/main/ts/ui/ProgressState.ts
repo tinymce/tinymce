@@ -10,8 +10,8 @@
 
 import Throbber from 'tinymce/ui/Throbber';
 
-var setup = function (editor, theme) {
-  var throbber;
+const setup = function (editor, theme) {
+  let throbber;
 
   editor.on('ProgressState', function (e) {
     throbber = throbber || new Throbber(theme.panel.getEl('body'));
@@ -24,6 +24,6 @@ var setup = function (editor, theme) {
   });
 };
 
-export default <any> {
-  setup: setup
+export default {
+  setup
 };

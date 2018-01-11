@@ -8,13 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var get = function (clipboard, quirks) {
+const get = function (clipboard, quirks) {
   return {
-    clipboard: clipboard,
-    quirks: quirks
+    clipboard,
+    quirks
   };
 };
 
 export default {
-  get: get
+  get
 };

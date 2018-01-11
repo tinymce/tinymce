@@ -20,18 +20,18 @@
  */
 
 // This is technically not a ZWSP but a ZWNBSP or a BYTE ORDER MARK it used to be a ZWSP
-var ZWSP = '\uFEFF';
+const ZWSP = '\uFEFF';
 
-var isZwsp = function (chr) {
+const isZwsp = function (chr) {
   return chr === ZWSP;
 };
 
-var trim = function (text) {
+const trim = function (text) {
   return text.replace(new RegExp(ZWSP, 'g'), '');
 };
 
 export default {
-  isZwsp: isZwsp,
-  ZWSP: ZWSP,
-  trim: trim
+  isZwsp,
+  ZWSP,
+  trim
 };

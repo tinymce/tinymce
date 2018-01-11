@@ -15,11 +15,11 @@ import FilterContent from './core/FilterContent';
 import Buttons from './ui/Buttons';
 
 PluginManager.add('fullpage', function (editor) {
-  var headState = Cell(''), footState = Cell('');
+  const headState = Cell(''), footState = Cell('');
 
   Commands.register(editor, headState);
   Buttons.register(editor);
   FilterContent.setup(editor, headState, footState);
 });
 
-export default function () { };
+export default function () { }

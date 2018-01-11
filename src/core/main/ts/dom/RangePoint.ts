@@ -11,7 +11,7 @@
 import { Arr } from '@ephox/katamari';
 import ClientRect from '../geom/ClientRect';
 
-var isXYWithinRange = function (clientX, clientY, range) {
+const isXYWithinRange = function (clientX, clientY, range) {
   if (range.collapsed) {
     return false;
   }
@@ -22,5 +22,5 @@ var isXYWithinRange = function (clientX, clientY, range) {
 };
 
 export default {
-  isXYWithinRange: isXYWithinRange
+  isXYWithinRange
 };

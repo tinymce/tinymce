@@ -2,12 +2,11 @@ import { RawAssertions } from '@ephox/agar';
 import StyleConversions from 'tinymce/themes/mobile/util/StyleConversions';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('Atomic Test: styles.StyleConversionsTest', function() {
-  var check = function (label, expected, input) {
-    var output = StyleConversions.expand(input);
+UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
+  const check = function (label, expected, input) {
+    const output = StyleConversions.expand(input);
     RawAssertions.assertEq('StyleConversions.expand (' + label + ')', expected, output);
   };
-
 
   check(
     'Empty input',
@@ -55,10 +54,10 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function() {
     'Input with three items, and an empty menu in the middle',
     {
       menus: {
-        'beta': [ ]
+        beta: [ ]
       },
       expansions: {
-        'beta': 'beta'
+        beta: 'beta'
       },
       items: [
         { title: 'alpha' },
@@ -80,12 +79,12 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function() {
     'Input with three items, and a menu with a single item in the middle',
     {
       menus: {
-        'beta': [
+        beta: [
           { title: 'beta-1' }
         ]
       },
       expansions: {
-        'beta': 'beta'
+        beta: 'beta'
       },
       items: [
         { title: 'alpha' },
@@ -109,14 +108,14 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function() {
     'Input with three items, and a menu with three items in the middle',
     {
       menus: {
-        'beta': [
+        beta: [
           { title: 'beta-1' },
           { title: 'beta-2' },
           { title: 'beta-3' }
         ]
       },
       expansions: {
-        'beta': 'beta'
+        beta: 'beta'
       },
       items: [
         { title: 'alpha' },
@@ -232,4 +231,3 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function() {
     ]
   );
 });
-

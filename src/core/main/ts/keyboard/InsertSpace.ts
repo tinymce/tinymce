@@ -14,19 +14,19 @@ import NodeType from '../dom/NodeType';
 import BoundaryLocation from './BoundaryLocation';
 import InlineUtils from './InlineUtils';
 
-var isValidInsertPoint = function (location, caretPosition) {
+const isValidInsertPoint = function (location, caretPosition) {
   return isAtStartOrEnd(location) && NodeType.isText(caretPosition.container());
 };
 
-var insertNbspAtPosition = function (editor, caretPosition) {
-  var container = caretPosition.container();
-  var offset = caretPosition.offset();
+const insertNbspAtPosition = function (editor, caretPosition) {
+  const container = caretPosition.container();
+  const offset = caretPosition.offset();
 
   container.insertData(offset, '\u00a0');
   editor.selection.setCursorLocation(container, offset + 1);
 };
 
-var insertAtLocation = function (editor, caretPosition, location) {
+const insertAtLocation = function (editor, caretPosition, location) {
   if (isValidInsertPoint(location, caretPosition)) {
     insertNbspAtPosition(editor, caretPosition);
     return true;
@@ -35,14 +35,14 @@ var insertAtLocation = function (editor, caretPosition, location) {
   }
 };
 
-var insertAtCaret = function (editor) {
-  var isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
-  var caretPosition = CaretPosition.fromRangeStart(editor.selection.getRng());
-  var boundaryLocation = BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), caretPosition);
+const insertAtCaret = function (editor) {
+  const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
+  const caretPosition = CaretPosition.fromRangeStart(editor.selection.getRng());
+  const boundaryLocation = BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), caretPosition);
   return boundaryLocation.map(Fun.curry(insertAtLocation, editor, caretPosition)).getOr(false);
 };
 
-var isAtStartOrEnd = function (location) {
+const isAtStartOrEnd = function (location) {
   return location.fold(
     Fun.constant(false), // Before
     Fun.constant(true),  // Start
@@ -51,10 +51,10 @@ var isAtStartOrEnd = function (location) {
   );
 };
 
-var insertAtSelection = function (editor) {
+const insertAtSelection = function (editor) {
   return editor.selection.isCollapsed() ? insertAtCaret(editor) : false;
 };
 
 export default {
-  insertAtSelection: insertAtSelection
+  insertAtSelection
 };

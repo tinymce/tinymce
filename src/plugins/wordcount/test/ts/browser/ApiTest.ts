@@ -5,59 +5,59 @@ import Plugin from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
 
-  suite.test("Blank document has 0 words", function (editor) {
+  suite.test('Blank document has 0 words', function (editor) {
     editor.setContent('');
-    var result = editor.plugins.wordcount.getCount();
+    const result = editor.plugins.wordcount.getCount();
     LegacyUnit.equal(result, 0);
   });
 
-  suite.test("Simple word count", function (editor) {
+  suite.test('Simple word count', function (editor) {
     editor.setContent('<p>My sentence is this.</p>');
-    var result = editor.plugins.wordcount.getCount();
+    const result = editor.plugins.wordcount.getCount();
     LegacyUnit.equal(result, 4);
   });
 
-  suite.test("Does not count dashes", function (editor) {
+  suite.test('Does not count dashes', function (editor) {
     editor.setContent('<p>Something -- ok</p>');
-    var result = editor.plugins.wordcount.getCount();
+    const result = editor.plugins.wordcount.getCount();
     LegacyUnit.equal(result, 2);
   });
 
-  suite.test("Does not count asterisks, non-word characters", function (editor) {
+  suite.test('Does not count asterisks, non-word characters', function (editor) {
     editor.setContent('<p>* something\n\u00b7 something else</p>');
-    var result = editor.plugins.wordcount.getCount();
+    const result = editor.plugins.wordcount.getCount();
     LegacyUnit.equal(result, 3);
   });
 
-  suite.test("Does count numbers", function (editor) {
+  suite.test('Does count numbers', function (editor) {
     editor.setContent('<p>Something 123 ok</p>');
-    var result = editor.plugins.wordcount.getCount();
+    const result = editor.plugins.wordcount.getCount();
     LegacyUnit.equal(result, 3);
   });
 
-  suite.test("Does not count htmlentities", function (editor) {
+  suite.test('Does not count htmlentities', function (editor) {
     editor.setContent('<p>It&rsquo;s my life &ndash; &#8211; &#x2013; don\'t you forget.</p>');
-    var result = editor.plugins.wordcount.getCount();
+    const result = editor.plugins.wordcount.getCount();
     LegacyUnit.equal(result, 6);
   });
 
-  suite.test("Counts hyphenated words as one word", function (editor) {
+  suite.test('Counts hyphenated words as one word', function (editor) {
     editor.setContent('<p>Hello some-word here.</p>');
-    var result = editor.plugins.wordcount.getCount();
+    const result = editor.plugins.wordcount.getCount();
     LegacyUnit.equal(result, 3);
   });
 
-  suite.test("Counts words between blocks as two words", function (editor) {
+  suite.test('Counts words between blocks as two words', function (editor) {
     editor.setContent('<p>Hello</p><p>world</p>');
-    var result = editor.plugins.wordcount.getCount();
+    const result = editor.plugins.wordcount.getCount();
     LegacyUnit.equal(result, 2);
   });
 
@@ -68,4 +68,3 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

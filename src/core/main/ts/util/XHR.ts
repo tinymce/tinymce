@@ -32,7 +32,7 @@ import Tools from './Tools';
  * });
  */
 
-var XHR: any = {
+const XHR: any = {
   /**
    * Sends a XMLHTTPRequest.
    * Consult the Wiki for details on what settings this method takes.
@@ -40,12 +40,12 @@ var XHR: any = {
    * @method send
    * @param {Object} settings Object will target URL, callbacks and other info needed to make the request.
    */
-  send: function (settings) {
-    var xhr, count = 0;
+  send (settings) {
+    let xhr, count = 0;
 
-    var ready = function () {
-      if (!settings.async || xhr.readyState == 4 || count++ > 10000) {
-        if (settings.success && count < 10000 && xhr.status == 200) {
+    const ready = function () {
+      if (!settings.async || xhr.readyState === 4 || count++ > 10000) {
+        if (settings.success && count < 10000 && xhr.status === 200) {
           settings.success.call(settings.success_scope, '' + xhr.responseText, xhr, settings);
         } else if (settings.error) {
           settings.error.call(settings.error_scope, count > 10000 ? 'TIMED_OUT' : 'GENERAL', xhr, settings);
@@ -64,7 +64,7 @@ var XHR: any = {
     settings.async = settings.async === false ? false : true;
     settings.data = settings.data || '';
 
-    XHR.fire('beforeInitialize', { settings: settings });
+    XHR.fire('beforeInitialize', { settings });
 
     xhr = new XMLHttpRequest();
 
@@ -91,7 +91,7 @@ var XHR: any = {
 
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
-      xhr = XHR.fire('beforeSend', { xhr: xhr, settings: settings }).xhr;
+      xhr = XHR.fire('beforeSend', { xhr, settings }).xhr;
       xhr.send(settings.data);
 
       // Syncronous request

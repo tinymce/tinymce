@@ -10,8 +10,8 @@
 
 import Events from '../api/Events';
 
-var fireSkinLoaded = function (editor) {
-  var done = function () {
+const fireSkinLoaded = function (editor) {
+  const done = function () {
     editor._skinLoaded = true;
     Events.fireSkinLoaded(editor);
   };
@@ -25,6 +25,6 @@ var fireSkinLoaded = function (editor) {
   };
 };
 
-export default <any> {
-  fireSkinLoaded: fireSkinLoaded
+export default {
+  fireSkinLoaded
 };

@@ -13,18 +13,18 @@ import Tools from 'tinymce/core/util/Tools';
 import Events from '../api/Events';
 import Settings from '../api/Settings';
 
-var isEmpty = function (editor, html?) {
-  var forcedRootBlockName = editor.settings.forced_root_block;
+const isEmpty = function (editor, html?) {
+  const forcedRootBlockName = editor.settings.forced_root_block;
 
-  html = Tools.trim(typeof html === "undefined" ? editor.getBody().innerHTML : html);
+  html = Tools.trim(typeof html === 'undefined' ? editor.getBody().innerHTML : html);
 
   return html === '' || new RegExp(
     '^<' + forcedRootBlockName + '[^>]*>((\u00a0|&nbsp;|[ \t]|<br[^>]*>)+?|)<\/' + forcedRootBlockName + '>|<br>$', 'i'
   ).test(html);
 };
 
-var hasDraft = function (editor) {
-  var time = parseInt(LocalStorage.getItem(Settings.getAutoSavePrefix(editor) + "time"), 10) || 0;
+const hasDraft = function (editor) {
+  const time = parseInt(LocalStorage.getItem(Settings.getAutoSavePrefix(editor) + 'time'), 10) || 0;
 
   if (new Date().getTime() - time > Settings.getAutoSaveRetention(editor)) {
     removeDraft(editor, false);
@@ -34,38 +34,38 @@ var hasDraft = function (editor) {
   return true;
 };
 
-var removeDraft = function (editor, fire?) {
-  var prefix = Settings.getAutoSavePrefix(editor);
+const removeDraft = function (editor, fire?) {
+  const prefix = Settings.getAutoSavePrefix(editor);
 
-  LocalStorage.removeItem(prefix + "draft");
-  LocalStorage.removeItem(prefix + "time");
+  LocalStorage.removeItem(prefix + 'draft');
+  LocalStorage.removeItem(prefix + 'time');
 
   if (fire !== false) {
     Events.fireRemoveDraft(editor);
   }
 };
 
-var storeDraft = function (editor) {
-  var prefix = Settings.getAutoSavePrefix(editor);
+const storeDraft = function (editor) {
+  const prefix = Settings.getAutoSavePrefix(editor);
 
   if (!isEmpty(editor) && editor.isDirty()) {
-    LocalStorage.setItem(prefix + "draft", editor.getContent({ format: 'raw', no_events: true }));
-    LocalStorage.setItem(prefix + "time", new Date().getTime().toString());
+    LocalStorage.setItem(prefix + 'draft', editor.getContent({ format: 'raw', no_events: true }));
+    LocalStorage.setItem(prefix + 'time', new Date().getTime().toString());
     Events.fireStoreDraft(editor);
   }
 };
 
-var restoreDraft = function (editor) {
-  var prefix = Settings.getAutoSavePrefix(editor);
+const restoreDraft = function (editor) {
+  const prefix = Settings.getAutoSavePrefix(editor);
 
   if (hasDraft(editor)) {
-    editor.setContent(LocalStorage.getItem(prefix + "draft"), { format: 'raw' });
+    editor.setContent(LocalStorage.getItem(prefix + 'draft'), { format: 'raw' });
     Events.fireRestoreDraft(editor);
   }
 };
 
-var startStoreDraft = function (editor, started) {
-  var interval = Settings.getAutoSaveInterval(editor);
+const startStoreDraft = function (editor, started) {
+  const interval = Settings.getAutoSaveInterval(editor);
 
   if (!started.get()) {
     setInterval(function () {
@@ -78,7 +78,7 @@ var startStoreDraft = function (editor, started) {
   }
 };
 
-var restoreLastDraft = function (editor) {
+const restoreLastDraft = function (editor) {
   editor.undoManager.transact(function () {
     restoreDraft(editor);
     removeDraft(editor);
@@ -88,11 +88,11 @@ var restoreLastDraft = function (editor) {
 };
 
 export default {
-  isEmpty: isEmpty,
-  hasDraft: hasDraft,
-  removeDraft: removeDraft,
-  storeDraft: storeDraft,
-  restoreDraft: restoreDraft,
-  startStoreDraft: startStoreDraft,
-  restoreLastDraft: restoreLastDraft
+  isEmpty,
+  hasDraft,
+  removeDraft,
+  storeDraft,
+  restoreDraft,
+  startStoreDraft,
+  restoreLastDraft
 };

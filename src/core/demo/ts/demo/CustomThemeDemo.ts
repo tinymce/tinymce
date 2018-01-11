@@ -10,8 +10,8 @@
 
 import tinymce from 'tinymce/core/api/Tinymce';
 
-export default <any> function () {
-  var textarea = document.createElement('textarea');
+export default function () {
+  const textarea = document.createElement('textarea');
   textarea.rows = 20;
   textarea.cols = 80;
   textarea.innerHTML = '<p>Bolt</p>';
@@ -19,9 +19,10 @@ export default <any> function () {
   document.querySelector('#ephox-ui').appendChild(textarea);
 
   tinymce.init({
-    selector: "textarea",
-    theme: function (editor, target) {
-      var dom = tinymce.DOM, editorContainer;
+    selector: 'textarea',
+    theme (editor, target) {
+      const dom = tinymce.DOM;
+      let editorContainer;
 
       editorContainer = dom.insertAfter(dom.create('div', { style: 'border: 1px solid gray' },
         '<div>' +
@@ -49,17 +50,17 @@ export default <any> function () {
       editor.on(function () {
         tinymce.each(dom.select('button', editorContainer), function (button) {
           editor.formatter.formatChanged(dom.getAttrib(button, 'data-mce-command'), function (state) {
-            button.style.color = state ? "red" : "";
+            button.style.color = state ? 'red' : '';
           });
         });
       });
 
       return {
-        editorContainer: editorContainer,
+        editorContainer,
         iframeContainer: editorContainer.lastChild,
         iframeHeight: target.offsetHeight - editorContainer.firstChild.offsetHeight
       };
     },
     height: 600
   });
-};
+}

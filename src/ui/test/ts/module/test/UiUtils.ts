@@ -1,8 +1,8 @@
 import { Assertions } from '@ephox/agar';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-var rect = function (viewBlock, ctrl) {
-  var outerRect, innerRect;
+const rect = function (viewBlock, ctrl) {
+  let outerRect, innerRect;
 
   if (ctrl.nodeType) {
     innerRect = ctrl.getBoundingClientRect();
@@ -20,8 +20,8 @@ var rect = function (viewBlock, ctrl) {
   ];
 };
 
-var size = function (ctrl) {
-  var rect;
+const size = function (ctrl) {
+  let rect;
 
   if (ctrl.nodeType) {
     rect = ctrl.getBoundingClientRect();
@@ -32,10 +32,10 @@ var size = function (ctrl) {
   return [rect.width, rect.height];
 };
 
-var nearlyEqualRects = function (rect1, rect2, diff) {
+const nearlyEqualRects = function (rect1, rect2, diff?) {
   diff = diff || 1;
 
-  for (var i = 0; i < 4; i++) {
+  for (let i = 0; i < 4; i++) {
     if (Math.abs(rect1[i] - rect2[i]) > diff) {
       Assertions.assertEq('Should be equal rects', rect2, rect1);
       return;
@@ -43,7 +43,7 @@ var nearlyEqualRects = function (rect1, rect2, diff) {
   }
 };
 
-var loadSkinAndOverride = function (viewBlock, done) {
+const loadSkinAndOverride = function (viewBlock, done) {
   viewBlock.attach();
   DOMUtils.DOM.addClass(viewBlock.get(), 'ui-overrides');
   DOMUtils.DOM.styleSheetLoader.loadAll([
@@ -54,9 +54,9 @@ var loadSkinAndOverride = function (viewBlock, done) {
   });
 };
 
-export default <any> {
-  rect: rect,
-  size: size,
-  nearlyEqualRects: nearlyEqualRects,
-  loadSkinAndOverride: loadSkinAndOverride
+export default {
+  rect,
+  size,
+  nearlyEqualRects,
+  loadSkinAndOverride
 };

@@ -25,10 +25,10 @@ import Tools from '../util/Tools';
  * @version 3.4
  */
 
-var mapCache: any = {}, dummyObj = {};
-var makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
+const mapCache: any = {}, dummyObj = {};
+const makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
 
-var split = function (items, delim?) {
+const split = function (items, delim?) {
   items = Tools.trim(items);
   return items ? items.split(delim || ' ') : [];
 };
@@ -40,15 +40,17 @@ var split = function (items, delim?) {
  * @param {String} type html4, html5 or html5-strict schema type.
  * @return {Object} Schema lookup table.
  */
-var compileSchema = function (type) {
-  var schema: any = {}, globalAttributes, blockContent;
-  var phrasingContent, flowContent, html4BlockContent, html4PhrasingContent;
+const compileSchema = function (type) {
+  const schema: any = {};
+  let globalAttributes, blockContent;
+  let phrasingContent, flowContent, html4BlockContent, html4PhrasingContent;
 
-  var add = function (name, attributes?, children?) {
-    var ni, attributesOrder, element;
+  const add = function (name, attributes?, children?) {
+    let ni, attributesOrder, element;
 
-    var arrayToMap = function (array, obj?) {
-      var map = {}, i, l;
+    const arrayToMap = function (array, obj?) {
+      const map = {};
+      let i, l;
 
       for (i = 0, l = array.length; i < l; i++) {
         map[array[i]] = obj || {};
@@ -58,9 +60,9 @@ var compileSchema = function (type) {
     };
 
     children = children || [];
-    attributes = attributes || "";
+    attributes = attributes || '';
 
-    if (typeof children === "string") {
+    if (typeof children === 'string') {
       children = split(children);
     }
 
@@ -71,7 +73,7 @@ var compileSchema = function (type) {
 
       element = {
         attributes: arrayToMap(attributesOrder),
-        attributesOrder: attributesOrder,
+        attributesOrder,
         children: arrayToMap(children, dummyObj)
       };
 
@@ -79,8 +81,8 @@ var compileSchema = function (type) {
     }
   };
 
-  var addAttrs = function (name, attributes?) {
-    var ni, schemaItem, i, l;
+  const addAttrs = function (name, attributes?) {
+    let ni, schemaItem, i, l;
 
     name = split(name);
     ni = name.length;
@@ -100,7 +102,7 @@ var compileSchema = function (type) {
   }
 
   // Attributes present on all elements
-  globalAttributes = "id accesskey class dir lang style tabindex title role";
+  globalAttributes = 'id accesskey class dir lang style tabindex title role';
 
   // Event attributes can be opt-in/opt-out
   /*eventAttributes = split("onabort onblur oncancel oncanplay oncanplaythrough onchange onclick onclose oncontextmenu oncuechange " +
@@ -113,173 +115,173 @@ var compileSchema = function (type) {
 
   // Block content elements
   blockContent =
-    "address blockquote div dl fieldset form h1 h2 h3 h4 h5 h6 hr menu ol p pre table ul";
+    'address blockquote div dl fieldset form h1 h2 h3 h4 h5 h6 hr menu ol p pre table ul';
 
   // Phrasing content elements from the HTML5 spec (inline)
   phrasingContent =
-    "a abbr b bdo br button cite code del dfn em embed i iframe img input ins kbd " +
-    "label map noscript object q s samp script select small span strong sub sup " +
-    "textarea u var #text #comment"
+    'a abbr b bdo br button cite code del dfn em embed i iframe img input ins kbd ' +
+    'label map noscript object q s samp script select small span strong sub sup ' +
+    'textarea u var #text #comment'
     ;
 
   // Add HTML5 items to globalAttributes, blockContent, phrasingContent
-  if (type != "html4") {
-    globalAttributes += " contenteditable contextmenu draggable dropzone " +
-      "hidden spellcheck translate";
-    blockContent += " article aside details dialog figure header footer hgroup section nav";
-    phrasingContent += " audio canvas command datalist mark meter output picture " +
-      "progress time wbr video ruby bdi keygen";
+  if (type !== 'html4') {
+    globalAttributes += ' contenteditable contextmenu draggable dropzone ' +
+      'hidden spellcheck translate';
+    blockContent += ' article aside details dialog figure header footer hgroup section nav';
+    phrasingContent += ' audio canvas command datalist mark meter output picture ' +
+      'progress time wbr video ruby bdi keygen';
   }
 
   // Add HTML4 elements unless it's html5-strict
-  if (type != "html5-strict") {
-    globalAttributes += " xml:lang";
+  if (type !== 'html5-strict') {
+    globalAttributes += ' xml:lang';
 
-    html4PhrasingContent = "acronym applet basefont big font strike tt";
+    html4PhrasingContent = 'acronym applet basefont big font strike tt';
     phrasingContent = [phrasingContent, html4PhrasingContent].join(' ');
 
     each(split(html4PhrasingContent), function (name) {
-      add(name, "", phrasingContent);
+      add(name, '', phrasingContent);
     });
 
-    html4BlockContent = "center dir isindex noframes";
+    html4BlockContent = 'center dir isindex noframes';
     blockContent = [blockContent, html4BlockContent].join(' ');
 
     // Flow content elements from the HTML5 spec (block+inline)
     flowContent = [blockContent, phrasingContent].join(' ');
 
     each(split(html4BlockContent), function (name) {
-      add(name, "", flowContent);
+      add(name, '', flowContent);
     });
   }
 
   // Flow content elements from the HTML5 spec (block+inline)
-  flowContent = flowContent || [blockContent, phrasingContent].join(" ");
+  flowContent = flowContent || [blockContent, phrasingContent].join(' ');
 
   // HTML4 base schema TODO: Move HTML5 specific attributes to HTML5 specific if statement
   // Schema items <element name>, <specific attributes>, <children ..>
-  add("html", "manifest", "head body");
-  add("head", "", "base command link meta noscript script style title");
-  add("title hr noscript br");
-  add("base", "href target");
-  add("link", "href rel media hreflang type sizes hreflang");
-  add("meta", "name http-equiv content charset");
-  add("style", "media type scoped");
-  add("script", "src async defer type charset");
-  add("body", "onafterprint onbeforeprint onbeforeunload onblur onerror onfocus " +
-    "onhashchange onload onmessage onoffline ononline onpagehide onpageshow " +
-    "onpopstate onresize onscroll onstorage onunload", flowContent);
-  add("address dt dd div caption", "", flowContent);
-  add("h1 h2 h3 h4 h5 h6 pre p abbr code var samp kbd sub sup i b u bdo span legend em strong small s cite dfn", "", phrasingContent);
-  add("blockquote", "cite", flowContent);
-  add("ol", "reversed start type", "li");
-  add("ul", "", "li");
-  add("li", "value", flowContent);
-  add("dl", "", "dt dd");
-  add("a", "href target rel media hreflang type", phrasingContent);
-  add("q", "cite", phrasingContent);
-  add("ins del", "cite datetime", flowContent);
-  add("img", "src sizes srcset alt usemap ismap width height");
-  add("iframe", "src name width height", flowContent);
-  add("embed", "src type width height");
-  add("object", "data type typemustmatch name usemap form width height", [flowContent, "param"].join(' '));
-  add("param", "name value");
-  add("map", "name", [flowContent, "area"].join(' '));
-  add("area", "alt coords shape href target rel media hreflang type");
-  add("table", "border", "caption colgroup thead tfoot tbody tr" + (type == "html4" ? " col" : ""));
-  add("colgroup", "span", "col");
-  add("col", "span");
-  add("tbody thead tfoot", "", "tr");
-  add("tr", "", "td th");
-  add("td", "colspan rowspan headers", flowContent);
-  add("th", "colspan rowspan headers scope abbr", flowContent);
-  add("form", "accept-charset action autocomplete enctype method name novalidate target", flowContent);
-  add("fieldset", "disabled form name", [flowContent, "legend"].join(' '));
-  add("label", "form for", phrasingContent);
-  add("input", "accept alt autocomplete checked dirname disabled form formaction formenctype formmethod formnovalidate " +
-    "formtarget height list max maxlength min multiple name pattern readonly required size src step type value width"
+  add('html', 'manifest', 'head body');
+  add('head', '', 'base command link meta noscript script style title');
+  add('title hr noscript br');
+  add('base', 'href target');
+  add('link', 'href rel media hreflang type sizes hreflang');
+  add('meta', 'name http-equiv content charset');
+  add('style', 'media type scoped');
+  add('script', 'src async defer type charset');
+  add('body', 'onafterprint onbeforeprint onbeforeunload onblur onerror onfocus ' +
+    'onhashchange onload onmessage onoffline ononline onpagehide onpageshow ' +
+    'onpopstate onresize onscroll onstorage onunload', flowContent);
+  add('address dt dd div caption', '', flowContent);
+  add('h1 h2 h3 h4 h5 h6 pre p abbr code var samp kbd sub sup i b u bdo span legend em strong small s cite dfn', '', phrasingContent);
+  add('blockquote', 'cite', flowContent);
+  add('ol', 'reversed start type', 'li');
+  add('ul', '', 'li');
+  add('li', 'value', flowContent);
+  add('dl', '', 'dt dd');
+  add('a', 'href target rel media hreflang type', phrasingContent);
+  add('q', 'cite', phrasingContent);
+  add('ins del', 'cite datetime', flowContent);
+  add('img', 'src sizes srcset alt usemap ismap width height');
+  add('iframe', 'src name width height', flowContent);
+  add('embed', 'src type width height');
+  add('object', 'data type typemustmatch name usemap form width height', [flowContent, 'param'].join(' '));
+  add('param', 'name value');
+  add('map', 'name', [flowContent, 'area'].join(' '));
+  add('area', 'alt coords shape href target rel media hreflang type');
+  add('table', 'border', 'caption colgroup thead tfoot tbody tr' + (type === 'html4' ? ' col' : ''));
+  add('colgroup', 'span', 'col');
+  add('col', 'span');
+  add('tbody thead tfoot', '', 'tr');
+  add('tr', '', 'td th');
+  add('td', 'colspan rowspan headers', flowContent);
+  add('th', 'colspan rowspan headers scope abbr', flowContent);
+  add('form', 'accept-charset action autocomplete enctype method name novalidate target', flowContent);
+  add('fieldset', 'disabled form name', [flowContent, 'legend'].join(' '));
+  add('label', 'form for', phrasingContent);
+  add('input', 'accept alt autocomplete checked dirname disabled form formaction formenctype formmethod formnovalidate ' +
+    'formtarget height list max maxlength min multiple name pattern readonly required size src step type value width'
   );
-  add("button", "disabled form formaction formenctype formmethod formnovalidate formtarget name type value",
-    type == "html4" ? flowContent : phrasingContent);
-  add("select", "disabled form multiple name required size", "option optgroup");
-  add("optgroup", "disabled label", "option");
-  add("option", "disabled label selected value");
-  add("textarea", "cols dirname disabled form maxlength name readonly required rows wrap");
-  add("menu", "type label", [flowContent, "li"].join(' '));
-  add("noscript", "", flowContent);
+  add('button', 'disabled form formaction formenctype formmethod formnovalidate formtarget name type value',
+    type === 'html4' ? flowContent : phrasingContent);
+  add('select', 'disabled form multiple name required size', 'option optgroup');
+  add('optgroup', 'disabled label', 'option');
+  add('option', 'disabled label selected value');
+  add('textarea', 'cols dirname disabled form maxlength name readonly required rows wrap');
+  add('menu', 'type label', [flowContent, 'li'].join(' '));
+  add('noscript', '', flowContent);
 
   // Extend with HTML5 elements
-  if (type != "html4") {
-    add("wbr");
-    add("ruby", "", [phrasingContent, "rt rp"].join(' '));
-    add("figcaption", "", flowContent);
-    add("mark rt rp summary bdi", "", phrasingContent);
-    add("canvas", "width height", flowContent);
-    add("video", "src crossorigin poster preload autoplay mediagroup loop " +
-      "muted controls width height buffered", [flowContent, "track source"].join(' '));
-    add("audio", "src crossorigin preload autoplay mediagroup loop muted controls " +
-      "buffered volume", [flowContent, "track source"].join(' '));
-    add("picture", "", "img source");
-    add("source", "src srcset type media sizes");
-    add("track", "kind src srclang label default");
-    add("datalist", "", [phrasingContent, "option"].join(' '));
-    add("article section nav aside header footer", "", flowContent);
-    add("hgroup", "", "h1 h2 h3 h4 h5 h6");
-    add("figure", "", [flowContent, "figcaption"].join(' '));
-    add("time", "datetime", phrasingContent);
-    add("dialog", "open", flowContent);
-    add("command", "type label icon disabled checked radiogroup command");
-    add("output", "for form name", phrasingContent);
-    add("progress", "value max", phrasingContent);
-    add("meter", "value min max low high optimum", phrasingContent);
-    add("details", "open", [flowContent, "summary"].join(' '));
-    add("keygen", "autofocus challenge disabled form keytype name");
+  if (type !== 'html4') {
+    add('wbr');
+    add('ruby', '', [phrasingContent, 'rt rp'].join(' '));
+    add('figcaption', '', flowContent);
+    add('mark rt rp summary bdi', '', phrasingContent);
+    add('canvas', 'width height', flowContent);
+    add('video', 'src crossorigin poster preload autoplay mediagroup loop ' +
+      'muted controls width height buffered', [flowContent, 'track source'].join(' '));
+    add('audio', 'src crossorigin preload autoplay mediagroup loop muted controls ' +
+      'buffered volume', [flowContent, 'track source'].join(' '));
+    add('picture', '', 'img source');
+    add('source', 'src srcset type media sizes');
+    add('track', 'kind src srclang label default');
+    add('datalist', '', [phrasingContent, 'option'].join(' '));
+    add('article section nav aside header footer', '', flowContent);
+    add('hgroup', '', 'h1 h2 h3 h4 h5 h6');
+    add('figure', '', [flowContent, 'figcaption'].join(' '));
+    add('time', 'datetime', phrasingContent);
+    add('dialog', 'open', flowContent);
+    add('command', 'type label icon disabled checked radiogroup command');
+    add('output', 'for form name', phrasingContent);
+    add('progress', 'value max', phrasingContent);
+    add('meter', 'value min max low high optimum', phrasingContent);
+    add('details', 'open', [flowContent, 'summary'].join(' '));
+    add('keygen', 'autofocus challenge disabled form keytype name');
   }
 
   // Extend with HTML4 attributes unless it's html5-strict
-  if (type != "html5-strict") {
-    addAttrs("script", "language xml:space");
-    addAttrs("style", "xml:space");
-    addAttrs("object", "declare classid code codebase codetype archive standby align border hspace vspace");
-    addAttrs("embed", "align name hspace vspace");
-    addAttrs("param", "valuetype type");
-    addAttrs("a", "charset name rev shape coords");
-    addAttrs("br", "clear");
-    addAttrs("applet", "codebase archive code object alt name width height align hspace vspace");
-    addAttrs("img", "name longdesc align border hspace vspace");
-    addAttrs("iframe", "longdesc frameborder marginwidth marginheight scrolling align");
-    addAttrs("font basefont", "size color face");
-    addAttrs("input", "usemap align");
-    addAttrs("select", "onchange");
-    addAttrs("textarea");
-    addAttrs("h1 h2 h3 h4 h5 h6 div p legend caption", "align");
-    addAttrs("ul", "type compact");
-    addAttrs("li", "type");
-    addAttrs("ol dl menu dir", "compact");
-    addAttrs("pre", "width xml:space");
-    addAttrs("hr", "align noshade size width");
-    addAttrs("isindex", "prompt");
-    addAttrs("table", "summary width frame rules cellspacing cellpadding align bgcolor");
-    addAttrs("col", "width align char charoff valign");
-    addAttrs("colgroup", "width align char charoff valign");
-    addAttrs("thead", "align char charoff valign");
-    addAttrs("tr", "align char charoff valign bgcolor");
-    addAttrs("th", "axis align char charoff valign nowrap bgcolor width height");
-    addAttrs("form", "accept");
-    addAttrs("td", "abbr axis scope align char charoff valign nowrap bgcolor width height");
-    addAttrs("tfoot", "align char charoff valign");
-    addAttrs("tbody", "align char charoff valign");
-    addAttrs("area", "nohref");
-    addAttrs("body", "background bgcolor text link vlink alink");
+  if (type !== 'html5-strict') {
+    addAttrs('script', 'language xml:space');
+    addAttrs('style', 'xml:space');
+    addAttrs('object', 'declare classid code codebase codetype archive standby align border hspace vspace');
+    addAttrs('embed', 'align name hspace vspace');
+    addAttrs('param', 'valuetype type');
+    addAttrs('a', 'charset name rev shape coords');
+    addAttrs('br', 'clear');
+    addAttrs('applet', 'codebase archive code object alt name width height align hspace vspace');
+    addAttrs('img', 'name longdesc align border hspace vspace');
+    addAttrs('iframe', 'longdesc frameborder marginwidth marginheight scrolling align');
+    addAttrs('font basefont', 'size color face');
+    addAttrs('input', 'usemap align');
+    addAttrs('select', 'onchange');
+    addAttrs('textarea');
+    addAttrs('h1 h2 h3 h4 h5 h6 div p legend caption', 'align');
+    addAttrs('ul', 'type compact');
+    addAttrs('li', 'type');
+    addAttrs('ol dl menu dir', 'compact');
+    addAttrs('pre', 'width xml:space');
+    addAttrs('hr', 'align noshade size width');
+    addAttrs('isindex', 'prompt');
+    addAttrs('table', 'summary width frame rules cellspacing cellpadding align bgcolor');
+    addAttrs('col', 'width align char charoff valign');
+    addAttrs('colgroup', 'width align char charoff valign');
+    addAttrs('thead', 'align char charoff valign');
+    addAttrs('tr', 'align char charoff valign bgcolor');
+    addAttrs('th', 'axis align char charoff valign nowrap bgcolor width height');
+    addAttrs('form', 'accept');
+    addAttrs('td', 'abbr axis scope align char charoff valign nowrap bgcolor width height');
+    addAttrs('tfoot', 'align char charoff valign');
+    addAttrs('tbody', 'align char charoff valign');
+    addAttrs('area', 'nohref');
+    addAttrs('body', 'background bgcolor text link vlink alink');
   }
 
   // Extend with HTML5 attributes unless it's html4
-  if (type != "html4") {
-    addAttrs("input button select textarea", "autofocus");
-    addAttrs("input textarea", "placeholder");
-    addAttrs("a", "download");
-    addAttrs("link script img", "crossorigin");
-    addAttrs("iframe", "sandbox seamless allowfullscreen"); // Excluded: srcdoc
+  if (type !== 'html4') {
+    addAttrs('input button select textarea', 'autofocus');
+    addAttrs('input textarea', 'placeholder');
+    addAttrs('a', 'download');
+    addAttrs('link script img', 'crossorigin');
+    addAttrs('iframe', 'sandbox seamless allowfullscreen'); // Excluded: srcdoc
   }
 
   // Special: iframe, ruby, video, audio, label
@@ -313,13 +315,13 @@ var compileSchema = function (type) {
   return schema;
 };
 
-var compileElementMap = function (value, mode?) {
-  var styles;
+const compileElementMap = function (value, mode?) {
+  let styles;
 
   if (value) {
     styles = {};
 
-    if (typeof value == 'string') {
+    if (typeof value === 'string') {
       value = {
         '*': value
       };
@@ -327,7 +329,7 @@ var compileElementMap = function (value, mode?) {
 
     // Convert styles into a rule list
     each(value, function (value, key) {
-      styles[key] = styles[key.toUpperCase()] = mode == 'map' ? makeMap(value, /[, ]/) : explode(value, /[, ]/);
+      styles[key] = styles[key.toUpperCase()] = mode === 'map' ? makeMap(value, /[, ]/) : explode(value, /[, ]/);
     });
   }
 
@@ -335,14 +337,20 @@ var compileElementMap = function (value, mode?) {
 };
 
 export default function (settings?) {
-  var self: any = {}, elements = {}, children = {}, patternElements = [], validStyles, invalidStyles, schemaItems;
-  var whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap, validClasses;
-  var blockElementsMap, nonEmptyElementsMap, moveCaretBeforeOnEnterElementsMap, textBlockElementsMap, textInlineElementsMap;
-  var customElementsMap = {}, specialElements = {};
+  const self: any = {};
+  let elements = {};
+  const children = {};
+  let patternElements = [];
+  let validStyles;
+  let invalidStyles;
+  let schemaItems;
+  let whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap, validClasses;
+  let blockElementsMap, nonEmptyElementsMap, moveCaretBeforeOnEnterElementsMap, textBlockElementsMap, textInlineElementsMap;
+  const customElementsMap = {}, specialElements = {};
 
   // Creates an lookup table map object for the specified option or the default value
-  var createLookupTable = function (option, defaultValue?, extendWith?) {
-    var value = settings[option];
+  const createLookupTable = function (option, defaultValue?, extendWith?) {
+    let value = settings[option];
 
     if (!value) {
       // Get cached default map or make it if needed
@@ -400,16 +408,16 @@ export default function (settings?) {
   });
 
   // Converts a wildcard expression string to a regexp for example *a will become /.*a/.
-  var patternToRegExp = function (str) {
+  const patternToRegExp = function (str) {
     return new RegExp('^' + str.replace(/([?+*])/g, '.$1') + '$');
   };
 
   // Parses the specified valid_elements string and adds to the current rules
   // This function is a bit hard to read since it's heavily optimized for speed
-  var addValidElements = function (validElements) {
-    var ei, el, ai, al, matches, element, attr, attrData, elementName, attrName, attrType, attributes, attributesOrder,
-      prefix, outputName, globalAttributes, globalAttributesOrder, key, value,
-      elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)\])?$/,
+  const addValidElements = function (validElements) {
+    let ei, el, ai, al, matches, element, attr, attrData, elementName, attrName, attrType, attributes, attributesOrder,
+      prefix, outputName, globalAttributes, globalAttributesOrder, key, value;
+    const elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)\])?$/,
       attrRuleRegExp = /^([!\-])?(\w+[\\:]:\w+|[^=:<]+)?(?:([=:<])(.*))?$/,
       hasPatternsRegExp = /[*?+]/;
 
@@ -439,8 +447,8 @@ export default function (settings?) {
 
           // Create the new element
           element = {
-            attributes: attributes,
-            attributesOrder: attributesOrder
+            attributes,
+            attributesOrder
           };
 
           // Padd empty elements prefix
@@ -497,14 +505,14 @@ export default function (settings?) {
                   // Default value
                   if (prefix === '=') {
                     element.attributesDefault = element.attributesDefault || [];
-                    element.attributesDefault.push({ name: attrName, value: value });
+                    element.attributesDefault.push({ name: attrName, value });
                     attr.defaultValue = value;
                   }
 
                   // Forced value
                   if (prefix === ':') {
                     element.attributesForced = element.attributesForced || [];
-                    element.attributesForced.push({ name: attrName, value: value });
+                    element.attributesForced.push({ name: attrName, value });
                     attr.forcedValue = value;
                   }
 
@@ -532,7 +540,7 @@ export default function (settings?) {
           }
 
           // Global rule, store away these for later usage
-          if (!globalAttributes && elementName == '@') {
+          if (!globalAttributes && elementName === '@') {
             globalAttributes = attributes;
             globalAttributesOrder = attributesOrder;
           }
@@ -555,7 +563,7 @@ export default function (settings?) {
     }
   };
 
-  var setValidElements = function (validElements) {
+  const setValidElements = function (validElements) {
     elements = {};
     patternElements = [];
 
@@ -567,15 +575,15 @@ export default function (settings?) {
   };
 
   // Adds custom non HTML elements to the schema
-  var addCustomElements = function (customElements) {
-    var customElementRegExp = /^(~)?(.+)$/;
+  const addCustomElements = function (customElements) {
+    const customElementRegExp = /^(~)?(.+)$/;
 
     if (customElements) {
       // Flush cached items since we are altering the default maps
       mapCache.text_block_elements = mapCache.block_elements = null;
 
       each(split(customElements, ','), function (rule) {
-        var matches = customElementRegExp.exec(rule),
+        const matches = customElementRegExp.exec(rule),
           inline = matches[1] === '~',
           cloneName = inline ? 'span' : 'div',
           name = matches[2];
@@ -591,7 +599,7 @@ export default function (settings?) {
 
         // Add elements clone if needed
         if (!elements[name]) {
-          var customRule = elements[cloneName];
+          let customRule = elements[cloneName];
 
           customRule = extend({}, customRule);
           delete customRule.removeEmptyAttrs;
@@ -612,15 +620,16 @@ export default function (settings?) {
   };
 
   // Adds valid children to the schema object
-  var addValidChildren = function (validChildren) {
-    var childRuleRegExp = /^([+\-]?)(\w+)\[([^\]]+)\]$/;
+  const addValidChildren = function (validChildren) {
+    const childRuleRegExp = /^([+\-]?)(\w+)\[([^\]]+)\]$/;
 
     // Invalidate the schema cache if the schema is mutated
     mapCache[settings.schema] = null;
 
     if (validChildren) {
       each(split(validChildren, ','), function (rule) {
-        var matches = childRuleRegExp.exec(rule), parent, prefix;
+        const matches = childRuleRegExp.exec(rule);
+        let parent, prefix;
 
         if (matches) {
           prefix = matches[1];
@@ -646,8 +655,8 @@ export default function (settings?) {
     }
   };
 
-  var getElementRule = function (name) {
-    var element = elements[name], i;
+  const getElementRule = function (name) {
+    let element = elements[name], i;
 
     // Exact match found
     if (element) {
@@ -677,7 +686,7 @@ export default function (settings?) {
     });
 
     // Switch these on HTML4
-    if (settings.schema != "html5") {
+    if (settings.schema !== 'html5') {
       each(split('strong/b em/i'), function (item) {
         item = split(item, '/');
         elements[item[1]].outputName = item[0];
@@ -720,7 +729,6 @@ export default function (settings?) {
   // Todo: Remove this when we fix list handling to be valid
   addValidChildren('+ol[ul|ol],+ul[ul|ol]');
 
-
   // Some elements are not valid by themselves - require parents
   each({
     dd: 'dl',
@@ -740,7 +748,6 @@ export default function (settings?) {
       elements[item].parentsRequired = split(parents);
     }
   });
-
 
   // Delete invalid elements
   if (settings.invalid_elements) {
@@ -912,7 +919,7 @@ export default function (settings?) {
    * @return {Boolean} True/false if the element is a valid child of the specified parent.
    */
   self.isValidChild = function (name, child) {
-    var parent = children[name.toLowerCase()];
+    const parent = children[name.toLowerCase()];
 
     return !!(parent && parent[child.toLowerCase()]);
   };
@@ -927,7 +934,8 @@ export default function (settings?) {
    * @return {Boolean} True/false if the element and attribute is valid.
    */
   self.isValid = function (name, attr) {
-    var attrPatterns, i, rule = getElementRule(name);
+    let attrPatterns, i;
+    const rule = getElementRule(name);
 
     // Check if it's a valid element
     if (rule) {
@@ -1016,4 +1024,4 @@ export default function (settings?) {
   self.elements = elements;
 
   return self;
-};
+}

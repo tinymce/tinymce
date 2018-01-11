@@ -11,16 +11,16 @@ import InliteTheme from 'tinymce/themes/inlite/Theme';
 import Toolbar from '../module/test/Toolbar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.ClosedDialogScrollTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.ClosedDialogScrollTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   InliteTheme();
   LinkPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyActions = TinyActions(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyActions = TinyActions(editor);
     Pipeline.async({}, [
       tinyApis.sFocus,
       tinyApis.sSetContent('<p style="height: 5000px">a</p><p>b</p>'),
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.ClosedDialogScrollTest', function() {
       ]),
       tinyActions.sUiKeydown(Keys.enter(), {}),
       Step.sync(function () {
-        var offset = window.pageYOffset;
+        const offset = window.pageYOffset;
 
         RawAssertions.assertEq('Should not be at top', offset > 0, true);
       })

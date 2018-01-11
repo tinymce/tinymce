@@ -29,29 +29,28 @@ import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 import LinkButton from 'tinymce/themes/mobile/ui/LinkButton';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var detection = PlatformDetection.detect();
+UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const detection = PlatformDetection.detect();
 
-  var realm = IosRealm();
+  const realm = IosRealm();
   // Make toolbar appear
   Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
 
-  var body = Body.body();
+  const body = Body.body();
   Attachment.attachSystem(body, realm.system());
 
-  var doc = Traverse.owner(body);
+  const doc = Traverse.owner(body);
 
   TestStyles.addStyles();
 
-  var unload = function () {
+  const unload = function () {
     TestStyles.removeStyles();
     Attachment.detachSystem(realm.system());
   };
 
-  var tEditor = TestEditor();
-
+  const tEditor = TestEditor();
 
   realm.setToolbarGroups([
     {
@@ -62,16 +61,16 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function() {
     }
   ]);
 
-  var sAssertNavigation = function (label, prevEnabled, nextEnabled) {
+  const sAssertNavigation = function (label, prevEnabled, nextEnabled) {
     return Logger.t(
       label,
       Step.sync(function () {
-        var active = Focus.active().getOrDie();
+        const active = Focus.active().getOrDie();
         // The buttons are next and previous siblings
-        var prev = Traverse.parent(active).bind(Traverse.prevSibling).getOrDie('Could not find button to left');
-        var next = Traverse.parent(active).bind(Traverse.nextSibling).getOrDie('Could not find button to right');
+        const prev = Traverse.parent(active).bind(Traverse.prevSibling).getOrDie('Could not find button to left');
+        const next = Traverse.parent(active).bind(Traverse.nextSibling).getOrDie('Could not find button to right');
 
-        var assertNavButton = function (buttonLabel, expected, button) {
+        const assertNavButton = function (buttonLabel, expected, button) {
           Assertions.assertStructure(
             'Checking ' + buttonLabel + ' button should be enabled = ' + expected,
             ApproxStructure.build(function (s, str, arr) {
@@ -94,7 +93,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function() {
     );
   };
 
-  var sClickNavigation = function (selector) {
+  const sClickNavigation = function (selector) {
     return Chain.asStep({ }, [
       TestUi.cGetFocused,
       TestUi.cGetParent,
@@ -104,31 +103,30 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function() {
     ]);
   };
 
-  var sClickPrev = sClickNavigation('.tinymce-mobile-icon-previous');
-  var sClickNext = sClickNavigation('.tinymce-mobile-icon-next');
+  const sClickPrev = sClickNavigation('.tinymce-mobile-icon-previous');
+  const sClickNext = sClickNavigation('.tinymce-mobile-icon-next');
 
-
-  var sAssertUrlFocused = GeneralSteps.sequence([
+  const sAssertUrlFocused = GeneralSteps.sequence([
     FocusTools.sTryOnSelector('Focus should be on input with link URL', doc, 'input[placeholder="Type or paste URL"]'),
     sAssertNavigation('Checking initial navigation on text node', false, true)
   ]);
 
-  var sAssertTextFocused = GeneralSteps.sequence([
+  const sAssertTextFocused = GeneralSteps.sequence([
     FocusTools.sTryOnSelector('Focus should be on input with link text', doc, 'input[placeholder="Link text"]'),
     sAssertNavigation('Checking navigation for link text', true, true)
   ]);
 
-  var sAssertTitleFocused = GeneralSteps.sequence([
+  const sAssertTitleFocused = GeneralSteps.sequence([
     FocusTools.sTryOnSelector('Focus should be on input with link title', doc, 'input[placeholder="Link title"]'),
     sAssertNavigation('Checking navigation for link title', true, true)
   ]);
 
-  var sAssertTargetFocused = GeneralSteps.sequence([
+  const sAssertTargetFocused = GeneralSteps.sequence([
     FocusTools.sTryOnSelector('Focus should be on input with link target', doc, 'input[placeholder="Link target"]'),
     sAssertNavigation('Checking navigation for link target', true, false)
   ]);
 
-  var sTestNavigation = GeneralSteps.sequence([
+  const sTestNavigation = GeneralSteps.sequence([
     Keyboard.sKeydown(doc, Keys.tab(), { }),
     sAssertTextFocused,
     Keyboard.sKeydown(doc, Keys.tab(), { }),
@@ -156,10 +154,10 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function() {
     sAssertUrlFocused
   ]);
 
-  var sClickLink = Mouse.sClickOn(realm.element(), TestSelectors.link());
+  const sClickLink = Mouse.sClickOn(realm.element(), TestSelectors.link());
 
-  var sTestScenario = function (rawScenario) {
-    var scenario = ValueSchema.asRawOrDie('Checking scenario', ValueSchema.objOf([
+  const sTestScenario = function (rawScenario) {
+    const scenario = ValueSchema.asRawOrDie('Checking scenario', ValueSchema.objOf([
       FieldSchema.strict('label'),
       FieldSchema.defaulted('content', ''),
       FieldSchema.defaulted('node', Element.fromText('')),
@@ -356,7 +354,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function() {
       node: Element.fromHtml('<a href="http://prepared-url">Prepared</a>'),
       fields: { },
       expected: [ ],
-      mutations: function (node) {
+      mutations (node) {
         return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
           return s.element('a', {
             attrs: {
@@ -375,7 +373,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function() {
         url: 'http://new-url'
       },
       expected: [ ],
-      mutations: function (node) {
+      mutations (node) {
         return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
           return s.element('a', {
             attrs: {
@@ -394,7 +392,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function() {
         url: 'http://new-url'
       },
       expected: [ ],
-      mutations: function (node) {
+      mutations (node) {
         return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
           return s.element('a', {
             attrs: {
@@ -414,7 +412,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function() {
         text: 'new-text'
       },
       expected: [ ],
-      mutations: function (node) {
+      mutations (node) {
         return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
           return s.element('a', {
             attrs: {
@@ -429,4 +427,3 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function() {
     unload(); success();
   }, failure);
 });
-

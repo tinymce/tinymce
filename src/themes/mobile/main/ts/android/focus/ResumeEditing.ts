@@ -17,7 +17,7 @@ import { Node } from '@ephox/sugar';
 // Then we tried everyone's favourite setTimeout solution. This appears to work because it looks like the bug might
 // be caused by the fact that the autocomplete cache is maintained while in the same event queue. As soon as we
 // disconnect the stack, it looks like it is fixed. That makes some level of sense.
-var autocompleteHack = function (/* iBody */) {
+const autocompleteHack = function (/* iBody */) {
   return function (f) {
     setTimeout(function () {
       f();
@@ -25,15 +25,15 @@ var autocompleteHack = function (/* iBody */) {
   };
 };
 
-var resume = function (cWin) {
+const resume = function (cWin) {
   cWin.focus();
-  var iBody = Element.fromDom(cWin.document.body);
+  const iBody = Element.fromDom(cWin.document.body);
 
-  var inInput = Focus.active().exists(function (elem) {
+  const inInput = Focus.active().exists(function (elem) {
     return Arr.contains([ 'input', 'textarea' ], Node.name(elem));
   });
 
-  var transaction = inInput ? autocompleteHack() : Fun.apply;
+  const transaction = inInput ? autocompleteHack() : Fun.apply;
 
   transaction(function () {
     // If we don't blur before focusing the content, a previous focus in something like a statebutton
@@ -44,6 +44,6 @@ var resume = function (cWin) {
   });
 };
 
-export default <any> {
-  resume: resume
+export default {
+  resume
 };

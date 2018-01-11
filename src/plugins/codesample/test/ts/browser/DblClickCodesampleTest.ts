@@ -8,22 +8,22 @@ import CodePlugin from 'tinymce/plugins/codesample/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   CodePlugin();
   ModernTheme();
 
-  var sInsertTextareaContent = function (value) {
+  const sInsertTextareaContent = function (value) {
     return Step.sync(function () {
-      var textarea: any = document.querySelector('div[role="dialog"] textarea');
+      const textarea: any = document.querySelector('div[role="dialog"] textarea');
       textarea.value = value;
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       Logger.t('doubleclick on codesample opens dialog', GeneralSteps.sequence([
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
         sInsertTextareaContent('<p>a</p>'),
         tinyUi.sClickOnUi('click OK btn', 'div.mce-primary button'),
         Step.sync(function () {
-          var pre = editor.getBody().querySelector('pre');
+          const pre = editor.getBody().querySelector('pre');
           editor.fire('dblclick', { target: pre });
         }),
         tinyUi.sWaitForPopup('wait for window', 'div[role="dialog"]')
@@ -44,4 +44,3 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

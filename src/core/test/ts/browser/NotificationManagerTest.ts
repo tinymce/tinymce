@@ -5,15 +5,15 @@ import Tools from 'tinymce/core/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var teardown = function (editor) {
-    var notifications = [].concat(editor.notificationManager.getNotifications());
+  const teardown = function (editor) {
+    const notifications = [].concat(editor.notificationManager.getNotifications());
 
     Tools.each(notifications, function (notification) {
       notification.close();
@@ -21,11 +21,11 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function() {
   };
 
   suite.test('Should not add duplicate text message', function (editor) {
-    var testMsg1 = { type: 'default', text: 'test default message' };
-    var testMsg2 = { type: 'warning', text: 'test warning message' };
-    var testMsg3 = { type: 'error', text: 'test error message' };
-    var testMsg4 = { type: 'info', text: 'test info message' };
-    var notifications = editor.notificationManager.getNotifications();
+    const testMsg1 = { type: 'default', text: 'test default message' };
+    const testMsg2 = { type: 'warning', text: 'test warning message' };
+    const testMsg3 = { type: 'error', text: 'test error message' };
+    const testMsg4 = { type: 'info', text: 'test info message' };
+    const notifications = editor.notificationManager.getNotifications();
 
     editor.notificationManager.open(testMsg1);
 
@@ -51,8 +51,8 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function() {
   });
 
   suite.test('Should add duplicate progressBar messages', function (editor) {
-    var testMsg1 = { text: 'test progressBar message', progressBar: true };
-    var notifications = editor.notificationManager.getNotifications();
+    const testMsg1 = { text: 'test progressBar message', progressBar: true };
+    const notifications = editor.notificationManager.getNotifications();
 
     editor.notificationManager.open(testMsg1);
 
@@ -68,14 +68,14 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function() {
   });
 
   suite.asyncTest('Should add duplicate timeout messages', function (editor, done) {
-    var checkClosed = function () {
+    const checkClosed = function () {
       if (notifications.length === 0) {
         done();
         teardown(editor);
       }
     };
-    var testMsg1 = { text: 'test timeout message', timeout: 1 };
-    var notifications = editor.notificationManager.getNotifications();
+    const testMsg1 = { text: 'test timeout message', timeout: 1 };
+    const notifications = editor.notificationManager.getNotifications();
 
     editor.notificationManager.open(testMsg1).on('close', checkClosed);
 
@@ -87,7 +87,7 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function() {
   });
 
   suite.test('Should not open notifcation if editor is removed', function (editor) {
-    var testMsg1 = { type: 'default', text: 'test progressBar message' };
+    const testMsg1 = { type: 'default', text: 'test progressBar message' };
 
     editor.remove();
 
@@ -111,4 +111,3 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

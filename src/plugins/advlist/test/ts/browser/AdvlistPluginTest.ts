@@ -6,22 +6,22 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.lists.AdvlistPluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.lists.AdvlistPluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   AdvListPlugin();
   ListsPlugin();
   ModernTheme();
 
-  var listStyleTest = function (title, definition) {
+  const listStyleTest = function (title, definition) {
     suite.test(title, function (editor) {
       editor.getBody().innerHTML = definition.inputContent;
       LegacyUnit.setSelection(editor, definition.inputSelection[0], definition.inputSelection[1]);
       editor.execCommand(definition.command, false, { 'list-style-type': definition.listType });
-      var rng = editor.selection.getRng(true);
-      var expectedElm = editor.dom.select(definition.expectedSelection[0])[0];
+      const rng = editor.selection.getRng(true);
+      const expectedElm = editor.dom.select(definition.expectedSelection[0])[0];
 
       LegacyUnit.equal(editor.getContent(), definition.expectedContent, 'Editor content should be equal');
       LegacyUnit.equalDom(rng.startContainer.parentNode, expectedElm, 'Selection elements should be equal');
@@ -185,7 +185,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.AdvlistPluginTest', function()
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
-    plugins: "advlist lists",
+    plugins: 'advlist lists',
     add_unload_trigger: false,
     indent: false,
     entities: 'raw',
@@ -197,4 +197,3 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.AdvlistPluginTest', function()
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

@@ -22,22 +22,20 @@ import Tools from 'tinymce/core/util/Tools';
  * @extends tinymce.ui.ComboBox
  */
 
-"use strict";
-
 declare let window: any;
 
-var getActiveEditor = function () {
+const getActiveEditor = function () {
   return window.tinymce ? window.tinymce.activeEditor : EditorManager.activeEditor;
 };
 
-var history = {};
-var HISTORY_LENGTH = 5;
+let history = {};
+const HISTORY_LENGTH = 5;
 
-var clearHistory = function () {
+const clearHistory = function () {
   history = {};
 };
 
-var toMenuItem = function (target) {
+const toMenuItem = function (target) {
   return {
     title: target.title,
     value: {
@@ -48,40 +46,40 @@ var toMenuItem = function (target) {
   };
 };
 
-var toMenuItems = function (targets) {
+const toMenuItems = function (targets) {
   return Tools.map(targets, toMenuItem);
 };
 
-var staticMenuItem = function (title, url) {
+const staticMenuItem = function (title, url) {
   return {
-    title: title,
+    title,
     value: {
-      title: title,
-      url: url,
+      title,
+      url,
       attach: Fun.noop
     }
   };
 };
 
-var isUniqueUrl = function (url, targets) {
-  var foundTarget = Arr.exists(targets, function (target) {
+const isUniqueUrl = function (url, targets) {
+  const foundTarget = Arr.exists(targets, function (target) {
     return target.url === url;
   });
 
   return !foundTarget;
 };
 
-var getSetting = function (editorSettings, name, defaultValue) {
-  var value = name in editorSettings ? editorSettings[name] : defaultValue;
+const getSetting = function (editorSettings, name, defaultValue) {
+  const value = name in editorSettings ? editorSettings[name] : defaultValue;
   return value === false ? null : value;
 };
 
-var createMenuItems = function (term, targets, fileType, editorSettings) {
-  var separator = { title: '-' };
+const createMenuItems = function (term, targets, fileType, editorSettings) {
+  const separator = { title: '-' };
 
-  var fromHistoryMenuItems = function (history) {
-    var historyItems = history.hasOwnProperty(fileType) ? history[fileType] : [ ];
-    var uniqueHistory = Arr.filter(historyItems, function (url) {
+  const fromHistoryMenuItems = function (history) {
+    const historyItems = history.hasOwnProperty(fileType) ? history[fileType] : [ ];
+    const uniqueHistory = Arr.filter(historyItems, function (url) {
       return isUniqueUrl(url, targets);
     });
 
@@ -90,25 +88,25 @@ var createMenuItems = function (term, targets, fileType, editorSettings) {
         title: url,
         value: {
           title: url,
-          url: url,
+          url,
           attach: Fun.noop
         }
       };
     });
   };
 
-  var fromMenuItems = function (type) {
-    var filteredTargets = Arr.filter(targets, function (target) {
+  const fromMenuItems = function (type) {
+    const filteredTargets = Arr.filter(targets, function (target) {
       return target.type === type;
     });
 
     return toMenuItems(filteredTargets);
   };
 
-  var anchorMenuItems = function () {
-    var anchorMenuItems = fromMenuItems('anchor');
-    var topAnchor = getSetting(editorSettings, 'anchor_top', '#top');
-    var bottomAchor = getSetting(editorSettings, 'anchor_bottom', '#bottom');
+  const anchorMenuItems = function () {
+    const anchorMenuItems = fromMenuItems('anchor');
+    const topAnchor = getSetting(editorSettings, 'anchor_top', '#top');
+    const bottomAchor = getSetting(editorSettings, 'anchor_bottom', '#bottom');
 
     if (topAnchor !== null) {
       anchorMenuItems.unshift(staticMenuItem('<top>', topAnchor));
@@ -121,9 +119,9 @@ var createMenuItems = function (term, targets, fileType, editorSettings) {
     return anchorMenuItems;
   };
 
-  var join = function (items) {
+  const join = function (items) {
     return Arr.foldl(items, function (a, b) {
-      var bothEmpty = a.length === 0 || b.length === 0;
+      const bothEmpty = a.length === 0 || b.length === 0;
       return bothEmpty ? a.concat(b) : a.concat(separator, b);
     }, []);
   };
@@ -139,8 +137,8 @@ var createMenuItems = function (term, targets, fileType, editorSettings) {
   ]) : filterByQuery(term, fromHistoryMenuItems(history));
 };
 
-var addToHistory = function (url, fileType) {
-  var items = history[fileType];
+const addToHistory = function (url, fileType) {
+  const items = history[fileType];
 
   if (!/^https?/.test(url)) {
     return;
@@ -155,24 +153,24 @@ var addToHistory = function (url, fileType) {
   }
 };
 
-var filterByQuery = function (term, menuItems) {
-  var lowerCaseTerm = term.toLowerCase();
-  var result = Tools.grep(menuItems, function (item) {
+const filterByQuery = function (term, menuItems) {
+  const lowerCaseTerm = term.toLowerCase();
+  const result = Tools.grep(menuItems, function (item) {
     return item.title.toLowerCase().indexOf(lowerCaseTerm) !== -1;
   });
 
   return result.length === 1 && result[0].title === term ? [] : result;
 };
 
-var getTitle = function (linkDetails) {
-  var title = linkDetails.title;
+const getTitle = function (linkDetails) {
+  const title = linkDetails.title;
   return title.raw ? title.raw : title;
 };
 
-var setupAutoCompleteHandler = function (ctrl, editorSettings, bodyElm, fileType) {
-  var autocomplete = function (term) {
-    var linkTargets = LinkTargets.find(bodyElm);
-    var menuItems = createMenuItems(term, linkTargets, fileType, editorSettings);
+const setupAutoCompleteHandler = function (ctrl, editorSettings, bodyElm, fileType) {
+  const autocomplete = function (term) {
+    const linkTargets = LinkTargets.find(bodyElm);
+    const menuItems = createMenuItems(term, linkTargets, fileType, editorSettings);
     ctrl.showAutoComplete(menuItems, term);
   };
 
@@ -181,10 +179,10 @@ var setupAutoCompleteHandler = function (ctrl, editorSettings, bodyElm, fileType
   });
 
   ctrl.on('selectitem', function (e) {
-    var linkDetails = e.value;
+    const linkDetails = e.value;
 
     ctrl.value(linkDetails.url);
-    var title = getTitle(linkDetails);
+    const title = getTitle(linkDetails);
 
     if (fileType === 'image') {
       ctrl.fire('change', { meta: { alt: title, attach: linkDetails.attach } });
@@ -210,34 +208,34 @@ var setupAutoCompleteHandler = function (ctrl, editorSettings, bodyElm, fileType
   });
 };
 
-var statusToUiState = function (result) {
-  var status = result.status, message = result.message;
+const statusToUiState = function (result) {
+  const status = result.status, message = result.message;
 
   if (status === 'valid') {
-    return { status: 'ok', message: message };
+    return { status: 'ok', message };
   } else if (status === 'unknown') {
-    return { status: 'warn', message: message };
+    return { status: 'warn', message };
   } else if (status === 'invalid') {
-    return { status: 'warn', message: message };
+    return { status: 'warn', message };
   } else {
     return { status: 'none', message: '' };
   }
 };
 
-var setupLinkValidatorHandler = function (ctrl, editorSettings, fileType) {
-  var validatorHandler = editorSettings.filepicker_validator_handler;
+const setupLinkValidatorHandler = function (ctrl, editorSettings, fileType) {
+  const validatorHandler = editorSettings.filepicker_validator_handler;
   if (validatorHandler) {
-    var validateUrl = function (url) {
+    const validateUrl = function (url) {
       if (url.length === 0) {
         ctrl.statusLevel('none');
         return;
       }
 
       validatorHandler({
-        url: url,
+        url,
         type: fileType
       }, function (result) {
-        var uiState = statusToUiState(result);
+        const uiState = statusToUiState(result);
 
         ctrl.statusMessage(uiState.message);
         ctrl.statusLevel(uiState.status);
@@ -250,9 +248,9 @@ var setupLinkValidatorHandler = function (ctrl, editorSettings, fileType) {
   }
 };
 
-export default <any> ComboBox.extend({
+export default ComboBox.extend({
   Statics: {
-    clearHistory: clearHistory
+    clearHistory
   },
 
   /**
@@ -261,10 +259,10 @@ export default <any> ComboBox.extend({
    * @constructor
    * @param {Object} settings Name/value object with settings.
    */
-  init: function (settings) {
-    var self = this, editor = getActiveEditor(), editorSettings = editor.settings;
-    var actionCallback, fileBrowserCallback, fileBrowserCallbackTypes;
-    var fileType = settings.filetype;
+  init (settings) {
+    const self = this, editor = getActiveEditor(), editorSettings = editor.settings;
+    let actionCallback, fileBrowserCallback, fileBrowserCallbackTypes;
+    const fileType = settings.filetype;
 
     settings.spellcheck = false;
 
@@ -277,7 +275,7 @@ export default <any> ComboBox.extend({
       fileBrowserCallback = editorSettings.file_picker_callback;
       if (fileBrowserCallback && (!fileBrowserCallbackTypes || fileBrowserCallbackTypes[fileType])) {
         actionCallback = function () {
-          var meta = self.fire('beforecall').meta;
+          let meta = self.fire('beforecall').meta;
 
           meta = Tools.extend({ filetype: fileType }, meta);
 
@@ -285,7 +283,7 @@ export default <any> ComboBox.extend({
           fileBrowserCallback.call(
             editor,
             function (value, meta) {
-              self.value(value).fire('change', { meta: meta });
+              self.value(value).fire('change', { meta });
             },
             self.value(),
             meta

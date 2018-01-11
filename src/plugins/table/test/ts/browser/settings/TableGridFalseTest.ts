@@ -10,16 +10,16 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TableGridFalse', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.table.TableGridFalse', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   TablePlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       Logger.t('test table grid disabled', GeneralSteps.sequence([
@@ -45,4 +45,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableGridFalse', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

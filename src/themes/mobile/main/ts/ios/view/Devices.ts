@@ -37,8 +37,8 @@ landscape : 459
 
 */
 
-var findDevice = function (deviceWidth, deviceHeight) {
-  var devices = [
+const findDevice = function (deviceWidth, deviceHeight) {
+  const devices = [
     // iPhone 4 class
     { width: 320, height: 480, keyboard: { portrait: 300, landscape: 240 } },
     // iPhone 5 class
@@ -60,6 +60,6 @@ var findDevice = function (deviceWidth, deviceHeight) {
   }).getOr({ portrait: deviceHeight / 5, landscape: deviceWidth / 4 });
 };
 
-export default <any> {
-  findDevice: findDevice
+export default {
+  findDevice
 };

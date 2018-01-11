@@ -21,17 +21,17 @@ import Orientation from '../../touch/view/Orientation';
 
 */
 
-var softKeyboardLimits = function (outerWindow) {
+const softKeyboardLimits = function (outerWindow) {
   return Devices.findDevice(outerWindow.screen.width, outerWindow.screen.height);
 };
 
-var accountableKeyboardHeight = function (outerWindow) {
-  var portrait = Orientation.get(outerWindow).isPortrait();
-  var limits = softKeyboardLimits(outerWindow);
+const accountableKeyboardHeight = function (outerWindow) {
+  const portrait = Orientation.get(outerWindow).isPortrait();
+  const limits = softKeyboardLimits(outerWindow);
 
-  var keyboard = portrait ? limits.portrait : limits.landscape;
+  const keyboard = portrait ? limits.portrait : limits.landscape;
 
-  var visualScreenHeight = portrait ? outerWindow.screen.height : outerWindow.screen.width;
+  const visualScreenHeight = portrait ? outerWindow.screen.height : outerWindow.screen.width;
 
   // This is our attempt to detect when we are in a webview. If the DOM window height is smaller than the
   // actual screen height by about the size of a keyboard, we assume that's because a keyboard is
@@ -39,17 +39,17 @@ var accountableKeyboardHeight = function (outerWindow) {
   return (visualScreenHeight - outerWindow.innerHeight) > keyboard ? 0 : keyboard;
 };
 
-var getGreenzone = function (socket, dropup) {
-  var outerWindow = Traverse.owner(socket).dom().defaultView;
+const getGreenzone = function (socket, dropup) {
+  const outerWindow = Traverse.owner(socket).dom().defaultView;
   // Include the dropup for this calculation because it represents the total viewable height.
-  var viewportHeight = Height.get(socket) + Height.get(dropup);
-  var acc = accountableKeyboardHeight(outerWindow);
+  const viewportHeight = Height.get(socket) + Height.get(dropup);
+  const acc = accountableKeyboardHeight(outerWindow);
   return viewportHeight - acc;
 };
 
-var updatePadding = function (contentBody, socket, dropup) {
-  var greenzoneHeight = getGreenzone(socket, dropup);
-  var deltaHeight = (Height.get(socket) + Height.get(dropup)) - greenzoneHeight;
+const updatePadding = function (contentBody, socket, dropup) {
+  const greenzoneHeight = getGreenzone(socket, dropup);
+  const deltaHeight = (Height.get(socket) + Height.get(dropup)) - greenzoneHeight;
   // TBIO-3878 Changed the element that was receiving the padding from the iframe to the body of the
   // iframe's document. The reasoning for this is that the syncHeight function of IosSetup.js relies on
   // the scrollHeight of the body to set the height of the iframe itself. If we don't set the
@@ -57,7 +57,7 @@ var updatePadding = function (contentBody, socket, dropup) {
   Css.set(contentBody, 'padding-bottom', deltaHeight + 'px');
 };
 
-export default <any> {
-  getGreenzone: getGreenzone,
-  updatePadding: updatePadding
+export default {
+  getGreenzone,
+  updatePadding
 };

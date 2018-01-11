@@ -4,9 +4,9 @@ import { Editor } from '@ephox/mcagar';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.init.InitEditorOnHiddenElementTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.init.InitEditorOnHiddenElementTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
 
@@ -21,4 +21,3 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorOnHiddenElementTest', fu
     success();
   }, failure);
 });
-

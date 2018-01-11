@@ -14,14 +14,13 @@
  * @class tinymce.ui.KeyboardNavigation
  */
 
-"use strict";
-
-var hasTabstopData = function (elm) {
+const hasTabstopData = function (elm) {
   return elm.getAttribute('data-mce-tabstop') ? true : false;
 };
 
-export default <any> function (settings) {
-  var root = settings.root, focusedElement, focusedControl;
+export default function (settings) {
+  const root = settings.root;
+  let focusedElement, focusedControl;
 
   function isElement(node) {
     return node && node.nodeType === 1;
@@ -63,7 +62,7 @@ export default <any> function (settings) {
    * @return {String} Role of the first parent that has a role.
    */
   function getParentRole(elm?) {
-    var role, parent = elm || focusedElement;
+    let role, parent = elm || focusedElement;
 
     while ((parent = parent.parentNode)) {
       if ((role = getRole(parent))) {
@@ -80,7 +79,7 @@ export default <any> function (settings) {
    * @return {String} Aria property value.
    */
   function getAriaProp(name) {
-    var elm = focusedElement;
+    const elm = focusedElement;
 
     if (isElement(elm)) {
       return elm.getAttribute('aria-' + name);
@@ -95,11 +94,11 @@ export default <any> function (settings) {
    * @return {Boolean} True/false if the element is a text element or not.
    */
   function isTextInputElement(elm) {
-    var tagName = elm.tagName.toUpperCase();
+    const tagName = elm.tagName.toUpperCase();
 
     // Notice: since type can be "email" etc we don't check the type
     // So all input elements gets treated as text input elements
-    return tagName == "INPUT" || tagName == "TEXTAREA" || tagName == "SELECT";
+    return tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT';
   }
 
   /**
@@ -133,10 +132,10 @@ export default <any> function (settings) {
    * @return {Array} Array of focusable elements.
    */
   function getFocusElements(elm) {
-    var elements = [];
+    const elements = [];
 
     function collect(elm) {
-      if (elm.nodeType != 1 || elm.style.display == 'none' || elm.disabled) {
+      if (elm.nodeType !== 1 || elm.style.display === 'none' || elm.disabled) {
         return;
       }
 
@@ -144,7 +143,7 @@ export default <any> function (settings) {
         elements.push(elm);
       }
 
-      for (var i = 0; i < elm.childNodes.length; i++) {
+      for (let i = 0; i < elm.childNodes.length; i++) {
         collect(elm.childNodes[i]);
       }
     }
@@ -164,13 +163,13 @@ export default <any> function (settings) {
    * @return {tinymce.ui.Control} Navigation root control.
    */
   function getNavigationRoot(targetControl?) {
-    var navigationRoot, controls;
+    let navigationRoot, controls;
 
     targetControl = targetControl || focusedControl;
     controls = targetControl.parents().toArray();
     controls.unshift(targetControl);
 
-    for (var i = 0; i < controls.length; i++) {
+    for (let i = 0; i < controls.length; i++) {
       navigationRoot = controls[i];
 
       if (navigationRoot.settings.ariaRoot) {
@@ -189,10 +188,10 @@ export default <any> function (settings) {
    * @param {tinymce.ui.Control} targetControl Target control to focus the first item in.
    */
   function focusFirst(targetControl) {
-    var navigationRoot = getNavigationRoot(targetControl);
-    var focusElements = getFocusElements(navigationRoot.getEl());
+    const navigationRoot = getNavigationRoot(targetControl);
+    const focusElements = getFocusElements(navigationRoot.getEl());
 
-    if (navigationRoot.settings.ariaRemember && "lastAriaIndex" in navigationRoot) {
+    if (navigationRoot.settings.ariaRemember && 'lastAriaIndex' in navigationRoot) {
       moveFocusToIndex(navigationRoot.lastAriaIndex, focusElements);
     } else {
       moveFocusToIndex(0, focusElements);
@@ -230,11 +229,12 @@ export default <any> function (settings) {
    * @param {Array} elements Optional array of elements to move within defaults to the current navigation roots elements.
    */
   function moveFocus(dir, elements?) {
-    var idx = -1, navigationRoot = getNavigationRoot();
+    let idx = -1;
+    const navigationRoot = getNavigationRoot();
 
     elements = elements || getFocusElements(navigationRoot.getEl());
 
-    for (var i = 0; i < elements.length; i++) {
+    for (let i = 0; i < elements.length; i++) {
       if (elements[i] === focusedElement) {
         idx = i;
       }
@@ -250,9 +250,9 @@ export default <any> function (settings) {
    * @private
    */
   function left() {
-    var parentRole = getParentRole();
+    const parentRole = getParentRole();
 
-    if (parentRole == "tablist") {
+    if (parentRole === 'tablist') {
       moveFocus(-1, getFocusElements(focusedElement.parentNode));
     } else if (focusedControl.parent().submenu) {
       cancel();
@@ -267,11 +267,11 @@ export default <any> function (settings) {
    * @private
    */
   function right() {
-    var role = getRole(), parentRole = getParentRole();
+    const role = getRole(), parentRole = getParentRole();
 
-    if (parentRole == "tablist") {
+    if (parentRole === 'tablist') {
       moveFocus(1, getFocusElements(focusedElement.parentNode));
-    } else if (role == "menuitem" && parentRole == "menu" && getAriaProp('haspopup')) {
+    } else if (role === 'menuitem' && parentRole === 'menu' && getAriaProp('haspopup')) {
       enter();
     } else {
       moveFocus(1);
@@ -293,11 +293,11 @@ export default <any> function (settings) {
    * @private
    */
   function down() {
-    var role = getRole(), parentRole = getParentRole();
+    const role = getRole(), parentRole = getParentRole();
 
-    if (role == "menuitem" && parentRole == "menubar") {
+    if (role === 'menuitem' && parentRole === 'menubar') {
       enter();
-    } else if (role == "button" && getAriaProp('haspopup')) {
+    } else if (role === 'button' && getAriaProp('haspopup')) {
       enter({ key: 'down' });
     } else {
       moveFocus(1);
@@ -311,10 +311,10 @@ export default <any> function (settings) {
    * @param {DOMEvent} e DOM event object.
    */
   function tab(e) {
-    var parentRole = getParentRole();
+    const parentRole = getParentRole();
 
-    if (parentRole == "tablist") {
-      var elm = getFocusElements(focusedControl.getEl('body'))[0];
+    if (parentRole === 'tablist') {
+      const elm = getFocusElements(focusedControl.getEl('body'))[0];
 
       if (elm) {
         elm.focus();
@@ -341,7 +341,7 @@ export default <any> function (settings) {
    */
   function enter(aria?) {
     aria = aria || {};
-    focusedControl.fire('click', { target: focusedElement, aria: aria });
+    focusedControl.fire('click', { target: focusedElement, aria });
   }
 
   root.on('keydown', function (e) {
@@ -404,6 +404,6 @@ export default <any> function (settings) {
   });
 
   return {
-    focusFirst: focusFirst
+    focusFirst
   };
-};
+}

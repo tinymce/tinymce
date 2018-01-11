@@ -6,15 +6,15 @@ import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
   Plugin();
 
-  var teardown = function (editor) {
+  const teardown = function (editor) {
     delete editor.settings.image_dimensions;
     delete editor.settings.file_browser_callback;
     delete editor.settings.image_list;
@@ -24,31 +24,31 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     delete editor.settings.image_caption;
   };
 
-  var cleanHtml = function (html) {
+  const cleanHtml = function (html) {
     return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
   };
 
-  var getFrontmostWindow = function (editor) {
+  const getFrontmostWindow = function (editor) {
     return editor.windowManager.windows[editor.windowManager.windows.length - 1];
   };
 
-  var fillAndSubmitWindowForm = function (editor, data) {
-    var win = getFrontmostWindow(editor);
+  const fillAndSubmitWindowForm = function (editor, data) {
+    const win = getFrontmostWindow(editor);
 
     win.fromJSON(data);
     win.find('form')[0].submit();
     win.close();
   };
 
-  var triggerElementChange = function (element) {
-    var evt;
+  const triggerElementChange = function (element) {
+    let evt;
 
-    if ("createEvent" in document) {
-      evt = document.createEvent("HTMLEvents");
-      evt.initEvent("change", false, true);
+    if ('createEvent' in document) {
+      evt = document.createEvent('HTMLEvents');
+      evt.initEvent('change', false, true);
       element.dispatchEvent(evt);
     } else {
-      element.fireEvent("onchange");
+      element.fireEvent('onchange');
     }
   };
 
@@ -57,18 +57,18 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "constrain": true,
-      "height": "",
-      "src": "",
-      "width": ""
+      alt: '',
+      constrain: true,
+      height: '',
+      src: '',
+      width: ''
     });
 
     fillAndSubmitWindowForm(editor, {
-      "alt": "alt",
-      "height": "100",
-      "src": "src",
-      "width": "200"
+      alt: 'alt',
+      height: '100',
+      src: 'src',
+      width: '200'
     });
 
     LegacyUnit.equal(
@@ -83,13 +83,13 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "src": ""
+      alt: '',
+      src: ''
     });
 
     fillAndSubmitWindowForm(editor, {
-      "alt": "alt",
-      "src": "src"
+      alt: 'alt',
+      src: 'src'
     });
 
     LegacyUnit.equal(
@@ -117,24 +117,24 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
       editor.execCommand('mceImage', true);
 
       LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-        "alt": "",
-        "class": "class1",
-        "image-list": "",
-        "constrain": true,
-        "caption": false,
-        "height": "",
-        "src": "",
-        "width": ""
+        'alt': '',
+        'class': 'class1',
+        'image-list': '',
+        'constrain': true,
+        'caption': false,
+        'height': '',
+        'src': '',
+        'width': ''
       });
 
       fillAndSubmitWindowForm(editor, {
-        "alt": "alt",
-        "class": "class1",
-        "constrain": true,
-        "caption": true,
-        "height": "200",
-        "src": "src",
-        "width": "100"
+        alt: 'alt',
+        class: 'class1',
+        constrain: true,
+        caption: true,
+        height: '200',
+        src: 'src',
+        width: '100'
       });
 
       LegacyUnit.equal(
@@ -164,22 +164,22 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
       editor.execCommand('mceImage', true);
 
       LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-        "alt": "",
-        "class": "class1",
-        "constrain": true,
-        "height": "",
-        "src": "",
-        "width": ""
+        alt: '',
+        class: 'class1',
+        constrain: true,
+        height: '',
+        src: '',
+        width: ''
       });
 
       fillAndSubmitWindowForm(editor, {
-        "alt": "alt",
-        "class": "class1",
-        "constrain": true,
-        "caption": true,
-        "height": "200",
-        "src": "src",
-        "width": "100"
+        alt: 'alt',
+        class: 'class1',
+        constrain: true,
+        caption: true,
+        height: '200',
+        src: 'src',
+        width: '100'
       });
 
       LegacyUnit.equal(
@@ -189,16 +189,16 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     });
   }
 
-  suite.test("Image recognizes relative src url and prepends relative image_prepend_url setting.", function (editor) {
-    var win, elementId, element;
+  suite.test('Image recognizes relative src url and prepends relative image_prepend_url setting.', function (editor) {
+    let win, elementId, element;
 
     editor.settings.image_prepend_url = 'testing/images/';
     editor.setContent('');
     editor.execCommand('mceImage', true);
 
-    var data = {
-      "src": "src",
-      "alt": "alt"
+    const data = {
+      src: 'src',
+      alt: 'alt'
     };
 
     win = getFrontmostWindow(editor);
@@ -217,16 +217,16 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     );
   });
 
-  suite.test("Image recognizes relative src url and prepends absolute image_prepend_url setting.", function (editor) {
-    var win, elementId, element;
+  suite.test('Image recognizes relative src url and prepends absolute image_prepend_url setting.', function (editor) {
+    let win, elementId, element;
 
     editor.settings.image_prepend_url = 'http://abc.local/images/';
     editor.setContent('');
     editor.execCommand('mceImage', true);
 
-    var data = {
-      "src": "src",
-      "alt": "alt"
+    const data = {
+      src: 'src',
+      alt: 'alt'
     };
 
     win = getFrontmostWindow(editor);
@@ -250,7 +250,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.settings.image_dimensions = false;
 
     editor.setContent('<p>a</p>');
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 1);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
     editor.selection.setRng(rng);
@@ -258,18 +258,18 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     fillAndSubmitWindowForm(editor, {
-      "alt": "alt",
-      "border": "10px",
-      "src": "src"
+      alt: 'alt',
+      border: '10px',
+      src: 'src'
     });
 
     LegacyUnit.equal(
@@ -286,19 +286,19 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     fillAndSubmitWindowForm(editor, {
-      "alt": "alt",
-      "hspace": "10",
-      "src": "src",
-      "vspace": "10"
+      alt: 'alt',
+      hspace: '10',
+      src: 'src',
+      vspace: '10'
     });
 
     LegacyUnit.equal(
@@ -316,18 +316,18 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     fillAndSubmitWindowForm(editor, {
-      "alt": "alt",
-      "src": "src",
-      "style": "border-width: 10px;"
+      alt: 'alt',
+      src: 'src',
+      style: 'border-width: 10px;'
     });
 
     LegacyUnit.equal(
@@ -345,18 +345,18 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     fillAndSubmitWindowForm(editor, {
-      "alt": "alt",
-      "src": "src",
-      "style": "margin: 10px;"
+      alt: 'alt',
+      src: 'src',
+      style: 'margin: 10px;'
     });
 
     LegacyUnit.equal(
@@ -374,19 +374,19 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     fillAndSubmitWindowForm(editor, {
-      "alt": "alt",
-      "border": "10",
-      "src": "src",
-      "style": "border-width: 15px;"
+      alt: 'alt',
+      border: '10',
+      src: 'src',
+      style: 'border-width: 15px;'
     });
 
     LegacyUnit.equal(
@@ -404,20 +404,20 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     fillAndSubmitWindowForm(editor, {
-      "alt": "alt",
-      "hspace": "10",
-      "src": "src",
-      "style": "margin-left: 15px; margin-top: 20px;",
-      "vspace": "10"
+      alt: 'alt',
+      hspace: '10',
+      src: 'src',
+      style: 'margin-left: 15px; margin-top: 20px;',
+      vspace: '10'
     });
 
     LegacyUnit.equal(
@@ -435,23 +435,23 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin-left: 15px; margin-right: 15px;').fire('change');
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "15",
-      "src": "",
-      "style": "margin-left: 15px; margin-right: 15px;",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '15',
+      src: '',
+      style: 'margin-left: 15px; margin-right: 15px;',
+      vspace: ''
     });
 
   });
@@ -464,23 +464,23 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin-top: 15px; margin-bottom: 15px;').fire('change');
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "margin-top: 15px; margin-bottom: 15px;",
-      "vspace": "15"
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: 'margin-top: 15px; margin-bottom: 15px;',
+      vspace: '15'
     });
 
   });
@@ -493,23 +493,23 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin: 5px;').fire('change');
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "5",
-      "src": "",
-      "style": "margin: 5px;",
-      "vspace": "5"
+      alt: '',
+      border: '',
+      hspace: '5',
+      src: '',
+      style: 'margin: 5px;',
+      vspace: '5'
     });
 
   });
@@ -522,23 +522,23 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin: 5px 10px;').fire('change');
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "10",
-      "src": "",
-      "style": "margin: 5px 10px 5px 10px;",
-      "vspace": "5"
+      alt: '',
+      border: '',
+      hspace: '10',
+      src: '',
+      style: 'margin: 5px 10px 5px 10px;',
+      vspace: '5'
     });
 
   });
@@ -551,23 +551,23 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin: 5px 10px;').fire('change');
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "10",
-      "src": "",
-      "style": "margin: 5px 10px 5px 10px;",
-      "vspace": "5"
+      alt: '',
+      border: '',
+      hspace: '10',
+      src: '',
+      style: 'margin: 5px 10px 5px 10px;',
+      vspace: '5'
     });
 
   });
@@ -580,23 +580,23 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin: 5px 10px 15px;').fire('change');
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "10",
-      "src": "",
-      "style": "margin: 5px 10px 15px 10px;",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '10',
+      src: '',
+      style: 'margin: 5px 10px 15px 10px;',
+      vspace: ''
     });
 
   });
@@ -609,23 +609,23 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin: 5px 10px 15px 20px;').fire('change');
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "margin: 5px 10px 15px 20px;",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: 'margin: 5px 10px 15px 20px;',
+      vspace: ''
     });
 
   });
@@ -638,23 +638,23 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     editor.execCommand('mceImage', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "",
-      "vspace": ""
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: '',
+      vspace: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin: 5px 10px 15px 20px; margin-top: 15px;').fire('change');
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "alt": "",
-      "border": "",
-      "hspace": "",
-      "src": "",
-      "style": "margin: 15px 10px 15px 20px;",
-      "vspace": "15"
+      alt: '',
+      border: '',
+      hspace: '',
+      src: '',
+      style: 'margin: 15px 10px 15px 20px;',
+      vspace: '15'
     });
 
   });
@@ -667,4 +667,3 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

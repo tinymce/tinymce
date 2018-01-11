@@ -25,12 +25,10 @@ import Widget from './Widget';
  * @extends tinymce.ui.Widget
  */
 
-"use strict";
-
-export default <any> Widget.extend({
+export default Widget.extend({
   Defaults: {
-    classes: "widget btn",
-    role: "button"
+    classes: 'widget btn',
+    role: 'button'
   },
 
   /**
@@ -42,8 +40,9 @@ export default <any> Widget.extend({
    * @setting {String} image Image to use for icon.
    * @setting {String} icon Icon to use for button.
    */
-  init: function (settings) {
-    var self = this, size;
+  init (settings) {
+    const self = this;
+    let size;
 
     self._super(settings);
     settings = self.settings;
@@ -79,7 +78,7 @@ export default <any> Widget.extend({
    * @param {String} [icon] New icon identifier.
    * @return {String|tinymce.ui.MenuButton} Current icon or current MenuButton instance.
    */
-  icon: function (icon) {
+  icon (icon) {
     if (!arguments.length) {
       return this.state.get('icon');
     }
@@ -94,13 +93,13 @@ export default <any> Widget.extend({
    *
    * @method repaint
    */
-  repaint: function () {
-    var btnElm = this.getEl().firstChild,
-      btnStyle;
+  repaint () {
+    const btnElm = this.getEl().firstChild;
+    let btnStyle;
 
     if (btnElm) {
       btnStyle = btnElm.style;
-      btnStyle.width = btnStyle.height = "100%";
+      btnStyle.width = btnStyle.height = '100%';
     }
 
     this._super();
@@ -112,17 +111,20 @@ export default <any> Widget.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, id = self._id, prefix = self.classPrefix;
-    var icon = self.state.get('icon'), image, text = self.state.get('text'), textHtml = '';
-    var ariaPressed, settings = self.settings;
+  renderHtml () {
+    const self = this, id = self._id, prefix = self.classPrefix;
+    let icon = self.state.get('icon'), image;
+    const text = self.state.get('text');
+    let textHtml = '';
+    let ariaPressed;
+    const settings = self.settings;
 
     image = settings.image;
     if (image) {
       icon = 'none';
 
       // Support for [high dpi, low dpi] image sources
-      if (typeof image != "string") {
+      if (typeof image !== 'string') {
         image = window.getSelection ? image[0] : image[1];
       }
 
@@ -149,11 +151,11 @@ export default <any> Widget.extend({
     );
   },
 
-  bindStates: function () {
-    var self = this, $ = self.$, textCls = self.classPrefix + 'txt';
+  bindStates () {
+    const self = this, $ = self.$, textCls = self.classPrefix + 'txt';
 
     function setButtonText(text) {
-      var $span = $('span.' + textCls, self.getEl());
+      let $span = $('span.' + textCls, self.getEl());
 
       if (text) {
         if (!$span[0]) {
@@ -174,15 +176,17 @@ export default <any> Widget.extend({
     });
 
     self.state.on('change:icon', function (e) {
-      var icon = e.value, prefix = self.classPrefix;
+      let icon = e.value;
+      const prefix = self.classPrefix;
 
       self.settings.icon = icon;
       icon = icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
 
-      var btnElm = self.getEl().firstChild, iconElm = btnElm.getElementsByTagName('i')[0];
+      const btnElm = self.getEl().firstChild;
+      let iconElm = btnElm.getElementsByTagName('i')[0];
 
       if (icon) {
-        if (!iconElm || iconElm != btnElm.firstChild) {
+        if (!iconElm || iconElm !== btnElm.firstChild) {
           iconElm = document.createElement('i');
           btnElm.insertBefore(iconElm, btnElm.firstChild);
         }

@@ -13,30 +13,28 @@ import Tools from 'tinymce/core/util/Tools';
 import DomUtils from './DomUtils';
 import Notification from './Notification';
 
-
-
-export default <any> function (editor) {
-  var getEditorContainer = function (editor) {
+export default function (editor) {
+  const getEditorContainer = function (editor) {
     return editor.inline ? editor.getElement() : editor.getContentAreaContainer();
   };
 
-  var getContainerWidth = function () {
-    var container = getEditorContainer(editor);
+  const getContainerWidth = function () {
+    const container = getEditorContainer(editor);
     return DomUtils.getSize(container).width;
   };
 
   // Since the viewport will change based on the present notifications, we need to move them all to the
   // top left of the viewport to give an accurate size measurement so we can position them later.
-  var prePositionNotifications = function (notifications) {
+  const prePositionNotifications = function (notifications) {
     Arr.each(notifications, function (notification) {
       notification.moveTo(0, 0);
     });
   };
 
-  var positionNotifications = function (notifications) {
+  const positionNotifications = function (notifications) {
     if (notifications.length > 0) {
-      var firstItem = notifications.slice(0, 1)[0];
-      var container = getEditorContainer(editor);
+      const firstItem = notifications.slice(0, 1)[0];
+      const container = getEditorContainer(editor);
       firstItem.moveRel(container, 'tc-tc');
       Arr.each(notifications, function (notification, index) {
         if (index > 0) {
@@ -46,17 +44,17 @@ export default <any> function (editor) {
     }
   };
 
-  var reposition = function (notifications) {
+  const reposition = function (notifications) {
     prePositionNotifications(notifications);
     positionNotifications(notifications);
   };
 
-  var open = function (args, closeCallback) {
-    var extendedArgs = Tools.extend(args, { maxWidth: getContainerWidth() });
-    var notif = new Notification(extendedArgs);
+  const open = function (args, closeCallback) {
+    const extendedArgs = Tools.extend(args, { maxWidth: getContainerWidth() });
+    const notif = new Notification(extendedArgs);
     notif.args = extendedArgs;
 
-    //If we have a timeout value
+    // If we have a timeout value
     if (extendedArgs.timeout > 0) {
       notif.timer = setTimeout(function () {
         notif.close();
@@ -73,18 +71,18 @@ export default <any> function (editor) {
     return notif;
   };
 
-  var close = function (notification) {
+  const close = function (notification) {
     notification.close();
   };
 
-  var getArgs = function (notification) {
+  const getArgs = function (notification) {
     return notification.args;
   };
 
   return {
-    open: open,
-    close: close,
-    reposition: reposition,
-    getArgs: getArgs
+    open,
+    close,
+    reposition,
+    getArgs
   };
-};
+}

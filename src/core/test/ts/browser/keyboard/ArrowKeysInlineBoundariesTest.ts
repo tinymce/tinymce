@@ -15,40 +15,40 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest',
-  function() {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
-    var os = PlatformDetection.detect().os;
+  function () {
+    const success = arguments[arguments.length - 2];
+    const failure = arguments[arguments.length - 1];
+    const os = PlatformDetection.detect().os;
 
     Theme();
 
-    var sAssertCaretAtZwsp = function (editor) {
+    const sAssertCaretAtZwsp = function (editor) {
       return Step.sync(function () {
-        var rng = editor.selection.getRng();
-        var sc = rng.startContainer, so = rng.startOffset;
-        var chr = sc.data.substr(so, 1);
+        const rng = editor.selection.getRng();
+        const sc = rng.startContainer, so = rng.startOffset;
+        const chr = sc.data.substr(so, 1);
         Assertions.assertEq('Should be zwsp at caret', chr, Zwsp.ZWSP);
       });
     };
 
-    var sAssertCaretAfterZwsp = function (editor) {
+    const sAssertCaretAfterZwsp = function (editor) {
       return Step.sync(function () {
-        var rng = editor.selection.getRng();
-        var sc = rng.startContainer, so = rng.startOffset;
-        var chr = sc.data.substr(so - 1, 1);
+        const rng = editor.selection.getRng();
+        const sc = rng.startContainer, so = rng.startOffset;
+        const chr = sc.data.substr(so - 1, 1);
         Assertions.assertEq('Should be after a zwsp at caret', chr, Zwsp.ZWSP);
       });
     };
 
-    var sSetRawContent = function (editor, html) {
+    const sSetRawContent = function (editor, html) {
       return Step.sync(function () {
         editor.getBody().innerHTML = html;
       });
     };
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyApis = TinyApis(editor);
-      var tinyActions = TinyActions(editor);
+      const tinyApis = TinyApis(editor);
+      const tinyActions = TinyActions(editor);
 
       Pipeline.async({}, [
         tinyApis.sFocus,
@@ -298,4 +298,3 @@ UnitTest.asynctest(
     }, success, failure);
   }
 );
-

@@ -17,12 +17,12 @@ import UiDomFactory from '../util/UiDomFactory';
 import { Tabstopping } from '@ephox/alloy';
 import { Keying } from '@ephox/alloy';
 
-var clearInputBehaviour = 'input-clearing';
+const clearInputBehaviour = 'input-clearing';
 
-var field = function (name, placeholder) {
-  var inputSpec = Memento.record(Input.sketch({
-    placeholder: placeholder,
-    onSetValue: function (input, data) {
+const field = function (name, placeholder) {
+  const inputSpec = Memento.record(Input.sketch({
+    placeholder,
+    onSetValue (input, data) {
       // If the value changes, inform the container so that it can update whether the "x" is visible
       AlloyTriggers.emit(input, NativeEvents.input());
     },
@@ -38,18 +38,18 @@ var field = function (name, placeholder) {
     selectOnFocus: false
   }));
 
-  var buttonSpec = Memento.record(
+  const buttonSpec = Memento.record(
     Button.sketch({
       dom: UiDomFactory.dom('<button class="${prefix}-input-container-x ${prefix}-icon-cancel-circle ${prefix}-icon"></button>'),
-      action: function (button) {
-        var input = inputSpec.get(button);
+      action (button) {
+        const input = inputSpec.get(button);
         Representing.setValue(input, '');
       }
     })
   );
 
   return {
-    name: name,
+    name,
     spec: Container.sketch({
       dom: UiDomFactory.dom('<div class="${prefix}-input-container"></div>'),
       components: [
@@ -61,7 +61,7 @@ var field = function (name, placeholder) {
           toggleClass: Styles.resolve('input-container-empty')
         }),
         Composing.config({
-          find: function (comp) {
+          find (comp) {
             return Option.some(inputSpec.get(comp));
           }
         }),
@@ -69,9 +69,9 @@ var field = function (name, placeholder) {
           // INVESTIGATE: Because this only happens on input,
           // it won't reset unless it has an initial value
           AlloyEvents.run(NativeEvents.input(), function (iContainer) {
-            var input = inputSpec.get(iContainer);
-            var val = Representing.getValue(input);
-            var f = val.length > 0 ? Toggling.off : Toggling.on;
+            const input = inputSpec.get(iContainer);
+            const val = Representing.getValue(input);
+            const f = val.length > 0 ? Toggling.off : Toggling.on;
             f(iContainer);
           })
         ])
@@ -80,9 +80,9 @@ var field = function (name, placeholder) {
   };
 };
 
-var hidden = function (name) {
+const hidden = function (name) {
   return {
-    name: name,
+    name,
     spec: DataField.sketch({
       dom: {
         tag: 'span',
@@ -90,14 +90,14 @@ var hidden = function (name) {
           display: 'none'
         }
       },
-      getInitialValue: function () {
+      getInitialValue () {
         return Option.none();
       }
     })
   };
 };
 
-export default <any> {
-  field: field,
-  hidden: hidden
+export default {
+  field,
+  hidden
 };

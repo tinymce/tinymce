@@ -17,10 +17,10 @@ import RangeNodes from '../selection/RangeNodes';
 import Zwsp from '../text/Zwsp';
 import Tools from '../util/Tools';
 
-var isContentEditableFalse = NodeType.isContentEditableFalse;
+const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-var getNormalizedTextOffset = function (trim, container, offset) {
-  var node, trimmedOffset;
+const getNormalizedTextOffset = function (trim, container, offset) {
+  let node, trimmedOffset;
 
   trimmedOffset = trim(container.data.slice(0, offset)).length;
   for (node = container.previousSibling; node && NodeType.isText(node); node = node.previousSibling) {
@@ -30,10 +30,12 @@ var getNormalizedTextOffset = function (trim, container, offset) {
   return trimmedOffset;
 };
 
-var getPoint = function (dom, trim, normalized, rng, start) {
-  var container = rng[start ? 'startContainer' : 'endContainer'];
-  var offset = rng[start ? 'startOffset' : 'endOffset'], point = [], childNodes, after = 0;
-  var root = dom.getRoot();
+const getPoint = function (dom, trim, normalized, rng, start) {
+  let container = rng[start ? 'startContainer' : 'endContainer'];
+  let offset = rng[start ? 'startOffset' : 'endOffset'];
+  const point = [];
+  let  childNodes, after = 0;
+  const root = dom.getRoot();
 
   if (NodeType.isText(container)) {
     point.push(normalized ? getNormalizedTextOffset(trim, container, offset) : offset);
@@ -55,8 +57,8 @@ var getPoint = function (dom, trim, normalized, rng, start) {
   return point;
 };
 
-var getLocation = function (trim, selection, normalized, rng) {
-  var dom = selection.dom, bookmark: any = {};
+const getLocation = function (trim, selection, normalized, rng) {
+  const dom = selection.dom, bookmark: any = {};
 
   bookmark.start = getPoint(dom, trim, normalized, rng, true);
 
@@ -67,14 +69,14 @@ var getLocation = function (trim, selection, normalized, rng) {
   return bookmark;
 };
 
-var trimEmptyTextNode = function (node) {
+const trimEmptyTextNode = function (node) {
   if (NodeType.isText(node) && node.data.length === 0) {
     node.parentNode.removeChild(node);
   }
 };
 
-var findIndex = function (dom, name, element) {
-  var count = 0;
+const findIndex = function (dom, name, element) {
+  let count = 0;
 
   Tools.each(dom.select(name), function (node) {
     if (node.getAttribute('data-mce-bogus') === 'all') {
@@ -91,8 +93,9 @@ var findIndex = function (dom, name, element) {
   return count;
 };
 
-var moveEndPoint = function (rng, start) {
-  var container, offset, childNodes, prefix = start ? 'start' : 'end';
+const moveEndPoint = function (rng, start) {
+  let container, offset, childNodes;
+  const prefix = start ? 'start' : 'end';
 
   container = rng[prefix + 'Container'];
   offset = rng[prefix + 'Offset'];
@@ -107,15 +110,15 @@ var moveEndPoint = function (rng, start) {
   }
 };
 
-var normalizeTableCellSelection = function (rng) {
+const normalizeTableCellSelection = function (rng) {
   moveEndPoint(rng, true);
   moveEndPoint(rng, false);
 
   return rng;
 };
 
-var findSibling = function (node, offset) {
-  var sibling;
+const findSibling = function (node, offset) {
+  let sibling;
 
   if (NodeType.isElement(node)) {
     node = RangeNodes.getNode(node, offset);
@@ -141,30 +144,30 @@ var findSibling = function (node, offset) {
   }
 };
 
-var findAdjacentContentEditableFalseElm = function (rng) {
+const findAdjacentContentEditableFalseElm = function (rng) {
   return findSibling(rng.startContainer, rng.startOffset) || findSibling(rng.endContainer, rng.endOffset);
 };
 
-var getOffsetBookmark = function (trim, normalized, selection) {
-  var element = selection.getNode();
-  var name = element ? element.nodeName : null;
-  var rng = selection.getRng();
+const getOffsetBookmark = function (trim, normalized, selection) {
+  let element = selection.getNode();
+  let name = element ? element.nodeName : null;
+  const rng = selection.getRng();
 
   if (isContentEditableFalse(element) || name === 'IMG') {
-    return { name: name, index: findIndex(selection.dom, name, element) };
+    return { name, index: findIndex(selection.dom, name, element) };
   }
 
   element = findAdjacentContentEditableFalseElm(rng);
   if (element) {
     name = element.tagName;
-    return { name: name, index: findIndex(selection.dom, name, element) };
+    return { name, index: findIndex(selection.dom, name, element) };
   }
 
   return getLocation(trim, selection, normalized, rng);
 };
 
-var getCaretBookmark = function (selection) {
-  var rng = selection.getRng();
+const getCaretBookmark = function (selection) {
+  const rng = selection.getRng();
 
   return {
     start: CaretBookmark.create(selection.dom.getRoot(), CaretPosition.fromRangeStart(rng)),
@@ -172,47 +175,47 @@ var getCaretBookmark = function (selection) {
   };
 };
 
-var getRangeBookmark = function (selection) {
+const getRangeBookmark = function (selection) {
   return { rng: selection.getRng() };
 };
 
-var getPersistentBookmark = function (selection) {
-  var dom = selection.dom;
-  var rng = selection.getRng();
-  var id = dom.uniqueId();
-  var collapsed = selection.isCollapsed();
-  var styles = 'overflow:hidden;line-height:0px';
-  var element = selection.getNode();
-  var name = element.nodeName;
-  var chr = '&#xFEFF;';
+const getPersistentBookmark = function (selection) {
+  const dom = selection.dom;
+  let rng = selection.getRng();
+  const id = dom.uniqueId();
+  const collapsed = selection.isCollapsed();
+  const styles = 'overflow:hidden;line-height:0px';
+  const element = selection.getNode();
+  const name = element.nodeName;
+  const chr = '&#xFEFF;';
 
   if (name === 'IMG') {
-    return { name: name, index: findIndex(dom, name, element) };
+    return { name, index: findIndex(dom, name, element) };
   }
 
   // W3C method
-  var rng2 = normalizeTableCellSelection(rng.cloneRange());
+  const rng2 = normalizeTableCellSelection(rng.cloneRange());
 
   // Insert end marker
   if (!collapsed) {
     rng2.collapse(false);
-    var endBookmarkNode = dom.create('span', { 'data-mce-type': 'bookmark', id: id + '_end', style: styles }, chr);
+    const endBookmarkNode = dom.create('span', { 'data-mce-type': 'bookmark', 'id': id + '_end', 'style': styles }, chr);
     rng2.insertNode(endBookmarkNode);
     trimEmptyTextNode(endBookmarkNode.nextSibling);
   }
 
   rng = normalizeTableCellSelection(rng);
   rng.collapse(true);
-  var startBookmarkNode = dom.create('span', { 'data-mce-type': 'bookmark', id: id + '_start', style: styles }, chr);
+  const startBookmarkNode = dom.create('span', { 'data-mce-type': 'bookmark', 'id': id + '_start', 'style': styles }, chr);
   rng.insertNode(startBookmarkNode);
   trimEmptyTextNode(startBookmarkNode.previousSibling);
 
-  selection.moveToBookmark({ id: id, keep: 1 });
+  selection.moveToBookmark({ id, keep: 1 });
 
-  return { id: id };
+  return { id };
 };
 
-var getBookmark = function (selection, type, normalized) {
+const getBookmark = function (selection, type, normalized) {
   if (type === 2) {
     return getOffsetBookmark(Zwsp.trim, normalized, selection);
   } else if (type === 3) {
@@ -225,6 +228,6 @@ var getBookmark = function (selection, type, normalized) {
 };
 
 export default {
-  getBookmark: getBookmark,
+  getBookmark,
   getUndoBookmark: Fun.curry(getOffsetBookmark, Fun.identity, true)
 };

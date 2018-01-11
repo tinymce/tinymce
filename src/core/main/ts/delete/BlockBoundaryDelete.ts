@@ -12,8 +12,9 @@ import { Element } from '@ephox/sugar';
 import BlockBoundary from './BlockBoundary';
 import MergeBlocks from './MergeBlocks';
 
-var backspaceDelete = function (editor, forward) {
-  var position, rootNode = Element.fromDom(editor.getBody());
+const backspaceDelete = function (editor, forward) {
+  let position;
+  const rootNode = Element.fromDom(editor.getBody());
 
   position = BlockBoundary.read(rootNode.dom(), forward, editor.selection.getRng()).bind(function (blockBoundary) {
     return MergeBlocks.mergeBlocks(rootNode, forward, blockBoundary.from().block(), blockBoundary.to().block());
@@ -27,5 +28,5 @@ var backspaceDelete = function (editor, forward) {
 };
 
 export default {
-  backspaceDelete: backspaceDelete
+  backspaceDelete
 };

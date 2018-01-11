@@ -10,7 +10,7 @@
 
 import FilterContent from './FilterContent';
 
-var setup = function (editor) {
+const setup = function (editor) {
   editor.on('ResolveName', function (e) {
     if (e.target.nodeName === 'IMG' && editor.dom.hasClass(e.target, FilterContent.getPageBreakClass())) {
       e.name = 'pagebreak';
@@ -19,5 +19,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

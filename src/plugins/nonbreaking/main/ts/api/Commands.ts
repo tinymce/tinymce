@@ -10,12 +10,12 @@
 
 import Actions from '../core/Actions';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addCommand('mceNonBreaking', function () {
     Actions.insertNbsp(editor, 1);
   });
 };
 
 export default {
-  register: register
+  register
 };

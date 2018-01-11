@@ -18,14 +18,14 @@ import MatchFormat from './MatchFormat';
 import RemoveFormat from './RemoveFormat';
 import Tools from '../util/Tools';
 
-var each = Tools.each;
+const each = Tools.each;
 
-var isElementNode = function (node) {
+const isElementNode = function (node) {
   return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !CaretFormat.isCaretNode(node) && !NodeType.isBogus(node);
 };
 
-var findElementSibling = function (node, siblingName) {
-  var sibling;
+const findElementSibling = function (node, siblingName) {
+  let sibling;
 
   for (sibling = node; sibling; sibling = sibling[siblingName]) {
     if (sibling.nodeType === 3 && sibling.nodeValue.length !== 0) {
@@ -40,8 +40,9 @@ var findElementSibling = function (node, siblingName) {
   return node;
 };
 
-var mergeSiblingsNodes = function (dom, prev, next) {
-  var sibling, tmpSibling, elementUtils = new ElementUtils(dom);
+const mergeSiblingsNodes = function (dom, prev, next) {
+  let sibling, tmpSibling;
+  const elementUtils = new ElementUtils(dom);
 
   // Check if next/prev exists and that they are elements
   if (prev && next) {
@@ -71,7 +72,7 @@ var mergeSiblingsNodes = function (dom, prev, next) {
   return next;
 };
 
-var processChildElements = function (node, filter, process) {
+const processChildElements = function (node, filter, process) {
   each(node.childNodes, function (node) {
     if (isElementNode(node)) {
       if (filter(node)) {
@@ -84,13 +85,13 @@ var processChildElements = function (node, filter, process) {
   });
 };
 
-var hasStyle = function (dom, name) {
+const hasStyle = function (dom, name) {
   return Fun.curry(function (name, node) {
     return !!(node && FormatUtils.getStyle(dom, node, name));
   }, name);
 };
 
-var applyStyle = function (dom, name, value) {
+const applyStyle = function (dom, name, value) {
   return Fun.curry(function (name, value, node) {
     dom.setStyle(node, name, value);
 
@@ -102,14 +103,14 @@ var applyStyle = function (dom, name, value) {
   }, name, value);
 };
 
-var unwrapEmptySpan = function (dom, node) {
+const unwrapEmptySpan = function (dom, node) {
   if (node.nodeName === 'SPAN' && dom.getAttribs(node).length === 0) {
     dom.remove(node, true);
   }
 };
 
-var processUnderlineAndColor = function (dom, node) {
-  var textDecoration;
+const processUnderlineAndColor = function (dom, node) {
+  let textDecoration;
   if (node.nodeType === 1 && node.parentNode && node.parentNode.nodeType === 1) {
     textDecoration = FormatUtils.getTextDecoration(dom, node.parentNode);
     if (dom.getStyle(node, 'color') && textDecoration) {
@@ -120,7 +121,7 @@ var processUnderlineAndColor = function (dom, node) {
   }
 };
 
-var mergeUnderlineAndColor = function (dom, format, vars, node) {
+const mergeUnderlineAndColor = function (dom, format, vars, node) {
   // Colored nodes should be underlined so that the color of the underline matches the text color.
   if (format.styles.color || format.styles.textDecoration) {
     Tools.walk(node, Fun.curry(processUnderlineAndColor, dom), 'childNodes');
@@ -128,7 +129,7 @@ var mergeUnderlineAndColor = function (dom, format, vars, node) {
   }
 };
 
-var mergeBackgroundColorAndFontSize = function (dom, format, vars, node) {
+const mergeBackgroundColorAndFontSize = function (dom, format, vars, node) {
   // nodes with font-size should have their own background color as well to fit the line-height (see TINY-882)
   if (format.styles && format.styles.backgroundColor) {
     processChildElements(node,
@@ -138,7 +139,7 @@ var mergeBackgroundColorAndFontSize = function (dom, format, vars, node) {
   }
 };
 
-var mergeSubSup = function (dom, format, vars, node) {
+const mergeSubSup = function (dom, format, vars, node) {
   // Remove font size on all chilren of a sub/sup and remove the inverse element
   if (format.inline === 'sub' || format.inline === 'sup') {
     processChildElements(node,
@@ -150,7 +151,7 @@ var mergeSubSup = function (dom, format, vars, node) {
   }
 };
 
-var mergeSiblings = function (dom, format, vars, node) {
+const mergeSiblings = function (dom, format, vars, node) {
   // Merge next and previous siblings if they are similar <b>text</b><b>text</b> becomes <b>texttext</b>
   if (node && format.merge_siblings !== false) {
     node = mergeSiblingsNodes(dom, FormatUtils.getNonWhiteSpaceSibling(node), node);
@@ -158,9 +159,9 @@ var mergeSiblings = function (dom, format, vars, node) {
   }
 };
 
-var clearChildStyles = function (dom, format, node) {
+const clearChildStyles = function (dom, format, node) {
   if (format.clear_child_styles) {
-    var selector = format.links ? '*:not(a)' : '*';
+    const selector = format.links ? '*:not(a)' : '*';
     each(dom.select(selector, node), function (node) {
       if (isElementNode(node)) {
         each(format.styles, function (value, name) {
@@ -171,7 +172,7 @@ var clearChildStyles = function (dom, format, node) {
   }
 };
 
-var mergeWithChildren = function (editor, formatList, vars, node) {
+const mergeWithChildren = function (editor, formatList, vars, node) {
   // Remove/merge children
   each(formatList, function (format) {
     // Merge all children of similar type will move styles from child to parent
@@ -189,7 +190,7 @@ var mergeWithChildren = function (editor, formatList, vars, node) {
   });
 };
 
-var mergeWithParents = function (editor, format, name, vars, node) {
+const mergeWithParents = function (editor, format, name, vars, node) {
   // Remove format if direct parent already has the same format
   if (MatchFormat.matchNode(editor, node.parentNode, name, vars)) {
     if (RemoveFormat.removeFormat(editor, format, vars, node)) {
@@ -209,10 +210,10 @@ var mergeWithParents = function (editor, format, name, vars, node) {
 };
 
 export default {
-  mergeWithChildren: mergeWithChildren,
-  mergeUnderlineAndColor: mergeUnderlineAndColor,
-  mergeBackgroundColorAndFontSize: mergeBackgroundColorAndFontSize,
-  mergeSubSup: mergeSubSup,
-  mergeSiblings: mergeSiblings,
-  mergeWithParents: mergeWithParents
+  mergeWithChildren,
+  mergeUnderlineAndColor,
+  mergeBackgroundColorAndFontSize,
+  mergeSubSup,
+  mergeSiblings,
+  mergeWithParents
 };

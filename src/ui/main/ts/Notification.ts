@@ -22,19 +22,19 @@ import Delay from 'tinymce/core/util/Delay';
  * @mixes tinymce.ui.Movable
  */
 
-var updateLiveRegion = function (ctx, text) {
+const updateLiveRegion = function (ctx, text) {
   ctx.getEl().lastChild.textContent = text + (ctx.progressBar ? ' ' + ctx.progressBar.value() + '%' : '');
 };
 
-export default <any> Control.extend({
+export default Control.extend({
   Mixins: [Movable],
 
   Defaults: {
     classes: 'widget notification'
   },
 
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._super(settings);
 
@@ -68,7 +68,7 @@ export default <any> Control.extend({
     }
 
     self.on('click', function (e) {
-      if (e.target.className.indexOf(self.classPrefix + 'close') != -1) {
+      if (e.target.className.indexOf(self.classPrefix + 'close') !== -1) {
         self.close();
       }
     });
@@ -80,8 +80,10 @@ export default <any> Control.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, prefix = self.classPrefix, icon = '', closeButton = '', progressBar = '', notificationStyle = '';
+  renderHtml () {
+    const self = this;
+    const prefix = self.classPrefix;
+    let icon = '', closeButton = '', progressBar = '', notificationStyle = '';
 
     if (self.icon) {
       icon = '<i class="' + prefix + 'ico' + ' ' + prefix + 'i-' + self.icon + '"></i>';
@@ -109,8 +111,8 @@ export default <any> Control.extend({
     );
   },
 
-  postRender: function () {
-    var self = this;
+  postRender () {
+    const self = this;
 
     Delay.setTimeout(function () {
       self.$el.addClass(self.classPrefix + 'in');
@@ -120,8 +122,8 @@ export default <any> Control.extend({
     return self._super();
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     self.state.on('change:text', function (e) {
       self.getEl().firstChild.innerHTML = e.value;
@@ -136,8 +138,8 @@ export default <any> Control.extend({
     return self._super();
   },
 
-  close: function () {
-    var self = this;
+  close () {
+    const self = this;
 
     if (!self.fire('close').isDefaultPrevented()) {
       self.remove();
@@ -151,8 +153,9 @@ export default <any> Control.extend({
    *
    * @method repaint
    */
-  repaint: function () {
-    var self = this, style, rect;
+  repaint () {
+    const self = this;
+    let style, rect;
 
     style = self.getEl().style;
     rect = self._layoutRect;

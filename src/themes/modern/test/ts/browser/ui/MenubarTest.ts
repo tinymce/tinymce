@@ -6,8 +6,8 @@ import EditorManager from 'tinymce/core/EditorManager';
 import Menubar from 'tinymce/themes/modern/ui/Menubar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('browser.tinymce.themes.modern.test.ui.MenubarTest', function() {
-  var menuItems = [
+UnitTest.test('browser.tinymce.themes.modern.test.ui.MenubarTest', function () {
+  const menuItems = [
     'newdocument',
     'restoredraft',
     'preview',
@@ -53,8 +53,8 @@ UnitTest.test('browser.tinymce.themes.modern.test.ui.MenubarTest', function() {
     'a11ycheck'
   ];
 
-  var testMenubarCustomItems = function (label, expectedStructure, settings, customItemsCallback) {
-    var editor = new Editor('id', settings, EditorManager);
+  const testMenubarCustomItems = function (label, expectedStructure, settings, customItemsCallback) {
+    const editor = new Editor('id', settings, EditorManager);
 
     Arr.each(menuItems, function (name) {
       editor.addMenuItem(name, { text: name });
@@ -62,23 +62,23 @@ UnitTest.test('browser.tinymce.themes.modern.test.ui.MenubarTest', function() {
 
     customItemsCallback(editor);
 
-    var menuButtons = Menubar.createMenuButtons(editor);
+    const menuButtons = Menubar.createMenuButtons(editor);
     Assertions.assertEq(label, expectedStructure, menuButtons);
   };
 
-  var testMenubar = function (label, expectedStructure, settings) {
+  const testMenubar = function (label, expectedStructure, settings) {
     testMenubarCustomItems(label, expectedStructure, settings, Fun.noop);
   };
 
-  var menuItem = function (text) {
-    return { text: text };
+  const menuItem = function (text) {
+    return { text };
   };
 
-  var menuSeparator = function () {
+  const menuSeparator = function () {
     return { text: '|' };
   };
 
-  var menuCustomItem = function (item) {
+  const menuCustomItem = function (item) {
     return item;
   };
 
@@ -314,8 +314,8 @@ UnitTest.test('browser.tinymce.themes.modern.test.ui.MenubarTest', function() {
     ],
     {
       menu: {
-        'file': { title: 'Custom file', items: 'newdocument preview' },
-        'view': { title: 'Custom view', items: 'preview' }
+        file: { title: 'Custom file', items: 'newdocument preview' },
+        view: { title: 'Custom view', items: 'preview' }
       }
     }
   );
@@ -334,7 +334,7 @@ UnitTest.test('browser.tinymce.themes.modern.test.ui.MenubarTest', function() {
     ],
     {
       menu: {
-        'file': { title: 'Custom file', items: '| newdocument | | | preview |' }
+        file: { title: 'Custom file', items: '| newdocument | | | preview |' }
       }
     }
   );
@@ -403,7 +403,7 @@ UnitTest.test('browser.tinymce.themes.modern.test.ui.MenubarTest', function() {
     ],
     {
       menu: {
-        'file': { title: 'File', items: 'custom1' }
+        file: { title: 'File', items: 'custom1' }
       }
     },
     function (editor) {
@@ -417,4 +417,3 @@ UnitTest.test('browser.tinymce.themes.modern.test.ui.MenubarTest', function() {
     }
   );
 });
-

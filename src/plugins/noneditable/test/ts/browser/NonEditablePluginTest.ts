@@ -5,30 +5,30 @@ import Plugin from 'tinymce/plugins/noneditable/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.noneditable.NonEditablePluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.noneditable.NonEditablePluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
 
   suite.test('noneditable class', function (editor) {
     editor.setContent('<p><span class="mceNonEditable">abc</span></p>');
-    LegacyUnit.equal(editor.dom.select('span')[0].contentEditable, "false");
+    LegacyUnit.equal(editor.dom.select('span')[0].contentEditable, 'false');
   });
 
   suite.test('editable class', function (editor) {
     editor.setContent('<p><span class="mceEditable">abc</span></p>');
-    LegacyUnit.equal(editor.dom.select('span')[0].contentEditable, "true");
+    LegacyUnit.equal(editor.dom.select('span')[0].contentEditable, 'true');
   });
 
   suite.test('noneditable regexp', function (editor) {
     editor.setContent('<p>{test1}{test2}</p>');
 
     LegacyUnit.equal(editor.dom.select('span').length, 2);
-    LegacyUnit.equal(editor.dom.select('span')[0].contentEditable, "false");
-    LegacyUnit.equal(editor.dom.select('span')[1].contentEditable, "false");
+    LegacyUnit.equal(editor.dom.select('span')[0].contentEditable, 'false');
+    LegacyUnit.equal(editor.dom.select('span')[1].contentEditable, 'false');
     LegacyUnit.equal(editor.getContent(), '<p>{test1}{test2}</p>');
   });
 
@@ -48,4 +48,3 @@ UnitTest.asynctest('browser.tinymce.plugins.noneditable.NonEditablePluginTest', 
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

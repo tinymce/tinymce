@@ -7,9 +7,9 @@ import { Throttler } from '@ephox/katamari';
 import Styles from '../../style/Styles';
 import UiDomFactory from '../../util/UiDomFactory';
 
-var sketch = function (onView, translate) {
+const sketch = function (onView, translate) {
 
-  var memIcon = Memento.record(
+  const memIcon = Memento.record(
     Container.sketch({
       dom: UiDomFactory.dom('<div aria-hidden="true" class="${prefix}-mask-tap-icon"></div>'),
       containerBehaviours: Behaviour.derive([
@@ -21,7 +21,7 @@ var sketch = function (onView, translate) {
     })
   );
 
-  var onViewThrottle = Throttler.first(onView, 200);
+  const onViewThrottle = Throttler.first(onView, 200);
 
   return Container.sketch({
     dom: UiDomFactory.dom('<div class="${prefix}-disabled-mask"></div>'),
@@ -34,7 +34,7 @@ var sketch = function (onView, translate) {
             components: [
               memIcon.asSpec()
             ],
-            action: function (button) {
+            action (button) {
               onViewThrottle.throttle();
             },
 
@@ -50,6 +50,6 @@ var sketch = function (onView, translate) {
   });
 };
 
-export default <any> {
-  sketch: sketch
+export default {
+  sketch
 };

@@ -10,12 +10,12 @@
 
 import Actions from '../core/Actions';
 
-var register = function (editor, toggleState) {
+const register = function (editor, toggleState) {
   editor.addCommand('mceVisualChars', function () {
     Actions.toggleVisualChars(editor, toggleState);
   });
 };
 
 export default {
-  register: register
+  register
 };

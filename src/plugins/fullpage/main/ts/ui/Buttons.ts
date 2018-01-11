@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addButton('fullpage', {
     title: 'Document properties',
     cmd: 'mceFullPageProperties'
@@ -22,5 +22,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

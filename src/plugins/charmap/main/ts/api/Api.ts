@@ -11,21 +11,21 @@
 import Actions from '../core/Actions';
 import CharMap from '../core/CharMap';
 
-var get = function (editor) {
-  var getCharMap = function () {
+const get = function (editor) {
+  const getCharMap = function () {
     return CharMap.getCharMap(editor);
   };
 
-  var insertChar = function (chr) {
+  const insertChar = function (chr) {
     Actions.insertChar(editor, chr);
   };
 
   return {
-    getCharMap: getCharMap,
-    insertChar: insertChar
+    getCharMap,
+    insertChar
   };
 };
 
 export default {
-  get: get
+  get
 };

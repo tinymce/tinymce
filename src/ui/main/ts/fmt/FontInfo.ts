@@ -21,10 +21,10 @@ import DOMUtils from 'tinymce/core/dom/DOMUtils';
  * @class tinymce.fmt.FontInfo
  */
 
-var getSpecifiedFontProp = function (propName, rootElm, elm) {
+const getSpecifiedFontProp = function (propName, rootElm, elm) {
   while (elm !== rootElm) {
     if (elm.style[propName]) {
-      var foundStyle = elm.style[propName];
+      const foundStyle = elm.style[propName];
       return foundStyle !== '' ? Option.some(foundStyle) : Option.none();
     }
     elm = elm.parentNode;
@@ -32,12 +32,12 @@ var getSpecifiedFontProp = function (propName, rootElm, elm) {
   return Option.none();
 };
 
-var round = function (number, precision) {
-  var factor = Math.pow(10, precision);
+const round = function (number, precision) {
+  const factor = Math.pow(10, precision);
   return Math.round(number * factor) / factor;
 };
 
-var toPt = function (fontSize, precision) {
+const toPt = function (fontSize, precision?) {
   if (/[0-9.]+px$/.test(fontSize)) {
     // Round to the nearest 0.5
     return round(parseInt(fontSize, 10) * 72 / 96, precision || 0) + 'pt';
@@ -45,16 +45,16 @@ var toPt = function (fontSize, precision) {
   return fontSize;
 };
 
-var normalizeFontFamily = function (fontFamily) {
+const normalizeFontFamily = function (fontFamily) {
   // 'Font name', Font -> Font name,Font
   return fontFamily.replace(/[\'\"]/g, '').replace(/,\s+/g, ',');
 };
 
-var getComputedFontProp = function (propName, elm) {
+const getComputedFontProp = function (propName, elm) {
   return Option.from(DOMUtils.DOM.getStyle(elm, propName, true));
 };
 
-var getFontProp = function (propName) {
+const getFontProp = function (propName) {
   return function (rootElm, elm) {
     return Option.from(elm)
       .map(Element.fromDom)
@@ -67,8 +67,8 @@ var getFontProp = function (propName) {
   };
 };
 
-export default <any> {
+export default {
   getFontSize: getFontProp('fontSize'),
   getFontFamily: Fun.compose(normalizeFontFamily, getFontProp('fontFamily')),
-  toPt: toPt
+  toPt
 };

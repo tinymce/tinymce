@@ -11,22 +11,22 @@
 import GetBookmark from './GetBookmark';
 import ResolveBookmark from './ResolveBookmark';
 
-var getBookmark = function (selection, type, normalized) {
+const getBookmark = function (selection, type, normalized) {
   return GetBookmark.getBookmark(selection, type, normalized);
 };
 
-var moveToBookmark = function (selection, bookmark) {
+const moveToBookmark = function (selection, bookmark) {
   ResolveBookmark.resolve(selection, bookmark).each(function (rng) {
     selection.setRng(rng);
   });
 };
 
-var isBookmarkNode = function (node) {
+const isBookmarkNode = function (node) {
   return node && node.tagName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
 };
 
 export default {
-  getBookmark: getBookmark,
-  moveToBookmark: moveToBookmark,
-  isBookmarkNode: isBookmarkNode
+  getBookmark,
+  moveToBookmark,
+  isBookmarkNode
 };

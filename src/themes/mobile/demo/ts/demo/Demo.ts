@@ -14,12 +14,11 @@ import AutosavePlugin from 'tinymce/plugins/autosave/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/mobile/Theme';
 
-
-export default <any> function () {
+export default function () {
   Theme();
-  ListsPlugin;
-  AutolinkPlugin;
-  AutosavePlugin;
+  ListsPlugin();
+  AutolinkPlugin();
+  AutosavePlugin();
 
   EditorManager.init({
     selector: '.tiny-text',
@@ -32,7 +31,7 @@ export default <any> function () {
     ],
     skin_url: '../../../../../js/tinymce/skins/lightgray',
 
-    setup: function (ed) {
+    setup (ed) {
       ed.on('skinLoaded', function () {
         // Notification fields for equality: type, text, progressBar, timeout
         ed.notificationManager.open({
@@ -70,7 +69,7 @@ export default <any> function () {
         // Should not appear when not in a table.
         title: 'Table', items: [
           { title: 'Rows', items: [
-            { title: 'Cell', selector: 'tr', styles: { 'background': 'red' } }
+            { title: 'Cell', selector: 'tr', styles: { background: 'red' } }
           ] }
         ]
       },
@@ -94,4 +93,4 @@ export default <any> function () {
       }
     ]
   });
-};
+}

@@ -10,7 +10,7 @@
 
 import { Arr } from '@ephox/katamari';
 
-var containsXY = function (clientRect, clientX, clientY) {
+const containsXY = function (clientRect, clientX, clientY) {
   return (
     clientX >= clientRect.left &&
     clientX <= clientRect.right &&
@@ -19,7 +19,7 @@ var containsXY = function (clientRect, clientX, clientY) {
   );
 };
 
-var isXYWithinRange = function (clientX, clientY, range) {
+const isXYWithinRange = function (clientX, clientY, range) {
   if (range.collapsed) {
     return false;
   }
@@ -30,5 +30,5 @@ var isXYWithinRange = function (clientX, clientY, range) {
 };
 
 export default {
-  isXYWithinRange: isXYWithinRange
+  isXYWithinRange
 };

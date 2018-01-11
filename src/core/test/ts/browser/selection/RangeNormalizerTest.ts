@@ -9,36 +9,36 @@ import RangeNormalizer from 'tinymce/core/selection/RangeNormalizer';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var viewBlock = ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const viewBlock = ViewBlock();
 
-  var sSetContent = function (html) {
+  const sSetContent = function (html) {
     return Step.sync(function () {
       viewBlock.update(html);
     });
   };
 
-  var mNormalizeRange = Step.stateful(function (value, next, die) {
+  const mNormalizeRange = Step.stateful(function (value, next, die) {
     next(RangeNormalizer.normalize(value));
   });
 
-  var mCreateRange = function (startPath, startOffset, endPath, endOffset) {
+  const mCreateRange = function (startPath, startOffset, endPath, endOffset) {
     return Step.stateful(function (value, next, die) {
-      var startContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
-      var endContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
-      var rng = document.createRange();
+      const startContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
+      const rng = document.createRange();
       rng.setStart(startContainer.dom(), startOffset);
       rng.setEnd(endContainer.dom(), endOffset);
       next(rng);
     });
   };
 
-  var mAssertRange = function (startPath, startOffset, endPath, endOffset) {
+  const mAssertRange = function (startPath, startOffset, endPath, endOffset) {
     return Step.stateful(function (value, next, die) {
-      var startContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
-      var endContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
+      const startContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
 
       Assertions.assertDomEq('Should be expected startContainer', startContainer, Element.fromDom(value.startContainer));
       Assertions.assertEq('Should be expected startOffset', startOffset, value.startOffset);
@@ -110,4 +110,3 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', functio
     success();
   }, failure);
 });
-

@@ -15,7 +15,7 @@
  * @class tinymce.Mode
  */
 
-var setEditorCommandState = function (editor, cmd, state) {
+const setEditorCommandState = function (editor, cmd, state) {
   try {
     editor.getDoc().execCommand(cmd, false, state);
   } catch (ex) {
@@ -23,8 +23,8 @@ var setEditorCommandState = function (editor, cmd, state) {
   }
 };
 
-var clickBlocker = function (editor) {
-  var target, handler;
+const clickBlocker = function (editor) {
+  let target, handler;
 
   target = editor.getBody();
 
@@ -37,13 +37,13 @@ var clickBlocker = function (editor) {
   editor.dom.bind(target, 'click', handler);
 
   return {
-    unbind: function () {
+    unbind () {
       editor.dom.unbind(target, 'click', handler);
     }
   };
 };
 
-var toggleReadOnly = function (editor, state) {
+const toggleReadOnly = function (editor, state) {
   if (editor._clickBlocker) {
     editor._clickBlocker.unbind();
     editor._clickBlocker = null;
@@ -57,33 +57,33 @@ var toggleReadOnly = function (editor, state) {
   } else {
     editor.readonly = false;
     editor.getBody().contentEditable = true;
-    setEditorCommandState(editor, "StyleWithCSS", false);
-    setEditorCommandState(editor, "enableInlineTableEditing", false);
-    setEditorCommandState(editor, "enableObjectResizing", false);
+    setEditorCommandState(editor, 'StyleWithCSS', false);
+    setEditorCommandState(editor, 'enableInlineTableEditing', false);
+    setEditorCommandState(editor, 'enableObjectResizing', false);
     editor.focus();
     editor.nodeChanged();
   }
 };
 
-var setMode = function (editor, mode) {
-  var currentMode = editor.readonly ? 'readonly' : 'design';
+const setMode = function (editor, mode) {
+  const currentMode = editor.readonly ? 'readonly' : 'design';
 
-  if (mode == currentMode) {
+  if (mode === currentMode) {
     return;
   }
 
   if (editor.initialized) {
-    toggleReadOnly(editor, mode == 'readonly');
+    toggleReadOnly(editor, mode === 'readonly');
   } else {
     editor.on('init', function () {
-      toggleReadOnly(editor, mode == 'readonly');
+      toggleReadOnly(editor, mode === 'readonly');
     });
   }
 
   // Event is NOT preventable
-  editor.fire('SwitchMode', { mode: mode });
+  editor.fire('SwitchMode', { mode });
 };
 
 export default {
-  setMode: setMode
+  setMode
 };

@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var toggleActiveState = function (editor) {
+const toggleActiveState = function (editor) {
   return function (e) {
-    var ctrl = e.control;
+    const ctrl = e.control;
 
     editor.on('VisualChars', function (e) {
       ctrl.active(e.state);
@@ -18,7 +18,7 @@ var toggleActiveState = function (editor) {
   };
 };
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addButton('visualchars', {
     active: false,
     title: 'Show invisible characters',

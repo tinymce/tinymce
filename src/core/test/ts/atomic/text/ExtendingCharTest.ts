@@ -3,10 +3,10 @@ import { Pipeline } from '@ephox/agar';
 import ExtendingChar from 'tinymce/core/text/ExtendingChar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('atomic.tinymce.core.text.ExtendingCharTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('atomic.tinymce.core.text.ExtendingCharTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   suite.test('isExtendingChar', function () {
     LegacyUnit.strictEqual(ExtendingChar.isExtendingChar('a'), false);
@@ -17,4 +17,3 @@ UnitTest.asynctest('atomic.tinymce.core.text.ExtendingCharTest', function() {
     success();
   }, failure);
 });
-

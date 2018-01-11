@@ -15,19 +15,19 @@
  * @class tinymce.dom.NodeType
  */
 
-var isNodeType = function (type) {
+const isNodeType = function (type) {
   return function (node) {
-    return !!node && node.nodeType == type;
+    return !!node && node.nodeType === type;
   };
 };
 
-var isElement = isNodeType(1);
+const isElement = isNodeType(1);
 
-var matchNodeNames = function (names) {
+const matchNodeNames = function (names) {
   names = names.toLowerCase().split(' ');
 
   return function (node) {
-    var i, name;
+    let i, name;
 
     if (node && node.nodeType) {
       name = node.nodeName.toLowerCase();
@@ -43,11 +43,11 @@ var matchNodeNames = function (names) {
   };
 };
 
-var matchStyleValues = function (name, values) {
+const matchStyleValues = function (name, values) {
   values = values.toLowerCase().split(' ');
 
   return function (node) {
-    var i, cssValue;
+    let i, cssValue;
 
     if (isElement(node)) {
       for (i = 0; i < values.length; i++) {
@@ -62,29 +62,29 @@ var matchStyleValues = function (name, values) {
   };
 };
 
-var hasPropValue = function (propName, propValue) {
+const hasPropValue = function (propName, propValue) {
   return function (node) {
     return isElement(node) && node[propName] === propValue;
   };
 };
 
-var hasAttribute = function (attrName, attrValue?) {
+const hasAttribute = function (attrName, attrValue?) {
   return function (node) {
     return isElement(node) && node.hasAttribute(attrName);
   };
 };
 
-var hasAttributeValue = function (attrName, attrValue) {
+const hasAttributeValue = function (attrName, attrValue) {
   return function (node) {
     return isElement(node) && node.getAttribute(attrName) === attrValue;
   };
 };
 
-var isBogus = function (node) {
+const isBogus = function (node) {
   return isElement(node) && node.hasAttribute('data-mce-bogus');
 };
 
-var hasContentEditableState = function (value) {
+const hasContentEditableState = function (value) {
   return function (node) {
     if (isElement(node)) {
       if (node.contentEditable === value) {
@@ -102,16 +102,16 @@ var hasContentEditableState = function (value) {
 
 export default {
   isText: isNodeType(3),
-  isElement: isElement,
+  isElement,
   isComment: isNodeType(8),
   isDocument: isNodeType(9),
   isBr: matchNodeNames('br'),
   isContentEditableTrue: hasContentEditableState('true'),
   isContentEditableFalse: hasContentEditableState('false'),
-  matchNodeNames: matchNodeNames,
-  hasPropValue: hasPropValue,
-  hasAttribute: hasAttribute,
-  hasAttributeValue: hasAttributeValue,
-  matchStyleValues: matchStyleValues,
-  isBogus: isBogus
+  matchNodeNames,
+  hasPropValue,
+  hasAttribute,
+  hasAttributeValue,
+  matchStyleValues,
+  isBogus
 };

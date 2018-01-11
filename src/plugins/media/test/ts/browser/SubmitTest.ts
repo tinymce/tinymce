@@ -1,8 +1,5 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
@@ -11,14 +8,14 @@ import Utils from '../module/test/Utils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.core.SubmitTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.core.SubmitTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
   Theme();
 
-  var sTestEmbedContentSubmit = function (ui, editor, apis, url, expected) {
+  const sTestEmbedContentSubmit = function (ui, editor, apis, url, expected) {
     return GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       Utils.sSetFormItemNoEvent(ui, url),
@@ -28,8 +25,8 @@ UnitTest.asynctest('browser.core.SubmitTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var ui = TinyUi(editor);
-    var apis = TinyApis(editor);
+    const ui = TinyUi(editor);
+    const apis = TinyApis(editor);
 
     Pipeline.async({}, [
       sTestEmbedContentSubmit(ui, editor, apis, 'https://www.youtube.com/watch?v=IcgmSRJHu_8',
@@ -42,9 +39,9 @@ UnitTest.asynctest('browser.core.SubmitTest', function() {
       apis.sSetContent('')
     ], onSuccess, onFailure);
   }, {
-    plugins: ["media"],
-    toolbar: "media",
-    media_url_resolver: function (data, resolve) {
+    plugins: ['media'],
+    toolbar: 'media',
+    media_url_resolver (data, resolve) {
       setTimeout(function () {
         resolve({
           html: '<span id="fake">' + data.url + '</span>'
@@ -54,4 +51,3 @@ UnitTest.asynctest('browser.core.SubmitTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

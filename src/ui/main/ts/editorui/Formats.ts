@@ -11,15 +11,15 @@
 import Tools from 'tinymce/core/util/Tools';
 import FormatUtils from './FormatUtils';
 
-var hideMenuObjects = function (editor, menu) {
-  var count = menu.length;
+const hideMenuObjects = function (editor, menu) {
+  let count = menu.length;
 
   Tools.each(menu, function (item) {
     if (item.menu) {
       item.hidden = hideMenuObjects(editor, item.menu) === 0;
     }
 
-    var formatName = item.format;
+    const formatName = item.format;
     if (formatName) {
       item.hidden = !editor.formatter.canApply(formatName);
     }
@@ -32,8 +32,8 @@ var hideMenuObjects = function (editor, menu) {
   return count;
 };
 
-var hideFormatMenuItems = function (editor, menu) {
-  var count = menu.items().length;
+const hideFormatMenuItems = function (editor, menu) {
+  let count = menu.items().length;
 
   menu.items().each(function (item) {
     if (item.menu) {
@@ -44,7 +44,7 @@ var hideFormatMenuItems = function (editor, menu) {
       item.visible(hideMenuObjects(editor, item.settings.menu) > 0);
     }
 
-    var formatName = item.settings.format;
+    const formatName = item.settings.format;
     if (formatName) {
       item.visible(editor.formatter.canApply(formatName));
     }
@@ -57,10 +57,11 @@ var hideFormatMenuItems = function (editor, menu) {
   return count;
 };
 
-var createFormatMenu = function (editor) {
-  var count = 0, newFormats = [];
+const createFormatMenu = function (editor) {
+  let count = 0;
+  const newFormats = [];
 
-  var defaultStyleFormats = [
+  const defaultStyleFormats = [
     {
       title: 'Headings', items: [
         { title: 'Heading 1', format: 'h1' },
@@ -103,15 +104,15 @@ var createFormatMenu = function (editor) {
     }
   ];
 
-  var createMenu = function (formats) {
-    var menu = [];
+  const createMenu = function (formats) {
+    const menu = [];
 
     if (!formats) {
       return;
     }
 
     Tools.each(formats, function (format) {
-      var menuItem: any = {
+      const menuItem: any = {
         text: format.title,
         icon: format.icon
       };
@@ -119,7 +120,7 @@ var createFormatMenu = function (editor) {
       if (format.items) {
         menuItem.menu = createMenu(format.items);
       } else {
-        var formatName = format.format || "custom" + count++;
+        const formatName = format.format || 'custom' + count++;
 
         if (!format.format) {
           format.name = formatName;
@@ -136,8 +137,8 @@ var createFormatMenu = function (editor) {
     return menu;
   };
 
-  var createStylesMenu = function () {
-    var menu;
+  const createStylesMenu = function () {
+    let menu;
 
     if (editor.settings.style_formats_merge) {
       if (editor.settings.style_formats) {
@@ -161,23 +162,23 @@ var createFormatMenu = function (editor) {
   return {
     type: 'menu',
     items: createStylesMenu(),
-    onPostRender: function (e) {
+    onPostRender (e) {
       editor.fire('renderFormatsMenu', { control: e.control });
     },
     itemDefaults: {
       preview: true,
 
-      textStyle: function () {
+      textStyle () {
         if (this.settings.format) {
           return editor.formatter.getCssText(this.settings.format);
         }
       },
 
-      onPostRender: function () {
-        var self = this;
+      onPostRender () {
+        const self = this;
 
         self.parent().on('show', function () {
-          var formatName, command;
+          let formatName, command;
 
           formatName = self.settings.format;
           if (formatName) {
@@ -192,7 +193,7 @@ var createFormatMenu = function (editor) {
         });
       },
 
-      onclick: function () {
+      onclick () {
         if (this.settings.format) {
           FormatUtils.toggleFormat(editor, this.settings.format)();
         }
@@ -205,19 +206,19 @@ var createFormatMenu = function (editor) {
   };
 };
 
-var registerMenuItems = function (editor, formatMenu) {
+const registerMenuItems = function (editor, formatMenu) {
   editor.addMenuItem('formats', {
     text: 'Formats',
     menu: formatMenu
   });
 };
 
-var registerButtons = function (editor, formatMenu) {
+const registerButtons = function (editor, formatMenu) {
   editor.addButton('styleselect', {
     type: 'menubutton',
     text: 'Formats',
     menu: formatMenu,
-    onShowMenu: function () {
+    onShowMenu () {
       if (editor.settings.style_formats_autohide) {
         hideFormatMenuItems(editor, this.menu);
       }
@@ -225,13 +226,13 @@ var registerButtons = function (editor, formatMenu) {
   });
 };
 
-var register = function (editor) {
-  var formatMenu = createFormatMenu(editor);
+const register = function (editor) {
+  const formatMenu = createFormatMenu(editor);
 
   registerMenuItems(editor, formatMenu);
   registerButtons(editor, formatMenu);
 };
 
-export default <any> {
-  register: register
+export default {
+  register
 };

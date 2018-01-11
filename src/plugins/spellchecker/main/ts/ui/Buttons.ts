@@ -12,8 +12,8 @@ import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 import Actions from '../core/Actions';
 
-var buildMenuItems = function (listName, languageValues) {
-  var items = [];
+const buildMenuItems = function (listName, languageValues) {
+  const items = [];
 
   Tools.each(languageValues, function (languageValue) {
     items.push({
@@ -26,9 +26,9 @@ var buildMenuItems = function (listName, languageValues) {
   return items;
 };
 
-var updateSelection = function (editor) {
+const updateSelection = function (editor) {
   return function (e) {
-    var selectedLanguage = Settings.getLanguage(editor);
+    const selectedLanguage = Settings.getLanguage(editor);
 
     e.control.items().each(function (ctrl) {
       ctrl.active(ctrl.settings.data === selectedLanguage);
@@ -36,7 +36,7 @@ var updateSelection = function (editor) {
   };
 };
 
-var getItems = function (editor) {
+const getItems = function (editor) {
   return Tools.map(Settings.getLanguages(editor).split(','), function (langPair) {
     langPair = langPair.split('=');
 
@@ -47,17 +47,17 @@ var getItems = function (editor) {
   });
 };
 
-var register = function (editor, pluginUrl, startedState, textMatcherState, currentLanguageState, lastSuggestionsState) {
-  var languageMenuItems = buildMenuItems('Language', getItems(editor));
-  var startSpellchecking = function () {
+const register = function (editor, pluginUrl, startedState, textMatcherState, currentLanguageState, lastSuggestionsState) {
+  const languageMenuItems = buildMenuItems('Language', getItems(editor));
+  const startSpellchecking = function () {
     Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
   };
 
-  var buttonArgs: any = {
+  const buttonArgs: any = {
     tooltip: 'Spellcheck',
     onclick: startSpellchecking,
-    onPostRender: function (e) {
-      var ctrl = e.control;
+    onPostRender (e) {
+      const ctrl = e.control;
 
       editor.on('SpellcheckStart SpellcheckEnd', function () {
         ctrl.active(startedState.get());
@@ -81,8 +81,8 @@ var register = function (editor, pluginUrl, startedState, textMatcherState, curr
     context: 'tools',
     onclick: startSpellchecking,
     selectable: true,
-    onPostRender: function () {
-      var self = this;
+    onPostRender () {
+      const self = this;
 
       self.active(startedState.get());
 
@@ -94,5 +94,5 @@ var register = function (editor, pluginUrl, startedState, textMatcherState, curr
 };
 
 export default {
-  register: register
+  register
 };

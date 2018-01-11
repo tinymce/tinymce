@@ -17,17 +17,17 @@ import CaretContainer from './CaretContainer';
  * This module shows the invisble block that the caret is currently in when contents is added to that block.
  */
 
-var findBlockCaretContainer = function (editor) {
+const findBlockCaretContainer = function (editor) {
   return SelectorFind.descendant(Element.fromDom(editor.getBody()), '*[data-mce-caret]').fold(Fun.constant(null), function (elm) {
     return elm.dom();
   });
 };
 
-var removeIeControlRect = function (editor) {
+const removeIeControlRect = function (editor) {
   editor.selection.setRng(editor.selection.getRng());
 };
 
-var showBlockCaretContainer = function (editor, blockCaretContainer) {
+const showBlockCaretContainer = function (editor, blockCaretContainer) {
   if (blockCaretContainer.hasAttribute('data-mce-caret')) {
     CaretContainer.showCaretContainerBlock(blockCaretContainer);
     removeIeControlRect(editor);
@@ -35,8 +35,8 @@ var showBlockCaretContainer = function (editor, blockCaretContainer) {
   }
 };
 
-var handleBlockContainer = function (editor, e) {
-  var blockCaretContainer = findBlockCaretContainer(editor);
+const handleBlockContainer = function (editor, e) {
+  const blockCaretContainer = findBlockCaretContainer(editor);
 
   if (!blockCaretContainer) {
     return;
@@ -54,10 +54,10 @@ var handleBlockContainer = function (editor, e) {
   }
 };
 
-var setup = function (editor) {
+const setup = function (editor) {
   editor.on('keyup compositionstart', Fun.curry(handleBlockContainer, editor));
 };
 
 export default {
-  setup: setup
+  setup
 };

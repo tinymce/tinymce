@@ -1,20 +1,20 @@
 import { Focus } from '@ephox/sugar';
 
-var refreshInput = function (input) {
+const refreshInput = function (input) {
   // This is magic used to refresh the iOS cursor on an input field when input focus is
   // lost and then restored. The setTime out is important for consistency, a lower value
   // may not yield a successful reselection when the time out value is 10, 30% success
   // on making the blue selection reappear.
-  var start = input.dom().selectionStart;
-  var end = input.dom().selectionEnd;
-  var dir = input.dom().selectionDirection;
+  const start = input.dom().selectionStart;
+  const end = input.dom().selectionEnd;
+  const dir = input.dom().selectionDirection;
   setTimeout(function () {
     input.dom().setSelectionRange(start, end, dir);
     Focus.focus(input);
   }, 50);
 };
 
-var refresh = function (winScope) {
+const refresh = function (winScope) {
   // Sometimes the cursor can get out of sync with the content, it looks weird and importantly
   // it causes the code that dismisses the keyboard to fail, Fussy has selection code, but since
   // this is fired often and confined to iOS, it's implemented with more native code. Note, you
@@ -22,10 +22,10 @@ var refresh = function (winScope) {
   // and start typing. The content will scroll up to go into the greenzone, but the cursor will
   // still display in the old location. It only updates once you keep typing. However, if we do this
   // hack, then the cursor is updated. You'll still have any autocorrect selection boxes, though.
-  var sel = winScope.getSelection();
+  const sel = winScope.getSelection();
   if (sel.rangeCount > 0) {
-    var br = sel.getRangeAt(0);
-    var r = winScope.document.createRange();
+    const br = sel.getRangeAt(0);
+    const r = winScope.document.createRange();
     r.setStart(br.startContainer, br.startOffset);
     r.setEnd(br.endContainer, br.endOffset);
 
@@ -36,7 +36,7 @@ var refresh = function (winScope) {
   }
 };
 
-export default <any> {
-  refreshInput: refreshInput,
-  refresh: refresh
+export default {
+  refreshInput,
+  refresh
 };

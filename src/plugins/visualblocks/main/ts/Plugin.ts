@@ -15,11 +15,11 @@ import Bindings from './core/Bindings';
 import Buttons from './ui/Buttons';
 
 PluginManager.add('visualblocks', function (editor, pluginUrl) {
-  var enabledState = Cell(false);
+  const enabledState = Cell(false);
 
   Commands.register(editor, pluginUrl, enabledState);
   Buttons.register(editor, enabledState);
   Bindings.setup(editor, pluginUrl, enabledState);
 });
 
-export default function () { };
+export default function () { }

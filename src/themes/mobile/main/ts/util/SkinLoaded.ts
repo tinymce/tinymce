@@ -1,5 +1,5 @@
-var fireSkinLoaded = function (editor) {
-  var done = function () {
+const fireSkinLoaded = function (editor) {
+  const done = function () {
     editor._skinLoaded = true;
     editor.fire('SkinLoaded');
   };
@@ -13,6 +13,6 @@ var fireSkinLoaded = function (editor) {
   };
 };
 
-export default <any> {
-  fireSkinLoaded: fireSkinLoaded
+export default {
+  fireSkinLoaded
 };

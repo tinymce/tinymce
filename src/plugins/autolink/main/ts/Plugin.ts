@@ -8,7 +8,6 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Env from 'tinymce/core/Env';
 import PluginManager from 'tinymce/core/PluginManager';
 import Keys from './core/Keys';
 
@@ -16,4 +15,4 @@ PluginManager.add('autolink', function (editor) {
   Keys.setup(editor);
 });
 
-export default function () { };
+export default function () { }

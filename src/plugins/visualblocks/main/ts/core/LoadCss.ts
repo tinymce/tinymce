@@ -11,16 +11,16 @@
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Tools from 'tinymce/core/util/Tools';
 
-var cssId = DOMUtils.DOM.uniqueId();
+const cssId = DOMUtils.DOM.uniqueId();
 
-var load = function (doc, url) {
-  var linkElements = Tools.toArray(doc.getElementsByTagName('link'));
-  var matchingLinkElms = Tools.grep(linkElements, function (head) {
+const load = function (doc, url) {
+  const linkElements = Tools.toArray(doc.getElementsByTagName('link'));
+  const matchingLinkElms = Tools.grep(linkElements, function (head) {
     return head.id === cssId;
   });
 
   if (matchingLinkElms.length === 0) {
-    var linkElm = DOMUtils.DOM.create('link', {
+    const linkElm = DOMUtils.DOM.create('link', {
       id: cssId,
       rel: 'stylesheet',
       href: url
@@ -31,5 +31,5 @@ var load = function (doc, url) {
 };
 
 export default {
-  load: load
+  load
 };

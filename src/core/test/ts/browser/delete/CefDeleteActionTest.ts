@@ -3,7 +3,6 @@ import { Chain } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
 import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
@@ -11,60 +10,60 @@ import CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var viewBlock = ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const viewBlock = ViewBlock();
 
-  var cSetHtml = function (html) {
+  const cSetHtml = function (html) {
     return Chain.op(function () {
       viewBlock.update(html);
     });
   };
 
-  var cReadAction = function (forward, cursorPath, cursorOffset) {
+  const cReadAction = function (forward, cursorPath, cursorOffset) {
     return Chain.mapper(function (viewBlock) {
-      var container = Hierarchy.follow(Element.fromDom(viewBlock.get()), cursorPath).getOrDie();
-      var rng = document.createRange();
+      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), cursorPath).getOrDie();
+      const rng = document.createRange();
       rng.setStart(container.dom(), cursorOffset);
       rng.setEnd(container.dom(), cursorOffset);
       return CefDeleteAction.read(viewBlock.get(), forward, rng);
     });
   };
 
-  var cAssertRemoveElementAction = function (elementPath) {
+  const cAssertRemoveElementAction = function (elementPath) {
     return Chain.op(function (actionOption) {
-      var element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
-      var action = actionOption.getOrDie();
+      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+      const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'remove', actionName(action));
       Assertions.assertDomEq('Should be expected element', element, actionValue(action));
     });
   };
 
-  var cAssertMoveToElementAction = function (elementPath) {
+  const cAssertMoveToElementAction = function (elementPath) {
     return Chain.op(function (actionOption) {
-      var element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
-      var action = actionOption.getOrDie();
+      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+      const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'moveToElement', actionName(action));
       Assertions.assertDomEq('Should be expected element', element, actionValue(action));
     });
   };
 
-  var cAssertMoveToPositionAction = function (elementPath, offset) {
+  const cAssertMoveToPositionAction = function (elementPath, offset) {
     return Chain.op(function (actionOption) {
-      var container = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
-      var action = actionOption.getOrDie();
+      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+      const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'moveToPosition', actionName(action));
       Assertions.assertDomEq('Should be expected container', container, Element.fromDom(actionValue(action).container()));
       Assertions.assertEq('Should be expected offset', offset, actionValue(action).offset());
     });
   };
 
-  var cAssertActionNone = Chain.op(function (actionOption) {
+  const cAssertActionNone = Chain.op(function (actionOption) {
     Assertions.assertEq('Action value should be none', true, actionOption.isNone());
   });
 
-  var actionName = function (action) {
+  const actionName = function (action) {
     return action.fold(
       Fun.constant('remove'),
       Fun.constant('moveToElement'),
@@ -72,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function()
     );
   };
 
-  var actionValue = function (action) {
+  const actionValue = function (action) {
     return action.fold(
       Element.fromDom,
       Element.fromDom,
@@ -254,4 +253,3 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function()
     success();
   }, failure);
 });
-

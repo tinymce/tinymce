@@ -8,21 +8,21 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var guess = function (url) {
-  var mimes = {
-    'mp3': 'audio/mpeg',
-    'wav': 'audio/wav',
-    'mp4': 'video/mp4',
-    'webm': 'video/webm',
-    'ogg': 'video/ogg',
-    'swf': 'application/x-shockwave-flash'
+const guess = function (url) {
+  const mimes = {
+    mp3: 'audio/mpeg',
+    wav: 'audio/wav',
+    mp4: 'video/mp4',
+    webm: 'video/webm',
+    ogg: 'video/ogg',
+    swf: 'application/x-shockwave-flash'
   };
-  var fileEnd = url.toLowerCase().split('.').pop();
-  var mime = mimes[fileEnd];
+  const fileEnd = url.toLowerCase().split('.').pop();
+  const mime = mimes[fileEnd];
 
   return mime ? mime : '';
 };
 
 export default {
-  guess: guess
+  guess
 };

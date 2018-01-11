@@ -8,22 +8,22 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getTocClass = function (editor) {
+const getTocClass = function (editor) {
   return editor.getParam('toc_class', 'mce-toc');
 };
 
-var getTocHeader = function (editor) {
-  var tagName = editor.getParam('toc_header', 'h2');
+const getTocHeader = function (editor) {
+  const tagName = editor.getParam('toc_header', 'h2');
   return /^h[1-6]$/.test(tagName) ? tagName : 'h2';
 };
 
-var getTocDepth = function (editor) {
-  var depth = parseInt(editor.getParam('toc_depth', '3'), 10);
+const getTocDepth = function (editor) {
+  const depth = parseInt(editor.getParam('toc_depth', '3'), 10);
   return depth >= 1 && depth <= 9 ? depth : 3;
 };
 
 export default {
-  getTocClass: getTocClass,
-  getTocHeader: getTocHeader,
-  getTocDepth: getTocDepth
+  getTocClass,
+  getTocHeader,
+  getTocDepth
 };

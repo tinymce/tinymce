@@ -23,11 +23,11 @@ import EditorFocus from './focus/EditorFocus';
  * @class tinymce.ForceBlocks
  */
 
-var isBlockElement = function (blockElements, node) {
+const isBlockElement = function (blockElements, node) {
   return blockElements.hasOwnProperty(node.nodeName);
 };
 
-var isValidTarget = function (blockElements, node) {
+const isValidTarget = function (blockElements, node) {
   if (NodeType.isText(node)) {
     return true;
   } else if (NodeType.isElement(node)) {
@@ -37,19 +37,21 @@ var isValidTarget = function (blockElements, node) {
   }
 };
 
-var hasBlockParent = function (blockElements, root, node) {
+const hasBlockParent = function (blockElements, root, node) {
   return Arr.exists(Parents.parents(Element.fromDom(node), Element.fromDom(root)), function (elm) {
     return isBlockElement(blockElements, elm.dom());
   });
 };
 
-var addRootBlocks = function (editor) {
-  var settings = editor.settings, dom = editor.dom, selection = editor.selection;
-  var schema = editor.schema, blockElements = schema.getBlockElements();
-  var node = selection.getStart(), rootNode = editor.getBody(), rng;
-  var startContainer, startOffset, endContainer, endOffset, rootBlockNode;
-  var tempNode, wrapped, restoreSelection;
-  var rootNodeName, forcedRootBlock;
+const addRootBlocks = function (editor) {
+  const settings = editor.settings, dom = editor.dom, selection = editor.selection;
+  const schema = editor.schema, blockElements = schema.getBlockElements();
+  let node = selection.getStart();
+  const rootNode = editor.getBody();
+  let rng;
+  let startContainer, startOffset, endContainer, endOffset, rootBlockNode;
+  let tempNode, wrapped, restoreSelection;
+  let rootNodeName, forcedRootBlock;
 
   forcedRootBlock = settings.forced_root_block;
 
@@ -105,12 +107,12 @@ var addRootBlocks = function (editor) {
   }
 };
 
-var setup = function (editor) {
+const setup = function (editor) {
   if (editor.settings.forced_root_block) {
     editor.on('NodeChange', Fun.curry(addRootBlocks, editor));
   }
 };
 
 export default {
-  setup: setup
+  setup
 };

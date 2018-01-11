@@ -18,16 +18,14 @@ import Form from './Form';
  * @extends tinymce.ui.Form
  */
 
-"use strict";
-
-export default <any> Form.extend({
+export default Form.extend({
   Defaults: {
     containerCls: 'fieldset',
     layout: 'flex',
     direction: 'column',
     align: 'stretch',
     flex: 1,
-    padding: "25 15 5 15",
+    padding: '25 15 5 15',
     labelGap: 30,
     spacing: 10,
     border: 1
@@ -39,8 +37,8 @@ export default <any> Form.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, layout = self._layout, prefix = self.classPrefix;
+  renderHtml () {
+    const self = this, layout = self._layout, prefix = self.classPrefix;
 
     self.preRender();
     layout.preRender(self);

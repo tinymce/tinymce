@@ -16,13 +16,13 @@ import UpdateHtml from './UpdateHtml';
 import UrlPatterns from './UrlPatterns';
 import VideoScript from './VideoScript';
 
-var getIframeHtml = function (data) {
-  var allowFullscreen = data.allowFullscreen ? ' allowFullscreen="1"' : '';
+const getIframeHtml = function (data) {
+  const allowFullscreen = data.allowFullscreen ? ' allowFullscreen="1"' : '';
   return '<iframe src="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '"' + allowFullscreen + '></iframe>';
 };
 
-var getFlashHtml = function (data) {
-  var html = '<object data="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '" type="application/x-shockwave-flash">';
+const getFlashHtml = function (data) {
+  let html = '<object data="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '" type="application/x-shockwave-flash">';
 
   if (data.poster) {
     html += '<img src="' + data.poster + '" width="' + data.width + '" height="' + data.height + '" />';
@@ -33,7 +33,7 @@ var getFlashHtml = function (data) {
   return html;
 };
 
-var getAudioHtml = function (data, audioTemplateCallback) {
+const getAudioHtml = function (data, audioTemplateCallback) {
   if (audioTemplateCallback) {
     return audioTemplateCallback(data);
   } else {
@@ -49,7 +49,7 @@ var getAudioHtml = function (data, audioTemplateCallback) {
   }
 };
 
-var getVideoHtml = function (data, videoTemplateCallback) {
+const getVideoHtml = function (data, videoTemplateCallback) {
   if (videoTemplateCallback) {
     return videoTemplateCallback(data);
   } else {
@@ -66,12 +66,12 @@ var getVideoHtml = function (data, videoTemplateCallback) {
   }
 };
 
-var getScriptHtml = function (data) {
+const getScriptHtml = function (data) {
   return '<script src="' + data.source1 + '"></script>';
 };
 
-var dataToHtml = function (editor, dataIn) {
-  var data = Tools.extend({}, dataIn);
+const dataToHtml = function (editor, dataIn) {
+  const data = Tools.extend({}, dataIn);
 
   if (!data.source1) {
     Tools.extend(data, HtmlToData.htmlToData(Settings.getScripts(editor), data.embed));
@@ -88,17 +88,17 @@ var dataToHtml = function (editor, dataIn) {
     data.poster = '';
   }
 
-  data.source1 = editor.convertURL(data.source1, "source");
-  data.source2 = editor.convertURL(data.source2, "source");
+  data.source1 = editor.convertURL(data.source1, 'source');
+  data.source2 = editor.convertURL(data.source2, 'source');
   data.source1mime = Mime.guess(data.source1);
   data.source2mime = Mime.guess(data.source2);
-  data.poster = editor.convertURL(data.poster, "poster");
+  data.poster = editor.convertURL(data.poster, 'poster');
 
   Tools.each(UrlPatterns.urlPatterns, function (pattern) {
-    var i;
-    var url;
+    let i;
+    let url;
 
-    var match = pattern.regex.exec(data.source1);
+    const match = pattern.regex.exec(data.source1);
 
     if (match) {
       url = pattern.url;
@@ -122,15 +122,15 @@ var dataToHtml = function (editor, dataIn) {
   if (data.embed) {
     return UpdateHtml.updateHtml(data.embed, data, true);
   } else {
-    var videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), data.source1);
+    const videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), data.source1);
     if (videoScript) {
       data.type = 'script';
       data.width = videoScript.width;
       data.height = videoScript.height;
     }
 
-    var audioTemplateCallback = Settings.getAudioTemplateCallback(editor);
-    var videoTemplateCallback = Settings.getVideoTemplateCallback(editor);
+    const audioTemplateCallback = Settings.getAudioTemplateCallback(editor);
+    const videoTemplateCallback = Settings.getVideoTemplateCallback(editor);
 
     data.width = data.width || 300;
     data.height = data.height || 150;
@@ -139,13 +139,13 @@ var dataToHtml = function (editor, dataIn) {
       data[key] = editor.dom.encode(value);
     });
 
-    if (data.type === "iframe") {
+    if (data.type === 'iframe') {
       return getIframeHtml(data);
-    } else if (data.source1mime === "application/x-shockwave-flash") {
+    } else if (data.source1mime === 'application/x-shockwave-flash') {
       return getFlashHtml(data);
     } else if (data.source1mime.indexOf('audio') !== -1) {
       return getAudioHtml(data, audioTemplateCallback);
-    } else if (data.type === "script") {
+    } else if (data.type === 'script') {
       return getScriptHtml(data);
     } else {
       return getVideoHtml(data, videoTemplateCallback);
@@ -154,5 +154,5 @@ var dataToHtml = function (editor, dataIn) {
 };
 
 export default {
-  dataToHtml: dataToHtml
+  dataToHtml
 };

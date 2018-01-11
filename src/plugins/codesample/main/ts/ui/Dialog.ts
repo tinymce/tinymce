@@ -12,20 +12,18 @@ import Settings from '../api/Settings';
 import CodeSample from '../core/CodeSample';
 import Languages from '../core/Languages';
 
-
-
 export default {
-  open: function (editor) {
-    var minWidth = Settings.getDialogMinWidth(editor);
-    var minHeight = Settings.getDialogMinHeight(editor);
-    var currentLanguage = Languages.getCurrentLanguage(editor);
-    var currentLanguages = Languages.getLanguages(editor);
-    var currentCode = CodeSample.getCurrentCode(editor);
+  open (editor) {
+    const minWidth = Settings.getDialogMinWidth(editor);
+    const minHeight = Settings.getDialogMinHeight(editor);
+    const currentLanguage = Languages.getCurrentLanguage(editor);
+    const currentLanguages = Languages.getLanguages(editor);
+    const currentCode = CodeSample.getCurrentCode(editor);
 
     editor.windowManager.open({
-      title: "Insert/Edit code sample",
-      minWidth: minWidth,
-      minHeight: minHeight,
+      title: 'Insert/Edit code sample',
+      minWidth,
+      minHeight,
       layout: 'flex',
       direction: 'column',
       align: 'stretch',
@@ -52,7 +50,7 @@ export default {
           autofocus: true
         }
       ],
-      onSubmit: function (e) {
+      onSubmit (e) {
         CodeSample.insertCodeSample(editor, e.data.language, e.data.code);
       }
     });

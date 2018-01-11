@@ -1,5 +1,4 @@
 import { Behaviour } from '@ephox/alloy';
-import { Receiving } from '@ephox/alloy';
 import { Toggling } from '@ephox/alloy';
 import { Slider } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
@@ -8,21 +7,21 @@ import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
 import UiDomFactory from '../util/UiDomFactory';
 
-var schema = ValueSchema.objOfOnly([
+const schema = ValueSchema.objOfOnly([
   FieldSchema.strict('getInitialValue'),
   FieldSchema.strict('onChange'),
   FieldSchema.strict('category'),
   FieldSchema.strict('sizes')
 ]);
 
-var sketch = function (rawSpec) {
-  var spec = ValueSchema.asRawOrDie('SizeSlider', schema, rawSpec);
+const sketch = function (rawSpec) {
+  const spec = ValueSchema.asRawOrDie('SizeSlider', schema, rawSpec);
 
-  var isValidValue = function (valueIndex) {
+  const isValidValue = function (valueIndex) {
     return valueIndex >= 0 && valueIndex < spec.sizes.length;
   };
 
-  var onChange = function (slider, thumb, valueIndex) {
+  const onChange = function (slider, thumb, valueIndex) {
     if (isValidValue(valueIndex)) {
       spec.onChange(valueIndex);
     }
@@ -36,11 +35,11 @@ var sketch = function (rawSpec) {
         Styles.resolve('slider'),
         Styles.resolve('slider-size-container') ]
     },
-    onChange: onChange,
-    onDragStart: function (slider, thumb) {
+    onChange,
+    onDragStart (slider, thumb) {
       Toggling.on(thumb);
     },
-    onDragEnd: function (slider, thumb) {
+    onDragEnd (slider, thumb) {
       Toggling.off(thumb);
     },
     min: 0,
@@ -60,7 +59,7 @@ var sketch = function (rawSpec) {
           UiDomFactory.spec('<div class="${prefix}-slider-size-line"></div>')
         ]
       }),
-      
+
       Slider.parts().thumb({
         dom: UiDomFactory.dom('<div class="${prefix}-slider-thumb"></div>'),
         behaviours: Behaviour.derive([
@@ -73,6 +72,6 @@ var sketch = function (rawSpec) {
   });
 };
 
-export default <any> {
-  sketch: sketch
+export default {
+  sketch
 };

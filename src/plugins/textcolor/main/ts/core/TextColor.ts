@@ -8,11 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getCurrentColor = function (editor, format) {
-  var color;
+const getCurrentColor = function (editor, format) {
+  let color;
 
   editor.dom.getParents(editor.selection.getStart(), function (elm) {
-    var value;
+    let value;
 
     if ((value = elm.style[format === 'forecolor' ? 'color' : 'background-color'])) {
       color = value;
@@ -22,8 +22,9 @@ var getCurrentColor = function (editor, format) {
   return color;
 };
 
-var mapColors = function (colorMap) {
-  var i, colors = [];
+const mapColors = function (colorMap) {
+  let i;
+  const colors = [];
 
   for (i = 0; i < colorMap.length; i += 2) {
     colors.push({
@@ -35,15 +36,15 @@ var mapColors = function (colorMap) {
   return colors;
 };
 
-var applyFormat = function (editor, format, value) {
+const applyFormat = function (editor, format, value) {
   editor.undoManager.transact(function () {
     editor.focus();
-    editor.formatter.apply(format, { value: value });
+    editor.formatter.apply(format, { value });
     editor.nodeChanged();
   });
 };
 
-var removeFormat = function (editor, format) {
+const removeFormat = function (editor, format) {
   editor.undoManager.transact(function () {
     editor.focus();
     editor.formatter.remove(format, { value: null }, null, true);
@@ -52,8 +53,8 @@ var removeFormat = function (editor, format) {
 };
 
 export default {
-  getCurrentColor: getCurrentColor,
-  mapColors: mapColors,
-  applyFormat: applyFormat,
-  removeFormat: removeFormat
+  getCurrentColor,
+  mapColors,
+  applyFormat,
+  removeFormat
 };

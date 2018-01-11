@@ -15,12 +15,12 @@
  * @private
  */
 
-var add = function (editor, name, settings) {
-  var sidebars = editor.sidebars ? editor.sidebars : [];
-  sidebars.push({ name: name, settings: settings });
+const add = function (editor, name, settings) {
+  const sidebars = editor.sidebars ? editor.sidebars : [];
+  sidebars.push({ name, settings });
   editor.sidebars = sidebars;
 };
 
 export default {
-  add: add
+  add
 };

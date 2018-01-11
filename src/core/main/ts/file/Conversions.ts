@@ -22,21 +22,21 @@ import Promise from '../util/Promise';
  * @class tinymce.file.Conversions
  */
 
-var blobUriToBlob = function (url) {
+const blobUriToBlob = function (url) {
   return new Promise(function (resolve, reject) {
 
-    var rejectWithError = function () {
-      reject("Cannot convert " + url + " to Blob. Resource might not exist or is inaccessible.");
+    const rejectWithError = function () {
+      reject('Cannot convert ' + url + ' to Blob. Resource might not exist or is inaccessible.');
     };
 
     try {
-      var xhr = new XMLHttpRequest();
+      const xhr = new XMLHttpRequest();
 
       xhr.open('GET', url, true);
       xhr.responseType = 'blob';
 
       xhr.onload = function () {
-        if (this.status == 200) {
+        if (this.status === 200) {
           resolve(this.response);
         } else {
           // IE11 makes it into onload but responds with status 500
@@ -55,8 +55,8 @@ var blobUriToBlob = function (url) {
   });
 };
 
-var parseDataUri = function (uri) {
-  var type, matches;
+const parseDataUri = function (uri) {
+  let type, matches;
 
   uri = decodeURIComponent(uri).split(',');
 
@@ -66,14 +66,14 @@ var parseDataUri = function (uri) {
   }
 
   return {
-    type: type,
+    type,
     data: uri[1]
   };
 };
 
-var dataUriToBlob = function (uri) {
+const dataUriToBlob = function (uri) {
   return new Promise(function (resolve) {
-    var str, arr, i;
+    let str, arr, i;
 
     uri = parseDataUri(uri);
 
@@ -95,7 +95,7 @@ var dataUriToBlob = function (uri) {
   });
 };
 
-var uriToBlob = function (url) {
+const uriToBlob = function (url) {
   if (url.indexOf('blob:') === 0) {
     return blobUriToBlob(url);
   }
@@ -107,9 +107,9 @@ var uriToBlob = function (url) {
   return null;
 };
 
-var blobToDataUri = function (blob) {
+const blobToDataUri = function (blob) {
   return new Promise(function (resolve) {
-    var reader = new FileReader();
+    const reader = new FileReader();
 
     reader.onloadend = function () {
       resolve(reader.result);
@@ -120,7 +120,7 @@ var blobToDataUri = function (blob) {
 };
 
 export default {
-  uriToBlob: uriToBlob,
-  blobToDataUri: blobToDataUri,
-  parseDataUri: parseDataUri
+  uriToBlob,
+  blobToDataUri,
+  parseDataUri
 };

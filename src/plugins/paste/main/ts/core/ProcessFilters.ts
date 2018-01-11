@@ -11,18 +11,18 @@
 import Events from '../api/Events';
 import WordFilter from './WordFilter';
 
-var processResult = function (content, cancelled) {
-  return { content: content, cancelled: cancelled };
+const processResult = function (content, cancelled) {
+  return { content, cancelled };
 };
 
-var postProcessFilter = function (editor, html, internal, isWordHtml) {
-  var tempBody = editor.dom.create('div', { style: 'display:none' }, html);
-  var postProcessArgs = Events.firePastePostProcess(editor, tempBody, internal, isWordHtml);
+const postProcessFilter = function (editor, html, internal, isWordHtml) {
+  const tempBody = editor.dom.create('div', { style: 'display:none' }, html);
+  const postProcessArgs = Events.firePastePostProcess(editor, tempBody, internal, isWordHtml);
   return processResult(postProcessArgs.node.innerHTML, postProcessArgs.isDefaultPrevented());
 };
 
-var filterContent = function (editor, content, internal, isWordHtml) {
-  var preProcessArgs = Events.firePastePreProcess(editor, content, internal, isWordHtml);
+const filterContent = function (editor, content, internal, isWordHtml) {
+  const preProcessArgs = Events.firePastePreProcess(editor, content, internal, isWordHtml);
 
   if (editor.hasEventListeners('PastePostProcess') && !preProcessArgs.isDefaultPrevented()) {
     return postProcessFilter(editor, preProcessArgs.content, internal, isWordHtml);
@@ -31,13 +31,13 @@ var filterContent = function (editor, content, internal, isWordHtml) {
   }
 };
 
-var process = function (editor, html, internal) {
-  var isWordHtml = WordFilter.isWordContent(html);
-  var content = isWordHtml ? WordFilter.preProcess(editor, html) : html;
+const process = function (editor, html, internal) {
+  const isWordHtml = WordFilter.isWordContent(html);
+  const content = isWordHtml ? WordFilter.preProcess(editor, html) : html;
 
   return filterContent(editor, content, internal, isWordHtml);
 };
 
 export default {
-  process: process
+  process
 };

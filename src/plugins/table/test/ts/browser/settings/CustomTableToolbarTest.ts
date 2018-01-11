@@ -12,18 +12,18 @@ import TableTestUtils from '../../module/test/TableTestUtils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   TablePlugin();
 
-  var tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
+  const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       Logger.t('test custom count of toolbar buttons', GeneralSteps.sequence([
@@ -45,4 +45,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', funct
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

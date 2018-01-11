@@ -28,17 +28,17 @@ import Tools from './util/Tools';
  * @private
  */
 
-var isTableCell = NodeType.matchNodeNames('td th');
+const isTableCell = NodeType.matchNodeNames('td th');
 
-var validInsertion = function (editor, value, parentNode) {
+const validInsertion = function (editor, value, parentNode) {
   // Should never insert content into bogus elements, since these can
   // be resize handles or similar
   if (parentNode.getAttribute('data-mce-bogus') === 'all') {
     parentNode.parentNode.insertBefore(editor.dom.createFragment(value), parentNode);
   } else {
     // Check if parent is empty or only has one BR element then set the innerHTML of that parent
-    var node = parentNode.firstChild;
-    var node2 = parentNode.lastChild;
+    const node = parentNode.firstChild;
+    const node2 = parentNode.lastChild;
     if (!node || (node === node2 && node.nodeName === 'BR')) {///
       editor.dom.setHTML(parentNode, value);
     } else {
@@ -47,28 +47,28 @@ var validInsertion = function (editor, value, parentNode) {
   }
 };
 
-var trimBrsFromTableCell = function (dom, elm) {
+const trimBrsFromTableCell = function (dom, elm) {
   Option.from(dom.getParent(elm, 'td,th')).map(Element.fromDom).each(PaddingBr.trimBlockTrailingBr);
 };
 
-var insertHtmlAtCaret = function (editor, value, details) {
-  var parser, serializer, parentNode, rootNode, fragment, args;
-  var marker, rng, node, node2, bookmarkHtml, merge;
-  var textInlineElements = editor.schema.getTextInlineElements();
-  var selection = editor.selection, dom = editor.dom;
+const insertHtmlAtCaret = function (editor, value, details) {
+  let parser, serializer, parentNode, rootNode, fragment, args;
+  let marker, rng, node, node2, bookmarkHtml, merge;
+  const textInlineElements = editor.schema.getTextInlineElements();
+  const selection = editor.selection, dom = editor.dom;
 
-  var trimOrPaddLeftRight = function (html) {
-    var rng, container, offset;
+  const trimOrPaddLeftRight = function (html) {
+    let rng, container, offset;
 
     rng = selection.getRng(true);
     container = rng.startContainer;
     offset = rng.startOffset;
 
-    var hasSiblingText = function (siblingName) {
-      return container[siblingName] && container[siblingName].nodeType == 3;
+    const hasSiblingText = function (siblingName) {
+      return container[siblingName] && container[siblingName].nodeType === 3;
     };
 
-    if (container.nodeType == 3) {
+    if (container.nodeType === 3) {
       if (offset > 0) {
         html = html.replace(/^&nbsp;/, ' ');
       } else if (!hasSiblingText('previousSibling')) {
@@ -86,14 +86,14 @@ var insertHtmlAtCaret = function (editor, value, details) {
   };
 
   // Removes &nbsp; from a [b] c -> a &nbsp;c -> a c
-  var trimNbspAfterDeleteAndPaddValue = function () {
-    var rng, container, offset;
+  const trimNbspAfterDeleteAndPaddValue = function () {
+    let rng, container, offset;
 
     rng = selection.getRng(true);
     container = rng.startContainer;
     offset = rng.startOffset;
 
-    if (container.nodeType == 3 && rng.collapsed) {
+    if (container.nodeType === 3 && rng.collapsed) {
       if (container.data[offset] === '\u00a0') {
         container.deleteData(offset, 1);
 
@@ -110,12 +110,12 @@ var insertHtmlAtCaret = function (editor, value, details) {
     }
   };
 
-  var reduceInlineTextElements = function () {
+  const reduceInlineTextElements = function () {
     if (merge) {
-      var root = editor.getBody(), elementUtils = new ElementUtils(dom);
+      const root = editor.getBody(), elementUtils = new ElementUtils(dom);
 
       Tools.each(dom.select('*[data-mce-fragment]'), function (node) {
-        for (var testNode = node.parentNode; testNode && testNode != root; testNode = testNode.parentNode) {
+        for (let testNode = node.parentNode; testNode && testNode !== root; testNode = testNode.parentNode) {
           if (textInlineElements[node.nodeName.toLowerCase()] && elementUtils.compare(testNode, node)) {
             dom.remove(node, true);
           }
@@ -124,8 +124,8 @@ var insertHtmlAtCaret = function (editor, value, details) {
     }
   };
 
-  var markFragmentElements = function (fragment) {
-    var node = fragment;
+  const markFragmentElements = function (fragment) {
+    let node = fragment;
 
     while ((node = node.walk())) {
       if (node.type === 1) {
@@ -134,25 +134,25 @@ var insertHtmlAtCaret = function (editor, value, details) {
     }
   };
 
-  var umarkFragmentElements = function (elm) {
+  const umarkFragmentElements = function (elm) {
     Tools.each(elm.getElementsByTagName('*'), function (elm) {
       elm.removeAttribute('data-mce-fragment');
     });
   };
 
-  var isPartOfFragment = function (node) {
+  const isPartOfFragment = function (node) {
     return !!node.getAttribute('data-mce-fragment');
   };
 
-  var canHaveChildren = function (node) {
+  const canHaveChildren = function (node) {
     return node && !editor.schema.getShortEndedElements()[node.nodeName];
   };
 
-  var moveSelectionToMarker = function (marker) {
-    var parentEditableFalseElm, parentBlock, nextRng;
+  const moveSelectionToMarker = function (marker) {
+    let parentEditableFalseElm, parentBlock, nextRng;
 
-    var getContentEditableFalseParent = function (node) {
-      var root = editor.getBody();
+    const getContentEditableFalseParent = function (node) {
+      const root = editor.getBody();
 
       for (; node && node !== root; node = node.parentNode) {
         if (editor.dom.getContentEditable(node) === 'false') {
@@ -182,13 +182,13 @@ var insertHtmlAtCaret = function (editor, value, details) {
 
     // If previous sibling is a text node set the selection to the end of that node
     node = marker.previousSibling;
-    if (node && node.nodeType == 3) {
+    if (node && node.nodeType === 3) {
       rng.setStart(node, node.nodeValue.length);
 
       // TODO: Why can't we normalize on IE
       if (!Env.ie) {
         node2 = marker.nextSibling;
-        if (node2 && node2.nodeType == 3) {
+        if (node2 && node2.nodeType === 3) {
           node.appendData(node2.data);
           node2.parentNode.removeChild(node2);
         }
@@ -199,9 +199,9 @@ var insertHtmlAtCaret = function (editor, value, details) {
       rng.setEndBefore(marker);
     }
 
-    var findNextCaretRng = function (rng) {
-      var caretPos = CaretPosition.fromRangeStart(rng);
-      var caretWalker = CaretWalker(editor.getBody());
+    const findNextCaretRng = function (rng) {
+      let caretPos = CaretPosition.fromRangeStart(rng);
+      const caretWalker = CaretWalker(editor.getBody());
 
       caretPos = caretWalker.next(caretPos);
       if (caretPos) {
@@ -255,7 +255,7 @@ var insertHtmlAtCaret = function (editor, value, details) {
   value = args.content;
 
   // Add caret at end of contents if it's missing
-  if (value.indexOf('{$caret}') == -1) {
+  if (value.indexOf('{$caret}') === -1) {
     value += '{$caret}';
   }
 
@@ -264,8 +264,8 @@ var insertHtmlAtCaret = function (editor, value, details) {
 
   // If selection is at <body>|<p></p> then move it into <body><p>|</p>
   rng = selection.getRng();
-  var caretElement = rng.startContainer || (rng.parentElement ? rng.parentElement() : null);
-  var body = editor.getBody();
+  const caretElement = rng.startContainer || (rng.parentElement ? rng.parentElement() : null);
+  const body = editor.getBody();
   if (caretElement === body && selection.isCollapsed()) {
     if (dom.isBlock(body.firstChild) && canHaveChildren(body.firstChild) && dom.isEmpty(body.firstChild)) {
       rng = dom.createRng();
@@ -287,7 +287,7 @@ var insertHtmlAtCaret = function (editor, value, details) {
   parentNode = selection.getNode();
 
   // Parse the fragment within the context of the parent node
-  var parserArgs: any = { context: parentNode.nodeName.toLowerCase(), data: details.data, insert: true };
+  const parserArgs: any = { context: parentNode.nodeName.toLowerCase(), data: details.data, insert: true };
   fragment = parser.parse(value, parserArgs);
 
   // Custom handling of lists
@@ -302,11 +302,11 @@ var insertHtmlAtCaret = function (editor, value, details) {
 
   // Move the caret to a more suitable location
   node = fragment.lastChild;
-  if (node.attr('id') == 'mce_marker') {
+  if (node.attr('id') === 'mce_marker') {
     marker = node;
 
     for (node = node.prev; node; node = node.walk(true)) {
-      if (node.type == 3 || !dom.isBlock(node.name)) {
+      if (node.type === 3 || !dom.isBlock(node.name)) {
         if (editor.schema.isValidChild(node.parent.name, 'span')) {
           node.parent.insert(marker, node, node.name === 'br');
         }
@@ -331,7 +331,7 @@ var insertHtmlAtCaret = function (editor, value, details) {
     rootNode = editor.getBody();
 
     // Opera will return the document node when selection is in root
-    if (parentNode.nodeType == 9) {
+    if (parentNode.nodeType === 9) {
       parentNode = node = rootNode;
     } else {
       node = parentNode;
@@ -344,7 +344,7 @@ var insertHtmlAtCaret = function (editor, value, details) {
     }
 
     // Get the outer/inner HTML depending on if we are in the root and parser and serialize that
-    value = parentNode == rootNode ? rootNode.innerHTML : dom.getOuterHTML(parentNode);
+    value = parentNode === rootNode ? rootNode.innerHTML : dom.getOuterHTML(parentNode);
     value = serializer.serialize(
       parser.parse(
         // Need to replace by using a function since $ in the contents would otherwise be a problem
@@ -355,7 +355,7 @@ var insertHtmlAtCaret = function (editor, value, details) {
     );
 
     // Set the inner/outer HTML depending on if we are in the root or not
-    if (parentNode == rootNode) {
+    if (parentNode === rootNode) {
       dom.setHTML(rootNode, value);
     } else {
       dom.setOuterHTML(parentNode, value);
@@ -371,8 +371,8 @@ var insertHtmlAtCaret = function (editor, value, details) {
   editor.addVisual();
 };
 
-var processValue = function (value) {
-  var details;
+const processValue = function (value) {
+  let details;
 
   if (typeof value !== 'string') {
     details = Tools.extend({
@@ -384,7 +384,7 @@ var processValue = function (value) {
 
     return {
       content: value.content,
-      details: details
+      details
     };
   }
 
@@ -394,11 +394,11 @@ var processValue = function (value) {
   };
 };
 
-var insertAtCaret = function (editor, value) {
-  var result = processValue(value);
+const insertAtCaret = function (editor, value) {
+  const result = processValue(value);
   insertHtmlAtCaret(editor, result.content, result.details);
 };
 
 export default {
-  insertAtCaret: insertAtCaret
+  insertAtCaret
 };

@@ -23,25 +23,25 @@ import Tools from '../util/Tools';
  * @version 3.4
  */
 
-var makeMap = Tools.makeMap;
+const makeMap = Tools.makeMap;
 
-var namedEntities, baseEntities, reverseEntities,
-  attrsCharsRegExp = /[&<>\"\u0060\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
-  textCharsRegExp = /[<>&\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
-  rawCharsRegExp = /[<>&\"\']/g,
-  entityRegExp = /&#([a-z0-9]+);?|&([a-z0-9]+);/gi,
-  asciiMap = {
-    128: "\u20AC", 130: "\u201A", 131: "\u0192", 132: "\u201E", 133: "\u2026", 134: "\u2020",
-    135: "\u2021", 136: "\u02C6", 137: "\u2030", 138: "\u0160", 139: "\u2039", 140: "\u0152",
-    142: "\u017D", 145: "\u2018", 146: "\u2019", 147: "\u201C", 148: "\u201D", 149: "\u2022",
-    150: "\u2013", 151: "\u2014", 152: "\u02DC", 153: "\u2122", 154: "\u0161", 155: "\u203A",
-    156: "\u0153", 158: "\u017E", 159: "\u0178"
+let namedEntities, baseEntities, reverseEntities;
+const attrsCharsRegExp = /[&<>\"\u0060\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
+const textCharsRegExp = /[<>&\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
+const rawCharsRegExp = /[<>&\"\']/g;
+const entityRegExp = /&#([a-z0-9]+);?|&([a-z0-9]+);/gi;
+const asciiMap = {
+    128: '\u20AC', 130: '\u201A', 131: '\u0192', 132: '\u201E', 133: '\u2026', 134: '\u2020',
+    135: '\u2021', 136: '\u02C6', 137: '\u2030', 138: '\u0160', 139: '\u2039', 140: '\u0152',
+    142: '\u017D', 145: '\u2018', 146: '\u2019', 147: '\u201C', 148: '\u201D', 149: '\u2022',
+    150: '\u2013', 151: '\u2014', 152: '\u02DC', 153: '\u2122', 154: '\u0161', 155: '\u203A',
+    156: '\u0153', 158: '\u017E', 159: '\u0178'
   };
 
 // Raw entities
 baseEntities = {
   '\"': '&quot;', // Needs to be escaped since the YUI compressor would otherwise break the code
-  "'": '&#39;',
+  '\'': '&#39;',
   '<': '&lt;',
   '>': '&gt;',
   '&': '&amp;',
@@ -54,22 +54,23 @@ reverseEntities = {
   '&gt;': '>',
   '&amp;': '&',
   '&quot;': '"',
-  '&apos;': "'"
+  '&apos;': '\''
 };
 
 // Decodes text by using the browser
-var nativeDecode = function (text) {
-  var elm;
+const nativeDecode = function (text) {
+  let elm;
 
-  elm = Element.fromTag("div").dom();
+  elm = Element.fromTag('div').dom();
   elm.innerHTML = text;
 
   return elm.textContent || elm.innerText || text;
 };
 
 // Build a two way lookup table for the entities
-var buildEntitiesLookup = function (items, radix?) {
-  var i, chr, entity, lookup = {};
+const buildEntitiesLookup = function (items, radix?) {
+  let i, chr, entity;
+  const lookup = {};
 
   if (items) {
     items = items.split(',');
@@ -119,7 +120,7 @@ namedEntities = buildEntitiesLookup(
   '80f,rlm,80j,ndash,80k,mdash,80o,lsquo,80p,rsquo,80q,sbquo,80s,ldquo,80t,rdquo,80u,bdquo,810,dagger,' +
   '811,Dagger,81g,permil,81p,lsaquo,81q,rsaquo,85c,euro', 32);
 
-var Entities = {
+const Entities = {
   /**
    * Encodes the specified string using raw entities. This means only the required XML base entities will be encoded.
    *
@@ -128,7 +129,7 @@ var Entities = {
    * @param {Boolean} attr Optional flag to specify if the text is attribute contents.
    * @return {String} Entity encoded text.
    */
-  encodeRaw: function (text, attr?) {
+  encodeRaw (text, attr?) {
     return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
       return baseEntities[chr] || chr;
     });
@@ -143,7 +144,7 @@ var Entities = {
    * @param {String} text Text to encode.
    * @return {String} Entity encoded text.
    */
-  encodeAllRaw: function (text) {
+  encodeAllRaw (text) {
     return ('' + text).replace(rawCharsRegExp, function (chr) {
       return baseEntities[chr] || chr;
     });
@@ -158,7 +159,7 @@ var Entities = {
    * @param {Boolean} attr Optional flag to specify if the text is attribute contents.
    * @return {String} Entity encoded text.
    */
-  encodeNumeric: function (text, attr?) {
+  encodeNumeric (text, attr?) {
     return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
       // Multi byte sequence convert it to a single entity
       if (chr.length > 1) {
@@ -179,7 +180,7 @@ var Entities = {
    * @param {Object} entities Optional parameter with entities to use.
    * @return {String} Entity encoded text.
    */
-  encodeNamed: function (text, attr?, entities?) {
+  encodeNamed (text, attr?, entities?) {
     entities = entities || namedEntities;
 
     return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
@@ -195,10 +196,10 @@ var Entities = {
    * @param {String} entities Optional parameter with entities to use instead of the built in set.
    * @return {function} Encode function to be used.
    */
-  getEncodeFunc: function (name, entities?) {
+  getEncodeFunc (name, entities?) {
     entities = buildEntitiesLookup(entities) || namedEntities;
 
-    var encodeNamedAndNumeric = function (text, attr) {
+    const encodeNamedAndNumeric = function (text, attr) {
       return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
         if (baseEntities[chr] !== undefined) {
           return baseEntities[chr];
@@ -217,7 +218,7 @@ var Entities = {
       });
     };
 
-    var encodeCustomNamed = function (text, attr) {
+    const encodeCustomNamed = function (text, attr) {
       return Entities.encodeNamed(text, attr, entities);
     };
 
@@ -255,7 +256,7 @@ var Entities = {
    * @param {String} text Text to entity decode.
    * @return {String} Entity decoded string.
    */
-  decode: function (text) {
+  decode (text) {
     return text.replace(entityRegExp, function (all, numeric) {
       if (numeric) {
         if (numeric.charAt(0).toLowerCase() === 'x') {

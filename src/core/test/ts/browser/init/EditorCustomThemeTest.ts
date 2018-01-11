@@ -3,10 +3,10 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   suite.test('getContainer/getContentAreaContainer', function (editor) {
     LegacyUnit.equal(editor.getContainer().id, 'editorContainer', 'Should be the new editorContainer element');
@@ -24,11 +24,11 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', function()
     entities: 'raw',
     indent: false,
     skin_url: '/project/js/tinymce/skins/lightgray',
-    theme: function (editor, targetnode) {
-      var editorContainer = document.createElement('div');
+    theme (editor, targetnode) {
+      const editorContainer = document.createElement('div');
       editorContainer.id = 'editorContainer';
 
-      var iframeContainer = document.createElement('div');
+      const iframeContainer = document.createElement('div');
       iframeContainer.id = 'iframeContainer';
 
       editorContainer.appendChild(iframeContainer);
@@ -43,10 +43,9 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', function()
       }
 
       return {
-        iframeContainer: iframeContainer,
-        editorContainer: editorContainer
+        iframeContainer,
+        editorContainer
       };
     }
   }, success, failure);
 });
-

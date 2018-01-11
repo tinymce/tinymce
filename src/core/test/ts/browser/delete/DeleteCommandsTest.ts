@@ -1,4 +1,3 @@
-import { Assertions } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
@@ -9,26 +8,26 @@ import DeleteCommands from 'tinymce/core/delete/DeleteCommands';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.DeleteCommandsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.DeleteCommandsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sDelete = function (editor) {
+  const sDelete = function (editor) {
     return Step.sync(function () {
       DeleteCommands.deleteCommand(editor);
     });
   };
 
-  var sForwardDelete = function (editor) {
+  const sForwardDelete = function (editor) {
     return Step.sync(function () {
       DeleteCommands.forwardDeleteCommand(editor);
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -52,4 +51,3 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteCommandsTest', function() 
     indent: false
   }, success, failure);
 });
-

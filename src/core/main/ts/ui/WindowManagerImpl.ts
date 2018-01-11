@@ -8,10 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-
-
 export default function () {
-  var unimplemented = function () {
+  const unimplemented = function () {
     throw new Error('Theme did not provide a WindowManager implementation.');
   };
 
@@ -23,4 +21,4 @@ export default function () {
     getParams: unimplemented,
     setParams: unimplemented
   };
-};
+}

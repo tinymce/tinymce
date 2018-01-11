@@ -4,19 +4,19 @@ import TreeWalker from 'tinymce/core/dom/TreeWalker';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = ViewBlock();
-  var nodes;
+UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
+  let nodes;
 
-  var setup = function () {
-    var all = function (node) {
-      var list = [node];
+  const setup = function () {
+    const all = function (node) {
+      let list = [node];
 
       if (node.hasChildNodes()) {
-        for (var i = 0; i < node.childNodes.length; i++) {
+        for (let i = 0; i < node.childNodes.length; i++) {
           list = list.concat(all(node.childNodes[i]));
         }
       }
@@ -48,12 +48,12 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function() {
     nodes = all(viewBlock.get()).slice(1);
   };
 
-  var compareNodeLists = function (expectedNodes, actutalNodes) {
+  const compareNodeLists = function (expectedNodes, actutalNodes) {
     if (expectedNodes.length !== actutalNodes.length) {
       return false;
     }
 
-    for (var i = 0; i < expectedNodes.length; i++) {
+    for (let i = 0; i < expectedNodes.length; i++) {
       if (expectedNodes[i] !== actutalNodes[i]) {
         return false;
       }
@@ -63,8 +63,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function() {
   };
 
   suite.test('next', function () {
-    var walker = new TreeWalker(nodes[0], viewBlock.get());
-    var actualNodes;
+    const walker = new TreeWalker(nodes[0], viewBlock.get());
+    let actualNodes;
 
     actualNodes = [walker.current()];
     while ((walker.next())) {
@@ -75,8 +75,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function() {
   });
 
   suite.test('prev2', function () {
-    var walker = new TreeWalker(nodes[nodes.length - 1], viewBlock.get());
-    var actualNodes;
+    const walker = new TreeWalker(nodes[nodes.length - 1], viewBlock.get());
+    let actualNodes;
 
     actualNodes = [walker.current()];
     while ((walker.prev2())) {
@@ -88,8 +88,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function() {
   });
 
   suite.test('prev2(shallow:true)', function () {
-    var walker = new TreeWalker(nodes[nodes.length - 1], viewBlock.get());
-    var actualNodes;
+    const walker = new TreeWalker(nodes[nodes.length - 1], viewBlock.get());
+    let actualNodes;
 
     actualNodes = [walker.current()];
     while ((walker.prev2(true))) {
@@ -108,4 +108,3 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function() {
     success();
   }, failure);
 });
-

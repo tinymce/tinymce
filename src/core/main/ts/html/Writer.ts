@@ -24,17 +24,18 @@ import Tools from '../util/Tools';
  * @version 3.4
  */
 
-var makeMap = Tools.makeMap;
+const makeMap = Tools.makeMap;
 
 export default function (settings?) {
-  var html = [], indent, indentBefore, indentAfter, encode, htmlOutput;
+  const html = [];
+  let indent, indentBefore, indentAfter, encode, htmlOutput;
 
   settings = settings || {};
   indent = settings.indent;
   indentBefore = makeMap(settings.indent_before || '');
   indentAfter = makeMap(settings.indent_after || '');
   encode = Entities.getEncodeFunc(settings.entity_encoding || 'raw', settings.entities);
-  htmlOutput = settings.element_format == "html";
+  htmlOutput = settings.element_format === 'html';
 
   return {
     /**
@@ -45,8 +46,8 @@ export default function (settings?) {
      * @param {Array} attrs Optional attribute array or undefined if it hasn't any.
      * @param {Boolean} empty Optional empty state if the tag should end like <br />.
      */
-    start: function (name, attrs, empty) {
-      var i, l, attr, value;
+    start (name, attrs, empty) {
+      let i, l, attr, value;
 
       if (indent && indentBefore[name] && html.length > 0) {
         value = html[html.length - 1];
@@ -86,8 +87,8 @@ export default function (settings?) {
      * @method end
      * @param {String} name Name of the element.
      */
-    end: function (name) {
-      var value;
+    end (name) {
+      let value;
 
       /*if (indent && indentBefore[name] && html.length > 0) {
         value = html[html.length - 1];
@@ -114,7 +115,7 @@ export default function (settings?) {
      * @param {String} text String to write out.
      * @param {Boolean} raw Optional raw state if true the contents wont get encoded.
      */
-    text: function (text, raw) {
+    text (text, raw) {
       if (text.length > 0) {
         html[html.length] = raw ? text : encode(text);
       }
@@ -126,7 +127,7 @@ export default function (settings?) {
      * @method cdata
      * @param {String} text String to write out inside the cdata.
      */
-    cdata: function (text) {
+    cdata (text) {
       html.push('<![CDATA[', text, ']]>');
     },
 
@@ -136,7 +137,7 @@ export default function (settings?) {
      * @method cdata
      * @param {String} text String to write out inside the comment.
      */
-    comment: function (text) {
+    comment (text) {
       html.push('<!--', text, '-->');
     },
 
@@ -147,7 +148,7 @@ export default function (settings?) {
      * @param {String} name Name of the pi.
      * @param {String} text String to write out inside the pi.
      */
-    pi: function (name, text) {
+    pi (name, text) {
       if (text) {
         html.push('<?', name, ' ', encode(text), '?>');
       } else {
@@ -165,7 +166,7 @@ export default function (settings?) {
      * @method doctype
      * @param {String} text String to write out inside the doctype.
      */
-    doctype: function (text) {
+    doctype (text) {
       html.push('<!DOCTYPE', text, '>', indent ? '\n' : '');
     },
 
@@ -174,7 +175,7 @@ export default function (settings?) {
      *
      * @method reset
      */
-    reset: function () {
+    reset () {
       html.length = 0;
     },
 
@@ -184,8 +185,8 @@ export default function (settings?) {
      * @method getContent
      * @return {String} HTML contents that got written down.
      */
-    getContent: function () {
+    getContent () {
       return html.join('').replace(/\n$/, '');
     }
   };
-};
+}

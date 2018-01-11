@@ -25,12 +25,12 @@ import FormatChangers from './util/FormatChangers';
 import SkinLoaded from './util/SkinLoaded';
 
 /// not to be confused with editor mode
-var READING = Fun.constant('toReading'); /// 'hide the keyboard'
-var EDITING = Fun.constant('toEditing'); /// 'show the keyboard'
+const READING = Fun.constant('toReading'); /// 'hide the keyboard'
+const EDITING = Fun.constant('toEditing'); /// 'show the keyboard'
 
 ThemeManager.add('mobile', function (editor) {
-  var renderUI = function (args) {
-    var cssUrls = CssUrls.derive(editor);
+  const renderUI = function (args) {
+    const cssUrls = CssUrls.derive(editor);
 
     if (Settings.isSkinDisabled(editor) === false) {
       editor.contentCSS.push(cssUrls.content);
@@ -39,31 +39,31 @@ ThemeManager.add('mobile', function (editor) {
       SkinLoaded.fireSkinLoaded(editor)();
     }
 
-    var doScrollIntoView = function () {
+    const doScrollIntoView = function () {
       editor.fire('scrollIntoView');
     };
 
-    var wrapper = Element.fromTag('div');
-    var realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm(doScrollIntoView) : IosRealm(doScrollIntoView);
-    var original = Element.fromDom(args.targetNode);
+    const wrapper = Element.fromTag('div');
+    const realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm(doScrollIntoView) : IosRealm(doScrollIntoView);
+    const original = Element.fromDom(args.targetNode);
     Insert.after(original, wrapper);
     Attachment.attachSystem(wrapper, realm.system());
 
-    var findFocusIn = function (elem) {
+    const findFocusIn = function (elem) {
       return Focus.search(elem).bind(function (focused) {
         return realm.system().getByDom(focused).toOption();
       });
     };
-    var outerWindow = args.targetNode.ownerDocument.defaultView;
-    var orientation = Orientation.onChange(outerWindow, {
-      onChange: function () {
-        var alloy = realm.system();
+    const outerWindow = args.targetNode.ownerDocument.defaultView;
+    const orientation = Orientation.onChange(outerWindow, {
+      onChange () {
+        const alloy = realm.system();
         alloy.broadcastOn([ TinyChannels.orientationChanged() ], { width: Orientation.getActualWidth(outerWindow) });
       },
       onReady: Fun.noop
     });
 
-    var setReadOnly = function (readOnlyGroups, mainGroups, ro) {
+    const setReadOnly = function (readOnlyGroups, mainGroups, ro) {
       if (ro === false) {
         editor.selection.collapse();
       }
@@ -73,10 +73,10 @@ ThemeManager.add('mobile', function (editor) {
       realm.updateMode(ro);
     };
 
-    var bindHandler = function (label, handler) {
+    const bindHandler = function (label, handler) {
       editor.on(label, handler);
       return {
-        unbind: function () {
+        unbind () {
           editor.off(label);
         }
       };
@@ -85,45 +85,45 @@ ThemeManager.add('mobile', function (editor) {
     editor.on('init', function () {
       realm.init({
         editor: {
-          getFrame: function () {
+          getFrame () {
             return Element.fromDom(editor.contentAreaContainer.querySelector('iframe'));
           },
 
-          onDomChanged: function () {
+          onDomChanged () {
             return {
               unbind: Fun.noop
             };
           },
 
-          onToReading: function (handler) {
+          onToReading (handler) {
             return bindHandler(READING(), handler);
           },
 
-          onToEditing: function (handler) {
+          onToEditing (handler) {
             return bindHandler(EDITING(), handler);
           },
 
-          onScrollToCursor: function (handler) {
+          onScrollToCursor (handler) {
             editor.on('scrollIntoView', function (tinyEvent) {
               handler(tinyEvent);
             });
 
-            var unbind = function () {
+            const unbind = function () {
               editor.off('scrollIntoView');
               orientation.destroy();
             };
 
             return {
-              unbind: unbind
+              unbind
             };
           },
 
-          onTouchToolstrip: function () {
+          onTouchToolstrip () {
             hideDropup();
           },
 
-          onTouchContent: function () {
-            var toolbar = Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')));
+          onTouchContent () {
+            const toolbar = Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')));
             // If something in the toolbar had focus, fire an execute on it (execute on tap away)
             // Perhaps it will be clearer later what is a better way of doing this.
             findFocusIn(toolbar).each(AlloyTriggers.emitExecute);
@@ -131,15 +131,15 @@ ThemeManager.add('mobile', function (editor) {
             hideDropup();
           },
 
-          onTapContent: function (evt) {
-            var target = evt.target();
+          onTapContent (evt) {
+            const target = evt.target();
             // If the user has tapped (touchstart, touchend without movement) on an image, select it.
             if (Node.name(target) === 'img') {
               editor.selection.select(target.dom());
               // Prevent the default behaviour from firing so that the image stays selected
               evt.kill();
             } else if (Node.name(target) === 'a') {
-              var component = realm.system().getByDom(Element.fromDom(editor.editorContainer));
+              const component = realm.system().getByDom(Element.fromDom(editor.editorContainer));
               component.each(function (container) {
                 /// view mode
                 if (Swapping.isAlpha(container)) {
@@ -157,12 +157,12 @@ ThemeManager.add('mobile', function (editor) {
         alloy: realm.system(),
         translate: Fun.noop,
 
-        setReadOnly: function (ro) {
+        setReadOnly (ro) {
           setReadOnly(readOnlyGroups, mainGroups, ro);
         }
       });
 
-      var hideDropup = function () {
+      const hideDropup = function () {
         realm.dropup().disappear(function () {
           realm.system().broadcastOn([ TinyChannels.dropupDismissed() ], { });
         });
@@ -170,7 +170,7 @@ ThemeManager.add('mobile', function (editor) {
 
       Debugging.registerInspector('remove this', realm.system());
 
-      var backToMaskGroup = {
+      const backToMaskGroup = {
         label: 'The first group',
         scrollable: false,
         items: [
@@ -181,7 +181,7 @@ ThemeManager.add('mobile', function (editor) {
         ]
       };
 
-      var backToReadOnlyGroup = {
+      const backToReadOnlyGroup = {
         label: 'Back to read only',
         scrollable: false,
         items: [
@@ -191,22 +191,22 @@ ThemeManager.add('mobile', function (editor) {
         ]
       };
 
-      var readOnlyGroup = {
+      const readOnlyGroup = {
         label: 'The read only mode group',
         scrollable: true,
         items: []
       };
 
-      var features = Features.setup(realm, editor);
-      var items = Features.detect(editor.settings, features);
+      const features = Features.setup(realm, editor);
+      const items = Features.detect(editor.settings, features);
 
-      var actionGroup = {
+      const actionGroup = {
         label: 'the action group',
         scrollable: true,
-        items: items
+        items
       };
 
-      var extraGroup = {
+      const extraGroup = {
         label: 'The extra group',
         scrollable: false,
         items: [
@@ -214,8 +214,8 @@ ThemeManager.add('mobile', function (editor) {
         ]
       };
 
-      var mainGroups = Cell([ backToReadOnlyGroup, actionGroup, extraGroup ]);
-      var readOnlyGroups = Cell([ backToMaskGroup, readOnlyGroup, extraGroup ]);
+      const mainGroups = Cell([ backToReadOnlyGroup, actionGroup, extraGroup ]);
+      const readOnlyGroups = Cell([ backToMaskGroup, readOnlyGroup, extraGroup ]);
 
       // Investigate ways to keep in sync with the ui
       FormatChangers.init(realm, editor);
@@ -228,7 +228,7 @@ ThemeManager.add('mobile', function (editor) {
   };
 
   return {
-    getNotificationManagerImpl: function () {
+    getNotificationManagerImpl () {
       return {
         open: Fun.identity,
         close: Fun.noop,
@@ -236,8 +236,8 @@ ThemeManager.add('mobile', function (editor) {
         getArgs: Fun.identity
       };
     },
-    renderUI: renderUI
+    renderUI
   };
 });
 
-export default <any> function () { };
+export default function () { }

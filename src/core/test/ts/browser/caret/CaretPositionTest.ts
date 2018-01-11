@@ -1,28 +1,27 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Env from 'tinymce/core/Env';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.CaretPositionTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var createRange = CaretAsserts.createRange;
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.CaretPositionTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const createRange = CaretAsserts.createRange;
+  const viewBlock = ViewBlock();
 
   if (!Env.ceFalse) {
     return;
   }
 
-  var getRoot = function () {
+  const getRoot = function () {
     return viewBlock.get();
   };
 
-  var setupHtml = function (html) {
+  const setupHtml = function (html) {
     viewBlock.update(html);
   };
 
@@ -209,4 +208,3 @@ UnitTest.asynctest('browser.tinymce.core.CaretPositionTest', function() {
     success();
   }, failure);
 });
-

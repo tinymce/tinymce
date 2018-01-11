@@ -10,25 +10,25 @@
 
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-var getContentCss = function (editor) {
+const getContentCss = function (editor) {
   return editor.settings.codesample_content_css;
 };
 
-var getLanguages = function (editor) {
+const getLanguages = function (editor) {
   return editor.settings.codesample_languages;
 };
 
-var getDialogMinWidth = function (editor) {
+const getDialogMinWidth = function (editor) {
   return Math.min(DOMUtils.DOM.getViewPort().w, editor.getParam('codesample_dialog_width', 800));
 };
 
-var getDialogMinHeight = function (editor) {
+const getDialogMinHeight = function (editor) {
   return Math.min(DOMUtils.DOM.getViewPort().w, editor.getParam('codesample_dialog_height', 650));
 };
 
 export default {
-  getContentCss: getContentCss,
-  getLanguages: getLanguages,
-  getDialogMinWidth: getDialogMinWidth,
-  getDialogMinHeight: getDialogMinHeight
+  getContentCss,
+  getLanguages,
+  getDialogMinWidth,
+  getDialogMinHeight
 };

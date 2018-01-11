@@ -15,9 +15,9 @@
  * @class tinymce.geom.ClientRect
  */
 
-var round = Math.round;
+const round = Math.round;
 
-var clone = function (rect) {
+const clone = function (rect) {
   if (!rect) {
     return { left: 0, top: 0, bottom: 0, right: 0, width: 0, height: 0 };
   }
@@ -32,7 +32,7 @@ var clone = function (rect) {
   };
 };
 
-var collapse = function (clientRect, toStart) {
+const collapse = function (clientRect, toStart) {
   clientRect = clone(clientRect);
 
   if (toStart) {
@@ -47,7 +47,7 @@ var collapse = function (clientRect, toStart) {
   return clientRect;
 };
 
-var isEqual = function (rect1, rect2) {
+const isEqual = function (rect1, rect2) {
   return (
     rect1.left === rect2.left &&
     rect1.top === rect2.top &&
@@ -56,12 +56,12 @@ var isEqual = function (rect1, rect2) {
   );
 };
 
-var isValidOverflow = function (overflowY, clientRect1, clientRect2) {
+const isValidOverflow = function (overflowY, clientRect1, clientRect2) {
   return overflowY >= 0 && overflowY <= Math.min(clientRect1.height, clientRect2.height) / 2;
 
 };
 
-var isAbove = function (clientRect1, clientRect2) {
+const isAbove = function (clientRect1, clientRect2) {
   if ((clientRect1.bottom - clientRect1.height / 2) < clientRect2.top) {
     return true;
   }
@@ -73,7 +73,7 @@ var isAbove = function (clientRect1, clientRect2) {
   return isValidOverflow(clientRect2.top - clientRect1.bottom, clientRect1, clientRect2);
 };
 
-var isBelow = function (clientRect1, clientRect2) {
+const isBelow = function (clientRect1, clientRect2) {
   if (clientRect1.top > clientRect2.bottom) {
     return true;
   }
@@ -85,15 +85,15 @@ var isBelow = function (clientRect1, clientRect2) {
   return isValidOverflow(clientRect2.bottom - clientRect1.top, clientRect1, clientRect2);
 };
 
-var isLeft = function (clientRect1, clientRect2) {
+const isLeft = function (clientRect1, clientRect2) {
   return clientRect1.left < clientRect2.left;
 };
 
-var isRight = function (clientRect1, clientRect2) {
+const isRight = function (clientRect1, clientRect2) {
   return clientRect1.right > clientRect2.right;
 };
 
-var compare = function (clientRect1, clientRect2) {
+const compare = function (clientRect1, clientRect2) {
   if (isAbove(clientRect1, clientRect2)) {
     return -1;
   }
@@ -113,7 +113,7 @@ var compare = function (clientRect1, clientRect2) {
   return 0;
 };
 
-var containsXY = function (clientRect, clientX, clientY) {
+const containsXY = function (clientRect, clientX, clientY) {
   return (
     clientX >= clientRect.left &&
     clientX <= clientRect.right &&
@@ -123,13 +123,13 @@ var containsXY = function (clientRect, clientX, clientY) {
 };
 
 export default {
-  clone: clone,
-  collapse: collapse,
-  isEqual: isEqual,
-  isAbove: isAbove,
-  isBelow: isBelow,
-  isLeft: isLeft,
-  isRight: isRight,
-  compare: compare,
-  containsXY: containsXY
+  clone,
+  collapse,
+  isEqual,
+  isAbove,
+  isBelow,
+  isLeft,
+  isRight,
+  compare,
+  containsXY
 };

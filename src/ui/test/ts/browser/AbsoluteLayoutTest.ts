@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import EventUtils from 'tinymce/core/dom/EventUtils';
 import UiUtils from '../module/test/UiUtils';
 import ViewBlock from '../module/test/ViewBlock';
@@ -9,16 +8,16 @@ import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.AbsoluteLayoutTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.ui.AbsoluteLayoutTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   // Registers ui widgets to factory
   Api.registerToFactory();
 
-  var createPanel = function (settings) {
+  const createPanel = function (settings) {
     return Factory.create(Tools.extend({
       type: 'panel',
       layout: 'absolute',
@@ -27,8 +26,8 @@ UnitTest.asynctest('browser.tinymce.ui.AbsoluteLayoutTest', function() {
     }, settings)).renderTo(viewBlock.get()).reflow();
   };
 
-  suite.test("spacer x:10, y:20, minWidth: 100, minHeight: 100", function () {
-    var panel = createPanel({
+  suite.test('spacer x:10, y:20, minWidth: 100, minHeight: 100', function () {
+    const panel = createPanel({
       items: [
         { type: 'spacer', x: 10, y: 20, w: 100, h: 120, classes: 'red' }
       ]
@@ -46,4 +45,3 @@ UnitTest.asynctest('browser.tinymce.ui.AbsoluteLayoutTest', function() {
     }, failure);
   });
 });
-

@@ -10,52 +10,52 @@ import { GeneralSteps } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('tinymce.themes.modern.test.browser.SidebarTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var dialogRoot = TinyDom.fromDom(document.body);
-  var state = [];
+UnitTest.asynctest('tinymce.themes.modern.test.browser.SidebarTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const dialogRoot = TinyDom.fromDom(document.body);
+  let state = [];
 
   Theme();
 
-  var storeEvent = function (name) {
+  const storeEvent = function (name) {
     return function (api) {
       state.push({
-        name: name,
+        name,
         element: api.element()
       });
     };
   };
 
-  var cWaitForToolbar = Chain.fromChainsWith(dialogRoot, [
+  const cWaitForToolbar = Chain.fromChainsWith(dialogRoot, [
     UiFinder.cWaitFor('Sidebar toolbar', '.mce-sidebar-toolbar')
   ]);
 
-  var cFindButton = function (ariaLabel) {
+  const cFindButton = function (ariaLabel) {
     return UiFinder.cFindIn('div[aria-label="' + ariaLabel + '"]');
   };
 
-  var cClickButton = function (ariaLabel) {
+  const cClickButton = function (ariaLabel) {
     return Chain.fromChains([
       cFindButton(ariaLabel),
       Mouse.cTrueClick
     ]);
   };
 
-  var sClickButton = function (ariaLabel) {
+  const sClickButton = function (ariaLabel) {
     return Chain.asStep({}, [
       cWaitForToolbar,
       cClickButton(ariaLabel)
     ]);
   };
 
-  var sResetState = Step.sync(function () {
+  const sResetState = Step.sync(function () {
     state = [];
   });
 
-  var sAssertEventNames = function (expectedNames) {
+  const sAssertEventNames = function (expectedNames) {
     return Step.sync(function () {
-      var actualNames = state.map(function (state) {
+      const actualNames = state.map(function (state) {
         return state.name;
       });
 
@@ -63,32 +63,32 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.SidebarTest', function() 
     });
   };
 
-  var getSidebarElement = function (index) {
-    var sidebarPanelElms = document.querySelectorAll('.mce-sidebar-panel > .mce-container-body');
-    var flippedIndex = sidebarPanelElms.length - 1 - index;
+  const getSidebarElement = function (index) {
+    const sidebarPanelElms = document.querySelectorAll('.mce-sidebar-panel > .mce-container-body');
+    const flippedIndex = sidebarPanelElms.length - 1 - index;
     return sidebarPanelElms ? sidebarPanelElms[flippedIndex] : null;
   };
 
-  var sAssertPanelElements = function (expectedPanelIndexes) {
+  const sAssertPanelElements = function (expectedPanelIndexes) {
     return Step.sync(function () {
       state.forEach(function (state, i) {
-        var actualElement = state.element;
-        var expectedElement = getSidebarElement(expectedPanelIndexes[i]);
+        const actualElement = state.element;
+        const expectedElement = getSidebarElement(expectedPanelIndexes[i]);
         Assertions.assertEq('Elements need to be equal', true, expectedElement === actualElement);
       });
     });
   };
 
-  var sAssertPanelVisibility = function (visibleStates) {
+  const sAssertPanelVisibility = function (visibleStates) {
     return Step.sync(function () {
       visibleStates.forEach(function (visibleState, i) {
-        var panelElement: any = getSidebarElement(i).parentNode;
+        const panelElement: any = getSidebarElement(i).parentNode;
         Assertions.assertEq('Visibility need to be equal', visibleState, panelElement.style.display !== 'none');
       });
     });
   };
 
-  var sClickAndAssertEvents = function (tooltip, expectedNames, expectedPanelIndexes) {
+  const sClickAndAssertEvents = function (tooltip, expectedNames, expectedPanelIndexes) {
     return GeneralSteps.sequence([
       sResetState,
       sClickButton(tooltip),
@@ -97,29 +97,29 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.SidebarTest', function() 
     ]);
   };
 
-  var sAssertButtonIcon = function (tooltip, expectedIcon) {
+  const sAssertButtonIcon = function (tooltip, expectedIcon) {
     return Chain.asStep({}, [
       cWaitForToolbar,
       cFindButton(tooltip),
       UiFinder.cFindIn('i'),
       Chain.op(function (iconElm) {
-        var className = iconElm.dom().className;
+        const className = iconElm.dom().className;
         Assertions.assertEq('Needs to have icon class: ' + expectedIcon, true, className.indexOf('mce-i-' + expectedIcon) !== -1);
       })
     ]);
   };
 
-  var normalizeUrlString = function (urlString) {
+  const normalizeUrlString = function (urlString) {
     return urlString.replace(/\"/g, '');
   };
 
-  var sAssertButtonIconImage = function (tooltip, expectedIconUrl) {
+  const sAssertButtonIconImage = function (tooltip, expectedIconUrl) {
     return Chain.asStep({}, [
       cWaitForToolbar,
       cFindButton(tooltip),
       UiFinder.cFindIn('i'),
       Chain.op(function (iconElm) {
-        var actualUrl = normalizeUrlString(iconElm.dom().style.backgroundImage);
+        const actualUrl = normalizeUrlString(iconElm.dom().style.backgroundImage);
         Assertions.assertEq('Needs to have correct icon url', 'url(' + expectedIconUrl + ')', actualUrl);
       })
     ]);
@@ -141,7 +141,7 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.SidebarTest', function() 
     ], onSuccess, onFailure);
   }, {
     theme: 'modern',
-    setup: function (editor) {
+    setup (editor) {
       editor.addSidebar('mysidebar1', {
         tooltip: 'My sidebar 1',
         icon: 'bold',
@@ -169,4 +169,3 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.SidebarTest', function() 
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

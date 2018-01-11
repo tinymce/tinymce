@@ -6,16 +6,16 @@ import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   SpellcheckerPlugin();
 
-  var sCheckButtonType = function (editor, expected) {
+  const sCheckButtonType = function (editor, expected) {
     return Step.sync(function () {
-      var button = editor.buttons.spellchecker;
+      const button = editor.buttons.spellchecker;
 
       RawAssertions.assertEq('should have same type', expected, button.type);
     });
@@ -32,4 +32,3 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

@@ -18,9 +18,9 @@ import Tools from '../util/Tools';
  * @class tinymce.dom.ElementUtils
  */
 
-var each = Tools.each;
+const each = Tools.each;
 
-var ElementUtils = function (dom) {
+const ElementUtils = function (dom) {
   /**
    * Compares two nodes and checks if it's attributes and styles matches.
    * This doesn't compare classes as items since their order is significant.
@@ -32,7 +32,7 @@ var ElementUtils = function (dom) {
    */
   this.compare = function (node1, node2) {
     // Not the same name
-    if (node1.nodeName != node2.nodeName) {
+    if (node1.nodeName !== node2.nodeName) {
       return false;
     }
 
@@ -43,11 +43,11 @@ var ElementUtils = function (dom) {
      * @param {Node} node Node to get attributes from.
      * @return {Object} Name/value object with attributes and attribute values.
      */
-    var getAttribs = function (node) {
-      var attribs = {};
+    const getAttribs = function (node) {
+      const attribs = {};
 
       each(dom.getAttribs(node), function (attr) {
-        var name = attr.nodeName.toLowerCase();
+        const name = attr.nodeName.toLowerCase();
 
         // Don't compare internal attributes or style
         if (name.indexOf('_') !== 0 && name !== 'style' && name.indexOf('data-') !== 0) {
@@ -66,8 +66,8 @@ var ElementUtils = function (dom) {
      * @param {Object} obj2 Second object to compare.
      * @return {boolean} True/false if the objects matches or not.
      */
-    var compareObjects = function (obj1, obj2) {
-      var value, name;
+    const compareObjects = function (obj1, obj2) {
+      let value, name;
 
       for (name in obj1) {
         // Obj1 has item obj2 doesn't have
@@ -75,12 +75,12 @@ var ElementUtils = function (dom) {
           value = obj2[name];
 
           // Obj2 doesn't have obj1 item
-          if (typeof value == "undefined") {
+          if (typeof value === 'undefined') {
             return false;
           }
 
           // Obj2 item has a different value
-          if (obj1[name] != value) {
+          if (obj1[name] !== value) {
             return false;
           }
 

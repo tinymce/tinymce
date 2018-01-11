@@ -21,12 +21,10 @@ import Delay from 'tinymce/core/util/Delay';
  * @extends tinymce.ui.Control
  */
 
-"use strict";
-
-var toggleTextStyle = function (ctrl, state) {
-  var textStyle = ctrl._textStyle;
+const toggleTextStyle = function (ctrl, state) {
+  const textStyle = ctrl._textStyle;
   if (textStyle) {
-    var textElm = ctrl.getEl('text');
+    const textElm = ctrl.getEl('text');
     textElm.setAttribute('style', textStyle);
 
     if (state) {
@@ -36,7 +34,7 @@ var toggleTextStyle = function (ctrl, state) {
   }
 };
 
-export default <any> Widget.extend({
+export default Widget.extend({
   Defaults: {
     border: 0,
     role: 'menuitem'
@@ -51,8 +49,9 @@ export default <any> Widget.extend({
    * @setting {Array} menu Submenu array with items.
    * @setting {String} shortcut Shortcut to display for menu item. Example: Ctrl+X
    */
-  init: function (settings) {
-    var self = this, text;
+  init (settings) {
+    const self = this;
+    let text;
 
     self._super(settings);
 
@@ -100,7 +99,7 @@ export default <any> Widget.extend({
    * @method hasMenus
    * @return {Boolean} True/false state if it has submenu.
    */
-  hasMenus: function () {
+  hasMenus () {
     return !!this.settings.menu;
   },
 
@@ -109,8 +108,11 @@ export default <any> Widget.extend({
    *
    * @method showMenu
    */
-  showMenu: function () {
-    var self = this, settings = self.settings, menu, parent = self.parent();
+  showMenu () {
+    const self = this;
+    const settings = self.settings;
+    let menu;
+    const parent = self.parent();
 
     parent.items().each(function (ctrl) {
       if (ctrl !== self) {
@@ -170,7 +172,7 @@ export default <any> Widget.extend({
 
       menu.classes.add('menu-sub');
 
-      var rel = menu.testMoveRel(
+      let rel = menu.testMoveRel(
         self.getEl(),
         self.isRtl() ? ['tl-tr', 'bl-br', 'tr-tl', 'br-bl'] : ['tr-tl', 'br-bl', 'tl-tr', 'bl-br']
       );
@@ -192,8 +194,8 @@ export default <any> Widget.extend({
    *
    * @method hideMenu
    */
-  hideMenu: function () {
-    var self = this;
+  hideMenu () {
+    const self = this;
 
     if (self.menu) {
       self.menu.items().each(function (item) {
@@ -215,14 +217,18 @@ export default <any> Widget.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, id = self._id, settings = self.settings, prefix = self.classPrefix, text = self.state.get('text');
-    var icon = self.settings.icon, image = '', shortcut = settings.shortcut;
-    var url = self.encode(settings.url), iconHtml = '';
+  renderHtml () {
+    const self = this;
+    const id = self._id;
+    const settings = self.settings;
+    const prefix = self.classPrefix;
+    let text = self.state.get('text');
+    let icon = self.settings.icon, image = '', shortcut = settings.shortcut;
+    let url = self.encode(settings.url), iconHtml = '';
 
     // Converts shortcut format to Mac/PC variants
     function convertShortcut(shortcut) {
-      var i, value, replace = {};
+      let i, value, replace = {};
 
       if (Env.mac) {
         replace = {
@@ -251,11 +257,11 @@ export default <any> Widget.extend({
     }
 
     function escapeRegExp(str) {
-      return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
     function markMatches(text) {
-      var match = settings.match || '';
+      const match = settings.match || '';
 
       return match ? text.replace(new RegExp(escapeRegExp(match), 'gi'), function (match) {
         return '!mce~match[' + match + ']mce~match!';
@@ -302,16 +308,16 @@ export default <any> Widget.extend({
    *
    * @method postRender
    */
-  postRender: function () {
-    var self = this, settings = self.settings;
+  postRender () {
+    const self = this, settings = self.settings;
 
-    var textStyle = settings.textStyle;
-    if (typeof textStyle === "function") {
+    let textStyle = settings.textStyle;
+    if (typeof textStyle === 'function') {
       textStyle = textStyle.call(this);
     }
 
     if (textStyle) {
-      var textElm = self.getEl('text');
+      const textElm = self.getEl('text');
       if (textElm) {
         textElm.setAttribute('style', textStyle);
         self._textStyle = textStyle;
@@ -342,8 +348,8 @@ export default <any> Widget.extend({
     return self;
   },
 
-  hover: function () {
-    var self = this;
+  hover () {
+    const self = this;
 
     self.parent().items().each(function (ctrl) {
       ctrl.classes.remove('selected');
@@ -354,10 +360,10 @@ export default <any> Widget.extend({
     return self;
   },
 
-  active: function (state) {
+  active (state) {
     toggleTextStyle(this, state);
 
-    if (typeof state != "undefined") {
+    if (typeof state !== 'undefined') {
       this.aria('checked', state);
     }
 
@@ -369,7 +375,7 @@ export default <any> Widget.extend({
    *
    * @method remove
    */
-  remove: function () {
+  remove () {
     this._super();
 
     if (this.menu) {

@@ -17,20 +17,20 @@ import DOMUtils from '../dom/DOMUtils';
 import InitContentBody from './InitContentBody';
 import Uuid from '../util/Uuid';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var relaxDomain = function (editor, ifr) {
+const relaxDomain = function (editor, ifr) {
   // Domain relaxing is required since the user has messed around with document.domain
   // This only applies to IE 11 other browsers including Edge seems to handle document.domain
   if (document.domain !== window.location.hostname && Env.ie && Env.ie < 12) {
-    var bodyUuid = Uuid.uuid('mce');
+    const bodyUuid = Uuid.uuid('mce');
 
     editor[bodyUuid] = function () {
       InitContentBody.initContentBody(editor);
     };
 
     /*eslint no-script-url:0 */
-    var domainRelaxUrl = 'javascript:(function(){' +
+    const domainRelaxUrl = 'javascript:(function(){' +
       'document.open();document.domain="' + document.domain + '";' +
       'var ed = window.parent.tinymce.get("' + editor.id + '");document.write(ed.iframeHTML);' +
       'document.close();ed.' + bodyUuid + '(true);})()';
@@ -42,13 +42,13 @@ var relaxDomain = function (editor, ifr) {
   return false;
 };
 
-var normalizeHeight = function (height) {
-  var normalizedHeight = typeof height === 'number' ? height + 'px' : height;
+const normalizeHeight = function (height) {
+  const normalizedHeight = typeof height === 'number' ? height + 'px' : height;
   return normalizedHeight ? normalizedHeight : '';
 };
 
-var createIframeElement = function (id, title, height, customAttrs) {
-  var iframe = Element.fromTag('iframe');
+const createIframeElement = function (id, title, height, customAttrs) {
+  const iframe = Element.fromTag('iframe');
 
   Attr.setAll(iframe, customAttrs);
 
@@ -56,7 +56,7 @@ var createIframeElement = function (id, title, height, customAttrs) {
     id: id + '_ifr',
     frameBorder: '0',
     allowTransparency: 'true',
-    title: title
+    title
   });
 
   Css.setAll(iframe, {
@@ -68,8 +68,8 @@ var createIframeElement = function (id, title, height, customAttrs) {
   return iframe;
 };
 
-var getIframeHtml = function (editor) {
-  var bodyId, bodyClass, iframeHTML;
+const getIframeHtml = function (editor) {
+  let bodyId, bodyClass, iframeHTML;
 
   iframeHTML = Settings.getDocType(editor) + '<html><head>';
 
@@ -95,20 +95,20 @@ var getIframeHtml = function (editor) {
   return iframeHTML;
 };
 
-var createIframe = function (editor, o) {
-  var title = editor.editorManager.translate(
-    "Rich Text Area. Press ALT-F9 for menu. " +
-    "Press ALT-F10 for toolbar. Press ALT-0 for help"
+const createIframe = function (editor, o) {
+  const title = editor.editorManager.translate(
+    'Rich Text Area. Press ALT-F9 for menu. ' +
+    'Press ALT-F10 for toolbar. Press ALT-0 for help'
   );
 
-  var ifr = createIframeElement(editor.id, title, o.height, Settings.getIframeAttrs(editor)).dom();
+  const ifr = createIframeElement(editor.id, title, o.height, Settings.getIframeAttrs(editor)).dom();
 
   ifr.onload = function () {
     ifr.onload = null;
-    editor.fire("load");
+    editor.fire('load');
   };
 
-  var isDomainRelaxed = relaxDomain(editor, ifr);
+  const isDomainRelaxed = relaxDomain(editor, ifr);
 
   editor.contentAreaContainer = o.iframeContainer;
   editor.iframeElement = ifr;
@@ -119,8 +119,8 @@ var createIframe = function (editor, o) {
   return isDomainRelaxed;
 };
 
-var init = function (editor, boxInfo) {
-  var isDomainRelaxed = createIframe(editor, boxInfo);
+const init = function (editor, boxInfo) {
+  const isDomainRelaxed = createIframe(editor, boxInfo);
 
   if (boxInfo.editorContainer) {
     DOM.get(boxInfo.editorContainer).style.display = editor.orgDisplay;
@@ -136,5 +136,5 @@ var init = function (editor, boxInfo) {
 };
 
 export default {
-  init: init
+  init
 };

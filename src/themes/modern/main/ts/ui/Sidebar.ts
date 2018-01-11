@@ -13,24 +13,24 @@ import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
 import Events from '../api/Events';
 
-var api = function (elm) {
+const api = function (elm) {
   return {
-    element: function () {
+    element () {
       return elm;
     }
   };
 };
 
-var trigger = function (sidebar, panel, callbackName) {
-  var callback = sidebar.settings[callbackName];
+const trigger = function (sidebar, panel, callbackName) {
+  const callback = sidebar.settings[callbackName];
   if (callback) {
     callback(api(panel.getEl('body')));
   }
 };
 
-var hidePanels = function (name, container, sidebars) {
+const hidePanels = function (name, container, sidebars) {
   Tools.each(sidebars, function (sidebar) {
-    var panel = container.items().filter('#' + sidebar.name)[0];
+    const panel = container.items().filter('#' + sidebar.name)[0];
 
     if (panel && panel.visible() && sidebar.name !== name) {
       trigger(sidebar, panel, 'onhide');
@@ -39,24 +39,24 @@ var hidePanels = function (name, container, sidebars) {
   });
 };
 
-var deactivateButtons = function (toolbar) {
+const deactivateButtons = function (toolbar) {
   toolbar.items().each(function (ctrl) {
     ctrl.active(false);
   });
 };
 
-var findSidebar = function (sidebars, name) {
+const findSidebar = function (sidebars, name) {
   return Tools.grep(sidebars, function (sidebar) {
     return sidebar.name === name;
   })[0];
 };
 
-var showPanel = function (editor, name, sidebars) {
+const showPanel = function (editor, name, sidebars) {
   return function (e) {
-    var btnCtrl = e.control;
-    var container = btnCtrl.parents().filter('panel')[0];
-    var panel = container.find('#' + name)[0];
-    var sidebar = findSidebar(sidebars, name);
+    const btnCtrl = e.control;
+    const container = btnCtrl.parents().filter('panel')[0];
+    let panel = container.find('#' + name)[0];
+    const sidebar = findSidebar(sidebars, name);
 
     hidePanels(name, container, sidebars);
     deactivateButtons(btnCtrl.parent());
@@ -72,7 +72,7 @@ var showPanel = function (editor, name, sidebars) {
       } else {
         panel = Factory.create({
           type: 'container',
-          name: name,
+          name,
           layout: 'stack',
           classes: 'sidebar-panel',
           html: ''
@@ -90,17 +90,17 @@ var showPanel = function (editor, name, sidebars) {
   };
 };
 
-var isModernBrowser = function () {
+const isModernBrowser = function () {
   return !Env.ie || Env.ie >= 11;
 };
 
-var hasSidebar = function (editor) {
+const hasSidebar = function (editor) {
   return isModernBrowser() && editor.sidebars ? editor.sidebars.length > 0 : false;
 };
 
-var createSidebar = function (editor) {
-  var buttons = Tools.map(editor.sidebars, function (sidebar) {
-    var settings = sidebar.settings;
+const createSidebar = function (editor) {
+  const buttons = Tools.map(editor.sidebars, function (sidebar) {
+    const settings = sidebar.settings;
 
     return {
       type: 'button',
@@ -127,7 +127,7 @@ var createSidebar = function (editor) {
   };
 };
 
-export default <any> {
-  hasSidebar: hasSidebar,
-  createSidebar: createSidebar
+export default {
+  hasSidebar,
+  createSidebar
 };

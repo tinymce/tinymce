@@ -17,12 +17,12 @@ import Util from '../alien/Util';
  * @private
  */
 
-var buildListItems = function (inputList, itemCallback, startItems?) {
-  var appendItems = function (values, output?) {
+const buildListItems = function (inputList, itemCallback, startItems?) {
+  const appendItems = function (values, output?) {
     output = output || [];
 
     Tools.each(values, function (item) {
-      var menuItem: any = { text: item.text || item.title };
+      const menuItem: any = { text: item.text || item.title };
 
       if (item.menu) {
         menuItem.menu = appendItems(item.menu);
@@ -43,22 +43,22 @@ var buildListItems = function (inputList, itemCallback, startItems?) {
   return appendItems(inputList, startItems || []);
 };
 
-var updateStyleField = function (editor, evt) {
-  var dom = editor.dom;
-  var rootControl = evt.control.rootControl;
-  var data = rootControl.toJSON();
-  var css = dom.parseStyle(data.style);
+const updateStyleField = function (editor, evt) {
+  const dom = editor.dom;
+  const rootControl = evt.control.rootControl;
+  const data = rootControl.toJSON();
+  const css = dom.parseStyle(data.style);
 
   if (evt.control.name() === 'style') {
-    rootControl.find('#borderStyle').value(css["border-style"] || '')[0].fire('select');
-    rootControl.find('#borderColor').value(css["border-color"] || '')[0].fire('change');
-    rootControl.find('#backgroundColor').value(css["background-color"] || '')[0].fire('change');
+    rootControl.find('#borderStyle').value(css['border-style'] || '')[0].fire('select');
+    rootControl.find('#borderColor').value(css['border-color'] || '')[0].fire('change');
+    rootControl.find('#backgroundColor').value(css['background-color'] || '')[0].fire('change');
     rootControl.find('#width').value(css.width || '').fire('change');
     rootControl.find('#height').value(css.height || '').fire('change');
   } else {
-    css["border-style"] = data.borderStyle;
-    css["border-color"] = data.borderColor;
-    css["background-color"] = data.backgroundColor;
+    css['border-style'] = data.borderStyle;
+    css['border-color'] = data.borderColor;
+    css['background-color'] = data.backgroundColor;
     css.width = data.width ? Util.addSizeSuffix(data.width) : '';
     css.height = data.height ? Util.addSizeSuffix(data.height) : '';
   }
@@ -66,29 +66,29 @@ var updateStyleField = function (editor, evt) {
   rootControl.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
 };
 
-var extractAdvancedStyles = function (dom, elm) {
-  var css = dom.parseStyle(dom.getAttrib(elm, 'style'));
-  var data: any = {};
+const extractAdvancedStyles = function (dom, elm) {
+  const css = dom.parseStyle(dom.getAttrib(elm, 'style'));
+  const data: any = {};
 
-  if (css["border-style"]) {
-    data.borderStyle = css["border-style"];
+  if (css['border-style']) {
+    data.borderStyle = css['border-style'];
   }
 
-  if (css["border-color"]) {
-    data.borderColor = css["border-color"];
+  if (css['border-color']) {
+    data.borderColor = css['border-color'];
   }
 
-  if (css["background-color"]) {
-    data.backgroundColor = css["background-color"];
+  if (css['background-color']) {
+    data.backgroundColor = css['background-color'];
   }
 
   data.style = dom.serializeStyle(css);
   return data;
 };
 
-var createStyleForm = function (editor) {
-  var createColorPickAction = function () {
-    var colorPickerCallback = editor.settings.color_picker_callback;
+const createStyleForm = function (editor) {
+  const createColorPickAction = function () {
+    const colorPickerCallback = editor.settings.color_picker_callback;
     if (colorPickerCallback) {
       return function (evt) {
         return colorPickerCallback.call(
@@ -165,8 +165,8 @@ var createStyleForm = function (editor) {
 };
 
 export default {
-  createStyleForm: createStyleForm,
-  buildListItems: buildListItems,
-  updateStyleField: updateStyleField,
-  extractAdvancedStyles: extractAdvancedStyles
+  createStyleForm,
+  buildListItems,
+  updateStyleField,
+  extractAdvancedStyles
 };

@@ -15,9 +15,9 @@ declare let tinymce: any;
 TextPatternPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  plugins: "textpattern code",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  toolbar: "code",
+  selector: 'textarea.tinymce',
+  plugins: 'textpattern code',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  toolbar: 'code',
   height: 600
 });

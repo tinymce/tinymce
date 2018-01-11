@@ -11,7 +11,7 @@
 import Actions from '../core/Actions';
 import Utils from '../core/Utils';
 
-var setupButtons = function (editor) {
+const setupButtons = function (editor) {
   editor.addButton('link', {
     active: false,
     icon: 'link',
@@ -37,7 +37,7 @@ var setupButtons = function (editor) {
   }
 };
 
-var setupMenuItems = function (editor) {
+const setupMenuItems = function (editor) {
   editor.addMenuItem('openlink', {
     text: 'Open link',
     icon: 'newtab',
@@ -57,7 +57,7 @@ var setupMenuItems = function (editor) {
   });
 };
 
-var setupContextToolbars = function (editor) {
+const setupContextToolbars = function (editor) {
   if (editor.addContextToolbar) {
     editor.addContextToolbar(
       Actions.leftClickedOnAHref(editor),
@@ -67,7 +67,7 @@ var setupContextToolbars = function (editor) {
 };
 
 export default {
-  setupButtons: setupButtons,
-  setupMenuItems: setupMenuItems,
-  setupContextToolbars: setupContextToolbars
+  setupButtons,
+  setupMenuItems,
+  setupContextToolbars
 };

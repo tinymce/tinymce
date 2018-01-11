@@ -9,16 +9,16 @@ import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   CharmapPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -37,4 +37,3 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', fu
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

@@ -10,12 +10,12 @@
 
 import PanelHtml from './PanelHtml';
 
-var insertEmoticon = function (editor, src, alt) {
-  editor.insertContent(editor.dom.createHTML('img', { src: src, alt: alt }));
+const insertEmoticon = function (editor, src, alt) {
+  editor.insertContent(editor.dom.createHTML('img', { src, alt }));
 };
 
-var register = function (editor, pluginUrl) {
-  var panelHtml = PanelHtml.getHtml(pluginUrl);
+const register = function (editor, pluginUrl) {
+  const panelHtml = PanelHtml.getHtml(pluginUrl);
 
   editor.addButton('emoticons', {
     type: 'panelbutton',
@@ -23,8 +23,8 @@ var register = function (editor, pluginUrl) {
       role: 'application',
       autohide: true,
       html: panelHtml,
-      onclick: function (e) {
-        var linkElm = editor.dom.getParent(e.target, 'a');
+      onclick (e) {
+        const linkElm = editor.dom.getParent(e.target, 'a');
         if (linkElm) {
           insertEmoticon(editor, linkElm.getAttribute('data-mce-url'), linkElm.getAttribute('data-mce-alt'));
           this.hide();
@@ -36,5 +36,5 @@ var register = function (editor, pluginUrl) {
 };
 
 export default {
-  register: register
+  register
 };

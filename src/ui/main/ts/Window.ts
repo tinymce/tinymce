@@ -25,8 +25,6 @@ import Panel from './Panel';
  * @extends tinymce.ui.FloatPanel
  */
 
-"use strict";
-
 interface Window {
   _fullscreen: boolean;
   layoutRect: any;
@@ -34,11 +32,12 @@ interface Window {
   settings: any;
 }
 
-var windows: Window[] = [], oldMetaValue = '';
+const windows: Window[] = [];
+let oldMetaValue = '';
 
 function toggleFullScreenState(state) {
-  var noScaleMetaValue = 'width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0',
-    viewport = DomQuery("meta[name=viewport]")[0],
+  const noScaleMetaValue = 'width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0';
+  let viewport = DomQuery('meta[name=viewport]')[0],
     contentValue;
 
   if (Env.overrideViewPort === false) {
@@ -52,7 +51,7 @@ function toggleFullScreenState(state) {
   }
 
   contentValue = viewport.getAttribute('content');
-  if (contentValue && typeof oldMetaValue != 'undefined') {
+  if (contentValue && typeof oldMetaValue !== 'undefined') {
     oldMetaValue = contentValue;
   }
 
@@ -66,7 +65,7 @@ function toggleBodyFullScreenClasses(classPrefix, state) {
 }
 
 function checkFullscreenWindows() {
-  for (var i = 0; i < windows.length; i++) {
+  for (let i = 0; i < windows.length; i++) {
     if (windows[i]._fullscreen) {
       return true;
     }
@@ -76,19 +75,19 @@ function checkFullscreenWindows() {
 
 function handleWindowResize() {
   if (!Env.desktop) {
-    var lastSize = {
+    let lastSize = {
       w: window.innerWidth,
       h: window.innerHeight
     };
 
     Delay.setInterval(function () {
-      var w = window.innerWidth,
+      const w = window.innerWidth,
         h = window.innerHeight;
 
-      if (lastSize.w != w || lastSize.h != h) {
+      if (lastSize.w !== w || lastSize.h !== h) {
         lastSize = {
-          w: w,
-          h: h
+          w,
+          h
         };
 
         DomQuery(window).trigger('resize');
@@ -97,7 +96,9 @@ function handleWindowResize() {
   }
 
   function reposition() {
-    var i, rect = DomUtils.getWindowSize(), layoutRect;
+    let i;
+    const rect = DomUtils.getWindowSize();
+    let layoutRect;
 
     for (i = 0; i < windows.length; i++) {
       layoutRect = windows[i].layoutRect();
@@ -112,7 +113,7 @@ function handleWindowResize() {
   DomQuery(window).on('resize', reposition);
 }
 
-var Window = FloatPanel.extend({
+const Window = FloatPanel.extend({
   modal: true,
 
   Defaults: {
@@ -121,11 +122,11 @@ var Window = FloatPanel.extend({
     containerCls: 'panel',
     role: 'dialog',
     callbacks: {
-      submit: function () {
+      submit () {
         this.fire('submit', { data: this.toJSON() });
       },
 
-      close: function () {
+      close () {
         this.close();
       }
     }
@@ -137,8 +138,8 @@ var Window = FloatPanel.extend({
    * @constructor
    * @param {Object} settings Name/value object with settings.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._super(settings);
 
@@ -170,7 +171,7 @@ var Window = FloatPanel.extend({
     }
 
     self.on('click', function (e) {
-      var closeClass = self.classPrefix + 'close';
+      const closeClass = self.classPrefix + 'close';
 
       if (DomUtils.hasClass(e.target, closeClass) || DomUtils.hasClass(e.target.parentNode, closeClass)) {
         self.close();
@@ -192,8 +193,10 @@ var Window = FloatPanel.extend({
    *
    * @method recalc
    */
-  recalc: function () {
-    var self = this, statusbar = self.statusbar, layoutRect, width, x, needsRecalc;
+  recalc () {
+    const self = this;
+    const statusbar = self.statusbar;
+    let layoutRect, width, x, needsRecalc;
 
     if (self._fullscreen) {
       self.layoutRect(DomUtils.getWindowSize());
@@ -209,7 +212,7 @@ var Window = FloatPanel.extend({
       width = layoutRect.headerW;
       if (width > layoutRect.w) {
         x = layoutRect.x - Math.max(0, width / 2);
-        self.layoutRect({ w: width, x: x });
+        self.layoutRect({ w: width, x });
         needsRecalc = true;
       }
     }
@@ -221,7 +224,7 @@ var Window = FloatPanel.extend({
       width = statusbar.layoutRect().minW + layoutRect.deltaW;
       if (width > layoutRect.w) {
         x = layoutRect.x - Math.max(0, width - layoutRect.w);
-        self.layoutRect({ w: width, x: x });
+        self.layoutRect({ w: width, x });
         needsRecalc = true;
       }
     }
@@ -240,14 +243,16 @@ var Window = FloatPanel.extend({
    * @method initLayoutRect
    * @return {Object} Layout rect instance.
    */
-  initLayoutRect: function () {
-    var self = this, layoutRect = self._super(), deltaH = 0, headEl;
+  initLayoutRect () {
+    const self = this;
+    const layoutRect = self._super();
+    let deltaH = 0, headEl;
 
     // Reserve vertical space for title
     if (self.settings.title && !self._fullscreen) {
       headEl = self.getEl('head');
 
-      var size = DomUtils.getSize(headEl);
+      const size = DomUtils.getSize(headEl);
 
       layoutRect.headerW = size.width;
       layoutRect.headerH = size.height;
@@ -262,10 +267,10 @@ var Window = FloatPanel.extend({
 
     layoutRect.deltaH += deltaH;
     layoutRect.minH += deltaH;
-    //layoutRect.innerH -= deltaH;
+    // layoutRect.innerH -= deltaH;
     layoutRect.h += deltaH;
 
-    var rect = DomUtils.getWindowSize();
+    const rect = DomUtils.getWindowSize();
 
     layoutRect.x = self.settings.x || Math.max(0, rect.w / 2 - layoutRect.w / 2);
     layoutRect.y = self.settings.y || Math.max(0, rect.h / 2 - layoutRect.h / 2);
@@ -279,9 +284,10 @@ var Window = FloatPanel.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, layout = self._layout, id = self._id, prefix = self.classPrefix;
-    var settings = self.settings, headerHtml = '', footerHtml = '', html = settings.html;
+  renderHtml () {
+    const self = this, layout = self._layout, id = self._id, prefix = self.classPrefix;
+    const settings = self.settings;
+    let headerHtml = '', footerHtml = '', html = settings.html;
 
     self.preRender();
     layout.preRender(self);
@@ -302,7 +308,7 @@ var Window = FloatPanel.extend({
       html = '<iframe src="' + settings.url + '" tabindex="-1"></iframe>';
     }
 
-    if (typeof html == "undefined") {
+    if (typeof html === 'undefined') {
       html = layout.renderHtml(self);
     }
 
@@ -330,19 +336,23 @@ var Window = FloatPanel.extend({
    * @param {Boolean} state True/false state.
    * @return {tinymce.ui.Window} Current window instance.
    */
-  fullscreen: function (state) {
-    var self = this, documentElement = document.documentElement, slowRendering, prefix = self.classPrefix, layoutRect;
+  fullscreen (state) {
+    const self = this;
+    const documentElement = document.documentElement;
+    let slowRendering;
+    const prefix = self.classPrefix;
+    let layoutRect;
 
-    if (state != self._fullscreen) {
+    if (state !== self._fullscreen) {
       DomQuery(window).on('resize', function () {
-        var time;
+        let time;
 
         if (self._fullscreen) {
           // Time the layout time if it's to slow use a timeout to not hog the CPU
           if (!slowRendering) {
             time = new Date().getTime();
 
-            var rect = DomUtils.getWindowSize();
+            const rect = DomUtils.getWindowSize();
             self.moveTo(0, 0).resizeTo(rect.w, rect.h);
 
             if ((new Date().getTime()) - time > 50) {
@@ -351,7 +361,7 @@ var Window = FloatPanel.extend({
           } else {
             if (!self._timer) {
               self._timer = Delay.setTimeout(function () {
-                var rect = DomUtils.getWindowSize();
+                const rect = DomUtils.getWindowSize();
                 self.moveTo(0, 0).resizeTo(rect.w, rect.h);
 
                 self._timer = 0;
@@ -380,7 +390,7 @@ var Window = FloatPanel.extend({
         DomQuery([documentElement, document.body]).addClass(prefix + 'fullscreen');
         self.classes.add('fullscreen');
 
-        var rect = DomUtils.getWindowSize();
+        const rect = DomUtils.getWindowSize();
         self.moveTo(0, 0).resizeTo(rect.w, rect.h);
       }
     }
@@ -393,8 +403,9 @@ var Window = FloatPanel.extend({
    *
    * @method postRender
    */
-  postRender: function () {
-    var self = this, startPos;
+  postRender () {
+    const self = this;
+    let startPos;
 
     setTimeout(function () {
       self.classes.add('in');
@@ -410,14 +421,14 @@ var Window = FloatPanel.extend({
     self.focus();
 
     this.dragHelper = new DragHelper(self._id + '-dragh', {
-      start: function () {
+      start () {
         startPos = {
           x: self.layoutRect().x,
           y: self.layoutRect().y
         };
       },
 
-      drag: function (e) {
+      drag (e) {
         self.moveTo(startPos.x + e.deltaX, startPos.y + e.deltaY);
       }
     });
@@ -438,7 +449,7 @@ var Window = FloatPanel.extend({
    * @method submit
    * @return {Object} Event arguments object.
    */
-  submit: function () {
+  submit () {
     return this.fire('submit', { data: this.toJSON() });
   },
 
@@ -448,8 +459,9 @@ var Window = FloatPanel.extend({
    * @method remove
    * @return {tinymce.ui.Control} Current control instance.
    */
-  remove: function () {
-    var self = this, i;
+  remove () {
+    const self = this;
+    let i;
 
     self.dragHelper.destroy();
     self._super();
@@ -476,12 +488,12 @@ var Window = FloatPanel.extend({
    * @method getContentWindow
    * @return {Window} window object or null.
    */
-  getContentWindow: function () {
-    var ifr = this.getEl().getElementsByTagName('iframe')[0];
+  getContentWindow () {
+    const ifr = this.getEl().getElementsByTagName('iframe')[0];
     return ifr ? ifr.contentWindow : null;
   }
 });
 
 handleWindowResize();
 
-export default <any> Window;
+export default Window;

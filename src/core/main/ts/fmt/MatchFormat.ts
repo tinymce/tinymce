@@ -10,13 +10,13 @@
 
 import FormatUtils from './FormatUtils';
 
-var isEq = FormatUtils.isEq;
+const isEq = FormatUtils.isEq;
 
-var matchesUnInheritedFormatSelector = function (ed, node, name) {
-  var formatList = ed.formatter.get(name);
+const matchesUnInheritedFormatSelector = function (ed, node, name) {
+  const formatList = ed.formatter.get(name);
 
   if (formatList) {
-    for (var i = 0; i < formatList.length; i++) {
+    for (let i = 0; i < formatList.length; i++) {
       if (formatList[i].inherit === false && ed.dom.is(node, formatList[i].selector)) {
         return true;
       }
@@ -26,8 +26,8 @@ var matchesUnInheritedFormatSelector = function (ed, node, name) {
   return false;
 };
 
-var matchParents = function (editor, node, name, vars) {
-  var root = editor.dom.getRoot();
+const matchParents = function (editor, node, name, vars) {
+  const root = editor.dom.getRoot();
 
   if (node === root) {
     return false;
@@ -46,7 +46,7 @@ var matchParents = function (editor, node, name, vars) {
   return matchNode(editor, node, name, vars);
 };
 
-var matchName = function (dom, node, format) {
+const matchName = function (dom, node, format) {
   // Check for inline match
   if (isEq(node, format.inline)) {
     return true;
@@ -63,8 +63,10 @@ var matchName = function (dom, node, format) {
   }
 };
 
-var matchItems = function (dom, node, format, itemName, similar, vars) {
-  var key, value, items = format[itemName], i;
+const matchItems = function (dom, node, format, itemName, similar, vars) {
+  let key, value;
+  const items = format[itemName];
+  let i;
 
   // Custom match
   if (format.onmatch) {
@@ -105,8 +107,10 @@ var matchItems = function (dom, node, format, itemName, similar, vars) {
   return format;
 };
 
-var matchNode = function (ed, node, name, vars?, similar?) {
-  var formatList = ed.formatter.get(name), format, i, x, classes, dom = ed.dom;
+const matchNode = function (ed, node, name, vars?, similar?) {
+  const formatList = ed.formatter.get(name);
+  let format, i, x, classes;
+  const dom = ed.dom;
 
   if (formatList && node) {
     // Check each format in list
@@ -130,8 +134,8 @@ var matchNode = function (ed, node, name, vars?, similar?) {
   }
 };
 
-var match = function (editor, name, vars, node) {
-  var startNode;
+const match = function (editor, name, vars, node) {
+  let startNode;
 
   // Check specified node
   if (node) {
@@ -155,13 +159,15 @@ var match = function (editor, name, vars, node) {
   return false;
 };
 
-var matchAll = function (editor, names, vars) {
-  var startElement, matchedFormatNames = [], checkedMap = {};
+const matchAll = function (editor, names, vars) {
+  let startElement;
+  const matchedFormatNames = [];
+  const checkedMap = {};
 
   // Check start of selection for formats
   startElement = editor.selection.getStart();
   editor.dom.getParent(startElement, function (node) {
-    var i, name;
+    let i, name;
 
     for (i = 0; i < names.length; i++) {
       name = names[i];
@@ -176,8 +182,10 @@ var matchAll = function (editor, names, vars) {
   return matchedFormatNames;
 };
 
-var canApply = function (editor, name) {
-  var formatList = editor.formatter.get(name), startNode, parents, i, x, selector, dom = editor.dom;
+const canApply = function (editor, name) {
+  const formatList = editor.formatter.get(name);
+  let startNode, parents, i, x, selector;
+  const dom = editor.dom;
 
   if (formatList) {
     startNode = editor.selection.getStart();
@@ -204,10 +212,10 @@ var canApply = function (editor, name) {
 };
 
 export default {
-  matchNode: matchNode,
-  matchName: matchName,
-  match: match,
-  matchAll: matchAll,
-  canApply: canApply,
-  matchesUnInheritedFormatSelector: matchesUnInheritedFormatSelector
+  matchNode,
+  matchName,
+  match,
+  matchAll,
+  canApply,
+  matchesUnInheritedFormatSelector
 };

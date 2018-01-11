@@ -11,18 +11,17 @@
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
-import Settings from '../api/Settings';
 import Actions from '../core/Actions';
 
-var suggestionsMenu;
+let suggestionsMenu;
 
-var showSuggestions = function (editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, word, spans) {
-  var items = [], suggestions = lastSuggestionsState.get().suggestions[word];
+const showSuggestions = function (editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, word, spans) {
+  const items = [], suggestions = lastSuggestionsState.get().suggestions[word];
 
   Tools.each(suggestions, function (suggestion) {
     items.push({
       text: suggestion,
-      onclick: function () {
+      onclick () {
         editor.insertContent(editor.dom.encode(suggestion));
         editor.dom.remove(spans);
         Actions.checkIfFinished(editor, startedState, textMatcherState);
@@ -32,10 +31,10 @@ var showSuggestions = function (editor, pluginUrl, lastSuggestionsState, started
 
   items.push({ text: '-' });
 
-  var hasDictionarySupport = lastSuggestionsState.get().hasDictionarySupport;
+  const hasDictionarySupport = lastSuggestionsState.get().hasDictionarySupport;
   if (hasDictionarySupport) {
     items.push({
-      text: 'Add to Dictionary', onclick: function () {
+      text: 'Add to Dictionary', onclick () {
         Actions.addToDictionary(editor, pluginUrl, startedState, textMatcherState, word, spans);
       }
     });
@@ -43,13 +42,13 @@ var showSuggestions = function (editor, pluginUrl, lastSuggestionsState, started
 
   items.push.apply(items, [
     {
-      text: 'Ignore', onclick: function () {
+      text: 'Ignore', onclick () {
         Actions.ignoreWord(editor, startedState, textMatcherState, word, spans);
       }
     },
 
     {
-      text: 'Ignore all', onclick: function () {
+      text: 'Ignore all', onclick () {
         Actions.ignoreWord(editor, startedState, textMatcherState, word, spans, true);
       }
     }
@@ -57,14 +56,14 @@ var showSuggestions = function (editor, pluginUrl, lastSuggestionsState, started
 
   // Render menu
   suggestionsMenu = Factory.create('menu', {
-    items: items,
+    items,
     context: 'contextmenu',
-    onautohide: function (e) {
+    onautohide (e) {
       if (e.target.className.indexOf('spellchecker') !== -1) {
         e.preventDefault();
       }
     },
-    onhide: function () {
+    onhide () {
       suggestionsMenu.remove();
       suggestionsMenu = null;
     }
@@ -73,9 +72,9 @@ var showSuggestions = function (editor, pluginUrl, lastSuggestionsState, started
   suggestionsMenu.renderTo(document.body);
 
   // Position menu
-  var pos = DOMUtils.DOM.getPos(editor.getContentAreaContainer());
-  var targetPos = editor.dom.getPos(spans[0]);
-  var root = editor.dom.getRoot();
+  const pos = DOMUtils.DOM.getPos(editor.getContentAreaContainer());
+  const targetPos = editor.dom.getPos(spans[0]);
+  const root = editor.dom.getRoot();
 
   // Adjust targetPos for scrolling in the editor
   if (root.nodeName === 'BODY') {
@@ -92,17 +91,17 @@ var showSuggestions = function (editor, pluginUrl, lastSuggestionsState, started
   suggestionsMenu.moveTo(pos.x, pos.y + spans[0].offsetHeight);
 };
 
-var setup = function (editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState) {
+const setup = function (editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState) {
   editor.on('click', function (e) {
-    var target = e.target;
+    const target = e.target;
 
-    if (target.className === "mce-spellchecker-word") {
+    if (target.className === 'mce-spellchecker-word') {
       e.preventDefault();
 
-      var spans = Actions.findSpansByIndex(editor, Actions.getElmIndex(target));
+      const spans = Actions.findSpansByIndex(editor, Actions.getElmIndex(target));
 
       if (spans.length > 0) {
-        var rng = editor.dom.createRng();
+        const rng = editor.dom.createRng();
         rng.setStartBefore(spans[0]);
         rng.setEndAfter(spans[spans.length - 1]);
         editor.selection.setRng(rng);
@@ -113,5 +112,5 @@ var setup = function (editor, pluginUrl, lastSuggestionsState, startedState, tex
 };
 
 export default {
-  setup: setup
+  setup
 };

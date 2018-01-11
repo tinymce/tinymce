@@ -8,14 +8,14 @@ import Utils from '../module/test/Utils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.core.DataAttributeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.core.DataAttributeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
   Theme();
 
-  var sTestEmbedContentFromUrlWithAttribute = function (ui, url, content) {
+  const sTestEmbedContentFromUrlWithAttribute = function (ui, url, content) {
     return GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       Utils.sPasteSourceValue(ui, url),
@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.core.DataAttributeTest', function() {
       Utils.sCloseDialog(ui)
     ]);
   };
-  var sTestEmbedContentFromUrl2 = function (ui, url, url2, content, content2) {
+  const sTestEmbedContentFromUrl2 = function (ui, url, url2, content, content2) {
     return GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       Utils.sPasteSourceValue(ui, url),
@@ -39,8 +39,8 @@ UnitTest.asynctest('browser.core.DataAttributeTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var ui = TinyUi(editor);
-    var api = TinyApis(editor);
+    const ui = TinyUi(editor);
+    const api = TinyApis(editor);
 
     Pipeline.async({}, [
       sTestEmbedContentFromUrlWithAttribute(ui,
@@ -61,12 +61,11 @@ UnitTest.asynctest('browser.core.DataAttributeTest', function() {
       Utils.sAssertSizeRecalcConstrainedReopen(ui)
     ], onSuccess, onFailure);
   }, {
-    plugins: ["media"],
-    toolbar: "media",
-    media_url_resolver: function (data, resolve) {
+    plugins: ['media'],
+    toolbar: 'media',
+    media_url_resolver (data, resolve) {
       resolve({ html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>' });
     },
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

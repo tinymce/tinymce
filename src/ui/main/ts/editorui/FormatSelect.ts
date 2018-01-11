@@ -11,7 +11,7 @@
 import Tools from 'tinymce/core/util/Tools';
 import FormatUtils from './FormatUtils';
 
-var defaultBlocks = (
+const defaultBlocks = (
   'Paragraph=p;' +
   'Heading 1=h1;' +
   'Heading 2=h2;' +
@@ -22,10 +22,10 @@ var defaultBlocks = (
   'Preformatted=pre'
 );
 
-var createFormats = function (formats) {
+const createFormats = function (formats) {
   formats = formats.replace(/;$/, '').split(';');
 
-  var i = formats.length;
+  let i = formats.length;
   while (i--) {
     formats[i] = formats[i].split('=');
   }
@@ -33,13 +33,13 @@ var createFormats = function (formats) {
   return formats;
 };
 
-var createListBoxChangeHandler = function (editor, items, formatName?) {
+const createListBoxChangeHandler = function (editor, items, formatName?) {
   return function () {
-    var self = this;
+    const self = this;
 
     editor.on('nodeChange', function (e) {
-      var formatter = editor.formatter;
-      var value = null;
+      const formatter = editor.formatter;
+      let value = null;
 
       Tools.each(e.parents, function (node) {
         Tools.each(items, function (item) {
@@ -68,15 +68,15 @@ var createListBoxChangeHandler = function (editor, items, formatName?) {
   };
 };
 
-var lazyFormatSelectBoxItems = function (editor, blocks) {
+const lazyFormatSelectBoxItems = function (editor, blocks) {
   return function () {
-    var items = [];
+    const items = [];
 
     Tools.each(blocks, function (block) {
       items.push({
         text: block[0],
         value: block[1],
-        textStyle: function () {
+        textStyle () {
           return editor.formatter.getCssText(block[1]);
         }
       });
@@ -87,9 +87,9 @@ var lazyFormatSelectBoxItems = function (editor, blocks) {
       text: blocks[0][0],
       values: items,
       fixedWidth: true,
-      onselect: function (e) {
+      onselect (e) {
         if (e.control) {
-          var fmt = e.control.value();
+          const fmt = e.control.value();
           FormatUtils.toggleFormat(editor, fmt)();
         }
       },
@@ -98,20 +98,20 @@ var lazyFormatSelectBoxItems = function (editor, blocks) {
   };
 };
 
-var buildMenuItems = function (editor, blocks) {
+const buildMenuItems = function (editor, blocks) {
   return Tools.map(blocks, function (block) {
     return {
       text: block[0],
       onclick: FormatUtils.toggleFormat(editor, block[1]),
-      textStyle: function () {
+      textStyle () {
         return editor.formatter.getCssText(block[1]);
       }
     };
   });
 };
 
-var register = function (editor) {
-  var blocks = createFormats(editor.settings.block_formats || defaultBlocks);
+const register = function (editor) {
+  const blocks = createFormats(editor.settings.block_formats || defaultBlocks);
 
   editor.addMenuItem('blockformats', {
     text: 'Blocks',
@@ -121,6 +121,6 @@ var register = function (editor) {
   editor.addButton('formatselect', lazyFormatSelectBoxItems(editor, blocks));
 };
 
-export default <any> {
-  register: register
+export default {
+  register
 };

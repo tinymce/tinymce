@@ -3,11 +3,12 @@ import Settings from '../api/Settings';
 import Utils from '../core/Utils';
 import SizeManager from './SizeManager';
 
-var onSrcChange = function (evt, editor) {
-  var srcURL, prependURL, absoluteURLPattern, meta = evt.meta || {};
-  var control = evt.control;
-  var rootControl = control.rootControl;
-  var imageListCtrl = rootControl.find('#image-list')[0];
+const onSrcChange = function (evt, editor) {
+  let srcURL, prependURL, absoluteURLPattern;
+  const meta = evt.meta || {};
+  const control = evt.control;
+  const rootControl = control.rootControl;
+  const imageListCtrl = rootControl.find('#image-list')[0];
 
   if (imageListCtrl) {
     imageListCtrl.value(editor.convertURL(control.value(), 'src'));
@@ -39,19 +40,19 @@ var onSrcChange = function (evt, editor) {
   }
 };
 
-var onBeforeCall = function (evt) {
+const onBeforeCall = function (evt) {
   evt.meta = evt.control.rootControl.toJSON();
 };
 
-var getGeneralItems = function (editor, imageListCtrl) {
-  var generalFormItems = [
+const getGeneralItems = function (editor, imageListCtrl) {
+  const generalFormItems = [
     {
       name: 'src',
       type: 'filepicker',
       filetype: 'image',
       label: 'Source',
       autofocus: true,
-      onchange: function (evt) {
+      onchange (evt) {
         onSrcChange(evt, editor);
       },
       onbeforecall: onBeforeCall
@@ -98,7 +99,7 @@ var getGeneralItems = function (editor, imageListCtrl) {
   return generalFormItems;
 };
 
-var makeTab = function (editor, imageListCtrl) {
+const makeTab = function (editor, imageListCtrl) {
   return {
     title: 'General',
     type: 'form',
@@ -107,6 +108,6 @@ var makeTab = function (editor, imageListCtrl) {
 };
 
 export default {
-  makeTab: makeTab,
-  getGeneralItems: getGeneralItems
+  makeTab,
+  getGeneralItems
 };

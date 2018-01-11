@@ -4,15 +4,15 @@ import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
   suite.test('OpenWindow/CloseWindow events', function (editor) {
-    var openWindowArgs, closeWindowArgs;
+    let openWindowArgs, closeWindowArgs;
 
     editor.on('CloseWindow', function (e) {
       closeWindowArgs = e;
@@ -42,4 +42,3 @@ UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

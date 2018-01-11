@@ -9,7 +9,7 @@
  */
 
 function getImageSize(img) {
-  var width, height;
+  let width, height;
 
   function isPxValue(value) {
     return /^[0-9\.]+px$/.test(value);
@@ -42,7 +42,7 @@ function getImageSize(img) {
 }
 
 function setImageSize(img, size) {
-  var width, height;
+  let width, height;
 
   if (size) {
     width = img.style.width;
@@ -72,7 +72,7 @@ function getNaturalImageSize(img) {
 }
 
 export default {
-  getImageSize: getImageSize,
-  setImageSize: setImageSize,
-  getNaturalImageSize: getNaturalImageSize
+  getImageSize,
+  setImageSize,
+  getNaturalImageSize
 };

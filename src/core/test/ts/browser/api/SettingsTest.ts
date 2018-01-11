@@ -4,7 +4,7 @@ import EditorManager from 'tinymce/core/EditorManager';
 import Settings from 'tinymce/core/api/Settings';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('browser.tinymce.core.api.SettingsTest', function() {
+UnitTest.test('browser.tinymce.core.api.SettingsTest', function () {
   Assertions.assertEq('Should be default id', 'tinymce', Settings.getBodyId(new Editor('id', {}, EditorManager)));
   Assertions.assertEq('Should be specified id', 'x', Settings.getBodyId(new Editor('id', { body_id: 'x' }, EditorManager)));
   Assertions.assertEq('Should be specified id for ida', 'a', Settings.getBodyId(new Editor('ida', { body_id: 'ida=a,idb=b' }, EditorManager)));
@@ -17,4 +17,3 @@ UnitTest.test('browser.tinymce.core.api.SettingsTest', function() {
   Assertions.assertEq('Should be specified class for idb', 'b', Settings.getBodyClass(new Editor('idb', { body_class: 'ida=a,idb=b' }, EditorManager)));
   Assertions.assertEq('Should be default class for idc', '', Settings.getBodyClass(new Editor('idc', { body_class: 'ida=a,idb=b' }, EditorManager)));
 });
-

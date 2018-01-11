@@ -4,9 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 
-
-
-export default <any> ValueSchema.objOf([
+export default ValueSchema.objOf([
   FieldSchema.strictObjOf('editor', [
     // Maybe have frame as a method, but I doubt it ... I think we pretty much need a frame
     FieldSchema.strict('getFrame'),
@@ -28,7 +26,6 @@ export default <any> ValueSchema.objOf([
     FieldSchema.defaulted('onTouchContent', Fun.noop),
     FieldSchema.defaulted('onTapContent', Fun.noop),
     FieldSchema.defaulted('onTouchToolstrip', Fun.noop),
-
 
     FieldSchema.defaulted('onScrollToCursor', Fun.constant({ unbind: Fun.noop })),
     FieldSchema.defaulted('onScrollToElement', Fun.constant({ unbind: Fun.noop })),

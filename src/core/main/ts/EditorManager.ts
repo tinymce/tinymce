@@ -36,18 +36,19 @@ declare const window: any;
  * @static
  */
 
-var DOM = DOMUtils.DOM;
-var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
-var instanceCounter = 0, beforeUnloadDelegate, EditorManager, boundGlobalEvents = false;
-var legacyEditors = [], editors = [];
+const DOM = DOMUtils.DOM;
+const explode = Tools.explode, each = Tools.each, extend = Tools.extend;
+let instanceCounter = 0, beforeUnloadDelegate, EditorManager, boundGlobalEvents = false;
+const legacyEditors = [];
+let editors = [];
 
-var isValidLegacyKey = function (id) {
+const isValidLegacyKey = function (id) {
   // In theory we could filter out any editor id:s that clash
   // with array prototype items but that could break existing integrations
   return id !== 'length';
 };
 
-var globalEventDelegate = function (e) {
+const globalEventDelegate = function (e) {
   each(EditorManager.get(), function (editor) {
     if (e.type === 'scroll') {
       editor.fire('ScrollWindow', e);
@@ -57,7 +58,7 @@ var globalEventDelegate = function (e) {
   });
 };
 
-var toggleGlobalEvents = function (state) {
+const toggleGlobalEvents = function (state) {
   if (state !== boundGlobalEvents) {
     if (state) {
       DomQuery(window).on('resize scroll', globalEventDelegate);
@@ -69,11 +70,11 @@ var toggleGlobalEvents = function (state) {
   }
 };
 
-var removeEditorFromList = function (targetEditor) {
-  var oldEditors = editors;
+const removeEditorFromList = function (targetEditor) {
+  const oldEditors = editors;
 
   delete legacyEditors[targetEditor.id];
-  for (var i = 0; i < legacyEditors.length; i++) {
+  for (let i = 0; i < legacyEditors.length; i++) {
     if (legacyEditors[i] === targetEditor) {
       legacyEditors.splice(i, 1);
       break;
@@ -97,7 +98,7 @@ var removeEditorFromList = function (targetEditor) {
   return oldEditors.length !== editors.length;
 };
 
-var purgeDestroyedEditor = function (editor) {
+const purgeDestroyedEditor = function (editor) {
   // User has manually destroyed the editor lets clean up the mess
   if (editor && editor.initialized && !(editor.getContainer() || editor.getBody()).parentNode) {
     removeEditorFromList(editor);
@@ -174,8 +175,9 @@ EditorManager = {
 
   settings: {},
 
-  setup: function () {
-    var self = this, baseURL, documentBaseURL, suffix = "", preInit, src;
+  setup () {
+    const self = this;
+    let baseURL, documentBaseURL, suffix = '', preInit, src;
 
     // Get base URL for the current document
     documentBaseURL = URI.getDocumentBaseUrl(document.location);
@@ -197,17 +199,17 @@ EditorManager = {
       suffix = preInit.suffix;
     } else {
       // Get base where the tinymce script is located
-      var scripts = document.getElementsByTagName('script');
-      for (var i = 0; i < scripts.length; i++) {
+      const scripts = document.getElementsByTagName('script');
+      for (let i = 0; i < scripts.length; i++) {
         src = scripts[i].src;
 
         // Script types supported:
         // tinymce.js tinymce.min.js tinymce.dev.js
         // tinymce.jquery.js tinymce.jquery.min.js tinymce.jquery.dev.js
         // tinymce.full.js tinymce.full.min.js tinymce.full.dev.js
-        var srcScript = src.substring(src.lastIndexOf('/'));
+        const srcScript = src.substring(src.lastIndexOf('/'));
         if (/tinymce(\.full|\.jquery|)(\.min|\.dev|)\.js/.test(src)) {
-          if (srcScript.indexOf('.min') != -1) {
+          if (srcScript.indexOf('.min') !== -1) {
             suffix = '.min';
           }
 
@@ -221,7 +223,7 @@ EditorManager = {
       if (!baseURL && document.currentScript) {
         src = (<any> document.currentScript).src;
 
-        if (src.indexOf('.min') != -1) {
+        if (src.indexOf('.min') !== -1) {
           suffix = '.min';
         }
 
@@ -270,8 +272,8 @@ EditorManager = {
    * @method overrideDefaults
    * @param {Object} defaultSettings Defaults settings object.
    */
-  overrideDefaults: function (defaultSettings) {
-    var baseUrl, suffix;
+  overrideDefaults (defaultSettings) {
+    let baseUrl, suffix;
 
     baseUrl = defaultSettings.base_url;
     if (baseUrl) {
@@ -286,8 +288,8 @@ EditorManager = {
 
     this.defaultSettings = defaultSettings;
 
-    var pluginBaseUrls = defaultSettings.plugin_base_urls;
-    for (var name in pluginBaseUrls) {
+    const pluginBaseUrls = defaultSettings.plugin_base_urls;
+    for (const name in pluginBaseUrls) {
       AddOnManager.PluginManager.urls[name] = pluginBaseUrls[name];
     }
   },
@@ -311,8 +313,9 @@ EditorManager = {
    *    ...
    * });
    */
-  init: function (settings) {
-    var self = this, result, invalidInlineTargets;
+  init (settings) {
+    const self = this;
+    let result, invalidInlineTargets;
 
     invalidInlineTargets = Tools.makeMap(
       'area base basefont br col frame hr img input isindex link meta param embed source wbr track ' +
@@ -320,12 +323,12 @@ EditorManager = {
       ' '
     );
 
-    var isInvalidInlineTarget = function (settings, elm) {
+    const isInvalidInlineTarget = function (settings, elm) {
       return settings.inline && elm.tagName.toLowerCase() in invalidInlineTargets;
     };
 
-    var createId = function (elm) {
-      var id = elm.id;
+    const createId = function (elm) {
+      let id = elm.id;
 
       // Use element id, or unique name or generate a unique id
       if (!id) {
@@ -344,8 +347,8 @@ EditorManager = {
       return id;
     };
 
-    var execCallback = function (name) {
-      var callback = settings[name];
+    const execCallback = function (name) {
+      const callback = settings[name];
 
       if (!callback) {
         return;
@@ -354,12 +357,12 @@ EditorManager = {
       return callback.apply(self, Array.prototype.slice.call(arguments, 2));
     };
 
-    var hasClass = function (elm, className) {
+    const hasClass = function (elm, className) {
       return className.constructor === RegExp ? className.test(elm.className) : DOM.hasClass(elm, className);
     };
 
-    var findTargets = function (settings) {
-      var l, targets = [];
+    const findTargets = function (settings) {
+      let l, targets = [];
 
       if (Env.ie && Env.ie < 11) {
         ErrorReporter.initError(
@@ -383,12 +386,12 @@ EditorManager = {
 
       // Fallback to old setting
       switch (settings.mode) {
-        case "exact":
+        case 'exact':
           l = settings.elements || '';
 
           if (l.length > 0) {
             each(explode(l), function (id) {
-              var elm;
+              let elm;
 
               if ((elm = DOM.get(id))) {
                 targets.push(elm);
@@ -407,8 +410,8 @@ EditorManager = {
           }
           break;
 
-        case "textareas":
-        case "specific_textareas":
+        case 'textareas':
+        case 'specific_textareas':
           each(DOM.select('textarea'), function (elm) {
             if (settings.editor_deselector && hasClass(elm, settings.editor_deselector)) {
               return;
@@ -424,15 +427,17 @@ EditorManager = {
       return targets;
     };
 
-    var provideResults = function (editors) {
+    let provideResults = function (editors) {
       result = editors;
     };
 
-    var initEditors = function () {
-      var initCount = 0, editors = [], targets;
+    const initEditors = function () {
+      let initCount = 0;
+      const editors = [];
+      let targets;
 
-      var createEditor = function (id, settings, targetElm) {
-        var editor = new Editor(id, settings, self);
+      const createEditor = function (id, settings, targetElm) {
+        const editor = new Editor(id, settings, self);
 
         editors.push(editor);
 
@@ -524,7 +529,7 @@ EditorManager = {
    *    ed.windowManager.alert('Hello world!');
    * });
    */
-  get: function (id) {
+  get (id) {
     if (arguments.length === 0) {
       return editors.slice(0);
     } else if (Type.isString(id)) {
@@ -545,8 +550,9 @@ EditorManager = {
    * @param {tinymce.Editor} editor Editor instance to add to the collection.
    * @return {tinymce.Editor} The same instance that got passed in.
    */
-  add: function (editor) {
-    var self = this, existingEditor;
+  add (editor) {
+    const self = this;
+    let existingEditor;
 
     // Prevent existing editors from beeing added again this could happen
     // if a user calls createEditor then render or add multiple times.
@@ -573,7 +579,7 @@ EditorManager = {
     // to fire a bunch of activate/deactivate calls while initializing
     self.activeEditor = editor;
 
-    self.fire('AddEditor', { editor: editor });
+    self.fire('AddEditor', { editor });
 
     if (!beforeUnloadDelegate) {
       beforeUnloadDelegate = function () {
@@ -594,7 +600,7 @@ EditorManager = {
    * @param {Object} settings Editor instance settings.
    * @return {tinymce.Editor} Editor instance that got created.
    */
-  createEditor: function (id, settings) {
+  createEditor (id, settings) {
     return this.add(new Editor(id, settings, this));
   },
 
@@ -618,8 +624,9 @@ EditorManager = {
    * @param {tinymce.Editor/String/Object} [selector] CSS selector or editor instance to remove.
    * @return {tinymce.Editor} The editor that got passed in will be return if it was found otherwise null.
    */
-  remove: function (selector) {
-    var self = this, i, editor;
+  remove (selector) {
+    const self = this;
+    let i, editor;
 
     // Remove all editors
     if (!selector) {
@@ -654,7 +661,7 @@ EditorManager = {
     }
 
     if (removeEditorFromList(editor)) {
-      self.fire('RemoveEditor', { editor: editor });
+      self.fire('RemoveEditor', { editor });
     }
 
     if (editors.length === 0) {
@@ -677,19 +684,19 @@ EditorManager = {
    * @param {String} value Optional value parameter like for example an URL to a link.
    * @return {Boolean} true/false if the command was executed or not.
    */
-  execCommand: function (cmd, ui, value) {
-    var self = this, editor = self.get(value);
+  execCommand (cmd, ui, value) {
+    const self = this, editor = self.get(value);
 
     // Manager commands
     switch (cmd) {
-      case "mceAddEditor":
+      case 'mceAddEditor':
         if (!self.get(value)) {
           new Editor(value, self.settings, self).render();
         }
 
         return true;
 
-      case "mceRemoveEditor":
+      case 'mceRemoveEditor':
         if (editor) {
           editor.remove();
         }
@@ -727,7 +734,7 @@ EditorManager = {
    * // Saves all contents
    * tinyMCE.triggerSave();
    */
-  triggerSave: function () {
+  triggerSave () {
     each(editors, function (editor) {
       editor.save();
     });
@@ -740,7 +747,7 @@ EditorManager = {
    * @param {String} code Optional language code.
    * @param {Object} items Name/value object with translations.
    */
-  addI18n: function (code, items) {
+  addI18n (code, items) {
     I18n.add(code, items);
   },
 
@@ -751,7 +758,7 @@ EditorManager = {
    * @param {String/Array/Object} text String to translate
    * @return {String} Translated string.
    */
-  translate: function (text) {
+  translate (text) {
     return I18n.translate(text);
   },
 
@@ -761,10 +768,10 @@ EditorManager = {
    * @method setActive
    * @param {tinymce.Editor} editor Editor instance to set as the active instance.
    */
-  setActive: function (editor) {
-    var activeEditor = this.activeEditor;
+  setActive (editor) {
+    const activeEditor = this.activeEditor;
 
-    if (this.activeEditor != editor) {
+    if (this.activeEditor !== editor) {
       if (activeEditor) {
         activeEditor.fire('deactivate', { relatedTarget: editor });
       }

@@ -13,12 +13,12 @@ import NodeType from './NodeType';
 import TextBlock from './TextBlock';
 import Tools from 'tinymce/core/util/Tools';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var splitList = function (editor, ul, li, newBlock?) {
-  var tmpRng, fragment, bookmarks, node;
+const splitList = function (editor, ul, li, newBlock?) {
+  let tmpRng, fragment, bookmarks, node;
 
-  var removeAndKeepBookmarks = function (targetNode) {
+  const removeAndKeepBookmarks = function (targetNode) {
     Tools.each(bookmarks, function (node) {
       targetNode.parentNode.insertBefore(node, li.parentNode);
     });
@@ -58,5 +58,5 @@ var splitList = function (editor, ul, li, newBlock?) {
 };
 
 export default {
-  splitList: splitList
+  splitList
 };

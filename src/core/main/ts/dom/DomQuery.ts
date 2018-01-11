@@ -35,25 +35,25 @@ import Tools from '../util/Tools';
  * @class tinymce.dom.DomQuery
  */
 
-var doc = document, push = Array.prototype.push, slice = Array.prototype.slice;
-var rquickExpr = /^(?:[^#<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/;
-var Event = EventUtils.Event, undef;
-var skipUniques = Tools.makeMap('children,contents,next,prev');
+const doc = document, push = Array.prototype.push, slice = Array.prototype.slice;
+const rquickExpr = /^(?:[^#<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/;
+const Event = EventUtils.Event;
+const skipUniques = Tools.makeMap('children,contents,next,prev');
 
-var isDefined = function (obj) {
+const isDefined = function (obj) {
   return typeof obj !== 'undefined';
 };
 
-var isString = function (obj) {
+const isString = function (obj) {
   return typeof obj === 'string';
 };
 
-var isWindow = function (obj) {
-  return obj && obj == obj.window;
+const isWindow = function (obj) {
+  return obj && obj === obj.window;
 };
 
-var createFragment = function (html, fragDoc) {
-  var frag, node, container;
+const createFragment = function (html, fragDoc) {
+  let frag, node, container;
 
   fragDoc = fragDoc || doc;
   container = fragDoc.createElement('div');
@@ -67,8 +67,8 @@ var createFragment = function (html, fragDoc) {
   return frag;
 };
 
-var domManipulate = function (targetNodes, sourceItem, callback, reverse?) {
-  var i;
+const domManipulate = function (targetNodes, sourceItem, callback, reverse?) {
+  let i;
 
   if (isString(sourceItem)) {
     sourceItem = createFragment(sourceItem, getElementDocument(targetNodes[0]));
@@ -98,19 +98,19 @@ var domManipulate = function (targetNodes, sourceItem, callback, reverse?) {
   return targetNodes;
 };
 
-var hasClass = function (node, className) {
+const hasClass = function (node, className) {
   return node && className && (' ' + node.className + ' ').indexOf(' ' + className + ' ') !== -1;
 };
 
-var wrap = function (elements, wrapper, all?) {
-  var lastParent, newWrapper;
+const wrap = function (elements, wrapper, all?) {
+  let lastParent, newWrapper;
 
   wrapper = DomQuery(wrapper)[0];
 
   elements.each(function () {
-    var self = this;
+    const self = this;
 
-    if (!all || lastParent != self.parentNode) {
+    if (!all || lastParent !== self.parentNode) {
       lastParent = self.parentNode;
       newWrapper = wrapper.cloneNode(false);
       self.parentNode.insertBefore(newWrapper, self);
@@ -123,26 +123,26 @@ var wrap = function (elements, wrapper, all?) {
   return elements;
 };
 
-var numericCssMap = Tools.makeMap('fillOpacity fontWeight lineHeight opacity orphans widows zIndex zoom', ' ');
-var booleanMap = Tools.makeMap('checked compact declare defer disabled ismap multiple nohref noshade nowrap readonly selected', ' ');
-var propFix = {
-  'for': 'htmlFor',
-  'class': 'className',
-  'readonly': 'readOnly'
+const numericCssMap = Tools.makeMap('fillOpacity fontWeight lineHeight opacity orphans widows zIndex zoom', ' ');
+const booleanMap = Tools.makeMap('checked compact declare defer disabled ismap multiple nohref noshade nowrap readonly selected', ' ');
+const propFix = {
+  for: 'htmlFor',
+  class: 'className',
+  readonly: 'readOnly'
 };
-var cssFix = {
-  'float': 'cssFloat'
+const cssFix = {
+  float: 'cssFloat'
 };
 
-var attrHooks = {}, cssHooks = {};
+const attrHooks = {}, cssHooks = {};
 
-var DomQuery: any = function (selector, context) {
+const DomQuery: any = function (selector, context) {
   /*eslint new-cap:0 */
   return new DomQuery.fn.init(selector, context);
 };
 
-var inArray = function (item, array) {
-  var i;
+const inArray = function (item, array) {
+  let i;
 
   if (array.indexOf) {
     return array.indexOf(item);
@@ -158,19 +158,19 @@ var inArray = function (item, array) {
   return -1;
 };
 
-var whiteSpaceRegExp = /^\s*|\s*$/g;
+const whiteSpaceRegExp = /^\s*|\s*$/g;
 
-var trim = function (str) {
-  return (str === null || str === undef) ? '' : ("" + str).replace(whiteSpaceRegExp, '');
+const trim = function (str) {
+  return (str === null || str === undefined) ? '' : ('' + str).replace(whiteSpaceRegExp, '');
 };
 
-var each = function (obj, callback) {
-  var length, key, i, undef, value;
+const each = function (obj, callback) {
+  let length, key, i, value;
 
   if (obj) {
     length = obj.length;
 
-    if (length === undef) {
+    if (length === undefined) {
       // Loop object items
       for (key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -194,8 +194,8 @@ var each = function (obj, callback) {
   return obj;
 };
 
-var grep = function (array, callback) {
-  var out = [];
+const grep = function (array, callback) {
+  const out = [];
 
   each(array, function (i, item) {
     if (callback(item, i)) {
@@ -206,12 +206,12 @@ var grep = function (array, callback) {
   return out;
 };
 
-var getElementDocument = function (element) {
+const getElementDocument = function (element) {
   if (!element) {
     return doc;
   }
 
-  if (element.nodeType == 9) {
+  if (element.nodeType === 9) {
     return element;
   }
 
@@ -227,7 +227,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @property selector
    * @type String
    */
-  selector: "",
+  selector: '',
 
   /**
    * Context used to create the set.
@@ -253,8 +253,9 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Array/DomQuery} selector Optional CSS selector/Array or array like object or HTML string.
    * @param {Document/Element} context Optional context to search in.
    */
-  init: function (selector, context) {
-    var self = this, match, node;
+  init (selector, context) {
+    const self = this;
+    let match, node;
 
     if (!selector) {
       return self;
@@ -280,7 +281,7 @@ DomQuery.fn = DomQuery.prototype = {
     if (isString(selector)) {
       self.selector = selector;
 
-      if (selector.charAt(0) === "<" && selector.charAt(selector.length - 1) === ">" && selector.length >= 3) {
+      if (selector.charAt(0) === '<' && selector.charAt(selector.length - 1) === '>' && selector.length >= 3) {
         match = [null, selector, null];
       } else {
         match = rquickExpr.exec(selector);
@@ -324,7 +325,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @method toArray
    * @return {Array} Array of all nodes in set.
    */
-  toArray: function () {
+  toArray () {
     return Tools.toArray(this);
   },
 
@@ -336,8 +337,9 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {Boolean} sort Optional sort flag that enables sorting of elements.
    * @return {tinymce.dom.DomQuery} New instance with nodes added.
    */
-  add: function (items, sort) {
-    var self = this, nodes, i;
+  add (items, sort) {
+    const self = this;
+    let nodes, i;
 
     if (isString(items)) {
       return self.add(DomQuery(items));
@@ -364,16 +366,17 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String} value Optional value to set.
    * @return {tinymce.dom.DomQuery/String} Current set or the specified attribute when only the name is specified.
    */
-  attr: function (name, value) {
-    var self = this, hook;
+  attr (name, value) {
+    const self = this;
+    let hook;
 
-    if (typeof name === "object") {
+    if (typeof name === 'object') {
       each(name, function (name, value) {
         self.attr(name, value);
       });
     } else if (isDefined(value)) {
       this.each(function () {
-        var hook;
+        let hook;
 
         if (this.nodeType === 1) {
           hook = attrHooks[name];
@@ -397,13 +400,13 @@ DomQuery.fn = DomQuery.prototype = {
         }
 
         if (booleanMap[name]) {
-          return self.prop(name) ? name : undef;
+          return self.prop(name) ? name : undefined;
         }
 
         value = self[0].getAttribute(name, 2);
 
         if (value === null) {
-          value = undef;
+          value = undefined;
         }
       }
 
@@ -420,7 +423,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Object} name Name of attribute to remove.
    * @return {tinymce.dom.DomQuery/String} Current set.
    */
-  removeAttr: function (name) {
+  removeAttr (name) {
     return this.attr(name, null);
   },
 
@@ -432,18 +435,18 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String} value Optional value to set.
    * @return {tinymce.dom.DomQuery/String} Current set or the specified property when only the name is specified.
    */
-  prop: function (name, value) {
-    var self = this;
+  prop (name, value) {
+    const self = this;
 
     name = propFix[name] || name;
 
-    if (typeof name === "object") {
+    if (typeof name === 'object') {
       each(name, function (name, value) {
         self.prop(name, value);
       });
     } else if (isDefined(value)) {
       this.each(function () {
-        if (this.nodeType == 1) {
+        if (this.nodeType === 1) {
           this[name] = value;
         }
       });
@@ -466,22 +469,23 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String} value Optional value to set.
    * @return {tinymce.dom.DomQuery/String} Current set or the specified style when only the name is specified.
    */
-  css: function (name, value) {
-    var self = this, elm, hook;
+  css (name, value) {
+    const self = this;
+    let elm, hook;
 
-    var camel = function (name) {
+    const camel = function (name) {
       return name.replace(/-(\D)/g, function (a, b) {
         return b.toUpperCase();
       });
     };
 
-    var dashed = function (name) {
+    const dashed = function (name) {
       return name.replace(/[A-Z]/g, function (a) {
         return '-' + a;
       });
     };
 
-    if (typeof name === "object") {
+    if (typeof name === 'object') {
       each(name, function (name, value) {
         self.css(name, value);
       });
@@ -495,7 +499,7 @@ DomQuery.fn = DomQuery.prototype = {
         }
 
         self.each(function () {
-          var style = this.style;
+          const style = this.style;
 
           hook = cssHooks[name];
           if (hook && hook.set) {
@@ -529,7 +533,7 @@ DomQuery.fn = DomQuery.prototype = {
           try {
             return elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(dashed(name));
           } catch (ex) {
-            return undef;
+            return undefined;
           }
         } else if (elm.currentStyle) {
           return elm.currentStyle[camel(name)];
@@ -546,8 +550,9 @@ DomQuery.fn = DomQuery.prototype = {
    * @method remove
    * @return {tinymce.dom.DomQuery} Current set with the removed nodes.
    */
-  remove: function () {
-    var self = this, node, i = this.length;
+  remove () {
+    const self = this;
+    let node, i = this.length;
 
     while (i--) {
       node = self[i];
@@ -567,8 +572,9 @@ DomQuery.fn = DomQuery.prototype = {
    * @method empty
    * @return {tinymce.dom.DomQuery} Current set with the empty nodes.
    */
-  empty: function () {
-    var self = this, node, i = this.length;
+  empty () {
+    const self = this;
+    let node, i = this.length;
 
     while (i--) {
       node = self[i];
@@ -587,8 +593,9 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String} value Optional innerHTML value to set on each element.
    * @return {tinymce.dom.DomQuery/String} Current set or the innerHTML of the first element.
    */
-  html: function (value) {
-    var self = this, i;
+  html (value) {
+    const self = this;
+    let i;
 
     if (isDefined(value)) {
       i = self.length;
@@ -615,13 +622,14 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String} value Optional innerText value to set on each element.
    * @return {tinymce.dom.DomQuery/String} Current set or the innerText of the first element.
    */
-  text: function (value) {
-    var self = this, i;
+  text (value) {
+    const self = this;
+    let i;
 
     if (isDefined(value)) {
       i = self.length;
       while (i--) {
-        if ("innerText" in self[i]) {
+        if ('innerText' in self[i]) {
           self[i].innerText = value;
         } else {
           self[0].textContent = value;
@@ -641,7 +649,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to append to each element in set.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  append: function () {
+  append () {
     return domManipulate(this, arguments, function (node) {
       // Either element or Shadow Root
       if (this.nodeType === 1 || (this.host && this.host.nodeType === 1)) {
@@ -657,7 +665,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to prepend to each element in set.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  prepend: function () {
+  prepend () {
     return domManipulate(this, arguments, function (node) {
       // Either element or Shadow Root
       if (this.nodeType === 1 || (this.host && this.host.nodeType === 1)) {
@@ -673,8 +681,8 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to add before to each element in set.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  before: function () {
-    var self = this;
+  before () {
+    const self = this;
 
     if (self[0] && self[0].parentNode) {
       return domManipulate(self, arguments, function (node) {
@@ -692,8 +700,8 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to add after to each element in set.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  after: function () {
-    var self = this;
+  after () {
+    const self = this;
 
     if (self[0] && self[0].parentNode) {
       return domManipulate(self, arguments, function (node) {
@@ -711,7 +719,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} val Item to append the current set to.
    * @return {tinymce.dom.DomQuery} Current set with the appended nodes.
    */
-  appendTo: function (val) {
+  appendTo (val) {
     DomQuery(val).append(this);
 
     return this;
@@ -724,7 +732,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} val Item to prepend the current set to.
    * @return {tinymce.dom.DomQuery} Current set with the prepended nodes.
    */
-  prependTo: function (val) {
+  prependTo (val) {
     DomQuery(val).prepend(this);
 
     return this;
@@ -737,7 +745,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to replace nodes with.
    * @return {tinymce.dom.DomQuery} Set with replaced nodes.
    */
-  replaceWith: function (content) {
+  replaceWith (content) {
     return this.before(content).remove();
   },
 
@@ -748,7 +756,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to wrap nodes with.
    * @return {tinymce.dom.DomQuery} Set with wrapped nodes.
    */
-  wrap: function (content) {
+  wrap (content) {
     return wrap(this, content);
   },
 
@@ -760,7 +768,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to wrap nodes with.
    * @return {tinymce.dom.DomQuery} Set with wrapped nodes.
    */
-  wrapAll: function (content) {
+  wrapAll (content) {
     return wrap(this, content, true);
   },
 
@@ -771,7 +779,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to wrap nodes with.
    * @return {tinymce.dom.DomQuery} Set with wrapped nodes.
    */
-  wrapInner: function (content) {
+  wrapInner (content) {
     this.each(function () {
       DomQuery(this).contents().wrapAll(content);
     });
@@ -785,7 +793,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @method unwrap
    * @return {tinymce.dom.DomQuery} Set with unwrapped nodes.
    */
-  unwrap: function () {
+  unwrap () {
     return this.parent().each(function () {
       DomQuery(this).replaceWith(this.childNodes);
     });
@@ -797,8 +805,8 @@ DomQuery.fn = DomQuery.prototype = {
    * @method clone
    * @return {tinymce.dom.DomQuery} Set with cloned nodes.
    */
-  clone: function () {
-    var result = [];
+  clone () {
+    const result = [];
 
     this.each(function () {
       result.push(this.cloneNode(true));
@@ -814,7 +822,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String} className Class name to add.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  addClass: function (className) {
+  addClass (className) {
     return this.toggleClass(className, true);
   },
 
@@ -825,7 +833,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String} className Class name to remove.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  removeClass: function (className) {
+  removeClass (className) {
     return this.toggleClass(className, false);
   },
 
@@ -837,11 +845,11 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {Boolean} state Optional state to toggle on/off.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  toggleClass: function (className, state) {
-    var self = this;
+  toggleClass (className, state) {
+    const self = this;
 
     // Functions are not supported
-    if (typeof className != 'string') {
+    if (typeof className !== 'string') {
       return self;
     }
 
@@ -851,14 +859,14 @@ DomQuery.fn = DomQuery.prototype = {
       });
     } else {
       self.each(function (index, node) {
-        var existingClassName, classState;
+        let existingClassName, classState;
 
         classState = hasClass(node, className);
         if (classState !== state) {
           existingClassName = node.className;
 
           if (classState) {
-            node.className = trim((" " + existingClassName + " ").replace(' ' + className + ' ', ' '));
+            node.className = trim((' ' + existingClassName + ' ').replace(' ' + className + ' ', ' '));
           } else {
             node.className += existingClassName ? ' ' + className : className;
           }
@@ -876,7 +884,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String} className Class name to check for.
    * @return {Boolean} True/false if the set has the specified class.
    */
-  hasClass: function (className) {
+  hasClass (className) {
     return hasClass(this[0], className);
   },
 
@@ -888,7 +896,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {function} callback Callback function to execute for each item.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  each: function (callback) {
+  each (callback) {
     return each(this, callback);
   },
 
@@ -900,7 +908,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {function} callback Callback function to execute when the event occurs.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  on: function (name, callback) {
+  on (name, callback) {
     return this.each(function () {
       Event.bind(this, name, callback);
     });
@@ -914,7 +922,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {function} callback Optional callback function to execute when the event occurs.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  off: function (name, callback) {
+  off (name, callback) {
     return this.each(function () {
       Event.unbind(this, name, callback);
     });
@@ -927,9 +935,9 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Object} name Name of the event to trigger or event object.
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  trigger: function (name) {
+  trigger (name) {
     return this.each(function () {
-      if (typeof name == 'object') {
+      if (typeof name === 'object') {
         Event.fire(this, name.type, name);
       } else {
         Event.fire(this, name);
@@ -943,7 +951,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @method show
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  show: function () {
+  show () {
     return this.css('display', '');
   },
 
@@ -953,7 +961,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @method hide
    * @return {tinymce.dom.DomQuery} Current set.
    */
-  hide: function () {
+  hide () {
     return this.css('display', 'none');
   },
 
@@ -965,7 +973,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {Number} end Optional end index to end slice at.
    * @return {tinymce.dom.DomQuery} Sliced set.
    */
-  slice: function () {
+  slice () {
     return new DomQuery(slice.apply(this, arguments));
   },
 
@@ -976,7 +984,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {Number} index Index to set it equal to.
    * @return {tinymce.dom.DomQuery} Single item set.
    */
-  eq: function (index) {
+  eq (index) {
     return index === -1 ? this.slice(index) : this.slice(index, +index + 1);
   },
 
@@ -986,7 +994,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @method first
    * @return {tinymce.dom.DomQuery} Single item set.
    */
-  first: function () {
+  first () {
     return this.eq(0);
   },
 
@@ -996,7 +1004,7 @@ DomQuery.fn = DomQuery.prototype = {
    * @method last
    * @return {tinymce.dom.DomQuery} Single item set.
    */
-  last: function () {
+  last () {
     return this.eq(-1);
   },
 
@@ -1007,8 +1015,9 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String} selector Selector to find elements by.
    * @return {tinymce.dom.DomQuery} Set with matches elements.
    */
-  find: function (selector) {
-    var i, l, ret = [];
+  find (selector) {
+    let i, l;
+    const ret = [];
 
     for (i = 0, l = this.length; i < l; i++) {
       DomQuery.find(selector, this[i], ret);
@@ -1024,8 +1033,8 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/function} selector Selector to filter elements by.
    * @return {tinymce.dom.DomQuery} Set with filtered elements.
    */
-  filter: function (selector) {
-    if (typeof selector == 'function') {
+  filter (selector) {
+    if (typeof selector === 'function') {
       return DomQuery(grep(this.toArray(), function (item, i) {
         return selector(i, item);
       }));
@@ -1041,8 +1050,8 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {String/Element/tinymce.dom.DomQuery} selector Selector or element to find.
    * @return {tinymce.dom.DomQuery} Set with closest elements.
    */
-  closest: function (selector) {
-    var result = [];
+  closest (selector) {
+    const result = [];
 
     if (selector instanceof DomQuery) {
       selector = selector[0];
@@ -1050,10 +1059,10 @@ DomQuery.fn = DomQuery.prototype = {
 
     this.each(function (i, node) {
       while (node) {
-        if (typeof selector == 'string' && DomQuery(node).is(selector)) {
+        if (typeof selector === 'string' && DomQuery(node).is(selector)) {
           result.push(node);
           break;
-        } else if (node == selector) {
+        } else if (node === selector) {
           result.push(node);
           break;
         }
@@ -1072,9 +1081,9 @@ DomQuery.fn = DomQuery.prototype = {
    * @param {Object} offset Optional offset object to set on each item.
    * @return {Object/tinymce.dom.DomQuery} Returns the first element offset or the current set if you specified an offset.
    */
-  offset: function (offset) {
-    var elm, doc, docElm;
-    var x = 0, y = 0, pos;
+  offset (offset) {
+    let elm, doc, docElm;
+    let x = 0, y = 0, pos;
 
     if (!offset) {
       elm = this[0];
@@ -1099,7 +1108,7 @@ DomQuery.fn = DomQuery.prototype = {
     return this.css(offset);
   },
 
-  push: push,
+  push,
   sort: [].sort,
   splice: [].splice
 };
@@ -1125,7 +1134,7 @@ Tools.extend(DomQuery, {
    * @param {Object} object Object to convert to array.
    * @return {Array} Array produced from object.
    */
-  makeArray: function (object) {
+  makeArray (object) {
     if (isWindow(object) || object.nodeType) {
       return [object];
     }
@@ -1142,7 +1151,7 @@ Tools.extend(DomQuery, {
    * @param {Array} array Array to look for item in.
    * @return {Number} Index of the item or -1.
    */
-  inArray: inArray,
+  inArray,
 
   /**
    * Returns true/false if the specified object is an array or not.
@@ -1163,7 +1172,7 @@ Tools.extend(DomQuery, {
    * @param {Object} obj Object to iterate.
    * @param {function} callback Callback function to execute for each item.
    */
-  each: each,
+  each,
 
   /**
    * Removes whitespace from the beginning and end of a string.
@@ -1173,7 +1182,7 @@ Tools.extend(DomQuery, {
    * @param {String} str String to remove whitespace from.
    * @return {String} New string with removed whitespace.
    */
-  trim: trim,
+  trim,
 
   /**
    * Filters out items from the input array by calling the specified function for each item.
@@ -1188,7 +1197,7 @@ Tools.extend(DomQuery, {
    * // Filter out some items, this will return an array with 4 and 5
    * var items = DomQuery.grep([1, 2, 3, 4, 5], function(v) {return v > 3;});
    */
-  grep: grep,
+  grep,
 
   // Sizzle
   find: Sizzle,
@@ -1196,15 +1205,15 @@ Tools.extend(DomQuery, {
   unique: Sizzle.uniqueSort,
   text: Sizzle.getText,
   contains: Sizzle.contains,
-  filter: function (expr, elems, not) {
-    var i = elems.length;
+  filter (expr, elems, not) {
+    let i = elems.length;
 
     if (not) {
-      expr = ":not(" + expr + ")";
+      expr = ':not(' + expr + ')';
     }
 
     while (i--) {
-      if (elems[i].nodeType != 1) {
+      if (elems[i].nodeType !== 1) {
         elems.splice(i, 1);
       }
     }
@@ -1219,10 +1228,11 @@ Tools.extend(DomQuery, {
   }
 });
 
-var dir = function (el, prop, until?) {
-  var matched = [], cur = el[prop];
+const dir = function (el, prop, until?) {
+  const matched = [];
+  let cur = el[prop];
 
-  if (typeof until != 'string' && until instanceof DomQuery) {
+  if (typeof until !== 'string' && until instanceof DomQuery) {
     until = until[0];
   }
 
@@ -1232,7 +1242,7 @@ var dir = function (el, prop, until?) {
         break;
       }
 
-      if (typeof until == 'string' && DomQuery(cur).is(until)) {
+      if (typeof until === 'string' && DomQuery(cur).is(until)) {
         break;
       }
     }
@@ -1247,8 +1257,8 @@ var dir = function (el, prop, until?) {
   return matched;
 };
 
-var sibling = function (node, siblingName, nodeType, until?) {
-  var result = [];
+const sibling = function (node, siblingName, nodeType, until?) {
+  const result = [];
 
   if (until instanceof DomQuery) {
     until = until[0];
@@ -1264,7 +1274,7 @@ var sibling = function (node, siblingName, nodeType, until?) {
         break;
       }
 
-      if (typeof until == 'string' && DomQuery(node).is(until)) {
+      if (typeof until === 'string' && DomQuery(node).is(until)) {
         break;
       }
     }
@@ -1275,9 +1285,9 @@ var sibling = function (node, siblingName, nodeType, until?) {
   return result;
 };
 
-var firstSibling = function (node, siblingName, nodeType) {
+const firstSibling = function (node, siblingName, nodeType) {
   for (node = node[siblingName]; node; node = node[siblingName]) {
-    if (node.nodeType == nodeType) {
+    if (node.nodeType === nodeType) {
       return node;
     }
   }
@@ -1293,8 +1303,8 @@ each({
    * @param {Element/tinymce.dom.DomQuery} node Node to match parents against.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
    */
-  parent: function (node) {
-    var parent = node.parentNode;
+  parent (node) {
+    const parent = node.parentNode;
 
     return parent && parent.nodeType !== 11 ? parent : null;
   },
@@ -1306,8 +1316,8 @@ each({
    * @param {Element/tinymce.dom.DomQuery} node Node to match parents against.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
    */
-  parents: function (node) {
-    return dir(node, "parentNode");
+  parents (node) {
+    return dir(node, 'parentNode');
   },
 
   /**
@@ -1317,7 +1327,7 @@ each({
    * @param {Element/tinymce.dom.DomQuery} node Node to match the next element against.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
    */
-  next: function (node) {
+  next (node) {
     return firstSibling(node, 'nextSibling', 1);
   },
 
@@ -1328,7 +1338,7 @@ each({
    * @param {Element/tinymce.dom.DomQuery} node Node to match the previous element against.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
    */
-  prev: function (node) {
+  prev (node) {
     return firstSibling(node, 'previousSibling', 1);
   },
 
@@ -1339,7 +1349,7 @@ each({
    * @param {Element/tinymce.dom.DomQuery} node Node to match the elements against.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
    */
-  children: function (node) {
+  children (node) {
     return sibling(node.firstChild, 'nextSibling', 1);
   },
 
@@ -1350,15 +1360,16 @@ each({
    * @param {Element/tinymce.dom.DomQuery} node Node to get the contents of.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
    */
-  contents: function (node) {
-    return Tools.toArray((node.nodeName === "iframe" ? node.contentDocument || node.contentWindow.document : node).childNodes);
+  contents (node) {
+    return Tools.toArray((node.nodeName === 'iframe' ? node.contentDocument || node.contentWindow.document : node).childNodes);
   }
 }, function (name, fn) {
   DomQuery.fn[name] = function (selector) {
-    var self = this, result = [];
+    const self = this;
+    let result = [];
 
     self.each(function () {
-      var nodes = fn.call(result, this, selector, result);
+      const nodes = fn.call(result, this, selector, result);
 
       if (nodes) {
         if (DomQuery.isArray(nodes)) {
@@ -1400,8 +1411,8 @@ each({
    * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
    */
-  parentsUntil: function (node, until) {
-    return dir(node, "parentNode", until);
+  parentsUntil (node, until) {
+    return dir(node, 'parentNode', until);
   },
 
   /**
@@ -1412,7 +1423,7 @@ each({
    * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
    */
-  nextUntil: function (node, until) {
+  nextUntil (node, until) {
     return sibling(node, 'nextSibling', 1, until).slice(1);
   },
 
@@ -1424,15 +1435,16 @@ each({
    * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
    * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
    */
-  prevUntil: function (node, until) {
+  prevUntil (node, until) {
     return sibling(node, 'previousSibling', 1, until).slice(1);
   }
 }, function (name, fn) {
   DomQuery.fn[name] = function (selector, filter) {
-    var self = this, result = [];
+    const self = this;
+    let result = [];
 
     self.each(function () {
-      var nodes = fn.call(result, this, selector, result);
+      const nodes = fn.call(result, this, selector, result);
 
       if (nodes) {
         if (DomQuery.isArray(nodes)) {
@@ -1476,9 +1488,9 @@ DomQuery.fn.is = function (selector) {
 DomQuery.fn.init.prototype = DomQuery.fn;
 
 DomQuery.overrideDefaults = function (callback) {
-  var defaults;
+  let defaults;
 
-  var sub: any = function (selector, context) {
+  const sub: any = function (selector, context) {
     defaults = defaults || callback();
 
     if (arguments.length === 0) {
@@ -1497,7 +1509,7 @@ DomQuery.overrideDefaults = function (callback) {
   return sub;
 };
 
-var appendHooks = function (targetHooks, prop, hooks) {
+const appendHooks = function (targetHooks, prop, hooks) {
   each(hooks, function (name, func) {
     targetHooks[name] = targetHooks[name] || {};
     targetHooks[name][prop] = func;
@@ -1506,35 +1518,35 @@ var appendHooks = function (targetHooks, prop, hooks) {
 
 if (Env.ie && Env.ie < 8) {
   appendHooks(attrHooks, 'get', {
-    maxlength: function (elm) {
-      var value = elm.maxLength;
+    maxlength (elm) {
+      const value = elm.maxLength;
 
       if (value === 0x7fffffff) {
-        return undef;
+        return undefined;
       }
 
       return value;
     },
 
-    size: function (elm) {
-      var value = elm.size;
+    size (elm) {
+      const value = elm.size;
 
       if (value === 20) {
-        return undef;
+        return undefined;
       }
 
       return value;
     },
 
-    'class': function (elm) {
+    class (elm) {
       return elm.className;
     },
 
-    style: function (elm) {
-      var value = elm.style.cssText;
+    style (elm) {
+      const value = elm.style.cssText;
 
       if (value.length === 0) {
-        return undef;
+        return undefined;
       }
 
       return value;
@@ -1542,11 +1554,11 @@ if (Env.ie && Env.ie < 8) {
   });
 
   appendHooks(attrHooks, 'set', {
-    'class': function (elm, value) {
+    class (elm, value) {
       elm.className = value;
     },
 
-    style: function (elm, value) {
+    style (elm, value) {
       elm.style.cssText = value;
     }
   });
@@ -1555,11 +1567,11 @@ if (Env.ie && Env.ie < 8) {
 if (Env.ie && Env.ie < 9) {
   /*jshint sub:true */
   /*eslint dot-notation: 0*/
-  cssFix['float'] = 'styleFloat';
+  cssFix.float = 'styleFloat';
 
   appendHooks(cssHooks, 'set', {
-    opacity: function (elm, value) {
-      var style = elm.style;
+    opacity (elm, value) {
+      const style = elm.style;
 
       if (value === null || value === '') {
         style.removeAttribute('filter');

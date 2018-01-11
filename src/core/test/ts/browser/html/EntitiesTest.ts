@@ -3,10 +3,10 @@ import { Pipeline } from '@ephox/agar';
 import Entities from 'tinymce/core/html/Entities';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   suite.test('encodeRaw', function () {
     LegacyUnit.equal(
@@ -46,19 +46,19 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function() {
       'Named encoding attribute'
     );
     LegacyUnit.equal(
-      Entities.encodeNamed('<>"\'\u00e5\u00e4\u00f6', false, { '\u00e5': '&aring;' }),
+      Entities.encodeNamed('<>"\'\u00e5\u00e4\u00f6', false, { å: '&aring;' }),
       '&lt;&gt;"\'&aring;\u00e4\u00f6',
       'Named encoding text'
     );
     LegacyUnit.equal(
-      Entities.encodeNamed('<>"\'\u00e5\u00e4\u00f6', true, { '\u00e5': '&aring;' }),
+      Entities.encodeNamed('<>"\'\u00e5\u00e4\u00f6', true, { å: '&aring;' }),
       '&lt;&gt;&quot;\'&aring;\u00e4\u00f6',
       'Named encoding attribute'
     );
   });
 
   suite.test('getEncodeFunc', function () {
-    var encodeFunc;
+    let encodeFunc;
 
     encodeFunc = Entities.getEncodeFunc('raw');
     LegacyUnit.equal(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;\u00e5\u00e4\u00f6', 'Raw encoding text');
@@ -126,11 +126,10 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function() {
       '&#8250;&#339;&#157;&#382;&#376;',
       'Entity decode ascii');
 
-    LegacyUnit.equal(Entities.encodeNumeric(Entities.decode('&#194564;')), '&#194564;', "High byte non western character.");
+    LegacyUnit.equal(Entities.encodeNumeric(Entities.decode('&#194564;')), '&#194564;', 'High byte non western character.');
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {
     success();
   }, failure);
 });
-

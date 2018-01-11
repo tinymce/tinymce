@@ -28,11 +28,10 @@ import DomQuery from 'tinymce/core/dom/DomQuery';
  * @class tinymce.ui.DragHelper
  */
 
-"use strict";
-
 function getDocumentSize(doc) {
-  var documentElement, body, scrollWidth, clientWidth;
-  var offsetWidth, scrollHeight, clientHeight, offsetHeight, max = Math.max;
+  let documentElement, body, scrollWidth, clientWidth;
+  let offsetWidth, scrollHeight, clientHeight, offsetHeight;
+  const max = Math.max;
 
   documentElement = doc.documentElement;
   body = doc.body;
@@ -52,18 +51,21 @@ function getDocumentSize(doc) {
 }
 
 function updateWithTouchData(e) {
-  var keys, i;
+  let keys, i;
 
   if (e.changedTouches) {
-    keys = "screenX screenY pageX pageY clientX clientY".split(' ');
+    keys = 'screenX screenY pageX pageY clientX clientY'.split(' ');
     for (i = 0; i < keys.length; i++) {
       e[keys[i]] = e.changedTouches[0][keys[i]];
     }
   }
 }
 
-export default <any> function (id, settings) {
-  var $eventOverlay, doc = settings.document || document, downButton, start, stop, drag, startX, startY;
+export default function (id, settings) {
+  let $eventOverlay;
+  const doc = settings.document || document;
+  let downButton;
+  let start, stop, drag, startX, startY;
 
   settings = settings || {};
 
@@ -72,7 +74,8 @@ export default <any> function (id, settings) {
   }
 
   start = function (e) {
-    var docSize = getDocumentSize(doc), handleElm, cursor;
+    const docSize = getDocumentSize(doc);
+    let handleElm, cursor;
 
     updateWithTouchData(e);
 
@@ -84,19 +87,19 @@ export default <any> function (id, settings) {
 
     // Grab cursor from handle so we can place it on overlay
     if (window.getComputedStyle) {
-      cursor = window.getComputedStyle(handleElm, null).getPropertyValue("cursor");
+      cursor = window.getComputedStyle(handleElm, null).getPropertyValue('cursor');
     } else {
       cursor = handleElm.runtimeStyle.cursor;
     }
 
     $eventOverlay = DomQuery('<div></div>').css({
-      position: "absolute",
+      position: 'absolute',
       top: 0, left: 0,
       width: docSize.width,
       height: docSize.height,
       zIndex: 0x7FFFFFFF,
       opacity: 0.0001,
-      cursor: cursor
+      cursor
     }).appendTo(doc.body);
 
     DomQuery(doc).on('mousemove touchmove', drag).on('mouseup touchend', stop);
@@ -140,4 +143,4 @@ export default <any> function (id, settings) {
   };
 
   DomQuery(getHandleElm()).on('mousedown touchstart', start);
-};
+}

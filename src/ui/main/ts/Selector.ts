@@ -40,8 +40,6 @@ import Class from 'tinymce/core/util/Class';
  * @class tinymce.ui.Selector
  */
 
-"use strict";
-
 /**
  * Produces an array with a unique set of objects. It will not compare the values
  * but the references of the objects.
@@ -52,7 +50,8 @@ import Class from 'tinymce/core/util/Class';
  * @return {Array} Array with unique items.
  */
 function unique(array) {
-  var uniqueItems = [], i = array.length, item;
+  const uniqueItems = [];
+  let i = array.length, item;
 
   while (i--) {
     item = array[i];
@@ -71,15 +70,15 @@ function unique(array) {
   return uniqueItems;
 }
 
-var expression = /^([\w\\*]+)?(?:#([\w\-\\]+))?(?:\.([\w\\\.]+))?(?:\[\@?([\w\\]+)([\^\$\*!~]?=)([\w\\]+)\])?(?:\:(.+))?/i;
+const expression = /^([\w\\*]+)?(?:#([\w\-\\]+))?(?:\.([\w\\\.]+))?(?:\[\@?([\w\\]+)([\^\$\*!~]?=)([\w\\]+)\])?(?:\:(.+))?/i;
 
 /*jshint maxlen:255 */
 /*eslint max-len:0 */
-var chunker = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^\[\]]*\]|['"][^'"]*['"]|[^\[\]'"]+)+\]|\\.|[^ >+~,(\[\\]+)+|[>+~])(\s*,\s*)?((?:.|\r|\n)*)/g,
-  whiteSpace = /^\s*|\s*$/g,
-  Collection;
+const chunker = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^\[\]]*\]|['"][^'"]*['"]|[^\[\]'"]+)+\]|\\.|[^ >+~,(\[\\]+)+|[>+~])(\s*,\s*)?((?:.|\r|\n)*)/g;
+const whiteSpace = /^\s*|\s*$/g;
+let Collection;
 
-var Selector = Class.extend({
+const Selector = Class.extend({
   /**
    * Constructs a new Selector instance.
    *
@@ -87,8 +86,8 @@ var Selector = Class.extend({
    * @method init
    * @param {String} selector CSS like selector expression.
    */
-  init: function (selector) {
-    var match = this.match;
+  init (selector) {
+    const match = this.match;
 
     function compileNameFilter(name) {
       if (name) {
@@ -113,7 +112,7 @@ var Selector = Class.extend({
         classes = classes.split('.');
 
         return function (item) {
-          var i = classes.length;
+          let i = classes.length;
 
           while (i--) {
             if (!item.classes.contains(classes[i])) {
@@ -129,22 +128,22 @@ var Selector = Class.extend({
     function compileAttrFilter(name, cmp, check) {
       if (name) {
         return function (item) {
-          var value = item[name] ? item[name]() : '';
+          const value = item[name] ? item[name]() : '';
 
           return !cmp ? !!check :
-            cmp === "=" ? value === check :
-              cmp === "*=" ? value.indexOf(check) >= 0 :
-                cmp === "~=" ? (" " + value + " ").indexOf(" " + check + " ") >= 0 :
-                  cmp === "!=" ? value != check :
-                    cmp === "^=" ? value.indexOf(check) === 0 :
-                      cmp === "$=" ? value.substr(value.length - check.length) === check :
+            cmp === '=' ? value === check :
+              cmp === '*=' ? value.indexOf(check) >= 0 :
+                cmp === '~=' ? (' ' + value + ' ').indexOf(' ' + check + ' ') >= 0 :
+                  cmp === '!=' ? value !== check :
+                    cmp === '^=' ? value.indexOf(check) === 0 :
+                      cmp === '$=' ? value.substr(value.length - check.length) === check :
                         false;
         };
       }
     }
 
     function compilePsuedoFilter(name) {
-      var notSelectors;
+      let notSelectors;
 
       if (name) {
         name = /(?:not\((.+)\))|(.+)/i.exec(name);
@@ -172,7 +171,7 @@ var Selector = Class.extend({
     }
 
     function compile(selector, filters, direct) {
-      var parts;
+      let parts;
 
       function add(filter) {
         if (filter) {
@@ -198,10 +197,11 @@ var Selector = Class.extend({
 
     // Parser logic based on Sizzle by John Resig
     function parseChunks(selector, selectors) {
-      var parts = [], extra, matches, i;
+      const parts = [];
+      let extra, matches, i;
 
       do {
-        chunker.exec("");
+        chunker.exec('');
         matches = chunker.exec(selector);
 
         if (matches) {
@@ -221,7 +221,7 @@ var Selector = Class.extend({
 
       selector = [];
       for (i = 0; i < parts.length; i++) {
-        if (parts[i] != '>') {
+        if (parts[i] !== '>') {
           selector.push(compile(parts[i], [], parts[i - 1] === '>'));
         }
       }
@@ -242,8 +242,8 @@ var Selector = Class.extend({
    * @param {Array} selectors Optional array of selectors, mostly used internally.
    * @return {Boolean} true/false state if the control matches or not.
    */
-  match: function (control, selectors) {
-    var i, l, si, sl, selector, fi, fl, filters, index, length, siblings, count, item;
+  match (control, selectors) {
+    let i, l, si, sl, selector, fi, fl, filters, index, length, siblings, count, item;
 
     selectors = selectors || this._selectors;
     for (i = 0, l = selectors.length; i < l; i++) {
@@ -305,11 +305,13 @@ var Selector = Class.extend({
    * @param {tinymce.ui.Control} container Container to look for items in.
    * @return {tinymce.ui.Collection} Collection with matched elements.
    */
-  find: function (container) {
-    var matches = [], i, l, selectors = this._selectors;
+  find (container) {
+    let matches = [], i, l;
+    const selectors = this._selectors;
 
     function collect(items, selector, index) {
-      var i, l, fi, fl, item, filters = selector[index];
+      let i, l, fi, fl, item;
+      const filters = selector[index];
 
       for (i = 0, l = items.length; i < l; i++) {
         item = items[i];
@@ -325,7 +327,7 @@ var Selector = Class.extend({
         // All filters matched the item
         if (fi === fl) {
           // Matched item is on the last expression like: panel toolbar [button]
-          if (index == selector.length - 1) {
+          if (index === selector.length - 1) {
             matches.push(item);
           } else {
             // Collect next expression type
@@ -365,4 +367,4 @@ var Selector = Class.extend({
   }
 });
 
-export default <any> Selector;
+export default Selector;

@@ -15,10 +15,10 @@ declare let tinymce: any;
 AnchorPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "anchor code",
-  toolbar: "anchor code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'anchor code',
+  toolbar: 'anchor code',
   height: 600
 });

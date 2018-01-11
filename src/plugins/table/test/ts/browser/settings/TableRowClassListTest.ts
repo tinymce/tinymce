@@ -10,18 +10,18 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TableRowClassListTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.table.TableRowClassListTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   TablePlugin();
 
-  var tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
+  const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       Logger.t('no class input without setting', GeneralSteps.sequence([
@@ -65,4 +65,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowClassListTest', functi
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

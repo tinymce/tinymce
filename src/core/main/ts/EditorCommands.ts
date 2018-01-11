@@ -24,14 +24,14 @@ import Tools from './util/Tools';
  */
 
 // Added for compression purposes
-var each = Tools.each, extend = Tools.extend;
-var map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
-var TRUE = true, FALSE = false;
+const each = Tools.each, extend = Tools.extend;
+const map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
+const TRUE = true, FALSE = false;
 
 export default function (editor) {
-  var dom, selection, formatter,
-    commands = { state: {}, exec: {}, value: {} },
-    settings = editor.settings,
+  let dom, selection, formatter;
+  const commands = { state: {}, exec: {}, value: {} };
+  let settings = editor.settings,
     bookmark;
 
   editor.on('PreInit', function () {
@@ -51,8 +51,8 @@ export default function (editor) {
    * @param {Object} args Optional extra arguments to the execCommand.
    * @return {Boolean} true/false if the command was found or not.
    */
-  var execCommand = function (command, ui, value, args) {
-    var func, customCommand, state = false;
+  const execCommand = function (command, ui, value, args) {
+    let func, customCommand, state = false;
 
     if (editor.removed) {
       return;
@@ -64,7 +64,7 @@ export default function (editor) {
       SelectionBookmark.restore(editor);
     }
 
-    args = editor.fire('BeforeExecCommand', { command: command, ui: ui, value: value });
+    args = editor.fire('BeforeExecCommand', { command, ui, value });
     if (args.isDefaultPrevented()) {
       return false;
     }
@@ -72,14 +72,14 @@ export default function (editor) {
     customCommand = command.toLowerCase();
     if ((func = commands.exec[customCommand])) {
       func(customCommand, ui, value);
-      editor.fire('ExecCommand', { command: command, ui: ui, value: value });
+      editor.fire('ExecCommand', { command, ui, value });
       return true;
     }
 
     // Plugin commands
     each(editor.plugins, function (p) {
       if (p.execCommand && p.execCommand(command, ui, value)) {
-        editor.fire('ExecCommand', { command: command, ui: ui, value: value });
+        editor.fire('ExecCommand', { command, ui, value });
         state = true;
         return false;
       }
@@ -91,7 +91,7 @@ export default function (editor) {
 
     // Theme commands
     if (editor.theme && editor.theme.execCommand && editor.theme.execCommand(command, ui, value)) {
-      editor.fire('ExecCommand', { command: command, ui: ui, value: value });
+      editor.fire('ExecCommand', { command, ui, value });
       return true;
     }
 
@@ -103,7 +103,7 @@ export default function (editor) {
     }
 
     if (state) {
-      editor.fire('ExecCommand', { command: command, ui: ui, value: value });
+      editor.fire('ExecCommand', { command, ui, value });
       return true;
     }
 
@@ -117,8 +117,8 @@ export default function (editor) {
    * @param {String} command Command to check the state of.
    * @return {Boolean/Number} true/false if the selected contents is bold or not, -1 if it's not found.
    */
-  var queryCommandState = function (command) {
-    var func;
+  const queryCommandState = function (command) {
+    let func;
 
     if (editor.quirks.isHidden() || editor.removed) {
       return;
@@ -146,8 +146,8 @@ export default function (editor) {
    * @param {String} command Command to check the value of.
    * @return {Object} Command value of false if it's not found.
    */
-  var queryCommandValue = function (command) {
-    var func;
+  const queryCommandValue = function (command) {
+    let func;
 
     if (editor.quirks.isHidden() || editor.removed) {
       return;
@@ -173,7 +173,7 @@ export default function (editor) {
    * @param {Object} commandList Name/value collection with commands to add, the names can also be comma separated.
    * @param {String} type Optional type to add, defaults to exec. Can be value or state as well.
    */
-  var addCommands = function (commandList, type?) {
+  const addCommands = function (commandList, type?) {
     type = type || 'exec';
 
     each(commandList, function (callback, command) {
@@ -183,7 +183,7 @@ export default function (editor) {
     });
   };
 
-  var addCommand = function (command, callback, scope) {
+  const addCommand = function (command, callback, scope) {
     command = command.toLowerCase();
     commands.exec[command] = function (command, ui, value, args) {
       return callback.call(scope || editor, ui, value, args);
@@ -197,7 +197,7 @@ export default function (editor) {
    * @param {String} command Command that we check support for.
    * @return {Boolean} true/false if the command is supported or not.
    */
-  var queryCommandSupported = function (command) {
+  const queryCommandSupported = function (command) {
     command = command.toLowerCase();
 
     if (commands.exec[command]) {
@@ -214,41 +214,41 @@ export default function (editor) {
     return false;
   };
 
-  var addQueryStateHandler = function (command, callback, scope) {
+  const addQueryStateHandler = function (command, callback, scope) {
     command = command.toLowerCase();
     commands.state[command] = function () {
       return callback.call(scope || editor);
     };
   };
 
-  var addQueryValueHandler = function (command, callback, scope) {
+  const addQueryValueHandler = function (command, callback, scope) {
     command = command.toLowerCase();
     commands.value[command] = function () {
       return callback.call(scope || editor);
     };
   };
 
-  var hasCustomCommand = function (command) {
+  const hasCustomCommand = function (command) {
     command = command.toLowerCase();
     return !!commands.exec[command];
   };
 
   // Expose public methods
   extend(this, {
-    execCommand: execCommand,
-    queryCommandState: queryCommandState,
-    queryCommandValue: queryCommandValue,
-    queryCommandSupported: queryCommandSupported,
-    addCommands: addCommands,
-    addCommand: addCommand,
-    addQueryStateHandler: addQueryStateHandler,
-    addQueryValueHandler: addQueryValueHandler,
-    hasCustomCommand: hasCustomCommand
+    execCommand,
+    queryCommandState,
+    queryCommandValue,
+    queryCommandSupported,
+    addCommands,
+    addCommand,
+    addQueryStateHandler,
+    addQueryValueHandler,
+    hasCustomCommand
   });
 
   // Private methods
 
-  var execNativeCommand = function (command, ui?, value?) {
+  const execNativeCommand = function (command, ui?, value?) {
     if (ui === undefined) {
       ui = FALSE;
     }
@@ -260,35 +260,36 @@ export default function (editor) {
     return editor.getDoc().execCommand(command, ui, value);
   };
 
-  var isFormatMatch = function (name) {
+  const isFormatMatch = function (name) {
     return formatter.match(name);
   };
 
-  var toggleFormat = function (name, value?) {
-    formatter.toggle(name, value ? { value: value } : undefined);
+  const toggleFormat = function (name, value?) {
+    formatter.toggle(name, value ? { value } : undefined);
     editor.nodeChanged();
   };
 
-  var storeSelection = function (type?) {
+  const storeSelection = function (type?) {
     bookmark = selection.getBookmark(type);
   };
 
-  var restoreSelection = function () {
+  const restoreSelection = function () {
     selection.moveToBookmark(bookmark);
   };
 
   // Add execCommand overrides
   addCommands({
     // Ignore these, added for compatibility
-    'mceResetDesignMode,mceBeginUndoLevel': function () { },
+    'mceResetDesignMode,mceBeginUndoLevel' () { },
 
     // Add undo manager logic
-    'mceEndUndoLevel,mceAddUndoLevel': function () {
+    'mceEndUndoLevel,mceAddUndoLevel' () {
       editor.undoManager.add();
     },
 
-    'Cut,Copy,Paste': function (command) {
-      var doc = editor.getDoc(), failed;
+    'Cut,Copy,Paste' (command) {
+      const doc = editor.getDoc();
+      let failed;
 
       // Try executing the native command
       try {
@@ -305,9 +306,9 @@ export default function (editor) {
 
       // Present alert message about clipboard access not being available
       if (failed || !doc.queryCommandSupported(command)) {
-        var msg = editor.translate(
-          "Your browser doesn't support direct access to the clipboard. " +
-          "Please use the Ctrl+X/C/V keyboard shortcuts instead."
+        let msg = editor.translate(
+          'Your browser doesn\'t support direct access to the clipboard. ' +
+          'Please use the Ctrl+X/C/V keyboard shortcuts instead.'
         );
 
         if (Env.mac) {
@@ -319,9 +320,9 @@ export default function (editor) {
     },
 
     // Override unlink command
-    unlink: function () {
+    'unlink' () {
       if (selection.isCollapsed()) {
-        var elm = editor.dom.getParent(editor.selection.getStart(), 'a');
+        const elm = editor.dom.getParent(editor.selection.getStart(), 'a');
         if (elm) {
           editor.dom.remove(elm, true);
         }
@@ -329,32 +330,32 @@ export default function (editor) {
         return;
       }
 
-      formatter.remove("link");
+      formatter.remove('link');
     },
 
     // Override justify commands to use the text formatter engine
-    'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull,JustifyNone': function (command) {
-      var align = command.substring(7);
+    'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull,JustifyNone' (command) {
+      let align = command.substring(7);
 
-      if (align == 'full') {
+      if (align === 'full') {
         align = 'justify';
       }
 
       // Remove all other alignments first
       each('left,center,right,justify'.split(','), function (name) {
-        if (align != name) {
+        if (align !== name) {
           formatter.remove('align' + name);
         }
       });
 
-      if (align != 'none') {
+      if (align !== 'none') {
         toggleFormat('align' + align);
       }
     },
 
     // Override list commands to fix WebKit bug
-    'InsertUnorderedList,InsertOrderedList': function (command) {
-      var listElm, listParent;
+    'InsertUnorderedList,InsertOrderedList' (command) {
+      let listElm, listParent;
 
       execNativeCommand(command);
 
@@ -375,17 +376,17 @@ export default function (editor) {
     },
 
     // Override commands to use the text formatter engine
-    'Bold,Italic,Underline,Strikethrough,Superscript,Subscript': function (command) {
+    'Bold,Italic,Underline,Strikethrough,Superscript,Subscript' (command) {
       toggleFormat(command);
     },
 
     // Override commands to use the text formatter engine
-    'ForeColor,HiliteColor,FontName': function (command, ui, value) {
+    'ForeColor,HiliteColor,FontName' (command, ui, value) {
       toggleFormat(command, value);
     },
 
-    FontSize: function (command, ui, value) {
-      var fontClasses, fontSizes;
+    'FontSize' (command, ui, value) {
+      let fontClasses, fontSizes;
 
       // Convert font size 1-7 to styles
       if (value >= 1 && value <= 7) {
@@ -402,57 +403,57 @@ export default function (editor) {
       toggleFormat(command, value);
     },
 
-    RemoveFormat: function (command) {
+    'RemoveFormat' (command) {
       formatter.remove(command);
     },
 
-    mceBlockQuote: function () {
+    'mceBlockQuote' () {
       toggleFormat('blockquote');
     },
 
-    FormatBlock: function (command, ui, value) {
+    'FormatBlock' (command, ui, value) {
       return toggleFormat(value || 'p');
     },
 
-    mceCleanup: function () {
-      var bookmark = selection.getBookmark();
+    'mceCleanup' () {
+      const bookmark = selection.getBookmark();
 
       editor.setContent(editor.getContent({ cleanup: TRUE }), { cleanup: TRUE });
 
       selection.moveToBookmark(bookmark);
     },
 
-    mceRemoveNode: function (command, ui, value) {
-      var node = value || selection.getNode();
+    'mceRemoveNode' (command, ui, value) {
+      const node = value || selection.getNode();
 
       // Make sure that the body node isn't removed
-      if (node != editor.getBody()) {
+      if (node !== editor.getBody()) {
         storeSelection();
         editor.dom.remove(node, TRUE);
         restoreSelection();
       }
     },
 
-    mceSelectNodeDepth: function (command, ui, value) {
-      var counter = 0;
+    'mceSelectNodeDepth' (command, ui, value) {
+      let counter = 0;
 
       dom.getParent(selection.getNode(), function (node) {
-        if (node.nodeType == 1 && counter++ == value) {
+        if (node.nodeType === 1 && counter++ === value) {
           selection.select(node);
           return FALSE;
         }
       }, editor.getBody());
     },
 
-    mceSelectNode: function (command, ui, value) {
+    'mceSelectNode' (command, ui, value) {
       selection.select(value);
     },
 
-    mceInsertContent: function (command, ui, value) {
+    'mceInsertContent' (command, ui, value) {
       InsertContent.insertAtCaret(editor, value);
     },
 
-    mceInsertRawHTML: function (command, ui, value) {
+    'mceInsertRawHTML' (command, ui, value) {
       selection.setContent('tiny_mce_marker');
       editor.setContent(
         editor.getContent().replace(/tiny_mce_marker/g, function () {
@@ -461,16 +462,16 @@ export default function (editor) {
       );
     },
 
-    mceToggleFormat: function (command, ui, value) {
+    'mceToggleFormat' (command, ui, value) {
       toggleFormat(value);
     },
 
-    mceSetContent: function (command, ui, value) {
+    'mceSetContent' (command, ui, value) {
       editor.setContent(value);
     },
 
-    'Indent,Outdent': function (command) {
-      var intentValue, indentUnit, value;
+    'Indent,Outdent' (command) {
+      let intentValue, indentUnit, value;
 
       // Setup indent level
       intentValue = settings.indentation;
@@ -484,16 +485,16 @@ export default function (editor) {
         }
 
         each(selection.getSelectedBlocks(), function (element) {
-          if (dom.getContentEditable(element) === "false") {
+          if (dom.getContentEditable(element) === 'false') {
             return;
           }
 
-          if (element.nodeName !== "LI") {
-            var indentStyleName = editor.getParam('indent_use_margin', false) ? 'margin' : 'padding';
+          if (element.nodeName !== 'LI') {
+            let indentStyleName = editor.getParam('indent_use_margin', false) ? 'margin' : 'padding';
             indentStyleName = element.nodeName === 'TABLE' ? 'margin' : indentStyleName;
-            indentStyleName += dom.getStyle(element, 'direction', true) == 'rtl' ? 'Right' : 'Left';
+            indentStyleName += dom.getStyle(element, 'direction', true) === 'rtl' ? 'Right' : 'Left';
 
-            if (command == 'outdent') {
+            if (command === 'outdent') {
               value = Math.max(0, parseInt(element.style[indentStyleName] || 0, 10) - intentValue);
               dom.setStyle(element, indentStyleName, value ? value + indentUnit : '');
             } else {
@@ -507,26 +508,26 @@ export default function (editor) {
       }
     },
 
-    mceRepaint: function () {
+    'mceRepaint' () {
     },
 
-    InsertHorizontalRule: function () {
+    'InsertHorizontalRule' () {
       editor.execCommand('mceInsertContent', false, '<hr />');
     },
 
-    mceToggleVisualAid: function () {
+    'mceToggleVisualAid' () {
       editor.hasVisual = !editor.hasVisual;
       editor.addVisual();
     },
 
-    mceReplaceContent: function (command, ui, value) {
+    'mceReplaceContent' (command, ui, value) {
       editor.execCommand('mceInsertContent', false, value.replace(/\{\$selection\}/g, selection.getContent({ format: 'text' })));
     },
 
-    mceInsertLink: function (command, ui, value) {
-      var anchor;
+    'mceInsertLink' (command, ui, value) {
+      let anchor;
 
-      if (typeof value == 'string') {
+      if (typeof value === 'string') {
         value = { href: value };
       }
 
@@ -546,28 +547,28 @@ export default function (editor) {
       }
     },
 
-    selectAll: function () {
-      var editingHost = dom.getParent(selection.getStart(), NodeType.isContentEditableTrue);
+    'selectAll' () {
+      const editingHost = dom.getParent(selection.getStart(), NodeType.isContentEditableTrue);
       if (editingHost) {
-        var rng = dom.createRng();
+        const rng = dom.createRng();
         rng.selectNodeContents(editingHost);
         selection.setRng(rng);
       }
     },
 
-    "delete": function () {
+    'delete' () {
       DeleteCommands.deleteCommand(editor);
     },
 
-    "forwardDelete": function () {
+    'forwardDelete' () {
       DeleteCommands.forwardDeleteCommand(editor);
     },
 
-    mceNewDocument: function () {
+    'mceNewDocument' () {
       editor.setContent('');
     },
 
-    InsertLineBreak: function (command, ui, value) {
+    'InsertLineBreak' (command, ui, value) {
       InsertBr.insert(editor, value);
       return true;
     }
@@ -576,25 +577,25 @@ export default function (editor) {
   // Add queryCommandState overrides
   addCommands({
     // Override justify commands
-    'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull': function (command) {
-      var name = 'align' + command.substring(7);
-      var nodes = selection.isCollapsed() ? [dom.getParent(selection.getNode(), dom.isBlock)] : selection.getSelectedBlocks();
-      var matches = map(nodes, function (node) {
+    'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull' (command) {
+      const name = 'align' + command.substring(7);
+      const nodes = selection.isCollapsed() ? [dom.getParent(selection.getNode(), dom.isBlock)] : selection.getSelectedBlocks();
+      const matches = map(nodes, function (node) {
         return !!formatter.matchNode(node, name);
       });
       return inArray(matches, TRUE) !== -1;
     },
 
-    'Bold,Italic,Underline,Strikethrough,Superscript,Subscript': function (command) {
+    'Bold,Italic,Underline,Strikethrough,Superscript,Subscript' (command) {
       return isFormatMatch(command);
     },
 
-    mceBlockQuote: function () {
+    'mceBlockQuote' () {
       return isFormatMatch('blockquote');
     },
 
-    Outdent: function () {
-      var node;
+    'Outdent' () {
+      let node;
 
       if (settings.inline_styles) {
         if ((node = dom.getParent(selection.getStart(), dom.isBlock)) && parseInt(node.style.paddingLeft, 10) > 0) {
@@ -613,8 +614,8 @@ export default function (editor) {
       );
     },
 
-    'InsertUnorderedList,InsertOrderedList': function (command) {
-      var list = dom.getParent(selection.getNode(), 'ul,ol');
+    'InsertUnorderedList,InsertOrderedList' (command) {
+      const list = dom.getParent(selection.getNode(), 'ul,ol');
 
       return list &&
         (
@@ -626,11 +627,11 @@ export default function (editor) {
 
   // Add queryCommandValue overrides
   addCommands({
-    'FontSize,FontName': function (command) {
-      var value = 0, parent;
+    'FontSize,FontName' (command) {
+      let value = 0, parent;
 
       if ((parent = dom.getParent(selection.getNode(), 'span'))) {
-        if (command == 'fontsize') {
+        if (command === 'fontsize') {
           value = parent.style.fontSize;
         } else {
           value = parent.style.fontFamily.replace(/, /g, ',').replace(/[\'\"]/g, '').toLowerCase();
@@ -643,12 +644,12 @@ export default function (editor) {
 
   // Add undo manager logic
   addCommands({
-    Undo: function () {
+    Undo () {
       editor.undoManager.undo();
     },
 
-    Redo: function () {
+    Redo () {
       editor.undoManager.redo();
     }
   });
-};
+}

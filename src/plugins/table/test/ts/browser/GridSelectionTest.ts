@@ -10,15 +10,15 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
 
-  var assertTableSelection = function (editor, tableHtml, selectCells, cellContents) {
+  const assertTableSelection = function (editor, tableHtml, selectCells, cellContents) {
     function selectRangeXY(table, startTd, endTd) {
       editor.fire('mousedown', { target: startTd, button: 0 });
       editor.fire('mouseover', { target: endTd, button: 0 });
@@ -35,20 +35,20 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', function()
 
     editor.setContent(tableHtml);
 
-    var table = editor.$('table')[0];
-    var cells = getCells(table);
+    const table = editor.$('table')[0];
+    const cells = getCells(table);
 
-    var startTd = Tools.grep(cells, function (elm) {
+    const startTd = Tools.grep(cells, function (elm) {
       return elm.innerHTML === selectCells[0];
     })[0];
 
-    var endTd = Tools.grep(cells, function (elm) {
+    const endTd = Tools.grep(cells, function (elm) {
       return elm.innerHTML === selectCells[1];
     })[0];
 
     selectRangeXY(table, startTd, endTd);
 
-    var selection = getSelectedCells(table);
+    let selection = getSelectedCells(table);
     selection = Tools.map(selection, function (elm) {
       return elm.innerHTML;
     });
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', function()
     LegacyUnit.deepEqual(selection, cellContents);
   };
 
-  suite.test("Table grid selection", function (editor) {
+  suite.test('Table grid selection', function (editor) {
     assertTableSelection(editor, '<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>', ['1', '2'], ['1', '2']);
     assertTableSelection(editor, '<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>', ['1', '3'], ['1', '3']);
     assertTableSelection(editor,
@@ -83,13 +83,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', function()
     );
   });
 
-  var sSetRawContent = function (editor, html) {
+  const sSetRawContent = function (editor, html) {
     return Step.sync(function () {
       editor.getBody().innerHTML = html;
     });
   };
 
-  var sAssertSelectionContent = function (editor, expectedHtml) {
+  const sAssertSelectionContent = function (editor, expectedHtml) {
     return Step.sync(function () {
       Assertions.assertHtml('Should be expected content', expectedHtml, editor.selection.getContent());
     });
@@ -111,4 +111,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', function()
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

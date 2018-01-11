@@ -19,6 +19,6 @@ function trimArg(predicateFn) {
 }
 
 export default {
-  isCodeSample: isCodeSample,
-  trimArg: trimArg
+  isCodeSample,
+  trimArg
 };

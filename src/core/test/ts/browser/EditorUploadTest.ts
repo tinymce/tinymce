@@ -9,20 +9,20 @@ import Conversions from 'tinymce/core/file/Conversions';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var testBlobDataUri;
+  let testBlobDataUri;
 
   if (!Env.fileApi) {
     return;
   }
 
-  var teardown = function (editor) {
+  const teardown = function (editor) {
     return Step.sync(function () {
       editor.editorUpload.destroy();
       editor.settings.automatic_uploads = false;
@@ -31,17 +31,17 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
     });
   };
 
-  var appendTeardown = function (editor, steps) {
+  const appendTeardown = function (editor, steps) {
     return Arr.bind(steps, function (step) {
       return [step, teardown(editor)];
     });
   };
 
-  var imageHtml = function (uri) {
+  const imageHtml = function (uri) {
     return DOMUtils.DOM.createHTML('img', { src: uri });
   };
 
-  var assertResult = function (editor, uploadedBlobInfo, result) {
+  const assertResult = function (editor, uploadedBlobInfo, result) {
     LegacyUnit.strictEqual(result.length, 1);
     LegacyUnit.strictEqual(result[0].status, true);
     LegacyUnit.strictEqual(result[0].element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1, true);
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
     return result;
   };
 
-  var hasBlobAsSource = function (elm) {
+  const hasBlobAsSource = function (elm) {
     return elm.src.indexOf('blob:') === 0;
   };
 
@@ -58,16 +58,16 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
     editor.setContent(imageHtml(testBlobDataUri));
 
     editor._scanForImages().then(function (result) {
-      var blobInfo = result[0].blobInfo;
+      const blobInfo = result[0].blobInfo;
 
-      LegacyUnit.equal("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64(), testBlobDataUri);
+      LegacyUnit.equal('data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64(), testBlobDataUri);
       LegacyUnit.equal(editor.getBody().innerHTML, '<p><img src="' + blobInfo.blobUri() + '"></p>');
       LegacyUnit.equal(
         '<p><img src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '" /></p>',
         editor.getContent()
       );
       LegacyUnit.strictEqual(editor.editorUpload.blobCache.get(blobInfo.id()), blobInfo);
-    }).then(done)["catch"](fail);
+    }).then(done).catch(fail);
   });
 
   suite.asyncTest('replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)', function (editor, done) {
@@ -78,7 +78,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
     };
 
     editor._scanForImages().then(function (result) {
-      var blobUri = result[0].blobInfo.blobUri();
+      const blobUri = result[0].blobInfo.blobUri();
 
       editor.uploadImages(function () {
         editor.setContent(imageHtml(blobUri));
@@ -101,7 +101,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
     };
 
     editor._scanForImages().then(function (result) {
-      var blobUri = result[0].blobInfo.blobUri();
+      const blobUri = result[0].blobInfo.blobUri();
 
       editor.uploadImages(function () {
         editor.setContent(imageHtml(blobUri));
@@ -113,7 +113,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
   });
 
   suite.asyncTest('uploadImages (callback)', function (editor, done) {
-    var uploadedBlobInfo;
+    let uploadedBlobInfo;
 
     editor.setContent(imageHtml(testBlobDataUri));
 
@@ -133,7 +133,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
   });
 
   suite.asyncTest('uploadImages (promise)', function (editor, done) {
-    var uploadedBlobInfo;
+    let uploadedBlobInfo;
 
     editor.setContent(imageHtml(testBlobDataUri));
 
@@ -156,9 +156,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
   });
 
   suite.asyncTest('uploadImages retain blob urls after upload', function (editor, done) {
-    var uploadedBlobInfo;
+    let uploadedBlobInfo;
 
-    var assertResult = function (result) {
+    const assertResult = function (result) {
       LegacyUnit.strictEqual(result[0].status, true);
       LegacyUnit.strictEqual(hasBlobAsSource(result[0].element), true, 'Not a blob url');
       LegacyUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', editor.getContent());
@@ -185,9 +185,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
   });
 
   suite.asyncTest('uploadConcurrentImages', function (editor, done) {
-    var uploadCount = 0, callCount = 0;
+    let uploadCount = 0, callCount = 0;
 
-    var uploadDone = function (result) {
+    const uploadDone = function (result) {
       callCount++;
 
       if (callCount === 2) {
@@ -215,9 +215,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
   });
 
   suite.asyncTest('uploadConcurrentImages (fail)', function (editor, done) {
-    var uploadCount = 0, callCount = 0;
+    let uploadCount = 0, callCount = 0;
 
-    var uploadDone = function (result) {
+    const uploadDone = function (result) {
       callCount++;
 
       if (callCount === 2) {
@@ -245,9 +245,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
   });
 
   suite.asyncTest('Don\'t upload transparent image', function (editor, done) {
-    var uploadCount = 0;
+    let uploadCount = 0;
 
-    var uploadDone = function () {
+    const uploadDone = function () {
       done();
       LegacyUnit.equal(uploadCount, 0, 'Should not upload.');
     };
@@ -263,9 +263,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
   });
 
   suite.asyncTest('Don\'t upload bogus image', function (editor, done) {
-    var uploadCount = 0;
+    let uploadCount = 0;
 
-    var uploadDone = function () {
+    const uploadDone = function () {
       done();
       LegacyUnit.equal(uploadCount, 0, 'Should not upload.');
     };
@@ -281,9 +281,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
   });
 
   suite.asyncTest('Don\'t upload filtered image', function (editor, done) {
-    var uploadCount = 0;
+    let uploadCount = 0;
 
-    var uploadDone = function () {
+    const uploadDone = function () {
       done();
       LegacyUnit.equal(uploadCount, 0, 'Should not upload.');
     };
@@ -310,30 +310,30 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var canvas, context;
+    let canvas, context;
 
-    canvas = document.createElement("canvas");
+    canvas = document.createElement('canvas');
     canvas.width = 320;
     canvas.height = 200;
 
-    context = canvas.getContext("2d");
-    context.fillStyle = "#ff0000";
+    context = canvas.getContext('2d');
+    context.fillStyle = '#ff0000';
     context.fillRect(0, 0, 160, 100);
-    context.fillStyle = "#00ff00";
+    context.fillStyle = '#00ff00';
     context.fillRect(160, 0, 160, 100);
-    context.fillStyle = "#0000ff";
+    context.fillStyle = '#0000ff';
     context.fillRect(0, 100, 160, 100);
-    context.fillStyle = "#ff00ff";
+    context.fillStyle = '#ff00ff';
     context.fillRect(160, 100, 160, 100);
 
     testBlobDataUri = canvas.toDataURL();
 
     Conversions.uriToBlob(testBlobDataUri).then(function () {
-      var steps = appendTeardown(editor, suite.toSteps(editor));
+      const steps = appendTeardown(editor, suite.toSteps(editor));
       Pipeline.async({}, steps, onSuccess, onFailure);
     });
   }, {
-    selector: "textarea",
+    selector: 'textarea',
     add_unload_trigger: false,
     disable_nodechange: true,
     automatic_uploads: false,
@@ -342,4 +342,3 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

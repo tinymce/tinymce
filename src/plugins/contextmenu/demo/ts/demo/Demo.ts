@@ -15,11 +15,11 @@ declare let tinymce: any;
 ContextMenuPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "contextmenu code",
-  toolbar: "contextmenu code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'contextmenu code',
+  toolbar: 'contextmenu code',
   height: 600,
   contextmenu: 'code'
 });

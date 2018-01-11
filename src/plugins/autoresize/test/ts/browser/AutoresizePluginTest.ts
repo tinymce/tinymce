@@ -13,37 +13,37 @@ import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   AutoresizePlugin();
   FullscreenPlugin();
   ModernTheme();
 
-  var sAssertEditorHeightAbove = function (editor, minHeight) {
+  const sAssertEditorHeightAbove = function (editor, minHeight) {
     return Step.sync(function () {
-      var editorHeight = editor.getContainer().clientHeight;
+      const editorHeight = editor.getContainer().clientHeight;
       RawAssertions.assertEq('should be above: ' + editorHeight + '>=' + minHeight, true, editorHeight >= minHeight);
     });
   };
 
-  var sAssertEditorHeightBelow = function (editor, minHeight) {
+  const sAssertEditorHeightBelow = function (editor, minHeight) {
     return Step.sync(function () {
-      var editorHeight = editor.getContainer().clientHeight;
+      const editorHeight = editor.getContainer().clientHeight;
       RawAssertions.assertEq('should be below: ' + editorHeight + '<=' + minHeight, true, editorHeight <= minHeight);
     });
   };
 
-  var sAssertScroll = function (editor, state) {
+  const sAssertScroll = function (editor, state) {
     return Step.sync(function () {
-      var body = editor.getBody();
+      const body = editor.getBody();
       Assertions.assertEq('', !state, body.style.overflowY === 'hidden');
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, Arr.flatten([
       [
@@ -85,4 +85,3 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', fu
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

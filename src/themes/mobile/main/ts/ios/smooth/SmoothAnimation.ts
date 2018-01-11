@@ -1,6 +1,6 @@
 import { Option } from '@ephox/katamari';
 
-var adjust = function (value, destination, amount) {
+const adjust = function (value, destination, amount) {
   if (Math.abs(value - destination) <= amount) {
     return Option.none();
   } else if (value < destination) {
@@ -10,33 +10,33 @@ var adjust = function (value, destination, amount) {
   }
 };
 
-var create = function () {
-  var interval = null;
+const create = function () {
+  let interval = null;
 
-  var animate = function (getCurrent, destination, amount, increment, doFinish, rate) {
-    var finished = false;
+  const animate = function (getCurrent, destination, amount, increment, doFinish, rate) {
+    let finished = false;
 
-    var finish = function (v) {
+    const finish = function (v) {
       finished = true;
       doFinish(v);
     };
 
     clearInterval(interval);
 
-    var abort = function (v) {
+    const abort = function (v) {
       clearInterval(interval);
       finish(v);
     };
 
     interval = setInterval(function () {
-      var value = getCurrent();
+      const value = getCurrent();
       adjust(value, destination, amount).fold(function () {
         clearInterval(interval);
         finish(destination);
       }, function (s) {
         increment(s, abort);
         if (! finished) {
-          var newValue = getCurrent();
+          const newValue = getCurrent();
           // Jump to the end if the increment is no longer working.
           if (newValue !== s || Math.abs(newValue - destination) > Math.abs(value - destination)) {
             clearInterval(interval);
@@ -48,11 +48,11 @@ var create = function () {
   };
 
   return {
-    animate: animate
+    animate
   };
 };
 
-export default <any> {
-  create: create,
-  adjust: adjust
+export default {
+  create,
+  adjust
 };

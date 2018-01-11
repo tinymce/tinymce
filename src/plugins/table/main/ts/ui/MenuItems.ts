@@ -17,24 +17,24 @@ import InsertTable from '../actions/InsertTable';
 import TableTargets from '../queries/TableTargets';
 import TableDialog from './TableDialog';
 
-var addMenuItems = function (editor, selections) {
-  var targets = Option.none();
+const addMenuItems = function (editor, selections) {
+  let targets = Option.none();
 
-  var tableCtrls = [];
-  var cellCtrls = [];
-  var mergeCtrls = [];
-  var unmergeCtrls = [];
+  const tableCtrls = [];
+  const cellCtrls = [];
+  const mergeCtrls = [];
+  const unmergeCtrls = [];
 
-  var noTargetDisable = function (ctrl) {
+  const noTargetDisable = function (ctrl) {
     ctrl.disabled(true);
   };
 
-  var ctrlEnable = function (ctrl) {
+  const ctrlEnable = function (ctrl) {
     ctrl.disabled(false);
   };
 
-  var pushTable = function () {
-    var self = this;
+  const pushTable = function () {
+    const self = this;
     tableCtrls.push(self);
     targets.fold(function () {
       noTargetDisable(self);
@@ -43,8 +43,8 @@ var addMenuItems = function (editor, selections) {
     });
   };
 
-  var pushCell = function () {
-    var self = this;
+  const pushCell = function () {
+    const self = this;
     cellCtrls.push(self);
     targets.fold(function () {
       noTargetDisable(self);
@@ -53,8 +53,8 @@ var addMenuItems = function (editor, selections) {
     });
   };
 
-  var pushMerge = function () {
-    var self = this;
+  const pushMerge = function () {
+    const self = this;
     mergeCtrls.push(self);
     targets.fold(function () {
       noTargetDisable(self);
@@ -63,8 +63,8 @@ var addMenuItems = function (editor, selections) {
     });
   };
 
-  var pushUnmerge = function () {
-    var self = this;
+  const pushUnmerge = function () {
+    const self = this;
     unmergeCtrls.push(self);
     targets.fold(function () {
       noTargetDisable(self);
@@ -73,7 +73,7 @@ var addMenuItems = function (editor, selections) {
     });
   };
 
-  var setDisabledCtrls = function () {
+  const setDisabledCtrls = function () {
     targets.fold(function () {
       Arr.each(tableCtrls, noTargetDisable);
       Arr.each(cellCtrls, noTargetDisable);
@@ -93,10 +93,10 @@ var addMenuItems = function (editor, selections) {
 
   editor.on('init', function () {
     editor.on('nodechange', function (e) {
-      var cellOpt = Option.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
+      const cellOpt = Option.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
       targets = cellOpt.bind(function (cellDom) {
-        var cell = Element.fromDom(cellDom);
-        var table = TableLookup.table(cell);
+        const cell = Element.fromDom(cellDom);
+        const table = TableLookup.table(cell);
         return table.map(function (table) {
           return TableTargets.forMenu(selections, table, cell);
         });
@@ -106,15 +106,15 @@ var addMenuItems = function (editor, selections) {
     });
   });
 
-  var generateTableGrid = function () {
-    var html = '';
+  const generateTableGrid = function () {
+    let html = '';
 
     html = '<table role="grid" class="mce-grid mce-grid-border" aria-readonly="true">';
 
-    for (var y = 0; y < 10; y++) {
+    for (let y = 0; y < 10; y++) {
       html += '<tr>';
 
-      for (var x = 0; x < 10; x++) {
+      for (let x = 0; x < 10; x++) {
         html += '<td role="gridcell" tabindex="-1"><a id="mcegrid' + (y * 10 + x) + '" href="#" ' +
           'data-mce-x="' + x + '" data-mce-y="' + y + '"></a></td>';
       }
@@ -129,10 +129,10 @@ var addMenuItems = function (editor, selections) {
     return html;
   };
 
-  var selectGrid = function (editor, tx, ty, control) {
-    var table = control.getEl().getElementsByTagName('table')[0];
-    var x, y, focusCell, cell, active;
-    var rtl = control.isRtl() || control.parent().rel == 'tl-tr';
+  const selectGrid = function (editor, tx, ty, control) {
+    const table = control.getEl().getElementsByTagName('table')[0];
+    let x, y, focusCell, cell, active;
+    const rtl = control.isRtl() || control.parent().rel === 'tl-tr';
 
     table.nextSibling.innerHTML = (tx + 1) + ' x ' + (ty + 1);
 
@@ -156,7 +156,7 @@ var addMenuItems = function (editor, selections) {
     return focusCell.parentNode;
   };
 
-  var insertTable = editor.settings.table_grid === false ? {
+  const insertTable = editor.settings.table_grid === false ? {
     text: 'Table',
     icon: 'table',
     context: 'table',
@@ -166,18 +166,18 @@ var addMenuItems = function (editor, selections) {
     icon: 'table',
     context: 'table',
     ariaHideMenu: true,
-    onclick: function (e) {
+    onclick (e) {
       if (e.aria) {
         this.parent().hideAll();
         e.stopImmediatePropagation();
         TableDialog.open(editor);
       }
     },
-    onshow: function () {
+    onshow () {
       selectGrid(editor, 0, 0, this.menu.items()[0]);
     },
-    onhide: function () {
-      var elements = this.menu.items()[0].getEl().getElementsByTagName('a');
+    onhide () {
+      const elements = this.menu.items()[0].getEl().getElementsByTagName('a');
       editor.dom.removeClass(elements, 'mce-active');
       editor.dom.addClass(elements[0], 'mce-active');
     },
@@ -186,18 +186,19 @@ var addMenuItems = function (editor, selections) {
         type: 'container',
         html: generateTableGrid(),
 
-        onPostRender: function () {
+        onPostRender () {
           this.lastX = this.lastY = 0;
         },
 
-        onmousemove: function (e) {
-          var target = e.target, x, y;
+        onmousemove (e) {
+          const target = e.target;
+          let x, y;
 
-          if (target.tagName.toUpperCase() == 'A') {
+          if (target.tagName.toUpperCase() === 'A') {
             x = parseInt(target.getAttribute('data-mce-x'), 10);
             y = parseInt(target.getAttribute('data-mce-y'), 10);
 
-            if (this.isRtl() || this.parent().rel == 'tl-tr') {
+            if (this.isRtl() || this.parent().rel === 'tl-tr') {
               x = 9 - x;
             }
 
@@ -210,10 +211,10 @@ var addMenuItems = function (editor, selections) {
           }
         },
 
-        onclick: function (e) {
-          var self = this;
+        onclick (e) {
+          const self = this;
 
-          if (e.target.tagName.toUpperCase() == 'A') {
+          if (e.target.tagName.toUpperCase() === 'A') {
             e.preventDefault();
             e.stopPropagation();
             self.parent().cancel();
@@ -235,21 +236,21 @@ var addMenuItems = function (editor, selections) {
     };
   }
 
-  var tableProperties = {
+  const tableProperties = {
     text: 'Table properties',
     context: 'table',
     onPostRender: pushTable,
     onclick: Fun.curry(TableDialog.open, editor, true)
   };
 
-  var deleteTable = {
+  const deleteTable = {
     text: 'Delete table',
     context: 'table',
     onPostRender: pushTable,
     cmd: 'mceTableDelete'
   };
 
-  var row = {
+  const row = {
     text: 'Row',
     context: 'table',
     menu: [
@@ -265,7 +266,7 @@ var addMenuItems = function (editor, selections) {
     ]
   };
 
-  var column = {
+  const column = {
     text: 'Column',
     context: 'table',
     menu: [
@@ -275,7 +276,7 @@ var addMenuItems = function (editor, selections) {
     ]
   };
 
-  var cell = {
+  const cell = {
     separator: 'before',
     text: 'Cell',
     context: 'table',
@@ -295,5 +296,5 @@ var addMenuItems = function (editor, selections) {
 };
 
 export default {
-  addMenuItems: addMenuItems
+  addMenuItems
 };

@@ -9,13 +9,13 @@ import { Editor } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var settings = {
+  const settings = {
     skin_url: '/project/js/tinymce/skins/lightgray',
     inline: true
   };
@@ -33,4 +33,3 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', function(
     success();
   }, failure);
 });
-

@@ -16,60 +16,60 @@ import ContextSelectors from './ContextSelectors';
 import NewLineUtils from './NewLineUtils';
 import LazyEvaluator from '../util/LazyEvaluator';
 
-var newLineAction = Adt.generate([
+const newLineAction = Adt.generate([
   { br: [ ] },
   { block: [ ] },
   { none: [ ] }
 ]);
 
-var shouldBlockNewLine = function (editor, shiftKey) {
+const shouldBlockNewLine = function (editor, shiftKey) {
   return ContextSelectors.shouldBlockNewLine(editor);
 };
 
-var isBrMode = function (requiredState) {
+const isBrMode = function (requiredState) {
   return function (editor, shiftKey) {
-    var brMode = Settings.getForcedRootBlock(editor) === '';
+    const brMode = Settings.getForcedRootBlock(editor) === '';
     return brMode === requiredState;
   };
 };
 
-var inListBlock = function (requiredState) {
+const inListBlock = function (requiredState) {
   return function (editor, shiftKey) {
     return NewLineUtils.isListItemParentBlock(editor) === requiredState;
   };
 };
 
-var inPreBlock = function (requiredState) {
+const inPreBlock = function (requiredState) {
   return function (editor, shiftKey) {
-    var inPre = NewLineUtils.getParentBlockName(editor) === 'PRE';
+    const inPre = NewLineUtils.getParentBlockName(editor) === 'PRE';
     return inPre === requiredState;
   };
 };
 
-var shouldPutBrInPre = function (requiredState) {
+const shouldPutBrInPre = function (requiredState) {
   return function (editor, shiftKey) {
     return Settings.shouldPutBrInPre(editor) === requiredState;
   };
 };
 
-var inBrContext = function (editor, shiftKey) {
+const inBrContext = function (editor, shiftKey) {
   return ContextSelectors.shouldInsertBr(editor);
 };
 
-var hasShiftKey = function (editor, shiftKey) {
+const hasShiftKey = function (editor, shiftKey) {
   return shiftKey;
 };
 
-var canInsertIntoEditableRoot = function (editor) {
-  var forcedRootBlock = Settings.getForcedRootBlock(editor);
-  var rootEditable = NewLineUtils.getEditableRoot(editor.dom, editor.selection.getStart());
+const canInsertIntoEditableRoot = function (editor) {
+  const forcedRootBlock = Settings.getForcedRootBlock(editor);
+  const rootEditable = NewLineUtils.getEditableRoot(editor.dom, editor.selection.getStart());
 
   return rootEditable && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock ? forcedRootBlock : 'P');
 };
 
-var match = function (predicates, action) {
+const match = function (predicates, action) {
   return function (editor, shiftKey) {
-    var isMatch = Arr.foldl(predicates, function (res, p) {
+    const isMatch = Arr.foldl(predicates, function (res, p) {
       return res && p(editor, shiftKey);
     }, true);
 
@@ -77,7 +77,7 @@ var match = function (predicates, action) {
   };
 };
 
-var getAction = function (editor, evt) {
+const getAction = function (editor, evt) {
   return LazyEvaluator.evaluateUntil([
     match([shouldBlockNewLine], newLineAction.none()),
     match([inPreBlock(true), shouldPutBrInPre(false), hasShiftKey], newLineAction.br()),
@@ -95,5 +95,5 @@ var getAction = function (editor, evt) {
 };
 
 export default {
-  getAction: getAction
+  getAction
 };

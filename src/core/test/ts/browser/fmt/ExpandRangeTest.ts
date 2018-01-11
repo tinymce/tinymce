@@ -11,24 +11,24 @@ import ExpandRange from 'tinymce/core/fmt/ExpandRange';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
 
-  var cSetRawContent = function (html) {
+  const cSetRawContent = function (html) {
     return Chain.op(function (editor) {
       editor.getBody().innerHTML = html;
     });
   };
 
-  var cExpandRng = function (startPath, startOffset, endPath, endOffset, format, remove) {
+  const cExpandRng = function (startPath, startOffset, endPath, endOffset, format, remove) {
     return Chain.mapper(function (editor) {
-      var startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
-      var endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
+      const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
 
-      var rng = editor.dom.createRng();
+      const rng = editor.dom.createRng();
       rng.setStart(startContainer.dom(), startOffset);
       rng.setEnd(endContainer.dom(), endOffset);
 
@@ -36,10 +36,10 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function() {
     });
   };
 
-  var cAssertRange = function (editor, startPath, startOffset, endPath, endOffset) {
+  const cAssertRange = function (editor, startPath, startOffset, endPath, endOffset) {
     return Chain.op(function (rng) {
-      var startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
-      var endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
+      const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
 
       Assertions.assertDomEq('Should be expected start container', startContainer, Element.fromDom(rng.startContainer));
       Assertions.assertEq('Should be expected start offset', startOffset, rng.startOffset);
@@ -49,11 +49,11 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var inlineFormat = [{ inline: 'b' }];
-    var blockFormat = [{ block: 'div' }];
-    var selectorFormat = [{ selector: 'div', classes: 'b' }];
-    var selectorFormatCollapsed = [{ selector: 'div', classes: 'b', collapsed: true }];
+    const tinyApis = TinyApis(editor);
+    const inlineFormat = [{ inline: 'b' }];
+    const blockFormat = [{ block: 'div' }];
+    const selectorFormat = [{ selector: 'div', classes: 'b' }];
+    const selectorFormatCollapsed = [{ selector: 'div', classes: 'b', collapsed: true }];
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -213,4 +213,3 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

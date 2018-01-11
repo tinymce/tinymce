@@ -3,23 +3,23 @@ import Settings from 'tinymce/plugins/textpattern/api/Settings';
 import Patterns from 'tinymce/plugins/textpattern/core/Patterns';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('atomic.tinymce.plugins.textpattern.FindPatternTest', function() {
-  var defaultPatterns = Settings.getPatterns({});
+UnitTest.test('atomic.tinymce.plugins.textpattern.FindPatternTest', function () {
+  const defaultPatterns = Settings.getPatterns({});
 
-  var testFindEndPattern = function (text, offset, space, expectedPattern) {
-    var actual = Patterns.findEndPattern(defaultPatterns, text, offset, space ? 1 : 0);
+  const testFindEndPattern = function (text, offset, space, expectedPattern) {
+    const actual = Patterns.findEndPattern(defaultPatterns, text, offset, space ? 1 : 0);
 
     RawAssertions.assertEq('Assert correct pattern', expectedPattern, actual.end);
   };
 
-  var testFindStartPattern = function (text, expectedPattern) {
-    var actual = Patterns.findPattern(defaultPatterns, text);
+  const testFindStartPattern = function (text, expectedPattern) {
+    const actual = Patterns.findPattern(defaultPatterns, text);
 
     RawAssertions.assertEq('Assert correct pattern', expectedPattern, actual.start);
   };
 
-  var testFindStartPatternUndefined = function (text) {
-    var actual = Patterns.findPattern(defaultPatterns, text);
+  const testFindStartPatternUndefined = function (text) {
+    const actual = Patterns.findPattern(defaultPatterns, text);
 
     RawAssertions.assertEq('Assert correct pattern', undefined, actual);
   };
@@ -44,4 +44,3 @@ UnitTest.test('atomic.tinymce.plugins.textpattern.FindPatternTest', function() {
   testFindStartPattern('* x', '* ');
   testFindStartPattern('- x', '- ');
 });
-

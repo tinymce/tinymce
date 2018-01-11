@@ -10,12 +10,12 @@
 
 import Dialog from '../ui/Dialog';
 
-var register = function (editor, headState) {
+const register = function (editor, headState) {
   editor.addCommand('mceFullPageProperties', function () {
     Dialog.open(editor, headState);
   });
 };
 
 export default {
-  register: register
+  register
 };

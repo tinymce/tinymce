@@ -12,10 +12,10 @@ import Promise from 'tinymce/core/util/Promise';
 import Settings from '../api/Settings';
 import DataToHtml from './DataToHtml';
 
-var cache = {};
-var embedPromise = function (data, dataToHtml, handler) {
+const cache = {};
+const embedPromise = function (data, dataToHtml, handler) {
   return new Promise(function (res, rej) {
-    var wrappedResolve = function (response) {
+    const wrappedResolve = function (response) {
       if (response.html) {
         cache[data.source1] = response;
       }
@@ -32,29 +32,29 @@ var embedPromise = function (data, dataToHtml, handler) {
   });
 };
 
-var defaultPromise = function (data, dataToHtml) {
+const defaultPromise = function (data, dataToHtml) {
   return new Promise(function (res) {
     res({ html: dataToHtml(data), url: data.source1 });
   });
 };
 
-var loadedData = function (editor) {
+const loadedData = function (editor) {
   return function (data) {
     return DataToHtml.dataToHtml(editor, data);
   };
 };
 
-var getEmbedHtml = function (editor, data) {
-  var embedHandler = Settings.getUrlResolver(editor);
+const getEmbedHtml = function (editor, data) {
+  const embedHandler = Settings.getUrlResolver(editor);
 
   return embedHandler ? embedPromise(data, loadedData(editor), embedHandler) : defaultPromise(data, loadedData(editor));
 };
 
-var isCached = function (url) {
+const isCached = function (url) {
   return cache.hasOwnProperty(url);
 };
 
 export default {
-  getEmbedHtml: getEmbedHtml,
-  isCached: isCached
+  getEmbedHtml,
+  isCached
 };

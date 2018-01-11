@@ -10,16 +10,16 @@
 
 import Dialog from '../ui/Dialog';
 
-var get = function (editor) {
-  var showDialog = function () {
+const get = function (editor) {
+  const showDialog = function () {
     Dialog.showDialog(editor);
   };
 
   return {
-    showDialog: showDialog
+    showDialog
   };
 };
 
 export default {
-  get: get
+  get
 };

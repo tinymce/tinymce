@@ -3,7 +3,6 @@ import { Chain } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import CaretFinder from 'tinymce/core/caret/CaretFinder';
@@ -11,52 +10,52 @@ import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const viewBlock = ViewBlock();
 
-  var cSetHtml = function (html) {
+  const cSetHtml = function (html) {
     return Chain.op(function () {
       viewBlock.update(html);
     });
   };
 
-  var cCreateFromPosition = function (path, offset) {
+  const cCreateFromPosition = function (path, offset) {
     return Chain.mapper(function (viewBlock) {
-      var container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
       return new CaretPosition(container.dom(), offset);
     });
   };
 
-  var cAssertCaretPosition = function (path, expectedOffset) {
+  const cAssertCaretPosition = function (path, expectedOffset) {
     return Chain.op(function (posOption) {
-      var pos = posOption.getOrDie();
-      var expectedContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+      const pos = posOption.getOrDie();
+      const expectedContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
       Assertions.assertDomEq('Should be the expected container', expectedContainer, Element.fromDom(pos.container()));
       Assertions.assertEq('Should be the expected offset', expectedOffset, pos.offset());
     });
   };
 
-  var cAssertNone = Chain.op(function (pos) {
+  const cAssertNone = Chain.op(function (pos) {
     Assertions.assertEq('Should be the none but got some', true, pos.isNone());
   });
 
-  var cFromPosition = function (forward) {
+  const cFromPosition = function (forward) {
     return Chain.mapper(function (from) {
       return CaretFinder.fromPosition(forward, viewBlock.get(), from);
     });
   };
 
-  var cNavigate = function (forward) {
+  const cNavigate = function (forward) {
     return Chain.mapper(function (from) {
       return CaretFinder.navigate(forward, viewBlock.get(), from);
     });
   };
 
-  var cPositionIn = function (forward, path) {
+  const cPositionIn = function (forward, path) {
     return Chain.mapper(function (_) {
-      var element = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
       return CaretFinder.positionIn(forward, element.dom());
     });
   };
@@ -368,4 +367,3 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function() {
     success();
   }, failure);
 });
-

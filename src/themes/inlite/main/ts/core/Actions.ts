@@ -11,8 +11,8 @@
 import Uuid from '../alien/Uuid';
 import Unlink from '../alien/Unlink';
 
-var createTableHtml = function (cols, rows) {
-  var x, y, html;
+const createTableHtml = function (cols, rows) {
+  let x, y, html;
 
   html = '<table data-mce-id="mce" style="width: 100%">';
   html += '<tbody>';
@@ -33,14 +33,14 @@ var createTableHtml = function (cols, rows) {
   return html;
 };
 
-var getInsertedElement = function (editor) {
-  var elms = editor.dom.select('*[data-mce-id]');
+const getInsertedElement = function (editor) {
+  const elms = editor.dom.select('*[data-mce-id]');
   return elms[0];
 };
 
-var insertTable = function (editor, cols, rows) {
+const insertTable = function (editor, cols, rows) {
   editor.undoManager.transact(function () {
-    var tableElm, cellElm;
+    let tableElm, cellElm;
 
     editor.insertContent(createTableHtml(cols, rows));
 
@@ -51,12 +51,12 @@ var insertTable = function (editor, cols, rows) {
   });
 };
 
-var formatBlock = function (editor, formatName) {
+const formatBlock = function (editor, formatName) {
   editor.execCommand('FormatBlock', false, formatName);
 };
 
-var insertBlob = function (editor, base64, blob) {
-  var blobCache, blobInfo;
+const insertBlob = function (editor, base64, blob) {
+  let blobCache, blobInfo;
 
   blobCache = editor.editorUpload.blobCache;
   blobInfo = blobCache.create(Uuid.uuid('mceu'), blob, base64);
@@ -65,40 +65,40 @@ var insertBlob = function (editor, base64, blob) {
   editor.insertContent(editor.dom.createHTML('img', { src: blobInfo.blobUri() }));
 };
 
-var collapseSelectionToEnd = function (editor) {
+const collapseSelectionToEnd = function (editor) {
   editor.selection.collapse(false);
 };
 
-var unlink = function (editor) {
+const unlink = function (editor) {
   editor.focus();
   Unlink.unlinkSelection(editor);
   collapseSelectionToEnd(editor);
 };
 
-var changeHref = function (editor, elm, url) {
+const changeHref = function (editor, elm, url) {
   editor.focus();
   editor.dom.setAttrib(elm, 'href', url);
   collapseSelectionToEnd(editor);
 };
 
-var insertLink = function (editor, url) {
+const insertLink = function (editor, url) {
   editor.execCommand('mceInsertLink', false, { href: url });
   collapseSelectionToEnd(editor);
 };
 
-var updateOrInsertLink = function (editor, url) {
-  var elm = editor.dom.getParent(editor.selection.getStart(), 'a[href]');
+const updateOrInsertLink = function (editor, url) {
+  const elm = editor.dom.getParent(editor.selection.getStart(), 'a[href]');
   elm ? changeHref(editor, elm, url) : insertLink(editor, url);
 };
 
-var createLink = function (editor, url) {
+const createLink = function (editor, url) {
   url.trim().length === 0 ? unlink(editor) : updateOrInsertLink(editor, url);
 };
 
-export default <any> {
-  insertTable: insertTable,
-  formatBlock: formatBlock,
-  insertBlob: insertBlob,
-  createLink: createLink,
-  unlink: unlink
+export default {
+  insertTable,
+  formatBlock,
+  insertBlob,
+  createLink,
+  unlink
 };

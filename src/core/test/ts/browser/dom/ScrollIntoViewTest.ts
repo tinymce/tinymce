@@ -12,19 +12,19 @@ import ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sScrollReset = function (editor) {
+  const sScrollReset = function (editor) {
     return Step.sync(function () {
       editor.getWin().scrollTo(0, 0);
     });
   };
 
-  var sSetContent = function (editor, tinyApis, html) {
+  const sSetContent = function (editor, tinyApis, html) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent(html),
       Waiter.sTryUntil('Wait for scrollHeight to be updated', Step.sync(function () {
@@ -33,30 +33,30 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function() {
     ]);
   };
 
-  var sScrollIntoView = function (editor, selector, alignToTop) {
+  const sScrollIntoView = function (editor, selector, alignToTop) {
     return Step.sync(function () {
       editor.selection.scrollIntoView(editor.dom.select(selector)[0], alignToTop);
     });
   };
 
-  var sScrollIntoViewPrivateApi = function (editor, selector, alignToTop) {
+  const sScrollIntoViewPrivateApi = function (editor, selector, alignToTop) {
     return Step.sync(function () {
       ScrollIntoView.scrollIntoView(editor, editor.dom.select(selector)[0], alignToTop);
     });
   };
 
-  var sAssertScrollPosition = function (editor, x, y) {
+  const sAssertScrollPosition = function (editor, x, y) {
     return Step.sync(function () {
       Assertions.assertEq('Scroll position X should be expected value', x, editor.dom.getViewPort(editor.getWin()).x);
       Assertions.assertEq('Scroll position Y should be expected value', y, editor.dom.getViewPort(editor.getWin()).y);
     });
   };
 
-  var mBindScrollIntoViewEvent = function (editor) {
+  const mBindScrollIntoViewEvent = function (editor) {
     return Step.stateful(function (value, next, die) {
-      var state = Cell({});
+      const state = Cell({});
 
-      var handler = function (e) {
+      const handler = function (e) {
         e.preventDefault();
         state.set({
           elm: e.elm,
@@ -67,16 +67,16 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function() {
       editor.on('ScrollIntoView', handler);
 
       next({
-        handler: handler,
-        state: state
+        handler,
+        state
       });
     });
   };
 
-  var mAssertScrollIntoViewEventInfo = function (editor, expectedElementSelector, expectedAlignToTop) {
+  const mAssertScrollIntoViewEventInfo = function (editor, expectedElementSelector, expectedAlignToTop) {
     return Step.stateful(function (value, next, die) {
-      var expectedTarget = Element.fromDom(editor.dom.select(expectedElementSelector)[0]);
-      var actualTarget = Element.fromDom(value.state.get().elm);
+      const expectedTarget = Element.fromDom(editor.dom.select(expectedElementSelector)[0]);
+      const actualTarget = Element.fromDom(value.state.get().elm);
       Assertions.assertDomEq('Target should be expected element', expectedTarget, actualTarget);
       Assertions.assertEq('Align to top should be expected value', expectedAlignToTop, value.state.get().alignToTop);
       editor.off('ScrollIntoView', value.handler);
@@ -84,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function() {
     });
   };
 
-  var steps = function (editor, tinyApis) {
+  const steps = function (editor, tinyApis) {
     return [
       tinyApis.sFocus,
       Logger.t('Public Selection API', GeneralSteps.sequence([
@@ -152,12 +152,12 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function() {
     ];
   };
 
-  var isPhantomJs = function () {
+  const isPhantomJs = function () {
     return /PhantomJS/.test(window.navigator.userAgent);
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     // Only run scrolling tests on real browsers doesn't seem to work on phantomjs for some reason
     Pipeline.async({}, isPhantomJs() ? [ ] : steps(editor, tinyApis), onSuccess, onFailure);
@@ -167,4 +167,3 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', function() {
     content_style: 'body.mce-content-body  { margin: 0 }'
   }, success, failure);
 });
-

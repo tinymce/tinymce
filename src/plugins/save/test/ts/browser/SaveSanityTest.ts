@@ -8,17 +8,17 @@ import SavePlugin from 'tinymce/plugins/save/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.save.SaveSanityTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.save.SaveSanityTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   SavePlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
-    var tinyApis = TinyApis(editor);
-    var tinyActions = TinyActions(editor);
+    const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
       tinyUi.sWaitForUi('check button', 'div[aria-disabled="true"] i.mce-i-save'),
@@ -33,4 +33,3 @@ UnitTest.asynctest('browser.tinymce.plugins.save.SaveSanityTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

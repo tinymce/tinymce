@@ -7,13 +7,13 @@ import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
 import UiDomFactory from '../util/UiDomFactory';
 
-var forToolbarCommand = function (editor, command) {
+const forToolbarCommand = function (editor, command) {
   return forToolbar(command, function () {
     editor.execCommand(command);
   }, { });
 };
 
-var getToggleBehaviours = function (command) {
+const getToggleBehaviours = function (command) {
   return Behaviour.derive([
     Toggling.config({
       toggleClass: Styles.resolve('toolbar-button-selected'),
@@ -23,14 +23,14 @@ var getToggleBehaviours = function (command) {
       }
     }),
     Receivers.format(command, function (button, status) {
-      var toggle = status ? Toggling.on : Toggling.off;
+      const toggle = status ? Toggling.on : Toggling.off;
       toggle(button);
     })
   ]);
 };
 
-var forToolbarStateCommand = function (editor, command) {
-  var extraBehaviours = getToggleBehaviours(command);
+const forToolbarStateCommand = function (editor, command) {
+  const extraBehaviours = getToggleBehaviours(command);
 
   return forToolbar(command, function () {
     editor.execCommand(command);
@@ -38,15 +38,15 @@ var forToolbarStateCommand = function (editor, command) {
 };
 
 // The action is not just executing the same command
-var forToolbarStateAction = function (editor, clazz, command, action) {
-  var extraBehaviours = getToggleBehaviours(command);
+const forToolbarStateAction = function (editor, clazz, command, action) {
+  const extraBehaviours = getToggleBehaviours(command);
   return forToolbar(clazz, action, extraBehaviours);
 };
 
-var forToolbar = function (clazz, action, extraBehaviours) {
+const forToolbar = function (clazz, action, extraBehaviours) {
   return Button.sketch({
     dom: UiDomFactory.dom('<span class="${prefix}-toolbar-button ${prefix}-icon-' + clazz + ' ${prefix}-icon"></span>'),
-    action: action,
+    action,
 
     buttonBehaviours: Merger.deepMerge(
       Behaviour.derive([
@@ -57,9 +57,9 @@ var forToolbar = function (clazz, action, extraBehaviours) {
   });
 };
 
-export default <any> {
-  forToolbar: forToolbar,
-  forToolbarCommand: forToolbarCommand,
-  forToolbarStateAction: forToolbarStateAction,
-  forToolbarStateCommand: forToolbarStateCommand
+export default {
+  forToolbar,
+  forToolbarCommand,
+  forToolbarStateAction,
+  forToolbarStateCommand
 };

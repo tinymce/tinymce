@@ -7,30 +7,30 @@ import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Bookmark from 'tinymce/themes/inlite/alien/Bookmark';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.alien.BookmarkTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.alien.BookmarkTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var toNativeRange = function (range) {
-    var domRange = document.createRange();
+  const toNativeRange = function (range) {
+    const domRange = document.createRange();
     domRange.setStart(range.start().dom(), range.soffset());
     domRange.setEnd(range.finish().dom(), range.foffset());
     return domRange;
   };
 
-  var rangeToBookmark = function (dom) {
+  const rangeToBookmark = function (dom) {
     return function (range) {
       return Bookmark.create(dom, range);
     };
   };
 
-  var bookmarkToRange = function (dom) {
+  const bookmarkToRange = function (dom) {
     return function (bookmark) {
       return Bookmark.resolve(dom, bookmark);
     };
   };
 
-  var cAssertRangeEq = function (expected) {
+  const cAssertRangeEq = function (expected) {
     return Chain.op(function (actual) {
       Assertions.assertDomEq('Not equal startContainer', expected.start(), TinyDom.fromDom(actual.startContainer));
       Assertions.assertEq('Not equal startOffset', expected.soffset(), actual.startOffset);
@@ -39,9 +39,9 @@ UnitTest.asynctest('browser.alien.BookmarkTest', function() {
     });
   };
 
-  var sTestBookmark = function (html, path) {
-    var dom = DOMUtils.DOM;
-    var elm = TinyDom.fromDom(dom.create('div', {}, html));
+  const sTestBookmark = function (html, path) {
+    const dom = DOMUtils.DOM;
+    const elm = TinyDom.fromDom(dom.create('div', {}, html));
 
     return Chain.asStep(elm, [
       Cursors.cFollowPath(Cursors.pathFrom(path)),
@@ -64,4 +64,3 @@ UnitTest.asynctest('browser.alien.BookmarkTest', function() {
     success();
   }, failure);
 });
-

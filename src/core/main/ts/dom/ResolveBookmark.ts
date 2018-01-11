@@ -16,7 +16,7 @@ import CaretPosition from '../caret/CaretPosition';
 import NodeType from './NodeType';
 import Tools from '../util/Tools';
 
-var addBogus = function (dom, node) {
+const addBogus = function (dom, node) {
   // Adds a bogus BR element for empty block elements
   if (dom.isBlock(node) && !node.innerHTML && !Env.ie) {
     node.innerHTML = '<br data-mce-bogus="1" />';
@@ -25,8 +25,8 @@ var addBogus = function (dom, node) {
   return node;
 };
 
-var resolveCaretPositionBookmark = function (dom, bookmark) {
-  var rng, pos;
+const resolveCaretPositionBookmark = function (dom, bookmark) {
+  let rng, pos;
 
   rng = dom.createRng();
   pos = CaretBookmark.resolve(dom.getRoot(), bookmark.start);
@@ -38,8 +38,10 @@ var resolveCaretPositionBookmark = function (dom, bookmark) {
   return rng;
 };
 
-var setEndPoint = function (dom, start, bookmark, rng) {
-  var point = bookmark[start ? 'start' : 'end'], i, node, offset, children, root = dom.getRoot();
+const setEndPoint = function (dom, start, bookmark, rng) {
+  const point = bookmark[start ? 'start' : 'end'];
+  let i, node, offset, children;
+  const root = dom.getRoot();
 
   if (point) {
     offset = point[0];
@@ -76,9 +78,10 @@ var setEndPoint = function (dom, start, bookmark, rng) {
   return true;
 };
 
-var restoreEndPoint = function (dom, suffix, bookmark) {
-  var marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev, keep = bookmark.keep;
-  var container, offset;
+const restoreEndPoint = function (dom, suffix, bookmark) {
+  let marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev;
+  const keep = bookmark.keep;
+  let container, offset;
 
   if (marker) {
     node = marker.parentNode;
@@ -147,12 +150,12 @@ var restoreEndPoint = function (dom, suffix, bookmark) {
   }
 };
 
-var alt = function (o1, o2) {
+const alt = function (o1, o2) {
   return o1.isSome() ? o1 : o2;
 };
 
-var resolvePaths = function (dom, bookmark) {
-  var rng = dom.createRng();
+const resolvePaths = function (dom, bookmark) {
+  const rng = dom.createRng();
 
   if (setEndPoint(dom, true, bookmark, rng) && setEndPoint(dom, false, bookmark, rng)) {
     return Option.some(rng);
@@ -161,31 +164,31 @@ var resolvePaths = function (dom, bookmark) {
   }
 };
 
-var resolveId = function (dom, bookmark) {
-  var startPos = restoreEndPoint(dom, 'start', bookmark);
-  var endPos = restoreEndPoint(dom, 'end', bookmark);
+const resolveId = function (dom, bookmark) {
+  const startPos = restoreEndPoint(dom, 'start', bookmark);
+  const endPos = restoreEndPoint(dom, 'end', bookmark);
 
   return Options.liftN([
     startPos,
     alt(endPos, startPos)
   ], function (spos, epos) {
-    var rng = dom.createRng();
+    const rng = dom.createRng();
     rng.setStart(addBogus(dom, spos.container()), spos.offset());
     rng.setEnd(addBogus(dom, epos.container()), epos.offset());
     return rng;
   });
 };
 
-var resolveIndex = function (dom, bookmark) {
+const resolveIndex = function (dom, bookmark) {
   return Option.from(dom.select(bookmark.name)[bookmark.index]).map(function (elm) {
-    var rng = dom.createRng();
+    const rng = dom.createRng();
     rng.selectNode(elm);
     return rng;
   });
 };
 
-var resolve = function (selection, bookmark) {
-  var dom = selection.dom;
+const resolve = function (selection, bookmark) {
+  const dom = selection.dom;
 
   if (bookmark) {
     if (Tools.isArray(bookmark.start)) {
@@ -205,5 +208,5 @@ var resolve = function (selection, bookmark) {
 };
 
 export default {
-  resolve: resolve
+  resolve
 };

@@ -11,8 +11,9 @@
 import Settings from '../api/Settings';
 
 // Todo: use a proper css loader here
-var loadCss = function (editor, pluginUrl, addedInlineCss, addedCss) {
-  var linkElm, contentCss = Settings.getContentCss(editor);
+const loadCss = function (editor, pluginUrl, addedInlineCss, addedCss) {
+  let linkElm;
+  const contentCss = Settings.getContentCss(editor);
 
   if (editor.inline && addedInlineCss.get()) {
     return;
@@ -39,5 +40,5 @@ var loadCss = function (editor, pluginUrl, addedInlineCss, addedCss) {
 };
 
 export default {
-  loadCss: loadCss
+  loadCss
 };

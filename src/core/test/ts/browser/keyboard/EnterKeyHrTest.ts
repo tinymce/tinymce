@@ -2,22 +2,21 @@ import { GeneralSteps } from '@ephox/agar';
 import { Keys } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { TinyActions } from '@ephox/mcagar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyActions = TinyActions(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -79,4 +78,3 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

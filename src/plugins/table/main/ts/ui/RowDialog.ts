@@ -19,12 +19,12 @@ import Helpers from './Helpers';
  * @private
  */
 
-var extractDataFromElement = function (editor, elm) {
-  var dom = editor.dom;
-  var data: any = {
+const extractDataFromElement = function (editor, elm) {
+  const dom = editor.dom;
+  const data: any = {
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
     scope: dom.getAttrib(elm, 'scope'),
-    'class': dom.getAttrib(elm, 'class')
+    class: dom.getAttrib(elm, 'class')
   };
 
   data.type = elm.parentNode.nodeName.toLowerCase();
@@ -42,10 +42,10 @@ var extractDataFromElement = function (editor, elm) {
   return data;
 };
 
-var switchRowType = function (dom, rowElm, toType) {
-  var tableElm = dom.getParent(rowElm, 'table');
-  var oldParentElm = rowElm.parentNode;
-  var parentElm = dom.select(toType, tableElm)[0];
+const switchRowType = function (dom, rowElm, toType) {
+  const tableElm = dom.getParent(rowElm, 'table');
+  const oldParentElm = rowElm.parentNode;
+  let parentElm = dom.select(toType, tableElm)[0];
 
   if (!parentElm) {
     parentElm = dom.create(toType);
@@ -69,8 +69,8 @@ var switchRowType = function (dom, rowElm, toType) {
 };
 
 function onSubmitRowForm(editor, rows, evt) {
-  var dom = editor.dom;
-  var data;
+  const dom = editor.dom;
+  let data;
 
   function setAttrib(elm, name, value) {
     if (value) {
@@ -91,7 +91,7 @@ function onSubmitRowForm(editor, rows, evt) {
     Tools.each(rows, function (rowElm) {
       setAttrib(rowElm, 'scope', data.scope);
       setAttrib(rowElm, 'style', data.style);
-      setAttrib(rowElm, 'class', data['class']);
+      setAttrib(rowElm, 'class', data.class);
       setStyle(rowElm, 'height', Util.addSizeSuffix(data.height));
 
       if (data.type !== rowElm.parentNode.nodeName.toLowerCase()) {
@@ -112,15 +112,18 @@ function onSubmitRowForm(editor, rows, evt) {
   });
 }
 
-var open = function (editor) {
-  var dom = editor.dom, tableElm, cellElm, rowElm, classListCtrl, data, rows = [], generalRowForm;
+const open = function (editor) {
+  const dom = editor.dom;
+  let tableElm, cellElm, rowElm, classListCtrl, data;
+  const rows = [];
+  let generalRowForm;
 
   tableElm = editor.dom.getParent(editor.selection.getStart(), 'table');
   cellElm = editor.dom.getParent(editor.selection.getStart(), 'td,th');
 
   Tools.each(tableElm.rows, function (row) {
     Tools.each(row.cells, function (cell) {
-      if (dom.getAttrib(cell, 'data-mce-selected') || cell == cellElm) {
+      if (dom.getAttrib(cell, 'data-mce-selected') || cell === cellElm) {
         rows.push(row);
         return false;
       }
@@ -137,7 +140,7 @@ var open = function (editor) {
     data = {
       height: '',
       scope: '',
-      'class': '',
+      class: '',
       align: '',
       type: rowElm.parentNode.nodeName.toLowerCase()
     };
@@ -203,8 +206,8 @@ var open = function (editor) {
 
   if (editor.settings.table_row_advtab !== false) {
     editor.windowManager.open({
-      title: "Row properties",
-      data: data,
+      title: 'Row properties',
+      data,
       bodyType: 'tabpanel',
       body: [
         {
@@ -218,8 +221,8 @@ var open = function (editor) {
     });
   } else {
     editor.windowManager.open({
-      title: "Row properties",
-      data: data,
+      title: 'Row properties',
+      data,
       body: generalRowForm,
       onsubmit: Fun.curry(onSubmitRowForm, editor, rows)
     });
@@ -227,5 +230,5 @@ var open = function (editor) {
 };
 
 export default {
-  open: open
+  open
 };

@@ -14,28 +14,28 @@ import { SelectorFilter } from '@ephox/sugar';
 import ElementType from '../dom/ElementType';
 import MultiRange from './MultiRange';
 
-var getCellsFromRanges = function (ranges) {
+const getCellsFromRanges = function (ranges) {
   return Arr.filter(MultiRange.getSelectedNodes(ranges), ElementType.isTableCell);
 };
 
-var getCellsFromElement = function (elm) {
-  var selectedCells = SelectorFilter.descendants(elm, 'td[data-mce-selected],th[data-mce-selected]');
+const getCellsFromElement = function (elm) {
+  const selectedCells = SelectorFilter.descendants(elm, 'td[data-mce-selected],th[data-mce-selected]');
   return selectedCells;
 };
 
-var getCellsFromElementOrRanges = function (ranges, element) {
-  var selectedCells = getCellsFromElement(element);
-  var rangeCells = getCellsFromRanges(ranges);
+const getCellsFromElementOrRanges = function (ranges, element) {
+  const selectedCells = getCellsFromElement(element);
+  const rangeCells = getCellsFromRanges(ranges);
   return selectedCells.length > 0 ? selectedCells : rangeCells;
 };
 
-var getCellsFromEditor = function (editor) {
+const getCellsFromEditor = function (editor) {
   return getCellsFromElementOrRanges(MultiRange.getRanges(editor.selection.getSel()), Element.fromDom(editor.getBody()));
 };
 
 export default {
-  getCellsFromRanges: getCellsFromRanges,
-  getCellsFromElement: getCellsFromElement,
-  getCellsFromElementOrRanges: getCellsFromElementOrRanges,
-  getCellsFromEditor: getCellsFromEditor
+  getCellsFromRanges,
+  getCellsFromElement,
+  getCellsFromElementOrRanges,
+  getCellsFromEditor
 };

@@ -10,18 +10,18 @@
 
 import { Adt } from '@ephox/katamari';
 
-var type = Adt.generate([
+const type = Adt.generate([
   { none: [] },
   { multiple: [ 'elements' ] },
   { single: [ 'selection' ] }
 ]);
 
-var cata = function (subject, onNone, onMultiple, onSingle) {
+const cata = function (subject, onNone, onMultiple, onSingle) {
   return subject.fold(onNone, onMultiple, onSingle);
 };
 
 export default {
-  cata: cata,
+  cata,
   none: type.none,
   multiple: type.multiple,
   single: type.single

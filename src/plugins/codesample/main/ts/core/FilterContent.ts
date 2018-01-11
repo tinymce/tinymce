@@ -11,14 +11,14 @@
 import Prism from './Prism';
 import Utils from '../util/Utils';
 
-var setup = function (editor) {
-  var $ = editor.$;
+const setup = function (editor) {
+  const $ = editor.$;
 
   editor.on('PreProcess', function (e) {
     $('pre[contenteditable=false]', e.node).
       filter(Utils.trimArg(Utils.isCodeSample)).
       each(function (idx, elm) {
-        var $elm = $(elm), code = elm.textContent;
+        const $elm = $(elm), code = elm.textContent;
 
         $elm.attr('class', $.trim($elm.attr('class')));
         $elm.removeAttr('contentEditable');
@@ -31,8 +31,8 @@ var setup = function (editor) {
   });
 
   editor.on('SetContent', function () {
-    var unprocessedCodeSamples = $('pre').filter(Utils.trimArg(Utils.isCodeSample)).filter(function (idx, elm) {
-      return elm.contentEditable !== "false";
+    const unprocessedCodeSamples = $('pre').filter(Utils.trimArg(Utils.isCodeSample)).filter(function (idx, elm) {
+      return elm.contentEditable !== 'false';
     });
 
     if (unprocessedCodeSamples.length) {
@@ -53,5 +53,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

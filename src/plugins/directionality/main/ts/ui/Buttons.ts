@@ -10,8 +10,8 @@
 
 import Tools from 'tinymce/core/util/Tools';
 
-var generateSelector = function (dir) {
-  var selector = [];
+const generateSelector = function (dir) {
+  const selector = [];
 
   Tools.each('h1 h2 h3 h4 h5 h6 div p'.split(' '), function (name) {
     selector.push(name + '[dir=' + dir + ']');
@@ -20,7 +20,7 @@ var generateSelector = function (dir) {
   return selector.join(',');
 };
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addButton('ltr', {
     title: 'Left to right',
     cmd: 'mceDirectionLTR',
@@ -35,5 +35,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

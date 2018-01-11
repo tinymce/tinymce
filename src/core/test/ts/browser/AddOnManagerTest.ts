@@ -5,15 +5,15 @@ import ScriptLoader from 'tinymce/core/dom/ScriptLoader';
 import PluginManager from 'tinymce/core/PluginManager';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var languagePackUrl;
+UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  let languagePackUrl;
 
-  var patch = function (proto, name, patchFunc) {
-    var originalFunc = proto[name];
-    var originalFuncs = proto.__originalFuncs;
+  const patch = function (proto, name, patchFunc) {
+    let originalFunc = proto[name];
+    let originalFuncs = proto.__originalFuncs;
 
     if (!originalFuncs) {
       proto.__originalFuncs = originalFuncs = {};
@@ -26,14 +26,14 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', function() {
     }
 
     proto[name] = function () {
-      var args = Array.prototype.slice.call(arguments);
+      const args = Array.prototype.slice.call(arguments);
       args.unshift(originalFunc);
       return patchFunc.apply(this, args);
     };
   };
 
-  var unpatch = function (proto, name?) {
-    var originalFuncs = proto.__originalFuncs;
+  const unpatch = function (proto, name?) {
+    const originalFuncs = proto.__originalFuncs;
 
     if (!originalFuncs) {
       return;
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', function() {
       proto[name] = originalFuncs[name];
       delete originalFuncs[name];
     } else {
-      for (var key in originalFuncs) {
+      for (const key in originalFuncs) {
         proto[key] = originalFuncs[key];
       }
 
@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', function() {
     }
   };
 
-  var getLanguagePackUrl = function (language, languages?) {
+  const getLanguagePackUrl = function (language, languages?) {
     languagePackUrl = null;
     AddOnManager.language = language;
     PluginManager.requireLangPack('plugin', languages);
@@ -86,4 +86,3 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', function() {
     unpatch(ScriptLoader.ScriptLoader);
   }, failure);
 });
-

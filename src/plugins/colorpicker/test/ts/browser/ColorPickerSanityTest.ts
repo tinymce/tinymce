@@ -1,5 +1,4 @@
 import { Pipeline } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
 import TextColorPlugin from 'tinymce/plugins/textcolor/Plugin';
@@ -7,16 +6,16 @@ import ColorPickerPlugin from 'tinymce/plugins/colorpicker/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.colorpicker.ColorPickerSanityTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.colorpicker.ColorPickerSanityTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   TextColorPlugin();
   ColorPickerPlugin();
   ModernTheme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       tinyUi.sClickOnToolbar('click forecolor arrow', 'div[aria-label="Text color"] button.mce-open'),
@@ -34,4 +33,3 @@ UnitTest.asynctest('browser.tinymce.plugins.colorpicker.ColorPickerSanityTest', 
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

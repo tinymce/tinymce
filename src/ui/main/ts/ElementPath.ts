@@ -17,21 +17,19 @@ import Path from './Path';
  * @extends tinymce.ui.Path
  */
 
-
-
-export default <any> Path.extend({
+export default Path.extend({
   /**
    * Post render method. Called after the control has been rendered to the target.
    *
    * @method postRender
    * @return {tinymce.ui.ElementPath} Current combobox instance.
    */
-  postRender: function () {
-    var self = this, editor = self.settings.editor;
+  postRender () {
+    const self = this, editor = self.settings.editor;
 
     function isHidden(elm) {
       if (elm.nodeType === 1) {
-        if (elm.nodeName == "BR" || !!elm.getAttribute('data-mce-bogus')) {
+        if (elm.nodeName === 'BR' || !!elm.getAttribute('data-mce-bogus')) {
           return true;
         }
 
@@ -51,11 +49,13 @@ export default <any> Path.extend({
       });
 
       editor.on('nodeChange', function (e) {
-        var outParents = [], parents = e.parents, i = parents.length;
+        const outParents = [];
+        const parents = e.parents;
+        let i = parents.length;
 
         while (i--) {
-          if (parents[i].nodeType == 1 && !isHidden(parents[i])) {
-            var args = editor.fire('ResolveName', {
+          if (parents[i].nodeType === 1 && !isHidden(parents[i])) {
+            const args = editor.fire('ResolveName', {
               name: parents[i].nodeName.toLowerCase(),
               target: parents[i]
             });

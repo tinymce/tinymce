@@ -5,16 +5,16 @@ import HtmlUtils from '../module/test/HtmlUtils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var pressArrowKey = function (editor) {
-    var dom = editor.dom, target = editor.selection.getNode();
-    var evt = { keyCode: 37 };
+  const pressArrowKey = function (editor) {
+    const dom = editor.dom, target = editor.selection.getNode();
+    const evt = { keyCode: 37 };
 
     dom.fire(target, 'keydown', evt);
     dom.fire(target, 'keypress', evt);
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', function() {
   });
 
   suite.test('Wrap single root text node in P with attrs', function (editor) {
-    editor.settings.forced_root_block_attrs = { "class": "class1" };
+    editor.settings.forced_root_block_attrs = { class: 'class1' };
     editor.getBody().innerHTML = 'abcd';
     LegacyUnit.setSelection(editor, 'body', 2);
     pressArrowKey(editor);
@@ -67,14 +67,14 @@ UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', function() {
   });
 
   suite.test('Remove empty root text nodes', function (editor) {
-    var body = editor.getBody();
+    const body = editor.getBody();
 
     editor.settings.forced_root_block = 'div';
     editor.getBody().innerHTML = 'abcd<div>abcd</div>';
     body.insertBefore(editor.getDoc().createTextNode(''), body.firstChild);
     body.appendChild(editor.getDoc().createTextNode(''));
 
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.getBody().childNodes[1], 1);
     rng.setEnd(editor.getBody().childNodes[1], 1);
     editor.selection.setRng(rng);
@@ -100,4 +100,3 @@ UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

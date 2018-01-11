@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var setContent = function (editor, html) {
+const setContent = function (editor, html) {
   // We get a lovely "Wrong document" error in IE 11 if we
   // don't move the focus to the editor before creating an undo
   // transation since it tries to make a bookmark for the current selection
@@ -22,11 +22,11 @@ var setContent = function (editor, html) {
   editor.nodeChanged();
 };
 
-var getContent = function (editor) {
+const getContent = function (editor) {
   return editor.getContent({ source_view: true });
 };
 
 export default {
-  setContent: setContent,
-  getContent: getContent
+  setContent,
+  getContent
 };

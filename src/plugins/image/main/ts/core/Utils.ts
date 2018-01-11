@@ -19,24 +19,24 @@ import Settings from '../api/Settings';
  * @private
  */
 
-var parseIntAndGetMax = function (val1, val2) {
+const parseIntAndGetMax = function (val1, val2) {
   return Math.max(parseInt(val1, 10), parseInt(val2, 10));
 };
 
-var getImageSize = function (url, callback) {
-  var img = document.createElement('img');
+const getImageSize = function (url, callback) {
+  const img = document.createElement('img');
 
   function done(width, height) {
     if (img.parentNode) {
       img.parentNode.removeChild(img);
     }
 
-    callback({ width: width, height: height });
+    callback({ width, height });
   }
 
   img.onload = function () {
-    var width = parseIntAndGetMax(img.width, img.clientWidth);
-    var height = parseIntAndGetMax(img.height, img.clientHeight);
+    const width = parseIntAndGetMax(img.width, img.clientWidth);
+    const height = parseIntAndGetMax(img.height, img.clientHeight);
     done(width, height);
   };
 
@@ -44,7 +44,7 @@ var getImageSize = function (url, callback) {
     done(0, 0);
   };
 
-  var style = img.style;
+  const style = img.style;
   style.visibility = 'hidden';
   style.position = 'fixed';
   style.bottom = style.left = '0px';
@@ -54,13 +54,12 @@ var getImageSize = function (url, callback) {
   img.src = url;
 };
 
-
-var buildListItems = function (inputList, itemCallback, startItems?) {
+const buildListItems = function (inputList, itemCallback, startItems?) {
   function appendItems(values, output?) {
     output = output || [];
 
     Tools.each(values, function (item) {
-      var menuItem: any = { text: item.text || item.title };
+      const menuItem: any = { text: item.text || item.title };
 
       if (item.menu) {
         menuItem.menu = appendItems(item.menu);
@@ -78,45 +77,45 @@ var buildListItems = function (inputList, itemCallback, startItems?) {
   return appendItems(inputList, startItems || []);
 };
 
-var removePixelSuffix = function (value) {
+const removePixelSuffix = function (value) {
   if (value) {
     value = value.replace(/px$/, '');
   }
   return value;
 };
 
-var addPixelSuffix = function (value) {
+const addPixelSuffix = function (value) {
   if (value.length > 0 && /^[0-9]+$/.test(value)) {
     value += 'px';
   }
   return value;
 };
 
-var mergeMargins = function (css) {
+const mergeMargins = function (css) {
   if (css.margin) {
 
-    var splitMargin = css.margin.split(" ");
+    const splitMargin = css.margin.split(' ');
 
     switch (splitMargin.length) {
-      case 1: //margin: toprightbottomleft;
+      case 1: // margin: toprightbottomleft;
         css['margin-top'] = css['margin-top'] || splitMargin[0];
         css['margin-right'] = css['margin-right'] || splitMargin[0];
         css['margin-bottom'] = css['margin-bottom'] || splitMargin[0];
         css['margin-left'] = css['margin-left'] || splitMargin[0];
         break;
-      case 2: //margin: topbottom rightleft;
+      case 2: // margin: topbottom rightleft;
         css['margin-top'] = css['margin-top'] || splitMargin[0];
         css['margin-right'] = css['margin-right'] || splitMargin[1];
         css['margin-bottom'] = css['margin-bottom'] || splitMargin[0];
         css['margin-left'] = css['margin-left'] || splitMargin[1];
         break;
-      case 3: //margin: top rightleft bottom;
+      case 3: // margin: top rightleft bottom;
         css['margin-top'] = css['margin-top'] || splitMargin[0];
         css['margin-right'] = css['margin-right'] || splitMargin[1];
         css['margin-bottom'] = css['margin-bottom'] || splitMargin[2];
         css['margin-left'] = css['margin-left'] || splitMargin[1];
         break;
-      case 4: //margin: top right bottom left;
+      case 4: // margin: top right bottom left;
         css['margin-top'] = css['margin-top'] || splitMargin[0];
         css['margin-right'] = css['margin-right'] || splitMargin[1];
         css['margin-bottom'] = css['margin-bottom'] || splitMargin[2];
@@ -127,24 +126,24 @@ var mergeMargins = function (css) {
   return css;
 };
 
-var createImageList = function (editor, callback) {
-  var imageList = Settings.getImageList(editor);
+const createImageList = function (editor, callback) {
+  const imageList = Settings.getImageList(editor);
 
-  if (typeof imageList === "string") {
+  if (typeof imageList === 'string') {
     XHR.send({
       url: imageList,
-      success: function (text) {
+      success (text) {
         callback(JSON.parse(text));
       }
     });
-  } else if (typeof imageList === "function") {
+  } else if (typeof imageList === 'function') {
     imageList(callback);
   } else {
     callback(imageList);
   }
 };
 
-var waitLoadImage = function (editor, data, imgElm) {
+const waitLoadImage = function (editor, data, imgElm) {
   function selectImage() {
     imgElm.onload = imgElm.onerror = null;
 
@@ -168,9 +167,9 @@ var waitLoadImage = function (editor, data, imgElm) {
   imgElm.onerror = selectImage;
 };
 
-var blobToDataUri = function (blob) {
+const blobToDataUri = function (blob) {
   return new Promise(function (resolve, reject) {
-    var reader = new FileReader();
+    const reader = new FileReader();
     reader.onload = function () {
       resolve(reader.result);
     };
@@ -182,12 +181,12 @@ var blobToDataUri = function (blob) {
 };
 
 export default {
-  getImageSize: getImageSize,
-  buildListItems: buildListItems,
-  removePixelSuffix: removePixelSuffix,
-  addPixelSuffix: addPixelSuffix,
-  mergeMargins: mergeMargins,
-  createImageList: createImageList,
-  waitLoadImage: waitLoadImage,
-  blobToDataUri: blobToDataUri
+  getImageSize,
+  buildListItems,
+  removePixelSuffix,
+  addPixelSuffix,
+  mergeMargins,
+  createImageList,
+  waitLoadImage,
+  blobToDataUri
 };

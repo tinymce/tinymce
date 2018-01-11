@@ -15,10 +15,10 @@ declare let tinymce: any;
 PageBreakPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "pagebreak code",
-  toolbar: "pagebreak code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'pagebreak code',
+  toolbar: 'pagebreak code',
   height: 600
 });

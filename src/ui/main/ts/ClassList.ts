@@ -17,8 +17,6 @@ import Tools from 'tinymce/core/util/Tools';
  * @class tinymce.ui.ClassList
  */
 
-"use strict";
-
 function noop() {
 }
 
@@ -44,7 +42,7 @@ Tools.extend(ClassList.prototype, {
    * @param {String} cls Class to be added.
    * @return {tinymce.ui.ClassList} Current class list instance.
    */
-  add: function (cls) {
+  add (cls) {
     if (cls && !this.contains(cls)) {
       this.cls._map[cls] = true;
       this.cls.push(cls);
@@ -61,9 +59,10 @@ Tools.extend(ClassList.prototype, {
    * @param {String} cls Class to be removed.
    * @return {tinymce.ui.ClassList} Current class list instance.
    */
-  remove: function (cls) {
+  remove (cls) {
     if (this.contains(cls)) {
-      for (var i = 0; i < this.cls.length; i++) {
+      let i;
+      for (i = 0; i < this.cls.length; i++) {
         if (this.cls[i] === cls) {
           break;
         }
@@ -85,8 +84,8 @@ Tools.extend(ClassList.prototype, {
    * @param {Boolean} state Optional state if it should be added/removed.
    * @return {tinymce.ui.ClassList} Current class list instance.
    */
-  toggle: function (cls, state) {
-    var curState = this.contains(cls);
+  toggle (cls, state) {
+    const curState = this.contains(cls);
 
     if (curState !== state) {
       if (curState) {
@@ -108,7 +107,7 @@ Tools.extend(ClassList.prototype, {
    * @param {String} cls Class to look for.
    * @return {Boolean} true/false if the class exists or not.
    */
-  contains: function (cls) {
+  contains (cls) {
     return !!this.cls._map[cls];
   },
 
@@ -119,7 +118,7 @@ Tools.extend(ClassList.prototype, {
    * @return {String} Space separated list of classes.
    */
 
-  _change: function () {
+  _change () {
     delete this.clsValue;
     this.onchange.call(this);
   }
@@ -127,14 +126,14 @@ Tools.extend(ClassList.prototype, {
 
 // IE 8 compatibility
 ClassList.prototype.toString = function () {
-  var value;
+  let value;
 
   if (this.clsValue) {
     return this.clsValue;
   }
 
   value = '';
-  for (var i = 0; i < this.cls.length; i++) {
+  for (let i = 0; i < this.cls.length; i++) {
     if (i > 0) {
       value += ' ';
     }
@@ -145,4 +144,4 @@ ClassList.prototype.toString = function () {
   return value;
 };
 
-export default <any> ClassList;
+export default ClassList;

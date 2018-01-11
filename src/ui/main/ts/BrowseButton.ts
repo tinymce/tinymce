@@ -21,9 +21,7 @@ import $ from 'tinymce/core/dom/DomQuery';
  * @extends tinymce.ui.Widget
  */
 
-
-
-export default <any> Button.extend({
+export default Button.extend({
   /**
    * Constructs a instance with the specified settings.
    *
@@ -33,11 +31,11 @@ export default <any> Button.extend({
    * @setting {Number} maxLength Max length for the dropzone.
    * @setting {Number} size Size of the dropzone in characters.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     settings = Tools.extend({
-      text: "Browse...",
+      text: 'Browse...',
       multiple: false,
       accept: null // by default accept any files
     }, settings);
@@ -56,10 +54,10 @@ export default <any> Button.extend({
    *
    * @method postRender
    */
-  postRender: function () {
-    var self = this;
+  postRender () {
+    const self = this;
 
-    var input = DomUtils.create('input', {
+    const input = DomUtils.create('input', {
       type: 'file',
       id: self._id + '-browse',
       accept: self.settings.accept
@@ -68,7 +66,7 @@ export default <any> Button.extend({
     self._super();
 
     $(input).on('change', function (e) {
-      var files = e.target.files;
+      const files = e.target.files;
 
       self.value = function () {
         if (!files.length) {
@@ -102,8 +100,7 @@ export default <any> Button.extend({
     self.getEl().appendChild(input);
   },
 
-
-  remove: function () {
+  remove () {
     $(this.getEl('button')).off();
     $(this.getEl('input')).off();
 

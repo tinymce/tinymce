@@ -7,15 +7,15 @@ import Tools from 'tinymce/core/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var pressEnter = function (editor, evt?) {
-    var dom = editor.dom, target = editor.selection.getNode();
+  const pressEnter = function (editor, evt?) {
+    const dom = editor.dom, target = editor.selection.getNode();
 
     evt = Tools.extend({ keyCode: 13, shiftKey: false }, evt);
 
@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p><em>a</em></p><p>b</p>');
-    var rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng(true);
     LegacyUnit.equal(rng.startContainer.nodeValue, 'b');
   });
 
@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p>abc</p><p><img src="about:blank" /></p>');
-    var rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng(true);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'IMG');
   });
@@ -79,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p><img src="about:blank" /></p><p><img src="about:blank" /></p>');
-    var rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng(true);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'IMG');
   });
@@ -96,7 +96,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p>abc</p><p><input type="text" /></p>');
-    var rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng(true);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'INPUT');
   });
@@ -106,7 +106,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p><input type="text" /></p><p><input type="text" /></p>');
-    var rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng(true);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'INPUT');
   });
@@ -375,7 +375,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
   });
 
   suite.test('Enter at end of H1 with forced_root_block_attrs', function (editor) {
-    editor.settings.forced_root_block_attrs = { "class": "class1" };
+    editor.settings.forced_root_block_attrs = { class: 'class1' };
     editor.getBody().innerHTML = '<h1>a</h1>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     pressEnter(editor);
@@ -517,7 +517,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
   suite.test('Shift+Enter in body with forced_root_block set to false', function (editor) {
     editor.settings.forced_root_block = false;
     editor.getBody().innerHTML = 'abcd';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild, 2);
     rng.setEnd(editor.getBody().firstChild, 2);
     editor.selection.setRng(rng);
@@ -545,7 +545,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
   });
 
   suite.test(
-    "keep_styles=false: P should not pass its styles and classes to the new P that is cloned from it when enter is pressed", function (editor) {
+    'keep_styles=false: P should not pass its styles and classes to the new P that is cloned from it when enter is pressed', function (editor) {
       editor.settings.keep_styles = false;
       editor.getBody().innerHTML = '<p class="red" style="color: #ff0000;"><span style="font-size: 13px;">X</span></p>';
       LegacyUnit.setSelection(editor, 'span', 1);
@@ -573,7 +573,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p>a</p><p><br />b</p>');
 
-    var rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng(true);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'BR');
     editor.settings.forced_root_block = 'p';
@@ -584,7 +584,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
   if (!Env.ie || Env.ie > 8) {
     suite.test('Enter before BR between DIVs', function (editor) {
       editor.getBody().innerHTML = '<div>a<span>b</span>c</div><br /><div>d</div>';
-      var rng = editor.dom.createRng();
+      const rng = editor.dom.createRng();
       rng.setStartBefore(editor.dom.select('br')[0]);
       rng.setEndBefore(editor.dom.select('br')[0]);
       editor.selection.setRng(rng);
@@ -595,7 +595,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
 
   // Only test these on modern browsers
   suite.test('Enter behind table element', function (editor) {
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
 
     editor.getBody().innerHTML = '<table><tbody><td>x</td></tbody></table>';
     rng.setStartAfter(editor.getBody().lastChild);
@@ -607,7 +607,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
   });
 
   suite.test('Enter before table element', function (editor) {
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
 
     editor.getBody().innerHTML = '<table><tbody><td>x</td></tbody></table>';
     rng.setStartBefore(editor.getBody().lastChild);
@@ -619,7 +619,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
   });
 
   suite.test('Enter behind table followed by a p', function (editor) {
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
 
     editor.getBody().innerHTML = '<table><tbody><td>x</td></tbody></table><p>x</p>';
     rng.setStartAfter(editor.getBody().firstChild);
@@ -631,7 +631,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
   });
 
   suite.test('Enter before table element preceded by a p', function (editor) {
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
 
     editor.getBody().innerHTML = '<p>x</p><table><tbody><td>x</td></tbody></table>';
     rng.setStartBefore(editor.getBody().lastChild);
@@ -643,7 +643,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
   });
 
   suite.test('Enter twice before table element', function (editor) {
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
 
     editor.getBody().innerHTML = '<table><tbody><tr><td>x</td></tr></tbody></table>';
     rng.setStartBefore(editor.getBody().lastChild);
@@ -661,7 +661,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p><b>abc</b></p><p>\u00a0</p>');
 
-    var rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng(true);
     LegacyUnit.equal(rng.startContainer.nodeName, 'B');
     LegacyUnit.equal(rng.startContainer.data !== ' ', true);
   });
@@ -699,4 +699,3 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

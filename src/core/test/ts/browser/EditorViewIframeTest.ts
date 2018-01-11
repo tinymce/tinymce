@@ -12,31 +12,31 @@ import EditorView from 'tinymce/core/EditorView';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var isPhantomJs = function () {
+  const isPhantomJs = function () {
     return /PhantomJS/.test(window.navigator.userAgent);
   };
 
-  var getIframeClientRect = function (editor) {
+  const getIframeClientRect = function (editor) {
     return SelectorFind.descendant(Element.fromDom(editor.getContentAreaContainer()), 'iframe').map(function (elm) {
       return elm.dom().getBoundingClientRect();
     }).getOrDie();
   };
 
-  var sSetBodyStyles = function (editor, css) {
+  const sSetBodyStyles = function (editor, css) {
     return Step.sync(function () {
       Css.setAll(Element.fromDom(editor.getBody()), css);
     });
   };
 
-  var sTestIsXYInContentArea = function (editor) {
+  const sTestIsXYInContentArea = function (editor) {
     return Step.sync(function () {
-      var rect = getIframeClientRect(editor);
+      const rect = getIframeClientRect(editor);
 
       Assertions.assertEq(
         'Should be inside the area since the scrollbars are excluded',
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, isPhantomJs() ? [] : [
       Logger.t('isXYInContentArea without borders, margin', GeneralSteps.sequence([
@@ -72,4 +72,3 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

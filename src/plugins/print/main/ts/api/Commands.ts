@@ -8,12 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addCommand('mcePrint', function () {
     editor.getWin().print();
   });
 };
 
 export default {
-  register: register
+  register
 };

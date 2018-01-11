@@ -10,7 +10,7 @@
 
 import Anchor from '../core/Anchor';
 
-var insertAnchor = function (editor, newId) {
+const insertAnchor = function (editor, newId) {
   if (!Anchor.isValidId(newId)) {
     editor.windowManager.alert(
       'Id should start with a letter, followed only by letters, numbers, dashes, dots, colons or underscores.'
@@ -22,14 +22,14 @@ var insertAnchor = function (editor, newId) {
   }
 };
 
-var open = function (editor) {
-  var currentId = Anchor.getId(editor);
+const open = function (editor) {
+  const currentId = Anchor.getId(editor);
 
   editor.windowManager.open({
     title: 'Anchor',
     body: { type: 'textbox', name: 'id', size: 40, label: 'Id', value: currentId },
-    onsubmit: function (e) {
-      var newId = e.data.id;
+    onsubmit (e) {
+      const newId = e.data.id;
 
       if (insertAnchor(editor, newId)) {
         e.preventDefault();
@@ -39,5 +39,5 @@ var open = function (editor) {
 };
 
 export default {
-  open: open
+  open
 };

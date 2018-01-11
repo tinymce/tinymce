@@ -12,7 +12,6 @@ import Env from 'tinymce/core/Env';
 import Delay from 'tinymce/core/util/Delay';
 import Tools from 'tinymce/core/util/Tools';
 import FloatPanel from './FloatPanel';
-import MenuItem from './MenuItem';
 import Throbber from './Throbber';
 
 /**
@@ -23,9 +22,7 @@ import Throbber from './Throbber';
  * @extends tinymce.ui.FloatPanel
  */
 
-"use strict";
-
-export default <any> FloatPanel.extend({
+export default FloatPanel.extend({
   Defaults: {
     defaultType: 'menuitem',
     border: 1,
@@ -41,8 +38,8 @@ export default <any> FloatPanel.extend({
    * @constructor
    * @param {Object} settings Name/value object with settings.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     settings.autohide = true;
     settings.constrainToViewport = true;
@@ -53,7 +50,8 @@ export default <any> FloatPanel.extend({
     }
 
     if (settings.itemDefaults) {
-      var items = settings.items, i = items.length;
+      const items = settings.items;
+      let i = items.length;
 
       while (i--) {
         items[i] = Tools.extend({}, settings.itemDefaults, items[i]);
@@ -74,7 +72,7 @@ export default <any> FloatPanel.extend({
    *
    * @method repaint
    */
-  repaint: function () {
+  repaint () {
     this.classes.toggle('menu-align', true);
 
     this._super();
@@ -90,8 +88,8 @@ export default <any> FloatPanel.extend({
    *
    * @method cancel
    */
-  cancel: function () {
-    var self = this;
+  cancel () {
+    const self = this;
 
     self.hideAll();
     self.fire('select');
@@ -102,8 +100,9 @@ export default <any> FloatPanel.extend({
    *
    * @method load
    */
-  load: function () {
-    var self = this, time, factory;
+  load () {
+    const self = this;
+    let time, factory;
 
     function hideThrobber() {
       if (self.throbber) {
@@ -163,8 +162,8 @@ export default <any> FloatPanel.extend({
    *
    * @method hideAll
    */
-  hideAll: function () {
-    var self = this;
+  hideAll () {
+    const self = this;
 
     this.find('menuitem').exec('hideMenu');
 
@@ -176,11 +175,11 @@ export default <any> FloatPanel.extend({
    *
    * @method preRender
    */
-  preRender: function () {
-    var self = this;
+  preRender () {
+    const self = this;
 
     self.items().each(function (ctrl) {
-      var settings = ctrl.settings;
+      const settings = ctrl.settings;
 
       if (settings.icon || settings.image || settings.selectable) {
         self._hasIcons = true;

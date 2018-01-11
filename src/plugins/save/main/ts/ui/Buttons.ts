@@ -10,9 +10,9 @@
 
 import Settings from '../api/Settings';
 
-var stateToggle = function (editor) {
+const stateToggle = function (editor) {
   return function (e) {
-    var ctrl = e.control;
+    const ctrl = e.control;
 
     editor.on('nodeChange dirty', function () {
       ctrl.disabled(Settings.enableWhenDirty(editor) && !editor.isDirty());
@@ -20,7 +20,7 @@ var stateToggle = function (editor) {
   };
 };
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addButton('save', {
     icon: 'save',
     text: 'Save',
@@ -41,5 +41,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

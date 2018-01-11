@@ -3,10 +3,10 @@ import { Pipeline } from '@ephox/agar';
 import Json from 'tinymce/core/util/JSON';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.util.JsonTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.util.JsonTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   suite.test('serialize', function () {
     LegacyUnit.equal(
@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonTest', function() {
         float1: 3.14,
         int1: 123,
         null1: null,
-        obj1: { key1: "val1", key2: "val2" }, str1: '\"\'abc\u00C5123\\'
+        obj1: { key1: 'val1', key2: 'val2' }, str1: '\"\'abc\u00C5123\\'
       }
       ),
       '{"arr1":[1,2,3,[1,2,3]],"bool1":true,"float1":3.14,"int1":123,"null1":null,' +
@@ -30,11 +30,11 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonTest', function() {
         float1: 3.14,
         int1: 123,
         null1: null,
-        obj1: { key1: "val1", key2: "val2" }, str1: '\"\'abc\u00C5123'
-      }, "'"
+        obj1: { key1: 'val1', key2: 'val2' }, str1: '\"\'abc\u00C5123'
+      }, '\''
       ),
-      "{'arr1':[1,2,3,[1,2,3]],'bool1':true,'float1':3.14,'int1':123,'null1':null," +
-      "'obj1':{'key1':'val1','key2':'val2'},'str1':'\\\"\\'abc\\u00c5123'}"
+      '{\'arr1\':[1,2,3,[1,2,3]],\'bool1\':true,\'float1\':3.14,\'int1\':123,\'null1\':null,' +
+      '\'obj1\':{\'key1\':\'val1\',\'key2\':\'val2\'},\'str1\':\'\\"\\\'abc\\u00c5123\'}'
     );
   });
 
@@ -50,4 +50,3 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonTest', function() {
     success();
   }, failure);
 });
-

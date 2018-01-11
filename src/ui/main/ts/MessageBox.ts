@@ -17,27 +17,25 @@ import Window from './Window';
  * @extends tinymce.ui.FloatPanel
  */
 
-"use strict";
-
-var MessageBox = Window.extend({
+const MessageBox = Window.extend({
   /**
    * Constructs a instance with the specified settings.
    *
    * @constructor
    * @param {Object} settings Name/value object with settings.
    */
-  init: function (settings) {
+  init (settings) {
     settings = {
       border: 1,
       padding: 20,
       layout: 'flex',
-      pack: "center",
-      align: "center",
+      pack: 'center',
+      align: 'center',
       containerCls: 'panel',
       autoScroll: true,
-      buttons: { type: "button", text: "Ok", action: "ok" },
+      buttons: { type: 'button', text: 'Ok', action: 'ok' },
       items: {
-        type: "label",
+        type: 'label',
         multiline: true,
         maxWidth: 500,
         maxHeight: 200
@@ -91,15 +89,16 @@ var MessageBox = Window.extend({
      * @method msgBox
      * @param {Object} settings Name/value object with settings.
      */
-    msgBox: function (settings) {
-      var buttons, callback = settings.callback || function () { };
+    msgBox (settings) {
+      let buttons;
+      const callback = settings.callback || function () { };
 
       function createButton(text, status, primary?) {
         return {
-          type: "button",
-          text: text,
+          type: 'button',
+          text,
           subtype: primary ? 'primary' : '',
-          onClick: function (e) {
+          onClick (e) {
             e.control.parents()[1].close();
             callback(status);
           }
@@ -121,7 +120,7 @@ var MessageBox = Window.extend({
             createButton('No', 0)
           ];
 
-          if (settings.buttons == MessageBox.YES_NO_CANCEL) {
+          if (settings.buttons === MessageBox.YES_NO_CANCEL) {
             buttons.push(createButton('Cancel', -1));
           }
           break;
@@ -139,24 +138,24 @@ var MessageBox = Window.extend({
         y: settings.y,
         minWidth: 300,
         minHeight: 100,
-        layout: "flex",
-        pack: "center",
-        align: "center",
-        buttons: buttons,
+        layout: 'flex',
+        pack: 'center',
+        align: 'center',
+        buttons,
         title: settings.title,
         role: 'alertdialog',
         items: {
-          type: "label",
+          type: 'label',
           multiline: true,
           maxWidth: 500,
           maxHeight: 200,
           text: settings.text
         },
-        onPostRender: function () {
+        onPostRender () {
           this.aria('describedby', this.items()[0]._id);
         },
         onClose: settings.onClose,
-        onCancel: function () {
+        onCancel () {
           callback(false);
         }
       }).renderTo(document.body).reflow();
@@ -169,8 +168,8 @@ var MessageBox = Window.extend({
      * @param {Object} settings Settings for the alert dialog.
      * @param {function} [callback] Callback to execute when the user makes a choice.
      */
-    alert: function (settings, callback) {
-      if (typeof settings == "string") {
+    alert (settings, callback) {
+      if (typeof settings === 'string') {
         settings = { text: settings };
       }
 
@@ -185,8 +184,8 @@ var MessageBox = Window.extend({
      * @param {Object} settings Settings for the confirm dialog.
      * @param {function} [callback] Callback to execute when the user makes a choice.
      */
-    confirm: function (settings, callback) {
-      if (typeof settings == "string") {
+    confirm (settings, callback) {
+      if (typeof settings === 'string') {
         settings = { text: settings };
       }
 
@@ -198,4 +197,4 @@ var MessageBox = Window.extend({
   }
 });
 
-export default <any> MessageBox;
+export default MessageBox;

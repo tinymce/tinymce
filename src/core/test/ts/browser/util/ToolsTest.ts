@@ -3,10 +3,10 @@ import { Pipeline } from '@ephox/agar';
 import Tools from 'tinymce/core/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.util.ToolsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.util.ToolsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   suite.test('extend', function () {
     LegacyUnit.deepEqual({ a: 1, b: 2, c: 3 }, Tools.extend({ a: 1 }, { b: 2 }, { c: 3 }));
@@ -17,4 +17,3 @@ UnitTest.asynctest('browser.tinymce.core.util.ToolsTest', function() {
     success();
   }, failure);
 });
-

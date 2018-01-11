@@ -5,14 +5,14 @@ import InsertContent from 'tinymce/core/InsertContent';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.InsertContentForcedRootBlockFalseTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.InsertContentForcedRootBlockFalseTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var trimBrs = function (string) {
+  const trimBrs = function (string) {
     return string.replace(/<br>/g, '');
   };
 
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentForcedRootBlockFalseTest',
   suite.test('insertAtCaret - selected text with bogus div', function (editor) {
     editor.getBody().innerHTML = 'a<div data-mce-bogus="all">x</div>';
     editor.focus();
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild, 0);
     rng.setEnd(editor.getBody().firstChild, 1);
     editor.selection.setRng(rng);
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentForcedRootBlockFalseTest',
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
-    selector: "textarea",
+    selector: 'textarea',
     add_unload_trigger: false,
     disable_nodechange: true,
     forced_root_block: false,
@@ -48,4 +48,3 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentForcedRootBlockFalseTest',
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var create = function (prefix) {
-  var counter = 0;
+const create = function (prefix) {
+  let counter = 0;
 
   return function () {
-    var guid = new Date().getTime().toString(32);
+    const guid = new Date().getTime().toString(32);
     return prefix + guid + (counter++).toString(32);
   };
 };
 
 export default {
-  create: create
+  create
 };

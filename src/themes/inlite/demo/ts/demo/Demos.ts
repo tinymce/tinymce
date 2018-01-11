@@ -19,8 +19,6 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import InliteTheme from 'tinymce/themes/inlite/Theme';
 
-declare let tinymce: any;
-
 AnchorPlugin();
 AutoLinkPlugin();
 ContextMenuPlugin();
@@ -40,15 +38,15 @@ EditorManager.init({
   selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
   inline: true,
   paste_data_images: true,
-  filepicker_validator_handler: function (query, success) {
-    var valid = /^https?:/.test(query.url);
+  filepicker_validator_handler (query, success) {
+    const valid = /^https?:/.test(query.url);
 
     success({
       status: valid ? 'valid' : 'invalid',
       message: valid ? 'Url seems to be valid' : 'Are you use that this url is valid?'
     });
   },
-  file_picker_callback: function () { }
+  file_picker_callback () { }
 });
 
-export default <any> function () { };
+export default function () { }

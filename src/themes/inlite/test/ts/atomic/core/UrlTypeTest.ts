@@ -1,9 +1,9 @@
 import UrlType from 'tinymce/themes/inlite/core/UrlType';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('atomic.themes.core.UrlTypeTest', function() {
-  var testIsDomainLike = function () {
-    var mostUsedTopLevelDomains = [
+UnitTest.test('atomic.themes.core.UrlTypeTest', function () {
+  const testIsDomainLike = function () {
+    const mostUsedTopLevelDomains = [
       'com', 'org', 'edu', 'gov', 'uk', 'net', 'ca', 'de', 'jp',
       'fr', 'au', 'us', 'ru', 'ch', 'it', 'nl', 'se', 'no', 'es', 'mil'
     ];
@@ -22,7 +22,7 @@ UnitTest.test('atomic.themes.core.UrlTypeTest', function() {
     assert.eq(UrlType.isDomainLike('/a/b'), false);
   };
 
-  var testIsAbsoluteUrl = function () {
+  const testIsAbsoluteUrl = function () {
     assert.eq(UrlType.isAbsolute('http://www.site.com'), true);
     assert.eq(UrlType.isAbsolute('https://www.site.com'), true);
     assert.eq(UrlType.isAbsolute('www.site.com'), false);
@@ -32,4 +32,3 @@ UnitTest.test('atomic.themes.core.UrlTypeTest', function() {
   testIsDomainLike();
   testIsAbsoluteUrl();
 });
-

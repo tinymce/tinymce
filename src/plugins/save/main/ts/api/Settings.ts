@@ -8,20 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var enableWhenDirty = function (editor) {
+const enableWhenDirty = function (editor) {
   return editor.getParam('save_enablewhendirty', true);
 };
 
-var hasOnSaveCallback = function (editor) {
+const hasOnSaveCallback = function (editor) {
   return !!editor.getParam('save_onsavecallback');
 };
 
-var hasOnCancelCallback = function (editor) {
+const hasOnCancelCallback = function (editor) {
   return !!editor.getParam('save_oncancelcallback');
 };
 
 export default {
-  enableWhenDirty: enableWhenDirty,
-  hasOnSaveCallback: hasOnSaveCallback,
-  hasOnCancelCallback: hasOnCancelCallback
+  enableWhenDirty,
+  hasOnSaveCallback,
+  hasOnCancelCallback
 };

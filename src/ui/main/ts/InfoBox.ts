@@ -18,9 +18,7 @@ import Widget from './Widget';
  * @extends tinymce.ui.Widget
  */
 
-"use strict";
-
-export default <any> Widget.extend({
+export default Widget.extend({
   /**
    * Constructs a instance with the specified settings.
    *
@@ -28,22 +26,22 @@ export default <any> Widget.extend({
    * @param {Object} settings Name/value object with settings.
    * @setting {Boolean} multiline Multiline label.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._super(settings);
     self.classes.add('widget').add('infobox');
     self.canFocus = false;
   },
 
-  severity: function (level) {
+  severity (level) {
     this.classes.remove('error');
     this.classes.remove('warning');
     this.classes.remove('success');
     this.classes.add(level);
   },
 
-  help: function (state) {
+  help (state) {
     this.state.set('help', state);
   },
 
@@ -53,8 +51,8 @@ export default <any> Widget.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, prefix = self.classPrefix;
+  renderHtml () {
+    const self = this, prefix = self.classPrefix;
 
     return (
       '<div id="' + self._id + '" class="' + self.classes + '">' +
@@ -68,8 +66,8 @@ export default <any> Widget.extend({
     );
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     self.state.on('change:text', function (e) {
       self.getEl('body').firstChild.data = self.encode(e.value);

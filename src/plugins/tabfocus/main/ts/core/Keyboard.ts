@@ -16,17 +16,17 @@ import Tools from 'tinymce/core/util/Tools';
 import VK from 'tinymce/core/util/VK';
 import Settings from '../api/Settings';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var tabCancel = function (e) {
+const tabCancel = function (e) {
   if (e.keyCode === VK.TAB && !e.ctrlKey && !e.altKey && !e.metaKey) {
     e.preventDefault();
   }
 };
 
-var setup = function (editor) {
+const setup = function (editor) {
   function tabHandler(e) {
-    var x, el, v, i;
+    let x, el, v, i;
 
     if (e.keyCode !== VK.TAB || e.ctrlKey || e.altKey || e.metaKey || e.isDefaultPrevented()) {
       return;
@@ -36,9 +36,9 @@ var setup = function (editor) {
       el = DOM.select(':input:enabled,*[tabindex]:not(iframe)');
 
       function canSelectRecursive(e) {
-        return e.nodeName === "BODY" || (e.type !== 'hidden' &&
-          e.style.display !== "none" &&
-          e.style.visibility !== "hidden" && canSelectRecursive(e.parentNode));
+        return e.nodeName === 'BODY' || (e.type !== 'hidden' &&
+          e.style.display !== 'none' &&
+          e.style.visibility !== 'hidden' && canSelectRecursive(e.parentNode));
       }
 
       function canSelect(el) {
@@ -91,7 +91,7 @@ var setup = function (editor) {
     }
 
     if (el) {
-      var focusEditor = EditorManager.get(el.id || el.name);
+      const focusEditor = EditorManager.get(el.id || el.name);
 
       if (el.id && focusEditor) {
         focusEditor.focus();
@@ -126,5 +126,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

@@ -4,38 +4,37 @@ import { PlatformDetection } from '@ephox/sand';
 import { DomEvent } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 
-var INTERVAL = 50;
-var INSURANCE = 1000 / INTERVAL;
+const INTERVAL = 50;
+const INSURANCE = 1000 / INTERVAL;
 
-var get = function (outerWindow) {
+const get = function (outerWindow) {
   // We need to use this because the window shrinks due to an app keyboard,
   // width > height is no longer reliable.
-  var isPortrait = outerWindow.matchMedia('(orientation: portrait)').matches;
+  const isPortrait = outerWindow.matchMedia('(orientation: portrait)').matches;
   return {
     isPortrait: Fun.constant(isPortrait)
   };
 };
 
-
 // In iOS the width of the window is not swapped properly when the device is
 // rotated causing problems.
 // getActualWidth will return the actual width of the window accurated with the
 // orientation of the device.
-var getActualWidth = function (outerWindow) {
-  var isIos = PlatformDetection.detect().os.isiOS();
-  var isPortrait = get(outerWindow).isPortrait();
+const getActualWidth = function (outerWindow) {
+  const isIos = PlatformDetection.detect().os.isiOS();
+  const isPortrait = get(outerWindow).isPortrait();
   return isIos && !isPortrait ? outerWindow.screen.height : outerWindow.screen.width;
 };
 
-var onChange = function (outerWindow, listeners) {
-  var win = Element.fromDom(outerWindow);
-  var poller = null;
+const onChange = function (outerWindow, listeners) {
+  const win = Element.fromDom(outerWindow);
+  let poller = null;
 
-  var change = function () {
+  const change = function () {
     // If a developer is spamming orientation events in the simulator, clear our last check
     clearInterval(poller);
 
-    var orientation = get(outerWindow);
+    const orientation = get(outerWindow);
     listeners.onChange(orientation);
 
     onAdjustment(function () {
@@ -44,14 +43,14 @@ var onChange = function (outerWindow, listeners) {
     });
   };
 
-  var orientationHandle = DomEvent.bind(win, 'orientationchange', change);
+  const orientationHandle = DomEvent.bind(win, 'orientationchange', change);
 
-  var onAdjustment = function (f) {
+  const onAdjustment = function (f) {
     // If a developer is spamming orientation events in the simulator, clear our last check
     clearInterval(poller);
 
-    var flag = outerWindow.innerHeight;
-    var insurance = 0;
+    const flag = outerWindow.innerHeight;
+    let insurance = 0;
     poller = setInterval(function () {
       if (flag !== outerWindow.innerHeight) {
         clearInterval(poller);
@@ -64,18 +63,18 @@ var onChange = function (outerWindow, listeners) {
     }, INTERVAL);
   };
 
-  var destroy = function () {
+  const destroy = function () {
     orientationHandle.unbind();
   };
 
   return {
-    onAdjustment: onAdjustment,
-    destroy: destroy
+    onAdjustment,
+    destroy
   };
 };
 
-export default <any> {
-  get: get,
-  onChange: onChange,
-  getActualWidth: getActualWidth
+export default {
+  get,
+  onChange,
+  getActualWidth
 };

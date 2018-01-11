@@ -1,7 +1,7 @@
 import Writer from 'tinymce/core/html/Writer';
 import SaxParser from 'tinymce/core/html/SaxParser';
 
-var cleanHtml = function (html) {
+const cleanHtml = function (html) {
   return html.toLowerCase().replace(/[\r\n]+/gi, '')
     .replace(/ (sizcache[0-9]+|sizcache|nodeindex|sizset[0-9]+|sizset|data\-mce\-expando|data\-mce\-selected)="[^"]*"/gi, '')
     .replace(/<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\/span>|<div[^>]+data-mce-bogus[^>]+><\/div>/gi, '')
@@ -11,8 +11,8 @@ var cleanHtml = function (html) {
     });
 };
 
-var normalizeHtml = function (html) {
-  var writer = Writer();
+const normalizeHtml = function (html) {
+  const writer = Writer();
 
   new SaxParser({
     validate: false,
@@ -23,7 +23,7 @@ var normalizeHtml = function (html) {
     pi: writer.pi,
     doctype: writer.doctype,
 
-    start: function (name, attrs, empty) {
+    start (name, attrs, empty) {
       attrs.sort(function (a, b) {
         if (a.name === b.name) {
           return 0;
@@ -40,6 +40,6 @@ var normalizeHtml = function (html) {
 };
 
 export default {
-  cleanHtml: cleanHtml,
-  normalizeHtml: normalizeHtml
+  cleanHtml,
+  normalizeHtml
 };

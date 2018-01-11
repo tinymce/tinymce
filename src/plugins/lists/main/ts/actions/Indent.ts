@@ -13,10 +13,10 @@ import Bookmark from '../core/Bookmark';
 import NodeType from '../core/NodeType';
 import Selection from '../core/Selection';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var mergeLists = function (from, to) {
-  var node;
+const mergeLists = function (from, to) {
+  let node;
 
   if (NodeType.isListNode(from)) {
     while ((node = from.firstChild)) {
@@ -27,8 +27,8 @@ var mergeLists = function (from, to) {
   }
 };
 
-var indent = function (li) {
-  var sibling, newList, listStyle;
+const indent = function (li) {
+  let sibling, newList, listStyle;
 
   if (li.nodeName === 'DT') {
     DOM.rename(li, 'DD');
@@ -75,13 +75,13 @@ var indent = function (li) {
   return false;
 };
 
-var indentSelection = function (editor) {
-  var listElements = Selection.getSelectedListItems(editor);
+const indentSelection = function (editor) {
+  const listElements = Selection.getSelectedListItems(editor);
 
   if (listElements.length) {
-    var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
+    const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
 
-    for (var i = 0; i < listElements.length; i++) {
+    for (let i = 0; i < listElements.length; i++) {
       if (!indent(listElements[i]) && i === 0) {
         break;
       }
@@ -95,5 +95,5 @@ var indentSelection = function (editor) {
 };
 
 export default {
-  indentSelection: indentSelection
+  indentSelection
 };

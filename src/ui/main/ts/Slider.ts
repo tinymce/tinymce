@@ -20,8 +20,6 @@ import DomUtils from './DomUtils';
  * @extends tinymce.ui.Widget
  */
 
-"use strict";
-
 function constrain(value, minVal, maxVal) {
   if (value < minVal) {
     value = minVal;
@@ -39,16 +37,16 @@ function setAriaProp(el, name, value) {
 }
 
 function updateSliderHandle(ctrl, value) {
-  var maxHandlePos, shortSizeName, sizeName, stylePosName, styleValue, handleEl;
+  let maxHandlePos, shortSizeName, sizeName, stylePosName, styleValue, handleEl;
 
-  if (ctrl.settings.orientation == "v") {
-    stylePosName = "top";
-    sizeName = "height";
-    shortSizeName = "h";
+  if (ctrl.settings.orientation === 'v') {
+    stylePosName = 'top';
+    sizeName = 'height';
+    shortSizeName = 'h';
   } else {
-    stylePosName = "left";
-    sizeName = "width";
-    shortSizeName = "w";
+    stylePosName = 'left';
+    sizeName = 'width';
+    shortSizeName = 'w';
   }
 
   handleEl = ctrl.getEl('handle');
@@ -64,9 +62,9 @@ function updateSliderHandle(ctrl, value) {
   setAriaProp(handleEl, 'valuemax', ctrl._maxValue);
 }
 
-export default <any> Widget.extend({
-  init: function (settings) {
-    var self = this;
+export default Widget.extend({
+  init (settings) {
+    const self = this;
 
     if (!settings.previewFilter) {
       settings.previewFilter = function (value) {
@@ -77,7 +75,7 @@ export default <any> Widget.extend({
     self._super(settings);
     self.classes.add('slider');
 
-    if (settings.orientation == "v") {
+    if (settings.orientation === 'v') {
       self.classes.add('vertical');
     }
 
@@ -86,8 +84,8 @@ export default <any> Widget.extend({
     self._initValue = self.state.get('value');
   },
 
-  renderHtml: function () {
-    var self = this, id = self._id, prefix = self.classPrefix;
+  renderHtml () {
+    const self = this, id = self._id, prefix = self.classPrefix;
 
     return (
       '<div id="' + id + '" class="' + self.classes + '">' +
@@ -96,12 +94,13 @@ export default <any> Widget.extend({
     );
   },
 
-  reset: function () {
+  reset () {
     this.value(this._initValue).repaint();
   },
 
-  postRender: function () {
-    var self = this, minValue, maxValue, screenCordName,
+  postRender () {
+    const self = this;
+    let minValue, maxValue, screenCordName,
       stylePosName, sizeName, shortSizeName;
 
     function toFraction(min, max, val) {
@@ -114,7 +113,7 @@ export default <any> Widget.extend({
 
     function handleKeyboard(minValue, maxValue) {
       function alter(delta) {
-        var value;
+        let value;
 
         value = self.value();
         value = fromFraction(minValue, maxValue, toFraction(minValue, maxValue, value) + (delta * 0.05));
@@ -122,9 +121,9 @@ export default <any> Widget.extend({
 
         self.value(value);
 
-        self.fire('dragstart', { value: value });
-        self.fire('drag', { value: value });
-        self.fire('dragend', { value: value });
+        self.fire('dragstart', { value });
+        self.fire('drag', { value });
+        self.fire('dragend', { value });
       }
 
       self.on('keydown', function (e) {
@@ -143,20 +142,20 @@ export default <any> Widget.extend({
     }
 
     function handleDrag(minValue, maxValue, handleEl) {
-      var startPos, startHandlePos, maxHandlePos, handlePos, value;
+      let startPos, startHandlePos, maxHandlePos, handlePos, value;
 
       self._dragHelper = new DragHelper(self._id, {
-        handle: self._id + "-handle",
+        handle: self._id + '-handle',
 
-        start: function (e) {
+        start (e) {
           startPos = e[screenCordName];
           startHandlePos = parseInt(self.getEl('handle').style[stylePosName], 10);
           maxHandlePos = (self.layoutRect()[shortSizeName] || 100) - DomUtils.getSize(handleEl)[sizeName];
-          self.fire('dragstart', { value: value });
+          self.fire('dragstart', { value });
         },
 
-        drag: function (e) {
-          var delta = e[screenCordName] - startPos;
+        drag (e) {
+          const delta = e[screenCordName] - startPos;
 
           handlePos = constrain(startHandlePos + delta, 0, maxHandlePos);
           handleEl.style[stylePosName] = handlePos + 'px';
@@ -166,12 +165,12 @@ export default <any> Widget.extend({
 
           self.tooltip().text('' + self.settings.previewFilter(value)).show().moveRel(handleEl, 'bc tc');
 
-          self.fire('drag', { value: value });
+          self.fire('drag', { value });
         },
 
-        stop: function () {
+        stop () {
           self.tooltip().hide();
-          self.fire('dragend', { value: value });
+          self.fire('dragend', { value });
         }
       });
     }
@@ -179,16 +178,16 @@ export default <any> Widget.extend({
     minValue = self._minValue;
     maxValue = self._maxValue;
 
-    if (self.settings.orientation == "v") {
-      screenCordName = "screenY";
-      stylePosName = "top";
-      sizeName = "height";
-      shortSizeName = "h";
+    if (self.settings.orientation === 'v') {
+      screenCordName = 'screenY';
+      stylePosName = 'top';
+      sizeName = 'height';
+      shortSizeName = 'h';
     } else {
-      screenCordName = "screenX";
-      stylePosName = "left";
-      sizeName = "width";
-      shortSizeName = "w";
+      screenCordName = 'screenX';
+      stylePosName = 'left';
+      sizeName = 'width';
+      shortSizeName = 'w';
     }
 
     self._super();
@@ -197,13 +196,13 @@ export default <any> Widget.extend({
     handleDrag(minValue, maxValue, self.getEl('handle'));
   },
 
-  repaint: function () {
+  repaint () {
     this._super();
     updateSliderHandle(this, this.value());
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     self.state.on('change:value', function (e) {
       updateSliderHandle(self, e.value);

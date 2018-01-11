@@ -13,16 +13,18 @@ import Settings from '../api/Settings';
 import Parser from './Parser';
 import Protect from './Protect';
 
-var each = Tools.each;
+const each = Tools.each;
 
-var low = function (s) {
+const low = function (s) {
   return s.replace(/<\/?[A-Z]+/g, function (a) {
     return a.toLowerCase();
   });
 };
 
-var handleSetContent = function (editor, headState, footState, evt) {
-  var startPos, endPos, content, headerFragment, styles = '', dom = editor.dom, elm;
+const handleSetContent = function (editor, headState, footState, evt) {
+  let startPos, endPos, content, headerFragment, styles = '';
+  const dom = editor.dom;
+  let elm;
 
   if (evt.selection) {
     return;
@@ -85,7 +87,7 @@ var handleSetContent = function (editor, headState, footState, evt) {
 
   dom.remove('fullpage_styles');
 
-  var headElm = editor.getDoc().getElementsByTagName('head')[0];
+  const headElm = editor.getDoc().getElementsByTagName('head')[0];
 
   if (styles) {
     dom.add(headElm, 'style', {
@@ -99,7 +101,7 @@ var handleSetContent = function (editor, headState, footState, evt) {
     }
   }
 
-  var currentStyleSheetsMap = {};
+  const currentStyleSheetsMap = {};
   Tools.each(headElm.getElementsByTagName('link'), function (stylesheet) {
     if (stylesheet.rel === 'stylesheet' && stylesheet.getAttribute('data-mce-fullpage')) {
       currentStyleSheetsMap[stylesheet.href] = stylesheet;
@@ -108,16 +110,16 @@ var handleSetContent = function (editor, headState, footState, evt) {
 
   // Add new
   Tools.each(headerFragment.getAll('link'), function (stylesheet) {
-    var href = stylesheet.attr('href');
+    const href = stylesheet.attr('href');
     if (!href) {
       return true;
     }
 
     if (!currentStyleSheetsMap[href] && stylesheet.attr('rel') === 'stylesheet') {
       dom.add(headElm, 'link', {
-        rel: 'stylesheet',
-        text: 'text/css',
-        href: href,
+        'rel': 'stylesheet',
+        'text': 'text/css',
+        'href': href,
         'data-mce-fullpage': '1'
       });
     }
@@ -131,11 +133,11 @@ var handleSetContent = function (editor, headState, footState, evt) {
   });
 };
 
-var getDefaultHeader = function (editor) {
-  var header = '', value, styles = '';
+const getDefaultHeader = function (editor) {
+  let header = '', value, styles = '';
 
   if (Settings.getDefaultXmlPi(editor)) {
-    var piEncoding = Settings.getDefaultEncoding(editor);
+    const piEncoding = Settings.getDefaultEncoding(editor);
     header += '<?xml version="1.0" encoding="' + (piEncoding ? piEncoding : 'ISO-8859-1') + '" ?>\n';
   }
 
@@ -167,13 +169,13 @@ var getDefaultHeader = function (editor) {
   return header;
 };
 
-var handleGetContent = function (editor, head, foot, evt) {
+const handleGetContent = function (editor, head, foot, evt) {
   if (!evt.selection && (!evt.source_view || !Settings.shouldHideInSourceView(editor))) {
     evt.content = Protect.unprotectHtml(Tools.trim(head) + '\n' + Tools.trim(evt.content) + '\n' + Tools.trim(foot));
   }
 };
 
-var setup = function (editor, headState, footState) {
+const setup = function (editor, headState, footState) {
   editor.on('BeforeSetContent', function (evt) {
     handleSetContent(editor, headState, footState, evt);
   });
@@ -183,5 +185,5 @@ var setup = function (editor, headState, footState) {
 };
 
 export default {
-  setup: setup
+  setup
 };

@@ -10,12 +10,12 @@
 
 import UnicodeData from './UnicodeData';
 
-var ci = UnicodeData.characterIndices;
-var isWordBoundary = function (map, index) {
-  var prevType;
-  var type = map[index];
-  var nextType = map[index + 1];
-  var nextNextType;
+const ci = UnicodeData.characterIndices;
+const isWordBoundary = function (map, index) {
+  let prevType;
+  const type = map[index];
+  const nextType = map[index + 1];
+  let nextNextType;
 
   if (index < 0 || (index > map.length - 1 && index !== 0)) {
     // console.log('isWordBoundary: index out of bounds', 'warn', 'text-wordbreak');
@@ -118,5 +118,5 @@ var isWordBoundary = function (map, index) {
 };
 
 export default {
-  isWordBoundary: isWordBoundary
+  isWordBoundary
 };

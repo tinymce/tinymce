@@ -20,9 +20,7 @@ import Movable from './Movable';
  * @mixes tinymce.ui.Movable
  */
 
-
-
-export default <any> Control.extend({
+export default Control.extend({
   Mixins: [Movable],
 
   Defaults: {
@@ -35,8 +33,8 @@ export default <any> Control.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, prefix = self.classPrefix;
+  renderHtml () {
+    const self = this, prefix = self.classPrefix;
 
     return (
       '<div id="' + self._id + '" class="' + self.classes + '" role="presentation">' +
@@ -46,8 +44,8 @@ export default <any> Control.extend({
     );
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     self.state.on('change:text', function (e) {
       self.getEl().lastChild.innerHTML = self.encode(e.value);
@@ -61,8 +59,9 @@ export default <any> Control.extend({
    *
    * @method repaint
    */
-  repaint: function () {
-    var self = this, style, rect;
+  repaint () {
+    const self = this;
+    let style, rect;
 
     style = self.getEl().style;
     rect = self._layoutRect;

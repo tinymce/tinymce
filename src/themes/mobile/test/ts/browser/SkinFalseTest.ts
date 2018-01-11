@@ -3,9 +3,9 @@ import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/mobile/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.themes.mobile.SkinFalseTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.themes.mobile.SkinFalseTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
@@ -20,4 +20,3 @@ UnitTest.asynctest('browser.tinymce.themes.mobile.SkinFalseTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

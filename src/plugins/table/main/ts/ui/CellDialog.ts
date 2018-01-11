@@ -19,17 +19,17 @@ import Helpers from './Helpers';
  * @private
  */
 
-var updateStyles = function (elm, cssText) {
+const updateStyles = function (elm, cssText) {
   elm.style.cssText += ';' + cssText;
 };
 
-var extractDataFromElement = function (editor, elm) {
-  var dom = editor.dom;
-  var data: any = {
+const extractDataFromElement = function (editor, elm) {
+  const dom = editor.dom;
+  const data: any = {
     width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
     scope: dom.getAttrib(elm, 'scope'),
-    'class': dom.getAttrib(elm, 'class')
+    class: dom.getAttrib(elm, 'class')
   };
 
   data.type = elm.nodeName.toLowerCase();
@@ -53,9 +53,9 @@ var extractDataFromElement = function (editor, elm) {
   return data;
 };
 
-var onSubmitCellForm = function (editor, cells, evt) {
-  var dom = editor.dom;
-  var data;
+const onSubmitCellForm = function (editor, cells, evt) {
+  const dom = editor.dom;
+  let data;
 
   function setAttrib(elm, name, value) {
     if (value) {
@@ -82,7 +82,7 @@ var onSubmitCellForm = function (editor, cells, evt) {
         updateStyles(cellElm, data.style);
       }
 
-      setAttrib(cellElm, 'class', data['class']);
+      setAttrib(cellElm, 'class', data.class);
       setStyle(cellElm, 'width', Util.addSizeSuffix(data.width));
       setStyle(cellElm, 'height', Util.addSizeSuffix(data.height));
 
@@ -112,8 +112,8 @@ var onSubmitCellForm = function (editor, cells, evt) {
   });
 };
 
-var open = function (editor) {
-  var cellElm, data, classListCtrl, cells = [];
+const open = function (editor) {
+  let cellElm, data, classListCtrl, cells = [];
 
   // Get selected cells or the current cell
   cells = editor.dom.select('td[data-mce-selected],th[data-mce-selected]');
@@ -134,7 +134,7 @@ var open = function (editor) {
       width: '',
       height: '',
       scope: '',
-      'class': '',
+      class: '',
       align: '',
       style: '',
       type: cellElm.nodeName.toLowerCase()
@@ -161,7 +161,7 @@ var open = function (editor) {
     };
   }
 
-  var generalCellForm = {
+  const generalCellForm = {
     type: 'form',
     layout: 'flex',
     direction: 'column',
@@ -245,9 +245,9 @@ var open = function (editor) {
 
   if (editor.settings.table_cell_advtab !== false) {
     editor.windowManager.open({
-      title: "Cell properties",
+      title: 'Cell properties',
       bodyType: 'tabpanel',
-      data: data,
+      data,
       body: [
         {
           title: 'General',
@@ -260,8 +260,8 @@ var open = function (editor) {
     });
   } else {
     editor.windowManager.open({
-      title: "Cell properties",
-      data: data,
+      title: 'Cell properties',
+      data,
       body: generalCellForm,
       onsubmit: Fun.curry(onSubmitCellForm, editor, cells)
     });
@@ -269,5 +269,5 @@ var open = function (editor) {
 };
 
 export default {
-  open: open
+  open
 };

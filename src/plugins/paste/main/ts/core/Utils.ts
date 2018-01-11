@@ -38,13 +38,15 @@ function filter(content, items) {
  * @return {String} String of text with line feeds.
  */
 function innerText(html) {
-  var schema = Schema(), domParser = DomParser({}, schema), text = '';
-  var shortEndedElements = schema.getShortEndedElements();
-  var ignoreElements = Tools.makeMap('script noscript style textarea video audio iframe object', ' ');
-  var blockElements = schema.getBlockElements();
+  const schema = Schema();
+  const domParser = DomParser({}, schema);
+  let text = '';
+  const shortEndedElements = schema.getShortEndedElements();
+  const ignoreElements = Tools.makeMap('script noscript style textarea video audio iframe object', ' ');
+  const blockElements = schema.getBlockElements();
 
   function walk(node) {
-    var name = node.name, currentNode = node;
+    const name = node.name, currentNode = node;
 
     if (name === 'br') {
       text += '\n';
@@ -124,21 +126,21 @@ function trimHtml(html) {
 
 // TODO: Should be in some global class
 function createIdGenerator(prefix) {
-  var count = 0;
+  let count = 0;
 
   return function () {
     return prefix + (count++);
   };
 }
 
-var isMsEdge = function () {
+const isMsEdge = function () {
   return navigator.userAgent.indexOf(' Edge/') !== -1;
 };
 
 export default {
-  filter: filter,
-  innerText: innerText,
-  trimHtml: trimHtml,
-  createIdGenerator: createIdGenerator,
-  isMsEdge: isMsEdge
+  filter,
+  innerText,
+  trimHtml,
+  createIdGenerator,
+  isMsEdge
 };

@@ -9,16 +9,16 @@ import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.link.ContextToolbarTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.link.ContextToolbarTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   LinkPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       // no toolbar on by default
@@ -39,4 +39,3 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ContextToolbarTest', function()
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

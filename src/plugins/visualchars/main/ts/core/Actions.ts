@@ -11,8 +11,10 @@
 import Events from '../api/Events';
 import VisualChars from './VisualChars';
 
-var toggleVisualChars = function (editor, toggleState) {
-  var body = editor.getBody(), selection = editor.selection, bookmark;
+const toggleVisualChars = function (editor, toggleState) {
+  const body = editor.getBody();
+  const selection = editor.selection;
+  let bookmark;
 
   toggleState.set(!toggleState.get());
   Events.fireVisualChars(editor, toggleState.get());
@@ -29,5 +31,5 @@ var toggleVisualChars = function (editor, toggleState) {
 };
 
 export default {
-  toggleVisualChars: toggleVisualChars
+  toggleVisualChars
 };

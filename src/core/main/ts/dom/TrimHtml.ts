@@ -11,19 +11,19 @@
 import SaxParser from '../html/SaxParser';
 import Zwsp from '../text/Zwsp';
 
-var trimHtml = function (tempAttrs, html) {
-  var trimContentRegExp = new RegExp([
+const trimHtml = function (tempAttrs, html) {
+  const trimContentRegExp = new RegExp([
     '\\s?(' + tempAttrs.join('|') + ')="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
   ].join('|'), 'gi');
 
   return html.replace(trimContentRegExp, '');
 };
 
-var trimInternal = function (serializer, html) {
-  var content = html;
-  var bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
-  var endTagIndex, index, matchLength, matches, shortEndedElements;
-  var schema = serializer.schema;
+const trimInternal = function (serializer, html) {
+  let content = html;
+  const bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
+  let endTagIndex, index, matchLength, matches, shortEndedElements;
+  const schema = serializer.schema;
 
   content = trimHtml(serializer.getTempAttrs(), content);
   shortEndedElements = schema.getShortEndedElements();
@@ -46,11 +46,11 @@ var trimInternal = function (serializer, html) {
   return content;
 };
 
-var trimExternal = function (serializer, html) {
+const trimExternal = function (serializer, html) {
   return Zwsp.trim(trimInternal(serializer, html));
 };
 
 export default {
-  trimExternal: trimExternal,
-  trimInternal: trimInternal
+  trimExternal,
+  trimInternal
 };

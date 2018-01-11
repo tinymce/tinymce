@@ -10,7 +10,7 @@
 
 import Direction from '../core/Direction';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addCommand('mceDirectionLTR', function () {
     Direction.setDir(editor, 'ltr');
   });
@@ -21,5 +21,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

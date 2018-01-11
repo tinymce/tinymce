@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var toggleFormat = function (editor, fmt) {
+const toggleFormat = function (editor, fmt) {
   return function () {
     editor.execCommand('mceToggleFormat', false, fmt);
   };
 };
 
-var postRenderFormat = function (editor, name) {
+const postRenderFormat = function (editor, name) {
   return function () {
-    var self = this;
+    const self = this;
 
     // TODO: Fix this
     if (editor.formatter) {
@@ -33,7 +33,7 @@ var postRenderFormat = function (editor, name) {
   };
 };
 
-export default <any> {
-  toggleFormat: toggleFormat,
-  postRenderFormat: postRenderFormat
+export default {
+  toggleFormat,
+  postRenderFormat
 };

@@ -10,15 +10,15 @@
 
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-var getMinWidth = function (editor) {
+const getMinWidth = function (editor) {
   return editor.getParam('code_dialog_width', 600);
 };
 
-var getMinHeight = function (editor) {
+const getMinHeight = function (editor) {
   return editor.getParam('code_dialog_height', Math.min(DOMUtils.DOM.getViewPort().h - 200, 500));
 };
 
 export default {
-  getMinWidth: getMinWidth,
-  getMinHeight: getMinHeight
+  getMinWidth,
+  getMinHeight
 };

@@ -13,7 +13,7 @@ import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 
 EditorManager._beforeUnloadHandler = function () {
-  var msg;
+  let msg;
 
   Tools.each(EditorManager.get(), function (editor) {
     // Store a draft for each editor instance
@@ -23,17 +23,17 @@ EditorManager._beforeUnloadHandler = function () {
 
     // Setup a return message if the editor is dirty
     if (!msg && editor.isDirty() && Settings.shouldAskBeforeUnload(editor)) {
-      msg = editor.translate("You have unsaved changes are you sure you want to navigate away?");
+      msg = editor.translate('You have unsaved changes are you sure you want to navigate away?');
     }
   });
 
   return msg;
 };
 
-var setup = function (editor) {
+const setup = function (editor) {
   window.onbeforeunload = EditorManager._beforeUnloadHandler;
 };
 
 export default {
-  setup: setup
+  setup
 };

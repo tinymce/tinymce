@@ -10,12 +10,12 @@
 
 import NodeType from '../dom/NodeType';
 
-var splitText = function (node, offset) {
+const splitText = function (node, offset) {
   return node.splitText(offset);
 };
 
-var split = function (rng) {
-  var startContainer = rng.startContainer,
+const split = function (rng) {
+  let startContainer = rng.startContainer,
     startOffset = rng.startOffset,
     endContainer = rng.endContainer,
     endOffset = rng.endOffset;
@@ -50,13 +50,13 @@ var split = function (rng) {
   }
 
   return {
-    startContainer: startContainer,
-    startOffset: startOffset,
-    endContainer: endContainer,
-    endOffset: endOffset
+    startContainer,
+    startOffset,
+    endContainer,
+    endOffset
   };
 };
 
 export default {
-  split: split
+  split
 };

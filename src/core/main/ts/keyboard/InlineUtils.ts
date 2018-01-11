@@ -21,36 +21,36 @@ import DOMUtils from '../dom/DOMUtils';
 import NodeType from '../dom/NodeType';
 import Bidi from '../text/Bidi';
 
-var isInlineTarget = function (editor, elm) {
-  var selector = EditorSettings.getString(editor, 'inline_boundaries_selector').getOr('a[href],code');
+const isInlineTarget = function (editor, elm) {
+  const selector = EditorSettings.getString(editor, 'inline_boundaries_selector').getOr('a[href],code');
   return Selectors.is(Element.fromDom(elm), selector);
 };
 
-var isRtl = function (element) {
+const isRtl = function (element) {
   return DOMUtils.DOM.getStyle(element, 'direction', true) === 'rtl' || Bidi.hasStrongRtl(element.textContent);
 };
 
-var findInlineParents = function (isInlineTarget, rootNode, pos) {
+const findInlineParents = function (isInlineTarget, rootNode, pos) {
   return Arr.filter(DOMUtils.DOM.getParents(pos.container(), '*', rootNode), isInlineTarget);
 };
 
-var findRootInline = function (isInlineTarget, rootNode, pos) {
-  var parents = findInlineParents(isInlineTarget, rootNode, pos);
+const findRootInline = function (isInlineTarget, rootNode, pos) {
+  const parents = findInlineParents(isInlineTarget, rootNode, pos);
   return Option.from(parents[parents.length - 1]);
 };
 
-var hasSameParentBlock = function (rootNode, node1, node2) {
-  var block1 = CaretUtils.getParentBlock(node1, rootNode);
-  var block2 = CaretUtils.getParentBlock(node2, rootNode);
+const hasSameParentBlock = function (rootNode, node1, node2) {
+  const block1 = CaretUtils.getParentBlock(node1, rootNode);
+  const block2 = CaretUtils.getParentBlock(node2, rootNode);
   return block1 && block1 === block2;
 };
 
-var isAtZwsp = function (pos) {
+const isAtZwsp = function (pos) {
   return CaretContainer.isBeforeInline(pos) || CaretContainer.isAfterInline(pos);
 };
 
-var normalizePosition = function (forward, pos) {
-  var container = pos.container(), offset = pos.offset();
+const normalizePosition = function (forward, pos) {
+  const container = pos.container(), offset = pos.offset();
 
   if (forward) {
     if (CaretContainer.isCaretContainerInline(container)) {
@@ -75,16 +75,16 @@ var normalizePosition = function (forward, pos) {
   }
 };
 
-var normalizeForwards = Fun.curry(normalizePosition, true);
-var normalizeBackwards = Fun.curry(normalizePosition, false);
+const normalizeForwards = Fun.curry(normalizePosition, true);
+const normalizeBackwards = Fun.curry(normalizePosition, false);
 
 export default {
-  isInlineTarget: isInlineTarget,
-  findRootInline: findRootInline,
-  isRtl: isRtl,
-  isAtZwsp: isAtZwsp,
-  normalizePosition: normalizePosition,
-  normalizeForwards: normalizeForwards,
-  normalizeBackwards: normalizeBackwards,
-  hasSameParentBlock: hasSameParentBlock
+  isInlineTarget,
+  findRootInline,
+  isRtl,
+  isAtZwsp,
+  normalizePosition,
+  normalizeForwards,
+  normalizeBackwards,
+  hasSameParentBlock
 };

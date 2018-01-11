@@ -11,14 +11,14 @@
 import InsertNewLine from '../newline/InsertNewLine';
 import VK from '../util/VK';
 
-var endTypingLevel = function (undoManager) {
+const endTypingLevel = function (undoManager) {
   if (undoManager.typing) {
     undoManager.typing = false;
     undoManager.add();
   }
 };
 
-var handleEnterKeyEvent = function (editor, event) {
+const handleEnterKeyEvent = function (editor, event) {
   if (event.isDefaultPrevented()) {
     return;
   }
@@ -35,7 +35,7 @@ var handleEnterKeyEvent = function (editor, event) {
   });
 };
 
-var setup = function (editor) {
+const setup = function (editor) {
   editor.on('keydown', function (event) {
     if (event.keyCode === VK.ENTER) {
       handleEnterKeyEvent(editor, event);
@@ -44,5 +44,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

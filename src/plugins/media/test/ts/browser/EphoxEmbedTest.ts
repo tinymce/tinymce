@@ -12,14 +12,14 @@ import Utils from '../module/test/Utils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.core.EphoxEmbedTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.core.EphoxEmbedTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
   Theme();
 
-  var ephoxEmbedStructure = ApproxStructure.build(function (s, str/*, arr*/) {
+  const ephoxEmbedStructure = ApproxStructure.build(function (s, str/*, arr*/) {
     return s.element('p', {
       children: [
         s.element('div', {
@@ -39,17 +39,17 @@ UnitTest.asynctest('browser.core.EphoxEmbedTest', function() {
     });
   });
 
-  var sAssertDivStructure = function (editor, expected) {
+  const sAssertDivStructure = function (editor, expected) {
     return Step.sync(function () {
-      var div = editor.dom.select('div')[0];
-      var actual = div ? Element.fromHtml(div.outerHTML) : Element.FromHtml('');
+      const div = editor.dom.select('div')[0];
+      const actual = div ? Element.fromHtml(div.outerHTML) : Element.FromHtml('');
       return Assertions.sAssertStructure('Should be the same structure', expected, actual);
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var ui = TinyUi(editor);
-    var apis = TinyApis(editor);
+    const ui = TinyUi(editor);
+    const apis = TinyApis(editor);
 
     Pipeline.async({}, [
       apis.sFocus,
@@ -67,9 +67,9 @@ UnitTest.asynctest('browser.core.EphoxEmbedTest', function() {
       Waiter.sTryUntil('wait for div struture', sAssertDivStructure(editor, ephoxEmbedStructure), 100, 3000)
     ], onSuccess, onFailure);
   }, {
-    plugins: "media",
-    toolbar: "media",
-    media_url_resolver: function (data, resolve) {
+    plugins: 'media',
+    toolbar: 'media',
+    media_url_resolver (data, resolve) {
       resolve({
         html: '<video width="300" height="150" ' +
           'controls="controls">\n<source src="' + data.url + '" />\n</video>'
@@ -78,4 +78,3 @@ UnitTest.asynctest('browser.core.EphoxEmbedTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

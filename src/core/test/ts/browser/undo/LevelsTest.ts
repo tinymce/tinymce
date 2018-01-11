@@ -6,54 +6,54 @@ import Levels from 'tinymce/core/undo/Levels';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var getBookmark = function (editor) {
+  const getBookmark = function (editor) {
     return editor.selection.getBookmark(2, true);
   };
 
   suite.test('createFragmentedLevel', function () {
     LegacyUnit.deepEqual(Levels.createFragmentedLevel(['a', 'b']), {
-      'beforeBookmark': null,
-      'bookmark': null,
-      'content': '',
-      'fragments': ['a', 'b'],
-      'type': 'fragmented'
+      beforeBookmark: null,
+      bookmark: null,
+      content: '',
+      fragments: ['a', 'b'],
+      type: 'fragmented'
     });
   });
 
   suite.test('createCompleteLevel', function () {
     LegacyUnit.deepEqual(Levels.createCompleteLevel('a'), {
-      'beforeBookmark': null,
-      'bookmark': null,
-      'content': 'a',
-      'fragments': null,
-      'type': 'complete'
+      beforeBookmark: null,
+      bookmark: null,
+      content: 'a',
+      fragments: null,
+      type: 'complete'
     });
   });
 
   suite.test('createFromEditor', function (editor) {
     LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
-      'beforeBookmark': null,
-      'bookmark': null,
-      'content': Env.ie && Env.ie < 11 ? '<p></p>' : '<p><br data-mce-bogus="1"></p>',
-      'fragments': null,
-      'type': 'complete'
+      beforeBookmark: null,
+      bookmark: null,
+      content: Env.ie && Env.ie < 11 ? '<p></p>' : '<p><br data-mce-bogus="1"></p>',
+      fragments: null,
+      type: 'complete'
     });
 
     editor.getBody().innerHTML = '<iframe src="about:blank"></iframe>a<!--b-->c';
 
     LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
-      'beforeBookmark': null,
-      'bookmark': null,
-      'content': '',
-      'fragments': ['<iframe src="about:blank"></iframe>', 'a', '<!--b-->', 'c'],
-      'type': 'fragmented'
+      beforeBookmark: null,
+      bookmark: null,
+      content: '',
+      fragments: ['<iframe src="about:blank"></iframe>', 'a', '<!--b-->', 'c'],
+      type: 'fragmented'
     });
   });
 
@@ -61,11 +61,11 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function() {
     editor.getBody().innerHTML = '<p data-mce-bogus="all">a</p> <span>b</span>';
 
     LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
-      'beforeBookmark': null,
-      'bookmark': null,
-      'content': ' <span>b</span>',
-      'fragments': null,
-      'type': 'complete'
+      beforeBookmark: null,
+      bookmark: null,
+      content: ' <span>b</span>',
+      fragments: null,
+      type: 'complete'
     });
   });
 
@@ -73,21 +73,21 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function() {
     editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <p data-mce-bogus="all">a</p> <span>b</span>';
 
     LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
-      'beforeBookmark': null,
-      'bookmark': null,
-      'content': '',
-      'fragments':[
-        "<iframe src=\"about:blank\"></iframe>",
-        " ",
-        " ",
-        "<span>b</span>"
+      beforeBookmark: null,
+      bookmark: null,
+      content: '',
+      fragments: [
+        '<iframe src="about:blank"></iframe>',
+        ' ',
+        ' ',
+        '<span>b</span>'
       ],
-      'type': 'fragmented'
+      type: 'fragmented'
     });
   });
 
   suite.test('applyToEditor to equal content with complete level', function (editor) {
-    var level = Levels.createCompleteLevel('<p>a</p>');
+    const level = Levels.createCompleteLevel('<p>a</p>');
     level.bookmark = { start: [1, 0, 0] };
 
     editor.getBody().innerHTML = '<p>a</p>';
@@ -99,7 +99,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function() {
   });
 
   suite.test('applyToEditor to different content with complete level', function (editor) {
-    var level = Levels.createCompleteLevel('<p>b</p>');
+    const level = Levels.createCompleteLevel('<p>b</p>');
     level.bookmark = { start: [1, 0, 0] };
 
     editor.getBody().innerHTML = '<p>a</p>';
@@ -111,7 +111,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function() {
   });
 
   suite.test('applyToEditor to different content with fragmented level', function (editor) {
-    var level = Levels.createFragmentedLevel(['<p>a</p>', '<p>b</p>']);
+    const level = Levels.createFragmentedLevel(['<p>a</p>', '<p>b</p>']);
     level.bookmark = { start: [1, 0, 0] };
 
     editor.getBody().innerHTML = '<p>c</p>';
@@ -141,7 +141,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function() {
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
-    selector: "textarea",
+    selector: 'textarea',
     add_unload_trigger: false,
     disable_nodechange: true,
     entities: 'raw',
@@ -149,4 +149,3 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

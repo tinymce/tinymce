@@ -19,17 +19,15 @@ import AbsoluteLayout from './AbsoluteLayout';
  * @extends tinymce.ui.AbsoluteLayout
  */
 
-"use strict";
-
-export default <any> AbsoluteLayout.extend({
+export default AbsoluteLayout.extend({
   /**
    * Recalculates the positions of the controls in the specified container.
    *
    * @method recalc
    * @param {tinymce.ui.Container} container Container instance to recalc.
    */
-  recalc: function (container) {
-    var contLayoutRect = container.layoutRect(), paddingBox = container.paddingBox;
+  recalc (container) {
+    const contLayoutRect = container.layoutRect(), paddingBox = container.paddingBox;
 
     container.items().filter(':visible').each(function (ctrl) {
       ctrl.layoutRect({

@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import EventUtils from 'tinymce/core/dom/EventUtils';
 import UiUtils from '../module/test/UiUtils';
 import ViewBlock from '../module/test/ViewBlock';
@@ -9,16 +8,16 @@ import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.FitLayoutTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.ui.FitLayoutTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   // Registers ui widgets to factory
   Api.registerToFactory();
 
-  var createFitPanel = function (settings) {
+  const createFitPanel = function (settings) {
     EventUtils.Event.clean(viewBlock.get());
     viewBlock.update('');
 
@@ -31,8 +30,8 @@ UnitTest.asynctest('browser.tinymce.ui.FitLayoutTest', function() {
     }, settings)).renderTo(viewBlock.get()).reflow();
   };
 
-  suite.test("fit with spacer inside", function () {
-    var panel = createFitPanel({
+  suite.test('fit with spacer inside', function () {
+    const panel = createFitPanel({
       items: [
         { type: 'spacer', classes: 'red' }
       ]
@@ -42,8 +41,8 @@ UnitTest.asynctest('browser.tinymce.ui.FitLayoutTest', function() {
     LegacyUnit.equal(UiUtils.rect(viewBlock, panel.find('spacer')[0]), [1, 1, 198, 198]);
   });
 
-  suite.test("fit with padding and spacer inside", function () {
-    var panel = createFitPanel({
+  suite.test('fit with padding and spacer inside', function () {
+    const panel = createFitPanel({
       padding: 3,
       items: [
         { type: 'spacer', classes: 'red' }
@@ -54,8 +53,8 @@ UnitTest.asynctest('browser.tinymce.ui.FitLayoutTest', function() {
     LegacyUnit.equal(UiUtils.rect(viewBlock, panel.find('spacer')[0]), [4, 4, 192, 192]);
   });
 
-  suite.test("fit with panel inside", function () {
-    var panel = createFitPanel({
+  suite.test('fit with panel inside', function () {
+    const panel = createFitPanel({
       items: [
         { type: 'panel', border: 1 }
       ]
@@ -73,4 +72,3 @@ UnitTest.asynctest('browser.tinymce.ui.FitLayoutTest', function() {
     }, failure);
   });
 });
-

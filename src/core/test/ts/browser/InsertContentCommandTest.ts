@@ -1,19 +1,18 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import Env from 'tinymce/core/Env';
 import JSON from 'tinymce/core/util/JSON';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var normalizeRng = function (rng) {
+  const normalizeRng = function (rng) {
     if (rng.startContainer.nodeType === 3) {
       if (rng.startOffset === 0) {
         rng.setStartBefore(rng.startContainer);
@@ -33,16 +32,16 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
     return rng;
   };
 
-  var ok = function (value, label?) {
+  const ok = function (value, label?) {
     return LegacyUnit.equal(value, true, label);
   };
 
-  var getContent = function (editor) {
+  const getContent = function (editor) {
     return editor.getContent();
   };
 
   suite.test('mceInsertContent - p inside text of p', function (editor) {
-    var rng;
+    let rng;
 
     editor.setContent('<p>1234</p>');
     editor.focus();
@@ -62,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
   });
 
   suite.test('mceInsertContent before HR', function (editor) {
-    var rng;
+    let rng;
 
     editor.setContent('<hr>');
     editor.focus();
@@ -119,7 +118,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
   });
 
   suite.test('mceInsertContent - p inside whole p', function (editor) {
-    var rng;
+    let rng;
 
     editor.setContent('<p>1234</p>');
     rng = editor.dom.createRng();
@@ -138,7 +137,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
   });
 
   suite.test('mceInsertContent - pre in text of pre', function (editor) {
-    var rng;
+    let rng;
 
     editor.setContent('<pre>1234</pre>');
     rng = editor.dom.createRng();
@@ -157,7 +156,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
   });
 
   suite.test('mceInsertContent - h1 in text of h1', function (editor) {
-    var rng;
+    let rng;
 
     editor.setContent('<h1>1234</h1>');
     rng = editor.dom.createRng();
@@ -176,7 +175,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
   });
 
   suite.test('mceInsertContent - li inside li', function (editor) {
-    var rng;
+    let rng;
 
     editor.setContent('<ul><li>1234</li></ul>');
     rng = editor.dom.createRng();
@@ -195,7 +194,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
   });
 
   suite.test('mceInsertContent - p inside empty editor', function (editor) {
-    var rng;
+    let rng;
 
     editor.setContent('');
     editor.execCommand('mceInsertContent', false, '<p>abc</p>');
@@ -210,7 +209,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
   });
 
   suite.test('mceInsertContent - text inside empty p', function (editor) {
-    var rng;
+    let rng;
 
     editor.getBody().innerHTML = '<p></p>';
     LegacyUnit.setSelection(editor, 'p', 0);
@@ -229,7 +228,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
   });
 
   suite.test('mceInsertContent - text inside empty p with br caret node', function (editor) {
-    var rng;
+    let rng;
 
     editor.getBody().innerHTML = '<p><br></p>';
     rng = editor.dom.createRng();
@@ -248,7 +247,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
   });
 
   suite.test('mceInsertContent - image inside p', function (editor) {
-    var rng;
+    let rng;
 
     editor.setContent('<p>1</p>');
     rng = editor.dom.createRng();
@@ -266,7 +265,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
   });
 
   suite.test('mceInsertContent - legacy content', function (editor) {
-    var rng;
+    let rng;
 
     // Convert legacy content
     editor.setContent('<p>1</p>');
@@ -282,7 +281,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
   });
 
   suite.test('mceInsertContent - hr', function (editor) {
-    var rng;
+    let rng;
 
     editor.setContent('<p>123</p>');
     rng = editor.dom.createRng();
@@ -317,10 +316,10 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
   });
 
   suite.test('mceInsertContent - invalid insertion with spans on page', function (editor) {
-    var startingContent = '<p>123 testing <em>span later in document</em></p>',
+    const startingContent = '<p>123 testing <em>span later in document</em></p>',
       insertedContent = '<ul><li>u</li><li>l</li></ul>';
     editor.setContent(startingContent);
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 0);
     editor.selection.setRng(rng);
@@ -421,4 +420,3 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentCommandTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

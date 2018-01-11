@@ -1,4 +1,3 @@
-import { ApproxStructure } from '@ephox/agar';
 import { Chain } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
@@ -14,16 +13,16 @@ import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   ImagePlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -35,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', function() 
           tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
           UiFinder.cFindIn('label:contains("Source")'),
           Chain.mapper(function (val) {
-            var inputElm = document.getElementById(val.dom().htmlFor).querySelector('input');
+            const inputElm = document.getElementById(val.dom().htmlFor).querySelector('input');
             return TinyDom.fromDom(inputElm);
           }),
           UiControls.cSetValue('')
@@ -68,4 +67,3 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', function() 
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

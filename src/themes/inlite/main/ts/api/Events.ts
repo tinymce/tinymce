@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var fireSkinLoaded = function (editor) {
+const fireSkinLoaded = function (editor) {
   editor.fire('SkinLoaded');
 };
 
-var fireBeforeRenderUI = function (editor) {
+const fireBeforeRenderUI = function (editor) {
   return editor.fire('BeforeRenderUI');
 };
 
-export default <any> {
-  fireSkinLoaded: fireSkinLoaded,
-  fireBeforeRenderUI: fireBeforeRenderUI
+export default {
+  fireSkinLoaded,
+  fireBeforeRenderUI
 };

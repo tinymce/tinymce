@@ -12,13 +12,13 @@ import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 import Actions from '../core/Actions';
 
-var createMenuItems = function (editor, lastFormatState) {
-  var formats = Settings.getFormats(editor);
+const createMenuItems = function (editor, lastFormatState) {
+  const formats = Settings.getFormats(editor);
 
   return Tools.map(formats, function (fmt) {
     return {
       text: Actions.getDateTime(editor, fmt),
-      onclick: function () {
+      onclick () {
         lastFormatState.set(fmt);
         Actions.insertDateTime(editor, fmt);
       }
@@ -26,15 +26,15 @@ var createMenuItems = function (editor, lastFormatState) {
   });
 };
 
-var register = function (editor, lastFormatState) {
-  var menuItems = createMenuItems(editor, lastFormatState);
+const register = function (editor, lastFormatState) {
+  const menuItems = createMenuItems(editor, lastFormatState);
 
   editor.addButton('insertdatetime', {
     type: 'splitbutton',
     title: 'Insert date/time',
     menu: menuItems,
-    onclick: function () {
-      var lastFormat = lastFormatState.get();
+    onclick () {
+      const lastFormat = lastFormatState.get();
       Actions.insertDateTime(editor, lastFormat ? lastFormat : Settings.getDefaultDateTime(editor));
     }
   });
@@ -48,5 +48,5 @@ var register = function (editor, lastFormatState) {
 };
 
 export default {
-  register: register
+  register
 };

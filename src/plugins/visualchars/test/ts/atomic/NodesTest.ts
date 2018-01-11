@@ -3,11 +3,11 @@ import { Element } from '@ephox/sugar';
 import Nodes from 'tinymce/plugins/visualchars/core/Nodes';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', function() {
-  var nbsp = '\u00a0';
-  var shy = '\u00AD';
+UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', function () {
+  const nbsp = '\u00a0';
+  const shy = '\u00AD';
 
-  var testReplaceWithSpans = function () {
+  const testReplaceWithSpans = function () {
     Assertions.assertHtml(
       'should return span around shy and nbsp',
       'a<span data-mce-bogus="1" class="mce-nbsp">\u00a0</span>b<span data-mce-bogus="1" class="mce-shy">\u00AD</span>',
@@ -15,8 +15,8 @@ UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', function() {
     );
   };
 
-  var testFilterDescendants = function () {
-    var div = document.createElement('div');
+  const testFilterDescendants = function () {
+    const div = document.createElement('div');
     div.innerHTML = '<p>a</p>' +
                     '<p>b' + nbsp + '</p>' +
                     '<p>c</p>' +
@@ -29,8 +29,8 @@ UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', function() {
     );
   };
 
-  var testFilterDescendants2 = function () {
-    var div = document.createElement('div');
+  const testFilterDescendants2 = function () {
+    const div = document.createElement('div');
     div.innerHTML = '<p>a' + nbsp + '</p>' +
                     '<p>b' + nbsp + '</p>' +
                     '<p>c' + nbsp + '</p>' +
@@ -47,4 +47,3 @@ UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', function() {
   testFilterDescendants();
   testFilterDescendants2();
 });
-

@@ -12,12 +12,12 @@ import { Option } from '@ephox/katamari';
 import Env from 'tinymce/core/Env';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-var getUiContainerDelta = function () {
-  var uiContainer = Env.container;
+const getUiContainerDelta = function () {
+  const uiContainer = Env.container;
   if (uiContainer && DOMUtils.DOM.getStyle(uiContainer, 'position', true) !== 'static') {
-    var containerPos = DOMUtils.DOM.getPos(uiContainer);
-    var dx = containerPos.x - uiContainer.scrollLeft;
-    var dy = containerPos.y - uiContainer.scrollTop;
+    const containerPos = DOMUtils.DOM.getPos(uiContainer);
+    const dx = containerPos.x - uiContainer.scrollLeft;
+    const dy = containerPos.y - uiContainer.scrollTop;
     return Option.some({
       x: dx,
       y: dy
@@ -27,6 +27,6 @@ var getUiContainerDelta = function () {
   }
 };
 
-export default <any> {
-  getUiContainerDelta: getUiContainerDelta
+export default {
+  getUiContainerDelta
 };

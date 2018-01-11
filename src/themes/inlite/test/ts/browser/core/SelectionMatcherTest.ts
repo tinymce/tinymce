@@ -4,18 +4,17 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import PredicateId from 'tinymce/themes/inlite/core/PredicateId';
 import SelectionMatcher from 'tinymce/themes/inlite/core/SelectionMatcher';
 import InliteTheme from 'tinymce/themes/inlite/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.core.SelectionMatcherTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.core.SelectionMatcherTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   InliteTheme();
 
-  var assertResult = function (expectedResultState, result) {
+  const assertResult = function (expectedResultState, result) {
     Assertions.assertEq('Should not be null', result !== null, expectedResultState);
 
     if (expectedResultState === true) {
@@ -24,9 +23,9 @@ UnitTest.asynctest('browser.core.SelectionMatcherTest', function() {
     }
   };
 
-  var sTextSelectionTest = function (tinyApis, editor, inputHtml, spath, soffset, fpath, foffset, expectedResultState) {
-    var sAssertTextSelectionResult = Step.sync(function () {
-      var result = SelectionMatcher.textSelection('a')(editor);
+  const sTextSelectionTest = function (tinyApis, editor, inputHtml, spath, soffset, fpath, foffset, expectedResultState) {
+    const sAssertTextSelectionResult = Step.sync(function () {
+      const result = SelectionMatcher.textSelection('a')(editor);
       assertResult(expectedResultState, result);
     });
 
@@ -37,17 +36,17 @@ UnitTest.asynctest('browser.core.SelectionMatcherTest', function() {
     ]);
   };
 
-  var sTextSelectionTests = function (tinyApis, editor) {
+  const sTextSelectionTests = function (tinyApis, editor) {
     return GeneralSteps.sequence([
       sTextSelectionTest(tinyApis, editor, '<p>a<.p>', [0], 0, [0], 1, true),
       sTextSelectionTest(tinyApis, editor, '<p>a</p>', [0], 0, [0], 0, false)
     ]);
   };
 
-  var sEmptyTextBlockTest = function (tinyApis, editor, inputHtml, spath, soffset, fpath, foffset, expectedResultState) {
-    var sAssertTextSelectionResult = Step.sync(function () {
-      var elements = editor.dom.getParents(editor.selection.getStart());
-      var result = SelectionMatcher.emptyTextBlock(elements, 'a')(editor);
+  const sEmptyTextBlockTest = function (tinyApis, editor, inputHtml, spath, soffset, fpath, foffset, expectedResultState) {
+    const sAssertTextSelectionResult = Step.sync(function () {
+      const elements = editor.dom.getParents(editor.selection.getStart());
+      const result = SelectionMatcher.emptyTextBlock(elements, 'a')(editor);
       assertResult(expectedResultState, result);
     });
 
@@ -58,7 +57,7 @@ UnitTest.asynctest('browser.core.SelectionMatcherTest', function() {
     ]);
   };
 
-  var sEmptyTextBlockTests = function (tinyApis, editor) {
+  const sEmptyTextBlockTests = function (tinyApis, editor) {
     return GeneralSteps.sequence([
       sEmptyTextBlockTest(tinyApis, editor, '<p>a</p>', [0], 0, [0], 0, false),
       sEmptyTextBlockTest(tinyApis, editor, '<p>a</p>', [0], 0, [0], 1, false),
@@ -68,7 +67,7 @@ UnitTest.asynctest('browser.core.SelectionMatcherTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -81,4 +80,3 @@ UnitTest.asynctest('browser.core.SelectionMatcherTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

@@ -11,13 +11,13 @@
 import EditorManager from 'tinymce/core/EditorManager';
 import I18n from 'tinymce/core/util/I18n';
 
-var getVersion = function (major, minor) {
+const getVersion = function (major, minor) {
   return major.indexOf('@') === 0 ? 'X.X.X' : major + '.' + minor;
 };
 
-var makeRow = function () {
-  var version = getVersion(EditorManager.majorVersion, EditorManager.minorVersion);
-  var changeLogLink = '<a href="https://www.tinymce.com/docs/changelog/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">TinyMCE ' + version + '</a>';
+const makeRow = function () {
+  const version = getVersion(EditorManager.majorVersion, EditorManager.minorVersion);
+  const changeLogLink = '<a href="https://www.tinymce.com/docs/changelog/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">TinyMCE ' + version + '</a>';
 
   return [
     {
@@ -30,7 +30,7 @@ var makeRow = function () {
     },
     {
       text: 'Close',
-      onclick: function () {
+      onclick () {
         this.parent().parent().close();
       }
     }
@@ -38,5 +38,5 @@ var makeRow = function () {
 };
 
 export default {
-  makeRow: makeRow
+  makeRow
 };

@@ -20,13 +20,11 @@
  * } while (walker.next());
  */
 
-
-
 export default function (startNode, rootNode) {
-  var node = startNode;
+  let node = startNode;
 
-  var findSibling = function (node, startName, siblingName, shallow) {
-    var sibling, parent;
+  const findSibling = function (node, startName, siblingName, shallow) {
+    let sibling, parent;
 
     if (node) {
       // Walk into nodes if it has a start
@@ -35,14 +33,14 @@ export default function (startNode, rootNode) {
       }
 
       // Return the sibling if it has one
-      if (node != rootNode) {
+      if (node !== rootNode) {
         sibling = node[siblingName];
         if (sibling) {
           return sibling;
         }
 
         // Walk up the parents to look for siblings
-        for (parent = node.parentNode; parent && parent != rootNode; parent = parent.parentNode) {
+        for (parent = node.parentNode; parent && parent !== rootNode; parent = parent.parentNode) {
           sibling = parent[siblingName];
           if (sibling) {
             return sibling;
@@ -52,8 +50,8 @@ export default function (startNode, rootNode) {
     }
   };
 
-  var findPreviousNode = function (node, startName, siblingName, shallow) {
-    var sibling, parent, child;
+  const findPreviousNode = function (node, startName, siblingName, shallow) {
+    let sibling, parent, child;
 
     if (node) {
       sibling = node[siblingName];
@@ -117,4 +115,4 @@ export default function (startNode, rootNode) {
     node = findPreviousNode(node, 'lastChild', 'previousSibling', shallow);
     return node;
   };
-};
+}

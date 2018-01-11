@@ -8,21 +8,21 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var get = function (patternsState) {
-  var setPatterns = function (newPatterns) {
+const get = function (patternsState) {
+  const setPatterns = function (newPatterns) {
     patternsState.set(newPatterns);
   };
 
-  var getPatterns = function () {
+  const getPatterns = function () {
     return patternsState.get();
   };
 
   return {
-    setPatterns: setPatterns,
-    getPatterns: getPatterns
+    setPatterns,
+    getPatterns
   };
 };
 
 export default {
-  get: get
+  get
 };

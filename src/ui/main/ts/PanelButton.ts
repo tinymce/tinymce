@@ -18,21 +18,19 @@ import FloatPanel from './FloatPanel';
  * @extends tinymce.ui.Button
  */
 
-"use strict";
-
-export default <any> Button.extend({
+export default Button.extend({
   /**
    * Shows the panel for the button.
    *
    * @method showPanel
    */
-  showPanel: function () {
-    var self = this, settings = self.settings;
+  showPanel () {
+    const self = this, settings = self.settings;
 
     self.classes.add('opened');
 
     if (!self.panel) {
-      var panelSettings = settings.panel;
+      let panelSettings = settings.panel;
 
       // Wrap panel in grid layout if type if specified
       // This makes it possible to add forms or other containers directly in the panel option
@@ -62,7 +60,7 @@ export default <any> Button.extend({
       self.panel.show();
     }
 
-    var rel = self.panel.testMoveRel(self.getEl(), settings.popoverAlign || (self.isRtl() ? ['bc-tc', 'bc-tl', 'bc-tr'] : ['bc-tc', 'bc-tr', 'bc-tl']));
+    const rel = self.panel.testMoveRel(self.getEl(), settings.popoverAlign || (self.isRtl() ? ['bc-tc', 'bc-tl', 'bc-tr'] : ['bc-tc', 'bc-tr', 'bc-tl']));
 
     self.panel.classes.toggle('start', rel === 'bc-tl');
     self.panel.classes.toggle('end', rel === 'bc-tr');
@@ -75,8 +73,8 @@ export default <any> Button.extend({
    *
    * @method hidePanel
    */
-  hidePanel: function () {
-    var self = this;
+  hidePanel () {
+    const self = this;
 
     if (self.panel) {
       self.panel.hide();
@@ -88,8 +86,8 @@ export default <any> Button.extend({
    *
    * @method postRender
    */
-  postRender: function () {
-    var self = this;
+  postRender () {
+    const self = this;
 
     self.aria('haspopup', true);
 
@@ -107,7 +105,7 @@ export default <any> Button.extend({
     return self._super();
   },
 
-  remove: function () {
+  remove () {
     if (this.panel) {
       this.panel.remove();
       this.panel = null;

@@ -12,7 +12,6 @@ import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import { Options } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import CaretContainer from '../caret/CaretContainer';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import CaretUtils from '../caret/CaretUtils';
@@ -22,12 +21,12 @@ import BoundaryLocation from '../keyboard/BoundaryLocation';
 import BoundarySelection from '../keyboard/BoundarySelection';
 import InlineUtils from '../keyboard/InlineUtils';
 
-var isFeatureEnabled = function (editor) {
+const isFeatureEnabled = function (editor) {
   return editor.settings.inline_boundaries !== false;
 };
 
-var rangeFromPositions = function (from, to) {
-  var range = document.createRange();
+const rangeFromPositions = function (from, to) {
+  const range = document.createRange();
 
   range.setStart(from.container(), from.offset());
   range.setEnd(to.container(), to.offset());
@@ -36,13 +35,13 @@ var rangeFromPositions = function (from, to) {
 };
 
 // Checks for delete at <code>|a</code> when there is only one item left except the zwsp caret container nodes
-var hasOnlyTwoOrLessPositionsLeft = function (elm) {
+const hasOnlyTwoOrLessPositionsLeft = function (elm) {
   return Options.liftN([
     CaretFinder.firstPositionIn(elm),
     CaretFinder.lastPositionIn(elm)
   ], function (firstPos, lastPos) {
-    var normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
-    var normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
+    const normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
+    const normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
 
     return CaretFinder.nextPosition(elm, normalizedFirstPos).map(function (pos) {
       return pos.isEqual(normalizedLastPos);
@@ -50,7 +49,7 @@ var hasOnlyTwoOrLessPositionsLeft = function (elm) {
   }).getOr(true);
 };
 
-var setCaretLocation = function (editor, caret) {
+const setCaretLocation = function (editor, caret) {
   return function (location) {
     return BoundaryCaret.renderCaret(caret, location).map(function (pos) {
       BoundarySelection.setCaretPosition(editor, pos);
@@ -59,9 +58,9 @@ var setCaretLocation = function (editor, caret) {
   };
 };
 
-var deleteFromTo = function (editor, caret, from, to) {
-  var rootNode = editor.getBody();
-  var isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
+const deleteFromTo = function (editor, caret, from, to) {
+  const rootNode = editor.getBody();
+  const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
 
   editor.undoManager.ignore(function () {
     editor.selection.setRng(rangeFromPositions(from, to));
@@ -75,15 +74,15 @@ var deleteFromTo = function (editor, caret, from, to) {
   editor.nodeChanged();
 };
 
-var rescope = function (rootNode, node) {
-  var parentBlock = CaretUtils.getParentBlock(node, rootNode);
+const rescope = function (rootNode, node) {
+  const parentBlock = CaretUtils.getParentBlock(node, rootNode);
   return parentBlock ? parentBlock : rootNode;
 };
 
-var backspaceDeleteCollapsed = function (editor, caret, forward, from) {
-  var rootNode = rescope(editor.getBody(), from.container());
-  var isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
-  var fromLocation = BoundaryLocation.readLocation(isInlineTarget, rootNode, from);
+const backspaceDeleteCollapsed = function (editor, caret, forward, from) {
+  const rootNode = rescope(editor.getBody(), from.container());
+  const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
+  const fromLocation = BoundaryLocation.readLocation(isInlineTarget, rootNode, from);
 
   return fromLocation.bind(function (location) {
     if (forward) {
@@ -104,8 +103,8 @@ var backspaceDeleteCollapsed = function (editor, caret, forward, from) {
   })
   .map(setCaretLocation(editor, caret))
   .getOrThunk(function () {
-    var toPosition = CaretFinder.navigate(forward, rootNode, from);
-    var toLocation = toPosition.bind(function (pos) {
+    const toPosition = CaretFinder.navigate(forward, rootNode, from);
+    const toLocation = toPosition.bind(function (pos) {
       return BoundaryLocation.readLocation(isInlineTarget, rootNode, pos);
     });
 
@@ -134,9 +133,9 @@ var backspaceDeleteCollapsed = function (editor, caret, forward, from) {
   });
 };
 
-var backspaceDelete = function (editor, caret, forward?) {
+const backspaceDelete = function (editor, caret, forward?) {
   if (editor.selection.isCollapsed() && isFeatureEnabled(editor)) {
-    var from = CaretPosition.fromRangeStart(editor.selection.getRng());
+    const from = CaretPosition.fromRangeStart(editor.selection.getRng());
     return backspaceDeleteCollapsed(editor, caret, forward, from);
   }
 
@@ -144,5 +143,5 @@ var backspaceDelete = function (editor, caret, forward?) {
 };
 
 export default {
-  backspaceDelete: backspaceDelete
+  backspaceDelete
 };

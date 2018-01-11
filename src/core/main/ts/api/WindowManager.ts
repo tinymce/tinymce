@@ -35,40 +35,38 @@ import WindowManagerImpl from '../ui/WindowManagerImpl';
  * });
  */
 
-
-
 export default function (editor) {
-  var windows = [];
+  const windows = [];
 
-  var getImplementation = function () {
-    var theme = editor.theme;
+  const getImplementation = function () {
+    const theme = editor.theme;
     return theme && theme.getWindowManagerImpl ? theme.getWindowManagerImpl() : WindowManagerImpl();
   };
 
-  var funcBind = function (scope, f) {
+  const funcBind = function (scope, f) {
     return function () {
       return f ? f.apply(scope, arguments) : undefined;
     };
   };
 
-  var fireOpenEvent = function (win) {
+  const fireOpenEvent = function (win) {
     editor.fire('OpenWindow', {
-      win: win
+      win
     });
   };
 
-  var fireCloseEvent = function (win) {
+  const fireCloseEvent = function (win) {
     editor.fire('CloseWindow', {
-      win: win
+      win
     });
   };
 
-  var addWindow = function (win) {
+  const addWindow = function (win) {
     windows.push(win);
     fireOpenEvent(win);
   };
 
-  var closeWindow = function (win) {
+  const closeWindow = function (win) {
     Arr.findIndex(windows, function (otherWindow) {
       return otherWindow === win;
     }).each(function (index) {
@@ -84,47 +82,47 @@ export default function (editor) {
     });
   };
 
-  var getTopWindow = function () {
+  const getTopWindow = function () {
     return Option.from(windows[windows.length - 1]);
   };
 
-  var open = function (args, params) {
+  const open = function (args, params) {
     editor.editorManager.setActive(editor);
     SelectionBookmark.store(editor);
 
-    var win = getImplementation().open(args, params, closeWindow);
+    const win = getImplementation().open(args, params, closeWindow);
     addWindow(win);
     return win;
   };
 
-  var alert = function (message, callback, scope) {
-    var win = getImplementation().alert(message, funcBind(scope ? scope : this, callback), closeWindow);
+  const alert = function (message, callback, scope) {
+    const win = getImplementation().alert(message, funcBind(scope ? scope : this, callback), closeWindow);
     addWindow(win);
   };
 
-  var confirm = function (message, callback, scope) {
-    var win = getImplementation().confirm(message, funcBind(scope ? scope : this, callback), closeWindow);
+  const confirm = function (message, callback, scope) {
+    const win = getImplementation().confirm(message, funcBind(scope ? scope : this, callback), closeWindow);
     addWindow(win);
   };
 
-  var close = function () {
+  const close = function () {
     getTopWindow().each(function (win) {
       getImplementation().close(win);
       closeWindow(win);
     });
   };
 
-  var getParams = function () {
+  const getParams = function () {
     return getTopWindow().map(getImplementation().getParams).getOr(null);
   };
 
-  var setParams = function (params) {
+  const setParams = function (params) {
     getTopWindow().each(function (win) {
       getImplementation().setParams(win, params);
     });
   };
 
-  var getWindows = function () {
+  const getWindows = function () {
     return windows;
   };
 
@@ -137,7 +135,7 @@ export default function (editor) {
   return {
     // Used by the legacy3x compat layer and possible third party
     // TODO: Deprecate this, and possible switch to a immutable window array for getWindows
-    windows: windows,
+    windows,
 
     /**
      * Opens a new window.
@@ -152,7 +150,7 @@ export default function (editor) {
      * @option {Boolean} autoScroll Specifies whether the popup window can have scrollbars if required (i.e. content
      * larger than the popup size specified).
      */
-    open: open,
+    open,
 
     /**
      * Creates a alert dialog. Please don't use the blocking behavior of this
@@ -166,7 +164,7 @@ export default function (editor) {
      * // Displays an alert box using the active editors window manager instance
      * tinymce.activeEditor.windowManager.alert('Hello world!');
      */
-    alert: alert,
+    alert,
 
     /**
      * Creates a confirm dialog. Please don't use the blocking behavior of this
@@ -185,14 +183,14 @@ export default function (editor) {
      *       tinymce.activeEditor.windowManager.alert("Cancel");
      * });
      */
-    confirm: confirm,
+    confirm,
 
     /**
      * Closes the top most window.
      *
      * @method close
      */
-    close: close,
+    close,
 
     /**
      * Returns the params of the last window open call. This can be used in iframe based
@@ -204,7 +202,7 @@ export default function (editor) {
      * @method getParams
      * @return {Object} Name/value object with parameters passed from windowManager.open call.
      */
-    getParams: getParams,
+    getParams,
 
     /**
      * Sets the params of the last opened window.
@@ -212,7 +210,7 @@ export default function (editor) {
      * @method setParams
      * @param {Object} params Params object to set for the last opened window.
      */
-    setParams: setParams,
+    setParams,
 
     /**
      * Returns the currently opened window objects.
@@ -220,6 +218,6 @@ export default function (editor) {
      * @method getWindows
      * @return {Array} Array of the currently opened windows.
      */
-    getWindows: getWindows
+    getWindows
   };
-};
+}

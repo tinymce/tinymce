@@ -2,25 +2,24 @@ import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import DomParser from 'tinymce/core/html/DomParser';
-import Node from 'tinymce/core/html/Node';
 import Schema from 'tinymce/core/html/Schema';
 import InsertList from 'tinymce/core/InsertList';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.InsertListTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var schema = Schema({});
+UnitTest.asynctest('browser.tinymce.core.InsertListTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const schema = Schema({});
 
-  var createFragment = function (html) {
-    var parser = DomParser({ validate: false });
-    var fragment = parser.parse(html);
+  const createFragment = function (html) {
+    const parser = DomParser({ validate: false });
+    const fragment = parser.parse(html);
 
     return fragment;
   };
 
-  var createDomFragment = function (html) {
+  const createDomFragment = function (html) {
     return DOMUtils.DOM.createFragment(html);
   };
 
@@ -37,14 +36,14 @@ UnitTest.asynctest('browser.tinymce.core.InsertListTest', function() {
   });
 
   suite.test('listItems', function () {
-    var list = createDomFragment('<ul><li>a</li><li>b</li><li>c</li></ul>').firstChild;
+    const list = createDomFragment('<ul><li>a</li><li>b</li><li>c</li></ul>').firstChild;
 
     LegacyUnit.equal(InsertList.listItems(list).length, 3);
     LegacyUnit.equal(InsertList.listItems(list)[0].nodeName, 'LI');
   });
 
   suite.test('trimListItems', function () {
-    var list = createDomFragment('<ul><li>a</li><li>b</li><li></li></ul>').firstChild;
+    const list = createDomFragment('<ul><li>a</li><li>b</li><li></li></ul>').firstChild;
 
     LegacyUnit.equal(InsertList.listItems(list).length, 3);
     LegacyUnit.equal(InsertList.trimListItems(InsertList.listItems(list)).length, 2);
@@ -54,4 +53,3 @@ UnitTest.asynctest('browser.tinymce.core.InsertListTest', function() {
     success();
   }, failure);
 });
-

@@ -1,8 +1,5 @@
 import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { Memento } from '@ephox/alloy';
 import { Attachment } from '@ephox/alloy';
 import GuiSetup from '../../module/test/GuiSetup';
@@ -17,9 +14,9 @@ import Buttons from 'tinymce/themes/mobile/ui/Buttons';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: ui.ButtonsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: ui.ButtonsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   /*
    * PURPOSE
@@ -28,45 +25,45 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function() {
    * Ensure that they all fire the right actions and get updated appropriately based on broadcasts.
    */
 
-  var realm = IosRealm();
+  const realm = IosRealm();
 
-  var body = Body.body();
+  const body = Body.body();
   Attachment.attachSystem(body, realm.system());
 
   // Make toolbar appear
   Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
 
-  var doc = Traverse.owner(body);
+  const doc = Traverse.owner(body);
 
   TestStyles.addStyles();
 
-  var unload = function () {
+  const unload = function () {
     TestStyles.removeStyles();
     Attachment.detachSystem(realm.system());
   };
 
   /* The test editor puts execCommand and insertContent calls into the store */
-  var tEditor = TestEditor();
+  const tEditor = TestEditor();
 
-  var memAlpha = Memento.record(
+  const memAlpha = Memento.record(
     Buttons.forToolbarCommand(tEditor.editor(), 'alpha')
   );
 
-  var memBeta = Memento.record(
+  const memBeta = Memento.record(
     Buttons.forToolbarStateCommand(tEditor.editor(), 'beta')
   );
 
-  var memGamma = Memento.record(
+  const memGamma = Memento.record(
     Buttons.forToolbarStateAction(tEditor.editor(), 'gamma-class', 'gamma-query', function () {
       tEditor.adder('gamma-action')();
     })
   );
 
-  var sClickAlpha = TestUi.sClickComponent(realm, memAlpha);
-  var sClickBeta = TestUi.sClickComponent(realm, memBeta);
-  var sClickGamma = TestUi.sClickComponent(realm, memGamma);
+  const sClickAlpha = TestUi.sClickComponent(realm, memAlpha);
+  const sClickBeta = TestUi.sClickComponent(realm, memBeta);
+  const sClickGamma = TestUi.sClickComponent(realm, memGamma);
 
-  var sCheckComponent = function (label, state) {
+  const sCheckComponent = function (label, state) {
     return function (memento) {
       return TestUi.sWaitForToggledState(label, state, realm, memento);
     };
@@ -84,17 +81,17 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function() {
   ]);
 
   /*
-   * Alpha has no toggling, so just check that when the user clicks on the button, the 
+   * Alpha has no toggling, so just check that when the user clicks on the button, the
    * editor fires execCommand with alpha
    */
-  var sTestAlpha = GeneralSteps.sequence([
+  const sTestAlpha = GeneralSteps.sequence([
     tEditor.sAssertEq('Initially empty', [ ]),
     sClickAlpha,
     tEditor.sAssertEq('After clicking on alpha', [
       {
         method: 'execCommand',
         data: {
-          'alpha': undefined
+          alpha: undefined
         }
       }
     ]),
@@ -106,14 +103,14 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function() {
    *  - when the user clicks on the button, execCommand is fired
    *  - when the format change is broadcast, the toggled state changes
    */
-  var sTestBeta = GeneralSteps.sequence([
+  const sTestBeta = GeneralSteps.sequence([
     tEditor.sAssertEq('before beta, store is empty', [ ]),
     sClickBeta,
     tEditor.sAssertEq('After clicking on beta', [
       {
         method: 'execCommand',
         data: {
-          'beta': undefined
+          beta: undefined
         }
       }
     ]),
@@ -130,7 +127,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function() {
    *  - when the user clicks on the button, the custom action is fired
    *  - when the format change is broadcast, the toggled state changes
    */
-  var sTestGamma = GeneralSteps.sequence([
+  const sTestGamma = GeneralSteps.sequence([
     tEditor.sAssertEq('before gamma, store is empty', [ ]),
     sClickGamma,
     tEditor.sAssertEq('After clicking on gamma', [ 'gamma-action' ]),
@@ -155,4 +152,3 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function() {
     unload(); success();
   }, failure);
 });
-

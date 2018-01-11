@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import Plugin from 'tinymce/plugins/searchreplace/Plugin';
 import { TinyLoader } from '@ephox/mcagar';
 import HtmlUtils from '../module/test/HtmlUtils';
 import Theme from 'tinymce/themes/modern/Theme';
@@ -8,10 +7,10 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.searchreplace.SearchReplacePluginTest',
-  function() {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
-    var suite = LegacyUnit.createSuite();
+  function () {
+    const success = arguments[arguments.length - 2];
+    const failure = arguments[arguments.length - 1];
+    const suite = LegacyUnit.createSuite();
     Theme();
 
     suite.test('Find no match', function (editor) {
@@ -49,35 +48,35 @@ UnitTest.asynctest(
       editor.setContent('a');
       editor.plugins.searchreplace.find('a');
       LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), false);
-      LegacyUnit.equal("<p>x</p>", editor.getContent());
+      LegacyUnit.equal('<p>x</p>', editor.getContent());
     });
 
     suite.test('Find and replace first in multiple matches', function (editor) {
       editor.setContent('a b a');
       editor.plugins.searchreplace.find('a');
       LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), true);
-      LegacyUnit.equal("<p>x b a</p>", editor.getContent());
+      LegacyUnit.equal('<p>x b a</p>', editor.getContent());
     });
 
     suite.test('Find and replace two consecutive spaces', function (editor) {
       editor.setContent('a&nbsp; b');
       editor.plugins.searchreplace.find('a  ');
       LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), false);
-      LegacyUnit.equal("<p>xb</p>", editor.getContent());
+      LegacyUnit.equal('<p>xb</p>', editor.getContent());
     });
 
     suite.test('Find and replace consecutive spaces', function (editor) {
       editor.setContent('a&nbsp; &nbsp;b');
       editor.plugins.searchreplace.find('a   ');
       LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), false);
-      LegacyUnit.equal("<p>xb</p>", editor.getContent());
+      LegacyUnit.equal('<p>xb</p>', editor.getContent());
     });
 
     suite.test('Find and replace all in multiple matches', function (editor) {
       editor.setContent('a b a');
       editor.plugins.searchreplace.find('a');
       LegacyUnit.equal(editor.plugins.searchreplace.replace('x', true, true), false);
-      LegacyUnit.equal("<p>x b x</p>", editor.getContent());
+      LegacyUnit.equal('<p>x b x</p>', editor.getContent());
     });
 
     suite.test('Find multiple matches, move to next and replace', function (editor) {
@@ -85,21 +84,21 @@ UnitTest.asynctest(
       LegacyUnit.equal(2, editor.plugins.searchreplace.find('a'));
       editor.plugins.searchreplace.next();
       LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), false);
-      LegacyUnit.equal("<p>a x</p>", editor.getContent());
+      LegacyUnit.equal('<p>a x</p>', editor.getContent());
     });
 
     suite.test('Find and replace fragmented match', function (editor) {
       editor.setContent('<b>te<i>s</i>t</b><b>te<i>s</i>t</b>');
       editor.plugins.searchreplace.find('test');
       LegacyUnit.equal(editor.plugins.searchreplace.replace('abc'), true);
-      LegacyUnit.equal(editor.getContent(), "<p><b>abc</b><b>te<i>s</i>t</b></p>");
+      LegacyUnit.equal(editor.getContent(), '<p><b>abc</b><b>te<i>s</i>t</b></p>');
     });
 
     suite.test('Find and replace all fragmented matches', function (editor) {
       editor.setContent('<b>te<i>s</i>t</b><b>te<i>s</i>t</b>');
       editor.plugins.searchreplace.find('test');
       LegacyUnit.equal(editor.plugins.searchreplace.replace('abc', true, true), false);
-      LegacyUnit.equal(editor.getContent(), "<p><b>abc</b><b>abc</b></p>");
+      LegacyUnit.equal(editor.getContent(), '<p><b>abc</b><b>abc</b></p>');
     });
 
     suite.test('Find multiple matches, move to next and replace backwards', function (editor) {
@@ -108,7 +107,7 @@ UnitTest.asynctest(
       editor.plugins.searchreplace.next();
       LegacyUnit.equal(editor.plugins.searchreplace.replace('x', false), true);
       LegacyUnit.equal(editor.plugins.searchreplace.replace('y', false), false);
-      LegacyUnit.equal("<p>y x</p>", editor.getContent());
+      LegacyUnit.equal('<p>y x</p>', editor.getContent());
     });
 
     suite.test('Find multiple matches and unmark them', function (editor) {
@@ -139,4 +138,3 @@ UnitTest.asynctest(
     }, success, failure);
   }
 );
-

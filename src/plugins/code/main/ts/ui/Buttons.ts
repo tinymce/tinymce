@@ -10,11 +10,11 @@
 
 import Dialog from './Dialog';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addButton('code', {
     icon: 'code',
     tooltip: 'Source code',
-    onclick: function () {
+    onclick () {
       Dialog.open(editor);
     }
   });
@@ -22,12 +22,12 @@ var register = function (editor) {
   editor.addMenuItem('code', {
     icon: 'code',
     text: 'Source code',
-    onclick: function () {
+    onclick () {
       Dialog.open(editor);
     }
   });
 };
 
 export default {
-  register: register
+  register
 };

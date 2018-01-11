@@ -14,16 +14,17 @@ import DOMUtils from '../dom/DOMUtils';
 import SelectionRestore from '../selection/SelectionRestore';
 import Delay from '../util/Delay';
 
-var documentFocusInHandler, DOM = DOMUtils.DOM;
+let documentFocusInHandler;
+const DOM = DOMUtils.DOM;
 
-var isEditorUIElement = function (elm) {
+const isEditorUIElement = function (elm) {
   // Since this can be overridden by third party we need to use the API reference here
   return FocusManager.isEditorUIElement(elm);
 };
 
-var isUIElement = function (editor, elm) {
-  var customSelector = editor ? editor.settings.custom_ui_selector : '';
-  var parent = DOM.getParent(elm, function (elm) {
+const isUIElement = function (editor, elm) {
+  const customSelector = editor ? editor.settings.custom_ui_selector : '';
+  const parent = DOM.getParent(elm, function (elm) {
     return (
       isEditorUIElement(elm) ||
       (customSelector ? editor.dom.is(elm, customSelector) : false)
@@ -32,7 +33,7 @@ var isUIElement = function (editor, elm) {
   return parent !== null;
 };
 
-var getActiveElement = function () {
+const getActiveElement = function () {
   try {
     return document.activeElement;
   } catch (ex) {
@@ -42,15 +43,15 @@ var getActiveElement = function () {
   }
 };
 
-var registerEvents = function (editorManager, e) {
-  var editor = e.editor;
+const registerEvents = function (editorManager, e) {
+  const editor = e.editor;
 
   SelectionRestore.register(editor);
 
   editor.on('focusin', function () {
-    var focusedEditor = editorManager.focusedEditor;
+    const focusedEditor = editorManager.focusedEditor;
 
-    if (focusedEditor != editor) {
+    if (focusedEditor !== editor) {
       if (focusedEditor) {
         focusedEditor.fire('blur', { focusedEditor: editor });
       }
@@ -64,10 +65,10 @@ var registerEvents = function (editorManager, e) {
 
   editor.on('focusout', function () {
     Delay.setEditorTimeout(editor, function () {
-      var focusedEditor = editorManager.focusedEditor;
+      const focusedEditor = editorManager.focusedEditor;
 
       // Still the same editor the blur was outside any editor UI
-      if (!isUIElement(editor, getActiveElement()) && focusedEditor == editor) {
+      if (!isUIElement(editor, getActiveElement()) && focusedEditor === editor) {
         editor.fire('blur', { focusedEditor: null });
         editorManager.focusedEditor = null;
       }
@@ -78,7 +79,8 @@ var registerEvents = function (editorManager, e) {
   // isn't within the body of the activeEditor nor a UI element such as a dialog child control
   if (!documentFocusInHandler) {
     documentFocusInHandler = function (e) {
-      var activeEditor = editorManager.activeEditor, target;
+      const activeEditor = editorManager.activeEditor;
+      let target;
 
       target = e.target;
 
@@ -95,8 +97,8 @@ var registerEvents = function (editorManager, e) {
   }
 };
 
-var unregisterDocumentEvents = function (editorManager, e) {
-  if (editorManager.focusedEditor == e.editor) {
+const unregisterDocumentEvents = function (editorManager, e) {
+  if (editorManager.focusedEditor === e.editor) {
     editorManager.focusedEditor = null;
   }
 
@@ -106,13 +108,13 @@ var unregisterDocumentEvents = function (editorManager, e) {
   }
 };
 
-var setup = function (editorManager) {
+const setup = function (editorManager) {
   editorManager.on('AddEditor', Fun.curry(registerEvents, editorManager));
   editorManager.on('RemoveEditor', Fun.curry(unregisterDocumentEvents, editorManager));
 };
 
 export default {
-  setup: setup,
-  isEditorUIElement: isEditorUIElement,
-  isUIElement: isUIElement
+  setup,
+  isEditorUIElement,
+  isUIElement
 };

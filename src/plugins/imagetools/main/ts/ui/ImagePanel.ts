@@ -10,19 +10,17 @@
 
 import Rect from 'tinymce/core/geom/Rect';
 import Factory from 'tinymce/core/ui/Factory';
-import Promise from 'tinymce/core/util/Promise';
-import Tools from 'tinymce/core/util/Tools';
 import LoadImage from '../core/LoadImage';
 import CropRect from './CropRect';
 
-var create = function (settings) {
-  var Control = Factory.get('Control');
-  var ImagePanel = Control.extend({
+const create = function (settings) {
+  const Control = Factory.get('Control');
+  const ImagePanel = Control.extend({
     Defaults: {
-      classes: "imagepanel"
+      classes: 'imagepanel'
     },
 
-    selection: function (rect) {
+    selection (rect) {
       if (arguments.length) {
         this.state.set('rect', rect);
         return this;
@@ -31,8 +29,8 @@ var create = function (settings) {
       return this.state.get('rect');
     },
 
-    imageSize: function () {
-      var viewRect = this.state.get('viewRect');
+    imageSize () {
+      const viewRect = this.state.get('viewRect');
 
       return {
         w: viewRect.w,
@@ -40,23 +38,24 @@ var create = function (settings) {
       };
     },
 
-    toggleCropRect: function (state) {
+    toggleCropRect (state) {
       this.state.set('cropEnabled', state);
     },
 
-    imageSrc: function (url) {
-      var self = this, img = new Image();
+    imageSrc (url) {
+      const self = this, img = new Image();
 
       img.src = url;
 
       LoadImage.loadImage(img).then(function () {
-        var rect, $img, lastRect = self.state.get('viewRect');
+        let rect, $img;
+        const lastRect = self.state.get('viewRect');
 
         $img = self.$el.find('img');
         if ($img[0]) {
           $img.replaceWith(img);
         } else {
-          var bg = document.createElement('div');
+          const bg = document.createElement('div');
           bg.className = 'mce-imagepanel-bg';
           self.getEl().appendChild(bg);
           self.getEl().appendChild(img);
@@ -75,7 +74,7 @@ var create = function (settings) {
       });
     },
 
-    zoom: function (value) {
+    zoom (value) {
       if (arguments.length) {
         this.state.set('zoom', value);
         return this;
@@ -84,13 +83,14 @@ var create = function (settings) {
       return this.state.get('zoom');
     },
 
-    postRender: function () {
+    postRender () {
       this.imageSrc(this.settings.imageSrc);
       return this._super();
     },
 
-    zoomFit: function () {
-      var self = this, $img, pw, ph, w, h, zoom, padding;
+    zoomFit () {
+      const self = this;
+      let $img, pw, ph, w, h, zoom, padding;
 
       padding = 10;
       $img = self.$el.find('img');
@@ -107,8 +107,8 @@ var create = function (settings) {
       self.zoom(zoom);
     },
 
-    repaintImage: function () {
-      var x, y, w, h, pw, ph, $img, $bg, zoom, rect, elm;
+    repaintImage () {
+      let x, y, w, h, pw, ph, $img, $bg, zoom, rect, elm;
 
       elm = this.getEl();
       zoom = this.zoom();
@@ -145,10 +145,10 @@ var create = function (settings) {
         });
 
         this.cropRect.setClampRect({
-          x: x,
-          y: y,
-          w: w,
-          h: h
+          x,
+          y,
+          w,
+          h
         });
 
         this.cropRect.setViewPortRect({
@@ -160,8 +160,8 @@ var create = function (settings) {
       }
     },
 
-    bindStates: function () {
-      var self = this;
+    bindStates () {
+      const self = this;
 
       function setupCropRect(rect) {
         self.cropRect = CropRect(
@@ -175,7 +175,8 @@ var create = function (settings) {
         );
 
         self.cropRect.on('updateRect', function (e) {
-          var rect = e.rect, zoom = self.zoom();
+          let rect = e.rect;
+          const zoom = self.zoom();
 
           rect = {
             x: Math.round(rect.x / zoom),
@@ -200,7 +201,7 @@ var create = function (settings) {
       });
 
       self.state.on('change:rect', function (e) {
-        var rect = e.value;
+        const rect = e.value;
 
         if (!self.cropRect) {
           setupCropRect(rect);
@@ -215,5 +216,5 @@ var create = function (settings) {
 };
 
 export default {
-  create: create
+  create
 };

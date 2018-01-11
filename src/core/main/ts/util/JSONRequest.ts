@@ -40,9 +40,9 @@ import Tools from './Tools';
  * });
  */
 
-var extend = Tools.extend;
+const extend = Tools.extend;
 
-var JSONRequest: any = function (settings) {
+const JSONRequest: any = function (settings) {
   this.settings = extend({}, settings);
   this.count = 0;
 };
@@ -66,15 +66,15 @@ JSONRequest.prototype = {
    * @method send
    * @param {Object} args Call object where there are three field id, method and params this object should also contain callbacks etc.
    */
-  send: function (args) {
-    var ecb = args.error, scb = args.success;
+  send (args) {
+    const ecb = args.error, scb = args.success;
 
     args = extend(this.settings, args);
 
     args.success = function (c, x) {
       c = JSON.parse(c);
 
-      if (typeof c == 'undefined') {
+      if (typeof c === 'undefined') {
         c = {
           error: 'JSON Parse error.'
         };

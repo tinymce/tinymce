@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var fireVisualChars = function (editor, state) {
-  return editor.fire('VisualChars', { state: state });
+const fireVisualChars = function (editor, state) {
+  return editor.fire('VisualChars', { state });
 };
 
 export default {
-  fireVisualChars: fireVisualChars
+  fireVisualChars
 };

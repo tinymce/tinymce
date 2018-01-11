@@ -15,10 +15,10 @@ declare let tinymce: any;
 PreviewPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "preview code",
-  toolbar: "preview code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'preview code',
+  toolbar: 'preview code',
   height: 600
 });

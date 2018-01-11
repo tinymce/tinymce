@@ -7,17 +7,17 @@ import { Element } from '@ephox/sugar';
 import ElementType from 'tinymce/core/dom/ElementType';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.ElementTypeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.ElementTypeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var sCheckElement = function (name, predicate, expectedValue) {
+  const sCheckElement = function (name, predicate, expectedValue) {
     return Step.sync(function () {
       Assertions.assertEq('Should be the expected value for specified element', expectedValue, predicate(Element.fromTag(name)));
     });
   };
 
-  var sCheckText = function (predicate) {
+  const sCheckText = function (predicate) {
     return Step.sync(function () {
       Assertions.assertEq('Should be false for non element', false, predicate(Element.fromText('text')));
     });
@@ -99,4 +99,3 @@ UnitTest.asynctest('browser.tinymce.core.dom.ElementTypeTest', function() {
     success();
   }, failure);
 });
-

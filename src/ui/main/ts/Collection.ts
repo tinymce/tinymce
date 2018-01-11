@@ -22,9 +22,8 @@ import Class from 'tinymce/core/util/Class';
  * @class tinymce.ui.Collection
  */
 
-"use strict";
-
-var Collection, proto, push = Array.prototype.push, slice = Array.prototype.slice;
+let Collection, proto;
+const push = Array.prototype.push, slice = Array.prototype.slice;
 
 proto = {
   /**
@@ -42,7 +41,7 @@ proto = {
    * @method init
    * @param {Array} items Optional array with items to add.
    */
-  init: function (items) {
+  init (items) {
     if (items) {
       this.add(items);
     }
@@ -55,8 +54,8 @@ proto = {
    * @param {Array} items Array if items to add to collection.
    * @return {tinymce.ui.Collection} Current collection instance.
    */
-  add: function (items) {
-    var self = this;
+  add (items) {
+    const self = this;
 
     // Force single item into array
     if (!Tools.isArray(items)) {
@@ -80,8 +79,10 @@ proto = {
    * @param {Array} items Array with items to set into the Collection.
    * @return {tinymce.ui.Collection} Collection instance.
    */
-  set: function (items) {
-    var self = this, len = self.length, i;
+  set (items) {
+    const self = this;
+    const len = self.length;
+    let i;
 
     self.length = 0;
     self.add(items);
@@ -101,11 +102,14 @@ proto = {
    * @param {String} selector Selector expression to filter items by.
    * @return {tinymce.ui.Collection} Collection containing the filtered items.
    */
-  filter: function (selector) {
-    var self = this, i, l, matches = [], item, match;
+  filter (selector) {
+    const self = this;
+    let i, l;
+    const matches = [];
+    let item, match;
 
     // Compile string into selector expression
-    if (typeof selector === "string") {
+    if (typeof selector === 'string') {
       selector = new Selector(selector);
 
       match = function (item) {
@@ -135,7 +139,7 @@ proto = {
    * @param {Number} len Optional length to slice.
    * @return {tinymce.ui.Collection} Current collection.
    */
-  slice: function () {
+  slice () {
     return new Collection(slice.apply(this, arguments));
   },
 
@@ -146,7 +150,7 @@ proto = {
    * @param {Number} index Index of the item to set the collection to.
    * @return {tinymce.ui.Collection} Current collection.
    */
-  eq: function (index) {
+  eq (index) {
     return index === -1 ? this.slice(index) : this.slice(index, +index + 1);
   },
 
@@ -157,7 +161,7 @@ proto = {
    * @param {function} callback Callback to execute for each item in collection.
    * @return {tinymce.ui.Collection} Current collection instance.
    */
-  each: function (callback) {
+  each (callback) {
     Tools.each(this, callback);
 
     return this;
@@ -169,7 +173,7 @@ proto = {
    * @method toArray
    * @return {Array} Array with all items from collection.
    */
-  toArray: function () {
+  toArray () {
     return Tools.toArray(this);
   },
 
@@ -180,8 +184,9 @@ proto = {
    * @param {Control} ctrl Control instance to look for.
    * @return {Number} Index of the specified control or -1.
    */
-  indexOf: function (ctrl) {
-    var self = this, i = self.length;
+  indexOf (ctrl) {
+    const self = this;
+    let i = self.length;
 
     while (i--) {
       if (self[i] === ctrl) {
@@ -198,7 +203,7 @@ proto = {
    * @method reverse
    * @return {tinymce.ui.Collection} Collection instance with reversed items.
    */
-  reverse: function () {
+  reverse () {
     return new Collection(Tools.toArray(this).reverse());
   },
 
@@ -209,7 +214,7 @@ proto = {
    * @param {String} cls Class to check for.
    * @return {Boolean} true/false state if the class exists or not.
    */
-  hasClass: function (cls) {
+  hasClass (cls) {
     return this[0] ? this[0].classes.contains(cls) : false;
   },
 
@@ -221,10 +226,11 @@ proto = {
    * @param {Object} value Optional object value to set.
    * @return {tinymce.ui.Collection} Current collection instance or value of the first item on a get operation.
    */
-  prop: function (name, value) {
-    var self = this, undef, item;
+  prop (name, value) {
+    const self = this;
+    let item;
 
-    if (value !== undef) {
+    if (value !== undefined) {
       self.each(function (item) {
         if (item[name]) {
           item[name](value);
@@ -250,8 +256,8 @@ proto = {
    * @param {Object} ... Multiple arguments to pass to each function.
    * @return {tinymce.ui.Collection} Current collection.
    */
-  exec: function (name) {
-    var self = this, args = Tools.toArray(arguments).slice(1);
+  exec (name) {
+    const self = this, args = Tools.toArray(arguments).slice(1);
 
     self.each(function (item) {
       if (item[name]) {
@@ -268,8 +274,8 @@ proto = {
    * @method remove
    * @return {tinymce.ui.Collection} Current collection.
    */
-  remove: function () {
-    var i = this.length;
+  remove () {
+    let i = this.length;
 
     while (i--) {
       this[i].remove();
@@ -285,7 +291,7 @@ proto = {
    * @param {String} cls Class to add to each item.
    * @return {tinymce.ui.Collection} Current collection instance.
    */
-  addClass: function (cls) {
+  addClass (cls) {
     return this.each(function (item) {
       item.classes.add(cls);
     });
@@ -298,7 +304,7 @@ proto = {
    * @param {String} cls Class to remove from each item.
    * @return {tinymce.ui.Collection} Current collection instance.
    */
-  removeClass: function (cls) {
+  removeClass (cls) {
     return this.each(function (item) {
       item.classes.remove(cls);
     });
@@ -408,7 +414,7 @@ proto = {
 // Extend tinymce.ui.Collection prototype with some generated control specific methods
 Tools.each('fire on off show hide append prepend before after reflow'.split(' '), function (name) {
   proto[name] = function () {
-    var args = Tools.toArray(arguments);
+    const args = Tools.toArray(arguments);
 
     this.each(function (ctrl) {
       if (name in ctrl) {
@@ -433,4 +439,4 @@ Collection = Class.extend(proto);
 // Stick Collection into Selector to prevent circual references
 Selector.Collection = Collection;
 
-export default <any> Collection;
+export default Collection;

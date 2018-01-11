@@ -1,20 +1,19 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import Tools from 'tinymce/core/util/Tools';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.MergeCellCommandTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.table.MergeCellCommandTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
 
-  var testCommand = function (editor, command, tests) {
+  const testCommand = function (editor, command, tests) {
     // TODO: Figure out why these doesn't work
     /*Tools.each(tests, function (test) {
       editor.getBody().innerHTML = test.before;
@@ -25,11 +24,11 @@ UnitTest.asynctest('browser.tinymce.plugins.table.MergeCellCommandTest', functio
     });*/
   };
 
-  var cleanTableHtml = function (html) {
-    return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
-  };
+  // const cleanTableHtml = function (html) {
+  //   return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
+  // };
 
-  suite.test("mceTableMergeCells", function (editor) {
+  suite.test('mceTableMergeCells', function (editor) {
     testCommand(editor, 'mceTableMergeCells', [
       {
         message: 'Should merge all cells into one',
@@ -319,4 +318,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.MergeCellCommandTest', functio
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

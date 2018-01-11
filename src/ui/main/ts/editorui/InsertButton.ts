@@ -11,8 +11,8 @@
 import { Arr } from '@ephox/katamari';
 import Tools from 'tinymce/core/util/Tools';
 
-var createCustomMenuItems = function (editor, names) {
-  var items, nameList;
+const createCustomMenuItems = function (editor, names) {
+  let items, nameList;
 
   if (typeof names === 'string') {
     nameList = names.split(' ');
@@ -31,12 +31,12 @@ var createCustomMenuItems = function (editor, names) {
   });
 };
 
-var isSeparator = function (menuItem) {
+const isSeparator = function (menuItem) {
   return menuItem && menuItem.text === '-';
 };
 
-var trimMenuItems = function (menuItems) {
-  var menuItems2 = Arr.filter(menuItems, function (menuItem, i, menuItems) {
+const trimMenuItems = function (menuItems) {
+  const menuItems2 = Arr.filter(menuItems, function (menuItem, i, menuItems) {
     return !isSeparator(menuItem) || !isSeparator(menuItems[i - 1]);
   });
 
@@ -45,9 +45,9 @@ var trimMenuItems = function (menuItems) {
   });
 };
 
-var createContextMenuItems = function (editor, context) {
-  var outputMenuItems = [{ text: '-' }];
-  var menuItems = Tools.grep(editor.menuItems, function (menuItem) {
+const createContextMenuItems = function (editor, context) {
+  const outputMenuItems = [{ text: '-' }];
+  const menuItems = Tools.grep(editor.menuItems, function (menuItem) {
     return menuItem.context === context;
   });
 
@@ -70,8 +70,8 @@ var createContextMenuItems = function (editor, context) {
   return outputMenuItems;
 };
 
-var createInsertMenu = function (editor) {
-  var insertButtonItems = editor.settings.insert_button_items;
+const createInsertMenu = function (editor) {
+  const insertButtonItems = editor.settings.insert_button_items;
 
   if (insertButtonItems) {
     return trimMenuItems(createCustomMenuItems(editor, insertButtonItems));
@@ -80,22 +80,22 @@ var createInsertMenu = function (editor) {
   }
 };
 
-var registerButtons = function (editor) {
+const registerButtons = function (editor) {
   editor.addButton('insert', {
     type: 'menubutton',
     icon: 'insert',
     menu: [],
-    oncreatemenu: function () {
+    oncreatemenu () {
       this.menu.add(createInsertMenu(editor));
       this.menu.renderNew();
     }
   });
 };
 
-var register = function (editor) {
+const register = function (editor) {
   registerButtons(editor);
 };
 
-export default <any> {
-  register: register
+export default {
+  register
 };

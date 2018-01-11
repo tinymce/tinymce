@@ -11,20 +11,20 @@
 import { Fun } from '@ephox/katamari';
 import { Direction } from '@ephox/sugar';
 
-var ltr = {
+const ltr = {
   isRtl: Fun.constant(false)
 };
 
-var rtl = {
+const rtl = {
   isRtl: Fun.constant(true)
 };
 
 // Get the directionality from the position in the content
-var directionAt = function (element) {
-  var dir = Direction.getDirection(element);
+const directionAt = function (element) {
+  const dir = Direction.getDirection(element);
   return dir === 'rtl' ? rtl : ltr;
 };
 
 export default {
-  directionAt: directionAt
+  directionAt
 };

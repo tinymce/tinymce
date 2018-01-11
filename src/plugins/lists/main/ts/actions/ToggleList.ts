@@ -17,31 +17,31 @@ import NormalizeLists from '../core/NormalizeLists';
 import Selection from '../core/Selection';
 import SplitList from '../core/SplitList';
 
-var updateListStyle = function (dom, el, detail) {
-  var type = detail['list-style-type'] ? detail['list-style-type'] : null;
+const updateListStyle = function (dom, el, detail) {
+  const type = detail['list-style-type'] ? detail['list-style-type'] : null;
   dom.setStyle(el, 'list-style-type', type);
 };
 
-var setAttribs = function (elm, attrs) {
+const setAttribs = function (elm, attrs) {
   Tools.each(attrs, function (value, key) {
     elm.setAttribute(key, value);
   });
 };
 
-var updateListAttrs = function (dom, el, detail) {
+const updateListAttrs = function (dom, el, detail) {
   setAttribs(el, detail['list-attributes']);
   Tools.each(dom.select('li', el), function (li) {
     setAttribs(li, detail['list-item-attributes']);
   });
 };
 
-var updateListWithDetails = function (dom, el, detail) {
+const updateListWithDetails = function (dom, el, detail) {
   updateListStyle(dom, el, detail);
   updateListAttrs(dom, el, detail);
 };
 
-var getEndPointNode = function (editor, rng, start, root) {
-  var container, offset;
+const getEndPointNode = function (editor, rng, start, root) {
+  let container, offset;
 
   container = rng[start ? 'startContainer' : 'endContainer'];
   offset = rng[start ? 'startOffset' : 'endOffset'];
@@ -70,14 +70,15 @@ var getEndPointNode = function (editor, rng, start, root) {
   return container;
 };
 
-var getSelectedTextBlocks = function (editor, rng, root) {
-  var textBlocks = [], dom = editor.dom;
+const getSelectedTextBlocks = function (editor, rng, root) {
+  const textBlocks = [], dom = editor.dom;
 
-  var startNode = getEndPointNode(editor, rng, true, root);
-  var endNode = getEndPointNode(editor, rng, false, root);
-  var block, siblings = [];
+  const startNode = getEndPointNode(editor, rng, true, root);
+  const endNode = getEndPointNode(editor, rng, false, root);
+  let block;
+  const siblings = [];
 
-  for (var node = startNode; node; node = node.nextSibling) {
+  for (let node = startNode; node; node = node.nextSibling) {
     siblings.push(node);
 
     if (node === endNode) {
@@ -101,7 +102,7 @@ var getSelectedTextBlocks = function (editor, rng, root) {
       return;
     }
 
-    var nextSibling = node.nextSibling;
+    const nextSibling = node.nextSibling;
     if (BookmarkManager.isBookmarkNode(node)) {
       if (NodeType.isTextBlock(editor, nextSibling) || (!nextSibling && node.parentNode === root)) {
         block = null;
@@ -121,23 +122,24 @@ var getSelectedTextBlocks = function (editor, rng, root) {
   return textBlocks;
 };
 
-var hasCompatibleStyle = function (dom, sib, detail) {
-  var sibStyle = dom.getStyle(sib, 'list-style-type');
-  var detailStyle = detail ? detail['list-style-type'] : '';
+const hasCompatibleStyle = function (dom, sib, detail) {
+  const sibStyle = dom.getStyle(sib, 'list-style-type');
+  let detailStyle = detail ? detail['list-style-type'] : '';
 
   detailStyle = detailStyle === null ? '' : detailStyle;
 
   return sibStyle === detailStyle;
 };
 
-var applyList = function (editor, listName, detail) {
-  var rng = editor.selection.getRng(true), bookmark, listItemName = 'LI';
-  var root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
-  var dom = editor.dom;
+const applyList = function (editor, listName, detail) {
+  const rng = editor.selection.getRng(true);
+  let bookmark, listItemName = 'LI';
+  const root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
+  const dom = editor.dom;
 
   detail = detail ? detail : {};
 
-  if (dom.getContentEditable(editor.selection.getNode()) === "false") {
+  if (dom.getContentEditable(editor.selection.getNode()) === 'false') {
     return;
   }
 
@@ -150,7 +152,7 @@ var applyList = function (editor, listName, detail) {
   bookmark = Bookmark.createBookmark(rng);
 
   Tools.each(getSelectedTextBlocks(editor, rng, root), function (block) {
-    var listBlock, sibling;
+    let listBlock, sibling;
 
     sibling = block.previousSibling;
     if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listName && hasCompatibleStyle(dom, sibling, detail)) {
@@ -171,11 +173,11 @@ var applyList = function (editor, listName, detail) {
   editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
 };
 
-var removeList = function (editor) {
-  var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
-  var root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
-  var listItems = Selection.getSelectedListItems(editor);
-  var emptyListItems = Tools.grep(listItems, function (li) {
+const removeList = function (editor) {
+  const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
+  const root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
+  let listItems = Selection.getSelectedListItems(editor);
+  const emptyListItems = Tools.grep(listItems, function (li) {
     return editor.dom.isEmpty(li);
   });
 
@@ -191,7 +193,7 @@ var removeList = function (editor) {
   });
 
   Tools.each(listItems, function (li) {
-    var node, rootList;
+    let node, rootList;
 
     if (li.parentNode === editor.getBody()) {
       return;
@@ -210,26 +212,26 @@ var removeList = function (editor) {
   editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
 };
 
-var isValidLists = function (list1, list2) {
+const isValidLists = function (list1, list2) {
   return list1 && list2 && NodeType.isListNode(list1) && list1.nodeName === list2.nodeName;
 };
 
-var hasSameListStyle = function (dom, list1, list2) {
-  var targetStyle = dom.getStyle(list1, 'list-style-type', true);
-  var style = dom.getStyle(list2, 'list-style-type', true);
+const hasSameListStyle = function (dom, list1, list2) {
+  const targetStyle = dom.getStyle(list1, 'list-style-type', true);
+  const style = dom.getStyle(list2, 'list-style-type', true);
   return targetStyle === style;
 };
 
-var hasSameClasses = function (elm1, elm2) {
+const hasSameClasses = function (elm1, elm2) {
   return elm1.className === elm2.className;
 };
 
-var shouldMerge = function (dom, list1, list2) {
+const shouldMerge = function (dom, list1, list2) {
   return isValidLists(list1, list2) && hasSameListStyle(dom, list1, list2) && hasSameClasses(list1, list2);
 };
 
-var mergeWithAdjacentLists = function (dom, listBlock) {
-  var sibling, node;
+const mergeWithAdjacentLists = function (dom, listBlock) {
+  let sibling, node;
 
   sibling = listBlock.nextSibling;
   if (shouldMerge(dom, listBlock, sibling)) {
@@ -250,20 +252,20 @@ var mergeWithAdjacentLists = function (dom, listBlock) {
   }
 };
 
-var updateList = function (dom, list, listName, detail) {
+const updateList = function (dom, list, listName, detail) {
   if (list.nodeName !== listName) {
-    var newList = dom.rename(list, listName);
+    const newList = dom.rename(list, listName);
     updateListWithDetails(dom, newList, detail);
   } else {
     updateListWithDetails(dom, list, detail);
   }
 };
 
-var toggleMultipleLists = function (editor, parentList, lists, listName, detail) {
+const toggleMultipleLists = function (editor, parentList, lists, listName, detail) {
   if (parentList.nodeName === listName && !hasListStyleDetail(detail)) {
     removeList(editor);
   } else {
-    var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
+    const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
 
     Tools.each([parentList].concat(lists), function (elm) {
       updateList(editor.dom, elm, listName, detail);
@@ -273,11 +275,11 @@ var toggleMultipleLists = function (editor, parentList, lists, listName, detail)
   }
 };
 
-var hasListStyleDetail = function (detail) {
+const hasListStyleDetail = function (detail) {
   return 'list-style-type' in detail;
 };
 
-var toggleSingleList = function (editor, parentList, listName, detail) {
+const toggleSingleList = function (editor, parentList, listName, detail) {
   if (parentList === editor.getBody()) {
     return;
   }
@@ -286,7 +288,7 @@ var toggleSingleList = function (editor, parentList, listName, detail) {
     if (parentList.nodeName === listName && !hasListStyleDetail(detail)) {
       removeList(editor);
     } else {
-      var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
+      const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
       updateListWithDetails(editor.dom, parentList, detail);
       mergeWithAdjacentLists(editor.dom, editor.dom.rename(parentList, listName));
       editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
@@ -296,9 +298,9 @@ var toggleSingleList = function (editor, parentList, listName, detail) {
   }
 };
 
-var toggleList = function (editor, listName, detail) {
-  var parentList = Selection.getParentList(editor);
-  var selectedSubLists = Selection.getSelectedSubLists(editor);
+const toggleList = function (editor, listName, detail) {
+  const parentList = Selection.getParentList(editor);
+  const selectedSubLists = Selection.getSelectedSubLists(editor);
 
   detail = detail ? detail : {};
 
@@ -310,7 +312,7 @@ var toggleList = function (editor, listName, detail) {
 };
 
 export default {
-  toggleList: toggleList,
-  removeList: removeList,
-  mergeWithAdjacentLists: mergeWithAdjacentLists
+  toggleList,
+  removeList,
+  mergeWithAdjacentLists
 };

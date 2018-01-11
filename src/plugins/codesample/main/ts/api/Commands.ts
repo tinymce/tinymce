@@ -11,9 +11,9 @@
 import Dialog from '../ui/Dialog';
 import Utils from '../util/Utils';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addCommand('codesample', function () {
-    var node = editor.selection.getNode();
+    const node = editor.selection.getNode();
     if (editor.selection.isCollapsed() || Utils.isCodeSample(node)) {
       Dialog.open(editor);
     } else {
@@ -23,5 +23,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

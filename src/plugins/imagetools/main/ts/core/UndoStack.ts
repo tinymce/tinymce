@@ -8,20 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-
-
 export default function () {
-  var data = [], index = -1;
+  const data = [];
+  let index = -1;
 
   function add(state) {
-    var removed;
+    let removed;
 
     removed = data.splice(++index);
     data.push(state);
 
     return {
-      state: state,
-      removed: removed
+      state,
+      removed
     };
   }
 
@@ -46,11 +45,11 @@ export default function () {
   }
 
   return {
-    data: data,
-    add: add,
-    undo: undo,
-    redo: redo,
-    canUndo: canUndo,
-    canRedo: canRedo
+    data,
+    add,
+    undo,
+    redo,
+    canUndo,
+    canRedo
   };
-};
+}

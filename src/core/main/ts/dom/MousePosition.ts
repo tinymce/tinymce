@@ -15,8 +15,8 @@
  * @class tinymce.dom.MousePosition
  */
 
-var getAbsolutePosition = function (elm) {
-  var doc, docElem, win, clientRect;
+const getAbsolutePosition = function (elm) {
+  let doc, docElem, win, clientRect;
 
   clientRect = elm.getBoundingClientRect();
   doc = elm.ownerDocument;
@@ -29,27 +29,27 @@ var getAbsolutePosition = function (elm) {
   };
 };
 
-var getBodyPosition = function (editor) {
+const getBodyPosition = function (editor) {
   return editor.inline ? getAbsolutePosition(editor.getBody()) : { left: 0, top: 0 };
 };
 
-var getScrollPosition = function (editor) {
-  var body = editor.getBody();
+const getScrollPosition = function (editor) {
+  const body = editor.getBody();
   return editor.inline ? { left: body.scrollLeft, top: body.scrollTop } : { left: 0, top: 0 };
 };
 
-var getBodyScroll = function (editor) {
-  var body = editor.getBody(), docElm = editor.getDoc().documentElement;
-  var inlineScroll = { left: body.scrollLeft, top: body.scrollTop };
-  var iframeScroll = { left: body.scrollLeft || docElm.scrollLeft, top: body.scrollTop || docElm.scrollTop };
+const getBodyScroll = function (editor) {
+  const body = editor.getBody(), docElm = editor.getDoc().documentElement;
+  const inlineScroll = { left: body.scrollLeft, top: body.scrollTop };
+  const iframeScroll = { left: body.scrollLeft || docElm.scrollLeft, top: body.scrollTop || docElm.scrollTop };
 
   return editor.inline ? inlineScroll : iframeScroll;
 };
 
-var getMousePosition = function (editor, event) {
+const getMousePosition = function (editor, event) {
   if (event.target.ownerDocument !== editor.getDoc()) {
-    var iframePosition = getAbsolutePosition(editor.getContentAreaContainer());
-    var scrollPosition = getBodyScroll(editor);
+    const iframePosition = getAbsolutePosition(editor.getContentAreaContainer());
+    const scrollPosition = getBodyScroll(editor);
 
     return {
       left: event.pageX - iframePosition.left + scrollPosition.left,
@@ -63,17 +63,17 @@ var getMousePosition = function (editor, event) {
   };
 };
 
-var calculatePosition = function (bodyPosition, scrollPosition, mousePosition) {
+const calculatePosition = function (bodyPosition, scrollPosition, mousePosition) {
   return {
     pageX: (mousePosition.left - bodyPosition.left) + scrollPosition.left,
     pageY: (mousePosition.top - bodyPosition.top) + scrollPosition.top
   };
 };
 
-var calc = function (editor, event) {
+const calc = function (editor, event) {
   return calculatePosition(getBodyPosition(editor), getScrollPosition(editor), getMousePosition(editor, event));
 };
 
 export default {
-  calc: calc
+  calc
 };

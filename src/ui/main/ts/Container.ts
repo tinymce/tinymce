@@ -28,11 +28,9 @@ import ReflowQueue from './ReflowQueue';
  * @extends tinymce.ui.Control
  */
 
-"use strict";
+const selectorCache = {};
 
-var selectorCache = {};
-
-export default <any> Control.extend({
+export default Control.extend({
   /**
    * Constructs a new control instance with the specified settings.
    *
@@ -42,8 +40,8 @@ export default <any> Control.extend({
    * @setting {String} layout Layout manager by name to use.
    * @setting {Object} defaults Default settings to apply to all items.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._super(settings);
     settings = self.settings;
@@ -90,7 +88,7 @@ export default <any> Control.extend({
    * @method items
    * @return {tinymce.ui.Collection} Control collection direct child controls.
    */
-  items: function () {
+  items () {
     return this._items;
   },
 
@@ -101,7 +99,7 @@ export default <any> Control.extend({
    * @param {String} selector Selector CSS pattern to find children by.
    * @return {tinymce.ui.Collection} Control collection with child controls.
    */
-  find: function (selector) {
+  find (selector) {
     selector = selectorCache[selector] = selectorCache[selector] || new Selector(selector);
 
     return selector.find(this);
@@ -115,8 +113,8 @@ export default <any> Control.extend({
    * @param {Array/Object/tinymce.ui.Control} items Array or item that will be added to the container.
    * @return {tinymce.ui.Collection} Current collection control.
    */
-  add: function (items) {
-    var self = this;
+  add (items) {
+    const self = this;
 
     self.items().add(self.create(items)).parent(self);
 
@@ -131,8 +129,9 @@ export default <any> Control.extend({
    * @param {Boolean} keyboard Optional true/false if the focus was a keyboard focus or not.
    * @return {tinymce.ui.Collection} Current instance.
    */
-  focus: function (keyboard) {
-    var self = this, focusCtrl, keyboardNav, items;
+  focus (keyboard) {
+    const self = this;
+    let focusCtrl, keyboardNav, items;
 
     if (keyboard) {
       keyboardNav = self.keyboardNav || self.parents().eq(-1)[0].keyboardNav;
@@ -175,8 +174,10 @@ export default <any> Control.extend({
    * @param {tinymce.ui.Control} oldItem Old item to be replaced.
    * @param {tinymce.ui.Control} newItem New item to be inserted.
    */
-  replace: function (oldItem, newItem) {
-    var ctrlElm, items = this.items(), i = items.length;
+  replace (oldItem, newItem) {
+    let ctrlElm;
+    const items = this.items();
+    let i = items.length;
 
     // Replace the item in collection
     while (i--) {
@@ -212,8 +213,10 @@ export default <any> Control.extend({
    * @param {Array} items Array of items to convert into control instances.
    * @return {Array} Array with control instances.
    */
-  create: function (items) {
-    var self = this, settings, ctrlItems = [];
+  create (items) {
+    const self = this;
+    let settings;
+    const ctrlItems = [];
 
     // Non array structure, then force it into an array
     if (!Tools.isArray(items)) {
@@ -226,7 +229,7 @@ export default <any> Control.extend({
         // Construct item if needed
         if (!(item instanceof Control)) {
           // Name only then convert it to an object
-          if (typeof item == "string") {
+          if (typeof item === 'string') {
             item = { type: item };
           }
 
@@ -249,12 +252,12 @@ export default <any> Control.extend({
    *
    * @private
    */
-  renderNew: function () {
-    var self = this;
+  renderNew () {
+    const self = this;
 
     // Render any new items
     self.items().each(function (ctrl, index) {
-      var containerElm;
+      let containerElm;
 
       ctrl.parent(self);
 
@@ -286,7 +289,7 @@ export default <any> Control.extend({
    * @param {Array/tinymce.ui.Collection} items Array if controls to append.
    * @return {tinymce.ui.Container} Current container instance.
    */
-  append: function (items) {
+  append (items) {
     return this.add(items).renderNew();
   },
 
@@ -297,8 +300,8 @@ export default <any> Control.extend({
    * @param {Array/tinymce.ui.Collection} items Array if controls to prepend.
    * @return {tinymce.ui.Container} Current container instance.
    */
-  prepend: function (items) {
-    var self = this;
+  prepend (items) {
+    const self = this;
 
     self.items().set(self.create(items).concat(self.items().toArray()));
 
@@ -313,8 +316,9 @@ export default <any> Control.extend({
    * @param {Number} index Index to insert controls at.
    * @param {Boolean} [before=false] Inserts controls before the index.
    */
-  insert: function (items, index, before) {
-    var self = this, curItems, beforeItems, afterItems;
+  insert (items, index, before) {
+    const self = this;
+    let curItems, beforeItems, afterItems;
 
     items = self.create(items);
     curItems = self.items();
@@ -341,10 +345,10 @@ export default <any> Control.extend({
    * @param {Object} data JSON data object to set control values by.
    * @return {tinymce.ui.Container} Current form instance.
    */
-  fromJSON: function (data) {
-    var self = this;
+  fromJSON (data) {
+    const self = this;
 
-    for (var name in data) {
+    for (const name in data) {
       self.find('#' + name).value(data[name]);
     }
 
@@ -358,13 +362,13 @@ export default <any> Control.extend({
    * @method toJSON
    * @return {Object} JSON object with form data.
    */
-  toJSON: function () {
-    var self = this, data = {};
+  toJSON () {
+    const self = this, data = {};
 
     self.find('*').each(function (ctrl) {
-      var name = ctrl.name(), value = ctrl.value();
+      const name = ctrl.name(), value = ctrl.value();
 
-      if (name && typeof value != "undefined") {
+      if (name && typeof value !== 'undefined') {
         data[name] = value;
       }
     });
@@ -378,8 +382,8 @@ export default <any> Control.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, layout = self._layout, role = this.settings.role;
+  renderHtml () {
+    const self = this, layout = self._layout, role = this.settings.role;
 
     self.preRender();
     layout.preRender(self);
@@ -399,8 +403,9 @@ export default <any> Control.extend({
    * @method postRender
    * @return {tinymce.ui.Container} Current combobox instance.
    */
-  postRender: function () {
-    var self = this, box;
+  postRender () {
+    const self = this;
+    let box;
 
     self.items().exec('postRender');
     self._super();
@@ -423,7 +428,7 @@ export default <any> Control.extend({
     }
 
     if (!self.parent()) {
-      self.keyboardNav = new KeyboardNavigation({
+      self.keyboardNav = KeyboardNavigation({
         root: self
       });
     }
@@ -439,8 +444,8 @@ export default <any> Control.extend({
    * @method initLayoutRect
    * @return {Object} Layout rect instance.
    */
-  initLayoutRect: function () {
-    var self = this, layoutRect = self._super();
+  initLayoutRect () {
+    const self = this, layoutRect = self._super();
 
     // Recalc container size by asking layout manager
     self._layout.recalc(self);
@@ -454,10 +459,12 @@ export default <any> Control.extend({
    *
    * @method recalc
    */
-  recalc: function () {
-    var self = this, rect = self._layoutRect, lastRect = self._lastRect;
+  recalc () {
+    const self = this;
+    let rect = self._layoutRect;
+    const lastRect = self._lastRect;
 
-    if (!lastRect || lastRect.w != rect.w || lastRect.h != rect.h) {
+    if (!lastRect || lastRect.w !== rect.w || lastRect.h !== rect.h) {
       self._layout.recalc(self);
       rect = self.layoutRect();
       self._lastRect = { x: rect.x, y: rect.y, w: rect.w, h: rect.h };
@@ -476,8 +483,8 @@ export default <any> Control.extend({
    * @method reflow
    * @return {tinymce.ui.Container} Current container instance.
    */
-  reflow: function () {
-    var i;
+  reflow () {
+    let i;
 
     ReflowQueue.remove(this);
 
@@ -493,7 +500,7 @@ export default <any> Control.extend({
       }
 
       // TODO: Fix me!
-      if (this.settings.layout !== "flow" && this.settings.layout !== "stack") {
+      if (this.settings.layout !== 'flow' && this.settings.layout !== 'stack') {
         this.repaint();
       }
 

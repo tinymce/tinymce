@@ -14,8 +14,8 @@ import CefNavigation from './CefNavigation';
 import MatchKeys from './MatchKeys';
 import VK from '../util/VK';
 
-var executeKeydownOverride = function (editor, caret, evt) {
-  var os = PlatformDetection.detect().os;
+const executeKeydownOverride = function (editor, caret, evt) {
+  const os = PlatformDetection.detect().os;
 
   MatchKeys.execute([
     { keyCode: VK.RIGHT, action: CefNavigation.moveH(editor, true) },
@@ -31,7 +31,7 @@ var executeKeydownOverride = function (editor, caret, evt) {
   });
 };
 
-var setup = function (editor, caret) {
+const setup = function (editor, caret) {
   editor.on('keydown', function (evt) {
     if (evt.isDefaultPrevented() === false) {
       executeKeydownOverride(editor, caret, evt);
@@ -40,5 +40,5 @@ var setup = function (editor, caret) {
 };
 
 export default {
-  setup: setup
+  setup
 };

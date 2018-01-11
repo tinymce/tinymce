@@ -8,21 +8,21 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
   Theme();
 
-  var sInsertTable = function (editor, cols, rows) {
+  const sInsertTable = function (editor, cols, rows) {
     return Step.sync(function () {
       editor.plugins.table.insertTable(cols, rows);
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('Insert table 2x2', GeneralSteps.sequence([
@@ -53,4 +53,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

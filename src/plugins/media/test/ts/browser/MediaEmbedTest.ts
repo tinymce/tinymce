@@ -7,16 +7,16 @@ import Utils from '../module/test/Utils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.core.MediaEmbedTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.core.MediaEmbedTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var ui = TinyUi(editor);
-    var api = TinyApis(editor);
+    const ui = TinyUi(editor);
+    const api = TinyApis(editor);
 
     Pipeline.async({}, [
       Utils.sTestEmbedContentFromUrl(ui,
@@ -35,9 +35,9 @@ UnitTest.asynctest('browser.core.MediaEmbedTest', function() {
       Utils.sAssertSizeRecalcConstrainedReopen(ui)
     ], onSuccess, onFailure);
   }, {
-    plugins: ["media"],
-    toolbar: "media",
-    media_url_resolver: function (data, resolve) {
+    plugins: ['media'],
+    toolbar: 'media',
+    media_url_resolver (data, resolve) {
       resolve({
         html: '<video width="300" height="150" ' +
           'controls="controls">\n<source src="' + data.url + '" />\n</video>'
@@ -46,4 +46,3 @@ UnitTest.asynctest('browser.core.MediaEmbedTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

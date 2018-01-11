@@ -10,16 +10,16 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   TablePlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       Logger.t('no styles without setting', GeneralSteps.sequence([
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', funct
         tinyUi.sClickOnUi('click table menu', 'div[role="menu"] span:contains("Table")'),
         tinyUi.sClickOnUi('click table grid', 'td[role="gridcell"]:first a'),
         Step.sync(function () {
-          var table = editor.getBody().querySelector('table');
+          const table = editor.getBody().querySelector('table');
           RawAssertions.assertEq('should be empty', '', table.style.border);
         }),
         tinyApis.sSetContent('')
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', funct
         tinyUi.sClickOnUi('click table menu', 'div[role="menu"] span:contains("Table")'),
         tinyUi.sClickOnUi('click table grid', 'td[role="gridcell"]:first a'),
         Step.sync(function () {
-          var table = editor.getBody().querySelector('table');
+          const table = editor.getBody().querySelector('table');
           RawAssertions.assertEq('should be undefined', '3px solid blue', table.style.border);
         }),
         tinyApis.sSetContent('')
@@ -53,4 +53,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', funct
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

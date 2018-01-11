@@ -7,14 +7,14 @@ import Thor from '../../util/Thor';
 import Styles from '../../style/Styles';
 import MetaViewport from '../../touch/view/MetaViewport';
 
-var create = function (platform, mask) {
+const create = function (platform, mask) {
 
-  var meta = MetaViewport.tag();
-  var androidApi = Singleton.api();
+  const meta = MetaViewport.tag();
+  const androidApi = Singleton.api();
 
-  var androidEvents = Singleton.api();
+  const androidEvents = Singleton.api();
 
-  var enter = function () {
+  const enter = function () {
     mask.hide();
 
     Class.add(platform.container, Styles.resolve('fullscreen-maximized'));
@@ -36,7 +36,7 @@ var create = function (platform, mask) {
     });
   };
 
-  var exit = function () {
+  const exit = function () {
     meta.restore();
     mask.show();
     Class.remove(platform.container, Styles.resolve('fullscreen-maximized'));
@@ -52,11 +52,11 @@ var create = function (platform, mask) {
   };
 
   return {
-    enter: enter,
-    exit: exit
+    enter,
+    exit
   };
 };
 
-export default <any> {
-  create: create
+export default {
+  create
 };

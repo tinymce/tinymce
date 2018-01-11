@@ -3,18 +3,17 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/Env';
 import HtmlUtils from '../module/test/HtmlUtils';
-import JSON from 'tinymce/core/util/JSON';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var normalizeRng = function (rng) {
+  const normalizeRng = function (rng) {
     if (rng.startContainer.nodeType === 3) {
       if (rng.startOffset === 0) {
         rng.setStartBefore(rng.startContainer);
@@ -34,12 +33,12 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function() {
     return rng;
   };
 
-  var ok = function (value, label?) {
+  const ok = function (value, label?) {
     return LegacyUnit.equal(value, true, label);
   };
 
   suite.test('InsertHorizontalRule', function (editor) {
-    var rng;
+    let rng;
 
     editor.setContent('<p>123</p>');
     rng = editor.dom.createRng();
@@ -100,4 +99,3 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

@@ -10,12 +10,12 @@
 
 import VisualBlocks from '../core/VisualBlocks';
 
-var register = function (editor, pluginUrl, enabledState) {
+const register = function (editor, pluginUrl, enabledState) {
   editor.addCommand('mceVisualBlocks', function () {
     VisualBlocks.toggleVisualBlocks(editor, pluginUrl, enabledState);
   });
 };
 
 export default {
-  register: register
+  register
 };

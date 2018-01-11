@@ -15,10 +15,10 @@ declare let tinymce: any;
 NonBreakingPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "nonbreaking code",
-  toolbar: "nonbreaking code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'nonbreaking code',
+  toolbar: 'nonbreaking code',
   height: 600
 });

@@ -11,12 +11,12 @@
 import Tools from 'tinymce/core/util/Tools';
 import Parser from '../core/Parser';
 
-var open = function (editor, headState) {
-  var data = Parser.htmlToData(editor, headState.get());
+const open = function (editor, headState) {
+  const data = Parser.htmlToData(editor, headState.get());
 
   editor.windowManager.open({
     title: 'Document properties',
-    data: data,
+    data,
     defaults: { type: 'textbox', size: 40 },
     body: [
       { name: 'title', label: 'Title' },
@@ -26,13 +26,13 @@ var open = function (editor, headState) {
       { name: 'author', label: 'Author' },
       { name: 'docencoding', label: 'Encoding' }
     ],
-    onSubmit: function (e) {
-      var headHtml = Parser.dataToHtml(editor, Tools.extend(data, e.data), headState.get());
+    onSubmit (e) {
+      const headHtml = Parser.dataToHtml(editor, Tools.extend(data, e.data), headState.get());
       headState.set(headHtml);
     }
   });
 };
 
-export default <any> {
-  open: open
+export default {
+  open
 };

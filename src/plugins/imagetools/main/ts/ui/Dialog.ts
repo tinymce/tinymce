@@ -20,7 +20,7 @@ import ImagePanel from './ImagePanel';
 
 function createState(blob) {
   return {
-    blob: blob,
+    blob,
     url: URL.createObjectURL(blob)
   };
 }
@@ -36,14 +36,14 @@ function destroyStates(states) {
 }
 
 function open(editor, currentState, resolve, reject) {
-  var win, undoStack = UndoStack(), mainPanel, filtersPanel, tempState,
+  let win, undoStack = UndoStack(), mainPanel, filtersPanel, tempState,
     cropPanel, resizePanel, flipRotatePanel, imagePanel, sidePanel, mainViewContainer,
     invertPanel, brightnessPanel, huePanel, saturatePanel, contrastPanel, grayscalePanel,
     sepiaPanel, colorizePanel, sharpenPanel, embossPanel, gammaPanel, exposurePanel, panels,
     width, height, ratioW, ratioH;
 
   function recalcSize(e) {
-    var widthCtrl, heightCtrl, newWidth, newHeight;
+    let widthCtrl, heightCtrl, newWidth, newHeight;
 
     widthCtrl = win.find('#w')[0];
     heightCtrl = win.find('#h')[0];
@@ -88,7 +88,7 @@ function open(editor, currentState, resolve, reject) {
 
   function switchPanel(targetPanel) {
     return function () {
-      var hidePanels = Tools.grep(panels, function (panel) {
+      const hidePanels = Tools.grep(panels, function (panel) {
         return panel.settings.name !== targetPanel;
       });
 
@@ -114,7 +114,7 @@ function open(editor, currentState, resolve, reject) {
   }
 
   function crop() {
-    var rect = imagePanel.selection();
+    const rect = imagePanel.selection();
 
     ResultConversions.blobToImageResult(currentState.blob).
       then(function (ir) {
@@ -127,11 +127,11 @@ function open(editor, currentState, resolve, reject) {
       });
   }
 
-  var tempAction: any = function (fn) {
-    var args = [].slice.call(arguments, 1);
+  const tempAction: any = function (fn) {
+    const args = [].slice.call(arguments, 1);
 
     return function () {
-      var state = tempState || currentState;
+      const state = tempState || currentState;
 
       ResultConversions.blobToImageResult(state.blob).
         then(function (ir) {
@@ -141,7 +141,7 @@ function open(editor, currentState, resolve, reject) {
   };
 
   function action(fn, ...arg): Function {
-    var args = [].slice.call(arguments, 1);
+    const args = [].slice.call(arguments, 1);
 
     return function () {
       ResultConversions.blobToImageResult(currentState.blob).
@@ -182,7 +182,7 @@ function open(editor, currentState, resolve, reject) {
   }
 
   function zoomIn() {
-    var zoom = imagePanel.zoom();
+    let zoom = imagePanel.zoom();
 
     if (zoom < 2) {
       zoom += 0.1;
@@ -192,7 +192,7 @@ function open(editor, currentState, resolve, reject) {
   }
 
   function zoomOut() {
-    var zoom = imagePanel.zoom();
+    let zoom = imagePanel.zoom();
 
     if (zoom > 0.1) {
       zoom -= 0.1;
@@ -234,11 +234,11 @@ function open(editor, currentState, resolve, reject) {
         classes: 'imagetool',
         type: 'button'
       },
-      items: items
+      items
     });
   }
 
-  var imageResultToBlob = function (ir) {
+  const imageResultToBlob = function (ir) {
     return ir.toBlob();
   };
 
@@ -256,7 +256,7 @@ function open(editor, currentState, resolve, reject) {
         }).
         then(imageResultToBlob).
         then(function (blob) {
-          var newTempState = createState(blob);
+          const newTempState = createState(blob);
 
           displayState(newTempState);
           destroyState(tempState);
@@ -273,7 +273,7 @@ function open(editor, currentState, resolve, reject) {
         }).
         then(imageResultToBlob).
         then(function (blob) {
-          var newTempState = createState(blob);
+          const newTempState = createState(blob);
           displayState(newTempState);
           destroyState(tempState);
           tempState = newTempState;
@@ -286,12 +286,12 @@ function open(editor, currentState, resolve, reject) {
       {
         type: 'slider',
         flex: 1,
-        ondragend: function (e) {
+        ondragend (e) {
           update(e.value);
         },
         minValue: min,
         maxValue: max,
-        value: value,
+        value,
         previewFilter: floatToPercent
       },
       { type: 'spacer', flex: 1 },
@@ -304,7 +304,7 @@ function open(editor, currentState, resolve, reject) {
 
   function createRgbFilterPanel(title, filter) {
     function update() {
-      var r, g, b;
+      let r, g, b;
 
       r = win.find('#r')[0].value();
       g = win.find('#g')[0].value();
@@ -316,7 +316,7 @@ function open(editor, currentState, resolve, reject) {
       }).
       then(imageResultToBlob).
       then(function (blob) {
-        var newTempState = createState(blob);
+        const newTempState = createState(blob);
         displayState(newTempState);
         destroyState(tempState);
         tempState = newTempState;
@@ -370,7 +370,7 @@ function open(editor, currentState, resolve, reject) {
     { type: 'spacer', flex: 1 },
     { text: 'Apply', subtype: 'primary', onclick: 'submit' }
   ]).hide().on('submit', function (e) {
-    var width = parseInt(win.find('#w').value(), 10),
+    const width = parseInt(win.find('#w').value(), 10),
       height = parseInt(win.find('#h').value(), 10);
 
     e.preventDefault();
@@ -390,19 +390,19 @@ function open(editor, currentState, resolve, reject) {
     { text: 'Apply', subtype: 'primary', onclick: applyTempState }
   ]).hide().on('show', disableUndoRedo);
 
-  invertPanel = createFilterPanel("Invert", ImageTransformations.invert);
-  sharpenPanel = createFilterPanel("Sharpen", ImageTransformations.sharpen);
-  embossPanel = createFilterPanel("Emboss", ImageTransformations.emboss);
+  invertPanel = createFilterPanel('Invert', ImageTransformations.invert);
+  sharpenPanel = createFilterPanel('Sharpen', ImageTransformations.sharpen);
+  embossPanel = createFilterPanel('Emboss', ImageTransformations.emboss);
 
-  brightnessPanel = createVariableFilterPanel("Brightness", ImageTransformations.brightness, 0, -1, 1);
-  huePanel = createVariableFilterPanel("Hue", ImageTransformations.hue, 180, 0, 360);
-  saturatePanel = createVariableFilterPanel("Saturate", ImageTransformations.saturate, 0, -1, 1);
-  contrastPanel = createVariableFilterPanel("Contrast", ImageTransformations.contrast, 0, -1, 1);
-  grayscalePanel = createVariableFilterPanel("Grayscale", ImageTransformations.grayscale, 0, 0, 1);
-  sepiaPanel = createVariableFilterPanel("Sepia", ImageTransformations.sepia, 0, 0, 1);
-  colorizePanel = createRgbFilterPanel("Colorize", ImageTransformations.colorize);
-  gammaPanel = createVariableFilterPanel("Gamma", ImageTransformations.gamma, 0, -1, 1);
-  exposurePanel = createVariableFilterPanel("Exposure", ImageTransformations.exposure, 1, 0, 2);
+  brightnessPanel = createVariableFilterPanel('Brightness', ImageTransformations.brightness, 0, -1, 1);
+  huePanel = createVariableFilterPanel('Hue', ImageTransformations.hue, 180, 0, 360);
+  saturatePanel = createVariableFilterPanel('Saturate', ImageTransformations.saturate, 0, -1, 1);
+  contrastPanel = createVariableFilterPanel('Contrast', ImageTransformations.contrast, 0, -1, 1);
+  grayscalePanel = createVariableFilterPanel('Grayscale', ImageTransformations.grayscale, 0, 0, 1);
+  sepiaPanel = createVariableFilterPanel('Sepia', ImageTransformations.sepia, 0, 0, 1);
+  colorizePanel = createRgbFilterPanel('Colorize', ImageTransformations.colorize);
+  gammaPanel = createVariableFilterPanel('Gamma', ImageTransformations.gamma, 0, -1, 1);
+  exposurePanel = createVariableFilterPanel('Exposure', ImageTransformations.exposure, 1, 0, 2);
 
   filtersPanel = createPanel([
     { text: 'Back', onclick: cancel },
@@ -425,7 +425,7 @@ function open(editor, currentState, resolve, reject) {
     { tooltip: 'Color levels', icon: 'drop', onclick: switchPanel(colorizePanel) },
     { tooltip: 'Gamma', icon: 'gamma', onclick: switchPanel(gammaPanel) },
     { tooltip: 'Invert', icon: 'invert', onclick: switchPanel(invertPanel) }
-    //{text: 'More', onclick: switchPanel(filtersPanel)}
+    // {text: 'More', onclick: switchPanel(filtersPanel)}
   ]);
 
   imagePanel = ImagePanel.create({
@@ -522,5 +522,5 @@ function edit(editor, imageResult) {
 }
 
 export default {
-  edit: edit
+  edit
 };

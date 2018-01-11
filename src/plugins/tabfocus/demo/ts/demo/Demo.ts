@@ -15,9 +15,9 @@ declare let tinymce: any;
 TabFocusPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  plugins: "tabfocus code",
-  toolbar: "code",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
+  selector: 'textarea.tinymce',
+  plugins: 'tabfocus code',
+  toolbar: 'code',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
   height: 600
 });

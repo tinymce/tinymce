@@ -10,20 +10,20 @@ import Plugin from 'tinymce/plugins/fullpage/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
 
-  var teardown = function (editor) {
+  const teardown = function (editor) {
     editor.getBody().rtl = '';
   };
 
   suite.test('Keep header/footer intact', function (editor) {
-    var normalizeHTML = function (html) {
+    const normalizeHTML = function (html) {
       return html.replace(/\s/g, '');
     };
 
@@ -82,10 +82,10 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
   });
 
   suite.test('add/remove stylesheets', function (editor) {
-    var hasLink = function hasink(href) {
-      var links = editor.getDoc().getElementsByTagName('link');
+    const hasLink = function hasink(href) {
+      const links = editor.getDoc().getElementsByTagName('link');
 
-      for (var i = 0; i < links.length; i++) {
+      for (let i = 0; i < links.length; i++) {
         if (links[i].href.indexOf('/' + href) !== -1) {
           return true;
         }
@@ -95,16 +95,16 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
     };
 
     editor.setContent('<html><head><link rel="stylesheet" href="a.css"></head><body><p>c</p></body></html>');
-    LegacyUnit.equal(hasLink("a.css"), true);
-    LegacyUnit.equal(hasLink("b.css"), false);
-    LegacyUnit.equal(hasLink("c.css"), false);
+    LegacyUnit.equal(hasLink('a.css'), true);
+    LegacyUnit.equal(hasLink('b.css'), false);
+    LegacyUnit.equal(hasLink('c.css'), false);
 
     editor.setContent(
       '<html><head><link rel="stylesheet" href="a.css"><link rel="stylesheet" href="b.css"></head><body><p>c</p></body></html>'
     );
-    LegacyUnit.equal(hasLink("a.css"), true);
-    LegacyUnit.equal(hasLink("b.css"), true);
-    LegacyUnit.equal(hasLink("c.css"), false);
+    LegacyUnit.equal(hasLink('a.css'), true);
+    LegacyUnit.equal(hasLink('b.css'), true);
+    LegacyUnit.equal(hasLink('c.css'), false);
 
     editor.setContent(
       '<html><head>' +
@@ -114,22 +114,22 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
       '</head>' +
       '<body><p>c</p></body></html>'
     );
-    LegacyUnit.equal(hasLink("a.css"), true);
-    LegacyUnit.equal(hasLink("b.css"), true);
-    LegacyUnit.equal(hasLink("c.css"), true);
+    LegacyUnit.equal(hasLink('a.css'), true);
+    LegacyUnit.equal(hasLink('b.css'), true);
+    LegacyUnit.equal(hasLink('c.css'), true);
 
     editor.setContent('<html><head><link rel="stylesheet" href="a.css"></head><body><p>c</p></body></html>');
-    LegacyUnit.equal(hasLink("a.css"), true);
-    LegacyUnit.equal(hasLink("b.css"), false);
-    LegacyUnit.equal(hasLink("c.css"), false);
+    LegacyUnit.equal(hasLink('a.css'), true);
+    LegacyUnit.equal(hasLink('b.css'), false);
+    LegacyUnit.equal(hasLink('c.css'), false);
 
     editor.setContent('<html><head></head><body><p>c</p></body></html>');
-    LegacyUnit.equal(hasLink("a.css"), false);
-    LegacyUnit.equal(hasLink("b.css"), false);
-    LegacyUnit.equal(hasLink("c.css"), false);
+    LegacyUnit.equal(hasLink('a.css'), false);
+    LegacyUnit.equal(hasLink('b.css'), false);
+    LegacyUnit.equal(hasLink('c.css'), false);
   });
 
-  var sParseStyles = function (editor) {
+  const sParseStyles = function (editor) {
     return GeneralSteps.sequence([
       Step.sync(function () {
         editor.setContent('<html><head><style>p {text-align:right}</style></head><body dir="rtl"><p>Test</p></body></html>');
@@ -143,7 +143,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
     ]);
   };
 
-  var sProtectConditionalCommentsInHeadFoot = function (editor) {
+  const sProtectConditionalCommentsInHeadFoot = function (editor) {
     return GeneralSteps.sequence([
       Step.sync(function () {
         editor.setContent([
@@ -160,7 +160,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
         ].join('\n'));
       }),
       Step.sync(function () {
-        var expectedContent = [
+        const expectedContent = [
           '<!DOCTYPE html>',
           '<html>',
           '<!--[if mso]>',
@@ -197,4 +197,3 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
     ]
   }, success, failure);
 });
-

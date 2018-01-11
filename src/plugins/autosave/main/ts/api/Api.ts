@@ -11,14 +11,14 @@
 import Storage from '../core/Storage';
 
 // Inlined the curry function since adding Fun without tree shaking to every plugin would produce a lot of bloat
-var curry = function (f, editor) {
+const curry = function (f, editor) {
   return function () {
-    var args = Array.prototype.slice.call(arguments);
+    const args = Array.prototype.slice.call(arguments);
     return f.apply(null, [editor].concat(args));
   };
 };
 
-var get = function (editor) {
+const get = function (editor) {
   return {
     hasDraft: curry(Storage.hasDraft, editor),
     storeDraft: curry(Storage.storeDraft, editor),
@@ -29,5 +29,5 @@ var get = function (editor) {
 };
 
 export default {
-  get: get
+  get
 };

@@ -7,17 +7,17 @@ import Api from 'tinymce/ui/Api';
 import Factory from 'tinymce/core/ui/Factory';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.SelectorTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
-  var panel;
+UnitTest.asynctest('browser.tinymce.ui.SelectorTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
+  let panel;
 
   // Registers ui widgets to factory
   Api.registerToFactory();
 
-  var createPanel = function () {
+  const createPanel = function () {
     panel = Factory.create({
       type: 'panel',
       items: [
@@ -56,8 +56,8 @@ UnitTest.asynctest('browser.tinymce.ui.SelectorTest', function() {
     }).renderTo(viewBlock.get());
   };
 
-  suite.test("Basic", function () {
-    var matches;
+  suite.test('Basic', function () {
+    let matches;
 
     matches = panel.find('button');
     LegacyUnit.equal(matches.length, 12);
@@ -72,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.ui.SelectorTest', function() {
     LegacyUnit.equal(panel.find('button,button,buttongroup button').length, 12, 'Check unique');
   });
 
-  suite.test("Classes", function () {
+  suite.test('Classes', function () {
     LegacyUnit.equal(panel.find('button.class1').length, 3);
     LegacyUnit.equal(panel.find('button.class1.class2').length, 2);
     LegacyUnit.equal(panel.find('button.class2.class1').length, 2);
@@ -80,7 +80,7 @@ UnitTest.asynctest('browser.tinymce.ui.SelectorTest', function() {
     LegacyUnit.equal(panel.find('button.class1, button.class2').length, 3);
   });
 
-  suite.test("Psuedo:not", function () {
+  suite.test('Psuedo:not', function () {
     LegacyUnit.equal(panel.find('button:not(.class1)').length, 9);
     LegacyUnit.equal(panel.find('button:not(buttongroup button)').length, 3);
     LegacyUnit.equal(panel.find('button:not(toolbar button)').length, 9);
@@ -90,8 +90,8 @@ UnitTest.asynctest('browser.tinymce.ui.SelectorTest', function() {
     LegacyUnit.equal(panel.find('button:not(.class3, .class4)').length, 10);
   });
 
-  suite.test("Psuedo:odd/even/first/last", function () {
-    var matches;
+  suite.test('Psuedo:odd/even/first/last', function () {
+    let matches;
 
     matches = panel.find('button:first');
 
@@ -118,11 +118,11 @@ UnitTest.asynctest('browser.tinymce.ui.SelectorTest', function() {
     LegacyUnit.equal(matches[1].name() === 'button3', true);
   });
 
-  suite.test("Psuedo:disabled", function () {
+  suite.test('Psuedo:disabled', function () {
     LegacyUnit.equal(panel.find('button:disabled').length, 2);
   });
 
-  suite.test("Attribute value", function () {
+  suite.test('Attribute value', function () {
     LegacyUnit.equal(panel.find('button[name]').length, 12);
     LegacyUnit.equal(panel.find('button[name=button1]').length, 1);
     LegacyUnit.equal(panel.find('button[name^=button1]').length, 4);
@@ -131,15 +131,15 @@ UnitTest.asynctest('browser.tinymce.ui.SelectorTest', function() {
     LegacyUnit.equal(panel.find('button[name!=button1]').length, 11);
   });
 
-  suite.test("Direct descendant", function () {
+  suite.test('Direct descendant', function () {
     LegacyUnit.equal(panel.find('> button').length, 3);
     LegacyUnit.equal(panel.find('toolbar > buttongroup').length, 1);
     LegacyUnit.equal(panel.find('toolbar > button').length, 0);
   });
 
-  suite.test("Parents", function () {
-    LegacyUnit.equal(panel.find("#button10")[0].parents("toolbar,buttongroup").length, 2);
-    LegacyUnit.equal(panel.find("#button10")[0].parents("panel").length, 1);
+  suite.test('Parents', function () {
+    LegacyUnit.equal(panel.find('#button10')[0].parents('toolbar,buttongroup').length, 2);
+    LegacyUnit.equal(panel.find('#button10')[0].parents('panel').length, 1);
   });
 
   UiUtils.loadSkinAndOverride(viewBlock, function () {
@@ -151,4 +151,3 @@ UnitTest.asynctest('browser.tinymce.ui.SelectorTest', function() {
     }, failure);
   });
 });
-

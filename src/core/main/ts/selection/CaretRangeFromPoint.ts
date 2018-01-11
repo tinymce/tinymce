@@ -11,11 +11,11 @@
 import NodeType from '../dom/NodeType';
 import Tools from '../util/Tools';
 
-var hasCeProperty = function (node) {
+const hasCeProperty = function (node) {
   return NodeType.isContentEditableTrue(node) || NodeType.isContentEditableFalse(node);
 };
 
-var findParent = function (node, rootNode, predicate) {
+const findParent = function (node, rootNode, predicate) {
   while (node && node !== rootNode) {
     if (predicate(node)) {
       return node;
@@ -30,8 +30,8 @@ var findParent = function (node, rootNode, predicate) {
 /**
  * Finds the closest selection rect tries to get the range from that.
  */
-var findClosestIeRange = function (clientX, clientY, doc) {
-  var element, rng, rects;
+const findClosestIeRange = function (clientX, clientY, doc) {
+  let element, rng, rects;
 
   element = doc.elementFromPoint(clientX, clientY);
   rng = doc.body.createTextRange();
@@ -66,13 +66,13 @@ var findClosestIeRange = function (clientX, clientY, doc) {
   return null;
 };
 
-var moveOutOfContentEditableFalse = function (rng, rootNode) {
-  var parentElement = rng && rng.parentElement ? rng.parentElement() : null;
+const moveOutOfContentEditableFalse = function (rng, rootNode) {
+  const parentElement = rng && rng.parentElement ? rng.parentElement() : null;
   return NodeType.isContentEditableFalse(findParent(parentElement, rootNode, hasCeProperty)) ? null : rng;
 };
 
-var fromPoint = function (clientX, clientY, doc) {
-  var rng, point;
+const fromPoint = function (clientX, clientY, doc) {
+  let rng, point;
 
   if (doc.caretPositionFromPoint) {
     point = doc.caretPositionFromPoint(clientX, clientY);
@@ -100,5 +100,5 @@ var fromPoint = function (clientX, clientY, doc) {
 };
 
 export default {
-  fromPoint: fromPoint
+  fromPoint
 };

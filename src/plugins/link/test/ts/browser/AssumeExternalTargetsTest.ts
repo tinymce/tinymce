@@ -1,7 +1,5 @@
 import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import { TinyActions } from '@ephox/mcagar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
@@ -10,16 +8,16 @@ import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   LinkPlugin();
 
-  var sEnterUrl = function (url) {
+  const sEnterUrl = function (url) {
     return Step.sync(function () {
-      var input: any = document.activeElement;
+      const input: any = document.activeElement;
 
       input.value = url;
       DOMUtils.DOM.fire(input, 'change');
@@ -27,8 +25,8 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', fun
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
-    var tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       // with default setting, always prompts www.-urls, not other without protocol
@@ -41,13 +39,13 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', fun
         'span:contains("The URL you entered seems to be an external link. Do you want to add the required http:// prefix?")'
       ),
       tinyUi.sClickOnUi('click ok button', 'button > span:contains("Ok")'),
-      tinyApis.sAssertContentPresence({ 'a': 1 }),
+      tinyApis.sAssertContentPresence({ a: 1 }),
       tinyApis.sSetContent(''),
       tinyUi.sClickOnToolbar('click on link button', 'div[aria-label="Insert/edit link"] > button'),
       tinyUi.sWaitForPopup('link popup', 'div[aria-label="Insert link"][role="dialog"]'),
       sEnterUrl('google.com'),
       tinyUi.sClickOnUi('click ok button', 'button > span:contains("Ok")'),
-      tinyApis.sAssertContentPresence({ 'a': 1 }),
+      tinyApis.sAssertContentPresence({ a: 1 }),
       tinyApis.sSetContent(''),
 
       // with link_assume_external_targets: true, prompts on all, even without protocol
@@ -61,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', fun
         'span:contains("The URL you entered seems to be an external link. Do you want to add the required http:// prefix?")'
       ),
       tinyUi.sClickOnUi('click ok button', 'button > span:contains("Ok")'),
-      tinyApis.sAssertContentPresence({ 'a': 1 }),
+      tinyApis.sAssertContentPresence({ a: 1 }),
       tinyApis.sSetContent(''),
       tinyUi.sClickOnToolbar('click on link button', 'div[aria-label="Insert/edit link"] > button'),
       tinyUi.sWaitForPopup('link popup', 'div[aria-label="Insert link"][role="dialog"]'),
@@ -72,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', fun
         'span:contains("The URL you entered seems to be an external link. Do you want to add the required http:// prefix?")'
       ),
       tinyUi.sClickOnUi('click ok button', 'button > span:contains("Ok")'),
-      tinyApis.sAssertContentPresence({ 'a': 1 }),
+      tinyApis.sAssertContentPresence({ a: 1 }),
       tinyApis.sSetContent('')
     ], onSuccess, onFailure);
   }, {
@@ -81,4 +79,3 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', fun
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

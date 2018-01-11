@@ -1,5 +1,5 @@
-var charCodeToKeyCode = function (charCode) {
-  var lookup = {
+const charCodeToKeyCode = function (charCode) {
+  const lookup = {
     '0': 48, '1': 49, '2': 50, '3': 51, '4': 52, '5': 53, '6': 54, '7': 55, '8': 56, '9': 57, 'a': 65, 'b': 66, 'c': 67,
     'd': 68, 'e': 69, 'f': 70, 'g': 71, 'h': 72, 'i': 73, 'j': 74, 'k': 75, 'l': 76, 'm': 77, 'n': 78, 'o': 79, 'p': 80, 'q': 81,
     'r': 82, 's': 83, 't': 84, 'u': 85, 'v': 86, 'w': 87, 'x': 88, 'y': 89, ' ': 32, ',': 188, '-': 189, '.': 190, '/': 191,
@@ -9,18 +9,18 @@ var charCodeToKeyCode = function (charCode) {
   return lookup[String.fromCharCode(charCode)];
 };
 
-var type = function (editor, chr) {
-  var keyCode, charCode, evt, startElm, rng, offset;
+const type = function (editor, chr) {
+  let keyCode, charCode, evt, startElm, rng, offset;
 
-  var fakeEvent = function (target, type, evt) {
+  const fakeEvent = function (target, type, evt) {
     editor.dom.fire(target, type, evt);
   };
 
   // Numeric keyCode
-  if (typeof chr === "number") {
+  if (typeof chr === 'number') {
     charCode = chr;
     keyCode = charCodeToKeyCode(charCode);
-  } else if (typeof chr === "string") {
+  } else if (typeof chr === 'string') {
     // String value
     if (chr === '\b') {
       keyCode = 8;
@@ -44,7 +44,7 @@ var type = function (editor, chr) {
     }
   }
 
-  evt = evt || { keyCode: keyCode, charCode: charCode };
+  evt = evt || { keyCode, charCode };
 
   startElm = editor.selection.getStart();
   fakeEvent(startElm, 'keydown', evt);
@@ -66,7 +66,7 @@ var type = function (editor, chr) {
 
         if (rng.collapsed) {
           if (rng.startContainer.nodeType === 1) {
-            var nodes = rng.startContainer.childNodes, lastNode = nodes[nodes.length - 1];
+            const nodes = rng.startContainer.childNodes, lastNode = nodes[nodes.length - 1];
 
             // If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node
             // Expand the range to include the last char <p>ab[c]</p> since IE 11 doesn't delete otherwise
@@ -107,6 +107,6 @@ var type = function (editor, chr) {
   fakeEvent(startElm, 'keyup', evt);
 };
 
-export default <any> {
-  type: type
+export default {
+  type
 };

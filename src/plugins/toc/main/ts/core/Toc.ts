@@ -14,25 +14,26 @@ import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 import Guid from './Guid';
 
-var tocId = Guid.create('mcetoc_');
+const tocId = Guid.create('mcetoc_');
 
-var generateSelector = function generateSelector(depth) {
-  var i, selector = [];
+const generateSelector = function generateSelector(depth) {
+  let i;
+  const selector = [];
   for (i = 1; i <= depth; i++) {
     selector.push('h' + i);
   }
   return selector.join(',');
 };
 
-var hasHeaders = function (editor) {
+const hasHeaders = function (editor) {
   return readHeaders(editor).length > 0;
 };
 
-var readHeaders = function (editor) {
-  var tocClass = Settings.getTocClass(editor);
-  var headerTag = Settings.getTocHeader(editor);
-  var selector = generateSelector(Settings.getTocDepth(editor));
-  var headers = editor.$(selector);
+const readHeaders = function (editor) {
+  const tocClass = Settings.getTocClass(editor);
+  const headerTag = Settings.getTocHeader(editor);
+  const selector = generateSelector(Settings.getTocDepth(editor));
+  let headers = editor.$(selector);
 
   // if headerTag is one of h1-9, we need to filter it out from the set
   if (headers.length && /^h[1-9]$/i.test(headerTag)) {
@@ -51,8 +52,8 @@ var readHeaders = function (editor) {
   });
 };
 
-var getMinLevel = function (headers) {
-  var i, minLevel = 9;
+const getMinLevel = function (headers) {
+  let i, minLevel = 9;
 
   for (i = 0; i < headers.length; i++) {
     if (headers[i].level < minLevel) {
@@ -67,22 +68,22 @@ var getMinLevel = function (headers) {
   return minLevel;
 };
 
-var generateTitle = function (tag, title) {
-  var openTag = '<' + tag + ' contenteditable="true">';
-  var closeTag = '</' + tag + '>';
+const generateTitle = function (tag, title) {
+  const openTag = '<' + tag + ' contenteditable="true">';
+  const closeTag = '</' + tag + '>';
   return openTag + DOMUtils.DOM.encode(title) + closeTag;
 };
 
-var generateTocHtml = function (editor) {
-  var html = generateTocContentHtml(editor);
+const generateTocHtml = function (editor) {
+  const html = generateTocContentHtml(editor);
   return '<div class="' + editor.dom.encode(Settings.getTocClass(editor)) + '" contenteditable="false">' + html + '</div>';
 };
 
-var generateTocContentHtml = function (editor) {
-  var html = '';
-  var headers = readHeaders(editor);
-  var prevLevel = getMinLevel(headers) - 1;
-  var i, ii, h, nextLevel;
+const generateTocContentHtml = function (editor) {
+  let html = '';
+  const headers = readHeaders(editor);
+  let prevLevel = getMinLevel(headers) - 1;
+  let i, ii, h, nextLevel;
 
   if (!headers.length) {
     return '';
@@ -123,13 +124,13 @@ var generateTocContentHtml = function (editor) {
   return html;
 };
 
-var isEmptyOrOffscren = function (editor, nodes) {
+const isEmptyOrOffscren = function (editor, nodes) {
   return !nodes.length || editor.dom.getParents(nodes[0], '.mce-offscreen-selection').length > 0;
 };
 
-var insertToc = function (editor) {
-  var tocClass = Settings.getTocClass(editor);
-  var $tocElm = editor.$('.' + tocClass);
+const insertToc = function (editor) {
+  const tocClass = Settings.getTocClass(editor);
+  const $tocElm = editor.$('.' + tocClass);
 
   if (isEmptyOrOffscren(editor, $tocElm)) {
     editor.insertContent(generateTocHtml(editor));
@@ -138,9 +139,9 @@ var insertToc = function (editor) {
   }
 };
 
-var updateToc = function (editor) {
-  var tocClass = Settings.getTocClass(editor);
-  var $tocElm = editor.$('.' + tocClass);
+const updateToc = function (editor) {
+  const tocClass = Settings.getTocClass(editor);
+  const $tocElm = editor.$('.' + tocClass);
 
   if ($tocElm.length) {
     editor.undoManager.transact(function () {
@@ -150,7 +151,7 @@ var updateToc = function (editor) {
 };
 
 export default {
-  hasHeaders: hasHeaders,
-  insertToc: insertToc,
-  updateToc: updateToc
+  hasHeaders,
+  insertToc,
+  updateToc
 };

@@ -25,4 +25,4 @@ PluginManager.add('media', function (editor) {
   return Api.get(editor);
 });
 
-export default function () { };
+export default function () { }

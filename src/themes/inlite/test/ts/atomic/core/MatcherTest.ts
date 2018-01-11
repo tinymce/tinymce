@@ -1,22 +1,22 @@
 import Matcher from 'tinymce/themes/inlite/core/Matcher';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('browser.themes.inlite.MatcherTest', function() {
-  var testMatch = function (mockEditor, matches, expectedResult) {
-    var result;
+UnitTest.test('browser.themes.inlite.MatcherTest', function () {
+  const testMatch = function (mockEditor, matches, expectedResult) {
+    let result;
 
     result = Matcher.match(mockEditor, matches);
     assert.eq(expectedResult, result);
   };
 
-  var match = function (key) {
+  const match = function (key) {
     return function (editor) {
       return editor[key];
     };
   };
 
-  var testMatcher = function () {
-    var mockEditor = {
+  const testMatcher = function () {
+    const mockEditor = {
       success1: 'success1',
       success2: 'success2',
       failure: null
@@ -50,4 +50,3 @@ UnitTest.test('browser.themes.inlite.MatcherTest', function() {
 
   testMatcher();
 });
-

@@ -13,10 +13,10 @@ import Entities from '../html/Entities';
 
 declare const unescape: any;
 
-var register = function (htmlParser, settings, dom) {
+const register = function (htmlParser, settings, dom) {
   // Convert tabindex back to elements when serializing contents
   htmlParser.addAttributeFilter('data-mce-tabindex', function (nodes, name) {
-    var i = nodes.length, node;
+    let i = nodes.length, node;
 
     while (i--) {
       node = nodes[i];
@@ -27,14 +27,16 @@ var register = function (htmlParser, settings, dom) {
 
   // Convert move data-mce-src, data-mce-href and data-mce-style into nodes or process them if needed
   htmlParser.addAttributeFilter('src,href,style', function (nodes, name) {
-    var i = nodes.length, node, value, internalName = 'data-mce-' + name;
-    var urlConverter = settings.url_converter, urlConverterScope = settings.url_converter_scope, undef;
+    let i = nodes.length, node, value;
+    const internalName = 'data-mce-' + name;
+    const urlConverter = settings.url_converter;
+    const urlConverterScope = settings.url_converter_scope;
 
     while (i--) {
       node = nodes[i];
 
       value = node.attributes.map[internalName];
-      if (value !== undef) {
+      if (value !== undefined) {
         // Set external name to internal value and remove internal
         node.attr(name, value.length > 0 ? value : null);
         node.attr(internalName, null);
@@ -42,7 +44,7 @@ var register = function (htmlParser, settings, dom) {
         // No internal attribute found then convert the value we have in the DOM
         value = node.attributes.map[name];
 
-        if (name === "style") {
+        if (name === 'style') {
           value = dom.serializeStyle(dom.parseStyle(value), node.name);
         } else if (urlConverter) {
           value = urlConverter.call(urlConverterScope, value, name, node.name);
@@ -55,7 +57,7 @@ var register = function (htmlParser, settings, dom) {
 
   // Remove internal classes mceItem<..> or mceSelected
   htmlParser.addAttributeFilter('class', function (nodes) {
-    var i = nodes.length, node, value;
+    let i = nodes.length, node, value;
 
     while (i--) {
       node = nodes[i];
@@ -70,7 +72,7 @@ var register = function (htmlParser, settings, dom) {
 
   // Remove bookmark elements
   htmlParser.addAttributeFilter('data-mce-type', function (nodes, name, args) {
-    var i = nodes.length, node;
+    let i = nodes.length, node;
 
     while (i--) {
       node = nodes[i];
@@ -82,7 +84,7 @@ var register = function (htmlParser, settings, dom) {
   });
 
   htmlParser.addNodeFilter('noscript', function (nodes) {
-    var i = nodes.length, node;
+    let i = nodes.length, node;
 
     while (i--) {
       node = nodes[i].firstChild;
@@ -95,9 +97,9 @@ var register = function (htmlParser, settings, dom) {
 
   // Force script into CDATA sections and remove the mce- prefix also add comments around styles
   htmlParser.addNodeFilter('script,style', function (nodes, name) {
-    var i = nodes.length, node, value, type;
+    let i = nodes.length, node, value, type;
 
-    var trim = function (value) {
+    const trim = function (value) {
       /*jshint maxlen:255 */
       /*eslint max-len:0 */
       return value.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n')
@@ -110,7 +112,7 @@ var register = function (htmlParser, settings, dom) {
       node = nodes[i];
       value = node.firstChild ? node.firstChild.value : '';
 
-      if (name === "script") {
+      if (name === 'script') {
         // Remove mce- prefix from script elements and remove default type since the user specified
         // a script element without type attribute
         type = node.attr('type');
@@ -131,7 +133,7 @@ var register = function (htmlParser, settings, dom) {
 
   // Convert comments to cdata and handle protected comments
   htmlParser.addNodeFilter('#comment', function (nodes) {
-    var i = nodes.length, node;
+    let i = nodes.length, node;
 
     while (i--) {
       node = nodes[i];
@@ -141,7 +143,7 @@ var register = function (htmlParser, settings, dom) {
         node.type = 4;
         node.value = node.value.replace(/^\[CDATA\[|\]\]$/g, '');
       } else if (node.value.indexOf('mce:protected ') === 0) {
-        node.name = "#text";
+        node.name = '#text';
         node.type = 3;
         node.raw = true;
         node.value = unescape(node.value).substr(14);
@@ -150,14 +152,14 @@ var register = function (htmlParser, settings, dom) {
   });
 
   htmlParser.addNodeFilter('xml:namespace,input', function (nodes, name) {
-    var i = nodes.length, node;
+    let i = nodes.length, node;
 
     while (i--) {
       node = nodes[i];
       if (node.type === 7) {
         node.remove();
       } else if (node.type === 1) {
-        if (name === "input" && !("type" in node.attributes.map)) {
+        if (name === 'input' && !('type' in node.attributes.map)) {
           node.attr('type', 'text');
         }
       }
@@ -183,7 +185,7 @@ var register = function (htmlParser, settings, dom) {
     'data-mce-type,data-mce-resize',
 
     function (nodes, name) {
-      var i = nodes.length;
+      let i = nodes.length;
 
       while (i--) {
         nodes[i].attr(name, null);
@@ -201,10 +203,10 @@ var register = function (htmlParser, settings, dom) {
  *
  * Example of what happens: <body>text</body> becomes <body>text<br><br></body>
  */
-var trimTrailingBr = function (rootNode) {
-  var brNode1, brNode2;
+const trimTrailingBr = function (rootNode) {
+  let brNode1, brNode2;
 
-  var isBr = function (node) {
+  const isBr = function (node) {
     return node && node.name === 'br';
   };
 
@@ -220,6 +222,6 @@ var trimTrailingBr = function (rootNode) {
 };
 
 export default {
-  register: register,
-  trimTrailingBr: trimTrailingBr
+  register,
+  trimTrailingBr
 };

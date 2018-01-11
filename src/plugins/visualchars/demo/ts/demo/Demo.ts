@@ -15,9 +15,9 @@ declare let tinymce: any;
 VisualCharsPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  plugins: "visualchars code",
-  toolbar: "visualchars code",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
+  selector: 'textarea.tinymce',
+  plugins: 'visualchars code',
+  toolbar: 'visualchars code',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
   height: 600
 });

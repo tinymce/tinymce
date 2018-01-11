@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var firePreProcess = function (editor, args) {
+const firePreProcess = function (editor, args) {
   return editor.fire('PreProcess', args);
 };
 
-var firePostProcess = function (editor, args) {
+const firePostProcess = function (editor, args) {
   return editor.fire('PostProcess', args);
 };
 
 export default {
-  firePreProcess: firePreProcess,
-  firePostProcess: firePostProcess
+  firePreProcess,
+  firePostProcess
 };

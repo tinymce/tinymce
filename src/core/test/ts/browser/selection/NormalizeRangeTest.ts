@@ -12,15 +12,15 @@ import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var viewBlock = ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const viewBlock = ViewBlock();
 
-  var assertRange = function (root, range, startPath, startOffset, endPath, endOffset) {
-    var sc = Hierarchy.follow(Element.fromDom(root), startPath).getOrDie();
-    var ec = Hierarchy.follow(Element.fromDom(root), endPath).getOrDie();
-    var actualRange = range.getOrDie('Should be some');
+  const assertRange = function (root, range, startPath, startOffset, endPath, endOffset) {
+    const sc = Hierarchy.follow(Element.fromDom(root), startPath).getOrDie();
+    const ec = Hierarchy.follow(Element.fromDom(root), endPath).getOrDie();
+    const actualRange = range.getOrDie('Should be some');
 
     Assertions.assertDomEq('Should be expected start container', sc, Element.fromDom(actualRange.startContainer));
     Assertions.assertEq('Should be expected start offset', startOffset, actualRange.startOffset);
@@ -28,17 +28,17 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
     Assertions.assertEq('Should be expected end offset', endOffset, actualRange.endOffset);
   };
 
-  var cSetHtml = function (html) {
+  const cSetHtml = function (html) {
     return Chain.op(function () {
       viewBlock.update(html);
     });
   };
 
-  var cNormalizeRange = function (startPath, startOffset, endPath, endOffset) {
+  const cNormalizeRange = function (startPath, startOffset, endPath, endOffset) {
     return Chain.mapper(function (viewBlock) {
-      var sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
-      var ec = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
-      var rng = document.createRange();
+      const sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
+      const ec = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
+      const rng = document.createRange();
 
       rng.setStart(sc.dom(), startOffset);
       rng.setEnd(ec.dom(), endOffset);
@@ -47,13 +47,13 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
     });
   };
 
-  var cAssertRange = function (startPath, startOffset, endPath, endOffset) {
+  const cAssertRange = function (startPath, startOffset, endPath, endOffset) {
     return Chain.op(function (range) {
       assertRange(viewBlock.get(), range, startPath, startOffset, endPath, endOffset);
     });
   };
 
-  var cAssertRangeNone = Chain.op(function (range) {
+  const cAssertRangeNone = Chain.op(function (range) {
     Assertions.assertEq('Should be none', true, range.isNone());
   });
 
@@ -297,16 +297,16 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
     ])),
 
     Logger.t('Normalize on document', Step.sync(function () {
-      var doc = document.implementation.createHTMLDocument('');
-      var rng = document.createRange();
-      var dom = new DOMUtils(doc, { root_element: doc.body });
+      const doc = document.implementation.createHTMLDocument('');
+      const rng = document.createRange();
+      const dom = new DOMUtils(doc, { root_element: doc.body });
 
       doc.body.innerHTML = '<p>a</p>';
 
       rng.setStart(document, 0);
       rng.setEnd(document, 0);
 
-      var normRng = NormalizeRange.normalize(dom, rng);
+      const normRng = NormalizeRange.normalize(dom, rng);
       assertRange(doc.body, normRng, [0, 0], 0, [0, 0], 0);
     }))
   ], function () {
@@ -314,4 +314,3 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
     success();
   }, failure);
 });
-

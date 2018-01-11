@@ -15,7 +15,7 @@ import ElementType from '../dom/ElementType';
 import NodeType from '../dom/NodeType';
 import TreeWalker from '../dom/TreeWalker';
 
-var firstNonWhiteSpaceNodeSibling = function (node) {
+const firstNonWhiteSpaceNodeSibling = function (node) {
   while (node) {
     if (node.nodeType === 1 || (node.nodeType === 3 && node.data && /[\r\n\s]/.test(node.data))) {
       return node;
@@ -25,16 +25,18 @@ var firstNonWhiteSpaceNodeSibling = function (node) {
   }
 };
 
-var moveToCaretPosition = function (editor, root) {
-  var walker, node, rng, lastNode = root, tempElm, dom = editor.dom;
-  var moveCaretBeforeOnEnterElementsMap = editor.schema.getMoveCaretBeforeOnEnterElements();
+const moveToCaretPosition = function (editor, root) {
+  // tslint:disable-next-line:prefer-const
+  let walker, node, rng, lastNode = root, tempElm;
+  const dom = editor.dom;
+  const moveCaretBeforeOnEnterElementsMap = editor.schema.getMoveCaretBeforeOnEnterElements();
 
   if (!root) {
     return;
   }
 
   if (/^(LI|DT|DD)$/.test(root.nodeName)) {
-    var firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);
+    const firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);
 
     if (firstChild && /^(UL|OL|DL)$/.test(firstChild.nodeName)) {
       root.insertBefore(dom.doc.createTextNode('\u00a0'), root.firstChild);
@@ -90,13 +92,14 @@ var moveToCaretPosition = function (editor, root) {
   editor.selection.scrollIntoView(root);
 };
 
-var getEditableRoot = function (dom, node) {
-  var root = dom.getRoot(), parent, editableRoot;
+const getEditableRoot = function (dom, node) {
+  const root = dom.getRoot();
+  let parent, editableRoot;
 
   // Get all parents until we hit a non editable parent or the root
   parent = node;
-  while (parent !== root && dom.getContentEditable(parent) !== "false") {
-    if (dom.getContentEditable(parent) === "true") {
+  while (parent !== root && dom.getContentEditable(parent) !== 'false') {
+    if (dom.getContentEditable(parent) === 'true') {
       editableRoot = parent;
     }
 
@@ -106,11 +109,11 @@ var getEditableRoot = function (dom, node) {
   return parent !== root ? editableRoot : root;
 };
 
-var getParentBlock = function (editor) {
+const getParentBlock = function (editor) {
   return Option.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
 };
 
-var getParentBlockName = function (editor) {
+const getParentBlockName = function (editor) {
   return getParentBlock(editor).fold(
     Fun.constant(''),
     function (parentBlock) {
@@ -119,16 +122,16 @@ var getParentBlockName = function (editor) {
   );
 };
 
-var isListItemParentBlock = function (editor) {
+const isListItemParentBlock = function (editor) {
   return getParentBlock(editor).filter(function (elm) {
     return ElementType.isListItem(Element.fromDom(elm));
   }).isSome();
 };
 
 export default {
-  moveToCaretPosition: moveToCaretPosition,
-  getEditableRoot: getEditableRoot,
-  getParentBlock: getParentBlock,
-  getParentBlockName: getParentBlockName,
-  isListItemParentBlock: isListItemParentBlock
+  moveToCaretPosition,
+  getEditableRoot,
+  getParentBlock,
+  getParentBlockName,
+  isListItemParentBlock
 };

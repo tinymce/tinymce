@@ -18,11 +18,9 @@ import Tooltip from './Tooltip';
  * @extends tinymce.ui.Control
  */
 
-"use strict";
+let tooltip;
 
-var tooltip;
-
-var Widget = Control.extend({
+const Widget = Control.extend({
   /**
    * Constructs a instance with the specified settings.
    *
@@ -32,8 +30,8 @@ var Widget = Control.extend({
    * @setting {Boolean} autofocus True if the control should be focused when rendered.
    * @setting {String} text Text to display inside widget.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._super(settings);
     settings = self.settings;
@@ -41,14 +39,14 @@ var Widget = Control.extend({
 
     if (settings.tooltip && Widget.tooltips !== false) {
       self.on('mouseenter', function (e) {
-        var tooltip = self.tooltip().moveTo(-0xFFFF);
+        const tooltip = self.tooltip().moveTo(-0xFFFF);
 
-        if (e.control == self) {
-          var rel = tooltip.text(settings.tooltip).show().testMoveRel(self.getEl(), ['bc-tc', 'bc-tl', 'bc-tr']);
+        if (e.control === self) {
+          const rel = tooltip.text(settings.tooltip).show().testMoveRel(self.getEl(), ['bc-tc', 'bc-tl', 'bc-tr']);
 
-          tooltip.classes.toggle('tooltip-n', rel == 'bc-tc');
-          tooltip.classes.toggle('tooltip-nw', rel == 'bc-tl');
-          tooltip.classes.toggle('tooltip-ne', rel == 'bc-tr');
+          tooltip.classes.toggle('tooltip-n', rel === 'bc-tc');
+          tooltip.classes.toggle('tooltip-nw', rel === 'bc-tl');
+          tooltip.classes.toggle('tooltip-ne', rel === 'bc-tr');
 
           tooltip.moveRel(self.getEl(), rel);
         } else {
@@ -70,7 +68,7 @@ var Widget = Control.extend({
    * @method tooltip
    * @return {tinymce.ui.Tooltip} Tooltip instance.
    */
-  tooltip: function () {
+  tooltip () {
     if (!tooltip) {
       tooltip = new Tooltip({ type: 'tooltip' });
       tooltip.renderTo();
@@ -84,8 +82,8 @@ var Widget = Control.extend({
    *
    * @method postRender
    */
-  postRender: function () {
-    var self = this, settings = self.settings;
+  postRender () {
+    const self = this, settings = self.settings;
 
     self._super();
 
@@ -99,8 +97,8 @@ var Widget = Control.extend({
     }
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     function disable(state) {
       self.aria('disabled', state);
@@ -137,7 +135,7 @@ var Widget = Control.extend({
    * @method remove
    * @return {tinymce.ui.Control} Current control instance.
    */
-  remove: function () {
+  remove () {
     this._super();
 
     if (tooltip) {
@@ -147,4 +145,4 @@ var Widget = Control.extend({
   }
 });
 
-export default <any> Widget;
+export default Widget;

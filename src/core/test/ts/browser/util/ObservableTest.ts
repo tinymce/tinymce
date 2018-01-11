@@ -4,15 +4,15 @@ import Observable from 'tinymce/core/util/Observable';
 import Tools from 'tinymce/core/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.util.ObservableTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.util.ObservableTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
-  suite.test("Event bubbling/removed state", function () {
-    var lastName, lastState, data = '';
+  suite.test('Event bubbling/removed state', function () {
+    let lastName, lastState, data = '';
 
-    var Class: any = function (parentObj) {
+    const Class: any = function (parentObj) {
       this.toggleNativeEvent = function (name, state) {
         lastName = name;
         lastState = state;
@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.util.ObservableTest', function() {
 
     Tools.extend(Class.prototype, Observable);
 
-    var inst1 = new Class();
+    const inst1 = new Class();
 
     inst1.on('click', function () {
       data += 'a';
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.util.ObservableTest', function() {
     LegacyUnit.strictEqual(lastName, null);
     LegacyUnit.strictEqual(lastState, null);
 
-    var inst2 = new Class(inst1);
+    const inst2 = new Class(inst1);
     inst2.on('click', function () {
       data += 'c';
     });
@@ -68,4 +68,3 @@ UnitTest.asynctest('browser.tinymce.core.util.ObservableTest', function() {
     success();
   }, failure);
 });
-

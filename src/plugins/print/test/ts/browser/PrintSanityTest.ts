@@ -5,15 +5,15 @@ import PrintPlugin from 'tinymce/plugins/print/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.print.PrintSanityTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.print.PrintSanityTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   PrintPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       tinyUi.sWaitForUi('check print button exists', 'div[aria-label="Print"] > button')
@@ -24,4 +24,3 @@ UnitTest.asynctest('browser.tinymce.plugins.print.PrintSanityTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

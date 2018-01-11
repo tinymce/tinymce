@@ -18,7 +18,7 @@ import DeleteElement from './DeleteElement';
 import DeleteUtils from './DeleteUtils';
 import NodeType from '../dom/NodeType';
 
-var deleteElement = function (editor, forward) {
+const deleteElement = function (editor, forward) {
   return function (element) {
     editor._selectionOverrides.hideFakeCaret();
     DeleteElement.deleteElement(editor, forward, Element.fromDom(element));
@@ -26,23 +26,23 @@ var deleteElement = function (editor, forward) {
   };
 };
 
-var moveToElement = function (editor, forward) {
+const moveToElement = function (editor, forward) {
   return function (element) {
-    var pos = forward ? CaretPosition.before(element) : CaretPosition.after(element);
+    const pos = forward ? CaretPosition.before(element) : CaretPosition.after(element);
     editor.selection.setRng(pos.toRange());
     return true;
   };
 };
 
-var moveToPosition = function (editor) {
+const moveToPosition = function (editor) {
   return function (pos) {
     editor.selection.setRng(pos.toRange());
     return true;
   };
 };
 
-var backspaceDeleteCaret = function (editor, forward) {
-  var result = CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng()).map(function (deleteAction) {
+const backspaceDeleteCaret = function (editor, forward) {
+  const result = CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng()).map(function (deleteAction) {
     return deleteAction.fold(
       deleteElement(editor, forward),
       moveToElement(editor, forward),
@@ -53,12 +53,12 @@ var backspaceDeleteCaret = function (editor, forward) {
   return result.getOr(false);
 };
 
-var deleteOffscreenSelection = function (rootElement) {
+const deleteOffscreenSelection = function (rootElement) {
   Arr.each(SelectorFilter.descendants(rootElement, '.mce-offscreen-selection'), Remove.remove);
 };
 
-var backspaceDeleteRange = function (editor, forward) {
-  var selectedElement = editor.selection.getNode();
+const backspaceDeleteRange = function (editor, forward) {
+  const selectedElement = editor.selection.getNode();
   if (NodeType.isContentEditableFalse(selectedElement)) {
     deleteOffscreenSelection(Element.fromDom(editor.getBody()));
     DeleteElement.deleteElement(editor, forward, Element.fromDom(editor.selection.getNode()));
@@ -69,7 +69,7 @@ var backspaceDeleteRange = function (editor, forward) {
   }
 };
 
-var getContentEditableRoot = function (root, node) {
+const getContentEditableRoot = function (root, node) {
   while (node && node !== root) {
     if (NodeType.isContentEditableTrue(node) || NodeType.isContentEditableFalse(node)) {
       return node;
@@ -81,11 +81,12 @@ var getContentEditableRoot = function (root, node) {
   return null;
 };
 
-var paddEmptyElement = function (editor) {
-  var br, ceRoot = getContentEditableRoot(editor.getBody(), editor.selection.getNode());
+const paddEmptyElement = function (editor) {
+  let br;
+  const ceRoot = getContentEditableRoot(editor.getBody(), editor.selection.getNode());
 
   if (NodeType.isContentEditableTrue(ceRoot) && editor.dom.isBlock(ceRoot) && editor.dom.isEmpty(ceRoot)) {
-    br = editor.dom.create('br', { "data-mce-bogus": "1" });
+    br = editor.dom.create('br', { 'data-mce-bogus': '1' });
     editor.dom.setHTML(ceRoot, '');
     ceRoot.appendChild(br);
     editor.selection.setRng(CaretPosition.before(br).toRange());
@@ -94,7 +95,7 @@ var paddEmptyElement = function (editor) {
   return true;
 };
 
-var backspaceDelete = function (editor, forward) {
+const backspaceDelete = function (editor, forward) {
   if (editor.selection.isCollapsed()) {
     return backspaceDeleteCaret(editor, forward);
   } else {
@@ -103,6 +104,6 @@ var backspaceDelete = function (editor, forward) {
 };
 
 export default {
-  backspaceDelete: backspaceDelete,
-  paddEmptyElement: paddEmptyElement
+  backspaceDelete,
+  paddEmptyElement
 };

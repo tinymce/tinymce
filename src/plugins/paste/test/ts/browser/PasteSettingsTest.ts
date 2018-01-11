@@ -9,15 +9,15 @@ import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.PasteSettingsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var viewBlock = ViewBlock();
+UnitTest.asynctest('tinymce.plugins.paste.browser.PasteSettingsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const viewBlock = ViewBlock();
 
   Theme();
   Plugin();
 
-  var cCreateInlineEditor = function (settings) {
+  const cCreateInlineEditor = function (settings) {
     return Chain.on(function (viewBlock, next, die) {
       viewBlock.update('<div id="inline-tiny"></div>');
 
@@ -25,7 +25,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteSettingsTest', function()
         selector: '#inline-tiny',
         inline: true,
         skin_url: '/project/js/tinymce/skins/lightgray',
-        setup: function (editor) {
+        setup (editor) {
           editor.on('SkinLoaded', function () {
             next(Chain.wrap(editor));
           });
@@ -34,7 +34,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteSettingsTest', function()
     });
   };
 
-  var cRemoveEditor = Chain.op(function (editor) {
+  const cRemoveEditor = Chain.op(function (editor) {
     editor.remove();
   });
 
@@ -55,4 +55,3 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteSettingsTest', function()
     success();
   }, failure);
 });
-

@@ -20,27 +20,27 @@ import Tools from './util/Tools';
  * @private
  */
 
-var hasOnlyOneChild = function (node) {
+const hasOnlyOneChild = function (node) {
   return node.firstChild && node.firstChild === node.lastChild;
 };
 
-var isPaddingNode = function (node) {
+const isPaddingNode = function (node) {
   return node.name === 'br' || node.value === '\u00a0';
 };
 
-var isPaddedEmptyBlock = function (schema, node) {
-  var blockElements = schema.getBlockElements();
+const isPaddedEmptyBlock = function (schema, node) {
+  const blockElements = schema.getBlockElements();
   return blockElements[node.name] && hasOnlyOneChild(node) && isPaddingNode(node.firstChild);
 };
 
-var isEmptyFragmentElement = function (schema, node) {
-  var nonEmptyElements = schema.getNonEmptyElements();
+const isEmptyFragmentElement = function (schema, node) {
+  const nonEmptyElements = schema.getNonEmptyElements();
   return node && (node.isEmpty(nonEmptyElements) || isPaddedEmptyBlock(schema, node));
 };
 
-var isListFragment = function (schema, fragment) {
-  var firstChild = fragment.firstChild;
-  var lastChild = fragment.lastChild;
+const isListFragment = function (schema, fragment) {
+  let firstChild = fragment.firstChild;
+  let lastChild = fragment.lastChild;
 
   // Skip meta since it's likely <meta><ul>..</ul>
   if (firstChild && firstChild.name === 'meta') {
@@ -64,9 +64,9 @@ var isListFragment = function (schema, fragment) {
   return firstChild.name === 'ul' || firstChild.name === 'ol';
 };
 
-var cleanupDomFragment = function (domFragment) {
-  var firstChild = domFragment.firstChild;
-  var lastChild = domFragment.lastChild;
+const cleanupDomFragment = function (domFragment) {
+  const firstChild = domFragment.firstChild;
+  const lastChild = domFragment.lastChild;
 
   // TODO: remove the meta tag from paste logic
   if (firstChild && firstChild.nodeName === 'META') {
@@ -80,47 +80,47 @@ var cleanupDomFragment = function (domFragment) {
   return domFragment;
 };
 
-var toDomFragment = function (dom, serializer, fragment) {
-  var html = serializer.serialize(fragment);
-  var domFragment = dom.createFragment(html);
+const toDomFragment = function (dom, serializer, fragment) {
+  const html = serializer.serialize(fragment);
+  const domFragment = dom.createFragment(html);
 
   return cleanupDomFragment(domFragment);
 };
 
-var listItems = function (elm) {
+const listItems = function (elm) {
   return Tools.grep(elm.childNodes, function (child) {
     return child.nodeName === 'LI';
   });
 };
 
-var isPadding = function (node) {
+const isPadding = function (node) {
   return node.data === '\u00a0' || NodeType.isBr(node);
 };
 
-var isListItemPadded = function (node) {
+const isListItemPadded = function (node) {
   return node && node.firstChild && node.firstChild === node.lastChild && isPadding(node.firstChild);
 };
 
-var isEmptyOrPadded = function (elm) {
+const isEmptyOrPadded = function (elm) {
   return !elm.firstChild || isListItemPadded(elm);
 };
 
-var trimListItems = function (elms) {
+const trimListItems = function (elms) {
   return elms.length > 0 && isEmptyOrPadded(elms[elms.length - 1]) ? elms.slice(0, -1) : elms;
 };
 
-var getParentLi = function (dom, node) {
-  var parentBlock = dom.getParent(node, dom.isBlock);
+const getParentLi = function (dom, node) {
+  const parentBlock = dom.getParent(node, dom.isBlock);
   return parentBlock && parentBlock.nodeName === 'LI' ? parentBlock : null;
 };
 
-var isParentBlockLi = function (dom, node) {
+const isParentBlockLi = function (dom, node) {
   return !!getParentLi(dom, node);
 };
 
-var getSplit = function (parentNode, rng) {
-  var beforeRng = rng.cloneRange();
-  var afterRng = rng.cloneRange();
+const getSplit = function (parentNode, rng) {
+  const beforeRng = rng.cloneRange();
+  const afterRng = rng.cloneRange();
 
   beforeRng.setStartBefore(parentNode);
   afterRng.setEndAfter(parentNode);
@@ -131,25 +131,25 @@ var getSplit = function (parentNode, rng) {
   ];
 };
 
-var findFirstIn = function (node, rootNode) {
-  var caretPos = CaretPosition.before(node);
-  var caretWalker = CaretWalker(rootNode);
-  var newCaretPos = caretWalker.next(caretPos);
+const findFirstIn = function (node, rootNode) {
+  const caretPos = CaretPosition.before(node);
+  const caretWalker = CaretWalker(rootNode);
+  const newCaretPos = caretWalker.next(caretPos);
 
   return newCaretPos ? newCaretPos.toRange() : null;
 };
 
-var findLastOf = function (node, rootNode) {
-  var caretPos = CaretPosition.after(node);
-  var caretWalker = CaretWalker(rootNode);
-  var newCaretPos = caretWalker.prev(caretPos);
+const findLastOf = function (node, rootNode) {
+  const caretPos = CaretPosition.after(node);
+  const caretWalker = CaretWalker(rootNode);
+  const newCaretPos = caretWalker.prev(caretPos);
 
   return newCaretPos ? newCaretPos.toRange() : null;
 };
 
-var insertMiddle = function (target, elms, rootNode, rng) {
-  var parts = getSplit(target, rng);
-  var parentElm = target.parentNode;
+const insertMiddle = function (target, elms, rootNode, rng) {
+  const parts = getSplit(target, rng);
+  const parentElm = target.parentNode;
 
   parentElm.insertBefore(parts[0], target);
   Tools.each(elms, function (li) {
@@ -161,8 +161,8 @@ var insertMiddle = function (target, elms, rootNode, rng) {
   return findLastOf(elms[elms.length - 1], rootNode);
 };
 
-var insertBefore = function (target, elms, rootNode) {
-  var parentElm = target.parentNode;
+const insertBefore = function (target, elms, rootNode) {
+  const parentElm = target.parentNode;
 
   Tools.each(elms, function (elm) {
     parentElm.insertBefore(elm, target);
@@ -171,22 +171,22 @@ var insertBefore = function (target, elms, rootNode) {
   return findFirstIn(target, rootNode);
 };
 
-var insertAfter = function (target, elms, rootNode, dom) {
+const insertAfter = function (target, elms, rootNode, dom) {
   dom.insertAfter(elms.reverse(), target);
   return findLastOf(elms[0], rootNode);
 };
 
-var insertAtCaret = function (serializer, dom, rng, fragment) {
-  var domFragment = toDomFragment(dom, serializer, fragment);
-  var liTarget = getParentLi(dom, rng.startContainer);
-  var liElms = trimListItems(listItems(domFragment.firstChild));
-  var BEGINNING = 1, END = 2;
-  var rootNode = dom.getRoot();
+const insertAtCaret = function (serializer, dom, rng, fragment) {
+  const domFragment = toDomFragment(dom, serializer, fragment);
+  const liTarget = getParentLi(dom, rng.startContainer);
+  const liElms = trimListItems(listItems(domFragment.firstChild));
+  const BEGINNING = 1, END = 2;
+  const rootNode = dom.getRoot();
 
-  var isAt = function (location) {
-    var caretPos = CaretPosition.fromRangeStart(rng);
-    var caretWalker = CaretWalker(dom.getRoot());
-    var newPos = location === BEGINNING ? caretWalker.prev(caretPos) : caretWalker.next(caretPos);
+  const isAt = function (location) {
+    const caretPos = CaretPosition.fromRangeStart(rng);
+    const caretWalker = CaretWalker(dom.getRoot());
+    const newPos = location === BEGINNING ? caretWalker.prev(caretPos) : caretWalker.next(caretPos);
 
     return newPos ? getParentLi(dom, newPos.getNode()) !== liTarget : true;
   };
@@ -201,9 +201,9 @@ var insertAtCaret = function (serializer, dom, rng, fragment) {
 };
 
 export default {
-  isListFragment: isListFragment,
-  insertAtCaret: insertAtCaret,
-  isParentBlockLi: isParentBlockLi,
-  trimListItems: trimListItems,
-  listItems: listItems
+  isListFragment,
+  insertAtCaret,
+  isParentBlockLi,
+  trimListItems,
+  listItems
 };

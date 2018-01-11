@@ -3,17 +3,17 @@ import { Future } from '@ephox/katamari';
 import SmoothAnimation from 'tinymce/themes/mobile/ios/smooth/SmoothAnimation';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.asynctest('SmoothAnimationTest', function() {
-  var success = arguments[arguments.length - 2];
+UnitTest.asynctest('SmoothAnimationTest', function () {
+  const success = arguments[arguments.length - 2];
 
-  var animator = SmoothAnimation.create();
+  const animator = SmoothAnimation.create();
 
-  var check = function (label, initial, destination, amount) {
+  const check = function (label, initial, destination, amount) {
     return Future.nu(function (callback) {
-      var current = initial;
-      var values = [ current ];
+      let current = initial;
+      let values = [ current ];
 
-      var add = function (val, abort) {
+      const add = function (val, abort) {
         if (val > 100) {
           abort('abort');
         } else {
@@ -27,17 +27,17 @@ UnitTest.asynctest('SmoothAnimationTest', function() {
       }, destination, amount, add, function (s) {
         add(s, Fun.identity);
         callback({
-          label: label,
+          label,
           info: {
-            current: current,
-            values: values
+            current,
+            values
           }
         });
       }, 2);
     });
   };
 
-  var assertInfo = function (label, expected, info) {
+  const assertInfo = function (label, expected, info) {
     assert.eq(
       expected.current,
       info.current,
@@ -64,4 +64,3 @@ UnitTest.asynctest('SmoothAnimationTest', function() {
     });
   });
 });
-

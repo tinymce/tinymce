@@ -20,12 +20,10 @@ import MenuButton from './MenuButton';
  * @extends tinymce.ui.Button
  */
 
-
-
-export default <any> MenuButton.extend({
+export default MenuButton.extend({
   Defaults: {
-    classes: "widget btn splitbtn",
-    role: "button"
+    classes: 'widget btn splitbtn',
+    role: 'button'
   },
 
   /**
@@ -33,8 +31,11 @@ export default <any> MenuButton.extend({
    *
    * @method repaint
    */
-  repaint: function () {
-    var self = this, elm = self.getEl(), rect = self.layoutRect(), mainButtonElm, menuButtonElm;
+  repaint () {
+    const self = this;
+    const elm = self.getEl();
+    const rect = self.layoutRect();
+    let mainButtonElm, menuButtonElm;
 
     self._super();
 
@@ -58,8 +59,8 @@ export default <any> MenuButton.extend({
    *
    * @private
    */
-  activeMenu: function (state) {
-    var self = this;
+  activeMenu (state) {
+    const self = this;
 
     DomQuery(self.getEl().lastChild).toggleClass(self.classPrefix + 'active', state);
   },
@@ -70,17 +71,22 @@ export default <any> MenuButton.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, id = self._id, prefix = self.classPrefix, image;
-    var icon = self.state.get('icon'), text = self.state.get('text');
-    var settings = self.settings, textHtml = '', ariaPressed;
+  renderHtml () {
+    const self = this;
+    const id = self._id;
+    const prefix = self.classPrefix;
+    let image;
+    let icon = self.state.get('icon');
+    const text = self.state.get('text');
+    const settings = self.settings;
+    let textHtml = '', ariaPressed;
 
     image = settings.image;
     if (image) {
       icon = 'none';
 
       // Support for [high dpi, low dpi] image sources
-      if (typeof image != "string") {
+      if (typeof image !== 'string') {
         image = window.getSelection ? image[0] : image[1];
       }
 
@@ -105,7 +111,7 @@ export default <any> MenuButton.extend({
       textHtml +
       '</button>' +
       '<button type="button" class="' + prefix + 'open" hidefocus="1" tabindex="-1">' +
-      //(icon ? '<i class="' + icon + '"></i>' : '') +
+      // (icon ? '<i class="' + icon + '"></i>' : '') +
       (self._menuBtnText ? (icon ? '\u00a0' : '') + self._menuBtnText : '') +
       ' <i class="' + prefix + 'caret"></i>' +
       '</button>' +
@@ -118,16 +124,16 @@ export default <any> MenuButton.extend({
    *
    * @method postRender
    */
-  postRender: function () {
-    var self = this, onClickHandler = self.settings.onclick;
+  postRender () {
+    const self = this, onClickHandler = self.settings.onclick;
 
     self.on('click', function (e) {
-      var node = e.target;
+      let node = e.target;
 
-      if (e.control == this) {
+      if (e.control === this) {
         // Find clicks that is on the main button
         while (node) {
-          if ((e.aria && e.aria.key != 'down') || (node.nodeName == 'BUTTON' && node.className.indexOf('open') == -1)) {
+          if ((e.aria && e.aria.key !== 'down') || (node.nodeName === 'BUTTON' && node.className.indexOf('open') === -1)) {
             e.stopImmediatePropagation();
 
             if (onClickHandler) {

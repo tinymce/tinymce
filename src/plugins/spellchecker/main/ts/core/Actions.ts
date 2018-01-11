@@ -15,28 +15,29 @@ import Events from '../api/Events';
 import Settings from '../api/Settings';
 import DomTextMatcher from './DomTextMatcher';
 
-var getTextMatcher = function (editor, textMatcherState) {
+const getTextMatcher = function (editor, textMatcherState) {
   if (!textMatcherState.get()) {
-    var textMatcher = DomTextMatcher(editor.getBody(), editor);
+    const textMatcher = DomTextMatcher(editor.getBody(), editor);
     textMatcherState.set(textMatcher);
   }
 
   return textMatcherState.get();
 };
 
-var isEmpty = function (obj) {
-  for (var name in obj) {
+const isEmpty = function (obj) {
+  for (const _ in obj) {
     return false;
   }
 
   return true;
 };
 
-var defaultSpellcheckCallback = function (editor, pluginUrl, currentLanguageState) {
+const defaultSpellcheckCallback = function (editor, pluginUrl, currentLanguageState) {
   return function (method, text, doneCallback, errorCallback) {
-    var data = { method: method, lang: currentLanguageState.get() }, postData = '';
+    const data = { method, lang: currentLanguageState.get() };
+    let postData = '';
 
-    data[method === "addToDictionary" ? "word" : "text"] = text;
+    data[method === 'addToDictionary' ? 'word' : 'text'] = text;
 
     Tools.each(data, function (value, key) {
       if (postData) {
@@ -48,14 +49,14 @@ var defaultSpellcheckCallback = function (editor, pluginUrl, currentLanguageStat
 
     XHR.send({
       url: new URI(pluginUrl).toAbsolute(Settings.getRpcUrl(editor)),
-      type: "post",
+      type: 'post',
       content_type: 'application/x-www-form-urlencoded',
       data: postData,
-      success: function (result) {
+      success (result) {
         result = JSON.parse(result);
 
         if (!result) {
-          var message = editor.translate("Server response wasn't proper JSON.");
+          const message = editor.translate('Server response wasn\'t proper JSON.');
           errorCallback(message);
         } else if (result.error) {
           errorCallback(result.error);
@@ -63,49 +64,49 @@ var defaultSpellcheckCallback = function (editor, pluginUrl, currentLanguageStat
           doneCallback(result);
         }
       },
-      error: function () {
-        var message = editor.translate("The spelling service was not found: (") +
+      error () {
+        const message = editor.translate('The spelling service was not found: (') +
           Settings.getRpcUrl(editor) +
-          editor.translate(")");
+          editor.translate(')');
         errorCallback(message);
       }
     });
   };
 };
 
-var sendRpcCall = function (editor, pluginUrl, currentLanguageState, name, data, successCallback, errorCallback?) {
-  var userSpellcheckCallback = Settings.getSpellcheckerCallback(editor);
-  var spellCheckCallback = userSpellcheckCallback ? userSpellcheckCallback : defaultSpellcheckCallback(editor, pluginUrl, currentLanguageState);
+const sendRpcCall = function (editor, pluginUrl, currentLanguageState, name, data, successCallback, errorCallback?) {
+  const userSpellcheckCallback = Settings.getSpellcheckerCallback(editor);
+  const spellCheckCallback = userSpellcheckCallback ? userSpellcheckCallback : defaultSpellcheckCallback(editor, pluginUrl, currentLanguageState);
   spellCheckCallback.call(editor.plugins.spellchecker, name, data, successCallback, errorCallback);
 };
 
-var spellcheck = function (editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState) {
+const spellcheck = function (editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState) {
   if (finish(editor, startedState, textMatcherState)) {
     return;
   }
 
-  var errorCallback = function (message) {
+  const errorCallback = function (message) {
     editor.notificationManager.open({ text: message, type: 'error' });
     editor.setProgressState(false);
     finish(editor, startedState, textMatcherState);
   };
 
-  var successCallback = function (data) {
+  const successCallback = function (data) {
     markErrors(editor, startedState, textMatcherState, lastSuggestionsState, data);
   };
 
   editor.setProgressState(true);
-  sendRpcCall(editor, pluginUrl, currentLanguageState, "spellcheck", getTextMatcher(editor, textMatcherState).text, successCallback, errorCallback);
+  sendRpcCall(editor, pluginUrl, currentLanguageState, 'spellcheck', getTextMatcher(editor, textMatcherState).text, successCallback, errorCallback);
   editor.focus();
 };
 
-var checkIfFinished = function (editor, startedState, textMatcherState) {
+const checkIfFinished = function (editor, startedState, textMatcherState) {
   if (!editor.dom.select('span.mce-spellchecker-word').length) {
     finish(editor, startedState, textMatcherState);
   }
 };
 
-var addToDictionary = function (editor, pluginUrl, startedState, textMatcherState, word, spans) {
+const addToDictionary = function (editor, pluginUrl, startedState, textMatcherState, word, spans) {
   editor.setProgressState(true);
 
   sendRpcCall(editor, pluginUrl, 'addToDictionary', word, function () {
@@ -118,7 +119,7 @@ var addToDictionary = function (editor, pluginUrl, startedState, textMatcherStat
   });
 };
 
-var ignoreWord = function (editor, startedState, textMatcherState, word, spans, all?) {
+const ignoreWord = function (editor, startedState, textMatcherState, word, spans, all?) {
   editor.selection.collapse();
 
   if (all) {
@@ -134,7 +135,7 @@ var ignoreWord = function (editor, startedState, textMatcherState, word, spans, 
   checkIfFinished(editor, startedState, textMatcherState);
 };
 
-var finish = function (editor, startedState, textMatcherState) {
+const finish = function (editor, startedState, textMatcherState) {
   getTextMatcher(editor, textMatcherState).reset();
   textMatcherState.set(null);
 
@@ -145,23 +146,24 @@ var finish = function (editor, startedState, textMatcherState) {
   }
 };
 
-var getElmIndex = function (elm) {
-  var value = elm.getAttribute('data-mce-index');
+const getElmIndex = function (elm) {
+  const value = elm.getAttribute('data-mce-index');
 
-  if (typeof value === "number") {
-    return "" + value;
+  if (typeof value === 'number') {
+    return '' + value;
   }
 
   return value;
 };
 
-var findSpansByIndex = function (editor, index) {
-  var nodes, spans = [];
+const findSpansByIndex = function (editor, index) {
+  let nodes;
+  const spans = [];
 
   nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
   if (nodes.length) {
-    for (var i = 0; i < nodes.length; i++) {
-      var nodeIndex = getElmIndex(nodes[i]);
+    for (let i = 0; i < nodes.length; i++) {
+      const nodeIndex = getElmIndex(nodes[i]);
 
       if (nodeIndex === null || !nodeIndex.length) {
         continue;
@@ -176,8 +178,8 @@ var findSpansByIndex = function (editor, index) {
   return spans;
 };
 
-var markErrors = function (editor, startedState, textMatcherState, lastSuggestionsState, data) {
-  var suggestions, hasDictionarySupport;
+const markErrors = function (editor, startedState, textMatcherState, lastSuggestionsState, data) {
+  let suggestions, hasDictionarySupport;
 
   if (data.words) {
     hasDictionarySupport = !!data.dictionary;
@@ -190,24 +192,24 @@ var markErrors = function (editor, startedState, textMatcherState, lastSuggestio
   editor.setProgressState(false);
 
   if (isEmpty(suggestions)) {
-    var message = editor.translate('No misspellings found.');
+    const message = editor.translate('No misspellings found.');
     editor.notificationManager.open({ text: message, type: 'info' });
     startedState.set(false);
     return;
   }
 
   lastSuggestionsState.set({
-    suggestions: suggestions,
-    hasDictionarySupport: hasDictionarySupport
+    suggestions,
+    hasDictionarySupport
   });
 
   getTextMatcher(editor, textMatcherState).find(Settings.getSpellcheckerWordcharPattern(editor)).filter(function (match) {
     return !!suggestions[match.text];
   }).wrap(function (match) {
     return editor.dom.create('span', {
-      "class": 'mce-spellchecker-word',
-      "data-mce-bogus": 1,
-      "data-mce-word": match.text
+      'class': 'mce-spellchecker-word',
+      'data-mce-bogus': 1,
+      'data-mce-word': match.text
     });
   });
 
@@ -216,11 +218,11 @@ var markErrors = function (editor, startedState, textMatcherState, lastSuggestio
 };
 
 export default {
-  spellcheck: spellcheck,
-  checkIfFinished: checkIfFinished,
-  addToDictionary: addToDictionary,
-  ignoreWord: ignoreWord,
-  findSpansByIndex: findSpansByIndex,
-  getElmIndex: getElmIndex,
-  markErrors: markErrors
+  spellcheck,
+  checkIfFinished,
+  addToDictionary,
+  ignoreWord,
+  findSpansByIndex,
+  getElmIndex,
+  markErrors
 };

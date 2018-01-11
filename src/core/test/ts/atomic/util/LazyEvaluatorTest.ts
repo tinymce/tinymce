@@ -5,12 +5,12 @@ import { Option } from '@ephox/katamari';
 import LazyEvaluator from 'tinymce/core/util/LazyEvaluator';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('atomic.tinymce.core.util.LazyEvaluatorTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('atomic.tinymce.core.util.LazyEvaluatorTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var sTestEvaluateUntil = Step.sync(function () {
-    var operations = [
+  const sTestEvaluateUntil = Step.sync(function () {
+    const operations = [
       function (a, b) {
         return a === 1 && b === 'a' ? Option.some(1) : Option.none();
       },
@@ -34,4 +34,3 @@ UnitTest.asynctest('atomic.tinymce.core.util.LazyEvaluatorTest', function() {
     success();
   }, failure);
 });
-

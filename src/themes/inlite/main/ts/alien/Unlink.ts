@@ -20,8 +20,9 @@ import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
  *  a[b<a href="x">c]d</a>e -> a[bc]<a href="x">d</a>e
  */
 
-var getSelectedElements = function (rootElm, startNode, endNode) {
-  var walker, node, elms = [];
+const getSelectedElements = function (rootElm, startNode, endNode) {
+  let walker, node;
+  const elms = [];
 
   walker = new TreeWalker(startNode, rootElm);
   for (node = startNode; node; node = walker.next()) {
@@ -37,8 +38,8 @@ var getSelectedElements = function (rootElm, startNode, endNode) {
   return elms;
 };
 
-var unwrapElements = function (editor, elms) {
-  var bookmark, dom, selection;
+const unwrapElements = function (editor, elms) {
+  let bookmark, dom, selection;
 
   dom = editor.dom;
   selection = editor.selection;
@@ -51,17 +52,17 @@ var unwrapElements = function (editor, elms) {
   selection.setRng(Bookmark.resolve(dom, bookmark));
 };
 
-var isLink = function (elm) {
+const isLink = function (elm) {
   return elm.nodeName === 'A' && elm.hasAttribute('href');
 };
 
-var getParentAnchorOrSelf = function (dom, elm) {
-  var anchorElm = dom.getParent(elm, isLink);
+const getParentAnchorOrSelf = function (dom, elm) {
+  const anchorElm = dom.getParent(elm, isLink);
   return anchorElm ? anchorElm : elm;
 };
 
-var getSelectedAnchors = function (editor) {
-  var startElm, endElm, rootElm, anchorElms, selection, dom, rng;
+const getSelectedAnchors = function (editor) {
+  let startElm, endElm, rootElm, anchorElms, selection, dom, rng;
 
   selection = editor.selection;
   dom = editor.dom;
@@ -74,10 +75,10 @@ var getSelectedAnchors = function (editor) {
   return anchorElms;
 };
 
-var unlinkSelection = function (editor) {
+const unlinkSelection = function (editor) {
   unwrapElements(editor, getSelectedAnchors(editor));
 };
 
-export default <any> {
-  unlinkSelection: unlinkSelection
+export default {
+  unlinkSelection
 };

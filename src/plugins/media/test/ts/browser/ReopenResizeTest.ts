@@ -9,32 +9,32 @@ import Utils from '../module/test/Utils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
   Theme();
 
-  var sWaitForResizeHandles = function (editor) {
+  const sWaitForResizeHandles = function (editor) {
     return Waiter.sTryUntil('Wait for new width value', Step.sync(function () {
       RawAssertions.assertEq('Resize handle should exist', editor.dom.select('#mceResizeHandlenw').length, 1);
     }), 1, 3000);
   };
 
-  var sRawAssertImagePresence = function (editor) {
+  const sRawAssertImagePresence = function (editor) {
     // Hacky way to assert that the placeholder image is in
     // the correct place that works cross browser
     // assertContentStructure did not work because some
     // browsers insert BRs and some do not
     return Step.sync(function () {
-      var actualCount = editor.dom.select('img.mce-object').length;
+      const actualCount = editor.dom.select('img.mce-object').length;
       RawAssertions.assertEq('assert raw content', 1, actualCount);
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var ui = TinyUi(editor);
+    const ui = TinyUi(editor);
 
     Pipeline.async({}, [
       Utils.sOpenDialog(ui),
@@ -53,11 +53,10 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function() 
       )
     ], onSuccess, onFailure);
   }, {
-    plugins: ["media"],
-    toolbar: "media",
+    plugins: ['media'],
+    toolbar: 'media',
     indent: false,
     forced_root_block: false,
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

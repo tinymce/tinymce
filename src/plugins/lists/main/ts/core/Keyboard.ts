@@ -14,7 +14,7 @@ import Outdent from '../actions/Outdent';
 import Settings from '../api/Settings';
 import Delete from './Delete';
 
-var setupTabKey = function (editor) {
+const setupTabKey = function (editor) {
   editor.on('keydown', function (e) {
     // Check for tab but not ctrl/cmd+tab since it switches browser tabs
     if (e.keyCode !== VK.TAB || VK.metaKeyPressed(e)) {
@@ -33,7 +33,7 @@ var setupTabKey = function (editor) {
   });
 };
 
-var setup = function (editor) {
+const setup = function (editor) {
   if (Settings.shouldIndentOnTab(editor)) {
     setupTabKey(editor);
   }
@@ -42,5 +42,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

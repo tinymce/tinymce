@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getAutoLinkPattern = function (editor) {
+const getAutoLinkPattern = function (editor) {
   return editor.getParam('autolink_pattern', /^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.|(?:mailto:)?[A-Z0-9._%+\-]+@)(.+)$/i);
 };
 
-var getDefaultLinkTarget = function (editor) {
+const getDefaultLinkTarget = function (editor) {
   return editor.getParam('default_link_target', '');
 };
 
 export default {
-  getAutoLinkPattern: getAutoLinkPattern,
-  getDefaultLinkTarget: getDefaultLinkTarget
+  getAutoLinkPattern,
+  getDefaultLinkTarget
 };

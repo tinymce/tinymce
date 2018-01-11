@@ -13,28 +13,28 @@ import SearchreplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   SearchreplacePlugin();
 
-  var sUndo = function (editor) {
+  const sUndo = function (editor) {
     return Step.sync(function () {
       editor.undoManager.undo();
     });
   };
 
-  var sRedo = function (editor) {
+  const sRedo = function (editor) {
     return Step.sync(function () {
       editor.undoManager.redo();
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       Logger.t('replace on of three found, undo and redo and there be no matcher spans in editor', GeneralSteps.sequence([
@@ -80,4 +80,3 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', 
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

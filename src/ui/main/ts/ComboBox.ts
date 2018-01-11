@@ -24,9 +24,7 @@ import Widget from './Widget';
  * @extends tinymce.ui.Widget
  */
 
-"use strict";
-
-export default <any> Widget.extend({
+export default Widget.extend({
   /**
    * Constructs a new control instance with the specified settings.
    *
@@ -34,8 +32,8 @@ export default <any> Widget.extend({
    * @param {Object} settings Name/value object with settings.
    * @setting {String} placeholder Placeholder text to display.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._super(settings);
     settings = self.settings;
@@ -51,14 +49,15 @@ export default <any> Widget.extend({
     }
 
     self.on('click', function (e) {
-      var elm = e.target, root = self.getEl();
+      let elm = e.target;
+      const root = self.getEl();
 
-      if (!DomQuery.contains(root, elm) && elm != root) {
+      if (!DomQuery.contains(root, elm) && elm !== root) {
         return;
       }
 
-      while (elm && elm != root) {
-        if (elm.id && elm.id.indexOf('-open') != -1) {
+      while (elm && elm !== root) {
+        if (elm.id && elm.id.indexOf('-open') !== -1) {
           self.fire('action');
 
           if (settings.menu) {
@@ -76,9 +75,9 @@ export default <any> Widget.extend({
 
     // TODO: Rework this
     self.on('keydown', function (e) {
-      var rootControl;
+      let rootControl;
 
-      if (e.keyCode == 13 && e.target.nodeName === 'INPUT') {
+      if (e.keyCode === 13 && e.target.nodeName === 'INPUT') {
         e.preventDefault();
 
         // Find root control that we can do toJSON on
@@ -95,9 +94,9 @@ export default <any> Widget.extend({
     });
 
     self.on('keyup', function (e) {
-      if (e.target.nodeName == "INPUT") {
-        var oldValue = self.state.get('value');
-        var newValue = e.target.value;
+      if (e.target.nodeName === 'INPUT') {
+        const oldValue = self.state.get('value');
+        const newValue = e.target.value;
 
         if (newValue !== oldValue) {
           self.state.set('value', newValue);
@@ -107,22 +106,22 @@ export default <any> Widget.extend({
     });
 
     self.on('mouseover', function (e) {
-      var tooltip = self.tooltip().moveTo(-0xFFFF);
+      const tooltip = self.tooltip().moveTo(-0xFFFF);
 
       if (self.statusLevel() && e.target.className.indexOf(self.classPrefix + 'status') !== -1) {
-        var statusMessage = self.statusMessage() || 'Ok';
-        var rel = tooltip.text(statusMessage).show().testMoveRel(e.target, ['bc-tc', 'bc-tl', 'bc-tr']);
+        const statusMessage = self.statusMessage() || 'Ok';
+        const rel = tooltip.text(statusMessage).show().testMoveRel(e.target, ['bc-tc', 'bc-tl', 'bc-tr']);
 
-        tooltip.classes.toggle('tooltip-n', rel == 'bc-tc');
-        tooltip.classes.toggle('tooltip-nw', rel == 'bc-tl');
-        tooltip.classes.toggle('tooltip-ne', rel == 'bc-tr');
+        tooltip.classes.toggle('tooltip-n', rel === 'bc-tc');
+        tooltip.classes.toggle('tooltip-nw', rel === 'bc-tl');
+        tooltip.classes.toggle('tooltip-ne', rel === 'bc-tr');
 
         tooltip.moveRel(e.target, rel);
       }
     });
   },
 
-  statusLevel: function (value) {
+  statusLevel (value) {
     if (arguments.length > 0) {
       this.state.set('statusLevel', value);
     }
@@ -130,7 +129,7 @@ export default <any> Widget.extend({
     return this.state.get('statusLevel');
   },
 
-  statusMessage: function (value) {
+  statusMessage (value) {
     if (arguments.length > 0) {
       this.state.set('statusMessage', value);
     }
@@ -138,8 +137,10 @@ export default <any> Widget.extend({
     return this.state.get('statusMessage');
   },
 
-  showMenu: function () {
-    var self = this, settings = self.settings, menu;
+  showMenu () {
+    const self = this;
+    const settings = self.settings;
+    let menu;
 
     if (!self.menu) {
       menu = settings.menu || [];
@@ -165,7 +166,7 @@ export default <any> Widget.extend({
 
       self.menu.on('show hide', function (e) {
         e.control.items().each(function (ctrl) {
-          ctrl.active(ctrl.value() == self.value());
+          ctrl.active(ctrl.value() === self.value());
         });
       }).fire('show');
 
@@ -174,7 +175,7 @@ export default <any> Widget.extend({
       });
 
       self.on('focusin', function (e) {
-        if (e.target.tagName.toUpperCase() == 'INPUT') {
+        if (e.target.tagName.toUpperCase() === 'INPUT') {
           self.menu.hide();
         }
       });
@@ -192,7 +193,7 @@ export default <any> Widget.extend({
    *
    * @method focus
    */
-  focus: function () {
+  focus () {
     this.getEl('inp').focus();
   },
 
@@ -201,9 +202,10 @@ export default <any> Widget.extend({
    *
    * @method repaint
    */
-  repaint: function () {
-    var self = this, elm = self.getEl(), openElm = self.getEl('open'), rect = self.layoutRect();
-    var width, lineHeight, innerPadding = 0, inputElm = elm.firstChild;
+  repaint () {
+    const self = this, elm = self.getEl(), openElm = self.getEl('open'), rect = self.layoutRect();
+    let width, lineHeight, innerPadding = 0;
+    const inputElm = elm.firstChild;
 
     if (self.statusLevel() && self.statusLevel() !== 'none') {
       innerPadding = (
@@ -219,14 +221,14 @@ export default <any> Widget.extend({
     }
 
     // Detect old IE 7+8 add lineHeight to align caret vertically in the middle
-    var doc: any = document;
+    const doc: any = document;
     if (doc.all && (!doc.documentMode || doc.documentMode <= 8)) {
       lineHeight = (self.layoutRect().h - 2) + 'px';
     }
 
     DomQuery(inputElm).css({
       width: width - innerPadding,
-      lineHeight: lineHeight
+      lineHeight
     });
 
     self._super();
@@ -240,8 +242,8 @@ export default <any> Widget.extend({
    * @method postRender
    * @return {tinymce.ui.ComboBox} Current combobox instance.
    */
-  postRender: function () {
-    var self = this;
+  postRender () {
+    const self = this;
 
     DomQuery(this.getEl('inp')).on('change', function (e) {
       self.state.set('value', e.target.value);
@@ -257,12 +259,12 @@ export default <any> Widget.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, id = self._id, settings = self.settings, prefix = self.classPrefix;
-    var value = self.state.get('value') || '';
-    var icon, text, openBtnHtml = '', extraAttrs = '', statusHtml = '';
+  renderHtml () {
+    const self = this, id = self._id, settings = self.settings, prefix = self.classPrefix;
+    const value = self.state.get('value') || '';
+    let icon, text, openBtnHtml = '', extraAttrs = '', statusHtml = '';
 
-    if ("spellcheck" in settings) {
+    if ('spellcheck' in settings) {
       extraAttrs += ' spellcheck="' + settings.spellcheck + '"';
     }
 
@@ -285,7 +287,7 @@ export default <any> Widget.extend({
     }
 
     icon = settings.icon;
-    if (icon && icon != 'caret') {
+    if (icon && icon !== 'caret') {
       icon = prefix + 'ico ' + prefix + 'i-' + settings.icon;
     }
 
@@ -295,7 +297,7 @@ export default <any> Widget.extend({
       openBtnHtml = (
         '<div id="' + id + '-open" class="' + prefix + 'btn ' + prefix + 'open" tabIndex="-1" role="button">' +
         '<button id="' + id + '-action" type="button" hidefocus="1" tabindex="-1">' +
-        (icon != 'caret' ? '<i class="' + icon + '"></i>' : '<i class="' + prefix + 'caret"></i>') +
+        (icon !== 'caret' ? '<i class="' + icon + '"></i>' : '<i class="' + prefix + 'caret"></i>') +
         (text ? (icon ? ' ' : '') + text : '') +
         '</button>' +
         '</div>'
@@ -315,7 +317,7 @@ export default <any> Widget.extend({
     );
   },
 
-  value: function (value) {
+  value (value) {
     if (arguments.length) {
       this.state.set('value', value);
       return this;
@@ -329,19 +331,19 @@ export default <any> Widget.extend({
     return this.state.get('value');
   },
 
-  showAutoComplete: function (items, term) {
-    var self = this;
+  showAutoComplete (items, term) {
+    const self = this;
 
     if (items.length === 0) {
       self.hideMenu();
       return;
     }
 
-    var insert = function (value, title) {
+    const insert = function (value, title) {
       return function () {
         self.fire('selectitem', {
-          title: title,
-          value: value
+          title,
+          value
         });
       };
     };
@@ -381,24 +383,24 @@ export default <any> Widget.extend({
       self.focus();
     });
 
-    var maxW = self.layoutRect().w;
-    self.menu.layoutRect({ w: maxW, minW: 0, maxW: maxW });
+    const maxW = self.layoutRect().w;
+    self.menu.layoutRect({ w: maxW, minW: 0, maxW });
     self.menu.reflow();
     self.menu.show();
     self.menu.moveRel(self.getEl(), self.isRtl() ? ['br-tr', 'tr-br'] : ['bl-tl', 'tl-bl']);
   },
 
-  hideMenu: function () {
+  hideMenu () {
     if (this.menu) {
       this.menu.hide();
     }
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     self.state.on('change:value', function (e) {
-      if (self.getEl('inp').value != e.value) {
+      if (self.getEl('inp').value !== e.value) {
         self.getEl('inp').value = e.value;
       }
     });
@@ -408,8 +410,8 @@ export default <any> Widget.extend({
     });
 
     self.state.on('change:statusLevel', function (e) {
-      var statusIconElm = self.getEl('status');
-      var prefix = self.classPrefix, value = e.value;
+      const statusIconElm = self.getEl('status');
+      const prefix = self.classPrefix, value = e.value;
 
       DomUtils.css(statusIconElm, 'display', value === 'none' ? 'none' : '');
       DomUtils.toggleClass(statusIconElm, prefix + 'i-checkmark', value === 'ok');
@@ -430,14 +432,14 @@ export default <any> Widget.extend({
       }
     });
 
-    var focusIdx = function (idx, menu) {
+    const focusIdx = function (idx, menu) {
       if (menu && menu.items().length > 0) {
         menu.items().eq(idx)[0].focus();
       }
     };
 
     self.on('keydown', function (e) {
-      var keyCode = e.keyCode;
+      const keyCode = e.keyCode;
 
       if (e.target.nodeName === 'INPUT') {
         if (keyCode === VK.DOWN) {
@@ -454,7 +456,7 @@ export default <any> Widget.extend({
     return self._super();
   },
 
-  remove: function () {
+  remove () {
     DomQuery(this.getEl('inp')).off();
 
     if (this.menu) {

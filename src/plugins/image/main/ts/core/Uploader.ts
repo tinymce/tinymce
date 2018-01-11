@@ -17,9 +17,9 @@ import Tools from 'tinymce/core/util/Tools';
  * if it wasn't marked as private.
  */
 
-var noop = function () {};
+const noop = function () {};
 
-var pathJoin = function (path1, path2) {
+const pathJoin = function (path1, path2) {
   if (path1) {
     return path1.replace(/\/$/, '') + '/' + path2.replace(/^\//, '');
   }
@@ -28,8 +28,8 @@ var pathJoin = function (path1, path2) {
 };
 
 export default function (settings) {
-  var defaultHandler = function (blobInfo, success, failure, progress) {
-    var xhr, formData;
+  const defaultHandler = function (blobInfo, success, failure, progress) {
+    let xhr, formData;
 
     xhr = new XMLHttpRequest();
     xhr.open('POST', settings.url);
@@ -44,7 +44,7 @@ export default function (settings) {
     };
 
     xhr.onload = function () {
-      var json;
+      let json;
 
       if (xhr.status < 200 || xhr.status >= 300) {
         failure('HTTP Error: ' + xhr.status);
@@ -67,7 +67,7 @@ export default function (settings) {
     xhr.send(formData);
   };
 
-  var uploadBlob = function (blobInfo, handler) {
+  const uploadBlob = function (blobInfo, handler) {
     return new Promise(function (resolve, reject) {
       try {
         handler(blobInfo, resolve, reject, noop);
@@ -77,11 +77,11 @@ export default function (settings) {
     });
   };
 
-  var isDefaultHandler = function (handler) {
+  const isDefaultHandler = function (handler) {
     return handler === defaultHandler;
   };
 
-  var upload = function (blobInfo) {
+  const upload = function (blobInfo) {
     return (!settings.url && isDefaultHandler(settings.handler)) ? Promise.reject('Upload url missing from the settings.') : uploadBlob(blobInfo, settings.handler);
   };
 
@@ -91,6 +91,6 @@ export default function (settings) {
   }, settings);
 
   return {
-    upload: upload
+    upload
   };
-};
+}

@@ -9,16 +9,16 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityTest',
-  function() {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+  function () {
+    const success = arguments[arguments.length - 2];
+    const failure = arguments[arguments.length - 1];
 
     ModernTheme();
     InsertDatetimePlugin();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyUi = TinyUi(editor);
-      var tinyApis = TinyApis(editor);
+      const tinyUi = TinyUi(editor);
+      const tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
         tinyUi.sClickOnToolbar('click on insertdatetime button', 'div[aria-label="Insert date/time"] > button.mce-open'),
@@ -43,4 +43,3 @@ UnitTest.asynctest(
     }, success, failure);
   }
 );
-

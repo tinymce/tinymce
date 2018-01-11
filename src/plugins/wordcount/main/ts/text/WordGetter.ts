@@ -12,18 +12,18 @@ import UnicodeData from './UnicodeData';
 import StringMapper from './StringMapper';
 import WordBoundary from './WordBoundary';
 
-var EMPTY_STRING = UnicodeData.EMPTY_STRING;
-var WHITESPACE = UnicodeData.WHITESPACE;
-var PUNCTUATION = UnicodeData.PUNCTUATION;
+const EMPTY_STRING = UnicodeData.EMPTY_STRING;
+const WHITESPACE = UnicodeData.WHITESPACE;
+const PUNCTUATION = UnicodeData.PUNCTUATION;
 
-var isProtocol = function (word) {
+const isProtocol = function (word) {
   return word === 'http' || word === 'https';
 };
 
-var findWordEnd = function (string, index) {
-  var i;
-  for (i = index; i < string.length; ++i) {
-    var chr = string.charAt(i);
+const findWordEnd = function (str, index) {
+  let i;
+  for (i = index; i < str.length; ++i) {
+    const chr = str.charAt(i);
 
     if (WHITESPACE.test(chr)) {
       break;
@@ -32,9 +32,9 @@ var findWordEnd = function (string, index) {
   return i;
 };
 
-var extractUrl = function (word, string, index) {
-  var endIndex = findWordEnd(string, index + 1);
-  var peakedWord = string.substring(index + 1, endIndex);
+const extractUrl = function (word, str, index) {
+  const endIndex = findWordEnd(str, index + 1);
+  const peakedWord = str.substring(index + 1, endIndex);
   if (peakedWord.substr(0, 3) === '://') {
     return {
       word: word + peakedWord,
@@ -43,27 +43,27 @@ var extractUrl = function (word, string, index) {
   }
 
   return {
-    word: word,
-    index: index
+    word,
+    index
   };
 };
 
-var doGetWords = function (string, options) {
-  var i = 0;
-  var map = StringMapper.classify(string);
-  var len = map.length;
-  var word: any = [];
-  var words = [];
-  var chr;
-  var includePunctuation;
-  var includeWhitespace;
+const doGetWords = function (str, options) {
+  let i = 0;
+  const map = StringMapper.classify(str);
+  const len = map.length;
+  let word: any = [];
+  const words = [];
+  let chr;
+  let includePunctuation;
+  let includeWhitespace;
 
   if (!options) {
     options = {};
   }
 
   if (options.ignoreCase) {
-    string = string.toLowerCase();
+    str = str.toLowerCase();
   }
 
   includePunctuation = options.includePunctuation;
@@ -73,7 +73,7 @@ var doGetWords = function (string, options) {
   // whether it precedes a word boundary, building an array of distinct
   // words as we go.
   for (; i < len; ++i) {
-    chr = string.charAt(i);
+    chr = str.charAt(i);
 
     // Append this character to the current word.
     word.push(chr);
@@ -88,7 +88,7 @@ var doGetWords = function (string, options) {
         (includeWhitespace || !WHITESPACE.test(word)) &&
         (includePunctuation || !PUNCTUATION.test(word))) {
         if (isProtocol(word)) {
-          var obj = extractUrl(word, string, i);
+          const obj = extractUrl(word, str, i);
           words.push(obj.word);
           i = obj.index;
         } else {
@@ -103,10 +103,10 @@ var doGetWords = function (string, options) {
   return words;
 };
 
-var getWords = function (string, options?) {
-  return doGetWords(string.replace(/\ufeff/g, ''), options);
+const getWords = function (str, options?) {
+  return doGetWords(str.replace(/\ufeff/g, ''), options);
 };
 
 export default {
-  getWords: getWords
+  getWords
 };

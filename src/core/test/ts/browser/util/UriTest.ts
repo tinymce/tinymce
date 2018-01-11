@@ -3,27 +3,28 @@ import { Pipeline } from '@ephox/agar';
 import URI from 'tinymce/core/util/URI';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.util.UriTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.util.UriTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
-  var ok = function (value, label?) {
+  const ok = function (value, label?) {
+    console.log(value, label);
     return LegacyUnit.equal(value, true, label);
   };
 
   /* eslint max-len: 0 */
 
   suite.test('protocol relative url', function () {
-    var uri = new URI('//www.site.com/dir1/file?query#hash');
+    const uri = new URI('//www.site.com/dir1/file?query#hash');
 
-    LegacyUnit.equal(uri.protocol, "");
-    LegacyUnit.equal(uri.host, "www.site.com");
-    LegacyUnit.equal(uri.path, "/dir1/file");
-    LegacyUnit.equal(uri.query, "query");
-    LegacyUnit.equal(uri.anchor, "hash");
-    LegacyUnit.equal(uri.source, "//www.site.com/dir1/file?query#hash");
-    LegacyUnit.equal(uri.getURI(), "//www.site.com/dir1/file?query#hash");
+    LegacyUnit.equal(uri.protocol, '');
+    LegacyUnit.equal(uri.host, 'www.site.com');
+    LegacyUnit.equal(uri.path, '/dir1/file');
+    LegacyUnit.equal(uri.query, 'query');
+    LegacyUnit.equal(uri.anchor, 'hash');
+    LegacyUnit.equal(uri.source, '//www.site.com/dir1/file?query#hash');
+    LegacyUnit.equal(uri.getURI(), '//www.site.com/dir1/file?query#hash');
     LegacyUnit.equal(uri.toRelative('//www.site.com/dir1/file2'), 'file2');
     LegacyUnit.equal(uri.toRelative('//www.site2.com/dir1/file2'), '//www.site2.com/dir1/file2');
     LegacyUnit.equal(uri.toAbsolute('../file2'), '//www.site.com/dir1/file2');
@@ -118,7 +119,7 @@ UnitTest.asynctest('browser.tinymce.core.util.UriTest', function() {
   });
 
   suite.test('getDocumentBaseUrl', function () {
-    var getDocumentBaseUrl = URI.getDocumentBaseUrl;
+    const getDocumentBaseUrl = URI.getDocumentBaseUrl;
 
     LegacyUnit.equal(getDocumentBaseUrl({ protocol: 'file:', host: '', pathname: '/dir/path1/path2' }), 'file:///dir/path1/');
     LegacyUnit.equal(getDocumentBaseUrl({ protocol: 'http:', host: 'localhost', pathname: '/dir/path1/path2' }), 'http://localhost/dir/path1/');
@@ -135,4 +136,3 @@ UnitTest.asynctest('browser.tinymce.core.util.UriTest', function() {
     success();
   }, failure);
 });
-

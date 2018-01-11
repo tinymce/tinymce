@@ -7,7 +7,7 @@ import Inputs from './Inputs';
 import SerialisedDialog from './SerialisedDialog';
 import RangePreserver from '../util/RangePreserver';
 
-var getGroups = Thunk.cached(function (realm, editor) {
+const getGroups = Thunk.cached(function (realm, editor) {
   return [
     {
       label: 'the link group',
@@ -23,14 +23,14 @@ var getGroups = Thunk.cached(function (realm, editor) {
 
           // Do not include link
           maxFieldIndex: [ 'url', 'text', 'title', 'target' ].length - 1,
-          getInitialValue: function (/* dialog */) {
+          getInitialValue (/* dialog */) {
             return Option.some(
               LinkBridge.getInfo(editor)
             );
           },
 
-          onExecute: function (dialog/*, simulatedEvent */) {
-            var info = Representing.getValue(dialog);
+          onExecute (dialog/*, simulatedEvent */) {
+            const info = Representing.getValue(dialog);
             LinkBridge.applyInfo(editor, info);
             realm.restoreToolbar();
             editor.focus();
@@ -41,10 +41,10 @@ var getGroups = Thunk.cached(function (realm, editor) {
   ];
 });
 
-var sketch = function (realm, editor) {
+const sketch = function (realm, editor) {
   return Buttons.forToolbarStateAction(editor, 'link', 'link', function () {
-    var groups = getGroups(realm, editor);
-    
+    const groups = getGroups(realm, editor);
+
     realm.setContextToolbar(groups);
     // Focus inside
     // On Android, there is a bug where if you position the cursor (collapsed) within a
@@ -62,6 +62,6 @@ var sketch = function (realm, editor) {
   });
 };
 
-export default <any> {
-  sketch: sketch
+export default {
+  sketch
 };

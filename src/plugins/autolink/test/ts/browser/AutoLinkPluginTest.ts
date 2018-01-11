@@ -7,37 +7,37 @@ import KeyUtils from '../module/test/KeyUtils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
   Plugin();
 
-  var typeUrl = function (editor, url) {
+  const typeUrl = function (editor, url) {
     editor.setContent('<p>' + url + '</p>');
     LegacyUnit.setSelection(editor, 'p', url.length);
     KeyUtils.type(editor, ' ');
     return editor.getContent();
   };
 
-  var typeAnEclipsedURL = function (editor, url) {
-    url = "(" + url;
+  const typeAnEclipsedURL = function (editor, url) {
+    url = '(' + url;
     editor.setContent('<p>' + url + '</p>');
     LegacyUnit.setSelection(editor, 'p', url.length);
     KeyUtils.type(editor, ')');
     return editor.getContent();
   };
 
-  var typeNewlineURL = function (editor, url) {
+  const typeNewlineURL = function (editor, url) {
     editor.setContent('<p>' + url + '</p>');
     LegacyUnit.setSelection(editor, 'p', url.length);
     KeyUtils.type(editor, '\n');
     return editor.getContent();
   };
 
-  suite.test("Urls ended with space", function (editor) {
+  suite.test('Urls ended with space', function (editor) {
     editor.focus();
     LegacyUnit.equal(typeUrl(editor, 'http://www.domain.com'), '<p><a href="http://www.domain.com">http://www.domain.com</a></p>');
     LegacyUnit.equal(typeUrl(editor, 'https://www.domain.com'), '<p><a href="https://www.domain.com">https://www.domain.com</a></p>');
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', functi
     LegacyUnit.equal(typeUrl(editor, 'first-last@domain.com'), '<p><a href="mailto:first-last@domain.com">first-last@domain.com</a></p>');
   });
 
-  suite.test("Urls ended with )", function (editor) {
+  suite.test('Urls ended with )', function (editor) {
     LegacyUnit.equal(
       typeAnEclipsedURL(editor, 'http://www.domain.com'),
       '<p>(<a href="http://www.domain.com">http://www.domain.com</a>)</p>'
@@ -71,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', functi
     LegacyUnit.equal(typeAnEclipsedURL(editor, 'www.domain.com.'), '<p>(<a href="http://www.domain.com">www.domain.com</a>.)</p>');
   });
 
-  suite.test("Urls ended with new line", function (editor) {
+  suite.test('Urls ended with new line', function (editor) {
     LegacyUnit.equal(
       typeNewlineURL(editor, 'http://www.domain.com'),
       '<p><a href="http://www.domain.com">http://www.domain.com</a></p><p>&nbsp;</p>'
@@ -98,7 +98,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', functi
     );
   });
 
-  suite.test("Url inside blank formatting wrapper", function (editor) {
+  suite.test('Url inside blank formatting wrapper', function (editor) {
     editor.focus();
     editor.setContent('<p><br></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
@@ -111,7 +111,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', functi
     );
   });
 
-  suite.test("default_link_target='_self'", function (editor) {
+  suite.test('default_link_target=\'_self\'', function (editor) {
     editor.settings.default_link_target = '_self';
     LegacyUnit.equal(
       typeUrl(editor, 'http://www.domain.com'),
@@ -121,7 +121,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', functi
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var steps = Env.ie ? [] : suite.toSteps(editor);
+    const steps = Env.ie ? [] : suite.toSteps(editor);
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
     plugins: 'autolink',
@@ -129,4 +129,3 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', functi
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

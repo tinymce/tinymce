@@ -8,11 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var applyListFormat = function (editor, listName, styleValue) {
-  var cmd = listName === 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList';
+const applyListFormat = function (editor, listName, styleValue) {
+  const cmd = listName === 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList';
   editor.execCommand(cmd, false, styleValue === false ? null : { 'list-style-type': styleValue });
 };
 
 export default {
-  applyListFormat: applyListFormat
+  applyListFormat
 };

@@ -18,31 +18,29 @@ import Tools from './util/Tools';
  * @class tinymce.UndoManager
  */
 
-
-
 export default function (editor) {
-  var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;
+  let self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;
 
-  var isUnlocked = function () {
+  const isUnlocked = function () {
     return locks === 0;
   };
 
-  var setTyping = function (typing) {
+  const setTyping = function (typing) {
     if (isUnlocked()) {
       self.typing = typing;
     }
   };
 
-  var setDirty = function (state) {
+  const setDirty = function (state) {
     editor.setDirty(state);
   };
 
-  var addNonTypingUndoLevel = function (e?) {
+  const addNonTypingUndoLevel = function (e?) {
     setTyping(false);
     self.add({}, e);
   };
 
-  var endTyping = function () {
+  const endTyping = function () {
     if (self.typing) {
       setTyping(false);
       self.add();
@@ -56,7 +54,7 @@ export default function (editor) {
 
   // Get position before an execCommand is processed
   editor.on('BeforeExecCommand', function (e) {
-    var cmd = e.command;
+    const cmd = e.command;
 
     if (cmd !== 'Undo' && cmd !== 'Redo' && cmd !== 'mceRepaint') {
       endTyping();
@@ -66,7 +64,7 @@ export default function (editor) {
 
   // Add undo level after an execCommand call was made
   editor.on('ExecCommand', function (e) {
-    var cmd = e.command;
+    const cmd = e.command;
 
     if (cmd !== 'Undo' && cmd !== 'Redo' && cmd !== 'mceRepaint') {
       addNonTypingUndoLevel(e);
@@ -81,7 +79,7 @@ export default function (editor) {
   editor.on('DragEnd', addNonTypingUndoLevel);
 
   editor.on('KeyUp', function (e) {
-    var keyCode = e.keyCode;
+    const keyCode = e.keyCode;
 
     // If key is prevented then don't add undo level
     // This would happen on keyboard shortcuts for example
@@ -112,7 +110,7 @@ export default function (editor) {
   });
 
   editor.on('KeyDown', function (e) {
-    var keyCode = e.keyCode;
+    const keyCode = e.keyCode;
 
     // If key is prevented then don't add undo level
     // This would happen on keyboard shortcuts for example
@@ -130,7 +128,7 @@ export default function (editor) {
     }
 
     // If key isn't Ctrl+Alt/AltGr
-    var modKey = (e.ctrlKey && !e.altKey) || e.metaKey;
+    const modKey = (e.ctrlKey && !e.altKey) || e.metaKey;
     if ((keyCode < 16 || keyCode > 20) && keyCode !== 224 && keyCode !== 91 && !self.typing && !modKey) {
       self.beforeChange();
       setTyping(true);
@@ -158,7 +156,7 @@ export default function (editor) {
   /*eslint consistent-this:0 */
   self = {
     // Explode for debugging reasons
-    data: data,
+    data,
 
     /**
      * State if the user is currently typing or not. This will add a typing operation into one undo
@@ -174,7 +172,7 @@ export default function (editor) {
      *
      * @method beforeChange
      */
-    beforeChange: function () {
+    beforeChange () {
       if (isUnlocked()) {
         beforeBookmark = GetBookmark.getUndoBookmark(editor.selection);
       }
@@ -188,8 +186,10 @@ export default function (editor) {
      * @param {DOMEvent} event Optional event responsible for the creation of the undo level.
      * @return {Object} Undo level that got added or null it a level wasn't needed.
      */
-    add: function (level, event) {
-      var i, settings = editor.settings, lastLevel, currentLevel;
+    add (level, event) {
+      let i;
+      const settings = editor.settings;
+      let lastLevel, currentLevel;
 
       currentLevel = Levels.createFromEditor(editor);
       level = level || {};
@@ -200,7 +200,7 @@ export default function (editor) {
       }
 
       lastLevel = data[index];
-      if (editor.fire('BeforeAddUndo', { level: level, lastLevel: lastLevel, originalEvent: event }).isDefaultPrevented()) {
+      if (editor.fire('BeforeAddUndo', { level, lastLevel, originalEvent: event }).isDefaultPrevented()) {
         return null;
       }
 
@@ -237,7 +237,7 @@ export default function (editor) {
       data.push(level);
       index = data.length - 1;
 
-      var args = { level: level, lastLevel: lastLevel, originalEvent: event };
+      const args = { level, lastLevel, originalEvent: event };
 
       editor.fire('AddUndo', args);
 
@@ -255,8 +255,8 @@ export default function (editor) {
      * @method undo
      * @return {Object} Undo level or null if no undo was performed.
      */
-    undo: function () {
-      var level;
+    undo () {
+      let level;
 
       if (self.typing) {
         self.add();
@@ -268,7 +268,7 @@ export default function (editor) {
         level = data[--index];
         Levels.applyToEditor(editor, level, true);
         setDirty(true);
-        editor.fire('undo', { level: level });
+        editor.fire('undo', { level });
       }
 
       return level;
@@ -280,14 +280,14 @@ export default function (editor) {
      * @method redo
      * @return {Object} Redo level or null if no redo was performed.
      */
-    redo: function () {
-      var level;
+    redo () {
+      let level;
 
       if (index < data.length - 1) {
         level = data[++index];
         Levels.applyToEditor(editor, level, false);
         setDirty(true);
-        editor.fire('redo', { level: level });
+        editor.fire('redo', { level });
       }
 
       return level;
@@ -298,7 +298,7 @@ export default function (editor) {
      *
      * @method clear
      */
-    clear: function () {
+    clear () {
       data = [];
       index = 0;
       self.typing = false;
@@ -312,7 +312,7 @@ export default function (editor) {
      * @method hasUndo
      * @return {Boolean} true/false if the undo manager has any undo levels.
      */
-    hasUndo: function () {
+    hasUndo () {
       // Has undo levels or typing and content isn't the same as the initial level
       return index > 0 || (self.typing && data[0] && !Levels.isEq(Levels.createFromEditor(editor), data[0]));
     },
@@ -323,7 +323,7 @@ export default function (editor) {
      * @method hasRedo
      * @return {Boolean} true/false if the undo manager has any redo levels.
      */
-    hasRedo: function () {
+    hasRedo () {
       return index < data.length - 1 && !self.typing;
     },
 
@@ -337,7 +337,7 @@ export default function (editor) {
      * @param {function} callback Function that gets executed and has dom manipulation logic in it.
      * @return {Object} Undo level that got added or null it a level wasn't needed.
      */
-    transact: function (callback) {
+    transact (callback) {
       endTyping();
       self.beforeChange();
       self.ignore(callback);
@@ -353,7 +353,7 @@ export default function (editor) {
      * @param {function} callback Function that gets executed and has dom manipulation logic in it.
      * @return {Object} Undo level that got added or null it a level wasn't needed.
      */
-    ignore: function (callback) {
+    ignore (callback) {
       try {
         locks++;
         callback();
@@ -371,8 +371,8 @@ export default function (editor) {
      * @param {function} callback1 Function that does mutation but gets stored as a "hidden" extra undo level.
      * @param {function} callback2 Function that does mutation but gets displayed to the user.
      */
-    extra: function (callback1, callback2) {
-      var lastLevel, bookmark;
+    extra (callback1, callback2) {
+      let lastLevel, bookmark;
 
       if (self.transact(callback1)) {
         bookmark = data[index].bookmark;
@@ -387,4 +387,4 @@ export default function (editor) {
   };
 
   return self;
-};
+}

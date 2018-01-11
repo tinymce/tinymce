@@ -6,8 +6,8 @@ import MobileSchema from './MobileSchema';
 import IosMode from '../ios/core/IosMode';
 import TapToEditMask from '../touch/view/TapToEditMask';
 
-var produce = function (raw) {
-  var mobile = ValueSchema.asRawOrDie(
+const produce = function (raw) {
+  const mobile = ValueSchema.asRawOrDie(
     'Getting IosWebapp schema',
     MobileSchema,
     raw
@@ -17,26 +17,26 @@ var produce = function (raw) {
   Css.set(mobile.toolstrip, 'width', '100%');
 
   Css.set(mobile.container, 'position', 'relative');
-  var onView = function () {
+  const onView = function () {
     mobile.setReadOnly(true);
     mode.enter();
   };
 
-  var mask = GuiFactory.build(
+  const mask = GuiFactory.build(
     TapToEditMask.sketch(onView, mobile.translate)
   );
 
   mobile.alloy.add(mask);
-  var maskApi = {
-    show: function () {
+  const maskApi = {
+    show () {
       mobile.alloy.add(mask);
     },
-    hide: function () {
+    hide () {
       mobile.alloy.remove(mask);
     }
   };
 
-  var mode = IosMode.create(mobile, maskApi);
+  const mode = IosMode.create(mobile, maskApi);
 
   return {
     setReadOnly: mobile.setReadOnly,
@@ -47,6 +47,6 @@ var produce = function (raw) {
   };
 };
 
-export default <any> {
-  produce: produce
+export default {
+  produce
 };

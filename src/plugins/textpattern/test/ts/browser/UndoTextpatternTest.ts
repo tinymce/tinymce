@@ -9,18 +9,18 @@ import Utils from '../module/test/Utils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   TextpatternPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyActions = TinyActions(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyActions = TinyActions(editor);
 
-    var steps = Utils.withTeardown([
+    const steps = Utils.withTeardown([
       Logger.t('inline italic then undo', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*'),
         tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a')),
@@ -36,4 +36,3 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', fu
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

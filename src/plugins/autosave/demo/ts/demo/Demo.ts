@@ -15,10 +15,10 @@ declare let tinymce: any;
 AutoSavePlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "autosave code",
-  toolbar: "restoredraft code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'autosave code',
+  toolbar: 'restoredraft code',
   height: 600
 });

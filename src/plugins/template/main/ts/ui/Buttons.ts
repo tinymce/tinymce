@@ -11,13 +11,13 @@
 import Templates from '../core/Templates';
 import Dialog from './Dialog';
 
-var showDialog = function (editor) {
+const showDialog = function (editor) {
   return function (templates) {
     Dialog.open(editor, templates);
   };
 };
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addButton('template', {
     title: 'Insert template',
     onclick: Templates.createTemplateList(editor.settings, showDialog(editor))
@@ -32,5 +32,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

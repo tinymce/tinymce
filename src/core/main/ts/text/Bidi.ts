@@ -8,12 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var strongRtl = /[\u0591-\u07FF\uFB1D-\uFDFF\uFE70-\uFEFC]/;
+const strongRtl = /[\u0591-\u07FF\uFB1D-\uFDFF\uFE70-\uFEFC]/;
 
-var hasStrongRtl = function (text) {
+const hasStrongRtl = function (text) {
   return strongRtl.test(text);
 };
 
 export default {
-  hasStrongRtl: hasStrongRtl
+  hasStrongRtl
 };

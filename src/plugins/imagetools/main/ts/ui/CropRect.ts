@@ -15,10 +15,15 @@ import Observable from 'tinymce/core/util/Observable';
 import Tools from 'tinymce/core/util/Tools';
 import VK from 'tinymce/core/util/VK';
 
-var count = 0;
+let count = 0;
 
 export default function (currentRect, viewPortRect, clampRect, containerElm, action) {
-  var instance, handles, dragHelpers, blockers, prefix = 'mce-', id = prefix + 'crid-' + (count++);
+  let instance;
+  let handles;
+  let dragHelpers;
+  let blockers;
+  const prefix = 'mce-';
+  const id = prefix + 'crid-' + count++;
 
   handles = [
     { name: 'move', xMul: 0, yMul: 0, deltaX: 1, deltaY: 1, deltaW: 0, deltaH: 0, label: 'Crop Mask' },
@@ -28,7 +33,7 @@ export default function (currentRect, viewPortRect, clampRect, containerElm, act
     { name: 'se', xMul: 1, yMul: 1, deltaX: 0, deltaY: 0, deltaW: 1, deltaH: 1, label: 'Bottom Right Crop Handle' }
   ];
 
-  blockers = ["top", "right", "bottom", "left"];
+  blockers = ['top', 'right', 'bottom', 'left'];
 
   function getAbsoluteRect(outerRect, relativeRect) {
     return {
@@ -53,7 +58,7 @@ export default function (currentRect, viewPortRect, clampRect, containerElm, act
   }
 
   function moveRect(handle, startRect, deltaX, deltaY) {
-    var x, y, w, h, rect;
+    let x, y, w, h, rect;
 
     x = startRect.x;
     y = startRect.y;
@@ -73,27 +78,27 @@ export default function (currentRect, viewPortRect, clampRect, containerElm, act
       h = 20;
     }
 
-    rect = currentRect = Rect.clamp({ x: x, y: y, w: w, h: h }, clampRect, handle.name === 'move');
+    rect = currentRect = Rect.clamp({ x, y, w, h }, clampRect, handle.name === 'move');
     rect = getRelativeRect(clampRect, rect);
 
-    instance.fire('updateRect', { rect: rect });
+    instance.fire('updateRect', { rect });
     setInnerRect(rect);
   }
 
   function render() {
     function createDragHelper(handle) {
-      var startRect;
-      var DragHelper = Factory.get('DragHelper');
+      let startRect;
+      const DragHelper = Factory.get('DragHelper');
 
       return new DragHelper(id, {
         document: containerElm.ownerDocument,
         handle: id + '-' + handle.name,
 
-        start: function () {
+        start () {
           startRect = currentRect;
         },
 
-        drag: function (e) {
+        drag (e) {
           moveRect(handle, startRect, e.deltaX, e.deltaY);
         }
       });
@@ -128,7 +133,7 @@ export default function (currentRect, viewPortRect, clampRect, containerElm, act
     });
 
     DomQuery(containerElm).on('keydown', function (e) {
-      var activeHandle;
+      let activeHandle;
 
       Tools.each(handles, function (handle) {
         if (e.target.id === id + '-' + handle.name) {
@@ -171,7 +176,7 @@ export default function (currentRect, viewPortRect, clampRect, containerElm, act
   }
 
   function toggleVisibility(state) {
-    var selectors;
+    let selectors;
 
     selectors = Tools.map(handles, function (handle) {
       return '#' + id + '-' + handle.name;
@@ -253,14 +258,14 @@ export default function (currentRect, viewPortRect, clampRect, containerElm, act
   render();
 
   instance = Tools.extend({
-    toggleVisibility: toggleVisibility,
-    setClampRect: setClampRect,
-    setRect: setRect,
-    getInnerRect: getInnerRect,
-    setInnerRect: setInnerRect,
-    setViewPortRect: setViewPortRect,
-    destroy: destroy
+    toggleVisibility,
+    setClampRect,
+    setRect,
+    getInnerRect,
+    setInnerRect,
+    setViewPortRect,
+    destroy
   }, Observable);
 
   return instance;
-};
+}

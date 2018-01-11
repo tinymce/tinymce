@@ -10,7 +10,7 @@
 
 import Dialog from './Dialog';
 
-var register = function (editor, pluginUrl) {
+const register = function (editor, pluginUrl) {
   editor.addButton('help', {
     icon: 'help',
     onclick: Dialog.open(editor, pluginUrl)
@@ -25,5 +25,5 @@ var register = function (editor, pluginUrl) {
 };
 
 export default {
-  register: register
+  register
 };

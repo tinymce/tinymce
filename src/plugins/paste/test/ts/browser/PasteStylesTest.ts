@@ -1,7 +1,6 @@
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/Env';
@@ -10,16 +9,16 @@ import Paste from '../module/test/Paste';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: .PasteStylesTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: .PasteStylesTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   PastePlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var steps = Env.webkit ? [
+    const tinyApis = TinyApis(editor);
+    const steps = Env.webkit ? [
       Logger.t('Paste span with encoded style attribute, paste_webkit_styles: font-family',
         GeneralSteps.sequence([
           tinyApis.sSetSetting('paste_webkit_styles', 'font-family'),
@@ -69,4 +68,3 @@ UnitTest.asynctest('Browser Test: .PasteStylesTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

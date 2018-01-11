@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var fireSpellcheckStart = function (editor) {
+const fireSpellcheckStart = function (editor) {
   return editor.fire('SpellcheckStart');
 };
 
-var fireSpellcheckEnd = function (editor) {
+const fireSpellcheckEnd = function (editor) {
   return editor.fire('SpellcheckEnd');
 };
 
 export default {
-  fireSpellcheckStart: fireSpellcheckStart,
-  fireSpellcheckEnd: fireSpellcheckEnd
+  fireSpellcheckStart,
+  fireSpellcheckEnd
 };

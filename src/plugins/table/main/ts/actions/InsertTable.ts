@@ -15,23 +15,23 @@ import { Attr } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 import { SelectorFind } from '@ephox/sugar';
 
-var placeCaretInCell = function (editor, cell) {
+const placeCaretInCell = function (editor, cell) {
   editor.selection.select(cell.dom(), true);
   editor.selection.collapse(true);
 };
 
-var selectFirstCellInTable = function (editor, tableElm) {
+const selectFirstCellInTable = function (editor, tableElm) {
   SelectorFind.descendant(tableElm, 'td,th').each(Fun.curry(placeCaretInCell, editor));
 };
 
-var insert = function (editor, columns, rows) {
-  var tableElm;
+const insert = function (editor, columns, rows) {
+  let tableElm;
 
-  var renderedHtml = TableRender.render(rows, columns, 0, 0);
+  const renderedHtml = TableRender.render(rows, columns, 0, 0);
 
   Attr.set(renderedHtml, 'id', '__mce');
 
-  var html = Html.getOuter(renderedHtml);
+  const html = Html.getOuter(renderedHtml);
 
   editor.insertContent(html);
 
@@ -59,5 +59,5 @@ var insert = function (editor, columns, rows) {
 };
 
 export default {
-  insert: insert
+  insert
 };

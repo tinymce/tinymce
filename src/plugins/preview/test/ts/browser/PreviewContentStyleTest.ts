@@ -8,34 +8,34 @@ import IframeContent from 'tinymce/plugins/preview/ui/IframeContent';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   PreviewPlugin();
 
-  var assertIframeContains = function (editor, text, expected) {
-    var actual = IframeContent.getPreviewHtml(editor);
-    var regexp = new RegExp(text);
+  const assertIframeContains = function (editor, text, expected) {
+    const actual = IframeContent.getPreviewHtml(editor);
+    const regexp = new RegExp(text);
 
     RawAssertions.assertEq('Should be same html', expected, regexp.test(actual));
   };
 
-  var sAssertIframeHtmlContains = function (editor, text) {
+  const sAssertIframeHtmlContains = function (editor, text) {
     return Step.sync(function () {
       assertIframeContains(editor, text, true);
     });
   };
 
-  var sAssertIframeHtmlNotContains = function (editor, text) {
+  const sAssertIframeHtmlNotContains = function (editor, text) {
     return Step.sync(function () {
       assertIframeContains(editor, text, false);
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sSetContent('<p>hello world</p>'),
@@ -49,4 +49,3 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', fu
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

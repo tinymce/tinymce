@@ -10,7 +10,7 @@ import { Node } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 import TappingEvent from '../../util/TappingEvent';
 
-var isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
+const isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
 /*
 
   `selectionchange` on the iframe document. If the selection is *ranged*, then we add the margin, because we
@@ -23,16 +23,16 @@ var isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
   an input or textarea
 
 */
-var initEvents = function (editorApi, toolstrip, alloy) {
+const initEvents = function (editorApi, toolstrip, alloy) {
 
-  var tapping = TappingEvent.monitor(editorApi);
-  var outerDoc = Traverse.owner(toolstrip);
+  const tapping = TappingEvent.monitor(editorApi);
+  const outerDoc = Traverse.owner(toolstrip);
 
-  var isRanged = function (sel) {
+  const isRanged = function (sel) {
     return !Compare.eq(sel.start(), sel.finish()) || sel.soffset() !== sel.foffset();
   };
 
-  var hasRangeInUi = function () {
+  const hasRangeInUi = function () {
     return Focus.active(outerDoc).filter(function (input) {
       return Node.name(input) === 'input';
     }).exists(function (input) {
@@ -40,12 +40,12 @@ var initEvents = function (editorApi, toolstrip, alloy) {
     });
   };
 
-  var updateMargin = function () {
-    var rangeInContent = editorApi.doc().dom().hasFocus() && editorApi.getSelection().exists(isRanged);
+  const updateMargin = function () {
+    const rangeInContent = editorApi.doc().dom().hasFocus() && editorApi.getSelection().exists(isRanged);
     alloy.getByDom(toolstrip).each((rangeInContent || hasRangeInUi()) === true ? Toggling.on : Toggling.off);
   };
 
-  var listeners = [
+  const listeners = [
     DomEvent.bind(editorApi.body(), 'touchstart', function (evt) {
       editorApi.onTouchContent();
       tapping.fireTouchstart(evt);
@@ -66,13 +66,13 @@ var initEvents = function (editorApi, toolstrip, alloy) {
     editorApi.onScrollToCursor(function (tinyEvent) {
       tinyEvent.preventDefault();
       editorApi.getCursorBox().each(function (bounds) {
-        var cWin = editorApi.win();
+        const cWin = editorApi.win();
         // The goal here is to shift as little as required.
-        var isOutside = bounds.top() > cWin.innerHeight || bounds.bottom() > cWin.innerHeight;
-        var cScrollBy = isOutside ? bounds.bottom() - cWin.innerHeight + 50/*EXTRA_SPACING*/ : 0;
+        const isOutside = bounds.top() > cWin.innerHeight || bounds.bottom() > cWin.innerHeight;
+        const cScrollBy = isOutside ? bounds.bottom() - cWin.innerHeight + 50 /*EXTRA_SPACING*/ : 0;
         if (cScrollBy !== 0) {
           cWin.scrollTo(cWin.pageXOffset, cWin.pageYOffset + cScrollBy);
-        }         
+        }
       });
     })
   ].concat(
@@ -85,17 +85,17 @@ var initEvents = function (editorApi, toolstrip, alloy) {
     ]
   );
 
-  var destroy = function () {
+  const destroy = function () {
     Arr.each(listeners, function (l) {
       l.unbind();
     });
   };
 
   return {
-    destroy: destroy
+    destroy
   };
 };
 
-export default <any> {
-  initEvents: initEvents
+export default {
+  initEvents
 };

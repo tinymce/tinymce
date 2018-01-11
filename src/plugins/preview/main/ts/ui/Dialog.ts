@@ -9,15 +9,14 @@
  */
 
 import Env from 'tinymce/core/Env';
-import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 import IframeContent from './IframeContent';
 
-var open = function (editor) {
-  var sandbox = !Env.ie;
-  var dialogHtml = '<iframe src="javascript:\'\'" frameborder="0"' + (sandbox ? ' sandbox="allow-scripts"' : '') + '></iframe>';
-  var dialogWidth = Settings.getPreviewDialogWidth(editor);
-  var dialogHeight = Settings.getPreviewDialogHeight(editor);
+const open = function (editor) {
+  const sandbox = !Env.ie;
+  const dialogHtml = '<iframe src="javascript:\'\'" frameborder="0"' + (sandbox ? ' sandbox="allow-scripts"' : '') + '></iframe>';
+  const dialogWidth = Settings.getPreviewDialogWidth(editor);
+  const dialogHeight = Settings.getPreviewDialogHeight(editor);
 
   editor.windowManager.open({
     title: 'Preview',
@@ -26,17 +25,17 @@ var open = function (editor) {
     html: dialogHtml,
     buttons: {
       text: 'Close',
-      onclick: function (e) {
+      onclick (e) {
         e.control.parent().parent().close();
       }
     },
-    onPostRender: function (e) {
-      var iframeElm = e.control.getEl('body').firstChild;
+    onPostRender (e) {
+      const iframeElm = e.control.getEl('body').firstChild;
       IframeContent.injectIframeContent(editor, iframeElm, sandbox);
     }
   });
 };
 
 export default {
-  open: open
+  open
 };

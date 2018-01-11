@@ -7,9 +7,9 @@ import SizeSlider from './SizeSlider';
 import ToolbarWidgets from './ToolbarWidgets';
 import UiDomFactory from '../util/UiDomFactory';
 
-var headings = [ 'p', 'h3', 'h2', 'h1' ];
+const headings = [ 'p', 'h3', 'h2', 'h1' ];
 
-var makeSlider = function (spec) {
+const makeSlider = function (spec) {
   return SizeSlider.sketch({
     category: 'heading',
     sizes: headings,
@@ -18,16 +18,16 @@ var makeSlider = function (spec) {
   });
 };
 
-var sketch = function (realm, editor) {
-  var spec = {
-    onChange: function (value) {
+const sketch = function (realm, editor) {
+  const spec = {
+    onChange (value) {
       editor.execCommand('FormatBlock', null, headings[value].toLowerCase());
     },
-    getInitialValue: function () {
-      var node = editor.selection.getStart();
-      var elem = Element.fromDom(node);
+    getInitialValue () {
+      const node = editor.selection.getStart();
+      const elem = Element.fromDom(node);
       return TransformFind.closest(elem, function (e) {
-        var nodeName = Node.name(e);
+        const nodeName = Node.name(e);
         return Arr.indexOf(headings, nodeName);
       }, function (e) {
         return Compare.eq(e, Element.fromDom(editor.getBody()));
@@ -44,6 +44,6 @@ var sketch = function (realm, editor) {
   });
 };
 
-export default <any> {
-  sketch: sketch
+export default {
+  sketch
 };

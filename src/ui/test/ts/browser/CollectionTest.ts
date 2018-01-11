@@ -7,17 +7,17 @@ import Collection from 'tinymce/ui/Collection';
 import Factory from 'tinymce/core/ui/Factory';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
-  var panel;
+UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
+  let panel;
 
   // Registers ui widgets to factory
   Api.registerToFactory();
 
-  var createPanel = function () {
+  const createPanel = function () {
     panel = Factory.create({
       type: 'panel',
       items: [
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
     }).renderTo(viewBlock.get());
   };
 
-  suite.test("Constructor", function () {
+  suite.test('Constructor', function () {
     LegacyUnit.equal(new Collection().length, 0);
     LegacyUnit.equal(new Collection(panel.find('button').toArray()).length, 12);
     LegacyUnit.equal(new Collection(panel.find('button')).length, 12);
@@ -64,31 +64,31 @@ UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
     LegacyUnit.equal(new Collection(panel.find('button:first')[0])[0].type, 'button');
   });
 
-  suite.test("add", function () {
-    var collection = new Collection([panel, panel]);
+  suite.test('add', function () {
+    const collection = new Collection([panel, panel]);
 
     LegacyUnit.equal(collection.add(panel).length, 3);
     LegacyUnit.equal(collection.add([panel, panel]).length, 5);
   });
 
-  suite.test("set", function () {
-    var collection = new Collection([panel, panel]);
+  suite.test('set', function () {
+    const collection = new Collection([panel, panel]);
 
     LegacyUnit.equal(collection.set(panel).length, 1);
     LegacyUnit.equal(collection.set([panel, panel]).length, 2);
   });
 
-  suite.test("filter", function () {
+  suite.test('filter', function () {
     LegacyUnit.equal(panel.find('button').filter('*:first').length, 4);
     LegacyUnit.equal(panel.find('button').filter('buttongroup button').length, 9);
     LegacyUnit.equal(panel.find('button').filter('*').length, 12);
     LegacyUnit.equal(panel.find('button').filter('nomatch').length, 0);
     LegacyUnit.equal(panel.find('button').filter(function (ctrl) {
-      return ctrl.settings.name === "button7";
+      return ctrl.settings.name === 'button7';
     }).length, 1);
   });
 
-  suite.test("slice", function () {
+  suite.test('slice', function () {
     LegacyUnit.equal(panel.find('button').slice(1).length, 11);
     LegacyUnit.equal(panel.find('button').slice(1)[0].name(), 'button2');
 
@@ -108,7 +108,7 @@ UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
     LegacyUnit.equal(panel.find('button').slice(-1000).length, 12);
   });
 
-  suite.test("eq", function () {
+  suite.test('eq', function () {
     LegacyUnit.equal(panel.find('button').eq(1).length, 1);
     LegacyUnit.equal(panel.find('button').eq(1)[0].name(), 'button2');
 
@@ -118,8 +118,8 @@ UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
     LegacyUnit.equal(panel.find('button').eq(1000).length, 0);
   });
 
-  suite.test("each", function () {
-    var count;
+  suite.test('each', function () {
+    let count;
 
     count = 0;
     panel.find('button').each(function () {
@@ -163,13 +163,13 @@ UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
     LegacyUnit.equal(count, 4);
   });
 
-  suite.test("toArray", function () {
+  suite.test('toArray', function () {
     LegacyUnit.equal(panel.find('button').toArray().length, 12);
     LegacyUnit.equal(panel.find('button').toArray().concat, Array.prototype.concat);
   });
 
-  suite.test("fire/on/off", function () {
-    var value;
+  suite.test('fire/on/off', function () {
+    let value;
 
     value = 0;
     panel.find('button').off();
@@ -203,7 +203,7 @@ UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
     LegacyUnit.equal(value, 0);
   });
 
-  suite.test("show/hide", function () {
+  suite.test('show/hide', function () {
     panel.find('button#button1,button#button2').hide();
     LegacyUnit.equal(panel.find('button:not(:visible)').length, 2);
 
@@ -213,7 +213,7 @@ UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
     panel.find('button#button2').show();
   });
 
-  suite.test("text", function () {
+  suite.test('text', function () {
     LegacyUnit.equal(panel.find('button#button1,button#button2').text(), 'button1');
     LegacyUnit.equal(panel.find('button#button2').text('button2').text(), 'button2');
 
@@ -221,7 +221,7 @@ UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
     LegacyUnit.equal(panel.find('button#button3').text(), 'test');
   });
 
-  suite.test("disabled", function () {
+  suite.test('disabled', function () {
     LegacyUnit.equal(panel.find('button#button1').disabled(), true);
     LegacyUnit.equal(panel.find('button#button2').disabled(), false);
     LegacyUnit.equal(panel.find('button#button2').disabled(true).disabled(), true);
@@ -229,28 +229,28 @@ UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
     panel.find('button#button2').disabled(false);
   });
 
-  suite.test("visible", function () {
+  suite.test('visible', function () {
     LegacyUnit.equal(panel.find('button#button2').visible(), true);
     LegacyUnit.equal(panel.find('button#button2').visible(false).visible(), false);
 
     panel.find('button#button2').visible(true);
   });
 
-  suite.test("active", function () {
+  suite.test('active', function () {
     LegacyUnit.equal(panel.find('button#button2').active(), false);
     LegacyUnit.equal(panel.find('button#button2').active(true).active(), true);
 
     panel.find('button#button2').active(false);
   });
 
-  suite.test("name", function () {
+  suite.test('name', function () {
     LegacyUnit.equal(panel.find('button#button1').name(), 'button1');
     LegacyUnit.equal(panel.find('button#button2').name('buttonX').name(), 'buttonX');
 
     panel.find('button#buttonX').name('button2');
   });
 
-  suite.test("addClass/removeClass/hasClass", function () {
+  suite.test('addClass/removeClass/hasClass', function () {
     panel.find('button#button1').addClass('test');
     LegacyUnit.equal(panel.find('button#button1').hasClass('test'), true);
     LegacyUnit.equal(panel.find('button#button1').hasClass('nomatch'), false);
@@ -258,7 +258,7 @@ UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
     LegacyUnit.equal(panel.find('button#button1').hasClass('test'), false);
   });
 
-  suite.test("prop", function () {
+  suite.test('prop', function () {
     LegacyUnit.equal(panel.find('button#button1').prop('disabled'), true);
     LegacyUnit.equal(panel.find('button#button1').prop('name'), 'button1');
     LegacyUnit.equal(panel.find('button#button1').prop('name', 'buttonX').prop('name'), 'buttonX');
@@ -266,7 +266,7 @@ UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
     LegacyUnit.equal(panel.find('button#button1').prop('missingProperty'), undefined);
   });
 
-  suite.test("exec", function () {
+  suite.test('exec', function () {
     LegacyUnit.equal(panel.find('button#button1').exec('disabled', false).disabled(), false);
     panel.find('button#button1').disabled(true);
   });
@@ -279,4 +279,3 @@ UnitTest.asynctest('browser.tinymce.ui.ButtonTest', function() {
     success();
   }, failure);
 });
-

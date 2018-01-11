@@ -14,9 +14,9 @@ import Actions from '../core/Actions';
 import ListUtils from '../core/ListUtils';
 import ListStyles from './ListStyles';
 
-var findIndex = function (list, predicate) {
-  for (var index = 0; index < list.length; index++) {
-    var element = list[index];
+const findIndex = function (list, predicate) {
+  for (let index = 0; index < list.length; index++) {
+    const element = list[index];
 
     if (predicate(element)) {
       return index;
@@ -25,58 +25,58 @@ var findIndex = function (list, predicate) {
   return -1;
 };
 
-var listState = function (editor, listName) {
+const listState = function (editor, listName) {
   return function (e) {
-    var ctrl = e.control;
+    const ctrl = e.control;
 
     editor.on('NodeChange', function (e) {
-      var tableCellIndex = findIndex(e.parents, ListUtils.isTableCellNode);
-      var parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
-      var lists = Tools.grep(parents, ListUtils.isListNode(editor));
+      const tableCellIndex = findIndex(e.parents, ListUtils.isTableCellNode);
+      const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
+      const lists = Tools.grep(parents, ListUtils.isListNode(editor));
       ctrl.active(lists.length > 0 && lists[0].nodeName === listName);
     });
   };
 };
 
-var updateSelection = function (editor) {
+const updateSelection = function (editor) {
   return function (e) {
-    var listStyleType = ListUtils.getSelectedStyleType(editor);
+    const listStyleType = ListUtils.getSelectedStyleType(editor);
     e.control.items().each(function (ctrl) {
       ctrl.active(ctrl.settings.data === listStyleType);
     });
   };
 };
 
-var addSplitButton = function (editor, id, tooltip, cmd, nodeName, styles) {
+const addSplitButton = function (editor, id, tooltip, cmd, nodeName, styles) {
   editor.addButton(id, {
     active: false,
     type: 'splitbutton',
-    tooltip: tooltip,
+    tooltip,
     menu: ListStyles.toMenuItems(styles),
     onPostRender: listState(editor, nodeName),
     onshow: updateSelection(editor),
-    onselect: function (e) {
+    onselect (e) {
       Actions.applyListFormat(editor, nodeName, e.control.settings.data);
     },
-    onclick: function () {
+    onclick () {
       editor.execCommand(cmd);
     }
   });
 };
 
-var addButton = function (editor, id, tooltip, cmd, nodeName, styles) {
+const addButton = function (editor, id, tooltip, cmd, nodeName, styles) {
   editor.addButton(id, {
     active: false,
     type: 'button',
-    tooltip: tooltip,
+    tooltip,
     onPostRender: listState(editor, nodeName),
-    onclick: function () {
+    onclick () {
       editor.execCommand(cmd);
     }
   });
 };
 
-var addControl = function (editor, id, tooltip, cmd, nodeName, styles) {
+const addControl = function (editor, id, tooltip, cmd, nodeName, styles) {
   if (styles.length > 0) {
     addSplitButton(editor, id, tooltip, cmd, nodeName, styles);
   } else {
@@ -84,11 +84,11 @@ var addControl = function (editor, id, tooltip, cmd, nodeName, styles) {
   }
 };
 
-var register = function (editor) {
+const register = function (editor) {
   addControl(editor, 'numlist', 'Numbered list', 'InsertOrderedList', 'OL', Settings.getNumberStyles(editor));
   addControl(editor, 'bullist', 'Bullet list', 'InsertUnorderedList', 'UL', Settings.getBulletStyles(editor));
 };
 
 export default {
-  register: register
+  register
 };

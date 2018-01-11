@@ -19,23 +19,21 @@ import Measure from '../core/Measure';
 import Forms from './Forms';
 import Toolbar from './Toolbar';
 
+export default function () {
+  let panel, currentRect;
 
-
-export default <any> function () {
-  var panel, currentRect;
-
-  var createToolbars = function (editor, toolbars) {
+  const createToolbars = function (editor, toolbars) {
     return Tools.map(toolbars, function (toolbar) {
       return Toolbar.create(editor, toolbar.id, toolbar.items);
     });
   };
 
-  var hasToolbarItems = function (toolbar) {
+  const hasToolbarItems = function (toolbar) {
     return toolbar.items().length > 0;
   };
 
-  var create = function (editor, toolbars) {
-    var items = createToolbars(editor, toolbars).concat([
+  const create = function (editor, toolbars) {
+    const items = createToolbars(editor, toolbars).concat([
       Toolbar.create(editor, 'text', Settings.getTextSelectionToolbarItems(editor)),
       Toolbar.create(editor, 'insert', Settings.getInsertToolbarItems(editor)),
       Forms.createQuickLinkForm(editor, hide)
@@ -54,23 +52,23 @@ export default <any> function () {
       fixed: true,
       border: 1,
       items: Tools.grep(items, hasToolbarItems),
-      oncancel: function () {
+      oncancel () {
         editor.focus();
       }
     });
   };
 
-  var showPanel = function (panel) {
+  const showPanel = function (panel) {
     if (panel) {
       panel.show();
     }
   };
 
-  var movePanelTo = function (panel, pos) {
+  const movePanelTo = function (panel, pos) {
     panel.moveTo(pos.x, pos.y);
   };
 
-  var togglePositionClass = function (panel, relPos) {
+  const togglePositionClass = function (panel, relPos) {
     relPos = relPos ? relPos.substr(0, 2) : '';
 
     Tools.each({
@@ -97,8 +95,8 @@ export default <any> function () {
     }
   };
 
-  var showToolbar = function (panel, id) {
-    var toolbars = panel.items().filter('#' + id);
+  const showToolbar = function (panel, id) {
+    const toolbars = panel.items().filter('#' + id);
 
     if (toolbars.length > 0) {
       toolbars[0].show();
@@ -109,8 +107,8 @@ export default <any> function () {
     return false;
   };
 
-  var repositionPanelAt = function (panel, id, editor, targetRect) {
-    var contentAreaRect, panelRect, result, userConstainHandler;
+  const repositionPanelAt = function (panel, id, editor, targetRect) {
+    let contentAreaRect, panelRect, result, userConstainHandler;
 
     userConstainHandler = Settings.getPositionHandler(editor);
     contentAreaRect = Measure.getContentAreaRect(editor);
@@ -123,8 +121,8 @@ export default <any> function () {
     }
 
     if (result) {
-      var delta = UiContainer.getUiContainerDelta().getOr({ x: 0, y: 0 });
-      var transposedPanelRect = { x: result.rect.x - delta.x, y: result.rect.y - delta.y, w: result.rect.w, h: result.rect.h };
+      const delta = UiContainer.getUiContainerDelta().getOr({ x: 0, y: 0 });
+      const transposedPanelRect = { x: result.rect.x - delta.x, y: result.rect.y - delta.y, w: result.rect.w, h: result.rect.h };
       currentRect = targetRect;
       movePanelTo(panel, Layout.userConstrain(userConstainHandler, targetRect, contentAreaRect, transposedPanelRect));
       togglePositionClass(panel, result.position);
@@ -134,7 +132,7 @@ export default <any> function () {
     }
   };
 
-  var showPanelAt = function (panel, id, editor, targetRect) {
+  const showPanelAt = function (panel, id, editor, targetRect) {
     showPanel(panel);
     panel.items().hide();
 
@@ -148,11 +146,11 @@ export default <any> function () {
     }
   };
 
-  var hasFormVisible = function () {
+  const hasFormVisible = function () {
     return panel.items().filter('form:visible').length > 0;
   };
 
-  var showForm = function (editor, id) {
+  const showForm = function (editor, id) {
     if (panel) {
       panel.items().hide();
 
@@ -161,7 +159,7 @@ export default <any> function () {
         return;
       }
 
-      var contentAreaRect, panelRect, result, userConstainHandler;
+      let contentAreaRect, panelRect, result, userConstainHandler;
 
       showPanel(panel);
       panel.items().hide();
@@ -181,7 +179,7 @@ export default <any> function () {
     }
   };
 
-  var show = function (editor, id, targetRect, toolbars) {
+  const show = function (editor, id, targetRect, toolbars) {
     if (!panel) {
       Events.fireBeforeRenderUI(editor);
       panel = create(editor, toolbars);
@@ -192,19 +190,19 @@ export default <any> function () {
     showPanelAt(panel, id, editor, targetRect);
   };
 
-  var reposition = function (editor, id, targetRect) {
+  const reposition = function (editor, id, targetRect) {
     if (panel) {
       repositionPanelAt(panel, id, editor, targetRect);
     }
   };
 
-  var hide = function () {
+  const hide = function () {
     if (panel) {
       panel.hide();
     }
   };
 
-  var focus = function () {
+  const focus = function () {
     if (panel) {
       panel.find('toolbar:visible').eq(0).each(function (item) {
         item.focus(true);
@@ -212,24 +210,24 @@ export default <any> function () {
     }
   };
 
-  var remove = function () {
+  const remove = function () {
     if (panel) {
       panel.remove();
       panel = null;
     }
   };
 
-  var inForm = function () {
+  const inForm = function () {
     return panel && panel.visible() && hasFormVisible();
   };
 
   return {
-    show: show,
-    showForm: showForm,
-    reposition: reposition,
-    inForm: inForm,
-    hide: hide,
-    focus: focus,
-    remove: remove
+    show,
+    showForm,
+    reposition,
+    inForm,
+    hide,
+    focus,
+    remove
   };
-};
+}

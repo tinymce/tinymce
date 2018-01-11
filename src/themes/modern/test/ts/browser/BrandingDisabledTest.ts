@@ -6,9 +6,9 @@ import { Element } from '@ephox/sugar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.themes.modern.test.BradingDisabledTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.themes.modern.test.BradingDisabledTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
@@ -22,4 +22,3 @@ UnitTest.asynctest('browser.tinymce.themes.modern.test.BradingDisabledTest', fun
     branding: false
   }, success, failure);
 });
-

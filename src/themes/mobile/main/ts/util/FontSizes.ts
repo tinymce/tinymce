@@ -8,25 +8,25 @@ import { Css } from '@ephox/sugar';
 import { TransformFind } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 
-var candidates = [ '9px', '10px', '11px', '12px', '14px', '16px', '18px', '20px', '24px', '32px', '36px' ];
+const candidates = [ '9px', '10px', '11px', '12px', '14px', '16px', '18px', '20px', '24px', '32px', '36px' ];
 
-var defaultSize = 'medium';
-var defaultIndex = 2;
+const defaultSize = 'medium';
+const defaultIndex = 2;
 
-var indexToSize = function (index) {
+const indexToSize = function (index) {
   return Option.from(candidates[index]);
 };
 
-var sizeToIndex = function (size) {
+const sizeToIndex = function (size) {
   return Arr.findIndex(candidates, function (v) {
     return v === size;
   });
 };
 
-var getRawOrComputed = function (isRoot, rawStart) {
-  var optStart = Node.isElement(rawStart) ? Option.some(rawStart) : Traverse.parent(rawStart);
+const getRawOrComputed = function (isRoot, rawStart) {
+  const optStart = Node.isElement(rawStart) ? Option.some(rawStart) : Traverse.parent(rawStart);
   return optStart.map(function (start) {
-    var inline = TransformFind.closest(start, function (elem) {
+    const inline = TransformFind.closest(start, function (elem) {
       return Css.getRaw(elem, 'font-size');
     }, isRoot);
 
@@ -36,42 +36,42 @@ var getRawOrComputed = function (isRoot, rawStart) {
   }).getOr('');
 };
 
-var getSize = function (editor) {
+const getSize = function (editor) {
   // This was taken from the tinymce approach (FontInfo is unlikely to be global)
-  var node = editor.selection.getStart();
-  var elem = Element.fromDom(node);
-  var root = Element.fromDom(editor.getBody());
+  const node = editor.selection.getStart();
+  const elem = Element.fromDom(node);
+  const root = Element.fromDom(editor.getBody());
 
-  var isRoot = function (e) {
+  const isRoot = function (e) {
     return Compare.eq(root, e);
   };
 
-  var elemSize = getRawOrComputed(isRoot, elem);
+  const elemSize = getRawOrComputed(isRoot, elem);
   return Arr.find(candidates, function (size) {
     return elemSize === size;
   }).getOr(defaultSize);
 };
 
-var applySize = function (editor, value) {
-  var currentValue = getSize(editor);
+const applySize = function (editor, value) {
+  const currentValue = getSize(editor);
   if (currentValue !== value) {
     editor.execCommand('fontSize', false, value);
   }
 };
 
-var get = function (editor) {
-  var size = getSize(editor);
+const get = function (editor) {
+  const size = getSize(editor);
   return sizeToIndex(size).getOr(defaultIndex);
 };
 
-var apply = function (editor, index) {
+const apply = function (editor, index) {
   indexToSize(index).each(function (size) {
     applySize(editor, size);
   });
 };
 
-export default <any> {
+export default {
   candidates: Fun.constant(candidates),
-  get: get,
-  apply: apply
+  get,
+  apply
 };

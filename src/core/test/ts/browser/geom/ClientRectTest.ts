@@ -3,12 +3,12 @@ import { Pipeline } from '@ephox/agar';
 import ClientRect from 'tinymce/core/geom/ClientRect';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.geom.ClientRectTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.geom.ClientRectTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
-  var rect = function (x, y, w, h) {
+  const rect = function (x, y, w, h) {
     return {
       left: x,
       top: y,
@@ -88,4 +88,3 @@ UnitTest.asynctest('browser.tinymce.core.geom.ClientRectTest', function() {
     success();
   }, failure);
 });
-

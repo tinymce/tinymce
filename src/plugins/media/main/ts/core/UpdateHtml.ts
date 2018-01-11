@@ -14,16 +14,16 @@ import Schema from 'tinymce/core/html/Schema';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Size from './Size';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var setAttributes = function (attrs, updatedAttrs) {
-  var name;
-  var i;
-  var value;
-  var attr;
+const setAttributes = function (attrs, updatedAttrs) {
+  let name;
+  let i;
+  let value;
+  let attr;
 
   for (name in updatedAttrs) {
-    value = "" + updatedAttrs[name];
+    value = '' + updatedAttrs[name];
 
     if (attrs.map[name]) {
       i = attrs.length;
@@ -42,8 +42,8 @@ var setAttributes = function (attrs, updatedAttrs) {
       }
     } else if (value) {
       attrs.push({
-        name: name,
-        value: value
+        name,
+        value
       });
 
       attrs.map[name] = value;
@@ -51,42 +51,42 @@ var setAttributes = function (attrs, updatedAttrs) {
   }
 };
 
-var normalizeHtml = function (html) {
-  var writer = Writer();
-  var parser = new SaxParser(writer);
+const normalizeHtml = function (html) {
+  const writer = Writer();
+  const parser = new SaxParser(writer);
   parser.parse(html);
   return writer.getContent();
 };
 
-var updateHtmlSax = function (html, data, updateAll?) {
-  var writer = Writer();
-  var sourceCount = 0;
-  var hasImage;
+const updateHtmlSax = function (html, data, updateAll?) {
+  const writer = Writer();
+  let sourceCount = 0;
+  let hasImage;
 
   new SaxParser({
     validate: false,
     allow_conditional_comments: true,
     special: 'script,noscript',
 
-    comment: function (text) {
+    comment (text) {
       writer.comment(text);
     },
 
-    cdata: function (text) {
+    cdata (text) {
       writer.cdata(text);
     },
 
-    text: function (text, raw) {
+    text (text, raw) {
       writer.text(text, raw);
     },
 
-    start: function (name, attrs, empty) {
+    start (name, attrs, empty) {
       switch (name) {
-        case "video":
-        case "object":
-        case "embed":
-        case "img":
-        case "iframe":
+        case 'video':
+        case 'object':
+        case 'embed':
+        case 'img':
+        case 'iframe':
           if (data.height !== undefined && data.width !== undefined) {
             setAttributes(attrs, {
               width: data.width,
@@ -98,41 +98,41 @@ var updateHtmlSax = function (html, data, updateAll?) {
 
       if (updateAll) {
         switch (name) {
-          case "video":
+          case 'video':
             setAttributes(attrs, {
               poster: data.poster,
-              src: ""
+              src: ''
             });
 
             if (data.source2) {
               setAttributes(attrs, {
-                src: ""
+                src: ''
               });
             }
             break;
 
-          case "iframe":
+          case 'iframe':
             setAttributes(attrs, {
               src: data.source1
             });
             break;
 
-          case "source":
+          case 'source':
             sourceCount++;
 
             if (sourceCount <= 2) {
               setAttributes(attrs, {
-                src: data["source" + sourceCount],
-                type: data["source" + sourceCount + "mime"]
+                src: data['source' + sourceCount],
+                type: data['source' + sourceCount + 'mime']
               });
 
-              if (!data["source" + sourceCount]) {
+              if (!data['source' + sourceCount]) {
                 return;
               }
             }
             break;
 
-          case "img":
+          case 'img':
             if (!data.poster) {
               return;
             }
@@ -145,27 +145,27 @@ var updateHtmlSax = function (html, data, updateAll?) {
       writer.start(name, attrs, empty);
     },
 
-    end: function (name) {
-      if (name === "video" && updateAll) {
-        for (var index = 1; index <= 2; index++) {
-          if (data["source" + index]) {
-            var attrs: any = [];
+    end (name) {
+      if (name === 'video' && updateAll) {
+        for (let index = 1; index <= 2; index++) {
+          if (data['source' + index]) {
+            const attrs: any = [];
             attrs.map = {};
 
             if (sourceCount < index) {
               setAttributes(attrs, {
-                src: data["source" + index],
-                type: data["source" + index + "mime"]
+                src: data['source' + index],
+                type: data['source' + index + 'mime']
               });
 
-              writer.start("source", attrs, true);
+              writer.start('source', attrs, true);
             }
           }
         }
       }
 
-      if (data.poster && name === "object" && updateAll && !hasImage) {
-        var imgAttrs: any = [];
+      if (data.poster && name === 'object' && updateAll && !hasImage) {
+        const imgAttrs: any = [];
         imgAttrs.map = {};
 
         setAttributes(imgAttrs, {
@@ -174,7 +174,7 @@ var updateHtmlSax = function (html, data, updateAll?) {
           height: data.height
         });
 
-        writer.start("img", imgAttrs, true);
+        writer.start('img', imgAttrs, true);
       }
 
       writer.end(name);
@@ -184,14 +184,14 @@ var updateHtmlSax = function (html, data, updateAll?) {
   return writer.getContent();
 };
 
-var isEphoxEmbed = function (html) {
-  var fragment = DOM.createFragment(html);
+const isEphoxEmbed = function (html) {
+  const fragment = DOM.createFragment(html);
   return DOM.getAttrib(fragment.firstChild, 'data-ephox-embed-iri') !== '';
 };
 
-var updateEphoxEmbed = function (html, data) {
-  var fragment = DOM.createFragment(html);
-  var div = fragment.firstChild;
+const updateEphoxEmbed = function (html, data) {
+  const fragment = DOM.createFragment(html);
+  const div = fragment.firstChild;
 
   Size.setMaxWidth(div, data.width);
   Size.setMaxHeight(div, data.height);
@@ -199,10 +199,10 @@ var updateEphoxEmbed = function (html, data) {
   return normalizeHtml(div.outerHTML);
 };
 
-var updateHtml = function (html, data, updateAll?) {
+const updateHtml = function (html, data, updateAll?) {
   return isEphoxEmbed(html) ? updateEphoxEmbed(html, data) : updateHtmlSax(html, data, updateAll);
 };
 
 export default {
-  updateHtml: updateHtml
+  updateHtml
 };

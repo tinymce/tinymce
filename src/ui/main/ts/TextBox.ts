@@ -20,9 +20,7 @@ import Widget from './Widget';
  * @extends tinymce.ui.Widget
  */
 
-
-
-export default <any> Widget.extend({
+export default Widget.extend({
   /**
    * Constructs a instance with the specified settings.
    *
@@ -32,8 +30,8 @@ export default <any> Widget.extend({
    * @setting {Number} maxLength Max length for the textbox.
    * @setting {Number} size Size of the textbox in characters.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._super(settings);
 
@@ -43,9 +41,9 @@ export default <any> Widget.extend({
       self.classes.add('multiline');
     } else {
       self.on('keydown', function (e) {
-        var rootControl;
+        let rootControl;
 
-        if (e.keyCode == 13) {
+        if (e.keyCode === 13) {
           e.preventDefault();
 
           // Find root control that we can do toJSON on
@@ -72,15 +70,16 @@ export default <any> Widget.extend({
    *
    * @method repaint
    */
-  repaint: function () {
-    var self = this, style, rect, borderBox, borderW, borderH = 0, lastRepaintRect;
+  repaint () {
+    const self = this;
+    let style, rect, borderBox, borderW, borderH = 0, lastRepaintRect;
 
     style = self.getEl().style;
     rect = self._layoutRect;
     lastRepaintRect = self._lastRepaintRect || {};
 
     // Detect old IE 7+8 add lineHeight to align caret vertically in the middle
-    var doc: any = document;
+    const doc: any = document;
     if (!self.settings.multiline && doc.all && (!doc.documentMode || doc.documentMode <= 8)) {
       style.lineHeight = (rect.h - borderH) + 'px';
     }
@@ -121,8 +120,10 @@ export default <any> Widget.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, settings = self.settings, attrs, elm;
+  renderHtml () {
+    const self = this;
+    const settings = self.settings;
+    let attrs, elm;
 
     attrs = {
       id: self._id,
@@ -151,7 +152,7 @@ export default <any> Widget.extend({
     return elm.outerHTML;
   },
 
-  value: function (value) {
+  value (value) {
     if (arguments.length) {
       this.state.set('value', value);
       return this;
@@ -170,8 +171,8 @@ export default <any> Widget.extend({
    *
    * @method postRender
    */
-  postRender: function () {
-    var self = this;
+  postRender () {
+    const self = this;
 
     self.getEl().value = self.state.get('value');
     self._super();
@@ -182,11 +183,11 @@ export default <any> Widget.extend({
     });
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     self.state.on('change:value', function (e) {
-      if (self.getEl().value != e.value) {
+      if (self.getEl().value !== e.value) {
         self.getEl().value = e.value;
       }
     });
@@ -198,7 +199,7 @@ export default <any> Widget.extend({
     return self._super();
   },
 
-  remove: function () {
+  remove () {
     this.$el.off();
     this._super();
   }

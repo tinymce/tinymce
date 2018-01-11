@@ -10,16 +10,16 @@
 
 import ImportCss from '../core/ImportCss';
 
-var get = function (editor) {
-  var convertSelectorToFormat = function (selectorText) {
+const get = function (editor) {
+  const convertSelectorToFormat = function (selectorText) {
     return ImportCss.defaultConvertSelectorToFormat(editor, selectorText);
   };
 
   return {
-    convertSelectorToFormat: convertSelectorToFormat
+    convertSelectorToFormat
   };
 };
 
 export default {
-  get: get
+  get
 };

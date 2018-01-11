@@ -3,7 +3,6 @@ import { GeneralSteps } from '@ephox/agar';
 import { Keys } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { TinyActions } from '@ephox/mcagar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
@@ -12,32 +11,32 @@ import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sSetup = function (tinyApis, html, elementPath, offset) {
+  const sSetup = function (tinyApis, html, elementPath, offset) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent(html),
       tinyApis.sSetCursor(elementPath, offset)
     ]);
   };
 
-  var sEnterKey = function (tinyActions) {
+  const sEnterKey = function (tinyActions) {
     return tinyActions.sContentKeystroke(Keys.enter(), {});
   };
 
-  var addGeckoBr = function (s, str, children) {
+  const addGeckoBr = function (s, str, children) {
     if (Env.gecko) {
-      return [].concat(children).concat(s.element('br', { attrs: { 'data-mce-bogus': str.is("1") } }));
+      return [].concat(children).concat(s.element('br', { attrs: { 'data-mce-bogus': str.is('1') } }));
     } else {
       return children;
     }
   };
 
-  var sTestEnterAtStartOfAnchorZwsp = function (tinyApis, tinyActions) {
+  const sTestEnterAtStartOfAnchorZwsp = function (tinyApis, tinyActions) {
     return Logger.t(
       'sTestEnterAtStartOfAnchorZwsp',
       GeneralSteps.sequence([
@@ -78,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
     );
   };
 
-  var sTestEnterAtEndOfAnchorZwsp = function (tinyApis, tinyActions) {
+  const sTestEnterAtEndOfAnchorZwsp = function (tinyApis, tinyActions) {
     return Logger.t(
       'sTestEnterAtEndOfAnchorZwsp',
       GeneralSteps.sequence([
@@ -119,7 +118,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
     );
   };
 
-  var sTestEnterAtStartOfAnchorZwspWithAdjacentContent = function (tinyApis, tinyActions) {
+  const sTestEnterAtStartOfAnchorZwspWithAdjacentContent = function (tinyApis, tinyActions) {
     return Logger.t(
       'sTestEnterAtStartOfAnchorZwspWithAdjacentContent',
       GeneralSteps.sequence([
@@ -163,7 +162,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
     );
   };
 
-  var sTestEnterAtEndOfAnchorZwspWithAdjacentContent = function (tinyApis, tinyActions) {
+  const sTestEnterAtEndOfAnchorZwspWithAdjacentContent = function (tinyApis, tinyActions) {
     return Logger.t(
       'sTestEnterAtStartOfAnchorZwspWithAdjacentContent',
       GeneralSteps.sequence([
@@ -202,8 +201,8 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyActions = TinyActions(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -216,4 +215,3 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

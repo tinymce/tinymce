@@ -10,12 +10,12 @@
 
 import Promise from 'tinymce/core/util/Promise';
 
-var pickFile = function () {
+const pickFile = function () {
   return new Promise(function (resolve) {
-    var fileInput;
+    let fileInput;
 
-    fileInput = document.createElement("input");
-    fileInput.type = "file";
+    fileInput = document.createElement('input');
+    fileInput.type = 'file';
     fileInput.style.position = 'fixed';
     fileInput.style.left = 0;
     fileInput.style.top = 0;
@@ -31,6 +31,6 @@ var pickFile = function () {
   });
 };
 
-export default <any> {
-  pickFile: pickFile
+export default {
+  pickFile
 };

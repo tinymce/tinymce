@@ -6,22 +6,20 @@ import { SelectorFind } from '@ephox/sugar';
 import StylesMenu from 'tinymce/themes/mobile/ui/StylesMenu';
 import UiDomFactory from 'tinymce/themes/mobile/util/UiDomFactory';
 
+export default function () {
+  const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
-
-export default <any> function () {
-  var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
-
-  var menu = StylesMenu.sketch({
+  const menu = StylesMenu.sketch({
     formats: {
       menus: {
-        'Beta': [
+        Beta: [
           { title: 'Beta-1', isSelected: Fun.constant(false), getPreview: Fun.constant('') },
           { title: 'Beta-2', isSelected: Fun.constant(false), getPreview: Fun.constant('') },
           { title: 'Beta-3', isSelected: Fun.constant(false), getPreview: Fun.constant('') }
         ]
       },
       expansions: {
-        'Beta': 'Beta'
+        Beta: 'Beta'
       },
       items: [
         { title: 'Alpha', isSelected: Fun.constant(false), getPreview: Fun.constant('') },
@@ -29,16 +27,15 @@ export default <any> function () {
         { title: 'Gamma', isSelected: Fun.constant(true), getPreview: Fun.constant('') }
       ]
     },
-    handle: function (format) {
+    handle (format) {
       console.log('firing', format);
     }
   });
 
-
-  var gui = Gui.create();
+  const gui = Gui.create();
   Attachment.attachSystem(ephoxUi, gui);
 
-  var container = GuiFactory.build({
+  const container = GuiFactory.build({
     dom: UiDomFactory.dom('<div class="${prefix}-outer-container ${prefix}-fullscreen-maximized"></div>'),
     components: [
       {
@@ -51,4 +48,4 @@ export default <any> function () {
   });
 
   gui.add(container);
-};
+}

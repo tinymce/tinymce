@@ -17,14 +17,14 @@ import Utils from '../module/test/Utils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   MediaPlugin();
 
-  var cAssertEmbedValue = function (expected) {
+  const cAssertEmbedValue = function (expected) {
     return Chain.control(
       Chain.fromChains([
         UiFinder.cFindIn('label:contains("Paste your embed code below:")'),
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', functio
     );
   };
 
-  var sWaitForAndAssertNotification = function (expected) {
+  const sWaitForAndAssertNotification = function (expected) {
     return Chain.asStep(TinyDom.fromDom(document.body), [
       UiFinder.cWaitFor('Could not find notification', 'div.mce-notification-inner'),
       Chain.mapper(Html.get),
@@ -47,8 +47,8 @@ UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', functio
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
-    var tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -81,7 +81,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', functio
     plugins: 'media',
     toolbar: 'media',
     skin_url: '/project/js/tinymce/skins/lightgray',
-    media_url_resolver: function (data, resolve, reject) {
+    media_url_resolver (data, resolve, reject) {
       if (data.url === 'test') {
         resolve({
           html: '<div>x</div>' });
@@ -91,4 +91,3 @@ UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', functio
     }
   }, success, failure);
 });
-

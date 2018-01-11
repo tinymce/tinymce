@@ -22,4 +22,4 @@ PluginManager.add('emoticons', function (editor, pluginUrl) {
   Buttons.register(editor, pluginUrl);
 });
 
-export default function () { };
+export default function () { }

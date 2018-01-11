@@ -22,14 +22,14 @@ import Fun from './util/Fun';
  * @class tinymce.DragDropOverrides
  */
 
-var isContentEditableFalse = NodeType.isContentEditableFalse,
+const isContentEditableFalse = NodeType.isContentEditableFalse,
   isContentEditableTrue = NodeType.isContentEditableTrue;
 
-var isDraggable = function (rootElm, elm) {
+const isDraggable = function (rootElm, elm) {
   return isContentEditableFalse(elm) && elm !== rootElm;
 };
 
-var isValidDropTarget = function (editor, targetElement, dragElement) {
+const isValidDropTarget = function (editor, targetElement, dragElement) {
   if (targetElement === dragElement || editor.dom.isChildOf(targetElement, dragElement)) {
     return false;
   }
@@ -41,23 +41,23 @@ var isValidDropTarget = function (editor, targetElement, dragElement) {
   return true;
 };
 
-var cloneElement = function (elm) {
-  var cloneElm = elm.cloneNode(true);
+const cloneElement = function (elm) {
+  const cloneElm = elm.cloneNode(true);
   cloneElm.removeAttribute('data-mce-selected');
   return cloneElm;
 };
 
-var createGhost = function (editor, elm, width, height) {
-  var clonedElm = elm.cloneNode(true);
+const createGhost = function (editor, elm, width, height) {
+  const clonedElm = elm.cloneNode(true);
 
-  editor.dom.setStyles(clonedElm, { width: width, height: height });
+  editor.dom.setStyles(clonedElm, { width, height });
   editor.dom.setAttrib(clonedElm, 'data-mce-selected', null);
 
-  var ghostElm = editor.dom.create('div', {
+  const ghostElm = editor.dom.create('div', {
     'class': 'mce-drag-container',
     'data-mce-bogus': 'all',
-    unselectable: 'on',
-    contenteditable: 'false'
+    'unselectable': 'on',
+    'contenteditable': 'false'
   });
 
   editor.dom.setStyles(ghostElm, {
@@ -67,8 +67,8 @@ var createGhost = function (editor, elm, width, height) {
     border: 0,
     padding: 0,
     margin: 0,
-    width: width,
-    height: height
+    width,
+    height
   });
 
   editor.dom.setStyles(clonedElm, {
@@ -81,14 +81,14 @@ var createGhost = function (editor, elm, width, height) {
   return ghostElm;
 };
 
-var appendGhostToBody = function (ghostElm, bodyElm) {
+const appendGhostToBody = function (ghostElm, bodyElm) {
   if (ghostElm.parentNode !== bodyElm) {
     bodyElm.appendChild(ghostElm);
   }
 };
 
-var moveGhost = function (ghostElm, position, width, height, maxX, maxY) {
-  var overflowX = 0, overflowY = 0;
+const moveGhost = function (ghostElm, position, width, height, maxX, maxY) {
+  let overflowX = 0, overflowY = 0;
 
   ghostElm.style.left = position.pageX + 'px';
   ghostElm.style.top = position.pageY + 'px';
@@ -105,36 +105,36 @@ var moveGhost = function (ghostElm, position, width, height, maxX, maxY) {
   ghostElm.style.height = (height - overflowY) + 'px';
 };
 
-var removeElement = function (elm) {
+const removeElement = function (elm) {
   if (elm && elm.parentNode) {
     elm.parentNode.removeChild(elm);
   }
 };
 
-var isLeftMouseButtonPressed = function (e) {
+const isLeftMouseButtonPressed = function (e) {
   return e.button === 0;
 };
 
-var hasDraggableElement = function (state) {
+const hasDraggableElement = function (state) {
   return state.element;
 };
 
-var applyRelPos = function (state, position) {
+const applyRelPos = function (state, position) {
   return {
     pageX: position.pageX - state.relX,
     pageY: position.pageY + 5
   };
 };
 
-var start = function (state, editor) {
+const start = function (state, editor) {
   return function (e) {
     if (isLeftMouseButtonPressed(e)) {
-      var ceElm = Arr.find(editor.dom.getParents(e.target), Fun.or(isContentEditableFalse, isContentEditableTrue));
+      const ceElm = Arr.find(editor.dom.getParents(e.target), Fun.or(isContentEditableFalse, isContentEditableTrue));
 
       if (isDraggable(editor.getBody(), ceElm)) {
-        var elmPos = editor.dom.getPos(ceElm);
-        var bodyElm = editor.getBody();
-        var docElm = editor.getDoc().documentElement;
+        const elmPos = editor.dom.getPos(ceElm);
+        const bodyElm = editor.getBody();
+        const docElm = editor.getDoc().documentElement;
 
         state.element = ceElm;
         state.screenX = e.screenX;
@@ -151,18 +151,18 @@ var start = function (state, editor) {
   };
 };
 
-var move = function (state, editor) {
+const move = function (state, editor) {
   // Reduces laggy drag behavior on Gecko
-  var throttledPlaceCaretAt = Delay.throttle(function (clientX, clientY) {
+  const throttledPlaceCaretAt = Delay.throttle(function (clientX, clientY) {
     editor._selectionOverrides.hideFakeCaret();
     editor.selection.placeCaretAt(clientX, clientY);
   }, 0);
 
   return function (e) {
-    var movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
+    const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
 
     if (hasDraggableElement(state) && !state.dragging && movement > 10) {
-      var args = editor.fire('dragstart', { target: state.element });
+      const args = editor.fire('dragstart', { target: state.element });
       if (args.isDefaultPrevented()) {
         return;
       }
@@ -172,7 +172,7 @@ var move = function (state, editor) {
     }
 
     if (state.dragging) {
-      var targetPos = applyRelPos(state, MousePosition.calc(editor, e));
+      const targetPos = applyRelPos(state, MousePosition.calc(editor, e));
 
       appendGhostToBody(state.ghost, editor.getBody());
       moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY);
@@ -183,20 +183,20 @@ var move = function (state, editor) {
 };
 
 // Returns the raw element instead of the fake cE=false element
-var getRawTarget = function (selection) {
-  var rng = selection.getSel().getRangeAt(0);
-  var startContainer = rng.startContainer;
+const getRawTarget = function (selection) {
+  const rng = selection.getSel().getRangeAt(0);
+  const startContainer = rng.startContainer;
   return startContainer.nodeType === 3 ? startContainer.parentNode : startContainer;
 };
 
-var drop = function (state, editor) {
+const drop = function (state, editor) {
   return function (e) {
     if (state.dragging) {
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
-        var targetClone = cloneElement(state.element);
+        let targetClone = cloneElement(state.element);
 
-        var args = editor.fire('drop', {
-          targetClone: targetClone,
+        const args = editor.fire('drop', {
+          targetClone,
           clientX: e.clientX,
           clientY: e.clientY
         });
@@ -217,7 +217,7 @@ var drop = function (state, editor) {
   };
 };
 
-var stop = function (state, editor) {
+const stop = function (state, editor) {
   return function () {
     removeDragState(state);
     if (state.dragging) {
@@ -226,14 +226,15 @@ var stop = function (state, editor) {
   };
 };
 
-var removeDragState = function (state) {
+const removeDragState = function (state) {
   state.dragging = false;
   state.element = null;
   removeElement(state.ghost);
 };
 
-var bindFakeDragEvents = function (editor) {
-  var state = {}, pageDom, dragStartHandler, dragHandler, dropHandler, dragEndHandler, rootDocument;
+const bindFakeDragEvents = function (editor) {
+  const state = {};
+  let pageDom, dragStartHandler, dragHandler, dropHandler, dragEndHandler, rootDocument;
 
   pageDom = DOMUtils.DOM;
   rootDocument = document;
@@ -255,10 +256,10 @@ var bindFakeDragEvents = function (editor) {
   });
 };
 
-var blockIeDrop = function (editor) {
+const blockIeDrop = function (editor) {
   editor.on('drop', function (e) {
     // FF doesn't pass out clientX/clientY for drop since this is for IE we just use null instead
-    var realTarget = typeof e.clientX !== 'undefined' ? editor.getDoc().elementFromPoint(e.clientX, e.clientY) : null;
+    const realTarget = typeof e.clientX !== 'undefined' ? editor.getDoc().elementFromPoint(e.clientX, e.clientY) : null;
 
     if (isContentEditableFalse(realTarget) || isContentEditableFalse(editor.dom.getContentEditableParent(realTarget))) {
       e.preventDefault();
@@ -266,11 +267,11 @@ var blockIeDrop = function (editor) {
   });
 };
 
-var init = function (editor) {
+const init = function (editor) {
   bindFakeDragEvents(editor);
   blockIeDrop(editor);
 };
 
 export default {
-  init: init
+  init
 };

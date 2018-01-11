@@ -10,36 +10,35 @@ import URI from 'tinymce/core/util/URI';
 import ImageUtils from '../module/test/ImageUtils';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var uploadHandlerState = ImageUtils.createStateContainer();
+UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const uploadHandlerState = ImageUtils.createStateContainer();
 
-  var srcUrl = '/project/src/plugins/imagetools/demo/img/dogleft.jpg';
+  const srcUrl = '/project/src/plugins/imagetools/demo/img/dogleft.jpg';
 
   ModernTheme();
   Plugin();
 
-  var sAssertUploadFilename = function (expected) {
+  const sAssertUploadFilename = function (expected) {
     return Step.sync(function () {
-      var blobInfo = uploadHandlerState.get().blobInfo;
+      const blobInfo = uploadHandlerState.get().blobInfo;
       RawAssertions.assertEq('Should be expected file name', expected, blobInfo.filename());
     });
   };
 
-  var sAssertUri = function (expected) {
+  const sAssertUri = function (expected) {
     return Step.sync(function () {
-      var blobInfo = uploadHandlerState.get().blobInfo;
-      var uri = new URI(blobInfo.uri());
+      const blobInfo = uploadHandlerState.get().blobInfo;
+      const uri = new URI(blobInfo.uri());
       RawAssertions.assertEq('Should be expected uri', expected, uri.relative);
     });
   };
 
-
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
-    var sTestGenerateFileName = function () {
+    const sTestGenerateFileName = function () {
       return GeneralSteps.sequence([
         uploadHandlerState.sResetState,
         tinyApis.sSetSetting('images_reuse_filename', false),
@@ -53,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', fu
       ]);
     };
 
-    var sTestReuseFilename = function () {
+    const sTestReuseFilename = function () {
       return GeneralSteps.sequence([
         uploadHandlerState.sResetState,
         tinyApis.sSetSetting('images_reuse_filename', true),
@@ -79,4 +78,3 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', fu
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

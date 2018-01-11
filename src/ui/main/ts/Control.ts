@@ -28,19 +28,17 @@ import ReflowQueue from './ReflowQueue';
  * @class tinymce.ui.Control
  */
 
-"use strict";
+const hasMouseWheelEventSupport = 'onmousewheel' in document;
+const hasWheelEventSupport = false;
+const classPrefix = 'mce-';
+let Control, idCounter = 0;
 
-var hasMouseWheelEventSupport = "onmousewheel" in document;
-var hasWheelEventSupport = false;
-var classPrefix = "mce-";
-var Control, idCounter = 0;
-
-var proto = {
+const proto = {
   Statics: {
-    classPrefix: classPrefix
+    classPrefix
   },
 
-  isRtl: function () {
+  isRtl () {
     return Control.rtl;
   },
 
@@ -50,7 +48,7 @@ var proto = {
    * @final
    * @field {String} classPrefix
    */
-  classPrefix: classPrefix,
+  classPrefix,
 
   /**
    * Constructs a new control instance with the specified settings.
@@ -69,11 +67,12 @@ var proto = {
    * @setting {Boolean} disabled Is the control disabled by default.
    * @setting {String} name Name of the control instance.
    */
-  init: function (settings) {
-    var self = this, classes, defaultClasses;
+  init (settings) {
+    const self = this;
+    let classes, defaultClasses;
 
     function applyClasses(classes) {
-      var i;
+      let i;
 
       classes = classes.split(' ');
       for (i = 0; i < classes.length; i++) {
@@ -111,7 +110,7 @@ var proto = {
       if (self.Defaults) {
         defaultClasses = self.Defaults.classes;
 
-        if (defaultClasses && classes != defaultClasses) {
+        if (defaultClasses && classes !== defaultClasses) {
           applyClasses(defaultClasses);
         }
       }
@@ -156,7 +155,7 @@ var proto = {
    * @method getContainerElm
    * @return {Element} HTML DOM element to render into.
    */
-  getContainerElm: function () {
+  getContainerElm () {
     return DomUtils.getContainer();
   },
 
@@ -167,8 +166,9 @@ var proto = {
    * @param {Element} elm HTML dom element to get parent control from.
    * @return {tinymce.ui.Control} Control instance or undefined.
    */
-  getParentCtrl: function (elm) {
-    var ctrl, lookup = this.getRoot().controlIdLookup;
+  getParentCtrl (elm) {
+    let ctrl;
+    const lookup = this.getRoot().controlIdLookup;
 
     while (elm && lookup) {
       ctrl = lookup[elm.id];
@@ -190,10 +190,13 @@ var proto = {
    * @method initLayoutRect
    * @return {Object} Layout rect instance.
    */
-  initLayoutRect: function () {
-    var self = this, settings = self.settings, borderBox, layoutRect;
-    var elm = self.getEl(), width, height, minWidth, minHeight, autoResize;
-    var startMinWidth, startMinHeight, initialSize;
+  initLayoutRect () {
+    const self = this;
+    const settings = self.settings;
+    let borderBox, layoutRect;
+    const elm = self.getEl();
+    let width, height, minWidth, minHeight, autoResize;
+    let startMinWidth, startMinHeight, initialSize;
 
     // Measure the current element
     borderBox = self.borderBox = self.borderBox || BoxUtils.measureBox(elm, 'border');
@@ -209,16 +212,16 @@ var proto = {
     width = settings.width;
     height = settings.height;
     autoResize = settings.autoResize;
-    autoResize = typeof autoResize != "undefined" ? autoResize : !width && !height;
+    autoResize = typeof autoResize !== 'undefined' ? autoResize : !width && !height;
 
     width = width || minWidth;
     height = height || minHeight;
 
-    var deltaW = borderBox.left + borderBox.right;
-    var deltaH = borderBox.top + borderBox.bottom;
+    const deltaW = borderBox.left + borderBox.right;
+    const deltaH = borderBox.top + borderBox.bottom;
 
-    var maxW = settings.maxWidth || 0xFFFF;
-    var maxH = settings.maxHeight || 0xFFFF;
+    const maxW = settings.maxWidth || 0xFFFF;
+    const maxH = settings.maxHeight || 0xFFFF;
 
     // Setup initial layout rect
     self._layoutRect = layoutRect = {
@@ -226,8 +229,8 @@ var proto = {
       y: settings.y || 0,
       w: width,
       h: height,
-      deltaW: deltaW,
-      deltaH: deltaH,
+      deltaW,
+      deltaH,
       contentW: width - deltaW,
       contentH: height - deltaH,
       innerW: width - deltaW,
@@ -236,9 +239,9 @@ var proto = {
       startMinHeight: startMinHeight || 0,
       minW: Math.min(minWidth, maxW),
       minH: Math.min(minHeight, maxH),
-      maxW: maxW,
-      maxH: maxH,
-      autoResize: autoResize,
+      maxW,
+      maxH,
+      autoResize,
       scrollW: 0
     };
 
@@ -254,8 +257,9 @@ var proto = {
    * @param {Object} [newRect] Optional new layout rect.
    * @return {tinymce.ui.Control/Object} Current control or rect object.
    */
-  layoutRect: function (newRect) {
-    var self = this, curRect = self._layoutRect, lastLayoutRect, size, deltaWidth, deltaHeight, undef, repaintControls;
+  layoutRect (newRect) {
+    const self = this;
+    let curRect = self._layoutRect, lastLayoutRect, size, deltaWidth, deltaHeight, repaintControls;
 
     // Initialize default layout rect
     if (!curRect) {
@@ -269,28 +273,28 @@ var proto = {
       deltaHeight = curRect.deltaH;
 
       // Set x position
-      if (newRect.x !== undef) {
+      if (newRect.x !== undefined) {
         curRect.x = newRect.x;
       }
 
       // Set y position
-      if (newRect.y !== undef) {
+      if (newRect.y !== undefined) {
         curRect.y = newRect.y;
       }
 
       // Set minW
-      if (newRect.minW !== undef) {
+      if (newRect.minW !== undefined) {
         curRect.minW = newRect.minW;
       }
 
       // Set minH
-      if (newRect.minH !== undef) {
+      if (newRect.minH !== undefined) {
         curRect.minH = newRect.minH;
       }
 
       // Set new width and calculate inner width
       size = newRect.w;
-      if (size !== undef) {
+      if (size !== undefined) {
         size = size < curRect.minW ? curRect.minW : size;
         size = size > curRect.maxW ? curRect.maxW : size;
         curRect.w = size;
@@ -299,7 +303,7 @@ var proto = {
 
       // Set new height and calculate inner height
       size = newRect.h;
-      if (size !== undef) {
+      if (size !== undefined) {
         size = size < curRect.minH ? curRect.minH : size;
         size = size > curRect.maxH ? curRect.maxH : size;
         curRect.h = size;
@@ -308,7 +312,7 @@ var proto = {
 
       // Set new inner width and calculate width
       size = newRect.innerW;
-      if (size !== undef) {
+      if (size !== undefined) {
         size = size < curRect.minW - deltaWidth ? curRect.minW - deltaWidth : size;
         size = size > curRect.maxW - deltaWidth ? curRect.maxW - deltaWidth : size;
         curRect.innerW = size;
@@ -317,7 +321,7 @@ var proto = {
 
       // Set new height and calculate inner height
       size = newRect.innerH;
-      if (size !== undef) {
+      if (size !== undefined) {
         size = size < curRect.minH - deltaHeight ? curRect.minH - deltaHeight : size;
         size = size > curRect.maxH - deltaHeight ? curRect.maxH - deltaHeight : size;
         curRect.innerH = size;
@@ -325,12 +329,12 @@ var proto = {
       }
 
       // Set new contentW
-      if (newRect.contentW !== undef) {
+      if (newRect.contentW !== undefined) {
         curRect.contentW = newRect.contentW;
       }
 
       // Set new contentH
-      if (newRect.contentH !== undef) {
+      if (newRect.contentH !== undefined) {
         curRect.contentH = newRect.contentH;
       }
 
@@ -364,9 +368,10 @@ var proto = {
    *
    * @method repaint
    */
-  repaint: function () {
-    var self = this, style, bodyStyle, bodyElm, rect, borderBox;
-    var borderW, borderH, lastRepaintRect, round, value;
+  repaint () {
+    const self = this;
+    let style, bodyStyle, bodyElm, rect, borderBox;
+    let borderW, borderH, lastRepaintRect, round, value;
 
     // Use Math.round on all values on IE < 9
     round = !document.createRange ? Math.round : function (value) {
@@ -435,8 +440,8 @@ var proto = {
   /**
    * Updates the controls layout rect by re-measuing it.
    */
-  updateLayoutRect: function () {
-    var self = this;
+  updateLayoutRect () {
+    const self = this;
 
     self.parent()._lastRect = null;
 
@@ -457,20 +462,20 @@ var proto = {
    * @param {String/function} callback Callback function to execute ones the event occurs.
    * @return {tinymce.ui.Control} Current control object.
    */
-  on: function (name, callback) {
-    var self = this;
+  on (name, callback) {
+    const self = this;
 
     function resolveCallbackName(name) {
-      var callback, scope;
+      let callback, scope;
 
-      if (typeof name != 'string') {
+      if (typeof name !== 'string') {
         return name;
       }
 
       return function (e) {
         if (!callback) {
           self.parentsAndSelf().each(function (ctrl) {
-            var callbacks = ctrl.settings.callbacks;
+            const callbacks = ctrl.settings.callbacks;
 
             if (callbacks && (callback = callbacks[name])) {
               scope = ctrl;
@@ -504,7 +509,7 @@ var proto = {
    * @param {function} [callback] Callback function to unbind.
    * @return {tinymce.ui.Control} Current control object.
    */
-  off: function (name, callback) {
+  off (name, callback) {
     getEventDispatcher(this).off(name, callback);
     return this;
   },
@@ -519,8 +524,8 @@ var proto = {
    * @param {Boolean} [bubble] Value to control bubbling. Defaults to true.
    * @return {Object} Current arguments object.
    */
-  fire: function (name, args, bubble) {
-    var self = this;
+  fire (name, args, bubble) {
+    const self = this;
 
     args = args || {};
 
@@ -532,7 +537,7 @@ var proto = {
 
     // Bubble event up to parents
     if (bubble !== false && self.parent) {
-      var parent = self.parent();
+      let parent = self.parent();
       while (parent && !args.isPropagationStopped()) {
         parent.fire(name, args, false);
         parent = parent.parent();
@@ -549,7 +554,7 @@ var proto = {
    * @param {String} name Name of the event to check for.
    * @return {Boolean} True/false state if the event has listeners.
    */
-  hasEventListeners: function (name) {
+  hasEventListeners (name) {
     return getEventDispatcher(this).has(name);
   },
 
@@ -560,8 +565,9 @@ var proto = {
    * @param {String} selector Optional selector expression to find parents.
    * @return {tinymce.ui.Collection} Collection with all parent controls.
    */
-  parents: function (selector) {
-    var self = this, ctrl, parents = new Collection();
+  parents (selector) {
+    const self = this;
+    let ctrl, parents = new Collection();
 
     // Add each parent to collection
     for (ctrl = self.parent(); ctrl; ctrl = ctrl.parent()) {
@@ -583,7 +589,7 @@ var proto = {
    * @param {String} selector Optional selector expression to find parents.
    * @return {tinymce.ui.Collection} Collection with all parent controls.
    */
-  parentsAndSelf: function (selector) {
+  parentsAndSelf (selector) {
     return new Collection(this).add(this.parents(selector));
   },
 
@@ -593,8 +599,8 @@ var proto = {
    * @method next
    * @return {tinymce.ui.Control} Next control instance.
    */
-  next: function () {
-    var parentControls = this.parent().items();
+  next () {
+    const parentControls = this.parent().items();
 
     return parentControls[parentControls.indexOf(this) + 1];
   },
@@ -605,8 +611,8 @@ var proto = {
    * @method prev
    * @return {tinymce.ui.Control} Previous control instance.
    */
-  prev: function () {
-    var parentControls = this.parent().items();
+  prev () {
+    const parentControls = this.parent().items();
 
     return parentControls[parentControls.indexOf(this) - 1];
   },
@@ -618,7 +624,7 @@ var proto = {
    * @param {String} html Html string to set as inner html.
    * @return {tinymce.ui.Control} Current control object.
    */
-  innerHtml: function (html) {
+  innerHtml (html) {
     this.$el.html(html);
     return this;
   },
@@ -630,8 +636,8 @@ var proto = {
    * @param {String} [suffix] Suffix to get element by.
    * @return {Element} HTML DOM element for the current control or it's children.
    */
-  getEl: function (suffix) {
-    var id = suffix ? this._id + '-' + suffix : this._id;
+  getEl (suffix) {
+    const id = suffix ? this._id + '-' + suffix : this._id;
 
     if (!this._elmCache[id]) {
       this._elmCache[id] = DomQuery('#' + id)[0];
@@ -646,7 +652,7 @@ var proto = {
    * @method show
    * @return {tinymce.ui.Control} Current control instance.
    */
-  show: function () {
+  show () {
     return this.visible(true);
   },
 
@@ -656,7 +662,7 @@ var proto = {
    * @method hide
    * @return {tinymce.ui.Control} Current control instance.
    */
-  hide: function () {
+  hide () {
     return this.visible(false);
   },
 
@@ -666,7 +672,7 @@ var proto = {
    * @method focus
    * @return {tinymce.ui.Control} Current control instance.
    */
-  focus: function () {
+  focus () {
     try {
       this.getEl().focus();
     } catch (ex) {
@@ -682,7 +688,7 @@ var proto = {
    * @method blur
    * @return {tinymce.ui.Control} Current control instance.
    */
-  blur: function () {
+  blur () {
     this.getEl().blur();
 
     return this;
@@ -696,17 +702,17 @@ var proto = {
    * @param {String} value Value of the aria property.
    * @return {tinymce.ui.Control} Current control instance.
    */
-  aria: function (name, value) {
-    var self = this, elm = self.getEl(self.ariaTarget);
+  aria (name, value) {
+    const self = this, elm = self.getEl(self.ariaTarget);
 
-    if (typeof value === "undefined") {
+    if (typeof value === 'undefined') {
       return self._aria[name];
     }
 
     self._aria[name] = value;
 
     if (self.state.get('rendered')) {
-      elm.setAttribute(name == 'role' ? name : 'aria-' + name, value);
+      elm.setAttribute(name === 'role' ? name : 'aria-' + name, value);
     }
 
     return self;
@@ -721,7 +727,7 @@ var proto = {
    * @param {Boolean} [translate=true] False if the contents shouldn't be translated.
    * @return {String} Encoded and possible traslated string.
    */
-  encode: function (text, translate) {
+  encode (text, translate) {
     if (translate !== false) {
       text = this.translate(text);
     }
@@ -738,7 +744,7 @@ var proto = {
    * @param {String} text Text to translate.
    * @return {String} Translated string or the same as the input.
    */
-  translate: function (text) {
+  translate (text) {
     return Control.translate ? Control.translate(text) : text;
   },
 
@@ -749,8 +755,8 @@ var proto = {
    * @param {Array/tinymce.ui.Collection} items Array of items to prepend before this control.
    * @return {tinymce.ui.Control} Current control instance.
    */
-  before: function (items) {
-    var self = this, parent = self.parent();
+  before (items) {
+    const self = this, parent = self.parent();
 
     if (parent) {
       parent.insert(items, parent.items().indexOf(self), true);
@@ -766,8 +772,8 @@ var proto = {
    * @param {Array/tinymce.ui.Collection} items Array of items to append after this control.
    * @return {tinymce.ui.Control} Current control instance.
    */
-  after: function (items) {
-    var self = this, parent = self.parent();
+  after (items) {
+    const self = this, parent = self.parent();
 
     if (parent) {
       parent.insert(items, parent.items().indexOf(self));
@@ -782,11 +788,14 @@ var proto = {
    * @method remove
    * @return {tinymce.ui.Control} Current control instance.
    */
-  remove: function () {
-    var self = this, elm = self.getEl(), parent = self.parent(), newItems, i;
+  remove () {
+    const self = this;
+    const elm = self.getEl();
+    const parent = self.parent();
+    let newItems, i;
 
     if (self.items) {
-      var controls = self.items().toArray();
+      const controls = self.items().toArray();
       i = controls.length;
       while (i--) {
         controls[i].remove();
@@ -806,11 +815,11 @@ var proto = {
       parent._lastRect = null;
     }
 
-    if (self._eventsRoot && self._eventsRoot == self) {
+    if (self._eventsRoot && self._eventsRoot === self) {
       DomQuery(elm).off();
     }
 
-    var lookup = self.getRoot().controlIdLookup;
+    const lookup = self.getRoot().controlIdLookup;
     if (lookup) {
       delete lookup[self._id];
     }
@@ -834,7 +843,7 @@ var proto = {
    * @param {Element} elm Element to render before.
    * @return {tinymce.ui.Control} Current control instance.
    */
-  renderBefore: function (elm) {
+  renderBefore (elm) {
     DomQuery(elm).before(this.renderHtml());
     this.postRender();
     return this;
@@ -847,19 +856,19 @@ var proto = {
    * @param {Element} elm Element to render to.
    * @return {tinymce.ui.Control} Current control instance.
    */
-  renderTo: function (elm) {
+  renderTo (elm) {
     DomQuery(elm || this.getContainerElm()).append(this.renderHtml());
     this.postRender();
     return this;
   },
 
-  preRender: function () {
+  preRender () {
   },
 
-  render: function () {
+  render () {
   },
 
-  renderHtml: function () {
+  renderHtml () {
     return '<div id="' + this._id + '" class="' + this.classes + '"></div>';
   },
 
@@ -869,15 +878,17 @@ var proto = {
    * @method postRender
    * @return {tinymce.ui.Control} Current control instance.
    */
-  postRender: function () {
-    var self = this, settings = self.settings, elm, box, parent, name, parentEventsRoot;
+  postRender () {
+    const self = this;
+    const settings = self.settings;
+    let elm, box, parent, name, parentEventsRoot;
 
     self.$el = DomQuery(self.getEl());
     self.state.set('rendered', true);
 
     // Bind on<event> settings
     for (name in settings) {
-      if (name.indexOf("on") === 0) {
+      if (name.indexOf('on') === 0) {
         self.on(name.substr(2), settings[name]);
       }
     }
@@ -915,14 +926,14 @@ var proto = {
     }
 
     // Add instance to lookup
-    var root = self.getRoot();
+    const root = self.getRoot();
     if (!root.controlIdLookup) {
       root.controlIdLookup = {};
     }
 
     root.controlIdLookup[self._id] = self;
 
-    for (var key in self._aria) {
+    for (const key in self._aria) {
       self.aria(key, self._aria[key]);
     }
 
@@ -933,7 +944,8 @@ var proto = {
     self.bindStates();
 
     self.state.on('change:visible', function (e) {
-      var state = e.value, parentCtrl;
+      const state = e.value;
+      let parentCtrl;
 
       if (self.state.get('rendered')) {
         self.getEl().style.display = state === false ? 'none' : '';
@@ -956,7 +968,7 @@ var proto = {
     self.fire('postrender', {}, false);
   },
 
-  bindStates: function () {
+  bindStates () {
   },
 
   /**
@@ -966,23 +978,23 @@ var proto = {
    * @param {String} align Alignment in view top|center|bottom.
    * @return {tinymce.ui.Control} Current control instance.
    */
-  scrollIntoView: function (align) {
+  scrollIntoView (align) {
     function getOffset(elm, rootElm) {
-      var x, y, parent = elm;
+      let x, y, parent = elm;
 
       x = y = 0;
-      while (parent && parent != rootElm && parent.nodeType) {
+      while (parent && parent !== rootElm && parent.nodeType) {
         x += parent.offsetLeft || 0;
         y += parent.offsetTop || 0;
         parent = parent.offsetParent;
       }
 
-      return { x: x, y: y };
+      return { x, y };
     }
 
-    var elm = this.getEl(), parentElm = elm.parentNode;
-    var x, y, width, height, parentWidth, parentHeight;
-    var pos = getOffset(elm, parentElm);
+    const elm = this.getEl(), parentElm = elm.parentNode;
+    let x, y, width, height, parentWidth, parentHeight;
+    const pos = getOffset(elm, parentElm);
 
     x = pos.x;
     y = pos.y;
@@ -991,10 +1003,10 @@ var proto = {
     parentWidth = parentElm.clientWidth;
     parentHeight = parentElm.clientHeight;
 
-    if (align == "end") {
+    if (align === 'end') {
       x -= parentWidth - width;
       y -= parentHeight - height;
-    } else if (align == "center") {
+    } else if (align === 'center') {
       x -= (parentWidth / 2) - (width / 2);
       y -= (parentHeight / 2) - (height / 2);
     }
@@ -1005,8 +1017,9 @@ var proto = {
     return this;
   },
 
-  getRoot: function () {
-    var ctrl = this, rootControl, parents = [];
+  getRoot () {
+    let ctrl = this, rootControl;
+    const parents = [];
 
     while (ctrl) {
       if (ctrl.rootControl) {
@@ -1023,7 +1036,7 @@ var proto = {
       rootControl = this;
     }
 
-    var i = parents.length;
+    let i = parents.length;
     while (i--) {
       parents[i].rootControl = rootControl;
     }
@@ -1042,10 +1055,10 @@ var proto = {
    * @method reflow
    * @return {tinymce.ui.Control} Current control instance.
    */
-  reflow: function () {
+  reflow () {
     ReflowQueue.remove(this);
 
-    var parent = this.parent();
+    const parent = this.parent();
     if (parent && parent._layout && !parent._layout.isNative()) {
       parent.reflow();
     }
@@ -1126,7 +1139,7 @@ Tools.each('text title visible disabled active value'.split(' '), function (name
       return this.state.get(name);
     }
 
-    if (typeof value != "undefined") {
+    if (typeof value !== 'undefined') {
       this.state.set(name, value);
     }
 
@@ -1140,7 +1153,7 @@ function getEventDispatcher(obj) {
   if (!obj._eventDispatcher) {
     obj._eventDispatcher = new EventDispatcher({
       scope: obj,
-      toggleEvent: function (name, state) {
+      toggleEvent (name, state) {
         if (state && EventDispatcher.isNative(name)) {
           if (!obj._nativeEvents) {
             obj._nativeEvents = {};
@@ -1160,10 +1173,10 @@ function getEventDispatcher(obj) {
 }
 
 function bindPendingEvents(eventCtrl) {
-  var i, l, parents, eventRootCtrl, nativeEvents, name;
+  let i, l, parents, eventRootCtrl, nativeEvents, name;
 
   function delegate(e) {
-    var control = eventCtrl.getParentCtrl(e.target);
+    const control = eventCtrl.getParentCtrl(e.target);
 
     if (control) {
       control.fire(e.type, e);
@@ -1171,13 +1184,13 @@ function bindPendingEvents(eventCtrl) {
   }
 
   function mouseLeaveHandler() {
-    var ctrl = eventRootCtrl._lastHoverCtrl;
+    const ctrl = eventRootCtrl._lastHoverCtrl;
 
     if (ctrl) {
-      ctrl.fire("mouseleave", { target: ctrl.getEl() });
+      ctrl.fire('mouseleave', { target: ctrl.getEl() });
 
       ctrl.parents().each(function (ctrl) {
-        ctrl.fire("mouseleave", { target: ctrl.getEl() });
+        ctrl.fire('mouseleave', { target: ctrl.getEl() });
       });
 
       eventRootCtrl._lastHoverCtrl = null;
@@ -1185,7 +1198,7 @@ function bindPendingEvents(eventCtrl) {
   }
 
   function mouseEnterHandler(e) {
-    var ctrl = eventCtrl.getParentCtrl(e.target), lastCtrl = eventRootCtrl._lastHoverCtrl, idx = 0, i, parents, lastParents;
+    let ctrl = eventCtrl.getParentCtrl(e.target), lastCtrl = eventRootCtrl._lastHoverCtrl, idx = 0, i, parents, lastParents;
 
     // Over on a new control
     if (ctrl !== lastCtrl) {
@@ -1206,7 +1219,7 @@ function bindPendingEvents(eventCtrl) {
 
         for (i = lastParents.length - 1; i >= idx; i--) {
           lastCtrl = lastParents[i];
-          lastCtrl.fire("mouseleave", {
+          lastCtrl.fire('mouseleave', {
             target: lastCtrl.getEl()
           });
         }
@@ -1214,7 +1227,7 @@ function bindPendingEvents(eventCtrl) {
 
       for (i = idx; i < parents.length; i++) {
         ctrl = parents[i];
-        ctrl.fire("mouseenter", {
+        ctrl.fire('mouseenter', {
           target: ctrl.getEl()
         });
       }
@@ -1224,7 +1237,7 @@ function bindPendingEvents(eventCtrl) {
   function fixWheelEvent(e) {
     e.preventDefault();
 
-    if (e.type == "mousewheel") {
+    if (e.type === 'mousewheel') {
       e.deltaY = -1 / 40 * e.wheelDelta;
 
       if (e.wheelDeltaX) {
@@ -1235,7 +1248,7 @@ function bindPendingEvents(eventCtrl) {
       e.deltaY = e.detail;
     }
 
-    e = eventCtrl.fire("wheel", e);
+    e = eventCtrl.fire('wheel', e);
   }
 
   nativeEvents = eventCtrl._nativeEvents;
@@ -1258,7 +1271,7 @@ function bindPendingEvents(eventCtrl) {
       parents[i]._eventsRoot = eventRootCtrl;
     }
 
-    var eventRootDelegates = eventRootCtrl._delegates;
+    let eventRootDelegates = eventRootCtrl._delegates;
     if (!eventRootDelegates) {
       eventRootDelegates = eventRootCtrl._delegates = {};
     }
@@ -1269,21 +1282,21 @@ function bindPendingEvents(eventCtrl) {
         return false;
       }
 
-      if (name === "wheel" && !hasWheelEventSupport) {
+      if (name === 'wheel' && !hasWheelEventSupport) {
         if (hasMouseWheelEventSupport) {
-          DomQuery(eventCtrl.getEl()).on("mousewheel", fixWheelEvent);
+          DomQuery(eventCtrl.getEl()).on('mousewheel', fixWheelEvent);
         } else {
-          DomQuery(eventCtrl.getEl()).on("DOMMouseScroll", fixWheelEvent);
+          DomQuery(eventCtrl.getEl()).on('DOMMouseScroll', fixWheelEvent);
         }
 
         continue;
       }
 
       // Special treatment for mousenter/mouseleave since these doesn't bubble
-      if (name === "mouseenter" || name === "mouseleave") {
+      if (name === 'mouseenter' || name === 'mouseleave') {
         // Fake mousenter/mouseleave
         if (!eventRootCtrl._hasMouseEnter) {
-          DomQuery(eventRootCtrl.getEl()).on("mouseleave", mouseLeaveHandler).on("mouseover", mouseEnterHandler);
+          DomQuery(eventRootCtrl.getEl()).on('mouseleave', mouseLeaveHandler).on('mouseover', mouseEnterHandler);
           eventRootCtrl._hasMouseEnter = 1;
         }
       } else if (!eventRootDelegates[name]) {
@@ -1297,4 +1310,4 @@ function bindPendingEvents(eventCtrl) {
   }
 }
 
-export default <any> Control;
+export default Control;

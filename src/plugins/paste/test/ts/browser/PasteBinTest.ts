@@ -4,7 +4,6 @@ import { Pipeline } from '@ephox/agar';
 import { Id } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
-import { TinyLoader } from '@ephox/mcagar';
 import EditorManager from 'tinymce/core/EditorManager';
 import ViewBlock from '../module/test/ViewBlock';
 import PasteBin from 'tinymce/plugins/paste/core/PasteBin';
@@ -12,31 +11,31 @@ import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
   PastePlugin();
 
-  var cases = [
+  const cases = [
     {
-      label: "TINY-1162: testing nested paste bins",
+      label: 'TINY-1162: testing nested paste bins',
       content: '<div id="mcepastebin" contenteditable="true" data-mce-bogus="all" data-mce-style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0" style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0"><div id="mcepastebin" data-mce-bogus="all" data-mce-style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0" style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0">a</div><div id="mcepastebin" data-mce-bogus="all" data-mce-style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0" style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0">b</div></div>',
       result: '<div>a</div><div>b</div>'
     },
     {
-      label: "TINY-1162: testing adjacent paste bins",
+      label: 'TINY-1162: testing adjacent paste bins',
       content: '<div id="mcepastebin" contenteditable="true" data-mce-bogus="all" data-mce-style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0" style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0"><p>a</p><p>b</p></div><div id="mcepastebin" contenteditable="true" data-mce-bogus="all" data-mce-style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0" style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0"><p>c</p></div>',
       result: '<p>a</p><p>b</p><p>c</p>'
     }
   ];
 
-  var viewBlock = ViewBlock();
+  const viewBlock = ViewBlock();
 
-  var cCreateEditorFromSettings = function (settings?, html?) {
+  const cCreateEditorFromSettings = function (settings?, html?) {
     return Chain.on(function (viewBlock, next, die) {
-      var randomId = Id.generate('tiny');
+      const randomId = Id.generate('tiny');
       html = html || '<textarea></textarea>';
 
       viewBlock.update(html);
@@ -48,7 +47,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function() {
         indent: false,
         plugins: 'paste',
         skin_url: '/project/js/tinymce/skins/lightgray',
-        setup: function (editor) {
+        setup (editor) {
           editor.on('SkinLoaded', function () {
             setTimeout(function () {
               next(Chain.wrap(editor));
@@ -59,22 +58,22 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function() {
     });
   };
 
-  var cCreateEditorFromHtml = function (html, settings) {
+  const cCreateEditorFromHtml = function (html, settings) {
     return cCreateEditorFromSettings(settings, html);
   };
 
-  var cRemoveEditor = function () {
+  const cRemoveEditor = function () {
     return Chain.op(function (editor) {
       editor.remove();
     });
   };
 
-  var cAssertCases = function (cases) {
+  const cAssertCases = function (cases) {
     return Chain.op(function (editor) {
-      var pasteBin = PasteBin(editor);
+      const pasteBin = PasteBin(editor);
       Obj.each(cases, function (c, i) {
         editor.getBody().innerHTML = c.content;
-        Assertions.assertEq(c.label || "Asserting paste bin case " + i, c.result, pasteBin.getHtml());
+        Assertions.assertEq(c.label || 'Asserting paste bin case ' + i, c.result, pasteBin.getHtml());
         pasteBin.remove();
       });
     });
@@ -100,4 +99,3 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function() {
     success();
   }, failure);
 });
-

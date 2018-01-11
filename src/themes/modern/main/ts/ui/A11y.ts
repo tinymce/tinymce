@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var focus = function (panel, type) {
+const focus = function (panel, type) {
   return function () {
-    var item = panel.find(type)[0];
+    const item = panel.find(type)[0];
 
     if (item) {
       item.focus(true);
@@ -18,7 +18,7 @@ var focus = function (panel, type) {
   };
 };
 
-var addKeys = function (editor, panel) {
+const addKeys = function (editor, panel) {
   editor.shortcuts.add('Alt+F9', '', focus(panel, 'menubar'));
   editor.shortcuts.add('Alt+F10,F10', '', focus(panel, 'toolbar'));
   editor.shortcuts.add('Alt+F11', '', focus(panel, 'elementpath'));
@@ -27,6 +27,6 @@ var addKeys = function (editor, panel) {
   });
 };
 
-export default <any> {
-  addKeys: addKeys
+export default {
+  addKeys
 };

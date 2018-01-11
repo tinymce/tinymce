@@ -10,20 +10,20 @@ import VK from 'tinymce/core/util/VK';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var pressKey = function (key) {
+  const pressKey = function (key) {
     return function (editor) {
       Keyboard.keystroke(key, {}, TinyDom.fromDom(editor.getBody()));
     };
   };
 
-  var exitPreTest = function (arrow, offset, expectedContent) {
+  const exitPreTest = function (arrow, offset, expectedContent) {
     return function (editor) {
       editor.setContent('<pre>abc</pre>');
 
@@ -39,14 +39,14 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function() {
     };
   };
 
-  var ok = function (a, label) {
+  const ok = function (a, label) {
     LegacyUnit.equal(a, true, label);
   };
 
-  var leftArrow = pressKey(VK.LEFT);
-  var rightArrow = pressKey(VK.RIGHT);
-  var upArrow = pressKey(VK.UP);
-  var downArrow = pressKey(VK.DOWN);
+  const leftArrow = pressKey(VK.LEFT);
+  const rightArrow = pressKey(VK.RIGHT);
+  const upArrow = pressKey(VK.UP);
+  const downArrow = pressKey(VK.DOWN);
 
   suite.test('left/right over cE=false inline', function (editor) {
     editor.focus();
@@ -128,7 +128,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function() {
 
   suite.test('click on link in cE=false', function (editor) {
     editor.setContent('<p contentEditable="false"><a href="#"><strong>link</strong></a></p>');
-    var evt = editor.fire('click', { target: editor.$('strong')[0] });
+    const evt = editor.fire('click', { target: editor.$('strong')[0] });
 
     LegacyUnit.equal(evt.isDefaultPrevented(), true);
   });
@@ -143,8 +143,8 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function() {
       '</table>'
     );
 
-    var firstTd = editor.dom.select('td')[0];
-    var rect = editor.dom.getRect(firstTd);
+    const firstTd = editor.dom.select('td')[0];
+    const rect = editor.dom.getRect(firstTd);
 
     editor.fire('mousedown', {
       target: firstTd,
@@ -165,7 +165,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function() {
       );
 
       editor.selection.select(editor.dom.select('table')[0]);
-      var offscreenSelection = editor.dom.select('.mce-offscreen-selection')[0];
+      const offscreenSelection = editor.dom.select('.mce-offscreen-selection')[0];
 
       ok(offscreenSelection.offsetLeft !== undefined, 'The offscreen selection\'s left border is undefined');
       ok(offscreenSelection.offsetLeft < 0, 'The offscreen selection\'s left border is onscreen');
@@ -185,7 +185,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function() {
   suite.test('set range after ce=false element but lean backwards', function (editor) {
     editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
 
-    var rng = document.createRange();
+    const rng = document.createRange();
     rng.setStartBefore(editor.dom.select('p')[1]);
     rng.setEndBefore(editor.dom.select('p')[1]);
 
@@ -196,7 +196,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function() {
   suite.test('set range after ce=false element but lean forwards', function (editor) {
     editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
 
-    var rng = document.createRange();
+    const rng = document.createRange();
     rng.setStartBefore(editor.dom.select('p')[1]);
     rng.setEndBefore(editor.dom.select('p')[1]);
 
@@ -205,7 +205,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function() {
   });
 
   suite.test('showCaret at TD', function (editor) {
-    var rng;
+    let rng;
 
     editor.setContent('<table><tr><td contenteditable="false">x</td></tr></table>');
     rng = editor._selectionOverrides.showCaret(1, editor.dom.select('td')[0], true);
@@ -213,7 +213,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function() {
   });
 
   suite.test('showCaret at TH', function (editor) {
-    var rng;
+    let rng;
 
     editor.setContent('<table><tr><th contenteditable="false">x</th></tr></table>');
     rng = editor._selectionOverrides.showCaret(1, editor.dom.select('th')[0], true);
@@ -221,7 +221,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function() {
   });
 
   suite.test('showCaret block on specific element', function (editor) {
-    var rng;
+    let rng;
 
     editor.on('ShowCaret', function (e) {
       if (e.target.getAttribute('data-no-cef') === 'true') {
@@ -243,7 +243,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function() {
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
-    selector: "textarea",
+    selector: 'textarea',
     add_unload_trigger: false,
     disable_nodechange: true,
     entities: 'raw',
@@ -251,4 +251,3 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

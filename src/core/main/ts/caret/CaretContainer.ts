@@ -19,10 +19,10 @@ import Zwsp from '../text/Zwsp';
  * @class tinymce.caret.CaretContainer
  */
 
-var isElement = NodeType.isElement,
+const isElement = NodeType.isElement,
   isText = NodeType.isText;
 
-var isCaretContainerBlock = function (node) {
+const isCaretContainerBlock = function (node) {
   if (isText(node)) {
     node = node.parentNode;
   }
@@ -30,20 +30,20 @@ var isCaretContainerBlock = function (node) {
   return isElement(node) && node.hasAttribute('data-mce-caret');
 };
 
-var isCaretContainerInline = function (node) {
+const isCaretContainerInline = function (node) {
   return isText(node) && Zwsp.isZwsp(node.data);
 };
 
-var isCaretContainer = function (node) {
+const isCaretContainer = function (node) {
   return isCaretContainerBlock(node) || isCaretContainerInline(node);
 };
 
-var hasContent = function (node) {
+const hasContent = function (node) {
   return node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
 };
 
-var insertInline = function (node, before) {
-  var doc, sibling, textNode, parentNode;
+const insertInline = function (node, before) {
+  let doc, sibling, textNode, parentNode;
 
   doc = node.ownerDocument;
   textNode = doc.createTextNode(Zwsp.ZWSP);
@@ -85,9 +85,9 @@ var insertInline = function (node, before) {
   return textNode;
 };
 
-var prependInline = function (node) {
+const prependInline = function (node) {
   if (NodeType.isText(node)) {
-    var data = node.data;
+    const data = node.data;
     if (data.length > 0 && data.charAt(0) !== Zwsp.ZWSP) {
       node.insertData(0, Zwsp.ZWSP);
     }
@@ -97,9 +97,9 @@ var prependInline = function (node) {
   }
 };
 
-var appendInline = function (node) {
+const appendInline = function (node) {
   if (NodeType.isText(node)) {
-    var data = node.data;
+    const data = node.data;
     if (data.length > 0 && data.charAt(data.length - 1) !== Zwsp.ZWSP) {
       node.insertData(data.length, Zwsp.ZWSP);
     }
@@ -109,22 +109,22 @@ var appendInline = function (node) {
   }
 };
 
-var isBeforeInline = function (pos) {
+const isBeforeInline = function (pos) {
   return pos && NodeType.isText(pos.container()) && pos.container().data.charAt(pos.offset()) === Zwsp.ZWSP;
 };
 
-var isAfterInline = function (pos) {
+const isAfterInline = function (pos) {
   return pos && NodeType.isText(pos.container()) && pos.container().data.charAt(pos.offset() - 1) === Zwsp.ZWSP;
 };
 
-var createBogusBr = function () {
-  var br = document.createElement('br');
+const createBogusBr = function () {
+  const br = document.createElement('br');
   br.setAttribute('data-mce-bogus', '1');
   return br;
 };
 
-var insertBlock = function (blockName, node, before) {
-  var doc, blockNode, parentNode;
+const insertBlock = function (blockName, node, before) {
+  let doc, blockNode, parentNode;
 
   doc = node.ownerDocument;
   blockNode = doc.createElement(blockName);
@@ -146,23 +146,23 @@ var insertBlock = function (blockName, node, before) {
   return blockNode;
 };
 
-var startsWithCaretContainer = function (node) {
-  return isText(node) && node.data[0] == Zwsp.ZWSP;
+const startsWithCaretContainer = function (node) {
+  return isText(node) && node.data[0] === Zwsp.ZWSP;
 };
 
-var endsWithCaretContainer = function (node) {
-  return isText(node) && node.data[node.data.length - 1] == Zwsp.ZWSP;
+const endsWithCaretContainer = function (node) {
+  return isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
 };
 
-var trimBogusBr = function (elm) {
-  var brs = elm.getElementsByTagName('br');
-  var lastBr = brs[brs.length - 1];
+const trimBogusBr = function (elm) {
+  const brs = elm.getElementsByTagName('br');
+  const lastBr = brs[brs.length - 1];
   if (NodeType.isBogus(lastBr)) {
     lastBr.parentNode.removeChild(lastBr);
   }
 };
 
-var showCaretContainerBlock = function (caretContainer) {
+const showCaretContainerBlock = function (caretContainer) {
   if (caretContainer && caretContainer.hasAttribute('data-mce-caret')) {
     trimBogusBr(caretContainer);
     caretContainer.removeAttribute('data-mce-caret');
@@ -176,17 +176,17 @@ var showCaretContainerBlock = function (caretContainer) {
 };
 
 export default {
-  isCaretContainer: isCaretContainer,
-  isCaretContainerBlock: isCaretContainerBlock,
-  isCaretContainerInline: isCaretContainerInline,
-  showCaretContainerBlock: showCaretContainerBlock,
-  insertInline: insertInline,
-  prependInline: prependInline,
-  appendInline: appendInline,
-  isBeforeInline: isBeforeInline,
-  isAfterInline: isAfterInline,
-  insertBlock: insertBlock,
-  hasContent: hasContent,
-  startsWithCaretContainer: startsWithCaretContainer,
-  endsWithCaretContainer: endsWithCaretContainer
+  isCaretContainer,
+  isCaretContainerBlock,
+  isCaretContainerInline,
+  showCaretContainerBlock,
+  insertInline,
+  prependInline,
+  appendInline,
+  isBeforeInline,
+  isAfterInline,
+  insertBlock,
+  hasContent,
+  startsWithCaretContainer,
+  endsWithCaretContainer
 };

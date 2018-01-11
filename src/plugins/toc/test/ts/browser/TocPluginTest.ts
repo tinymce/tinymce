@@ -7,15 +7,15 @@ import HtmlUtils from '../module/test/HtmlUtils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
 
-  var stripAttribs = function ($el, attr) {
+  const stripAttribs = function ($el, attr) {
     if (Tools.isArray(attr)) {
       Tools.each(attr, function (attr) {
         stripAttribs($el, attr);
@@ -27,11 +27,11 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', function() {
     $el.find('[' + attr + ']').removeAttr(attr);
   };
 
-  var trimBr = function (html) {
+  const trimBr = function (html) {
     return html.replace(/<br data-mce-bogus="1" \/>/g, '');
   };
 
-  suite.test("mceInsertToc", function (editor) {
+  suite.test('mceInsertToc', function (editor) {
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
       '<p>This is some text.</p><br />' +
@@ -46,12 +46,12 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', function() {
     LegacyUnit.setSelection(editor, 'h1', 0);
     editor.execCommand('mceInsertToc');
 
-    var $toc = editor.$('.tst-toc');
+    const $toc = editor.$('.tst-toc');
 
-    LegacyUnit.equal($toc.length, 2, "ToC inserted");
-    LegacyUnit.equal($toc.attr('contentEditable'), "false", "cE=false");
+    LegacyUnit.equal($toc.length, 2, 'ToC inserted');
+    LegacyUnit.equal($toc.attr('contentEditable'), 'false', 'cE=false');
 
-    LegacyUnit.equal($toc.find('ul ul ul').length, 0, "no levels beyond 2 are included");
+    LegacyUnit.equal($toc.find('ul ul ul').length, 0, 'no levels beyond 2 are included');
 
     stripAttribs($toc, ['data-mce-href', 'data-mce-selected']);
 
@@ -70,11 +70,11 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', function() {
       '</li>' +
       '</ul>' +
       '</div>',
-      "no surprises in ToC structure"
+      'no surprises in ToC structure'
     );
   });
 
-  suite.test("mceInsertToc - flat structure", function (editor) {
+  suite.test('mceInsertToc - flat structure', function (editor) {
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
       '<p>This is some text.</p><br />' +
@@ -89,7 +89,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', function() {
     LegacyUnit.setSelection(editor, 'h1', 0);
     editor.execCommand('mceInsertToc');
 
-    var $toc = editor.$('.tst-toc');
+    const $toc = editor.$('.tst-toc');
 
     stripAttribs($toc, ['data-mce-href', 'data-mce-selected']);
 
@@ -109,11 +109,11 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', function() {
       '</ul>' +
       '</li>' +
       '</ul>',
-      "no surprises in ToC structure"
+      'no surprises in ToC structure'
     );
   });
 
-  suite.test("mceUpdateToc", function (editor) {
+  suite.test('mceUpdateToc', function (editor) {
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
       '<p>This is some text.</p><br />' +
@@ -135,11 +135,11 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', function() {
     editor.execCommand('mceUpdateToc');
 
     LegacyUnit.equal(editor.$('.tst-toc > ul a[href="#h5"]').length, 1,
-      "ToC has been successfully updated");
+      'ToC has been successfully updated');
   });
 
-  suite.test("Misc.", function (editor) {
-    var contents, $toc;
+  suite.test('Misc.', function (editor) {
+    let contents, $toc;
 
     editor.getBody().innerHTML =
       '<h2 id="h1">H2</h2>' +
@@ -154,14 +154,14 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', function() {
     editor.execCommand('mceInsertToc');
 
     contents = editor.getContent();
-    LegacyUnit.equal(/contenteditable/i.test(contents), false, "cE stripped for getContent()");
+    LegacyUnit.equal(/contenteditable/i.test(contents), false, 'cE stripped for getContent()');
 
     editor.setContent(contents);
 
     $toc = editor.$('.tst-toc');
-    LegacyUnit.deepEqual($toc.attr('contentEditable'), "false", "cE added back after setContent()");
-    LegacyUnit.deepEqual($toc.find(':first-child').attr('contentEditable'), "true",
-      "cE added back to title after setContent()");
+    LegacyUnit.deepEqual($toc.attr('contentEditable'), 'false', 'cE added back after setContent()');
+    LegacyUnit.deepEqual($toc.find(':first-child').attr('contentEditable'), 'true',
+      'cE added back to title after setContent()');
 
     stripAttribs($toc, ['data-mce-href', 'data-mce-selected']);
 
@@ -175,7 +175,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', function() {
       '<a href="#h2">H2</a>' +
       '</li>' +
       '</ul>',
-      "the largest available header becomes first ToC level"
+      'the largest available header becomes first ToC level'
     );
   });
 
@@ -192,4 +192,3 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

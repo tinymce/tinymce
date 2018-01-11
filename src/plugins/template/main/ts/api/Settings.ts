@@ -10,55 +10,55 @@
 
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-var getCreationDateClasses = function (editor) {
+const getCreationDateClasses = function (editor) {
   return editor.getParam('template_cdate_classes', 'cdate');
 };
 
-var getModificationDateClasses = function (editor) {
+const getModificationDateClasses = function (editor) {
   return editor.getParam('template_mdate_classes', 'mdate');
 };
 
-var getSelectedContentClasses = function (editor) {
+const getSelectedContentClasses = function (editor) {
   return editor.getParam('template_selected_content_classes', 'selcontent');
 };
 
-var getPreviewReplaceValues = function (editor) {
+const getPreviewReplaceValues = function (editor) {
   return editor.getParam('template_preview_replace_values');
 };
 
-var getTemplateReplaceValues = function (editor) {
+const getTemplateReplaceValues = function (editor) {
   return editor.getParam('template_replace_values');
 };
 
-var getTemplates = function (editorSettings) {
+const getTemplates = function (editorSettings) {
   return editorSettings.templates;
 };
 
-var getCdateFormat = function (editor) {
+const getCdateFormat = function (editor) {
   return editor.getParam('template_cdate_format', editor.getLang('template.cdate_format'));
 };
 
-var getMdateFormat = function (editor) {
-  return editor.getParam("template_mdate_format", editor.getLang("template.mdate_format"));
+const getMdateFormat = function (editor) {
+  return editor.getParam('template_mdate_format', editor.getLang('template.mdate_format'));
 };
 
-var getDialogWidth = function (editor) {
+const getDialogWidth = function (editor) {
   return editor.getParam('template_popup_width', 600);
 };
 
-var getDialogHeight = function (editor) {
+const getDialogHeight = function (editor) {
   return Math.min(DOMUtils.DOM.getViewPort().h, editor.getParam('template_popup_height', 500));
 };
 
 export default {
-  getCreationDateClasses: getCreationDateClasses,
-  getModificationDateClasses: getModificationDateClasses,
-  getSelectedContentClasses: getSelectedContentClasses,
-  getPreviewReplaceValues: getPreviewReplaceValues,
-  getTemplateReplaceValues: getTemplateReplaceValues,
-  getTemplates: getTemplates,
-  getCdateFormat: getCdateFormat,
-  getMdateFormat: getMdateFormat,
-  getDialogWidth: getDialogWidth,
-  getDialogHeight: getDialogHeight
+  getCreationDateClasses,
+  getModificationDateClasses,
+  getSelectedContentClasses,
+  getPreviewReplaceValues,
+  getTemplateReplaceValues,
+  getTemplates,
+  getCdateFormat,
+  getMdateFormat,
+  getDialogWidth,
+  getDialogHeight
 };

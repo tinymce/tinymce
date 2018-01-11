@@ -4,21 +4,21 @@ import NodePath from 'tinymce/core/dom/NodePath';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
-  var getRoot = function () {
+  const getRoot = function () {
     return viewBlock.get();
   };
 
-  var setupHtml = function (html) {
+  const setupHtml = function (html) {
     viewBlock.update(html);
   };
 
-  suite.test("create", function () {
+  suite.test('create', function () {
     setupHtml('<p>a<b>12<input></b></p>');
 
     LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild), [0]);
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function() {
     LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild), [1, 1, 0]);
   });
 
-  suite.test("resolve", function () {
+  suite.test('resolve', function () {
     setupHtml('<p>a<b>12<input></b></p>');
 
     LegacyUnit.equalDom(NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild)), getRoot().firstChild);
@@ -46,4 +46,3 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function() {
     success();
   }, failure);
 });
-

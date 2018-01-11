@@ -14,10 +14,10 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 ModernTheme();
 
-export default <any> function () {
-  var notifyShort = function (type) {
-    var notification = EditorManager.activeEditor.notificationManager.open({
-      type: type,
+export default function () {
+  const notifyShort = function (type) {
+    const notification = EditorManager.activeEditor.notificationManager.open({
+      type,
       text: 'This is an example ' + (type ? type : 'blank') + ' message.'
     });
 
@@ -27,34 +27,34 @@ export default <any> function () {
     console.log(notification);
   };
 
-  var notifyLong = function (len) {
-    var longTextMessage = [];
+  const notifyLong = function (len) {
+    const longTextMessage = [];
 
-    for (var i = 0; i < len; i++) {
+    for (let i = 0; i < len; i++) {
       longTextMessage.push('bla');
     }
 
-    var notification = EditorManager.activeEditor.notificationManager.open({
+    const notification = EditorManager.activeEditor.notificationManager.open({
       text: longTextMessage.join(' ')
     });
     console.log(notification);
   };
 
-  var notifyExtraLong = function (len) {
-    var longTextMessage = ['this is text '];
+  const notifyExtraLong = function (len) {
+    const longTextMessage = ['this is text '];
 
-    for (var i = 0; i < len; i++) {
+    for (let i = 0; i < len; i++) {
       longTextMessage.push('bla');
     }
 
-    var notification = EditorManager.activeEditor.notificationManager.open({
+    const notification = EditorManager.activeEditor.notificationManager.open({
       text: longTextMessage.join('')
     });
     console.log(notification);
   };
 
-  var notifyProgress = function (percent) {
-    var notification = EditorManager.activeEditor.notificationManager.open({
+  const notifyProgress = function (percent) {
+    const notification = EditorManager.activeEditor.notificationManager.open({
       text: 'Progress text',
       progressBar: true
     });
@@ -67,16 +67,16 @@ export default <any> function () {
     console.log(notification);
   };
 
-  var notifyTimeout = function (time) {
-    var notification = EditorManager.activeEditor.notificationManager.open({
+  const notifyTimeout = function (time) {
+    const notification = EditorManager.activeEditor.notificationManager.open({
       text: 'Timeout: ' + time,
       timeout: time
     });
     console.log(notification);
   };
 
-  var notifyIcon = function () {
-    var notification = EditorManager.activeEditor.notificationManager.open({
+  const notifyIcon = function () {
+    const notification = EditorManager.activeEditor.notificationManager.open({
       text: 'Text',
       icon: 'bold'
     });
@@ -95,7 +95,7 @@ export default <any> function () {
     { title: 'notifyTimeout', action: notifyTimeout, value: 3000 },
     { title: 'notifyIcon', action: notifyIcon }
   ], function (notification) {
-    var btn = document.createElement('button');
+    const btn = document.createElement('button');
     btn.innerHTML = notification.title;
     btn.onclick = function () {
       notification.action(notification.value);
@@ -115,4 +115,4 @@ export default <any> function () {
     skin_url: '../../../../../js/tinymce/skins/lightgray',
     codesample_content_css: '../../../../../js/tinymce/plugins/codesample/css/prism.css'
   });
-};
+}

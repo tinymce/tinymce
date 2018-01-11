@@ -17,27 +17,27 @@ import Size from '../core/Size';
 import UpdateHtml from '../core/UpdateHtml';
 import SizeManager from './SizeManager';
 
-var embedChange = (Env.ie && Env.ie <= 8) ? 'onChange' : 'onInput';
+const embedChange = (Env.ie && Env.ie <= 8) ? 'onChange' : 'onInput';
 
-var handleError = function (editor) {
+const handleError = function (editor) {
   return function (error) {
-    var errorMessage = error && error.msg ?
+    const errorMessage = error && error.msg ?
       'Media embed handler error: ' + error.msg :
       'Media embed handler threw unknown error.';
     editor.notificationManager.open({ type: 'error', text: errorMessage });
   };
 };
 
-var getData = function (editor) {
-  var element = editor.selection.getNode();
-  var dataEmbed = element.getAttribute('data-ephox-embed-iri');
+const getData = function (editor) {
+  const element = editor.selection.getNode();
+  const dataEmbed = element.getAttribute('data-ephox-embed-iri');
 
   if (dataEmbed) {
     return {
-      source1: dataEmbed,
+      'source1': dataEmbed,
       'data-ephox-embed-iri': dataEmbed,
-      width: Size.getMaxWidth(element),
-      height: Size.getMaxHeight(element)
+      'width': Size.getMaxWidth(element),
+      'height': Size.getMaxHeight(element)
     };
   }
 
@@ -46,19 +46,19 @@ var getData = function (editor) {
     {};
 };
 
-var getSource = function (editor) {
-  var elm = editor.selection.getNode();
+const getSource = function (editor) {
+  const elm = editor.selection.getNode();
 
   if (elm.getAttribute('data-mce-object') || elm.getAttribute('data-ephox-embed-iri')) {
     return editor.selection.getContent();
   }
 };
 
-var addEmbedHtml = function (win, editor) {
+const addEmbedHtml = function (win, editor) {
   return function (response) {
-    var html = response.html;
-    var embed = win.find('#embed')[0];
-    var data = Tools.extend(HtmlToData.htmlToData(Settings.getScripts(editor), html), { source1: response.url });
+    const html = response.html;
+    const embed = win.find('#embed')[0];
+    const data = Tools.extend(HtmlToData.htmlToData(Settings.getScripts(editor), html), { source1: response.url });
     win.fromJSON(data);
 
     if (embed) {
@@ -68,10 +68,10 @@ var addEmbedHtml = function (win, editor) {
   };
 };
 
-var selectPlaceholder = function (editor, beforeObjects) {
-  var i;
-  var y;
-  var afterObjects = editor.dom.select('img[data-mce-object]');
+const selectPlaceholder = function (editor, beforeObjects) {
+  let i;
+  let y;
+  const afterObjects = editor.dom.select('img[data-mce-object]');
 
   // Find new image placeholder so we can select it
   for (i = 0; i < beforeObjects.length; i++) {
@@ -85,16 +85,16 @@ var selectPlaceholder = function (editor, beforeObjects) {
   editor.selection.select(afterObjects[0]);
 };
 
-var handleInsert = function (editor, html) {
-  var beforeObjects = editor.dom.select('img[data-mce-object]');
+const handleInsert = function (editor, html) {
+  const beforeObjects = editor.dom.select('img[data-mce-object]');
 
   editor.insertContent(html);
   selectPlaceholder(editor, beforeObjects);
   editor.nodeChanged();
 };
 
-var submitForm = function (win, editor) {
-  var data = win.toJSON();
+const submitForm = function (win, editor) {
+  const data = win.toJSON();
 
   data.embed = UpdateHtml.updateHtml(data.embed, data);
 
@@ -104,21 +104,21 @@ var submitForm = function (win, editor) {
     Service.getEmbedHtml(editor, data)
       .then(function (response) {
         handleInsert(editor, response.html);
-      })["catch"](handleError(editor));
+      }).catch(handleError(editor));
   }
 };
 
-var populateMeta = function (win, meta) {
+const populateMeta = function (win, meta) {
   Tools.each(meta, function (value, key) {
     win.find('#' + key).value(value);
   });
 };
 
-var showDialog = function (editor) {
-  var win;
-  var data;
+const showDialog = function (editor) {
+  let win;
+  let data;
 
-  var generalFormItems: any[] = [
+  const generalFormItems: any[] = [
     {
       name: 'source1',
       type: 'filepicker',
@@ -126,31 +126,31 @@ var showDialog = function (editor) {
       size: 40,
       autofocus: true,
       label: 'Source',
-      onpaste: function () {
+      onpaste () {
         setTimeout(function () {
           Service.getEmbedHtml(editor, win.toJSON())
             .then(
             addEmbedHtml(win, editor)
-            )["catch"](handleError(editor));
+            ).catch(handleError(editor));
         }, 1);
       },
-      onchange: function (e) {
+      onchange (e) {
         Service.getEmbedHtml(editor, win.toJSON())
           .then(
           addEmbedHtml(win, editor)
-          )["catch"](handleError(editor));
+          ).catch(handleError(editor));
 
         populateMeta(win, e.meta);
       },
-      onbeforecall: function (e) {
+      onbeforecall (e) {
         e.meta = win.toJSON();
       }
     }
   ];
 
-  var advancedFormItems = [];
+  const advancedFormItems = [];
 
-  var reserialise = function (update) {
+  const reserialise = function (update) {
     update(win);
     data = win.toJSON();
     win.find('#embed').value(UpdateHtml.updateHtml(data.embed, data));
@@ -165,13 +165,13 @@ var showDialog = function (editor) {
   }
 
   if (Settings.hasDimensions(editor)) {
-    var control = SizeManager.createUi(reserialise);
+    const control = SizeManager.createUi(reserialise);
     generalFormItems.push(control);
   }
 
   data = getData(editor);
 
-  var embedTextBox = {
+  const embedTextBox = {
     id: 'mcemediasource',
     type: 'textbox',
     flex: 1,
@@ -182,7 +182,7 @@ var showDialog = function (editor) {
     label: 'Source'
   };
 
-  var updateValueOnChange = function () {
+  const updateValueOnChange = function () {
     data = Tools.extend({}, HtmlToData.htmlToData(Settings.getScripts(editor), this.value()));
     this.parent().parent().fromJSON(data);
   };
@@ -191,18 +191,18 @@ var showDialog = function (editor) {
 
   win = editor.windowManager.open({
     title: 'Insert/edit media',
-    data: data,
+    data,
     bodyType: 'tabpanel',
     body: [
       {
         title: 'General',
-        type: "form",
+        type: 'form',
         items: generalFormItems
       },
 
       {
         title: 'Embed',
-        type: "container",
+        type: 'container',
         layout: 'flex',
         direction: 'column',
         align: 'stretch',
@@ -220,11 +220,11 @@ var showDialog = function (editor) {
 
       {
         title: 'Advanced',
-        type: "form",
+        type: 'form',
         items: advancedFormItems
       }
     ],
-    onSubmit: function () {
+    onSubmit () {
       SizeManager.updateSize(win);
       submitForm(win, editor);
     }
@@ -234,5 +234,5 @@ var showDialog = function (editor) {
 };
 
 export default {
-  showDialog: showDialog
+  showDialog
 };

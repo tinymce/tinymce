@@ -10,12 +10,12 @@
 
 import Actions from '../core/Actions';
 
-var register = function (editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState) {
+const register = function (editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState) {
   editor.addCommand('mceSpellCheck', function () {
     Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
   });
 };
 
 export default {
-  register: register
+  register
 };

@@ -10,14 +10,14 @@
 
 import Delete from '../core/Delete';
 
-var get = function (editor) {
+const get = function (editor) {
   return {
-    backspaceDelete: function (isForward) {
+    backspaceDelete (isForward) {
       Delete.backspaceDelete(editor, isForward);
     }
   };
 };
 
 export default {
-  get: get
+  get
 };

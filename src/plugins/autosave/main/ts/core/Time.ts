@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var parse = function (time, defaultTime) {
-  var multiples = {
+const parse = function (time, defaultTime) {
+  const multiples = {
     s: 1000,
     m: 60000
   };
@@ -20,5 +20,5 @@ var parse = function (time, defaultTime) {
 };
 
 export default {
-  parse: parse
+  parse
 };

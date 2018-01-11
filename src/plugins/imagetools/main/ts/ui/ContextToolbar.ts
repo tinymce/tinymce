@@ -12,7 +12,7 @@ import { Fun } from '@ephox/katamari';
 import Settings from '../api/Settings';
 import Actions from '../core/Actions';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addContextToolbar(
     Fun.curry(Actions.isEditableImage, editor),
     Settings.getToolbarItems(editor)
@@ -20,5 +20,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

@@ -23,15 +23,15 @@ import Tools from '../util/Tools';
  * @private
  */
 
-"use strict";
-
 export default function (document, settings?) {
-  var idCount = 0, loadedStates = {}, maxLoadTime;
+  let idCount = 0;
+  const loadedStates = {};
+  let maxLoadTime;
 
   settings = settings || {};
   maxLoadTime = settings.maxLoadTime || 5000;
 
-  var appendToHead = function (node) {
+  const appendToHead = function (node) {
     document.getElementsByTagName('head')[0].appendChild(node);
   };
 
@@ -43,11 +43,12 @@ export default function (document, settings?) {
    * @param {Function} loadedCallback Callback to be executed when loaded.
    * @param {Function} errorCallback Callback to be executed when failed loading.
    */
-  var load = function (url, loadedCallback, errorCallback) {
-    var link, style, startTime, state;
+  const load = function (url, loadedCallback, errorCallback) {
+    let link, style, startTime, state;
 
-    var passed = function () {
-      var callbacks = state.passed, i = callbacks.length;
+    const passed = function () {
+      const callbacks = state.passed;
+      let i = callbacks.length;
 
       while (i--) {
         callbacks[i]();
@@ -58,8 +59,9 @@ export default function (document, settings?) {
       state.failed = [];
     };
 
-    var failed = function () {
-      var callbacks = state.failed, i = callbacks.length;
+    const failed = function () {
+      const callbacks = state.failed;
+      let i = callbacks.length;
 
       while (i--) {
         callbacks[i]();
@@ -71,13 +73,13 @@ export default function (document, settings?) {
     };
 
     // Sniffs for older WebKit versions that have the link.onload but a broken one
-    var isOldWebKit = function () {
-      var webKitChunks = navigator.userAgent.match(/WebKit\/(\d*)/);
+    const isOldWebKit = function () {
+      const webKitChunks = navigator.userAgent.match(/WebKit\/(\d*)/);
       return !!(webKitChunks && parseInt(webKitChunks[1], 10) < 536);
     };
 
     // Calls the waitCallback until the test returns true or the timeout occurs
-    var wait = function (testCallback, waitCallback) {
+    const wait = function (testCallback, waitCallback) {
       if (!testCallback()) {
         // Wait for timeout
         if ((new Date().getTime()) - startTime < maxLoadTime) {
@@ -90,9 +92,10 @@ export default function (document, settings?) {
 
     // Workaround for WebKit that doesn't properly support the onload event for link elements
     // Or WebKit that fires the onload event before the StyleSheet is added to the document
-    var waitForWebKitLinkLoaded = function () {
+    const waitForWebKitLinkLoaded = function () {
       wait(function () {
-        var styleSheets = document.styleSheets, styleSheet, i = styleSheets.length, owner;
+        const styleSheets = document.styleSheets;
+        let styleSheet, i = styleSheets.length, owner;
 
         while (i--) {
           styleSheet = styleSheets[i];
@@ -106,11 +109,11 @@ export default function (document, settings?) {
     };
 
     // Workaround for older Geckos that doesn't have any onload event for StyleSheets
-    var waitForGeckoLinkLoaded = function () {
+    const waitForGeckoLinkLoaded = function () {
       wait(function () {
         try {
           // Accessing the cssRules will throw an exception until the CSS file is loaded
-          var cssRules = style.sheet.cssRules;
+          const cssRules = style.sheet.cssRules;
           passed();
           return !!cssRules;
         } catch (ex) {
@@ -141,18 +144,18 @@ export default function (document, settings?) {
     }
 
     // Is loading wait for it to pass
-    if (state.status == 1) {
+    if (state.status === 1) {
       return;
     }
 
     // Has finished loading and was success
-    if (state.status == 2) {
+    if (state.status === 2) {
       passed();
       return;
     }
 
     // Has finished loading and was a failure
-    if (state.status == 3) {
+    if (state.status === 3) {
       failed();
       return;
     }
@@ -168,13 +171,13 @@ export default function (document, settings?) {
     startTime = new Date().getTime();
 
     // Feature detect onload on link element and sniff older webkits since it has an broken onload event
-    if ("onload" in link && !isOldWebKit()) {
+    if ('onload' in link && !isOldWebKit()) {
       link.onload = waitForWebKitLinkLoaded;
       link.onerror = failed;
     } else {
       // Sniff for old Firefox that doesn't support the onload event on link elements
       // TODO: Remove this in the future when everyone uses modern browsers
-      if (navigator.userAgent.indexOf("Firefox") > 0) {
+      if (navigator.userAgent.indexOf('Firefox') > 0) {
         style = document.createElement('style');
         style.textContent = '@import "' + url + '"';
         waitForGeckoLinkLoaded();
@@ -190,7 +193,7 @@ export default function (document, settings?) {
     link.href = url;
   };
 
-  var loadF = function (url) {
+  const loadF = function (url) {
     return Future.nu(function (resolve) {
       load(
         url,
@@ -200,13 +203,13 @@ export default function (document, settings?) {
     });
   };
 
-  var unbox = function (result) {
+  const unbox = function (result) {
     return result.fold(Fun.identity, Fun.identity);
   };
 
-  var loadAll = function (urls, success, failure) {
+  const loadAll = function (urls, success, failure) {
     Futures.par(Arr.map(urls, loadF)).get(function (result) {
-      var parts = Arr.partition(result, function (r) {
+      const parts = Arr.partition(result, function (r) {
         return r.isValue();
       });
 
@@ -219,7 +222,7 @@ export default function (document, settings?) {
   };
 
   return {
-    load: load,
-    loadAll: loadAll
+    load,
+    loadAll
   };
-};
+}

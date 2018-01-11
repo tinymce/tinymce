@@ -10,11 +10,11 @@
 
 import Events from '../api/Events';
 
-var insertChar = function (editor, chr) {
-  var evtChr = Events.fireInsertCustomChar(editor, chr).chr;
+const insertChar = function (editor, chr) {
+  const evtChr = Events.fireInsertCustomChar(editor, chr).chr;
   editor.execCommand('mceInsertContent', false, evtChr);
 };
 
 export default {
-  insertChar: insertChar
+  insertChar
 };

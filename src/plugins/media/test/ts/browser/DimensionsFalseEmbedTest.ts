@@ -1,10 +1,7 @@
 import { ApproxStructure } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
 import { Waiter } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
-import { TinyDom } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/media/Plugin';
@@ -12,14 +9,14 @@ import Utils from '../module/test/Utils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
   Theme();
 
-  var struct = ApproxStructure.build(function (s, str) {
+  const struct = ApproxStructure.build(function (s, str) {
     return s.element('body', {
       children: [
         s.element('p', {
@@ -46,8 +43,8 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', fun
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
-    var tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Utils.sOpenDialog(tinyUi),
@@ -65,10 +62,9 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', fun
       )
     ], onSuccess, onFailure);
   }, {
-    plugins: ["media"],
-    toolbar: "media",
+    plugins: ['media'],
+    toolbar: 'media',
     media_dimensions: false,
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

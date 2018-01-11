@@ -8,27 +8,27 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var stringRepeat = function (string, repeats) {
-  var str = '';
+const stringRepeat = function (string, repeats) {
+  let str = '';
 
-  for (var index = 0; index < repeats; index++) {
+  for (let index = 0; index < repeats; index++) {
     str += string;
   }
 
   return str;
 };
 
-var isVisualCharsEnabled = function (editor) {
+const isVisualCharsEnabled = function (editor) {
   return editor.plugins.visualchars ? editor.plugins.visualchars.isEnabled() : false;
 };
 
-var insertNbsp = function (editor, times) {
-  var nbsp = isVisualCharsEnabled(editor) ? '<span class="mce-nbsp">&nbsp;</span>' : '&nbsp;';
+const insertNbsp = function (editor, times) {
+  const nbsp = isVisualCharsEnabled(editor) ? '<span class="mce-nbsp">&nbsp;</span>' : '&nbsp;';
 
   editor.insertContent(stringRepeat(nbsp, times));
   editor.dom.setAttrib(editor.dom.select('span.mce-nbsp'), 'data-mce-bogus', '1');
 };
 
 export default {
-  insertNbsp: insertNbsp
+  insertNbsp
 };

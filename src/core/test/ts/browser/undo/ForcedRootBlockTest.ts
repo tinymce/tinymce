@@ -5,10 +5,10 @@ import Levels from 'tinymce/core/undo/Levels';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
@@ -16,11 +16,11 @@ UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function() {
     editor.getBody().innerHTML = '<strong>a</strong> <span>b</span>';
 
     LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
-      'beforeBookmark': null,
-      'bookmark': null,
-      'content': '<strong>a</strong> <span>b</span>',
-      'fragments': null,
-      'type': 'complete'
+      beforeBookmark: null,
+      bookmark: null,
+      content: '<strong>a</strong> <span>b</span>',
+      fragments: null,
+      type: 'complete'
     });
   });
 
@@ -28,24 +28,24 @@ UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function() {
     editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <strong>a</strong> <span>b</span>';
 
     LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
-      'beforeBookmark': null,
-      'bookmark': null,
-      'content': '',
-      'fragments': [
-        "<iframe src=\"about:blank\"></iframe>",
-        " ",
-        "<strong>a</strong>",
-        " ",
-        "<span>b</span>"
+      beforeBookmark: null,
+      bookmark: null,
+      content: '',
+      fragments: [
+        '<iframe src="about:blank"></iframe>',
+        ' ',
+        '<strong>a</strong>',
+        ' ',
+        '<span>b</span>'
       ],
-      'type': 'fragmented'
+      type: 'fragmented'
     });
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
-    selector: "textarea",
+    selector: 'textarea',
     add_unload_trigger: false,
     disable_nodechange: true,
     entities: 'raw',
@@ -53,4 +53,3 @@ UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

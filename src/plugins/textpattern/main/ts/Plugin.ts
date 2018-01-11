@@ -15,11 +15,11 @@ import Settings from './api/Settings';
 import Keyboard from './core/Keyboard';
 
 PluginManager.add('textpattern', function (editor) {
-  var patternsState = Cell(Settings.getPatterns(editor.settings));
+  const patternsState = Cell(Settings.getPatterns(editor.settings));
 
   Keyboard.setup(editor, patternsState);
 
   return Api.get(patternsState);
 });
 
-export default function () { };
+export default function () { }

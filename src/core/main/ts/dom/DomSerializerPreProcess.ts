@@ -12,9 +12,9 @@ import { Merger } from '@ephox/katamari';
 import Events from '../api/Events';
 import Tools from '../util/Tools';
 
-var preProcess = function (editor, node, args) {
-  var impl, doc, oldDoc;
-  var dom = editor.dom;
+const preProcess = function (editor, node, args) {
+  let impl, doc, oldDoc;
+  const dom = editor.dom;
 
   node = node.cloneNode(true);
 
@@ -42,7 +42,7 @@ var preProcess = function (editor, node, args) {
     dom.doc = doc;
   }
 
-  Events.firePreProcess(editor, Merger.merge(args, { node: node }));
+  Events.firePreProcess(editor, Merger.merge(args, { node }));
 
   if (oldDoc) {
     dom.doc = oldDoc;
@@ -51,14 +51,14 @@ var preProcess = function (editor, node, args) {
   return node;
 };
 
-var shouldFireEvent = function (editor, args) {
+const shouldFireEvent = function (editor, args) {
   return editor && editor.hasEventListeners('PreProcess') && !args.no_events;
 };
 
-var process = function (editor, node, args) {
+const process = function (editor, node, args) {
   return shouldFireEvent(editor, args) ? preProcess(editor, node, args) : node;
 };
 
 export default {
-  process: process
+  process
 };

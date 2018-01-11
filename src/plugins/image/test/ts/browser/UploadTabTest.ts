@@ -13,23 +13,23 @@ import Theme from 'tinymce/themes/modern/Theme';
 import Conversions from 'tinymce/core/file/Conversions';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var src = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
-  var b64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
+  const src = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
+  const b64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
 
   Theme();
   Plugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var api = TinyApis(editor);
-    var ui = TinyUi(editor);
+    const api = TinyApis(editor);
+    const ui = TinyUi(editor);
 
-    var cPopupToDialog = function (selector) {
+    const cPopupToDialog = function (selector) {
       return Chain.fromChains([
-        ui.cWaitForPopup("Locate popup", selector),
+        ui.cWaitForPopup('Locate popup', selector),
         Chain.on(function (container, next, die) {
           return Arr.find(editor.windowManager.getWindows(), function (win) {
             return container.dom().id === win._id;
@@ -40,28 +40,28 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
       ]);
     };
 
-    var sAssertImageTab = function (title, isPresent) {
+    const sAssertImageTab = function (title, isPresent) {
       return GeneralSteps.sequence([
-        ui.sClickOnToolbar("Trigger Image dialog", 'div[aria-label="Insert/edit image"]'),
+        ui.sClickOnToolbar('Trigger Image dialog', 'div[aria-label="Insert/edit image"]'),
         Chain.asStep({}, [
-          ui.cWaitForPopup("Wait for Image dialog", 'div[role="dialog"][aria-label="Insert/edit image"]'),
+          ui.cWaitForPopup('Wait for Image dialog', 'div[role="dialog"][aria-label="Insert/edit image"]'),
           Chain.op(function (container) {
-            var expected = {};
+            const expected = {};
             expected['.mce-tab:contains("' + title + '")'] = isPresent ? 1 : 0;
-            Assertions.assertPresence("Asserting presence", expected, container);
+            Assertions.assertPresence('Asserting presence', expected, container);
           })
         ]),
-        ui.sClickOnUi("Close dialog", 'button:contains("Cancel")')
+        ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
       ]);
     };
 
-    var sTriggerUpload = Step.async(function (next, die) {
+    const sTriggerUpload = Step.async(function (next, die) {
       Conversions.uriToBlob(b64).then(function (blob) {
         Pipeline.async({}, [
           Chain.asStep({}, [
             cPopupToDialog('div[role="dialog"][aria-label="Insert/edit image"]'),
             Chain.op(function (win) {
-              var browseBtn = win.find('browsebutton')[0];
+              const browseBtn = win.find('browsebutton')[0];
               browseBtn.value = function () {
                 return blob;
               };
@@ -72,12 +72,11 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
       });
     });
 
-
-    var sAssertTextValue = function (fieldName, value) {
+    const sAssertTextValue = function (fieldName, value) {
       return Chain.asStep({}, [
         cPopupToDialog('div[role="dialog"][aria-label="Insert/edit image"]'),
         Chain.op(function (win) {
-          Assertions.assertEq("Assert field " + src + " value ", value, win.find('#' + fieldName).value());
+          Assertions.assertEq('Assert field ' + src + ' value ', value, win.find('#' + fieldName).value());
         })
       ]);
     };
@@ -89,7 +88,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
         sAssertImageTab('Upload', false)
       ])),
 
-      Logger.t("Upload tab should be present when images_upload_url is set to some truthy value", GeneralSteps.sequence([
+      Logger.t('Upload tab should be present when images_upload_url is set to some truthy value', GeneralSteps.sequence([
         api.sSetContent('<p><img src="' + src + '" /></p>'),
         api.sSelect('img', []),
         api.sSetSetting('image_advtab', false), // make sure that Advanced tab appears separately
@@ -102,7 +101,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
         sAssertImageTab('Advanced', true)
       ])),
 
-      Logger.t("Upload tab should be present when images_upload_handler is set to some truthy value", GeneralSteps.sequence([
+      Logger.t('Upload tab should be present when images_upload_handler is set to some truthy value', GeneralSteps.sequence([
         api.sSetContent('<p><img src="' + src + '" /></p>'),
         api.sSelect('img', []),
         api.sSetSetting('image_advtab', false), // make sure that Advanced tab appears separately
@@ -117,45 +116,45 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
         sAssertImageTab('Advanced', true)
       ])),
 
-      Logger.t("Image uploader test with custom route", GeneralSteps.sequence([
+      Logger.t('Image uploader test with custom route', GeneralSteps.sequence([
         api.sSetContent(''),
         api.sSetSetting('images_upload_url', '/custom/imageUpload'),
-        ui.sClickOnToolbar("Trigger Image dialog", 'div[aria-label="Insert/edit image"]'),
-        ui.sWaitForPopup("Wait for Image dialog", 'div[role="dialog"][aria-label="Insert/edit image"]'),
-        ui.sClickOnUi("Switch to Upload tab", '.mce-tab:contains("Upload")'),
+        ui.sClickOnToolbar('Trigger Image dialog', 'div[aria-label="Insert/edit image"]'),
+        ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"][aria-label="Insert/edit image"]'),
+        ui.sClickOnUi('Switch to Upload tab', '.mce-tab:contains("Upload")'),
         sTriggerUpload,
-        ui.sWaitForUi("Wait for General tab to activate", '.mce-tab.mce-active:contains("General")'),
+        ui.sWaitForUi('Wait for General tab to activate', '.mce-tab.mce-active:contains("General")'),
         sAssertTextValue('src', 'uploaded_image.jpg'),
         api.sDeleteSetting('images_upload_url'),
-        ui.sClickOnUi("Close dialog", 'button:contains("Cancel")')
+        ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
       ])),
 
-      Logger.t("Image uploader test with images_upload_handler", GeneralSteps.sequence([
+      Logger.t('Image uploader test with images_upload_handler', GeneralSteps.sequence([
         api.sSetContent(''),
         api.sSetSetting('images_upload_handler', function (blobInfo, success) {
           return success('file.jpg');
         }),
-        ui.sClickOnToolbar("Trigger Image dialog", 'div[aria-label="Insert/edit image"]'),
-        ui.sWaitForPopup("Wait for Image dialog", 'div[role="dialog"][aria-label="Insert/edit image"]'),
-        ui.sClickOnUi("Switch to Upload tab", '.mce-tab:contains("Upload")'),
+        ui.sClickOnToolbar('Trigger Image dialog', 'div[aria-label="Insert/edit image"]'),
+        ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"][aria-label="Insert/edit image"]'),
+        ui.sClickOnUi('Switch to Upload tab', '.mce-tab:contains("Upload")'),
         sTriggerUpload,
-        ui.sWaitForUi("Wait for General tab to activate", '.mce-tab.mce-active:contains("General")'),
+        ui.sWaitForUi('Wait for General tab to activate', '.mce-tab.mce-active:contains("General")'),
         sAssertTextValue('src', 'file.jpg'),
-        ui.sClickOnUi("Close dialog", 'button:contains("Cancel")')
+        ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
       ])),
 
-      Logger.t("Test that we get full base64 string in images_upload_handler", GeneralSteps.sequence([
+      Logger.t('Test that we get full base64 string in images_upload_handler', GeneralSteps.sequence([
         api.sSetContent(''),
         api.sSetSetting('images_upload_handler', function (blobInfo, success) {
           return success(blobInfo.base64());
         }),
-        ui.sClickOnToolbar("Trigger Image dialog", 'div[aria-label="Insert/edit image"]'),
-        ui.sWaitForPopup("Wait for Image dialog", 'div[role="dialog"][aria-label="Insert/edit image"]'),
-        ui.sClickOnUi("Switch to Upload tab", '.mce-tab:contains("Upload")'),
+        ui.sClickOnToolbar('Trigger Image dialog', 'div[aria-label="Insert/edit image"]'),
+        ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"][aria-label="Insert/edit image"]'),
+        ui.sClickOnUi('Switch to Upload tab', '.mce-tab:contains("Upload")'),
         sTriggerUpload,
-        ui.sWaitForUi("Wait for General tab to activate", '.mce-tab.mce-active:contains("General")'),
+        ui.sWaitForUi('Wait for General tab to activate', '.mce-tab.mce-active:contains("General")'),
         sAssertTextValue('src', b64.split(',')[1]),
-        ui.sClickOnUi("Close dialog", 'button:contains("Cancel")')
+        ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
       ]))
     ], onSuccess, onFailure);
   }, {
@@ -164,4 +163,3 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

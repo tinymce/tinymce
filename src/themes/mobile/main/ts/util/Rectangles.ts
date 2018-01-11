@@ -6,9 +6,9 @@ import { Awareness } from '@ephox/sugar';
 import { Selection } from '@ephox/sugar';
 import { WindowSelection } from '@ephox/sugar';
 
-var COLLAPSED_WIDTH = 2;
+const COLLAPSED_WIDTH = 2;
 
-var collapsedRect = function (rect) {
+const collapsedRect = function (rect) {
   return {
     left: rect.left,
     top: rect.top,
@@ -19,7 +19,7 @@ var collapsedRect = function (rect) {
   };
 };
 
-var toRect = function (rawRect) {
+const toRect = function (rawRect) {
   return {
     left: Fun.constant(rawRect.left),
     top: Fun.constant(rawRect.top),
@@ -30,26 +30,26 @@ var toRect = function (rawRect) {
   };
 };
 
-var getRectsFromRange = function (range) {
+const getRectsFromRange = function (range) {
   if (! range.collapsed) {
     return Arr.map(range.getClientRects(), toRect);
   } else {
-    var start = Element.fromDom(range.startContainer);
+    const start = Element.fromDom(range.startContainer);
     return Traverse.parent(start).bind(function (parent) {
-      var selection = Selection.exact(start, range.startOffset, parent, Awareness.getEnd(parent));
-      var optRect = WindowSelection.getFirstRect(range.startContainer.ownerDocument.defaultView, selection);
+      const selection = Selection.exact(start, range.startOffset, parent, Awareness.getEnd(parent));
+      const optRect = WindowSelection.getFirstRect(range.startContainer.ownerDocument.defaultView, selection);
       return optRect.map(collapsedRect).map(Arr.pure);
     }).getOr([ ]);
   }
 };
 
-var getRectangles = function (cWin) {
-  var sel = cWin.getSelection();
+const getRectangles = function (cWin) {
+  const sel = cWin.getSelection();
   // In the Android WebView for some reason cWin.getSelection returns undefined.
   // The undefined check it is to avoid throwing of a JS error.
   return sel !== undefined && sel.rangeCount > 0 ? getRectsFromRange(sel.getRangeAt(0)) : [ ];
 };
 
-export default <any> {
-  getRectangles: getRectangles
+export default {
+  getRectangles
 };

@@ -18,16 +18,16 @@ import MatchFormat from './MatchFormat';
 import RangeWalk from '../selection/RangeWalk';
 import Tools from '../util/Tools';
 
-var MCE_ATTR_RE = /^(src|href|style)$/;
-var each = Tools.each;
-var isEq = FormatUtils.isEq;
+const MCE_ATTR_RE = /^(src|href|style)$/;
+const each = Tools.each;
+const isEq = FormatUtils.isEq;
 
-var isTableCell = function (node) {
+const isTableCell = function (node) {
   return /^(TH|TD)$/.test(node.nodeName);
 };
 
-var getContainer = function (ed, rng, start?) {
-  var container, offset, lastIdx;
+const getContainer = function (ed, rng, start?) {
+  let container, offset, lastIdx;
 
   container = rng[start ? 'startContainer' : 'endContainer'];
   offset = rng[start ? 'startOffset' : 'endOffset'];
@@ -55,8 +55,8 @@ var getContainer = function (ed, rng, start?) {
   return container;
 };
 
-var wrap = function (dom, node, name, attrs?) {
-  var wrapper = dom.create(name, attrs);
+const wrap = function (dom, node, name, attrs?) {
+  const wrapper = dom.create(name, attrs);
 
   node.parentNode.insertBefore(wrapper, node);
   wrapper.appendChild(node);
@@ -72,7 +72,7 @@ var wrap = function (dom, node, name, attrs?) {
  * @param {Object} format Format object o match with.
  * @return {boolean} true/false if the format matches.
  */
-var matchName = function (dom, node, format) {
+const matchName = function (dom, node, format) {
   // Check for inline match
   if (isEq(node, format.inline)) {
     return true;
@@ -89,11 +89,11 @@ var matchName = function (dom, node, format) {
   }
 };
 
-var isColorFormatAndAnchor = function (node, format) {
+const isColorFormatAndAnchor = function (node, format) {
   return format.links && node.tagName === 'A';
 };
 
-var find = function (dom, node, next, inc?) {
+const find = function (dom, node, next, inc?) {
   node = FormatUtils.getNonWhiteSpaceSibling(node, next, inc);
   return !node || (node.nodeName === 'BR' || dom.isBlock(node));
 };
@@ -116,9 +116,10 @@ var find = function (dom, node, next, inc?) {
  * @param {Object} format Format rule.
  * @return {Node} Input node.
  */
-var removeNode = function (ed, node, format) {
-  var parentNode = node.parentNode, rootBlockElm;
-  var dom = ed.dom, forcedRootBlock = ed.settings.forced_root_block;
+const removeNode = function (ed, node, format) {
+  const parentNode = node.parentNode;
+  let rootBlockElm;
+  const dom = ed.dom, forcedRootBlock = ed.settings.forced_root_block;
 
   if (format.block) {
     if (!forcedRootBlock) {
@@ -172,8 +173,9 @@ var removeNode = function (ed, node, format) {
  * @param {Node} compareNode Optional compare node, if specified the styles will be compared to that node.
  * @return {Boolean} True/false if the node was removed or not.
  */
-var removeFormat = function (ed, format, vars?, node?, compareNode?) {
-  var i, attrs, stylesModified, dom = ed.dom;
+const removeFormat = function (ed, format, vars?, node?, compareNode?) {
+  let i, attrs, stylesModified;
+  const dom = ed.dom;
 
   // Check if node matches format
   if (!matchName(dom, node, format) && !isColorFormatAndAnchor(node, format)) {
@@ -207,7 +209,7 @@ var removeFormat = function (ed, format, vars?, node?, compareNode?) {
 
     // Remove attributes
     each(format.attributes, function (value, name) {
-      var valueOut;
+      let valueOut;
 
       value = FormatUtils.replaceVars(value, vars);
 
@@ -239,7 +241,7 @@ var removeFormat = function (ed, format, vars?, node?, compareNode?) {
         }
 
         // IE6 has a bug where the attribute doesn't get removed correctly
-        if (name === "class") {
+        if (name === 'class') {
           node.removeAttribute('className');
         }
 
@@ -264,7 +266,7 @@ var removeFormat = function (ed, format, vars?, node?, compareNode?) {
     // Check for non internal attributes
     attrs = dom.getAttribs(node);
     for (i = 0; i < attrs.length; i++) {
-      var attrName = attrs[i].nodeName;
+      const attrName = attrs[i].nodeName;
       if (attrName.indexOf('_') !== 0 && attrName.indexOf('data-') !== 0) {
         return false;
       }
@@ -278,12 +280,12 @@ var removeFormat = function (ed, format, vars?, node?, compareNode?) {
   }
 };
 
-var findFormatRoot = function (editor, container, name, vars, similar) {
-  var formatRoot;
+const findFormatRoot = function (editor, container, name, vars, similar) {
+  let formatRoot;
 
   // Find format root
   each(FormatUtils.getParents(editor.dom, container.parentNode).reverse(), function (parent) {
-    var format;
+    let format;
 
     // Find format root element
     if (!formatRoot && parent.id !== '_start' && parent.id !== '_end') {
@@ -298,8 +300,9 @@ var findFormatRoot = function (editor, container, name, vars, similar) {
   return formatRoot;
 };
 
-var wrapAndSplit = function (editor, formatList, formatRoot, container, target, split, format, vars) {
-  var parent, clone, lastClone, firstClone, i, formatRootParent, dom = editor.dom;
+const wrapAndSplit = function (editor, formatList, formatRoot, container, target, split, format, vars) {
+  let parent, clone, lastClone, firstClone, i, formatRootParent;
+  const dom = editor.dom;
 
   // Format root found then clone formats and split it
   if (formatRoot) {
@@ -344,23 +347,25 @@ var wrapAndSplit = function (editor, formatList, formatRoot, container, target, 
   return container;
 };
 
-var remove = function (ed, name, vars?, node?, similar?) {
-  var formatList = ed.formatter.get(name), format = formatList[0];
-  var bookmark, rng, contentEditable = true, dom = ed.dom, selection = ed.selection;
+const remove = function (ed, name, vars?, node?, similar?) {
+  const formatList = ed.formatter.get(name), format = formatList[0];
+  let bookmark, rng, contentEditable = true;
+  const dom = ed.dom;
+  const selection = ed.selection;
 
-  var splitToFormatRoot = function (container) {
-    var formatRoot = findFormatRoot(ed, container, name, vars, similar);
+  const splitToFormatRoot = function (container) {
+    const formatRoot = findFormatRoot(ed, container, name, vars, similar);
     return wrapAndSplit(ed, formatList, formatRoot, container, container, true, format, vars);
   };
 
   // Merges the styles for each node
-  var process = function (node) {
-    var children, i, l, lastContentEditable, hasContentEditableState;
+  const process = function (node) {
+    let children, i, l, lastContentEditable, hasContentEditableState;
 
     // Node has a contentEditable value
     if (NodeType.isElement(node) && dom.getContentEditable(node)) {
       lastContentEditable = contentEditable;
-      contentEditable = dom.getContentEditable(node) === "true";
+      contentEditable = dom.getContentEditable(node) === 'true';
       hasContentEditableState = true; // We don't want to wrap the container only it's children
     }
 
@@ -390,9 +395,9 @@ var remove = function (ed, name, vars?, node?, similar?) {
     }
   };
 
-  var unwrap = function (start?) {
-    var node = dom.get(start ? '_start' : '_end'),
-      out = node[start ? 'firstChild' : 'lastChild'];
+  const unwrap = function (start?) {
+    const node = dom.get(start ? '_start' : '_end');
+    let out = node[start ? 'firstChild' : 'lastChild'];
 
     // If the end is placed within the start the result will be removed
     // So this checks if the out node is a bookmark node if it is it
@@ -411,9 +416,9 @@ var remove = function (ed, name, vars?, node?, similar?) {
     return out;
   };
 
-  var removeRngStyle = function (rng) {
-    var startContainer, endContainer;
-    var commonAncestorContainer = rng.commonAncestorContainer;
+  const removeRngStyle = function (rng) {
+    let startContainer, endContainer;
+    const commonAncestorContainer = rng.commonAncestorContainer;
 
     rng = ExpandRange.expandRng(ed, rng, formatList, true);
 
@@ -426,7 +431,7 @@ var remove = function (ed, name, vars?, node?, similar?) {
         // so let's see if we can use the first child instead
         // This will happen if you triple click a table cell and use remove formatting
         if (/^(TR|TH|TD)$/.test(startContainer.nodeName) && startContainer.firstChild) {
-          if (startContainer.nodeName === "TR") {
+          if (startContainer.nodeName === 'TR') {
             startContainer = startContainer.firstChild.firstChild || startContainer;
           } else {
             startContainer = startContainer.firstChild || startContainer;
@@ -441,15 +446,15 @@ var remove = function (ed, name, vars?, node?, similar?) {
         }
 
         if (dom.isChildOf(startContainer, endContainer) && startContainer !== endContainer && !dom.isBlock(endContainer) && !isTableCell(startContainer) && !isTableCell(endContainer)) {
-          startContainer = wrap(dom, startContainer, 'span', { id: '_start', 'data-mce-type': 'bookmark' });
+          startContainer = wrap(dom, startContainer, 'span', { 'id': '_start', 'data-mce-type': 'bookmark' });
           splitToFormatRoot(startContainer);
           startContainer = unwrap(true);
           return;
         }
 
         // Wrap start/end nodes in span element since these might be cloned/moved
-        startContainer = wrap(dom, startContainer, 'span', { id: '_start', 'data-mce-type': 'bookmark' });
-        endContainer = wrap(dom, endContainer, 'span', { id: '_end', 'data-mce-type': 'bookmark' });
+        startContainer = wrap(dom, startContainer, 'span', { 'id': '_start', 'data-mce-type': 'bookmark' });
+        endContainer = wrap(dom, endContainer, 'span', { 'id': '_end', 'data-mce-type': 'bookmark' });
 
         // Split start/end
         splitToFormatRoot(startContainer);
@@ -478,11 +483,11 @@ var remove = function (ed, name, vars?, node?, similar?) {
         if (NodeType.isElement(node) && ed.dom.getStyle(node, 'text-decoration') === 'underline' &&
           node.parentNode && FormatUtils.getTextDecoration(dom, node.parentNode) === 'underline') {
           removeFormat(ed, {
-            'deep': false,
-            'exact': true,
-            'inline': 'span',
-            'styles': {
-              'textDecoration': 'underline'
+            deep: false,
+            exact: true,
+            inline: 'span',
+            styles: {
+              textDecoration: 'underline'
             }
           }, null, node);
         }
@@ -504,9 +509,9 @@ var remove = function (ed, name, vars?, node?, similar?) {
     return;
   }
 
-  if (dom.getContentEditable(selection.getNode()) === "false") {
+  if (dom.getContentEditable(selection.getNode()) === 'false') {
     node = selection.getNode();
-    for (var i = 0, l = formatList.length; i < l; i++) {
+    for (let i = 0, l = formatList.length; i < l; i++) {
       if (formatList[i].ceFalseOverride) {
         if (removeFormat(ed, formatList[i], vars, node, node)) {
           break;
@@ -535,6 +540,6 @@ var remove = function (ed, name, vars?, node?, similar?) {
 };
 
 export default {
-  removeFormat: removeFormat,
-  remove: remove
+  removeFormat,
+  remove
 };

@@ -11,7 +11,6 @@
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Factory from 'tinymce/core/ui/Factory';
 import I18n from 'tinymce/core/util/I18n';
-import Tools from 'tinymce/core/util/Tools';
 import Events from '../api/Events';
 import Settings from '../api/Settings';
 import A11y from '../ui/A11y';
@@ -22,26 +21,26 @@ import Sidebar from '../ui/Sidebar';
 import SkinLoaded from '../ui/SkinLoaded';
 import Toolbar from '../ui/Toolbar';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var switchMode = function (panel) {
+const switchMode = function (panel) {
   return function (e) {
     panel.find('*').disabled(e.mode === 'readonly');
   };
 };
 
-var editArea = function (border) {
+const editArea = function (border) {
   return {
     type: 'panel',
     name: 'iframe',
     layout: 'stack',
     classes: 'edit-area',
-    border: border,
+    border,
     html: ''
   };
 };
 
-var editAreaContainer = function (editor) {
+const editAreaContainer = function (editor) {
   return {
     type: 'panel',
     layout: 'stack',
@@ -54,8 +53,8 @@ var editAreaContainer = function (editor) {
   };
 };
 
-var render = function (editor, theme, args) {
-  var panel, resizeHandleCtrl, startSize;
+const render = function (editor, theme, args) {
+  let panel, resizeHandleCtrl, startSize;
 
   if (Settings.isSkinDisabled(editor) === false && args.skinUiCss) {
     DOM.styleSheetLoader.load(args.skinUiCss, SkinLoaded.fireSkinLoaded(editor));
@@ -83,13 +82,13 @@ var render = function (editor, theme, args) {
     ]
   });
 
-  if (Settings.getResize(editor) !== "none") {
+  if (Settings.getResize(editor) !== 'none') {
     resizeHandleCtrl = {
       type: 'resizehandle',
       direction: Settings.getResize(editor),
 
-      onResizeStart: function () {
-        var elm = editor.getContentAreaContainer().firstChild;
+      onResizeStart () {
+        const elm = editor.getContentAreaContainer().firstChild;
 
         startSize = {
           width: elm.clientWidth,
@@ -97,7 +96,7 @@ var render = function (editor, theme, args) {
         };
       },
 
-      onResize: function (e) {
+      onResize (e) {
         if (Settings.getResize(editor) === 'both') {
           Resize.resizeTo(editor, startSize.width + e.deltaX, startSize.height + e.deltaY);
         } else {
@@ -108,13 +107,13 @@ var render = function (editor, theme, args) {
   }
 
   if (Settings.hasStatusbar(editor)) {
-    var linkHtml = '<a href="https://www.tinymce.com/?utm_campaign=editor_referral&utm_medium=poweredby&utm_source=tinymce" rel="noopener" target="_blank">tinymce</a>';
-    var html = I18n.translate(['Powered by {0}', linkHtml]);
-    var brandingLabel = Settings.isBrandingEnabled(editor) ? { type: 'label', classes: 'branding', html: ' ' + html } : null;
+    const linkHtml = '<a href="https://www.tinymce.com/?utm_campaign=editor_referral&utm_medium=poweredby&utm_source=tinymce" rel="noopener" target="_blank">tinymce</a>';
+    const html = I18n.translate(['Powered by {0}', linkHtml]);
+    const brandingLabel = Settings.isBrandingEnabled(editor) ? { type: 'label', classes: 'branding', html: ' ' + html } : null;
 
     panel.add({
       type: 'panel', name: 'statusbar', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', ariaRoot: true, items: [
-        { type: 'elementpath', editor: editor },
+        { type: 'elementpath', editor },
         resizeHandleCtrl,
         brandingLabel
       ]
@@ -149,6 +148,6 @@ var render = function (editor, theme, args) {
   };
 };
 
-export default <any> {
-  render: render
+export default {
+  render
 };

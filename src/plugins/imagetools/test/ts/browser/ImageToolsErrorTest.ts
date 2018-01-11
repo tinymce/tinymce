@@ -4,32 +4,28 @@ import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Mouse } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { UiFinder } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyDom } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { Html } from '@ephox/sugar';
-import URI from 'tinymce/core/util/URI';
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
-import ImageOps from '../module/test/ImageOps';
 import ImageUtils from '../module/test/ImageUtils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var uploadHandlerState = ImageUtils.createStateContainer();
+UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const uploadHandlerState = ImageUtils.createStateContainer();
 
-  var corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
+  const corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
 
   Plugin();
   ModernTheme();
 
-  var sAssertErrorMessage = function (html) {
+  const sAssertErrorMessage = function (html) {
     return Chain.asStep(TinyDom.fromDom(document.body), [
       UiFinder.cWaitFor('Could not find notification', '.mce-notification-inner'),
       Chain.mapper(Html.get),
@@ -37,16 +33,15 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
     ]);
   };
 
-  var sCloseErrorMessage = Chain.asStep(TinyDom.fromDom(document.body), [
+  const sCloseErrorMessage = Chain.asStep(TinyDom.fromDom(document.body), [
     UiFinder.cWaitFor('Could not find notification', '.mce-notification > button'),
     Mouse.cClick
   ]);
 
-
   TinyLoader.setup(
     function (editor, onSuccess, onFailure) {
-      var tinyApis = TinyApis(editor);
-      var stepsWithTeardown = Arr.bind([
+      const tinyApis = TinyApis(editor);
+      const stepsWithTeardown = Arr.bind([
         Logger.t('incorrect service url no api key', GeneralSteps.sequence([
           uploadHandlerState.sResetState,
           tinyApis.sSetSetting('imagetools_proxy', 'http://0.0.0.0.0.0/'),
@@ -126,7 +121,6 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
         ];
       });
 
-
       Pipeline.async({}, stepsWithTeardown, onSuccess, onFailure);
     },
     {
@@ -138,4 +132,3 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
     failure
   );
 });
-

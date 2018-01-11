@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addButton('hr', {
     icon: 'hr',
     tooltip: 'Horizontal line',
@@ -24,5 +24,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

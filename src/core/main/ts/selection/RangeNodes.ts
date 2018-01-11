@@ -8,18 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getSelectedNode = function (range) {
-  var startContainer = range.startContainer,
+const getSelectedNode = function (range) {
+  const startContainer = range.startContainer,
     startOffset = range.startOffset;
 
-  if (startContainer.hasChildNodes() && range.endOffset == startOffset + 1) {
+  if (startContainer.hasChildNodes() && range.endOffset === startOffset + 1) {
     return startContainer.childNodes[startOffset];
   }
 
   return null;
 };
 
-var getNode = function (container, offset) {
+const getNode = function (container, offset) {
   if (container.nodeType === 1 && container.hasChildNodes()) {
     if (offset >= container.childNodes.length) {
       offset = container.childNodes.length - 1;
@@ -32,6 +32,6 @@ var getNode = function (container, offset) {
 };
 
 export default {
-  getSelectedNode: getSelectedNode,
-  getNode: getNode
+  getSelectedNode,
+  getNode
 };

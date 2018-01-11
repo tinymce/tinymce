@@ -10,12 +10,12 @@
 
 import PluginManager from 'tinymce/core/PluginManager';
 
-var hasProPlugin = function (editor) {
+const hasProPlugin = function (editor) {
   // draw back if power version is requested and registered
   if (/(^|[ ,])powerpaste([, ]|$)/.test(editor.settings.plugins) && PluginManager.get('powerpaste')) {
 
-    if (typeof window.console !== "undefined" && window.console.log) {
-      window.console.log("PowerPaste is incompatible with Paste plugin! Remove 'paste' from the 'plugins' option.");
+    if (typeof window.console !== 'undefined' && window.console.log) {
+      window.console.log('PowerPaste is incompatible with Paste plugin! Remove \'paste\' from the \'plugins\' option.');
     }
     return true;
   } else {
@@ -24,5 +24,5 @@ var hasProPlugin = function (editor) {
 };
 
 export default {
-  hasProPlugin: hasProPlugin
+  hasProPlugin
 };

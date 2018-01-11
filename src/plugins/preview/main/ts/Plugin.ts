@@ -17,4 +17,4 @@ PluginManager.add('preview', function (editor) {
   Buttons.register(editor);
 });
 
-export default function () { };
+export default function () { }

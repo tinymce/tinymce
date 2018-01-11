@@ -17,9 +17,7 @@
  * @class tinymce.ui.Factory
  */
 
-"use strict";
-
-var types = {};
+const types = {};
 
 export default {
   /**
@@ -29,7 +27,7 @@ export default {
    * @param {String} type Type name for example "button".
    * @param {function} typeClass Class type function.
    */
-  add: function (type, typeClass) {
+  add (type, typeClass) {
     types[type.toLowerCase()] = typeClass;
   },
 
@@ -40,7 +38,7 @@ export default {
    * @param {String} type Type to look for.
    * @return {Boolean} true/false if the control by name exists.
    */
-  has: function (type) {
+  has (type) {
     return !!types[type.toLowerCase()];
   },
 
@@ -51,11 +49,11 @@ export default {
    * @param {String} type Type get.
    * @return {Object} Module or undefined.
    */
-  get: function (type) {
-    var lctype = type.toLowerCase();
-    var controlType = types.hasOwnProperty(lctype) ? types[lctype] : null;
+  get (type) {
+    const lctype = type.toLowerCase();
+    const controlType = types.hasOwnProperty(lctype) ? types[lctype] : null;
     if (controlType === null) {
-      throw new Error("Could not find module for type: " + type);
+      throw new Error('Could not find module for type: ' + type);
     }
 
     return controlType;
@@ -76,11 +74,11 @@ export default {
    * @param {Object/String} settings Name/Value object with items used to create the type.
    * @return {tinymce.ui.Control} Control instance based on the specified type.
    */
-  create: function (type, settings?) {
-    var ControlType;
+  create (type, settings?) {
+    let ControlType;
 
     // If string is specified then use it as the type
-    if (typeof type == 'string') {
+    if (typeof type === 'string') {
       settings = settings || {};
       settings.type = type;
     } else {
@@ -95,7 +93,7 @@ export default {
     // #if debug
 
     if (!ControlType) {
-      throw new Error("Could not find control by type: " + type);
+      throw new Error('Could not find control by type: ' + type);
     }
 
     // #endif

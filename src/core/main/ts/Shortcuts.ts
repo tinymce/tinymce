@@ -22,21 +22,24 @@ import Env from './Env';
  * editor.shortcuts.add('access+a', "description of the shortcut", function() {}); // "access" maps to ctrl+alt on Mac and shift+alt on PC
  */
 
-var each = Tools.each, explode = Tools.explode;
+const each = Tools.each, explode = Tools.explode;
 
-var keyCodeLookup = {
-  "f9": 120,
-  "f10": 121,
-  "f11": 122
+const keyCodeLookup = {
+  f9: 120,
+  f10: 121,
+  f11: 122
 };
 
-var modifierNames = Tools.makeMap('alt,ctrl,shift,meta,access');
+const modifierNames = Tools.makeMap('alt,ctrl,shift,meta,access');
 
 export default function (editor) {
-  var self = this, shortcuts = {}, pendingPatterns = [];
+  const self = this;
+  const shortcuts = {};
+  let pendingPatterns = [];
 
-  var parseShortcut = function (pattern) {
-    var id, key, shortcut: any = {};
+  const parseShortcut = function (pattern) {
+    let id, key;
+    const shortcut: any = {};
 
     // Parse modifiers and keys ctrl+alt+b for example
     each(explode(pattern, '+'), function (value) {
@@ -88,8 +91,8 @@ export default function (editor) {
     return shortcut;
   };
 
-  var createShortcut = function (pattern, desc?, cmdFunc?, scope?) {
-    var shortcuts;
+  const createShortcut = function (pattern, desc?, cmdFunc?, scope?) {
+    let shortcuts;
 
     shortcuts = Tools.map(explode(pattern, '>'), parseShortcut);
     shortcuts[shortcuts.length - 1] = Tools.extend(shortcuts[shortcuts.length - 1], {
@@ -103,28 +106,28 @@ export default function (editor) {
     });
   };
 
-  var hasModifier = function (e) {
+  const hasModifier = function (e) {
     return e.altKey || e.ctrlKey || e.metaKey;
   };
 
-  var isFunctionKey = function (e) {
-    return e.type === "keydown" && e.keyCode >= 112 && e.keyCode <= 123;
+  const isFunctionKey = function (e) {
+    return e.type === 'keydown' && e.keyCode >= 112 && e.keyCode <= 123;
   };
 
-  var matchShortcut = function (e, shortcut) {
+  const matchShortcut = function (e, shortcut) {
     if (!shortcut) {
       return false;
     }
 
-    if (shortcut.ctrl != e.ctrlKey || shortcut.meta != e.metaKey) {
+    if (shortcut.ctrl !== e.ctrlKey || shortcut.meta !== e.metaKey) {
       return false;
     }
 
-    if (shortcut.alt != e.altKey || shortcut.shift != e.shiftKey) {
+    if (shortcut.alt !== e.altKey || shortcut.shift !== e.shiftKey) {
       return false;
     }
 
-    if (e.keyCode == shortcut.keyCode || (e.charCode && e.charCode == shortcut.charCode)) {
+    if (e.keyCode === shortcut.keyCode || (e.charCode && e.charCode === shortcut.charCode)) {
       e.preventDefault();
       return true;
     }
@@ -132,7 +135,7 @@ export default function (editor) {
     return false;
   };
 
-  var executeShortcutAction = function (shortcut) {
+  const executeShortcutAction = function (shortcut) {
     return shortcut.func ? shortcut.func.call(shortcut.scope) : null;
   };
 
@@ -142,7 +145,7 @@ export default function (editor) {
         if (matchShortcut(e, shortcut)) {
           pendingPatterns = shortcut.subpatterns.slice(0);
 
-          if (e.type == "keydown") {
+          if (e.type === 'keydown') {
             executeShortcutAction(shortcut);
           }
 
@@ -152,7 +155,7 @@ export default function (editor) {
 
       if (matchShortcut(e, pendingPatterns[0])) {
         if (pendingPatterns.length === 1) {
-          if (e.type == "keydown") {
+          if (e.type === 'keydown') {
             executeShortcutAction(pendingPatterns[0]);
           }
         }
@@ -173,7 +176,7 @@ export default function (editor) {
    * @return {Boolean} true/false state if the shortcut was added or not.
    */
   self.add = function (pattern, desc, cmdFunc, scope) {
-    var cmd;
+    let cmd;
 
     cmd = cmdFunc;
 
@@ -188,7 +191,7 @@ export default function (editor) {
     }
 
     each(explode(Tools.trim(pattern.toLowerCase())), function (pattern) {
-      var shortcut = createShortcut(pattern, desc, cmdFunc, scope);
+      const shortcut = createShortcut(pattern, desc, cmdFunc, scope);
       shortcuts[shortcut.id] = shortcut;
     });
 
@@ -203,7 +206,7 @@ export default function (editor) {
    * @return {Boolean} true/false state if the shortcut was removed or not.
    */
   self.remove = function (pattern) {
-    var shortcut = createShortcut(pattern);
+    const shortcut = createShortcut(pattern);
 
     if (shortcuts[shortcut.id]) {
       delete shortcuts[shortcut.id];
@@ -212,4 +215,4 @@ export default function (editor) {
 
     return false;
   };
-};
+}

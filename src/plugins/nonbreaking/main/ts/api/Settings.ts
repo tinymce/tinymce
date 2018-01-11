@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getKeyboardSpaces = function (editor) {
-  var spaces = editor.getParam('nonbreaking_force_tab', 0);
+const getKeyboardSpaces = function (editor) {
+  const spaces = editor.getParam('nonbreaking_force_tab', 0);
 
   if (typeof spaces === 'boolean') {
     return spaces === true ? 3 : 0;
@@ -19,5 +19,5 @@ var getKeyboardSpaces = function (editor) {
 };
 
 export default {
-  getKeyboardSpaces: getKeyboardSpaces
+  getKeyboardSpaces
 };

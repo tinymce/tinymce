@@ -10,10 +10,10 @@
 
 import Dialog from '../ui/Dialog';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addCommand('mceImage', Dialog(editor).open);
 };
 
 export default {
-  register: register
+  register
 };

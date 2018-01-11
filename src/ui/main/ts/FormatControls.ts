@@ -26,7 +26,7 @@ import SimpleControls from './editorui/SimpleControls';
 import UndoRedo from './editorui/UndoRedo';
 import VisualAid from './editorui/VisualAid';
 
-var setupEnvironment = function () {
+const setupEnvironment = function () {
   Widget.tooltips = !Env.iOS;
 
   Control.translate = function (text) {
@@ -34,7 +34,7 @@ var setupEnvironment = function () {
   };
 };
 
-var setupUiContainer = function (editor) {
+const setupUiContainer = function (editor) {
   if (editor.settings.ui_container) {
     Env.container = SelectorFind.descendant(Element.fromDom(document.body), editor.settings.ui_container).fold(Fun.constant(null), function (elm) {
       return elm.dom();
@@ -42,19 +42,19 @@ var setupUiContainer = function (editor) {
   }
 };
 
-var setupRtlMode = function (editor) {
+const setupRtlMode = function (editor) {
   if (editor.rtl) {
     Control.rtl = true;
   }
 };
 
-var setupHideFloatPanels = function (editor) {
+const setupHideFloatPanels = function (editor) {
   editor.on('mousedown', function () {
     FloatPanel.hideAll();
   });
 };
 
-var setup = function (editor) {
+const setup = function (editor) {
   setupRtlMode(editor);
   setupHideFloatPanels(editor);
   setupUiContainer(editor);
@@ -71,6 +71,6 @@ var setup = function (editor) {
   InsertButton.register(editor);
 };
 
-export default <any> {
-  setup: setup
+export default {
+  setup
 };

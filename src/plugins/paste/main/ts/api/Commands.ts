@@ -10,7 +10,7 @@
 
 import Actions from '../core/Actions';
 
-var register = function (editor, clipboard, userIsInformedState) {
+const register = function (editor, clipboard, userIsInformedState) {
   editor.addCommand('mceTogglePlainTextPaste', function () {
     Actions.togglePlainTextPaste(editor, clipboard, userIsInformedState);
   });
@@ -27,5 +27,5 @@ var register = function (editor, clipboard, userIsInformedState) {
 };
 
 export default {
-  register: register
+  register
 };

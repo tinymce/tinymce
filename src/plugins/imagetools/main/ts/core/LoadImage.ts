@@ -10,9 +10,9 @@
 
 import Promise from 'tinymce/core/util/Promise';
 
-var loadImage = function (image) {
+const loadImage = function (image) {
   return new Promise(function (resolve) {
-    var loaded = function () {
+    const loaded = function () {
       image.removeEventListener('load', loaded);
       resolve(image);
     };
@@ -26,5 +26,5 @@ var loadImage = function (image) {
 };
 
 export default {
-  loadImage: loadImage
+  loadImage
 };

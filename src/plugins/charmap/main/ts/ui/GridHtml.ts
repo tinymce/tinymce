@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getHtml = function (charmap) {
-  var gridHtml, x, y;
-  var width = Math.min(charmap.length, 25);
-  var height = Math.ceil(charmap.length / width);
+const getHtml = function (charmap) {
+  let gridHtml, x, y;
+  const width = Math.min(charmap.length, 25);
+  const height = Math.ceil(charmap.length / width);
 
   gridHtml = '<table role="presentation" cellspacing="0" class="mce-charmap"><tbody>';
 
@@ -19,11 +19,11 @@ var getHtml = function (charmap) {
     gridHtml += '<tr>';
 
     for (x = 0; x < width; x++) {
-      var index = y * width + x;
+      const index = y * width + x;
       if (index < charmap.length) {
-        var chr = charmap[index];
-        var charCode = parseInt(chr[0], 10);
-        var chrText = chr ? String.fromCharCode(charCode) : '&nbsp;';
+        const chr = charmap[index];
+        const charCode = parseInt(chr[0], 10);
+        const chrText = chr ? String.fromCharCode(charCode) : '&nbsp;';
 
         gridHtml += (
           '<td title="' + chr[1] + '">' +
@@ -46,5 +46,5 @@ var getHtml = function (charmap) {
 };
 
 export default {
-  getHtml: getHtml
+  getHtml
 };

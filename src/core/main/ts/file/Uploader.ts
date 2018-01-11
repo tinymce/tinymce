@@ -9,7 +9,6 @@
  */
 
 import { XMLHttpRequest } from '@ephox/sand';
-import Fun from '../util/Fun';
 import Promise from '../util/Promise';
 import Tools from '../util/Tools';
 
@@ -33,12 +32,10 @@ import Tools from '../util/Tools';
  * });
  */
 
-
-
 export default function (uploadStatus, settings) {
-  var pendingPromises = {};
+  const pendingPromises = {};
 
-  var pathJoin = function (path1, path2) {
+  const pathJoin = function (path1, path2) {
     if (path1) {
       return path1.replace(/\/$/, '') + '/' + path2.replace(/^\//, '');
     }
@@ -46,8 +43,8 @@ export default function (uploadStatus, settings) {
     return path2;
   };
 
-  var defaultHandler = function (blobInfo, success, failure, progress) {
-    var xhr, formData;
+  const defaultHandler = function (blobInfo, success, failure, progress) {
+    let xhr, formData;
 
     xhr = new XMLHttpRequest();
     xhr.open('POST', settings.url);
@@ -58,21 +55,21 @@ export default function (uploadStatus, settings) {
     };
 
     xhr.onerror = function () {
-      failure("Image upload failed due to a XHR Transport error. Code: " + xhr.status);
+      failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
     };
 
     xhr.onload = function () {
-      var json;
+      let json;
 
       if (xhr.status < 200 || xhr.status >= 300) {
-        failure("HTTP Error: " + xhr.status);
+        failure('HTTP Error: ' + xhr.status);
         return;
       }
 
       json = JSON.parse(xhr.responseText);
 
-      if (!json || typeof json.location != "string") {
-        failure("Invalid JSON: " + xhr.responseText);
+      if (!json || typeof json.location !== 'string') {
+        failure('Invalid JSON: ' + xhr.responseText);
         return;
       }
 
@@ -85,30 +82,30 @@ export default function (uploadStatus, settings) {
     xhr.send(formData);
   };
 
-  var noUpload = function () {
+  const noUpload = function () {
     return new Promise(function (resolve) {
       resolve([]);
     });
   };
 
-  var handlerSuccess = function (blobInfo, url) {
+  const handlerSuccess = function (blobInfo, url) {
     return {
-      url: url,
-      blobInfo: blobInfo,
+      url,
+      blobInfo,
       status: true
     };
   };
 
-  var handlerFailure = function (blobInfo, error) {
+  const handlerFailure = function (blobInfo, error) {
     return {
       url: '',
-      blobInfo: blobInfo,
+      blobInfo,
       status: false,
-      error: error
+      error
     };
   };
 
-  var resolvePending = function (blobUri, result) {
+  const resolvePending = function (blobUri, result) {
     Tools.each(pendingPromises[blobUri], function (resolve) {
       resolve(result);
     });
@@ -116,31 +113,31 @@ export default function (uploadStatus, settings) {
     delete pendingPromises[blobUri];
   };
 
-  var uploadBlobInfo = function (blobInfo, handler, openNotification) {
+  const uploadBlobInfo = function (blobInfo, handler, openNotification) {
     uploadStatus.markPending(blobInfo.blobUri());
 
     return new Promise(function (resolve) {
-      var notification, progress;
+      let notification, progress;
 
-      var noop = function () {
+      const noop = function () {
       };
 
       try {
-        var closeNotification = function () {
+        const closeNotification = function () {
           if (notification) {
             notification.close();
             progress = noop; // Once it's closed it's closed
           }
         };
 
-        var success = function (url) {
+        const success = function (url) {
           closeNotification();
           uploadStatus.markUploaded(blobInfo.blobUri(), url);
           resolvePending(blobInfo.blobUri(), handlerSuccess(blobInfo, url));
           resolve(handlerSuccess(blobInfo, url));
         };
 
-        var failure = function (error) {
+        const failure = function (error) {
           closeNotification();
           uploadStatus.removeFailed(blobInfo.blobUri());
           resolvePending(blobInfo.blobUri(), handlerFailure(blobInfo, error));
@@ -166,12 +163,12 @@ export default function (uploadStatus, settings) {
     });
   };
 
-  var isDefaultHandler = function (handler) {
+  const isDefaultHandler = function (handler) {
     return handler === defaultHandler;
   };
 
-  var pendingUploadBlobInfo = function (blobInfo) {
-    var blobUri = blobInfo.blobUri();
+  const pendingUploadBlobInfo = function (blobInfo) {
+    const blobUri = blobInfo.blobUri();
 
     return new Promise(function (resolve) {
       pendingPromises[blobUri] = pendingPromises[blobUri] || [];
@@ -179,7 +176,7 @@ export default function (uploadStatus, settings) {
     });
   };
 
-  var uploadBlobs = function (blobInfos, openNotification) {
+  const uploadBlobs = function (blobInfos, openNotification) {
     blobInfos = Tools.grep(blobInfos, function (blobInfo) {
       return !uploadStatus.isUploaded(blobInfo.blobUri());
     });
@@ -190,7 +187,7 @@ export default function (uploadStatus, settings) {
     }));
   };
 
-  var upload = function (blobInfos, openNotification) {
+  const upload = function (blobInfos, openNotification) {
     return (!settings.url && isDefaultHandler(settings.handler)) ? noUpload() : uploadBlobs(blobInfos, openNotification);
   };
 
@@ -201,6 +198,6 @@ export default function (uploadStatus, settings) {
   }, settings);
 
   return {
-    upload: upload
+    upload
   };
-};
+}

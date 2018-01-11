@@ -22,9 +22,7 @@ import DomUtils from './DomUtils';
  * @setting {Number} activeTab Active tab index.
  */
 
-"use strict";
-
-export default <any> Panel.extend({
+export default Panel.extend({
   Defaults: {
     layout: 'absolute',
     defaults: {
@@ -38,26 +36,26 @@ export default <any> Panel.extend({
    * @method activateTab
    * @param {Number} idx Index of the tab to activate.
    */
-  activateTab: function (idx) {
-    var activeTabElm;
+  activateTab (idx) {
+    let activeTabElm;
 
     if (this.activeTabId) {
       activeTabElm = this.getEl(this.activeTabId);
       $(activeTabElm).removeClass(this.classPrefix + 'active');
-      activeTabElm.setAttribute('aria-selected', "false");
+      activeTabElm.setAttribute('aria-selected', 'false');
     }
 
     this.activeTabId = 't' + idx;
 
     activeTabElm = this.getEl('t' + idx);
-    activeTabElm.setAttribute('aria-selected', "true");
+    activeTabElm.setAttribute('aria-selected', 'true');
     $(activeTabElm).addClass(this.classPrefix + 'active');
 
     this.items()[idx].show().fire('showtab');
     this.reflow();
 
     this.items().each(function (item, i) {
-      if (idx != i) {
+      if (idx !== i) {
         item.hide();
       }
     });
@@ -69,14 +67,17 @@ export default <any> Panel.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, layout = self._layout, tabsHtml = '', prefix = self.classPrefix;
+  renderHtml () {
+    const self = this;
+    const layout = self._layout;
+    let tabsHtml = '';
+    const prefix = self.classPrefix;
 
     self.preRender();
     layout.preRender(self);
 
     self.items().each(function (ctrl, i) {
-      var id = self._id + '-t' + i;
+      const id = self._id + '-t' + i;
 
       ctrl.aria('role', 'tabpanel');
       ctrl.aria('labelledby', id);
@@ -106,8 +107,8 @@ export default <any> Panel.extend({
    *
    * @method postRender
    */
-  postRender: function () {
-    var self = this;
+  postRender () {
+    const self = this;
 
     self._super();
 
@@ -115,13 +116,13 @@ export default <any> Panel.extend({
     self.activateTab(self.settings.activeTab);
 
     this.on('click', function (e) {
-      var targetParent = e.target.parentNode;
+      const targetParent = e.target.parentNode;
 
-      if (targetParent && targetParent.id == self._id + '-head') {
-        var i = targetParent.childNodes.length;
+      if (targetParent && targetParent.id === self._id + '-head') {
+        let i = targetParent.childNodes.length;
 
         while (i--) {
-          if (targetParent.childNodes[i] == e.target) {
+          if (targetParent.childNodes[i] === e.target) {
             self.activateTab(i);
           }
         }
@@ -137,8 +138,9 @@ export default <any> Panel.extend({
    * @method initLayoutRect
    * @return {Object} Layout rect instance.
    */
-  initLayoutRect: function () {
-    var self = this, rect, minW, minH;
+  initLayoutRect () {
+    const self = this;
+    let rect, minW, minH;
 
     minW = DomUtils.getSize(self.getEl('head')).width;
     minW = minW < 0 ? 0 : minW;
@@ -163,7 +165,7 @@ export default <any> Panel.extend({
       });
     });
 
-    var headH = DomUtils.getSize(self.getEl('head')).height;
+    const headH = DomUtils.getSize(self.getEl('head')).height;
 
     self.settings.minWidth = minW;
     self.settings.minHeight = minH + headH;

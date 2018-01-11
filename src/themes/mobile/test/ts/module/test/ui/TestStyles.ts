@@ -11,10 +11,10 @@ import { Class } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';
 import { SelectorFind } from '@ephox/sugar';
 
-var styleClass = Id.generate('ui-test-styles');
+const styleClass = Id.generate('ui-test-styles');
 
-var addStyles = function () {
-  var link = Element.fromTag('link');
+const addStyles = function () {
+  const link = Element.fromTag('link');
   Attr.setAll(link, {
     rel: 'Stylesheet',
     href: '/project/js/tinymce/skins/lightgray/skin.mobile.min.css',
@@ -22,16 +22,16 @@ var addStyles = function () {
   });
   Class.add(link, styleClass);
 
-  var head = Element.fromDom(document.head);
+  const head = Element.fromDom(document.head);
   Insert.append(head, link);
 };
 
-var removeStyles = function () {
-  var head = Element.fromDom(document.head);
+const removeStyles = function () {
+  const head = Element.fromDom(document.head);
   SelectorFind.descendant(head, '.' + styleClass).each(Remove.remove);
 };
 
-var sWaitForToolstrip = function (realm) {
+const sWaitForToolstrip = function (realm) {
   return Waiter.sTryUntil(
     'Waiting until CSS has loaded',
     Chain.asStep(realm.element(), [
@@ -47,8 +47,8 @@ var sWaitForToolstrip = function (realm) {
   );
 };
 
-export default <any> {
-  addStyles: addStyles,
-  removeStyles: removeStyles,
-  sWaitForToolstrip: sWaitForToolstrip
+export default {
+  addStyles,
+  removeStyles,
+  sWaitForToolstrip
 };

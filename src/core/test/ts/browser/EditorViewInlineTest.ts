@@ -11,21 +11,21 @@ import EditorView from 'tinymce/core/EditorView';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sSetBodyStyles = function (editor, css) {
+  const sSetBodyStyles = function (editor, css) {
     return Step.sync(function () {
       Css.setAll(Element.fromDom(editor.getBody()), css);
     });
   };
 
-  var sTestIsXYInContentArea = function (editor, deltaX, deltaY) {
+  const sTestIsXYInContentArea = function (editor, deltaX, deltaY) {
     return Step.sync(function () {
-      var rect = editor.getBody().getBoundingClientRect();
+      const rect = editor.getBody().getBoundingClientRect();
 
       Assertions.assertEq(
         'Should be inside the area since the scrollbars are excluded',
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('isXYInContentArea without borders, margin', GeneralSteps.sequence([
@@ -68,4 +68,3 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

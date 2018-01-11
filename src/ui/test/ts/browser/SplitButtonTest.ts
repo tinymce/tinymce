@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import EventUtils from 'tinymce/core/dom/EventUtils';
 import UiUtils from '../module/test/UiUtils';
 import ViewBlock from '../module/test/ViewBlock';
@@ -9,16 +8,16 @@ import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.SplitButtonTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.ui.SplitButtonTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   // Registers ui widgets to factory
   Api.registerToFactory();
 
-  var createSplitButton = function (settings) {
+  const createSplitButton = function (settings) {
     EventUtils.Event.clean(viewBlock.get());
     viewBlock.update('');
 
@@ -27,87 +26,88 @@ UnitTest.asynctest('browser.tinymce.ui.SplitButtonTest', function() {
     }, settings)).renderTo(viewBlock.get()).reflow();
   };
 
-  suite.test("splitbutton text, size default", function () {
-    var splitButton = createSplitButton({ text: 'X' });
+  suite.test('splitbutton text, size default', function () {
+    const splitButton = createSplitButton({ text: 'X' });
 
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 42, 30], 4);
   });
 
-  suite.test("splitbutton text, size large", function () {
-    var splitButton = createSplitButton({ text: 'X', size: 'large' });
+  suite.test('splitbutton text, size large', function () {
+    const splitButton = createSplitButton({ text: 'X', size: 'large' });
 
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 57, 39], 4);
   });
 
-  suite.test("splitbutton text, size small", function () {
-    var splitButton = createSplitButton({ text: 'X', size: 'small' });
+  suite.test('splitbutton text, size small', function () {
+    const splitButton = createSplitButton({ text: 'X', size: 'small' });
 
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 36, 23], 4);
   });
 
-  suite.test("splitbutton text, width 100, height 100", function () {
-    var splitButton = createSplitButton({ text: 'X', width: 100, height: 100 });
+  suite.test('splitbutton text, width 100, height 100', function () {
+    const splitButton = createSplitButton({ text: 'X', width: 100, height: 100 });
 
     LegacyUnit.equal(UiUtils.rect(viewBlock, splitButton), [0, 0, 100, 100]);
     LegacyUnit.equal(UiUtils.rect(viewBlock, splitButton.getEl().firstChild), [1, 1, 83, 98]);
   });
 
-  suite.test("splitbutton icon, size default", function () {
-    var splitButton = createSplitButton({ icon: 'test' });
+  suite.test('splitbutton icon, size default', function () {
+    const splitButton = createSplitButton({ icon: 'test' });
 
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 50, 30], 4);
   });
 
-  suite.test("splitbutton icon, size small", function () {
-    var splitButton = createSplitButton({ icon: 'test', size: 'small' });
+  suite.test('splitbutton icon, size small', function () {
+    const splitButton = createSplitButton({ icon: 'test', size: 'small' });
 
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 45, 24], 4);
   });
 
-  suite.test("splitbutton icon, size large", function () {
-    var splitButton = createSplitButton({ icon: 'test', size: 'large' });
+  suite.test('splitbutton icon, size large', function () {
+    const splitButton = createSplitButton({ icon: 'test', size: 'large' });
 
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 63, 40], 4);
   });
 
-  suite.test("splitbutton icon, width 100, height 100", function () {
-    var splitButton = createSplitButton({ icon: 'test', width: 100, height: 100 });
+  suite.test('splitbutton icon, width 100, height 100', function () {
+    const splitButton = createSplitButton({ icon: 'test', width: 100, height: 100 });
 
     LegacyUnit.equal(UiUtils.rect(viewBlock, splitButton), [0, 0, 100, 100]);
     LegacyUnit.equal(UiUtils.rect(viewBlock, splitButton.getEl().firstChild), [1, 1, 83, 98]);
   });
 
-  suite.test("splitbutton text & icon, size default", function () {
-    var splitButton = createSplitButton({ text: 'X', icon: 'test' });
+  suite.test('splitbutton text & icon, size default', function () {
+    const splitButton = createSplitButton({ text: 'X', icon: 'test' });
 
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 62, 30], 4);
   });
 
-  suite.test("splitbutton text & icon, size large", function () {
-    var splitButton = createSplitButton({ text: 'X', icon: 'test', size: 'large' });
+  suite.test('splitbutton text & icon, size large', function () {
+    const splitButton = createSplitButton({ text: 'X', icon: 'test', size: 'large' });
 
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 78, 40], 4);
   });
 
-  suite.test("splitbutton text & icon, size small", function () {
-    var splitButton = createSplitButton({ text: 'X', icon: 'test', size: 'small' });
+  suite.test('splitbutton text & icon, size small', function () {
+    const splitButton = createSplitButton({ text: 'X', icon: 'test', size: 'small' });
 
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, splitButton), [0, 0, 60, 24], 5);
   });
 
-  suite.test("splitbutton text & icon, width 100, height 100", function () {
-    var splitButton = createSplitButton({ text: 'X', icon: 'test', width: 100, height: 100 });
+  suite.test('splitbutton text & icon, width 100, height 100', function () {
+    const splitButton = createSplitButton({ text: 'X', icon: 'test', width: 100, height: 100 });
 
     LegacyUnit.equal(UiUtils.rect(viewBlock, splitButton), [0, 0, 100, 100]);
     LegacyUnit.equal(UiUtils.rect(viewBlock, splitButton.getEl().firstChild), [1, 1, 83, 98]);
   });
 
-  suite.test("splitbutton click event", function () {
-    var splitButton, clicks: any = {};
+  suite.test('splitbutton click event', function () {
+    let splitButton;
+    const clicks: any = {};
 
     splitButton = createSplitButton({
       text: 'X',
-      onclick: function () {
+      onclick () {
         clicks.a = 'a';
       }
     });
@@ -125,4 +125,3 @@ UnitTest.asynctest('browser.tinymce.ui.SplitButtonTest', function() {
     }, failure);
   });
 });
-

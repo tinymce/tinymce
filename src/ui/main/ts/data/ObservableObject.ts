@@ -26,7 +26,7 @@ function isNode(node) {
 
 // Todo: Maybe this should be shallow compare since it might be huge object references
 function isEqual(a, b) {
-  var k, checked;
+  let k, checked;
 
   // Strict equals
   if (a === b) {
@@ -39,7 +39,7 @@ function isEqual(a, b) {
   }
 
   // Compare number, boolean, string, undefined
-  if (typeof a !== "object" || typeof b !== "object") {
+  if (typeof a !== 'object' || typeof b !== 'object') {
     return a === b;
   }
 
@@ -81,7 +81,7 @@ function isEqual(a, b) {
   return true;
 }
 
-export default <any> Class.extend({
+export default Class.extend({
   Mixins: [Observable],
 
   /**
@@ -90,8 +90,8 @@ export default <any> Class.extend({
    * @constructor
    * @param {Object} data Initial data for the object.
    */
-  init: function (data) {
-    var name, value;
+  init (data) {
+    let name, value;
 
     data = data || {};
 
@@ -115,14 +115,15 @@ export default <any> Class.extend({
    * @param {Object} value Value to set for the property.
    * @return {tinymce.data.ObservableObject} Observable object instance.
    */
-  set: function (name, value) {
-    var key, args, oldValue = this.data[name];
+  set (name, value) {
+    let key, args;
+    const oldValue = this.data[name];
 
     if (value instanceof Binding) {
       value = value.create(this, name);
     }
 
-    if (typeof name === "object") {
+    if (typeof name === 'object') {
       for (key in name) {
         this.set(key, name[key]);
       }
@@ -135,9 +136,9 @@ export default <any> Class.extend({
 
       args = {
         target: this,
-        name: name,
-        value: value,
-        oldValue: oldValue
+        name,
+        value,
+        oldValue
       };
 
       this.fire('change:' + name, args);
@@ -154,7 +155,7 @@ export default <any> Class.extend({
    * @param {String} name Name of the property to get.
    * @return {Object} Object value of propery.
    */
-  get: function (name) {
+  get (name) {
     return this.data[name];
   },
 
@@ -165,7 +166,7 @@ export default <any> Class.extend({
    * @param {String} name Name of the property to check for.
    * @return {Boolean} true/false if the item exists.
    */
-  has: function (name) {
+  has (name) {
     return name in this.data;
   },
 
@@ -177,7 +178,7 @@ export default <any> Class.extend({
    * @param {String} name Name of the property to sync with the property it's inserted to.
    * @return {tinymce.data.Binding} Data binding instance.
    */
-  bind: function (name) {
+  bind (name) {
     return Binding.create(this, name);
   },
 
@@ -187,7 +188,7 @@ export default <any> Class.extend({
    *
    * @method destroy
    */
-  destroy: function () {
+  destroy () {
     this.fire('destroy');
   }
 });

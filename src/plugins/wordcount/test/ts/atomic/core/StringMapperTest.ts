@@ -2,33 +2,33 @@ import StringMapper from 'tinymce/plugins/wordcount/text/StringMapper';
 import UnicodeData from 'tinymce/plugins/wordcount/text/UnicodeData';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('atomic.core.StringMapperTest', function() {
-  var ci = UnicodeData.characterIndices;
+UnitTest.test('atomic.core.StringMapperTest', function () {
+  const ci = UnicodeData.characterIndices;
 
-  var ALETTER = ci.ALETTER;
-  var MIDNUMLET = ci.MIDNUMLET;
-  var MIDLETTER = ci.MIDLETTER;
-  var MIDNUM = ci.MIDNUM;
-  var NUMERIC = ci.NUMERIC;
-  var CR = ci.CR;
-  var LF = ci.LF;
-  var NEWLINE = ci.NEWLINE;
-  var EXTEND = ci.EXTEND;
-  var FORMAT = ci.FORMAT;
-  var KATAKANA = ci.KATAKANA;
-  var EXTENDNUMLET = ci.EXTENDNUMLET;
-  var OTHER = ci.OTHER;
-  var AT = ci.AT;
+  const ALETTER = ci.ALETTER;
+  const MIDNUMLET = ci.MIDNUMLET;
+  const MIDLETTER = ci.MIDLETTER;
+  const MIDNUM = ci.MIDNUM;
+  const NUMERIC = ci.NUMERIC;
+  const CR = ci.CR;
+  const LF = ci.LF;
+  const NEWLINE = ci.NEWLINE;
+  const EXTEND = ci.EXTEND;
+  const FORMAT = ci.FORMAT;
+  const KATAKANA = ci.KATAKANA;
+  const EXTENDNUMLET = ci.EXTENDNUMLET;
+  const OTHER = ci.OTHER;
+  const AT = ci.AT;
 
-  var classify = StringMapper.classify;
+  const classify = StringMapper.classify;
 
-  var testClassify = function () {
-    assert.eq([ALETTER, ALETTER, ALETTER], classify("abc"));
-    assert.eq([ALETTER, ALETTER, ALETTER], classify("åäö"));
-    assert.eq([ALETTER, NUMERIC, ALETTER], classify("a2c"));
-    assert.eq([ALETTER, MIDNUMLET, ALETTER, ALETTER, OTHER, ALETTER, ALETTER, ALETTER, ALETTER, ALETTER], classify("a'la carte"));
-    assert.eq([ALETTER, ALETTER, ALETTER, OTHER, LF, OTHER, ALETTER, ALETTER, ALETTER], classify("one \n two"));
-    assert.eq([NUMERIC, MIDNUM, NUMERIC, NUMERIC, NUMERIC, MIDNUMLET, NUMERIC, NUMERIC], classify("3,500.10"));
+  const testClassify = function () {
+    assert.eq([ALETTER, ALETTER, ALETTER], classify('abc'));
+    assert.eq([ALETTER, ALETTER, ALETTER], classify('åäö'));
+    assert.eq([ALETTER, NUMERIC, ALETTER], classify('a2c'));
+    assert.eq([ALETTER, MIDNUMLET, ALETTER, ALETTER, OTHER, ALETTER, ALETTER, ALETTER, ALETTER, ALETTER], classify('a\'la carte'));
+    assert.eq([ALETTER, ALETTER, ALETTER, OTHER, LF, OTHER, ALETTER, ALETTER, ALETTER], classify('one \n two'));
+    assert.eq([NUMERIC, MIDNUM, NUMERIC, NUMERIC, NUMERIC, MIDNUMLET, NUMERIC, NUMERIC], classify('3,500.10'));
     assert.eq([OTHER, KATAKANA, KATAKANA], classify('愛ラブ'));
     assert.eq([OTHER, OTHER], classify('ねこ'));
     assert.eq([MIDLETTER], classify('·'));
@@ -43,4 +43,3 @@ UnitTest.test('atomic.core.StringMapperTest', function() {
 
   testClassify();
 });
-

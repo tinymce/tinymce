@@ -20,15 +20,15 @@ import Settings from '../api/Settings';
  * @private
  */
 
-var isAbsoluteUrl = function (url) {
+const isAbsoluteUrl = function (url) {
   return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
 };
 
-var isImageUrl = function (url) {
+const isImageUrl = function (url) {
   return isAbsoluteUrl(url) && /.(gif|jpe?g|png)$/.test(url);
 };
 
-var createImage = function (editor, url, pasteHtml) {
+const createImage = function (editor, url, pasteHtml) {
   editor.undoManager.extra(function () {
     pasteHtml(editor, url);
   }, function () {
@@ -38,7 +38,7 @@ var createImage = function (editor, url, pasteHtml) {
   return true;
 };
 
-var createLink = function (editor, url, pasteHtml) {
+const createLink = function (editor, url, pasteHtml) {
   editor.undoManager.extra(function () {
     pasteHtml(editor, url);
   }, function () {
@@ -48,15 +48,15 @@ var createLink = function (editor, url, pasteHtml) {
   return true;
 };
 
-var linkSelection = function (editor, html, pasteHtml) {
+const linkSelection = function (editor, html, pasteHtml) {
   return editor.selection.isCollapsed() === false && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtml) : false;
 };
 
-var insertImage = function (editor, html, pasteHtml) {
+const insertImage = function (editor, html, pasteHtml) {
   return isImageUrl(html) ? createImage(editor, html, pasteHtml) : false;
 };
 
-var pasteHtml = function (editor, html) {
+const pasteHtml = function (editor, html) {
   editor.insertContent(html, {
     merge: Settings.shouldMergeFormats(editor),
     paste: true
@@ -65,7 +65,7 @@ var pasteHtml = function (editor, html) {
   return true;
 };
 
-var smartInsertContent = function (editor, html) {
+const smartInsertContent = function (editor, html) {
   Tools.each([
     linkSelection,
     insertImage,
@@ -75,7 +75,7 @@ var smartInsertContent = function (editor, html) {
   });
 };
 
-var insertContent = function (editor, html) {
+const insertContent = function (editor, html) {
   if (Settings.isSmartPasteEnabled(editor) === false) {
     pasteHtml(editor, html);
   } else {
@@ -84,7 +84,7 @@ var insertContent = function (editor, html) {
 };
 
 export default {
-  isImageUrl: isImageUrl,
-  isAbsoluteUrl: isAbsoluteUrl,
-  insertContent: insertContent
+  isImageUrl,
+  isAbsoluteUrl,
+  insertContent
 };

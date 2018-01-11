@@ -2,24 +2,24 @@ import { Objects } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
 
-var getFromExpandingItem = function (item) {
-  var newItem = Merger.deepMerge(
+const getFromExpandingItem = function (item) {
+  const newItem = Merger.deepMerge(
     Objects.exclude(item, [ 'items' ]),
     {
       menu: true
     }
   );
 
-  var rest = expand(item.items);
+  const rest = expand(item.items);
 
-  var newMenus = Merger.deepMerge(
+  const newMenus = Merger.deepMerge(
     rest.menus,
     Objects.wrap(
       item.title,
       rest.items
     )
   );
-  var newExpansions = Merger.deepMerge(
+  const newExpansions = Merger.deepMerge(
     rest.expansions,
     Objects.wrap(item.title, item.title)
   );
@@ -31,19 +31,18 @@ var getFromExpandingItem = function (item) {
   };
 };
 
-var getFromItem = function (item) {
+const getFromItem = function (item) {
   return Objects.hasKey(item, 'items') ? getFromExpandingItem(item) : {
-    item: item,
+    item,
     menus: { },
     expansions: { }
   };
 };
 
-
 // Takes items, and consolidates them into its return value
-var expand = function (items) {
+const expand = function (items) {
   return Arr.foldr(items, function (acc, item) {
-    var newData = getFromItem(item);
+    const newData = getFromItem(item);
     return {
       menus: Merger.deepMerge(acc.menus, newData.menus),
       items: [ newData.item ].concat(acc.items),
@@ -56,6 +55,6 @@ var expand = function (items) {
   });
 };
 
-export default <any> {
-  expand: expand
+export default {
+  expand
 };

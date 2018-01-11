@@ -18,11 +18,9 @@ import Checkbox from './Checkbox';
  * @extends tinymce.ui.Checkbox
  */
 
-"use strict";
-
-export default <any> Checkbox.extend({
+export default Checkbox.extend({
   Defaults: {
-    classes: "radio",
-    role: "radio"
+    classes: 'radio',
+    role: 'radio'
   }
 });

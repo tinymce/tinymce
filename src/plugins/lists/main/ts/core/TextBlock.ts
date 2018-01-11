@@ -12,11 +12,13 @@ import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Env from 'tinymce/core/Env';
 import NodeType from './NodeType';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var createNewTextBlock = function (editor, contentNode, blockName?) {
-  var node, textBlock, fragment = DOM.createFragment(), hasContentNode;
-  var blockElements = editor.schema.getBlockElements();
+const createNewTextBlock = function (editor, contentNode, blockName?) {
+  let node, textBlock;
+  const fragment = DOM.createFragment();
+  let hasContentNode;
+  const blockElements = editor.schema.getBlockElements();
 
   if (editor.settings.forced_root_block) {
     blockName = blockName || editor.settings.forced_root_block;
@@ -36,7 +38,7 @@ var createNewTextBlock = function (editor, contentNode, blockName?) {
 
   if (contentNode) {
     while ((node = contentNode.firstChild)) {
-      var nodeName = node.nodeName;
+      const nodeName = node.nodeName;
 
       if (!hasContentNode && (nodeName !== 'SPAN' || node.getAttribute('data-mce-type') !== 'bookmark')) {
         hasContentNode = true;
@@ -73,5 +75,5 @@ var createNewTextBlock = function (editor, contentNode, blockName?) {
 };
 
 export default {
-  createNewTextBlock: createNewTextBlock
+  createNewTextBlock
 };

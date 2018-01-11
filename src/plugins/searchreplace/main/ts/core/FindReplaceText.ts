@@ -13,7 +13,7 @@
 /*eslint no-labels:0, no-constant-condition: 0 */
 
 function isContentEditableFalse(node) {
-  return node && node.nodeType === 1 && node.contentEditable === "false";
+  return node && node.nodeType === 1 && node.contentEditable === 'false';
 }
 
 // Based on work developed by: James Padolsey http://james.padolsey.com
@@ -21,8 +21,10 @@ function isContentEditableFalse(node) {
 // TODO: Handle contentEditable edgecase:
 // <p>text<span contentEditable="false">text<span contentEditable="true">text</span>text</span>text</p>
 function findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schema) {
-  var m, matches = [], text, count = 0, doc;
-  var blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;
+  let m;
+  const matches = [];
+  let text, count = 0, doc;
+  let blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;
 
   doc = node.ownerDocument;
   blockElementsMap = schema.getBlockElements(); // H1-H6, P, TD etc
@@ -33,16 +35,16 @@ function findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schem
     captureGroup = captureGroup || 0;
 
     if (!m[0]) {
-      throw 'findAndReplaceDOMText cannot handle zero-length matches';
+      throw new Error('findAndReplaceDOMText cannot handle zero-length matches');
     }
 
-    var index = m.index;
+    let index = m.index;
 
     if (captureGroup > 0) {
-      var cg = m[captureGroup];
+      const cg = m[captureGroup];
 
       if (!cg) {
-        throw 'Invalid capture group';
+        throw new Error('Invalid capture group');
       }
 
       index += m[0].indexOf(cg);
@@ -53,7 +55,7 @@ function findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schem
   }
 
   function getText(node) {
-    var txt;
+    let txt;
 
     if (node.nodeType === 3) {
       return node.data;
@@ -83,7 +85,7 @@ function findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schem
   }
 
   function stepThroughMatches(node, matches, replaceFn) {
-    var startNode, endNode, startNodeIndex,
+    let startNode, endNode, startNodeIndex,
       endNodeIndex, innerNodes = [], atIndex = 0, curNode = node,
       matchLocation = matches.shift(), matchIndex = 0;
 
@@ -113,13 +115,13 @@ function findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schem
 
       if (startNode && endNode) {
         curNode = replaceFn({
-          startNode: startNode,
-          startNodeIndex: startNodeIndex,
-          endNode: endNode,
-          endNodeIndex: endNodeIndex,
-          innerNodes: innerNodes,
+          startNode,
+          startNodeIndex,
+          endNode,
+          endNodeIndex,
+          innerNodes,
           match: matchLocation[2],
-          matchIndex: matchIndex
+          matchIndex
         });
 
         // replaceFn has to return the node that replaced the endNode
@@ -166,13 +168,13 @@ function findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schem
   * and inserts the replacement element.
   */
   function genReplacer(nodeName) {
-    var makeReplacementNode;
+    let makeReplacementNode;
 
     if (typeof nodeName !== 'function') {
-      var stencilNode = nodeName.nodeType ? nodeName : doc.createElement(nodeName);
+      const stencilNode = nodeName.nodeType ? nodeName : doc.createElement(nodeName);
 
       makeReplacementNode = function (fill, matchIndex) {
-        var clone = stencilNode.cloneNode(false);
+        const clone = stencilNode.cloneNode(false);
 
         clone.setAttribute('data-mce-index', matchIndex);
 
@@ -187,11 +189,15 @@ function findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schem
     }
 
     return function (range) {
-      var before, after, parentNode, startNode = range.startNode,
-        endNode = range.endNode, matchIndex = range.matchIndex;
+      let before;
+      let after;
+      let parentNode;
+      const startNode = range.startNode;
+      const endNode = range.endNode;
+      const matchIndex = range.matchIndex;
 
       if (startNode === endNode) {
-        var node = startNode;
+        const node = startNode;
 
         parentNode = node.parentNode;
         if (range.startNodeIndex > 0) {
@@ -201,7 +207,7 @@ function findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schem
         }
 
         // Create the replacement node:
-        var el = makeReplacementNode(range.match[0], matchIndex);
+        const el = makeReplacementNode(range.match[0], matchIndex);
         parentNode.insertBefore(el, node);
         if (range.endNodeIndex < node.length) {
           // Add `after` text node (after the match)
@@ -217,17 +223,17 @@ function findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schem
       // Replace startNode -> [innerNodes...] -> endNode (in that order)
       before = doc.createTextNode(startNode.data.substring(0, range.startNodeIndex));
       after = doc.createTextNode(endNode.data.substring(range.endNodeIndex));
-      var elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);
-      var innerEls = [];
+      const elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);
+      const innerEls = [];
 
-      for (var i = 0, l = range.innerNodes.length; i < l; ++i) {
-        var innerNode = range.innerNodes[i];
-        var innerEl = makeReplacementNode(innerNode.data, matchIndex);
+      for (let i = 0, l = range.innerNodes.length; i < l; ++i) {
+        const innerNode = range.innerNodes[i];
+        const innerEl = makeReplacementNode(innerNode.data, matchIndex);
         innerNode.parentNode.replaceChild(innerEl, innerNode);
         innerEls.push(innerEl);
       }
 
-      var elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);
+      const elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);
 
       parentNode = startNode.parentNode;
       parentNode.insertBefore(before, startNode);
@@ -266,5 +272,5 @@ function findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schem
 }
 
 export default {
-  findAndReplaceDOMText: findAndReplaceDOMText
+  findAndReplaceDOMText
 };

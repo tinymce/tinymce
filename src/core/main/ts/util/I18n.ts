@@ -17,9 +17,8 @@ import Tools from './Tools';
  * @class tinymce.util.I18n
  */
 
-"use strict";
-
-var data = {}, code = "en";
+const data = {};
+let code = 'en';
 
 export default {
   /**
@@ -28,7 +27,7 @@ export default {
    * @method setCode
    * @param {String} newCode Current language code.
    */
-  setCode: function (newCode) {
+  setCode (newCode) {
     if (newCode) {
       code = newCode;
       this.rtl = this.data[newCode] ? this.data[newCode]._dir === 'rtl' : false;
@@ -41,7 +40,7 @@ export default {
    * @method getCode
    * @return {String} Current language code.
    */
-  getCode: function () {
+  getCode () {
     return code;
   },
 
@@ -60,14 +59,14 @@ export default {
    * @param {String} code Language code like sv_SE.
    * @param {Array} items Name/value array with English en_US to sv_SE.
    */
-  add: function (code, items) {
-    var langData = data[code];
+  add (code, items) {
+    let langData = data[code];
 
     if (!langData) {
       data[code] = langData = {};
     }
 
-    for (var name in items) {
+    for (const name in items) {
       langData[name] = items[name];
     }
 
@@ -86,8 +85,8 @@ export default {
    * @param {String/Object/Array} text Text to translate.
    * @return {String} String that got translated.
    */
-  translate: function (text) {
-    var langData = data[code] || {};
+  translate (text) {
+    const langData = data[code] || {};
 
     /**
      * number - string
@@ -99,23 +98,22 @@ export default {
      * @param obj
      * @returns {string}
      */
-    var toString = function (obj) {
+    const toString = function (obj) {
       if (Tools.is(obj, 'function')) {
         return Object.prototype.toString.call(obj);
       }
       return !isEmpty(obj) ? '' + obj : '';
     };
 
-    var isEmpty = function (text) {
+    const isEmpty = function (text) {
       return text === '' || text === null || Tools.is(text, 'undefined');
     };
 
-    var getLangData = function (text) {
+    const getLangData = function (text) {
       // make sure we work on a string and return a string
       text = toString(text);
       return Tools.hasOwn(langData, text) ? toString(langData[text]) : text;
     };
-
 
     if (isEmpty(text)) {
       return '';
@@ -126,7 +124,7 @@ export default {
     }
 
     if (Tools.is(text, 'array')) {
-      var values = text.slice(1);
+      const values = text.slice(1);
       text = getLangData(text[0]).replace(/\{([0-9]+)\}/g, function ($1, $2) {
         return Tools.hasOwn(values, $2) ? toString(values[$2]) : $1;
       });
@@ -135,5 +133,5 @@ export default {
     return getLangData(text).replace(/{context:\w+}$/, '');
   },
 
-  data: data
+  data
 };

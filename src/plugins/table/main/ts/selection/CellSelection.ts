@@ -27,26 +27,24 @@ import Ephemera from './Ephemera';
 
 /*eslint no-bitwise:0 */
 
-
-
 export default function (editor, lazyResize) {
-  var handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
-  var handlers = Option.none();
+  const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
+  let handlers = Option.none();
 
-  var annotations = SelectionAnnotation.byAttr(Ephemera);
+  const annotations = SelectionAnnotation.byAttr(Ephemera);
 
   editor.on('init', function (e) {
-    var win = editor.getWin();
-    var body = Util.getBody(editor);
-    var isRoot = Util.getIsRoot(editor);
+    const win = editor.getWin();
+    const body = Util.getBody(editor);
+    const isRoot = Util.getIsRoot(editor);
 
-    var syncSelection = function () {
-      var sel = editor.selection;
-      var start = Element.fromDom(sel.getStart());
-      var end = Element.fromDom(sel.getEnd());
-      var startTable = TableLookup.table(start);
-      var endTable = TableLookup.table(end);
-      var sameTable = startTable.bind(function (tableStart) {
+    const syncSelection = function () {
+      const sel = editor.selection;
+      const start = Element.fromDom(sel.getStart());
+      const end = Element.fromDom(sel.getEnd());
+      const startTable = TableLookup.table(start);
+      const endTable = TableLookup.table(end);
+      const sameTable = startTable.bind(function (tableStart) {
         return endTable.bind(function (tableEnd) {
           return Compare.eq(tableStart, tableEnd) ? Option.some(true) : Option.none();
         });
@@ -56,43 +54,43 @@ export default function (editor, lazyResize) {
       }, Fun.noop);
     };
 
-    var mouseHandlers = InputHandlers.mouse(win, body, isRoot, annotations);
-    var keyHandlers = InputHandlers.keyboard(win, body, isRoot, annotations);
+    const mouseHandlers = InputHandlers.mouse(win, body, isRoot, annotations);
+    const keyHandlers = InputHandlers.keyboard(win, body, isRoot, annotations);
 
-    var handleResponse = function (event, response) {
+    const handleResponse = function (event, response) {
       if (response.kill()) {
         event.kill();
       }
       response.selection().each(function (ns) {
-        var relative = Selection.relative(ns.start(), ns.finish());
-        var rng = SelectionDirection.asLtrRange(win, relative);
+        const relative = Selection.relative(ns.start(), ns.finish());
+        const rng = SelectionDirection.asLtrRange(win, relative);
         editor.selection.setRng(rng);
       });
     };
 
-    var keyup = function (event) {
-      var wrappedEvent = wrapEvent(event);
+    const keyup = function (event) {
+      const wrappedEvent = wrapEvent(event);
       // Note, this is an optimisation.
       if (wrappedEvent.raw().shiftKey && SelectionKeys.isNavigation(wrappedEvent.raw().which)) {
-        var rng = editor.selection.getRng();
-        var start = Element.fromDom(rng.startContainer);
-        var end = Element.fromDom(rng.endContainer);
+        const rng = editor.selection.getRng();
+        const start = Element.fromDom(rng.startContainer);
+        const end = Element.fromDom(rng.endContainer);
         keyHandlers.keyup(wrappedEvent, start, rng.startOffset, end, rng.endOffset).each(function (response) {
           handleResponse(wrappedEvent, response);
         });
       }
     };
 
-    var checkLast = function (last) {
+    const checkLast = function (last) {
       return !Attr.has(last, 'data-mce-bogus') && Node.name(last) !== 'br' && !(Node.isText(last) && Text.get(last).length === 0);
     };
 
-    var getLast = function () {
-      var body = Element.fromDom(editor.getBody());
+    const getLast = function () {
+      const body = Element.fromDom(editor.getBody());
 
-      var lastChild = Traverse.lastChild(body);
+      const lastChild = Traverse.lastChild(body);
 
-      var getPrevLast = function (last) {
+      const getPrevLast = function (last) {
         return Traverse.prevSibling(last).bind(function (prevLast) {
           return checkLast(prevLast) ? Option.some(prevLast) : getPrevLast(prevLast);
         });
@@ -103,8 +101,8 @@ export default function (editor, lazyResize) {
       });
     };
 
-    var keydown = function (event) {
-      var wrappedEvent = wrapEvent(event);
+    const keydown = function (event) {
+      const wrappedEvent = wrapEvent(event);
       lazyResize().each(function (resize) {
         resize.hideBars();
       });
@@ -126,11 +124,11 @@ export default function (editor, lazyResize) {
         });
       }
 
-      var rng = editor.selection.getRng();
-      var startContainer = Element.fromDom(editor.selection.getStart());
-      var start = Element.fromDom(rng.startContainer);
-      var end = Element.fromDom(rng.endContainer);
-      var direction = Direction.directionAt(startContainer).isRtl() ? SelectionKeys.rtl : SelectionKeys.ltr;
+      const rng = editor.selection.getRng();
+      const startContainer = Element.fromDom(editor.selection.getStart());
+      const start = Element.fromDom(rng.startContainer);
+      const end = Element.fromDom(rng.endContainer);
+      const direction = Direction.directionAt(startContainer).isRtl() ? SelectionKeys.rtl : SelectionKeys.ltr;
       keyHandlers.keydown(wrappedEvent, start, rng.startOffset, end, rng.endOffset, direction).each(function (response) {
         handleResponse(wrappedEvent, response);
       });
@@ -139,38 +137,38 @@ export default function (editor, lazyResize) {
       });
     };
 
-    var wrapEvent = function (event) {
+    const wrapEvent = function (event) {
       // IE9 minimum
-      var target = Element.fromDom(event.target);
+      const target = Element.fromDom(event.target);
 
-      var stop = function () {
+      const stop = function () {
         event.stopPropagation();
       };
 
-      var prevent = function () {
+      const prevent = function () {
         event.preventDefault();
       };
 
-      var kill = Fun.compose(prevent, stop); // more of a sequence than a compose, but same effect
+      const kill = Fun.compose(prevent, stop); // more of a sequence than a compose, but same effect
 
       // FIX: Don't just expose the raw event. Need to identify what needs standardisation.
       return {
-        'target':  Fun.constant(target),
-        'x':       Fun.constant(event.x),
-        'y':       Fun.constant(event.y),
-        'stop':    stop,
-        'prevent': prevent,
-        'kill':    kill,
-        'raw':     Fun.constant(event)
+        target:  Fun.constant(target),
+        x:       Fun.constant(event.x),
+        y:       Fun.constant(event.y),
+        stop,
+        prevent,
+        kill,
+        raw:     Fun.constant(event)
       };
     };
 
-    var isLeftMouse = function (raw) {
+    const isLeftMouse = function (raw) {
       return raw.button === 0;
     };
 
     // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
-    var isLeftButtonPressed = function (raw) {
+    const isLeftButtonPressed = function (raw) {
       // Only added by Chrome/Firefox in June 2015.
       // This is only to fix a 1px bug (TBIO-2836) so return true if we're on an older browser
       if (raw.buttons === undefined) {
@@ -181,17 +179,17 @@ export default function (editor, lazyResize) {
       return (raw.buttons & 1) !== 0;
     };
 
-    var mouseDown = function (e) {
+    const mouseDown = function (e) {
       if (isLeftMouse(e)) {
         mouseHandlers.mousedown(wrapEvent(e));
       }
     };
-    var mouseOver = function (e) {
+    const mouseOver = function (e) {
       if (isLeftButtonPressed(e)) {
         mouseHandlers.mouseover(wrapEvent(e));
       }
     };
-    var mouseUp = function (e) {
+    const mouseUp = function (e) {
       if (isLeftMouse) {
         mouseHandlers.mouseup(wrapEvent(e));
       }
@@ -208,12 +206,12 @@ export default function (editor, lazyResize) {
       mousedown: mouseDown,
       mouseover: mouseOver,
       mouseup: mouseUp,
-      keyup: keyup,
-      keydown: keydown
+      keyup,
+      keydown
     }));
   });
 
-  var destroy = function () {
+  const destroy = function () {
     handlers.each(function (handlers) {
       // editor.off('mousedown', handlers.mousedown());
       // editor.off('mouseover', handlers.mouseover());
@@ -225,6 +223,6 @@ export default function (editor, lazyResize) {
 
   return {
     clear: annotations.clear,
-    destroy: destroy
+    destroy
   };
-};
+}

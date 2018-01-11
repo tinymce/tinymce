@@ -21,14 +21,14 @@ import Env from '../Env';
  * @class tinymce.file.ImageScanner
  */
 
-var count = 0;
+let count = 0;
 
-var uniqueId = function (prefix?) {
+const uniqueId = function (prefix?) {
   return (prefix || 'blobid') + (count++);
 };
 
-var imageToBlobInfo = function (blobCache, img, resolve, reject) {
-  var base64, blobInfo;
+const imageToBlobInfo = function (blobCache, img, resolve, reject) {
+  let base64, blobInfo;
 
   if (img.src.indexOf('blob:') === 0) {
     blobInfo = blobCache.getByUri(img.src);
@@ -36,7 +36,7 @@ var imageToBlobInfo = function (blobCache, img, resolve, reject) {
     if (blobInfo) {
       resolve({
         image: img,
-        blobInfo: blobInfo
+        blobInfo
       });
     } else {
       Conversions.uriToBlob(img.src).then(function (blob) {
@@ -47,7 +47,7 @@ var imageToBlobInfo = function (blobCache, img, resolve, reject) {
 
           resolve({
             image: img,
-            blobInfo: blobInfo
+            blobInfo
           });
         });
       }, function (err) {
@@ -66,7 +66,7 @@ var imageToBlobInfo = function (blobCache, img, resolve, reject) {
   if (blobInfo) {
     resolve({
       image: img,
-      blobInfo: blobInfo
+      blobInfo
     });
   } else {
     Conversions.uriToBlob(img.src).then(function (blob) {
@@ -75,7 +75,7 @@ var imageToBlobInfo = function (blobCache, img, resolve, reject) {
 
       resolve({
         image: img,
-        blobInfo: blobInfo
+        blobInfo
       });
     }, function (err) {
       reject(err);
@@ -83,22 +83,22 @@ var imageToBlobInfo = function (blobCache, img, resolve, reject) {
   }
 };
 
-var getAllImages = function (elm) {
+const getAllImages = function (elm) {
   return elm ? elm.getElementsByTagName('img') : [];
 };
 
 export default function (uploadStatus, blobCache) {
-  var cachedPromises = {};
+  const cachedPromises = {};
 
-  var findAll = function (elm, predicate?) {
-    var images, promises;
+  const findAll = function (elm, predicate?) {
+    let images, promises;
 
     if (!predicate) {
       predicate = Fun.constant(true);
     }
 
     images = Arr.filter(getAllImages(elm), function (img) {
-      var src = img.src;
+      const src = img.src;
 
       if (!Env.fileApi) {
         return false;
@@ -112,7 +112,7 @@ export default function (uploadStatus, blobCache) {
         return false;
       }
 
-      if (!src || src == Env.transparentSrc) {
+      if (!src || src === Env.transparentSrc) {
         return false;
       }
 
@@ -128,7 +128,7 @@ export default function (uploadStatus, blobCache) {
     });
 
     promises = Arr.map(images, function (img) {
-      var newPromise;
+      let newPromise;
 
       if (cachedPromises[img.src]) {
         // Since the cached promise will return the cached image
@@ -151,7 +151,7 @@ export default function (uploadStatus, blobCache) {
       }).then(function (result) {
         delete cachedPromises[result.image.src];
         return result;
-      })['catch'](function (error) {
+      }).catch(function (error) {
         delete cachedPromises[img.src];
         return error;
       });
@@ -165,6 +165,6 @@ export default function (uploadStatus, blobCache) {
   };
 
   return {
-    findAll: findAll
+    findAll
   };
-};
+}

@@ -19,8 +19,8 @@
  * @version 3.4
  */
 
-var whiteSpaceRegExp = /^[ \t\r\n]*$/;
-var typeLookup = {
+const whiteSpaceRegExp = /^[ \t\r\n]*$/;
+const typeLookup = {
   '#text': 3,
   '#comment': 8,
   '#cdata': 4,
@@ -30,8 +30,11 @@ var typeLookup = {
 };
 
 // Walks the tree left/right
-var walk = function (node, rootNode, prev?) {
-  var sibling, parent, startName = prev ? 'lastChild' : 'firstChild', siblingName = prev ? 'prev' : 'next';
+const walk = function (node, rootNode, prev?) {
+  let sibling;
+  let parent;
+  const startName = prev ? 'lastChild' : 'firstChild';
+  const siblingName = prev ? 'prev' : 'next';
 
   // Walk into nodes if it has a start
   if (node[startName]) {
@@ -65,7 +68,7 @@ var walk = function (node, rootNode, prev?) {
  * @param {String} name Name of the node type.
  * @param {Number} type Numeric type representing the node.
  */
-var Node: any = function (name, type) {
+const Node: any = function (name, type) {
   this.name = name;
   this.type = type;
 
@@ -86,8 +89,8 @@ Node.prototype = {
    * @param {tinymce.html.Node} node Node to replace the current node with.
    * @return {tinymce.html.Node} The old node that got replaced.
    */
-  replace: function (node) {
-    var self = this;
+  replace (node) {
+    const self = this;
 
     if (node.parent) {
       node.remove();
@@ -112,10 +115,11 @@ Node.prototype = {
    * @param {String} value Optional value to set.
    * @return {String/tinymce.html.Node} String or undefined on a get operation or the current node on a set operation.
    */
-  attr: function (name, value) {
-    var self = this, attrs, i, undef;
+  attr (name, value) {
+    const self = this;
+    let attrs, i;
 
-    if (typeof name !== "string") {
+    if (typeof name !== 'string') {
       for (i in name) {
         self.attr(i, name[i]);
       }
@@ -124,7 +128,7 @@ Node.prototype = {
     }
 
     if ((attrs = self.attributes)) {
-      if (value !== undef) {
+      if (value !== undefined) {
         // Remove attribute
         if (value === null) {
           if (name in attrs.map) {
@@ -153,7 +157,7 @@ Node.prototype = {
             }
           }
         } else {
-          attrs.push({ name: name, value: value });
+          attrs.push({ name, value });
         }
 
         attrs.map[name] = value;
@@ -175,8 +179,10 @@ Node.prototype = {
    * @method clone
    * @return {tinymce.html.Node} New copy of the original node.
    */
-  clone: function () {
-    var self = this, clone = new Node(self.name, self.type), i, l, selfAttrs, selfAttr, cloneAttrs;
+  clone () {
+    const self = this;
+    const clone = new Node(self.name, self.type);
+    let i, l, selfAttrs, selfAttr, cloneAttrs;
 
     // Clone element attributes
     if ((selfAttrs = self.attributes)) {
@@ -210,8 +216,8 @@ Node.prototype = {
    *
    * @method wrap
    */
-  wrap: function (wrapper) {
-    var self = this;
+  wrap (wrapper) {
+    const self = this;
 
     self.parent.insert(wrapper, self);
     wrapper.append(self);
@@ -227,8 +233,9 @@ Node.prototype = {
    *
    * @method unwrap
    */
-  unwrap: function () {
-    var self = this, node, next;
+  unwrap () {
+    const self = this;
+    let node, next;
 
     for (node = self.firstChild; node;) {
       next = node.next;
@@ -248,8 +255,8 @@ Node.prototype = {
    * @method remove
    * @return {tinymce.html.Node} Current node that got removed.
    */
-  remove: function () {
-    var self = this, parent = self.parent, next = self.next, prev = self.prev;
+  remove () {
+    const self = this, parent = self.parent, next = self.next, prev = self.prev;
 
     if (parent) {
       if (parent.firstChild === self) {
@@ -288,8 +295,9 @@ Node.prototype = {
    * @param {tinymce.html.Node} node Node to append as a child of the current one.
    * @return {tinymce.html.Node} The node that got appended.
    */
-  append: function (node) {
-    var self = this, last;
+  append (node) {
+    const self = this;
+    let last;
 
     if (node.parent) {
       node.remove();
@@ -321,8 +329,8 @@ Node.prototype = {
    * @param {Boolean} before Optional state to insert the node before the reference node.
    * @return {tinymce.html.Node} The node that got inserted.
    */
-  insert: function (node, refNode, before) {
-    var parent;
+  insert (node, refNode, before) {
+    let parent;
 
     if (node.parent) {
       node.remove();
@@ -364,8 +372,10 @@ Node.prototype = {
    * @param {String} name Name of the child nodes to collect.
    * @return {Array} Array with child nodes matchin the specified name.
    */
-  getAll: function (name) {
-    var self = this, node, collection = [];
+  getAll (name) {
+    const self = this;
+    let node;
+    const collection = [];
 
     for (node = self.firstChild; node; node = walk(node, self)) {
       if (node.name === name) {
@@ -382,8 +392,9 @@ Node.prototype = {
    * @method empty
    * @return {tinymce.html.Node} The current node that got cleared.
    */
-  empty: function () {
-    var self = this, nodes, i, node;
+  empty () {
+    const self = this;
+    let nodes, i, node;
 
     // Remove all children
     if (self.firstChild) {
@@ -418,8 +429,9 @@ Node.prototype = {
    * @param {function} predicate Optional predicate that gets called after the other rules determine that the node is empty. Should return true if the node is a content node.
    * @return {Boolean} true/false if the node is empty or not.
    */
-  isEmpty: function (elements, whitespace, predicate) {
-    var self = this, node = self.firstChild, i, name;
+  isEmpty (elements, whitespace, predicate) {
+    const self = this;
+    let node = self.firstChild, i, name;
 
     whitespace = whitespace || {};
 
@@ -440,7 +452,7 @@ Node.prototype = {
           i = node.attributes.length;
           while (i--) {
             name = node.attributes[i].name;
-            if (name === "name" || name.indexOf('data-mce-bookmark') === 0) {
+            if (name === 'name' || name.indexOf('data-mce-bookmark') === 0) {
               return false;
             }
           }
@@ -478,7 +490,7 @@ Node.prototype = {
    * @param {Boolean} prev Optional previous node state defaults to false.
    * @return {tinymce.html.Node} Node that is next to or previous of the current node.
    */
-  walk: function (prev) {
+  walk (prev) {
     return walk(this, null, prev);
   }
 };
@@ -492,7 +504,7 @@ Node.prototype = {
  * @param {Object} attrs Name/value collection of attributes that will be applied to elements.
  */
 Node.create = function (name, attrs) {
-  var node, attrName;
+  let node, attrName;
 
   // Create node
   node = new Node(name, typeLookup[name] || 1);

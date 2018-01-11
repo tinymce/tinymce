@@ -3,13 +3,13 @@ import { Pipeline } from '@ephox/agar';
 import ObservableObject from 'tinymce/ui/data/ObservableObject';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.data.ObservableObjectTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.ui.data.ObservableObjectTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
-  suite.test("Constructor", function () {
-    var obj;
+  suite.test('Constructor', function () {
+    let obj;
 
     obj = new ObservableObject();
     LegacyUnit.strictEqual(!obj.has('a'), true);
@@ -19,8 +19,8 @@ UnitTest.asynctest('browser.tinymce.ui.data.ObservableObjectTest', function() {
     LegacyUnit.strictEqual(obj.get('b'), 2);
   });
 
-  suite.test("set/get and observe all", function () {
-    var obj = new ObservableObject(), events = [];
+  suite.test('set/get and observe all', function () {
+    const obj = new ObservableObject(), events = [];
 
     obj.on('change', function (e) {
       events.push(e);
@@ -42,8 +42,8 @@ UnitTest.asynctest('browser.tinymce.ui.data.ObservableObjectTest', function() {
     LegacyUnit.equal(events[3].value, 'b');
   });
 
-  suite.test("set/get and observe specific", function () {
-    var obj = new ObservableObject(), events = [];
+  suite.test('set/get and observe specific', function () {
+    const obj = new ObservableObject(), events = [];
 
     obj.on('change:a', function (e) {
       events.push(e);
@@ -60,4 +60,3 @@ UnitTest.asynctest('browser.tinymce.ui.data.ObservableObjectTest', function() {
     success();
   }, failure);
 });
-

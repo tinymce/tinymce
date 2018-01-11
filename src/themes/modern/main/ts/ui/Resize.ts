@@ -12,16 +12,16 @@ import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Events from '../api/Events';
 import Settings from '../api/Settings';
 
-var DOM = DOMUtils.DOM;
-var getSize = function (elm) {
+const DOM = DOMUtils.DOM;
+const getSize = function (elm) {
   return {
     width: elm.clientWidth,
     height: elm.clientHeight
   };
 };
 
-var resizeTo = function (editor, width, height) {
-  var containerElm, iframeElm, containerSize, iframeSize;
+const resizeTo = function (editor, width, height) {
+  let containerElm, iframeElm, containerSize, iframeSize;
 
   containerElm = editor.getContainer();
   iframeElm = editor.getContentAreaContainer().firstChild;
@@ -43,12 +43,12 @@ var resizeTo = function (editor, width, height) {
   Events.fireResizeEditor(editor);
 };
 
-var resizeBy = function (editor, dw, dh) {
-  var elm = editor.getContentAreaContainer();
+const resizeBy = function (editor, dw, dh) {
+  const elm = editor.getContentAreaContainer();
   resizeTo(editor, elm.clientWidth + dw, elm.clientHeight + dh);
 };
 
-export default <any> {
-  resizeTo: resizeTo,
-  resizeBy: resizeBy
+export default {
+  resizeTo,
+  resizeBy
 };

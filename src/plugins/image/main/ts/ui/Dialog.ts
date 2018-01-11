@@ -21,16 +21,14 @@ import UploadTab from './UploadTab';
  * @private
  */
 
-
-
 export default function (editor) {
-  var updateStyle = function (editor, rootControl) {
+  const updateStyle = function (editor, rootControl) {
     if (!Settings.hasAdvTab(editor)) {
       return;
     }
-    var dom = editor.dom;
-    var data = rootControl.toJSON();
-    var css = dom.parseStyle(data.style);
+    const dom = editor.dom;
+    const data = rootControl.toJSON();
+    let css = dom.parseStyle(data.style);
 
     css = Utils.mergeMargins(css);
 
@@ -48,11 +46,12 @@ export default function (editor) {
   };
 
   function showDialog(imageList) {
-    var win, data: any = {}, imgElm, figureElm, dom = editor.dom;
-    var imageListCtrl;
+    let win, data: any = {}, imgElm, figureElm;
+    const dom = editor.dom;
+    let imageListCtrl;
 
     function onSubmitForm() {
-      var figureElm, oldImg;
+      let figureElm, oldImg;
 
       SizeManager.updateSize(win);
       updateStyle(editor, win);
@@ -89,13 +88,13 @@ export default function (editor) {
         height: data.height,
         style: data.style,
         caption: data.caption,
-        "class": data["class"]
+        class: data.class
       };
 
       editor.undoManager.transact(function () {
         if (!data.src) {
           if (imgElm) {
-            var elm = dom.is(imgElm.parentNode, 'figure.image') ? imgElm.parentNode : imgElm;
+            const elm = dom.is(imgElm.parentNode, 'figure.image') ? imgElm.parentNode : imgElm;
             dom.remove(elm);
             editor.focus();
             editor.nodeChanged();
@@ -109,7 +108,7 @@ export default function (editor) {
           return;
         }
 
-        if (data.title === "") {
+        if (data.title === '') {
           data.title = null;
         }
 
@@ -137,12 +136,12 @@ export default function (editor) {
           if (!dom.is(imgElm.parentNode, 'figure.image')) {
             oldImg = imgElm;
             imgElm = imgElm.cloneNode(true);
-            figureElm = dom.create('figure', { 'class': 'image' });
+            figureElm = dom.create('figure', { class: 'image' });
             figureElm.appendChild(imgElm);
             figureElm.appendChild(dom.create('figcaption', { contentEditable: true }, 'Caption'));
             figureElm.contentEditable = false;
 
-            var textBlock = dom.getParent(oldImg, function (node) {
+            const textBlock = dom.getParent(oldImg, function (node) {
               return editor.schema.getTextBlockElements()[node.nodeName];
             });
 
@@ -180,7 +179,7 @@ export default function (editor) {
         src: dom.getAttrib(imgElm, 'src'),
         alt: dom.getAttrib(imgElm, 'alt'),
         title: dom.getAttrib(imgElm, 'title'),
-        "class": dom.getAttrib(imgElm, 'class'),
+        class: dom.getAttrib(imgElm, 'class'),
         width: dom.getAttrib(imgElm, 'width'),
         height: dom.getAttrib(imgElm, 'height'),
         caption: !!figureElm
@@ -200,8 +199,8 @@ export default function (editor) {
           [{ text: 'None', value: '' }]
         ),
         value: data.src && editor.convertURL(data.src, 'src'),
-        onselect: function (e) {
-          var altCtrl = win.find('#alt');
+        onselect (e) {
+          const altCtrl = win.find('#alt');
 
           if (!altCtrl.value() || (e.lastControl && altCtrl.value() === e.lastControl.text())) {
             altCtrl.value(e.control.text());
@@ -209,7 +208,7 @@ export default function (editor) {
 
           win.find('#src').value(e.control.value()).fire('change');
         },
-        onPostRender: function () {
+        onPostRender () {
           /*eslint consistent-this: 0*/
           imageListCtrl = this;
         }
@@ -217,7 +216,7 @@ export default function (editor) {
     }
 
     if (Settings.hasAdvTab(editor) || Settings.hasUploadUrl(editor) || Settings.hasUploadHandler(editor)) {
-      var body = [
+      const body = [
         MainTab.makeTab(editor, imageListCtrl)
       ];
 
@@ -247,16 +246,16 @@ export default function (editor) {
       // Advanced dialog shows general+advanced tabs
       win = editor.windowManager.open({
         title: 'Insert/edit image',
-        data: data,
+        data,
         bodyType: 'tabpanel',
-        body: body,
+        body,
         onSubmit: onSubmitForm
       });
     } else {
       // Simple default dialog
       win = editor.windowManager.open({
         title: 'Insert/edit image',
-        data: data,
+        data,
         body: MainTab.getGeneralItems(editor, imageListCtrl),
         onSubmit: onSubmitForm
       });
@@ -270,6 +269,6 @@ export default function (editor) {
   }
 
   return {
-    open: open
+    open
   };
-};
+}

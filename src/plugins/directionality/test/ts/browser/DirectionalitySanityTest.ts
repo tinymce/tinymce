@@ -9,16 +9,16 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.directionality.DirectionalitySanityTest',
-  function() {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+  function () {
+    const success = arguments[arguments.length - 2];
+    const failure = arguments[arguments.length - 1];
 
     ModernTheme();
     DirectionalityPlugin();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyUi = TinyUi(editor);
-      var tinyApis = TinyApis(editor);
+      const tinyUi = TinyUi(editor);
+      const tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
         tinyApis.sSetContent('a'),
@@ -55,4 +55,3 @@ UnitTest.asynctest(
     }, success, failure);
   }
 );
-

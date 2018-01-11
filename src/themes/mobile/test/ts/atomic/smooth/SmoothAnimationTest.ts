@@ -1,14 +1,14 @@
 import SmoothAnimation from 'tinymce/themes/mobile/ios/smooth/SmoothAnimation';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Smooth Animation AdjustTest', function() {
-  var checkNone = function (label, value, destination, amount) {
-    var actual = SmoothAnimation.adjust(value, destination, amount);
+UnitTest.test('Smooth Animation AdjustTest', function () {
+  const checkNone = function (label, value, destination, amount) {
+    const actual = SmoothAnimation.adjust(value, destination, amount);
     assert.eq(true, actual.isNone(), 'Test: ' + label + '. Expected none but was: ' + actual.toString());
   };
 
-  var check = function (label, expected, value, destination, amount) {
-    var actual = SmoothAnimation.adjust(value, destination, amount);
+  const check = function (label, expected, value, destination, amount) {
+    const actual = SmoothAnimation.adjust(value, destination, amount);
     assert.eq(true, actual.is(expected), 'Test: ' + label + '. Expected some(' + expected + ') but was: ' + actual.toString());
   };
 
@@ -49,4 +49,3 @@ UnitTest.test('Smooth Animation AdjustTest', function() {
     0, 250, 100
   );
 });
-

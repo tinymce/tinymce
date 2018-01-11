@@ -2,9 +2,9 @@ import { RawAssertions } from '@ephox/agar';
 import Html from 'tinymce/plugins/visualchars/core/Html';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('atomic.tinymce.plugins.visualchars.HtmlTest', function() {
-  var nbsp = '\u00a0';
-  var shy = '\u00AD';
+UnitTest.test('atomic.tinymce.plugins.visualchars.HtmlTest', function () {
+  const nbsp = '\u00a0';
+  const shy = '\u00AD';
 
   RawAssertions.assertEq(
     'should return correct span',
@@ -18,4 +18,3 @@ UnitTest.test('atomic.tinymce.plugins.visualchars.HtmlTest', function() {
     Html.wrapCharWithSpan(shy)
   );
 });
-

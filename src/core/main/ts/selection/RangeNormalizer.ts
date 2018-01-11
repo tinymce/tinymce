@@ -12,8 +12,8 @@ import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import CaretUtils from '../caret/CaretUtils';
 
-var createRange = function (sc, so, ec, eo) {
-  var rng = document.createRange();
+const createRange = function (sc, so, ec, eo) {
+  const rng = document.createRange();
   rng.setStart(sc, so);
   rng.setEnd(ec, eo);
   return rng;
@@ -26,10 +26,10 @@ var createRange = function (sc, so, ec, eo) {
 // We would want it to be:
 //   <blockquote><p>[a]</p></blockquote><p>b</p>
 // Since it would otherwise produces spans out of thin air on insertContent for example.
-var normalizeBlockSelectionRange = function (rng) {
-  var startPos = CaretPosition.fromRangeStart(rng);
-  var endPos = CaretPosition.fromRangeEnd(rng);
-  var rootNode = rng.commonAncestorContainer;
+const normalizeBlockSelectionRange = function (rng) {
+  const startPos = CaretPosition.fromRangeStart(rng);
+  const endPos = CaretPosition.fromRangeEnd(rng);
+  const rootNode = rng.commonAncestorContainer;
 
   return CaretFinder.fromPosition(false, rootNode, endPos)
     .map(function (newEndPos) {
@@ -41,14 +41,14 @@ var normalizeBlockSelectionRange = function (rng) {
     }).getOr(rng);
 };
 
-var normalizeBlockSelection = function (rng) {
+const normalizeBlockSelection = function (rng) {
   return rng.collapsed ? rng : normalizeBlockSelectionRange(rng);
 };
 
-var normalize = function (rng) {
+const normalize = function (rng) {
   return normalizeBlockSelection(rng);
 };
 
 export default {
-  normalize: normalize
+  normalize
 };

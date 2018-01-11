@@ -1,69 +1,65 @@
-import { TapEvent } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 import { Throttler } from '@ephox/katamari';
 import { Compare } from '@ephox/sugar';
 import { DomEvent } from '@ephox/sugar';
 import { Height } from '@ephox/sugar';
-import { Location } from '@ephox/sugar';
 import TappingEvent from '../../util/TappingEvent';
 
-var initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
-  var saveSelectionFirst = function () {
+const initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
+  const saveSelectionFirst = function () {
     iosApi.run(function (api) {
       api.highlightSelection();
     });
   };
 
-  var refreshIosSelection = function () {
+  const refreshIosSelection = function () {
     iosApi.run(function (api) {
       api.refreshSelection();
     });
   };
 
-  var scrollToY = function (yTop, height) {
+  const scrollToY = function (yTop, height) {
     // Because the iframe has no scroll, and the socket is the part that scrolls,
     // anything visible inside the iframe actually has a top value (for bounding
     // rectangle) > socket.scrollTop. The rectangle is with respect to the top of
     // the iframe, which has scrolled up above the socket viewport.
-    var y = yTop - socket.dom().scrollTop;
+    const y = yTop - socket.dom().scrollTop;
     iosApi.run(function (api) {
       api.scrollIntoView(y, y + height);
     });
   };
 
-  var scrollToElement = function (target) {
-    var yTop = Location.absolute(target).top();
-    var height = Height.get(target);
+  const scrollToElement = function (target) {
     scrollToY(iosApi, socket);
   };
 
-  var scrollToCursor = function () {
+  const scrollToCursor = function () {
     editorApi.getCursorBox().each(function (box) {
       scrollToY(box.top(), box.height());
     });
   };
 
-  var clearSelection = function () {
+  const clearSelection = function () {
     // Clear any fake selections visible.
     iosApi.run(function (api) {
       api.clearSelection();
     });
   };
 
-  var clearAndRefresh = function () {
+  const clearAndRefresh = function () {
     clearSelection();
     refreshThrottle.throttle();
   };
 
-  var refreshView = function () {
+  const refreshView = function () {
     scrollToCursor();
     iosApi.run(function (api) {
       api.syncHeight();
     });
   };
 
-  var reposition = function () {
-    var toolbarHeight = Height.get(toolstrip);
+  const reposition = function () {
+    const toolbarHeight = Height.get(toolstrip);
     iosApi.run(function (api) {
       api.setViewportOffset(toolbarHeight);
     });
@@ -72,28 +68,28 @@ var initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
     refreshView();
   };
 
-  var toEditing = function () {
+  const toEditing = function () {
     iosApi.run(function (api) {
       api.toEditing();
     });
   };
 
-  var toReading = function () {
+  const toReading = function () {
     iosApi.run(function (api) {
       api.toReading();
     });
   };
 
-  var onToolbarTouch = function (event) {
+  const onToolbarTouch = function (event) {
     iosApi.run(function (api) {
       api.onToolbarTouch(event);
     });
   };
 
-  var tapping = TappingEvent.monitor(editorApi);
+  const tapping = TappingEvent.monitor(editorApi);
 
-  var refreshThrottle = Throttler.last(refreshView, 300);
-  var listeners = [
+  const refreshThrottle = Throttler.last(refreshView, 300);
+  const listeners = [
     // Clear any fake selections, scroll to cursor, and update the iframe height
     editorApi.onKeyup(clearAndRefresh),
     // Update any fake selections that are showing
@@ -173,17 +169,17 @@ var initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
     })
   ];
 
-  var destroy = function () {
+  const destroy = function () {
     Arr.each(listeners, function (l) {
       l.unbind();
     });
   };
 
   return {
-    destroy: destroy
+    destroy
   };
 };
 
-export default <any> {
-  initEvents: initEvents
+export default {
+  initEvents
 };

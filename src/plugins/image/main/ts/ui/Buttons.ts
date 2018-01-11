@@ -10,7 +10,7 @@
 
 import Dialog from './Dialog';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addButton('image', {
     icon: 'image',
     tooltip: 'Insert/edit image',
@@ -28,5 +28,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

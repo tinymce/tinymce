@@ -22,7 +22,7 @@ import SplitRange from '../../selection/SplitRange';
  * @class tinymce.dom.RangeUtils
  */
 
-var RangeUtils: any = function (dom) {
+const RangeUtils: any = function (dom) {
   /**
    * Walks the specified range like object and executes the callback for each sibling collection it finds.
    *
@@ -31,7 +31,7 @@ var RangeUtils: any = function (dom) {
    * @param {Object} rng Range like object.
    * @param {function} callback Callback function to execute for each sibling collection.
    */
-  var walk = function (rng, callback) {
+  const walk = function (rng, callback) {
     return RangeWalk.walk(dom, rng, callback);
   };
 
@@ -42,7 +42,7 @@ var RangeUtils: any = function (dom) {
    * @param {Range/RangeObject} rng Range to split.
    * @return {Object} Range position object.
    */
-  var split = SplitRange.split;
+  const split = SplitRange.split;
 
   /**
    * Normalizes the specified range by finding the closest best suitable caret location.
@@ -51,7 +51,7 @@ var RangeUtils: any = function (dom) {
    * @param {Range} rng Range to normalize.
    * @return {Boolean} True/false if the specified range was normalized or not.
    */
-  var normalize = function (rng) {
+  const normalize = function (rng) {
     return NormalizeRange.normalize(dom, rng).fold(
       Fun.constant(false),
       function (normalizedRng) {
@@ -63,9 +63,9 @@ var RangeUtils: any = function (dom) {
   };
 
   return {
-    walk: walk,
-    split: split,
-    normalize: normalize
+    walk,
+    split,
+    normalize
   };
 };
 

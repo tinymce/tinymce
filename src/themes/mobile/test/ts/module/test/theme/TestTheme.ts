@@ -12,17 +12,16 @@ import ThemeManager from 'tinymce/core/ThemeManager';
 import Features from 'tinymce/themes/mobile/features/Features';
 import FormatChangers from 'tinymce/themes/mobile/util/FormatChangers';
 
-var name = 'test';
+const name = 'test';
 
-
-var setup = function (info, onSuccess, onFailure) {
+const setup = function (info, onSuccess, onFailure) {
 
   /* This test is going to create a toolbar with both list items on it */
-  var alloy = Gui.create();
+  const alloy = Gui.create();
 
   Attachment.attachSystem(info.container, alloy);
 
-  var toolbar = GuiFactory.build({
+  const toolbar = GuiFactory.build({
     dom: {
       tag: 'div',
       classes: [ 'test-toolbar' ]
@@ -32,7 +31,7 @@ var setup = function (info, onSuccess, onFailure) {
     ])
   });
 
-  var socket = GuiFactory.build({
+  const socket = GuiFactory.build({
     dom: {
       tag: 'div',
       classes: [ 'test-socket' ]
@@ -42,15 +41,14 @@ var setup = function (info, onSuccess, onFailure) {
   alloy.add(toolbar);
   alloy.add(socket);
 
-  var realm = {
+  const realm = {
     system: Fun.constant(alloy),
     socket: Fun.constant(socket)
   };
 
-
   ThemeManager.add(name, function (editor) {
     return {
-      renderUI: function (args) {
+      renderUI (args) {
         editor.fire('SkinLoaded');
         return {
           iframeContainer: socket.element().dom(),
@@ -61,21 +59,21 @@ var setup = function (info, onSuccess, onFailure) {
   });
 
   return {
-    use: function (f) {
+    use (f) {
       TinyLoader.setup(function (editor, onS, onF) {
-        var features = Features.setup(realm, editor);
+        const features = Features.setup(realm, editor);
 
         FormatChangers.init(realm, editor);
 
-        var apis = TinyApis(editor);
+        const apis = TinyApis(editor);
 
-        var buttons = { };
+        const buttons = { };
         Arr.each(info.items, function (item) {
           // For each item in the toolbar, make a lookup
           buttons[item] = Memento.record(features[item].sketch());
         });
 
-        var toolbarItems = Arr.map(info.items, function (item) {
+        const toolbarItems = Arr.map(info.items, function (item) {
           return buttons[item].asSpec();
         });
 
@@ -88,7 +86,7 @@ var setup = function (info, onSuccess, onFailure) {
   };
 };
 
-export default <any> {
-  setup: setup,
+export default {
+  setup,
   name: Fun.constant(name)
 };

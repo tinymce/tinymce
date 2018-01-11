@@ -11,45 +11,45 @@ import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var ZWSP = Zwsp.ZWSP;
+UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const ZWSP = Zwsp.ZWSP;
 
-  var cCreateElement = function (html) {
+  const cCreateElement = function (html) {
     return Chain.mapper(function (_) {
       return Element.fromHtml(html);
     });
   };
 
-  var cNormalizePosition = function (forward, path, offset) {
+  const cNormalizePosition = function (forward, path, offset) {
     return Chain.mapper(function (elm) {
-      var container = Hierarchy.follow(elm, path).getOrDie();
-      var pos = new CaretPosition(container.dom(), offset);
-      return { pos: InlineUtils.normalizePosition(forward, pos), elm: elm };
+      const container = Hierarchy.follow(elm, path).getOrDie();
+      const pos = new CaretPosition(container.dom(), offset);
+      return { pos: InlineUtils.normalizePosition(forward, pos), elm };
     });
   };
 
-  var cAssertPosition = function (path, expectedOffset) {
+  const cAssertPosition = function (path, expectedOffset) {
     return Chain.mapper(function (elmPos) {
-      var expectedContainer = Hierarchy.follow(elmPos.elm, path).getOrDie();
+      const expectedContainer = Hierarchy.follow(elmPos.elm, path).getOrDie();
       Assertions.assertDomEq('Should be expected container', Element.fromDom(elmPos.pos.container()), expectedContainer);
       Assertions.assertEq('Should be expected offset', elmPos.pos.offset(), expectedOffset);
       return {};
     });
   };
 
-  var cSplitAt = function (path, offset) {
+  const cSplitAt = function (path, offset) {
     return Chain.mapper(function (elm) {
-      var textNode = Hierarchy.follow(elm, path).getOrDie();
+      const textNode = Hierarchy.follow(elm, path).getOrDie();
       textNode.dom().splitText(offset);
       return elm;
     });
   };
 
-  var createFakeEditor = function (settings) {
+  const createFakeEditor = function (settings) {
     return {
-      settings: settings
+      settings
     };
   };
 
@@ -189,4 +189,3 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function() {
     success();
   }, failure);
 });
-

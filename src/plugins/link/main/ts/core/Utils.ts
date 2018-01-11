@@ -11,20 +11,20 @@
 import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 
-var toggleTargetRules = function (rel, isUnsafe) {
-  var rules = ['noopener'];
-  var newRel = rel ? rel.split(/\s+/) : [];
+const toggleTargetRules = function (rel, isUnsafe) {
+  const rules = ['noopener'];
+  let newRel = rel ? rel.split(/\s+/) : [];
 
-  var toString = function (rel) {
+  const toString = function (rel) {
     return Tools.trim(rel.sort().join(' '));
   };
 
-  var addTargetRules = function (rel) {
+  const addTargetRules = function (rel) {
     rel = removeTargetRules(rel);
     return rel.length ? rel.concat(rules) : rules;
   };
 
-  var removeTargetRules = function (rel) {
+  const removeTargetRules = function (rel) {
     return rel.filter(function (val) {
       return Tools.inArray(rules, val) === -1;
     });
@@ -34,11 +34,11 @@ var toggleTargetRules = function (rel, isUnsafe) {
   return newRel.length ? toString(newRel) : null;
 };
 
-var trimCaretContainers = function (text) {
+const trimCaretContainers = function (text) {
   return text.replace(/\uFEFF/g, '');
 };
 
-var getAnchorElement = function (editor, selectedElm?) {
+const getAnchorElement = function (editor, selectedElm?) {
   selectedElm = selectedElm || editor.selection.getNode();
   if (isImageFigure(selectedElm)) {
     // for an image conained in a figure we look for a link inside the selected element
@@ -48,20 +48,20 @@ var getAnchorElement = function (editor, selectedElm?) {
   }
 };
 
-var getAnchorText = function (selection, anchorElm) {
-  var text = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : selection.getContent({ format: 'text' });
+const getAnchorText = function (selection, anchorElm) {
+  const text = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : selection.getContent({ format: 'text' });
   return trimCaretContainers(text);
 };
 
-var isLink = function (elm) {
+const isLink = function (elm) {
   return elm && elm.nodeName === 'A' && elm.href;
 };
 
-var hasLinks = function (elements) {
+const hasLinks = function (elements) {
   return Tools.grep(elements, isLink).length > 0;
 };
 
-var isOnlyTextSelected = function (html) {
+const isOnlyTextSelected = function (html) {
   // Partial html and not a fully selected anchor element
   if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') === -1)) {
     return false;
@@ -70,21 +70,21 @@ var isOnlyTextSelected = function (html) {
   return true;
 };
 
-var isImageFigure = function (node) {
+const isImageFigure = function (node) {
   return node && node.nodeName === 'FIGURE' && /\bimage\b/i.test(node.className);
 };
 
-var link = function (editor, attachState) {
+const link = function (editor, attachState) {
   return function (data) {
     editor.undoManager.transact(function () {
-      var selectedElm = editor.selection.getNode();
-      var anchorElm = getAnchorElement(editor, selectedElm);
+      const selectedElm = editor.selection.getNode();
+      const anchorElm = getAnchorElement(editor, selectedElm);
 
-      var linkAttrs = {
+      const linkAttrs = {
         href: data.href,
         target: data.target ? data.target : null,
         rel: data.rel ? data.rel : null,
-        "class": data["class"] ? data["class"] : null,
+        class: data.class ? data.class : null,
         title: data.title ? data.title : null
       };
 
@@ -101,7 +101,7 @@ var link = function (editor, attachState) {
         editor.focus();
 
         if (data.hasOwnProperty('text')) {
-          if ("innerText" in anchorElm) {
+          if ('innerText' in anchorElm) {
             anchorElm.innerText = data.text;
           } else {
             anchorElm.textContent = data.text;
@@ -125,10 +125,10 @@ var link = function (editor, attachState) {
   };
 };
 
-var unlink = function (editor) {
+const unlink = function (editor) {
   return function () {
     editor.undoManager.transact(function () {
-      var node = editor.selection.getNode();
+      const node = editor.selection.getNode();
       if (isImageFigure(node)) {
         unlinkImageFigure(editor, node);
       } else {
@@ -138,8 +138,8 @@ var unlink = function (editor) {
   };
 };
 
-var unlinkImageFigure = function (editor, fig) {
-  var a, img;
+const unlinkImageFigure = function (editor, fig) {
+  let a, img;
   img = editor.dom.select('img', fig)[0];
   if (img) {
     a = editor.dom.getParents(img, 'a[href]', fig)[0];
@@ -150,8 +150,8 @@ var unlinkImageFigure = function (editor, fig) {
   }
 };
 
-var linkImageFigure = function (editor, fig, attrs) {
-  var a, img;
+const linkImageFigure = function (editor, fig, attrs) {
+  let a, img;
   img = editor.dom.select('img', fig)[0];
   if (img) {
     a = editor.dom.create('a', attrs);
@@ -161,12 +161,12 @@ var linkImageFigure = function (editor, fig, attrs) {
 };
 
 export default {
-  link: link,
-  unlink: unlink,
-  isLink: isLink,
-  hasLinks: hasLinks,
-  isOnlyTextSelected: isOnlyTextSelected,
-  getAnchorElement: getAnchorElement,
-  getAnchorText: getAnchorText,
-  toggleTargetRules: toggleTargetRules
+  link,
+  unlink,
+  isLink,
+  hasLinks,
+  isOnlyTextSelected,
+  getAnchorElement,
+  getAnchorText,
+  toggleTargetRules
 };

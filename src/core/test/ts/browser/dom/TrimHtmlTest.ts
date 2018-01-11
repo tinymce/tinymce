@@ -6,8 +6,8 @@ import TrimHtml from 'tinymce/core/dom/TrimHtml';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('browser.tinymce.core.dom.TrimHtmlTest', function() {
-  var serializer = DomSerializer({}, new Editor('id', {}, EditorManager));
+UnitTest.test('browser.tinymce.core.dom.TrimHtmlTest', function () {
+  const serializer = DomSerializer({}, new Editor('id', {}, EditorManager));
 
   RawAssertions.assertEq('Should be unchanged', '<p id="a" data-mce-abc="1">a</p>', TrimHtml.trimInternal(serializer, '<p id="a" data-mce-abc="1">a</p>'));
   RawAssertions.assertEq('Should not have internal attr', '<p>a</p>', TrimHtml.trimInternal(serializer, '<p data-mce-selected="1">a</p>'));
@@ -17,4 +17,3 @@ UnitTest.test('browser.tinymce.core.dom.TrimHtmlTest', function() {
   RawAssertions.assertEq('Should not have internal attr', '<p>a</p>', TrimHtml.trimExternal(serializer, '<p data-mce-selected="1">a</p>'));
   RawAssertions.assertEq('Should not have zwsp', '<p>ab</p>', TrimHtml.trimExternal(serializer, '<p>a' + Zwsp.ZWSP + 'b</p>'));
 });
-

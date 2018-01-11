@@ -18,8 +18,9 @@ import { SelectorFilter } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 import ElementType from './ElementType';
 
-var getLastChildren = function (elm) {
-  var children = [], rawNode = elm.dom();
+const getLastChildren = function (elm) {
+  const children = [];
+  let rawNode = elm.dom();
 
   while (rawNode) {
     children.push(Element.fromDom(rawNode));
@@ -29,28 +30,28 @@ var getLastChildren = function (elm) {
   return children;
 };
 
-var removeTrailingBr = function (elm) {
-  var allBrs = SelectorFilter.descendants(elm, 'br');
-  var brs = Arr.filter(getLastChildren(elm).slice(-1), ElementType.isBr);
+const removeTrailingBr = function (elm) {
+  const allBrs = SelectorFilter.descendants(elm, 'br');
+  const brs = Arr.filter(getLastChildren(elm).slice(-1), ElementType.isBr);
   if (allBrs.length === brs.length) {
     Arr.each(brs, Remove.remove);
   }
 };
 
-var fillWithPaddingBr = function (elm) {
+const fillWithPaddingBr = function (elm) {
   Remove.empty(elm);
   Insert.append(elm, Element.fromHtml('<br data-mce-bogus="1">'));
 };
 
-var isPaddingContents = function (elm) {
+const isPaddingContents = function (elm) {
   return Node.isText(elm) ? Text.get(elm) === '\u00a0' : ElementType.isBr(elm);
 };
 
-var isPaddedElement = function (elm) {
+const isPaddedElement = function (elm) {
   return Arr.filter(Traverse.children(elm), isPaddingContents).length === 1;
 };
 
-var trimBlockTrailingBr = function (elm) {
+const trimBlockTrailingBr = function (elm) {
   Traverse.lastChild(elm).each(function (lastChild) {
     Traverse.prevSibling(lastChild).each(function (lastChildPrevSibling) {
       if (ElementType.isBlock(elm) && ElementType.isBr(lastChild) && ElementType.isBlock(lastChildPrevSibling)) {
@@ -61,8 +62,8 @@ var trimBlockTrailingBr = function (elm) {
 };
 
 export default {
-  removeTrailingBr: removeTrailingBr,
-  fillWithPaddingBr: fillWithPaddingBr,
-  isPaddedElement: isPaddedElement,
-  trimBlockTrailingBr: trimBlockTrailingBr
+  removeTrailingBr,
+  fillWithPaddingBr,
+  isPaddedElement,
+  trimBlockTrailingBr
 };

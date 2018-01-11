@@ -11,42 +11,41 @@
 import SaxParser from 'tinymce/core/html/SaxParser';
 import Schema from 'tinymce/core/html/Schema';
 import Writer from 'tinymce/core/html/Writer';
-import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 
-var sanitize = function (editor, html) {
+const sanitize = function (editor, html) {
   if (Settings.shouldFilterHtml(editor) === false) {
     return html;
   }
 
-  var writer = Writer();
-  var blocked;
+  const writer = Writer();
+  let blocked;
 
   new SaxParser({
     validate: false,
     allow_conditional_comments: false,
     special: 'script,noscript',
 
-    comment: function (text) {
+    comment (text) {
       writer.comment(text);
     },
 
-    cdata: function (text) {
+    cdata (text) {
       writer.cdata(text);
     },
 
-    text: function (text, raw) {
+    text (text, raw) {
       writer.text(text, raw);
     },
 
-    start: function (name, attrs, empty) {
+    start (name, attrs, empty) {
       blocked = true;
 
       if (name === 'script' || name === 'noscript') {
         return;
       }
 
-      for (var i = 0; i < attrs.length; i++) {
+      for (let i = 0; i < attrs.length; i++) {
         if (attrs[i].name.indexOf('on') === 0) {
           return;
         }
@@ -60,7 +59,7 @@ var sanitize = function (editor, html) {
       blocked = false;
     },
 
-    end: function (name) {
+    end (name) {
       if (blocked) {
         return;
       }
@@ -73,5 +72,5 @@ var sanitize = function (editor, html) {
 };
 
 export default {
-  sanitize: sanitize
+  sanitize
 };

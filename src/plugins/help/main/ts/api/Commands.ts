@@ -10,10 +10,10 @@
 
 import Dialog from '../ui/Dialog';
 
-var register = function (editor, pluginUrl) {
+const register = function (editor, pluginUrl) {
   editor.addCommand('mceHelp', Dialog.open(editor, pluginUrl));
 };
 
 export default {
-  register: register
+  register
 };

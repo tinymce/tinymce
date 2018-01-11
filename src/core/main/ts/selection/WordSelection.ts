@@ -12,20 +12,20 @@ import { Type } from '@ephox/katamari';
 import CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 
-var hasSelectionModifyApi = function (editor) {
+const hasSelectionModifyApi = function (editor) {
   return Type.isFunction(editor.selection.getSel().modify);
 };
 
-var moveRel = function (forward, selection, pos) {
-  var delta = forward ? 1 : -1;
+const moveRel = function (forward, selection, pos) {
+  const delta = forward ? 1 : -1;
   selection.setRng(CaretPosition(pos.container(), pos.offset() + delta).toRange());
   selection.getSel().modify('move', forward ? 'forward' : 'backward', 'word');
   return true;
 };
 
-var moveByWord = function (forward, editor) {
-  var rng = editor.selection.getRng();
-  var pos = forward ? CaretPosition.fromRangeEnd(rng) : CaretPosition.fromRangeStart(rng);
+const moveByWord = function (forward, editor) {
+  const rng = editor.selection.getRng();
+  const pos = forward ? CaretPosition.fromRangeEnd(rng) : CaretPosition.fromRangeStart(rng);
 
   if (!hasSelectionModifyApi(editor)) {
     return false;
@@ -39,6 +39,6 @@ var moveByWord = function (forward, editor) {
 };
 
 export default {
-  hasSelectionModifyApi: hasSelectionModifyApi,
-  moveByWord: moveByWord
+  hasSelectionModifyApi,
+  moveByWord
 };

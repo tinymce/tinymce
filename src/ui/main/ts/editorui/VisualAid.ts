@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var toggleVisualAidState = function (editor) {
+const toggleVisualAidState = function (editor) {
   return function () {
-    var self = this;
+    const self = this;
 
     editor.on('VisualAid', function (e) {
       self.active(e.hasVisual);
@@ -20,7 +20,7 @@ var toggleVisualAidState = function (editor) {
   };
 };
 
-var registerMenuItems = function (editor) {
+const registerMenuItems = function (editor) {
   editor.addMenuItem('visualaid', {
     text: 'Visual aids',
     selectable: true,
@@ -29,10 +29,10 @@ var registerMenuItems = function (editor) {
   });
 };
 
-var register = function (editor) {
+const register = function (editor) {
   registerMenuItems(editor);
 };
 
-export default <any> {
-  register: register
+export default {
+  register
 };

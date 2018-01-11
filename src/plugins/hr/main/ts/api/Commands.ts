@@ -8,12 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addCommand('InsertHorizontalRule', function () {
     editor.execCommand('mceInsertContent', false, '<hr />');
   });
 };
 
 export default {
-  register: register
+  register
 };

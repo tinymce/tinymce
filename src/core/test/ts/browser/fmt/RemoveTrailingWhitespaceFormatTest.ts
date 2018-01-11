@@ -1,7 +1,6 @@
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
@@ -11,16 +10,16 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.core.fmt.RemoveTrailingWhitespaceFormatTest',
-  function() {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+  function () {
+    const success = arguments[arguments.length - 2];
+    const failure = arguments[arguments.length - 1];
 
     ModernTheme();
     LinkPlugin();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyApis = TinyApis(editor);
-      var tinyUi = TinyUi(editor);
+      const tinyApis = TinyApis(editor);
+      const tinyUi = TinyUi(editor);
 
       Pipeline.async({}, [
         Logger.t('remove bold with leading whitespace', GeneralSteps.sequence([

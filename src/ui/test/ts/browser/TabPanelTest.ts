@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import EventUtils from 'tinymce/core/dom/EventUtils';
 import UiUtils from '../module/test/UiUtils';
 import ViewBlock from '../module/test/ViewBlock';
@@ -9,16 +8,16 @@ import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.TabPanelTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.ui.TabPanelTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   // Registers ui widgets to factory
   Api.registerToFactory();
 
-  var createTabPanel = function (settings) {
+  const createTabPanel = function (settings) {
     EventUtils.Event.clean(viewBlock.get());
     viewBlock.update('');
 
@@ -32,8 +31,8 @@ UnitTest.asynctest('browser.tinymce.ui.TabPanelTest', function() {
     }, settings)).renderTo(viewBlock.get()).reflow();
   };
 
-  suite.test("panel width: 100, height: 100", function () {
-    var panel = createTabPanel({
+  suite.test('panel width: 100, height: 100', function () {
+    const panel = createTabPanel({
       width: 100,
       height: 100,
       layout: 'fit'
@@ -43,8 +42,8 @@ UnitTest.asynctest('browser.tinymce.ui.TabPanelTest', function() {
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, panel.items()[0]), [0, 31, 100, 69], 4);
   });
 
-  suite.test("panel width: 100, height: 100, border: 1", function () {
-    var panel = createTabPanel({
+  suite.test('panel width: 100, height: 100, border: 1', function () {
+    const panel = createTabPanel({
       width: 100,
       height: 100,
       border: 1,
@@ -55,8 +54,8 @@ UnitTest.asynctest('browser.tinymce.ui.TabPanelTest', function() {
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, panel.items()[0]), [0, 31, 100, 69], 4);
   });
 
-  suite.test("panel width: 100, height: 100, activeTab: 1", function () {
-    var panel = createTabPanel({
+  suite.test('panel width: 100, height: 100, activeTab: 1', function () {
+    const panel = createTabPanel({
       width: 100,
       height: 100,
       activeTab: 1,
@@ -67,8 +66,8 @@ UnitTest.asynctest('browser.tinymce.ui.TabPanelTest', function() {
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, panel.items()[1]), [0, 31, 100, 69], 4);
   });
 
-  suite.test("panel width: auto, height: auto, mixed sized widgets", function () {
-    var panel = createTabPanel({
+  suite.test('panel width: auto, height: auto, mixed sized widgets', function () {
+    const panel = createTabPanel({
       items: [
         { title: 'a', type: 'spacer', classes: 'red', style: 'width: 100px; height: 100px' },
         { title: 'b', type: 'spacer', classes: 'green', style: 'width: 70px; height: 70px' },
@@ -86,8 +85,8 @@ UnitTest.asynctest('browser.tinymce.ui.TabPanelTest', function() {
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, panel.items()[2]), [0, 31, 120, 120], 4);
   });
 
-  suite.test("panel width: auto, height: auto, mixed sized containers", function () {
-    var panel = createTabPanel({
+  suite.test('panel width: auto, height: auto, mixed sized containers', function () {
+    const panel = createTabPanel({
       items: [
         {
           title: 'a',
@@ -151,4 +150,3 @@ UnitTest.asynctest('browser.tinymce.ui.TabPanelTest', function() {
     }, failure);
   });
 });
-

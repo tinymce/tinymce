@@ -7,17 +7,17 @@ import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   ModernTheme();
   LinkPlugin();
 
-  var nonRelativeRegex = /^\w+:/i;
+  const nonRelativeRegex = /^\w+:/i;
 
-  var _cleanHtml = function (html) {
+  const _cleanHtml = function (html) {
     html = html.toLowerCase().replace(/[\r\n]+/gi, '');
     html = html.replace(/ (sizcache[0-9]+|sizcache|nodeindex|sizset[0-9]+|sizset|data\-mce\-expando|data\-mce\-selected)="[^"]*"/gi, '');
     html = html.replace(/<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\/span>|<div[^>]+data-mce-bogus[^>]+><\/div>/gi, '');
@@ -29,23 +29,23 @@ UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function() {
     return html;
   };
 
-  var cleanHtml = function (html) {
+  const cleanHtml = function (html) {
     return _cleanHtml(html).replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
   };
 
-  var getFrontmostWindow = function (editor) {
+  const getFrontmostWindow = function (editor) {
     return editor.windowManager.windows[editor.windowManager.windows.length - 1];
   };
 
-  var fillAndSubmitWindowForm = function (editor, data) {
-    var win = getFrontmostWindow(editor);
+  const fillAndSubmitWindowForm = function (editor, data) {
+    const win = getFrontmostWindow(editor);
 
     win.fromJSON(data);
     win.find('form')[0].submit();
     win.close();
   };
 
-  var sTeardown = function (editor) {
+  const sTeardown = function (editor) {
     return Step.sync(function () {
       delete editor.settings.file_browser_callback;
       delete editor.settings.link_list;
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function() {
       delete editor.settings.link_target_list;
       delete editor.settings.rel_list;
 
-      var win = getFrontmostWindow(editor);
+      const win = getFrontmostWindow(editor);
 
       if (win) {
         win.close();
@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function() {
     });
   };
 
-  var appendTeardown = function (editor, steps) {
+  const appendTeardown = function (editor, steps) {
     return Arr.bind(steps, function (step) {
       return [step, sTeardown(editor)];
     });
@@ -72,17 +72,17 @@ UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function() {
     editor.execCommand('mceLink', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "href": "",
-      "target": "",
-      "text": "",
-      "title": ""
+      href: '',
+      target: '',
+      text: '',
+      title: ''
     });
 
     fillAndSubmitWindowForm(editor, {
-      "href": "href",
-      "target": "_blank",
-      "text": "text",
-      "title": "title"
+      href: 'href',
+      target: '_blank',
+      text: 'text',
+      title: 'title'
     });
 
     LegacyUnit.equal(
@@ -97,16 +97,16 @@ UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function() {
     editor.execCommand('mceLink', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "href": "",
-      "target": "",
-      "text": "b",
-      "title": ""
+      href: '',
+      target: '',
+      text: 'b',
+      title: ''
     });
 
     fillAndSubmitWindowForm(editor, {
-      "href": "href",
-      "target": "_blank",
-      "title": "title"
+      href: 'href',
+      target: '_blank',
+      title: 'title'
     });
 
     LegacyUnit.equal(
@@ -121,15 +121,15 @@ UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function() {
     editor.execCommand('mceLink', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "href": "",
-      "target": "",
-      "title": ""
+      href: '',
+      target: '',
+      title: ''
     });
 
     fillAndSubmitWindowForm(editor, {
-      "href": "href",
-      "target": "_blank",
-      "title": "title"
+      href: 'href',
+      target: '_blank',
+      title: 'title'
     });
 
     LegacyUnit.equal(
@@ -164,18 +164,18 @@ UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function() {
     editor.execCommand('mceLink', true);
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "class": "class1",
-      "href": "",
-      "rel": "rel1",
-      "target": "target1",
-      "text": "",
-      "title": ""
+      class: 'class1',
+      href: '',
+      rel: 'rel1',
+      target: 'target1',
+      text: '',
+      title: ''
     });
 
     fillAndSubmitWindowForm(editor, {
-      "href": "href",
-      "text": "text",
-      "title": "title"
+      href: 'href',
+      text: 'text',
+      title: 'title'
     });
 
     LegacyUnit.equal(
@@ -184,7 +184,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function() {
     );
   });
 
-  //Since there's no capability to use the confirm dialog with unit tests, simply test the regex we're using
+  // Since there's no capability to use the confirm dialog with unit tests, simply test the regex we're using
   suite.test('Test new regex for non relative link setting ftp', function () {
     LegacyUnit.equal(nonRelativeRegex.test('ftp://testftp.com'), true);
   });
@@ -210,4 +210,3 @@ UnitTest.asynctest('browser.tinymce.plugins.link.LinkPluginTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

@@ -9,12 +9,13 @@
  */
 
 function isContentEditableFalse(node) {
-  return node && node.nodeType === 1 && node.contentEditable === "false";
+  return node && node.nodeType === 1 && node.contentEditable === 'false';
 }
 
 export default function (node, editor) {
-  var m, matches = [], text, dom = editor.dom;
-  var blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;
+  let m, matches = [], text;
+  const dom = editor.dom;
+  let blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;
 
   blockElementsMap = editor.schema.getBlockElements(); // H1-H6, P, TD etc
   hiddenTextElementsMap = editor.schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT
@@ -22,19 +23,19 @@ export default function (node, editor) {
 
   function createMatch(m, data) {
     if (!m[0]) {
-      throw 'findAndReplaceDOMText cannot handle zero-length matches';
+      throw new Error('findAndReplaceDOMText cannot handle zero-length matches');
     }
 
     return {
       start: m.index,
       end: m.index + m[0].length,
       text: m[0],
-      data: data
+      data
     };
   }
 
   function getText(node) {
-    var txt;
+    let txt;
 
     if (node.nodeType === 3) {
       return node.data;
@@ -64,7 +65,7 @@ export default function (node, editor) {
   }
 
   function stepThroughMatches(node, matches, replaceFn) {
-    var startNode, endNode, startNodeIndex,
+    let startNode, endNode, startNodeIndex,
       endNodeIndex, innerNodes = [], atIndex = 0, curNode = node,
       matchLocation, matchIndex = 0;
 
@@ -75,7 +76,7 @@ export default function (node, editor) {
 
     matchLocation = matches.shift();
 
-    out: while (true) { //eslint-disable-line no-constant-condition
+    out: while (true) { // eslint-disable-line no-constant-condition
       if (blockElementsMap[curNode.nodeName] || shortEndedElementsMap[curNode.nodeName] || isContentEditableFalse(curNode)) {
         atIndex++;
       }
@@ -101,13 +102,13 @@ export default function (node, editor) {
 
       if (startNode && endNode) {
         curNode = replaceFn({
-          startNode: startNode,
-          startNodeIndex: startNodeIndex,
-          endNode: endNode,
-          endNodeIndex: endNodeIndex,
-          innerNodes: innerNodes,
+          startNode,
+          startNodeIndex,
+          endNode,
+          endNodeIndex,
+          innerNodes,
           match: matchLocation.text,
-          matchIndex: matchIndex
+          matchIndex
         });
 
         // replaceFn has to return the node that replaced the endNode
@@ -136,7 +137,7 @@ export default function (node, editor) {
       }
 
       // Move forward or up:
-      while (true) { //eslint-disable-line no-constant-condition
+      while (true) { // eslint-disable-line no-constant-condition
         if (curNode.nextSibling) {
           curNode = curNode.nextSibling;
           break;
@@ -155,13 +156,13 @@ export default function (node, editor) {
   */
   function genReplacer(callback) {
     function makeReplacementNode(fill, matchIndex) {
-      var match = matches[matchIndex];
+      const match = matches[matchIndex];
 
       if (!match.stencil) {
         match.stencil = callback(match);
       }
 
-      var clone = match.stencil.cloneNode(false);
+      const clone = match.stencil.cloneNode(false);
       clone.setAttribute('data-mce-index', matchIndex);
 
       if (fill) {
@@ -172,12 +173,16 @@ export default function (node, editor) {
     }
 
     return function (range) {
-      var before, after, parentNode, startNode = range.startNode,
-        endNode = range.endNode, matchIndex = range.matchIndex,
-        doc = dom.doc;
+      let before;
+      let after;
+      let parentNode;
+      const startNode = range.startNode;
+      const endNode = range.endNode;
+      const matchIndex = range.matchIndex;
+      const doc = dom.doc;
 
       if (startNode === endNode) {
-        var node = startNode;
+        const node = startNode;
 
         parentNode = node.parentNode;
         if (range.startNodeIndex > 0) {
@@ -187,7 +192,7 @@ export default function (node, editor) {
         }
 
         // Create the replacement node:
-        var el = makeReplacementNode(range.match, matchIndex);
+        const el = makeReplacementNode(range.match, matchIndex);
         parentNode.insertBefore(el, node);
         if (range.endNodeIndex < node.length) {
           // Add "after" text node (after the match)
@@ -203,17 +208,17 @@ export default function (node, editor) {
       // Replace startNode -> [innerNodes...] -> endNode (in that order)
       before = doc.createTextNode(startNode.data.substring(0, range.startNodeIndex));
       after = doc.createTextNode(endNode.data.substring(range.endNodeIndex));
-      var elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);
-      var innerEls = [];
+      const elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);
+      const innerEls = [];
 
-      for (var i = 0, l = range.innerNodes.length; i < l; ++i) {
-        var innerNode = range.innerNodes[i];
-        var innerEl = makeReplacementNode(innerNode.data, matchIndex);
+      for (let i = 0, l = range.innerNodes.length; i < l; ++i) {
+        const innerNode = range.innerNodes[i];
+        const innerEl = makeReplacementNode(innerNode.data, matchIndex);
         innerNode.parentNode.replaceChild(innerEl, innerNode);
         innerEls.push(innerEl);
       }
 
-      var elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);
+      const elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);
 
       parentNode = startNode.parentNode;
       parentNode.insertBefore(before, startNode);
@@ -230,7 +235,7 @@ export default function (node, editor) {
   }
 
   function unwrapElement(element) {
-    var parentNode = element.parentNode;
+    const parentNode = element.parentNode;
     parentNode.insertBefore(element.firstChild, element);
     element.parentNode.removeChild(element);
   }
@@ -240,12 +245,12 @@ export default function (node, editor) {
   }
 
   function getWrappersByIndex(index) {
-    var elements = node.getElementsByTagName('*'), wrappers = [];
+    const elements = node.getElementsByTagName('*'), wrappers = [];
 
-    index = typeof index === "number" ? "" + index : null;
+    index = typeof index === 'number' ? '' + index : null;
 
-    for (var i = 0; i < elements.length; i++) {
-      var element = elements[i], dataIndex = element.getAttribute('data-mce-index');
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i], dataIndex = element.getAttribute('data-mce-index');
 
       if (dataIndex !== null && dataIndex.length && hasClass(element)) {
         if (dataIndex === index || index === null) {
@@ -264,7 +269,7 @@ export default function (node, editor) {
   * @return {Number} Index of match or -1 if it isn't found.
   */
   function indexOf(match) {
-    var i = matches.length;
+    let i = matches.length;
     while (i--) {
       if (matches[i] === match) {
         return i;
@@ -281,7 +286,7 @@ export default function (node, editor) {
   * @return {DomTextMatcher} Current DomTextMatcher instance.
   */
   function filter(callback) {
-    var filteredMatches = [];
+    const filteredMatches = [];
 
     each(function (match, i) {
       if (callback(match, i)) {
@@ -302,7 +307,7 @@ export default function (node, editor) {
   * @return {DomTextMatcher} Current DomTextMatcher instance.
   */
   function each(callback) {
-    for (var i = 0, l = matches.length; i < l; i++) {
+    for (let i = 0, l = matches.length; i < l; i++) {
       if (callback(matches[i], i) === false) {
         break;
       }
@@ -352,7 +357,8 @@ export default function (node, editor) {
   * @return {DomTextMatcher} Current DomTextMatcher instance.
   */
   function unwrap(match?) {
-    var i, elements = getWrappersByIndex(match ? indexOf(match) : null);
+    let i;
+    const elements = getWrappersByIndex(match ? indexOf(match) : null);
 
     i = elements.length;
     while (i--) {
@@ -393,10 +399,10 @@ export default function (node, editor) {
   */
   function add(start, length, data) {
     matches.push({
-      start: start,
+      start,
       end: start + length,
       text: text.substr(start, length),
-      data: data
+      data
     });
 
     return this;
@@ -409,9 +415,9 @@ export default function (node, editor) {
   * @return {DOMRange} DOM Range for the specified match.
   */
   function rangeFromMatch(match) {
-    var wrappers = getWrappersByIndex(indexOf(match));
+    const wrappers = getWrappersByIndex(indexOf(match));
 
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStartBefore(wrappers[0]);
     rng.setEndAfter(wrappers[wrappers.length - 1]);
 
@@ -426,7 +432,7 @@ export default function (node, editor) {
   * @return {DOMRange} DOM range produced after the replace.
   */
   function replace(match, text) {
-    var rng = rangeFromMatch(match);
+    const rng = rangeFromMatch(match);
 
     rng.deleteContents();
 
@@ -452,19 +458,19 @@ export default function (node, editor) {
   text = getText(node);
 
   return {
-    text: text,
-    matches: matches,
-    each: each,
-    filter: filter,
-    reset: reset,
-    matchFromElement: matchFromElement,
-    elementFromMatch: elementFromMatch,
-    find: find,
-    add: add,
-    wrap: wrap,
-    unwrap: unwrap,
-    replace: replace,
-    rangeFromMatch: rangeFromMatch,
-    indexOf: indexOf
+    text,
+    matches,
+    each,
+    filter,
+    reset,
+    matchFromElement,
+    elementFromMatch,
+    find,
+    add,
+    wrap,
+    unwrap,
+    replace,
+    rangeFromMatch,
+    indexOf
   };
-};
+}

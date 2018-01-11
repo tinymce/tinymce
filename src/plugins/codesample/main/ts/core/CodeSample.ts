@@ -12,8 +12,8 @@ import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Prism from './Prism';
 import Utils from '../util/Utils';
 
-var getSelectedCodeSample = function (editor) {
-  var node = editor.selection.getNode();
+const getSelectedCodeSample = function (editor) {
+  const node = editor.selection.getNode();
 
   if (Utils.isCodeSample(node)) {
     return node;
@@ -22,9 +22,9 @@ var getSelectedCodeSample = function (editor) {
   return null;
 };
 
-var insertCodeSample = function (editor, language, code) {
+const insertCodeSample = function (editor, language, code) {
   editor.undoManager.transact(function () {
-    var node = getSelectedCodeSample(editor);
+    const node = getSelectedCodeSample(editor);
 
     code = DOMUtils.DOM.encode(code);
 
@@ -40,8 +40,8 @@ var insertCodeSample = function (editor, language, code) {
   });
 };
 
-var getCurrentCode = function (editor) {
-  var node = getSelectedCodeSample(editor);
+const getCurrentCode = function (editor) {
+  const node = getSelectedCodeSample(editor);
 
   if (node) {
     return node.textContent;
@@ -51,7 +51,7 @@ var getCurrentCode = function (editor) {
 };
 
 export default {
-  getSelectedCodeSample: getSelectedCodeSample,
-  insertCodeSample: insertCodeSample,
-  getCurrentCode: getCurrentCode
+  getSelectedCodeSample,
+  insertCodeSample,
+  getCurrentCode
 };

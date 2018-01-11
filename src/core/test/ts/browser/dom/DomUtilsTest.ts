@@ -1,27 +1,24 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import Dimensions from 'tinymce/core/dom/Dimensions';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Env from 'tinymce/core/Env';
 import Schema from 'tinymce/core/html/Schema';
 import HtmlUtils from '../../module/test/HtmlUtils';
-import ViewBlock from '../../module/test/ViewBlock';
-import Arr from 'tinymce/core/util/Arr';
 import Tools from 'tinymce/core/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
-  var DOM = new DOMUtils(document, { keep_values : true, schema : Schema() });
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
+  const DOM = new DOMUtils(document, { keep_values : true, schema : Schema() });
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   suite.test('parseStyle', function () {
-    var dom;
+    let dom;
 
     DOM.add(document.body, 'div', { id : 'test' });
 
-    dom = new DOMUtils(document, { hex_colors : true, keep_values : true, url_converter : function (u) {
+    dom = new DOMUtils(document, { hex_colors : true, keep_values : true, url_converter (u) {
       return 'X' + u + 'Y';
     } });
 
@@ -146,17 +143,17 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
   });
 
   suite.test('add', function () {
-    var e;
+    let e;
 
     DOM.add(document.body, 'div', { id : 'test' });
 
-    DOM.add('test', 'span', { 'class' : 'abc 123' }, 'content <b>abc</b>');
+    DOM.add('test', 'span', { class : 'abc 123' }, 'content <b>abc</b>');
     e = DOM.get('test').getElementsByTagName('span')[0];
     LegacyUnit.equal(e.className, 'abc 123');
     LegacyUnit.equal(e.innerHTML.toLowerCase(), 'content <b>abc</b>');
     DOM.remove(e);
 
-    DOM.add('test', 'span', { 'class' : 'abc 123' });
+    DOM.add('test', 'span', { class : 'abc 123' });
     e = DOM.get('test').getElementsByTagName('span')[0];
     LegacyUnit.equal(e.className, 'abc 123');
     DOM.remove(e);
@@ -167,16 +164,16 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
     DOM.remove(e);
 
     DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
-    DOM.add(['test2', 'test3', 'test4'], 'span', { 'class' : 'abc 123' });
+    DOM.add(['test2', 'test3', 'test4'], 'span', { class : 'abc 123' });
     LegacyUnit.equal(DOM.select('span', 'test').length, 6);
 
     DOM.remove('test');
   });
 
   suite.test('create', function () {
-    var e;
+    let e;
 
-    e = DOM.create('span', { 'class' : 'abc 123' }, 'content <b>abc</b>');
+    e = DOM.create('span', { class : 'abc 123' }, 'content <b>abc</b>');
 
     LegacyUnit.equal(e.nodeName, 'SPAN');
     LegacyUnit.equal(e.className, 'abc 123');
@@ -185,11 +182,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
 
   suite.test('createHTML', function () {
     LegacyUnit.equal(
-      DOM.createHTML('span', { 'id': 'id1', 'class': 'abc 123' }, 'content <b>abc</b>'),
+      DOM.createHTML('span', { id: 'id1', class: 'abc 123' }, 'content <b>abc</b>'),
       '<span id="id1" class="abc 123">content <b>abc</b></span>'
     );
-    LegacyUnit.equal(DOM.createHTML('span', { 'id': 'id1', 'class': 'abc 123' }), '<span id="id1" class="abc 123" />');
-    LegacyUnit.equal(DOM.createHTML('span', { 'id': null, 'class': undefined }), '<span />');
+    LegacyUnit.equal(DOM.createHTML('span', { id: 'id1', class: 'abc 123' }), '<span id="id1" class="abc 123" />');
+    LegacyUnit.equal(DOM.createHTML('span', { id: null, class: undefined }), '<span />');
     LegacyUnit.equal(DOM.createHTML('span'), '<span />');
     LegacyUnit.equal(DOM.createHTML('span', null, 'content <b>abc</b>'), '<span>content <b>abc</b></span>');
   });
@@ -231,7 +228,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
 
     DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>');
     LegacyUnit.equal(DOM.select('div div', 'test').length, 1, null, Env.webkit); // Issue: http://bugs.webkit.org/show_bug.cgi?id=17461
-    //alert(DOM.select('div div', 'test').length +","+DOM.get('test').querySelectorAll('div div').length);
+    // alert(DOM.select('div div', 'test').length +","+DOM.get('test').querySelectorAll('div div').length);
 
     DOM.remove('test');
   });
@@ -253,7 +250,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
   });
 
   suite.test('setGetAttrib', function () {
-    var dom;
+    let dom;
 
     DOM.add(document.body, 'div', { id : 'test' });
 
@@ -265,7 +262,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
     LegacyUnit.equal(DOM.getAttrib('test', 'data-mce-src'), 'url');
     LegacyUnit.equal(DOM.getAttrib('test', 'abc'), '');
 
-    DOM.setAttribs('test', { 'class' : '123', title : 'abc' });
+    DOM.setAttribs('test', { class : '123', title : 'abc' });
     LegacyUnit.equal(DOM.getAttrib('test', 'class'), '123');
     LegacyUnit.equal(DOM.getAttrib('test', 'title'), 'abc');
 
@@ -273,7 +270,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
     LegacyUnit.equal(DOM.getAttrib('test', 'class'), '123');
     LegacyUnit.equal(DOM.getAttrib('test', 'title'), 'abc');
 
-    dom = new DOMUtils(document, { keep_values : true, url_converter : function (u, n) {
+    dom = new DOMUtils(document, { keep_values : true, url_converter (u, n) {
       return '&<>"' + u + '&<>"' + n;
     } });
 
@@ -294,8 +291,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
   });
 
   suite.test('getAttribs', function () {
-    var check = function (obj, val) {
-      var count = 0;
+    const check = function (obj, val) {
+      let count = 0;
 
       val = val.split(',');
 
@@ -365,7 +362,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
     DOM.remove('test');
   });
 
-  var eqNodeName = function (name) {
+  const eqNodeName = function (name) {
     return function (n) {
       return n.nodeName === name;
     };
@@ -411,7 +408,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
   });
 
   suite.test('getViewPort', function () {
-    var wp;
+    let wp;
 
     wp = DOM.getViewPort();
     LegacyUnit.equal(wp.x, 0);
@@ -421,7 +418,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
   });
 
   suite.test('getRect', function () {
-    var r;
+    let r;
 
     DOM.add(document.body, 'div', { id : 'test' });
 
@@ -442,7 +439,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
   });
 
   suite.test('getSize', function () {
-    var r;
+    let r;
 
     DOM.add(document.body, 'div', { id : 'test' });
 
@@ -484,7 +481,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
   });
 
   suite.test('loadCSS', function () {
-    var c = 0;
+    let c = 0;
 
     DOM.loadCSS('tinymce/dom/test.css?a=1,tinymce/dom/test.css?a=2,tinymce/dom/test.css?a=3');
 
@@ -582,7 +579,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
   });
 
   suite.test('split', function () {
-    var point, parent;
+    let point, parent;
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.setHTML('test', '<p><b>text1<span>inner</span>text2</b></p>');
@@ -622,7 +619,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
   suite.test('isEmpty without defined schema', function () {
     DOM.add(document.body, 'div', { id : 'test' }, '');
 
-    var domUtils = new DOMUtils(document);
+    const domUtils = new DOMUtils(document);
 
     DOM.setHTML('test', '<hr>');
     LegacyUnit.equal(domUtils.isEmpty(DOM.get('test')), false, 'Should be false since hr is something');
@@ -706,34 +703,34 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
   });
 
   suite.test('isEmpty with list of elements considered non-empty', function () {
-    var elm = DOM.create('p', null, '<img>');
+    const elm = DOM.create('p', null, '<img>');
     LegacyUnit.equal(false, DOM.isEmpty(elm, { img: true }));
   });
 
   suite.test('isEmpty on pre', function () {
-    var elm = DOM.create('pre', null, '  ');
+    const elm = DOM.create('pre', null, '  ');
     LegacyUnit.equal(false, DOM.isEmpty(elm));
   });
 
   suite.test('isEmpty with list of elements considered non-empty without schema', function () {
-    var domWithoutSchema = new DOMUtils(document, { keep_values: true });
+    const domWithoutSchema = new DOMUtils(document, { keep_values: true });
 
-    var elm = domWithoutSchema.create('p', null, '<img>');
+    const elm = domWithoutSchema.create('p', null, '<img>');
     LegacyUnit.equal(false, domWithoutSchema.isEmpty(elm, { img: true }));
   });
 
   suite.test('isEmpty on P with BR in EM', function () {
-    var elm = DOM.create('p', null, '<em><br></em>');
+    const elm = DOM.create('p', null, '<em><br></em>');
     LegacyUnit.equal(DOM.isEmpty(elm), true, 'No children');
   });
 
   suite.test('isEmpty on P with two BR in EM', function () {
-    var elm = DOM.create('p', null, '<em><br><br></em>');
+    const elm = DOM.create('p', null, '<em><br><br></em>');
     LegacyUnit.equal(false, DOM.isEmpty(elm));
   });
 
   suite.test('bind/unbind/fire', function () {
-    var count = 0;
+    let count = 0;
 
     DOM.bind(document, 'click', function () {
       count++;
@@ -763,4 +760,3 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function() {
     success();
   }, failure);
 });
-

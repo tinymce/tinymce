@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addButton('charmap', {
     icon: 'charmap',
     tooltip: 'Special character',
@@ -24,5 +24,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

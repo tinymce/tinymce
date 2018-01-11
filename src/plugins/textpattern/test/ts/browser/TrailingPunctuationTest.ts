@@ -12,21 +12,21 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.textpattern.TrailingPunctuationTest',
-  function() {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+  function () {
+    const success = arguments[arguments.length - 2];
+    const failure = arguments[arguments.length - 1];
 
     ModernTheme();
     TextpatternPlugin();
 
-    var sTypeChar = function (editor, character) {
+    const sTypeChar = function (editor, character) {
       return Step.sync(function () {
-        var charCode = character.charCodeAt(0);
-        editor.fire('keypress', { charCode: charCode });
+        const charCode = character.charCodeAt(0);
+        editor.fire('keypress', { charCode });
       });
     };
 
-    var sTypeAndTrigger = function (tinyApis, editor) {
+    const sTypeAndTrigger = function (tinyApis, editor) {
       return function (label, patternText, trigger, tag, rawText) {
         return Logger.t(label, GeneralSteps.sequence([
           tinyApis.sSetContent('<p>' + patternText + trigger + '</p>'),
@@ -57,8 +57,8 @@ UnitTest.asynctest(
     };
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyApis = TinyApis(editor);
-      var tnt = sTypeAndTrigger(tinyApis, editor);
+      const tinyApis = TinyApis(editor);
+      const tnt = sTypeAndTrigger(tinyApis, editor);
 
       Pipeline.async({}, [
         tnt('em with ,', '*a*', ',', 'em', 'a'),
@@ -80,4 +80,3 @@ UnitTest.asynctest(
     }, success, failure);
   }
 );
-

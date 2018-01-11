@@ -15,9 +15,9 @@ declare let tinymce: any;
 TocPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  plugins: "toc code",
-  toolbar: "toc code formatselect",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
+  selector: 'textarea.tinymce',
+  plugins: 'toc code',
+  toolbar: 'toc code formatselect',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
   height: 600
 });

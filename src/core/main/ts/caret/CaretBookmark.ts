@@ -33,12 +33,12 @@ import CaretPosition from './CaretPosition';
  * var caretPosition = CaretBookmark.resolve(bookmark);
  */
 
-var isText = NodeType.isText,
+const isText = NodeType.isText,
   isBogus = NodeType.isBogus,
   nodeIndex = DomUtils.nodeIndex;
 
-var normalizedParent = function (node) {
-  var parentNode = node.parentNode;
+const normalizedParent = function (node) {
+  const parentNode = node.parentNode;
 
   if (isBogus(parentNode)) {
     return normalizedParent(parentNode);
@@ -47,13 +47,13 @@ var normalizedParent = function (node) {
   return parentNode;
 };
 
-var getChildNodes = function (node) {
+const getChildNodes = function (node) {
   if (!node) {
     return [];
   }
 
   return Arr.reduce(node.childNodes, function (result, node) {
-    if (isBogus(node) && node.nodeName != 'BR') {
+    if (isBogus(node) && node.nodeName !== 'BR') {
       result = result.concat(getChildNodes(node));
     } else {
       result.push(node);
@@ -63,7 +63,7 @@ var getChildNodes = function (node) {
   }, []);
 };
 
-var normalizedTextOffset = function (textNode, offset) {
+const normalizedTextOffset = function (textNode, offset) {
   while ((textNode = textNode.previousSibling)) {
     if (!isText(textNode)) {
       break;
@@ -75,14 +75,14 @@ var normalizedTextOffset = function (textNode, offset) {
   return offset;
 };
 
-var equal = function (targetValue) {
+const equal = function (targetValue) {
   return function (value) {
     return targetValue === value;
   };
 };
 
-var normalizedNodeIndex = function (node) {
-  var nodes, index, numTextFragments;
+const normalizedNodeIndex = function (node) {
+  let nodes, index, numTextFragments;
 
   nodes = getChildNodes(normalizedParent(node));
   index = Arr.findIndex(nodes, equal(node), node);
@@ -101,8 +101,8 @@ var normalizedNodeIndex = function (node) {
   return index - numTextFragments;
 };
 
-var createPathItem = function (node) {
-  var name;
+const createPathItem = function (node) {
+  let name;
 
   if (isText(node)) {
     name = 'text()';
@@ -113,10 +113,10 @@ var createPathItem = function (node) {
   return name + '[' + normalizedNodeIndex(node) + ']';
 };
 
-var parentsUntil = function (rootNode, node, predicate?) {
-  var parents = [];
+const parentsUntil = function (rootNode, node, predicate?) {
+  const parents = [];
 
-  for (node = node.parentNode; node != rootNode; node = node.parentNode) {
+  for (node = node.parentNode; node !== rootNode; node = node.parentNode) {
     if (predicate && predicate(node)) {
       break;
     }
@@ -127,8 +127,8 @@ var parentsUntil = function (rootNode, node, predicate?) {
   return parents;
 };
 
-var create = function (rootNode, caretPosition) {
-  var container, offset, path = [],
+const create = function (rootNode, caretPosition) {
+  let container, offset, path = [],
     outputOffset, childNodes, parents;
 
   container = caretPosition.container();
@@ -158,8 +158,8 @@ var create = function (rootNode, caretPosition) {
   return path.reverse().join('/') + ',' + outputOffset;
 };
 
-var resolvePathItem = function (node, name, index) {
-  var nodes = getChildNodes(node);
+const resolvePathItem = function (node, name, index) {
+  let nodes = getChildNodes(node);
 
   nodes = Arr.filter(nodes, function (node, index) {
     return !isText(node) || !isText(nodes[index - 1]);
@@ -169,8 +169,8 @@ var resolvePathItem = function (node, name, index) {
   return nodes[index];
 };
 
-var findTextPosition = function (container, offset) {
-  var node = container, targetOffset = 0, dataLen;
+const findTextPosition = function (container, offset) {
+  let node = container, targetOffset = 0, dataLen;
 
   while (isText(node)) {
     dataLen = node.data.length;
@@ -198,8 +198,8 @@ var findTextPosition = function (container, offset) {
   return new CaretPosition(container, offset);
 };
 
-var resolve = function (rootNode, path) {
-  var parts, container, offset;
+const resolve = function (rootNode, path) {
+  let parts, container, offset;
 
   if (!path) {
     return null;
@@ -248,7 +248,7 @@ export default {
    * @param {tinymce.caret.CaretPosition} caretPosition Caret position within the root node.
    * @return {String} String xpath like location of caret position.
    */
-  create: create,
+  create,
 
   /**
    * Resolves a xpath like bookmark location to the a caret position.
@@ -258,5 +258,5 @@ export default {
    * @param {String} bookmark Bookmark string to resolve.
    * @return {tinymce.caret.CaretPosition} Caret position resolved from xpath like bookmark.
    */
-  resolve: resolve
+  resolve
 };

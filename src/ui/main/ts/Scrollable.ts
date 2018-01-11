@@ -18,24 +18,22 @@ import DragHelper from './DragHelper';
  * @mixin tinymce.ui.Scrollable
  */
 
-"use strict";
-
-export default <any> {
-  init: function () {
-    var self = this;
+export default {
+  init () {
+    const self = this;
     self.on('repaint', self.renderScroll);
   },
 
-  renderScroll: function () {
-    var self = this, margin = 2;
+  renderScroll () {
+    const self = this, margin = 2;
 
     function repaintScroll() {
-      var hasScrollH, hasScrollV, bodyElm;
+      let hasScrollH, hasScrollV, bodyElm;
 
       function repaintAxis(axisName, posName, sizeName, contentSizeName, hasScroll, ax) {
-        var containerElm, scrollBarElm, scrollThumbElm;
-        var containerSize, scrollSize, ratio, rect;
-        var posNameLower, sizeNameLower;
+        let containerElm, scrollBarElm, scrollThumbElm;
+        let containerSize, scrollSize, ratio, rect;
+        let posNameLower, sizeNameLower;
 
         scrollBarElm = self.getEl('scroll' + axisName);
         if (scrollBarElm) {
@@ -51,19 +49,19 @@ export default <any> {
 
           $(scrollBarElm).css('display', 'block');
           containerElm = self.getEl('body');
-          scrollThumbElm = self.getEl('scroll' + axisName + "t");
-          containerSize = containerElm["client" + sizeName] - (margin * 2);
-          containerSize -= hasScrollH && hasScrollV ? scrollBarElm["client" + ax] : 0;
-          scrollSize = containerElm["scroll" + sizeName];
+          scrollThumbElm = self.getEl('scroll' + axisName + 't');
+          containerSize = containerElm['client' + sizeName] - (margin * 2);
+          containerSize -= hasScrollH && hasScrollV ? scrollBarElm['client' + ax] : 0;
+          scrollSize = containerElm['scroll' + sizeName];
           ratio = containerSize / scrollSize;
 
           rect = {};
-          rect[posNameLower] = containerElm["offset" + posName] + margin;
+          rect[posNameLower] = containerElm['offset' + posName] + margin;
           rect[sizeNameLower] = containerSize;
           $(scrollBarElm).css(rect);
 
           rect = {};
-          rect[posNameLower] = containerElm["scroll" + posName] * ratio;
+          rect[posNameLower] = containerElm['scroll' + posName] * ratio;
           rect[sizeNameLower] = containerSize * ratio;
           $(scrollThumbElm).css(rect);
         }
@@ -73,13 +71,14 @@ export default <any> {
       hasScrollH = bodyElm.scrollWidth > bodyElm.clientWidth;
       hasScrollV = bodyElm.scrollHeight > bodyElm.clientHeight;
 
-      repaintAxis("h", "Left", "Width", "contentW", hasScrollH, "Height");
-      repaintAxis("v", "Top", "Height", "contentH", hasScrollV, "Width");
+      repaintAxis('h', 'Left', 'Width', 'contentW', hasScrollH, 'Height');
+      repaintAxis('v', 'Top', 'Height', 'contentH', hasScrollV, 'Width');
     }
 
     function addScroll() {
       function addScrollAxis(axisName, posName, sizeName, deltaPosName, ax) {
-        var scrollStart, axisId = self._id + '-scroll' + axisName, prefix = self.classPrefix;
+        let scrollStart;
+        const axisId = self._id + '-scroll' + axisName, prefix = self.classPrefix;
 
         $(self.getEl()).append(
           '<div id="' + axisId + '" class="' + prefix + 'scrollbar ' + prefix + 'scrollbar-' + axisName + '">' +
@@ -88,24 +87,25 @@ export default <any> {
         );
 
         self.draghelper = new DragHelper(axisId + 't', {
-          start: function () {
-            scrollStart = self.getEl('body')["scroll" + posName];
+          start () {
+            scrollStart = self.getEl('body')['scroll' + posName];
             $('#' + axisId).addClass(prefix + 'active');
           },
 
-          drag: function (e) {
-            var ratio, hasScrollH, hasScrollV, containerSize, layoutRect = self.layoutRect();
+          drag (e) {
+            let ratio, hasScrollH, hasScrollV, containerSize;
+            const layoutRect = self.layoutRect();
 
             hasScrollH = layoutRect.contentW > layoutRect.innerW;
             hasScrollV = layoutRect.contentH > layoutRect.innerH;
-            containerSize = self.getEl('body')["client" + sizeName] - (margin * 2);
-            containerSize -= hasScrollH && hasScrollV ? self.getEl('scroll' + axisName)["client" + ax] : 0;
+            containerSize = self.getEl('body')['client' + sizeName] - (margin * 2);
+            containerSize -= hasScrollH && hasScrollV ? self.getEl('scroll' + axisName)['client' + ax] : 0;
 
-            ratio = containerSize / self.getEl('body')["scroll" + sizeName];
-            self.getEl('body')["scroll" + posName] = scrollStart + (e["delta" + deltaPosName] / ratio);
+            ratio = containerSize / self.getEl('body')['scroll' + sizeName];
+            self.getEl('body')['scroll' + posName] = scrollStart + (e['delta' + deltaPosName] / ratio);
           },
 
-          stop: function () {
+          stop () {
             $('#' + axisId).removeClass(prefix + 'active');
           }
         });
@@ -113,8 +113,8 @@ export default <any> {
 
       self.classes.add('scroll');
 
-      addScrollAxis("v", "Top", "Height", "Y", "Width");
-      addScrollAxis("h", "Left", "Width", "X", "Height");
+      addScrollAxis('v', 'Top', 'Height', 'Y', 'Width');
+      addScrollAxis('h', 'Left', 'Width', 'X', 'Height');
     }
 
     if (self.settings.autoScroll) {
@@ -123,7 +123,7 @@ export default <any> {
         addScroll();
 
         self.on('wheel', function (e) {
-          var bodyEl = self.getEl('body');
+          const bodyEl = self.getEl('body');
 
           bodyEl.scrollLeft += (e.deltaX || 0) * 10;
           bodyEl.scrollTop += e.deltaY * 10;
@@ -131,7 +131,7 @@ export default <any> {
           repaintScroll();
         });
 
-        $(self.getEl('body')).on("scroll", repaintScroll);
+        $(self.getEl('body')).on('scroll', repaintScroll);
       }
 
       repaintScroll();

@@ -10,7 +10,7 @@
 
 import Type from './Type';
 
-var validDefaultOrDie = function (value, predicate) {
+const validDefaultOrDie = function (value, predicate) {
   if (predicate(value)) {
     return true;
   }
@@ -18,26 +18,26 @@ var validDefaultOrDie = function (value, predicate) {
   throw new Error('Default value doesn\'t match requested type.');
 };
 
-var getByTypeOr = function (predicate) {
+const getByTypeOr = function (predicate) {
   return function (editor, name, defaultValue) {
-    var settings = editor.settings;
+    const settings = editor.settings;
     validDefaultOrDie(defaultValue, predicate);
     return name in settings && predicate(settings[name]) ? settings[name] : defaultValue;
   };
 };
 
-var splitNoEmpty = function (str, delim) {
+const splitNoEmpty = function (str, delim) {
   return str.split(delim).filter(function (item) {
     return item.length > 0;
   });
 };
 
-var itemsToArray = function (value, defaultValue) {
-  var stringToItemsArray = function (value) {
+const itemsToArray = function (value, defaultValue) {
+  const stringToItemsArray = function (value) {
     return typeof value === 'string' ? splitNoEmpty(value, /[ ,]/) : value;
   };
 
-  var boolToItemsArray = function (value, defaultValue) {
+  const boolToItemsArray = function (value, defaultValue) {
     return value === false ? [] : defaultValue;
   };
 
@@ -52,15 +52,15 @@ var itemsToArray = function (value, defaultValue) {
   return defaultValue;
 };
 
-var getToolbarItemsOr = function (predicate) {
+const getToolbarItemsOr = function (predicate) {
   return function (editor, name, defaultValue) {
-    var value = name in editor.settings ? editor.settings[name] : defaultValue;
+    const value = name in editor.settings ? editor.settings[name] : defaultValue;
     validDefaultOrDie(defaultValue, predicate);
     return itemsToArray(value, defaultValue);
   };
 };
 
-export default <any> {
+export default {
   // TODO: Add Option based getString, getBool if merged with core
   getStringOr: getByTypeOr(Type.isString),
   getBoolOr: getByTypeOr(Type.isBoolean),
