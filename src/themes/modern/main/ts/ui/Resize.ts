@@ -10,7 +10,7 @@
 
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Events from '../api/Events';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const DOM = DOMUtils.DOM;
 const getSize = function (elm) {

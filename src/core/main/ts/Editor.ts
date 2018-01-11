@@ -11,7 +11,7 @@
 import AddOnManager from './AddOnManager';
 import EditorCommands from './EditorCommands';
 import EditorObservable from './EditorObservable';
-import EditorSettings from './EditorSettings';
+import * as EditorSettings from './EditorSettings';
 import Env from './Env';
 import Mode from './Mode';
 import Shortcuts from './Shortcuts';
@@ -313,31 +313,8 @@ Editor.prototype = {
    * // Returns a specific config value from a specific editor instance by id
    * var someval2 = tinymce.get('my_editor').getParam('myvalue');
    */
-  getParam (name, defaultVal, type) {
-    const value = name in this.settings ? this.settings[name] : defaultVal;
-    let output;
-
-    if (type === 'hash') {
-      output = {};
-
-      if (typeof value === 'string') {
-        each(value.indexOf('=') > 0 ? value.split(/[;,](?![^=;,]*(?:[;,]|$))/) : value.split(','), function (value) {
-          value = value.split('=');
-
-          if (value.length > 1) {
-            output[trim(value[0])] = trim(value[1]);
-          } else {
-            output[trim(value[0])] = trim(value);
-          }
-        });
-      } else {
-        output = value;
-      }
-
-      return output;
-    }
-
-    return value;
+  getParam (name: string, defaultVal?: any, type?: string): any {
+    return EditorSettings.getParam(this, name, defaultVal, type);
   },
 
   /**
