@@ -70,7 +70,7 @@ const registerEvents = function (editorManager, e) {
       const focusedEditor = editorManager.focusedEditor;
 
       // Still the same editor the blur was outside any editor UI
-      if (!isUIElement(editor, getActiveElement()) && focusedEditor === self) {
+      if (!isUIElement(self, getActiveElement()) && focusedEditor === self) {
         self.fire('blur', { focusedEditor: null });
         editorManager.focusedEditor = null;
       }
