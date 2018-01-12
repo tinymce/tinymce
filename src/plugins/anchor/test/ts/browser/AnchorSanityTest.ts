@@ -8,23 +8,23 @@ import AchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   AchorPlugin();
   ModernTheme();
 
-  var sType = function (text) {
+  const sType = function (text) {
     return Step.sync(function () {
-      var elm: any = document.querySelector('div[aria-label="Anchor"].mce-floatpanel input');
+      const elm: any = document.querySelector('div[aria-label="Anchor"].mce-floatpanel input');
       elm.value = text;
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
-    var tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sSetContent('abc'),
@@ -45,4 +45,3 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', functio
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

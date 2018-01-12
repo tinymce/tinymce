@@ -1,35 +1,35 @@
 import { Arr } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
 
-var notImplemented = function () {
+const notImplemented = function () {
   throw new Error('Mockup function is not implemented.');
 };
 
-var createDataTransferItem = function (mime, content) {
+const createDataTransferItem = function (mime, content) {
   return {
     kind: 'string',
     type: mime,
     getAsFile: notImplemented,
-    getAsString: function () {
+    getAsString () {
       return content;
     }
   };
 };
 
-var create = function (inputData) {
-  var data = {}, result;
+const create = function (inputData) {
+  let data = {}, result;
 
-  var clearData = function () {
+  const clearData = function () {
     data = {};
     result.items = [];
     result.types = [];
   };
 
-  var getData = function (mime) {
+  const getData = function (mime) {
     return mime in data ? data[mime] : '';
   };
 
-  var setData = function (mime, content) {
+  const setData = function (mime, content) {
     data[mime] = content;
     result.types = Obj.keys(data);
     result.items = Arr.map(result.types, function (type) {
@@ -43,9 +43,9 @@ var create = function (inputData) {
     files: [],
     items: [],
     types: [],
-    clearData: clearData,
-    getData: getData,
-    setData: setData,
+    clearData,
+    getData,
+    setData,
     setDragImage: notImplemented,
     addElement: notImplemented
   };
@@ -58,5 +58,5 @@ var create = function (inputData) {
 };
 
 export default {
-  create: create
+  create
 };

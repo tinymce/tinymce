@@ -17,7 +17,7 @@ import TableDelete from '../delete/TableDelete';
 import MatchKeys from './MatchKeys';
 import VK from '../util/VK';
 
-var executeKeydownOverride = function (editor, caret, evt) {
+const executeKeydownOverride = function (editor, caret, evt) {
   MatchKeys.execute([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, true) },
@@ -36,14 +36,14 @@ var executeKeydownOverride = function (editor, caret, evt) {
   });
 };
 
-var executeKeyupOverride = function (editor, evt) {
+const executeKeyupOverride = function (editor, evt) {
   MatchKeys.execute([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
     { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) }
   ], evt);
 };
 
-var setup = function (editor, caret) {
+const setup = function (editor, caret) {
   editor.on('keydown', function (evt) {
     if (evt.isDefaultPrevented() === false) {
       executeKeydownOverride(editor, caret, evt);
@@ -58,5 +58,5 @@ var setup = function (editor, caret) {
 };
 
 export default {
-  setup: setup
+  setup
 };

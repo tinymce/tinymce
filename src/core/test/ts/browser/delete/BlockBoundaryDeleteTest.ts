@@ -10,48 +10,48 @@ import BlockBoundaryDelete from 'tinymce/core/delete/BlockBoundaryDelete';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sDelete = function (editor) {
+  const sDelete = function (editor) {
     return Step.sync(function () {
-      var returnVal = BlockBoundaryDelete.backspaceDelete(editor, true);
+      const returnVal = BlockBoundaryDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  var sDeleteNoop = function (editor) {
+  const sDeleteNoop = function (editor) {
     return Step.sync(function () {
-      var returnVal = BlockBoundaryDelete.backspaceDelete(editor, true);
+      const returnVal = BlockBoundaryDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
-  var sBackspace = function (editor, forward?) {
+  const sBackspace = function (editor, forward?) {
     return Step.sync(function () {
-      var returnVal = BlockBoundaryDelete.backspaceDelete(editor, false);
+      const returnVal = BlockBoundaryDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  var sBackspaceNoop = function (editor, forward?) {
+  const sBackspaceNoop = function (editor, forward?) {
     return Step.sync(function () {
-      var returnVal = BlockBoundaryDelete.backspaceDelete(editor, false);
+      const returnVal = BlockBoundaryDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
-  var sSetRawContent = function (editor, html) {
+  const sSetRawContent = function (editor, html) {
     return Step.sync(function () {
       editor.getBody().innerHTML = html;
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -275,4 +275,3 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
     indent: false
   }, success, failure);
 });
-

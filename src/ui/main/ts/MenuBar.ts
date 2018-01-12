@@ -18,9 +18,7 @@ import Toolbar from './Toolbar';
  * @extends tinymce.ui.Container
  */
 
-"use strict";
-
-export default <any> Toolbar.extend({
+export default Toolbar.extend({
   Defaults: {
     role: 'menubar',
     containerCls: 'menubar',

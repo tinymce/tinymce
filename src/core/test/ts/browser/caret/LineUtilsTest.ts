@@ -4,16 +4,16 @@ import Env from 'tinymce/core/Env';
 import LineUtils from 'tinymce/core/caret/LineUtils';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.LineUtilsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.LineUtilsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   if (!Env.ceFalse) {
     return;
   }
 
-  var rect = function (x, y, w, h) {
+  const rect = function (x, y, w, h) {
     return {
       left: x,
       top: y,
@@ -35,4 +35,3 @@ UnitTest.asynctest('browser.tinymce.core.LineUtilsTest', function() {
     success();
   }, failure);
 });
-

@@ -12,7 +12,7 @@ import Actions from '../core/Actions';
 import CharMap from '../core/CharMap';
 import GridHtml from './GridHtml';
 
-var getParentTd = function (elm) {
+const getParentTd = function (elm) {
   while (elm) {
     if (elm.nodeName === 'TD') {
       return elm;
@@ -22,20 +22,20 @@ var getParentTd = function (elm) {
   }
 };
 
-var open = function (editor) {
-  var win;
+const open = function (editor) {
+  let win;
 
-  var charMapPanel = {
+  const charMapPanel = {
     type: 'container',
     html: GridHtml.getHtml(CharMap.getCharMap(editor)),
-    onclick: function (e) {
-      var target = e.target;
+    onclick (e) {
+      const target = e.target;
 
       if (/^(TD|DIV)$/.test(target.nodeName)) {
-        var charDiv = getParentTd(target).firstChild;
+        const charDiv = getParentTd(target).firstChild;
         if (charDiv && charDiv.hasAttribute('data-chr')) {
-          var charCodeString = charDiv.getAttribute('data-chr');
-          var charCode = parseInt(charCodeString, 10);
+          const charCodeString = charDiv.getAttribute('data-chr');
+          const charCode = parseInt(charCodeString, 10);
 
           if (!isNaN(charCode)) {
             Actions.insertChar(editor, String.fromCharCode(charCode));
@@ -47,8 +47,8 @@ var open = function (editor) {
         }
       }
     },
-    onmouseover: function (e) {
-      var td = getParentTd(e.target);
+    onmouseover (e) {
+      const td = getParentTd(e.target);
 
       if (td && td.firstChild) {
         win.find('#preview').text(td.firstChild.firstChild.data);
@@ -61,7 +61,7 @@ var open = function (editor) {
   };
 
   win = editor.windowManager.open({
-    title: "Special character",
+    title: 'Special character',
     spacing: 10,
     padding: 10,
     items: [
@@ -101,7 +101,7 @@ var open = function (editor) {
     ],
     buttons: [
       {
-        text: "Close", onclick: function () {
+        text: 'Close', onclick () {
           win.close();
         }
       }
@@ -110,5 +110,5 @@ var open = function (editor) {
 };
 
 export default {
-  open: open
+  open
 };

@@ -4,37 +4,37 @@ import { Objects } from '@ephox/boulder';
 import { Cell } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 
-export default <any> function () {
-  var store = TestStore();
+export default function () {
+  const store = TestStore();
 
-  var editorState = {
+  const editorState = {
     start: Cell(null),
     content: Cell('')
   };
 
-  var sPrepareState = function (node, content) {
+  const sPrepareState = function (node, content) {
     return Step.sync(function () {
       editorState.start.set(node);
       editorState.content.set(content);
     });
   };
 
-  var editor = {
+  const editor = {
     selection: {
       getStart: editorState.start.get,
       getContent: editorState.content.get,
       select: Fun.noop
     },
 
-    insertContent: function (data) {
-      store.adder({ method: 'insertContent', data: data })();
+    insertContent (data) {
+      store.adder({ method: 'insertContent', data })();
     },
-    execCommand: function (name, ui, args) {
+    execCommand (name, ui, args) {
       store.adder({ method: 'execCommand', data: Objects.wrap(name, args) })();
     },
     dom: {
-      createHTML: function (tag, attributes, innerText) {
-        return { tag: tag, attributes: attributes, innerText: innerText };
+      createHTML (tag, attributes, innerText) {
+        return { tag, attributes, innerText };
       },
       encode: Fun.identity
     },
@@ -47,6 +47,6 @@ export default <any> function () {
     assertEq: store.assertEq,
     sAssertEq: store.sAssertEq,
     sClear: store.sClear,
-    sPrepareState: sPrepareState
+    sPrepareState
   };
-};
+}

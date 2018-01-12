@@ -5,78 +5,77 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import ViewBlock from '../module/test/ViewBlock';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sRemoveEditor = function (editor) {
+  const sRemoveEditor = function (editor) {
     return Step.sync(function () {
       editor.remove();
     });
   };
 
-  var sExecCallback = function (editor, name, arg) {
+  const sExecCallback = function (editor, name, arg) {
     return Step.sync(function () {
       editor.execCallback(name, arg);
     });
   };
 
-  var sTryAccess = function (editor, name, expectedValue) {
+  const sTryAccess = function (editor, name, expectedValue) {
     return Step.sync(function () {
-      var result = editor[name]();
+      const result = editor[name]();
       Assertions.assertEq('Should be expected value on a removed editor', expectedValue, result);
     });
   };
 
-  var sShow = function (editor) {
+  const sShow = function (editor) {
     return Step.sync(function () {
       editor.show();
     });
   };
 
-  var sHide = function (editor) {
+  const sHide = function (editor) {
     return Step.sync(function () {
       editor.hide();
     });
   };
 
-  var sLoad = function (editor) {
+  const sLoad = function (editor) {
     return Step.sync(function () {
       editor.load();
     });
   };
 
-  var sSave = function (editor) {
+  const sSave = function (editor) {
     return Step.sync(function () {
       editor.save();
     });
   };
 
-  var sQueryCommandState = function (editor, name) {
+  const sQueryCommandState = function (editor, name) {
     return Step.sync(function () {
       editor.queryCommandState(name);
     });
   };
 
-  var sQueryCommandValue = function (editor, name) {
+  const sQueryCommandValue = function (editor, name) {
     return Step.sync(function () {
       editor.queryCommandValue(name);
     });
   };
 
-  var sQueryCommandSupported = function (editor, name) {
+  const sQueryCommandSupported = function (editor, name) {
     return Step.sync(function () {
       editor.queryCommandSupported(name);
     });
   };
 
-  var sUploadImages = function (editor) {
+  const sUploadImages = function (editor) {
     return Step.sync(function () {
       editor.uploadImages(function () {
       });
@@ -84,7 +83,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       sRemoveEditor(editor),
@@ -112,8 +111,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function() {
     ], onSuccess, onFailure);
   }, {
     skin_url: '/project/js/tinymce/skins/lightgray',
-    test_callback: function () {
+    test_callback () {
     }
   }, success, failure);
 });
-

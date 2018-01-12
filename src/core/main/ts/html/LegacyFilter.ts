@@ -12,19 +12,19 @@ import { Arr } from '@ephox/katamari';
 import Styles from './Styles';
 import Tools from '../util/Tools';
 
-var removeAttrs = function (node, names) {
+const removeAttrs = function (node, names) {
   Arr.each(names, function (name) {
     node.attr(name, null);
   });
 };
 
-var addFontToSpansFilter = function (domParser, styles, fontSizes) {
+const addFontToSpansFilter = function (domParser, styles, fontSizes) {
   domParser.addNodeFilter('font', function (nodes) {
     Arr.each(nodes, function (node) {
-      var props = styles.parse(node.attr('style'));
-      var color = node.attr('color');
-      var face = node.attr('face');
-      var size = node.attr('size');
+      const props = styles.parse(node.attr('style'));
+      const color = node.attr('color');
+      const face = node.attr('face');
+      const size = node.attr('size');
 
       if (color) {
         props.color = color;
@@ -45,10 +45,10 @@ var addFontToSpansFilter = function (domParser, styles, fontSizes) {
   });
 };
 
-var addStrikeToSpanFilter = function (domParser, styles) {
+const addStrikeToSpanFilter = function (domParser, styles) {
   domParser.addNodeFilter('strike', function (nodes) {
     Arr.each(nodes, function (node) {
-      var props = styles.parse(node.attr('style'));
+      const props = styles.parse(node.attr('style'));
 
       props['text-decoration'] = 'line-through';
 
@@ -58,8 +58,8 @@ var addStrikeToSpanFilter = function (domParser, styles) {
   });
 };
 
-var addFilters = function (domParser, settings) {
-  var styles = Styles();
+const addFilters = function (domParser, settings) {
+  const styles = Styles();
 
   if (settings.convert_fonts_to_spans) {
     addFontToSpansFilter(domParser, styles, Tools.explode(settings.font_size_legacy_values));
@@ -68,12 +68,12 @@ var addFilters = function (domParser, settings) {
   addStrikeToSpanFilter(domParser, styles);
 };
 
-var register = function (domParser, settings) {
+const register = function (domParser, settings) {
   if (settings.inline_styles) {
     addFilters(domParser, settings);
   }
 };
 
 export default {
-  register: register
+  register
 };

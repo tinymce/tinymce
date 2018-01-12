@@ -13,27 +13,27 @@ import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   ImagePlugin();
 
-  var cGetBody = Chain.mapper(function (editor) {
+  const cGetBody = Chain.mapper(function (editor) {
     return TinyDom.fromDom(editor.getBody());
   });
 
-  var cGetElementSize = Chain.mapper(function (elm) {
-    var elmStyle = elm.dom().style;
+  const cGetElementSize = Chain.mapper(function (elm) {
+    const elmStyle = elm.dom().style;
     return { w: elmStyle.width, h: elmStyle.height };
   });
 
-  var cDragHandleRight = function (px) {
+  const cDragHandleRight = function (px) {
     return Chain.op(function (input) {
-      var dom = input.editor.dom;
-      var target = input.resizeSE.dom();
-      var pos = dom.getPos(target);
+      const dom = input.editor.dom;
+      const target = input.resizeSE.dom();
+      const pos = dom.getPos(target);
 
       dom.fire(target, 'mousedown', { screenX: pos.x, screenY: pos.y });
       dom.fire(target, 'mousemove', { screenX: pos.x + px, screenY: pos.y });
@@ -83,4 +83,3 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', function() 
     success();
   }, failure);
 });
-

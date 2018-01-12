@@ -10,9 +10,9 @@
 
 import Storage from '../core/Storage';
 
-var postRender = function (editor, started) {
+const postRender = function (editor, started) {
   return function (e) {
-    var ctrl = e.control;
+    const ctrl = e.control;
 
     ctrl.disabled(!Storage.hasDraft(editor));
 
@@ -27,10 +27,10 @@ var postRender = function (editor, started) {
   };
 };
 
-var register = function (editor, started) {
+const register = function (editor, started) {
   editor.addButton('restoredraft', {
     title: 'Restore last draft',
-    onclick: function () {
+    onclick () {
       Storage.restoreLastDraft(editor);
     },
     onPostRender: postRender(editor, started)
@@ -38,7 +38,7 @@ var register = function (editor, started) {
 
   editor.addMenuItem('restoredraft', {
     text: 'Restore last draft',
-    onclick: function () {
+    onclick () {
       Storage.restoreLastDraft(editor);
     },
     onPostRender: postRender(editor, started),
@@ -47,5 +47,5 @@ var register = function (editor, started) {
 };
 
 export default {
-  register: register
+  register
 };

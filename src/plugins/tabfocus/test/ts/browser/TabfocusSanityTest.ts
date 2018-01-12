@@ -10,32 +10,32 @@ import TabfocusPlugin from 'tinymce/plugins/tabfocus/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   TabfocusPlugin();
 
-  var sAddInputs = function (editor) {
+  const sAddInputs = function (editor) {
     return Step.sync(function () {
-      var container = editor.getContainer();
-      var input1 = document.createElement('input');
+      const container = editor.getContainer();
+      const input1 = document.createElement('input');
       input1.id = 'tempinput1';
 
       container.parentNode.insertBefore(input1, container);
     });
   };
 
-  var sRemoveInputs = Step.sync(function () {
-    var input1 = document.getElementById('tempinput1');
+  const sRemoveInputs = Step.sync(function () {
+    const input1 = document.getElementById('tempinput1');
 
     input1.parentNode.removeChild(input1);
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyActions = TinyActions(editor);
-    var tinyApis = TinyApis(editor);
+    const tinyActions = TinyActions(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       sAddInputs(editor),
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', functi
       tinyActions.sContentKeystroke(Keys.tab(), {}),
       Waiter.sTryUntil('vait for focus',
         Step.sync(function () {
-          var input = document.getElementById('tempinput1');
+          const input = document.getElementById('tempinput1');
           RawAssertions.assertEq('should be same', input.outerHTML, document.activeElement.outerHTML);
         }), 100, 4000),
       sRemoveInputs
@@ -57,4 +57,3 @@ UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', functi
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

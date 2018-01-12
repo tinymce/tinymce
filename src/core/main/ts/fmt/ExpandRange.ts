@@ -13,12 +13,12 @@ import TreeWalker from '../dom/TreeWalker';
 import FormatUtils from './FormatUtils';
 import RangeNodes from '../selection/RangeNodes';
 
-var isBookmarkNode = Bookmarks.isBookmarkNode;
-var getParents = FormatUtils.getParents, isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode, isTextBlock = FormatUtils.isTextBlock;
+const isBookmarkNode = Bookmarks.isBookmarkNode;
+const getParents = FormatUtils.getParents, isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode, isTextBlock = FormatUtils.isTextBlock;
 
 // This function walks down the tree to find the leaf at the selection.
 // The offset is also returned as if node initially a leaf, the offset may be in the middle of the text node.
-var findLeaf = function (node, offset?) {
+const findLeaf = function (node, offset?) {
   if (typeof offset === 'undefined') {
     offset = node.nodeType === 3 ? node.length : node.childNodes.length;
   }
@@ -30,13 +30,13 @@ var findLeaf = function (node, offset?) {
     }
   }
 
-  return { node: node, offset: offset };
+  return { node, offset };
 };
 
-var excludeTrailingWhitespace = function (endContainer, endOffset) {
+const excludeTrailingWhitespace = function (endContainer, endOffset) {
   // Avoid applying formatting to a trailing space,
   // but remove formatting from trailing space
-  var leaf = findLeaf(endContainer, endOffset);
+  let leaf = findLeaf(endContainer, endOffset);
   if (leaf.node) {
     while (leaf.node && leaf.offset === 0 && leaf.node.previousSibling) {
       leaf = findLeaf(leaf.node.previousSibling);
@@ -55,17 +55,17 @@ var excludeTrailingWhitespace = function (endContainer, endOffset) {
   return endContainer;
 };
 
-var isBogusBr = function (node) {
-  return node.nodeName === "BR" && node.getAttribute('data-mce-bogus') && !node.nextSibling;
+const isBogusBr = function (node) {
+  return node.nodeName === 'BR' && node.getAttribute('data-mce-bogus') && !node.nextSibling;
 };
 
 // Expands the node to the closes contentEditable false element if it exists
-var findParentContentEditable = function (dom, node) {
-  var parent = node;
+const findParentContentEditable = function (dom, node) {
+  let parent = node;
 
   while (parent) {
     if (parent.nodeType === 1 && dom.getContentEditable(parent)) {
-      return dom.getContentEditable(parent) === "false" ? parent : node;
+      return dom.getContentEditable(parent) === 'false' ? parent : node;
     }
 
     parent = parent.parentNode;
@@ -74,10 +74,11 @@ var findParentContentEditable = function (dom, node) {
   return node;
 };
 
-var findSpace = function (start, remove, node, offset?) {
-  var pos, pos2, str = node.nodeValue;
+const findSpace = function (start, remove, node, offset?) {
+  let pos, pos2;
+  const str = node.nodeValue;
 
-  if (typeof offset === "undefined") {
+  if (typeof offset === 'undefined') {
     offset = start ? str.length : 0;
   }
 
@@ -99,14 +100,14 @@ var findSpace = function (start, remove, node, offset?) {
   return pos;
 };
 
-var findWordEndPoint = function (dom, body, container, offset, start, remove) {
-  var walker, node, pos, lastTextNode;
+const findWordEndPoint = function (dom, body, container, offset, start, remove) {
+  let walker, node, pos, lastTextNode;
 
   if (container.nodeType === 3) {
     pos = findSpace(start, remove, container, offset);
 
     if (pos !== -1) {
-      return { container: container, offset: pos };
+      return { container, offset: pos };
     }
 
     lastTextNode = container;
@@ -134,12 +135,12 @@ var findWordEndPoint = function (dom, body, container, offset, start, remove) {
       offset = lastTextNode.length;
     }
 
-    return { container: lastTextNode, offset: offset };
+    return { container: lastTextNode, offset };
   }
 };
 
-var findSelectorEndPoint = function (dom, format, rng, container, siblingName) {
-  var parents, i, y, curFormat;
+const findSelectorEndPoint = function (dom, format, rng, container, siblingName) {
+  let parents, i, y, curFormat;
 
   if (container.nodeType === 3 && container.nodeValue.length === 0 && container[siblingName]) {
     container = container[siblingName];
@@ -151,7 +152,7 @@ var findSelectorEndPoint = function (dom, format, rng, container, siblingName) {
       curFormat = format[y];
 
       // If collapsed state is set then skip formats that doesn't match that
-      if ("collapsed" in curFormat && curFormat.collapsed !== rng.collapsed) {
+      if ('collapsed' in curFormat && curFormat.collapsed !== rng.collapsed) {
         continue;
       }
 
@@ -164,8 +165,10 @@ var findSelectorEndPoint = function (dom, format, rng, container, siblingName) {
   return container;
 };
 
-var findBlockEndPoint = function (editor, format, container, siblingName) {
-  var node, dom = editor.dom, root = dom.getRoot();
+const findBlockEndPoint = function (editor, format, container, siblingName) {
+  let node;
+  const dom = editor.dom;
+  const root = dom.getRoot();
 
   // Expand to block of similar type
   if (!format[0].wrapper) {
@@ -174,7 +177,7 @@ var findBlockEndPoint = function (editor, format, container, siblingName) {
 
   // Expand to first wrappable block element or any block element
   if (!node) {
-    var scopeRoot = dom.getParent(container, 'LI,TD,TH');
+    const scopeRoot = dom.getParent(container, 'LI,TD,TH');
     node = dom.getParent(container.nodeType === 3 ? container.parentNode : container, function (node) {
       // Fixes #6183 where it would expand to editable parent element in inline mode
       return node !== root && isTextBlock(editor, node);
@@ -205,8 +208,8 @@ var findBlockEndPoint = function (editor, format, container, siblingName) {
 };
 
 // This function walks up the tree if there is no siblings before/after the node
-var findParentContainer = function (dom, format, startContainer, startOffset, endContainer, endOffset, start) {
-  var container, parent, sibling, siblingName, root;
+const findParentContainer = function (dom, format, startContainer, startOffset, endContainer, endOffset, start) {
+  let container, parent, sibling, siblingName, root;
 
   container = parent = start ? startContainer : endContainer;
   siblingName = start ? 'previousSibling' : 'nextSibling';
@@ -245,13 +248,13 @@ var findParentContainer = function (dom, format, startContainer, startOffset, en
   return container;
 };
 
-var expandRng = function (editor, rng, format, remove?) {
-  var endPoint,
+const expandRng = function (editor, rng, format, remove?) {
+  let endPoint,
     startContainer = rng.startContainer,
     startOffset = rng.startOffset,
     endContainer = rng.endContainer,
-    endOffset = rng.endOffset,
-    dom = editor.dom;
+    endOffset = rng.endOffset;
+  const dom = editor.dom;
 
   // If index based start position then resolve it
   if (startContainer.nodeType === 1 && startContainer.hasChildNodes()) {
@@ -365,13 +368,13 @@ var expandRng = function (editor, rng, format, remove?) {
 
   // Return new range like object
   return {
-    startContainer: startContainer,
-    startOffset: startOffset,
-    endContainer: endContainer,
-    endOffset: endOffset
+    startContainer,
+    startOffset,
+    endContainer,
+    endOffset
   };
 };
 
 export default {
-  expandRng: expandRng
+  expandRng
 };

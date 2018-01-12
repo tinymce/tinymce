@@ -9,18 +9,18 @@ import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
   PastePlugin();
 
-  var cProcessPre = function (html, internal, preProcess) {
+  const cProcessPre = function (html, internal, preProcess) {
     return Chain.mapper(function (editor) {
       editor.on('PastePreProcess', preProcess);
 
-      var result = ProcessFilters.process(editor, html, internal);
+      const result = ProcessFilters.process(editor, html, internal);
 
       editor.off('PastePreProcess', preProcess);
 
@@ -28,12 +28,12 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', function(
     });
   };
 
-  var cProcessPrePost = function (html, internal, preProcess, postProcess) {
+  const cProcessPrePost = function (html, internal, preProcess, postProcess) {
     return Chain.mapper(function (editor) {
       editor.on('PastePreProcess', preProcess);
       editor.on('PastePostProcess', postProcess);
 
-      var result = ProcessFilters.process(editor, html, internal);
+      const result = ProcessFilters.process(editor, html, internal);
 
       editor.off('PastePreProcess', preProcess);
       editor.off('PastePostProcess', postProcess);
@@ -42,21 +42,21 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', function(
     });
   };
 
-  var preventHandler = function (e) {
+  const preventHandler = function (e) {
     e.preventDefault();
   };
 
-  var preProcessHandler = function (e) {
+  const preProcessHandler = function (e) {
     e.content += 'X';
   };
 
-  var postProcessHandler = function (editor) {
+  const postProcessHandler = function (editor) {
     return function (e) {
       editor.dom.remove(editor.dom.select('b', e.node), true);
     };
   };
 
-  var assertInternal = function (expectedFlag) {
+  const assertInternal = function (expectedFlag) {
     return function (e) {
       Assertions.assertEq('Should be expected internal flag', expectedFlag, e.internal);
     };
@@ -116,4 +116,3 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', function(
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

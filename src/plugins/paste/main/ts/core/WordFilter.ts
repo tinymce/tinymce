@@ -38,7 +38,7 @@ function isWordContent(content) {
  * Checks if the specified text starts with "1. " or "a. " etc.
  */
 function isNumericList(text) {
-  var found, patterns;
+  let found, patterns;
 
   patterns = [
     /^[IVXLMCD]{1,2}\.[ \u00a0]/,  // Roman upper case
@@ -72,10 +72,10 @@ function isBulletList(text) {
  * @param {tinymce.html.Node} node Root node to convert children of.
  */
 function convertFakeListsToProperLists(node) {
-  var currentListNode, prevListNode, lastLevel = 1;
+  let currentListNode, prevListNode, lastLevel = 1;
 
   function getText(node) {
-    var txt = '';
+    let txt = '';
 
     if (node.type === 3) {
       return node.value;
@@ -123,7 +123,7 @@ function convertFakeListsToProperLists(node) {
   }
 
   function convertParagraphToLi(paragraphNode, listName, start?) {
-    var level = paragraphNode._listLevel || lastLevel;
+    const level = paragraphNode._listLevel || lastLevel;
 
     // Handle list nesting
     if (level !== lastLevel) {
@@ -170,7 +170,8 @@ function convertFakeListsToProperLists(node) {
 
   // Build a list of all root level elements before we start
   // altering them in the loop below.
-  var elements = [], child = node.firstChild;
+  const elements = [];
+  let child = node.firstChild;
   while (typeof child !== 'undefined' && child !== null) {
     elements.push(child);
 
@@ -182,12 +183,12 @@ function convertFakeListsToProperLists(node) {
     }
   }
 
-  for (var i = 0; i < elements.length; i++) {
+  for (let i = 0; i < elements.length; i++) {
     node = elements[i];
 
     if (node.name === 'p' && node.firstChild) {
       // Find first text node in paragraph
-      var nodeText = getText(node);
+      const nodeText = getText(node);
 
       // Detect unordered lists look for bullets
       if (isBulletList(nodeText)) {
@@ -198,8 +199,8 @@ function convertFakeListsToProperLists(node) {
       // Detect ordered lists 1., a. or ixv.
       if (isNumericList(nodeText)) {
         // Parse OL start number
-        var matches = /([0-9]+)\./.exec(nodeText);
-        var start = 1;
+        const matches = /([0-9]+)\./.exec(nodeText);
+        let start = 1;
         if (matches) {
           start = parseInt(matches[1], 10);
         }
@@ -227,7 +228,8 @@ function convertFakeListsToProperLists(node) {
 }
 
 function filterStyles(editor, validStyles, node, styleValue) {
-  var outputStyles = {}, matches, styles = editor.dom.parseStyle(styleValue);
+  let outputStyles = {}, matches;
+  const styles = editor.dom.parseStyle(styleValue);
 
   Tools.each(styles, function (value, name) {
     // Convert various MS styles to W3C styles
@@ -248,32 +250,32 @@ function filterStyles(editor, validStyles, node, styleValue) {
 
         break;
 
-      case "horiz-align":
-        name = "text-align";
+      case 'horiz-align':
+        name = 'text-align';
         break;
 
-      case "vert-align":
-        name = "vertical-align";
+      case 'vert-align':
+        name = 'vertical-align';
         break;
 
-      case "font-color":
-      case "mso-foreground":
-        name = "color";
+      case 'font-color':
+      case 'mso-foreground':
+        name = 'color';
         break;
 
-      case "mso-background":
-      case "mso-highlight":
-        name = "background";
+      case 'mso-background':
+      case 'mso-highlight':
+        name = 'background';
         break;
 
-      case "font-weight":
-      case "font-style":
-        if (value !== "normal") {
+      case 'font-weight':
+      case 'font-style':
+        if (value !== 'normal') {
           outputStyles[name] = value;
         }
         return;
 
-      case "mso-element":
+      case 'mso-element':
         // Remove track changes code
         if (/^(comment|comment-list)$/i.test(value)) {
           node.remove();
@@ -294,21 +296,21 @@ function filterStyles(editor, validStyles, node, styleValue) {
     }
 
     // Output only valid styles
-    if (Settings.getRetainStyleProps(editor) === "all" || (validStyles && validStyles[name])) {
+    if (Settings.getRetainStyleProps(editor) === 'all' || (validStyles && validStyles[name])) {
       outputStyles[name] = value;
     }
   });
 
   // Convert bold style to "b" element
-  if (/(bold)/i.test(outputStyles["font-weight"])) {
-    delete outputStyles["font-weight"];
-    node.wrap(new Node("b", 1));
+  if (/(bold)/i.test(outputStyles['font-weight'])) {
+    delete outputStyles['font-weight'];
+    node.wrap(new Node('b', 1));
   }
 
   // Convert italic style to "i" element
-  if (/(italic)/i.test(outputStyles["font-style"])) {
-    delete outputStyles["font-style"];
-    node.wrap(new Node("i", 1));
+  if (/(italic)/i.test(outputStyles['font-style'])) {
+    delete outputStyles['font-style'];
+    node.wrap(new Node('i', 1));
   }
 
   // Serialize the styles and see if there is something left to keep
@@ -320,8 +322,8 @@ function filterStyles(editor, validStyles, node, styleValue) {
   return null;
 }
 
-var filterWordContent = function (editor, content) {
-  var retainStyleProperties, validStyles;
+const filterWordContent = function (editor, content) {
+  let retainStyleProperties, validStyles;
 
   retainStyleProperties = Settings.getRetainStyleProps(editor);
   if (retainStyleProperties) {
@@ -344,25 +346,25 @@ var filterWordContent = function (editor, content) {
     /<(!|script[^>]*>.*?<\/script(?=[>\s])|\/?(\?xml(:\w+)?|img|meta|link|style|\w:\w+)(?=[\s\/>]))[^>]*>/gi,
 
     // Convert <s> into <strike> for line-though
-    [/<(\/?)s>/gi, "<$1strike>"],
+    [/<(\/?)s>/gi, '<$1strike>'],
 
     // Replace nsbp entites to char since it's easier to handle
-    [/&nbsp;/gi, "\u00a0"],
+    [/&nbsp;/gi, '\u00a0'],
 
     // Convert <span style="mso-spacerun:yes">___</span> to string of alternating
     // breaking/non-breaking spaces of same length
     [/<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi,
       function (str, spaces) {
         return (spaces.length > 0) ?
-          spaces.replace(/./, " ").slice(Math.floor(spaces.length / 2)).split("").join("\u00a0") : "";
+          spaces.replace(/./, ' ').slice(Math.floor(spaces.length / 2)).split('').join('\u00a0') : '';
       }
     ]
   ]);
 
-  var validElements = Settings.getWordValidElements(editor);
+  const validElements = Settings.getWordValidElements(editor);
 
   // Setup strict schema
-  var schema = Schema({
+  const schema = Schema({
     valid_elements: validElements,
     valid_children: '-li[p]'
   });
@@ -371,23 +373,23 @@ var filterWordContent = function (editor, content) {
   // paste_word_valid_elements config option and we need to check them for properties
   Tools.each(schema.elements, function (rule) {
     /*eslint dot-notation:0*/
-    if (!rule.attributes["class"]) {
-      rule.attributes["class"] = {};
-      rule.attributesOrder.push("class");
+    if (!rule.attributes.class) {
+      rule.attributes.class = {};
+      rule.attributesOrder.push('class');
     }
 
     if (!rule.attributes.style) {
       rule.attributes.style = {};
-      rule.attributesOrder.push("style");
+      rule.attributesOrder.push('style');
     }
   });
 
   // Parse HTML into DOM structure
-  var domParser = DomParser({}, schema);
+  const domParser = DomParser({}, schema);
 
   // Filter styles to remove "mso" specific styles and convert some of them
   domParser.addAttributeFilter('style', function (nodes) {
-    var i = nodes.length, node;
+    let i = nodes.length, node;
 
     while (i--) {
       node = nodes[i];
@@ -402,7 +404,7 @@ var filterWordContent = function (editor, content) {
 
   // Check the class attribute for comments or del items and remove those
   domParser.addAttributeFilter('class', function (nodes) {
-    var i = nodes.length, node, className;
+    let i = nodes.length, node, className;
 
     while (i--) {
       node = nodes[i];
@@ -418,7 +420,7 @@ var filterWordContent = function (editor, content) {
 
   // Remove all del elements since we don't want the track changes code in the editor
   domParser.addNodeFilter('del', function (nodes) {
-    var i = nodes.length;
+    let i = nodes.length;
 
     while (i--) {
       nodes[i].remove();
@@ -427,7 +429,7 @@ var filterWordContent = function (editor, content) {
 
   // Keep some of the links and anchors
   domParser.addNodeFilter('a', function (nodes) {
-    var i = nodes.length, node, href, name;
+    let i = nodes.length, node, href, name;
 
     while (i--) {
       node = nodes[i];
@@ -456,15 +458,15 @@ var filterWordContent = function (editor, content) {
         }
 
         node.attr({
-          href: href,
-          name: name
+          href,
+          name
         });
       }
     }
   });
 
   // Parse into DOM structure
-  var rootNode = domParser.parse(content);
+  const rootNode = domParser.parse(content);
 
   // Process DOM
   if (Settings.shouldConvertWordFakeLists(editor)) {
@@ -479,11 +481,11 @@ var filterWordContent = function (editor, content) {
   return content;
 };
 
-var preProcess = function (editor, content) {
+const preProcess = function (editor, content) {
   return Settings.shouldUseDefaultFilters(editor) ? filterWordContent(editor, content) : content;
 };
 
 export default {
-  preProcess: preProcess,
-  isWordContent: isWordContent
+  preProcess,
+  isWordContent
 };

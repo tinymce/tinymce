@@ -1,8 +1,8 @@
 import Type from 'tinymce/themes/inlite/alien/Type';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('atomic.themes.alien.TypeTest', function() {
-  var testIsString = function () {
+UnitTest.test('atomic.themes.alien.TypeTest', function () {
+  const testIsString = function () {
     assert.eq(Type.isString('a'), true);
     assert.eq(Type.isString(null), false);
     assert.eq(Type.isString(undefined), false);
@@ -13,7 +13,7 @@ UnitTest.test('atomic.themes.alien.TypeTest', function() {
     assert.eq(Type.isString(function () { }), false);
   };
 
-  var testIsNumber = function () {
+  const testIsNumber = function () {
     assert.eq(Type.isNumber('a'), false);
     assert.eq(Type.isNumber(null), false);
     assert.eq(Type.isNumber(undefined), false);
@@ -24,7 +24,7 @@ UnitTest.test('atomic.themes.alien.TypeTest', function() {
     assert.eq(Type.isNumber(function () { }), false);
   };
 
-  var testIsBoolean = function () {
+  const testIsBoolean = function () {
     assert.eq(Type.isBoolean('a'), false);
     assert.eq(Type.isBoolean(null), false);
     assert.eq(Type.isBoolean(undefined), false);
@@ -35,7 +35,7 @@ UnitTest.test('atomic.themes.alien.TypeTest', function() {
     assert.eq(Type.isBoolean(function () { }), false);
   };
 
-  var testIsObject = function () {
+  const testIsObject = function () {
     assert.eq(Type.isObject('a'), false);
     assert.eq(Type.isObject(null), false);
     assert.eq(Type.isObject(undefined), false);
@@ -46,7 +46,7 @@ UnitTest.test('atomic.themes.alien.TypeTest', function() {
     assert.eq(Type.isObject(function () { }), false);
   };
 
-  var testIsNull = function () {
+  const testIsNull = function () {
     assert.eq(Type.isNull('a'), false);
     assert.eq(Type.isNull(null), true);
     assert.eq(Type.isNull(undefined), false);
@@ -57,7 +57,7 @@ UnitTest.test('atomic.themes.alien.TypeTest', function() {
     assert.eq(Type.isNull(function () { }), false);
   };
 
-  var testIsArray = function () {
+  const testIsArray = function () {
     assert.eq(Type.isArray('a'), false);
     assert.eq(Type.isArray(null), false);
     assert.eq(Type.isArray(undefined), false);
@@ -68,7 +68,7 @@ UnitTest.test('atomic.themes.alien.TypeTest', function() {
     assert.eq(Type.isArray(function () { }), false);
   };
 
-  var testIsFunction = function () {
+  const testIsFunction = function () {
     assert.eq(Type.isFunction('a'), false);
     assert.eq(Type.isFunction(null), false);
     assert.eq(Type.isFunction(undefined), false);
@@ -87,4 +87,3 @@ UnitTest.test('atomic.themes.alien.TypeTest', function() {
   testIsArray();
   testIsFunction();
 });
-

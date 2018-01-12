@@ -22,22 +22,22 @@ import Schema from '../html/Schema';
  * @class tinymce.fmt.Preview
  */
 
-var each = Tools.each;
-var dom = DOMUtils.DOM;
+const each = Tools.each;
+const dom = DOMUtils.DOM;
 
-var parsedSelectorToHtml = function (ancestry, editor) {
-  var elm, item, fragment;
-  var schema = editor && editor.schema || Schema({});
+const parsedSelectorToHtml = function (ancestry, editor) {
+  let elm, item, fragment;
+  const schema = editor && editor.schema || Schema({});
 
-  var decorate = function (elm, item) {
+  const decorate = function (elm, item) {
     if (item.classes.length) {
       dom.addClass(elm, item.classes.join(' '));
     }
     dom.setAttribs(elm, item.attrs);
   };
 
-  var createElement = function (sItem) {
-    var elm;
+  const createElement = function (sItem) {
+    let elm;
 
     item = typeof sItem === 'string' ? {
       name: sItem,
@@ -50,10 +50,10 @@ var parsedSelectorToHtml = function (ancestry, editor) {
     return elm;
   };
 
-  var getRequiredParent = function (elm, candidate) {
-    var name = typeof elm !== 'string' ? elm.nodeName.toLowerCase() : elm;
-    var elmRule = schema.getElementRule(name);
-    var parentsRequired = elmRule && elmRule.parentsRequired;
+  const getRequiredParent = function (elm, candidate) {
+    const name = typeof elm !== 'string' ? elm.nodeName.toLowerCase() : elm;
+    const elmRule = schema.getElementRule(name);
+    const parentsRequired = elmRule && elmRule.parentsRequired;
 
     if (parentsRequired && parentsRequired.length) {
       return candidate && Tools.inArray(parentsRequired, candidate) !== -1 ? candidate : parentsRequired[0];
@@ -62,10 +62,10 @@ var parsedSelectorToHtml = function (ancestry, editor) {
     }
   };
 
-  var wrapInHtml = function (elm, ancestry, siblings) {
-    var parent, parentCandidate, parentRequired;
-    var ancestor = ancestry.length > 0 && ancestry[0];
-    var ancestorName = ancestor && ancestor.name;
+  const wrapInHtml = function (elm, ancestry, siblings) {
+    let parent, parentCandidate, parentRequired;
+    const ancestor = ancestry.length > 0 && ancestry[0];
+    const ancestorName = ancestor && ancestor.name;
 
     parentRequired = getRequiredParent(elm, ancestorName);
 
@@ -96,7 +96,7 @@ var parsedSelectorToHtml = function (ancestry, editor) {
       }
 
       Tools.each(siblings, function (sibling) {
-        var siblingElm = createElement(sibling);
+        const siblingElm = createElement(sibling);
         parent.insertBefore(siblingElm, elm);
       });
     }
@@ -115,13 +115,13 @@ var parsedSelectorToHtml = function (ancestry, editor) {
   }
 };
 
-var selectorToHtml = function (selector, editor?) {
+const selectorToHtml = function (selector, editor?) {
   return parsedSelectorToHtml(parseSelector(selector), editor);
 };
 
-var parseSelectorItem = function (item) {
-  var tagName;
-  var obj: any = {
+const parseSelectorItem = function (item) {
+  let tagName;
+  const obj: any = {
     classes: [],
     attrs: {}
   };
@@ -149,7 +149,7 @@ var parseSelectorItem = function (item) {
 
       // atribute matched
       if ($3 === '[') {
-        var m = $4.match(/([\w\-]+)(?:\=\"([^\"]+))?/);
+        const m = $4.match(/([\w\-]+)(?:\=\"([^\"]+))?/);
         if (m) {
           obj.attrs[m[1]] = m[2];
         }
@@ -163,7 +163,7 @@ var parseSelectorItem = function (item) {
   return obj;
 };
 
-var parseSelector = function (selector) {
+const parseSelector = function (selector) {
   if (!selector || typeof selector !== 'string') {
     return [];
   }
@@ -177,8 +177,8 @@ var parseSelector = function (selector) {
   // split either on > or on space, but not the one inside brackets
   return Tools.map(selector.split(/(?:>|\s+(?![^\[\]]+\]))/), function (item) {
     // process each sibling selector separately
-    var siblings = Tools.map(item.split(/(?:~\+|~|\+)/), parseSelectorItem);
-    var obj = siblings.pop(); // the last one is our real target
+    const siblings = Tools.map(item.split(/(?:~\+|~|\+)/), parseSelectorItem);
+    const obj = siblings.pop(); // the last one is our real target
 
     if (siblings.length) {
       obj.siblings = siblings;
@@ -187,9 +187,9 @@ var parseSelector = function (selector) {
   }).reverse();
 };
 
-var getCssText = function (editor, format) {
-  var name, previewFrag, previewElm, items;
-  var previewCss = '', parentFontSize, previewStyles;
+const getCssText = function (editor, format) {
+  let name, previewFrag, previewElm, items;
+  let previewCss = '', parentFontSize, previewStyles;
 
   previewStyles = editor.settings.preview_styles;
 
@@ -205,12 +205,12 @@ var getCssText = function (editor, format) {
   }
 
   // Removes any variables since these can't be previewed
-  var removeVars = function (val) {
+  const removeVars = function (val) {
     return val.replace(/%(\w+)/g, '');
   };
 
   // Create block/inline element to use for preview
-  if (typeof format === "string") {
+  if (typeof format === 'string') {
     format = editor.formatter.get(format);
     if (!format) {
       return;
@@ -281,7 +281,7 @@ var getCssText = function (editor, format) {
   parentFontSize = /px$/.test(parentFontSize) ? parseInt(parentFontSize, 10) : 0;
 
   each(previewStyles.split(' '), function (name) {
-    var value = dom.getStyle(previewElm, name, true);
+    let value = dom.getStyle(previewElm, name, true);
 
     // If background is transparent then check if the body has a background color we can use
     if (name === 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
@@ -315,7 +315,7 @@ var getCssText = function (editor, format) {
       }
     }
 
-    if (name === "border" && value) {
+    if (name === 'border' && value) {
       previewCss += 'padding:0 2px;';
     }
 
@@ -324,7 +324,7 @@ var getCssText = function (editor, format) {
 
   editor.fire('AfterPreviewFormats');
 
-  //previewCss += 'line-height:normal';
+  // previewCss += 'line-height:normal';
 
   dom.remove(previewFrag);
 
@@ -332,7 +332,7 @@ var getCssText = function (editor, format) {
 };
 
 export default {
-  getCssText: getCssText,
-  parseSelector: parseSelector,
-  selectorToHtml: selectorToHtml
+  getCssText,
+  parseSelector,
+  selectorToHtml
 };

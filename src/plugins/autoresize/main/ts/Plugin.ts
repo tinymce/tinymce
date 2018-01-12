@@ -22,10 +22,10 @@ import Resize from './core/Resize';
 
 PluginManager.add('autoresize', function (editor) {
   if (!editor.inline) {
-    var oldSize = Cell(0);
+    const oldSize = Cell(0);
     Commands.register(editor, oldSize);
     Resize.setup(editor, oldSize);
   }
 });
 
-export default function () {};
+export default function () {}

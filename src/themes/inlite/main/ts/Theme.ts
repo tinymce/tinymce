@@ -21,7 +21,7 @@ Api.registerToFactory();
 Api.appendTo(window.tinymce ? window.tinymce : {});
 
 ThemeManager.add('inlite', function (editor) {
-  var panel = new Panel();
+  const panel = Panel();
 
   FormatControls.setup(editor);
   Buttons.addToEditor(editor, panel);
@@ -29,4 +29,4 @@ ThemeManager.add('inlite', function (editor) {
   return ThemeApi.get(editor, panel);
 });
 
-export default <any> function () { };
+export default function () { }

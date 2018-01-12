@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var fireVisualBlocks = function (editor, state) {
-  editor.fire('VisualBlocks', { state: state });
+const fireVisualBlocks = function (editor, state) {
+  editor.fire('VisualBlocks', { state });
 };
 
 export default {
-  fireVisualBlocks: fireVisualBlocks
+  fireVisualBlocks
 };

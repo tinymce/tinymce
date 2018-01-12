@@ -4,10 +4,10 @@ import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
     editor.focus();
     editor.formatter.register('bold', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b>1234</b></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
   suite.test('Selected style element with css styles', function (editor) {
     editor.formatter.register('color', { inline: 'span', styles: { color: '#ff0000' } });
     editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
   suite.test('Selected style element with css styles indexed', function (editor) {
     editor.formatter.register('color', { inline: 'span', styles: ['color'] });
     editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
   suite.test('Selected style element with attributes', function (editor) {
     editor.formatter.register('fontsize', { inline: 'font', attributes: { size: '7' } });
     editor.getBody().innerHTML = '<p><font size="7">1234</font></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('font')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('font')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
       { inline: 'strong' }
     ]);
     editor.getBody().innerHTML = '<p><strong>1234</strong></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('strong')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('strong')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
   suite.test('Selected complex style element', function (editor) {
     editor.formatter.register('complex', { inline: 'span', styles: { fontWeight: 'bold' } });
     editor.getBody().innerHTML = '<p><span style="color:#ff0000; font-weight:bold">1234</span></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -78,7 +78,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
   suite.test('Selected non style element text', function (editor) {
     editor.formatter.register('bold', { inline: 'b' });
     editor.getBody().innerHTML = '<p>1234</p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -88,7 +88,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
   suite.test('Selected partial style element (start)', function (editor) {
     editor.formatter.register('bold', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b>1234</b>5678</p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('p')[0].lastChild, 4);
     editor.selection.setRng(rng);
@@ -98,7 +98,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
   suite.test('Selected partial style element (end)', function (editor) {
     editor.formatter.register('bold', { inline: 'b' });
     editor.getBody().innerHTML = '<p>1234<b>5678</b></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[0].lastChild, 4);
     editor.selection.setRng(rng);
@@ -108,7 +108,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
   suite.test('Selected element text with parent inline element', function (editor) {
     editor.formatter.register('bold', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b><em><span>1234</span></em></b></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -118,7 +118,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
   suite.test('Selected element match with variable', function (editor) {
     editor.formatter.register('complex', { inline: 'span', styles: { color: '%color' } });
     editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -129,14 +129,14 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
     editor.formatter.register('complex', {
       inline: 'span',
       styles: {
-        color: function (vars) {
+        color (vars) {
           return vars.color + '00';
         }
       }
     });
 
     editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -158,7 +158,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
   suite.test('Custom onmatch handler', function (editor) {
     editor.formatter.register('format', {
       inline: 'span',
-      onmatch: function (elm) {
+      onmatch (elm) {
         return elm.className === 'x';
       }
     });
@@ -171,7 +171,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
   });
 
   suite.test('formatChanged complex format', function (editor) {
-    var newState, newArgs;
+    let newState, newArgs;
 
     editor.formatter.register('complex', { inline: 'span', styles: { color: '%color' } });
 
@@ -203,7 +203,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
   suite.test('Selected style element text', function (editor) {
     editor.formatter.register('bold', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b>1234</b></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -225,4 +225,3 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

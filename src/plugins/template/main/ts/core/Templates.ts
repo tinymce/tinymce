@@ -13,9 +13,9 @@ import XHR from 'tinymce/core/util/XHR';
 import Settings from '../api/Settings';
 import DateTimeHelper from './DateTimeHelper';
 
-var createTemplateList = function (editorSettings, callback) {
+const createTemplateList = function (editorSettings, callback) {
   return function () {
-    var templateList = Settings.getTemplates(editorSettings);
+    const templateList = Settings.getTemplates(editorSettings);
 
     if (typeof templateList === 'function') {
       templateList(callback);
@@ -25,7 +25,7 @@ var createTemplateList = function (editorSettings, callback) {
     if (typeof templateList === 'string') {
       XHR.send({
         url: templateList,
-        success: function (text) {
+        success (text) {
           callback(JSON.parse(text));
         }
       });
@@ -35,7 +35,7 @@ var createTemplateList = function (editorSettings, callback) {
   };
 };
 
-var replaceTemplateValues = function (editor, html, templateValues) {
+const replaceTemplateValues = function (editor, html, templateValues) {
   Tools.each(templateValues, function (v, k) {
     if (typeof v === 'function') {
       v = v(k);
@@ -47,8 +47,8 @@ var replaceTemplateValues = function (editor, html, templateValues) {
   return html;
 };
 
-var replaceVals = function (editor, e) {
-  var dom = editor.dom, vl = Settings.getTemplateReplaceValues(editor);
+const replaceVals = function (editor, e) {
+  const dom = editor.dom, vl = Settings.getTemplateReplaceValues(editor);
 
   Tools.each(dom.select('*', e), function (e) {
     Tools.each(vl, function (v, k) {
@@ -61,12 +61,15 @@ var replaceVals = function (editor, e) {
   });
 };
 
-var hasClass = function (n, c) {
+const hasClass = function (n, c) {
   return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
 };
 
-var insertTemplate = function (editor, ui, html) {
-  var el, n, dom = editor.dom, sel = editor.selection.getContent();
+const insertTemplate = function (editor, ui, html) {
+  let el;
+  let n;
+  const dom = editor.dom;
+  const sel = editor.selection.getContent();
 
   html = replaceTemplateValues(editor, html, Settings.getTemplateReplaceValues(editor));
   el = dom.create('div', null, html);
@@ -102,8 +105,8 @@ var insertTemplate = function (editor, ui, html) {
 };
 
 export default {
-  createTemplateList: createTemplateList,
-  replaceTemplateValues: replaceTemplateValues,
-  replaceVals: replaceVals,
-  insertTemplate: insertTemplate
+  createTemplateList,
+  replaceTemplateValues,
+  replaceVals,
+  insertTemplate
 };

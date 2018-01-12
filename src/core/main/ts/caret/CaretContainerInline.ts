@@ -12,21 +12,21 @@ import { Fun } from '@ephox/katamari';
 import NodeType from '../dom/NodeType';
 import Zwsp from '../text/Zwsp';
 
-var isText = NodeType.isText;
+const isText = NodeType.isText;
 
-var startsWithCaretContainer = function (node) {
+const startsWithCaretContainer = function (node) {
   return isText(node) && node.data[0] === Zwsp.ZWSP;
 };
 
-var endsWithCaretContainer = function (node) {
+const endsWithCaretContainer = function (node) {
   return isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
 };
 
-var createZwsp = function (node) {
+const createZwsp = function (node) {
   return node.ownerDocument.createTextNode(Zwsp.ZWSP);
 };
 
-var insertBefore = function (node) {
+const insertBefore = function (node) {
   if (isText(node.previousSibling)) {
     if (endsWithCaretContainer(node.previousSibling)) {
       return node.previousSibling;
@@ -42,13 +42,13 @@ var insertBefore = function (node) {
       return node;
     }
   } else {
-    var newNode = createZwsp(node);
+    const newNode = createZwsp(node);
     node.parentNode.insertBefore(newNode, node);
     return newNode;
   }
 };
 
-var insertAfter = function (node) {
+const insertAfter = function (node) {
   if (isText(node.nextSibling)) {
     if (startsWithCaretContainer(node.nextSibling)) {
       return node.nextSibling;
@@ -64,7 +64,7 @@ var insertAfter = function (node) {
       return node;
     }
   } else {
-    var newNode = createZwsp(node);
+    const newNode = createZwsp(node);
     if (node.nextSibling) {
       node.parentNode.insertBefore(newNode, node.nextSibling);
     } else {
@@ -74,12 +74,12 @@ var insertAfter = function (node) {
   }
 };
 
-var insertInline = function (before, node) {
+const insertInline = function (before, node) {
   return before ? insertBefore(node) : insertAfter(node);
 };
 
 export default {
-  insertInline: insertInline,
+  insertInline,
   insertInlineBefore: Fun.curry(insertInline, true),
   insertInlineAfter: Fun.curry(insertInline, false)
 };

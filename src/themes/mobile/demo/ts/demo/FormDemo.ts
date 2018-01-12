@@ -7,14 +7,12 @@ import Inputs from 'tinymce/themes/mobile/ui/Inputs';
 import SerialisedDialog from 'tinymce/themes/mobile/ui/SerialisedDialog';
 import UiDomFactory from 'tinymce/themes/mobile/util/UiDomFactory';
 
+export default function () {
+  const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
-
-export default <any> function () {
-  var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
-
-  var form = SerialisedDialog.sketch({
-    onExecute: function () { },
-    getInitialValue: function () {
+  const form = SerialisedDialog.sketch({
+    onExecute () { },
+    getInitialValue () {
       return Option.some({
         alpha: 'Alpha',
         beta: '',
@@ -30,10 +28,10 @@ export default <any> function () {
     ]
   });
 
-  var gui = Gui.create();
+  const gui = Gui.create();
   Attachment.attachSystem(ephoxUi, gui);
 
-  var container = GuiFactory.build({
+  const container = GuiFactory.build({
     dom: UiDomFactory.dom('<div class="${prefix}-outer-container ${prefix}-fullscreen-maximized"></div>'),
     components: [
       {
@@ -56,4 +54,4 @@ export default <any> function () {
   });
 
   gui.add(container);
-};
+}

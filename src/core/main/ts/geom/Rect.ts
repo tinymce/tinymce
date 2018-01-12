@@ -14,9 +14,7 @@
  * @class tinymce.geom.Rect
  */
 
-"use strict";
-
-var min = Math.min, max = Math.max, round = Math.round;
+const min = Math.min, max = Math.max, round = Math.round;
 
 /**
  * Returns the rect positioned based on the relative position name
@@ -27,8 +25,8 @@ var min = Math.min, max = Math.max, round = Math.round;
  * @param {Rect} targetRect Rect to move relative to based on the rel option.
  * @param {String} rel Relative position. For example: tr-bl.
  */
-var relativePosition = function (rect, targetRect, rel) {
-  var x, y, w, h, targetW, targetH;
+const relativePosition = function (rect, targetRect, rel) {
+  let x, y, w, h, targetW, targetH;
 
   x = targetRect.x;
   y = targetRect.y;
@@ -83,8 +81,8 @@ var relativePosition = function (rect, targetRect, rel) {
  * @param {Rect} constrainRect Rect to constrain within.
  * @param {Array} rels Array of relative positions to test against.
  */
-var findBestRelativePosition = function (rect, targetRect, constrainRect, rels) {
-  var pos, i;
+const findBestRelativePosition = function (rect, targetRect, constrainRect, rels) {
+  let pos, i;
 
   for (i = 0; i < rels.length; i++) {
     pos = relativePosition(rect, targetRect, rels[i]);
@@ -107,7 +105,7 @@ var findBestRelativePosition = function (rect, targetRect, constrainRect, rels) 
  * @param {Number} h Relative height to expand by.
  * @return {Rect} New expanded rect.
  */
-var inflate = function (rect, w, h) {
+const inflate = function (rect, w, h) {
   return create(rect.x - w, rect.y - h, rect.w + w * 2, rect.h + h * 2);
 };
 
@@ -119,8 +117,8 @@ var inflate = function (rect, w, h) {
  * @param {Rect} cropRect The second rectangle to compare.
  * @return {Rect} The intersection of the two rectangles or null if they don't intersect.
  */
-var intersect = function (rect, cropRect) {
-  var x1, y1, x2, y2;
+const intersect = function (rect, cropRect) {
+  let x1, y1, x2, y2;
 
   x1 = max(rect.x, cropRect.x);
   y1 = max(rect.y, cropRect.y);
@@ -144,8 +142,8 @@ var intersect = function (rect, cropRect) {
  * @param {Boolean} fixedSize True/false if size should be fixed.
  * @return {Rect} Clamped rect.
  */
-var clamp = function (rect, clampRect, fixedSize?) {
-  var underflowX1, underflowY1, overflowX2, overflowY2,
+const clamp = function (rect, clampRect, fixedSize?) {
+  let underflowX1, underflowY1, overflowX2, overflowY2,
     x1, y1, x2, y2, cx2, cy2;
 
   x1 = rect.x;
@@ -186,8 +184,8 @@ var clamp = function (rect, clampRect, fixedSize?) {
  * @param {Number} h Rectangle height.
  * @return {Rect} New rectangle object.
  */
-var create = function (x, y, w, h) {
-  return { x: x, y: y, w: w, h: h };
+const create = function (x, y, w, h) {
+  return { x, y, w, h };
 };
 
 /**
@@ -197,16 +195,16 @@ var create = function (x, y, w, h) {
  * @param {ClientRect} clientRect DOM ClientRect object.
  * @return {Rect} New rectangle object.
  */
-var fromClientRect = function (clientRect) {
+const fromClientRect = function (clientRect) {
   return create(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
 };
 
 export default {
-  inflate: inflate,
-  relativePosition: relativePosition,
-  findBestRelativePosition: findBestRelativePosition,
-  intersect: intersect,
-  clamp: clamp,
-  create: create,
-  fromClientRect: fromClientRect
+  inflate,
+  relativePosition,
+  findBestRelativePosition,
+  intersect,
+  clamp,
+  create,
+  fromClientRect
 };

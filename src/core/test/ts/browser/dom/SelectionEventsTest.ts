@@ -11,38 +11,38 @@ import { Element } from '@ephox/sugar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var mBindEventMutator = function (editor, eventName, mutator) {
+  const mBindEventMutator = function (editor, eventName, mutator) {
     return Step.stateful(function (value, next, die) {
-      var eventArgs = Cell();
+      const eventArgs = Cell();
 
-      var handler = function (e) {
+      const handler = function (e) {
         mutator(editor, e);
         eventArgs.set(e);
       };
 
       editor.on(eventName, handler);
-      next({ eventArgs: eventArgs, handler: handler });
+      next({ eventArgs, handler });
     });
   };
 
-  var mBindEvent = function (editor, eventName) {
+  const mBindEvent = function (editor, eventName) {
     return mBindEventMutator(editor, eventName, Fun.noop);
   };
 
-  var mUnbindEvent = function (editor, eventName) {
+  const mUnbindEvent = function (editor, eventName) {
     return Step.stateful(function (value, next, die) {
       editor.off(eventName, value.handler);
       next({});
     });
   };
 
-  var mAssertSetSelectionEventArgs = function (editor, expectedForward) {
+  const mAssertSetSelectionEventArgs = function (editor, expectedForward) {
     return Step.stateful(function (value, next, die) {
       Assertions.assertEq('Should be expected forward flag', expectedForward, value.eventArgs.get().forward);
       assertSelectAllRange(editor, value.eventArgs.get().range);
@@ -50,30 +50,30 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function() {
     });
   };
 
-  var getSelectAllRng = function (editor) {
-    var rng = document.createRange();
+  const getSelectAllRng = function (editor) {
+    const rng = document.createRange();
     rng.setStartBefore(editor.getBody().firstChild);
     rng.setEndAfter(editor.getBody().firstChild);
     return rng;
   };
 
-  var sSetRng = function (editor, forward) {
+  const sSetRng = function (editor, forward) {
     return Step.sync(function () {
       editor.selection.setRng(getSelectAllRng(editor), forward);
     });
   };
 
-  var sGetRng = function (editor, forward?) {
+  const sGetRng = function (editor, forward?) {
     return Step.sync(function () {
       editor.selection.getRng();
     });
   };
 
-  var selectAll = function (editor, eventArgs) {
+  const selectAll = function (editor, eventArgs) {
     eventArgs.range = getSelectAllRng(editor);
   };
 
-  var assertSelectAllRange = function (editor, actualRng) {
+  const assertSelectAllRange = function (editor, actualRng) {
     Assertions.assertDomEq(
       'Should be expected startContainer',
       Element.fromDom(editor.getBody()),
@@ -88,7 +88,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
     Pipeline.async({}, [
       tinyApis.sFocus,
       Logger.t('SetSelectionRange event', GeneralSteps.sequence([
@@ -133,4 +133,3 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

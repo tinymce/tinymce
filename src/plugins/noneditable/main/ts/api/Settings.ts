@@ -8,16 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getNonEditableClass = function (editor) {
+const getNonEditableClass = function (editor) {
   return editor.getParam('noneditable_noneditable_class', 'mceNonEditable');
 };
 
-var getEditableClass = function (editor) {
+const getEditableClass = function (editor) {
   return editor.getParam('noneditable_editable_class', 'mceEditable');
 };
 
-var getNonEditableRegExps = function (editor) {
-  var nonEditableRegExps = editor.getParam('noneditable_regexp', []);
+const getNonEditableRegExps = function (editor) {
+  const nonEditableRegExps = editor.getParam('noneditable_regexp', []);
 
   if (nonEditableRegExps && nonEditableRegExps.constructor === RegExp) {
     return [nonEditableRegExps];
@@ -27,7 +27,7 @@ var getNonEditableRegExps = function (editor) {
 };
 
 export default {
-  getNonEditableClass: getNonEditableClass,
-  getEditableClass: getEditableClass,
-  getNonEditableRegExps: getNonEditableRegExps
+  getNonEditableClass,
+  getEditableClass,
+  getNonEditableRegExps
 };

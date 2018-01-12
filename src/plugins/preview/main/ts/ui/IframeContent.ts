@@ -11,8 +11,11 @@
 import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 
-var getPreviewHtml = function (editor) {
-  var previewHtml, headHtml = '', encode = editor.dom.encode, contentStyle = Settings.getContentStyle(editor);
+const getPreviewHtml = function (editor) {
+  let previewHtml;
+  let headHtml = '';
+  const encode = editor.dom.encode;
+  const contentStyle = Settings.getContentStyle(editor);
 
   headHtml += '<base href="' + encode(editor.documentBaseURI.getURI()) + '">';
 
@@ -24,19 +27,19 @@ var getPreviewHtml = function (editor) {
     headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '">';
   });
 
-  var bodyId = editor.settings.body_id || 'tinymce';
+  let bodyId = editor.settings.body_id || 'tinymce';
   if (bodyId.indexOf('=') !== -1) {
     bodyId = editor.getParam('body_id', '', 'hash');
     bodyId = bodyId[editor.id] || bodyId;
   }
 
-  var bodyClass = editor.settings.body_class || '';
+  let bodyClass = editor.settings.body_class || '';
   if (bodyClass.indexOf('=') !== -1) {
     bodyClass = editor.getParam('body_class', '', 'hash');
     bodyClass = bodyClass[editor.id] || '';
   }
 
-  var preventClicksOnLinksScript = (
+  const preventClicksOnLinksScript = (
     '<script>' +
     'document.addEventListener && document.addEventListener("click", function(e) {' +
     'for (var elm = e.target; elm; elm = elm.parentNode) {' +
@@ -48,7 +51,7 @@ var getPreviewHtml = function (editor) {
     '</script> '
   );
 
-  var dirAttr = editor.settings.directionality ? ' dir="' + editor.settings.directionality + '"' : '';
+  const dirAttr = editor.settings.directionality ? ' dir="' + editor.settings.directionality + '"' : '';
 
   previewHtml = (
     '<!DOCTYPE html>' +
@@ -66,14 +69,14 @@ var getPreviewHtml = function (editor) {
   return previewHtml;
 };
 
-var injectIframeContent = function (editor, iframe, sandbox) {
-  var previewHtml = getPreviewHtml(editor);
+const injectIframeContent = function (editor, iframe, sandbox) {
+  const previewHtml = getPreviewHtml(editor);
 
   if (!sandbox) {
     // IE 6-11 doesn't support data uris on iframes
     // so I guess they will have to be less secure since we can't sandbox on those
     // TODO: Use sandbox if future versions of IE supports iframes with data: uris.
-    var doc = iframe.contentWindow.document;
+    const doc = iframe.contentWindow.document;
     doc.open();
     doc.write(previewHtml);
     doc.close();
@@ -83,6 +86,6 @@ var injectIframeContent = function (editor, iframe, sandbox) {
 };
 
 export default {
-  getPreviewHtml: getPreviewHtml,
-  injectIframeContent: injectIframeContent
+  getPreviewHtml,
+  injectIframeContent
 };

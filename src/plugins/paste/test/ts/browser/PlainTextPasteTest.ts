@@ -1,12 +1,10 @@
 import { Assertions } from '@ephox/agar';
 import { Chain } from '@ephox/agar';
 import { Guard } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
 import { Id } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/EditorManager';
 import ViewBlock from '../module/test/ViewBlock';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
@@ -14,15 +12,15 @@ import MockDataTransfer from '../module/test/MockDataTransfer';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var viewBlock = ViewBlock();
+  const viewBlock = ViewBlock();
 
-  var cCreateEditorFromSettings = function (settings, html?) {
+  const cCreateEditorFromSettings = function (settings, html?) {
     return Chain.on(function (viewBlock, next, die) {
-      var randomId = Id.generate('tiny-');
+      const randomId = Id.generate('tiny-');
       html = html || '<textarea></textarea>';
 
       viewBlock.update(html);
@@ -32,7 +30,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', function() {
         selector: '#' + randomId,
         skin_url: '/project/js/tinymce/skins/lightgray',
         indent: false,
-        setup: function (editor) {
+        setup (editor) {
           editor.on('SkinLoaded', function () {
             setTimeout(function () {
               next(Chain.wrap(editor));
@@ -43,39 +41,35 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', function() {
     });
   };
 
-  var cRemoveEditor = function () {
+  const cRemoveEditor = function () {
     return Chain.op(function (editor) {
       editor.remove();
     });
   };
 
-
-  var cClearEditor = function () {
+  const cClearEditor = function () {
     return Chain.on(function (editor, next, die) {
-      editor.setContent("");
+      editor.setContent('');
       next(Chain.wrap(editor));
     });
   };
 
-
-  var cFireFakePasteEvent = function (data) {
+  const cFireFakePasteEvent = function (data) {
     return Chain.on(function (editor, next, die) {
       editor.fire('paste', { clipboardData: MockDataTransfer.create(data) });
       next(Chain.wrap(editor));
     });
   };
 
-
-  var cAssertEditorContent = function (label, expected) {
+  const cAssertEditorContent = function (label, expected) {
     return Chain.on(function (editor, next, die) {
-      Assertions.assertHtml(label || "Asserting editors content", expected, editor.getContent());
+      Assertions.assertHtml(label || 'Asserting editors content', expected, editor.getContent());
       next(Chain.wrap(editor));
     });
   };
 
-
-  var cAssertClipboardPaste = function (expected, data) {
-    var chains = [];
+  const cAssertClipboardPaste = function (expected, data) {
+    const chains = [];
 
     Obj.each(data, function (data, label) {
       chains.push(
@@ -91,32 +85,30 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', function() {
     return Chain.fromChains(chains);
   };
 
+  const srcText = 'one\r\ntwo\r\n\r\nthree\r\n\r\n\r\nfour\r\n\r\n\r\n\r\n.';
 
-  var srcText = 'one\r\ntwo\r\n\r\nthree\r\n\r\n\r\nfour\r\n\r\n\r\n\r\n.';
-
-  var pasteData = {
-    'Firefox': {
+  const pasteData = {
+    Firefox: {
       'text/plain': srcText,
       'text/html': 'one<br>two<br><br>three<br><br><br>four<br><br><br><br>.'
     },
-    'Chrome': {
+    Chrome: {
       'text/plain': srcText,
       'text/html': '<div>one</div><div>two</div><div><br></div><div>three</div><div><br></div><div><br></div><div>four</div><div><br></div><div><br></div><div><br></div><div>.'
     },
-    'Edge': {
+    Edge: {
       'text/plain': srcText,
       'text/html': '<div>one<br>two</div><div>three</div><div><br>four</div><div><br></div><div>.</div>'
     },
-    'IE': {
+    IE: {
       'text/plain': srcText,
       'text/html': '<p>one<br>two</p><p>three</p><p><br>four</p><p><br></p><p>.</p>'
     }
   };
 
-  var expectedWithRootBlock = '<p>one<br />two</p><p>three</p><p><br />four</p><p>&nbsp;</p><p>.</p>';
-  var expectedWithRootBlockAndAttrs = '<p class="attr">one<br />two</p><p class="attr">three</p><p class="attr"><br />four</p><p class="attr">&nbsp;</p><p class="attr">.</p>';
-  var expectedWithoutRootBlock = 'one<br />two<br /><br />three<br /><br /><br />four<br /><br /><br /><br />.';
-
+  const expectedWithRootBlock = '<p>one<br />two</p><p>three</p><p><br />four</p><p>&nbsp;</p><p>.</p>';
+  const expectedWithRootBlockAndAttrs = '<p class="attr">one<br />two</p><p class="attr">three</p><p class="attr"><br />four</p><p class="attr">&nbsp;</p><p class="attr">.</p>';
+  const expectedWithoutRootBlock = 'one<br />two<br /><br />three<br /><br /><br />four<br /><br /><br /><br />.';
 
   Theme();
   PastePlugin();
@@ -137,7 +129,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', function() {
         plugins: 'paste',
         forced_root_block: 'p',
         forced_root_block_attrs: {
-          'class': 'attr'
+          class: 'attr'
         }
       }),
       cAssertClipboardPaste(expectedWithRootBlockAndAttrs, pasteData),
@@ -156,4 +148,3 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', function() {
     success();
   }, failure);
 });
-

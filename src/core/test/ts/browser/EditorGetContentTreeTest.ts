@@ -9,25 +9,25 @@ import Serializer from 'tinymce/core/html/Serializer';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorGetContentTreeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.EditorGetContentTreeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var toHtml = function (node) {
-    var htmlSerializer = Serializer({});
+  const toHtml = function (node) {
+    const htmlSerializer = Serializer({});
     return htmlSerializer.serialize(node);
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('Get content as tree', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
         Step.sync(function () {
-          var html = toHtml(editor.getContent({ format: 'tree' }));
+          const html = toHtml(editor.getContent({ format: 'tree' }));
           Assertions.assertHtml('Should be expected html', '<p>a</p>', html);
         })
       ])),
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorGetContentTreeTest', function() {
         tinyApis.sSetContent('<p>ab<em>c</em></p>'),
         tinyApis.sSetSelection([0, 0], 1, [0, 1, 0], 1),
         Step.sync(function () {
-          var html = toHtml(editor.selection.getContent({ format: 'tree' }));
+          const html = toHtml(editor.selection.getContent({ format: 'tree' }));
           Assertions.assertHtml('Should be expected selection html', 'b<em>c</em>', html);
         })
       ])),
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorGetContentTreeTest', function() {
         tinyApis.sSetContent('<p>a b c</p>'),
         tinyApis.sSetSelection([0, 0], 1, [0, 0], 4),
         Step.sync(function () {
-          var html = toHtml(editor.selection.getContent({ format: 'tree' }));
+          const html = toHtml(editor.selection.getContent({ format: 'tree' }));
           Assertions.assertHtml('Should be expected selection html', ' b ', html);
         })
       ]))
@@ -53,4 +53,3 @@ UnitTest.asynctest('browser.tinymce.core.EditorGetContentTreeTest', function() {
     inline: true
   }, success, failure);
 });
-

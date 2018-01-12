@@ -13,7 +13,7 @@ import Convert from './core/Convert';
 
 PluginManager.add('bbcode', function () {
   return {
-    init: function (editor) {
+    init (editor) {
       editor.on('beforeSetContent', function (e) {
         e.content = Convert.bbcode2html(e.content);
       });
@@ -31,4 +31,4 @@ PluginManager.add('bbcode', function () {
   };
 });
 
-export default function () { };
+export default function () { }

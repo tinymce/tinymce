@@ -20,20 +20,20 @@ import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
 import Scrollable from '../touch/scroll/Scrollable';
 
-var getValue = function (item) {
+const getValue = function (item) {
   return Objects.readOptFrom(item, 'format').getOr(item.title);
 };
 
-var convert = function (formats, memMenuThunk) {
-  var mainMenu = makeMenu('Styles', [
+const convert = function (formats, memMenuThunk) {
+  const mainMenu = makeMenu('Styles', [
   ].concat(
     Arr.map(formats.items, function (k) {
       return makeItem(getValue(k), k.title, k.isSelected(), k.getPreview(), Objects.hasKey(formats.expansions, getValue(k)));
     })
   ), memMenuThunk, false);
 
-  var submenus = Obj.map(formats.menus, function (menuItems, menuName) {
-    var items = Arr.map(menuItems, function (item) {
+  const submenus = Obj.map(formats.menus, function (menuItems, menuName) {
+    const items = Arr.map(menuItems, function (item) {
       return makeItem(
         getValue(item),
         item.title,
@@ -45,21 +45,20 @@ var convert = function (formats, memMenuThunk) {
     return makeMenu(menuName, items, memMenuThunk, true);
   });
 
-  var menus = Merger.deepMerge(submenus, Objects.wrap('styles', mainMenu));
+  const menus = Merger.deepMerge(submenus, Objects.wrap('styles', mainMenu));
 
-
-  var tmenu = TieredMenu.tieredData('styles', menus, formats.expansions);
+  const tmenu = TieredMenu.tieredData('styles', menus, formats.expansions);
 
   return {
-    tmenu: tmenu
+    tmenu
   };
 };
 
-var makeItem = function (value, text, selected, preview, isMenu) {
+const makeItem = function (value, text, selected, preview, isMenu) {
   return {
     data: {
-      value: value,
-      text: text
+      value,
+      text
     },
     type: 'item',
     dom: {
@@ -69,11 +68,11 @@ var makeItem = function (value, text, selected, preview, isMenu) {
     toggling: {
       toggleOnExecute: false,
       toggleClass: Styles.resolve('format-matches'),
-      selected: selected
+      selected
     },
     itemBehaviours: Behaviour.derive(isMenu ? [ ] : [
       Receivers.format(value, function (comp, status) {
-        var toggle = status ? Toggling.on : Toggling.off;
+        const toggle = status ? Toggling.on : Toggling.off;
         toggle(comp);
       })
     ]),
@@ -91,9 +90,9 @@ var makeItem = function (value, text, selected, preview, isMenu) {
   };
 };
 
-var makeMenu = function (value, items, memMenuThunk, collapsable) {
+const makeMenu = function (value, items, memMenuThunk, collapsable) {
   return {
-    value: value,
+    value,
     dom: {
       tag: 'div'
     },
@@ -112,9 +111,9 @@ var makeMenu = function (value, items, memMenuThunk, collapsable) {
           },
           GuiFactory.text(value)
         ] : [ GuiFactory.text(value) ],
-        action: function (item) {
+        action (item) {
           if (collapsable) {
-            var comp = memMenuThunk().get(item);
+            const comp = memMenuThunk().get(item);
             TieredMenu.collapseMenu(comp);
           }
         }
@@ -145,7 +144,7 @@ var makeMenu = function (value, items, memMenuThunk, collapsable) {
         ])
       }
     ],
-    items: items,
+    items,
     menuBehaviours: Behaviour.derive([
       Transitioning.config({
         initialState: 'after',
@@ -160,13 +159,13 @@ var makeMenu = function (value, items, memMenuThunk, collapsable) {
   };
 };
 
-var sketch = function (settings) {
-  var dataset = convert(settings.formats, function () {
+const sketch = function (settings) {
+  const dataset = convert(settings.formats, function () {
     return memMenu;
   });
   // Turn settings into a tiered menu data.
 
-  var memMenu = Memento.record(TieredMenu.sketch({
+  const memMenu = Memento.record(TieredMenu.sketch({
     dom: {
       tag: 'div',
       classes: [ Styles.resolve('styles-menu') ]
@@ -178,21 +177,21 @@ var sketch = function (settings) {
     // For animations, need things to stay around in the DOM (at least until animation is done)
     stayInDom: true,
 
-    onExecute: function (tmenu, item) {
-      var v = Representing.getValue(item);
+    onExecute (tmenu, item) {
+      const v = Representing.getValue(item);
       settings.handle(item, v.value);
     },
-    onEscape: function () {
+    onEscape () {
     },
-    onOpenMenu: function (container, menu) {
-      var w = Width.get(container.element());
+    onOpenMenu (container, menu) {
+      const w = Width.get(container.element());
       Width.set(menu.element(), w);
       Transitioning.jumpTo(menu, 'current');
     },
-    onOpenSubmenu: function (container, item, submenu) {
-      var w = Width.get(container.element());
-      var menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
-      var menuComp = container.getSystem().getByDom(menu).getOrDie();
+    onOpenSubmenu (container, item, submenu) {
+      const w = Width.get(container.element());
+      const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+      const menuComp = container.getSystem().getByDom(menu).getOrDie();
 
       Width.set(submenu.element(), w);
 
@@ -201,9 +200,9 @@ var sketch = function (settings) {
       Transitioning.progressTo(submenu, 'current');
     },
 
-    onCollapseMenu: function (container, item, menu) {
-      var submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
-      var submenuComp = container.getSystem().getByDom(submenu).getOrDie();
+    onCollapseMenu (container, item, menu) {
+      const submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+      const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
       Transitioning.progressTo(submenuComp, 'after');
       Transitioning.progressTo(menu, 'current');
     },
@@ -225,6 +224,6 @@ var sketch = function (settings) {
   return memMenu.asSpec();
 };
 
-export default <any> {
-  sketch: sketch
+export default {
+  sketch
 };

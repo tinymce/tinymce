@@ -16,11 +16,11 @@ import EventDispatcher from './EventDispatcher';
  * @mixin tinymce.util.Observable
  */
 
-var getEventDispatcher = function (obj) {
+const getEventDispatcher = function (obj) {
   if (!obj._eventDispatcher) {
     obj._eventDispatcher = new EventDispatcher({
       scope: obj,
-      toggleEvent: function (name, state) {
+      toggleEvent (name, state) {
         if (EventDispatcher.isNative(name) && obj.toggleNativeEvent) {
           obj.toggleNativeEvent(name, state);
         }
@@ -44,11 +44,11 @@ export default {
    * @example
    * instance.fire('event', {...});
    */
-  fire: function (name, args, bubble) {
-    var self = this;
+  fire (name, args, bubble) {
+    const self = this;
 
     // Prevent all events except the remove event after the instance has been removed
-    if (self.removed && name !== "remove") {
+    if (self.removed && name !== 'remove') {
       return args;
     }
 
@@ -56,7 +56,7 @@ export default {
 
     // Bubble event up to parents
     if (bubble !== false && self.parent) {
-      var parent = self.parent();
+      let parent = self.parent();
       while (parent && !args.isPropagationStopped()) {
         parent.fire(name, args, false);
         parent = parent.parent();
@@ -80,7 +80,7 @@ export default {
    *     // Callback logic
    * });
    */
-  on: function (name, callback, prepend) {
+  on (name, callback, prepend) {
     return getEventDispatcher(this).on(name, callback, prepend);
   },
 
@@ -102,7 +102,7 @@ export default {
    * // Unbind all events
    * instance.off();
    */
-  off: function (name, callback) {
+  off (name, callback) {
     return getEventDispatcher(this).off(name, callback);
   },
 
@@ -115,7 +115,7 @@ export default {
    * @param {callback} callback Callback to bind only once.
    * @return {Object} Current class instance.
    */
-  once: function (name, callback) {
+  once (name, callback) {
     return getEventDispatcher(this).once(name, callback);
   },
 
@@ -126,7 +126,7 @@ export default {
    * @param {String} name Name of the event to check for.
    * @return {Boolean} true/false if the event exists or not.
    */
-  hasEventListeners: function (name) {
+  hasEventListeners (name) {
     return getEventDispatcher(this).has(name);
   }
 };

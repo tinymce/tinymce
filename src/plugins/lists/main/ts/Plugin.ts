@@ -22,4 +22,4 @@ PluginManager.add('lists', function (editor) {
   return Api.get(editor);
 });
 
-export default function () { };
+export default function () { }

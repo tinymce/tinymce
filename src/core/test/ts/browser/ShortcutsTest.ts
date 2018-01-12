@@ -6,16 +6,16 @@ import Tools from 'tinymce/core/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
   suite.test('Shortcuts formats', function (editor) {
-    var assertShortcut = function (shortcut, args, assertState) {
-      var called = false;
+    const assertShortcut = function (shortcut, args, assertState) {
+      let called = false;
 
       editor.shortcuts.add(shortcut, '', function () {
         called = true;
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function() {
   });
 
   suite.test('Remove', function (editor) {
-    var called = false, eventArgs;
+    let called = false, eventArgs;
 
     eventArgs = {
       ctrlKey: true,
@@ -91,4 +91,3 @@ UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

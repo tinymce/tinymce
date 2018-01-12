@@ -23,17 +23,15 @@ import Delay from 'tinymce/core/util/Delay';
  * @extends tinymce.ui.Widget
  */
 
-"use strict";
-
-export default <any> Widget.extend({
+export default Widget.extend({
   /**
    * Renders the control as a HTML string.
    *
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this;
+  renderHtml () {
+    const self = this;
 
     self.classes.add('iframe');
     self.canFocus = false;
@@ -41,7 +39,7 @@ export default <any> Widget.extend({
     /*eslint no-script-url:0 */
     return (
       '<iframe id="' + self._id + '" class="' + self.classes + '" tabindex="-1" src="' +
-      (self.settings.url || "javascript:''") + '" frameborder="0"></iframe>'
+      (self.settings.url || 'javascript:\'\'') + '" frameborder="0"></iframe>'
     );
   },
 
@@ -51,7 +49,7 @@ export default <any> Widget.extend({
    * @method src
    * @param {String} src Source URL for iframe.
    */
-  src: function (src) {
+  src (src) {
     this.getEl().src = src;
   },
 
@@ -63,8 +61,8 @@ export default <any> Widget.extend({
    * @param {function} callback Optional callback to execute when the iframe body is filled with contents.
    * @return {tinymce.ui.Iframe} Current iframe control.
    */
-  html: function (html, callback) {
-    var self = this, body = this.getEl().contentWindow.document.body;
+  html (html, callback) {
+    const self = this, body = this.getEl().contentWindow.document.body;
 
     // Wait for iframe to initialize IE 10 takes time
     if (!body) {

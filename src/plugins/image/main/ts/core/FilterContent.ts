@@ -10,16 +10,16 @@
 
 import Tools from 'tinymce/core/util/Tools';
 
-var hasImageClass = function (node) {
-  var className = node.attr('class');
+const hasImageClass = function (node) {
+  const className = node.attr('class');
   return className && /\bimage\b/.test(className);
 };
 
-var toggleContentEditableState = function (state) {
+const toggleContentEditableState = function (state) {
   return function (nodes) {
-    var i = nodes.length, node;
+    let i = nodes.length, node;
 
-    var toggleContentEditable = function (node) {
+    const toggleContentEditable = function (node) {
       node.attr('contenteditable', state ? 'true' : null);
     };
 
@@ -34,7 +34,7 @@ var toggleContentEditableState = function (state) {
   };
 };
 
-var setup = function (editor) {
+const setup = function (editor) {
   editor.on('preInit', function () {
     editor.parser.addNodeFilter('figure', toggleContentEditableState(true));
     editor.serializer.addNodeFilter('figure', toggleContentEditableState(false));
@@ -42,5 +42,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

@@ -19,8 +19,8 @@ import DeleteUtils from './DeleteUtils';
 import MergeBlocks from './MergeBlocks';
 import ElementType from '../dom/ElementType';
 
-var deleteRangeMergeBlocks = function (rootNode, selection) {
-  var rng = selection.getRng();
+const deleteRangeMergeBlocks = function (rootNode, selection) {
+  const rng = selection.getRng();
 
   return Options.liftN([
     DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.startContainer)),
@@ -40,38 +40,38 @@ var deleteRangeMergeBlocks = function (rootNode, selection) {
   }).getOr(false);
 };
 
-var isRawNodeInTable = function (root, rawNode) {
-  var node = Element.fromDom(rawNode);
-  var isRoot = Fun.curry(Compare.eq, root);
+const isRawNodeInTable = function (root, rawNode) {
+  const node = Element.fromDom(rawNode);
+  const isRoot = Fun.curry(Compare.eq, root);
   return PredicateFind.ancestor(node, ElementType.isTableCell, isRoot).isSome();
 };
 
-var isSelectionInTable = function (root, rng) {
+const isSelectionInTable = function (root, rng) {
   return isRawNodeInTable(root, rng.startContainer) || isRawNodeInTable(root, rng.endContainer);
 };
 
-var isEverythingSelected = function (root, rng) {
-  var noPrevious = CaretFinder.prevPosition(root.dom(), CaretPosition.fromRangeStart(rng)).isNone();
-  var noNext = CaretFinder.nextPosition(root.dom(), CaretPosition.fromRangeEnd(rng)).isNone();
+const isEverythingSelected = function (root, rng) {
+  const noPrevious = CaretFinder.prevPosition(root.dom(), CaretPosition.fromRangeStart(rng)).isNone();
+  const noNext = CaretFinder.nextPosition(root.dom(), CaretPosition.fromRangeEnd(rng)).isNone();
   return !isSelectionInTable(root, rng) && noPrevious && noNext;
 };
 
-var emptyEditor = function (editor) {
+const emptyEditor = function (editor) {
   editor.setContent('');
   editor.selection.setCursorLocation();
   return true;
 };
 
-var deleteRange = function (editor) {
-  var rootNode = Element.fromDom(editor.getBody());
-  var rng = editor.selection.getRng();
+const deleteRange = function (editor) {
+  const rootNode = Element.fromDom(editor.getBody());
+  const rng = editor.selection.getRng();
   return isEverythingSelected(rootNode, rng) ? emptyEditor(editor) : deleteRangeMergeBlocks(rootNode, editor.selection);
 };
 
-var backspaceDelete = function (editor, forward) {
+const backspaceDelete = function (editor, forward) {
   return editor.selection.isCollapsed() ? false : deleteRange(editor);
 };
 
 export default {
-  backspaceDelete: backspaceDelete
+  backspaceDelete
 };

@@ -11,22 +11,22 @@
 import Settings from '../api/Settings';
 import Content from '../core/Content';
 
-var open = function (editor) {
-  var minWidth = Settings.getMinWidth(editor);
-  var minHeight = Settings.getMinHeight(editor);
+const open = function (editor) {
+  const minWidth = Settings.getMinWidth(editor);
+  const minHeight = Settings.getMinHeight(editor);
 
-  var win = editor.windowManager.open({
+  const win = editor.windowManager.open({
     title: 'Source code',
     body: {
       type: 'textbox',
       name: 'code',
       multiline: true,
-      minWidth: minWidth,
-      minHeight: minHeight,
+      minWidth,
+      minHeight,
       spellcheck: false,
       style: 'direction: ltr; text-align: left'
     },
-    onSubmit: function (e) {
+    onSubmit (e) {
       Content.setContent(editor, e.data.code);
     }
   });
@@ -37,5 +37,5 @@ var open = function (editor) {
 };
 
 export default {
-  open: open
+  open
 };

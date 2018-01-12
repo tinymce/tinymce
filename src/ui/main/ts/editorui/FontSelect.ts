@@ -11,12 +11,12 @@
 import Tools from 'tinymce/core/util/Tools';
 import FontInfo from '../fmt/FontInfo';
 
-var getFirstFont = function (fontFamily) {
+const getFirstFont = function (fontFamily) {
   return fontFamily ? fontFamily.split(',')[0] : '';
 };
 
-var findMatchingValue = function (items, fontFamily) {
-  var value;
+const findMatchingValue = function (items, fontFamily) {
+  let value;
 
   Tools.each(items, function (item) {
     if (item.value.toLowerCase() === fontFamily.toLowerCase()) {
@@ -33,13 +33,13 @@ var findMatchingValue = function (items, fontFamily) {
   return value;
 };
 
-var createFontNameListBoxChangeHandler = function (editor, items) {
+const createFontNameListBoxChangeHandler = function (editor, items) {
   return function () {
-    var self = this;
+    const self = this;
 
     editor.on('init nodeChange', function (e) {
-      var fontFamily = FontInfo.getFontFamily(editor.getBody(), e.element);
-      var match = findMatchingValue(items, fontFamily);
+      const fontFamily = FontInfo.getFontFamily(editor.getBody(), e.element);
+      const match = findMatchingValue(items, fontFamily);
 
       self.value(match ? match : null);
 
@@ -50,10 +50,10 @@ var createFontNameListBoxChangeHandler = function (editor, items) {
   };
 };
 
-var createFormats = function (formats) {
+const createFormats = function (formats) {
   formats = formats.replace(/;$/, '').split(';');
 
-  var i = formats.length;
+  let i = formats.length;
   while (i--) {
     formats[i] = formats[i].split('=');
   }
@@ -61,8 +61,8 @@ var createFormats = function (formats) {
   return formats;
 };
 
-var getFontItems = function (editor) {
-  var defaultFontsFormats = (
+const getFontItems = function (editor) {
+  const defaultFontsFormats = (
     'Andale Mono=andale mono,monospace;' +
     'Arial=arial,helvetica,sans-serif;' +
     'Arial Black=arial black,sans-serif;' +
@@ -82,7 +82,7 @@ var getFontItems = function (editor) {
     'Wingdings=wingdings,zapf dingbats'
   );
 
-  var fonts = createFormats(editor.settings.font_formats || defaultFontsFormats);
+  const fonts = createFormats(editor.settings.font_formats || defaultFontsFormats);
 
   return Tools.map(fonts, function (font) {
     return {
@@ -93,9 +93,9 @@ var getFontItems = function (editor) {
   });
 };
 
-var registerButtons = function (editor) {
+const registerButtons = function (editor) {
   editor.addButton('fontselect', function () {
-    var items = getFontItems(editor);
+    const items = getFontItems(editor);
 
     return {
       type: 'listbox',
@@ -104,7 +104,7 @@ var registerButtons = function (editor) {
       values: items,
       fixedWidth: true,
       onPostRender: createFontNameListBoxChangeHandler(editor, items),
-      onselect: function (e) {
+      onselect (e) {
         if (e.control.settings.value) {
           editor.execCommand('FontName', false, e.control.settings.value);
         }
@@ -113,10 +113,10 @@ var registerButtons = function (editor) {
   });
 };
 
-var register = function (editor) {
+const register = function (editor) {
   registerButtons(editor);
 };
 
-export default <any> {
-  register: register
+export default {
+  register
 };

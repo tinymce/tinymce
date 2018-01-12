@@ -6,36 +6,36 @@ import Settings from 'tinymce/plugins/textpattern/api/Settings';
 import Formatter from 'tinymce/plugins/textpattern/core/Formatter';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: .FormatterTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: .FormatterTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var defaultPatterns = Settings.getPatterns({});
+  const defaultPatterns = Settings.getPatterns({});
 
-  var createRng = function (text, startOffset, endOffset) {
+  const createRng = function (text, startOffset, endOffset) {
 
-    var textNode = document.createTextNode(text);
-    var rng = document.createRange();
+    const textNode = document.createTextNode(text);
+    const rng = document.createRange();
     rng.setStart(textNode, startOffset);
     rng.setEnd(textNode, endOffset);
 
     return rng;
   };
 
-  var createParagraphElementRng = function (text, startOffset, endOffset) {
-    var p = document.createElement('p');
-    var textNode = document.createTextNode(text);
+  const createParagraphElementRng = function (text, startOffset, endOffset) {
+    const p = document.createElement('p');
+    const textNode = document.createTextNode(text);
     p.appendChild(textNode);
-    var rng = document.createRange();
+    const rng = document.createRange();
     rng.setStart(p, startOffset);
     rng.setEnd(p, endOffset);
 
     return rng;
   };
 
-  var cGetInlinePattern = function (patterns, space) {
+  const cGetInlinePattern = function (patterns, space) {
     return Chain.mapper(function (input) {
-      var x = Formatter.patternFromRng(patterns, input, space);
+      const x = Formatter.patternFromRng(patterns, input, space);
 
       return x === undefined ? 'undefined' : x;
     });
@@ -156,4 +156,3 @@ UnitTest.asynctest('Browser Test: .FormatterTest', function() {
     success();
   }, failure);
 });
-

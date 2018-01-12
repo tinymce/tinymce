@@ -7,15 +7,15 @@ import { Id } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import UiDomFactory from '../util/UiDomFactory';
 
-var addImage = function (editor, blob) {
+const addImage = function (editor, blob) {
   BlobConversions.blobToBase64(blob).then(function (base64) {
     editor.undoManager.transact(function () {
-      var cache = editor.editorUpload.blobCache;
-      var info = cache.create(
+      const cache = editor.editorUpload.blobCache;
+      const info = cache.create(
         Id.generate('mceu'), blob, base64
       );
       cache.add(info);
-      var img = editor.dom.createHTML('img', {
+      const img = editor.dom.createHTML('img', {
         src: info.blobUri()
       });
       editor.insertContent(img);
@@ -23,14 +23,14 @@ var addImage = function (editor, blob) {
   });
 };
 
-var extractBlob = function (simulatedEvent) {
-  var event = simulatedEvent.event();
-  var files = event.raw().target.files || event.raw().dataTransfer.files;
+const extractBlob = function (simulatedEvent) {
+  const event = simulatedEvent.event();
+  const files = event.raw().target.files || event.raw().dataTransfer.files;
   return Option.from(files[0]);
 };
 
-var sketch = function (editor) {
-  var pickerDom = {
+const sketch = function (editor) {
+  const pickerDom = {
     tag: 'input',
     attributes: { accept: 'image/*', type: 'file', title: '' },
      // Visibility hidden so that it cannot be seen, and position absolute so that it doesn't
@@ -38,7 +38,7 @@ var sketch = function (editor) {
     styles: { visibility: 'hidden', position: 'absolute' }
   };
 
-  var memPicker = Memento.record({
+  const memPicker = Memento.record({
     dom: pickerDom,
     events: AlloyEvents.derive([
       // Stop the event firing again at the button level
@@ -57,14 +57,14 @@ var sketch = function (editor) {
     components: [
       memPicker.asSpec()
     ],
-    action: function (button) {
-      var picker = memPicker.get(button);
+    action (button) {
+      const picker = memPicker.get(button);
       // Trigger a dom click for the file input
       picker.element().dom().click();
     }
   });
 };
 
-export default <any> {
-  sketch: sketch
+export default {
+  sketch
 };

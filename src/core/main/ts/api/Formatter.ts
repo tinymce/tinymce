@@ -35,11 +35,9 @@ import FormatShortcuts from '../keyboard/FormatShortcuts';
  *  tinymce.activeEditor.formatter.apply('mycustomformat');
  */
 
-
-
 export default function (editor) {
-  var formats = FormatRegistry(editor);
-  var formatChangeState = Cell(null);
+  const formats = FormatRegistry(editor);
+  const formatChangeState = Cell(null);
 
   FormatShortcuts.setup(editor);
   CaretFormat.setup(editor);
@@ -167,4 +165,4 @@ export default function (editor) {
      */
     getCssText: Fun.curry(Preview.getCssText, editor)
   };
-};
+}

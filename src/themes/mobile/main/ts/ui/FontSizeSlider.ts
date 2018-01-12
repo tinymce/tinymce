@@ -3,18 +3,18 @@ import ToolbarWidgets from './ToolbarWidgets';
 import FontSizes from '../util/FontSizes';
 import UiDomFactory from '../util/UiDomFactory';
 
-var sizes = FontSizes.candidates();
+const sizes = FontSizes.candidates();
 
-var makeSlider = function (spec) {
+const makeSlider = function (spec) {
   return SizeSlider.sketch({
     onChange: spec.onChange,
-    sizes: sizes,
+    sizes,
     category: 'font',
     getInitialValue: spec.getInitialValue
   });
 };
 
-var makeItems = function (spec) {
+const makeItems = function (spec) {
   return [
     UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-small-font ${prefix}-icon"></span>'),
     makeSlider(spec),
@@ -22,12 +22,12 @@ var makeItems = function (spec) {
   ];
 };
 
-var sketch = function (realm, editor) {
-  var spec = {
-    onChange: function (value) {
+const sketch = function (realm, editor) {
+  const spec = {
+    onChange (value) {
       FontSizes.apply(editor, value);
     },
-    getInitialValue: function (/* slider */) {
+    getInitialValue (/* slider */) {
       return FontSizes.get(editor);
     }
   };
@@ -37,7 +37,7 @@ var sketch = function (realm, editor) {
   });
 };
 
-export default <any> {
-  makeItems: makeItems,
-  sketch: sketch
+export default {
+  makeItems,
+  sketch
 };

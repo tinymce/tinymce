@@ -1,5 +1,4 @@
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/Env';
@@ -7,10 +6,10 @@ import HtmlUtils from '../../module/test/HtmlUtils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
@@ -99,7 +98,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function() {
 
   suite.test('Delete from after image to paragraph', function (editor) {
     editor.getBody().innerHTML = '<p>a</p><p><img src="about:blank"></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStartAfter(editor.dom.select('img')[0]);
     rng.setEndAfter(editor.dom.select('img')[0]);
     editor.selection.setRng(rng);
@@ -143,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function() {
   suite.test('ForwardDelete from end of H1 with BR line to P', function (editor) {
     editor.getBody().innerHTML = '<h1>a<br>b</h1><p>c</p>';
 
-    var rng = editor.selection.getRng();
+    const rng = editor.selection.getRng();
     rng.setStart(editor.$('h1')[0].lastChild, 1);
     rng.setEnd(editor.$('h1')[0].lastChild, 1);
     editor.selection.setRng(rng);
@@ -179,7 +178,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function() {
   suite.test('Backspace key from beginning of P into H1', function (editor) {
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
-    editor.fire("keydown", { keyCode: 8, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false });
+    editor.fire('keydown', { keyCode: 8, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false });
     LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<h1>ab</h1>');
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
   });
@@ -187,7 +186,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function() {
   suite.test('Delete key from end of H1 into P', function (editor) {
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
-    editor.fire("keydown", { keyCode: 46, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false });
+    editor.fire('keydown', { keyCode: 46, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false });
     LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<h1>ab</h1>');
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
@@ -322,7 +321,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function() {
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var steps = Env.webkit ? suite.toSteps(editor) : [];
+    const steps = Env.webkit ? suite.toSteps(editor) : [];
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
@@ -331,4 +330,3 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

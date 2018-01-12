@@ -5,10 +5,10 @@ import Plugin from 'tinymce/plugins/charmap/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
@@ -76,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', function
   });
 
   suite.test('Insert character', function (editor) {
-    var lastEvt;
+    let lastEvt;
 
     editor.on('insertCustomChar', function (e) {
       lastEvt = e;
@@ -94,4 +94,3 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', function
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

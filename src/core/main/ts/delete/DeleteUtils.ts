@@ -17,39 +17,39 @@ import CaretFinder from '../caret/CaretFinder';
 import ElementType from '../dom/ElementType';
 import InlineUtils from '../keyboard/InlineUtils';
 
-var isBeforeRoot = function (rootNode) {
+const isBeforeRoot = function (rootNode) {
   return function (elm) {
     return Compare.eq(rootNode, Element.fromDom(elm.dom().parentNode));
   };
 };
 
-var getParentBlock = function (rootNode, elm) {
+const getParentBlock = function (rootNode, elm) {
   return Compare.contains(rootNode, elm) ? PredicateFind.closest(elm, function (element) {
     return ElementType.isTextBlock(element) || ElementType.isListItem(element);
   }, isBeforeRoot(rootNode)) : Option.none();
 };
 
-var placeCaretInEmptyBody = function (editor) {
-  var body = editor.getBody();
-  var node = body.firstChild && editor.dom.isBlock(body.firstChild) ? body.firstChild : body;
+const placeCaretInEmptyBody = function (editor) {
+  const body = editor.getBody();
+  const node = body.firstChild && editor.dom.isBlock(body.firstChild) ? body.firstChild : body;
   editor.selection.setCursorLocation(node, 0);
 };
 
-var paddEmptyBody = function (editor) {
+const paddEmptyBody = function (editor) {
   if (editor.dom.isEmpty(editor.getBody())) {
     editor.setContent('');
     placeCaretInEmptyBody(editor);
   }
 };
 
-var willDeleteLastPositionInElement = function (forward, fromPos, elm) {
+const willDeleteLastPositionInElement = function (forward, fromPos, elm) {
   return Options.liftN([
     CaretFinder.firstPositionIn(elm),
     CaretFinder.lastPositionIn(elm)
   ], function (firstPos, lastPos) {
-    var normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
-    var normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
-    var normalizedFromPos = InlineUtils.normalizePosition(false, fromPos);
+    const normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
+    const normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
+    const normalizedFromPos = InlineUtils.normalizePosition(false, fromPos);
 
     if (forward) {
       return CaretFinder.nextPosition(elm, normalizedFromPos).map(function (nextPos) {
@@ -64,7 +64,7 @@ var willDeleteLastPositionInElement = function (forward, fromPos, elm) {
 };
 
 export default {
-  getParentBlock: getParentBlock,
-  paddEmptyBody: paddEmptyBody,
-  willDeleteLastPositionInElement: willDeleteLastPositionInElement
+  getParentBlock,
+  paddEmptyBody,
+  willDeleteLastPositionInElement
 };

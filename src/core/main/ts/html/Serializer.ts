@@ -21,13 +21,11 @@ import Schema from './Schema';
  * @version 3.4
  */
 
-
-
 export default function (settings?, schema?) {
-  var self: any = {}, writer = Writer(settings);
+  const self: any = {}, writer = Writer(settings);
 
   settings = settings || {};
-  settings.validate = "validate" in settings ? settings.validate : true;
+  settings.validate = 'validate' in settings ? settings.validate : true;
 
   self.schema = schema = schema || Schema();
   self.writer = writer;
@@ -42,38 +40,38 @@ export default function (settings?, schema?) {
    * @return {String} String with HTML based on DOM tree.
    */
   self.serialize = function (node) {
-    var handlers, validate;
+    let handlers, validate;
 
     validate = settings.validate;
 
     handlers = {
       // #text
-      3: function (node) {
+      3 (node) {
         writer.text(node.value, node.raw);
       },
 
       // #comment
-      8: function (node) {
+      8 (node) {
         writer.comment(node.value);
       },
 
       // Processing instruction
-      7: function (node) {
+      7 (node) {
         writer.pi(node.name, node.value);
       },
 
       // Doctype
-      10: function (node) {
+      10 (node) {
         writer.doctype(node.value);
       },
 
       // CDATA
-      4: function (node) {
+      4 (node) {
         writer.cdata(node.value);
       },
 
       // Document fragment
-      11: function (node) {
+      11 (node) {
         if ((node = node.firstChild)) {
           do {
             walk(node);
@@ -84,8 +82,9 @@ export default function (settings?, schema?) {
 
     writer.reset();
 
-    var walk = function (node) {
-      var handler = handlers[node.type], name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
+    const walk = function (node) {
+      const handler = handlers[node.type];
+      let  name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
 
       if (!handler) {
         name = node.name;
@@ -140,7 +139,7 @@ export default function (settings?, schema?) {
     };
 
     // Serialize element and treat all non elements as fragments
-    if (node.type == 1 && !settings.inner) {
+    if (node.type === 1 && !settings.inner) {
       walk(node);
     } else {
       handlers[11](node);
@@ -150,4 +149,4 @@ export default function (settings?, schema?) {
   };
 
   return self;
-};
+}

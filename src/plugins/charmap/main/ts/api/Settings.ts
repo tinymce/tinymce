@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getCharMap = function (editor) {
+const getCharMap = function (editor) {
   return editor.settings.charmap;
 };
 
-var getCharMapAppend = function (editor) {
+const getCharMapAppend = function (editor) {
   return editor.settings.charmap_append;
 };
 
 export default {
-  getCharMap: getCharMap,
-  getCharMapAppend: getCharMapAppend
+  getCharMap,
+  getCharMapAppend
 };

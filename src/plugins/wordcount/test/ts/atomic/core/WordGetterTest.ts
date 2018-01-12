@@ -1,10 +1,10 @@
 import WordGetter from 'tinymce/plugins/wordcount/text/WordGetter';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('atomic.core.WordGetterTest', function() {
-  var getWords = WordGetter.getWords;
+UnitTest.test('atomic.core.WordGetterTest', function () {
+  const getWords = WordGetter.getWords;
 
-  var testGetWords = function () {
+  const testGetWords = function () {
     // splits words on whitespace
     assert.eq(['hello', 'world'], getWords('hello world'));
     // does not split on numeric separators
@@ -42,4 +42,3 @@ UnitTest.test('atomic.core.WordGetterTest', function() {
 
   testGetWords();
 });
-

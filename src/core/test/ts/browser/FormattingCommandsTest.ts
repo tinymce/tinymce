@@ -4,14 +4,14 @@ import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var ok = function (value, label?) {
+  const ok = function (value, label?) {
     return LegacyUnit.equal(value, true, label);
   };
 
@@ -30,12 +30,12 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function() {
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
     editor.execCommand('Bold');
-    LegacyUnit.equal(editor.getContent(), "<p><strong>test 123</strong></p>");
+    LegacyUnit.equal(editor.getContent(), '<p><strong>test 123</strong></p>');
 
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
     editor.execCommand('Italic');
-    LegacyUnit.equal(editor.getContent(), "<p><em>test 123</em></p>");
+    LegacyUnit.equal(editor.getContent(), '<p><em>test 123</em></p>');
 
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
@@ -185,7 +185,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function() {
     try {
       editor.execCommand('FormatBlock', false, 'div');
     } catch (ex) {
-      //t.log('Failed: ' + ex.message);
+      // t.log('Failed: ' + ex.message);
     }
 
     LegacyUnit.equal(editor.getContent(), '<div>test 123</div>');
@@ -223,7 +223,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function() {
   suite.test('mceInsertLink (link encoded and with class)', function (editor) {
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
-    editor.execCommand('mceInsertLink', false, { href: '"&<>', 'class': 'test' });
+    editor.execCommand('mceInsertLink', false, { href: '"&<>', class: 'test' });
     LegacyUnit.equal(editor.getContent(), '<p><a class="test" href="&quot;&amp;&lt;&gt;">test 123</a></p>');
   });
 
@@ -242,7 +242,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function() {
   });
 
   suite.test('mceInsertLink (link adjacent text)', function (editor) {
-    var rng;
+    let rng;
 
     editor.setContent('<p><a href="#">a</a>b</p>');
 
@@ -305,7 +305,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function() {
 
   suite.test('mceInsertLink bug #7331', function (editor) {
     editor.setContent('<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.$('td')[1].firstChild, 0);
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
@@ -441,4 +441,3 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

@@ -12,7 +12,6 @@ import Schema from './Schema';
 import Entities from './Entities';
 import Tools from '../util/Tools';
 
-declare const escape: any;
 declare const unescape: any;
 
 /*eslint max-depth:[2, 9] */
@@ -58,13 +57,13 @@ declare const unescape: any;
  * @version 3.4
  */
 
-var each = Tools.each;
+const each = Tools.each;
 
-var isValidPrefixAttrName = function (name) {
+const isValidPrefixAttrName = function (name) {
   return name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
 };
 
-var trimComments = function (text) {
+const trimComments = function (text) {
   return text.replace(/<!--|-->/g, '');
 };
 
@@ -79,8 +78,8 @@ var trimComments = function (text) {
  * @param {Number} startIndex Indext to start searching at should be after the start tag.
  * @return {Number} Index of the end tag.
  */
-var findEndTag = function (schema, html, startIndex) {
-  var count = 1, index, matches, tokenRegExp, shortEndedElements;
+const findEndTag = function (schema, html, startIndex) {
+  let count = 1, index, matches, tokenRegExp, shortEndedElements;
 
   shortEndedElements = schema.getShortEndedElements();
   tokenRegExp = /<([!?\/])?([A-Za-z0-9\-_\:\.]+)((?:\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\/|\s+)>/g;
@@ -115,10 +114,10 @@ var findEndTag = function (schema, html, startIndex) {
  * @param {Object} settings Name/value collection of settings. comment, cdata, text, start and end are callbacks.
  * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
  */
-var SaxParser: any = function (settings, schema) {
-  var self = this;
+const SaxParser: any = function (settings, schema) {
+  const self = this;
 
-  var noop = function () { };
+  const noop = function () { };
 
   settings = settings || {};
   self.schema = schema = schema || Schema();
@@ -143,16 +142,21 @@ var SaxParser: any = function (settings, schema) {
    * @param {String} html Html string to sax parse.
    */
   self.parse = function (html) {
-    var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, i, text, name;
-    var isInternalElement, removeInternalElements, shortEndedElements, fillAttrsMap, isShortEnded;
-    var validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
-    var attributesRequired, attributesDefault, attributesForced, processHtml;
-    var anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
-    var decode = Entities.decode, fixSelfClosing, filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster');
-    var scriptUriRegExp = /((java|vb)script|mhtml):/i, dataUriRegExp = /^data:/i;
+    const self = this;
+    let matches, index = 0, value, endRegExp;
+    const stack = [];
+    let attrList, i, text, name;
+    let isInternalElement, removeInternalElements, shortEndedElements, fillAttrsMap, isShortEnded;
+    let validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
+    let attributesRequired, attributesDefault, attributesForced, processHtml;
+    let anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
+    const decode = Entities.decode;
+    let fixSelfClosing;
+    const filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster');
+    const scriptUriRegExp = /((java|vb)script|mhtml):/i, dataUriRegExp = /^data:/i;
 
-    var processEndTag = function (name) {
-      var pos, i;
+    const processEndTag = function (name) {
+      let pos, i;
 
       // Find position of parent of the same type
       pos = stack.length;
@@ -178,8 +182,9 @@ var SaxParser: any = function (settings, schema) {
       }
     };
 
-    var parseAttribute = function (match, name, value, val2, val3) {
-      var attrRule, i, trimRegExp = /[\s\u0000-\u001F]+/g;
+    const parseAttribute = function (match, name, value, val2, val3) {
+      let attrRule, i;
+      const trimRegExp = /[\s\u0000-\u001F]+/g;
 
       name = name.toLowerCase();
       value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
@@ -217,7 +222,7 @@ var SaxParser: any = function (settings, schema) {
 
       // Block any javascript: urls or non image data uris
       if (filteredUrlAttrs[name] && !settings.allow_script_urls) {
-        var uri = value.replace(trimRegExp, '');
+        let uri = value.replace(trimRegExp, '');
 
         try {
           // Might throw malformed URI sequence
@@ -244,8 +249,8 @@ var SaxParser: any = function (settings, schema) {
       // Add attribute to list and map
       attrList.map[name] = value;
       attrList.push({
-        name: name,
-        value: value
+        name,
+        value
       });
     };
 
@@ -362,7 +367,7 @@ var SaxParser: any = function (settings, schema) {
                 }
 
                 attrList.map[name] = attrValue;
-                attrList.push({ name: name, value: attrValue });
+                attrList.push({ name, value: attrValue });
               }
             }
 
@@ -381,7 +386,7 @@ var SaxParser: any = function (settings, schema) {
                   }
 
                   attrList.map[name] = attrValue;
-                  attrList.push({ name: name, value: attrValue });
+                  attrList.push({ name, value: attrValue });
                 }
               }
             }
@@ -449,7 +454,7 @@ var SaxParser: any = function (settings, schema) {
 
         // Push value on to stack
         if (!isShortEnded) {
-          if (!attribsValue || attribsValue.indexOf('/') != attribsValue.length - 1) {
+          if (!attribsValue || attribsValue.indexOf('/') !== attribsValue.length - 1) {
             stack.push({ name: value, valid: isValidElement });
           } else if (isValidElement) {
             self.end(value);

@@ -12,10 +12,11 @@ import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Tools from 'tinymce/core/util/Tools';
 import NodeType from './NodeType';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var normalizeList = function (dom, ul) {
-  var sibling, parentNode = ul.parentNode;
+const normalizeList = function (dom, ul) {
+  let sibling;
+  const parentNode = ul.parentNode;
 
   // Move UL/OL to previous LI if it's the only child of a LI
   if (parentNode.nodeName === 'LI' && parentNode.firstChild === ul) {
@@ -40,13 +41,13 @@ var normalizeList = function (dom, ul) {
   }
 };
 
-var normalizeLists = function (dom, element) {
+const normalizeLists = function (dom, element) {
   Tools.each(Tools.grep(dom.select('ol,ul', element)), function (ul) {
     normalizeList(dom, ul);
   });
 };
 
 export default {
-  normalizeList: normalizeList,
-  normalizeLists: normalizeLists
+  normalizeList,
+  normalizeLists
 };

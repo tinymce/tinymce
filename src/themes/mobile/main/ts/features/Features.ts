@@ -1,10 +1,8 @@
 import { Behaviour } from '@ephox/alloy';
 import { Receiving } from '@ephox/alloy';
 import { Toggling } from '@ephox/alloy';
-import { Memento } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import { Type } from '@ephox/katamari';
 import Receivers from '../channels/Receivers';
@@ -17,88 +15,88 @@ import ImagePicker from '../ui/ImagePicker';
 import LinkButton from '../ui/LinkButton';
 import StyleFormats from '../util/StyleFormats';
 
-var defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect' ];
+const defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect' ];
 
-var extract = function (rawToolbar) {
+const extract = function (rawToolbar) {
   // Ignoring groups
-  var toolbar = rawToolbar.replace(/\|/g, ' ').trim();
+  const toolbar = rawToolbar.replace(/\|/g, ' ').trim();
   return toolbar.length > 0 ? toolbar.split(/\s+/) : [ ];
 };
 
-var identifyFromArray = function (toolbar) {
+const identifyFromArray = function (toolbar) {
   return Arr.bind(toolbar, function (item) {
     return Type.isArray(item) ? identifyFromArray(item) : extract(item);
   });
 };
 
-var identify = function (settings) {
+const identify = function (settings) {
   // Firstly, flatten the toolbar
-  var toolbar = settings.toolbar !== undefined ? settings.toolbar : defaults;
+  const toolbar = settings.toolbar !== undefined ? settings.toolbar : defaults;
   return Type.isArray(toolbar) ? identifyFromArray(toolbar) : extract(toolbar);
 };
 
-var setup = function (realm, editor) {
-  var commandSketch = function (name) {
+const setup = function (realm, editor) {
+  const commandSketch = function (name) {
     return function () {
       return Buttons.forToolbarCommand(editor, name);
     };
   };
 
-  var stateCommandSketch = function (name) {
+  const stateCommandSketch = function (name) {
     return function () {
       return Buttons.forToolbarStateCommand(editor, name);
     };
   };
 
-  var actionSketch = function (name, query, action) {
+  const actionSketch = function (name, query, action) {
     return function () {
       return Buttons.forToolbarStateAction(editor, name, query, action);
     };
   };
 
-  var undo = commandSketch('undo');
-  var redo = commandSketch('redo');
-  var bold = stateCommandSketch('bold');
-  var italic = stateCommandSketch('italic');
-  var underline = stateCommandSketch('underline');
-  var removeformat = commandSketch('removeformat');
+  const undo = commandSketch('undo');
+  const redo = commandSketch('redo');
+  const bold = stateCommandSketch('bold');
+  const italic = stateCommandSketch('italic');
+  const underline = stateCommandSketch('underline');
+  const removeformat = commandSketch('removeformat');
 
-  var link = function () {
+  const link = function () {
     return LinkButton.sketch(realm, editor);
   };
-  
-  var unlink = actionSketch('unlink', 'link', function () {
+
+  const unlink = actionSketch('unlink', 'link', function () {
     editor.execCommand('unlink', null, false);
   });
-  var image = function () {
+  const image = function () {
     return ImagePicker.sketch(editor);
   };
 
-  var bullist = actionSketch('unordered-list', 'ul', function () {
+  const bullist = actionSketch('unordered-list', 'ul', function () {
     editor.execCommand('InsertUnorderedList', null, false);
   });
 
-  var numlist = actionSketch('ordered-list', 'ol', function () {
+  const numlist = actionSketch('ordered-list', 'ol', function () {
     editor.execCommand('InsertOrderedList', null, false);
   });
 
-  var fontsizeselect = function () {
+  const fontsizeselect = function () {
     return FontSizeSlider.sketch(realm, editor);
   };
 
-  var forecolor = function () {
+  const forecolor = function () {
     return ColorSlider.sketch(realm, editor);
   };
 
-  var styleFormats = StyleFormats.register(editor, editor.settings);
+  const styleFormats = StyleFormats.register(editor, editor.settings);
 
-  var styleFormatsMenu = function () {
+  const styleFormatsMenu = function () {
     return StyleFormats.ui(editor, styleFormats, function () {
       editor.fire('scrollIntoView');
     });
   };
 
-  var styleselect = function () {
+  const styleselect = function () {
     return Buttons.forToolbar('style-formats', function (button) {
       editor.fire('toReading');
       realm.dropup().appear(styleFormatsMenu, Toggling.on, button);
@@ -119,15 +117,15 @@ var setup = function (realm, editor) {
     ]));
   };
 
-  var feature = function (prereq, sketch) {
+  const feature = function (prereq, sketch) {
     return {
-      isSupported: function () {
+      isSupported () {
         // NOTE: forall is true for none
         return prereq.forall(function (p) {
           return Objects.hasKey(editor.buttons, p);
         });
       },
-      sketch: sketch
+      sketch
     };
   };
 
@@ -150,22 +148,22 @@ var setup = function (realm, editor) {
   };
 };
 
-var detect = function (settings, features) {
+const detect = function (settings, features) {
   // Firstly, work out which items are in the toolbar
-  var itemNames = identify(settings);
+  const itemNames = identify(settings);
 
   // Now, build the list only including supported features and no duplicates.
-  var present = { };
+  const present = { };
   return Arr.bind(itemNames, function (iName) {
-    var r = !Objects.hasKey(present, iName) && Objects.hasKey(features, iName) && features[iName].isSupported() ? [ features[iName].sketch() ] : [];
+    const r = !Objects.hasKey(present, iName) && Objects.hasKey(features, iName) && features[iName].isSupported() ? [ features[iName].sketch() ] : [];
     // NOTE: Could use fold to avoid mutation, but it might be overkill and not performant
     present[iName] = true;
     return r;
   });
 };
 
-export default <any> {
-  identify: identify,
-  setup: setup,
-  detect: detect
+export default {
+  identify,
+  setup,
+  detect
 };

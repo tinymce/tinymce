@@ -10,15 +10,13 @@
 
 import DOMUtils from '../dom/DOMUtils';
 
-
-
 export default {
   callbacks: {},
   count: 0,
 
-  send: function (settings) {
-    var self = this, dom = DOMUtils.DOM, count = settings.count !== undefined ? settings.count : self.count;
-    var id = 'tinymce_jsonp_' + count;
+  send (settings) {
+    const self = this, dom = DOMUtils.DOM, count = settings.count !== undefined ? settings.count : self.count;
+    const id = 'tinymce_jsonp_' + count;
 
     self.callbacks[count] = function (json) {
       dom.remove(id);
@@ -28,7 +26,7 @@ export default {
     };
 
     dom.add(dom.doc.body, 'script', {
-      id: id,
+      id,
       src: settings.url,
       type: 'text/javascript'
     });

@@ -17,10 +17,10 @@ import Buttons from './ui/Buttons';
 import Dialog from './ui/Dialog';
 import Utils from './util/Utils';
 
-var addedInlineCss = Cell(false);
+const addedInlineCss = Cell(false);
 
 PluginManager.add('codesample', function (editor, pluginUrl) {
-  var addedCss = Cell(false);
+  const addedCss = Cell(false);
 
   FilterContent.setup(editor);
   Buttons.register(editor);
@@ -37,4 +37,4 @@ PluginManager.add('codesample', function (editor, pluginUrl) {
   });
 });
 
-export default function () { };
+export default function () { }

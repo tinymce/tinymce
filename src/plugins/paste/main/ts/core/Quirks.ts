@@ -52,13 +52,13 @@ function removeExplorerBrElementsAfterBlocks(editor, html) {
   }
 
   // Produce block regexp based on the block elements in schema
-  var blockElements = [];
+  const blockElements = [];
 
   Tools.each(editor.schema.getBlockElements(), function (block, blockName) {
     blockElements.push(blockName);
   });
 
-  var explorerBlocksRegExp = new RegExp(
+  const explorerBlocksRegExp = new RegExp(
     '(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*(<\\/?(' + blockElements.join('|') + ')[^>]*>)(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*',
     'g'
   );
@@ -94,9 +94,9 @@ function removeWebKitStyles(editor, content, internal, isWordHtml) {
   }
 
   // Filter away styles that isn't matching the target node
-  var webKitStyles = Settings.getWebkitStyles(editor);
+  let webKitStyles = Settings.getWebkitStyles(editor);
 
-  if (Settings.shouldRemoveWebKitStyles(editor) === false || webKitStyles === "all") {
+  if (Settings.shouldRemoveWebKitStyles(editor) === false || webKitStyles === 'all') {
     return content;
   }
 
@@ -106,18 +106,18 @@ function removeWebKitStyles(editor, content, internal, isWordHtml) {
 
   // Keep specific styles that doesn't match the current node computed style
   if (webKitStyles) {
-    var dom = editor.dom, node = editor.selection.getNode();
+    const dom = editor.dom, node = editor.selection.getNode();
 
     content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, function (all, before, value, after) {
-      var inputStyles = dom.parseStyle(dom.decode(value), 'span');
-      var outputStyles = {};
+      const inputStyles = dom.parseStyle(dom.decode(value), 'span');
+      let outputStyles = {};
 
-      if (webKitStyles === "none") {
+      if (webKitStyles === 'none') {
         return before + after;
       }
 
-      for (var i = 0; i < webKitStyles.length; i++) {
-        var inputValue = inputStyles[webKitStyles[i]], currentValue = dom.getStyle(node, webKitStyles[i], true);
+      for (let i = 0; i < webKitStyles.length; i++) {
+        let inputValue = inputStyles[webKitStyles[i]], currentValue = dom.getStyle(node, webKitStyles[i], true);
 
         if (/color/.test(webKitStyles[i])) {
           inputValue = dom.toHex(inputValue);
@@ -155,7 +155,7 @@ function removeUnderlineAndFontInAnchor(editor, root) {
   });
 }
 
-var setup = function (editor) {
+const setup = function (editor) {
   if (Env.webkit) {
     addPreProcessFilter(editor, removeWebKitStyles);
   }
@@ -167,5 +167,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

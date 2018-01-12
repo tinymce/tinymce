@@ -16,10 +16,8 @@ import DomUtils from './DomUtils';
  * @mixin tinymce.ui.Movable
  */
 
-"use strict";
-
 function calculateRelativePosition(ctrl, targetElm, rel) {
-  var ctrlElm, pos, x, y, selfW, selfH, targetW, targetH, viewport, size;
+  let ctrlElm, pos, x, y, selfW, selfH, targetW, targetH, viewport, size;
 
   viewport = DomUtils.getViewPort();
 
@@ -28,7 +26,7 @@ function calculateRelativePosition(ctrl, targetElm, rel) {
   x = pos.x;
   y = pos.y;
 
-  if (ctrl.state.get('fixed') && DomUtils.getRuntimeStyle(document.body, 'position') == 'static') {
+  if (ctrl.state.get('fixed') && DomUtils.getRuntimeStyle(document.body, 'position') === 'static') {
     x -= viewport.x;
     y -= viewport.y;
   }
@@ -82,14 +80,14 @@ function calculateRelativePosition(ctrl, targetElm, rel) {
   }
 
   return {
-    x: x,
-    y: y,
+    x,
+    y,
     w: selfW,
     h: selfH
   };
 }
 
-export default <any> {
+export default {
   /**
    * Tests various positions to get the most suitable one.
    *
@@ -98,11 +96,11 @@ export default <any> {
    * @param {Array} rels Array with relative positions.
    * @return {String} Best suitable relative position.
    */
-  testMoveRel: function (elm, rels) {
-    var viewPortRect = DomUtils.getViewPort();
+  testMoveRel (elm, rels) {
+    const viewPortRect = DomUtils.getViewPort();
 
-    for (var i = 0; i < rels.length; i++) {
-      var pos = calculateRelativePosition(this, elm, rels[i]);
+    for (let i = 0; i < rels.length; i++) {
+      const pos = calculateRelativePosition(this, elm, rels[i]);
 
       if (this.state.get('fixed')) {
         if (pos.x > 0 && pos.x + pos.w < viewPortRect.w && pos.y > 0 && pos.y + pos.h < viewPortRect.h) {
@@ -127,12 +125,12 @@ export default <any> {
    * @param {String} rel Relative mode. For example: br-tl.
    * @return {tinymce.ui.Control} Current control instance.
    */
-  moveRel: function (elm, rel) {
-    if (typeof rel != 'string') {
+  moveRel (elm, rel) {
+    if (typeof rel !== 'string') {
       rel = this.testMoveRel(elm, rel);
     }
 
-    var pos = calculateRelativePosition(this, elm, rel);
+    const pos = calculateRelativePosition(this, elm, rel);
     return this.moveTo(pos.x, pos.y);
   },
 
@@ -144,8 +142,8 @@ export default <any> {
    * @param {Number} dy Relative y position.
    * @return {tinymce.ui.Control} Current control instance.
    */
-  moveBy: function (dx, dy) {
-    var self = this, rect = self.layoutRect();
+  moveBy (dx, dy) {
+    const self = this, rect = self.layoutRect();
 
     self.moveTo(rect.x + dx, rect.y + dy);
 
@@ -160,8 +158,8 @@ export default <any> {
    * @param {Number} y Absolute y position.
    * @return {tinymce.ui.Control} Current control instance.
    */
-  moveTo: function (x, y) {
-    var self = this;
+  moveTo (x, y) {
+    const self = this;
 
     // TODO: Move this to some global class
     function constrain(value, max, size) {
@@ -178,21 +176,21 @@ export default <any> {
     }
 
     if (self.settings.constrainToViewport) {
-      var viewPortRect = DomUtils.getViewPort(window);
-      var layoutRect = self.layoutRect();
+      const viewPortRect = DomUtils.getViewPort(window);
+      const layoutRect = self.layoutRect();
 
       x = constrain(x, viewPortRect.w + viewPortRect.x, layoutRect.w);
       y = constrain(y, viewPortRect.h + viewPortRect.y, layoutRect.h);
     }
 
     if (self.state.get('rendered')) {
-      self.layoutRect({ x: x, y: y }).repaint();
+      self.layoutRect({ x, y }).repaint();
     } else {
       self.settings.x = x;
       self.settings.y = y;
     }
 
-    self.fire('move', { x: x, y: y });
+    self.fire('move', { x, y });
 
     return self;
   }

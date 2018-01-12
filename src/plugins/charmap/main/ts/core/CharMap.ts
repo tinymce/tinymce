@@ -11,9 +11,9 @@
 import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 
-var isArray = Tools.isArray;
+const isArray = Tools.isArray;
 
-var getDefaultCharMap = function () {
+const getDefaultCharMap = function () {
   return [
     ['160', 'no-break space'],
     ['173', 'soft hyphen'],
@@ -288,31 +288,31 @@ var getDefaultCharMap = function () {
   ];
 };
 
-var charmapFilter = function (charmap) {
+const charmapFilter = function (charmap) {
   return Tools.grep(charmap, function (item) {
     return isArray(item) && item.length === 2;
   });
 };
 
-var getCharsFromSetting = function (settingValue) {
+const getCharsFromSetting = function (settingValue) {
   if (isArray(settingValue)) {
     return [].concat(charmapFilter(settingValue));
   }
 
-  if (typeof settingValue === "function") {
+  if (typeof settingValue === 'function') {
     return settingValue();
   }
 
   return [];
 };
 
-var extendCharMap = function (editor, charmap) {
-  var userCharMap = Settings.getCharMap(editor);
+const extendCharMap = function (editor, charmap) {
+  const userCharMap = Settings.getCharMap(editor);
   if (userCharMap) {
     charmap = getCharsFromSetting(userCharMap);
   }
 
-  var userCharMapAppend = Settings.getCharMapAppend(editor);
+  const userCharMapAppend = Settings.getCharMapAppend(editor);
   if (userCharMapAppend) {
     return [].concat(charmap).concat(getCharsFromSetting(userCharMapAppend));
   }
@@ -320,10 +320,10 @@ var extendCharMap = function (editor, charmap) {
   return charmap;
 };
 
-var getCharMap = function (editor) {
+const getCharMap = function (editor) {
   return extendCharMap(editor, getDefaultCharMap());
 };
 
 export default {
-  getCharMap: getCharMap
+  getCharMap
 };

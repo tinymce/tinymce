@@ -30,7 +30,9 @@
 
 /*eslint-enable */
 
-var i,
+/* tslint:disable */
+
+let i,
   support,
   Expr,
   getText,
@@ -53,7 +55,7 @@ var i,
   contains,
 
   // Instance-specific data
-  expando = "sizzle" + -(new Date()),
+  expando = 'sizzle' + -(new Date()),
   preferredDoc = window.document,
   dirruns = 0,
   done = 0,
@@ -80,7 +82,7 @@ var i,
   slice = arr.slice,
   // Use a stripped-down indexOf if we can't use a native one
   indexOf = arr.indexOf || function (elem) {
-    var i = 0,
+    let i = 0,
       len = this.length;
     for (; i < len; i++) {
       if (this[i] === elem) {
@@ -90,59 +92,59 @@ var i,
     return -1;
   },
 
-  booleans = "checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",
+  booleans = 'checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped',
 
   // Regular expressions
 
   // http://www.w3.org/TR/css3-selectors/#whitespace
-  whitespace = "[\\x20\\t\\r\\n\\f]",
+  whitespace = '[\\x20\\t\\r\\n\\f]',
 
   // http://www.w3.org/TR/CSS21/syndata.html#value-def-identifier
-  identifier = "(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",
+  identifier = '(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+',
 
   // Attribute selectors: http://www.w3.org/TR/selectors/#attribute-selectors
-  attributes = "\\[" + whitespace + "*(" + identifier + ")(?:" + whitespace +
+  attributes = '\\[' + whitespace + '*(' + identifier + ')(?:' + whitespace +
     // Operator (capture 2)
-    "*([*^$|!~]?=)" + whitespace +
+    '*([*^$|!~]?=)' + whitespace +
     // "Attribute values must be CSS identifiers [capture 5] or strings [capture 3 or capture 4]"
-    "*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|(" + identifier + "))|)" + whitespace +
-    "*\\]",
+    '*(?:\'((?:\\\\.|[^\\\\\'])*)\'|"((?:\\\\.|[^\\\\"])*)"|(' + identifier + '))|)' + whitespace +
+    '*\\]',
 
-  pseudos = ":(" + identifier + ")(?:\\((" +
+  pseudos = ':(' + identifier + ')(?:\\((' +
     // To reduce the number of selectors needing tokenize in the preFilter, prefer arguments:
     // 1. quoted (capture 3; capture 4 or capture 5)
-    "('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|" +
+    '(\'((?:\\\\.|[^\\\\\'])*)\'|"((?:\\\\.|[^\\\\"])*)")|' +
     // 2. simple (capture 6)
-    "((?:\\\\.|[^\\\\()[\\]]|" + attributes + ")*)|" +
+    '((?:\\\\.|[^\\\\()[\\]]|' + attributes + ')*)|' +
     // 3. anything else (capture 2)
-    ".*" +
-    ")\\)|)",
+    '.*' +
+    ')\\)|)',
 
   // Leading and non-escaped trailing whitespace, capturing some non-whitespace characters preceding the latter
-  rtrim = new RegExp("^" + whitespace + "+|((?:^|[^\\\\])(?:\\\\.)*)" + whitespace + "+$", "g"),
+  rtrim = new RegExp('^' + whitespace + '+|((?:^|[^\\\\])(?:\\\\.)*)' + whitespace + '+$', 'g'),
 
-  rcomma = new RegExp("^" + whitespace + "*," + whitespace + "*"),
-  rcombinators = new RegExp("^" + whitespace + "*([>+~]|" + whitespace + ")" + whitespace + "*"),
+  rcomma = new RegExp('^' + whitespace + '*,' + whitespace + '*'),
+  rcombinators = new RegExp('^' + whitespace + '*([>+~]|' + whitespace + ')' + whitespace + '*'),
 
-  rattributeQuotes = new RegExp("=" + whitespace + "*([^\\]'\"]*?)" + whitespace + "*\\]", "g"),
+  rattributeQuotes = new RegExp('=' + whitespace + '*([^\\]\'"]*?)' + whitespace + '*\\]', 'g'),
 
   rpseudo = new RegExp(pseudos),
-  ridentifier = new RegExp("^" + identifier + "$"),
+  ridentifier = new RegExp('^' + identifier + '$'),
 
   matchExpr = {
-    "ID": new RegExp("^#(" + identifier + ")"),
-    "CLASS": new RegExp("^\\.(" + identifier + ")"),
-    "TAG": new RegExp("^(" + identifier + "|[*])"),
-    "ATTR": new RegExp("^" + attributes),
-    "PSEUDO": new RegExp("^" + pseudos),
-    "CHILD": new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\(" + whitespace +
-      "*(even|odd|(([+-]|)(\\d*)n|)" + whitespace + "*(?:([+-]|)" + whitespace +
-      "*(\\d+)|))" + whitespace + "*\\)|)", "i"),
-    "bool": new RegExp("^(?:" + booleans + ")$", "i"),
+    ID: new RegExp('^#(' + identifier + ')'),
+    CLASS: new RegExp('^\\.(' + identifier + ')'),
+    TAG: new RegExp('^(' + identifier + '|[*])'),
+    ATTR: new RegExp('^' + attributes),
+    PSEUDO: new RegExp('^' + pseudos),
+    CHILD: new RegExp('^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\(' + whitespace +
+      '*(even|odd|(([+-]|)(\\d*)n|)' + whitespace + '*(?:([+-]|)' + whitespace +
+      '*(\\d+)|))' + whitespace + '*\\)|)', 'i'),
+    bool: new RegExp('^(?:' + booleans + ')$', 'i'),
     // For use in libraries implementing .is()
     // We use this for POS matching in `select`
-    "needsContext": new RegExp("^" + whitespace + "*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(" +
-      whitespace + "*((?:-\\d)?\\d*)" + whitespace + "*\\)|)(?=[^-]|$)", "i")
+    needsContext: new RegExp('^' + whitespace + '*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(' +
+      whitespace + '*((?:-\\d)?\\d*)' + whitespace + '*\\)|)(?=[^-]|$)', 'i')
   },
 
   rinputs = /^(?:input|select|textarea|button)$/i,
@@ -157,9 +159,9 @@ var i,
   rescape = /'|\\/g,
 
   // CSS escapes http://www.w3.org/TR/CSS21/syndata.html#escaped-characters
-  runescape = new RegExp("\\\\([\\da-f]{1,6}" + whitespace + "?|(" + whitespace + ")|.)", "ig"),
+  runescape = new RegExp('\\\\([\\da-f]{1,6}' + whitespace + '?|(' + whitespace + ')|.)', 'ig'),
   funescape = function (_, escaped, escapedWhitespace) {
-    var high = (<any>"0x") + escaped - 0x10000;
+    const high = (<any> '0x') + escaped - 0x10000;
     // NaN means non-codepoint
     // Support: Firefox<24
     // Workaround erroneous numeric interpretation of +"0x"
@@ -180,6 +182,7 @@ try {
   );
   // Support: Android<4.0
   // Detect silently failing push.apply
+  // tslint:disable-next-line:no-unused-expression
   arr[preferredDoc.childNodes.length].nodeType;
 } catch (e) {
   push = {
@@ -193,7 +196,7 @@ try {
       // Support: IE<9
       // Otherwise append directly
       function (target, els) {
-        var j = target.length,
+        let j = target.length,
           i = 0;
         // Can't trust NodeList.length
         while ((target[j++] = els[i++])) { }
@@ -202,8 +205,8 @@ try {
   };
 }
 
-var Sizzle: any = function (selector, context, results, seed) {
-  var match, elem, m, nodeType,
+const Sizzle: any = function (selector, context, results, seed) {
+  let match, elem, m, nodeType,
     // QSA vars
     i, groups, old, nid, newContext, newSelector;
 
@@ -214,7 +217,7 @@ var Sizzle: any = function (selector, context, results, seed) {
   context = context || document;
   results = results || [];
 
-  if (!selector || typeof selector !== "string") {
+  if (!selector || typeof selector !== 'string') {
     return results;
   }
 
@@ -273,22 +276,22 @@ var Sizzle: any = function (selector, context, results, seed) {
       // We can work around this by specifying an extra ID on the root
       // and working up from there (Thanks to Andrew Dupont for the technique)
       // IE 8 doesn't work on object elements
-      if (nodeType === 1 && context.nodeName.toLowerCase() !== "object") {
+      if (nodeType === 1 && context.nodeName.toLowerCase() !== 'object') {
         groups = tokenize(selector);
 
-        if ((old = context.getAttribute("id"))) {
-          nid = old.replace(rescape, "\\$&");
+        if ((old = context.getAttribute('id'))) {
+          nid = old.replace(rescape, '\\$&');
         } else {
-          context.setAttribute("id", nid);
+          context.setAttribute('id', nid);
         }
-        nid = "[id='" + nid + "'] ";
+        nid = '[id=\'' + nid + '\'] ';
 
         i = groups.length;
         while (i--) {
           groups[i] = nid + toSelector(groups[i]);
         }
         newContext = rsibling.test(selector) && testContext(context.parentNode) || context;
-        newSelector = groups.join(",");
+        newSelector = groups.join(',');
       }
 
       if (newSelector) {
@@ -300,7 +303,7 @@ var Sizzle: any = function (selector, context, results, seed) {
         } catch (qsaError) {
         } finally {
           if (!old) {
-            context.removeAttribute("id");
+            context.removeAttribute('id');
           }
         }
       }
@@ -308,8 +311,8 @@ var Sizzle: any = function (selector, context, results, seed) {
   }
 
   // All others
-  return select(selector.replace(rtrim, "$1"), context, results, seed);
-}
+  return select(selector.replace(rtrim, '$1'), context, results, seed);
+};
 
 /**
  * Create key-value caches of limited size
@@ -318,15 +321,15 @@ var Sizzle: any = function (selector, context, results, seed) {
  * deleting the oldest entry
  */
 function createCache() {
-  var keys = [];
+  const keys = [];
 
   function cache(key, value) {
     // Use (key + " ") to avoid collision with native prototype properties (see Issue #157)
-    if (keys.push(key + " ") > Expr.cacheLength) {
+    if (keys.push(key + ' ') > Expr.cacheLength) {
       // Only keep the most recent entries
       delete cache[keys.shift()];
     }
-    return (cache[key + " "] = value);
+    return (cache[key + ' '] = value);
   }
   return cache;
 }
@@ -361,19 +364,19 @@ function markFunction(fn) {
   }
 }*/
 
-/**
- * Adds the same handler for all of the specified attrs
- * @param {String} attrs Pipe-separated list of attributes
- * @param {Function} handler The method that will be applied
- */
-function addHandle(attrs, handler) {
-  var arr = attrs.split("|"),
-    i = attrs.length;
+// /**
+//  * Adds the same handler for all of the specified attrs
+//  * @param {String} attrs Pipe-separated list of attributes
+//  * @param {Function} handler The method that will be applied
+//  */
+// function addHandle(attrs, handler) {
+//   let arr = attrs.split('|'),
+//     i = attrs.length;
 
-  while (i--) {
-    Expr.attrHandle[arr[i]] = handler;
-  }
-}
+//   while (i--) {
+//     Expr.attrHandle[arr[i]] = handler;
+//   }
+// }
 
 /**
  * Checks document order of two siblings
@@ -382,7 +385,7 @@ function addHandle(attrs, handler) {
  * @returns {Number} Returns less than 0 if a precedes b, greater than 0 if a follows b
  */
 function siblingCheck(a, b) {
-  var cur = b && a,
+  let cur = b && a,
     diff = cur && a.nodeType === 1 && b.nodeType === 1 &&
       (~b.sourceIndex || MAX_NEGATIVE) -
       (~a.sourceIndex || MAX_NEGATIVE);
@@ -410,8 +413,8 @@ function siblingCheck(a, b) {
  */
 function createInputPseudo(type) {
   return function (elem) {
-    var name = elem.nodeName.toLowerCase();
-    return name === "input" && elem.type === type;
+    const name = elem.nodeName.toLowerCase();
+    return name === 'input' && elem.type === type;
   };
 }
 
@@ -421,8 +424,8 @@ function createInputPseudo(type) {
  */
 function createButtonPseudo(type) {
   return function (elem) {
-    var name = elem.nodeName.toLowerCase();
-    return (name === "input" || name === "button") && elem.type === type;
+    const name = elem.nodeName.toLowerCase();
+    return (name === 'input' || name === 'button') && elem.type === type;
   };
 }
 
@@ -434,7 +437,7 @@ function createPositionalPseudo(fn) {
   return markFunction(function (argument) {
     argument = +argument;
     return markFunction(function (seed, matches) {
-      var j,
+      let j,
         matchIndexes = fn([], seed.length, argument),
         i = matchIndexes.length;
 
@@ -468,8 +471,8 @@ support = Sizzle.support = {};
 isXML = Sizzle.isXML = function (elem) {
   // documentElement is verified for cases where it doesn't yet exist
   // (such as loading iframes in IE - #4833)
-  var documentElement = elem && (elem.ownerDocument || elem).documentElement;
-  return documentElement ? documentElement.nodeName !== "HTML" : false;
+  const documentElement = elem && (elem.ownerDocument || elem).documentElement;
+  return documentElement ? documentElement.nodeName !== 'HTML' : false;
 };
 
 /**
@@ -478,7 +481,7 @@ isXML = Sizzle.isXML = function (elem) {
  * @returns {Object} Returns the current document
  */
 setDocument = Sizzle.setDocument = function (node) {
-  var hasCompare,
+  let hasCompare,
     doc = node ? node.ownerDocument || node : preferredDoc,
     parent = doc.defaultView;
 
@@ -512,11 +515,11 @@ setDocument = Sizzle.setDocument = function (node) {
   if (parent && parent !== getTop(parent)) {
     // IE11 does not have attachEvent, so all must suffer
     if (parent.addEventListener) {
-      parent.addEventListener("unload", function () {
+      parent.addEventListener('unload', function () {
         setDocument();
       }, false);
     } else if (parent.attachEvent) {
-      parent.attachEvent("onunload", function () {
+      parent.attachEvent('onunload', function () {
         setDocument();
       });
     }
@@ -546,18 +549,18 @@ setDocument = Sizzle.setDocument = function (node) {
 
   // ID find and filter
   /*if (support.getById) {*/
-    Expr.find["ID"] = function (id, context) {
+  Expr.find.ID = function (id, context) {
       if (typeof context.getElementById !== strundefined && documentIsHTML) {
-        var m = context.getElementById(id);
+        const m = context.getElementById(id);
         // Check parentNode to catch when Blackberry 4.6 returns
         // nodes that are no longer in the document #6963
         return m && m.parentNode ? [m] : [];
       }
     };
-    Expr.filter["ID"] = function (id) {
-      var attrId = id.replace(runescape, funescape);
+  Expr.filter.ID = function (id) {
+      const attrId = id.replace(runescape, funescape);
       return function (elem) {
-        return elem.getAttribute("id") === attrId;
+        return elem.getAttribute('id') === attrId;
       };
     };
   /*} else {
@@ -575,20 +578,20 @@ setDocument = Sizzle.setDocument = function (node) {
   }*/
 
   // Tag
-  Expr.find["TAG"] = support.getElementsByTagName ?
+  Expr.find.TAG = support.getElementsByTagName ?
     function (tag, context) {
       if (typeof context.getElementsByTagName !== strundefined) {
         return context.getElementsByTagName(tag);
       }
     } :
     function (tag, context) {
-      var elem,
+      let elem,
         tmp = [],
         i = 0,
         results = context.getElementsByTagName(tag);
 
       // Filter out possible comments
-      if (tag === "*") {
+      if (tag === '*') {
         while ((elem = results[i++])) {
           if (elem.nodeType === 1) {
             tmp.push(elem);
@@ -601,7 +604,7 @@ setDocument = Sizzle.setDocument = function (node) {
     };
 
   // Class
-  Expr.find["CLASS"] = support.getElementsByClassName && function (className, context) {
+  Expr.find.CLASS = support.getElementsByClassName && function (className, context) {
     if (documentIsHTML) {
       return context.getElementsByClassName(className);
     }
@@ -704,8 +707,8 @@ setDocument = Sizzle.setDocument = function (node) {
   }
   */
 
-  rbuggyQSA = rbuggyQSA.length && new RegExp(rbuggyQSA.join("|"));
-  rbuggyMatches = rbuggyMatches.length && new RegExp(rbuggyMatches.join("|"));
+  rbuggyQSA = rbuggyQSA.length && new RegExp(rbuggyQSA.join('|'));
+  rbuggyMatches = rbuggyMatches.length && new RegExp(rbuggyMatches.join('|'));
 
   /* Contains
   ---------------------------------------------------------------------- */
@@ -716,7 +719,7 @@ setDocument = Sizzle.setDocument = function (node) {
   // As in, an element does not contain itself
   contains = hasCompare || rnative.test(docElem.contains) ?
     function (a, b) {
-      var adown = a.nodeType === 9 ? a.documentElement : a,
+      const adown = a.nodeType === 9 ? a.documentElement : a,
         bup = b && b.parentNode;
       return a === bup || !!(bup && bup.nodeType === 1 && (
         adown.contains ?
@@ -749,7 +752,7 @@ setDocument = Sizzle.setDocument = function (node) {
       }
 
       // Sort on method existence if only one input has compareDocumentPosition
-      var compare = (<any> (!a.compareDocumentPosition)) - (<any> (!b.compareDocumentPosition));
+      let compare = (<any> (!a.compareDocumentPosition)) - (<any> (!b.compareDocumentPosition));
       if (compare) {
         return compare;
       }
@@ -788,7 +791,7 @@ setDocument = Sizzle.setDocument = function (node) {
         return 0;
       }
 
-      var cur,
+      let cur,
         i = 0,
         aup = a.parentNode,
         bup = b.parentNode,
@@ -849,14 +852,14 @@ Sizzle.matchesSelector = function (elem, expr) {
   }
 
   // Make sure that attribute selectors are quoted
-  expr = expr.replace(rattributeQuotes, "='$1']");
+  expr = expr.replace(rattributeQuotes, '=\'$1\']');
 
   if (support.matchesSelector && documentIsHTML &&
     (!rbuggyMatches || !rbuggyMatches.test(expr)) &&
     (!rbuggyQSA || !rbuggyQSA.test(expr))) {
 
     try {
-      var ret = matches.call(elem, expr);
+      const ret = matches.call(elem, expr);
 
       // IE 9's matchesSelector returns false on disconnected nodes
       if (ret || support.disconnectedMatch ||
@@ -885,7 +888,7 @@ Sizzle.attr = function (elem, name) {
     setDocument(elem);
   }
 
-  var fn = Expr.attrHandle[name.toLowerCase()],
+  let fn = Expr.attrHandle[name.toLowerCase()],
     // Don't get fooled by Object.prototype properties (jQuery #13807)
     val = fn && hasOwn.call(Expr.attrHandle, name.toLowerCase()) ?
       fn(elem, name, !documentIsHTML) :
@@ -901,7 +904,7 @@ Sizzle.attr = function (elem, name) {
 };
 
 Sizzle.error = function (msg) {
-  throw new Error("Syntax error, unrecognized expression: " + msg);
+  throw new Error('Syntax error, unrecognized expression: ' + msg);
 };
 
 /**
@@ -909,7 +912,7 @@ Sizzle.error = function (msg) {
  * @param {ArrayLike} results
  */
 Sizzle.uniqueSort = function (results) {
-  var elem,
+  let elem,
     duplicates = [],
     j = 0,
     i = 0;
@@ -942,8 +945,8 @@ Sizzle.uniqueSort = function (results) {
  * @param {Array|Element} elem
  */
 getText = Sizzle.getText = function (elem) {
-  var node,
-    ret = "",
+  let node,
+    ret = '',
     i = 0,
     nodeType = elem.nodeType;
 
@@ -956,7 +959,7 @@ getText = Sizzle.getText = function (elem) {
   } else if (nodeType === 1 || nodeType === 9 || nodeType === 11) {
     // Use textContent for elements
     // innerText usage removed for consistency of new lines (jQuery #11153)
-    if (typeof elem.textContent === "string") {
+    if (typeof elem.textContent === 'string') {
       return elem.textContent;
     } else {
       // Traverse its children
@@ -986,27 +989,27 @@ Expr = Sizzle.selectors = {
   find: {},
 
   relative: {
-    ">": { dir: "parentNode", first: true },
-    " ": { dir: "parentNode" },
-    "+": { dir: "previousSibling", first: true },
-    "~": { dir: "previousSibling" }
+    '>': { dir: 'parentNode', first: true },
+    ' ': { dir: 'parentNode' },
+    '+': { dir: 'previousSibling', first: true },
+    '~': { dir: 'previousSibling' }
   },
 
   preFilter: {
-    "ATTR": function (match) {
+    ATTR (match) {
       match[1] = match[1].replace(runescape, funescape);
 
       // Move the given value to match[3] whether quoted or unquoted
-      match[3] = (match[3] || match[4] || match[5] || "").replace(runescape, funescape);
+      match[3] = (match[3] || match[4] || match[5] || '').replace(runescape, funescape);
 
-      if (match[2] === "~=") {
-        match[3] = " " + match[3] + " ";
+      if (match[2] === '~=') {
+        match[3] = ' ' + match[3] + ' ';
       }
 
       return match.slice(0, 4);
     },
 
-    "CHILD": function (match) {
+    CHILD (match) {
       /* matches from matchExpr["CHILD"]
         1 type (only|nth|...)
         2 what (child|of-type)
@@ -1019,7 +1022,7 @@ Expr = Sizzle.selectors = {
       */
       match[1] = match[1].toLowerCase();
 
-      if (match[1].slice(0, 3) === "nth") {
+      if (match[1].slice(0, 3) === 'nth') {
         // nth-* requires argument
         if (!match[3]) {
           Sizzle.error(match[0]);
@@ -1027,8 +1030,8 @@ Expr = Sizzle.selectors = {
 
         // numeric x and y parameters for Expr.filter.CHILD
         // remember that false/true cast respectively to 0/1
-        match[4] = +(match[4] ? match[5] + (match[6] || 1) : 2 * (<any>(match[3] === "even") || match[3] === "odd"));
-        match[5] = +((match[7] + match[8]) || match[3] === "odd");
+        match[4] = +(match[4] ? match[5] + (match[6] || 1) : 2 * (<any> (match[3] === 'even') || match[3] === 'odd'));
+        match[5] = +((match[7] + match[8]) || match[3] === 'odd');
 
         // other types prohibit arguments
       } else if (match[3]) {
@@ -1038,24 +1041,24 @@ Expr = Sizzle.selectors = {
       return match;
     },
 
-    "PSEUDO": function (match) {
-      var excess,
+    PSEUDO (match) {
+      let excess,
         unquoted = !match[6] && match[2];
 
-      if (matchExpr["CHILD"].test(match[0])) {
+      if (matchExpr.CHILD.test(match[0])) {
         return null;
       }
 
       // Accept quoted arguments as-is
       if (match[3]) {
-        match[2] = match[4] || match[5] || "";
+        match[2] = match[4] || match[5] || '';
 
         // Strip excess characters from unquoted arguments
       } else if (unquoted && rpseudo.test(unquoted) &&
         // Get excess from tokenize (recursively)
         (excess = tokenize(unquoted, true)) &&
         // advance to the next closing parenthesis
-        (excess = unquoted.indexOf(")", unquoted.length - excess) - unquoted.length)) {
+        (excess = unquoted.indexOf(')', unquoted.length - excess) - unquoted.length)) {
 
         // excess is a negative index
         match[0] = match[0].slice(0, excess);
@@ -1069,53 +1072,53 @@ Expr = Sizzle.selectors = {
 
   filter: {
 
-    "TAG": function (nodeNameSelector) {
-      var nodeName = nodeNameSelector.replace(runescape, funescape).toLowerCase();
-      return nodeNameSelector === "*" ?
+    TAG (nodeNameSelector) {
+      const nodeName = nodeNameSelector.replace(runescape, funescape).toLowerCase();
+      return nodeNameSelector === '*' ?
         function () { return true; } :
         function (elem) {
           return elem.nodeName && elem.nodeName.toLowerCase() === nodeName;
         };
     },
 
-    "CLASS": function (className) {
-      var pattern = classCache[className + " "];
+    CLASS (className) {
+      let pattern = classCache[className + ' '];
 
       return pattern ||
-        (pattern = new RegExp("(^|" + whitespace + ")" + className + "(" + whitespace + "|$)")) &&
+        (pattern = new RegExp('(^|' + whitespace + ')' + className + '(' + whitespace + '|$)')) &&
         classCache(className, function (elem) {
-          return pattern.test(typeof elem.className === "string" && elem.className || typeof elem.getAttribute !== strundefined && elem.getAttribute("class") || "");
+          return pattern.test(typeof elem.className === 'string' && elem.className || typeof elem.getAttribute !== strundefined && elem.getAttribute('class') || '');
         });
     },
 
-    "ATTR": function (name, operator, check) {
+    ATTR (name, operator, check) {
       return function (elem) {
-        var result = Sizzle.attr(elem, name);
+        let result = Sizzle.attr(elem, name);
 
         if (result == null) {
-          return operator === "!=";
+          return operator === '!=';
         }
         if (!operator) {
           return true;
         }
 
-        result += "";
+        result += '';
 
-        return operator === "=" ? result === check :
-          operator === "!=" ? result !== check :
-            operator === "^=" ? check && result.indexOf(check) === 0 :
-              operator === "*=" ? check && result.indexOf(check) > -1 :
-                operator === "$=" ? check && result.slice(-check.length) === check :
-                  operator === "~=" ? (" " + result + " ").indexOf(check) > -1 :
-                    operator === "|=" ? result === check || result.slice(0, check.length + 1) === check + "-" :
+        return operator === '=' ? result === check :
+          operator === '!=' ? result !== check :
+            operator === '^=' ? check && result.indexOf(check) === 0 :
+              operator === '*=' ? check && result.indexOf(check) > -1 :
+                operator === '$=' ? check && result.slice(-check.length) === check :
+                  operator === '~=' ? (' ' + result + ' ').indexOf(check) > -1 :
+                    operator === '|=' ? result === check || result.slice(0, check.length + 1) === check + '-' :
                       false;
       };
     },
 
-    "CHILD": function (type, what, argument, first, last) {
-      var simple = type.slice(0, 3) !== "nth",
-        forward = type.slice(-4) !== "last",
-        ofType = what === "of-type";
+    CHILD (type, what, argument, first, last) {
+      const simple = type.slice(0, 3) !== 'nth',
+        forward = type.slice(-4) !== 'last',
+        ofType = what === 'of-type';
 
       return first === 1 && last === 0 ?
 
@@ -1125,8 +1128,8 @@ Expr = Sizzle.selectors = {
         } :
 
         function (elem, context, xml) {
-          var cache, outerCache, node, diff, nodeIndex, start,
-            dir = simple !== forward ? "nextSibling" : "previousSibling",
+          let cache, outerCache, node, diff, nodeIndex, start,
+            dir = simple !== forward ? 'nextSibling' : 'previousSibling',
             parent = elem.parentNode,
             name = ofType && elem.nodeName.toLowerCase(),
             useCache = !xml && !ofType;
@@ -1143,7 +1146,7 @@ Expr = Sizzle.selectors = {
                   }
                 }
                 // Reverse direction for :only-* (if we haven't yet done so)
-                start = dir = type === "only" && !start && "nextSibling";
+                start = dir = type === 'only' && !start && 'nextSibling';
               }
               return true;
             }
@@ -1201,14 +1204,14 @@ Expr = Sizzle.selectors = {
         };
     },
 
-    "PSEUDO": function (pseudo, argument) {
+    PSEUDO (pseudo, argument) {
       // pseudo-class names are case-insensitive
       // http://www.w3.org/TR/selectors/#pseudo-classes
       // Prioritize by case sensitivity in case custom pseudos are added with uppercase letters
       // Remember that setFilters inherits from pseudos
-      var args,
+      let args,
         fn = Expr.pseudos[pseudo] || Expr.setFilters[pseudo.toLowerCase()] ||
-          Sizzle.error("unsupported pseudo: " + pseudo);
+          Sizzle.error('unsupported pseudo: ' + pseudo);
 
       // The user may use createPseudo to indicate that
       // arguments are needed to create the filter function
@@ -1219,10 +1222,10 @@ Expr = Sizzle.selectors = {
 
       // But maintain support for old signatures
       if (fn.length > 1) {
-        args = [pseudo, pseudo, "", argument];
+        args = [pseudo, pseudo, '', argument];
         return Expr.setFilters.hasOwnProperty(pseudo.toLowerCase()) ?
           markFunction(function (seed, matches) {
-            var idx,
+            let idx,
               matched = fn(seed, argument),
               i = matched.length;
             while (i--) {
@@ -1241,17 +1244,17 @@ Expr = Sizzle.selectors = {
 
   pseudos: {
     // Potentially complex pseudos
-    "not": markFunction(function (selector) {
+    not: markFunction(function (selector) {
       // Trim the selector passed to compile
       // to avoid treating leading and trailing
       // spaces as combinators
-      var input = [],
+      const input = [],
         results = [],
-        matcher = compile(selector.replace(rtrim, "$1"));
+        matcher = compile(selector.replace(rtrim, '$1'));
 
       return matcher[expando] ?
         markFunction(function (seed, matches, context, xml) {
-          var elem,
+          let elem,
             unmatched = matcher(seed, null, xml, []),
             i = seed.length;
 
@@ -1269,13 +1272,13 @@ Expr = Sizzle.selectors = {
         };
     }),
 
-    "has": markFunction(function (selector) {
+    has: markFunction(function (selector) {
       return function (elem) {
         return Sizzle(selector, elem).length > 0;
       };
     }),
 
-    "contains": markFunction(function (text) {
+    contains: markFunction(function (text) {
       text = text.replace(runescape, funescape);
       return function (elem) {
         return (elem.textContent || elem.innerText || getText(elem)).indexOf(text) > -1;
@@ -1289,21 +1292,21 @@ Expr = Sizzle.selectors = {
     // The matching of C against the element's language value is performed case-insensitively.
     // The identifier C does not have to be a valid language name."
     // http://www.w3.org/TR/selectors/#lang-pseudo
-    "lang": markFunction(function (lang) {
+    lang: markFunction(function (lang) {
       // lang value must be a valid identifier
-      if (!ridentifier.test(lang || "")) {
-        Sizzle.error("unsupported lang: " + lang);
+      if (!ridentifier.test(lang || '')) {
+        Sizzle.error('unsupported lang: ' + lang);
       }
       lang = lang.replace(runescape, funescape).toLowerCase();
       return function (elem) {
-        var elemLang;
+        let elemLang;
         do {
           if ((elemLang = documentIsHTML ?
             elem.lang :
-            elem.getAttribute("xml:lang") || elem.getAttribute("lang"))) {
+            elem.getAttribute('xml:lang') || elem.getAttribute('lang'))) {
 
             elemLang = elemLang.toLowerCase();
-            return elemLang === lang || elemLang.indexOf(lang + "-") === 0;
+            return elemLang === lang || elemLang.indexOf(lang + '-') === 0;
           }
         } while ((elem = elem.parentNode) && elem.nodeType === 1);
         return false;
@@ -1311,39 +1314,40 @@ Expr = Sizzle.selectors = {
     }),
 
     // Miscellaneous
-    "target": function (elem) {
-      var hash = window.location && window.location.hash;
+    target (elem) {
+      const hash = window.location && window.location.hash;
       return hash && hash.slice(1) === elem.id;
     },
 
-    "root": function (elem) {
+    root (elem) {
       return elem === docElem;
     },
 
-    "focus": function (elem) {
+    focus (elem) {
       return elem === document.activeElement && (!document.hasFocus || document.hasFocus()) && !!(elem.type || elem.href || ~elem.tabIndex);
     },
 
     // Boolean properties
-    "enabled": function (elem) {
+    enabled (elem) {
       return elem.disabled === false;
     },
 
-    "disabled": function (elem) {
+    disabled (elem) {
       return elem.disabled === true;
     },
 
-    "checked": function (elem) {
+    checked (elem) {
       // In CSS3, :checked should return both checked and selected elements
       // http://www.w3.org/TR/2011/REC-css3-selectors-20110929/#checked
-      var nodeName = elem.nodeName.toLowerCase();
-      return (nodeName === "input" && !!elem.checked) || (nodeName === "option" && !!elem.selected);
+      const nodeName = elem.nodeName.toLowerCase();
+      return (nodeName === 'input' && !!elem.checked) || (nodeName === 'option' && !!elem.selected);
     },
 
-    "selected": function (elem) {
+    selected (elem) {
       // Accessing this property makes selected-by-default
       // options in Safari work properly
       if (elem.parentNode) {
+        // tslint:disable-next-line:no-unused-expression
         elem.parentNode.selectedIndex;
       }
 
@@ -1351,7 +1355,7 @@ Expr = Sizzle.selectors = {
     },
 
     // Contents
-    "empty": function (elem) {
+    empty (elem) {
       // http://www.w3.org/TR/selectors/#empty-pseudo
       // :empty is negated by element (1) or content nodes (text: 3; cdata: 4; entity ref: 5),
       //   but not by others (comment: 8; processing instruction: 7; etc.)
@@ -1364,73 +1368,73 @@ Expr = Sizzle.selectors = {
       return true;
     },
 
-    "parent": function (elem) {
-      return !Expr.pseudos["empty"](elem);
+    parent (elem) {
+      return !Expr.pseudos.empty(elem);
     },
 
     // Element/input types
-    "header": function (elem) {
+    header (elem) {
       return rheader.test(elem.nodeName);
     },
 
-    "input": function (elem) {
+    input (elem) {
       return rinputs.test(elem.nodeName);
     },
 
-    "button": function (elem) {
-      var name = elem.nodeName.toLowerCase();
-      return name === "input" && elem.type === "button" || name === "button";
+    button (elem) {
+      const name = elem.nodeName.toLowerCase();
+      return name === 'input' && elem.type === 'button' || name === 'button';
     },
 
-    "text": function (elem) {
-      var attr;
-      return elem.nodeName.toLowerCase() === "input" &&
-        elem.type === "text" &&
+    text (elem) {
+      let attr;
+      return elem.nodeName.toLowerCase() === 'input' &&
+        elem.type === 'text' &&
 
         // Support: IE<8
         // New HTML5 attribute values (e.g., "search") appear with elem.type === "text"
-        ((attr = elem.getAttribute("type")) == null || attr.toLowerCase() === "text");
+        ((attr = elem.getAttribute('type')) == null || attr.toLowerCase() === 'text');
     },
 
     // Position-in-collection
-    "first": createPositionalPseudo(function () {
+    first: createPositionalPseudo(function () {
       return [0];
     }),
 
-    "last": createPositionalPseudo(function (matchIndexes, length) {
+    last: createPositionalPseudo(function (matchIndexes, length) {
       return [length - 1];
     }),
 
-    "eq": createPositionalPseudo(function (matchIndexes, length, argument) {
+    eq: createPositionalPseudo(function (matchIndexes, length, argument) {
       return [argument < 0 ? argument + length : argument];
     }),
 
-    "even": createPositionalPseudo(function (matchIndexes, length) {
-      var i = 0;
+    even: createPositionalPseudo(function (matchIndexes, length) {
+      let i = 0;
       for (; i < length; i += 2) {
         matchIndexes.push(i);
       }
       return matchIndexes;
     }),
 
-    "odd": createPositionalPseudo(function (matchIndexes, length) {
-      var i = 1;
+    odd: createPositionalPseudo(function (matchIndexes, length) {
+      let i = 1;
       for (; i < length; i += 2) {
         matchIndexes.push(i);
       }
       return matchIndexes;
     }),
 
-    "lt": createPositionalPseudo(function (matchIndexes, length, argument) {
-      var i = argument < 0 ? argument + length : argument;
+    lt: createPositionalPseudo(function (matchIndexes, length, argument) {
+      let i = argument < 0 ? argument + length : argument;
       for (; --i >= 0;) {
         matchIndexes.push(i);
       }
       return matchIndexes;
     }),
 
-    "gt": createPositionalPseudo(function (matchIndexes, length, argument) {
-      var i = argument < 0 ? argument + length : argument;
+    gt: createPositionalPseudo(function (matchIndexes, length, argument) {
+      let i = argument < 0 ? argument + length : argument;
       for (; ++i < length;) {
         matchIndexes.push(i);
       }
@@ -1439,7 +1443,7 @@ Expr = Sizzle.selectors = {
   }
 };
 
-Expr.pseudos["nth"] = Expr.pseudos["eq"];
+Expr.pseudos.nth = Expr.pseudos.eq;
 
 // Add button/input type pseudos
 for (i in { radio: true, checkbox: true, file: true, password: true, image: true }) {
@@ -1455,9 +1459,9 @@ setFilters.prototype = Expr.filters = Expr.pseudos;
 Expr.setFilters = new setFilters();
 
 tokenize = Sizzle.tokenize = function (selector, parseOnly) {
-  var matched, match, tokens, type,
+  let matched, match, tokens, type,
     soFar, groups, preFilters,
-    cached = tokenCache[selector + " "];
+    cached = tokenCache[selector + ' '];
 
   if (cached) {
     return parseOnly ? 0 : cached.slice(0);
@@ -1486,7 +1490,7 @@ tokenize = Sizzle.tokenize = function (selector, parseOnly) {
       tokens.push({
         value: matched,
         // Cast descendant combinators to space
-        type: match[0].replace(rtrim, " ")
+        type: match[0].replace(rtrim, ' ')
       });
       soFar = soFar.slice(matched.length);
     }
@@ -1498,7 +1502,7 @@ tokenize = Sizzle.tokenize = function (selector, parseOnly) {
         matched = match.shift();
         tokens.push({
           value: matched,
-          type: type,
+          type,
           matches: match
         });
         soFar = soFar.slice(matched.length);
@@ -1522,9 +1526,9 @@ tokenize = Sizzle.tokenize = function (selector, parseOnly) {
 };
 
 function toSelector(tokens) {
-  var i = 0,
+  let i = 0,
     len = tokens.length,
-    selector = "";
+    selector = '';
   for (; i < len; i++) {
     selector += tokens[i].value;
   }
@@ -1532,8 +1536,8 @@ function toSelector(tokens) {
 }
 
 function addCombinator(matcher, combinator, base?) {
-  var dir = combinator.dir,
-    checkNonElements = base && dir === "parentNode",
+  const dir = combinator.dir,
+    checkNonElements = base && dir === 'parentNode',
     doneName = done++;
 
   return combinator.first ?
@@ -1548,7 +1552,7 @@ function addCombinator(matcher, combinator, base?) {
 
     // Check against all ancestor/preceding elements
     function (elem, context, xml) {
-      var oldCache, outerCache,
+      let oldCache, outerCache,
         newCache = [dirruns, doneName];
 
       // We can't set arbitrary data on XML nodes, so they don't benefit from dir caching
@@ -1587,7 +1591,7 @@ function addCombinator(matcher, combinator, base?) {
 function elementMatcher(matchers) {
   return matchers.length > 1 ?
     function (elem, context, xml) {
-      var i = matchers.length;
+      let i = matchers.length;
       while (i--) {
         if (!matchers[i](elem, context, xml)) {
           return false;
@@ -1599,7 +1603,7 @@ function elementMatcher(matchers) {
 }
 
 function multipleContexts(selector, contexts, results) {
-  var i = 0,
+  let i = 0,
     len = contexts.length;
   for (; i < len; i++) {
     Sizzle(selector, contexts[i], results);
@@ -1608,7 +1612,7 @@ function multipleContexts(selector, contexts, results) {
 }
 
 function condense(unmatched, map?, filter?, context?, xml?) {
-  var elem,
+  let elem,
     newUnmatched = [],
     i = 0,
     len = unmatched.length,
@@ -1636,13 +1640,13 @@ function setMatcher(preFilter, selector?, matcher?, postFilter?, postFinder?, po
     postFinder = setMatcher(postFinder, postSelector);
   }
   return markFunction(function (seed, results, context, xml) {
-    var temp, i, elem,
+    let temp, i, elem,
       preMap = [],
       postMap = [],
       preexisting = results.length,
 
       // Get initial elements from seed or context
-      elems = seed || multipleContexts(selector || "*", context.nodeType ? [context] : context, []),
+      elems = seed || multipleContexts(selector || '*', context.nodeType ? [context] : context, []),
 
       // Prefilter to get matcher input, preserving a map for seed-results synchronization
       matcherIn = preFilter && (seed || !selector) ?
@@ -1722,10 +1726,10 @@ function setMatcher(preFilter, selector?, matcher?, postFilter?, postFinder?, po
 }
 
 function matcherFromTokens(tokens) {
-  var checkContext, matcher, j,
+  let checkContext, matcher, j,
     len = tokens.length,
     leadingRelative = Expr.relative[tokens[0].type],
-    implicitRelative = leadingRelative || Expr.relative[" "],
+    implicitRelative = leadingRelative || Expr.relative[' '],
     i = leadingRelative ? 1 : 0,
 
     // The foundational matcher ensures that elements are reachable from top-level context(s)
@@ -1761,8 +1765,8 @@ function matcherFromTokens(tokens) {
           i > 1 && elementMatcher(matchers),
           i > 1 && toSelector(
             // If the preceding token was a descendant combinator, insert an implicit any-element `*`
-            tokens.slice(0, i - 1).concat({ value: tokens[i - 2].type === " " ? "*" : "" })
-          ).replace(rtrim, "$1"),
+            tokens.slice(0, i - 1).concat({ value: tokens[i - 2].type === ' ' ? '*' : '' })
+          ).replace(rtrim, '$1'),
           matcher,
           i < j && matcherFromTokens(tokens.slice(i, j)),
           j < len && matcherFromTokens((tokens = tokens.slice(j))),
@@ -1777,17 +1781,17 @@ function matcherFromTokens(tokens) {
 }
 
 function matcherFromGroupMatchers(elementMatchers, setMatchers) {
-  var bySet = setMatchers.length > 0,
+  const bySet = setMatchers.length > 0,
     byElement = elementMatchers.length > 0,
     superMatcher = function (seed, context, xml, results, outermost) {
-      var elem, j, matcher,
+      let elem, j, matcher,
         matchedCount = 0,
-        i: any = "0",
+        i: any = '0',
         unmatched = seed && [],
         setMatched = [],
         contextBackup = outermostContext,
         // We must always have either seed elements or outermost context
-        elems = seed || byElement && Expr.find["TAG"]("*", outermost),
+        elems = seed || byElement && Expr.find.TAG('*', outermost),
         // Use integer dirruns iff this is the outermost matcher
         dirrunsUnique = (dirruns += contextBackup == null ? 1 : Math.random() || 0.1),
         len = elems.length;
@@ -1876,10 +1880,10 @@ function matcherFromGroupMatchers(elementMatchers, setMatchers) {
 }
 
 compile = Sizzle.compile = function (selector, match /* Internal Use Only */) {
-  var i,
+  let i,
     setMatchers = [],
     elementMatchers = [],
-    cached = compilerCache[selector + " "];
+    cached = compilerCache[selector + ' '];
 
   if (!cached) {
     // Generate a function of recursive functions that can be used to check each element
@@ -1915,8 +1919,8 @@ compile = Sizzle.compile = function (selector, match /* Internal Use Only */) {
  * @param {Array} [seed] A set of elements to match against
  */
 select = Sizzle.select = function (selector, context, results, seed) {
-  var i, tokens, token, type, find,
-    compiled = typeof selector === "function" && selector,
+  let i, tokens, token, type, find,
+    compiled = typeof selector === 'function' && selector,
     match = !seed && tokenize((selector = compiled.selector || selector));
 
   results = results || [];
@@ -1926,11 +1930,11 @@ select = Sizzle.select = function (selector, context, results, seed) {
 
     // Take a shortcut and set the context if the root selector is an ID
     tokens = match[0] = match[0].slice(0);
-    if (tokens.length > 2 && (token = tokens[0]).type === "ID" &&
+    if (tokens.length > 2 && (token = tokens[0]).type === 'ID' &&
       support.getById && context.nodeType === 9 && documentIsHTML &&
       Expr.relative[tokens[1].type]) {
 
-      context = (Expr.find["ID"](token.matches[0].replace(runescape, funescape), context) || [])[0];
+      context = (Expr.find.ID(token.matches[0].replace(runescape, funescape), context) || [])[0];
       if (!context) {
         return results;
 
@@ -1943,7 +1947,7 @@ select = Sizzle.select = function (selector, context, results, seed) {
     }
 
     // Fetch a seed set for right-to-left matching
-    i = matchExpr["needsContext"].test(selector) ? 0 : tokens.length;
+    i = matchExpr.needsContext.test(selector) ? 0 : tokens.length;
     while (i--) {
       token = tokens[i];
 
@@ -1987,7 +1991,7 @@ select = Sizzle.select = function (selector, context, results, seed) {
 // One-time assignments
 
 // Sort stability
-support.sortStable = expando.split("").sort(sortOrder).join("") === expando;
+support.sortStable = expando.split('').sort(sortOrder).join('') === expando;
 
 // Support: Chrome 14-35+
 // Always assume duplicates if they aren't passed to the comparison function

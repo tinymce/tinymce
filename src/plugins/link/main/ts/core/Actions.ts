@@ -14,34 +14,34 @@ import OpenUrl from './OpenUrl';
 import Utils from './Utils';
 import Dialog from '../ui/Dialog';
 
-var getLink = function (editor, elm) {
+const getLink = function (editor, elm) {
   return editor.dom.getParent(elm, 'a[href]');
 };
 
-var getSelectedLink = function (editor) {
+const getSelectedLink = function (editor) {
   return getLink(editor, editor.selection.getStart());
 };
 
-var getHref = function (elm) {
+const getHref = function (elm) {
   // Returns the real href value not the resolved a.href value
-  var href = elm.getAttribute('data-mce-href');
+  const href = elm.getAttribute('data-mce-href');
   return href ? href : elm.getAttribute('href');
 };
 
-var isContextMenuVisible = function (editor) {
-  var contextmenu = editor.plugins.contextmenu;
+const isContextMenuVisible = function (editor) {
+  const contextmenu = editor.plugins.contextmenu;
   return contextmenu ? contextmenu.isContextMenuVisible() : false;
 };
 
-var hasOnlyAltModifier = function (e) {
+const hasOnlyAltModifier = function (e) {
   return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
 };
 
-var gotoLink = function (editor, a) {
+const gotoLink = function (editor, a) {
   if (a) {
-    var href = getHref(a);
+    const href = getHref(a);
     if (/^#/.test(href)) {
-      var targetEl = editor.$(href);
+      const targetEl = editor.$(href);
       if (targetEl.length) {
         editor.selection.scrollIntoView(targetEl[0], true);
       }
@@ -51,21 +51,21 @@ var gotoLink = function (editor, a) {
   }
 };
 
-var openDialog = function (editor) {
+const openDialog = function (editor) {
   return function () {
     Dialog.open(editor);
   };
 };
 
-var gotoSelectedLink = function (editor) {
+const gotoSelectedLink = function (editor) {
   return function () {
     gotoLink(editor, getSelectedLink(editor));
   };
 };
 
-var leftClickedOnAHref = function (editor) {
+const leftClickedOnAHref = function (editor) {
   return function (elm) {
-    var sel, rng, node;
+    let sel, rng, node;
     if (Settings.hasContextToolbar(editor.settings) && !isContextMenuVisible(editor) && Utils.isLink(elm)) {
       sel = editor.selection;
       rng = sel.getRng();
@@ -79,9 +79,9 @@ var leftClickedOnAHref = function (editor) {
   };
 };
 
-var setupGotoLinks = function (editor) {
+const setupGotoLinks = function (editor) {
   editor.on('click', function (e) {
-    var link = getLink(editor, e.target);
+    const link = getLink(editor, e.target);
     if (link && VK.metaKeyPressed(e)) {
       e.preventDefault();
       gotoLink(editor, link);
@@ -89,7 +89,7 @@ var setupGotoLinks = function (editor) {
   });
 
   editor.on('keydown', function (e) {
-    var link = getSelectedLink(editor);
+    const link = getSelectedLink(editor);
     if (link && e.keyCode === 13 && hasOnlyAltModifier(e)) {
       e.preventDefault();
       gotoLink(editor, link);
@@ -97,20 +97,20 @@ var setupGotoLinks = function (editor) {
   });
 };
 
-var toggleActiveState = function (editor) {
+const toggleActiveState = function (editor) {
   return function () {
-    var self = this;
+    const self = this;
     editor.on('nodechange', function (e) {
       self.active(!editor.readonly && !!Utils.getAnchorElement(editor, e.element));
     });
   };
 };
 
-var toggleViewLinkState = function (editor) {
+const toggleViewLinkState = function (editor) {
   return function () {
-    var self = this;
+    const self = this;
 
-    var toggleVisibility = function (e) {
+    const toggleVisibility = function (e) {
       if (Utils.hasLinks(e.parents)) {
         self.show();
       } else {
@@ -131,10 +131,10 @@ var toggleViewLinkState = function (editor) {
 };
 
 export default {
-  openDialog: openDialog,
-  gotoSelectedLink: gotoSelectedLink,
-  leftClickedOnAHref: leftClickedOnAHref,
-  setupGotoLinks: setupGotoLinks,
-  toggleActiveState: toggleActiveState,
-  toggleViewLinkState: toggleViewLinkState
+  openDialog,
+  gotoSelectedLink,
+  leftClickedOnAHref,
+  setupGotoLinks,
+  toggleActiveState,
+  toggleViewLinkState
 };

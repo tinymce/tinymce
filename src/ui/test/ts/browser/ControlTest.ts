@@ -1,27 +1,24 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import EventUtils from 'tinymce/core/dom/EventUtils';
 import EditorManager from 'tinymce/core/EditorManager';
-import UiUtils from '../module/test/UiUtils';
 import ViewBlock from '../module/test/ViewBlock';
 import Api from 'tinymce/ui/Api';
 import Container from 'tinymce/ui/Container';
 import Control from 'tinymce/ui/Control';
-import Tools from 'tinymce/core/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.ControlTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.ui.ControlTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   // Registers ui widgets to factory
   Api.registerToFactory();
 
-  suite.test("Initial states", function () {
-    var ctrl;
+  suite.test('Initial states', function () {
+    let ctrl;
 
     ctrl = new Control({});
 
@@ -36,8 +33,8 @@ UnitTest.asynctest('browser.tinymce.ui.ControlTest', function() {
     LegacyUnit.equal(ctrl.settings, {});
   });
 
-  suite.test("Settings", function () {
-    var ctrl = new Control({
+  suite.test('Settings', function () {
+    const ctrl = new Control({
       disabled: true,
       active: true,
       visible: true,
@@ -50,9 +47,9 @@ UnitTest.asynctest('browser.tinymce.ui.ControlTest', function() {
     LegacyUnit.equal(ctrl.disabled(), true);
     LegacyUnit.equal(ctrl.active(), true);
     LegacyUnit.equal(ctrl.visible(), true);
-    LegacyUnit.equal(ctrl.text(), "Text");
-    LegacyUnit.equal(ctrl.name(), "Name");
-    LegacyUnit.equal(ctrl.title(), "Title");
+    LegacyUnit.equal(ctrl.text(), 'Text');
+    LegacyUnit.equal(ctrl.name(), 'Name');
+    LegacyUnit.equal(ctrl.title(), 'Title');
     LegacyUnit.equal(ctrl.parent(), undefined);
     LegacyUnit.equal(ctrl.settings, {
       disabled: true,
@@ -64,8 +61,8 @@ UnitTest.asynctest('browser.tinymce.ui.ControlTest', function() {
     });
   });
 
-  suite.test("Properties", function () {
-    var ctrl, cont;
+  suite.test('Properties', function () {
+    let ctrl, cont;
 
     cont = new Container({});
     ctrl = new Control({});
@@ -75,23 +72,23 @@ UnitTest.asynctest('browser.tinymce.ui.ControlTest', function() {
       disabled(true).
       active(true).
       visible(true).
-      text("Text").
-      title("Title").
-      name("Name").parent(cont);
+      text('Text').
+      title('Title').
+      name('Name').parent(cont);
 
     // Check states
     LegacyUnit.equal(ctrl.disabled(), true);
     LegacyUnit.equal(ctrl.active(), true);
     LegacyUnit.equal(ctrl.visible(), true);
-    LegacyUnit.equal(ctrl.text(), "Text");
-    LegacyUnit.equal(ctrl.name(), "Name");
-    LegacyUnit.equal(ctrl.title(), "Title");
+    LegacyUnit.equal(ctrl.text(), 'Text');
+    LegacyUnit.equal(ctrl.name(), 'Name');
+    LegacyUnit.equal(ctrl.title(), 'Title');
     LegacyUnit.equal(ctrl.parent(), cont);
     LegacyUnit.equal(ctrl.settings, {});
   });
 
-  suite.test("Chained methods", function () {
-    var ctrl = new Control({});
+  suite.test('Chained methods', function () {
+    let ctrl = new Control({});
 
     // Set all states
     ctrl = ctrl.
@@ -104,15 +101,15 @@ UnitTest.asynctest('browser.tinymce.ui.ControlTest', function() {
     LegacyUnit.equal(ctrl instanceof Control, true);
   });
 
-  suite.test("Events", function () {
-    var ctrl, count;
+  suite.test('Events', function () {
+    let ctrl, count;
 
     ctrl = new Control({
-      onMyEvent: function () {
+      onMyEvent () {
         count++;
       },
       callbacks: {
-        handler1: function () {
+        handler1 () {
           count++;
         }
       }
@@ -126,7 +123,7 @@ UnitTest.asynctest('browser.tinymce.ui.ControlTest', function() {
 
     ctrl.fire('MyEvent', { myKey: 'myVal' });
 
-    var countAndBreak = function () {
+    const countAndBreak = function () {
       count++;
       return false;
     };
@@ -176,8 +173,8 @@ UnitTest.asynctest('browser.tinymce.ui.ControlTest', function() {
     LegacyUnit.equal(count, 1);
   });
 
-  suite.test("hasClass,addClass,removeClass", function () {
-    var ctrl = new Control({ classes: 'class1 class2 class3' });
+  suite.test('hasClass,addClass,removeClass', function () {
+    const ctrl = new Control({ classes: 'class1 class2 class3' });
 
     LegacyUnit.equal(ctrl.classes.toString(), 'mce-class1 mce-class2 mce-class3');
     LegacyUnit.equal(ctrl.classes.contains('class1'), true);
@@ -212,15 +209,15 @@ UnitTest.asynctest('browser.tinymce.ui.ControlTest', function() {
     LegacyUnit.equal(ctrl.classes.contains('class3'), false);
   });
 
-  suite.test("encode", function () {
-    EditorManager.i18n.add('en', { 'old': '"new"' });
+  suite.test('encode', function () {
+    EditorManager.i18n.add('en', { old: '"new"' });
     LegacyUnit.equal(new Control({}).encode('<>"&'), '&#60;&#62;&#34;&#38;');
     LegacyUnit.equal(new Control({}).encode('old'), '&#34;new&#34;');
     LegacyUnit.equal(new Control({}).encode('old', false), 'old');
   });
 
-  suite.test("translate", function () {
-    EditorManager.i18n.add('en', { 'old': 'new' });
+  suite.test('translate', function () {
+    EditorManager.i18n.add('en', { old: 'new' });
     LegacyUnit.equal(new Control({}).translate('old'), 'new');
     LegacyUnit.equal(new Control({}).translate('old2'), 'old2');
   });
@@ -232,4 +229,3 @@ UnitTest.asynctest('browser.tinymce.ui.ControlTest', function() {
     success();
   }, failure);
 });
-

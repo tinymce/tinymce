@@ -7,14 +7,14 @@ import { Element } from '@ephox/sugar';
 import Empty from 'tinymce/core/dom/Empty';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var sTestEmpty = function (html, expected) {
+  const sTestEmpty = function (html, expected) {
     return Step.sync(function () {
-      var elm = Element.fromHtml(html);
-      var expectedLabel = expected ? 'empty' : 'not empty';
+      const elm = Element.fromHtml(html);
+      const expectedLabel = expected ? 'empty' : 'not empty';
       Assertions.assertEq(html + ' should be treated as ' + expectedLabel, expected, Empty.isEmpty(elm));
     });
   };
@@ -54,4 +54,3 @@ UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', function() {
     success();
   }, failure);
 });
-

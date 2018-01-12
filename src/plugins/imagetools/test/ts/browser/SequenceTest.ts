@@ -9,22 +9,21 @@ import ImageOps from '../module/test/ImageOps';
 import ImageUtils from '../module/test/ImageUtils';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var srcUrl = '/project/src/plugins/imagetools/demo/img/dogleft.jpg';
+  const srcUrl = '/project/src/plugins/imagetools/demo/img/dogleft.jpg';
   // var corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
 
   Plugin();
   ModernTheme();
 
-
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var imgOps = ImageOps(editor);
+    const tinyApis = TinyApis(editor);
+    const imgOps = ImageOps(editor);
 
-    var sManipulateImage = function (message, url) {
+    const sManipulateImage = function (message, url) {
       return Logger.t(message, GeneralSteps.sequence([
         ImageUtils.sLoadImage(editor, url),
         tinyApis.sSelect('img', []),
@@ -44,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', function()
     };
 
     Pipeline.async({}, [
-      //sManipulateImage('Test image operations on an image CORS domain', corsUrl),
+      // sManipulateImage('Test image operations on an image CORS domain', corsUrl),
       sManipulateImage('Test image operations on an image from the same domain', srcUrl)
     ], onSuccess, onFailure);
   }, {
@@ -53,4 +52,3 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', function()
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

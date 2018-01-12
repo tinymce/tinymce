@@ -8,16 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var get = function (visibleState) {
-  var isContextMenuVisible = function () {
+const get = function (visibleState) {
+  const isContextMenuVisible = function () {
     return visibleState.get();
   };
 
   return {
-    isContextMenuVisible: isContextMenuVisible
+    isContextMenuVisible
   };
 };
 
 export default {
-  get: get
+  get
 };

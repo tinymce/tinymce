@@ -16,7 +16,7 @@ import Keyboard from './core/Keyboard';
 import * as Buttons from './ui/Buttons';
 
 PluginManager.add('visualchars', function (editor) {
-  var toggleState = Cell(false);
+  const toggleState = Cell(false);
 
   Commands.register(editor, toggleState);
   Buttons.register(editor);
@@ -25,4 +25,4 @@ PluginManager.add('visualchars', function (editor) {
   return Api.get(toggleState);
 });
 
-export default function () {};
+export default function () {}

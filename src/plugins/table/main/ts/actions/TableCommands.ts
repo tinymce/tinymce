@@ -25,11 +25,11 @@ import TableDialog from '../ui/TableDialog';
 import RowDialog from '../ui/RowDialog';
 import CellDialog from '../ui/CellDialog';
 
-var each = Tools.each;
+const each = Tools.each;
 
-var clipboardRows = Option.none();
+let clipboardRows = Option.none();
 
-var getClipboardRows = function () {
+const getClipboardRows = function () {
   return clipboardRows.fold(function () {
     return;
   }, function (rows) {
@@ -39,40 +39,40 @@ var getClipboardRows = function () {
   });
 };
 
-var setClipboardRows = function (rows) {
-  var sugarRows = Arr.map(rows, Element.fromDom);
+const setClipboardRows = function (rows) {
+  const sugarRows = Arr.map(rows, Element.fromDom);
   clipboardRows = Option.from(sugarRows);
 };
 
-var registerCommands = function (editor, actions, cellSelection, selections) {
-  var isRoot = Util.getIsRoot(editor);
-  var eraseTable = function () {
-    var cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
-    var table = TableLookup.table(cell, isRoot);
+const registerCommands = function (editor, actions, cellSelection, selections) {
+  const isRoot = Util.getIsRoot(editor);
+  const eraseTable = function () {
+    const cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
+    const table = TableLookup.table(cell, isRoot);
     table.filter(Fun.not(isRoot)).each(function (table) {
-      var cursor = Element.fromText('');
+      const cursor = Element.fromText('');
       Insert.after(table, cursor);
       Remove.remove(table);
-      var rng = editor.dom.createRng();
+      const rng = editor.dom.createRng();
       rng.setStart(cursor.dom(), 0);
       rng.setEnd(cursor.dom(), 0);
       editor.selection.setRng(rng);
     });
   };
 
-  var getSelectionStartCell = function () {
+  const getSelectionStartCell = function () {
     return Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
   };
 
-  var getTableFromCell = function (cell) {
+  const getTableFromCell = function (cell) {
     return TableLookup.table(cell, isRoot);
   };
 
-  var actOnSelection = function (execute) {
-    var cell = getSelectionStartCell();
-    var table = getTableFromCell(cell);
+  const actOnSelection = function (execute) {
+    const cell = getSelectionStartCell();
+    const table = getTableFromCell(cell);
     table.each(function (table) {
-      var targets = TableTargets.forMenu(selections, table, cell);
+      const targets = TableTargets.forMenu(selections, table, cell);
       execute(table, targets).each(function (rng) {
         editor.selection.setRng(rng);
         editor.focus();
@@ -81,29 +81,29 @@ var registerCommands = function (editor, actions, cellSelection, selections) {
     });
   };
 
-  var copyRowSelection = function (execute?) {
-    var cell = getSelectionStartCell();
-    var table = getTableFromCell(cell);
+  const copyRowSelection = function (execute?) {
+    const cell = getSelectionStartCell();
+    const table = getTableFromCell(cell);
     return table.bind(function (table) {
-      var doc = Element.fromDom(editor.getDoc());
-      var targets = TableTargets.forMenu(selections, table, cell);
-      var generators = TableFill.cellOperations(Fun.noop, doc, Option.none());
+      const doc = Element.fromDom(editor.getDoc());
+      const targets = TableTargets.forMenu(selections, table, cell);
+      const generators = TableFill.cellOperations(Fun.noop, doc, Option.none());
       return CopyRows.copyRows(table, targets, generators);
     });
   };
 
-  var pasteOnSelection = function (execute) {
+  const pasteOnSelection = function (execute) {
     // If we have clipboard rows to paste
     clipboardRows.each(function (rows) {
-      var clonedRows = Arr.map(rows, function (row) {
+      const clonedRows = Arr.map(rows, function (row) {
         return Replication.deep(row);
       });
-      var cell = getSelectionStartCell();
-      var table = getTableFromCell(cell);
+      const cell = getSelectionStartCell();
+      const table = getTableFromCell(cell);
       table.bind(function (table) {
-        var doc = Element.fromDom(editor.getDoc());
-        var generators = TableFill.paste(doc);
-        var targets = TableTargets.pasteRows(selections, table, cell, clonedRows, generators);
+        const doc = Element.fromDom(editor.getDoc());
+        const generators = TableFill.paste(doc);
+        const targets = TableTargets.pasteRows(selections, table, cell, clonedRows, generators);
         execute(table, targets).each(function (rng) {
           editor.selection.setRng(rng);
           editor.focus();
@@ -115,52 +115,52 @@ var registerCommands = function (editor, actions, cellSelection, selections) {
 
   // Register action commands
   each({
-    mceTableSplitCells: function () {
+    mceTableSplitCells () {
       actOnSelection(actions.unmergeCells);
     },
 
-    mceTableMergeCells: function () {
+    mceTableMergeCells () {
       actOnSelection(actions.mergeCells);
     },
 
-    mceTableInsertRowBefore: function () {
+    mceTableInsertRowBefore () {
       actOnSelection(actions.insertRowsBefore);
     },
 
-    mceTableInsertRowAfter: function () {
+    mceTableInsertRowAfter () {
       actOnSelection(actions.insertRowsAfter);
     },
 
-    mceTableInsertColBefore: function () {
+    mceTableInsertColBefore () {
       actOnSelection(actions.insertColumnsBefore);
     },
 
-    mceTableInsertColAfter: function () {
+    mceTableInsertColAfter () {
       actOnSelection(actions.insertColumnsAfter);
     },
 
-    mceTableDeleteCol: function () {
+    mceTableDeleteCol () {
       actOnSelection(actions.deleteColumn);
     },
 
-    mceTableDeleteRow: function () {
+    mceTableDeleteRow () {
       actOnSelection(actions.deleteRow);
     },
 
-    mceTableCutRow: function (grid) {
+    mceTableCutRow (grid) {
       clipboardRows = copyRowSelection();
       actOnSelection(actions.deleteRow);
     },
 
-    mceTableCopyRow: function (grid) {
+    mceTableCopyRow (grid) {
       clipboardRows = copyRowSelection();
     },
 
-    mceTablePasteRowBefore: function (grid) {
+    mceTablePasteRowBefore (grid) {
       pasteOnSelection(actions.pasteRowsBefore);
     },
 
-    mceTablePasteRowAfter: function (grid) {
+    mceTablePasteRowAfter (grid) {
       pasteOnSelection(actions.pasteRowsAfter);
     },
 
@@ -183,7 +183,7 @@ var registerCommands = function (editor, actions, cellSelection, selections) {
 };
 
 export default {
-  registerCommands: registerCommands,
-  getClipboardRows: getClipboardRows,
-  setClipboardRows: setClipboardRows
+  registerCommands,
+  getClipboardRows,
+  setClipboardRows
 };

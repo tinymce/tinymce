@@ -19,7 +19,7 @@ import Settings from '../api/Settings';
  * @private
  */
 
-var isFullscreen = function (editor) {
+const isFullscreen = function (editor) {
   return editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
 };
 
@@ -27,7 +27,7 @@ var isFullscreen = function (editor) {
  * Calls the resize x times in 100ms intervals. We can't wait for load events since
  * the CSS files might load async.
  */
-var wait = function (editor, oldSize, times, interval, callback?) {
+const wait = function (editor, oldSize, times, interval, callback?) {
   Delay.setEditorTimeout(editor, function () {
     resize(editor, oldSize);
 
@@ -39,8 +39,8 @@ var wait = function (editor, oldSize, times, interval, callback?) {
   }, interval);
 };
 
-var toggleScrolling = function (editor, state) {
-  var body = editor.getBody();
+const toggleScrolling = function (editor, state) {
+  const body = editor.getBody();
   if (body) {
     body.style.overflowY = state ? '' : 'hidden';
     if (!state) {
@@ -52,10 +52,10 @@ var toggleScrolling = function (editor, state) {
 /**
  * This method gets executed each time the editor needs to resize.
  */
-var resize = function (editor, oldSize) {
-  var deltaSize, doc, body, resizeHeight, myHeight;
-  var marginTop, marginBottom, paddingTop, paddingBottom, borderTop, borderBottom;
-  var dom = editor.dom;
+const resize = function (editor, oldSize) {
+  let deltaSize, doc, body, resizeHeight, myHeight;
+  let marginTop, marginBottom, paddingTop, paddingBottom, borderTop, borderBottom;
+  const dom = editor.dom;
 
   doc = editor.getDoc();
   if (!doc) {
@@ -94,7 +94,7 @@ var resize = function (editor, oldSize) {
   }
 
   // If a maximum height has been defined don't exceed this height
-  var maxHeight = Settings.getAutoResizeMaxHeight(editor);
+  const maxHeight = Settings.getAutoResizeMaxHeight(editor);
   if (maxHeight && myHeight > maxHeight) {
     resizeHeight = maxHeight;
     toggleScrolling(editor, true);
@@ -116,9 +116,10 @@ var resize = function (editor, oldSize) {
   }
 };
 
-var setup = function (editor, oldSize) {
-  editor.on("init", function () {
-    var overflowPadding, bottomMargin, dom = editor.dom;
+const setup = function (editor, oldSize) {
+  editor.on('init', function () {
+    let overflowPadding, bottomMargin;
+    const dom = editor.dom;
 
     overflowPadding = Settings.getAutoResizeOverflowPadding(editor);
     bottomMargin = Settings.getAutoResizeBottomMargin(editor);
@@ -153,6 +154,6 @@ var setup = function (editor, oldSize) {
 };
 
 export default {
-  setup: setup,
-  resize: resize
+  setup,
+  resize
 };

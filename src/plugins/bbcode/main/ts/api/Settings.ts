@@ -8,11 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getDialect = function (editor) {
+const getDialect = function (editor) {
   // Note: This option isn't even used since we only support one dialect
   return editor.getParam('bbcode_dialect', 'punbb').toLowerCase();
 };
 
 export default {
-  getDialect: getDialect
+  getDialect
 };

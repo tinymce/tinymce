@@ -11,12 +11,12 @@
 import UnicodeData from './UnicodeData';
 import Arr from '../alien/Arr';
 
-var SETS = UnicodeData.SETS;
-var OTHER = UnicodeData.characterIndices.OTHER;
+const SETS = UnicodeData.SETS;
+const OTHER = UnicodeData.characterIndices.OTHER;
 
-var getType = function (char) {
-  var j, set, type = OTHER;
-  var setsLength = SETS.length;
+const getType = function (char) {
+  let j, set, type = OTHER;
+  const setsLength = SETS.length;
   for (j = 0; j < setsLength; ++j) {
     set = SETS[j];
 
@@ -28,24 +28,24 @@ var getType = function (char) {
   return type;
 };
 
-var memoize = function (func) {
-  var cache = {};
+const memoize = function (func) {
+  const cache = {};
   return function (char) {
     if (cache[char]) {
       return cache[char];
     } else {
-      var result = func(char);
+      const result = func(char);
       cache[char] = result;
       return result;
     }
   };
 };
 
-var classify = function (string) {
-  var memoized = memoize(getType);
+const classify = function (string) {
+  const memoized = memoize(getType);
   return Arr.map(string.split(''), memoized);
 };
 
 export default {
-  classify: classify
+  classify
 };

@@ -10,7 +10,7 @@
 
 import FilterContent from '../core/FilterContent';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addCommand('mcePageBreak', function () {
     if (editor.settings.pagebreak_split_block) {
       editor.insertContent('<p>' + FilterContent.getPlaceholderHtml() + '</p>');
@@ -21,5 +21,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

@@ -12,15 +12,15 @@ import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 
-var displayErrorMessage = function (editor, message) {
+const displayErrorMessage = function (editor, message) {
   editor.notificationManager.open({
     text: editor.translate(message),
     type: 'error'
   });
 };
 
-var save = function (editor) {
-  var formObj;
+const save = function (editor) {
+  let formObj;
 
   formObj = DOMUtils.DOM.getParent(editor.id, 'form');
 
@@ -54,8 +54,8 @@ var save = function (editor) {
   }
 };
 
-var cancel = function (editor) {
-  var h = Tools.trim(editor.startContent);
+const cancel = function (editor) {
+  const h = Tools.trim(editor.startContent);
 
   // Use callback instead
   if (Settings.hasOnCancelCallback(editor)) {
@@ -69,6 +69,6 @@ var cancel = function (editor) {
 };
 
 export default {
-  save: save,
-  cancel: cancel
+  save,
+  cancel
 };

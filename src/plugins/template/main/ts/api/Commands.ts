@@ -11,10 +11,10 @@
 import { Fun } from '@ephox/katamari';
 import Templates from '../core/Templates';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addCommand('mceInsertTemplate', Fun.curry(Templates.insertTemplate, editor));
 };
 
 export default {
-  register: register
+  register
 };

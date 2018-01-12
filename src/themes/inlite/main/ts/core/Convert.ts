@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var fromClientRect = function (clientRect) {
+const fromClientRect = function (clientRect) {
   return {
     x: clientRect.left,
     y: clientRect.top,
@@ -17,7 +17,7 @@ var fromClientRect = function (clientRect) {
   };
 };
 
-var toClientRect = function (geomRect) {
+const toClientRect = function (geomRect) {
   return {
     left: geomRect.x,
     top: geomRect.y,
@@ -28,7 +28,7 @@ var toClientRect = function (geomRect) {
   };
 };
 
-export default <any> {
-  fromClientRect: fromClientRect,
-  toClientRect: toClientRect
+export default {
+  fromClientRect,
+  toClientRect
 };

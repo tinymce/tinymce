@@ -12,11 +12,11 @@ import Settings from '../api/Settings';
 import Coords from './Coords';
 import ContextMenu from '../ui/ContextMenu';
 
-var isNativeOverrideKeyEvent = function (editor, e) {
+const isNativeOverrideKeyEvent = function (editor, e) {
   return e.ctrlKey && !Settings.shouldNeverUseNative(editor);
 };
 
-var setup = function (editor, visibleState, menu) {
+const setup = function (editor, visibleState, menu) {
   editor.on('contextmenu', function (e) {
     if (isNativeOverrideKeyEvent(editor, e)) {
       return;
@@ -28,5 +28,5 @@ var setup = function (editor, visibleState, menu) {
 };
 
 export default {
-  setup: setup
+  setup
 };

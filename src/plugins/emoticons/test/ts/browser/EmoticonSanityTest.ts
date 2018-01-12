@@ -1,6 +1,5 @@
 import { ApproxStructure } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
@@ -8,16 +7,16 @@ import EmoticonPlugin from 'tinymce/plugins/emoticons/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.emoticons.EmoticonSanityTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.emoticons.EmoticonSanityTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   EmoticonPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
-    var tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyUi.sClickOnToolbar('click on emoticons button', 'div[aria-label="Emoticons"] > button'),
@@ -44,4 +43,3 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.EmoticonSanityTest', funct
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

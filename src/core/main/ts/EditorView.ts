@@ -15,56 +15,56 @@ import { Element } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 
-var getProp = function (propName, elm) {
-  var rawElm = elm.dom();
+const getProp = function (propName, elm) {
+  const rawElm = elm.dom();
   return rawElm[propName];
 };
 
-var getComputedSizeProp = function (propName, elm) {
+const getComputedSizeProp = function (propName, elm) {
   return parseInt(Css.get(elm, propName), 10);
 };
 
-var getClientWidth = Fun.curry(getProp, 'clientWidth');
-var getClientHeight = Fun.curry(getProp, 'clientHeight');
-var getMarginTop = Fun.curry(getComputedSizeProp, 'margin-top');
-var getMarginLeft = Fun.curry(getComputedSizeProp, 'margin-left');
+const getClientWidth = Fun.curry(getProp, 'clientWidth');
+const getClientHeight = Fun.curry(getProp, 'clientHeight');
+const getMarginTop = Fun.curry(getComputedSizeProp, 'margin-top');
+const getMarginLeft = Fun.curry(getComputedSizeProp, 'margin-left');
 
-var getBoundingClientRect = function (elm) {
+const getBoundingClientRect = function (elm) {
   return elm.dom().getBoundingClientRect();
 };
 
-var isInsideElementContentArea = function (bodyElm, clientX, clientY) {
-  var clientWidth = getClientWidth(bodyElm);
-  var clientHeight = getClientHeight(bodyElm);
+const isInsideElementContentArea = function (bodyElm, clientX, clientY) {
+  const clientWidth = getClientWidth(bodyElm);
+  const clientHeight = getClientHeight(bodyElm);
 
   return clientX >= 0 && clientY >= 0 && clientX <= clientWidth && clientY <= clientHeight;
 };
 
-var transpose = function (inline, elm, clientX, clientY) {
-  var clientRect = getBoundingClientRect(elm);
-  var deltaX = inline ? clientRect.left + elm.dom().clientLeft + getMarginLeft(elm) : 0;
-  var deltaY = inline ? clientRect.top + elm.dom().clientTop + getMarginTop(elm) : 0;
-  var x = clientX - deltaX;
-  var y = clientY - deltaY;
+const transpose = function (inline, elm, clientX, clientY) {
+  const clientRect = getBoundingClientRect(elm);
+  const deltaX = inline ? clientRect.left + elm.dom().clientLeft + getMarginLeft(elm) : 0;
+  const deltaY = inline ? clientRect.top + elm.dom().clientTop + getMarginTop(elm) : 0;
+  const x = clientX - deltaX;
+  const y = clientY - deltaY;
 
-  return { x: x, y: y };
+  return { x, y };
 };
 
 // Checks if the specified coordinate is within the visual content area excluding the scrollbars
-var isXYInContentArea = function (editor, clientX, clientY) {
-  var bodyElm = Element.fromDom(editor.getBody());
-  var targetElm = editor.inline ? bodyElm : Traverse.documentElement(bodyElm);
-  var transposedPoint = transpose(editor.inline, targetElm, clientX, clientY);
+const isXYInContentArea = function (editor, clientX, clientY) {
+  const bodyElm = Element.fromDom(editor.getBody());
+  const targetElm = editor.inline ? bodyElm : Traverse.documentElement(bodyElm);
+  const transposedPoint = transpose(editor.inline, targetElm, clientX, clientY);
 
   return isInsideElementContentArea(targetElm, transposedPoint.x, transposedPoint.y);
 };
 
-var fromDomSafe = function (node) {
+const fromDomSafe = function (node) {
   return Option.from(node).map(Element.fromDom);
 };
 
-var isEditorAttachedToDom = function (editor) {
-  var rawContainer = editor.inline ? editor.getBody() : editor.getContentAreaContainer();
+const isEditorAttachedToDom = function (editor) {
+  const rawContainer = editor.inline ? editor.getBody() : editor.getContentAreaContainer();
 
   return fromDomSafe(rawContainer).map(function (container) {
     return Compare.contains(Traverse.owner(container), container);
@@ -72,6 +72,6 @@ var isEditorAttachedToDom = function (editor) {
 };
 
 export default {
-  isXYInContentArea: isXYInContentArea,
-  isEditorAttachedToDom: isEditorAttachedToDom
+  isXYInContentArea,
+  isEditorAttachedToDom
 };

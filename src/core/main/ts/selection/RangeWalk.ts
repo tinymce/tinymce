@@ -10,10 +10,10 @@
 
 import Tools from '../util/Tools';
 
-var each = Tools.each;
+const each = Tools.each;
 
-var getEndChild = function (container, index) {
-  var childNodes = container.childNodes;
+const getEndChild = function (container, index) {
+  const childNodes = container.childNodes;
 
   index--;
 
@@ -26,13 +26,18 @@ var getEndChild = function (container, index) {
   return childNodes[index] || container;
 };
 
-var walk = function (dom, rng, callback) {
-  var startContainer = rng.startContainer,
-    startOffset = rng.startOffset,
-    endContainer = rng.endContainer,
-    endOffset = rng.endOffset,
-    ancestor, startPoint,
-    endPoint, node, parent, siblings, nodes;
+const walk = function (dom, rng, callback) {
+  let startContainer = rng.startContainer;
+  const startOffset = rng.startOffset;
+  let endContainer = rng.endContainer;
+  const endOffset = rng.endOffset;
+  let ancestor;
+  let startPoint;
+  let endPoint;
+  let node;
+  let parent;
+  let siblings;
+  let nodes;
 
   // Handle table cell selection the table plugin enables
   // you to fake select table cells and perform formatting actions on them
@@ -52,8 +57,8 @@ var walk = function (dom, rng, callback) {
    * @param {Array} nodes Nodes to exclude items from.
    * @return {Array} Array with nodes excluding the start/end container if needed.
    */
-  var exclude = function (nodes) {
-    var node;
+  const exclude = function (nodes) {
+    let node;
 
     // First node is excluded
     node = nodes[0];
@@ -70,17 +75,17 @@ var walk = function (dom, rng, callback) {
     return nodes;
   };
 
-  var collectSiblings = function (node, name, endNode?) {
-    var siblings = [];
+  const collectSiblings = function (node, name, endNode?) {
+    const siblings = [];
 
-    for (; node && node != endNode; node = node[name]) {
+    for (; node && node !== endNode; node = node[name]) {
       siblings.push(node);
     }
 
     return siblings;
   };
 
-  var findEndPoint = function (node, root) {
+  const findEndPoint = function (node, root) {
     do {
       if (node.parentNode === root) {
         return node;
@@ -90,10 +95,10 @@ var walk = function (dom, rng, callback) {
     } while (node);
   };
 
-  var walkBoundary = function (startNode, endNode, next?) {
-    var siblingName = next ? 'nextSibling' : 'previousSibling';
+  const walkBoundary = function (startNode, endNode, next?) {
+    const siblingName = next ? 'nextSibling' : 'previousSibling';
 
-    for (node = startNode, parent = node.parentNode; node && node != endNode; node = parent) {
+    for (node = startNode, parent = node.parentNode; node && node !== endNode; node = parent) {
       parent = node.parentNode;
       siblings = collectSiblings(node === startNode ? node : node[siblingName], siblingName);
 
@@ -170,5 +175,5 @@ var walk = function (dom, rng, callback) {
 };
 
 export default {
-  walk: walk
+  walk
 };

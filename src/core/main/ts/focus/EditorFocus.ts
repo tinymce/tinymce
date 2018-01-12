@@ -18,17 +18,17 @@ import ElementType from '../dom/ElementType';
 import RangeNodes from '../selection/RangeNodes';
 import SelectionBookmark from '../selection/SelectionBookmark';
 
-var getContentEditableHost = function (editor, node) {
+const getContentEditableHost = function (editor, node) {
   return editor.dom.getParent(node, function (node) {
-    return editor.dom.getContentEditable(node) === "true";
+    return editor.dom.getContentEditable(node) === 'true';
   });
 };
 
-var getCollapsedNode = function (rng) {
+const getCollapsedNode = function (rng) {
   return rng.collapsed ? Option.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(Element.fromDom) : Option.none();
 };
 
-var getFocusInElement = function (root, rng) {
+const getFocusInElement = function (root, rng) {
   return getCollapsedNode(rng).bind(function (node) {
     if (ElementType.isTableSection(node)) {
       return Option.some(node);
@@ -40,7 +40,7 @@ var getFocusInElement = function (root, rng) {
   });
 };
 
-var normalizeSelection = function (editor, rng) {
+const normalizeSelection = function (editor, rng) {
   getFocusInElement(Element.fromDom(editor.getBody()), rng).bind(function (elm) {
     return CaretFinder.firstPositionIn(elm.dom());
   }).fold(
@@ -53,7 +53,7 @@ var normalizeSelection = function (editor, rng) {
   );
 };
 
-var focusBody = function (body) {
+const focusBody = function (body) {
   if (body.setActive) {
     // IE 11 sometimes throws "Invalid function" then fallback to focus
     // setActive is better since it doesn't scroll to the element being focused
@@ -67,26 +67,27 @@ var focusBody = function (body) {
   }
 };
 
-var hasElementFocus = function (elm) {
+const hasElementFocus = function (elm) {
   return Focus.hasFocus(elm) || Focus.search(elm).isSome();
 };
 
-var hasIframeFocus = function (editor) {
+const hasIframeFocus = function (editor) {
   return editor.iframeElement && Focus.hasFocus(Element.fromDom(editor.iframeElement));
 };
 
-var hasInlineFocus = function (editor) {
-  var rawBody = editor.getBody();
+const hasInlineFocus = function (editor) {
+  const rawBody = editor.getBody();
   return rawBody && hasElementFocus(Element.fromDom(rawBody));
 };
 
-var hasFocus = function (editor) {
+const hasFocus = function (editor) {
   return editor.inline ? hasInlineFocus(editor) : hasIframeFocus(editor);
 };
 
-var focusEditor = function (editor) {
-  var selection = editor.selection, contentEditable = editor.settings.content_editable;
-  var body = editor.getBody(), contentEditableHost, rng = selection.getRng();
+const focusEditor = function (editor) {
+  const selection = editor.selection, contentEditable = editor.settings.content_editable;
+  const body = editor.getBody();
+  let contentEditableHost, rng = selection.getRng();
 
   editor.quirks.refreshContentEditable();
 
@@ -126,11 +127,11 @@ var focusEditor = function (editor) {
   activateEditor(editor);
 };
 
-var activateEditor = function (editor) {
+const activateEditor = function (editor) {
   editor.editorManager.setActive(editor);
 };
 
-var focus = function (editor, skipFocus) {
+const focus = function (editor, skipFocus) {
   if (editor.removed) {
     return;
   }
@@ -139,6 +140,6 @@ var focus = function (editor, skipFocus) {
 };
 
 export default {
-  focus: focus,
-  hasFocus: hasFocus
+  focus,
+  hasFocus
 };

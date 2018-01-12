@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var urls = [
+const urls = [
   { key: 'advlist', name: 'Advanced List' },
   { key: 'anchor', name: 'Anchor' },
   { key: 'autolink', name: 'Autolink' },
@@ -56,5 +56,5 @@ var urls = [
 ];
 
 export default {
-  urls: urls
+  urls
 };

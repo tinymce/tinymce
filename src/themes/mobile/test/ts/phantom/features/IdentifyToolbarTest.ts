@@ -2,9 +2,9 @@ import { Assertions } from '@ephox/agar';
 import Features from 'tinymce/themes/mobile/features/Features';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('features.IdentifyToolbarTest', function() {
-  var check = function (label, expected, input) {
-    var actual = Features.identify(input);
+UnitTest.test('features.IdentifyToolbarTest', function () {
+  const check = function (label, expected, input) {
+    const actual = Features.identify(input);
     Assertions.assertEq(label, expected, actual);
   };
 
@@ -26,4 +26,3 @@ UnitTest.test('features.IdentifyToolbarTest', function() {
     'bullist', 'numlist', 'outdent', 'indent', 'link', 'image'
   ], { toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image' });
 });
-

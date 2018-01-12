@@ -19,17 +19,15 @@ import Tools from 'tinymce/core/util/Tools';
  * @class tinymce.ui.DomUtils
  */
 
-"use strict";
+let count = 0;
 
-var count = 0;
-
-var funcs = {
-  id: function () {
+const funcs = {
+  id () {
     return 'mceu_' + (count++);
   },
 
-  create: function (name, attrs, children) {
-    var elm = document.createElement(name);
+  create (name, attrs, children?) {
+    const elm = document.createElement(name);
 
     DOMUtils.DOM.setAttribs(elm, attrs);
 
@@ -46,19 +44,19 @@ var funcs = {
     return elm;
   },
 
-  createFragment: function (html) {
+  createFragment (html) {
     return DOMUtils.DOM.createFragment(html);
   },
 
-  getWindowSize: function () {
+  getWindowSize () {
     return DOMUtils.DOM.getViewPort();
   },
 
-  getSize: function (elm) {
-    var width, height;
+  getSize (elm) {
+    let width, height;
 
     if (elm.getBoundingClientRect) {
-      var rect = elm.getBoundingClientRect();
+      const rect = elm.getBoundingClientRect();
 
       width = Math.max(rect.width || (rect.right - rect.left), elm.offsetWidth);
       height = Math.max(rect.height || (rect.bottom - rect.bottom), elm.offsetHeight);
@@ -67,65 +65,65 @@ var funcs = {
       height = elm.offsetHeight;
     }
 
-    return { width: width, height: height };
+    return { width, height };
   },
 
-  getPos: function (elm, root) {
+  getPos (elm, root?) {
     return DOMUtils.DOM.getPos(elm, root || funcs.getContainer());
   },
 
-  getContainer: function () {
+  getContainer () {
     return Env.container ? Env.container : document.body;
   },
 
-  getViewPort: function (win) {
+  getViewPort (win?) {
     return DOMUtils.DOM.getViewPort(win);
   },
 
-  get: function (id) {
+  get (id) {
     return document.getElementById(id);
   },
 
-  addClass: function (elm, cls) {
+  addClass (elm, cls) {
     return DOMUtils.DOM.addClass(elm, cls);
   },
 
-  removeClass: function (elm, cls) {
+  removeClass (elm, cls) {
     return DOMUtils.DOM.removeClass(elm, cls);
   },
 
-  hasClass: function (elm, cls) {
+  hasClass (elm, cls) {
     return DOMUtils.DOM.hasClass(elm, cls);
   },
 
-  toggleClass: function (elm, cls, state) {
+  toggleClass (elm, cls, state) {
     return DOMUtils.DOM.toggleClass(elm, cls, state);
   },
 
-  css: function (elm, name, value) {
+  css (elm, name, value?) {
     return DOMUtils.DOM.setStyle(elm, name, value);
   },
 
-  getRuntimeStyle: function (elm, name) {
+  getRuntimeStyle (elm, name) {
     return DOMUtils.DOM.getStyle(elm, name, true);
   },
 
-  on: function (target, name, callback, scope) {
+  on (target, name, callback, scope?) {
     return DOMUtils.DOM.bind(target, name, callback, scope);
   },
 
-  off: function (target, name, callback) {
+  off (target, name, callback) {
     return DOMUtils.DOM.unbind(target, name, callback);
   },
 
-  fire: function (target, name, args) {
+  fire (target, name, args) {
     return DOMUtils.DOM.fire(target, name, args);
   },
 
-  innerHtml: function (elm, html) {
+  innerHtml (elm, html) {
     // Workaround for <div> in <p> bug on IE 8 #6178
     DOMUtils.DOM.setHTML(elm, html);
   }
 };
 
-export default <any> funcs;
+export default funcs;

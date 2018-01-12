@@ -8,56 +8,56 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var shouldPlainTextInform = function (editor) {
+const shouldPlainTextInform = function (editor) {
   return editor.getParam('paste_plaintext_inform', true);
 };
 
-var shouldBlockDrop = function (editor) {
+const shouldBlockDrop = function (editor) {
   return editor.getParam('paste_block_drop', false);
 };
 
-var shouldPasteDataImages = function (editor) {
+const shouldPasteDataImages = function (editor) {
   return editor.getParam('paste_data_images', false);
 };
 
-var shouldFilterDrop = function (editor) {
+const shouldFilterDrop = function (editor) {
   return editor.getParam('paste_filter_drop', true);
 };
 
-var getPreProcess = function (editor) {
+const getPreProcess = function (editor) {
   return editor.getParam('paste_preprocess');
 };
 
-var getPostProcess = function (editor) {
+const getPostProcess = function (editor) {
   return editor.getParam('paste_postprocess');
 };
 
-var getWebkitStyles = function (editor) {
+const getWebkitStyles = function (editor) {
   return editor.getParam('paste_webkit_styles');
 };
 
-var shouldRemoveWebKitStyles = function (editor) {
+const shouldRemoveWebKitStyles = function (editor) {
   return editor.getParam('paste_remove_styles_if_webkit', true);
 };
 
-var shouldMergeFormats = function (editor) {
+const shouldMergeFormats = function (editor) {
   return editor.getParam('paste_merge_formats', true);
 };
 
-var isSmartPasteEnabled = function (editor) {
+const isSmartPasteEnabled = function (editor) {
   return editor.getParam('smart_paste', true);
 };
 
-var isPasteAsTextEnabled = function (editor) {
+const isPasteAsTextEnabled = function (editor) {
   return editor.getParam('paste_as_text', false);
 };
 
-var getRetainStyleProps = function (editor) {
+const getRetainStyleProps = function (editor) {
   return editor.getParam('paste_retain_style_properties');
 };
 
-var getWordValidElements = function (editor) {
-  var defaultValidElements = (
+const getWordValidElements = function (editor) {
+  const defaultValidElements = (
     '-strong/b,-em/i,-u,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
     '-p/div,-a[href|name],sub,sup,strike,br,del,table[width],tr,' +
     'td[colspan|rowspan|width],th[colspan|rowspan|width],thead,tfoot,tbody'
@@ -66,28 +66,28 @@ var getWordValidElements = function (editor) {
   return editor.getParam('paste_word_valid_elements', defaultValidElements);
 };
 
-var shouldConvertWordFakeLists = function (editor) {
+const shouldConvertWordFakeLists = function (editor) {
   return editor.getParam('paste_convert_word_fake_lists', true);
 };
 
-var shouldUseDefaultFilters = function (editor) {
+const shouldUseDefaultFilters = function (editor) {
   return editor.getParam('paste_enable_default_filters', true);
 };
 
 export default {
-  shouldPlainTextInform: shouldPlainTextInform,
-  shouldBlockDrop: shouldBlockDrop,
-  shouldPasteDataImages: shouldPasteDataImages,
-  shouldFilterDrop: shouldFilterDrop,
-  getPreProcess: getPreProcess,
-  getPostProcess: getPostProcess,
-  getWebkitStyles: getWebkitStyles,
-  shouldRemoveWebKitStyles: shouldRemoveWebKitStyles,
-  shouldMergeFormats: shouldMergeFormats,
-  isSmartPasteEnabled: isSmartPasteEnabled,
-  isPasteAsTextEnabled: isPasteAsTextEnabled,
-  getRetainStyleProps: getRetainStyleProps,
-  getWordValidElements: getWordValidElements,
-  shouldConvertWordFakeLists: shouldConvertWordFakeLists,
-  shouldUseDefaultFilters: shouldUseDefaultFilters
+  shouldPlainTextInform,
+  shouldBlockDrop,
+  shouldPasteDataImages,
+  shouldFilterDrop,
+  getPreProcess,
+  getPostProcess,
+  getWebkitStyles,
+  shouldRemoveWebKitStyles,
+  shouldMergeFormats,
+  isSmartPasteEnabled,
+  isPasteAsTextEnabled,
+  getRetainStyleProps,
+  getWordValidElements,
+  shouldConvertWordFakeLists,
+  shouldUseDefaultFilters
 };

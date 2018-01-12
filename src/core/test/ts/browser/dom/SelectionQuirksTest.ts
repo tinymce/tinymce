@@ -12,44 +12,44 @@ import { Element } from '@ephox/sugar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyActions = TinyActions(editor);
-    var count;
+    const tinyApis = TinyApis(editor);
+    const tinyActions = TinyActions(editor);
+    let count;
 
     // hijack editor.selection.normalize() to count how many times it will be invoked
-    var backupNormalize = editor.selection.normalize;
-    var normalize = function () {
+    const backupNormalize = editor.selection.normalize;
+    const normalize = function () {
       count = count === undefined ? 1 : count + 1;
       backupNormalize.apply(this, arguments);
     };
     editor.selection.normalize = normalize;
 
-    var sResetNormalizeCounter = function () {
+    const sResetNormalizeCounter = function () {
       return Step.sync(function () {
         count = 0;
       });
     };
 
-    var sAssertNormalizeCounter = function (expected) {
+    const sAssertNormalizeCounter = function (expected) {
       return Step.sync(function () {
         Assertions.assertEq('checking normalization counter', expected, count);
       });
     };
 
-    var sClickBody = function (editor) {
+    const sClickBody = function (editor) {
       return Step.sync(function () {
-        var target = editor.getBody();
+        const target = editor.getBody();
 
-        editor.fire('mousedown', { target: target });
-        editor.fire('mouseup', { target: target });
-        editor.fire('click', { target: target });
+        editor.fire('mousedown', { target });
+        editor.fire('mouseup', { target });
+        editor.fire('click', { target });
       });
     };
 
@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function() {
         tinyApis.sSetContent('<p>a<img src="about:blank" style="float: right"></p>'),
         tinyApis.sSetSelection([0], 1, [0], 2),
         Step.sync(function () {
-          var selection = editor.selection.getSel();
+          const selection = editor.selection.getSel();
           Assertions.assertEq('Anchor node should be the paragraph not the text node', 'P', selection.anchorNode.nodeName);
           Assertions.assertEq('Anchor offset should be the element index', 1, selection.anchorOffset);
         })
@@ -87,7 +87,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function() {
         tinyApis.sAssertSelection([1, 0], 0, [1, 0], 0)
       ])),
 
-      Logger.t("Normalization during operations with modifier keys, should run only once in the end when user releases modifier key.", GeneralSteps.sequence([
+      Logger.t('Normalization during operations with modifier keys, should run only once in the end when user releases modifier key.', GeneralSteps.sequence([
         sResetNormalizeCounter(),
         tinyApis.sSetContent('<p><b>a</b><i>a</i></p>'),
         tinyApis.sSetSelection([0, 0, 0], 0, [0, 0], 0),
@@ -103,4 +103,3 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

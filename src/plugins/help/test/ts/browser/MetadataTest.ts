@@ -12,16 +12,16 @@ import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: .MetadataTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: .MetadataTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   HelpPlugin();
   FakePlugin();
   NoMetaFakePlugin();
 
-  var sAssertPluginList = function (html) {
+  const sAssertPluginList = function (html) {
     return Chain.asStep(TinyDom.fromDom(document.body), [
       UiFinder.cWaitFor('Could not find notification', 'div.mce-floatpanel ul'),
       Chain.mapper(Html.get),
@@ -30,7 +30,7 @@ UnitTest.asynctest('Browser Test: .MetadataTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
+    const tinyUi = TinyUi(editor);
     Pipeline.async({}, [
       tinyUi.sClickOnToolbar('click on help button', 'button'),
       sAssertPluginList(
@@ -45,4 +45,3 @@ UnitTest.asynctest('Browser Test: .MetadataTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

@@ -3,18 +3,18 @@ import { Pipeline } from '@ephox/agar';
 import Fragments from 'tinymce/core/undo/Fragments';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
-  var div = function (html) {
-    var div = document.createElement('div');
+  const div = function (html) {
+    const div = document.createElement('div');
     div.innerHTML = html;
     return div;
   };
 
-  var html = function (elm) {
+  const html = function (elm) {
     return elm.innerHTML;
   };
 
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', function() {
   });
 
   suite.test('read and exclude zero length text nodes', function () {
-    var elm = div('<p>a</p><p>b</p>');
+    const elm = div('<p>a</p><p>b</p>');
     elm.insertBefore(document.createTextNode(''), elm.lastChild);
     LegacyUnit.deepEqual(Fragments.read(elm), ['<p>a</p>', '<p>b</p>']);
   });
@@ -47,4 +47,3 @@ UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', function() {
     success();
   }, failure);
 });
-

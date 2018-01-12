@@ -8,7 +8,6 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Env from 'tinymce/core/Env';
 import PluginManager from 'tinymce/core/PluginManager';
 import Commands from './api/Commands';
 import FilterContent from './core/FilterContent';
@@ -22,4 +21,4 @@ PluginManager.add('pagebreak', function (editor) {
   ResolveName.setup(editor);
 });
 
-export default function () { };
+export default function () { }

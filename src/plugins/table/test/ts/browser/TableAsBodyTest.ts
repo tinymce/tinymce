@@ -16,42 +16,42 @@ import EditorManager from 'tinymce/core/EditorManager';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
 
-  var toDomRange = function (range) {
-    var doc = Traverse.owner(range.start());
-    var rng = doc.dom().createRange();
+  const toDomRange = function (range) {
+    const doc = Traverse.owner(range.start());
+    const rng = doc.dom().createRange();
     rng.setStart(range.start().dom(), range.soffset());
     rng.setEnd(range.finish().dom(), range.foffset());
     return rng;
   };
 
-  var createDomSelection = function (container, sPath, soffset, fPath, foffset) {
-    var path = Cursors.path({
+  const createDomSelection = function (container, sPath, soffset, fPath, foffset) {
+    const path = Cursors.path({
       startPath: sPath,
-      soffset: soffset,
+      soffset,
       finishPath: fPath,
-      foffset: foffset
+      foffset
     });
     return toDomRange(Cursors.calculate(container, path));
   };
 
-  var cFromSettings = function (settings, html) {
+  const cFromSettings = function (settings, html) {
     return Chain.on(function (_, next, die) {
-      var randomId = Id.generate('tiny-loader');
+      const randomId = Id.generate('tiny-loader');
       settings = settings || {};
-      var target = Element.fromHtml(html);
+      const target = Element.fromHtml(html);
 
       Attr.set(target, 'id', randomId);
       Insert.append(Element.fromDom(document.body), target);
 
       EditorManager.init(Merger.merge(settings, {
         selector: '#' + randomId,
-        init_instance_callback: function (editor) {
+        init_instance_callback (editor) {
           setTimeout(function () {
             next(Chain.wrap(editor));
           }, 0);
@@ -60,37 +60,37 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', function() {
     });
   };
 
-  var cExecCommand = function (command, value?) {
+  const cExecCommand = function (command, value?) {
     return Chain.op(function (editor) {
       editor.execCommand(command, false, value);
     });
   };
 
-  var cAssertContent = function (expected) {
+  const cAssertContent = function (expected) {
     return Chain.op(function (editor) {
       Assertions.assertHtml('Checking TinyMCE content', expected, editor.getContent());
     });
   };
 
-  var cRemove = Chain.op(function (editor) {
-    var id = editor.id;
+  const cRemove = Chain.op(function (editor) {
+    const id = editor.id;
     editor.remove();
     Selectors.one('#' + id).bind(Remove.remove);
   });
 
-  var lazyBody = function (editor) {
+  const lazyBody = function (editor) {
     return Element.fromDom(editor.getBody());
   };
 
-  var cSetSelection = function (startPath, soffset, finishPath, foffset) {
+  const cSetSelection = function (startPath, soffset, finishPath, foffset) {
     return Chain.op(function (editor) {
-      var range = createDomSelection(lazyBody(editor), startPath, soffset, finishPath, foffset);
+      const range = createDomSelection(lazyBody(editor), startPath, soffset, finishPath, foffset);
       editor.selection.setRng(range);
       editor.nodeChanged();
     });
   };
 
-  var settings = {
+  const settings = {
     theme: false,
     inline: true,
     indent: false,
@@ -135,4 +135,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', function() {
     success();
   }, failure);
 });
-

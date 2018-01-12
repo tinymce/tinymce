@@ -10,9 +10,9 @@
 
 import Actions from './Actions';
 
-var setup = function (editor, imageUploadTimerState, lastSelectedImageState) {
+const setup = function (editor, imageUploadTimerState, lastSelectedImageState) {
   editor.on('NodeChange', function (e) {
-    var lastSelectedImage = lastSelectedImageState.get();
+    const lastSelectedImage = lastSelectedImageState.get();
 
     // If the last node we selected was an image
     // And had a source that doesn't match the current blob url
@@ -31,5 +31,5 @@ var setup = function (editor, imageUploadTimerState, lastSelectedImageState) {
 };
 
 export default {
-  setup: setup
+  setup
 };

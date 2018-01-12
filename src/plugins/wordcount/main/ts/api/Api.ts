@@ -10,16 +10,16 @@
 
 import WordCount from '../text/WordCount';
 
-var get = function (editor) {
-  var getCount = function () {
+const get = function (editor) {
+  const getCount = function () {
     return WordCount.getCount(editor);
   };
 
   return {
-    getCount: getCount
+    getCount
   };
 };
 
 export default {
-  get: get
+  get
 };

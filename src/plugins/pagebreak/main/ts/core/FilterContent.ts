@@ -11,18 +11,18 @@
 import Env from 'tinymce/core/Env';
 import Settings from '../api/Settings';
 
-var getPageBreakClass = function () {
+const getPageBreakClass = function () {
   return 'mce-pagebreak';
 };
 
-var getPlaceholderHtml = function () {
+const getPlaceholderHtml = function () {
   return '<img src="' + Env.transparentSrc + '" class="' + getPageBreakClass() + '" data-mce-resize="false" data-mce-placeholder />';
 };
 
-var setup = function (editor) {
-  var separatorHtml = Settings.getSeparatorHtml(editor);
+const setup = function (editor) {
+  const separatorHtml = Settings.getSeparatorHtml(editor);
 
-  var pageBreakSeparatorRegExp = new RegExp(separatorHtml.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function (a) {
+  const pageBreakSeparatorRegExp = new RegExp(separatorHtml.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function (a) {
     return '\\' + a;
   }), 'gi');
 
@@ -32,14 +32,14 @@ var setup = function (editor) {
 
   editor.on('PreInit', function () {
     editor.serializer.addNodeFilter('img', function (nodes) {
-      var i = nodes.length, node, className;
+      let i = nodes.length, node, className;
 
       while (i--) {
         node = nodes[i];
         className = node.attr('class');
         if (className && className.indexOf('mce-pagebreak') !== -1) {
           // Replace parent block node if pagebreak_split_block is enabled
-          var parentNode = node.parent;
+          const parentNode = node.parent;
           if (editor.schema.getBlockElements()[parentNode.name] && Settings.shouldSplitBlock(editor)) {
             parentNode.type = 3;
             parentNode.value = separatorHtml;
@@ -58,7 +58,7 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup,
-  getPlaceholderHtml: getPlaceholderHtml,
-  getPageBreakClass: getPageBreakClass
+  setup,
+  getPlaceholderHtml,
+  getPageBreakClass
 };

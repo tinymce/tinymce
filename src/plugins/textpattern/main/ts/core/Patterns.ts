@@ -9,7 +9,7 @@
  */
 
 // Returns a sorted patterns list, ordered descending by start length
-var sortPatterns = function (patterns) {
+const sortPatterns = function (patterns) {
   return patterns.sort(function (a, b) {
     if (a.start.length > b.start.length) {
       return -1;
@@ -24,8 +24,8 @@ var sortPatterns = function (patterns) {
 };
 
 // Finds a matching pattern to the specified text
-var findPattern = function (patterns, text) {
-  for (var i = 0; i < patterns.length; i++) {
+const findPattern = function (patterns, text) {
+  for (let i = 0; i < patterns.length; i++) {
     if (text.indexOf(patterns[i].start) !== 0) {
       continue;
     }
@@ -38,19 +38,19 @@ var findPattern = function (patterns, text) {
   }
 };
 
-var isMatchingPattern = function (pattern, text, offset, delta) {
-  var textEnd = text.substr(offset - pattern.end.length - delta, pattern.end.length);
+const isMatchingPattern = function (pattern, text, offset, delta) {
+  const textEnd = text.substr(offset - pattern.end.length - delta, pattern.end.length);
   return textEnd === pattern.end;
 };
 
-var hasContent = function (offset, delta, pattern) {
+const hasContent = function (offset, delta, pattern) {
   return (offset - delta - pattern.end.length - pattern.start.length) > 0;
 };
 
 // Finds the best matching end pattern
-var findEndPattern = function (patterns, text, offset, delta) {
-  var pattern, i;
-  var sortedPatterns = sortPatterns(patterns);
+const findEndPattern = function (patterns, text, offset, delta) {
+  let pattern, i;
+  const sortedPatterns = sortPatterns(patterns);
 
   // Find best matching end
   for (i = 0; i < sortedPatterns.length; i++) {
@@ -62,6 +62,6 @@ var findEndPattern = function (patterns, text, offset, delta) {
 };
 
 export default {
-  findPattern: findPattern,
-  findEndPattern: findEndPattern
+  findPattern,
+  findEndPattern
 };

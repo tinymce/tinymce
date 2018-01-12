@@ -19,4 +19,4 @@ PluginManager.add('image', function (editor) {
   Commands.register(editor);
 });
 
-export default function () { };
+export default function () { }

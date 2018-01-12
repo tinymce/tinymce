@@ -13,33 +13,33 @@ import Zwsp from 'tinymce/core/text/Zwsp';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
 
-  var sApplyCaretFormat = function (editor, name, vars) {
+  const sApplyCaretFormat = function (editor, name, vars) {
     return Step.sync(function () {
       CaretFormat.applyCaretFormat(editor, name, vars);
     });
   };
 
-  var sRemoveCaretFormat = function (editor, name, vars, similar?) {
+  const sRemoveCaretFormat = function (editor, name, vars, similar?) {
     return Step.sync(function () {
       CaretFormat.removeCaretFormat(editor, name, vars, similar);
     });
   };
 
-  var sSetRawContent = function (editor, html) {
+  const sSetRawContent = function (editor, html) {
     return Step.sync(function () {
       editor.getBody().innerHTML = html;
     });
   };
 
-  var sAssertNormalizedContentStructure = function (editor, expected) {
+  const sAssertNormalizedContentStructure = function (editor, expected) {
     return Step.sync(function () {
-      var rawBody = editor.getBody().cloneNode(true);
+      const rawBody = editor.getBody().cloneNode(true);
       rawBody.normalize();
 
       Assertions.assertStructure(
@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -317,7 +317,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function() {
         Assertions.assertEq('Should be false since it is not a caret node', false, CaretFormat.isCaretNode(editor.dom.create('b')));
         Assertions.assertEq('Should be false since it ia caret node', true, CaretFormat.isCaretNode(editor.dom.create('span', { id: '_mce_caret' })));
       })),
-      Logger.t("Apply some format to the empty editor and make sure that the content didn't mutate after serialization (TINY-1288)", GeneralSteps.sequence([
+      Logger.t('Apply some format to the empty editor and make sure that the content didn\'t mutate after serialization (TINY-1288)', GeneralSteps.sequence([
         tinyApis.sSetContent(''),
         tinyApis.sSetCursor([0], 0),
         tinyApis.sExecCommand('fontname', 'Arial'),
@@ -352,8 +352,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function() {
         }))
       ])),
       Logger.t('getParentCaretContainer', Step.sync(function () {
-        var body = Element.fromHtml('<div><span id="_mce_caret">a</span></div>');
-        var caret = Element.fromDom(body.dom().firstChild);
+        const body = Element.fromHtml('<div><span id="_mce_caret">a</span></div>');
+        const caret = Element.fromDom(body.dom().firstChild);
 
         Assertions.assertDomEq('Should be caret element on child', caret, Element.fromDom(CaretFormat.getParentCaretContainer(body.dom(), caret.dom().firstChild)));
         Assertions.assertDomEq('Should be caret element on self', caret, Element.fromDom(CaretFormat.getParentCaretContainer(body.dom(), caret.dom())));
@@ -361,13 +361,13 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function() {
         Assertions.assertEq('Should not be caret element', null, CaretFormat.getParentCaretContainer(caret.dom(), caret.dom()));
       })),
       Logger.t('replaceWithCaretFormat', Step.sync(function () {
-        var body = Element.fromHtml('<div><br /></div>');
-        var formats = [
+        const body = Element.fromHtml('<div><br /></div>');
+        const formats = [
           Element.fromTag('b').dom(),
           Element.fromTag('i').dom()
         ];
 
-        var pos = CaretFormat.replaceWithCaretFormat(body.dom().firstChild, formats);
+        const pos = CaretFormat.replaceWithCaretFormat(body.dom().firstChild, formats);
 
         Assertions.assertEq('Should be at first offset', 0, pos.offset());
         Assertions.assertEq('Should the zwsp text node', Zwsp.ZWSP, pos.container().data);
@@ -418,4 +418,3 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

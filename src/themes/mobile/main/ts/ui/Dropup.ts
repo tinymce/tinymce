@@ -7,15 +7,15 @@ import { Fun } from '@ephox/katamari';
 import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
 
-var build = function (refresh, scrollIntoView) {
-  var dropup = GuiFactory.build(
+const build = function (refresh, scrollIntoView) {
+  const dropup = GuiFactory.build(
     Container.sketch({
       dom: {
         tag: 'div',
         classes: Styles.resolve('dropup')
       },
       components: [
-        
+
       ],
       containerBehaviours: Behaviour.derive([
         Replacing.config({ }),
@@ -27,13 +27,13 @@ var build = function (refresh, scrollIntoView) {
           dimension: {
             property: 'height'
           },
-          onShrunk: function (component) {
+          onShrunk (component) {
             refresh();
             scrollIntoView();
 
             Replacing.set(component, [ ]);
           },
-          onGrown: function (component) {
+          onGrown (component) {
             refresh();
             scrollIntoView();
           }
@@ -45,7 +45,7 @@ var build = function (refresh, scrollIntoView) {
     })
   );
 
-  var appear = function (menu, update, component) {
+  const appear = function (menu, update, component) {
     if (Sliding.hasShrunk(dropup) === true && Sliding.isTransitioning(dropup) === false) {
       window.requestAnimationFrame(function () {
         update(component);
@@ -55,7 +55,7 @@ var build = function (refresh, scrollIntoView) {
     }
   };
 
-  var disappear = function (onReadyToShrink) {
+  const disappear = function (onReadyToShrink) {
     window.requestAnimationFrame(function () {
       onReadyToShrink();
       Sliding.shrink(dropup);
@@ -63,13 +63,13 @@ var build = function (refresh, scrollIntoView) {
   };
 
   return {
-    appear: appear,
-    disappear: disappear,
+    appear,
+    disappear,
     component: Fun.constant(dropup),
     element: dropup.element
   };
 };
 
-export default <any> {
-  build: build
+export default {
+  build
 };

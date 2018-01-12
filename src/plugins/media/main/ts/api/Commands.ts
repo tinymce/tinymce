@@ -10,8 +10,8 @@
 
 import Dialog from '../ui/Dialog';
 
-var register = function (editor) {
-  var showDialog = function () {
+const register = function (editor) {
+  const showDialog = function () {
     Dialog.showDialog(editor);
   };
 
@@ -19,5 +19,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

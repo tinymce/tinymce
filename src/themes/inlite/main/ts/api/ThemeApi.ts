@@ -12,22 +12,22 @@ import Render from '../core/Render';
 import NotificationManagerImpl from 'tinymce/ui/NotificationManagerImpl';
 import WindowManagerImpl from 'tinymce/ui/WindowManagerImpl';
 
-var get = function (editor, panel) {
-  var renderUI = function () {
+const get = function (editor, panel) {
+  const renderUI = function () {
     return Render.renderUI(editor, panel);
   };
 
   return {
-    renderUI: renderUI,
-    getNotificationManagerImpl: function () {
+    renderUI,
+    getNotificationManagerImpl () {
       return NotificationManagerImpl(editor);
     },
-    getWindowManagerImpl: function () {
+    getWindowManagerImpl () {
       return WindowManagerImpl(editor);
     }
   };
 };
 
-export default <any> {
-  get: get
+export default {
+  get
 };

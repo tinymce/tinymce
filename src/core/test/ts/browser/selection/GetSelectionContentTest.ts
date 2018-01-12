@@ -10,27 +10,27 @@ import GetSelectionContent from 'tinymce/core/selection/GetSelectionContent';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var cGetContent = function (args) {
+  const cGetContent = function (args) {
     return Chain.mapper(function (editor) {
       return GetSelectionContent.getContent(editor, args);
     });
   };
 
-  var sAssertGetContent = function (label, editor, expectedContents) {
+  const sAssertGetContent = function (label, editor, expectedContents) {
     return Chain.asStep(editor, [
       cGetContent({}),
       Assertions.cAssertEq('Should be expected contents', expectedContents)
     ]);
   };
 
-  var sAssertGetContentOverrideBeforeGetContent = function (label, editor, expectedContents) {
-    var handler = function (e) {
+  const sAssertGetContentOverrideBeforeGetContent = function (label, editor, expectedContents) {
+    const handler = function (e) {
       if (e.selection === true) {
         e.preventDefault();
         e.content = expectedContents;
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', function
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('Should be empty contents on a caret selection', GeneralSteps.sequence([
@@ -77,4 +77,3 @@ UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', function
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

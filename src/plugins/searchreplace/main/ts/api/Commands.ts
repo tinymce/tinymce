@@ -10,12 +10,12 @@
 
 import Dialog from '../ui/Dialog';
 
-var register = function (editor, currentIndexState) {
+const register = function (editor, currentIndexState) {
   editor.addCommand('SearchReplace', function () {
     Dialog.open(editor, currentIndexState);
   });
 };
 
 export default {
-  register: register
+  register
 };

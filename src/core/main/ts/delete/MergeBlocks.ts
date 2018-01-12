@@ -23,8 +23,8 @@ import NodeType from '../dom/NodeType';
 import PaddingBr from '../dom/PaddingBr';
 import Parents from '../dom/Parents';
 
-var getChildrenUntilBlockBoundary = function (block) {
-  var children = Traverse.children(block);
+const getChildrenUntilBlockBoundary = function (block) {
+  const children = Traverse.children(block);
   return Arr.findIndex(children, ElementType.isBlock).fold(
     function () {
       return children;
@@ -35,8 +35,8 @@ var getChildrenUntilBlockBoundary = function (block) {
   );
 };
 
-var extractChildren = function (block) {
-  var children = getChildrenUntilBlockBoundary(block);
+const extractChildren = function (block) {
+  const children = getChildrenUntilBlockBoundary(block);
 
   Arr.each(children, function (node) {
     Remove.remove(node);
@@ -45,29 +45,29 @@ var extractChildren = function (block) {
   return children;
 };
 
-var trimBr = function (first, block) {
+const trimBr = function (first, block) {
   CaretFinder.positionIn(first, block.dom()).each(function (position) {
-    var node = position.getNode();
+    const node = position.getNode();
     if (NodeType.isBr(node)) {
       Remove.remove(Element.fromDom(node));
     }
   });
 };
 
-var removeEmptyRoot = function (rootNode, block) {
-  var parents = Parents.parentsAndSelf(block, rootNode);
+const removeEmptyRoot = function (rootNode, block) {
+  const parents = Parents.parentsAndSelf(block, rootNode);
   return Arr.find(parents.reverse(), Empty.isEmpty).each(Remove.remove);
 };
 
-var findParentInsertPoint = function (toBlock, block) {
-  var parents = Traverse.parents(block, function (elm) {
+const findParentInsertPoint = function (toBlock, block) {
+  const parents = Traverse.parents(block, function (elm) {
     return Compare.eq(elm, toBlock);
   });
 
   return Option.from(parents[parents.length - 2]);
 };
 
-var getInsertionPoint = function (fromBlock, toBlock) {
+const getInsertionPoint = function (fromBlock, toBlock) {
   if (Compare.contains(toBlock, fromBlock)) {
     return Traverse.parent(fromBlock).bind(function (parent) {
       return Compare.eq(parent, toBlock) ? Option.some(fromBlock) : findParentInsertPoint(toBlock, fromBlock);
@@ -77,7 +77,7 @@ var getInsertionPoint = function (fromBlock, toBlock) {
   }
 };
 
-var mergeBlockInto = function (rootNode, fromBlock, toBlock) {
+const mergeBlockInto = function (rootNode, fromBlock, toBlock) {
   if (Empty.isEmpty(toBlock)) {
     Remove.remove(toBlock);
 
@@ -90,13 +90,13 @@ var mergeBlockInto = function (rootNode, fromBlock, toBlock) {
     trimBr(true, fromBlock);
     trimBr(false, toBlock);
 
-    var children = extractChildren(fromBlock);
+    const children = extractChildren(fromBlock);
 
     return getInsertionPoint(fromBlock, toBlock).fold(
       function () {
         removeEmptyRoot(rootNode, fromBlock);
 
-        var position = CaretFinder.lastPositionIn(toBlock.dom());
+        const position = CaretFinder.lastPositionIn(toBlock.dom());
 
         Arr.each(children, function (node) {
           Insert.append(toBlock, node);
@@ -105,7 +105,7 @@ var mergeBlockInto = function (rootNode, fromBlock, toBlock) {
         return position;
       },
       function (target) {
-        var position = CaretFinder.prevPosition(toBlock.dom(), CaretPosition.before(target.dom()));
+        const position = CaretFinder.prevPosition(toBlock.dom(), CaretPosition.before(target.dom()));
 
         Arr.each(children, function (node) {
           Insert.before(target, node);
@@ -119,10 +119,10 @@ var mergeBlockInto = function (rootNode, fromBlock, toBlock) {
   }
 };
 
-var mergeBlocks = function (rootNode, forward, block1, block2) {
+const mergeBlocks = function (rootNode, forward, block1, block2) {
   return forward ? mergeBlockInto(rootNode, block2, block1) : mergeBlockInto(rootNode, block1, block2);
 };
 
 export default {
-  mergeBlocks: mergeBlocks
+  mergeBlocks
 };

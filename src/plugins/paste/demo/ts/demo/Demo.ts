@@ -17,12 +17,12 @@ declare let tinymce: any;
 PastePlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "paste code",
-  toolbar: "undo redo | pastetext code",
-  init_instance_callback: function (editor) {
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'paste code',
+  toolbar: 'undo redo | pastetext code',
+  init_instance_callback (editor) {
     editor.on('PastePreProcess', function (evt) {
       console.log(evt);
     });

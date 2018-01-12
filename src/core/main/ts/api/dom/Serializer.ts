@@ -17,10 +17,8 @@ import DomSerializer from '../../dom/DomSerializer';
  * @class tinymce.dom.Serializer
  */
 
-
-
 export default function (settings, editor?) {
-  var domSerializer = DomSerializer(settings, editor);
+  const domSerializer = DomSerializer(settings, editor);
 
   // Return public methods
   return {
@@ -110,4 +108,4 @@ export default function (settings, editor?) {
      */
     getTempAttrs: domSerializer.getTempAttrs
   };
-};
+}

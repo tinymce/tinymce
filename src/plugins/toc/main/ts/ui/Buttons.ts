@@ -11,9 +11,9 @@
 import Settings from '../api/Settings';
 import Toc from '../core/Toc';
 
-var toggleState = function (editor) {
+const toggleState = function (editor) {
   return function (e) {
-    var ctrl = e.control;
+    const ctrl = e.control;
 
     editor.on('LoadContent SetContent change', function () {
       ctrl.disabled(editor.readonly || !Toc.hasHeaders(editor));
@@ -21,13 +21,13 @@ var toggleState = function (editor) {
   };
 };
 
-var isToc = function (editor) {
+const isToc = function (editor) {
   return function (elm) {
     return elm && editor.dom.is(elm, '.' + Settings.getTocClass(editor)) && editor.getBody().contains(elm);
   };
 };
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addButton('toc', {
     tooltip: 'Table of Contents',
     cmd: 'mceInsertToc',
@@ -42,7 +42,7 @@ var register = function (editor) {
   });
 
   editor.addMenuItem('toc', {
-    text: "Table of Contents",
+    text: 'Table of Contents',
     context: 'insert',
     cmd: 'mceInsertToc',
     onPostRender: toggleState(editor)
@@ -52,5 +52,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

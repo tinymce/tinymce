@@ -9,32 +9,31 @@
  */
 
 import Env from 'tinymce/core/Env';
-import PluginManager from 'tinymce/core/PluginManager';
 import Settings from '../api/Settings';
 
-var rangeEqualsDelimiterOrSpace = function (rangeString, delimiter) {
+const rangeEqualsDelimiterOrSpace = function (rangeString, delimiter) {
   return rangeString === delimiter || rangeString === ' ' || rangeString.charCodeAt(0) === 160;
 };
 
-var handleEclipse = function (editor) {
+const handleEclipse = function (editor) {
   parseCurrentLine(editor, -1, '(');
 };
 
-var handleSpacebar = function (editor) {
+const handleSpacebar = function (editor) {
   parseCurrentLine(editor, 0, '');
 };
 
-var handleEnter = function (editor) {
+const handleEnter = function (editor) {
   parseCurrentLine(editor, -1, '');
 };
 
-var scopeIndex = function (container, index) {
+const scopeIndex = function (container, index) {
   if (index < 0) {
     index = 0;
   }
 
   if (container.nodeType === 3) {
-    var len = container.data.length;
+    const len = container.data.length;
 
     if (index > len) {
       index = len;
@@ -44,7 +43,7 @@ var scopeIndex = function (container, index) {
   return index;
 };
 
-var setStart = function (rng, container, offset) {
+const setStart = function (rng, container, offset) {
   if (container.nodeType !== 1 || container.hasChildNodes()) {
     rng.setStart(container, scopeIndex(container, offset));
   } else {
@@ -52,7 +51,7 @@ var setStart = function (rng, container, offset) {
   }
 };
 
-var setEnd = function (rng, container, offset) {
+const setEnd = function (rng, container, offset) {
   if (container.nodeType !== 1 || container.hasChildNodes()) {
     rng.setEnd(container, scopeIndex(container, offset));
   } else {
@@ -60,10 +59,10 @@ var setEnd = function (rng, container, offset) {
   }
 };
 
-var parseCurrentLine = function (editor, endOffset, delimiter) {
-  var rng, end, start, endContainer, bookmark, text, matches, prev, len, rngText;
-  var autoLinkPattern = Settings.getAutoLinkPattern(editor);
-  var defaultLinkTarget = Settings.getDefaultLinkTarget(editor);
+const parseCurrentLine = function (editor, endOffset, delimiter) {
+  let rng, end, start, endContainer, bookmark, text, matches, prev, len, rngText;
+  const autoLinkPattern = Settings.getAutoLinkPattern(editor);
+  const defaultLinkTarget = Settings.getDefaultLinkTarget(editor);
 
   // Never create a link when we are inside a link
   if (editor.selection.getNode().tagName === 'A') {
@@ -172,10 +171,10 @@ var parseCurrentLine = function (editor, endOffset, delimiter) {
   }
 };
 
-var setup = function (editor) {
-  var autoUrlDetectState;
+const setup = function (editor) {
+  let autoUrlDetectState;
 
-  editor.on("keydown", function (e) {
+  editor.on('keydown', function (e) {
     if (e.keyCode === 13) {
       return handleEnter(editor);
     }
@@ -183,7 +182,7 @@ var setup = function (editor) {
 
   // Internet Explorer has built-in automatic linking for most cases
   if (Env.ie) {
-    editor.on("focus", function () {
+    editor.on('focus', function () {
       if (!autoUrlDetectState) {
         autoUrlDetectState = true;
 
@@ -198,13 +197,13 @@ var setup = function (editor) {
     return;
   }
 
-  editor.on("keypress", function (e) {
+  editor.on('keypress', function (e) {
     if (e.keyCode === 41) {
       return handleEclipse(editor);
     }
   });
 
-  editor.on("keyup", function (e) {
+  editor.on('keyup', function (e) {
     if (e.keyCode === 32) {
       return handleSpacebar(editor);
     }
@@ -212,5 +211,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

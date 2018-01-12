@@ -8,21 +8,21 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var trimPx = function (value) {
+const trimPx = function (value) {
   return value.replace(/px$/, '');
 };
 
-var addPx = function (value) {
+const addPx = function (value) {
   return /^[0-9.]+$/.test(value) ? (value + 'px') : value;
 };
 
-var getSize = function (name) {
+const getSize = function (name) {
   return function (elm) {
     return elm ? trimPx(elm.style[name]) : '';
   };
 };
 
-var setSize = function (name) {
+const setSize = function (name) {
   return function (elm, value) {
     if (elm) {
       elm.style[name] = addPx(value);

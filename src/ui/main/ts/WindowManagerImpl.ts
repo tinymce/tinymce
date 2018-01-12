@@ -11,11 +11,9 @@
 import Window from './Window';
 import MessageBox from './MessageBox';
 
-
-
-export default <any> function (editor) {
-  var open = function (args, params, closeCallback) {
-    var win;
+export default function (editor) {
+  const open = function (args, params, closeCallback) {
+    let win;
 
     args.title = args.title || ' ';
 
@@ -40,13 +38,13 @@ export default <any> function (editor) {
     if (!args.url && !args.buttons) {
       args.buttons = [
         {
-          text: 'Ok', subtype: 'primary', onclick: function () {
+          text: 'Ok', subtype: 'primary', onclick () {
             win.find('form')[0].submit();
           }
         },
 
         {
-          text: 'Cancel', onclick: function () {
+          text: 'Cancel', onclick () {
             win.close();
           }
         }
@@ -63,7 +61,7 @@ export default <any> function (editor) {
     if (args.data) {
       win.on('postRender', function () {
         this.find('*').each(function (ctrl) {
-          var name = ctrl.name();
+          const name = ctrl.name();
 
           if (name in args.data) {
             ctrl.value(args.data[name]);
@@ -81,8 +79,8 @@ export default <any> function (editor) {
     return win;
   };
 
-  var alert = function (message, choiceCallback, closeCallback) {
-    var win;
+  const alert = function (message, choiceCallback, closeCallback) {
+    let win;
 
     win = MessageBox.alert(message, function () {
       choiceCallback();
@@ -95,8 +93,8 @@ export default <any> function (editor) {
     return win;
   };
 
-  var confirm = function (message, choiceCallback, closeCallback) {
-    var win;
+  const confirm = function (message, choiceCallback, closeCallback) {
+    let win;
 
     win = MessageBox.confirm(message, function (state) {
       choiceCallback(state);
@@ -109,24 +107,24 @@ export default <any> function (editor) {
     return win;
   };
 
-  var close = function (window) {
+  const close = function (window) {
     window.close();
   };
 
-  var getParams = function (window) {
+  const getParams = function (window) {
     return window.params;
   };
 
-  var setParams = function (window, params) {
+  const setParams = function (window, params) {
     window.params = params;
   };
 
   return {
-    open: open,
-    alert: alert,
-    confirm: confirm,
-    close: close,
-    getParams: getParams,
-    setParams: setParams
+    open,
+    alert,
+    confirm,
+    close,
+    getParams,
+    setParams
   };
-};
+}

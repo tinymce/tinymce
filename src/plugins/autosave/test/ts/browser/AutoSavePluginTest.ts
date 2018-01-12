@@ -5,15 +5,15 @@ import Plugin from 'tinymce/plugins/autosave/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
 
-  suite.test("isEmpty true", function (editor) {
+  suite.test('isEmpty true', function (editor) {
     LegacyUnit.equal(editor.plugins.autosave.isEmpty(''), true);
     LegacyUnit.equal(editor.plugins.autosave.isEmpty('   '), true);
     LegacyUnit.equal(editor.plugins.autosave.isEmpty('\t\t\t'), true);
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', functi
     LegacyUnit.equal(editor.plugins.autosave.isEmpty('<p><br data-mce-bogus="true" /><br data-mce-bogus="true" /></p>'), true);
   });
 
-  suite.test("isEmpty false", function (editor) {
+  suite.test('isEmpty false', function (editor) {
     LegacyUnit.equal(editor.plugins.autosave.isEmpty('X'), false);
     LegacyUnit.equal(editor.plugins.autosave.isEmpty('   X'), false);
     LegacyUnit.equal(editor.plugins.autosave.isEmpty('\t\t\tX'), false);
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', functi
     LegacyUnit.equal(editor.plugins.autosave.isEmpty('<img src="x" />'), false);
   });
 
-  suite.test("hasDraft/storeDraft/restoreDraft", function (editor) {
+  suite.test('hasDraft/storeDraft/restoreDraft', function (editor) {
     LegacyUnit.equal(editor.plugins.autosave.hasDraft(), false);
 
     editor.setContent('X');
@@ -70,18 +70,18 @@ UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', functi
     editor.plugins.autosave.removeDraft();
   });
 
-  suite.test("recognises location hash change", function (editor) {
+  suite.test('recognises location hash change', function (editor) {
     LegacyUnit.equal(editor.plugins.autosave.hasDraft(), false);
 
     editor.setContent('X');
     editor.undoManager.add();
     editor.plugins.autosave.storeDraft();
 
-    window.location.hash = "test";
+    window.location.hash = 'test';
 
     LegacyUnit.equal(editor.plugins.autosave.hasDraft(), false);
 
-    history.replaceState("", document.title, window.location.pathname + window.location.search);
+    history.replaceState('', document.title, window.location.pathname + window.location.search);
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
@@ -92,4 +92,3 @@ UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', functi
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

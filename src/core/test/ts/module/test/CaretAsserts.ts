@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-var assertCaretPosition = function (actual, expected, message) {
+const assertCaretPosition = function (actual, expected, message?) {
   if (expected === null) {
     LegacyUnit.strictEqual(actual, expected, message || 'Expected null.');
     return;
@@ -16,15 +16,15 @@ var assertCaretPosition = function (actual, expected, message) {
   Assertions.assertEq(message, true, expected.isEqual(actual));
 };
 
-var assertRange = function (expected, actual) {
+const assertRange = function (expected, actual) {
   Assertions.assertEq('startContainers should be equal', true, expected.startContainer === actual.startContainer);
   Assertions.assertEq('startOffset should be equal', true, expected.startOffset === actual.startOffset);
   Assertions.assertEq('endContainer should be equal', true, expected.endContainer === actual.endContainer);
   Assertions.assertEq('endOffset should be equal', true, expected.endOffset === actual.endOffset);
 };
 
-var createRange = function (startContainer, startOffset, endContainer, endOffset) {
-  var rng = DOMUtils.DOM.createRng();
+const createRange = function (startContainer, startOffset, endContainer?, endOffset?) {
+  const rng = DOMUtils.DOM.createRng();
 
   rng.setStart(startContainer, startOffset);
 
@@ -35,8 +35,8 @@ var createRange = function (startContainer, startOffset, endContainer, endOffset
   return rng;
 };
 
-export default <any> {
-  createRange: createRange,
-  assertCaretPosition: assertCaretPosition,
-  assertRange: assertRange
+export default {
+  createRange,
+  assertCaretPosition,
+  assertRange
 };

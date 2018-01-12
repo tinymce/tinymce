@@ -11,8 +11,8 @@
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Convert from './Convert';
 
-var toAbsolute = function (rect) {
-  var vp = DOMUtils.DOM.getViewPort();
+const toAbsolute = function (rect) {
+  const vp = DOMUtils.DOM.getViewPort();
 
   return {
     x: rect.x + vp.x,
@@ -22,8 +22,8 @@ var toAbsolute = function (rect) {
   };
 };
 
-var measureElement = function (elm) {
-  var clientRect = elm.getBoundingClientRect();
+const measureElement = function (elm) {
+  const clientRect = elm.getBoundingClientRect();
 
   return toAbsolute({
     x: clientRect.left,
@@ -33,26 +33,26 @@ var measureElement = function (elm) {
   });
 };
 
-var getElementRect = function (editor, elm) {
+const getElementRect = function (editor, elm) {
   return measureElement(elm);
 };
 
-var getPageAreaRect = function (editor) {
+const getPageAreaRect = function (editor) {
   return measureElement(editor.getElement().ownerDocument.body);
 };
 
-var getContentAreaRect = function (editor) {
+const getContentAreaRect = function (editor) {
   return measureElement(editor.getContentAreaContainer() || editor.getBody());
 };
 
-var getSelectionRect = function (editor) {
-  var clientRect = editor.selection.getBoundingClientRect();
+const getSelectionRect = function (editor) {
+  const clientRect = editor.selection.getBoundingClientRect();
   return clientRect ? toAbsolute(Convert.fromClientRect(clientRect)) : null;
 };
 
-export default <any> {
-  getElementRect: getElementRect,
-  getPageAreaRect: getPageAreaRect,
-  getContentAreaRect: getContentAreaRect,
-  getSelectionRect: getSelectionRect
+export default {
+  getElementRect,
+  getPageAreaRect,
+  getContentAreaRect,
+  getSelectionRect
 };

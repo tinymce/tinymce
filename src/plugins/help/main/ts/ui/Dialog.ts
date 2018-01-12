@@ -8,12 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import EditorManager from 'tinymce/core/EditorManager';
 import KeyboardShortcutsTab from './KeyboardShortcutsTab';
 import PluginsTab from './PluginsTab';
 import ButtonsRow from './ButtonsRow';
 
-var open = function (editor, pluginUrl) {
+const open = function (editor, pluginUrl) {
   return function () {
     editor.windowManager.open({
       title: 'Help',
@@ -24,8 +23,8 @@ var open = function (editor, pluginUrl) {
         PluginsTab.makeTab(editor)
       ],
       buttons: ButtonsRow.makeRow(),
-      onPostRender: function () {
-        var title = this.getEl('title');
+      onPostRender () {
+        const title = this.getEl('title');
         title.innerHTML = '<img src="' + pluginUrl + '/img/logo.png" alt="TinyMCE Logo" style="display: inline-block; width: 200px; height: 50px">';
       }
     });
@@ -33,5 +32,5 @@ var open = function (editor, pluginUrl) {
 };
 
 export default {
-  open: open
+  open
 };

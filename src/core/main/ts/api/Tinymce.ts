@@ -57,76 +57,76 @@ import URI from '../util/URI';
 import VK from '../util/VK';
 import XHR from '../util/XHR';
 
-var tinymce = EditorManager;
+let tinymce = EditorManager;
 
 /**
  * @include ../../../../../../tools/docs/tinymce.js
  */
-var publicApi = {
+const publicApi = {
   geom: {
-    Rect: Rect
+    Rect
   },
 
   util: {
-    Promise: Promise,
-    Delay: Delay,
-    Tools: Tools,
-    VK: VK,
-    URI: URI,
-    Class: Class,
-    EventDispatcher: EventDispatcher,
-    Observable: Observable,
-    I18n: I18n,
-    XHR: XHR,
-    JSON: JSON,
-    JSONRequest: JSONRequest,
-    JSONP: JSONP,
-    LocalStorage: LocalStorage,
-    Color: Color
+    Promise,
+    Delay,
+    Tools,
+    VK,
+    URI,
+    Class,
+    EventDispatcher,
+    Observable,
+    I18n,
+    XHR,
+    JSON,
+    JSONRequest,
+    JSONP,
+    LocalStorage,
+    Color
   },
 
   dom: {
-    EventUtils: EventUtils,
-    Sizzle: Sizzle,
-    DomQuery: DomQuery,
-    TreeWalker: TreeWalker,
-    DOMUtils: DOMUtils,
-    ScriptLoader: ScriptLoader,
-    RangeUtils: RangeUtils,
+    EventUtils,
+    Sizzle,
+    DomQuery,
+    TreeWalker,
+    DOMUtils,
+    ScriptLoader,
+    RangeUtils,
     Serializer: DomSerializer,
-    ControlSelection: ControlSelection,
-    BookmarkManager: BookmarkManager,
-    Selection: Selection,
+    ControlSelection,
+    BookmarkManager,
+    Selection,
     Event: EventUtils.Event
   },
 
   html: {
-    Styles: Styles,
-    Entities: Entities,
-    Node: Node,
-    Schema: Schema,
-    SaxParser: SaxParser,
-    DomParser: DomParser,
-    Writer: Writer,
+    Styles,
+    Entities,
+    Node,
+    Schema,
+    SaxParser,
+    DomParser,
+    Writer,
     Serializer: HtmlSerializer
   },
 
   ui: {
-    Factory: Factory
+    Factory
   },
 
-  Env: Env,
-  AddOnManager: AddOnManager,
-  Formatter: Formatter,
-  UndoManager: UndoManager,
-  EditorCommands: EditorCommands,
-  WindowManager: WindowManager,
-  NotificationManager: NotificationManager,
-  EditorObservable: EditorObservable,
-  Shortcuts: Shortcuts,
-  Editor: Editor,
-  FocusManager: FocusManager,
-  EditorManager: EditorManager,
+  Env,
+  AddOnManager,
+  Formatter,
+  UndoManager,
+  EditorCommands,
+  WindowManager,
+  NotificationManager,
+  EditorObservable,
+  Shortcuts,
+  Editor,
+  FocusManager,
+  EditorManager,
 
   // Global instances
   DOM: DOMUtils.DOM,

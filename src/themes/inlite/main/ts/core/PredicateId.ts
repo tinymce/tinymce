@@ -10,21 +10,21 @@
 
 import Tools from 'tinymce/core/util/Tools';
 
-var create = function (id, predicate) {
+const create = function (id, predicate) {
   return {
-    id: id,
-    predicate: predicate
+    id,
+    predicate
   };
 };
 
 // fromContextToolbars :: [ContextToolbar] -> [PredicateId]
-var fromContextToolbars = function (toolbars) {
+const fromContextToolbars = function (toolbars) {
   return Tools.map(toolbars, function (toolbar) {
     return create(toolbar.id, toolbar.predicate);
   });
 };
 
-export default <any> {
-  create: create,
-  fromContextToolbars: fromContextToolbars
+export default {
+  create,
+  fromContextToolbars
 };

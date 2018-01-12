@@ -18,14 +18,14 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   TablePlugin();
 
-  var sDragDrop = function (container, selector, dx, dy) {
+  const sDragDrop = function (container, selector, dx, dy) {
     return Chain.asStep(container, [
       UiFinder.cFindIn(selector),
       Mouse.cMouseDown,
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function() {
     ]);
   };
 
-  var sDragDropBlocker = function (container, selector, dx, dy) {
+  const sDragDropBlocker = function (container, selector, dx, dy) {
     return Chain.asStep({}, [
       Chain.fromParent(Chain.inject(container), [
         Chain.fromChains([
@@ -51,20 +51,20 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function() {
     ]);
   };
 
-  var sMouseover = function (container, selector) {
+  const sMouseover = function (container, selector) {
     return Chain.asStep(container, [
       UiFinder.cFindIn(selector),
       Mouse.cMouseOver
     ]);
   };
 
-  var state = Cell(null);
+  const state = Cell(null);
 
-  var sSetStateFrom = function (editor, path) {
+  const sSetStateFrom = function (editor, path) {
     return Step.sync(function () {
-      var element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
-      var height = Height.get(element);
-      var width = Width.get(element);
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
+      const height = Height.get(element);
+      const width = Width.get(element);
 
       state.set({
         h: height,
@@ -73,29 +73,29 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function() {
     });
   };
 
-  var sResetState = Step.sync(function () {
+  const sResetState = Step.sync(function () {
     state.set(null);
   });
 
-  var looseEqual = function (exp, act, loose) {
+  const looseEqual = function (exp, act, loose) {
     return Math.abs(exp - act) <= loose;
   };
 
-  var sAssertSizeChange = function (editor, path, change) {
+  const sAssertSizeChange = function (editor, path, change) {
     return Step.sync(function () {
-      var element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
-      var height = Height.get(element);
-      var width = Width.get(element);
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
+      const height = Height.get(element);
+      const width = Width.get(element);
 
-      var changedHeight = state.get().h + change.dh;
-      var changedWidth = state.get().w + change.dw;
+      const changedHeight = state.get().h + change.dh;
+      const changedWidth = state.get().w + change.dw;
 
       Assertions.assertEq('height has changed as expected', true, looseEqual(changedHeight, height, 2));
       Assertions.assertEq('width has changed as expected', true, looseEqual(changedWidth, width, 2));
     });
   };
 
-  var tableHtml = '<table style="border-collapse: collapse; width: 367px; height: 90px;" border="1">' +
+  const tableHtml = '<table style="border-collapse: collapse; width: 367px; height: 90px;" border="1">' +
                     '<tbody>' +
                       '<tr>' +
                         '<td style="width: 180px;">a</td>' +
@@ -108,7 +108,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function() {
                     '</tbody>' +
                   '</table>';
 
-  var sWaitForSelection = function (editor, tinyApis) {
+  const sWaitForSelection = function (editor, tinyApis) {
     return GeneralSteps.sequence([
       tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
       Waiter.sTryUntil(
@@ -120,7 +120,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
     Pipeline.async({}, [
       tinyApis.sFocus,
 
@@ -239,4 +239,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

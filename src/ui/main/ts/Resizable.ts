@@ -16,15 +16,13 @@ import DomUtils from './DomUtils';
  * @mixin tinymce.ui.Resizable
  */
 
-"use strict";
-
-export default <any> {
+export default {
   /**
    * Resizes the control to contents.
    *
    * @method resizeToContent
    */
-  resizeToContent: function () {
+  resizeToContent () {
     this._layoutRect.autoResize = true;
     this._lastRect = null;
     this.reflow();
@@ -38,17 +36,17 @@ export default <any> {
    * @param {Number} h Control height.
    * @return {tinymce.ui.Control} Current control instance.
    */
-  resizeTo: function (w, h) {
+  resizeTo (w, h) {
     // TODO: Fix hack
     if (w <= 1 || h <= 1) {
-      var rect = DomUtils.getWindowSize();
+      const rect = DomUtils.getWindowSize();
 
       w = w <= 1 ? w * rect.w : w;
       h = h <= 1 ? h * rect.h : h;
     }
 
     this._layoutRect.autoResize = false;
-    return this.layoutRect({ minW: w, minH: h, w: w, h: h }).reflow();
+    return this.layoutRect({ minW: w, minH: h, w, h }).reflow();
   },
 
   /**
@@ -59,8 +57,8 @@ export default <any> {
    * @param {Number} dh Relative control height.
    * @return {tinymce.ui.Control} Current control instance.
    */
-  resizeBy: function (dw, dh) {
-    var self = this, rect = self.layoutRect();
+  resizeBy (dw, dh) {
+    const self = this, rect = self.layoutRect();
 
     return self.resizeTo(rect.w + dw, rect.h + dh);
   }

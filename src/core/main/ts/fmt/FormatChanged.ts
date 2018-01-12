@@ -8,20 +8,20 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Cell } from '@ephox/katamari';
 import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 import Tools from '../util/Tools';
 
-var each = Tools.each;
+const each = Tools.each;
 
-var setup = function (formatChangeData, editor) {
-  var currentFormats = {};
+const setup = function (formatChangeData, editor) {
+  const currentFormats = {};
 
   formatChangeData.set({});
 
   editor.on('NodeChange', function (e) {
-    var parents = FormatUtils.getParents(editor.dom, e.element), matchedFormats = {};
+    let parents = FormatUtils.getParents(editor.dom, e.element);
+    const matchedFormats = {};
 
     // Ignore bogus nodes like the <a> tag created by moveStart()
     parents = Tools.grep(parents, function (node) {
@@ -35,7 +35,7 @@ var setup = function (formatChangeData, editor) {
           if (!currentFormats[format]) {
             // Execute callbacks
             each(callbacks, function (callback) {
-              callback(true, { node: node, format: format, parents: parents });
+              callback(true, { node, format, parents });
             });
 
             currentFormats[format] = callbacks;
@@ -57,15 +57,15 @@ var setup = function (formatChangeData, editor) {
         delete currentFormats[format];
 
         each(callbacks, function (callback) {
-          callback(false, { node: e.element, format: format, parents: parents });
+          callback(false, { node: e.element, format, parents });
         });
       }
     });
   });
 };
 
-var addListeners = function (formatChangeData, formats, callback, similar) {
-  var formatChangeItems = formatChangeData.get();
+const addListeners = function (formatChangeData, formats, callback, similar) {
+  const formatChangeItems = formatChangeData.get();
 
   each(formats.split(','), function (format) {
     if (!formatChangeItems[format]) {
@@ -79,7 +79,7 @@ var addListeners = function (formatChangeData, formats, callback, similar) {
   formatChangeData.set(formatChangeItems);
 };
 
-var formatChanged = function (editor, formatChangeState, formats, callback, similar) {
+const formatChanged = function (editor, formatChangeState, formats, callback, similar) {
   if (formatChangeState.get() === null) {
     setup(formatChangeState, editor);
   }
@@ -88,5 +88,5 @@ var formatChanged = function (editor, formatChangeState, formats, callback, simi
 };
 
 export default {
-  formatChanged: formatChanged
+  formatChanged
 };

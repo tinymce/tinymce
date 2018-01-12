@@ -9,43 +9,42 @@
  */
 
 import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
-import tinymce from 'tinymce/core/EditorManager';
 import I18n from 'tinymce/core/util/I18n';
 import PluginUrls from '../data/PluginUrls';
 
-var makeLink = Fun.curry(Strings.supplant, '<a href="${url}" target="_blank" rel="noopener">${name}</a>');
+const makeLink = Fun.curry(Strings.supplant, '<a href="${url}" target="_blank" rel="noopener">${name}</a>');
 
-var maybeUrlize = function (editor, key) {
+const maybeUrlize = function (editor, key) {
   return Arr.find(PluginUrls.urls, function (x) {
     return x.key === key;
   }).fold(function () {
-    var getMetadata = editor.plugins[key].getMetadata;
+    const getMetadata = editor.plugins[key].getMetadata;
     return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
   }, function (x) {
     return makeLink({ name: x.name, url: 'https://www.tinymce.com/docs/plugins/' + x.key });
   });
 };
 
-var getPluginKeys = function (editor) {
-  var keys = Obj.keys(editor.plugins);
+const getPluginKeys = function (editor) {
+  const keys = Obj.keys(editor.plugins);
   return editor.settings.forced_plugins === undefined ?
     keys :
     Arr.filter(keys, Fun.not(Fun.curry(Arr.contains, editor.settings.forced_plugins)));
 };
 
-var pluginLister = function (editor) {
-  var pluginKeys = getPluginKeys(editor);
-  var pluginLis = Arr.map(pluginKeys, function (key) {
+const pluginLister = function (editor) {
+  const pluginKeys = getPluginKeys(editor);
+  const pluginLis = Arr.map(pluginKeys, function (key) {
     return '<li>' + maybeUrlize(editor, key) + '</li>';
   });
-  var count = pluginLis.length;
-  var pluginsString = pluginLis.join('');
+  const count = pluginLis.length;
+  const pluginsString = pluginLis.join('');
 
   return '<p><b>' + I18n.translate(['Plugins installed ({0}):', count ]) + '</b></p>' +
           '<ul>' + pluginsString + '</ul>';
 };
 
-var installedPlugins = function (editor) {
+const installedPlugins = function (editor) {
   return {
     type: 'container',
     html: '<div style="overflow-y: auto; overflow-x: hidden; max-height: 230px; height: 230px;" data-mce-tabstop="1" tabindex="-1">' +
@@ -55,7 +54,7 @@ var installedPlugins = function (editor) {
   };
 };
 
-var availablePlugins = function () {
+const availablePlugins = function () {
   return {
     type: 'container',
     html: '<div style="padding: 10px; background: #e3e7f4; height: 100%;" data-mce-tabstop="1" tabindex="-1">' +
@@ -74,7 +73,7 @@ var availablePlugins = function () {
   };
 };
 
-var makeTab = function (editor) {
+const makeTab = function (editor) {
   return {
     title: 'Plugins',
     type: 'container',
@@ -90,5 +89,5 @@ var makeTab = function (editor) {
 };
 
 export default {
-  makeTab: makeTab
+  makeTab
 };

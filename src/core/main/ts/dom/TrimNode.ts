@@ -3,13 +3,13 @@ import ElementType from './ElementType';
 import NodeType from './NodeType';
 import Tools from '../util/Tools';
 
-var surroundedBySpans = function (node) {
-  var previousIsSpan = node.previousSibling && node.previousSibling.nodeName === 'SPAN';
-  var nextIsSpan = node.nextSibling && node.nextSibling.nodeName === 'SPAN';
+const surroundedBySpans = function (node) {
+  const previousIsSpan = node.previousSibling && node.previousSibling.nodeName === 'SPAN';
+  const nextIsSpan = node.nextSibling && node.nextSibling.nodeName === 'SPAN';
   return previousIsSpan && nextIsSpan;
 };
 
-var isBookmarkNode = function (node) {
+const isBookmarkNode = function (node) {
   return node && node.tagName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
 };
 
@@ -21,8 +21,8 @@ var isBookmarkNode = function (node) {
 //   <p>text 1<span></span></p><b>CHOP</b><p><span></span>text 2</p>
 // this function will then trim off empty edges and produce:
 //   <p>text 1</p><b>CHOP</b><p>text 2</p>
-var trimNode = function (dom, node) {
-  var i, children = node.childNodes;
+const trimNode = function (dom, node) {
+  let i, children = node.childNodes;
 
   if (NodeType.isElement(node) && isBookmarkNode(node)) {
     return;
@@ -36,7 +36,7 @@ var trimNode = function (dom, node) {
     // Keep non whitespace text nodes
     if (NodeType.isText(node) && node.nodeValue.length > 0) {
       // Keep if parent element is a block or if there is some useful content
-      var trimmedLength = Tools.trim(node.nodeValue).length;
+      const trimmedLength = Tools.trim(node.nodeValue).length;
       if (dom.isBlock(node.parentNode) || trimmedLength > 0) {
         return;
       }
@@ -65,5 +65,5 @@ var trimNode = function (dom, node) {
 };
 
 export default {
-  trimNode: trimNode
+  trimNode
 };

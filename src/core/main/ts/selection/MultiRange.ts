@@ -12,11 +12,11 @@ import { Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import RangeNodes from './RangeNodes';
 
-var getRanges = function (selection) {
-  var ranges = [];
+const getRanges = function (selection) {
+  const ranges = [];
 
   if (selection) {
-    for (var i = 0; i < selection.rangeCount; i++) {
+    for (let i = 0; i < selection.rangeCount; i++) {
       ranges.push(selection.getRangeAt(i));
     }
   }
@@ -24,19 +24,19 @@ var getRanges = function (selection) {
   return ranges;
 };
 
-var getSelectedNodes = function (ranges) {
+const getSelectedNodes = function (ranges) {
   return Arr.bind(ranges, function (range) {
-    var node = RangeNodes.getSelectedNode(range);
+    const node = RangeNodes.getSelectedNode(range);
     return node ? [ Element.fromDom(node) ] : [];
   });
 };
 
-var hasMultipleRanges = function (selection) {
+const hasMultipleRanges = function (selection) {
   return getRanges(selection).length > 1;
 };
 
 export default {
-  getRanges: getRanges,
-  getSelectedNodes: getSelectedNodes,
-  hasMultipleRanges: hasMultipleRanges
+  getRanges,
+  getSelectedNodes,
+  hasMultipleRanges
 };

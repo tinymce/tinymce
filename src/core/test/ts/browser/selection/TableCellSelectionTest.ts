@@ -1,39 +1,35 @@
 import { Assertions } from '@ephox/agar';
 import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
 import { Hierarchy } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
-import FragmentReader from 'tinymce/core/selection/FragmentReader';
 import TableCellSelection from 'tinymce/core/selection/TableCellSelection';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var viewBlock = ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const viewBlock = ViewBlock();
 
-  var cSetHtml = function (html) {
+  const cSetHtml = function (html) {
     return Chain.op(function () {
       viewBlock.update(html);
     });
   };
 
-  var cGetCellsFromElement = Chain.mapper(function (viewBlock) {
+  const cGetCellsFromElement = Chain.mapper(function (viewBlock) {
     return TableCellSelection.getCellsFromElement(Element.fromDom(viewBlock.get()));
   });
 
-  var cGetCellsFromRanges = function (paths) {
+  const cGetCellsFromRanges = function (paths) {
     return Chain.mapper(function (viewBlock) {
-      var ranges = Arr.map(paths, function (path) {
-        var container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
-        var rng = document.createRange();
+      const ranges = Arr.map(paths, function (path) {
+        const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+        const rng = document.createRange();
         rng.selectNode(container.dom());
         return rng;
       });
@@ -42,9 +38,9 @@ UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', func
     });
   };
 
-  var cAssertCellContents = function (expectedContents) {
+  const cAssertCellContents = function (expectedContents) {
     return Chain.op(function (cells) {
-      var actualContents = Arr.map(cells, Html.get);
+      const actualContents = Arr.map(cells, Html.get);
       Assertions.assertEq('Should be expected cell contents', expectedContents, actualContents);
     });
   };
@@ -66,4 +62,3 @@ UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', func
     success();
   }, failure);
 });
-

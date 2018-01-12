@@ -15,10 +15,10 @@ declare let tinymce: any;
 HrPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "hr code",
-  toolbar: "hr code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'hr code',
+  toolbar: 'hr code',
   height: 600
 });

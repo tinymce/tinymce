@@ -20,8 +20,8 @@ import ClientRect from '../geom/ClientRect';
  * @class tinymce.dom.Dimensions
  */
 
-var getClientRects = function (node) {
-  var toArrayWithNode = function (clientRects) {
+const getClientRects = function (node) {
+  const toArrayWithNode = function (clientRects) {
     return Arr.map(clientRects, function (clientRect) {
       clientRect = ClientRect.clone(clientRect);
       clientRect.node = node;
@@ -41,7 +41,7 @@ var getClientRects = function (node) {
   }
 
   if (NodeType.isText(node)) {
-    var rng = node.ownerDocument.createRange();
+    const rng = node.ownerDocument.createRange();
 
     rng.setStart(node, 0);
     rng.setEnd(node, node.data.length);
@@ -58,5 +58,5 @@ export default {
    * @param {Array/DOMNode} node Node or array of nodes to get client rects on.
    * @param {Array} Array of client rects with a extra node property.
    */
-  getClientRects: getClientRects
+  getClientRects
 };

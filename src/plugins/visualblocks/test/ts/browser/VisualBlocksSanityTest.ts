@@ -9,16 +9,16 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.visualblocks.VisualBlocksSanityTest',
-  function() {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+  function () {
+    const success = arguments[arguments.length - 2];
+    const failure = arguments[arguments.length - 1];
 
     ModernTheme();
     VisualBlocksPlugin();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyUi = TinyUi(editor);
-      var tinyApis = TinyApis(editor);
+      const tinyUi = TinyUi(editor);
+      const tinyApis = TinyApis(editor);
       Pipeline.async({}, [
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str, arr) {
           return s.element('body', {
@@ -51,4 +51,3 @@ UnitTest.asynctest(
     }, success, failure);
   }
 );
-

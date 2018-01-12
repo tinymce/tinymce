@@ -14,19 +14,19 @@ import XHR from 'tinymce/core/util/XHR';
 import Settings from '../api/Settings';
 import Utils from '../core/Utils';
 
-var attachState = {};
+let attachState = {};
 
-var createLinkList = function (editor, callback) {
-  var linkList = Settings.getLinkList(editor.settings);
+const createLinkList = function (editor, callback) {
+  const linkList = Settings.getLinkList(editor.settings);
 
-  if (typeof linkList === "string") {
+  if (typeof linkList === 'string') {
     XHR.send({
       url: linkList,
-      success: function (text) {
+      success (text) {
         callback(editor, JSON.parse(text));
       }
     });
-  } else if (typeof linkList === "function") {
+  } else if (typeof linkList === 'function') {
     linkList(function (list) {
       callback(editor, list);
     });
@@ -35,12 +35,12 @@ var createLinkList = function (editor, callback) {
   }
 };
 
-var buildListItems = function (inputList, itemCallback?, startItems?) {
-  var appendItems = function (values, output?) {
+const buildListItems = function (inputList, itemCallback?, startItems?) {
+  const appendItems = function (values, output?) {
     output = output || [];
 
     Tools.each(values, function (item) {
-      var menuItem: any = { text: item.text || item.title };
+      const menuItem: any = { text: item.text || item.title };
 
       if (item.menu) {
         menuItem.menu = appendItems(item.menu);
@@ -62,8 +62,8 @@ var buildListItems = function (inputList, itemCallback?, startItems?) {
 };
 
 // Delay confirm since onSubmit will move focus
-var delayedConfirm = function (editor, message, callback) {
-  var rng = editor.selection.getRng();
+const delayedConfirm = function (editor, message, callback) {
+  const rng = editor.selection.getRng();
 
   Delay.setEditorTimeout(editor, function () {
     editor.windowManager.confirm(message, function (state) {
@@ -73,12 +73,15 @@ var delayedConfirm = function (editor, message, callback) {
   });
 };
 
-var showDialog = function (editor, linkList) {
-  var data: any = {}, selection = editor.selection, dom = editor.dom, anchorElm, initialText;
-  var win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, value;
+const showDialog = function (editor, linkList) {
+  const data: any = {};
+  const selection = editor.selection;
+  const dom = editor.dom;
+  let anchorElm, initialText;
+  let win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, value;
 
-  var linkListChangeHandler = function (e) {
-    var textCtrl = win.find('#text');
+  const linkListChangeHandler = function (e) {
+    const textCtrl = win.find('#text');
 
     if (!textCtrl.value() || (e.lastControl && textCtrl.value() === e.lastControl.text())) {
       textCtrl.value(e.control.text());
@@ -87,11 +90,11 @@ var showDialog = function (editor, linkList) {
     win.find('#href').value(e.control.value());
   };
 
-  var buildAnchorListControl = function (url) {
-    var anchorList = [];
+  const buildAnchorListControl = function (url) {
+    const anchorList = [];
 
     Tools.each(editor.dom.select('a:not([href])'), function (anchor) {
-      var id = anchor.name || anchor.id;
+      const id = anchor.name || anchor.id;
 
       if (id) {
         anchorList.push({
@@ -115,21 +118,21 @@ var showDialog = function (editor, linkList) {
     }
   };
 
-  var updateText = function () {
+  const updateText = function () {
     if (!initialText && onlyText && !data.text) {
       this.parent().parent().find('#text')[0].value(this.value());
     }
   };
 
-  var urlChange = function (e) {
-    var meta = e.meta || {};
+  const urlChange = function (e) {
+    const meta = e.meta || {};
 
     if (linkListCtrl) {
       linkListCtrl.value(editor.convertURL(this.value(), 'href'));
     }
 
     Tools.each(e.meta, function (value, key) {
-      var inp = win.find('#' + key);
+      const inp = win.find('#' + key);
 
       if (key === 'text') {
         if (initialText.length === 0) {
@@ -153,7 +156,7 @@ var showDialog = function (editor, linkList) {
     }
   };
 
-  var onBeforeCall = function (e) {
+  const onBeforeCall = function (e) {
     e.meta = win.toJSON();
   };
 
@@ -174,7 +177,7 @@ var showDialog = function (editor, linkList) {
   }
 
   if ((value = dom.getAttrib(anchorElm, 'class'))) {
-    data['class'] = value;
+    data.class = value;
   }
 
   if ((value = dom.getAttrib(anchorElm, 'title'))) {
@@ -187,7 +190,7 @@ var showDialog = function (editor, linkList) {
       type: 'textbox',
       size: 40,
       label: 'Text to display',
-      onchange: function () {
+      onchange () {
         data.text = this.value();
       }
     };
@@ -206,7 +209,7 @@ var showDialog = function (editor, linkList) {
       ),
       onselect: linkListChangeHandler,
       value: editor.convertURL(data.href, 'href'),
-      onPostRender: function () {
+      onPostRender () {
         /*eslint consistent-this:0*/
         linkListCtrl = this;
       }
@@ -274,7 +277,7 @@ var showDialog = function (editor, linkList) {
 
   win = editor.windowManager.open({
     title: 'Insert link',
-    data: data,
+    data,
     body: [
       {
         name: 'href',
@@ -295,14 +298,14 @@ var showDialog = function (editor, linkList) {
       targetListCtrl,
       classListCtrl
     ],
-    onSubmit: function (e) {
-      var assumeExternalTargets = Settings.assumeExternalTargets(editor.settings);
-      var insertLink = Utils.link(editor, attachState);
-      var removeLink = Utils.unlink(editor);
+    onSubmit (e) {
+      const assumeExternalTargets = Settings.assumeExternalTargets(editor.settings);
+      const insertLink = Utils.link(editor, attachState);
+      const removeLink = Utils.unlink(editor);
 
-      var resultData = Tools.extend({}, data, e.data);
+      const resultData = Tools.extend({}, data, e.data);
       /*eslint dot-notation: 0*/
-      var href = resultData.href;
+      const href = resultData.href;
 
       if (!href) {
         removeLink();
@@ -349,10 +352,10 @@ var showDialog = function (editor, linkList) {
   });
 };
 
-var open = function (editor) {
+const open = function (editor) {
   createLinkList(editor, showDialog);
 };
 
 export default {
-  open: open
+  open
 };

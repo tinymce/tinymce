@@ -8,22 +8,22 @@ import DefaultStyleFormats from '../features/DefaultStyleFormats';
 import StylesMenu from '../ui/StylesMenu';
 import StyleConversions from './StyleConversions';
 
-var register = function (editor, settings) {
+const register = function (editor, settings) {
 
-  var isSelectedFor = function (format) {
+  const isSelectedFor = function (format) {
     return function () {
       return editor.formatter.match(format);
     };
   };
 
-  var getPreview = function (format) {
+  const getPreview = function (format) {
     return function () {
-      var styles = editor.formatter.getCssText(format);
+      const styles = editor.formatter.getCssText(format);
       return styles;
     };
   };
 
-  var enrichSupported = function (item) {
+  const enrichSupported = function (item) {
     return Merger.deepMerge(item, {
       isSelected: isSelectedFor(item.format),
       getPreview: getPreview(item.format)
@@ -31,16 +31,16 @@ var register = function (editor, settings) {
   };
 
   // Item that triggers a submenu
-  var enrichMenu = function (item) {
+  const enrichMenu = function (item) {
     return Merger.deepMerge(item, {
       isSelected: Fun.constant(false),
       getPreview: Fun.constant('')
     });
   };
 
-  var enrichCustom = function (item) {
-    var formatName = Id.generate(item.title);
-    var newItem = Merger.deepMerge(item, {
+  const enrichCustom = function (item) {
+    const formatName = Id.generate(item.title);
+    const newItem = Merger.deepMerge(item, {
       format: formatName,
       isSelected: isSelectedFor(formatName),
       getPreview: getPreview(formatName)
@@ -49,12 +49,12 @@ var register = function (editor, settings) {
     return newItem;
   };
 
-  var formats = Objects.readOptFrom(settings, 'style_formats').getOr(DefaultStyleFormats);
+  const formats = Objects.readOptFrom(settings, 'style_formats').getOr(DefaultStyleFormats);
 
-  var doEnrich = function (items) {
+  const doEnrich = function (items) {
     return Arr.map(items, function (item) {
       if (Objects.hasKey(item, 'items')) {
-        var newItems = doEnrich(item.items);
+        const newItems = doEnrich(item.items);
         return Merger.deepMerge(
           enrichMenu(item),
           {
@@ -72,31 +72,30 @@ var register = function (editor, settings) {
   return doEnrich(formats);
 };
 
-var prune = function (editor, formats) {
+const prune = function (editor, formats) {
 
-  var doPrune = function (items) {
+  const doPrune = function (items) {
     return Arr.bind(items, function (item) {
       if (item.items !== undefined) {
-        var newItems = doPrune(item.items);
+        const newItems = doPrune(item.items);
         return newItems.length > 0 ? [ item ] : [ ];
       } else {
-        var keep = Objects.hasKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
+        const keep = Objects.hasKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
         return keep ? [ item ] : [ ];
       }
     });
   };
 
-  var prunedItems = doPrune(formats);
+  const prunedItems = doPrune(formats);
   return StyleConversions.expand(prunedItems);
 };
 
-
-var ui = function (editor, formats, onDone) {
-  var pruned = prune(editor, formats);
+const ui = function (editor, formats, onDone) {
+  const pruned = prune(editor, formats);
 
   return StylesMenu.sketch({
     formats: pruned,
-    handle: function (item, value) {
+    handle (item, value) {
       editor.undoManager.transact(function () {
         if (Toggling.isOn(item)) {
           editor.formatter.remove(value);
@@ -109,7 +108,7 @@ var ui = function (editor, formats, onDone) {
   });
 };
 
-export default <any> {
-  register: register,
-  ui: ui
+export default {
+  register,
+  ui
 };

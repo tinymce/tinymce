@@ -12,21 +12,21 @@ import { Fun } from '@ephox/katamari';
 import Tools from 'tinymce/core/util/Tools';
 import TableDialog from './TableDialog';
 
-var each = Tools.each;
+const each = Tools.each;
 
-var addButtons = function (editor) {
-  var menuItems = [];
-  each("inserttable tableprops deletetable | cell row column".split(' '), function (name) {
-    if (name == '|') {
+const addButtons = function (editor) {
+  const menuItems = [];
+  each('inserttable tableprops deletetable | cell row column'.split(' '), function (name) {
+    if (name === '|') {
       menuItems.push({ text: '-' });
     } else {
       menuItems.push(editor.menuItems[name]);
     }
   });
 
-  editor.addButton("table", {
-    type: "menubutton",
-    title: "Table",
+  editor.addButton('table', {
+    type: 'menubutton',
+    title: 'Table',
     menu: menuItems
   });
 
@@ -118,14 +118,14 @@ var addButtons = function (editor) {
   });
 };
 
-var addToolbars = function (editor) {
-  var isTable = function (table) {
-    var selectorMatched = editor.dom.is(table, 'table') && editor.getBody().contains(table);
+const addToolbars = function (editor) {
+  const isTable = function (table) {
+    const selectorMatched = editor.dom.is(table, 'table') && editor.getBody().contains(table);
 
     return selectorMatched;
   };
 
-  var toolbarItems = editor.settings.table_toolbar;
+  let toolbarItems = editor.settings.table_toolbar;
 
   if (toolbarItems === '' || toolbarItems === false) {
     return;
@@ -144,6 +144,6 @@ var addToolbars = function (editor) {
 };
 
 export default {
-  addButtons: addButtons,
-  addToolbars: addToolbars
+  addButtons,
+  addToolbars
 };

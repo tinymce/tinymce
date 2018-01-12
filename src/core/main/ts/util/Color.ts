@@ -19,7 +19,7 @@
  * console.log(white.toHex(), red.toHsv());
  */
 
-var min = Math.min, max = Math.max, round = Math.round;
+const min = Math.min, max = Math.max, round = Math.round;
 
 /**
  * Constructs a new color instance.
@@ -28,11 +28,12 @@ var min = Math.min, max = Math.max, round = Math.round;
  * @method Color
  * @param {String} value Optional initial value to parse.
  */
-var Color = function (value?) {
-  var self: any = {}, r = 0, g = 0, b = 0;
+const Color = function (value?) {
+  const self: any = {};
+  let r = 0, g = 0, b = 0;
 
-  var rgb2hsv = function (r, g, b) {
-    var h, s, v, d, minRGB, maxRGB;
+  const rgb2hsv = function (r, g, b) {
+    let h, s, v, d, minRGB, maxRGB;
 
     h = 0;
     s = 0;
@@ -44,7 +45,7 @@ var Color = function (value?) {
     minRGB = min(r, min(g, b));
     maxRGB = max(r, max(g, b));
 
-    if (minRGB == maxRGB) {
+    if (minRGB === maxRGB) {
       v = minRGB;
 
       return {
@@ -55,8 +56,8 @@ var Color = function (value?) {
     }
 
     /*eslint no-nested-ternary:0 */
-    d = (r == minRGB) ? g - b : ((b == minRGB) ? r - g : b - r);
-    h = (r == minRGB) ? 3 : ((b == minRGB) ? 1 : 5);
+    d = (r === minRGB) ? g - b : ((b === minRGB) ? r - g : b - r);
+    h = (r === minRGB) ? 3 : ((b === minRGB) ? 1 : 5);
     h = 60 * (h - d / (maxRGB - minRGB));
     s = (maxRGB - minRGB) / maxRGB;
     v = maxRGB;
@@ -68,8 +69,8 @@ var Color = function (value?) {
     };
   };
 
-  var hsvToRgb = function (hue, saturation, brightness) {
-    var side, chroma, x, match;
+  const hsvToRgb = function (hue, saturation, brightness) {
+    let side, chroma, x, match;
 
     hue = (parseInt(hue, 10) || 0) % 360;
     saturation = parseInt(saturation, 10) / 100;
@@ -139,8 +140,8 @@ var Color = function (value?) {
    * @method toHex
    * @return {String} Hex string of current color.
    */
-  var toHex = function () {
-    var hex = function (val) {
+  const toHex = function () {
+    const hex = function (val) {
       val = parseInt(val, 10).toString(16);
 
       return val.length > 1 ? val : '0' + val;
@@ -155,11 +156,11 @@ var Color = function (value?) {
    * @method toRgb
    * @return {Object} Object with r, g, b fields.
    */
-  var toRgb = function () {
+  const toRgb = function () {
     return {
-      r: r,
-      g: g,
-      b: b
+      r,
+      g,
+      b
     };
   };
 
@@ -169,7 +170,7 @@ var Color = function (value?) {
    * @method toHsv
    * @return {Object} Object with h, s, v fields.
    */
-  var toHsv = function () {
+  const toHsv = function () {
     return rgb2hsv(r, g, b);
   };
 
@@ -187,15 +188,15 @@ var Color = function (value?) {
    * @param {Object/String} value Color value to parse.
    * @return {tinymce.util.Color} Current color instance.
    */
-  var parse = function (value) {
-    var matches;
+  const parse = function (value) {
+    let matches;
 
-    if (typeof value == 'object') {
-      if ("r" in value) {
+    if (typeof value === 'object') {
+      if ('r' in value) {
         r = value.r;
         g = value.g;
         b = value.b;
-      } else if ("v" in value) {
+      } else if ('v' in value) {
         hsvToRgb(value.h, value.s, value.v);
       }
     } else {

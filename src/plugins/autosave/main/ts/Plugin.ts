@@ -22,7 +22,7 @@ import Buttons from './ui/Buttons';
  */
 
 PluginManager.add('autosave', function (editor) {
-  var started = Cell(false);
+  const started = Cell(false);
 
   BeforeUnload.setup(editor);
   Buttons.register(editor, started);
@@ -30,4 +30,4 @@ PluginManager.add('autosave', function (editor) {
   return Api.get(editor);
 });
 
-export default function () { };
+export default function () { }

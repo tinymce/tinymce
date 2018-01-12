@@ -6,7 +6,6 @@ import { Step } from '@ephox/agar';
 import { Waiter } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import CutCopy from 'tinymce/plugins/paste/core/CutCopy';
 import InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
 import Utils from 'tinymce/plugins/paste/core/Utils';
 import Plugin from 'tinymce/plugins/paste/Plugin';
@@ -14,41 +13,41 @@ import MockDataTransfer from '../module/test/MockDataTransfer';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var dataTransfer, lastPreProcessEvent, lastPostProcessEvent;
+UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  let dataTransfer, lastPreProcessEvent, lastPostProcessEvent;
 
   Plugin();
   Theme();
 
-  var sResetProcessEvents = Step.sync(function () {
+  const sResetProcessEvents = Step.sync(function () {
     lastPreProcessEvent = null;
     lastPostProcessEvent = null;
   });
 
-  var sCutCopyDataTransferEvent = function (editor, type) {
+  const sCutCopyDataTransferEvent = function (editor, type) {
     return Step.sync(function () {
       dataTransfer = MockDataTransfer.create({});
       editor.fire(type, { clipboardData: dataTransfer });
     });
   };
 
-  var sPasteDataTransferEvent = function (editor, data) {
+  const sPasteDataTransferEvent = function (editor, data) {
     return Step.sync(function () {
       dataTransfer = MockDataTransfer.create(data);
       editor.fire('paste', { clipboardData: dataTransfer });
     });
   };
 
-  var sAssertClipboardData = function (expectedHtml, expectedText) {
+  const sAssertClipboardData = function (expectedHtml, expectedText) {
     return Step.sync(function () {
       RawAssertions.assertEq('text/html data should match', expectedHtml, dataTransfer.getData('text/html'));
       RawAssertions.assertEq('text/plain data should match', expectedText, dataTransfer.getData('text/plain'));
     });
   };
 
-  var sCopy = function (editor, tinyApis, html, spath, soffset, fpath, foffset) {
+  const sCopy = function (editor, tinyApis, html, spath, soffset, fpath, foffset) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent(html),
       tinyApis.sSetSelection(spath, soffset, fpath, foffset),
@@ -56,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', functi
     ]);
   };
 
-  var sCut = function (editor, tinyApis, html, spath, soffset, fpath, foffset) {
+  const sCut = function (editor, tinyApis, html, spath, soffset, fpath, foffset) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent(html),
       tinyApis.sSetSelection(spath, soffset, fpath, foffset),
@@ -64,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', functi
     ]);
   };
 
-  var sPaste = function (editor, tinyApis, startHtml, pasteData, spath, soffset, fpath, foffset) {
+  const sPaste = function (editor, tinyApis, startHtml, pasteData, spath, soffset, fpath, foffset) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent(startHtml),
       tinyApis.sSetSelection(spath, soffset, fpath, foffset),
@@ -73,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', functi
     ]);
   };
 
-  var sTestCopy = function (editor, tinyApis) {
+  const sTestCopy = function (editor, tinyApis) {
     return Logger.t('Copy tests', GeneralSteps.sequence([
       Logger.t('Copy simple text', GeneralSteps.sequence([
         sCopy(editor, tinyApis, '<p>text</p>', [0, 0], 0, [0, 0], 4),
@@ -105,8 +104,8 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', functi
     ]));
   };
 
-  var sTestCut = function (editor, tinyApis) {
-    var sWaitUntilAssertContent = function (expected) {
+  const sTestCut = function (editor, tinyApis) {
+    const sWaitUntilAssertContent = function (expected) {
       return Waiter.sTryUntil('Cut is async now, so need to wait for content', tinyApis.sAssertContent(expected), 100, 1000);
     };
 
@@ -141,26 +140,26 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', functi
     ]));
   };
 
-  var sAssertLastPreProcessEvent = function (expectedData) {
+  const sAssertLastPreProcessEvent = function (expectedData) {
     return Step.sync(function () {
       RawAssertions.assertEq('Internal property should be equal', expectedData.internal, lastPreProcessEvent.internal);
       RawAssertions.assertEq('Content property should be equal', expectedData.content, lastPreProcessEvent.content);
     });
   };
 
-  var sAssertLastPostProcessEvent = function (expectedData) {
+  const sAssertLastPostProcessEvent = function (expectedData) {
     return Step.sync(function () {
       RawAssertions.assertEq('Internal property should be equal', expectedData.internal, lastPostProcessEvent.internal);
       RawAssertions.assertEq('Content property should be equal', expectedData.content, lastPostProcessEvent.node.innerHTML);
     });
   };
 
-  var sWaitForProcessEvents = Waiter.sTryUntil('Did not get any events fired', Step.sync(function () {
+  const sWaitForProcessEvents = Waiter.sTryUntil('Did not get any events fired', Step.sync(function () {
     RawAssertions.assertEq('PastePreProcess event object', lastPreProcessEvent !== null, true);
     RawAssertions.assertEq('PastePostProcess event object', lastPostProcessEvent !== null, true);
   }), 100, 100);
 
-  var sTestPaste = function (editor, tinyApis) {
+  const sTestPaste = function (editor, tinyApis) {
     return Logger.t('Paste tests', GeneralSteps.sequence([
       Logger.t('Paste external content', GeneralSteps.sequence([
         sPaste(editor, tinyApis, '<p>abc</p>', { 'text/plain': 'X', 'text/html': '<p>X</p>' }, [0, 0], 0, [0, 0], 3),
@@ -196,7 +195,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', functi
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     // Disabled tests on Edge 15 due to broken clipboard API
     Pipeline.async({}, Utils.isMsEdge() ? [ ] : [
@@ -206,7 +205,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', functi
     ], onSuccess, onFailure);
   }, {
     plugins: 'paste',
-    init_instance_callback: function (editor) {
+    init_instance_callback (editor) {
       editor.on('PastePreProcess', function (evt) {
         lastPreProcessEvent = evt;
       });
@@ -218,4 +217,3 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', functi
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

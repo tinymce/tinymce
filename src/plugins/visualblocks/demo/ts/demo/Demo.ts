@@ -18,12 +18,12 @@ VisualBlocksPlugin();
 PluginManager.urls.visualblocks = '../../../dist/visualblocks';
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  plugins: "visualblocks code",
-  toolbar: "visualblocks code",
+  selector: 'textarea.tinymce',
+  plugins: 'visualblocks code',
+  toolbar: 'visualblocks code',
   visualblocks_default_state: true,
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  //end_container_on_empty_block: true,
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  // end_container_on_empty_block: true,
   // Style formats
   style_formats: [
     { title: 'h1', block: 'h1' },

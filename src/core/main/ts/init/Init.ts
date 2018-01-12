@@ -16,10 +16,11 @@ import InitContentBody from './InitContentBody';
 import InitIframe from './InitIframe';
 import Tools from '../util/Tools';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var initPlugin = function (editor, initializedPlugins, plugin) {
-  var Plugin = PluginManager.get(plugin), pluginUrl, pluginInstance;
+const initPlugin = function (editor, initializedPlugins, plugin) {
+  const Plugin = PluginManager.get(plugin);
+  let pluginUrl, pluginInstance;
 
   pluginUrl = PluginManager.urls[plugin] || editor.documentBaseUrl.replace(/\/$/, '');
   plugin = Tools.trim(plugin);
@@ -43,21 +44,22 @@ var initPlugin = function (editor, initializedPlugins, plugin) {
   }
 };
 
-var trimLegacyPrefix = function (name) {
+const trimLegacyPrefix = function (name) {
   // Themes and plugins can be prefixed with - to prevent them from being lazy loaded
   return name.replace(/^\-/, '');
 };
 
-var initPlugins = function (editor) {
-  var initializedPlugins = [];
+const initPlugins = function (editor) {
+  const initializedPlugins = [];
 
   Tools.each(editor.settings.plugins.split(/[ ,]/), function (name) {
     initPlugin(editor, initializedPlugins, trimLegacyPrefix(name));
   });
 };
 
-var initTheme = function (editor) {
-  var Theme, theme = editor.settings.theme;
+const initTheme = function (editor) {
+  let Theme;
+  const theme = editor.settings.theme;
 
   if (Type.isString(theme)) {
     editor.settings.theme = trimLegacyPrefix(theme);
@@ -74,8 +76,10 @@ var initTheme = function (editor) {
   }
 };
 
-var renderFromLoadedTheme = function (editor) {
-  var w, h, minHeight, re, info, settings = editor.settings, elm = editor.getElement();
+const renderFromLoadedTheme = function (editor) {
+  let w, h, minHeight, re, info;
+  const settings = editor.settings;
+  const elm = editor.getElement();
 
   w = settings.width || DOM.getStyle(elm, 'width') || '100%';
   h = settings.height || DOM.getStyle(elm, 'height') || elm.offsetHeight;
@@ -112,17 +116,18 @@ var renderFromLoadedTheme = function (editor) {
   return info;
 };
 
-var renderFromThemeFunc = function (editor) {
-  var info, elm = editor.getElement();
+const renderFromThemeFunc = function (editor) {
+  let info;
+  const elm = editor.getElement();
 
   info = editor.settings.theme(editor, elm);
 
   if (info.editorContainer.nodeType) {
-    info.editorContainer.id = info.editorContainer.id || editor.id + "_parent";
+    info.editorContainer.id = info.editorContainer.id || editor.id + '_parent';
   }
 
   if (info.iframeContainer && info.iframeContainer.nodeType) {
-    info.iframeContainer.id = info.iframeContainer.id || editor.id + "_iframecontainer";
+    info.iframeContainer.id = info.iframeContainer.id || editor.id + '_iframecontainer';
   }
 
   info.height = info.iframeHeight ? info.iframeHeight : elm.offsetHeight;
@@ -130,28 +135,28 @@ var renderFromThemeFunc = function (editor) {
   return info;
 };
 
-var createThemeFalseResult = function (element) {
+const createThemeFalseResult = function (element) {
   return {
     editorContainer: element,
     iframeContainer: element
   };
 };
 
-var renderThemeFalseIframe = function (targetElement) {
-  var iframeContainer = DOM.create('div');
+const renderThemeFalseIframe = function (targetElement) {
+  const iframeContainer = DOM.create('div');
 
   DOM.insertAfter(iframeContainer, targetElement);
 
   return createThemeFalseResult(iframeContainer);
 };
 
-var renderThemeFalse = function (editor) {
-  var targetElement = editor.getElement();
+const renderThemeFalse = function (editor) {
+  const targetElement = editor.getElement();
   return editor.inline ? createThemeFalseResult(null) : renderThemeFalseIframe(targetElement);
 };
 
-var renderThemeUi = function (editor) {
-  var settings = editor.settings, elm = editor.getElement();
+const renderThemeUi = function (editor) {
+  const settings = editor.settings, elm = editor.getElement();
 
   editor.orgDisplay = elm.style.display;
 
@@ -164,8 +169,10 @@ var renderThemeUi = function (editor) {
   }
 };
 
-var init = function (editor) {
-  var settings = editor.settings, elm = editor.getElement(), boxInfo;
+const init = function (editor) {
+  const settings = editor.settings;
+  const elm = editor.getElement();
+  let boxInfo;
 
   editor.rtl = settings.rtl_ui || editor.editorManager.i18n.rtl;
   editor.editorManager.i18n.setCode(settings.language);
@@ -194,5 +201,5 @@ var init = function (editor) {
 };
 
 export default {
-  init: init
+  init
 };

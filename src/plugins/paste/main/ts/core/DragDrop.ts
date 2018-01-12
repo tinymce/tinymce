@@ -14,21 +14,21 @@ import Settings from '../api/Settings';
 import InternalHtml from './InternalHtml';
 import Utils from './Utils';
 
-var getCaretRangeFromEvent = function (editor, e) {
+const getCaretRangeFromEvent = function (editor, e) {
   return RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());
 };
 
-var isPlainTextFileUrl = function (content) {
-  var plainTextContent = content['text/plain'];
+const isPlainTextFileUrl = function (content) {
+  const plainTextContent = content['text/plain'];
   return plainTextContent ? plainTextContent.indexOf('file://') === 0 : false;
 };
 
-var setFocusedRange = function (editor, rng) {
+const setFocusedRange = function (editor, rng) {
   editor.focus();
   editor.selection.setRng(rng);
 };
 
-var setup = function (editor, clipboard, draggingInternallyState) {
+const setup = function (editor, clipboard, draggingInternallyState) {
   // Block all drag/drop events
   if (Settings.shouldBlockDrop(editor)) {
     editor.on('dragend dragover draggesture dragdrop drop drag', function (e) {
@@ -40,7 +40,7 @@ var setup = function (editor, clipboard, draggingInternallyState) {
   // Prevent users from dropping data images on Gecko
   if (!Settings.shouldPasteDataImages(editor)) {
     editor.on('drop', function (e) {
-      var dataTransfer = e.dataTransfer;
+      const dataTransfer = e.dataTransfer;
 
       if (dataTransfer && dataTransfer.files && dataTransfer.files.length > 0) {
         e.preventDefault();
@@ -49,7 +49,7 @@ var setup = function (editor, clipboard, draggingInternallyState) {
   }
 
   editor.on('drop', function (e) {
-    var dropContent, rng;
+    let dropContent, rng;
 
     rng = getCaretRangeFromEvent(editor, e);
 
@@ -58,14 +58,14 @@ var setup = function (editor, clipboard, draggingInternallyState) {
     }
 
     dropContent = clipboard.getDataTransferItems(e.dataTransfer);
-    var internal = clipboard.hasContentType(dropContent, InternalHtml.internalHtmlMime());
+    const internal = clipboard.hasContentType(dropContent, InternalHtml.internalHtmlMime());
 
     if ((!clipboard.hasHtmlOrText(dropContent) || isPlainTextFileUrl(dropContent)) && clipboard.pasteImageData(e, rng)) {
       return;
     }
 
     if (rng && Settings.shouldFilterDrop(editor)) {
-      var content = dropContent['mce-internal'] || dropContent['text/html'] || dropContent['text/plain'];
+      let content = dropContent['mce-internal'] || dropContent['text/html'] || dropContent['text/plain'];
 
       if (content) {
         e.preventDefault();
@@ -109,5 +109,5 @@ var setup = function (editor, clipboard, draggingInternallyState) {
 };
 
 export default {
-  setup: setup
+  setup
 };

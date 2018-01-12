@@ -10,7 +10,7 @@
 
 import Actions from '../core/Actions';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addCommand('mceSave', function () {
     Actions.save(editor);
   });
@@ -21,5 +21,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

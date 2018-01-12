@@ -10,17 +10,17 @@
 
 import Settings from '../api/Settings';
 
-var setup = function (editor) {
-  var plugin = editor.plugins.paste;
+const setup = function (editor) {
+  const plugin = editor.plugins.paste;
 
-  var preProcess = Settings.getPreProcess(editor);
+  const preProcess = Settings.getPreProcess(editor);
   if (preProcess) {
     editor.on('PastePreProcess', function (e) {
       preProcess.call(plugin, plugin, e);
     });
   }
 
-  var postProcess = Settings.getPostProcess(editor);
+  const postProcess = Settings.getPostProcess(editor);
   if (postProcess) {
     editor.on('PastePostProcess', function (e) {
       postProcess.call(plugin, plugin, e);
@@ -29,5 +29,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

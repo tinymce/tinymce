@@ -21,10 +21,10 @@ import InliteTheme from 'tinymce/themes/inlite/Theme';
 import Toolbar from '../module/test/Toolbar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.core.ThemeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var dialogRoot = TinyDom.fromDom(document.body);
+UnitTest.asynctest('browser.core.ThemeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const dialogRoot = TinyDom.fromDom(document.body);
 
   InliteTheme();
   ImagePlugin();
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.core.ThemeTest', function() {
   ContextMenuPlugin();
   TextPatternPlugin();
 
-  var sClickFocusedButton = function (selector) {
+  const sClickFocusedButton = function (selector) {
     return GeneralSteps.sequence([
       Waiter.sTryUntil(
         'Focus was not moved to the expected element',
@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.core.ThemeTest', function() {
     ]);
   };
 
-  var sBoldTests = function (tinyApis) {
+  const sBoldTests = function (tinyApis) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent('<p>a</p>'),
       tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.core.ThemeTest', function() {
     ]);
   };
 
-  var sH2Tests = function (tinyApis) {
+  const sH2Tests = function (tinyApis) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent('<p>a</p>'),
       tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.core.ThemeTest', function() {
     ]);
   };
 
-  var sInsertLink = function (url) {
+  const sInsertLink = function (url) {
     return Chain.asStep({}, [
       Toolbar.cWaitForToolbar,
       Toolbar.cClickButton('Insert/Edit link'),
@@ -79,42 +79,42 @@ UnitTest.asynctest('browser.core.ThemeTest', function() {
     ]);
   };
 
-  var cWaitForConfirmDialog = Chain.fromChainsWith(dialogRoot, [
+  const cWaitForConfirmDialog = Chain.fromChainsWith(dialogRoot, [
     UiFinder.cWaitForState('window element', '.mce-window', function () {
       return true;
     })
   ]);
 
-  var cClickButton = function (btnText) {
+  const cClickButton = function (btnText) {
     return Chain.fromChains([
       UiFinder.cFindIn('button:contains("' + btnText + '")'),
       Mouse.cTrueClick
     ]);
   };
 
-  var sClickConfirmButton = function (btnText) {
+  const sClickConfirmButton = function (btnText) {
     return Chain.asStep({}, [
       cWaitForConfirmDialog,
       cClickButton(btnText)
     ]);
   };
 
-  var sInsertLinkConfirmPrefix = function (url, btnText) {
+  const sInsertLinkConfirmPrefix = function (url, btnText) {
     return GeneralSteps.sequence([
       sInsertLink(url),
       sClickConfirmButton(btnText)
     ]);
   };
 
-  var sUnlink = Chain.asStep({}, [
+  const sUnlink = Chain.asStep({}, [
     Toolbar.cWaitForToolbar,
     Toolbar.cClickButton('Insert/Edit link'),
     Toolbar.cWaitForToolbar,
     Toolbar.cClickButton('Remove link')
   ]);
 
-  var sLinkTests = function (tinyApis, tinyActions) {
-    var sContentActionTest = function (inputHtml, spath, soffset, fpath, foffset, expectedHtml, sAction) {
+  const sLinkTests = function (tinyApis, tinyActions) {
+    const sContentActionTest = function (inputHtml, spath, soffset, fpath, foffset, expectedHtml, sAction) {
       return GeneralSteps.sequence([
         tinyApis.sSetContent(inputHtml),
         tinyApis.sSetSelection(spath, soffset, fpath, foffset),
@@ -124,19 +124,19 @@ UnitTest.asynctest('browser.core.ThemeTest', function() {
       ]);
     };
 
-    var sLinkTest = function (inputHtml, spath, soffset, fpath, foffset, url, expectedHtml) {
+    const sLinkTest = function (inputHtml, spath, soffset, fpath, foffset, url, expectedHtml) {
       return sContentActionTest(inputHtml, spath, soffset, fpath, foffset, expectedHtml, sInsertLink(url));
     };
 
-    var sUnlinkTest = function (inputHtml, spath, soffset, fpath, foffset, expectedHtml) {
+    const sUnlinkTest = function (inputHtml, spath, soffset, fpath, foffset, expectedHtml) {
       return sContentActionTest(inputHtml, spath, soffset, fpath, foffset, expectedHtml, sUnlink);
     };
 
-    var sLinkWithConfirmOkTest = function (inputHtml, spath, soffset, fpath, foffset, url, expectedHtml) {
+    const sLinkWithConfirmOkTest = function (inputHtml, spath, soffset, fpath, foffset, url, expectedHtml) {
       return sContentActionTest(inputHtml, spath, soffset, fpath, foffset, expectedHtml, sInsertLinkConfirmPrefix(url, 'Ok'));
     };
 
-    var sLinkWithConfirmCancelTest = function (inputHtml, spath, soffset, fpath, foffset, url, expectedHtml) {
+    const sLinkWithConfirmCancelTest = function (inputHtml, spath, soffset, fpath, foffset, url, expectedHtml) {
       return sContentActionTest(inputHtml, spath, soffset, fpath, foffset, expectedHtml, sInsertLinkConfirmPrefix(url, 'Cancel'));
     };
 
@@ -150,7 +150,7 @@ UnitTest.asynctest('browser.core.ThemeTest', function() {
     ]);
   };
 
-  var sInsertTableTests = function (tinyApis) {
+  const sInsertTableTests = function (tinyApis) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent('<p><br></p><p>b</p>'),
       tinyApis.sSetCursor([0], 0),
@@ -174,7 +174,7 @@ UnitTest.asynctest('browser.core.ThemeTest', function() {
     ]);
   };
 
-  var sAriaTests = function (tinyApis, tinyActions) {
+  const sAriaTests = function (tinyApis, tinyActions) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent('<p>a</p>'),
       tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
@@ -186,7 +186,7 @@ UnitTest.asynctest('browser.core.ThemeTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor), tinyActions = TinyActions(editor);
+    const tinyApis = TinyApis(editor), tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,

@@ -10,18 +10,18 @@ import HtmlUtils from '../../module/test/HtmlUtils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var ok = function (value, label) {
+  const ok = function (value, label) {
     return LegacyUnit.equal(value, true, label);
   };
 
-  var previewStyles = function () {
+  const previewStyles = function () {
     return (
       'table .preview {' +
         'color: rgb(0, 255, 0);' + // green
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function() {
   };
 
   suite.test('Get preview css text for formats', function (editor) {
-    var getCssText = function (format) {
+    const getCssText = function (format) {
       return Preview.getCssText(editor, format);
     };
 
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function() {
       'Test preview of a custom element.');
 
     ok(/color\:rgb\(255, 0, 0\)/.test(getCssText({ inline: 'invalid', styles: { color: '#ff0000' } })),
-      "Test preview of an invalid element shouldn't crash the editor .");
+      'Test preview of an invalid element shouldn\'t crash the editor .');
 
     ok(/color\:rgb\(0, 255, 0\)/.test(getCssText({ selector: 'tr', classes: ['preview'] })),
       'Style is properly inherited in preview for partial element (like TR).');
@@ -147,29 +147,29 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function() {
 
     LegacyUnit.deepEqual(Preview.parseSelector('.class > *'), [
       {
-        name: "div",
-        selector: "*",
+        name: 'div',
+        selector: '*',
         attrs: {},
         classes: []
       },
       {
-        name: "div",
-        selector: ".class",
-        classes: ["class"],
+        name: 'div',
+        selector: '.class',
+        classes: ['class'],
         attrs: {}
       }
     ], '.class > * ok');
 
     LegacyUnit.deepEqual(Preview.parseSelector('p + *'), [
       {
-        name: "div",
-        selector: "*",
+        name: 'div',
+        selector: '*',
         attrs: {},
         classes: [],
         siblings: [
           {
-            name: "p",
-            selector: "p",
+            name: 'p',
+            selector: 'p',
             attrs: {},
             classes: []
           }
@@ -179,8 +179,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function() {
 
     LegacyUnit.deepEqual(Preview.parseSelector('*.test'), [
       {
-        name: "*",
-        selector: "*.test",
+        name: '*',
+        selector: '*.test',
         attrs: {},
         classes: ['test']
       }
@@ -188,11 +188,11 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function() {
   });
 
   suite.test('Preview.selectorToHtml()', function () {
-    var trimSpaces = function (str) {
+    const trimSpaces = function (str) {
       return str.replace(/>\s+</g, '><').replace(/^\s*|\s*$/g, '');
     };
 
-    var selectorToHtml = function (selector) {
+    const selectorToHtml = function (selector) {
       return HtmlUtils.normalizeHtml(Preview.selectorToHtml(selector).outerHTML);
     };
 
@@ -248,7 +248,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function() {
         Waiter.sTryUntil(
           'Expected styles where not loaded',
           Step.sync(function () {
-            var color = editor.dom.getStyle(editor.dom.select('p'), 'color', true);
+            const color = editor.dom.getStyle(editor.dom.select('p'), 'color', true);
             Assertions.assertEq('Did not get a color value of 255', true, color.indexOf('255') !== -1);
           }
         ), 10, 3000)
@@ -256,7 +256,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function() {
       suite.toSteps(editor)
     ]), onSuccess, onFailure);
   }, {
-    selector: "textarea",
+    selector: 'textarea',
     add_unload_trigger: false,
     disable_nodechange: true,
     custom_elements: '~custom',
@@ -267,4 +267,3 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

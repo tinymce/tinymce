@@ -1,7 +1,7 @@
-var isSkinDisabled = function (editor) {
+const isSkinDisabled = function (editor) {
   return editor.settings.skin === false;
 };
 
-export default <any> {
-  isSkinDisabled: isSkinDisabled
+export default {
+  isSkinDisabled
 };

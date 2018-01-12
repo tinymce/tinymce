@@ -5,15 +5,15 @@ import Hooks from 'tinymce/core/fmt/Hooks';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.HooksTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.fmt.HooksTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
   suite.test('pre - postProcessHook', function (editor) {
-    var assertPreHook = function (setupHtml, setupSelection, expected) {
+    const assertPreHook = function (setupHtml, setupSelection, expected) {
       editor.getBody().innerHTML = setupHtml;
       LegacyUnit.setSelection.apply(LegacyUnit, [editor].concat(setupSelection));
       Hooks.postProcess('pre', editor);
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.HooksTest', function() {
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
-    selector: "textarea",
+    selector: 'textarea',
     add_unload_trigger: false,
     disable_nodechange: true,
     entities: 'raw',
@@ -74,4 +74,3 @@ UnitTest.asynctest('browser.tinymce.core.fmt.HooksTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

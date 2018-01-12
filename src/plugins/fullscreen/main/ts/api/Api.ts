@@ -8,14 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var get = function (fullscreenState) {
+const get = function (fullscreenState) {
   return {
-    isFullscreen: function () {
+    isFullscreen () {
       return fullscreenState.get() !== null;
     }
   };
 };
 
 export default {
-  get: get
+  get
 };

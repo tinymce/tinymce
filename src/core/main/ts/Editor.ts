@@ -55,10 +55,10 @@ import Uuid from './util/Uuid';
  */
 
 // Shorten these names
-var DOM = DOMUtils.DOM;
-var extend = Tools.extend, each = Tools.each;
-var trim = Tools.trim, resolve = Tools.resolve;
-var ie = Env.ie;
+const DOM = DOMUtils.DOM;
+const extend = Tools.extend, each = Tools.each;
+const trim = Tools.trim, resolve = Tools.resolve;
+const ie = Env.ie;
 
 /**
  * Include Editor API docs.
@@ -75,8 +75,9 @@ var ie = Env.ie;
  * @param {Object} settings Settings for the editor.
  * @param {tinymce.EditorManager} editorManager EditorManager instance.
  */
-var Editor = function (id, settings, editorManager) {
-  var self = this, documentBaseUrl, baseUri;
+const Editor = function (id, settings, editorManager) {
+  const self = this;
+  let documentBaseUrl, baseUri;
 
   documentBaseUrl = self.documentBaseUrl = editorManager.documentBaseURL;
   baseUri = editorManager.baseURI;
@@ -215,7 +216,7 @@ Editor.prototype = {
    *
    * @method render
    */
-  render: function () {
+  render () {
     Render.render(this);
   },
 
@@ -226,7 +227,7 @@ Editor.prototype = {
    * @method focus
    * @param {Boolean} skipFocus Skip DOM focus. Just set is as the active editor.
    */
-  focus: function (skipFocus) {
+  focus (skipFocus) {
     EditorFocus.focus(this, skipFocus);
   },
 
@@ -238,8 +239,9 @@ Editor.prototype = {
    * @param {String} name Name of the callback to execute.
    * @return {Object} Return value passed from callback function.
    */
-  execCallback: function (name) {
-    var self = this, callback = self.settings[name], scope;
+  execCallback (name) {
+    const self = this;
+    let callback = self.settings[name], scope;
 
     if (!callback) {
       return;
@@ -256,7 +258,7 @@ Editor.prototype = {
       scope = scope ? resolve(scope) : 0;
       callback = resolve(callback);
       self.callbackLookup = self.callbackLookup || {};
-      self.callbackLookup[name] = { func: callback, scope: scope };
+      self.callbackLookup[name] = { func: callback, scope };
     }
 
     return callback.apply(scope || self, Array.prototype.slice.call(arguments, 1));
@@ -270,9 +272,9 @@ Editor.prototype = {
    * @param {String} text String to translate by the language pack data.
    * @return {String} Translated string.
    */
-  translate: function (text) {
+  translate (text) {
     if (text && Tools.is(text, 'string')) {
-      var lang = this.settings.language || 'en', i18n = this.editorManager.i18n;
+      const lang = this.settings.language || 'en', i18n = this.editorManager.i18n;
 
       text = i18n.data[lang + '.' + text] || text.replace(/\{\#([^\}]+)\}/g, function (a, b) {
         return i18n.data[lang + '.' + b] || '{#' + b + '}';
@@ -289,7 +291,7 @@ Editor.prototype = {
    * @param {String} name Name/key to get from the language pack.
    * @param {String} defaultVal Optional default value to retrieve.
    */
-  getLang: function (name, defaultVal) {
+  getLang (name, defaultVal) {
     return (
       this.editorManager.i18n.data[(this.settings.language || 'en') + '.' + name] ||
       (defaultVal !== undefined ? defaultVal : '{#' + name + '}')
@@ -311,8 +313,9 @@ Editor.prototype = {
    * // Returns a specific config value from a specific editor instance by id
    * var someval2 = tinymce.get('my_editor').getParam('myvalue');
    */
-  getParam: function (name, defaultVal, type) {
-    var value = name in this.settings ? this.settings[name] : defaultVal, output;
+  getParam (name, defaultVal, type) {
+    const value = name in this.settings ? this.settings[name] : defaultVal;
+    let output;
 
     if (type === 'hash') {
       output = {};
@@ -344,7 +347,7 @@ Editor.prototype = {
    * @method nodeChanged
    * @param {Object} args Optional args to pass to NodeChange event handlers.
    */
-  nodeChanged: function (args) {
+  nodeChanged (args) {
     this._nodeChangeDispatcher.nodeChanged(args);
   },
 
@@ -372,8 +375,8 @@ Editor.prototype = {
    *    }
    * });
    */
-  addButton: function (name, settings) {
-    var self = this;
+  addButton (name, settings) {
+    const self = this;
 
     if (settings.cmd) {
       settings.onclick = function () {
@@ -415,7 +418,7 @@ Editor.prototype = {
    *    }
    * });
    */
-  addSidebar: function (name, settings) {
+  addSidebar (name, settings) {
     return Sidebar.add(this, name, settings);
   },
 
@@ -444,8 +447,8 @@ Editor.prototype = {
    *    }
    * });
    */
-  addMenuItem: function (name, settings) {
-    var self = this;
+  addMenuItem (name, settings) {
+    const self = this;
 
     if (settings.cmd) {
       settings.onclick = function () {
@@ -464,13 +467,14 @@ Editor.prototype = {
    * @param {function/string} predicate Predicate that needs to return true if provided strings get converted into CSS predicates.
    * @param {String/Array} items String or array with items to add to the context toolbar.
    */
-  addContextToolbar: function (predicate, items) {
-    var self = this, selector;
+  addContextToolbar (predicate, items) {
+    const self = this;
+    let selector;
 
     self.contextToolbars = self.contextToolbars || [];
 
     // Convert selector to predicate
-    if (typeof predicate == "string") {
+    if (typeof predicate === 'string') {
       selector = predicate;
       predicate = function (elm) {
         return self.dom.is(elm, selector);
@@ -479,8 +483,8 @@ Editor.prototype = {
 
     self.contextToolbars.push({
       id: Uuid.uuid('mcet'),
-      predicate: predicate,
-      items: items
+      predicate,
+      items
     });
   },
 
@@ -505,7 +509,7 @@ Editor.prototype = {
    *    }
    * });
    */
-  addCommand: function (name, callback, scope) {
+  addCommand (name, callback, scope) {
     /**
      * Callback function that gets called when a command is executed.
      *
@@ -526,7 +530,7 @@ Editor.prototype = {
    * @param {addQueryStateHandlerCallback} callback Function to execute when the command state retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  addQueryStateHandler: function (name, callback, scope) {
+  addQueryStateHandler (name, callback, scope) {
     /**
      * Callback function that gets called when a queryCommandState is executed.
      *
@@ -545,7 +549,7 @@ Editor.prototype = {
    * @param {addQueryValueHandlerCallback} callback Function to execute when the command value retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  addQueryValueHandler: function (name, callback, scope) {
+  addQueryValueHandler (name, callback, scope) {
     /**
      * Callback function that gets called when a queryCommandValue is executed.
      *
@@ -565,7 +569,7 @@ Editor.prototype = {
    * @param {Object} sc Optional scope to execute the function in.
    * @return {Boolean} true/false state if the shortcut was added or not.
    */
-  addShortcut: function (pattern, desc, cmdFunc, scope) {
+  addShortcut (pattern, desc, cmdFunc, scope) {
     this.shortcuts.add(pattern, desc, cmdFunc, scope);
   },
 
@@ -581,7 +585,7 @@ Editor.prototype = {
    * @param {mixed} value Optional command value, this can be anything.
    * @param {Object} args Optional arguments object.
    */
-  execCommand: function (cmd, ui, value, args) {
+  execCommand (cmd, ui, value, args) {
     return this.editorCommands.execCommand(cmd, ui, value, args);
   },
 
@@ -592,7 +596,7 @@ Editor.prototype = {
    * @param {string} cmd Command to query state from.
    * @return {Boolean} Command specific state, for example if bold is enabled or not.
    */
-  queryCommandState: function (cmd) {
+  queryCommandState (cmd) {
     return this.editorCommands.queryCommandState(cmd);
   },
 
@@ -603,7 +607,7 @@ Editor.prototype = {
    * @param {string} cmd Command to query value from.
    * @return {Object} Command specific value, for example the current font size.
    */
-  queryCommandValue: function (cmd) {
+  queryCommandValue (cmd) {
     return this.editorCommands.queryCommandValue(cmd);
   },
 
@@ -614,7 +618,7 @@ Editor.prototype = {
    * @param {String} cmd Command that we check support for.
    * @return {Boolean} true/false if the command is supported or not.
    */
-  queryCommandSupported: function (cmd) {
+  queryCommandSupported (cmd) {
     return this.editorCommands.queryCommandSupported(cmd);
   },
 
@@ -623,8 +627,8 @@ Editor.prototype = {
    *
    * @method show
    */
-  show: function () {
-    var self = this;
+  show () {
+    const self = this;
 
     if (self.hidden) {
       self.hidden = false;
@@ -646,8 +650,8 @@ Editor.prototype = {
    *
    * @method hide
    */
-  hide: function () {
-    var self = this, doc = self.getDoc();
+  hide () {
+    const self = this, doc = self.getDoc();
 
     if (!self.hidden) {
       // Fixed bug where IE has a blinking cursor left from the editor
@@ -662,7 +666,7 @@ Editor.prototype = {
         self.getBody().contentEditable = false;
 
         // Make sure the editor gets blurred
-        if (self == self.editorManager.focusedEditor) {
+        if (self === self.editorManager.focusedEditor) {
           self.editorManager.focusedEditor = null;
         }
       } else {
@@ -681,7 +685,7 @@ Editor.prototype = {
    * @method isHidden
    * @return {Boolean} True/false if the editor is hidden or not.
    */
-  isHidden: function () {
+  isHidden () {
     return !!this.hidden;
   },
 
@@ -703,8 +707,8 @@ Editor.prototype = {
    * // Show progress after 3 seconds
    * tinymce.activeEditor.setProgressState(true, 3000);
    */
-  setProgressState: function (state, time) {
-    this.fire('ProgressState', { state: state, time: time });
+  setProgressState (state, time) {
+    this.fire('ProgressState', { state, time });
   },
 
   /**
@@ -716,8 +720,9 @@ Editor.prototype = {
    * @param {Object} args Optional content object, this gets passed around through the whole load process.
    * @return {String} HTML string that got set into the editor.
    */
-  load: function (args) {
-    var self = this, elm = self.getElement(), html;
+  load (args) {
+    const self = this;
+    let elm = self.getElement(), html;
 
     if (self.removed) {
       return '';
@@ -749,8 +754,9 @@ Editor.prototype = {
    * @param {Object} args Optional content object, this gets passed around through the whole save process.
    * @return {String} HTML string that got set into the textarea/div.
    */
-  save: function (args) {
-    var self = this, elm = self.getElement(), html, form;
+  save (args) {
+    const self = this;
+    let elm = self.getElement(), html, form;
 
     if (!elm || !self.initialized || self.removed) {
       return;
@@ -767,7 +773,7 @@ Editor.prototype = {
     }
 
     // Always run this internal event
-    if (args.format == 'raw') {
+    if (args.format === 'raw') {
       self.fire('RawSaveContent', args);
     }
 
@@ -782,7 +788,7 @@ Editor.prototype = {
       // Update hidden form element
       if ((form = DOM.getParent(self.id, 'form'))) {
         each(form.elements, function (elm) {
-          if (elm.name == self.id) {
+          if (elm.name === self.id) {
             elm.value = html;
             return false;
           }
@@ -822,8 +828,10 @@ Editor.prototype = {
    * // Sets the bbcode contents of the activeEditor editor if the bbcode plugin was added
    * tinymce.activeEditor.setContent('[b]some[/b] html', {format: 'bbcode'});
    */
-  setContent: function (content, args) {
-    var self = this, body = self.getBody(), forcedRootBlockName, padd;
+  setContent (content, args) {
+    const self = this;
+    const body = self.getBody();
+    let forcedRootBlockName, padd;
 
     // Setup args object
     args = args || {};
@@ -845,7 +853,7 @@ Editor.prototype = {
 
       // Todo: There is a lot more root elements that need special padding
       // so separate this and add all of them at some point.
-      if (body.nodeName == 'TABLE') {
+      if (body.nodeName === 'TABLE') {
         content = '<tr><td>' + padd + '</td></tr>';
       } else if (/^(UL|OL)$/.test(body.nodeName)) {
         content = '<li>' + padd + '</li>';
@@ -912,8 +920,10 @@ Editor.prototype = {
    * // Get content of a specific editor:
    * tinymce.get('content id').getContent()
    */
-  getContent: function (args) {
-    var self = this, content, body = self.getBody();
+  getContent (args) {
+    const self = this;
+    let content;
+    const body = self.getBody();
 
     if (self.removed) {
       return '';
@@ -963,9 +973,9 @@ Editor.prototype = {
    * @param {String} content Content to insert.
    * @param {Object} args Optional args to pass to insert call.
    */
-  insertContent: function (content, args) {
+  insertContent (content, args) {
     if (args) {
-      content = extend({ content: content }, args);
+      content = extend({ content }, args);
     }
 
     this.execCommand('mceInsertContent', false, content);
@@ -984,7 +994,7 @@ Editor.prototype = {
    * if (tinymce.activeEditor.isDirty())
    *     alert("You must save your contents.");
    */
-  isDirty: function () {
+  isDirty () {
     return !this.isNotDirty;
   },
 
@@ -1004,12 +1014,12 @@ Editor.prototype = {
    *     editor.setDirty(false); // Force not dirty state
    * }
    */
-  setDirty: function (state) {
-    var oldState = !this.isNotDirty;
+  setDirty (state) {
+    const oldState = !this.isNotDirty;
 
     this.isNotDirty = !state;
 
-    if (state && state != oldState) {
+    if (state && state !== oldState) {
       this.fire('dirty');
     }
   },
@@ -1020,7 +1030,7 @@ Editor.prototype = {
    * @method setMode
    * @param {String} mode Mode to set the editor in.
    */
-  setMode: function (mode) {
+  setMode (mode) {
     Mode.setMode(this, mode);
   },
 
@@ -1031,8 +1041,8 @@ Editor.prototype = {
    * @method getContainer
    * @return {Element} HTML DOM element for the editor container.
    */
-  getContainer: function () {
-    var self = this;
+  getContainer () {
+    const self = this;
 
     if (!self.container) {
       self.container = DOM.get(self.editorContainer || self.id + '_parent');
@@ -1048,7 +1058,7 @@ Editor.prototype = {
    * @method getContentAreaContainer
    * @return {Element} HTML DOM element for the editor area container.
    */
-  getContentAreaContainer: function () {
+  getContentAreaContainer () {
     return this.contentAreaContainer;
   },
 
@@ -1058,7 +1068,7 @@ Editor.prototype = {
    * @method getElement
    * @return {Element} HTML DOM element for the replaced element.
    */
-  getElement: function () {
+  getElement () {
     if (!this.targetElm) {
       this.targetElm = DOM.get(this.id);
     }
@@ -1072,8 +1082,9 @@ Editor.prototype = {
    * @method getWin
    * @return {Window} Iframe DOM window object.
    */
-  getWin: function () {
-    var self = this, elm;
+  getWin () {
+    const self = this;
+    let elm;
 
     if (!self.contentWindow) {
       elm = self.iframeElement;
@@ -1092,8 +1103,9 @@ Editor.prototype = {
    * @method getDoc
    * @return {Document} Iframe DOM document object.
    */
-  getDoc: function () {
-    var self = this, win;
+  getDoc () {
+    const self = this;
+    let win;
 
     if (!self.contentDocument) {
       win = self.getWin();
@@ -1113,8 +1125,8 @@ Editor.prototype = {
    * @method getBody
    * @return {Element} The root element of the editable area.
    */
-  getBody: function () {
-    var doc = this.getDoc();
+  getBody () {
+    const doc = this.getDoc();
     return this.bodyElement || (doc ? doc.body : null);
   },
 
@@ -1129,8 +1141,8 @@ Editor.prototype = {
    * @param {string/HTMLElement} elm Tag name or HTML DOM element depending on HTML or DOM insert.
    * @return {string} Converted URL string.
    */
-  convertURL: function (url, name, elm) {
-    var self = this, settings = self.settings;
+  convertURL (url, name, elm) {
+    const self = this, settings = self.settings;
 
     // Use callback instead
     if (settings.urlconverter_callback) {
@@ -1138,7 +1150,7 @@ Editor.prototype = {
     }
 
     // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
-    if (!settings.convert_urls || (elm && elm.nodeName == 'LINK') || url.indexOf('file:') === 0 || url.length === 0) {
+    if (!settings.convert_urls || (elm && elm.nodeName === 'LINK') || url.indexOf('file:') === 0 || url.length === 0) {
       return url;
     }
 
@@ -1159,8 +1171,11 @@ Editor.prototype = {
    * @method addVisual
    * @param {Element} elm Optional root element to loop though to find tables etc that needs the visual aid.
    */
-  addVisual: function (elm) {
-    var self = this, settings = self.settings, dom = self.dom, cls;
+  addVisual (elm) {
+    const self = this;
+    const settings = self.settings;
+    const dom = self.dom;
+    let cls;
 
     elm = elm || self.getBody();
 
@@ -1169,14 +1184,14 @@ Editor.prototype = {
     }
 
     each(dom.select('table,a', elm), function (elm) {
-      var value;
+      let value;
 
       switch (elm.nodeName) {
         case 'TABLE':
           cls = settings.visual_table_class || 'mce-item-table';
           value = dom.getAttrib(elm, 'border');
 
-          if ((!value || value == '0') && self.hasVisual) {
+          if ((!value || value === '0') && self.hasVisual) {
             dom.addClass(elm, cls);
           } else {
             dom.removeClass(elm, cls);
@@ -1208,8 +1223,8 @@ Editor.prototype = {
    *
    * @method remove
    */
-  remove: function () {
-    var self = this;
+  remove () {
+    const self = this;
 
     if (!self.removed) {
       self.save();
@@ -1250,8 +1265,9 @@ Editor.prototype = {
    * @method destroy
    * @param {Boolean} automatic Optional state if the destroy is an automatic destroy or user called one.
    */
-  destroy: function (automatic) {
-    var self = this, form;
+  destroy (automatic) {
+    const self = this;
+    let form;
 
     // One time is enough
     if (self.destroyed) {
@@ -1306,13 +1322,13 @@ Editor.prototype = {
    * @param {function} callback Optional callback with images and status for each image.
    * @return {tinymce.util.Promise} Promise instance.
    */
-  uploadImages: function (callback) {
+  uploadImages (callback) {
     return this.editorUpload.uploadImages(callback);
   },
 
   // Internal functions
 
-  _scanForImages: function () {
+  _scanForImages () {
     return this.editorUpload.scanForImages();
   }
 };

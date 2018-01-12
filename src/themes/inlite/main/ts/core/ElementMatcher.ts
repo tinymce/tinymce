@@ -12,9 +12,9 @@ import Matcher from './Matcher';
 import Measure from './Measure';
 
 // element :: Element, [PredicateId] -> (Editor -> Matcher.result | Null)
-var element = function (element, predicateIds) {
+const element = function (element, predicateIds) {
   return function (editor) {
-    for (var i = 0; i < predicateIds.length; i++) {
+    for (let i = 0; i < predicateIds.length; i++) {
       if (predicateIds[i].predicate(element)) {
         return Matcher.result(predicateIds[i].id, Measure.getElementRect(editor, element));
       }
@@ -25,10 +25,10 @@ var element = function (element, predicateIds) {
 };
 
 // parent :: [Elements], [PredicateId] -> (Editor -> Matcher.result | Null)
-var parent = function (elements, predicateIds) {
+const parent = function (elements, predicateIds) {
   return function (editor) {
-    for (var i = 0; i < elements.length; i++) {
-      for (var x = 0; x < predicateIds.length; x++) {
+    for (let i = 0; i < elements.length; i++) {
+      for (let x = 0; x < predicateIds.length; x++) {
         if (predicateIds[x].predicate(elements[i])) {
           return Matcher.result(predicateIds[x].id, Measure.getElementRect(editor, elements[i]));
         }
@@ -39,7 +39,7 @@ var parent = function (elements, predicateIds) {
   };
 };
 
-export default <any> {
-  element: element,
-  parent: parent
+export default {
+  element,
+  parent
 };

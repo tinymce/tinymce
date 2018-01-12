@@ -20,9 +20,9 @@ import Theme from 'tinymce/themes/inlite/Theme';
 import Toolbar from '../module/test/Toolbar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.AutoCompleteTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.AutoCompleteTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ImagePlugin();
   LinkPlugin();
@@ -32,13 +32,13 @@ UnitTest.asynctest('browser.AutoCompleteTest', function() {
   TextpatternPlugin();
   Theme();
 
-  var cKeyStroke = function (keyvalue, modifiers) {
+  const cKeyStroke = function (keyvalue, modifiers) {
     return Chain.op(function (dispatcher) {
       Keyboard.keystroke(keyvalue, modifiers, dispatcher);
     });
   };
 
-  var sSetupLinkableContent = function (tinyApis) {
+  const sSetupLinkableContent = function (tinyApis) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent(
         '<h1 id="a">abc</h1>' +
@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.AutoCompleteTest', function() {
     ]);
   };
 
-  var sSelectAutoCompleteLink = function (tinyApis, url) {
+  const sSelectAutoCompleteLink = function (tinyApis, url) {
     return Chain.asStep({}, [
       Chain.fromParent(Toolbar.cWaitForToolbar, [
         Toolbar.cClickButton('Insert/Edit link')
@@ -71,8 +71,8 @@ UnitTest.asynctest('browser.AutoCompleteTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyActions = TinyActions(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,

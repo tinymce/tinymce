@@ -10,8 +10,8 @@
 
 import { Fun } from '@ephox/katamari';
 
-var stateChange = function (editor, clipboard, e) {
-  var ctrl = e.control;
+const stateChange = function (editor, clipboard, e) {
+  const ctrl = e.control;
 
   ctrl.active(clipboard.pasteFormat === 'text');
 
@@ -20,8 +20,8 @@ var stateChange = function (editor, clipboard, e) {
   });
 };
 
-var register = function (editor, clipboard) {
-  var postRender = Fun.curry(stateChange, editor, clipboard);
+const register = function (editor, clipboard) {
+  const postRender = Fun.curry(stateChange, editor, clipboard);
 
   editor.addButton('pastetext', {
     active: false,
@@ -41,5 +41,5 @@ var register = function (editor, clipboard) {
 };
 
 export default {
-  register: register
+  register
 };

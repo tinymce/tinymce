@@ -6,48 +6,47 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
 import InlineFormatDelete from 'tinymce/core/delete/InlineFormatDelete';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sDelete = function (editor) {
+  const sDelete = function (editor) {
     return Step.sync(function () {
-      var returnVal = InlineFormatDelete.backspaceDelete(editor, true);
+      const returnVal = InlineFormatDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  var sDeleteNoop = function (editor) {
+  const sDeleteNoop = function (editor) {
     return Step.sync(function () {
-      var returnVal = InlineFormatDelete.backspaceDelete(editor, true);
+      const returnVal = InlineFormatDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
-  var sBackspace = function (editor, forward?) {
+  const sBackspace = function (editor, forward?) {
     return Step.sync(function () {
-      var returnVal = InlineFormatDelete.backspaceDelete(editor, false);
+      const returnVal = InlineFormatDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  var sBackspaceNoop = function (editor, forward?) {
+  const sBackspaceNoop = function (editor, forward?) {
     return Step.sync(function () {
-      var returnVal = InlineFormatDelete.backspaceDelete(editor, false);
+      const returnVal = InlineFormatDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -251,4 +250,3 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function() 
     indent: false
   }, success, failure);
 });
-

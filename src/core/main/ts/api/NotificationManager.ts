@@ -26,35 +26,33 @@ import Delay from '../util/Delay';
  * });
  */
 
-
-
 export default function (editor) {
-  var notifications = [];
+  const notifications = [];
 
-  var getImplementation = function () {
-    var theme = editor.theme;
+  const getImplementation = function () {
+    const theme = editor.theme;
     return theme && theme.getNotificationManagerImpl ? theme.getNotificationManagerImpl() : NotificationManagerImpl();
   };
 
-  var getTopNotification = function () {
+  const getTopNotification = function () {
     return Option.from(notifications[0]);
   };
 
-  var isEqual = function (a, b) {
+  const isEqual = function (a, b) {
     return a.type === b.type && a.text === b.text && !a.progressBar && !a.timeout && !b.progressBar && !b.timeout;
   };
 
-  var reposition = function () {
+  const reposition = function () {
     if (notifications.length > 0) {
       getImplementation().reposition(notifications);
     }
   };
 
-  var addNotification = function (notification) {
+  const addNotification = function (notification) {
     notifications.push(notification);
   };
 
-  var closeNotification = function (notification) {
+  const closeNotification = function (notification) {
     Arr.findIndex(notifications, function (otherNotification) {
       return otherNotification === notification;
     }).each(function (index) {
@@ -64,7 +62,7 @@ export default function (editor) {
     });
   };
 
-  var open = function (args) {
+  const open = function (args) {
     // Never open notification if editor has been removed.
     if (editor.removed || !EditorView.isEditorAttachedToDom(editor)) {
       return;
@@ -75,7 +73,7 @@ export default function (editor) {
     }).getOrThunk(function () {
       editor.editorManager.setActive(editor);
 
-      var notification = getImplementation().open(args, function () {
+      const notification = getImplementation().open(args, function () {
         closeNotification(notification);
         reposition();
       });
@@ -86,7 +84,7 @@ export default function (editor) {
     });
   };
 
-  var close = function () {
+  const close = function () {
     getTopNotification().each(function (notification) {
       getImplementation().close(notification);
       closeNotification(notification);
@@ -94,13 +92,13 @@ export default function (editor) {
     });
   };
 
-  var getNotifications = function () {
+  const getNotifications = function () {
     return notifications;
   };
 
-  var registerEvents = function (editor) {
+  const registerEvents = function (editor) {
     editor.on('SkinLoaded', function () {
-      var serviceMessage = editor.settings.service_message;
+      const serviceMessage = editor.settings.service_message;
 
       if (serviceMessage) {
         open({
@@ -132,14 +130,14 @@ export default function (editor) {
      * @method open
      * @param {Object} args Optional name/value settings collection contains things like timeout/color/message etc.
      */
-    open: open,
+    open,
 
     /**
      * Closes the top most notification.
      *
      * @method close
      */
-    close: close,
+    close,
 
     /**
      * Returns the currently opened notification objects.
@@ -147,6 +145,6 @@ export default function (editor) {
      * @method getNotifications
      * @return {Array} Array of the currently opened notifications.
      */
-    getNotifications: getNotifications
+    getNotifications
   };
-};
+}

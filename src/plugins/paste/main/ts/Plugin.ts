@@ -20,13 +20,13 @@ import PrePostProcess from './core/PrePostProcess';
 import Quirks from './core/Quirks';
 import Buttons from './ui/Buttons';
 
-var userIsInformedState = Cell(false);
+const userIsInformedState = Cell(false);
 
 PluginManager.add('paste', function (editor) {
   if (DetectProPlugin.hasProPlugin(editor) === false) {
-    var clipboard = new Clipboard(editor);
-    var quirks = Quirks.setup(editor);
-    var draggingInternallyState = Cell(false);
+    const clipboard = new Clipboard(editor);
+    const quirks = Quirks.setup(editor);
+    const draggingInternallyState = Cell(false);
 
     Buttons.register(editor, clipboard);
     Commands.register(editor, clipboard, userIsInformedState);
@@ -38,4 +38,4 @@ PluginManager.add('paste', function (editor) {
   }
 });
 
-export default function () { };
+export default function () { }

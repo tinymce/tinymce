@@ -19,17 +19,15 @@ import ComboBox from './ComboBox';
  * @extends tinymce.ui.ComboBox
  */
 
-"use strict";
-
-export default <any> ComboBox.extend({
+export default ComboBox.extend({
   /**
    * Constructs a new control instance with the specified settings.
    *
    * @constructor
    * @param {Object} settings Name/value object with settings.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     settings.spellcheck = false;
 
@@ -45,9 +43,9 @@ export default <any> ComboBox.extend({
     });
   },
 
-  repaintColor: function (value) {
-    var openElm = this.getEl('open');
-    var elm = openElm ? openElm.getElementsByTagName('i')[0] : null;
+  repaintColor (value) {
+    const openElm = this.getEl('open');
+    const elm = openElm ? openElm.getElementsByTagName('i')[0] : null;
 
     if (elm) {
       try {
@@ -58,8 +56,8 @@ export default <any> ComboBox.extend({
     }
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     self.state.on('change:value', function (e) {
       if (self.state.get('rendered')) {

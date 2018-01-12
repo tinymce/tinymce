@@ -10,17 +10,17 @@ import Strings from '../module/test/Strings';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
 
   /* eslint-disable max-len */
 
-  var sTeardown = function (editor) {
+  const sTeardown = function (editor) {
     return Step.sync(function () {
       delete editor.settings.paste_remove_styles_if_webkit;
       delete editor.settings.paste_retain_style_properties;
@@ -30,18 +30,18 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     });
   };
 
-  var appendTeardown = function (editor, steps) {
+  const appendTeardown = function (editor, steps) {
     return Arr.bind(steps, function (step) {
       return [step, sTeardown(editor)];
     });
   };
 
-  var trimContent = function (content) {
+  const trimContent = function (content) {
     return content.replace(/^<p>&nbsp;<\/p>\n?/, '').replace(/\n?<p>&nbsp;<\/p>$/, '');
   };
 
-  suite.test("Plain text toggle event", function (editor) {
-    var events = [];
+  suite.test('Plain text toggle event', function (editor) {
+    const events = [];
 
     editor.on('PastePlainTextToggle', function (e) {
       events.push({ state: e.state });
@@ -66,8 +66,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     ], 'Should be enabled again');
   });
 
-  suite.test("Paste simple text content", function (editor) {
-    var rng = editor.dom.createRng();
+  suite.test('Paste simple text content', function (editor) {
+    const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
     editor.focus();
@@ -79,8 +79,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<p>1TEST4</p>');
   });
 
-  suite.test("Paste styled text content", function (editor) {
-    var rng = editor.dom.createRng();
+  suite.test('Paste styled text content', function (editor) {
+    const rng = editor.dom.createRng();
 
     editor.settings.paste_remove_styles_if_webkit = false;
 
@@ -93,8 +93,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<p>1<strong><em><span style="color: red;">TEST</span></em></strong>4</p>');
   });
 
-  suite.test("Paste paragraph in paragraph", function (editor) {
-    var rng = editor.dom.createRng();
+  suite.test('Paste paragraph in paragraph', function (editor) {
+    const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
     rng.setStart(editor.getBody().firstChild.firstChild, 1);
@@ -105,8 +105,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<p>1</p><p>TEST</p><p>4</p>');
   });
 
-  suite.test("Paste paragraphs in complex paragraph", function (editor) {
-    var rng = editor.dom.createRng();
+  suite.test('Paste paragraphs in complex paragraph', function (editor) {
+    const rng = editor.dom.createRng();
 
     editor.setContent('<p><strong><em>1234</em></strong></p>');
     rng.setStart(editor.dom.select('em,i')[0].firstChild, 1);
@@ -117,8 +117,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<p><strong><em>1</em></strong></p><p>TEST 1</p><p>TEST 2</p><p><strong><em>4</em></strong></p>');
   });
 
-  suite.test("Paste Word fake list", function (editor) {
-    var rng = editor.dom.createRng();
+  suite.test('Paste Word fake list', function (editor) {
+    let rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
     rng.setStart(editor.getBody().firstChild.firstChild, 0);
@@ -147,8 +147,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<ol><li>Version 7.0:</li></ol>');
   });
 
-  suite.test("Paste Word fake list before BR", function (editor) {
-    var rng = editor.dom.createRng();
+  suite.test('Paste Word fake list before BR', function (editor) {
+    let rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
     rng.setStart(editor.getBody().firstChild.firstChild, 0);
@@ -167,8 +167,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li><li>Item 5</li><li>Item 6</li></ul><p><br />a</p>');
   });
 
-  suite.test("Paste Word fake lists interrupted by header", function (editor) {
-    var rng = editor.dom.createRng();
+  suite.test('Paste Word fake lists interrupted by header', function (editor) {
+    const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
     rng.setStart(editor.getBody().firstChild.firstChild, 0);
@@ -179,7 +179,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<ul><li>List before heading A</li><li>List before heading B</li></ul><h1>heading</h1><ul><li>List after heading A</li><li>List after heading B</li></ul>');
   });
 
-  suite.test("Paste list like paragraph and list", function (editor) {
+  suite.test('Paste list like paragraph and list', function (editor) {
     editor.setContent('');
 
     editor.execCommand('mceInsertClipboardContent', false, {
@@ -189,7 +189,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<p>ABC. X</p><ol><li>Y</li></ol>');
   });
 
-  suite.test("Paste list like paragraph and list (disabled)", function (editor) {
+  suite.test('Paste list like paragraph and list (disabled)', function (editor) {
     editor.setContent('');
 
     editor.settings.paste_convert_word_fake_lists = false;
@@ -203,8 +203,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<p>ABC. X</p><p>1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Y</p>');
   });
 
-  suite.test("Paste Word table", function (editor) {
-    var rng = editor.dom.createRng();
+  suite.test('Paste Word table', function (editor) {
+    const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
     rng.setStart(editor.getBody().firstChild.firstChild, 0);
@@ -215,8 +215,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<table><tbody><tr><td width="307"><p>Cell 1</p></td><td width="307"><p>Cell 2</p></td></tr><tr><td width="307"><p>Cell 3</p></td><td width="307"><p>Cell 4</p></td></tr></tbody></table><p>&nbsp;</p>');
   });
 
-  suite.test("Paste Office 365", function (editor) {
-    var rng = editor.dom.createRng();
+  suite.test('Paste Office 365', function (editor) {
+    const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
     rng.setStart(editor.getBody().firstChild.firstChild, 0);
@@ -227,8 +227,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<p>Test</p>');
   });
 
-  suite.test("Paste Google Docs 1", function (editor) {
-    var rng = editor.dom.createRng();
+  suite.test('Paste Google Docs 1', function (editor) {
+    const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
     rng.setStart(editor.getBody().firstChild.firstChild, 0);
@@ -239,8 +239,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<p>Test</p>');
   });
 
-  suite.test("Paste Google Docs 2", function (editor) {
-    var rng = editor.dom.createRng();
+  suite.test('Paste Google Docs 2', function (editor) {
+    const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
     rng.setStart(editor.getBody().firstChild.firstChild, 0);
@@ -261,7 +261,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<p>a</p><p>b</p><p>c</p>');
   });
 
-  suite.test("Paste Word without mso markings", function (editor) {
+  suite.test('Paste Word without mso markings', function (editor) {
     editor.setContent('');
     editor.execCommand('mceInsertClipboardContent', false, {
       content: (
@@ -278,7 +278,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     ));
   });
 
-  suite.test("Paste Word links", function (editor) {
+  suite.test('Paste Word links', function (editor) {
     editor.setContent('');
     editor.execCommand('mceInsertClipboardContent', false, {
       content: (
@@ -317,7 +317,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     ));
   });
 
-  suite.test("Paste Word retain styles", function (editor) {
+  suite.test('Paste Word retain styles', function (editor) {
     editor.settings.paste_retain_style_properties = 'color,background-color,font-family';
 
     // Test color
@@ -333,7 +333,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<p style=\"background-color: #ff0000;\">Test</p>');
   });
 
-  suite.test("Paste Word retain bold/italic styles to elements", function (editor) {
+  suite.test('Paste Word retain bold/italic styles to elements', function (editor) {
     editor.settings.paste_retain_style_properties = 'color';
 
     editor.setContent('');
@@ -372,18 +372,18 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
 
     editor.execCommand('mceInsertClipboardContent', false, {
       content: (
-        "<p class=MsoListParagraphCxSpFirst style='text-indent:-18.0pt;mso-list:l0 level1 lfo1'>" +
-        "<![if !supportLists]><span style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol'>" +
-        "<span style='mso-list:Ignore'>·<span style='font:7.0pt \"Times New Roman\"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-        "</span></span></span><![endif]>a</p>" +
+        '<p class=MsoListParagraphCxSpFirst style=\'text-indent:-18.0pt;mso-list:l0 level1 lfo1\'>' +
+        '<![if !supportLists]><span style=\'font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol\'>' +
+        '<span style=\'mso-list:Ignore\'>·<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
+        '</span></span></span><![endif]>a</p>' +
 
-        "<p class=MsoListParagraphCxSpMiddle style='margin-left:72.0pt;mso-add-space:auto;text-indent:-18.0pt;mso-list:l0 level2 lfo1'>" +
-        "<![if !supportLists]><span style='font-family:\"Courier New\";mso-fareast-font-family:\"Courier New\"'>" +
-        "<span style='mso-list:Ignore'>o<span style='font:7.0pt \"Times New Roman\"'>&nbsp;&nbsp;</span></span></span><![endif]>b</p>" +
+        '<p class=MsoListParagraphCxSpMiddle style=\'margin-left:72.0pt;mso-add-space:auto;text-indent:-18.0pt;mso-list:l0 level2 lfo1\'>' +
+        '<![if !supportLists]><span style=\'font-family:"Courier New";mso-fareast-font-family:"Courier New"\'>' +
+        '<span style=\'mso-list:Ignore\'>o<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;</span></span></span><![endif]>b</p>' +
 
-        "<p class=MsoListParagraphCxSpLast style='margin-left:108.0pt;mso-add-space:auto;text-indent:-18.0pt;mso-list:l0 level3 lfo1'>" +
-        "<![if !supportLists]><span style='font-family:Wingdings;mso-fareast-font-family:Wingdings;mso-bidi-font-family:Wingdings'>" +
-        "<span style='mso-list:Ignore'>§<span style='font:7.0pt \"Times New Roman\"'>&nbsp;</span></span></span><![endif]>c 1. x</p>"
+        '<p class=MsoListParagraphCxSpLast style=\'margin-left:108.0pt;mso-add-space:auto;text-indent:-18.0pt;mso-list:l0 level3 lfo1\'>' +
+        '<![if !supportLists]><span style=\'font-family:Wingdings;mso-fareast-font-family:Wingdings;mso-bidi-font-family:Wingdings\'>' +
+        '<span style=\'mso-list:Ignore\'>§<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;</span></span></span><![endif]>c 1. x</p>'
       )
     });
 
@@ -408,22 +408,22 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
 
     editor.execCommand('mceInsertClipboardContent', false, {
       content: (
-        "<p class=MsoListParagraphCxSpFirst style='text-indent:-18.0pt;mso-list:l0 level1 lfo1'>" +
-        "<![if !supportLists]><span style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'>" +
-        "<span style='mso-list:Ignore'>1.<span style='font:7.0pt \"Times New Roman\"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>" +
-        "</span></span><![endif]>a</p>" +
+        '<p class=MsoListParagraphCxSpFirst style=\'text-indent:-18.0pt;mso-list:l0 level1 lfo1\'>' +
+        '<![if !supportLists]><span style=\'mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin\'>' +
+        '<span style=\'mso-list:Ignore\'>1.<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
+        '</span></span><![endif]>a</p>' +
 
-        "<p class=MsoListParagraphCxSpMiddle style='margin-left:72.0pt;mso-add-space:auto;text-indent:-18.0pt;mso-list:l0 level2 lfo1'>" +
-        "<![if !supportLists]><span style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span style='mso-list:Ignore'>a." +
-        "<span style='font:7.0pt \"Times New Roman\"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]>b</p>" +
+        '<p class=MsoListParagraphCxSpMiddle style=\'margin-left:72.0pt;mso-add-space:auto;text-indent:-18.0pt;mso-list:l0 level2 lfo1\'>' +
+        '<![if !supportLists]><span style=\'mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin\'><span style=\'mso-list:Ignore\'>a.' +
+        '<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]>b</p>' +
 
-        "<p class=MsoListParagraphCxSpLast style='margin-left:108.0pt;mso-add-space:auto;text-indent:-108.0pt;mso-text-indent-alt:-9.0pt;mso-list:l0 level3 lfo1'>" +
-        "<![if !supportLists]><span style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span style='mso-list:Ignore'>" +
-        "<span style='font:7.0pt \"Times New Roman\"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>i.<span style='font:7.0pt \"Times New Roman\"'>" +
-        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]>c</p>"
+        '<p class=MsoListParagraphCxSpLast style=\'margin-left:108.0pt;mso-add-space:auto;text-indent:-108.0pt;mso-text-indent-alt:-9.0pt;mso-list:l0 level3 lfo1\'>' +
+        '<![if !supportLists]><span style=\'mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin\'><span style=\'mso-list:Ignore\'>' +
+        '<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
+        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
+        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
+        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>i.<span style=\'font:7.0pt "Times New Roman"\'>' +
+        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]>c</p>'
       )
     });
 
@@ -443,7 +443,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     );
   });
 
-  suite.test("Paste list start index", function (editor) {
+  suite.test('Paste list start index', function (editor) {
     editor.settings.paste_merge_formats = true;
 
     editor.setContent('');
@@ -459,7 +459,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<ol start="10"><li>J</li></ol>');
   });
 
-  suite.test("Paste paste_merge_formats: true", function (editor) {
+  suite.test('Paste paste_merge_formats: true', function (editor) {
     editor.settings.paste_merge_formats = true;
 
     editor.setContent('<p><strong>a</strong></p>');
@@ -468,7 +468,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<p><strong>a<em>b</em></strong></p>');
   });
 
-  suite.test("Paste paste_merge_formats: false", function (editor) {
+  suite.test('Paste paste_merge_formats: false', function (editor) {
     editor.settings.paste_merge_formats = false;
 
     editor.setContent('<p><strong>a</strong></p>');
@@ -477,21 +477,21 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     LegacyUnit.equal(editor.getContent(), '<p><strong>a<em><strong>b</strong></em></strong></p>');
   });
 
-  suite.test("Paste word DIV as P", function (editor) {
+  suite.test('Paste word DIV as P', function (editor) {
     editor.setContent('');
     editor.execCommand('SelectAll');
     editor.execCommand('mceInsertClipboardContent', false, { content: '<p class="MsoNormal">1</p><div>2</div>' });
     LegacyUnit.equal(editor.getContent(), '<p>1</p><p>2</p>');
   });
 
-  suite.test("Paste part of list from IE", function (editor) {
+  suite.test('Paste part of list from IE', function (editor) {
     editor.setContent('');
     editor.execCommand('SelectAll');
     editor.execCommand('mceInsertClipboardContent', false, { content: '<li>item2</li><li>item3</li>' });
     LegacyUnit.equal(trimContent(editor.getContent()), '<ul><li>item2</li><li>item3</li></ul>', 'List tags are inferred when pasting LI');
   });
 
-  suite.test("Disable default filters", function (editor) {
+  suite.test('Disable default filters', function (editor) {
     editor.settings.paste_enable_default_filters = false;
 
     // Test color
@@ -503,10 +503,10 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
   });
 
   suite.test('paste invalid content with spans on page', function (editor) {
-    var startingContent = '<p>123 testing <span id="x">span later in document</span></p>',
+    const startingContent = '<p>123 testing <span id="x">span later in document</span></p>',
       insertedContent = '<ul><li>u</li><li>l</li></ul>';
     editor.setContent(startingContent);
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 0);
     editor.selection.setRng(rng);
@@ -517,7 +517,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
 
   suite.test('paste plain text with space', function (editor) {
     editor.setContent('<p>text</p>');
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 1);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
     editor.selection.setRng(rng);
@@ -528,7 +528,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
 
   suite.test('paste plain text with linefeeds', function (editor) {
     editor.setContent('<p>text</p>');
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 1);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
     editor.selection.setRng(rng);
@@ -539,7 +539,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
 
   suite.test('paste plain text with double linefeeds', function (editor) {
     editor.setContent('<p>text</p>');
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 1);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
     editor.selection.setRng(rng);
@@ -550,7 +550,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
 
   suite.test('paste plain text with entities', function (editor) {
     editor.setContent('<p>text</p>');
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 1);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
     editor.selection.setRng(rng);
@@ -561,7 +561,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
 
   suite.test('paste plain text with paragraphs', function (editor) {
     editor.setContent('<p>text</p>');
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 1);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
     editor.selection.setRng(rng);
@@ -857,4 +857,3 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

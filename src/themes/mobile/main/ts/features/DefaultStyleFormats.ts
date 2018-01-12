@@ -1,6 +1,5 @@
 
-
-export default <any> [
+export default [
   {
     title: 'Headings', items: [
       { title: 'Heading 1', format: 'h1' },

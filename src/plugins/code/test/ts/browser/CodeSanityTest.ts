@@ -8,23 +8,23 @@ import CodePlugin from 'tinymce/plugins/code/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   CodePlugin();
   ModernTheme();
 
-  var sAssertTextareaContent = function (expected) {
+  const sAssertTextareaContent = function (expected) {
     return Step.sync(function () {
-      var textarea: any = document.querySelector('div[role="dialog"] textarea');
+      const textarea: any = document.querySelector('div[role="dialog"] textarea');
       RawAssertions.assertEq('should have correct value', expected, textarea.value);
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
-    var tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sSetContent('<b>a</b>'),
@@ -38,4 +38,3 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

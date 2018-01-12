@@ -34,16 +34,18 @@ import Tools from '../util/Tools';
  */
 
 // Shorten names
-var each = Tools.each, is = Tools.is, grep = Tools.grep;
-var isIE = Env.ie;
-var simpleSelectorRe = /^([a-z0-9],?)+$/i;
-var whiteSpaceRegExp = /^[ \t\r\n]*$/;
+const each = Tools.each, is = Tools.is, grep = Tools.grep;
+const isIE = Env.ie;
+const simpleSelectorRe = /^([a-z0-9],?)+$/i;
+const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
-var setupAttrHooks = function (domUtils, settings) {
-  var attrHooks: any = {}, keepValues = settings.keep_values, keepUrlHook;
+const setupAttrHooks = function (domUtils, settings) {
+  let attrHooks: any = {};
+  const keepValues = settings.keep_values;
+  let keepUrlHook;
 
   keepUrlHook = {
-    set: function ($elm, value, name) {
+    set ($elm, value, name) {
       if (settings.url_converter) {
         value = settings.url_converter.call(settings.url_converter_scope || domUtils, value, name, $elm[0]);
       }
@@ -51,14 +53,14 @@ var setupAttrHooks = function (domUtils, settings) {
       $elm.attr('data-mce-' + name, value).attr(name, value);
     },
 
-    get: function ($elm, name) {
+    get ($elm, name) {
       return $elm.attr('data-mce-' + name) || $elm.attr(name);
     }
   };
 
   attrHooks = {
     style: {
-      set: function ($elm, value) {
+      set ($elm, value) {
         if (value !== null && typeof value === 'object') {
           $elm.css(value);
           return;
@@ -71,8 +73,8 @@ var setupAttrHooks = function (domUtils, settings) {
         $elm.attr('style', value);
       },
 
-      get: function ($elm) {
-        var value = $elm.attr('data-mce-style') || $elm.attr('style');
+      get ($elm) {
+        let value = $elm.attr('data-mce-style') || $elm.attr('style');
 
         value = domUtils.serializeStyle(domUtils.parseStyle(value), $elm[0].nodeName);
 
@@ -88,8 +90,8 @@ var setupAttrHooks = function (domUtils, settings) {
   return attrHooks;
 };
 
-var updateInternalStyleAttr = function (domUtils, $elm) {
-  var value = $elm.attr('style');
+const updateInternalStyleAttr = function (domUtils, $elm) {
+  let value = $elm.attr('style');
 
   value = domUtils.serializeStyle(domUtils.parseStyle(value), $elm[0].nodeName);
 
@@ -100,16 +102,16 @@ var updateInternalStyleAttr = function (domUtils, $elm) {
   $elm.attr('data-mce-style', value);
 };
 
-var nodeIndex = function (node, normalized) {
-  var idx = 0, lastNodeType, nodeType;
+const nodeIndex = function (node, normalized) {
+  let idx = 0, lastNodeType, nodeType;
 
   if (node) {
     for (lastNodeType = node.nodeType, node = node.previousSibling; node; node = node.previousSibling) {
       nodeType = node.nodeType;
 
       // Normalize text nodes
-      if (normalized && nodeType == 3) {
-        if (nodeType == lastNodeType || !node.nodeValue.length) {
+      if (normalized && nodeType === 3) {
+        if (nodeType === lastNodeType || !node.nodeValue.length) {
           continue;
         }
       }
@@ -129,15 +131,16 @@ var nodeIndex = function (node, normalized) {
  * @param {Document} doc Document reference to bind the utility class to.
  * @param {settings} settings Optional settings collection.
  */
-var DOMUtils: any = function (doc, settings) {
-  var self = this, blockElementsMap;
+const DOMUtils: any = function (doc, settings) {
+  const self = this;
+  let blockElementsMap;
 
   self.doc = doc;
   self.win = window;
   self.files = {};
   self.counter = 0;
   self.stdMode = !isIE || doc.documentMode >= 8;
-  self.boxModel = !isIE || doc.compatMode == "CSS1Compat" || self.stdMode;
+  self.boxModel = !isIE || doc.compatMode === 'CSS1Compat' || self.stdMode;
   self.styleSheetLoader = StyleSheetLoader(doc);
   self.boundEvents = [];
   self.settings = settings = settings || {};
@@ -172,7 +175,7 @@ var DOMUtils: any = function (doc, settings) {
     }
 
     // This function is called in module pattern style since it might be executed with the wrong this scope
-    var type = node.nodeType;
+    const type = node.nodeType;
 
     // If it's a node then check the type and use the nodeName
     if (type) {
@@ -184,8 +187,8 @@ var DOMUtils: any = function (doc, settings) {
 };
 
 DOMUtils.prototype = {
-  $$: function (elm) {
-    if (typeof elm == 'string') {
+  $$ (elm) {
+    if (typeof elm === 'string') {
       elm = this.get(elm);
     }
 
@@ -194,11 +197,12 @@ DOMUtils.prototype = {
 
   root: null,
 
-  fixDoc: function (doc) {
+  fixDoc (doc) {
   },
 
-  clone: function (node, deep) {
-    var self = this, clone, doc;
+  clone (node, deep) {
+    const self = this;
+    let clone, doc;
 
     // TODO: Add feature detection here in the future
     if (!isIE || node.nodeType !== 1 || deep) {
@@ -229,8 +233,8 @@ DOMUtils.prototype = {
    * @method getRoot
    * @return {Element} Root element for the utility class.
    */
-  getRoot: function () {
-    var self = this;
+  getRoot () {
+    const self = this;
 
     return self.settings.root_element || self.doc.body;
   },
@@ -242,8 +246,8 @@ DOMUtils.prototype = {
    * @param {Window} win Optional window to get viewport of.
    * @return {Object} Viewport object with fields x, y, w and h.
    */
-  getViewPort: function (win) {
-    var doc, rootElm;
+  getViewPort (win) {
+    let doc, rootElm;
 
     win = !win ? this.win : win;
     doc = win.document;
@@ -265,8 +269,9 @@ DOMUtils.prototype = {
    * @param {Element/String} elm Element object or element ID to get rectangle from.
    * @return {object} Rectangle for specified element object with x, y, w, h fields.
    */
-  getRect: function (elm) {
-    var self = this, pos, size;
+  getRect (elm) {
+    const self = this;
+    let pos, size;
 
     elm = self.get(elm);
     pos = self.getPos(elm);
@@ -285,8 +290,9 @@ DOMUtils.prototype = {
    * @param {Element/String} elm Element object or element ID to get rectangle from.
    * @return {object} Rectangle for specified element object with w, h fields.
    */
-  getSize: function (elm) {
-    var self = this, w, h;
+  getSize (elm) {
+    const self = this;
+    let w, h;
 
     elm = self.get(elm);
     w = self.getStyle(elm, 'width');
@@ -320,7 +326,7 @@ DOMUtils.prototype = {
    * @param {Node} root Optional root element, never go beyond this point.
    * @return {Node} DOM Node or null if it wasn't found.
    */
-  getParent: function (node, selector, root) {
+  getParent (node, selector, root) {
     return this.getParents(node, selector, root, false);
   },
 
@@ -334,14 +340,16 @@ DOMUtils.prototype = {
    * @param {Node} root Optional root element, never go beyond this point.
    * @return {Array} Array of nodes or null if it wasn't found.
    */
-  getParents: function (node, selector, root, collect) {
-    var self = this, selectorVal, result = [];
+  getParents (node, selector, root, collect) {
+    const self = this;
+    let selectorVal;
+    const result = [];
 
     node = self.get(node);
     collect = collect === undefined;
 
     // Default root on inline mode
-    root = root || (self.getRoot().nodeName != 'BODY' ? self.getRoot().parentNode : null);
+    root = root || (self.getRoot().nodeName !== 'BODY' ? self.getRoot().parentNode : null);
 
     // Wrap node name as func
     if (is(selector, 'string')) {
@@ -349,7 +357,7 @@ DOMUtils.prototype = {
 
       if (selector === '*') {
         selector = function (node) {
-          return node.nodeType == 1;
+          return node.nodeType === 1;
         };
       } else {
         selector = function (node) {
@@ -359,7 +367,7 @@ DOMUtils.prototype = {
     }
 
     while (node) {
-      if (node == root || !node.nodeType || node.nodeType === 9) {
+      if (node === root || !node.nodeType || node.nodeType === 9) {
         break;
       }
 
@@ -384,10 +392,10 @@ DOMUtils.prototype = {
    * @param {String/Element} n Element id to look for or element to just pass though.
    * @return {Element} Element matching the specified id or null if it wasn't found.
    */
-  get: function (elm) {
-    var name;
+  get (elm) {
+    let name;
 
-    if (elm && this.doc && typeof elm == 'string') {
+    if (elm && this.doc && typeof elm === 'string') {
       name = elm;
       elm = this.doc.getElementById(elm);
 
@@ -408,7 +416,7 @@ DOMUtils.prototype = {
    * @param {String/function} selector Selector CSS expression or function.
    * @return {Node} Next node item matching the selector or null if it wasn't found.
    */
-  getNext: function (node, selector) {
+  getNext (node, selector) {
     return this._findSib(node, selector, 'nextSibling');
   },
 
@@ -420,7 +428,7 @@ DOMUtils.prototype = {
    * @param {String/function} selector Selector CSS expression or function.
    * @return {Node} Previous node item matching the selector or null if it wasn't found.
    */
-  getPrev: function (node, selector) {
+  getPrev (node, selector) {
     return this._findSib(node, selector, 'previousSibling');
   },
 
@@ -442,8 +450,8 @@ DOMUtils.prototype = {
    * // Adds a class to all spans that have the test class in the currently active editor
    * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('span.test'), 'someclass')
    */
-  select: function (selector, scope) {
-    var self = this;
+  select (selector, scope) {
+    const self = this;
 
     /*eslint new-cap:0 */
     return Sizzle(selector, self.get(scope) || self.settings.root_element || self.doc, []);
@@ -456,8 +464,8 @@ DOMUtils.prototype = {
    * @param {Node/NodeList} elm DOM node to match or an array of nodes to match.
    * @param {String} selector CSS pattern to match the element against.
    */
-  is: function (elm, selector) {
-    var i;
+  is (elm, selector) {
+    let i;
 
     if (!elm) {
       return false;
@@ -467,7 +475,7 @@ DOMUtils.prototype = {
     if (elm.length === undefined) {
       // Simple all selector
       if (selector === '*') {
-        return elm.nodeType == 1;
+        return elm.nodeType === 1;
       }
 
       // Simple selector just elements
@@ -476,7 +484,7 @@ DOMUtils.prototype = {
         elm = elm.nodeName.toLowerCase();
 
         for (i = selector.length - 1; i >= 0; i--) {
-          if (selector[i] == elm) {
+          if (selector[i] === elm) {
             return true;
           }
         }
@@ -486,11 +494,11 @@ DOMUtils.prototype = {
     }
 
     // Is non element
-    if (elm.nodeType && elm.nodeType != 1) {
+    if (elm.nodeType && elm.nodeType !== 1) {
       return false;
     }
 
-    var elms = elm.nodeType ? [elm] : elm;
+    const elms = elm.nodeType ? [elm] : elm;
 
     /*eslint new-cap:0 */
     return Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;
@@ -513,11 +521,11 @@ DOMUtils.prototype = {
    * // Adds a new paragraph to the end of the active editor
    * tinymce.activeEditor.dom.add(tinymce.activeEditor.getBody(), 'p', {title: 'my title'}, 'Some content');
    */
-  add: function (parentElm, name, attrs, html, create) {
-    var self = this;
+  add (parentElm, name, attrs, html, create) {
+    const self = this;
 
     return this.run(parentElm, function (parentElm) {
-      var newElm;
+      let newElm;
 
       newElm = is(name, 'string') ? self.doc.createElement(name) : name;
       self.setAttribs(newElm, attrs);
@@ -547,7 +555,7 @@ DOMUtils.prototype = {
    * var el = tinymce.activeEditor.dom.create('div', {id: 'test', 'class': 'myclass'}, 'some content');
    * tinymce.activeEditor.selection.setNode(el);
    */
-  create: function (name, attrs, html) {
+  create (name, attrs, html) {
     return this.add(this.doc.createElement(name), name, attrs, html, 1);
   },
 
@@ -563,19 +571,19 @@ DOMUtils.prototype = {
    * // Creates a html chunk and inserts it at the current selection/caret location
    * tinymce.activeEditor.selection.setContent(tinymce.activeEditor.dom.createHTML('a', {href: 'test.html'}, 'some line'));
    */
-  createHTML: function (name, attrs, html) {
-    var outHtml = '', key;
+  createHTML (name, attrs, html) {
+    let outHtml = '', key;
 
     outHtml += '<' + name;
 
     for (key in attrs) {
-      if (attrs.hasOwnProperty(key) && attrs[key] !== null && typeof attrs[key] != 'undefined') {
+      if (attrs.hasOwnProperty(key) && attrs[key] !== null && typeof attrs[key] !== 'undefined') {
         outHtml += ' ' + key + '="' + this.encode(attrs[key]) + '"';
       }
     }
 
     // A call to tinymce.is doesn't work for some odd reason on IE9 possible bug inside their JS runtime
-    if (typeof html != "undefined") {
+    if (typeof html !== 'undefined') {
       return outHtml + '>' + html + '</' + name + '>';
     }
 
@@ -589,10 +597,12 @@ DOMUtils.prototype = {
    * @param {String} html Html string to create fragment from.
    * @return {DocumentFragment} Document fragment node.
    */
-  createFragment: function (html) {
-    var frag, node, doc = this.doc, container;
+  createFragment (html) {
+    let frag, node;
+    const doc = this.doc;
+    let container;
 
-    container = doc.createElement("div");
+    container = doc.createElement('div');
     frag = doc.createDocumentFragment();
 
     if (html) {
@@ -622,15 +632,15 @@ DOMUtils.prototype = {
    * // Removes an element by id in the document
    * tinymce.DOM.remove('mydiv');
    */
-  remove: function (node, keepChildren) {
+  remove (node, keepChildren) {
     node = this.$$(node);
 
     if (keepChildren) {
       node.each(function () {
-        var child;
+        let child;
 
         while ((child = this.firstChild)) {
-          if (child.nodeType == 3 && child.data.length === 0) {
+          if (child.nodeType === 3 && child.data.length === 0) {
             this.removeChild(child);
           } else {
             this.parentNode.insertBefore(child, this);
@@ -659,7 +669,7 @@ DOMUtils.prototype = {
    * // Sets a style value to an element by id in the current document
    * tinymce.DOM.setStyle('mydiv', 'background-color', 'red');
    */
-  setStyle: function (elm, name, value) {
+  setStyle (elm, name, value) {
     elm = this.$$(elm).css(name, value);
 
     if (this.settings.update_styles) {
@@ -676,7 +686,7 @@ DOMUtils.prototype = {
    * @param {Boolean} computed Computed style.
    * @return {String} Current style or computed style value of an element.
    */
-  getStyle: function (elm, name, computed) {
+  getStyle (elm, name, computed) {
     elm = this.$$(elm);
 
     if (computed) {
@@ -688,7 +698,7 @@ DOMUtils.prototype = {
       return b.toUpperCase();
     });
 
-    if (name == 'float') {
+    if (name === 'float') {
       name = Env.ie && Env.ie < 12 ? 'styleFloat' : 'cssFloat';
     }
 
@@ -708,7 +718,7 @@ DOMUtils.prototype = {
    * // Sets styles to an element by id in the current document
    * tinymce.DOM.setStyles('mydiv', {'background-color': 'red', 'color': 'green'});
    */
-  setStyles: function (elm, styles) {
+  setStyles (elm, styles) {
     elm = this.$$(elm).css(styles);
 
     if (this.settings.update_styles) {
@@ -722,9 +732,10 @@ DOMUtils.prototype = {
    * @method removeAllAttribs
    * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to remove attributes from.
    */
-  removeAllAttribs: function (e) {
+  removeAllAttribs (e) {
     return this.run(e, function (e) {
-      var i, attrs = e.attributes;
+      let i;
+      const attrs = e.attributes;
       for (i = attrs.length - 1; i >= 0; i--) {
         e.removeAttributeNode(attrs.item(i));
       }
@@ -746,8 +757,10 @@ DOMUtils.prototype = {
    * // Sets class attribute on a specific element in the current page
    * tinymce.dom.setAttrib('mydiv', 'class', 'myclass');
    */
-  setAttrib: function (elm, name, value) {
-    var self = this, originalValue, hook, settings = self.settings;
+  setAttrib (elm, name, value) {
+    const self = this;
+    let originalValue, hook;
+    const settings = self.settings;
 
     if (value === '') {
       value = null;
@@ -767,7 +780,7 @@ DOMUtils.prototype = {
       elm.attr(name, value);
     }
 
-    if (originalValue != value && settings.onSetAttrib) {
+    if (originalValue !== value && settings.onSetAttrib) {
       settings.onSetAttrib({
         attrElm: elm,
         attrName: name,
@@ -789,8 +802,8 @@ DOMUtils.prototype = {
    * // Sets class and title attributes on a specific element in the current page
    * tinymce.DOM.setAttribs('mydiv', {'class': 'myclass', title: 'some title'});
    */
-  setAttribs: function (elm, attrs) {
-    var self = this;
+  setAttribs (elm, attrs) {
+    const self = this;
 
     self.$$(elm).each(function (i, node) {
       each(attrs, function (value, name) {
@@ -808,8 +821,9 @@ DOMUtils.prototype = {
    * @param {String} defaultVal Optional default value to return if the attribute didn't exist.
    * @return {String} Attribute value string, default value or null if the attribute wasn't found.
    */
-  getAttrib: function (elm, name, defaultVal) {
-    var self = this, hook, value;
+  getAttrib (elm, name, defaultVal) {
+    const self = this;
+    let hook, value;
 
     elm = self.$$(elm);
 
@@ -823,7 +837,7 @@ DOMUtils.prototype = {
       }
     }
 
-    if (typeof value == 'undefined') {
+    if (typeof value === 'undefined') {
       value = defaultVal || '';
     }
 
@@ -838,7 +852,7 @@ DOMUtils.prototype = {
    * @param {Element} rootElm Optional root element to stop calculations at.
    * @return {object} Absolute position of the specified element object with x, y fields.
    */
-  getPos: function (elm, rootElm) {
+  getPos (elm, rootElm) {
     return Position.getPos(this.doc.body, this.get(elm), rootElm);
   },
 
@@ -851,7 +865,7 @@ DOMUtils.prototype = {
    * @param {String} cssText Style value to parse, for example: border:1px solid red;.
    * @return {Object} Object representation of that style, for example: {border: '1px solid red'}
    */
-  parseStyle: function (cssText) {
+  parseStyle (cssText) {
     return this.styles.parse(cssText);
   },
 
@@ -863,7 +877,7 @@ DOMUtils.prototype = {
    * @param {String} name Optional element name.
    * @return {String} String representation of the style object, for example: border: 1px solid red.
    */
-  serializeStyle: function (styles, name) {
+  serializeStyle (styles, name) {
     return this.styles.serialize(styles, name);
   },
 
@@ -873,12 +887,14 @@ DOMUtils.prototype = {
    * @method addStyle
    * @param {String} cssText CSS Text style to add to top of head of document.
    */
-  addStyle: function (cssText) {
-    var self = this, doc = self.doc, head, styleElm;
+  addStyle (cssText) {
+    const self = this;
+    const doc = self.doc;
+    let head, styleElm;
 
     // Prevent inline from loading the same styles twice
     if (self !== DOMUtils.DOM && doc === document) {
-      var addedStyles = DOMUtils.DOM.addedStyles;
+      let addedStyles = DOMUtils.DOM.addedStyles;
 
       addedStyles = addedStyles || [];
       if (addedStyles[cssText]) {
@@ -930,8 +946,10 @@ DOMUtils.prototype = {
    * // Loads multiple CSS files into the current document
    * tinymce.DOM.loadCSS('somepath/some.css,somepath/someother.css');
    */
-  loadCSS: function (url) {
-    var self = this, doc = self.doc, head;
+  loadCSS (url) {
+    const self = this;
+    const doc = self.doc;
+    let head;
 
     // Prevent inline from loading the same CSS file twice
     if (self !== DOMUtils.DOM && doc === document) {
@@ -946,7 +964,7 @@ DOMUtils.prototype = {
     head = doc.getElementsByTagName('head')[0];
 
     each(url.split(','), function (url) {
-      var link;
+      let link;
 
       url = Tools._addCacheSuffix(url);
 
@@ -988,7 +1006,7 @@ DOMUtils.prototype = {
    * // Adds a class to a specific element in the current page
    * tinymce.DOM.addClass('mydiv', 'myclass');
    */
-  addClass: function (elm, cls) {
+  addClass (elm, cls) {
     this.$$(elm).addClass(cls);
   },
 
@@ -1007,7 +1025,7 @@ DOMUtils.prototype = {
    * // Removes a class from a specific element in the current page
    * tinymce.DOM.removeClass('mydiv', 'myclass');
    */
-  removeClass: function (elm, cls) {
+  removeClass (elm, cls) {
     this.toggleClass(elm, cls, false);
   },
 
@@ -1019,7 +1037,7 @@ DOMUtils.prototype = {
    * @param {String} cls CSS class to check for.
    * @return {Boolean} true/false if the specified element has the specified class.
    */
-  hasClass: function (elm, cls) {
+  hasClass (elm, cls) {
     return this.$$(elm).hasClass(cls);
   },
 
@@ -1031,7 +1049,7 @@ DOMUtils.prototype = {
    * @param {[type]} cls Class to toggle on/off.
    * @param {[type]} state Optional state to set.
    */
-  toggleClass: function (elm, cls, state) {
+  toggleClass (elm, cls, state) {
     this.$$(elm).toggleClass(cls, state).each(function () {
       if (this.className === '') {
         DomQuery(this).attr('class', null);
@@ -1045,7 +1063,7 @@ DOMUtils.prototype = {
    * @method show
    * @param {String/Element/Array} elm ID of DOM element or DOM element or array with elements or IDs to show.
    */
-  show: function (elm) {
+  show (elm) {
     this.$$(elm).show();
   },
 
@@ -1058,7 +1076,7 @@ DOMUtils.prototype = {
    * // Hides an element by id in the document
    * tinymce.DOM.hide('myid');
    */
-  hide: function (elm) {
+  hide (elm) {
     this.$$(elm).hide();
   },
 
@@ -1069,8 +1087,8 @@ DOMUtils.prototype = {
    * @param {String/Element} elm Id or element to check display state on.
    * @return {Boolean} true/false if the element is hidden or not.
    */
-  isHidden: function (elm) {
-    return this.$$(elm).css('display') == 'none';
+  isHidden (elm) {
+    return this.$$(elm).css('display') === 'none';
   },
 
   /**
@@ -1081,7 +1099,7 @@ DOMUtils.prototype = {
    * @param {String} prefix Optional prefix to add in front of all ids - defaults to "mce_".
    * @return {String} Unique id.
    */
-  uniqueId: function (prefix) {
+  uniqueId (prefix) {
     return (!prefix ? 'mce_' : prefix) + (this.counter++);
   },
 
@@ -1099,7 +1117,7 @@ DOMUtils.prototype = {
    * // Sets the inner HTML of an element by id in the document
    * tinymce.DOM.setHTML('mydiv', 'some inner html');
    */
-  setHTML: function (elm, html) {
+  setHTML (elm, html) {
     elm = this.$$(elm);
 
     if (isIE) {
@@ -1140,11 +1158,11 @@ DOMUtils.prototype = {
    * tinymce.DOM.getOuterHTML(editorElement);
    * tinymce.activeEditor.getOuterHTML(tinymce.activeEditor.getBody());
    */
-  getOuterHTML: function (elm) {
+  getOuterHTML (elm) {
     elm = this.get(elm);
 
     // Older FF doesn't have outerHTML 3.6 is still used by some orgaizations
-    return elm.nodeType == 1 && "outerHTML" in elm ? elm.outerHTML : DomQuery('<div></div>').append(DomQuery(elm).clone()).html();
+    return elm.nodeType === 1 && 'outerHTML' in elm ? elm.outerHTML : DomQuery('<div></div>').append(DomQuery(elm).clone()).html();
   },
 
   /**
@@ -1160,13 +1178,13 @@ DOMUtils.prototype = {
    * // Sets the outer HTML of an element by id in the document
    * tinymce.DOM.setOuterHTML('mydiv', '<div>some html</div>');
    */
-  setOuterHTML: function (elm, html) {
-    var self = this;
+  setOuterHTML (elm, html) {
+    const self = this;
 
     self.$$(elm).each(function () {
       try {
         // Older FF doesn't have outerHTML 3.6 is still used by some organizations
-        if ("outerHTML" in this) {
+        if ('outerHTML' in this) {
           this.outerHTML = html;
           return;
         }
@@ -1205,11 +1223,11 @@ DOMUtils.prototype = {
    * @param {Element/String/Array} referenceNode Reference element, element id or array of elements to insert after.
    * @return {Element/Array} Element that got added or an array with elements.
    */
-  insertAfter: function (node, referenceNode) {
+  insertAfter (node, referenceNode) {
     referenceNode = this.get(referenceNode);
 
     return this.run(node, function (node) {
-      var parent, nextSibling;
+      let parent, nextSibling;
 
       parent = referenceNode.parentNode;
       nextSibling = referenceNode.nextSibling;
@@ -1234,8 +1252,8 @@ DOMUtils.prototype = {
    * @param {Boolean} keepChildren Optional keep children state, if set to true child nodes from the old object will be added
    * to new ones.
    */
-  replace: function (newElm, oldElm, keepChildren) {
-    var self = this;
+  replace (newElm, oldElm, keepChildren) {
+    const self = this;
 
     return self.run(oldElm, function (oldElm) {
       if (is(oldElm, 'array')) {
@@ -1260,10 +1278,11 @@ DOMUtils.prototype = {
    * @param {String} name Name of the new element.
    * @return {Element} New element or the old element if it needed renaming.
    */
-  rename: function (elm, name) {
-    var self = this, newElm;
+  rename (elm, name) {
+    const self = this;
+    let newElm;
 
-    if (elm.nodeName != name.toUpperCase()) {
+    if (elm.nodeName !== name.toUpperCase()) {
       // Rename block element
       newElm = self.create(name);
 
@@ -1287,17 +1306,17 @@ DOMUtils.prototype = {
    * @param {Element} b Element to find common ancestor of.
    * @return {Element} Common ancestor element of the two input elements.
    */
-  findCommonAncestor: function (a, b) {
-    var ps = a, pe;
+  findCommonAncestor (a, b) {
+    let ps = a, pe;
 
     while (ps) {
       pe = b;
 
-      while (pe && ps != pe) {
+      while (pe && ps !== pe) {
         pe = pe.parentNode;
       }
 
-      if (ps == pe) {
+      if (ps === pe) {
         break;
       }
 
@@ -1318,7 +1337,7 @@ DOMUtils.prototype = {
    * @param {String} rgbVal RGB string value like rgb(1,2,3)
    * @return {String} Hex version of that RGB value like #FF00FF.
    */
-  toHex: function (rgbVal) {
+  toHex (rgbVal) {
     return this.styles.toHex(Tools.trim(rgbVal));
   },
 
@@ -1331,8 +1350,9 @@ DOMUtils.prototype = {
    * @param {Object} scope Optional scope to execute the function in.
    * @return {Object/Array} Single object, or an array of objects if multiple input elements were passed in.
    */
-  run: function (elm, func, scope) {
-    var self = this, result;
+  run (elm, func, scope) {
+    const self = this;
+    let result;
 
     if (typeof elm === 'string') {
       elm = self.get(elm);
@@ -1348,7 +1368,7 @@ DOMUtils.prototype = {
 
       each(elm, function (elm, i) {
         if (elm) {
-          if (typeof elm == 'string') {
+          if (typeof elm === 'string') {
             elm = self.get(elm);
           }
 
@@ -1369,8 +1389,8 @@ DOMUtils.prototype = {
    * @param {HTMLElement/string} elm Element node or string id to get attributes from.
    * @return {NodeList} NodeList with attributes.
    */
-  getAttribs: function (elm) {
-    var attrs;
+  getAttribs (elm) {
+    let attrs;
 
     elm = this.get(elm);
 
@@ -1382,7 +1402,7 @@ DOMUtils.prototype = {
       attrs = [];
 
       // Object will throw exception in IE
-      if (elm.nodeName == 'OBJECT') {
+      if (elm.nodeName === 'OBJECT') {
         return elm.attributes;
       }
 
@@ -1392,7 +1412,7 @@ DOMUtils.prototype = {
       }
 
       // It's crazy that this is faster in IE but it's because it returns all attributes all the time
-      var attrRegExp = /<\/?[\w:\-]+ ?|=[\"][^\"]+\"|=\'[^\']+\'|=[\w\-]+|>/gi;
+      const attrRegExp = /<\/?[\w:\-]+ ?|=[\"][^\"]+\"|=\'[^\']+\'|=[\w\-]+|>/gi;
       elm.cloneNode(false).outerHTML.replace(attrRegExp, '').replace(/[\w:\-]+/gi, function (a) {
         attrs.push({ specified: 1, nodeName: a });
       });
@@ -1412,8 +1432,9 @@ DOMUtils.prototype = {
    * @param {Object} elements Optional name/value object with elements that are automatically treated as non-empty elements.
    * @return {Boolean} true/false if the node is empty or not.
    */
-  isEmpty: function (node, elements) {
-    var self = this, i, attributes, type, whitespace, walker, name, brCount = 0;
+  isEmpty (node, elements) {
+    const self = this;
+    let i, attributes, type, whitespace, walker, name, brCount = 0;
 
     node = node.firstChild;
     if (node) {
@@ -1426,7 +1447,7 @@ DOMUtils.prototype = {
 
         if (type === 1) {
           // Ignore bogus elements
-          var bogusVal = node.getAttribute('data-mce-bogus');
+          const bogusVal = node.getAttribute('data-mce-bogus');
           if (bogusVal) {
             node = walker.next(bogusVal === 'all');
             continue;
@@ -1450,14 +1471,14 @@ DOMUtils.prototype = {
           i = attributes.length;
           while (i--) {
             name = attributes[i].nodeName;
-            if (name === "name" || name === 'data-mce-bookmark') {
+            if (name === 'name' || name === 'data-mce-bookmark') {
               return false;
             }
           }
         }
 
         // Keep comment nodes
-        if (type == 8) {
+        if (type === 8) {
           return false;
         }
 
@@ -1488,7 +1509,7 @@ DOMUtils.prototype = {
    * var rng = tinymce.DOM.createRng();
    * alert(rng.startContainer + "," + rng.startOffset);
    */
-  createRng: function () {
+  createRng () {
     return this.doc.createRange();
   },
 
@@ -1500,7 +1521,7 @@ DOMUtils.prototype = {
    * @param {boolean} normalized Optional true/false state if the index is what it would be after a normalization.
    * @return {Number} Index of the specified node.
    */
-  nodeIndex: nodeIndex,
+  nodeIndex,
 
   /**
    * Splits an element into two new elements and places the specified split
@@ -1513,8 +1534,9 @@ DOMUtils.prototype = {
    * @param {Element} replacementElm Optional replacement element to replace the split element with.
    * @return {Element} Returns the split element or the replacement element if that is specified.
    */
-  split: function (parentElm, splitElm, replacementElm) {
-    var self = this, r = self.createRng(), bef, aft, pa;
+  split (parentElm, splitElm, replacementElm) {
+    const self = this;
+    let r = self.createRng(), bef, aft, pa;
 
     if (parentElm && splitElm) {
       // Get before chunk
@@ -1535,7 +1557,7 @@ DOMUtils.prototype = {
       // Insert middle chunk
       if (replacementElm) {
         pa.insertBefore(replacementElm, parentElm);
-        //pa.replaceChild(replacementElm, splitElm);
+        // pa.replaceChild(replacementElm, splitElm);
       } else {
         pa.insertBefore(splitElm, parentElm);
       }
@@ -1559,11 +1581,11 @@ DOMUtils.prototype = {
    * @param {Object} scope Optional scope to execute the function in.
    * @return {function} Function callback handler the same as the one passed in.
    */
-  bind: function (target, name, func, scope) {
-    var self = this;
+  bind (target, name, func, scope) {
+    const self = this;
 
     if (Tools.isArray(target)) {
-      var i = target.length;
+      let i = target.length;
 
       while (i--) {
         target[i] = self.bind(target[i], name, func, scope);
@@ -1590,8 +1612,9 @@ DOMUtils.prototype = {
    * @return {bool/Array} Bool state of true if the handler was removed, or an array of states if multiple input elements
    * were passed in.
    */
-  unbind: function (target, name, func) {
-    var self = this, i;
+  unbind (target, name, func) {
+    const self = this;
+    let i;
 
     if (Tools.isArray(target)) {
       i = target.length;
@@ -1608,9 +1631,9 @@ DOMUtils.prototype = {
       i = self.boundEvents.length;
 
       while (i--) {
-        var item = self.boundEvents[i];
+        const item = self.boundEvents[i];
 
-        if (target == item[0] && (!name || name == item[1]) && (!func || func == item[2])) {
+        if (target === item[0] && (!name || name === item[1]) && (!func || func === item[2])) {
           this.events.unbind(item[0], item[1], item[2]);
         }
       }
@@ -1628,31 +1651,32 @@ DOMUtils.prototype = {
    * @param {Object} evt Event object to send.
    * @return {Event} Event object.
    */
-  fire: function (target, name, evt) {
+  fire (target, name, evt) {
     return this.events.fire(target, name, evt);
   },
 
   // Returns the content editable state of a node
-  getContentEditable: function (node) {
-    var contentEditable;
+  getContentEditable (node) {
+    let contentEditable;
 
     // Check type
-    if (!node || node.nodeType != 1) {
+    if (!node || node.nodeType !== 1) {
       return null;
     }
 
     // Check for fake content editable
-    contentEditable = node.getAttribute("data-mce-contenteditable");
-    if (contentEditable && contentEditable !== "inherit") {
+    contentEditable = node.getAttribute('data-mce-contenteditable');
+    if (contentEditable && contentEditable !== 'inherit') {
       return contentEditable;
     }
 
     // Check for real content editable
-    return node.contentEditable !== "inherit" ? node.contentEditable : null;
+    return node.contentEditable !== 'inherit' ? node.contentEditable : null;
   },
 
-  getContentEditableParent: function (node) {
-    var root = this.getRoot(), state = null;
+  getContentEditableParent (node) {
+    const root = this.getRoot();
+    let state = null;
 
     for (; node && node !== root; node = node.parentNode) {
       state = this.getContentEditable(node);
@@ -1670,15 +1694,15 @@ DOMUtils.prototype = {
    *
    * @method destroy
    */
-  destroy: function () {
-    var self = this;
+  destroy () {
+    const self = this;
 
     // Unbind all events bound to window/document by editor instance
     if (self.boundEvents) {
-      var i = self.boundEvents.length;
+      let i = self.boundEvents.length;
 
       while (i--) {
-        var item = self.boundEvents[i];
+        const item = self.boundEvents[i];
         this.events.unbind(item[0], item[1], item[2]);
       }
 
@@ -1694,7 +1718,7 @@ DOMUtils.prototype = {
     self.win = self.doc = self.root = self.events = self.frag = null;
   },
 
-  isChildOf: function (node, parent) {
+  isChildOf (node, parent) {
     while (node) {
       if (parent === node) {
         return true;
@@ -1708,7 +1732,7 @@ DOMUtils.prototype = {
 
   // #ifdef debug
 
-  dumpRng: function (r) {
+  dumpRng (r) {
     return (
       'startContainer: ' + r.startContainer.nodeName +
       ', startOffset: ' + r.startOffset +
@@ -1719,12 +1743,13 @@ DOMUtils.prototype = {
 
   // #endif
 
-  _findSib: function (node, selector, name) {
-    var self = this, func = selector;
+  _findSib (node, selector, name) {
+    const self = this;
+    let func = selector;
 
     if (node) {
       // If expression make a function of it using is
-      if (typeof func == 'string') {
+      if (typeof func === 'string') {
         func = function (node) {
           return self.is(node, selector);
         };

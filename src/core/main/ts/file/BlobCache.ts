@@ -20,13 +20,12 @@ import Uuid from '../util/Uuid';
  * @class tinymce.file.BlobCache
  */
 
-
-
 export default function () {
-  var cache = [], constant = Fun.constant;
+  let cache = [];
+  const constant = Fun.constant;
 
-  var mimeToExt = function (mime) {
-    var mimes = {
+  const mimeToExt = function (mime) {
+    const mimes = {
       'image/jpeg': 'jpg',
       'image/jpg': 'jpg',
       'image/gif': 'gif',
@@ -36,20 +35,20 @@ export default function () {
     return mimes[mime.toLowerCase()] || 'dat';
   };
 
-  var create = function (o, blob?, base64?, filename?) {
+  const create = function (o, blob?, base64?, filename?) {
     return typeof o === 'object' ? toBlobInfo(o) : toBlobInfo({
       id: o,
       name: filename,
-      blob: blob,
-      base64: base64
+      blob,
+      base64
     });
   };
 
-  var toBlobInfo = function (o) {
-    var id, name;
+  const toBlobInfo = function (o) {
+    let id, name;
 
     if (!o.blob || !o.base64) {
-      throw "blob and base64 representations of the image are required for BlobInfo to be created";
+      throw new Error('blob and base64 representations of the image are required for BlobInfo to be created');
     }
 
     id = o.id || Uuid.uuid('blobid');
@@ -66,29 +65,29 @@ export default function () {
     };
   };
 
-  var add = function (blobInfo) {
+  const add = function (blobInfo) {
     if (!get(blobInfo.id())) {
       cache.push(blobInfo);
     }
   };
 
-  var get = function (id) {
+  const get = function (id) {
     return findFirst(function (cachedBlobInfo) {
       return cachedBlobInfo.id() === id;
     });
   };
 
-  var findFirst = function (predicate) {
+  const findFirst = function (predicate) {
     return Arr.filter(cache, predicate)[0];
   };
 
-  var getByUri = function (blobUri) {
+  const getByUri = function (blobUri) {
     return findFirst(function (blobInfo) {
-      return blobInfo.blobUri() == blobUri;
+      return blobInfo.blobUri() === blobUri;
     });
   };
 
-  var removeByUri = function (blobUri) {
+  const removeByUri = function (blobUri) {
     cache = Arr.filter(cache, function (blobInfo) {
       if (blobInfo.blobUri() === blobUri) {
         URL.revokeObjectURL(blobInfo.blobUri());
@@ -99,7 +98,7 @@ export default function () {
     });
   };
 
-  var destroy = function () {
+  const destroy = function () {
     Arr.each(cache, function (cachedBlobInfo) {
       URL.revokeObjectURL(cachedBlobInfo.blobUri());
     });
@@ -108,12 +107,12 @@ export default function () {
   };
 
   return {
-    create: create,
-    add: add,
-    get: get,
-    getByUri: getByUri,
-    findFirst: findFirst,
-    removeByUri: removeByUri,
-    destroy: destroy
+    create,
+    add,
+    get,
+    getByUri,
+    findFirst,
+    removeByUri,
+    destroy
   };
-};
+}

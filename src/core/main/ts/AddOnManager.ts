@@ -78,10 +78,10 @@ import Tools from './util/Tools';
  * });
  */
 
-var each = Tools.each;
+const each = Tools.each;
 
-var AddOnManager: any = function () {
-  var self = this;
+const AddOnManager: any = function () {
+  const self = this;
 
   self.items = [];
   self.urls = {};
@@ -97,7 +97,7 @@ AddOnManager.prototype = {
    * @param {String} name Add-on to look for.
    * @return {tinymce.Theme/tinymce.Plugin} Theme or plugin add-on instance or undefined.
    */
-  get: function (name) {
+  get (name) {
     if (this.lookup[name]) {
       return this.lookup[name].instance;
     }
@@ -105,8 +105,8 @@ AddOnManager.prototype = {
     return undefined;
   },
 
-  dependencies: function (name) {
-    var result;
+  dependencies (name) {
+    let result;
 
     if (this.lookup[name]) {
       result = this.lookup[name].dependencies;
@@ -122,17 +122,17 @@ AddOnManager.prototype = {
    * @param {String} name Short name of the add-on.
    * @param {String} languages Optional comma or space separated list of languages to check if it matches the name.
    */
-  requireLangPack: function (name, languages) {
-    var language = AddOnManager.language;
+  requireLangPack (name, languages) {
+    let language = AddOnManager.language;
 
     if (language && AddOnManager.languageLoad !== false) {
       if (languages) {
         languages = ',' + languages + ',';
 
         // Load short form sv.js or long form sv_SE.js
-        if (languages.indexOf(',' + language.substr(0, 2) + ',') != -1) {
+        if (languages.indexOf(',' + language.substr(0, 2) + ',') !== -1) {
           language = language.substr(0, 2);
-        } else if (languages.indexOf(',' + language + ',') == -1) {
+        } else if (languages.indexOf(',' + language + ',') === -1) {
           return;
         }
       }
@@ -167,10 +167,10 @@ AddOnManager.prototype = {
    *  plugins: '-test' // Init the plugin but don't try to load it
    * });
    */
-  add: function (id, addOn, dependencies) {
+  add (id, addOn, dependencies) {
     this.items.push(addOn);
-    this.lookup[id] = { instance: addOn, dependencies: dependencies };
-    var result = Arr.partition(this._listeners, function (listener) {
+    this.lookup[id] = { instance: addOn, dependencies };
+    const result = Arr.partition(this._listeners, function (listener) {
       return listener.name === id;
     });
 
@@ -183,13 +183,13 @@ AddOnManager.prototype = {
     return addOn;
   },
 
-  remove: function (name) {
+  remove (name) {
     delete this.urls[name];
     delete this.lookup[name];
   },
 
-  createUrl: function (baseUrl, dep) {
-    if (typeof dep === "object") {
+  createUrl (baseUrl, dep) {
+    if (typeof dep === 'object') {
       return dep;
     }
 
@@ -205,11 +205,11 @@ AddOnManager.prototype = {
    * @param {String} pluginName name of the plugin to load scripts from (will be used to get the base url for the plugins).
    * @param {Array} scripts Array containing the names of the scripts to load.
    */
-  addComponents: function (pluginName, scripts) {
-    var pluginUrl = this.urls[pluginName];
+  addComponents (pluginName, scripts) {
+    const pluginUrl = this.urls[pluginName];
 
     each(scripts, function (script) {
-      ScriptLoader.ScriptLoader.add(pluginUrl + "/" + script);
+      ScriptLoader.ScriptLoader.add(pluginUrl + '/' + script);
     });
   },
 
@@ -232,14 +232,15 @@ AddOnManager.prototype = {
    *  plugins: '-myplugin' // Don't try to load it again
    * });
    */
-  load: function (name, addOnUrl, success, scope, failure) {
-    var self = this, url = addOnUrl;
+  load (name, addOnUrl, success, scope, failure) {
+    const self = this;
+    let url = addOnUrl;
 
-    var loadDependencies = function () {
-      var dependencies = self.dependencies(name);
+    const loadDependencies = function () {
+      const dependencies = self.dependencies(name);
 
       each(dependencies, function (dep) {
-        var newUrl = self.createUrl(addOnUrl, dep);
+        const newUrl = self.createUrl(addOnUrl, dep);
 
         self.load(newUrl.resource, newUrl, undefined, undefined);
       });
@@ -257,11 +258,11 @@ AddOnManager.prototype = {
       return;
     }
 
-    if (typeof addOnUrl === "object") {
+    if (typeof addOnUrl === 'object') {
       url = addOnUrl.prefix + addOnUrl.resource + addOnUrl.suffix;
     }
 
-    if (url.indexOf('/') !== 0 && url.indexOf('://') == -1) {
+    if (url.indexOf('/') !== 0 && url.indexOf('://') === -1) {
       url = AddOnManager.baseURL + '/' + url;
     }
 
@@ -274,11 +275,11 @@ AddOnManager.prototype = {
     }
   },
 
-  waitFor: function (name, callback) {
+  waitFor (name, callback) {
     if (this.lookup.hasOwnProperty(name)) {
       callback();
     } else {
-      this._listeners.push({ name: name, callback: callback });
+      this._listeners.push({ name, callback });
     }
   }
 };

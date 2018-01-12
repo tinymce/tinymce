@@ -19,9 +19,7 @@ import Layout from './Layout';
  * @extends tinymce.ui.Layout
  */
 
-"use strict";
-
-export default <any> Layout.extend({
+export default Layout.extend({
   Defaults: {
     containerClass: 'abs-layout',
     controlClass: 'abs-layout-item'
@@ -33,9 +31,9 @@ export default <any> Layout.extend({
    * @method recalc
    * @param {tinymce.ui.Container} container Container instance to recalc.
    */
-  recalc: function (container) {
+  recalc (container) {
     container.items().filter(':visible').each(function (ctrl) {
-      var settings = ctrl.settings;
+      const settings = ctrl.settings;
 
       ctrl.layoutRect({
         x: settings.x,
@@ -56,7 +54,7 @@ export default <any> Layout.extend({
    * @method renderHtml
    * @param {tinymce.ui.Container} container Container to render HTML for.
    */
-  renderHtml: function (container) {
+  renderHtml (container) {
     return '<div id="' + container._id + '-absend" class="' + container.classPrefix + 'abs-end"></div>' + this._super(container);
   }
 });

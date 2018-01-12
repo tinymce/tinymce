@@ -15,18 +15,18 @@ import Styles from '../../style/Styles';
 import Scrollable from '../../touch/scroll/Scrollable';
 import MetaViewport from '../../touch/view/MetaViewport';
 
-var create = function (platform, mask) {
-  var meta = MetaViewport.tag();
+const create = function (platform, mask) {
+  const meta = MetaViewport.tag();
 
-  var priorState = Singleton.value();
-  var scrollEvents = Singleton.value();
+  const priorState = Singleton.value();
+  const scrollEvents = Singleton.value();
 
-  var iosApi = Singleton.api();
-  var iosEvents = Singleton.api();
+  const iosApi = Singleton.api();
+  const iosEvents = Singleton.api();
 
-  var enter = function () {
+  const enter = function () {
     mask.hide();
-    var doc = Element.fromDom(document);
+    const doc = Element.fromDom(document);
     PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
       // TODO: Orientation changes.
       // orientation = Orientation.onChange();
@@ -54,7 +54,7 @@ var create = function (platform, mask) {
 
       Focus.focus(editorApi.body());
 
-      var setupBag = Struct.immutableBag([
+      const setupBag = Struct.immutableBag([
         'cWin',
         'ceBody',
         'socket',
@@ -71,18 +71,18 @@ var create = function (platform, mask) {
 
       iosApi.set(
         IosSetup.setup(setupBag({
-          'cWin': editorApi.win(),
-          'ceBody': editorApi.body(),
-          'socket': platform.socket,
-          'toolstrip': platform.toolstrip,
-          'toolbar': platform.toolbar,
-          'dropup': platform.dropup.element(),
-          'contentElement': editorApi.frame(),
-          'cursor': Fun.noop,
-          'outerBody': platform.body,
-          'outerWindow': platform.win,
-          'keyboardType': IosKeyboard.stubborn,
-          'isScrolling': function () {
+          cWin: editorApi.win(),
+          ceBody: editorApi.body(),
+          socket: platform.socket,
+          toolstrip: platform.toolstrip,
+          toolbar: platform.toolbar,
+          dropup: platform.dropup.element(),
+          contentElement: editorApi.frame(),
+          cursor: Fun.noop,
+          outerBody: platform.body,
+          outerWindow: platform.win,
+          keyboardType: IosKeyboard.stubborn,
+          isScrolling () {
             return scrollEvents.get().exists(function (s) {
               return s.socket.isScrolling();
             });
@@ -94,14 +94,13 @@ var create = function (platform, mask) {
         api.syncHeight();
       });
 
-
       iosEvents.set(
         IosEvents.initEvents(editorApi, iosApi, platform.toolstrip, platform.socket, platform.dropup)
       );
     });
   };
 
-  var exit = function () {
+  const exit = function () {
     meta.restore();
     iosEvents.clear();
     iosApi.clear();
@@ -141,19 +140,19 @@ var create = function (platform, mask) {
   };
 
   // dropup
-  var refreshStructure = function () {
+  const refreshStructure = function () {
     iosApi.run(function (api) {
       api.refreshStructure();
     });
   };
 
   return {
-    enter: enter,
-    refreshStructure: refreshStructure,
-    exit: exit
+    enter,
+    refreshStructure,
+    exit
   };
 };
 
-export default <any> {
-  create: create
+export default {
+  create
 };

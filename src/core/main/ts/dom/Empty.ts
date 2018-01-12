@@ -16,30 +16,30 @@ import CaretCandidate from '../caret/CaretCandidate';
 import NodeType from './NodeType';
 import TreeWalker from './TreeWalker';
 
-var hasWhitespacePreserveParent = function (rootNode, node) {
-  var rootElement = Element.fromDom(rootNode);
-  var startNode = Element.fromDom(node);
+const hasWhitespacePreserveParent = function (rootNode, node) {
+  const rootElement = Element.fromDom(rootNode);
+  const startNode = Element.fromDom(node);
   return SelectorExists.ancestor(startNode, 'pre,code', Fun.curry(Compare.eq, rootElement));
 };
 
-var isWhitespace = function (rootNode, node) {
+const isWhitespace = function (rootNode, node) {
   return NodeType.isText(node) && /^[ \t\r\n]*$/.test(node.data) && hasWhitespacePreserveParent(rootNode, node) === false;
 };
 
-var isNamedAnchor = function (node) {
+const isNamedAnchor = function (node) {
   return NodeType.isElement(node) && node.nodeName === 'A' && node.hasAttribute('name');
 };
 
-var isContent = function (rootNode, node) {
+const isContent = function (rootNode, node) {
   return (CaretCandidate.isCaretCandidate(node) && isWhitespace(rootNode, node) === false) || isNamedAnchor(node) || isBookmark(node);
 };
 
-var isBookmark = NodeType.hasAttribute('data-mce-bookmark');
-var isBogus = NodeType.hasAttribute('data-mce-bogus');
-var isBogusAll = NodeType.hasAttributeValue('data-mce-bogus', 'all');
+const isBookmark = NodeType.hasAttribute('data-mce-bookmark');
+const isBogus = NodeType.hasAttribute('data-mce-bogus');
+const isBogusAll = NodeType.hasAttributeValue('data-mce-bogus', 'all');
 
-var isEmptyNode = function (targetNode) {
-  var walker, node, brCount = 0;
+const isEmptyNode = function (targetNode) {
+  let walker, node, brCount = 0;
 
   if (isContent(targetNode, targetNode)) {
     return false;
@@ -78,10 +78,10 @@ var isEmptyNode = function (targetNode) {
   }
 };
 
-var isEmpty = function (elm) {
+const isEmpty = function (elm) {
   return isEmptyNode(elm.dom());
 };
 
 export default {
-  isEmpty: isEmpty
+  isEmpty
 };

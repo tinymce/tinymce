@@ -8,30 +8,30 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getAutoResizeMinHeight = function (editor) {
+const getAutoResizeMinHeight = function (editor) {
   return parseInt(editor.getParam('autoresize_min_height', editor.getElement().offsetHeight), 10);
 };
 
-var getAutoResizeMaxHeight = function (editor) {
+const getAutoResizeMaxHeight = function (editor) {
   return parseInt(editor.getParam('autoresize_max_height', 0), 10);
 };
 
-var getAutoResizeOverflowPadding = function (editor) {
+const getAutoResizeOverflowPadding = function (editor) {
   return editor.getParam('autoresize_overflow_padding', 1);
 };
 
-var getAutoResizeBottomMargin = function (editor) {
+const getAutoResizeBottomMargin = function (editor) {
   return editor.getParam('autoresize_bottom_margin', 50);
 };
 
-var shouldAutoResizeOnInit = function (editor) {
+const shouldAutoResizeOnInit = function (editor) {
   return editor.getParam('autoresize_on_init', true);
 };
 
 export default {
-  getAutoResizeMinHeight: getAutoResizeMinHeight,
-  getAutoResizeMaxHeight: getAutoResizeMaxHeight,
-  getAutoResizeOverflowPadding: getAutoResizeOverflowPadding,
-  getAutoResizeBottomMargin: getAutoResizeBottomMargin,
-  shouldAutoResizeOnInit: shouldAutoResizeOnInit
+  getAutoResizeMinHeight,
+  getAutoResizeMaxHeight,
+  getAutoResizeOverflowPadding,
+  getAutoResizeBottomMargin,
+  shouldAutoResizeOnInit
 };

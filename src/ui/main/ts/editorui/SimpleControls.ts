@@ -11,7 +11,7 @@
 import Tools from 'tinymce/core/util/Tools';
 import FormatUtils from './FormatUtils';
 
-var registerFormatButtons = function (editor) {
+const registerFormatButtons = function (editor) {
   Tools.each({
     bold: 'Bold',
     italic: 'Italic',
@@ -29,7 +29,7 @@ var registerFormatButtons = function (editor) {
   });
 };
 
-var registerCommandButtons = function (editor) {
+const registerCommandButtons = function (editor) {
   Tools.each({
     outdent: ['Decrease indent', 'Outdent'],
     indent: ['Increase indent', 'Indent'],
@@ -50,7 +50,7 @@ var registerCommandButtons = function (editor) {
   });
 };
 
-var registerCommandToggleButtons = function (editor) {
+const registerCommandToggleButtons = function (editor) {
   Tools.each({
     blockquote: ['Blockquote', 'mceBlockQuote'],
     subscript: ['Subscript', 'Subscript'],
@@ -65,13 +65,13 @@ var registerCommandToggleButtons = function (editor) {
   });
 };
 
-var registerButtons = function (editor) {
+const registerButtons = function (editor) {
   registerFormatButtons(editor);
   registerCommandButtons(editor);
   registerCommandToggleButtons(editor);
 };
 
-var registerMenuItems = function (editor) {
+const registerMenuItems = function (editor) {
   Tools.each({
     bold: ['Bold', 'Bold', 'Meta+B'],
     italic: ['Italic', 'Italic', 'Meta+I'],
@@ -101,11 +101,11 @@ var registerMenuItems = function (editor) {
   });
 };
 
-var register = function (editor) {
+const register = function (editor) {
   registerButtons(editor);
   registerMenuItems(editor);
 };
 
-export default <any> {
-  register: register
+export default {
+  register
 };

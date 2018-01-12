@@ -1,12 +1,12 @@
 import { Fun } from '@ephox/katamari';
 
-var prefix = 'tinymce-mobile';
+const prefix = 'tinymce-mobile';
 
-var resolve = function (p) {
+const resolve = function (p) {
   return prefix + '-' + p;
 };
 
-export default <any> {
-  resolve: resolve,
+export default {
+  resolve,
   prefix: Fun.constant(prefix)
 };

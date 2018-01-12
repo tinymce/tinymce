@@ -2,9 +2,9 @@ import { Fun } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
 import Styles from '../../style/Styles';
 
-var scrollable = Styles.resolve('scrollable');
+const scrollable = Styles.resolve('scrollable');
 
-var register = function (element) {
+const register = function (element) {
 /*
  *  The reason this function exists is to have a
  *  central place where to set if an element can be explicitly
@@ -13,12 +13,12 @@ var register = function (element) {
   Class.add(element, scrollable);
 };
 
-var deregister = function (element) {
+const deregister = function (element) {
   Class.remove(element, scrollable);
 };
 
-export default <any> {
-  register: register,
-  deregister: deregister,
+export default {
+  register,
+  deregister,
   scrollable: Fun.constant(scrollable)
 };

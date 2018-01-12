@@ -28,6 +28,6 @@
  * var value = tinymce.util.LocalStorage.getItem('key');
  */
 
-let localStorage = window.localStorage;
+const localStorage = window.localStorage;
 
 export default localStorage;

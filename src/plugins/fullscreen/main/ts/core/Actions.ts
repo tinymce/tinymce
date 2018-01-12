@@ -11,11 +11,14 @@
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Events from '../api/Events';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var getWindowSize = function () {
-  var w, h, win = window, doc = document;
-  var body = doc.body;
+const getWindowSize = function () {
+  let w;
+  let h;
+  const win = window;
+  const doc = document;
+  const body = doc.body;
 
   // Old IE
   if (body.offsetWidth) {
@@ -29,11 +32,11 @@ var getWindowSize = function () {
     h = win.innerHeight;
   }
 
-  return { w: w, h: h };
+  return { w, h };
 };
 
-var getScrollPos = function () {
-  var vp = DOM.getViewPort();
+const getScrollPos = function () {
+  const vp = DOM.getViewPort();
 
   return {
     x: vp.x,
@@ -41,20 +44,22 @@ var getScrollPos = function () {
   };
 };
 
-var setScrollPos = function (pos) {
+const setScrollPos = function (pos) {
   window.scrollTo(pos.x, pos.y);
 };
 
-var toggleFullscreen = function (editor, fullscreenState) {
-  var body = document.body, documentElement = document.documentElement, editorContainerStyle;
-  var editorContainer, iframe, iframeStyle;
-  var fullscreenInfo = fullscreenState.get();
+const toggleFullscreen = function (editor, fullscreenState) {
+  const body = document.body;
+  const documentElement = document.documentElement;
+  let editorContainerStyle;
+  let editorContainer, iframe, iframeStyle;
+  const fullscreenInfo = fullscreenState.get();
 
-  var resize = function () {
+  const resize = function () {
     DOM.setStyle(iframe, 'height', getWindowSize().h - (editorContainer.clientHeight - iframe.clientHeight));
   };
 
-  var removeResize = function () {
+  const removeResize = function () {
     DOM.unbind(window, 'resize', resize);
   };
 
@@ -64,7 +69,7 @@ var toggleFullscreen = function (editor, fullscreenState) {
   iframeStyle = iframe.style;
 
   if (!fullscreenInfo) {
-    var newFullScreenInfo = {
+    const newFullScreenInfo = {
       scrollPos: getScrollPos(),
       containerWidth: editorContainerStyle.width,
       containerHeight: editorContainerStyle.height,
@@ -114,5 +119,5 @@ var toggleFullscreen = function (editor, fullscreenState) {
 };
 
 export default {
-  toggleFullscreen: toggleFullscreen
+  toggleFullscreen
 };

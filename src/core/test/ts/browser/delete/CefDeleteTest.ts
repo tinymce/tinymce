@@ -12,18 +12,18 @@ import { Element } from '@ephox/sugar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sKeyUp = function (editor, key) {
-    var iDoc = Element.fromDom(editor.getDoc());
+  const sKeyUp = function (editor, key) {
+    const iDoc = Element.fromDom(editor.getDoc());
     return Keyboard.sKeyup(iDoc, key, {});
   };
 
-  var sFakeBackspaceKeyOnRange = function (editor) {
+  const sFakeBackspaceKeyOnRange = function (editor) {
     return GeneralSteps.sequence([
       Step.sync(function () {
         editor.getDoc().execCommand('Delete', false, null);
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function() {
     ]);
   };
 
-  var sTestDeletePadd = function (editor, tinyApis, tinyActions) {
+  const sTestDeletePadd = function (editor, tinyApis, tinyActions) {
     return GeneralSteps.sequence([
       tinyApis.sFocus,
       Logger.t('Should padd empty ce=true inside ce=false when everything is deleted', GeneralSteps.sequence([
@@ -160,8 +160,8 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyActions = TinyActions(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
       sTestDeletePadd(editor, tinyApis, tinyActions)
@@ -170,4 +170,3 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

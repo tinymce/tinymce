@@ -9,21 +9,19 @@ import { Fun } from '@ephox/katamari';
 import { TinyActions } from '@ephox/mcagar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
-import { Selectors } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
 import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var locationName = function (location) {
+  const locationName = function (location) {
     return location.fold(
       Fun.constant('before'),
       Fun.constant('start'),
@@ -32,15 +30,15 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', funct
     );
   };
 
-  var readLocation = function (editor) {
-    var isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
+  const readLocation = function (editor) {
+    const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
     return BoundaryLocation
       .readLocation(isInlineTarget, editor.getBody(), CaretPosition.fromRangeStart(editor.selection.getRng()))
       .map(locationName)
       .getOr('none');
   };
 
-  var sTestDeleteOrBackspaceKey = function (editor, tinyApis, tinyActions, key) {
+  const sTestDeleteOrBackspaceKey = function (editor, tinyApis, tinyActions, key) {
     return function (setupHtml, setupPath, setupOffset, expectedHtml, expectedLocation, expectedPath, expectedOffet) {
       return GeneralSteps.sequence([
         tinyApis.sSetContent(setupHtml),
@@ -57,13 +55,13 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', funct
     };
   };
 
-  var sNormalizeBody = function (editor) {
+  const sNormalizeBody = function (editor) {
     return Step.sync(function () {
       editor.getBody().normalize();
     });
   };
 
-  var paragraphWithText = function (text) {
+  const paragraphWithText = function (text) {
     return ApproxStructure.build(function (s, str, arr) {
       return s.element('body', {
         children: [s.element('p', { children: [s.text(str.is(text))] })]
@@ -72,10 +70,10 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', funct
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyActions = TinyActions(editor);
-    var sTestBackspace = sTestDeleteOrBackspaceKey(editor, tinyApis, tinyActions, Keys.backspace());
-    var sTestDelete = sTestDeleteOrBackspaceKey(editor, tinyApis, tinyActions, 46);
+    const tinyApis = TinyApis(editor);
+    const tinyActions = TinyActions(editor);
+    const sTestBackspace = sTestDeleteOrBackspaceKey(editor, tinyApis, tinyActions, Keys.backspace());
+    const sTestDelete = sTestDeleteOrBackspaceKey(editor, tinyApis, tinyActions, 46);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -124,4 +122,3 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', funct
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

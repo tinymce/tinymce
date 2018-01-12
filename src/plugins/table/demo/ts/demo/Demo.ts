@@ -15,11 +15,11 @@ declare let tinymce: any;
 TablePlugin();
 
 tinymce.init({
-  selector: "div.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "table code contextmenu paste",
-  toolbar: "table code",
+  selector: 'div.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'table code contextmenu paste',
+  toolbar: 'table code',
   media_dimensions: false,
   // media_live_embeds: false,
   // media_url_resolver: function (data, resolve) {

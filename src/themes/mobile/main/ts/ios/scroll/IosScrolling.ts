@@ -1,7 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import { Future } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
-import { Classes } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 import SmoothAnimation from '../smooth/SmoothAnimation';
@@ -9,33 +8,33 @@ import IosViewport from '../view/IosViewport';
 import Styles from '../../style/Styles';
 import DataAttributes from '../../util/DataAttributes';
 
-var animator = SmoothAnimation.create();
+const animator = SmoothAnimation.create();
 
-var ANIMATION_STEP = 15;
-var NUM_TOP_ANIMATION_FRAMES = 10;
-var ANIMATION_RATE = 10;
+const ANIMATION_STEP = 15;
+const NUM_TOP_ANIMATION_FRAMES = 10;
+const ANIMATION_RATE = 10;
 
-var lastScroll = 'data-' + Styles.resolve('last-scroll-top');
+const lastScroll = 'data-' + Styles.resolve('last-scroll-top');
 
-var getTop = function (element) {
-  var raw = Css.getRaw(element, 'top').getOr(0);
+const getTop = function (element) {
+  const raw = Css.getRaw(element, 'top').getOr(0);
   return parseInt(raw, 10);
 };
 
-var getScrollTop = function (element) {
+const getScrollTop = function (element) {
   return parseInt(element.dom().scrollTop, 10);
 };
 
-var moveScrollAndTop = function (element, destination, finalTop) {
+const moveScrollAndTop = function (element, destination, finalTop) {
   return Future.nu(function (callback) {
-    var getCurrent = Fun.curry(getScrollTop, element);
+    const getCurrent = Fun.curry(getScrollTop, element);
 
-    var update = function (newScroll) {
+    const update = function (newScroll) {
       element.dom().scrollTop = newScroll;
       Css.set(element, 'top', (getTop(element) + ANIMATION_STEP) + 'px');
     };
 
-    var finish = function (/* dest */) {
+    const finish = function (/* dest */) {
       element.dom().scrollTop = destination;
       Css.set(element, 'top', finalTop + 'px');
       callback(destination);
@@ -45,13 +44,13 @@ var moveScrollAndTop = function (element, destination, finalTop) {
   });
 };
 
-var moveOnlyScroll = function (element, destination) {
+const moveOnlyScroll = function (element, destination) {
   return Future.nu(function (callback) {
-    var getCurrent = Fun.curry(getScrollTop, element);
+    const getCurrent = Fun.curry(getScrollTop, element);
     Attr.set(element, lastScroll, getCurrent());
 
-    var update = function (newScroll, abort) {
-      var previous = DataAttributes.safeParse(element, lastScroll);
+    const update = function (newScroll, abort) {
+      const previous = DataAttributes.safeParse(element, lastScroll);
       // As soon as we detect a scroll value that we didn't set, assume the user
       // is scrolling, and abort the scrolling.
       if (previous !== element.dom().scrollTop) {
@@ -62,40 +61,40 @@ var moveOnlyScroll = function (element, destination) {
       }
     };
 
-    var finish = function (/* dest */) {
+    const finish = function (/* dest */) {
       element.dom().scrollTop = destination;
       Attr.set(element, lastScroll, destination);
       callback(destination);
     };
 
     // Identify the number of steps based on distance (consistent time)
-    var distance = Math.abs(destination - getCurrent());
-    var step = Math.ceil(distance / NUM_TOP_ANIMATION_FRAMES);
+    const distance = Math.abs(destination - getCurrent());
+    const step = Math.ceil(distance / NUM_TOP_ANIMATION_FRAMES);
     animator.animate(getCurrent, destination, step, update, finish, ANIMATION_RATE);
   });
 };
 
-var moveOnlyTop = function (element, destination) {
+const moveOnlyTop = function (element, destination) {
   return Future.nu(function (callback) {
-    var getCurrent = Fun.curry(getTop, element);
+    const getCurrent = Fun.curry(getTop, element);
 
-    var update = function (newTop) {
+    const update = function (newTop) {
       Css.set(element, 'top', newTop + 'px');
     };
 
-    var finish = function (/* dest */) {
+    const finish = function (/* dest */) {
       update(destination);
       callback(destination);
     };
 
-    var distance = Math.abs(destination - getCurrent());
-    var step = Math.ceil(distance / NUM_TOP_ANIMATION_FRAMES);
+    const distance = Math.abs(destination - getCurrent());
+    const step = Math.ceil(distance / NUM_TOP_ANIMATION_FRAMES);
     animator.animate(getCurrent, destination, step, update, finish, ANIMATION_RATE);
   });
 };
 
-var updateTop = function (element, amount) {
-  var newTop = (amount + IosViewport.getYFixedData(element)) + 'px';
+const updateTop = function (element, amount) {
+  const newTop = (amount + IosViewport.getYFixedData(element)) + 'px';
   Css.set(element, 'top', newTop);
 };
 
@@ -103,8 +102,8 @@ var updateTop = function (element, amount) {
 // However, on tinyMCE, we seemed to get a lot more cursor flickering as the window scroll
 // was changing. Therefore, until tests prove otherwise, we are just going to jump to the
 // destination in one go.
-var moveWindowScroll = function (toolbar, viewport, destY) {
-  var outerWindow = Traverse.owner(toolbar).dom().defaultView;
+const moveWindowScroll = function (toolbar, viewport, destY) {
+  const outerWindow = Traverse.owner(toolbar).dom().defaultView;
   return Future.nu(function (callback) {
     updateTop(toolbar, destY);
     updateTop(viewport, destY);
@@ -113,9 +112,9 @@ var moveWindowScroll = function (toolbar, viewport, destY) {
   });
 };
 
-export default <any> {
-  moveScrollAndTop: moveScrollAndTop,
-  moveOnlyScroll: moveOnlyScroll,
-  moveOnlyTop: moveOnlyTop,
-  moveWindowScroll: moveWindowScroll
+export default {
+  moveScrollAndTop,
+  moveOnlyScroll,
+  moveOnlyTop,
+  moveWindowScroll
 };

@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import EventUtils from 'tinymce/core/dom/EventUtils';
 import UiUtils from '../module/test/UiUtils';
 import ViewBlock from '../module/test/ViewBlock';
@@ -9,27 +8,27 @@ import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.GridLayoutTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.ui.GridLayoutTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   // Registers ui widgets to factory
   Api.registerToFactory();
 
-  var resetScroll = function (elm) {
+  const resetScroll = function (elm) {
     elm.scrollTop = 0;
     elm.scrollLeft = 0;
   };
 
-  var renderGridPanel = function (settings) {
+  const renderGridPanel = function (settings) {
     EventUtils.Event.clean(viewBlock.get());
     viewBlock.update('');
 
-    var panel = Factory.create(Tools.extend({
-      type: "panel",
-      layout: "grid",
+    const panel = Factory.create(Tools.extend({
+      type: 'panel',
+      layout: 'grid',
       defaults: { type: 'spacer' }
     }, settings)).renderTo(viewBlock.get()).reflow();
 
@@ -38,8 +37,8 @@ UnitTest.asynctest('browser.tinymce.ui.GridLayoutTest', function() {
     return panel;
   };
 
-  suite.test("automatic grid size 2x2", function () {
-    var panel = renderGridPanel({
+  suite.test('automatic grid size 2x2', function () {
+    const panel = renderGridPanel({
       items: [
         { classes: 'red' }, { classes: 'green' },
         { classes: 'blue' }, { classes: 'cyan' }
@@ -72,8 +71,8 @@ UnitTest.asynctest('browser.tinymce.ui.GridLayoutTest', function() {
   });
   */
 
-  suite.test("spacing: 3, automatic grid size 2x2", function () {
-    var panel = renderGridPanel({
+  suite.test('spacing: 3, automatic grid size 2x2', function () {
+    const panel = renderGridPanel({
       spacing: 3,
       items: [
         { classes: 'red' }, { classes: 'green' },
@@ -88,8 +87,8 @@ UnitTest.asynctest('browser.tinymce.ui.GridLayoutTest', function() {
     LegacyUnit.equal(UiUtils.rect(viewBlock, panel.find('spacer')[3]), [23, 23, 20, 20]);
   });
 
-  suite.test("padding: 3, automatic grid size 2x2", function () {
-    var panel = renderGridPanel({
+  suite.test('padding: 3, automatic grid size 2x2', function () {
+    const panel = renderGridPanel({
       padding: 3,
       items: [
         { classes: 'red' }, { classes: 'green' },
@@ -104,8 +103,8 @@ UnitTest.asynctest('browser.tinymce.ui.GridLayoutTest', function() {
     LegacyUnit.equal(UiUtils.rect(viewBlock, panel.find('spacer')[3]), [23, 23, 20, 20]);
   });
 
-  suite.test("spacing: 3, padding: 3, automatic grid size 2x2", function () {
-    var panel = renderGridPanel({
+  suite.test('spacing: 3, padding: 3, automatic grid size 2x2', function () {
+    const panel = renderGridPanel({
       padding: 3,
       spacing: 3,
       items: [
@@ -121,8 +120,8 @@ UnitTest.asynctest('browser.tinymce.ui.GridLayoutTest', function() {
     LegacyUnit.equal(UiUtils.rect(viewBlock, panel.find('spacer')[3]), [26, 26, 20, 20]);
   });
 
-  suite.test("inner elements 100x100 maxWidth/maxHeight: 118 (overflow W+H)", function () {
-    var panel = renderGridPanel({
+  suite.test('inner elements 100x100 maxWidth/maxHeight: 118 (overflow W+H)', function () {
+    const panel = renderGridPanel({
       autoResize: true,
       autoScroll: true,
       maxWidth: 118,
@@ -149,8 +148,8 @@ UnitTest.asynctest('browser.tinymce.ui.GridLayoutTest', function() {
     LegacyUnit.equal(panel.layoutRect().contentH, 200);
   });
 
-  suite.test("inner elements: 100x100, padding: 20, spacing: 10, maxWidth/maxHeight: 118 (overflow W+H)", function () {
-    var panel = renderGridPanel({
+  suite.test('inner elements: 100x100, padding: 20, spacing: 10, maxWidth/maxHeight: 118 (overflow W+H)', function () {
+    const panel = renderGridPanel({
       autoResize: true,
       autoScroll: true,
       maxWidth: 118,
@@ -179,8 +178,8 @@ UnitTest.asynctest('browser.tinymce.ui.GridLayoutTest', function() {
     LegacyUnit.equal(panel.layoutRect().contentH, 20 + 200 + 10 + 20);
   });
 
-  suite.test("inner elements 100x100 maxWidth: 118 (overflow W)", function () {
-    var panel = renderGridPanel({
+  suite.test('inner elements 100x100 maxWidth: 118 (overflow W)', function () {
+    const panel = renderGridPanel({
       autoResize: true,
       autoScroll: true,
       maxWidth: 100,
@@ -203,8 +202,8 @@ UnitTest.asynctest('browser.tinymce.ui.GridLayoutTest', function() {
     LegacyUnit.equal(panel.layoutRect().contentH, 200);
   });
 
-  suite.test("inner elements 100x100 maxHeight: 118 (overflow H)", function () {
-    var panel = renderGridPanel({
+  suite.test('inner elements 100x100 maxHeight: 118 (overflow H)', function () {
+    const panel = renderGridPanel({
       autoResize: true,
       autoScroll: true,
       maxHeight: 100,
@@ -235,4 +234,3 @@ UnitTest.asynctest('browser.tinymce.ui.GridLayoutTest', function() {
     }, failure);
   });
 });
-

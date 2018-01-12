@@ -20,9 +20,10 @@ import InlineUtils from '../keyboard/InlineUtils';
 import NormalizeRange from '../selection/NormalizeRange';
 
 // Walks the parent block to the right and look for BR elements
-var hasRightSideContent = function (schema, container, parentBlock) {
-  var walker = new TreeWalker(container, parentBlock), node;
-  var nonEmptyElementsMap = schema.getNonEmptyElements();
+const hasRightSideContent = function (schema, container, parentBlock) {
+  const walker = new TreeWalker(container, parentBlock);
+  let node;
+  const nonEmptyElementsMap = schema.getNonEmptyElements();
 
   while ((node = walker.next())) {
     if (nonEmptyElementsMap[node.nodeName.toLowerCase()] || node.length > 0) {
@@ -31,16 +32,16 @@ var hasRightSideContent = function (schema, container, parentBlock) {
   }
 };
 
-var scrollToBr = function (dom, selection, brElm) {
+const scrollToBr = function (dom, selection, brElm) {
   // Insert temp marker and scroll to that
-  var marker = dom.create('span', {}, '&nbsp;');
+  const marker = dom.create('span', {}, '&nbsp;');
   brElm.parentNode.insertBefore(marker, brElm);
   selection.scrollIntoView(marker);
   dom.remove(marker);
 };
 
-var moveSelectionToBr = function (dom, selection, brElm, extraBr) {
-  var rng = dom.createRng();
+const moveSelectionToBr = function (dom, selection, brElm, extraBr) {
+  const rng = dom.createRng();
 
   if (!extraBr) {
     rng.setStartAfter(brElm);
@@ -53,24 +54,24 @@ var moveSelectionToBr = function (dom, selection, brElm, extraBr) {
   selection.setRng(rng);
 };
 
-var insertBrAtCaret = function (editor, evt) {
+const insertBrAtCaret = function (editor, evt) {
   // We load the current event in from EnterKey.js when appropriate to heed
   // certain event-specific variations such as ctrl-enter in a list
-  var selection = editor.selection, dom = editor.dom;
-  var brElm, extraBr;
-  var rng = selection.getRng(true);
+  const selection = editor.selection, dom = editor.dom;
+  let brElm, extraBr;
+  const rng = selection.getRng(true);
 
   NormalizeRange.normalize(dom, rng).each(function (normRng) {
     rng.setStart(normRng.startContainer, normRng.startOffset);
     rng.setEnd(normRng.endContainer, normRng.endOffset);
   });
 
-  var offset = rng.startOffset;
-  var container = rng.startContainer;
+  let offset = rng.startOffset;
+  let container = rng.startContainer;
 
   // Resolve node index
   if (container.nodeType === 1 && container.hasChildNodes()) {
-    var isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
+    const isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
 
     container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
     if (isAfterLastNodeInContainer && container.nodeType === 3) {
@@ -80,12 +81,12 @@ var insertBrAtCaret = function (editor, evt) {
     }
   }
 
-  var parentBlock = dom.getParent(container, dom.isBlock);
-  var containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
-  var containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
+  let parentBlock = dom.getParent(container, dom.isBlock);
+  const containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
+  const containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
 
   // Enter inside block contained within a LI then split or insert before/after LI
-  var isControlKey = evt && evt.ctrlKey;
+  const isControlKey = evt && evt.ctrlKey;
   if (containerBlockName === 'LI' && !isControlKey) {
     parentBlock = containerBlock;
   }
@@ -109,29 +110,29 @@ var insertBrAtCaret = function (editor, evt) {
   editor.undoManager.add();
 };
 
-var insertBrBefore = function (editor, inline) {
-  var br = Element.fromTag('br');
+const insertBrBefore = function (editor, inline) {
+  const br = Element.fromTag('br');
   Insert.before(Element.fromDom(inline), br);
   editor.undoManager.add();
 };
 
-var insertBrAfter = function (editor, inline) {
+const insertBrAfter = function (editor, inline) {
   if (!hasBrAfter(editor.getBody(), inline)) {
     Insert.after(Element.fromDom(inline), Element.fromTag('br'));
   }
 
-  var br = Element.fromTag('br');
+  const br = Element.fromTag('br');
   Insert.after(Element.fromDom(inline), br);
   scrollToBr(editor.dom, editor.selection, br.dom());
   moveSelectionToBr(editor.dom, editor.selection, br.dom(), false);
   editor.undoManager.add();
 };
 
-var isBeforeBr = function (pos) {
+const isBeforeBr = function (pos) {
   return NodeType.isBr(pos.getNode());
 };
 
-var hasBrAfter = function (rootNode, startNode) {
+const hasBrAfter = function (rootNode, startNode) {
   if (isBeforeBr(CaretPosition.after(startNode))) {
     return true;
   } else {
@@ -141,11 +142,11 @@ var hasBrAfter = function (rootNode, startNode) {
   }
 };
 
-var isAnchorLink = function (elm) {
+const isAnchorLink = function (elm) {
   return elm && elm.nodeName === 'A' && 'href' in elm;
 };
 
-var isInsideAnchor = function (location) {
+const isInsideAnchor = function (location) {
   return location.fold(
     Fun.constant(false),
     isAnchorLink,
@@ -154,13 +155,13 @@ var isInsideAnchor = function (location) {
   );
 };
 
-var readInlineAnchorLocation = function (editor) {
-  var isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
-  var position = CaretPosition.fromRangeStart(editor.selection.getRng());
+const readInlineAnchorLocation = function (editor) {
+  const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
+  const position = CaretPosition.fromRangeStart(editor.selection.getRng());
   return BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), position).filter(isInsideAnchor);
 };
 
-var insertBrOutsideAnchor = function (editor, location) {
+const insertBrOutsideAnchor = function (editor, location) {
   location.fold(
     Fun.noop,
     Fun.curry(insertBrBefore, editor),
@@ -169,8 +170,8 @@ var insertBrOutsideAnchor = function (editor, location) {
   );
 };
 
-var insert = function (editor, evt?) {
-  var anchorLocation = readInlineAnchorLocation(editor);
+const insert = function (editor, evt?) {
+  const anchorLocation = readInlineAnchorLocation(editor);
 
   if (anchorLocation.isSome()) {
     anchorLocation.each(Fun.curry(insertBrOutsideAnchor, editor));
@@ -180,5 +181,5 @@ var insert = function (editor, evt?) {
 };
 
 export default {
-  insert: insert
+  insert
 };

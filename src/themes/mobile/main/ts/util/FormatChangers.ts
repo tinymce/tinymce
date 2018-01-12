@@ -3,17 +3,17 @@ import { Fun } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
 import TinyChannels from '../channels/TinyChannels';
 
-var fontSizes = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
+const fontSizes = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
 
-var fireChange = function (realm, command, state) {
+const fireChange = function (realm, command, state) {
   realm.system().broadcastOn([ TinyChannels.formatChanged() ], {
-    command: command,
-    state: state
+    command,
+    state
   });
 };
 
-var init = function (realm, editor) {
-  var allFormats = Obj.keys(editor.formatter.get());
+const init = function (realm, editor) {
+  const allFormats = Obj.keys(editor.formatter.get());
   Arr.each(allFormats, function (command) {
     editor.formatter.formatChanged(command, function (state) {
       fireChange(realm, command, state);
@@ -27,7 +27,7 @@ var init = function (realm, editor) {
   });
 };
 
-export default <any> {
-  init: init,
+export default {
+  init,
   fontSizes: Fun.constant(fontSizes)
 };

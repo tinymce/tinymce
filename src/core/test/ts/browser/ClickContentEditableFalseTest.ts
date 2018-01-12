@@ -10,26 +10,26 @@ import TypeText from '../module/test/TypeText';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.ClickContentEditableFalseTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.ClickContentEditableFalseTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sClickMiddleOf = function (editor, elementPath) {
+  const sClickMiddleOf = function (editor, elementPath) {
     return Step.sync(function () {
-      var element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie().dom();
-      var rect = element.getBoundingClientRect();
-      var clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie().dom();
+      const rect = element.getBoundingClientRect();
+      const clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
 
-      editor.fire('mousedown', { target: element, clientX: clientX, clientY: clientY });
-      editor.fire('mouseup', { target: element, clientX: clientX, clientY: clientY });
-      editor.fire('click', { target: element, clientX: clientX, clientY: clientY });
+      editor.fire('mousedown', { target: element, clientX, clientY });
+      editor.fire('mouseup', { target: element, clientX, clientY });
+      editor.fire('click', { target: element, clientX, clientY });
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -69,4 +69,3 @@ UnitTest.asynctest('browser.tinymce.core.ClickContentEditableFalseTest', functio
     indent: false
   }, success, failure);
 });
-

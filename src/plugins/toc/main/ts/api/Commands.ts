@@ -10,7 +10,7 @@
 
 import Toc from '../core/Toc';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addCommand('mceInsertToc', function () {
     Toc.insertToc(editor);
   });
@@ -21,5 +21,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

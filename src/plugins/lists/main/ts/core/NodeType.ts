@@ -8,43 +8,43 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var isTextNode = function (node) {
+const isTextNode = function (node) {
   return node && node.nodeType === 3;
 };
 
-var isListNode = function (node) {
+const isListNode = function (node) {
   return node && (/^(OL|UL|DL)$/).test(node.nodeName);
 };
 
-var isListItemNode = function (node) {
+const isListItemNode = function (node) {
   return node && /^(LI|DT|DD)$/.test(node.nodeName);
 };
 
-var isTableCellNode = function (node) {
+const isTableCellNode = function (node) {
   return node && /^(TH|TD)$/.test(node.nodeName);
 };
 
-var isBr = function (node) {
+const isBr = function (node) {
   return node && node.nodeName === 'BR';
 };
 
-var isFirstChild = function (node) {
+const isFirstChild = function (node) {
   return node.parentNode.firstChild === node;
 };
 
-var isLastChild = function (node) {
+const isLastChild = function (node) {
   return node.parentNode.lastChild === node;
 };
 
-var isTextBlock = function (editor, node) {
+const isTextBlock = function (editor, node) {
   return node && !!editor.schema.getTextBlockElements()[node.nodeName];
 };
 
-var isBlock = function (node, blockElements) {
+const isBlock = function (node, blockElements) {
   return node && node.nodeName in blockElements;
 };
 
-var isBogusBr = function (dom, node) {
+const isBogusBr = function (dom, node) {
   if (!isBr(node)) {
     return false;
   }
@@ -56,8 +56,8 @@ var isBogusBr = function (dom, node) {
   return false;
 };
 
-var isEmpty = function (dom, elm, keepBookmarks?) {
-  var empty = dom.isEmpty(elm);
+const isEmpty = function (dom, elm, keepBookmarks?) {
+  const empty = dom.isEmpty(elm);
 
   if (keepBookmarks && dom.select('span[data-mce-type=bookmark]', elm).length > 0) {
     return false;
@@ -66,21 +66,21 @@ var isEmpty = function (dom, elm, keepBookmarks?) {
   return empty;
 };
 
-var isChildOfBody = function (dom, elm) {
+const isChildOfBody = function (dom, elm) {
   return dom.isChildOf(elm, dom.getRoot());
 };
 
 export default {
-  isTextNode: isTextNode,
-  isListNode: isListNode,
-  isListItemNode: isListItemNode,
-  isTableCellNode: isTableCellNode,
-  isBr: isBr,
-  isFirstChild: isFirstChild,
-  isLastChild: isLastChild,
-  isTextBlock: isTextBlock,
-  isBlock: isBlock,
-  isBogusBr: isBogusBr,
-  isEmpty: isEmpty,
-  isChildOfBody: isChildOfBody
+  isTextNode,
+  isListNode,
+  isListItemNode,
+  isTableCellNode,
+  isBr,
+  isFirstChild,
+  isLastChild,
+  isTextBlock,
+  isBlock,
+  isBogusBr,
+  isEmpty,
+  isChildOfBody
 };

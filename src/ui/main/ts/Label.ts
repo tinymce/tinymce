@@ -20,9 +20,7 @@ import DomUtils from './DomUtils';
  * @extends tinymce.ui.Widget
  */
 
-"use strict";
-
-export default <any> Widget.extend({
+export default Widget.extend({
   /**
    * Constructs a instance with the specified settings.
    *
@@ -30,8 +28,8 @@ export default <any> Widget.extend({
    * @param {Object} settings Name/value object with settings.
    * @setting {Boolean} multiline Multiline label.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._super(settings);
     self.classes.add('widget').add('label');
@@ -54,11 +52,11 @@ export default <any> Widget.extend({
    * @method initLayoutRect
    * @return {Object} Layout rect instance.
    */
-  initLayoutRect: function () {
-    var self = this, layoutRect = self._super();
+  initLayoutRect () {
+    const self = this, layoutRect = self._super();
 
     if (self.settings.multiline) {
-      var size = DomUtils.getSize(self.getEl());
+      const size = DomUtils.getSize(self.getEl());
 
       // Check if the text fits within maxW if not then try word wrapping it
       if (size.width > layoutRect.maxW) {
@@ -78,8 +76,8 @@ export default <any> Widget.extend({
    *
    * @method repaint
    */
-  repaint: function () {
-    var self = this;
+  repaint () {
+    const self = this;
 
     if (!self.settings.multiline) {
       self.getEl().style.lineHeight = self.layoutRect().h + 'px';
@@ -88,7 +86,7 @@ export default <any> Widget.extend({
     return self._super();
   },
 
-  severity: function (level) {
+  severity (level) {
     this.classes.remove('error');
     this.classes.remove('warning');
     this.classes.remove('success');
@@ -101,9 +99,10 @@ export default <any> Widget.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, targetCtrl, forName, forId = self.settings.forId;
-    var text = self.settings.html ? self.settings.html : self.encode(self.state.get('text'));
+  renderHtml () {
+    const self = this;
+    let targetCtrl, forName, forId = self.settings.forId;
+    const text = self.settings.html ? self.settings.html : self.encode(self.state.get('text'));
 
     if (!forId && (forName = self.settings.forName)) {
       targetCtrl = self.getRoot().find('#' + forName)[0];
@@ -128,8 +127,8 @@ export default <any> Widget.extend({
     );
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     self.state.on('change:text', function (e) {
       self.innerHtml(self.encode(e.value));

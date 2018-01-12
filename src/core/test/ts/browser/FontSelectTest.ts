@@ -13,13 +13,13 @@ import { TextContent } from '@ephox/sugar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sAssertSelectBoxDisplayValue = function (editor, title, expectedValue) {
+  const sAssertSelectBoxDisplayValue = function (editor, title, expectedValue) {
     return Chain.asStep(Element.fromDom(document.body), [
       UiFinder.cFindIn('*[aria-label="' + title + '"]'),
       Chain.mapper(Fun.compose(Strings.trim, TextContent.get)),
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('Font family and font size on initial page load', GeneralSteps.sequence([
@@ -65,4 +65,3 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function() {
     fontsize_formats: '12pt 12.75pt 13pt 32pt'
   }, success, failure);
 });
-

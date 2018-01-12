@@ -9,18 +9,18 @@
  */
 
 // result :: String, Rect -> Matcher.result
-var result = function (id, rect) {
+const result = function (id, rect) {
   return {
-    id: id,
-    rect: rect
+    id,
+    rect
   };
 };
 
 // match :: Editor, [(Editor -> Matcher.result | Null)] -> Matcher.result | Null
-var match = function (editor, matchers) {
-  for (var i = 0; i < matchers.length; i++) {
-    var f = matchers[i];
-    var result = f(editor);
+const match = function (editor, matchers) {
+  for (let i = 0; i < matchers.length; i++) {
+    const f = matchers[i];
+    const result = f(editor);
 
     if (result) {
       return result;
@@ -30,7 +30,7 @@ var match = function (editor, matchers) {
   return null;
 };
 
-export default <any> {
-  match: match,
-  result: result
+export default {
+  match,
+  result
 };

@@ -8,26 +8,26 @@ import InsertBr from 'tinymce/core/newline/InsertBr';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sInsertBr = function (editor) {
+  const sInsertBr = function (editor) {
     return Step.sync(function () {
       InsertBr.insert(editor);
     });
   };
 
-  var sSetRawContent = function (editor, html) {
+  const sSetRawContent = function (editor, html) {
     return Step.sync(function () {
       editor.getBody().innerHTML = html;
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('Enter inside inline boundary link', GeneralSteps.sequence([
@@ -103,4 +103,3 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

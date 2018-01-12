@@ -8,13 +8,10 @@ import ColorSlider from 'tinymce/themes/mobile/ui/ColorSlider';
 import FontSizeSlider from 'tinymce/themes/mobile/ui/FontSizeSlider';
 import UiDomFactory from 'tinymce/themes/mobile/util/UiDomFactory';
 
+export default function () {
+  const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
-
-export default <any> function () {
-  var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
-
-
-  var fontSlider = Container.sketch({
+  const fontSlider = Container.sketch({
     dom: UiDomFactory.dom('<div class="${prefix}-toolbar ${prefix}-context-toolbar"></div>'),
     components: [
       {
@@ -27,7 +24,7 @@ export default <any> function () {
     ]
   });
 
-  var colorSlider = Container.sketch({
+  const colorSlider = Container.sketch({
     dom: UiDomFactory.dom('<div class="${prefix}-toolbar ${prefix}-context-toolbar"></div>'),
     components: [
       {
@@ -40,10 +37,10 @@ export default <any> function () {
     ]
   });
 
-  var gui = Gui.create();
+  const gui = Gui.create();
   Attachment.attachSystem(ephoxUi, gui);
 
-  var container = GuiFactory.build({
+  const container = GuiFactory.build({
     dom: UiDomFactory.dom('<div class="{prefix}-outer-container ${prefix}-fullscreen-maximized"></div>'),
     components: [
       {
@@ -58,4 +55,4 @@ export default <any> function () {
   });
 
   gui.add(container);
-};
+}

@@ -10,14 +10,14 @@
 
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import I18n from 'tinymce/core/util/I18n';
-import Settings from '../api/Settings';
 import TextColor from '../core/TextColor';
 
-var getHtml = function (cols, rows, colorMap, hasColorPicker) {
-  var colors, color, html, last, x, y, i, count = 0, id = DOMUtils.DOM.uniqueId('mcearia');
+const getHtml = function (cols, rows, colorMap, hasColorPicker) {
+  let colors, color, html, last, x, y, i, count = 0;
+  const id = DOMUtils.DOM.uniqueId('mcearia');
 
-  var getColorCellHtml = function (color, title) {
-    var isNoColor = color === 'transparent';
+  const getColorCellHtml = function (color, title) {
+    const isNoColor = color === 'transparent';
 
     return (
       '<td class="mce-grid-cell' + (isNoColor ? ' mce-colorbtn-trans' : '') + '">' +
@@ -35,8 +35,8 @@ var getHtml = function (cols, rows, colorMap, hasColorPicker) {
 
   colors = TextColor.mapColors(colorMap);
   colors.push({
-    text: I18n.translate("No color"),
-    color: "transparent"
+    text: I18n.translate('No color'),
+    color: 'transparent'
   });
 
   html = '<table class="mce-grid mce-grid-border mce-colorbutton-grid" role="list" cellspacing="0"><tbody>';
@@ -86,5 +86,5 @@ var getHtml = function (cols, rows, colorMap, hasColorPicker) {
 };
 
 export default {
-  getHtml: getHtml
+  getHtml
 };

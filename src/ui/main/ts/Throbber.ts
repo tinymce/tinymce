@@ -19,10 +19,11 @@ import Delay from 'tinymce/core/util/Delay';
  * @class tinymce.ui.Throbber
  */
 
-"use strict";
-
-export default <any> function (elm, inline) {
-  var self = this, state, classPrefix = Control.classPrefix, timer;
+export default function (elm, inline?) {
+  const self = this;
+  let state;
+  const classPrefix = Control.classPrefix;
+  let timer;
 
   /**
    * Shows the throbber.
@@ -65,11 +66,11 @@ export default <any> function (elm, inline) {
    * @return {tinymce.ui.Throbber} Current throbber instance.
    */
   self.hide = function () {
-    var child = elm.lastChild;
+    const child = elm.lastChild;
 
     Delay.clearTimeout(timer);
 
-    if (child && child.className.indexOf('throbber') != -1) {
+    if (child && child.className.indexOf('throbber') !== -1) {
       child.parentNode.removeChild(child);
     }
 
@@ -77,4 +78,4 @@ export default <any> function (elm, inline) {
 
     return self;
   };
-};
+}

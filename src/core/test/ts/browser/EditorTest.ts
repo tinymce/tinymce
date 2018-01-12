@@ -8,15 +8,15 @@ import URI from 'tinymce/core/util/URI';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
   suite.test('Event: change', function (editor) {
-    var level, lastLevel;
+    let level, lastLevel;
 
     editor.on('change', function (e) {
       level = e.level;
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
   });
 
   suite.test('Event: beforeExecCommand', function (editor) {
-    var cmd, ui, value;
+    let cmd, ui, value;
 
     editor.on('BeforeExecCommand', function (e) {
       cmd = e.command;
@@ -124,7 +124,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
     if (Env.webkit) {
       // Note that if we create the P with this invalid content directly, Chrome cleans it up differently to other browsers so we don't
       // wind up testing the serialization functionality we were aiming for and the test fails.
-      var p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
+      const p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
       editor.dom.replace(p, editor.getBody().firstChild);
 
       LegacyUnit.equal(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>');
@@ -149,9 +149,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
   });
 
   suite.test('setContent', function (editor) {
-    var count;
+    let count;
 
-    var callback = function (e) {
+    const callback = function (e) {
       e.content = e.content.replace(/test/, 'X');
       count++;
     };
@@ -160,14 +160,14 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
     editor.on('BeforeSetContent', callback);
     count = 0;
     editor.setContent('<p>test</p>');
-    LegacyUnit.equal(editor.getContent(), "<p>X</p>");
+    LegacyUnit.equal(editor.getContent(), '<p>X</p>');
     LegacyUnit.equal(count, 2);
     editor.off('SetContent', callback);
     editor.off('BeforeSetContent', callback);
 
     count = 0;
     editor.setContent('<p>test</p>');
-    LegacyUnit.equal(editor.getContent(), "<p>test</p>");
+    LegacyUnit.equal(editor.getContent(), '<p>test</p>');
     LegacyUnit.equal(count, 0);
   });
 
@@ -176,7 +176,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
     editor.settings.disable_nodechange = false;
     editor.nodeChanged();
     editor.settings.disable_nodechange = true;
-    LegacyUnit.equal(editor.getContent(), "<!-- x --><p>\u00a0</p>");
+    LegacyUnit.equal(editor.getContent(), '<!-- x --><p>\u00a0</p>');
   });
 
   suite.test('custom elements', function (editor) {
@@ -191,7 +191,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
   });
 
   suite.test('show/hide/isHidden and events', function (editor) {
-    var lastEvent;
+    let lastEvent;
 
     editor.on('show hide', function (e) {
       lastEvent = e;
@@ -201,7 +201,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
 
     editor.hide();
     LegacyUnit.equal(editor.isHidden(), true, 'After hide isHidden state');
-    LegacyUnit.equal(lastEvent.type, "hide");
+    LegacyUnit.equal(lastEvent.type, 'hide');
 
     lastEvent = null;
     editor.hide();
@@ -209,7 +209,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
 
     editor.show();
     LegacyUnit.equal(editor.isHidden(), false, 'After show isHidden state');
-    LegacyUnit.equal(lastEvent.type, "show");
+    LegacyUnit.equal(lastEvent.type, 'show');
 
     lastEvent = null;
     editor.show();
@@ -217,7 +217,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
   });
 
   suite.test('hide save content and hidden state while saving', function (editor) {
-    var lastEvent, hiddenStateWhileSaving;
+    let lastEvent, hiddenStateWhileSaving;
 
     editor.on('SaveContent', function (e) {
       lastEvent = e;
@@ -227,7 +227,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
     editor.setContent('xyz');
     editor.hide();
 
-    var elm: any = document.getElementById(editor.id);
+    const elm: any = document.getElementById(editor.id);
     LegacyUnit.equal(hiddenStateWhileSaving, false, 'False isHidden state while saving');
     LegacyUnit.equal(lastEvent.content, '<p>xyz</p>');
     LegacyUnit.equal(elm.value, '<p>xyz</p>');
@@ -250,47 +250,49 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
   });
 
   suite.test('addCommand', function (editor) {
-    var scope = {}, lastScope, lastArgs;
+    const scope = {};
+    let lastScope, lastArgs;
 
-    var callback = function () {
+    const callback = function () {
       // eslint-disable-next-line
       lastScope = this;
       lastArgs = arguments;
     };
 
-    editor.addCommand("CustomCommand1", callback, scope);
-    editor.addCommand("CustomCommand2", callback);
+    editor.addCommand('CustomCommand1', callback, scope);
+    editor.addCommand('CustomCommand2', callback);
 
-    editor.execCommand("CustomCommand1", false, "value", { extra: true });
+    editor.execCommand('CustomCommand1', false, 'value', { extra: true });
     LegacyUnit.equal(lastArgs[0], false);
-    LegacyUnit.equal(lastArgs[1], "value");
+    LegacyUnit.equal(lastArgs[1], 'value');
     LegacyUnit.equal(lastScope === scope, true);
 
-    editor.execCommand("CustomCommand2");
-    LegacyUnit.equal(typeof lastArgs[0], "undefined");
-    LegacyUnit.equal(typeof lastArgs[1], "undefined");
+    editor.execCommand('CustomCommand2');
+    LegacyUnit.equal(typeof lastArgs[0], 'undefined');
+    LegacyUnit.equal(typeof lastArgs[1], 'undefined');
     LegacyUnit.equal(lastScope === editor, true);
   });
 
   suite.test('addQueryStateHandler', function (editor) {
-    var scope = {}, lastScope, currentState;
+    const scope = {};
+    let lastScope, currentState;
 
-    var callback = function () {
+    const callback = function () {
       // eslint-disable-next-line
       lastScope = this;
       return currentState;
     };
 
-    editor.addQueryStateHandler("CustomCommand1", callback, scope);
-    editor.addQueryStateHandler("CustomCommand2", callback);
+    editor.addQueryStateHandler('CustomCommand1', callback, scope);
+    editor.addQueryStateHandler('CustomCommand2', callback);
 
     currentState = false;
-    LegacyUnit.equal(editor.queryCommandState("CustomCommand1"), false);
-    LegacyUnit.equal(lastScope === scope, true, "Scope is not custom scope");
+    LegacyUnit.equal(editor.queryCommandState('CustomCommand1'), false);
+    LegacyUnit.equal(lastScope === scope, true, 'Scope is not custom scope');
 
     currentState = true;
-    LegacyUnit.equal(editor.queryCommandState("CustomCommand2"), true);
-    LegacyUnit.equal(lastScope === editor, true, "Scope is not editor");
+    LegacyUnit.equal(editor.queryCommandState('CustomCommand2'), true);
+    LegacyUnit.equal(lastScope === editor, true, 'Scope is not editor');
   });
 
   suite.test('Block script execution', function (editor) {
@@ -312,28 +314,29 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
   });
 
   suite.test('addQueryValueHandler', function (editor) {
-    var scope = {}, lastScope, currentValue;
+    const scope = {};
+    let lastScope, currentValue;
 
-    var callback = function () {
+    const callback = function () {
       // eslint-disable-next-line
       lastScope = this;
       return currentValue;
     };
 
-    editor.addQueryValueHandler("CustomCommand1", callback, scope);
-    editor.addQueryValueHandler("CustomCommand2", callback);
+    editor.addQueryValueHandler('CustomCommand1', callback, scope);
+    editor.addQueryValueHandler('CustomCommand2', callback);
 
-    currentValue = "a";
-    LegacyUnit.equal(editor.queryCommandValue("CustomCommand1"), "a");
-    LegacyUnit.equal(lastScope === scope, true, "Scope is not custom scope");
+    currentValue = 'a';
+    LegacyUnit.equal(editor.queryCommandValue('CustomCommand1'), 'a');
+    LegacyUnit.equal(lastScope === scope, true, 'Scope is not custom scope');
 
-    currentValue = "b";
-    LegacyUnit.equal(editor.queryCommandValue("CustomCommand2"), "b", true);
-    LegacyUnit.equal(lastScope === editor, true, "Scope is not editor");
+    currentValue = 'b';
+    LegacyUnit.equal(editor.queryCommandValue('CustomCommand2'), 'b', true);
+    LegacyUnit.equal(lastScope === editor, true, 'Scope is not editor');
   });
 
   suite.test('setDirty/isDirty', function (editor) {
-    var lastArgs = null;
+    let lastArgs = null;
 
     editor.on('dirty', function (e) {
       lastArgs = e;
@@ -358,7 +361,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
   });
 
   suite.test('setMode', function (editor) {
-    var clickCount = 0;
+    let clickCount = 0;
 
     editor.on('click', function () {
       clickCount++;
@@ -381,11 +384,11 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
   suite.test('translate', function (editor) {
     EditorManager.addI18n('en_US', {
       'input i18n': 'output i18n',
-      "value:{0}{1}": "value translation:{0}{1}"
+      'value:{0}{1}': 'value translation:{0}{1}'
     });
 
     LegacyUnit.equal(editor.translate('input i18n'), 'output i18n');
-    LegacyUnit.equal(editor.translate(["value:{0}{1}", "a", "b"]), "value translation:ab");
+    LegacyUnit.equal(editor.translate(['value:{0}{1}', 'a', 'b']), 'value translation:ab');
   });
 
   suite.test('Treat some paragraphs as empty contents', function (editor) {
@@ -427,7 +430,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
       onSuccess();
     }, onFailure);
   }, {
-    selector: "textarea",
+    selector: 'textarea',
     add_unload_trigger: false,
     disable_nodechange: true,
     custom_elements: 'custom1,~custom2',
@@ -437,4 +440,3 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

@@ -11,29 +11,29 @@
 import { Compare } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 
-var getBody = function (editor) {
+const getBody = function (editor) {
   return Element.fromDom(editor.getBody());
 };
-var getIsRoot = function (editor) {
+const getIsRoot = function (editor) {
   return function (element) {
     return Compare.eq(element, getBody(editor));
   };
 };
 
-var removePxSuffix = function (size) {
-  return size ? size.replace(/px$/, '') : "";
+const removePxSuffix = function (size) {
+  return size ? size.replace(/px$/, '') : '';
 };
 
-var addSizeSuffix = function (size) {
+const addSizeSuffix = function (size) {
   if (/^[0-9]+$/.test(size)) {
-    size += "px";
+    size += 'px';
   }
   return size;
 };
 
 export default {
-  getBody: getBody,
-  getIsRoot: getIsRoot,
-  addSizeSuffix: addSizeSuffix,
-  removePxSuffix: removePxSuffix
+  getBody,
+  getIsRoot,
+  addSizeSuffix,
+  removePxSuffix
 };

@@ -11,28 +11,28 @@
 import EditorManager from 'tinymce/core/EditorManager';
 import Tools from 'tinymce/core/util/Tools';
 
-var isBrandingEnabled = function (editor) {
+const isBrandingEnabled = function (editor) {
   return editor.getParam('branding', true);
 };
 
-var hasMenubar = function (editor) {
+const hasMenubar = function (editor) {
   return getMenubar(editor) !== false;
 };
 
-var getMenubar = function (editor) {
+const getMenubar = function (editor) {
   return editor.getParam('menubar');
 };
 
-var hasStatusbar = function (editor) {
+const hasStatusbar = function (editor) {
   return editor.getParam('statusbar', true);
 };
 
-var getToolbarSize = function (editor) {
+const getToolbarSize = function (editor) {
   return editor.getParam('toolbar_items_size');
 };
 
-var getResize = function (editor) {
-  var resize = editor.getParam('resize', 'vertical');
+const getResize = function (editor) {
+  const resize = editor.getParam('resize', 'vertical');
   if (resize === false) {
     return 'none';
   } else if (resize === 'both') {
@@ -42,49 +42,49 @@ var getResize = function (editor) {
   }
 };
 
-var isReadOnly = function (editor) {
+const isReadOnly = function (editor) {
   return editor.getParam('readonly', false);
 };
 
-var getFixedToolbarContainer = function (editor) {
+const getFixedToolbarContainer = function (editor) {
   return editor.getParam('fixed_toolbar_container');
 };
 
-var getInlineToolbarPositionHandler = function (editor) {
+const getInlineToolbarPositionHandler = function (editor) {
   return editor.getParam('inline_toolbar_position_handler');
 };
 
-var getMenu = function (editor) {
+const getMenu = function (editor) {
   return editor.getParam('menu');
 };
 
-var getRemovedMenuItems = function (editor) {
+const getRemovedMenuItems = function (editor) {
   return editor.getParam('removed_menuitems', '');
 };
 
-var getMinWidth = function (editor) {
+const getMinWidth = function (editor) {
   return editor.getParam('min_width', 100);
 };
 
-var getMinHeight = function (editor) {
+const getMinHeight = function (editor) {
   return editor.getParam('min_height', 100);
 };
 
-var getMaxWidth = function (editor) {
+const getMaxWidth = function (editor) {
   return editor.getParam('max_width', 0xFFFF);
 };
 
-var getMaxHeight = function (editor) {
+const getMaxHeight = function (editor) {
   return editor.getParam('max_height', 0xFFFF);
 };
 
-var getSkinUrl = function (editor) {
-  var settings = editor.settings;
-  var skin = settings.skin;
-  var skinUrl = settings.skin_url;
+const getSkinUrl = function (editor) {
+  const settings = editor.settings;
+  const skin = settings.skin;
+  let skinUrl = settings.skin_url;
 
   if (skin !== false) {
-    var skinName = skin ? skin : 'lightgray';
+    const skinName = skin ? skin : 'lightgray';
 
     if (skinUrl) {
       skinUrl = editor.documentBaseURI.toAbsolute(skinUrl);
@@ -96,20 +96,20 @@ var getSkinUrl = function (editor) {
   return skinUrl;
 };
 
-var isSkinDisabled = function (editor) {
+const isSkinDisabled = function (editor) {
   return editor.settings.skin === false;
 };
 
-var isInline = function (editor) {
+const isInline = function (editor) {
   return editor.getParam('inline', false);
 };
 
-var getIndexedToolbars = function (settings, defaultToolbar) {
-  var toolbars = [];
+const getIndexedToolbars = function (settings, defaultToolbar) {
+  const toolbars = [];
 
   // Generate toolbar<n>
-  for (var i = 1; i < 10; i++) {
-    var toolbar = settings['toolbar' + i];
+  for (let i = 1; i < 10; i++) {
+    const toolbar = settings['toolbar' + i];
     if (!toolbar) {
       break;
     }
@@ -117,13 +117,13 @@ var getIndexedToolbars = function (settings, defaultToolbar) {
     toolbars.push(toolbar);
   }
 
-  var mainToolbar = settings.toolbar ? [ settings.toolbar ] : [ defaultToolbar ];
+  const mainToolbar = settings.toolbar ? [ settings.toolbar ] : [ defaultToolbar ];
   return toolbars.length > 0 ? toolbars : mainToolbar;
 };
 
-var getToolbars = function (editor) {
-  var toolbar = editor.getParam('toolbar');
-  var defaultToolbar = 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image';
+const getToolbars = function (editor) {
+  const toolbar = editor.getParam('toolbar');
+  const defaultToolbar = 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image';
 
   if (toolbar === false) {
     return [];
@@ -136,24 +136,24 @@ var getToolbars = function (editor) {
   }
 };
 
-export default <any> {
-  isBrandingEnabled: isBrandingEnabled,
-  hasMenubar: hasMenubar,
-  getMenubar: getMenubar,
-  hasStatusbar: hasStatusbar,
-  getToolbarSize: getToolbarSize,
-  getResize: getResize,
-  isReadOnly: isReadOnly,
-  getFixedToolbarContainer: getFixedToolbarContainer,
-  getInlineToolbarPositionHandler: getInlineToolbarPositionHandler,
-  getMenu: getMenu,
-  getRemovedMenuItems: getRemovedMenuItems,
-  getMinWidth: getMinWidth,
-  getMinHeight: getMinHeight,
-  getMaxWidth: getMaxWidth,
-  getMaxHeight: getMaxHeight,
-  getSkinUrl: getSkinUrl,
-  isSkinDisabled: isSkinDisabled,
-  isInline: isInline,
-  getToolbars: getToolbars
+export default {
+  isBrandingEnabled,
+  hasMenubar,
+  getMenubar,
+  hasStatusbar,
+  getToolbarSize,
+  getResize,
+  isReadOnly,
+  getFixedToolbarContainer,
+  getInlineToolbarPositionHandler,
+  getMenu,
+  getRemovedMenuItems,
+  getMinWidth,
+  getMinHeight,
+  getMaxWidth,
+  getMaxHeight,
+  getSkinUrl,
+  isSkinDisabled,
+  isInline,
+  getToolbars
 };

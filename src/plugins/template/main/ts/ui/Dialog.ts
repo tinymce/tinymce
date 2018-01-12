@@ -8,15 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Tools from 'tinymce/core/util/Tools';
 import XHR from 'tinymce/core/util/XHR';
 import Settings from '../api/Settings';
 import Templates from '../core/Templates';
 
-var insertIframeHtml = function (editor, win, html) {
+const insertIframeHtml = function (editor, win, html) {
   if (html.indexOf('<html>') === -1) {
-    var contentCssLinks = '';
+    let contentCssLinks = '';
 
     Tools.each(editor.contentCSS, function (url) {
       contentCssLinks += '<link type="text/css" rel="stylesheet" href="' +
@@ -24,7 +23,7 @@ var insertIframeHtml = function (editor, win, html) {
               '">';
     });
 
-    var bodyClass = editor.settings.body_class || '';
+    let bodyClass = editor.settings.body_class || '';
     if (bodyClass.indexOf('=') !== -1) {
       bodyClass = editor.getParam('body_class', '', 'hash');
       bodyClass = bodyClass[editor.id] || '';
@@ -45,17 +44,19 @@ var insertIframeHtml = function (editor, win, html) {
 
   html = Templates.replaceTemplateValues(editor, html, Settings.getPreviewReplaceValues(editor));
 
-  var doc = win.find('iframe')[0].getEl().contentWindow.document;
+  const doc = win.find('iframe')[0].getEl().contentWindow.document;
   doc.open();
   doc.write(html);
   doc.close();
 };
 
-var open = function (editor, templateList) {
-  var win, values = [], templateHtml;
+const open = function (editor, templateList) {
+  let win;
+  const values = [];
+  let templateHtml;
 
   if (!templateList || templateList.length === 0) {
-    var message = editor.translate('No templates defined.');
+    const message = editor.translate('No templates defined.');
     editor.notificationManager.open({ text: message, type: 'info' });
     return;
   }
@@ -72,13 +73,13 @@ var open = function (editor, templateList) {
     });
   });
 
-  var onSelectTemplate = function (e) {
-    var value = e.control.value();
+  const onSelectTemplate = function (e) {
+    const value = e.control.value();
 
     if (value.url) {
       XHR.send({
         url: value.url,
-        success: function (html) {
+        success (html) {
           templateHtml = html;
           insertIframeHtml(editor, win, templateHtml);
         }
@@ -111,7 +112,7 @@ var open = function (editor, templateList) {
               type: 'listbox',
               label: 'Templates',
               name: 'template',
-              values: values,
+              values,
               onselect: onSelectTemplate
             }
           }
@@ -130,7 +131,7 @@ var open = function (editor, templateList) {
       }
     ],
 
-    onsubmit: function () {
+    onsubmit () {
       Templates.insertTemplate(editor, false, templateHtml);
     },
 
@@ -142,5 +143,5 @@ var open = function (editor, templateList) {
 };
 
 export default {
-  open: open
+  open
 };

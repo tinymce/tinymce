@@ -8,22 +8,20 @@ import CommonRealm from './CommonRealm';
 import Dropup from './Dropup';
 import OuterContainer from './OuterContainer';
 
-
-
-export default <any> function (scrollIntoView) {
-  var alloy = OuterContainer({
+export default function (scrollIntoView?) { // unsure if this should be optional?
+  const alloy = OuterContainer({
     classes: [ Styles.resolve('ios-container') ]
   });
 
-  var toolbar = ScrollingToolbar();
+  const toolbar = ScrollingToolbar();
 
-  var webapp = Singleton.api();
+  const webapp = Singleton.api();
 
-  var switchToEdit = CommonRealm.makeEditSwitch(webapp);
+  const switchToEdit = CommonRealm.makeEditSwitch(webapp);
 
-  var socket = CommonRealm.makeSocket();
+  const socket = CommonRealm.makeSocket();
 
-  var dropup = Dropup.build(function () {
+  const dropup = Dropup.build(function () {
     webapp.run(function (w) {
       w.refreshStructure();
     });
@@ -33,52 +31,52 @@ export default <any> function (scrollIntoView) {
   alloy.add(socket);
   alloy.add(dropup.component());
 
-  var setToolbarGroups = function (rawGroups) {
-    var groups = toolbar.createGroups(rawGroups);
+  const setToolbarGroups = function (rawGroups) {
+    const groups = toolbar.createGroups(rawGroups);
     toolbar.setGroups(groups);
   };
 
-  var setContextToolbar = function (rawGroups) {
-    var groups = toolbar.createGroups(rawGroups);
+  const setContextToolbar = function (rawGroups) {
+    const groups = toolbar.createGroups(rawGroups);
     toolbar.setContextToolbar(groups);
   };
 
-  var focusToolbar = function () {
+  const focusToolbar = function () {
     toolbar.focus();
   };
 
-  var restoreToolbar = function () {
+  const restoreToolbar = function () {
     toolbar.restoreToolbar();
   };
 
-  var init = function (spec) {
+  const init = function (spec) {
     webapp.set(
       IosWebapp.produce(spec)
     );
   };
 
-  var exit = function () {
+  const exit = function () {
     webapp.run(function (w) {
       Replacing.remove(socket, switchToEdit);
       w.exit();
     });
   };
 
-  var updateMode = function (readOnly) {
+  const updateMode = function (readOnly) {
     CommonRealm.updateMode(socket, switchToEdit, readOnly, alloy.root());
   };
 
   return {
     system: Fun.constant(alloy),
     element: alloy.element,
-    init: init,
-    exit: exit,
-    setToolbarGroups: setToolbarGroups,
-    setContextToolbar: setContextToolbar,
-    focusToolbar: focusToolbar,
-    restoreToolbar: restoreToolbar,
-    updateMode: updateMode,
+    init,
+    exit,
+    setToolbarGroups,
+    setContextToolbar,
+    focusToolbar,
+    restoreToolbar,
+    updateMode,
     socket: Fun.constant(socket),
     dropup: Fun.constant(dropup)
   };
-};
+}

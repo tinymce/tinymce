@@ -8,13 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var charMap = {
+const charMap = {
   '\u00a0': 'nbsp',
   '\u00ad': 'shy'
 };
 
-var charMapToRegExp = function (charMap, global?) {
-  var key, regExp = '';
+const charMapToRegExp = function (charMap, global?) {
+  let key, regExp = '';
 
   for (key in charMap) {
     regExp += key;
@@ -23,8 +23,8 @@ var charMapToRegExp = function (charMap, global?) {
   return new RegExp('[' + regExp + ']', global ? 'g' : '');
 };
 
-var charMapToSelector = function (charMap) {
-  var key, selector = '';
+const charMapToSelector = function (charMap) {
+  let key, selector = '';
 
   for (key in charMap) {
     if (selector) {
@@ -37,10 +37,10 @@ var charMapToSelector = function (charMap) {
 };
 
 export default {
-  charMap: charMap,
+  charMap,
   regExp: charMapToRegExp(charMap),
   regExpGlobal: charMapToRegExp(charMap, true),
   selector: charMapToSelector(charMap),
-  charMapToRegExp: charMapToRegExp,
-  charMapToSelector: charMapToSelector
+  charMapToRegExp,
+  charMapToSelector
 };

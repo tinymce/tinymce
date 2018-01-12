@@ -8,14 +8,14 @@ import { Waiter } from '@ephox/agar';
 import { TinyDom } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
-var sOpenDialog = function (ui) {
+const sOpenDialog = function (ui) {
   return GeneralSteps.sequence([
     ui.sClickOnToolbar('Click on media button', 'div[aria-label="Insert/edit media"] > button'),
     ui.sWaitForPopup('wait for popup', 'div[role="dialog"]')
   ]);
 };
 
-var cFindInDialog = function (mapper) {
+const cFindInDialog = function (mapper) {
   return function (ui, text) {
     return Chain.fromChains([
       ui.cWaitForPopup('Wait for popup', 'div[role="dialog"]'),
@@ -27,43 +27,43 @@ var cFindInDialog = function (mapper) {
   };
 };
 
-var cFindWidthInput = cFindInDialog(function (value) {
+const cFindWidthInput = cFindInDialog(function (value) {
   return document.getElementById(value.dom().htmlFor).querySelector('input[aria-label="Width"]');
 });
 
-var cFindHeightInput = cFindInDialog(function (value) {
+const cFindHeightInput = cFindInDialog(function (value) {
   return document.getElementById(value.dom().htmlFor).querySelector('input[aria-label="Height"]');
 });
 
-var cGetWidthValue = function (ui) {
+const cGetWidthValue = function (ui) {
   return Chain.fromChains([
     cFindWidthInput(ui, 'Dimensions'),
     UiControls.cGetValue
   ]);
 };
 
-var cSetWidthValue = function (ui, value) {
+const cSetWidthValue = function (ui, value) {
   return Chain.fromChains([
     cFindWidthInput(ui, 'Dimensions'),
     UiControls.cSetValue(value)
   ]);
 };
 
-var cGetHeightValue = function (ui) {
+const cGetHeightValue = function (ui) {
   return Chain.fromChains([
     cFindHeightInput(ui, 'Dimensions'),
     UiControls.cGetValue
   ]);
 };
 
-var cSetHeightValue = function (ui, value) {
+const cSetHeightValue = function (ui, value) {
   return Chain.fromChains([
     cFindHeightInput(ui, 'Dimensions'),
     UiControls.cSetValue(value)
   ]);
 };
 
-var sAssertWidthValue = function (ui, value) {
+const sAssertWidthValue = function (ui, value) {
   return Waiter.sTryUntil('Wait for new width value',
     Chain.asStep({}, [
       cGetWidthValue(ui),
@@ -72,7 +72,7 @@ var sAssertWidthValue = function (ui, value) {
   );
 };
 
-var sAssertHeightValue = function (ui, value) {
+const sAssertHeightValue = function (ui, value) {
   return Waiter.sTryUntil('Wait for new height value',
     Chain.asStep({}, [
       cGetHeightValue(ui),
@@ -81,7 +81,7 @@ var sAssertHeightValue = function (ui, value) {
   );
 };
 
-var sAssertSourceValue = function (ui, value) {
+const sAssertSourceValue = function (ui, value) {
   return Waiter.sTryUntil('Wait for source value',
     Chain.asStep({}, [
       cFindFilepickerInput(ui, 'Source'),
@@ -91,8 +91,7 @@ var sAssertSourceValue = function (ui, value) {
   );
 };
 
-
-var sPasteSourceValue = function (ui, value) {
+const sPasteSourceValue = function (ui, value) {
   return Chain.asStep({}, [
     cFindFilepickerInput(ui, 'Source'),
     UiControls.cSetValue(value),
@@ -100,107 +99,107 @@ var sPasteSourceValue = function (ui, value) {
   ]);
 };
 
-var sChangeWidthValue = function (ui, value) {
+const sChangeWidthValue = function (ui, value) {
   return Chain.asStep({}, [
     cSetWidthValue(ui, value),
     cFakeEvent('change')
   ]);
 };
 
-var sChangeHeightValue = function (ui, value) {
+const sChangeHeightValue = function (ui, value) {
   return Chain.asStep({}, [
     cSetHeightValue(ui, value),
     cFakeEvent('change')
   ]);
 };
 
-var sAssertSizeRecalcConstrained = function (ui) {
+const sAssertSizeRecalcConstrained = function (ui) {
   return GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, 'http://test.se'),
-    sAssertWidthValue(ui, "300"),
-    sAssertHeightValue(ui, "150"),
-    sChangeWidthValue(ui, "350"),
-    sAssertWidthValue(ui, "350"),
-    sAssertHeightValue(ui, "175"),
-    sChangeHeightValue(ui, "100"),
-    sAssertHeightValue(ui, "100"),
-    sAssertWidthValue(ui, "200"),
+    sAssertWidthValue(ui, '300'),
+    sAssertHeightValue(ui, '150'),
+    sChangeWidthValue(ui, '350'),
+    sAssertWidthValue(ui, '350'),
+    sAssertHeightValue(ui, '175'),
+    sChangeHeightValue(ui, '100'),
+    sAssertHeightValue(ui, '100'),
+    sAssertWidthValue(ui, '200'),
     sCloseDialog(ui)
   ]);
 };
 
-var sAssertSizeRecalcConstrainedReopen = function (ui) {
+const sAssertSizeRecalcConstrainedReopen = function (ui) {
   return GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, 'http://test.se'),
-    sAssertWidthValue(ui, "300"),
-    sAssertHeightValue(ui, "150"),
-    sChangeWidthValue(ui, "350"),
-    sAssertWidthValue(ui, "350"),
-    sAssertHeightValue(ui, "175"),
-    sChangeHeightValue(ui, "100"),
-    sAssertHeightValue(ui, "100"),
-    sAssertWidthValue(ui, "200"),
+    sAssertWidthValue(ui, '300'),
+    sAssertHeightValue(ui, '150'),
+    sChangeWidthValue(ui, '350'),
+    sAssertWidthValue(ui, '350'),
+    sAssertHeightValue(ui, '175'),
+    sChangeHeightValue(ui, '100'),
+    sAssertHeightValue(ui, '100'),
+    sAssertWidthValue(ui, '200'),
     sSubmitAndReopen(ui),
-    sAssertHeightValue(ui, "100"),
-    sAssertWidthValue(ui, "200"),
-    sChangeWidthValue(ui, "350"),
-    sAssertWidthValue(ui, "350"),
-    sAssertHeightValue(ui, "175")
+    sAssertHeightValue(ui, '100'),
+    sAssertWidthValue(ui, '200'),
+    sChangeWidthValue(ui, '350'),
+    sAssertWidthValue(ui, '350'),
+    sAssertHeightValue(ui, '175')
   ]);
 };
 
-var sAssertSizeRecalcUnconstrained = function (ui) {
+const sAssertSizeRecalcUnconstrained = function (ui) {
   return GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, 'http://test.se'),
     ui.sClickOnUi('click checkbox', '.mce-checkbox'),
-    sAssertWidthValue(ui, "300"),
-    sAssertHeightValue(ui, "150"),
-    sChangeWidthValue(ui, "350"),
-    sAssertWidthValue(ui, "350"),
-    sAssertHeightValue(ui, "150"),
-    sChangeHeightValue(ui, "100"),
-    sAssertHeightValue(ui, "100"),
-    sAssertWidthValue(ui, "350"),
+    sAssertWidthValue(ui, '300'),
+    sAssertHeightValue(ui, '150'),
+    sChangeWidthValue(ui, '350'),
+    sAssertWidthValue(ui, '350'),
+    sAssertHeightValue(ui, '150'),
+    sChangeHeightValue(ui, '100'),
+    sAssertHeightValue(ui, '100'),
+    sAssertWidthValue(ui, '350'),
     sCloseDialog(ui)
   ]);
 };
 
-var sCloseDialog = function (ui) {
+const sCloseDialog = function (ui) {
   return ui.sClickOnUi('Click cancel button', '.mce-i-remove');
 };
 
-var cFakeEvent = function (name) {
+const cFakeEvent = function (name) {
   return Chain.op(function (elm) {
     DOMUtils.DOM.fire(elm.dom(), name);
   });
 };
 
-var cFindFilepickerInput = cFindInDialog(function (value) {
+const cFindFilepickerInput = cFindInDialog(function (value) {
   return document.getElementById(value.dom().htmlFor).querySelector('input');
 });
 
-var cFindTextarea = cFindInDialog(function (value) {
+const cFindTextarea = cFindInDialog(function (value) {
   return document.getElementById(value.dom().htmlFor);
 });
 
-var cSetSourceInput = function (ui, value) {
+const cSetSourceInput = function (ui, value) {
   return Chain.fromChains([
     cFindFilepickerInput(ui, 'Source'),
     UiControls.cSetValue(value)
   ]);
 };
 
-var cGetTextareaContent = function (ui) {
+const cGetTextareaContent = function (ui) {
   return Chain.fromChains([
     cFindTextarea(ui, 'Paste your embed code below:'),
     UiControls.cGetValue
   ]);
 };
 
-var sPasteTextareaValue = function (ui, value) {
+const sPasteTextareaValue = function (ui, value) {
   return Chain.asStep({}, [
     cFindTextarea(ui, 'Paste your embed code below:'),
     UiControls.cSetValue(value),
@@ -208,7 +207,7 @@ var sPasteTextareaValue = function (ui, value) {
   ]);
 };
 
-var sAssertEmbedContent = function (ui, content) {
+const sAssertEmbedContent = function (ui, content) {
   return Waiter.sTryUntil('Textarea should have a proper value',
     Chain.asStep({}, [
       cGetTextareaContent(ui),
@@ -217,7 +216,7 @@ var sAssertEmbedContent = function (ui, content) {
   );
 };
 
-var sTestEmbedContentFromUrl = function (ui, url, content) {
+const sTestEmbedContentFromUrl = function (ui, url, content) {
   return GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, url),
@@ -226,13 +225,13 @@ var sTestEmbedContentFromUrl = function (ui, url, content) {
   ]);
 };
 
-var sSetFormItemNoEvent = function (ui, value) {
+const sSetFormItemNoEvent = function (ui, value) {
   return Chain.asStep({}, [
     cSetSourceInput(ui, value)
   ]);
 };
 
-var sAssertEditorContent = function (apis, editor, expected) {
+const sAssertEditorContent = function (apis, editor, expected) {
   return Waiter.sTryUntil('Wait for editor value',
     Chain.asStep({}, [
       apis.cGetContent,
@@ -241,44 +240,44 @@ var sAssertEditorContent = function (apis, editor, expected) {
   );
 };
 
-var sSubmitDialog = function (ui) {
+const sSubmitDialog = function (ui) {
   return ui.sClickOnUi('Click submit button', 'div.mce-primary > button');
 };
 
-var sSubmitAndReopen = function (ui) {
+const sSubmitAndReopen = function (ui) {
   return GeneralSteps.sequence([
     sSubmitDialog(ui),
     sOpenDialog(ui)
   ]);
 };
 
-var sSetSetting = function (editorSetting, key, value) {
+const sSetSetting = function (editorSetting, key, value) {
   return Step.sync(function () {
     editorSetting[key] = value;
   });
 };
 
 export default {
-  cSetSourceInput: cSetSourceInput,
+  cSetSourceInput,
   cFindTextare: cFindTextarea,
-  cFakeEvent: cFakeEvent,
-  cFindInDialog: cFindInDialog,
-  sOpenDialog: sOpenDialog,
-  sCloseDialog: sCloseDialog,
-  sSubmitDialog: sSubmitDialog,
-  sTestEmbedContentFromUrl: sTestEmbedContentFromUrl,
-  sSetFormItemNoEvent: sSetFormItemNoEvent,
-  sAssertEditorContent: sAssertEditorContent,
-  sSetSetting: sSetSetting,
-  sSubmitAndReopen: sSubmitAndReopen,
-  sAssertWidthValue: sAssertWidthValue,
-  sAssertHeightValue: sAssertHeightValue,
-  sPasteSourceValue: sPasteSourceValue,
-  sAssertSizeRecalcConstrained: sAssertSizeRecalcConstrained,
-  sAssertSizeRecalcConstrainedReopen: sAssertSizeRecalcConstrainedReopen,
-  sAssertSizeRecalcUnconstrained: sAssertSizeRecalcUnconstrained,
-  sAssertEmbedContent: sAssertEmbedContent,
-  sAssertSourceValue: sAssertSourceValue,
-  sChangeWidthValue: sChangeWidthValue,
-  sPasteTextareaValue: sPasteTextareaValue
+  cFakeEvent,
+  cFindInDialog,
+  sOpenDialog,
+  sCloseDialog,
+  sSubmitDialog,
+  sTestEmbedContentFromUrl,
+  sSetFormItemNoEvent,
+  sAssertEditorContent,
+  sSetSetting,
+  sSubmitAndReopen,
+  sAssertWidthValue,
+  sAssertHeightValue,
+  sPasteSourceValue,
+  sAssertSizeRecalcConstrained,
+  sAssertSizeRecalcConstrainedReopen,
+  sAssertSizeRecalcUnconstrained,
+  sAssertEmbedContent,
+  sAssertSourceValue,
+  sChangeWidthValue,
+  sPasteTextareaValue
 };

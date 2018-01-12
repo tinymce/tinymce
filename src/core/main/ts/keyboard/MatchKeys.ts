@@ -12,7 +12,7 @@ import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
 
-var defaultPatterns = function (patterns) {
+const defaultPatterns = function (patterns) {
   return Arr.map(patterns, function (pattern) {
     return Merger.merge({
       shiftKey: false,
@@ -25,7 +25,7 @@ var defaultPatterns = function (patterns) {
   });
 };
 
-var matchesEvent = function (pattern, evt) {
+const matchesEvent = function (pattern, evt) {
   return (
     evt.keyCode === pattern.keyCode &&
     evt.shiftKey === pattern.shiftKey &&
@@ -35,27 +35,27 @@ var matchesEvent = function (pattern, evt) {
   );
 };
 
-var match = function (patterns, evt) {
+const match = function (patterns, evt) {
   return Arr.bind(defaultPatterns(patterns), function (pattern) {
     return matchesEvent(pattern, evt) ? [pattern] : [ ];
   });
 };
 
-var action = function (f, ...x: any[]) {
-  var args = Array.prototype.slice.call(arguments, 1);
+const action = function (f, ...x: any[]) {
+  const args = Array.prototype.slice.call(arguments, 1);
   return function () {
     return f.apply(null, args);
   };
 };
 
-var execute = function (patterns, evt) {
+const execute = function (patterns, evt) {
   return Arr.find(match(patterns, evt), function (pattern) {
     return pattern.action();
   });
 };
 
 export default {
-  match: match,
-  action: action,
-  execute: execute
+  match,
+  action,
+  execute
 };

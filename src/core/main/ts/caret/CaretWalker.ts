@@ -30,7 +30,7 @@ import Fun from '../util/Fun';
  * var nextLogicalCaretPosition = caretWalker.next(CaretPosition.fromRangeEnd(range));
  */
 
-var isContentEditableFalse = NodeType.isContentEditableFalse,
+const isContentEditableFalse = NodeType.isContentEditableFalse,
   isText = NodeType.isText,
   isElement = NodeType.isElement,
   isBr = NodeType.isBr,
@@ -40,10 +40,10 @@ var isContentEditableFalse = NodeType.isContentEditableFalse,
   isAtomic = CaretCandidate.isAtomic,
   isEditableCaretCandidate = CaretCandidate.isEditableCaretCandidate;
 
-var getParents = function (node, rootNode) {
-  var parents = [];
+const getParents = function (node, rootNode) {
+  const parents = [];
 
-  while (node && node != rootNode) {
+  while (node && node !== rootNode) {
     parents.push(node);
     node = node.parentNode;
   }
@@ -51,7 +51,7 @@ var getParents = function (node, rootNode) {
   return parents;
 };
 
-var nodeAtIndex = function (container, offset) {
+const nodeAtIndex = function (container, offset) {
   if (container.hasChildNodes() && offset < container.childNodes.length) {
     return container.childNodes[offset];
   }
@@ -59,7 +59,7 @@ var nodeAtIndex = function (container, offset) {
   return null;
 };
 
-var getCaretCandidatePosition = function (direction, node) {
+const getCaretCandidatePosition = function (direction, node) {
   if (isForwards(direction)) {
     if (isCaretCandidate(node.previousSibling) && !isText(node.previousSibling)) {
       return CaretPosition.before(node);
@@ -92,8 +92,8 @@ var getCaretCandidatePosition = function (direction, node) {
 };
 
 // Jumps over BR elements <p>|<br></p><p>a</p> -> <p><br></p><p>|a</p>
-var isBrBeforeBlock = function (node, rootNode) {
-  var next;
+const isBrBeforeBlock = function (node, rootNode) {
+  let next;
 
   if (!NodeType.isBr(node)) {
     return false;
@@ -107,8 +107,8 @@ var isBrBeforeBlock = function (node, rootNode) {
   return !CaretUtils.isInSameBlock(CaretPosition.before(node), CaretPosition.before(next), rootNode);
 };
 
-var findCaretPosition = function (direction, startCaretPosition, rootNode) {
-  var container, offset, node, nextNode, innerNode,
+const findCaretPosition = function (direction, startCaretPosition, rootNode) {
+  let container, offset, node, nextNode, innerNode,
     rootContentEditableFalseElm, caretPosition;
 
   if (!isElement(rootNode) || !startCaretPosition) {
@@ -227,7 +227,7 @@ export default function (rootNode) {
      * @param {tinymce.caret.CaretPosition} caretPosition Caret position to start from.
      * @return {tinymce.caret.CaretPosition} CaretPosition or null if no position was found.
      */
-    next: function (caretPosition) {
+    next (caretPosition) {
       return findCaretPosition(1, caretPosition, rootNode);
     },
 
@@ -240,8 +240,8 @@ export default function (rootNode) {
      * @param {tinymce.caret.CaretPosition} caretPosition Caret position to start from.
      * @return {tinymce.caret.CaretPosition} CaretPosition or null if no position was found.
      */
-    prev: function (caretPosition) {
+    prev (caretPosition) {
       return findCaretPosition(-1, caretPosition, rootNode);
     }
   };
-};
+}

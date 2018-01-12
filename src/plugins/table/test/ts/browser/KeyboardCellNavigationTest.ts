@@ -14,18 +14,18 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.table.quirks.KeyboardCellNavigationTest',
-  function() {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+  function () {
+    const success = arguments[arguments.length - 2];
+    const failure = arguments[arguments.length - 1];
 
     ModernTheme();
     TablePlugin();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyApis = TinyApis(editor);
-      var tinyActions = TinyActions(editor);
+      const tinyApis = TinyApis(editor);
+      const tinyActions = TinyActions(editor);
 
-      var selectionChangeState = Cell(false);
+      const selectionChangeState = Cell(false);
 
       Pipeline.async({}, Env.webkit ? [
         tinyApis.sFocus,
@@ -56,4 +56,3 @@ UnitTest.asynctest(
     }, success, failure);
   }
 );
-

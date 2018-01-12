@@ -15,9 +15,7 @@
  * @class tinymce.ui.BoxUtils
  */
 
-"use strict";
-
-export default <any> {
+export default {
   /**
    * Parses the specified box value. A box value contains 1-4 properties in clockwise order.
    *
@@ -26,14 +24,15 @@ export default <any> {
    * @return {Object} Object with top/right/bottom/left properties.
    * @private
    */
-  parseBox: function (value) {
-    var len, radix = 10;
+  parseBox (value) {
+    let len;
+    const radix = 10;
 
     if (!value) {
       return;
     }
 
-    if (typeof value === "number") {
+    if (typeof value === 'number') {
       value = value || 0;
 
       return {
@@ -64,12 +63,12 @@ export default <any> {
     };
   },
 
-  measureBox: function (elm, prefix) {
+  measureBox (elm, prefix) {
     function getStyle(name) {
-      var defaultView = elm.ownerDocument.defaultView;
+      const defaultView = elm.ownerDocument.defaultView;
 
       if (defaultView) {
-        var computedStyle = defaultView.getComputedStyle(elm, null);
+        const computedStyle = defaultView.getComputedStyle(elm, null);
         if (computedStyle) {
           // Remove camelcase
           name = name.replace(/[A-Z]/g, function (a) {
@@ -86,16 +85,16 @@ export default <any> {
     }
 
     function getSide(name) {
-      var val = parseFloat(getStyle(name));
+      const val = parseFloat(getStyle(name));
 
       return isNaN(val) ? 0 : val;
     }
 
     return {
-      top: getSide(prefix + "TopWidth"),
-      right: getSide(prefix + "RightWidth"),
-      bottom: getSide(prefix + "BottomWidth"),
-      left: getSide(prefix + "LeftWidth")
+      top: getSide(prefix + 'TopWidth'),
+      right: getSide(prefix + 'RightWidth'),
+      bottom: getSide(prefix + 'BottomWidth'),
+      left: getSide(prefix + 'LeftWidth')
     };
   }
 };

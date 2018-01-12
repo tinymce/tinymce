@@ -19,9 +19,9 @@ import Delay from 'tinymce/core/util/Delay';
  * @static
  */
 
-var dirtyCtrls = {}, animationFrameRequested;
+let dirtyCtrls = {}, animationFrameRequested;
 
-export default <any> {
+export default {
   /**
    * Adds a control to the next automatic reflow call. This is the control that had a state
    * change for example if the control was hidden/shown.
@@ -29,8 +29,8 @@ export default <any> {
    * @method add
    * @param {tinymce.ui.Control} ctrl Control to add to queue.
    */
-  add: function (ctrl) {
-    var parent = ctrl.parent();
+  add (ctrl) {
+    const parent = ctrl.parent();
 
     if (parent) {
       if (!parent._layout || parent._layout.isNative()) {
@@ -45,7 +45,7 @@ export default <any> {
         animationFrameRequested = true;
 
         Delay.requestAnimationFrame(function () {
-          var id, ctrl;
+          let id, ctrl;
 
           animationFrameRequested = false;
 
@@ -70,7 +70,7 @@ export default <any> {
    * @method remove
    * @param {tinymce.ui.Control} ctrl Control to remove from queue.
    */
-  remove: function (ctrl) {
+  remove (ctrl) {
     if (dirtyCtrls[ctrl._id]) {
       delete dirtyCtrls[ctrl._id];
     }

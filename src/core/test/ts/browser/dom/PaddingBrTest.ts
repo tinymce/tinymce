@@ -5,25 +5,24 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
-import Empty from 'tinymce/core/dom/Empty';
 import PaddingBr from 'tinymce/core/dom/PaddingBr';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var sTestRemoveTrailingBr = function (label, inputHtml, expectedHtml) {
+  const sTestRemoveTrailingBr = function (label, inputHtml, expectedHtml) {
     return Step.sync(function () {
-      var elm = Element.fromHtml(inputHtml);
+      const elm = Element.fromHtml(inputHtml);
       PaddingBr.removeTrailingBr(elm);
       Assertions.assertHtml(label, expectedHtml, Html.getOuter(elm));
     });
   };
 
-  var sTestTrimBlockTrailingBr = function (label, inputHtml, expectedHtml) {
+  const sTestTrimBlockTrailingBr = function (label, inputHtml, expectedHtml) {
     return Step.sync(function () {
-      var elm = Element.fromHtml(inputHtml);
+      const elm = Element.fromHtml(inputHtml);
       PaddingBr.trimBlockTrailingBr(elm);
       Assertions.assertHtml(label, expectedHtml, Html.getOuter(elm));
     });
@@ -43,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function() {
     ])),
     Logger.t('fillWithPaddingBr', GeneralSteps.sequence([
       Step.sync(function () {
-        var elm = Element.fromHtml('<p>a</p>');
+        const elm = Element.fromHtml('<p>a</p>');
         PaddingBr.fillWithPaddingBr(elm);
         Assertions.assertHtml('Should be padded with bogus br', '<p><br data-mce-bogus="1"></p>', Html.getOuter(elm));
       })
@@ -68,4 +67,3 @@ UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function() {
     success();
   }, failure);
 });
-

@@ -99,14 +99,13 @@ VisualCharsPlugin();
 WordCountPlugin();
 ModernTheme();
 
-
-export default <any> function () {
-  var config = {
-    theme: "modern",
+export default function () {
+  const config = {
+    theme: 'modern',
     plugins: [
-      "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc",
-      "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-      "save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern codesample"
+      'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
+      'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+      'save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern codesample'
     ],
     /*
     menubar: 'file edit insert view format table tools',
@@ -121,20 +120,20 @@ export default <any> function () {
     },
     removed_menuitems: 'undo',
     */
-    //resize: 'both',
-    //statusbar: false,
-    //menubar: false,
+    // resize: 'both',
+    // statusbar: false,
+    // menubar: false,
     add_unload_trigger: false,
-    toolbar: "insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | " +
-    "bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample",
+    toolbar: 'insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample',
 
-    setup: function (ed) {
+    setup (ed) {
       ed.addSidebar('sidebar1', {
         tooltip: 'My side bar 1',
         icon: 'bold',
-        onrender: function (api) {
-          var rect = api.element().getBoundingClientRect();
-          var panel = Factory.create({
+        onrender (api) {
+          const rect = api.element().getBoundingClientRect();
+          const panel = Factory.create({
             layout: 'flex',
             direction: 'column',
             pack: 'center',
@@ -149,10 +148,10 @@ export default <any> function () {
           panel.renderTo(api.element()).reflow();
           console.log('Render panel 1');
         },
-        onshow: function (api) {
+        onshow (api) {
           console.log('Show panel 1', api.element());
         },
-        onhide: function (api) {
+        onhide (api) {
           console.log('Hide panel 1', api.element());
         }
       });
@@ -160,14 +159,14 @@ export default <any> function () {
       ed.addSidebar('sidebar2', {
         tooltip: 'My side bar 2',
         icon: 'italic',
-        onrender: function (api) {
+        onrender (api) {
           console.log('Render panel 2', api.element());
         },
-        onshow: function (api) {
+        onshow (api) {
           console.log('Show panel 2', api.element());
           api.element().innerHTML = document.body.innerText;
         },
-        onhide: function (api) {
+        onhide (api) {
           console.log('Hide panel 2', api.element());
         }
       });
@@ -190,4 +189,4 @@ export default <any> function () {
       codesample_content_css: '../../../../../js/tinymce/plugins/codesample/css/prism.css'
     })
   );
-};
+}

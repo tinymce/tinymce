@@ -19,9 +19,7 @@ import Container from './Container';
  * @setting {String} label Label to display for the form item.
  */
 
-"use strict";
-
-export default <any> Container.extend({
+export default Container.extend({
   Defaults: {
     layout: 'flex',
     align: 'center',
@@ -36,8 +34,8 @@ export default <any> Container.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, layout = self._layout, prefix = self.classPrefix;
+  renderHtml () {
+    const self = this, layout = self._layout, prefix = self.classPrefix;
 
     self.classes.add('formitem');
     layout.preRender(self);

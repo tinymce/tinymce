@@ -13,9 +13,9 @@ import Settings from '../api/Settings';
 import DateTimeHelper from './DateTimeHelper';
 import Templates from './Templates';
 
-var setup = function (editor) {
+const setup = function (editor) {
   editor.on('PreProcess', function (o) {
-    var dom = editor.dom, dateFormat = Settings.getMdateFormat(editor);
+    const dom = editor.dom, dateFormat = Settings.getMdateFormat(editor);
 
     Tools.each(dom.select('div', o.node), function (e) {
       if (dom.hasClass(e, 'mceTmpl')) {
@@ -32,5 +32,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

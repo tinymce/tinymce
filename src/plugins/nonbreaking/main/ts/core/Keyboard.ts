@@ -12,8 +12,8 @@ import VK from 'tinymce/core/util/VK';
 import Settings from '../api/Settings';
 import Actions from './Actions';
 
-var setup = function (editor) {
-  var spaces = Settings.getKeyboardSpaces(editor);
+const setup = function (editor) {
+  const spaces = Settings.getKeyboardSpaces(editor);
 
   if (spaces > 0) {
     editor.on('keydown', function (e) {
@@ -31,5 +31,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

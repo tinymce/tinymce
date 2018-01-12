@@ -21,14 +21,14 @@ import PluginManager from '../PluginManager';
 import ThemeManager from '../ThemeManager';
 import Tools from '../util/Tools';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var hasSkipLoadPrefix = function (name) {
+const hasSkipLoadPrefix = function (name) {
   return name.charAt(0) === '-';
 };
 
-var loadLanguage = function (scriptLoader, editor) {
-  var settings = editor.settings;
+const loadLanguage = function (scriptLoader, editor) {
+  const settings = editor.settings;
 
   if (settings.language && settings.language !== 'en' && !settings.language_url) {
     settings.language_url = editor.editorManager.baseURL + '/langs/' + settings.language + '.js';
@@ -39,12 +39,12 @@ var loadLanguage = function (scriptLoader, editor) {
   }
 };
 
-var loadTheme = function (scriptLoader, editor, suffix, callback) {
-  var settings = editor.settings, theme = settings.theme;
+const loadTheme = function (scriptLoader, editor, suffix, callback) {
+  const settings = editor.settings, theme = settings.theme;
 
   if (Type.isString(theme)) {
     if (!hasSkipLoadPrefix(theme) && !ThemeManager.urls.hasOwnProperty(theme)) {
-      var themeUrl = settings.theme_url;
+      const themeUrl = settings.theme_url;
 
       if (themeUrl) {
         ThemeManager.load(theme, editor.documentBaseURI.toAbsolute(themeUrl));
@@ -61,7 +61,7 @@ var loadTheme = function (scriptLoader, editor, suffix, callback) {
   }
 };
 
-var loadPlugins = function (settings, suffix) {
+const loadPlugins = function (settings, suffix) {
   if (Tools.isArray(settings.plugins)) {
     settings.plugins = settings.plugins.join(' ');
   }
@@ -78,10 +78,10 @@ var loadPlugins = function (settings, suffix) {
       if (hasSkipLoadPrefix(plugin)) {
         plugin = plugin.substr(1, plugin.length);
 
-        var dependencies = PluginManager.dependencies(plugin);
+        const dependencies = PluginManager.dependencies(plugin);
 
         Tools.each(dependencies, function (dep) {
-          var defaultSettings = {
+          const defaultSettings = {
             prefix: 'plugins/',
             resource: dep,
             suffix: '/plugin' + suffix + '.js'
@@ -101,8 +101,8 @@ var loadPlugins = function (settings, suffix) {
   });
 };
 
-var loadScripts = function (editor, suffix) {
-  var scriptLoader = ScriptLoader.ScriptLoader;
+const loadScripts = function (editor, suffix) {
+  const scriptLoader = ScriptLoader.ScriptLoader;
 
   loadTheme(scriptLoader, editor, suffix, function () {
     loadLanguage(scriptLoader, editor);
@@ -122,10 +122,10 @@ var loadScripts = function (editor, suffix) {
   });
 };
 
-var render = function (editor) {
-  var settings = editor.settings, id = editor.id;
+const render = function (editor) {
+  const settings = editor.settings, id = editor.id;
 
-  var readyHandler = function () {
+  const readyHandler = function () {
     DOM.unbind(window, 'ready', readyHandler);
     editor.render();
   };
@@ -154,7 +154,7 @@ var render = function (editor) {
     editor.inline = true;
   }
 
-  var form = editor.getElement().form || DOM.getParent(id, 'form');
+  const form = editor.getElement().form || DOM.getParent(id, 'form');
   if (form) {
     editor.formElement = form;
 
@@ -222,5 +222,5 @@ var render = function (editor) {
 };
 
 export default {
-  render: render
+  render
 };

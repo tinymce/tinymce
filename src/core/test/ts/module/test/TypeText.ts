@@ -4,16 +4,16 @@ import { Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 
-var insertCharAtRange = function (rng, chr) {
-  var outRng = rng.cloneRange();
-  var sc = rng.startContainer, so = rng.startOffset;
+const insertCharAtRange = function (rng, chr) {
+  const outRng = rng.cloneRange();
+  const sc = rng.startContainer, so = rng.startOffset;
 
   if (sc.nodeType === 3) {
     sc.insertData(so, chr);
     outRng.setStart(sc, so + 1);
     outRng.setEnd(sc, so + 1);
   } else {
-    var textNode = document.createTextNode(chr);
+    const textNode = document.createTextNode(chr);
 
     if (so === sc.childNodes.length) {
       sc.appendChild(textNode);
@@ -28,12 +28,12 @@ var insertCharAtRange = function (rng, chr) {
   return outRng;
 };
 
-var insertCharAtSelection = function (doc, chr) {
-  var sel = doc.defaultView.getSelection();
+const insertCharAtSelection = function (doc, chr) {
+  const sel = doc.defaultView.getSelection();
 
   if (sel.rangeCount >= 1) {
-    var rng = sel.getRangeAt(0);
-    var newRange = insertCharAtRange(rng, chr);
+    const rng = sel.getRangeAt(0);
+    const newRange = insertCharAtRange(rng, chr);
     sel.removeAllRanges();
     sel.addRange(newRange);
   } else {
@@ -41,13 +41,13 @@ var insertCharAtSelection = function (doc, chr) {
   }
 };
 
-var sInsertCharAtSelection = function (doc, chr) {
+const sInsertCharAtSelection = function (doc, chr) {
   return Step.sync(function () {
     insertCharAtSelection(doc.dom(), chr);
   });
 };
 
-var sTypeChar = function (doc, chr) {
+const sTypeChar = function (doc, chr) {
   return GeneralSteps.sequence([
     Keyboard.sKeydown(doc, chr, {}),
     Keyboard.sKeypress(doc, chr, {}),
@@ -56,10 +56,10 @@ var sTypeChar = function (doc, chr) {
   ]);
 };
 
-var sTypeContentAtSelection = function (doc, text) {
+const sTypeContentAtSelection = function (doc, text) {
   return GeneralSteps.sequence(Arr.map(text.split(''), Fun.curry(sTypeChar, doc)));
 };
 
-export default <any> {
-  sTypeContentAtSelection: sTypeContentAtSelection
+export default {
+  sTypeContentAtSelection
 };

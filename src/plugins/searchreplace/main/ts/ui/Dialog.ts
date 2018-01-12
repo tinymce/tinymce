@@ -11,8 +11,8 @@
 import Tools from 'tinymce/core/util/Tools';
 import Actions from '../core/Actions';
 
-var open = function (editor, currentIndexState) {
-  var last: any = {}, selectedText;
+const open = function (editor, currentIndexState) {
+  let last: any = {}, selectedText;
   editor.undoManager.add();
 
   selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
@@ -28,17 +28,17 @@ var open = function (editor, currentIndexState) {
     });
   }
 
-  var win = editor.windowManager.open({
-    layout: "flex",
-    pack: "center",
-    align: "center",
-    onClose: function () {
+  const win = editor.windowManager.open({
+    layout: 'flex',
+    pack: 'center',
+    align: 'center',
+    onClose () {
       editor.focus();
       Actions.done(editor, currentIndexState);
       editor.undoManager.add();
     },
-    onSubmit: function (e) {
-      var count, caseState, text, wholeWord;
+    onSubmit (e) {
+      let count, caseState, text, wholeWord;
 
       e.preventDefault();
 
@@ -72,19 +72,19 @@ var open = function (editor, currentIndexState) {
       updateButtonStates();
 
       last = {
-        text: text,
-        caseState: caseState,
-        wholeWord: wholeWord
+        text,
+        caseState,
+        wholeWord
       };
     },
     buttons: [
       {
-        text: "Find", subtype: 'primary', onclick: function () {
+        text: 'Find', subtype: 'primary', onclick () {
           win.submit();
         }
       },
       {
-        text: "Replace", disabled: true, onclick: function () {
+        text: 'Replace', disabled: true, onclick () {
           if (!Actions.replace(editor, currentIndexState, win.find('#replace').value())) {
             win.statusbar.items().slice(1).disabled(true);
             currentIndexState.set(-1);
@@ -93,29 +93,29 @@ var open = function (editor, currentIndexState) {
         }
       },
       {
-        text: "Replace all", disabled: true, onclick: function () {
+        text: 'Replace all', disabled: true, onclick () {
           Actions.replace(editor, currentIndexState, win.find('#replace').value(), true, true);
           win.statusbar.items().slice(1).disabled(true);
           last = {};
         }
       },
-      { type: "spacer", flex: 1 },
+      { type: 'spacer', flex: 1 },
       {
-        text: "Prev", name: 'prev', disabled: true, onclick: function () {
+        text: 'Prev', name: 'prev', disabled: true, onclick () {
           Actions.prev(editor, currentIndexState);
           updateButtonStates();
         }
       },
       {
-        text: "Next", name: 'next', disabled: true, onclick: function () {
+        text: 'Next', name: 'next', disabled: true, onclick () {
           Actions.next(editor, currentIndexState);
           updateButtonStates();
         }
       }
     ],
-    title: "Find and replace",
+    title: 'Find and replace',
     items: {
-      type: "form",
+      type: 'form',
       padding: 20,
       labelGap: 30,
       spacing: 10,
@@ -130,5 +130,5 @@ var open = function (editor, currentIndexState) {
 };
 
 export default {
-  open: open
+  open
 };

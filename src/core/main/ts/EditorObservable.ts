@@ -19,7 +19,8 @@ import Tools from './util/Tools';
  * @extends tinymce.util.Observable
  */
 
-var DOM = DOMUtils.DOM, customEventRootDelegates;
+const DOM = DOMUtils.DOM;
+let customEventRootDelegates;
 
 /**
  * Returns the event target so for the specified event. Some events fire
@@ -31,8 +32,8 @@ var DOM = DOMUtils.DOM, customEventRootDelegates;
  * @param {String} eventName Name of the event for example "click".
  * @return {Element/Document} HTML Element or document target to bind on.
  */
-var getEventTarget = function (editor, eventName) {
-  if (eventName == 'selectionchange') {
+const getEventTarget = function (editor, eventName) {
+  if (eventName === 'selectionchange') {
     return editor.getDoc();
   }
 
@@ -62,10 +63,10 @@ var getEventTarget = function (editor, eventName) {
  * @param {tinymce.Editor} editor Editor instance to get event target from.
  * @param {String} eventName Name of the event for example "click".
  */
-var bindEventDelegate = function (editor, eventName) {
-  var eventRootElm, delegate;
+const bindEventDelegate = function (editor, eventName) {
+  let eventRootElm, delegate;
 
-  var isListening = function (editor) {
+  const isListening = function (editor) {
     return !editor.hidden && !editor.readonly;
   };
 
@@ -83,7 +84,7 @@ var bindEventDelegate = function (editor, eventName) {
     if (!customEventRootDelegates) {
       customEventRootDelegates = {};
       editor.editorManager.on('removeEditor', function () {
-        var name;
+        let name;
 
         if (!editor.editorManager.activeEditor) {
           if (customEventRootDelegates) {
@@ -102,10 +103,12 @@ var bindEventDelegate = function (editor, eventName) {
     }
 
     delegate = function (e) {
-      var target = e.target, editors = editor.editorManager.get(), i = editors.length;
+      const target = e.target;
+      const editors = editor.editorManager.get();
+      let i = editors.length;
 
       while (i--) {
-        var body = editors[i].getBody();
+        const body = editors[i].getBody();
 
         if (body === target || DOM.isChildOf(target, body)) {
           if (isListening(editors[i])) {
@@ -129,14 +132,14 @@ var bindEventDelegate = function (editor, eventName) {
   }
 };
 
-var EditorObservable = {
+let EditorObservable = {
   /**
    * Bind any pending event delegates. This gets executed after the target body/document is created.
    *
    * @private
    */
-  bindPendingEventDelegates: function () {
-    var self = this;
+  bindPendingEventDelegates () {
+    const self = this;
 
     Tools.each(self._pendingNativeEvents, function (name) {
       bindEventDelegate(self, name);
@@ -149,11 +152,11 @@ var EditorObservable = {
    *
    * @private
    */
-  toggleNativeEvent: function (name, state) {
-    var self = this;
+  toggleNativeEvent (name, state) {
+    const self = this;
 
     // Never bind focus/blur since the FocusManager fakes those
-    if (name == "focus" || name == "blur") {
+    if (name === 'focus' || name === 'blur') {
       return;
     }
 
@@ -178,8 +181,9 @@ var EditorObservable = {
    *
    * @private
    */
-  unbindAllNativeEvents: function () {
-    var self = this, name;
+  unbindAllNativeEvents () {
+    const self = this;
+    let name;
 
     if (self.delegates) {
       for (name in self.delegates) {

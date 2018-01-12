@@ -15,7 +15,7 @@ import Commands from './api/Commands';
 import Buttons from './ui/Buttons';
 
 PluginManager.add('fullscreen', function (editor) {
-  var fullscreenState = Cell(null);
+  const fullscreenState = Cell(null);
 
   Commands.register(editor, fullscreenState);
   Buttons.register(editor);
@@ -25,4 +25,4 @@ PluginManager.add('fullscreen', function (editor) {
   return Api.get(fullscreenState);
 });
 
-export default function () { };
+export default function () { }

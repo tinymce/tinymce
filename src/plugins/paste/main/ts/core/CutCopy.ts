@@ -12,16 +12,16 @@ import Env from 'tinymce/core/Env';
 import InternalHtml from './InternalHtml';
 import Utils from './Utils';
 
-var noop = function () {
+const noop = function () {
 };
 
-var hasWorkingClipboardApi = function (clipboardData) {
+const hasWorkingClipboardApi = function (clipboardData) {
   // iOS supports the clipboardData API but it doesn't do anything for cut operations
   // Edge 15 has a broken HTML Clipboard API see https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11780845/
   return Env.iOS === false && clipboardData !== undefined && typeof clipboardData.setData === 'function' && Utils.isMsEdge() !== true;
 };
 
-var setHtml5Clipboard = function (clipboardData, html, text) {
+const setHtml5Clipboard = function (clipboardData, html, text) {
   if (hasWorkingClipboardApi(clipboardData)) {
     try {
       clipboardData.clearData();
@@ -37,7 +37,7 @@ var setHtml5Clipboard = function (clipboardData, html, text) {
   }
 };
 
-var setClipboardData = function (evt, data, fallback, done) {
+const setClipboardData = function (evt, data, fallback, done) {
   if (setHtml5Clipboard(evt.clipboardData, data.html, data.text)) {
     evt.preventDefault();
     done();
@@ -46,14 +46,14 @@ var setClipboardData = function (evt, data, fallback, done) {
   }
 };
 
-var fallback = function (editor) {
+const fallback = function (editor) {
   return function (html, done) {
-    var markedHtml = InternalHtml.mark(html);
-    var outer = editor.dom.create('div', {
-      contenteditable: "false",
-      "data-mce-bogus": "all"
+    const markedHtml = InternalHtml.mark(html);
+    const outer = editor.dom.create('div', {
+      'contenteditable': 'false',
+      'data-mce-bogus': 'all'
     });
-    var inner = editor.dom.create('div', { contenteditable: "true" }, markedHtml);
+    const inner = editor.dom.create('div', { contenteditable: 'true' }, markedHtml);
     editor.dom.setStyles(outer, {
       position: 'fixed',
       left: '-3000px',
@@ -63,10 +63,10 @@ var fallback = function (editor) {
     outer.appendChild(inner);
     editor.dom.add(editor.getBody(), outer);
 
-    var range = editor.selection.getRng();
+    const range = editor.selection.getRng();
     inner.focus();
 
-    var offscreenRange = editor.dom.createRng();
+    const offscreenRange = editor.dom.createRng();
     offscreenRange.selectNodeContents(inner);
     editor.selection.setRng(offscreenRange);
 
@@ -78,14 +78,14 @@ var fallback = function (editor) {
   };
 };
 
-var getData = function (editor) {
+const getData = function (editor) {
   return {
     html: editor.selection.getContent({ contextual: true }),
     text: editor.selection.getContent({ format: 'text' })
   };
 };
 
-var cut = function (editor) {
+const cut = function (editor) {
   return function (evt) {
     if (editor.selection.isCollapsed() === false) {
       setClipboardData(evt, getData(editor), fallback(editor), function () {
@@ -99,7 +99,7 @@ var cut = function (editor) {
   };
 };
 
-var copy = function (editor) {
+const copy = function (editor) {
   return function (evt) {
     if (editor.selection.isCollapsed() === false) {
       setClipboardData(evt, getData(editor), fallback(editor), noop);
@@ -107,11 +107,11 @@ var copy = function (editor) {
   };
 };
 
-var register = function (editor) {
+const register = function (editor) {
   editor.on('cut', cut(editor));
   editor.on('copy', copy(editor));
 };
 
 export default {
-  register: register
+  register
 };

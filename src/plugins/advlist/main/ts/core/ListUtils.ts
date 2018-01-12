@@ -8,27 +8,27 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var isChildOfBody = function (editor, elm) {
+const isChildOfBody = function (editor, elm) {
   return editor.$.contains(editor.getBody(), elm);
 };
 
-var isTableCellNode = function (node) {
+const isTableCellNode = function (node) {
   return node && /^(TH|TD)$/.test(node.nodeName);
 };
 
-var isListNode = function (editor) {
+const isListNode = function (editor) {
   return function (node) {
     return node && (/^(OL|UL|DL)$/).test(node.nodeName) && isChildOfBody(editor, node);
   };
 };
 
-var getSelectedStyleType = function (editor) {
-  var listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
+const getSelectedStyleType = function (editor) {
+  const listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
   return editor.dom.getStyle(listElm, 'listStyleType') || '';
 };
 
 export default {
-  isTableCellNode: isTableCellNode,
-  isListNode: isListNode,
-  getSelectedStyleType: getSelectedStyleType
+  isTableCellNode,
+  isListNode,
+  getSelectedStyleType
 };

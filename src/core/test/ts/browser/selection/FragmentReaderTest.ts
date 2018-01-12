@@ -4,7 +4,6 @@ import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
 import { Hierarchy } from '@ephox/sugar';
 import { Insert } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
@@ -13,22 +12,22 @@ import FragmentReader from 'tinymce/core/selection/FragmentReader';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var viewBlock = ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const viewBlock = ViewBlock();
 
-  var cSetHtml = function (html) {
+  const cSetHtml = function (html) {
     return Chain.op(function () {
       viewBlock.update(html);
     });
   };
 
-  var cReadFragment = function (startPath, startOffset, endPath, endOffset) {
+  const cReadFragment = function (startPath, startOffset, endPath, endOffset) {
     return Chain.mapper(function (viewBlock) {
-      var sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
-      var ec = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
-      var rng = document.createRange();
+      const sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
+      const ec = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
+      const rng = document.createRange();
 
       rng.setStart(sc.dom(), startOffset);
       rng.setEnd(ec.dom(), endOffset);
@@ -37,11 +36,11 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function
     });
   };
 
-  var cReadFragmentCells = function (paths) {
+  const cReadFragmentCells = function (paths) {
     return Chain.mapper(function (viewBlock) {
-      var ranges = Arr.map(paths, function (path) {
-        var container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
-        var rng = document.createRange();
+      const ranges = Arr.map(paths, function (path) {
+        const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+        const rng = document.createRange();
         rng.selectNode(container.dom());
         return rng;
       });
@@ -50,15 +49,15 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function
     });
   };
 
-  var getFragmentHtml = function (fragment) {
-    var elm = Element.fromTag('div');
+  const getFragmentHtml = function (fragment) {
+    const elm = Element.fromTag('div');
     Insert.append(elm, fragment);
     return Html.get(elm);
   };
 
-  var cAssertFragmentHtml = function (expectedHtml) {
+  const cAssertFragmentHtml = function (expectedHtml) {
     return Chain.mapper(function (fragment) {
-      var actualHtml = getFragmentHtml(fragment);
+      const actualHtml = getFragmentHtml(fragment);
       Assertions.assertHtml('Should be expected fragment html', expectedHtml, actualHtml);
       return fragment;
     });
@@ -219,4 +218,3 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function
     success();
   }, failure);
 });
-

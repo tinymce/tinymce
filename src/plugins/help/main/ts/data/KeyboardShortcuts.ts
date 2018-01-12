@@ -10,10 +10,10 @@
 
 import Env from 'tinymce/core/Env';
 
-var meta = Env.mac ? '\u2318' : 'Ctrl';
-var access = Env.mac ? 'Ctrl + Alt' : 'Shift + Alt';
+const meta = Env.mac ? '\u2318' : 'Ctrl';
+const access = Env.mac ? 'Ctrl + Alt' : 'Shift + Alt';
 
-var shortcuts = [
+const shortcuts = [
   { shortcut: meta + ' + B', action: 'Bold' },
   { shortcut: meta + ' + I', action: 'Italic' },
   { shortcut: meta + ' + U', action: 'Underline' },
@@ -42,5 +42,5 @@ var shortcuts = [
 ];
 
 export default {
-  shortcuts: shortcuts
+  shortcuts
 };

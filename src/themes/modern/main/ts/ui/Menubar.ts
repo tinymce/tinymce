@@ -12,7 +12,7 @@ import { Arr } from '@ephox/katamari';
 import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 
-var defaultMenus = {
+const defaultMenus = {
   file: { title: 'File', items: 'newdocument restoredraft | preview | print' },
   edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
   view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen' },
@@ -23,31 +23,31 @@ var defaultMenus = {
   help: { title: 'Help' }
 };
 
-var delimiterMenuNamePair = function () {
+const delimiterMenuNamePair = function () {
   return { name: '|', item: { text: '|' } };
 };
 
-var createMenuNameItemPair = function (name, item) {
-  var menuItem = item ? { name: name, item: item } : null;
+const createMenuNameItemPair = function (name, item) {
+  const menuItem = item ? { name, item } : null;
   return name === '|' ? delimiterMenuNamePair() : menuItem;
 };
 
-var hasItemName = function (namedMenuItems, name) {
+const hasItemName = function (namedMenuItems, name) {
   return Arr.findIndex(namedMenuItems, function (namedMenuItem) {
     return namedMenuItem.name === name;
   }).isSome();
 };
 
-var isSeparator = function (namedMenuItem) {
+const isSeparator = function (namedMenuItem) {
   return namedMenuItem && namedMenuItem.item.text === '|';
 };
 
-var cleanupMenu = function (namedMenuItems, removedMenuItems) {
-  var menuItemsPass1 = Arr.filter(namedMenuItems, function (namedMenuItem) {
+const cleanupMenu = function (namedMenuItems, removedMenuItems) {
+  const menuItemsPass1 = Arr.filter(namedMenuItems, function (namedMenuItem) {
     return removedMenuItems.hasOwnProperty(namedMenuItem.name) === false;
   });
 
-  var menuItemsPass2 = Arr.filter(menuItemsPass1, function (namedMenuItem, i, namedMenuItems) {
+  const menuItemsPass2 = Arr.filter(menuItemsPass1, function (namedMenuItem, i, namedMenuItems) {
     return !isSeparator(namedMenuItem) || !isSeparator(namedMenuItems[i - 1]);
   });
 
@@ -56,8 +56,8 @@ var cleanupMenu = function (namedMenuItems, removedMenuItems) {
   });
 };
 
-var createMenu = function (editorMenuItems, menus, removedMenuItems, context) {
-  var menuButton, menu, namedMenuItems, isUserDefined;
+const createMenu = function (editorMenuItems, menus, removedMenuItems, context) {
+  let menuButton, menu, namedMenuItems, isUserDefined;
 
   // User defined menu
   if (menus) {
@@ -73,7 +73,7 @@ var createMenu = function (editorMenuItems, menus, removedMenuItems, context) {
 
     // Default/user defined items
     Tools.each((menu.items || '').split(/[ ,]/), function (name) {
-      var namedMenuItem = createMenuNameItemPair(name, editorMenuItems[name]);
+      const namedMenuItem = createMenuNameItemPair(name, editorMenuItems[name]);
 
       if (namedMenuItem) {
         namedMenuItems.push(namedMenuItem);
@@ -113,9 +113,10 @@ var createMenu = function (editorMenuItems, menus, removedMenuItems, context) {
   return menuButton;
 };
 
-var getDefaultMenubar = function (editor) {
-  var name, defaultMenuBar = [];
-  var menu = Settings.getMenu(editor);
+const getDefaultMenubar = function (editor) {
+  let name;
+  const defaultMenuBar = [];
+  const menu = Settings.getMenu(editor);
 
   if (menu) {
     for (name in menu) {
@@ -130,16 +131,16 @@ var getDefaultMenubar = function (editor) {
   return defaultMenuBar;
 };
 
-var createMenuButtons = function (editor) {
-  var menuButtons = [];
-  var defaultMenuBar = getDefaultMenubar(editor);
-  var removedMenuItems = Tools.makeMap(Settings.getRemovedMenuItems(editor).split(/[ ,]/));
+const createMenuButtons = function (editor) {
+  const menuButtons = [];
+  const defaultMenuBar = getDefaultMenubar(editor);
+  const removedMenuItems = Tools.makeMap(Settings.getRemovedMenuItems(editor).split(/[ ,]/));
 
-  var menubar = Settings.getMenubar(editor);
-  var enabledMenuNames = typeof menubar === "string" ? menubar.split(/[ ,]/) : defaultMenuBar;
-  for (var i = 0; i < enabledMenuNames.length; i++) {
-    var menuItems = enabledMenuNames[i];
-    var menu = createMenu(editor.menuItems, Settings.getMenu(editor), removedMenuItems, menuItems);
+  const menubar = Settings.getMenubar(editor);
+  const enabledMenuNames = typeof menubar === 'string' ? menubar.split(/[ ,]/) : defaultMenuBar;
+  for (let i = 0; i < enabledMenuNames.length; i++) {
+    const menuItems = enabledMenuNames[i];
+    const menu = createMenu(editor.menuItems, Settings.getMenu(editor), removedMenuItems, menuItems);
     if (menu) {
       menuButtons.push(menu);
     }
@@ -148,6 +149,6 @@ var createMenuButtons = function (editor) {
   return menuButtons;
 };
 
-export default <any> {
-  createMenuButtons: createMenuButtons
+export default {
+  createMenuButtons
 };

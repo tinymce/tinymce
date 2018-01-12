@@ -10,4 +10,4 @@ window.demos = {
   formDemo: FormDemo,
   slidersDemo: SlidersDemo,
   stylesMenuDemo: StylesMenuDemo
-}
+};

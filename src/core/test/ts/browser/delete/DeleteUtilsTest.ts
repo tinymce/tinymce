@@ -3,7 +3,6 @@ import { Chain } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Fun } from '@ephox/katamari';
 import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
@@ -11,41 +10,41 @@ import DeleteUtils from 'tinymce/core/delete/DeleteUtils';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var viewBlock = ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const viewBlock = ViewBlock();
 
-  var cSetHtml = function (html) {
+  const cSetHtml = function (html) {
     return Chain.op(function () {
       viewBlock.update(html);
     });
   };
 
-  var cGetParentTextBlock = function (elementPath) {
+  const cGetParentTextBlock = function (elementPath) {
     return Chain.mapper(function (viewBlock) {
-      var element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
       return DeleteUtils.getParentBlock(Element.fromDom(viewBlock.get()), element);
     });
   };
 
-  var cAssertBlock = function (elementPath) {
+  const cAssertBlock = function (elementPath) {
     return Chain.op(function (actualBlock) {
-      var expectedBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+      const expectedBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
       Assertions.assertDomEq('Should be the expected block element', expectedBlock, actualBlock.getOrDie());
     });
   };
 
-  var cWillDeleteLastPositionInElement = function (forward, caretPath, caretOffset, elementPath) {
+  const cWillDeleteLastPositionInElement = function (forward, caretPath, caretOffset, elementPath) {
     return Chain.mapper(function (actualBlock) {
-      var element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
-      var caretNode = Hierarchy.follow(Element.fromDom(viewBlock.get()), caretPath).getOrDie();
+      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+      const caretNode = Hierarchy.follow(Element.fromDom(viewBlock.get()), caretPath).getOrDie();
 
       return DeleteUtils.willDeleteLastPositionInElement(forward, CaretPosition(caretNode.dom(), caretOffset), element.dom());
     });
   };
 
-  var cAssertNone = Chain.op(function (actualBlock) {
+  const cAssertNone = Chain.op(function (actualBlock) {
     Assertions.assertEq('Should be the none but got some', true, actualBlock.isNone());
   });
 
@@ -125,4 +124,3 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function() {
     success();
   }, failure);
 });
-

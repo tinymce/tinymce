@@ -11,16 +11,16 @@
 import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 
-var hasClass = function (checkClassName) {
+const hasClass = function (checkClassName) {
   return function (node) {
     return (' ' + node.attr('class') + ' ').indexOf(checkClassName) !== -1;
   };
 };
 
-var replaceMatchWithSpan = function (editor, content, cls) {
+const replaceMatchWithSpan = function (editor, content, cls) {
   return function (match) {
-    var args = arguments, index = args[args.length - 2];
-    var prevChar = index > 0 ? content.charAt(index - 1) : '';
+    const args = arguments, index = args[args.length - 2];
+    const prevChar = index > 0 ? content.charAt(index - 1) : '';
 
     // Is value inside an attribute then don't replace
     if (prevChar === '"') {
@@ -29,9 +29,9 @@ var replaceMatchWithSpan = function (editor, content, cls) {
 
     // Is value inside a contentEditable='false' tag
     if (prevChar === '>') {
-      var findStartTagIndex = content.lastIndexOf('<', index);
+      const findStartTagIndex = content.lastIndexOf('<', index);
       if (findStartTagIndex !== -1) {
-        var tagHtml = content.substring(findStartTagIndex, index);
+        const tagHtml = content.substring(findStartTagIndex, index);
         if (tagHtml.indexOf('contenteditable="false"') !== -1) {
           return match;
         }
@@ -45,8 +45,8 @@ var replaceMatchWithSpan = function (editor, content, cls) {
   };
 };
 
-var convertRegExpsToNonEditable = function (editor, nonEditableRegExps, e) {
-  var i = nonEditableRegExps.length, content = e.content;
+const convertRegExpsToNonEditable = function (editor, nonEditableRegExps, e) {
+  let i = nonEditableRegExps.length, content = e.content;
 
   // Don't replace the variables when raw is used for example on undo/redo
   if (e.format === 'raw') {
@@ -60,15 +60,16 @@ var convertRegExpsToNonEditable = function (editor, nonEditableRegExps, e) {
   e.content = content;
 };
 
-var setup = function (editor) {
-  var editClass, nonEditClass, contentEditableAttrName = 'contenteditable';
+const setup = function (editor) {
+  let editClass, nonEditClass;
+  const contentEditableAttrName = 'contenteditable';
 
   editClass = ' ' + Tools.trim(Settings.getEditableClass(editor)) + ' ';
   nonEditClass = ' ' + Tools.trim(Settings.getNonEditableClass(editor)) + ' ';
 
-  var hasEditClass = hasClass(editClass);
-  var hasNonEditClass = hasClass(nonEditClass);
-  var nonEditableRegExps = Settings.getNonEditableRegExps(editor);
+  const hasEditClass = hasClass(editClass);
+  const hasNonEditClass = hasClass(nonEditClass);
+  const nonEditableRegExps = Settings.getNonEditableRegExps(editor);
 
   editor.on('PreInit', function () {
     if (nonEditableRegExps.length > 0) {
@@ -78,7 +79,7 @@ var setup = function (editor) {
     }
 
     editor.parser.addAttributeFilter('class', function (nodes) {
-      var i = nodes.length, node;
+      let i = nodes.length, node;
 
       while (i--) {
         node = nodes[i];
@@ -92,7 +93,7 @@ var setup = function (editor) {
     });
 
     editor.serializer.addAttributeFilter(contentEditableAttrName, function (nodes) {
-      var i = nodes.length, node;
+      let i = nodes.length, node;
 
       while (i--) {
         node = nodes[i];
@@ -114,5 +115,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

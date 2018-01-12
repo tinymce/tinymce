@@ -18,22 +18,21 @@ import Entities from 'tinymce/core/html/Entities';
  * @private
  */
 
-var isPlainText = function (text) {
+const isPlainText = function (text) {
   // so basically any tag that is not one of the "p, div, span, br", or is one of them, but is followed
   // by some additional characters qualifies the text as not a plain text (having some HTML tags)
   // <span style="white-space:pre"> and <br /> are added as separate exceptions to the rule
   return !/<(?:\/?(?!(?:div|p|br|span)>)\w+|(?:(?!(?:span style="white-space:\s?pre;?">)|br\s?\/>))\w+\s[^>]+)>/i.test(text);
 };
 
-
-var toBRs = function (text) {
+const toBRs = function (text) {
   return text.replace(/\r?\n/g, '<br>');
 };
 
-
-var openContainer = function (rootTag, rootAttrs) {
-  var key, attrs = [];
-  var tag = '<' + rootTag;
+const openContainer = function (rootTag, rootAttrs) {
+  let key;
+  const attrs = [];
+  let tag = '<' + rootTag;
 
   if (typeof rootAttrs === 'object') {
     for (key in rootAttrs) {
@@ -49,31 +48,29 @@ var openContainer = function (rootTag, rootAttrs) {
   return tag + '>';
 };
 
+const toBlockElements = function (text, rootTag, rootAttrs) {
+  const blocks = text.split(/\n\n/);
+  const tagOpen = openContainer(rootTag, rootAttrs);
+  const tagClose = '</' + rootTag + '>';
 
-var toBlockElements = function (text, rootTag, rootAttrs) {
-  var blocks = text.split(/\n\n/);
-  var tagOpen = openContainer(rootTag, rootAttrs);
-  var tagClose = '</' + rootTag + '>';
-
-  var paragraphs = Tools.map(blocks, function (p) {
+  const paragraphs = Tools.map(blocks, function (p) {
     return p.split(/\n/).join('<br />');
   });
 
-  var stitch = function (p) {
+  const stitch = function (p) {
     return tagOpen + p + tagClose;
   };
 
   return paragraphs.length === 1 ? paragraphs[0] : Tools.map(paragraphs, stitch).join('');
 };
 
-
-var convert = function (text, rootTag, rootAttrs) {
+const convert = function (text, rootTag, rootAttrs) {
   return rootTag ? toBlockElements(text, rootTag, rootAttrs) : toBRs(text);
 };
 
 export default {
-  isPlainText: isPlainText,
-  convert: convert,
-  toBRs: toBRs,
-  toBlockElements: toBlockElements
+  isPlainText,
+  convert,
+  toBRs,
+  toBlockElements
 };

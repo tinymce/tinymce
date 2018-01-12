@@ -5,19 +5,19 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.InsertCommandsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.table.InsertCommandsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
 
-  var cleanTableHtml = function (html) {
+  const cleanTableHtml = function (html) {
     return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
   };
 
-  suite.test("mceTableInsertColAfter command", function (editor) {
+  suite.test('mceTableInsertColAfter command', function (editor) {
     editor.focus();
     editor.setContent('<table><tr><td>1</td></tr><tr><td>2</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 0);
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertCommandsTest', function(
     );
   });
 
-  suite.test("mceTableInsertColAfter command with two selected columns", function (editor) {
+  suite.test('mceTableInsertColAfter command with two selected columns', function (editor) {
     editor.getBody().innerHTML = (
       '<table><tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td>' +
       '<td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>'
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertCommandsTest', function(
     );
   });
 
-  suite.test("mceTableInsertColBefore command", function (editor) {
+  suite.test('mceTableInsertColBefore command', function (editor) {
     editor.setContent('<table><tr><td>1</td></tr><tr><td>2</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 0);
     editor.execCommand('mceTableInsertColBefore');
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertCommandsTest', function(
     );
   });
 
-  suite.test("mceTableInsertColBefore command with two selected columns", function (editor) {
+  suite.test('mceTableInsertColBefore command with two selected columns', function (editor) {
     editor.getBody().innerHTML = (
       '<table><tr><td>1</td><td data-mce-selected="1">2</td><td data-mce-selected="1">3</td>' +
       '</tr><tr><td>4</td><td>5</td><td>6</td></tr></table>'
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertCommandsTest', function(
     );
   });
 
-  suite.test("mceTableInsertRowAfter command", function (editor) {
+  suite.test('mceTableInsertRowAfter command', function (editor) {
     editor.setContent('<table><tr><td>1</td><td>2</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 0);
     editor.execCommand('mceTableInsertRowAfter');
@@ -76,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertCommandsTest', function(
     );
   });
 
-  suite.test("mceTableInsertRowAfter command with two selected rows", function (editor) {
+  suite.test('mceTableInsertRowAfter command with two selected rows', function (editor) {
     editor.getBody().innerHTML = (
       '<table><tr><td data-mce-selected="1">1</td><td>2</td></tr><tr><td data-mce-selected="1">3</td><td>4</td></tr></table>'
     );
@@ -89,7 +89,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertCommandsTest', function(
     );
   });
 
-  suite.test("mceTableInsertRowAfter command on merged cells", function (editor) {
+  suite.test('mceTableInsertRowAfter command on merged cells', function (editor) {
     editor.setContent(
       '<table>' +
       '<tr><td>1</td><td>2</td><td>3</td></tr>' +
@@ -115,7 +115,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertCommandsTest', function(
     );
   });
 
-  suite.test("mceTableInsertRowBefore command", function (editor) {
+  suite.test('mceTableInsertRowBefore command', function (editor) {
     editor.setContent('<table><tr><td>1</td><td>2</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 0);
     editor.execCommand('mceTableInsertRowBefore');
@@ -125,7 +125,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertCommandsTest', function(
     );
   });
 
-  suite.test("mceTableInsertRowBefore command with two selected rows", function (editor) {
+  suite.test('mceTableInsertRowBefore command with two selected rows', function (editor) {
     editor.getBody().innerHTML = (
       '<table><tr><td data-mce-selected="1">1</td><td>2</td></tr><tr><td data-mce-selected="1">3</td><td>4</td></tr></table>'
     );
@@ -149,4 +149,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertCommandsTest', function(
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

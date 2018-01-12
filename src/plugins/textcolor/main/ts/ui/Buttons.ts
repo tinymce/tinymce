@@ -14,14 +14,14 @@ import Settings from '../api/Settings';
 import TextColor from '../core/TextColor';
 import ColorPickerHtml from './ColorPickerHtml';
 
-var setDivColor = function setDivColor(div, value) {
+const setDivColor = function setDivColor(div, value) {
   div.style.background = value;
   div.setAttribute('data-mce-color', value);
 };
 
-var onButtonClick = function (editor) {
+const onButtonClick = function (editor) {
   return function (e) {
-    var ctrl = e.control;
+    const ctrl = e.control;
 
     if (ctrl._color) {
       editor.execCommand('mceApplyTextcolor', ctrl.settings.format, ctrl._color);
@@ -31,18 +31,19 @@ var onButtonClick = function (editor) {
   };
 };
 
-var onPanelClick = function (editor, cols) {
+const onPanelClick = function (editor, cols) {
   return function (e) {
-    var buttonCtrl = this.parent(), value;
-    var currentColor = TextColor.getCurrentColor(editor, buttonCtrl.settings.format);
+    const buttonCtrl = this.parent();
+    let value;
+    const currentColor = TextColor.getCurrentColor(editor, buttonCtrl.settings.format);
 
-    var selectColor = function (value) {
+    const selectColor = function (value) {
       buttonCtrl.hidePanel();
       buttonCtrl.color(value);
       editor.execCommand('mceApplyTextcolor', buttonCtrl.settings.format, value);
     };
 
-    var resetColor = function () {
+    const resetColor = function () {
       buttonCtrl.hidePanel();
       buttonCtrl.resetColor();
       editor.execCommand('mceRemoveTextcolor', buttonCtrl.settings.format);
@@ -51,11 +52,11 @@ var onPanelClick = function (editor, cols) {
     if (DOMUtils.DOM.getParent(e.target, '.mce-custom-color-btn')) {
       buttonCtrl.hidePanel();
 
-      var colorPickerCallback = Settings.getColorPickerCallback(editor);
+      const colorPickerCallback = Settings.getColorPickerCallback(editor);
 
       colorPickerCallback.call(editor, function (value) {
-        var tableElm = buttonCtrl.panel.getEl().getElementsByTagName('table')[0];
-        var customColorCells, div, i;
+        const tableElm = buttonCtrl.panel.getEl().getElementsByTagName('table')[0];
+        let customColorCells, div, i;
 
         customColorCells = Tools.map(tableElm.rows[tableElm.rows.length - 1].childNodes, function (elm) {
           return elm.firstChild;
@@ -101,18 +102,18 @@ var onPanelClick = function (editor, cols) {
   };
 };
 
-var renderColorPicker = function (editor, foreColor) {
+const renderColorPicker = function (editor, foreColor) {
   return function () {
-    var cols = foreColor ? Settings.getForeColorCols(editor) : Settings.getBackColorCols(editor);
-    var rows = foreColor ? Settings.getForeColorRows(editor) : Settings.getBackColorRows(editor);
-    var colorMap = foreColor ? Settings.getForeColorMap(editor) : Settings.getBackColorMap(editor);
-    var hasColorPicker = Settings.hasColorPicker(editor);
+    const cols = foreColor ? Settings.getForeColorCols(editor) : Settings.getBackColorCols(editor);
+    const rows = foreColor ? Settings.getForeColorRows(editor) : Settings.getBackColorRows(editor);
+    const colorMap = foreColor ? Settings.getForeColorMap(editor) : Settings.getBackColorMap(editor);
+    const hasColorPicker = Settings.hasColorPicker(editor);
 
     return ColorPickerHtml.getHtml(cols, rows, colorMap, hasColorPicker);
   };
 };
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addButton('forecolor', {
     type: 'colorbutton',
     tooltip: 'Text color',
@@ -141,5 +142,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

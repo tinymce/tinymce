@@ -10,15 +10,15 @@ import Tools from 'tinymce/core/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   Theme();
 
-  var teardown = function (done) {
+  const teardown = function (done) {
     Delay.setTimeout(function () {
       EditorManager.remove();
       done();
@@ -28,20 +28,20 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function() {
   suite.asyncTest('get', function (_, done) {
     viewBlock.update('<textarea class="tinymce"></textarea>');
     EditorManager.init({
-      selector: "textarea.tinymce",
+      selector: 'textarea.tinymce',
       skin_url: '/project/js/tinymce/skins/lightgray',
-      init_instance_callback: function (editor1) {
+      init_instance_callback (editor1) {
         LegacyUnit.equal(EditorManager.get().length, 1);
         LegacyUnit.equal(EditorManager.get(0) === EditorManager.activeEditor, true);
         LegacyUnit.equal(EditorManager.get(1), null);
-        LegacyUnit.equal(EditorManager.get("noid"), null);
+        LegacyUnit.equal(EditorManager.get('noid'), null);
         LegacyUnit.equal(EditorManager.get(undefined), null);
         LegacyUnit.equal(EditorManager.get()[0] === EditorManager.activeEditor, true);
         LegacyUnit.equal(EditorManager.get(EditorManager.activeEditor.id) === EditorManager.activeEditor, true);
         LegacyUnit.equal(EditorManager.get() !== EditorManager.get(), true);
 
         // Trigger save
-        var saveCount = 0;
+        let saveCount = 0;
 
         editor1.on('SaveContent', function () {
           saveCount++;
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function() {
 
         // Re-init on same id
         EditorManager.init({
-          selector: "#" + EditorManager.activeEditor.id,
+          selector: '#' + EditorManager.activeEditor.id,
           skin_url: '/project/js/tinymce/skins/lightgray'
         });
 
@@ -65,29 +65,29 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function() {
 
   suite.test('addI18n/translate', function () {
     EditorManager.addI18n('en', {
-      'from': 'to'
+      from: 'to'
     });
 
     LegacyUnit.equal(EditorManager.translate('from'), 'to');
   });
 
-  suite.asyncTest("Do not reload language pack if it was already loaded or registered manually.", function (_, done) {
-    var langCode = 'mce_lang';
-    var langUrl = 'http://example.com/language/' + langCode + '.js';
+  suite.asyncTest('Do not reload language pack if it was already loaded or registered manually.', function (_, done) {
+    const langCode = 'mce_lang';
+    const langUrl = 'http://example.com/language/' + langCode + '.js';
 
     EditorManager.addI18n(langCode, {
-      'from': 'to'
+      from: 'to'
     });
 
     viewBlock.update('<textarea></textarea>');
 
     EditorManager.init({
-      selector: "textarea",
+      selector: 'textarea',
       skin_url: '/project/js/tinymce/skins/lightgray',
       language: langCode,
       language_url: langUrl,
-      init_instance_callback: function (ed) {
-        var scripts = Tools.grep(document.getElementsByTagName('script'), function (script) {
+      init_instance_callback (ed) {
+        const scripts = Tools.grep(document.getElementsByTagName('script'), function (script) {
           return script.src === langUrl;
         });
 
@@ -102,21 +102,21 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function() {
     EditorManager.remove();
 
     EditorManager.init({
-      selector: "textarea",
+      selector: 'textarea',
       skin_url: '/project/js/tinymce/skins/lightgray',
-      init_instance_callback: function (editor1) {
+      init_instance_callback (editor1) {
         Delay.setTimeout(function () {
           // Destroy the editor by setting innerHTML common ajax pattern
           viewBlock.update('<textarea id="' + editor1.id + '"></textarea>');
 
           // Re-init the editor will have the same id
           EditorManager.init({
-            selector: "textarea",
+            selector: 'textarea',
             skin_url: '/project/js/tinymce/skins/lightgray',
-            init_instance_callback: function (editor2) {
+            init_instance_callback (editor2) {
               LegacyUnit.equal(EditorManager.get().length, 1);
               LegacyUnit.equal(editor1.id, editor2.id);
-              LegacyUnit.equal(editor1.destroyed, 1, "First editor instance should be destroyed");
+              LegacyUnit.equal(editor1.destroyed, 1, 'First editor instance should be destroyed');
 
               teardown(done);
             }
@@ -127,7 +127,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function() {
   });
 
   suite.test('overrideDefaults', function () {
-    var oldBaseURI, oldBaseUrl, oldSuffix;
+    let oldBaseURI, oldBaseUrl, oldSuffix;
 
     oldBaseURI = EditorManager.baseURI;
     oldBaseUrl = EditorManager.baseURL;
@@ -135,43 +135,43 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function() {
 
     EditorManager.overrideDefaults({
       test: 42,
-      base_url: "http://www.EditorManager.com/base/",
-      suffix: "x",
+      base_url: 'http://www.EditorManager.com/base/',
+      suffix: 'x',
       external_plugins: {
-        "plugina": "//domain/plugina.js",
-        "pluginb": "//domain/pluginb.js"
+        plugina: '//domain/plugina.js',
+        pluginb: '//domain/pluginb.js'
       },
       plugin_base_urls: {
         testplugin: 'http://custom.ephox.com/dir/testplugin'
       }
     });
 
-    LegacyUnit.strictEqual(EditorManager.baseURI.path, "/base");
-    LegacyUnit.strictEqual(EditorManager.baseURL, "http://www.EditorManager.com/base");
-    LegacyUnit.strictEqual(EditorManager.suffix, "x");
+    LegacyUnit.strictEqual(EditorManager.baseURI.path, '/base');
+    LegacyUnit.strictEqual(EditorManager.baseURL, 'http://www.EditorManager.com/base');
+    LegacyUnit.strictEqual(EditorManager.suffix, 'x');
     LegacyUnit.strictEqual(new Editor('ed1', {}, EditorManager).settings.test, 42);
     LegacyUnit.strictEqual(PluginManager.urls.testplugin, 'http://custom.ephox.com/dir/testplugin');
 
     LegacyUnit.equal(new Editor('ed2', {
       skin_url: '/project/js/tinymce/skins/lightgray',
       external_plugins: {
-        "plugina": "//domain/plugina2.js",
-        "pluginc": "//domain/pluginc.js"
+        plugina: '//domain/plugina2.js',
+        pluginc: '//domain/pluginc.js'
       },
       plugin_base_urls: {
         testplugin: 'http://custom.ephox.com/dir/testplugin'
       }
     }, EditorManager).settings.external_plugins, {
-      "plugina": "//domain/plugina2.js",
-      "pluginb": "//domain/pluginb.js",
-      "pluginc": "//domain/pluginc.js"
+      plugina: '//domain/plugina2.js',
+      pluginb: '//domain/pluginb.js',
+      pluginc: '//domain/pluginc.js'
     });
 
     LegacyUnit.equal(new Editor('ed3', {
       skin_url: '/project/js/tinymce/skins/lightgray'
     }, EditorManager).settings.external_plugins, {
-      "plugina": "//domain/plugina.js",
-      "pluginb": "//domain/pluginb.js"
+      plugina: '//domain/plugina.js',
+      pluginb: '//domain/pluginb.js'
     });
 
     EditorManager.baseURI = oldBaseURI;
@@ -182,7 +182,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function() {
   });
 
   suite.test('Init inline editor on invalid targets', function () {
-    var invalidNames;
+    let invalidNames;
 
     invalidNames = (
       'area base basefont br col frame hr img input isindex link meta param embed source wbr track ' +
@@ -192,7 +192,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function() {
     EditorManager.remove();
 
     Tools.each(invalidNames.split(' '), function (invalidName) {
-      var elm = DOMUtils.DOM.add(document.body, invalidName, { 'class': 'targetEditor' }, null);
+      const elm = DOMUtils.DOM.add(document.body, invalidName, { class: 'targetEditor' }, null);
 
       EditorManager.init({
         selector: invalidName + '.targetEditor',
@@ -212,4 +212,3 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function() {
     success();
   }, failure);
 });
-

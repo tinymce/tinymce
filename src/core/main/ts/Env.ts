@@ -19,11 +19,11 @@ import { URL } from '@ephox/sand';
  * @static
  */
 
-var nav = navigator, userAgent = nav.userAgent;
-var opera, webkit, ie, ie11, ie12, gecko, mac, iDevice, android, fileApi, phone, tablet, windowsPhone;
+const nav = navigator, userAgent = nav.userAgent;
+let opera, webkit, ie, ie11, ie12, gecko, mac, iDevice, android, fileApi, phone, tablet, windowsPhone;
 
-var matchMediaQuery = function (query) {
-  return "matchMedia" in window ? matchMedia(query).matches : false;
+const matchMediaQuery = function (query) {
+  return 'matchMedia' in window ? matchMedia(query).matches : false;
 };
 
 opera = false;
@@ -31,16 +31,16 @@ android = /Android/.test(userAgent);
 webkit = /WebKit/.test(userAgent);
 ie = !webkit && !opera && (/MSIE/gi).test(userAgent) && (/Explorer/gi).test(nav.appName);
 ie = ie && /MSIE (\w+)\./.exec(userAgent)[1];
-ie11 = userAgent.indexOf('Trident/') != -1 && (userAgent.indexOf('rv:') != -1 || nav.appName.indexOf('Netscape') != -1) ? 11 : false;
-ie12 = (userAgent.indexOf('Edge/') != -1 && !ie && !ie11) ? 12 : false;
+ie11 = userAgent.indexOf('Trident/') !== -1 && (userAgent.indexOf('rv:') !== -1 || nav.appName.indexOf('Netscape') !== -1) ? 11 : false;
+ie12 = (userAgent.indexOf('Edge/') !== -1 && !ie && !ie11) ? 12 : false;
 ie = ie || ie11 || ie12;
 gecko = !webkit && !ie11 && /Gecko/.test(userAgent);
-mac = userAgent.indexOf('Mac') != -1;
+mac = userAgent.indexOf('Mac') !== -1;
 iDevice = /(iPad|iPhone)/.test(userAgent);
-fileApi = "FormData" in window && "FileReader" in window && "URL" in window && !!URL.createObjectURL;
-phone = matchMediaQuery("only screen and (max-device-width: 480px)") && (android || iDevice);
-tablet = matchMediaQuery("only screen and (min-width: 800px)") && (android || iDevice);
-windowsPhone = userAgent.indexOf('Windows Phone') != -1;
+fileApi = 'FormData' in window && 'FileReader' in window && 'URL' in window && !!URL.createObjectURL;
+phone = matchMediaQuery('only screen and (max-device-width: 480px)') && (android || iDevice);
+tablet = matchMediaQuery('only screen and (min-width: 800px)') && (android || iDevice);
+windowsPhone = userAgent.indexOf('Windows Phone') !== -1;
 
 if (ie12) {
   webkit = false;
@@ -48,7 +48,7 @@ if (ie12) {
 
 // Is a iPad/iPhone and not on iOS5 sniff the WebKit version since older iOS WebKit versions
 // says it has contentEditable support but there is no visible caret.
-var contentEditable = !iDevice || fileApi || parseInt(userAgent.match(/AppleWebKit\/(\d*)/)[1]) >= 534;
+const contentEditable = !iDevice || fileApi || parseInt(userAgent.match(/AppleWebKit\/(\d*)/)[1], 10) >= 534;
 
 export default {
   /**
@@ -58,7 +58,7 @@ export default {
    * @type Boolean
    * @final
    */
-  opera: opera,
+  opera,
 
   /**
    * Constant that is true if the browser is WebKit (Safari/Chrome).
@@ -67,7 +67,7 @@ export default {
    * @type Boolean
    * @final
    */
-  webkit: webkit,
+  webkit,
 
   /**
    * Constant that is more than zero if the browser is IE.
@@ -76,7 +76,7 @@ export default {
    * @type Boolean
    * @final
    */
-  ie: ie,
+  ie,
 
   /**
    * Constant that is true if the browser is Gecko.
@@ -85,7 +85,7 @@ export default {
    * @type Boolean
    * @final
    */
-  gecko: gecko,
+  gecko,
 
   /**
    * Constant that is true if the os is Mac OS.
@@ -94,7 +94,7 @@ export default {
    * @type Boolean
    * @final
    */
-  mac: mac,
+  mac,
 
   /**
    * Constant that is true if the os is iOS.
@@ -112,7 +112,7 @@ export default {
    * @type Boolean
    * @final
    */
-  android: android,
+  android,
 
   /**
    * Constant that is true if the browser supports editing.
@@ -121,7 +121,7 @@ export default {
    * @type Boolean
    * @final
    */
-  contentEditable: contentEditable,
+  contentEditable,
 
   /**
    * Transparent image data url.
@@ -130,7 +130,7 @@ export default {
    * @type Boolean
    * @final
    */
-  transparentSrc: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+  transparentSrc: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
 
   /**
    * Returns true/false if the browser can or can't place the caret after a inline block like an image.
@@ -139,7 +139,7 @@ export default {
    * @type Boolean
    * @final
    */
-  caretAfter: ie != 8,
+  caretAfter: ie !== 8,
 
   /**
    * Constant that is true if the browser supports native DOM Ranges. IE 9+.
@@ -147,7 +147,7 @@ export default {
    * @property range
    * @type Boolean
    */
-  range: window.getSelection && "Range" in window,
+  range: window.getSelection && 'Range' in window,
 
   /**
    * Returns the IE document mode for non IE browsers this will fake IE 10.
@@ -163,7 +163,7 @@ export default {
    * @property fileApi
    * @type Boolean
    */
-  fileApi: fileApi,
+  fileApi,
 
   /**
    * Constant that is true if the browser supports contentEditable=false regions.
@@ -184,5 +184,5 @@ export default {
   canHaveCSP: (ie === false || ie > 11),
 
   desktop: !phone && !tablet,
-  windowsPhone: windowsPhone
+  windowsPhone
 };

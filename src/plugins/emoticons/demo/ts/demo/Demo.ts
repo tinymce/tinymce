@@ -15,10 +15,10 @@ declare let tinymce: any;
 EmoticonsPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "emoticons code",
-  toolbar: "emoticons code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'emoticons code',
+  toolbar: 'emoticons code',
   height: 600
 });

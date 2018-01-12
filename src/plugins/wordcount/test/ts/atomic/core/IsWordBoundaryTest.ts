@@ -2,20 +2,20 @@ import StringMapper from 'tinymce/plugins/wordcount/text/StringMapper';
 import WordBoundary from 'tinymce/plugins/wordcount/text/WordBoundary';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('atomic.core.WordBoundaryTest', function() {
-  var iwb = function (str, index) {
+UnitTest.test('atomic.core.WordBoundaryTest', function () {
+  const iwb = function (str, index) {
     return WordBoundary.isWordBoundary(StringMapper.classify(str), index);
   };
 
-  var testWordBoundary = function () {
+  const testWordBoundary = function () {
     // should not break between most characters
     assert.eq(false, iwb('abc', 1));
     assert.eq(false, iwb('åäö', 1));
     assert.eq(false, iwb('üßœ', 1));
 
     // should not break some punctuation
-    assert.eq(false, iwb("can't", 2));
-    assert.eq(false, iwb("can’t", 2));
+    assert.eq(false, iwb('can\'t', 2));
+    assert.eq(false, iwb('can’t', 2));
     assert.eq(false, iwb('foo.bar', 2));
     assert.eq(false, iwb('foo:bar', 2));
 
@@ -73,4 +73,3 @@ UnitTest.test('atomic.core.WordBoundaryTest', function() {
 
   testWordBoundary();
 });
-

@@ -3,13 +3,14 @@ import { Pipeline } from '@ephox/agar';
 import EventDispatcher from 'tinymce/core/util/EventDispatcher';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
-  suite.test("fire (no event listeners)", function () {
-    var dispatcher = new EventDispatcher(), args;
+  suite.test('fire (no event listeners)', function () {
+    const dispatcher = new EventDispatcher();
+    let args;
 
     args = dispatcher.fire('click', { test: 1 });
     LegacyUnit.equal(args.test, 1);
@@ -24,8 +25,9 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(args.isImmediatePropagationStopped(), false);
   });
 
-  suite.test("fire (event listeners)", function () {
-    var dispatcher = new EventDispatcher(), data = '';
+  suite.test('fire (event listeners)', function () {
+    const dispatcher = new EventDispatcher();
+    let data = '';
 
     dispatcher.on('click', function () {
       data += 'a';
@@ -38,8 +40,9 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(data, 'ab');
   });
 
-  suite.test("fire (event listeners) stopImmediatePropagation", function () {
-    var dispatcher = new EventDispatcher(), data = '';
+  suite.test('fire (event listeners) stopImmediatePropagation', function () {
+    const dispatcher = new EventDispatcher();
+    let data = '';
 
     dispatcher.on('click', function (e) {
       data += 'a'; e.stopImmediatePropagation();
@@ -52,8 +55,9 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(data, 'a');
   });
 
-  suite.test("on", function () {
-    var dispatcher = new EventDispatcher(), data = '';
+  suite.test('on', function () {
+    const dispatcher = new EventDispatcher();
+    let data = '';
 
     LegacyUnit.equal(dispatcher.on('click', function () {
       data += 'a';
@@ -69,8 +73,9 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(data, 'abb');
   });
 
-  suite.test("on (prepend)", function () {
-    var dispatcher = new EventDispatcher(), data = '';
+  suite.test('on (prepend)', function () {
+    const dispatcher = new EventDispatcher();
+    let data = '';
 
     LegacyUnit.equal(dispatcher.on('click', function () {
       data += 'a';
@@ -83,8 +88,9 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(data, 'ba');
   });
 
-  suite.test("once", function () {
-    var dispatcher = new EventDispatcher(), data = '';
+  suite.test('once', function () {
+    const dispatcher = new EventDispatcher();
+    let data = '';
 
     LegacyUnit.equal(dispatcher.on('click', function () {
       data += 'a';
@@ -103,8 +109,9 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(data, 'abcac');
   });
 
-  suite.test("once (prepend)", function () {
-    var dispatcher = new EventDispatcher(), data = '';
+  suite.test('once (prepend)', function () {
+    const dispatcher = new EventDispatcher();
+    let data = '';
 
     LegacyUnit.equal(dispatcher.on('click', function () {
       data += 'a';
@@ -123,10 +130,11 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(data, 'bacac');
   });
 
-  suite.test("once (unbind)", function () {
-    var dispatcher = new EventDispatcher(), data = '';
+  suite.test('once (unbind)', function () {
+    const dispatcher = new EventDispatcher();
+    let data = '';
 
-    var handler = function () {
+    const handler = function () {
       data += 'b';
     };
 
@@ -140,8 +148,9 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(data, 'a');
   });
 
-  suite.test("once (multiple events)", function () {
-    var dispatcher = new EventDispatcher(), data = '';
+  suite.test('once (multiple events)', function () {
+    const dispatcher = new EventDispatcher();
+    let data = '';
 
     dispatcher.once('click', function () {
       data += 'a';
@@ -162,16 +171,17 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(data, 'ab');
   });
 
-  suite.test("off (all)", function () {
-    var dispatcher = new EventDispatcher(), data = '';
+  suite.test('off (all)', function () {
+    const dispatcher = new EventDispatcher();
+    let data = '';
 
-    var listenerA = function () {
+    const listenerA = function () {
       data += 'a';
     };
-    var listenerB = function () {
+    const listenerB = function () {
       data += 'b';
     };
-    var listenerC = function () {
+    const listenerC = function () {
       data += 'c';
     };
 
@@ -187,16 +197,17 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(data, '');
   });
 
-  suite.test("off (all named)", function () {
-    var dispatcher = new EventDispatcher(), data = '';
+  suite.test('off (all named)', function () {
+    const dispatcher = new EventDispatcher();
+    let data = '';
 
-    var listenerA = function () {
+    const listenerA = function () {
       data += 'a';
     };
-    var listenerB = function () {
+    const listenerB = function () {
       data += 'b';
     };
-    var listenerC = function () {
+    const listenerC = function () {
       data += 'c';
     };
 
@@ -212,13 +223,14 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(data, 'c');
   });
 
-  suite.test("off (all specific observer)", function () {
-    var dispatcher = new EventDispatcher(), data = '';
+  suite.test('off (all specific observer)', function () {
+    const dispatcher = new EventDispatcher();
+    let data = '';
 
-    var listenerA = function () {
+    const listenerA = function () {
       data += 'a';
     };
-    var listenerB = function () {
+    const listenerB = function () {
       data += 'b';
     };
 
@@ -231,8 +243,8 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(data, 'a');
   });
 
-  suite.test("scope setting", function () {
-    var lastScope, lastEvent, dispatcher;
+  suite.test('scope setting', function () {
+    let lastScope, lastEvent, dispatcher;
 
     dispatcher = new EventDispatcher();
     dispatcher.on('click', function () {
@@ -241,8 +253,8 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     }).fire('click');
     LegacyUnit.equal(dispatcher, lastScope);
 
-    var scope = { test: 1 };
-    dispatcher = new EventDispatcher({ scope: scope });
+    const scope = { test: 1 };
+    dispatcher = new EventDispatcher({ scope });
     dispatcher.on('click', function (e) {
       // eslint-disable-next-line consistent-this
       lastScope = this;
@@ -252,11 +264,11 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(lastEvent.target, lastScope);
   });
 
-  suite.test("beforeFire setting", function () {
-    var lastArgs, dispatcher, args;
+  suite.test('beforeFire setting', function () {
+    let lastArgs, dispatcher, args;
 
     dispatcher = new EventDispatcher({
-      beforeFire: function (args) {
+      beforeFire (args) {
         lastArgs = args;
       }
     });
@@ -265,17 +277,17 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(lastArgs === args, true);
   });
 
-  suite.test("beforeFire setting (stopImmediatePropagation)", function () {
-    var lastArgs, dispatcher, args, data = '';
+  suite.test('beforeFire setting (stopImmediatePropagation)', function () {
+    let lastArgs, dispatcher, args, data = '';
 
     dispatcher = new EventDispatcher({
-      beforeFire: function (args) {
+      beforeFire (args) {
         lastArgs = args;
         args.stopImmediatePropagation();
       }
     });
 
-    var listenerA = function () {
+    const listenerA = function () {
       data += 'a';
     };
 
@@ -285,19 +297,19 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     LegacyUnit.equal(data, '');
   });
 
-  suite.test("toggleEvent setting", function () {
-    var lastName, lastState, dispatcher;
+  suite.test('toggleEvent setting', function () {
+    let lastName, lastState, dispatcher;
 
     dispatcher = new EventDispatcher({
-      toggleEvent: function (name, state) {
+      toggleEvent (name, state) {
         lastName = name;
         lastState = state;
       }
     });
 
-    var listenerA = function () {
+    const listenerA = function () {
     };
-    var listenerB = function () {
+    const listenerB = function () {
     };
 
     dispatcher.on('click', listenerA);
@@ -322,4 +334,3 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function() {
     success();
   }, failure);
 });
-

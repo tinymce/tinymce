@@ -8,13 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var isAnchorNode = function (node) {
+const isAnchorNode = function (node) {
   return !node.attr('href') && (node.attr('id') || node.attr('name')) && !node.firstChild;
 };
 
-var setContentEditable = function (state) {
+const setContentEditable = function (state) {
   return function (nodes) {
-    for (var i = 0; i < nodes.length; i++) {
+    for (let i = 0; i < nodes.length; i++) {
       if (isAnchorNode(nodes[i])) {
         nodes[i].attr('contenteditable', state);
       }
@@ -22,7 +22,7 @@ var setContentEditable = function (state) {
   };
 };
 
-var setup = function (editor) {
+const setup = function (editor) {
   editor.on('PreInit', function () {
     editor.parser.addNodeFilter('a', setContentEditable('false'));
     editor.serializer.addNodeFilter('a', setContentEditable(null));
@@ -30,5 +30,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

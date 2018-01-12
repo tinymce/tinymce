@@ -4,9 +4,9 @@ import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorForcedSettingsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.EditorForcedSettingsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
@@ -25,4 +25,3 @@ UnitTest.asynctest('browser.tinymce.core.EditorForcedSettingsTest', function() {
     validate: false
   }, success, failure);
 });
-

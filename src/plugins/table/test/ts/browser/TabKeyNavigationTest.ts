@@ -5,15 +5,15 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TabKeyNavigationTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.table.TabKeyNavigationTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
 
-  suite.test("Tab key navigation", function (editor) {
+  suite.test('Tab key navigation', function (editor) {
     editor.focus();
 
     editor.setContent('<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr></tbody></table><p>x</p>');
@@ -51,4 +51,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TabKeyNavigationTest', functio
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

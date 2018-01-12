@@ -8,12 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var toggleUndoRedoState = function (editor, type) {
+const toggleUndoRedoState = function (editor, type) {
   return function () {
-    var self = this;
+    const self = this;
 
-    var checkState = function () {
-      var typeFn = type === 'redo' ? 'hasRedo' : 'hasUndo';
+    const checkState = function () {
+      const typeFn = type === 'redo' ? 'hasRedo' : 'hasUndo';
       return editor.undoManager ? editor.undoManager[typeFn]() : false;
     };
 
@@ -24,7 +24,7 @@ var toggleUndoRedoState = function (editor, type) {
   };
 };
 
-var registerMenuItems = function (editor) {
+const registerMenuItems = function (editor) {
   editor.addMenuItem('undo', {
     text: 'Undo',
     icon: 'undo',
@@ -42,7 +42,7 @@ var registerMenuItems = function (editor) {
   });
 };
 
-var registerButtons = function (editor) {
+const registerButtons = function (editor) {
   editor.addButton('undo', {
     tooltip: 'Undo',
     onPostRender: toggleUndoRedoState(editor, 'undo'),
@@ -56,11 +56,11 @@ var registerButtons = function (editor) {
   });
 };
 
-var register = function (editor) {
+const register = function (editor) {
   registerMenuItems(editor);
   registerButtons(editor);
 };
 
-export default <any> {
-  register: register
+export default {
+  register
 };

@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var fireInsertCustomChar = function (editor, chr) {
-  return editor.fire('insertCustomChar', { chr: chr });
+const fireInsertCustomChar = function (editor, chr) {
+  return editor.fire('insertCustomChar', { chr });
 };
 
 export default {
-  fireInsertCustomChar: fireInsertCustomChar
+  fireInsertCustomChar
 };

@@ -15,9 +15,8 @@ import CaretContainerRemove from '../caret/CaretContainerRemove';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import NodeType from '../dom/NodeType';
-import InlineUtils from './InlineUtils';
 
-var insertInlinePos = function (pos, before) {
+const insertInlinePos = function (pos, before) {
   if (NodeType.isText(pos.container())) {
     return CaretContainerInline.insertInline(before, pos.container());
   } else {
@@ -25,16 +24,16 @@ var insertInlinePos = function (pos, before) {
   }
 };
 
-var isPosCaretContainer = function (pos, caret) {
-  var caretNode = caret.get();
+const isPosCaretContainer = function (pos, caret) {
+  const caretNode = caret.get();
   return caretNode && pos.container() === caretNode && CaretContainer.isCaretContainerInline(caretNode);
 };
 
-var renderCaret = function (caret, location) {
+const renderCaret = function (caret, location) {
   return location.fold(
     function (element) { // Before
       CaretContainerRemove.remove(caret.get());
-      var text = CaretContainerInline.insertInlineBefore(element);
+      const text = CaretContainerInline.insertInlineBefore(element);
       caret.set(text);
       return Option.some(new CaretPosition(text, text.length - 1));
     },
@@ -42,7 +41,7 @@ var renderCaret = function (caret, location) {
       return CaretFinder.firstPositionIn(element).map(function (pos) {
         if (!isPosCaretContainer(pos, caret)) {
           CaretContainerRemove.remove(caret.get());
-          var text = insertInlinePos(pos, true);
+          const text = insertInlinePos(pos, true);
           caret.set(text);
           return new CaretPosition(text, 1);
         } else {
@@ -54,7 +53,7 @@ var renderCaret = function (caret, location) {
       return CaretFinder.lastPositionIn(element).map(function (pos) {
         if (!isPosCaretContainer(pos, caret)) {
           CaretContainerRemove.remove(caret.get());
-          var text = insertInlinePos(pos, false);
+          const text = insertInlinePos(pos, false);
           caret.set(text);
           return new CaretPosition(text, text.length - 1);
         } else {
@@ -64,7 +63,7 @@ var renderCaret = function (caret, location) {
     },
     function (element) { // After
       CaretContainerRemove.remove(caret.get());
-      var text = CaretContainerInline.insertInlineAfter(element);
+      const text = CaretContainerInline.insertInlineAfter(element);
       caret.set(text);
       return Option.some(new CaretPosition(text, 1));
     }
@@ -72,5 +71,5 @@ var renderCaret = function (caret, location) {
 };
 
 export default {
-  renderCaret: renderCaret
+  renderCaret
 };

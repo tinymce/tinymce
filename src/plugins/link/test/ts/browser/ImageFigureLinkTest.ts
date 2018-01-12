@@ -9,19 +9,18 @@ import LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   LinkPlugin();
 
-
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var api = TinyApis(editor);
+    const api = TinyApis(editor);
 
-    var sLinkTheSelection = function () {
-      var insertLink = LinkPluginUtils.link(editor, {});
+    const sLinkTheSelection = function () {
+      const insertLink = LinkPluginUtils.link(editor, {});
       return Step.sync(function () {
         insertLink({
           href: 'http://google.com'
@@ -29,17 +28,16 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', function(
       });
     };
 
-    var sUnlinkSelection = function () {
-      var removeLink = LinkPluginUtils.unlink(editor);
+    const sUnlinkSelection = function () {
+      const removeLink = LinkPluginUtils.unlink(editor);
       return Step.sync(function () {
         removeLink();
       });
     };
 
-    var sAssertPresense = function (selector) {
-      return Assertions.sAssertPresence("Detect presense of the element", selector, TinyDom.fromDom(editor.getBody()));
+    const sAssertPresense = function (selector) {
+      return Assertions.sAssertPresence('Detect presense of the element', selector, TinyDom.fromDom(editor.getBody()));
     };
-
 
     Pipeline.async({}, [
       api.sSetContent(
@@ -62,4 +60,3 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', function(
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

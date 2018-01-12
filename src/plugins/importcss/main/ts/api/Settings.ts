@@ -8,40 +8,40 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var shouldMergeClasses = function (editor) {
+const shouldMergeClasses = function (editor) {
   return editor.getParam('importcss_merge_classes');
 };
 
-var shouldImportExclusive = function (editor) {
+const shouldImportExclusive = function (editor) {
   return editor.getParam('importcss_exclusive');
 };
 
-var getSelectorConverter = function (editor) {
+const getSelectorConverter = function (editor) {
   return editor.getParam('importcss_selector_converter');
 };
 
-var getSelectorFilter = function (editor) {
+const getSelectorFilter = function (editor) {
   return editor.getParam('importcss_selector_filter');
 };
 
-var getCssGroups = function (editor) {
+const getCssGroups = function (editor) {
   return editor.getParam('importcss_groups');
 };
 
-var shouldAppend = function (editor) {
+const shouldAppend = function (editor) {
   return editor.getParam('importcss_append');
 };
 
-var getFileFilter = function (editor) {
+const getFileFilter = function (editor) {
   return editor.getParam('importcss_file_filter');
 };
 
 export default {
-  shouldMergeClasses: shouldMergeClasses,
-  shouldImportExclusive: shouldImportExclusive,
-  getSelectorConverter: getSelectorConverter,
-  getSelectorFilter: getSelectorFilter,
-  getCssGroups: getCssGroups,
-  shouldAppend: shouldAppend,
-  getFileFilter: getFileFilter
+  shouldMergeClasses,
+  shouldImportExclusive,
+  getSelectorConverter,
+  getSelectorFilter,
+  getCssGroups,
+  shouldAppend,
+  getFileFilter
 };

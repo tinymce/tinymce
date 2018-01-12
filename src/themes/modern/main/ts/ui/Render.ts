@@ -13,8 +13,8 @@ import Iframe from '../modes/Iframe';
 import Inline from '../modes/Inline';
 import ProgressState from './ProgressState';
 
-var renderUI = function (editor, theme, args) {
-  var skinUrl = Settings.getSkinUrl(editor);
+const renderUI = function (editor, theme, args) {
+  const skinUrl = Settings.getSkinUrl(editor);
 
   if (skinUrl) {
     args.skinUiCss = skinUrl + '/skin.min.css';
@@ -26,6 +26,6 @@ var renderUI = function (editor, theme, args) {
   return Settings.isInline(editor) ? Inline.render(editor, theme, args) : Iframe.render(editor, theme, args);
 };
 
-export default <any> {
-  renderUI: renderUI
+export default {
+  renderUI
 };

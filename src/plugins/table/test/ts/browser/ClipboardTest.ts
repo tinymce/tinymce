@@ -6,19 +6,19 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
 
-  var cleanTableHtml = function (html) {
+  const cleanTableHtml = function (html) {
     return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
   };
 
-  var selectOne = function (editor, start) {
+  const selectOne = function (editor, start) {
     start = editor.$(start)[0];
 
     editor.fire('mousedown', { target: start, button: 0 });
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function() {
     LegacyUnit.setSelection(editor, start, 0);
   };
 
-  var selectRangeXY = function (editor, start, end) {
+  const selectRangeXY = function (editor, start, end) {
     start = editor.$(start)[0];
     end = editor.$(end)[0];
 
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function() {
     LegacyUnit.setSelection(editor, end, 0);
   };
 
-  suite.test("mceTablePasteRowBefore command", function (editor) {
+  suite.test('mceTablePasteRowBefore command', function (editor) {
     editor.focus();
     editor.setContent(
       '<table>' +
@@ -81,7 +81,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function() {
     );
   });
 
-  suite.test("mceTablePasteRowAfter command", function (editor) {
+  suite.test('mceTablePasteRowAfter command', function (editor) {
     editor.setContent(
       '<table>' +
       '<tr><td>1</td><td>2</td></tr>' +
@@ -123,7 +123,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function() {
     );
   });
 
-  suite.test("mceTablePasteRowAfter command with thead and tfoot", function (editor) {
+  suite.test('mceTablePasteRowAfter command with thead and tfoot', function (editor) {
     editor.setContent(
       '<table>' +
       '<thead>' +
@@ -185,7 +185,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function() {
     );
   });
 
-  suite.test("mceTablePasteRowAfter from merged row source", function (editor) {
+  suite.test('mceTablePasteRowAfter from merged row source', function (editor) {
     editor.setContent(
       '<table>' +
       '<tbody>' +
@@ -213,7 +213,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function() {
     );
   });
 
-  suite.test("mceTablePasteRowAfter from merged row source to merged row target", function (editor) {
+  suite.test('mceTablePasteRowAfter from merged row source to merged row target', function (editor) {
     editor.setContent(
       '<table>' +
       '<tbody>' +
@@ -241,7 +241,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function() {
     );
   });
 
-  suite.test("mceTablePasteRowAfter to wider table", function (editor) {
+  suite.test('mceTablePasteRowAfter to wider table', function (editor) {
     editor.setContent(
       '<table>' +
       '<tbody>' +
@@ -280,7 +280,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function() {
     );
   });
 
-  suite.test("mceTablePasteRowAfter to narrower table", function (editor) {
+  suite.test('mceTablePasteRowAfter to narrower table', function (editor) {
     editor.setContent(
       '<table>' +
       '<tbody>' +
@@ -322,8 +322,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function() {
     );
   });
 
-
-  suite.test("Copy/paste several rows with multiple rowspans", function (editor) {
+  suite.test('Copy/paste several rows with multiple rowspans', function (editor) {
     editor.setContent(
       '<table>' +
       '<tbody>' +
@@ -357,12 +356,11 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function() {
     );
   });
 
-
-  suite.test("row clipboard api", function (editor) {
-    var clipboardRows;
+  suite.test('row clipboard api', function (editor) {
+    let clipboardRows;
 
     function createRow(cellContents) {
-      var tr = editor.dom.create('tr');
+      const tr = editor.dom.create('tr');
 
       Tools.each(cellContents, function (html) {
         tr.appendChild(editor.dom.create('td', null, html));
@@ -420,4 +418,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

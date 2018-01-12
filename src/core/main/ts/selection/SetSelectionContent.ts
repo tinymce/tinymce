@@ -8,8 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var setContent = function (editor, content, args) {
-  var rng = editor.selection.getRng(), caretNode, doc = editor.getDoc(), frag, temp;
+const setContent = function (editor, content, args) {
+  let rng = editor.selection.getRng(), caretNode;
+  const doc = editor.getDoc();
+  let frag, temp;
 
   args = args || { format: 'html' };
   args.set = true;
@@ -32,7 +34,7 @@ var setContent = function (editor, content, args) {
     content += '<span id="__caret">_</span>';
 
     // Delete and insert new node
-    if (rng.startContainer == doc && rng.endContainer == doc) {
+    if (rng.startContainer === doc && rng.endContainer === doc) {
       // WebKit will fail if the body is empty since the range is then invalid and it can't insert contents
       doc.body.innerHTML = content;
     } else {
@@ -97,5 +99,5 @@ var setContent = function (editor, content, args) {
 };
 
 export default {
-  setContent: setContent
+  setContent
 };

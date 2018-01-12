@@ -16,9 +16,9 @@ import TreeWalker from '../dom/TreeWalker';
 import CaretFormat from '../fmt/CaretFormat';
 import RangeCompare from './RangeCompare';
 
-var position = Struct.immutable('container', 'offset');
+const position = Struct.immutable('container', 'offset');
 
-var findParent = function (node, rootNode, predicate) {
+const findParent = function (node, rootNode, predicate) {
   while (node && node !== rootNode) {
     if (predicate(node)) {
       return node;
@@ -30,30 +30,30 @@ var findParent = function (node, rootNode, predicate) {
   return null;
 };
 
-var hasParent = function (node, rootNode, predicate) {
+const hasParent = function (node, rootNode, predicate) {
   return findParent(node, rootNode, predicate) !== null;
 };
 
-var hasParentWithName = function (node, rootNode, name) {
+const hasParentWithName = function (node, rootNode, name) {
   return hasParent(node, rootNode, function (node) {
     return node.nodeName === name;
   });
 };
 
-var isTable = function (node) {
+const isTable = function (node) {
   return node && node.nodeName === 'TABLE';
 };
 
-var isTableCell = function (node) {
+const isTableCell = function (node) {
   return node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
 };
 
-var isCeFalseCaretContainer = function (node, rootNode) {
+const isCeFalseCaretContainer = function (node, rootNode) {
   return CaretContainer.isCaretContainer(node) && hasParent(node, rootNode, CaretFormat.isCaretNode) === false;
 };
 
-var hasBrBeforeAfter = function (dom, node, left) {
-  var walker = new TreeWalker(node, dom.getParent(node.parentNode, dom.isBlock) || dom.getRoot());
+const hasBrBeforeAfter = function (dom, node, left) {
+  const walker = new TreeWalker(node, dom.getParent(node.parentNode, dom.isBlock) || dom.getRoot());
 
   while ((node = walker[left ? 'prev' : 'next']())) {
     if (NodeType.isBr(node)) {
@@ -62,11 +62,11 @@ var hasBrBeforeAfter = function (dom, node, left) {
   }
 };
 
-var isPrevNode = function (node, name) {
+const isPrevNode = function (node, name) {
   return node.previousSibling && node.previousSibling.nodeName === name;
 };
 
-var hasContentEditableFalseParent = function (body, node) {
+const hasContentEditableFalseParent = function (body, node) {
   while (node && node !== body) {
     if (NodeType.isContentEditableFalse(node)) {
       return true;
@@ -80,9 +80,11 @@ var hasContentEditableFalseParent = function (body, node) {
 
 // Walks the dom left/right to find a suitable text node to move the endpoint into
 // It will only walk within the current parent block or body and will stop if it hits a block or a BR/IMG
-var findTextNodeRelative = function (dom, isAfterNode, collapsed, left, startNode) {
-  var walker, lastInlineElement, parentBlockContainer, body = dom.getRoot(), node;
-  var nonEmptyElementsMap = dom.schema.getNonEmptyElements();
+const findTextNodeRelative = function (dom, isAfterNode, collapsed, left, startNode) {
+  let walker, lastInlineElement, parentBlockContainer;
+  const body = dom.getRoot();
+  let node;
+  const nonEmptyElementsMap = dom.schema.getNonEmptyElements();
 
   parentBlockContainer = dom.getParent(startNode.parentNode, dom.isBlock) || body;
 
@@ -96,7 +98,7 @@ var findTextNodeRelative = function (dom, isAfterNode, collapsed, left, startNod
   walker = new TreeWalker(startNode, parentBlockContainer);
   while ((node = walker[left ? 'prev' : 'next']())) {
     // Break if we hit a non content editable node
-    if (dom.getContentEditableParent(node) === "false" || isCeFalseCaretContainer(node, body)) {
+    if (dom.getContentEditableParent(node) === 'false' || isCeFalseCaretContainer(node, body)) {
       return Option.none();
     }
 
@@ -125,9 +127,11 @@ var findTextNodeRelative = function (dom, isAfterNode, collapsed, left, startNod
   return Option.none();
 };
 
-var normalizeEndPoint = function (dom, collapsed, start, rng) {
-  var container, offset, walker, body = dom.getRoot(), node, nonEmptyElementsMap;
-  var directionLeft, isAfterNode, normalized = false;
+const normalizeEndPoint = function (dom, collapsed, start, rng) {
+  let container, offset, walker;
+  const body = dom.getRoot();
+  let node, nonEmptyElementsMap;
+  let directionLeft, isAfterNode, normalized = false;
 
   container = rng[(start ? 'start' : 'end') + 'Container'];
   offset = rng[(start ? 'start' : 'end') + 'Offset'];
@@ -270,8 +274,8 @@ var normalizeEndPoint = function (dom, collapsed, start, rng) {
   return normalized ? Option.some(position(container, offset)) : Option.none();
 };
 
-var normalize = function (dom, rng) {
-  var collapsed = rng.collapsed, normRng = rng.cloneRange();
+const normalize = function (dom, rng) {
+  const collapsed = rng.collapsed, normRng = rng.cloneRange();
 
   normalizeEndPoint(dom, collapsed, true, normRng).each(function (pos) {
     normRng.setStart(pos.container(), pos.offset());
@@ -292,5 +296,5 @@ var normalize = function (dom, rng) {
 };
 
 export default {
-  normalize: normalize
+  normalize
 };

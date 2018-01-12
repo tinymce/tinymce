@@ -19,21 +19,19 @@ import DragHelper from './DragHelper';
  * @extends tinymce.ui.Widget
  */
 
-"use strict";
-
-export default <any> Widget.extend({
+export default Widget.extend({
   /**
    * Renders the control as a HTML string.
    *
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, prefix = self.classPrefix;
+  renderHtml () {
+    const self = this, prefix = self.classPrefix;
 
     self.classes.add('resizehandle');
 
-    if (self.settings.direction == "both") {
+    if (self.settings.direction === 'both') {
       self.classes.add('resizehandle-both');
     }
 
@@ -51,31 +49,31 @@ export default <any> Widget.extend({
    *
    * @method postRender
    */
-  postRender: function () {
-    var self = this;
+  postRender () {
+    const self = this;
 
     self._super();
 
     self.resizeDragHelper = new DragHelper(this._id, {
-      start: function () {
+      start () {
         self.fire('ResizeStart');
       },
 
-      drag: function (e) {
-        if (self.settings.direction != "both") {
+      drag (e) {
+        if (self.settings.direction !== 'both') {
           e.deltaX = 0;
         }
 
         self.fire('Resize', e);
       },
 
-      stop: function () {
+      stop () {
         self.fire('ResizeEnd');
       }
     });
   },
 
-  remove: function () {
+  remove () {
     if (this.resizeDragHelper) {
       this.resizeDragHelper.destroy();
     }

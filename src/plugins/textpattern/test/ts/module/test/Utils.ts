@@ -3,10 +3,10 @@ import { GeneralSteps } from '@ephox/agar';
 import { Keys } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 
-var sSetContentAndPressKey = function (key) {
+const sSetContentAndPressKey = function (key) {
   return function (tinyApis, tinyActions, content) {
-    var padding = key === Keys.space() ? '\u00a0' : '';
-    var extraOffset = padding === '' ? 0 : 1;
+    const padding = key === Keys.space() ? '\u00a0' : '';
+    const extraOffset = padding === '' ? 0 : 1;
     return GeneralSteps.sequence([
       tinyApis.sSetContent('<p>' + content + padding + '</p>'),
       tinyApis.sFocus,
@@ -19,21 +19,21 @@ var sSetContentAndPressKey = function (key) {
   };
 };
 
-var withTeardown = function (steps, teardownStep) {
+const withTeardown = function (steps, teardownStep) {
   return Arr.bind(steps, function (step) {
     return [step, teardownStep];
   });
 };
 
-var bodyStruct = function (children) {
+const bodyStruct = function (children) {
   return ApproxStructure.build(function (s, str) {
     return s.element('body', {
-      children: children
+      children
     });
   });
 };
 
-var inlineStructHelper = function (tag, content) {
+const inlineStructHelper = function (tag, content) {
   return ApproxStructure.build(function (s, str) {
     return bodyStruct([
       s.element('p', {
@@ -50,7 +50,7 @@ var inlineStructHelper = function (tag, content) {
   });
 };
 
-var inlineBlockStructHelper = function (tag, content) {
+const inlineBlockStructHelper = function (tag, content) {
   return ApproxStructure.build(function (s, str) {
     return bodyStruct([
       s.element('p', {
@@ -68,7 +68,7 @@ var inlineBlockStructHelper = function (tag, content) {
   });
 };
 
-var blockStructHelper = function (tag, content) {
+const blockStructHelper = function (tag, content) {
   return ApproxStructure.build(function (s, str) {
     return bodyStruct([
       s.element(tag, {
@@ -84,9 +84,9 @@ var blockStructHelper = function (tag, content) {
 export default {
   sSetContentAndPressSpace: sSetContentAndPressKey(Keys.space()),
   sSetContentAndPressEnter: sSetContentAndPressKey(Keys.enter()),
-  withTeardown: withTeardown,
-  bodyStruct: bodyStruct,
-  inlineStructHelper: inlineStructHelper,
-  inlineBlockStructHelper: inlineBlockStructHelper,
-  blockStructHelper: blockStructHelper
+  withTeardown,
+  bodyStruct,
+  inlineStructHelper,
+  inlineBlockStructHelper,
+  blockStructHelper
 };

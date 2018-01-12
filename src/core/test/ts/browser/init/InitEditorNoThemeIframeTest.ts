@@ -10,12 +10,12 @@ import { SelectorFind } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('Tests if the editor is responsive after setting theme to false', GeneralSteps.sequence([
@@ -23,9 +23,9 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', func
         tinyApis.sAssertContent('<p>a</p>')
       ])),
       Logger.t('Editor element properties', Step.sync(function () {
-        var body = Element.fromDom(document.body);
-        var targetElement = SelectorFind.descendant(body, '#' + editor.id).getOrDie('No elm');
-        var editorElement = Traverse.nextSibling(targetElement).getOrDie('No elm');
+        const body = Element.fromDom(document.body);
+        const targetElement = SelectorFind.descendant(body, '#' + editor.id).getOrDie('No elm');
+        const editorElement = Traverse.nextSibling(targetElement).getOrDie('No elm');
 
         Assertions.assertDomEq('Should be expected element', editorElement, Element.fromDom(editor.editorContainer));
         Assertions.assertDomEq('Should be expected element', editorElement, Element.fromDom(editor.contentAreaContainer));
@@ -35,9 +35,8 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', func
   }, {
     theme: false,
     skin_url: '/project/js/tinymce/skins/lightgray',
-    init_instance_callback: function (editor) {
+    init_instance_callback (editor) {
       editor.fire('SkinLoaded');
     }
   }, success, failure);
 });
-

@@ -15,9 +15,9 @@ declare let tinymce: any;
 SpellCheckerPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  plugins: "spellchecker code",
-  toolbar: "spellchecker code",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
+  selector: 'textarea.tinymce',
+  plugins: 'spellchecker code',
+  toolbar: 'spellchecker code',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
   height: 600
 });

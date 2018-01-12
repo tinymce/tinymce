@@ -1,4 +1,3 @@
-import { Assertions } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
@@ -9,16 +8,16 @@ import TemplatePlugin from 'tinymce/plugins/template/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.template.SelectedContentTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.template.SelectedContentTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   TemplatePlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
-    var tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('test selectedcontent replacement with default class', GeneralSteps.sequence([
@@ -48,4 +47,3 @@ UnitTest.asynctest('browser.tinymce.plugins.template.SelectedContentTest', funct
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

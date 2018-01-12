@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var each = function (o, cb, s?) {
-  var n, l;
+const each = function (o, cb, s?) {
+  let n, l;
 
   if (!o) {
     return 0;
@@ -38,8 +38,8 @@ var each = function (o, cb, s?) {
   return 1;
 };
 
-var map = function (array, callback) {
-  var out = [];
+const map = function (array, callback) {
+  const out = [];
 
   each(array, function (item, index) {
     out.push(callback(item, index, array));
@@ -49,6 +49,6 @@ var map = function (array, callback) {
 };
 
 export default {
-  each: each,
-  map: map
+  each,
+  map
 };

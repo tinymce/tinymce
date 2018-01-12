@@ -20,9 +20,7 @@ import Scrollable from './Scrollable';
  * @mixes tinymce.ui.Scrollable
  */
 
-"use strict";
-
-export default <any> Container.extend({
+export default Container.extend({
   Defaults: {
     layout: 'fit',
     containerCls: 'panel'
@@ -36,20 +34,22 @@ export default <any> Container.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, layout = self._layout, innerHtml = self.settings.html;
+  renderHtml () {
+    const self = this;
+    const layout = self._layout;
+    let innerHtml = self.settings.html;
 
     self.preRender();
     layout.preRender(self);
 
-    if (typeof innerHtml == "undefined") {
+    if (typeof innerHtml === 'undefined') {
       innerHtml = (
         '<div id="' + self._id + '-body" class="' + self.bodyClasses + '">' +
         layout.renderHtml(self) +
         '</div>'
       );
     } else {
-      if (typeof innerHtml == 'function') {
+      if (typeof innerHtml === 'function') {
         innerHtml = innerHtml.call(self);
       }
 

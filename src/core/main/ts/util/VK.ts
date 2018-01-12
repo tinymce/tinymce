@@ -14,8 +14,6 @@ import Env from '../Env';
  * This file exposes a set of the common KeyCodes for use. Please grow it as needed.
  */
 
-
-
 export default {
   BACKSPACE: 8,
   DELETE: 46,
@@ -27,11 +25,11 @@ export default {
   TAB: 9,
   UP: 38,
 
-  modifierPressed: function (e) {
+  modifierPressed (e) {
     return e.shiftKey || e.ctrlKey || e.altKey || this.metaKeyPressed(e);
   },
 
-  metaKeyPressed: function (e) {
+  metaKeyPressed (e) {
     // Check if ctrl or meta key is pressed. Edge case for AltGr on Windows where it produces ctrlKey+altKey states
     return (Env.mac ? e.metaKey : e.ctrlKey && !e.altKey);
   }

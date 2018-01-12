@@ -6,16 +6,16 @@ import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.SerializerEventsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.SerializerEventsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [
       Logger.t('Pre/post process events', Step.sync(function () {
-        var preProcessArgs, postProcessArgs;
+        let preProcessArgs, postProcessArgs;
 
         editor.on('PreProcess', function (o) {
           preProcessArgs = o;
@@ -52,4 +52,3 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerEventsTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

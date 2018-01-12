@@ -25,14 +25,14 @@ import Resizable from './Resizable';
  * @mixes tinymce.ui.Resizable
  */
 
-"use strict";
-
-var documentClickHandler, documentScrollHandler, windowResizeHandler, visiblePanels = [];
-var zOrder = [], hasModal;
+let documentClickHandler, documentScrollHandler, windowResizeHandler;
+const visiblePanels = [];
+const zOrder = [];
+let hasModal;
 
 function isChildOf(ctrl, parent) {
   while (ctrl) {
-    if (ctrl == parent) {
+    if (ctrl === parent) {
       return true;
     }
 
@@ -43,10 +43,10 @@ function isChildOf(ctrl, parent) {
 function skipOrHidePanels(e) {
   // Hide any float panel when a click/focus out is out side that float panel and the
   // float panels direct parent for example a click on a menu button
-  var i = visiblePanels.length;
+  let i = visiblePanels.length;
 
   while (i--) {
-    var panel = visiblePanels[i], clickCtrl = panel.getParentCtrl(e.target);
+    const panel = visiblePanels[i], clickCtrl = panel.getParentCtrl(e.target);
 
     if (panel.settings.autohide) {
       if (clickCtrl) {
@@ -68,7 +68,7 @@ function bindDocumentClickHandler() {
   if (!documentClickHandler) {
     documentClickHandler = function (e) {
       // Gecko fires click event and in the wrong order on Mac so lets normalize
-      if (e.button == 2) {
+      if (e.button === 2) {
         return;
       }
 
@@ -82,7 +82,7 @@ function bindDocumentClickHandler() {
 function bindDocumentScrollHandler() {
   if (!documentScrollHandler) {
     documentScrollHandler = function () {
-      var i;
+      let i;
 
       i = visiblePanels.length;
       while (i--) {
@@ -96,11 +96,12 @@ function bindDocumentScrollHandler() {
 
 function bindWindowResizeHandler() {
   if (!windowResizeHandler) {
-    var docElm = document.documentElement, clientWidth = docElm.clientWidth, clientHeight = docElm.clientHeight;
+    const docElm = document.documentElement;
+    let clientWidth = docElm.clientWidth, clientHeight = docElm.clientHeight;
 
     windowResizeHandler = function () {
       // Workaround for #7065 IE 7 fires resize events event though the window wasn't resized
-      if (!document.all || clientWidth != docElm.clientWidth || clientHeight != docElm.clientHeight) {
+      if (!document.all || clientWidth !== docElm.clientWidth || clientHeight !== docElm.clientHeight) {
         clientWidth = docElm.clientWidth;
         clientHeight = docElm.clientHeight;
         FloatPanel.hideAll();
@@ -116,17 +117,17 @@ function bindWindowResizeHandler() {
  * also reposition all child panels of the current panel.
  */
 function repositionPanel(panel) {
-  var scrollY = DomUtils.getViewPort().y;
+  const scrollY = DomUtils.getViewPort().y;
 
   function toggleFixedChildPanels(fixed, deltaY) {
-    var parent;
+    let parent;
 
-    for (var i = 0; i < visiblePanels.length; i++) {
-      if (visiblePanels[i] != panel) {
+    for (let i = 0; i < visiblePanels.length; i++) {
+      if (visiblePanels[i] !== panel) {
         parent = visiblePanels[i].parent();
 
         while (parent && (parent = parent.parent())) {
-          if (parent == panel) {
+          if (parent === panel) {
             visiblePanels[i].fixed(fixed).moveBy(0, deltaY).repaint();
           }
         }
@@ -152,7 +153,7 @@ function repositionPanel(panel) {
 }
 
 function addRemove(add, ctrl) {
-  var i, zIndex = FloatPanel.zIndex || 0xFFFF, topModal;
+  let i, zIndex = FloatPanel.zIndex || 0xFFFF, topModal;
 
   if (add) {
     zOrder.push(ctrl);
@@ -179,7 +180,7 @@ function addRemove(add, ctrl) {
     }
   }
 
-  var modalBlockEl = DomQuery('#' + ctrl.classPrefix + 'modal-block', ctrl.getContainerElm())[0];
+  const modalBlockEl = DomQuery('#' + ctrl.classPrefix + 'modal-block', ctrl.getContainerElm())[0];
 
   if (topModal) {
     DomQuery(modalBlockEl).css('z-index', topModal.zIndex - 1);
@@ -191,7 +192,7 @@ function addRemove(add, ctrl) {
   FloatPanel.currentZIndex = zIndex;
 }
 
-var FloatPanel = Panel.extend({
+const FloatPanel = Panel.extend({
   Mixins: [Movable, Resizable],
 
   /**
@@ -201,8 +202,8 @@ var FloatPanel = Panel.extend({
    * @param {Object} settings Name/value object with settings.
    * @setting {Boolean} autohide Automatically hide the panel.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._super(settings);
     self._eventsRoot = self;
@@ -225,8 +226,9 @@ var FloatPanel = Panel.extend({
     }
 
     self.on('postrender show', function (e) {
-      if (e.control == self) {
-        var $modalBlockEl, prefix = self.classPrefix;
+      if (e.control === self) {
+        let $modalBlockEl;
+        const prefix = self.classPrefix;
 
         if (self.modal && !hasModal) {
           $modalBlockEl = DomQuery('#' + prefix + 'modal-block', self.getContainerElm());
@@ -267,12 +269,12 @@ var FloatPanel = Panel.extend({
     self.aria('describedby', self.describedBy || self._id + '-none');
   },
 
-  fixed: function (state) {
-    var self = this;
+  fixed (state) {
+    const self = this;
 
-    if (self.state.get('fixed') != state) {
+    if (self.state.get('fixed') !== state) {
       if (self.state.get('rendered')) {
-        var viewport = DomUtils.getViewPort();
+        const viewport = DomUtils.getViewPort();
 
         if (state) {
           self.layoutRect().y -= viewport.y;
@@ -294,8 +296,10 @@ var FloatPanel = Panel.extend({
    * @method show
    * @return {tinymce.ui.FloatPanel} Current floatpanel instance.
    */
-  show: function () {
-    var self = this, i, state = self._super();
+  show () {
+    const self = this;
+    let i;
+    const state = self._super();
 
     i = visiblePanels.length;
     while (i--) {
@@ -317,7 +321,7 @@ var FloatPanel = Panel.extend({
    * @method hide
    * @return {tinymce.ui.FloatPanel} Current floatpanel instance.
    */
-  hide: function () {
+  hide () {
     removeVisiblePanel(this);
     addRemove(false, this);
 
@@ -330,7 +334,7 @@ var FloatPanel = Panel.extend({
    *
    * @method hideAll
    */
-  hideAll: function () {
+  hideAll () {
     FloatPanel.hideAll();
   },
 
@@ -339,8 +343,8 @@ var FloatPanel = Panel.extend({
    *
    * @method close
    */
-  close: function () {
-    var self = this;
+  close () {
+    const self = this;
 
     if (!self.fire('close').isDefaultPrevented()) {
       self.remove();
@@ -355,13 +359,13 @@ var FloatPanel = Panel.extend({
    *
    * @method remove
    */
-  remove: function () {
+  remove () {
     removeVisiblePanel(this);
     this._super();
   },
 
-  postRender: function () {
-    var self = this;
+  postRender () {
+    const self = this;
 
     if (self.settings.bodyRole) {
       this.getEl('body').setAttribute('role', self.settings.bodyRole);
@@ -379,10 +383,10 @@ var FloatPanel = Panel.extend({
  * @method hideAll
  */
 FloatPanel.hideAll = function () {
-  var i = visiblePanels.length;
+  let i = visiblePanels.length;
 
   while (i--) {
-    var panel = visiblePanels[i];
+    const panel = visiblePanels[i];
 
     if (panel && panel.settings.autohide) {
       panel.hide();
@@ -392,7 +396,7 @@ FloatPanel.hideAll = function () {
 };
 
 function removeVisiblePanel(panel) {
-  var i;
+  let i;
 
   i = visiblePanels.length;
   while (i--) {
@@ -409,4 +413,4 @@ function removeVisiblePanel(panel) {
   }
 }
 
-export default <any> FloatPanel;
+export default FloatPanel;

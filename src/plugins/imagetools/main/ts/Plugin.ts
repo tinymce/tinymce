@@ -16,8 +16,8 @@ import Buttons from './ui/Buttons';
 import ContextToolbar from './ui/ContextToolbar';
 
 PluginManager.add('imagetools', function (editor) {
-  var imageUploadTimerState = Cell(0);
-  var lastSelectedImageState = Cell(null);
+  const imageUploadTimerState = Cell(0);
+  const lastSelectedImageState = Cell(null);
 
   Commands.register(editor, imageUploadTimerState);
   Buttons.register(editor);
@@ -26,4 +26,4 @@ PluginManager.add('imagetools', function (editor) {
   UploadSelectedImage.setup(editor, imageUploadTimerState, lastSelectedImageState);
 });
 
-export default function () { };
+export default function () { }

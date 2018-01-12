@@ -10,27 +10,30 @@
 
 import NodeType from './NodeType';
 
-var getPos = function (elm) {
-  var x = 0, y = 0;
+const getPos = function (elm) {
+  let x = 0, y = 0;
 
-  var offsetParent = elm;
+  let offsetParent = elm;
   while (offsetParent && offsetParent.nodeType) {
     x += offsetParent.offsetLeft || 0;
     y += offsetParent.offsetTop || 0;
     offsetParent = offsetParent.offsetParent;
   }
 
-  return { x: x, y: y };
+  return { x, y };
 };
 
-var fireScrollIntoViewEvent = function (editor, elm, alignToTop) {
-  var scrollEvent: any = { elm: elm, alignToTop: alignToTop };
+const fireScrollIntoViewEvent = function (editor, elm, alignToTop) {
+  const scrollEvent: any = { elm, alignToTop };
   editor.fire('scrollIntoView', scrollEvent);
   return scrollEvent.isDefaultPrevented();
 };
 
-var scrollIntoView = function (editor, elm, alignToTop) {
-  var y, viewPort, dom = editor.dom, root = dom.getRoot(), viewPortY, viewPortH, offsetY = 0;
+const scrollIntoView = function (editor, elm, alignToTop) {
+  let y, viewPort;
+  const dom = editor.dom;
+  const root = dom.getRoot();
+  let viewPortY, viewPortH, offsetY = 0;
 
   if (fireScrollIntoViewEvent(editor, elm, alignToTop)) {
     return;
@@ -45,7 +48,7 @@ var scrollIntoView = function (editor, elm, alignToTop) {
   }
 
   if (root.nodeName !== 'BODY') {
-    var scrollContainer = editor.selection.getScrollContainer();
+    const scrollContainer = editor.selection.getScrollContainer();
     if (scrollContainer) {
       y = getPos(elm).y - getPos(scrollContainer).y + offsetY;
       viewPortH = scrollContainer.clientHeight;
@@ -68,5 +71,5 @@ var scrollIntoView = function (editor, elm, alignToTop) {
 };
 
 export default {
-  scrollIntoView: scrollIntoView
+  scrollIntoView
 };

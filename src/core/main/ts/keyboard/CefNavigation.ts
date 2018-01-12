@@ -21,12 +21,12 @@ import RangeNodes from '../selection/RangeNodes';
 import Arr from '../util/Arr';
 import Fun from '../util/Fun';
 
-var isContentEditableFalse = NodeType.isContentEditableFalse;
-var getSelectedNode = RangeNodes.getSelectedNode;
-var isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse;
-var isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse;
+const isContentEditableFalse = NodeType.isContentEditableFalse;
+const getSelectedNode = RangeNodes.getSelectedNode;
+const isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse;
+const isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse;
 
-var getVisualCaretPosition = function (walkFn, caretPosition) {
+const getVisualCaretPosition = function (walkFn, caretPosition) {
   while ((caretPosition = walkFn(caretPosition))) {
     if (caretPosition.isVisible()) {
       return caretPosition;
@@ -36,8 +36,8 @@ var getVisualCaretPosition = function (walkFn, caretPosition) {
   return caretPosition;
 };
 
-var isMoveInsideSameBlock = function (fromCaretPosition, toCaretPosition) {
-  var inSameBlock = CaretUtils.isInSameBlock(fromCaretPosition, toCaretPosition);
+const isMoveInsideSameBlock = function (fromCaretPosition, toCaretPosition) {
+  const inSameBlock = CaretUtils.isInSameBlock(fromCaretPosition, toCaretPosition);
 
   // Handle bogus BR <p>abc|<br></p>
   if (!inSameBlock && NodeType.isBr(fromCaretPosition.getNode())) {
@@ -47,11 +47,11 @@ var isMoveInsideSameBlock = function (fromCaretPosition, toCaretPosition) {
   return inSameBlock;
 };
 
-var isRangeInCaretContainerBlock = function (range) {
+const isRangeInCaretContainerBlock = function (range) {
   return CaretContainer.isCaretContainerBlock(range.startContainer);
 };
 
-var getNormalizedRangeEndPoint = function (direction, rootNode, range) {
+const getNormalizedRangeEndPoint = function (direction, rootNode, range) {
   range = CaretUtils.normalizeRange(direction, rootNode, range);
 
   if (direction === -1) {
@@ -61,8 +61,8 @@ var getNormalizedRangeEndPoint = function (direction, rootNode, range) {
   return CaretPosition.fromRangeEnd(range);
 };
 
-var moveToCeFalseHorizontally = function (direction, editor, getNextPosFn, isBeforeContentEditableFalseFn, range) {
-  var node, caretPosition, peekCaretPosition, rangeIsInContainerBlock;
+const moveToCeFalseHorizontally = function (direction, editor, getNextPosFn, isBeforeContentEditableFalseFn, range) {
+  let node, caretPosition, peekCaretPosition, rangeIsInContainerBlock;
 
   if (!range.collapsed) {
     node = getSelectedNode(range);
@@ -106,8 +106,8 @@ var moveToCeFalseHorizontally = function (direction, editor, getNextPosFn, isBef
   return null;
 };
 
-var moveToCeFalseVertically = function (direction, editor, walkerFn, range) {
-  var caretPosition, linePositions, nextLinePositions,
+const moveToCeFalseVertically = function (direction, editor, walkerFn, range) {
+  let caretPosition, linePositions, nextLinePositions,
     closestNextLineRect, caretClientRect, clientX,
     dist1, dist2, contentEditableFalseNode;
 
@@ -142,7 +142,7 @@ var moveToCeFalseVertically = function (direction, editor, walkerFn, range) {
   }
 
   if (contentEditableFalseNode) {
-    var caretPositions = LineWalker.positionsUntil(direction, editor.getBody(), LineWalker.isAboveLine(1), contentEditableFalseNode);
+    const caretPositions = LineWalker.positionsUntil(direction, editor.getBody(), LineWalker.isAboveLine(1), contentEditableFalseNode);
 
     closestNextLineRect = LineUtils.findClosestClientRect(Arr.filter(caretPositions, LineWalker.isLine(1)), clientX);
     if (closestNextLineRect) {
@@ -156,8 +156,8 @@ var moveToCeFalseVertically = function (direction, editor, walkerFn, range) {
   }
 };
 
-var createTextBlock = function (editor) {
-  var textBlock = editor.dom.create(editor.settings.forced_root_block);
+const createTextBlock = function (editor) {
+  const textBlock = editor.dom.create(editor.settings.forced_root_block);
 
   if (!Env.ie || Env.ie >= 11) {
     textBlock.innerHTML = '<br data-mce-bogus="1">';
@@ -166,11 +166,11 @@ var createTextBlock = function (editor) {
   return textBlock;
 };
 
-var exitPreBlock = function (editor, direction, range) {
-  var pre, caretPos, newBlock;
-  var caretWalker = CaretWalker(editor.getBody());
-  var getNextVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.next);
-  var getPrevVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.prev);
+const exitPreBlock = function (editor, direction, range) {
+  let pre, caretPos, newBlock;
+  const caretWalker = CaretWalker(editor.getBody());
+  const getNextVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.next);
+  const getPrevVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.prev);
 
   if (range.collapsed && editor.settings.forced_root_block) {
     pre = editor.dom.getParent(range.startContainer, 'PRE');
@@ -199,14 +199,15 @@ var exitPreBlock = function (editor, direction, range) {
   }
 };
 
-var getHorizontalRange = function (editor, forward) {
-  var caretWalker = CaretWalker(editor.getBody());
-  var getNextVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.next);
-  var getPrevVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.prev);
-  var newRange, direction = forward ? 1 : -1;
-  var getNextPosFn = forward ? getNextVisualCaretPosition : getPrevVisualCaretPosition;
-  var isBeforeContentEditableFalseFn = forward ? isBeforeContentEditableFalse : isAfterContentEditableFalse;
-  var range = editor.selection.getRng();
+const getHorizontalRange = function (editor, forward) {
+  const caretWalker = CaretWalker(editor.getBody());
+  const getNextVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.next);
+  const getPrevVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.prev);
+  let newRange;
+  const direction = forward ? 1 : -1;
+  const getNextPosFn = forward ? getNextVisualCaretPosition : getPrevVisualCaretPosition;
+  const isBeforeContentEditableFalseFn = forward ? isBeforeContentEditableFalse : isAfterContentEditableFalse;
+  const range = editor.selection.getRng();
 
   newRange = moveToCeFalseHorizontally(direction, editor, getNextPosFn, isBeforeContentEditableFalseFn, range);
   if (newRange) {
@@ -221,10 +222,11 @@ var getHorizontalRange = function (editor, forward) {
   return null;
 };
 
-var getVerticalRange = function (editor, down) {
-  var newRange, direction = down ? 1 : -1;
-  var walkerFn = down ? LineWalker.downUntil : LineWalker.upUntil;
-  var range = editor.selection.getRng();
+const getVerticalRange = function (editor, down) {
+  let newRange;
+  const direction = down ? 1 : -1;
+  const walkerFn = down ? LineWalker.downUntil : LineWalker.upUntil;
+  const range = editor.selection.getRng();
 
   newRange = moveToCeFalseVertically(direction, editor, walkerFn, range);
   if (newRange) {
@@ -239,9 +241,9 @@ var getVerticalRange = function (editor, down) {
   return null;
 };
 
-var moveH = function (editor, forward) {
+const moveH = function (editor, forward) {
   return function () {
-    var newRng = getHorizontalRange(editor, forward);
+    const newRng = getHorizontalRange(editor, forward);
 
     if (newRng) {
       editor.selection.setRng(newRng);
@@ -252,9 +254,9 @@ var moveH = function (editor, forward) {
   };
 };
 
-var moveV = function (editor, down) {
+const moveV = function (editor, down) {
   return function () {
-    var newRng = getVerticalRange(editor, down);
+    const newRng = getVerticalRange(editor, down);
 
     if (newRng) {
       editor.selection.setRng(newRng);
@@ -266,6 +268,6 @@ var moveV = function (editor, down) {
 };
 
 export default {
-  moveH: moveH,
-  moveV: moveV
+  moveH,
+  moveV
 };

@@ -11,30 +11,30 @@
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import NodeType from './NodeType';
 
-var getNormalizedEndPoint = function (container, offset) {
-  var node = RangeUtils.getNode(container, offset);
+const getNormalizedEndPoint = function (container, offset) {
+  const node = RangeUtils.getNode(container, offset);
 
   if (NodeType.isListItemNode(container) && NodeType.isTextNode(node)) {
-    var textNodeOffset = offset >= container.childNodes.length ? node.data.length : 0;
+    const textNodeOffset = offset >= container.childNodes.length ? node.data.length : 0;
     return { container: node, offset: textNodeOffset };
   }
 
-  return { container: container, offset: offset };
+  return { container, offset };
 };
 
-var normalizeRange = function (rng) {
-  var outRng = rng.cloneRange();
+const normalizeRange = function (rng) {
+  const outRng = rng.cloneRange();
 
-  var rangeStart = getNormalizedEndPoint(rng.startContainer, rng.startOffset);
+  const rangeStart = getNormalizedEndPoint(rng.startContainer, rng.startOffset);
   outRng.setStart(rangeStart.container, rangeStart.offset);
 
-  var rangeEnd = getNormalizedEndPoint(rng.endContainer, rng.endOffset);
+  const rangeEnd = getNormalizedEndPoint(rng.endContainer, rng.endOffset);
   outRng.setEnd(rangeEnd.container, rangeEnd.offset);
 
   return outRng;
 };
 
 export default {
-  getNormalizedEndPoint: getNormalizedEndPoint,
-  normalizeRange: normalizeRange
+  getNormalizedEndPoint,
+  normalizeRange
 };

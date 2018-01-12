@@ -14,14 +14,14 @@ declare let tinymce: any;
 
 ColorPickerPlugin();
 
-var elm: any = document.querySelector('.tinymce');
+const elm: any = document.querySelector('.tinymce');
 elm.value = '<table><tbody><tr><td>One</td></tr></tbody></table>';
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "table colorpicker code",
-  toolbar: "table code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'table colorpicker code',
+  toolbar: 'table code',
   height: 600
 });

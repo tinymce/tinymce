@@ -14,21 +14,21 @@ import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   ImagePlugin();
 
-  var cFakeEvent = function (name) {
+  const cFakeEvent = function (name) {
     return Chain.op(function (elm) {
       DOMUtils.DOM.fire(elm.dom(), name);
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       Logger.t('image proportion constrains should work directly', GeneralSteps.sequence([
@@ -74,9 +74,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', function() {
     plugins: 'image',
     toolbar: 'image',
     skin_url: '/project/js/tinymce/skins/lightgray',
-    file_picker_callback: function (callback) {
+    file_picker_callback (callback) {
       callback('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
     }
   }, success, failure);
 });
-

@@ -12,7 +12,7 @@ import VK from 'tinymce/core/util/VK';
 import Formatter from './Formatter';
 
 function handleEnter(editor, patterns) {
-  var wrappedTextNode, rng;
+  let wrappedTextNode, rng;
 
   wrappedTextNode = Formatter.applyInlineFormatEnter(editor, patterns);
   if (wrappedTextNode) {
@@ -26,7 +26,7 @@ function handleEnter(editor, patterns) {
 }
 
 function handleInlineKey(editor, patterns) {
-  var wrappedTextNode, lastChar, lastCharNode, rng, dom;
+  let wrappedTextNode, lastChar, lastCharNode, rng, dom;
 
   wrappedTextNode = Formatter.applyInlineFormatSpace(editor, patterns);
   if (wrappedTextNode) {
@@ -48,29 +48,29 @@ function handleInlineKey(editor, patterns) {
   }
 }
 
-var checkKeyEvent = function (codes, event, predicate) {
-  for (var i = 0; i < codes.length; i++) {
+const checkKeyEvent = function (codes, event, predicate) {
+  for (let i = 0; i < codes.length; i++) {
     if (predicate(codes[i], event)) {
       return true;
     }
   }
 };
 
-var checkKeyCode = function (codes, event) {
+const checkKeyCode = function (codes, event) {
   return checkKeyEvent(codes, event, function (code, event) {
     return code === event.keyCode && VK.modifierPressed(event) === false;
   });
 };
 
-var checkCharCode = function (chars, event) {
+const checkCharCode = function (chars, event) {
   return checkKeyEvent(chars, event, function (chr, event) {
     return chr.charCodeAt(0) === event.charCode;
   });
 };
 
 export default {
-  handleEnter: handleEnter,
-  handleInlineKey: handleInlineKey,
-  checkCharCode: checkCharCode,
-  checkKeyCode: checkKeyCode
+  handleEnter,
+  handleInlineKey,
+  checkCharCode,
+  checkKeyCode
 };

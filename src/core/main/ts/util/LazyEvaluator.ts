@@ -10,9 +10,9 @@
 
 import { Option } from '@ephox/katamari';
 
-var evaluateUntil = function (fns, args) {
-  for (var i = 0; i < fns.length; i++) {
-    var result = fns[i].apply(null, args);
+const evaluateUntil = function (fns, args) {
+  for (let i = 0; i < fns.length; i++) {
+    const result = fns[i].apply(null, args);
     if (result.isSome()) {
       return result;
     }
@@ -22,5 +22,5 @@ var evaluateUntil = function (fns, args) {
 };
 
 export default {
-  evaluateUntil: evaluateUntil
+  evaluateUntil
 };

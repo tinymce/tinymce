@@ -9,18 +9,18 @@ import TemplatePlugin from 'tinymce/plugins/template/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.template.DatesTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.template.DatesTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   TemplatePlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
-    var tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
 
-    var sDeleteSetting = function (key) {
+    const sDeleteSetting = function (key) {
       return Step.sync(function () {
         delete editor.settings[key];
       });
@@ -97,4 +97,3 @@ UnitTest.asynctest('browser.tinymce.plugins.template.DatesTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

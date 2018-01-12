@@ -20,9 +20,7 @@ import DomUtils from './DomUtils';
  * @extends tinymce.ui.Widget
  */
 
-
-
-export default <any> Widget.extend({
+export default Widget.extend({
   /**
    * Constructs a instance with the specified settings.
    *
@@ -32,12 +30,12 @@ export default <any> Widget.extend({
    * @setting {Number} maxLength Max length for the dropzone.
    * @setting {Number} size Size of the dropzone in characters.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     settings = Tools.extend({
       height: 100,
-      text: "Drop an image here",
+      text: 'Drop an image here',
       multiple: false,
       accept: null // by default accept any files
     }, settings);
@@ -57,9 +55,10 @@ export default <any> Widget.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, attrs, elm;
-    var cfg = self.settings;
+  renderHtml () {
+    const self = this;
+    let attrs, elm;
+    const cfg = self.settings;
 
     attrs = {
       id: self._id,
@@ -81,28 +80,27 @@ export default <any> Widget.extend({
     return elm.outerHTML;
   },
 
-
     /**
    * Called after the control has been rendered.
    *
    * @method postRender
    */
-  postRender: function () {
-    var self = this;
+  postRender () {
+    const self = this;
 
-    var toggleDragClass = function (e) {
+    const toggleDragClass = function (e) {
       e.preventDefault();
       self.classes.toggle('dragenter');
       self.getEl().className = self.classes;
     };
 
-    var filter = function (files) {
-      var accept = self.settings.accept;
+    const filter = function (files) {
+      const accept = self.settings.accept;
       if (typeof accept !== 'string') {
         return files;
       }
 
-      var re = new RegExp('(' + accept.split(/\s*,\s*/).join('|') + ')$', 'i');
+      const re = new RegExp('(' + accept.split(/\s*,\s*/).join('|') + ')$', 'i');
       return Tools.grep(files, function (file) {
         return re.test(file.name);
       });
@@ -124,7 +122,7 @@ export default <any> Widget.extend({
         return;
       }
 
-      var files = filter(e.dataTransfer.files);
+      const files = filter(e.dataTransfer.files);
 
       self.value = function () {
         if (!files.length) {
@@ -142,7 +140,7 @@ export default <any> Widget.extend({
     });
   },
 
-  remove: function () {
+  remove () {
     this.$el.off();
     this._super();
   }

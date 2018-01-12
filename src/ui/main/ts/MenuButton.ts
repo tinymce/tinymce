@@ -20,8 +20,6 @@ import MenuBar from './MenuBar';
  * @extends tinymce.ui.Button
  */
 
-"use strict";
-
 // TODO: Maybe add as some global function
 function isChildOf(node, parent) {
   while (node) {
@@ -35,15 +33,15 @@ function isChildOf(node, parent) {
   return false;
 }
 
-var MenuButton = Button.extend({
+const MenuButton = Button.extend({
   /**
    * Constructs a instance with the specified settings.
    *
    * @constructor
    * @param {Object} settings Name/value object with settings.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._renderOpen = true;
 
@@ -66,8 +64,9 @@ var MenuButton = Button.extend({
    *
    * @method showMenu
    */
-  showMenu: function (toggle) {
-    var self = this, menu;
+  showMenu (toggle) {
+    const self = this;
+    let menu;
 
     if (self.menu && self.menu.visible() && toggle !== false) {
       return self.hideMenu();
@@ -112,11 +111,11 @@ var MenuButton = Button.extend({
 
       self.menu.on('show hide', function (e) {
         if (e.control === self.menu) {
-          self.activeMenu(e.type == 'show');
-          self.classes.toggle('opened', e.type == 'show');
+          self.activeMenu(e.type === 'show');
+          self.classes.toggle('opened', e.type === 'show');
         }
 
-        self.aria('expanded', e.type == 'show');
+        self.aria('expanded', e.type === 'show');
       }).fire('show');
     }
 
@@ -131,8 +130,8 @@ var MenuButton = Button.extend({
    *
    * @method hideMenu
    */
-  hideMenu: function () {
-    var self = this;
+  hideMenu () {
+    const self = this;
 
     if (self.menu) {
       self.menu.items().each(function (item) {
@@ -150,7 +149,7 @@ var MenuButton = Button.extend({
    *
    * @private
    */
-  activeMenu: function (state) {
+  activeMenu (state) {
     this.classes.toggle('active', state);
   },
 
@@ -160,17 +159,18 @@ var MenuButton = Button.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, id = self._id, prefix = self.classPrefix;
-    var icon = self.settings.icon, image, text = self.state.get('text'),
-      textHtml = '';
+  renderHtml () {
+    const self = this, id = self._id, prefix = self.classPrefix;
+    let icon = self.settings.icon, image;
+    const text = self.state.get('text');
+    let textHtml = '';
 
     image = self.settings.image;
     if (image) {
       icon = 'none';
 
       // Support for [high dpi, low dpi] image sources
-      if (typeof image != "string") {
+      if (typeof image !== 'string') {
         image = window.getSelection ? image[0] : image[1];
       }
 
@@ -204,8 +204,8 @@ var MenuButton = Button.extend({
    *
    * @method postRender
    */
-  postRender: function () {
-    var self = this;
+  postRender () {
+    const self = this;
 
     self.on('click', function (e) {
       if (e.control === self && isChildOf(e.target, self.getEl())) {
@@ -219,11 +219,13 @@ var MenuButton = Button.extend({
     });
 
     self.on('mouseenter', function (e) {
-      var overCtrl = e.control, parent = self.parent(), hasVisibleSiblingMenu;
+      const overCtrl = e.control;
+      const parent = self.parent();
+      let hasVisibleSiblingMenu;
 
-      if (overCtrl && parent && overCtrl instanceof MenuButton && overCtrl.parent() == parent) {
+      if (overCtrl && parent && overCtrl instanceof MenuButton && overCtrl.parent() === parent) {
         parent.items().filter('MenuButton').each(function (ctrl) {
-          if (ctrl.hideMenu && ctrl != overCtrl) {
+          if (ctrl.hideMenu && ctrl !== overCtrl) {
             if (ctrl.menu && ctrl.menu.visible()) {
               hasVisibleSiblingMenu = true;
             }
@@ -242,8 +244,8 @@ var MenuButton = Button.extend({
     return self._super();
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     self.state.on('change:menu', function () {
       if (self.menu) {
@@ -261,7 +263,7 @@ var MenuButton = Button.extend({
    *
    * @method remove
    */
-  remove: function () {
+  remove () {
     this._super();
 
     if (this.menu) {
@@ -270,4 +272,4 @@ var MenuButton = Button.extend({
   }
 });
 
-export default <any> MenuButton;
+export default MenuButton;

@@ -8,51 +8,51 @@ import Theme from 'tinymce/themes/modern/Theme';
 import FilePicker from 'tinymce/ui/FilePicker';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
   LinkPlugin();
 
-  var getFilePickerCtrl = function (editor) {
-    var win = editor.windowManager.getWindows()[0];
+  const getFilePickerCtrl = function (editor) {
+    const win = editor.windowManager.getWindows()[0];
     return win ? win.find('filepicker')[0] : null;
   };
 
-  var keydownOnCtrl = function (pickerCtrl, keyCode) {
+  const keydownOnCtrl = function (pickerCtrl, keyCode) {
     return new Promise(function (resolve) {
-      pickerCtrl.fire('keydown', { target: pickerCtrl.getEl('inp'), keyCode: keyCode });
+      pickerCtrl.fire('keydown', { target: pickerCtrl.getEl('inp'), keyCode });
       resolve(pickerCtrl);
     });
   };
 
-  var downOnMenu = function (editor) {
+  const downOnMenu = function (editor) {
     return function () {
       return keydownOnCtrl(getFilePickerCtrl(editor).menu, VK.DOWN);
     };
   };
 
-  var enterOnMenu = function (editor) {
+  const enterOnMenu = function (editor) {
     return function () {
       return keydownOnCtrl(getFilePickerCtrl(editor).menu, VK.ENTER);
     };
   };
 
-  var downOnPicker = function (editor) {
+  const downOnPicker = function (editor) {
     return function () {
       return keydownOnCtrl(getFilePickerCtrl(editor), VK.DOWN);
     };
   };
 
-  var enterOnPicker = function (editor) {
+  const enterOnPicker = function (editor) {
     return function () {
       return keydownOnCtrl(getFilePickerCtrl(editor), VK.ENTER);
     };
   };
 
-  var setContent = function (editor, content) {
+  const setContent = function (editor, content) {
     return function () {
       return new Promise(function (resolve) {
         editor.setContent(content);
@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function() {
     };
   };
 
-  var execCommand = function (editor, cmd) {
+  const execCommand = function (editor, cmd) {
     return function () {
       return new Promise(function (resolve) {
         editor.execCommand(cmd);
@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function() {
     };
   };
 
-  var assertContent = function (editor, exceptedContent) {
+  const assertContent = function (editor, exceptedContent) {
     return function () {
       return new Promise(function (resolve) {
         LegacyUnit.equal(editor.getContent(), exceptedContent, 'Should have the expected content');
@@ -79,12 +79,12 @@ UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function() {
     };
   };
 
-  var waitFor = function (predicate, poll, timeout) {
+  const waitFor = function (predicate, poll, timeout) {
     return function () {
-      var start = new Date().getTime();
+      const start = new Date().getTime();
 
       return new Promise(function (resolve, reject) {
-        var check = function () {
+        const check = function () {
           if (predicate()) {
             resolve();
             return;
@@ -103,10 +103,10 @@ UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function() {
     };
   };
 
-  var waitForMenu = function (editor) {
+  const waitForMenu = function (editor) {
     return waitFor(
       function () {
-        var pickerCtrl = getFilePickerCtrl(editor);
+        const pickerCtrl = getFilePickerCtrl(editor);
         return pickerCtrl && pickerCtrl.menu;
       },
       100,
@@ -114,7 +114,7 @@ UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function() {
     );
   };
 
-  var setCaret = function (editor, selector, index) {
+  const setCaret = function (editor, selector, index) {
     return function () {
       return new Promise(function (resolve) {
         LegacyUnit.setSelection(editor, selector, index);
@@ -123,31 +123,31 @@ UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function() {
     };
   };
 
-  var assertValue = function (editor, expectedValue) {
+  const assertValue = function (editor, expectedValue) {
     return function () {
       return new Promise(function (resolve) {
-        var pickerCtrl = getFilePickerCtrl(editor);
+        const pickerCtrl = getFilePickerCtrl(editor);
         LegacyUnit.equal(pickerCtrl.value(), expectedValue, 'Should have the correct file picker value');
         resolve(pickerCtrl);
       });
     };
   };
 
-  var setPickerValue = function (editor, value) {
+  const setPickerValue = function (editor, value) {
     return function () {
       return new Promise(function (resolve) {
-        var pickerCtrl = getFilePickerCtrl(editor);
+        const pickerCtrl = getFilePickerCtrl(editor);
         pickerCtrl.value(value);
         resolve(pickerCtrl);
       });
     };
   };
 
-  var waitForStatusChange = function (editor) {
+  const waitForStatusChange = function (editor) {
     return waitFor(
       function () {
-        var pickerCtrl = getFilePickerCtrl(editor);
-        var msg = pickerCtrl.statusMessage();
+        const pickerCtrl = getFilePickerCtrl(editor);
+        const msg = pickerCtrl.statusMessage();
         return msg && msg.length > 0;
       },
       100,
@@ -155,10 +155,10 @@ UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function() {
     );
   };
 
-  var assertStatus = function (editor, level, message) {
+  const assertStatus = function (editor, level, message) {
     return function () {
       return new Promise(function (resolve) {
-        var pickerCtrl = getFilePickerCtrl(editor);
+        const pickerCtrl = getFilePickerCtrl(editor);
         LegacyUnit.equal(pickerCtrl.statusLevel(), level);
         LegacyUnit.equal(pickerCtrl.statusMessage(), message);
         resolve(pickerCtrl);
@@ -166,12 +166,12 @@ UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function() {
     };
   };
 
-  var sequence = function (fs) {
+  const sequence = function (fs) {
     return new Promise(function (resolve) {
-      var result = [];
+      const result = [];
 
-      var next = function () {
-        var f = fs.shift();
+      const next = function () {
+        const f = fs.shift();
 
         if (f) {
           f().then(function (res) {
@@ -257,9 +257,9 @@ UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function() {
     plugins: 'link',
     skin_url: '/project/js/tinymce/skins/lightgray',
     indent: false,
-    filepicker_validator_handler: function (query, success) {
+    filepicker_validator_handler (query, success) {
       window.setTimeout(function () {
-        var valid = query.url.indexOf('fake') === -1;
+        const valid = query.url.indexOf('fake') === -1;
 
         success({
           status: valid ? 'valid' : 'invalid',
@@ -269,4 +269,3 @@ UnitTest.asynctest('browser.tinymce.ui.FilePickerTest', function() {
     }
   }, success, failure);
 });
-

@@ -14,23 +14,23 @@ import SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var viewBlock = ViewBlock();
+  const viewBlock = ViewBlock();
 
-  var cSetHtml = function (html) {
+  const cSetHtml = function (html) {
     return Chain.op(function (vb) {
       vb.update(html);
     });
   };
 
-  var cSetSelection = function (startPath, soffset, finishPath, foffset) {
+  const cSetSelection = function (startPath, soffset, finishPath, foffset) {
     return Chain.op(function () {
-      var sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie('invalid startPath');
-      var fc = Hierarchy.follow(Element.fromDom(viewBlock.get()), finishPath).getOrDie('invalid finishPath');
-      var win = Traverse.defaultView(sc);
+      const sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie('invalid startPath');
+      const fc = Hierarchy.follow(Element.fromDom(viewBlock.get()), finishPath).getOrDie('invalid finishPath');
+      const win = Traverse.defaultView(sc);
 
       WindowSelection.setExact(
         win.dom(), sc, soffset, fc, foffset
@@ -38,16 +38,16 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     });
   };
 
-  var cGetBookmark = function (rootPath) {
+  const cGetBookmark = function (rootPath) {
     return Chain.mapper(function () {
-      var root = Hierarchy.follow(Element.fromDom(viewBlock.get()), rootPath).getOrDie();
+      const root = Hierarchy.follow(Element.fromDom(viewBlock.get()), rootPath).getOrDie();
       return SelectionBookmark.getBookmark(root);
     });
   };
 
-  var cValidateBookmark = function (rootPath) {
+  const cValidateBookmark = function (rootPath) {
     return Chain.on(function (input, next, die) {
-      var root = Hierarchy.follow(Element.fromDom(viewBlock.get()), rootPath).getOrDie();
+      const root = Hierarchy.follow(Element.fromDom(viewBlock.get()), rootPath).getOrDie();
 
       return input.each(function (b) {
         return next(Chain.wrap(SelectionBookmark.validate(root, b)));
@@ -55,22 +55,22 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     });
   };
 
-  var cAssertNone = Chain.op(function (x) {
+  const cAssertNone = Chain.op(function (x) {
     RawAssertions.assertEq('should be none', true, x.isNone());
   });
 
-  var cAssertSome = Chain.op(function (x) {
+  const cAssertSome = Chain.op(function (x) {
     RawAssertions.assertEq('should be some', true, x.isSome());
   });
 
-  var cAssertSelection = function (startPath, startOffset, finishPath, finishOffset) {
+  const cAssertSelection = function (startPath, startOffset, finishPath, finishOffset) {
     return Chain.op(function () {
-      var sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
-      var fc = Hierarchy.follow(Element.fromDom(viewBlock.get()), finishPath).getOrDie();
+      const sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
+      const fc = Hierarchy.follow(Element.fromDom(viewBlock.get()), finishPath).getOrDie();
 
-      var win = Traverse.defaultView(Element.fromDom(viewBlock.get()));
+      const win = Traverse.defaultView(Element.fromDom(viewBlock.get()));
 
-      var sel = WindowSelection.getExact(win.dom()).getOrDie('no selection');
+      const sel = WindowSelection.getExact(win.dom()).getOrDie('no selection');
 
       Assertions.assertDomEq('sc', sc, sel.start());
       Assertions.assertEq('soffset', startOffset, sel.soffset());
@@ -79,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     });
   };
 
-  var cManipulateBookmarkOffsets = function (startPad, finishPad) {
+  const cManipulateBookmarkOffsets = function (startPad, finishPad) {
     return Chain.mapper(function (bookmark) {
       return bookmark
         .map(function (bm) {
@@ -88,18 +88,18 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     });
   };
 
-  var cDeleteElement = function (path) {
+  const cDeleteElement = function (path) {
     return Chain.op(function () {
       Hierarchy.follow(Element.fromDom(viewBlock.get()), path).each(Remove.remove);
     });
   };
 
-  var cAssertBookmark = function (startPath, startOffset, finishPath, finishOffset) {
+  const cAssertBookmark = function (startPath, startOffset, finishPath, finishOffset) {
     return Chain.op(function (input) {
-      var sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
-      var fc = Hierarchy.follow(Element.fromDom(viewBlock.get()), finishPath).getOrDie();
+      const sc = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
+      const fc = Hierarchy.follow(Element.fromDom(viewBlock.get()), finishPath).getOrDie();
 
-      var bookmarkRng = input.getOrDie('no bookmark!');
+      const bookmarkRng = input.getOrDie('no bookmark!');
 
       Assertions.assertDomEq('sc', sc, bookmarkRng.start());
       Assertions.assertEq('soffset', startOffset, bookmarkRng.soffset());
@@ -108,10 +108,10 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     });
   };
 
-  var cSetSelectionFromBookmark = Chain.op(function (bookmark) {
+  const cSetSelectionFromBookmark = Chain.op(function (bookmark) {
     bookmark.each(function (b) {
-      var root = Element.fromDom(viewBlock.get());
-      var win = Traverse.defaultView(root);
+      const root = Element.fromDom(viewBlock.get());
+      const win = Traverse.defaultView(root);
 
       SelectionBookmark.validate(root, b)
         .each(function (rng) {
@@ -208,7 +208,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     ])),
     Logger.t('readRange with with win without getSelection should return Option.none', Chain.asStep({}, [
       Chain.mapper(function () {
-        var mockWin = { getSelection: Fun.constant(null) };
+        const mockWin = { getSelection: Fun.constant(null) };
         return SelectionBookmark.readRange(mockWin);
       }),
       cAssertNone
@@ -218,4 +218,3 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
     success();
   }, failure);
 });
-

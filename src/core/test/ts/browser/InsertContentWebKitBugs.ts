@@ -6,14 +6,14 @@ import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('Insert contents on a triple click selection should not produce odd spans', GeneralSteps.sequence([
@@ -31,4 +31,3 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function() {
     content_style: 'blockquote { font-size: 12px }' // Needed to produce spans with runtime styles
   }, success, failure);
 });
-

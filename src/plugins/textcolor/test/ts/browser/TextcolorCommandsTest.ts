@@ -8,21 +8,21 @@ import { UnitTest } from '@ephox/bedrock';
 UnitTest.asynctest(
   'browser.tinymce.plugins.textcolor.TextcolorCommandsTest',
   function () {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+    const success = arguments[arguments.length - 2];
+    const failure = arguments[arguments.length - 1];
 
     ModernTheme();
     TextcolorPlugin();
 
-    var state = Cell(null);
+    const state = Cell(null);
 
-    var sAssertState = function (expected) {
+    const sAssertState = function (expected) {
       return Step.sync(function () {
         RawAssertions.assertEq('should be same', expected, state.get());
       });
     };
 
-    var sResetState = Step.sync(function () {
+    const sResetState = Step.sync(function () {
       state.set(null);
     });
 
@@ -32,8 +32,8 @@ UnitTest.asynctest(
         state.set(e.command);
       });
 
-      var tinyUi = TinyUi(editor);
-      var tinyApis = TinyApis(editor);
+      const tinyUi = TinyUi(editor);
+      const tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
         Logger.t('apply and remove forecolor and make sure of the right command has been executed', GeneralSteps.sequence([

@@ -11,31 +11,31 @@
 import Settings from './Settings';
 import Actions from '../core/Actions';
 
-var get = function (editor, startedState, lastSuggestionsState, textMatcherState, url) {
-  var getLanguage = function () {
+const get = function (editor, startedState, lastSuggestionsState, textMatcherState, url) {
+  const getLanguage = function () {
     return Settings.getLanguage(editor);
   };
 
-  var getWordCharPattern = function () {
+  const getWordCharPattern = function () {
     return Settings.getSpellcheckerWordcharPattern(editor);
   };
 
-  var markErrors = function (data) {
+  const markErrors = function (data) {
     Actions.markErrors(editor, startedState, textMatcherState, lastSuggestionsState, data);
   };
 
-  var getTextMatcher = function () {
+  const getTextMatcher = function () {
     return textMatcherState.get();
   };
 
   return {
-    getTextMatcher: getTextMatcher,
-    getWordCharPattern: getWordCharPattern,
-    markErrors: markErrors,
-    getLanguage: getLanguage
+    getTextMatcher,
+    getWordCharPattern,
+    markErrors,
+    getLanguage
   };
 };
 
 export default {
-  get: get
+  get
 };

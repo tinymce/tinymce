@@ -3,9 +3,9 @@ import IosScrolling from '../scroll/IosScrolling';
 import DeviceZones from './DeviceZones';
 import CursorRefresh from '../../touch/focus/CursorRefresh';
 
-var scrollIntoView = function (cWin, socket, dropup, top, bottom) {
-  var greenzone = DeviceZones.getGreenzone(socket, dropup);
-  var refreshCursor = Fun.curry(CursorRefresh.refresh, cWin);
+const scrollIntoView = function (cWin, socket, dropup, top, bottom) {
+  const greenzone = DeviceZones.getGreenzone(socket, dropup);
+  const refreshCursor = Fun.curry(CursorRefresh.refresh, cWin);
 
   if (top > greenzone || bottom > greenzone) {
     IosScrolling.moveOnlyScroll(socket, socket.dom().scrollTop - greenzone + bottom).get(refreshCursor);
@@ -16,6 +16,6 @@ var scrollIntoView = function (cWin, socket, dropup, top, bottom) {
   }
 };
 
-export default <any> {
-  scrollIntoView: scrollIntoView
+export default {
+  scrollIntoView
 };

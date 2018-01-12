@@ -21,8 +21,8 @@
  * var str = tinymce.util.JSON.serialize(obj);
  */
 
-var serialize = function (o, quote?) {
-  var i, v, t, name;
+const serialize = function (o, quote?) {
+  let i, v, t, name;
 
   quote = quote || '"';
 
@@ -32,13 +32,13 @@ var serialize = function (o, quote?) {
 
   t = typeof o;
 
-  if (t == 'string') {
+  if (t === 'string') {
     v = '\bb\tt\nn\ff\rr\""\'\'\\\\';
 
     /*eslint no-control-regex:0 */
     return quote + o.replace(/([\u0080-\uFFFF\x00-\x1f\"\'\\])/g, function (a, b) {
       // Make sure single quotes never get encoded inside double quotes for JSON compatibility
-      if (quote === '"' && a === "'") {
+      if (quote === '"' && a === '\'') {
         return a;
       }
 
@@ -54,7 +54,7 @@ var serialize = function (o, quote?) {
     }) + quote;
   }
 
-  if (t == 'object') {
+  if (t === 'object') {
     if (o.hasOwnProperty && Object.prototype.toString.call(o) === '[object Array]') {
       for (i = 0, v = '['; i < o.length; i++) {
         v += (i > 0 ? ',' : '') + serialize(o[i], quote);
@@ -67,7 +67,7 @@ var serialize = function (o, quote?) {
 
     for (name in o) {
       if (o.hasOwnProperty(name)) {
-        v += typeof o[name] != 'function' ? (v.length > 1 ? ',' + quote : quote) + name +
+        v += typeof o[name] !== 'function' ? (v.length > 1 ? ',' + quote : quote) + name +
           quote + ':' + serialize(o[name], quote) : '';
       }
     }
@@ -87,7 +87,7 @@ export default {
    * @param {String} quote Optional quote string defaults to ".
    * @return {string} JSON string serialized from input.
    */
-  serialize: serialize,
+  serialize,
 
   /**
    * Unserializes/parses the specified JSON string into a object.
@@ -96,7 +96,7 @@ export default {
    * @param {string} s JSON String to parse into a JavaScript object.
    * @return {Object} Object from input JSON string or undefined if it failed.
    */
-  parse: function (text) {
+  parse (text) {
     try {
       // Trick uglify JS
       return window[String.fromCharCode(101) + 'val']('(' + text + ')');

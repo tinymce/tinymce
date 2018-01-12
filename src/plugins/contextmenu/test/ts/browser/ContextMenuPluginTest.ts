@@ -13,28 +13,28 @@ import ContextMenuPlugin from 'tinymce/plugins/contextmenu/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.contextmenu.ContextMenuPluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.contextmenu.ContextMenuPluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   ContextMenuPlugin();
 
-  var sContextMenuClickInMiddleOf = function (editor, elementPath) {
+  const sContextMenuClickInMiddleOf = function (editor, elementPath) {
     return Step.sync(function () {
-      var element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie().dom();
-      var rect = element.getBoundingClientRect();
-      var clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie().dom();
+      const rect = element.getBoundingClientRect();
+      const clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
 
-      editor.fire('mousedown', { target: element, clientX: clientX, clientY: clientY, button: 2 });
-      editor.fire('mouseup', { target: element, clientX: clientX, clientY: clientY, button: 2 });
-      editor.fire('contextmenu', { target: element, clientX: clientX, clientY: clientY });
+      editor.fire('mousedown', { target: element, clientX, clientY, button: 2 });
+      editor.fire('mouseup', { target: element, clientX, clientY, button: 2 });
+      editor.fire('contextmenu', { target: element, clientX, clientY });
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
-    var tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('Context menu click on text', GeneralSteps.sequence([
@@ -74,4 +74,3 @@ UnitTest.asynctest('browser.tinymce.plugins.contextmenu.ContextMenuPluginTest', 
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

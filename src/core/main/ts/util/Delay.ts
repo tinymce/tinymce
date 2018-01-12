@@ -16,12 +16,13 @@ import Promise from './Promise';
  * @class tinymce.util.Delay
  */
 
-var requestAnimationFramePromise;
+let requestAnimationFramePromise;
 
-var requestAnimationFrame = function (callback, element?) {
-  var i, requestAnimationFrameFunc: any = window.requestAnimationFrame, vendors = ['ms', 'moz', 'webkit'];
+const requestAnimationFrame = function (callback, element?) {
+  let i, requestAnimationFrameFunc: any = window.requestAnimationFrame;
+  const vendors = ['ms', 'moz', 'webkit'];
 
-  var featurefill = function (callback) {
+  const featurefill = function (callback) {
     window.setTimeout(callback, 0);
   };
 
@@ -36,35 +37,35 @@ var requestAnimationFrame = function (callback, element?) {
   requestAnimationFrameFunc(callback, element);
 };
 
-var wrappedSetTimeout = function (callback, time?) {
-  if (typeof time != 'number') {
+const wrappedSetTimeout = function (callback, time?) {
+  if (typeof time !== 'number') {
     time = 0;
   }
 
   return setTimeout(callback, time);
 };
 
-var wrappedSetInterval = function (callback, time?) {
-  if (typeof time != 'number') {
+const wrappedSetInterval = function (callback, time?) {
+  if (typeof time !== 'number') {
     time = 1; // IE 8 needs it to be > 0
   }
 
   return setInterval(callback, time);
 };
 
-var wrappedClearTimeout = function (id) {
+const wrappedClearTimeout = function (id) {
   return clearTimeout(id);
 };
 
-var wrappedClearInterval = function (id) {
+const wrappedClearInterval = function (id) {
   return clearInterval(id);
 };
 
-var debounce = function (callback, time?) {
-  var timer, func;
+const debounce = function (callback, time?) {
+  let timer, func;
 
   func = function () {
-    var args = arguments;
+    const args = arguments;
 
     clearTimeout(timer);
 
@@ -88,7 +89,7 @@ export default {
    * @param {function} callback Callback to execute when a new frame is available.
    * @param {DOMElement} element Optional element to scope it to.
    */
-  requestAnimationFrame: function (callback, element?) {
+  requestAnimationFrame (callback, element?) {
     if (requestAnimationFramePromise) {
       requestAnimationFramePromise.then(callback);
       return;
@@ -133,7 +134,7 @@ export default {
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
    * @return {Number} Timeout id number.
    */
-  setEditorTimeout: function (editor, callback, time?) {
+  setEditorTimeout (editor, callback, time?) {
     return wrappedSetTimeout(function () {
       if (!editor.removed) {
         callback();
@@ -150,8 +151,8 @@ export default {
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
    * @return {Number} Timeout id number.
    */
-  setEditorInterval: function (editor, callback, time?) {
-    var timer;
+  setEditorInterval (editor, callback, time?) {
+    let timer;
 
     timer = wrappedSetInterval(function () {
       if (!editor.removed) {
@@ -172,7 +173,7 @@ export default {
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
    * @return {Function} debounced function callback.
    */
-  debounce: debounce,
+  debounce,
 
   // Throttle needs to be debounce due to backwards compatibility.
   throttle: debounce,

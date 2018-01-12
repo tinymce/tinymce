@@ -10,36 +10,36 @@
 
 import Actions from '../core/Actions';
 
-var get = function (editor, currentIndexState) {
-  var done = function (keepEditorSelection) {
+const get = function (editor, currentIndexState) {
+  const done = function (keepEditorSelection) {
     return Actions.done(editor, currentIndexState, keepEditorSelection);
   };
 
-  var find = function (text, matchCase, wholeWord) {
+  const find = function (text, matchCase, wholeWord) {
     return Actions.find(editor, currentIndexState, text, matchCase, wholeWord);
   };
 
-  var next = function () {
+  const next = function () {
     return Actions.next(editor, currentIndexState);
   };
 
-  var prev = function () {
+  const prev = function () {
     return Actions.prev(editor, currentIndexState);
   };
 
-  var replace = function (text, forward, all) {
+  const replace = function (text, forward, all) {
     return Actions.replace(editor, currentIndexState, text, forward, all);
   };
 
   return {
-    done: done,
-    find: find,
-    next: next,
-    prev: prev,
-    replace: replace
+    done,
+    find,
+    next,
+    prev,
+    replace
   };
 };
 
 export default {
-  get: get
+  get
 };

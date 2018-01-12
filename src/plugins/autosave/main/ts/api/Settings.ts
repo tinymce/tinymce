@@ -10,12 +10,12 @@
 
 import Time from '../core/Time';
 
-var shouldAskBeforeUnload = function (editor) {
-  return editor.getParam("autosave_ask_before_unload", true);
+const shouldAskBeforeUnload = function (editor) {
+  return editor.getParam('autosave_ask_before_unload', true);
 };
 
-var getAutoSavePrefix = function (editor) {
-  var prefix = editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-');
+const getAutoSavePrefix = function (editor) {
+  let prefix = editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-');
 
   prefix = prefix.replace(/\{path\}/g, document.location.pathname);
   prefix = prefix.replace(/\{query\}/g, document.location.search);
@@ -25,22 +25,22 @@ var getAutoSavePrefix = function (editor) {
   return prefix;
 };
 
-var shouldRestoreWhenEmpty = function (editor) {
+const shouldRestoreWhenEmpty = function (editor) {
   return editor.getParam('autosave_restore_when_empty', false);
 };
 
-var getAutoSaveInterval = function (editor) {
+const getAutoSaveInterval = function (editor) {
   return Time.parse(editor.settings.autosave_interval, '30s');
 };
 
-var getAutoSaveRetention = function (editor) {
+const getAutoSaveRetention = function (editor) {
   return Time.parse(editor.settings.autosave_retention, '20m');
 };
 
 export default {
-  shouldAskBeforeUnload: shouldAskBeforeUnload,
-  getAutoSavePrefix: getAutoSavePrefix,
-  shouldRestoreWhenEmpty: shouldRestoreWhenEmpty,
-  getAutoSaveInterval: getAutoSaveInterval,
-  getAutoSaveRetention: getAutoSaveRetention
+  shouldAskBeforeUnload,
+  getAutoSavePrefix,
+  shouldRestoreWhenEmpty,
+  getAutoSaveInterval,
+  getAutoSaveRetention
 };

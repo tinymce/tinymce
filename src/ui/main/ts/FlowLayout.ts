@@ -18,9 +18,7 @@ import Layout from './Layout';
  * @extends tinymce.ui.Layout
  */
 
-
-
-export default <any> Layout.extend({
+export default Layout.extend({
   Defaults: {
     containerClass: 'flow-layout',
     controlClass: 'flow-layout-item',
@@ -33,7 +31,7 @@ export default <any> Layout.extend({
    * @method recalc
    * @param {tinymce.ui.Container} container Container instance to recalc.
    */
-  recalc: function (container) {
+  recalc (container) {
     container.items().filter(':visible').each(function (ctrl) {
       if (ctrl.recalc) {
         ctrl.recalc();
@@ -41,7 +39,7 @@ export default <any> Layout.extend({
     });
   },
 
-  isNative: function () {
+  isNative () {
     return true;
   }
 });

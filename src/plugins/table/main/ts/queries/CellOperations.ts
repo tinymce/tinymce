@@ -17,7 +17,7 @@ import Ephemera from '../selection/Ephemera';
 import SelectionTypes from '../selection/SelectionTypes';
 
 // Return an array of the selected elements
-var selection = function (cell, selections) {
+const selection = function (cell, selections) {
   return SelectionTypes.cata(selections.get(),
     Fun.constant([]),
     Fun.identity,
@@ -25,18 +25,18 @@ var selection = function (cell, selections) {
   );
 };
 
-var unmergable = function (cell, selections) {
-  var hasSpan = function (elem) {
+const unmergable = function (cell, selections) {
+  const hasSpan = function (elem) {
     return (Attr.has(elem, 'rowspan') && parseInt(Attr.get(elem, 'rowspan'), 10) > 1) ||
            (Attr.has(elem, 'colspan') && parseInt(Attr.get(elem, 'colspan'), 10) > 1);
   };
 
-  var candidates = selection(cell, selections);
+  const candidates = selection(cell, selections);
 
   return candidates.length > 0 && Arr.forall(candidates, hasSpan) ? Option.some(candidates) : Option.none();
 };
 
-var mergable = function (table, selections) {
+const mergable = function (table, selections) {
   return SelectionTypes.cata(selections.get(),
     Option.none,
     function (cells, _env) {
@@ -55,7 +55,7 @@ var mergable = function (table, selections) {
 };
 
 export default {
-  mergable: mergable,
-  unmergable: unmergable,
-  selection: selection
+  mergable,
+  unmergable,
+  selection
 };

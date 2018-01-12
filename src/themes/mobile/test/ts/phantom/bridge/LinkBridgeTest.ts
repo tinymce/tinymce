@@ -13,49 +13,49 @@ import { Element } from '@ephox/sugar';
 import LinkBridge from 'tinymce/themes/mobile/bridge/LinkBridge';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function() {
-  var store = TestStore();
+UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
+  const store = TestStore();
 
-  var editorState = {
+  const editorState = {
     start: Cell(null),
     content: Cell('')
   };
 
-  var editor = {
+  const editor = {
     selection: {
       getStart: editorState.start.get,
       getContent: editorState.content.get,
       select: Fun.noop
     },
-    insertContent: function (data) {
-      store.adder({ method: 'insertContent', data: data })();
+    insertContent (data) {
+      store.adder({ method: 'insertContent', data })();
     },
-    execCommand: function (name) {
+    execCommand (name) {
       store.adder({ method: 'execCommand', data: name })();
     },
     dom: {
-      createHTML: function (tag, attributes, innerText) {
-        return { tag: tag, attributes: attributes, innerText: innerText };
+      createHTML (tag, attributes, innerText) {
+        return { tag, attributes, innerText };
       },
       encode: Fun.identity
     },
     focus: Fun.noop
   };
 
-  var checkGetNoLink = function (rawScenario) {
-    var schema = ValueSchema.objOfOnly([
+  const checkGetNoLink = function (rawScenario) {
+    const schema = ValueSchema.objOfOnly([
       FieldSchema.strict('label'),
       FieldSchema.defaulted('nodeText', ''),
       FieldSchema.defaulted('selection', ''),
       FieldSchema.strict('expected')
     ]);
 
-    var scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
+    const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
 
     Logger.sync('getInfo ... ' + scenario.label, function () {
       editorState.start.set(Element.fromText(scenario.nodeText).dom());
       editorState.content.set(scenario.selection);
-      var info = LinkBridge.getInfo(editor);
+      const info = LinkBridge.getInfo(editor);
       RawAssertions.assertEq('Checking getInfo (no link)', {
         url: '',
         text: scenario.expected,
@@ -66,27 +66,27 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function() {
     });
   };
 
-  var checkGetALink = function (rawScenario) {
-    var schema = ValueSchema.objOfOnly([
+  const checkGetALink = function (rawScenario) {
+    const schema = ValueSchema.objOfOnly([
       FieldSchema.strict('label'),
       FieldSchema.defaulted('linkHtml', ''),
       FieldSchema.defaulted('selection', ''),
       FieldSchema.strict('expected')
     ]);
 
-    var scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
+    const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
 
     Logger.sync('getInfo ... ' + scenario.label + ', link: ' + scenario.linkHtml, function () {
       editorState.start.set(Element.fromHtml(scenario.linkHtml).dom());
       editorState.content.set(scenario.selection);
-      var info = LinkBridge.getInfo(editor);
+      const info = LinkBridge.getInfo(editor);
       RawAssertions.assertEq('Checking getInfo (link)', scenario.expected, Objects.narrow(info, [ 'url', 'text', 'target', 'title' ]));
       RawAssertions.assertEq('Checking link is set', true, info.link.isSome());
     });
   };
 
-  var checkApply = function (rawScenario) {
-    var schema = ValueSchema.objOfOnly([
+  const checkApply = function (rawScenario) {
+    const schema = ValueSchema.objOfOnly([
       FieldSchema.strict('label'),
       FieldSchema.strictObjOf('info', [
         FieldSchema.option('url'),
@@ -99,12 +99,12 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function() {
       FieldSchema.defaulted('expected', [ ])
     ]);
 
-    var scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
+    const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
     Logger.sync('setInfo ... ' + scenario.label, function () {
       store.clear();
       LinkBridge.applyInfo(editor, scenario.info);
       store.assertEq('Checking store', scenario.expected);
-      var link = scenario.info.link.bind(Fun.identity);
+      const link = scenario.info.link.bind(Fun.identity);
       link.each(scenario.mutations);
     });
   };
@@ -180,7 +180,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function() {
     info: {
       url: 'hi'
     },
-    mutations: function (elem) {
+    mutations (elem) {
 
     },
     expected: [
@@ -203,7 +203,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function() {
       url: 'hi',
       text: 'hello'
     },
-    mutations: function (elem) {
+    mutations (elem) {
 
     },
     expected: [
@@ -227,7 +227,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function() {
       text: 'hello',
       title: 'Title'
     },
-    mutations: function (elem) {
+    mutations (elem) {
 
     },
     expected: [
@@ -253,7 +253,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function() {
       title: 'Title',
       target: 'new'
     },
-    mutations: function (elem) {
+    mutations (elem) {
 
     },
     expected: [
@@ -283,7 +283,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function() {
         Element.fromHtml('<a href="http://foo">http://foo</a>')
       )
     },
-    mutations: function (elem) {
+    mutations (elem) {
       Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, arr) {
         return s.element('a', {
           attrs: {
@@ -306,7 +306,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function() {
         Element.fromHtml('<a href="http://foo">Foo</a>')
       )
     },
-    mutations: function (elem) {
+    mutations (elem) {
       Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, arr) {
         return s.element('a', {
           attrs: {
@@ -329,7 +329,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function() {
         Element.fromHtml('<a href="http://foo">Foo</a>')
       )
     },
-    mutations: function (elem) {
+    mutations (elem) {
       Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, arr) {
         return s.element('a', {
           attrs: {
@@ -373,4 +373,3 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function() {
     expected: [ ]
   });
 });
-

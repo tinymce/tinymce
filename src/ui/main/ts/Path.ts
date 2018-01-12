@@ -18,9 +18,7 @@ import Widget from './Widget';
  * @extends tinymce.ui.Widget
  */
 
-"use strict";
-
-export default <any> Widget.extend({
+export default Widget.extend({
   /**
    * Constructs a instance with the specified settings.
    *
@@ -28,8 +26,8 @@ export default <any> Widget.extend({
    * @param {Object} settings Name/value object with settings.
    * @setting {String} delimiter Delimiter to display between row in path.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     if (!settings.delimiter) {
       settings.delimiter = '\u00BB';
@@ -40,10 +38,11 @@ export default <any> Widget.extend({
     self.canFocus = true;
 
     self.on('click', function (e) {
-      var index, target = e.target;
+      let index;
+      const target = e.target;
 
       if ((index = target.getAttribute('data-index'))) {
-        self.fire('select', { value: self.row()[index], index: index });
+        self.fire('select', { value: self.row()[index], index });
       }
     });
 
@@ -56,8 +55,8 @@ export default <any> Widget.extend({
    * @method focus
    * @return {tinymce.ui.Control} Current control instance.
    */
-  focus: function () {
-    var self = this;
+  focus () {
+    const self = this;
 
     self.getEl().firstChild.focus();
 
@@ -70,7 +69,7 @@ export default <any> Widget.extend({
    * @method row
    * @param {Array} row Array with row name is rendered to path.
    */
-  row: function (row) {
+  row (row) {
     if (!arguments.length) {
       return this.state.get('row');
     }
@@ -86,8 +85,8 @@ export default <any> Widget.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this;
+  renderHtml () {
+    const self = this;
 
     return (
       '<div id="' + self._id + '" class="' + self.classes + '">' +
@@ -96,8 +95,8 @@ export default <any> Widget.extend({
     );
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     self.state.on('change:row', function (e) {
       self.innerHtml(self._getDataPathHtml(e.value));
@@ -106,13 +105,16 @@ export default <any> Widget.extend({
     return self._super();
   },
 
-  _getDataPathHtml: function (data) {
-    var self = this, parts = data || [], i, l, html = '', prefix = self.classPrefix;
+  _getDataPathHtml (data) {
+    const self = this;
+    const parts = data || [];
+    let i, l, html = '';
+    const prefix = self.classPrefix;
 
     for (i = 0, l = parts.length; i < l; i++) {
       html += (
         (i > 0 ? '<div class="' + prefix + 'divider" aria-hidden="true"> ' + self.settings.delimiter + ' </div>' : '') +
-        '<div role="button" class="' + prefix + 'path-item' + (i == l - 1 ? ' ' + prefix + 'last' : '') + '" data-index="' +
+        '<div role="button" class="' + prefix + 'path-item' + (i === l - 1 ? ' ' + prefix + 'last' : '') + '" data-index="' +
         i + '" tabindex="-1" id="' + self._id + '-' + i + '" aria-level="' + (i + 1) + '">' + parts[i].name + '</div>'
       );
     }

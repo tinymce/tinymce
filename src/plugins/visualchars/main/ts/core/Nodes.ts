@@ -13,17 +13,17 @@ import { Element, Node } from '@ephox/sugar';
 import Data from './Data';
 import Html from './Html';
 
-var isMatch = function (n) {
+const isMatch = function (n) {
   return Node.isText(n) &&
     Node.value(n) !== undefined &&
     Data.regExp.test(Node.value(n));
 };
 
 // inlined sugars PredicateFilter.descendants for file size
-var filterDescendants = function (scope, predicate) {
-  var result = [];
-  var dom = scope.dom();
-  var children = Arr.map(dom.childNodes, Element.fromDom);
+const filterDescendants = function (scope, predicate) {
+  let result = [];
+  const dom = scope.dom();
+  const children = Arr.map(dom.childNodes, Element.fromDom);
 
   Arr.each(children, function (x) {
     if (predicate(x)) {
@@ -34,7 +34,7 @@ var filterDescendants = function (scope, predicate) {
   return result;
 };
 
-var findParentElm = function (elm, rootElm) {
+const findParentElm = function (elm, rootElm) {
   while (elm.parentNode) {
     if (elm.parentNode === rootElm) {
       return elm;
@@ -43,13 +43,13 @@ var findParentElm = function (elm, rootElm) {
   }
 };
 
-var replaceWithSpans = function (html) {
+const replaceWithSpans = function (html) {
   return html.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
 };
 
 export default {
-  isMatch: isMatch,
-  filterDescendants: filterDescendants,
-  findParentElm: findParentElm,
-  replaceWithSpans: replaceWithSpans
+  isMatch,
+  filterDescendants,
+  findParentElm,
+  replaceWithSpans
 };

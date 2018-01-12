@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var shouldIndentOnTab = function (editor) {
+const shouldIndentOnTab = function (editor) {
   return editor.getParam('lists_indent_on_tab', true);
 };
 
 export default {
-  shouldIndentOnTab: shouldIndentOnTab
+  shouldIndentOnTab
 };

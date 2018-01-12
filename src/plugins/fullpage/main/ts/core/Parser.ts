@@ -14,7 +14,7 @@ import Serializer from 'tinymce/core/html/Serializer';
 import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 
-var parseHeader = function (head) {
+const parseHeader = function (head) {
   // Parse the contents with a DOM parser
   return DomParser({
     validate: false,
@@ -22,11 +22,13 @@ var parseHeader = function (head) {
   }).parse(head);
 };
 
-var htmlToData = function (editor, head) {
-  var headerFragment = parseHeader(head), data: any = {}, elm, matches;
+const htmlToData = function (editor, head) {
+  const headerFragment = parseHeader(head);
+  const data: any = {};
+  let elm, matches;
 
   function getAttr(elm, name) {
-    var value = elm.attr(name);
+    const value = elm.attr(name);
 
     return value || '';
   }
@@ -49,7 +51,7 @@ var htmlToData = function (editor, head) {
   // Parse doctype
   elm = headerFragment.getAll('#doctype')[0];
   if (elm) {
-    data.doctype = '<!DOCTYPE' + elm.value + ">";
+    data.doctype = '<!DOCTYPE' + elm.value + '>';
   }
 
   // Parse title element
@@ -60,11 +62,13 @@ var htmlToData = function (editor, head) {
 
   // Parse meta elements
   Tools.each(headerFragment.getAll('meta'), function (meta) {
-    var name = meta.attr('name'), httpEquiv = meta.attr('http-equiv'), matches;
+    const name = meta.attr('name');
+    const httpEquiv = meta.attr('http-equiv');
+    let matches;
 
     if (name) {
       data[name.toLowerCase()] = meta.attr('content');
-    } else if (httpEquiv === "Content-Type") {
+    } else if (httpEquiv === 'Content-Type') {
       matches = /charset\s*=\s*(.*)\s*/gi.exec(meta.attr('content'));
 
       if (matches) {
@@ -100,8 +104,9 @@ var htmlToData = function (editor, head) {
   return data;
 };
 
-var dataToHtml = function (editor, data, head) {
-  var headerFragment, headElement, html, elm, value, dom = editor.dom;
+const dataToHtml = function (editor, data, head) {
+  let headerFragment, headElement, html, elm, value;
+  const dom = editor.dom;
 
   function setAttr(elm, name, value) {
     elm.attr(name, value ? value : undefined);
@@ -203,7 +208,9 @@ var dataToHtml = function (editor, data, head) {
 
   // Add/update/remove meta
   Tools.each('keywords,description,author,copyright,robots'.split(','), function (name) {
-    var nodes = headerFragment.getAll('meta'), i, meta, value = data[name];
+    const nodes = headerFragment.getAll('meta');
+    let i, meta;
+    const value = data[name];
 
     for (i = 0; i < nodes.length; i++) {
       meta = nodes[i];
@@ -229,7 +236,7 @@ var dataToHtml = function (editor, data, head) {
     }
   });
 
-  var currentStyleSheetsMap = {};
+  const currentStyleSheetsMap = {};
   Tools.each(headerFragment.getAll('link'), function (stylesheet) {
     if (stylesheet.attr('rel') === 'stylesheet') {
       currentStyleSheetsMap[stylesheet.attr('href')] = stylesheet;
@@ -301,7 +308,7 @@ var dataToHtml = function (editor, data, head) {
 };
 
 export default {
-  parseHeader: parseHeader,
-  htmlToData: htmlToData,
-  dataToHtml: dataToHtml
+  parseHeader,
+  htmlToData,
+  dataToHtml
 };

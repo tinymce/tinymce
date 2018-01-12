@@ -6,27 +6,26 @@ import { Pipeline } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 import { Hierarchy } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 import SimpleTableModel from 'tinymce/core/selection/SimpleTableModel';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var cFromDom = function (html) {
+  const cFromDom = function (html) {
     return Chain.mapper(function (_) {
       return SimpleTableModel.fromDom(Element.fromHtml(html));
     });
   };
 
-  var cFromDomSubSection = function (html, startPath, endPath) {
+  const cFromDomSubSection = function (html, startPath, endPath) {
     return Chain.binder(function (_) {
-      var tableElm = Element.fromHtml(html);
-      var startElm = Hierarchy.follow(tableElm, startPath).getOrDie();
-      var endElm = Hierarchy.follow(tableElm, endPath).getOrDie();
+      const tableElm = Element.fromHtml(html);
+      const startElm = Hierarchy.follow(tableElm, startPath).getOrDie();
+      const endElm = Hierarchy.follow(tableElm, endPath).getOrDie();
       return SimpleTableModel.subsection(SimpleTableModel.fromDom(tableElm), startElm, endElm).fold(
         Fun.constant(Result.error('Failed to get the subsection')),
         Result.value
@@ -34,21 +33,21 @@ UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function()
     });
   };
 
-  var cAssertWidth = function (expectedWidth) {
+  const cAssertWidth = function (expectedWidth) {
     return Chain.op(function (tableModel) {
       Assertions.assertEq('Should be expected width', expectedWidth, tableModel.width());
     });
   };
 
-  var cAssertHeight = function (expectedWidth) {
+  const cAssertHeight = function (expectedWidth) {
     return Chain.op(function (tableModel) {
       Assertions.assertEq('Should be expected height', expectedWidth, tableModel.rows().length);
     });
   };
 
-  var cAssertModelAsHtml = function (expectedHtml) {
+  const cAssertModelAsHtml = function (expectedHtml) {
     return Chain.op(function (tableModel) {
-      var actualHtml = Html.getOuter(SimpleTableModel.toDom(tableModel));
+      const actualHtml = Html.getOuter(SimpleTableModel.toDom(tableModel));
       Assertions.assertHtml('Should be expected table html', expectedHtml, actualHtml);
     });
   };
@@ -146,4 +145,3 @@ UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function()
     success();
   }, failure);
 });
-

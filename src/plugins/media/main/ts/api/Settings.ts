@@ -8,50 +8,50 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getScripts = function (editor) {
+const getScripts = function (editor) {
   return editor.getParam('media_scripts');
 };
 
-var getAudioTemplateCallback = function (editor) {
+const getAudioTemplateCallback = function (editor) {
   return editor.getParam('audio_template_callback');
 };
 
-var getVideoTemplateCallback = function (editor) {
+const getVideoTemplateCallback = function (editor) {
   return editor.getParam('video_template_callback');
 };
 
-var hasLiveEmbeds = function (editor) {
+const hasLiveEmbeds = function (editor) {
   return editor.getParam('media_live_embeds', true);
 };
 
-var shouldFilterHtml = function (editor) {
+const shouldFilterHtml = function (editor) {
   return editor.getParam('media_filter_html', true);
 };
 
-var getUrlResolver = function (editor) {
+const getUrlResolver = function (editor) {
   return editor.getParam('media_url_resolver');
 };
 
-var hasAltSource = function (editor) {
+const hasAltSource = function (editor) {
   return editor.getParam('media_alt_source', true);
 };
 
-var hasPoster = function (editor) {
+const hasPoster = function (editor) {
   return editor.getParam('media_poster', true);
 };
 
-var hasDimensions = function (editor) {
+const hasDimensions = function (editor) {
   return editor.getParam('media_dimensions', true);
 };
 
 export default {
-  getScripts: getScripts,
-  getAudioTemplateCallback: getAudioTemplateCallback,
-  getVideoTemplateCallback: getVideoTemplateCallback,
-  hasLiveEmbeds: hasLiveEmbeds,
-  shouldFilterHtml: shouldFilterHtml,
-  getUrlResolver: getUrlResolver,
-  hasAltSource: hasAltSource,
-  hasPoster: hasPoster,
-  hasDimensions: hasDimensions
+  getScripts,
+  getAudioTemplateCallback,
+  getVideoTemplateCallback,
+  hasLiveEmbeds,
+  shouldFilterHtml,
+  getUrlResolver,
+  hasAltSource,
+  hasPoster,
+  hasDimensions
 };

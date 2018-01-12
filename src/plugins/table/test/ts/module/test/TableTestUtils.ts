@@ -4,7 +4,7 @@ import { Mouse } from '@ephox/agar';
 import { UiFinder } from '@ephox/agar';
 import { TinyDom } from '@ephox/mcagar';
 
-var sOpenToolbarOn = function (editor, selector, path) {
+const sOpenToolbarOn = function (editor, selector, path) {
   return Chain.asStep(TinyDom.fromDom(editor.getBody()), [
     UiFinder.cFindIn(selector),
     Cursors.cFollow(path),
@@ -16,5 +16,5 @@ var sOpenToolbarOn = function (editor, selector, path) {
 };
 
 export default {
-  sOpenToolbarOn: sOpenToolbarOn
+  sOpenToolbarOn
 };

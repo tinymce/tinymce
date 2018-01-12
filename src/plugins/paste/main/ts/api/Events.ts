@@ -8,25 +8,25 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var firePastePreProcess = function (editor, html, internal, isWordHtml) {
-  return editor.fire('PastePreProcess', { content: html, internal: internal, wordContent: isWordHtml });
+const firePastePreProcess = function (editor, html, internal, isWordHtml) {
+  return editor.fire('PastePreProcess', { content: html, internal, wordContent: isWordHtml });
 };
 
-var firePastePostProcess = function (editor, node, internal, isWordHtml) {
-  return editor.fire('PastePostProcess', { node: node, internal: internal, wordContent: isWordHtml });
+const firePastePostProcess = function (editor, node, internal, isWordHtml) {
+  return editor.fire('PastePostProcess', { node, internal, wordContent: isWordHtml });
 };
 
-var firePastePlainTextToggle = function (editor, state) {
-  return editor.fire('PastePlainTextToggle', { state: state });
+const firePastePlainTextToggle = function (editor, state) {
+  return editor.fire('PastePlainTextToggle', { state });
 };
 
-var firePaste = function (editor, ieFake) {
-  return editor.fire('paste', { ieFake: ieFake });
+const firePaste = function (editor, ieFake) {
+  return editor.fire('paste', { ieFake });
 };
 
 export default {
-  firePastePreProcess: firePastePreProcess,
-  firePastePostProcess: firePastePostProcess,
-  firePastePlainTextToggle: firePastePlainTextToggle,
-  firePaste: firePaste
+  firePastePreProcess,
+  firePastePostProcess,
+  firePastePlainTextToggle,
+  firePaste
 };

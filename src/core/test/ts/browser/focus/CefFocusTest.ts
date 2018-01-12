@@ -11,14 +11,14 @@ import ViewBlock from '../../module/test/ViewBlock';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const viewBlock = ViewBlock();
 
   Theme();
 
-  var sCreateInlineEditors = function (html) {
+  const sCreateInlineEditors = function (html) {
     return Step.async(function (done) {
       viewBlock.update(html);
 
@@ -32,12 +32,12 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function() {
     });
   };
 
-  var sAssertSelection = function (editorIndex, startPath, startOffset, endPath, endOffset) {
+  const sAssertSelection = function (editorIndex, startPath, startOffset, endPath, endOffset) {
     return Step.sync(function () {
-      var editor = EditorManager.get(editorIndex);
-      var startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
-      var endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
-      var rng = editor.selection.getRng();
+      const editor = EditorManager.get(editorIndex);
+      const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
+      const rng = editor.selection.getRng();
 
       Assertions.assertDomEq('Should be expected from start container', startContainer, Element.fromDom(rng.startContainer));
       Assertions.assertEq('Should be expected from start offset', startOffset, rng.startOffset);
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function() {
     });
   };
 
-  var sRemoveEditors = Step.sync(function () {
+  const sRemoveEditors = Step.sync(function () {
     EditorManager.remove();
   });
 
@@ -60,8 +60,8 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function() {
       }),
       Waiter.sTryUntil('Wait for selection to move', sAssertSelection(1, [0], 0, [0], 0), 10, 3000),
       Step.sync(function () {
-        var caretElm0 = EditorManager.get(0).getBody().querySelector('[data-mce-caret]');
-        var caretElm1 = EditorManager.get(1).getBody().querySelector('[data-mce-caret]');
+        const caretElm0 = EditorManager.get(0).getBody().querySelector('[data-mce-caret]');
+        const caretElm1 = EditorManager.get(1).getBody().querySelector('[data-mce-caret]');
 
         Assertions.assertEq('Should not be a caret element present editor 0', false, !!caretElm0);
         Assertions.assertEq('Should be a caret element present editor 1', true, !!caretElm1);
@@ -73,4 +73,3 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function() {
     success();
   }, failure);
 });
-

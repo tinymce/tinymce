@@ -8,10 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-
-
 export default function () {
-  var unimplemented = function () {
+  const unimplemented = function () {
     throw new Error('Theme did not provide a NotificationManager implementation.');
   };
 
@@ -21,4 +19,4 @@ export default function () {
     reposition: unimplemented,
     getArgs: unimplemented
   };
-};
+}

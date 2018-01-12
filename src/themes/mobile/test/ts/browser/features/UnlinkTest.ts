@@ -7,12 +7,12 @@ import TestTheme from '../../module/test/theme/TestTheme';
 import TestUi from '../../module/test/ui/TestUi';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: features.UnlinkTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: features.UnlinkTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   /* This test is going to create a toolbar with bold, italic, underline in it */
-  var body = Body.body();
+  const body = Body.body();
 
   TestTheme.setup({
     container: body,
@@ -20,30 +20,30 @@ UnitTest.asynctest('Browser Test: features.UnlinkTest', function() {
   }, success, failure).use(
     function (realm, apis, toolbar, socket, buttons, onSuccess, onFailure) {
 
-      var sSetS1 = apis.sSetSelection([ 0, 0 ], 'n'.length, [ 0, 0 ], 'n'.length);
-      var sSetS2 = apis.sSetSelection([ 0, 1, 0 ], 'tin'.length, [ 0, 1, 0 ], 'tin'.length);
+      const sSetS1 = apis.sSetSelection([ 0, 0 ], 'n'.length, [ 0, 0 ], 'n'.length);
+      const sSetS2 = apis.sSetSelection([ 0, 1, 0 ], 'tin'.length, [ 0, 1, 0 ], 'tin'.length);
 
-      var sCheckComponent = function (label, state) {
+      const sCheckComponent = function (label, state) {
         return function (memento) {
           return TestUi.sWaitForToggledState(label, state, realm, memento);
         };
       };
 
-      var sCheckS1 = function (situation) {
+      const sCheckS1 = function (situation) {
         return GeneralSteps.sequence([
           sSetS1,
           sCheckLink(situation, false)
         ]);
       };
 
-      var sCheckS2 = function (situation) {
+      const sCheckS2 = function (situation) {
         return GeneralSteps.sequence([
           sSetS2,
           sCheckLink(situation, true)
         ]);
       };
 
-      var sCheckLink = function (situation, expected) {
+      const sCheckLink = function (situation, expected) {
         return GeneralSteps.sequence([
           sCheckComponent(situation + ' (unlink state)', expected)(buttons.unlink),
           sCheckComponent(situation + ' (link state)', expected)(buttons.link)
@@ -83,4 +83,3 @@ UnitTest.asynctest('Browser Test: features.UnlinkTest', function() {
     }
   );
 });
-

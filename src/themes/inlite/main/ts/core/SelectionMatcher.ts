@@ -12,7 +12,7 @@ import Matcher from './Matcher';
 import Measure from './Measure';
 
 // textSelection :: String -> (Editor -> Matcher.result | Null)
-var textSelection = function (id) {
+const textSelection = function (id) {
   return function (editor) {
     if (!editor.selection.isCollapsed()) {
       return Matcher.result(id, Measure.getSelectionRect(editor));
@@ -23,9 +23,10 @@ var textSelection = function (id) {
 };
 
 // emptyTextBlock :: [Elements], String -> (Editor -> Matcher.result | Null)
-var emptyTextBlock = function (elements, id) {
+const emptyTextBlock = function (elements, id) {
   return function (editor) {
-    var i, textBlockElementsMap = editor.schema.getTextBlockElements();
+    let i;
+    const textBlockElementsMap = editor.schema.getTextBlockElements();
 
     for (i = 0; i < elements.length; i++) {
       if (elements[i].nodeName === 'TABLE') {
@@ -47,7 +48,7 @@ var emptyTextBlock = function (elements, id) {
   };
 };
 
-export default <any> {
-  textSelection: textSelection,
-  emptyTextBlock: emptyTextBlock
+export default {
+  textSelection,
+  emptyTextBlock
 };

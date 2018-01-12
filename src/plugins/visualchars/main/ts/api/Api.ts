@@ -8,16 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var get = function (toggleState) {
-  var isEnabled = function () {
+const get = function (toggleState) {
+  const isEnabled = function () {
     return toggleState.get();
   };
 
   return {
-    isEnabled: isEnabled
+    isEnabled
   };
 };
 
 export default {
-  get: get
+  get
 };

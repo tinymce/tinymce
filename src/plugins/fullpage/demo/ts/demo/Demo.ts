@@ -15,10 +15,10 @@ declare let tinymce: any;
 FullPagePlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "fullpage code",
-  toolbar: "fullpage code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'fullpage code',
+  toolbar: 'fullpage code',
   height: 600
 });

@@ -15,10 +15,10 @@ declare let tinymce: any;
 PrintPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "print code",
-  toolbar: "print code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'print code',
+  toolbar: 'print code',
   height: 600
 });

@@ -20,7 +20,7 @@ import CaretContainer from './CaretContainer';
  * @class tinymce.caret.CaretCandidate
  */
 
-var isContentEditableTrue = NodeType.isContentEditableTrue,
+const isContentEditableTrue = NodeType.isContentEditableTrue,
   isContentEditableFalse = NodeType.isContentEditableFalse,
   isBr = NodeType.isBr,
   isText = NodeType.isText,
@@ -29,7 +29,7 @@ var isContentEditableTrue = NodeType.isContentEditableTrue,
   isTable = NodeType.matchNodeNames('table'),
   isCaretContainer = CaretContainer.isCaretContainer;
 
-var isCaretCandidate = function (node) {
+const isCaretCandidate = function (node) {
   if (isCaretContainer(node)) {
     return false;
   }
@@ -45,8 +45,8 @@ var isCaretCandidate = function (node) {
   return isAtomicInline(node) || isBr(node) || isTable(node) || isContentEditableFalse(node);
 };
 
-var isInEditable = function (node, rootNode) {
-  for (node = node.parentNode; node && node != rootNode; node = node.parentNode) {
+const isInEditable = function (node, rootNode) {
+  for (node = node.parentNode; node && node !== rootNode; node = node.parentNode) {
     if (isContentEditableFalse(node)) {
       return false;
     }
@@ -59,7 +59,7 @@ var isInEditable = function (node, rootNode) {
   return true;
 };
 
-var isAtomicContentEditableFalse = function (node) {
+const isAtomicContentEditableFalse = function (node) {
   if (!isContentEditableFalse(node)) {
     return false;
   }
@@ -69,17 +69,17 @@ var isAtomicContentEditableFalse = function (node) {
   }, false) !== true;
 };
 
-var isAtomic = function (node) {
+const isAtomic = function (node) {
   return isAtomicInline(node) || isAtomicContentEditableFalse(node);
 };
 
-var isEditableCaretCandidate = function (node, rootNode?) {
+const isEditableCaretCandidate = function (node, rootNode?) {
   return isCaretCandidate(node) && isInEditable(node, rootNode);
 };
 
 export default {
-  isCaretCandidate: isCaretCandidate,
-  isInEditable: isInEditable,
-  isAtomic: isAtomic,
-  isEditableCaretCandidate: isEditableCaretCandidate
+  isCaretCandidate,
+  isInEditable,
+  isAtomic,
+  isEditableCaretCandidate
 };

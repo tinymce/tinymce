@@ -1,8 +1,6 @@
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { UiFinder } from '@ephox/agar';
 import { Waiter } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
 import { TinyDom } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
@@ -11,15 +9,15 @@ import Utils from '../module/test/Utils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var ui = TinyUi(editor);
+    const ui = TinyUi(editor);
 
     Pipeline.async({}, [
       Utils.sOpenDialog(ui),
@@ -32,10 +30,9 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', functi
 
     ], onSuccess, onFailure);
   }, {
-    plugins: ["media"],
-    toolbar: "media",
+    plugins: ['media'],
+    toolbar: 'media',
     media_dimensions: false,
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

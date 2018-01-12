@@ -6,22 +6,22 @@ import EditorManager from 'tinymce/core/EditorManager';
 import EditorSettings from 'tinymce/themes/inlite/alien/EditorSettings';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.alien.EditorSettingsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.alien.EditorSettingsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var handler = function () {
+  const handler = function () {
   };
 
-  var defaultHandler = function () {
+  const defaultHandler = function () {
   };
 
-  var createEditor = function () {
-    var editor = new Editor('id', {
+  const createEditor = function () {
+    const editor = new Editor('id', {
       string: 'value',
       bool: true,
       number: 3,
-      handler: handler,
+      handler,
       toolbar_string1: 'a b',
       toolbar_string2: 'a,b',
       toolbar_string_empty1: '',
@@ -36,36 +36,36 @@ UnitTest.asynctest('browser.alien.EditorSettingsTest', function() {
 
   /*eslint max-len:0*/
 
-  var sTestGetStringOr = Step.sync(function () {
-    var editor = createEditor();
+  const sTestGetStringOr = Step.sync(function () {
+    const editor = createEditor();
     Assertions.assertEq('Should be a specified settings string value', 'value', EditorSettings.getStringOr(editor, 'string', 'default'));
     Assertions.assertEq('Should be default string value', 'default', EditorSettings.getStringOr(editor, 'non_existing', 'default'));
     Assertions.assertEq('Should be default string value on a bool', 'default', EditorSettings.getStringOr(editor, 'bool', 'default'));
   });
 
-  var sTestGetBoolOr = Step.sync(function () {
-    var editor = createEditor();
+  const sTestGetBoolOr = Step.sync(function () {
+    const editor = createEditor();
     Assertions.assertEq('Should be a specified settings bool value', true, EditorSettings.getBoolOr(editor, 'bool', false));
     Assertions.assertEq('Should be default bool value', false, EditorSettings.getBoolOr(editor, 'non_existing', false));
     Assertions.assertEq('Should be default bool value on a string', false, EditorSettings.getBoolOr(editor, 'string', false));
   });
 
-  var sTestGetNumberOr = Step.sync(function () {
-    var editor = createEditor();
+  const sTestGetNumberOr = Step.sync(function () {
+    const editor = createEditor();
     Assertions.assertEq('Should be a specified settings number value', 3, EditorSettings.getNumberOr(editor, 'number', 3));
     Assertions.assertEq('Should be default number value', 5, EditorSettings.getNumberOr(editor, 'non_existing', 5));
     Assertions.assertEq('Should be default number value on a string', 5, EditorSettings.getNumberOr(editor, 'string', 5));
   });
 
-  var sTestGetHandlerOr = Step.sync(function () {
-    var editor = createEditor();
+  const sTestGetHandlerOr = Step.sync(function () {
+    const editor = createEditor();
     Assertions.assertEq('Should be a specified settings handler value', handler, EditorSettings.getHandlerOr(editor, 'handler', defaultHandler));
     Assertions.assertEq('Should be default handler value', defaultHandler, EditorSettings.getHandlerOr(editor, 'non_existing', defaultHandler));
     Assertions.assertEq('Should be default handler value on a string', defaultHandler, EditorSettings.getHandlerOr(editor, 'string', defaultHandler));
   });
 
-  var sTestToolbarItemsOr = Step.sync(function () {
-    var editor = createEditor();
+  const sTestToolbarItemsOr = Step.sync(function () {
+    const editor = createEditor();
     Assertions.assertEq('Should be a specified toolbar items string value 1', ['a', 'b'], EditorSettings.getToolbarItemsOr(editor, 'toolbar_string1', ['c', 'd']));
     Assertions.assertEq('Should be a specified toolbar items string value 2', ['a', 'b'], EditorSettings.getToolbarItemsOr(editor, 'toolbar_string2', ['c', 'd']));
     Assertions.assertEq('Should be a specified toolbar items array value', ['a', 'b'], EditorSettings.getToolbarItemsOr(editor, 'toolbar_array', ['c', 'd']));
@@ -87,4 +87,3 @@ UnitTest.asynctest('browser.alien.EditorSettingsTest', function() {
     success();
   }, failure);
 });
-

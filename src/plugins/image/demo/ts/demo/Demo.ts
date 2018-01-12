@@ -15,15 +15,15 @@ declare let tinymce: any;
 ImagePlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "image code",
-  toolbar: "undo redo | image code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'image code',
+  toolbar: 'undo redo | image code',
   image_caption: true,
   image_advtab: true,
   images_upload_url: 'postAcceptor.php',
-  file_picker_callback: function (callback, value, meta) {
+  file_picker_callback (callback, value, meta) {
     callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
   },
   height: 600

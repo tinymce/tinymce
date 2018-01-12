@@ -13,11 +13,9 @@ import Util from '../alien/Util';
 import Ephemera from './Ephemera';
 import SelectionTypes from './SelectionTypes';
 
-
-
 export default function (editor) {
-  var get = function () {
-    var body = Util.getBody(editor);
+  const get = function () {
+    const body = Util.getBody(editor);
 
     return TableSelection.retrieve(body, Ephemera.selectedSelector()).fold(function () {
       if (editor.selection.getStart() === undefined) {
@@ -31,6 +29,6 @@ export default function (editor) {
   };
 
   return {
-    get: get
+    get
   };
-};
+}

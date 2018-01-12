@@ -19,10 +19,8 @@ import Delay from './util/Delay';
  * @private
  */
 
-
-
 export default function (editor) {
-  var lastRng, lastPath = [];
+  let lastRng, lastPath = [];
 
   /**
    * Returns true/false if the current element path has been changed or not.
@@ -30,8 +28,8 @@ export default function (editor) {
    * @private
    * @return {Boolean} True if the element path is the same false if it's not.
    */
-  var isSameElementPath = function (startElm) {
-    var i, currentPath;
+  const isSameElementPath = function (startElm) {
+    let i, currentPath;
 
     currentPath = editor.$(startElm).parentsUntil(editor.getBody()).add(startElm);
     if (currentPath.length === lastPath.length) {
@@ -55,7 +53,7 @@ export default function (editor) {
   // Gecko doesn't support the "selectionchange" event
   if (!('onselectionchange' in editor.getDoc())) {
     editor.on('NodeChange Click MouseUp KeyUp Focus', function (e) {
-      var nativeRng, fakeRng;
+      let nativeRng, fakeRng;
 
       // Since DOM Ranges mutate on modification
       // of the DOM we need to clone it's contents
@@ -69,7 +67,7 @@ export default function (editor) {
 
       // Always treat nodechange as a selectionchange since applying
       // formatting to the current range wouldn't update the range but it's parent
-      if (e.type == 'nodechange' || !RangeCompare.isEq(fakeRng, lastRng)) {
+      if (e.type === 'nodechange' || !RangeCompare.isEq(fakeRng, lastRng)) {
         editor.fire('SelectionChange');
       }
 
@@ -85,7 +83,7 @@ export default function (editor) {
 
   // Selection change is delayed ~200ms on IE when you click inside the current range
   editor.on('SelectionChange', function () {
-    var startElm = editor.selection.getStart(true);
+    const startElm = editor.selection.getStart(true);
 
     // When focusout from after cef element to other input element the startelm can be undefined.
     // IE 8 will fire a selectionchange event with an incorrect selection
@@ -104,7 +102,7 @@ export default function (editor) {
     if (!e.isDefaultPrevented()) {
       // Delay nodeChanged call for WebKit edge case issue where the range
       // isn't updated until after you click outside a selected image
-      if (editor.selection.getNode().nodeName == 'IMG') {
+      if (editor.selection.getNode().nodeName === 'IMG') {
         Delay.setEditorTimeout(editor, function () {
           editor.nodeChanged();
         });
@@ -122,7 +120,8 @@ export default function (editor) {
    * @param {Object} args Optional args to pass to NodeChange event handlers.
    */
   this.nodeChanged = function (args) {
-    var selection = editor.selection, node, parents, root;
+    const selection = editor.selection;
+    let node, parents, root;
 
     // Fix for bug #1896577 it seems that this can not be fired while the editor is loading
     if (editor.initialized && selection && !editor.settings.disable_nodechange && !editor.readonly) {
@@ -131,7 +130,7 @@ export default function (editor) {
       node = selection.getStart(true) || root;
 
       // Make sure the node is within the editor root or is the editor root
-      if (node.ownerDocument != editor.getDoc() || !editor.dom.isChildOf(node, root)) {
+      if (node.ownerDocument !== editor.getDoc() || !editor.dom.isChildOf(node, root)) {
         node = root;
       }
 
@@ -152,4 +151,4 @@ export default function (editor) {
       editor.fire('NodeChange', args);
     }
   };
-};
+}

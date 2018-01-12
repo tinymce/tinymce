@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var shouldNeverUseNative = function (editor) {
+const shouldNeverUseNative = function (editor) {
   return editor.settings.contextmenu_never_use_native;
 };
 
-var getContextMenu = function (editor) {
+const getContextMenu = function (editor) {
   return editor.getParam('contextmenu', 'link openlink image inserttable | cell row column deletetable');
 };
 
 export default {
-  shouldNeverUseNative: shouldNeverUseNative,
-  getContextMenu: getContextMenu
+  shouldNeverUseNative,
+  getContextMenu
 };

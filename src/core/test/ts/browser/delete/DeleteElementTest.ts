@@ -11,27 +11,27 @@ import DeleteElement from 'tinymce/core/delete/DeleteElement';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Theme();
 
-  var sDeleteElementPath = function (editor, forward, path) {
+  const sDeleteElementPath = function (editor, forward, path) {
     return Step.sync(function () {
-      var element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie();
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie();
       DeleteElement.deleteElement(editor, forward, element);
     });
   };
 
-  var sAssertCaretDirection = function (editor, expectedCaretData) {
+  const sAssertCaretDirection = function (editor, expectedCaretData) {
     return Step.sync(function () {
       Assertions.assertEq('Should have the right caret data', expectedCaretData, editor.selection.getNode().getAttribute('data-mce-caret'));
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -177,4 +177,3 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

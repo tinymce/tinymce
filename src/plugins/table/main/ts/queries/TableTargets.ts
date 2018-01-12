@@ -11,7 +11,7 @@
 import { Fun, Option, Struct } from '@ephox/katamari';
 import CellOperations from './CellOperations';
 
-var noMenu = function (cell) {
+const noMenu = function (cell) {
   return {
     element: Fun.constant(cell),
     mergable: Option.none,
@@ -20,7 +20,7 @@ var noMenu = function (cell) {
   };
 };
 
-var forMenu = function (selections, table, cell) {
+const forMenu = function (selections, table, cell) {
   return {
     element: Fun.constant(cell),
     mergable: Fun.constant(CellOperations.mergable(table, selections)),
@@ -29,13 +29,13 @@ var forMenu = function (selections, table, cell) {
   };
 };
 
-var notCell = function (element) {
+const notCell = function (element) {
   return noMenu(element);
 };
 
-var paste = Struct.immutable('element', 'clipboard', 'generators');
+const paste = Struct.immutable('element', 'clipboard', 'generators');
 
-var pasteRows = function (selections, table, cell, clipboard, generators) {
+const pasteRows = function (selections, table, cell, clipboard, generators) {
   return {
     element: Fun.constant(cell),
     mergable: Option.none,
@@ -47,9 +47,9 @@ var pasteRows = function (selections, table, cell, clipboard, generators) {
 };
 
 export default {
-  noMenu: noMenu,
-  forMenu: forMenu,
-  notCell: notCell,
-  paste: paste,
-  pasteRows: pasteRows
+  noMenu,
+  forMenu,
+  notCell,
+  paste,
+  pasteRows
 };

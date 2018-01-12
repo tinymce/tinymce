@@ -5,22 +5,22 @@ import { Css } from '@ephox/sugar';
 import IosScrolling from '../scroll/IosScrolling';
 import IosViewport from './IosViewport';
 
-var updateFixed = function (element, property, winY, offsetY) {
-  var destination = winY + offsetY;
+const updateFixed = function (element, property, winY, offsetY) {
+  const destination = winY + offsetY;
   Css.set(element, property, destination + 'px');
   return Future.pure(offsetY);
 };
 
-var updateScrollingFixed = function (element, winY, offsetY) {
-  var destTop = winY + offsetY;
-  var oldProp = Css.getRaw(element, 'top').getOr(offsetY);
+const updateScrollingFixed = function (element, winY, offsetY) {
+  const destTop = winY + offsetY;
+  const oldProp = Css.getRaw(element, 'top').getOr(offsetY);
   // While we are changing top, aim to scroll by the same amount to keep the cursor in the same location.
-  var delta = destTop - parseInt(oldProp, 10);
-  var destScroll = element.dom().scrollTop + delta;
+  const delta = destTop - parseInt(oldProp, 10);
+  const destScroll = element.dom().scrollTop + delta;
   return IosScrolling.moveScrollAndTop(element, destScroll, destTop);
 };
 
-var updateFixture = function (fixture, winY) {
+const updateFixture = function (fixture, winY) {
   return fixture.fold(function (element, property, offsetY) {
     return updateFixed(element, property, winY, offsetY);
   }, function (element, offsetY) {
@@ -28,14 +28,14 @@ var updateFixture = function (fixture, winY) {
   });
 };
 
-var updatePositions = function (container, winY) {
-  var fixtures = IosViewport.findFixtures(container);
-  var updates = Arr.map(fixtures, function (fixture) {
+const updatePositions = function (container, winY) {
+  const fixtures = IosViewport.findFixtures(container);
+  const updates = Arr.map(fixtures, function (fixture) {
     return updateFixture(fixture, winY);
   });
   return Futures.par(updates);
 };
 
-export default <any> {
-  updatePositions: updatePositions
+export default {
+  updatePositions
 };

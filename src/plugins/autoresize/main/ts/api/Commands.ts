@@ -10,12 +10,12 @@
 
 import Resize from '../core/Resize';
 
-var register = function (editor, oldSize) {
+const register = function (editor, oldSize) {
   editor.addCommand('mceAutoResize', function () {
     Resize.resize(editor, oldSize);
   });
 };
 
 export default {
-  register: register
+  register
 };

@@ -12,9 +12,9 @@ import Delay from 'tinymce/core/util/Delay';
 import VK from 'tinymce/core/util/VK';
 import KeyHandler from './KeyHandler';
 
-var setup = function (editor, patternsState) {
-  var charCodes = [',', '.', ';', ':', '!', '?'];
-  var keyCodes = [32];
+const setup = function (editor, patternsState) {
+  const charCodes = [',', '.', ';', ':', '!', '?'];
+  const keyCodes = [32];
 
   editor.on('keydown', function (e) {
     if (e.keyCode === 13 && !VK.modifierPressed(e)) {
@@ -38,5 +38,5 @@ var setup = function (editor, patternsState) {
 };
 
 export default {
-  setup: setup
+  setup
 };

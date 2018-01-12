@@ -21,22 +21,22 @@ import Helpers from './Helpers';
  * @private
  */
 
-//Explore the layers of the table till we find the first layer of tds or ths
+// Explore the layers of the table till we find the first layer of tds or ths
 function styleTDTH(dom, elm, name, value?) {
-  if (elm.tagName === "TD" || elm.tagName === "TH") {
+  if (elm.tagName === 'TD' || elm.tagName === 'TH') {
     dom.setStyle(elm, name, value);
   } else {
     if (elm.children) {
-      for (var i = 0; i < elm.children.length; i++) {
+      for (let i = 0; i < elm.children.length; i++) {
         styleTDTH(dom, elm.children[i], name, value);
       }
     }
   }
 }
 
-var extractDataFromElement = function (editor, tableElm) {
-  var dom = editor.dom;
-  var data: any = {
+const extractDataFromElement = function (editor, tableElm) {
+  const dom = editor.dom;
+  const data: any = {
     width: dom.getStyle(tableElm, 'width') || dom.getAttrib(tableElm, 'width'),
     height: dom.getStyle(tableElm, 'height') || dom.getAttrib(tableElm, 'height'),
     cellspacing: dom.getStyle(tableElm, 'border-spacing') || dom.getAttrib(tableElm, 'cellspacing'),
@@ -44,7 +44,7 @@ var extractDataFromElement = function (editor, tableElm) {
     border: dom.getAttrib(tableElm, 'data-mce-border') || dom.getAttrib(tableElm, 'border') || Styles.getTDTHOverallStyle(editor.dom, tableElm, 'border'),
     borderColor: dom.getAttrib(tableElm, 'data-mce-border-color'),
     caption: !!dom.select('caption', tableElm)[0],
-    'class': dom.getAttrib(tableElm, 'class')
+    class: dom.getAttrib(tableElm, 'class')
   };
 
   Tools.each('left center right'.split(' '), function (name) {
@@ -59,11 +59,12 @@ var extractDataFromElement = function (editor, tableElm) {
   return data;
 };
 
-var applyDataToElement = function (editor, tableElm, data) {
-  var dom = editor.dom;
-  var attrs: any = {}, styles: any = {};
+const applyDataToElement = function (editor, tableElm, data) {
+  const dom = editor.dom;
+  const attrs: any = {};
+  let styles: any = {};
 
-  attrs['class'] = data['class'];
+  attrs.class = data.class;
 
   styles.height = Util.addSizeSuffix(data.height);
 
@@ -94,7 +95,7 @@ var applyDataToElement = function (editor, tableElm, data) {
   // will control whether child TD/THs should be processed or not
   if (editor.settings.table_style_by_css) {
     if (tableElm.children) {
-      for (var i = 0; i < tableElm.children.length; i++) {
+      for (let i = 0; i < tableElm.children.length; i++) {
         styleTDTH(dom, tableElm.children[i], {
           'border-width': Util.addSizeSuffix(data.border),
           'border-color': data.borderColor,
@@ -116,16 +117,16 @@ var applyDataToElement = function (editor, tableElm, data) {
   dom.setAttribs(tableElm, attrs);
 };
 
-var onSubmitTableForm = function (editor, tableElm, evt) {
-  var dom = editor.dom;
-  var captionElm;
-  var data;
+const onSubmitTableForm = function (editor, tableElm, evt) {
+  const dom = editor.dom;
+  let captionElm;
+  let data;
 
   Helpers.updateStyleField(editor, evt);
   data = evt.control.rootControl.toJSON();
 
-  if (data["class"] === false) {
-    delete data["class"];
+  if (data.class === false) {
+    delete data.class;
   }
 
   editor.undoManager.transact(function () {
@@ -158,8 +159,9 @@ var onSubmitTableForm = function (editor, tableElm, evt) {
   });
 };
 
-var open = function (editor, isProps?) {
-  var dom = editor.dom, tableElm, colsCtrl, rowsCtrl, classListCtrl, data = {}, generalTableForm;
+const open = function (editor, isProps?) {
+  const dom = editor.dom;
+  let tableElm, colsCtrl, rowsCtrl, classListCtrl, data: any = {}, generalTableForm;
 
   if (isProps === true) {
     tableElm = dom.getParent(editor.selection.getStart(), 'table');
@@ -172,8 +174,8 @@ var open = function (editor, isProps?) {
   }
 
   if (editor.settings.table_class_list) {
-    if (data["class"]) {
-      data["class"] = data["class"].replace(/\s*mce\-item\-table\s*/g, '');
+    if (data.class) {
+      data.class = data.class.replace(/\s*mce\-item\-table\s*/g, '');
     }
 
     classListCtrl = {
@@ -246,8 +248,8 @@ var open = function (editor, isProps?) {
 
   if (editor.settings.table_advtab !== false) {
     editor.windowManager.open({
-      title: "Table properties",
-      data: data,
+      title: 'Table properties',
+      data,
       bodyType: 'tabpanel',
       body: [
         {
@@ -261,8 +263,8 @@ var open = function (editor, isProps?) {
     });
   } else {
     editor.windowManager.open({
-      title: "Table properties",
-      data: data,
+      title: 'Table properties',
+      data,
       body: generalTableForm,
       onsubmit: Fun.curry(onSubmitTableForm, editor, tableElm)
     });
@@ -270,5 +272,5 @@ var open = function (editor, isProps?) {
 };
 
 export default {
-  open: open
+  open
 };

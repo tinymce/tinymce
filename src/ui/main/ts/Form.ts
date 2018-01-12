@@ -30,9 +30,7 @@ import Tools from 'tinymce/core/util/Tools';
  * @extends tinymce.ui.Container
  */
 
-"use strict";
-
-export default <any> Container.extend({
+export default Container.extend({
   Defaults: {
     containerCls: 'form',
     layout: 'flex',
@@ -43,7 +41,7 @@ export default <any> Container.extend({
     labelGap: 30,
     spacing: 10,
     callbacks: {
-      submit: function () {
+      submit () {
         this.submit();
       }
     }
@@ -54,20 +52,21 @@ export default <any> Container.extend({
    *
    * @method preRender
    */
-  preRender: function () {
-    var self = this, items = self.items();
+  preRender () {
+    const self = this, items = self.items();
 
     if (!self.settings.formItemDefaults) {
       self.settings.formItemDefaults = {
         layout: 'flex',
-        autoResize: "overflow",
+        autoResize: 'overflow',
         defaults: { flex: 1 }
       };
     }
 
     // Wrap any labeled items in FormItems
     items.each(function (ctrl) {
-      var formItem, label = ctrl.settings.label;
+      let formItem;
+      const label = ctrl.settings.label;
 
       if (label) {
         formItem = new FormItem(Tools.extend({
@@ -84,7 +83,7 @@ export default <any> Container.extend({
         formItem.type = 'formitem';
         ctrl.aria('labelledby', ctrl._id + '-l');
 
-        if (typeof ctrl.settings.flex == "undefined") {
+        if (typeof ctrl.settings.flex === 'undefined') {
           ctrl.settings.flex = 1;
         }
 
@@ -100,7 +99,7 @@ export default <any> Container.extend({
    * @method submit
    * @return {Object} Event arguments object.
    */
-  submit: function () {
+  submit () {
     return this.fire('submit', { data: this.toJSON() });
   },
 
@@ -110,33 +109,35 @@ export default <any> Container.extend({
    * @method postRender
    * @return {tinymce.ui.ComboBox} Current combobox instance.
    */
-  postRender: function () {
-    var self = this;
+  postRender () {
+    const self = this;
 
     self._super();
     self.fromJSON(self.settings.data);
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     self._super();
 
     function recalcLabels() {
-      var maxLabelWidth = 0, labels = [], i, labelGap, items;
+      let maxLabelWidth = 0;
+      const labels = [];
+      let  i, labelGap, items;
 
       if (self.settings.labelGapCalc === false) {
         return;
       }
 
-      if (self.settings.labelGapCalc == "children") {
+      if (self.settings.labelGapCalc === 'children') {
         items = self.find('formitem');
       } else {
         items = self.items();
       }
 
       items.filter('formitem').each(function (item) {
-        var labelCtrl = item.items()[0], labelWidth = labelCtrl.getEl().clientWidth;
+        const labelCtrl = item.items()[0], labelWidth = labelCtrl.getEl().clientWidth;
 
         maxLabelWidth = labelWidth > maxLabelWidth ? labelWidth : maxLabelWidth;
         labels.push(labelCtrl);

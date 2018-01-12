@@ -13,36 +13,36 @@ import Resize from '../ui/Resize';
 import NotificationManagerImpl from 'tinymce/ui/NotificationManagerImpl';
 import WindowManagerImpl from 'tinymce/ui/WindowManagerImpl';
 
-var get = function (editor) {
-  var renderUI = function (args) {
+const get = function (editor) {
+  const renderUI = function (args) {
     return Render.renderUI(editor, this, args);
   };
 
-  var resizeTo = function (w, h) {
+  const resizeTo = function (w, h) {
     return Resize.resizeTo(editor, w, h);
   };
 
-  var resizeBy = function (dw, dh) {
+  const resizeBy = function (dw, dh) {
     return Resize.resizeBy(editor, dw, dh);
   };
 
-  var getNotificationManagerImpl = function () {
+  const getNotificationManagerImpl = function () {
     return NotificationManagerImpl(editor);
   };
 
-  var getWindowManagerImpl = function () {
+  const getWindowManagerImpl = function () {
     return WindowManagerImpl(editor);
   };
 
   return {
-    renderUI: renderUI,
-    resizeTo: resizeTo,
-    resizeBy: resizeBy,
-    getNotificationManagerImpl: getNotificationManagerImpl,
-    getWindowManagerImpl: getWindowManagerImpl
+    renderUI,
+    resizeTo,
+    resizeBy,
+    getNotificationManagerImpl,
+    getWindowManagerImpl
   };
 };
 
-export default <any> {
-  get: get
+export default {
+  get
 };

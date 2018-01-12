@@ -71,73 +71,73 @@ import Tooltip from './Tooltip';
 import Widget from './Widget';
 import Window from './Window';
 
-var getApi = function () {
+const getApi = function () {
   return {
-    Selector: Selector,
-    Collection: Collection,
-    ReflowQueue: ReflowQueue,
-    Control: Control,
-    Factory: Factory,
-    KeyboardNavigation: KeyboardNavigation,
-    Container: Container,
-    DragHelper: DragHelper,
-    Scrollable: Scrollable,
-    Panel: Panel,
-    Movable: Movable,
-    Resizable: Resizable,
-    FloatPanel: FloatPanel,
-    Window: Window,
-    MessageBox: MessageBox,
-    Tooltip: Tooltip,
-    Widget: Widget,
-    Progress: Progress,
-    Notification: Notification,
-    Layout: Layout,
-    AbsoluteLayout: AbsoluteLayout,
-    Button: Button,
-    ButtonGroup: ButtonGroup,
-    Checkbox: Checkbox,
-    ComboBox: ComboBox,
-    ColorBox: ColorBox,
-    PanelButton: PanelButton,
-    ColorButton: ColorButton,
-    ColorPicker: ColorPicker,
-    Path: Path,
-    ElementPath: ElementPath,
-    FormItem: FormItem,
-    Form: Form,
-    FieldSet: FieldSet,
-    FilePicker: FilePicker,
-    FitLayout: FitLayout,
-    FlexLayout: FlexLayout,
-    FlowLayout: FlowLayout,
-    FormatControls: FormatControls,
-    GridLayout: GridLayout,
-    Iframe: Iframe,
-    InfoBox: InfoBox,
-    Label: Label,
-    Toolbar: Toolbar,
-    MenuBar: MenuBar,
-    MenuButton: MenuButton,
-    MenuItem: MenuItem,
-    Throbber: Throbber,
-    Menu: Menu,
-    ListBox: ListBox,
-    Radio: Radio,
-    ResizeHandle: ResizeHandle,
-    SelectBox: SelectBox,
-    Slider: Slider,
-    Spacer: Spacer,
-    SplitButton: SplitButton,
-    StackLayout: StackLayout,
-    TabPanel: TabPanel,
-    TextBox: TextBox,
-    DropZone: DropZone,
-    BrowseButton: BrowseButton
+    Selector,
+    Collection,
+    ReflowQueue,
+    Control,
+    Factory,
+    KeyboardNavigation,
+    Container,
+    DragHelper,
+    Scrollable,
+    Panel,
+    Movable,
+    Resizable,
+    FloatPanel,
+    Window,
+    MessageBox,
+    Tooltip,
+    Widget,
+    Progress,
+    Notification,
+    Layout,
+    AbsoluteLayout,
+    Button,
+    ButtonGroup,
+    Checkbox,
+    ComboBox,
+    ColorBox,
+    PanelButton,
+    ColorButton,
+    ColorPicker,
+    Path,
+    ElementPath,
+    FormItem,
+    Form,
+    FieldSet,
+    FilePicker,
+    FitLayout,
+    FlexLayout,
+    FlowLayout,
+    FormatControls,
+    GridLayout,
+    Iframe,
+    InfoBox,
+    Label,
+    Toolbar,
+    MenuBar,
+    MenuButton,
+    MenuItem,
+    Throbber,
+    Menu,
+    ListBox,
+    Radio,
+    ResizeHandle,
+    SelectBox,
+    Slider,
+    Spacer,
+    SplitButton,
+    StackLayout,
+    TabPanel,
+    TextBox,
+    DropZone,
+    BrowseButton
   };
 };
 
-var appendTo = function (target) {
+const appendTo = function (target) {
   if (target.ui) {
     Tools.each(getApi(), function (ref, key) {
       target.ui[key] = ref;
@@ -147,15 +147,15 @@ var appendTo = function (target) {
   }
 };
 
-var registerToFactory = function () {
+const registerToFactory = function () {
   Tools.each(getApi(), function (ref, key) {
     Factory.add(key, ref);
   });
 };
 
-var Api = {
-  appendTo: appendTo,
-  registerToFactory: registerToFactory
+const Api = {
+  appendTo,
+  registerToFactory
 };
 
-export default <any> Api;
+export default Api;

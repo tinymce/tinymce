@@ -12,9 +12,9 @@ import Tools from 'tinymce/core/util/Tools';
 import NodeType from '../core/NodeType';
 import Selection from '../core/Selection';
 
-var findIndex = function (list, predicate) {
-  for (var index = 0; index < list.length; index++) {
-    var element = list[index];
+const findIndex = function (list, predicate) {
+  for (let index = 0; index < list.length; index++) {
+    const element = list[index];
 
     if (predicate(element)) {
       return index;
@@ -22,34 +22,34 @@ var findIndex = function (list, predicate) {
   }
   return -1;
 };
-var listState = function (editor, listName) {
+const listState = function (editor, listName) {
   return function (e) {
-    var ctrl = e.control;
+    const ctrl = e.control;
 
     editor.on('NodeChange', function (e) {
-      var tableCellIndex = findIndex(e.parents, NodeType.isTableCellNode);
-      var parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
-      var lists = Tools.grep(parents, NodeType.isListNode);
+      const tableCellIndex = findIndex(e.parents, NodeType.isTableCellNode);
+      const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
+      const lists = Tools.grep(parents, NodeType.isListNode);
       ctrl.active(lists.length > 0 && lists[0].nodeName === listName);
     });
   };
 };
 
-var indentPostRender = function (editor) {
+const indentPostRender = function (editor) {
   return function (e) {
-    var ctrl = e.control;
+    const ctrl = e.control;
 
     editor.on('nodechange', function () {
-      var listItemBlocks = Selection.getSelectedListItems(editor);
-      var disable = listItemBlocks.length > 0 && NodeType.isFirstChild(listItemBlocks[0]);
+      const listItemBlocks = Selection.getSelectedListItems(editor);
+      const disable = listItemBlocks.length > 0 && NodeType.isFirstChild(listItemBlocks[0]);
       ctrl.disabled(disable);
     });
   };
 };
 
-var register = function (editor) {
-  var hasPlugin = function (editor, plugin) {
-    var plugins = editor.settings.plugins ? editor.settings.plugins : '';
+const register = function (editor) {
+  const hasPlugin = function (editor, plugin) {
+    const plugins = editor.settings.plugins ? editor.settings.plugins : '';
     return Tools.inArray(plugins.split(/[ ,]/), plugin) !== -1;
   };
 
@@ -78,5 +78,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

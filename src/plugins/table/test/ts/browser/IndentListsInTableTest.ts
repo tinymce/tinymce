@@ -12,25 +12,24 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('tinymce.plugins.table.IndentListsInTableTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('tinymce.plugins.table.IndentListsInTableTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   TablePlugin();
   ListsPlugin();
 
-  var sAssertTableInnerHTML = function (editor, expected) {
+  const sAssertTableInnerHTML = function (editor, expected) {
     return Step.sync(function () {
-      var actual = editor.getBody().firstChild.innerHTML;
+      const actual = editor.getBody().firstChild.innerHTML;
       RawAssertions.assertEq('Does not have correct html', expected, actual);
     });
   };
 
-
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyActions = TinyActions(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -64,4 +63,3 @@ UnitTest.asynctest('tinymce.plugins.table.IndentListsInTableTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

@@ -13,40 +13,40 @@ import Plugin from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
   Theme();
 
-  var sReset = function (tinyApis) {
+  const sReset = function (tinyApis) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent(''),
       sWaitForWordcount(0)
     ], 0);
   };
 
-  var sAssertWordcount = function (num) {
+  const sAssertWordcount = function (num) {
     return Step.sync(function () {
-      var countEl = DOMUtils.DOM.select('.mce-wordcount')[0];
-      var value = countEl ? countEl.innerText : '';
+      const countEl = DOMUtils.DOM.select('.mce-wordcount')[0];
+      const value = countEl ? countEl.innerText : '';
       Assertions.assertEq('wordcount', num + ' WORDS', value.toUpperCase());
     });
   };
 
-  var sWaitForWordcount = function (num) {
+  const sWaitForWordcount = function (num) {
     return Waiter.sTryUntil('wordcount did not change', sAssertWordcount(num), 100, 3000);
   };
 
-  var sFakeTyping = function (editor, str) {
+  const sFakeTyping = function (editor, str) {
     return Step.sync(function () {
       editor.getBody().innerHTML = '<p>' + str + '</p>';
       Keyboard.keystroke(Keys.space(), {}, TinyDom.fromDom(editor.getBody()));
     });
   };
 
-  var sTestSetContent = function (tinyApis) {
+  const sTestSetContent = function (tinyApis) {
     return GeneralSteps.sequence([
       sReset(tinyApis),
       tinyApis.sSetContent('<p>hello world</p>'),
@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function() {
     ], 0);
   };
 
-  var sTestKeystroke = function (editor, tinyApis) {
+  const sTestKeystroke = function (editor, tinyApis) {
     return GeneralSteps.sequence([
       sReset(tinyApis),
       sFakeTyping(editor, 'a b c'),
@@ -63,19 +63,19 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function() {
     ], 0);
   };
 
-  var sExecCommand = function (editor, command) {
+  const sExecCommand = function (editor, command) {
     return Step.sync(function () {
       editor.execCommand(command);
     });
   };
 
-  var sSetRawContent = function (editor, content) {
+  const sSetRawContent = function (editor, content) {
     return Step.sync(function () {
       editor.getBody().innerHTML = content;
     });
   };
 
-  var sTestUndoRedo = function (editor, tinyApis) {
+  const sTestUndoRedo = function (editor, tinyApis) {
     return GeneralSteps.sequence([
       sReset(tinyApis),
       tinyApis.sSetContent('<p>a b c</p>'),
@@ -91,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function() {
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       sTestSetContent(tinyApis),
@@ -103,4 +103,3 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

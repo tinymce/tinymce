@@ -16,8 +16,8 @@ import { Element } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';
 import Util from '../alien/Util';
 
-var createContainer = function () {
-  var container = Element.fromTag('div');
+const createContainer = function () {
+  const container = Element.fromTag('div');
 
   Css.setAll(container, {
     position: 'static',
@@ -33,17 +33,17 @@ var createContainer = function () {
   return container;
 };
 
-var get = function (editor, container?) {
+const get = function (editor, container?) {
   return editor.inline ? ResizeWire.body(Util.getBody(editor), createContainer()) : ResizeWire.only(Element.fromDom(editor.getDoc()));
 };
 
-var remove = function (editor, wire) {
+const remove = function (editor, wire) {
   if (editor.inline) {
     Remove.remove(wire.parent());
   }
 };
 
 export default {
-  get: get,
-  remove: remove
+  get,
+  remove
 };

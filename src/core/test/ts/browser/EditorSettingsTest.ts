@@ -9,11 +9,11 @@ import EditorSettings from 'tinymce/core/EditorSettings';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var detection = PlatformDetection.detect();
-  var isTouch = detection.deviceType.isTouch();
+UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const detection = PlatformDetection.detect();
+  const isTouch = detection.deviceType.isTouch();
 
   Theme();
 
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function() {
     Pipeline.async({}, [
       Logger.t('getEditorSettings tests', GeneralSteps.sequence([
         Logger.t('Override defaults plugins', Step.sync(function () {
-          var settings = EditorSettings.getEditorSettings(
+          const settings = EditorSettings.getEditorSettings(
             editor,
             'id',
             'documentBaseUrl',
@@ -45,90 +45,90 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function() {
         })),
 
         Logger.t('Override defaults with forced_plugins using arrays', Step.sync(function () {
-          var defaultSettings = {
+          const defaultSettings = {
             forced_plugins: ['a', 'b']
           };
 
-          var userSettings = {
+          const userSettings = {
             plugins: ['c', 'd']
           };
 
-          var settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
+          const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
 
           Assertions.assertEq('Should be both forced and user plugins', 'a b c d', settings.plugins);
         })),
 
         Logger.t('Override defaults with forced_plugins using strings', Step.sync(function () {
-          var defaultSettings = {
+          const defaultSettings = {
             forced_plugins: 'a b'
           };
 
-          var userSettings = {
+          const userSettings = {
             plugins: 'c d'
           };
 
-          var settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
+          const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
 
           Assertions.assertEq('Should be both forced and user plugins', 'a b c d', settings.plugins);
         })),
 
         Logger.t('Override defaults with forced_plugins using mixed types and spaces', Step.sync(function () {
-          var defaultSettings = {
+          const defaultSettings = {
             forced_plugins: '  a   b'
           };
 
-          var userSettings = {
+          const userSettings = {
             plugins: [' c ', '  d   e ']
           };
 
-          var settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
+          const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
 
           Assertions.assertEq('Should be both forced and user plugins', 'a b c d e', settings.plugins);
         })),
 
         Logger.t('Override defaults with just default forced_plugins', Step.sync(function () {
-          var defaultSettings = {
+          const defaultSettings = {
             forced_plugins: ['a', 'b']
           };
 
-          var userSettings = {
+          const userSettings = {
           };
 
-          var settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
+          const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
 
           Assertions.assertEq('Should be just default plugins', 'a b', settings.plugins);
         })),
 
         Logger.t('Override defaults with just user plugins', Step.sync(function () {
-          var defaultSettings = {
+          const defaultSettings = {
           };
 
-          var userSettings = {
+          const userSettings = {
             plugins: ['a', 'b']
           };
 
-          var settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
+          const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
 
           Assertions.assertEq('Should be just user plugins', 'a b', settings.plugins);
         })),
 
         Logger.t('Override defaults with forced_plugins should not be possible to override', Step.sync(function () {
-          var defaultSettings = {
+          const defaultSettings = {
             forced_plugins: ['a', 'b']
           };
 
-          var userSettings = {
+          const userSettings = {
             forced_plugins: ['a'],
             plugins: ['c', 'd']
           };
 
-          var settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
+          const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
 
           Assertions.assertEq('Should be just forced and user plugins', 'a b c d', settings.plugins);
         })),
 
         Logger.t('Getters for varous setting types', Step.sync(function () {
-          var settings = EditorSettings.getEditorSettings(
+          const settings = EditorSettings.getEditorSettings(
             {},
             'id',
             'documentBaseUrl',
@@ -145,8 +145,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function() {
             }
           );
 
-          var fakeEditor = {
-            settings: settings
+          const fakeEditor = {
+            settings
           };
 
           Assertions.assertEq('Should be none for non existing setting', true, EditorSettings.get(fakeEditor, 'non_existing').isNone());
@@ -163,7 +163,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function() {
         })),
 
         Logger.t('Mobile override', Step.sync(function () {
-          var settings = EditorSettings.getEditorSettings(
+          const settings = EditorSettings.getEditorSettings(
             {},
             'id',
             'documentBaseUrl',
@@ -178,8 +178,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function() {
             }
           );
 
-          var fakeEditor = {
-            settings: settings
+          const fakeEditor = {
+            settings
           };
 
           Assertions.assertEq('Should only have the mobile setting on touch', EditorSettings.get(fakeEditor, 'settingA').getOr(false), isTouch);
@@ -251,4 +251,3 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

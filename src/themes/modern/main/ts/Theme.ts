@@ -21,4 +21,4 @@ ThemeManager.add('modern', function (editor) {
   return ThemeApi.get(editor);
 });
 
-export default <any> function () { };
+export default function () { }

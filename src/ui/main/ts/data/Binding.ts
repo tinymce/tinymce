@@ -23,7 +23,7 @@
  * @method Binding
  * @param {Object} settings Settings to the binding.
  */
-var Binding: any = function(settings) {
+const Binding: any = function (settings) {
   this.create = settings.create;
 };
 
@@ -37,14 +37,14 @@ var Binding: any = function(settings) {
  */
 Binding.create = function (model, name) {
   return new Binding({
-    create: function (otherModel, otherName) {
-      var bindings;
+    create (otherModel, otherName) {
+      let bindings;
 
-      var fromSelfToOther = function(e) {
+      const fromSelfToOther = function (e) {
         otherModel.set(otherName, e.value);
       };
 
-      var fromOtherToSelf = function(e) {
+      const fromOtherToSelf = function (e) {
         model.set(name, e.value);
       };
 
@@ -58,7 +58,7 @@ Binding.create = function (model, name) {
         bindings = otherModel._bindings = [];
 
         otherModel.on('destroy', function () {
-          var i = bindings.length;
+          let i = bindings.length;
 
           while (i--) {
             bindings[i]();
@@ -75,4 +75,4 @@ Binding.create = function (model, name) {
   });
 };
 
-export default <any> Binding;
+export default Binding;

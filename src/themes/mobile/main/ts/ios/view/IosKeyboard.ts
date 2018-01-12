@@ -2,7 +2,6 @@ import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 import { DomEvent } from '@ephox/sugar';
-import { Body } from '@ephox/sugar';
 import { Node } from '@ephox/sugar';
 import ResumeEditing from '../focus/ResumeEditing';
 import CaptureBin from '../../util/CaptureBin';
@@ -36,16 +35,16 @@ import CaptureBin from '../../util/CaptureBin';
  * the stubborn keyboard in webapp mode, we will need to find some way to let repartee know the MaxHeight
  * needs to exclude the keyboard. This isn't a problem with timid, because the keyboard is dismissed.
  */
-var stubborn = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
-  var toEditing = function () {
+const stubborn = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
+  const toEditing = function () {
     ResumeEditing.resume(cWin, frame);
   };
 
-  var toReading = function () {
+  const toReading = function () {
     CaptureBin.input(outerBody, Focus.blur);
   };
 
-  var captureInput = DomEvent.bind(page, 'keydown', function (evt) {
+  const captureInput = DomEvent.bind(page, 'keydown', function (evt) {
     // Think about killing the event.
     if (! Arr.contains([ 'input', 'textarea' ], Node.name(evt.target()))) {
 
@@ -56,19 +55,19 @@ var stubborn = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
     }
   });
 
-  var onToolbarTouch = function (/* event */) {
+  const onToolbarTouch = function (/* event */) {
     // Do nothing
   };
 
-  var destroy = function () {
+  const destroy = function () {
     captureInput.unbind();
   };
 
   return {
-    toReading: toReading,
-    toEditing: toEditing,
-    onToolbarTouch: onToolbarTouch,
-    destroy: destroy
+    toReading,
+    toEditing,
+    onToolbarTouch,
+    destroy
   };
 };
 
@@ -90,32 +89,32 @@ var stubborn = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
  * However, the timid keyboard mode will seamlessly integrate with dropdowns max-height, because
  * dropdowns dismiss the keyboard, so they have all the height they require.
  */
-var timid = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
-  var dismissKeyboard = function () {
+const timid = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
+  const dismissKeyboard = function () {
     Focus.blur(frame);
   };
 
-  var onToolbarTouch = function () {
+  const onToolbarTouch = function () {
     dismissKeyboard();
   };
 
-  var toReading = function () {
+  const toReading = function () {
     dismissKeyboard();
   };
 
-  var toEditing = function () {
+  const toEditing = function () {
     ResumeEditing.resume(cWin, frame);
   };
 
   return {
-    toReading: toReading,
-    toEditing: toEditing,
-    onToolbarTouch: onToolbarTouch,
+    toReading,
+    toEditing,
+    onToolbarTouch,
     destroy: Fun.noop
   };
 };
 
-export default <any> {
-  stubborn: stubborn,
-  timid: timid
+export default {
+  stubborn,
+  timid
 };

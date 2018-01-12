@@ -3,9 +3,9 @@ import { TinyLoader } from '@ephox/mcagar';
 import InliteTheme from 'tinymce/themes/inlite/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.themes.inlite.SkinFalseTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.themes.inlite.SkinFalseTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   InliteTheme();
 
@@ -20,4 +20,3 @@ UnitTest.asynctest('browser.tinymce.themes.inlite.SkinFalseTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

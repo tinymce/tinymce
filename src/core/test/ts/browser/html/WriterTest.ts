@@ -3,13 +3,13 @@ import { Pipeline } from '@ephox/agar';
 import Writer from 'tinymce/core/html/Writer';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   suite.test('Comment', function () {
-    var writer;
+    let writer;
 
     writer = Writer();
     writer.comment('text');
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function() {
   });
 
   suite.test('CDATA', function () {
-    var writer;
+    let writer;
 
     writer = Writer();
     writer.cdata('text');
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function() {
   });
 
   suite.test('PI', function () {
-    var writer;
+    let writer;
 
     writer = Writer();
     writer.pi('xml', 'someval');
@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function() {
   });
 
   suite.test('Doctype', function () {
-    var writer;
+    let writer;
 
     writer = Writer();
     writer.doctype(' text');
@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function() {
   });
 
   suite.test('Text', function () {
-    var writer;
+    let writer;
 
     writer = Writer();
     writer.text('te<xt');
@@ -73,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function() {
   });
 
   suite.test('Text raw', function () {
-    var writer;
+    let writer;
 
     writer = Writer();
     writer.text('te<xt', true);
@@ -85,7 +85,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function() {
   });
 
   suite.test('Start', function () {
-    var writer;
+    let writer;
 
     writer = Writer();
     writer.start('b');
@@ -109,7 +109,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function() {
   });
 
   suite.test('End', function () {
-    var writer;
+    let writer;
 
     writer = Writer();
     writer.end('b');
@@ -117,9 +117,9 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function() {
   });
 
   suite.test('Indentation', function () {
-    var writer;
+    let writer;
 
-    writer = Writer({ indent: true, indent_before: 'p', indent_after:'p' });
+    writer = Writer({ indent: true, indent_before: 'p', indent_after: 'p' });
     writer.start('p');
     writer.start('span');
     writer.text('a');
@@ -130,7 +130,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function() {
     writer.end('p');
     LegacyUnit.equal(writer.getContent(), '<p><span>a</span></p>\n<p>a</p>');
 
-    writer = Writer({ indent: true, indent_before: 'p', indent_after:'p' });
+    writer = Writer({ indent: true, indent_before: 'p', indent_after: 'p' });
     writer.start('p');
     writer.text('a');
     writer.end('p');
@@ -138,22 +138,22 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function() {
   });
 
   suite.test('Entities', function () {
-    var writer;
+    let writer;
 
     writer = Writer();
-    writer.start('p', [{ name: "title", value: '<>"\'&\u00e5\u00e4\u00f6' }]);
+    writer.start('p', [{ name: 'title', value: '<>"\'&\u00e5\u00e4\u00f6' }]);
     writer.text('<>"\'&\u00e5\u00e4\u00f6');
     writer.end('p');
     LegacyUnit.equal(writer.getContent(), '<p title="&lt;&gt;&quot;\'&amp;\u00e5\u00e4\u00f6">&lt;&gt;"\'&amp;\u00e5\u00e4\u00f6</p>');
 
     writer = Writer({ entity_encoding: 'numeric' });
-    writer.start('p', [{ name: "title", value: '<>"\'&\u00e5\u00e4\u00f6' }]);
+    writer.start('p', [{ name: 'title', value: '<>"\'&\u00e5\u00e4\u00f6' }]);
     writer.text('<>"\'&\u00e5\u00e4\u00f6');
     writer.end('p');
     LegacyUnit.equal(writer.getContent(), '<p title="&lt;&gt;&quot;\'&amp;&#229;&#228;&#246;">&lt;&gt;"\'&amp;&#229;&#228;&#246;</p>');
 
     writer = Writer({ entity_encoding: 'named' });
-    writer.start('p', [{ name: "title", value: '<>"\'&\u00e5\u00e4\u00f6' }]);
+    writer.start('p', [{ name: 'title', value: '<>"\'&\u00e5\u00e4\u00f6' }]);
     writer.text('<>"\'&\u00e5\u00e4\u00f6');
     writer.end('p');
     LegacyUnit.equal(writer.getContent(), '<p title="&lt;&gt;&quot;\'&amp;&aring;&auml;&ouml;">&lt;&gt;"\'&amp;&aring;&auml;&ouml;</p>');
@@ -163,4 +163,3 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function() {
     success();
   }, failure);
 });
-

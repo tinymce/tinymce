@@ -3,12 +3,12 @@ import { Pipeline } from '@ephox/agar';
 import Diff from 'tinymce/core/undo/Diff';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.undo.DiffTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.undo.DiffTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
-  var KEEP = Diff.KEEP, INSERT = Diff.INSERT, DELETE = Diff.DELETE;
+  const KEEP = Diff.KEEP, INSERT = Diff.INSERT, DELETE = Diff.DELETE;
 
   suite.test('diff', function () {
     LegacyUnit.deepEqual(Diff.diff([], []), []);
@@ -26,4 +26,3 @@ UnitTest.asynctest('browser.tinymce.core.undo.DiffTest', function() {
     success();
   }, failure);
 });
-

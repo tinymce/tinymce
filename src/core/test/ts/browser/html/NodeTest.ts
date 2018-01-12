@@ -3,17 +3,17 @@ import { Pipeline } from '@ephox/agar';
 import Node from 'tinymce/core/html/Node';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
-  var ok = function (value, label?) {
+  const ok = function (value, label?) {
     return LegacyUnit.equal(value, true, label);
   };
 
   suite.test('construction', function () {
-    var node;
+    let node;
 
     node = new Node('#text', 3);
     LegacyUnit.equal(node.name, '#text');
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('append inside empty node', function () {
-    var root, node;
+    let root, node;
 
     root = new Node('#frag', 11);
     node = root.append(new Node('b', 1));
@@ -63,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('append node after node', function () {
-    var root, node, node2;
+    let root, node, node2;
 
     root = new Node('#frag', 11);
     node2 = root.append(new Node('a', 1));
@@ -88,7 +88,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('append existing node before other existing node', function () {
-    var root, node, node2;
+    let root, node, node2;
 
     root = new Node('#frag', 11);
     node = root.append(new Node('a', 1));
@@ -109,7 +109,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('remove single child', function () {
-    var root, node;
+    let root, node;
 
     root = new Node('#frag', 11);
     node = root.append(new Node('p', 1));
@@ -123,7 +123,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('remove middle node', function () {
-    var root, node, node2, node3;
+    let root, node, node2, node3;
 
     root = new Node('#frag', 11);
     node = root.append(new Node('a', 1));
@@ -142,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('insert after last', function () {
-    var fragment, root, node, node2;
+    let fragment, root, node, node2;
 
     fragment = new Node('#frag', 11);
     root = fragment.append(new Node('body', 1));
@@ -156,7 +156,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('insert before first', function () {
-    var fragment, root, node, node2;
+    let fragment, root, node, node2;
 
     fragment = new Node('#frag', 11);
     root = fragment.append(new Node('body', 1));
@@ -173,7 +173,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('insert before second', function () {
-    var fragment, root, node, node2, node3;
+    let fragment, root, node, node2, node3;
 
     fragment = new Node('#frag', 11);
     root = fragment.append(new Node('body', 1));
@@ -188,7 +188,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('insert after and between two nodes', function () {
-    var root, node, node2, node3, fragment;
+    let root, node, node2, node3, fragment;
 
     fragment = new Node('#frag', 11);
     root = fragment.append(new Node('body', 1));
@@ -205,7 +205,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('replace single child', function () {
-    var root, node1, node2;
+    let root, node1, node2;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
@@ -219,7 +219,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('replace first child', function () {
-    var root, node1, node2, node3;
+    let root, node1, node2, node3;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
@@ -234,7 +234,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('replace last child', function () {
-    var root, node1, node2, node3;
+    let root, node1, node2, node3;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
@@ -249,7 +249,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('replace middle child', function () {
-    var root, node1, node2, node3, node4;
+    let root, node1, node2, node3, node4;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
@@ -265,7 +265,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('attr', function () {
-    var node;
+    let node;
 
     node = new Node('b', 1);
     LegacyUnit.deepEqual(node.attributes, []);
@@ -273,7 +273,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
     LegacyUnit.equal(node.attr('attr1'), 'value1');
     LegacyUnit.equal(node.attr('attr2'), undefined);
     LegacyUnit.deepEqual(node.attributes, [{ name: 'attr1', value: 'value1' }]);
-    LegacyUnit.deepEqual(node.attributes.map, { 'attr1': 'value1' });
+    LegacyUnit.deepEqual(node.attributes.map, { attr1: 'value1' });
 
     node = new Node('b', 1);
     LegacyUnit.deepEqual(node.attributes, []);
@@ -281,7 +281,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
     node.attr('attr1', 'valueX');
     LegacyUnit.equal(node.attr('attr1'), 'valueX');
     LegacyUnit.deepEqual(node.attributes, [{ name: 'attr1', value: 'valueX' }]);
-    LegacyUnit.deepEqual(node.attributes.map, { 'attr1': 'valueX' });
+    LegacyUnit.deepEqual(node.attributes.map, { attr1: 'valueX' });
 
     node = new Node('b', 1);
     LegacyUnit.deepEqual(node.attributes, []);
@@ -290,7 +290,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
     LegacyUnit.equal(node.attr('attr1'), 'value1');
     LegacyUnit.equal(node.attr('attr2'), 'value2');
     LegacyUnit.deepEqual(node.attributes, [{ name: 'attr1', value: 'value1' }, { name: 'attr2', value: 'value2' }]);
-    LegacyUnit.deepEqual(node.attributes.map, { 'attr1': 'value1', 'attr2': 'value2' });
+    LegacyUnit.deepEqual(node.attributes.map, { attr1: 'value1', attr2: 'value2' });
 
     node = new Node('b', 1);
     LegacyUnit.deepEqual(node.attributes, []);
@@ -312,7 +312,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('clone', function () {
-    var root, node, clone;
+    let root, node, clone;
 
     node = new Node('#text', 3);
     node.value = 'value';
@@ -343,11 +343,11 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
     LegacyUnit.equal(clone.name, 'b');
     LegacyUnit.equal(clone.type, 1);
     LegacyUnit.deepEqual(clone.attributes, [{ name: 'class', value: 'class' }, { name: 'title', value: 'title' }]);
-    LegacyUnit.deepEqual(clone.attributes.map, { 'class': 'class', 'title': 'title' });
+    LegacyUnit.deepEqual(clone.attributes.map, { class: 'class', title: 'title' });
   });
 
   suite.test('unwrap', function () {
-    var root, node1, node2, node3;
+    let root, node1, node2, node3;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
@@ -369,7 +369,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('empty', function () {
-    var root, node1;
+    let root, node1;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
@@ -381,7 +381,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
   });
 
   suite.test('isEmpty', function () {
-    var root, node1, node2;
+    let root, node1, node2;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('p', 1));
@@ -413,7 +413,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
     node1 = root.append(new Node('a', 1)).attr('name', 'x');
     ok(!root.isEmpty({ img: 1 }), 'Contains anchor with name attribute.');
 
-    var isSpan = function (node) {
+    const isSpan = function (node) {
       return node.name === 'span';
     };
 
@@ -430,4 +430,3 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function() {
     success();
   }, failure);
 });
-

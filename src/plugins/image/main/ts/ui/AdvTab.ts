@@ -1,24 +1,24 @@
 import Settings from '../api/Settings';
 import Utils from '../core/Utils';
 
-var updateVSpaceHSpaceBorder = function (editor) {
+const updateVSpaceHSpaceBorder = function (editor) {
   return function (evt) {
-    var dom = editor.dom;
-    var rootControl = evt.control.rootControl;
+    const dom = editor.dom;
+    const rootControl = evt.control.rootControl;
 
     if (!Settings.hasAdvTab(editor)) {
       return;
     }
 
-    var data = rootControl.toJSON();
-    var css = dom.parseStyle(data.style);
+    const data = rootControl.toJSON();
+    let css = dom.parseStyle(data.style);
 
-    rootControl.find('#vspace').value("");
-    rootControl.find('#hspace').value("");
+    rootControl.find('#vspace').value('');
+    rootControl.find('#hspace').value('');
 
     css = Utils.mergeMargins(css);
 
-      //Move opposite equal margins to vspace/hspace field
+      // Move opposite equal margins to vspace/hspace field
     if ((css['margin-top'] && css['margin-bottom']) || (css['margin-right'] && css['margin-left'])) {
       if (css['margin-top'] === css['margin-bottom']) {
         rootControl.find('#vspace').value(Utils.removePixelSuffix(css['margin-top']));
@@ -32,7 +32,7 @@ var updateVSpaceHSpaceBorder = function (editor) {
       }
     }
 
-      //Move border-width
+      // Move border-width
     if (css['border-width']) {
       rootControl.find('#border').value(Utils.removePixelSuffix(css['border-width']));
     }
@@ -41,7 +41,7 @@ var updateVSpaceHSpaceBorder = function (editor) {
   };
 };
 
-var makeTab = function (editor, updateStyle) {
+const makeTab = function (editor, updateStyle) {
   return {
     title: 'Advanced',
     type: 'form',
@@ -63,7 +63,7 @@ var makeTab = function (editor, updateStyle) {
         defaults: {
           type: 'textbox',
           maxWidth: 50,
-          onchange: function (evt) {
+          onchange (evt) {
             updateStyle(editor, evt.control.rootControl);
           }
         },
@@ -78,5 +78,5 @@ var makeTab = function (editor, updateStyle) {
 };
 
 export default {
-  makeTab: makeTab
+  makeTab
 };

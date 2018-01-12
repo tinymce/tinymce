@@ -8,32 +8,32 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var validContext = /^(p|h[1-6]|li)$/;
+const validContext = /^(p|h[1-6]|li)$/;
 
-var findStartTokenIndex = function (regexp, html) {
-  var matches = regexp.exec(html);
+const findStartTokenIndex = function (regexp, html) {
+  const matches = regexp.exec(html);
   return matches ? matches.index + matches[0].length : -1;
 };
 
-var findEndTokenIndex = function (regexp, html) {
-  var matches = regexp.exec(html);
+const findEndTokenIndex = function (regexp, html) {
+  const matches = regexp.exec(html);
   return matches ? matches.index : -1;
 };
 
-var unwrap = function (startRe, endRe, html) {
-  var startIndex = findStartTokenIndex(startRe, html);
-  var endIndex = findEndTokenIndex(endRe, html);
+const unwrap = function (startRe, endRe, html) {
+  const startIndex = findStartTokenIndex(startRe, html);
+  const endIndex = findEndTokenIndex(endRe, html);
   return startIndex !== -1 && endIndex !== -1 ? html.substring(startIndex, endIndex) : html;
 };
 
-var parseContext = function (html) {
-  var matches = /<\/([^>]+)>/g.exec(html);
+const parseContext = function (html) {
+  const matches = /<\/([^>]+)>/g.exec(html);
   return matches ? matches[1].toLowerCase() : 'body';
 };
 
-var getFragmentInfo = function (html) {
-  var startIndex = findStartTokenIndex(/<!--\s*StartFragment\s*-->/g, html);
-  var endIndex = findEndTokenIndex(/<!--\s*EndFragment\s*-->/g, html);
+const getFragmentInfo = function (html) {
+  const startIndex = findStartTokenIndex(/<!--\s*StartFragment\s*-->/g, html);
+  const endIndex = findEndTokenIndex(/<!--\s*EndFragment\s*-->/g, html);
 
   if (startIndex !== -1 && endIndex !== -1) {
     return {
@@ -41,22 +41,22 @@ var getFragmentInfo = function (html) {
       context: parseContext(html.substr(endIndex))
     };
   } else {
-    return { html: html, context: 'body' };
+    return { html, context: 'body' };
   }
 };
 
-var unwrapHtml = function (html) {
+const unwrapHtml = function (html) {
   return unwrap(/<body[^>]*>/gi, /<\/body>/gi,
     unwrap(/<!--\s*StartFragment\s*-->/g, /<!--\s*EndFragment\s*-->/g, html)
   );
 };
 
-var getFragmentHtml = function (html) {
-  var fragmentInfo = getFragmentInfo(html);
+const getFragmentHtml = function (html) {
+  const fragmentInfo = getFragmentInfo(html);
   return validContext.test(fragmentInfo.context) ? unwrapHtml(fragmentInfo.html) : unwrapHtml(html);
 };
 
 export default {
-  getFragmentInfo: getFragmentInfo,
-  getFragmentHtml: getFragmentHtml
+  getFragmentInfo,
+  getFragmentHtml
 };

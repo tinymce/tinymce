@@ -25,19 +25,19 @@ import AbsoluteLayout from './AbsoluteLayout';
  * @extends tinymce.ui.AbsoluteLayout
  */
 
-"use strict";
-
-export default <any> AbsoluteLayout.extend({
+export default AbsoluteLayout.extend({
   /**
    * Recalculates the positions of the controls in the specified container.
    *
    * @method recalc
    * @param {tinymce.ui.Container} container Container instance to recalc.
    */
-  recalc: function (container) {
-    var settings, rows, cols, items, contLayoutRect, width, height, rect,
-      ctrlLayoutRect, ctrl, x, y, posX, posY, ctrlSettings, contPaddingBox, align, spacingH, spacingV, alignH, alignV, maxX, maxY,
-      colWidths = [], rowHeights = [], ctrlMinWidth, ctrlMinHeight, availableWidth, availableHeight, reverseRows, idx;
+  recalc (container) {
+    let settings, rows, cols, items, contLayoutRect, width, height, rect,
+      ctrlLayoutRect, ctrl, x, y, posX, posY, ctrlSettings, contPaddingBox, align, spacingH, spacingV, alignH, alignV, maxX, maxY;
+    const colWidths = [];
+    const rowHeights = [];
+    let ctrlMinWidth, ctrlMinHeight, availableWidth, availableHeight, reverseRows, idx;
 
     // Get layout settings
     settings = container.settings;
@@ -52,11 +52,11 @@ export default <any> AbsoluteLayout.extend({
     contPaddingBox = container.paddingBox;
     reverseRows = 'reverseRows' in settings ? settings.reverseRows : container.isRtl();
 
-    if (alignH && typeof alignH == "string") {
+    if (alignH && typeof alignH === 'string') {
       alignH = [alignH];
     }
 
-    if (alignV && typeof alignV == "string") {
+    if (alignV && typeof alignV === 'string') {
       alignV = [alignV];
     }
 
@@ -119,7 +119,7 @@ export default <any> AbsoluteLayout.extend({
     rect.minH = Math.max(rect.minH, contLayoutRect.startMinHeight);
 
     // Resize container container if minSize was changed
-    if (contLayoutRect.autoResize && (rect.minW != contLayoutRect.minW || rect.minH != contLayoutRect.minH)) {
+    if (contLayoutRect.autoResize && (rect.minW !== contLayoutRect.minW || rect.minH !== contLayoutRect.minH)) {
       rect.w = rect.minW;
       rect.h = rect.minH;
 
@@ -128,7 +128,7 @@ export default <any> AbsoluteLayout.extend({
 
       // Forced recalc for example if items are hidden/shown
       if (container._lastRect === null) {
-        var parentCtrl = container.parent();
+        const parentCtrl = container.parent();
         if (parentCtrl) {
           parentCtrl._lastRect = null;
           parentCtrl.recalc();
@@ -145,17 +145,17 @@ export default <any> AbsoluteLayout.extend({
       rect.contentH = rect.minH - contLayoutRect.deltaH;
     }
 
-    var flexV;
+    let flexV;
 
-    if (settings.packV == 'start') {
+    if (settings.packV === 'start') {
       flexV = 0;
     } else {
       flexV = availableHeight > 0 ? Math.floor(availableHeight / rows) : 0;
     }
 
     // Calculate totalFlex
-    var totalFlex = 0;
-    var flexWidths = settings.flexWidths;
+    let totalFlex = 0;
+    const flexWidths = settings.flexWidths;
     if (flexWidths) {
       for (x = 0; x < flexWidths.length; x++) {
         totalFlex += flexWidths[x];
@@ -165,7 +165,7 @@ export default <any> AbsoluteLayout.extend({
     }
 
     // Calculate new column widths based on flex values
-    var ratio = availableWidth / totalFlex;
+    const ratio = availableWidth / totalFlex;
     for (x = 0; x < cols; x++) {
       colWidths[x] += flexWidths ? flexWidths[x] * ratio : ratio;
     }
@@ -199,21 +199,21 @@ export default <any> AbsoluteLayout.extend({
 
         // Align control horizontal
         align = ctrlSettings.alignH || (alignH ? (alignH[x] || alignH[0]) : null);
-        if (align == "center") {
+        if (align === 'center') {
           ctrlLayoutRect.x = posX + (width / 2) - (ctrlLayoutRect.w / 2);
-        } else if (align == "right") {
+        } else if (align === 'right') {
           ctrlLayoutRect.x = posX + width - ctrlLayoutRect.w;
-        } else if (align == "stretch") {
+        } else if (align === 'stretch') {
           ctrlLayoutRect.w = width;
         }
 
         // Align control vertical
         align = ctrlSettings.alignV || (alignV ? (alignV[x] || alignV[0]) : null);
-        if (align == "center") {
+        if (align === 'center') {
           ctrlLayoutRect.y = posY + (height / 2) - (ctrlLayoutRect.h / 2);
-        } else if (align == "bottom") {
+        } else if (align === 'bottom') {
           ctrlLayoutRect.y = posY + height - ctrlLayoutRect.h;
-        } else if (align == "stretch") {
+        } else if (align === 'stretch') {
           ctrlLayoutRect.h = height;
         }
 

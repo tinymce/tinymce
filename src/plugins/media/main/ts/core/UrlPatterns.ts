@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var urlPatterns = [
+const urlPatterns = [
   {
     regex: /youtu\.be\/([\w\-.]+)/,
     type: 'iframe', w: 560, h: 314,
@@ -35,8 +35,8 @@ var urlPatterns = [
   },
   {
     regex: /vimeo\.com\/(.*)\/([0-9]+)/,
-    type: "iframe", w: 425, h: 350,
-    url: "//player.vimeo.com/video/$2?title=0&amp;byline=0",
+    type: 'iframe', w: 425, h: 350,
+    url: '//player.vimeo.com/video/$2?title=0&amp;byline=0',
     allowfullscreen: true
   },
   {
@@ -60,5 +60,5 @@ var urlPatterns = [
 ];
 
 export default {
-  urlPatterns: urlPatterns
+  urlPatterns
 };

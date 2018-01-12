@@ -1,6 +1,5 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Env from 'tinymce/core/Env';
 import CaretUtils from 'tinymce/core/caret/CaretUtils';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
@@ -10,25 +9,25 @@ import CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var assertRange = CaretAsserts.assertRange;
-  var createRange = CaretAsserts.createRange;
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const assertRange = CaretAsserts.assertRange;
+  const createRange = CaretAsserts.createRange;
+  const viewBlock = ViewBlock();
 
   if (!Env.ceFalse) {
     return;
   }
 
-  var ZWSP = Zwsp.ZWSP;
+  const ZWSP = Zwsp.ZWSP;
 
-  var getRoot = function () {
+  const getRoot = function () {
     return viewBlock.get();
   };
 
-  var setupHtml = function (html) {
+  const setupHtml = function (html) {
     viewBlock.update(html);
 
     // IE messes zwsp up on innerHTML so we need to first set markers then replace then using dom operations
@@ -36,9 +35,9 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function() {
     replaceWithZwsp(viewBlock.get());
   };
 
-  var replaceWithZwsp = function (node) {
-    for (var i = 0; i < node.childNodes.length; i++) {
-      var childNode = node.childNodes[i];
+  const replaceWithZwsp = function (node) {
+    for (let i = 0; i < node.childNodes.length; i++) {
+      const childNode = node.childNodes[i];
 
       if (childNode.nodeType === 3) {
         childNode.nodeValue = childNode.nodeValue.replace(/__ZWSP__/, ZWSP);
@@ -48,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function() {
     }
   };
 
-  var findElm = function (selector) {
+  const findElm = function (selector) {
     return $(selector, getRoot())[0];
   };
 
@@ -71,11 +70,11 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function() {
   suite.test('findNode', function () {
     setupHtml('<b>abc</b><b><i>123</i></b>def');
 
-    var isBold = function (node) {
+    const isBold = function (node) {
       return node.nodeName === 'B';
     };
 
-    var isText = function (node) {
+    const isText = function (node) {
       return node.nodeType === 3;
     };
 
@@ -284,4 +283,3 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function() {
     success();
   }, failure);
 });
-

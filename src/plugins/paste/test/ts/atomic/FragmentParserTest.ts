@@ -2,8 +2,8 @@ import { RawAssertions } from '@ephox/agar';
 import FragmentParser from 'tinymce/plugins/paste/core/FragmentParser';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('atomic.tinymce.plugins.paste.FragmentParserTest', function() {
-  var testGetFragmentInfo = function () {
+UnitTest.test('atomic.tinymce.plugins.paste.FragmentParserTest', function () {
+  const testGetFragmentInfo = function () {
     RawAssertions.assertEq(
       'Should be the input string and context body',
       {
@@ -83,7 +83,7 @@ UnitTest.test('atomic.tinymce.plugins.paste.FragmentParserTest', function() {
     );
   };
 
-  var testGetFragmentHtml = function () {
+  const testGetFragmentHtml = function () {
     RawAssertions.assertEq(
       'Should be the input string',
       'abc',
@@ -148,4 +148,3 @@ UnitTest.test('atomic.tinymce.plugins.paste.FragmentParserTest', function() {
   testGetFragmentInfo();
   testGetFragmentHtml();
 });
-

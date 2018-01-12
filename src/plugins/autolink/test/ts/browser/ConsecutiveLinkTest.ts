@@ -1,9 +1,7 @@
 import { GeneralSteps } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
-import { TinyActions } from '@ephox/mcagar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/Env';
@@ -12,16 +10,16 @@ import KeyUtils from '../module/test/KeyUtils';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   AutolinkPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var steps = Env.ie ? [] : [
+    const tinyApis = TinyApis(editor);
+    const steps = Env.ie ? [] : [
       tinyApis.sFocus,
       Logger.t('Chrome adds a nbsp between link and text', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;www.domain.com</p>'),
@@ -47,4 +45,3 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', funct
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

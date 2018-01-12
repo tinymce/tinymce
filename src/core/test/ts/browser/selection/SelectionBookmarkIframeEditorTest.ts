@@ -13,62 +13,62 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.core.selection.SelectionBookmarkIframeEditorTest',
-  function() {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+  function () {
+    const success = arguments[arguments.length - 2];
+    const failure = arguments[arguments.length - 1];
 
     ModernTheme();
-    var testDivId = 'testDiv1234';
+    const testDivId = 'testDiv1234';
 
-    var sRemoveTestDiv = Step.sync(function () {
-      var input = document.querySelector('#' + testDivId);
+    const sRemoveTestDiv = Step.sync(function () {
+      const input = document.querySelector('#' + testDivId);
       input.parentNode.removeChild(input);
     });
 
-    var sAddTestDiv = Step.sync(function () {
-      var div = document.createElement('div');
+    const sAddTestDiv = Step.sync(function () {
+      const div = document.createElement('div');
       div.innerHTML = 'xxx';
       div.contentEditable = 'true';
       div.id = testDivId;
       document.body.appendChild(div);
     });
 
-    var focusDiv = function () {
-      var input: any = document.querySelector('#' + testDivId);
+    const focusDiv = function () {
+      const input: any = document.querySelector('#' + testDivId);
       input.focus();
     };
 
-    var setSelection = function (editor, start, soffset, finish, foffset) {
-      var sc = Hierarchy.follow(Element.fromDom(editor.getBody()), start).getOrDie();
-      var fc = Hierarchy.follow(Element.fromDom(editor.getBody()), start).getOrDie();
+    const setSelection = function (editor, start, soffset, finish, foffset) {
+      const sc = Hierarchy.follow(Element.fromDom(editor.getBody()), start).getOrDie();
+      const fc = Hierarchy.follow(Element.fromDom(editor.getBody()), start).getOrDie();
 
-      var rng = document.createRange();
+      const rng = document.createRange();
       rng.setStart(sc.dom(), soffset);
       rng.setEnd(fc.dom(), foffset);
 
       editor.selection.setRng(rng);
     };
 
-    var assertPath = function (label, root, expPath, expOffset, actElement, actOffset) {
-      var expected = Cursors.calculateOne(root, expPath);
-      var message = function () {
-        var actual = Element.fromDom(actElement);
-        var actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
+    const assertPath = function (label, root, expPath, expOffset, actElement, actOffset) {
+      const expected = Cursors.calculateOne(root, expPath);
+      const message = function () {
+        const actual = Element.fromDom(actElement);
+        const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
         return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
       };
       Assertions.assertEq('Assert incorrect for ' + label + '.\n' + message(), true, expected.dom() === actElement);
       Assertions.assertEq('Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
     };
 
-    var assertSelection = function (editor, startPath, soffset, finishPath, foffset) {
-      var actual = editor.selection.getRng();
-      var root = Element.fromDom(editor.getBody());
+    const assertSelection = function (editor, startPath, soffset, finishPath, foffset) {
+      const actual = editor.selection.getRng();
+      const root = Element.fromDom(editor.getBody());
       assertPath('start', root, startPath, soffset, actual.startContainer, actual.startOffset);
       assertPath('finish', root, finishPath, foffset, actual.endContainer, actual.endOffset);
     };
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var browser = PlatformDetection.detect().browser;
+      const browser = PlatformDetection.detect().browser;
       Pipeline.async({}, browser.isIE() ? [ // Only run on IE
         sAddTestDiv,
         Logger.t('assert selection after no nodechanged, should not restore', Step.sync(function () {
@@ -129,4 +129,3 @@ UnitTest.asynctest(
     }, failure);
   }
 );
-

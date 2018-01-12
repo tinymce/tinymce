@@ -11,10 +11,10 @@
 import { Throttler } from '@ephox/katamari';
 import CefUtils from '../keyboard/CefUtils';
 
-var setup = function (editor) {
-  var renderFocusCaret = Throttler.first(function () {
+const setup = function (editor) {
+  const renderFocusCaret = Throttler.first(function () {
     if (!editor.removed) {
-      var caretRange = CefUtils.renderRangeCaret(editor, editor.selection.getRng());
+      const caretRange = CefUtils.renderRangeCaret(editor, editor.selection.getRng());
       editor.selection.setRng(caretRange);
     }
   }, 0);
@@ -29,5 +29,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

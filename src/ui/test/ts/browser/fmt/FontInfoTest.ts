@@ -5,20 +5,20 @@ import { Element } from '@ephox/sugar';
 import FontInfo from 'tinymce/ui/fmt/FontInfo';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.fmt.FontInfoTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.ui.fmt.FontInfoTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
-  var assertComputedFontProp = function (fontProp, html, path, expected) {
-    var div = document.createElement('div');
-    var fontGetProp = fontProp === 'fontSize' ? FontInfo.getFontSize : FontInfo.getFontFamily;
+  const assertComputedFontProp = function (fontProp, html, path, expected) {
+    const div = document.createElement('div');
+    const fontGetProp = fontProp === 'fontSize' ? FontInfo.getFontSize : FontInfo.getFontFamily;
 
     document.body.appendChild(div);
     div.style[fontProp] = expected;
     div.innerHTML = html;
-    var elm = Hierarchy.follow(Element.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
-    var actual = fontGetProp(div, elm.dom());
+    const elm = Hierarchy.follow(Element.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
+    const actual = fontGetProp(div, elm.dom());
     LegacyUnit.equal(
       actual,
       expected,
@@ -27,14 +27,14 @@ UnitTest.asynctest('browser.tinymce.ui.fmt.FontInfoTest', function() {
     div.parentNode.removeChild(div);
   };
 
-  var assertSpecificFontProp = function (fontProp, html, path, expected) {
-    var div = document.createElement('div');
-    var fontGetProp = fontProp === 'fontSize' ? FontInfo.getFontSize : FontInfo.getFontFamily;
+  const assertSpecificFontProp = function (fontProp, html, path, expected) {
+    const div = document.createElement('div');
+    const fontGetProp = fontProp === 'fontSize' ? FontInfo.getFontSize : FontInfo.getFontFamily;
 
     document.body.appendChild(div);
     div.innerHTML = html;
-    var elm = Hierarchy.follow(Element.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
-    var actual = fontGetProp(div, elm.dom());
+    const elm = Hierarchy.follow(Element.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
+    const actual = fontGetProp(div, elm.dom());
     LegacyUnit.equal(
       actual,
       expected,
@@ -94,12 +94,12 @@ UnitTest.asynctest('browser.tinymce.ui.fmt.FontInfoTest', function() {
   });
 
   suite.asyncTest('getFontFamily should always return string even if display: none (firefox specific bug)', function (_, done) {
-    var iframe = document.createElement('iframe');
+    const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     document.body.appendChild(iframe);
 
     iframe.addEventListener('load', function () {
-      var fontFamily = FontInfo.getFontFamily(iframe.contentDocument.body, iframe.contentDocument.body.firstChild);
+      const fontFamily = FontInfo.getFontFamily(iframe.contentDocument.body, iframe.contentDocument.body.firstChild);
       LegacyUnit.equal(typeof fontFamily, 'string', 'Should always be a string');
       iframe.parentNode.removeChild(iframe);
 
@@ -122,4 +122,3 @@ UnitTest.asynctest('browser.tinymce.ui.fmt.FontInfoTest', function() {
     success();
   }, failure);
 });
-

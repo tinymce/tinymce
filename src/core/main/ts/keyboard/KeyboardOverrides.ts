@@ -14,8 +14,8 @@ import DeleteBackspaceKeys from './DeleteBackspaceKeys';
 import EnterKey from './EnterKey';
 import SpaceKey from './SpaceKey';
 
-var setup = function (editor) {
-  var caret = BoundarySelection.setupSelectedState(editor);
+const setup = function (editor) {
+  const caret = BoundarySelection.setupSelectedState(editor);
 
   ArrowKeys.setup(editor, caret);
   DeleteBackspaceKeys.setup(editor, caret);
@@ -24,5 +24,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

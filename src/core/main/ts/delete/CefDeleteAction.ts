@@ -18,20 +18,20 @@ import DeleteUtils from './DeleteUtils';
 import Empty from '../dom/Empty';
 import NodeType from '../dom/NodeType';
 
-var DeleteAction = Adt.generate([
+const DeleteAction = Adt.generate([
   { remove: [ 'element' ] },
   { moveToElement: [ 'element' ] },
   { moveToPosition: [ 'position' ] }
 ]);
 
-var isAtContentEditableBlockCaret = function (forward, from) {
-  var elm = from.getNode(forward === false);
-  var caretLocation = forward ? 'after' : 'before';
+const isAtContentEditableBlockCaret = function (forward, from) {
+  const elm = from.getNode(forward === false);
+  const caretLocation = forward ? 'after' : 'before';
   return NodeType.isElement(elm) && elm.getAttribute('data-mce-caret') === caretLocation;
 };
 
-var deleteEmptyBlockOrMoveToCef = function (rootNode, forward, from, to) {
-  var toCefElm = to.getNode(forward === false);
+const deleteEmptyBlockOrMoveToCef = function (rootNode, forward, from, to) {
+  const toCefElm = to.getNode(forward === false);
   return DeleteUtils.getParentBlock(Element.fromDom(rootNode), Element.fromDom(from.getNode())).map(function (blockElm) {
     return Empty.isEmpty(blockElm) ? DeleteAction.remove(blockElm.dom()) : DeleteAction.moveToElement(toCefElm);
   }).orThunk(function () {
@@ -39,7 +39,7 @@ var deleteEmptyBlockOrMoveToCef = function (rootNode, forward, from, to) {
   });
 };
 
-var findCefPosition = function (rootNode, forward, from) {
+const findCefPosition = function (rootNode, forward, from) {
   return CaretFinder.fromPosition(forward, rootNode, from).bind(function (to) {
     if (forward && NodeType.isContentEditableFalse(to.getNode())) {
       return deleteEmptyBlockOrMoveToCef(rootNode, forward, from, to);
@@ -55,7 +55,7 @@ var findCefPosition = function (rootNode, forward, from) {
   });
 };
 
-var getContentEditableBlockAction = function (forward, elm) {
+const getContentEditableBlockAction = function (forward, elm) {
   if (forward && NodeType.isContentEditableFalse(elm.nextSibling)) {
     return Option.some(DeleteAction.moveToElement(elm.nextSibling));
   } else if (forward === false && NodeType.isContentEditableFalse(elm.previousSibling)) {
@@ -65,7 +65,7 @@ var getContentEditableBlockAction = function (forward, elm) {
   }
 };
 
-var skipMoveToActionFromInlineCefToContent = function (root, from, deleteAction) {
+const skipMoveToActionFromInlineCefToContent = function (root, from, deleteAction) {
   return deleteAction.fold(
     function (elm) {
       return Option.some(DeleteAction.remove(elm));
@@ -83,7 +83,7 @@ var skipMoveToActionFromInlineCefToContent = function (root, from, deleteAction)
   );
 };
 
-var getContentEditableAction = function (rootNode, forward, from) {
+const getContentEditableAction = function (rootNode, forward, from) {
   if (isAtContentEditableBlockCaret(forward, from)) {
     return getContentEditableBlockAction(forward, from.getNode(forward === false))
       .fold(
@@ -99,9 +99,9 @@ var getContentEditableAction = function (rootNode, forward, from) {
   }
 };
 
-var read = function (rootNode, forward, rng) {
-  var normalizedRange = CaretUtils.normalizeRange(forward ? 1 : -1, rootNode, rng);
-  var from = CaretPosition.fromRangeStart(normalizedRange);
+const read = function (rootNode, forward, rng) {
+  const normalizedRange = CaretUtils.normalizeRange(forward ? 1 : -1, rootNode, rng);
+  const from = CaretPosition.fromRangeStart(normalizedRange);
 
   if (forward === false && CaretUtils.isAfterContentEditableFalse(from)) {
     return Option.some(DeleteAction.remove(from.getNode(true)));
@@ -113,5 +113,5 @@ var read = function (rootNode, forward, rng) {
 };
 
 export default {
-  read: read
+  read
 };

@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addButton('pagebreak', {
     title: 'Page break',
     cmd: 'mcePageBreak'
@@ -23,5 +23,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

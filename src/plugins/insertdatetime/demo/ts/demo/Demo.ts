@@ -15,10 +15,10 @@ declare let tinymce: any;
 InsertDateTimePlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "insertdatetime code",
-  toolbar: "insertdatetime code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'insertdatetime code',
+  toolbar: 'insertdatetime code',
   height: 600
 });

@@ -1,23 +1,23 @@
 import InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('atomic.tinymce.plugins.paste.InternalHtmlTest', function() {
-  var testMark = function () {
+UnitTest.test('atomic.tinymce.plugins.paste.InternalHtmlTest', function () {
+  const testMark = function () {
     assert.eq('<!-- x-tinymce/html -->abc', InternalHtml.mark('abc'));
   };
 
-  var testUnmark = function () {
+  const testUnmark = function () {
     assert.eq('abc', InternalHtml.unmark('<!-- x-tinymce/html -->abc'));
     assert.eq('abc', InternalHtml.unmark('abc<!-- x-tinymce/html -->'));
   };
 
-  var testIsMarked = function () {
+  const testIsMarked = function () {
     assert.eq(true, InternalHtml.isMarked('<!-- x-tinymce/html -->abc'));
     assert.eq(true, InternalHtml.isMarked('abc<!-- x-tinymce/html -->'));
     assert.eq(false, InternalHtml.isMarked('abc'));
   };
 
-  var testInternalHtmlMime = function () {
+  const testInternalHtmlMime = function () {
     assert.eq('x-tinymce/html', InternalHtml.internalHtmlMime());
   };
 
@@ -26,4 +26,3 @@ UnitTest.test('atomic.tinymce.plugins.paste.InternalHtmlTest', function() {
   testIsMarked();
   testInternalHtmlMime();
 });
-

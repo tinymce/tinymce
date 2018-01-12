@@ -12,18 +12,19 @@ import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 
-var createToolbar = function (editor, items, size) {
-  var toolbarItems = [], buttonGroup;
+const createToolbar = function (editor, items, size?) {
+  const toolbarItems = [];
+  let buttonGroup;
 
   if (!items) {
     return;
   }
 
   Tools.each(items.split(/[ ,]/), function (item) {
-    var itemName;
+    let itemName;
 
-    var bindSelectorChanged = function () {
-      var selection = editor.selection;
+    const bindSelectorChanged = function () {
+      const selection = editor.selection;
 
       if (item.settings.stateSelector) {
         selection.selectorChanged(item.settings.stateSelector, function (state) {
@@ -38,7 +39,7 @@ var createToolbar = function (editor, items, size) {
       }
     };
 
-    if (item === "|") {
+    if (item === '|') {
       buttonGroup = null;
     } else {
       if (!buttonGroup) {
@@ -51,7 +52,7 @@ var createToolbar = function (editor, items, size) {
         itemName = item;
         item = editor.buttons[itemName];
 
-        if (typeof item === "function") {
+        if (typeof item === 'function') {
           item = item();
         }
 
@@ -83,10 +84,10 @@ var createToolbar = function (editor, items, size) {
  * @param {String} size Optional toolbar item size.
  * @return {Array} Array with toolbars.
  */
-var createToolbars = function (editor, size) {
-  var toolbars = [];
+const createToolbars = function (editor, size) {
+  const toolbars = [];
 
-  var addToolbar = function (items) {
+  const addToolbar = function (items) {
     if (items) {
       toolbars.push(createToolbar(editor, items, size));
     }
@@ -100,7 +101,7 @@ var createToolbars = function (editor, size) {
     return {
       type: 'panel',
       layout: 'stack',
-      classes: "toolbar-grp",
+      classes: 'toolbar-grp',
       ariaRoot: true,
       ariaRemember: true,
       items: toolbars
@@ -108,7 +109,7 @@ var createToolbars = function (editor, size) {
   }
 };
 
-export default <any> {
-  createToolbar: createToolbar,
-  createToolbars: createToolbars
+export default {
+  createToolbar,
+  createToolbars
 };

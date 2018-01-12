@@ -22,23 +22,23 @@ import AbsoluteLayout from './AbsoluteLayout';
  * @extends tinymce.ui.AbsoluteLayout
  */
 
-"use strict";
-
-export default <any> AbsoluteLayout.extend({
+export default AbsoluteLayout.extend({
   /**
    * Recalculates the positions of the controls in the specified container.
    *
    * @method recalc
    * @param {tinymce.ui.Container} container Container instance to recalc.
    */
-  recalc: function (container) {
+  recalc (container) {
     // A ton of variables, needs to be in the same scope for performance
-    var i, l, items, contLayoutRect, contPaddingBox, contSettings, align, pack, spacing, totalFlex, availableSpace, direction;
-    var ctrl, ctrlLayoutRect, ctrlSettings, flex, maxSizeItems = [], size, maxSize, ratio, rect, pos, maxAlignEndPos;
-    var sizeName, minSizeName, posName, maxSizeName, beforeName, innerSizeName, deltaSizeName, contentSizeName;
-    var alignAxisName, alignInnerSizeName, alignSizeName, alignMinSizeName, alignBeforeName, alignAfterName;
-    var alignDeltaSizeName, alignContentSizeName;
-    var max = Math.max, min = Math.min;
+    let i, l, items, contLayoutRect, contPaddingBox, contSettings, align, pack, spacing, totalFlex, availableSpace, direction;
+    let ctrl, ctrlLayoutRect, ctrlSettings, flex;
+    const maxSizeItems = [];
+    let size, maxSize, ratio, rect, pos, maxAlignEndPos;
+    let sizeName, minSizeName, posName, maxSizeName, beforeName, innerSizeName, deltaSizeName, contentSizeName;
+    let alignAxisName, alignInnerSizeName, alignSizeName, alignMinSizeName, alignBeforeName, alignAfterName;
+    let alignDeltaSizeName, alignContentSizeName;
+    const max = Math.max, min = Math.min;
 
     // Get container items, properties and settings
     items = container.items().filter(':visible');
@@ -50,48 +50,48 @@ export default <any> AbsoluteLayout.extend({
     pack = container.isRtl() ? (contSettings.pack || 'end') : contSettings.pack;
     spacing = contSettings.spacing || 0;
 
-    if (direction == "row-reversed" || direction == "column-reverse") {
+    if (direction === 'row-reversed' || direction === 'column-reverse') {
       items = items.set(items.toArray().reverse());
       direction = direction.split('-')[0];
     }
 
     // Setup axis variable name for row/column direction since the calculations is the same
-    if (direction == "column") {
-      posName = "y";
-      sizeName = "h";
-      minSizeName = "minH";
-      maxSizeName = "maxH";
-      innerSizeName = "innerH";
+    if (direction === 'column') {
+      posName = 'y';
+      sizeName = 'h';
+      minSizeName = 'minH';
+      maxSizeName = 'maxH';
+      innerSizeName = 'innerH';
       beforeName = 'top';
-      deltaSizeName = "deltaH";
-      contentSizeName = "contentH";
+      deltaSizeName = 'deltaH';
+      contentSizeName = 'contentH';
 
-      alignBeforeName = "left";
-      alignSizeName = "w";
-      alignAxisName = "x";
-      alignInnerSizeName = "innerW";
-      alignMinSizeName = "minW";
-      alignAfterName = "right";
-      alignDeltaSizeName = "deltaW";
-      alignContentSizeName = "contentW";
+      alignBeforeName = 'left';
+      alignSizeName = 'w';
+      alignAxisName = 'x';
+      alignInnerSizeName = 'innerW';
+      alignMinSizeName = 'minW';
+      alignAfterName = 'right';
+      alignDeltaSizeName = 'deltaW';
+      alignContentSizeName = 'contentW';
     } else {
-      posName = "x";
-      sizeName = "w";
-      minSizeName = "minW";
-      maxSizeName = "maxW";
-      innerSizeName = "innerW";
+      posName = 'x';
+      sizeName = 'w';
+      minSizeName = 'minW';
+      maxSizeName = 'maxW';
+      innerSizeName = 'innerW';
       beforeName = 'left';
-      deltaSizeName = "deltaW";
-      contentSizeName = "contentW";
+      deltaSizeName = 'deltaW';
+      contentSizeName = 'contentW';
 
-      alignBeforeName = "top";
-      alignSizeName = "h";
-      alignAxisName = "y";
-      alignInnerSizeName = "innerH";
-      alignMinSizeName = "minH";
-      alignAfterName = "bottom";
-      alignDeltaSizeName = "deltaH";
-      alignContentSizeName = "contentH";
+      alignBeforeName = 'top';
+      alignSizeName = 'h';
+      alignAxisName = 'y';
+      alignInnerSizeName = 'innerH';
+      alignMinSizeName = 'minH';
+      alignAfterName = 'bottom';
+      alignDeltaSizeName = 'deltaH';
+      alignContentSizeName = 'contentH';
     }
 
     // Figure out total flex, availableSpace and collect any max size elements
@@ -142,7 +142,7 @@ export default <any> AbsoluteLayout.extend({
     rect.minH = max(rect.minH, contLayoutRect.startMinHeight);
 
     // Resize container container if minSize was changed
-    if (contLayoutRect.autoResize && (rect.minW != contLayoutRect.minW || rect.minH != contLayoutRect.minH)) {
+    if (contLayoutRect.autoResize && (rect.minW !== contLayoutRect.minW || rect.minH !== contLayoutRect.minH)) {
       rect.w = rect.minW;
       rect.h = rect.minH;
 
@@ -151,7 +151,7 @@ export default <any> AbsoluteLayout.extend({
 
       // Forced recalc for example if items are hidden/shown
       if (container._lastRect === null) {
-        var parentCtrl = container.parent();
+        const parentCtrl = container.parent();
         if (parentCtrl) {
           parentCtrl._lastRect = null;
           parentCtrl.recalc();
@@ -186,9 +186,9 @@ export default <any> AbsoluteLayout.extend({
 
     // Handle pack setting moves the start position to end, center
     if (totalFlex === 0) {
-      if (pack == "end") {
+      if (pack === 'end') {
         pos = availableSpace + contPaddingBox[beforeName];
-      } else if (pack == "center") {
+      } else if (pack === 'center') {
         pos = Math.round(
           (contLayoutRect[innerSizeName] / 2) - ((contLayoutRect[innerSizeName] - availableSpace) / 2)
         ) + contPaddingBox[beforeName];
@@ -196,7 +196,7 @@ export default <any> AbsoluteLayout.extend({
         if (pos < 0) {
           pos = contPaddingBox[beforeName];
         }
-      } else if (pack == "justify") {
+      } else if (pack === 'justify') {
         pos = contPaddingBox[beforeName];
         spacing = Math.floor(availableSpace / (items.length - 1));
       }
@@ -212,15 +212,15 @@ export default <any> AbsoluteLayout.extend({
       size = ctrlLayoutRect.maxFlexSize || ctrlLayoutRect[minSizeName];
 
       // Align the control on the other axis
-      if (align === "center") {
+      if (align === 'center') {
         rect[alignAxisName] = Math.round((contLayoutRect[alignInnerSizeName] / 2) - (ctrlLayoutRect[alignSizeName] / 2));
-      } else if (align === "stretch") {
+      } else if (align === 'stretch') {
         rect[alignSizeName] = max(
           ctrlLayoutRect[alignMinSizeName] || 0,
           contLayoutRect[alignInnerSizeName] - contPaddingBox[alignBeforeName] - contPaddingBox[alignAfterName]
         );
         rect[alignAxisName] = contPaddingBox[alignBeforeName];
-      } else if (align === "end") {
+      } else if (align === 'end') {
         rect[alignAxisName] = contLayoutRect[alignInnerSizeName] - ctrlLayoutRect[alignSizeName] - contPaddingBox.top;
       }
 

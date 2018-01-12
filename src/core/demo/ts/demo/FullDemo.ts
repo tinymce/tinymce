@@ -59,7 +59,7 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 declare const window: any;
 
-export default <any> function () {
+export default function () {
   AdvListPlugin();
   AnchorPlugin();
   AutoLinkPlugin();
@@ -108,13 +108,13 @@ export default <any> function () {
 
   PluginManager.urls.emoticons = '../../../../js/tinymce/plugins/emoticons';
 
-  var settings = {
+  const settings = {
     skin_url: '../../../../js/tinymce/skins/lightgray',
     codesample_content_css: '../../../../js/tinymce/plugins/codesample/css/prism.css',
     visualblocks_content_css: '../../../../js/tinymce/plugins/visualblocks/css/visualblocks.css',
     images_upload_url: 'd',
-    selector: "textarea",
-    //rtl_ui: true,
+    selector: 'textarea',
+    // rtl_ui: true,
     link_list: [
       { title: 'My page 1', value: 'http://www.tinymce.com' },
       { title: 'My page 2', value: 'http://www.moxiecode.com' }
@@ -129,36 +129,36 @@ export default <any> function () {
     ],
     importcss_append: true,
     height: 400,
-    file_picker_callback: function (callback, value, meta) {
+    file_picker_callback (callback, value, meta) {
       // Provide file and text for the link dialog
-      if (meta.filetype == 'file') {
+      if (meta.filetype === 'file') {
         callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
       }
 
       // Provide image and alt text for the image dialog
-      if (meta.filetype == 'image') {
+      if (meta.filetype === 'image') {
         callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
       }
 
       // Provide alternative source and posted for the media dialog
-      if (meta.filetype == 'media') {
+      if (meta.filetype === 'media') {
         callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
       }
     },
-    spellchecker_callback: function (method, text, success, failure) {
-      var words = text.match(this.getWordCharPattern());
+    spellchecker_callback (method, text, success, failure) {
+      const words = text.match(this.getWordCharPattern());
 
-      if (method === "spellcheck") {
-        var suggestions = {};
+      if (method === 'spellcheck') {
+        const suggestions = {};
 
-        for (var i = 0; i < words.length; i++) {
-          suggestions[words[i]] = ["First", "Second"];
+        for (let i = 0; i < words.length; i++) {
+          suggestions[words[i]] = ['First', 'Second'];
         }
 
         success(suggestions);
       }
 
-      if (method === "addToDictionary") {
+      if (method === 'addToDictionary') {
         success();
       }
     },
@@ -166,28 +166,28 @@ export default <any> function () {
       { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },
       { title: 'Some title 2', description: 'Some desc 2', content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>' }
     ],
-    template_cdate_format: "[CDATE: %m/%d/%Y : %H:%M:%S]",
-    template_mdate_format: "[MDATE: %m/%d/%Y : %H:%M:%S]",
+    template_cdate_format: '[CDATE: %m/%d/%Y : %H:%M:%S]',
+    template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
     image_caption: true,
-    theme: "modern",
+    theme: 'modern',
     mobile: {
       plugins: [
-        "autosave lists"
+        'autosave lists'
       ]
     },
     plugins: [
-      "autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc",
-      "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-      "save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern",
-      "codesample help noneditable print"
+      'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
+      'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+      'save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern',
+      'codesample help noneditable print'
     ],
     add_unload_trigger: false,
-    toolbar: "insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | " +
-    "bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl"
+    toolbar: 'insertfile undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl'
   };
 
   EditorManager.init(settings);
   EditorManager.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
 
   window.tinymce = EditorManager;
-};
+}

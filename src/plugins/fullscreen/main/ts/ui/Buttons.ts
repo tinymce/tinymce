@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var postRender = function (editor) {
+const postRender = function (editor) {
   return function (e) {
-    var ctrl = e.control;
+    const ctrl = e.control;
 
     editor.on('FullscreenStateChanged', function (e) {
       ctrl.active(e.state);
@@ -18,7 +18,7 @@ var postRender = function (editor) {
   };
 };
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addMenuItem('fullscreen', {
     text: 'Fullscreen',
     shortcut: 'Ctrl+Shift+F',
@@ -37,5 +37,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

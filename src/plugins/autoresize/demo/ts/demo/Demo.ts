@@ -15,10 +15,10 @@ declare let tinymce: any;
 AutoResizePlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "autoresize code",
-  toolbar: "autoresize code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'autoresize code',
+  toolbar: 'autoresize code',
   height: 600
 });

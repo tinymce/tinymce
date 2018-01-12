@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import EventUtils from 'tinymce/core/dom/EventUtils';
 import UiUtils from '../module/test/UiUtils';
 import ViewBlock from '../module/test/ViewBlock';
@@ -9,36 +8,36 @@ import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.TextBoxTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.ui.TextBoxTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   // Registers ui widgets to factory
   Api.registerToFactory();
 
-  var createTextBox = function (settings) {
+  const createTextBox = function (settings) {
     return Factory.create(Tools.extend({
       type: 'textbox'
     }, settings)).renderTo(viewBlock.get()).reflow();
   };
 
-  var teardown = function () {
+  const teardown = function () {
     EventUtils.Event.clean(viewBlock.get());
     viewBlock.update('');
   };
 
-  suite.test("textbox text, size chars: 5", function () {
-    var textBox1 = createTextBox({ text: 'X', size: 5 });
-    var textBox2 = createTextBox({ text: 'X', size: 6 });
+  suite.test('textbox text, size chars: 5', function () {
+    const textBox1 = createTextBox({ text: 'X', size: 5 });
+    const textBox2 = createTextBox({ text: 'X', size: 6 });
 
     LegacyUnit.equal(UiUtils.size(textBox1)[0] < UiUtils.size(textBox2)[0], true);
     teardown();
   });
 
-  suite.test("textbox text, size 100x100", function () {
-    var textBox = createTextBox({ text: 'X', width: 100, height: 100 });
+  suite.test('textbox text, size 100x100', function () {
+    const textBox = createTextBox({ text: 'X', width: 100, height: 100 });
 
     LegacyUnit.equal(UiUtils.size(textBox), [100, 100]);
     teardown();
@@ -52,4 +51,3 @@ UnitTest.asynctest('browser.tinymce.ui.TextBoxTest', function() {
     }, failure);
   });
 });
-

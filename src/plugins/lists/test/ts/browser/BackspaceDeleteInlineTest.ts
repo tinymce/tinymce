@@ -1,16 +1,15 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
 import DomQuery from 'tinymce/core/dom/DomQuery';
 import EditorManager from 'tinymce/core/EditorManager';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteInlineTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteInlineTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   ModernTheme();
@@ -31,13 +30,13 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteInlineTest', function()
     LegacyUnit.equal(DomQuery('#lists li').length, 3);
   });
 
-  var teardown = function (editor, div) {
+  const teardown = function (editor, div) {
     editor.remove();
     div.parentNode.removeChild(div);
   };
 
-  var setup = function (success, failure) {
-    var div = document.createElement('div');
+  const setup = function (success, failure) {
+    const div = document.createElement('div');
 
     div.innerHTML = (
       '<div id="lists">' +
@@ -54,9 +53,9 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteInlineTest', function()
       inline: true,
       add_unload_trigger: false,
       skin: false,
-      plugins: "lists",
+      plugins: 'lists',
       disable_nodechange: true,
-      init_instance_callback: function (editor) {
+      init_instance_callback (editor) {
         Pipeline.async({}, suite.toSteps(editor), function () {
           teardown(editor, div);
           success();
@@ -71,4 +70,3 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteInlineTest', function()
 
   setup(success, failure);
 });
-

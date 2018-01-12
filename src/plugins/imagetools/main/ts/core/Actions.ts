@@ -22,53 +22,53 @@ import ImageSize from './ImageSize';
 import Proxy from './Proxy';
 import Dialog from '../ui/Dialog';
 
-var count = 0;
+let count = 0;
 
-var isEditableImage = function (editor, img) {
-  var selectorMatched = editor.dom.is(img, 'img:not([data-mce-object],[data-mce-placeholder])');
+const isEditableImage = function (editor, img) {
+  const selectorMatched = editor.dom.is(img, 'img:not([data-mce-object],[data-mce-placeholder])');
 
   return selectorMatched && (isLocalImage(editor, img) || isCorsImage(editor, img) || editor.settings.imagetools_proxy);
 };
 
-var displayError = function (editor, error) {
+const displayError = function (editor, error) {
   editor.notificationManager.open({
     text: error,
     type: 'error'
   });
 };
 
-var getSelectedImage = function (editor) {
+const getSelectedImage = function (editor) {
   return editor.selection.getNode();
 };
 
-var extractFilename = function (editor, url) {
-  var m = url.match(/\/([^\/\?]+)?\.(?:jpeg|jpg|png|gif)(?:\?|$)/i);
+const extractFilename = function (editor, url) {
+  const m = url.match(/\/([^\/\?]+)?\.(?:jpeg|jpg|png|gif)(?:\?|$)/i);
   if (m) {
     return editor.dom.encode(m[1]);
   }
   return null;
 };
 
-var createId = function () {
+const createId = function () {
   return 'imagetools' + count++;
 };
 
-var isLocalImage = function (editor, img) {
-  var url = img.src;
+const isLocalImage = function (editor, img) {
+  const url = img.src;
 
   return url.indexOf('data:') === 0 || url.indexOf('blob:') === 0 || new URI(url).host === editor.documentBaseURI.host;
 };
 
-var isCorsImage = function (editor, img) {
+const isCorsImage = function (editor, img) {
   return Tools.inArray(editor.settings.imagetools_cors_hosts, new URI(img.src).host) !== -1;
 };
 
-var getApiKey = function (editor) {
+const getApiKey = function (editor) {
   return editor.settings.api_key || editor.settings.imagetools_api_key;
 };
 
-var imageToBlob = function (editor, img) {
-  var src = img.src, apiKey;
+const imageToBlob = function (editor, img) {
+  let src = img.src, apiKey;
 
   if (isCorsImage(editor, img)) {
     return Proxy.getUrl(img.src, null);
@@ -84,8 +84,8 @@ var imageToBlob = function (editor, img) {
   return BlobConversions.imageToBlob(img);
 };
 
-var findSelectedBlob = function (editor) {
-  var blobInfo;
+const findSelectedBlob = function (editor) {
+  let blobInfo;
   blobInfo = editor.editorUpload.blobCache.getByUri(getSelectedImage(editor).src);
   if (blobInfo) {
     return Promise.resolve(blobInfo.blob());
@@ -94,21 +94,21 @@ var findSelectedBlob = function (editor) {
   return imageToBlob(editor, getSelectedImage(editor));
 };
 
-var startTimedUpload = function (editor, imageUploadTimerState) {
-  var imageUploadTimer = Delay.setEditorTimeout(editor, function () {
+const startTimedUpload = function (editor, imageUploadTimerState) {
+  const imageUploadTimer = Delay.setEditorTimeout(editor, function () {
     editor.editorUpload.uploadImagesAuto();
   }, editor.settings.images_upload_timeout || 30000);
 
   imageUploadTimerState.set(imageUploadTimer);
 };
 
-var cancelTimedUpload = function (imageUploadTimerState) {
+const cancelTimedUpload = function (imageUploadTimerState) {
   clearTimeout(imageUploadTimerState.get());
 };
 
-var updateSelectedImage = function (editor, ir, uploadImmediately, imageUploadTimerState) {
+const updateSelectedImage = function (editor, ir, uploadImmediately, imageUploadTimerState) {
   return ir.toBlob().then(function (blob) {
-    var uri, name, blobCache, blobInfo, selectedImage;
+    let uri, name, blobCache, blobInfo, selectedImage;
 
     blobCache = editor.editorUpload.blobCache;
     selectedImage = getSelectedImage(editor);
@@ -126,10 +126,10 @@ var updateSelectedImage = function (editor, ir, uploadImmediately, imageUploadTi
 
     blobInfo = blobCache.create({
       id: createId(),
-      blob: blob,
+      blob,
       base64: ir.toBase64(),
-      uri: uri,
-      name: name
+      uri,
+      name
     });
 
     blobCache.add(blobInfo);
@@ -158,7 +158,7 @@ var updateSelectedImage = function (editor, ir, uploadImmediately, imageUploadTi
   });
 };
 
-var selectedImageOperation = function (editor, imageUploadTimerState, fn) {
+const selectedImageOperation = function (editor, imageUploadTimerState, fn) {
   return function () {
     return editor._scanForImages().
       then(Fun.curry(findSelectedBlob, editor)).
@@ -172,10 +172,10 @@ var selectedImageOperation = function (editor, imageUploadTimerState, fn) {
   };
 };
 
-var rotate = function (editor, imageUploadTimerState, angle) {
+const rotate = function (editor, imageUploadTimerState, angle) {
   return function () {
     return selectedImageOperation(editor, imageUploadTimerState, function (imageResult) {
-      var size = ImageSize.getImageSize(getSelectedImage(editor));
+      const size = ImageSize.getImageSize(getSelectedImage(editor));
 
       if (size) {
         ImageSize.setImageSize(getSelectedImage(editor), {
@@ -189,7 +189,7 @@ var rotate = function (editor, imageUploadTimerState, angle) {
   };
 };
 
-var flip = function (editor, imageUploadTimerState, axis) {
+const flip = function (editor, imageUploadTimerState, axis) {
   return function () {
     return selectedImageOperation(editor, imageUploadTimerState, function (imageResult) {
       return ImageTransformations.flip(imageResult, axis);
@@ -197,15 +197,15 @@ var flip = function (editor, imageUploadTimerState, axis) {
   };
 };
 
-var editImageDialog = function (editor, imageUploadTimerState) {
+const editImageDialog = function (editor, imageUploadTimerState) {
   return function () {
-    var img = getSelectedImage(editor), originalSize = ImageSize.getNaturalImageSize(img);
+    const img = getSelectedImage(editor), originalSize = ImageSize.getNaturalImageSize(img);
 
-    var handleDialogBlob = function (blob) {
+    const handleDialogBlob = function (blob) {
       return new Promise(function (resolve) {
         BlobConversions.blobToImage(blob).
           then(function (newImage) {
-            var newSize = ImageSize.getNaturalImageSize(newImage);
+            const newSize = ImageSize.getNaturalImageSize(newImage);
 
             if (originalSize.w !== newSize.w || originalSize.h !== newSize.h) {
               if (ImageSize.getImageSize(img)) {
@@ -219,7 +219,7 @@ var editImageDialog = function (editor, imageUploadTimerState) {
       });
     };
 
-    var openDialog = function (editor, imageResult) {
+    const openDialog = function (editor, imageResult) {
       return Dialog.edit(editor, imageResult).then(handleDialogBlob).
         then(ResultConversions.blobToImageResult).
         then(function (imageResult) {
@@ -238,9 +238,9 @@ var editImageDialog = function (editor, imageUploadTimerState) {
 };
 
 export default {
-  rotate: rotate,
-  flip: flip,
-  editImageDialog: editImageDialog,
-  isEditableImage: isEditableImage,
-  cancelTimedUpload: cancelTimedUpload
+  rotate,
+  flip,
+  editImageDialog,
+  isEditableImage,
+  cancelTimedUpload
 };

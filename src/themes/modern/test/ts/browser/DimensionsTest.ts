@@ -11,15 +11,15 @@ import EditorManager from 'tinymce/core/EditorManager';
 import ViewBlock from '../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('tinymce.themes.modern.test.browser.DimensionsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('tinymce.themes.modern.test.browser.DimensionsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var viewBlock = new ViewBlock();
+  const viewBlock = ViewBlock();
 
-  var cCreateEditorFromSettings = function (settings, html?) {
+  const cCreateEditorFromSettings = function (settings, html?) {
     return Chain.on(function (viewBlock, next, die) {
-      var randomId = Id.generate('tiny-');
+      const randomId = Id.generate('tiny-');
       html = html || '<textarea></textarea>';
 
       viewBlock.update(html);
@@ -28,7 +28,7 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.DimensionsTest', function
       EditorManager.init(Merger.merge(settings, {
         selector: '#' + randomId,
         skin_url: '/project/js/tinymce/skins/lightgray',
-        setup: function (editor) {
+        setup (editor) {
           editor.on('SkinLoaded', function () {
             setTimeout(function () {
               next(Chain.wrap(editor));
@@ -39,37 +39,37 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.DimensionsTest', function
     });
   };
 
-  var cCreateEditorFromHtml = function (html) {
+  const cCreateEditorFromHtml = function (html) {
     return cCreateEditorFromSettings({}, html);
   };
 
-  var cRemoveEditor = function () {
+  const cRemoveEditor = function () {
     return Chain.op(function (editor) {
       editor.remove();
     });
   };
 
-  var cAssertEditorDimension = function (dimension, value) {
+  const cAssertEditorDimension = function (dimension, value) {
     return Chain.on(function (editor, next, die) {
-      var container = editor.iframeElement;
-      var getter = dimension === 'width' ? Width.get : Height.get;
-      var actualValue = typeof value === 'string' ? container.style[dimension] : getter(Element.fromDom(container));
+      const container = editor.iframeElement;
+      const getter = dimension === 'width' ? Width.get : Height.get;
+      const actualValue = typeof value === 'string' ? container.style[dimension] : getter(Element.fromDom(container));
 
-      Assertions.assertEq("Editors content area has expected " + dimension, value, actualValue);
+      Assertions.assertEq('Editors content area has expected ' + dimension, value, actualValue);
 
       next(Chain.wrap(editor));
     });
   };
 
-  var cAssertEditorWidth = function (width) {
+  const cAssertEditorWidth = function (width) {
     return cAssertEditorDimension('width', width);
   };
 
-  var cAssertEditorHeight = function (height) {
+  const cAssertEditorHeight = function (height) {
     return cAssertEditorDimension('height', height);
   };
 
-  var cAssertEditorSize = function (width, height) {
+  const cAssertEditorSize = function (width, height) {
     return Chain.fromChains([
       cAssertEditorWidth(width),
       cAssertEditorHeight(height)
@@ -106,4 +106,3 @@ UnitTest.asynctest('tinymce.themes.modern.test.browser.DimensionsTest', function
     success();
   }, failure);
 });
-

@@ -6,9 +6,9 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 import BoxUtils from 'tinymce/ui/BoxUtils';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.BoxUtilsMeasureBoxIframeDisplayNoneTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.ui.BoxUtilsMeasureBoxIframeDisplayNoneTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
 
@@ -16,13 +16,13 @@ UnitTest.asynctest('browser.tinymce.ui.BoxUtilsMeasureBoxIframeDisplayNoneTest',
     Logger.t(
       'firefox specific test, boxutils should not throw error when used on hidden iframe',
       Step.async(function (next, die) {
-        var iframe = document.createElement('iframe');
+        const iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
 
         iframe.addEventListener('load', function () {
           try {
-            var measured = BoxUtils.measureBox(iframe.contentDocument.body.firstChild, 'border');
+            const measured = BoxUtils.measureBox(iframe.contentDocument.body.firstChild, 'border');
             Assertions.assertEq('should return 0', 0, measured.top);
             iframe.parentNode.removeChild(iframe);
             next();
@@ -40,4 +40,3 @@ UnitTest.asynctest('browser.tinymce.ui.BoxUtilsMeasureBoxIframeDisplayNoneTest',
     success();
   }, failure);
 });
-

@@ -10,13 +10,13 @@
 
 import Dialog from './Dialog';
 
-var showDialog = function (editor, currentIndexState) {
+const showDialog = function (editor, currentIndexState) {
   return function () {
     Dialog.open(editor, currentIndexState);
   };
 };
 
-var register = function (editor, currentIndexState) {
+const register = function (editor, currentIndexState) {
   editor.addMenuItem('searchreplace', {
     text: 'Find and replace',
     shortcut: 'Meta+F',
@@ -34,5 +34,5 @@ var register = function (editor, currentIndexState) {
 };
 
 export default {
-  register: register
+  register
 };

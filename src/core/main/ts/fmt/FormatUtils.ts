@@ -10,12 +10,12 @@
 
 import TreeWalker from '../dom/TreeWalker';
 
-var isInlineBlock = function (node) {
+const isInlineBlock = function (node) {
   return node && /^(IMG)$/.test(node.nodeName);
 };
 
-var moveStart = function (dom, selection, rng) {
-  var container = rng.startContainer,
+const moveStart = function (dom, selection, rng) {
+  let container = rng.startContainer,
     offset = rng.startOffset,
     walker, node, nodes;
 
@@ -64,7 +64,7 @@ var moveStart = function (dom, selection, rng) {
  * @param {boolean} inc (Optional) Include the current node in checking. Defaults to false.
  * @return {Node} Next or previous node or undefined if it wasn't found.
  */
-var getNonWhiteSpaceSibling = function (node, next?, inc?) {
+const getNonWhiteSpaceSibling = function (node, next?, inc?) {
   if (node) {
     next = next ? 'nextSibling' : 'previousSibling';
 
@@ -76,7 +76,7 @@ var getNonWhiteSpaceSibling = function (node, next?, inc?) {
   }
 };
 
-var isTextBlock = function (editor, name) {
+const isTextBlock = function (editor, name) {
   if (name.nodeType) {
     name = name.nodeName;
   }
@@ -84,11 +84,11 @@ var isTextBlock = function (editor, name) {
   return !!editor.schema.getTextBlockElements()[name.toLowerCase()];
 };
 
-var isValid = function (ed, parent, child) {
+const isValid = function (ed, parent, child) {
   return ed.schema.isValidChild(parent, child);
 };
 
-var isWhiteSpaceNode = function (node) {
+const isWhiteSpaceNode = function (node) {
   return node && node.nodeType === 3 && /^([\t \r\n]+|)$/.test(node.nodeValue);
 };
 
@@ -100,8 +100,8 @@ var isWhiteSpaceNode = function (node) {
  * @param {Object} vars Name/value array with variables to replace.
  * @return {String} New value with replaced variables.
  */
-var replaceVars = function (value, vars) {
-  if (typeof value !== "string") {
+const replaceVars = function (value, vars) {
+  if (typeof value !== 'string') {
     value = value(vars);
   } else if (vars) {
     value = value.replace(/%(\w+)/g, function (str, name) {
@@ -120,7 +120,7 @@ var replaceVars = function (value, vars) {
  * @param {String/Node} str2 Node or string to compare.
  * @return {boolean} True/false if they match.
  */
-var isEq = function (str1, str2) {
+const isEq = function (str1, str2) {
   str1 = str1 || '';
   str2 = str2 || '';
 
@@ -130,7 +130,7 @@ var isEq = function (str1, str2) {
   return str1.toLowerCase() === str2.toLowerCase();
 };
 
-var normalizeStyleValue = function (dom, value, name) {
+const normalizeStyleValue = function (dom, value, name) {
   // Force the format to hex
   if (name === 'color' || name === 'backgroundColor') {
     value = dom.toHex(value);
@@ -149,12 +149,12 @@ var normalizeStyleValue = function (dom, value, name) {
   return '' + value;
 };
 
-var getStyle = function (dom, node, name) {
+const getStyle = function (dom, node, name) {
   return normalizeStyleValue(dom, dom.getStyle(node, name), name);
 };
 
-var getTextDecoration = function (dom, node) {
-  var decoration;
+const getTextDecoration = function (dom, node) {
+  let decoration;
 
   dom.getParent(node, function (n) {
     decoration = dom.getStyle(n, 'text-decoration');
@@ -164,21 +164,21 @@ var getTextDecoration = function (dom, node) {
   return decoration;
 };
 
-var getParents = function (dom, node, selector?) {
+const getParents = function (dom, node, selector?) {
   return dom.getParents(node, selector, dom.getRoot());
 };
 
 export default {
-  isInlineBlock: isInlineBlock,
-  moveStart: moveStart,
-  getNonWhiteSpaceSibling: getNonWhiteSpaceSibling,
-  isTextBlock: isTextBlock,
-  isValid: isValid,
-  isWhiteSpaceNode: isWhiteSpaceNode,
-  replaceVars: replaceVars,
-  isEq: isEq,
-  normalizeStyleValue: normalizeStyleValue,
-  getStyle: getStyle,
-  getTextDecoration: getTextDecoration,
-  getParents: getParents
+  isInlineBlock,
+  moveStart,
+  getNonWhiteSpaceSibling,
+  isTextBlock,
+  isValid,
+  isWhiteSpaceNode,
+  replaceVars,
+  isEq,
+  normalizeStyleValue,
+  getStyle,
+  getTextDecoration,
+  getParents
 };

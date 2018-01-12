@@ -7,38 +7,36 @@ import { Attr } from '@ephox/sugar';
 import { WindowSelection } from '@ephox/sugar';
 import TestEditor from './TestEditor';
 
-
-
-export default <any> function () {
-  var frame = Element.fromTag('iframe');
+export default function () {
+  const frame = Element.fromTag('iframe');
   Attr.set(frame, 'src', '/project/src/themes/mobile/test/html/editor.html');
 
-  var config = {
-    getFrame: function () {
+  const config = {
+    getFrame () {
       return frame;
     },
-    onDomChanged: function () {
+    onDomChanged () {
       return { unbind: Fun.noop };
     }
   };
 
-  var delegate = TestEditor();
-  var dEditor = delegate.editor();
+  const delegate = TestEditor();
+  const dEditor = delegate.editor();
 
-  var editor = {
+  const editor = {
     selection: {
-      getStart: function () {
+      getStart () {
         return WindowSelection.getExact(frame.dom().contentWindow).map(function (sel) {
           return sel.start().dom();
         }).getOr(null);
       },
-      getContent: function () {
+      getContent () {
         return frame.dom().contentWindow.document.body.innerHTML;
       },
       select: Fun.noop
     },
 
-    getBody: function () {
+    getBody () {
       return frame.dom().contentWindow.document.body;
     },
 
@@ -46,18 +44,18 @@ export default <any> function () {
     execCommand: dEditor.execCommand,
     dom: dEditor.dom,
     // Maybe this should be implemented
-    focus: function () {
+    focus () {
       Focus.focus(frame);
-      var win = frame.dom().contentWindow;
+      const win = frame.dom().contentWindow;
       WindowSelection.getExact(win).orThunk(function () {
-        var fbody = Element.fromDom(frame.dom().contentWindow.document.body);
-        var elem = Cursors.calculateOne(fbody, [ 0 ]);
+        const fbody = Element.fromDom(frame.dom().contentWindow.document.body);
+        const elem = Cursors.calculateOne(fbody, [ 0 ]);
         WindowSelection.setExact(win, elem, 0, elem, 0);
       });
     }
   };
 
-  var component = GuiFactory.build(
+  const component = GuiFactory.build(
     GuiFactory.external({
       element: frame
     })
@@ -73,4 +71,4 @@ export default <any> function () {
     sClear: delegate.sClear,
     sPrepareState: delegate.sPrepareState
   };
-};
+}

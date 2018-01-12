@@ -4,7 +4,7 @@ import EditorManager from 'tinymce/core/EditorManager';
 import Settings from 'tinymce/plugins/toc/api/Settings';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('browser.tinymce.plugins.toc.api.SettingsTest', function() {
+UnitTest.test('browser.tinymce.plugins.toc.api.SettingsTest', function () {
   Assertions.assertEq('Should be default toc class', 'mce-toc', Settings.getTocClass(new Editor('x', {}, EditorManager)));
   Assertions.assertEq('Should be specified toc class', 'c', Settings.getTocClass(new Editor('x', { toc_class: 'c' }, EditorManager)));
 
@@ -17,4 +17,3 @@ UnitTest.test('browser.tinymce.plugins.toc.api.SettingsTest', function() {
   Assertions.assertEq('Should be specified toc depth', 5, Settings.getTocDepth(new Editor('x', { toc_depth: 5 }, EditorManager)));
   Assertions.assertEq('Should be default toc depth for invalid', 3, Settings.getTocDepth(new Editor('x', { toc_depth: '53' }, EditorManager)));
 });
-

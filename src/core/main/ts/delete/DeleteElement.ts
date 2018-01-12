@@ -23,25 +23,25 @@ import CaretPosition from '../caret/CaretPosition';
 import Empty from '../dom/Empty';
 import NodeType from '../dom/NodeType';
 
-var needsReposition = function (pos, elm) {
-  var container = pos.container();
-  var offset = pos.offset();
+const needsReposition = function (pos, elm) {
+  const container = pos.container();
+  const offset = pos.offset();
   return CaretPosition.isTextPosition(pos) === false && container === elm.parentNode && offset > CaretPosition.before(elm).offset();
 };
 
-var reposition = function (elm, pos) {
+const reposition = function (elm, pos) {
   return needsReposition(pos, elm) ? new CaretPosition(pos.container(), pos.offset() - 1) : pos;
 };
 
-var beforeOrStartOf = function (node) {
+const beforeOrStartOf = function (node) {
   return NodeType.isText(node) ? new CaretPosition(node, 0) : CaretPosition.before(node);
 };
 
-var afterOrEndOf = function (node) {
+const afterOrEndOf = function (node) {
   return NodeType.isText(node) ? new CaretPosition(node, node.data.length) : CaretPosition.after(node);
 };
 
-var getPreviousSiblingCaretPosition = function (elm) {
+const getPreviousSiblingCaretPosition = function (elm) {
   if (CaretCandidate.isCaretCandidate(elm.previousSibling)) {
     return Option.some(afterOrEndOf(elm.previousSibling));
   } else {
@@ -49,7 +49,7 @@ var getPreviousSiblingCaretPosition = function (elm) {
   }
 };
 
-var getNextSiblingCaretPosition = function (elm) {
+const getNextSiblingCaretPosition = function (elm) {
   if (CaretCandidate.isCaretCandidate(elm.nextSibling)) {
     return Option.some(beforeOrStartOf(elm.nextSibling));
   } else {
@@ -57,8 +57,8 @@ var getNextSiblingCaretPosition = function (elm) {
   }
 };
 
-var findCaretPositionBackwardsFromElm = function (rootElement, elm) {
-  var startPosition = CaretPosition.before(elm.previousSibling ? elm.previousSibling : elm.parentNode);
+const findCaretPositionBackwardsFromElm = function (rootElement, elm) {
+  const startPosition = CaretPosition.before(elm.previousSibling ? elm.previousSibling : elm.parentNode);
   return CaretFinder.prevPosition(rootElement, startPosition).fold(
     function () {
       return CaretFinder.nextPosition(rootElement, CaretPosition.after(elm));
@@ -67,7 +67,7 @@ var findCaretPositionBackwardsFromElm = function (rootElement, elm) {
   );
 };
 
-var findCaretPositionForwardsFromElm = function (rootElement, elm) {
+const findCaretPositionForwardsFromElm = function (rootElement, elm) {
   return CaretFinder.nextPosition(rootElement, CaretPosition.after(elm)).fold(
     function () {
       return CaretFinder.prevPosition(rootElement, CaretPosition.before(elm));
@@ -76,7 +76,7 @@ var findCaretPositionForwardsFromElm = function (rootElement, elm) {
   );
 };
 
-var findCaretPositionBackwards = function (rootElement, elm) {
+const findCaretPositionBackwards = function (rootElement, elm) {
   return getPreviousSiblingCaretPosition(elm).orThunk(function () {
     return getNextSiblingCaretPosition(elm);
   }).orThunk(function () {
@@ -84,7 +84,7 @@ var findCaretPositionBackwards = function (rootElement, elm) {
   });
 };
 
-var findCaretPositionForward = function (rootElement, elm) {
+const findCaretPositionForward = function (rootElement, elm) {
   return getNextSiblingCaretPosition(elm).orThunk(function () {
     return getPreviousSiblingCaretPosition(elm);
   }).orThunk(function () {
@@ -92,15 +92,15 @@ var findCaretPositionForward = function (rootElement, elm) {
   });
 };
 
-var findCaretPosition = function (forward, rootElement, elm) {
+const findCaretPosition = function (forward, rootElement, elm) {
   return forward ? findCaretPositionForward(rootElement, elm) : findCaretPositionBackwards(rootElement, elm);
 };
 
-var findCaretPosOutsideElmAfterDelete = function (forward, rootElement, elm) {
+const findCaretPosOutsideElmAfterDelete = function (forward, rootElement, elm) {
   return findCaretPosition(forward, rootElement, elm).map(Fun.curry(reposition, elm));
 };
 
-var setSelection = function (editor, forward, pos) {
+const setSelection = function (editor, forward, pos) {
   pos.fold(
     function () {
       editor.focus();
@@ -111,19 +111,19 @@ var setSelection = function (editor, forward, pos) {
   );
 };
 
-var eqRawNode = function (rawNode) {
+const eqRawNode = function (rawNode) {
   return function (elm) {
     return elm.dom() === rawNode;
   };
 };
 
-var isBlock = function (editor, elm) {
+const isBlock = function (editor, elm) {
   return elm && editor.schema.getBlockElements().hasOwnProperty(Node.name(elm));
 };
 
-var paddEmptyBlock = function (elm) {
+const paddEmptyBlock = function (elm) {
   if (Empty.isEmpty(elm)) {
-    var br = Element.fromHtml('<br data-mce-bogus="1">');
+    const br = Element.fromHtml('<br data-mce-bogus="1">');
     Remove.empty(elm);
     Insert.append(elm, br);
     return Option.some(CaretPosition.before(br.dom()));
@@ -133,9 +133,11 @@ var paddEmptyBlock = function (elm) {
 };
 
 // When deleting an element between two text nodes IE 11 doesn't automatically merge the adjacent text nodes
-var deleteNormalized = function (elm, afterDeletePosOpt) {
+const deleteNormalized = function (elm, afterDeletePosOpt) {
   return Options.liftN([Traverse.prevSibling(elm), Traverse.nextSibling(elm), afterDeletePosOpt], function (prev, next, afterDeletePos) {
-    var offset, prevNode = prev.dom(), nextNode = next.dom();
+    let offset;
+    const prevNode = prev.dom();
+    const nextNode = next.dom();
 
     if (NodeType.isText(prevNode) && NodeType.isText(nextNode)) {
       offset = prevNode.data.length;
@@ -157,10 +159,10 @@ var deleteNormalized = function (elm, afterDeletePosOpt) {
   });
 };
 
-var deleteElement = function (editor, forward, elm) {
-  var afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
-  var parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
-  var normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos);
+const deleteElement = function (editor, forward, elm) {
+  const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
+  const parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
+  const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos);
 
   if (editor.dom.isEmpty(editor.getBody())) {
     editor.setContent('');
@@ -178,5 +180,5 @@ var deleteElement = function (editor, forward, elm) {
 };
 
 export default {
-  deleteElement: deleteElement
+  deleteElement
 };

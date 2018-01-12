@@ -3,58 +3,56 @@ import { Chain } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Node } from '@ephox/sugar';
 import Parents from 'tinymce/core/dom/Parents';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var cCreateStructure = function (html) {
+  const cCreateStructure = function (html) {
     return Chain.mapper(function (_) {
       return Element.fromHtml(html);
     });
   };
 
-  var cParentsUntil = function (startPath, rootPath, predicate) {
+  const cParentsUntil = function (startPath, rootPath, predicate) {
     return Chain.mapper(function (structure) {
-      var startNode = Hierarchy.follow(structure, startPath).getOrDie();
-      var rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
+      const startNode = Hierarchy.follow(structure, startPath).getOrDie();
+      const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
       return Parents.parentsUntil(startNode, rootNode, predicate);
     });
   };
 
-  var cParents = function (startPath, rootPath) {
+  const cParents = function (startPath, rootPath) {
     return Chain.mapper(function (structure) {
-      var startNode = Hierarchy.follow(structure, startPath).getOrDie();
-      var rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
+      const startNode = Hierarchy.follow(structure, startPath).getOrDie();
+      const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
       return Parents.parents(startNode, rootNode);
     });
   };
 
-  var cParentsAndSelf = function (startPath, rootPath) {
+  const cParentsAndSelf = function (startPath, rootPath) {
     return Chain.mapper(function (structure) {
-      var startNode = Hierarchy.follow(structure, startPath).getOrDie();
-      var rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
+      const startNode = Hierarchy.follow(structure, startPath).getOrDie();
+      const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
       return Parents.parentsAndSelf(startNode, rootNode);
     });
   };
 
-  var cAssertElementNames = function (expectedNames) {
+  const cAssertElementNames = function (expectedNames) {
     return Chain.mapper(function (parents) {
-      var names = Arr.map(parents, Node.name);
+      const names = Arr.map(parents, Node.name);
       Assertions.assertEq('Should be expected names', expectedNames, names);
       return {};
     });
   };
 
-  var hasName = function (name) {
+  const hasName = function (name) {
     return function (elm) {
       return Node.name(elm) === name;
     };
@@ -130,4 +128,3 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function() {
     success();
   }, failure);
 });
-

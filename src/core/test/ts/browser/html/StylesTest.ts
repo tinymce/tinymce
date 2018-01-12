@@ -4,74 +4,74 @@ import Styles from 'tinymce/core/html/Styles';
 import Schema from 'tinymce/core/html/Schema';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   suite.test('Basic parsing/serializing', function () {
-    var styles = Styles();
+    const styles = Styles();
 
-    LegacyUnit.equal(styles.serialize(styles.parse('FONT-SIZE:10px')), "font-size: 10px;");
-    LegacyUnit.equal(styles.serialize(styles.parse('FONT-SIZE:10px;COLOR:red')), "font-size: 10px; color: red;");
-    LegacyUnit.equal(styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  red   ')), "font-size: 10px; color: red;");
-    LegacyUnit.equal(styles.serialize(styles.parse('key:"value"')), "key: 'value';");
-    LegacyUnit.equal(styles.serialize(styles.parse('key:"value1" \'value2\'')), "key: 'value1' 'value2';");
-    LegacyUnit.equal(styles.serialize(styles.parse('key:"val\\"ue1" \'val\\\'ue2\'')), "key: 'val\"ue1' 'val\\'ue2';");
+    LegacyUnit.equal(styles.serialize(styles.parse('FONT-SIZE:10px')), 'font-size: 10px;');
+    LegacyUnit.equal(styles.serialize(styles.parse('FONT-SIZE:10px;COLOR:red')), 'font-size: 10px; color: red;');
+    LegacyUnit.equal(styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  red   ')), 'font-size: 10px; color: red;');
+    LegacyUnit.equal(styles.serialize(styles.parse('key:"value"')), 'key: \'value\';');
+    LegacyUnit.equal(styles.serialize(styles.parse('key:"value1" \'value2\'')), 'key: \'value1\' \'value2\';');
+    LegacyUnit.equal(styles.serialize(styles.parse('key:"val\\"ue1" \'val\\\'ue2\'')), 'key: \'val"ue1\' \'val\\\'ue2\';');
     LegacyUnit.equal(styles.serialize(styles.parse('width:100%')), 'width: 100%;');
     LegacyUnit.equal(styles.serialize(styles.parse('value:_; value2:"_"')), 'value: _; value2: \'_\';');
-    LegacyUnit.equal(styles.serialize(styles.parse('value: "&amp;"')), "value: '&amp;';");
-    LegacyUnit.equal(styles.serialize(styles.parse('value: "&"')), "value: '&';");
-    LegacyUnit.equal(styles.serialize(styles.parse('value: ')), "");
+    LegacyUnit.equal(styles.serialize(styles.parse('value: "&amp;"')), 'value: \'&amp;\';');
+    LegacyUnit.equal(styles.serialize(styles.parse('value: "&"')), 'value: \'&\';');
+    LegacyUnit.equal(styles.serialize(styles.parse('value: ')), '');
     LegacyUnit.equal(
-      styles.serialize(styles.parse("background: url('http://www.site.com/(foo)');")),
-      "background: url('http://www.site.com/(foo)');"
+      styles.serialize(styles.parse('background: url(\'http://www.site.com/(foo)\');')),
+      'background: url(\'http://www.site.com/(foo)\');'
     );
   });
 
   suite.test('Colors force hex and lowercase', function () {
-    var styles = Styles();
+    const styles = Styles();
 
-    LegacyUnit.equal(styles.serialize(styles.parse('color: rgb(1,2,3)')), "color: #010203;");
-    LegacyUnit.equal(styles.serialize(styles.parse('color: RGB(1,2,3)')), "color: #010203;");
-    LegacyUnit.equal(styles.serialize(styles.parse('color: #FF0000')), "color: #ff0000;");
-    LegacyUnit.equal(styles.serialize(styles.parse('  color:   RGB  (  1  ,  2  ,  3  )  ')), "color: #010203;");
+    LegacyUnit.equal(styles.serialize(styles.parse('color: rgb(1,2,3)')), 'color: #010203;');
+    LegacyUnit.equal(styles.serialize(styles.parse('color: RGB(1,2,3)')), 'color: #010203;');
+    LegacyUnit.equal(styles.serialize(styles.parse('color: #FF0000')), 'color: #ff0000;');
+    LegacyUnit.equal(styles.serialize(styles.parse('  color:   RGB  (  1  ,  2  ,  3  )  ')), 'color: #010203;');
     LegacyUnit.equal(
       styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  RGB  (  1  ,  2  ,  3  )   ')),
-      "font-size: 10px; color: #010203;"
+      'font-size: 10px; color: #010203;'
     );
-    LegacyUnit.equal(styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  RED   ')), "font-size: 10px; color: red;");
+    LegacyUnit.equal(styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  RED   ')), 'font-size: 10px; color: red;');
   });
 
   suite.test('Urls convert urls and force format', function () {
-    var styles = Styles({
-      url_converter: function (url) {
+    const styles = Styles({
+      url_converter (url) {
         return '|' + url + '|';
       }
     });
 
-    LegacyUnit.equal(styles.serialize(styles.parse('background: url(a)')), "background: url('|a|');");
-    LegacyUnit.equal(styles.serialize(styles.parse('background: url("a")')), "background: url('|a|');");
-    LegacyUnit.equal(styles.serialize(styles.parse("background: url('a')")), "background: url('|a|');");
-    LegacyUnit.equal(styles.serialize(styles.parse('background: url(   a   )')), "background: url('|a|');");
-    LegacyUnit.equal(styles.serialize(styles.parse('background: url(   "a"   )')), "background: url('|a|');");
-    LegacyUnit.equal(styles.serialize(styles.parse("background: url(    'a'    )")), "background: url('|a|');");
+    LegacyUnit.equal(styles.serialize(styles.parse('background: url(a)')), 'background: url(\'|a|\');');
+    LegacyUnit.equal(styles.serialize(styles.parse('background: url("a")')), 'background: url(\'|a|\');');
+    LegacyUnit.equal(styles.serialize(styles.parse('background: url(\'a\')')), 'background: url(\'|a|\');');
+    LegacyUnit.equal(styles.serialize(styles.parse('background: url(   a   )')), 'background: url(\'|a|\');');
+    LegacyUnit.equal(styles.serialize(styles.parse('background: url(   "a"   )')), 'background: url(\'|a|\');');
+    LegacyUnit.equal(styles.serialize(styles.parse('background: url(    \'a\'    )')), 'background: url(\'|a|\');');
     LegacyUnit.equal(
       styles.serialize(styles.parse('background1: url(a); background2: url("a"); background3: url(\'a\')')),
-      "background1: url('|a|'); background2: url('|a|'); background3: url('|a|');"
+      'background1: url(\'|a|\'); background2: url(\'|a|\'); background3: url(\'|a|\');'
     );
     LegacyUnit.equal(
-      styles.serialize(styles.parse("background: url('http://www.site.com/a?a=b&c=d')")),
-      "background: url('|http://www.site.com/a?a=b&c=d|');"
+      styles.serialize(styles.parse('background: url(\'http://www.site.com/a?a=b&c=d\')')),
+      'background: url(\'|http://www.site.com/a?a=b&c=d|\');'
     );
     LegacyUnit.equal(
-      styles.serialize(styles.parse("background: url('http://www.site.com/a_190x144.jpg');")),
-      "background: url('|http://www.site.com/a_190x144.jpg|');"
+      styles.serialize(styles.parse('background: url(\'http://www.site.com/a_190x144.jpg\');')),
+      'background: url(\'|http://www.site.com/a_190x144.jpg|\');'
     );
   });
 
   suite.test('Compress styles', function () {
-    var styles = Styles();
+    const styles = Styles();
 
     LegacyUnit.equal(
       styles.serialize(
@@ -149,81 +149,80 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function() {
   });
 
   suite.test('Font weight', function () {
-    var styles = Styles();
+    const styles = Styles();
 
-    LegacyUnit.equal(styles.serialize(styles.parse('font-weight: 700')), "font-weight: bold;");
+    LegacyUnit.equal(styles.serialize(styles.parse('font-weight: 700')), 'font-weight: bold;');
   });
 
   suite.test('Valid styles', function () {
-    var styles = Styles({}, Schema({ valid_styles: { '*': 'color,font-size', 'a': 'margin-left' } }));
+    const styles = Styles({}, Schema({ valid_styles: { '*': 'color,font-size', 'a': 'margin-left' } }));
 
     LegacyUnit.equal(
       styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; invalid: 1;'), 'b'),
-      "color: #ff0000; font-size: 10px;"
+      'color: #ff0000; font-size: 10px;'
     );
     LegacyUnit.equal(
       styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; invalid: 2;'), 'a'),
-      "color: #ff0000; font-size: 10px; margin-left: 10px;"
+      'color: #ff0000; font-size: 10px; margin-left: 10px;'
     );
   });
 
   suite.test('Invalid styles', function () {
-    var styles = Styles({}, Schema({ invalid_styles: { '*': 'color,font-size', 'a': 'margin-left' } }));
+    const styles = Styles({}, Schema({ invalid_styles: { '*': 'color,font-size', 'a': 'margin-left' } }));
 
-    LegacyUnit.equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px'), 'b'), "margin-left: 10px;");
+    LegacyUnit.equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px'), 'b'), 'margin-left: 10px;');
     LegacyUnit.equal(
       styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; margin-right: 10px;'), 'a'),
-      "margin-right: 10px;"
+      'margin-right: 10px;'
     );
   });
 
   suite.test('Suspicious (XSS) property names', function () {
-    var styles = Styles();
+    const styles = Styles();
 
-    LegacyUnit.equal(styles.serialize(styles.parse('font-fa"on-load\\3dxss\\28\\29\\20mily:\'arial\'')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('font-fa\\"on-load\\3dxss\\28\\29\\20mily:\'arial\'')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('font-fa\\22on-load\\3dxss\\28\\29\\20mily:\'arial\'')), "");
+    LegacyUnit.equal(styles.serialize(styles.parse('font-fa"on-load\\3dxss\\28\\29\\20mily:\'arial\'')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('font-fa\\"on-load\\3dxss\\28\\29\\20mily:\'arial\'')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('font-fa\\22on-load\\3dxss\\28\\29\\20mily:\'arial\'')), '');
   });
 
   suite.test('Script urls denied', function () {
-    var styles = Styles();
+    const styles = Styles();
 
-    LegacyUnit.equal(styles.serialize(styles.parse('behavior:url(test.htc)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('b\\65havior:url(test.htc)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('color:expression(alert(1))')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('color:\\65xpression(alert(1))')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('color:exp/**/ression(alert(1))')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('color:/**/')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('color:  expression  (  alert(1))')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url(jAvaScript:alert(1)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url(javascript:alert(1)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url(j\\61vascript:alert(1)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url(\\6a\\61vascript:alert(1)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url(\\6A\\61vascript:alert(1)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url\\28\\6A\\61vascript:alert(1)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:\\75rl(j\\61vascript:alert(1)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('b\\61ckground:\\75rl(j\\61vascript:alert(1)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url(vbscript:alert(1)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url(j\navas\u0000cr\tipt:alert(1)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url(data:image/svg+xml,%3Csvg/%3E)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url( data:image/svg+xml,%3Csvg/%3E)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url\\28 data:image/svg+xml,%3Csvg/%3E)')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url("data: image/svg+xml,%3Csvg/%3E")')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url("data: ima ge/svg+xml,%3Csvg/%3E")')), "");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url("data: image /svg+xml,%3Csvg/%3E")')), "");
+    LegacyUnit.equal(styles.serialize(styles.parse('behavior:url(test.htc)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('b\\65havior:url(test.htc)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('color:expression(alert(1))')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('color:\\65xpression(alert(1))')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('color:exp/**/ression(alert(1))')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('color:/**/')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('color:  expression  (  alert(1))')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url(jAvaScript:alert(1)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url(javascript:alert(1)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url(j\\61vascript:alert(1)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url(\\6a\\61vascript:alert(1)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url(\\6A\\61vascript:alert(1)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url\\28\\6A\\61vascript:alert(1)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:\\75rl(j\\61vascript:alert(1)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('b\\61ckground:\\75rl(j\\61vascript:alert(1)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url(vbscript:alert(1)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url(j\navas\u0000cr\tipt:alert(1)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url(data:image/svg+xml,%3Csvg/%3E)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url( data:image/svg+xml,%3Csvg/%3E)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url\\28 data:image/svg+xml,%3Csvg/%3E)')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url("data: image/svg+xml,%3Csvg/%3E")')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url("data: ima ge/svg+xml,%3Csvg/%3E")')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url("data: image /svg+xml,%3Csvg/%3E")')), '');
   });
 
   suite.test('Script urls allowed', function () {
-    var styles = Styles({ allow_script_urls: true });
+    const styles = Styles({ allow_script_urls: true });
 
-    LegacyUnit.equal(styles.serialize(styles.parse('behavior:url(test.htc)')), "behavior: url('test.htc');");
-    LegacyUnit.equal(styles.serialize(styles.parse('color:expression(alert(1))')), "color: expression(alert(1));");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url(javascript:alert(1)')), "background: url('javascript:alert(1');");
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url(vbscript:alert(1)')), "background: url('vbscript:alert(1');");
+    LegacyUnit.equal(styles.serialize(styles.parse('behavior:url(test.htc)')), 'behavior: url(\'test.htc\');');
+    LegacyUnit.equal(styles.serialize(styles.parse('color:expression(alert(1))')), 'color: expression(alert(1));');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url(javascript:alert(1)')), 'background: url(\'javascript:alert(1\');');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url(vbscript:alert(1)')), 'background: url(\'vbscript:alert(1\');');
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {
     success();
   }, failure);
 });
-

@@ -10,7 +10,6 @@
 
 import PluginManager from 'tinymce/core/PluginManager';
 import Commands from './api/Commands';
-import Settings from './api/Settings';
 import FilterContent from './core/FilterContent';
 import Buttons from './ui/Buttons';
 
@@ -20,4 +19,4 @@ PluginManager.add('toc', function (editor) {
   FilterContent.setup(editor);
 });
 
-export default function () { };
+export default function () { }

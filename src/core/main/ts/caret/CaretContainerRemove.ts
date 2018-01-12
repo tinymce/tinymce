@@ -14,26 +14,26 @@ import CaretPosition from './CaretPosition';
 import NodeType from '../dom/NodeType';
 import Zwsp from '../text/Zwsp';
 
-var isElement = NodeType.isElement;
-var isText = NodeType.isText;
+const isElement = NodeType.isElement;
+const isText = NodeType.isText;
 
-var removeNode = function (node) {
-  var parentNode = node.parentNode;
+const removeNode = function (node) {
+  const parentNode = node.parentNode;
   if (parentNode) {
     parentNode.removeChild(node);
   }
 };
 
-var getNodeValue = function (node) {
+const getNodeValue = function (node) {
   try {
     return node.nodeValue;
   } catch (ex) {
     // IE sometimes produces "Invalid argument" on nodes
-    return "";
+    return '';
   }
 };
 
-var setNodeValue = function (node, text) {
+const setNodeValue = function (node, text) {
   if (text.length === 0) {
     removeNode(node);
   } else {
@@ -41,20 +41,20 @@ var setNodeValue = function (node, text) {
   }
 };
 
-var trimCount = function (text) {
-  var trimmedText = Zwsp.trim(text);
+const trimCount = function (text) {
+  const trimmedText = Zwsp.trim(text);
   return { count: text.length - trimmedText.length, text: trimmedText };
 };
 
-var removeUnchanged = function (caretContainer, pos) {
+const removeUnchanged = function (caretContainer, pos) {
   remove(caretContainer);
   return pos;
 };
 
-var removeTextAndReposition = function (caretContainer, pos) {
-  var before = trimCount(caretContainer.data.substr(0, pos.offset()));
-  var after = trimCount(caretContainer.data.substr(pos.offset()));
-  var text = before.text + after.text;
+const removeTextAndReposition = function (caretContainer, pos) {
+  const before = trimCount(caretContainer.data.substr(0, pos.offset()));
+  const after = trimCount(caretContainer.data.substr(pos.offset()));
+  const text = before.text + after.text;
 
   if (text.length > 0) {
     setNodeValue(caretContainer, text);
@@ -64,28 +64,28 @@ var removeTextAndReposition = function (caretContainer, pos) {
   }
 };
 
-var removeElementAndReposition = function (caretContainer, pos) {
-  var parentNode = pos.container();
-  var newPosition = Arr.indexOf(parentNode.childNodes, caretContainer).map(function (index) {
+const removeElementAndReposition = function (caretContainer, pos) {
+  const parentNode = pos.container();
+  const newPosition = Arr.indexOf(parentNode.childNodes, caretContainer).map(function (index) {
     return index < pos.offset() ? new CaretPosition(parentNode, pos.offset() - 1) : pos;
   }).getOr(pos);
   remove(caretContainer);
   return newPosition;
 };
 
-var removeTextCaretContainer = function (caretContainer, pos) {
+const removeTextCaretContainer = function (caretContainer, pos) {
   return pos.container() === caretContainer ? removeTextAndReposition(caretContainer, pos) : removeUnchanged(caretContainer, pos);
 };
 
-var removeElementCaretContainer = function (caretContainer, pos) {
+const removeElementCaretContainer = function (caretContainer, pos) {
   return pos.container() === caretContainer.parentNode ? removeElementAndReposition(caretContainer, pos) : removeUnchanged(caretContainer, pos);
 };
 
-var removeAndReposition = function (container, pos) {
+const removeAndReposition = function (container, pos) {
   return CaretPosition.isTextPosition(pos) ? removeTextCaretContainer(container, pos) : removeElementCaretContainer(container, pos);
 };
 
-var remove = function (caretContainerNode) {
+const remove = function (caretContainerNode) {
   if (isElement(caretContainerNode) && CaretContainer.isCaretContainer(caretContainerNode)) {
     if (CaretContainer.hasContent(caretContainerNode)) {
       caretContainerNode.removeAttribute('data-mce-caret');
@@ -95,12 +95,12 @@ var remove = function (caretContainerNode) {
   }
 
   if (isText(caretContainerNode)) {
-    var text = Zwsp.trim(getNodeValue(caretContainerNode));
+    const text = Zwsp.trim(getNodeValue(caretContainerNode));
     setNodeValue(caretContainerNode, text);
   }
 };
 
 export default {
-  removeAndReposition: removeAndReposition,
-  remove: remove
+  removeAndReposition,
+  remove
 };

@@ -8,21 +8,21 @@ import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.CaretContainerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.CaretContainerTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   if (!Env.ceFalse) {
     return;
   }
 
-  var getRoot = function () {
+  const getRoot = function () {
     return viewBlock.get();
   };
 
-  var setupHtml = function (html) {
+  const setupHtml = function (html) {
     viewBlock.update(html);
   };
 
@@ -113,7 +113,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerTest', function() {
 
   suite.test('hasContent', function () {
     setupHtml('<span contentEditable="false">1</span>');
-    var caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild, true);
+    const caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild, true);
     LegacyUnit.equal(CaretContainer.hasContent(caretContainerBlock), false);
     caretContainerBlock.insertBefore(document.createTextNode('a'), caretContainerBlock.firstChild);
     LegacyUnit.equal(CaretContainer.hasContent(caretContainerBlock), true);
@@ -121,7 +121,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerTest', function() {
 
   suite.test('showCaretContainerBlock', function () {
     setupHtml('<span contentEditable="false">1</span>');
-    var caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild, true);
+    const caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild, true);
     caretContainerBlock.insertBefore(document.createTextNode('a'), caretContainerBlock.firstChild);
     CaretContainer.showCaretContainerBlock(caretContainerBlock);
     LegacyUnit.equal(caretContainerBlock.outerHTML, '<p>a</p>');
@@ -129,7 +129,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerTest', function() {
 
   suite.test('prependInline', function () {
     setupHtml('a');
-    var caretContainerTextNode = CaretContainer.prependInline(getRoot().firstChild);
+    const caretContainerTextNode = CaretContainer.prependInline(getRoot().firstChild);
     LegacyUnit.equal(caretContainerTextNode.data, Zwsp.ZWSP + 'a');
   });
 
@@ -141,7 +141,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerTest', function() {
 
   suite.test('appendInline', function () {
     setupHtml('a');
-    var caretContainerTextNode = CaretContainer.appendInline(getRoot().firstChild);
+    const caretContainerTextNode = CaretContainer.appendInline(getRoot().firstChild);
     LegacyUnit.equal(caretContainerTextNode.data, 'a' + Zwsp.ZWSP);
   });
 
@@ -163,4 +163,3 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerTest', function() {
     success();
   }, failure);
 });
-

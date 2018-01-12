@@ -18,9 +18,9 @@ import Class from 'tinymce/core/util/Class';
  * @class tinymce.data.ObservableArray
  */
 
-var push = Array.prototype.push, slice = Array.prototype.slice, splice = Array.prototype.splice;
+const push = Array.prototype.push, slice = Array.prototype.slice, splice = Array.prototype.splice;
 
-var ObservableArray = Class.extend({
+const ObservableArray = Class.extend({
   Mixins: [Observable],
 
   /**
@@ -37,7 +37,7 @@ var ObservableArray = Class.extend({
    * @constructor
    * @param {Object} data Optional initial data for the object.
    */
-  init: function (data) {
+  init (data) {
     if (data) {
       this.push.apply(this, data);
     }
@@ -50,15 +50,16 @@ var ObservableArray = Class.extend({
    * @param {Object} item... Item or items to add to the end of array.
    * @return {Number} Number of items that got added.
    */
-  push: function () {
-    var args, index = this.length;
+  push () {
+    let args;
+    const index = this.length;
 
     args = Array.prototype.slice.call(arguments);
     push.apply(this, args);
 
     this.fire('add', {
       items: args,
-      index: index
+      index
     });
 
     return args.length;
@@ -70,7 +71,7 @@ var ObservableArray = Class.extend({
    * @method pop
    * @return {Object} Item that got popped out.
    */
-  pop: function () {
+  pop () {
     return this.splice(this.length - 1, 1)[0];
   },
 
@@ -82,7 +83,7 @@ var ObservableArray = Class.extend({
    * @param {Number} end End of slice.
    * @return {Array} Native array instance with items.
    */
-  slice: function (begin, end) {
+  slice (begin, end) {
     return slice.call(this, begin, end);
   },
 
@@ -94,8 +95,9 @@ var ObservableArray = Class.extend({
    * @param {Number} howMany Optional number of items to splice away.
    * @param {Object} item ... Item or items to insert at the specified index.
    */
-  splice: function (index) {
-    var added, removed, args = slice.call(arguments);
+  splice (index) {
+    let added, removed;
+    const args = slice.call(arguments);
 
     if (args.length === 1) {
       args[1] = this.length;
@@ -105,11 +107,11 @@ var ObservableArray = Class.extend({
     added = args.slice(2);
 
     if (removed.length > 0) {
-      this.fire('remove', { items: removed, index: index });
+      this.fire('remove', { items: removed, index });
     }
 
     if (added.length > 0) {
-      this.fire('add', { items: added, index: index });
+      this.fire('add', { items: added, index });
     }
 
     return removed;
@@ -121,7 +123,7 @@ var ObservableArray = Class.extend({
    * @method shift
    * @return {Object} First item of the array.
    */
-  shift: function () {
+  shift () {
     return this.splice(0, 1)[0];
   },
 
@@ -132,8 +134,8 @@ var ObservableArray = Class.extend({
    * @param {Object} item... Item or items to prepend to array.
    * @return {Number} Number of items that got added.
    */
-  unshift: function () {
-    var args = slice.call(arguments);
+  unshift () {
+    const args = slice.call(arguments);
     this.splice.apply(this, [0, 0].concat(args));
     return args.length;
   },
@@ -145,8 +147,8 @@ var ObservableArray = Class.extend({
    * @param {function} callback Callback to execute for each item in array.
    * @param {Object} scope Optional scope for this when executing the callback.
    */
-  forEach: function (callback, scope) {
-    var i;
+  forEach (callback, scope) {
+    let i;
 
     scope = scope || this;
     for (i = 0; i < this.length; i++) {
@@ -160,8 +162,8 @@ var ObservableArray = Class.extend({
    * @method indexOf
    * @return {Number} Index of item or null if it wasn't found.
    */
-  indexOf: function (item) {
-    for (var i = 0; i < this.length; i++) {
+  indexOf (item) {
+    for (let i = 0; i < this.length; i++) {
       if (this[i] === item) {
         return i;
       }
@@ -179,8 +181,8 @@ var ObservableArray = Class.extend({
    * @param {Object} thisArg Optional scope for this when executing the callback.
    * @return {tinymce.data.ObservableArray} Filtered observable array instance.
    */
-  filter: function (callback, thisArg) {
-    var self = this, out = new ObservableArray();
+  filter (callback, thisArg) {
+    const self = this, out = new ObservableArray();
 
     this.forEach(function (item, index) {
       if (callback.call(thisArg || self, item, index, self)) {
@@ -192,4 +194,4 @@ var ObservableArray = Class.extend({
   }
 });
 
-export default <any> ObservableArray;
+export default ObservableArray;

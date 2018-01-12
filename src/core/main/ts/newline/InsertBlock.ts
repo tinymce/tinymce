@@ -19,34 +19,36 @@ import NormalizeRange from '../selection/NormalizeRange';
 import Zwsp from '../text/Zwsp';
 import Tools from '../util/Tools';
 
-var isEmptyAnchor = function (elm) {
-  return elm && elm.nodeName === "A" && Tools.trim(Zwsp.trim(elm.innerText || elm.textContent)).length === 0;
+const isEmptyAnchor = function (elm) {
+  return elm && elm.nodeName === 'A' && Tools.trim(Zwsp.trim(elm.innerText || elm.textContent)).length === 0;
 };
 
-var isTableCell = function (node) {
+const isTableCell = function (node) {
   return node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
 };
 
-var emptyBlock = function (elm) {
+const emptyBlock = function (elm) {
   elm.innerHTML = '<br data-mce-bogus="1">';
 };
 
-var containerAndSiblingName = function (container, nodeName) {
+const containerAndSiblingName = function (container, nodeName) {
   return container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
 };
 
 // Returns true if the block can be split into two blocks or not
-var canSplitBlock = function (dom, node) {
+const canSplitBlock = function (dom, node) {
   return node &&
     dom.isBlock(node) &&
     !/^(TD|TH|CAPTION|FORM)$/.test(node.nodeName) &&
     !/^(fixed|absolute)/i.test(node.style.position) &&
-    dom.getContentEditable(node) !== "true";
+    dom.getContentEditable(node) !== 'true';
 };
 
 // Remove the first empty inline element of the block so this: <p><b><em></em></b>x</p> becomes this: <p>x</p>
-var trimInlineElementsOnLeftSideOfBlock = function (dom, nonEmptyElementsMap, block) {
-  var node = block, firstChilds = [], i;
+const trimInlineElementsOnLeftSideOfBlock = function (dom, nonEmptyElementsMap, block) {
+  let node = block;
+  const firstChilds = [];
+  let i;
 
   if (!node) {
     return;
@@ -76,25 +78,25 @@ var trimInlineElementsOnLeftSideOfBlock = function (dom, nonEmptyElementsMap, bl
   }
 };
 
-var normalizeZwspOffset = function (start, container, offset) {
+const normalizeZwspOffset = function (start, container, offset) {
   if (NodeType.isText(container) === false) {
     return offset;
-  } if (start) {
+  } else if (start) {
     return offset === 1 && container.data.charAt(offset - 1) === Zwsp.ZWSP ? 0 : offset;
   } else {
     return offset === container.data.length - 1 && container.data.charAt(offset) === Zwsp.ZWSP ? container.data.length : offset;
   }
 };
 
-var includeZwspInRange = function (rng) {
-  var newRng = rng.cloneRange();
+const includeZwspInRange = function (rng) {
+  const newRng = rng.cloneRange();
   newRng.setStart(rng.startContainer, normalizeZwspOffset(true, rng.startContainer, rng.startOffset));
   newRng.setEnd(rng.endContainer, normalizeZwspOffset(false, rng.endContainer, rng.endOffset));
   return newRng;
 };
 
 // Trims any linebreaks at the beginning of node user for example when pressing enter in a PRE element
-var trimLeadingLineBreaks = function (node) {
+const trimLeadingLineBreaks = function (node) {
   do {
     if (NodeType.isText(node)) {
       node.nodeValue = node.nodeValue.replace(/^[\r\n]+/, '');
@@ -104,13 +106,14 @@ var trimLeadingLineBreaks = function (node) {
   } while (node);
 };
 
-var getEditableRoot = function (dom, node) {
-  var root = dom.getRoot(), parent, editableRoot;
+const getEditableRoot = function (dom, node) {
+  const root = dom.getRoot();
+  let parent, editableRoot;
 
   // Get all parents until we hit a non editable parent or the root
   parent = node;
-  while (parent !== root && dom.getContentEditable(parent) !== "false") {
-    if (dom.getContentEditable(parent) === "true") {
+  while (parent !== root && dom.getContentEditable(parent) !== 'false') {
+    if (dom.getContentEditable(parent) === 'true') {
       editableRoot = parent;
     }
 
@@ -120,8 +123,8 @@ var getEditableRoot = function (dom, node) {
   return parent !== root ? editableRoot : root;
 };
 
-var setForcedBlockAttrs = function (editor, node) {
-  var forcedRootBlockName = Settings.getForcedRootBlock(editor);
+const setForcedBlockAttrs = function (editor, node) {
+  const forcedRootBlockName = Settings.getForcedRootBlock(editor);
 
   if (forcedRootBlockName && forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
     editor.dom.setAttribs(node, Settings.getForcedRootBlockAttrs(editor));
@@ -129,9 +132,10 @@ var setForcedBlockAttrs = function (editor, node) {
 };
 
 // Wraps any text nodes or inline elements in the specified forced root block name
-var wrapSelfAndSiblingsInDefaultBlock = function (editor, newBlockName, rng, container, offset) {
-  var newBlock, parentBlock, startNode, node, next, rootBlockName, blockName = newBlockName || 'P';
-  var dom = editor.dom, editableRoot = getEditableRoot(dom, container);
+const wrapSelfAndSiblingsInDefaultBlock = function (editor, newBlockName, rng, container, offset) {
+  let newBlock, parentBlock, startNode, node, next, rootBlockName;
+  const blockName = newBlockName || 'P';
+  const dom = editor.dom, editableRoot = getEditableRoot(dom, container);
 
   // Not in a block element or in a table cell or caption
   parentBlock = dom.getParent(container, dom.isBlock);
@@ -189,8 +193,8 @@ var wrapSelfAndSiblingsInDefaultBlock = function (editor, newBlockName, rng, con
 
 // Adds a BR at the end of blocks that only contains an IMG or INPUT since
 // these might be floated and then they won't expand the block
-var addBrToBlockIfNeeded = function (dom, block) {
-  var lastChild;
+const addBrToBlockIfNeeded = function (dom, block) {
+  let lastChild;
 
   // IE will render the blocks correctly other browsers needs a BR
   block.normalize(); // Remove empty text nodes that got left behind by the extract
@@ -202,19 +206,20 @@ var addBrToBlockIfNeeded = function (dom, block) {
   }
 };
 
-var insert = function (editor, evt) {
-  var tmpRng, editableRoot, container, offset, parentBlock, shiftKey;
-  var newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
-  var dom = editor.dom;
-  var schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements();
-  var rng = editor.selection.getRng();
+const insert = function (editor, evt) {
+  let tmpRng, editableRoot, container, offset, parentBlock, shiftKey;
+  let newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
+  const dom = editor.dom;
+  const schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements();
+  const rng = editor.selection.getRng();
 
   // Creates a new block element by cloning the current one or creating a new one if the name is specified
   // This function will also copy any text formatting from the parent block and add it to the new one
-  var createNewBlock = function (name?) {
-    var node = container, block, clonedNode, caretNode, textInlineElements = schema.getTextInlineElements();
+  const createNewBlock = function (name?) {
+    let node = container, block, clonedNode, caretNode;
+    const textInlineElements = schema.getTextInlineElements();
 
-    if (name || parentBlockName === "TABLE" || parentBlockName === "HR") {
+    if (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') {
       block = dom.create(name || newBlockName);
       setForcedBlockAttrs(editor, block);
     } else {
@@ -254,8 +259,8 @@ var insert = function (editor, evt) {
   };
 
   // Returns true/false if the caret is at the start/end of the parent block element
-  var isCaretAtStartOrEndOfBlock = function (start?) {
-    var walker, node, name, normalizedOffset;
+  const isCaretAtStartOrEndOfBlock = function (start?) {
+    let walker, node, name, normalizedOffset;
 
     normalizedOffset = normalizeZwspOffset(start, container, offset);
 
@@ -315,7 +320,7 @@ var insert = function (editor, evt) {
     return true;
   };
 
-  var insertNewBlockAfter = function () {
+  const insertNewBlockAfter = function () {
     // If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
     if (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName !== 'HGROUP') {
       newBlock = createNewBlock(newBlockName);
@@ -446,9 +451,9 @@ var insert = function (editor, evt) {
   dom.setAttrib(newBlock, 'id', ''); // Remove ID since it needs to be document unique
 
   // Allow custom handling of new blocks
-  editor.fire('NewBlock', { newBlock: newBlock });
+  editor.fire('NewBlock', { newBlock });
 };
 
 export default {
-  insert: insert
+  insert
 };

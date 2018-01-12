@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import EventUtils from 'tinymce/core/dom/EventUtils';
 import UiUtils from '../module/test/UiUtils';
 import ViewBlock from '../module/test/ViewBlock';
@@ -9,16 +8,16 @@ import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.ui.PanelTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.ui.PanelTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   // Registers ui widgets to factory
   Api.registerToFactory();
 
-  var createPanel = function (settings) {
+  const createPanel = function (settings) {
     EventUtils.Event.clean(viewBlock.get());
     viewBlock.update('');
 
@@ -27,8 +26,8 @@ UnitTest.asynctest('browser.tinymce.ui.PanelTest', function() {
     }, settings)).renderTo(viewBlock.get()).reflow();
   };
 
-  suite.test("panel width: 100, height: 100", function () {
-    var panel = createPanel({
+  suite.test('panel width: 100, height: 100', function () {
+    const panel = createPanel({
       width: 100,
       height: 100
     });
@@ -36,8 +35,8 @@ UnitTest.asynctest('browser.tinymce.ui.PanelTest', function() {
     UiUtils.nearlyEqualRects(UiUtils.rect(viewBlock, panel), [0, 0, 100, 100], 4);
   });
 
-  suite.test("panel border: 1, width: 100, height: 100", function () {
-    var panel = createPanel({
+  suite.test('panel border: 1, width: 100, height: 100', function () {
+    const panel = createPanel({
       width: 100,
       height: 100,
       border: 1
@@ -54,4 +53,3 @@ UnitTest.asynctest('browser.tinymce.ui.PanelTest', function() {
     }, failure);
   });
 });
-

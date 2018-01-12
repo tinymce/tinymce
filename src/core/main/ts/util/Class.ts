@@ -22,20 +22,23 @@ import Tools from './Tools';
  * * Defaults settings
  */
 
-var each = Tools.each, extend = Tools.extend;
+const each = Tools.each, extend = Tools.extend;
 
-var extendClass, initializing;
+let extendClass, initializing;
 
-var Class: any = function () {
+const Class: any = function () {
 };
 
 // Provides classical inheritance, based on code made by John Resig
 Class.extend = extendClass = function (prop) {
-  var self = this, _super = self.prototype, prototype, name, member;
+  const self = this;
+  const _super = self.prototype;
+  let prototype, name, member;
 
   // The dummy class constructor
-  var Class: any = function () {
-    var i, mixins, mixin, self = this;
+  const Class: any = function () {
+    let i, mixins, mixin;
+    const self = this;
 
     // All construction is actually done in the init method
     if (!initializing) {
@@ -59,15 +62,17 @@ Class.extend = extendClass = function (prop) {
   };
 
   // Dummy function, needs to be extended in order to provide functionality
-  var dummy = function () {
+  const dummy = function () {
     return this;
   };
 
   // Creates a overloaded method for the class
   // this enables you to use this._super(); to call the super function
-  var createMethod = function (name, fn) {
+  const createMethod = function (name, fn) {
     return function () {
-      var self = this, tmp = self._super, ret;
+      const self = this;
+      const tmp = self._super;
+      let ret;
 
       self._super = _super[name];
       ret = fn.apply(self, arguments);
@@ -88,8 +93,8 @@ Class.extend = extendClass = function (prop) {
   // Add mixins
   if (prop.Mixins) {
     each(prop.Mixins, function (mixin) {
-      for (var name in mixin) {
-        if (name !== "init") {
+      for (const name in mixin) {
+        if (name !== 'init') {
           prop[name] = mixin[name];
         }
       }
@@ -110,13 +115,13 @@ Class.extend = extendClass = function (prop) {
   // Generate property methods
   if (prop.Properties) {
     each(prop.Properties.split(','), function (name) {
-      var fieldName = '_' + name;
+      const fieldName = '_' + name;
 
       prop[name] = function (value) {
-        var self = this, undef;
+        const self = this;
 
         // Set value
-        if (value !== undef) {
+        if (value !== undefined) {
           self[fieldName] = value;
 
           return self;
@@ -144,7 +149,7 @@ Class.extend = extendClass = function (prop) {
   for (name in prop) {
     member = prop[name];
 
-    if (typeof member == "function" && _super[name]) {
+    if (typeof member === 'function' && _super[name]) {
       prototype[name] = createMethod(name, member);
     } else {
       prototype[name] = member;

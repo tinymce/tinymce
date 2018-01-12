@@ -8,36 +8,36 @@ import CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
-  var fakeCaret;
+  let fakeCaret;
 
   if (!Env.ceFalse) {
     return;
   }
 
-  var getRoot = function () {
+  const getRoot = function () {
     return viewBlock.get();
   };
 
-  var setup = function () {
+  const setup = function () {
     fakeCaret = FakeCaret(getRoot(), isBlock);
   };
 
-  var teardown = function () {
+  const teardown = function () {
     fakeCaret.destroy();
   };
 
-  var isBlock = function (node) {
+  const isBlock = function (node) {
     return node.nodeName === 'DIV';
   };
 
   suite.test('show/hide (before, block)', function () {
-    var rng, $fakeCaretElm;
+    let rng, $fakeCaretElm;
 
     $(getRoot()).html('<div>a</div>');
 
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function() {
   });
 
   suite.test('show/hide (before, block)', function () {
-    var rng, $fakeCaretElm;
+    let rng, $fakeCaretElm;
 
     $(getRoot()).html('<div>a</div>');
 
@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function() {
   });
 
   suite.test('show/hide (before, inline)', function () {
-    var rng, $fakeCaretText;
+    let rng, $fakeCaretText;
 
     $(getRoot()).html('<span>a</span>');
 
@@ -85,7 +85,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function() {
   });
 
   suite.test('show/hide (after, inline)', function () {
-    var rng, $fakeCaretText;
+    let rng, $fakeCaretText;
 
     $(getRoot()).html('<span>a</span>');
 
@@ -105,7 +105,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function() {
   });
 
   suite.test('show before TD', function () {
-    var rng;
+    let rng;
 
     getRoot().innerHTML = '<table><tr><td contenteditable="false">x</td></tr></table>';
     rng = fakeCaret.show(false, $('td', getRoot())[0]);
@@ -113,7 +113,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function() {
   });
 
   suite.test('show before TH', function () {
-    var rng;
+    let rng;
 
     getRoot().innerHTML = '<table><tr><th contenteditable="false">x</th></tr></table>';
     rng = fakeCaret.show(false, $('th', getRoot())[0]);
@@ -129,4 +129,3 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function() {
     success();
   }, failure);
 });
-

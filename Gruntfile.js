@@ -162,7 +162,7 @@ module.exports = function (grunt) {
       {plugins: () => gruntWebPack.allPlugins(plugins)},
       {themes: () => gruntWebPack.allThemes(themes)},
       gruntUtils.generate(plugins, 'plugin', (name) => () => gruntWebPack.createPlugin(name) ),
-      gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) ),
+      gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) )
     ),
 
     less: {
@@ -772,6 +772,7 @@ module.exports = function (grunt) {
   grunt.registerTask('default', [
     'validateVersion',
     'shell:tsc',
+    'tslint',
     'globals',
     'rollup',
     'uglify',
@@ -783,6 +784,14 @@ module.exports = function (grunt) {
     'nugetpack',
     'version'
   ]);
+
+  grunt.registerTask('dev', [
+    'shell:tsc',
+    'globals',
+    'rollup',
+    'less',
+    'copy'
+  ])
 
   grunt.registerTask('test', ['bedrock-auto:phantomjs']);
 };

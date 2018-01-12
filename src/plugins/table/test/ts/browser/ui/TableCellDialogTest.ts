@@ -5,34 +5,34 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
 
-  var getFrontmostWindow = function (editor) {
+  const getFrontmostWindow = function (editor) {
     return editor.windowManager.windows[editor.windowManager.windows.length - 1];
   };
 
-  var closeTopMostWindow = function (editor) {
-    var win = getFrontmostWindow(editor);
+  const closeTopMostWindow = function (editor) {
+    const win = getFrontmostWindow(editor);
     if (win) {
       getFrontmostWindow(editor).close();
     }
   };
 
-  var fillAndSubmitWindowForm = function (editor, data) {
-    var win = getFrontmostWindow(editor);
+  const fillAndSubmitWindowForm = function (editor, data) {
+    const win = getFrontmostWindow(editor);
 
     win.fromJSON(data);
     win.find('form')[0].submit();
     win.close();
   };
 
-  var cleanTableHtml = function (html) {
+  const cleanTableHtml = function (html) {
     return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
   };
   /*
@@ -133,7 +133,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', function
         closeTopMostWindow(editor);
       });
   */
-  suite.test("Table cell properties dialog update multiple cells", function (editor) {
+  suite.test('Table cell properties dialog update multiple cells', function (editor) {
     editor.getBody().innerHTML = (
       '<table>' +
       '<tbody>' +
@@ -148,21 +148,21 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', function
     editor.execCommand('mceTableCellProps');
 
     LegacyUnit.deepEqual(getFrontmostWindow(editor).toJSON(), {
-      "align": "",
-      "valign": "",
-      "height": "",
-      "scope": "",
-      "type": "td",
-      "width": "",
-      "backgroundColor": "",
-      "borderColor": "",
-      "borderStyle": "",
-      "style": ""
+      align: '',
+      valign: '',
+      height: '',
+      scope: '',
+      type: 'td',
+      width: '',
+      backgroundColor: '',
+      borderColor: '',
+      borderStyle: '',
+      style: ''
     }, 'Should not contain width');
 
     fillAndSubmitWindowForm(editor, {
-      "height": "20",
-      "valign": "bottom"
+      height: '20',
+      valign: 'bottom'
     });
 
     LegacyUnit.equal(
@@ -194,4 +194,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', function
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

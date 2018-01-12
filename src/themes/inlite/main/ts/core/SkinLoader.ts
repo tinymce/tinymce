@@ -12,8 +12,8 @@ import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Events from '../api/Events';
 import Settings from '../api/Settings';
 
-var fireSkinLoaded = function (editor, callback) {
-  var done = function () {
+const fireSkinLoaded = function (editor, callback) {
+  const done = function () {
     editor._skinLoaded = true;
     Events.fireSkinLoaded(editor);
     callback();
@@ -26,10 +26,10 @@ var fireSkinLoaded = function (editor, callback) {
   }
 };
 
-var load = function (editor, callback) {
-  var skinUrl = Settings.getSkinUrl(editor);
+const load = function (editor, callback) {
+  const skinUrl = Settings.getSkinUrl(editor);
 
-  var done = function () {
+  const done = function () {
     fireSkinLoaded(editor, callback);
   };
 
@@ -41,6 +41,6 @@ var load = function (editor, callback) {
   }
 };
 
-export default <any> {
-  load: load
+export default {
+  load
 };

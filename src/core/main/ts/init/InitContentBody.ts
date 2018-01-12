@@ -31,22 +31,24 @@ import Tools from '../util/Tools';
 
 declare const escape: any;
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var appendStyle = function (editor, text) {
-  var head = Element.fromDom(editor.getDoc().head);
-  var tag = Element.fromTag('style');
+const appendStyle = function (editor, text) {
+  const head = Element.fromDom(editor.getDoc().head);
+  const tag = Element.fromTag('style');
   Attr.set(tag, 'type', 'text/css');
   Insert.append(tag, Element.fromText(text));
   Insert.append(head, tag);
 };
 
-var createParser = function (editor) {
-  var parser = DomParser(editor.settings, editor.schema);
+const createParser = function (editor) {
+  const parser = DomParser(editor.settings, editor.schema);
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', function (nodes, name) {
-    var i = nodes.length, node, dom = editor.dom, value, internalName;
+    let i = nodes.length, node;
+    const dom = editor.dom;
+    let value, internalName;
 
     while (i--) {
       node = nodes[i];
@@ -60,7 +62,7 @@ var createParser = function (editor) {
           continue;
         }
 
-        if (name === "style") {
+        if (name === 'style') {
           value = dom.serializeStyle(dom.parseStyle(value), node.name);
 
           if (!value.length) {
@@ -69,7 +71,7 @@ var createParser = function (editor) {
 
           node.attr(internalName, value);
           node.attr(name, value);
-        } else if (name === "tabindex") {
+        } else if (name === 'tabindex') {
           node.attr(internalName, value);
           node.attr(name, null);
         } else {
@@ -81,7 +83,7 @@ var createParser = function (editor) {
 
   // Keep scripts from executing
   parser.addNodeFilter('script', function (nodes) {
-    var i = nodes.length, node, type;
+    let i = nodes.length, node, type;
 
     while (i--) {
       node = nodes[i];
@@ -93,7 +95,7 @@ var createParser = function (editor) {
   });
 
   parser.addNodeFilter('#cdata', function (nodes) {
-    var i = nodes.length, node;
+    let i = nodes.length, node;
 
     while (i--) {
       node = nodes[i];
@@ -104,7 +106,8 @@ var createParser = function (editor) {
   });
 
   parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function (nodes) {
-    var i = nodes.length, node, nonEmptyElements = editor.schema.getNonEmptyElements();
+    let i = nodes.length, node;
+    const nonEmptyElements = editor.schema.getNonEmptyElements();
 
     while (i--) {
       node = nodes[i];
@@ -118,10 +121,10 @@ var createParser = function (editor) {
   return parser;
 };
 
-var autoFocus = function (editor) {
+const autoFocus = function (editor) {
   if (editor.settings.auto_focus) {
     Delay.setEditorTimeout(editor, function () {
-      var focusEditor;
+      let focusEditor;
 
       if (editor.settings.auto_focus === true) {
         focusEditor = editor;
@@ -136,7 +139,7 @@ var autoFocus = function (editor) {
   }
 };
 
-var initEditor = function (editor) {
+const initEditor = function (editor) {
   editor.bindPendingEventDelegates();
   editor.initialized = true;
   editor.fire('init');
@@ -146,12 +149,14 @@ var initEditor = function (editor) {
   autoFocus(editor);
 };
 
-var getStyleSheetLoader = function (editor) {
+const getStyleSheetLoader = function (editor) {
   return editor.inline ? DOM.styleSheetLoader : editor.dom.styleSheetLoader;
 };
 
-var initContentBody = function (editor, skipWrite?) {
-  var settings = editor.settings, targetElm = editor.getElement(), doc = editor.getDoc(), body, contentCssText;
+const initContentBody = function (editor, skipWrite?) {
+  const settings = editor.settings;
+  const targetElm = editor.getElement();
+  let doc = editor.getDoc(), body, contentCssText;
 
   // Restore visibility on target element
   if (!settings.inline) {
@@ -167,7 +172,7 @@ var initContentBody = function (editor, skipWrite?) {
 
   if (settings.content_editable) {
     editor.on('remove', function () {
-      var bodyEl = this.getBody();
+      const bodyEl = this.getBody();
 
       DOM.removeClass(bodyEl, 'mce-content-body');
       DOM.removeClass(bodyEl, 'mce-edit-focus');
@@ -213,7 +218,7 @@ var initContentBody = function (editor, skipWrite?) {
     root_element: editor.inline ? editor.getBody() : null,
     collect: settings.content_editable,
     schema: editor.schema,
-    onSetAttrib: function (e) {
+    onSetAttrib (e) {
       editor.fire('SetAttrib', e);
     }
   });
@@ -234,7 +239,7 @@ var initContentBody = function (editor, skipWrite?) {
 
   if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
     doc.body.spellcheck = false; // Gecko
-    DOM.setAttrib(body, "spellcheck", "false");
+    DOM.setAttrib(body, 'spellcheck', 'false');
   }
 
   editor.quirks = Quirks(editor);
@@ -245,7 +250,7 @@ var initContentBody = function (editor, skipWrite?) {
   }
 
   if (settings.nowrap) {
-    body.style.whiteSpace = "nowrap";
+    body.style.whiteSpace = 'nowrap';
   }
 
   if (settings.protect) {
@@ -281,7 +286,7 @@ var initContentBody = function (editor, skipWrite?) {
     contentCssText = '';
 
     Tools.each(editor.contentStyles, function (style) {
-      contentCssText += style + "\r\n";
+      contentCssText += style + '\r\n';
     });
 
     editor.dom.addStyle(contentCssText);
@@ -304,5 +309,5 @@ var initContentBody = function (editor, skipWrite?) {
 };
 
 export default {
-  initContentBody: initContentBody
+  initContentBody
 };

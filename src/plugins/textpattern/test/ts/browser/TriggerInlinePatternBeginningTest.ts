@@ -11,18 +11,18 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.textpattern.TriggerInlinePatternBeginningTest',
-  function() {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+  function () {
+    const success = arguments[arguments.length - 2];
+    const failure = arguments[arguments.length - 1];
 
     ModernTheme();
     TextpatternPlugin();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyApis = TinyApis(editor);
+      const tinyApis = TinyApis(editor);
       // var tinyActions = TinyActions(editor);
 
-      var steps = Utils.withTeardown([
+      const steps = Utils.withTeardown([
         Logger.t('enter after first * in *a*', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>*a*</p>'),
           tinyApis.sFocus,
@@ -51,4 +51,3 @@ UnitTest.asynctest(
     }, success, failure);
   }
 );
-

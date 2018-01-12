@@ -7,7 +7,7 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test(
   'browser.tinymce.plugins.spellchecker.alien.DetectProPluginTest',
-  function() {
+  function () {
     // Fake loading of tinymcespellchecker
     PluginManager.add('tinymcespellchecker', function () { });
 
@@ -21,4 +21,3 @@ UnitTest.test(
     Assertions.assertEq('Should have pro plugin', true, DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'paste  tinymcespellchecker  paste' }, EditorManager)));
   }
 );
-

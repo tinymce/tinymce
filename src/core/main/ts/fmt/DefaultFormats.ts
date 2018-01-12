@@ -10,18 +10,18 @@
 
 import Tools from '../util/Tools';
 
-var get = function (dom) {
-  var formats = {
+const get = function (dom) {
+  const formats = {
     valigntop: [
-      { selector: 'td,th', styles: { 'verticalAlign': 'top' } }
+      { selector: 'td,th', styles: { verticalAlign: 'top' } }
     ],
 
     valignmiddle: [
-      { selector: 'td,th', styles: { 'verticalAlign': 'middle' } }
+      { selector: 'td,th', styles: { verticalAlign: 'middle' } }
     ],
 
     valignbottom: [
-      { selector: 'td,th', styles: { 'verticalAlign': 'bottom' } }
+      { selector: 'td,th', styles: { verticalAlign: 'bottom' } }
     ],
 
     alignleft: [
@@ -45,7 +45,7 @@ var get = function (dom) {
         selector: 'img,table',
         collapsed: false,
         styles: {
-          'float': 'left'
+          float: 'left'
         },
         preview: 'font-family font-size'
       }
@@ -110,7 +110,7 @@ var get = function (dom) {
         selector: 'img,table',
         collapsed: false,
         styles: {
-          'float': 'right'
+          float: 'right'
         },
         preview: 'font-family font-size'
       }
@@ -154,7 +154,7 @@ var get = function (dom) {
     hilitecolor: { inline: 'span', styles: { backgroundColor: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
     fontname: { inline: 'span', styles: { fontFamily: '%value' }, clear_child_styles: true },
     fontsize: { inline: 'span', styles: { fontSize: '%value' }, clear_child_styles: true },
-    fontsize_class: { inline: 'span', attributes: { 'class': '%value' } },
+    fontsize_class: { inline: 'span', attributes: { class: '%value' } },
     blockquote: { block: 'blockquote', wrapper: 1, remove: 'all' },
     subscript: { inline: 'sub' },
     superscript: { inline: 'sup' },
@@ -162,11 +162,11 @@ var get = function (dom) {
 
     link: {
       inline: 'a', selector: 'a', remove: 'all', split: true, deep: true,
-      onmatch: function () {
+      onmatch () {
         return true;
       },
 
-      onformat: function (elm, fmt, vars) {
+      onformat (elm, fmt, vars) {
         Tools.each(vars, function (value, key) {
           dom.setAttrib(elm, key, value);
         });
@@ -195,5 +195,5 @@ var get = function (dom) {
 };
 
 export default {
-  get: get
+  get
 };

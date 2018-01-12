@@ -18,9 +18,9 @@ import UiContainer from '../alien/UiContainer';
 import Settings from '../api/Settings';
 import Toolbar from './Toolbar';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var toClientRect = function (geomRect) {
+const toClientRect = function (geomRect) {
   return {
     left: geomRect.x,
     top: geomRect.y,
@@ -31,7 +31,7 @@ var toClientRect = function (geomRect) {
   };
 };
 
-var hideAllFloatingPanels = function (editor) {
+const hideAllFloatingPanels = function (editor) {
   Tools.each(editor.contextToolbars, function (toolbar) {
     if (toolbar.panel) {
       toolbar.panel.hide();
@@ -39,11 +39,11 @@ var hideAllFloatingPanels = function (editor) {
   });
 };
 
-var movePanelTo = function (panel, pos) {
+const movePanelTo = function (panel, pos) {
   panel.moveTo(pos.left, pos.top);
 };
 
-var togglePositionClass = function (panel, relPos, predicate) {
+const togglePositionClass = function (panel, relPos, predicate) {
   relPos = relPos ? relPos.substr(0, 2) : '';
 
   Tools.each({
@@ -61,29 +61,29 @@ var togglePositionClass = function (panel, relPos, predicate) {
   });
 };
 
-var userConstrain = function (handler, x, y, elementRect, contentAreaRect, panelRect) {
-  panelRect = toClientRect({ x: x, y: y, w: panelRect.w, h: panelRect.h });
+const userConstrain = function (handler, x, y, elementRect, contentAreaRect, panelRect) {
+  panelRect = toClientRect({ x, y, w: panelRect.w, h: panelRect.h });
 
   if (handler) {
     panelRect = handler({
       elementRect: toClientRect(elementRect),
       contentAreaRect: toClientRect(contentAreaRect),
-      panelRect: panelRect
+      panelRect
     });
   }
 
   return panelRect;
 };
 
-var addContextualToolbars = function (editor) {
-  var scrollContainer;
+const addContextualToolbars = function (editor) {
+  let scrollContainer;
 
-  var getContextToolbars = function () {
+  const getContextToolbars = function () {
     return editor.contextToolbars || [];
   };
 
-  var getElementRect = function (elm) {
-    var pos, targetRect, root;
+  const getElementRect = function (elm) {
+    let pos, targetRect, root;
 
     pos = DOM.getPos(editor.getContentAreaContainer());
     targetRect = editor.dom.getRect(elm);
@@ -101,9 +101,9 @@ var addContextualToolbars = function (editor) {
     return targetRect;
   };
 
-  var reposition = function (match, shouldShow?) {
-    var relPos, panelRect, elementRect, contentAreaRect, panel, relRect, testPositions, smallElementWidthThreshold;
-    var handler = Settings.getInlineToolbarPositionHandler(editor);
+  const reposition = function (match, shouldShow?) {
+    let relPos, panelRect, elementRect, contentAreaRect, panel, relRect, testPositions, smallElementWidthThreshold;
+    const handler = Settings.getInlineToolbarPositionHandler(editor);
 
     if (editor.removed) {
       return;
@@ -131,7 +131,7 @@ var addContextualToolbars = function (editor) {
     panelRect = DOM.getRect(panel.getEl());
     contentAreaRect = DOM.getRect(editor.getContentAreaContainer() || editor.getBody());
 
-    var delta = UiContainer.getUiContainerDelta().getOr({ x: 0, y: 0 });
+    const delta = UiContainer.getUiContainerDelta().getOr({ x: 0, y: 0 });
     elementRect.x += delta.x;
     elementRect.y += delta.y;
     panelRect.x += delta.x;
@@ -144,7 +144,7 @@ var addContextualToolbars = function (editor) {
     if (DOM.getStyle(match.element, 'display', true) !== 'inline') {
       // We need to use these instead of the rect values since the style
       // size properites might not be the same as the real size for a table if it has a caption
-      var clientRect = match.element.getBoundingClientRect();
+      const clientRect = match.element.getBoundingClientRect();
       elementRect.w = clientRect.width;
       elementRect.h = clientRect.height;
     }
@@ -189,14 +189,14 @@ var addContextualToolbars = function (editor) {
       return pos1 === pos2;
     });
 
-    //drawRect(contentAreaRect, 'blue');
-    //drawRect(elementRect, 'red');
-    //drawRect(panelRect, 'green');
+    // drawRect(contentAreaRect, 'blue');
+    // drawRect(elementRect, 'red');
+    // drawRect(panelRect, 'green');
   };
 
-  var repositionHandler = function (show) {
+  const repositionHandler = function (show) {
     return function () {
-      var execute = function () {
+      const execute = function () {
         if (editor.selection) {
           reposition(findFrontMostMatch(editor.selection.getNode()), show);
         }
@@ -206,9 +206,9 @@ var addContextualToolbars = function (editor) {
     };
   };
 
-  var bindScrollEvent = function () {
+  const bindScrollEvent = function () {
     if (!scrollContainer) {
-      var reposition = repositionHandler(true);
+      const reposition = repositionHandler(true);
 
       scrollContainer = editor.selection.getScrollContainer() || editor.getWin();
       DOM.bind(scrollContainer, 'scroll', reposition);
@@ -221,8 +221,8 @@ var addContextualToolbars = function (editor) {
     }
   };
 
-  var showContextToolbar = function (match) {
-    var panel;
+  const showContextToolbar = function (match) {
+    let panel;
 
     if (match.toolbar.panel) {
       match.toolbar.panel.show();
@@ -245,7 +245,7 @@ var addContextualToolbars = function (editor) {
       fixed: true,
       border: 1,
       items: Toolbar.createToolbar(editor, match.toolbar.items),
-      oncancel: function () {
+      oncancel () {
         editor.focus();
       }
     });
@@ -255,7 +255,7 @@ var addContextualToolbars = function (editor) {
     reposition(match);
   };
 
-  var hideAllContextToolbars = function () {
+  const hideAllContextToolbars = function () {
     Tools.each(getContextToolbars(), function (toolbar) {
       if (toolbar.panel) {
         toolbar.panel.hide();
@@ -263,8 +263,9 @@ var addContextualToolbars = function (editor) {
     });
   };
 
-  var findFrontMostMatch = function (targetElm) {
-    var i, y, parentsAndSelf, toolbars = getContextToolbars();
+  const findFrontMostMatch = function (targetElm) {
+    let i, y, parentsAndSelf;
+    const toolbars = getContextToolbars();
 
     parentsAndSelf = editor.$(targetElm).parents().add(targetElm);
     for (i = parentsAndSelf.length - 1; i >= 0; i--) {
@@ -289,7 +290,7 @@ var addContextualToolbars = function (editor) {
 
     // Needs to be delayed to avoid Chrome img focus out bug
     Delay.setEditorTimeout(editor, function () {
-      var match;
+      let match;
 
       match = findFrontMostMatch(editor.selection.getNode());
       if (match) {
@@ -304,7 +305,7 @@ var addContextualToolbars = function (editor) {
   editor.on('blur hide contextmenu', hideAllContextToolbars);
 
   editor.on('ObjectResizeStart', function () {
-    var match = findFrontMostMatch(editor.selection.getNode());
+    const match = findFrontMostMatch(editor.selection.getNode());
 
     if (match && match.toolbar.panel) {
       match.toolbar.panel.hide();
@@ -325,13 +326,13 @@ var addContextualToolbars = function (editor) {
   });
 
   editor.shortcuts.add('ctrl+shift+e > ctrl+shift+p', '', function () {
-    var match = findFrontMostMatch(editor.selection.getNode());
+    const match = findFrontMostMatch(editor.selection.getNode());
     if (match && match.toolbar.panel) {
       match.toolbar.panel.items()[0].focus();
     }
   });
 };
 
-export default <any> {
-  addContextualToolbars: addContextualToolbars
+export default {
+  addContextualToolbars
 };

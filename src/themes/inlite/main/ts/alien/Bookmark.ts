@@ -19,16 +19,16 @@
  * @param  {DOMRange} rng DOM Range to get bookmark on.
  * @return {Object} Bookmark object.
  */
-var create = function (dom, rng) {
-  var bookmark = {};
+const create = function (dom, rng) {
+  const bookmark = {};
 
   function setupEndPoint(start?) {
-    var offsetNode, container, offset;
+    let offsetNode, container, offset;
 
     container = rng[start ? 'startContainer' : 'endContainer'];
     offset = rng[start ? 'startOffset' : 'endOffset'];
 
-    if (container.nodeType == 1) {
+    if (container.nodeType === 1) {
       offsetNode = dom.create('span', { 'data-mce-type': 'bookmark' });
 
       if (container.hasChildNodes()) {
@@ -65,20 +65,20 @@ var create = function (dom, rng) {
  *
  * @param {Object} bookmark Bookmark object to move selection to.
  */
-var resolve = function (dom, bookmark) {
+const resolve = function (dom, bookmark) {
   function restoreEndPoint(start?) {
-    var container, offset, node;
+    let container, offset, node;
 
     function nodeIndex(container) {
-      var node = container.parentNode.firstChild, idx = 0;
+      let node = container.parentNode.firstChild, idx = 0;
 
       while (node) {
-        if (node == container) {
+        if (node === container) {
           return idx;
         }
 
         // Skip data-mce-type=bookmark nodes
-        if (node.nodeType != 1 || node.getAttribute('data-mce-type') != 'bookmark') {
+        if (node.nodeType !== 1 || node.getAttribute('data-mce-type') !== 'bookmark') {
           idx++;
         }
 
@@ -95,7 +95,7 @@ var resolve = function (dom, bookmark) {
       return;
     }
 
-    if (container.nodeType == 1) {
+    if (container.nodeType === 1) {
       offset = nodeIndex(container);
       container = container.parentNode;
       dom.remove(node);
@@ -108,7 +108,7 @@ var resolve = function (dom, bookmark) {
   restoreEndPoint(true);
   restoreEndPoint();
 
-  var rng = dom.createRng();
+  const rng = dom.createRng();
 
   rng.setStart(bookmark.startContainer, bookmark.startOffset);
 
@@ -119,7 +119,7 @@ var resolve = function (dom, bookmark) {
   return rng;
 };
 
-export default <any> {
-  create: create,
-  resolve: resolve
+export default {
+  create,
+  resolve
 };

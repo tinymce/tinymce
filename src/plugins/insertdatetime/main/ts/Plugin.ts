@@ -14,10 +14,10 @@ import Commands from './api/Commands';
 import Buttons from './ui/Buttons';
 
 PluginManager.add('insertdatetime', function (editor) {
-  var lastFormatState = Cell(null);
+  const lastFormatState = Cell(null);
 
   Commands.register(editor);
   Buttons.register(editor, lastFormatState);
 });
 
-export default function () { };
+export default function () { }

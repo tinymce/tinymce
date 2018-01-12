@@ -3,7 +3,6 @@ import { Behaviour } from '@ephox/alloy';
 import { Disabling } from '@ephox/alloy';
 import { Highlighting } from '@ephox/alloy';
 import { Keying } from '@ephox/alloy';
-import { Receiving } from '@ephox/alloy';
 import { Representing } from '@ephox/alloy';
 import { Memento } from '@ephox/alloy';
 import { AlloyEvents } from '@ephox/alloy';
@@ -27,13 +26,13 @@ import SwipingModel from '../model/SwipingModel';
 import Styles from '../style/Styles';
 import UiDomFactory from '../util/UiDomFactory';
 
-var sketch = function (rawSpec) {
-  var navigateEvent = 'navigateEvent';
+const sketch = function (rawSpec) {
+  const navigateEvent = 'navigateEvent';
 
-  var wrapperAdhocEvents = 'serializer-wrapper-events';
-  var formAdhocEvents = 'form-events';
+  const wrapperAdhocEvents = 'serializer-wrapper-events';
+  const formAdhocEvents = 'form-events';
 
-  var schema = ValueSchema.objOf([
+  const schema = ValueSchema.objOf([
     FieldSchema.strict('fields'),
     // Used for when datafields are present.
     FieldSchema.defaulted('maxFieldIndex', rawSpec.fields.length - 1),
@@ -47,13 +46,13 @@ var sketch = function (rawSpec) {
     })
   ]);
 
-  var spec = ValueSchema.asRawOrDie('SerialisedDialog', schema, rawSpec);
+  const spec = ValueSchema.asRawOrDie('SerialisedDialog', schema, rawSpec);
 
-  var navigationButton = function (direction, directionName, enabled) {
+  const navigationButton = function (direction, directionName, enabled) {
     return Button.sketch({
       dom: UiDomFactory.dom('<span class="${prefix}-icon-' + directionName + ' ${prefix}-icon"></span>'),
-      action: function (button) {
-        AlloyTriggers.emitWith(button, navigateEvent, { direction: direction });
+      action (button) {
+        AlloyTriggers.emitWith(button, navigateEvent, { direction });
       },
       buttonBehaviours: Behaviour.derive([
         Disabling.config({
@@ -64,19 +63,19 @@ var sketch = function (rawSpec) {
     });
   };
 
-  var reposition = function (dialog, message) {
+  const reposition = function (dialog, message) {
     SelectorFind.descendant(dialog.element(), '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
       Css.set(parent, 'left', (-spec.state.currentScreen.get() * message.width) + 'px');
     });
   };
 
-  var navigate = function (dialog, direction) {
-    var screens = SelectorFilter.descendants(dialog.element(), '.' + Styles.resolve('serialised-dialog-screen'));
+  const navigate = function (dialog, direction) {
+    const screens = SelectorFilter.descendants(dialog.element(), '.' + Styles.resolve('serialised-dialog-screen'));
     SelectorFind.descendant(dialog.element(), '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
       if ((spec.state.currentScreen.get() + direction) >= 0 && (spec.state.currentScreen.get() + direction) < screens.length) {
         Css.getRaw(parent, 'left').each(function (left) {
-          var currentLeft = parseInt(left, 10);
-          var w = Width.get(screens[0]);
+          const currentLeft = parseInt(left, 10);
+          const w = Width.get(screens[0]);
           Css.set(parent, 'left', (currentLeft - (direction * w)) + 'px');
         });
         spec.state.currentScreen.set(spec.state.currentScreen.get() + direction);
@@ -85,24 +84,24 @@ var sketch = function (rawSpec) {
   };
 
   // Unfortunately we need to inspect the DOM to find the input that is currently on screen
-  var focusInput = function (dialog) {
-    var inputs = SelectorFilter.descendants(dialog.element(), 'input');
-    var optInput = Option.from(inputs[spec.state.currentScreen.get()]);
+  const focusInput = function (dialog) {
+    const inputs = SelectorFilter.descendants(dialog.element(), 'input');
+    const optInput = Option.from(inputs[spec.state.currentScreen.get()]);
     optInput.each(function (input) {
       dialog.getSystem().getByDom(input).each(function (inputComp) {
         AlloyTriggers.dispatchFocus(dialog, inputComp.element());
       });
     });
-    var dotitems = memDots.get(dialog);
+    const dotitems = memDots.get(dialog);
     Highlighting.highlightAt(dotitems, spec.state.currentScreen.get());
   };
 
-  var resetState = function () {
+  const resetState = function () {
     spec.state.currentScreen.set(0);
     spec.state.dialogSwipeState.clear();
   };
 
-  var memForm = Memento.record(
+  const memForm = Memento.record(
     Form.sketch(function (parts) {
       return {
         dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog"></div>'),
@@ -128,14 +127,14 @@ var sketch = function (rawSpec) {
           }),
           Keying.config({
             mode: 'special',
-            focusIn: function (dialog/*, specialInfo */) {
+            focusIn (dialog/*, specialInfo */) {
               focusInput(dialog);
             },
-            onTab: function (dialog/*, specialInfo */) {
+            onTab (dialog/*, specialInfo */) {
               navigate(dialog, +1);
               return Option.some(true);
             },
-            onShiftTab: function (dialog/*, specialInfo */) {
+            onShiftTab (dialog/*, specialInfo */) {
               navigate(dialog, -1);
               return Option.some(true);
             }
@@ -145,7 +144,7 @@ var sketch = function (rawSpec) {
             AlloyEvents.runOnAttached(function (dialog, simulatedEvent) {
               // Reset state to first screen.
               resetState();
-              var dotitems = memDots.get(dialog);
+              const dotitems = memDots.get(dialog);
               Highlighting.highlightFirst(dotitems);
               spec.getInitialValue(dialog).each(function (v) {
                 Representing.setValue(dialog, v);
@@ -161,7 +160,7 @@ var sketch = function (rawSpec) {
             }),
 
             AlloyEvents.run(navigateEvent, function (dialog, simulatedEvent) {
-              var direction = simulatedEvent.event().direction();
+              const direction = simulatedEvent.event().direction();
               navigate(dialog, direction);
             })
           ])
@@ -170,7 +169,7 @@ var sketch = function (rawSpec) {
     })
   );
 
-  var memDots = Memento.record({
+  const memDots = Memento.record({
     dom: UiDomFactory.dom('<div class="${prefix}-dot-container"></div>'),
     behaviours: Behaviour.derive([
       Highlighting.config({
@@ -195,8 +194,8 @@ var sketch = function (rawSpec) {
     behaviours: Behaviour.derive([
       Keying.config({
         mode: 'special',
-        focusIn: function (wrapper) {
-          var form = memForm.get(wrapper);
+        focusIn (wrapper) {
+          const form = memForm.get(wrapper);
           Keying.focusIn(form);
         }
       }),
@@ -217,9 +216,9 @@ var sketch = function (rawSpec) {
         }),
         AlloyEvents.run(NativeEvents.touchend(), function (wrapper/*, simulatedEvent */) {
           spec.state.dialogSwipeState.on(function (state) {
-            var dialog = memForm.get(wrapper);
+            const dialog = memForm.get(wrapper);
             // Confusing
-            var direction = -1 * SwipingModel.complete(state);
+            const direction = -1 * SwipingModel.complete(state);
             navigate(dialog, direction);
           });
         })
@@ -228,6 +227,6 @@ var sketch = function (rawSpec) {
   };
 };
 
-export default <any> {
-  sketch: sketch
+export default {
+  sketch
 };

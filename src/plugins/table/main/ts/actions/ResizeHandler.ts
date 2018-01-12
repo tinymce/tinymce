@@ -19,32 +19,30 @@ import TableWire from './TableWire';
 import Direction from '../queries/Direction';
 import Tools from 'tinymce/core/util/Tools';
 
-
-
 export default function (editor) {
-  var selectionRng = Option.none();
-  var resize = Option.none();
-  var wire = Option.none();
-  var percentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
-  var startW, startRawW;
+  let selectionRng = Option.none();
+  let resize = Option.none();
+  let wire = Option.none();
+  const percentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
+  let startW, startRawW;
 
-  var isTable = function (elm) {
+  const isTable = function (elm) {
     return elm.nodeName === 'TABLE';
   };
 
-  var getRawWidth = function (elm) {
+  const getRawWidth = function (elm) {
     return editor.dom.getStyle(elm, 'width') || editor.dom.getAttrib(elm, 'width');
   };
 
-  var lazyResize = function () {
+  const lazyResize = function () {
     return resize;
   };
 
-  var lazyWire = function () {
+  const lazyWire = function () {
     return wire.getOr(ResizeWire.only(Element.fromDom(editor.getBody())));
   };
 
-  var destroy = function () {
+  const destroy = function () {
     resize.each(function (sz) {
       sz.destroy();
     });
@@ -55,19 +53,19 @@ export default function (editor) {
   };
 
   editor.on('init', function () {
-    var direction = TableDirection(Direction.directionAt);
-    var rawWire = TableWire.get(editor);
+    const direction = TableDirection(Direction.directionAt);
+    const rawWire = TableWire.get(editor);
     wire = Option.some(rawWire);
     if (editor.settings.object_resizing && editor.settings.table_resize_bars !== false &&
       (editor.settings.object_resizing === true || editor.settings.object_resizing === 'table')) {
-      var sz = TableResize(rawWire, direction);
+      const sz = TableResize(rawWire, direction);
       sz.on();
       sz.events.startDrag.bind(function (event) {
         selectionRng = Option.some(editor.selection.getRng());
       });
       sz.events.afterResize.bind(function (event) {
-        var table = event.table();
-        var dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
+        const table = event.table();
+        const dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
         Arr.each(dataStyleCells, function (cell) {
           Attr.remove(cell, 'data-mce-style');
         });
@@ -94,20 +92,20 @@ export default function (editor) {
 
   editor.on('ObjectResized', function (e) {
     if (isTable(e.target)) {
-      var table = e.target;
+      const table = e.target;
 
       if (percentageBasedSizeRegex.test(startRawW)) {
-        var percentW = parseFloat(percentageBasedSizeRegex.exec(startRawW)[1]);
-        var targetPercentW = e.width * percentW / startW;
+        const percentW = parseFloat(percentageBasedSizeRegex.exec(startRawW)[1]);
+        const targetPercentW = e.width * percentW / startW;
         editor.dom.setStyle(table, 'width', targetPercentW + '%');
       } else {
-        var newCellSizes = [];
+        const newCellSizes = [];
         Tools.each(table.rows, function (row) {
           Tools.each(row.cells, function (cell) {
-            var width = editor.dom.getStyle(cell, 'width', true);
+            const width = editor.dom.getStyle(cell, 'width', true);
             newCellSizes.push({
-              cell: cell,
-              width: width
+              cell,
+              width
             });
           });
         });
@@ -121,8 +119,8 @@ export default function (editor) {
   });
 
   return {
-    lazyResize: lazyResize,
-    lazyWire: lazyWire,
-    destroy: destroy
+    lazyResize,
+    lazyWire,
+    destroy
   };
-};
+}

@@ -26,12 +26,10 @@ import Widget from './Widget';
  * @extends tinymce.ui.Widget
  */
 
-"use strict";
-
-export default <any> Widget.extend({
+export default Widget.extend({
   Defaults: {
-    classes: "checkbox",
-    role: "checkbox",
+    classes: 'checkbox',
+    role: 'checkbox',
     checked: false
   },
 
@@ -42,8 +40,8 @@ export default <any> Widget.extend({
    * @param {Object} settings Name/value object with settings.
    * @setting {Boolean} checked True if the checkbox should be checked by default.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._super(settings);
 
@@ -69,7 +67,7 @@ export default <any> Widget.extend({
    * @param {Boolean} [state] State to be set.
    * @return {Boolean|tinymce.ui.Checkbox} True/false or checkbox if it's a set operation.
    */
-  checked: function (state) {
+  checked (state) {
     if (!arguments.length) {
       return this.state.get('checked');
     }
@@ -86,7 +84,7 @@ export default <any> Widget.extend({
    * @param {Boolean} [state] State to be set.
    * @return {Boolean|tinymce.ui.Checkbox} True/false or checkbox if it's a set operation.
    */
-  value: function (state) {
+  value (state) {
     if (!arguments.length) {
       return this.checked();
     }
@@ -100,8 +98,8 @@ export default <any> Widget.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, id = self._id, prefix = self.classPrefix;
+  renderHtml () {
+    const self = this, id = self._id, prefix = self.classPrefix;
 
     return (
       '<div id="' + id + '" class="' + self.classes + '" unselectable="on" aria-labelledby="' + id + '-al" tabindex="-1">' +
@@ -111,11 +109,11 @@ export default <any> Widget.extend({
     );
   },
 
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     function checked(state) {
-      self.classes.toggle("checked", state);
+      self.classes.toggle('checked', state);
       self.aria('checked', state);
     }
 
@@ -129,19 +127,21 @@ export default <any> Widget.extend({
     });
 
     self.state.on('change:icon', function (e) {
-      var icon = e.value, prefix = self.classPrefix;
+      let icon = e.value;
+      const prefix = self.classPrefix;
 
-      if (typeof icon == 'undefined') {
+      if (typeof icon === 'undefined') {
         return self.settings.icon;
       }
 
       self.settings.icon = icon;
       icon = icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
 
-      var btnElm = self.getEl().firstChild, iconElm = btnElm.getElementsByTagName('i')[0];
+      const btnElm = self.getEl().firstChild;
+      let iconElm = btnElm.getElementsByTagName('i')[0];
 
       if (icon) {
-        if (!iconElm || iconElm != btnElm.firstChild) {
+        if (!iconElm || iconElm !== btnElm.firstChild) {
           iconElm = document.createElement('i');
           btnElm.insertBefore(iconElm, btnElm.firstChild);
         }

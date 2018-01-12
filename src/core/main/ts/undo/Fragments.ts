@@ -19,7 +19,7 @@ import Arr from '../util/Arr';
  * @private
  */
 
-var getOuterHtml = function (elm) {
+const getOuterHtml = function (elm) {
   if (elm.nodeType === 1) {
     return elm.outerHTML;
   } else if (elm.nodeType === 3) {
@@ -31,10 +31,10 @@ var getOuterHtml = function (elm) {
   return '';
 };
 
-var createFragment = function (html) {
-  var frag, node, container;
+const createFragment = function (html) {
+  let frag, node, container;
 
-  container = document.createElement("div");
+  container = document.createElement('div');
   frag = document.createDocumentFragment();
 
   if (html) {
@@ -48,25 +48,25 @@ var createFragment = function (html) {
   return frag;
 };
 
-var insertAt = function (elm, html, index) {
-  var fragment = createFragment(html);
+const insertAt = function (elm, html, index) {
+  const fragment = createFragment(html);
   if (elm.hasChildNodes() && index < elm.childNodes.length) {
-    var target = elm.childNodes[index];
+    const target = elm.childNodes[index];
     target.parentNode.insertBefore(fragment, target);
   } else {
     elm.appendChild(fragment);
   }
 };
 
-var removeAt = function (elm, index) {
+const removeAt = function (elm, index) {
   if (elm.hasChildNodes() && index < elm.childNodes.length) {
-    var target = elm.childNodes[index];
+    const target = elm.childNodes[index];
     target.parentNode.removeChild(target);
   }
 };
 
-var applyDiff = function (diff, elm) {
-  var index = 0;
+const applyDiff = function (diff, elm) {
+  let index = 0;
   Arr.each(diff, function (action) {
     if (action[0] === Diff.KEEP) {
       index++;
@@ -79,19 +79,19 @@ var applyDiff = function (diff, elm) {
   });
 };
 
-var read = function (elm) {
+const read = function (elm) {
   return Arr.filter(Arr.map(elm.childNodes, getOuterHtml), function (item) {
     return item.length > 0;
   });
 };
 
-var write = function (fragments, elm) {
-  var currentFragments = Arr.map(elm.childNodes, getOuterHtml);
+const write = function (fragments, elm) {
+  const currentFragments = Arr.map(elm.childNodes, getOuterHtml);
   applyDiff(Diff.diff(currentFragments, fragments), elm);
   return elm;
 };
 
 export default {
-  read: read,
-  write: write
+  read,
+  write
 };

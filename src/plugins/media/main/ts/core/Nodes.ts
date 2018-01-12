@@ -16,9 +16,9 @@ import VideoScript from './VideoScript';
 
 declare let escape: any;
 
-var createPlaceholderNode = function (editor, node) {
-  var placeHolder;
-  var name = node.name;
+const createPlaceholderNode = function (editor, node) {
+  let placeHolder;
+  const name = node.name;
 
   placeHolder = new Node('img', 1);
   placeHolder.shortEnded = true;
@@ -26,29 +26,29 @@ var createPlaceholderNode = function (editor, node) {
   retainAttributesAndInnerHtml(editor, node, placeHolder);
 
   placeHolder.attr({
-    width: node.attr('width') || "300",
-    height: node.attr('height') || (name === "audio" ? "30" : "150"),
-    style: node.attr('style'),
-    src: Env.transparentSrc,
-    "data-mce-object": name,
-    "class": "mce-object mce-object-" + name
+    'width': node.attr('width') || '300',
+    'height': node.attr('height') || (name === 'audio' ? '30' : '150'),
+    'style': node.attr('style'),
+    'src': Env.transparentSrc,
+    'data-mce-object': name,
+    'class': 'mce-object mce-object-' + name
   });
 
   return placeHolder;
 };
 
-var createPreviewIframeNode = function (editor, node) {
-  var previewWrapper;
-  var previewNode;
-  var shimNode;
-  var name = node.name;
+const createPreviewIframeNode = function (editor, node) {
+  let previewWrapper;
+  let previewNode;
+  let shimNode;
+  const name = node.name;
 
   previewWrapper = new Node('span', 1);
   previewWrapper.attr({
-    contentEditable: 'false',
-    style: node.attr('style'),
-    "data-mce-object": name,
-    "class": "mce-preview-object mce-object-" + name
+    'contentEditable': 'false',
+    'style': node.attr('style'),
+    'data-mce-object': name,
+    'class': 'mce-preview-object mce-object-' + name
   });
 
   retainAttributesAndInnerHtml(editor, node, previewWrapper);
@@ -57,8 +57,8 @@ var createPreviewIframeNode = function (editor, node) {
   previewNode.attr({
     src: node.attr('src'),
     allowfullscreen: node.attr('allowfullscreen'),
-    width: node.attr('width') || "300",
-    height: node.attr('height') || (name === "audio" ? "30" : "150"),
+    width: node.attr('width') || '300',
+    height: node.attr('height') || (name === 'audio' ? '30' : '150'),
     frameborder: '0'
   });
 
@@ -71,12 +71,12 @@ var createPreviewIframeNode = function (editor, node) {
   return previewWrapper;
 };
 
-var retainAttributesAndInnerHtml = function (editor, sourceNode, targetNode) {
-  var attrName;
-  var attrValue;
-  var attribs;
-  var ai;
-  var innerHtml;
+const retainAttributesAndInnerHtml = function (editor, sourceNode, targetNode) {
+  let attrName;
+  let attrValue;
+  let attribs;
+  let ai;
+  let innerHtml;
 
   // Prefix all attributes except width, height and style since we
   // will add these to the placeholder
@@ -86,8 +86,8 @@ var retainAttributesAndInnerHtml = function (editor, sourceNode, targetNode) {
     attrName = attribs[ai].name;
     attrValue = attribs[ai].value;
 
-    if (attrName !== "width" && attrName !== "height" && attrName !== "style") {
-      if (attrName === "data" || attrName === "src") {
+    if (attrName !== 'width' && attrName !== 'height' && attrName !== 'style') {
+      if (attrName === 'data' || attrName === 'src') {
         attrValue = editor.convertURL(attrValue, attrName);
       }
 
@@ -99,12 +99,12 @@ var retainAttributesAndInnerHtml = function (editor, sourceNode, targetNode) {
   // This enables us to copy/paste the fake object
   innerHtml = sourceNode.firstChild && sourceNode.firstChild.value;
   if (innerHtml) {
-    targetNode.attr("data-mce-html", escape(Sanitize.sanitize(editor, innerHtml)));
+    targetNode.attr('data-mce-html', escape(Sanitize.sanitize(editor, innerHtml)));
     targetNode.firstChild = null;
   }
 };
 
-var isWithinEphoxEmbed = function (node) {
+const isWithinEphoxEmbed = function (node) {
   while ((node = node.parent)) {
     if (node.attr('data-ephox-embed-iri')) {
       return true;
@@ -114,11 +114,11 @@ var isWithinEphoxEmbed = function (node) {
   return false;
 };
 
-var placeHolderConverter = function (editor) {
+const placeHolderConverter = function (editor) {
   return function (nodes) {
-    var i = nodes.length;
-    var node;
-    var videoScript;
+    let i = nodes.length;
+    let node;
+    let videoScript;
 
     while (i--) {
       node = nodes[i];
@@ -161,7 +161,7 @@ var placeHolderConverter = function (editor) {
 };
 
 export default {
-  createPreviewIframeNode: createPreviewIframeNode,
-  createPlaceholderNode: createPlaceholderNode,
-  placeHolderConverter: placeHolderConverter
+  createPreviewIframeNode,
+  createPlaceholderNode,
+  placeHolderConverter
 };

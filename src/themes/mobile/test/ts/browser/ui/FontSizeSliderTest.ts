@@ -12,29 +12,28 @@ import FontSizeSlider from 'tinymce/themes/mobile/ui/FontSizeSlider';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var detection = PlatformDetection.detect();
+UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const detection = PlatformDetection.detect();
 
-  var realm = IosRealm();
+  const realm = IosRealm();
   // Make toolbar appear
   Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
 
-  var body = Body.body();
+  const body = Body.body();
   Attachment.attachSystem(body, realm.system());
 
   TestStyles.addStyles();
 
-  var unload = function () {
+  const unload = function () {
     TestStyles.removeStyles();
     Attachment.detachSystem(realm.system());
   };
 
-  var tEditor = TestFrameEditor();
+  const tEditor = TestFrameEditor();
 
   realm.system().add(tEditor.component());
-
 
   realm.setToolbarGroups([
     {
@@ -58,4 +57,3 @@ UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function() {
     unload(); success();
   }, failure);
 });
-

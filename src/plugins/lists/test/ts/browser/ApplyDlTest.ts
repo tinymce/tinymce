@@ -5,10 +5,10 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Plugin();
   Theme();
@@ -115,7 +115,7 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function() {
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
-    plugins: "lists",
+    plugins: 'lists',
     add_unload_trigger: false,
     disable_nodechange: true,
     indent: false,
@@ -131,4 +131,3 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

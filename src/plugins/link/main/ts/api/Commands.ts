@@ -10,10 +10,10 @@
 
 import Actions from '../core/Actions';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addCommand('mceLink', Actions.openDialog(editor));
 };
 
 export default {
-  register: register
+  register
 };

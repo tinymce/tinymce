@@ -16,21 +16,21 @@ import TableDelete from 'tinymce/core/delete/TableDelete';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
 
-  var sSetRawContent = function (editor, content) {
+  const sSetRawContent = function (editor, content) {
     return Step.sync(function () {
       editor.getBody().innerHTML = content;
     });
   };
 
-  var sAssertRawNormalizedContent = function (editor, expectedContent) {
+  const sAssertRawNormalizedContent = function (editor, expectedContent) {
     return Step.sync(function () {
-      var element = Replication.deep(Element.fromDom(editor.getBody()));
+      const element = Replication.deep(Element.fromDom(editor.getBody()));
 
       // Remove internal selection dom items
       Arr.each(SelectorFilter.descendants(element, '*[data-mce-bogus="all"]'), Remove.remove);
@@ -42,36 +42,36 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', function() {
     });
   };
 
-  var sDelete = function (editor) {
+  const sDelete = function (editor) {
     return Step.sync(function () {
-      var returnVal = TableDelete.backspaceDelete(editor, true);
+      const returnVal = TableDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  var sBackspace = function (editor) {
+  const sBackspace = function (editor) {
     return Step.sync(function () {
-      var returnVal = TableDelete.backspaceDelete(editor, false);
+      const returnVal = TableDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  var sDeleteNoop = function (editor) {
+  const sDeleteNoop = function (editor) {
     return Step.sync(function () {
-      var returnVal = TableDelete.backspaceDelete(editor, true);
+      const returnVal = TableDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
-  var sBackspaceNoop = function (editor) {
+  const sBackspaceNoop = function (editor) {
     return Step.sync(function () {
-      var returnVal = TableDelete.backspaceDelete(editor, false);
+      const returnVal = TableDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus,
@@ -236,4 +236,3 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

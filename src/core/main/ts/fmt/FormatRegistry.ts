@@ -11,16 +11,14 @@
 import DefaultFormats from './DefaultFormats';
 import Tools from '../util/Tools';
 
-
-
 export default function (editor) {
-  var formats = {};
+  const formats = {};
 
-  var get = function (name) {
+  const get = function (name) {
     return name ? formats[name] : formats;
   };
 
-  var register = function (name, format?) {
+  const register = function (name, format?) {
     if (name) {
       if (typeof name !== 'string') {
         Tools.each(name, function (format, name) {
@@ -64,7 +62,7 @@ export default function (editor) {
     }
   };
 
-  var unregister = function (name) {
+  const unregister = function (name) {
     if (name && formats[name]) {
       delete formats[name];
     }
@@ -76,8 +74,8 @@ export default function (editor) {
   register(editor.settings.formats);
 
   return {
-    get: get,
-    register: register,
-    unregister: unregister
+    get,
+    register,
+    unregister
   };
-};
+}

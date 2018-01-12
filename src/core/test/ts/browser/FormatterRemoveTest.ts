@@ -7,14 +7,14 @@ import KeyUtils from '../module/test/KeyUtils';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var getContent = function (editor) {
+  const getContent = function (editor) {
     return editor.getContent(editor).toLowerCase().replace(/[\r]+/g, '');
   };
 
@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
     editor.focus();
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b>1234</b></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('Inline element on selected text with remove=all', function (editor) {
     editor.formatter.register('format', { selector: 'b', remove: 'all' });
     editor.getBody().innerHTML = '<p><b title="text">1234</b></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('Inline element on selected text with remove=none', function (editor) {
     editor.formatter.register('format', { selector: 'span', styles: { fontWeight: 'bold' }, remove: 'none' });
     editor.getBody().innerHTML = '<p><span style="font-weight:bold">1234</span></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0], 0);
     rng.setEnd(editor.dom.select('p')[0], 1);
     editor.selection.setRng(rng);
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('Inline element style where element is format root', function (editor) {
     editor.formatter.register('format', { inline: 'span', styles: { fontWeight: 'bold' } });
     editor.getBody().innerHTML = '<p><span style="font-weight:bold; color:#FF0000"><em>1234</em></span></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('em')[0].firstChild, 1);
     rng.setEnd(editor.dom.select('em')[0].firstChild, 3);
     editor.selection.setRng(rng);
@@ -71,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('Partially selected inline element text', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b>1234</b></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('b')[0].firstChild, 2);
     rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('Partially selected inline element text with children', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b><em><span>1234</span></em></b></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 2);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -97,7 +97,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('Partially selected inline element text with complex children', function (editor) {
     editor.formatter.register('format', { inline: 'span', styles: { fontWeight: 'bold' } });
     editor.getBody().innerHTML = '<p><span style="font-weight:bold"><em><span style="color:#ff0000;font-weight:bold">1234</span></em></span></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[1].firstChild, 2);
     rng.setEnd(editor.dom.select('span')[1].firstChild, 4);
     editor.selection.setRng(rng);
@@ -113,7 +113,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('Inline elements with exact flag', function (editor) {
     editor.formatter.register('format', { inline: 'span', styles: { color: '#ff0000' }, exact: true });
     editor.getBody().innerHTML = '<p><span style="font-size:10px;color:#ff0000">1234</span><span style="font-size:10px;color:#00ff00">1234</span></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0], 0);
     rng.setEnd(editor.dom.select('p')[0], 2);
     editor.selection.setRng(rng);
@@ -128,7 +128,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('Inline elements with variables', function (editor) {
     editor.formatter.register('format', { inline: 'span', styles: { color: '%color' }, exact: true });
     editor.getBody().innerHTML = '<p><span style="font-size:10px;color:#ff0000">1234</span><span style="font-size:10px;color:#00ff00">1234</span></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0], 0);
     rng.setEnd(editor.dom.select('p')[0], 2);
     editor.selection.setRng(rng);
@@ -144,15 +144,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
-        color: function (vars) {
-          return vars.color + "00";
+        color (vars) {
+          return vars.color + '00';
         }
       },
       exact: true
     });
 
     editor.getBody().innerHTML = '<p><span style="font-size:10px;color:#ff0000">1234</span><span style="font-size:10px;color:#00ff00">1234</span></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0], 0);
     rng.setEnd(editor.dom.select('p')[0], 2);
     editor.selection.setRng(rng);
@@ -169,7 +169,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('End within start element', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b>1234<b>5678</b></b></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0], 0);
     rng.setEnd(editor.dom.select('b')[0], 2);
     editor.selection.setRng(rng);
@@ -180,7 +180,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('Start and end within similar format 1', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b><em><b>1234<b>5678</b></b></em></b></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('em')[0], 0);
     rng.setEnd(editor.dom.select('b')[1], 2);
     editor.selection.setRng(rng);
@@ -191,7 +191,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('Start and end within similar format 2', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b><em><b>1234</b><b>5678</b></em></b></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('em')[0], 0);
     rng.setEnd(editor.dom.select('em')[0], 1);
     editor.selection.setRng(rng);
@@ -202,7 +202,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('Start and end within similar format 3', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b><em><b>1234</b></em></b></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('em')[0], 0);
     rng.setEnd(editor.dom.select('em')[0], 1);
     editor.selection.setRng(rng);
@@ -213,7 +213,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('End within start', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b><em>x<b>abc</b>y</em></b></p>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0], 0);
     rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
     editor.selection.setRng(rng);
@@ -224,7 +224,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('Remove block format', function (editor) {
     editor.formatter.register('format', { block: 'h1' });
     editor.getBody().innerHTML = '<h1>text</h1>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('h1')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('h1')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -235,7 +235,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   suite.test('Remove wrapper block format', function (editor) {
     editor.formatter.register('format', { block: 'blockquote', wrapper: true });
     editor.getBody().innerHTML = '<blockquote><p>text</p></blockquote>';
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
@@ -245,7 +245,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
 
   suite.test('Remove span format within block with style', function (editor) {
     editor.formatter.register('format', { selector: 'span', attributes: ['style', 'class'], remove: 'empty', split: true, expand: false, deep: true });
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     editor.getBody().innerHTML = '<p style="color:#ff0000"><span style="color:#00ff00">text</span></p>';
     rng.setStart(editor.dom.select('span')[0].firstChild, 1);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 3);
@@ -260,7 +260,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
 
   suite.test('Remove and verify start element', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     editor.getBody().innerHTML = '<p><b>text</b></p>';
     rng.setStart(editor.dom.select('b')[0].firstChild, 1);
     rng.setEnd(editor.dom.select('b')[0].firstChild, 3);
@@ -271,10 +271,10 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
   });
 
   suite.test('Remove with selection collapsed ensure correct caret position', function (editor) {
-    var content = '<p>test</p><p>testing</p>';
+    const content = '<p>test</p><p>testing</p>';
 
     editor.formatter.register('format', { block: 'p' });
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     editor.getBody().innerHTML = content;
     rng.setStart(editor.dom.select('p')[0].firstChild, 4);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
@@ -354,7 +354,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
 
     editor.formatter.register('format', { inline: 'b' });
     editor.setContent('<p>abc</p><p contenteditable="false"><b>def</b></p><p><b>ghj</b></p>');
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
     editor.selection.setRng(rng);
@@ -446,7 +446,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
     LegacyUnit.equal(getContent(editor), '<p>a</p>', 'B should be removed');
   });
 
-  suite.test("Remove ceFalseOverride format", function (editor) {
+  suite.test('Remove ceFalseOverride format', function (editor) {
     editor.setContent('<p class="a" contenteditable="false">a</p><div class="a" contenteditable="false">b</div>');
     editor.formatter.register('format', [
       { selector: 'div', classes: ['a'], ceFalseOverride: true },
@@ -498,4 +498,3 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

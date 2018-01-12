@@ -11,8 +11,8 @@
 import Tools from 'tinymce/core/util/Tools';
 import FontInfo from '../fmt/FontInfo';
 
-var findMatchingValue = function (items, pt, px) {
-  var value;
+const findMatchingValue = function (items, pt, px) {
+  let value;
 
   Tools.each(items, function (item) {
     if (item.value === px) {
@@ -25,12 +25,12 @@ var findMatchingValue = function (items, pt, px) {
   return value;
 };
 
-var createFontSizeListBoxChangeHandler = function (editor, items) {
+const createFontSizeListBoxChangeHandler = function (editor, items) {
   return function () {
-    var self = this;
+    const self = this;
 
     editor.on('init nodeChange', function (e) {
-      var px, pt, precision, match;
+      let px, pt, precision, match;
 
       px = FontInfo.getFontSize(editor.getBody(), e.element);
       if (px) {
@@ -50,26 +50,26 @@ var createFontSizeListBoxChangeHandler = function (editor, items) {
   };
 };
 
-var getFontSizeItems = function (editor) {
-  var defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
-  var fontsizeFormats = editor.settings.fontsize_formats || defaultFontsizeFormats;
+const getFontSizeItems = function (editor) {
+  const defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
+  const fontsizeFormats = editor.settings.fontsize_formats || defaultFontsizeFormats;
 
   return Tools.map(fontsizeFormats.split(' '), function (item) {
-    var text = item, value = item;
+    let text = item, value = item;
     // Allow text=value font sizes.
-    var values = item.split('=');
+    const values = item.split('=');
     if (values.length > 1) {
       text = values[0];
       value = values[1];
     }
 
-    return { text: text, value: value };
+    return { text, value };
   });
 };
 
-var registerButtons = function (editor) {
+const registerButtons = function (editor) {
   editor.addButton('fontsizeselect', function () {
-    var items = getFontSizeItems(editor);
+    const items = getFontSizeItems(editor);
 
     return {
       type: 'listbox',
@@ -78,7 +78,7 @@ var registerButtons = function (editor) {
       values: items,
       fixedWidth: true,
       onPostRender: createFontSizeListBoxChangeHandler(editor, items),
-      onclick: function (e) {
+      onclick (e) {
         if (e.control.settings.value) {
           editor.execCommand('FontSize', false, e.control.settings.value);
         }
@@ -87,10 +87,10 @@ var registerButtons = function (editor) {
   });
 };
 
-var register = function (editor) {
+const register = function (editor) {
   registerButtons(editor);
 };
 
-export default <any> {
-  register: register
+export default {
+  register
 };

@@ -15,4 +15,4 @@ PluginManager.add('noneditable', function (editor) {
   FilterContent.setup(editor);
 });
 
-export default function () { };
+export default function () { }

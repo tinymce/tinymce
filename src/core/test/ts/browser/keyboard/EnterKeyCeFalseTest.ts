@@ -1,21 +1,20 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import Env from 'tinymce/core/Env';
 import HtmlUtils from '../../module/test/HtmlUtils';
 import Tools from 'tinymce/core/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var pressEnter = function (editor, evt?) {
-    var dom = editor.dom, target = editor.selection.getNode();
+  const pressEnter = function (editor, evt?) {
+    const dom = editor.dom, target = editor.selection.getNode();
 
     evt = Tools.extend({ keyCode: 13 }, evt);
 
@@ -70,4 +69,3 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

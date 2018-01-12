@@ -12,7 +12,7 @@ import InsertSpace from './InsertSpace';
 import MatchKeys from './MatchKeys';
 import VK from '../util/VK';
 
-var executeKeydownOverride = function (editor, evt) {
+const executeKeydownOverride = function (editor, evt) {
   MatchKeys.execute([
     { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertAtSelection, editor) }
   ], evt).each(function (_) {
@@ -20,7 +20,7 @@ var executeKeydownOverride = function (editor, evt) {
   });
 };
 
-var setup = function (editor) {
+const setup = function (editor) {
   editor.on('keydown', function (evt) {
     if (evt.isDefaultPrevented() === false) {
       executeKeydownOverride(editor, evt);
@@ -29,5 +29,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

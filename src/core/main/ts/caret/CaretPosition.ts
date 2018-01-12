@@ -28,7 +28,7 @@ import Fun from '../util/Fun';
  * var caretPos2 = CaretPosition.fromRangeStart(someRange);
  */
 
-var isElement = NodeType.isElement,
+const isElement = NodeType.isElement,
   isCaretCandidate = CaretCandidate.isCaretCandidate,
   isBlock = NodeType.matchStyleValues('display', 'block table'),
   isFloated = NodeType.matchStyleValues('float', 'left right'),
@@ -39,18 +39,18 @@ var isElement = NodeType.isElement,
   nodeIndex = DOMUtils.nodeIndex,
   resolveIndex = RangeNodes.getNode;
 
-var createRange = function (doc) {
-  return "createRange" in doc ? doc.createRange() : DOMUtils.DOM.createRng();
+const createRange = function (doc) {
+  return 'createRange' in doc ? doc.createRange() : DOMUtils.DOM.createRng();
 };
 
-var isWhiteSpace = function (chr) {
+const isWhiteSpace = function (chr) {
   return chr && /[\r\n\t ]/.test(chr);
 };
 
-var isHiddenWhiteSpaceRange = function (range) {
-  var container = range.startContainer,
-    offset = range.startOffset,
-    text;
+const isHiddenWhiteSpaceRange = function (range) {
+  const container = range.startContainer;
+  const offset = range.startOffset;
+  let text;
 
   if (isWhiteSpace(range.toString()) && isNotPre(container.parentNode)) {
     text = container.data;
@@ -63,17 +63,18 @@ var isHiddenWhiteSpaceRange = function (range) {
   return false;
 };
 
-var getCaretPositionClientRects = function (caretPosition) {
-  var clientRects = [], beforeNode, node;
+const getCaretPositionClientRects = function (caretPosition) {
+  const clientRects = [];
+  let beforeNode, node;
 
   // Hack for older WebKit versions that doesn't
   // support getBoundingClientRect on BR elements
-  var getBrClientRect = function (brNode) {
-    var doc = brNode.ownerDocument,
-      rng = createRange(doc),
-      nbsp = doc.createTextNode('\u00a0'),
-      parentNode = brNode.parentNode,
-      clientRect;
+  const getBrClientRect = function (brNode) {
+    const doc = brNode.ownerDocument;
+    const rng = createRange(doc);
+    const nbsp = doc.createTextNode('\u00a0');
+    const parentNode = brNode.parentNode;
+    let clientRect;
 
     parentNode.insertBefore(nbsp, brNode);
     rng.setStart(nbsp, 0);
@@ -84,8 +85,8 @@ var getCaretPositionClientRects = function (caretPosition) {
     return clientRect;
   };
 
-  var getBoundingClientRect = function (item) {
-    var clientRect, clientRects;
+  const getBoundingClientRect = function (item) {
+    let clientRect, clientRects;
 
     clientRects = item.getClientRects();
     if (clientRects.length > 0) {
@@ -101,7 +102,7 @@ var getCaretPositionClientRects = function (caretPosition) {
     return clientRect;
   };
 
-  var collapseAndInflateWidth = function (clientRect, toStart) {
+  const collapseAndInflateWidth = function (clientRect, toStart) {
     clientRect = ClientRect.collapse(clientRect, toStart);
     clientRect.width = 1;
     clientRect.right = clientRect.left + 1;
@@ -109,7 +110,7 @@ var getCaretPositionClientRects = function (caretPosition) {
     return clientRect;
   };
 
-  var addUniqueAndValidRect = function (clientRect) {
+  const addUniqueAndValidRect = function (clientRect) {
     if (clientRect.height === 0) {
       return;
     }
@@ -123,8 +124,8 @@ var getCaretPositionClientRects = function (caretPosition) {
     clientRects.push(clientRect);
   };
 
-  var addCharacterOffset = function (container, offset) {
-    var range = createRange(container.ownerDocument);
+  const addCharacterOffset = function (container, offset) {
+    const range = createRange(container.ownerDocument);
 
     if (offset < container.data.length) {
       if (ExtendingChar.isExtendingChar(container.data[offset])) {
@@ -213,8 +214,8 @@ var getCaretPositionClientRects = function (caretPosition) {
  * @param {Number} offset Offset within that container node.
  * @param {Array} clientRects Optional client rects array for the position.
  */
-var CaretPosition: any = function (container, offset, clientRects) {
-  var isAtStart = function () {
+const CaretPosition: any = function (container, offset, clientRects) {
+  const isAtStart = function () {
     if (isText(container)) {
       return offset === 0;
     }
@@ -222,7 +223,7 @@ var CaretPosition: any = function (container, offset, clientRects) {
     return offset === 0;
   };
 
-  var isAtEnd = function () {
+  const isAtEnd = function () {
     if (isText(container)) {
       return offset >= container.data.length;
     }
@@ -230,8 +231,8 @@ var CaretPosition: any = function (container, offset, clientRects) {
     return offset >= container.childNodes.length;
   };
 
-  var toRange = function () {
-    var range;
+  const toRange = function () {
+    let range;
 
     range = createRange(container.ownerDocument);
     range.setStart(container, offset);
@@ -240,7 +241,7 @@ var CaretPosition: any = function (container, offset, clientRects) {
     return range;
   };
 
-  var getClientRects = function () {
+  const getClientRects = function () {
     if (!clientRects) {
       clientRects = getCaretPositionClientRects(new CaretPosition(container, offset));
     }
@@ -248,15 +249,15 @@ var CaretPosition: any = function (container, offset, clientRects) {
     return clientRects;
   };
 
-  var isVisible = function () {
+  const isVisible = function () {
     return getClientRects().length > 0;
   };
 
-  var isEqual = function (caretPosition) {
+  const isEqual = function (caretPosition) {
     return caretPosition && container === caretPosition.container() && offset === caretPosition.offset();
   };
 
-  var getNode = function (before) {
+  const getNode = function (before) {
     return resolveIndex(container, before ? offset - 1 : offset);
   };
 
@@ -283,7 +284,7 @@ var CaretPosition: any = function (container, offset, clientRects) {
      * @method toRange
      * @return {DOMRange} range for the caret position.
      */
-    toRange: toRange,
+    toRange,
 
     /**
      * Returns the client rects for the caret position. Might be multiple rects between
@@ -292,7 +293,7 @@ var CaretPosition: any = function (container, offset, clientRects) {
      * @method getClientRects
      * @return {Array} Array of client rects.
      */
-    getClientRects: getClientRects,
+    getClientRects,
 
     /**
      * Returns true if the caret location is visible/displayed on screen.
@@ -300,7 +301,7 @@ var CaretPosition: any = function (container, offset, clientRects) {
      * @method isVisible
      * @return {Boolean} true/false if the position is visible or not.
      */
-    isVisible: isVisible,
+    isVisible,
 
     /**
      * Returns true if the caret location is at the beginning of text node or container.
@@ -308,7 +309,7 @@ var CaretPosition: any = function (container, offset, clientRects) {
      * @method isVisible
      * @return {Boolean} true/false if the position is at the beginning.
      */
-    isAtStart: isAtStart,
+    isAtStart,
 
     /**
      * Returns true if the caret location is at the end of text node or container.
@@ -316,7 +317,7 @@ var CaretPosition: any = function (container, offset, clientRects) {
      * @method isVisible
      * @return {Boolean} true/false if the position is at the end.
      */
-    isAtEnd: isAtEnd,
+    isAtEnd,
 
     /**
      * Compares the caret position to another caret position. This will only compare the
@@ -326,7 +327,7 @@ var CaretPosition: any = function (container, offset, clientRects) {
      * @param {tinymce.caret.CaretPosition} caretPosition Caret position to compare with.
      * @return {Boolean} true if the caret positions are equal.
      */
-    isEqual: isEqual,
+    isEqual,
 
     /**
      * Returns the closest resolved node from a node index. That means if you have an offset after the
@@ -335,7 +336,7 @@ var CaretPosition: any = function (container, offset, clientRects) {
      * @method getNode
      * @return {Node} Node that is closest to the index.
      */
-    getNode: getNode
+    getNode
   };
 };
 

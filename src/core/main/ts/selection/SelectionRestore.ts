@@ -13,12 +13,12 @@ import { PlatformDetection } from '@ephox/sand';
 import DOMUtils from '../dom/DOMUtils';
 import SelectionBookmark from './SelectionBookmark';
 
-var isManualNodeChange = function (e) {
+const isManualNodeChange = function (e) {
   return e.type === 'nodechange' && e.selectionChange;
 };
 
-var registerPageMouseUp = function (editor, throttledStore) {
-  var mouseUpPage = function () {
+const registerPageMouseUp = function (editor, throttledStore) {
+  const mouseUpPage = function () {
     throttledStore.throttle();
   };
 
@@ -29,20 +29,20 @@ var registerPageMouseUp = function (editor, throttledStore) {
   });
 };
 
-var registerFocusOut = function (editor) {
+const registerFocusOut = function (editor) {
   editor.on('focusout', function () {
     SelectionBookmark.store(editor);
   });
 };
 
-var registerMouseUp = function (editor, throttledStore) {
+const registerMouseUp = function (editor, throttledStore) {
   editor.on('mouseup touchend', function (e) {
     throttledStore.throttle();
   });
 };
 
-var registerEditorEvents = function (editor, throttledStore) {
-  var browser = PlatformDetection.detect().browser;
+const registerEditorEvents = function (editor, throttledStore) {
+  const browser = PlatformDetection.detect().browser;
 
   if (browser.isIE() || browser.isEdge()) {
     registerFocusOut(editor);
@@ -57,8 +57,8 @@ var registerEditorEvents = function (editor, throttledStore) {
   });
 };
 
-var register = function (editor) {
-  var throttledStore = Throttler.first(function () {
+const register = function (editor) {
+  const throttledStore = Throttler.first(function () {
     SelectionBookmark.store(editor);
   }, 0);
 
@@ -76,5 +76,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

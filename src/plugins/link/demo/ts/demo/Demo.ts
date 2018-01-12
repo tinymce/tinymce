@@ -15,10 +15,10 @@ declare let tinymce: any;
 LinkPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "link code",
-  toolbar: "link code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'link code',
+  toolbar: 'link code',
   height: 600
 });

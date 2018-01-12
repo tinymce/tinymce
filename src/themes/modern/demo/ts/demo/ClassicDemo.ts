@@ -9,8 +9,6 @@
 //  */
 
 import EditorManager from 'tinymce/core/EditorManager';
-import Factory from 'tinymce/core/ui/Factory';
-import Tools from 'tinymce/core/util/Tools';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import AutoLinkPlugin from 'tinymce/plugins/autolink/Plugin';
@@ -99,26 +97,25 @@ VisualCharsPlugin();
 WordCountPlugin();
 ModernTheme();
 
-
-export default <any> function () {
+export default function () {
   EditorManager.init({
-    selector: "textarea.tinymce",
-    theme: "modern",
+    selector: 'textarea.tinymce',
+    theme: 'modern',
     plugins: [
-      "advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker",
-      "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-      "save table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker codesample"
+      'advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker',
+      'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+      'save table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker codesample'
     ],
     skin_url: '../../../../../js/tinymce/skins/lightgray',
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
 
-    toolbar1: "save newdocument fullpage | bold italic underline strikethrough | alignleft aligncenter alignright " +
-      "alignjustify | styleselect formatselect fontselect fontsizeselect",
-    toolbar2: "cut copy paste pastetext | searchreplace | bullist numlist | outdent indent blockquote | undo redo" +
-      " | link unlink anchor image media help code | insertdatetime preview | forecolor backcolor",
-    toolbar3: "table | hr removeformat | subscript superscript | charmap emoticons | print fullscreen | ltr rtl" +
-      " | spellchecker | visualchars visualblocks nonbreaking template pagebreak restoredraft | insertfile insertimage codesample",
+    toolbar1: 'save newdocument fullpage | bold italic underline strikethrough | alignleft aligncenter alignright ' +
+      'alignjustify | styleselect formatselect fontselect fontsizeselect',
+    toolbar2: 'cut copy paste pastetext | searchreplace | bullist numlist | outdent indent blockquote | undo redo' +
+      ' | link unlink anchor image media help code | insertdatetime preview | forecolor backcolor',
+    toolbar3: 'table | hr removeformat | subscript superscript | charmap emoticons | print fullscreen | ltr rtl' +
+      ' | spellchecker | visualchars visualblocks nonbreaking template pagebreak restoredraft | insertfile insertimage codesample',
     menubar: false,
     toolbar_items_size: 'small',
 
@@ -137,21 +134,21 @@ export default <any> function () {
       { title: 'My template 2', description: 'Some fancy template 2', url: 'development.html' }
     ],
 
-    spellchecker_callback: function (method, data, success) {
-      if (method === "spellcheck") {
-        var words = data.match(this.getWordCharPattern());
-        var suggestions = {};
+    spellchecker_callback (method, data, success) {
+      if (method === 'spellcheck') {
+        const words = data.match(this.getWordCharPattern());
+        const suggestions = {};
 
-        for (var i = 0; i < words.length; i++) {
-          suggestions[words[i]] = ["First", "second"];
+        for (let i = 0; i < words.length; i++) {
+          suggestions[words[i]] = ['First', 'second'];
         }
 
         success({ words: suggestions, dictionary: true });
       }
 
-      if (method === "addToDictionary") {
+      if (method === 'addToDictionary') {
         success();
       }
     }
   });
-};
+}

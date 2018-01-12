@@ -8,24 +8,24 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var doSyncSize = function (widthCtrl, heightCtrl) {
+const doSyncSize = function (widthCtrl, heightCtrl) {
   widthCtrl.state.set('oldVal', widthCtrl.value());
   heightCtrl.state.set('oldVal', heightCtrl.value());
 };
-var doSizeControls = function (win, f) {
-  var widthCtrl = win.find('#width')[0];
-  var heightCtrl = win.find('#height')[0];
-  var constrained = win.find('#constrain')[0];
+const doSizeControls = function (win, f) {
+  const widthCtrl = win.find('#width')[0];
+  const heightCtrl = win.find('#height')[0];
+  const constrained = win.find('#constrain')[0];
   if (widthCtrl && heightCtrl && constrained) {
     f(widthCtrl, heightCtrl, constrained.checked());
   }
 };
 
-var doUpdateSize = function (widthCtrl, heightCtrl, isContrained) {
-  var oldWidth = widthCtrl.state.get('oldVal');
-  var oldHeight = heightCtrl.state.get('oldVal');
-  var newWidth = widthCtrl.value();
-  var newHeight = heightCtrl.value();
+const doUpdateSize = function (widthCtrl, heightCtrl, isContrained) {
+  const oldWidth = widthCtrl.state.get('oldVal');
+  const oldHeight = heightCtrl.state.get('oldVal');
+  let newWidth = widthCtrl.value();
+  let newHeight = heightCtrl.value();
 
   if (isContrained && oldWidth && oldHeight && newWidth && newHeight) {
     if (newWidth !== oldWidth) {
@@ -46,16 +46,16 @@ var doUpdateSize = function (widthCtrl, heightCtrl, isContrained) {
   doSyncSize(widthCtrl, heightCtrl);
 };
 
-var syncSize = function (win) {
+const syncSize = function (win) {
   doSizeControls(win, doSyncSize);
 };
 
-var updateSize = function (win) {
+const updateSize = function (win) {
   doSizeControls(win, doUpdateSize);
 };
 
-var createUi = function (onChange) {
-  var recalcSize = function () {
+const createUi = function (onChange) {
+  const recalcSize = function () {
     onChange(function (win) {
       updateSize(win);
     });
@@ -83,7 +83,7 @@ var createUi = function (onChange) {
 };
 
 export default {
-  createUi: createUi,
-  syncSize: syncSize,
-  updateSize: updateSize
+  createUi,
+  syncSize,
+  updateSize
 };

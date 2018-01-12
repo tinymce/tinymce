@@ -20,27 +20,27 @@ import SkinLoaded from '../ui/SkinLoaded';
 import Toolbar from '../ui/Toolbar';
 import FloatPanel from 'tinymce/ui/FloatPanel';
 
-var isFixed = function (inlineToolbarContainer) {
+const isFixed = function (inlineToolbarContainer) {
   return !!(inlineToolbarContainer && !Env.container);
 };
 
-var render = function (editor, theme, args) {
-  var panel, inlineToolbarContainer;
-  var DOM = DOMUtils.DOM;
+const render = function (editor, theme, args) {
+  let panel, inlineToolbarContainer;
+  const DOM = DOMUtils.DOM;
 
-  var fixedToolbarContainer = Settings.getFixedToolbarContainer(editor);
+  const fixedToolbarContainer = Settings.getFixedToolbarContainer(editor);
   if (fixedToolbarContainer) {
     inlineToolbarContainer = DOM.select(fixedToolbarContainer)[0];
   }
 
-  var reposition = function () {
+  const reposition = function () {
     if (panel && panel.moveRel && panel.visible() && !panel._fixed) {
       // TODO: This is kind of ugly and doesn't handle multiple scrollable elements
-      var scrollContainer = editor.selection.getScrollContainer(), body = editor.getBody();
-      var deltaX = 0, deltaY = 0;
+      const scrollContainer = editor.selection.getScrollContainer(), body = editor.getBody();
+      let deltaX = 0, deltaY = 0;
 
       if (scrollContainer) {
-        var bodyPos = DOM.getPos(body), scrollContainerPos = DOM.getPos(scrollContainer);
+        const bodyPos = DOM.getPos(body), scrollContainerPos = DOM.getPos(scrollContainer);
 
         deltaX = Math.max(0, scrollContainerPos.x - bodyPos.x);
         deltaY = Math.max(0, scrollContainerPos.y - bodyPos.y);
@@ -50,7 +50,7 @@ var render = function (editor, theme, args) {
     }
   };
 
-  var show = function () {
+  const show = function () {
     if (panel) {
       panel.show();
       reposition();
@@ -58,7 +58,7 @@ var render = function (editor, theme, args) {
     }
   };
 
-  var hide = function () {
+  const hide = function () {
     if (panel) {
       // We require two events as the inline float panel based toolbar does not have autohide=true
       panel.hide();
@@ -70,7 +70,7 @@ var render = function (editor, theme, args) {
     }
   };
 
-  var render = function () {
+  const render = function () {
     if (panel) {
       if (!panel.visible()) {
         show();
@@ -154,6 +154,6 @@ var render = function (editor, theme, args) {
   return {};
 };
 
-export default <any> {
-  render: render
+export default {
+  render
 };

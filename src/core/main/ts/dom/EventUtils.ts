@@ -21,34 +21,32 @@ import Delay from '../util/Delay';
  * @class tinymce.dom.EventUtils
  */
 
-"use strict";
-
-var eventExpandoPrefix = "mce-data-";
-var mouseEventRe = /^(?:mouse|contextmenu)|click/;
-var deprecated = {
+const eventExpandoPrefix = 'mce-data-';
+const mouseEventRe = /^(?:mouse|contextmenu)|click/;
+const deprecated = {
   keyLocation: 1, layerX: 1, layerY: 1, returnValue: 1,
   webkitMovementX: 1, webkitMovementY: 1, keyIdentifier: 1
 };
 
 // Checks if it is our own isDefaultPrevented function
-var hasIsDefaultPrevented = function (event) {
+const hasIsDefaultPrevented = function (event) {
   return event.isDefaultPrevented === returnTrue || event.isDefaultPrevented === returnFalse;
 };
 
 // Dummy function that gets replaced on the delegation state functions
-var returnFalse = function () {
+const returnFalse = function () {
   return false;
 };
 
 // Dummy function that gets replaced on the delegation state functions
-var returnTrue = function () {
+const returnTrue = function () {
   return true;
 };
 
 /**
  * Binds a native event to a callback on the speified target.
  */
-var addEvent = function (target, name, callback, capture?) {
+const addEvent = function (target, name, callback, capture?) {
   if (target.addEventListener) {
     target.addEventListener(name, callback, capture || false);
   } else if (target.attachEvent) {
@@ -59,7 +57,7 @@ var addEvent = function (target, name, callback, capture?) {
 /**
  * Unbinds a native event callback on the specified target.
  */
-var removeEvent = function (target, name, callback, capture?) {
+const removeEvent = function (target, name, callback, capture?) {
   if (target.removeEventListener) {
     target.removeEventListener(name, callback, capture || false);
   } else if (target.detachEvent) {
@@ -70,8 +68,8 @@ var removeEvent = function (target, name, callback, capture?) {
 /**
  * Gets the event target based on shadow dom properties like path and deepPath.
  */
-var getTargetFromShadowDom = function (event, defaultTarget) {
-  var path, target = defaultTarget;
+const getTargetFromShadowDom = function (event, defaultTarget) {
+  let path, target = defaultTarget;
 
   // When target element is inside Shadow DOM we need to take first element from path
   // otherwise we'll get Shadow Root parent, not actual target element
@@ -96,8 +94,9 @@ var getTargetFromShadowDom = function (event, defaultTarget) {
 /**
  * Normalizes a native event object or just adds the event specific methods on a custom event.
  */
-var fix = function (originalEvent, data?) {
-  var name, event = data || {}, undef;
+const fix = function (originalEvent, data?) {
+  let name;
+  const event = data || {};
 
   // Copy all properties from the original event
   for (name in originalEvent) {
@@ -118,10 +117,10 @@ var fix = function (originalEvent, data?) {
   }
 
   // Calculate pageX/Y if missing and clientX/Y available
-  if (originalEvent && mouseEventRe.test(originalEvent.type) && originalEvent.pageX === undef && originalEvent.clientX !== undef) {
-    var eventDoc = event.target.ownerDocument || document;
-    var doc = eventDoc.documentElement;
-    var body = eventDoc.body;
+  if (originalEvent && mouseEventRe.test(originalEvent.type) && originalEvent.pageX === undefined && originalEvent.clientX !== undefined) {
+    const eventDoc = event.target.ownerDocument || document;
+    const doc = eventDoc.documentElement;
+    const body = eventDoc.body;
 
     event.pageX = originalEvent.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
       (doc && doc.clientLeft || body && body.clientLeft || 0);
@@ -172,7 +171,7 @@ var fix = function (originalEvent, data?) {
   }
 
   // Add missing metaKey for IE 8
-  if (typeof event.metaKey == 'undefined') {
+  if (typeof event.metaKey === 'undefined') {
     event.metaKey = false;
   }
 
@@ -183,40 +182,40 @@ var fix = function (originalEvent, data?) {
  * Bind a DOMContentLoaded event across browsers and executes the callback once the page DOM is initialized.
  * It will also set/check the domLoaded state of the event_utils instance so ready isn't called multiple times.
  */
-var bindOnReady = function (win, callback, eventUtils) {
-  var doc = win.document, event = { type: 'ready' };
+const bindOnReady = function (win, callback, eventUtils) {
+  const doc = win.document, event = { type: 'ready' };
 
   if (eventUtils.domLoaded) {
     callback(event);
     return;
   }
 
-  var isDocReady = function () {
+  const isDocReady = function () {
     // Check complete or interactive state if there is a body
     // element on some iframes IE 8 will produce a null body
-    return doc.readyState === "complete" || (doc.readyState === "interactive" && doc.body);
+    return doc.readyState === 'complete' || (doc.readyState === 'interactive' && doc.body);
   };
 
   // Gets called when the DOM is ready
-  var readyHandler = function () {
+  const readyHandler = function () {
     if (!eventUtils.domLoaded) {
       eventUtils.domLoaded = true;
       callback(event);
     }
   };
 
-  var waitForDomLoaded = function () {
+  const waitForDomLoaded = function () {
     if (isDocReady()) {
-      removeEvent(doc, "readystatechange", waitForDomLoaded);
+      removeEvent(doc, 'readystatechange', waitForDomLoaded);
       readyHandler();
     }
   };
 
-  var tryScroll = function () {
+  const tryScroll = function () {
     try {
       // If IE is used, use the trick by Diego Perini licensed under MIT by request to the author.
       // http://javascript.nwbox.com/IEContentLoaded/
-      doc.documentElement.doScroll("left");
+      doc.documentElement.doScroll('left');
     } catch (ex) {
       Delay.setTimeout(tryScroll);
       return;
@@ -234,7 +233,7 @@ var bindOnReady = function (win, callback, eventUtils) {
     }
   } else {
     // Use IE method
-    addEvent(doc, "readystatechange", waitForDomLoaded);
+    addEvent(doc, 'readystatechange', waitForDomLoaded);
 
     // Wait until we can scroll, when we can the DOM is initialized
     if (doc.documentElement.doScroll && win.self === win.top) {
@@ -249,12 +248,13 @@ var bindOnReady = function (win, callback, eventUtils) {
 /**
  * This class enables you to bind/unbind native events to elements and normalize it's behavior across browsers.
  */
-var EventUtils: any = function () {
-  var self = this, events = {}, count, expando, hasFocusIn, hasMouseEnterLeave, mouseEnterLeave;
+const EventUtils: any = function () {
+  const self = this;
+  let events = {}, count, expando, hasFocusIn, hasMouseEnterLeave, mouseEnterLeave;
 
   expando = eventExpandoPrefix + (+new Date()).toString(32);
-  hasMouseEnterLeave = "onmouseenter" in document.documentElement;
-  hasFocusIn = "onfocusin" in document.documentElement;
+  hasMouseEnterLeave = 'onmouseenter' in document.documentElement;
+  hasFocusIn = 'onfocusin' in document.documentElement;
   mouseEnterLeave = { mouseenter: 'mouseover', mouseleave: 'mouseout' };
   count = 1;
 
@@ -269,8 +269,9 @@ var EventUtils: any = function () {
    * @param {Event} evt Event object.
    * @param {String} id Expando id value to look for.
    */
-  var executeHandlers = function (evt, id) {
-    var callbackList, i, l, callback, container = events[id];
+  const executeHandlers = function (evt, id) {
+    let callbackList, i, l, callback;
+    const container = events[id];
 
     callbackList = container && container[evt.type];
     if (callbackList) {
@@ -301,10 +302,11 @@ var EventUtils: any = function () {
    * @return {function} Callback function that got bound.
    */
   self.bind = function (target, names, callback, scope) {
-    var id, callbackList, i, name, fakeName, nativeHandler, capture, win = window;
+    let id, callbackList, i, name, fakeName, nativeHandler, capture;
+    const win = window;
 
     // Native event handler function patches the event and executes the callbacks for the expando
-    var defaultNativeHandler = function (evt) {
+    const defaultNativeHandler = function (evt) {
       executeHandlers(fix(evt || win.event), id);
     };
 
@@ -334,12 +336,12 @@ var EventUtils: any = function () {
       fakeName = capture = false;
 
       // Use ready instead of DOMContentLoaded
-      if (name === "DOMContentLoaded") {
-        name = "ready";
+      if (name === 'DOMContentLoaded') {
+        name = 'ready';
       }
 
       // DOM is already ready
-      if (self.domLoaded && name === "ready" && target.readyState == 'complete') {
+      if (self.domLoaded && name === 'ready' && target.readyState === 'complete') {
         callback.call(scope, fix({ type: name }));
         continue;
       }
@@ -350,7 +352,7 @@ var EventUtils: any = function () {
 
         if (fakeName) {
           nativeHandler = function (evt) {
-            var current, related;
+            let current, related;
 
             current = evt.currentTarget;
             related = evt.relatedTarget;
@@ -378,9 +380,9 @@ var EventUtils: any = function () {
       }
 
       // Fake bubbling of focusin/focusout
-      if (!hasFocusIn && (name === "focusin" || name === "focusout")) {
+      if (!hasFocusIn && (name === 'focusin' || name === 'focusout')) {
         capture = true;
-        fakeName = name === "focusin" ? "focus" : "blur";
+        fakeName = name === 'focusin' ? 'focus' : 'blur';
         nativeHandler = function (evt) {
           evt = fix(evt || win.event);
           evt.type = evt.type === 'focus' ? 'focusin' : 'focusout';
@@ -391,27 +393,27 @@ var EventUtils: any = function () {
       // Setup callback list and bind native event
       callbackList = events[id][name];
       if (!callbackList) {
-        events[id][name] = callbackList = [{ func: callback, scope: scope }];
+        events[id][name] = callbackList = [{ func: callback, scope }];
         callbackList.fakeName = fakeName;
         callbackList.capture = capture;
-        //callbackList.callback = callback;
+        // callbackList.callback = callback;
 
         // Add the nativeHandler to the callback list so that we can later unbind it
         callbackList.nativeHandler = nativeHandler;
 
         // Check if the target has native events support
 
-        if (name === "ready") {
+        if (name === 'ready') {
           bindOnReady(target, nativeHandler, self);
         } else {
           addEvent(target, fakeName || name, nativeHandler, capture);
         }
       } else {
-        if (name === "ready" && self.domLoaded) {
+        if (name === 'ready' && self.domLoaded) {
           callback({ type: name });
         } else {
           // If it already has an native handler then just push the callback
-          callbackList.push({ func: callback, scope: scope });
+          callbackList.push({ func: callback, scope });
         }
       }
     }
@@ -431,7 +433,7 @@ var EventUtils: any = function () {
    * @return {EventUtils} Event utils instance.
    */
   self.unbind = function (target, names, callback) {
-    var id, callbackList, i, ci, name, eventMap;
+    let id, callbackList, i, ci, name, eventMap;
 
     // Don't bind to text nodes or comments
     if (!target || target.nodeType === 3 || target.nodeType === 8) {
@@ -458,8 +460,8 @@ var EventUtils: any = function () {
               ci = callbackList.length;
               while (ci--) {
                 if (callbackList[ci].func === callback) {
-                  var nativeHandler = callbackList.nativeHandler;
-                  var fakeName = callbackList.fakeName, capture = callbackList.capture;
+                  const nativeHandler = callbackList.nativeHandler;
+                  const fakeName = callbackList.fakeName, capture = callbackList.capture;
 
                   // Clone callbackList since unbind inside a callback would otherwise break the handlers loop
                   callbackList = callbackList.slice(0, ci).concat(callbackList.slice(ci + 1));
@@ -520,7 +522,7 @@ var EventUtils: any = function () {
    * @return {EventUtils} Event utils instance.
    */
   self.fire = function (target, name, args) {
-    var id;
+    let id;
 
     // Don't bind to text nodes or comments
     if (!target || target.nodeType === 3 || target.nodeType === 8) {
@@ -555,7 +557,8 @@ var EventUtils: any = function () {
    * @return {EventUtils} Event utils instance.
    */
   self.clean = function (target) {
-    var i, children, unbind = self.unbind;
+    let i, children;
+    const unbind = self.unbind;
 
     // Don't bind to text nodes or comments
     if (!target || target.nodeType === 3 || target.nodeType === 8) {

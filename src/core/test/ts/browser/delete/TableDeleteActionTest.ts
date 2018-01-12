@@ -7,21 +7,20 @@ import { Fun } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 import TableDeleteAction from 'tinymce/core/delete/TableDeleteAction';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var cFromHtml = function (html, startPath, startOffset, endPath, endOffset) {
+  const cFromHtml = function (html, startPath, startOffset, endPath, endOffset) {
     return Chain.mapper(function () {
-      var elm = Element.fromHtml(html);
-      var sc = Hierarchy.follow(elm, startPath).getOrDie();
-      var ec = Hierarchy.follow(elm, endPath).getOrDie();
-      var rng = document.createRange();
+      const elm = Element.fromHtml(html);
+      const sc = Hierarchy.follow(elm, startPath).getOrDie();
+      const ec = Hierarchy.follow(elm, endPath).getOrDie();
+      const rng = document.createRange();
 
       rng.setStart(sc.dom(), startOffset);
       rng.setEnd(ec.dom(), endOffset);
@@ -30,15 +29,15 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
     });
   };
 
-  var fail = function (message) {
+  const fail = function (message) {
     return Fun.constant(Result.error(message));
   };
 
-  var cAssertNone = Chain.op(function (x) {
+  const cAssertNone = Chain.op(function (x) {
     Assertions.assertEq('Is none', true, x.isNone());
   });
 
-  var cExtractActionCells = Chain.binder(function (actionOpt) {
+  const cExtractActionCells = Chain.binder(function (actionOpt) {
     return actionOpt
         .fold(
           fail('unexpected nothing'),
@@ -46,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
             return action.fold(
               fail('unexpected action'),
               function (xs) {
-                var cellString = Arr.map(xs, Html.getOuter).join('');
+                const cellString = Arr.map(xs, Html.getOuter).join('');
 
                 return Result.value(cellString);
               }
@@ -55,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
         );
   });
 
-  var cExtractTableFromDeleteAction = Chain.binder(function (actionOpt) {
+  const cExtractTableFromDeleteAction = Chain.binder(function (actionOpt) {
     return actionOpt
       .fold(
         fail('unexpected nothing'),
@@ -103,7 +102,6 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
       Assertions.cAssertEq('should be cells', '<th>b</th><th>c</th><td>d</td>')
     ])),
 
-
     Logger.t('select between rows, all cells', Chain.asStep({}, [
       cFromHtml(
         '<table><tbody><tr><th>a</th><th>b</th><th>c</th></tr><tr><td>d</td><td>e</td><td>f</td></tr></tbody></table>',
@@ -116,4 +114,3 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
     success();
   }, failure);
 });
-

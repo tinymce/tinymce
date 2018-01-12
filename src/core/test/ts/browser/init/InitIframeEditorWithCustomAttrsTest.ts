@@ -10,16 +10,16 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.core.init.InitIframeEditorWithCustomAttrsTest',
-  function() {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+  function () {
+    const success = arguments[arguments.length - 2];
+    const failure = arguments[arguments.length - 1];
 
     Theme();
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, [
         Logger.t('Check if iframe has the right custom attributes', Step.sync(function () {
-          var ifr = Element.fromDom(editor.iframeElement);
+          const ifr = Element.fromDom(editor.iframeElement);
 
           Assertions.assertEq('Id should not be the defined x', true, Attr.get(ifr, 'id') !== 'x');
           Assertions.assertEq('Custom attribute whould have the right value', 'a', Attr.get(ifr, 'data-custom1'));
@@ -29,11 +29,10 @@ UnitTest.asynctest(
     }, {
       skin_url: '/project/js/tinymce/skins/lightgray',
       iframe_attrs: {
-        id: 'x',
+        'id': 'x',
         'data-custom1': 'a',
         'data-custom2': 'b'
       }
     }, success, failure);
   }
 );
-

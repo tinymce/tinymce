@@ -10,10 +10,10 @@
 
 import Data from './Data';
 
-var wrapCharWithSpan = function (value) {
+const wrapCharWithSpan = function (value) {
   return '<span data-mce-bogus="1" class="mce-' + Data.charMap[value] + '">' + value + '</span>';
 };
 
 export default {
-  wrapCharWithSpan: wrapCharWithSpan
+  wrapCharWithSpan
 };

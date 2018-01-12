@@ -11,7 +11,7 @@
 import Settings from '../api/Settings';
 import VisualBlocks from './VisualBlocks';
 
-var setup = function (editor, pluginUrl, enabledState) {
+const setup = function (editor, pluginUrl, enabledState) {
   // Prevents the visualblocks from being presented in the preview of formats when that is computed
   editor.on('PreviewFormats AfterPreviewFormats', function (e) {
     if (enabledState.get()) {
@@ -31,5 +31,5 @@ var setup = function (editor, pluginUrl, enabledState) {
 };
 
 export default {
-  setup: setup
+  setup
 };

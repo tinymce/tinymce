@@ -18,45 +18,45 @@ import { Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import Tools from './util/Tools';
 
-var sectionResult = Struct.immutable('sections', 'settings');
-var detection = PlatformDetection.detect();
-var isTouch = detection.deviceType.isTouch();
-var mobilePlugins = [ 'lists', 'autolink', 'autosave' ];
-var defaultMobileSettings = { theme: 'mobile' };
+const sectionResult = Struct.immutable('sections', 'settings');
+const detection = PlatformDetection.detect();
+const isTouch = detection.deviceType.isTouch();
+const mobilePlugins = [ 'lists', 'autolink', 'autosave' ];
+const defaultMobileSettings = { theme: 'mobile' };
 
-var normalizePlugins = function (plugins) {
-  var pluginNames = Type.isArray(plugins) ? plugins.join(' ') : plugins;
-  var trimmedPlugins = Arr.map(Type.isString(pluginNames) ? pluginNames.split(' ') : [ ], Strings.trim);
+const normalizePlugins = function (plugins) {
+  const pluginNames = Type.isArray(plugins) ? plugins.join(' ') : plugins;
+  const trimmedPlugins = Arr.map(Type.isString(pluginNames) ? pluginNames.split(' ') : [ ], Strings.trim);
   return Arr.filter(trimmedPlugins, function (item) {
     return item.length > 0;
   });
 };
 
-var filterMobilePlugins = function (plugins) {
+const filterMobilePlugins = function (plugins) {
   return Arr.filter(plugins, Fun.curry(Arr.contains, mobilePlugins));
 };
 
-var extractSections = function (keys, settings) {
-  var result = Obj.bifilter(settings, function (value, key) {
+const extractSections = function (keys, settings) {
+  const result = Obj.bifilter(settings, function (value, key) {
     return Arr.contains(keys, key);
   });
 
   return sectionResult(result.t, result.f);
 };
 
-var getSection = function (sectionResult, name, defaults) {
-  var sections = sectionResult.sections();
-  var sectionSettings = sections.hasOwnProperty(name) ? sections[name] : { };
+const getSection = function (sectionResult, name, defaults) {
+  const sections = sectionResult.sections();
+  const sectionSettings = sections.hasOwnProperty(name) ? sections[name] : { };
   return Tools.extend({}, defaults, sectionSettings);
 };
 
-var hasSection = function (sectionResult, name) {
+const hasSection = function (sectionResult, name) {
   return sectionResult.sections().hasOwnProperty(name);
 };
 
-var getDefaultSettings = function (id, documentBaseUrl, editor) {
+const getDefaultSettings = function (id, documentBaseUrl, editor) {
   return {
-    id: id,
+    id,
     theme: 'modern',
     delta_width: 0,
     delta_height: 0,
@@ -95,8 +95,8 @@ var getDefaultSettings = function (id, documentBaseUrl, editor) {
   };
 };
 
-var getExternalPlugins = function (overrideSettings, settings) {
-  var userDefinedExternalPlugins = settings.external_plugins ? settings.external_plugins : { };
+const getExternalPlugins = function (overrideSettings, settings) {
+  const userDefinedExternalPlugins = settings.external_plugins ? settings.external_plugins : { };
 
   if (overrideSettings && overrideSettings.external_plugins) {
     return Tools.extend({}, overrideSettings.external_plugins, userDefinedExternalPlugins);
@@ -105,29 +105,29 @@ var getExternalPlugins = function (overrideSettings, settings) {
   }
 };
 
-var combinePlugins = function (forcedPlugins, plugins) {
+const combinePlugins = function (forcedPlugins, plugins) {
   return [].concat(normalizePlugins(forcedPlugins)).concat(normalizePlugins(plugins));
 };
 
-var processPlugins = function (isTouchDevice, sectionResult, defaultOverrideSettings, settings) {
-  var forcedPlugins = normalizePlugins(defaultOverrideSettings.forced_plugins);
-  var plugins = normalizePlugins(settings.plugins);
-  var platformPlugins = isTouchDevice && hasSection(sectionResult, 'mobile') ? filterMobilePlugins(plugins) : plugins;
-  var combinedPlugins = combinePlugins(forcedPlugins, platformPlugins);
+const processPlugins = function (isTouchDevice, sectionResult, defaultOverrideSettings, settings) {
+  const forcedPlugins = normalizePlugins(defaultOverrideSettings.forced_plugins);
+  const plugins = normalizePlugins(settings.plugins);
+  const platformPlugins = isTouchDevice && hasSection(sectionResult, 'mobile') ? filterMobilePlugins(plugins) : plugins;
+  const combinedPlugins = combinePlugins(forcedPlugins, platformPlugins);
 
   return Tools.extend(settings, {
     plugins: combinedPlugins.join(' ')
   });
 };
 
-var isOnMobile = function (isTouchDevice, sectionResult) {
-  var isInline = sectionResult.settings().inline; // We don't support mobile inline yet
+const isOnMobile = function (isTouchDevice, sectionResult) {
+  const isInline = sectionResult.settings().inline; // We don't support mobile inline yet
   return isTouchDevice && hasSection(sectionResult, 'mobile') && !isInline;
 };
 
-var combineSettings = function (isTouchDevice, defaultSettings, defaultOverrideSettings, settings) {
-  var sectionResult = extractSections(['mobile'], settings);
-  var extendedSettings = Tools.extend(
+const combineSettings = function (isTouchDevice, defaultSettings, defaultOverrideSettings, settings) {
+  const sectionResult = extractSections(['mobile'], settings);
+  const extendedSettings = Tools.extend(
     // Default settings
     defaultSettings,
 
@@ -151,22 +151,22 @@ var combineSettings = function (isTouchDevice, defaultSettings, defaultOverrideS
   return processPlugins(isTouchDevice, sectionResult, defaultOverrideSettings, extendedSettings);
 };
 
-var getEditorSettings = function (editor, id, documentBaseUrl, defaultOverrideSettings, settings) {
-  var defaultSettings = getDefaultSettings(id, documentBaseUrl, editor);
+const getEditorSettings = function (editor, id, documentBaseUrl, defaultOverrideSettings, settings) {
+  const defaultSettings = getDefaultSettings(id, documentBaseUrl, editor);
   return combineSettings(isTouch, defaultSettings, defaultOverrideSettings, settings);
 };
 
-var get = function (editor, name) {
+const get = function (editor, name) {
   return Option.from(editor.settings[name]);
 };
 
-var getFiltered = function (predicate, editor, name) {
+const getFiltered = function (predicate, editor, name) {
   return Option.from(editor.settings[name]).filter(predicate);
 };
 
 export default {
-  getEditorSettings: getEditorSettings,
-  get: get,
+  getEditorSettings,
+  get,
   getString: Fun.curry(getFiltered, Type.isString),
-  combineSettings: combineSettings
+  combineSettings
 };

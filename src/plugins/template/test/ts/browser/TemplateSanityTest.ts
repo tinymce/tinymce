@@ -2,7 +2,6 @@ import { Chain } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { UiFinder } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
@@ -11,16 +10,16 @@ import TemplatePlugin from 'tinymce/plugins/template/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   TemplatePlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
-    var tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('test basic template insertion', GeneralSteps.sequence([
@@ -48,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', functi
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"][aria-label="Insert template"]'),
           UiFinder.cWaitForState('iframe is loaded', 'iframe', function (elm) {
-            var iframeDoc = elm.dom().contentDocument || elm.dom().contentWindow.document;
+            const iframeDoc = elm.dom().contentDocument || elm.dom().contentWindow.document;
             return iframeDoc.body.firstChild !== null;
           })
         ]),
@@ -70,4 +69,3 @@ UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', functi
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

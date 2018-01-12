@@ -3,18 +3,18 @@ import { Pipeline } from '@ephox/agar';
 import Color from 'tinymce/core/util/Color';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.util.ColorTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.util.ColorTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
-  suite.test("Constructor", function () {
+  suite.test('Constructor', function () {
     LegacyUnit.equal(Color().toHex(), '#000000');
     LegacyUnit.equal(Color('#faebcd').toHex(), '#faebcd');
   });
 
-  suite.test("parse method", function () {
-    var color = Color();
+  suite.test('parse method', function () {
+    const color = Color();
 
     LegacyUnit.equal(color.parse('#faebcd').toHex(), '#faebcd');
     LegacyUnit.equal(color.parse('#ccc').toHex(), '#cccccc');
@@ -27,15 +27,15 @@ UnitTest.asynctest('browser.tinymce.core.util.ColorTest', function() {
     LegacyUnit.equal(color.parse({ r: -1, g: -10, b: -20 }).toHex(), '#000000');
   });
 
-  suite.test("toRgb method", function () {
+  suite.test('toRgb method', function () {
     LegacyUnit.deepEqual(Color('#faebcd').toRgb(), { r: 250, g: 235, b: 205 });
   });
 
-  suite.test("toHsv method", function () {
+  suite.test('toHsv method', function () {
     LegacyUnit.deepEqual(Color('#804041').toHsv(), { h: 359, s: 50, v: 50 });
   });
 
-  suite.test("toHex method", function () {
+  suite.test('toHex method', function () {
     LegacyUnit.equal(Color({ r: 255, g: 254, b: 253 }).toHex(), '#fffefd');
   });
 
@@ -43,4 +43,3 @@ UnitTest.asynctest('browser.tinymce.core.util.ColorTest', function() {
     success();
   }, failure);
 });
-

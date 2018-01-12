@@ -16,53 +16,47 @@ import { Selectors } from '@ephox/sugar';
 import { Visibility } from '@ephox/sugar';
 
 export default function (editor) {
-  var ui = TinyUi(editor);
+  const ui = TinyUi(editor);
 
-  var cHasState = function (predicate) {
+  const cHasState = function (predicate) {
     return Chain.binder(function (element) {
-      return predicate(element) ? Result.value(element) : Result.error("Predicate didn't match.");
+      return predicate(element) ? Result.value(element) : Result.error('Predicate didn\'t match.');
     });
   };
 
-
-  var cWaitForState = function (predicate) {
+  const cWaitForState = function (predicate) {
     return Chain.control(
       cHasState(predicate),
-      Guard.tryUntil("Predicate has failed.", 10, 3000)
+      Guard.tryUntil('Predicate has failed.', 10, 3000)
     );
   };
 
-
-  var cWaitForChain = function (chain) {
+  const cWaitForChain = function (chain) {
     return Chain.control(
       chain,
-      Guard.tryUntil("Chain has failed.", 10, 3000)
+      Guard.tryUntil('Chain has failed.', 10, 3000)
     );
   };
 
-
-  var cFindChildWithState = function (selector, predicate) {
+  const cFindChildWithState = function (selector, predicate) {
     return Chain.on(function (scope, next, die) {
-      var children = PredicateFilter.descendants(scope, function (element) {
+      const children = PredicateFilter.descendants(scope, function (element) {
         return Selectors.is(element, selector) && predicate(element);
       });
       children.length ? next(Chain.wrap(children[0])) : die();
     });
   };
 
-
-  var cDragSlider = Chain.fromChains([
+  const cDragSlider = Chain.fromChains([
     UiFinder.cFindIn('div[role="slider"]'),
     Chain.on(function (element, next, die) {
-      var pos = editor.dom.getPos(element.dom());
-
-      var unbindMouseMove = DomEvent.bind(element, 'mousemove', function (e) {
+      const unbindMouseMove = DomEvent.bind(element, 'mousemove', function (e) {
         Clicks.mouseup(element);
         unbindMouseMove();
         next(Chain.wrap(element));
       }).unbind;
 
-      var unbindMouseDown = DomEvent.bind(element, 'mousedown', function (e) {
+      const unbindMouseDown = DomEvent.bind(element, 'mousedown', function (e) {
         Clicks.mousemove(element); // not sure if xy actually matters here
         unbindMouseDown();
       }).unbind;
@@ -71,9 +65,8 @@ export default function (editor) {
     })
   ]);
 
-
-  var cExecCommandFromDialog = function (label) {
-    var cInteractWithUi;
+  const cExecCommandFromDialog = function (label) {
+    let cInteractWithUi;
 
     switch (label) {
       case 'Rotate counterclockwise':
@@ -96,7 +89,6 @@ export default function (editor) {
         cInteractWithUi = Chain.wait(1);
     }
 
-
     return Chain.fromChains([
       cClickToolbarButton('Edit image'),
       Chain.fromParent(ui.cWaitForPopup('wait for Edit Image dialog', 'div[aria-label="Edit image"][role="dialog"]'), [
@@ -114,29 +106,25 @@ export default function (editor) {
     ]);
   };
 
-
-  var cWaitForUi = function (label, selector) {
+  const cWaitForUi = function (label, selector) {
     return UiFinder.cWaitForState(label, selector, Fun.constant(true));
   };
 
-
-  var cClickButton = function (text) {
+  const cClickButton = function (text) {
     return Chain.fromChains([
       cWaitForUi('wait for ' + text + ' button', 'div[role="button"]:contains(' + text + '):not(.mce-disabled)'),
       Mouse.cClick
     ]);
   };
 
-
-  var cClickToolbarButton = function (label) {
+  const cClickToolbarButton = function (label) {
     return Chain.fromChains([
       UiFinder.cFindIn('div[aria-label="' + label + '"][role="button"]'),
       Mouse.cClick
     ]);
   };
 
-
-  var sWaitForUrlChange = function (imgEl, origUrl) {
+  const sWaitForUrlChange = function (imgEl, origUrl) {
     return Chain.asStep(imgEl, [
       cWaitForState(function (el) {
         return Attr.get(el, 'src') !== origUrl;
@@ -144,11 +132,10 @@ export default function (editor) {
     ]);
   };
 
-
-  var sExec = function (execFromToolbar, label) {
+  const sExec = function (execFromToolbar, label) {
     return Step.async(function (next, die) {
-      var imgEl = TinyDom.fromDom(editor.selection.getNode());
-      var origUrl = Attr.get(imgEl, 'src');
+      const imgEl = TinyDom.fromDom(editor.selection.getNode());
+      const origUrl = Attr.get(imgEl, 'src');
 
       Pipeline.async({}, [
         Chain.asStep(imgEl, [
@@ -167,4 +154,4 @@ export default function (editor) {
     sExecToolbar: Fun.curry(sExec, true),
     sExecDialog: Fun.curry(sExec, false)
   };
-};
+}

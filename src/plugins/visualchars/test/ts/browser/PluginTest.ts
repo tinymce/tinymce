@@ -8,14 +8,14 @@ import Plugin from 'tinymce/plugins/visualchars/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
   Theme();
 
-  var spanStruct = ApproxStructure.build(function (s, str) {
+  const spanStruct = ApproxStructure.build(function (s, str) {
     return s.element('body', {
       children: [
         s.element('p', {
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', function() 
     });
   });
 
-  var nbspStruct = ApproxStructure.build(function (s, str) {
+  const nbspStruct = ApproxStructure.build(function (s, str) {
     return s.element('body', {
       children: [
         s.element('p', {
@@ -46,8 +46,8 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', function() 
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyUi = TinyUi(editor);
-    var tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sSetContent('<p>a&nbsp;&nbsp;b</p>'),
@@ -67,4 +67,3 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', function() 
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

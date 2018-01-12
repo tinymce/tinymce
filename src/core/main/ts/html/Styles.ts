@@ -27,16 +27,19 @@
  * @version 3.4
  */
 
-
-
 export default function (settings?, schema?) {
   /*jshint maxlen:255 */
   /*eslint max-len:0 */
-  var rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi,
-    urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi,
-    styleRegExp = /\s*([^:]+):\s*([^;]+);?/g,
-    trimRightRegExp = /\s+$/,
-    i, encodingLookup = {}, encodingItems, validStyles, invalidStyles, invisibleChar = '\uFEFF';
+  const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
+  const urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi;
+  const styleRegExp = /\s*([^:]+):\s*([^;]+);?/g;
+  const trimRightRegExp = /\s+$/;
+  let i;
+  const encodingLookup = {};
+  let encodingItems;
+  let validStyles;
+  let invalidStyles;
+  const invisibleChar = '\uFEFF';
 
   settings = settings || {};
 
@@ -51,8 +54,8 @@ export default function (settings?, schema?) {
     encodingLookup[invisibleChar + i] = encodingItems[i];
   }
 
-  var toHex = function (match, r, g, b) {
-    var hex = function (val) {
+  const toHex = function (match, r, g, b) {
+    const hex = function (val) {
       val = parseInt(val, 10).toString(16);
 
       return val.length > 1 ? val : '0' + val; // 0 -> 00
@@ -69,7 +72,7 @@ export default function (settings?, schema?) {
      * @param {String} color RGB string value like rgb(1,2,3)
      * @return {String} Hex version of that RGB value like #FF00FF.
      */
-    toHex: function (color) {
+    toHex (color) {
       return color.replace(rgbRegExp, toHex);
     },
 
@@ -82,12 +85,14 @@ export default function (settings?, schema?) {
      * @param {String} css Style value to parse for example: border:1px solid red;.
      * @return {Object} Object representation of that style like {border: '1px solid red'}
      */
-    parse: function (css) {
-      var styles: any = {}, matches, name, value, isEncoded, urlConverter = settings.url_converter;
-      var urlConverterScope = settings.url_converter_scope || this;
+    parse (css) {
+      const styles: any = {};
+      let matches, name, value, isEncoded;
+      const urlConverter = settings.url_converter;
+      const urlConverterScope = settings.url_converter_scope || this;
 
-      var compress = function (prefix, suffix, noJoin?) {
-        var top, right, bottom, left;
+      const compress = function (prefix, suffix, noJoin?) {
+        let top, right, bottom, left;
 
         top = styles[prefix + '-top' + suffix];
         if (!top) {
@@ -109,7 +114,7 @@ export default function (settings?, schema?) {
           return;
         }
 
-        var box = [top, right, bottom, left];
+        const box = [top, right, bottom, left];
         i = box.length - 1;
         while (i--) {
           if (box[i] !== box[i + 1]) {
@@ -121,7 +126,7 @@ export default function (settings?, schema?) {
           return;
         }
 
-        styles[prefix + suffix] = i == -1 ? box[0] : box.join(' ');
+        styles[prefix + suffix] = i === -1 ? box[0] : box.join(' ');
         delete styles[prefix + '-top' + suffix];
         delete styles[prefix + '-right' + suffix];
         delete styles[prefix + '-bottom' + suffix];
@@ -131,8 +136,8 @@ export default function (settings?, schema?) {
       /**
        * Checks if the specific style can be compressed in other words if all border-width are equal.
        */
-      var canCompress = function (key) {
-        var value = styles[key], i;
+      const canCompress = function (key) {
+        let value = styles[key], i;
 
         if (!value) {
           return;
@@ -154,7 +159,7 @@ export default function (settings?, schema?) {
       /**
        * Compresses multiple styles into one style.
        */
-      var compress2 = function (target, a, b, c) {
+      const compress2 = function (target, a, b, c) {
         if (!canCompress(a)) {
           return;
         }
@@ -175,7 +180,7 @@ export default function (settings?, schema?) {
       };
 
       // Encodes the specified string by replacing all \" \' ; : with _<num>
-      var encode = function (str) {
+      const encode = function (str) {
         isEncoded = true;
 
         return encodingLookup[str];
@@ -183,7 +188,7 @@ export default function (settings?, schema?) {
 
       // Decodes the specified string by replacing all _<num> with it's original value \" \' etc
       // It will also decode the \" \' if keepSlashes is set to fale or omitted
-      var decode = function (str, keepSlashes?) {
+      const decode = function (str, keepSlashes?) {
         if (isEncoded) {
           str = str.replace(/\uFEFF[0-9]/g, function (str) {
             return encodingLookup[str];
@@ -191,41 +196,41 @@ export default function (settings?, schema?) {
         }
 
         if (!keepSlashes) {
-          str = str.replace(/\\([\'\";:])/g, "$1");
+          str = str.replace(/\\([\'\";:])/g, '$1');
         }
 
         return str;
       };
 
-      var decodeSingleHexSequence = function (escSeq) {
+      const decodeSingleHexSequence = function (escSeq) {
         return String.fromCharCode(parseInt(escSeq.slice(1), 16));
       };
 
-      var decodeHexSequences = function (value) {
+      const decodeHexSequences = function (value) {
         return value.replace(/\\[0-9a-f]+/gi, decodeSingleHexSequence);
       };
 
-      var processUrl = function (match, url, url2, url3, str, str2) {
+      const processUrl = function (match, url, url2, url3, str, str2) {
         str = str || str2;
 
         if (str) {
           str = decode(str);
 
           // Force strings into single quote format
-          return "'" + str.replace(/\'/g, "\\'") + "'";
+          return '\'' + str.replace(/\'/g, '\\\'') + '\'';
         }
 
         url = decode(url || url2 || url3);
 
         if (!settings.allow_script_urls) {
-          var scriptUrl = url.replace(/[\s\r\n]+/g, '');
+          const scriptUrl = url.replace(/[\s\r\n]+/g, '');
 
           if (/(java|vb)script:/i.test(scriptUrl)) {
-            return "";
+            return '';
           }
 
           if (!settings.allow_svg_data_urls && /^data:image\/svg/i.test(scriptUrl)) {
-            return "";
+            return '';
           }
         }
 
@@ -235,7 +240,7 @@ export default function (settings?, schema?) {
         }
 
         // Output new URL format
-        return "url('" + url.replace(/\'/g, "\\'") + "')";
+        return 'url(\'' + url.replace(/\'/g, '\\\'') + '\')';
       };
 
       if (css) {
@@ -265,7 +270,7 @@ export default function (settings?, schema?) {
             }
 
             // Don't allow behavior name or expression/comments within the values
-            if (!settings.allow_script_urls && (name == "behavior" || /expression\s*\(|\/\*|\*\//.test(value))) {
+            if (!settings.allow_script_urls && (name === 'behavior' || /expression\s*\(|\/\*|\*\//.test(value))) {
               continue;
             }
 
@@ -285,12 +290,12 @@ export default function (settings?, schema?) {
           }
         }
         // Compress the styles to reduce it's size for example IE will expand styles
-        compress("border", "", true);
-        compress("border", "-width");
-        compress("border", "-color");
-        compress("border", "-style");
-        compress("padding", "");
-        compress("margin", "");
+        compress('border', '', true);
+        compress('border', '-width');
+        compress('border', '-color');
+        compress('border', '-style');
+        compress('padding', '');
+        compress('margin', '');
         compress2('border', 'border-width', 'border-style', 'border-color');
 
         // Remove pointless border, IE produces these
@@ -316,11 +321,11 @@ export default function (settings?, schema?) {
      * @param {String} elementName Optional element name, if specified only the styles that matches the schema will be serialized.
      * @return {String} String representation of the style object for example: border: 1px solid red.
      */
-    serialize: function (styles, elementName?) {
-      var css = '', name, value;
+    serialize (styles, elementName?) {
+      let css = '', name, value;
 
-      var serializeStyles = function (name) {
-        var styleList, i, l, value;
+      const serializeStyles = function (name) {
+        let styleList, i, l, value;
 
         styleList = validStyles[name];
         if (styleList) {
@@ -335,8 +340,8 @@ export default function (settings?, schema?) {
         }
       };
 
-      var isValid = function (name, elementName) {
-        var styleMap;
+      const isValid = function (name, elementName) {
+        let styleMap;
 
         styleMap = invalidStyles['*'];
         if (styleMap && styleMap[name]) {
@@ -370,4 +375,4 @@ export default function (settings?, schema?) {
       return css;
     }
   };
-};
+}

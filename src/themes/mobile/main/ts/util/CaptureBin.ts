@@ -4,14 +4,14 @@ import { Remove } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';
 
-var input = function (parent, operation) {
+const input = function (parent, operation) {
   // to capture focus allowing the keyboard to remain open with no 'real' selection
-  var input = Element.fromTag('input');
+  const input = Element.fromTag('input');
   Css.setAll(input, {
-    'opacity': '0',
-    'position': 'absolute',
-    'top': '-1000px',
-    'left': '-1000px'
+    opacity: '0',
+    position: 'absolute',
+    top: '-1000px',
+    left: '-1000px'
   });
   Insert.append(parent, input);
 
@@ -20,6 +20,6 @@ var input = function (parent, operation) {
   Remove.remove(input);
 };
 
-export default <any> {
-  input: input
+export default {
+  input
 };

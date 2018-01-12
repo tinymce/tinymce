@@ -8,11 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import VisualBlocks from '../core/VisualBlocks';
-
-var toggleActiveState = function (editor, enabledState) {
+const toggleActiveState = function (editor, enabledState) {
   return function (e) {
-    var ctrl = e.control;
+    const ctrl = e.control;
 
     ctrl.active(enabledState.get());
 
@@ -22,7 +20,7 @@ var toggleActiveState = function (editor, enabledState) {
   };
 };
 
-var register = function (editor, enabledState) {
+const register = function (editor, enabledState) {
   editor.addButton('visualblocks', {
     active: false,
     title: 'Show blocks',
@@ -41,5 +39,5 @@ var register = function (editor, enabledState) {
 };
 
 export default {
-  register: register
+  register
 };

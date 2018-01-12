@@ -1,33 +1,33 @@
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 
 export default function () {
-  var domElm = DOMUtils.DOM.create('div', {
+  const domElm = DOMUtils.DOM.create('div', {
     style: 'position: absolute; right: 10px; top: 10px;'
   });
 
-  var attach = function (preventDuplicates?) {
+  const attach = function (preventDuplicates?) {
     if (preventDuplicates && domElm.parentNode === document.body) {
       detach();
     }
     document.body.appendChild(domElm);
   };
 
-  var detach = function () {
+  const detach = function () {
     DOMUtils.DOM.remove(domElm);
   };
 
-  var update = function (html) {
+  const update = function (html) {
     DOMUtils.DOM.setHTML(domElm, html);
   };
 
-  var get = function () {
+  const get = function () {
     return domElm;
   };
 
   return {
-    attach: attach,
-    update: update,
-    detach: detach,
-    get: get
+    attach,
+    update,
+    detach,
+    get
   };
-};
+}

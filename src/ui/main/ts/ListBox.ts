@@ -19,9 +19,7 @@ import Menu from './Menu';
  * @extends tinymce.ui.MenuButton
  */
 
-"use strict";
-
-export default <any> MenuButton.extend({
+export default MenuButton.extend({
   /**
    * Constructs a instance with the specified settings.
    *
@@ -29,12 +27,13 @@ export default <any> MenuButton.extend({
    * @param {Object} settings Name/value object with settings.
    * @setting {Array} values Array with values to add to list box.
    */
-  init: function (settings) {
-    var self = this, values, selected, selectedText, lastItemCtrl;
+  init (settings) {
+    const self = this;
+    let values, selected, selectedText, lastItemCtrl;
 
     function setSelected(menuValues) {
       // Try to find a selected value
-      for (var i = 0; i < menuValues.length; i++) {
+      for (let i = 0; i < menuValues.length; i++) {
         selected = menuValues[i].selected || settings.value === menuValues[i].value;
 
         if (selected) {
@@ -57,7 +56,7 @@ export default <any> MenuButton.extend({
 
     self._values = values = settings.values;
     if (values) {
-      if (typeof settings.value != "undefined") {
+      if (typeof settings.value !== 'undefined') {
         setSelected(values);
       }
 
@@ -75,7 +74,7 @@ export default <any> MenuButton.extend({
     self.classes.add('listbox');
 
     self.on('select', function (e) {
-      var ctrl = e.control;
+      const ctrl = e.control;
 
       if (lastItemCtrl) {
         e.lastControl = lastItemCtrl;
@@ -98,8 +97,8 @@ export default <any> MenuButton.extend({
    * @param {String} [value] Value to be set.
    * @return {Boolean/tinymce.ui.ListBox} Value or self if it's a set operation.
    */
-  bindStates: function () {
-    var self = this;
+  bindStates () {
+    const self = this;
 
     function activateMenuItemsByValue(menu, value) {
       if (menu instanceof Menu) {
@@ -112,13 +111,13 @@ export default <any> MenuButton.extend({
     }
 
     function getSelectedItem(menuValues, value) {
-      var selectedItem;
+      let selectedItem;
 
       if (!menuValues) {
         return;
       }
 
-      for (var i = 0; i < menuValues.length; i++) {
+      for (let i = 0; i < menuValues.length; i++) {
         if (menuValues[i].value === value) {
           return menuValues[i];
         }
@@ -137,7 +136,7 @@ export default <any> MenuButton.extend({
     });
 
     self.state.on('change:value', function (e) {
-      var selectedItem = getSelectedItem(self.state.get('menu'), e.value);
+      const selectedItem = getSelectedItem(self.state.get('menu'), e.value);
 
       if (selectedItem) {
         self.text(selectedItem.text);

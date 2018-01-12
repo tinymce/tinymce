@@ -9,26 +9,26 @@ import UploadStatus from 'tinymce/core/file/UploadStatus';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   if (!Env.fileApi) {
     return;
   }
 
-  var base64Src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==';
-  var blobUriSrc;
-  var invalidBlobUriSrc = "blob:70BE8432-BA4D-4787-9AB9-86563351FBF7";
+  const base64Src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==';
+  let blobUriSrc;
+  const invalidBlobUriSrc = 'blob:70BE8432-BA4D-4787-9AB9-86563351FBF7';
 
   Conversions.uriToBlob(base64Src).then(function (blob) {
     blobUriSrc = URL.createObjectURL(blob);
   });
 
-  suite.asyncTest("findAll", function (_, done) {
-    var imageScanner = ImageScanner(UploadStatus(), BlobCache());
+  suite.asyncTest('findAll', function (_, done) {
+    const imageScanner = ImageScanner(UploadStatus(), BlobCache());
 
     viewBlock.update(
       '<img src="' + base64Src + '">' +
@@ -41,18 +41,18 @@ UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function() {
 
     imageScanner.findAll(viewBlock.get()).then(function (result) {
       done();
-      var blobInfo = result[0].blobInfo;
+      const blobInfo = result[0].blobInfo;
       LegacyUnit.equal(result.length, 3);
-      LegacyUnit.equal(typeof result[result.length - 1], 'string', "Last item is not the image, but error message.");
+      LegacyUnit.equal(typeof result[result.length - 1], 'string', 'Last item is not the image, but error message.');
       LegacyUnit.equal('data:image/gif;base64,' + blobInfo.base64(), base64Src);
       LegacyUnit.equalDom(result[0].image, viewBlock.get().firstChild);
     });
   });
 
-  suite.asyncTest("findAll (filtered)", function (_, done) {
-    var imageScanner = ImageScanner(UploadStatus(), BlobCache());
+  suite.asyncTest('findAll (filtered)', function (_, done) {
+    const imageScanner = ImageScanner(UploadStatus(), BlobCache());
 
-    var predicate = function (img) {
+    const predicate = function (img) {
       return !img.hasAttribute('data-skip');
     };
 
@@ -79,4 +79,3 @@ UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function() {
     }, failure);
   });
 });
-

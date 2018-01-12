@@ -3,7 +3,7 @@ import { Focus } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import CursorRefresh from '../../touch/focus/CursorRefresh';
 
-var resume = function (cWin, frame) {
+const resume = function (cWin, frame) {
   Focus.active().each(function (active) {
     // INVESTIGATE: This predicate may not be required. The purpose of it is to ensure
     // that the content window's frame element is not unnecessarily blurred before giving
@@ -19,6 +19,6 @@ var resume = function (cWin, frame) {
   CursorRefresh.refresh(cWin);
 };
 
-export default <any> {
-  resume: resume
+export default {
+  resume
 };

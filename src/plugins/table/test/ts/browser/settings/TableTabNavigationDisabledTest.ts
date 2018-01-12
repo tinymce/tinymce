@@ -12,18 +12,18 @@ import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.table.TableTablNavigationDisabledTest',
-  function() {
-    var success = arguments[arguments.length - 2];
-    var failure = arguments[arguments.length - 1];
+  function () {
+    const success = arguments[arguments.length - 2];
+    const failure = arguments[arguments.length - 1];
 
     ModernTheme();
     TablePlugin();
 
-    var tableHtml = '<table><tbody><tr><td>a</td></tr><tr><td>a</td></tr></tbody></table>';
+    const tableHtml = '<table><tbody><tr><td>a</td></tr><tr><td>a</td></tr></tbody></table>';
 
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
-      var tinyApis = TinyApis(editor);
-      var tinyActions = TinyActions(editor);
+      const tinyApis = TinyApis(editor);
+      const tinyActions = TinyActions(editor);
 
       Pipeline.async({}, [
         Logger.t('test table grid disabled', GeneralSteps.sequence([
@@ -41,4 +41,3 @@ UnitTest.asynctest(
     }, success, failure);
   }
 );
-

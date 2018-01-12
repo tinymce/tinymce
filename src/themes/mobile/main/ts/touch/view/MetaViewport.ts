@@ -7,24 +7,24 @@ import { SelectorFind } from '@ephox/sugar';
  * The purpose of this fix is to toggle the presence of a meta tag which disables scrolling
  * for the user
  */
-var tag = function () {
-  var head = SelectorFind.first('head').getOrDie();
+const tag = function () {
+  const head = SelectorFind.first('head').getOrDie();
 
-  var nu = function () {
-    var meta = Element.fromTag('meta');
+  const nu = function () {
+    const meta = Element.fromTag('meta');
     Attr.set(meta, 'name', 'viewport');
     Insert.append(head, meta);
     return meta;
   };
 
-  var element = SelectorFind.first('meta[name="viewport"]').getOrThunk(nu);
-  var backup = Attr.get(element, 'content');
+  const element = SelectorFind.first('meta[name="viewport"]').getOrThunk(nu);
+  const backup = Attr.get(element, 'content');
 
-  var maximize = function () {
+  const maximize = function () {
     Attr.set(element, 'content', 'width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0');
   };
 
-  var restore = function () {
+  const restore = function () {
     if (backup !== undefined && backup !== null && backup.length > 0) {
       Attr.set(element, 'content', backup);
     } else {
@@ -41,11 +41,11 @@ var tag = function () {
   };
 
   return {
-    maximize: maximize,
-    restore: restore
+    maximize,
+    restore
   };
 };
 
-export default <any> {
-  tag: tag
+export default {
+  tag
 };

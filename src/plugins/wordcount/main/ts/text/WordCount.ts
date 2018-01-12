@@ -10,14 +10,14 @@
 
 import WordGetter from './WordGetter';
 
-var getTextContent = function (editor) {
+const getTextContent = function (editor) {
   return editor.removed ? '' : editor.getBody().innerText;
 };
 
-var getCount = function (editor) {
+const getCount = function (editor) {
   return WordGetter.getWords(getTextContent(editor)).length;
 };
 
 export default {
-  getCount: getCount
+  getCount
 };

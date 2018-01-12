@@ -8,20 +8,20 @@ import TextcolorPlugin from 'tinymce/plugins/textcolor/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   TextcolorPlugin();
-  var forecolorStruct = ApproxStructure.build(function (s, str) {
+  const forecolorStruct = ApproxStructure.build(function (s, str) {
     return s.element('body', {
       children: [
         s.element('p', {
           children: [
             s.element('span', {
               styles: {
-                color: str.is(Env.ie && Env.ie <= 11 ? '#0000ff' : 'rgb(0, 0, 255)'),
+                'color': str.is(Env.ie && Env.ie <= 11 ? '#0000ff' : 'rgb(0, 0, 255)'),
                 'font-size': str.is('24pt')
               }
             }),
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', f
     });
   });
 
-  var backcolorStruct = ApproxStructure.build(function (s, str) {
+  const backcolorStruct = ApproxStructure.build(function (s, str) {
     return s.element('body', {
       children: [
         s.element('p', {
@@ -51,9 +51,8 @@ UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', f
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
-    var tinyUi = TinyUi(editor);
-
+    const tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
       // forecolor test
@@ -83,4 +82,3 @@ UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', f
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

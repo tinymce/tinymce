@@ -11,7 +11,7 @@
 import Settings from './Settings';
 import Actions from '../core/Actions';
 
-var register = function (editor) {
+const register = function (editor) {
   editor.addCommand('mceInsertDate', function () {
     Actions.insertDateTime(editor, Settings.getDateFormat(editor));
   });
@@ -22,5 +22,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

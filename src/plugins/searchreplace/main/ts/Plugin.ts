@@ -15,7 +15,7 @@ import Commands from './api/Commands';
 import Buttons from './ui/Buttons';
 
 PluginManager.add('searchreplace', function (editor) {
-  var currentIndexState = Cell(-1);
+  const currentIndexState = Cell(-1);
 
   Commands.register(editor, currentIndexState);
   Buttons.register(editor, currentIndexState);
@@ -23,4 +23,4 @@ PluginManager.add('searchreplace', function (editor) {
   return Api.get(editor, currentIndexState);
 });
 
-export default function () { };
+export default function () { }

@@ -10,7 +10,6 @@
 
 import { Arr } from '@ephox/katamari';
 import EditorManager from 'tinymce/core/EditorManager';
-import PluginManager from 'tinymce/core/PluginManager';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import AutoLinkPlugin from 'tinymce/plugins/autolink/Plugin';
@@ -55,7 +54,7 @@ import VisualCharsPlugin from 'tinymce/plugins/visualchars/Plugin';
 import WordCountPlugin from 'tinymce/plugins/wordcount/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 
-export default <any> function () {
+export default function () {
   AdvListPlugin();
   AnchorPlugin();
   AutoLinkPlugin();
@@ -100,11 +99,11 @@ export default <any> function () {
   WordCountPlugin();
   ModernTheme();
 
-  var cmd = function (command, value?) {
-    return { command: command, value: value };
+  const cmd = function (command, value?) {
+    return { command, value };
   };
 
-  var commands = [
+  const commands = [
     cmd('Bold'),
     cmd('Italic'),
     cmd('Underline'),
@@ -186,7 +185,7 @@ export default <any> function () {
   ];
 
   Arr.each(commands, function (cmd) {
-    var btn = document.createElement('button');
+    const btn = document.createElement('button');
     btn.innerHTML = cmd.command;
     btn.onclick = function () {
       EditorManager.activeEditor.execCommand(cmd.command, false, cmd.value);
@@ -196,14 +195,14 @@ export default <any> function () {
 
   EditorManager.init({
     skin_url: '../../../../js/tinymce/skins/lightgray',
-    selector: "textarea.tinymce",
+    selector: 'textarea.tinymce',
     plugins: [
-      "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc",
-      "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-      "save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern codesample"
+      'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
+      'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+      'save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern codesample'
     ],
-    theme: "modern",
+    theme: 'modern',
     toolbar1: 'bold italic',
     menubar: false
   });
-};
+}

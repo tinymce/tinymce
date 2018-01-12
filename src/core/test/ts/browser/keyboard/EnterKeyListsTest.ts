@@ -1,20 +1,19 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import HtmlUtils from '../../module/test/HtmlUtils';
 import Tools from 'tinymce/core/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var pressEnter = function (editor, evt?) {
-    var dom = editor.dom, target = editor.selection.getNode();
+  const pressEnter = function (editor, evt?) {
+    const dom = editor.dom, target = editor.selection.getNode();
 
     evt = Tools.extend({ keyCode: 13, shiftKey: false }, evt);
 
@@ -23,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function()
     dom.fire(target, 'keyup', evt);
   };
 
-  var trimBrsOnIE = function (html) {
+  const trimBrsOnIE = function (html) {
     return html.replace(/<br[^>]*>/gi, '');
   };
 
@@ -411,7 +410,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function()
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-
   suite.test('Shift+Enter at beginning of P inside LI', function (editor) {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 0);
@@ -438,7 +436,6 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function()
     );
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
-
 
   suite.test('Ctrl+Enter at beginning of P inside LI', function (editor) {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
@@ -485,4 +482,3 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function()
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

@@ -36,13 +36,13 @@ import Tools from '../util/Tools';
  * alert(tinymce.activeEditor.selection.getNode().nodeName);
  */
 
-var each = Tools.each, trim = Tools.trim;
+const each = Tools.each, trim = Tools.trim;
 
-var isAttachedToDom = function (node) {
+const isAttachedToDom = function (node) {
   return !!(node && node.ownerDocument) && Compare.contains(Element.fromDom(node.ownerDocument), Element.fromDom(node));
 };
 
-var isValidRange = function (rng) {
+const isValidRange = function (rng) {
   if (!rng) {
     return false;
   } else if (rng.select) { // Native IE range still produced by placeCaretAt
@@ -62,8 +62,8 @@ var isValidRange = function (rng) {
  * @param {tinymce.Editor} editor Editor instance of the selection.
  * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
  */
-var Selection = function (dom, win, serializer, editor) {
-  var self = this;
+const Selection = function (dom, win, serializer, editor) {
+  const self = this;
 
   self.dom = dom;
   self.win = win;
@@ -82,8 +82,8 @@ Selection.prototype = {
    * @param {Node} node Optional node to put the cursor in.
    * @param {Number} offset Optional offset from the start of the node to put the cursor at.
    */
-  setCursorLocation: function (node, offset) {
-    var self = this, rng = self.dom.createRng();
+  setCursorLocation (node, offset) {
+    const self = this, rng = self.dom.createRng();
 
     if (!node) {
       self._moveEndPoint(rng, self.editor.getBody(), true);
@@ -109,7 +109,7 @@ Selection.prototype = {
    * // Alerts the currently selected contents as plain text
    * alert(tinymce.activeEditor.selection.getContent({format: 'text'}));
    */
-  getContent: function (args) {
+  getContent (args) {
     return GetSelectionContent.getContent(this.editor, args);
   },
 
@@ -125,7 +125,7 @@ Selection.prototype = {
    * // Inserts some HTML contents at the current selection
    * tinymce.activeEditor.selection.setContent('<strong>Some contents</strong>');
    */
-  setContent: function (content, args) {
+  setContent (content, args) {
     SetSelectionContent.setContent(this.editor, content, args);
   },
 
@@ -137,18 +137,20 @@ Selection.prototype = {
    * @param {Boolean} real Optional state to get the real parent when the selection is collapsed not the closest element.
    * @return {Element} Start element of selection range.
    */
-  getStart: function (real) {
-    var self = this, rng = self.getRng(), startElement;
+  getStart (real) {
+    const self = this;
+    const rng = self.getRng();
+    let startElement;
 
     startElement = rng.startContainer;
 
-    if (startElement.nodeType == 1 && startElement.hasChildNodes()) {
+    if (startElement.nodeType === 1 && startElement.hasChildNodes()) {
       if (!real || !rng.collapsed) {
         startElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];
       }
     }
 
-    if (startElement && startElement.nodeType == 3) {
+    if (startElement && startElement.nodeType === 3) {
       return startElement.parentNode;
     }
 
@@ -163,19 +165,21 @@ Selection.prototype = {
    * @param {Boolean} real Optional state to get the real parent when the selection is collapsed not the closest element.
    * @return {Element} End element of selection range.
    */
-  getEnd: function (real) {
-    var self = this, rng = self.getRng(), endElement, endOffset;
+  getEnd (real) {
+    const self = this;
+    const rng = self.getRng();
+    let endElement, endOffset;
 
     endElement = rng.endContainer;
     endOffset = rng.endOffset;
 
-    if (endElement.nodeType == 1 && endElement.hasChildNodes()) {
+    if (endElement.nodeType === 1 && endElement.hasChildNodes()) {
       if (!real || !rng.collapsed) {
         endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
       }
     }
 
-    if (endElement && endElement.nodeType == 3) {
+    if (endElement && endElement.nodeType === 3) {
       return endElement.parentNode;
     }
 
@@ -199,7 +203,7 @@ Selection.prototype = {
    * // Restore the selection bookmark
    * tinymce.activeEditor.selection.moveToBookmark(bm);
    */
-  getBookmark: function (type, normalized) {
+  getBookmark (type, normalized) {
     return this.bookmarkManager.getBookmark(type, normalized);
   },
 
@@ -218,7 +222,7 @@ Selection.prototype = {
    * // Restore the selection bookmark
    * tinymce.activeEditor.selection.moveToBookmark(bm);
    */
-  moveToBookmark: function (bookmark) {
+  moveToBookmark (bookmark) {
     return this.bookmarkManager.moveToBookmark(bookmark);
   },
 
@@ -233,8 +237,11 @@ Selection.prototype = {
    * // Select the first paragraph in the active editor
    * tinymce.activeEditor.selection.select(tinymce.activeEditor.dom.select('p')[0]);
    */
-  select: function (node, content) {
-    var self = this, dom = self.dom, rng = dom.createRng(), idx;
+  select (node, content) {
+    const self = this;
+    const dom = self.dom;
+    const rng = dom.createRng();
+    let idx;
 
     if (node) {
       idx = dom.nodeIndex(node);
@@ -260,8 +267,8 @@ Selection.prototype = {
    * @return {Boolean} true/false state if the selection range is collapsed or not.
    * Collapsed means if it's a caret or a larger selection.
    */
-  isCollapsed: function () {
-    var self = this, rng = self.getRng(), sel = self.getSel();
+  isCollapsed () {
+    const self = this, rng = self.getRng(), sel = self.getSel();
 
     if (!rng || rng.item) {
       return false;
@@ -280,8 +287,8 @@ Selection.prototype = {
    * @method collapse
    * @param {Boolean} toStart Optional boolean state if to collapse to end or not. Defaults to false.
    */
-  collapse: function (toStart) {
-    var self = this, rng = self.getRng();
+  collapse (toStart) {
+    const self = this, rng = self.getRng();
 
     rng.collapse(!!toStart);
     self.setRng(rng);
@@ -293,8 +300,8 @@ Selection.prototype = {
    * @method getSel
    * @return {Selection} Internal browser selection object.
    */
-  getSel: function () {
-    var win = this.win;
+  getSel () {
+    const win = this.win;
 
     return win.getSelection ? win.getSelection() : win.document.selection;
   },
@@ -308,10 +315,11 @@ Selection.prototype = {
    * @see http://www.quirksmode.org/dom/range_intro.html
    * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
    */
-  getRng: function (w3c) {
-    var self = this, selection, rng, elm, doc;
+  getRng (w3c) {
+    const self = this;
+    let selection, rng, elm, doc;
 
-    var tryCompareBoundaryPoints = function (how, sourceRange, destinationRange) {
+    const tryCompareBoundaryPoints = function (how, sourceRange, destinationRange) {
       try {
         return sourceRange.compareBoundaryPoints(how, destinationRange);
       } catch (ex) {
@@ -335,7 +343,7 @@ Selection.prototype = {
     }
 
     if (self.editor.bookmark !== undefined && EditorFocus.hasFocus(self.editor) === false) {
-      var bookmark = SelectionBookmark.getRng(self.editor);
+      const bookmark = SelectionBookmark.getRng(self.editor);
 
       if (bookmark.isSome()) {
         return bookmark.getOr(doc.createRange());
@@ -392,8 +400,9 @@ Selection.prototype = {
    * @param {Range} rng Range to select.
    * @param {Boolean} forward Optional boolean if the selection is forwards or backwards.
    */
-  setRng: function (rng, forward) {
-    var self = this, sel, node, evt;
+  setRng (rng, forward) {
+    const self = this;
+    let sel, node, evt;
 
     if (!isValidRange(rng)) {
       return;
@@ -414,7 +423,7 @@ Selection.prototype = {
 
     sel = self.getSel();
 
-    evt = self.editor.fire('SetSelectionRange', { range: rng, forward: forward });
+    evt = self.editor.fire('SetSelectionRange', { range: rng, forward });
     rng = evt.range;
 
     if (sel) {
@@ -462,7 +471,7 @@ Selection.prototype = {
       }
     }
 
-    self.editor.fire('AfterSetSelectionRange', { range: rng, forward: forward });
+    self.editor.fire('AfterSetSelectionRange', { range: rng, forward });
   },
 
   /**
@@ -475,8 +484,8 @@ Selection.prototype = {
    * // Inserts a DOM node at current selection/caret location
    * tinymce.activeEditor.selection.setNode(tinymce.activeEditor.dom.create('img', {src: 'some.gif', title: 'some title'}));
    */
-  setNode: function (elm) {
-    var self = this;
+  setNode (elm) {
+    const self = this;
 
     self.setContent(self.dom.getOuterHTML(elm));
 
@@ -492,12 +501,15 @@ Selection.prototype = {
    * // Alerts the currently selected elements node name
    * alert(tinymce.activeEditor.selection.getNode().nodeName);
    */
-  getNode: function () {
-    var self = this, rng = self.getRng(), elm;
-    var startContainer, endContainer, startOffset, endOffset, root = self.dom.getRoot();
+  getNode () {
+    const self = this;
+    const rng = self.getRng();
+    let elm;
+    let startContainer, endContainer, startOffset, endOffset;
+    const root = self.dom.getRoot();
 
-    var skipEmptyTextNodes = function (node, forwards) {
-      var orig = node;
+    const skipEmptyTextNodes = function (node, forwards) {
+      const orig = node;
 
       while (node && node.nodeType === 3 && node.length === 0) {
         node = forwards ? node.nextSibling : node.previousSibling;
@@ -519,7 +531,7 @@ Selection.prototype = {
 
     // Handle selection a image or other control like element such as anchors
     if (!rng.collapsed) {
-      if (startContainer == endContainer) {
+      if (startContainer === endContainer) {
         if (endOffset - startOffset < 2) {
           if (startContainer.hasChildNodes()) {
             elm = startContainer.childNodes[startOffset];
@@ -528,7 +540,7 @@ Selection.prototype = {
       }
 
       // If the anchor node is a element instead of a text node then return this element
-      //if (tinymce.isWebKit && sel.anchorNode && sel.anchorNode.nodeType == 1)
+      // if (tinymce.isWebKit && sel.anchorNode && sel.anchorNode.nodeType == 1)
       // return sel.anchorNode.childNodes[sel.anchorOffset];
 
       // Handle cases where the selection is immediately wrapped around a node and return that node instead of it's parent.
@@ -552,44 +564,50 @@ Selection.prototype = {
       }
     }
 
-    if (elm && elm.nodeType == 3) {
+    if (elm && elm.nodeType === 3) {
       return elm.parentNode;
     }
 
     return elm;
   },
 
-  getSelectedBlocks: function (startElm, endElm) {
-    var self = this, dom = self.dom, node, root, selectedBlocks = [];
+  getSelectedBlocks (startElm, endElm) {
+    const self = this;
+    const dom = self.dom;
+    let node, root;
+    const selectedBlocks = [];
 
     root = dom.getRoot();
     startElm = dom.getParent(startElm || self.getStart(), dom.isBlock);
     endElm = dom.getParent(endElm || self.getEnd(), dom.isBlock);
 
-    if (startElm && startElm != root) {
+    if (startElm && startElm !== root) {
       selectedBlocks.push(startElm);
     }
 
-    if (startElm && endElm && startElm != endElm) {
+    if (startElm && endElm && startElm !== endElm) {
       node = startElm;
 
-      var walker = new TreeWalker(startElm, root);
-      while ((node = walker.next()) && node != endElm) {
+      const walker = new TreeWalker(startElm, root);
+      while ((node = walker.next()) && node !== endElm) {
         if (dom.isBlock(node)) {
           selectedBlocks.push(node);
         }
       }
     }
 
-    if (endElm && startElm != endElm && endElm != root) {
+    if (endElm && startElm !== endElm && endElm !== root) {
       selectedBlocks.push(endElm);
     }
 
     return selectedBlocks;
   },
 
-  isForward: function () {
-    var dom = this.dom, sel = this.getSel(), anchorRange, focusRange;
+  isForward () {
+    const dom = this.dom;
+    const sel = this.getSel();
+    let anchorRange,
+      focusRange;
 
     // No support for selection direction then always return true
     if (!sel || !sel.anchorNode || !sel.focusNode) {
@@ -607,11 +625,11 @@ Selection.prototype = {
     return anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;
   },
 
-  normalize: function () {
-    var self = this, rng = self.getRng();
+  normalize () {
+    const self = this, rng = self.getRng();
 
     if (!MultiRange.hasMultipleRanges(self.getSel())) {
-      var normRng = NormalizeRange.normalize(self.dom, rng);
+      const normRng = NormalizeRange.normalize(self.dom, rng);
 
       normRng.each(function (normRng) {
         self.setRng(normRng, self.isForward());
@@ -631,15 +649,16 @@ Selection.prototype = {
    * @param {String} selector CSS selector to check for.
    * @param {function} callback Callback with state and args when the selector is matches or not.
    */
-  selectorChanged: function (selector, callback) {
-    var self = this, currentSelectors;
+  selectorChanged (selector, callback) {
+    const self = this;
+    let currentSelectors;
 
     if (!self.selectorChangedData) {
       self.selectorChangedData = {};
       currentSelectors = {};
 
       self.editor.on('NodeChange', function (e) {
-        var node = e.element, dom = self.dom, parents = dom.getParents(node, null, dom.getRoot()), matchedSelectors = {};
+        const node = e.element, dom = self.dom, parents = dom.getParents(node, null, dom.getRoot()), matchedSelectors = {};
 
         // Check for new matching selectors
         each(self.selectorChangedData, function (callbacks, selector) {
@@ -648,7 +667,7 @@ Selection.prototype = {
               if (!currentSelectors[selector]) {
                 // Execute callbacks
                 each(callbacks, function (callback) {
-                  callback(true, { node: node, selector: selector, parents: parents });
+                  callback(true, { node, selector, parents });
                 });
 
                 currentSelectors[selector] = callbacks;
@@ -666,7 +685,7 @@ Selection.prototype = {
             delete currentSelectors[selector];
 
             each(callbacks, function (callback) {
-              callback(false, { node: node, selector: selector, parents: parents });
+              callback(false, { node, selector, parents });
             });
           }
         });
@@ -683,10 +702,10 @@ Selection.prototype = {
     return self;
   },
 
-  getScrollContainer: function () {
-    var scrollContainer, node = this.dom.getRoot();
+  getScrollContainer () {
+    let scrollContainer, node = this.dom.getRoot();
 
-    while (node && node.nodeName != 'BODY') {
+    while (node && node.nodeName !== 'BODY') {
       if (node.scrollHeight > node.clientHeight) {
         scrollContainer = node;
         break;
@@ -698,21 +717,21 @@ Selection.prototype = {
     return scrollContainer;
   },
 
-  scrollIntoView: function (elm, alignToTop) {
+  scrollIntoView (elm, alignToTop) {
     ScrollIntoView.scrollIntoView(this.editor, elm, alignToTop);
   },
 
-  placeCaretAt: function (clientX, clientY) {
+  placeCaretAt (clientX, clientY) {
     this.setRng(CaretRangeFromPoint.fromPoint(clientX, clientY, this.editor.getDoc()));
   },
 
-  _moveEndPoint: function (rng, node, start) {
-    var root = node, walker = new TreeWalker(node, root);
-    var nonEmptyElementsMap = this.dom.schema.getNonEmptyElements();
+  _moveEndPoint (rng, node, start) {
+    const root = node, walker = new TreeWalker(node, root);
+    const nonEmptyElementsMap = this.dom.schema.getNonEmptyElements();
 
     do {
       // Text node
-      if (node.nodeType == 3 && trim(node.nodeValue).length !== 0) {
+      if (node.nodeType === 3 && trim(node.nodeValue).length !== 0) {
         if (start) {
           rng.setStart(node, 0);
         } else {
@@ -727,7 +746,7 @@ Selection.prototype = {
         if (start) {
           rng.setStartBefore(node);
         } else {
-          if (node.nodeName == 'BR') {
+          if (node.nodeName === 'BR') {
             rng.setEndBefore(node);
           } else {
             rng.setEndAfter(node);
@@ -750,7 +769,7 @@ Selection.prototype = {
     } while ((node = (start ? walker.next() : walker.prev())));
 
     // Failed to find any text node or other suitable location then move to the root of body
-    if (root.nodeName == 'BODY') {
+    if (root.nodeName === 'BODY') {
       if (start) {
         rng.setStart(root, 0);
       } else {
@@ -759,12 +778,12 @@ Selection.prototype = {
     }
   },
 
-  getBoundingClientRect: function () {
-    var rng = this.getRng();
+  getBoundingClientRect () {
+    const rng = this.getRng();
     return rng.collapsed ? CaretPosition.fromRangeStart(rng).getClientRects()[0] : rng.getBoundingClientRect();
   },
 
-  destroy: function () {
+  destroy () {
     this.win = null;
     this.controlSelection.destroy();
   }

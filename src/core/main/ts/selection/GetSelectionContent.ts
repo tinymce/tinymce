@@ -14,10 +14,11 @@ import FragmentReader from './FragmentReader';
 import MultiRange from './MultiRange';
 import Zwsp from '../text/Zwsp';
 
-var getContent = function (editor, args) {
-  var rng = editor.selection.getRng(), tmpElm = editor.dom.create("body");
-  var sel = editor.selection.getSel(), fragment;
-  var ranges = EventProcessRanges.processRanges(editor, MultiRange.getRanges(sel));
+const getContent = function (editor, args) {
+  const rng = editor.selection.getRng(), tmpElm = editor.dom.create('body');
+  const sel = editor.selection.getSel();
+  let fragment;
+  const ranges = EventProcessRanges.processRanges(editor, MultiRange.getRanges(sel));
 
   args = args || {};
   args.get = true;
@@ -51,7 +52,7 @@ var getContent = function (editor, args) {
 
   args.getInner = true;
 
-  var content = editor.selection.serializer.serialize(tmpElm, args);
+  const content = editor.selection.serializer.serialize(tmpElm, args);
   if (args.format === 'tree') {
     return content;
   }
@@ -63,5 +64,5 @@ var getContent = function (editor, args) {
 };
 
 export default {
-  getContent: getContent
+  getContent
 };

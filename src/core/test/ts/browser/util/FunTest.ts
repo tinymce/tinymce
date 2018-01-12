@@ -3,26 +3,26 @@ import { Pipeline } from '@ephox/agar';
 import Fun from 'tinymce/core/util/Fun';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.util.FunTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.util.FunTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
-  var isTrue = function (value) {
+  const isTrue = function (value) {
     return value === true;
   };
 
-  var isFalse = function (value) {
+  const isFalse = function (value) {
     return value === true;
   };
 
-  var isAbove = function (target, value) {
+  const isAbove = function (target, value) {
     return value() > target();
   };
 
   suite.test('constant', function () {
     LegacyUnit.strictEqual(Fun.constant(1)(), 1);
-    LegacyUnit.strictEqual(Fun.constant("1")(), "1");
+    LegacyUnit.strictEqual(Fun.constant('1')(), '1');
     LegacyUnit.strictEqual(Fun.constant(null)(), null);
   });
 
@@ -32,16 +32,16 @@ UnitTest.asynctest('browser.tinymce.core.util.FunTest', function() {
   });
 
   suite.test('and', function () {
-    var isAbove5 = Fun.curry(isAbove, Fun.constant(5));
-    var isAbove10 = Fun.curry(isAbove, Fun.constant(10));
+    const isAbove5 = Fun.curry(isAbove, Fun.constant(5));
+    const isAbove10 = Fun.curry(isAbove, Fun.constant(10));
 
     LegacyUnit.strictEqual(Fun.and(isAbove10, isAbove5)(Fun.constant(10)), false);
     LegacyUnit.strictEqual(Fun.and(isAbove10, isAbove5)(Fun.constant(30)), true);
   });
 
   suite.test('or', function () {
-    var isAbove5 = Fun.curry(isAbove, Fun.constant(5));
-    var isAbove10 = Fun.curry(isAbove, Fun.constant(10));
+    const isAbove5 = Fun.curry(isAbove, Fun.constant(5));
+    const isAbove10 = Fun.curry(isAbove, Fun.constant(10));
 
     LegacyUnit.strictEqual(Fun.or(isAbove10, isAbove5)(Fun.constant(5)), false);
     LegacyUnit.strictEqual(Fun.or(isAbove10, isAbove5)(Fun.constant(15)), true);
@@ -56,4 +56,3 @@ UnitTest.asynctest('browser.tinymce.core.util.FunTest', function() {
     success();
   }, failure);
 });
-

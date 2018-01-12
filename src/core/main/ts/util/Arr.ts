@@ -15,12 +15,12 @@
  * @class tinymce.util.Arr
  */
 
-var isArray = Array.isArray || function (obj) {
-  return Object.prototype.toString.call(obj) === "[object Array]";
+const isArray = Array.isArray || function (obj) {
+  return Object.prototype.toString.call(obj) === '[object Array]';
 };
 
-var toArray = function (obj) {
-  var array = obj, i, l;
+const toArray = function (obj) {
+  let array = obj, i, l;
 
   if (!isArray(obj)) {
     array = [];
@@ -32,8 +32,8 @@ var toArray = function (obj) {
   return array;
 };
 
-var each = function (o, cb, s?) {
-  var n, l;
+const each = function (o, cb, s?) {
+  let n, l;
 
   if (!o) {
     return 0;
@@ -62,8 +62,8 @@ var each = function (o, cb, s?) {
   return 1;
 };
 
-var map = function (array, callback) {
-  var out = [];
+const map = function (array, callback) {
+  const out = [];
 
   each(array, function (item, index) {
     out.push(callback(item, index, array));
@@ -72,8 +72,8 @@ var map = function (array, callback) {
   return out;
 };
 
-var filter = function (a, f?) {
-  var o = [];
+const filter = function (a, f?) {
+  const o = [];
 
   each(a, function (v, index) {
     if (!f || f(v, index, a)) {
@@ -84,8 +84,8 @@ var filter = function (a, f?) {
   return o;
 };
 
-var indexOf = function (a, v) {
-  var i, l;
+const indexOf = function (a, v) {
+  let i, l;
 
   if (a) {
     for (i = 0, l = a.length; i < l; i++) {
@@ -98,8 +98,8 @@ var indexOf = function (a, v) {
   return -1;
 };
 
-var reduce = function (collection, iteratee, accumulator?, thisArg?) {
-  var i = 0;
+const reduce = function (collection, iteratee, accumulator?, thisArg?) {
+  let i = 0;
 
   if (arguments.length < 3) {
     accumulator = collection[0];
@@ -112,8 +112,8 @@ var reduce = function (collection, iteratee, accumulator?, thisArg?) {
   return accumulator;
 };
 
-var findIndex = function (array, predicate, thisArg?) {
-  var i, l;
+const findIndex = function (array, predicate, thisArg?) {
+  let i, l;
 
   for (i = 0, l = array.length; i < l; i++) {
     if (predicate.call(thisArg, array[i], i, array)) {
@@ -124,8 +124,8 @@ var findIndex = function (array, predicate, thisArg?) {
   return -1;
 };
 
-var find = function (array, predicate, thisArg?) {
-  var idx = findIndex(array, predicate, thisArg);
+const find = function (array, predicate, thisArg?) {
+  const idx = findIndex(array, predicate, thisArg);
 
   if (idx !== -1) {
     return array[idx];
@@ -134,19 +134,19 @@ var find = function (array, predicate, thisArg?) {
   return undefined;
 };
 
-var last = function (collection) {
+const last = function (collection) {
   return collection[collection.length - 1];
 };
 
 export default {
-  isArray: isArray,
-  toArray: toArray,
-  each: each,
-  map: map,
-  filter: filter,
-  indexOf: indexOf,
-  reduce: reduce,
-  findIndex: findIndex,
-  find: find,
-  last: last
+  isArray,
+  toArray,
+  each,
+  map,
+  filter,
+  indexOf,
+  reduce,
+  findIndex,
+  find,
+  last
 };

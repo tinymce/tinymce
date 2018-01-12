@@ -10,21 +10,21 @@
 
 import Tools from 'tinymce/core/util/Tools';
 
-var styleValueToText = function (styleValue) {
+const styleValueToText = function (styleValue) {
   return styleValue.replace(/\-/g, ' ').replace(/\b\w/g, function (chr) {
     return chr.toUpperCase();
   });
 };
 
-var toMenuItems = function (styles) {
+const toMenuItems = function (styles) {
   return Tools.map(styles, function (styleValue) {
-    var text = styleValueToText(styleValue);
-    var data = styleValue === 'default' ? '' : styleValue;
+    const text = styleValueToText(styleValue);
+    const data = styleValue === 'default' ? '' : styleValue;
 
-    return { text: text, data: data };
+    return { text, data };
   });
 };
 
 export default {
-  toMenuItems: toMenuItems
+  toMenuItems
 };

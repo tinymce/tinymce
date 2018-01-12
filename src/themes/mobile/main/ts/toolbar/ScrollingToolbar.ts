@@ -16,11 +16,9 @@ import Styles from '../style/Styles';
 import Scrollable from '../touch/scroll/Scrollable';
 import UiDomFactory from '../util/UiDomFactory';
 
-
-
-export default <any> function () {
-  var makeGroup = function (gSpec) {
-    var scrollClass = gSpec.scrollable === true ? '${prefix}-toolbar-scrollable-group' : '';
+export default function () {
+  const makeGroup = function (gSpec) {
+    const scrollClass = gSpec.scrollable === true ? '${prefix}-toolbar-scrollable-group' : '';
     return {
       dom: UiDomFactory.dom('<div aria-label="' + gSpec.label + '" class="${prefix}-toolbar-group ' + scrollClass + '"></div>'),
 
@@ -49,7 +47,7 @@ export default <any> function () {
     };
   };
 
-  var toolbar = GuiFactory.build(
+  const toolbar = GuiFactory.build(
     Toolbar.sketch(
       {
         dom: UiDomFactory.dom('<div class="${prefix}-toolbar"></div>'),
@@ -73,7 +71,7 @@ export default <any> function () {
     )
   );
 
-  var wrapper = GuiFactory.build(
+  const wrapper = GuiFactory.build(
     Container.sketch({
       dom: {
         classes: [ Styles.resolve('toolstrip') ]
@@ -90,49 +88,49 @@ export default <any> function () {
     })
   );
 
-  var resetGroups = function () {
+  const resetGroups = function () {
     Toolbar.setGroups(toolbar, initGroups.get());
     Toggling.off(toolbar);
   };
 
-  var initGroups = Cell([ ]);
+  const initGroups = Cell([ ]);
 
-  var setGroups = function (gs) {
+  const setGroups = function (gs) {
     initGroups.set(gs);
     resetGroups();
   };
 
-  var createGroups = function (gs) {
+  const createGroups = function (gs) {
     return Arr.map(gs, Fun.compose(ToolbarGroup.sketch, makeGroup));
   };
 
-  var refresh = function () {
+  const refresh = function () {
     Toolbar.refresh(toolbar);
   };
 
-  var setContextToolbar = function (gs) {
+  const setContextToolbar = function (gs) {
     Toggling.on(toolbar);
     Toolbar.setGroups(toolbar, gs);
   };
 
-  var restoreToolbar = function () {
+  const restoreToolbar = function () {
     if (Toggling.isOn(toolbar)) {
       resetGroups();
     }
   };
 
-  var focus = function () {
+  const focus = function () {
     Keying.focusIn(toolbar);
   };
 
   return {
     wrapper: Fun.constant(wrapper),
     toolbar: Fun.constant(toolbar),
-    createGroups: createGroups,
-    setGroups: setGroups,
-    setContextToolbar: setContextToolbar,
-    restoreToolbar: restoreToolbar,
-    refresh: refresh,
-    focus: focus
+    createGroups,
+    setGroups,
+    setContextToolbar,
+    restoreToolbar,
+    refresh,
+    focus
   };
-};
+}

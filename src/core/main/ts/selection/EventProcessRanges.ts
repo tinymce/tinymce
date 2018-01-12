@@ -10,13 +10,13 @@
 
 import { Arr } from '@ephox/katamari';
 
-var processRanges = function (editor, ranges) {
+const processRanges = function (editor, ranges) {
   return Arr.map(ranges, function (range) {
-    var evt = editor.fire('GetSelectionRange', { range: range });
+    const evt = editor.fire('GetSelectionRange', { range });
     return evt.range !== range ? evt.range : range;
   });
 };
 
 export default {
-  processRanges: processRanges
+  processRanges
 };

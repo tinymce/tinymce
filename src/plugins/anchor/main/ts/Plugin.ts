@@ -19,4 +19,4 @@ PluginManager.add('anchor', function (editor) {
   Buttons.register(editor);
 });
 
-export default function () { };
+export default function () { }

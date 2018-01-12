@@ -19,10 +19,10 @@ import SuggestionsMenu from './ui/SuggestionsMenu';
 
 PluginManager.add('spellchecker', function (editor, pluginUrl) {
   if (DetectProPlugin.hasProPlugin(editor) === false) {
-    var startedState = Cell(false);
-    var currentLanguageState = Cell(Settings.getLanguage(editor));
-    var textMatcherState = Cell(null);
-    var lastSuggestionsState = Cell({});
+    const startedState = Cell(false);
+    const currentLanguageState = Cell(Settings.getLanguage(editor));
+    const textMatcherState = Cell(null);
+    const lastSuggestionsState = Cell({});
 
     Buttons.register(editor, pluginUrl, startedState, textMatcherState, currentLanguageState, lastSuggestionsState);
     SuggestionsMenu.setup(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState);
@@ -32,4 +32,4 @@ PluginManager.add('spellchecker', function (editor, pluginUrl) {
   }
 });
 
-export default function () { };
+export default function () { }

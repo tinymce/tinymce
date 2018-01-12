@@ -15,61 +15,59 @@
  * @class tinymce.file.UploadStatus
  */
 
-
-
 export default function () {
-  var PENDING = 1, UPLOADED = 2;
-  var blobUriStatuses = {};
+  const PENDING = 1, UPLOADED = 2;
+  let blobUriStatuses = {};
 
-  var createStatus = function (status, resultUri) {
+  const createStatus = function (status, resultUri) {
     return {
-      status: status,
-      resultUri: resultUri
+      status,
+      resultUri
     };
   };
 
-  var hasBlobUri = function (blobUri) {
+  const hasBlobUri = function (blobUri) {
     return blobUri in blobUriStatuses;
   };
 
-  var getResultUri = function (blobUri) {
-    var result = blobUriStatuses[blobUri];
+  const getResultUri = function (blobUri) {
+    const result = blobUriStatuses[blobUri];
 
     return result ? result.resultUri : null;
   };
 
-  var isPending = function (blobUri) {
+  const isPending = function (blobUri) {
     return hasBlobUri(blobUri) ? blobUriStatuses[blobUri].status === PENDING : false;
   };
 
-  var isUploaded = function (blobUri) {
+  const isUploaded = function (blobUri) {
     return hasBlobUri(blobUri) ? blobUriStatuses[blobUri].status === UPLOADED : false;
   };
 
-  var markPending = function (blobUri) {
+  const markPending = function (blobUri) {
     blobUriStatuses[blobUri] = createStatus(PENDING, null);
   };
 
-  var markUploaded = function (blobUri, resultUri) {
+  const markUploaded = function (blobUri, resultUri) {
     blobUriStatuses[blobUri] = createStatus(UPLOADED, resultUri);
   };
 
-  var removeFailed = function (blobUri) {
+  const removeFailed = function (blobUri) {
     delete blobUriStatuses[blobUri];
   };
 
-  var destroy = function () {
+  const destroy = function () {
     blobUriStatuses = {};
   };
 
   return {
-    hasBlobUri: hasBlobUri,
-    getResultUri: getResultUri,
-    isPending: isPending,
-    isUploaded: isUploaded,
-    markPending: markPending,
-    markUploaded: markUploaded,
-    removeFailed: removeFailed,
-    destroy: destroy
+    hasBlobUri,
+    getResultUri,
+    isPending,
+    isUploaded,
+    markPending,
+    markUploaded,
+    removeFailed,
+    destroy
   };
-};
+}

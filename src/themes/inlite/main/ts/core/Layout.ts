@@ -11,21 +11,21 @@
 import Rect from 'tinymce/core/geom/Rect';
 import Convert from './Convert';
 
-var result = function (rect, position) {
+const result = function (rect, position) {
   return {
-    rect: rect,
-    position: position
+    rect,
+    position
   };
 };
 
-var moveTo = function (rect, toRect) {
+const moveTo = function (rect, toRect) {
   return { x: toRect.x, y: toRect.y, w: rect.w, h: rect.h };
 };
 
-var calcByPositions = function (testPositions1, testPositions2, targetRect, contentAreaRect, panelRect) {
-  var relPos, relRect, outputPanelRect;
+const calcByPositions = function (testPositions1, testPositions2, targetRect, contentAreaRect, panelRect) {
+  let relPos, relRect, outputPanelRect;
 
-  var paddedContentRect = {
+  const paddedContentRect = {
     x: contentAreaRect.x,
     y: contentAreaRect.y,
     w: contentAreaRect.w + (contentAreaRect.w < (panelRect.w + targetRect.w) ? panelRect.w : 0),
@@ -58,7 +58,7 @@ var calcByPositions = function (testPositions1, testPositions2, targetRect, cont
   return null;
 };
 
-var calcInsert = function (targetRect, contentAreaRect, panelRect) {
+const calcInsert = function (targetRect, contentAreaRect, panelRect) {
   return calcByPositions(
     ['cr-cl', 'cl-cr'],
     ['bc-tc', 'bl-tl', 'br-tr'],
@@ -68,7 +68,7 @@ var calcInsert = function (targetRect, contentAreaRect, panelRect) {
   );
 };
 
-var calc = function (targetRect, contentAreaRect, panelRect) {
+const calc = function (targetRect, contentAreaRect, panelRect) {
   return calcByPositions(
     ['tc-bc', 'bc-tc', 'tl-bl', 'bl-tl', 'tr-br', 'br-tr', 'cr-cl', 'cl-cr'],
     ['bc-tc', 'bl-tl', 'br-tr', 'cr-cl'],
@@ -78,8 +78,8 @@ var calc = function (targetRect, contentAreaRect, panelRect) {
   );
 };
 
-var userConstrain = function (handler, targetRect, contentAreaRect, panelRect) {
-  var userConstrainedPanelRect;
+const userConstrain = function (handler, targetRect, contentAreaRect, panelRect) {
+  let userConstrainedPanelRect;
 
   if (typeof handler === 'function') {
     userConstrainedPanelRect = handler({
@@ -94,13 +94,13 @@ var userConstrain = function (handler, targetRect, contentAreaRect, panelRect) {
   return panelRect;
 };
 
-var defaultHandler = function (rects) {
+const defaultHandler = function (rects) {
   return rects.panelRect;
 };
 
-export default <any> {
-  calcInsert: calcInsert,
-  calc: calc,
-  userConstrain: userConstrain,
-  defaultHandler: defaultHandler
+export default {
+  calcInsert,
+  calc,
+  userConstrain,
+  defaultHandler
 };

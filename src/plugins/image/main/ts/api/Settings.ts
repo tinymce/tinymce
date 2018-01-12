@@ -8,75 +8,75 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var hasDimensions = function (editor) {
+const hasDimensions = function (editor) {
   return editor.settings.image_dimensions === false ? false : true;
 };
 
-var hasAdvTab = function (editor) {
+const hasAdvTab = function (editor) {
   return editor.settings.image_advtab === true ? true : false;
 };
 
-var getPrependUrl = function (editor) {
+const getPrependUrl = function (editor) {
   return editor.getParam('image_prepend_url', '');
 };
 
-var getClassList = function (editor) {
+const getClassList = function (editor) {
   return editor.getParam('image_class_list');
 };
 
-var hasDescription = function (editor) {
+const hasDescription = function (editor) {
   return editor.settings.image_description === false ? false : true;
 };
 
-var hasImageTitle = function (editor) {
+const hasImageTitle = function (editor) {
   return editor.settings.image_title === true ? true : false;
 };
 
-var hasImageCaption = function (editor) {
+const hasImageCaption = function (editor) {
   return editor.settings.image_caption === true ? true : false;
 };
 
-var getImageList = function (editor) {
+const getImageList = function (editor) {
   return editor.getParam('image_list', false);
 };
 
-var hasUploadUrl = function (editor) {
+const hasUploadUrl = function (editor) {
   return editor.getParam('images_upload_url', false);
 };
 
-var hasUploadHandler = function (editor) {
+const hasUploadHandler = function (editor) {
   return editor.getParam('images_upload_handler', false);
 };
 
-var getUploadUrl = function (editor) {
+const getUploadUrl = function (editor) {
   return editor.getParam('images_upload_url');
 };
 
-var getUploadHandler = function (editor) {
+const getUploadHandler = function (editor) {
   return editor.getParam('images_upload_handler');
 };
 
-var getUploadBasePath = function (editor) {
+const getUploadBasePath = function (editor) {
   return editor.getParam('images_upload_base_path');
 };
 
-var getUploadCredentials = function (editor) {
+const getUploadCredentials = function (editor) {
   return editor.getParam('images_upload_credentials');
 };
 
 export default {
-  hasDimensions: hasDimensions,
-  hasAdvTab: hasAdvTab,
-  getPrependUrl: getPrependUrl,
-  getClassList: getClassList,
-  hasDescription: hasDescription,
-  hasImageTitle: hasImageTitle,
-  hasImageCaption: hasImageCaption,
-  getImageList: getImageList,
-  hasUploadUrl: hasUploadUrl,
-  hasUploadHandler: hasUploadHandler,
-  getUploadUrl: getUploadUrl,
-  getUploadHandler: getUploadHandler,
-  getUploadBasePath: getUploadBasePath,
-  getUploadCredentials: getUploadCredentials
+  hasDimensions,
+  hasAdvTab,
+  getPrependUrl,
+  getClassList,
+  hasDescription,
+  hasImageTitle,
+  hasImageCaption,
+  getImageList,
+  hasUploadUrl,
+  hasUploadHandler,
+  getUploadUrl,
+  getUploadHandler,
+  getUploadBasePath,
+  getUploadCredentials
 };

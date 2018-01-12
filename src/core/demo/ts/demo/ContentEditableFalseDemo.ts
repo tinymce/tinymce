@@ -15,15 +15,15 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 declare const window: any;
 
-export default <any> function () {
+export default function () {
   ModernTheme();
   PastePlugin();
 
-  var paintClientRect = function (rect, color, id) {
-    var editor = EditorManager.activeEditor,
-      $ = editor.$,
-      rectDiv,
-      viewPort = editor.dom.getViewPort();
+  const paintClientRect = function (rect, color, id) {
+    const editor = EditorManager.activeEditor;
+    const $ = editor.$;
+    let rectDiv;
+    const viewPort = editor.dom.getViewPort();
 
     if (!rect) {
       return;
@@ -48,17 +48,17 @@ export default <any> function () {
     });
   };
 
-  var paintClientRects = function (rects, color) {
+  const paintClientRects = function (rects, color) {
     Tools.each(rects, function (rect, index) {
       paintClientRect(rect, color, color + index);
     });
   };
 
-  var logPos = function (caretPosition) {
-    var container = caretPosition.container(),
+  const logPos = function (caretPosition) {
+    const container = caretPosition.container(),
       offset = caretPosition.offset();
 
-    if (container.nodeType == 3) {
+    if (container.nodeType === 3) {
       if (container.data[offset]) {
         console.log(container.data[offset]);
       } else {
@@ -74,26 +74,26 @@ export default <any> function () {
   window.logPos = logPos;
 
   EditorManager.init({
-    selector: "textarea.tinymce",
+    selector: 'textarea.tinymce',
     skin_url: '../../../../js/tinymce/skins/lightgray',
     add_unload_trigger: false,
-    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify" +
-    " | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample",
+    toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
+    ' | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample',
     plugins: ['paste'],
     content_css: '../css/content_editable.css',
     height: 400
   });
 
   EditorManager.init({
-    selector: "div.tinymce",
+    selector: 'div.tinymce',
     inline: true,
     skin_url: '../../../../js/tinymce/skins/lightgray',
     add_unload_trigger: false,
-    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify" +
-    " | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample",
+    toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
+    ' | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample',
     plugins: ['paste'],
     content_css: '../css/content_editable.css'
   });
 
   window.tinymce = EditorManager;
-};
+}

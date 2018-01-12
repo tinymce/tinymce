@@ -10,35 +10,34 @@
 
 import Tools from 'tinymce/core/util/Tools';
 import SaxParser from 'tinymce/core/html/SaxParser';
-import Schema from 'tinymce/core/html/Schema';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import VideoScript from './VideoScript';
 import Size from './Size';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var getEphoxEmbedIri = function (elm) {
+const getEphoxEmbedIri = function (elm) {
   return DOM.getAttrib(elm, 'data-ephox-embed-iri');
 };
 
-var isEphoxEmbed = function (html) {
-  var fragment = DOM.createFragment(html);
+const isEphoxEmbed = function (html) {
+  const fragment = DOM.createFragment(html);
   return getEphoxEmbedIri(fragment.firstChild) !== '';
 };
 
-var htmlToDataSax = function (prefixes, html) {
-  var data: any = {};
+const htmlToDataSax = function (prefixes, html) {
+  let data: any = {};
 
   new SaxParser({
     validate: false,
     allow_conditional_comments: true,
     special: 'script,noscript',
-    start: function (name, attrs) {
-      if (!data.source1 && name === "param") {
+    start (name, attrs) {
+      if (!data.source1 && name === 'param') {
         data.source1 = attrs.map.movie;
       }
 
-      if (name === "iframe" || name === "object" || name === "embed" || name === "video" || name === "audio") {
+      if (name === 'iframe' || name === 'object' || name === 'embed' || name === 'video' || name === 'audio') {
         if (!data.type) {
           data.type = name;
         }
@@ -46,21 +45,21 @@ var htmlToDataSax = function (prefixes, html) {
         data = Tools.extend(attrs.map, data);
       }
 
-      if (name === "script") {
-        var videoScript = VideoScript.getVideoScriptMatch(prefixes, attrs.map.src);
+      if (name === 'script') {
+        const videoScript = VideoScript.getVideoScriptMatch(prefixes, attrs.map.src);
         if (!videoScript) {
           return;
         }
 
         data = {
-          type: "script",
+          type: 'script',
           source1: attrs.map.src,
           width: videoScript.width,
           height: videoScript.height
         };
       }
 
-      if (name === "source") {
+      if (name === 'source') {
         if (!data.source1) {
           data.source1 = attrs.map.src;
         } else if (!data.source2) {
@@ -68,7 +67,7 @@ var htmlToDataSax = function (prefixes, html) {
         }
       }
 
-      if (name === "img" && !data.poster) {
+      if (name === 'img' && !data.poster) {
         data.poster = attrs.map.src;
       }
     }
@@ -81,9 +80,9 @@ var htmlToDataSax = function (prefixes, html) {
   return data;
 };
 
-var ephoxEmbedHtmlToData = function (html) {
-  var fragment = DOM.createFragment(html);
-  var div = fragment.firstChild;
+const ephoxEmbedHtmlToData = function (html) {
+  const fragment = DOM.createFragment(html);
+  const div = fragment.firstChild;
 
   return {
     type: 'ephox-embed-iri',
@@ -95,10 +94,10 @@ var ephoxEmbedHtmlToData = function (html) {
   };
 };
 
-var htmlToData = function (prefixes, html) {
+const htmlToData = function (prefixes, html) {
   return isEphoxEmbed(html) ? ephoxEmbedHtmlToData(html) : htmlToDataSax(prefixes, html);
 };
 
 export default {
-  htmlToData: htmlToData
+  htmlToData
 };

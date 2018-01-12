@@ -16,16 +16,18 @@ import Selection from '../core/Selection';
 import SplitList from '../core/SplitList';
 import TextBlock from '../core/TextBlock';
 
-var DOM = DOMUtils.DOM;
+const DOM = DOMUtils.DOM;
 
-var removeEmptyLi = function (dom, li) {
+const removeEmptyLi = function (dom, li) {
   if (NodeType.isEmpty(dom, li)) {
     DOM.remove(li);
   }
 };
 
-var outdent = function (editor, li) {
-  var ul = li.parentNode, ulParent = ul.parentNode, newBlock;
+const outdent = function (editor, li) {
+  let ul = li.parentNode;
+  const ulParent = ul.parentNode;
+  let newBlock;
 
   if (ul === editor.getBody()) {
     return true;
@@ -37,7 +39,7 @@ var outdent = function (editor, li) {
   }
 
   if (NodeType.isFirstChild(li) && NodeType.isLastChild(li)) {
-    if (ulParent.nodeName === "LI") {
+    if (ulParent.nodeName === 'LI') {
       DOM.insertAfter(li, ulParent);
       removeEmptyLi(editor.dom, ulParent);
       DOM.remove(ul);
@@ -50,7 +52,7 @@ var outdent = function (editor, li) {
 
     return true;
   } else if (NodeType.isFirstChild(li)) {
-    if (ulParent.nodeName === "LI") {
+    if (ulParent.nodeName === 'LI') {
       DOM.insertAfter(li, ulParent);
       li.appendChild(ul);
       removeEmptyLi(editor.dom, ulParent);
@@ -63,7 +65,7 @@ var outdent = function (editor, li) {
 
     return true;
   } else if (NodeType.isLastChild(li)) {
-    if (ulParent.nodeName === "LI") {
+    if (ulParent.nodeName === 'LI') {
       DOM.insertAfter(li, ulParent);
     } else if (NodeType.isListNode(ulParent)) {
       DOM.insertAfter(li, ul);
@@ -90,17 +92,17 @@ var outdent = function (editor, li) {
   return true;
 };
 
-var outdentSelection = function (editor) {
-  var listElements = Selection.getSelectedListItems(editor);
+const outdentSelection = function (editor) {
+  const listElements = Selection.getSelectedListItems(editor);
 
   if (listElements.length) {
-    var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
-    var i, y;
-    var root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
+    const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
+    let i, y;
+    const root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
 
     i = listElements.length;
     while (i--) {
-      var node = listElements[i].parentNode;
+      let node = listElements[i].parentNode;
 
       while (node && node !== root) {
         y = listElements.length;
@@ -129,6 +131,6 @@ var outdentSelection = function (editor) {
 };
 
 export default {
-  outdent: outdent,
-  outdentSelection: outdentSelection
+  outdent,
+  outdentSelection
 };

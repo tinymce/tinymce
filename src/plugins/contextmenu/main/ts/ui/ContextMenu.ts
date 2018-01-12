@@ -12,12 +12,13 @@ import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
 import Settings from '../api/Settings';
 
-var renderMenu = function (editor, visibleState) {
-  var menu, contextmenu, items = [];
+const renderMenu = function (editor, visibleState) {
+  let menu, contextmenu;
+  const items = [];
 
   contextmenu = Settings.getContextMenu(editor);
   Tools.each(contextmenu.split(/[ ,]/), function (name) {
-    var item = editor.menuItems[name];
+    let item = editor.menuItems[name];
 
     if (name === '|') {
       item = { text: name };
@@ -29,7 +30,7 @@ var renderMenu = function (editor, visibleState) {
     }
   });
 
-  for (var i = 0; i < items.length; i++) {
+  for (let i = 0; i < items.length; i++) {
     if (items[i].text === '|') {
       if (i === 0 || i === items.length - 1) {
         items.splice(i, 1);
@@ -38,7 +39,7 @@ var renderMenu = function (editor, visibleState) {
   }
 
   menu = Factory.create('menu', {
-    items: items,
+    items,
     context: 'contextmenu',
     classes: 'contextmenu'
   }).renderTo();
@@ -57,7 +58,7 @@ var renderMenu = function (editor, visibleState) {
   return menu;
 };
 
-var show = function (editor, pos, visibleState, menu) {
+const show = function (editor, pos, visibleState, menu) {
   if (menu.get() === null) {
     menu.set(renderMenu(editor, visibleState));
   } else {
@@ -69,5 +70,5 @@ var show = function (editor, pos, visibleState, menu) {
 };
 
 export default {
-  show: show
+  show
 };

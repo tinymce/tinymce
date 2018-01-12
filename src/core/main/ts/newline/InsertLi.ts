@@ -11,24 +11,24 @@
 import NodeType from '../dom/NodeType';
 import NewLineUtils from './NewLineUtils';
 
-var hasFirstChild = function (elm, name) {
+const hasFirstChild = function (elm, name) {
   return elm.firstChild && elm.firstChild.nodeName === name;
 };
 
-var hasParent = function (elm, parentName) {
+const hasParent = function (elm, parentName) {
   return elm && elm.parentNode && elm.parentNode.nodeName === parentName;
 };
 
-var isListBlock = function (elm) {
+const isListBlock = function (elm) {
   return elm && /^(OL|UL|LI)$/.test(elm.nodeName);
 };
 
-var isNestedList = function (elm) {
+const isNestedList = function (elm) {
   return isListBlock(elm) && isListBlock(elm.parentNode);
 };
 
-var getContainerBlock = function (containerBlock) {
-  var containerBlockParent = containerBlock.parentNode;
+const getContainerBlock = function (containerBlock) {
+  const containerBlockParent = containerBlock.parentNode;
 
   if (/^(LI|DT|DD)$/.test(containerBlockParent.nodeName)) {
     return containerBlockParent;
@@ -37,8 +37,8 @@ var getContainerBlock = function (containerBlock) {
   return containerBlock;
 };
 
-var isFirstOrLastLi = function (containerBlock, parentBlock, first) {
-  var node = containerBlock[first ? 'firstChild' : 'lastChild'];
+const isFirstOrLastLi = function (containerBlock, parentBlock, first) {
+  let node = containerBlock[first ? 'firstChild' : 'lastChild'];
 
   // Find first/last element since there might be whitespace there
   while (node) {
@@ -53,9 +53,9 @@ var isFirstOrLastLi = function (containerBlock, parentBlock, first) {
 };
 
 // Inserts a block or br before/after or in the middle of a split list of the LI is empty
-var insert = function (editor, createNewBlock, containerBlock, parentBlock, newBlockName) {
-  var dom = editor.dom;
-  var rng = editor.selection.getRng();
+const insert = function (editor, createNewBlock, containerBlock, parentBlock, newBlockName) {
+  const dom = editor.dom;
+  const rng = editor.selection.getRng();
 
   if (containerBlock === editor.getBody()) {
     return;
@@ -65,7 +65,7 @@ var insert = function (editor, createNewBlock, containerBlock, parentBlock, newB
     newBlockName = 'LI';
   }
 
-  var newBlock = newBlockName ? createNewBlock(newBlockName) : dom.create('BR');
+  let newBlock = newBlockName ? createNewBlock(newBlockName) : dom.create('BR');
 
   if (isFirstOrLastLi(containerBlock, parentBlock, true) && isFirstOrLastLi(containerBlock, parentBlock, false)) {
     if (hasParent(containerBlock, 'LI')) {
@@ -92,10 +92,10 @@ var insert = function (editor, createNewBlock, containerBlock, parentBlock, newB
     // Middle LI in list the split the list and insert a text block in the middle
     // Extract after fragment and insert it after the current block
     containerBlock = getContainerBlock(containerBlock);
-    var tmpRng = rng.cloneRange();
+    const tmpRng = rng.cloneRange();
     tmpRng.setStartAfter(parentBlock);
     tmpRng.setEndAfter(containerBlock);
-    var fragment = tmpRng.extractContents();
+    const fragment = tmpRng.extractContents();
 
     if (newBlockName === 'LI' && hasFirstChild(fragment, 'LI')) {
       newBlock = fragment.firstChild;
@@ -111,5 +111,5 @@ var insert = function (editor, createNewBlock, containerBlock, parentBlock, newB
 };
 
 export default {
-  insert: insert
+  insert
 };

@@ -17,9 +17,7 @@ import Container from './Container';
  * @extends tinymce.ui.Container
  */
 
-"use strict";
-
-export default <any> Container.extend({
+export default Container.extend({
   Defaults: {
     role: 'toolbar',
     layout: 'flow'
@@ -31,8 +29,8 @@ export default <any> Container.extend({
    * @constructor
    * @param {Object} settings Name/value object with settings.
    */
-  init: function (settings) {
-    var self = this;
+  init (settings) {
+    const self = this;
 
     self._super(settings);
     self.classes.add('toolbar');
@@ -43,8 +41,8 @@ export default <any> Container.extend({
    *
    * @method postRender
    */
-  postRender: function () {
-    var self = this;
+  postRender () {
+    const self = this;
 
     self.items().each(function (ctrl) {
       ctrl.classes.add('toolbar-item');

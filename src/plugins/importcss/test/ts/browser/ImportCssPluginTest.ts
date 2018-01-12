@@ -8,33 +8,33 @@ import ImportCssPlugin from 'tinymce/plugins/importcss/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var menuCtrl;
+UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  let menuCtrl;
 
   ModernTheme();
   ImportCssPlugin();
 
-  var fireFormatsMenuEvent = function (editor, styleSheets, items?) {
+  const fireFormatsMenuEvent = function (editor, styleSheets, items?) {
     menuCtrl = Factory.create('menu', {
-      items: items
+      items
     }).renderTo(document.getElementById('view'));
 
     return editor.fire('renderFormatsMenu', {
       control: menuCtrl,
       doc: {
-        styleSheets: styleSheets
+        styleSheets
       }
     });
   };
 
-  var getMenuItemFormat = function (editor, item) {
+  const getMenuItemFormat = function (editor, item) {
     return editor.formatter.get(item.settings.format)[0];
   };
 
-  var sTeardown = function (editor) {
+  const sTeardown = function (editor) {
     return Step.sync(function () {
       if (menuCtrl) {
         menuCtrl.remove();
@@ -52,17 +52,17 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
     });
   };
 
-  var appendTeardown = function (editor, steps) {
+  const appendTeardown = function (editor, steps) {
     return Arr.bind(steps, function (step) {
       return [step, sTeardown(editor)];
     });
   };
 
-  suite.test("Import content_css files", function (editor) {
-    editor.contentCSS.push("test1.css");
-    editor.contentCSS.push("test2.css");
+  suite.test('Import content_css files', function (editor) {
+    editor.contentCSS.push('test1.css');
+    editor.contentCSS.push('test2.css');
 
-    var evt = fireFormatsMenuEvent(editor, [
+    const evt = fireFormatsMenuEvent(editor, [
       {
         href: 'test1.css',
         cssRules: [
@@ -92,23 +92,23 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
     LegacyUnit.equal(evt.control.items()[3].text(), 'd');
   });
 
-  suite.test("Import custom importcss_merge_classes: false", function (editor) {
-    editor.contentCSS.push("test.css");
+  suite.test('Import custom importcss_merge_classes: false', function (editor) {
+    editor.contentCSS.push('test.css');
     editor.settings.importcss_merge_classes = false;
 
-    var evt = fireFormatsMenuEvent(editor, [
+    const evt = fireFormatsMenuEvent(editor, [
       { href: 'test.css', cssRules: [{ selectorText: '.a' }] }
     ]);
 
     LegacyUnit.equal(evt.control.items().length, 1);
-    LegacyUnit.equal(getMenuItemFormat(editor, evt.control.items()[0]).attributes, { "class": "a" });
+    LegacyUnit.equal(getMenuItemFormat(editor, evt.control.items()[0]).attributes, { class: 'a' });
   });
 
-  suite.test("Import custom importcss_append: true", function (editor) {
-    editor.contentCSS.push("test.css");
+  suite.test('Import custom importcss_append: true', function (editor) {
+    editor.contentCSS.push('test.css');
     editor.settings.importcss_append = true;
 
-    var evt = fireFormatsMenuEvent(editor, [
+    const evt = fireFormatsMenuEvent(editor, [
       { href: 'test.css', cssRules: [{ selectorText: '.b' }] }
     ], { text: 'a' });
 
@@ -117,11 +117,11 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
     LegacyUnit.equal(evt.control.items()[1].text(), 'b');
   });
 
-  suite.test("Import custom importcss_selector_filter (string)", function (editor) {
-    editor.contentCSS.push("test1.css");
-    editor.settings.importcss_selector_filter = ".a";
+  suite.test('Import custom importcss_selector_filter (string)', function (editor) {
+    editor.contentCSS.push('test1.css');
+    editor.settings.importcss_selector_filter = '.a';
 
-    var evt = fireFormatsMenuEvent(editor, [
+    const evt = fireFormatsMenuEvent(editor, [
       {
         href: 'test1.css', cssRules: [
           { selectorText: '.a' },
@@ -134,13 +134,13 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
     LegacyUnit.equal(evt.control.items()[0].text(), 'a');
   });
 
-  suite.test("Import custom importcss_selector_filter (function)", function (editor) {
-    editor.contentCSS.push("test1.css");
+  suite.test('Import custom importcss_selector_filter (function)', function (editor) {
+    editor.contentCSS.push('test1.css');
     editor.settings.importcss_selector_filter = function (selector) {
-      return selector === ".a";
+      return selector === '.a';
     };
 
-    var evt = fireFormatsMenuEvent(editor, [
+    const evt = fireFormatsMenuEvent(editor, [
       {
         href: 'test1.css', cssRules: [
           { selectorText: '.a' },
@@ -153,11 +153,11 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
     LegacyUnit.equal(evt.control.items()[0].text(), 'a');
   });
 
-  suite.test("Import custom importcss_selector_filter (regexp)", function (editor) {
-    editor.contentCSS.push("test1.css");
+  suite.test('Import custom importcss_selector_filter (regexp)', function (editor) {
+    editor.contentCSS.push('test1.css');
     editor.settings.importcss_selector_filter = /a/;
 
-    var evt = fireFormatsMenuEvent(editor, [
+    const evt = fireFormatsMenuEvent(editor, [
       {
         href: 'test1.css', cssRules: [
           { selectorText: '.a' },
@@ -170,15 +170,15 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
     LegacyUnit.equal(evt.control.items()[0].text(), 'a');
   });
 
-  suite.test("Import custom importcss_groups", function (editor) {
-    editor.contentCSS.push("test1.css");
+  suite.test('Import custom importcss_groups', function (editor) {
+    editor.contentCSS.push('test1.css');
     editor.settings.importcss_groups = [
       { title: 'g1', filter: /a/ },
       { title: 'g2', filter: /b/ },
       { title: 'g3' }
     ];
 
-    var evt = fireFormatsMenuEvent(editor, [
+    const evt = fireFormatsMenuEvent(editor, [
       {
         href: 'test1.css', cssRules: [
           { selectorText: '.a' },
@@ -197,11 +197,11 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
     LegacyUnit.equal(evt.control.items()[2].settings.menu[0].text, 'c');
   });
 
-  suite.test("Import custom importcss_file_filter (string)", function (editor) {
-    editor.contentCSS.push("test1.css");
-    editor.settings.importcss_file_filter = "test2.css";
+  suite.test('Import custom importcss_file_filter (string)', function (editor) {
+    editor.contentCSS.push('test1.css');
+    editor.settings.importcss_file_filter = 'test2.css';
 
-    var evt = fireFormatsMenuEvent(editor, [
+    const evt = fireFormatsMenuEvent(editor, [
       { href: 'test1.css', cssRules: [{ selectorText: '.a' }] },
       { href: 'test2.css', cssRules: [{ selectorText: '.b' }] }
     ]);
@@ -210,13 +210,13 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
     LegacyUnit.equal(evt.control.items()[0].text(), 'b');
   });
 
-  suite.test("Import custom importcss_file_filter (function)", function (editor) {
-    editor.contentCSS.push("test1.css");
+  suite.test('Import custom importcss_file_filter (function)', function (editor) {
+    editor.contentCSS.push('test1.css');
     editor.settings.importcss_file_filter = function (href) {
-      return href === "test2.css";
+      return href === 'test2.css';
     };
 
-    var evt = fireFormatsMenuEvent(editor, [
+    const evt = fireFormatsMenuEvent(editor, [
       { href: 'test1.css', cssRules: [{ selectorText: '.a' }] },
       { href: 'test2.css', cssRules: [{ selectorText: '.b' }] }
     ]);
@@ -225,11 +225,11 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
     LegacyUnit.equal(evt.control.items()[0].text(), 'b');
   });
 
-  suite.test("Import custom importcss_file_filter (regexp)", function (editor) {
-    editor.contentCSS.push("test1.css");
+  suite.test('Import custom importcss_file_filter (regexp)', function (editor) {
+    editor.contentCSS.push('test1.css');
     editor.settings.importcss_file_filter = /test2\.css/;
 
-    var evt = fireFormatsMenuEvent(editor, [
+    const evt = fireFormatsMenuEvent(editor, [
       { href: 'test1.css', cssRules: [{ selectorText: '.a' }] },
       { href: 'test2.css', cssRules: [{ selectorText: '.b' }] }
     ]);
@@ -238,14 +238,14 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
     LegacyUnit.equal(evt.control.items()[0].text(), 'b');
   });
 
-  suite.test("Import custom importcss_selector_converter", function (editor) {
+  suite.test('Import custom importcss_selector_converter', function (editor) {
     editor.settings.importcss_groups = [
       { title: 'g1', filter: /\.a/, custom: 'A' },
       { title: 'g2', filter: /\.b/, custom: 'B' },
       { title: 'g3', custom: 'C' }
     ];
 
-    editor.contentCSS.push("test1.css");
+    editor.contentCSS.push('test1.css');
     editor.settings.importcss_selector_converter = function (selector, group) {
       return {
         title: selector + group.custom,
@@ -253,7 +253,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
       };
     };
 
-    var evt = fireFormatsMenuEvent(editor, [
+    const evt = fireFormatsMenuEvent(editor, [
       {
         href: 'test1.css', cssRules: [
           { selectorText: '.a' },
@@ -263,7 +263,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
       }
     ]);
 
-    var items = evt.control.items();
+    const items = evt.control.items();
     LegacyUnit.equal(items.length, 3);
     LegacyUnit.equal(items[0].text(), 'g1');
     LegacyUnit.equal(items[0].settings.menu[0].text, '.aA');
@@ -273,19 +273,19 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
     LegacyUnit.equal(items[2].settings.menu[0].text, '.cC');
   });
 
-  suite.test("Import custom group selector_converter", function (editor) {
-    var constant = function (format) {
+  suite.test('Import custom group selector_converter', function (editor) {
+    const constant = function (format) {
       return function () {
         return format;
       };
     };
 
-    var formatA = {
+    const formatA = {
       title: 'my format a',
       selector: 'p'
     };
 
-    var formatB = {
+    const formatB = {
       title: 'my format b',
       selector: 'h1'
     };
@@ -296,9 +296,9 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
       { title: 'g3', custom: 'C' }
     ];
 
-    editor.contentCSS.push("test1.css");
+    editor.contentCSS.push('test1.css');
 
-    var evt = fireFormatsMenuEvent(editor, [
+    const evt = fireFormatsMenuEvent(editor, [
       {
         href: 'test1.css', cssRules: [
           { selectorText: '.a' },
@@ -308,7 +308,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
       }
     ]);
 
-    var items = evt.control.items();
+    const items = evt.control.items();
     LegacyUnit.equal(items.length, 3);
     LegacyUnit.equal(items[0].text(), 'g1');
     LegacyUnit.equal(items[0].settings.menu[0].text, 'my format a');
@@ -318,15 +318,15 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
     LegacyUnit.equal(items[2].settings.menu[0].text, 'c');
   });
 
-  suite.test("Import custom importcss_exclusive: true", function (editor) {
+  suite.test('Import custom importcss_exclusive: true', function (editor) {
     editor.settings.importcss_exclusive = true;
     editor.settings.importcss_groups = [
       { title: 'g1' },
       { title: 'g2' }
     ];
 
-    editor.contentCSS.push("test1.css");
-    var evt = fireFormatsMenuEvent(editor, [
+    editor.contentCSS.push('test1.css');
+    const evt = fireFormatsMenuEvent(editor, [
       {
         href: 'test1.css', cssRules: [
           { selectorText: '.a' },
@@ -336,22 +336,22 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
       }
     ]);
 
-    var items = evt.control.items();
+    const items = evt.control.items();
     LegacyUnit.equal(items.length, 1);
     LegacyUnit.equal(items[0].text(), 'g1');
     LegacyUnit.equal(items[0].settings.menu[0].text, 'a');
     LegacyUnit.equal(items[0].settings.menu[1].text, 'b');
   });
 
-  suite.test("Import custom importcss_exclusive: false", function (editor) {
+  suite.test('Import custom importcss_exclusive: false', function (editor) {
     editor.settings.importcss_exclusive = false;
     editor.settings.importcss_groups = [
       { title: 'g1' },
       { title: 'g2' }
     ];
 
-    editor.contentCSS.push("test1.css");
-    var evt = fireFormatsMenuEvent(editor, [
+    editor.contentCSS.push('test1.css');
+    const evt = fireFormatsMenuEvent(editor, [
       {
         href: 'test1.css', cssRules: [
           { selectorText: '.a' },
@@ -361,7 +361,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
       }
     ]);
 
-    var items = evt.control.items();
+    const items = evt.control.items();
     LegacyUnit.equal(items.length, 2);
     LegacyUnit.equal(items[0].text(), 'g1');
     LegacyUnit.equal(items[0].settings.menu[0].text, 'a');
@@ -379,4 +379,3 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', f
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

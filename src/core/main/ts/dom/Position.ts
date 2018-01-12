@@ -15,23 +15,23 @@ import { Node } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 
-var browser = PlatformDetection.detect().browser;
+const browser = PlatformDetection.detect().browser;
 
-var firstElement = function (nodes) {
+const firstElement = function (nodes) {
   return Arr.find(nodes, Node.isElement);
 };
 
 // Firefox has a bug where caption height is not included correctly in offset calculations of tables
 // this tries to compensate for that by detecting if that offsets are incorrect and then remove the height
-var getTableCaptionDeltaY = function (elm) {
+const getTableCaptionDeltaY = function (elm) {
   if (browser.isFirefox() && Node.name(elm) === 'table') {
     return firstElement(Traverse.children(elm)).filter(function (elm) {
       return Node.name(elm) === 'caption';
     }).bind(function (caption) {
       return firstElement(Traverse.nextSiblings(caption)).map(function (body) {
-        var bodyTop = body.dom().offsetTop;
-        var captionTop = caption.dom().offsetTop;
-        var captionHeight = caption.dom().offsetHeight;
+        const bodyTop = body.dom().offsetTop;
+        const captionTop = caption.dom().offsetTop;
+        const captionHeight = caption.dom().offsetHeight;
         return bodyTop <= captionTop ? -captionHeight : 0;
       });
     }).getOr(0);
@@ -40,8 +40,10 @@ var getTableCaptionDeltaY = function (elm) {
   }
 };
 
-var getPos = function (body, elm, rootElm) {
-  var x = 0, y = 0, offsetParent, doc = body.ownerDocument, pos;
+const getPos = function (body, elm, rootElm) {
+  let x = 0, y = 0, offsetParent;
+  const doc = body.ownerDocument;
+  let pos;
 
   rootElm = rootElm ? rootElm : body;
 
@@ -56,7 +58,7 @@ var getPos = function (body, elm, rootElm) {
       x = pos.left + (doc.documentElement.scrollLeft || body.scrollLeft) - doc.documentElement.clientLeft;
       y = pos.top + (doc.documentElement.scrollTop || body.scrollTop) - doc.documentElement.clientTop;
 
-      return { x: x, y: y };
+      return { x, y };
     }
 
     offsetParent = elm;
@@ -76,9 +78,9 @@ var getPos = function (body, elm, rootElm) {
     y += getTableCaptionDeltaY(Element.fromDom(elm));
   }
 
-  return { x: x, y: y };
+  return { x, y };
 };
 
 export default {
-  getPos: getPos
+  getPos
 };

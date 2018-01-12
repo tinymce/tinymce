@@ -8,37 +8,37 @@ import CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
+  const viewBlock = ViewBlock();
 
   if (!Env.ceFalse) {
     return;
   }
 
-  var getRoot = function () {
+  const getRoot = function () {
     return viewBlock.get();
   };
 
-  var setupHtml = function (html) {
+  const setupHtml = function (html) {
     viewBlock.update(html);
   };
 
-  var findElm = function (selector) {
+  const findElm = function (selector) {
     return DomQuery(selector, getRoot())[0];
   };
 
-  var findElmPos = function (selector, offset) {
+  const findElmPos = function (selector, offset) {
     return CaretPosition(DomQuery(selector, getRoot())[0], offset);
   };
 
-  var findTextPos = function (selector, offset) {
+  const findTextPos = function (selector, offset) {
     return CaretPosition(DomQuery(selector, getRoot())[0].firstChild, offset);
   };
 
-  var logicalCaret = CaretWalker(getRoot());
+  const logicalCaret = CaretWalker(getRoot());
 
   suite.test('inside empty root', function () {
     setupHtml('');
@@ -318,4 +318,3 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', function() {
     success();
   }, failure);
 });
-

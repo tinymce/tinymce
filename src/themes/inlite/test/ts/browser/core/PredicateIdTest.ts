@@ -1,17 +1,17 @@
 import PredicateId from 'tinymce/themes/inlite/core/PredicateId';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('browser.core.PredicateIdTest', function() {
-  var testFromContextToolbars = function () {
-    var isTrue = function () {
+UnitTest.test('browser.core.PredicateIdTest', function () {
+  const testFromContextToolbars = function () {
+    const isTrue = function () {
       return true;
     };
 
-    var isFalse = function () {
+    const isFalse = function () {
       return false;
     };
 
-    var predIds = PredicateId.fromContextToolbars([
+    const predIds = PredicateId.fromContextToolbars([
       { toolbar: 'a b c', predicate: isTrue, id: 'a' },
       { toolbar: 'd e', predicate: isFalse, id: 'b' }
     ]);
@@ -24,4 +24,3 @@ UnitTest.test('browser.core.PredicateIdTest', function() {
 
   testFromContextToolbars();
 });
-

@@ -15,21 +15,21 @@ import Sanitize from './Sanitize';
 
 declare let unescape: any;
 
-var setup = function (editor) {
+const setup = function (editor) {
   editor.on('preInit', function () {
     // Make sure that any messy HTML is retained inside these
-    var specialElements = editor.schema.getSpecialElements();
+    const specialElements = editor.schema.getSpecialElements();
     Tools.each('video audio iframe object'.split(' '), function (name) {
       specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
     });
 
     // Allow elements
-    //editor.schema.addValidElements(
+    // editor.schema.addValidElements(
     //  'object[id|style|width|height|classid|codebase|*],embed[id|style|width|height|type|src|*],video[*],audio[*]'
-    //);
+    // );
 
     // Set allowFullscreen attribs as boolean
-    var boolAttrs = editor.schema.getBoolAttrs();
+    const boolAttrs = editor.schema.getBoolAttrs();
     Tools.each('webkitallowfullscreen mozallowfullscreen allowfullscreen'.split(' '), function (name) {
       boolAttrs[name] = {};
     });
@@ -40,15 +40,15 @@ var setup = function (editor) {
 
     // Replaces placeholder images with real elements for video, object, iframe etc
     editor.serializer.addAttributeFilter('data-mce-object', function (nodes, name) {
-      var i = nodes.length;
-      var node;
-      var realElm;
-      var ai;
-      var attribs;
-      var innerHtml;
-      var innerNode;
-      var realElmName;
-      var className;
+      let i = nodes.length;
+      let node;
+      let realElm;
+      let ai;
+      let attribs;
+      let innerHtml;
+      let innerNode;
+      let realElmName;
+      let className;
 
       while (i--) {
         node = nodes[i];
@@ -60,7 +60,7 @@ var setup = function (editor) {
         realElm = new Node(realElmName, 1);
 
         // Add width/height to everything but audio
-        if (realElmName !== "audio" && realElmName !== "script") {
+        if (realElmName !== 'audio' && realElmName !== 'script') {
           className = node.attr('class');
           if (className && className.indexOf('mce-preview-object') !== -1) {
             realElm.attr({
@@ -83,14 +83,14 @@ var setup = function (editor) {
         attribs = node.attributes;
         ai = attribs.length;
         while (ai--) {
-          var attrName = attribs[ai].name;
+          const attrName = attribs[ai].name;
 
           if (attrName.indexOf('data-mce-p-') === 0) {
             realElm.attr(attrName.substr(11), attribs[ai].value);
           }
         }
 
-        if (realElmName === "script") {
+        if (realElmName === 'script') {
           realElm.attr('type', 'text/javascript');
         }
 
@@ -112,7 +112,7 @@ var setup = function (editor) {
     // TODO: This shouldn't be needed there should be a way to mark bogus
     // elements so they are never removed except external save
     editor.$('span.mce-preview-object').each(function (index, elm) {
-      var $elm = editor.$(elm);
+      const $elm = editor.$(elm);
 
       if ($elm.find('span.mce-shim', elm).length === 0) {
         $elm.append('<span class="mce-shim"></span>');
@@ -122,5 +122,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

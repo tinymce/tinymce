@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var fireFullscreenStateChanged = function (editor, state) {
-  editor.fire('FullscreenStateChanged', { state: state });
+const fireFullscreenStateChanged = function (editor, state) {
+  editor.fire('FullscreenStateChanged', { state });
 };
 
 export default {
-  fireFullscreenStateChanged: fireFullscreenStateChanged
+  fireFullscreenStateChanged
 };

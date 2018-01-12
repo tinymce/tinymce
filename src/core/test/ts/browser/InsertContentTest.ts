@@ -5,16 +5,16 @@ import InsertContent from 'tinymce/core/InsertContent';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   Theme();
 
-  var assertSelection = function (editor, selector, offset) {
-    var node = editor.$(selector)[0];
-    var rng = editor.selection.getRng();
+  const assertSelection = function (editor, selector, offset) {
+    const node = editor.$(selector)[0];
+    const rng = editor.selection.getRng();
 
     LegacyUnit.equalDom(rng.startContainer, node.firstChild);
     LegacyUnit.equal(rng.startOffset, offset);
@@ -118,7 +118,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function() {
   suite.test('insertAtCaret - list into empty table cell with invalid contents #TINY-1231', function (editor) {
     editor.getBody().innerHTML = '<table class="mce-item-table"><tbody><tr><td><br></td></tr></tbody></table>';
     editor.focus();
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('td')[0], 0);
     rng.setEnd(editor.dom.select('td')[0], 0);
     editor.selection.setRng(rng);
@@ -137,9 +137,9 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function() {
   });
 
   suite.test('insertAtCaret prevent default of beforeSetContent', function (editor) {
-    var args;
+    let args;
 
-    var handler = function (e) {
+    const handler = function (e) {
       if (e.selection === true) {
         e.preventDefault();
         e.content = '<h1>b</h1>';
@@ -147,7 +147,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function() {
       }
     };
 
-    var collector = function (e) {
+    const collector = function (e) {
       args = e;
     };
 
@@ -169,7 +169,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function() {
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
-    selector: "textarea",
+    selector: 'textarea',
     add_unload_trigger: false,
     disable_nodechange: true,
     entities: 'raw',
@@ -177,4 +177,3 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

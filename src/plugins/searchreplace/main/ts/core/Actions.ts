@@ -11,18 +11,18 @@
 import Tools from 'tinymce/core/util/Tools';
 import FindReplaceText from './FindReplaceText';
 
-var getElmIndex = function (elm) {
-  var value = elm.getAttribute('data-mce-index');
+const getElmIndex = function (elm) {
+  const value = elm.getAttribute('data-mce-index');
 
-  if (typeof value === "number") {
-    return "" + value;
+  if (typeof value === 'number') {
+    return '' + value;
   }
 
   return value;
 };
 
-var markAllMatches = function (editor, currentIndexState, regex) {
-  var node, marker;
+const markAllMatches = function (editor, currentIndexState, regex) {
+  let node, marker;
 
   marker = editor.dom.create('span', {
     'data-mce-bogus': 1
@@ -36,8 +36,8 @@ var markAllMatches = function (editor, currentIndexState, regex) {
   return FindReplaceText.findAndReplaceDOMText(regex, node, marker, false, editor.schema);
 };
 
-var unwrap = function (node) {
-  var parentNode = node.parentNode;
+const unwrap = function (node) {
+  const parentNode = node.parentNode;
 
   if (node.firstChild) {
     parentNode.insertBefore(node.firstChild, node);
@@ -46,13 +46,14 @@ var unwrap = function (node) {
   node.parentNode.removeChild(node);
 };
 
-var findSpansByIndex = function (editor, index) {
-  var nodes, spans = [];
+const findSpansByIndex = function (editor, index) {
+  let nodes;
+  const spans = [];
 
   nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
   if (nodes.length) {
-    for (var i = 0; i < nodes.length; i++) {
-      var nodeIndex = getElmIndex(nodes[i]);
+    for (let i = 0; i < nodes.length; i++) {
+      const nodeIndex = getElmIndex(nodes[i]);
 
       if (nodeIndex === null || !nodeIndex.length) {
         continue;
@@ -67,8 +68,9 @@ var findSpansByIndex = function (editor, index) {
   return spans;
 };
 
-var moveSelection = function (editor, currentIndexState, forward) {
-  var testIndex = currentIndexState.get(), dom = editor.dom;
+const moveSelection = function (editor, currentIndexState, forward) {
+  let testIndex = currentIndexState.get();
+  const dom = editor.dom;
 
   forward = forward !== false;
 
@@ -80,7 +82,7 @@ var moveSelection = function (editor, currentIndexState, forward) {
 
   dom.removeClass(findSpansByIndex(editor, currentIndexState.get()), 'mce-match-marker-selected');
 
-  var spans = findSpansByIndex(editor, testIndex);
+  const spans = findSpansByIndex(editor, testIndex);
   if (spans.length) {
     dom.addClass(findSpansByIndex(editor, testIndex), 'mce-match-marker-selected');
     editor.selection.scrollIntoView(spans[0]);
@@ -90,8 +92,8 @@ var moveSelection = function (editor, currentIndexState, forward) {
   return -1;
 };
 
-var removeNode = function (dom, node) {
-  var parent = node.parentNode;
+const removeNode = function (dom, node) {
+  const parent = node.parentNode;
 
   dom.remove(node);
 
@@ -100,12 +102,12 @@ var removeNode = function (dom, node) {
   }
 };
 
-var find = function (editor, currentIndexState, text, matchCase, wholeWord) {
-  text = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+const find = function (editor, currentIndexState, text, matchCase, wholeWord) {
+  text = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
   text = text.replace(/\s/g, '\\s');
   text = wholeWord ? '\\b' + text + '\\b' : text;
 
-  var count = markAllMatches(editor, currentIndexState, new RegExp(text, matchCase ? 'g' : 'gi'));
+  const count = markAllMatches(editor, currentIndexState, new RegExp(text, matchCase ? 'g' : 'gi'));
 
   if (count) {
     currentIndexState.set(-1);
@@ -115,37 +117,37 @@ var find = function (editor, currentIndexState, text, matchCase, wholeWord) {
   return count;
 };
 
-var next = function (editor, currentIndexState) {
-  var index = moveSelection(editor, currentIndexState, true);
+const next = function (editor, currentIndexState) {
+  const index = moveSelection(editor, currentIndexState, true);
 
   if (index !== -1) {
     currentIndexState.set(index);
   }
 };
 
-var prev = function (editor, currentIndexState) {
-  var index = moveSelection(editor, currentIndexState, false);
+const prev = function (editor, currentIndexState) {
+  const index = moveSelection(editor, currentIndexState, false);
 
   if (index !== -1) {
     currentIndexState.set(index);
   }
 };
 
-var isMatchSpan = function (node) {
-  var matchIndex = getElmIndex(node);
+const isMatchSpan = function (node) {
+  const matchIndex = getElmIndex(node);
 
   return matchIndex !== null && matchIndex.length > 0;
 };
 
-var replace = function (editor, currentIndexState, text, forward?, all?) {
-  var i, nodes, node, matchIndex, currentMatchIndex, nextIndex = currentIndexState.get(), hasMore;
+const replace = function (editor, currentIndexState, text, forward?, all?) {
+  let i, nodes, node, matchIndex, currentMatchIndex, nextIndex = currentIndexState.get(), hasMore;
 
   forward = forward !== false;
 
   node = editor.getBody();
   nodes = Tools.grep(Tools.toArray(node.getElementsByTagName('span')), isMatchSpan);
   for (i = 0; i < nodes.length; i++) {
-    var nodeIndex = getElmIndex(nodes[i]);
+    const nodeIndex = getElmIndex(nodes[i]);
 
     matchIndex = currentMatchIndex = parseInt(nodeIndex, 10);
     if (all || matchIndex === currentIndexState.get()) {
@@ -188,12 +190,12 @@ var replace = function (editor, currentIndexState, text, forward?, all?) {
   return !all && hasMore;
 };
 
-var done = function (editor, currentIndexState, keepEditorSelection?) {
-  var i, nodes, startContainer, endContainer;
+const done = function (editor, currentIndexState, keepEditorSelection?) {
+  let i, nodes, startContainer, endContainer;
 
   nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
   for (i = 0; i < nodes.length; i++) {
-    var nodeIndex = getElmIndex(nodes[i]);
+    const nodeIndex = getElmIndex(nodes[i]);
 
     if (nodeIndex !== null && nodeIndex.length) {
       if (nodeIndex === currentIndexState.get().toString()) {
@@ -209,7 +211,7 @@ var done = function (editor, currentIndexState, keepEditorSelection?) {
   }
 
   if (startContainer && endContainer) {
-    var rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(startContainer, 0);
     rng.setEnd(endContainer, endContainer.data.length);
 
@@ -221,20 +223,20 @@ var done = function (editor, currentIndexState, keepEditorSelection?) {
   }
 };
 
-var hasNext = function (editor, currentIndexState) {
+const hasNext = function (editor, currentIndexState) {
   return findSpansByIndex(editor, currentIndexState.get() + 1).length > 0;
 };
 
-var hasPrev = function (editor, currentIndexState) {
+const hasPrev = function (editor, currentIndexState) {
   return findSpansByIndex(editor, currentIndexState.get() - 1).length > 0;
 };
 
 export default {
-  done: done,
-  find: find,
-  next: next,
-  prev: prev,
-  replace: replace,
-  hasNext: hasNext,
-  hasPrev: hasPrev
+  done,
+  find,
+  next,
+  prev,
+  replace,
+  hasNext,
+  hasPrev
 };

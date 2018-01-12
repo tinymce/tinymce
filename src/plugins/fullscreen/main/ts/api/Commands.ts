@@ -10,12 +10,12 @@
 
 import Actions from '../core/Actions';
 
-var register = function (editor, fullscreenState) {
+const register = function (editor, fullscreenState) {
   editor.addCommand('mceFullScreen', function () {
     Actions.toggleFullscreen(editor, fullscreenState);
   });
 };
 
 export default {
-  register: register
+  register
 };

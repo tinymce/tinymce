@@ -8,26 +8,26 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var internalMimeType = 'x-tinymce/html';
-var internalMark = '<!-- ' + internalMimeType + ' -->';
+const internalMimeType = 'x-tinymce/html';
+const internalMark = '<!-- ' + internalMimeType + ' -->';
 
-var mark = function (html) {
+const mark = function (html) {
   return internalMark + html;
 };
 
-var unmark = function (html) {
+const unmark = function (html) {
   return html.replace(internalMark, '');
 };
 
-var isMarked = function (html) {
+const isMarked = function (html) {
   return html.indexOf(internalMark) !== -1;
 };
 
 export default {
-  mark: mark,
-  unmark: unmark,
-  isMarked: isMarked,
-  internalHtmlMime: function () {
+  mark,
+  unmark,
+  isMarked,
+  internalHtmlMime () {
     return internalMimeType;
   }
 };

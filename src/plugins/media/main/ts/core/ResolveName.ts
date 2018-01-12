@@ -8,16 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var setup = function (editor) {
+const setup = function (editor) {
   editor.on('ResolveName', function (e) {
-    var name;
+    let name;
 
-    if (e.target.nodeType === 1 && (name = e.target.getAttribute("data-mce-object"))) {
+    if (e.target.nodeType === 1 && (name = e.target.getAttribute('data-mce-object'))) {
       e.name = name;
     }
   });
 };
 
 export default {
-  setup: setup
+  setup
 };

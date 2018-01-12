@@ -19,84 +19,84 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Plugin();
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var ui = TinyUi(editor);
-    var api = TinyApis(editor);
+    const ui = TinyUi(editor);
+    const api = TinyApis(editor);
 
-    var sAssertElementStructure = function (selector, expected) {
+    const sAssertElementStructure = function (selector, expected) {
       return Step.sync(function () {
-        var body = editor.getBody();
+        const body = editor.getBody();
         body.normalize(); // consolidate text nodes
 
         Assertions.assertStructure(
-          "Asserting HTML structure of the element: " + selector,
+          'Asserting HTML structure of the element: ' + selector,
           ApproxStructure.fromHtml(expected),
-          SelectorFind.descendant(Element.fromDom(body), selector).getOrDie("Nothing in the Editor matches selector: " + selector)
+          SelectorFind.descendant(Element.fromDom(body), selector).getOrDie('Nothing in the Editor matches selector: ' + selector)
         );
       });
     };
 
-    var cWaitForDialog = function (label) {
+    const cWaitForDialog = function (label) {
       // looking for dialogs by aria-label
       return ui.cWaitForPopup('wait for ' + label + ' dialog', 'div[aria-label="' + label + '"][role="dialog"]');
     };
 
-    var cFakeEventOn = function (event) {
+    const cFakeEventOn = function (event) {
       return Chain.op(function (elm) {
         DOMUtils.DOM.fire(elm.dom(), event);
       });
     };
 
     Pipeline.async({}, [
-      Logger.t("Table properties dialog (get data from plain table)", GeneralSteps.sequence([
+      Logger.t('Table properties dialog (get data from plain table)', GeneralSteps.sequence([
         api.sSetContent('<table><tr><td>X</td></tr></table>'),
         api.sSetCursor([0, 0, 0], 0),
         api.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
-          cWaitForDialog("Table properties"),
+          cWaitForDialog('Table properties'),
           ui.cAssertDialogContents({
-            "align": "",
-            "border": "",
-            "caption": false,
-            "cellpadding": "",
-            "cellspacing": "",
-            "height": "",
-            "width": "",
-            "backgroundColor": "",
-            "borderColor": "",
-            "borderStyle": "",
-            "style": ""
+            align: '',
+            border: '',
+            caption: false,
+            cellpadding: '',
+            cellspacing: '',
+            height: '',
+            width: '',
+            backgroundColor: '',
+            borderColor: '',
+            borderStyle: '',
+            style: ''
           }),
           ui.cSubmitDialog()
         ])
       ])),
 
-      Logger.t("Table properties dialog (get/set data from/to plain table, no adv tab)", GeneralSteps.sequence([
+      Logger.t('Table properties dialog (get/set data from/to plain table, no adv tab)', GeneralSteps.sequence([
         api.sSetSetting('table_advtab', false),
         api.sSetContent('<table><tr><td>X</td></tr></table>'),
         api.sSetCursor([0, 0, 0], 0),
         api.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
-          cWaitForDialog("Table properties"),
+          cWaitForDialog('Table properties'),
           ui.cAssertDialogContents({
-            "align": "",
-            "border": "",
-            "caption": false,
-            "cellpadding": "",
-            "cellspacing": "",
-            "height": "",
-            "width": ""
+            align: '',
+            border: '',
+            caption: false,
+            cellpadding: '',
+            cellspacing: '',
+            height: '',
+            width: ''
           }),
           ui.cFillDialogWith({
-            width: "100",
-            height: "101"
+            width: '100',
+            height: '101'
           }),
           ui.cSubmitDialog()
         ]),
@@ -104,24 +104,24 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function() {
         api.sDeleteSetting('table_advtab')
       ])),
 
-      Logger.t("Table cell properties dialog (get/set data from/to plain table, no adv tab)", GeneralSteps.sequence([
+      Logger.t('Table cell properties dialog (get/set data from/to plain table, no adv tab)', GeneralSteps.sequence([
         api.sSetSetting('table_cell_advtab', false),
         api.sSetContent('<table><tr><td>X</td></tr></table>'),
         api.sSetCursor([0, 0, 0], 0),
         api.sExecCommand('mceTableCellProps'),
         Chain.asStep({}, [
-          cWaitForDialog("Cell properties"),
+          cWaitForDialog('Cell properties'),
           ui.cAssertDialogContents({
-            "width": "",
-            "height": "",
-            "type": "td",
-            "scope": "",
-            "align": "",
-            "valign": ""
+            width: '',
+            height: '',
+            type: 'td',
+            scope: '',
+            align: '',
+            valign: ''
           }),
           ui.cFillDialogWith({
-            width: "100",
-            height: "101"
+            width: '100',
+            height: '101'
           }),
           ui.cSubmitDialog()
         ]),
@@ -129,21 +129,21 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function() {
         api.sDeleteSetting('table_cell_advtab')
       ])),
 
-      Logger.t("Table row properties dialog (get/set data from/to plain table, no adv tab)", GeneralSteps.sequence([
+      Logger.t('Table row properties dialog (get/set data from/to plain table, no adv tab)', GeneralSteps.sequence([
         api.sSetSetting('table_row_advtab', false),
         api.sSetContent('<table><tr><td>X</td></tr></table>'),
         api.sSetCursor([0, 0, 0], 0),
         api.sExecCommand('mceTableRowProps'),
         Chain.asStep({}, [
-          cWaitForDialog("Row properties"),
+          cWaitForDialog('Row properties'),
           ui.cAssertDialogContents({
-            "type": "tbody",
-            "align": "",
-            "height": ""
+            type: 'tbody',
+            align: '',
+            height: ''
           }),
           ui.cFillDialogWith({
-            width: "100",
-            height: "101"
+            width: '100',
+            height: '101'
           }),
           ui.cSubmitDialog()
         ]),
@@ -151,27 +151,27 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function() {
         api.sDeleteSetting('table_row_advtab')
       ])),
 
-      Logger.t("Table properties dialog (get/set data from/to plain table, class list)", GeneralSteps.sequence([
+      Logger.t('Table properties dialog (get/set data from/to plain table, class list)', GeneralSteps.sequence([
         api.sSetSetting('table_class_list', [{ title: 'Class1', value: 'class1' }]),
         api.sSetContent('<table><tr><td>X</td></tr></table>'),
         api.sSetCursor([0, 0, 0], 0),
         api.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
-          Chain.fromParent(cWaitForDialog("Table properties"), [
+          Chain.fromParent(cWaitForDialog('Table properties'), [
             Chain.fromChains([
               ui.cAssertDialogContents({
-                "align": "",
-                "border": "",
-                "caption": false,
-                "cellpadding": "",
-                "cellspacing": "",
-                "height": "",
-                "width": "",
-                "backgroundColor": "",
-                "borderColor": "",
-                "borderStyle": "",
-                "style": "",
-                "class": ""
+                align: '',
+                border: '',
+                caption: false,
+                cellpadding: '',
+                cellspacing: '',
+                height: '',
+                width: '',
+                backgroundColor: '',
+                borderColor: '',
+                borderStyle: '',
+                style: '',
+                class: ''
               })
             ]),
             Chain.fromChains([
@@ -195,7 +195,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function() {
           Mouse.cClick
         ]),
         Chain.asStep({}, [
-          cWaitForDialog("Table properties"),
+          cWaitForDialog('Table properties'),
           UiFinder.cFindIn('button:contains("Ok")'),
           Mouse.cClick
         ]),
@@ -203,7 +203,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function() {
         api.sDeleteSetting('table_class_list')
       ])),
 
-      Logger.t("Table properties dialog (get data from full table)", GeneralSteps.sequence([
+      Logger.t('Table properties dialog (get data from full table)', GeneralSteps.sequence([
         api.sSetContent(
           '<table style="width: 100px; height: 101px;" border="4" cellspacing="2" cellpadding="3">' +
           '<caption>&nbsp;</caption>' +
@@ -217,30 +217,30 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function() {
         api.sSetCursor([0, 0, 0], 0),
         api.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
-          cWaitForDialog("Table properties"),
+          cWaitForDialog('Table properties'),
           ui.cAssertDialogContents({
-            "align": "",
-            "border": "4",
-            "caption": true,
-            "cellpadding": "3",
-            "cellspacing": "2",
-            "height": "101px",
-            "width": "100px",
-            "backgroundColor": "",
-            "borderColor": "",
-            "borderStyle": "",
-            "style": "width: 100px; height: 101px;"
+            align: '',
+            border: '4',
+            caption: true,
+            cellpadding: '3',
+            cellspacing: '2',
+            height: '101px',
+            width: '100px',
+            backgroundColor: '',
+            borderColor: '',
+            borderStyle: '',
+            style: 'width: 100px; height: 101px;'
           }),
           ui.cSubmitDialog()
         ])
       ])),
 
-      Logger.t("Table properties dialog (add caption)", GeneralSteps.sequence([
+      Logger.t('Table properties dialog (add caption)', GeneralSteps.sequence([
         api.sSetContent('<table><tr><td>X</td></tr></table>'),
         api.sSetCursor([0, 0, 0], 0),
         api.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
-          cWaitForDialog("Table properties"),
+          cWaitForDialog('Table properties'),
           ui.cFillDialogWith({
             caption: true
           }),
@@ -249,12 +249,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function() {
         api.sAssertContent('<table><caption>&nbsp;</caption><tbody><tr><td>X</td></tr></tbody></table>')
       ])),
 
-      Logger.t("Table properties dialog (remove caption)", GeneralSteps.sequence([
+      Logger.t('Table properties dialog (remove caption)', GeneralSteps.sequence([
         api.sSetContent('<table><caption>&nbsp;</caption><tr><td>X</td></tr></table>'),
         api.sSetCursor([0, 0, 0], 0),
         api.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
-          cWaitForDialog("Table properties"),
+          cWaitForDialog('Table properties'),
           ui.cFillDialogWith({
             caption: false
           }),
@@ -263,12 +263,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function() {
         sAssertElementStructure('table', '<table><tbody><tr><td>X</td></tr></tbody></table>')
       ])),
 
-      Logger.t("Table properties dialog (change size in pixels)", GeneralSteps.sequence([
+      Logger.t('Table properties dialog (change size in pixels)', GeneralSteps.sequence([
         api.sSetContent('<table><tr><td>X</td></tr></table>'),
         api.sSetCursor([0, 0, 0], 0),
         api.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
-          cWaitForDialog("Table properties"),
+          cWaitForDialog('Table properties'),
           ui.cFillDialogWith({
             width: 100,
             height: 101
@@ -278,32 +278,32 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function() {
         sAssertElementStructure('table', '<table style="width: 100px; height: 101px;"><tbody><tr><td>X</td></tr></tbody></table>')
       ])),
 
-      Logger.t("Table properties dialog (change size in %)", GeneralSteps.sequence([
+      Logger.t('Table properties dialog (change size in %)', GeneralSteps.sequence([
         api.sSetContent('<table><tr><td>X</td></tr></table>'),
         api.sSetCursor([0, 0, 0], 0),
         api.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
-          cWaitForDialog("Table properties"),
+          cWaitForDialog('Table properties'),
           ui.cFillDialogWith({
-            width: "100%",
-            height: "101%"
+            width: '100%',
+            height: '101%'
           }),
           ui.cSubmitDialog()
         ]),
         sAssertElementStructure('table', '<table style="width: 100%; height: 101%;"><tbody><tr><td>X</td></tr></tbody></table>')
       ])),
 
-      Logger.t("Table properties dialog (change: border,cellpadding,cellspacing,align,backgroundColor,borderColor)", GeneralSteps.sequence([
+      Logger.t('Table properties dialog (change: border,cellpadding,cellspacing,align,backgroundColor,borderColor)', GeneralSteps.sequence([
         api.sSetContent('<table style="border-color: red; background-color: blue"><tr><td>X</td></tr></table>'),
         api.sSetCursor([0, 0, 0], 0),
         api.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
-          cWaitForDialog("Table properties"),
+          cWaitForDialog('Table properties'),
           ui.cFillDialogWith({
-            border: "1",
-            cellpadding: "2",
-            cellspacing: "3",
-            align: "right"
+            border: '1',
+            cellpadding: '2',
+            cellspacing: '3',
+            align: 'right'
           }),
           ui.cSubmitDialog()
         ]),
@@ -314,15 +314,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function() {
         )
       ])),
 
-      Logger.t("Table properties dialog css border", GeneralSteps.sequence([
+      Logger.t('Table properties dialog css border', GeneralSteps.sequence([
         api.sSetSetting('table_style_by_css', true),
         api.sSetContent('<table><tr><td>X</td><td>Z</td></tr></table>'),
         api.sSetCursor([0, 0, 0], 0),
         api.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
-          cWaitForDialog("Table properties"),
+          cWaitForDialog('Table properties'),
           ui.cFillDialogWith({
-            border: "1",
+            border: '1',
             borderColor: 'green'
           }),
           ui.cSubmitDialog()
@@ -337,12 +337,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function() {
         api.sDeleteSetting('table_style_by_css')
       ])),
 
-      Logger.t("changing the style field on adv tab changes the height and width", GeneralSteps.sequence([
+      Logger.t('changing the style field on adv tab changes the height and width', GeneralSteps.sequence([
         api.sSetContent('<table><tr><td>X</td></tr></table>'),
         api.sSetCursor([0, 0, 0], 0),
         api.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
-          Chain.fromParent(cWaitForDialog("Table properties"),
+          Chain.fromParent(cWaitForDialog('Table properties'),
             [
               Chain.fromChains([
                 UiFinder.cFindIn('label:contains("Width") + input'),
@@ -389,4 +389,3 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

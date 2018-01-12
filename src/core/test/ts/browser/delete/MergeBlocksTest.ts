@@ -3,41 +3,40 @@ import { Chain } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
 import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import MergeBlocks from 'tinymce/core/delete/MergeBlocks';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var viewBlock = ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const viewBlock = ViewBlock();
 
-  var cSetHtml = function (html) {
+  const cSetHtml = function (html) {
     return Chain.op(function () {
       viewBlock.update(html);
     });
   };
 
-  var cAssertHtml = function (expectedHtml) {
+  const cAssertHtml = function (expectedHtml) {
     return Chain.op(function () {
       Assertions.assertHtml('Should equal html', expectedHtml, viewBlock.get().innerHTML);
     });
   };
 
-  var cMergeBlocks = function (forward, block1Path, block2Path) {
+  const cMergeBlocks = function (forward, block1Path, block2Path) {
     return Chain.mapper(function (viewBlock) {
-      var block1 = Hierarchy.follow(Element.fromDom(viewBlock.get()), block1Path).getOrDie();
-      var block2 = Hierarchy.follow(Element.fromDom(viewBlock.get()), block2Path).getOrDie();
+      const block1 = Hierarchy.follow(Element.fromDom(viewBlock.get()), block1Path).getOrDie();
+      const block2 = Hierarchy.follow(Element.fromDom(viewBlock.get()), block2Path).getOrDie();
       return MergeBlocks.mergeBlocks(Element.fromDom(viewBlock.get()), forward, block1, block2);
     });
   };
 
-  var cAssertPosition = function (expectedPath, expectedOffset) {
+  const cAssertPosition = function (expectedPath, expectedOffset) {
     return Chain.op(function (position) {
-      var container = Hierarchy.follow(Element.fromDom(viewBlock.get()), expectedPath).getOrDie();
+      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), expectedPath).getOrDie();
 
       Assertions.assertDomEq('Should be expected container', container, Element.fromDom(position.getOrDie().container()));
       Assertions.assertEq('Should be expected offset', expectedOffset, position.getOrDie().offset());
@@ -236,4 +235,3 @@ UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function() {
     success();
   }, failure);
 });
-

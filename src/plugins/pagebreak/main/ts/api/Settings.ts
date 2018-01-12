@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getSeparatorHtml = function (editor) {
+const getSeparatorHtml = function (editor) {
   return editor.getParam('pagebreak_separator', '<!-- pagebreak -->');
 };
 
-var shouldSplitBlock = function (editor) {
+const shouldSplitBlock = function (editor) {
   return editor.getParam('pagebreak_split_block', false);
 };
 
 export default {
-  getSeparatorHtml: getSeparatorHtml,
-  shouldSplitBlock: shouldSplitBlock
+  getSeparatorHtml,
+  shouldSplitBlock
 };

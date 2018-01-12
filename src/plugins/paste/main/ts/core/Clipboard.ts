@@ -43,14 +43,13 @@ declare let window: any;
  * @private
  */
 
-
-
 export default function (editor) {
-  var self = this, keyboardPasteTimeStamp = 0;
-  var pasteBin = PasteBin(editor);
-  var keyboardPastePlainTextState;
-  var mceInternalUrlPrefix = 'data:text/mce-internal,';
-  var uniqueId = Utils.createIdGenerator("mceclip");
+  const self = this;
+  let keyboardPasteTimeStamp = 0;
+  const pasteBin = PasteBin(editor);
+  let keyboardPastePlainTextState;
+  const mceInternalUrlPrefix = 'data:text/mce-internal,';
+  const uniqueId = Utils.createIdGenerator('mceclip');
 
   self.pasteFormat = Settings.isPasteAsTextEnabled(editor) ? 'text' : 'html';
 
@@ -63,8 +62,8 @@ export default function (editor) {
    * @param {Boolean?} internalFlag Optional true/false flag if the contents is internal or external.
    */
   function pasteHtml(html, internalFlag) {
-    var internal = internalFlag ? internalFlag : InternalHtml.isMarked(html);
-    var args = ProcessFilters.process(editor, InternalHtml.unmark(html), internal);
+    const internal = internalFlag ? internalFlag : InternalHtml.isMarked(html);
+    const args = ProcessFilters.process(editor, InternalHtml.unmark(html), internal);
 
     if (args.cancelled === false) {
       SmartPaste.insertContent(editor, args.content);
@@ -84,7 +83,6 @@ export default function (editor) {
     pasteHtml(text, false);
   }
 
-
   /**
    * Gets various content types out of a datatransfer object.
    *
@@ -92,12 +90,12 @@ export default function (editor) {
    * @return {Object} Object with mime types and data for those mime types.
    */
   function getDataTransferItems(dataTransfer) {
-    var items = {};
+    const items = {};
 
     if (dataTransfer) {
       // Use old WebKit/IE API
       if (dataTransfer.getData) {
-        var legacyText = dataTransfer.getData('Text');
+        const legacyText = dataTransfer.getData('Text');
         if (legacyText && legacyText.length > 0) {
           if (legacyText.indexOf(mceInternalUrlPrefix) === -1) {
             items['text/plain'] = legacyText;
@@ -106,12 +104,12 @@ export default function (editor) {
       }
 
       if (dataTransfer.types) {
-        for (var i = 0; i < dataTransfer.types.length; i++) {
-          var contentType = dataTransfer.types[i];
+        for (let i = 0; i < dataTransfer.types.length; i++) {
+          const contentType = dataTransfer.types[i];
           try { // IE11 throws exception when contentType is Files (type is present but data cannot be retrieved via getData())
             items[contentType] = dataTransfer.getData(contentType);
           } catch (ex) {
-            items[contentType] = ""; // useless in general, but for consistency across browsers
+            items[contentType] = ''; // useless in general, but for consistency across browsers
           }
         }
       }
@@ -128,7 +126,7 @@ export default function (editor) {
    * @return {Object} Object with mime types and data for those mime types.
    */
   function getClipboardContent(clipboardEvent) {
-    var content = getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);
+    const content = getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);
 
     // Edge 15 has a broken HTML Clipboard API see https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11877517/
     return Utils.isMsEdge() ? Tools.extend(content, { 'text/html': '' }) : content;
@@ -139,7 +137,7 @@ export default function (editor) {
   }
 
   function getBase64FromUri(uri) {
-    var idx;
+    let idx;
 
     idx = uri.indexOf(',');
     if (idx !== -1) {
@@ -154,7 +152,7 @@ export default function (editor) {
   }
 
   function extractFilename(str) {
-    var m = str.match(/([\s\S]+?)\.(?:jpeg|jpg|png|gif)$/i);
+    const m = str.match(/([\s\S]+?)\.(?:jpeg|jpg|png|gif)$/i);
     return m ? editor.dom.encode(m[1]) : null;
   }
 
@@ -164,18 +162,18 @@ export default function (editor) {
       rng = null;
     }
 
-    var dataUri = reader.result;
-    var base64 = getBase64FromUri(dataUri);
-    var id = uniqueId();
-    var name = editor.settings.images_reuse_filename && blob.name ? extractFilename(blob.name) : id;
-    var img = new Image();
+    const dataUri = reader.result;
+    const base64 = getBase64FromUri(dataUri);
+    const id = uniqueId();
+    const name = editor.settings.images_reuse_filename && blob.name ? extractFilename(blob.name) : id;
+    const img = new Image();
 
     img.src = dataUri;
 
     // TODO: Move the bulk of the cache logic to EditorUpload
     if (isValidDataUriImage(editor.settings, img)) {
-      var blobCache = editor.editorUpload.blobCache;
-      var blobInfo, existingBlobInfo;
+      const blobCache = editor.editorUpload.blobCache;
+      let blobInfo, existingBlobInfo;
 
       existingBlobInfo = blobCache.findFirst(function (cachedBlobInfo) {
         return cachedBlobInfo.base64() === base64;
@@ -203,17 +201,17 @@ export default function (editor) {
    * @return {Boolean} true/false if the image data was found or not.
    */
   function pasteImageData(e, rng) {
-    var dataTransfer = e.clipboardData || e.dataTransfer;
+    const dataTransfer = e.clipboardData || e.dataTransfer;
 
     function processItems(items) {
-      var i, item, reader, hadImage = false;
+      let i, item, reader, hadImage = false;
 
       if (items) {
         for (i = 0; i < items.length; i++) {
           item = items[i];
 
           if (/^image\/(jpeg|png|gif|bmp)$/.test(item.type)) {
-            var blob = item.getAsFile ? item.getAsFile() : item;
+            const blob = item.getAsFile ? item.getAsFile() : item;
 
             reader = new window.FileReader();
             reader.onload = pasteImage.bind(null, rng, reader, blob);
@@ -240,7 +238,7 @@ export default function (editor) {
    * @return {Boolean} true/false if the clipboard is empty or not.
    */
   function isBrokenAndroidClipboardEvent(e) {
-    var clipboardData = e.clipboardData;
+    const clipboardData = e.clipboardData;
 
     return navigator.userAgent.indexOf('Android') !== -1 && clipboardData && clipboardData.items && clipboardData.items.length === 0;
   }
@@ -298,7 +296,7 @@ export default function (editor) {
     });
 
     function insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal) {
-      var content, isPlainTextHtml;
+      let content, isPlainTextHtml;
 
       // Grab HTML from Clipboard API or paste bin as a fallback
       if (hasContentType(clipboardContent, 'text/html')) {
@@ -354,19 +352,19 @@ export default function (editor) {
       }
     }
 
-    var getLastRng = function () {
+    const getLastRng = function () {
       return pasteBin.getLastRng() || editor.selection.getRng();
     };
 
     editor.on('paste', function (e) {
       // Getting content from the Clipboard can take some time
-      var clipboardTimer = new Date().getTime();
-      var clipboardContent = getClipboardContent(e);
-      var clipboardDelay = new Date().getTime() - clipboardTimer;
+      const clipboardTimer = new Date().getTime();
+      const clipboardContent = getClipboardContent(e);
+      const clipboardDelay = new Date().getTime() - clipboardTimer;
 
-      var isKeyBoardPaste = (new Date().getTime() - keyboardPasteTimeStamp - clipboardDelay) < 1000;
-      var plainTextMode = self.pasteFormat === "text" || keyboardPastePlainTextState;
-      var internal = hasContentType(clipboardContent, InternalHtml.internalHtmlMime());
+      const isKeyBoardPaste = (new Date().getTime() - keyboardPasteTimeStamp - clipboardDelay) < 1000;
+      const plainTextMode = self.pasteFormat === 'text' || keyboardPastePlainTextState;
+      let internal = hasContentType(clipboardContent, InternalHtml.internalHtmlMime());
 
       keyboardPastePlainTextState = false;
 
@@ -394,7 +392,7 @@ export default function (editor) {
         });
 
         editor.getDoc().execCommand('Paste', false, null);
-        clipboardContent["text/html"] = pasteBin.getHtml();
+        clipboardContent['text/html'] = pasteBin.getHtml();
       }
 
       // If clipboard API has HTML then use that directly
@@ -424,6 +422,7 @@ export default function (editor) {
 
   editor.on('preInit', function () {
     registerEventHandlers();
+    let src;
 
     // Remove all data images from paste for example from Gecko
     // except internal images like video elements
@@ -439,18 +438,18 @@ export default function (editor) {
       }
 
       function isWebKitFakeUrl(src) {
-        return src.indexOf("webkit-fake-url") === 0;
+        return src.indexOf('webkit-fake-url') === 0;
       }
 
       function isDataUri(src) {
-        return src.indexOf("data:") === 0;
+        return src.indexOf('data:') === 0;
       }
 
       if (!editor.settings.paste_data_images && isPasteInsert(args)) {
-        var i = nodes.length;
+        let i = nodes.length;
 
         while (i--) {
-          var src = nodes[i].attributes.map.src;
+          src = nodes[i].attributes.map.src;
 
           if (!src) {
             continue;
@@ -466,4 +465,4 @@ export default function (editor) {
       }
     });
   });
-};
+}

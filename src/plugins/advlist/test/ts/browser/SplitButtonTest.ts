@@ -6,16 +6,16 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.lists.SplitButtonTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.plugins.lists.SplitButtonTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const suite = LegacyUnit.createSuite();
 
   AdvListPlugin();
   ListsPlugin();
   ModernTheme();
 
-  suite.test("Replace splitbutton control with button when advlist_number_styles/advlist_bullet_styles are empty", function (editor) {
+  suite.test('Replace splitbutton control with button when advlist_number_styles/advlist_bullet_styles are empty', function (editor) {
     LegacyUnit.equal(editor.buttons.numlist.type, 'button');
     LegacyUnit.equal(editor.buttons.bullist.type, 'button');
   });
@@ -30,4 +30,3 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.SplitButtonTest', function() {
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

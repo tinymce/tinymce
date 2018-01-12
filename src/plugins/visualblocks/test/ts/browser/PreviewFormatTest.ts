@@ -1,4 +1,3 @@
-import { ApproxStructure } from '@ephox/agar';
 import { Assertions } from '@ephox/agar';
 import { GeneralSteps } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
@@ -14,23 +13,23 @@ import VisualBlocksPlugin from 'tinymce/plugins/visualblocks/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   ModernTheme();
   VisualBlocksPlugin();
 
-  var sWaitForVisualBlocks = function (editor) {
+  const sWaitForVisualBlocks = function (editor) {
     return Waiter.sTryUntil('Wait background css to be applied to first element', Step.sync(function () {
-      var p = Element.fromDom(editor.getBody().firstChild);
-      var background = Css.get(p, 'background-image');
+      const p = Element.fromDom(editor.getBody().firstChild);
+      const background = Css.get(p, 'background-image');
       Assertions.assertEq('Paragraph should have a url background', true, background.indexOf('url(') === 0);
     }), 10, 1000);
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    var tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('Toggle on/off visualblocks and compute previews', GeneralSteps.sequence([
@@ -55,4 +54,3 @@ UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', fu
     skin_url: '/project/js/tinymce/skins/lightgray'
   }, success, failure);
 });
-

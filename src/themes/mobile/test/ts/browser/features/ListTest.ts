@@ -7,12 +7,12 @@ import TestTheme from '../../module/test/theme/TestTheme';
 import TestUi from '../../module/test/ui/TestUi';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: features.ListTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: features.ListTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   /* This test is going to create a toolbar with both list items on it */
-  var body = Body.body();
+  const body = Body.body();
 
   TestTheme.setup({
     container: body,
@@ -20,50 +20,50 @@ UnitTest.asynctest('Browser Test: features.ListTest', function() {
   }, success, failure).use(
     function (realm, apis, toolbar, socket, buttons, onSuccess, onFailure) {
 
-      var sSetP1 = apis.sSetSelection([ 0, 0, 0 ], 'Thi'.length, [ 0, 0, 0 ], 'Thi'.length);
-      var sSetP2 = apis.sSetSelection([ 1, 0 ], 'Norma'.length, [ 1, 0 ], 'Norma'.length);
-      var sSetP3 = apis.sSetSelection([ 2, 0, 0 ], 'Bu'.length, [ 2, 0, 0 ], 'Bu'.length);
+      const sSetP1 = apis.sSetSelection([ 0, 0, 0 ], 'Thi'.length, [ 0, 0, 0 ], 'Thi'.length);
+      const sSetP2 = apis.sSetSelection([ 1, 0 ], 'Norma'.length, [ 1, 0 ], 'Norma'.length);
+      const sSetP3 = apis.sSetSelection([ 2, 0, 0 ], 'Bu'.length, [ 2, 0, 0 ], 'Bu'.length);
 
-      var sCheckComponent = function (label, state) {
+      const sCheckComponent = function (label, state) {
         return function (memento) {
           return TestUi.sWaitForToggledState(label, state, realm, memento);
         };
       };
 
-      var sCheckLists = function (situation, stateOfNumlist, stateOfBullist) {
+      const sCheckLists = function (situation, stateOfNumlist, stateOfBullist) {
         return GeneralSteps.sequence([
           sCheckComponent('checking numlist: ' + situation, stateOfNumlist)(buttons.numlist),
           sCheckComponent('checking bullist: ' + situation, stateOfBullist)(buttons.bullist)
         ]);
       };
 
-      var sCheckInNumlist = function (situation) {
+      const sCheckInNumlist = function (situation) {
         return sCheckLists(situation, true, false);
       };
 
-      var sCheckInBullist = function (situation) {
+      const sCheckInBullist = function (situation) {
         return sCheckLists(situation, false, true);
       };
 
-      var sCheckInNoList = function (situation) {
+      const sCheckInNoList = function (situation) {
         return sCheckLists(situation, false, false);
       };
 
-      var sCheckP1 = function (situation) {
+      const sCheckP1 = function (situation) {
         return GeneralSteps.sequence([
           sSetP1,
           sCheckInNumlist(situation)
         ]);
       };
 
-      var sCheckP2 = function (situation) {
+      const sCheckP2 = function (situation) {
         return GeneralSteps.sequence([
           sSetP2,
           sCheckInNoList(situation)
         ]);
       };
 
-      var sCheckP3 = function (situation) {
+      const sCheckP3 = function (situation) {
         return GeneralSteps.sequence([
           sSetP3,
           sCheckInBullist(situation)
@@ -97,4 +97,3 @@ UnitTest.asynctest('Browser Test: features.ListTest', function() {
     }
   );
 });
-

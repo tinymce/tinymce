@@ -15,10 +15,10 @@ declare let tinymce: any;
 AutoLinkPlugin();
 
 tinymce.init({
-  selector: "textarea.tinymce",
-  theme: "modern",
-  skin_url: "../../../../../js/tinymce/skins/lightgray",
-  plugins: "autolink code",
-  toolbar: "autolink code",
+  selector: 'textarea.tinymce',
+  theme: 'modern',
+  skin_url: '../../../../../js/tinymce/skins/lightgray',
+  plugins: 'autolink code',
+  toolbar: 'autolink code',
   height: 600
 });

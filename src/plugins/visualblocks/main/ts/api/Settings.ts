@@ -8,15 +8,15 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var isEnabledByDefault = function (editor) {
+const isEnabledByDefault = function (editor) {
   return editor.getParam('visualblocks_default_state', false);
 };
 
-var getContentCss = function (editor) {
+const getContentCss = function (editor) {
   return editor.settings.visualblocks_content_css;
 };
 
 export default {
-  isEnabledByDefault: isEnabledByDefault,
-  getContentCss: getContentCss
+  isEnabledByDefault,
+  getContentCss
 };

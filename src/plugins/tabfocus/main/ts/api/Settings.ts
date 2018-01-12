@@ -8,14 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-var getTabFocusElements = function (editor) {
+const getTabFocusElements = function (editor) {
   return editor.getParam('tabfocus_elements', ':prev,:next');
 };
 
-var getTabFocus = function (editor) {
+const getTabFocus = function (editor) {
   return editor.getParam('tab_focus', getTabFocusElements(editor));
 };
 
 export default {
-  getTabFocus: getTabFocus
+  getTabFocus
 };

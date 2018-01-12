@@ -13,12 +13,12 @@ import { XMLHttpRequest } from '@ephox/sand';
 import Promise from 'tinymce/core/util/Promise';
 import Tools from 'tinymce/core/util/Tools';
 
-var isValue = function (obj) {
+const isValue = function (obj) {
   return obj !== null && obj !== undefined;
 };
 
-var traverse = function (json, path) {
-  var value;
+const traverse = function (json, path) {
+  let value;
 
   value = path.reduce(function (result, key) {
     return isValue(result) ? result[key] : undefined;
@@ -27,9 +27,9 @@ var traverse = function (json, path) {
   return isValue(value) ? value : null;
 };
 
-var requestUrlAsBlob = function (url, headers) {
+const requestUrlAsBlob = function (url, headers) {
   return new Promise(function (resolve) {
-    var xhr;
+    let xhr;
 
     xhr = new XMLHttpRequest();
 
@@ -53,12 +53,12 @@ var requestUrlAsBlob = function (url, headers) {
   });
 };
 
-var readBlob = function (blob) {
+const readBlob = function (blob) {
   return new Promise(function (resolve) {
-    var fr = new FileReader();
+    const fr = new FileReader();
 
     fr.onload = function (e) {
-      var data = e.target;
+      const data = e.target;
       resolve(data.result);
     };
 
@@ -66,8 +66,8 @@ var readBlob = function (blob) {
   });
 };
 
-var parseJson = function (text) {
-  var json;
+const parseJson = function (text) {
+  let json;
 
   try {
     json = JSON.parse(text);
@@ -79,8 +79,8 @@ var parseJson = function (text) {
 };
 
 export default {
-  traverse: traverse,
-  readBlob: readBlob,
-  requestUrlAsBlob: requestUrlAsBlob,
-  parseJson: parseJson
+  traverse,
+  readBlob,
+  requestUrlAsBlob,
+  parseJson
 };

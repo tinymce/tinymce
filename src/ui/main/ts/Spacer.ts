@@ -18,17 +18,15 @@ import Widget from './Widget';
  * @extends tinymce.ui.Widget
  */
 
-"use strict";
-
-export default <any> Widget.extend({
+export default Widget.extend({
   /**
    * Renders the control as a HTML string.
    *
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this;
+  renderHtml () {
+    const self = this;
 
     self.classes.add('spacer');
     self.canFocus = false;

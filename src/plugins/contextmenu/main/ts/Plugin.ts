@@ -14,11 +14,11 @@ import Api from './api/Api';
 import Bind from './core/Bind';
 
 PluginManager.add('contextmenu', function (editor) {
-  var menu = Cell(null), visibleState = Cell(false);
+  const menu = Cell(null), visibleState = Cell(false);
 
   Bind.setup(editor, visibleState, menu);
 
   return Api.get(visibleState);
 });
 
-export default function () { };
+export default function () { }

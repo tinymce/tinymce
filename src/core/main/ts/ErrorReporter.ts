@@ -17,11 +17,11 @@ import AddOnManager from './AddOnManager';
  * @private
  */
 
-var PluginManager = AddOnManager.PluginManager;
+const PluginManager = AddOnManager.PluginManager;
 
-var resolvePluginName = function (targetUrl, suffix) {
-  for (var name in PluginManager.urls) {
-    var matchUrl = PluginManager.urls[name] + '/plugin' + suffix + '.js';
+const resolvePluginName = function (targetUrl, suffix) {
+  for (const name in PluginManager.urls) {
+    const matchUrl = PluginManager.urls[name] + '/plugin' + suffix + '.js';
     if (matchUrl === targetUrl) {
       return name;
     }
@@ -30,21 +30,21 @@ var resolvePluginName = function (targetUrl, suffix) {
   return null;
 };
 
-var pluginUrlToMessage = function (editor, url) {
-  var plugin = resolvePluginName(url, editor.suffix);
+const pluginUrlToMessage = function (editor, url) {
+  const plugin = resolvePluginName(url, editor.suffix);
   return plugin ?
     'Failed to load plugin: ' + plugin + ' from url ' + url :
     'Failed to load plugin url: ' + url;
 };
 
-var displayNotification = function (editor, message) {
+const displayNotification = function (editor, message) {
   editor.notificationManager.open({
     type: 'error',
     text: message
   });
 };
 
-var displayError = function (editor, message) {
+const displayError = function (editor, message) {
   if (editor._skinLoaded) {
     displayNotification(editor, message);
   } else {
@@ -54,16 +54,16 @@ var displayError = function (editor, message) {
   }
 };
 
-var uploadError = function (editor, message) {
+const uploadError = function (editor, message) {
   displayError(editor, 'Failed to upload image: ' + message);
 };
 
-var pluginLoadError = function (editor, url) {
+const pluginLoadError = function (editor, url) {
   displayError(editor, pluginUrlToMessage(editor, url));
 };
 
-var initError = function (message, ...x: any[]) {
-  var console = window.console;
+const initError = function (message, ...x: any[]) {
+  const console = window.console;
   if (console) { // Skip test env
     if (console.error) {
       console.error.apply(console, arguments);
@@ -74,8 +74,8 @@ var initError = function (message, ...x: any[]) {
 };
 
 export default {
-  pluginLoadError: pluginLoadError,
-  uploadError: uploadError,
-  displayError: displayError,
-  initError: initError
+  pluginLoadError,
+  uploadError,
+  displayError,
+  initError
 };

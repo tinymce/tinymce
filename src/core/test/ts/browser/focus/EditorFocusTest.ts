@@ -12,14 +12,14 @@ import ViewBlock from '../../module/test/ViewBlock';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-  var viewBlock = new ViewBlock();
+UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
+  const viewBlock = ViewBlock();
 
   Theme();
 
-  var cCreateInlineEditor = function (html) {
+  const cCreateInlineEditor = function (html) {
     return Chain.on(function (viewBlock, next, die) {
       viewBlock.update(html);
 
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function() {
         selector: '.tinymce-editor',
         inline: true,
         skin_url: '/project/js/tinymce/skins/lightgray',
-        setup: function (editor) {
+        setup (editor) {
           editor.on('SkinLoaded', function () {
             next(Chain.wrap(editor));
           });
@@ -36,22 +36,22 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function() {
     });
   };
 
-  var cFocusEditor = Chain.op(function (editor) {
+  const cFocusEditor = Chain.op(function (editor) {
     EditorFocus.focus(editor, false);
   });
 
-  var cFocusElement = function (elementPath) {
+  const cFocusElement = function (elementPath) {
     return Chain.op(function (editor) {
-      var element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie();
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie();
       element.dom().focus();
     });
   };
 
-  var cSetSelection = function (startPath, startOffset, endPath, endOffset) {
+  const cSetSelection = function (startPath, startOffset, endPath, endOffset) {
     return Chain.op(function (editor) {
-      var startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
-      var endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
-      var rng = editor.dom.createRng();
+      const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
+      const rng = editor.dom.createRng();
 
       rng.setStart(startContainer.dom(), startOffset);
       rng.setEnd(endContainer.dom(), endOffset);
@@ -60,11 +60,11 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function() {
     });
   };
 
-  var cAssertSelection = function (startPath, startOffset, endPath, endOffset) {
+  const cAssertSelection = function (startPath, startOffset, endPath, endOffset) {
     return Chain.op(function (editor) {
-      var startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
-      var endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
-      var rng = editor.selection.getRng();
+      const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
+      const rng = editor.selection.getRng();
 
       Assertions.assertDomEq('Should be expected from start container', startContainer, Element.fromDom(rng.startContainer));
       Assertions.assertEq('Should be expected from start offset', startOffset, rng.startOffset);
@@ -73,15 +73,15 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function() {
     });
   };
 
-  var cAssertHasFocus = function (elementPath) {
+  const cAssertHasFocus = function (elementPath) {
     return Chain.op(function (editor) {
-      var element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie();
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie();
       Assertions.assertEq('Should have focus on the editor', true, EditorFocus.hasFocus(editor));
       Assertions.assertDomEq('Should be the expected activeElement', element, Focus.active().getOrDie());
     });
   };
 
-  var cRemoveEditor = Chain.op(function (editor) {
+  const cRemoveEditor = Chain.op(function (editor) {
     editor.remove();
   });
 
@@ -127,4 +127,3 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function() {
     success();
   }, failure);
 });
-

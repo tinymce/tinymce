@@ -29,9 +29,7 @@ import Container from './Container';
  * @extends tinymce.ui.Container
  */
 
-"use strict";
-
-export default <any> Container.extend({
+export default Container.extend({
   Defaults: {
     defaultType: 'button',
     role: 'group'
@@ -43,8 +41,8 @@ export default <any> Container.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, layout = self._layout;
+  renderHtml () {
+    const self = this, layout = self._layout;
 
     self.classes.add('btn-group');
     self.preRender();

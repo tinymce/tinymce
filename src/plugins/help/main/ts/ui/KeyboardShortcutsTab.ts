@@ -12,11 +12,11 @@ import { Arr } from '@ephox/katamari';
 import I18n from 'tinymce/core/util/I18n';
 import KeyboardShortcuts from '../data/KeyboardShortcuts';
 
-var makeTab = function () {
-  var makeAriaLabel = function (shortcut) {
+const makeTab = function () {
+  const makeAriaLabel = function (shortcut) {
     return 'aria-label="Action: ' + shortcut.action + ', Shortcut: ' + shortcut.shortcut.replace(/Ctrl/g, 'Control') + '"';
   };
-  var shortcutLisString = Arr.map(KeyboardShortcuts.shortcuts, function (shortcut) {
+  const shortcutLisString = Arr.map(KeyboardShortcuts.shortcuts, function (shortcut) {
     return '<tr data-mce-tabstop="1" tabindex="-1" ' + makeAriaLabel(shortcut) + '>' +
               '<td>' + I18n.translate(shortcut.action) + '</td>' +
               '<td>' + shortcut.shortcut + '</td>' +
@@ -45,5 +45,5 @@ var makeTab = function () {
 };
 
 export default {
-  makeTab: makeTab
+  makeTab
 };

@@ -12,22 +12,23 @@ import Indent from '../actions/Indent';
 import Outdent from '../actions/Outdent';
 import ToggleList from '../actions/ToggleList';
 
-var queryListCommandState = function (editor, listName) {
+const queryListCommandState = function (editor, listName) {
   return function () {
-    var parentList = editor.dom.getParent(editor.selection.getStart(), 'UL,OL,DL');
+    const parentList = editor.dom.getParent(editor.selection.getStart(), 'UL,OL,DL');
     return parentList && parentList.nodeName === listName;
   };
 };
 
-var register = function (editor) {
+const register = function (editor) {
   editor.on('BeforeExecCommand', function (e) {
-    var cmd = e.command.toLowerCase(), isHandled;
+    const cmd = e.command.toLowerCase();
+    let isHandled;
 
-    if (cmd === "indent") {
+    if (cmd === 'indent') {
       if (Indent.indentSelection(editor)) {
         isHandled = true;
       }
-    } else if (cmd === "outdent") {
+    } else if (cmd === 'outdent') {
       if (Outdent.outdentSelection(editor)) {
         isHandled = true;
       }
@@ -58,5 +59,5 @@ var register = function (editor) {
 };
 
 export default {
-  register: register
+  register
 };

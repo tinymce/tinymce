@@ -13,9 +13,9 @@ import UpdateHtml from './UpdateHtml';
 declare let escape: any;
 declare let unescape: any;
 
-var setup = function (editor) {
+const setup = function (editor) {
   editor.on('click keyup', function () {
-    var selectedNode = editor.selection.getNode();
+    const selectedNode = editor.selection.getNode();
 
     if (selectedNode && editor.dom.hasClass(selectedNode, 'mce-preview-object')) {
       if (editor.dom.getAttrib(selectedNode, 'data-mce-selected')) {
@@ -25,16 +25,16 @@ var setup = function (editor) {
   });
 
   editor.on('ObjectSelected', function (e) {
-    var objectType = e.target.getAttribute('data-mce-object');
+    const objectType = e.target.getAttribute('data-mce-object');
 
-    if (objectType === "audio" || objectType === "script") {
+    if (objectType === 'audio' || objectType === 'script') {
       e.preventDefault();
     }
   });
 
   editor.on('objectResized', function (e) {
-    var target = e.target;
-    var html;
+    const target = e.target;
+    let html;
 
     if (target.getAttribute('data-mce-object')) {
       html = target.getAttribute('data-mce-html');
@@ -52,5 +52,5 @@ var setup = function (editor) {
 };
 
 export default {
-  setup: setup
+  setup
 };

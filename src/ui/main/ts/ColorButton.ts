@@ -21,18 +21,16 @@ import DomUtils from 'tinymce/core/dom/DOMUtils';
  * @extends tinymce.ui.PanelButton
  */
 
-"use strict";
+const DOM = DomUtils.DOM;
 
-var DOM = DomUtils.DOM;
-
-export default <any> PanelButton.extend({
+export default PanelButton.extend({
   /**
    * Constructs a new ColorButton instance with the specified settings.
    *
    * @constructor
    * @param {Object} settings Name/value object with settings.
    */
-  init: function (settings) {
+  init (settings) {
     this._super(settings);
     this.classes.add('splitbtn');
     this.classes.add('colorbutton');
@@ -45,7 +43,7 @@ export default <any> PanelButton.extend({
    * @param {String} [color] Color to set.
    * @return {String|tinymce.ui.ColorButton} Current color or current instance.
    */
-  color: function (color) {
+  color (color) {
     if (color) {
       this._color = color;
       this.getEl('preview').style.backgroundColor = color;
@@ -61,7 +59,7 @@ export default <any> PanelButton.extend({
    * @method resetColor
    * @return {tinymce.ui.ColorButton} Current instance.
    */
-  resetColor: function () {
+  resetColor () {
     this._color = null;
     this.getEl('preview').style.backgroundColor = null;
     return this;
@@ -73,11 +71,11 @@ export default <any> PanelButton.extend({
    * @method renderHtml
    * @return {String} HTML representing the control.
    */
-  renderHtml: function () {
-    var self = this, id = self._id, prefix = self.classPrefix, text = self.state.get('text');
-    var icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
-    var image = self.settings.image ? ' style="background-image: url(\'' + self.settings.image + '\')"' : '',
-      textHtml = '';
+  renderHtml () {
+    const self = this, id = self._id, prefix = self.classPrefix, text = self.state.get('text');
+    const icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
+    const image = self.settings.image ? ' style="background-image: url(\'' + self.settings.image + '\')"' : '';
+    let textHtml = '';
 
     if (text) {
       self.classes.add('btn-has-text');
@@ -103,15 +101,15 @@ export default <any> PanelButton.extend({
    *
    * @method postRender
    */
-  postRender: function () {
-    var self = this, onClickHandler = self.settings.onclick;
+  postRender () {
+    const self = this, onClickHandler = self.settings.onclick;
 
     self.on('click', function (e) {
       if (e.aria && e.aria.key === 'down') {
         return;
       }
 
-      if (e.control == self && !DOM.getParent(e.target, '.' + self.classPrefix + 'open')) {
+      if (e.control === self && !DOM.getParent(e.target, '.' + self.classPrefix + 'open')) {
         e.stopImmediatePropagation();
         onClickHandler.call(self, e);
       }
