@@ -118,8 +118,8 @@ const open = function (editor) {
   const rows = [];
   let generalRowForm;
 
-  tableElm = editor.dom.getParent(editor.selection.getStart(), 'table');
-  cellElm = editor.dom.getParent(editor.selection.getStart(), 'td,th');
+  tableElm = dom.getParent(editor.selection.getStart(), 'table');
+  cellElm = dom.getParent(editor.selection.getStart(), 'td,th');
 
   Tools.each(tableElm.rows, function (row) {
     Tools.each(row.cells, function (cell) {
@@ -215,7 +215,7 @@ const open = function (editor) {
           type: 'form',
           items: generalRowForm
         },
-        Helpers.createStyleForm(dom)
+        Helpers.createStyleForm(editor)
       ],
       onsubmit: Fun.curry(onSubmitRowForm, editor, rows)
     });
