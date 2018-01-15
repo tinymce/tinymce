@@ -167,7 +167,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', function 
     closeTopMostWindow(editor);
   });
 
-  suite.test("Update advanced styles from row properties dialog", function (editor) {
+  suite.test('Update advanced styles from row properties dialog', function (editor) {
     editor.getBody().innerHTML = (
       '<table>' +
       '<tbody>' +
@@ -181,8 +181,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', function 
     editor.execCommand('mceTableRowProps');
 
     fillAndSubmitWindowForm(editor, {
-      "borderStyle": "dotted",
-      "backgroundColor": "#ff0000"
+      borderStyle: 'dotted',
+      backgroundColor: '#ff0000'
     });
 
     LegacyUnit.equal(
