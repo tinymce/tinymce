@@ -22,38 +22,12 @@ node ("primary") {
     }
   }
 
-  def extNpmInstall = load("jenkins-plumbing/npm-install.groovy")
-  def extBedrock = load("jenkins-plumbing/bedrock-tests.groovy")
-
-  def permutations = [
-    [ name: "win10Chrome", os: "windows-10", browser: "chrome" ],
-    [ name: "win10FF", os: "windows-10", browser: "firefox" ],
-    [ name: "win10Edge", os: "windows-10", browser: "MicrosoftEdge" ],
-    [ name: "win10IE", os: "windows-10", browser: "ie" ]
-  ]
-
-  def processes = [:]
-  for (int i = 0; i < permutations.size(); i++) {
-    def permutation = permutations.get(i)
-    processes[permutation.name] = {
-      node("bedrock-" + permutation.os) {
-          
-        echo "Slave checkout"
-        git([branch: "master", url:'ssh://git@stash:7999/van/agar.git', credentialsId: credentialsId])  
-        
-        echo "Fetching Slave Dependencies"
-        extNpmInstall ()
-        
-        echo "Browser Tests for " + permutation.name
-        def webdriverTests = permutation.browser == "firefox" ? "" : " src/test/ts/webdriver"
-        extBedrock(permutation.name, permutation.browser, "src/test/ts/browser" + webdriverTests)
-      }
-    }
-  }
-
-  runTests = { 
-    parallel processes
-  }
+  def extBedrock = load("jenkins-plumbing/bedrock-browsers.groovy")
+  def runTests = extBedrock({ browser ->
+    // Firefox was disabled before, and IE never passes unless watched
+    def webdriverTests = (browser == "ie" || browser == "firefox") ? "" : " src/test/ts/webdriver"
+    return "src/test/ts/atomic src/test/ts/browser" + webdriverTests
+  })
 
   def runBuild = load("jenkins-plumbing/standard-build.groovy")
   runBuild(runTests)
