@@ -28,7 +28,7 @@ import DOMUtils from '../dom/DOMUtils';
 import DomQuery from '../dom/DomQuery';
 import EventUtils from '../dom/EventUtils';
 import ScriptLoader from '../dom/ScriptLoader';
-import Selection from '../dom/Selection';
+import * as Selection from '../dom/Selection';
 import Sizzle from '../dom/Sizzle';
 import TreeWalker from '../dom/TreeWalker';
 import Rect from '../geom/Rect';
@@ -96,7 +96,7 @@ const publicApi = {
     Serializer: DomSerializer,
     ControlSelection,
     BookmarkManager,
-    Selection,
+    Selection: Selection.create,
     Event: EventUtils.Event
   },
 

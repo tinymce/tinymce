@@ -17,6 +17,7 @@ import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 import RangeWalk from '../selection/RangeWalk';
 import Tools from '../util/Tools';
+import { EditorSelection } from 'tinymce/core/dom/Selection';
 
 const MCE_ATTR_RE = /^(src|href|style)$/;
 const each = Tools.each;
@@ -351,7 +352,7 @@ const remove = function (ed, name, vars?, node?, similar?) {
   const formatList = ed.formatter.get(name), format = formatList[0];
   let bookmark, rng, contentEditable = true;
   const dom = ed.dom;
-  const selection = ed.selection;
+  const selection: EditorSelection = ed.selection;
 
   const splitToFormatRoot = function (container) {
     const formatRoot = findFormatRoot(ed, container, name, vars, similar);
@@ -524,13 +525,13 @@ const remove = function (ed, name, vars?, node?, similar?) {
 
   if (!selection.isCollapsed() || !format.inline || dom.select('td[data-mce-selected],th[data-mce-selected]').length) {
     bookmark = selection.getBookmark();
-    removeRngStyle(selection.getRng(true));
+    removeRngStyle(selection.getRng());
     selection.moveToBookmark(bookmark);
 
     // Check if start element still has formatting then we are at: "<b>text|</b>text"
     // and need to move the start into the next text node
     if (format.inline && MatchFormat.match(ed, name, vars, selection.getStart())) {
-      FormatUtils.moveStart(dom, selection, selection.getRng(true));
+      FormatUtils.moveStart(dom, selection, selection.getRng());
     }
 
     ed.nodeChanged();

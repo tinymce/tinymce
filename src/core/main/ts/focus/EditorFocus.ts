@@ -17,6 +17,7 @@ import CaretFinder from '../caret/CaretFinder';
 import ElementType from '../dom/ElementType';
 import RangeNodes from '../selection/RangeNodes';
 import SelectionBookmark from '../selection/SelectionBookmark';
+import { EditorSelection } from '../dom/Selection';
 
 const getContentEditableHost = function (editor, node) {
   return editor.dom.getParent(node, function (node) {
@@ -85,7 +86,7 @@ const hasFocus = function (editor) {
 };
 
 const focusEditor = function (editor) {
-  const selection = editor.selection, contentEditable = editor.settings.content_editable;
+  const selection: EditorSelection = editor.selection, contentEditable = editor.settings.content_editable;
   const body = editor.getBody();
   let contentEditableHost, rng = selection.getRng();
 

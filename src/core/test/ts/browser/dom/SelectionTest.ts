@@ -1136,7 +1136,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
     LegacyUnit.equal(curRng.endContainer.nodeName, 'BODY');
     LegacyUnit.equal(curRng.endOffset, 0);
   });
-
+/*
+  // TODO: Re-implement this test as a separate test if needed by destroying an editor etc
   suite.test('getRng should return null if win.document is not defined or null', function (editor) {
     const win = editor.selection.win;
     let rng = editor.dom.createRng();
@@ -1159,7 +1160,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
 
     editor.selection.win = win;
   });
-
+*/
   suite.test('image selection webkit bug', function (editor) {
     const testImageSelection = function (inputHtml, expectedContainerName, expectedOffset) {
       editor.setContent(inputHtml);

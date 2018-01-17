@@ -9,12 +9,13 @@
  */
 
 import TreeWalker from '../dom/TreeWalker';
+import { EditorSelection } from '../dom/Selection';
 
 const isInlineBlock = function (node) {
   return node && /^(IMG)$/.test(node.nodeName);
 };
 
-const moveStart = function (dom, selection, rng) {
+const moveStart = function (dom, selection: EditorSelection, rng) {
   let container = rng.startContainer,
     offset = rng.startOffset,
     walker, node, nodes;

@@ -16,6 +16,7 @@ import Env from '../Env';
 import Delay from '../util/Delay';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
+import { EditorSelection } from './Selection';
 
 /**
  * This class handles control selection of elements. Controls are elements
@@ -40,7 +41,7 @@ const getContentEditableRoot = function (root, node) {
   return null;
 };
 
-export default function (selection, editor) {
+export default function (selection: EditorSelection, editor) {
   const dom = editor.dom, each = Tools.each;
   let selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
   let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;

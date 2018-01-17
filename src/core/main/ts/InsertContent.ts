@@ -20,6 +20,7 @@ import PaddingBr from './dom/PaddingBr';
 import Serializer from './html/Serializer';
 import RangeNormalizer from './selection/RangeNormalizer';
 import Tools from './util/Tools';
+import { EditorSelection } from './dom/Selection';
 
 /**
  * Handles inserts of contents into the editor instance.
@@ -55,12 +56,12 @@ const insertHtmlAtCaret = function (editor, value, details) {
   let parser, serializer, parentNode, rootNode, fragment, args;
   let marker, rng, node, node2, bookmarkHtml, merge;
   const textInlineElements = editor.schema.getTextInlineElements();
-  const selection = editor.selection, dom = editor.dom;
+  const selection: EditorSelection = editor.selection, dom = editor.dom;
 
   const trimOrPaddLeftRight = function (html) {
     let rng, container, offset;
 
-    rng = selection.getRng(true);
+    rng = selection.getRng();
     container = rng.startContainer;
     offset = rng.startOffset;
 
@@ -89,7 +90,7 @@ const insertHtmlAtCaret = function (editor, value, details) {
   const trimNbspAfterDeleteAndPaddValue = function () {
     let rng, container, offset;
 
-    rng = selection.getRng(true);
+    rng = selection.getRng();
     container = rng.startContainer;
     offset = rng.startOffset;
 
