@@ -71,11 +71,12 @@ const moveOutOfContentEditableFalse = function (rng, rootNode) {
   return NodeType.isContentEditableFalse(findParent(parentElement, rootNode, hasCeProperty)) ? null : rng;
 };
 
-const fromPoint = function (clientX, clientY, doc) {
+const fromPoint = function (clientX: number, clientY: number, doc: Document): Range {
   let rng, point;
+  const pointDoc = doc as any;
 
-  if (doc.caretPositionFromPoint) {
-    point = doc.caretPositionFromPoint(clientX, clientY);
+  if (pointDoc.caretPositionFromPoint) {
+    point = pointDoc.caretPositionFromPoint(clientX, clientY);
     if (point) {
       rng = doc.createRange();
       rng.setStart(point.offsetNode, point.offset);
@@ -83,8 +84,8 @@ const fromPoint = function (clientX, clientY, doc) {
     }
   } else if (doc.caretRangeFromPoint) {
     rng = doc.caretRangeFromPoint(clientX, clientY);
-  } else if (doc.body.createTextRange) {
-    rng = doc.body.createTextRange();
+  } else if (pointDoc.body.createTextRange) {
+    rng = pointDoc.body.createTextRange();
 
     try {
       rng.moveToPoint(clientX, clientY);

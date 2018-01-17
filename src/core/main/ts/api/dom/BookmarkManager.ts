@@ -10,6 +10,7 @@
 
 import { Fun } from '@ephox/katamari';
 import Bookmarks from '../../dom/Bookmarks';
+import { EditorSelection } from '../../dom/Selection';
 
 /**
  * This class handles selection bookmarks.
@@ -24,7 +25,7 @@ import Bookmarks from '../../dom/Bookmarks';
  * @method BookmarkManager
  * @param {tinymce.dom.Selection} selection Selection instance to handle bookmarks for.
  */
-const BookmarkManager: any = function (selection) {
+export function BookmarkManager(selection: EditorSelection) {
   return {
     /**
      * Returns a bookmark location for the current selection. This bookmark object
@@ -43,7 +44,7 @@ const BookmarkManager: any = function (selection) {
      * // Restore the selection bookmark
      * tinymce.activeEditor.selection.moveToBookmark(bm);
      */
-    getBookmark: Fun.curry(Bookmarks.getBookmark, selection),
+    getBookmark: Fun.curry(Bookmarks.getBookmark, selection) as (type: number, normalized?: boolean) => any,
 
     /**
      * Restores the selection to the specified bookmark.
@@ -60,18 +61,20 @@ const BookmarkManager: any = function (selection) {
      * // Restore the selection bookmark
      * tinymce.activeEditor.selection.moveToBookmark(bm);
      */
-    moveToBookmark: Fun.curry(Bookmarks.moveToBookmark, selection)
+    moveToBookmark: Fun.curry(Bookmarks.moveToBookmark, selection) as (bookmark: any) => boolean,
   };
-};
+}
 
-/**
- * Returns true/false if the specified node is a bookmark node or not.
- *
- * @static
- * @method isBookmarkNode
- * @param {DOMNode} node DOM Node to check if it's a bookmark node or not.
- * @return {Boolean} true/false if the node is a bookmark node or not.
- */
-BookmarkManager.isBookmarkNode = Bookmarks.isBookmarkNode;
+export namespace BookmarkManager {
+  /**
+   * Returns true/false if the specified node is a bookmark node or not.
+   *
+   * @static
+   * @method isBookmarkNode
+   * @param {DOMNode} node DOM Node to check if it's a bookmark node or not.
+   * @return {Boolean} true/false if the node is a bookmark node or not.
+   */
+  export const isBookmarkNode = Bookmarks.isBookmarkNode;
+}
 
 export default BookmarkManager;

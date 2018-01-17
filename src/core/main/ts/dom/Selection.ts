@@ -834,7 +834,7 @@ const create = function (dom, win: Window, serializer, editor): EditorSelection 
     destroy
   };
 
-  bookmarkManager = new BookmarkManager(exports);
+  bookmarkManager = BookmarkManager(exports);
   controlSelection = ControlSelection(exports, editor);
 
   exports.bookmarkManager = bookmarkManager;

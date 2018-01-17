@@ -23,7 +23,8 @@
       "interface-name": false,
       "ban-types": false,
       "no-console": false,
-      "no-bitwise": false
+      "no-bitwise": false,
+      "no-namespace": false
     },
     "rulesDirectory": []
 }
