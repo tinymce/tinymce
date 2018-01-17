@@ -8,32 +8,25 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * Contains various node validation functions.
- *
- * @private
- * @class tinymce.dom.NodeType
- */
-
 const isNodeType = function (type) {
-  return function (node) {
+  return function (node: Node) {
     return !!node && node.nodeType === type;
   };
 };
 
-const isElement = isNodeType(1);
+const isElement = isNodeType(1) as (node: Node) => node is HTMLElement;
 
-const matchNodeNames = function (names) {
-  names = names.toLowerCase().split(' ');
+const matchNodeNames = function (names: string) {
+  const items = names.toLowerCase().split(' ');
 
-  return function (node) {
+  return function (node: Node) {
     let i, name;
 
     if (node && node.nodeType) {
       name = node.nodeName.toLowerCase();
 
-      for (i = 0; i < names.length; i++) {
-        if (name === names[i]) {
+      for (i = 0; i < items.length; i++) {
+        if (name === items[i]) {
           return true;
         }
       }
@@ -43,16 +36,16 @@ const matchNodeNames = function (names) {
   };
 };
 
-const matchStyleValues = function (name, values) {
-  values = values.toLowerCase().split(' ');
+const matchStyleValues = function (name: string, values: string) {
+  const items = values.toLowerCase().split(' ');
 
   return function (node) {
     let i, cssValue;
 
     if (isElement(node)) {
-      for (i = 0; i < values.length; i++) {
+      for (i = 0; i < items.length; i++) {
         cssValue = node.ownerDocument.defaultView.getComputedStyle(node, null).getPropertyValue(name);
-        if (cssValue === values[i]) {
+        if (cssValue === items[i]) {
           return true;
         }
       }
@@ -62,30 +55,30 @@ const matchStyleValues = function (name, values) {
   };
 };
 
-const hasPropValue = function (propName, propValue) {
-  return function (node) {
+const hasPropValue = function (propName: string, propValue: any) {
+  return function (node: Node) {
     return isElement(node) && node[propName] === propValue;
   };
 };
 
-const hasAttribute = function (attrName, attrValue?) {
-  return function (node) {
+const hasAttribute = function (attrName: string, attrValue?: string) {
+  return function (node: Node) {
     return isElement(node) && node.hasAttribute(attrName);
   };
 };
 
-const hasAttributeValue = function (attrName, attrValue) {
-  return function (node) {
+const hasAttributeValue = function (attrName: string, attrValue: string) {
+  return function (node: Node) {
     return isElement(node) && node.getAttribute(attrName) === attrValue;
   };
 };
 
-const isBogus = function (node) {
+const isBogus = function (node: Node) {
   return isElement(node) && node.hasAttribute('data-mce-bogus');
 };
 
-const hasContentEditableState = function (value) {
-  return function (node) {
+const hasContentEditableState = function (value: string) {
+  return function (node: Node) {
     if (isElement(node)) {
       if (node.contentEditable === value) {
         return true;
@@ -100,14 +93,21 @@ const hasContentEditableState = function (value) {
   };
 };
 
+const isText = isNodeType(3) as (node: Node) => node is Text;
+const isComment = isNodeType(8) as (node: Node) => node is Comment;
+const isDocument = isNodeType(9) as (node: Node) => node is Document;
+const isBr = matchNodeNames('br') as (node: Node) => node is Element;
+const isContentEditableTrue = hasContentEditableState('true') as (node: Node) => node is Element;
+const isContentEditableFalse = hasContentEditableState('false') as (node: Node) => node is Element;
+
 export default {
-  isText: isNodeType(3),
+  isText,
   isElement,
-  isComment: isNodeType(8),
-  isDocument: isNodeType(9),
-  isBr: matchNodeNames('br'),
-  isContentEditableTrue: hasContentEditableState('true'),
-  isContentEditableFalse: hasContentEditableState('false'),
+  isComment,
+  isDocument,
+  isBr,
+  isContentEditableTrue,
+  isContentEditableFalse,
   matchNodeNames,
   hasPropValue,
   hasAttribute,
