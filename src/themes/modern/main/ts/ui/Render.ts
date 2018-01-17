@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import Iframe from '../modes/Iframe';
 import Inline from '../modes/Inline';
 import ProgressState from './ProgressState';

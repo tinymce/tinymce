@@ -10,7 +10,7 @@
 
 import Factory from 'tinymce/core/ui/Factory';
 import Tools from 'tinymce/core/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const createToolbar = function (editor, items, size?) {
   const toolbarItems = [];

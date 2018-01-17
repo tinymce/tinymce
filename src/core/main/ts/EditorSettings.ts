@@ -160,13 +160,56 @@ const get = function (editor, name) {
   return Option.from(editor.settings[name]);
 };
 
-const getFiltered = function (predicate, editor, name) {
-  return Option.from(editor.settings[name]).filter(predicate);
+const getFiltered = (predicate: Function, editor, name: string) => Option.from(editor.settings[name]).filter(predicate);
+
+const getString = Fun.curry(getFiltered, Type.isString);
+
+const getParamObject = (value: string) => {
+  let output = {};
+
+  if (typeof value === 'string') {
+    Arr.each(value.indexOf('=') > 0 ? value.split(/[;,](?![^=;,]*(?:[;,]|$))/) : value.split(','), function (value) {
+      value = value.split('=');
+
+      if (value.length > 1) {
+        output[Tools.trim(value[0])] = Tools.trim(value[1]);
+      } else {
+        output[Tools.trim(value[0])] = Tools.trim(value);
+      }
+    });
+  } else {
+    output = value;
+  }
+
+  return output;
 };
 
-export default {
+const getParam = (editor, name: string, defaultVal?: any, type?: string) => {
+  const value = name in editor.settings ? editor.settings[name] : defaultVal;
+
+  if (type === 'hash') {
+    return getParamObject(value);
+  } else if (type === 'string') {
+    return getFiltered(Type.isString, editor, name).getOr(defaultVal);
+  } else if (type === 'number') {
+    return getFiltered(Type.isNumber, editor, name).getOr(defaultVal);
+  } else if (type === 'boolean') {
+    return getFiltered(Type.isBoolean, editor, name).getOr(defaultVal);
+  } else if (type === 'object') {
+    return getFiltered(Type.isObject, editor, name).getOr(defaultVal);
+  } else if (type === 'array') {
+    return getFiltered(Type.isArray, editor, name).getOr(defaultVal);
+  } else if (type === 'function') {
+    return getFiltered(Type.isFunction, editor, name).getOr(defaultVal);
+  } else {
+    return value;
+  }
+};
+
+export {
   getEditorSettings,
   get,
-  getString: Fun.curry(getFiltered, Type.isString),
+  getString,
+  getParam,
   combineSettings
 };

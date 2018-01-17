@@ -5,9 +5,11 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import EditorSettings from 'tinymce/core/EditorSettings';
+import * as EditorSettings from 'tinymce/core/EditorSettings';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import Editor from 'tinymce/core/Editor';
+import EditorManager from 'tinymce/core/EditorManager';
 
 UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
   const success = arguments[arguments.length - 2];
@@ -245,7 +247,46 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
             EditorSettings.combineSettings(false, {}, { forced_plugins: ['a'] }, { forced_plugins: ['b'] })
           );
         }))
-      ]))
+      ])),
+      Logger.t('getParam hash (legacy)', Step.sync(function () {
+        const editor = new Editor('id', {
+          hash1: 'a,b,c',
+          hash2: 'a',
+          hash3: 'a=b',
+          hash4: 'a=b;c=d,e',
+          hash5: 'a=b,c=d'
+        }, EditorManager);
+
+        Assertions.assertEq('Should be expected object', { a: 'a', b: 'b', c: 'c' }, EditorSettings.getParam(editor, 'hash1', {}, 'hash'));
+        Assertions.assertEq('Should be expected object', { a: 'a' }, EditorSettings.getParam(editor, 'hash2', {}, 'hash'));
+        Assertions.assertEq('Should be expected object', { a: 'b' }, EditorSettings.getParam(editor, 'hash3', {}, 'hash'));
+        Assertions.assertEq('Should be expected object', { a: 'b', c: 'd,e' }, EditorSettings.getParam(editor, 'hash4', {}, 'hash'));
+        Assertions.assertEq('Should be expected object', { a: 'b', c: 'd' }, EditorSettings.getParam(editor, 'hash5', {}, 'hash'));
+        Assertions.assertEq('Should be expected default object', { b: 2 }, EditorSettings.getParam(editor, 'hash_undefined', { b: 2 }, 'hash'));
+      })),
+      Logger.t('getParam primary types', Step.sync(function () {
+        const editor = new Editor('id', {
+          bool: true,
+          str: 'a',
+          num: 2,
+          obj: { a: 1 },
+          arr: [ 'a' ],
+          fun: () => {}
+        }, EditorManager);
+
+        Assertions.assertEq('Should be expected bool', true, EditorSettings.getParam(editor, 'bool', false, 'boolean'));
+        Assertions.assertEq('Should be expected string', 'a', EditorSettings.getParam(editor, 'str', 'x', 'string'));
+        Assertions.assertEq('Should be expected number', 2, EditorSettings.getParam(editor, 'num', 1, 'number'));
+        Assertions.assertEq('Should be expected object', { a: 1 }, EditorSettings.getParam(editor, 'obj', {}, 'object'));
+        Assertions.assertEq('Should be expected array', [ 'a' ], EditorSettings.getParam(editor, 'arr', [], 'array'));
+        Assertions.assertEq('Should be expected function', 'function', typeof EditorSettings.getParam(editor, 'fun', null, 'function'));
+        Assertions.assertEq('Should be expected default bool', false, EditorSettings.getParam(editor, 'bool_undefined', false, 'boolean'));
+        Assertions.assertEq('Should be expected default string', 'x', EditorSettings.getParam(editor, 'str_undefined', 'x', 'string'));
+        Assertions.assertEq('Should be expected default number', 1, EditorSettings.getParam(editor, 'num_undefined', 1, 'number'));
+        Assertions.assertEq('Should be expected default object', {}, EditorSettings.getParam(editor, 'obj_undefined', {}, 'object'));
+        Assertions.assertEq('Should be expected default array', [], EditorSettings.getParam(editor, 'arr_undefined', [], 'array'));
+        Assertions.assertEq('Should be expected default function', null, EditorSettings.getParam(editor, 'fun_undefined', null, 'function'));
+      }))
     ], onSuccess, onFailure);
   }, {
     skin_url: '/project/js/tinymce/skins/lightgray'

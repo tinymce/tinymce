@@ -15,7 +15,7 @@ import Factory from 'tinymce/core/ui/Factory';
 import Delay from 'tinymce/core/util/Delay';
 import Tools from 'tinymce/core/util/Tools';
 import UiContainer from '../alien/UiContainer';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import Toolbar from './Toolbar';
 
 const DOM = DOMUtils.DOM;

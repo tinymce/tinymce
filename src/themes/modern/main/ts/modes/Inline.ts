@@ -12,7 +12,7 @@ import Env from 'tinymce/core/Env';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
 import Factory from 'tinymce/core/ui/Factory';
 import Events from '../api/Events';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import A11y from '../ui/A11y';
 import ContextToolbars from '../ui/ContextToolbars';
 import Menubar from '../ui/Menubar';

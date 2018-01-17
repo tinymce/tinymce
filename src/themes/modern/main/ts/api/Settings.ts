@@ -11,27 +11,24 @@
 import EditorManager from 'tinymce/core/EditorManager';
 import Tools from 'tinymce/core/util/Tools';
 
-const isBrandingEnabled = function (editor) {
-  return editor.getParam('branding', true);
-};
+const isBrandingEnabled = (editor): boolean => editor.getParam('branding', true, 'boolean');
+const hasMenubar = (editor): boolean => getMenubar(editor) !== false;
+const getMenubar = (editor) => editor.getParam('menubar');
+const hasStatusbar = (editor): boolean => editor.getParam('statusbar', true, 'boolean');
+const getToolbarSize = (editor): string => editor.getParam('toolbar_items_size');
+const isReadOnly = (editor): boolean => editor.getParam('readonly', false, 'boolean');
+const getFixedToolbarContainer = (editor) => editor.getParam('fixed_toolbar_container');
+const getInlineToolbarPositionHandler = (editor) => editor.getParam('inline_toolbar_position_handler');
+const getMenu = (editor) => editor.getParam('menu');
+const getRemovedMenuItems = (editor) => editor.getParam('removed_menuitems', '');
+const getMinWidth = (editor): number => editor.getParam('min_width', 100, 'number');
+const getMinHeight = (editor): number => editor.getParam('min_height', 100, 'number');
+const getMaxWidth = (editor): number => editor.getParam('max_width', 0xFFFF, 'number');
+const getMaxHeight = (editor): number => editor.getParam('max_height', 0xFFFF, 'number');
+const isSkinDisabled = (editor): boolean => editor.settings.skin === false;
+const isInline = (editor): boolean => editor.getParam('inline', false, 'boolean');
 
-const hasMenubar = function (editor) {
-  return getMenubar(editor) !== false;
-};
-
-const getMenubar = function (editor) {
-  return editor.getParam('menubar');
-};
-
-const hasStatusbar = function (editor) {
-  return editor.getParam('statusbar', true);
-};
-
-const getToolbarSize = function (editor) {
-  return editor.getParam('toolbar_items_size');
-};
-
-const getResize = function (editor) {
+const getResize = (editor): string => {
   const resize = editor.getParam('resize', 'vertical');
   if (resize === false) {
     return 'none';
@@ -42,43 +39,7 @@ const getResize = function (editor) {
   }
 };
 
-const isReadOnly = function (editor) {
-  return editor.getParam('readonly', false);
-};
-
-const getFixedToolbarContainer = function (editor) {
-  return editor.getParam('fixed_toolbar_container');
-};
-
-const getInlineToolbarPositionHandler = function (editor) {
-  return editor.getParam('inline_toolbar_position_handler');
-};
-
-const getMenu = function (editor) {
-  return editor.getParam('menu');
-};
-
-const getRemovedMenuItems = function (editor) {
-  return editor.getParam('removed_menuitems', '');
-};
-
-const getMinWidth = function (editor) {
-  return editor.getParam('min_width', 100);
-};
-
-const getMinHeight = function (editor) {
-  return editor.getParam('min_height', 100);
-};
-
-const getMaxWidth = function (editor) {
-  return editor.getParam('max_width', 0xFFFF);
-};
-
-const getMaxHeight = function (editor) {
-  return editor.getParam('max_height', 0xFFFF);
-};
-
-const getSkinUrl = function (editor) {
+const getSkinUrl = function (editor): string {
   const settings = editor.settings;
   const skin = settings.skin;
   let skinUrl = settings.skin_url;
@@ -94,14 +55,6 @@ const getSkinUrl = function (editor) {
   }
 
   return skinUrl;
-};
-
-const isSkinDisabled = function (editor) {
-  return editor.settings.skin === false;
-};
-
-const isInline = function (editor) {
-  return editor.getParam('inline', false);
 };
 
 const getIndexedToolbars = function (settings, defaultToolbar) {
@@ -136,7 +89,7 @@ const getToolbars = function (editor) {
   }
 };
 
-export default {
+export {
   isBrandingEnabled,
   hasMenubar,
   getMenubar,

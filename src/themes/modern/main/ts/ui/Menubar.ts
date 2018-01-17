@@ -10,7 +10,7 @@
 
 import { Arr } from '@ephox/katamari';
 import Tools from 'tinymce/core/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const defaultMenus = {
   file: { title: 'File', items: 'newdocument restoredraft | preview | print' },
