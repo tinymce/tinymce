@@ -178,6 +178,28 @@ UnitTest.asynctest(
             DOMUtils.DOM.fire(document, 'mouseup');
           }),
           sWaitForBookmark(editor, [0, 0], 0, [0, 0], 1)
+        ])),
+        Logger.t('getSelectionRange event should fire on bookmarked ranges', GeneralSteps.sequence([
+          sAddTestDiv,
+          Step.sync(() => {
+            const modifyRange = (e) => {
+              const newRng = document.createRange();
+              newRng.selectNodeContents(editor.getBody().lastChild);
+              e.range = newRng;
+            };
+
+            editor.setContent('<p>a</p><p>b</p>');
+            setSelection(editor, [0, 0], 0, [0, 0], 1);
+            editor.nodeChanged();
+            focusDiv();
+
+            editor.on('getSelectionRange', modifyRange);
+            const elm = editor.selection.getNode();
+            editor.off('getSelectedRange', modifyRange);
+
+            Assertions.assertEq('Expect event to change the selection from a to b', 'b', elm.innerHTML);
+          }),
+          sRemoveTestDiv
         ]))
       ], onSuccess, onFailure);
     }, {

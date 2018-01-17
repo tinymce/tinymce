@@ -10,8 +10,8 @@
 
 import { Arr } from '@ephox/katamari';
 
-const processRanges = function (editor, ranges) {
-  return Arr.map(ranges, function (range) {
+const processRanges = (editor, ranges: Range[]): Range[] => {
+  return Arr.map(ranges, (range) => {
     const evt = editor.fire('GetSelectionRange', { range });
     return evt.range !== range ? evt.range : range;
   });
