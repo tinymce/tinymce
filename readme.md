@@ -1,5 +1,5 @@
 TinyMCE - JavaScript Library for Rich Text Editing
-==========================================
+===================================================
 
 Building TinyMCE
 -----------------
@@ -25,13 +25,38 @@ Now, build TinyMCE by using `grunt`.
 $ grunt
 ```
 
+
 Build tasks
 ------------
 `grunt`
-Lints, minifies, unit tests and creates release packages for TinyMCE.
+Lints, compiles, minifies and creates release packages for TinyMCE. This will produce the production ready packages.
+
+`grunt dev`
+Runs tsc, webpack and less. This will only produce the bare essentials for a development build and is a lot faster.
 
 `grunt test`
-Runs all qunit tests on PhantomJS.
+Runs all tests on PhantomJS.
+
+`grunt bedrock-manual`
+Runs all tests manually in a browser.
+
+`grunt bedrock-auto:<browser>`
+Runs all tests through selenium browsers supported are chrome, firefox, ie, MicrosoftEdge, chrome-headless and phantomjs.
+
+`grunt webpack:core`
+Builds the demo js files for the core part of tinymce this is required to get the core demos working.
+
+`grunt webpack:plugins`
+Builds the demo js files for the plugins part of tinymce this is required to get the plugins demos working.
+
+`grunt webpack:themes`
+Builds the demo js files for the themes part of tinymce this is required to get the themes demos working.
+
+`grunt webpack:<name>-plugin`
+Builds the demo js files for the specific plugin.
+
+`grunt webpack:<name>-theme`
+Builds the demo js files for the specific theme.
 
 `grunt --help`
 Displays the various build tasks.
@@ -39,6 +64,7 @@ Displays the various build tasks.
 Bundle themes and plugins into a single file
 ---------------------------------------------
 `grunt bundle --themes=modern --plugins=table,paste`
+
 Minifies the core, adds the modern theme and adds the table and paste plugin into tinymce.min.js.
 
 Contributing to the TinyMCE project
