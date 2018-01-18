@@ -311,6 +311,7 @@ export default ComboBox.extend({
     }
 
     self._super(settings);
+    self.classes.add('filepicker');
 
     setupAutoCompleteHandler(self, editorSettings, editor.getBody(), fileType);
     setupLinkValidatorHandler(self, editorSettings, fileType);

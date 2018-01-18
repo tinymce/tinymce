@@ -385,6 +385,7 @@ export default Widget.extend({
 
     const maxW = self.layoutRect().w;
     self.menu.layoutRect({ w: maxW, minW: 0, maxW });
+    self.menu.repaint();
     self.menu.reflow();
     self.menu.show();
     self.menu.moveRel(self.getEl(), self.isRtl() ? ['br-tr', 'tr-br'] : ['bl-tl', 'tl-bl']);

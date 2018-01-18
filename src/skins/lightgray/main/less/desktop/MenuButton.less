@@ -30,7 +30,16 @@ div.@{prefix}-menubtn.@{prefix}-opened {
 
 // RTL
 
-.@{prefix}-rtl .@{prefix}-menubtn button {
-  direction: rtl;
-  text-align: right;
+.@{prefix}-rtl {
+  .@{prefix}-menubtn button {
+    direction: rtl;
+    text-align: right;
+  }
+
+  .@{prefix}-menubtn.@{prefix}-fixed-width span {
+    direction: rtl;
+    text-align: right;
+  }
 }
+
+
