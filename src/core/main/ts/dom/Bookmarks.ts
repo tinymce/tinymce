@@ -10,7 +10,7 @@
 
 import GetBookmark from './GetBookmark';
 import ResolveBookmark from './ResolveBookmark';
-import { EditorSelection } from './Selection';
+import { EditorSelection } from '../api/dom/Selection';
 import NodeType from './NodeType';
 
 const getBookmark = function (selection: EditorSelection, type, normalized) {

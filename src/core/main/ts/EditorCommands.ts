@@ -15,7 +15,7 @@ import NodeType from './dom/NodeType';
 import InsertBr from './newline/InsertBr';
 import SelectionBookmark from './selection/SelectionBookmark';
 import Tools from './util/Tools';
-import { EditorSelection } from './dom/Selection';
+import { EditorSelection } from './api/dom/Selection';
 
 /**
  * This class enables you to add custom editor commands and it contains

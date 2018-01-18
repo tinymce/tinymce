@@ -16,7 +16,7 @@ import NodeType from './NodeType';
 import RangeNodes from '../selection/RangeNodes';
 import Zwsp from '../text/Zwsp';
 import Tools from '../util/Tools';
-import { EditorSelection } from './Selection';
+import { EditorSelection } from '../api/dom/Selection';
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 

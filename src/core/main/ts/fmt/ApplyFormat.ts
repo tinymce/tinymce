@@ -19,7 +19,7 @@ import MergeFormats from './MergeFormats';
 import RangeNormalizer from '../selection/RangeNormalizer';
 import RangeWalk from '../selection/RangeWalk';
 import Tools from '../util/Tools';
-import { EditorSelection } from 'tinymce/core/dom/Selection';
+import { EditorSelection } from '../api/dom/Selection';
 
 const each = Tools.each;
 

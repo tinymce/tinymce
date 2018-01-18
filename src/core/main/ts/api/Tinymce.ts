@@ -23,12 +23,12 @@ import WindowManager from './WindowManager';
 import BookmarkManager from './dom/BookmarkManager';
 import RangeUtils from './dom/RangeUtils';
 import DomSerializer from './dom/Serializer';
-import ControlSelection from '../dom/ControlSelection';
+import ControlSelection from './dom/ControlSelection';
 import DOMUtils from '../dom/DOMUtils';
 import DomQuery from '../dom/DomQuery';
 import EventUtils from '../dom/EventUtils';
 import ScriptLoader from '../dom/ScriptLoader';
-import * as Selection from '../dom/Selection';
+import Selection from './dom/Selection';
 import Sizzle from '../dom/Sizzle';
 import TreeWalker from '../dom/TreeWalker';
 import Rect from '../geom/Rect';
@@ -96,7 +96,7 @@ const publicApi = {
     Serializer: DomSerializer,
     ControlSelection,
     BookmarkManager,
-    Selection: Selection.create,
+    Selection,
     Event: EventUtils.Event
   },
 

@@ -10,21 +10,21 @@
 
 import { Compare } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
-import Env from '../Env';
-import BookmarkManager from '../api/dom/BookmarkManager';
-import CaretPosition from '../caret/CaretPosition';
+import Env from '../../Env';
+import BookmarkManager from './BookmarkManager';
+import CaretPosition from '../../caret/CaretPosition';
 import ControlSelection from './ControlSelection';
-import ScrollIntoView from './ScrollIntoView';
-import TreeWalker from './TreeWalker';
-import EditorFocus from '../focus/EditorFocus';
-import CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
-import EventProcessRanges from '../selection/EventProcessRanges';
-import GetSelectionContent from '../selection/GetSelectionContent';
-import MultiRange from '../selection/MultiRange';
-import NormalizeRange from '../selection/NormalizeRange';
-import SelectionBookmark from '../selection/SelectionBookmark';
-import SetSelectionContent from '../selection/SetSelectionContent';
-import Tools from '../util/Tools';
+import ScrollIntoView from '../../dom/ScrollIntoView';
+import TreeWalker from '../../dom/TreeWalker';
+import EditorFocus from '../../focus/EditorFocus';
+import CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
+import EventProcessRanges from '../../selection/EventProcessRanges';
+import GetSelectionContent from '../../selection/GetSelectionContent';
+import MultiRange from '../../selection/MultiRange';
+import NormalizeRange from '../../selection/NormalizeRange';
+import SelectionBookmark from '../../selection/SelectionBookmark';
+import SetSelectionContent from '../../selection/SetSelectionContent';
+import Tools from '../../util/Tools';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -96,10 +96,10 @@ interface EditorSelection {
  * @method Selection
  * @param {tinymce.dom.DOMUtils} dom DOMUtils object reference.
  * @param {Window} win Window to bind the selection object to.
- * @param {tinymce.Editor} editor Editor instance of the selection.
  * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
+ * @param {tinymce.Editor} editor Editor instance of the selection.
  */
-const create = function (dom, win: Window, serializer, editor): EditorSelection {
+const Selection = function (dom, win: Window, serializer, editor): EditorSelection {
   let bookmarkManager, controlSelection;
   let selectedRange, explicitRange, selectorChangedData;
 
@@ -844,6 +844,7 @@ const create = function (dom, win: Window, serializer, editor): EditorSelection 
 };
 
 export {
-  EditorSelection,
-  create
+  EditorSelection
 };
+
+export default Selection;

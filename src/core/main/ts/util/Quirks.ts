@@ -16,7 +16,7 @@ import CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
 import Delay from './Delay';
 import Tools from './Tools';
 import VK from './VK';
-import { EditorSelection } from 'tinymce/core/dom/Selection';
+import { EditorSelection } from '../api/dom/Selection';
 
 declare const escape: any;
 declare const unescape: any;

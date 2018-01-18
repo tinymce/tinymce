@@ -9,7 +9,7 @@
  */
 
 import TreeWalker from '../dom/TreeWalker';
-import { EditorSelection } from '../dom/Selection';
+import { EditorSelection } from '../api/dom/Selection';
 
 const isInlineBlock = function (node) {
   return node && /^(IMG)$/.test(node.nodeName);

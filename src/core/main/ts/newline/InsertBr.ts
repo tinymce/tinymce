@@ -18,7 +18,7 @@ import TreeWalker from '../dom/TreeWalker';
 import BoundaryLocation from '../keyboard/BoundaryLocation';
 import InlineUtils from '../keyboard/InlineUtils';
 import NormalizeRange from '../selection/NormalizeRange';
-import { EditorSelection } from '../dom/Selection';
+import { EditorSelection } from '../api/dom/Selection';
 
 // Walks the parent block to the right and look for BR elements
 const hasRightSideContent = function (schema, container, parentBlock) {

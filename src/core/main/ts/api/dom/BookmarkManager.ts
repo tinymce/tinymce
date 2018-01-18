@@ -10,7 +10,7 @@
 
 import { Fun } from '@ephox/katamari';
 import Bookmarks from '../../dom/Bookmarks';
-import { EditorSelection } from '../../dom/Selection';
+import { EditorSelection } from './Selection';
 
 /**
  * This class handles selection bookmarks.

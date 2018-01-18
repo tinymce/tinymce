@@ -15,7 +15,7 @@ import CaretBookmark from '../caret/CaretBookmark';
 import CaretPosition from '../caret/CaretPosition';
 import NodeType from './NodeType';
 import Tools from '../util/Tools';
-import { EditorSelection } from '../dom/Selection';
+import { EditorSelection } from '../api/dom/Selection';
 
 const addBogus = function (dom, node) {
   // Adds a bogus BR element for empty block elements

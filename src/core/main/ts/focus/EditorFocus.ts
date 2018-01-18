@@ -17,7 +17,7 @@ import CaretFinder from '../caret/CaretFinder';
 import ElementType from '../dom/ElementType';
 import RangeNodes from '../selection/RangeNodes';
 import SelectionBookmark from '../selection/SelectionBookmark';
-import { EditorSelection } from '../dom/Selection';
+import { EditorSelection } from '../api/dom/Selection';
 
 const getContentEditableHost = function (editor, node) {
   return editor.dom.getParent(node, function (node) {

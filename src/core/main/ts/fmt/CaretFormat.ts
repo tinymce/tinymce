@@ -24,7 +24,7 @@ import MatchFormat from './MatchFormat';
 import SplitRange from '../selection/SplitRange';
 import Zwsp from '../text/Zwsp';
 import Fun from '../util/Fun';
-import { EditorSelection } from 'tinymce/core/dom/Selection';
+import { EditorSelection } from '../api/dom/Selection';
 
 const ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret';
 

@@ -17,7 +17,7 @@ import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 import RangeWalk from '../selection/RangeWalk';
 import Tools from '../util/Tools';
-import { EditorSelection } from 'tinymce/core/dom/Selection';
+import { EditorSelection } from '../api/dom/Selection';
 
 const MCE_ATTR_RE = /^(src|href|style)$/;
 const each = Tools.each;

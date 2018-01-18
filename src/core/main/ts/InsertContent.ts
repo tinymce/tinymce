@@ -20,7 +20,7 @@ import PaddingBr from './dom/PaddingBr';
 import Serializer from './html/Serializer';
 import RangeNormalizer from './selection/RangeNormalizer';
 import Tools from './util/Tools';
-import { EditorSelection } from './dom/Selection';
+import { EditorSelection } from './api/dom/Selection';
 
 /**
  * Handles inserts of contents into the editor instance.
