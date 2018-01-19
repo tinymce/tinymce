@@ -168,7 +168,9 @@ module.exports = function (grunt) {
       options: {
         webpack: gruntWebPack.all(plugins, themes),
         publicPath: '/',
-        inline: false
+        inline: false,
+        port: 3000,
+        before: app => gruntWebPack.generateDemoIndex(grunt, app, plugins, themes)
       },
       start: { }
     },
