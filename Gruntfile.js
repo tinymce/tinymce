@@ -663,6 +663,7 @@ module.exports = function (grunt) {
 
     clean: {
       dist: ['js'],
+      lib: ['lib'],
       scratch: ['scratch'],
       release: ['tmp']
     },
@@ -769,7 +770,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('@ephox/bedrock');
   grunt.loadNpmTasks('grunt-tslint');
 
-  grunt.registerTask('default', [
+  grunt.registerTask('prod', [
     'validateVersion',
     'shell:tsc',
     'tslint',
@@ -793,5 +794,6 @@ module.exports = function (grunt) {
     'copy'
   ])
 
+  grunt.registerTask('default', ['prod']);
   grunt.registerTask('test', ['bedrock-auto:phantomjs']);
 };
