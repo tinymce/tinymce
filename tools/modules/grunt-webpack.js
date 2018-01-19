@@ -96,7 +96,27 @@ let all = (plugins, themes) => {
 
 let generateDemoIndex = (grunt, app, plugins, themes) => {
   let demoList = grunt.file.expand(['src/**/demo/html/*.html'])
-  let links = `<ul>${demoList.map(link => `<li><a href="${link}">${link}</a></li>`).join('')}</ul>`
+  let sortedDemos = demoList.reduce((acc, link) => {
+    const type = link.split('/')[1];
+
+    if (!acc[type]) {
+      acc[type] = [];
+    }
+
+    acc[type].push(link)
+
+    return acc;
+  }, {})
+
+  let lists = Object.keys(sortedDemos).map(
+    type => `
+    <h2>${type}</h2>
+    <ul>
+      ${sortedDemos[type].map(
+        link => `<li>${type !== 'core' ? `<strong>${link.split('/')[2]}</strong> - ` : ''}<a href="${link}">${path.basename(link)}</a></li>`).join('')
+      }
+    </ul>`
+  ).join('');
   let html = `
   <!DOCTYPE html>
   <html lang="en">
@@ -107,7 +127,7 @@ let generateDemoIndex = (grunt, app, plugins, themes) => {
     <title>Demos</title>
   </head>
   <body>
-    ${links}
+    ${lists}
   </body>
   </html>
   `
