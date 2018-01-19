@@ -17,6 +17,9 @@ import { Element } from '@ephox/sugar';
 import { Node } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 import NodeType from '../dom/NodeType';
+import Env from 'tinymce/core/Env';
+import TreeWalker from '../dom/TreeWalker';
+import Tools from 'tinymce/core/util/Tools';
 
 const getStartNode = function (rng) {
   const sc = rng.startContainer, so = rng.startOffset;
@@ -68,6 +71,60 @@ const hasAllContentsSelected = function (elm, rng) {
   }).getOr(false);
 };
 
-export default {
-  hasAllContentsSelected
+const moveEndPoint = (dom, rng: Range, node, start: boolean): void => {
+  const root = node, walker = new TreeWalker(node, root);
+  const nonEmptyElementsMap = dom.schema.getNonEmptyElements();
+
+  do {
+    // Text node
+    if (node.nodeType === 3 && Tools.trim(node.nodeValue).length !== 0) {
+      if (start) {
+        rng.setStart(node, 0);
+      } else {
+        rng.setEnd(node, node.nodeValue.length);
+      }
+
+      return;
+    }
+
+    // BR/IMG/INPUT elements but not table cells
+    if (nonEmptyElementsMap[node.nodeName] && !/^(TD|TH)$/.test(node.nodeName)) {
+      if (start) {
+        rng.setStartBefore(node);
+      } else {
+        if (node.nodeName === 'BR') {
+          rng.setEndBefore(node);
+        } else {
+          rng.setEndAfter(node);
+        }
+      }
+
+      return;
+    }
+
+    // Found empty text block old IE can place the selection inside those
+    if (Env.ie && Env.ie < 11 && dom.isBlock(node) && dom.isEmpty(node)) {
+      if (start) {
+        rng.setStart(node, 0);
+      } else {
+        rng.setEnd(node, 0);
+      }
+
+      return;
+    }
+  } while ((node = (start ? walker.next() : walker.prev())));
+
+  // Failed to find any text node or other suitable location then move to the root of body
+  if (root.nodeName === 'BODY') {
+    if (start) {
+      rng.setStart(root, 0);
+    } else {
+      rng.setEnd(root, root.childNodes.length);
+    }
+  }
+};
+
+export {
+  hasAllContentsSelected,
+  moveEndPoint
 };
