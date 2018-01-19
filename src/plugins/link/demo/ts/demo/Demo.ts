@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import LinkPlugin from 'tinymce/plugins/link/Plugin';
-
 declare let tinymce: any;
-
-LinkPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'link code',
   height: 600
 });
+
+export {};

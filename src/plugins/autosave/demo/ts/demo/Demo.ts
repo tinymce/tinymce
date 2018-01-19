@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import AutoSavePlugin from 'tinymce/plugins/autosave/Plugin';
-
 declare let tinymce: any;
-
-AutoSavePlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'restoredraft code',
   height: 600
 });
+
+export {};

@@ -9,14 +9,12 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import EditorManager from 'tinymce/core/EditorManager';
-import ModernTheme from 'tinymce/themes/modern/Theme';
 
-ModernTheme();
+declare let tinymce: any;
 
 export default function () {
   const notifyShort = function (type) {
-    const notification = EditorManager.activeEditor.notificationManager.open({
+    const notification = tinymce.activeEditor.notificationManager.open({
       type,
       text: 'This is an example ' + (type ? type : 'blank') + ' message.'
     });
@@ -34,7 +32,7 @@ export default function () {
       longTextMessage.push('bla');
     }
 
-    const notification = EditorManager.activeEditor.notificationManager.open({
+    const notification = tinymce.activeEditor.notificationManager.open({
       text: longTextMessage.join(' ')
     });
     console.log(notification);
@@ -47,14 +45,14 @@ export default function () {
       longTextMessage.push('bla');
     }
 
-    const notification = EditorManager.activeEditor.notificationManager.open({
+    const notification = tinymce.activeEditor.notificationManager.open({
       text: longTextMessage.join('')
     });
     console.log(notification);
   };
 
   const notifyProgress = function (percent) {
-    const notification = EditorManager.activeEditor.notificationManager.open({
+    const notification = tinymce.activeEditor.notificationManager.open({
       text: 'Progress text',
       progressBar: true
     });
@@ -68,7 +66,7 @@ export default function () {
   };
 
   const notifyTimeout = function (time) {
-    const notification = EditorManager.activeEditor.notificationManager.open({
+    const notification = tinymce.activeEditor.notificationManager.open({
       text: 'Timeout: ' + time,
       timeout: time
     });
@@ -76,7 +74,7 @@ export default function () {
   };
 
   const notifyIcon = function () {
-    const notification = EditorManager.activeEditor.notificationManager.open({
+    const notification = tinymce.activeEditor.notificationManager.open({
       text: 'Text',
       icon: 'bold'
     });
@@ -103,13 +101,13 @@ export default function () {
     document.querySelector('#ephox-ui').appendChild(btn);
   });
 
-  EditorManager.init({
+  tinymce.init({
     selector: 'textarea.tinymce',
     skin_url: '../../../../../js/tinymce/skins/lightgray',
     codesample_content_css: '../../../../../js/tinymce/plugins/codesample/css/prism.css'
   });
 
-  EditorManager.init({
+  tinymce.init({
     selector: 'div.tinymce',
     inline: true,
     skin_url: '../../../../../js/tinymce/skins/lightgray',

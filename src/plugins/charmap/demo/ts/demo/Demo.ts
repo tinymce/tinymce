@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import CharMapPlugin from 'tinymce/plugins/charmap/Plugin';
-
 declare let tinymce: any;
-
-CharMapPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'charmap code',
   height: 600
 });
+
+export {};

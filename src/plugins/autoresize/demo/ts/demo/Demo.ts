@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import AutoResizePlugin from 'tinymce/plugins/autoresize/Plugin';
-
 declare let tinymce: any;
-
-AutoResizePlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'autoresize code',
   height: 600
 });
+
+export {};

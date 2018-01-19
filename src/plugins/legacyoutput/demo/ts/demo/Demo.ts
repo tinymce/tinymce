@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import LegacyOutputPlugin from 'tinymce/plugins/legacyoutput/Plugin';
-
 declare let tinymce: any;
-
-LegacyOutputPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'legacyoutput fontselect fontsizeselect code',
   height: 600
 });
+
+export {};

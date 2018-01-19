@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import MediaPlugin from 'tinymce/plugins/media/Plugin';
-
 declare let tinymce: any;
-
-MediaPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -36,3 +32,5 @@ tinymce.init({
   // },
   height: 600
 });
+
+export {};

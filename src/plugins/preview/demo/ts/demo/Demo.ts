@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
-
 declare let tinymce: any;
-
-PreviewPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'preview code',
   height: 600
 });
+
+export {};

@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import PrintPlugin from 'tinymce/plugins/print/Plugin';
-
 declare let tinymce: any;
-
-PrintPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'print code',
   height: 600
 });
+
+export {};

@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import AutoLinkPlugin from 'tinymce/plugins/autolink/Plugin';
-
 declare let tinymce: any;
-
-AutoLinkPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'autolink code',
   height: 600
 });
+
+export {};

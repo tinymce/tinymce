@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import ImagePlugin from 'tinymce/plugins/image/Plugin';
-
 declare let tinymce: any;
-
-ImagePlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -28,3 +24,5 @@ tinymce.init({
   },
   height: 600
 });
+
+export {};

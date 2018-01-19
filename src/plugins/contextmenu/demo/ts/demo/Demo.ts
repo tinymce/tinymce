@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import ContextMenuPlugin from 'tinymce/plugins/contextmenu/Plugin';
-
 declare let tinymce: any;
-
-ContextMenuPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -23,3 +19,5 @@ tinymce.init({
   height: 600,
   contextmenu: 'code'
 });
+
+export {};

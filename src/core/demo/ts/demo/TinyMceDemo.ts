@@ -8,19 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import EditorManager from 'tinymce/core/EditorManager';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+declare let tinymce: any;
 
 export default function () {
-  ModernTheme();
-
   const textarea = document.createElement('textarea');
   textarea.innerHTML = '<p>Bolt</p>';
 
   textarea.classList.add('tinymce');
   document.querySelector('#ephox-ui').appendChild(textarea);
 
-  EditorManager.init({
+  tinymce.init({
     // imagetools_cors_hosts: ["moxiecode.cachefly.net"],
     // imagetools_proxy: "proxy.php",
     // imagetools_api_key: '123',

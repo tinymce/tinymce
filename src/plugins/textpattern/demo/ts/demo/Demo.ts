@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
-
 declare let tinymce: any;
-
-TextPatternPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -21,3 +17,5 @@ tinymce.init({
   toolbar: 'code',
   height: 600
 });
+
+export {};

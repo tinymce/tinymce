@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
-
 declare let tinymce: any;
-
-AdvListPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'bullist numlist | outdent indent | code',
   height: 600
 });
+
+export {};

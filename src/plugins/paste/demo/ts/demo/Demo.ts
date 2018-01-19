@@ -8,13 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import PastePlugin from 'tinymce/plugins/paste/Plugin';
-
 /*eslint no-console:0 */
 
 declare let tinymce: any;
-
-PastePlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -33,3 +29,5 @@ tinymce.init({
   },
   height: 600
 });
+
+export {};

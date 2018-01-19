@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import TemplatePlugin from 'tinymce/plugins/template/Plugin';
-
 declare let tinymce: any;
-
-TemplatePlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -25,3 +21,5 @@ tinymce.init({
     { title: 'Some title 2', description: 'Some desc 2', content: 'My other content' }
   ]
 });
+
+export {};

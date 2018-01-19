@@ -8,19 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import EditorManager from 'tinymce/core/EditorManager';
-import AutolinkPlugin from 'tinymce/plugins/autolink/Plugin';
-import AutosavePlugin from 'tinymce/plugins/autosave/Plugin';
-import ListsPlugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/mobile/Theme';
+declare let tinymce: any;
 
 export default function () {
-  Theme();
-  ListsPlugin();
-  AutolinkPlugin();
-  AutosavePlugin();
-
-  EditorManager.init({
+  tinymce.init({
     selector: '.tiny-text',
     theme: 'mobile',
     toolbar: [ 'styleselect', 'undo', 'redo', 'bold', 'bold', 'italic', 'underline', 'styleselect', 'removeformat', 'link', 'unlink', 'image', 'fontsizeselect', 'bullist', 'numlist', 'forecolor' ],

@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import HrPlugin from 'tinymce/plugins/hr/Plugin';
-
 declare let tinymce: any;
-
-HrPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'hr code',
   height: 600
 });
+
+export {};

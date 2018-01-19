@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import TablePlugin from 'tinymce/plugins/table/Plugin';
-
 declare let tinymce: any;
-
-TablePlugin();
 
 tinymce.init({
   selector: 'div.tinymce',
@@ -28,3 +24,5 @@ tinymce.init({
   // },
   height: 600
 });
+
+export {};
