@@ -121,6 +121,7 @@ const MenuButton = Button.extend({
 
     self.menu.show();
     self.menu.layoutRect({ w: self.layoutRect().w });
+    self.menu.repaint();
     self.menu.moveRel(self.getEl(), self.isRtl() ? ['br-tr', 'tr-br'] : ['bl-tl', 'tl-bl']);
     self.fire('showmenu');
   },
