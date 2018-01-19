@@ -164,12 +164,15 @@ module.exports = function (grunt) {
       gruntUtils.generate(plugins, 'plugin', (name) => () => gruntWebPack.createPlugin(name) ),
       gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) )
     ),
-    "webpack-dev-server": {
+
+    'webpack-dev-server': {
       options: {
         webpack: gruntWebPack.all(plugins, themes),
         publicPath: '/',
         inline: false,
         port: 3000,
+        host: '0.0.0.0',
+        disableHostCheck: true,
         before: app => gruntWebPack.generateDemoIndex(grunt, app, plugins, themes)
       },
       start: { }
