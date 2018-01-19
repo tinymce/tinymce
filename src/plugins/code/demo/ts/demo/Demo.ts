@@ -8,10 +8,6 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import CodePlugin from 'tinymce/plugins/code/Plugin';
-
-CodePlugin();
-
 declare const tinymce: any;
 
 tinymce.init({
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'code',
   height: 600
 });
+
+export {};

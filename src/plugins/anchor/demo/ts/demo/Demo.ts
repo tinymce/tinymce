@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
-
 declare let tinymce: any;
-
-AnchorPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'anchor code',
   height: 600
 });
+
+export {};

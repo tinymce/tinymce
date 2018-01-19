@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import InsertDateTimePlugin from 'tinymce/plugins/insertdatetime/Plugin';
-
 declare let tinymce: any;
-
-InsertDateTimePlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'insertdatetime code',
   height: 600
 });
+
+export {};

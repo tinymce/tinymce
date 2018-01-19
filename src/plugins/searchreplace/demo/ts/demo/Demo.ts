@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import SearchReplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
-
 declare let tinymce: any;
-
-SearchReplacePlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'searchreplace code',
   height: 600
 });
+
+export {};

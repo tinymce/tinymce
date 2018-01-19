@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DirectionalityPlugin from 'tinymce/plugins/directionality/Plugin';
-
 declare let tinymce: any;
-
-DirectionalityPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'ltr rtl code',
   height: 600
 });
+
+export {};

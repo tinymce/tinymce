@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
-
 declare let tinymce: any;
-
-FullscreenPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'fullscreen code',
   height: 600
 });
+
+export {};

@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import VisualCharsPlugin from 'tinymce/plugins/visualchars/Plugin';
-
 declare let tinymce: any;
-
-VisualCharsPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -21,3 +17,5 @@ tinymce.init({
   skin_url: '../../../../../js/tinymce/skins/lightgray',
   height: 600
 });
+
+export {};

@@ -8,19 +8,13 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import EditorManager from 'tinymce/core/EditorManager';
-import Tools from 'tinymce/core/util/Tools';
-import PastePlugin from 'tinymce/plugins/paste/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
-
 declare const window: any;
+declare let tinymce: any;
 
 export default function () {
-  ModernTheme();
-  PastePlugin();
 
   const paintClientRect = function (rect, color, id) {
-    const editor = EditorManager.activeEditor;
+    const editor = tinymce.activeEditor;
     const $ = editor.$;
     let rectDiv;
     const viewPort = editor.dom.getViewPort();
@@ -49,7 +43,7 @@ export default function () {
   };
 
   const paintClientRects = function (rects, color) {
-    Tools.each(rects, function (rect, index) {
+    tinymce.util.Tools.each(rects, function (rect, index) {
       paintClientRect(rect, color, color + index);
     });
   };
@@ -73,7 +67,7 @@ export default function () {
   window.paintClientRects = paintClientRects;
   window.logPos = logPos;
 
-  EditorManager.init({
+  tinymce.init({
     selector: 'textarea.tinymce',
     skin_url: '../../../../js/tinymce/skins/lightgray',
     add_unload_trigger: false,
@@ -84,7 +78,7 @@ export default function () {
     height: 400
   });
 
-  EditorManager.init({
+  tinymce.init({
     selector: 'div.tinymce',
     inline: true,
     skin_url: '../../../../js/tinymce/skins/lightgray',
@@ -95,5 +89,5 @@ export default function () {
     content_css: '../css/content_editable.css'
   });
 
-  window.tinymce = EditorManager;
+  window.tinymce = tinymce;
 }

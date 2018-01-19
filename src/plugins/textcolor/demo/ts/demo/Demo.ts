@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import TextColorPlugin from 'tinymce/plugins/textcolor/Plugin';
-
 declare let tinymce: any;
-
-TextColorPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -21,3 +17,5 @@ tinymce.init({
   skin_url: '../../../../../js/tinymce/skins/lightgray',
   height: 600
 });
+
+export {};

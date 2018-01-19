@@ -8,14 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import VisualBlocksPlugin from 'tinymce/plugins/visualblocks/Plugin';
-import PluginManager from 'tinymce/core/PluginManager';
-
 declare let tinymce: any;
-
-VisualBlocksPlugin();
-
-PluginManager.urls.visualblocks = '../../../dist/visualblocks';
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -44,3 +37,5 @@ tinymce.init({
   ],
   height: 600
 });
+
+export {};

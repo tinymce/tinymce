@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import ImportCssPlugin from 'tinymce/plugins/importcss/Plugin';
-
 declare let tinymce: any;
-
-ImportCssPlugin();
 
 const elm: any = document.querySelector('.tinymce');
 elm.value = 'The format menu should show "red"';
@@ -26,3 +22,5 @@ tinymce.init({
   height: 600,
   content_css: '../css/rules.css'
 });
+
+export {};

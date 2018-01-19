@@ -9,14 +9,11 @@
  */
 
 import DomQuery from 'tinymce/core/dom/DomQuery';
-import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 
 declare let tinymce: any;
 
 const $ = DomQuery;
 const imgSrc = '../img/dogleft.jpg';
-
-ImageToolsPlugin();
 
 $(
   '<textarea class="tinymce">' +
@@ -88,3 +85,5 @@ function dump() {
 $('<button>send()</button>').appendTo('#ephox-ui').on('click', send);
 $('<button>upload()</button>').appendTo('#ephox-ui').on('click', upload);
 $('<button>dump()</button>').appendTo('#ephox-ui').on('click', dump);
+
+export {};

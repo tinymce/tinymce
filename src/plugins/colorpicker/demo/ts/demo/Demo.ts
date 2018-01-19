@@ -8,14 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import ColorPickerPlugin from 'tinymce/plugins/colorpicker/Plugin';
-
 declare let tinymce: any;
 
-ColorPickerPlugin();
-
-const elm: any = document.querySelector('.tinymce');
-elm.value = '<table><tbody><tr><td>One</td></tr></tbody></table>';
+const element: any = document.querySelector('.tinymce');
+element.value = '<table><tbody><tr><td>One</td></tr></tbody></table>';
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -25,3 +21,5 @@ tinymce.init({
   toolbar: 'table code',
   height: 600
 });
+
+export {};
