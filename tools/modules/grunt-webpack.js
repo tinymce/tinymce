@@ -76,21 +76,21 @@ let createTheme = (name) => {
 };
 
 let allPluginDemos = (plugins) => {
-  return create(buildDemoEntries(plugins, 'plugins', 'Demo.ts'), 'tsconfig.plugin.json', '/scratch/demos/plugins', 'demo.js')
+  return create(buildDemoEntries(plugins, 'plugins', 'Demo.ts'), 'tsconfig.plugin.json', 'scratch/demos/plugins', 'demo.js')
 }
 
 let allThemeDemos = (themes) => {
-  return create(buildDemoEntries(themes, 'themes', 'Demos.ts'), 'tsconfig.theme.json', '/scratch/demos/themes', 'demo.js')
+  return create(buildDemoEntries(themes, 'themes', 'Demos.ts'), 'tsconfig.theme.json', 'scratch/demos/themes', 'demo.js')
 }
 
 let all = (plugins, themes) => {
   return [
     allPluginDemos(plugins),
     allThemeDemos(themes),
-    create(`src/core/demo/ts/demo/Demos.ts`, 'tsconfig.json', '/scratch/demos/core/', 'demo.js'),
-    create('src/core/main/ts/api/Main.ts', 'tsconfig.json', '/js/tinymce/', 'tinymce.js'),
-    create(buildEntries(plugins, 'plugins', 'Plugin.ts'), 'tsconfig.plugin.json', '/js/tinymce/plugins', 'plugin.js'),
-    create(buildEntries(themes, 'themes', 'Theme.ts'), 'tsconfig.theme.json', '/js/tinymce/themes', 'theme.js')
+    create(`src/core/demo/ts/demo/Demos.ts`, 'tsconfig.json', 'scratch/demos/core/', 'demo.js'),
+    create('src/core/main/ts/api/Main.ts', 'tsconfig.json', 'js/tinymce/', 'tinymce.js'),
+    create(buildEntries(plugins, 'plugins', 'Plugin.ts'), 'tsconfig.plugin.json', 'js/tinymce/plugins', 'plugin.js'),
+    create(buildEntries(themes, 'themes', 'Theme.ts'), 'tsconfig.theme.json', 'js/tinymce/themes', 'theme.js')
   ];
 }
 

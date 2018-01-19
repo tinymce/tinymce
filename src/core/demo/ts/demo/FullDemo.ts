@@ -10,12 +10,9 @@
 
 import { Merger } from '@ephox/katamari';
 
-declare const window: any;
 declare let tinymce: any;
 
 export default function () {
-
-  // PluginManager.urls.emoticons = '../../../../js/tinymce/plugins/emoticons';
 
   const settings = {
     skin_url: '../../../../js/tinymce/skins/lightgray',
@@ -98,6 +95,4 @@ export default function () {
 
   tinymce.init(settings);
   tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
-
-  window.tinymce = tinymce;
 }
