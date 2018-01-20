@@ -49,27 +49,29 @@ const registerEvents = function (editorManager, e) {
   SelectionRestore.register(editor);
 
   editor.on('focusin', function () {
+    const self = this;
     const focusedEditor = editorManager.focusedEditor;
 
-    if (focusedEditor !== editor) {
+    if (focusedEditor !== self) {
       if (focusedEditor) {
-        focusedEditor.fire('blur', { focusedEditor: editor });
+        focusedEditor.fire('blur', { focusedEditor: self });
       }
 
-      editorManager.setActive(editor);
-      editorManager.focusedEditor = editor;
-      editor.fire('focus', { blurredEditor: focusedEditor });
-      editor.focus(true);
+      editorManager.setActive(self);
+      editorManager.focusedEditor = self;
+      self.fire('focus', { blurredEditor: focusedEditor });
+      self.focus(true);
     }
   });
 
   editor.on('focusout', function () {
-    Delay.setEditorTimeout(editor, function () {
+    const self = this;
+    Delay.setEditorTimeout(self, function () {
       const focusedEditor = editorManager.focusedEditor;
 
       // Still the same editor the blur was outside any editor UI
-      if (!isUIElement(editor, getActiveElement()) && focusedEditor === editor) {
-        editor.fire('blur', { focusedEditor: null });
+      if (!isUIElement(self, getActiveElement()) && focusedEditor === self) {
+        self.fire('blur', { focusedEditor: null });
         editorManager.focusedEditor = null;
       }
     });
