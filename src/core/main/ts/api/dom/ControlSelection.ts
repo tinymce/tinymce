@@ -18,6 +18,14 @@ import Tools from '../../util/Tools';
 import VK from '../../util/VK';
 import { EditorSelection } from './Selection';
 
+export interface ControlSelection {
+  isResizable: (elm: Element) => boolean;
+  showResizeRect: (elm: Element) => void;
+  hideResizeRect: () => void;
+  updateResizeRect: (evt: Event) => void;
+  destroy: () => void;
+}
+
 /**
  * This class handles control selection of elements. Controls are elements
  * that can be resized and needs to be selected as a whole. It adds custom resize handles
@@ -41,7 +49,7 @@ const getContentEditableRoot = function (root: Node, node: Node) {
   return null;
 };
 
-export default function (selection: EditorSelection, editor) {
+export default function (selection: EditorSelection, editor): ControlSelection {
   const dom = editor.dom, each = Tools.each;
   let selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
   let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
