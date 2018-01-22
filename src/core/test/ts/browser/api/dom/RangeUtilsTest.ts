@@ -33,12 +33,12 @@ UnitTest.asynctest('browser.tinymce.core.api.dom.RangeUtilsTest', function () {
 
     const rng1 = createRange(viewBlock.get().firstChild, 1, viewBlock.get().firstChild, 1);
     const rng1Clone = rng1.cloneRange();
-    Assertions.assertEq('label', false, new RangeUtils(DOM).normalize(rng1));
+    Assertions.assertEq('label', false, RangeUtils(DOM).normalize(rng1));
     assertRange(rng1Clone, rng1);
 
     const rng2 = createRange(viewBlock.get().lastChild, 0, viewBlock.get().lastChild, 0);
     const rng2Clone = rng2.cloneRange();
-    Assertions.assertEq('label', false, new RangeUtils(DOM).normalize(rng2));
+    Assertions.assertEq('label', false, RangeUtils(DOM).normalize(rng2));
     assertRange(rng2Clone, rng2);
   }));
 

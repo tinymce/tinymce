@@ -14,7 +14,7 @@ import Tools from '../util/Tools';
 export default function (editor) {
   const formats = {};
 
-  const get = function (name) {
+  const get = function (name: string) {
     return name ? formats[name] : formats;
   };
 
@@ -62,7 +62,7 @@ export default function (editor) {
     }
   };
 
-  const unregister = function (name) {
+  const unregister = function (name: string) {
     if (name && formats[name]) {
       delete formats[name];
     }

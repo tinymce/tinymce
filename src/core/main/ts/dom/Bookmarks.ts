@@ -10,19 +10,21 @@
 
 import GetBookmark from './GetBookmark';
 import ResolveBookmark from './ResolveBookmark';
+import { EditorSelection } from '../api/dom/Selection';
+import NodeType from './NodeType';
 
-const getBookmark = function (selection, type, normalized) {
+const getBookmark = function (selection: EditorSelection, type, normalized) {
   return GetBookmark.getBookmark(selection, type, normalized);
 };
 
-const moveToBookmark = function (selection, bookmark) {
+const moveToBookmark = function (selection: EditorSelection, bookmark) {
   ResolveBookmark.resolve(selection, bookmark).each(function (rng) {
     selection.setRng(rng);
   });
 };
 
-const isBookmarkNode = function (node) {
-  return node && node.tagName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
+const isBookmarkNode = function (node: Node) {
+  return NodeType.isElement(node) && node.tagName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
 };
 
 export default {

@@ -21,8 +21,7 @@ import SplitRange from '../../selection/SplitRange';
  *
  * @class tinymce.dom.RangeUtils
  */
-
-const RangeUtils: any = function (dom) {
+export function RangeUtils(dom) {
   /**
    * Walks the specified range like object and executes the callback for each sibling collection it finds.
    *
@@ -51,7 +50,7 @@ const RangeUtils: any = function (dom) {
    * @param {Range} rng Range to normalize.
    * @return {Boolean} True/false if the specified range was normalized or not.
    */
-  const normalize = function (rng) {
+  const normalize = function (rng: Range): Range {
     return NormalizeRange.normalize(dom, rng).fold(
       Fun.constant(false),
       function (normalizedRng) {
@@ -67,32 +66,34 @@ const RangeUtils: any = function (dom) {
     split,
     normalize
   };
-};
+}
 
-/**
- * Compares two ranges and checks if they are equal.
- *
- * @static
- * @method compareRanges
- * @param {DOMRange} rng1 First range to compare.
- * @param {DOMRange} rng2 First range to compare.
- * @return {Boolean} true/false if the ranges are equal.
- */
-RangeUtils.compareRanges = RangeCompare.isEq;
+export namespace RangeUtils {
+  /**
+   * Compares two ranges and checks if they are equal.
+   *
+   * @static
+   * @method compareRanges
+   * @param {DOMRange} rng1 First range to compare.
+   * @param {DOMRange} rng2 First range to compare.
+   * @return {Boolean} true/false if the ranges are equal.
+   */
+  export const compareRanges = RangeCompare.isEq;
 
-/**
- * Gets the caret range for the given x/y location.
- *
- * @static
- * @method getCaretRangeFromPoint
- * @param {Number} clientX X coordinate for range
- * @param {Number} clientY Y coordinate for range
- * @param {Document} doc Document that x/y are relative to
- * @returns {Range} caret range
- */
-RangeUtils.getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint;
+  /**
+   * Gets the caret range for the given x/y location.
+   *
+   * @static
+   * @method getCaretRangeFromPoint
+   * @param {Number} clientX X coordinate for range
+   * @param {Number} clientY Y coordinate for range
+   * @param {Document} doc Document that x/y are relative to
+   * @returns {Range} caret range
+   */
+  export const getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint;
 
-RangeUtils.getSelectedNode = RangeNodes.getSelectedNode;
-RangeUtils.getNode = RangeNodes.getNode;
+  export const getSelectedNode = RangeNodes.getSelectedNode;
+  export const getNode = RangeNodes.getNode;
+}
 
 export default RangeUtils;

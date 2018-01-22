@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const isTextNode = function (node) {
+const isTextNode = function (node: Node): node is Text {
   return node && node.nodeType === 3;
 };
 

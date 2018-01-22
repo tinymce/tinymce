@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const getSelectedNode = function (range) {
+const getSelectedNode = function (range: Range): Node {
   const startContainer = range.startContainer,
     startOffset = range.startOffset;
 
@@ -19,7 +19,7 @@ const getSelectedNode = function (range) {
   return null;
 };
 
-const getNode = function (container, offset) {
+const getNode = function (container: Node, offset: number): Node {
   if (container.nodeType === 1 && container.hasChildNodes()) {
     if (offset >= container.childNodes.length) {
       offset = container.childNodes.length - 1;

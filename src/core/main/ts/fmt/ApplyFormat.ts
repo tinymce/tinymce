@@ -19,10 +19,11 @@ import MergeFormats from './MergeFormats';
 import RangeNormalizer from '../selection/RangeNormalizer';
 import RangeWalk from '../selection/RangeWalk';
 import Tools from '../util/Tools';
+import { EditorSelection } from '../api/dom/Selection';
 
 const each = Tools.each;
 
-const isElementNode = function (node) {
+const isElementNode = function (node: Node) {
   return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !CaretFormat.isCaretNode(node) && !NodeType.isBogus(node);
 };
 
@@ -44,7 +45,7 @@ const applyFormat = function (ed, name, vars?, node?) {
   const format = formatList[0];
   let bookmark, rng;
   const isCollapsed = !node && ed.selection.isCollapsed();
-  const dom = ed.dom, selection = ed.selection;
+  const dom = ed.dom, selection: EditorSelection = ed.selection;
 
   const setElementFormat = function (elm, fmt?) {
     fmt = fmt || format;
@@ -334,14 +335,14 @@ const applyFormat = function (ed, name, vars?, node?) {
         // Apply formatting to selection
         ed.selection.setRng(RangeNormalizer.normalize(ed.selection.getRng()));
         bookmark = selection.getBookmark();
-        applyRngStyle(dom, ExpandRange.expandRng(ed, selection.getRng(true), formatList), bookmark);
+        applyRngStyle(dom, ExpandRange.expandRng(ed, selection.getRng(), formatList), bookmark);
 
         if (format.styles) {
           MergeFormats.mergeUnderlineAndColor(dom, format, vars, curSelNode);
         }
 
         selection.moveToBookmark(bookmark);
-        FormatUtils.moveStart(dom, selection, selection.getRng(true));
+        FormatUtils.moveStart(dom, selection, selection.getRng());
         ed.nodeChanged();
       } else {
         CaretFormat.applyCaretFormat(ed, name, vars);

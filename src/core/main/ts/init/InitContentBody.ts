@@ -20,7 +20,7 @@ import Formatter from '../api/Formatter';
 import Serializer from '../api/dom/Serializer';
 import CaretContainerInput from '../caret/CaretContainerInput';
 import DOMUtils from '../dom/DOMUtils';
-import Selection from '../dom/Selection';
+import Selection from '../api/dom/Selection';
 import DomParser from '../html/DomParser';
 import Node from '../html/Node';
 import Schema from '../html/Schema';
@@ -225,7 +225,7 @@ const initContentBody = function (editor, skipWrite?) {
 
   editor.parser = createParser(editor);
   editor.serializer = Serializer(settings, editor);
-  editor.selection = new Selection(editor.dom, editor.getWin(), editor.serializer, editor);
+  editor.selection = Selection(editor.dom, editor.getWin(), editor.serializer, editor);
   editor.formatter = Formatter(editor);
   editor.undoManager = UndoManager(editor);
   editor._nodeChangeDispatcher = new NodeChange(editor);

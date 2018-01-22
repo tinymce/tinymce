@@ -10,21 +10,21 @@
 
 import { Compare } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
-import Env from '../Env';
-import BookmarkManager from '../api/dom/BookmarkManager';
-import CaretPosition from '../caret/CaretPosition';
-import ControlSelection from './ControlSelection';
-import ScrollIntoView from './ScrollIntoView';
-import TreeWalker from './TreeWalker';
-import EditorFocus from '../focus/EditorFocus';
-import CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
-import EventProcessRanges from '../selection/EventProcessRanges';
-import GetSelectionContent from '../selection/GetSelectionContent';
-import MultiRange from '../selection/MultiRange';
-import NormalizeRange from '../selection/NormalizeRange';
-import SelectionBookmark from '../selection/SelectionBookmark';
-import SetSelectionContent from '../selection/SetSelectionContent';
-import Tools from '../util/Tools';
+import Env from '../../Env';
+import BookmarkManager from './BookmarkManager';
+import CaretPosition from '../../caret/CaretPosition';
+import ControlSelection, { ControlSelection as ControlSelectionType } from './ControlSelection';
+import ScrollIntoView from '../../dom/ScrollIntoView';
+import TreeWalker from '../../dom/TreeWalker';
+import EditorFocus from '../../focus/EditorFocus';
+import CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
+import EventProcessRanges from '../../selection/EventProcessRanges';
+import GetSelectionContent from '../../selection/GetSelectionContent';
+import MultiRange from '../../selection/MultiRange';
+import NormalizeRange from '../../selection/NormalizeRange';
+import SelectionBookmark from '../../selection/SelectionBookmark';
+import SetSelectionContent from '../../selection/SetSelectionContent';
+import Tools from '../../util/Tools';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -38,19 +38,56 @@ import Tools from '../util/Tools';
 
 const each = Tools.each, trim = Tools.trim;
 
-const isAttachedToDom = function (node) {
+const isAttachedToDom = function (node: Node): boolean {
   return !!(node && node.ownerDocument) && Compare.contains(Element.fromDom(node.ownerDocument), Element.fromDom(node));
 };
 
-const isValidRange = function (rng) {
+const isValidRange = function (rng: Range) {
   if (!rng) {
     return false;
-  } else if (rng.select) { // Native IE range still produced by placeCaretAt
+  } else if (rng.hasOwnProperty('select')) { // Native IE range still produced by placeCaretAt
     return true;
   } else {
     return isAttachedToDom(rng.startContainer) && isAttachedToDom(rng.endContainer);
   }
 };
+
+interface EditorSelection {
+  bookmarkManager: any;
+  controlSelection: ControlSelectionType;
+  dom: any;
+  win: Window;
+  serializer: any;
+  editor: any;
+  collapse: (toStart?: boolean) => void;
+  setCursorLocation: (node?: Node, offset?: number) => void;
+  getContent: (args: any) => any;
+  setContent: (content: any, args?: any) => void;
+  getBookmark: (type?: number, normalized?: boolean) => any;
+  moveToBookmark: (bookmark: any) => boolean;
+  select: (node: Node, content?: boolean) => Node;
+  isCollapsed: () => boolean;
+  isForward: () => boolean;
+  setNode: (elm: Element) => Element;
+  getNode: () => Element;
+  getSel: () => Selection;
+  setRng: (rng: Range, forward?: boolean) => void;
+  getRng: () => Range;
+  getStart: (real?: boolean) => Element;
+  getEnd: (real?: boolean) => Element;
+  getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
+  normalize: () => Range;
+  selectorChanged: (selector: string, callback: (active: boolean, args: {
+      node: Node;
+      selector: String;
+      parents: Element[];
+  }) => void) => any;
+  getScrollContainer: () => Element;
+  scrollIntoView: (elm: Element, alignToTop?: boolean) => void;
+  placeCaretAt: (clientX: number, clientY: number) => void;
+  getBoundingClientRect: () => ClientRect;
+  destroy: () => void;
+}
 
 /**
  * Constructs a new selection instance.
@@ -59,21 +96,13 @@ const isValidRange = function (rng) {
  * @method Selection
  * @param {tinymce.dom.DOMUtils} dom DOMUtils object reference.
  * @param {Window} win Window to bind the selection object to.
- * @param {tinymce.Editor} editor Editor instance of the selection.
  * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
+ * @param {tinymce.Editor} editor Editor instance of the selection.
  */
-const Selection = function (dom, win, serializer, editor) {
-  const self = this;
+const Selection = function (dom, win: Window, serializer, editor): EditorSelection {
+  let bookmarkManager, controlSelection: ControlSelectionType;
+  let selectedRange, explicitRange, selectorChangedData;
 
-  self.dom = dom;
-  self.win = win;
-  self.serializer = serializer;
-  self.editor = editor;
-  self.bookmarkManager = new BookmarkManager(self);
-  self.controlSelection = ControlSelection(self, editor);
-};
-
-Selection.prototype = {
   /**
    * Move the selection cursor range to the specified node and offset.
    * If there is no node specified it will move it to the first suitable location within the body.
@@ -82,19 +111,19 @@ Selection.prototype = {
    * @param {Node} node Optional node to put the cursor in.
    * @param {Number} offset Optional offset from the start of the node to put the cursor at.
    */
-  setCursorLocation (node, offset) {
-    const self = this, rng = self.dom.createRng();
+  const setCursorLocation = (node?: Node, offset?: number) => {
+    const rng = dom.createRng();
 
     if (!node) {
-      self._moveEndPoint(rng, self.editor.getBody(), true);
-      self.setRng(rng);
+      _moveEndPoint(rng, editor.getBody(), true);
+      setRng(rng);
     } else {
       rng.setStart(node, offset);
       rng.setEnd(node, offset);
-      self.setRng(rng);
-      self.collapse(false);
+      setRng(rng);
+      collapse(false);
     }
-  },
+  };
 
   /**
    * Returns the selected contents using the DOM serializer passed in to this class.
@@ -109,9 +138,9 @@ Selection.prototype = {
    * // Alerts the currently selected contents as plain text
    * alert(tinymce.activeEditor.selection.getContent({format: 'text'}));
    */
-  getContent (args) {
-    return GetSelectionContent.getContent(this.editor, args);
-  },
+  const getContent = (args) => {
+    return GetSelectionContent.getContent(editor, args);
+  };
 
   /**
    * Sets the current selection to the specified content. If any contents is selected it will be replaced
@@ -125,9 +154,9 @@ Selection.prototype = {
    * // Inserts some HTML contents at the current selection
    * tinymce.activeEditor.selection.setContent('<strong>Some contents</strong>');
    */
-  setContent (content, args) {
-    SetSelectionContent.setContent(this.editor, content, args);
-  },
+  const setContent = (content, args?) => {
+    SetSelectionContent.setContent(editor, content, args);
+  };
 
   /**
    * Returns the start element of a selection range. If the start is in a text
@@ -137,9 +166,8 @@ Selection.prototype = {
    * @param {Boolean} real Optional state to get the real parent when the selection is collapsed not the closest element.
    * @return {Element} Start element of selection range.
    */
-  getStart (real) {
-    const self = this;
-    const rng = self.getRng();
+  const getStart = (real?: boolean): Element => {
+    const rng = getRng();
     let startElement;
 
     startElement = rng.startContainer;
@@ -155,7 +183,7 @@ Selection.prototype = {
     }
 
     return startElement;
-  },
+  };
 
   /**
    * Returns the end element of a selection range. If the end is in a text
@@ -165,9 +193,8 @@ Selection.prototype = {
    * @param {Boolean} real Optional state to get the real parent when the selection is collapsed not the closest element.
    * @return {Element} End element of selection range.
    */
-  getEnd (real) {
-    const self = this;
-    const rng = self.getRng();
+  const getEnd = (real?: boolean): Element => {
+    const rng = getRng();
     let endElement, endOffset;
 
     endElement = rng.endContainer;
@@ -184,7 +211,7 @@ Selection.prototype = {
     }
 
     return endElement;
-  },
+  };
 
   /**
    * Returns a bookmark location for the current selection. This bookmark object
@@ -203,9 +230,9 @@ Selection.prototype = {
    * // Restore the selection bookmark
    * tinymce.activeEditor.selection.moveToBookmark(bm);
    */
-  getBookmark (type, normalized) {
-    return this.bookmarkManager.getBookmark(type, normalized);
-  },
+  const getBookmark = (type?: number, normalized?: boolean) => {
+    return bookmarkManager.getBookmark(type, normalized);
+  };
 
   /**
    * Restores the selection to the specified bookmark.
@@ -222,9 +249,9 @@ Selection.prototype = {
    * // Restore the selection bookmark
    * tinymce.activeEditor.selection.moveToBookmark(bm);
    */
-  moveToBookmark (bookmark) {
-    return this.bookmarkManager.moveToBookmark(bookmark);
-  },
+  const moveToBookmark = (bookmark): boolean => {
+    return bookmarkManager.moveToBookmark(bookmark);
+  };
 
   /**
    * Selects the specified element. This will place the start and end of the selection range around the element.
@@ -237,9 +264,7 @@ Selection.prototype = {
    * // Select the first paragraph in the active editor
    * tinymce.activeEditor.selection.select(tinymce.activeEditor.dom.select('p')[0]);
    */
-  select (node, content) {
-    const self = this;
-    const dom = self.dom;
+  const select = (node: Node, content?: boolean) => {
     const rng = dom.createRng();
     let idx;
 
@@ -250,15 +275,15 @@ Selection.prototype = {
 
       // Find first/last text node or BR element
       if (content) {
-        self._moveEndPoint(rng, node, true);
-        self._moveEndPoint(rng, node);
+        _moveEndPoint(rng, node, true);
+        _moveEndPoint(rng, node);
       }
 
-      self.setRng(rng);
+      setRng(rng);
     }
 
     return node;
-  },
+  };
 
   /**
    * Returns true/false if the selection range is collapsed or not. Collapsed means if it's a caret or a larger selection.
@@ -267,8 +292,8 @@ Selection.prototype = {
    * @return {Boolean} true/false state if the selection range is collapsed or not.
    * Collapsed means if it's a caret or a larger selection.
    */
-  isCollapsed () {
-    const self = this, rng = self.getRng(), sel = self.getSel();
+  const isCollapsed = (): boolean => {
+    const rng: any = getRng(), sel = getSel();
 
     if (!rng || rng.item) {
       return false;
@@ -279,7 +304,7 @@ Selection.prototype = {
     }
 
     return !sel || rng.collapsed;
-  },
+  };
 
   /**
    * Collapse the selection to start or end of range.
@@ -287,12 +312,12 @@ Selection.prototype = {
    * @method collapse
    * @param {Boolean} toStart Optional boolean state if to collapse to end or not. Defaults to false.
    */
-  collapse (toStart) {
-    const self = this, rng = self.getRng();
+  const collapse = (toStart?: boolean) => {
+    const rng = getRng();
 
     rng.collapse(!!toStart);
-    self.setRng(rng);
-  },
+    setRng(rng);
+  };
 
   /**
    * Returns the browsers internal selection object.
@@ -300,23 +325,19 @@ Selection.prototype = {
    * @method getSel
    * @return {Selection} Internal browser selection object.
    */
-  getSel () {
-    const win = this.win;
-
-    return win.getSelection ? win.getSelection() : win.document.selection;
-  },
+  const getSel = (): Selection => {
+    return win.getSelection ? win.getSelection() : (<any> win.document).selection;
+  };
 
   /**
    * Returns the browsers internal range object.
    *
    * @method getRng
-   * @param {Boolean} w3c Forces a compatible W3C range on IE.
    * @return {Range} Internal browser range object.
    * @see http://www.quirksmode.org/dom/range_intro.html
    * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
    */
-  getRng (w3c) {
-    const self = this;
+  const getRng = (): Range => {
     let selection, rng, elm, doc;
 
     const tryCompareBoundaryPoints = function (how, sourceRange, destinationRange) {
@@ -332,26 +353,26 @@ Selection.prototype = {
       }
     };
 
-    if (!self.win) {
+    if (!win) {
       return null;
     }
 
-    doc = self.win.document;
+    doc = win.document;
 
     if (typeof doc === 'undefined' || doc === null) {
       return null;
     }
 
-    if (self.editor.bookmark !== undefined && EditorFocus.hasFocus(self.editor) === false) {
-      const bookmark = SelectionBookmark.getRng(self.editor);
+    if (editor.bookmark !== undefined && EditorFocus.hasFocus(editor) === false) {
+      const bookmark = SelectionBookmark.getRng(editor);
 
       if (bookmark.isSome()) {
-        return bookmark.getOr(doc.createRange());
+        return bookmark.map((r) => EventProcessRanges.processRanges(editor, [r])[0]).getOr(doc.createRange());
       }
     }
 
     try {
-      if ((selection = self.getSel())) {
+      if ((selection = getSel())) {
         if (selection.rangeCount > 0) {
           rng = selection.getRangeAt(0);
         } else {
@@ -362,7 +383,7 @@ Selection.prototype = {
       // IE throws unspecified error here if TinyMCE is placed in a frame/iframe
     }
 
-    rng = EventProcessRanges.processRanges(self.editor, [rng])[0];
+    rng = EventProcessRanges.processRanges(editor, [rng])[0];
 
     // No range found then create an empty one
     // This can occur when the editor is placed in a hidden container element on Gecko
@@ -373,25 +394,25 @@ Selection.prototype = {
 
     // If range is at start of document then move it to start of body
     if (rng.setStart && rng.startContainer.nodeType === 9 && rng.collapsed) {
-      elm = self.dom.getRoot();
+      elm = dom.getRoot();
       rng.setStart(elm, 0);
       rng.setEnd(elm, 0);
     }
 
-    if (self.selectedRange && self.explicitRange) {
-      if (tryCompareBoundaryPoints(rng.START_TO_START, rng, self.selectedRange) === 0 &&
-        tryCompareBoundaryPoints(rng.END_TO_END, rng, self.selectedRange) === 0) {
+    if (selectedRange && explicitRange) {
+      if (tryCompareBoundaryPoints(rng.START_TO_START, rng, selectedRange) === 0 &&
+        tryCompareBoundaryPoints(rng.END_TO_END, rng, selectedRange) === 0) {
         // Safari, Opera and Chrome only ever select text which causes the range to change.
         // This lets us use the originally set range if the selection hasn't been changed by the user.
-        rng = self.explicitRange;
+        rng = explicitRange;
       } else {
-        self.selectedRange = null;
-        self.explicitRange = null;
+        selectedRange = null;
+        explicitRange = null;
       }
     }
 
     return rng;
-  },
+  };
 
   /**
    * Changes the selection to the specified DOM range.
@@ -400,8 +421,7 @@ Selection.prototype = {
    * @param {Range} rng Range to select.
    * @param {Boolean} forward Optional boolean if the selection is forwards or backwards.
    */
-  setRng (rng, forward) {
-    const self = this;
+  const setRng = (rng: Range, forward?: boolean) => {
     let sel, node, evt;
 
     if (!isValidRange(rng)) {
@@ -409,11 +429,12 @@ Selection.prototype = {
     }
 
     // Is IE specific range
-    if (rng.select) {
-      self.explicitRange = null;
+    const ieRange: any = rng.hasOwnProperty('select') ? rng : null;
+    if (ieRange) {
+      explicitRange = null;
 
       try {
-        rng.select();
+        ieRange.select();
       } catch (ex) {
         // Needed for some odd IE bug #1843306
       }
@@ -421,13 +442,13 @@ Selection.prototype = {
       return;
     }
 
-    sel = self.getSel();
+    sel = getSel();
 
-    evt = self.editor.fire('SetSelectionRange', { range: rng, forward });
+    evt = editor.fire('SetSelectionRange', { range: rng, forward });
     rng = evt.range;
 
     if (sel) {
-      self.explicitRange = rng;
+      explicitRange = rng;
 
       try {
         sel.removeAllRanges();
@@ -443,7 +464,7 @@ Selection.prototype = {
       }
 
       // adding range isn't always successful so we need to check range count otherwise an exception can occur
-      self.selectedRange = sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
+      selectedRange = sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
     }
 
     // WebKit egde case selecting images works better using setBaseAndExtent when the image is floated
@@ -471,8 +492,8 @@ Selection.prototype = {
       }
     }
 
-    self.editor.fire('AfterSetSelectionRange', { range: rng, forward });
-  },
+    editor.fire('AfterSetSelectionRange', { range: rng, forward });
+  };
 
   /**
    * Sets the current selection to the specified DOM element.
@@ -484,13 +505,10 @@ Selection.prototype = {
    * // Inserts a DOM node at current selection/caret location
    * tinymce.activeEditor.selection.setNode(tinymce.activeEditor.dom.create('img', {src: 'some.gif', title: 'some title'}));
    */
-  setNode (elm) {
-    const self = this;
-
-    self.setContent(self.dom.getOuterHTML(elm));
-
+  const setNode = (elm: Element): Element => {
+    setContent(dom.getOuterHTML(elm));
     return elm;
-  },
+  };
 
   /**
    * Returns the currently selected element or the common ancestor element for both start and end of the selection.
@@ -501,12 +519,11 @@ Selection.prototype = {
    * // Alerts the currently selected elements node name
    * alert(tinymce.activeEditor.selection.getNode().nodeName);
    */
-  getNode () {
-    const self = this;
-    const rng = self.getRng();
+  const getNode = (): Element => {
+    const rng = getRng();
     let elm;
     let startContainer, endContainer, startOffset, endOffset;
-    const root = self.dom.getRoot();
+    const root = dom.getRoot();
 
     const skipEmptyTextNodes = function (node, forwards) {
       const orig = node;
@@ -569,17 +586,15 @@ Selection.prototype = {
     }
 
     return elm;
-  },
+  };
 
-  getSelectedBlocks (startElm, endElm) {
-    const self = this;
-    const dom = self.dom;
+  const getSelectedBlocks = (startElm?: Element, endElm?: Element): Element[] => {
     let node, root;
     const selectedBlocks = [];
 
     root = dom.getRoot();
-    startElm = dom.getParent(startElm || self.getStart(), dom.isBlock);
-    endElm = dom.getParent(endElm || self.getEnd(), dom.isBlock);
+    startElm = dom.getParent(startElm || getStart(), dom.isBlock);
+    endElm = dom.getParent(endElm || getEnd(), dom.isBlock);
 
     if (startElm && startElm !== root) {
       selectedBlocks.push(startElm);
@@ -601,11 +616,10 @@ Selection.prototype = {
     }
 
     return selectedBlocks;
-  },
+  };
 
-  isForward () {
-    const dom = this.dom;
-    const sel = this.getSel();
+  const isForward = (): boolean => {
+    const sel = getSel();
     let anchorRange,
       focusRange;
 
@@ -623,23 +637,23 @@ Selection.prototype = {
     focusRange.collapse(true);
 
     return anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;
-  },
+  };
 
-  normalize () {
-    const self = this, rng = self.getRng();
+  const normalize = (): Range => {
+    const rng = getRng();
 
-    if (!MultiRange.hasMultipleRanges(self.getSel())) {
-      const normRng = NormalizeRange.normalize(self.dom, rng);
+    if (!MultiRange.hasMultipleRanges(getSel())) {
+      const normRng = NormalizeRange.normalize(dom, rng);
 
       normRng.each(function (normRng) {
-        self.setRng(normRng, self.isForward());
+        setRng(normRng, isForward());
       });
 
       return normRng.getOr(rng);
     }
 
     return rng;
-  },
+  };
 
   /**
    * Executes callback when the current selection starts/stops matching the specified selector. The current
@@ -649,19 +663,18 @@ Selection.prototype = {
    * @param {String} selector CSS selector to check for.
    * @param {function} callback Callback with state and args when the selector is matches or not.
    */
-  selectorChanged (selector, callback) {
-    const self = this;
+  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node, selector: String, parents: Element[] }) => void) => {
     let currentSelectors;
 
-    if (!self.selectorChangedData) {
-      self.selectorChangedData = {};
+    if (!selectorChangedData) {
+      selectorChangedData = {};
       currentSelectors = {};
 
-      self.editor.on('NodeChange', function (e) {
-        const node = e.element, dom = self.dom, parents = dom.getParents(node, null, dom.getRoot()), matchedSelectors = {};
+      editor.on('NodeChange', function (e) {
+        const node = e.element, parents = dom.getParents(node, null, dom.getRoot()), matchedSelectors = {};
 
         // Check for new matching selectors
-        each(self.selectorChangedData, function (callbacks, selector) {
+        each(selectorChangedData, function (callbacks, selector) {
           each(parents, function (node) {
             if (dom.is(node, selector)) {
               if (!currentSelectors[selector]) {
@@ -693,17 +706,17 @@ Selection.prototype = {
     }
 
     // Add selector listeners
-    if (!self.selectorChangedData[selector]) {
-      self.selectorChangedData[selector] = [];
+    if (!selectorChangedData[selector]) {
+      selectorChangedData[selector] = [];
     }
 
-    self.selectorChangedData[selector].push(callback);
+    selectorChangedData[selector].push(callback);
 
-    return self;
-  },
+    return exports;
+  };
 
-  getScrollContainer () {
-    let scrollContainer, node = this.dom.getRoot();
+  const getScrollContainer = (): Element => {
+    let scrollContainer, node = dom.getRoot();
 
     while (node && node.nodeName !== 'BODY') {
       if (node.scrollHeight > node.clientHeight) {
@@ -715,19 +728,19 @@ Selection.prototype = {
     }
 
     return scrollContainer;
-  },
+  };
 
-  scrollIntoView (elm, alignToTop) {
-    ScrollIntoView.scrollIntoView(this.editor, elm, alignToTop);
-  },
+  const scrollIntoView = (elm: Element, alignToTop?: boolean) => {
+    ScrollIntoView.scrollIntoView(editor, elm, alignToTop);
+  };
 
-  placeCaretAt (clientX, clientY) {
-    this.setRng(CaretRangeFromPoint.fromPoint(clientX, clientY, this.editor.getDoc()));
-  },
+  const placeCaretAt = (clientX: number, clientY: number) => {
+    setRng(CaretRangeFromPoint.fromPoint(clientX, clientY, editor.getDoc()));
+  };
 
-  _moveEndPoint (rng, node, start) {
+  const _moveEndPoint = (rng, node, start?: boolean) => {
     const root = node, walker = new TreeWalker(node, root);
-    const nonEmptyElementsMap = this.dom.schema.getNonEmptyElements();
+    const nonEmptyElementsMap = dom.schema.getNonEmptyElements();
 
     do {
       // Text node
@@ -757,7 +770,7 @@ Selection.prototype = {
       }
 
       // Found empty text block old IE can place the selection inside those
-      if (Env.ie && Env.ie < 11 && this.dom.isBlock(node) && this.dom.isEmpty(node)) {
+      if (Env.ie && Env.ie < 11 && dom.isBlock(node) && dom.isEmpty(node)) {
         if (start) {
           rng.setStart(node, 0);
         } else {
@@ -776,17 +789,62 @@ Selection.prototype = {
         rng.setEnd(root, root.childNodes.length);
       }
     }
-  },
+  };
 
-  getBoundingClientRect () {
-    const rng = this.getRng();
+  const getBoundingClientRect = (): ClientRect => {
+    const rng = getRng();
     return rng.collapsed ? CaretPosition.fromRangeStart(rng).getClientRects()[0] : rng.getBoundingClientRect();
-  },
+  };
 
-  destroy () {
-    this.win = null;
-    this.controlSelection.destroy();
-  }
+  const destroy = () => {
+    win = null;
+    controlSelection.destroy();
+  };
+
+  const exports = {
+    bookmarkManager: null,
+    controlSelection: null,
+    dom,
+    win,
+    serializer,
+    editor,
+    collapse,
+    setCursorLocation,
+    getContent,
+    setContent,
+    getBookmark,
+    moveToBookmark,
+    select,
+    isCollapsed,
+    isForward,
+    setNode,
+    getNode,
+    getSel,
+    setRng,
+    getRng,
+    getStart,
+    getEnd,
+    getSelectedBlocks,
+    normalize,
+    selectorChanged,
+    getScrollContainer,
+    scrollIntoView,
+    placeCaretAt,
+    getBoundingClientRect,
+    destroy
+  };
+
+  bookmarkManager = BookmarkManager(exports);
+  controlSelection = ControlSelection(exports, editor);
+
+  exports.bookmarkManager = bookmarkManager;
+  exports.controlSelection = controlSelection;
+
+  return exports;
+};
+
+export {
+  EditorSelection
 };
 
 export default Selection;

@@ -10,12 +10,21 @@
 
 import { Element } from '@ephox/sugar';
 import { Selectors } from '@ephox/sugar';
-import NodeType from './NodeType';
-import RangePoint from './RangePoint';
-import Env from '../Env';
-import Delay from '../util/Delay';
-import Tools from '../util/Tools';
-import VK from '../util/VK';
+import NodeType from '../../dom/NodeType';
+import RangePoint from '../../dom/RangePoint';
+import Env from '../../Env';
+import Delay from '../../util/Delay';
+import Tools from '../../util/Tools';
+import VK from '../../util/VK';
+import { EditorSelection } from './Selection';
+
+export interface ControlSelection {
+  isResizable: (elm: Element) => boolean;
+  showResizeRect: (elm: Element) => void;
+  hideResizeRect: () => void;
+  updateResizeRect: (evt: Event) => void;
+  destroy: () => void;
+}
 
 /**
  * This class handles control selection of elements. Controls are elements
@@ -28,7 +37,7 @@ import VK from '../util/VK';
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 
-const getContentEditableRoot = function (root, node) {
+const getContentEditableRoot = function (root: Node, node: Node) {
   while (node && node !== root) {
     if (isContentEditableTrue(node) || isContentEditableFalse(node)) {
       return node;
@@ -40,7 +49,7 @@ const getContentEditableRoot = function (root, node) {
   return null;
 };
 
-export default function (selection, editor) {
+export default function (selection: EditorSelection, editor): ControlSelection {
   const dom = editor.dom, each = Tools.each;
   let selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
   let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;

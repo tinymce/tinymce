@@ -24,6 +24,7 @@ import MatchFormat from './MatchFormat';
 import SplitRange from '../selection/SplitRange';
 import Zwsp from '../text/Zwsp';
 import Fun from '../util/Fun';
+import { EditorSelection } from '../api/dom/Selection';
 
 const ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret';
 
@@ -146,7 +147,7 @@ const removeCaretContainerNode = function (dom, selection, node, moveCaret) {
 };
 
 // Removes the caret container for the specified node or all on the current document
-const removeCaretContainer = function (body, dom, selection, node, moveCaret?) {
+const removeCaretContainer = function (body, dom, selection: EditorSelection, node, moveCaret?) {
   if (!node) {
     node = getParentCaretContainer(body, selection.getStart());
 
@@ -242,10 +243,10 @@ const applyCaretFormat = function (editor, name, vars) {
 };
 
 const removeCaretFormat = function (editor, name, vars, similar) {
-  const dom = editor.dom, selection = editor.selection;
-  let rng = selection.getRng(true), container, offset, bookmark;
+  const dom = editor.dom, selection: EditorSelection = editor.selection;
+  let container, offset, bookmark;
   let hasContentAfter, node, formatNode;
-  const parents = [];
+  const parents = [], rng = selection.getRng();
   let caretContainer;
 
   container = rng.startContainer;
@@ -287,10 +288,10 @@ const removeCaretFormat = function (editor, name, vars, similar) {
     rng.collapse(true);
 
     // Expand the range to the closest word and split it at those points
-    rng = ExpandRange.expandRng(editor, rng, editor.formatter.get(name), true);
-    rng = SplitRange.split(rng);
+    let expandedRng = ExpandRange.expandRng(editor, rng, editor.formatter.get(name), true);
+    expandedRng = SplitRange.split(expandedRng);
 
-    editor.formatter.remove(name, vars, rng);
+    editor.formatter.remove(name, vars, expandedRng);
     selection.moveToBookmark(bookmark);
   } else {
     caretContainer = getParentCaretContainer(editor.getBody(), formatNode);
@@ -312,7 +313,7 @@ const removeCaretFormat = function (editor, name, vars, similar) {
   }
 };
 
-const disableCaretContainer = function (body, dom, selection, keyCode) {
+const disableCaretContainer = function (body, dom, selection: EditorSelection, keyCode) {
   removeCaretContainer(body, dom, selection, null, false);
 
   // Remove caret container if it's empty

@@ -16,6 +16,7 @@ import CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
 import Delay from './Delay';
 import Tools from './Tools';
 import VK from './VK';
+import { EditorSelection } from '../api/dom/Selection';
 
 declare const escape: any;
 declare const unescape: any;
@@ -29,7 +30,7 @@ declare const unescape: any;
 
 export default function (editor) {
   const each = Tools.each;
-  const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection,
+  const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection: EditorSelection = editor.selection,
     settings = editor.settings, parser = editor.parser;
   const isGecko = Env.gecko, isIE = Env.ie, isWebKit = Env.webkit;
   const mceInternalUrlPrefix = 'data:text/mce-internal,';
@@ -261,7 +262,7 @@ export default function (editor) {
           return;
         }
 
-        if (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {
+        if (selection.isCollapsed() && selection.getRng().startOffset === 0) {
           const node = selection.getNode();
           const previousSibling = node.previousSibling;
 
@@ -394,7 +395,7 @@ export default function (editor) {
   const disableBackspaceIntoATable = function () {
     editor.on('keydown', function (e) {
       if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
-        if (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {
+        if (selection.isCollapsed() && selection.getRng().startOffset === 0) {
           const previousSibling = selection.getNode().previousSibling;
           if (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === 'table') {
             e.preventDefault();

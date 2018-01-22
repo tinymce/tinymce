@@ -26,7 +26,7 @@
  * @param  {Element} elm Element to check if it's part of the UI or not.
  * @return {Boolean} True/false state if the element is part of the UI or not.
  */
-const isEditorUIElement = function (elm) {
+const isEditorUIElement = function (elm: Element) {
   // Needs to be converted to string since svg can have focus: #6776
   return elm.className.toString().indexOf('mce-') !== -1;
 };
