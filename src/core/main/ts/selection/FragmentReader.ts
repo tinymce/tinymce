@@ -20,7 +20,7 @@ import { SelectorFind } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 import ElementType from '../dom/ElementType';
 import Parents from '../dom/Parents';
-import SelectionUtils from './SelectionUtils';
+import * as SelectionUtils from './SelectionUtils';
 import SimpleTableModel from './SimpleTableModel';
 import TableCellSelection from './TableCellSelection';
 

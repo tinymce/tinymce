@@ -59,7 +59,9 @@ module.exports = function (grunt) {
             plugins: [
               swag.nodeResolve({
                 basedir: __dirname,
-                prefixes: {}
+                prefixes: {
+                  'tinymce/core': 'lib/core/main/ts'
+                }
               }),
               swag.remapImports()
             ]

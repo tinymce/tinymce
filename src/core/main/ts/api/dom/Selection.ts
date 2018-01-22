@@ -8,14 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Compare } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { Compare, Element } from '@ephox/sugar';
 import Env from '../../Env';
 import BookmarkManager from './BookmarkManager';
 import CaretPosition from '../../caret/CaretPosition';
 import ControlSelection, { ControlSelection as ControlSelectionType } from './ControlSelection';
 import ScrollIntoView from '../../dom/ScrollIntoView';
-import TreeWalker from '../../dom/TreeWalker';
 import EditorFocus from '../../focus/EditorFocus';
 import CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import EventProcessRanges from '../../selection/EventProcessRanges';
@@ -25,6 +23,8 @@ import NormalizeRange from '../../selection/NormalizeRange';
 import SelectionBookmark from '../../selection/SelectionBookmark';
 import SetSelectionContent from '../../selection/SetSelectionContent';
 import Tools from '../../util/Tools';
+import * as ElementSelection from '../../selection/ElementSelection';
+import { moveEndPoint } from 'tinymce/core/selection/SelectionUtils';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -36,7 +36,7 @@ import Tools from '../../util/Tools';
  * alert(tinymce.activeEditor.selection.getNode().nodeName);
  */
 
-const each = Tools.each, trim = Tools.trim;
+const each = Tools.each;
 
 const isAttachedToDom = function (node: Node): boolean {
   return !!(node && node.ownerDocument) && Compare.contains(Element.fromDom(node.ownerDocument), Element.fromDom(node));
@@ -115,7 +115,7 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
     const rng = dom.createRng();
 
     if (!node) {
-      _moveEndPoint(rng, editor.getBody(), true);
+      moveEndPoint(dom, rng, editor.getBody(), true);
       setRng(rng);
     } else {
       rng.setStart(node, offset);
@@ -138,9 +138,7 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
    * // Alerts the currently selected contents as plain text
    * alert(tinymce.activeEditor.selection.getContent({format: 'text'}));
    */
-  const getContent = (args) => {
-    return GetSelectionContent.getContent(editor, args);
-  };
+  const getContent = (args) => GetSelectionContent.getContent(editor, args);
 
   /**
    * Sets the current selection to the specified content. If any contents is selected it will be replaced
@@ -154,9 +152,7 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
    * // Inserts some HTML contents at the current selection
    * tinymce.activeEditor.selection.setContent('<strong>Some contents</strong>');
    */
-  const setContent = (content, args?) => {
-    SetSelectionContent.setContent(editor, content, args);
-  };
+  const setContent = (content, args?) => SetSelectionContent.setContent(editor, content, args);
 
   /**
    * Returns the start element of a selection range. If the start is in a text
@@ -166,24 +162,7 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
    * @param {Boolean} real Optional state to get the real parent when the selection is collapsed not the closest element.
    * @return {Element} Start element of selection range.
    */
-  const getStart = (real?: boolean): Element => {
-    const rng = getRng();
-    let startElement;
-
-    startElement = rng.startContainer;
-
-    if (startElement.nodeType === 1 && startElement.hasChildNodes()) {
-      if (!real || !rng.collapsed) {
-        startElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];
-      }
-    }
-
-    if (startElement && startElement.nodeType === 3) {
-      return startElement.parentNode;
-    }
-
-    return startElement;
-  };
+  const getStart = (real?: boolean): Element => ElementSelection.getStart(editor.getBody(), getRng(), real);
 
   /**
    * Returns the end element of a selection range. If the end is in a text
@@ -193,25 +172,7 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
    * @param {Boolean} real Optional state to get the real parent when the selection is collapsed not the closest element.
    * @return {Element} End element of selection range.
    */
-  const getEnd = (real?: boolean): Element => {
-    const rng = getRng();
-    let endElement, endOffset;
-
-    endElement = rng.endContainer;
-    endOffset = rng.endOffset;
-
-    if (endElement.nodeType === 1 && endElement.hasChildNodes()) {
-      if (!real || !rng.collapsed) {
-        endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
-      }
-    }
-
-    if (endElement && endElement.nodeType === 3) {
-      return endElement.parentNode;
-    }
-
-    return endElement;
-  };
+  const getEnd = (real?: boolean): Element => ElementSelection.getEnd(editor.getBody(), getRng(), real);
 
   /**
    * Returns a bookmark location for the current selection. This bookmark object
@@ -230,9 +191,7 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
    * // Restore the selection bookmark
    * tinymce.activeEditor.selection.moveToBookmark(bm);
    */
-  const getBookmark = (type?: number, normalized?: boolean) => {
-    return bookmarkManager.getBookmark(type, normalized);
-  };
+  const getBookmark = (type?: number, normalized?: boolean) => bookmarkManager.getBookmark(type, normalized);
 
   /**
    * Restores the selection to the specified bookmark.
@@ -249,9 +208,7 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
    * // Restore the selection bookmark
    * tinymce.activeEditor.selection.moveToBookmark(bm);
    */
-  const moveToBookmark = (bookmark): boolean => {
-    return bookmarkManager.moveToBookmark(bookmark);
-  };
+  const moveToBookmark = (bookmark): boolean => bookmarkManager.moveToBookmark(bookmark);
 
   /**
    * Selects the specified element. This will place the start and end of the selection range around the element.
@@ -265,23 +222,7 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
    * tinymce.activeEditor.selection.select(tinymce.activeEditor.dom.select('p')[0]);
    */
   const select = (node: Node, content?: boolean) => {
-    const rng = dom.createRng();
-    let idx;
-
-    if (node) {
-      idx = dom.nodeIndex(node);
-      rng.setStart(node.parentNode, idx);
-      rng.setEnd(node.parentNode, idx + 1);
-
-      // Find first/last text node or BR element
-      if (content) {
-        _moveEndPoint(rng, node, true);
-        _moveEndPoint(rng, node);
-      }
-
-      setRng(rng);
-    }
-
+    ElementSelection.select(dom, node, content).each(setRng);
     return node;
   };
 
@@ -325,9 +266,7 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
    * @method getSel
    * @return {Selection} Internal browser selection object.
    */
-  const getSel = (): Selection => {
-    return win.getSelection ? win.getSelection() : (<any> win.document).selection;
-  };
+  const getSel = (): Selection => win.getSelection ? win.getSelection() : (<any> win.document).selection;
 
   /**
    * Returns the browsers internal range object.
@@ -519,104 +458,9 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
    * // Alerts the currently selected elements node name
    * alert(tinymce.activeEditor.selection.getNode().nodeName);
    */
-  const getNode = (): Element => {
-    const rng = getRng();
-    let elm;
-    let startContainer, endContainer, startOffset, endOffset;
-    const root = dom.getRoot();
+  const getNode = (): Element => ElementSelection.getNode(editor.getBody(), getRng());
 
-    const skipEmptyTextNodes = function (node, forwards) {
-      const orig = node;
-
-      while (node && node.nodeType === 3 && node.length === 0) {
-        node = forwards ? node.nextSibling : node.previousSibling;
-      }
-
-      return node || orig;
-    };
-
-    // Range maybe lost after the editor is made visible again
-    if (!rng) {
-      return root;
-    }
-
-    startContainer = rng.startContainer;
-    endContainer = rng.endContainer;
-    startOffset = rng.startOffset;
-    endOffset = rng.endOffset;
-    elm = rng.commonAncestorContainer;
-
-    // Handle selection a image or other control like element such as anchors
-    if (!rng.collapsed) {
-      if (startContainer === endContainer) {
-        if (endOffset - startOffset < 2) {
-          if (startContainer.hasChildNodes()) {
-            elm = startContainer.childNodes[startOffset];
-          }
-        }
-      }
-
-      // If the anchor node is a element instead of a text node then return this element
-      // if (tinymce.isWebKit && sel.anchorNode && sel.anchorNode.nodeType == 1)
-      // return sel.anchorNode.childNodes[sel.anchorOffset];
-
-      // Handle cases where the selection is immediately wrapped around a node and return that node instead of it's parent.
-      // This happens when you double click an underlined word in FireFox.
-      if (startContainer.nodeType === 3 && endContainer.nodeType === 3) {
-        if (startContainer.length === startOffset) {
-          startContainer = skipEmptyTextNodes(startContainer.nextSibling, true);
-        } else {
-          startContainer = startContainer.parentNode;
-        }
-
-        if (endOffset === 0) {
-          endContainer = skipEmptyTextNodes(endContainer.previousSibling, false);
-        } else {
-          endContainer = endContainer.parentNode;
-        }
-
-        if (startContainer && startContainer === endContainer) {
-          return startContainer;
-        }
-      }
-    }
-
-    if (elm && elm.nodeType === 3) {
-      return elm.parentNode;
-    }
-
-    return elm;
-  };
-
-  const getSelectedBlocks = (startElm?: Element, endElm?: Element): Element[] => {
-    let node, root;
-    const selectedBlocks = [];
-
-    root = dom.getRoot();
-    startElm = dom.getParent(startElm || getStart(), dom.isBlock);
-    endElm = dom.getParent(endElm || getEnd(), dom.isBlock);
-
-    if (startElm && startElm !== root) {
-      selectedBlocks.push(startElm);
-    }
-
-    if (startElm && endElm && startElm !== endElm) {
-      node = startElm;
-
-      const walker = new TreeWalker(startElm, root);
-      while ((node = walker.next()) && node !== endElm) {
-        if (dom.isBlock(node)) {
-          selectedBlocks.push(node);
-        }
-      }
-    }
-
-    if (endElm && startElm !== endElm && endElm !== root) {
-      selectedBlocks.push(endElm);
-    }
-
-    return selectedBlocks;
-  };
+  const getSelectedBlocks = (startElm: Element, endElm: Element) => ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
 
   const isForward = (): boolean => {
     const sel = getSel();
@@ -730,66 +574,8 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
     return scrollContainer;
   };
 
-  const scrollIntoView = (elm: Element, alignToTop?: boolean) => {
-    ScrollIntoView.scrollIntoView(editor, elm, alignToTop);
-  };
-
-  const placeCaretAt = (clientX: number, clientY: number) => {
-    setRng(CaretRangeFromPoint.fromPoint(clientX, clientY, editor.getDoc()));
-  };
-
-  const _moveEndPoint = (rng, node, start?: boolean) => {
-    const root = node, walker = new TreeWalker(node, root);
-    const nonEmptyElementsMap = dom.schema.getNonEmptyElements();
-
-    do {
-      // Text node
-      if (node.nodeType === 3 && trim(node.nodeValue).length !== 0) {
-        if (start) {
-          rng.setStart(node, 0);
-        } else {
-          rng.setEnd(node, node.nodeValue.length);
-        }
-
-        return;
-      }
-
-      // BR/IMG/INPUT elements but not table cells
-      if (nonEmptyElementsMap[node.nodeName] && !/^(TD|TH)$/.test(node.nodeName)) {
-        if (start) {
-          rng.setStartBefore(node);
-        } else {
-          if (node.nodeName === 'BR') {
-            rng.setEndBefore(node);
-          } else {
-            rng.setEndAfter(node);
-          }
-        }
-
-        return;
-      }
-
-      // Found empty text block old IE can place the selection inside those
-      if (Env.ie && Env.ie < 11 && dom.isBlock(node) && dom.isEmpty(node)) {
-        if (start) {
-          rng.setStart(node, 0);
-        } else {
-          rng.setEnd(node, 0);
-        }
-
-        return;
-      }
-    } while ((node = (start ? walker.next() : walker.prev())));
-
-    // Failed to find any text node or other suitable location then move to the root of body
-    if (root.nodeName === 'BODY') {
-      if (start) {
-        rng.setStart(root, 0);
-      } else {
-        rng.setEnd(root, root.childNodes.length);
-      }
-    }
-  };
+  const scrollIntoView = (elm: Element, alignToTop?: boolean) => ScrollIntoView.scrollIntoView(editor, elm, alignToTop);
+  const placeCaretAt = (clientX: number, clientY: number) => setRng(CaretRangeFromPoint.fromPoint(clientX, clientY, editor.getDoc()));
 
   const getBoundingClientRect = (): ClientRect => {
     const rng = getRng();

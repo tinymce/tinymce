@@ -170,6 +170,19 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function () {
     LegacyUnit.equal(editor.selection.getEnd().id, 'a', 'Selected contents (getEnd, collapsed)');
   });
 
+  suite.test('getStart/getEnd on comment should return parent element', function (editor) {
+    editor.setContent('<p><!-- x --></p>');
+    const rng = editor.dom.createRng();
+    rng.setStart(editor.getBody().firstChild, 0);
+    rng.setEnd(editor.getBody().firstChild, 0);
+    editor.selection.setRng(rng);
+
+    LegacyUnit.equal(editor.selection.getStart().nodeName, 'P', 'Node name should be paragraph');
+    LegacyUnit.equal(editor.selection.getStart(true).nodeName, 'P', 'Node name should be paragraph');
+    LegacyUnit.equal(editor.selection.getEnd().nodeName, 'P', 'Node name should be paragraph');
+    LegacyUnit.equal(editor.selection.getEnd(true).nodeName, 'P', 'Node name should be paragraph');
+  });
+
   suite.test('getBookmark/setBookmark (persistent)', function (editor) {
     let rng, bookmark;
 
