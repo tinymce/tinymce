@@ -117,6 +117,7 @@ const render = function (editor, theme, args) {
     ContextToolbars.addContextualToolbars(editor);
 
     editor.on('nodeChange', reposition);
+    editor.on('ResizeWindow', reposition);
     editor.on('activate', show);
     editor.on('deactivate', hide);
 
