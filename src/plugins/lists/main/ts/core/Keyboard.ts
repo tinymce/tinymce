@@ -16,8 +16,8 @@ import Delete from './Delete';
 
 const setupTabKey = function (editor) {
   editor.on('keydown', function (e) {
-    // Check for tab but not ctrl/cmd+tab since it switches browser tabs
-    if (e.keyCode !== VK.TAB || VK.metaKeyPressed(e)) {
+    // Check for tab but not ctrl+tab since it switches browser tabs on any OS
+    if (e.keyCode !== VK.TAB || (e.ctrlKey && !e.altKey)) {
       return;
     }
 
