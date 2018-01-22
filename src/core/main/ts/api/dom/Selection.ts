@@ -38,6 +38,10 @@ import { moveEndPoint } from 'tinymce/core/selection/SelectionUtils';
 
 const each = Tools.each;
 
+const isNativeIeSelection = (rng: any): boolean => {
+  return !!(<any> rng).select;
+};
+
 const isAttachedToDom = function (node: Node): boolean {
   return !!(node && node.ownerDocument) && Compare.contains(Element.fromDom(node.ownerDocument), Element.fromDom(node));
 };
@@ -45,7 +49,7 @@ const isAttachedToDom = function (node: Node): boolean {
 const isValidRange = function (rng: Range) {
   if (!rng) {
     return false;
-  } else if (rng.hasOwnProperty('select')) { // Native IE range still produced by placeCaretAt
+  } else if (isNativeIeSelection(rng)) { // Native IE range still produced by placeCaretAt
     return true;
   } else {
     return isAttachedToDom(rng.startContainer) && isAttachedToDom(rng.endContainer);
@@ -368,7 +372,7 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
     }
 
     // Is IE specific range
-    const ieRange: any = rng.hasOwnProperty('select') ? rng : null;
+    const ieRange: any = isNativeIeSelection(rng) ? rng : null;
     if (ieRange) {
       explicitRange = null;
 
