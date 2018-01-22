@@ -1,0 +1,9 @@
+ 
+.mce-i-paint-brush {
+    background: url('../img/paint-brush.png');
+    background-repeat: no-repeat;
+}
+
+.mce-active-orange {
+    background-color: rgb(255, 165, 0) !important;
+}
