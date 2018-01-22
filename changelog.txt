@@ -2,7 +2,7 @@ Version 4.7.5 (2018-01-22)
     Fixed bug with the Codesample Plugin where it wasn't possible to edit codesamples when the editor was in inline mode.
     Fixed bug where focusing on the status bar broke the keyboard navigation functionality.
     Fixed bug where an error would be thrown on Edge by the Table Plugin when pasting using the PowerPaste Plugin.
-    Fixed bug in the Table Plugins where selecting row border style from the dropdown menu in advanced row properties would throw an error.
+    Fixed bug in the Table Plugin where selecting row border style from the dropdown menu in advanced row properties would throw an error.
     Fixed bug with icons being rendered incorrectly on Chrome on Mac OS.
     Fixed bug in the Textcolor Plugin where the font color and background color buttons wouldn't trigger an ExecCommand event.
     Fixed bug in the Link Plugin where the url field wasn't forced LTR.
