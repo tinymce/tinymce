@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import NonEditablePlugin from 'tinymce/plugins/noneditable/Plugin';
-
 declare let tinymce: any;
-
-NonEditablePlugin();
 
 const button = document.querySelector('button.clicky');
 button.addEventListener('click', function () {
@@ -42,3 +38,5 @@ tinymce.init({
   toolbar: 'code',
   height: 600
 });
+
+export {};

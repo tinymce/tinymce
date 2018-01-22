@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import PageBreakPlugin from 'tinymce/plugins/pagebreak/Plugin';
-
 declare let tinymce: any;
-
-PageBreakPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'pagebreak code',
   height: 600
 });
+
+export {};

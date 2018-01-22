@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import NonBreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
-
 declare let tinymce: any;
-
-NonBreakingPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'nonbreaking code',
   height: 600
 });
+
+export {};

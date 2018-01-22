@@ -8,14 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import HelpPlugin from 'tinymce/plugins/help/Plugin';
-import PluginManager from 'tinymce/core/PluginManager';
-
 declare let tinymce: any;
-
-HelpPlugin();
-
-PluginManager.urls.help = '../../../../../js/tinymce/plugins/help';
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -25,3 +18,5 @@ tinymce.init({
   toolbar: 'help',
   height: 600
 });
+
+export {};

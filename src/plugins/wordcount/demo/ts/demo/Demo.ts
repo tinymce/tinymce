@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import WordCountPlugin from 'tinymce/plugins/wordcount/Plugin';
-
 declare let tinymce: any;
-
-WordCountPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -21,3 +17,5 @@ tinymce.init({
   plugins: 'wordcount code',
   height: 600
 });
+
+export {};

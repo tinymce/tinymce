@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import FullPagePlugin from 'tinymce/plugins/fullpage/Plugin';
-
 declare let tinymce: any;
-
-FullPagePlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'fullpage code',
   height: 600
 });
+
+export {};

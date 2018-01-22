@@ -8,7 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import tinymce from 'tinymce/core/api/Tinymce';
+// import tinymce from 'tinymce/core/api/Tinymce';
+
+declare const tinymce: any;
 
 export default function () {
   const textarea = document.createElement('textarea');

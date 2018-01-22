@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import SavePlugin from 'tinymce/plugins/save/Plugin';
-
 declare let tinymce: any;
-
-SavePlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'save code',
   height: 600
 });
+
+export {};

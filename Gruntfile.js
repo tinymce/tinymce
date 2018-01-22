@@ -158,12 +158,25 @@ module.exports = function (grunt) {
     ),
 
     webpack: Object.assign(
-      {core: () => gruntWebPack.create('core', 'tsconfig.json', `src/core/demo/ts/demo/Demos.ts`, `scratch/demos/core/demo.js`)},
+      {core: () => gruntWebPack.create('src/core/demo/ts/demo/Demos.ts', 'tsconfig.json', 'scratch/demos/core', 'demo.js')},
       {plugins: () => gruntWebPack.allPlugins(plugins)},
       {themes: () => gruntWebPack.allThemes(themes)},
       gruntUtils.generate(plugins, 'plugin', (name) => () => gruntWebPack.createPlugin(name) ),
       gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) )
     ),
+
+    'webpack-dev-server': {
+      options: {
+        webpack: gruntWebPack.all(plugins, themes),
+        publicPath: '/',
+        inline: false,
+        port: 3000,
+        host: '0.0.0.0',
+        disableHostCheck: true,
+        before: app => gruntWebPack.generateDemoIndex(grunt, app, plugins, themes)
+      },
+      start: { }
+    },
 
     less: {
       desktop: {
@@ -792,7 +805,9 @@ module.exports = function (grunt) {
     'rollup',
     'less',
     'copy'
-  ])
+  ]);
+
+  grunt.registerTask('start', ['webpack-dev-server']);
 
   grunt.registerTask('default', ['prod']);
   grunt.registerTask('test', ['bedrock-auto:phantomjs']);

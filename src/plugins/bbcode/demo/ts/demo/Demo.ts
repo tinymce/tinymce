@@ -8,13 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import BbCodePlugin from 'tinymce/plugins/bbcode/Plugin';
-
-/*eslint no-console:0, no-unused-vars: 0 */
-
 declare let tinymce: any;
-
-BbCodePlugin();
 
 let elm: any;
 elm = document.querySelector('.tinymce');
@@ -28,3 +22,5 @@ tinymce.init({
   toolbar: 'bbcode code',
   height: 600
 });
+
+export {};

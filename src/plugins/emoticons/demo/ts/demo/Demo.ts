@@ -8,11 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
-
 declare let tinymce: any;
-
-EmoticonsPlugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
@@ -22,3 +18,5 @@ tinymce.init({
   toolbar: 'emoticons code',
   height: 600
 });
+
+export {};
