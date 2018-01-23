@@ -14,8 +14,11 @@ import CefUtils from '../keyboard/CefUtils';
 const setup = function (editor) {
   const renderFocusCaret = Throttler.first(function () {
     if (!editor.removed) {
-      const caretRange = CefUtils.renderRangeCaret(editor, editor.selection.getRng());
-      editor.selection.setRng(caretRange);
+      const rng = editor.selection.getRng();
+      if (rng.collapsed) { // see TINY-1479
+        const caretRange = CefUtils.renderRangeCaret(editor, editor.selection.getRng());
+        editor.selection.setRng(caretRange);
+      }
     }
   }, 0);
 
