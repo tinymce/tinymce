@@ -14,7 +14,7 @@ export default class BinaryReader {
 
     read(idx, size) {
         if (idx + size > this.length()) {
-            throw new Error("You are trying to read outside the source boundaries.");
+            return null;
         }
 
         var mv = this.littleEndian ? 0 : -8 * (size - 1);
