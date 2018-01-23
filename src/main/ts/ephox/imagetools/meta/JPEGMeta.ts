@@ -26,8 +26,9 @@ var extractFrom = function (blob) {
                 meta.rawHeaders = headers;
                 return meta;
             }
-        } catch (ex) {}
-        return Promise.reject(`Unsupported format or not an image: ${blob.type}`);
+        } catch (ex) {
+            return Promise.reject(`Unsupported format or not an image: ${blob.type} (Exception: ${ex.message})`);
+        }
     });
 };
 
