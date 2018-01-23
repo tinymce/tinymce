@@ -19,7 +19,7 @@
   var undef, lazyLoading, patchApplied;
   var delayedInits = [], $, win;
 
-  win = global ? global : window;
+  win = typeof global !== 'undefined' ? global : window;
   $ = win.jQuery;
 
   var getTinymce = function () {
