@@ -70,7 +70,7 @@ function blobToImage(blob) {
 }
 
 function anyUriToBlob(url) {
-  return new Promise(function (resolve) {
+  return new Promise(function (resolve, reject) {
     var xhr = new XMLHttpRequest();
 
     xhr.open('GET', url, true);
@@ -82,6 +82,23 @@ function anyUriToBlob(url) {
       if (this.status == 200) {
         resolve(this.response);
       }
+    };
+
+    xhr.onerror = function () {
+      /*
+       * prior to TBIO-4268, converting an image to a blob did image -> canvas -> b64 -> blob.
+       * That was optimised away into a single AJAX call, but the result was no ability to detect 'your canvas is tainted, you need a proxy'.
+       * We now create a custom JS error object with extra properties to look like a tainted canvas error.
+       */
+      var corsError = () => {
+        var obj = new Error('No access to download image') as any;
+        obj.code = 18;
+        obj.name = 'SecurityError';
+        return obj;
+      }
+
+      var genericError = () => new Error('Error ' + this.status + ' downloading image');
+      reject(this.status === 0 ? corsError() : genericError());
     };
 
     xhr.send();
