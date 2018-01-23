@@ -12,9 +12,16 @@ import Tinymce from './Tinymce';
 
 declare const window: any;
 
-const exportToWindowGlobal = function (tinymce) {
+const exportToModuleLoaders = (tinymce) => {
+  if (typeof module === 'object') {
+    module.exports = tinymce;
+  }
+};
+
+const exportToWindowGlobal = (tinymce) => {
   window.tinymce = tinymce;
   window.tinyMCE = tinymce;
 };
 
 exportToWindowGlobal(Tinymce);
+exportToModuleLoaders(Tinymce);
