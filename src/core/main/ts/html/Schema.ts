@@ -218,7 +218,7 @@ const compileSchema = function (type) {
     add('mark rt rp summary bdi', '', phrasingContent);
     add('canvas', 'width height', flowContent);
     add('video', 'src crossorigin poster preload autoplay mediagroup loop ' +
-      'muted controls width height buffered', [flowContent, 'track source'].join(' '));
+      'muted controls width height buffered playsinline', [flowContent, 'track source'].join(' '));
     add('audio', 'src crossorigin preload autoplay mediagroup loop muted controls ' +
       'buffered volume', [flowContent, 'track source'].join(' '));
     add('picture', '', 'img source');
