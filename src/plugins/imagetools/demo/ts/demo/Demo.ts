@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+// tslint:disable:no-console
+
 import DomQuery from 'tinymce/core/dom/DomQuery';
 
 declare let tinymce: any;
@@ -48,6 +50,7 @@ tinymce.init({
   paste_data_images: true,
   image_caption: true,
   height: 600,
+  // rtl_ui: true,
   toolbar1: 'undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons',
   images_upload_handler(data, success, failure, progress) {
     console.log('blob upload [started]', 'id:', data.id(), 'filename:', data.filename());

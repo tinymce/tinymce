@@ -28,6 +28,7 @@ const setup = function (createComponent, f, success, failure) {
     Attachment.detachSystem(gui);
     success();
   }, function (e) {
+    // tslint:disable-next-line:no-console
     console.error(e);
     failure(e);
   });

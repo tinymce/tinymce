@@ -92,6 +92,7 @@ const ScriptLoader: any = function () {
       } else {
         // Report the error so it's easier for people to spot loading errors
         if (typeof console !== 'undefined' && console.log) {
+          // tslint:disable-next-line:no-console
           console.log('Failed to load script: ' + url);
         }
       }

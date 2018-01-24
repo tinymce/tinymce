@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+// tslint:disable:no-console
+
 declare const window: any;
 declare let tinymce: any;
 

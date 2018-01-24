@@ -7,6 +7,9 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
+
+ // tslint:disable:no-console
+
 declare let tinymce: any;
 
 export default function () {

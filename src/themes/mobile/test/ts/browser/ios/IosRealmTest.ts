@@ -87,6 +87,7 @@ UnitTest.asynctest('Browser Test: ios.IosRealmTest', function () {
      */
     const editorY = iframe.dom().contentWindow.document.querySelector('iframe').getBoundingClientRect().top;
     const targetY = target.dom().getBoundingClientRect().top;
+    // tslint:disable-next-line:no-console
     console.log('editorY', editorY, 'targetY', targetY);
     return editorY + targetY;
   };
@@ -112,6 +113,7 @@ UnitTest.asynctest('Browser Test: ios.IosRealmTest', function () {
           cursorY
         }
       );
+      // tslint:disable-next-line:no-console
       console.log('newValue', newValue);
       next(newValue);
     });
