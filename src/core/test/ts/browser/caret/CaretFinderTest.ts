@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function () {
   const cCreateFromPosition = function (path, offset) {
     return Chain.mapper(function (viewBlock) {
       const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
-      return new CaretPosition(container.dom(), offset);
+      return CaretPosition(container.dom(), offset);
     });
   };
 

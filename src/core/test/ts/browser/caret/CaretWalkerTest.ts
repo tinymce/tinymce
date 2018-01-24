@@ -93,7 +93,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', function () {
   suite.test('from text to text across elements with siblings', function () {
     setupHtml('<p>abc<b><!-- x --></b></p><p><b><!-- x --></b></p><p><b><!-- x --></b>abc</p>');
     CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('p:first', 3)), CaretPosition(findElm('p:last').lastChild, 0));
-    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last').lastChild)), findTextPos('p:first', 3));
+    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last').lastChild, 0)), findTextPos('p:first', 3));
   });
 
   suite.test('from input to text', function () {

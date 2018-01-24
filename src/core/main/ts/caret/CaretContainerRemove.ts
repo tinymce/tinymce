@@ -58,7 +58,7 @@ const removeTextAndReposition = function (caretContainer, pos) {
 
   if (text.length > 0) {
     setNodeValue(caretContainer, text);
-    return new CaretPosition(caretContainer, pos.offset() - before.count);
+    return CaretPosition(caretContainer, pos.offset() - before.count);
   } else {
     return pos;
   }
@@ -67,7 +67,7 @@ const removeTextAndReposition = function (caretContainer, pos) {
 const removeElementAndReposition = function (caretContainer, pos) {
   const parentNode = pos.container();
   const newPosition = Arr.indexOf(parentNode.childNodes, caretContainer).map(function (index) {
-    return index < pos.offset() ? new CaretPosition(parentNode, pos.offset() - 1) : pos;
+    return index < pos.offset() ? CaretPosition(parentNode, pos.offset() - 1) : pos;
   }).getOr(pos);
   remove(caretContainer);
   return newPosition;

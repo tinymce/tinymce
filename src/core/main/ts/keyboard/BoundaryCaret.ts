@@ -35,7 +35,7 @@ const renderCaret = function (caret, location) {
       CaretContainerRemove.remove(caret.get());
       const text = CaretContainerInline.insertInlineBefore(element);
       caret.set(text);
-      return Option.some(new CaretPosition(text, text.length - 1));
+      return Option.some(CaretPosition(text, text.length - 1));
     },
     function (element) { // Start
       return CaretFinder.firstPositionIn(element).map(function (pos) {
@@ -43,9 +43,9 @@ const renderCaret = function (caret, location) {
           CaretContainerRemove.remove(caret.get());
           const text = insertInlinePos(pos, true);
           caret.set(text);
-          return new CaretPosition(text, 1);
+          return CaretPosition(text, 1);
         } else {
-          return new CaretPosition(caret.get(), 1);
+          return CaretPosition(caret.get(), 1);
         }
       });
     },
@@ -55,9 +55,9 @@ const renderCaret = function (caret, location) {
           CaretContainerRemove.remove(caret.get());
           const text = insertInlinePos(pos, false);
           caret.set(text);
-          return new CaretPosition(text, text.length - 1);
+          return CaretPosition(text, text.length - 1);
         } else {
-          return new CaretPosition(caret.get(), caret.get().length - 1);
+          return CaretPosition(caret.get(), caret.get().length - 1);
         }
       });
     },
@@ -65,7 +65,7 @@ const renderCaret = function (caret, location) {
       CaretContainerRemove.remove(caret.get());
       const text = CaretContainerInline.insertInlineAfter(element);
       caret.set(text);
-      return Option.some(new CaretPosition(text, 1));
+      return Option.some(CaretPosition(text, 1));
     }
   );
 };

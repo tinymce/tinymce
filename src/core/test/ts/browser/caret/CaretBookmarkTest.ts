@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretBookmarkTest', function () {
   };
 
   const createTextPos = function (textNode, offset) {
-    return new CaretPosition(textNode, offset);
+    return CaretPosition(textNode, offset);
   };
 
   suite.test('create element index', function () {

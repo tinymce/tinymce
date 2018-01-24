@@ -31,14 +31,14 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', functio
 
   const createLocation = function (elm, elementPath, offset) {
     const container = Hierarchy.follow(elm, elementPath);
-    const pos = new CaretPosition(container.getOrDie().dom(), offset);
+    const pos = CaretPosition(container.getOrDie().dom(), offset);
     const location = BoundaryLocation.readLocation(isInlineTarget, elm.dom(), pos);
     return location;
   };
 
   const createPosition = function (elm, elementPath, offset) {
     const container = Hierarchy.follow(elm, elementPath);
-    return new CaretPosition(container.getOrDie().dom(), offset);
+    return CaretPosition(container.getOrDie().dom(), offset);
   };
 
   const locationName = function (location) {

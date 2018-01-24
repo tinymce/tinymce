@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function () 
   const cNormalizePosition = function (forward, path, offset) {
     return Chain.mapper(function (elm) {
       const container = Hierarchy.follow(elm, path).getOrDie();
-      const pos = new CaretPosition(container.dom(), offset);
+      const pos = CaretPosition(container.dom(), offset);
       return { pos: InlineUtils.normalizePosition(forward, pos), elm };
     });
   };

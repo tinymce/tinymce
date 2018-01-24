@@ -195,7 +195,7 @@ const findTextPosition = function (container, offset) {
     offset = container.data.length;
   }
 
-  return new CaretPosition(container, offset);
+  return CaretPosition(container, offset);
 };
 
 const resolve = function (rootNode, path) {
@@ -233,7 +233,7 @@ const resolve = function (rootNode, path) {
       offset = nodeIndex(container);
     }
 
-    return new CaretPosition(container.parentNode, offset);
+    return CaretPosition(container.parentNode, offset);
   }
 
   return findTextPosition(container, parseInt(offset, 10));
