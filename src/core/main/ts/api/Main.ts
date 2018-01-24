@@ -14,7 +14,12 @@ declare const window: any;
 
 const exportToModuleLoaders = (tinymce) => {
   if (typeof module === 'object') {
-    module.exports = tinymce;
+    try {
+      module.exports = tinymce;
+    } catch (_) {
+      // It will thrown an error when running this module
+      // within webpack where the module.exports object is sealed
+    }
   }
 };
 
