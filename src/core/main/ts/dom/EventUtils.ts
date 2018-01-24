@@ -66,7 +66,7 @@ const removeEvent = function (target, name, callback, capture?) {
 };
 
 /**
- * Gets the event target based on shadow dom properties like path and deepPath.
+ * Gets the event target based on shadow dom properties like path and composedPath.
  */
 const getTargetFromShadowDom = function (event, defaultTarget) {
   let path, target = defaultTarget;
@@ -81,8 +81,8 @@ const getTargetFromShadowDom = function (event, defaultTarget) {
   }
 
   // Normalize target for WebComponents v1 implementation (standard)
-  if (event.deepPath) {
-    path = event.deepPath();
+  if (event.composedPath) {
+    path = event.composedPath();
     if (path && path.length > 0) {
       target = path[0];
     }
