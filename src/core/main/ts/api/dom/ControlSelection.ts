@@ -527,7 +527,7 @@ export default function (selection: EditorSelection, editor): ControlSelection {
       }
     });
 
-    editor.on('nodechange ResizeEditor ResizeWindow drop', throttledUpdateResizeRect);
+    editor.on('nodechange ResizeEditor ResizeWindow drop FullscreenStateChanged', throttledUpdateResizeRect);
 
     // Update resize rect while typing in a table
     editor.on('keyup compositionend', function (e) {
