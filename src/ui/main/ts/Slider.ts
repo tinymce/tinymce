@@ -11,6 +11,7 @@
 import Widget from './Widget';
 import DragHelper from './DragHelper';
 import DomUtils from './DomUtils';
+import { Type } from '@ephox/katamari';
 
 /**
  * Slider control.
@@ -79,8 +80,8 @@ export default Widget.extend({
       self.classes.add('vertical');
     }
 
-    self._minValue = settings.minValue || 0;
-    self._maxValue = settings.maxValue || 100;
+    self._minValue = Type.isNumber(settings.minValue) ? settings.minValue : 0;
+    self._maxValue = Type.isNumber(settings.maxValue) ? settings.maxValue : 100;
     self._initValue = self.state.get('value');
   },
 
