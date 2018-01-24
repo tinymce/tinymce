@@ -633,8 +633,6 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
   return exports;
 };
 
-export {
-  EditorSelection
-};
+export { EditorSelection as Selection };
 
 export default Selection;

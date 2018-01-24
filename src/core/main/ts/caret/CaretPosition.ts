@@ -13,7 +13,7 @@ import DOMUtils from '../dom/DOMUtils';
 import NodeType from '../dom/NodeType';
 import ClientRect from '../geom/ClientRect';
 import RangeNodes from '../selection/RangeNodes';
-import ExtendingChar from '../text/ExtendingChar';
+import * as ExtendingChar from '../text/ExtendingChar';
 import Fun from '../util/Fun';
 
 /**
@@ -214,7 +214,7 @@ export interface CaretPosition {
   isVisible: () => boolean;
   isAtStart: () => boolean;
   isAtEnd: () => boolean;
-  isEqual: (caretPosition: any) => boolean;
+  isEqual: (caretPosition: CaretPosition) => boolean;
   getNode: (before?: boolean) => Node;
 }
 
@@ -265,7 +265,7 @@ export function CaretPosition(container: Node, offset: number, clientRects?): Ca
     return getClientRects().length > 0;
   };
 
-  const isEqual = (caretPosition) => {
+  const isEqual = (caretPosition: CaretPosition) => {
     return caretPosition && container === caretPosition.container() && offset === caretPosition.offset();
   };
 
@@ -367,7 +367,7 @@ export namespace CaretPosition {
    * @param {DOMRange} range DOM Range to create caret position from.
    * @return {tinymce.caret.CaretPosition} Caret position from the end of DOM range.
    */
-  export const fromRangeEnd = (range) => CaretPosition(range.endContainer, range.endOffset);
+  export const fromRangeEnd = (range: Range) => CaretPosition(range.endContainer, range.endOffset);
 
   /**
    * Creates a caret position from a node and places the offset after it.
@@ -376,7 +376,7 @@ export namespace CaretPosition {
    * @param {Node} node Node to get caret position from.
    * @return {tinymce.caret.CaretPosition} Caret position from the node.
    */
-  export const after = (node) => CaretPosition(node.parentNode, nodeIndex(node) + 1);
+  export const after = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node) + 1);
 
   /**
    * Creates a caret position from a node and places the offset before it.
@@ -385,11 +385,11 @@ export namespace CaretPosition {
    * @param {Node} node Node to get caret position from.
    * @return {tinymce.caret.CaretPosition} Caret position from the node.
    */
-  export const before = (node) => CaretPosition(node.parentNode, nodeIndex(node));
+  export const before = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node));
 
-  export const isAtStart = (pos) => pos ? pos.isAtStart() : false;
-  export const isAtEnd = (pos) => pos ? pos.isAtEnd() : false;
-  export const isTextPosition = (pos) => pos ? NodeType.isText(pos.container()) : false;
+  export const isAtStart = (pos: CaretPosition) => pos ? pos.isAtStart() : false;
+  export const isAtEnd = (pos: CaretPosition) => pos ? pos.isAtEnd() : false;
+  export const isTextPosition = (pos: CaretPosition) => pos ? NodeType.isText(pos.container()) : false;
 }
 
 export default CaretPosition;

@@ -19,7 +19,7 @@ import CaretPosition from '../caret/CaretPosition';
 import CaretUtils from '../caret/CaretUtils';
 import DOMUtils from '../dom/DOMUtils';
 import NodeType from '../dom/NodeType';
-import Bidi from '../text/Bidi';
+import * as Bidi from '../text/Bidi';
 
 const isInlineTarget = function (editor, elm) {
   const selector = EditorSettings.getString(editor, 'inline_boundaries_selector').getOr('a[href],code');

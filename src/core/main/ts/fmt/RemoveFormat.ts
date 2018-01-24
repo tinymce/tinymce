@@ -17,7 +17,7 @@ import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 import RangeWalk from '../selection/RangeWalk';
 import Tools from '../util/Tools';
-import { EditorSelection } from '../api/dom/Selection';
+import { Selection } from '../api/dom/Selection';
 
 const MCE_ATTR_RE = /^(src|href|style)$/;
 const each = Tools.each;
@@ -352,7 +352,7 @@ const remove = function (ed, name, vars?, node?, similar?) {
   const formatList = ed.formatter.get(name), format = formatList[0];
   let bookmark, rng, contentEditable = true;
   const dom = ed.dom;
-  const selection: EditorSelection = ed.selection;
+  const selection: Selection = ed.selection;
 
   const splitToFormatRoot = function (container) {
     const formatRoot = findFormatRoot(ed, container, name, vars, similar);

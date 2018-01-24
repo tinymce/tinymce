@@ -16,7 +16,7 @@ import NodeType from './NodeType';
 import RangeNodes from '../selection/RangeNodes';
 import Zwsp from '../text/Zwsp';
 import Tools from '../util/Tools';
-import { EditorSelection } from '../api/dom/Selection';
+import { Selection } from '../api/dom/Selection';
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
@@ -58,7 +58,7 @@ const getPoint = function (dom, trim, normalized, rng, start) {
   return point;
 };
 
-const getLocation = function (trim, selection: EditorSelection, normalized, rng) {
+const getLocation = function (trim, selection: Selection, normalized, rng) {
   const dom = selection.dom, bookmark: any = {};
 
   bookmark.start = getPoint(dom, trim, normalized, rng, true);
@@ -149,7 +149,7 @@ const findAdjacentContentEditableFalseElm = function (rng) {
   return findSibling(rng.startContainer, rng.startOffset) || findSibling(rng.endContainer, rng.endOffset);
 };
 
-const getOffsetBookmark = function (trim, normalized, selection: EditorSelection) {
+const getOffsetBookmark = function (trim, normalized, selection: Selection) {
   let element = selection.getNode();
   let name = element ? element.nodeName : null;
   const rng = selection.getRng();
@@ -167,7 +167,7 @@ const getOffsetBookmark = function (trim, normalized, selection: EditorSelection
   return getLocation(trim, selection, normalized, rng);
 };
 
-const getCaretBookmark = function (selection: EditorSelection) {
+const getCaretBookmark = function (selection: Selection) {
   const rng = selection.getRng();
 
   return {
@@ -176,11 +176,11 @@ const getCaretBookmark = function (selection: EditorSelection) {
   };
 };
 
-const getRangeBookmark = function (selection: EditorSelection) {
+const getRangeBookmark = function (selection: Selection) {
   return { rng: selection.getRng() };
 };
 
-const getPersistentBookmark = function (selection: EditorSelection) {
+const getPersistentBookmark = function (selection: Selection) {
   const dom = selection.dom;
   let rng = selection.getRng();
   const id = dom.uniqueId();
@@ -216,7 +216,7 @@ const getPersistentBookmark = function (selection: EditorSelection) {
   return { id };
 };
 
-const getBookmark = function (selection: EditorSelection, type, normalized) {
+const getBookmark = function (selection: Selection, type, normalized) {
   if (type === 2) {
     return getOffsetBookmark(Zwsp.trim, normalized, selection);
   } else if (type === 3) {

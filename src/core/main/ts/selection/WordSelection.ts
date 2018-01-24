@@ -11,13 +11,13 @@
 import { Type } from '@ephox/katamari';
 import CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
-import { EditorSelection } from '../api/dom/Selection';
+import { Selection } from '../api/dom/Selection';
 
 const hasSelectionModifyApi = function (editor) {
   return Type.isFunction(editor.selection.getSel().modify);
 };
 
-const moveRel = function (forward, selection: EditorSelection, pos) {
+const moveRel = function (forward, selection: Selection, pos) {
   const delta = forward ? 1 : -1;
   selection.setRng(CaretPosition(pos.container(), pos.offset() + delta).toRange());
   (<any> selection.getSel()).modify('move', forward ? 'forward' : 'backward', 'word');

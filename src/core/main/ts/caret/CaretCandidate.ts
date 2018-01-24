@@ -29,7 +29,7 @@ const isContentEditableTrue = NodeType.isContentEditableTrue,
   isTable = NodeType.matchNodeNames('table'),
   isCaretContainer = CaretContainer.isCaretContainer;
 
-const isCaretCandidate = function (node) {
+const isCaretCandidate = (node: Node): boolean => {
   if (isCaretContainer(node)) {
     return false;
   }

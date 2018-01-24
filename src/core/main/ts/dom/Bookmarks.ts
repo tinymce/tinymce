@@ -10,14 +10,14 @@
 
 import GetBookmark from './GetBookmark';
 import ResolveBookmark from './ResolveBookmark';
-import { EditorSelection } from '../api/dom/Selection';
+import { Selection } from '../api/dom/Selection';
 import NodeType from './NodeType';
 
-const getBookmark = function (selection: EditorSelection, type, normalized) {
+const getBookmark = function (selection: Selection, type, normalized) {
   return GetBookmark.getBookmark(selection, type, normalized);
 };
 
-const moveToBookmark = function (selection: EditorSelection, bookmark) {
+const moveToBookmark = function (selection: Selection, bookmark) {
   ResolveBookmark.resolve(selection, bookmark).each(function (rng) {
     selection.setRng(rng);
   });

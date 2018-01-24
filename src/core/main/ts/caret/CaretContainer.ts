@@ -22,7 +22,7 @@ import Zwsp from '../text/Zwsp';
 const isElement = NodeType.isElement,
   isText = NodeType.isText;
 
-const isCaretContainerBlock = function (node) {
+const isCaretContainerBlock = (node: Node) => {
   if (isText(node)) {
     node = node.parentNode;
   }
@@ -30,19 +30,14 @@ const isCaretContainerBlock = function (node) {
   return isElement(node) && node.hasAttribute('data-mce-caret');
 };
 
-const isCaretContainerInline = function (node) {
-  return isText(node) && Zwsp.isZwsp(node.data);
-};
-
-const isCaretContainer = function (node) {
-  return isCaretContainerBlock(node) || isCaretContainerInline(node);
-};
+const isCaretContainerInline = (node: Node) => isText(node) && Zwsp.isZwsp(node.data);
+const isCaretContainer = (node: Node): boolean => isCaretContainerBlock(node) || isCaretContainerInline(node);
 
 const hasContent = function (node) {
   return node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
 };
 
-const insertInline = function (node, before) {
+const insertInline = (node: Node, before: boolean): Node => {
   let doc, sibling, textNode, parentNode;
 
   doc = node.ownerDocument;

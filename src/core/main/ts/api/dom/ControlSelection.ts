@@ -16,7 +16,7 @@ import Env from '../../Env';
 import Delay from '../../util/Delay';
 import Tools from '../../util/Tools';
 import VK from '../../util/VK';
-import { EditorSelection } from './Selection';
+import { Selection } from './Selection';
 
 export interface ControlSelection {
   isResizable: (elm: Element) => boolean;
@@ -49,7 +49,7 @@ const getContentEditableRoot = function (root: Node, node: Node) {
   return null;
 };
 
-export default function (selection: EditorSelection, editor): ControlSelection {
+export default function (selection: Selection, editor): ControlSelection {
   const dom = editor.dom, each = Tools.each;
   let selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
   let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;

@@ -20,7 +20,7 @@ import PaddingBr from './dom/PaddingBr';
 import Serializer from './html/Serializer';
 import RangeNormalizer from './selection/RangeNormalizer';
 import Tools from './util/Tools';
-import { EditorSelection } from './api/dom/Selection';
+import { Selection } from './api/dom/Selection';
 
 /**
  * Handles inserts of contents into the editor instance.
@@ -56,7 +56,7 @@ const insertHtmlAtCaret = function (editor, value, details) {
   let parser, serializer, parentNode, rootNode, fragment, args;
   let marker, rng, node, node2, bookmarkHtml, merge;
   const textInlineElements = editor.schema.getTextInlineElements();
-  const selection: EditorSelection = editor.selection, dom = editor.dom;
+  const selection: Selection = editor.selection, dom = editor.dom;
 
   const trimOrPaddLeftRight = function (html) {
     let rng, container, offset;
