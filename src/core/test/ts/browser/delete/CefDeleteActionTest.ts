@@ -6,7 +6,7 @@ import { Pipeline } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
 import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
-import CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
+import * as CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
@@ -247,7 +247,30 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function (
         cReadAction(false, [0], 0),
         cAssertActionNone
       ]))
-    ]))
+    ])),
+
+    Logger.t('Should not produce actions if cefs are inline between blocks', GeneralSteps.sequence([
+      Logger.t('Should be no action since delete from after inline cef to before inline cef is handled by merge', Chain.asStep(viewBlock, [
+        cSetHtml('<p><b contenteditable="false">a</b></p><p><b contenteditable="false">b</b></p>'),
+        cReadAction(true, [0], 1),
+        cAssertActionNone
+      ])),
+      Logger.t('Should be no action since backspace from before inline cef to after inline cef is handled by merge', Chain.asStep(viewBlock, [
+        cSetHtml('<p><b contenteditable="false">a</b></p><p><b contenteditable="false">b</b></p>'),
+        cReadAction(false, [1], 0),
+        cAssertActionNone
+      ])),
+      Logger.t('Should be no action since delete from after inline cef to normal content is handled by merge', Chain.asStep(viewBlock, [
+        cSetHtml('<p><b contenteditable="false">a</b></p><p>b</p>'),
+        cReadAction(true, [0], 1),
+        cAssertActionNone
+      ])),
+      Logger.t('Should be no action since backspace from before inline cef to normal content is handled by merge', Chain.asStep(viewBlock, [
+        cSetHtml('<p>a</p><p><b contenteditable="false">b</b></p>'),
+        cReadAction(false, [1], 0),
+        cAssertActionNone
+      ]))
+    ])),
   ], function () {
     viewBlock.detach();
     success();

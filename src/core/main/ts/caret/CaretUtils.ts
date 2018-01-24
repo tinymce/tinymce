@@ -14,6 +14,7 @@ import NodeType from '../dom/NodeType';
 import CaretContainer from './CaretContainer';
 import CaretCandidate from './CaretCandidate';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
+import { Option } from '@ephox/katamari';
 
 /**
  * Utility functions shared by the caret logic.
@@ -295,6 +296,10 @@ const isNextToContentEditableFalse = (relativeOffset: number, caretPosition: Car
   return isContentEditableFalse(getChildNodeAtRelativeOffset(relativeOffset, caretPosition));
 };
 
+const getRelativeCefElm = (forward: boolean, caretPosition: CaretPosition) => {
+  return Option.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, caretPosition)).filter(isContentEditableFalse);
+};
+
 export default {
   isForwards,
   isBackwards,
@@ -305,5 +310,6 @@ export default {
   isInSameEditingHost,
   isBeforeContentEditableFalse: curry(isNextToContentEditableFalse, 0) as (caretPosition: CaretPosition) => boolean,
   isAfterContentEditableFalse: curry(isNextToContentEditableFalse, -1) as (caretPosition: CaretPosition) => boolean,
-  normalizeRange
+  normalizeRange,
+  getRelativeCefElm
 };
