@@ -14,7 +14,7 @@ import { Element } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import NodeType from '../dom/NodeType';
-import TreeWalker from '../dom/TreeWalker';
+import TreeWalker from '../api/dom/TreeWalker';
 import BoundaryLocation from '../keyboard/BoundaryLocation';
 import InlineUtils from '../keyboard/InlineUtils';
 import NormalizeRange from '../selection/NormalizeRange';

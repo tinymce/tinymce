@@ -9,7 +9,7 @@
  */
 
 import NodeType from '../dom/NodeType';
-import DomUtils from '../dom/DOMUtils';
+import DomUtils from '../api/dom/DOMUtils';
 import Fun from '../util/Fun';
 import Arr from '../util/Arr';
 import CaretPosition from './CaretPosition';

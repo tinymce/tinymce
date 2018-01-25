@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 const assertCaretPosition = function (actual, expected, message?) {
   if (expected === null) {

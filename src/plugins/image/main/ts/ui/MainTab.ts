@@ -1,4 +1,4 @@
-import Tools from 'tinymce/core/util/Tools';
+import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Utils from '../core/Utils';
 import SizeManager from './SizeManager';

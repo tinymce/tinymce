@@ -11,13 +11,13 @@
 import Settings from '../api/Settings';
 import CaretContainer from '../caret/CaretContainer';
 import NodeType from '../dom/NodeType';
-import TreeWalker from '../dom/TreeWalker';
+import TreeWalker from '../api/dom/TreeWalker';
 import CaretFormat from '../fmt/CaretFormat';
 import InsertLi from './InsertLi';
 import NewLineUtils from './NewLineUtils';
 import NormalizeRange from '../selection/NormalizeRange';
 import Zwsp from '../text/Zwsp';
-import Tools from '../util/Tools';
+import Tools from '../api/util/Tools';
 
 const isEmptyAnchor = function (elm) {
   return elm && elm.nodeName === 'A' && Tools.trim(Zwsp.trim(elm.innerText || elm.textContent)).length === 0;

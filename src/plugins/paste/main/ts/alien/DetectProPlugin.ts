@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import PluginManager from 'tinymce/core/PluginManager';
+import PluginManager from 'tinymce/core/api/PluginManager';
 
 const hasProPlugin = function (editor) {
   // draw back if power version is requested and registered

@@ -10,7 +10,7 @@
 
 import { Option } from '@ephox/katamari';
 import { Node, Traverse, Element } from '@ephox/sugar';
-import TreeWalker from '../dom/TreeWalker';
+import TreeWalker from '../api/dom/TreeWalker';
 import { moveEndPoint } from './SelectionUtils';
 import NodeType from '../dom/NodeType';
 

@@ -1,10 +1,10 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
-import Env from 'tinymce/core/Env';
-import Schema from 'tinymce/core/html/Schema';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Env from 'tinymce/core/api/Env';
+import Schema from 'tinymce/core/api/html/Schema';
 import HtmlUtils from '../../module/test/HtmlUtils';
-import Tools from 'tinymce/core/util/Tools';
+import Tools from 'tinymce/core/api/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {

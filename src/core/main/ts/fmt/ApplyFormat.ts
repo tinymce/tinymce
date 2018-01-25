@@ -18,7 +18,7 @@ import MatchFormat from './MatchFormat';
 import MergeFormats from './MergeFormats';
 import RangeNormalizer from '../selection/RangeNormalizer';
 import RangeWalk from '../selection/RangeWalk';
-import Tools from '../util/Tools';
+import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';
 
 const each = Tools.each;

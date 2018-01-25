@@ -11,7 +11,7 @@
 import Widget from './Widget';
 import DragHelper from './DragHelper';
 import DomUtils from './DomUtils';
-import Color from 'tinymce/core/util/Color';
+import Color from 'tinymce/core/api/util/Color';
 
 /**
  * Color picker widget lets you select colors.

@@ -10,10 +10,10 @@
 
 import CaretContainer from './CaretContainer';
 import CaretContainerRemove from './CaretContainerRemove';
-import DomQuery from '../dom/DomQuery';
+import DomQuery from '../api/dom/DomQuery';
 import NodeType from '../dom/NodeType';
 import ClientRect from '../geom/ClientRect';
-import Delay from '../util/Delay';
+import Delay from '../api/util/Delay';
 
 /**
  * This module contains logic for rendering a fake visual caret.

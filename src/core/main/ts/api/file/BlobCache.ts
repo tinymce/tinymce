@@ -9,9 +9,9 @@
  */
 
 import { URL } from '@ephox/sand';
-import Arr from '../util/Arr';
-import Fun from '../util/Fun';
-import Uuid from '../util/Uuid';
+import Arr from '../../util/Arr';
+import Fun from '../../util/Fun';
+import Uuid from '../../util/Uuid';
 
 /**
  * Hold blob info objects where a blob has extra internal information.

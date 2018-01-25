@@ -9,8 +9,8 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import Styles from './Styles';
-import Tools from '../util/Tools';
+import Styles from '../api/html/Styles';
+import Tools from '../api/util/Tools';
 
 const removeAttrs = function (node, names) {
   Arr.each(names, function (name) {

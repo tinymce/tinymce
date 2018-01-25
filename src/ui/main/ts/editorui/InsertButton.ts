@@ -9,7 +9,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import Tools from 'tinymce/core/util/Tools';
+import Tools from 'tinymce/core/api/util/Tools';
 
 const createCustomMenuItems = function (editor, names) {
   let items, nameList;

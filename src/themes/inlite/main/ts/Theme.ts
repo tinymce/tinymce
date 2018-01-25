@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import ThemeManager from 'tinymce/core/ThemeManager';
+import ThemeManager from 'tinymce/core/api/ThemeManager';
 import ThemeApi from './api/ThemeApi';
 import Buttons from './ui/Buttons';
 import Panel from './ui/Panel';

@@ -9,8 +9,8 @@
  */
 
 import { XMLHttpRequest } from '@ephox/sand';
-import Promise from '../util/Promise';
-import Tools from '../util/Tools';
+import Promise from '../api/util/Promise';
+import Tools from '../api/util/Tools';
 
 /**
  * Upload blobs or blob infos to the specified URL or handler.

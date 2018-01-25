@@ -9,7 +9,7 @@
  */
 
 import Panel from './Panel';
-import $ from 'tinymce/core/dom/DomQuery';
+import $ from 'tinymce/core/api/dom/DomQuery';
 import DomUtils from './DomUtils';
 
 /**

@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Factory from 'tinymce/core/ui/Factory';
-import Tools from 'tinymce/core/util/Tools';
+import Factory from 'tinymce/core/api/ui/Factory';
+import Tools from 'tinymce/core/api/util/Tools';
 import AbsoluteLayout from './AbsoluteLayout';
 import BrowseButton from './BrowseButton';
 import Button from './Button';

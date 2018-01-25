@@ -10,12 +10,12 @@
  * @ignore-file
  */
 
-import Env from '../Env';
+import Env from '../api/Env';
 import CaretContainer from '../caret/CaretContainer';
 import CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
-import Delay from './Delay';
-import Tools from './Tools';
-import VK from './VK';
+import Delay from '../api/util/Delay';
+import Tools from '../api/util/Tools';
+import VK from '../api/util/VK';
 import { Selection } from '../api/dom/Selection';
 
 declare const escape: any;

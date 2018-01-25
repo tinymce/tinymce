@@ -1,4 +1,4 @@
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 export default function () {
   const domElm = DOMUtils.DOM.create('div', {

@@ -1,5 +1,5 @@
 import { Assertions } from '@ephox/agar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 const rect = function (viewBlock, ctrl) {
   let outerRect, innerRect;

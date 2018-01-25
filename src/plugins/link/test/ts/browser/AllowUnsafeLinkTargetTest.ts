@@ -8,7 +8,7 @@ import { Arr } from '@ephox/katamari';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { TinyUi } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';

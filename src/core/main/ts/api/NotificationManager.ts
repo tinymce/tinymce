@@ -12,7 +12,7 @@ import { Arr } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import EditorView from '../EditorView';
 import NotificationManagerImpl from '../ui/NotificationManagerImpl';
-import Delay from '../util/Delay';
+import Delay from './util/Delay';
 
 /**
  * This class handles the creation of TinyMCE's notifications.

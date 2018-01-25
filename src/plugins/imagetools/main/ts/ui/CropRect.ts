@@ -8,12 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DomQuery from 'tinymce/core/dom/DomQuery';
-import Rect from 'tinymce/core/geom/Rect';
-import Factory from 'tinymce/core/ui/Factory';
-import Observable from 'tinymce/core/util/Observable';
-import Tools from 'tinymce/core/util/Tools';
-import VK from 'tinymce/core/util/VK';
+import DomQuery from 'tinymce/core/api/dom/DomQuery';
+import Rect from 'tinymce/core/api/geom/Rect';
+import Factory from 'tinymce/core/api/ui/Factory';
+import Observable from 'tinymce/core/api/util/Observable';
+import Tools from 'tinymce/core/api/util/Tools';
+import VK from 'tinymce/core/api/util/VK';
 
 let count = 0;
 

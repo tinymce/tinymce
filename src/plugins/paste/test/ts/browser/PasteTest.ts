@@ -3,7 +3,7 @@ import { Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import Env from 'tinymce/core/Env';
+import Env from 'tinymce/core/api/Env';
 import Utils from 'tinymce/plugins/paste/core/Utils';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Strings from '../module/test/Strings';

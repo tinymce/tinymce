@@ -10,9 +10,9 @@
 
 import { Fun } from '@ephox/katamari';
 import FocusManager from '../api/FocusManager';
-import DOMUtils from '../dom/DOMUtils';
+import DOMUtils from '../api/dom/DOMUtils';
 import SelectionRestore from '../selection/SelectionRestore';
-import Delay from '../util/Delay';
+import Delay from '../api/util/Delay';
 
 let documentFocusInHandler;
 const DOM = DOMUtils.DOM;

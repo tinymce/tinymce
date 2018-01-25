@@ -9,7 +9,7 @@
  */
 
 import Bookmarks from '../dom/Bookmarks';
-import TreeWalker from '../dom/TreeWalker';
+import TreeWalker from '../api/dom/TreeWalker';
 import FormatUtils from './FormatUtils';
 import RangeNodes from '../selection/RangeNodes';
 

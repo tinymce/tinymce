@@ -11,9 +11,9 @@
 import { Element } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
 import { Css } from '@ephox/sugar';
-import Env from '../Env';
+import Env from '../api/Env';
 import Settings from '../api/Settings';
-import DOMUtils from '../dom/DOMUtils';
+import DOMUtils from '../api/dom/DOMUtils';
 import InitContentBody from './InitContentBody';
 import Uuid from '../util/Uuid';
 

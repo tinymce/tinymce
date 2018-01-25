@@ -1,8 +1,8 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
-import DomParser from 'tinymce/core/html/DomParser';
-import Schema from 'tinymce/core/html/Schema';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import DomParser from 'tinymce/core/api/html/DomParser';
+import Schema from 'tinymce/core/api/html/Schema';
 import InsertList from 'tinymce/core/InsertList';
 import { UnitTest } from '@ephox/bedrock';
 

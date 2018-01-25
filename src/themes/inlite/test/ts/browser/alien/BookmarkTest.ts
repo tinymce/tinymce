@@ -3,7 +3,7 @@ import { Chain } from '@ephox/agar';
 import { Cursors } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
 import { TinyDom } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Bookmark from 'tinymce/themes/inlite/alien/Bookmark';
 import { UnitTest } from '@ephox/bedrock';
 

@@ -9,7 +9,7 @@
  */
 
 import { FileReader } from '@ephox/sand';
-import Promise from 'tinymce/core/util/Promise';
+import Promise from 'tinymce/core/api/util/Promise';
 
 const blobToBase64 = function (blob) {
   return new Promise(function (resolve) {

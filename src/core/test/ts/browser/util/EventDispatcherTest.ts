@@ -1,6 +1,6 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import EventDispatcher from 'tinymce/core/util/EventDispatcher';
+import EventDispatcher from 'tinymce/core/api/util/EventDispatcher';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function () {

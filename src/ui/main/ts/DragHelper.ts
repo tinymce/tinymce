@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DomQuery from 'tinymce/core/dom/DomQuery';
+import DomQuery from 'tinymce/core/api/dom/DomQuery';
 
 /**
  * Drag/drop helper class.

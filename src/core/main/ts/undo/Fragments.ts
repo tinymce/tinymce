@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Entities from '../html/Entities';
+import Entities from '../api/html/Entities';
 import Diff from './Diff';
 import Arr from '../util/Arr';
 

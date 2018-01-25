@@ -9,7 +9,7 @@
  */
 
 import Fun from '../util/Fun';
-import TreeWalker from '../dom/TreeWalker';
+import TreeWalker from '../api/dom/TreeWalker';
 import NodeType from '../dom/NodeType';
 import CaretContainer from './CaretContainer';
 import CaretCandidate from './CaretCandidate';

@@ -17,7 +17,7 @@ import { Attr } from '@ephox/sugar';
 import CaretPosition from '../caret/CaretPosition';
 import NodeType from '../dom/NodeType';
 import PaddingBr from '../dom/PaddingBr';
-import TreeWalker from '../dom/TreeWalker';
+import TreeWalker from '../api/dom/TreeWalker';
 import ExpandRange from './ExpandRange';
 import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';

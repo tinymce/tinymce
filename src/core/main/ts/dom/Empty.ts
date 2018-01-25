@@ -14,7 +14,7 @@ import { Element } from '@ephox/sugar';
 import { SelectorExists } from '@ephox/sugar';
 import CaretCandidate from '../caret/CaretCandidate';
 import NodeType from './NodeType';
-import TreeWalker from './TreeWalker';
+import TreeWalker from '../api/dom/TreeWalker';
 
 const hasWhitespacePreserveParent = function (rootNode, node) {
   const rootElement = Element.fromDom(rootNode);

@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Tools from 'tinymce/core/util/Tools';
+import Tools from 'tinymce/core/api/util/Tools';
 
 declare const escape: any;
 declare const unescape: any;

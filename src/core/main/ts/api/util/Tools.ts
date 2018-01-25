@@ -9,7 +9,7 @@
  */
 
 import Env from '../Env';
-import Arr from './Arr';
+import Arr from '../../util/Arr';
 
 /**
  * This class contains various utlity functions. These are also exposed

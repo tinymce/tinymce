@@ -1,8 +1,8 @@
 import { Assertions } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
-import Editor from 'tinymce/core/Editor';
-import EditorManager from 'tinymce/core/EditorManager';
+import Editor from 'tinymce/core/api/Editor';
+import EditorManager from 'tinymce/core/api/EditorManager';
 import Menubar from 'tinymce/themes/modern/ui/Menubar';
 import { UnitTest } from '@ephox/bedrock';
 

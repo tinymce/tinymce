@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Env from 'tinymce/core/Env';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
-import Factory from 'tinymce/core/ui/Factory';
+import Env from 'tinymce/core/api/Env';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Factory from 'tinymce/core/api/ui/Factory';
 import Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import A11y from '../ui/A11y';

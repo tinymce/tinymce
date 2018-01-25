@@ -13,7 +13,7 @@ import { FileReader } from '@ephox/sand';
 import { Uint8Array } from '@ephox/sand';
 import { Window } from '@ephox/sand';
 import { XMLHttpRequest } from '@ephox/sand';
-import Promise from '../util/Promise';
+import Promise from '../api/util/Promise';
 
 /**
  * Converts blob/uris back and forth.

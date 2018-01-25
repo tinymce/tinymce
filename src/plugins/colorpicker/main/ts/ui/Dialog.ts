@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Color from 'tinymce/core/util/Color';
+import Color from 'tinymce/core/api/util/Color';
 
 const showPreview = function (win, hexColor) {
   win.find('#preview')[0].getEl().style.background = hexColor;

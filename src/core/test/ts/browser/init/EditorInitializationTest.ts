@@ -8,10 +8,10 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
 import { SelectorFilter } from '@ephox/sugar';
-import EditorManager from 'tinymce/core/EditorManager';
-import Env from 'tinymce/core/Env';
+import EditorManager from 'tinymce/core/api/EditorManager';
+import Env from 'tinymce/core/api/Env';
 import ViewBlock from '../../module/test/ViewBlock';
-import Tools from 'tinymce/core/util/Tools';
+import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 

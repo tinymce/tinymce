@@ -9,8 +9,8 @@
  */
 
 import { Option } from '@ephox/katamari';
-import Env from 'tinymce/core/Env';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import Env from 'tinymce/core/api/Env';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 const getUiContainerDelta = function () {
   const uiContainer = Env.container;

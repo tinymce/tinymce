@@ -9,8 +9,8 @@
  */
 
 import Bookmark from './Bookmark';
-import Tools from 'tinymce/core/util/Tools';
-import TreeWalker from 'tinymce/core/dom/TreeWalker';
+import Tools from 'tinymce/core/api/util/Tools';
+import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 
 /**

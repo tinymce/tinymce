@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Tools from 'tinymce/core/util/Tools';
-import Env from 'tinymce/core/Env';
+import Tools from 'tinymce/core/api/util/Tools';
+import Env from 'tinymce/core/api/Env';
 
 /**
  * @class tinymce.pasteplugin.PasteBin

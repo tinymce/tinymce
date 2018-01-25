@@ -11,7 +11,7 @@
 import CaretPosition from './caret/CaretPosition';
 import CaretWalker from './caret/CaretWalker';
 import NodeType from './dom/NodeType';
-import Tools from './util/Tools';
+import Tools from './api/util/Tools';
 
 /**
  * Handles inserts of lists into the editor instance.

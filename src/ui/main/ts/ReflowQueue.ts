@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Delay from 'tinymce/core/util/Delay';
+import Delay from 'tinymce/core/api/util/Delay';
 
 /**
  * This class will automatically reflow controls on the next animation frame within a few milliseconds on older browsers.

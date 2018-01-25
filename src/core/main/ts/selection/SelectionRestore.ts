@@ -10,7 +10,7 @@
 
 import { Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import DOMUtils from '../dom/DOMUtils';
+import DOMUtils from '../api/dom/DOMUtils';
 import SelectionBookmark from './SelectionBookmark';
 
 const isManualNodeChange = function (e) {

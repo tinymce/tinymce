@@ -9,13 +9,13 @@
  */
 
 import Env from './Env';
-import InsertContent from './InsertContent';
-import DeleteCommands from './delete/DeleteCommands';
-import NodeType from './dom/NodeType';
-import InsertBr from './newline/InsertBr';
-import SelectionBookmark from './selection/SelectionBookmark';
+import InsertContent from '../InsertContent';
+import DeleteCommands from '../delete/DeleteCommands';
+import NodeType from '../dom/NodeType';
+import InsertBr from '../newline/InsertBr';
+import SelectionBookmark from '../selection/SelectionBookmark';
 import Tools from './util/Tools';
-import { Selection } from './api/dom/Selection';
+import { Selection } from './dom/Selection';
 
 /**
  * This class enables you to add custom editor commands and it contains

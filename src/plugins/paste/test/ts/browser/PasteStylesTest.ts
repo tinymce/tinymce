@@ -3,7 +3,7 @@ import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import Env from 'tinymce/core/Env';
+import Env from 'tinymce/core/api/Env';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Paste from '../module/test/Paste';
 import ModernTheme from 'tinymce/themes/modern/Theme';

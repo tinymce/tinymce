@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DomParser from 'tinymce/core/html/DomParser';
-import Schema from 'tinymce/core/html/Schema';
-import Tools from 'tinymce/core/util/Tools';
+import DomParser from 'tinymce/core/api/html/DomParser';
+import Schema from 'tinymce/core/api/html/Schema';
+import Tools from 'tinymce/core/api/util/Tools';
 
 /**
  * This class contails various utility functions for the paste plugin.

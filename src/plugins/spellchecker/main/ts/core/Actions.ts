@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Tools from 'tinymce/core/util/Tools';
-import URI from 'tinymce/core/util/URI';
-import XHR from 'tinymce/core/util/XHR';
+import Tools from 'tinymce/core/api/util/Tools';
+import URI from 'tinymce/core/api/util/URI';
+import XHR from 'tinymce/core/api/util/XHR';
 import Events from '../api/Events';
 import Settings from '../api/Settings';
 import DomTextMatcher from './DomTextMatcher';

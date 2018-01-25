@@ -9,7 +9,7 @@
  */
 
 import NodeType from '../dom/NodeType';
-import Tools from '../util/Tools';
+import Tools from '../api/util/Tools';
 
 const hasCeProperty = function (node) {
   return NodeType.isContentEditableTrue(node) || NodeType.isContentEditableFalse(node);

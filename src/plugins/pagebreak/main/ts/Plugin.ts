@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import PluginManager from 'tinymce/core/PluginManager';
+import PluginManager from 'tinymce/core/api/PluginManager';
 import Commands from './api/Commands';
 import FilterContent from './core/FilterContent';
 import ResolveName from './core/ResolveName';

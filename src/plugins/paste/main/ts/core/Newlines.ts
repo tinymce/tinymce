@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Tools from 'tinymce/core/util/Tools';
-import Entities from 'tinymce/core/html/Entities';
+import Tools from 'tinymce/core/api/util/Tools';
+import Entities from 'tinymce/core/api/html/Entities';
 
 /**
  * Newlines class contains utilities to convert newlines (\n or \r\n) tp BRs or to a combination of the specified block element and BRs

@@ -1,10 +1,10 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import ScriptLoader from 'tinymce/core/dom/ScriptLoader';
-import EditorManager from 'tinymce/core/EditorManager';
-import Factory from 'tinymce/core/ui/Factory';
-import I18n from 'tinymce/core/util/I18n';
+import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
+import EditorManager from 'tinymce/core/api/EditorManager';
+import Factory from 'tinymce/core/api/ui/Factory';
+import I18n from 'tinymce/core/api/util/I18n';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 

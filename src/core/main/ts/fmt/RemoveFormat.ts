@@ -10,13 +10,13 @@
 
 import Bookmarks from '../dom/Bookmarks';
 import NodeType from '../dom/NodeType';
-import TreeWalker from '../dom/TreeWalker';
+import TreeWalker from '../api/dom/TreeWalker';
 import CaretFormat from './CaretFormat';
 import ExpandRange from './ExpandRange';
 import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 import RangeWalk from '../selection/RangeWalk';
-import Tools from '../util/Tools';
+import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';
 
 const MCE_ATTR_RE = /^(src|href|style)$/;

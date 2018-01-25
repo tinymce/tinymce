@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import GetBookmark from './dom/GetBookmark';
-import Levels from './undo/Levels';
+import GetBookmark from '../dom/GetBookmark';
+import Levels from '../undo/Levels';
 import Tools from './util/Tools';
 
 /**

@@ -8,10 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DomQuery from 'tinymce/core/dom/DomQuery';
-import Factory from 'tinymce/core/ui/Factory';
-import Tools from 'tinymce/core/util/Tools';
-import VK from 'tinymce/core/util/VK';
+import DomQuery from 'tinymce/core/api/dom/DomQuery';
+import Factory from 'tinymce/core/api/ui/Factory';
+import Tools from 'tinymce/core/api/util/Tools';
+import VK from 'tinymce/core/api/util/VK';
 import DomUtils from './DomUtils';
 import Widget from './Widget';
 

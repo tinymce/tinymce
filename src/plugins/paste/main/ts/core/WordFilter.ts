@@ -8,11 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DomParser from 'tinymce/core/html/DomParser';
-import Node from 'tinymce/core/html/Node';
-import Schema from 'tinymce/core/html/Schema';
-import Serializer from 'tinymce/core/html/Serializer';
-import Tools from 'tinymce/core/util/Tools';
+import DomParser from 'tinymce/core/api/html/DomParser';
+import Node from 'tinymce/core/api/html/Node';
+import Schema from 'tinymce/core/api/html/Schema';
+import Serializer from 'tinymce/core/api/html/Serializer';
+import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Utils from './Utils';
 

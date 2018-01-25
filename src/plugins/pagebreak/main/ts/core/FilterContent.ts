@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Env from 'tinymce/core/Env';
+import Env from 'tinymce/core/api/Env';
 import Settings from '../api/Settings';
 
 const getPageBreakClass = function () {

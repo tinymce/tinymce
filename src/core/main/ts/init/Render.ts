@@ -11,15 +11,15 @@
 import { Type } from '@ephox/katamari';
 import NotificationManager from '../api/NotificationManager';
 import WindowManager from '../api/WindowManager';
-import DOMUtils from '../dom/DOMUtils';
-import EventUtils from '../dom/EventUtils';
-import ScriptLoader from '../dom/ScriptLoader';
-import Env from '../Env';
+import DOMUtils from '../api/dom/DOMUtils';
+import EventUtils from '../api/dom/EventUtils';
+import ScriptLoader from '../api/dom/ScriptLoader';
+import Env from '../api/Env';
 import ErrorReporter from '../ErrorReporter';
 import Init from './Init';
-import PluginManager from '../PluginManager';
-import ThemeManager from '../ThemeManager';
-import Tools from '../util/Tools';
+import PluginManager from '../api/PluginManager';
+import ThemeManager from '../api/ThemeManager';
+import Tools from '../api/util/Tools';
 
 const DOM = DOMUtils.DOM;
 

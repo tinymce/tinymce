@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Env from 'tinymce/core/Env';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
-import Delay from 'tinymce/core/util/Delay';
+import Env from 'tinymce/core/api/Env';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Delay from 'tinymce/core/api/util/Delay';
 import Arr from '../alien/Arr';
 import ElementMatcher from './ElementMatcher';
 import Matcher from './Matcher';

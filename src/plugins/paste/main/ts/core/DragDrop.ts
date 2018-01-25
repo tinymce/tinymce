@@ -9,7 +9,7 @@
  */
 
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
-import Delay from 'tinymce/core/util/Delay';
+import Delay from 'tinymce/core/api/util/Delay';
 import Settings from '../api/Settings';
 import InternalHtml from './InternalHtml';
 import Utils from './Utils';

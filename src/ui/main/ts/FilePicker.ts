@@ -11,9 +11,9 @@
 import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import LinkTargets from './content/LinkTargets';
-import EditorManager from 'tinymce/core/EditorManager';
+import EditorManager from 'tinymce/core/api/EditorManager';
 import ComboBox from './ComboBox';
-import Tools from 'tinymce/core/util/Tools';
+import Tools from 'tinymce/core/api/util/Tools';
 
 /**
  * This class creates a file picker control.

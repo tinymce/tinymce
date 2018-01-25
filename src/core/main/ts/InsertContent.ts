@@ -10,16 +10,16 @@
 
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import Env from './Env';
+import Env from './api/Env';
 import InsertList from './InsertList';
 import CaretPosition from './caret/CaretPosition';
 import CaretWalker from './caret/CaretWalker';
-import ElementUtils from './dom/ElementUtils';
+import ElementUtils from './api/dom/ElementUtils';
 import NodeType from './dom/NodeType';
 import PaddingBr from './dom/PaddingBr';
-import Serializer from './html/Serializer';
+import Serializer from './api/html/Serializer';
 import RangeNormalizer from './selection/RangeNormalizer';
-import Tools from './util/Tools';
+import Tools from './api/util/Tools';
 import { Selection } from './api/dom/Selection';
 
 /**

@@ -13,7 +13,7 @@ import { Fun } from '@ephox/katamari';
 import { Id } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { SelectorFilter } from '@ephox/sugar';
-import Tools from 'tinymce/core/util/Tools';
+import Tools from 'tinymce/core/api/util/Tools';
 
 /**
  * This module is enables you to get anything that you can link to in a element.

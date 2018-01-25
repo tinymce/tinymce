@@ -1,8 +1,8 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Env from 'tinymce/core/Env';
+import Env from 'tinymce/core/api/Env';
 import CaretCandidate from 'tinymce/core/caret/CaretCandidate';
-import $ from 'tinymce/core/dom/DomQuery';
+import $ from 'tinymce/core/api/dom/DomQuery';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';

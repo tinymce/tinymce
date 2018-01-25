@@ -1,6 +1,6 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Schema from 'tinymce/core/html/Schema';
+import Schema from 'tinymce/core/api/html/Schema';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function () {

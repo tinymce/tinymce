@@ -10,7 +10,7 @@
 
 import InsertSpace from './InsertSpace';
 import MatchKeys from './MatchKeys';
-import VK from '../util/VK';
+import VK from '../api/util/VK';
 
 const executeKeydownOverride = function (editor, evt) {
   MatchKeys.execute([

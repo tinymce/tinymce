@@ -17,7 +17,7 @@ import { Attr } from '@ephox/sugar';
 import { SelectorFilter } from '@ephox/sugar';
 import TableWire from './TableWire';
 import Direction from '../queries/Direction';
-import Tools from 'tinymce/core/util/Tools';
+import Tools from 'tinymce/core/api/util/Tools';
 
 export default function (editor) {
   let selectionRng = Option.none();

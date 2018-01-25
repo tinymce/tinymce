@@ -9,7 +9,7 @@
  */
 
 import { Cell } from '@ephox/katamari';
-import PluginManager from 'tinymce/core/PluginManager';
+import PluginManager from 'tinymce/core/api/PluginManager';
 import Api from './api/Api';
 import Commands from './api/Commands';
 import Buttons from './ui/Buttons';

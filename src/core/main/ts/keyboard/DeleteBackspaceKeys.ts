@@ -15,7 +15,7 @@ import InlineBoundaryDelete from '../delete/InlineBoundaryDelete';
 import InlineFormatDelete from '../delete/InlineFormatDelete';
 import TableDelete from '../delete/TableDelete';
 import MatchKeys from './MatchKeys';
-import VK from '../util/VK';
+import VK from '../api/util/VK';
 
 const executeKeydownOverride = function (editor, caret, evt) {
   MatchKeys.execute([

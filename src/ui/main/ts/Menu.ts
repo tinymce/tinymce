@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Env from 'tinymce/core/Env';
-import Delay from 'tinymce/core/util/Delay';
-import Tools from 'tinymce/core/util/Tools';
+import Env from 'tinymce/core/api/Env';
+import Delay from 'tinymce/core/api/util/Delay';
+import Tools from 'tinymce/core/api/util/Tools';
 import FloatPanel from './FloatPanel';
 import Throbber from './Throbber';
 

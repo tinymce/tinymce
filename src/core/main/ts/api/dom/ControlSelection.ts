@@ -12,13 +12,13 @@ import { Element } from '@ephox/sugar';
 import { Selectors } from '@ephox/sugar';
 import NodeType from '../../dom/NodeType';
 import RangePoint from '../../dom/RangePoint';
-import Env from '../../Env';
-import Delay from '../../util/Delay';
-import Tools from '../../util/Tools';
-import VK from '../../util/VK';
+import Env from '../Env';
+import Delay from '../util/Delay';
+import Tools from '../util/Tools';
+import VK from '../util/VK';
 import { Selection } from './Selection';
 
-export interface ControlSelection {
+interface ControlSelection {
   isResizable: (elm: Element) => boolean;
   showResizeRect: (elm: Element) => void;
   hideResizeRect: () => void;
@@ -49,7 +49,7 @@ const getContentEditableRoot = function (root: Node, node: Node) {
   return null;
 };
 
-export default function (selection: Selection, editor): ControlSelection {
+const ControlSelection = (selection: Selection, editor): ControlSelection => {
   const dom = editor.dom, each = Tools.each;
   let selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
   let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
@@ -557,4 +557,6 @@ export default function (selection: Selection, editor): ControlSelection {
     updateResizeRect,
     destroy
   };
-}
+};
+
+export default ControlSelection;

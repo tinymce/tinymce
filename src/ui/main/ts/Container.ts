@@ -11,10 +11,10 @@
 import Control from './Control';
 import Collection from './Collection';
 import Selector from './Selector';
-import Factory from 'tinymce/core/ui/Factory';
+import Factory from 'tinymce/core/api/ui/Factory';
 import KeyboardNavigation from './KeyboardNavigation';
-import Tools from 'tinymce/core/util/Tools';
-import $ from 'tinymce/core/dom/DomQuery';
+import Tools from 'tinymce/core/api/util/Tools';
+import $ from 'tinymce/core/api/dom/DomQuery';
 import ClassList from './ClassList';
 import ReflowQueue from './ReflowQueue';
 

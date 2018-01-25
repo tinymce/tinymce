@@ -10,11 +10,11 @@
 
 import { Option } from '@ephox/katamari';
 import { Options } from '@ephox/katamari';
-import Env from '../Env';
+import Env from '../api/Env';
 import CaretBookmark from '../caret/CaretBookmark';
 import CaretPosition from '../caret/CaretPosition';
 import NodeType from './NodeType';
-import Tools from '../util/Tools';
+import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';
 
 const addBogus = function (dom, node) {

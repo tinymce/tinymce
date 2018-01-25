@@ -10,14 +10,14 @@
 
 import { Fun } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
-import Events from '../api/Events';
+import Events from '../Events';
 import DOMUtils from './DOMUtils';
-import DomSerializerFilters from './DomSerializerFilters';
-import DomSerializerPreProcess from './DomSerializerPreProcess';
+import DomSerializerFilters from '../../dom/DomSerializerFilters';
+import DomSerializerPreProcess from '../../dom/DomSerializerPreProcess';
 import DomParser from '../html/DomParser';
 import Schema from '../html/Schema';
 import Serializer from '../html/Serializer';
-import Zwsp from '../text/Zwsp';
+import Zwsp from '../../text/Zwsp';
 import Tools from '../util/Tools';
 
 const addTempAttr = function (htmlParser, tempAttrs, name) {

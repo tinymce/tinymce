@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DomQuery from 'tinymce/core/dom/DomQuery';
-import Delay from 'tinymce/core/util/Delay';
+import DomQuery from 'tinymce/core/api/dom/DomQuery';
+import Delay from 'tinymce/core/api/util/Delay';
 import DomUtils from './DomUtils';
 import Movable from './Movable';
 import Panel from './Panel';

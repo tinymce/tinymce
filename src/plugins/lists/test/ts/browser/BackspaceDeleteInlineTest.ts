@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import DomQuery from 'tinymce/core/dom/DomQuery';
-import EditorManager from 'tinymce/core/EditorManager';
+import DomQuery from 'tinymce/core/api/dom/DomQuery';
+import EditorManager from 'tinymce/core/api/EditorManager';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';

@@ -9,7 +9,7 @@
  */
 
 import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
-import I18n from 'tinymce/core/util/I18n';
+import I18n from 'tinymce/core/api/util/I18n';
 import PluginUrls from '../data/PluginUrls';
 
 const makeLink = Fun.curry(Strings.supplant, '<a href="${url}" target="_blank" rel="noopener">${name}</a>');

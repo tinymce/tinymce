@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Env from 'tinymce/core/Env';
-import Node from 'tinymce/core/html/Node';
+import Env from 'tinymce/core/api/Env';
+import Node from 'tinymce/core/api/html/Node';
 import Settings from '../api/Settings';
 import Sanitize from './Sanitize';
 import VideoScript from './VideoScript';

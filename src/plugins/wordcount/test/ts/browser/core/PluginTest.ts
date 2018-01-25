@@ -8,7 +8,7 @@ import { Waiter } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyDom } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';

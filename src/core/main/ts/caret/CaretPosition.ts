@@ -9,7 +9,7 @@
  */
 
 import CaretCandidate from './CaretCandidate';
-import DOMUtils from '../dom/DOMUtils';
+import DOMUtils from '../api/dom/DOMUtils';
 import NodeType from '../dom/NodeType';
 import ClientRect from '../geom/ClientRect';
 import RangeNodes from '../selection/RangeNodes';

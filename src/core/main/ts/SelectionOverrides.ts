@@ -16,7 +16,7 @@ import { SelectorFilter } from '@ephox/sugar';
 import { SelectorFind } from '@ephox/sugar';
 import DragDropOverrides from './DragDropOverrides';
 import EditorView from './EditorView';
-import Env from './Env';
+import Env from './api/Env';
 import CaretContainer from './caret/CaretContainer';
 import CaretPosition from './caret/CaretPosition';
 import CaretUtils from './caret/CaretUtils';
@@ -27,7 +27,7 @@ import NodeType from './dom/NodeType';
 import RangePoint from './dom/RangePoint';
 import CefFocus from './focus/CefFocus';
 import CefUtils from './keyboard/CefUtils';
-import VK from './util/VK';
+import VK from './api/util/VK';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue,
   isContentEditableFalse = NodeType.isContentEditableFalse,

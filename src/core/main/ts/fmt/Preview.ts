@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DOMUtils from '../dom/DOMUtils';
-import Tools from '../util/Tools';
-import Schema from '../html/Schema';
+import DOMUtils from '../api/dom/DOMUtils';
+import Tools from '../api/util/Tools';
+import Schema from '../api/html/Schema';
 
 /**
  * Internal class for generating previews styles for formats.

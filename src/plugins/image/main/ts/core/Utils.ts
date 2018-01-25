@@ -9,9 +9,9 @@
  */
 
 import { FileReader } from '@ephox/sand';
-import Promise from 'tinymce/core/util/Promise';
-import Tools from 'tinymce/core/util/Tools';
-import XHR from 'tinymce/core/util/XHR';
+import Promise from 'tinymce/core/api/util/Promise';
+import Tools from 'tinymce/core/api/util/Tools';
+import XHR from 'tinymce/core/api/util/XHR';
 import Settings from '../api/Settings';
 
 /**

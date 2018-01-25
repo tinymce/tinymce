@@ -1,4 +1,4 @@
-import PluginManager from 'tinymce/core/PluginManager';
+import PluginManager from 'tinymce/core/api/PluginManager';
 
 const Plugin = function (editor, url) {
   return {

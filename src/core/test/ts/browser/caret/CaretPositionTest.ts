@@ -1,6 +1,6 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Env from 'tinymce/core/Env';
+import Env from 'tinymce/core/api/Env';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';

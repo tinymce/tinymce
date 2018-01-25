@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Env from '../Env';
+import Env from '../api/Env';
 import CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import CaretUtils from '../caret/CaretUtils';

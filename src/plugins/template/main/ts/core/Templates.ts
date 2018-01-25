@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Tools from 'tinymce/core/util/Tools';
-import XHR from 'tinymce/core/util/XHR';
+import Tools from 'tinymce/core/api/util/Tools';
+import XHR from 'tinymce/core/api/util/XHR';
 import Settings from '../api/Settings';
 import DateTimeHelper from './DateTimeHelper';
 

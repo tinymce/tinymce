@@ -20,7 +20,7 @@ import { SelectorFind } from '@ephox/sugar';
 import { CursorPosition } from '@ephox/sugar';
 import { Selection } from '@ephox/sugar';
 import { WindowSelection } from '@ephox/sugar';
-import VK from 'tinymce/core/util/VK';
+import VK from 'tinymce/core/api/util/VK';
 import Util from '../alien/Util';
 import TableTargets from './TableTargets';
 
