@@ -73,9 +73,7 @@ const hasAttributeValue = function (attrName: string, attrValue: string) {
   };
 };
 
-const isBogus = function (node: Node) {
-  return isElement(node) && node.hasAttribute('data-mce-bogus');
-};
+const isBogus = (node: Node): node is Element => isElement(node) && node.hasAttribute('data-mce-bogus');
 
 const hasContentEditableState = function (value: string) {
   return function (node: Node) {

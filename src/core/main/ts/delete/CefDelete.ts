@@ -13,7 +13,7 @@ import { Remove } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { SelectorFilter } from '@ephox/sugar';
 import CaretPosition from '../caret/CaretPosition';
-import CefDeleteAction from './CefDeleteAction';
+import * as CefDeleteAction from './CefDeleteAction';
 import DeleteElement from './DeleteElement';
 import DeleteUtils from './DeleteUtils';
 import NodeType from '../dom/NodeType';

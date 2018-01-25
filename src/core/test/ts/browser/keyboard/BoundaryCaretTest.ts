@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryCaretTest', function (
 
   const createLocation = function (elm, elementPath, offset) {
     const container = Hierarchy.follow(elm, elementPath);
-    const pos = new CaretPosition(container.getOrDie().dom(), offset);
+    const pos = CaretPosition(container.getOrDie().dom(), offset);
     const location = BoundaryLocation.readLocation(isInlineTarget, elm.dom(), pos);
     return location;
   };

@@ -113,10 +113,10 @@ const createPathItem = function (node) {
   return name + '[' + normalizedNodeIndex(node) + ']';
 };
 
-const parentsUntil = function (rootNode, node, predicate?) {
+const parentsUntil = function (root: Node, node: Node, predicate?): Node[] {
   const parents = [];
 
-  for (node = node.parentNode; node !== rootNode; node = node.parentNode) {
+  for (node = node.parentNode; node !== root; node = node.parentNode) {
     if (predicate && predicate(node)) {
       break;
     }
@@ -127,7 +127,7 @@ const parentsUntil = function (rootNode, node, predicate?) {
   return parents;
 };
 
-const create = function (rootNode, caretPosition) {
+const create = (root: Node, caretPosition: CaretPosition): string => {
   let container, offset, path = [],
     outputOffset, childNodes, parents;
 
@@ -149,7 +149,7 @@ const create = function (rootNode, caretPosition) {
   }
 
   path.push(createPathItem(container));
-  parents = parentsUntil(rootNode, container);
+  parents = parentsUntil(root, container);
   parents = Arr.filter(parents, Fun.negate(NodeType.isBogus));
   path = path.concat(Arr.map(parents, function (node) {
     return createPathItem(node);
@@ -158,7 +158,7 @@ const create = function (rootNode, caretPosition) {
   return path.reverse().join('/') + ',' + outputOffset;
 };
 
-const resolvePathItem = function (node, name, index) {
+const resolvePathItem = (node: Node, name: string, index: number): Node => {
   let nodes = getChildNodes(node);
 
   nodes = Arr.filter(nodes, function (node, index) {
@@ -169,7 +169,7 @@ const resolvePathItem = function (node, name, index) {
   return nodes[index];
 };
 
-const findTextPosition = function (container, offset) {
+const findTextPosition = (container: Node, offset: number): CaretPosition => {
   let node = container, targetOffset = 0, dataLen;
 
   while (isText(node)) {
@@ -191,14 +191,14 @@ const findTextPosition = function (container, offset) {
     node = node.nextSibling;
   }
 
-  if (offset > container.data.length) {
+  if (isText(container) && offset > container.data.length) {
     offset = container.data.length;
   }
 
-  return new CaretPosition(container, offset);
+  return CaretPosition(container, offset);
 };
 
-const resolve = function (rootNode, path) {
+const resolve = (root: Node, path: string): CaretPosition => {
   let parts, container, offset;
 
   if (!path) {
@@ -220,7 +220,7 @@ const resolve = function (rootNode, path) {
     }
 
     return resolvePathItem(result, value[1], parseInt(value[2], 10));
-  }, rootNode);
+  }, root);
 
   if (!container) {
     return null;
@@ -233,7 +233,7 @@ const resolve = function (rootNode, path) {
       offset = nodeIndex(container);
     }
 
-    return new CaretPosition(container.parentNode, offset);
+    return CaretPosition(container.parentNode, offset);
   }
 
   return findTextPosition(container, parseInt(offset, 10));

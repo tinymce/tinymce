@@ -78,9 +78,7 @@ const isEmptyNode = function (targetNode) {
   }
 };
 
-const isEmpty = function (elm) {
-  return isEmptyNode(elm.dom());
-};
+const isEmpty = (elm) => isEmptyNode(elm.dom());
 
 export default {
   isEmpty

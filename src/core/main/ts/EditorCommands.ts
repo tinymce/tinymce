@@ -15,7 +15,7 @@ import NodeType from './dom/NodeType';
 import InsertBr from './newline/InsertBr';
 import SelectionBookmark from './selection/SelectionBookmark';
 import Tools from './util/Tools';
-import { EditorSelection } from './api/dom/Selection';
+import { Selection } from './api/dom/Selection';
 
 /**
  * This class enables you to add custom editor commands and it contains
@@ -30,7 +30,7 @@ const map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
 const TRUE = true, FALSE = false;
 
 export default function (editor) {
-  let dom, selection: EditorSelection, formatter;
+  let dom, selection: Selection, formatter;
   const commands = { state: {}, exec: {}, value: {} };
   let settings = editor.settings,
     bookmark;

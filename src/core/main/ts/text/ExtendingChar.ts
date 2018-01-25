@@ -43,10 +43,10 @@ const extendingChars = new RegExp(
   '\uAAEC-\uAAED\uAAF6\uABE5\uABE8\uABED\uFB1E\uFE00-\uFE0F\uFE20-\uFE2F\uFF9E-\uFF9F]'
 );
 
-const isExtendingChar = function (ch) {
+const isExtendingChar = (ch: string) => {
   return typeof ch === 'string' && ch.charCodeAt(0) >= 768 && extendingChars.test(ch);
 };
 
-export default {
+export {
   isExtendingChar
 };

@@ -16,7 +16,7 @@ import CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
 import Delay from './Delay';
 import Tools from './Tools';
 import VK from './VK';
-import { EditorSelection } from '../api/dom/Selection';
+import { Selection } from '../api/dom/Selection';
 
 declare const escape: any;
 declare const unescape: any;
@@ -30,7 +30,7 @@ declare const unescape: any;
 
 export default function (editor) {
   const each = Tools.each;
-  const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection: EditorSelection = editor.selection,
+  const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection: Selection = editor.selection,
     settings = editor.settings, parser = editor.parser;
   const isGecko = Env.gecko, isIE = Env.ie, isWebKit = Env.webkit;
   const mceInternalUrlPrefix = 'data:text/mce-internal,';

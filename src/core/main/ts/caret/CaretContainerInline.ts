@@ -13,20 +13,11 @@ import NodeType from '../dom/NodeType';
 import Zwsp from '../text/Zwsp';
 
 const isText = NodeType.isText;
+const startsWithCaretContainer = (node: Node) => isText(node) && node.data[0] === Zwsp.ZWSP;
+const endsWithCaretContainer = (node: Node) => isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
+const createZwsp = (node: Node) => node.ownerDocument.createTextNode(Zwsp.ZWSP);
 
-const startsWithCaretContainer = function (node) {
-  return isText(node) && node.data[0] === Zwsp.ZWSP;
-};
-
-const endsWithCaretContainer = function (node) {
-  return isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
-};
-
-const createZwsp = function (node) {
-  return node.ownerDocument.createTextNode(Zwsp.ZWSP);
-};
-
-const insertBefore = function (node) {
+const insertBefore = (node: Node) => {
   if (isText(node.previousSibling)) {
     if (endsWithCaretContainer(node.previousSibling)) {
       return node.previousSibling;
@@ -48,7 +39,7 @@ const insertBefore = function (node) {
   }
 };
 
-const insertAfter = function (node) {
+const insertAfter = (node: Node) => {
   if (isText(node.nextSibling)) {
     if (startsWithCaretContainer(node.nextSibling)) {
       return node.nextSibling;
@@ -74,12 +65,10 @@ const insertAfter = function (node) {
   }
 };
 
-const insertInline = function (before, node) {
-  return before ? insertBefore(node) : insertAfter(node);
-};
+const insertInline = (before: boolean, node: Node) => before ? insertBefore(node) : insertAfter(node);
 
 export default {
   insertInline,
-  insertInlineBefore: Fun.curry(insertInline, true),
-  insertInlineAfter: Fun.curry(insertInline, false)
+  insertInlineBefore: Fun.curry(insertInline, true) as (node: Node) => Text,
+  insertInlineAfter: Fun.curry(insertInline, false) as (node: Node) => Text
 };

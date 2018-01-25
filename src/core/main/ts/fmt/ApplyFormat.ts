@@ -19,7 +19,7 @@ import MergeFormats from './MergeFormats';
 import RangeNormalizer from '../selection/RangeNormalizer';
 import RangeWalk from '../selection/RangeWalk';
 import Tools from '../util/Tools';
-import { EditorSelection } from '../api/dom/Selection';
+import { Selection } from '../api/dom/Selection';
 
 const each = Tools.each;
 
@@ -45,7 +45,7 @@ const applyFormat = function (ed, name, vars?, node?) {
   const format = formatList[0];
   let bookmark, rng;
   const isCollapsed = !node && ed.selection.isCollapsed();
-  const dom = ed.dom, selection: EditorSelection = ed.selection;
+  const dom = ed.dom, selection: Selection = ed.selection;
 
   const setElementFormat = function (elm, fmt?) {
     fmt = fmt || format;

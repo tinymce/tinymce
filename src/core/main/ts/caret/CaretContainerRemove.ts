@@ -17,14 +17,14 @@ import Zwsp from '../text/Zwsp';
 const isElement = NodeType.isElement;
 const isText = NodeType.isText;
 
-const removeNode = function (node) {
+const removeNode = (node: Node) => {
   const parentNode = node.parentNode;
   if (parentNode) {
     parentNode.removeChild(node);
   }
 };
 
-const getNodeValue = function (node) {
+const getNodeValue = (node: Node): string => {
   try {
     return node.nodeValue;
   } catch (ex) {
@@ -33,7 +33,7 @@ const getNodeValue = function (node) {
   }
 };
 
-const setNodeValue = function (node, text) {
+const setNodeValue = (node: Node, text: string) => {
   if (text.length === 0) {
     removeNode(node);
   } else {
@@ -41,51 +41,51 @@ const setNodeValue = function (node, text) {
   }
 };
 
-const trimCount = function (text) {
+const trimCount = (text: string) => {
   const trimmedText = Zwsp.trim(text);
   return { count: text.length - trimmedText.length, text: trimmedText };
 };
 
-const removeUnchanged = function (caretContainer, pos) {
+const removeUnchanged = (caretContainer: Node, pos: CaretPosition): CaretPosition => {
   remove(caretContainer);
   return pos;
 };
 
-const removeTextAndReposition = function (caretContainer, pos) {
+const removeTextAndReposition = (caretContainer: Text, pos: CaretPosition): CaretPosition => {
   const before = trimCount(caretContainer.data.substr(0, pos.offset()));
   const after = trimCount(caretContainer.data.substr(pos.offset()));
   const text = before.text + after.text;
 
   if (text.length > 0) {
     setNodeValue(caretContainer, text);
-    return new CaretPosition(caretContainer, pos.offset() - before.count);
+    return CaretPosition(caretContainer, pos.offset() - before.count);
   } else {
     return pos;
   }
 };
 
-const removeElementAndReposition = function (caretContainer, pos) {
+const removeElementAndReposition = (caretContainer: Node, pos: CaretPosition): CaretPosition => {
   const parentNode = pos.container();
   const newPosition = Arr.indexOf(parentNode.childNodes, caretContainer).map(function (index) {
-    return index < pos.offset() ? new CaretPosition(parentNode, pos.offset() - 1) : pos;
+    return index < pos.offset() ? CaretPosition(parentNode, pos.offset() - 1) : pos;
   }).getOr(pos);
   remove(caretContainer);
   return newPosition;
 };
 
-const removeTextCaretContainer = function (caretContainer, pos) {
-  return pos.container() === caretContainer ? removeTextAndReposition(caretContainer, pos) : removeUnchanged(caretContainer, pos);
+const removeTextCaretContainer = (caretContainer: Node, pos: CaretPosition) => {
+  return isText(caretContainer) && pos.container() === caretContainer ? removeTextAndReposition(caretContainer, pos) : removeUnchanged(caretContainer, pos);
 };
 
-const removeElementCaretContainer = function (caretContainer, pos) {
+const removeElementCaretContainer = (caretContainer: Node, pos: CaretPosition) => {
   return pos.container() === caretContainer.parentNode ? removeElementAndReposition(caretContainer, pos) : removeUnchanged(caretContainer, pos);
 };
 
-const removeAndReposition = function (container, pos) {
+const removeAndReposition = (container: Node, pos: CaretPosition) => {
   return CaretPosition.isTextPosition(pos) ? removeTextCaretContainer(container, pos) : removeElementCaretContainer(container, pos);
 };
 
-const remove = function (caretContainerNode) {
+const remove = (caretContainerNode: Node) => {
   if (isElement(caretContainerNode) && CaretContainer.isCaretContainer(caretContainerNode)) {
     if (CaretContainer.hasContent(caretContainerNode)) {
       caretContainerNode.removeAttribute('data-mce-caret');

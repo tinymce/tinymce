@@ -30,15 +30,15 @@ const needsReposition = function (pos, elm) {
 };
 
 const reposition = function (elm, pos) {
-  return needsReposition(pos, elm) ? new CaretPosition(pos.container(), pos.offset() - 1) : pos;
+  return needsReposition(pos, elm) ? CaretPosition(pos.container(), pos.offset() - 1) : pos;
 };
 
 const beforeOrStartOf = function (node) {
-  return NodeType.isText(node) ? new CaretPosition(node, 0) : CaretPosition.before(node);
+  return NodeType.isText(node) ? CaretPosition(node, 0) : CaretPosition.before(node);
 };
 
 const afterOrEndOf = function (node) {
-  return NodeType.isText(node) ? new CaretPosition(node, node.data.length) : CaretPosition.after(node);
+  return NodeType.isText(node) ? CaretPosition(node, node.data.length) : CaretPosition.after(node);
 };
 
 const getPreviousSiblingCaretPosition = function (elm) {
@@ -111,7 +111,7 @@ const setSelection = function (editor, forward, pos) {
   );
 };
 
-const eqRawNode = function (rawNode) {
+const eqRawNode = function (rawNode: Node) {
   return function (elm) {
     return elm.dom() === rawNode;
   };
@@ -145,7 +145,7 @@ const deleteNormalized = function (elm, afterDeletePosOpt) {
       Remove.remove(next);
       Remove.remove(elm);
       if (afterDeletePos.container() === nextNode) {
-        return new CaretPosition(prevNode, offset);
+        return CaretPosition(prevNode, offset);
       } else {
         return afterDeletePos;
       }
@@ -159,7 +159,7 @@ const deleteNormalized = function (elm, afterDeletePosOpt) {
   });
 };
 
-const deleteElement = function (editor, forward, elm) {
+const deleteElement = function (editor, forward: boolean, elm) {
   const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
   const parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
   const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos);

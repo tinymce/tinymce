@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function () {
 
     $(getRoot()).html('<p>a</p><p>b</p><p>c</p>');
 
-    caretPosition = new CaretPosition(getRoot().lastChild.lastChild, 1);
+    caretPosition = CaretPosition(getRoot().lastChild.lastChild, 1);
     result = LineWalker.upUntil(getRoot(), predicate, caretPosition);
 
     LegacyUnit.equal(result.length, 3);
@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function () {
 
     $(getRoot()).html('<p>a</p><p>b</p><p>c</p>');
 
-    caretPosition = new CaretPosition(getRoot().firstChild.firstChild, 0);
+    caretPosition = CaretPosition(getRoot().firstChild.firstChild, 0);
     result = LineWalker.downUntil(getRoot(), predicate, caretPosition);
 
     LegacyUnit.equal(result.length, 3);

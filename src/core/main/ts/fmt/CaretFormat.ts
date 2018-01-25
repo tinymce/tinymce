@@ -24,7 +24,7 @@ import MatchFormat from './MatchFormat';
 import SplitRange from '../selection/SplitRange';
 import Zwsp from '../text/Zwsp';
 import Fun from '../util/Fun';
-import { EditorSelection } from '../api/dom/Selection';
+import { Selection } from '../api/dom/Selection';
 
 const ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret';
 
@@ -147,7 +147,7 @@ const removeCaretContainerNode = function (dom, selection, node, moveCaret) {
 };
 
 // Removes the caret container for the specified node or all on the current document
-const removeCaretContainer = function (body, dom, selection: EditorSelection, node, moveCaret?) {
+const removeCaretContainer = function (body, dom, selection: Selection, node, moveCaret?) {
   if (!node) {
     node = getParentCaretContainer(body, selection.getStart());
 
@@ -243,7 +243,7 @@ const applyCaretFormat = function (editor, name, vars) {
 };
 
 const removeCaretFormat = function (editor, name, vars, similar) {
-  const dom = editor.dom, selection: EditorSelection = editor.selection;
+  const dom = editor.dom, selection: Selection = editor.selection;
   let container, offset, bookmark;
   let hasContentAfter, node, formatNode;
   const parents = [], rng = selection.getRng();
@@ -313,7 +313,7 @@ const removeCaretFormat = function (editor, name, vars, similar) {
   }
 };
 
-const disableCaretContainer = function (body, dom, selection: EditorSelection, keyCode) {
+const disableCaretContainer = function (body, dom, selection: Selection, keyCode) {
   removeCaretContainer(body, dom, selection, null, false);
 
   // Remove caret container if it's empty

@@ -77,7 +77,7 @@ const navigate = function (forward, rootNode, from) {
 const positionIn = function (forward, element) {
   const startNode = forward ? element.firstChild : element.lastChild;
   if (NodeType.isText(startNode)) {
-    return Option.some(new CaretPosition(startNode, forward ? 0 : startNode.data.length));
+    return Option.some(CaretPosition(startNode, forward ? 0 : startNode.data.length));
   } else if (startNode) {
     if (CaretCandidate.isCaretCandidate(startNode)) {
       return Option.some(forward ? CaretPosition.before(startNode) : afterElement(startNode));

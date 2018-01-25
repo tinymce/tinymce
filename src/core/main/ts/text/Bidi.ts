@@ -10,10 +10,8 @@
 
 const strongRtl = /[\u0591-\u07FF\uFB1D-\uFDFF\uFE70-\uFEFC]/;
 
-const hasStrongRtl = function (text) {
-  return strongRtl.test(text);
-};
+const hasStrongRtl = (text: string) => strongRtl.test(text);
 
-export default {
+export {
   hasStrongRtl
 };

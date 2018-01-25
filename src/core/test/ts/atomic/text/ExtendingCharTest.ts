@@ -1,6 +1,6 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import ExtendingChar from 'tinymce/core/text/ExtendingChar';
+import * as ExtendingChar from 'tinymce/core/text/ExtendingChar';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('atomic.tinymce.core.text.ExtendingCharTest', function () {

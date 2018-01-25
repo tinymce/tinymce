@@ -10,7 +10,7 @@
 
 import { Fun } from '@ephox/katamari';
 import Bookmarks from '../../dom/Bookmarks';
-import { EditorSelection } from './Selection';
+import { Selection } from './Selection';
 
 /**
  * This class handles selection bookmarks.
@@ -25,7 +25,7 @@ import { EditorSelection } from './Selection';
  * @method BookmarkManager
  * @param {tinymce.dom.Selection} selection Selection instance to handle bookmarks for.
  */
-export function BookmarkManager(selection: EditorSelection) {
+export function BookmarkManager(selection: Selection) {
   return {
     /**
      * Returns a bookmark location for the current selection. This bookmark object

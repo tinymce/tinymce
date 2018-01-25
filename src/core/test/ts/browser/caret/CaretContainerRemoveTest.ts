@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function () 
       CaretContainer.insertBlock('p', getRoot().firstChild, true);
       Assertions.assertEq('Should be block container', true, CaretContainer.isCaretContainerBlock(getRoot().firstChild));
 
-      const pos = CaretContainerRemove.removeAndReposition(getRoot().firstChild, new CaretPosition(getRoot(), 0));
+      const pos = CaretContainerRemove.removeAndReposition(getRoot().firstChild, CaretPosition(getRoot(), 0));
       Assertions.assertEq('Should be unchanged offset', 0, pos.offset());
       Assertions.assertDomEq('Should be unchanged container', Element.fromDom(getRoot()), Element.fromDom(pos.container()));
       Assertions.assertEq('Should not be block container', false, CaretContainer.isCaretContainerBlock(getRoot().firstChild));
@@ -63,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function () 
       CaretContainer.insertBlock('p', getRoot().childNodes[1], true);
       Assertions.assertEq('Should be block container', true, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
 
-      const pos = CaretContainerRemove.removeAndReposition(getRoot().childNodes[1], new CaretPosition(getRoot(), 0));
+      const pos = CaretContainerRemove.removeAndReposition(getRoot().childNodes[1], CaretPosition(getRoot(), 0));
       Assertions.assertEq('Should be unchanged offset', 0, pos.offset());
       Assertions.assertDomEq('Should be unchanged container', Element.fromDom(getRoot()), Element.fromDom(pos.container()));
       Assertions.assertEq('Should not be block container', false, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
@@ -78,7 +78,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function () 
       CaretContainer.insertBlock('p', getRoot().childNodes[1], true);
       Assertions.assertEq('Should be block container', true, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
 
-      const pos = CaretContainerRemove.removeAndReposition(getRoot().childNodes[1], new CaretPosition(getRoot(), 3));
+      const pos = CaretContainerRemove.removeAndReposition(getRoot().childNodes[1], CaretPosition(getRoot(), 3));
       Assertions.assertEq('Should be changed offset', 2, pos.offset());
       Assertions.assertDomEq('Should be unchanged container', Element.fromDom(getRoot()), Element.fromDom(pos.container()));
       Assertions.assertEq('Should not be block container', false, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));

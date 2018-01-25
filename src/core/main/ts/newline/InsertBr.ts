@@ -18,7 +18,7 @@ import TreeWalker from '../dom/TreeWalker';
 import BoundaryLocation from '../keyboard/BoundaryLocation';
 import InlineUtils from '../keyboard/InlineUtils';
 import NormalizeRange from '../selection/NormalizeRange';
-import { EditorSelection } from '../api/dom/Selection';
+import { Selection } from '../api/dom/Selection';
 
 // Walks the parent block to the right and look for BR elements
 const hasRightSideContent = function (schema, container, parentBlock) {
@@ -33,7 +33,7 @@ const hasRightSideContent = function (schema, container, parentBlock) {
   }
 };
 
-const scrollToBr = function (dom, selection: EditorSelection, brElm) {
+const scrollToBr = function (dom, selection: Selection, brElm) {
   // Insert temp marker and scroll to that
   const marker = dom.create('span', {}, '&nbsp;');
   brElm.parentNode.insertBefore(marker, brElm);
@@ -41,7 +41,7 @@ const scrollToBr = function (dom, selection: EditorSelection, brElm) {
   dom.remove(marker);
 };
 
-const moveSelectionToBr = function (dom, selection: EditorSelection, brElm, extraBr) {
+const moveSelectionToBr = function (dom, selection: Selection, brElm, extraBr) {
   const rng = dom.createRng();
 
   if (!extraBr) {
@@ -58,7 +58,7 @@ const moveSelectionToBr = function (dom, selection: EditorSelection, brElm, extr
 const insertBrAtCaret = function (editor, evt) {
   // We load the current event in from EnterKey.js when appropriate to heed
   // certain event-specific variations such as ctrl-enter in a list
-  const selection: EditorSelection = editor.selection, dom = editor.dom;
+  const selection: Selection = editor.selection, dom = editor.dom;
   let brElm, extraBr;
   const rng = selection.getRng();
 

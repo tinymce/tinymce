@@ -19,7 +19,7 @@ import CaretPosition from '../caret/CaretPosition';
 import CaretUtils from '../caret/CaretUtils';
 import DOMUtils from '../dom/DOMUtils';
 import NodeType from '../dom/NodeType';
-import Bidi from '../text/Bidi';
+import * as Bidi from '../text/Bidi';
 
 const isInlineTarget = function (editor, elm) {
   const selector = EditorSettings.getString(editor, 'inline_boundaries_selector').getOr('a[href],code');
@@ -55,22 +55,22 @@ const normalizePosition = function (forward, pos) {
   if (forward) {
     if (CaretContainer.isCaretContainerInline(container)) {
       if (NodeType.isText(container.nextSibling)) {
-        return new CaretPosition(container.nextSibling, 0);
+        return CaretPosition(container.nextSibling, 0);
       } else {
         return CaretPosition.after(container);
       }
     } else {
-      return CaretContainer.isBeforeInline(pos) ? new CaretPosition(container, offset + 1) : pos;
+      return CaretContainer.isBeforeInline(pos) ? CaretPosition(container, offset + 1) : pos;
     }
   } else {
     if (CaretContainer.isCaretContainerInline(container)) {
       if (NodeType.isText(container.previousSibling)) {
-        return new CaretPosition(container.previousSibling, container.previousSibling.data.length);
+        return CaretPosition(container.previousSibling, container.previousSibling.data.length);
       } else {
         return CaretPosition.before(container);
       }
     } else {
-      return CaretContainer.isAfterInline(pos) ? new CaretPosition(container, offset - 1) : pos;
+      return CaretContainer.isAfterInline(pos) ? CaretPosition(container, offset - 1) : pos;
     }
   }
 };
