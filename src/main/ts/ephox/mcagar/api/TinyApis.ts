@@ -10,14 +10,16 @@ import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
 
+export interface Presence {
+  [selector:string]: number;
+}
 
-
-export default <any> function (editor) {
-  var setContent = function (html) {
+export default function (editor) {
+  var setContent = function (html: string) {
     editor.setContent(html);
   };
 
-  var sSetContent = function (html) {
+  var sSetContent = function (html: string) {
     return Step.sync(function () {
       setContent(html);
     });
@@ -44,11 +46,11 @@ export default <any> function (editor) {
     return sSetSelection(path.startPath(), path.soffset(), path.finishPath(), path.foffset());
   };
 
-  var sSetCursor = function (elementPath, offset) {
+  var sSetCursor = function (elementPath: number[], offset: number) {
     return sSetSelection(elementPath, offset, elementPath, offset);
   };
 
-  var sSetSelection = function (startPath, soffset, finishPath, foffset) {
+  var sSetSelection = function (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
     return Chain.asStep(lazyBody(), [
       TinySelections.cCreateDomSelection(startPath, soffset, finishPath, foffset),
       cSetDomSelection,
@@ -56,19 +58,19 @@ export default <any> function (editor) {
     ]);
   };
 
-  var sSetSetting = function (key, value) {
+  var sSetSetting = function (key: string, value) {
     return Step.sync(function () {
       editor.settings[key] = value;
     });
   };
 
-  var sDeleteSetting = function (key) {
+  var sDeleteSetting = function (key: string) {
     return Step.sync(function () {
       delete editor.settings[key];
     });
   };
 
-  var sSelect = function (selector, path) {
+  var sSelect = function (selector: string, path: number[]) {
     return Chain.asStep(lazyBody(), [
       UiFinder.cFindIn(selector),
       Cursors.cFollow(path),
@@ -81,20 +83,20 @@ export default <any> function (editor) {
     return editor.getContent();
   });
 
-  var sExecCommand = function (command, value) {
+  var sExecCommand = function (command: string, value?) {
     return Step.sync(function () {
       editor.execCommand(command, false, value);
     });
   };
 
-  var sAssertContent = function (expected) {
+  var sAssertContent = function (expected: string) {
     return Chain.asStep({}, [
       cGetContent,
       Assertions.cAssertHtml('Checking TinyMCE content', expected)
     ]);
   };
 
-  var sAssertContentPresence = function (expected) {
+  var sAssertContentPresence = function (expected: Presence) {
     return Assertions.sAssertPresence(
       'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
       expected,
@@ -110,11 +112,11 @@ export default <any> function (editor) {
     );
   };
 
-  var sAssertSelectionFrom = function (expected) {
+  // var sAssertSelectionFrom = function (expected) {
     // TODO
-  };
+  // };
 
-  var assertPath = function (label, root, expPath, expOffset, actElement, actOffset) {
+  var assertPath = function (label: string, root, expPath: number[], expOffset: number, actElement, actOffset: number) {
     var expected = Cursors.calculateOne(root, expPath);
     var message = function () {
       var actual = Element.fromDom(actElement);
@@ -125,7 +127,7 @@ export default <any> function (editor) {
     Assertions.assertEq('Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
   };
 
-  var sAssertSelection = function (startPath, soffset, finishPath, foffset) {
+  var sAssertSelection = function (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
     return Step.sync(function () {
       var actual = editor.selection.getRng();
       assertPath('start', lazyBody(), startPath, soffset, actual.startContainer, actual.startOffset);
@@ -167,7 +169,7 @@ export default <any> function (editor) {
     sSetCursor: sSetCursor,
     sSelect: sSelect,
     sExecCommand: sExecCommand,
-    sAssertSelectionFrom: sAssertSelectionFrom,
+    // sAssertSelectionFrom: sAssertSelectionFrom,
     sAssertSelection: sAssertSelection,
     sTryAssertFocus: sTryAssertFocus,
     sFocus: sFocus,

@@ -3,24 +3,24 @@ import { Element } from '@ephox/sugar';
 
 
 
-export default <any> function (editor) {
+export default function (editor) {
   var iDoc = Element.fromDom(editor.getDoc());
   var uiDoc = Element.fromDom(document);
 
-  var sContentKeydown = function (code, modifiers) {
-    return Keyboard.sKeydown(iDoc, code, modifiers !== undefined ? modifiers : {});
+  var sContentKeydown = function (code: number, modifiers = {}) {
+    return Keyboard.sKeydown(iDoc, code, modifiers);
   };
 
-  var sContentKeystroke = function (code, modifiers) {
+  var sContentKeystroke = function (code: number, modifiers = {}) {
     return Keyboard.sKeystroke(iDoc, code, modifiers);
   };
 
-  var sContentKeypress = function (code, modifiers) {
+  var sContentKeypress = function (code: number, modifiers = {}) {
     return Keyboard.sKeypress(iDoc, code, modifiers);
   };
 
-  var sUiKeydown = function (code, modifiers) {
-    return Keyboard.sKeydown(uiDoc, code, modifiers !== undefined ? modifiers : {});
+  var sUiKeydown = function (code: number, modifiers = {}) {
+    return Keyboard.sKeydown(uiDoc, code, modifiers);
   };
 
   return {

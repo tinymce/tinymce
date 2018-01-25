@@ -13,18 +13,18 @@ var cUiDoc = Chain.mapper(function (editor) {
   return Element.fromDom(document);
 });
 
-var cTriggerKeyEvent = function (cTarget, evtType, code, modifiers) {
+var cTriggerKeyEvent = function (cTarget, evtType: string, code: number, modifiers = {}) {
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cTarget, 'doc'),
     NamedChain.direct('doc', FocusTools.cGetFocused, 'activeElement'),
     NamedChain.direct('activeElement', Chain.op(function (dispatcher) {
-      Keyboard[evtType](code, modifiers !== undefined ? modifiers : {}, dispatcher);
+      Keyboard[evtType](code, modifiers, dispatcher);
     }), '_'),
     NamedChain.output(NamedChain.inputName())
   ]);
 };
 
-export default <any> {
+export default {
   cContentKeypress: Fun.curry(cTriggerKeyEvent, cIDoc, 'keypress'),
   cContentKeydown: Fun.curry(cTriggerKeyEvent, cIDoc, 'keydown'),
   cContentKeystroke: Fun.curry(cTriggerKeyEvent, cIDoc, 'keystroke'),

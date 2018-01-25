@@ -11,5 +11,6 @@
 /config/bolt/bootstrap*.js
 /node_modules
 /npm_output
+ephox-mcagar-*.tgz
 
 package-lock.json

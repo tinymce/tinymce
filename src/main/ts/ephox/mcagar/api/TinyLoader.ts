@@ -13,7 +13,7 @@ declare const tinymce: any;
 tinymce.baseURL = document.location.protocol + '//' + document.location.host + '/project/node_modules/tinymce';
 tinymce.baseURI = new tinymce.util.URI(tinymce.baseURL);
 
-var createTarget = function (inline) {
+var createTarget = function (inline: boolean) {
   var target = Element.fromTag(inline ? 'div' : 'textarea');
   return target;
 };
@@ -58,6 +58,6 @@ var setup = function (callback, settings, success, failure) {
   }));
 };
 
-export default <any> {
+export default {
   setup: setup
 };

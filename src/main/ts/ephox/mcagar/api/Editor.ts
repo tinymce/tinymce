@@ -33,7 +33,7 @@ var cFromElement = function (element, settings) {
   });
 };
 
-var cFromHtml = function (html, settings) {
+var cFromHtml = function (html: string, settings) {
   var element = html ? Element.fromHtml(html) : Element.fromTag(settings.inline ? 'div' : 'textarea')
   return cFromElement(element, settings);
 };
@@ -48,7 +48,7 @@ var cRemove = Chain.op(function (editor) {
   Selectors.one('#' + id).each(Remove.remove);
 });
 
-export default <any> {
+export default {
   cFromHtml: cFromHtml,
   cFromElement: cFromElement,
   cFromSettings: cFromSettings,

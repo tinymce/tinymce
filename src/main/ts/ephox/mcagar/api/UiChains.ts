@@ -32,14 +32,14 @@ var cGetMenuRoot = Chain.fromChains([
   UiFinder.cFindIn('.mce-menubar')
 ]);
 
-var cFindIn = function (cRoot, selector) {
+var cFindIn = function (cRoot, selector: string) {
   return Chain.fromChains([
     cRoot,
     UiFinder.cFindIn(selector)
   ]);
 };
 
-var cClickOnWithin = function (label, selector, cContext) {
+var cClickOnWithin = function (label: string, selector: string, cContext) {
    return NamedChain.asChain([
      NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
      NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
@@ -48,20 +48,20 @@ var cClickOnWithin = function (label, selector, cContext) {
    ]);
  };
 
-var cClickOnUi = function (label, selector) {
+var cClickOnUi = function (label: string, selector: string) {
  return cClickOnWithin(label, selector, cDialogRoot);
 };
 
-var cClickOnToolbar = function (label, selector) {
+var cClickOnToolbar = function (label: string, selector: string) {
   return cClickOnWithin(label, selector, cGetToolbarRoot);
 };
 
-var cClickOnMenu = function (label, selector) {
+var cClickOnMenu = function (label: string, selector: string) {
   return cClickOnWithin(label, selector, cGetMenuRoot);
 };
 
 var cWaitForState = function (hasState) {
-  return function (label, selector) {
+  return function (label: string, selector: string) {
     return NamedChain.asChain([
       NamedChain.write('element', Chain.fromChains([
         cDialogRoot,
@@ -72,22 +72,22 @@ var cWaitForState = function (hasState) {
   };
 };
 
-var cWaitForVisible = function (label, selector) {
+var cWaitForVisible = function (label: string, selector: string) {
   return Chain.fromChains([
     cDialogRoot,
     UiFinder.cWaitForState(label, selector, Visibility.isVisible)
   ]);
 };
 
-var cWaitForPopup = function (label, selector) {
+var cWaitForPopup = function (label: string, selector: string) {
   return cWaitForState(Visibility.isVisible)(label, selector);
 };
 
-var cWaitForUi = function (label, selector) {
+var cWaitForUi = function (label: string, selector: string) {
   return cWaitForState(Fun.constant(true))(label, selector);
 };
 
-var cTriggerContextMenu = function (label, target, menu) {
+var cTriggerContextMenu = function (label: string, target, menu) {
   return Chain.fromChains([
     cEditorRoot,
     UiFinder.cFindIn(target),
@@ -107,7 +107,7 @@ var cDialogByPopup = Chain.binder(function (input) {
   return dialogs.length ? Result.value(dialogs[0]) : Result.error("dialog with id of: " + popupId + " was not found");
 });
 
-var cWaitForDialog = function (selector) {
+var cWaitForDialog = function (selector: string) {
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
     NamedChain.write('popupNode', cWaitForVisible('waiting for popup: ' + selector, selector)),
@@ -117,7 +117,7 @@ var cWaitForDialog = function (selector) {
   ]);
 };
 
-var cAssertDialogContents = function (selector, data) {
+var cAssertDialogContents = function (selector: string, data) {
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cWaitForDialog(selector), 'dialog'),
     NamedChain.direct('dialog', Chain.op(function (dialog) {
@@ -131,7 +131,7 @@ var cAssertActiveDialogContents = function (data) {
   return cAssertDialogContents('[role="dialog"]', data);
 };
 
-var cFillDialog = function (selector, data) {
+var cFillDialog = function (selector: string, data) {
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cWaitForDialog(selector), 'dialog'),
     NamedChain.direct('dialog', Chain.op(function (dialog) {
@@ -145,7 +145,7 @@ var cFillActiveDialog = function (data) {
   return cFillDialog('[role="dialog"]', data);
 };
 
-var cClickPopupButton = function (btnSelector, selector) {
+var cClickPopupButton = function (btnSelector: string, selector?: string) {
   var popupSelector = selector ? selector : '[role="dialog"]';
 
   return NamedChain.asChain([
@@ -156,15 +156,15 @@ var cClickPopupButton = function (btnSelector, selector) {
   ]);
 };
 
-var cCloseDialog = function (selector) {
+var cCloseDialog = function (selector: string) {
   return cClickPopupButton('div[role="button"]:contains(Cancel)', selector);
 };
 
-var cSubmitDialog = function (selector) {
+var cSubmitDialog = function (selector?: string) {
   return cClickPopupButton('div[role="button"].mce-primary', selector);
 };
 
-export default <any> {
+export default {
   cClickOnToolbar: cClickOnToolbar,
   cClickOnMenu: cClickOnMenu,
   cClickOnUi: cClickOnUi,

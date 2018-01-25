@@ -10,7 +10,7 @@ var toDomRange = function (range) {
   return rng;
 };
 
-var createDomSelection = function (container, sPath, soffset, fPath, foffset) {
+var createDomSelection = function (container, sPath: number[], soffset: number, fPath: number[], foffset: number) {
   var path = Cursors.path({
     startPath: sPath,
     soffset: soffset,
@@ -20,7 +20,7 @@ var createDomSelection = function (container, sPath, soffset, fPath, foffset) {
   return toDomRange(Cursors.calculate(container, path));
 };
 
-var createDomCursor = function (container, elementPath, offset) {
+var createDomCursor = function (container, elementPath: number[], offset: number) {
   var elm = Cursors.calculateOne(container, elementPath);
   return toDomRange(Cursors.range({
     start: elm,
@@ -30,7 +30,7 @@ var createDomCursor = function (container, elementPath, offset) {
   }));
 };
 
-var createDomSelectionOf = function (container, start, soffset, finish, foffset) {
+var createDomSelectionOf = function (container, start, soffset: number, finish, foffset: number) {
   return toDomRange(Cursors.range({
     start: start,
     soffset: soffset,
@@ -39,25 +39,25 @@ var createDomSelectionOf = function (container, start, soffset, finish, foffset)
   }));
 };
 
-var cCreateDomSelection = function (sPath, soffset, fPath, foffset) {
+var cCreateDomSelection = function (sPath: number[], soffset: number, fPath: number[], foffset: number) {
   return Chain.mapper(function (container) {
     return createDomSelection(container, sPath, soffset, fPath, foffset);
   });
 };
 
-var cCreateDomCursor = function (elementPath, offset) {
+var cCreateDomCursor = function (elementPath: number[], offset: number) {
   return Chain.mapper(function (container) {
     return createDomCursor(container, elementPath, offset);
   });
 };
 
-var cCreateDomSelectionOf = function (start, soffset, finish, foffset) {
+var cCreateDomSelectionOf = function (start, soffset: number, finish, foffset: number) {
   return Chain.mapper(function (container) {
     return createDomSelectionOf(container, start, soffset, finish, foffset);
   });
 };
 
-export default <any> {
+export default {
   createDomSelection: createDomSelection,
   createDomCursor: createDomCursor,
   createDomSelectionOf: createDomSelectionOf,

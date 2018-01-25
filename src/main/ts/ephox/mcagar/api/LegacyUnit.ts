@@ -3,7 +3,7 @@ import { Logger } from '@ephox/agar';
 import { Assertions } from '@ephox/agar';
 import TinyDom from './TinyDom';
 
-var test = function (message, fn) {
+var test = function (message: string, fn: Function) {
   return function (editor) {
     return Logger.t(
       message,
@@ -14,7 +14,7 @@ var test = function (message, fn) {
   };
 };
 
-var asyncTest = function (message, fn) {
+var asyncTest = function (message: string, fn: Function) {
   return function (editor) {
     return Logger.t(
       message,
@@ -29,11 +29,11 @@ var createSuite = function () {
   var tests = [];
 
   return {
-    test: function (message, fn) {
+    test: function (message: string, fn: Function) {
       tests.push(test(message, fn));
     },
 
-    asyncTest: function (message, fn) {
+    asyncTest: function (message: string, fn: Function) {
       tests.push(asyncTest(message, fn));
     },
 
@@ -45,13 +45,13 @@ var createSuite = function () {
   };
 };
 
-var execCommand = function execCommand(editor, cmd, ui, obj) {
+var execCommand = function execCommand(editor, cmd: string, ui?, value?) {
   if (editor.editorCommands.hasCustomCommand(cmd)) {
-    editor.execCommand(cmd, ui, obj);
+    editor.execCommand(cmd, ui, value);
   }
 };
 
-var findContainer = function (editor, selector) {
+var findContainer = function (editor, selector: string) {
   var container;
 
   if (typeof selector === 'string') {
@@ -67,7 +67,7 @@ var findContainer = function (editor, selector) {
   return container;
 };
 
-var setSelection = function (editor, startSelector, startOffset, endSelector, endOffset) {
+var setSelection = function (editor, startSelector: string, startOffset: number, endSelector?: string, endOffset?: number) {
   var startContainer = findContainer(editor, startSelector);
   var endContainer = findContainer(editor, endSelector ? endSelector : startSelector);
   var rng = editor.dom.createRng();
@@ -100,19 +100,19 @@ var setSelection = function (editor, startSelector, startOffset, endSelector, en
   editor.selection.setRng(rng);
 };
 
-var trimBrs = function (html) {
+var trimBrs = function (html: string) {
   return html.toLowerCase().replace(/<br[^>]*>|[\r\n]+/gi, '');
 };
 
-var equalDom = function (actual, expected, message) {
+var equalDom = function (actual, expected, message?: string) {
   Assertions.assertDomEq(typeof message !== "undefined" ? message : 'Nodes are not equal', TinyDom.fromDom(expected), TinyDom.fromDom(actual));
 };
 
-var equal = function (actual, expected, message) {
+var equal = function (actual, expected, message?: string) {
   Assertions.assertEq(typeof message !== "undefined" ? message : 'No message specified', expected, actual);
 };
 
-export default <any> {
+export default {
   test: test,
   asyncTest: asyncTest,
   createSuite: createSuite,
