@@ -13,7 +13,7 @@ import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import ElementType from '../dom/ElementType';
 import NodeType from '../dom/NodeType';
-import TreeWalker from '../dom/TreeWalker';
+import TreeWalker from '../api/dom/TreeWalker';
 
 const firstNonWhiteSpaceNodeSibling = function (node) {
   while (node) {

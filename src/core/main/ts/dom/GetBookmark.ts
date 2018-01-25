@@ -15,7 +15,7 @@ import CaretPosition from '../caret/CaretPosition';
 import NodeType from './NodeType';
 import RangeNodes from '../selection/RangeNodes';
 import Zwsp from '../text/Zwsp';
-import Tools from '../util/Tools';
+import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;

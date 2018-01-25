@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
-import Tools from 'tinymce/core/util/Tools';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import TextColor from '../core/TextColor';
 import ColorPickerHtml from './ColorPickerHtml';

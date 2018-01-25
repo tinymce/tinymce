@@ -9,7 +9,7 @@
  */
 
 import InsertNewLine from '../newline/InsertNewLine';
-import VK from '../util/VK';
+import VK from '../api/util/VK';
 
 const endTypingLevel = function (undoManager) {
   if (undoManager.typing) {

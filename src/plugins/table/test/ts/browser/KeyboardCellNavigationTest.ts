@@ -7,7 +7,7 @@ import { Cell } from '@ephox/katamari';
 import { TinyActions } from '@ephox/mcagar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import Env from 'tinymce/core/Env';
+import Env from 'tinymce/core/api/Env';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';

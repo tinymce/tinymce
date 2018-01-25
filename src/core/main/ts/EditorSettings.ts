@@ -16,7 +16,7 @@ import { Strings } from '@ephox/katamari';
 import { Struct } from '@ephox/katamari';
 import { Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import Tools from './util/Tools';
+import Tools from './api/util/Tools';
 
 const sectionResult = Struct.immutable('sections', 'settings');
 const detection = PlatformDetection.detect();

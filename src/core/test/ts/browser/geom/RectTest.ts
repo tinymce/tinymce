@@ -1,7 +1,7 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Rect from 'tinymce/core/geom/Rect';
-import Tools from 'tinymce/core/util/Tools';
+import Rect from 'tinymce/core/api/geom/Rect';
+import Tools from 'tinymce/core/api/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function () {

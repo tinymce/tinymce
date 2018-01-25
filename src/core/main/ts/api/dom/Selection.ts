@@ -9,7 +9,7 @@
  */
 
 import { Compare, Element } from '@ephox/sugar';
-import Env from '../../Env';
+import Env from '../Env';
 import BookmarkManager from './BookmarkManager';
 import CaretPosition from '../../caret/CaretPosition';
 import ControlSelection, { ControlSelection as ControlSelectionType } from './ControlSelection';
@@ -22,7 +22,7 @@ import MultiRange from '../../selection/MultiRange';
 import NormalizeRange from '../../selection/NormalizeRange';
 import SelectionBookmark from '../../selection/SelectionBookmark';
 import SetSelectionContent from '../../selection/SetSelectionContent';
-import Tools from '../../util/Tools';
+import Tools from '../util/Tools';
 import * as ElementSelection from '../../selection/ElementSelection';
 import { moveEndPoint } from 'tinymce/core/selection/SelectionUtils';
 

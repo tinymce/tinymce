@@ -1,6 +1,6 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Env from 'tinymce/core/Env';
+import Env from 'tinymce/core/api/Env';
 import LineUtils from 'tinymce/core/caret/LineUtils';
 import { UnitTest } from '@ephox/bedrock';
 

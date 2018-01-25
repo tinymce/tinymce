@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Rect from 'tinymce/core/geom/Rect';
-import Factory from 'tinymce/core/ui/Factory';
+import Rect from 'tinymce/core/api/geom/Rect';
+import Factory from 'tinymce/core/api/ui/Factory';
 import LoadImage from '../core/LoadImage';
 import CropRect from './CropRect';
 

@@ -4,7 +4,7 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import Env from 'tinymce/core/Env';
+import Env from 'tinymce/core/api/Env';
 import AutolinkPlugin from 'tinymce/plugins/autolink/Plugin';
 import KeyUtils from '../module/test/KeyUtils';
 import ModernTheme from 'tinymce/themes/modern/Theme';

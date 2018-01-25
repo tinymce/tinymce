@@ -3,7 +3,7 @@ import { Chain } from '@ephox/agar';
 import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
 import { Merger } from '@ephox/katamari';
-import EditorManager from 'tinymce/core/EditorManager';
+import EditorManager from 'tinymce/core/api/EditorManager';
 import ViewBlock from '../module/test/ViewBlock';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';

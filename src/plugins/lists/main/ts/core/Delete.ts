@@ -9,8 +9,8 @@
  */
 
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
-import TreeWalker from 'tinymce/core/dom/TreeWalker';
-import VK from 'tinymce/core/util/VK';
+import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
+import VK from 'tinymce/core/api/util/VK';
 import ToggleList from '../actions/ToggleList';
 import Bookmark from './Bookmark';
 import NodeType from './NodeType';

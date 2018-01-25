@@ -8,11 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Promise from '../util/Promise';
+import Promise from '../api/util/Promise';
 import Arr from '../util/Arr';
 import Fun from '../util/Fun';
 import Conversions from './Conversions';
-import Env from '../Env';
+import Env from '../api/Env';
 
 /**
  * Finds images with data uris or blob uris. If data uris are found it will convert them into blob uris.

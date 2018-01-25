@@ -6,7 +6,7 @@ import { Element } from '@ephox/sugar';
 import CaretContainer from 'tinymce/core/caret/CaretContainer';
 import CaretContainerRemove from 'tinymce/core/caret/CaretContainerRemove';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
-import Env from 'tinymce/core/Env';
+import Env from 'tinymce/core/api/Env';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 

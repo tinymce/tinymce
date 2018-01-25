@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DOMUtils from './DOMUtils';
+import DOMUtils from '../api/dom/DOMUtils';
 
 /**
  * Handles paths of nodes within an element.

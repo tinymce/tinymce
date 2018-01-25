@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Tools from '../util/Tools';
+import Tools from '../api/util/Tools';
 
 const each = Tools.each;
 

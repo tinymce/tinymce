@@ -1,12 +1,12 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
-import Editor from 'tinymce/core/Editor';
-import EditorManager from 'tinymce/core/EditorManager';
-import PluginManager from 'tinymce/core/PluginManager';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
+import EditorManager from 'tinymce/core/api/EditorManager';
+import PluginManager from 'tinymce/core/api/PluginManager';
 import ViewBlock from '../module/test/ViewBlock';
-import Delay from 'tinymce/core/util/Delay';
-import Tools from 'tinymce/core/util/Tools';
+import Delay from 'tinymce/core/api/util/Delay';
+import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 

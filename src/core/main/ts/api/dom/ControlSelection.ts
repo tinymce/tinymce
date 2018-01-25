@@ -13,9 +13,9 @@ import { Selectors } from '@ephox/sugar';
 import NodeType from '../../dom/NodeType';
 import RangePoint from '../../dom/RangePoint';
 import Env from '../Env';
-import Delay from '../../util/Delay';
-import Tools from '../../util/Tools';
-import VK from '../../util/VK';
+import Delay from '../util/Delay';
+import Tools from '../util/Tools';
+import VK from '../util/VK';
 import { Selection } from './Selection';
 
 export interface ControlSelection {

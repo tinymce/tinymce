@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import SaxParser from '../html/SaxParser';
+import SaxParser from '../api/html/SaxParser';
 import Zwsp from '../text/Zwsp';
 
 const trimHtml = function (tempAttrs, html) {

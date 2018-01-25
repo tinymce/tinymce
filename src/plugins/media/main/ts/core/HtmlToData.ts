@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Tools from 'tinymce/core/util/Tools';
-import SaxParser from 'tinymce/core/html/SaxParser';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import Tools from 'tinymce/core/api/util/Tools';
+import SaxParser from 'tinymce/core/api/html/SaxParser';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import VideoScript from './VideoScript';
 import Size from './Size';
 

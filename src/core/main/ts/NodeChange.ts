@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Env from './Env';
+import Env from './api/Env';
 import RangeCompare from './selection/RangeCompare';
-import Delay from './util/Delay';
+import Delay from './api/util/Delay';
 
 /**
  * This class handles the nodechange event dispatching both manual and through selection change events.

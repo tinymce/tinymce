@@ -1,8 +1,8 @@
 import { Assertions } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
-import Editor from 'tinymce/core/Editor';
-import EditorManager from 'tinymce/core/EditorManager';
+import Editor from 'tinymce/core/api/Editor';
+import EditorManager from 'tinymce/core/api/EditorManager';
 import EditorSettings from 'tinymce/themes/inlite/alien/EditorSettings';
 import { UnitTest } from '@ephox/bedrock';
 

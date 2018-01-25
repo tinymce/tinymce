@@ -7,7 +7,7 @@ import { Chain } from '@ephox/agar';
 import { Element } from '@ephox/sugar';
 import { Width } from '@ephox/sugar';
 import { Height } from '@ephox/sugar';
-import EditorManager from 'tinymce/core/EditorManager';
+import EditorManager from 'tinymce/core/api/EditorManager';
 import ViewBlock from '../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 

@@ -18,7 +18,7 @@ import { Insert } from '@ephox/sugar';
 import { Remove } from '@ephox/sugar';
 import { Replication } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
-import Tools from 'tinymce/core/util/Tools';
+import Tools from 'tinymce/core/api/util/Tools';
 import Util from '../alien/Util';
 import TableTargets from '../queries/TableTargets';
 import TableDialog from '../ui/TableDialog';

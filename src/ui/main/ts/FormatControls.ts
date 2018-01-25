@@ -11,8 +11,8 @@
 import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { SelectorFind } from '@ephox/sugar';
-import EditorManager from 'tinymce/core/EditorManager';
-import Env from 'tinymce/core/Env';
+import EditorManager from 'tinymce/core/api/EditorManager';
+import Env from 'tinymce/core/api/Env';
 import Control from './Control';
 import FloatPanel from './FloatPanel';
 import Widget from './Widget';

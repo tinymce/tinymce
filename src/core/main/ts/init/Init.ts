@@ -9,12 +9,12 @@
  */
 
 import { Type } from '@ephox/katamari';
-import PluginManager from '../PluginManager';
-import ThemeManager from '../ThemeManager';
-import DOMUtils from '../dom/DOMUtils';
+import PluginManager from '../api/PluginManager';
+import ThemeManager from '../api/ThemeManager';
+import DOMUtils from '../api/dom/DOMUtils';
 import InitContentBody from './InitContentBody';
 import InitIframe from './InitIframe';
-import Tools from '../util/Tools';
+import Tools from '../api/util/Tools';
 
 const DOM = DOMUtils.DOM;
 

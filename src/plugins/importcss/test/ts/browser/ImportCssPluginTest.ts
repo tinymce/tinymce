@@ -3,7 +3,7 @@ import { Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import Factory from 'tinymce/core/ui/Factory';
+import Factory from 'tinymce/core/api/ui/Factory';
 import ImportCssPlugin from 'tinymce/plugins/importcss/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';

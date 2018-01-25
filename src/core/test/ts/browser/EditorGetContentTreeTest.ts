@@ -5,7 +5,7 @@ import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import Serializer from 'tinymce/core/html/Serializer';
+import Serializer from 'tinymce/core/api/html/Serializer';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 

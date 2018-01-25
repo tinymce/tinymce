@@ -8,7 +8,7 @@ import { Arr } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
-import ThemeManager from 'tinymce/core/ThemeManager';
+import ThemeManager from 'tinymce/core/api/ThemeManager';
 import Features from 'tinymce/themes/mobile/features/Features';
 import FormatChangers from 'tinymce/themes/mobile/util/FormatChangers';
 

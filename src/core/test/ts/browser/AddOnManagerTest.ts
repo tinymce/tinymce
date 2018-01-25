@@ -1,8 +1,8 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import AddOnManager from 'tinymce/core/AddOnManager';
-import ScriptLoader from 'tinymce/core/dom/ScriptLoader';
-import PluginManager from 'tinymce/core/PluginManager';
+import AddOnManager from 'tinymce/core/api/AddOnManager';
+import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
+import PluginManager from 'tinymce/core/api/PluginManager';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', function () {

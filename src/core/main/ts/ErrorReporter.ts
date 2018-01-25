@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import AddOnManager from './AddOnManager';
+import AddOnManager from './api/AddOnManager';
 
 /**
  * Various error reporting helper functions.

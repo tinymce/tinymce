@@ -1,5 +1,5 @@
 import { URL } from '@ephox/sand';
-import Factory from 'tinymce/core/ui/Factory';
+import Factory from 'tinymce/core/api/ui/Factory';
 import Settings from '../api/Settings';
 import Utils from '../core/Utils';
 import Uploader from '../core/Uploader';

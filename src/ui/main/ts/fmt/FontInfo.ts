@@ -12,7 +12,7 @@ import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { Node } from '@ephox/sugar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 /**
  * Internal class for computing font size for elements.

@@ -6,7 +6,7 @@ import { Pipeline } from '@ephox/agar';
 import { Focus } from '@ephox/sugar';
 import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
-import EditorManager from 'tinymce/core/EditorManager';
+import EditorManager from 'tinymce/core/api/EditorManager';
 import EditorFocus from 'tinymce/core/focus/EditorFocus';
 import ViewBlock from '../../module/test/ViewBlock';
 import Theme from 'tinymce/themes/modern/Theme';

@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import VK from 'tinymce/core/util/VK';
+import VK from 'tinymce/core/api/util/VK';
 import Indent from '../actions/Indent';
 import Outdent from '../actions/Outdent';
 import Settings from '../api/Settings';

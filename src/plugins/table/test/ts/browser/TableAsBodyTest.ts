@@ -12,7 +12,7 @@ import { Element } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
 import { Selectors } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
-import EditorManager from 'tinymce/core/EditorManager';
+import EditorManager from 'tinymce/core/api/EditorManager';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import { UnitTest } from '@ephox/bedrock';
 

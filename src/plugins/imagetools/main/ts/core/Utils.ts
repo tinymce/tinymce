@@ -10,8 +10,8 @@
 
 import { FileReader } from '@ephox/sand';
 import { XMLHttpRequest } from '@ephox/sand';
-import Promise from 'tinymce/core/util/Promise';
-import Tools from 'tinymce/core/util/Tools';
+import Promise from 'tinymce/core/api/util/Promise';
+import Tools from 'tinymce/core/api/util/Tools';
 
 const isValue = function (obj) {
   return obj !== null && obj !== undefined;

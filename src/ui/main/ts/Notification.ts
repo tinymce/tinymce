@@ -11,7 +11,7 @@
 import Control from './Control';
 import Movable from './Movable';
 import Progress from './Progress';
-import Delay from 'tinymce/core/util/Delay';
+import Delay from 'tinymce/core/api/util/Delay';
 
 /**
  * Creates a notification instance.

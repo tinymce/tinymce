@@ -4,7 +4,7 @@ import { Pipeline } from '@ephox/agar';
 import { Id } from '@ephox/katamari';
 import { Merger } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
-import EditorManager from 'tinymce/core/EditorManager';
+import EditorManager from 'tinymce/core/api/EditorManager';
 import ViewBlock from '../module/test/ViewBlock';
 import PasteBin from 'tinymce/plugins/paste/core/PasteBin';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';

@@ -1,11 +1,11 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import EventUtils from 'tinymce/core/dom/EventUtils';
+import EventUtils from 'tinymce/core/api/dom/EventUtils';
 import UiUtils from '../module/test/UiUtils';
 import ViewBlock from '../module/test/ViewBlock';
 import Api from 'tinymce/ui/Api';
-import Factory from 'tinymce/core/ui/Factory';
-import Tools from 'tinymce/core/util/Tools';
+import Factory from 'tinymce/core/api/ui/Factory';
+import Tools from 'tinymce/core/api/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.ui.TabPanelTest', function () {

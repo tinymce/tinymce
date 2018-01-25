@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import LegacyFilter from './LegacyFilter';
+import LegacyFilter from '../../html/LegacyFilter';
 import Node from './Node';
 import SaxParser from './SaxParser';
 import Schema from './Schema';

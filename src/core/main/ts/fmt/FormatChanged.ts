@@ -10,7 +10,7 @@
 
 import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
-import Tools from '../util/Tools';
+import Tools from '../api/util/Tools';
 
 const each = Tools.each;
 

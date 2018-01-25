@@ -8,8 +8,8 @@ import { PlatformDetection } from '@ephox/sand';
 import * as EditorSettings from 'tinymce/core/EditorSettings';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import Editor from 'tinymce/core/Editor';
-import EditorManager from 'tinymce/core/EditorManager';
+import Editor from 'tinymce/core/api/Editor';
+import EditorManager from 'tinymce/core/api/EditorManager';
 
 UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
   const success = arguments[arguments.length - 2];

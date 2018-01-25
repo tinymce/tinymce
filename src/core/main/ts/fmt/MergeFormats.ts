@@ -10,13 +10,13 @@
 
 import { Fun } from '@ephox/katamari';
 import Bookmarks from '../dom/Bookmarks';
-import ElementUtils from '../dom/ElementUtils';
+import ElementUtils from '../api/dom/ElementUtils';
 import NodeType from '../dom/NodeType';
 import CaretFormat from './CaretFormat';
 import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 import RemoveFormat from './RemoveFormat';
-import Tools from '../util/Tools';
+import Tools from '../api/util/Tools';
 
 const each = Tools.each;
 

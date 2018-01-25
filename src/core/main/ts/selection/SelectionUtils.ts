@@ -17,9 +17,9 @@ import { Element } from '@ephox/sugar';
 import { Node } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
 import NodeType from '../dom/NodeType';
-import Env from 'tinymce/core/Env';
-import TreeWalker from '../dom/TreeWalker';
-import Tools from 'tinymce/core/util/Tools';
+import Env from '../api/Env';
+import TreeWalker from '../api/dom/TreeWalker';
+import Tools from '../api/util/Tools';
 
 const getStartNode = function (rng) {
   const sc = rng.startContainer, so = rng.startOffset;

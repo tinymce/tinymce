@@ -10,7 +10,7 @@
 
 // tslint:disable:no-console
 
-import DomQuery from 'tinymce/core/dom/DomQuery';
+import DomQuery from 'tinymce/core/api/dom/DomQuery';
 
 declare let tinymce: any;
 

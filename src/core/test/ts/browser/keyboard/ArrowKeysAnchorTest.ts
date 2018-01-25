@@ -10,7 +10,7 @@ import { TinyActions } from '@ephox/mcagar';
 import { TinyApis } from '@ephox/mcagar';
 import { TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
-import Env from 'tinymce/core/Env';
+import Env from 'tinymce/core/api/Env';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';

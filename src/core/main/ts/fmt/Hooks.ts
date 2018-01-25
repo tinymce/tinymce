@@ -10,7 +10,7 @@
 
 import Arr from '../util/Arr';
 import NodeType from '../dom/NodeType';
-import $ from '../dom/DomQuery';
+import $ from '../api/dom/DomQuery';
 
 /**
  * Internal class for overriding formatting.

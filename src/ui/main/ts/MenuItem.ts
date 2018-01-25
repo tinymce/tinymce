@@ -9,9 +9,9 @@
  */
 
 import Widget from './Widget';
-import Factory from 'tinymce/core/ui/Factory';
-import Env from 'tinymce/core/Env';
-import Delay from 'tinymce/core/util/Delay';
+import Factory from 'tinymce/core/api/ui/Factory';
+import Env from 'tinymce/core/api/Env';
+import Delay from 'tinymce/core/api/util/Delay';
 
 /**
  * Creates a new menu item.

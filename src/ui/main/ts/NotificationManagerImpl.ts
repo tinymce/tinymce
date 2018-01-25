@@ -9,7 +9,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import Tools from 'tinymce/core/util/Tools';
+import Tools from 'tinymce/core/api/util/Tools';
 import DomUtils from './DomUtils';
 import Notification from './Notification';
 

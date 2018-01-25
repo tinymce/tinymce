@@ -8,12 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Arr from './util/Arr';
-import Uploader from './file/Uploader';
-import ImageScanner from './file/ImageScanner';
+import Arr from '../util/Arr';
+import Uploader from '../file/Uploader';
+import ImageScanner from '../file/ImageScanner';
 import BlobCache from './file/BlobCache';
-import UploadStatus from './file/UploadStatus';
-import ErrorReporter from './ErrorReporter';
+import UploadStatus from '../file/UploadStatus';
+import ErrorReporter from '../ErrorReporter';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.

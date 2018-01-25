@@ -13,8 +13,8 @@ import { Fun } from '@ephox/katamari';
 import { Future } from '@ephox/katamari';
 import { Futures } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
-import Delay from '../util/Delay';
-import Tools from '../util/Tools';
+import Delay from '../api/util/Delay';
+import Tools from '../api/util/Tools';
 
 /**
  * This class handles loading of external stylesheets and fires events when these are loaded.

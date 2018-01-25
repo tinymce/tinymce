@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { RawAssertions } from '@ephox/agar';
 import { Step } from '@ephox/agar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TrimNode from 'tinymce/core/dom/TrimNode';
 import { UnitTest } from '@ephox/bedrock';
 

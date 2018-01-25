@@ -6,7 +6,7 @@ import { UiControls } from '@ephox/agar';
 import { UiFinder } from '@ephox/agar';
 import { Waiter } from '@ephox/agar';
 import { TinyDom } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 const sOpenDialog = function (ui) {
   return GeneralSteps.sequence([

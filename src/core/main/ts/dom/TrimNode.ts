@@ -1,7 +1,7 @@
 import { Element } from '@ephox/sugar';
 import ElementType from './ElementType';
 import NodeType from './NodeType';
-import Tools from '../util/Tools';
+import Tools from '../api/util/Tools';
 
 const surroundedBySpans = function (node) {
   const previousIsSpan = node.previousSibling && node.previousSibling.nodeName === 'SPAN';

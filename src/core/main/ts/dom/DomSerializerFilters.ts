@@ -9,7 +9,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import Entities from '../html/Entities';
+import Entities from '../api/html/Entities';
 
 declare const unescape: any;
 

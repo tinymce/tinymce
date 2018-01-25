@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Delay from 'tinymce/core/util/Delay';
-import I18n from 'tinymce/core/util/I18n';
+import Delay from 'tinymce/core/api/util/Delay';
+import I18n from 'tinymce/core/api/util/I18n';
 import WordCount from '../text/WordCount';
 
 const setup = function (editor) {

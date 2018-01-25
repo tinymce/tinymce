@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Rect from 'tinymce/core/geom/Rect';
+import Rect from 'tinymce/core/api/geom/Rect';
 import Convert from './Convert';
 
 const result = function (rect, position) {

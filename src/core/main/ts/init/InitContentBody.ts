@@ -11,23 +11,23 @@
 import { Insert } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Attr } from '@ephox/sugar';
-import EditorUpload from '../EditorUpload';
+import EditorUpload from '../api/EditorUpload';
 import ForceBlocks from '../ForceBlocks';
 import NodeChange from '../NodeChange';
 import SelectionOverrides from '../SelectionOverrides';
-import UndoManager from '../UndoManager';
+import UndoManager from '../api/UndoManager';
 import Formatter from '../api/Formatter';
 import Serializer from '../api/dom/Serializer';
 import CaretContainerInput from '../caret/CaretContainerInput';
-import DOMUtils from '../dom/DOMUtils';
+import DOMUtils from '../api/dom/DOMUtils';
 import Selection from '../api/dom/Selection';
-import DomParser from '../html/DomParser';
-import Node from '../html/Node';
-import Schema from '../html/Schema';
+import DomParser from '../api/html/DomParser';
+import Node from '../api/html/Node';
+import Schema from '../api/html/Schema';
 import KeyboardOverrides from '../keyboard/KeyboardOverrides';
-import Delay from '../util/Delay';
+import Delay from '../api/util/Delay';
 import Quirks from '../util/Quirks';
-import Tools from '../util/Tools';
+import Tools from '../api/util/Tools';
 
 declare const escape: any;
 

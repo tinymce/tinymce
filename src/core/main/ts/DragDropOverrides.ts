@@ -8,11 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DOMUtils from './dom/DOMUtils';
+import DOMUtils from './api/dom/DOMUtils';
 import MousePosition from './dom/MousePosition';
 import NodeType from './dom/NodeType';
 import Arr from './util/Arr';
-import Delay from './util/Delay';
+import Delay from './api/util/Delay';
 import Fun from './util/Fun';
 
 /**

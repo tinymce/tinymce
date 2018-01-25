@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import EventUtils from 'tinymce/core/dom/EventUtils';
-import EditorManager from 'tinymce/core/EditorManager';
+import EventUtils from 'tinymce/core/api/dom/EventUtils';
+import EditorManager from 'tinymce/core/api/EditorManager';
 import ViewBlock from '../module/test/ViewBlock';
 import Api from 'tinymce/ui/Api';
 import Container from 'tinymce/ui/Container';

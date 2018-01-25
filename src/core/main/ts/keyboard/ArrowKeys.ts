@@ -12,7 +12,7 @@ import { PlatformDetection } from '@ephox/sand';
 import BoundarySelection from './BoundarySelection';
 import CefNavigation from './CefNavigation';
 import MatchKeys from './MatchKeys';
-import VK from '../util/VK';
+import VK from '../api/util/VK';
 
 const executeKeydownOverride = function (editor, caret, evt) {
   const os = PlatformDetection.detect().os;

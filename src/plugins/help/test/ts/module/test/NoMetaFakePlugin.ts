@@ -1,4 +1,4 @@
-import PluginManager from 'tinymce/core/PluginManager';
+import PluginManager from 'tinymce/core/api/PluginManager';
 
 PluginManager.add('nometafake', function () {});
 

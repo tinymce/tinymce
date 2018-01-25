@@ -11,20 +11,20 @@
 import AddOnManager from './AddOnManager';
 import EditorCommands from './EditorCommands';
 import EditorObservable from './EditorObservable';
-import * as EditorSettings from './EditorSettings';
+import * as EditorSettings from '../EditorSettings';
 import Env from './Env';
-import Mode from './Mode';
+import Mode from '../Mode';
 import Shortcuts from './Shortcuts';
 import DOMUtils from './dom/DOMUtils';
 import DomQuery from './dom/DomQuery';
-import TrimHtml from './dom/TrimHtml';
-import EditorFocus from './focus/EditorFocus';
+import TrimHtml from '../dom/TrimHtml';
+import EditorFocus from '../focus/EditorFocus';
 import Serializer from './html/Serializer';
-import Render from './init/Render';
-import Sidebar from './ui/Sidebar';
+import Render from '../init/Render';
+import Sidebar from '../ui/Sidebar';
 import Tools from './util/Tools';
 import URI from './util/URI';
-import Uuid from './util/Uuid';
+import Uuid from '../util/Uuid';
 
 /*jshint scripturl:true */
 

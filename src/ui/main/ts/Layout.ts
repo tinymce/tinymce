@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Class from 'tinymce/core/util/Class';
-import Tools from 'tinymce/core/util/Tools';
+import Class from 'tinymce/core/api/util/Class';
+import Tools from 'tinymce/core/api/util/Tools';
 
 /**
  * Base layout manager class.

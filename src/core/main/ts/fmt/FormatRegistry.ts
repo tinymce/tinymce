@@ -9,7 +9,7 @@
  */
 
 import DefaultFormats from './DefaultFormats';
-import Tools from '../util/Tools';
+import Tools from '../api/util/Tools';
 
 export default function (editor) {
   const formats = {};

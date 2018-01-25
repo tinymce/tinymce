@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
-import Env from 'tinymce/core/Env';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Env from 'tinymce/core/api/Env';
 import NodeType from './NodeType';
 
 const DOM = DOMUtils.DOM;

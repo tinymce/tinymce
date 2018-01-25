@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import DOMUtils from 'tinymce/core/dom/DOMUtils';
-import Factory from 'tinymce/core/ui/Factory';
-import Tools from 'tinymce/core/util/Tools';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Factory from 'tinymce/core/api/ui/Factory';
+import Tools from 'tinymce/core/api/util/Tools';
 import UiContainer from '../alien/UiContainer';
 import Events from '../api/Events';
 import Settings from '../api/Settings';

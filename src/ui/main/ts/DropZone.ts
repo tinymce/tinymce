@@ -9,7 +9,7 @@
  */
 
 import Widget from './Widget';
-import Tools from 'tinymce/core/util/Tools';
+import Tools from 'tinymce/core/api/util/Tools';
 import DomUtils from './DomUtils';
 
 /**

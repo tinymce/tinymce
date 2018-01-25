@@ -1,5 +1,5 @@
 import { Arr, Fun } from '@ephox/katamari';
-import Promise from 'tinymce/core/util/Promise';
+import Promise from 'tinymce/core/api/util/Promise';
 import Utils from './Utils';
 
 const friendlyHttpErrors = [

@@ -17,7 +17,7 @@ import * as EditorSettings from '../EditorSettings';
 import CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import CaretUtils from '../caret/CaretUtils';
-import DOMUtils from '../dom/DOMUtils';
+import DOMUtils from '../api/dom/DOMUtils';
 import NodeType from '../dom/NodeType';
 import * as Bidi from '../text/Bidi';
 
