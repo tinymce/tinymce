@@ -1,7 +1,6 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/dom/DOMUtils';
-import Env from 'tinymce/core/Env';
 import Schema from 'tinymce/core/html/Schema';
 import HtmlUtils from '../../module/test/HtmlUtils';
 import Tools from 'tinymce/core/util/Tools';
@@ -227,7 +226,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
     LegacyUnit.equal(DOM.select('div.test2', 'test').length, 2);
 
     DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>');
-    LegacyUnit.equal(DOM.select('div div', 'test').length, 1, null, Env.webkit); // Issue: http://bugs.webkit.org/show_bug.cgi?id=17461
+    LegacyUnit.equal(DOM.select('div div', 'test').length, 1); // Issue: http://bugs.webkit.org/show_bug.cgi?id=17461
     // alert(DOM.select('div div', 'test').length +","+DOM.get('test').querySelectorAll('div div').length);
 
     DOM.remove('test');

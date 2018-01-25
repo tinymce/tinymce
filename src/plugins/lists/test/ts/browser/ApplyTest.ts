@@ -143,7 +143,7 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function () {
       );
 
       editor.focus();
-      LegacyUnit.setSelection(editor, 'li:nth-child(2)');
+      LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
       LegacyUnit.execCommand(editor, 'InsertOrderedList');
 
       LegacyUnit.equal(editor.getContent(),
@@ -190,7 +190,7 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', function () {
     );
 
     editor.focus();
-    LegacyUnit.setSelection(editor, 'li:nth-child(2)');
+    LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
     LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
     LegacyUnit.equal(editor.getContent(),
