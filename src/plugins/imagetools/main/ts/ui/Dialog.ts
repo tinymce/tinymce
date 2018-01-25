@@ -42,6 +42,8 @@ function open(editor, currentState, resolve, reject) {
     sepiaPanel, colorizePanel, sharpenPanel, embossPanel, gammaPanel, exposurePanel, panels,
     width, height, ratioW, ratioH;
 
+  const reverseIfRtl = (items: any[]) => editor.rtl ? items.reverse() : items;
+
   function recalcSize(e) {
     let widthCtrl, heightCtrl, newWidth, newHeight;
 
@@ -243,11 +245,11 @@ function open(editor, currentState, resolve, reject) {
   };
 
   function createFilterPanel(title, filter) {
-    return createPanel([
+    return createPanel(reverseIfRtl([
       { text: 'Back', onclick: cancel },
       { type: 'spacer', flex: 1 },
       { text: 'Apply', subtype: 'primary', onclick: applyTempState }
-    ]).hide().on('show', function () {
+    ])).hide().on('show', function () {
       disableUndoRedo();
 
       ResultConversions.blobToImageResult(currentState.blob).
@@ -280,7 +282,7 @@ function open(editor, currentState, resolve, reject) {
         });
     }
 
-    return createPanel([
+    return createPanel(reverseIfRtl([
       { text: 'Back', onclick: cancel },
       { type: 'spacer', flex: 1 },
       {
@@ -289,14 +291,14 @@ function open(editor, currentState, resolve, reject) {
         ondragend (e) {
           update(e.value);
         },
-        minValue: min,
-        maxValue: max,
+        minValue: editor.rtl ? max : min,
+        maxValue: editor.rtl ? min : max,
         value,
         previewFilter: floatToPercent
       },
       { type: 'spacer', flex: 1 },
       { text: 'Apply', subtype: 'primary', onclick: applyTempState }
-    ]).hide().on('show', function () {
+    ])).hide().on('show', function () {
       this.find('slider').value(value);
       disableUndoRedo();
     });
@@ -323,34 +325,57 @@ function open(editor, currentState, resolve, reject) {
       });
     }
 
-    return createPanel([
-      { text: 'Back', onclick: cancel },
-      { type: 'spacer', flex: 1 },
-      {
-        type: 'slider', label: 'R', name: 'r', minValue: 0,
-        value: 1, maxValue: 2, ondragend: update, previewFilter: floatToPercent
-      },
-      {
-        type: 'slider', label: 'G', name: 'g', minValue: 0,
-        value: 1, maxValue: 2, ondragend: update, previewFilter: floatToPercent
-      },
-      {
-        type: 'slider', label: 'B', name: 'b', minValue: 0,
-        value: 1, maxValue: 2, ondragend: update, previewFilter: floatToPercent
-      },
-      { type: 'spacer', flex: 1 },
-      { text: 'Apply', subtype: 'primary', onclick: applyTempState }
-    ]).hide().on('show', function () {
-      win.find('#r,#g,#b').value(1);
-      disableUndoRedo();
-    });
+    const min = editor.rtl ? 2 : 0;
+    const max = editor.rtl ? 0 : 2;
+
+    return createPanel(reverseIfRtl([
+        { text: 'Back', onclick: cancel },
+        { type: 'spacer', flex: 1 },
+        {
+          type: 'slider',
+          label: 'R',
+          name: 'r',
+          minValue: min,
+          value: 1,
+          maxValue: max,
+          ondragend: update,
+          previewFilter: floatToPercent
+        },
+        {
+          type: 'slider',
+          label: 'G',
+          name: 'g',
+          minValue: min,
+          value: 1,
+          maxValue: max,
+          ondragend: update,
+          previewFilter: floatToPercent
+        },
+        {
+          type: 'slider',
+          label: 'B',
+          name: 'b',
+          minValue: min,
+          value: 1,
+          maxValue: max,
+          ondragend: update,
+          previewFilter: floatToPercent
+        },
+        { type: 'spacer', flex: 1 },
+        { text: 'Apply', subtype: 'primary', onclick: applyTempState }
+      ]))
+      .hide()
+      .on('show', function () {
+        win.find('#r,#g,#b').value(1);
+        disableUndoRedo();
+      });
   }
 
-  cropPanel = createPanel([
+  cropPanel = createPanel(reverseIfRtl([
     { text: 'Back', onclick: cancel },
     { type: 'spacer', flex: 1 },
     { text: 'Apply', subtype: 'primary', onclick: crop }
-  ]).hide().on('show hide', function (e) {
+  ])).hide().on('show hide', function (e) {
     imagePanel.toggleCropRect(e.type === 'show');
   }).on('show', disableUndoRedo);
 
@@ -361,7 +386,7 @@ function open(editor, currentState, resolve, reject) {
     }
   }
 
-  resizePanel = createPanel([
+  resizePanel = createPanel(reverseIfRtl([
     { text: 'Back', onclick: cancel },
     { type: 'spacer', flex: 1 },
     { type: 'textbox', name: 'w', label: 'Width', size: 4, onkeyup: recalcSize },
@@ -369,7 +394,7 @@ function open(editor, currentState, resolve, reject) {
     { type: 'checkbox', name: 'constrain', text: 'Constrain proportions', checked: true, onchange: toggleConstrain },
     { type: 'spacer', flex: 1 },
     { text: 'Apply', subtype: 'primary', onclick: 'submit' }
-  ]).hide().on('submit', function (e) {
+  ])).hide().on('submit', function (e) {
     const width = parseInt(win.find('#w').value(), 10),
       height = parseInt(win.find('#h').value(), 10);
 
@@ -379,7 +404,7 @@ function open(editor, currentState, resolve, reject) {
     cancel();
   }).on('show', disableUndoRedo);
 
-  flipRotatePanel = createPanel([
+  flipRotatePanel = createPanel(reverseIfRtl([
     { text: 'Back', onclick: cancel },
     { type: 'spacer', flex: 1 },
     { icon: 'fliph', tooltip: 'Flip horizontally', onclick: tempAction(ImageTransformations.flip, 'h') },
@@ -388,7 +413,7 @@ function open(editor, currentState, resolve, reject) {
     { icon: 'rotateright', tooltip: 'Rotate clockwise', onclick: tempAction(ImageTransformations.rotate, 90) },
     { type: 'spacer', flex: 1 },
     { text: 'Apply', subtype: 'primary', onclick: applyTempState }
-  ]).hide().on('show', disableUndoRedo);
+  ])).hide().on('show', disableUndoRedo);
 
   invertPanel = createFilterPanel('Invert', ImageTransformations.invert);
   sharpenPanel = createFilterPanel('Sharpen', ImageTransformations.sharpen);
@@ -404,7 +429,7 @@ function open(editor, currentState, resolve, reject) {
   gammaPanel = createVariableFilterPanel('Gamma', ImageTransformations.gamma, 0, -1, 1);
   exposurePanel = createVariableFilterPanel('Exposure', ImageTransformations.exposure, 1, 0, 2);
 
-  filtersPanel = createPanel([
+  filtersPanel = createPanel(reverseIfRtl([
     { text: 'Back', onclick: cancel },
     { type: 'spacer', flex: 1 },
     { text: 'hue', icon: 'hue', onclick: switchPanel(huePanel) },
@@ -413,9 +438,9 @@ function open(editor, currentState, resolve, reject) {
     { text: 'emboss', icon: 'emboss', onclick: switchPanel(embossPanel) },
     { text: 'exposure', icon: 'exposure', onclick: switchPanel(exposurePanel) },
     { type: 'spacer', flex: 1 }
-  ]).hide();
+  ])).hide();
 
-  mainPanel = createPanel([
+  mainPanel = createPanel(reverseIfRtl([
     { tooltip: 'Crop', icon: 'crop', onclick: switchPanel(cropPanel) },
     { tooltip: 'Resize', icon: 'resize2', onclick: switchPanel(resizePanel) },
     { tooltip: 'Orientation', icon: 'orientation', onclick: switchPanel(flipRotatePanel) },
@@ -426,7 +451,7 @@ function open(editor, currentState, resolve, reject) {
     { tooltip: 'Gamma', icon: 'gamma', onclick: switchPanel(gammaPanel) },
     { tooltip: 'Invert', icon: 'invert', onclick: switchPanel(invertPanel) }
     // {text: 'More', onclick: switchPanel(filtersPanel)}
-  ]);
+  ]));
 
   imagePanel = ImagePanel.create({
     flex: 1,
@@ -436,6 +461,7 @@ function open(editor, currentState, resolve, reject) {
   sidePanel = Factory.create('Container', {
     layout: 'flex',
     direction: 'column',
+    pack: 'start',
     border: '0 1 0 0',
     padding: 5,
     spacing: 5,
@@ -453,7 +479,7 @@ function open(editor, currentState, resolve, reject) {
     direction: 'row',
     align: 'stretch',
     flex: 1,
-    items: [sidePanel, imagePanel]
+    items: reverseIfRtl([sidePanel, imagePanel])
   });
 
   panels = [
@@ -484,10 +510,10 @@ function open(editor, currentState, resolve, reject) {
     minHeight: Math.min(DOMUtils.DOM.getViewPort().h, 650),
     title: 'Edit image',
     items: panels.concat([mainViewContainer]),
-    buttons: [
+    buttons: reverseIfRtl([
       { text: 'Save', name: 'save', subtype: 'primary', onclick: save },
       { text: 'Cancel', onclick: 'close' }
-    ]
+    ])
   });
 
   win.on('close', function () {

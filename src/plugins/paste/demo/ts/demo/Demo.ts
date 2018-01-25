@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/*eslint no-console:0 */
+// tslint:disable:no-console
 
 declare let tinymce: any;
 

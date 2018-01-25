@@ -22,7 +22,7 @@
       "variable-name": false,
       "interface-name": false,
       "ban-types": false,
-      "no-console": false,
+      "no-console": true,
       "no-bitwise": false,
       "no-namespace": false
     },

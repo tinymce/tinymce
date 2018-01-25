@@ -28,6 +28,7 @@ export default function () {
       ]
     },
     handle (format) {
+      // tslint:disable-next-line:no-console
       console.log('firing', format);
     }
   });

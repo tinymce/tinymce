@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.core.util.UriTest', function () {
   const suite = LegacyUnit.createSuite();
 
   const ok = function (value, label?) {
-    console.log(value, label);
+    // console.log(value, label);
     return LegacyUnit.equal(value, true, label);
   };
 

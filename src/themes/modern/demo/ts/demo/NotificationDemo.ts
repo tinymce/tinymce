@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+// tslint:disable:no-console
+
 import { Arr } from '@ephox/katamari';
 
 declare let tinymce: any;
