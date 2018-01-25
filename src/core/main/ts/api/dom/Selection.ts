@@ -12,7 +12,7 @@ import { Compare, Element } from '@ephox/sugar';
 import Env from '../Env';
 import BookmarkManager from './BookmarkManager';
 import CaretPosition from '../../caret/CaretPosition';
-import ControlSelection, { ControlSelection as ControlSelectionType } from './ControlSelection';
+import ControlSelection from './ControlSelection';
 import ScrollIntoView from '../../dom/ScrollIntoView';
 import EditorFocus from '../../focus/EditorFocus';
 import CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
@@ -58,7 +58,7 @@ const isValidRange = function (rng: Range) {
 
 interface EditorSelection {
   bookmarkManager: any;
-  controlSelection: ControlSelectionType;
+  controlSelection: ControlSelection;
   dom: any;
   win: Window;
   serializer: any;
@@ -104,7 +104,7 @@ interface EditorSelection {
  * @param {tinymce.Editor} editor Editor instance of the selection.
  */
 const Selection = function (dom, win: Window, serializer, editor): EditorSelection {
-  let bookmarkManager, controlSelection: ControlSelectionType;
+  let bookmarkManager, controlSelection: ControlSelection;
   let selectedRange, explicitRange, selectorChangedData;
 
   /**
