@@ -22,7 +22,7 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', function () {
     );
 
     editor.focus();
-    LegacyUnit.setSelection(editor, 'li');
+    LegacyUnit.setSelection(editor, 'li', 0);
     LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
     LegacyUnit.equal(editor.getContent(),
@@ -41,7 +41,7 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', function () {
     );
 
     editor.focus();
-    LegacyUnit.setSelection(editor, 'li');
+    LegacyUnit.setSelection(editor, 'li', 0);
     LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
     LegacyUnit.equal(editor.getContent(),
@@ -64,7 +64,7 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', function () {
     );
 
     editor.focus();
-    LegacyUnit.setSelection(editor, 'li');
+    LegacyUnit.setSelection(editor, 'li', 0);
     LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
     LegacyUnit.equal(editor.getContent(),

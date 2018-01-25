@@ -331,7 +331,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
     LegacyUnit.equal(lastScope === scope, true, 'Scope is not custom scope');
 
     currentValue = 'b';
-    LegacyUnit.equal(editor.queryCommandValue('CustomCommand2'), 'b', true);
+    LegacyUnit.equal(editor.queryCommandValue('CustomCommand2'), 'b');
     LegacyUnit.equal(lastScope === editor, true, 'Scope is not editor');
   });
 

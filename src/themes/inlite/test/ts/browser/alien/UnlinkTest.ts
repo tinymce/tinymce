@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.alien.UnlinkTest', function () {
         tinyApis.sSetContent(inputHtml),
         tinyApis.sSetSelection(startPath, startOffset, finishPath, finishOffset),
         sUnlinkSelection(editor),
-        tinyApis.sAssertContent(expectedHtml, 'Should match expected anchor less html')
+        tinyApis.sAssertContent(expectedHtml)
       ]);
     };
 
