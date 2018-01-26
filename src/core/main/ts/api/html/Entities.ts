@@ -196,7 +196,7 @@ const encodeNamed = (text: string, attr?: boolean, entities?: EntitiesMap) => {
 const getEncodeFunc = (name: string, entities?: EntitiesMap | string) => {
   const entitiesMap = buildEntitiesLookup(entities) || namedEntities;
 
-  const encodeNamedAndNumeric = function (text, attr) {
+  const encodeNamedAndNumeric = (text: string, attr?: boolean): string => {
     return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
       if (baseEntities[chr] !== undefined) {
         return baseEntities[chr];

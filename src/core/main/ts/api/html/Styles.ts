@@ -27,6 +27,8 @@
  * @version 3.4
  */
 
+import Schema from './Schema';
+
 export interface Styles { [s: string]: string; }
 
 const toHex = (match: string, r: string, g: string, b: string) => {
@@ -39,7 +41,7 @@ const toHex = (match: string, r: string, g: string, b: string) => {
   return '#' + hex(r) + hex(g) + hex(b);
 };
 
-export default function (settings?, schema?) {
+export default function (settings?, schema?: Schema) {
   /*jshint maxlen:255 */
   /*eslint max-len:0 */
   const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;

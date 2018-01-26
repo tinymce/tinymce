@@ -55,18 +55,18 @@ const parseHtml = function (htmlParser, dom, html, args) {
   return rootNode;
 };
 
-const serializeNode = function (settings, schema, node) {
+const serializeNode = function (settings, schema: Schema, node) {
   const htmlSerializer = Serializer(settings, schema);
   return htmlSerializer.serialize(node);
 };
 
-const toHtml = function (editor, settings, schema, rootNode, args) {
+const toHtml = function (editor, settings, schema: Schema, rootNode, args) {
   const content = serializeNode(settings, schema, rootNode);
   return postProcess(editor, args, content);
 };
 
 export default function (settings, editor) {
-  let dom, schema, htmlParser;
+  let dom, schema: Schema, htmlParser;
   const tempAttrs = ['data-mce-selected'];
 
   dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;

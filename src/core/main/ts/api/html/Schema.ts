@@ -10,6 +10,53 @@
 
 import Tools from '../util/Tools';
 
+// tslint:disable:interface-over-type-literal
+
+interface Schema {
+  children: {};
+  elements: { [name: string]: ElementRule; };
+  getValidStyles: () => SchemaMap;
+  getValidClasses: () => SchemaMap;
+  getBlockElements: () => SchemaMap;
+  getInvalidStyles: () => SchemaMap;
+  getShortEndedElements: () => SchemaMap;
+  getTextBlockElements: () => SchemaMap;
+  getTextInlineElements: () => SchemaMap;
+  getBoolAttrs: () => SchemaMap;
+  getElementRule: (name: string) => ElementRule;
+  getSelfClosingElements: () => SchemaMap;
+  getNonEmptyElements: () => SchemaMap;
+  getMoveCaretBeforeOnEnterElements: () => SchemaMap;
+  getWhiteSpaceElements: () => SchemaMap;
+  getSpecialElements: () => SchemaRegExpMap;
+  isValidChild: (name: string, child: string) => boolean;
+  isValid: (name: string, attr?: string) => boolean;
+  getCustomElements: () => SchemaMap;
+  addValidElements: (validElements: string) => void;
+  setValidElements: (validElements: string) => void;
+  addCustomElements: (customElements: string) => void;
+  addValidChildren: (validChildren: any) => void;
+}
+
+export type Attribute = {
+  required?: boolean;
+  defaultValue?: string;
+  forcedValue?: string;
+  validValues?: any;
+};
+
+export type ElementRule = {
+  attributes: Attribute[];
+  attributesOrder: string[];
+  attributePatterns?: RegExp[];
+  paddEmpty?: boolean;
+  removeEmpty?: boolean;
+  removeEmptyAttrs?: boolean;
+};
+
+export type SchemaMap = { [name: string]: {}; };
+export type SchemaRegExpMap = { [name: string]: RegExp; };
+
 /**
  * Schema validator class.
  *
@@ -336,8 +383,7 @@ const compileElementMap = function (value, mode?) {
   return styles;
 };
 
-export default function (settings?) {
-  const self: any = {};
+function Schema(settings?) {
   let elements = {};
   const children = {};
   let patternElements = [];
@@ -346,7 +392,7 @@ export default function (settings?) {
   let schemaItems;
   let whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap, validClasses;
   let blockElementsMap, nonEmptyElementsMap, moveCaretBeforeOnEnterElementsMap, textBlockElementsMap, textInlineElementsMap;
-  const customElementsMap = {}, specialElements = {};
+  const customElementsMap = {}, specialElements = {} as SchemaRegExpMap;
 
   // Creates an lookup table map object for the specified option or the default value
   const createLookupTable = function (option, defaultValue?, extendWith?) {
@@ -408,13 +454,11 @@ export default function (settings?) {
   });
 
   // Converts a wildcard expression string to a regexp for example *a will become /.*a/.
-  const patternToRegExp = function (str) {
-    return new RegExp('^' + str.replace(/([?+*])/g, '.$1') + '$');
-  };
+  const patternToRegExp = (str) => new RegExp('^' + str.replace(/([?+*])/g, '.$1') + '$');
 
   // Parses the specified valid_elements string and adds to the current rules
   // This function is a bit hard to read since it's heavily optimized for speed
-  const addValidElements = function (validElements) {
+  const addValidElements = (validElements: string) => {
     let ei, el, ai, al, matches, element, attr, attrData, elementName, attrName, attrType, attributes, attributesOrder,
       prefix, outputName, globalAttributes, globalAttributesOrder, key, value;
     const elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)\])?$/,
@@ -563,7 +607,7 @@ export default function (settings?) {
     }
   };
 
-  const setValidElements = function (validElements) {
+  const setValidElements = function (validElements: string) {
     elements = {};
     patternElements = [];
 
@@ -575,7 +619,7 @@ export default function (settings?) {
   };
 
   // Adds custom non HTML elements to the schema
-  const addCustomElements = function (customElements) {
+  const addCustomElements = function (customElements: string) {
     const customElementRegExp = /^(~)?(.+)$/;
 
     if (customElements) {
@@ -655,7 +699,7 @@ export default function (settings?) {
     }
   };
 
-  const getElementRule = function (name) {
+  const getElementRule = (name: string): ElementRule => {
     let element = elements[name], i;
 
     // Exact match found
@@ -773,7 +817,6 @@ export default function (settings?) {
    * @field children
    * @type Object
    */
-  self.children = children;
 
   /**
    * Name/value map object with valid styles for each element.
@@ -781,9 +824,7 @@ export default function (settings?) {
    * @method getValidStyles
    * @type Object
    */
-  self.getValidStyles = function () {
-    return validStyles;
-  };
+  const getValidStyles = (): SchemaMap => validStyles;
 
   /**
    * Name/value map object with valid styles for each element.
@@ -791,9 +832,7 @@ export default function (settings?) {
    * @method getInvalidStyles
    * @type Object
    */
-  self.getInvalidStyles = function () {
-    return invalidStyles;
-  };
+  const getInvalidStyles = (): SchemaMap => invalidStyles;
 
   /**
    * Name/value map object with valid classes for each element.
@@ -801,9 +840,7 @@ export default function (settings?) {
    * @method getValidClasses
    * @type Object
    */
-  self.getValidClasses = function () {
-    return validClasses;
-  };
+  const getValidClasses = (): SchemaMap => validClasses;
 
   /**
    * Returns a map with boolean attributes.
@@ -811,9 +848,7 @@ export default function (settings?) {
    * @method getBoolAttrs
    * @return {Object} Name/value lookup map for boolean attributes.
    */
-  self.getBoolAttrs = function () {
-    return boolAttrMap;
-  };
+  const getBoolAttrs = (): SchemaMap => boolAttrMap;
 
   /**
    * Returns a map with block elements.
@@ -821,9 +856,7 @@ export default function (settings?) {
    * @method getBlockElements
    * @return {Object} Name/value lookup map for block elements.
    */
-  self.getBlockElements = function () {
-    return blockElementsMap;
-  };
+  const getBlockElements = (): SchemaMap => blockElementsMap;
 
   /**
    * Returns a map with text block elements. Such as: p,h1-h6,div,address
@@ -831,9 +864,7 @@ export default function (settings?) {
    * @method getTextBlockElements
    * @return {Object} Name/value lookup map for block elements.
    */
-  self.getTextBlockElements = function () {
-    return textBlockElementsMap;
-  };
+  const getTextBlockElements = (): SchemaMap => textBlockElementsMap;
 
   /**
    * Returns a map of inline text format nodes for example strong/span or ins.
@@ -841,9 +872,7 @@ export default function (settings?) {
    * @method getTextInlineElements
    * @return {Object} Name/value lookup map for text format elements.
    */
-  self.getTextInlineElements = function () {
-    return textInlineElementsMap;
-  };
+  const getTextInlineElements = (): SchemaMap => textInlineElementsMap;
 
   /**
    * Returns a map with short ended elements such as BR or IMG.
@@ -851,9 +880,7 @@ export default function (settings?) {
    * @method getShortEndedElements
    * @return {Object} Name/value lookup map for short ended elements.
    */
-  self.getShortEndedElements = function () {
-    return shortEndedElementsMap;
-  };
+  const getShortEndedElements = (): SchemaMap => shortEndedElementsMap;
 
   /**
    * Returns a map with self closing tags such as <li>.
@@ -861,9 +888,7 @@ export default function (settings?) {
    * @method getSelfClosingElements
    * @return {Object} Name/value lookup map for self closing tags elements.
    */
-  self.getSelfClosingElements = function () {
-    return selfClosingElementsMap;
-  };
+  const getSelfClosingElements = (): SchemaMap => selfClosingElementsMap;
 
   /**
    * Returns a map with elements that should be treated as contents regardless if it has text
@@ -872,9 +897,7 @@ export default function (settings?) {
    * @method getNonEmptyElements
    * @return {Object} Name/value lookup map for non empty elements.
    */
-  self.getNonEmptyElements = function () {
-    return nonEmptyElementsMap;
-  };
+  const getNonEmptyElements = (): SchemaMap => nonEmptyElementsMap;
 
   /**
    * Returns a map with elements that the caret should be moved in front of after enter is
@@ -883,9 +906,7 @@ export default function (settings?) {
    * @method getMoveCaretBeforeOnEnterElements
    * @return {Object} Name/value lookup map for elements to place the caret in front of.
    */
-  self.getMoveCaretBeforeOnEnterElements = function () {
-    return moveCaretBeforeOnEnterElementsMap;
-  };
+  const getMoveCaretBeforeOnEnterElements = (): SchemaMap => moveCaretBeforeOnEnterElementsMap;
 
   /**
    * Returns a map with elements where white space is to be preserved like PRE or SCRIPT.
@@ -893,9 +914,7 @@ export default function (settings?) {
    * @method getWhiteSpaceElements
    * @return {Object} Name/value lookup map for white space elements.
    */
-  self.getWhiteSpaceElements = function () {
-    return whiteSpaceElementsMap;
-  };
+  const getWhiteSpaceElements = (): SchemaMap => whiteSpaceElementsMap;
 
   /**
    * Returns a map with special elements. These are elements that needs to be parsed
@@ -905,9 +924,7 @@ export default function (settings?) {
    * @method getSpecialElements
    * @return {Object} Name/value lookup map for special elements.
    */
-  self.getSpecialElements = function () {
-    return specialElements;
-  };
+  const getSpecialElements = (): SchemaRegExpMap => specialElements;
 
   /**
    * Returns true/false if the specified element and it's child is valid or not
@@ -918,9 +935,8 @@ export default function (settings?) {
    * @param {String} child Element child to verify.
    * @return {Boolean} True/false if the element is a valid child of the specified parent.
    */
-  self.isValidChild = function (name, child) {
+  const isValidChild = (name: string, child: string): boolean => {
     const parent = children[name.toLowerCase()];
-
     return !!(parent && parent[child.toLowerCase()]);
   };
 
@@ -933,7 +949,7 @@ export default function (settings?) {
    * @param {String} attr Optional attribute name to check for.
    * @return {Boolean} True/false if the element and attribute is valid.
    */
-  self.isValid = function (name, attr) {
+  const isValid = (name: string, attr?: string): boolean => {
     let attrPatterns, i;
     const rule = getElementRule(name);
 
@@ -972,7 +988,6 @@ export default function (settings?) {
    * @param {String} name Element name to check for.
    * @return {Object} Element object or undefined if the element isn't valid.
    */
-  self.getElementRule = getElementRule;
 
   /**
    * Returns an map object of all custom elements.
@@ -980,9 +995,7 @@ export default function (settings?) {
    * @method getCustomElements
    * @return {Object} Name/value map object of all custom elements.
    */
-  self.getCustomElements = function () {
-    return customElementsMap;
-  };
+  const getCustomElements = (): SchemaMap => customElementsMap;
 
   /**
    * Parses a valid elements string and adds it to the schema. The valid elements
@@ -992,7 +1005,6 @@ export default function (settings?) {
    * @method addValidElements
    * @param {String} valid_elements String in the valid elements format to be parsed.
    */
-  self.addValidElements = addValidElements;
 
   /**
    * Parses a valid elements string and sets it to the schema. The valid elements
@@ -1002,7 +1014,6 @@ export default function (settings?) {
    * @method setValidElements
    * @param {String} valid_elements String in the valid elements format to be parsed.
    */
-  self.setValidElements = setValidElements;
 
   /**
    * Adds custom non HTML elements to the schema.
@@ -1010,7 +1021,6 @@ export default function (settings?) {
    * @method addCustomElements
    * @param {String} custom_elements Comma separated list of custom elements to add.
    */
-  self.addCustomElements = addCustomElements;
 
   /**
    * Parses a valid children string and adds them to the schema structure. The valid children
@@ -1019,9 +1029,32 @@ export default function (settings?) {
    * @method addValidChildren
    * @param {String} valid_children Valid children elements string to parse
    */
-  self.addValidChildren = addValidChildren;
 
-  self.elements = elements;
-
-  return self;
+  return {
+    children,
+    elements,
+    getValidStyles,
+    getValidClasses,
+    getBlockElements,
+    getInvalidStyles,
+    getShortEndedElements,
+    getTextBlockElements,
+    getTextInlineElements,
+    getBoolAttrs,
+    getElementRule,
+    getSelfClosingElements,
+    getNonEmptyElements,
+    getMoveCaretBeforeOnEnterElements,
+    getWhiteSpaceElements,
+    getSpecialElements,
+    isValidChild,
+    isValid,
+    getCustomElements,
+    addValidElements,
+    setValidElements,
+    addCustomElements,
+    addValidChildren
+  };
 }
+
+export default Schema;
