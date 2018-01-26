@@ -52,7 +52,7 @@ module.exports = function (grunt) {
         core: {
           options: {
             treeshake: true,
-            moduleName: 'tinymce',
+            name: 'tinymce',
             format: 'iife',
             banner: '(function () {',
             footer: '})()',
@@ -78,7 +78,7 @@ module.exports = function (grunt) {
         return {
           options: {
             treeshake: true,
-            moduleName: name,
+            name: name,
             format: 'iife',
             banner: '(function () {',
             footer: '})()',
@@ -99,7 +99,7 @@ module.exports = function (grunt) {
         return {
           options: {
             treeshake: true,
-            moduleName: name,
+            name: name,
             format: 'iife',
             banner: '(function () {',
             footer: '})()',
@@ -783,6 +783,7 @@ module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
   grunt.loadTasks('tools/tasks');
   grunt.loadNpmTasks('@ephox/bedrock');
+  grunt.loadNpmTasks('@ephox/swag');
   grunt.loadNpmTasks('grunt-tslint');
 
   grunt.registerTask('prod', [

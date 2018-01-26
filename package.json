@@ -43,7 +43,6 @@
     "grunt-contrib-watch": "~1.0.0",
     "grunt-nuget-pack": "^0.0.6",
     "grunt-replace": "^1.0.1",
-    "grunt-rollup": "^8.2.0",
     "grunt-shell": "^2.1.0",
     "grunt-tslint": "^5.0.1",
     "grunt-webpack": "^3.0.2",
