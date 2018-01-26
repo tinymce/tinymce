@@ -10,7 +10,7 @@ import { Visibility } from '@ephox/sugar';
 
 
 
-export default <any> function (editor) {
+export default function (editor) {
   var dialogRoot = Element.fromDom(document.body);
   var toolstripRoot = Element.fromDom(editor.getContainer());
   var editorRoot = Element.fromDom(editor.getBody());
@@ -27,63 +27,63 @@ export default <any> function (editor) {
 
   var cEditorRoot = Chain.inject(editorRoot);
 
-  var cFindIn = function (cRoot, selector) {
+  var cFindIn = function (cRoot, selector: string) {
     return Chain.fromChains([
       cRoot,
       UiFinder.cFindIn(selector)
     ]);
   };
 
-  var sClickOnToolbar = function (label, selector) {
+  var sClickOnToolbar = function (label: string, selector: string) {
     return Chain.asStep({}, [
       cFindIn(cGetToolbarRoot, selector),
       Mouse.cClick
     ]);
   };
 
-  var sClickOnMenu = function (label, selector) {
+  var sClickOnMenu = function (label: string, selector: string) {
     return Chain.asStep({}, [
       cFindIn(cGetMenuRoot, selector),
       Mouse.cClick
     ]);
   };
 
-  var sClickOnUi = function (label, selector) {
+  var sClickOnUi = function (label: string, selector: string) {
     return Chain.asStep({}, [
       cFindIn(cDialogRoot, selector),
       Mouse.cClick
     ]);
   };
 
-  var sWaitForUi = function (label, selector) {
+  var sWaitForUi = function (label: string, selector: string) {
     return Chain.asStep({}, [
       cWaitForUi(label, selector)
     ]);
   };
 
-  var sWaitForPopup = function (label, selector) {
+  var sWaitForPopup = function (label: string, selector: string) {
     return Chain.asStep({}, [
       cWaitForPopup(label, selector)
     ]);
   };
 
   var cWaitForState = function (hasState) {
-    return function (label, selector) {
+    return function (label: string, selector: string) {
       return Chain.fromChainsWith(dialogRoot, [
         UiFinder.cWaitForState(label, selector, hasState)
       ]);
     };
   };
 
-  var cWaitForPopup = function (label, selector) {
+  var cWaitForPopup = function (label: string, selector: string) {
     return cWaitForState(Visibility.isVisible)(label, selector);
   };
 
-  var cWaitForUi = function (label, selector) {
+  var cWaitForUi = function (label: string, selector: string) {
     return cWaitForState(Fun.constant(true))(label, selector);
   };
 
-  var cTriggerContextMenu = function (label, target, menu) {
+  var cTriggerContextMenu = function (label: string, target, menu) {
     return Chain.fromChains([
       cFindIn(cEditorRoot, target),
       Mouse.cContextMenu,
@@ -117,7 +117,7 @@ export default <any> function (editor) {
     });
   };
 
-  var sFillDialogWith = function (data, selector) {
+  var sFillDialogWith = function (data, selector: string) {
     return Chain.asStep({}, [
       cFindIn(cDialogRoot, selector),
       cFillDialogWith(data)
@@ -131,7 +131,7 @@ export default <any> function (editor) {
     ]);
   };
 
-  var sSubmitDialog = function (selector) {
+  var sSubmitDialog = function (selector: string) {
     return Chain.asStep({}, [
       cFindIn(cDialogRoot, selector),
       cSubmitDialog

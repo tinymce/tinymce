@@ -16,7 +16,7 @@ var fromRange = function (rng) {
   });
 };
 
-export default <any> {
+export default {
   fromDom: fromDom,
   fromRange: fromRange
 };

@@ -7,7 +7,7 @@ import Jsc from '@ephox/wrap-jsverify';
 
 
 
-export default <any> function (editor) {
+export default function (editor) {
 
   // We can't just generate a scenario because normalisation is going to cause issues 
   // with getting a selection.

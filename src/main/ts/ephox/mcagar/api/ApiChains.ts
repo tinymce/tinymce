@@ -6,6 +6,7 @@ import TinySelections from '../selection/TinySelections';
 import { Hierarchy } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { Html } from '@ephox/sugar';
+import { Presence } from './TinyApis';
 
 var lazyBody = function (editor) {
   return Element.fromDom(editor.getBody());
@@ -15,7 +16,7 @@ var cNodeChanged = Chain.op(function (editor) {
   editor.nodeChanged();
 });
 
-var cSetContent = function (html) {
+var cSetContent = function (html: string) {
   return Chain.op(function (editor) {
     editor.setContent(html);
   });
@@ -26,7 +27,7 @@ var cSetSelectionFrom = function (spec) {
   return cSetSelection(path.startPath(), path.soffset(), path.finishPath(), path.foffset());
 };
 
-var cSetCursor = function (elementPath, offset) {
+var cSetCursor = function (elementPath: number[], offset: number) {
   return cSetSelection(elementPath, offset, elementPath, offset);
 };
 
@@ -38,19 +39,19 @@ var cSetSelection = function (startPath, soffset, finishPath, foffset) {
   });
 };
 
-var cSetSetting = function (key, value) {
+var cSetSetting = function (key: string, value) {
   return Chain.op(function (editor) {
     editor.settings[key] = value;
   });
 };
 
-var cDeleteSetting = function (key) {
+var cDeleteSetting = function (key: string) {
   return Chain.op(function (editor) {
     delete editor.settings[key];
   });
 };
 
-var cSelect = function (selector, path) {
+var cSelect = function (selector: string, path: number[]) {
   return Chain.op(function (editor) {
     var container = UiFinder.findIn(lazyBody(editor), selector).getOrDie();
     var target = Cursors.calculateOne(container, path);
@@ -62,19 +63,19 @@ var cGetContent = Chain.mapper(function (editor) {
   return editor.getContent();
 });
 
-var cExecCommand = function (command, value) {
+var cExecCommand = function (command: string, value?) {
   return Chain.op(function (editor) {
     editor.execCommand(command, false, value);
   });
 };
 
-var cAssertContent = function (expected) {
+var cAssertContent = function (expected: string) {
   return Chain.op(function (editor) {
     Assertions.assertHtml('Checking TinyMCE content', expected, editor.getContent());
   });
 };
 
-var cAssertContentPresence = function (expected) {
+var cAssertContentPresence = function (expected: Presence) {
   return Chain.op(function (editor) {
     Assertions.assertPresence(
       'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
@@ -94,7 +95,7 @@ var cAssertContentStructure = function (expected) {
   });
 };
 
-var assertPath = function (label, root, expPath, expOffset, actElement, actOffset) {
+var assertPath = function (label, root, expPath: number[], expOffset: number, actElement, actOffset: number) {
   var expected = Cursors.calculateOne(root, expPath);
   var message = function () {
     var actual = Element.fromDom(actElement);
@@ -105,7 +106,7 @@ var assertPath = function (label, root, expPath, expOffset, actElement, actOffse
   Assertions.assertEq('Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
 };
 
-var cAssertSelection = function (startPath, soffset, finishPath, foffset) {
+var cAssertSelection = function (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
   return Chain.op(function (editor) {
     var actual = editor.selection.getRng();
     assertPath('start', lazyBody(editor), startPath, soffset, actual.startContainer, actual.startOffset);
@@ -117,7 +118,7 @@ var cFocus = Chain.op(function (editor) {
   editor.focus();
 });
 
-export default <any> {
+export default {
   cSetContent: cSetContent,
   cGetContent: cGetContent,
   cSetSelectionFrom: cSetSelectionFrom,
