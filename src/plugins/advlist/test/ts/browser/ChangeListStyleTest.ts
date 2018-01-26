@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ChangeListStyleTest', function
     Pipeline.async({}, [
       Logger.t('ul to alpha, cursor only in parent', GeneralSteps.sequence([
         tinyApis.sSetContent('<ul><li>a</li><ul><li>b</li></ul></ul>'),
-        tinyApis.sSetCursor([0, 0, 0], 0, [0, 0, 0], 0),
+        tinyApis.sSetCursor([0, 0, 0], 0),
         tinyUi.sClickOnToolbar('click numlist button', 'div[aria-label="Numbered list"] button.mce-open'),
         tinyUi.sClickOnUi('click lower alpha item', 'div[role="menuitem"] span:contains("Lower Alpha")'),
         tinyApis.sAssertContent('<ol style="list-style-type: lower-alpha;"><li>a</li><ul><li>b</li></ul></ol>'),
@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ChangeListStyleTest', function
       ])),
       Logger.t('alpha to ol, cursor only in parent', GeneralSteps.sequence([
         tinyApis.sSetContent('<ol style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ol>'),
-        tinyApis.sSetCursor([0, 0, 0], 0, [0, 0, 0], 0),
+        tinyApis.sSetCursor([0, 0, 0], 0),
         tinyUi.sClickOnToolbar('click numlist button', 'div[aria-label="Numbered list"] button.mce-open'),
         tinyUi.sClickOnUi('click lower alpha item', 'div[role="menuitem"] span:contains("Default")'),
         tinyApis.sAssertContent('<ol><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ol>'),
@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ChangeListStyleTest', function
       ])),
       Logger.t('alpha to ul, cursor only in parent', GeneralSteps.sequence([
         tinyApis.sSetContent('<ol style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ol>'),
-        tinyApis.sSetCursor([0, 0, 0], 0, [0, 0, 0], 0),
+        tinyApis.sSetCursor([0, 0, 0], 0),
         tinyUi.sClickOnToolbar('click numlist button', 'div[aria-label="Bullet list"] > button'),
         tinyApis.sAssertContent('<ul><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ul>'),
         tinyApis.sAssertSelection([0, 0, 0], 0, [0, 0, 0], 0)
