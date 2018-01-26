@@ -1,5 +1,5 @@
 import { Element } from '@ephox/sugar';
-import ElementType from './ElementType';
+import * as ElementType from './ElementType';
 import NodeType from './NodeType';
 import Tools from '../api/util/Tools';
 

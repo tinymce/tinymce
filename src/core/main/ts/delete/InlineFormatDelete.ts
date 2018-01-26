@@ -15,7 +15,7 @@ import { Traverse } from '@ephox/sugar';
 import CaretPosition from '../caret/CaretPosition';
 import DeleteElement from './DeleteElement';
 import DeleteUtils from './DeleteUtils';
-import ElementType from '../dom/ElementType';
+import * as ElementType from '../dom/ElementType';
 import Parents from '../dom/Parents';
 import CaretFormat from '../fmt/CaretFormat';
 

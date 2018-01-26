@@ -33,9 +33,9 @@ const paddEmptyNode = function (settings, args, blockElements, node) {
   const brPreferred = settings.padd_empty_with_br || args.insert;
 
   if (brPreferred && blockElements[node.name]) {
-    node.empty().append(new Node('br', '1')).shortEnded = true;
+    node.empty().append(new Node('br', 1)).shortEnded = true;
   } else {
-    node.empty().append(new Node('#text', '3')).value = '\u00a0';
+    node.empty().append(new Node('#text', 3)).value = '\u00a0';
   }
 };
 
@@ -431,7 +431,7 @@ export default function (settings?, schema?) {
       return output;
     };
 
-    parser = new SaxParser({
+    parser = SaxParser({
       validate,
       allow_script_urls: settings.allow_script_urls,
       allow_conditional_comments: settings.allow_conditional_comments,

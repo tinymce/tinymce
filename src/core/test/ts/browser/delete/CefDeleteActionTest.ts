@@ -249,6 +249,32 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', function (
       ]))
     ])),
 
+    Logger.t('Backspace/delete into cef table cell should not remove the cell', GeneralSteps.sequence([
+      Logger.t('Should be no action since it is a backspace before cef to text', Chain.asStep(viewBlock, [
+        cSetHtml('<table><tbody><tr><td contenteditable="false">1</td><td>2</td></tr></tbody></table>'),
+        cReadAction(false, [0, 0, 0, 1, 0], 0),
+        cAssertActionNone
+      ])),
+      Logger.t('Should be no action since it is a backspace before cef to text', Chain.asStep(viewBlock, [
+        cSetHtml('<table><tbody><tr><td>1</td><td contenteditable="false">2</td></tr></tbody></table>'),
+        cReadAction(true, [0, 0, 0, 0, 0], 1),
+        cAssertActionNone
+      ]))
+    ])),
+
+    Logger.t('Backspace/delete into cef list item should not remove the item', GeneralSteps.sequence([
+      Logger.t('Should be no action since it is a backspace before cef to text', Chain.asStep(viewBlock, [
+        cSetHtml('<ul><li contenteditable="false">1</li><li>2</li></ul>'),
+        cReadAction(false, [0, 1, 0], 0),
+        cAssertActionNone
+      ])),
+      Logger.t('Should be no action since it is a backspace before cef to text', Chain.asStep(viewBlock, [
+        cSetHtml('<ul><li>1</li><li contenteditable="false">2</li></ul>'),
+        cReadAction(true, [0, 0, 0], 1),
+        cAssertActionNone
+      ]))
+    ])),
+
     Logger.t('Should not produce actions if cefs are inline between blocks', GeneralSteps.sequence([
       Logger.t('Should be no action since delete from after inline cef to before inline cef is handled by merge', Chain.asStep(viewBlock, [
         cSetHtml('<p><b contenteditable="false">a</b></p><p><b contenteditable="false">b</b></p>'),

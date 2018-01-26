@@ -10,6 +10,7 @@
 
 import Writer from './Writer';
 import Schema from './Schema';
+import Node from './Node';
 
 /**
  * This class is used to serialize down the DOM tree into a string using a Writer instance.
@@ -21,14 +22,11 @@ import Schema from './Schema';
  * @version 3.4
  */
 
-export default function (settings?, schema?) {
-  const self: any = {}, writer = Writer(settings);
+export default function (settings?, schema = Schema()) {
+  const writer = Writer(settings);
 
   settings = settings || {};
   settings.validate = 'validate' in settings ? settings.validate : true;
-
-  self.schema = schema = schema || Schema();
-  self.writer = writer;
 
   /**
    * Serializes the specified node into a string.
@@ -39,7 +37,7 @@ export default function (settings?, schema?) {
    * @param {tinymce.html.Node} node Node instance to serialize.
    * @return {String} String with HTML based on DOM tree.
    */
-  self.serialize = function (node) {
+  const serialize = (node: Node) => {
     let handlers, validate;
 
     validate = settings.validate;
@@ -82,7 +80,7 @@ export default function (settings?, schema?) {
 
     writer.reset();
 
-    const walk = function (node) {
+    const walk = function (node: Node) {
       const handler = handlers[node.type];
       let  name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
 
@@ -148,5 +146,7 @@ export default function (settings?, schema?) {
     return writer.getContent();
   };
 
-  return self;
+  return {
+    serialize
+  };
 }

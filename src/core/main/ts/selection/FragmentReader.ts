@@ -18,7 +18,7 @@ import { Fragment } from '@ephox/sugar';
 import { Node } from '@ephox/sugar';
 import { SelectorFind } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
-import ElementType from '../dom/ElementType';
+import * as ElementType from '../dom/ElementType';
 import Parents from '../dom/Parents';
 import * as SelectionUtils from './SelectionUtils';
 import SimpleTableModel from './SimpleTableModel';

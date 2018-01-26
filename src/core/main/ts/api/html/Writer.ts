@@ -10,6 +10,7 @@
 
 import Entities from './Entities';
 import Tools from '../util/Tools';
+import { Attributes } from './Node';
 
 /**
  * This class is used to write HTML tags out it can be used with the Serializer or the SaxParser.
@@ -46,7 +47,7 @@ export default function (settings?) {
      * @param {Array} attrs Optional attribute array or undefined if it hasn't any.
      * @param {Boolean} empty Optional empty state if the tag should end like <br />.
      */
-    start (name, attrs, empty) {
+    start (name: string, attrs?: Attributes, empty?: boolean) {
       let i, l, attr, value;
 
       if (indent && indentBefore[name] && html.length > 0) {
@@ -87,7 +88,7 @@ export default function (settings?) {
      * @method end
      * @param {String} name Name of the element.
      */
-    end (name) {
+    end (name: string) {
       let value;
 
       /*if (indent && indentBefore[name] && html.length > 0) {
@@ -115,7 +116,7 @@ export default function (settings?) {
      * @param {String} text String to write out.
      * @param {Boolean} raw Optional raw state if true the contents wont get encoded.
      */
-    text (text, raw) {
+    text (text: string, raw?: boolean) {
       if (text.length > 0) {
         html[html.length] = raw ? text : encode(text);
       }
@@ -127,7 +128,7 @@ export default function (settings?) {
      * @method cdata
      * @param {String} text String to write out inside the cdata.
      */
-    cdata (text) {
+    cdata (text: string) {
       html.push('<![CDATA[', text, ']]>');
     },
 
@@ -137,7 +138,7 @@ export default function (settings?) {
      * @method cdata
      * @param {String} text String to write out inside the comment.
      */
-    comment (text) {
+    comment (text: string) {
       html.push('<!--', text, '-->');
     },
 
@@ -148,7 +149,7 @@ export default function (settings?) {
      * @param {String} name Name of the pi.
      * @param {String} text String to write out inside the pi.
      */
-    pi (name, text) {
+    pi (name: string, text: string) {
       if (text) {
         html.push('<?', name, ' ', encode(text), '?>');
       } else {
@@ -166,7 +167,7 @@ export default function (settings?) {
      * @method doctype
      * @param {String} text String to write out inside the doctype.
      */
-    doctype (text) {
+    doctype (text: string) {
       html.push('<!DOCTYPE', text, '>', indent ? '\n' : '');
     },
 
@@ -185,7 +186,7 @@ export default function (settings?) {
      * @method getContent
      * @return {String} HTML contents that got written down.
      */
-    getContent () {
+    getContent (): string {
       return html.join('').replace(/\n$/, '');
     }
   };
