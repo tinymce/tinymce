@@ -76,8 +76,10 @@ const addRootBlocks = function (editor) {
   node = rootNode.firstChild;
   while (node) {
     if (isValidTarget(blockElements, node)) {
-      // Remove empty text nodes
-      if (NodeType.isText(node) && node.nodeValue.length === 0) {
+      // Remove empty text nodes and nodes containing only whitespace
+      if (NodeType.isText(node) && (node.nodeValue.length === 0 ||
+          (node.nodeValue.length > 0 && /^\s+$/.test(node.nodeValue)))
+        ) {
         tempNode = node;
         node = node.nextSibling;
         dom.remove(tempNode);
