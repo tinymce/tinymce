@@ -14,7 +14,7 @@ import { Focus } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import Env from '../api/Env';
 import CaretFinder from '../caret/CaretFinder';
-import ElementType from '../dom/ElementType';
+import * as ElementType from '../dom/ElementType';
 import RangeNodes from '../selection/RangeNodes';
 import SelectionBookmark from '../selection/SelectionBookmark';
 import { Selection } from '../api/dom/Selection';

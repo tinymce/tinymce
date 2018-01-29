@@ -95,7 +95,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse(
       '<span id=id1 title="title value" class=\'class1 class2\' data-value="value1" ' +
@@ -110,126 +110,126 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse attribute formats counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<b href=\'"&amp;<>\'></b>');
     LegacyUnit.equal(writer.getContent(), '<b href="&quot;&amp;&lt;&gt;"></b>', 'Parse attributes with <> in them.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse attributes with <> in them (count).');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<span title=" "class=" "></span>');
     LegacyUnit.equal(writer.getContent(), '<span title=" " class=" "></span>', 'Parse compressed attributes.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse compressed attributes (count).');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<span title></span>');
     LegacyUnit.equal(writer.getContent(), '<span title=""></span>', 'Single empty attribute.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Single empty attributes (count).');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<span class="class" title></span>');
     LegacyUnit.equal(writer.getContent(), '<span class="class" title=""></span>', 'Empty attribute at end.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Empty attribute at end (count).');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<span title class="class"></span>');
     LegacyUnit.equal(writer.getContent(), '<span title="" class="class"></span>', 'Empty attribute at start.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Empty attribute at start (count).');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<img src="test">');
     LegacyUnit.equal(writer.getContent(), '<img src="test" />', 'Parse empty element.');
     LegacyUnit.deepEqual(counter.counts, { start: 1 }, 'Parse empty element counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<img\nsrc="test"\ntitle="row1\nrow2">');
     LegacyUnit.equal(writer.getContent(), '<img src="test" title="row1\nrow2" />', 'Parse attributes with linebreak.');
     LegacyUnit.deepEqual(counter.counts, { start: 1 }, 'Parse attributes with linebreak counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<img     \t  \t   src="test"     \t  \t   title="\t    row1\t     row2">');
     LegacyUnit.equal(writer.getContent(), '<img src="test" title="\t    row1\t     row2" />', 'Parse attributes with whitespace.');
     LegacyUnit.deepEqual(counter.counts, { start: 1 }, 'Parse attributes with whitespace counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<myns:mytag>text</myns:mytag>');
     LegacyUnit.equal(writer.getContent(), '<myns:mytag>text</myns:mytag>', 'Parse element with namespace.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, text: 1, end: 1 }, 'Parse element with namespace counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<myns-mytag>text</myns-mytag>');
     LegacyUnit.equal(writer.getContent(), '<myns-mytag>text</myns-mytag>', 'Parse element with dash name.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, text: 1, end: 1 }, 'Parse element with dash name counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<myns_mytag>text</myns_mytag>');
     LegacyUnit.equal(writer.getContent(), '<myns_mytag>text</myns_mytag>', 'Parse element with underscore name.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, text: 1, end: 1 }, 'Parse element with underscore name counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<p>text2<b>text3</p>text4</b>text5');
     LegacyUnit.equal(writer.getContent(), 'text1<p>text2<b>text3</b></p>text4text5', 'Parse tag soup 1.');
     LegacyUnit.deepEqual(counter.counts, { text: 5, start: 2, end: 2 }, 'Parse tag soup 1 counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<P>text2<B>text3</p>text4</b>text5');
     LegacyUnit.equal(writer.getContent(), 'text1<p>text2<b>text3</b></p>text4text5', 'Parse tag soup 2.');
     LegacyUnit.deepEqual(counter.counts, { text: 5, start: 2, end: 2 }, 'Parse tag soup 2 counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<P>text2<B>tex<t3</p>te>xt4</b>text5');
     LegacyUnit.equal(writer.getContent(), 'text1<p>text2<b>tex&lt;t3</b></p>te&gt;xt4text5', 'Parse tag soup 3.');
     LegacyUnit.deepEqual(counter.counts, { text: 5, start: 2, end: 2 }, 'Parse tag soup 3 counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<p>text2<b>text3');
     LegacyUnit.equal(writer.getContent(), 'text1<p>text2<b>text3</b></p>', 'Parse tag soup 4.');
     LegacyUnit.deepEqual(counter.counts, { text: 3, start: 2, end: 2 }, 'Parse tag soup 4 counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<script>text2');
     LegacyUnit.equal(writer.getContent(), 'text1<script>text2</s' + 'cript>', 'Parse tag soup 5.');
     LegacyUnit.deepEqual(counter.counts, { text: 2, start: 1, end: 1 }, 'Parse tag soup 5 counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<style>text2');
     LegacyUnit.equal(writer.getContent(), 'text1<style>text2</st' + 'yle>', 'Parse tag soup 6.');
     LegacyUnit.deepEqual(counter.counts, { text: 2, start: 1, end: 1 }, 'Parse tag soup 6 counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<span title="<test" data-test="test>"></span>');
     LegacyUnit.equal(
@@ -240,7 +240,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     LegacyUnit.deepEqual(counter.counts, { text: 1, start: 1, end: 1 }, 'Parse element with </> in attributes counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text\n<SC' + 'RIPT type=mce-text/javascript>// <![CDATA[\nalert(\'HELLO WORLD!\');\n// ]]></SC' + 'RIPT>');
     LegacyUnit.equal(
@@ -251,28 +251,28 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     LegacyUnit.deepEqual(counter.counts, { text: 2, start: 1, end: 1 }, 'Parse cdata script counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<noscript>te<br>xt2</noscript>text3');
     LegacyUnit.equal(writer.getContent(), 'text1<noscript>te<br>xt2</noscript>text3', 'Parse noscript elements.');
     LegacyUnit.deepEqual(counter.counts, { text: 3, start: 1, end: 1 }, 'Parse noscript elements counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<p>a</p><p /><p>b</p>');
     LegacyUnit.equal(writer.getContent(), '<p>a</p><p></p><p>b</p>', 'Parse invalid closed element.');
     LegacyUnit.deepEqual(counter.counts, { text: 2, start: 3, end: 3 }, 'Parse invalid closed element counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<br><br /><br/>');
     LegacyUnit.equal(writer.getContent(), '<br /><br /><br />', 'Parse short ended elements.');
     LegacyUnit.deepEqual(counter.counts, { start: 3 }, 'Parse short ended elements counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<p ></p>');
     LegacyUnit.equal(writer.getContent(), '<p></p>', 'Parse start elements with whitespace only attribs part.');
@@ -283,14 +283,14 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<em><style>// <b>tag</b></st' + 'yle>text2</em>');
     LegacyUnit.equal(writer.getContent(), 'text1<em><style>// <b>tag</b></st' + 'yle>text2</em>', 'Parse style element.');
     LegacyUnit.deepEqual(counter.counts, { start: 2, end: 2, text: 3 }, 'Parse style element counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<em><style id="id">// <b>tag</b></st' + 'yle>text2</em>');
     LegacyUnit.equal(
@@ -301,14 +301,14 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     LegacyUnit.deepEqual(counter.counts, { text: 3, start: 2, end: 2 }, 'Parse style element with attributes counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<em><style></st' + 'yle>text2</span>');
     LegacyUnit.equal(writer.getContent(), 'text1<em><style></st' + 'yle>text2</em>', 'Parse empty style element.');
     LegacyUnit.deepEqual(counter.counts, { text: 2, start: 2, end: 2 }, 'Parse empty style element counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(Tools.extend({ validate: true }, counter), Schema({ invalid_elements: 'style' }));
+    parser = SaxParser(Tools.extend({ validate: true }, counter), Schema({ invalid_elements: 'style' }));
     writer.reset();
     parser.parse('text1<em><style>text2</st' + 'yle>text3</em>');
     LegacyUnit.equal(writer.getContent(), 'text1<em>text3</em>', 'Parse invalid style element.');
@@ -319,14 +319,14 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<em><script>// <b>tag</b></s' + 'cript>text2</em>');
     LegacyUnit.equal(writer.getContent(), 'text1<em><script>// <b>tag</b></s' + 'cript>text2</em>', 'Parse script element.');
     LegacyUnit.deepEqual(counter.counts, { start: 2, end: 2, text: 3 }, 'Parse script element counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<em><script id="id">// <b>tag</b></s' + 'cript>text2</em>');
     LegacyUnit.equal(
@@ -337,14 +337,14 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     LegacyUnit.deepEqual(counter.counts, { start: 2, end: 2, text: 3 }, 'Parse script element with attributes counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<em><script></s' + 'cript>text2</em>');
     LegacyUnit.equal(writer.getContent(), 'text1<em><script></s' + 'cript>text2</em>', 'Parse empty script element.');
     LegacyUnit.deepEqual(counter.counts, { text: 2, start: 2, end: 2 }, 'Parse empty script element counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(Tools.extend({ validate: true }, counter), Schema({ invalid_elements: 'script' }));
+    parser = SaxParser(Tools.extend({ validate: true }, counter), Schema({ invalid_elements: 'script' }));
     writer.reset();
     parser.parse('text1<em><s' + 'cript>text2</s' + 'cript>text3</em>');
     LegacyUnit.equal(writer.getContent(), 'text1<em>text3</em>', 'Parse invalid script element.');
@@ -355,35 +355,35 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('');
     LegacyUnit.equal(writer.getContent(), '', 'Parse empty.');
     LegacyUnit.deepEqual(counter.counts, {}, 'Parse empty counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text');
     LegacyUnit.equal(writer.getContent(), 'text', 'Parse single text node.');
     LegacyUnit.deepEqual(counter.counts, { text: 1 }, 'Parse single text node counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<b>text</b>');
     LegacyUnit.equal(writer.getContent(), '<b>text</b>', 'Parse wrapped text.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, text: 1, end: 1 }, 'Parse wrapped text counts');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('text1<b>text2</b>');
     LegacyUnit.equal(writer.getContent(), 'text1<b>text2</b>', 'Parse text at start.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, text: 2, end: 1 }, 'Parse text at start counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<b>text1</b>text2');
     LegacyUnit.equal(writer.getContent(), '<b>text1</b>text2', 'Parse text at end.');
@@ -394,28 +394,28 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<!-- comment value -->');
     LegacyUnit.equal(writer.getContent(), '<!-- comment value -->', 'Parse comment with value.');
     LegacyUnit.deepEqual(counter.counts, { comment: 1 }, 'Parse comment with value count.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<!---->');
     LegacyUnit.equal(writer.getContent(), '', 'Parse comment without value.');
     LegacyUnit.deepEqual(counter.counts, {}, 'Parse comment without value count.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<!--<b></b>-->');
     LegacyUnit.equal(writer.getContent(), '<!--<b></b>-->', 'Parse comment with tag inside.');
     LegacyUnit.deepEqual(counter.counts, { comment: 1 }, 'Parse comment with tag inside counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<b>a<!-- value -->b</b>');
     LegacyUnit.equal(writer.getContent(), '<b>a<!-- value -->b</b>', 'Parse comment with tags around it.');
@@ -426,28 +426,28 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<![CDATA[test text]]>');
     LegacyUnit.equal(writer.getContent(), '<![CDATA[test text]]>', 'Parse cdata with value.');
     LegacyUnit.deepEqual(counter.counts, { cdata: 1 }, 'Parse cdata with value counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<![CDATA[]]>');
     LegacyUnit.equal(writer.getContent(), '', 'Parse cdata without value.');
     LegacyUnit.deepEqual(counter.counts, {}, 'Parse cdata without value counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<![CDATA[<b>a</b>]]>');
     LegacyUnit.equal(writer.getContent(), '<![CDATA[<b>a</b>]]>', 'Parse cdata with tag inside.');
     LegacyUnit.deepEqual(counter.counts, { cdata: 1 }, 'Parse cdata with tag inside counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<b>a<![CDATA[value]]>b</b>');
     LegacyUnit.equal(writer.getContent(), '<b>a<![CDATA[value]]>b</b>', 'Parse cdata with tags around it.');
@@ -458,21 +458,21 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<?xml version="1.0" encoding="UTF-8" ?>text1');
     LegacyUnit.equal(writer.getContent(), '<?xml version="1.0" encoding="UTF-8" ?>text1', 'Parse PI with attributes.');
     LegacyUnit.deepEqual(counter.counts, { pi: 1, text: 1 }, 'Parse PI with attributes counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<?xml?>text1');
     LegacyUnit.equal(writer.getContent(), '<?xml?>text1', 'Parse PI with no data.');
     LegacyUnit.deepEqual(counter.counts, { pi: 1, text: 1 }, 'Parse PI with data counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<?xml somevalue/>text1');
     LegacyUnit.equal(writer.getContent(), '<?xml somevalue?>text1', 'Parse PI with IE style ending.');
@@ -483,7 +483,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse(
       '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">text1'
@@ -496,7 +496,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     LegacyUnit.deepEqual(counter.counts, { doctype: 1, text: 1 }, 'Parse HTML5 DOCTYPE counts.');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<!DOCTYPE html>text1');
     LegacyUnit.equal(writer.getContent(), '<!DOCTYPE html>text1', 'Parse HTML5 DOCTYPE.');
@@ -508,7 +508,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
 
     counter = createCounter(writer);
     counter.validate = true;
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<invalid1>123<invalid2 />456<span title="title" invalid3="value">789</span>012</invalid1>');
     LegacyUnit.equal(writer.getContent(), '123456<span title="title">789</span>012', 'Parse invalid elements and attributes.');
@@ -520,7 +520,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
 
     counter = createCounter(writer);
     counter.validate = true;
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<ul><li>1<li><b>2</b><li><em><b>3</b></em></ul>');
     LegacyUnit.equal(
@@ -536,7 +536,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     schema = Schema({ valid_elements: 'b' });
     counter = createCounter(writer);
     counter.validate = true;
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<span id="id"><b>text</b></span><span id="id" data-mce-type="something"></span>');
     LegacyUnit.equal(
@@ -548,7 +548,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     schema = Schema({ valid_elements: 'b,span[class]' });
     counter = createCounter(writer);
     counter.validate = true;
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<span id="id" class="class"><b>text</b></span><span id="id" data-mce-type="something"></span>');
     LegacyUnit.equal(
@@ -565,7 +565,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     counter = createCounter(writer);
     counter.validate = true;
     counter.remove_internals = true;
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<span id="id"><b>text</b></span><span id="id" data-mce-type="something"></span>');
     LegacyUnit.equal(writer.getContent(), '<b>text</b>', 'Remove internal span element without any span schema rule.');
@@ -574,7 +574,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     counter = createCounter(writer);
     counter.validate = true;
     counter.remove_internals = true;
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<span id="id" class="class"><b>text</b></span><span id="id" data-mce-type="something"></span>');
     LegacyUnit.equal(
@@ -591,7 +591,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<a title="\\" href="h">x</a>');
     LegacyUnit.equal(writer.getContent(), '<a title="\\" href="h">x</a>');
@@ -602,7 +602,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
 
     counter = createCounter(writer);
     counter.validate = true;
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<p><span>A</span> <strong>B</strong></p>');
     LegacyUnit.equal(writer.getContent(), '<p>A <strong>B</strong></p>');
@@ -614,7 +614,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     counter = createCounter(writer);
     counter.validate = false;
     counter.allow_conditional_comments = true;
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
 
     writer.reset();
     parser.parse('<!--[if gte IE 4]>alert(1)<![endif]-->');
@@ -627,7 +627,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     counter = createCounter(writer);
     counter.validate = false;
     counter.allow_conditional_comments = false;
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
 
     writer.reset();
     parser.parse('<!--[if gte IE 4]>alert(1)<![endif]-->');
@@ -648,7 +648,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     counter = createCounter(writer);
     counter.validate = false;
     counter.allow_script_urls = true;
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse(
       '<a href="javascript:alert(1)">1</a>' +
@@ -668,7 +668,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     counter = createCounter(writer);
     counter.validate = false;
     counter.allow_html_data_urls = true;
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse(
       '<a href="javascript:alert(1)">1</a>' +
@@ -686,7 +686,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
 
     counter = createCounter(writer);
     counter.validate = false;
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
 
     writer.reset();
     parser.parse(
@@ -722,7 +722,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
 
       counter = createCounter(writer);
       counter.validate = true;
-      parser = new SaxParser(counter, schema);
+      parser = SaxParser(counter, schema);
       writer.reset();
       parser.parse(inputHtml);
       LegacyUnit.equal(writer.getContent(), outputHtml);
@@ -760,7 +760,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
 
     counter = createCounter(writer);
     counter.validate = false;
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
 
     writer.reset();
     parser.parse(
@@ -778,7 +778,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(Tools.extend({ validate: true }, counter), schema);
+    parser = SaxParser(Tools.extend({ validate: true }, counter), schema);
     writer.reset();
     parser.parse('<span aria-label="test" role="myrole" unsupportedattr="2">a</span>');
     LegacyUnit.equal(
@@ -791,7 +791,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<a5>text</a5>');
     LegacyUnit.equal(writer.getContent(), '<a5>text</a5>', 'Parse element with numbers.');
@@ -802,7 +802,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<b data-mce-type="test" id="x" style="color: red" src="1" data="2" onclick="3"></b>');
     LegacyUnit.equal(writer.getContent(), '<b data-mce-type="test" id="x" style="color: red"></b>');
@@ -813,7 +813,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<![CDATA[<!--x--><!--y-->--><!--]]>');
     LegacyUnit.equal(writer.getContent(), '<![CDATA[xy]]>');
@@ -833,7 +833,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     );
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse(specialHtml);
     LegacyUnit.equal(writer.getContent(), specialHtml);
@@ -844,13 +844,13 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('a <2 b b b b b b b b b b b b b b b b b b b b b b');
     LegacyUnit.equal(writer.getContent(), 'a &lt;2 b b b b b b b b b b b b b b b b b b b b b b');
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('a <2b>a</2b> b');
     LegacyUnit.equal(writer.getContent(), 'a &lt;2b&gt;a&lt;/2b&gt; b');
@@ -860,7 +860,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     let counter, parser;
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<b b b b b b b b b b b b b b b b b b b b b b b');
     LegacyUnit.equal(
@@ -869,7 +869,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     );
 
     counter = createCounter(writer);
-    parser = new SaxParser(counter, schema);
+    parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('a a<b c');
     LegacyUnit.equal(

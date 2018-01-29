@@ -27,7 +27,21 @@
  * @version 3.4
  */
 
-export default function (settings?, schema?) {
+import Schema from './Schema';
+
+export interface Styles { [s: string]: string; }
+
+const toHex = (match: string, r: string, g: string, b: string) => {
+  const hex = (val: string) => {
+    val = parseInt(val, 10).toString(16);
+
+    return val.length > 1 ? val : '0' + val; // 0 -> 00
+  };
+
+  return '#' + hex(r) + hex(g) + hex(b);
+};
+
+export default function (settings?, schema?: Schema) {
   /*jshint maxlen:255 */
   /*eslint max-len:0 */
   const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
@@ -54,16 +68,6 @@ export default function (settings?, schema?) {
     encodingLookup[invisibleChar + i] = encodingItems[i];
   }
 
-  const toHex = function (match, r, g, b) {
-    const hex = function (val) {
-      val = parseInt(val, 10).toString(16);
-
-      return val.length > 1 ? val : '0' + val; // 0 -> 00
-    };
-
-    return '#' + hex(r) + hex(g) + hex(b);
-  };
-
   return {
     /**
      * Parses the specified RGB color value and returns a hex version of that color.
@@ -72,7 +76,7 @@ export default function (settings?, schema?) {
      * @param {String} color RGB string value like rgb(1,2,3)
      * @return {String} Hex version of that RGB value like #FF00FF.
      */
-    toHex (color) {
+    toHex (color: string): string {
       return color.replace(rgbRegExp, toHex);
     },
 
@@ -85,7 +89,7 @@ export default function (settings?, schema?) {
      * @param {String} css Style value to parse for example: border:1px solid red;.
      * @return {Object} Object representation of that style like {border: '1px solid red'}
      */
-    parse (css) {
+    parse (css: string): Styles {
       const styles: any = {};
       let matches, name, value, isEncoded;
       const urlConverter = settings.url_converter;
@@ -321,10 +325,10 @@ export default function (settings?, schema?) {
      * @param {String} elementName Optional element name, if specified only the styles that matches the schema will be serialized.
      * @return {String} String representation of the style object for example: border: 1px solid red.
      */
-    serialize (styles, elementName?) {
+    serialize (styles: Styles, elementName?: string): string {
       let css = '', name, value;
 
-      const serializeStyles = function (name) {
+      const serializeStyles = (name: string) => {
         let styleList, i, l, value;
 
         styleList = validStyles[name];
@@ -340,7 +344,7 @@ export default function (settings?, schema?) {
         }
       };
 
-      const isValid = function (name, elementName) {
+      const isValid = (name: string, elementName: string): boolean => {
         let styleMap;
 
         styleMap = invalidStyles['*'];

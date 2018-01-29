@@ -14,8 +14,6 @@ import Tools from '../util/Tools';
 
 declare const unescape: any;
 
-/*eslint max-depth:[2, 9] */
-
 /**
  * This class parses HTML code using pure JavaScript and executes various events for each item it finds. It will
  * always execute the events in the right order for tag soup code like <b><p></b></p>. It will also remove elements
@@ -78,7 +76,7 @@ const trimComments = function (text) {
  * @param {Number} startIndex Indext to start searching at should be after the start tag.
  * @return {Number} Index of the end tag.
  */
-const findEndTag = function (schema, html, startIndex) {
+const findEndTagIndex = function (schema, html, startIndex) {
   let count = 1, index, matches, tokenRegExp, shortEndedElements;
 
   shortEndedElements = schema.getShortEndedElements();
@@ -114,13 +112,10 @@ const findEndTag = function (schema, html, startIndex) {
  * @param {Object} settings Name/value collection of settings. comment, cdata, text, start and end are callbacks.
  * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
  */
-const SaxParser: any = function (settings, schema) {
-  const self = this;
-
+export function SaxParser(settings, schema = Schema()) {
   const noop = function () { };
 
   settings = settings || {};
-  self.schema = schema = schema || Schema();
 
   if (settings.fix_self_closing !== false) {
     settings.fix_self_closing = true;
@@ -133,19 +128,26 @@ const SaxParser: any = function (settings, schema) {
     }
   });
 
+  const comment = settings.comment ? settings.comment : noop;
+  const cdata = settings.cdata ? settings.cdata : noop;
+  const text = settings.text ? settings.text : noop;
+  const start = settings.start ? settings.start : noop;
+  const end = settings.end ? settings.end : noop;
+  const pi = settings.pi ? settings.pi : noop;
+  const doctype = settings.doctype ? settings.doctype : noop;
+
   /**
    * Parses the specified HTML string and executes the callbacks for each item it finds.
    *
    * @example
-   * new SaxParser({...}).parse('<b>text</b>');
+   * SaxParser({...}).parse('<b>text</b>');
    * @method parse
    * @param {String} html Html string to sax parse.
    */
-  self.parse = function (html) {
-    const self = this;
+  const parse = (html: string) => {
     let matches, index = 0, value, endRegExp;
     const stack = [];
-    let attrList, i, text, name;
+    let attrList, i, textData, name;
     let isInternalElement, removeInternalElements, shortEndedElements, fillAttrsMap, isShortEnded;
     let validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
     let attributesRequired, attributesDefault, attributesForced, processHtml;
@@ -173,7 +175,7 @@ const SaxParser: any = function (settings, schema) {
           name = stack[i];
 
           if (name.valid) {
-            self.end(name.name);
+            end(name.name);
           }
         }
 
@@ -279,7 +281,7 @@ const SaxParser: any = function (settings, schema) {
     while ((matches = tokenRegExp.exec(processHtml))) { // Adds and extra '>' to keep regexps from doing catastrofic backtracking on malformed html
       // Text
       if (index < matches.index) {
-        self.text(decode(html.substr(index, matches.index - index)));
+        text(decode(html.substr(index, matches.index - index)));
       }
 
       if ((value = matches[6])) { // End element
@@ -295,7 +297,7 @@ const SaxParser: any = function (settings, schema) {
         // Did we consume the extra character then treat it as text
         // This handles the case with html like this: "text a<b text"
         if (matches.index + matches[0].length > html.length) {
-          self.text(decode(html.substr(matches.index)));
+          text(decode(html.substr(matches.index)));
           index = matches.index + matches[0].length;
           continue;
         }
@@ -409,7 +411,7 @@ const SaxParser: any = function (settings, schema) {
             // Invalidate element if it's marked as bogus
             if ((attr = attrList.map['data-mce-bogus'])) {
               if (attr === 'all') {
-                index = findEndTag(schema, html, tokenRegExp.lastIndex);
+                index = findEndTagIndex(schema, html, tokenRegExp.lastIndex);
                 tokenRegExp.lastIndex = index;
                 continue;
               }
@@ -419,7 +421,7 @@ const SaxParser: any = function (settings, schema) {
           }
 
           if (isValidElement) {
-            self.start(value, attrList, isShortEnded);
+            start(value, attrList, isShortEnded);
           }
         } else {
           isValidElement = false;
@@ -431,21 +433,21 @@ const SaxParser: any = function (settings, schema) {
 
           if ((matches = endRegExp.exec(html))) {
             if (isValidElement) {
-              text = html.substr(index, matches.index - index);
+              textData = html.substr(index, matches.index - index);
             }
 
             index = matches.index + matches[0].length;
           } else {
-            text = html.substr(index);
+            textData = html.substr(index);
             index = html.length;
           }
 
           if (isValidElement) {
-            if (text.length > 0) {
-              self.text(text, true);
+            if (textData.length > 0) {
+              text(textData, true);
             }
 
-            self.end(value);
+            end(value);
           }
 
           tokenRegExp.lastIndex = index;
@@ -457,7 +459,7 @@ const SaxParser: any = function (settings, schema) {
           if (!attribsValue || attribsValue.indexOf('/') !== attribsValue.length - 1) {
             stack.push({ name: value, valid: isValidElement });
           } else if (isValidElement) {
-            self.end(value);
+            end(value);
           }
         }
       } else if ((value = matches[1])) { // Comment
@@ -470,13 +472,13 @@ const SaxParser: any = function (settings, schema) {
           value = ' ' + value;
         }
 
-        self.comment(value);
+        comment(value);
       } else if ((value = matches[2])) { // CDATA
-        self.cdata(trimComments(value));
+        cdata(trimComments(value));
       } else if ((value = matches[3])) { // DOCTYPE
-        self.doctype(value);
+        doctype(value);
       } else if ((value = matches[4])) { // PI
-        self.pi(value, matches[5]);
+        pi(value, matches[5]);
       }
 
       index = matches.index + matches[0].length;
@@ -484,7 +486,7 @@ const SaxParser: any = function (settings, schema) {
 
     // Text
     if (index < html.length) {
-      self.text(decode(html.substr(index)));
+      text(decode(html.substr(index)));
     }
 
     // Close any open elements
@@ -492,12 +494,18 @@ const SaxParser: any = function (settings, schema) {
       value = stack[i];
 
       if (value.valid) {
-        self.end(value.name);
+        end(value.name);
       }
     }
   };
-};
 
-SaxParser.findEndTag = findEndTag;
+  return {
+    parse
+  };
+}
+
+export namespace SaxParser {
+  export const findEndTag = findEndTagIndex;
+}
 
 export default SaxParser;

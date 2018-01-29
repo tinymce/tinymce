@@ -14,7 +14,7 @@ import { Compare } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { PredicateFind } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
-import ElementType from '../dom/ElementType';
+import * as ElementType from '../dom/ElementType';
 import InlineUtils from '../keyboard/InlineUtils';
 
 const isBeforeRoot = function (rootNode) {

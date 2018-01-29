@@ -4,7 +4,7 @@ import { Logger } from '@ephox/agar';
 import { Pipeline } from '@ephox/agar';
 import { Step } from '@ephox/agar';
 import { Element } from '@ephox/sugar';
-import ElementType from 'tinymce/core/dom/ElementType';
+import * as ElementType from 'tinymce/core/dom/ElementType';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ElementTypeTest', function () {

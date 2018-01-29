@@ -16,7 +16,7 @@ import { Node } from '@ephox/sugar';
 import { Text } from '@ephox/sugar';
 import { SelectorFilter } from '@ephox/sugar';
 import { Traverse } from '@ephox/sugar';
-import ElementType from './ElementType';
+import * as ElementType from './ElementType';
 
 const getLastChildren = function (elm) {
   const children = [];

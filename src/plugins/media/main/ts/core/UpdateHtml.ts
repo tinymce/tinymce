@@ -53,7 +53,7 @@ const setAttributes = function (attrs, updatedAttrs) {
 
 const normalizeHtml = function (html) {
   const writer = Writer();
-  const parser = new SaxParser(writer);
+  const parser = SaxParser(writer);
   parser.parse(html);
   return writer.getContent();
 };
@@ -63,7 +63,7 @@ const updateHtmlSax = function (html, data, updateAll?) {
   let sourceCount = 0;
   let hasImage;
 
-  new SaxParser({
+  SaxParser({
     validate: false,
     allow_conditional_comments: true,
     special: 'script,noscript',

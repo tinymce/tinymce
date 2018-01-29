@@ -8,16 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * This class is a minimalistic implementation of a DOM like node used by the DomParser class.
- *
- * @example
- * var node = new tinymce.html.Node('strong', 1);
- * someRoot.append(node);
- *
- * @class tinymce.html.Node
- * @version 3.4
- */
+export type ElementMap = Array<{ [name: string]: boolean; }>;
+export type Attributes = Array<{ [name: string]: string; }>;
 
 const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 const typeLookup = {
@@ -30,7 +22,7 @@ const typeLookup = {
 };
 
 // Walks the tree left/right
-const walk = function (node, rootNode, prev?) {
+const walk = function (node: Node, root: Node, prev?: boolean): Node {
   let sibling;
   let parent;
   const startName = prev ? 'lastChild' : 'firstChild';
@@ -42,7 +34,7 @@ const walk = function (node, rootNode, prev?) {
   }
 
   // Return the sibling if it has one
-  if (node !== rootNode) {
+  if (node !== root) {
     sibling = node[siblingName];
 
     if (sibling) {
@@ -50,7 +42,7 @@ const walk = function (node, rootNode, prev?) {
     }
 
     // Walk up the parents to look for siblings
-    for (parent = node.parent; parent && parent !== rootNode; parent = parent.parent) {
+    for (parent = node.parent; parent && parent !== root; parent = parent.parent) {
       sibling = parent[siblingName];
 
       if (sibling) {
@@ -61,24 +53,70 @@ const walk = function (node, rootNode, prev?) {
 };
 
 /**
- * Constructs a new Node instance.
+ * This class is a minimalistic implementation of a DOM like node used by the DomParser class.
  *
- * @constructor
- * @method Node
- * @param {String} name Name of the node type.
- * @param {Number} type Numeric type representing the node.
+ * @example
+ * var node = new tinymce.html.Node('strong', 1);
+ * someRoot.append(node);
+ *
+ * @class tinymce.html.Node
+ * @version 3.4
  */
-const Node: any = function (name, type) {
-  this.name = name;
-  this.type = type;
 
-  if (type === 1) {
-    this.attributes = [];
-    this.attributes.map = {};
+class Node {
+  /**
+   * Creates a node of a specific type.
+   *
+   * @static
+   * @method create
+   * @param {String} name Name of the node type to create for example "b" or "#text".
+   * @param {Object} attrs Name/value collection of attributes that will be applied to elements.
+   */
+  public static create (name: string, attrs: Attributes): Node {
+    let node, attrName;
+
+    // Create node
+    node = new Node(name, typeLookup[name] || 1);
+
+    // Add attributes if needed
+    if (attrs) {
+      for (attrName in attrs) {
+        node.attr(attrName, attrs[attrName]);
+      }
+    }
+
+    return node;
   }
-};
 
-Node.prototype = {
+  public name: string;
+  public type: number;
+  public attributes: Attributes;
+  public value: string;
+  public shortEnded: boolean;
+  public parent: Node;
+  public firstChild: Node;
+  public lastChild: Node;
+  public next: Node;
+  public prev: Node;
+
+  /**
+   * Constructs a new Node instance.
+   *
+   * @constructor
+   * @method Node
+   * @param {String} name Name of the node type.
+   * @param {Number} type Numeric type representing the node.
+   */
+  constructor(name: string, type: number) {
+    this.name = name;
+    this.type = type;
+
+    if (type === 1) {
+      this.attributes = [] as Attributes;
+      (this.attributes as any).map = {}; // Should be considered internal
+    }
+  }
+
   /**
    * Replaces the current node with the specified one.
    *
@@ -89,7 +127,7 @@ Node.prototype = {
    * @param {tinymce.html.Node} node Node to replace the current node with.
    * @return {tinymce.html.Node} The old node that got replaced.
    */
-  replace (node) {
+  public replace (node: Node): Node {
     const self = this;
 
     if (node.parent) {
@@ -100,7 +138,7 @@ Node.prototype = {
     self.remove();
 
     return self;
-  },
+  }
 
   /**
    * Gets/sets or removes an attribute by name.
@@ -115,9 +153,9 @@ Node.prototype = {
    * @param {String} value Optional value to set.
    * @return {String/tinymce.html.Node} String or undefined on a get operation or the current node on a set operation.
    */
-  attr (name, value) {
+  public attr (name: string, value?: string): String | Node {
     const self = this;
-    let attrs, i;
+    let attrs: Attributes, i;
 
     if (typeof name !== 'string') {
       for (i in name) {
@@ -167,7 +205,7 @@ Node.prototype = {
 
       return attrs.map[name];
     }
-  },
+  }
 
   /**
    * Does a shallow clones the node into a new node. It will also exclude id attributes since
@@ -179,7 +217,7 @@ Node.prototype = {
    * @method clone
    * @return {tinymce.html.Node} New copy of the original node.
    */
-  clone () {
+  public clone (): Node {
     const self = this;
     const clone = new Node(self.name, self.type);
     let i, l, selfAttrs, selfAttr, cloneAttrs;
@@ -206,7 +244,7 @@ Node.prototype = {
     clone.shortEnded = self.shortEnded;
 
     return clone;
-  },
+  }
 
   /**
    * Wraps the node in in another node.
@@ -216,14 +254,14 @@ Node.prototype = {
    *
    * @method wrap
    */
-  wrap (wrapper) {
+  public wrap (wrapper: Node): Node {
     const self = this;
 
     self.parent.insert(wrapper, self);
     wrapper.append(self);
 
     return self;
-  },
+  }
 
   /**
    * Unwraps the node in other words it removes the node but keeps the children.
@@ -233,7 +271,7 @@ Node.prototype = {
    *
    * @method unwrap
    */
-  unwrap () {
+  public unwrap () {
     const self = this;
     let node, next;
 
@@ -244,7 +282,7 @@ Node.prototype = {
     }
 
     self.remove();
-  },
+  }
 
   /**
    * Removes the node from it's parent.
@@ -255,7 +293,7 @@ Node.prototype = {
    * @method remove
    * @return {tinymce.html.Node} Current node that got removed.
    */
-  remove () {
+  public remove (): Node {
     const self = this, parent = self.parent, next = self.next, prev = self.prev;
 
     if (parent) {
@@ -283,7 +321,7 @@ Node.prototype = {
     }
 
     return self;
-  },
+  }
 
   /**
    * Appends a new node as a child of the current node.
@@ -295,7 +333,7 @@ Node.prototype = {
    * @param {tinymce.html.Node} node Node to append as a child of the current one.
    * @return {tinymce.html.Node} The node that got appended.
    */
-  append (node) {
+  public append (node: Node): Node {
     const self = this;
     let last;
 
@@ -315,7 +353,7 @@ Node.prototype = {
     node.parent = self;
 
     return node;
-  },
+  }
 
   /**
    * Inserts a node at a specific position as a child of the current node.
@@ -329,7 +367,7 @@ Node.prototype = {
    * @param {Boolean} before Optional state to insert the node before the reference node.
    * @return {tinymce.html.Node} The node that got inserted.
    */
-  insert (node, refNode, before) {
+  public insert (node: Node, refNode: Node, before?: boolean): Node {
     let parent;
 
     if (node.parent) {
@@ -363,7 +401,7 @@ Node.prototype = {
     node.parent = parent;
 
     return node;
-  },
+  }
 
   /**
    * Get all children by name.
@@ -372,7 +410,7 @@ Node.prototype = {
    * @param {String} name Name of the child nodes to collect.
    * @return {Array} Array with child nodes matchin the specified name.
    */
-  getAll (name) {
+  public getAll (name: string): Node[] {
     const self = this;
     let node;
     const collection = [];
@@ -384,7 +422,7 @@ Node.prototype = {
     }
 
     return collection;
-  },
+  }
 
   /**
    * Removes all children of the current node.
@@ -392,7 +430,7 @@ Node.prototype = {
    * @method empty
    * @return {tinymce.html.Node} The current node that got cleared.
    */
-  empty () {
+  public empty (): Node {
     const self = this;
     let nodes, i, node;
 
@@ -416,7 +454,7 @@ Node.prototype = {
     self.firstChild = self.lastChild = null;
 
     return self;
-  },
+  }
 
   /**
    * Returns true/false if the node is to be considered empty or not.
@@ -429,11 +467,11 @@ Node.prototype = {
    * @param {function} predicate Optional predicate that gets called after the other rules determine that the node is empty. Should return true if the node is a content node.
    * @return {Boolean} true/false if the node is empty or not.
    */
-  isEmpty (elements, whitespace, predicate) {
+  public isEmpty (elements: ElementMap, whitespace?: ElementMap, predicate?: (node: Node) => boolean) {
     const self = this;
     let node = self.firstChild, i, name;
 
-    whitespace = whitespace || {};
+    whitespace = whitespace || {} as ElementMap;
 
     if (node) {
       do {
@@ -481,7 +519,7 @@ Node.prototype = {
     }
 
     return true;
-  },
+  }
 
   /**
    * Walks to the next or previous node and returns that node or null if it wasn't found.
@@ -490,33 +528,9 @@ Node.prototype = {
    * @param {Boolean} prev Optional previous node state defaults to false.
    * @return {tinymce.html.Node} Node that is next to or previous of the current node.
    */
-  walk (prev) {
+  public walk (prev?: boolean): Node {
     return walk(this, null, prev);
   }
-};
-
-/**
- * Creates a node of a specific type.
- *
- * @static
- * @method create
- * @param {String} name Name of the node type to create for example "b" or "#text".
- * @param {Object} attrs Name/value collection of attributes that will be applied to elements.
- */
-Node.create = function (name, attrs) {
-  let node, attrName;
-
-  // Create node
-  node = new Node(name, typeLookup[name] || 1);
-
-  // Add attributes if needed
-  if (attrs) {
-    for (attrName in attrs) {
-      node.attr(attrName, attrs[attrName]);
-    }
-  }
-
-  return node;
-};
+}
 
 export default Node;

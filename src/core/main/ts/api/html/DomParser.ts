@@ -14,6 +14,8 @@ import SaxParser from './SaxParser';
 import Schema from './Schema';
 import Tools from '../util/Tools';
 
+type ParserArgs = any;
+
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
  * sure that the node tree is valid according to the specified schema.
@@ -33,9 +35,9 @@ const paddEmptyNode = function (settings, args, blockElements, node) {
   const brPreferred = settings.padd_empty_with_br || args.insert;
 
   if (brPreferred && blockElements[node.name]) {
-    node.empty().append(new Node('br', '1')).shortEnded = true;
+    node.empty().append(new Node('br', 1)).shortEnded = true;
   } else {
-    node.empty().append(new Node('#text', '3')).value = '\u00a0';
+    node.empty().append(new Node('#text', 3)).value = '\u00a0';
   }
 };
 
@@ -58,8 +60,7 @@ const isEmpty = function (schema, nonEmptyElements, whitespaceElements, node) {
   });
 };
 
-export default function (settings?, schema?) {
-  const self: any = {};
+export default function (settings?, schema = Schema()) {
   const nodeFilters = {};
   const attributeFilters = [];
   let matchedNodes = {};
@@ -68,7 +69,6 @@ export default function (settings?, schema?) {
   settings = settings || {};
   settings.validate = 'validate' in settings ? settings.validate : true;
   settings.root_name = settings.root_name || 'body';
-  self.schema = schema = schema || Schema();
 
   const fixInvalidChildren = function (nodes) {
     let ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
@@ -123,12 +123,12 @@ export default function (settings?, schema?) {
         parents.reverse();
 
         // Clone the related parent and insert that after the moved node
-        newParent = currentNode = self.filterNode(parents[0].clone());
+        newParent = currentNode = filterNode(parents[0].clone());
 
         // Start cloning and moving children on the left side of the target node
         for (i = 0; i < parents.length - 1; i++) {
           if (schema.isValidChild(currentNode.name, parents[i].name)) {
-            tempNode = self.filterNode(parents[i].clone());
+            tempNode = filterNode(parents[i].clone());
             currentNode.append(tempNode);
           } else {
             tempNode = currentNode;
@@ -170,13 +170,13 @@ export default function (settings?, schema?) {
             continue;
           }
 
-          node.wrap(self.filterNode(new Node('ul', 1)));
+          node.wrap(filterNode(new Node('ul', 1)));
           continue;
         }
 
         // Try wrapping the element in a DIV
         if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
-          node.wrap(self.filterNode(new Node('div', 1)));
+          node.wrap(filterNode(new Node('div', 1)));
         } else {
           // We failed wrapping it, then remove or unwrap it
           if (specialElements[node.name]) {
@@ -196,7 +196,7 @@ export default function (settings?, schema?) {
    * @param {tinymce.html.Node} Node the node to run filters on.
    * @return {tinymce.html.Node} The passed in node.
    */
-  self.filterNode = function (node) {
+  const filterNode = (node: Node): Node => {
     let i, name, list;
 
     // Run element filters
@@ -243,7 +243,7 @@ export default function (settings?, schema?) {
    * @method {String} name Comma separated list of nodes to collect.
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
-  self.addNodeFilter = function (name, callback) {
+  const addNodeFilter = (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void) => {
     each(explode(name), function (name) {
       let list = nodeFilters[name];
 
@@ -269,7 +269,7 @@ export default function (settings?, schema?) {
    * @method {String} name Comma separated list of nodes to collect.
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
-  self.addAttributeFilter = function (name, callback) {
+  const addAttributeFilter = (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void) => {
     each(explode(name), function (name) {
       let i;
 
@@ -294,28 +294,26 @@ export default function (settings?, schema?) {
    * @param {Object} args Optional args object that gets passed to all filter functions.
    * @return {tinymce.html.Node} Root node containing the tree.
    */
-  self.parse = function (html, args) {
-    let parser, rootNode, node, nodes, i, l, fi, fl, list, name, validate;
-    let blockElements, startWhiteSpaceRegExp;
+  const parse = (html: string, args?: ParserArgs): Node => {
+    let parser, nodes, i, l, fi, fl, list, name;
+    let blockElements;
     const invalidChildren = [];
     let isInWhiteSpacePreservedElement;
-    let endWhiteSpaceRegExp, allWhiteSpaceRegExp, isAllWhiteSpaceRegExp, whiteSpaceElements;
-    let children, nonEmptyElements, rootBlockName;
+    let node: Node;
 
     args = args || {};
     matchedNodes = {};
     matchedAttributes = {};
     blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
-    nonEmptyElements = schema.getNonEmptyElements();
-    children = schema.children;
-    validate = settings.validate;
-    rootBlockName = 'forced_root_block' in args ? args.forced_root_block : settings.forced_root_block;
-
-    whiteSpaceElements = schema.getWhiteSpaceElements();
-    startWhiteSpaceRegExp = /^[ \t\r\n]+/;
-    endWhiteSpaceRegExp = /[ \t\r\n]+$/;
-    allWhiteSpaceRegExp = /[ \t\r\n]+/g;
-    isAllWhiteSpaceRegExp = /^[ \t\r\n]+$/;
+    const nonEmptyElements = schema.getNonEmptyElements();
+    const children = schema.children;
+    const validate = settings.validate;
+    const rootBlockName = 'forced_root_block' in args ? args.forced_root_block : settings.forced_root_block;
+    const whiteSpaceElements = schema.getWhiteSpaceElements();
+    const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
+    const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
+    const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
+    const isAllWhiteSpaceRegExp = /^[ \t\r\n]+$/;
 
     const addRootBlocks = function () {
       let node = rootNode.firstChild, next, rootBlockNode;
@@ -431,7 +429,7 @@ export default function (settings?, schema?) {
       return output;
     };
 
-    parser = new SaxParser({
+    parser = SaxParser({
       validate,
       allow_script_urls: settings.allow_script_urls,
       allow_conditional_comments: settings.allow_conditional_comments,
@@ -616,7 +614,7 @@ export default function (settings?, schema?) {
 
           if (elementRule.removeEmpty && isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
             // Leave nodes that have a name like <a name="name">
-            if (!node.attributes.map.name && !node.attributes.map.id) {
+            if (!node.attributes.map.name && !node.attr('id')) {
               tempNode = node.parent;
 
               if (blockElements[node.name]) {
@@ -639,7 +637,7 @@ export default function (settings?, schema?) {
       }
     }, schema);
 
-    rootNode = node = new Node(args.context || settings.root_name, 11);
+    const rootNode = node = new Node(args.context || settings.root_name, 11);
 
     parser.parse(html);
 
@@ -706,7 +704,7 @@ export default function (settings?, schema?) {
   // make it possible to place the caret inside empty blocks. This logic tries to remove
   // these elements and keep br elements that where intended to be there intact
   if (settings.remove_trailing_brs) {
-    self.addNodeFilter('br', function (nodes, _, args) {
+    addNodeFilter('br', (nodes, _, args) => {
       let i;
       const l = nodes.length;
       let node;
@@ -789,7 +787,7 @@ export default function (settings?, schema?) {
     });
   }
 
-  self.addAttributeFilter('href', function (nodes) {
+  addAttributeFilter('href', function (nodes) {
     let i = nodes.length, node;
 
     const appendRel = function (rel) {
@@ -820,7 +818,7 @@ export default function (settings?, schema?) {
 
   // Force anchor names closed, unless the setting "allow_html_in_named_anchor" is explicitly included.
   if (!settings.allow_html_in_named_anchor) {
-    self.addAttributeFilter('id,name', function (nodes) {
+    addAttributeFilter('id,name', function (nodes) {
       let i = nodes.length, sibling, prevSibling, parent, node;
 
       while (i--) {
@@ -841,7 +839,7 @@ export default function (settings?, schema?) {
   }
 
   if (settings.fix_list_elements) {
-    self.addNodeFilter('ul,ol', function (nodes) {
+    addNodeFilter('ul,ol', function (nodes) {
       let i = nodes.length, node, parentNode;
 
       while (i--) {
@@ -862,7 +860,7 @@ export default function (settings?, schema?) {
   }
 
   if (settings.validate && schema.getValidClasses()) {
-    self.addAttributeFilter('class', function (nodes) {
+    addAttributeFilter('class', function (nodes) {
       let i = nodes.length, node, classList, ci, className, classValue;
       const validClasses = schema.getValidClasses();
       let validClassesMap, valid;
@@ -904,7 +902,15 @@ export default function (settings?, schema?) {
     });
   }
 
-  LegacyFilter.register(self, settings);
+  const exports = {
+    schema,
+    addAttributeFilter,
+    addNodeFilter,
+    filterNode,
+    parse
+  };
 
-  return self;
+  LegacyFilter.register(exports, settings);
+
+  return exports;
 }

@@ -11,7 +11,7 @@
 import { Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { SelectorFilter } from '@ephox/sugar';
-import ElementType from '../dom/ElementType';
+import * as ElementType from '../dom/ElementType';
 import MultiRange from './MultiRange';
 
 const getCellsFromRanges = function (ranges) {

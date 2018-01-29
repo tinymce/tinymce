@@ -14,7 +14,7 @@ const cleanHtml = function (html) {
 const normalizeHtml = function (html) {
   const writer = Writer();
 
-  new SaxParser({
+  SaxParser({
     validate: false,
     comment: writer.comment,
     cdata: writer.cdata,

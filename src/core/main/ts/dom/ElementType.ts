@@ -41,33 +41,32 @@ const lists = ['ul', 'ol', 'dl'];
 
 const lazyLookup = function (items) {
   let lookup;
-  return function (node) {
+  return (node): boolean => {
     lookup = lookup ? lookup : Arr.mapToObject(items, Fun.constant(true));
     return lookup.hasOwnProperty(Node.name(node));
   };
 };
 
 const isHeading = lazyLookup(headings);
-
 const isBlock = lazyLookup(blocks);
+const isInline = (node) => Node.isElement(node) && !isBlock(node);
+const isBr = (node) => Node.isElement(node) && Node.name(node) === 'br';
+const isTextBlock = lazyLookup(textBlocks);
+const isList = lazyLookup(lists);
+const isListItem = lazyLookup(listItems);
+const isVoid = lazyLookup(voids);
+const isTableSection = lazyLookup(tableSections);
+const isTableCell = lazyLookup(tableCells);
 
-const isInline = function (node) {
-  return Node.isElement(node) && !isBlock(node);
-};
-
-const isBr = function (node) {
-  return Node.isElement(node) && Node.name(node) === 'br';
-};
-
-export default {
+export {
   isBlock,
   isInline,
   isHeading,
-  isTextBlock: lazyLookup(textBlocks),
-  isList: lazyLookup(lists),
-  isListItem: lazyLookup(listItems),
-  isVoid: lazyLookup(voids),
-  isTableSection: lazyLookup(tableSections),
-  isTableCell: lazyLookup(tableCells),
+  isTextBlock,
+  isList,
+  isListItem,
+  isVoid,
+  isTableSection,
+  isTableCell,
   isBr
 };

@@ -17,7 +17,9 @@ import CaretUtils from '../caret/CaretUtils';
 import DeleteUtils from './DeleteUtils';
 import Empty from '../dom/Empty';
 import NodeType from '../dom/NodeType';
-import ElementType from 'tinymce/core/dom/ElementType';
+import * as ElementType from 'tinymce/core/dom/ElementType';
+
+const isCompoundElement = (node: Node) => ElementType.isTableCell(Element.fromDom(node)) || ElementType.isListItem(Element.fromDom(node));
 
 const DeleteAction = Adt.generate([
   { remove: [ 'element' ] },
@@ -51,7 +53,9 @@ const deleteEmptyBlockOrMoveToCef = (root: Node, forward: boolean, from: CaretPo
 
 const findCefPosition = (root: Node, forward: boolean, from: CaretPosition) => {
   return CaretFinder.fromPosition(forward, root, from).bind(function (to) {
-    if (isDeleteFromCefDifferentBlocks(root, forward, from, to)) {
+    if (isCompoundElement(to.getNode())) {
+      return Option.none();
+    } else if (isDeleteFromCefDifferentBlocks(root, forward, from, to)) {
       return Option.none();
     } else if (forward && NodeType.isContentEditableFalse(to.getNode())) {
       return deleteEmptyBlockOrMoveToCef(root, forward, from, to);
@@ -95,24 +99,24 @@ const skipMoveToActionFromInlineCefToContent = (root: Node, from: CaretPosition,
   );
 };
 
-const getContentEditableAction = (rootNode: Node, forward: boolean, from: CaretPosition) => {
+const getContentEditableAction = (root: Node, forward: boolean, from: CaretPosition) => {
   if (isAtContentEditableBlockCaret(forward, from)) {
     return getContentEditableBlockAction(forward, from.getNode(forward === false))
       .fold(
         function () {
-          return findCefPosition(rootNode, forward, from);
+          return findCefPosition(root, forward, from);
         },
         Option.some
       );
   } else {
-    return findCefPosition(rootNode, forward, from).bind(function (deleteAction) {
-      return skipMoveToActionFromInlineCefToContent(rootNode, from, deleteAction);
+    return findCefPosition(root, forward, from).bind(function (deleteAction) {
+      return skipMoveToActionFromInlineCefToContent(root, from, deleteAction);
     });
   }
 };
 
-const read = (rootNode: Node, forward: boolean, rng: Range) => {
-  const normalizedRange = CaretUtils.normalizeRange(forward ? 1 : -1, rootNode, rng);
+const read = (root: Node, forward: boolean, rng: Range) => {
+  const normalizedRange = CaretUtils.normalizeRange(forward ? 1 : -1, root, rng);
   const from = CaretPosition.fromRangeStart(normalizedRange);
 
   if (forward === false && CaretUtils.isAfterContentEditableFalse(from)) {
@@ -120,11 +124,10 @@ const read = (rootNode: Node, forward: boolean, rng: Range) => {
   } else if (forward && CaretUtils.isBeforeContentEditableFalse(from)) {
     return Option.some(DeleteAction.remove(from.getNode()));
   } else {
-    return getContentEditableAction(rootNode, forward, from);
+    return getContentEditableAction(root, forward, from);
   }
 };
 
 export {
-  read,
-  isDeleteFromCefDifferentBlocks
+  read
 };

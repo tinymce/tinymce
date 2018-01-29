@@ -21,7 +21,7 @@ const sanitize = function (editor, html) {
   const writer = Writer();
   let blocked;
 
-  new SaxParser({
+  SaxParser({
     validate: false,
     allow_conditional_comments: false,
     special: 'script,noscript',

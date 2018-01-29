@@ -28,7 +28,7 @@ const isEphoxEmbed = function (html) {
 const htmlToDataSax = function (prefixes, html) {
   let data: any = {};
 
-  new SaxParser({
+  SaxParser({
     validate: false,
     allow_conditional_comments: true,
     special: 'script,noscript',
