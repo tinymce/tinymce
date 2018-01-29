@@ -28,7 +28,7 @@ export default function (settings, editor?) {
      *
      * @field {tinymce.html.Schema} schema
      */
-    schema: domSerializer.schema,
+    schema: domSerializer.schema as Schema,
 
     /**
      * Adds a node filter function to the parser used by the serializer, the parser will collect the specified nodes by name
