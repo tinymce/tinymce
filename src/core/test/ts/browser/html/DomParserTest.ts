@@ -660,6 +660,17 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function () {
     );
   });
 
+  suite.test('do not replace starting linebreak with space', function () {
+    const serializer = Serializer();
+
+    LegacyUnit.equal(
+      serializer.serialize(DomParser().parse(
+        '<p>a<br />\nb</p>')
+      ),
+      '<p>a<br />b</p>'
+    );
+  });
+
   Pipeline.async({}, suite.toSteps({}), function () {
     success();
   }, failure);

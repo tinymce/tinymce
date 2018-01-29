@@ -60,6 +60,8 @@ const isEmpty = function (schema, nonEmptyElements, whitespaceElements, node) {
   });
 };
 
+const isLineBreakNode = (node, blockElements) => node && (blockElements[node.name] || node.name === 'br');
+
 export default function (settings?, schema = Schema()) {
   const nodeFilters = {};
   const attributeFilters = [];
@@ -448,7 +450,7 @@ export default function (settings?, schema = Schema()) {
         if (!isInWhiteSpacePreservedElement) {
           text = text.replace(allWhiteSpaceRegExp, ' ');
 
-          if (node.lastChild && blockElements[node.lastChild.name]) {
+          if (isLineBreakNode(node.lastChild, blockElements)) {
             text = text.replace(startWhiteSpaceRegExp, '');
           }
         }
