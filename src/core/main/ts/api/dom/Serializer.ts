@@ -9,6 +9,7 @@
  */
 
 import DomSerializer from './DomSerializer';
+import Schema from '../html/Schema';
 
 /**
  * This class is used to serialize DOM trees into a string. Consult the TinyMCE Wiki API for
