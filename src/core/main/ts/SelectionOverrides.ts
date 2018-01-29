@@ -13,22 +13,22 @@ import { Remove, Element, Attr, SelectorFilter, SelectorFind } from '@ephox/suga
 import DragDropOverrides from './DragDropOverrides';
 import EditorView from './EditorView';
 import Env from './api/Env';
-import CaretContainer from './caret/CaretContainer';
+import * as CaretContainer from './caret/CaretContainer';
 import CaretPosition from './caret/CaretPosition';
 import CaretUtils from './caret/CaretUtils';
 import CaretWalker from './caret/CaretWalker';
 import FakeCaret from './caret/FakeCaret';
-import LineUtils from './caret/LineUtils';
+import * as LineUtils from './caret/LineUtils';
 import NodeType from './dom/NodeType';
 import RangePoint from './dom/RangePoint';
 import CefFocus from './focus/CefFocus';
-import CefUtils from './keyboard/CefUtils';
+import * as CefUtils from './keyboard/CefUtils';
 import VK from './api/util/VK';
 
-const isContentEditableTrue = NodeType.isContentEditableTrue,
-  isContentEditableFalse = NodeType.isContentEditableFalse,
-  isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse,
-  isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse;
+const isContentEditableTrue = NodeType.isContentEditableTrue;
+const isContentEditableFalse = NodeType.isContentEditableFalse;
+const isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse;
+const isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse;
 
 const SelectionOverrides = function (editor) {
   const isBlock = function (node) {

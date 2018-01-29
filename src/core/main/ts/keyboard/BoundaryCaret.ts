@@ -9,8 +9,8 @@
  */
 
 import { Option } from '@ephox/katamari';
-import CaretContainer from '../caret/CaretContainer';
-import CaretContainerInline from '../caret/CaretContainerInline';
+import * as CaretContainer from '../caret/CaretContainer';
+import * as CaretContainerInline from '../caret/CaretContainerInline';
 import CaretContainerRemove from '../caret/CaretContainerRemove';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';

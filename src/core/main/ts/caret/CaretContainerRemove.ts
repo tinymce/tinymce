@@ -9,7 +9,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import CaretContainer from './CaretContainer';
+import * as CaretContainer from './CaretContainer';
 import CaretPosition from './CaretPosition';
 import NodeType from '../dom/NodeType';
 import Zwsp from '../text/Zwsp';

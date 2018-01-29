@@ -11,10 +11,11 @@
 import Fun from '../util/Fun';
 import TreeWalker from '../api/dom/TreeWalker';
 import NodeType from '../dom/NodeType';
-import CaretContainer from './CaretContainer';
-import CaretCandidate from './CaretCandidate';
+import * as CaretContainer from './CaretContainer';
+import * as CaretCandidate from './CaretCandidate';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import { Option } from '@ephox/katamari';
+import { HDirection } from 'tinymce/core/caret/CaretWalker';
 
 /**
  * Utility functions shared by the caret logic.
@@ -32,8 +33,8 @@ const isContentEditableTrue = NodeType.isContentEditableTrue,
   isElement = NodeType.isElement,
   isCaretCandidate = CaretCandidate.isCaretCandidate;
 
-const isForwards = (direction: number) => direction > 0;
-const isBackwards = (direction: number) => direction < 0;
+const isForwards = (direction: HDirection) => direction > 0;
+const isBackwards = (direction: HDirection) => direction < 0;
 
 const skipCaretContainers = function (walk, shallow?: boolean): Node {
   let node;

@@ -9,7 +9,7 @@
  */
 
 import { Fun, Option } from '@ephox/katamari';
-import CaretCandidate from './CaretCandidate';
+import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
 import CaretUtils from './CaretUtils';
 import CaretWalker from './CaretWalker';

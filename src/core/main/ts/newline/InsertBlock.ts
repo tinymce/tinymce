@@ -9,7 +9,7 @@
  */
 
 import Settings from '../api/Settings';
-import CaretContainer from '../caret/CaretContainer';
+import * as CaretContainer from '../caret/CaretContainer';
 import NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
 import CaretFormat from '../fmt/CaretFormat';

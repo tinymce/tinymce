@@ -8,11 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import CaretCandidate from './CaretCandidate';
+import * as CaretCandidate from './CaretCandidate';
 import DOMUtils from '../api/dom/DOMUtils';
 import NodeType from '../dom/NodeType';
-import ClientRect from '../geom/ClientRect';
-import RangeNodes from '../selection/RangeNodes';
+import * as ClientRect from '../geom/ClientRect';
+import * as RangeNodes from '../selection/RangeNodes';
 import * as ExtendingChar from '../text/ExtendingChar';
 import Fun from '../util/Fun';
 
@@ -28,31 +28,26 @@ import Fun from '../util/Fun';
  * var caretPos2 = CaretPosition.fromRangeStart(someRange);
  */
 
-const isElement = NodeType.isElement,
-  isCaretCandidate = CaretCandidate.isCaretCandidate,
-  isBlock = NodeType.matchStyleValues('display', 'block table'),
-  isFloated = NodeType.matchStyleValues('float', 'left right'),
-  isValidElementCaretCandidate = Fun.and(isElement, isCaretCandidate, Fun.negate(isFloated)),
-  isNotPre = Fun.negate(NodeType.matchStyleValues('white-space', 'pre pre-line pre-wrap')),
-  isText = NodeType.isText,
-  isBr = NodeType.isBr,
-  nodeIndex = DOMUtils.nodeIndex,
-  resolveIndex = RangeNodes.getNode;
+const isElement = NodeType.isElement;
+const isCaretCandidate = CaretCandidate.isCaretCandidate;
+const isBlock = NodeType.matchStyleValues('display', 'block table');
+const isFloated = NodeType.matchStyleValues('float', 'left right');
+const isValidElementCaretCandidate = Fun.and(isElement, isCaretCandidate, Fun.negate(isFloated));
+const isNotPre = Fun.negate(NodeType.matchStyleValues('white-space', 'pre pre-line pre-wrap'));
+const isText = NodeType.isText;
+const isBr = NodeType.isBr;
+const nodeIndex = DOMUtils.nodeIndex;
+const resolveIndex = RangeNodes.getNode;
+const createRange = (doc: Document): Range => 'createRange' in doc ? doc.createRange() : DOMUtils.DOM.createRng();
+const isWhiteSpace = (chr: string): boolean => chr && /[\r\n\t ]/.test(chr);
+const isRange = (rng: any): rng is Range => !!rng.setStart && !!rng.setEnd;
 
-const createRange = function (doc) {
-  return 'createRange' in doc ? doc.createRange() : DOMUtils.DOM.createRng();
-};
-
-const isWhiteSpace = function (chr) {
-  return chr && /[\r\n\t ]/.test(chr);
-};
-
-const isHiddenWhiteSpaceRange = function (range) {
+const isHiddenWhiteSpaceRange = (range: Range): boolean => {
   const container = range.startContainer;
   const offset = range.startOffset;
   let text;
 
-  if (isWhiteSpace(range.toString()) && isNotPre(container.parentNode)) {
+  if (isWhiteSpace(range.toString()) && isNotPre(container.parentNode) && NodeType.isText(container)) {
     text = container.data;
 
     if (isWhiteSpace(text[offset - 1]) || isWhiteSpace(text[offset + 1])) {
@@ -63,52 +58,52 @@ const isHiddenWhiteSpaceRange = function (range) {
   return false;
 };
 
-const getCaretPositionClientRects = function (caretPosition) {
+// Hack for older WebKit versions that doesn't
+// support getBoundingClientRect on BR elements
+const getBrClientRect = (brNode: Element): ClientRect => {
+  const doc = brNode.ownerDocument;
+  const rng = createRange(doc);
+  const nbsp = doc.createTextNode('\u00a0');
+  const parentNode = brNode.parentNode;
+  let clientRect;
+
+  parentNode.insertBefore(nbsp, brNode);
+  rng.setStart(nbsp, 0);
+  rng.setEnd(nbsp, 1);
+  clientRect = ClientRect.clone(rng.getBoundingClientRect());
+  parentNode.removeChild(nbsp);
+
+  return clientRect;
+};
+
+const getBoundingClientRect = (item: Element | Range): ClientRect => {
+  let clientRect, clientRects;
+
+  clientRects = item.getClientRects();
+  if (clientRects.length > 0) {
+    clientRect = ClientRect.clone(clientRects[0]);
+  } else {
+    clientRect = ClientRect.clone(item.getBoundingClientRect());
+  }
+
+  if (!isRange(item) && isBr(item) && clientRect.left === 0) {
+    return getBrClientRect(item);
+  }
+
+  return clientRect;
+};
+
+const collapseAndInflateWidth = (clientRect: ClientRect, toStart: boolean): ClientRect.ClientRect => {
+  const newClientRect = ClientRect.collapse(clientRect, toStart);
+  newClientRect.width = 1;
+  newClientRect.right = newClientRect.left + 1;
+
+  return newClientRect;
+};
+
+const getCaretPositionClientRects = (caretPosition: CaretPosition): ClientRect[] => {
   const clientRects = [];
   let beforeNode, node;
-
-  // Hack for older WebKit versions that doesn't
-  // support getBoundingClientRect on BR elements
-  const getBrClientRect = function (brNode) {
-    const doc = brNode.ownerDocument;
-    const rng = createRange(doc);
-    const nbsp = doc.createTextNode('\u00a0');
-    const parentNode = brNode.parentNode;
-    let clientRect;
-
-    parentNode.insertBefore(nbsp, brNode);
-    rng.setStart(nbsp, 0);
-    rng.setEnd(nbsp, 1);
-    clientRect = ClientRect.clone(rng.getBoundingClientRect());
-    parentNode.removeChild(nbsp);
-
-    return clientRect;
-  };
-
-  const getBoundingClientRect = function (item) {
-    let clientRect, clientRects;
-
-    clientRects = item.getClientRects();
-    if (clientRects.length > 0) {
-      clientRect = ClientRect.clone(clientRects[0]);
-    } else {
-      clientRect = ClientRect.clone(item.getBoundingClientRect());
-    }
-
-    if (isBr(item) && clientRect.left === 0) {
-      return getBrClientRect(item);
-    }
-
-    return clientRect;
-  };
-
-  const collapseAndInflateWidth = function (clientRect, toStart) {
-    clientRect = ClientRect.collapse(clientRect, toStart);
-    clientRect.width = 1;
-    clientRect.right = clientRect.left + 1;
-
-    return clientRect;
-  };
 
   const addUniqueAndValidRect = function (clientRect) {
     if (clientRect.height === 0) {

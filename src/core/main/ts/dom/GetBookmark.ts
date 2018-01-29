@@ -9,11 +9,11 @@
  */
 
 import { Fun } from '@ephox/katamari';
-import CaretBookmark from '../caret/CaretBookmark';
-import CaretContainer from '../caret/CaretContainer';
+import * as CaretBookmark from '../caret/CaretBookmark';
+import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import NodeType from './NodeType';
-import RangeNodes from '../selection/RangeNodes';
+import * as RangeNodes from '../selection/RangeNodes';
 import Zwsp from '../text/Zwsp';
 import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';

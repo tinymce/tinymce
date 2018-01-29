@@ -10,7 +10,7 @@
 
 import { Option, Options } from '@ephox/katamari';
 import Env from '../api/Env';
-import CaretBookmark from '../caret/CaretBookmark';
+import * as CaretBookmark from '../caret/CaretBookmark';
 import CaretPosition from '../caret/CaretPosition';
 import NodeType from './NodeType';
 import Tools from '../api/util/Tools';

@@ -13,7 +13,7 @@ import { Compare, Focus, Element } from '@ephox/sugar';
 import Env from '../api/Env';
 import CaretFinder from '../caret/CaretFinder';
 import * as ElementType from '../dom/ElementType';
-import RangeNodes from '../selection/RangeNodes';
+import * as RangeNodes from '../selection/RangeNodes';
 import SelectionBookmark from '../selection/SelectionBookmark';
 import { Selection } from '../api/dom/Selection';
 

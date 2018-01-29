@@ -12,7 +12,7 @@ import { Fun } from '@ephox/katamari';
 import CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import NormalizeRange from '../../selection/NormalizeRange';
 import RangeCompare from '../../selection/RangeCompare';
-import RangeNodes from '../../selection/RangeNodes';
+import * as RangeNodes from '../../selection/RangeNodes';
 import RangeWalk from '../../selection/RangeWalk';
 import SplitRange from '../../selection/SplitRange';
 

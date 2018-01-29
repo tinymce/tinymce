@@ -25,11 +25,11 @@ export default {
   TAB: 9,
   UP: 38,
 
-  modifierPressed (e) {
+  modifierPressed (e: KeyboardEvent): boolean {
     return e.shiftKey || e.ctrlKey || e.altKey || this.metaKeyPressed(e);
   },
 
-  metaKeyPressed (e) {
+  metaKeyPressed (e: KeyboardEvent): boolean {
     // Check if ctrl or meta key is pressed. Edge case for AltGr on Windows where it produces ctrlKey+altKey states
     return (Env.mac ? e.metaKey : e.ctrlKey && !e.altKey);
   }

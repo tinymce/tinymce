@@ -10,11 +10,11 @@
 
 import { PlatformDetection } from '@ephox/sand';
 import BoundarySelection from './BoundarySelection';
-import CefNavigation from './CefNavigation';
+import * as CefNavigation from './CefNavigation';
 import MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
 
-const executeKeydownOverride = function (editor, caret, evt) {
+const executeKeydownOverride = function (editor, caret, evt: KeyboardEvent) {
   const os = PlatformDetection.detect().os;
 
   MatchKeys.execute([

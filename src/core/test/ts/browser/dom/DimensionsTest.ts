@@ -1,7 +1,7 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Arr from 'tinymce/core/util/Arr';
-import Dimensions from 'tinymce/core/dom/Dimensions';
+import * as Dimensions from 'tinymce/core/dom/Dimensions';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 
@@ -19,11 +19,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.DimensionsTest', function () {
   suite.test('getClientRects', function () {
     const viewElm = setupHtml('abc<span>123</span>');
 
-    LegacyUnit.strictEqual(Dimensions.getClientRects(viewElm.firstChild).length, 1);
-    LegacyUnit.strictEqual(Dimensions.getClientRects(viewElm.lastChild).length, 1);
-    LegacyUnit.equalDom(Dimensions.getClientRects(viewElm.firstChild)[0].node, viewElm.firstChild);
-    LegacyUnit.strictEqual(Dimensions.getClientRects(viewElm.firstChild)[0].left > 3, true);
-    LegacyUnit.strictEqual(Dimensions.getClientRects(viewElm.lastChild)[0].left > 3, true);
+    LegacyUnit.strictEqual(Dimensions.getClientRects([viewElm.firstChild]).length, 1);
+    LegacyUnit.strictEqual(Dimensions.getClientRects([viewElm.lastChild]).length, 1);
+    LegacyUnit.equalDom(Dimensions.getClientRects([viewElm.firstChild])[0].node, viewElm.firstChild);
+    LegacyUnit.strictEqual(Dimensions.getClientRects([viewElm.firstChild])[0].left > 3, true);
+    LegacyUnit.strictEqual(Dimensions.getClientRects([viewElm.lastChild])[0].left > 3, true);
   });
 
   suite.test('getClientRects from array', function () {

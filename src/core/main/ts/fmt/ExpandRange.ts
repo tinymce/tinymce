@@ -11,7 +11,7 @@
 import Bookmarks from '../dom/Bookmarks';
 import TreeWalker from '../api/dom/TreeWalker';
 import FormatUtils from './FormatUtils';
-import RangeNodes from '../selection/RangeNodes';
+import * as RangeNodes from '../selection/RangeNodes';
 
 const isBookmarkNode = Bookmarks.isBookmarkNode;
 const getParents = FormatUtils.getParents, isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode, isTextBlock = FormatUtils.isTextBlock;
