@@ -498,7 +498,7 @@ module.exports = function (grunt) {
               'name': 'tinymce/tinymce',
               'version': packageData.version,
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'license': ['LGPL-2.1'],
+              'license': ['LGPL-2.1-only'],
               'keywords': ['editor', 'wysiwyg', 'tinymce', 'richtext', 'javascript', 'html'],
               'homepage': 'http://www.tinymce.com',
               'type': 'component',
