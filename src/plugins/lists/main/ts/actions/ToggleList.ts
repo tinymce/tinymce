@@ -40,6 +40,10 @@ const updateListWithDetails = function (dom, el, detail) {
   updateListAttrs(dom, el, detail);
 };
 
+const removeStyles = (dom, element: HTMLElement, styles: string[]) => {
+  Tools.each(styles, (style) => dom.setStyle(element, { [style]: '' }));
+};
+
 const getEndPointNode = function (editor, rng, start, root) {
   let container, offset;
 
@@ -131,13 +135,12 @@ const hasCompatibleStyle = function (dom, sib, detail) {
   return sibStyle === detailStyle;
 };
 
-const applyList = function (editor, listName, detail) {
+const applyList = function (editor, listName: string, detail = {}) {
   const rng = editor.selection.getRng(true);
-  let bookmark, listItemName = 'LI';
+  let bookmark;
+  let listItemName = 'LI';
   const root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
   const dom = editor.dom;
-
-  detail = detail ? detail : {};
 
   if (dom.getContentEditable(editor.selection.getNode()) === 'false') {
     return;
@@ -165,6 +168,11 @@ const applyList = function (editor, listName, detail) {
       listBlock.appendChild(block);
       block = dom.rename(block, listItemName);
     }
+
+    removeStyles(dom, block, [
+      'margin', 'margin-right', 'margin-bottom', 'margin-left', 'margin-top',
+      'padding', 'padding-right', 'padding-bottom', 'padding-left', 'padding-top',
+    ]);
 
     updateListWithDetails(dom, listBlock, detail);
     mergeWithAdjacentLists(editor.dom, listBlock);
