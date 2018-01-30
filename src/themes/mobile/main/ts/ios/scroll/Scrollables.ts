@@ -1,7 +1,6 @@
 import { Fun } from '@ephox/katamari';
-import { DomEvent } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
+import { Attr, DomEvent, SelectorFind } from '@ephox/sugar';
+
 import Styles from '../../style/Styles';
 
 const dataHorizontal = 'data-' + Styles.resolve('horizontal-scroll');

@@ -1,12 +1,10 @@
-import { Pipeline } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { Pipeline, RawAssertions, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+
 import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
 import IframeContent from 'tinymce/plugins/preview/ui/IframeContent';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', function () {
   const success = arguments[arguments.length - 2];

@@ -1,11 +1,5 @@
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import { Hierarchy } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Hierarchy, Element } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import ViewBlock from '../../module/test/ViewBlock';
 import Theme from 'tinymce/themes/modern/Theme';

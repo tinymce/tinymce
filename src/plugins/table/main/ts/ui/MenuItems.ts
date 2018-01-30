@@ -8,11 +8,10 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Fun } from '@ephox/katamari';
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Element } from '@ephox/sugar';
+
 import InsertTable from '../actions/InsertTable';
 import TableTargets from '../queries/TableTargets';
 import TableDialog from './TableDialog';

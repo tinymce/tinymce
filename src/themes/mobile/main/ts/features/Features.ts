@@ -1,10 +1,7 @@
-import { Behaviour } from '@ephox/alloy';
-import { Receiving } from '@ephox/alloy';
-import { Toggling } from '@ephox/alloy';
+import { Behaviour, Receiving, Toggling } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Type } from '@ephox/katamari';
+import { Arr, Option, Type } from '@ephox/katamari';
+
 import Receivers from '../channels/Receivers';
 import TinyChannels from '../channels/TinyChannels';
 import Styles from '../style/Styles';

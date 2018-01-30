@@ -8,8 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import Bookmarks from './dom/Bookmarks';
 import NodeType from './dom/NodeType';

@@ -8,18 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { CellMutations } from '@ephox/snooker';
-import { TableDirection } from '@ephox/snooker';
-import { TableFill } from '@ephox/snooker';
-import { TableGridSize } from '@ephox/snooker';
-import { TableOperations } from '@ephox/snooker';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
+import { Arr, Fun, Option } from '@ephox/katamari';
+import {
+    CellMutations, TableDirection, TableFill, TableGridSize, TableOperations
+} from '@ephox/snooker';
+import { Attr, Element, Node, SelectorFilter } from '@ephox/sugar';
+
 import Util from '../alien/Util';
 import Direction from '../queries/Direction';
 

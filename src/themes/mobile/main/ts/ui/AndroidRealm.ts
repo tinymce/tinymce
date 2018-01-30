@@ -1,6 +1,6 @@
 import { Replacing } from '@ephox/alloy';
-import { Fun } from '@ephox/katamari';
-import { Singleton } from '@ephox/katamari';
+import { Fun, Singleton } from '@ephox/katamari';
+
 import AndroidWebapp from '../api/AndroidWebapp';
 import Styles from '../style/Styles';
 import ScrollingToolbar from '../toolbar/ScrollingToolbar';

@@ -1,12 +1,9 @@
-import { Keys } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { TinyActions } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
+import { Keys, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+
 import SavePlugin from 'tinymce/plugins/save/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.save.SaveSanityTest', function () {
   const success = arguments[arguments.length - 2];

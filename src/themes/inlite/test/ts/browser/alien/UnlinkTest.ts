@@ -1,11 +1,9 @@
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/inlite/Theme';
-import Unlink from 'tinymce/themes/inlite/alien/Unlink';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
+import { GeneralSteps, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+
+import Unlink from 'tinymce/themes/inlite/alien/Unlink';
+import Theme from 'tinymce/themes/inlite/Theme';
 
 UnitTest.asynctest('browser.alien.UnlinkTest', function () {
   const success = arguments[arguments.length - 2];

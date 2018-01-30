@@ -1,9 +1,7 @@
 import { Toggling } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Id } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import { Arr, Fun, Id, Merger } from '@ephox/katamari';
+
 import DefaultStyleFormats from '../features/DefaultStyleFormats';
 import StylesMenu from '../ui/StylesMenu';
 import StyleConversions from './StyleConversions';

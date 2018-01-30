@@ -1,15 +1,9 @@
-import { Assertions } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Attachment } from '@ephox/alloy';
-import { Gui } from '@ephox/alloy';
-import TestStore from './TestStore';
+import { Assertions, Pipeline, Step } from '@ephox/agar';
+import { Attachment, Gui } from '@ephox/alloy';
 import { Merger } from '@ephox/katamari';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
+import { DomEvent, Element, Html, Insert, Remove } from '@ephox/sugar';
+
+import TestStore from './TestStore';
 
 const setup = function (createComponent, f, success, failure) {
   const store = TestStore();

@@ -1,13 +1,6 @@
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Element, SelectorFind, Traverse } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', function () {

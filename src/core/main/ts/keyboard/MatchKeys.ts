@@ -8,9 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import { Arr, Fun, Merger } from '@ephox/katamari';
 
 const defaultPatterns = function (patterns) {
   return Arr.map(patterns, function (pattern) {

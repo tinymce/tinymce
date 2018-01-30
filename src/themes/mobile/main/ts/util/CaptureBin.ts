@@ -1,8 +1,4 @@
-import { Focus } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
+import { Css, Element, Focus, Insert, Remove } from '@ephox/sugar';
 
 const input = function (parent, operation) {
   // to capture focus allowing the keyboard to remain open with no 'real' selection

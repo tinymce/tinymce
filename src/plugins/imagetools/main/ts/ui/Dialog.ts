@@ -8,13 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { ImageTransformations } from '@ephox/imagetools';
-import { ResultConversions } from '@ephox/imagetools';
+import { ImageTransformations, ResultConversions } from '@ephox/imagetools';
 import { URL } from '@ephox/sand';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Factory from 'tinymce/core/api/ui/Factory';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import UndoStack from '../core/UndoStack';
 import ImagePanel from './ImagePanel';
 

@@ -1,16 +1,11 @@
-import { Swapping } from '@ephox/alloy';
-import { AlloyTriggers } from '@ephox/alloy';
-import { Attachment } from '@ephox/alloy';
-import { Debugging } from '@ephox/alloy';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { AlloyTriggers, Attachment, Debugging, Swapping } from '@ephox/alloy';
+import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Focus } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import ThemeManager from 'tinymce/core/api/ThemeManager';
+import { Element, Focus, Insert, Node } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import ThemeManager from 'tinymce/core/api/ThemeManager';
+
 import TinyCodeDupe from './alien/TinyCodeDupe';
 import Settings from './api/Settings';
 import TinyChannels from './channels/TinyChannels';

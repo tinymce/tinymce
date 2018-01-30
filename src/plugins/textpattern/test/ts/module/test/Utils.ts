@@ -1,6 +1,4 @@
-import { ApproxStructure } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Keys } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 
 const sSetContentAndPressKey = function (key) {

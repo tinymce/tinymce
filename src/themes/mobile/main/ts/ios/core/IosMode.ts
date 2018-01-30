@@ -1,19 +1,15 @@
-import { Fun } from '@ephox/katamari';
-import { Singleton } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import IosEvents from './IosEvents';
-import IosSetup from './IosSetup';
-import PlatformEditor from './PlatformEditor';
-import Scrollables from '../scroll/Scrollables';
-import IosKeyboard from '../view/IosKeyboard';
-import Thor from '../../util/Thor';
+import { Fun, Singleton, Struct } from '@ephox/katamari';
+import { Class, Css, Element, Focus } from '@ephox/sugar';
+
 import Styles from '../../style/Styles';
 import Scrollable from '../../touch/scroll/Scrollable';
 import MetaViewport from '../../touch/view/MetaViewport';
+import Thor from '../../util/Thor';
+import Scrollables from '../scroll/Scrollables';
+import IosKeyboard from '../view/IosKeyboard';
+import IosEvents from './IosEvents';
+import IosSetup from './IosSetup';
+import PlatformEditor from './PlatformEditor';
 
 const create = function (platform, mask) {
   const meta = MetaViewport.tag();

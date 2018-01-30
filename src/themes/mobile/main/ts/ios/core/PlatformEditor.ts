@@ -1,9 +1,5 @@
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { WindowSelection } from '@ephox/sugar';
+import { Fun, Option } from '@ephox/katamari';
+import { Compare, DomEvent, Element, WindowSelection } from '@ephox/sugar';
 
 const getBodyFromFrame = function (frame) {
   return Option.some(Element.fromDom(frame.dom().contentWindow.document.body));

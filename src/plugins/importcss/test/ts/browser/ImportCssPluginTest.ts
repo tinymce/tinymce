@@ -1,12 +1,11 @@
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
-import { LegacyUnit } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+
 import Factory from 'tinymce/core/api/ui/Factory';
 import ImportCssPlugin from 'tinymce/plugins/importcss/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', function () {
   const success = arguments[arguments.length - 2];

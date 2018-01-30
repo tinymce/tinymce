@@ -1,13 +1,7 @@
-import { Assertions } from '@ephox/agar';
-import { Cursors } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Assertions, Cursors, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Hierarchy } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
+import { Hierarchy, Element, Html } from '@ephox/sugar';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 

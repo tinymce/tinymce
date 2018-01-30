@@ -1,11 +1,6 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiControls } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { TinyDom } from '@ephox/mcagar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 const sOpenDialog = function (ui) {

@@ -9,9 +9,7 @@
  */
 
 import { TableSelection } from '@ephox/darwin';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 import Ephemera from '../selection/Ephemera';
 import SelectionTypes from '../selection/SelectionTypes';

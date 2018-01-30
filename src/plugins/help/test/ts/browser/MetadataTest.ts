@@ -1,16 +1,13 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { TinyDom } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
+import { Assertions, Chain, Pipeline, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Html } from '@ephox/sugar';
+
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
 import FakePlugin from '../module/test/FakePlugin';
 import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: .MetadataTest', function () {
   const success = arguments[arguments.length - 2];

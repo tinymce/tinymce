@@ -1,17 +1,10 @@
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyDom } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { Assertions, GeneralSteps, Keyboard, Keys, Pipeline, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function () {
   const success = arguments[arguments.length - 2];

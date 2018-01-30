@@ -1,15 +1,10 @@
-import { Adt } from '@ephox/katamari';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
-import { Height } from '@ephox/sugar';
-import DeviceZones from './DeviceZones';
+import { Adt, Arr, Fun } from '@ephox/katamari';
+import { Attr, Css, Height, SelectorFilter, Traverse } from '@ephox/sugar';
+
 import Styles from '../../style/Styles';
 import Scrollable from '../../touch/scroll/Scrollable';
 import DataAttributes from '../../util/DataAttributes';
+import DeviceZones from './DeviceZones';
 
 const fixture = Adt.generate([
   { fixed: [ 'element', 'property', 'offsetY' ] },

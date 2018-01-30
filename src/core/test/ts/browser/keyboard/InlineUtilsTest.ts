@@ -1,11 +1,5 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Hierarchy } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { Hierarchy, Element } from '@ephox/sugar';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import Zwsp from 'tinymce/core/text/Zwsp';

@@ -8,9 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Insert } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
+import { Insert, Element, Attr } from '@ephox/sugar';
 import EditorUpload from '../api/EditorUpload';
 import ForceBlocks from '../ForceBlocks';
 import NodeChange from '../NodeChange';

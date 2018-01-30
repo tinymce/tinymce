@@ -1,15 +1,6 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
+import { Assertions, Chain, Logger, Pipeline, RawAssertions } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
-import { Hierarchy } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
-import { Selection } from '@ephox/sugar';
-import { WindowSelection } from '@ephox/sugar';
+import { Hierarchy, Remove, Element, Traverse, Selection, WindowSelection } from '@ephox/sugar';
 import SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';

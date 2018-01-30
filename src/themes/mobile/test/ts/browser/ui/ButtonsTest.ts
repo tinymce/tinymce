@@ -1,18 +1,16 @@
-import { GeneralSteps } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Memento } from '@ephox/alloy';
-import { Attachment } from '@ephox/alloy';
-import GuiSetup from '../../module/test/GuiSetup';
-import { Body } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { GeneralSteps, Pipeline } from '@ephox/agar';
+import { Attachment, Memento } from '@ephox/alloy';
+import { UnitTest } from '@ephox/bedrock';
+import { Body, Class, Traverse } from '@ephox/sugar';
+
 import TinyChannels from 'tinymce/themes/mobile/channels/TinyChannels';
+import Buttons from 'tinymce/themes/mobile/ui/Buttons';
+import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
+
+import GuiSetup from '../../module/test/GuiSetup';
 import TestEditor from '../../module/test/ui/TestEditor';
 import TestStyles from '../../module/test/ui/TestStyles';
 import TestUi from '../../module/test/ui/TestUi';
-import Buttons from 'tinymce/themes/mobile/ui/Buttons';
-import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: ui.ButtonsTest', function () {
   const success = arguments[arguments.length - 2];

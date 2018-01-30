@@ -1,12 +1,6 @@
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Compare } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Text } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
-import { Selection } from '@ephox/sugar';
+import { Compare, Element, Node, Text, Traverse, Selection } from '@ephox/sugar';
 
 const browser = PlatformDetection.detect().browser;
 

@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
-import { LegacyUnit } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import FocusManager from 'tinymce/core/api/FocusManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import FocusController from 'tinymce/core/focus/FocusController';

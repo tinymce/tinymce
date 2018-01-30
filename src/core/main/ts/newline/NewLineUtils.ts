@@ -8,8 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import * as ElementType from '../dom/ElementType';
 import NodeType from '../dom/NodeType';

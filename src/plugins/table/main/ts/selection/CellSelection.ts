@@ -8,24 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { InputHandlers } from '@ephox/darwin';
-import { SelectionAnnotation } from '@ephox/darwin';
-import { SelectionKeys } from '@ephox/darwin';
+import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
 import { Fun, Option, Struct } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { Compare } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Text } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
-import { Selection } from '@ephox/sugar';
-import { SelectionDirection } from '@ephox/sugar';
+import {
+    Attr, Compare, Element, Node, Selection, SelectionDirection, Text, Traverse
+} from '@ephox/sugar';
+
 import Util from '../alien/Util';
 import Direction from '../queries/Direction';
 import Ephemera from './Ephemera';
-
-/*eslint no-bitwise:0 */
 
 export default function (editor, lazyResize) {
   const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);

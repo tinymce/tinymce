@@ -8,8 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Option } from '@ephox/katamari';
-import { Options } from '@ephox/katamari';
+import { Option, Options } from '@ephox/katamari';
 import Env from '../api/Env';
 import CaretBookmark from '../caret/CaretBookmark';
 import CaretPosition from '../caret/CaretPosition';

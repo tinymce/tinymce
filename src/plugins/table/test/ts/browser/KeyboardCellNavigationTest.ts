@@ -1,16 +1,11 @@
-import { Keys } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
+import { Keys, Pipeline, RawAssertions, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { Cell } from '@ephox/katamari';
-import { TinyActions } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+
 import Env from 'tinymce/core/api/Env';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.table.quirks.KeyboardCellNavigationTest',

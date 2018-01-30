@@ -1,20 +1,15 @@
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Throttler } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Body } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
+import { Fun, Option, Throttler } from '@ephox/katamari';
+import { Body, Css, DomEvent, Element, Focus } from '@ephox/sugar';
+
+import Orientation from '../../touch/view/Orientation';
+import CaptureBin from '../../util/CaptureBin';
+import Rectangles from '../../util/Rectangles';
 import FakeSelection from '../focus/FakeSelection';
 import IosScrolling from '../scroll/IosScrolling';
 import BackgroundActivity from '../smooth/BackgroundActivity';
 import Greenzone from '../view/Greenzone';
 import IosUpdates from '../view/IosUpdates';
 import IosViewport from '../view/IosViewport';
-import Orientation from '../../touch/view/Orientation';
-import CaptureBin from '../../util/CaptureBin';
-import Rectangles from '../../util/Rectangles';
 
 const VIEW_MARGIN = 5;
 

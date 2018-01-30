@@ -1,12 +1,6 @@
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { Cell } from '@ephox/katamari';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 import Theme from 'tinymce/themes/modern/Theme';

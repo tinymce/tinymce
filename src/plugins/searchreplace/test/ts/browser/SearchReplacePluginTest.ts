@@ -1,9 +1,10 @@
 import { Pipeline } from '@ephox/agar';
-import { LegacyUnit } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import HtmlUtils from '../module/test/HtmlUtils';
-import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+
+import Theme from 'tinymce/themes/modern/Theme';
+
+import HtmlUtils from '../module/test/HtmlUtils';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.searchreplace.SearchReplacePluginTest',

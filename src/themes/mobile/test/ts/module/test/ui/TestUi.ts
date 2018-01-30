@@ -1,18 +1,7 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiControls } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import { Toggling } from '@ephox/alloy';
-import { AlloyTriggers } from '@ephox/alloy';
-import { NativeEvents } from '@ephox/alloy';
-import { AlloyLogger } from '@ephox/alloy';
+import { Assertions, Chain, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { AlloyLogger, AlloyTriggers, NativeEvents, Toggling } from '@ephox/alloy';
 import { Result } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Attr, Focus, Traverse } from '@ephox/sugar';
 
 const cGetFocused = Chain.binder(function () {
   return Focus.active().fold(function () {

@@ -1,8 +1,4 @@
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ViewBlock from '../../../module/test/ViewBlock';

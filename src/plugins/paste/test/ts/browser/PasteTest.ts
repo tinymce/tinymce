@@ -1,14 +1,14 @@
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
-import { LegacyUnit } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+
 import Env from 'tinymce/core/api/Env';
 import Utils from 'tinymce/plugins/paste/core/Utils';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import Strings from '../module/test/Strings';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+
+import Strings from '../module/test/Strings';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
   const success = arguments[arguments.length - 2];

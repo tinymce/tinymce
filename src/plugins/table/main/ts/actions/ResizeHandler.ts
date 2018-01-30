@@ -7,17 +7,14 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
 import { Arr, Option } from '@ephox/katamari';
-import { ResizeWire } from '@ephox/snooker';
-import { TableDirection } from '@ephox/snooker';
-import { TableResize } from '@ephox/snooker';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
-import TableWire from './TableWire';
-import Direction from '../queries/Direction';
+import { ResizeWire, TableDirection, TableResize } from '@ephox/snooker';
+import { Attr, Element, SelectorFilter } from '@ephox/sugar';
+
 import Tools from 'tinymce/core/api/util/Tools';
+
+import Direction from '../queries/Direction';
+import TableWire from './TableWire';
 
 export default function (editor) {
   let selectionRng = Option.none();

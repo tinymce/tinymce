@@ -1,10 +1,10 @@
 import { Pipeline } from '@ephox/agar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
-import TextColorPlugin from 'tinymce/plugins/textcolor/Plugin';
-import ColorPickerPlugin from 'tinymce/plugins/colorpicker/Plugin';
-import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { TinyLoader, TinyUi } from '@ephox/mcagar';
+
+import ColorPickerPlugin from 'tinymce/plugins/colorpicker/Plugin';
+import TextColorPlugin from 'tinymce/plugins/textcolor/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.colorpicker.ColorPickerSanityTest', function () {
   const success = arguments[arguments.length - 2];

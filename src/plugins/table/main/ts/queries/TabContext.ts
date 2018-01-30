@@ -8,19 +8,14 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { CellNavigation } from '@ephox/snooker';
-import { TableLookup } from '@ephox/snooker';
-import { Compare } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { CursorPosition } from '@ephox/sugar';
-import { Selection } from '@ephox/sugar';
-import { WindowSelection } from '@ephox/sugar';
+import { Arr, Option } from '@ephox/katamari';
+import { CellNavigation, TableLookup } from '@ephox/snooker';
+import {
+    Compare, CursorPosition, Element, Node, Selection, SelectorFilter, SelectorFind, WindowSelection
+} from '@ephox/sugar';
+
 import VK from 'tinymce/core/api/util/VK';
+
 import Util from '../alien/Util';
 import TableTargets from './TableTargets';
 

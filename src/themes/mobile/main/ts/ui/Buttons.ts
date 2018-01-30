@@ -1,8 +1,6 @@
-import { Behaviour } from '@ephox/alloy';
-import { Toggling } from '@ephox/alloy';
-import { Unselecting } from '@ephox/alloy';
-import { Button } from '@ephox/alloy';
+import { Behaviour, Button, Toggling, Unselecting } from '@ephox/alloy';
 import { Merger } from '@ephox/katamari';
+
 import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
 import UiDomFactory from '../util/UiDomFactory';

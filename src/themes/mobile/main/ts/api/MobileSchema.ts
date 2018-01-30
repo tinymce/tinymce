@@ -1,8 +1,6 @@
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Element, Traverse } from '@ephox/sugar';
 
 export default ValueSchema.objOf([
   FieldSchema.strictObjOf('editor', [

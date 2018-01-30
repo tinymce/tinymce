@@ -1,9 +1,5 @@
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { TextContent } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
+import { Fun, Option } from '@ephox/katamari';
+import { Attr, Element, SelectorFind, TextContent } from '@ephox/sugar';
 
 const isNotEmpty = function (val) {
   return val.length > 0;

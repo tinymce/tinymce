@@ -1,12 +1,5 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { TransformFind } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Arr, Fun, Option } from '@ephox/katamari';
+import { Compare, Css, Element, Node, TransformFind, Traverse } from '@ephox/sugar';
 
 const candidates = [ '9px', '10px', '11px', '12px', '14px', '16px', '18px', '20px', '24px', '32px', '36px' ];
 

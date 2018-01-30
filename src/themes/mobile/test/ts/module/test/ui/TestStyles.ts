@@ -1,15 +1,6 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
+import { Assertions, Chain, UiFinder, Waiter } from '@ephox/agar';
 import { Id } from '@ephox/katamari';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
+import { Attr, Class, Css, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
 
 const styleClass = Id.generate('ui-test-styles');
 

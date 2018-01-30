@@ -1,6 +1,4 @@
-import { Assertions } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Assertions, Pipeline, Step } from '@ephox/agar';
 import { Option } from '@ephox/katamari';
 import LazyEvaluator from 'tinymce/core/util/LazyEvaluator';
 import { UnitTest } from '@ephox/bedrock';

@@ -1,13 +1,11 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
+import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { Fun } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
+
 import ProcessFilters from 'tinymce/plugins/paste/core/ProcessFilters';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', function () {
   const success = arguments[arguments.length - 2];

@@ -1,3 +1,22 @@
+import { Fun } from '@ephox/katamari';
+import { Element, SelectorFind } from '@ephox/sugar';
+
+import EditorManager from 'tinymce/core/api/EditorManager';
+import Env from 'tinymce/core/api/Env';
+
+import Control from './Control';
+import Align from './editorui/Align';
+import FontSelect from './editorui/FontSelect';
+import FontSizeSelect from './editorui/FontSizeSelect';
+import Formats from './editorui/Formats';
+import FormatSelect from './editorui/FormatSelect';
+import InsertButton from './editorui/InsertButton';
+import SimpleControls from './editorui/SimpleControls';
+import UndoRedo from './editorui/UndoRedo';
+import VisualAid from './editorui/VisualAid';
+import FloatPanel from './FloatPanel';
+import Widget from './Widget';
+
 /**
  * FormatControls.js
  *
@@ -7,24 +26,6 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
-import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import EditorManager from 'tinymce/core/api/EditorManager';
-import Env from 'tinymce/core/api/Env';
-import Control from './Control';
-import FloatPanel from './FloatPanel';
-import Widget from './Widget';
-import Align from './editorui/Align';
-import FontSelect from './editorui/FontSelect';
-import FontSizeSelect from './editorui/FontSizeSelect';
-import FormatSelect from './editorui/FormatSelect';
-import Formats from './editorui/Formats';
-import InsertButton from './editorui/InsertButton';
-import SimpleControls from './editorui/SimpleControls';
-import UndoRedo from './editorui/UndoRedo';
-import VisualAid from './editorui/VisualAid';
 
 const setupEnvironment = function () {
   Widget.tooltips = !Env.iOS;

@@ -1,15 +1,11 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { TinyDom } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
+import { Assertions, Chain, Pipeline, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Html } from '@ephox/sugar';
+
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.plugin.IgnoreForcedPluginsTest', function () {
   const success = arguments[arguments.length - 2];

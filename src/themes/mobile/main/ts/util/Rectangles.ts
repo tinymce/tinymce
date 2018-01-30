@@ -1,10 +1,5 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
-import { Awareness } from '@ephox/sugar';
-import { Selection } from '@ephox/sugar';
-import { WindowSelection } from '@ephox/sugar';
+import { Arr, Fun } from '@ephox/katamari';
+import { Awareness, Element, Selection, Traverse, WindowSelection } from '@ephox/sugar';
 
 const COLLAPSED_WIDTH = 2;
 

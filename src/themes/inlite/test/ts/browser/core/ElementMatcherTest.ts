@@ -1,9 +1,7 @@
-import { Step } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
+import { Assertions, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+
 import ElementMatcher from 'tinymce/themes/inlite/core/ElementMatcher';
 import PredicateId from 'tinymce/themes/inlite/core/PredicateId';
 import Theme from 'tinymce/themes/inlite/Theme';

@@ -1,3 +1,11 @@
+import { Arr, Fun } from '@ephox/katamari';
+
+import EditorManager from 'tinymce/core/api/EditorManager';
+import Tools from 'tinymce/core/api/util/Tools';
+
+import ComboBox from './ComboBox';
+import LinkTargets from './content/LinkTargets';
+
 /**
  * FilePicker.js
  *
@@ -7,13 +15,6 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import LinkTargets from './content/LinkTargets';
-import EditorManager from 'tinymce/core/api/EditorManager';
-import ComboBox from './ComboBox';
-import Tools from 'tinymce/core/api/util/Tools';
 
 /**
  * This class creates a file picker control.

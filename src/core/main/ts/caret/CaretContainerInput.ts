@@ -9,8 +9,7 @@
  */
 
 import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
+import { Element, SelectorFind } from '@ephox/sugar';
 import CaretContainer from './CaretContainer';
 
 /**

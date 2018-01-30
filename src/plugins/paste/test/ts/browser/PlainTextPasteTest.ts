@@ -1,16 +1,13 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Guard } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Id } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import EditorManager from 'tinymce/core/api/EditorManager';
-import ViewBlock from '../module/test/ViewBlock';
-import PastePlugin from 'tinymce/plugins/paste/Plugin';
-import MockDataTransfer from '../module/test/MockDataTransfer';
-import Theme from 'tinymce/themes/modern/Theme';
+import { Assertions, Chain, Guard, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Id, Merger, Obj } from '@ephox/katamari';
+
+import EditorManager from 'tinymce/core/api/EditorManager';
+import PastePlugin from 'tinymce/plugins/paste/Plugin';
+import Theme from 'tinymce/themes/modern/Theme';
+
+import MockDataTransfer from '../module/test/MockDataTransfer';
+import ViewBlock from '../module/test/ViewBlock';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.PlainTextPaste', function () {
   const success = arguments[arguments.length - 2];

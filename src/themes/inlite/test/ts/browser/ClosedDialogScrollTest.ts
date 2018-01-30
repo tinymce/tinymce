@@ -1,15 +1,11 @@
-import { Chain } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { TinyActions } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { Chain, Keys, Pipeline, RawAssertions, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import InliteTheme from 'tinymce/themes/inlite/Theme';
+
 import Toolbar from '../module/test/Toolbar';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.ClosedDialogScrollTest', function () {
   const success = arguments[arguments.length - 2];

@@ -1,10 +1,10 @@
 import { Assertions } from '@ephox/agar';
-import { Obj } from '@ephox/katamari';
-import { Arr } from '@ephox/katamari';
-import Theme from 'tinymce/themes/modern/Theme';
-import PastePlugin from 'tinymce/plugins/paste/Plugin';
-import Newlines from 'tinymce/plugins/paste/core/Newlines';
 import { UnitTest } from '@ephox/bedrock';
+import { Arr, Obj } from '@ephox/katamari';
+
+import Newlines from 'tinymce/plugins/paste/core/Newlines';
+import PastePlugin from 'tinymce/plugins/paste/Plugin';
+import Theme from 'tinymce/themes/modern/Theme';
 
 UnitTest.test('tinymce.plugins.paste.browser.NewlinesTest', function () {
   Theme();

@@ -1,6 +1,6 @@
 import { Replacing } from '@ephox/alloy';
-import { Fun } from '@ephox/katamari';
-import { Singleton } from '@ephox/katamari';
+import { Fun, Singleton } from '@ephox/katamari';
+
 import IosWebapp from '../api/IosWebapp';
 import Styles from '../style/Styles';
 import ScrollingToolbar from '../toolbar/ScrollingToolbar';

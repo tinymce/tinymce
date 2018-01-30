@@ -9,11 +9,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
+import { Insert, Remove, Element, Node, Attr } from '@ephox/sugar';
 import CaretPosition from '../caret/CaretPosition';
 import NodeType from '../dom/NodeType';
 import PaddingBr from '../dom/PaddingBr';

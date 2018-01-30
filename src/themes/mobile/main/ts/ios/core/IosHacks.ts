@@ -1,5 +1,4 @@
-import { Focus } from '@ephox/sugar';
-import { WindowSelection } from '@ephox/sugar';
+import { Focus, WindowSelection } from '@ephox/sugar';
 
 const setSelectionAtTouch = function (editorApi, touchEvent) {
   // shortTextFix, when text is short body height is short too, tapping at the bottom of the editor

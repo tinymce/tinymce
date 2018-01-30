@@ -9,13 +9,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Text } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Insert, Remove, Element, Node, Text, SelectorFilter, Traverse } from '@ephox/sugar';
 import * as ElementType from './ElementType';
 
 const getLastChildren = function (elm) {

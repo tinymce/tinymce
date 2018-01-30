@@ -1,12 +1,11 @@
-import { GeneralSteps } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
-import Plugin from 'tinymce/plugins/media/Plugin';
-import Utils from '../module/test/Utils';
-import Theme from 'tinymce/themes/modern/Theme';
+import { GeneralSteps, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+
+import Plugin from 'tinymce/plugins/media/Plugin';
+import Theme from 'tinymce/themes/modern/Theme';
+
+import Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.core.DataAttributeTest', function () {
   const success = arguments[arguments.length - 2];

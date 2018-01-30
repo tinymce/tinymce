@@ -1,13 +1,10 @@
-import { Pipeline } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyDom } from '@ephox/mcagar';
-import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import { Assertions, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
+
+import LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', function () {
   const success = arguments[arguments.length - 2];

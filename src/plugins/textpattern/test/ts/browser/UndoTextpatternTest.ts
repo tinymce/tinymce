@@ -1,13 +1,11 @@
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { TinyActions } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
-import Utils from '../module/test/Utils';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+
+import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
+import Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.textpattern.UndoTextpatternTest', function () {
   const success = arguments[arguments.length - 2];

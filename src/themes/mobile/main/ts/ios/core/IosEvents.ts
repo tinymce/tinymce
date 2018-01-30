@@ -1,8 +1,6 @@
-import { Arr } from '@ephox/katamari';
-import { Throttler } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Height } from '@ephox/sugar';
+import { Arr, Throttler } from '@ephox/katamari';
+import { Compare, DomEvent, Height } from '@ephox/sugar';
+
 import TappingEvent from '../../util/TappingEvent';
 
 const initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {

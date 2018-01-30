@@ -1,12 +1,5 @@
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { TinyActions } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { Assertions, GeneralSteps, Keys, Logger, Pipeline, Step } from '@ephox/agar';
+import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import WordSelection from 'tinymce/core/selection/WordSelection';
 import Zwsp from 'tinymce/core/text/Zwsp';

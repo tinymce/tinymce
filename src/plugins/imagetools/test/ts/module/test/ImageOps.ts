@@ -1,19 +1,8 @@
-import { Chain } from '@ephox/agar';
-import { Guard } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
+import { Chain, Guard, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
 import Clicks from '@ephox/agar/lib/main/ts/ephox/agar/mouse/Clicks';
-import { Fun } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { TinyDom } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
-import { DomEvent } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { PredicateFilter } from '@ephox/sugar';
-import { Selectors } from '@ephox/sugar';
-import { Visibility } from '@ephox/sugar';
+import { Fun, Result } from '@ephox/katamari';
+import { TinyDom, TinyUi } from '@ephox/mcagar';
+import { Attr, DomEvent, PredicateFilter, Selectors, Visibility } from '@ephox/sugar';
 
 export default function (editor) {
   const ui = TinyUi(editor);

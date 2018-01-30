@@ -1,13 +1,8 @@
 import { Toggling } from '@ephox/alloy';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Compare } from '@ephox/sugar';
-import { Focus } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Compare, DomEvent, Element, Focus, Node, Traverse } from '@ephox/sugar';
+
 import TappingEvent from '../../util/TappingEvent';
 
 const isAndroid6 = PlatformDetection.detect().os.version.major >= 6;

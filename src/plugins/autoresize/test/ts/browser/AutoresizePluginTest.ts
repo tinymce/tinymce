@@ -1,13 +1,6 @@
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
+import { Assertions, GeneralSteps, Logger, Pipeline, RawAssertions, Step, Waiter } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import AutoresizePlugin from 'tinymce/plugins/autoresize/Plugin';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';

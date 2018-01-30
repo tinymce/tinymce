@@ -9,11 +9,8 @@
  */
 
 import { ResizeWire } from '@ephox/snooker';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Body } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
+import { Body, Css, Element, Insert, Remove } from '@ephox/sugar';
+
 import Util from '../alien/Util';
 
 const createContainer = function () {

@@ -1,17 +1,9 @@
-import { Chain } from '@ephox/agar';
-import { NamedChain } from '@ephox/agar';
-import { Guard } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { TinyDom } from '@ephox/mcagar';
-import { Editor } from '@ephox/mcagar';
-import { ApiChains } from '@ephox/mcagar';
-import { UiChains } from '@ephox/mcagar';
+import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { ApiChains, Editor, TinyDom, UiChains } from '@ephox/mcagar';
+
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', function () {
   const success = arguments[arguments.length - 2];

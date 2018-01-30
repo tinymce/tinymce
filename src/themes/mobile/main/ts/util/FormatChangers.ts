@@ -1,6 +1,5 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
+
 import TinyChannels from '../channels/TinyChannels';
 
 const fontSizes = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];

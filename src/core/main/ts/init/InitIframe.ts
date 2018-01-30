@@ -8,9 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
+import { Element, Attr, Css } from '@ephox/sugar';
 import Env from '../api/Env';
 import Settings from '../api/Settings';
 import DOMUtils from '../api/dom/DOMUtils';

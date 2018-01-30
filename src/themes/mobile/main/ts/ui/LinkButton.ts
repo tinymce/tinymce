@@ -1,11 +1,11 @@
 import { Representing } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
-import { Thunk } from '@ephox/katamari';
+import { Option, Thunk } from '@ephox/katamari';
+
 import LinkBridge from '../bridge/LinkBridge';
+import RangePreserver from '../util/RangePreserver';
 import Buttons from './Buttons';
 import Inputs from './Inputs';
 import SerialisedDialog from './SerialisedDialog';
-import RangePreserver from '../util/RangePreserver';
 
 const getGroups = Thunk.cached(function (realm, editor) {
   return [

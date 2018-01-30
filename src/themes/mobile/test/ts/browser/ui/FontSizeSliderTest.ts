@@ -1,16 +1,15 @@
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Mouse, Pipeline, Step } from '@ephox/agar';
 import { Attachment } from '@ephox/alloy';
+import { UnitTest } from '@ephox/bedrock';
 import { PlatformDetection } from '@ephox/sand';
-import { Body } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
+import { Body, Class } from '@ephox/sugar';
+
+import FontSizeSlider from 'tinymce/themes/mobile/ui/FontSizeSlider';
+import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
+
 import TestFrameEditor from '../../module/test/ui/TestFrameEditor';
 import TestSelectors from '../../module/test/ui/TestSelectors';
 import TestStyles from '../../module/test/ui/TestStyles';
-import FontSizeSlider from 'tinymce/themes/mobile/ui/FontSizeSlider';
-import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function () {
   const success = arguments[arguments.length - 2];
