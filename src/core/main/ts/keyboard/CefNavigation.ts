@@ -26,7 +26,7 @@ const getSelectedNode = RangeNodes.getSelectedNode;
 const isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse;
 const isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse;
 
-const getVisualCaretPosition = function (walkFn, caretPosition) {
+const getVisualCaretPosition = (walkFn, caretPosition: CaretPosition): CaretPosition => {
   while ((caretPosition = walkFn(caretPosition))) {
     if (caretPosition.isVisible()) {
       return caretPosition;
@@ -36,11 +36,11 @@ const getVisualCaretPosition = function (walkFn, caretPosition) {
   return caretPosition;
 };
 
-const isMoveInsideSameBlock = function (fromCaretPosition, toCaretPosition) {
-  const inSameBlock = CaretUtils.isInSameBlock(fromCaretPosition, toCaretPosition);
+const isMoveInsideSameBlock = (from: CaretPosition, to: CaretPosition): boolean => {
+  const inSameBlock = CaretUtils.isInSameBlock(from, to);
 
   // Handle bogus BR <p>abc|<br></p>
-  if (!inSameBlock && NodeType.isBr(fromCaretPosition.getNode())) {
+  if (!inSameBlock && NodeType.isBr(from.getNode())) {
     return true;
   }
 
@@ -61,13 +61,15 @@ const getNormalizedRangeEndPoint = function (direction, rootNode, range) {
   return CaretPosition.fromRangeEnd(range);
 };
 
-const moveToCeFalseHorizontally = function (direction, editor, getNextPosFn, isBeforeContentEditableFalseFn, range) {
+const moveToCeFalseHorizontally = function (direction: HDirection, editor, getNextPosFn, range) {
   let node, caretPosition, peekCaretPosition, rangeIsInContainerBlock;
+  const forwards = direction === HDirection.Forwards;
+  const isBeforeContentEditableFalseFn = forwards ? isBeforeContentEditableFalse : isAfterContentEditableFalse;
 
   if (!range.collapsed) {
     node = getSelectedNode(range);
     if (isContentEditableFalse(node)) {
-      return CefUtils.showCaret(direction, editor, node, direction === -1);
+      return CefUtils.showCaret(direction, editor, node, direction === HDirection.Backwards);
     }
   }
 
@@ -75,7 +77,7 @@ const moveToCeFalseHorizontally = function (direction, editor, getNextPosFn, isB
   caretPosition = getNormalizedRangeEndPoint(direction, editor.getBody(), range);
 
   if (isBeforeContentEditableFalseFn(caretPosition)) {
-    return CefUtils.selectNode(editor, caretPosition.getNode(direction === -1));
+    return CefUtils.selectNode(editor, caretPosition.getNode(!forwards));
   }
 
   caretPosition = getNextPosFn(caretPosition);
@@ -88,14 +90,14 @@ const moveToCeFalseHorizontally = function (direction, editor, getNextPosFn, isB
   }
 
   if (isBeforeContentEditableFalseFn(caretPosition)) {
-    return CefUtils.showCaret(direction, editor, caretPosition.getNode(direction === -1), direction === 1);
+    return CefUtils.showCaret(direction, editor, caretPosition.getNode(!forwards), forwards);
   }
 
   // Peek ahead for handling of ab|c<span cE=false> -> abc|<span cE=false>
   peekCaretPosition = getNextPosFn(caretPosition);
   if (isBeforeContentEditableFalseFn(peekCaretPosition)) {
     if (isMoveInsideSameBlock(caretPosition, peekCaretPosition)) {
-      return CefUtils.showCaret(direction, editor, peekCaretPosition.getNode(direction === -1), direction === 1);
+      return CefUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards), forwards);
     }
   }
 
@@ -107,9 +109,9 @@ const moveToCeFalseHorizontally = function (direction, editor, getNextPosFn, isB
 };
 
 const moveToCeFalseVertically = function (direction: LineWalker.VDirection, editor, walkerFn, range: Range) {
-  let caretPosition, linePositions, nextLinePositions,
-    closestNextLineRect, caretClientRect, clientX,
-    dist1, dist2, contentEditableFalseNode;
+  let caretPosition, linePositions, nextLinePositions;
+  let closestNextLineRect, caretClientRect, clientX;
+  let dist1, dist2, contentEditableFalseNode;
 
   contentEditableFalseNode = getSelectedNode(range);
   caretPosition = getNormalizedRangeEndPoint(direction, editor.getBody(), range);
@@ -117,11 +119,11 @@ const moveToCeFalseVertically = function (direction: LineWalker.VDirection, edit
   nextLinePositions = Arr.filter(linePositions, LineWalker.isLine(1));
   caretClientRect = Arr.last(caretPosition.getClientRects());
 
-  if (isBeforeContentEditableFalse(caretPosition)) {
+  if (isBeforeContentEditableFalse(caretPosition) || CaretUtils.isBeforeTable(caretPosition)) {
     contentEditableFalseNode = caretPosition.getNode();
   }
 
-  if (isAfterContentEditableFalse(caretPosition)) {
+  if (isAfterContentEditableFalse(caretPosition) || CaretUtils.isAfterTable(caretPosition)) {
     contentEditableFalseNode = caretPosition.getNode(true);
   }
 
@@ -206,10 +208,9 @@ const getHorizontalRange = (editor, forward: boolean): Range => {
   let newRange;
   const direction = forward ? HDirection.Forwards : HDirection.Backwards;
   const getNextPosFn = forward ? getNextVisualCaretPosition : getPrevVisualCaretPosition;
-  const isBeforeContentEditableFalseFn = forward ? isBeforeContentEditableFalse : isAfterContentEditableFalse;
   const range = editor.selection.getRng();
 
-  newRange = moveToCeFalseHorizontally(direction, editor, getNextPosFn, isBeforeContentEditableFalseFn, range);
+  newRange = moveToCeFalseHorizontally(direction, editor, getNextPosFn, range);
   if (newRange) {
     return newRange;
   }

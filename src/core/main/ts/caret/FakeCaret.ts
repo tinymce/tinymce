@@ -171,6 +171,7 @@ export function FakeCaret(root: HTMLElement, isBlock: (node: Node) => boolean): 
       'position: absolute;' +
       'background-color: black;' +
       'background-color: currentcolor;' +
+      'background-color: red;' +
       '}' +
       '.mce-visual-caret-hidden {' +
       'display: none;' +
@@ -192,6 +193,10 @@ export function FakeCaret(root: HTMLElement, isBlock: (node: Node) => boolean): 
     getCss,
     destroy
   };
+}
+
+export namespace FakeCaret {
+  export const isFakeCaretTarget = (node: Node) => isContentEditableFalse(node) || NodeType.isTable(node);
 }
 
 export default FakeCaret;

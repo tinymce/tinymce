@@ -89,6 +89,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function () {
     LegacyUnit.strictEqual(NodeType.hasAttribute('y')($('<div x="1"></div>')[0]), false);
   });
 
+  suite.test('isTable', function () {
+    LegacyUnit.strictEqual(NodeType.isTable($('<table><tr><td></td></tr></table>')[0]), true);
+    LegacyUnit.strictEqual(NodeType.isTable($('<div></div>')[0]), false);
+    LegacyUnit.strictEqual(NodeType.isTable(document.createTextNode('test')), false);
+    LegacyUnit.strictEqual(NodeType.isTable(null), false);
+  });
+
   Pipeline.async({}, suite.toSteps({}), function () {
     success();
   }, failure);

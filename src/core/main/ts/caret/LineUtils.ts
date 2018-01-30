@@ -16,6 +16,7 @@ import CaretUtils from './CaretUtils';
 import * as CaretCandidate from './CaretCandidate';
 import { Fun } from '@ephox/katamari';
 import { ClientRectLine, VDirection } from 'tinymce/core/caret/LineWalker';
+import { FakeCaret } from 'tinymce/core/caret/FakeCaret';
 
 export interface CaretInfo {
   node: Node;
@@ -28,7 +29,7 @@ const distanceToRectLeft = (clientRect: NodeClientRect, clientX: number) => Math
 const distanceToRectRight = (clientRect: NodeClientRect, clientX: number) => Math.abs(clientRect.right - clientX);
 const isInside = (clientX: number, clientRect: ClientRect): boolean => clientX >= clientRect.left && clientX <= clientRect.right;
 
-const findClosestClientRect = (clientRects: ClientRect[], clientX: number): ClientRect => {
+const findClosestClientRect = (clientRects: ClientRect[], clientX: number): NodeClientRect => {
   return Arr.reduce(clientRects, (oldClientRect, clientRect) => {
     let oldDistance, newDistance;
 
@@ -87,7 +88,7 @@ const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect): ClientRe
 };
 
 const getContentEditableFalseChildren = (root: HTMLElement): HTMLElement[] => {
-  return Arr.filter(Arr.toArray(root.getElementsByTagName('*')), isContentEditableFalse);
+  return Arr.filter(Arr.toArray(root.getElementsByTagName('*')), FakeCaret.isFakeCaretTarget);
 };
 
 const caretInfo = (clientRect: NodeClientRect, clientX: number): CaretInfo => {
@@ -98,15 +99,15 @@ const caretInfo = (clientRect: NodeClientRect, clientX: number): CaretInfo => {
 };
 
 const closestCaret = (root: HTMLElement, clientX: number, clientY: number): CaretInfo => {
-  let contentEditableFalseNodeRects, closestNodeRect;
+  let closestNodeRect;
 
-  contentEditableFalseNodeRects = getClientRects(getContentEditableFalseChildren(root));
-  contentEditableFalseNodeRects = Arr.filter(contentEditableFalseNodeRects, (rect) => clientY >= rect.top && clientY <= rect.bottom);
+  const contentEditableFalseNodeRects = getClientRects(getContentEditableFalseChildren(root));
+  const targetNodeRects = Arr.filter(contentEditableFalseNodeRects, (rect) => clientY >= rect.top && clientY <= rect.bottom);
 
-  closestNodeRect = findClosestClientRect(contentEditableFalseNodeRects, clientX);
+  closestNodeRect = findClosestClientRect(targetNodeRects, clientX);
   if (closestNodeRect) {
     closestNodeRect = findClosestClientRect(findLineNodeRects(root, closestNodeRect), clientX);
-    if (closestNodeRect && isContentEditableFalse(closestNodeRect.node)) {
+    if (closestNodeRect && FakeCaret.isFakeCaretTarget(closestNodeRect.node)) {
       return caretInfo(closestNodeRect, clientX);
     }
   }

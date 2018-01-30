@@ -15,16 +15,16 @@ import CaretUtils from './CaretUtils';
 import CaretWalker from './CaretWalker';
 import NodeType from '../dom/NodeType';
 
-const walkToPositionIn = function (forward, rootNode, startNode) {
-  const position = forward ? CaretPosition.before(startNode) : CaretPosition.after(startNode);
-  return fromPosition(forward, rootNode, position);
+const walkToPositionIn = (forward: boolean, root: Node, start: Node) => {
+  const position = forward ? CaretPosition.before(start) : CaretPosition.after(start);
+  return fromPosition(forward, root, position);
 };
 
-const afterElement = function (node) {
+const afterElement = (node): CaretPosition => {
   return NodeType.isBr(node) ? CaretPosition.before(node) : CaretPosition.after(node);
 };
 
-const isBeforeOrStart = function (position) {
+const isBeforeOrStart = (position: CaretPosition): boolean => {
   if (CaretPosition.isTextPosition(position)) {
     return position.offset() === 0;
   } else {
@@ -32,23 +32,24 @@ const isBeforeOrStart = function (position) {
   }
 };
 
-const isAfterOrEnd = function (position) {
+const isAfterOrEnd = (position: CaretPosition): boolean => {
   if (CaretPosition.isTextPosition(position)) {
-    return position.offset() === position.container().data.length;
+    const container = position.container() as Text;
+    return position.offset() === container.data.length;
   } else {
     return CaretCandidate.isCaretCandidate(position.getNode(true));
   }
 };
 
-const isBeforeAfterSameElement = function (from, to) {
+const isBeforeAfterSameElement = (from: CaretPosition, to: CaretPosition): boolean => {
   return !CaretPosition.isTextPosition(from) && !CaretPosition.isTextPosition(to) && from.getNode() === to.getNode(true);
 };
 
-const isAtBr = function (position) {
+const isAtBr = (position: CaretPosition): boolean => {
   return !CaretPosition.isTextPosition(position) && NodeType.isBr(position.getNode());
 };
 
-const shouldSkipPosition = function (forward, from, to) {
+const shouldSkipPosition = (forward: boolean, from: CaretPosition, to: CaretPosition) => {
   if (forward) {
     return !isBeforeAfterSameElement(from, to) && !isAtBr(from) && isAfterOrEnd(from) && isBeforeOrStart(to);
   } else {
@@ -57,23 +58,23 @@ const shouldSkipPosition = function (forward, from, to) {
 };
 
 // Finds: <p>a|<b>b</b></p> -> <p>a<b>|b</b></p>
-const fromPosition = function (forward, rootNode, position) {
-  const walker = CaretWalker(rootNode);
-  return Option.from(forward ? walker.next(position) : walker.prev(position));
+const fromPosition = function (forward: boolean, root: Node, pos: CaretPosition) {
+  const walker = CaretWalker(root);
+  return Option.from(forward ? walker.next(pos) : walker.prev(pos));
 };
 
 // Finds: <p>a|<b>b</b></p> -> <p>a<b>b|</b></p>
-const navigate = function (forward, rootNode, from) {
-  return fromPosition(forward, rootNode, from).bind(function (to) {
-    if (CaretUtils.isInSameBlock(from, to, rootNode) && shouldSkipPosition(forward, from, to)) {
-      return fromPosition(forward, rootNode, to);
+const navigate = (forward: boolean, root: Element, from: CaretPosition) => {
+  return fromPosition(forward, root, from).bind(function (to) {
+    if (CaretUtils.isInSameBlock(from, to, root) && shouldSkipPosition(forward, from, to)) {
+      return fromPosition(forward, root, to);
     } else {
       return Option.some(to);
     }
   });
 };
 
-const positionIn = function (forward, element) {
+const positionIn = (forward: boolean, element: Element) => {
   const startNode = forward ? element.firstChild : element.lastChild;
   if (NodeType.isText(startNode)) {
     return Option.some(CaretPosition(startNode, forward ? 0 : startNode.data.length));

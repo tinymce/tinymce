@@ -64,7 +64,7 @@ const SelectionOverrides = function (editor) {
     editor.selection.scrollIntoView(node, alignToTop);
   };
 
-  const showCaret = function (direction, node, before) {
+  const showCaret = (direction, node: HTMLElement, before: boolean): Range => {
     let e;
 
     e = editor.fire('ShowCaret', {
@@ -234,7 +234,7 @@ const SelectionOverrides = function (editor) {
           if (!hasBetterMouseTarget(e.target, caretInfo.node)) {
             e.preventDefault();
             editor.getBody().focus();
-            setRange(showCaret(1, caretInfo.node, caretInfo.before));
+            setRange(showCaret(1, caretInfo.node as HTMLElement, caretInfo.before));
           }
         }
       }

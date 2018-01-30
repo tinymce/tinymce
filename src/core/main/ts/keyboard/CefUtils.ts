@@ -15,7 +15,7 @@ import NodeType from '../dom/NodeType';
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-const showCaret = function (direction, editor, node: Node, before: boolean) {
+const showCaret = (direction, editor, node: Node, before: boolean): Range => {
   // TODO: Figure out a better way to handle this dependency
   return editor._selectionOverrides.showCaret(direction, node, before);
 };
