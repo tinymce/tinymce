@@ -87,7 +87,7 @@ const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect): ClientRe
   return clientRects;
 };
 
-const getContentEditableFalseChildren = (root: HTMLElement): HTMLElement[] => {
+const getFakeCaretTargets = (root: HTMLElement): HTMLElement[] => {
   return Arr.filter(Arr.toArray(root.getElementsByTagName('*')), FakeCaret.isFakeCaretTarget);
 };
 
@@ -101,7 +101,7 @@ const caretInfo = (clientRect: NodeClientRect, clientX: number): CaretInfo => {
 const closestCaret = (root: HTMLElement, clientX: number, clientY: number): CaretInfo => {
   let closestNodeRect;
 
-  const contentEditableFalseNodeRects = getClientRects(getContentEditableFalseChildren(root));
+  const contentEditableFalseNodeRects = getClientRects(getFakeCaretTargets(root));
   const targetNodeRects = Arr.filter(contentEditableFalseNodeRects, (rect) => clientY >= rect.top && clientY <= rect.bottom);
 
   closestNodeRect = findClosestClientRect(targetNodeRects, clientX);

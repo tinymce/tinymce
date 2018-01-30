@@ -165,6 +165,8 @@ const showCaretContainerBlock = (caretContainer: Element): Element => {
   return null;
 };
 
+const isRangeInCaretContainerBlock = (range: Range): boolean => isCaretContainerBlock(range.startContainer);
+
 export {
   isCaretContainer,
   isCaretContainerBlock,
@@ -178,5 +180,6 @@ export {
   insertBlock,
   hasContent,
   startsWithCaretContainer,
-  endsWithCaretContainer
+  endsWithCaretContainer,
+  isRangeInCaretContainerBlock
 };

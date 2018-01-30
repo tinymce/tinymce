@@ -306,6 +306,16 @@ const getRelativeCefElm = (forward: boolean, caretPosition: CaretPosition) => {
   return Option.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, caretPosition)).filter(isContentEditableFalse);
 };
 
+const getNormalizedRangeEndPoint = (direction: number, root: Node, range: Range): CaretPosition => {
+  const normalizedRange = normalizeRange(direction, root, range);
+
+  if (direction === -1) {
+    return CaretPosition.fromRangeStart(normalizedRange);
+  }
+
+  return CaretPosition.fromRangeEnd(normalizedRange);
+};
+
 export default {
   isForwards,
   isBackwards,
@@ -319,5 +329,6 @@ export default {
   isBeforeTable: curry(isNextToTable, 0) as (caretPosition: CaretPosition) => boolean,
   isAfterTable: curry(isNextToTable, -1) as (caretPosition: CaretPosition) => boolean,
   normalizeRange,
-  getRelativeCefElm
+  getRelativeCefElm,
+  getNormalizedRangeEndPoint
 };

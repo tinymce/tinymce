@@ -37,7 +37,7 @@ const move = (editor, forward: boolean, table: Element): boolean => {
   const rng = editor.selection.getRng();
   const direction = forward ? 1 : -1;
 
-  if (table && isCaretAtStartOrEndOfTable(forward, rng, table)) {
+  if (table && rng.collapsed && isCaretAtStartOrEndOfTable(forward, rng, table)) {
     const newRng = CefUtils.showCaret(direction, editor, table, !forward);
     editor.selection.setRng(newRng);
     return true;

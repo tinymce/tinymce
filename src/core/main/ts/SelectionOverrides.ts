@@ -203,14 +203,19 @@ const SelectionOverrides = function (editor) {
 
     handleTouchSelect(editor);
 
-    editor.on('mousedown', function (e) {
+    editor.on('mousedown', (e: MouseEvent) => {
       let contentEditableRoot;
+      const targetElm = e.target as Element;
+
+      if (targetElm !== rootNode && targetElm.nodeName !== 'HTML' && !editor.dom.isChildOf(targetElm, rootNode)) {
+        return;
+      }
 
       if (EditorView.isXYInContentArea(editor, e.clientX, e.clientY) === false) {
         return;
       }
 
-      contentEditableRoot = getContentEditableRoot(e.target);
+      contentEditableRoot = getContentEditableRoot(targetElm);
       if (contentEditableRoot) {
         if (isContentEditableFalse(contentEditableRoot)) {
           e.preventDefault();
@@ -223,7 +228,7 @@ const SelectionOverrides = function (editor) {
             editor.selection.placeCaretAt(e.clientX, e.clientY);
           }
         }
-      } else {
+      } else if (FakeCaret.isFakeCaretTarget(targetElm) === false) {
         // Remove needs to be called here since the mousedown might alter the selection without calling selection.setRng
         // and therefore not fire the AfterSetSelectionRange event.
         removeContentEditableSelection();
