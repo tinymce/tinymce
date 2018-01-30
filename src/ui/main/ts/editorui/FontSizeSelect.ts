@@ -63,7 +63,7 @@ const getFontSizeItems = function (editor) {
       value = values[1];
     }
 
-    return { text, value };
+    return { text, value, textStyle: 'font-size:' + value };
   });
 };
 
