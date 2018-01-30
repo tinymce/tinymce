@@ -1,8 +1,5 @@
-import { Keyboard } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { LegacyUnit } from '@ephox/mcagar';
-import { TinyDom } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { Keyboard, Pipeline } from '@ephox/agar';
+import { LegacyUnit, TinyDom, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import CaretContainer from 'tinymce/core/caret/CaretContainer';
 import KeyUtils from '../module/test/KeyUtils';

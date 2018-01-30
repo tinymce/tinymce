@@ -8,12 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Fun, Option } from '@ephox/katamari';
+import { Compare, Element, Css, Traverse } from '@ephox/sugar';
 
 const getProp = function (propName, elm) {
   const rawElm = elm.dom();

@@ -1,13 +1,11 @@
-import { Pipeline } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import { TinyDom } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
-import Plugin from 'tinymce/plugins/media/Plugin';
-import Utils from '../module/test/Utils';
-import Theme from 'tinymce/themes/modern/Theme';
+import { Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
+
+import Plugin from 'tinymce/plugins/media/Plugin';
+import Theme from 'tinymce/themes/modern/Theme';
+
+import Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', function () {
   const success = arguments[arguments.length - 2];

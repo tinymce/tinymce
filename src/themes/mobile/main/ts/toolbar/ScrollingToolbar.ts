@@ -1,16 +1,10 @@
-import { AddEventsBehaviour } from '@ephox/alloy';
-import { Behaviour } from '@ephox/alloy';
-import { Keying } from '@ephox/alloy';
-import { Toggling } from '@ephox/alloy';
-import { GuiFactory } from '@ephox/alloy';
-import { AlloyEvents } from '@ephox/alloy';
-import { Container } from '@ephox/alloy';
-import { Toolbar } from '@ephox/alloy';
-import { ToolbarGroup } from '@ephox/alloy';
-import { Arr } from '@ephox/katamari';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import {
+    AddEventsBehaviour, AlloyEvents, Behaviour, Container, GuiFactory, Keying, Toggling, Toolbar,
+    ToolbarGroup
+} from '@ephox/alloy';
+import { Arr, Cell, Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
+
 import Scrollables from '../ios/scroll/Scrollables';
 import Styles from '../style/Styles';
 import Scrollable from '../touch/scroll/Scrollable';

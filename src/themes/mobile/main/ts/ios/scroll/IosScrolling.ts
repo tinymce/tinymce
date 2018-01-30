@@ -1,12 +1,10 @@
-import { Fun } from '@ephox/katamari';
-import { Future } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
-import SmoothAnimation from '../smooth/SmoothAnimation';
-import IosViewport from '../view/IosViewport';
+import { Fun, Future } from '@ephox/katamari';
+import { Attr, Css, Traverse } from '@ephox/sugar';
+
 import Styles from '../../style/Styles';
 import DataAttributes from '../../util/DataAttributes';
+import SmoothAnimation from '../smooth/SmoothAnimation';
+import IosViewport from '../view/IosViewport';
 
 const animator = SmoothAnimation.create();
 

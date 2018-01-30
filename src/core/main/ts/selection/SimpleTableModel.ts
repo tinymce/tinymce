@@ -8,16 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-import { Replication } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
+import { Arr, Option, Struct } from '@ephox/katamari';
+import { Compare, Insert, InsertAll, Replication, Element, Attr, SelectorFilter } from '@ephox/sugar';
 
 const tableModel = Struct.immutable('element', 'width', 'rows');
 const tableRow = Struct.immutable('element', 'cells');

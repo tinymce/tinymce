@@ -1,10 +1,6 @@
-import { Assertions } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
+import { Assertions, Pipeline, Step, Waiter } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
-import { LegacyUnit } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Preview from 'tinymce/core/fmt/Preview';
 import HtmlUtils from '../../module/test/HtmlUtils';
 import Theme from 'tinymce/themes/modern/Theme';

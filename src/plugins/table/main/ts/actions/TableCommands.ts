@@ -8,22 +8,17 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { CopyRows } from '@ephox/snooker';
-import { TableFill } from '@ephox/snooker';
-import { TableLookup } from '@ephox/snooker';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Replication } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { Arr, Fun, Option } from '@ephox/katamari';
+import { CopyRows, TableFill, TableLookup } from '@ephox/snooker';
+import { Element, Insert, Remove, Replication } from '@ephox/sugar';
+
 import Tools from 'tinymce/core/api/util/Tools';
+
 import Util from '../alien/Util';
 import TableTargets from '../queries/TableTargets';
-import TableDialog from '../ui/TableDialog';
-import RowDialog from '../ui/RowDialog';
 import CellDialog from '../ui/CellDialog';
+import RowDialog from '../ui/RowDialog';
+import TableDialog from '../ui/TableDialog';
 
 const each = Tools.each;
 

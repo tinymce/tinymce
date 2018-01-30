@@ -1,9 +1,9 @@
 import { Pipeline } from '@ephox/agar';
-import { LegacyUnit } from '@ephox/mcagar';
-import { Hierarchy } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import FontInfo from 'tinymce/ui/fmt/FontInfo';
 import { UnitTest } from '@ephox/bedrock';
+import { LegacyUnit } from '@ephox/mcagar';
+import { Element, Hierarchy } from '@ephox/sugar';
+
+import FontInfo from 'tinymce/ui/fmt/FontInfo';
 
 UnitTest.asynctest('browser.tinymce.ui.fmt.FontInfoTest', function () {
   const success = arguments[arguments.length - 2];

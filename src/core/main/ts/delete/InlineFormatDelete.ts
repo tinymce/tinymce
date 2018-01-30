@@ -8,10 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Arr, Fun } from '@ephox/katamari';
+import { Element, Traverse } from '@ephox/sugar';
 import CaretPosition from '../caret/CaretPosition';
 import DeleteElement from './DeleteElement';
 import DeleteUtils from './DeleteUtils';

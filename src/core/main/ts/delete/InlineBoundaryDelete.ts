@@ -8,9 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Options } from '@ephox/katamari';
+import { Fun, Option, Options } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';

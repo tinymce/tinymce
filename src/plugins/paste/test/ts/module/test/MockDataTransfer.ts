@@ -1,5 +1,4 @@
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 
 const notImplemented = function () {
   throw new Error('Mockup function is not implemented.');

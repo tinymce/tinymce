@@ -9,11 +9,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
+import { Remove, Element, Attr, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import DragDropOverrides from './DragDropOverrides';
 import EditorView from './EditorView';
 import Env from './api/Env';

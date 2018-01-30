@@ -9,13 +9,9 @@
  */
 
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { CopySelected } from '@ephox/snooker';
-import { TableFill } from '@ephox/snooker';
-import { TableLookup } from '@ephox/snooker';
-import { Replication } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Elements } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
+import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
+import { Element, Elements, Node, Replication } from '@ephox/sugar';
+
 import TableTargets from '../queries/TableTargets';
 import Ephemera from '../selection/Ephemera';
 import SelectionTypes from '../selection/SelectionTypes';

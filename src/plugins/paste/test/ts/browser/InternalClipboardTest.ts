@@ -1,17 +1,13 @@
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { GeneralSteps, Logger, Pipeline, RawAssertions, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+
 import InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
 import Utils from 'tinymce/plugins/paste/core/Utils';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import MockDataTransfer from '../module/test/MockDataTransfer';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+
+import MockDataTransfer from '../module/test/MockDataTransfer';
 
 UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', function () {
   const success = arguments[arguments.length - 2];

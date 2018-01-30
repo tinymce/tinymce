@@ -1,14 +1,10 @@
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { LegacyUnit } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+
 import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', function () {
   const success = arguments[arguments.length - 2];

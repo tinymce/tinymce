@@ -9,9 +9,7 @@
  */
 
 import { Option } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { Focus } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { Compare, Focus, Element } from '@ephox/sugar';
 import Env from '../api/Env';
 import CaretFinder from '../caret/CaretFinder';
 import * as ElementType from '../dom/ElementType';

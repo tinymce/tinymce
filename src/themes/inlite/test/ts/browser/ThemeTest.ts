@@ -1,16 +1,9 @@
-import { Chain } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { UiControls } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import { TinyActions } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyDom } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import {
+    Chain, FocusTools, GeneralSteps, Keys, Mouse, Pipeline, UiControls, UiFinder, Waiter
+} from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyActions, TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
+
 import ContextMenuPlugin from 'tinymce/plugins/contextmenu/Plugin';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
@@ -18,8 +11,8 @@ import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import InliteTheme from 'tinymce/themes/inlite/Theme';
+
 import Toolbar from '../module/test/Toolbar';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.core.ThemeTest', function () {
   const success = arguments[arguments.length - 2];

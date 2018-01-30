@@ -1,22 +1,13 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
+import {
+    Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter
+} from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { Cell } from '@ephox/katamari';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { Hierarchy } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Height } from '@ephox/sugar';
-import { Width } from '@ephox/sugar';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Element, Height, Hierarchy, Width } from '@ephox/sugar';
+
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
   const success = arguments[arguments.length - 2];

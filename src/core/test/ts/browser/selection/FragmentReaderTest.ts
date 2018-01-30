@@ -1,13 +1,6 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
-import { Hierarchy } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
+import { Hierarchy, Insert, Element, Html } from '@ephox/sugar';
 import FragmentReader from 'tinymce/core/selection/FragmentReader';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';

@@ -1,12 +1,6 @@
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { Hierarchy } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Hierarchy, Element } from '@ephox/sugar';
 import DeleteElement from 'tinymce/core/delete/DeleteElement';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';

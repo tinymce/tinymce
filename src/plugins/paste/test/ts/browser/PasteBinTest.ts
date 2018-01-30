@@ -1,15 +1,13 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Id } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
+import { Assertions, Chain, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Id, Merger, Obj } from '@ephox/katamari';
+
 import EditorManager from 'tinymce/core/api/EditorManager';
-import ViewBlock from '../module/test/ViewBlock';
 import PasteBin from 'tinymce/plugins/paste/core/PasteBin';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+
+import ViewBlock from '../module/test/ViewBlock';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function () {
   const success = arguments[arguments.length - 2];

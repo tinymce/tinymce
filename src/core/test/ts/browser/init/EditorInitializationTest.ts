@@ -1,13 +1,7 @@
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
+import { Element, Attr, SelectorFilter } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import ViewBlock from '../../module/test/ViewBlock';

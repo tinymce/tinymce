@@ -1,5 +1,4 @@
-import { Option } from '@ephox/katamari';
-import { Options } from '@ephox/katamari';
+import { Option, Options } from '@ephox/katamari';
 
 /*
 

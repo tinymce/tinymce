@@ -1,14 +1,9 @@
-import { Keys } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import { TinyActions } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { Keys, Pipeline, RawAssertions, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+
 import TabfocusPlugin from 'tinymce/plugins/tabfocus/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', function () {
   const success = arguments[arguments.length - 2];

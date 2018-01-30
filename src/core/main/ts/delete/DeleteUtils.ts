@@ -8,11 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Option } from '@ephox/katamari';
-import { Options } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { PredicateFind } from '@ephox/sugar';
+import { Option, Options } from '@ephox/katamari';
+import { Compare, Element, PredicateFind } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
 import * as ElementType from '../dom/ElementType';
 import InlineUtils from '../keyboard/InlineUtils';

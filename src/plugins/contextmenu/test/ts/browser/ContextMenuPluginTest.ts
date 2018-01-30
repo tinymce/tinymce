@@ -1,17 +1,10 @@
-import { ApproxStructure } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
-import { Hierarchy } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { ApproxStructure, GeneralSteps, Logger, Mouse, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { Element, Hierarchy } from '@ephox/sugar';
+
 import ContextMenuPlugin from 'tinymce/plugins/contextmenu/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.contextmenu.ContextMenuPluginTest', function () {
   const success = arguments[arguments.length - 2];

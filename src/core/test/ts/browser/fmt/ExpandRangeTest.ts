@@ -1,12 +1,6 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { Hierarchy } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Hierarchy, Element } from '@ephox/sugar';
 import ExpandRange from 'tinymce/core/fmt/ExpandRange';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';

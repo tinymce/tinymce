@@ -1,9 +1,5 @@
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
+import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import AdvlistPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';

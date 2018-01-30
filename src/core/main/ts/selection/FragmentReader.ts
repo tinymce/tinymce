@@ -8,16 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Replication } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Fragment } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Arr, Fun } from '@ephox/katamari';
+import { Compare, Insert, Replication, Element, Fragment, Node, SelectorFind, Traverse } from '@ephox/sugar';
 import * as ElementType from '../dom/ElementType';
 import Parents from '../dom/Parents';
 import * as SelectionUtils from './SelectionUtils';

@@ -1,17 +1,12 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import TestStore from '../../module/test/TestStore';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import LinkBridge from 'tinymce/themes/mobile/bridge/LinkBridge';
+import { ApproxStructure, Assertions, Logger, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { Cell, Fun, Option } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+
+import LinkBridge from 'tinymce/themes/mobile/bridge/LinkBridge';
+
+import TestStore from '../../module/test/TestStore';
 
 UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
   const store = TestStore();

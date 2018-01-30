@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
-import { LegacyUnit } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import HtmlUtils from '../../module/test/HtmlUtils';
 import Theme from 'tinymce/themes/modern/Theme';

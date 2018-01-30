@@ -8,19 +8,19 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { BlobConversions } from '@ephox/imagetools';
-import { ImageTransformations } from '@ephox/imagetools';
-import { ResultConversions } from '@ephox/imagetools';
+import { BlobConversions, ImageTransformations, ResultConversions } from '@ephox/imagetools';
 import { Fun } from '@ephox/katamari';
 import { URL } from '@ephox/sand';
+
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import URI from 'tinymce/core/api/util/URI';
+
 import Settings from '../api/Settings';
+import Dialog from '../ui/Dialog';
 import ImageSize from './ImageSize';
 import Proxy from './Proxy';
-import Dialog from '../ui/Dialog';
 
 let count = 0;
 

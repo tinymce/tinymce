@@ -1,6 +1,5 @@
 import { Pipeline } from '@ephox/agar';
-import { LegacyUnit } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Factory from 'tinymce/core/api/ui/Factory';

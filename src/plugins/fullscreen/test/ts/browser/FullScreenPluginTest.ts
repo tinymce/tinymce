@@ -1,11 +1,11 @@
 import { Pipeline } from '@ephox/agar';
-import { LegacyUnit } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { UnitTest } from '@ephox/bedrock';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Plugin from 'tinymce/plugins/fullscreen/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', function () {
   const success = arguments[arguments.length - 2];

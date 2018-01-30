@@ -1,11 +1,5 @@
-import { ApproxStructure } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { TinyActions } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { ApproxStructure, GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
+import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/modern/Theme';

@@ -8,9 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Arr, Cell, Fun } from '@ephox/katamari';
 import CaretContainerRemove from '../caret/CaretContainerRemove';
 import CaretPosition from '../caret/CaretPosition';
 import BoundaryCaret from './BoundaryCaret';

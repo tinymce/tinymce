@@ -1,21 +1,11 @@
-import { AddEventsBehaviour } from '@ephox/alloy';
-import { Behaviour } from '@ephox/alloy';
-import { Composing } from '@ephox/alloy';
-import { Representing } from '@ephox/alloy';
-import { Toggling } from '@ephox/alloy';
-import { Memento } from '@ephox/alloy';
-import { AlloyEvents } from '@ephox/alloy';
-import { AlloyTriggers } from '@ephox/alloy';
-import { NativeEvents } from '@ephox/alloy';
-import { Button } from '@ephox/alloy';
-import { Container } from '@ephox/alloy';
-import { DataField } from '@ephox/alloy';
-import { Input } from '@ephox/alloy';
+import {
+    AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Button, Composing, Container,
+    DataField, Input, Keying, Memento, NativeEvents, Representing, Tabstopping, Toggling
+} from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
+
 import Styles from '../style/Styles';
 import UiDomFactory from '../util/UiDomFactory';
-import { Tabstopping } from '@ephox/alloy';
-import { Keying } from '@ephox/alloy';
 
 const clearInputBehaviour = 'input-clearing';
 

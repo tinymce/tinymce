@@ -1,12 +1,10 @@
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
+import { Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.link.AssumeExternalTargetsTest', function () {
   const success = arguments[arguments.length - 2];

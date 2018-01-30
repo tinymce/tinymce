@@ -8,15 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Options } from '@ephox/katamari';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { PredicateFind } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Fun, Option, Options } from '@ephox/katamari';
+import { Insert, Remove, Element, Node, PredicateFind, Traverse } from '@ephox/sugar';
 import CaretCandidate from '../caret/CaretCandidate';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';

@@ -1,8 +1,8 @@
 import { Step } from '@ephox/agar';
-import TestStore from '../TestStore';
 import { Objects } from '@ephox/boulder';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Cell, Fun } from '@ephox/katamari';
+
+import TestStore from '../TestStore';
 
 export default function () {
   const store = TestStore();

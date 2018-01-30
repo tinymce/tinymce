@@ -1,12 +1,5 @@
-import { Chain } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { UiControls } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { TinyActions } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { Chain, Keys, Mouse, Pipeline, UiControls, UiFinder } from '@ephox/agar';
+import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';

@@ -1,17 +1,14 @@
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
-import { LegacyUnit } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { Blob } from '@ephox/sand';
-import { Uint8Array } from '@ephox/sand';
-import { Window } from '@ephox/sand';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { Blob, Uint8Array, Window } from '@ephox/sand';
+
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
 import Clipboard from 'tinymce/plugins/paste/core/Clipboard';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
   const success = arguments[arguments.length - 2];

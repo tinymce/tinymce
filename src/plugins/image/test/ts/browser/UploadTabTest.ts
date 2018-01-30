@@ -1,17 +1,11 @@
-import { Pipeline } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
-import Plugin from 'tinymce/plugins/image/Plugin';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/modern/Theme';
-import Conversions from 'tinymce/core/file/Conversions';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Arr } from '@ephox/katamari';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+
+import Conversions from 'tinymce/core/file/Conversions';
+import Plugin from 'tinymce/plugins/image/Plugin';
+import Theme from 'tinymce/themes/modern/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () {
   const success = arguments[arguments.length - 2];

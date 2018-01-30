@@ -1,8 +1,6 @@
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { DomEvent, Element } from '@ephox/sugar';
 
 const INTERVAL = 50;
 const INSURANCE = 1000 / INTERVAL;

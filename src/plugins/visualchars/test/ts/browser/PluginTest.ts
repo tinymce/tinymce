@@ -1,12 +1,9 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
+import { ApproxStructure, Assertions, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+
 import Plugin from 'tinymce/plugins/visualchars/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', function () {
   const success = arguments[arguments.length - 2];

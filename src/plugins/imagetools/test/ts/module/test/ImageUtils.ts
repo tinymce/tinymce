@@ -1,6 +1,4 @@
-import { RawAssertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
+import { RawAssertions, Step, Waiter } from '@ephox/agar';
 import { Cell } from '@ephox/katamari';
 
 const sExecCommand = function (editor, cmd, value?) {

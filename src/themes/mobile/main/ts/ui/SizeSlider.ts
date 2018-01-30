@@ -1,8 +1,6 @@
-import { Behaviour } from '@ephox/alloy';
-import { Toggling } from '@ephox/alloy';
-import { Slider } from '@ephox/alloy';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
+import { Behaviour, Slider, Toggling } from '@ephox/alloy';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
+
 import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
 import UiDomFactory from '../util/UiDomFactory';

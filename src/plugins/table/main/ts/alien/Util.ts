@@ -8,8 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Compare } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { Compare, Element } from '@ephox/sugar';
 
 const getBody = function (editor) {
   return Element.fromDom(editor.getBody());

@@ -1,14 +1,11 @@
-import { GeneralSteps } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { TinyActions } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import TablePlugin from 'tinymce/plugins/table/Plugin';
-import TableTestUtils from '../../module/test/TableTestUtils';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import { GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+
+import TablePlugin from 'tinymce/plugins/table/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
+import TableTestUtils from '../../module/test/TableTestUtils';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.table.TableTablNavigationDisabledTest',

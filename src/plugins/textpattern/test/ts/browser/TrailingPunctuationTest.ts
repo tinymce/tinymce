@@ -1,14 +1,9 @@
-import { ApproxStructure } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+
 import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.textpattern.TrailingPunctuationTest',

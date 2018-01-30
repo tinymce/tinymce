@@ -1,6 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import { Arr, Merger } from '@ephox/katamari';
 
 const getFromExpandingItem = function (item) {
   const newItem = Merger.deepMerge(

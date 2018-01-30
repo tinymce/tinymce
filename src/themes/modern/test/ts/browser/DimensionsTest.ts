@@ -1,15 +1,12 @@
-import { Id } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Assertions } from '@ephox/agar';
-import Theme from 'tinymce/themes/modern/Theme';
-import { Pipeline } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Element } from '@ephox/sugar';
-import { Width } from '@ephox/sugar';
-import { Height } from '@ephox/sugar';
-import EditorManager from 'tinymce/core/api/EditorManager';
-import ViewBlock from '../module/test/ViewBlock';
+import { Assertions, Chain, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Id, Merger } from '@ephox/katamari';
+import { Element, Height, Width } from '@ephox/sugar';
+
+import EditorManager from 'tinymce/core/api/EditorManager';
+import Theme from 'tinymce/themes/modern/Theme';
+
+import ViewBlock from '../module/test/ViewBlock';
 
 UnitTest.asynctest('tinymce.themes.modern.test.browser.DimensionsTest', function () {
   const success = arguments[arguments.length - 2];

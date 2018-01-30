@@ -1,14 +1,9 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { NamedChain } from '@ephox/agar';
-import { Guard } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Editor } from '@ephox/mcagar';
-import { TinyDom } from '@ephox/mcagar';
+import { Assertions, Chain, Guard, Mouse, NamedChain, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Editor, TinyDom } from '@ephox/mcagar';
+
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', function () {
   const success = arguments[arguments.length - 2];

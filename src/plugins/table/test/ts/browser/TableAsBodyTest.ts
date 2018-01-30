@@ -1,20 +1,10 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Cursors } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Id } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Selectors } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Assertions, Chain, Cursors, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Id, Merger } from '@ephox/katamari';
+import { Attr, Element, Insert, Remove, Selectors, Traverse } from '@ephox/sugar';
+
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.TableAsBodyTest', function () {
   const success = arguments[arguments.length - 2];

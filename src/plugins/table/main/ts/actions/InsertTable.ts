@@ -7,13 +7,9 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-
 import { Fun } from '@ephox/katamari';
 import { TableRender } from '@ephox/snooker';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
+import { Attr, Element, Html, SelectorFind } from '@ephox/sugar';
 
 const placeCaretInCell = function (editor, cell) {
   editor.selection.select(cell.dom(), true);

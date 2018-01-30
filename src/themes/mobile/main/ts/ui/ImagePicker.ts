@@ -1,10 +1,7 @@
-import { Memento } from '@ephox/alloy';
-import { AlloyEvents } from '@ephox/alloy';
-import { NativeEvents } from '@ephox/alloy';
-import { Button } from '@ephox/alloy';
+import { AlloyEvents, Button, Memento, NativeEvents } from '@ephox/alloy';
 import { BlobConversions } from '@ephox/imagetools';
-import { Id } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Id, Option } from '@ephox/katamari';
+
 import UiDomFactory from '../util/UiDomFactory';
 
 const addImage = function (editor, blob) {

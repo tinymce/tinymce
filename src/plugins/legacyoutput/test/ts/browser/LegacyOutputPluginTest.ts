@@ -1,9 +1,9 @@
 import { Pipeline } from '@ephox/agar';
-import { LegacyUnit } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { UnitTest } from '@ephox/bedrock';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+
 import Plugin from 'tinymce/plugins/legacyoutput/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest(
   'browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest',

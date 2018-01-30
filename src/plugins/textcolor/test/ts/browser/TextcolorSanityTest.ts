@@ -1,12 +1,10 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
+import { ApproxStructure, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+
 import Env from 'tinymce/core/api/Env';
 import TextcolorPlugin from 'tinymce/plugins/textcolor/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', function () {
   const success = arguments[arguments.length - 2];

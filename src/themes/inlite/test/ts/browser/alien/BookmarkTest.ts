@@ -1,11 +1,9 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Cursors } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
+import { Assertions, Chain, Cursors, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { TinyDom } from '@ephox/mcagar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Bookmark from 'tinymce/themes/inlite/alien/Bookmark';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.alien.BookmarkTest', function () {
   const success = arguments[arguments.length - 2];

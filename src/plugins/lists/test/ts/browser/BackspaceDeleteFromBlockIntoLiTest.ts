@@ -1,13 +1,9 @@
-import { GeneralSteps } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { TinyActions } from '@ephox/mcagar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: .RemoveTrailingBlockquoteTest', function () {
   const success = arguments[arguments.length - 2];

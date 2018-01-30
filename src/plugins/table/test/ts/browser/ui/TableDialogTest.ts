@@ -1,23 +1,14 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiControls } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyDom } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
+import {
+    ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiControls,
+    UiFinder
+} from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { Element, SelectorFind } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogTest', function () {
   const success = arguments[arguments.length - 2];

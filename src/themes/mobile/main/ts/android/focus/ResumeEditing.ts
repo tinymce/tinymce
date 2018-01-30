@@ -1,8 +1,5 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
+import { Arr, Fun } from '@ephox/katamari';
+import { Element, Focus, Node } from '@ephox/sugar';
 
 // There are numerous problems with Google Keyboard when we need to switch focus back from a toolbar item / dialog to
 // the content for editing. The major problem is to do with autocomplete. Android Google Keyboard (not Swift) seems to

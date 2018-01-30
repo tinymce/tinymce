@@ -1,10 +1,5 @@
-import { Chain } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
+import { Chain, Mouse, Pipeline, UiFinder } from '@ephox/agar';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';

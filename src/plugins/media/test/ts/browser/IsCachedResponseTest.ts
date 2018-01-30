@@ -1,21 +1,14 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Guard } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { UiControls } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyDom } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
-import { Html } from '@ephox/sugar';
-import MediaPlugin from 'tinymce/plugins/media/Plugin';
-import Utils from '../module/test/Utils';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import {
+    Assertions, Chain, GeneralSteps, Guard, Logger, Mouse, Pipeline, UiControls, UiFinder
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { Html } from '@ephox/sugar';
+
+import MediaPlugin from 'tinymce/plugins/media/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
+import Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', function () {
   const success = arguments[arguments.length - 2];

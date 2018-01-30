@@ -1,11 +1,6 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
+import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
-import { Hierarchy } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
+import { Hierarchy, Element, Html } from '@ephox/sugar';
 import TableCellSelection from 'tinymce/core/selection/TableCellSelection';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';

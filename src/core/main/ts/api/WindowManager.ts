@@ -8,8 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import SelectionBookmark from '../selection/SelectionBookmark';
 import WindowManagerImpl from '../ui/WindowManagerImpl';
 

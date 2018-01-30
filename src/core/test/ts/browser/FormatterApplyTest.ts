@@ -1,8 +1,6 @@
-import { Assertions } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
+import { Assertions, Pipeline } from '@ephox/agar';
 import { Obj } from '@ephox/katamari';
-import { LegacyUnit } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import HtmlUtils from '../module/test/HtmlUtils';
 import KeyUtils from '../module/test/KeyUtils';
 import Theme from 'tinymce/themes/modern/Theme';

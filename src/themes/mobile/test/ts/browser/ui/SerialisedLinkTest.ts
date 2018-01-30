@@ -1,33 +1,22 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
+import {
+    ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse,
+    Pipeline, Step, UiFinder
+} from '@ephox/agar';
 import { Attachment } from '@ephox/alloy';
-import GuiSetup from '../../module/test/GuiSetup';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
+import { UnitTest } from '@ephox/bedrock';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Focus } from '@ephox/sugar';
-import { Body } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Body, Class, Element, Focus, Traverse } from '@ephox/sugar';
+
+import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
+import LinkButton from 'tinymce/themes/mobile/ui/LinkButton';
+
+import GuiSetup from '../../module/test/GuiSetup';
 import TestEditor from '../../module/test/ui/TestEditor';
 import TestSelectors from '../../module/test/ui/TestSelectors';
 import TestStyles from '../../module/test/ui/TestStyles';
 import TestUi from '../../module/test/ui/TestUi';
-import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
-import LinkButton from 'tinymce/themes/mobile/ui/LinkButton';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function () {
   const success = arguments[arguments.length - 2];

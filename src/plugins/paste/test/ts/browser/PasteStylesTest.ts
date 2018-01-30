@@ -1,13 +1,12 @@
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+
 import Env from 'tinymce/core/api/Env';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
-import Paste from '../module/test/Paste';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { UnitTest } from '@ephox/bedrock';
+
+import Paste from '../module/test/Paste';
 
 UnitTest.asynctest('Browser Test: .PasteStylesTest', function () {
   const success = arguments[arguments.length - 2];

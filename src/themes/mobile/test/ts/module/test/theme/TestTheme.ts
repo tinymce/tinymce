@@ -1,13 +1,7 @@
-import { Behaviour } from '@ephox/alloy';
-import { Replacing } from '@ephox/alloy';
-import { GuiFactory } from '@ephox/alloy';
-import { Memento } from '@ephox/alloy';
-import { Attachment } from '@ephox/alloy';
-import { Gui } from '@ephox/alloy';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { Attachment, Behaviour, Gui, GuiFactory, Memento, Replacing } from '@ephox/alloy';
+import { Arr, Fun } from '@ephox/katamari';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 import Features from 'tinymce/themes/mobile/features/Features';
 import FormatChangers from 'tinymce/themes/mobile/util/FormatChangers';

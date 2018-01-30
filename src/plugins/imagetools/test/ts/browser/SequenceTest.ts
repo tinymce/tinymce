@@ -1,13 +1,12 @@
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
+
 import ImageOps from '../module/test/ImageOps';
 import ImageUtils from '../module/test/ImageUtils';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', function () {
   const success = arguments[arguments.length - 2];

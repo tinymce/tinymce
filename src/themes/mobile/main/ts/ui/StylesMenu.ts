@@ -1,21 +1,11 @@
-import { AddEventsBehaviour } from '@ephox/alloy';
-import { Behaviour } from '@ephox/alloy';
-import { Representing } from '@ephox/alloy';
-import { Toggling } from '@ephox/alloy';
-import { Transitioning } from '@ephox/alloy';
-import { GuiFactory } from '@ephox/alloy';
-import { Memento } from '@ephox/alloy';
-import { AlloyEvents } from '@ephox/alloy';
-import { Button } from '@ephox/alloy';
-import { Menu } from '@ephox/alloy';
-import { TieredMenu } from '@ephox/alloy';
+import {
+    AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, Memento, Menu, Representing,
+    TieredMenu, Toggling, Transitioning
+} from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Css } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { Width } from '@ephox/sugar';
+import { Arr, Merger, Obj } from '@ephox/katamari';
+import { Css, SelectorFind, Width } from '@ephox/sugar';
+
 import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
 import Scrollable from '../touch/scroll/Scrollable';

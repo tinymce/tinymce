@@ -1,13 +1,5 @@
-import { Adt } from '@ephox/katamari';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Options } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
+import { Adt, Arr, Fun, Option, Options, Struct } from '@ephox/katamari';
+import { Compare, Element, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
 const tableCellRng = Struct.immutable('start', 'end');
 const tableSelection = Struct.immutable('rng', 'table', 'cells');

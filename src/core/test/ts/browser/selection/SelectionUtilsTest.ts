@@ -1,9 +1,5 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Hierarchy } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
+import { Hierarchy, Element } from '@ephox/sugar';
 import * as SelectionUtils from 'tinymce/core/selection/SelectionUtils';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';

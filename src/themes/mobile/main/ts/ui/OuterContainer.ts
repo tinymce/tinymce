@@ -1,9 +1,6 @@
-import { Behaviour } from '@ephox/alloy';
-import { Swapping } from '@ephox/alloy';
-import { GuiFactory } from '@ephox/alloy';
-import { Gui } from '@ephox/alloy';
-import { Container } from '@ephox/alloy';
+import { Behaviour, Container, Gui, GuiFactory, Swapping } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
+
 import Styles from '../style/Styles';
 
 const READ_ONLY_MODE_CLASS = Fun.constant(Styles.resolve('readonly-mode'));

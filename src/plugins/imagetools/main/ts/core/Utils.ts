@@ -7,9 +7,8 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
+import { FileReader, XMLHttpRequest } from '@ephox/sand';
 
-import { FileReader } from '@ephox/sand';
-import { XMLHttpRequest } from '@ephox/sand';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 

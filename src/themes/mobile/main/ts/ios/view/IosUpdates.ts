@@ -1,7 +1,6 @@
-import { Arr } from '@ephox/katamari';
-import { Future } from '@ephox/katamari';
-import { Futures } from '@ephox/katamari';
+import { Arr, Future, Futures } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
+
 import IosScrolling from '../scroll/IosScrolling';
 import IosViewport from './IosViewport';
 

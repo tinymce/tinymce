@@ -1,5 +1,4 @@
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Pipeline, Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import EventUtils from 'tinymce/core/api/dom/EventUtils';

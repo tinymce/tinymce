@@ -8,12 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
+import { Arr, Fun, Option } from '@ephox/katamari';
+import { Compare, Element, Node } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import DeleteElement from './DeleteElement';

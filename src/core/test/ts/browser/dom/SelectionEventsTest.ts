@@ -1,12 +1,6 @@
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
+import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { Cell, Fun } from '@ephox/katamari';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';

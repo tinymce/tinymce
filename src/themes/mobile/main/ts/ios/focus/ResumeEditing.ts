@@ -1,6 +1,5 @@
-import { Compare } from '@ephox/sugar';
-import { Focus } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
+import { Compare, Element, Focus } from '@ephox/sugar';
+
 import CursorRefresh from '../../touch/focus/CursorRefresh';
 
 const resume = function (cWin, frame) {

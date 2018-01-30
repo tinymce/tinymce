@@ -1,19 +1,13 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyDom } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { Html } from '@ephox/sugar';
-import Plugin from 'tinymce/plugins/imagetools/Plugin';
-import ImageUtils from '../module/test/ImageUtils';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Arr } from '@ephox/katamari';
+import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
+import { Html } from '@ephox/sugar';
+
+import Plugin from 'tinymce/plugins/imagetools/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
+import ImageUtils from '../module/test/ImageUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', function () {
   const success = arguments[arguments.length - 2];

@@ -1,14 +1,8 @@
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyDom } from '@ephox/mcagar';
-import { Assertions } from '@ephox/agar';
-import Theme from 'tinymce/themes/modern/Theme';
-import { Pipeline } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { TinyDom, TinyLoader } from '@ephox/mcagar';
+
+import Theme from 'tinymce/themes/modern/Theme';
 
 UnitTest.asynctest('tinymce.themes.modern.test.browser.SidebarTest', function () {
   const success = arguments[arguments.length - 2];

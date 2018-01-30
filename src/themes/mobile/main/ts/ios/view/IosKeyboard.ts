@@ -1,10 +1,8 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import ResumeEditing from '../focus/ResumeEditing';
+import { Arr, Fun } from '@ephox/katamari';
+import { DomEvent, Focus, Node } from '@ephox/sugar';
+
 import CaptureBin from '../../util/CaptureBin';
+import ResumeEditing from '../focus/ResumeEditing';
 
 /*
  * Stubborn IOS Keyboard mode:

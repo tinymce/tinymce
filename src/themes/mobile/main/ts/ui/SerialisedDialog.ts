@@ -1,26 +1,11 @@
-import { AddEventsBehaviour } from '@ephox/alloy';
-import { Behaviour } from '@ephox/alloy';
-import { Disabling } from '@ephox/alloy';
-import { Highlighting } from '@ephox/alloy';
-import { Keying } from '@ephox/alloy';
-import { Representing } from '@ephox/alloy';
-import { Memento } from '@ephox/alloy';
-import { AlloyEvents } from '@ephox/alloy';
-import { AlloyTriggers } from '@ephox/alloy';
-import { NativeEvents } from '@ephox/alloy';
-import { Button } from '@ephox/alloy';
-import { Container } from '@ephox/alloy';
-import { Form } from '@ephox/alloy';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Cell } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Singleton } from '@ephox/katamari';
-import { Css } from '@ephox/sugar';
-import { SelectorFilter } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { Width } from '@ephox/sugar';
+import {
+    AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Button, Container, Disabling, Form,
+    Highlighting, Keying, Memento, NativeEvents, Representing
+} from '@ephox/alloy';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Arr, Cell, Option, Singleton } from '@ephox/katamari';
+import { Css, SelectorFilter, SelectorFind, Width } from '@ephox/sugar';
+
 import Receivers from '../channels/Receivers';
 import SwipingModel from '../model/SwipingModel';
 import Styles from '../style/Styles';

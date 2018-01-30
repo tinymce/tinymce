@@ -1,16 +1,12 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { TinyApis } from '@ephox/mcagar';
-import { TinyLoader } from '@ephox/mcagar';
-import { TinyUi } from '@ephox/mcagar';
-import { SelectorFilter } from '@ephox/sugar';
-import TablePlugin from 'tinymce/plugins/table/Plugin';
-import TableTestUtils from '../../module/test/TableTestUtils';
-import ModernTheme from 'tinymce/themes/modern/Theme';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { SelectorFilter } from '@ephox/sugar';
+
+import TablePlugin from 'tinymce/plugins/table/Plugin';
+import ModernTheme from 'tinymce/themes/modern/Theme';
+
+import TableTestUtils from '../../module/test/TableTestUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', function () {
   const success = arguments[arguments.length - 2];

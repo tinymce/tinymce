@@ -1,10 +1,5 @@
-import { Assertions } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
-import { Cell } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
+import { Arr, Cell, Merger } from '@ephox/katamari';
 import MatchKeys from 'tinymce/core/keyboard/MatchKeys';
 import { UnitTest } from '@ephox/bedrock';
 

@@ -1,10 +1,10 @@
 import { Assertions } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr, Fun } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Menubar from 'tinymce/themes/modern/ui/Menubar';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('browser.tinymce.themes.modern.test.ui.MenubarTest', function () {
   const menuItems = [
