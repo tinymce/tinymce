@@ -106,7 +106,7 @@ const cancelTimedUpload = function (imageUploadTimerState) {
   clearTimeout(imageUploadTimerState.get());
 };
 
-const updateSelectedImage = function (editor, ir, uploadImmediately, imageUploadTimerState) {
+const updateSelectedImage = function (editor, ir, uploadImmediately, imageUploadTimerState, done = function (image) {}) {
   return ir.toBlob().then(function (blob) {
     let uri, name, blobCache, blobInfo, selectedImage;
 
@@ -152,20 +152,22 @@ const updateSelectedImage = function (editor, ir, uploadImmediately, imageUpload
       editor.$(selectedImage).attr({
         src: blobInfo.blobUri()
       }).removeAttr('data-mce-src');
+
+      done(selectedImage);
     });
 
     return blobInfo;
   });
 };
 
-const selectedImageOperation = function (editor, imageUploadTimerState, fn) {
+const selectedImageOperation = function (editor, imageUploadTimerState, fn, done = null) {
   return function () {
     return editor._scanForImages().
       then(Fun.curry(findSelectedBlob, editor)).
       then(ResultConversions.blobToImageResult).
       then(fn).
       then(function (imageResult) {
-        return updateSelectedImage(editor, imageResult, false, imageUploadTimerState);
+        return updateSelectedImage(editor, imageResult, false, imageUploadTimerState, done);
       }, function (error) {
         displayError(editor, error);
       });
@@ -175,16 +177,16 @@ const selectedImageOperation = function (editor, imageUploadTimerState, fn) {
 const rotate = function (editor, imageUploadTimerState, angle) {
   return function () {
     return selectedImageOperation(editor, imageUploadTimerState, function (imageResult) {
-      const size = ImageSize.getImageSize(getSelectedImage(editor));
+      return ImageTransformations.rotate(imageResult, angle);
+    }, function (selectedImage) {
+      const size = ImageSize.getImageSize(selectedImage);
 
       if (size) {
-        ImageSize.setImageSize(getSelectedImage(editor), {
+        ImageSize.setImageSize(selectedImage, {
           w: size.h,
           h: size.w
         });
       }
-
-      return ImageTransformations.rotate(imageResult, angle);
     })();
   };
 };
