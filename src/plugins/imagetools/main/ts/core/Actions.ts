@@ -160,7 +160,7 @@ const updateSelectedImage = function (editor, ir, uploadImmediately, imageUpload
   });
 };
 
-const selectedImageOperation = function (editor, imageUploadTimerState, fn, done = null) {
+const selectedImageOperation = function (editor, imageUploadTimerState, fn, done = function (image) {}) {
   return function () {
     return editor._scanForImages().
       then(Fun.curry(findSelectedBlob, editor)).
