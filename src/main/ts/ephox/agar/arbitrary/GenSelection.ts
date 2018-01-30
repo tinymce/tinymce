@@ -20,7 +20,7 @@ var gChooseIn = function (target) {
   var offsets = getEnd(target);
   return Jsc.integer(0, offsets).generator.map(function (offset) {
     return { element: target, offset: offset };
-  });      
+  });
 };
 
 var gChooseFrom = function (root, exclusions) {
@@ -43,6 +43,6 @@ var selection = function (root, rawExclusions) {
   });
 };
 
-export default <any> {
+export default {
   selection: selection
 };

@@ -19,7 +19,7 @@ var gEnforce = function (decorations) {
   return Jsc.constant(decorations).generator;
 };
 
-export default <any> {
+export default {
   gOne: gOne,
   gEnforce: gEnforce
 };

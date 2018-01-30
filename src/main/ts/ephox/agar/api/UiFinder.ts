@@ -87,7 +87,7 @@ var cFindAllIn = function (selector) {
   });
 };
 
-export default <any>{
+export default {
   findIn,
   findAllIn,
 

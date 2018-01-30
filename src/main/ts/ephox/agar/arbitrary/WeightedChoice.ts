@@ -38,6 +38,6 @@ var generator = function (candidates) {
   return gChoose(list);
 };
 
-export default <any> {
+export default {
   generator: generator
 };

@@ -86,11 +86,11 @@ var calculateOne = function (container, calcPath) {
   return follow(container, calcPath).getOrDie();
 };
 
-export default <any> {
+export default {
   range: range,
   path: path,
   pathFrom: pathFrom,
-  
+
   cFollow: cFollow,
   cFollowPath: cFollowPath,
   cFollowCursor: cFollowCursor,

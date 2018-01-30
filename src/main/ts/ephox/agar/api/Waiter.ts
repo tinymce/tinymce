@@ -23,7 +23,7 @@ var sTimeout = function (label, step, limit) {
   return Step.control(step, guard);
 };
 
-export default <any>{
+export default {
   sTryUntilPredicate,
   sTryUntil,
   sTryUntilNot,

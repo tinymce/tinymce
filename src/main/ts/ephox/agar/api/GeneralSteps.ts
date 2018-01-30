@@ -70,7 +70,7 @@ var waitForPredicate = function (label, interval, amount, predicate) {
   });
 };
 
-export default <any> {
+export default {
   sequence: sequence,
   repeatUntil: repeatUntil,
   waitForPredicate: waitForPredicate,

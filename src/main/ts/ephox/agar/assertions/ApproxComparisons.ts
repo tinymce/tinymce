@@ -17,7 +17,7 @@ var assertOnBool = function (c, label, value) {
     label + ', Actual value: ' + Json.stringify(strValue),
     true,
     c
-  );      
+  );
 };
 
 var is = function (target) {
@@ -123,7 +123,7 @@ var not = function (target) {
   };
 };
 
-export default <any> {
+export default {
   is: is,
   startsWith: startsWith,
   none: none,

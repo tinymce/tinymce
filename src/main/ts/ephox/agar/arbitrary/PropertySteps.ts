@@ -31,7 +31,7 @@ var stepToPromise = function (step) {
 // Maybe wrap in the same way Jsc does for console output with ticks and crosses.
 var sAsyncProperty = function (name, arbitraries, statefulStep, _options) {
   var options = _options !== undefined ? _options : { };
-  
+
   return Step.async(function (next, die) {
     Jsc.asyncProperty(
       name,
@@ -42,6 +42,6 @@ var sAsyncProperty = function (name, arbitraries, statefulStep, _options) {
   });
 };
 
-export default <any> {
+export default {
   sAsyncProperty: sAsyncProperty
 };

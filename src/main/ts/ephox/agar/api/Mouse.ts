@@ -30,7 +30,7 @@ var sClickOn = function (container, selector) {
 
 var sHoverOn = function (container, selector) {
   return triggerWith(container, selector, function (elem) {
-    Clicks.mouseover(elem, 0, 0);
+    Clicks.mouseover(elem);
   });
 };
 
@@ -62,7 +62,7 @@ var cMouseMoveTo = function (dx, dy) {
   return Chain.op(Clicks.mousemoveTo(dx, dy));
 };
 
-export default <any> {
+export default {
   sClickOn: sClickOn,
   sTrueClickOn: sTrueClickOn,
   sHoverOn: sHoverOn,

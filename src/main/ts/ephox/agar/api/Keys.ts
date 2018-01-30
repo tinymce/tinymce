@@ -2,7 +2,7 @@ import { Fun } from '@ephox/katamari';
 
 
 
-export default <any> {
+export default {
   tab:  Fun.constant(9),
   escape: Fun.constant(27),
   enter: Fun.constant(13),

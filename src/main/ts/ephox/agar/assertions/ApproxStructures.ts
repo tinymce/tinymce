@@ -45,7 +45,7 @@ var text = function (s) {
       assert.fail(Truncate.getHtml(actual) + ' is not a text node, so cannot check if its text is: ' + s.show());
     }, function (t) {
       if (s.strAssert === undefined) throw new Error(Json.stringify(s) + ' is not a *string assertion*');
-      s.strAssert('Checking text content', t);  
+      s.strAssert('Checking text content', t);
     });
   };
 
@@ -122,7 +122,7 @@ var assertChildren = function (expectedChildren, actual) {
   });
 };
 
-export default <any> {
+export default {
   // Force anything to require invoking
   anything: Fun.constant(anything),
   element: element,

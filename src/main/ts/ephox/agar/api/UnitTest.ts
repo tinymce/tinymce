@@ -38,7 +38,7 @@ var domtest = function (name, test) {
   });
 };
 
-export default <any> {
+export default {
   test: test,
   asynctest: asynctest,
   domtest: domtest

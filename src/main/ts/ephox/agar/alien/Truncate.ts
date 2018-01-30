@@ -6,6 +6,6 @@ var getHtml = function (element) {
   return Html.getOuter(clone);
 };
 
-export default <any> {
+export default {
   getHtml: getHtml
 };

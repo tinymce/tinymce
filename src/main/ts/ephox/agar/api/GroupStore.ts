@@ -2,7 +2,7 @@ import { Merger } from '@ephox/katamari';
 
 
 
-export default <any> function () {
+export default function () {
   var data = {};
 
   var record = function (prop, elem) {

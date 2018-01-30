@@ -76,10 +76,10 @@ var extract = function (chain) {
 
 var fromChains = function (chains) {
   var cs = Arr.map(chains, extract);
-  
+
   return on(function (value, next, die) {
     Pipeline.async(wrap(value), cs, next, die);
-  });      
+  });
 };
 
 var fromChainsWith = function (initial, chains) {
@@ -103,18 +103,18 @@ var fromParent = function (parent, chains) {
         cnext(value);
       }, cdie);
     }, cdie);
-  });      
+  });
 };
 
 var asStep = function (initial, chains) {
   return Step.async(function (next, die) {
     var cs = Arr.map(chains, extract);
-    
+
     Pipeline.async(wrap(initial), cs, function () {
       // Ignore all the values and use the original
       next();
     }, die);
-  });      
+  });
 };
 
 // Convenience functions
@@ -144,13 +144,13 @@ var isInput = function (v) {
   return v.chain !== undefined;
 };
 
-var pipeline = function (chains, onSuccess, onFailure, delay) {
+var pipeline = function (chains, onSuccess, onFailure, delay?) {
   Pipeline.async(wrap({}), Arr.map(chains, extract), function (input) {
     onSuccess(unwrap(input));
   }, onFailure, delay);
 };
 
-export default <any> {
+export default {
   on: on,
   op: op,
   control: control,

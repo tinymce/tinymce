@@ -21,11 +21,11 @@ var scenario = function (component, overrides, exclusions) {
   });
 };
 
-var content = function (component, overrides) {
+var content = function (component, overrides?) {
   return ArbContent.arbOf(component, overrides);
 };
 
-export default <any> {
+export default {
   scenario: scenario,
   content: content
 };

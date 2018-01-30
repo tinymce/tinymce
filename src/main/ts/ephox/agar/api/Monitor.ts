@@ -1,6 +1,6 @@
 
 
-export default <any> function (initial, f) {
+export default function (initial, f) {
   var value = initial;
   var run = function () {
     var args = Array.prototype.slice.call(arguments, 0);

@@ -30,7 +30,7 @@ var write = function (name, chain) {
   });
 };
 
-// Partial write does not try and merge in input, because it knows that it 
+// Partial write does not try and merge in input, because it knows that it
 // might not be getting the full input
 var partialWrite = function (name, chain) {
   return Chain.on(function (input, next, die) {
@@ -106,11 +106,11 @@ var output = function (name) {
 
 var outputInput = output(inputName);
 
-var pipeline = function (namedChains, onSuccess, onFailure, delay) {
+var pipeline = function (namedChains, onSuccess, onFailure, delay?) {
   Chain.pipeline([asChain(namedChains)], onSuccess, onFailure, delay);
 };
 
-export default <any> {
+export default {
   inputName: Fun.constant(inputName),
   asChain: asChain,
   write: write,

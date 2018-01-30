@@ -49,7 +49,7 @@ var hexColor = Jsc.tuple([
   return [ '#' ].concat(digits).join('');
 });
 
-export default <any> {
+export default {
   selection: selection,
   describeSelection: describeSelection,
   chooseOne: chooseOne,

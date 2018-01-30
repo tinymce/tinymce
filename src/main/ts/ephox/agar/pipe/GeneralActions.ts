@@ -10,7 +10,7 @@ var debug = function () {
 
 var pass = function () { };
 
-export default <any> {
+export default {
   log: log,
   debug: debug,
   pass: pass

@@ -17,6 +17,6 @@ var assertEq = function (label, expected, actual) {
   if (expected !== actual) assert.eq(expected, actual, label + extra(expected, actual));
 };
 
-export default <any> {
+export default {
   assertEq: assertEq
 };

@@ -40,7 +40,7 @@ var clickAt = function (eventType, button) {
   }
 }
 
-export default <any> {
+export default {
   trigger: trigger,
   mousedown: click('mousedown', LEFT_CLICK),
   mouseup: click('mouseup', LEFT_CLICK),

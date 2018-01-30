@@ -184,7 +184,7 @@ var comment = {
   component: ArbNodes.comment
 };
 
-export default <any> {
+export default {
   whitespace: whitespace,
   formatting: formatting,
   inline: inline,

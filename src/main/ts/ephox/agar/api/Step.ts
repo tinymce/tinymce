@@ -48,7 +48,7 @@ var fail = function (message) {
 
 var pass = sync(GeneralActions.pass);
 
-export default <any> {
+export default {
   stateful: stateful,
   control: control,
   sync: sync,
