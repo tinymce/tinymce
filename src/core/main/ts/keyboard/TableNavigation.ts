@@ -14,6 +14,9 @@ import * as CefUtils from '../keyboard/CefUtils';
 import { Traverse, Element, Compare, PredicateFilter } from '@ephox/sugar';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import NodeType from '../dom/NodeType';
+import { PlatformDetection } from '@ephox/sand';
+
+const browser = PlatformDetection.detect().browser;
 
 const isChild = (first: boolean, elm: Element): boolean => {
   const start = Element.fromDom(elm);
@@ -46,23 +49,42 @@ const move = (editor, forward: boolean, table: Element): boolean => {
   return false;
 };
 
+const navigateHorizontally = (editor, forward: boolean): boolean => {
+  const table = editor.dom.getParent(editor.selection.getNode(), 'table');
+  return move(editor, forward, table);
+};
+
+const navigateVertially = (editor, down: boolean): boolean => {
+  return Option.from(editor.dom.getParent(editor.selection.getNode(), 'table')).map((table) => {
+    const firstOrLast = down ? isLastChild(table) : isFirstChild(table);
+    return firstOrLast && move(editor, down, table);
+  }).getOr(false);
+};
+
+const isTableNavigationBrowser = () => browser.isIE() || browser.isEdge() || browser.isFirefox();
+
 const moveH = (editor, forward: boolean): () => boolean => {
   return () => {
-    const table = editor.dom.getParent(editor.selection.getNode(), 'table');
-    return move(editor, forward, table);
+    if (isTableNavigationBrowser()) {
+      return navigateHorizontally(editor, forward);
+    } else {
+      return false;
+    }
   };
 };
 
-const moveV = (editor, down: boolean): () => boolean => {
+const moveV = (editor, forward: boolean): () => boolean => {
   return () => {
-    return Option.from(editor.dom.getParent(editor.selection.getNode(), 'table')).map((table) => {
-      const firstOrLast = down ? isLastChild(table) : isFirstChild(table);
-      return firstOrLast && move(editor, down, table);
-    }).getOr(false);
+    if (isTableNavigationBrowser()) {
+      return navigateVertially(editor, forward);
+    } else {
+      return false;
+    }
   };
 };
 
 export {
+  isTableNavigationBrowser,
   moveH,
   moveV
 };

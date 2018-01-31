@@ -74,6 +74,7 @@ const hasAttributeValue = function (attrName: string, attrValue: string) {
 };
 
 const isBogus = (node: Node): node is Element => isElement(node) && node.hasAttribute('data-mce-bogus');
+const isBogusAll = (node: Node): node is Element => isElement(node) && node.getAttribute('data-mce-bogus') === 'all';
 const isTable = (node: Node): node is Element => isElement(node) && node.tagName === 'TABLE';
 
 const hasContentEditableState = function (value: string) {
@@ -113,5 +114,6 @@ export default {
   hasAttributeValue,
   matchStyleValues,
   isBogus,
+  isBogusAll,
   isTable
 };

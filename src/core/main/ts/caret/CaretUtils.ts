@@ -287,7 +287,8 @@ const normalizeRange = (direction: number, root: Node, range: Range): Range => {
 };
 
 const isNextToContentEditableFalse = (relativeOffset: number, caretPosition: CaretPosition) => {
-  return isContentEditableFalse(getChildNodeAtRelativeOffset(relativeOffset, caretPosition));
+  const node = getChildNodeAtRelativeOffset(relativeOffset, caretPosition);
+  return isContentEditableFalse(node) && !NodeType.isBogusAll(node);
 };
 
 const isNextToTable = (relativeOffset: number, caretPosition: CaretPosition) => {

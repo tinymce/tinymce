@@ -1,12 +1,14 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Env from 'tinymce/core/api/Env';
-import { FakeCaret } from 'tinymce/core/caret/FakeCaret';
+import { FakeCaret, isFakeCaretTarget } from 'tinymce/core/caret/FakeCaret';
 import $ from 'tinymce/core/api/dom/DomQuery';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
+import { Element } from '@ephox/sugar';
+import { isTableNavigationBrowser } from 'tinymce/core/keyboard/TableNavigation';
 
 UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function () {
   const success = arguments[arguments.length - 2];
@@ -118,6 +120,12 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function () {
     getRoot().innerHTML = '<table><tr><th contenteditable="false">x</th></tr></table>';
     rng = fakeCaret.show(false, $('th', getRoot())[0]);
     LegacyUnit.equal(true, rng === null, 'Should be null since TH is not a valid caret target');
+  });
+
+  suite.test('isFakeCaretTarget', function () {
+    LegacyUnit.equal(false, isFakeCaretTarget(Element.fromHtml('<p></p>').dom()), 'Should not need a fake caret');
+    LegacyUnit.equal(true, isFakeCaretTarget(Element.fromHtml('<p contenteditable="false"></p>').dom()), 'Should always need a fake caret');
+    LegacyUnit.equal(isTableNavigationBrowser(), isFakeCaretTarget(Element.fromHtml('<table></table>').dom()), 'Should on some browsers need a fake caret');
   });
 
   viewBlock.attach();

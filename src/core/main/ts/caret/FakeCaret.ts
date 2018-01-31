@@ -14,6 +14,7 @@ import DomQuery from '../api/dom/DomQuery';
 import NodeType from '../dom/NodeType';
 import * as ClientRect from '../geom/ClientRect';
 import Delay from '../api/util/Delay';
+import { isTableNavigationBrowser } from '../keyboard/TableNavigation';
 
 export interface FakeCaret {
   show: (before: boolean, element: HTMLElement) => Range;
@@ -171,7 +172,7 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean): 
       'position: absolute;' +
       'background-color: black;' +
       'background-color: currentcolor;' +
-      'background-color: red;' +
+      // 'background-color: red;' +
       '}' +
       '.mce-visual-caret-hidden {' +
       'display: none;' +
@@ -195,4 +196,4 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean): 
   };
 };
 
-export const isFakeCaretTarget = (node: Node) => isContentEditableFalse(node) || NodeType.isTable(node);
+export const isFakeCaretTarget = (node: Node) => isContentEditableFalse(node) || (NodeType.isTable(node) && isTableNavigationBrowser());
