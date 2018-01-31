@@ -106,7 +106,7 @@ const cancelTimedUpload = function (imageUploadTimerState) {
   clearTimeout(imageUploadTimerState.get());
 };
 
-const updateSelectedImage = function (editor, ir, uploadImmediately, imageUploadTimerState) {
+const updateSelectedImage = function (editor, ir, uploadImmediately, imageUploadTimerState, size?) {
   return ir.toBlob().then(function (blob) {
     let uri, name, blobCache, blobInfo, selectedImage;
 
@@ -148,6 +148,12 @@ const updateSelectedImage = function (editor, ir, uploadImmediately, imageUpload
       }
 
       editor.$(selectedImage).on('load', imageLoadedHandler);
+      if (size) {
+        editor.$(selectedImage).attr({
+          width: size.w,
+          height: size.h
+        });
+      }
 
       editor.$(selectedImage).attr({
         src: blobInfo.blobUri()
@@ -158,14 +164,14 @@ const updateSelectedImage = function (editor, ir, uploadImmediately, imageUpload
   });
 };
 
-const selectedImageOperation = function (editor, imageUploadTimerState, fn) {
+const selectedImageOperation = function (editor, imageUploadTimerState, fn, size?) {
   return function () {
     return editor._scanForImages().
       then(Fun.curry(findSelectedBlob, editor)).
       then(ResultConversions.blobToImageResult).
       then(fn).
       then(function (imageResult) {
-        return updateSelectedImage(editor, imageResult, false, imageUploadTimerState);
+        return updateSelectedImage(editor, imageResult, false, imageUploadTimerState, size);
       }, function (error) {
         displayError(editor, error);
       });
@@ -174,18 +180,12 @@ const selectedImageOperation = function (editor, imageUploadTimerState, fn) {
 
 const rotate = function (editor, imageUploadTimerState, angle) {
   return function () {
+    const size = ImageSize.getImageSize(getSelectedImage(editor));
+    const flippedSize = size ? {w: size.h, h: size.w} : null;
+
     return selectedImageOperation(editor, imageUploadTimerState, function (imageResult) {
-      const size = ImageSize.getImageSize(getSelectedImage(editor));
-
-      if (size) {
-        ImageSize.setImageSize(getSelectedImage(editor), {
-          w: size.h,
-          h: size.w
-        });
-      }
-
       return ImageTransformations.rotate(imageResult, angle);
-    })();
+    }, flippedSize)();
   };
 };
 
