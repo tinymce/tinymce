@@ -16,7 +16,7 @@ import CaretUtils from './CaretUtils';
 import * as CaretCandidate from './CaretCandidate';
 import { Fun } from '@ephox/katamari';
 import { ClientRectLine, VDirection } from 'tinymce/core/caret/LineWalker';
-import { FakeCaret } from 'tinymce/core/caret/FakeCaret';
+import { isFakeCaretTarget } from 'tinymce/core/caret/FakeCaret';
 
 export interface CaretInfo {
   node: Node;
@@ -88,7 +88,7 @@ const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect): ClientRe
 };
 
 const getFakeCaretTargets = (root: HTMLElement): HTMLElement[] => {
-  return Arr.filter(Arr.toArray(root.getElementsByTagName('*')), FakeCaret.isFakeCaretTarget);
+  return Arr.filter(Arr.toArray(root.getElementsByTagName('*')), isFakeCaretTarget);
 };
 
 const caretInfo = (clientRect: NodeClientRect, clientX: number): CaretInfo => {
@@ -107,7 +107,7 @@ const closestCaret = (root: HTMLElement, clientX: number, clientY: number): Care
   closestNodeRect = findClosestClientRect(targetNodeRects, clientX);
   if (closestNodeRect) {
     closestNodeRect = findClosestClientRect(findLineNodeRects(root, closestNodeRect), clientX);
-    if (closestNodeRect && FakeCaret.isFakeCaretTarget(closestNodeRect.node)) {
+    if (closestNodeRect && isFakeCaretTarget(closestNodeRect.node)) {
       return caretInfo(closestNodeRect, clientX);
     }
   }

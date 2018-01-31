@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function () {
     LegacyUnit.setSelection(editor, 'li', 1);
     InsertContent.insertAtCaret(editor, { content: '<ul><li>a</li><li>b</li></ul>', paste: true });
     LegacyUnit.equal(editor.getContent(), '<ul><li>1</li><li>a</li><li>b</li><li>2</li></ul>');
-    assertSelection(editor, 'li:nth-child(4)', 1);
+    assertSelection(editor, 'li:nth-child(3)', 1);
   });
 
   suite.test('insertAtCaret - ul in middle of li with formatting', function (editor) {
@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function () {
       editor.getContent(),
       '<ul><li><em><strong>1</strong></em></li><li>a</li><li><em><strong>2</strong></em></li></ul>'
     );
-    assertSelection(editor, 'li:nth-child(3) strong', 1);
+    assertSelection(editor, 'li:nth-child(2)', 1);
   });
 
   suite.test('insertAtCaret - ul with trailing empty block in middle of li', function (editor) {
@@ -94,7 +94,7 @@ UnitTest.asynctest('browser.tinymce.core.InsertContentTest', function () {
       editor.getContent(),
       '<ul><li>a</li><li>b</li><li>c</li><li>d</li></ul>'
     );
-    assertSelection(editor, 'li:nth-child(4)', 1);
+    assertSelection(editor, 'li:nth-child(3)', 1);
   });
 
   suite.test('insertAtCaret - ul at beginning of li with empty end li', function (editor) {

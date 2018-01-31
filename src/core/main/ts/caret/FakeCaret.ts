@@ -91,7 +91,7 @@ const trimInlineCaretContainers = (root: Node): void => {
   }
 };
 
-export function FakeCaret(root: HTMLElement, isBlock: (node: Node) => boolean): FakeCaret {
+export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean): FakeCaret => {
   let cursorInterval, $lastVisualCaret = null, caretContainerNode;
 
   const show = (before: boolean, element: HTMLElement): Range => {
@@ -193,10 +193,6 @@ export function FakeCaret(root: HTMLElement, isBlock: (node: Node) => boolean): 
     getCss,
     destroy
   };
-}
+};
 
-export namespace FakeCaret {
-  export const isFakeCaretTarget = (node: Node) => isContentEditableFalse(node) || NodeType.isTable(node);
-}
-
-export default FakeCaret;
+export const isFakeCaretTarget = (node: Node) => isContentEditableFalse(node) || NodeType.isTable(node);

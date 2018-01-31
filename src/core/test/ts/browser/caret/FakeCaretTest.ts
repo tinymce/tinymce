@@ -1,7 +1,7 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Env from 'tinymce/core/api/Env';
-import FakeCaret from 'tinymce/core/caret/FakeCaret';
+import { FakeCaret } from 'tinymce/core/caret/FakeCaret';
 import $ from 'tinymce/core/api/dom/DomQuery';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import CaretAsserts from '../../module/test/CaretAsserts';

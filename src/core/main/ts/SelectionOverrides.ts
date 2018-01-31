@@ -17,13 +17,13 @@ import * as CaretContainer from './caret/CaretContainer';
 import CaretPosition from './caret/CaretPosition';
 import CaretUtils from './caret/CaretUtils';
 import CaretWalker from './caret/CaretWalker';
-import FakeCaret from './caret/FakeCaret';
 import * as LineUtils from './caret/LineUtils';
 import NodeType from './dom/NodeType';
 import RangePoint from './dom/RangePoint';
 import CefFocus from './focus/CefFocus';
 import * as CefUtils from './keyboard/CefUtils';
 import VK from './api/util/VK';
+import { FakeCaret, isFakeCaretTarget } from './caret/FakeCaret';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -228,7 +228,7 @@ const SelectionOverrides = function (editor) {
             editor.selection.placeCaretAt(e.clientX, e.clientY);
           }
         }
-      } else if (FakeCaret.isFakeCaretTarget(targetElm) === false) {
+      } else if (isFakeCaretTarget(targetElm) === false) {
         // Remove needs to be called here since the mousedown might alter the selection without calling selection.setRng
         // and therefore not fire the AfterSetSelectionRange event.
         removeContentEditableSelection();
@@ -362,21 +362,21 @@ const SelectionOverrides = function (editor) {
         if (forward === false) {
           caretPosition = getNormalizedRangeEndPoint(-1, range);
 
-          if (isContentEditableFalse(caretPosition.getNode(true))) {
+          if (isFakeCaretTarget(caretPosition.getNode(true))) {
             return showCaret(-1, caretPosition.getNode(true), false);
           }
 
-          if (isContentEditableFalse(caretPosition.getNode())) {
+          if (isFakeCaretTarget(caretPosition.getNode())) {
             return showCaret(-1, caretPosition.getNode(), !caretPosition.isAtEnd());
           }
         } else {
           caretPosition = getNormalizedRangeEndPoint(1, range);
 
-          if (isContentEditableFalse(caretPosition.getNode())) {
+          if (isFakeCaretTarget(caretPosition.getNode())) {
             return showCaret(1, caretPosition.getNode(), !caretPosition.isAtEnd());
           }
 
-          if (isContentEditableFalse(caretPosition.getNode(true))) {
+          if (isFakeCaretTarget(caretPosition.getNode(true))) {
             return showCaret(1, caretPosition.getNode(true), false);
           }
         }

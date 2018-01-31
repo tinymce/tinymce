@@ -16,24 +16,16 @@ import * as CaretCandidate from './CaretCandidate';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import { Option } from '@ephox/katamari';
 import { HDirection } from 'tinymce/core/caret/CaretWalker';
-import FakeCaret from 'tinymce/core/caret/FakeCaret';
+import { isFakeCaretTarget } from 'tinymce/core/caret/FakeCaret';
 
-/**
- * Utility functions shared by the caret logic.
- *
- * @private
- * @class tinymce.caret.CaretUtils
- */
-
-const isContentEditableTrue = NodeType.isContentEditableTrue,
-  isContentEditableFalse = NodeType.isContentEditableFalse,
-  isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption list-item'),
-  isCaretContainer = CaretContainer.isCaretContainer,
-  isCaretContainerBlock = CaretContainer.isCaretContainerBlock,
-  curry = Fun.curry,
-  isElement = NodeType.isElement,
-  isCaretCandidate = CaretCandidate.isCaretCandidate;
-
+const isContentEditableTrue = NodeType.isContentEditableTrue;
+const isContentEditableFalse = NodeType.isContentEditableFalse;
+const isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption list-item');
+const isCaretContainer = CaretContainer.isCaretContainer;
+const isCaretContainerBlock = CaretContainer.isCaretContainerBlock;
+const curry = Fun.curry;
+const isElement = NodeType.isElement;
+const isCaretCandidate = CaretCandidate.isCaretCandidate;
 const isForwards = (direction: HDirection) => direction > 0;
 const isBackwards = (direction: HDirection) => direction < 0;
 
@@ -107,15 +99,15 @@ const getParentBlock = (node: Node, rootNode?: Node) => {
   return null;
 };
 
-const isInSameBlock = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node) => {
+const isInSameBlock = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node): boolean => {
   return getParentBlock(caretPosition1.container(), rootNode) === getParentBlock(caretPosition2.container(), rootNode);
 };
 
-const isInSameEditingHost = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node) => {
+const isInSameEditingHost = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node): boolean => {
   return getEditingHost(caretPosition1.container(), rootNode) === getEditingHost(caretPosition2.container(), rootNode);
 };
 
-const getChildNodeAtRelativeOffset = function (relativeOffset: number, caretPosition: CaretPosition) {
+const getChildNodeAtRelativeOffset = (relativeOffset: number, caretPosition: CaretPosition): Node => {
   let container, offset;
 
   if (!caretPosition) {
@@ -146,11 +138,11 @@ const beforeAfter = (before: boolean, node: Node): Range => {
   return range;
 };
 
-const isNodesInSameBlock = function (rootNode: Node, node1: Node, node2: Node) {
-  return getParentBlock(node1, rootNode) === getParentBlock(node2, rootNode);
+const isNodesInSameBlock = (root: Node, node1: Node, node2: Node): boolean => {
+  return getParentBlock(node1, root) === getParentBlock(node2, root);
 };
 
-const lean = function (left: boolean, root: Node, node: Node) {
+const lean = (left: boolean, root: Node, node: Node): Node => {
   let sibling, siblingName;
 
   if (left) {
@@ -204,14 +196,14 @@ const normalizeRange = (direction: number, root: Node, range: Range): Range => {
 
     if (location === 'before') {
       node = container.nextSibling;
-      if (FakeCaret.isFakeCaretTarget(node)) {
+      if (isFakeCaretTarget(node)) {
         return before(node);
       }
     }
 
     if (location === 'after') {
       node = container.previousSibling;
-      if (FakeCaret.isFakeCaretTarget(node)) {
+      if (isFakeCaretTarget(node)) {
         return after(node);
       }
     }

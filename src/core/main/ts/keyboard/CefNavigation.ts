@@ -47,7 +47,7 @@ const isMoveInsideSameBlock = (from: CaretPosition, to: CaretPosition): boolean 
   return inSameBlock;
 };
 
-const moveToCeFalseHorizontally = function (direction: HDirection, editor, getNextPosFn, range) {
+const moveToCeFalseHorizontally = (direction: HDirection, editor, getNextPosFn, range): Range => {
   let node, caretPosition, peekCaretPosition, rangeIsInContainerBlock;
   const forwards = direction === HDirection.Forwards;
   const isBeforeContentEditableFalseFn = forwards ? isBeforeContentEditableFalse : isAfterContentEditableFalse;

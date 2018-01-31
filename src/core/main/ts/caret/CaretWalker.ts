@@ -113,8 +113,8 @@ const isBrBeforeBlock = (node: Node, root: Node): boolean => {
 };
 
 const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root: Node): CaretPosition => {
-  let container, offset, node, nextNode, innerNode,
-    rootContentEditableFalseElm, caretPosition;
+  let node, nextNode, innerNode;
+  let rootContentEditableFalseElm, caretPosition;
 
   if (!isElement(root) || !startPos) {
     return null;
@@ -129,8 +129,8 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
     caretPosition = startPos;
   }
 
-  container = caretPosition.container();
-  offset = caretPosition.offset();
+  const container = caretPosition.container();
+  let offset = caretPosition.offset();
 
   if (isText(container)) {
     if (isBackwards(direction) && offset > 0) {
@@ -191,7 +191,7 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
       }
     }
 
-    node = caretPosition.getNode();
+    node = nextNode ? nextNode : caretPosition.getNode();
   }
 
   if ((isForwards(direction) && caretPosition.isAtEnd()) || (isBackwards(direction) && caretPosition.isAtStart())) {
