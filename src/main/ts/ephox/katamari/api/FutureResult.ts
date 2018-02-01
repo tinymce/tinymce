@@ -1,5 +1,5 @@
-import Future, { FutureType } from "./Future";
-import Result, { ResultType } from "./Result";
+import Future, { FutureType } from './Future';
+import Result, { ResultType } from './Result';
 
 export interface FutureResultType<A, E> extends FutureType<ResultType<A, E>> {
   bindFuture: <B>(f: (value: A) => FutureType<ResultType<B, E>>) => FutureResultType<B, E>;

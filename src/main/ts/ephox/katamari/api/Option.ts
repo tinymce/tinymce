@@ -120,7 +120,7 @@ var NONE: OptionType<any> = (function () {
     equals: eq,
     equals_: eq,
     toArray: function () { return []; },
-    toString: Fun.constant("none()")
+    toString: Fun.constant('none()')
   };
   if (Object.freeze) Object.freeze(me);
   return me;
