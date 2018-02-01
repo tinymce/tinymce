@@ -55,7 +55,7 @@ module.exports = function (grunt) {
             name: 'tinymce',
             format: 'iife',
             banner: '(function () {',
-            footer: '})()',
+            footer: '})();',
             plugins: [
               swag.nodeResolve({
                 basedir: __dirname,
@@ -81,7 +81,7 @@ module.exports = function (grunt) {
             name: name,
             format: 'iife',
             banner: '(function () {',
-            footer: '})()',
+            footer: '})();',
             plugins: [
               swag.nodeResolve({
                 basedir: __dirname,
@@ -102,7 +102,7 @@ module.exports = function (grunt) {
             name: name,
             format: 'iife',
             banner: '(function () {',
-            footer: '})()',
+            footer: '})();',
             plugins: [
               swag.nodeResolve({
                 basedir: __dirname,
