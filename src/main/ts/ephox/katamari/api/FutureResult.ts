@@ -9,10 +9,10 @@ export interface FutureResultType<A, E> extends FutureType<ResultType<A, E>> {
   withTimeout: <E2>(timeout: number, errorThunk: () => E2) => FutureResultType<A, E | E2>
 }
 
-var pure = function <A=any, E=any>(delegate: FutureType<ResultType<A, E>>): FutureResultType<A, E> {
+var wrap = function <A=any, E=any>(delegate: FutureType<ResultType<A, E>>): FutureResultType<A, E> {
 
   var bindFuture = function <B>(f: (value: A) => FutureType<ResultType<B, E>>) {
-    return pure(
+    return wrap(
       delegate.bind(
         (resA) => resA.fold(
           () => <FutureType<ResultType<B, E>>>(<any>delegate),
@@ -23,11 +23,11 @@ var pure = function <A=any, E=any>(delegate: FutureType<ResultType<A, E>>): Futu
   };
 
   var bindResult = function <B>(f: (value: A) => ResultType<B, E>) {
-    return pure(delegate.map((resA) => resA.bind(f)));
+    return wrap(delegate.map((resA) => resA.bind(f)));
   };
 
   var mapResult = function <B>(f: (value: A) => B) {
-    return pure(delegate.map((resA) => resA.map(f)));
+    return wrap(delegate.map((resA) => resA.map(f)));
   };
 
   var foldResult = function <X>(whenError: (error: E) => X, whenValue: (value: A) => X) {
@@ -35,7 +35,7 @@ var pure = function <A=any, E=any>(delegate: FutureType<ResultType<A, E>>): Futu
   };
 
   var withTimeout = function <E2>(timeout: number, errorThunk: () => E2) {
-    return pure(Future.nu(function (callback: (value: ResultType<A, E | E2>) => void) {
+    return wrap(Future.nu(function (callback: (value: ResultType<A, E | E2>) => void) {
       var timedOut = false;
       var timer = window.setTimeout(() => {
         timedOut = true;
@@ -62,23 +62,23 @@ var pure = function <A=any, E=any>(delegate: FutureType<ResultType<A, E>>): Futu
 };
 
 var nu = function <A=any, E=any>(worker: (completer: (result: ResultType<A, E>) => void) => void) {
-  return pure(Future.nu(worker));
+  return wrap(Future.nu(worker));
 }
 
 var value = function <A, E=any>(value: A) {
-  return pure(Future.pure(Result.value(value)));
+  return wrap(Future.pure(Result.value(value)));
 };
 
 var error = function <A=any, E=any>(error: E) {
-  return pure(Future.pure(Result.error(error)));
+  return wrap(Future.pure(Result.error(error)));
 };
 
 var fromResult = function <A, E>(result: ResultType<A, E>) {
-  return pure(Future.pure(result));
+  return wrap(Future.pure(result));
 };
 
 var fromFuture = function <A, E=any>(future: FutureType<A>) {
-  return pure(future.map(Result.value));
+  return wrap(future.map(Result.value));
 };
 
 var fromPromise = function <T, E=any>(promise: Promise<T>) {
@@ -93,7 +93,8 @@ var fromPromise = function <T, E=any>(promise: Promise<T>) {
 
 export default {
   nu,
-  pure,
+  wrap,
+  pure: value,
   value,
   error,
   fromResult,
