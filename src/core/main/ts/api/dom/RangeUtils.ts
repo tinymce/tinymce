@@ -50,7 +50,7 @@ export function RangeUtils(dom) {
    * @param {Range} rng Range to normalize.
    * @return {Boolean} True/false if the specified range was normalized or not.
    */
-  const normalize = function (rng: Range): Range {
+  const normalize = function (rng: Range): boolean {
     return NormalizeRange.normalize(dom, rng).fold(
       Fun.constant(false),
       function (normalizedRng) {

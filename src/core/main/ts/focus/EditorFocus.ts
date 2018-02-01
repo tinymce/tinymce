@@ -16,6 +16,7 @@ import * as ElementType from '../dom/ElementType';
 import * as RangeNodes from '../selection/RangeNodes';
 import SelectionBookmark from '../selection/SelectionBookmark';
 import { Selection } from '../api/dom/Selection';
+import { CaretPosition } from '../caret/CaretPosition';
 
 const getContentEditableHost = function (editor, node) {
   return editor.dom.getParent(node, function (node) {
@@ -39,16 +40,12 @@ const getFocusInElement = function (root, rng) {
   });
 };
 
-const normalizeSelection = function (editor, rng) {
+const normalizeSelection = (editor, rng: Range): void => {
   getFocusInElement(Element.fromDom(editor.getBody()), rng).bind(function (elm) {
     return CaretFinder.firstPositionIn(elm.dom());
   }).fold(
-    function () {
-      editor.selection.normalize();
-    },
-    function (caretPos) {
-      editor.selection.setRng(caretPos.toRange());
-    }
+    () => editor.selection.normalize(),
+    (caretPos: CaretPosition) => editor.selection.setRng(caretPos.toRange())
   );
 };
 
