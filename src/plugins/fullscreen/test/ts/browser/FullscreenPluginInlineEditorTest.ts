@@ -17,8 +17,8 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginInlineEdi
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [
       Step.sync(() => {
-        RawAssertions.assertEq('should not have isFullscreen function', false, editor.plugins.fullscreen.isFullscreen());
-        RawAssertions.assertEq('should not have isFullscreen function', 'undefined', typeof editor.buttons.fullscreen);
+        RawAssertions.assertEq('should have isFullsceen api function', false, editor.plugins.fullscreen.isFullscreen());
+        RawAssertions.assertEq('should not have the fullscreen button', 'undefined', typeof editor.buttons.fullscreen);
       })
     ], onSuccess, onFailure);
   }, {
