@@ -1,7 +1,32 @@
 import Fun from './Fun';
 
-var never = Fun.never;
-var always = Fun.always;
+export interface OptionType<T> {
+  fold: <T2> (whenNone: () => T2, whenSome: (v: T) => T2) => T2;
+  is: (value: T) => boolean;
+  isSome: () => boolean;
+  isNone: () => boolean;
+  getOr: (value: T) => T;
+  getOrThunk: (makeValue: () => T) => T;
+  getOrDie: (msg?: string) => T;
+  or: (opt: OptionType<T>) => OptionType<T>;
+  orThunk: (makeOption: () => OptionType<T>) => OptionType<T>;
+  map: <T2> (mapper: (x: T) => T2) => OptionType<T2>;
+  ap: <T2> (optfab: OptionType<(a: T) => T2>) => OptionType<T2>;
+  each: (worker: (x: T) => void) => void;
+  bind: <T2> (f: (x: T) => OptionType<T2>) => OptionType<T2>;
+  /** convert an Option<Option<A>> to Option<A> */
+  flatten: () => OptionType<any>; // TODO: find a way to express in the typesystem
+  exists: (f: (x: T) => boolean) => boolean;
+  forall: (f: (x: T) => boolean) => boolean;
+  filter: (f: (x: T) => boolean) => OptionType<T>;
+  equals: (opt: OptionType<T>) => boolean;
+  equals_: <T2> (opt: OptionType<T2>, equality: (a: T, b: T2) => boolean) => boolean;
+  toArray: () => T[];
+  toString: () => string;
+};
+
+var never: () => false = Fun.never;
+var always: () => true = Fun.always;
 
 /**
   Option objects support the following methods:
@@ -60,9 +85,9 @@ var always = Fun.always;
 
 */
 
-var none = function () { return NONE; };
+var none = function<T = any> () { return <OptionType<T>> NONE; };
 
-var NONE = (function () {
+var NONE: OptionType<any> = (function () {
   var eq = function (o) {
     return o.isNone();
   };
@@ -72,7 +97,7 @@ var NONE = (function () {
   var id = function (n) { return n; };
   var noop = function () { };
 
-  var me = {
+  var me: OptionType<any> = {
     fold: function (n, s) { return n(); },
     is: never,
     isSome: never,
@@ -103,7 +128,7 @@ var NONE = (function () {
 
 
 /** some :: a -> Option a */
-var some = function (a) {
+var some = function <T> (a: T): OptionType<T> {
 
   // inlined from peanut, maybe a micro-optimisation?
   var constant_a = function () { return a; };
@@ -113,17 +138,17 @@ var some = function (a) {
     return me;
   };
 
-  var map = function (f) {
+  var map = function <T2> (f: (value: T) => T2) {
     return some(f(a));
   };
 
-  var bind = function (f) {
+  var bind = function <T2> (f: (value: T) => T2) {
     return f(a);
   };
 
-  var me = {
-    fold: function (n, s) { return s(a); },
-    is: function (v) { return a === v; },
+  var me: OptionType<T> = {
+    fold: function <T2> (n: () => T2, s: (v: T) => T2) { return s(a); },
+    is: function (v: T) { return a === v; },
     isSome: always,
     isNone: never,
     getOr: constant_a,
@@ -132,25 +157,25 @@ var some = function (a) {
     or: self,
     orThunk: self,
     map: map,
-    ap: function (optfab) {
-      return optfab.fold(none, function(fab) {
+    ap: function <T2> (optfab: OptionType<(a: T) => T2>) {
+      return optfab.fold(<() => OptionType<T2>>none, function(fab) {
         return some(fab(a));
       });
     },
-    each: function (f) {
+    each: function (f: (value: T) => void) {
       f(a);
     },
     bind: bind,
-    flatten: constant_a,
+    flatten: <any>constant_a,
     exists: bind,
     forall: bind,
-    filter: function (f) {
-      return f(a) ? me : NONE;
+    filter: function (f: (value: T) => boolean) {
+      return f(a) ? me : <OptionType<T>>NONE;
     },
-    equals: function (o) {
+    equals: function (o: OptionType<T>) {
       return o.is(a);
     },
-    equals_: function (o, elementEq) {
+    equals_: function <T2> (o: OptionType<T2>, elementEq: (a: T, b: T2) => boolean) {
       return o.fold(
         never,
         function (b) { return elementEq(a, b); }
@@ -167,11 +192,11 @@ var some = function (a) {
 };
 
 /** from :: undefined|null|a -> Option a */
-var from = function (value) {
-  return value === null || value === undefined ? NONE : some(value);
+var from = function <T> (value: T) {
+  return value === null || value === undefined ? <OptionType<T>>NONE : some(value);
 };
 
-export default <any> {
+export default {
   some: some,
   none: none,
   from: from

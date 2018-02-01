@@ -9,13 +9,13 @@ import Arr from '../api/Arr';
  *   get: function (callback) { callback(10); }
  * }
  */
-var par = function (asyncValues, nu) {
+var par = function <A, T, C> (asyncValues: (A & {get: (callback: (value: T) => void) => void})[], nu: (worker: (callback: (values: T[]) => void) => void) => C) {
   return nu(function(callback) {
-    var r = [];
+    var r: T[] = [];
     var count = 0;
 
-    var cb = function(i) {
-      return function(value) {
+    var cb = function(i: number) {
+      return function(value: T) {
         r[i] = value;
         count++;
         if (count >= asyncValues.length) {
@@ -27,13 +27,13 @@ var par = function (asyncValues, nu) {
     if (asyncValues.length === 0) {
       callback([]);
     } else {
-      Arr.each(asyncValues, function(asyncValue, i) {
+      Arr.each(asyncValues, function(asyncValue: A & {get: (callback: (value: T) => void) => void}, i) {
         asyncValue.get(cb(i));
       });
     }
   });
 };
 
-export default <any> {
+export default {
   par: par
 };
