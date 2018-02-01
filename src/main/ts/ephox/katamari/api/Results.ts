@@ -1,6 +1,6 @@
 import Adt from './Adt';
 import Arr from './Arr';
-import { ResultType } from 'ephox/katamari/api/Result';
+import { ResultType } from './Result';
 
 var comparison = Adt.generate([
   { bothErrors: ['error1', 'error2'] },
