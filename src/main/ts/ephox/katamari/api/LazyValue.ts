@@ -1,13 +1,13 @@
 import Arr from './Arr';
-import Option from './Option';
+import { Option } from './Option';
 
-export interface LazyValueType<T> {
+export interface LazyValue<T> {
   get: (callback: (value: T) => void) => void;
-  map: <U> (mapper: (value: T) => U) => LazyValueType<U>;
+  map: <U> (mapper: (value: T) => U) => LazyValue<U>;
   isReady: () => boolean;
 }
 
-var nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyValueType<T> {
+var nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyValue<T> {
   var data = Option.none<T>();
   var callbacks: ((value: T) => void)[] = [];
 
@@ -63,7 +63,7 @@ var pure = function <T> (a: T) {
   });
 };
 
-export default {
+export const LazyValue = {
   nu: nu,
   pure: pure
 };

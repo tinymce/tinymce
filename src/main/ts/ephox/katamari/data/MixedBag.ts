@@ -1,7 +1,7 @@
 import Arr from '../api/Arr';
 import Fun from '../api/Fun';
 import Obj from '../api/Obj';
-import Option from '../api/Option';
+import { Option } from '../api/Option';
 import BagUtils from '../util/BagUtils';
 
 

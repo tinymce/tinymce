@@ -1,8 +1,8 @@
-import LazyValue, { LazyValueType } from './LazyValue';
+import { LazyValue } from './LazyValue';
 import AsyncValues from '../async/AsyncValues';
 
 /** par :: [LazyValue a] -> LazyValue [a] */
-var par = function <T> (lazyValues: LazyValueType<T>[]) {
+var par = function <T> (lazyValues: LazyValue<T>[]) {
   return AsyncValues.par(lazyValues, LazyValue.nu);
 };
 

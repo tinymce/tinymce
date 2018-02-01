@@ -1,6 +1,6 @@
 import Fun from './Fun';
 
-export interface OptionType<T> {
+export interface Option<T> {
   fold: <T2> (whenNone: () => T2, whenSome: (v: T) => T2) => T2;
   is: (value: T) => boolean;
   isSome: () => boolean;
@@ -8,19 +8,19 @@ export interface OptionType<T> {
   getOr: (value: T) => T;
   getOrThunk: (makeValue: () => T) => T;
   getOrDie: (msg?: string) => T;
-  or: (opt: OptionType<T>) => OptionType<T>;
-  orThunk: (makeOption: () => OptionType<T>) => OptionType<T>;
-  map: <T2> (mapper: (x: T) => T2) => OptionType<T2>;
-  ap: <T2> (optfab: OptionType<(a: T) => T2>) => OptionType<T2>;
+  or: (opt: Option<T>) => Option<T>;
+  orThunk: (makeOption: () => Option<T>) => Option<T>;
+  map: <T2> (mapper: (x: T) => T2) => Option<T2>;
+  ap: <T2> (optfab: Option<(a: T) => T2>) => Option<T2>;
   each: (worker: (x: T) => void) => void;
-  bind: <T2> (f: (x: T) => OptionType<T2>) => OptionType<T2>;
+  bind: <T2> (f: (x: T) => Option<T2>) => Option<T2>;
   /** convert an Option<Option<A>> to Option<A> */
-  flatten: () => OptionType<any>; // TODO: find a way to express in the typesystem
+  flatten: () => Option<any>; // TODO: find a way to express in the typesystem
   exists: (f: (x: T) => boolean) => boolean;
   forall: (f: (x: T) => boolean) => boolean;
-  filter: (f: (x: T) => boolean) => OptionType<T>;
-  equals: (opt: OptionType<T>) => boolean;
-  equals_: <T2> (opt: OptionType<T2>, equality: (a: T, b: T2) => boolean) => boolean;
+  filter: (f: (x: T) => boolean) => Option<T>;
+  equals: (opt: Option<T>) => boolean;
+  equals_: <T2> (opt: Option<T2>, equality: (a: T, b: T2) => boolean) => boolean;
   toArray: () => T[];
   toString: () => string;
 };
@@ -85,9 +85,9 @@ var always: () => true = Fun.always;
 
 */
 
-var none = function<T = any> () { return <OptionType<T>> NONE; };
+var none = function<T = any> () { return <Option<T>> NONE; };
 
-var NONE: OptionType<any> = (function () {
+var NONE: Option<any> = (function () {
   var eq = function (o) {
     return o.isNone();
   };
@@ -97,7 +97,7 @@ var NONE: OptionType<any> = (function () {
   var id = function (n) { return n; };
   var noop = function () { };
 
-  var me: OptionType<any> = {
+  var me: Option<any> = {
     fold: function (n, s) { return n(); },
     is: never,
     isSome: never,
@@ -128,7 +128,7 @@ var NONE: OptionType<any> = (function () {
 
 
 /** some :: a -> Option a */
-var some = function <T> (a: T): OptionType<T> {
+var some = function <T> (a: T): Option<T> {
 
   // inlined from peanut, maybe a micro-optimisation?
   var constant_a = function () { return a; };
@@ -146,7 +146,7 @@ var some = function <T> (a: T): OptionType<T> {
     return f(a);
   };
 
-  var me: OptionType<T> = {
+  var me: Option<T> = {
     fold: function <T2> (n: () => T2, s: (v: T) => T2) { return s(a); },
     is: function (v: T) { return a === v; },
     isSome: always,
@@ -157,8 +157,8 @@ var some = function <T> (a: T): OptionType<T> {
     or: self,
     orThunk: self,
     map: map,
-    ap: function <T2> (optfab: OptionType<(a: T) => T2>) {
-      return optfab.fold(<() => OptionType<T2>>none, function(fab) {
+    ap: function <T2> (optfab: Option<(a: T) => T2>) {
+      return optfab.fold(<() => Option<T2>>none, function(fab) {
         return some(fab(a));
       });
     },
@@ -170,12 +170,12 @@ var some = function <T> (a: T): OptionType<T> {
     exists: bind,
     forall: bind,
     filter: function (f: (value: T) => boolean) {
-      return f(a) ? me : <OptionType<T>>NONE;
+      return f(a) ? me : <Option<T>>NONE;
     },
-    equals: function (o: OptionType<T>) {
+    equals: function (o: Option<T>) {
       return o.is(a);
     },
-    equals_: function <T2> (o: OptionType<T2>, elementEq: (a: T, b: T2) => boolean) {
+    equals_: function <T2> (o: Option<T2>, elementEq: (a: T, b: T2) => boolean) {
       return o.fold(
         never,
         function (b) { return elementEq(a, b); }
@@ -193,10 +193,10 @@ var some = function <T> (a: T): OptionType<T> {
 
 /** from :: undefined|null|a -> Option a */
 var from = function <T> (value: T) {
-  return value === null || value === undefined ? <OptionType<T>>NONE : some(value);
+  return value === null || value === undefined ? <Option<T>>NONE : some(value);
 };
 
-export default {
+export const Option = {
   some: some,
   none: none,
   from: from

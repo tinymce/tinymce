@@ -1,8 +1,8 @@
 import Arr from 'ephox/katamari/api/Arr';
 import Fun from 'ephox/katamari/api/Fun';
-import LazyValue from 'ephox/katamari/api/LazyValue';
+import { LazyValue } from 'ephox/katamari/api/LazyValue';
 import LazyValues from 'ephox/katamari/api/LazyValues';
-import Result from 'ephox/katamari/api/Result';
+import { Result } from 'ephox/katamari/api/Result';
 import AsyncProps from 'ephox/katamari/test/AsyncProps';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';

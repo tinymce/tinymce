@@ -1,6 +1,6 @@
 import Adt from './Adt';
 import Arr from './Arr';
-import { ResultType } from './Result';
+import { Result } from './Result';
 
 var comparison = Adt.generate([
   { bothErrors: ['error1', 'error2'] },
@@ -10,11 +10,11 @@ var comparison = Adt.generate([
 ]);
 
 /** partition :: [Result a] -> { errors: [String], values: [a] } */
-var partition = function <T, E>(results: ResultType<T, E>[]) {
+var partition = function <T, E>(results: Result<T, E>[]) {
   var errors: E[] = [];
   var values: T[] = [];
 
-  Arr.each(results, function (result: ResultType<T, E>) {
+  Arr.each(results, function (result: Result<T, E>) {
     result.fold(
       function (err) { errors.push(err); },
       function (value) { values.push(value); }
@@ -25,7 +25,7 @@ var partition = function <T, E>(results: ResultType<T, E>[]) {
 };
 
 /** compare :: (Result a, Result b) -> Comparison a b */
-var compare = function (result1: ResultType<any, any>, result2: ResultType<any, any>) {
+var compare = function (result1: Result<any, any>, result2: Result<any, any>) {
   return result1.fold(function (err1) {
     return result2.fold(function (err2) {
       return comparison.bothErrors(err1, err2);

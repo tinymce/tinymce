@@ -1,5 +1,5 @@
 import Fun from 'ephox/katamari/api/Fun';
-import Option from 'ephox/katamari/api/Option';
+import { Option } from 'ephox/katamari/api/Option';
 import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';

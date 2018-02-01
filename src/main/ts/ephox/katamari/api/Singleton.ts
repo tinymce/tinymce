@@ -1,4 +1,4 @@
-import Option from './Option';
+import { Option } from './Option';
 import Cell from './Cell';
 
 var revocable = function (doRevoke) {

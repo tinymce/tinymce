@@ -1,8 +1,8 @@
 import Arr from 'ephox/katamari/api/Arr';
 import Fun from 'ephox/katamari/api/Fun';
-import Future from 'ephox/katamari/api/Future';
+import { Future } from 'ephox/katamari/api/Future';
 import Futures from 'ephox/katamari/api/Futures';
-import Result from 'ephox/katamari/api/Result';
+import { Result } from 'ephox/katamari/api/Result';
 import AsyncProps from 'ephox/katamari/test/AsyncProps';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';

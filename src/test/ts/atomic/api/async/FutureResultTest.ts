@@ -1,6 +1,6 @@
-import Future from 'ephox/katamari/api/Future';
-import FutureResult from 'ephox/katamari/api/FutureResult';
-import Result from 'ephox/katamari/api/Result';
+import { Future } from 'ephox/katamari/api/Future';
+import { FutureResult } from 'ephox/katamari/api/FutureResult';
+import { Result } from 'ephox/katamari/api/Result';
 import Results from 'ephox/katamari/api/Results';
 import AsyncProps from 'ephox/katamari/test/AsyncProps';
 import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';

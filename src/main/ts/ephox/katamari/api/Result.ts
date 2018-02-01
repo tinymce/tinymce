@@ -1,17 +1,17 @@
 import Fun from './Fun';
-import Option, { OptionType } from './Option';
+import { Option } from './Option';
 
-export interface ResultType<T, E> {
+export interface Result<T, E> {
   is: (value: T) => boolean;
-  or: (result: ResultType<T, E>) => ResultType<T, E>;
-  orThunk: (makeResult: () => ResultType<T, E>) => ResultType<T, E>;
-  map: <U> (mapper: (value: T) => U) => ResultType<U, E>;
+  or: (result: Result<T, E>) => Result<T, E>;
+  orThunk: (makeResult: () => Result<T, E>) => Result<T, E>;
+  map: <U> (mapper: (value: T) => U) => Result<U, E>;
   each: (worker: (value: T) => void) => void;
-  bind: <U> (binder: (value: T) => ResultType<U, E>) => ResultType<U, E>;
+  bind: <U> (binder: (value: T) => Result<U, E>) => Result<U, E>;
   fold: <U> (whenError: (err: E) => U, mapper: (value: T) => U) => U;
   exists: (predicate: (value: T) => boolean) => boolean;
   forall: (predicate: (value: T) => boolean) => boolean;
-  toOption: () => OptionType<T>;
+  toOption: () => Option<T>;
   isValue: () => boolean;
   isError: () => boolean;
   getOr: (defaultValue: T) => T;
@@ -37,16 +37,16 @@ export interface ResultType<T, E> {
  * getOrDie :: this Result a -> a (or throws error)
 */
 
-var value = function <T, E = any>(o: T): ResultType<T, E> {
+var value = function <T, E = any>(o: T): Result<T, E> {
   var is = function (v: T) {
     return o === v;
   };
 
-  var or = function (opt: ResultType<T, E>) {
+  var or = function (opt: Result<T, E>) {
     return value(o);
   };
 
-  var orThunk = function (f: () => ResultType<T, E>) {
+  var orThunk = function (f: () => Result<T, E>) {
     return value(o);
   };
 
@@ -58,7 +58,7 @@ var value = function <T, E = any>(o: T): ResultType<T, E> {
     f(o);
   };
 
-  var bind = function <U>(f: (value: T) => ResultType<U, E>) {
+  var bind = function <U>(f: (value: T) => Result<U, E>) {
     return f(o);
   };
 
@@ -97,7 +97,7 @@ var value = function <T, E = any>(o: T): ResultType<T, E> {
   };
 };
 
-var error = function <T=any, E=any>(message: E): ResultType<T, E> {
+var error = function <T=any, E=any>(message: E): Result<T, E> {
   var getOrThunk = function (f: () => T) {
     return f();
   };
@@ -106,11 +106,11 @@ var error = function <T=any, E=any>(message: E): ResultType<T, E> {
     return Fun.die(message)();
   };
 
-  var or = function (opt: ResultType<T, E>) {
+  var or = function (opt: Result<T, E>) {
     return opt;
   };
 
-  var orThunk = function (f: () => ResultType<T, E>) {
+  var orThunk = function (f: () => Result<T, E>) {
     return f();
   };
 
@@ -118,7 +118,7 @@ var error = function <T=any, E=any>(message: E): ResultType<T, E> {
     return error<U, E>(message);
   };
 
-  var bind = function <U>(f: (value: T) => ResultType<U, E>) {
+  var bind = function <U>(f: (value: T) => Result<U, E>) {
     return error<U, E>(message);
   };
 
@@ -145,7 +145,7 @@ var error = function <T=any, E=any>(message: E): ResultType<T, E> {
   };
 };
 
-export default {
+export const Result = {
   value: value,
   error: error
 };
