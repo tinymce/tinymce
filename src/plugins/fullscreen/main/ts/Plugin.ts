@@ -17,6 +17,10 @@ import Buttons from './ui/Buttons';
 PluginManager.add('fullscreen', function (editor) {
   const fullscreenState = Cell(null);
 
+  if (editor.settings.inline) {
+    return Api.get(fullscreenState);
+  }
+
   Commands.register(editor, fullscreenState);
   Buttons.register(editor);
 
