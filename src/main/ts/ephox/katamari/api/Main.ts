@@ -3,21 +3,21 @@ import Arr from './Arr';
 import Cell from './Cell';
 import Contracts from './Contracts';
 import Fun from './Fun';
-import Future from './Future';
-import FutureResult from './FutureResult';
+import Future, { FutureType } from './Future';
+import FutureResult, { FutureResultType } from './FutureResult';
 import Futures from './Futures';
 import Global from './Global';
 import Id from './Id';
 import Jam from './Jam';
-import LazyValue from './LazyValue';
+import LazyValue, { LazyValueType } from './LazyValue';
 import LazyValues from './LazyValues';
 import Merger from './Merger';
 import Namespace from './Namespace';
 import Obj from './Obj';
-import Option from './Option';
+import Option, { OptionType } from './Option';
 import Options from './Options';
 import Resolve from './Resolve';
-import Result from './Result';
+import Result, { ResultType } from './Result';
 import Results from './Results';
 import Singleton from './Singleton';
 import StringMatch from './StringMatch';
@@ -37,20 +37,25 @@ export {
   Contracts,
   Fun,
   Future,
+  FutureType,
   FutureResult,
+  FutureResultType,
   Futures,
   Global,
   Id,
   Jam,
   LazyValue,
+  LazyValueType,
   LazyValues,
   Merger,
   Namespace,
   Obj,
   Option,
+  OptionType,
   Options,
   Resolve,
   Result,
+  ResultType,
   Results,
   Singleton,
   StringMatch,
