@@ -8,9 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Fun } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
-import TableDialog from './TableDialog';
 
 const each = Tools.each;
 
@@ -38,7 +36,7 @@ const addButtons = function (editor) {
 
   editor.addButton('tableprops', {
     title: 'Table properties',
-    onclick: Fun.curry(TableDialog.open, editor, true),
+    onclick: cmd('mceTableProps'),
     icon: 'table'
   });
 

@@ -8,13 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Element } from '@ephox/sugar';
 
 import InsertTable from '../actions/InsertTable';
 import TableTargets from '../queries/TableTargets';
-import TableDialog from './TableDialog';
 
 const addMenuItems = function (editor, selections) {
   let targets = Option.none();
@@ -159,7 +158,7 @@ const addMenuItems = function (editor, selections) {
     text: 'Table',
     icon: 'table',
     context: 'table',
-    onclick: Fun.curry(TableDialog.open, editor)
+    onclick: cmd('mceInsertTable')
   } : {
     text: 'Table',
     icon: 'table',
@@ -169,7 +168,7 @@ const addMenuItems = function (editor, selections) {
       if (e.aria) {
         this.parent().hideAll();
         e.stopImmediatePropagation();
-        TableDialog.open(editor);
+        editor.execCommand('mceInsertTable');
       }
     },
     onshow () {
@@ -239,7 +238,7 @@ const addMenuItems = function (editor, selections) {
     text: 'Table properties',
     context: 'table',
     onPostRender: pushTable,
-    onclick: Fun.curry(TableDialog.open, editor, true)
+    onclick: cmd('mceTableProps')
   };
 
   const deleteTable = {
