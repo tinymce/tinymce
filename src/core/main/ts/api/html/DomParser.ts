@@ -14,7 +14,13 @@ import SaxParser from './SaxParser';
 import Schema from './Schema';
 import Tools from '../util/Tools';
 
-type ParserArgs = any;
+export type ParserArgs = any;
+export type ParserFilterCallback = (nodes: Node[], name: string, args: ParserArgs) => void;
+
+export interface ParserFilter {
+  name: string;
+  callbacks: ParserFilterCallback[];
+}
 
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
@@ -257,6 +263,18 @@ export default function (settings?, schema = Schema()) {
     });
   };
 
+  const getNodeFilters = (): ParserFilter[] => {
+    const out = [];
+
+    for (const name in nodeFilters) {
+      if (nodeFilters.hasOwnProperty(name)) {
+        out.push({ name, callbacks: nodeFilters[name] });
+      }
+    }
+
+    return out;
+  };
+
   /**
    * Adds a attribute filter function to the parser, the parser will collect nodes that has the specified attributes
    * and then execute the callback ones it has finished parsing the document.
@@ -285,6 +303,8 @@ export default function (settings?, schema = Schema()) {
       attributeFilters.push({ name, callbacks: [callback] });
     });
   };
+
+  const getAttributeFilters = (): ParserFilter[] => [].concat(attributeFilters);
 
   /**
    * Parses the specified HTML string into a DOM like node tree and returns the result.
@@ -907,7 +927,9 @@ export default function (settings?, schema = Schema()) {
   const exports = {
     schema,
     addAttributeFilter,
+    getAttributeFilters,
     addNodeFilter,
+    getNodeFilters,
     filterNode,
     parse
   };
