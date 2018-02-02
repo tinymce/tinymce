@@ -9,15 +9,15 @@
  */
 
 import Env from '../api/Env';
-import CaretContainer from '../caret/CaretContainer';
+import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import CaretUtils from '../caret/CaretUtils';
-import CaretWalker from '../caret/CaretWalker';
-import LineUtils from '../caret/LineUtils';
-import LineWalker from '../caret/LineWalker';
+import CaretWalker, { HDirection } from '../caret/CaretWalker';
+import * as LineUtils from '../caret/LineUtils';
+import * as LineWalker from '../caret/LineWalker';
 import NodeType from '../dom/NodeType';
-import CefUtils from './CefUtils';
-import RangeNodes from '../selection/RangeNodes';
+import * as CefUtils from './CefUtils';
+import * as RangeNodes from '../selection/RangeNodes';
 import Arr from '../util/Arr';
 import Fun from '../util/Fun';
 
@@ -26,7 +26,7 @@ const getSelectedNode = RangeNodes.getSelectedNode;
 const isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse;
 const isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse;
 
-const getVisualCaretPosition = function (walkFn, caretPosition) {
+const getVisualCaretPosition = (walkFn, caretPosition: CaretPosition): CaretPosition => {
   while ((caretPosition = walkFn(caretPosition))) {
     if (caretPosition.isVisible()) {
       return caretPosition;
@@ -36,46 +36,34 @@ const getVisualCaretPosition = function (walkFn, caretPosition) {
   return caretPosition;
 };
 
-const isMoveInsideSameBlock = function (fromCaretPosition, toCaretPosition) {
-  const inSameBlock = CaretUtils.isInSameBlock(fromCaretPosition, toCaretPosition);
+const isMoveInsideSameBlock = (from: CaretPosition, to: CaretPosition): boolean => {
+  const inSameBlock = CaretUtils.isInSameBlock(from, to);
 
   // Handle bogus BR <p>abc|<br></p>
-  if (!inSameBlock && NodeType.isBr(fromCaretPosition.getNode())) {
+  if (!inSameBlock && NodeType.isBr(from.getNode())) {
     return true;
   }
 
   return inSameBlock;
 };
 
-const isRangeInCaretContainerBlock = function (range) {
-  return CaretContainer.isCaretContainerBlock(range.startContainer);
-};
-
-const getNormalizedRangeEndPoint = function (direction, rootNode, range) {
-  range = CaretUtils.normalizeRange(direction, rootNode, range);
-
-  if (direction === -1) {
-    return CaretPosition.fromRangeStart(range);
-  }
-
-  return CaretPosition.fromRangeEnd(range);
-};
-
-const moveToCeFalseHorizontally = function (direction, editor, getNextPosFn, isBeforeContentEditableFalseFn, range) {
+const moveToCeFalseHorizontally = (direction: HDirection, editor, getNextPosFn, range): Range => {
   let node, caretPosition, peekCaretPosition, rangeIsInContainerBlock;
+  const forwards = direction === HDirection.Forwards;
+  const isBeforeContentEditableFalseFn = forwards ? isBeforeContentEditableFalse : isAfterContentEditableFalse;
 
   if (!range.collapsed) {
     node = getSelectedNode(range);
     if (isContentEditableFalse(node)) {
-      return CefUtils.showCaret(direction, editor, node, direction === -1);
+      return CefUtils.showCaret(direction, editor, node, direction === HDirection.Backwards);
     }
   }
 
-  rangeIsInContainerBlock = isRangeInCaretContainerBlock(range);
-  caretPosition = getNormalizedRangeEndPoint(direction, editor.getBody(), range);
+  rangeIsInContainerBlock = CaretContainer.isRangeInCaretContainerBlock(range);
+  caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
 
   if (isBeforeContentEditableFalseFn(caretPosition)) {
-    return CefUtils.selectNode(editor, caretPosition.getNode(direction === -1));
+    return CefUtils.selectNode(editor, caretPosition.getNode(!forwards));
   }
 
   caretPosition = getNextPosFn(caretPosition);
@@ -88,14 +76,14 @@ const moveToCeFalseHorizontally = function (direction, editor, getNextPosFn, isB
   }
 
   if (isBeforeContentEditableFalseFn(caretPosition)) {
-    return CefUtils.showCaret(direction, editor, caretPosition.getNode(direction === -1), direction === 1);
+    return CefUtils.showCaret(direction, editor, caretPosition.getNode(!forwards), forwards);
   }
 
   // Peek ahead for handling of ab|c<span cE=false> -> abc|<span cE=false>
   peekCaretPosition = getNextPosFn(caretPosition);
   if (isBeforeContentEditableFalseFn(peekCaretPosition)) {
     if (isMoveInsideSameBlock(caretPosition, peekCaretPosition)) {
-      return CefUtils.showCaret(direction, editor, peekCaretPosition.getNode(direction === -1), direction === 1);
+      return CefUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards), forwards);
     }
   }
 
@@ -106,22 +94,22 @@ const moveToCeFalseHorizontally = function (direction, editor, getNextPosFn, isB
   return null;
 };
 
-const moveToCeFalseVertically = function (direction, editor, walkerFn, range) {
-  let caretPosition, linePositions, nextLinePositions,
-    closestNextLineRect, caretClientRect, clientX,
-    dist1, dist2, contentEditableFalseNode;
+const moveToCeFalseVertically = function (direction: LineWalker.VDirection, editor, walkerFn, range: Range) {
+  let caretPosition, linePositions, nextLinePositions;
+  let closestNextLineRect, caretClientRect, clientX;
+  let dist1, dist2, contentEditableFalseNode;
 
   contentEditableFalseNode = getSelectedNode(range);
-  caretPosition = getNormalizedRangeEndPoint(direction, editor.getBody(), range);
+  caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
   linePositions = walkerFn(editor.getBody(), LineWalker.isAboveLine(1), caretPosition);
   nextLinePositions = Arr.filter(linePositions, LineWalker.isLine(1));
   caretClientRect = Arr.last(caretPosition.getClientRects());
 
-  if (isBeforeContentEditableFalse(caretPosition)) {
+  if (isBeforeContentEditableFalse(caretPosition) || CaretUtils.isBeforeTable(caretPosition)) {
     contentEditableFalseNode = caretPosition.getNode();
   }
 
-  if (isAfterContentEditableFalse(caretPosition)) {
+  if (isAfterContentEditableFalse(caretPosition) || CaretUtils.isAfterTable(caretPosition)) {
     contentEditableFalseNode = caretPosition.getNode(true);
   }
 
@@ -156,7 +144,7 @@ const moveToCeFalseVertically = function (direction, editor, walkerFn, range) {
   }
 };
 
-const createTextBlock = function (editor) {
+const createTextBlock = (editor): Element => {
   const textBlock = editor.dom.create(editor.settings.forced_root_block);
 
   if (!Env.ie || Env.ie >= 11) {
@@ -166,7 +154,7 @@ const createTextBlock = function (editor) {
   return textBlock;
 };
 
-const exitPreBlock = function (editor, direction, range) {
+const exitPreBlock = (editor, direction: HDirection, range: Range): void => {
   let pre, caretPos, newBlock;
   const caretWalker = CaretWalker(editor.getBody());
   const getNextVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.next);
@@ -199,17 +187,16 @@ const exitPreBlock = function (editor, direction, range) {
   }
 };
 
-const getHorizontalRange = function (editor, forward) {
+const getHorizontalRange = (editor, forward: boolean): Range => {
   const caretWalker = CaretWalker(editor.getBody());
   const getNextVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.next);
   const getPrevVisualCaretPosition = Fun.curry(getVisualCaretPosition, caretWalker.prev);
   let newRange;
-  const direction = forward ? 1 : -1;
+  const direction = forward ? HDirection.Forwards : HDirection.Backwards;
   const getNextPosFn = forward ? getNextVisualCaretPosition : getPrevVisualCaretPosition;
-  const isBeforeContentEditableFalseFn = forward ? isBeforeContentEditableFalse : isAfterContentEditableFalse;
   const range = editor.selection.getRng();
 
-  newRange = moveToCeFalseHorizontally(direction, editor, getNextPosFn, isBeforeContentEditableFalseFn, range);
+  newRange = moveToCeFalseHorizontally(direction, editor, getNextPosFn, range);
   if (newRange) {
     return newRange;
   }
@@ -222,7 +209,7 @@ const getHorizontalRange = function (editor, forward) {
   return null;
 };
 
-const getVerticalRange = function (editor, down) {
+const getVerticalRange = (editor, down: boolean): Range => {
   let newRange;
   const direction = down ? 1 : -1;
   const walkerFn = down ? LineWalker.downUntil : LineWalker.upUntil;
@@ -241,8 +228,8 @@ const getVerticalRange = function (editor, down) {
   return null;
 };
 
-const moveH = function (editor, forward) {
-  return function () {
+const moveH = (editor, forward: boolean): () => boolean => {
+  return () => {
     const newRng = getHorizontalRange(editor, forward);
 
     if (newRng) {
@@ -254,8 +241,8 @@ const moveH = function (editor, forward) {
   };
 };
 
-const moveV = function (editor, down) {
-  return function () {
+const moveV = (editor, down: boolean): () => boolean => {
+  return () => {
     const newRng = getVerticalRange(editor, down);
 
     if (newRng) {
@@ -267,7 +254,7 @@ const moveV = function (editor, down) {
   };
 };
 
-export default {
+export {
   moveH,
   moveV
 };

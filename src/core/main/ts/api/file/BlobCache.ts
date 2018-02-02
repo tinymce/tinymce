@@ -13,13 +13,6 @@ import Arr from '../../util/Arr';
 import Fun from '../../util/Fun';
 import Uuid from '../../util/Uuid';
 
-/**
- * Hold blob info objects where a blob has extra internal information.
- *
- * @private
- * @class tinymce.file.BlobCache
- */
-
 export default function () {
   let cache = [];
   const constant = Fun.constant;

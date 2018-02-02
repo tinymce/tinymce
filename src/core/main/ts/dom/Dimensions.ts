@@ -10,17 +10,13 @@
 
 import Arr from '../util/Arr';
 import NodeType from './NodeType';
-import ClientRect from '../geom/ClientRect';
+import * as ClientRect from '../geom/ClientRect';
 
-/**
- * This module measures nodes and returns client rects. The client rects has an
- * extra node property.
- *
- * @private
- * @class tinymce.dom.Dimensions
- */
+export interface NodeClientRect extends ClientRect {
+  node: HTMLElement;
+}
 
-const getClientRects = function (node) {
+const getNodeClientRects = (node: Node): NodeClientRect[] => {
   const toArrayWithNode = function (clientRects) {
     return Arr.map(clientRects, function (clientRect) {
       clientRect = ClientRect.clone(clientRect);
@@ -29,12 +25,6 @@ const getClientRects = function (node) {
       return clientRect;
     });
   };
-
-  if (Arr.isArray(node)) {
-    return Arr.reduce(node, function (result, node) {
-      return result.concat(getClientRects(node));
-    }, []);
-  }
 
   if (NodeType.isElement(node)) {
     return toArrayWithNode(node.getClientRects());
@@ -50,13 +40,12 @@ const getClientRects = function (node) {
   }
 };
 
-export default {
-  /**
-   * Returns the client rects for a specific node.
-   *
-   * @method getClientRects
-   * @param {Array/DOMNode} node Node or array of nodes to get client rects on.
-   * @param {Array} Array of client rects with a extra node property.
-   */
+const getClientRects = (node: Node[]): NodeClientRect[] => {
+  return Arr.reduce(node, function (result, node) {
+    return result.concat(getNodeClientRects(node));
+  }, []);
+};
+
+export {
   getClientRects
 };

@@ -170,6 +170,12 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function () {
     LegacyUnit.strictEqual(CaretUtils.isBeforeContentEditableFalse(CaretPosition(getRoot(), 3)), false);
   });
 
+  suite.test('isBeforeContentEditableFalse/isAfterContentEditableFalse on bogus all element', function () {
+    setupHtml('<input><p contentEditable="false" data-mce-bogus="all"></p><input>');
+    LegacyUnit.strictEqual(CaretUtils.isBeforeContentEditableFalse(CaretPosition(getRoot(), 1)), false);
+    LegacyUnit.strictEqual(CaretUtils.isAfterContentEditableFalse(CaretPosition(getRoot(), 2)), false);
+  });
+
   suite.test('isAfterContentEditableFalse', function () {
     setupHtml(
       '<span contentEditable="false"></span>' +

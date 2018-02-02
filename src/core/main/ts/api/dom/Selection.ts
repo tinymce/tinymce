@@ -25,6 +25,8 @@ import SetSelectionContent from '../../selection/SetSelectionContent';
 import Tools from '../util/Tools';
 import * as ElementSelection from '../../selection/ElementSelection';
 import { moveEndPoint } from 'tinymce/core/selection/SelectionUtils';
+import { NativeSelection } from './NativeTypes';
+import { Editor } from 'tinymce/core/api/Editor';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -56,7 +58,7 @@ const isValidRange = function (rng: Range) {
   }
 };
 
-interface EditorSelection {
+export interface Selection {
   bookmarkManager: any;
   controlSelection: ControlSelection;
   dom: any;
@@ -74,7 +76,7 @@ interface EditorSelection {
   isForward: () => boolean;
   setNode: (elm: Element) => Element;
   getNode: () => Element;
-  getSel: () => Selection;
+  getSel: () => NativeSelection;
   setRng: (rng: Range, forward?: boolean) => void;
   getRng: () => Range;
   getStart: (real?: boolean) => Element;
@@ -103,7 +105,7 @@ interface EditorSelection {
  * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
  * @param {tinymce.Editor} editor Editor instance of the selection.
  */
-const Selection = function (dom, win: Window, serializer, editor): EditorSelection {
+export const Selection = function (dom, win: Window, serializer, editor: Editor): Selection {
   let bookmarkManager, controlSelection: ControlSelection;
   let selectedRange, explicitRange, selectorChangedData;
 
@@ -270,7 +272,7 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
    * @method getSel
    * @return {Selection} Internal browser selection object.
    */
-  const getSel = (): Selection => win.getSelection ? win.getSelection() : (<any> win.document).selection;
+  const getSel = (): NativeSelection => win.getSelection ? win.getSelection() : (<any> win.document).selection;
 
   /**
    * Returns the browsers internal range object.
@@ -632,7 +634,3 @@ const Selection = function (dom, win: Window, serializer, editor): EditorSelecti
 
   return exports;
 };
-
-export { EditorSelection as Selection };
-
-export default Selection;

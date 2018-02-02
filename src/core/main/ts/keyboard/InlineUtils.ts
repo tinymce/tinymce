@@ -11,7 +11,7 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Element, Selectors } from '@ephox/sugar';
 import * as EditorSettings from '../EditorSettings';
-import CaretContainer from '../caret/CaretContainer';
+import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import CaretUtils from '../caret/CaretUtils';
 import DOMUtils from '../api/dom/DOMUtils';

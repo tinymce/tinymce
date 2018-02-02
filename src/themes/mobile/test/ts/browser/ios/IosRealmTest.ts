@@ -86,7 +86,7 @@ UnitTest.asynctest('Browser Test: ios.IosRealmTest', function () {
     return Step.stateful(function (value, next, die) {
       const pageBody = iframe.dom().contentWindow.document.body;
       const editorBody = pageBody.querySelector('iframe').contentWindow.document.body;
-      const target = Option.from(editorBody.querySelectorAll(selector)[index]).map(Element.fromDom).getOrDie('no index ' + index + ' for selector: ' + selector);
+      const target: any = Option.from(editorBody.querySelectorAll(selector)[index]).map(Element.fromDom).getOrDie('no index ' + index + ' for selector: ' + selector);
       WindowSelection.setExact(editorBody.ownerDocument.defaultView, target, 0, target, 0);
       const socket = pageBody.querySelector('.tinymce-mobile-editor-socket');
       socket.scrollTop = target.dom().getBoundingClientRect().top - 100 - keyboardHeight;

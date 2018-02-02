@@ -25,6 +25,7 @@ import Sidebar from '../ui/Sidebar';
 import Tools from './util/Tools';
 import URI from './util/URI';
 import Uuid from '../util/Uuid';
+import { Selection } from 'tinymce/core/api/dom/Selection';
 
 /*jshint scripturl:true */
 
@@ -54,6 +55,11 @@ import Uuid from '../util/Uuid';
  * ed.render();
  */
 
+export interface Editor {
+  selection: Selection;
+  [key: string]: any;
+}
+
 // Shorten these names
 const DOM = DOMUtils.DOM;
 const extend = Tools.extend, each = Tools.each;
@@ -75,7 +81,7 @@ const ie = Env.ie;
  * @param {Object} settings Settings for the editor.
  * @param {tinymce.EditorManager} editorManager EditorManager instance.
  */
-const Editor = function (id, settings, editorManager) {
+export const Editor = function (id, settings, editorManager) {
   const self = this;
   let documentBaseUrl, baseUri;
 
@@ -190,7 +196,7 @@ const Editor = function (id, settings, editorManager) {
   }
 
   // Call setup
-  editorManager.fire('SetupEditor', self);
+  editorManager.fire('SetupEditor', { editor: self });
   self.execCallback('setup', self);
 
   /**
@@ -1311,5 +1317,3 @@ Editor.prototype = {
 };
 
 extend(Editor.prototype, EditorObservable);
-
-export default Editor;

@@ -1,7 +1,7 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Env from 'tinymce/core/api/Env';
-import LineWalker from 'tinymce/core/caret/LineWalker';
+import * as LineWalker from 'tinymce/core/caret/LineWalker';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import $ from 'tinymce/core/api/dom/DomQuery';
 import ViewBlock from '../../module/test/ViewBlock';
@@ -88,13 +88,13 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function () {
   });
 
   suite.test('isAboveLine', function () {
-    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 10 }), true);
-    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 2 }), false);
+    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 10 } as LineWalker.ClientRectLine), true);
+    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 2 } as LineWalker.ClientRectLine), false);
   });
 
   suite.test('isLine', function () {
-    LegacyUnit.equal(LineWalker.isLine(3)({ line: 3 }), true);
-    LegacyUnit.equal(LineWalker.isLine(3)({ line: 4 }), false);
+    LegacyUnit.equal(LineWalker.isLine(3)({ line: 3 } as LineWalker.ClientRectLine), true);
+    LegacyUnit.equal(LineWalker.isLine(3)({ line: 4 } as LineWalker.ClientRectLine), false);
   });
 
   viewBlock.attach();

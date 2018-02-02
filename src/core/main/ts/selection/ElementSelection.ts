@@ -20,7 +20,7 @@ const getEndpointElement = (root: Element, rng: Range, start: boolean, real: boo
 
   return Option.from(container).map(Element.fromDom).map((elm) => {
     return !real || !rng.collapsed ? Traverse.child(elm, resolve(elm, offset)).getOr(elm) : elm;
-  }).bind((elm) => Node.isElement(elm) ? Option.some(elm) : Traverse.parent(elm)).map((elm) => elm.dom()).getOr(root);
+  }).bind((elm) => Node.isElement(elm) ? Option.some(elm) : Traverse.parent(elm)).map((elm: any) => elm.dom()).getOr(root);
 };
 
 const getStart = (root: Element, rng: Range, real?: boolean): Element => {

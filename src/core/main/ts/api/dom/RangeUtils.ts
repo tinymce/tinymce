@@ -12,7 +12,7 @@ import { Fun } from '@ephox/katamari';
 import CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import NormalizeRange from '../../selection/NormalizeRange';
 import RangeCompare from '../../selection/RangeCompare';
-import RangeNodes from '../../selection/RangeNodes';
+import * as RangeNodes from '../../selection/RangeNodes';
 import RangeWalk from '../../selection/RangeWalk';
 import SplitRange from '../../selection/SplitRange';
 
@@ -50,7 +50,7 @@ export function RangeUtils(dom) {
    * @param {Range} rng Range to normalize.
    * @return {Boolean} True/false if the specified range was normalized or not.
    */
-  const normalize = function (rng: Range): Range {
+  const normalize = function (rng: Range): boolean {
     return NormalizeRange.normalize(dom, rng).fold(
       Fun.constant(false),
       function (normalizedRng) {

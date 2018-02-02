@@ -1,5 +1,5 @@
 import { Assertions } from '@ephox/agar';
-import Editor from 'tinymce/core/api/Editor';
+import { Editor } from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import DetectProPlugin from 'tinymce/plugins/paste/alien/DetectProPlugin';

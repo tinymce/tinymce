@@ -1,7 +1,7 @@
 import { Keyboard, Pipeline } from '@ephox/agar';
 import { LegacyUnit, TinyDom, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
-import CaretContainer from 'tinymce/core/caret/CaretContainer';
+import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import KeyUtils from '../module/test/KeyUtils';
 import VK from 'tinymce/core/api/util/VK';
 import Theme from 'tinymce/themes/modern/Theme';

@@ -31,7 +31,7 @@ const getNode = function (container: Node, offset: number): Node {
   return container;
 };
 
-export default {
+export {
   getSelectedNode,
   getNode
 };

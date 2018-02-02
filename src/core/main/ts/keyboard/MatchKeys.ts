@@ -10,8 +10,17 @@
 
 import { Arr, Fun, Merger } from '@ephox/katamari';
 
-const defaultPatterns = function (patterns) {
-  return Arr.map(patterns, function (pattern) {
+export interface KeyPattern {
+  shiftKey?: boolean;
+  altKey?: boolean;
+  ctrlKey?: boolean;
+  metaKey?: boolean;
+  keyCode?: number;
+  action: () => boolean;
+}
+
+const defaultPatterns = (patterns: KeyPattern[]): KeyPattern[] => {
+  return Arr.map(patterns, (pattern) => {
     return Merger.merge({
       shiftKey: false,
       altKey: false,
@@ -23,7 +32,7 @@ const defaultPatterns = function (patterns) {
   });
 };
 
-const matchesEvent = function (pattern, evt) {
+const matchesEvent = function (pattern: KeyPattern, evt: KeyboardEvent) {
   return (
     evt.keyCode === pattern.keyCode &&
     evt.shiftKey === pattern.shiftKey &&
@@ -33,8 +42,8 @@ const matchesEvent = function (pattern, evt) {
   );
 };
 
-const match = function (patterns, evt) {
-  return Arr.bind(defaultPatterns(patterns), function (pattern) {
+const match = function (patterns: KeyPattern[], evt: KeyboardEvent) {
+  return Arr.bind(defaultPatterns(patterns), (pattern) => {
     return matchesEvent(pattern, evt) ? [pattern] : [ ];
   });
 };
@@ -46,8 +55,8 @@ const action = function (f, ...x: any[]) {
   };
 };
 
-const execute = function (patterns, evt) {
-  return Arr.find(match(patterns, evt), function (pattern) {
+const execute = function (patterns: KeyPattern[], evt: KeyboardEvent) {
+  return Arr.find(match(patterns, evt), (pattern) => {
     return pattern.action();
   });
 };

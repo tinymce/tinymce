@@ -11,7 +11,7 @@
  */
 
 import Env from '../api/Env';
-import CaretContainer from '../caret/CaretContainer';
+import * as CaretContainer from '../caret/CaretContainer';
 import CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';

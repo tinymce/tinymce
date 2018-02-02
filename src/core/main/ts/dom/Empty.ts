@@ -10,7 +10,7 @@
 
 import { Fun } from '@ephox/katamari';
 import { Compare, Element, SelectorExists } from '@ephox/sugar';
-import CaretCandidate from '../caret/CaretCandidate';
+import * as CaretCandidate from '../caret/CaretCandidate';
 import NodeType from './NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
 

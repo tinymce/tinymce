@@ -10,7 +10,7 @@
 
 import { Fun, Option, Options } from '@ephox/katamari';
 import { Insert, Remove, Element, Node, PredicateFind, Traverse } from '@ephox/sugar';
-import CaretCandidate from '../caret/CaretCandidate';
+import * as CaretCandidate from '../caret/CaretCandidate';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import Empty from '../dom/Empty';

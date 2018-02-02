@@ -10,6 +10,7 @@
 
 import NodeType from '../dom/NodeType';
 import Zwsp from '../text/Zwsp';
+import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 
 /**
  * This module handles caret containers. A caret container is a node that
@@ -19,10 +20,10 @@ import Zwsp from '../text/Zwsp';
  * @class tinymce.caret.CaretContainer
  */
 
-const isElement = NodeType.isElement,
-  isText = NodeType.isText;
+const isElement = NodeType.isElement;
+const isText = NodeType.isText;
 
-const isCaretContainerBlock = (node: Node) => {
+const isCaretContainerBlock = (node: Node): boolean => {
   if (isText(node)) {
     node = node.parentNode;
   }
@@ -32,10 +33,7 @@ const isCaretContainerBlock = (node: Node) => {
 
 const isCaretContainerInline = (node: Node) => isText(node) && Zwsp.isZwsp(node.data);
 const isCaretContainer = (node: Node): boolean => isCaretContainerBlock(node) || isCaretContainerInline(node);
-
-const hasContent = function (node) {
-  return node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
-};
+const hasContent = (node: Node): boolean => node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
 
 const insertInline = (node: Node, before: boolean): Node => {
   let doc, sibling, textNode, parentNode;
@@ -80,7 +78,7 @@ const insertInline = (node: Node, before: boolean): Node => {
   return textNode;
 };
 
-const prependInline = function (node) {
+const prependInline = (node: Node): Node => {
   if (NodeType.isText(node)) {
     const data = node.data;
     if (data.length > 0 && data.charAt(0) !== Zwsp.ZWSP) {
@@ -92,7 +90,7 @@ const prependInline = function (node) {
   }
 };
 
-const appendInline = function (node) {
+const appendInline = (node: Node): Node => {
   if (NodeType.isText(node)) {
     const data = node.data;
     if (data.length > 0 && data.charAt(data.length - 1) !== Zwsp.ZWSP) {
@@ -104,21 +102,23 @@ const appendInline = function (node) {
   }
 };
 
-const isBeforeInline = function (pos) {
-  return pos && NodeType.isText(pos.container()) && pos.container().data.charAt(pos.offset()) === Zwsp.ZWSP;
+const isBeforeInline = (pos: CaretPosition): boolean => {
+  const container = pos.container();
+  return pos && NodeType.isText(container) && container.data.charAt(pos.offset()) === Zwsp.ZWSP;
 };
 
-const isAfterInline = function (pos) {
-  return pos && NodeType.isText(pos.container()) && pos.container().data.charAt(pos.offset() - 1) === Zwsp.ZWSP;
+const isAfterInline = (pos: CaretPosition): boolean => {
+  const container = pos.container();
+  return pos && NodeType.isText(container) && container.data.charAt(pos.offset() - 1) === Zwsp.ZWSP;
 };
 
-const createBogusBr = function () {
+const createBogusBr = (): Element => {
   const br = document.createElement('br');
   br.setAttribute('data-mce-bogus', '1');
   return br;
 };
 
-const insertBlock = function (blockName, node, before) {
+const insertBlock = (blockName: string, node: Node, before: boolean): Node => {
   let doc, blockNode, parentNode;
 
   doc = node.ownerDocument;
@@ -141,15 +141,10 @@ const insertBlock = function (blockName, node, before) {
   return blockNode;
 };
 
-const startsWithCaretContainer = function (node) {
-  return isText(node) && node.data[0] === Zwsp.ZWSP;
-};
+const startsWithCaretContainer = (node: Node): boolean => isText(node) && node.data[0] === Zwsp.ZWSP;
+const endsWithCaretContainer = (node: Node): boolean => isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
 
-const endsWithCaretContainer = function (node) {
-  return isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
-};
-
-const trimBogusBr = function (elm) {
+const trimBogusBr = (elm: Element): void => {
   const brs = elm.getElementsByTagName('br');
   const lastBr = brs[brs.length - 1];
   if (NodeType.isBogus(lastBr)) {
@@ -157,7 +152,7 @@ const trimBogusBr = function (elm) {
   }
 };
 
-const showCaretContainerBlock = function (caretContainer) {
+const showCaretContainerBlock = (caretContainer: Element): Element => {
   if (caretContainer && caretContainer.hasAttribute('data-mce-caret')) {
     trimBogusBr(caretContainer);
     caretContainer.removeAttribute('data-mce-caret');
@@ -170,7 +165,9 @@ const showCaretContainerBlock = function (caretContainer) {
   return null;
 };
 
-export default {
+const isRangeInCaretContainerBlock = (range: Range): boolean => isCaretContainerBlock(range.startContainer);
+
+export {
   isCaretContainer,
   isCaretContainerBlock,
   isCaretContainerInline,
@@ -183,5 +180,6 @@ export default {
   insertBlock,
   hasContent,
   startsWithCaretContainer,
-  endsWithCaretContainer
+  endsWithCaretContainer,
+  isRangeInCaretContainerBlock
 };

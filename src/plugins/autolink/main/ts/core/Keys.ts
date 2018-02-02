@@ -10,6 +10,7 @@
 
 import Env from 'tinymce/core/api/Env';
 import Settings from '../api/Settings';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const rangeEqualsDelimiterOrSpace = function (rangeString, delimiter) {
   return rangeString === delimiter || rangeString === ' ' || rangeString.charCodeAt(0) === 160;
@@ -171,7 +172,7 @@ const parseCurrentLine = function (editor, endOffset, delimiter) {
   }
 };
 
-const setup = function (editor) {
+const setup = function (editor: Editor) {
   let autoUrlDetectState;
 
   editor.on('keydown', function (e) {

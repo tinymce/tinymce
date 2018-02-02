@@ -8,16 +8,18 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-/**
- * Utility functions for working with client rects.
- *
- * @private
- * @class tinymce.geom.ClientRect
- */
+export interface ClientRect {
+  left: number;
+  top: number;
+  bottom: number;
+  right: number;
+  width: number;
+  height: number;
+}
 
 const round = Math.round;
 
-const clone = function (rect) {
+const clone = (rect: ClientRect): ClientRect => {
   if (!rect) {
     return { left: 0, top: 0, bottom: 0, right: 0, width: 0, height: 0 };
   }
@@ -32,22 +34,22 @@ const clone = function (rect) {
   };
 };
 
-const collapse = function (clientRect, toStart) {
-  clientRect = clone(clientRect);
+const collapse = (rect: ClientRect, toStart: boolean): ClientRect => {
+  rect = clone(rect);
 
   if (toStart) {
-    clientRect.right = clientRect.left;
+    rect.right = rect.left;
   } else {
-    clientRect.left = clientRect.left + clientRect.width;
-    clientRect.right = clientRect.left;
+    rect.left = rect.left + rect.width;
+    rect.right = rect.left;
   }
 
-  clientRect.width = 0;
+  rect.width = 0;
 
-  return clientRect;
+  return rect;
 };
 
-const isEqual = function (rect1, rect2) {
+const isEqual = (rect1: ClientRect, rect2: ClientRect): boolean => {
   return (
     rect1.left === rect2.left &&
     rect1.top === rect2.top &&
@@ -56,73 +58,67 @@ const isEqual = function (rect1, rect2) {
   );
 };
 
-const isValidOverflow = function (overflowY, clientRect1, clientRect2) {
-  return overflowY >= 0 && overflowY <= Math.min(clientRect1.height, clientRect2.height) / 2;
-
+const isValidOverflow = (overflowY: number, rect1: ClientRect, rect2: ClientRect): boolean => {
+  return overflowY >= 0 && overflowY <= Math.min(rect1.height, rect2.height) / 2;
 };
 
-const isAbove = function (clientRect1, clientRect2) {
-  if ((clientRect1.bottom - clientRect1.height / 2) < clientRect2.top) {
+const isAbove = (rect1: ClientRect, rect2: ClientRect): boolean => {
+  if ((rect1.bottom - rect1.height / 2) < rect2.top) {
     return true;
   }
 
-  if (clientRect1.top > clientRect2.bottom) {
+  if (rect1.top > rect2.bottom) {
     return false;
   }
 
-  return isValidOverflow(clientRect2.top - clientRect1.bottom, clientRect1, clientRect2);
+  return isValidOverflow(rect2.top - rect1.bottom, rect1, rect2);
 };
 
-const isBelow = function (clientRect1, clientRect2) {
-  if (clientRect1.top > clientRect2.bottom) {
+const isBelow = (rect1: ClientRect, rect2: ClientRect): boolean => {
+  if (rect1.top > rect2.bottom) {
     return true;
   }
 
-  if (clientRect1.bottom < clientRect2.top) {
+  if (rect1.bottom < rect2.top) {
     return false;
   }
 
-  return isValidOverflow(clientRect2.bottom - clientRect1.top, clientRect1, clientRect2);
+  return isValidOverflow(rect2.bottom - rect1.top, rect1, rect2);
 };
 
-const isLeft = function (clientRect1, clientRect2) {
-  return clientRect1.left < clientRect2.left;
-};
+const isLeft = (rect1: ClientRect, rect2: ClientRect): boolean => rect1.left < rect2.left;
+const isRight = (rect1: ClientRect, rect2: ClientRect): boolean => rect1.right > rect2.right;
 
-const isRight = function (clientRect1, clientRect2) {
-  return clientRect1.right > clientRect2.right;
-};
-
-const compare = function (clientRect1, clientRect2) {
-  if (isAbove(clientRect1, clientRect2)) {
+const compare = (rect1: ClientRect, rect2: ClientRect): number => {
+  if (isAbove(rect1, rect2)) {
     return -1;
   }
 
-  if (isBelow(clientRect1, clientRect2)) {
+  if (isBelow(rect1, rect2)) {
     return 1;
   }
 
-  if (isLeft(clientRect1, clientRect2)) {
+  if (isLeft(rect1, rect2)) {
     return -1;
   }
 
-  if (isRight(clientRect1, clientRect2)) {
+  if (isRight(rect1, rect2)) {
     return 1;
   }
 
   return 0;
 };
 
-const containsXY = function (clientRect, clientX, clientY) {
+const containsXY = (rect: ClientRect, clientX: number, clientY: number): boolean => {
   return (
-    clientX >= clientRect.left &&
-    clientX <= clientRect.right &&
-    clientY >= clientRect.top &&
-    clientY <= clientRect.bottom
+    clientX >= rect.left &&
+    clientX <= rect.right &&
+    clientY >= rect.top &&
+    clientY <= rect.bottom
   );
 };
 
-export default {
+export {
   clone,
   collapse,
   isEqual,

@@ -8,111 +8,108 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import CaretContainer from './CaretContainer';
+import * as CaretContainer from './CaretContainer';
 import CaretContainerRemove from './CaretContainerRemove';
 import DomQuery from '../api/dom/DomQuery';
 import NodeType from '../dom/NodeType';
-import ClientRect from '../geom/ClientRect';
+import * as ClientRect from '../geom/ClientRect';
 import Delay from '../api/util/Delay';
+import { isTableNavigationBrowser } from '../keyboard/TableNavigation';
 
-/**
- * This module contains logic for rendering a fake visual caret.
- *
- * @private
- * @class tinymce.caret.FakeCaret
- */
+export interface FakeCaret {
+  show: (before: boolean, element: HTMLElement) => Range;
+  hide: () => void;
+  getCss: () => string;
+  destroy: () => void;
+}
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
+const isTableCell = (node: Node) => NodeType.isElement(node) && /^(TD|TH)$/i.test(node.tagName);
+const hasFocus = (root: Node) => root.ownerDocument.activeElement === root;
 
-const isTableCell = function (node) {
-  return node && /^(TD|TH)$/i.test(node.nodeName);
+const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: boolean): ClientRect => {
+  const clientRect = ClientRect.collapse(element.getBoundingClientRect(), before);
+  let docElm, scrollX, scrollY, margin, rootRect;
+
+  if (root.tagName === 'BODY') {
+    docElm = root.ownerDocument.documentElement;
+    scrollX = root.scrollLeft || docElm.scrollLeft;
+    scrollY = root.scrollTop || docElm.scrollTop;
+  } else {
+    rootRect = root.getBoundingClientRect();
+    scrollX = root.scrollLeft - rootRect.left;
+    scrollY = root.scrollTop - rootRect.top;
+  }
+
+  clientRect.left += scrollX;
+  clientRect.right += scrollX;
+  clientRect.top += scrollY;
+  clientRect.bottom += scrollY;
+  clientRect.width = 1;
+
+  margin = element.offsetWidth - element.clientWidth;
+
+  if (margin > 0) {
+    if (before) {
+      margin *= -1;
+    }
+
+    clientRect.left += margin;
+    clientRect.right += margin;
+  }
+
+  return clientRect;
 };
 
-export default function (rootNode, isBlock) {
+const trimInlineCaretContainers = (root: Node): void => {
+  let contentEditableFalseNodes, node, sibling, i, data;
+
+  contentEditableFalseNodes = DomQuery('*[contentEditable=false]', root);
+  for (i = 0; i < contentEditableFalseNodes.length; i++) {
+    node = contentEditableFalseNodes[i];
+
+    sibling = node.previousSibling;
+    if (CaretContainer.endsWithCaretContainer(sibling)) {
+      data = sibling.data;
+
+      if (data.length === 1) {
+        sibling.parentNode.removeChild(sibling);
+      } else {
+        sibling.deleteData(data.length - 1, 1);
+      }
+    }
+
+    sibling = node.nextSibling;
+    if (CaretContainer.startsWithCaretContainer(sibling)) {
+      data = sibling.data;
+
+      if (data.length === 1) {
+        sibling.parentNode.removeChild(sibling);
+      } else {
+        sibling.deleteData(0, 1);
+      }
+    }
+  }
+};
+
+export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean): FakeCaret => {
   let cursorInterval, $lastVisualCaret = null, caretContainerNode;
 
-  const getAbsoluteClientRect = function (node, before) {
-    const clientRect = ClientRect.collapse(node.getBoundingClientRect(), before);
-    let docElm, scrollX, scrollY, margin, rootRect;
-
-    if (rootNode.tagName === 'BODY') {
-      docElm = rootNode.ownerDocument.documentElement;
-      scrollX = rootNode.scrollLeft || docElm.scrollLeft;
-      scrollY = rootNode.scrollTop || docElm.scrollTop;
-    } else {
-      rootRect = rootNode.getBoundingClientRect();
-      scrollX = rootNode.scrollLeft - rootRect.left;
-      scrollY = rootNode.scrollTop - rootRect.top;
-    }
-
-    clientRect.left += scrollX;
-    clientRect.right += scrollX;
-    clientRect.top += scrollY;
-    clientRect.bottom += scrollY;
-    clientRect.width = 1;
-
-    margin = node.offsetWidth - node.clientWidth;
-
-    if (margin > 0) {
-      if (before) {
-        margin *= -1;
-      }
-
-      clientRect.left += margin;
-      clientRect.right += margin;
-    }
-
-    return clientRect;
-  };
-
-  const trimInlineCaretContainers = function () {
-    let contentEditableFalseNodes, node, sibling, i, data;
-
-    contentEditableFalseNodes = DomQuery('*[contentEditable=false]', rootNode);
-    for (i = 0; i < contentEditableFalseNodes.length; i++) {
-      node = contentEditableFalseNodes[i];
-
-      sibling = node.previousSibling;
-      if (CaretContainer.endsWithCaretContainer(sibling)) {
-        data = sibling.data;
-
-        if (data.length === 1) {
-          sibling.parentNode.removeChild(sibling);
-        } else {
-          sibling.deleteData(data.length - 1, 1);
-        }
-      }
-
-      sibling = node.nextSibling;
-      if (CaretContainer.startsWithCaretContainer(sibling)) {
-        data = sibling.data;
-
-        if (data.length === 1) {
-          sibling.parentNode.removeChild(sibling);
-        } else {
-          sibling.deleteData(0, 1);
-        }
-      }
-    }
-
-    return null;
-  };
-
-  const show = function (before, node) {
+  const show = (before: boolean, element: HTMLElement): Range => {
     let clientRect, rng;
 
     hide();
 
-    if (isTableCell(node)) {
+    if (isTableCell(element)) {
       return null;
     }
 
-    if (isBlock(node)) {
-      caretContainerNode = CaretContainer.insertBlock('p', node, before);
-      clientRect = getAbsoluteClientRect(node, before);
+    if (isBlock(element)) {
+      caretContainerNode = CaretContainer.insertBlock('p', element, before);
+      clientRect = getAbsoluteClientRect(root, element, before);
       DomQuery(caretContainerNode).css('top', clientRect.top);
 
-      $lastVisualCaret = DomQuery('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css(clientRect).appendTo(rootNode);
+      $lastVisualCaret = DomQuery('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css(clientRect).appendTo(root);
 
       if (before) {
         $lastVisualCaret.addClass('mce-visual-caret-before');
@@ -120,12 +117,12 @@ export default function (rootNode, isBlock) {
 
       startBlink();
 
-      rng = node.ownerDocument.createRange();
+      rng = element.ownerDocument.createRange();
       rng.setStart(caretContainerNode, 0);
       rng.setEnd(caretContainerNode, 0);
     } else {
-      caretContainerNode = CaretContainer.insertInline(node, before);
-      rng = node.ownerDocument.createRange();
+      caretContainerNode = CaretContainer.insertInline(element, before);
+      rng = element.ownerDocument.createRange();
 
       if (isContentEditableFalse(caretContainerNode.nextSibling)) {
         rng.setStart(caretContainerNode, 0);
@@ -141,8 +138,8 @@ export default function (rootNode, isBlock) {
     return rng;
   };
 
-  const hide = function () {
-    trimInlineCaretContainers();
+  const hide = () => {
+    trimInlineCaretContainers(root);
 
     if (caretContainerNode) {
       CaretContainerRemove.remove(caretContainerNode);
@@ -157,30 +154,25 @@ export default function (rootNode, isBlock) {
     clearInterval(cursorInterval);
   };
 
-  const hasFocus = function () {
-    return rootNode.ownerDocument.activeElement === rootNode;
-  };
-
-  const startBlink = function () {
-    cursorInterval = Delay.setInterval(function () {
-      if (hasFocus()) {
-        DomQuery('div.mce-visual-caret', rootNode).toggleClass('mce-visual-caret-hidden');
+  const startBlink = () => {
+    cursorInterval = Delay.setInterval(() => {
+      if (hasFocus(root)) {
+        DomQuery('div.mce-visual-caret', root).toggleClass('mce-visual-caret-hidden');
       } else {
-        DomQuery('div.mce-visual-caret', rootNode).addClass('mce-visual-caret-hidden');
+        DomQuery('div.mce-visual-caret', root).addClass('mce-visual-caret-hidden');
       }
     }, 500);
   };
 
-  const destroy = function () {
-    Delay.clearInterval(cursorInterval);
-  };
+  const destroy = () => Delay.clearInterval(cursorInterval);
 
-  const getCss = function () {
+  const getCss = () => {
     return (
       '.mce-visual-caret {' +
       'position: absolute;' +
       'background-color: black;' +
       'background-color: currentcolor;' +
+      // 'background-color: red;' +
       '}' +
       '.mce-visual-caret-hidden {' +
       'display: none;' +
@@ -202,4 +194,6 @@ export default function (rootNode, isBlock) {
     getCss,
     destroy
   };
-}
+};
+
+export const isFakeCaretTarget = (node: Node) => isContentEditableFalse(node) || (NodeType.isTable(node) && isTableNavigationBrowser());

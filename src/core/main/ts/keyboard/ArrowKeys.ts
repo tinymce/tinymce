@@ -10,11 +10,12 @@
 
 import { PlatformDetection } from '@ephox/sand';
 import BoundarySelection from './BoundarySelection';
-import CefNavigation from './CefNavigation';
+import * as CefNavigation from './CefNavigation';
+import * as TableNavigation from './TableNavigation';
 import MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
 
-const executeKeydownOverride = function (editor, caret, evt) {
+const executeKeydownOverride = function (editor, caret, evt: KeyboardEvent) {
   const os = PlatformDetection.detect().os;
 
   MatchKeys.execute([
@@ -22,6 +23,10 @@ const executeKeydownOverride = function (editor, caret, evt) {
     { keyCode: VK.LEFT, action: CefNavigation.moveH(editor, false) },
     { keyCode: VK.UP, action: CefNavigation.moveV(editor, false) },
     { keyCode: VK.DOWN, action: CefNavigation.moveV(editor, true) },
+    { keyCode: VK.RIGHT, action: TableNavigation.moveH(editor, true) },
+    { keyCode: VK.LEFT, action: TableNavigation.moveH(editor, false) },
+    { keyCode: VK.UP, action: TableNavigation.moveV(editor, false) },
+    { keyCode: VK.DOWN, action: TableNavigation.moveV(editor, true) },
     { keyCode: VK.RIGHT, action: BoundarySelection.move(editor, caret, true) },
     { keyCode: VK.LEFT, action: BoundarySelection.move(editor, caret, false) },
     { keyCode: VK.RIGHT, ctrlKey: !os.isOSX(), altKey: os.isOSX(), action: BoundarySelection.moveNextWord(editor, caret) },

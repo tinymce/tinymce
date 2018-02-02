@@ -9,15 +9,15 @@
  */
 
 import { Fun, Merger } from '@ephox/katamari';
-import Events from '../Events';
-import DOMUtils from './DOMUtils';
-import DomSerializerFilters from '../../dom/DomSerializerFilters';
-import DomSerializerPreProcess from '../../dom/DomSerializerPreProcess';
-import DomParser from '../html/DomParser';
-import Schema from '../html/Schema';
-import Serializer from '../html/Serializer';
-import Zwsp from '../../text/Zwsp';
-import Tools from '../util/Tools';
+import Events from '../api/Events';
+import DOMUtils from '../api/dom/DOMUtils';
+import DomSerializerFilters from './DomSerializerFilters';
+import DomSerializerPreProcess from './DomSerializerPreProcess';
+import DomParser from '../api/html/DomParser';
+import Schema from '../api/html/Schema';
+import Serializer from '../api/html/Serializer';
+import Zwsp from '../text/Zwsp';
+import Tools from '../api/util/Tools';
 
 const addTempAttr = function (htmlParser, tempAttrs, name) {
   if (Tools.inArray(tempAttrs, name) === -1) {

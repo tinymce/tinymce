@@ -58,7 +58,7 @@ const getFontProp = function (propName) {
     return Option.from(elm)
       .map(Element.fromDom)
       .filter(Node.isElement)
-      .bind(function (element) {
+      .bind(function (element: any) {
         return getSpecifiedFontProp(propName, rootElm, element.dom())
           .or(getComputedFontProp(propName, element.dom()));
       })

@@ -84,9 +84,24 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function () {
     LegacyUnit.strictEqual(NodeType.isBogus(null), false);
   });
 
+  suite.test('isBogusAll', function () {
+    LegacyUnit.strictEqual(NodeType.isBogusAll($('<div data-mce-bogus="1"></div>')[0]), false);
+    LegacyUnit.strictEqual(NodeType.isBogusAll($('<div data-mce-bogus="all"></div>')[0]), true);
+    LegacyUnit.strictEqual(NodeType.isBogusAll($('<div></div>')[0]), false);
+    LegacyUnit.strictEqual(NodeType.isBogusAll(document.createTextNode('test')), false);
+    LegacyUnit.strictEqual(NodeType.isBogusAll(null), false);
+  });
+
   suite.test('hasAttribute', function () {
     LegacyUnit.strictEqual(NodeType.hasAttribute('x')($('<div x="1"></div>')[0]), true);
     LegacyUnit.strictEqual(NodeType.hasAttribute('y')($('<div x="1"></div>')[0]), false);
+  });
+
+  suite.test('isTable', function () {
+    LegacyUnit.strictEqual(NodeType.isTable($('<table><tr><td></td></tr></table>')[0]), true);
+    LegacyUnit.strictEqual(NodeType.isTable($('<div></div>')[0]), false);
+    LegacyUnit.strictEqual(NodeType.isTable(document.createTextNode('test')), false);
+    LegacyUnit.strictEqual(NodeType.isTable(null), false);
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {

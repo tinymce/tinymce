@@ -11,23 +11,22 @@
 import CaretPosition from '../caret/CaretPosition';
 import CaretUtils from '../caret/CaretUtils';
 import NodeType from '../dom/NodeType';
-import Fun from '../util/Fun';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-const showCaret = function (direction, editor, node, before) {
+const showCaret = (direction, editor, node: Node, before: boolean): Range => {
   // TODO: Figure out a better way to handle this dependency
   return editor._selectionOverrides.showCaret(direction, node, before);
 };
 
-const getNodeRange = function (node) {
+const getNodeRange = (node: Element): Range => {
   const rng = node.ownerDocument.createRange();
   rng.selectNode(node);
   return rng;
 };
 
-const selectNode = function (editor, node) {
+const selectNode = (editor, node: Element): Range => {
   let e;
 
   e = editor.fire('BeforeObjectSelected', { target: node });
@@ -38,7 +37,7 @@ const selectNode = function (editor, node) {
   return getNodeRange(node);
 };
 
-const renderCaretAtRange = function (editor, range) {
+const renderCaretAtRange = (editor, range: Range): Range => {
   let caretPosition, ceRoot;
 
   range = CaretUtils.normalizeRange(1, editor.getBody(), range);
@@ -53,7 +52,7 @@ const renderCaretAtRange = function (editor, range) {
   }
 
   // TODO: Should render caret before/after depending on where you click on the page forces after now
-  ceRoot = editor.dom.getParent(caretPosition.getNode(), Fun.or(isContentEditableFalse, isContentEditableTrue));
+  ceRoot = editor.dom.getParent(caretPosition.getNode(), (node) => isContentEditableFalse(node) || isContentEditableTrue(node));
   if (isContentEditableFalse(ceRoot)) {
     return showCaret(1, editor, ceRoot, false);
   }
@@ -61,7 +60,7 @@ const renderCaretAtRange = function (editor, range) {
   return null;
 };
 
-const renderRangeCaret = function (editor, range) {
+const renderRangeCaret = (editor, range: Range): Range => {
   let caretRange;
 
   if (!range || !range.collapsed) {
@@ -76,7 +75,7 @@ const renderRangeCaret = function (editor, range) {
   return range;
 };
 
-export default {
+export {
   showCaret,
   selectNode,
   renderCaretAtRange,

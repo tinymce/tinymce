@@ -286,7 +286,17 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function () {
           cCreateFromPosition([0], 0),
           cNavigate(false),
           cAssertNone
-        ]))
+        ])),
+        Logger.t('Should jump over bogus elements', Chain.asStep(viewBlock, [
+          cSetHtml([
+            '<p>1</p>',
+            '<p data-mce-bogus="all"></p>',
+            '<p>2</p>'
+          ].join('')),
+          cCreateFromPosition([], 2),
+          cNavigate(false),
+          cAssertCaretPosition([0, 0], 1)
+        ])),
       ]))
     ])),
 

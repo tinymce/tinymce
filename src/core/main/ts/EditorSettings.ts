@@ -154,7 +154,7 @@ const get = function (editor, name) {
   return Option.from(editor.settings[name]);
 };
 
-const getFiltered = (predicate: Function, editor, name: string) => Option.from(editor.settings[name]).filter(predicate);
+const getFiltered = (predicate: (x: any) => boolean, editor, name: string) => Option.from(editor.settings[name]).filter(predicate);
 
 const getString = Fun.curry(getFiltered, Type.isString);
 

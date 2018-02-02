@@ -149,7 +149,8 @@ UnitTest.asynctest('browser.tinymce.core.CaretPositionTest', function () {
 
   suite.test('getClientRects at extending character', function () {
     setupHtml('a');
-    getRoot().firstChild.appendData('\u0301b');
+    const textNode = getRoot().firstChild as Text;
+    textNode.appendData('\u0301b');
 
     LegacyUnit.equal(CaretPosition(getRoot().firstChild, 0).getClientRects().length, 1);
     LegacyUnit.equal(CaretPosition(getRoot().firstChild, 1).getClientRects().length, 0);
