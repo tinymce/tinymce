@@ -105,7 +105,7 @@ export interface Selection {
  * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
  * @param {tinymce.Editor} editor Editor instance of the selection.
  */
-const Selection = function (dom, win: Window, serializer, editor: Editor): Selection {
+export const Selection = function (dom, win: Window, serializer, editor: Editor): Selection {
   let bookmarkManager, controlSelection: ControlSelection;
   let selectedRange, explicitRange, selectorChangedData;
 
@@ -634,5 +634,3 @@ const Selection = function (dom, win: Window, serializer, editor: Editor): Selec
 
   return exports;
 };
-
-export default Selection;

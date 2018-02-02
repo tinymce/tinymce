@@ -1317,5 +1317,3 @@ Editor.prototype = {
 };
 
 extend(Editor.prototype, EditorObservable);
-
-export default Editor;

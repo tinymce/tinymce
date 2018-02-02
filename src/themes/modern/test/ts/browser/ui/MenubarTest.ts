@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Fun } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import { Editor } from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Menubar from 'tinymce/themes/modern/ui/Menubar';
 

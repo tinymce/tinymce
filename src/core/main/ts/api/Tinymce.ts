@@ -9,7 +9,7 @@
  */
 
 import AddOnManager from './AddOnManager';
-import Editor from './Editor';
+import { Editor } from './Editor';
 import EditorCommands from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
@@ -28,7 +28,7 @@ import DOMUtils from './dom/DOMUtils';
 import DomQuery from './dom/DomQuery';
 import EventUtils from './dom/EventUtils';
 import ScriptLoader from './dom/ScriptLoader';
-import Selection from './dom/Selection';
+import { Selection } from './dom/Selection';
 import Sizzle from './dom/Sizzle';
 import TreeWalker from './dom/TreeWalker';
 import Rect from './geom/Rect';

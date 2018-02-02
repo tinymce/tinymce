@@ -1,5 +1,5 @@
 import { RawAssertions } from '@ephox/agar';
-import Editor from 'tinymce/core/api/Editor';
+import { Editor } from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import DomSerializer from 'tinymce/core/dom/DomSerializer';
 import TrimHtml from 'tinymce/core/dom/TrimHtml';
