@@ -64,7 +64,7 @@ var assemble = function (rawHandler) {
 };
 
 var missingOrderError = function (eventName, tuples) {
-  return new Result.error([
+  return Result.error([
     'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' +
     'specify an event ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' +
     'can trigger it are: ' + Json.stringify(Arr.map(tuples, function (c) { return c.name(); }), null, 2)

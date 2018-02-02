@@ -86,7 +86,7 @@ var findSnap = function (component, snapInfo, newCoord, scroll, origin) {
   var snaps = snapInfo.getSnapPoints()(component);
 
   // HERE
-  return Options.findMap(snaps, function (snap) {
+  return Options.findMap(snaps, function (snap: any) {
     var sensor = snap.sensor();
     var inRange = DragCoord.withinRange(newCoord, sensor, snap.range().left(), snap.range().top(), scroll, origin);
     return inRange ? Option.some(

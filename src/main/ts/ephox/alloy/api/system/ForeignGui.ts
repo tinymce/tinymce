@@ -66,8 +66,8 @@ var supportedEvents = [
 
 // Find the dispatcher information for the target if available. Note, the
 // dispatcher may also change the target.
-var findDispatcher = function (dispatchers, target) {
-  return Options.findMap(dispatchers, function (dispatcher) {
+var findDispatcher = function (dispatchers, target): any {
+  return Options.findMap(dispatchers, function (dispatcher: any) {
     return dispatcher.getTarget()(target).map(function (newTarget) {
       return {
         target: Fun.constant(newTarget),

@@ -91,7 +91,7 @@ var make = function (detail, rawUiSpec) {
   };
 
   var updateMenuPath = function (container, state, path) {
-    return Option.from(path[0]).bind(state.lookupMenu).map(function (activeMenu) {
+    return Option.from(path[0]).bind(state.lookupMenu).map(function (activeMenu: any) {
       var rest = getMenus(state, path.slice(1));
       Arr.each(rest, function (r) {
         Class.add(r.element(), detail.markers().backgroundMenu());
@@ -120,7 +120,7 @@ var make = function (detail, rawUiSpec) {
     var value = getItemValue(item);
     return state.expand(value).bind(function (path) {
       // When expanding, always select the first.
-      Option.from(path[0]).bind(state.lookupMenu).each(function (activeMenu) {
+      Option.from(path[0]).bind(state.lookupMenu).each(function (activeMenu: any) {
         // DUPE with above. Fix later.
         if (! Body.inBody(activeMenu.element())) {
           Replacing.append(container, GuiFactory.premade(activeMenu));
