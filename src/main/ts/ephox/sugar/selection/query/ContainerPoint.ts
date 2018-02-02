@@ -19,7 +19,7 @@ import TextPoint from './TextPoint';
 var searchInChildren = function (doc, node, x, y) {
   var r = doc.dom().createRange();
   var nodes = Traverse.children(node);
-  return Options.findMap(nodes, function (n) {
+  return Options.findMap(nodes, function (n: any) {
     // slight mutation because we assume creating ranges is expensive
     r.selectNode(n.dom());
     return Geometry.inRect(r.getBoundingClientRect(), x, y) ?

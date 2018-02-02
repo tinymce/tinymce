@@ -41,7 +41,7 @@ var focusInside = function (element) {
  *  because the :focus selector relies on keyboard focus.
  */
 var search = function (element) {
-  return active(Traverse.owner(element)).filter(function (e) {
+  return active(Traverse.owner(element)).filter(function (e:any) {
     return element.dom().contains(e.dom());
   });
 };
