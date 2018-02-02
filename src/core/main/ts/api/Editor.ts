@@ -190,7 +190,7 @@ const Editor = function (id, settings, editorManager) {
   }
 
   // Call setup
-  editorManager.fire('SetupEditor', self);
+  editorManager.fire('SetupEditor', { editor: self });
   self.execCallback('setup', self);
 
   /**
