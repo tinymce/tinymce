@@ -1,6 +1,6 @@
-import Future from 'ephox/katamari/api/Future';
-import FutureResult from 'ephox/katamari/api/FutureResult';
-import Result from 'ephox/katamari/api/Result';
+import { Future } from 'ephox/katamari/api/Future';
+import { FutureResult } from 'ephox/katamari/api/FutureResult';
+import { Result } from 'ephox/katamari/api/Result';
 import Results from 'ephox/katamari/api/Results';
 import AsyncProps from 'ephox/katamari/test/AsyncProps';
 import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
@@ -13,7 +13,7 @@ UnitTest.asynctest('FutureResultsTest', function() {
 
   var testPure = function () {
     return new Promise(function (resolve, reject) {
-      FutureResult.pure('future.result.hello').get(function (res) {
+      FutureResult.value('future.result.hello').get(function (res) {
         res.fold(function (err) {
           reject('testPure: Unexpected error: ' + err);
         }, function (val) {
@@ -82,10 +82,10 @@ UnitTest.asynctest('FutureResultsTest', function() {
 
   var testBindFuture = function () {
     return new Promise(function (resolve, reject) {
-      var fut = FutureResult.pure('10');
+      var fut = FutureResult.value('10');
 
-      var f = function (x) {
-        return FutureResult.pure(x + '.bind.future');
+      var f = function (x: string) {
+        return FutureResult.value(x + '.bind.future');
       };
 
       fut.bindFuture(f).get(function (output) {
@@ -98,7 +98,7 @@ UnitTest.asynctest('FutureResultsTest', function() {
 
   var testBindResult = function () {
     return new Promise(function (resolve, reject) {
-      var fut = FutureResult.pure('10');
+      var fut = FutureResult.value('10');
 
       var f = function (x) {
         return Result.value(x + '.bind.result');
@@ -114,7 +114,7 @@ UnitTest.asynctest('FutureResultsTest', function() {
 
   var testMapResult = function () {
     return new Promise(function (resolve, reject) {
-      var fut = FutureResult.pure('10');
+      var fut = FutureResult.value('10');
 
       var f = function (x) {
         return x + '.map.result';
@@ -132,10 +132,10 @@ UnitTest.asynctest('FutureResultsTest', function() {
   var testSpecs = function () {
     return AsyncProps.checkProps([
       {
-        label: 'FutureResult.pure resolves with data',
+        label: 'FutureResult.value resolves with data',
         arbs: [ Jsc.json ],
         f: function (json) {
-          return AsyncProps.checkFuture(FutureResult.pure(json), function (data) {
+          return AsyncProps.checkFuture(FutureResult.value(json), function (data) {
             return data.fold(function (err) {
               return Result.error('Unexpected error in test: ' + err);
             }, function (value) {
@@ -146,10 +146,10 @@ UnitTest.asynctest('FutureResultsTest', function() {
       },
 
       {
-        label: 'FutureResult.pure mapResult f resolves with f data',
+        label: 'FutureResult.value mapResult f resolves with f data',
         arbs: [ Jsc.json, Jsc.fun(Jsc.json) ],
         f: function (json, f) {
-          var futureResult = FutureResult.pure(json);
+          var futureResult = FutureResult.value(json);
           return AsyncProps.checkFuture(futureResult.mapResult(f), function (data) {
             return data.fold(function (err) {
               return Result.error('Should not have failed: ' + err);

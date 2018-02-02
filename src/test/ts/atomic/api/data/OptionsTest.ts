@@ -1,6 +1,6 @@
 import Arr from 'ephox/katamari/api/Arr';
 import Fun from 'ephox/katamari/api/Fun';
-import Option from 'ephox/katamari/api/Option';
+import { Option } from 'ephox/katamari/api/Option';
 import Options from 'ephox/katamari/api/Options';
 import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';

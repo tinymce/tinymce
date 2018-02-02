@@ -1,12 +1,12 @@
 import Fun from 'ephox/katamari/api/Fun';
-import Option from 'ephox/katamari/api/Option';
+import { Option } from 'ephox/katamari/api/Option';
 import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('OptionSomeTest', function() {
   var testSanity = function () {
-    var boom = function(f) { throw 'Should not be called'; };
+    var boom = function(f?) { throw 'Should not be called'; };
 
     var s = Option.some(5);   
     assert.eq(true, s.isSome());

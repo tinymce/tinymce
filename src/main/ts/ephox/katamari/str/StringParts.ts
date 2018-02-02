@@ -1,4 +1,4 @@
-import Option from '../api/Option';
+import { Option } from '../api/Option';
 
 /** Return the first 'count' letters from 'str'.
 -     *  e.g. first("abcde", 2) === "ab"

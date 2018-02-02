@@ -1,5 +1,5 @@
 import Fun from 'ephox/katamari/api/Fun';
-import Result from 'ephox/katamari/api/Result';
+import { Result } from 'ephox/katamari/api/Result';
 import Results from 'ephox/katamari/api/Results';
 import ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import Jsc from '@ephox/wrap-jsverify';

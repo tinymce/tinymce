@@ -1,7 +1,7 @@
 import Fun from 'ephox/katamari/api/Fun';
-import Option from 'ephox/katamari/api/Option';
-import FutureResult from 'ephox/katamari/api/FutureResult';
-import Result from 'ephox/katamari/api/Result';
+import { Option } from 'ephox/katamari/api/Option';
+import { FutureResult } from 'ephox/katamari/api/FutureResult';
+import { Result } from 'ephox/katamari/api/Result';
 import Jsc from '@ephox/wrap-jsverify';
 
 var show = function (res) {

@@ -1,15 +1,15 @@
 import Arr from './Arr';
-import Future from './Future';
+import { Future } from './Future';
 import AsyncValues from '../async/AsyncValues';
 
 /** par :: [Future a] -> Future [a] */
-var par = function(futures) {
+var par = function <T> (futures: Future<T>[]) {
   return AsyncValues.par(futures, Future.nu);
 };
 
 /** mapM :: [a] -> (a -> Future b) -> Future [b] */
-var mapM = function(array, fn) {
-  var futures = Arr.map(array, fn);
+var mapM = function <A,B> (array: A[], fn: (value: A) => Future<B>) {
+  var futures: Future<B>[] = Arr.map(array, fn);
   return par(futures);
 };
 
@@ -19,13 +19,13 @@ var mapM = function(array, fn) {
  *
  *  compose :: ((b -> Future c), (a -> Future b)) -> a -> Future c
  */
-var compose = function (f, g) {
-  return function (a) {
+var compose = function <A,B,C> (f: (b: B) => Future<C>, g: (a: A) => Future<B>) {
+  return function (a: A) {
     return g(a).bind(f);
   };
 };
 
-export default <any> {
+export default {
   par: par,
   mapM: mapM,
   compose: compose

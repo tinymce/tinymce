@@ -1,4 +1,4 @@
-import Future from 'ephox/katamari/api/Future';
+import { Future } from 'ephox/katamari/api/Future';
 import Throttler from 'ephox/katamari/api/Throttler';
 import { UnitTest, assert } from '@ephox/bedrock';
 

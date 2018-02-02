@@ -1,4 +1,4 @@
-import Option from './Option';
+import { Option } from './Option';
 
 // Use the native Array.indexOf if it is available (IE9+) otherwise fall back to manual iteration
 // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf

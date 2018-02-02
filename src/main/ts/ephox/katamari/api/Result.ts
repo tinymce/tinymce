@@ -1,5 +1,23 @@
 import Fun from './Fun';
-import Option from './Option';
+import { Option } from './Option';
+
+export interface Result<T, E> {
+  is: (value: T) => boolean;
+  or: (result: Result<T, E>) => Result<T, E>;
+  orThunk: (makeResult: () => Result<T, E>) => Result<T, E>;
+  map: <U> (mapper: (value: T) => U) => Result<U, E>;
+  each: (worker: (value: T) => void) => void;
+  bind: <U> (binder: (value: T) => Result<U, E>) => Result<U, E>;
+  fold: <U> (whenError: (err: E) => U, mapper: (value: T) => U) => U;
+  exists: (predicate: (value: T) => boolean) => boolean;
+  forall: (predicate: (value: T) => boolean) => boolean;
+  toOption: () => Option<T>;
+  isValue: () => boolean;
+  isError: () => boolean;
+  getOr: (defaultValue: T) => T;
+  getOrThunk: (maker: () => T) => T;
+  getOrDie: () => T;
+};
 
 /* The type signatures for Result 
  * is :: this Result a -> a -> Bool
@@ -19,51 +37,51 @@ import Option from './Option';
  * getOrDie :: this Result a -> a (or throws error)
 */
 
-var value = function (o) {
-  var is = function (v) {
-    return o === v;      
+var value = function <T, E = any>(o: T): Result<T, E> {
+  var is = function (v: T) {
+    return o === v;
   };
 
-  var or = function (opt) {
+  var or = function (opt: Result<T, E>) {
     return value(o);
   };
 
-  var orThunk = function (f) {
+  var orThunk = function (f: () => Result<T, E>) {
     return value(o);
   };
 
-  var map = function (f) {
+  var map = function <U>(f: (value: T) => U) {
     return value(f(o));
   };
 
-  var each = function (f) {
+  var each = function (f: (value: T) => void) {
     f(o);
   };
 
-  var bind = function (f) {
+  var bind = function <U>(f: (value: T) => Result<U, E>) {
     return f(o);
   };
 
-  var fold = function (_, onValue) {
+  var fold = function <U>(_: (err: E) => U, onValue: (value: T) => U) {
     return onValue(o);
   };
 
-  var exists = function (f) {
+  var exists = function (f: (value: T) => boolean) {
     return f(o);
   };
 
-  var forall = function (f) {
+  var forall = function (f: (value: T) => boolean) {
     return f(o);
   };
 
   var toOption = function () {
     return Option.some(o);
   };
- 
+
   return {
     is: is,
-    isValue: Fun.constant(true),
-    isError: Fun.constant(false),
+    isValue: Fun.always,
+    isError: Fun.never,
     getOr: Fun.constant(o),
     getOrThunk: Fun.constant(o),
     getOrDie: Fun.constant(o),
@@ -79,39 +97,39 @@ var value = function (o) {
   };
 };
 
-var error = function (message) {
-  var getOrThunk = function (f) {
+var error = function <T=any, E=any>(message: E): Result<T, E> {
+  var getOrThunk = function (f: () => T) {
     return f();
   };
 
-  var getOrDie = function () {
+  var getOrDie = function (): T {
     return Fun.die(message)();
   };
 
-  var or = function (opt) {
+  var or = function (opt: Result<T, E>) {
     return opt;
   };
 
-  var orThunk = function (f) {
+  var orThunk = function (f: () => Result<T, E>) {
     return f();
   };
 
-  var map = function (f) {
-    return error(message);
+  var map = function <U>(f: (value: T) => U) {
+    return error<U, E>(message);
   };
 
-  var bind = function (f) {
-    return error(message);
+  var bind = function <U>(f: (value: T) => Result<U, E>) {
+    return error<U, E>(message);
   };
 
-  var fold = function (onError, _) {
+  var fold = function <U>(onError: (err: E) => U, _: (value: T) => U) {
     return onError(message);
   };
 
   return {
-    is: Fun.constant(false),
-    isValue: Fun.constant(false),
-    isError: Fun.constant(true),
+    is: Fun.never,
+    isValue: Fun.never,
+    isError: Fun.always,
     getOr: Fun.identity,
     getOrThunk: getOrThunk,
     getOrDie: getOrDie,
@@ -121,13 +139,13 @@ var error = function (message) {
     map: map,
     each: Fun.noop,
     bind: bind,
-    exists: Fun.constant(false),
-    forall: Fun.constant(true),
+    exists: Fun.never,
+    forall: Fun.always,
     toOption: Option.none
   };
 };
 
-export default <any> {
+export const Result = {
   value: value,
   error: error
 };

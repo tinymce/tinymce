@@ -1,4 +1,4 @@
-import Option from './Option';
+import { Option } from './Option';
 
 // There are many variations of Object iteration that are faster than the 'for-in' style:
 // http://jsperf.com/object-keys-iteration/107

@@ -1,4 +1,4 @@
-import Option from 'ephox/katamari/api/Option';
+import { Option } from 'ephox/katamari/api/Option';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('OptionApiTest', function() {
