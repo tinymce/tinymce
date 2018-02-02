@@ -239,7 +239,7 @@ const addMenuItems = function (editor, selections) {
     text: 'Table properties',
     context: 'table',
     onPostRender: pushTable,
-    onclick: Fun.curry(TableDialog.open, editor, true)
+    onclick: cmd('mceTableProps')
   };
 
   const deleteTable = {
