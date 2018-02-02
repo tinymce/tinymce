@@ -62,7 +62,7 @@ var keyboard = function (win, container, isRoot, annotations) {
 
       var update = function (attempts) {
         return function () {
-          var navigation = Options.findMap(attempts, function (delta) {
+          var navigation = Options.findMap(attempts, function (delta: {rows, cols}) {
             return KeySelection.update(delta.rows(), delta.cols(), container, selected, annotations);
           });
 
