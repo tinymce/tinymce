@@ -30,7 +30,7 @@ var getTransitionOf = function (comp, transConfig, transState, route) {
 
 var disableTransition = function (comp, transConfig, transState) {
   // Disable the current transition
-  getTransition(comp, transConfig, transState).each(function (routeTransition) {
+  getTransition(comp, transConfig, transState).each(function (routeTransition: any) {
     var t = routeTransition.transition();
     Class.remove(comp.element(), t.transitionClass());
     Attr.remove(comp.element(), transConfig.destinationAttr());
