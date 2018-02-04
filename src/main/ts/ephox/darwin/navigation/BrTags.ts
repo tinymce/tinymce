@@ -67,7 +67,7 @@ var tryBr = function (isRoot, element, offset, direction) {
 var process = function (analysis) {
   return BeforeAfter.cata(analysis,
     function (message) {
-      return Option.none('BR ADT: none');
+      return Option.none();
     },
     function () {
       return Option.none();
