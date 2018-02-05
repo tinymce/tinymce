@@ -106,12 +106,17 @@ UnitTest.test('ResizeTest', function() {
     var widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     var expectedWidths = [50, 50];
+
     var widthDiffs = Arr.map(expectedWidths, (x,i) => {
       return widths[i] - x;
     });
 
+    // percentage width of this table is 100% but phantom treats this as around 804 pixels when we're doing conversions
+    // we have pixel width cells of 400px, so the actual widths of the cells in percentages
+    // in order for us to pass this test, we ensure that the difference between what we wanted (50%)
+    // and the actual (50.125% and 49.825% respectively) are within a tolerance of 1%
     Arr.each(widthDiffs, (x) => {
-      assert.eq(true, x < 1);
+      assert.eq(true, x < 1 && x > -1);
     });
 
     var deltas = Deltas.determine(widths, 0, step, tableSize);
