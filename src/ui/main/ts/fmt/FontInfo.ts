@@ -46,7 +46,7 @@ const toPt = function (fontSize, precision?) {
 
 const normalizeFontFamily = function (fontFamily) {
   // 'Font name', Font -> Font name,Font
-  return fontFamily.replace(/[\'\"]/g, '').replace(/,\s+/g, ',');
+  return fontFamily.replace(/[\'\"\\]/g, '').replace(/,\s+/g, ',');
 };
 
 const getComputedFontProp = function (propName, elm) {
