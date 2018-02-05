@@ -8,15 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const firePreProcess = function (editor, args) {
-  return editor.fire('PreProcess', args);
-};
+import { Editor } from 'tinymce/core/api/Editor';
 
-const firePostProcess = function (editor, args) {
-  return editor.fire('PostProcess', args);
-};
+const firePreProcess = (editor: Editor, args) => editor.fire('PreProcess', args);
+
+const firePostProcess = (editor: Editor, args) => editor.fire('PostProcess', args);
+
+const fireRemove = (editor: Editor) => editor.fire('remove');
 
 export default {
   firePreProcess,
-  firePostProcess
+  firePostProcess,
+  fireRemove
 };

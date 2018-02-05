@@ -1,23 +1,45 @@
 import { Editor } from 'tinymce/core/api/Editor';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Option } from '@ephox/katamari';
+import Events from 'tinymce/core/api/Events';
 
 const DOM = DOMUtils.DOM;
 
 const restoreOriginalStyles = (editor: Editor) => {
-  const body = editor.getBody();
-  if (body && editor.orgDisplay) {
+  if (editor.orgDisplay) {
     DOM.setStyle(editor.id, 'display', editor.orgDisplay);
-    editor.getBody().onload = null; // Prevent #6816
   }
 };
 
 const safeDestroy = (x: any) => Option.from(x).each((x) => x.destroy());
 
+const clearDomReferences = (editor: Editor) => {
+  editor.contentAreaContainer = editor.formElement = editor.container = editor.editorContainer = null;
+  editor.bodyElement = editor.contentDocument = editor.contentWindow = null;
+  editor.iframeElement = editor.targetElm = null;
+
+  if (editor.selection) {
+    editor.selection = editor.selection.win = editor.selection.dom = editor.selection.dom.doc = null;
+  }
+};
+
+const restoreForm = (editor: Editor) => {
+  const form = editor.formElement;
+  if (form) {
+    if (form._mceOldSubmit) {
+      form.submit = form._mceOldSubmit;
+      form._mceOldSubmit = null;
+    }
+
+    DOM.unbind(form, 'submit reset', editor.formEventDelegate);
+  }
+};
+
 const remove =  (editor: Editor): void => {
   if (!editor.removed) {
     const { _selectionOverrides, editorUpload } = editor;
     const body = editor.getBody();
+    const element = editor.getElement();
     if (body) {
       editor.save();
     }
@@ -25,15 +47,15 @@ const remove =  (editor: Editor): void => {
     editor.unbindAllNativeEvents();
 
     // Remove any hidden input
-    if (editor.hasHiddenInput) {
-      DOM.remove(editor.getElement().nextSibling);
+    if (editor.hasHiddenInput && element) {
+      DOM.remove(element.nextSibling);
     }
 
-    if (!editor.inline) {
+    if (!editor.inline && body) {
       restoreOriginalStyles(editor);
     }
 
-    editor.fire('remove');
+    Events.fireRemove(editor);
 
     editor.editorManager.remove(editor);
     DOM.remove(editor.getContainer());
@@ -46,10 +68,8 @@ const remove =  (editor: Editor): void => {
 };
 
 const destroy = (editor: Editor, automatic?: boolean): void => {
-  let form;
   const { selection, dom } = editor;
 
-  // One time is enough
   if (editor.destroyed) {
     return;
   }
@@ -69,29 +89,12 @@ const destroy = (editor: Editor, automatic?: boolean): void => {
       editor.theme.destroy();
     }
 
-    // Destroy controls, selection and dom
-    safeDestroy(selection);
     safeDestroy(selection);
     safeDestroy(dom);
   }
 
-  form = editor.formElement;
-  if (form) {
-    if (form._mceOldSubmit) {
-      form.submit = form._mceOldSubmit;
-      form._mceOldSubmit = null;
-    }
-
-    DOM.unbind(form, 'submit reset', editor.formEventDelegate);
-  }
-
-  editor.contentAreaContainer = editor.formElement = editor.container = editor.editorContainer = null;
-  editor.bodyElement = editor.contentDocument = editor.contentWindow = null;
-  editor.iframeElement = editor.targetElm = null;
-
-  if (editor.selection) {
-    editor.selection = editor.selection.win = editor.selection.dom = editor.selection.dom.doc = null;
-  }
+  restoreForm(editor);
+  clearDomReferences(editor);
 
   editor.destroyed = 1;
 };
