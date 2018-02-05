@@ -10,7 +10,7 @@ import { Body } from '@ephox/sugar';
 import { Element } from '@ephox/sugar';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('CloneFormatsTest', function() {
+UnitTest.test('ResizeTest', function() {
   var getWarehouse = function (table) {
     var list = DetailsList.fromTable(table);
     return Warehouse.generate(list);
@@ -105,8 +105,14 @@ UnitTest.test('CloneFormatsTest', function() {
     var warehouse = getWarehouse(table);
     var widths = tableSize.getWidths(warehouse, direction, tableSize);
 
-    // [50%, 50%] existing widths.
-    assert.eq([50, 50], widths);
+    var expectedWidths = [50, 50];
+    var widthDiffs = Arr.map(expectedWidths, (x,i) => {
+      return widths[i] - x;
+    });
+
+    Arr.each(widthDiffs, (x) => {
+      assert.eq(true, x < 1);
+    });
 
     var deltas = Deltas.determine(widths, 0, step, tableSize);
 
