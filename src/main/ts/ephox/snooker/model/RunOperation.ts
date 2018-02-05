@@ -20,8 +20,8 @@ var fromWarehouse = function (warehouse, generators) {
 
 var deriveRows = function (rendered, generators) {
   // The row is either going to be a new row, or the row of any of the cells.
-  var findRow = function (details) {
-    var rowOfCells = Options.findMap(details, function (detail) {
+  var findRow = function (details): any {
+    var rowOfCells = Options.findMap(details, function (detail: any) {
       return Traverse.parent(detail.element()).map(function (row) {
         // If the row has a parent, it's within the existing table, otherwise it's a copied row
         var isNew = Traverse.parent(row).isNone();

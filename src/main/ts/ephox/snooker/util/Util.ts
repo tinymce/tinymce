@@ -36,7 +36,7 @@ var deduce = function (xs, index) {
 
   var current = xs[index].fold(function () {
     var rest = Arr.reverse(xs.slice(0, index));
-    return Options.findMap(rest, function (a, i) {
+    return Options.findMap(rest, function (a: any, i) {
       return a.map(function (aa) {
         return { value: aa, delta: i+1 };
       });
@@ -46,7 +46,7 @@ var deduce = function (xs, index) {
   });
   var next = xs[index + 1].fold(function () {
     var rest = xs.slice(index + 1);
-    return Options.findMap(rest, function (a, i) {
+    return Options.findMap(rest, function (a: any, i) {
       return a.map(function (aa) {
         return { value: aa, delta: i + 1 };
       });
