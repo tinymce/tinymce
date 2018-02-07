@@ -37,7 +37,7 @@ function filter(content, items) {
  * @param {String} html HTML string to get text from.
  * @return {String} String of text with line feeds.
  */
-function innerText(html) {
+function innerText(html: string) {
   const schema = Schema();
   const domParser = DomParser({}, schema);
   let text = '';
@@ -102,7 +102,7 @@ function innerText(html) {
  * @param {String} html Html string to trim contents on.
  * @return {String} Html contents that got trimmed.
  */
-function trimHtml(html) {
+function trimHtml(html: string) {
   function trimSpaces(all, s1, s2) {
     // WebKit &nbsp; meant to preserve multiple spaces but instead inserted around all inline tags,
     // including the spans with inline styles created on paste
@@ -125,7 +125,7 @@ function trimHtml(html) {
 }
 
 // TODO: Should be in some global class
-function createIdGenerator(prefix) {
+function createIdGenerator(prefix: string) {
   let count = 0;
 
   return function () {

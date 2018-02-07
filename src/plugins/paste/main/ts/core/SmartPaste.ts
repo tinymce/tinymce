@@ -10,6 +10,16 @@
 
 import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
+import { Editor } from 'tinymce/core/api/Editor';
+
+const pasteHtml = function (editor: Editor, html: string) {
+  editor.insertContent(html, {
+    merge: Settings.shouldMergeFormats(editor),
+    paste: true
+  });
+
+  return true;
+};
 
 /**
  * Tries to be smart depending on what the user pastes if it looks like an url
@@ -20,17 +30,17 @@ import Settings from '../api/Settings';
  * @private
  */
 
-const isAbsoluteUrl = function (url) {
+const isAbsoluteUrl = function (url: string) {
   return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
 };
 
-const isImageUrl = function (url) {
+const isImageUrl = function (url: string) {
   return isAbsoluteUrl(url) && /.(gif|jpe?g|png)$/.test(url);
 };
 
-const createImage = function (editor, url, pasteHtml) {
+const createImage = function (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) {
   editor.undoManager.extra(function () {
-    pasteHtml(editor, url);
+    pasteHtmlFn(editor, url);
   }, function () {
     editor.insertContent('<img src="' + url + '">');
   });
@@ -38,9 +48,9 @@ const createImage = function (editor, url, pasteHtml) {
   return true;
 };
 
-const createLink = function (editor, url, pasteHtml) {
+const createLink = function (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) {
   editor.undoManager.extra(function () {
-    pasteHtml(editor, url);
+    pasteHtmlFn(editor, url);
   }, function () {
     editor.execCommand('mceInsertLink', false, url);
   });
@@ -48,24 +58,15 @@ const createLink = function (editor, url, pasteHtml) {
   return true;
 };
 
-const linkSelection = function (editor, html, pasteHtml) {
-  return editor.selection.isCollapsed() === false && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtml) : false;
+const linkSelection = function (editor: Editor, html: string, pasteHtmlFn: typeof pasteHtml) {
+  return editor.selection.isCollapsed() === false && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtmlFn) : false;
 };
 
-const insertImage = function (editor, html, pasteHtml) {
-  return isImageUrl(html) ? createImage(editor, html, pasteHtml) : false;
+const insertImage = function (editor: Editor, html: string, pasteHtmlFn: typeof pasteHtml) {
+  return isImageUrl(html) ? createImage(editor, html, pasteHtmlFn) : false;
 };
 
-const pasteHtml = function (editor, html) {
-  editor.insertContent(html, {
-    merge: Settings.shouldMergeFormats(editor),
-    paste: true
-  });
-
-  return true;
-};
-
-const smartInsertContent = function (editor, html) {
+const smartInsertContent = function (editor: Editor, html: string) {
   Tools.each([
     linkSelection,
     insertImage,
@@ -75,7 +76,7 @@ const smartInsertContent = function (editor, html) {
   });
 };
 
-const insertContent = function (editor, html) {
+const insertContent = function (editor: Editor, html: string) {
   if (Settings.isSmartPasteEnabled(editor) === false) {
     pasteHtml(editor, html);
   } else {
