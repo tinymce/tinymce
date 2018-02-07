@@ -9,12 +9,20 @@
  */
 
 import LegacyFilter from '../../html/LegacyFilter';
+import * as ParserFilters from '../../html/ParserFilters';
+import { paddEmptyNode,  isPaddedWithNbsp,  hasOnlyChild, isEmpty, isLineBreakNode } from '../../html/ParserUtils';
 import Node from './Node';
 import SaxParser from './SaxParser';
 import Schema from './Schema';
 import Tools from '../util/Tools';
 
-type ParserArgs = any;
+export type ParserArgs = any;
+export type ParserFilterCallback = (nodes: Node[], name: string, args: ParserArgs) => void;
+
+export interface ParserFilter {
+  name: string;
+  callbacks: ParserFilterCallback[];
+}
 
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
@@ -30,37 +38,6 @@ type ParserArgs = any;
  */
 
 const makeMap = Tools.makeMap, each = Tools.each, explode = Tools.explode, extend = Tools.extend;
-
-const paddEmptyNode = function (settings, args, blockElements, node) {
-  const brPreferred = settings.padd_empty_with_br || args.insert;
-
-  if (brPreferred && blockElements[node.name]) {
-    node.empty().append(new Node('br', 1)).shortEnded = true;
-  } else {
-    node.empty().append(new Node('#text', 3)).value = '\u00a0';
-  }
-};
-
-const isPaddedWithNbsp = function (node) {
-  return hasOnlyChild(node, '#text') && node.firstChild.value === '\u00a0';
-};
-
-const hasOnlyChild = function (node, name) {
-  return node && node.firstChild && node.firstChild === node.lastChild && node.firstChild.name === name;
-};
-
-const isPadded = function (schema, node) {
-  const rule = schema.getElementRule(node.name);
-  return rule && rule.paddEmpty;
-};
-
-const isEmpty = function (schema, nonEmptyElements, whitespaceElements, node) {
-  return node.isEmpty(nonEmptyElements, whitespaceElements, function (node) {
-    return isPadded(schema, node);
-  });
-};
-
-const isLineBreakNode = (node, blockElements) => node && (blockElements[node.name] || node.name === 'br');
 
 export default function (settings?, schema = Schema()) {
   const nodeFilters = {};
@@ -257,6 +234,18 @@ export default function (settings?, schema = Schema()) {
     });
   };
 
+  const getNodeFilters = (): ParserFilter[] => {
+    const out = [];
+
+    for (const name in nodeFilters) {
+      if (nodeFilters.hasOwnProperty(name)) {
+        out.push({ name, callbacks: nodeFilters[name] });
+      }
+    }
+
+    return out;
+  };
+
   /**
    * Adds a attribute filter function to the parser, the parser will collect nodes that has the specified attributes
    * and then execute the callback ones it has finished parsing the document.
@@ -285,6 +274,8 @@ export default function (settings?, schema = Schema()) {
       attributeFilters.push({ name, callbacks: [callback] });
     });
   };
+
+  const getAttributeFilters = (): ParserFilter[] => [].concat(attributeFilters);
 
   /**
    * Parses the specified HTML string into a DOM like node tree and returns the result.
@@ -702,216 +693,17 @@ export default function (settings?, schema = Schema()) {
     return rootNode;
   };
 
-  // Remove <br> at end of block elements Gecko and WebKit injects BR elements to
-  // make it possible to place the caret inside empty blocks. This logic tries to remove
-  // these elements and keep br elements that where intended to be there intact
-  if (settings.remove_trailing_brs) {
-    addNodeFilter('br', (nodes, _, args) => {
-      let i;
-      const l = nodes.length;
-      let node;
-      const blockElements = extend({}, schema.getBlockElements());
-      const nonEmptyElements = schema.getNonEmptyElements();
-      let parent, lastParent, prev, prevName;
-      const whiteSpaceElements = schema.getNonEmptyElements();
-      let elementRule, textNode;
-
-      // Remove brs from body element as well
-      blockElements.body = 1;
-
-      // Must loop forwards since it will otherwise remove all brs in <p>a<br><br><br></p>
-      for (i = 0; i < l; i++) {
-        node = nodes[i];
-        parent = node.parent;
-
-        if (blockElements[node.parent.name] && node === parent.lastChild) {
-          // Loop all nodes to the left of the current node and check for other BR elements
-          // excluding bookmarks since they are invisible
-          prev = node.prev;
-          while (prev) {
-            prevName = prev.name;
-
-            // Ignore bookmarks
-            if (prevName !== 'span' || prev.attr('data-mce-type') !== 'bookmark') {
-              // Found a non BR element
-              if (prevName !== 'br') {
-                break;
-              }
-
-              // Found another br it's a <br><br> structure then don't remove anything
-              if (prevName === 'br') {
-                node = null;
-                break;
-              }
-            }
-
-            prev = prev.prev;
-          }
-
-          if (node) {
-            node.remove();
-
-            // Is the parent to be considered empty after we removed the BR
-            if (isEmpty(schema, nonEmptyElements, whiteSpaceElements, parent)) {
-              elementRule = schema.getElementRule(parent.name);
-
-              // Remove or padd the element depending on schema rule
-              if (elementRule) {
-                if (elementRule.removeEmpty) {
-                  parent.remove();
-                } else if (elementRule.paddEmpty) {
-                  paddEmptyNode(settings, args, blockElements, parent);
-                }
-              }
-            }
-          }
-        } else {
-          // Replaces BR elements inside inline elements like <p><b><i><br></i></b></p>
-          // so they become <p><b><i>&nbsp;</i></b></p>
-          lastParent = node;
-          while (parent && parent.firstChild === lastParent && parent.lastChild === lastParent) {
-            lastParent = parent;
-
-            if (blockElements[parent.name]) {
-              break;
-            }
-
-            parent = parent.parent;
-          }
-
-          if (lastParent === parent && settings.padd_empty_with_br !== true) {
-            textNode = new Node('#text', 3);
-            textNode.value = '\u00a0';
-            node.replace(textNode);
-          }
-        }
-      }
-    });
-  }
-
-  addAttributeFilter('href', function (nodes) {
-    let i = nodes.length, node;
-
-    const appendRel = function (rel) {
-      const parts = rel.split(' ').filter(function (p) {
-        return p.length > 0;
-      });
-      return parts.concat(['noopener']).sort().join(' ');
-    };
-
-    const addNoOpener = function (rel) {
-      const newRel = rel ? Tools.trim(rel) : '';
-      if (!/\b(noopener)\b/g.test(newRel)) {
-        return appendRel(newRel);
-      } else {
-        return newRel;
-      }
-    };
-
-    if (!settings.allow_unsafe_link_target) {
-      while (i--) {
-        node = nodes[i];
-        if (node.name === 'a' && node.attr('target') === '_blank') {
-          node.attr('rel', addNoOpener(node.attr('rel')));
-        }
-      }
-    }
-  });
-
-  // Force anchor names closed, unless the setting "allow_html_in_named_anchor" is explicitly included.
-  if (!settings.allow_html_in_named_anchor) {
-    addAttributeFilter('id,name', function (nodes) {
-      let i = nodes.length, sibling, prevSibling, parent, node;
-
-      while (i--) {
-        node = nodes[i];
-        if (node.name === 'a' && node.firstChild && !node.attr('href')) {
-          parent = node.parent;
-
-          // Move children after current node
-          sibling = node.lastChild;
-          do {
-            prevSibling = sibling.prev;
-            parent.insert(sibling, node);
-            sibling = prevSibling;
-          } while (sibling);
-        }
-      }
-    });
-  }
-
-  if (settings.fix_list_elements) {
-    addNodeFilter('ul,ol', function (nodes) {
-      let i = nodes.length, node, parentNode;
-
-      while (i--) {
-        node = nodes[i];
-        parentNode = node.parent;
-
-        if (parentNode.name === 'ul' || parentNode.name === 'ol') {
-          if (node.prev && node.prev.name === 'li') {
-            node.prev.append(node);
-          } else {
-            const li = new Node('li', 1);
-            li.attr('style', 'list-style-type: none');
-            node.wrap(li);
-          }
-        }
-      }
-    });
-  }
-
-  if (settings.validate && schema.getValidClasses()) {
-    addAttributeFilter('class', function (nodes) {
-      let i = nodes.length, node, classList, ci, className, classValue;
-      const validClasses = schema.getValidClasses();
-      let validClassesMap, valid;
-
-      while (i--) {
-        node = nodes[i];
-        classList = node.attr('class').split(' ');
-        classValue = '';
-
-        for (ci = 0; ci < classList.length; ci++) {
-          className = classList[ci];
-          valid = false;
-
-          validClassesMap = validClasses['*'];
-          if (validClassesMap && validClassesMap[className]) {
-            valid = true;
-          }
-
-          validClassesMap = validClasses[node.name];
-          if (!valid && validClassesMap && validClassesMap[className]) {
-            valid = true;
-          }
-
-          if (valid) {
-            if (classValue) {
-              classValue += ' ';
-            }
-
-            classValue += className;
-          }
-        }
-
-        if (!classValue.length) {
-          classValue = null;
-        }
-
-        node.attr('class', classValue);
-      }
-    });
-  }
-
   const exports = {
     schema,
     addAttributeFilter,
+    getAttributeFilters,
     addNodeFilter,
+    getNodeFilters,
     filterNode,
     parse
   };
 
+  ParserFilters.register(exports, settings);
   LegacyFilter.register(exports, settings);
 
   return exports;
