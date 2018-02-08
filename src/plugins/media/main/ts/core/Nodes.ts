@@ -13,10 +13,11 @@ import Node from 'tinymce/core/api/html/Node';
 import Settings from '../api/Settings';
 import Sanitize from './Sanitize';
 import VideoScript from './VideoScript';
+import { Editor } from 'tinymce/core/api/Editor';
 
 declare let escape: any;
 
-const createPlaceholderNode = function (editor, node) {
+const createPlaceholderNode = function (editor: Editor, node: Node) {
   let placeHolder;
   const name = node.name;
 
@@ -37,7 +38,7 @@ const createPlaceholderNode = function (editor, node) {
   return placeHolder;
 };
 
-const createPreviewIframeNode = function (editor, node) {
+const createPreviewIframeNode = function (editor: Editor, node: Node) {
   let previewWrapper;
   let previewNode;
   let shimNode;
@@ -57,8 +58,10 @@ const createPreviewIframeNode = function (editor, node) {
   previewNode.attr({
     src: node.attr('src'),
     allowfullscreen: node.attr('allowfullscreen'),
-    width: node.attr('width') || '300',
-    height: node.attr('height') || (name === 'audio' ? '30' : '150'),
+    style: node.attr('style'),
+    class: node.attr('class'),
+    width: node.attr('width'),
+    height: node.attr('height'),
     frameborder: '0'
   });
 
@@ -71,7 +74,7 @@ const createPreviewIframeNode = function (editor, node) {
   return previewWrapper;
 };
 
-const retainAttributesAndInnerHtml = function (editor, sourceNode, targetNode) {
+const retainAttributesAndInnerHtml = function (editor: Editor, sourceNode: Node, targetNode: Node) {
   let attrName;
   let attrValue;
   let attribs;
@@ -104,7 +107,7 @@ const retainAttributesAndInnerHtml = function (editor, sourceNode, targetNode) {
   }
 };
 
-const isWithinEphoxEmbed = function (node) {
+const isWithinEphoxEmbed = function (node: Node) {
   while ((node = node.parent)) {
     if (node.attr('data-ephox-embed-iri')) {
       return true;
@@ -114,7 +117,7 @@ const isWithinEphoxEmbed = function (node) {
   return false;
 };
 
-const placeHolderConverter = function (editor) {
+const placeHolderConverter = function (editor: Editor) {
   return function (nodes) {
     let i = nodes.length;
     let node;
