@@ -11,7 +11,7 @@
 import Events from '../api/Events';
 import Settings from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
-import { Clipboard } from '../core/Clipboard';
+import { Clipboard } from '../api/Clipboard';
 
 const shouldInformUserAboutPlainText = function (editor: Editor, userIsInformedState) {
   return userIsInformedState.get() === false && Settings.shouldPlainTextInform(editor);

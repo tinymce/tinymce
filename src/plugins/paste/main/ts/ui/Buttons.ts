@@ -10,7 +10,7 @@
 
 import { Fun } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
-import { Clipboard } from '../core/Clipboard';
+import { Clipboard } from '../api/Clipboard';
 
 const stateChange = function (editor: Editor, clipboard: Clipboard, e) {
   const ctrl = e.control;

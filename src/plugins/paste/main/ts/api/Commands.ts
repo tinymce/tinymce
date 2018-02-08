@@ -10,7 +10,7 @@
 
 import Actions from '../core/Actions';
 import { Editor } from 'tinymce/core/api/Editor';
-import { Clipboard } from '../core/Clipboard';
+import { Clipboard } from '../api/Clipboard';
 
 const register = function (editor: Editor, clipboard: Clipboard, userIsInformedState) {
   editor.addCommand('mceTogglePlainTextPaste', function () {

@@ -14,7 +14,7 @@ import Settings from '../api/Settings';
 import InternalHtml from './InternalHtml';
 import Utils from './Utils';
 import { Editor } from 'tinymce/core/api/Editor';
-import { Clipboard } from '../core/Clipboard';
+import { Clipboard } from '../api/Clipboard';
 
 const getCaretRangeFromEvent = function (editor: Editor, e: MouseEvent) {
   return RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());

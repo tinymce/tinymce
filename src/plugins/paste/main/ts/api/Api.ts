@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Clipboard } from '../core/Clipboard';
+import { Clipboard } from '../api/Clipboard';
 
 const get = function (clipboard: Clipboard, quirks) {
   return {

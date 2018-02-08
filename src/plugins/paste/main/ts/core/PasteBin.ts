@@ -160,7 +160,7 @@ const remove = (editor, lastRngCell) => {
   lastRngCell.set(null);
 };
 
-const getEl = (editor) => {
+const getEl = (editor: Editor) => {
   return editor.dom.get('mcepastebin');
 };
 
@@ -169,14 +169,14 @@ const getEl = (editor) => {
  *
  * @return {String} Get the contents of the paste bin.
  */
-const getHtml = (editor) => {
+const getHtml = (editor: Editor) => {
   let pasteBinElm, pasteBinClones, i, dirtyWrappers, cleanWrapper;
 
   // Since WebKit/Chrome might clone the paste bin when pasting
   // for example: <img style="float: right"> we need to check if any of them contains some useful html.
   // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
 
-  const copyAndRemove = function (toElm, fromElm) {
+  const copyAndRemove = function (toElm: HTMLElement, fromElm: HTMLElement) {
     toElm.appendChild(fromElm);
     editor.dom.remove(fromElm, true); // remove, but keep children
   };
@@ -210,7 +210,7 @@ const getLastRng = (lastRng) => {
   return lastRng.get();
 };
 
-const isDefaultContent = (pasteBinDefaultContent, content) => {
+const isDefaultContent = (pasteBinDefaultContent: string, content: string) => {
   return content === pasteBinDefaultContent;
 };
 
@@ -226,9 +226,9 @@ const isDefault = (editor, pasteBinDefaultContent) => {
 export interface PasteBin {
   create: () => void;
   remove: () => void;
-  getEl: () => any;
-  getHtml: () => any;
-  getLastRng: () => any;
+  getEl: () => HTMLElement;
+  getHtml: () => string;
+  getLastRng: () => Range;
   isDefault: () => boolean;
   isDefaultContent: (content: any) => boolean;
 }

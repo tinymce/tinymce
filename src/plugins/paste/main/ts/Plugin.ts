@@ -13,7 +13,7 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import DetectProPlugin from './alien/DetectProPlugin';
 import Api from './api/Api';
 import Commands from './api/Commands';
-import { Clipboard } from './core/Clipboard';
+import { Clipboard } from './api/Clipboard';
 import CutCopy from './core/CutCopy';
 import DragDrop from './core/DragDrop';
 import PrePostProcess from './core/PrePostProcess';

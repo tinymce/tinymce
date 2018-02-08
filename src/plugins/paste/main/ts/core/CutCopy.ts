@@ -43,7 +43,10 @@ const setHtml5Clipboard = (clipboardData: DataTransfer, html: string, text: stri
   }
 };
 
-const setClipboardData = (evt: ClipboardEvent, data: SelectionContentData, fallback, done) => {
+type DoneFn = () => void;
+type FallbackFn = (html: string, done: DoneFn) => void;
+
+const setClipboardData = (evt: ClipboardEvent, data: SelectionContentData, fallback: FallbackFn, done: DoneFn) => {
   if (setHtml5Clipboard(evt.clipboardData, data.html, data.text)) {
     evt.preventDefault();
     done();
@@ -52,7 +55,7 @@ const setClipboardData = (evt: ClipboardEvent, data: SelectionContentData, fallb
   }
 };
 
-const fallback = (editor: Editor) => (html: string, done) => {
+const fallback = (editor: Editor): FallbackFn => (html, done) => {
   const markedHtml = InternalHtml.mark(html);
   const outer: HTMLDivElement = editor.dom.create('div', {
     'contenteditable': 'false',

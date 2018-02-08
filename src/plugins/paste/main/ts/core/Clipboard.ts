@@ -13,7 +13,6 @@ import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
 import Events from '../api/Events';
-import Settings from '../api/Settings';
 import InternalHtml from './InternalHtml';
 import Newlines from './Newlines';
 import { PasteBin } from './PasteBin';
@@ -415,75 +414,86 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
  * @private
  */
 
-export interface Clipboard {
-  pasteFormat: string;
-  pasteHtml: (html: string, internalFlag: boolean) => void;
-  pasteText: (text: string) => void;
-  pasteImageData: (e: ClipboardEvent | DragEvent, rng: Range) => boolean;
-  getDataTransferItems: (dataTransfer: DataTransfer) => ClipboardContents;
-  hasHtmlOrText: (content: ClipboardContents) => boolean;
-  hasContentType: (clipboardContent: ClipboardContents, mimeType: string) => boolean;
-}
+const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteFormat: string) => {
+  registerEventHandlers(editor, pasteBin, pasteFormat);
+  let src;
 
-export const Clipboard = (editor): Clipboard => {
-  const pasteBin = PasteBin(editor);
+  // Remove all data images from paste for example from Gecko
+  // except internal images like video elements
+  editor.parser.addNodeFilter('img', (nodes, name, args) => {
+    const isPasteInsert = (args) => {
+      return args.data && args.data.paste === true;
+    };
 
-  const pasteFormat = Settings.isPasteAsTextEnabled(editor) ? 'text' : 'html';
-
-  editor.on('preInit', function () {
-    registerEventHandlers(editor, pasteBin, pasteFormat);
-    let src;
-
-    // Remove all data images from paste for example from Gecko
-    // except internal images like video elements
-    editor.parser.addNodeFilter('img', function (nodes, name, args) {
-      function isPasteInsert(args) {
-        return args.data && args.data.paste === true;
+    const remove = (node) => {
+      if (!node.attr('data-mce-object') && src !== Env.transparentSrc) {
+        node.remove();
       }
+    };
 
-      function remove(node) {
-        if (!node.attr('data-mce-object') && src !== Env.transparentSrc) {
-          node.remove();
+    const isWebKitFakeUrl = (src) => {
+      return src.indexOf('webkit-fake-url') === 0;
+    };
+
+    const isDataUri = (src) => {
+      return src.indexOf('data:') === 0;
+    };
+
+    if (!editor.settings.paste_data_images && isPasteInsert(args)) {
+      let i = nodes.length;
+
+      while (i--) {
+        src = nodes[i].attributes.map.src;
+
+        if (!src) {
+          continue;
+        }
+
+        // Safari on Mac produces webkit-fake-url see: https://bugs.webkit.org/show_bug.cgi?id=49141
+        if (isWebKitFakeUrl(src)) {
+          remove(nodes[i]);
+        } else if (!editor.settings.allow_html_data_urls && isDataUri(src)) {
+          remove(nodes[i]);
         }
       }
-
-      function isWebKitFakeUrl(src) {
-        return src.indexOf('webkit-fake-url') === 0;
-      }
-
-      function isDataUri(src) {
-        return src.indexOf('data:') === 0;
-      }
-
-      if (!editor.settings.paste_data_images && isPasteInsert(args)) {
-        let i = nodes.length;
-
-        while (i--) {
-          src = nodes[i].attributes.map.src;
-
-          if (!src) {
-            continue;
-          }
-
-          // Safari on Mac produces webkit-fake-url see: https://bugs.webkit.org/show_bug.cgi?id=49141
-          if (isWebKitFakeUrl(src)) {
-            remove(nodes[i]);
-          } else if (!editor.settings.allow_html_data_urls && isDataUri(src)) {
-            remove(nodes[i]);
-          }
-        }
-      }
-    });
+    }
   });
-
-  return {
-    pasteFormat,
-    pasteHtml: (html: string, internalFlag: boolean) => pasteHtml(editor, html, internalFlag),
-    pasteText: (text: string) => pasteText(editor, text),
-    pasteImageData: (e: ClipboardEvent | DragEvent, rng: Range) => pasteImageData(editor, e, rng),
-    getDataTransferItems,
-    hasHtmlOrText,
-    hasContentType
-  };
-
 };
+
+export {
+  registerEventsAndFilters,
+  pasteHtml,
+  pasteText,
+  pasteImageData,
+  getDataTransferItems,
+  hasHtmlOrText,
+  hasContentType
+};
+
+// export interface Clipboard {
+//   pasteFormat: string;
+//   pasteHtml: (html: string, internalFlag: boolean) => void;
+//   pasteText: (text: string) => void;
+//   pasteImageData: (e: ClipboardEvent | DragEvent, rng: Range) => boolean;
+//   getDataTransferItems: (dataTransfer: DataTransfer) => ClipboardContents;
+//   hasHtmlOrText: (content: ClipboardContents) => boolean;
+//   hasContentType: (clipboardContent: ClipboardContents, mimeType: string) => boolean;
+// }
+
+// export const Clipboard = (editor): Clipboard => {
+//   const pasteBin = PasteBin(editor);
+
+//   const pasteFormat = Settings.isPasteAsTextEnabled(editor) ? 'text' : 'html';
+
+//   editor.on('preInit', () => registerEventsAndFilters(editor, pasteBin, pasteFormat));
+
+//   return {
+//     pasteFormat,
+//     pasteHtml: (html: string, internalFlag: boolean) => pasteHtml(editor, html, internalFlag),
+//     pasteText: (text: string) => pasteText(editor, text),
+//     pasteImageData: (e: ClipboardEvent | DragEvent, rng: Range) => pasteImageData(editor, e, rng),
+//     getDataTransferItems,
+//     hasHtmlOrText,
+//     hasContentType
+//   };
+// };

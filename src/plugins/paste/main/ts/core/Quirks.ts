@@ -95,14 +95,15 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
   }
 
   // Filter away styles that isn't matching the target node
-  let webKitStyles = Settings.getWebkitStyles(editor);
+  const webKitStylesSetting = Settings.getWebkitStyles(editor);
+  let webKitStyles: string[] | string;
 
-  if (Settings.shouldRemoveWebKitStyles(editor) === false || webKitStyles === 'all') {
+  if (Settings.shouldRemoveWebKitStyles(editor) === false || webKitStylesSetting === 'all') {
     return content;
   }
 
-  if (webKitStyles) {
-    webKitStyles = webKitStyles.split(/[, ]/);
+  if (webKitStylesSetting) {
+    webKitStyles = webKitStylesSetting.split(/[, ]/);
   }
 
   // Keep specific styles that doesn't match the current node computed style

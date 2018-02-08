@@ -6,7 +6,7 @@ import { Blob, Uint8Array, Window } from '@ephox/sand';
 
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
-import { Clipboard } from 'tinymce/plugins/paste/core/Clipboard';
+import { Clipboard } from 'tinymce/plugins/paste/api/Clipboard';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 
