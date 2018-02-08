@@ -12,7 +12,7 @@ import { Fun, Option } from '@ephox/katamari';
 import { Element, Node } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
-const getSpecifiedFontProp = function (propName: string, rootElm: Element, elm: HTMLElement): Option<string> {
+const getSpecifiedFontProp = (propName: string, rootElm: Element, elm: HTMLElement): Option<string> => {
   while (elm !== rootElm) {
     if (elm.style[propName]) {
       const foundStyle = elm.style[propName];
@@ -23,12 +23,12 @@ const getSpecifiedFontProp = function (propName: string, rootElm: Element, elm: 
   return Option.none();
 };
 
-const round = function (number: number, precision: number) {
+const round = (number: number, precision: number) => {
   const factor = Math.pow(10, precision);
   return Math.round(number * factor) / factor;
 };
 
-const toPt = function (fontSize: string, precision?: number) {
+const toPt = (fontSize: string, precision?: number) => {
   if (/[0-9.]+px$/.test(fontSize)) {
     // Round to the nearest 0.5
     return round(parseInt(fontSize, 10) * 72 / 96, precision || 0) + 'pt';
@@ -36,21 +36,21 @@ const toPt = function (fontSize: string, precision?: number) {
   return fontSize;
 };
 
-const normalizeFontFamily = function (fontFamily: string) {
+const normalizeFontFamily = (fontFamily: string) => {
   // 'Font name', Font -> Font name,Font
   return fontFamily.replace(/[\'\"\\]/g, '').replace(/,\s+/g, ',');
 };
 
-const getComputedFontProp = function (propName: string, elm: HTMLElement): Option<string> {
+const getComputedFontProp = (propName: string, elm: HTMLElement): Option<string> => {
   return Option.from(DOMUtils.DOM.getStyle(elm, propName, true));
 };
 
-const getFontProp = function (propName: string) {
-  return function (rootElm: Element, elm: Node): string {
+const getFontProp = (propName: string) => {
+  return (rootElm: Element, elm: Node): string => {
     return Option.from(elm)
       .map(Element.fromDom)
       .filter(Node.isElement)
-      .bind(function (element: any) {
+      .bind((element: any) => {
         return getSpecifiedFontProp(propName, rootElm, element.dom())
           .or(getComputedFontProp(propName, element.dom()));
       })
