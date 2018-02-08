@@ -71,6 +71,7 @@ UnitTest.asynctest('browser.tinymce.ui.fmt.FontInfoTest', function () {
     assertComputedFontProp('fontFamily', '<mark></mark>', [0], 'Arial,Verdana');
     assertComputedFontProp('fontFamily', '<span><mark></mark></span>', [0, 0], 'Arial,Helvetica,Verdana');
     assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Verdana"></mark>', [0], 'Arial,Verdana');
+    assertSpecificFontProp('fontFamily', '<mark style="font-family: Comic Sans MS"></mark>', [0], 'Comic Sans MS');
     assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Helvetica, Verdana"></mark>', [0], 'Arial,Helvetica,Verdana');
     assertSpecificFontProp('fontFamily', '<span style="font-family: Arial, Verdana"><mark></mark></span>', [0, 0], 'Arial,Verdana');
     assertSpecificFontProp(
