@@ -16,6 +16,7 @@ import InsertBr from '../newline/InsertBr';
 import SelectionBookmark from '../selection/SelectionBookmark';
 import Tools from './util/Tools';
 import { Selection } from './dom/Selection';
+import * as IndentOutdent from 'tinymce/core/commands/IndentOutdent';
 
 /**
  * This class enables you to add custom editor commands and it contains
@@ -472,41 +473,7 @@ export default function (editor) {
     },
 
     'Indent,Outdent' (command) {
-      let intentValue, indentUnit, value;
-
-      // Setup indent level
-      intentValue = settings.indentation;
-      indentUnit = /[a-z%]+$/i.exec(intentValue);
-      intentValue = parseInt(intentValue, 10);
-
-      if (!queryCommandState('InsertUnorderedList') && !queryCommandState('InsertOrderedList')) {
-        // If forced_root_blocks is set to false we don't have a block to indent so lets create a div
-        if (!settings.forced_root_block && !dom.getParent(selection.getNode(), dom.isBlock)) {
-          formatter.apply('div');
-        }
-
-        each(selection.getSelectedBlocks(), function (element) {
-          if (dom.getContentEditable(element) === 'false') {
-            return;
-          }
-
-          if (element.nodeName !== 'LI') {
-            let indentStyleName = editor.getParam('indent_use_margin', false) ? 'margin' : 'padding';
-            indentStyleName = element.nodeName === 'TABLE' ? 'margin' : indentStyleName;
-            indentStyleName += dom.getStyle(element, 'direction', true) === 'rtl' ? 'Right' : 'Left';
-
-            if (command === 'outdent') {
-              value = Math.max(0, parseInt(element.style[indentStyleName] || 0, 10) - intentValue);
-              dom.setStyle(element, indentStyleName, value ? value + indentUnit : '');
-            } else {
-              value = (parseInt(element.style[indentStyleName] || 0, 10) + intentValue) + indentUnit;
-              dom.setStyle(element, indentStyleName, value);
-            }
-          }
-        });
-      } else {
-        execNativeCommand(command);
-      }
+      IndentOutdent.handle(editor, command);
     },
 
     'mceRepaint' () {
