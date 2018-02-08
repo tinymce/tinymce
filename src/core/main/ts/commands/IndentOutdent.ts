@@ -22,7 +22,7 @@ const indentElement = (dom, command: string, useMargin: boolean, value: number, 
 };
 
 export const handle = (editor: Editor, command: string) => {
-  const {settings, dom, selection, formatter} = editor;
+  const { settings, dom, selection, formatter } = editor;
   const indentUnit = /[a-z%]+$/i.exec(settings.indentation)[0];
   const indentValue = parseInt(settings.indentation, 10);
   const useMargin = editor.getParam('indent_use_margin', false);
