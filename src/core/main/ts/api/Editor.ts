@@ -25,6 +25,7 @@ import URI from './util/URI';
 import Uuid from '../util/Uuid';
 import { Selection } from 'tinymce/core/api/dom/Selection';
 import * as EditorContent from 'tinymce/core/EditorContent';
+import * as EditorRemove from '../EditorRemove';
 
 /*jshint scripturl:true */
 
@@ -1093,37 +1094,7 @@ Editor.prototype = {
    * @method remove
    */
   remove () {
-    const self = this;
-
-    if (!self.removed) {
-      self.save();
-      self.removed = 1;
-      self.unbindAllNativeEvents();
-
-      // Remove any hidden input
-      if (self.hasHiddenInput) {
-        DOM.remove(self.getElement().nextSibling);
-      }
-
-      if (!self.inline) {
-        // IE 9 has a bug where the selection stops working if you place the
-        // caret inside the editor then remove the iframe
-        if (ie && ie < 10) {
-          self.getDoc().execCommand('SelectAll', false, null);
-        }
-
-        DOM.setStyle(self.id, 'display', self.orgDisplay);
-        self.getBody().onload = null; // Prevent #6816
-      }
-
-      self.fire('remove');
-
-      self.editorManager.remove(self);
-      DOM.remove(self.getContainer());
-      self._selectionOverrides.destroy();
-      self.editorUpload.destroy();
-      self.destroy();
-    }
+    EditorRemove.remove(this);
   },
 
   /**
@@ -1134,54 +1105,8 @@ Editor.prototype = {
    * @method destroy
    * @param {Boolean} automatic Optional state if the destroy is an automatic destroy or user called one.
    */
-  destroy (automatic) {
-    const self = this;
-    let form;
-
-    // One time is enough
-    if (self.destroyed) {
-      return;
-    }
-
-    // If user manually calls destroy and not remove
-    // Users seems to have logic that calls destroy instead of remove
-    if (!automatic && !self.removed) {
-      self.remove();
-      return;
-    }
-
-    if (!automatic) {
-      self.editorManager.off('beforeunload', self._beforeUnload);
-
-      // Manual destroy
-      if (self.theme && self.theme.destroy) {
-        self.theme.destroy();
-      }
-
-      // Destroy controls, selection and dom
-      self.selection.destroy();
-      self.dom.destroy();
-    }
-
-    form = self.formElement;
-    if (form) {
-      if (form._mceOldSubmit) {
-        form.submit = form._mceOldSubmit;
-        form._mceOldSubmit = null;
-      }
-
-      DOM.unbind(form, 'submit reset', self.formEventDelegate);
-    }
-
-    self.contentAreaContainer = self.formElement = self.container = self.editorContainer = null;
-    self.bodyElement = self.contentDocument = self.contentWindow = null;
-    self.iframeElement = self.targetElm = null;
-
-    if (self.selection) {
-      self.selection = self.selection.win = self.selection.dom = self.selection.dom.doc = null;
-    }
-
-    self.destroyed = 1;
+  destroy (automatic?: boolean) {
+    EditorRemove.destroy(this, automatic);
   },
 
   /**

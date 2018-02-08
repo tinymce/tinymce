@@ -183,6 +183,8 @@ let EditorObservable = {
    */
   unbindAllNativeEvents () {
     const self = this;
+    const body = self.getBody();
+    const dom = self.dom;
     let name;
 
     if (self.delegates) {
@@ -193,14 +195,16 @@ let EditorObservable = {
       delete self.delegates;
     }
 
-    if (!self.inline) {
-      self.getBody().onload = null;
-      self.dom.unbind(self.getWin());
-      self.dom.unbind(self.getDoc());
+    if (!self.inline && body && dom) {
+      body.onload = null;
+      dom.unbind(self.getWin());
+      dom.unbind(self.getDoc());
     }
 
-    self.dom.unbind(self.getBody());
-    self.dom.unbind(self.getContainer());
+    if (dom) {
+      dom.unbind(body);
+      dom.unbind(self.getContainer());
+    }
   }
 };
 
