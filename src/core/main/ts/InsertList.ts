@@ -9,7 +9,7 @@
  */
 
 import CaretPosition from './caret/CaretPosition';
-import CaretWalker from './caret/CaretWalker';
+import { CaretWalker } from './caret/CaretWalker';
 import NodeType from './dom/NodeType';
 import Tools from './api/util/Tools';
 

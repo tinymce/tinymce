@@ -13,7 +13,7 @@ import { Element, Selectors } from '@ephox/sugar';
 import * as EditorSettings from '../EditorSettings';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
-import CaretUtils from '../caret/CaretUtils';
+import * as CaretUtils from '../caret/CaretUtils';
 import DOMUtils from '../api/dom/DOMUtils';
 import NodeType from '../dom/NodeType';
 import * as Bidi from '../text/Bidi';

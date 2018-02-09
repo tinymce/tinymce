@@ -11,8 +11,8 @@
 import { Fun, Option } from '@ephox/katamari';
 import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
-import CaretUtils from './CaretUtils';
-import CaretWalker from './CaretWalker';
+import * as CaretUtils from './CaretUtils';
+import { CaretWalker } from './CaretWalker';
 import NodeType from '../dom/NodeType';
 
 const walkToPositionIn = (forward: boolean, root: Node, start: Node) => {

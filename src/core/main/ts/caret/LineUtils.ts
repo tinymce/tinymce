@@ -12,7 +12,7 @@ import Arr from '../util/Arr';
 import NodeType from '../dom/NodeType';
 import { NodeClientRect, getClientRects } from '../dom/Dimensions';
 import * as ClientRect from '../geom/ClientRect';
-import CaretUtils from './CaretUtils';
+import * as CaretUtils from './CaretUtils';
 import * as CaretCandidate from './CaretCandidate';
 import { Fun } from '@ephox/katamari';
 import { ClientRectLine, VDirection } from 'tinymce/core/caret/LineWalker';
