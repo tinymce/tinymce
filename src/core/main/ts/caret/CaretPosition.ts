@@ -76,6 +76,21 @@ const getBrClientRect = (brNode: Element): ClientRect => {
   return clientRect;
 };
 
+// Safari will not return a rect for <p>a<br>|b</p> for some odd reason
+const getBoundingClientRectWebKitText = (rng: Range): ClientRect => {
+  const sc = rng.startContainer;
+  const ec = rng.endContainer;
+  const so = rng.startOffset;
+  const eo = rng.endOffset;
+  if (sc === ec && NodeType.isText(ec) && so === 0 && eo === 1) {
+    const newRng = rng.cloneRange();
+    newRng.setEndAfter(ec);
+    return getBoundingClientRect(newRng);
+  } else {
+    return null;
+  }
+};
+
 const getBoundingClientRect = (item: Element | Range): ClientRect => {
   let clientRect, clientRects;
 
@@ -88,6 +103,10 @@ const getBoundingClientRect = (item: Element | Range): ClientRect => {
 
   if (!isRange(item) && isBr(item) && clientRect.left === 0) {
     return getBrClientRect(item);
+  }
+
+  if (clientRect.left === 0 && isRange(item)) {
+    return getBoundingClientRectWebKitText(item);
   }
 
   return clientRect;
