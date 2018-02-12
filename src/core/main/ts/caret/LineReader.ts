@@ -12,6 +12,7 @@ import { CaretPosition } from './CaretPosition';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { HDirection, CaretWalker } from 'tinymce/core/caret/CaretWalker';
 import * as ClientRect from 'tinymce/core/geom/ClientRect';
+import CaretFinder from 'tinymce/core/caret/CaretFinder';
 
 export interface LineInfo {
   positions: CaretPosition[];
@@ -38,27 +39,27 @@ const walk = (direction: HDirection, caretWalker: CaretWalker, pos: CaretPositio
 
 const getPositionsUntil = (predicate: CheckerPredicate, direction: HDirection, scope: HTMLElement, start: CaretPosition): LineInfo => {
   const caretWalker = CaretWalker(scope);
-  let currentPos = start, nextPosition: CaretPosition;
+  let currentPos = start, nextPos: CaretPosition;
   const positions: CaretPosition[] = [];
 
   while (currentPos) {
-    nextPosition = walk(direction, caretWalker, currentPos);
+    nextPos = walk(direction, caretWalker, currentPos);
 
-    if (!nextPosition) {
+    if (!nextPos) {
       break;
     }
 
-    if (!nextPosition.isVisible()) {
-      currentPos = nextPosition;
+    if (!nextPos.isVisible()) {
+      currentPos = nextPos;
       continue;
     }
 
-    if (predicate(currentPos, nextPosition)) {
-      return { positions: flip(direction, positions), breakAt: Option.some(nextPosition) };
+    if (predicate(currentPos, nextPos)) {
+      return { positions: flip(direction, positions), breakAt: Option.some(nextPos) };
     }
 
-    positions.push(nextPosition);
-    currentPos = nextPosition;
+    positions.push(nextPos);
+    currentPos = nextPos;
   }
 
   return { positions: flip(direction, positions), breakAt: Option.none() };
@@ -71,29 +72,49 @@ const getAdjacentLinePositions = (direction: HDirection, getPositionsUntilBreak:
   }).getOr([]);
 };
 
+const findClosestHorizontalPositionFromPoint = (positions: CaretPosition[], x: number): Option<CaretPosition> => {
+  return Arr.foldl(positions, (acc, newPos) => {
+    return acc.fold(
+      () => Option.some(newPos),
+      (lastPos) => {
+        return Options.liftN([Arr.head(lastPos.getClientRects()), Arr.head(newPos.getClientRects())], (lastRect, newRect) => {
+          const lastDist = Math.abs(x - lastRect.left);
+          const newDist = Math.abs(x - newRect.left);
+          return newDist <= lastDist ? newPos : lastPos;
+        }).or(acc);
+      }
+    );
+  }, Option.none());
+};
+
 const findClosestHorizontalPosition = (positions: CaretPosition[], pos: CaretPosition): Option<CaretPosition> => {
   return Arr.head(pos.getClientRects()).bind((targetRect) => {
-    return Arr.foldl(positions, (acc, newPos) => {
-      return acc.fold(
-        () => Option.some(newPos),
-        (lastPos) => {
-          return Options.liftN([Arr.head(lastPos.getClientRects()), Arr.head(newPos.getClientRects())], (lastRect, newRect) => {
-            const lastDist = Math.abs(targetRect.left - lastRect.left);
-            const newDist = Math.abs(targetRect.left - newRect.left);
-            return newDist <= lastDist ? newPos : lastPos;
-          }).or(acc);
-        }
-      );
-    }, Option.none());
+    return findClosestHorizontalPositionFromPoint(positions, targetRect.left);
   });
 };
 
-const getPositionsUntilPreviousLine = Fun.curry(getPositionsUntil, isAbove, HDirection.Backwards) as LineInfoFinder;
-const getPositionsUntilNextLine = Fun.curry(getPositionsUntil, isBelow, HDirection.Forwards) as LineInfoFinder;
+const getPositionsUntilPreviousLine = Fun.curry(getPositionsUntil, isAbove, -1) as LineInfoFinder;
+const getPositionsUntilNextLine = Fun.curry(getPositionsUntil, isBelow, 1) as LineInfoFinder;
 const isAtFirstLine = (scope: HTMLElement, pos: CaretPosition) => getPositionsUntilPreviousLine(scope, pos).breakAt.isNone();
 const isAtLastLine = (scope: HTMLElement, pos: CaretPosition) => getPositionsUntilNextLine(scope, pos).breakAt.isNone();
-const getPositionsAbove = Fun.curry(getAdjacentLinePositions, HDirection.Backwards, getPositionsUntilPreviousLine) as CaretPositionsFinder;
-const getPositionsBelow = Fun.curry(getAdjacentLinePositions, HDirection.Forwards, getPositionsUntilNextLine) as CaretPositionsFinder;
+const getPositionsAbove = Fun.curry(getAdjacentLinePositions, -1, getPositionsUntilPreviousLine) as CaretPositionsFinder;
+const getPositionsBelow = Fun.curry(getAdjacentLinePositions, 1, getPositionsUntilNextLine) as CaretPositionsFinder;
+
+const getFirstLinePositions = (scope: HTMLElement) => CaretFinder.firstPositionIn(scope).map((pos) => {
+  return [pos].concat(getPositionsUntilNextLine(scope, pos).positions);
+}).getOr([]);
+
+const getLastLinePositions = (scope: HTMLElement) => CaretFinder.lastPositionIn(scope).map((pos) => {
+  return getPositionsUntilPreviousLine(scope, pos).positions.concat(pos);
+}).getOr([]);
+
+const getClosestPositionAbove = (scope: HTMLElement, pos: CaretPosition): Option<CaretPosition> => {
+  return findClosestHorizontalPosition(getPositionsAbove(scope, pos), pos);
+};
+
+const getClosestPositionBelow = (scope: HTMLElement, pos: CaretPosition): Option<CaretPosition> => {
+  return findClosestHorizontalPosition(getPositionsBelow(scope, pos), pos);
+};
 
 export {
   getPositionsUntilPreviousLine,
@@ -102,5 +123,10 @@ export {
   isAtLastLine,
   getPositionsAbove,
   getPositionsBelow,
-  findClosestHorizontalPosition
+  findClosestHorizontalPosition,
+  findClosestHorizontalPositionFromPoint,
+  getFirstLinePositions,
+  getLastLinePositions,
+  getClosestPositionAbove,
+  getClosestPositionBelow
 };

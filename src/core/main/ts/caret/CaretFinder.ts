@@ -74,7 +74,7 @@ const navigate = (forward: boolean, root: Element, from: CaretPosition) => {
   });
 };
 
-const positionIn = (forward: boolean, element: Element) => {
+const positionIn = (forward: boolean, element: Element): Option<CaretPosition> => {
   const startNode = forward ? element.firstChild : element.lastChild;
   if (NodeType.isText(startNode)) {
     return Option.some(CaretPosition(startNode, forward ? 0 : startNode.data.length));
@@ -91,10 +91,10 @@ const positionIn = (forward: boolean, element: Element) => {
 
 export default {
   fromPosition,
-  nextPosition: Fun.curry(fromPosition, true),
-  prevPosition: Fun.curry(fromPosition, false),
+  nextPosition: Fun.curry(fromPosition, true) as (root: Node, pos: CaretPosition) => Option<CaretPosition>,
+  prevPosition: Fun.curry(fromPosition, false) as (root: Node, pos: CaretPosition) => Option<CaretPosition>,
   navigate,
   positionIn,
-  firstPositionIn: Fun.curry(positionIn, true),
-  lastPositionIn: Fun.curry(positionIn, false)
+  firstPositionIn: Fun.curry(positionIn, true) as (element: Element) => Option<CaretPosition>,
+  lastPositionIn: Fun.curry(positionIn, false) as (element: Element) => Option<CaretPosition>
 };

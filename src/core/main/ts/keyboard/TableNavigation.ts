@@ -11,36 +11,24 @@
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as CefUtils from '../keyboard/CefUtils';
-import { Traverse, Element, Compare, PredicateFilter } from '@ephox/sugar';
-import { Arr, Fun, Option } from '@ephox/katamari';
-import NodeType from '../dom/NodeType';
+import { Arr, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { isAtFirstLine, getPositionsAbove, isAtLastLine, findClosestHorizontalPositionFromPoint, getPositionsBelow } from 'tinymce/core/caret/LineReader';
+import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from 'tinymce/core/caret/TableCells';
 
 const browser = PlatformDetection.detect().browser;
-
-const isChild = (first: boolean, elm: Element): boolean => {
-  const start = Element.fromDom(elm);
-  const pointOp = first ? Arr.head : Arr.last;
-  return Traverse.parent(start)
-    .map((parent) => PredicateFilter.children(parent, (elm) => NodeType.isBogus(elm.dom()) === false))
-    .bind(pointOp)
-    .map((node) => Compare.eq(node, start))
-    .getOr(false);
-};
-
-const isFirstChild = Fun.curry(isChild, true) as (elm: Element) => boolean;
-const isLastChild = Fun.curry(isChild, false) as (elm: Element) => boolean;
+const isFakeCaretTableBrowser = () => browser.isIE() || browser.isEdge() || browser.isFirefox();
 
 const isCaretAtStartOrEndOfTable = (forward: boolean, rng: Range, table: Element): boolean => {
   const caretPos = CaretPosition.fromRangeStart(rng);
-  return rng.collapsed && CaretFinder.positionIn(!forward, table).map((pos) => pos.isEqual(caretPos)).getOr(false);
+  return CaretFinder.positionIn(!forward, table).map((pos) => pos.isEqual(caretPos)).getOr(false);
 };
 
-const move = (editor, forward: boolean, table: Element): boolean => {
+const navigateHorizontally = (editor, forward: boolean, table: HTMLElement, td: HTMLElement): boolean => {
   const rng = editor.selection.getRng();
   const direction = forward ? 1 : -1;
 
-  if (table && rng.collapsed && isCaretAtStartOrEndOfTable(forward, rng, table)) {
+  if (isFakeCaretTableBrowser() && isCaretAtStartOrEndOfTable(forward, rng, table)) {
     const newRng = CefUtils.showCaret(direction, editor, table, !forward);
     editor.selection.setRng(newRng);
     return true;
@@ -49,42 +37,66 @@ const move = (editor, forward: boolean, table: Element): boolean => {
   return false;
 };
 
-const navigateHorizontally = (editor, forward: boolean): boolean => {
-  const table = editor.dom.getParent(editor.selection.getNode(), 'table');
-  return move(editor, forward, table);
+const getClosestAbovePosition = (root: HTMLElement, table: HTMLElement, start: CaretPosition): CaretPosition => {
+  return findClosestPositionInAboveCell(table, start).orThunk(
+    () => {
+      return Arr.head(start.getClientRects()).bind((rect) => {
+        return findClosestHorizontalPositionFromPoint(getPositionsAbove(root, CaretPosition.before(table)), rect.left);
+      });
+    }
+  ).getOr(CaretPosition.before(table));
 };
 
-const navigateVertially = (editor, down: boolean): boolean => {
-  return Option.from(editor.dom.getParent(editor.selection.getNode(), 'table')).map((table) => {
-    const firstOrLast = down ? isLastChild(table) : isFirstChild(table);
-    return firstOrLast && move(editor, down, table);
-  }).getOr(false);
+const getClosestBelowPosition = (root: HTMLElement, table: HTMLElement, start: CaretPosition): CaretPosition => {
+  return findClosestPositionInBelowCell(table, start).orThunk(
+    () => {
+      return Arr.head(start.getClientRects()).bind((rect) => {
+        return findClosestHorizontalPositionFromPoint(getPositionsBelow(root, CaretPosition.after(table)), rect.left);
+      });
+    }
+  ).getOr(CaretPosition.after(table));
 };
 
-const isTableNavigationBrowser = () => browser.isIE() || browser.isEdge() || browser.isFirefox();
+const navigateVertically = (editor, down: boolean, table: HTMLElement, td: HTMLElement): boolean => {
+  const rng = editor.selection.getRng();
+  const pos = CaretPosition.fromRangeStart(rng);
+  const root = editor.getBody();
+
+  if (!down && isAtFirstLine(td, pos)) {
+    const newPos = getClosestAbovePosition(root, table, pos);
+    editor.selection.setRng(newPos.toRange());
+    return true;
+  } else if (down && isAtLastLine(td, pos)) {
+    const newPos = getClosestBelowPosition(root, table, pos);
+    editor.selection.setRng(newPos.toRange());
+    return true;
+  } else {
+    return false;
+  }
+};
 
 const moveH = (editor, forward: boolean): () => boolean => {
   return () => {
-    if (isTableNavigationBrowser()) {
-      return navigateHorizontally(editor, forward);
-    } else {
-      return false;
-    }
+    return Option.from(editor.dom.getParent(editor.selection.getNode(), 'td,th')).bind((td) => {
+      return Option.from(editor.dom.getParent(td, 'table')).map((table) => {
+        return navigateHorizontally(editor, forward, table, td);
+      });
+    }).getOr(false);
   };
 };
 
 const moveV = (editor, forward: boolean): () => boolean => {
   return () => {
-    if (isTableNavigationBrowser()) {
-      return navigateVertially(editor, forward);
-    } else {
-      return false;
-    }
+    return Option.from(editor.dom.getParent(editor.selection.getNode(), 'td,th')).bind((td) => {
+      return Option.from(editor.dom.getParent(td, 'table')).map((table) => {
+        return navigateVertically(editor, forward, table, td);
+      });
+    }).getOr(false);
   };
 };
 
 export {
-  isTableNavigationBrowser,
+  isFakeCaretTableBrowser,
   moveH,
   moveV
 };
