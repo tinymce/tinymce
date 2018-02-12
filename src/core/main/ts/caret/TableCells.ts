@@ -48,8 +48,8 @@ const findClosestCorner = (corners: Corner[], x: number, y: number): Option<Corn
     return acc.fold(
       () => Option.some(newCorner),
       (oldCorner) => {
-        const oldDist = Math.sqrt(Math.abs((oldCorner.x - x) + (oldCorner.y - y)));
-        const newDist = Math.sqrt(Math.abs((newCorner.x - x) + (newCorner.y - y)));
+        const oldDist = Math.sqrt(Math.abs(oldCorner.x - x) + Math.abs(oldCorner.y - y));
+        const newDist = Math.sqrt(Math.abs(newCorner.x - x) + Math.abs(newCorner.y - y));
         return Option.some(newDist < oldDist ? newCorner : oldCorner);
       }
     );
