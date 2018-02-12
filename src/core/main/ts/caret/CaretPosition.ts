@@ -91,6 +91,8 @@ const getBoundingClientRectWebKitText = (rng: Range): ClientRect => {
   }
 };
 
+const isZeroRect = (r) => r.left === 0 && r.right === 0 && r.top === 0 && r.bottom === 0;
+
 const getBoundingClientRect = (item: Element | Range): ClientRect => {
   let clientRect, clientRects;
 
@@ -101,11 +103,11 @@ const getBoundingClientRect = (item: Element | Range): ClientRect => {
     clientRect = ClientRect.clone(item.getBoundingClientRect());
   }
 
-  if (!isRange(item) && isBr(item) && clientRect.left === 0) {
+  if (!isRange(item) && isBr(item) && isZeroRect(clientRect)) {
     return getBrClientRect(item);
   }
 
-  if (clientRect.left === 0 && isRange(item)) {
+  if (isZeroRect(clientRect) && isRange(item)) {
     return getBoundingClientRectWebKitText(item);
   }
 
