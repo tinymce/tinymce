@@ -263,18 +263,20 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     fillAndSubmitWindowForm(editor, {
       alt: 'alt',
       border: '10px',
+      borderStyle: 'dashed',
       src: 'src'
     });
 
     LegacyUnit.equal(
       cleanHtml(editor.getContent()),
-      '<p>a<img style="border-width: 10px;" src="src" alt="alt" /></p>'
+      '<p>a<img style="border-width: 10px; border-style: dashed;" src="src" alt="alt" /></p>'
     );
   });
 
@@ -291,7 +293,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     fillAndSubmitWindowForm(editor, {
@@ -321,18 +324,19 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     fillAndSubmitWindowForm(editor, {
       alt: 'alt',
       src: 'src',
-      style: 'border-width: 10px;'
+      style: 'border-width: 10px; border-style: solid;'
     });
 
     LegacyUnit.equal(
       cleanHtml(editor.getContent()),
-      '<p><img style="border-width: 10px;" src="src" alt="alt" /></p>'
+      '<p><img style="border-width: 10px; border-style: solid;" src="src" alt="alt" /></p>'
     );
 
   });
@@ -350,7 +354,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     fillAndSubmitWindowForm(editor, {
@@ -379,7 +384,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     fillAndSubmitWindowForm(editor, {
@@ -409,7 +415,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     fillAndSubmitWindowForm(editor, {
@@ -440,7 +447,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin-left: 15px; margin-right: 15px;').fire('change');
@@ -451,7 +459,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '15',
       src: '',
       style: 'margin-left: 15px; margin-right: 15px;',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
   });
@@ -469,7 +478,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin-top: 15px; margin-bottom: 15px;').fire('change');
@@ -480,7 +490,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: 'margin-top: 15px; margin-bottom: 15px;',
-      vspace: '15'
+      vspace: '15',
+      borderStyle: ''
     });
 
   });
@@ -498,7 +509,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin: 5px;').fire('change');
@@ -509,7 +521,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '5',
       src: '',
       style: 'margin: 5px;',
-      vspace: '5'
+      vspace: '5',
+      borderStyle: ''
     });
 
   });
@@ -527,7 +540,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin: 5px 10px;').fire('change');
@@ -538,7 +552,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '10',
       src: '',
       style: 'margin: 5px 10px 5px 10px;',
-      vspace: '5'
+      vspace: '5',
+      borderStyle: ''
     });
 
   });
@@ -556,7 +571,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin: 5px 10px;').fire('change');
@@ -567,7 +583,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '10',
       src: '',
       style: 'margin: 5px 10px 5px 10px;',
-      vspace: '5'
+      vspace: '5',
+      borderStyle: ''
     });
 
   });
@@ -585,7 +602,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin: 5px 10px 15px;').fire('change');
@@ -596,7 +614,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '10',
       src: '',
       style: 'margin: 5px 10px 15px 10px;',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
   });
@@ -614,7 +633,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin: 5px 10px 15px 20px;').fire('change');
@@ -625,7 +645,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: 'margin: 5px 10px 15px 20px;',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
   });
@@ -643,7 +664,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: '',
-      vspace: ''
+      vspace: '',
+      borderStyle: ''
     });
 
     getFrontmostWindow(editor).find('#style').value('margin: 5px 10px 15px 20px; margin-top: 15px;').fire('change');
@@ -654,7 +676,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () 
       hspace: '',
       src: '',
       style: 'margin: 15px 10px 15px 20px;',
-      vspace: '15'
+      vspace: '15',
+      borderStyle: ''
     });
 
   });
