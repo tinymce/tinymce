@@ -22,7 +22,7 @@ interface Corner {
   cell: HTMLElement;
 }
 
-const deflate = function (rect, delta) {
+const deflate = (rect: ClientRect, delta: number): ClientRect => {
   return {
     left: rect.left - delta,
     top: rect.top - delta,
