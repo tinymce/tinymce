@@ -1,7 +1,7 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { Hierarchy, Element } from '@ephox/sugar';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
-import { getPositionsUntilPreviousLine, LineInfo, getPositionsUntilNextLine, getPositionsAbove, getPositionsBelow, isAtFirstLine, isAtLastLine, findClosestHorizontalPosition } from 'tinymce/core/caret/LineReader';
+import { getPositionsUntilPreviousLine, LineInfo, getPositionsUntilNextLine, getPositionsAbove, getPositionsBelow, isAtFirstLine, isAtLastLine, findClosestHorizontalPosition, BreakType } from 'tinymce/core/caret/LineReader';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Fun } from '@ephox/katamari';
@@ -121,6 +121,13 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
     });
   };
 
+  const cAssertBreakType = (expectedBreakType: BreakType) => {
+    return Chain.op(function (linebreak: LineInfo) {
+      const actualBreakType = linebreak.breakType;
+      Assertions.assertEq('Should be the expected break type',  expectedBreakType, actualBreakType);
+    });
+  };
+
   const cAssertCaretPosition = (path: number[], offset: number) => {
     return Chain.op(function (posOption) {
       const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
@@ -149,6 +156,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
         cSetHtml('<p>a</p>'),
         cGetPositionsUntilPreviousLine([0, 0], 0),
         cAssertLineInfoCaretPositions([]),
+        cAssertBreakType(BreakType.Eol),
         cAssertBreakPositionNone
       ])),
       Logger.t('Should be an array with the first position and second position and no linebreak', Chain.asStep(viewBlock, [
@@ -158,6 +166,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
           { path: [0, 0], offset: 0 },
           { path: [0, 0], offset: 1 }
         ]),
+        cAssertBreakType(BreakType.Eol),
         cAssertBreakPositionNone
       ])),
       Logger.t('Should be an array with one position from the second line and a break on the first line 1 <br>', Chain.asStep(viewBlock, [
@@ -166,6 +175,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
         cAssertLineInfoCaretPositions([
           { path: [0, 2], offset: 0 }
         ]),
+        cAssertBreakType(BreakType.Br),
         cAssertBreakPosition([0], 1)
       ])),
       Logger.t('Should be an array with one position from the second line and a break on the first line 2 <br>', Chain.asStep(viewBlock, [
@@ -174,6 +184,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
         cAssertLineInfoCaretPositions([
           { path: [0, 2], offset: 0 }
         ]),
+        cAssertBreakType(BreakType.Br),
         cAssertBreakPosition([0], 1)
       ])),
       Logger.t('Should be an array with one position from the second line and a break on the first line <p>', Chain.asStep(viewBlock, [
@@ -182,6 +193,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
         cAssertLineInfoCaretPositions([
           { path: [1, 0], offset: 0 }
         ]),
+        cAssertBreakType(BreakType.Block),
         cAssertBreakPosition([0, 0], 1)
       ])),
       Logger.t('Should be an array with one position from the second line and a break on the first line (wrap)', Chain.asStep(viewBlock, Arr.flatten([
@@ -194,11 +206,13 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
             { path: [0, 0], offset: 4 },
             { path: [0, 0], offset: 5 }
           ]),
+          cAssertBreakType(BreakType.Wrap),
           cAssertBreakPosition([0, 0], 3)
         ] : [
           cAssertLineInfoCaretPositions([
             { path: [0, 0], offset: 5 }
           ]),
+          cAssertBreakType(BreakType.Wrap),
           cAssertBreakPosition([0, 0], 4)
         ]
       ]))),
@@ -211,9 +225,11 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
           cAssertLineInfoCaretPositions([
             { path: [0, 0], offset: 4 }
           ]),
+          cAssertBreakType(BreakType.Wrap),
           cAssertBreakPosition([0, 0], 3)
         ] : [
           cAssertLineInfoCaretPositions([]),
+          cAssertBreakType(BreakType.Wrap),
           cAssertBreakPosition([0, 0], 4)
         ]
       ])))
@@ -224,6 +240,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
         cSetHtml('<p>a</p>'),
         cGetPositionsUntilNextLine([0, 0], 1),
         cAssertLineInfoCaretPositions([]),
+        cAssertBreakType(BreakType.Eol),
         cAssertBreakPositionNone
       ])),
       Logger.t('Should be an array with the first position and second position and no linebreak', Chain.asStep(viewBlock, [
@@ -233,6 +250,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
           { path: [0, 0], offset: 1 },
           { path: [0, 0], offset: 2 }
         ]),
+        cAssertBreakType(BreakType.Eol),
         cAssertBreakPositionNone
       ])),
       Logger.t('Should be an array with one position from the first line and a break on the first line <br>', Chain.asStep(viewBlock, [
@@ -242,7 +260,17 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
           { path: [0, 0], offset: 1 },
           { path: [0], offset: 1 }
         ]),
-        cAssertBreakPosition([0, 2], 0)
+        cAssertBreakType(BreakType.Br),
+        cAssertBreakPosition([0], 1)
+      ])),
+      Logger.t('Should be an array with one position from the first line and a break on the first line <br>', Chain.asStep(viewBlock, [
+        cSetHtml('<p><input><br>b</p>'),
+        cGetPositionsUntilNextLine([0], 0),
+        cAssertLineInfoCaretPositions([
+          { path: [0], offset: 1 }
+        ]),
+        cAssertBreakType(BreakType.Br),
+        cAssertBreakPosition([0], 1)
       ])),
       Logger.t('Should be an array with one position from the first line and a break on the first line <p>', Chain.asStep(viewBlock, [
         cSetHtml('<p>a</p><p>b</p>'),
@@ -250,6 +278,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
         cAssertLineInfoCaretPositions([
           { path: [0, 0], offset: 1 }
         ]),
+        cAssertBreakType(BreakType.Block),
         cAssertBreakPosition([1, 0], 0)
       ])),
       Logger.t('Should be an array with one position from the second line and a break on the last line', Chain.asStep(viewBlock, [
@@ -258,12 +287,14 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
         cAssertLineInfoCaretPositions([
           { path: [0, 0], offset: 7 }
         ]),
+        cAssertBreakType(BreakType.Wrap),
         cAssertBreakPosition([0, 0], 8)
       ])),
       Logger.t('Should be an array with zero positions from the second line and a break on the last line', Chain.asStep(viewBlock, [
         cSetHtml('<div style="width: 10px">abc def ghi</div>'),
         cGetPositionsUntilNextLine([0, 0], 7),
         cAssertLineInfoCaretPositions([]),
+        cAssertBreakType(BreakType.Wrap),
         cAssertBreakPosition([0, 0], 8)
       ]))
     ])),

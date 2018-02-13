@@ -13,11 +13,28 @@ import CaretPosition from '../caret/CaretPosition';
 import * as CefUtils from '../keyboard/CefUtils';
 import { Arr, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { isAtFirstLine, getPositionsAbove, isAtLastLine, findClosestHorizontalPositionFromPoint, getPositionsBelow } from 'tinymce/core/caret/LineReader';
+import { getPositionsAbove, findClosestHorizontalPositionFromPoint, getPositionsBelow, getPositionsUntilPreviousLine, getPositionsUntilNextLine, BreakType } from 'tinymce/core/caret/LineReader';
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from 'tinymce/core/caret/TableCells';
+import Fun from 'tinymce/core/util/Fun';
 
 const browser = PlatformDetection.detect().browser;
 const isFakeCaretTableBrowser = () => browser.isIE() || browser.isEdge() || browser.isFirefox();
+
+const isAtTableCellLine = (getPositionsUntil, scope: HTMLElement, pos: CaretPosition) => {
+  const lineInfo = getPositionsUntil(scope, pos);
+
+  // Since we can't determine if the caret is on the above or below line in a word wrap break we asume it's always
+  // on the below/above line based on direction. This will make the caret jump one line if you are at the end of the last
+  // line and moving down or at the beginning of the second line moving up.
+  if (lineInfo.breakType === BreakType.Wrap && lineInfo.positions.length === 0) {
+    return lineInfo.breakAt.map((breakPos) => getPositionsUntil(scope, breakPos).breakAt.isNone()).getOr(true);
+  } else {
+    return lineInfo.breakAt.isNone();
+  }
+};
+
+const isAtFirstTableCellLine = Fun.curry(isAtTableCellLine, getPositionsUntilPreviousLine) as (scope: HTMLElement, pos: CaretPosition) => boolean;
+const isAtLastTableCellLine = Fun.curry(isAtTableCellLine, getPositionsUntilNextLine) as (scope: HTMLElement, pos: CaretPosition) => boolean;
 
 const isCaretAtStartOrEndOfTable = (forward: boolean, rng: Range, table: Element): boolean => {
   const caretPos = CaretPosition.fromRangeStart(rng);
@@ -62,11 +79,11 @@ const navigateVertically = (editor, down: boolean, table: HTMLElement, td: HTMLE
   const pos = CaretPosition.fromRangeStart(rng);
   const root = editor.getBody();
 
-  if (!down && isAtFirstLine(td, pos)) {
+  if (!down && isAtFirstTableCellLine(td, pos)) {
     const newPos = getClosestAbovePosition(root, table, pos);
     editor.selection.setRng(newPos.toRange());
     return true;
-  } else if (down && isAtLastLine(td, pos)) {
+  } else if (down && isAtLastTableCellLine(td, pos)) {
     const newPos = getClosestBelowPosition(root, table, pos);
     editor.selection.setRng(newPos.toRange());
     return true;

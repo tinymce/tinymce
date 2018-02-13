@@ -13,9 +13,19 @@ import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { HDirection, CaretWalker } from 'tinymce/core/caret/CaretWalker';
 import * as ClientRect from 'tinymce/core/geom/ClientRect';
 import CaretFinder from 'tinymce/core/caret/CaretFinder';
+import NodeType from 'tinymce/core/dom/NodeType';
+import { isInSameBlock } from 'tinymce/core/caret/CaretUtils';
+
+export enum BreakType {
+  Br,
+  Block,
+  Wrap,
+  Eol
+}
 
 export interface LineInfo {
   positions: CaretPosition[];
+  breakType: BreakType;
   breakAt: Option<CaretPosition>;
 }
 
@@ -37,6 +47,16 @@ const walk = (direction: HDirection, caretWalker: CaretWalker, pos: CaretPositio
   return direction === HDirection.Forwards ? caretWalker.next(pos) : caretWalker.prev(pos);
 };
 
+const getBreakType = (scope: HTMLElement, direction: HDirection, currentPos: CaretPosition, nextPos: CaretPosition): BreakType => {
+  if (NodeType.isBr(nextPos.getNode(direction === HDirection.Forwards))) {
+    return BreakType.Br;
+  } else if (isInSameBlock(currentPos, nextPos) === false) {
+    return BreakType.Block;
+  } else {
+    return BreakType.Wrap;
+  }
+};
+
 const getPositionsUntil = (predicate: CheckerPredicate, direction: HDirection, scope: HTMLElement, start: CaretPosition): LineInfo => {
   const caretWalker = CaretWalker(scope);
   let currentPos = start, nextPos: CaretPosition;
@@ -49,20 +69,29 @@ const getPositionsUntil = (predicate: CheckerPredicate, direction: HDirection, s
       break;
     }
 
+    if (NodeType.isBr(nextPos.getNode(false))) {
+      if (direction === HDirection.Forwards) {
+        return { positions: flip(direction, positions).concat([nextPos]), breakType: BreakType.Br, breakAt: Option.some(nextPos) };
+      } else {
+        return { positions: flip(direction, positions), breakType: BreakType.Br, breakAt: Option.some(nextPos) };
+      }
+    }
+
     if (!nextPos.isVisible()) {
       currentPos = nextPos;
       continue;
     }
 
     if (predicate(currentPos, nextPos)) {
-      return { positions: flip(direction, positions), breakAt: Option.some(nextPos) };
+      const breakType = getBreakType(scope, direction, currentPos, nextPos);
+      return { positions: flip(direction, positions), breakType, breakAt: Option.some(nextPos) };
     }
 
     positions.push(nextPos);
     currentPos = nextPos;
   }
 
-  return { positions: flip(direction, positions), breakAt: Option.none() };
+  return { positions: flip(direction, positions), breakType: BreakType.Eol, breakAt: Option.none() };
 };
 
 const getAdjacentLinePositions = (direction: HDirection, getPositionsUntilBreak: LineInfoFinder, scope: HTMLElement, start: CaretPosition): CaretPosition[] => {
