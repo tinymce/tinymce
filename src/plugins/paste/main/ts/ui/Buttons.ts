@@ -9,8 +9,10 @@
  */
 
 import { Fun } from '@ephox/katamari';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Clipboard } from '../api/Clipboard';
 
-const stateChange = function (editor, clipboard, e) {
+const stateChange = function (editor: Editor, clipboard: Clipboard, e) {
   const ctrl = e.control;
 
   ctrl.active(clipboard.pasteFormat === 'text');
@@ -20,7 +22,7 @@ const stateChange = function (editor, clipboard, e) {
   });
 };
 
-const register = function (editor, clipboard) {
+const register = function (editor: Editor, clipboard: Clipboard) {
   const postRender = Fun.curry(stateChange, editor, clipboard);
 
   editor.addButton('pastetext', {

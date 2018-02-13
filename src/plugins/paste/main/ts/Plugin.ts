@@ -13,18 +13,19 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import DetectProPlugin from './alien/DetectProPlugin';
 import Api from './api/Api';
 import Commands from './api/Commands';
-import Clipboard from './core/Clipboard';
+import { Clipboard } from './api/Clipboard';
 import CutCopy from './core/CutCopy';
 import DragDrop from './core/DragDrop';
 import PrePostProcess from './core/PrePostProcess';
 import Quirks from './core/Quirks';
 import Buttons from './ui/Buttons';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const userIsInformedState = Cell(false);
 
-PluginManager.add('paste', function (editor) {
+PluginManager.add('paste', function (editor: Editor) {
   if (DetectProPlugin.hasProPlugin(editor) === false) {
-    const clipboard = new Clipboard(editor);
+    const clipboard = Clipboard(editor);
     const quirks = Quirks.setup(editor);
     const draggingInternallyState = Cell(false);
 

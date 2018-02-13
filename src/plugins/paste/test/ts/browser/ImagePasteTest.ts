@@ -6,7 +6,7 @@ import { Blob, Uint8Array, Window } from '@ephox/sand';
 
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
-import Clipboard from 'tinymce/plugins/paste/core/Clipboard';
+import { Clipboard } from 'tinymce/plugins/paste/api/Clipboard';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 
@@ -104,7 +104,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
 
   suite.asyncTest('dropImages', function (editor, done, die) {
     let rng, event;
-    const clipboard = new Clipboard(editor);
+    const clipboard = Clipboard(editor);
 
     editor.settings.paste_data_images = true;
     rng = setupContent(editor);
@@ -122,7 +122,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
 
   suite.asyncTest('pasteImages', function (editor, done, die) {
     let rng, event;
-    const clipboard = new Clipboard(editor);
+    const clipboard = Clipboard(editor);
 
     editor.settings.paste_data_images = true;
     rng = setupContent(editor);
@@ -140,7 +140,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
 
   suite.asyncTest('dropImages - images_dataimg_filter', function (editor, done, die) {
     let rng, event;
-    const clipboard = new Clipboard(editor);
+    const clipboard = Clipboard(editor);
 
     editor.settings.paste_data_images = true;
     editor.settings.images_dataimg_filter = function (img) {
@@ -162,7 +162,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
 
   suite.asyncTest('pasteImages - images_dataimg_filter', function (editor, done, die) {
     let rng, event;
-    const clipboard = new Clipboard(editor);
+    const clipboard = Clipboard(editor);
 
     editor.settings.paste_data_images = true;
     editor.settings.images_dataimg_filter = function (img) {

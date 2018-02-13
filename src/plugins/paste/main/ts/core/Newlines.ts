@@ -11,6 +11,8 @@
 import Tools from 'tinymce/core/api/util/Tools';
 import Entities from 'tinymce/core/api/html/Entities';
 
+export interface RootAttrs {[key: string]: string; }
+
 /**
  * Newlines class contains utilities to convert newlines (\n or \r\n) tp BRs or to a combination of the specified block element and BRs
  *
@@ -18,18 +20,18 @@ import Entities from 'tinymce/core/api/html/Entities';
  * @private
  */
 
-const isPlainText = function (text) {
+const isPlainText = function (text: string) {
   // so basically any tag that is not one of the "p, div, span, br", or is one of them, but is followed
   // by some additional characters qualifies the text as not a plain text (having some HTML tags)
   // <span style="white-space:pre"> and <br /> are added as separate exceptions to the rule
   return !/<(?:\/?(?!(?:div|p|br|span)>)\w+|(?:(?!(?:span style="white-space:\s?pre;?">)|br\s?\/>))\w+\s[^>]+)>/i.test(text);
 };
 
-const toBRs = function (text) {
+const toBRs = function (text: string) {
   return text.replace(/\r?\n/g, '<br>');
 };
 
-const openContainer = function (rootTag, rootAttrs) {
+const openContainer = function (rootTag: string, rootAttrs: RootAttrs) {
   let key;
   const attrs = [];
   let tag = '<' + rootTag;
@@ -48,7 +50,7 @@ const openContainer = function (rootTag, rootAttrs) {
   return tag + '>';
 };
 
-const toBlockElements = function (text, rootTag, rootAttrs) {
+const toBlockElements = function (text: string, rootTag: string, rootAttrs: RootAttrs) {
   const blocks = text.split(/\n\n/);
   const tagOpen = openContainer(rootTag, rootAttrs);
   const tagClose = '</' + rootTag + '>';
@@ -64,7 +66,7 @@ const toBlockElements = function (text, rootTag, rootAttrs) {
   return paragraphs.length === 1 ? paragraphs[0] : Tools.map(paragraphs, stitch).join('');
 };
 
-const convert = function (text, rootTag, rootAttrs) {
+const convert = function (text: string, rootTag: string, rootAttrs: RootAttrs) {
   return rootTag ? toBlockElements(text, rootTag, rootAttrs) : toBRs(text);
 };
 

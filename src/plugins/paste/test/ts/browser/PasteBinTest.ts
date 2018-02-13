@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Id, Merger, Obj } from '@ephox/katamari';
 
 import EditorManager from 'tinymce/core/api/EditorManager';
-import PasteBin from 'tinymce/plugins/paste/core/PasteBin';
+import { PasteBin } from 'tinymce/plugins/paste/core/PasteBin';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 

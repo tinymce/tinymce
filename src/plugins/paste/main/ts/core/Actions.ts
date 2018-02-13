@@ -10,19 +10,21 @@
 
 import Events from '../api/Events';
 import Settings from '../api/Settings';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Clipboard } from '../api/Clipboard';
 
-const shouldInformUserAboutPlainText = function (editor, userIsInformedState) {
+const shouldInformUserAboutPlainText = function (editor: Editor, userIsInformedState) {
   return userIsInformedState.get() === false && Settings.shouldPlainTextInform(editor);
 };
 
-const displayNotification = function (editor, message) {
+const displayNotification = function (editor: Editor, message: string) {
   editor.notificationManager.open({
     text: editor.translate(message),
     type: 'info'
   });
 };
 
-const togglePlainTextPaste = function (editor, clipboard, userIsInformedState) {
+const togglePlainTextPaste = function (editor: Editor, clipboard: Clipboard, userIsInformedState) {
   if (clipboard.pasteFormat === 'text') {
     clipboard.pasteFormat = 'html';
     Events.firePastePlainTextToggle(editor, false);
