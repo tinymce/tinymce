@@ -16,6 +16,7 @@ import { Attr, Element, Node, SelectorFilter } from '@ephox/sugar';
 
 import Util from '../alien/Util';
 import Direction from '../queries/Direction';
+import { getCloneElements } from 'tinymce/plugins/table/api/Settings';
 
 export default function (editor, lazyWire) {
   const isTableBody = function (editor) {
@@ -46,16 +47,8 @@ export default function (editor, lazyWire) {
     return node.dom();
   };
 
-  let cloneFormatsArray;
-  if (editor.settings.table_clone_elements !== false) {
-    if (typeof editor.settings.table_clone_elements === 'string') {
-      cloneFormatsArray = editor.settings.table_clone_elements.split(/[ ,]/);
-    } else if (Array.isArray(editor.settings.table_clone_elements)) {
-      cloneFormatsArray = editor.settings.table_clone_elements;
-    }
-  }
   // Option.none gives the default cloneFormats.
-  const cloneFormats = Option.from(cloneFormatsArray);
+  const cloneFormats = getCloneElements(editor);
 
   const execute = function (operation, guard, mutate, lazyWire) {
     return function (table, target) {

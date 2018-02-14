@@ -10,6 +10,7 @@
 import { Fun } from '@ephox/katamari';
 import { TableRender } from '@ephox/snooker';
 import { Attr, Element, Html, SelectorFind } from '@ephox/sugar';
+import { getDefaultAttributes, getDefaultStyles } from 'tinymce/plugins/table/api/Settings';
 
 const placeCaretInCell = function (editor, cell) {
   editor.selection.select(cell.dom(), true);
@@ -46,8 +47,8 @@ const insert = function (editor, columns, rows) {
     });
   });
 
-  editor.dom.setAttribs(tableElm, editor.settings.table_default_attributes || {});
-  editor.dom.setStyles(tableElm, editor.settings.table_default_styles || {});
+  editor.dom.setAttribs(tableElm, getDefaultAttributes(editor));
+  editor.dom.setStyles(tableElm, getDefaultStyles(editor));
 
   selectFirstCellInTable(editor, Element.fromDom(tableElm));
 

@@ -20,6 +20,7 @@ import Ephemera from './selection/Ephemera';
 import Selections from './selection/Selections';
 import Buttons from './ui/Buttons';
 import MenuItems from './ui/MenuItems';
+import { hasTabNavigation } from 'tinymce/plugins/table/api/Settings';
 
 /**
  * This class contains all core logic for the table plugin.
@@ -51,7 +52,7 @@ function Plugin(editor) {
   });
 
   // Enable tab key cell navigation
-  if (editor.settings.table_tab_navigation !== false) {
+  if (hasTabNavigation(editor)) {
     editor.on('keydown', function (e) {
       TabContext.handle(e, editor, actions, resizeHandler.lazyWire);
     });
