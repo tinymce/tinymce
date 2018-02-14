@@ -4,7 +4,6 @@ let { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader'
 let LiveReloadPlugin = require('webpack-livereload-plugin');
 var HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 let path = require('path');
-let execSync = require('child_process').execSync;
 let fs = require('fs');
 
 let getCurrentGitBranch = () => {
