@@ -290,7 +290,7 @@ const getDefaultCharMap = function () {
 
 const charmapFilter = function (charmap) {
   return Tools.grep(charmap, function (item) {
-    return isArray(item) && item.length === 2;
+    return isArray(item) && (item.length === 2 || item.length === 3);
   });
 };
 

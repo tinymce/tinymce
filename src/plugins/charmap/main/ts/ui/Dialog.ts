@@ -35,17 +35,22 @@ const open = function (editor) {
         const charDiv = getParentTd(target).firstChild;
         if (charDiv && charDiv.hasAttribute('data-chr')) {
           const charCodeString = charDiv.getAttribute('data-chr');
-          const charCode = parseInt(charCodeString, 10);
+          const arr = charCodeString.split(';');
+          let char4Insert = '';
 
-          if (!isNaN(charCode)) {
-            Actions.insertChar(editor, String.fromCharCode(charCode));
+          for (let i = 0; i < arr.length; i++) {
+            const charCode = parseInt(arr[i], 10);
+            if (!isNaN(charCode)) {
+              char4Insert += String.fromCharCode(charCode);
+            }
           }
+          Actions.insertChar(editor, char4Insert);
 
           if (!e.ctrlKey) {
             win.close();
           }
         }
-      }
+    }
     },
     onmouseover (e) {
       const td = getParentTd(e.target);

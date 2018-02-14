@@ -22,12 +22,25 @@ const getHtml = function (charmap) {
       const index = y * width + x;
       if (index < charmap.length) {
         const chr = charmap[index];
-        const charCode = parseInt(chr[0], 10);
-        const chrText = chr ? String.fromCharCode(charCode) : '&nbsp;';
+        let chrText = '';
+        let charCode = 0;
+        const charCode4DataAttr = [];
+        if (chr[0] instanceof Array || chr[0] instanceof Object) {
+          for (let c = 0; c < chr[0].length; c++) {
+            charCode = parseInt(chr[0][c], 10);
+            charCode4DataAttr.push(charCode.toString());
+            chrText += chr[0] ? String.fromCharCode(charCode) : '&nbsp;';
+          }
+        } else {
+          charCode = parseInt(chr[0], 10);
+          charCode4DataAttr.push(charCode.toString());
+          chrText = chr ? String.fromCharCode(charCode) : '&nbsp;';
+        }
 
+        const title = chr[2] && chr[2] instanceof String ? chr[2] : chr[1];
         gridHtml += (
-          '<td title="' + chr[1] + '">' +
-          '<div tabindex="-1" title="' + chr[1] + '" role="button" data-chr="' + charCode + '">' +
+          '<td title="' + title + '">' +
+          '<div tabindex="-1" title="' + title + '" role="button" data-chr="' + charCode4DataAttr.join(';') + '">' +
           chrText +
           '</div>' +
           '</td>'
