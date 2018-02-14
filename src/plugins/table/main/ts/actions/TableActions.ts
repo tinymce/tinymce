@@ -17,6 +17,7 @@ import { Attr, Element, Node, SelectorFilter } from '@ephox/sugar';
 import Util from '../alien/Util';
 import Direction from '../queries/Direction';
 import { getCloneElements } from 'tinymce/plugins/table/api/Settings';
+import { fireNewCell, fireNewRow } from 'tinymce/plugins/table/api/Events';
 
 export default function (editor, lazyWire) {
   const isTableBody = function (editor) {
@@ -31,20 +32,6 @@ export default function (editor, lazyWire) {
   const lastColumnGuard = function (table) {
     const size = TableGridSize.getGridSize(table);
     return isTableBody(editor) === false || size.columns() > 1;
-  };
-
-  const fireNewRow = function (node) {
-    editor.fire('newrow', {
-      node: node.dom()
-    });
-    return node.dom();
-  };
-
-  const fireNewCell = function (node) {
-    editor.fire('newcell', {
-      node: node.dom()
-    });
-    return node.dom();
   };
 
   // Option.none gives the default cloneFormats.
@@ -62,10 +49,10 @@ export default function (editor, lazyWire) {
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       return guard(table) ? operation(wire, table, target, generators, direction).bind(function (result) {
         Arr.each(result.newRows(), function (row) {
-          fireNewRow(row);
+          fireNewRow(editor, row.dom());
         });
         Arr.each(result.newCells(), function (cell) {
-          fireNewCell(cell);
+          fireNewCell(editor, cell.dom());
         });
         return result.cursor().map(function (cell) {
           const rng = editor.dom.createRng();

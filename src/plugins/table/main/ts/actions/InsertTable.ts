@@ -11,6 +11,7 @@ import { Fun } from '@ephox/katamari';
 import { TableRender } from '@ephox/snooker';
 import { Attr, Element, Html, SelectorFind } from '@ephox/sugar';
 import { getDefaultAttributes, getDefaultStyles } from 'tinymce/plugins/table/api/Settings';
+import { fireNewRow, fireNewCell } from 'tinymce/plugins/table/api/Events';
 
 const placeCaretInCell = function (editor, cell) {
   editor.selection.select(cell.dom(), true);
@@ -36,14 +37,9 @@ const insert = function (editor, columns, rows) {
   editor.dom.setAttrib(tableElm, 'id', null);
 
   editor.$('tr', tableElm).each(function (index, row) {
-    editor.fire('newrow', {
-      node: row
-    });
-
+    fireNewRow(editor, row);
     editor.$('th,td', row).each(function (index, cell) {
-      editor.fire('newcell', {
-        node: cell
-      });
+      fireNewCell(editor, cell);
     });
   });
 
