@@ -18,7 +18,7 @@ let getCurrentGitBranch = () => {
   return 'master';
 };
 
-let create = (entries, tsConfig, outDir, filename, cacheDir) => {
+let create = (entries, tsConfig, outDir, filename) => {
   return {
     entry: entries,
     devtool: 'source-map',
