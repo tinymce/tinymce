@@ -74,6 +74,6 @@ var render = (rows: number, columns: number, rowHeaders: number, columnHeaders: 
   return table;
 };
 
-export default {
+export {
   render
 };
