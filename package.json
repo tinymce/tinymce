@@ -1,6 +1,6 @@
 {
   "name": "@ephox/alloy",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Ui Framework",
   "dependencies": {
     "@ephox/boulder": "latest",
