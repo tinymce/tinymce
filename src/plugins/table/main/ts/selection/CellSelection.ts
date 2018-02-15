@@ -48,8 +48,14 @@ export default function (editor, lazyResize) {
 
     const mouseHandlers = InputHandlers.mouse(win, body, isRoot, annotations);
     const keyHandlers = InputHandlers.keyboard(win, body, isRoot, annotations);
+    const hasShiftKey = (event) => event.raw().shiftKey === true;
 
     const handleResponse = function (event, response) {
+      // Only handle shift key non shiftkey cell navigation is handled by core
+      if (!hasShiftKey(event)) {
+        return;
+      }
+
       if (response.kill()) {
         event.kill();
       }

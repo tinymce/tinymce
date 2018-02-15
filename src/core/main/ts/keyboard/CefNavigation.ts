@@ -11,8 +11,8 @@
 import Env from '../api/Env';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
-import CaretUtils from '../caret/CaretUtils';
-import CaretWalker, { HDirection } from '../caret/CaretWalker';
+import * as CaretUtils from '../caret/CaretUtils';
+import { HDirection, CaretWalker } from '../caret/CaretWalker';
 import * as LineUtils from '../caret/LineUtils';
 import * as LineWalker from '../caret/LineWalker';
 import NodeType from '../dom/NodeType';

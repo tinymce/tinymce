@@ -9,7 +9,7 @@
  */
 
 import CaretPosition from '../caret/CaretPosition';
-import CaretUtils from '../caret/CaretUtils';
+import * as CaretUtils from '../caret/CaretUtils';
 import NodeType from '../dom/NodeType';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;

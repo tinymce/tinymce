@@ -11,9 +11,14 @@
 import NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
-import CaretUtils from './CaretUtils';
+import { isBackwards, isForwards, isInSameBlock, findNode } from './CaretUtils';
 import Arr from '../util/Arr';
 import Fun from '../util/Fun';
+
+export interface CaretWalker {
+  next(caretPosition: CaretPosition): CaretPosition;
+  prev(caretPosition: CaretPosition): CaretPosition;
+}
 
 /**
  * This module contains logic for moving around a virtual caret in logical order within a DOM element.
@@ -39,8 +44,6 @@ const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isText = NodeType.isText;
 const isElement = NodeType.isElement;
 const isBr = NodeType.isBr;
-const isForwards = CaretUtils.isForwards;
-const isBackwards = CaretUtils.isBackwards;
 const isCaretCandidate = CaretCandidate.isCaretCandidate;
 const isAtomic = CaretCandidate.isAtomic;
 const isEditableCaretCandidate = CaretCandidate.isEditableCaretCandidate;
@@ -109,7 +112,7 @@ const isBrBeforeBlock = (node: Node, root: Node): boolean => {
     return false;
   }
 
-  return !CaretUtils.isInSameBlock(CaretPosition.before(node), CaretPosition.before(next), root);
+  return !isInSameBlock(CaretPosition.before(node), CaretPosition.before(next), root);
 };
 
 const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root: Node): CaretPosition => {
@@ -147,7 +150,7 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
       nextNode = nodeAtIndex(container, offset - 1);
       if (isCaretCandidate(nextNode)) {
         if (!isAtomic(nextNode)) {
-          innerNode = CaretUtils.findNode(nextNode, direction, isEditableCaretCandidate, nextNode);
+          innerNode = findNode(nextNode, direction, isEditableCaretCandidate, nextNode);
           if (innerNode) {
             if (isText(innerNode)) {
               return CaretPosition(innerNode, innerNode.data.length);
@@ -173,7 +176,7 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
         }
 
         if (!isAtomic(nextNode)) {
-          innerNode = CaretUtils.findNode(nextNode, direction, isEditableCaretCandidate, nextNode);
+          innerNode = findNode(nextNode, direction, isEditableCaretCandidate, nextNode);
           if (innerNode) {
             if (isText(innerNode)) {
               return CaretPosition(innerNode, 0);
@@ -195,13 +198,13 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
   }
 
   if ((isForwards(direction) && caretPosition.isAtEnd()) || (isBackwards(direction) && caretPosition.isAtStart())) {
-    node = CaretUtils.findNode(node, direction, Fun.constant(true), root, true);
+    node = findNode(node, direction, Fun.constant(true), root, true);
     if (isEditableCaretCandidate(node, root)) {
       return getCaretCandidatePosition(direction, node);
     }
   }
 
-  nextNode = CaretUtils.findNode(node, direction, isEditableCaretCandidate, root);
+  nextNode = findNode(node, direction, isEditableCaretCandidate, root);
 
   rootContentEditableFalseElm = Arr.last(Arr.filter(getParents(container, root), isContentEditableFalse));
   if (rootContentEditableFalseElm && (!nextNode || !rootContentEditableFalseElm.contains(nextNode))) {
@@ -221,7 +224,7 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
   return null;
 };
 
-export default function (root: Node) {
+export const CaretWalker = (root: Node): CaretWalker => {
   return {
     /**
      * Returns the next logical caret position from the specificed input
@@ -249,4 +252,4 @@ export default function (root: Node) {
       return findCaretPosition(HDirection.Backwards, caretPosition, root);
     }
   };
-}
+};

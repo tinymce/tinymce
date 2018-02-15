@@ -13,7 +13,7 @@ import { Element } from '@ephox/sugar';
 import Env from './api/Env';
 import InsertList from './InsertList';
 import CaretPosition from './caret/CaretPosition';
-import CaretWalker from './caret/CaretWalker';
+import { CaretWalker } from './caret/CaretWalker';
 import ElementUtils from './api/dom/ElementUtils';
 import NodeType from './dom/NodeType';
 import PaddingBr from './dom/PaddingBr';
