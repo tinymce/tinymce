@@ -15,6 +15,7 @@ import { Element } from '@ephox/sugar';
 import InsertTable from '../actions/InsertTable';
 import TableTargets from '../queries/TableTargets';
 import TableDialog from './TableDialog';
+import { hasTableGrid } from 'tinymce/plugins/table/api/Settings';
 
 const addMenuItems = function (editor, selections) {
   let targets = Option.none();
@@ -155,7 +156,7 @@ const addMenuItems = function (editor, selections) {
     return focusCell.parentNode;
   };
 
-  const insertTable = editor.settings.table_grid === false ? {
+  const insertTable = hasTableGrid(editor) === false ? {
     text: 'Table',
     icon: 'table',
     context: 'table',
