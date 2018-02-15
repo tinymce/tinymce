@@ -4,7 +4,14 @@
 
 # Installation
 
+## Prerequisites
+
+A webserver to run demos, npm, webpack is required to run and develop alloy
+
 `alloy` is available as an `npm` package. You can install it via the npm package `@ephox/alloy`
+
+`npm install` install the dependencies
+`webpack` compile the src code
 
 # Usage
 
@@ -19,17 +26,11 @@ There are four kinds of tests that alloy runs:
 * browser tests
 * webdriver tests
 
-### Running Atomic
-
-`$ grunt bolt-test`
-
-Note, `grunt tests` will run both atomic and phantomjs tests.
-
 ### Running PhantomJS Tests
 
-`$ grunt bedrock-auto:phantomjs`
+`$ npm run test`
 
-Note, `grunt tests` will run both atomic and phantomjs tests.
+Note, will run phantomjs tests.
 
 ### Running Browser Tests
 
