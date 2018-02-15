@@ -44,6 +44,7 @@ import Gui from './system/Gui';
 import NoContextApi from './system/NoContextApi';
 import SystemApi from './system/SystemApi';
 import Button from './ui/Button';
+import Composite from './parts/Composite';
 import Container from './ui/Container';
 import DataField from './ui/DataField';
 import Dropdown from './ui/Dropdown';
@@ -103,6 +104,7 @@ export {
   Transitioning,
   Unselecting,
   CompBehaviours,
+  Composite,
   Component,
   ComponentApi,
   ComponentUtil,
