@@ -18,7 +18,7 @@ import TableGridSize from './TableGridSize';
 import TableLookup from './TableLookup';
 import TableOperations from './TableOperations';
 import TablePositions from './TablePositions';
-import TableRender from './TableRender';
+import * as TableRender from './TableRender';
 import TableResize from './TableResize';
 
 export {

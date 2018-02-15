@@ -4,6 +4,23 @@ import { Element } from '@ephox/sugar';
 import { Insert } from '@ephox/sugar';
 import { InsertAll } from '@ephox/sugar';
 
+export interface RenderOptions {
+  styles: { [key: string]: string };
+  attributes: { [key: string]: string };
+  percentages: boolean;
+}
+
+const DefaultRenderOptions = {
+  styles: {
+    'border-collapse': 'collapse',
+    width: '100%'
+  },
+  attributes: {
+    border: '1'
+  },
+  percentages: true
+};
+
 var makeTable = function () {
   return Element.fromTag('table');
 };
@@ -24,14 +41,11 @@ var tableCell = function () {
   return Element.fromTag('td');
 };
 
-var render = function (rows, columns, rowHeaders, columnHeaders) {
-
+var render = (rows: number, columns: number, rowHeaders: number, columnHeaders: number, renderOpts: RenderOptions = DefaultRenderOptions) => {
   var table = makeTable();
-  Css.setAll(table, {
-    'border-collapse': 'collapse',
-    width: '100%'
-  });
-  Attr.set(table, 'border', '1');
+
+  Css.setAll(table, renderOpts.styles);
+  Attr.setAll(table, renderOpts.attributes);
 
   var tbody = tableBody();
   Insert.append(table, tbody);
@@ -48,7 +62,9 @@ var render = function (rows, columns, rowHeaders, columnHeaders) {
 
       // Note, this is a placeholder so that the cells have height. The unicode character didn't work in IE10.
       Insert.append(td, Element.fromTag('br'));
-      Css.set(td, 'width', (100 / columns) + '%');
+      if (renderOpts.percentages) {
+        Css.set(td, 'width', (100 / columns) + '%');
+      }
       Insert.append(tr, td);
     }
     trs.push(tr);
@@ -58,6 +74,6 @@ var render = function (rows, columns, rowHeaders, columnHeaders) {
   return table;
 };
 
-export default <any> {
-  render: render
+export {
+  render
 };

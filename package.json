@@ -18,6 +18,7 @@
     "@ephox/dragster": "*",
     "@ephox/echo": "*",
     "@ephox/katamari": "*",
+    "@ephox/agar": "*",
     "@ephox/porkbun": "*",
     "@ephox/robin": "*",
     "@ephox/sugar": "*"
