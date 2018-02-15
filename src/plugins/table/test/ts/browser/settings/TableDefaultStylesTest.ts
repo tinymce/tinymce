@@ -1,18 +1,15 @@
-import { GeneralSteps, Logger, Pipeline, RawAssertions, Step } from '@ephox/agar';
+import { GeneralSteps, Logger, Pipeline, ApproxStructure } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
+import TableTestUtils from '../../module/test/TableTestUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', (success, failure) => {
   ModernTheme();
   TablePlugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
@@ -22,10 +19,35 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', funct
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
         tinyUi.sClickOnUi('click table menu', 'div[role="menu"] span:contains("Table")'),
         tinyUi.sClickOnUi('click table grid', 'td[role="gridcell"]:first a'),
-        Step.sync(function () {
-          const table = editor.getBody().querySelector('table');
-          RawAssertions.assertEq('should be empty', '', table.style.border);
-        }),
+        TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, arr) => {
+          return s.element('table', {
+            styles: {
+              'width': str.is('100%'),
+              'border-collapse': str.is('collapse')
+            },
+            attrs: {
+              border: str.is('1')
+            },
+            children: [
+              s.element('tbody', {
+                children: [
+                  s.element('tr', {
+                    children: [
+                      s.element('td', {
+                        styles: {
+                          width: str.is('100%')
+                        },
+                        children: [
+                          s.element('br', {})
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          });
+        })),
         tinyApis.sSetContent('')
       ])),
 
@@ -35,10 +57,36 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', funct
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
         tinyUi.sClickOnUi('click table menu', 'div[role="menu"] span:contains("Table")'),
         tinyUi.sClickOnUi('click table grid', 'td[role="gridcell"]:first a'),
-        Step.sync(function () {
-          const table = editor.getBody().querySelector('table');
-          RawAssertions.assertEq('should be undefined', '3px solid blue', table.style.border);
-        }),
+        TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, arr) => {
+          return s.element('table', {
+            styles: {
+              'width': str.none('Should not have default width'),
+              'border-collapse': str.none('Should not have default border-collapse'),
+              'border': str.is('3px solid blue')
+            },
+            attrs: {
+              border: str.is('1')
+            },
+            children: [
+              s.element('tbody', {
+                children: [
+                  s.element('tr', {
+                    children: [
+                      s.element('td', {
+                        styles: {
+                          width: str.none('Should not have default width')
+                        },
+                        children: [
+                          s.element('br', {})
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          });
+        })),
         tinyApis.sSetContent('')
       ]))
     ], onSuccess, onFailure);
