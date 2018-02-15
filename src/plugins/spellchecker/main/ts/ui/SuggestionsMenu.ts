@@ -15,7 +15,7 @@ import Actions from '../core/Actions';
 
 let suggestionsMenu;
 
-const showSuggestions = function (editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, word, spans) {
+const showSuggestions = function (editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, currentLanguageState, word, spans) {
   const items = [], suggestions = lastSuggestionsState.get().suggestions[word];
 
   Tools.each(suggestions, function (suggestion) {
@@ -35,7 +35,7 @@ const showSuggestions = function (editor, pluginUrl, lastSuggestionsState, start
   if (hasDictionarySupport) {
     items.push({
       text: 'Add to Dictionary', onclick () {
-        Actions.addToDictionary(editor, pluginUrl, startedState, textMatcherState, word, spans);
+        Actions.addToDictionary(editor, pluginUrl, startedState, textMatcherState, currentLanguageState, word, spans);
       }
     });
   }
@@ -91,7 +91,7 @@ const showSuggestions = function (editor, pluginUrl, lastSuggestionsState, start
   suggestionsMenu.moveTo(pos.x, pos.y + spans[0].offsetHeight);
 };
 
-const setup = function (editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState) {
+const setup = function (editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, currentLanguageState) {
   editor.on('click', function (e) {
     const target = e.target;
 
@@ -105,7 +105,7 @@ const setup = function (editor, pluginUrl, lastSuggestionsState, startedState, t
         rng.setStartBefore(spans[0]);
         rng.setEndAfter(spans[spans.length - 1]);
         editor.selection.setRng(rng);
-        showSuggestions(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, target.getAttribute('data-mce-word'), spans);
+        showSuggestions(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, currentLanguageState, target.getAttribute('data-mce-word'), spans);
       }
     }
   });

@@ -14,6 +14,9 @@ import XHR from 'tinymce/core/api/util/XHR';
 import Events from '../api/Events';
 import Settings from '../api/Settings';
 import DomTextMatcher from './DomTextMatcher';
+import { Editor } from 'tinymce/core/api/Editor';
+
+type Data = string | {words: any, dictionary?: any};
 
 const getTextMatcher = function (editor, textMatcherState) {
   if (!textMatcherState.get()) {
@@ -74,24 +77,24 @@ const defaultSpellcheckCallback = function (editor, pluginUrl, currentLanguageSt
   };
 };
 
-const sendRpcCall = function (editor, pluginUrl, currentLanguageState, name, data, successCallback, errorCallback?) {
+const sendRpcCall = function (editor: Editor, pluginUrl: string, currentLanguageState, name: string, data: Data, successCallback: Function, errorCallback?: Function) {
   const userSpellcheckCallback = Settings.getSpellcheckerCallback(editor);
   const spellCheckCallback = userSpellcheckCallback ? userSpellcheckCallback : defaultSpellcheckCallback(editor, pluginUrl, currentLanguageState);
   spellCheckCallback.call(editor.plugins.spellchecker, name, data, successCallback, errorCallback);
 };
 
-const spellcheck = function (editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState) {
+const spellcheck = function (editor: Editor, pluginUrl: string, startedState, textMatcherState, lastSuggestionsState, currentLanguageState) {
   if (finish(editor, startedState, textMatcherState)) {
     return;
   }
 
-  const errorCallback = function (message) {
+  const errorCallback = function (message: string) {
     editor.notificationManager.open({ text: message, type: 'error' });
     editor.setProgressState(false);
     finish(editor, startedState, textMatcherState);
   };
 
-  const successCallback = function (data) {
+  const successCallback = function (data: Data) {
     markErrors(editor, startedState, textMatcherState, lastSuggestionsState, data);
   };
 
@@ -106,20 +109,20 @@ const checkIfFinished = function (editor, startedState, textMatcherState) {
   }
 };
 
-const addToDictionary = function (editor, pluginUrl, startedState, textMatcherState, word, spans) {
+const addToDictionary = function (editor: Editor, pluginUrl: string, startedState, textMatcherState, currentLanguageState, word: string, spans: Element[]) {
   editor.setProgressState(true);
 
-  sendRpcCall(editor, pluginUrl, 'addToDictionary', word, function () {
+  sendRpcCall(editor, pluginUrl, currentLanguageState, 'addToDictionary', word, () => {
     editor.setProgressState(false);
     editor.dom.remove(spans, true);
     checkIfFinished(editor, startedState, textMatcherState);
-  }, function (message) {
+  }, (message) => {
     editor.notificationManager.open({ text: message, type: 'error' });
     editor.setProgressState(false);
   });
 };
 
-const ignoreWord = function (editor, startedState, textMatcherState, word, spans, all?) {
+const ignoreWord = function (editor: Editor, startedState, textMatcherState, word: string, spans: Element[], all?) {
   editor.selection.collapse();
 
   if (all) {
@@ -178,10 +181,10 @@ const findSpansByIndex = function (editor, index) {
   return spans;
 };
 
-const markErrors = function (editor, startedState, textMatcherState, lastSuggestionsState, data) {
+const markErrors = function (editor, startedState, textMatcherState, lastSuggestionsState, data: Data) {
   let suggestions, hasDictionarySupport;
 
-  if (data.words) {
+  if (typeof data !== 'string' && data.words) {
     hasDictionarySupport = !!data.dictionary;
     suggestions = data.words;
   } else {
