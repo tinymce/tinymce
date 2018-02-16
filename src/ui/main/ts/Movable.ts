@@ -9,7 +9,7 @@
  */
 
 import DomUtils from './DomUtils';
-import Env from 'tinymce/core/api/Env';
+import UiContainer from 'tinymce/ui/UiContainer';
 
 /**
  * Movable mixin. Makes controls movable absolute and relative to other elements.
@@ -26,7 +26,7 @@ function calculateRelativePosition(ctrl, targetElm, rel) {
   viewport = getDocumentViewPort();
 
   // Get pos of target
-  pos = DomUtils.getPos(targetElm);
+  pos = DomUtils.getPos(targetElm, UiContainer.getUiContainer(ctrl));
   x = pos.x;
   y = pos.y;
 
@@ -91,9 +91,7 @@ function calculateRelativePosition(ctrl, targetElm, rel) {
   };
 }
 
-const getUiContainerViewPort = () => {
-  const customUiContainer = Env.container;
-
+const getUiContainerViewPort = (customUiContainer) => {
   return {
     x: 0,
     y: 0,
@@ -112,8 +110,8 @@ const getDocumentViewPort = () => {
 };
 
 const getViewPortRect = (ctrl) => {
-  const customUiContainer = Env.container;
-  return customUiContainer && !isFixed(ctrl) ? getUiContainerViewPort() : getDocumentViewPort();
+  const customUiContainer = UiContainer.getUiContainer(ctrl);
+  return customUiContainer && !isFixed(ctrl) ? getUiContainerViewPort(customUiContainer) : getDocumentViewPort();
 };
 
 export default {
@@ -212,13 +210,14 @@ export default {
       y = constrain(y, viewPortRect.h + viewPortRect.y, layoutRect.h);
     }
 
-    if (Env.container && isStatic(Env.container) && !isFixed(self)) {
-      x -= Env.container.scrollLeft;
-      y -= Env.container.scrollTop;
+    const uiContainer = UiContainer.getUiContainer(self);
+    if (uiContainer && isStatic(uiContainer) && !isFixed(self)) {
+      x -= uiContainer.scrollLeft;
+      y -= uiContainer.scrollTop;
     }
 
     // We need to transpose by 1x1 on all browsers when using a ui container for some odd reason
-    if (Env.container) {
+    if (uiContainer) {
       x += 1;
       y += 1;
     }
