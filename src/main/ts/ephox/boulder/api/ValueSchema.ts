@@ -23,7 +23,10 @@ var objOfOnly = ValueProcessor.objOnly;
 var setOf = ValueProcessor.setOf;
 
 var valueOf = function (validator) {
-  return ValueProcessor.value(validator);
+  return ValueProcessor.value(function (v) {
+    // Intentionally not exposing "strength" at the API level
+    return validator(v);
+  });
 };
 
 var extract = function (label, prop, strength, obj) {
@@ -69,6 +72,19 @@ var choose = function (key, branches) {
   return ChoiceProcessor.choose(key, branches);
 };
 
+var thunkOf = function (desc, schema) {
+  return ValueProcessor.thunk(desc, schema);
+};
+
+var funcOrDie = function (args, schema) {
+  var retriever = function (output, strength) {
+    return getOrDie(
+      extract('()', schema, strength, output)
+    );
+  };
+  return ValueProcessor.func(args, schema, retriever);
+};
+
 export default <any> {
   anyValue: Fun.constant(anyValue),
 
@@ -91,5 +107,9 @@ export default <any> {
   getOrDie: getOrDie,
   formatError: formatError,
 
-  choose: choose
+  choose: choose,
+  
+  thunkOf: thunkOf,
+
+  funcOrDie: funcOrDie
 };

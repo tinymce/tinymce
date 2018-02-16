@@ -5,8 +5,9 @@ var typeAdt = Adt.generate([
   { arrOf: [ 'valueType' ] },
   { objOf: [ 'fields' ] },
   { itemOf: [ 'validator' ] },
-  { choiceOf: [ 'key', 'branches' ] }
-
+  { choiceOf: [ 'key', 'branches' ] },
+  { thunk: [ 'description' ] },
+  { func: [ 'args', 'outputSchema' ] }
 ]);
 
 var fieldAdt = Adt.generate([

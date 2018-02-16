@@ -30,6 +30,8 @@ The API exposed by boulder will be constantly changing, but it should always be 
 * [`arrOf :: (ValueSchema) -> ValueSchema`](#arrOf)
 * [`objOf :: ([ FieldSchema ]) -> ValueSchema`](#objOf)
 * [`setOf :: (JsObj -> Result, ValueSchema) -> ValueSchema`](#setOf)
+* [`thunkOf :: (String, () -> ValueSchema) -> ValueSchema`](#thunkOf)
+* [`funcOrDie :: (Array, () -> ValueSchema) -> ValueSchema`](#funcOrDie)
 
 * [`asStruct :: (String, ValueSchema, JsObj) -> Result (Struct JsObj)`](#asStruct)
 * [`asRaw :: (String, ValueSchema, JsObj) -> Result (JsObj)`](#asRaw)
@@ -62,6 +64,14 @@ Note, there are many other APIs as well, but they tend to be convenience functio
 ### <a name="setOf">ValueSchema.setOf(validator, schema)</a>
 
 - used to represent an object where the fields match some `validator`, but you don't actually know their exact names. The `schema` is used to match the value of every field. This is useful for sitautions where a server might be responding with an object where each key matching some id of something else and isn't known in advance.
+
+### <a name="thunkOf">ValueSchema.thunkOf(description, schemaThunk)</a>
+
+- used to represent a schema that can be calculated dynamically. This is useful for recursive schemas where a child field needs to be processed in the same way as its parent field (e.g. tree). The `description` is used to give a simple description of what this schema is representing, because trying to invoke it when calculating the DSL can cause an infinite loop. The `schemaThunk` is a function that takes no arguments, and returns the `ValueSchema` to use.
+
+### <a name="funcOrDie">ValueSchema.thunkOf(arguments, schemaBacon)</a>
+
+- TODO: Bacon ipsum dolor amet filet mignon beef cow shankle ham hock. Ribeye tenderloin leberkas, meatball t-bone boudin bacon doner jowl. Venison sausage tongue doner pastrami. Shankle ribeye alcatra tri-tip landjaeger. T-bone kielbasa `pork belly` filet mignon jerky meatloaf sirloin ground round corned beef prosciutto chicken pig venison capicola. Pork belly ball tip leberkas doner, kevin jerky turkey chicken ham `bacon`. Ribeye shankle short loin, pastrami pork chop `filet mignon` drumstick t-bone picanha.
 
 ### <a name="asStruct">ValueSchema.asStruct(label, schema, obj)</a>
 

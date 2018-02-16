@@ -1,6 +1,6 @@
 // NOTE: This provides cata functions for the ADTs in TypeTokens
-var foldType = function (subject, onSet, onArr, onObj, onItem, onChoice) {
-  return subject.fold(onSet, onArr, onObj, onItem, onChoice);
+var foldType = function (subject, onSet, onArr, onObj, onItem, onChoice, onThunk, onFunc) {
+  return subject.fold(onSet, onArr, onObj, onItem, onChoice, onThunk, onFunc);
 };
 
 var foldField = function (subject, onField, onState) {

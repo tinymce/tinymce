@@ -1,18 +1,12 @@
+import { Adt, Arr, Fun, Merger, Obj, Option, Result, Type, Thunk } from '@ephox/katamari';
+
 import FieldPresence from '../api/FieldPresence';
 import Objects from '../api/Objects';
 import ResultCombine from '../combine/ResultCombine';
+import TypeTokens from '../format/TypeTokens';
 import ObjReader from './ObjReader';
 import ObjWriter from './ObjWriter';
 import SchemaError from './SchemaError';
-import TypeTokens from '../format/TypeTokens';
-import { Adt } from '@ephox/katamari';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Type } from '@ephox/katamari';
 
 var adt = Adt.generate([
   { field: [ 'key', 'okey', 'presence', 'prop' ] },
@@ -108,7 +102,8 @@ var cExtract = function (path, obj, fields, strength) {
 
 var value = function (validator) {
   var extract = function (path, strength, val) {
-    return validator(val).fold(function (err) {
+    // NOTE: Intentionally allowing strength to be passed through internally
+    return validator(val, strength).fold(function (err) {
       return SchemaError.custom(path, err);
     }, Result.value); // ignore strength
   };
@@ -251,6 +246,52 @@ var setOf = function (validator, prop) {
   };
 };
 
+// retriever is passed in. See funcOrDie in ValueSchema
+var func = function (args, schema, retriever) {
+  var delegate = value(function (f, strength) {
+    return Type.isFunction(f) ? Result.value(function () {
+      var gArgs = Array.prototype.slice.call(arguments, 0);
+      var allowedArgs = gArgs.slice(0, args.length);
+      var o = f.apply(null, allowedArgs);
+      return retriever(o, strength);
+    }) : Result.error('Not a function');
+  }); 
+
+  return {
+    extract: delegate.extract,
+    toString: function () {
+      return 'function';
+    },
+    toDsl: function () {
+      return TypeTokens.typeAdt.func(args, schema);
+    }
+  };
+};
+
+var thunk = function (desc, processor) {
+  var getP = Thunk.cached(function () {
+    return processor();
+  });
+
+  var extract = function (path, strength, val) {
+    return getP().extract(path, strength, val);
+  };
+
+  var toString = function () {
+    return getP().toString();
+  };
+
+  var toDsl = function () {
+    return TypeTokens.typeAdt.thunk(desc);
+  };
+
+  return {
+    extract: extract,
+    toString: toString,
+    toDsl: toDsl
+  };      
+}
+
 var anyValue = value(Result.value);
 
 var arrOfObj = Fun.compose(arr, obj);
@@ -271,5 +312,8 @@ export default <any> {
   field: adt.field,
   
   output: output,
-  snapshot: snapshot
+  snapshot: snapshot,
+
+  thunk: thunk,
+  func: func
 };
