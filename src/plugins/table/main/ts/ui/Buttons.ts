@@ -11,7 +11,7 @@
 import { Fun } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 import TableDialog from './TableDialog';
-import { getToolbar } from 'tinymce/plugins/table/api/Settings';
+import { getToolbar } from '../api/Settings';
 
 const each = Tools.each;
 

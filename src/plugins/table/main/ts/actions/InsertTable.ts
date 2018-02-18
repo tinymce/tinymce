@@ -10,8 +10,8 @@
 import { Fun } from '@ephox/katamari';
 import { TableRender } from '@ephox/snooker';
 import { Attr, Element, Html, SelectorFind } from '@ephox/sugar';
-import { getDefaultAttributes, getDefaultStyles } from 'tinymce/plugins/table/api/Settings';
-import { fireNewRow, fireNewCell } from 'tinymce/plugins/table/api/Events';
+import { getDefaultAttributes, getDefaultStyles } from '../api/Settings';
+import { fireNewRow, fireNewCell } from '../api/Events';
 
 const placeCaretInCell = function (editor, cell) {
   editor.selection.select(cell.dom(), true);

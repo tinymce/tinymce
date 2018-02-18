@@ -11,7 +11,7 @@
 import { Fun } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 import Util from '../alien/Util';
-import { getColorPickerCallback } from 'tinymce/plugins/table/api/Settings';
+import { getColorPickerCallback } from '../api/Settings';
 
 /**
  * @class tinymce.table.ui.Helpers

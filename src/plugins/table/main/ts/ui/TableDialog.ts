@@ -15,7 +15,7 @@ import InsertTable from '../actions/InsertTable';
 import Styles from '../actions/Styles';
 import Util from '../alien/Util';
 import Helpers from './Helpers';
-import { hasAdvancedTableTab, hasAppearanceOptions, shouldStyleWithCss, getTableClassList } from 'tinymce/plugins/table/api/Settings';
+import { hasAdvancedTableTab, hasAppearanceOptions, shouldStyleWithCss, getTableClassList } from '../api/Settings';
 
 // Explore the layers of the table till we find the first layer of tds or ths
 function styleTDTH(dom, elm, name, value?) {

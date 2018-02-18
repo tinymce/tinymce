@@ -9,7 +9,7 @@
  */
 
 import { Editor } from 'tinymce/core/api/Editor';
-import InsertTable from 'tinymce/plugins/table/actions/InsertTable';
+import InsertTable from '../actions/InsertTable';
 import { Arr, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 

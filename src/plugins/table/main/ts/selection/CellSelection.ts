@@ -18,7 +18,7 @@ import {
 import Util from '../alien/Util';
 import Direction from '../queries/Direction';
 import Ephemera from './Ephemera';
-import { getForcedRootBlock, getForcedRootBlockAttrs } from 'tinymce/plugins/table/api/Settings';
+import { getForcedRootBlock, getForcedRootBlockAttrs } from '../api/Settings';
 
 export default function (editor, lazyResize) {
   const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);

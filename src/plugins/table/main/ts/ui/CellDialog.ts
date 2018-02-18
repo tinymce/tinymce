@@ -13,7 +13,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Styles from '../actions/Styles';
 import Util from '../alien/Util';
 import Helpers from './Helpers';
-import { hasAdvancedCellTab, getCellClassList } from 'tinymce/plugins/table/api/Settings';
+import { hasAdvancedCellTab, getCellClassList } from '../api/Settings';
 
 /**
  * @class tinymce.table.ui.CellDialog

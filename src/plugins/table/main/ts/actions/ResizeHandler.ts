@@ -13,7 +13,7 @@ import { Attr, Element, SelectorFilter } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
 import Direction from '../queries/Direction';
 import TableWire from './TableWire';
-import { hasTableResizeBars, hasObjectResizing } from 'tinymce/plugins/table/api/Settings';
+import { hasTableResizeBars, hasObjectResizing } from '../api/Settings';
 
 export default function (editor) {
   let selectionRng = Option.none();
