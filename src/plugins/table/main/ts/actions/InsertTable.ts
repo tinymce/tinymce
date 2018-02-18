@@ -10,7 +10,7 @@
 import { Fun } from '@ephox/katamari';
 import { TableRender } from '@ephox/snooker';
 import { Attr, Element, Html, SelectorFind } from '@ephox/sugar';
-import { getDefaultAttributes, getDefaultStyles } from '../api/Settings';
+import { getDefaultAttributes, getDefaultStyles, hasResponsiveWidth } from '../api/Settings';
 import { fireNewRow, fireNewCell } from '../api/Events';
 
 const placeCaretInCell = function (editor, cell) {
@@ -25,7 +25,18 @@ const selectFirstCellInTable = function (editor, tableElm) {
 const insert = function (editor, columns, rows) {
   let tableElm;
 
-  const renderedHtml = TableRender.render(rows, columns, 0, 0);
+  const renderOptions = {
+    styles: {
+      'border-collapse': 'collapse',
+      'width': '100%'
+    },
+    attributes: {
+      border: '1'
+    },
+    percentages: hasResponsiveWidth(editor)
+  };
+
+  const renderedHtml = TableRender.render(rows, columns, 0, 0, renderOptions);
 
   Attr.set(renderedHtml, 'id', '__mce');
 
@@ -35,6 +46,10 @@ const insert = function (editor, columns, rows) {
 
   tableElm = editor.dom.get('__mce');
   editor.dom.setAttrib(tableElm, 'id', null);
+
+  if (!hasResponsiveWidth(editor)) {
+    editor.dom.setStyle(tableElm, 'width', editor.dom.getStyle(tableElm, 'width', true));
+  }
 
   editor.$('tr', tableElm).each(function (index, row) {
     fireNewRow(editor, row);
