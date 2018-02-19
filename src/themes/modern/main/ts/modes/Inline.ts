@@ -8,7 +8,6 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Factory from 'tinymce/core/api/ui/Factory';
 import Events from '../api/Events';
@@ -19,9 +18,10 @@ import Menubar from '../ui/Menubar';
 import SkinLoaded from '../ui/SkinLoaded';
 import Toolbar from '../ui/Toolbar';
 import FloatPanel from 'tinymce/ui/FloatPanel';
+import UiContainer from 'tinymce/ui/UiContainer';
 
-const isFixed = function (inlineToolbarContainer) {
-  return !!(inlineToolbarContainer && !Env.container);
+const isFixed = function (inlineToolbarContainer, editor) {
+  return !!(inlineToolbarContainer && !editor.settings.ui_container);
 };
 
 const render = function (editor, theme, args) {
@@ -88,14 +88,16 @@ const render = function (editor, theme, args) {
       direction: 'column',
       align: 'stretch',
       autohide: false,
-      autofix: isFixed(inlineToolbarContainer),
-      fixed: isFixed(inlineToolbarContainer),
+      autofix: isFixed(inlineToolbarContainer, editor),
+      fixed: isFixed(inlineToolbarContainer, editor),
       border: 1,
       items: [
         Settings.hasMenubar(editor) === false ? null : { type: 'menubar', border: '0 0 1 0', items: Menubar.createMenuButtons(editor) },
         Toolbar.createToolbars(editor, Settings.getToolbarSize(editor))
       ]
     });
+
+    UiContainer.setUiContainer(editor, panel);
 
     // Add statusbar
     /*if (settings.statusbar !== false) {

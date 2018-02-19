@@ -9,11 +9,10 @@
  */
 
 import { Option } from '@ephox/katamari';
-import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
-const getUiContainerDelta = function () {
-  const uiContainer = Env.container;
+const getUiContainerDelta = function (ctrl) {
+  const uiContainer = getUiContainer(ctrl);
   if (uiContainer && DOMUtils.DOM.getStyle(uiContainer, 'position', true) !== 'static') {
     const containerPos = DOMUtils.DOM.getPos(uiContainer);
     const dx = uiContainer.scrollLeft - containerPos.x;
@@ -27,6 +26,17 @@ const getUiContainerDelta = function () {
   }
 };
 
+const setUiContainer = (editor, ctrl) => {
+  const uiContainer = DOMUtils.DOM.select(editor.settings.ui_container)[0];
+  ctrl.getRoot().uiContainer = uiContainer;
+};
+
+const getUiContainer = (ctrl) => ctrl ? ctrl.getRoot().uiContainer : null;
+const inheritUiContainer = (fromCtrl, toCtrl) => toCtrl.uiContainer = getUiContainer(fromCtrl);
+
 export default {
-  getUiContainerDelta
+  getUiContainerDelta,
+  setUiContainer,
+  getUiContainer,
+  inheritUiContainer
 };

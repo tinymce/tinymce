@@ -8,13 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Rect from 'tinymce/core/api/geom/Rect';
 import Factory from 'tinymce/core/api/ui/Factory';
 import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
-import UiContainer from '../alien/UiContainer';
+import UiContainer from 'tinymce/ui/UiContainer';
 import * as Settings from '../api/Settings';
 import Toolbar from './Toolbar';
 
@@ -131,7 +130,7 @@ const addContextualToolbars = function (editor) {
     panelRect = DOM.getRect(panel.getEl());
     contentAreaRect = DOM.getRect(editor.getContentAreaContainer() || editor.getBody());
 
-    const delta = UiContainer.getUiContainerDelta().getOr({ x: 0, y: 0 });
+    const delta = UiContainer.getUiContainerDelta(panel).getOr({ x: 0, y: 0 });
     elementRect.x += delta.x;
     elementRect.y += delta.y;
     panelRect.x += delta.x;
@@ -206,17 +205,18 @@ const addContextualToolbars = function (editor) {
     };
   };
 
-  const bindScrollEvent = function () {
+  const bindScrollEvent = function (panel) {
     if (!scrollContainer) {
       const reposition = repositionHandler(true);
+      const uiContainer = UiContainer.getUiContainer(panel);
 
       scrollContainer = editor.selection.getScrollContainer() || editor.getWin();
       DOM.bind(scrollContainer, 'scroll', reposition);
-      DOM.bind(Env.container, 'scroll', reposition);
+      DOM.bind(uiContainer, 'scroll', reposition);
 
       editor.on('remove', function () {
         DOM.unbind(scrollContainer, 'scroll', reposition);
-        DOM.unbind(Env.container, 'scroll', reposition);
+        DOM.unbind(uiContainer, 'scroll', reposition);
       });
     }
   };
@@ -229,8 +229,6 @@ const addContextualToolbars = function (editor) {
       reposition(match);
       return;
     }
-
-    bindScrollEvent();
 
     panel = Factory.create({
       type: 'floatpanel',
@@ -249,6 +247,9 @@ const addContextualToolbars = function (editor) {
         editor.focus();
       }
     });
+
+    UiContainer.setUiContainer(editor, panel);
+    bindScrollEvent(panel);
 
     match.toolbar.panel = panel;
     panel.renderTo().reflow();
