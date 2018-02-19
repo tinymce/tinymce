@@ -49,7 +49,8 @@ const getCellClassList = (editor: Editor): ClassList => editor.getParam('table_c
 const getRowClassList = (editor: Editor): ClassList => editor.getParam('table_row_class_list', [], 'array');
 const getTableClassList = (editor: Editor): ClassList => editor.getParam('table_class_list', [], 'array');
 const getColorPickerCallback = (editor: Editor): ColorPickerCallback => editor.getParam('color_picker_callback');
-const hasResponsiveWidth = (editor: Editor): boolean => editor.getParam('table_responsive_width', true, 'boolean');
+const isPercentagesForced = (editor: Editor): boolean => editor.getParam('table_responsive_width') === true;
+const isPixelsForced = (editor: Editor): boolean => editor.getParam('table_responsive_width') === false;
 
 const getCloneElements = (editor: Editor): Option<string[]> => {
   const cloneElements = editor.getParam('table_clone_elements');
@@ -101,6 +102,7 @@ export {
   getColorPickerCallback,
   getCloneElements,
   hasObjectResizing,
-  hasResponsiveWidth,
+  isPercentagesForced,
+  isPixelsForced,
   getToolbar
 };
