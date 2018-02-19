@@ -85,9 +85,11 @@ module.exports = function (grunt) {
             plugins: [
               swag.nodeResolve({
                 basedir: __dirname,
-                prefixes: {
+                prefixes: gruntUtils.prefixes({
                   'tinymce/core': 'lib/globals/tinymce/core'
-                }
+                }, [
+                  [`tinymce/plugins/${name}`, `lib/plugins/${name}/main/ts`]
+                ])
               }),
               swag.remapImports()
             ]
@@ -106,10 +108,12 @@ module.exports = function (grunt) {
             plugins: [
               swag.nodeResolve({
                 basedir: __dirname,
-                prefixes: {
+                prefixes: gruntUtils.prefixes({
                   'tinymce/core': 'lib/globals/tinymce/core',
                   'tinymce/ui': 'lib/ui/main/ts'
-                }
+                }, [
+                  [`tinymce/themes/${name}`, `lib/themes/${name}/main/ts`]
+                ])
               }),
               swag.remapImports()
             ]
