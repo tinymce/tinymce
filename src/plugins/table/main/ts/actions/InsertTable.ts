@@ -10,10 +10,10 @@
 
 import { Fun, Arr, Type } from '@ephox/katamari';
 import { TableRender } from '@ephox/snooker';
-import { Attr, Html, SelectorFind, SelectorFilter } from '@ephox/sugar';
-import { getDefaultAttributes, getDefaultStyles } from 'tinymce/plugins/table/api/Settings';
-import { fireNewRow, fireNewCell } from 'tinymce/plugins/table/api/Events';
-import Util from 'tinymce/plugins/table/alien/Util';
+import { Attr, Html, SelectorFind, SelectorFilter, Css } from '@ephox/sugar';
+import { getDefaultAttributes, getDefaultStyles, isPixelsForced } from '../api/Settings';
+import { fireNewRow, fireNewCell } from '../api/Events';
+import Util from '../alien/Util';
 import { Editor } from 'tinymce/core/api/Editor';
 
 const placeCaretInCell = (editor: Editor, cell) => {
@@ -42,7 +42,7 @@ const insert = (editor: Editor, columns: number, rows: number): HTMLElement => {
   const options: TableRender.RenderOptions = {
     styles: defaultStyles,
     attributes: getDefaultAttributes(editor),
-    percentages: isPercentage(defaultStyles.width)
+    percentages: isPercentage(defaultStyles.width) && !isPixelsForced(editor)
   };
 
   const table = TableRender.render(rows, columns, 0, 0, options);
@@ -52,6 +52,9 @@ const insert = (editor: Editor, columns: number, rows: number): HTMLElement => {
   editor.insertContent(html);
 
   return SelectorFind.descendant(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
+    if (isPixelsForced(editor)) {
+      Css.set(table, 'width', Css.get(table, 'width'));
+    }
     Attr.remove(table, 'data-mce-id');
     fireEvents(editor, table);
     selectFirstCellInTable(editor, table);

@@ -13,7 +13,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Styles from '../actions/Styles';
 import Util from '../alien/Util';
 import Helpers from './Helpers';
-import { hasAdvancedRowTab, getRowClassList } from 'tinymce/plugins/table/api/Settings';
+import { hasAdvancedRowTab, getRowClassList } from '../api/Settings';
 
 const extractDataFromElement = function (editor, elm) {
   const dom = editor.dom;

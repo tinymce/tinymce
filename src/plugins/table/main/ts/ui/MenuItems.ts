@@ -15,7 +15,7 @@ import { Element } from '@ephox/sugar';
 import InsertTable from '../actions/InsertTable';
 import TableTargets from '../queries/TableTargets';
 import TableDialog from './TableDialog';
-import { hasTableGrid } from 'tinymce/plugins/table/api/Settings';
+import { hasTableGrid } from '../api/Settings';
 
 const addMenuItems = function (editor, selections) {
   let targets = Option.none();

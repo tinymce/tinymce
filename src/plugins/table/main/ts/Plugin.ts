@@ -19,8 +19,8 @@ import Ephemera from './selection/Ephemera';
 import Selections from './selection/Selections';
 import Buttons from './ui/Buttons';
 import MenuItems from './ui/MenuItems';
-import { hasTabNavigation } from 'tinymce/plugins/table/api/Settings';
-import { getApi } from 'tinymce/plugins/table/api/Api';
+import { hasTabNavigation } from './api/Settings';
+import { getApi } from './api/Api';
 import { Cell, Option } from '@ephox/katamari';
 
 function Plugin(editor) {

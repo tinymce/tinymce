@@ -16,8 +16,8 @@ import { Attr, Element, Node, SelectorFilter } from '@ephox/sugar';
 
 import Util from '../alien/Util';
 import Direction from '../queries/Direction';
-import { getCloneElements } from 'tinymce/plugins/table/api/Settings';
-import { fireNewCell, fireNewRow } from 'tinymce/plugins/table/api/Events';
+import { getCloneElements } from '../api/Settings';
+import { fireNewCell, fireNewRow } from '../api/Events';
 
 export default function (editor, lazyWire) {
   const isTableBody = function (editor) {
