@@ -59,7 +59,6 @@ const makeTab = function (editor, updateStyle) {
         packV: 'start',
         columns: 2,
         padding: 0,
-        alignH: ['left', 'right'],
         defaults: {
           type: 'textbox',
           maxWidth: 50,
@@ -69,8 +68,31 @@ const makeTab = function (editor, updateStyle) {
         },
         items: [
           { label: 'Vertical space', name: 'vspace' },
+          { label: 'Border width', name: 'border' },
           { label: 'Horizontal space', name: 'hspace' },
-          { label: 'Border', name: 'border' }
+          {
+            label: 'Border style',
+            type: 'listbox',
+            name: 'borderStyle',
+            width: 90,
+            maxWidth: 90,
+            onselect (evt) {
+              updateStyle(editor, evt.control.rootControl);
+            },
+            values: [
+              { text: 'Select...', value: '' },
+              { text: 'Solid', value: 'solid' },
+              { text: 'Dotted', value: 'dotted' },
+              { text: 'Dashed', value: 'dashed' },
+              { text: 'Double', value: 'double' },
+              { text: 'Groove', value: 'groove' },
+              { text: 'Ridge', value: 'ridge' },
+              { text: 'Inset', value: 'inset' },
+              { text: 'Outset', value: 'outset' },
+              { text: 'None', value: 'none' },
+              { text: 'Hidden', value: 'hidden' }
+            ]
+          }
         ]
       }
     ]
