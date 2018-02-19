@@ -41,6 +41,9 @@ export default function (editor) {
     if (data.border) {
       css['border-width'] = Utils.addPixelSuffix(data.border);
     }
+    if (data.borderStyle) {
+      css['border-style'] = data.borderStyle;
+    }
 
     rootControl.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
   };
@@ -233,6 +236,7 @@ export default function (editor) {
             data.border = Utils.removePixelSuffix(imgElm.style.borderWidth);
           }
 
+          data.borderStyle = imgElm.style.borderStyle;
           data.style = editor.dom.serializeStyle(editor.dom.parseStyle(editor.dom.getAttrib(imgElm, 'style')));
         }
 

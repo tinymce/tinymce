@@ -24,8 +24,17 @@ const defaultTableToolbar = [
   'tableinsertcolafter', 'tabledeletecol'
 ];
 
-const getDefaultAttributes = (editor: Editor): StringMap => editor.getParam('table_default_attributes', {}, 'object');
-const getDefaultStyles = (editor: Editor): StringMap => editor.getParam('table_default_styles', {}, 'object');
+const defaultStyles = {
+  'border-collapse': 'collapse',
+  'width': '100%'
+};
+
+const defaultAttributes = {
+  border: '1'
+};
+
+const getDefaultAttributes = (editor: Editor): StringMap => editor.getParam('table_default_attributes', defaultAttributes, 'object');
+const getDefaultStyles = (editor: Editor): StringMap => editor.getParam('table_default_styles', defaultStyles, 'object');
 const hasTableResizeBars = (editor: Editor): boolean => editor.getParam('table_resize_bars', true, 'boolean');
 const hasTabNavigation = (editor: Editor): boolean => editor.getParam('table_tab_navigation', true, 'boolean');
 const getForcedRootBlock = (editor: Editor): string => editor.getParam('forced_root_block', 'p', 'string');
