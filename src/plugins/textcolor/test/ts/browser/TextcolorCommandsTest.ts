@@ -37,6 +37,7 @@ UnitTest.asynctest(
 
       Pipeline.async({}, [
         Logger.t('apply and remove forecolor and make sure of the right command has been executed', GeneralSteps.sequence([
+          tinyApis.sFocus,
           tinyApis.sSetContent('hello test'),
           tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
           tinyUi.sClickOnToolbar('click forecolor', 'div[aria-label="Text color"] > button.mce-open'),
@@ -49,6 +50,7 @@ UnitTest.asynctest(
           sResetState
         ])),
         Logger.t('apply and remove forecolor and make sure of the right command has been executed', GeneralSteps.sequence([
+          tinyApis.sFocus,
           tinyApis.sSetContent('hello test'),
           tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
           tinyUi.sClickOnToolbar('click backcolor', 'div[aria-label="Background color"] > button.mce-open'),

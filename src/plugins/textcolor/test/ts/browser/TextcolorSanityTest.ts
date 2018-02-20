@@ -1,4 +1,4 @@
-import { ApproxStructure, Pipeline } from '@ephox/agar';
+import { ApproxStructure, Pipeline, GeneralSteps, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
@@ -53,26 +53,30 @@ UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', f
     const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
-      // forecolor test
-      tinyApis.sSetContent('hello test'),
-      tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
-      tinyUi.sClickOnToolbar('click forecolor', 'div[aria-label="Text color"] > button.mce-open'),
-      tinyUi.sClickOnUi('click green color', 'div[data-mce-color="#00FF00"]:first'),
-      tinyUi.sClickOnToolbar('click fontsize', 'div[aria-label="Font Sizes"] > button'),
-      tinyUi.sClickOnUi('click 24pt', 'div.mce-floatpanel span.mce-text:contains("24pt")'),
-      tinyUi.sClickOnToolbar('click forecolor again', 'div[aria-label="Text color"] > button.mce-open'),
-      tinyUi.sClickOnUi('click blue color', 'div[data-mce-color="#0000FF"]:first'),
-      tinyApis.sAssertContentStructure(forecolorStruct),
-      // backcolor test
-      tinyApis.sSetContent('hello test'),
-      tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
-      tinyUi.sClickOnToolbar('click backcolor', 'div[aria-label="Background color"] > button.mce-open'),
-      tinyUi.sClickOnUi('click green color', 'div[data-mce-color="#00FF00"]:last'),
-      tinyUi.sClickOnToolbar('click fontsize', 'div[aria-label="Font Sizes"] > button'),
-      tinyUi.sClickOnUi('click 24pt', 'div.mce-floatpanel span.mce-text:contains("24pt")'),
-      tinyUi.sClickOnToolbar('click backcolor again', 'div[aria-label="Background color"] > button.mce-open'),
-      tinyUi.sClickOnUi('click a nice purple color', 'div[data-mce-color="#CC99FF"]:last'),
-      tinyApis.sAssertContentStructure(backcolorStruct)
+      Logger.t('forecolor', GeneralSteps.sequence([
+        tinyApis.sFocus,
+        tinyApis.sSetContent('hello test'),
+        tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
+        tinyUi.sClickOnToolbar('click forecolor', 'div[aria-label="Text color"] > button.mce-open'),
+        tinyUi.sClickOnUi('click green color', 'div[data-mce-color="#00FF00"]:first'),
+        tinyUi.sClickOnToolbar('click fontsize', 'div[aria-label="Font Sizes"] > button'),
+        tinyUi.sClickOnUi('click 24pt', 'div.mce-floatpanel span.mce-text:contains("24pt")'),
+        tinyUi.sClickOnToolbar('click forecolor again', 'div[aria-label="Text color"] > button.mce-open'),
+        tinyUi.sClickOnUi('click blue color', 'div[data-mce-color="#0000FF"]:first'),
+        tinyApis.sAssertContentStructure(forecolorStruct)
+      ])),
+      Logger.t('backcolor', GeneralSteps.sequence([
+        tinyApis.sFocus,
+        tinyApis.sSetContent('hello test'),
+        tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
+        tinyUi.sClickOnToolbar('click backcolor', 'div[aria-label="Background color"] > button.mce-open'),
+        tinyUi.sClickOnUi('click green color', 'div[data-mce-color="#00FF00"]:last'),
+        tinyUi.sClickOnToolbar('click fontsize', 'div[aria-label="Font Sizes"] > button'),
+        tinyUi.sClickOnUi('click 24pt', 'div.mce-floatpanel span.mce-text:contains("24pt")'),
+        tinyUi.sClickOnToolbar('click backcolor again', 'div[aria-label="Background color"] > button.mce-open'),
+        tinyUi.sClickOnUi('click a nice purple color', 'div[data-mce-color="#CC99FF"]:last'),
+        tinyApis.sAssertContentStructure(backcolorStruct)
+      ]))
     ], onSuccess, onFailure);
   }, {
     plugins: 'textcolor',
