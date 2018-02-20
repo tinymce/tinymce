@@ -199,5 +199,5 @@ function _loadShader(gl, source, type) {
 }
 
 export default <any> {
-  scale: scale
+  scale
 };

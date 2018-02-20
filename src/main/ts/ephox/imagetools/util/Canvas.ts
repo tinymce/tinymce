@@ -35,9 +35,9 @@ function resize(canvas, width, height) {
 }
 
 export default <any> {
-  create: create,
-  clone: clone,
-  resize: resize,
-  get2dContext: get2dContext,
-  get3dContext: get3dContext
+  create,
+  clone,
+  resize,
+  get2dContext,
+  get3dContext
 };

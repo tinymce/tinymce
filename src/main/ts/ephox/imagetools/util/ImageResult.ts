@@ -43,14 +43,14 @@ function create(getCanvas, blob, uri) {
   }
 
   return {
-    getType: getType,
-    toBlob: toBlob,
-    toDataURL: toDataURL,
-    toBase64: toBase64,
-    toAdjustedBlob: toAdjustedBlob,
-    toAdjustedDataURL: toAdjustedDataURL,
-    toAdjustedBase64: toAdjustedBase64,
-    toCanvas: toCanvas
+    getType,
+    toBlob,
+    toDataURL,
+    toBase64,
+    toAdjustedBlob,
+    toAdjustedDataURL,
+    toAdjustedBase64,
+    toCanvas
   };
 }
 
@@ -77,8 +77,8 @@ var fromBlobAndUrlSync = function (blob, url) {
 };
 
 export default <any> {
-  fromBlob: fromBlob,
-  fromCanvas: fromCanvas,
-  fromImage: fromImage,
-  fromBlobAndUrlSync: fromBlobAndUrlSync
+  fromBlob,
+  fromCanvas,
+  fromImage,
+  fromBlobAndUrlSync
 };

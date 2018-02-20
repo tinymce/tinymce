@@ -50,5 +50,5 @@ function _scale(image, wRatio, hRatio) {
 }
 
 export default <any> {
-  scale: scale
+  scale
 };

@@ -27,10 +27,10 @@ var uriToBlob = function (uri) {
 
 export default <any> {
   // used outside
-  blobToImage: blobToImage,
-  imageToBlob: imageToBlob,
-  blobToDataUri: blobToDataUri,
-  blobToBase64: blobToBase64,
-  dataUriToBlobSync: dataUriToBlobSync,
-  uriToBlob: uriToBlob
+  blobToImage,
+  imageToBlob,
+  blobToDataUri,
+  blobToBase64,
+  dataUriToBlobSync,
+  uriToBlob
 };

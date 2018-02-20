@@ -29,5 +29,5 @@ function guessMimeType(uri) {
 }
 
 export default <any> {
-  guessMimeType: guessMimeType
+  guessMimeType
 };

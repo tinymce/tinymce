@@ -66,21 +66,21 @@ var rotate = function (ir, angle) {
 };
 
 export default <any> {
-  invert: invert,
-  sharpen: sharpen,
-  emboss: emboss,
-  brightness: brightness,
-  hue: hue,
-  saturate: saturate,
-  contrast: contrast,
-  grayscale: grayscale,
-  sepia: sepia,
-  colorize: colorize,
-  gamma: gamma,
-  exposure: exposure,
+  invert,
+  sharpen,
+  emboss,
+  brightness,
+  hue,
+  saturate,
+  contrast,
+  grayscale,
+  sepia,
+  colorize,
+  gamma,
+  exposure,
 
-  flip: flip,
-  crop: crop,
-  resize: resize,
-  rotate: rotate
+  flip,
+  crop,
+  resize,
+  rotate
 };

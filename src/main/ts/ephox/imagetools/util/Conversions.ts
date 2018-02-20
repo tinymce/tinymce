@@ -203,6 +203,18 @@ function blobToDataUri(blob) {
   });
 }
 
+function blobToArrayBuffer(blob) {
+  return new Promise(function (resolve) {
+    var reader = new FileReader();
+
+    reader.onloadend = function () {
+      resolve(reader.result);
+    };
+
+    reader.readAsArrayBuffer(blob);
+  });
+}
+
 function blobToBase64(blob) {
   return blobToDataUri(blob).then(function (dataUri) {
     return dataUri.split(',')[1];
@@ -215,15 +227,16 @@ function revokeImageUrl(image) {
 
 export default <any> {
   // used outside
-  blobToImage: blobToImage,
-  imageToBlob: imageToBlob,
-  blobToDataUri: blobToDataUri,
-  blobToBase64: blobToBase64,
-  dataUriToBlobSync: dataUriToBlobSync,
+  blobToImage,
+  imageToBlob,
+  blobToArrayBuffer,
+  blobToDataUri,
+  blobToBase64,
+  dataUriToBlobSync,
 
   // helper method
-  canvasToBlob: canvasToBlob,
-  canvasToDataURL: canvasToDataURL,
-  blobToCanvas: blobToCanvas,
-  uriToBlob: uriToBlob
+  canvasToBlob,
+  canvasToDataURL,
+  blobToCanvas,
+  uriToBlob
 };

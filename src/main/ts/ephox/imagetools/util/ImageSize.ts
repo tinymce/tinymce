@@ -7,6 +7,6 @@ function getHeight(image) {
 }
 
 export default <any> {
-  getWidth: getWidth,
-  getHeight: getHeight
+  getWidth,
+  getHeight
 };

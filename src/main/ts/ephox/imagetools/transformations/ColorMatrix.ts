@@ -191,14 +191,14 @@ function adjustGrayscale(matrix, value) {
 }
 
 export default <any> {
-  identity: identity,
-  adjust: adjust,
-  multiply: multiply,
-  adjustContrast: adjustContrast,
-  adjustBrightness: adjustBrightness,
-  adjustSaturation: adjustSaturation,
-  adjustHue: adjustHue,
-  adjustColors: adjustColors,
-  adjustSepia: adjustSepia,
-  adjustGrayscale: adjustGrayscale
+  identity,
+  adjust,
+  multiply,
+  adjustContrast,
+  adjustBrightness,
+  adjustSaturation,
+  adjustHue,
+  adjustColors,
+  adjustSepia,
+  adjustGrayscale
 };
