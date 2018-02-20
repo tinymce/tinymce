@@ -34,6 +34,8 @@ var detect = function (container, isRoot, start, finish, selectRange) {
         return Option.none();
       }
     });
+  } else {
+    return Option.none();
   }
 };
 
