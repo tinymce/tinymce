@@ -143,6 +143,18 @@ export default function (editor) {
     }
   });
 
+  // For detecting when user has replaced text using the browser built-in spell checker
+  editor.on('input', (e) => {
+    if (e.inputType &&
+        (
+          e.inputType === 'insertReplacementText' || // Special inputType, currently only Chrome implements this: https://www.w3.org/TR/input-events-2/#x5.1.2-attributes
+          (e.inputType === 'insertText' && e.data === null) // Safari just shows inputType `insertText` but with data set to null so we can use that
+        )
+      ) {
+      addNonTypingUndoLevel(e);
+    }
+  });
+
   // Add keyboard shortcuts for undo/redo keys
   editor.addShortcut('meta+z', '', 'Undo');
   editor.addShortcut('meta+y,meta+shift+z', '', 'Redo');
