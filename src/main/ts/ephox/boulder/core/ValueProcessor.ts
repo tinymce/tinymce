@@ -8,19 +8,35 @@ import ObjReader from './ObjReader';
 import ObjWriter from './ObjWriter';
 import SchemaError from './SchemaError';
 
-var adt = Adt.generate([
+export interface AdtField {
+  key: string;
+  okey: string;
+  presence: any;
+  prop: ValueValidatorType;
+}
+
+// TODO: Handle the fact that strength shouldn't be pushed outside this project.
+export type ValueValidatorType = (a, strength: any) => Result<any, string>
+
+export interface AdtFieldType {
+  // fold_adtfieldtype: any,
+  fold: (...args: any[]) => any
+}
+
+// data AdtFieldType = Field fields | state 
+
+var adt: { field: (...args: any[]) => AdtFieldType, state: (...args: any[]) => AdtFieldType } = Adt.generate([
   { field: [ 'key', 'okey', 'presence', 'prop' ] },
   { state: [ 'okey', 'instantiator' ] }
 ]);
 
-var output = function (okey, value) {
+var output = function (okey, value): AdtFieldType {
   return adt.state(okey, Fun.constant(value));
 };
 
 var snapshot = function (okey) {
   return adt.state(okey, Fun.identity);
 };
-
 
 var strictAccess = function (path, obj, key) {
   // In strict mode, if it undefined, it is an error.
@@ -100,7 +116,8 @@ var cExtract = function (path, obj, fields, strength) {
   return ResultCombine.consolidateObj(results, {});
 };
 
-var value = function (validator) {
+var value = function (validator: ValueValidatorType) {
+
   var extract = function (path, strength, val) {
     // NOTE: Intentionally allowing strength to be passed through internally
     return validator(val, strength).fold(function (err) {
@@ -131,10 +148,10 @@ var getSetKeys = function (obj) {
   });
 };
 
-var objOnly = function (fields) {
+var objOnly = function (fields: AdtFieldType[]) {
   var delegate = obj(fields);
 
-  var fieldNames = Arr.foldr(fields, function (acc, f) {
+  var fieldNames = Arr.foldr(fields, function (acc, f: AdtFieldType) {
     return f.fold(function (key) {
       return Merger.deepMerge(acc, Objects.wrap(key, true));
     }, Fun.constant(acc));
@@ -157,7 +174,7 @@ var objOnly = function (fields) {
   };
 };
 
-var obj = function (fields) {
+var obj = function (fields: AdtFieldType[]) {
   var extract = function (path, strength, o) {
     return cExtract(path, o, fields, strength);
   };
@@ -296,7 +313,7 @@ var anyValue = value(Result.value);
 
 var arrOfObj = Fun.compose(arr, obj);
 
-export default <any> {
+export default {
   anyValue: Fun.constant(anyValue),
 
   value: value,

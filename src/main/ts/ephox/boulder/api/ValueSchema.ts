@@ -1,5 +1,5 @@
 import ChoiceProcessor from '../core/ChoiceProcessor';
-import ValueProcessor from '../core/ValueProcessor';
+import ValueProcessor, { AdtFieldType } from '../core/ValueProcessor';
 import PrettyPrinter from '../format/PrettyPrinter';
 import { Fun } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
@@ -85,7 +85,7 @@ var funcOrDie = function (args, schema) {
   return ValueProcessor.func(args, schema, retriever);
 };
 
-export default <any> {
+export default  {
   anyValue: Fun.constant(anyValue),
 
   arrOfObj: arrOfObj,

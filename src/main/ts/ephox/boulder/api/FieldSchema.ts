@@ -1,17 +1,17 @@
 import FieldPresence from './FieldPresence';
-import ValueProcessor from '../core/ValueProcessor';
+import ValueProcessor, { AdtFieldType } from '../core/ValueProcessor';
 import { Result } from '@ephox/katamari';
 import { Type } from '@ephox/katamari';
 
-var strict = function (key) {
+var strict = function (key:string) {
   return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.anyValue());
 };
 
-var strictOf = function (key, schema) {
+var strictOf = function (key:string, schema:any) {
   return ValueProcessor.field(key, key, FieldPresence.strict(), schema);
 };
 
-var strictFunction = function (key) {
+var strictFunction:any = function (key:string) {
   return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.value(function (f) {
     return Type.isFunction(f) ? Result.value(f) : Result.error('Not a function');
   }));
@@ -59,7 +59,7 @@ var optionObjOf = function (key, objSchema) {
   return ValueProcessor.field(key, key, FieldPresence.asOption(), ValueProcessor.obj(objSchema));
 };
 
-var optionObjOfOnly = function (key, objSchema) {
+var optionObjOfOnly = function (key, objSchema: AdtFieldType[]) {
   return ValueProcessor.field(key, key, FieldPresence.asOption(), ValueProcessor.objOnly(objSchema));
 };
 
