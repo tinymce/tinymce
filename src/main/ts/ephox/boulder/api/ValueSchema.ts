@@ -1,16 +1,16 @@
 import ChoiceProcessor from '../core/ChoiceProcessor';
-import ValueProcessor, { ValueAdtType, ValueValidatorType, ValueExtractorType, ResultOperatorType } from '../core/ValueProcessor';
+import ValueProcessor, { ValueAdtType, ValueValidatorType, ValueExtractorType, ProcesorType, PropExtractorType } from '../core/ValueProcessor';
 import PrettyPrinter from '../format/PrettyPrinter';
 import { Fun } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 
-var anyValue:ResultOperatorType = ValueProcessor.value(Result.value);
+var anyValue:ProcesorType = ValueProcessor.value(Result.value);
 
 var arrOfObj = function (objFields:ValueAdtType[]):ValueAdtType[] {
   return ValueProcessor.arrOfObj(objFields);
 };
 
-var arrOfVal = function () {
+var arrOfVal = function ():ProcesorType {
   return ValueProcessor.arr(anyValue);
 };
 
@@ -22,14 +22,14 @@ var objOfOnly = ValueProcessor.objOnly;
 
 var setOf = ValueProcessor.setOf;
 
-var valueOf = function (validator:ValueValidatorType) {
+var valueOf = function (validator:ValueValidatorType):ProcesorType {
   return ValueProcessor.value(function (v) {
     // Intentionally not exposing "strength" at the API level
     return validator(v);
   });
 };
 
-var extract = function (label, prop, strength, obj):Result<any, object> {
+var extract = function (label:string, prop:ProcesorType, strength:() => any, obj):Result<any,any>{
   return prop.extract([ label ], strength, obj).fold(function (errs) {
     return Result.error({
       input: obj,
@@ -38,11 +38,11 @@ var extract = function (label, prop, strength, obj):Result<any, object> {
   }, Result.value);
 };
 
-var asStruct = function (label, prop, obj) {
+var asStruct = function (label:string, prop:ProcesorType, obj:()=>any):Result<any,any> {
   return extract(label, prop, Fun.constant, obj);
 };
 
-var asRaw = function (label, prop, obj) {
+var asRaw = function (label:string, prop:ProcesorType, obj:()=>any):Result<any,any> {
   return extract(label, prop, Fun.identity, obj);
 };
 

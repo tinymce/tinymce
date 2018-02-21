@@ -19,10 +19,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function() {
 
   var checkRawErrIs = function (label, expectedPart, applicator, f, processor) {
     Logger.sync(label, function () {
-      var newF = ValueSchema.asRaw(label, processor, f).getOrDie(
-        'Should validate originally'
-      );
-
+      var newF = ValueSchema.asRaw(label, processor, f).getOrDie();
       var passed = null;
 
       try {

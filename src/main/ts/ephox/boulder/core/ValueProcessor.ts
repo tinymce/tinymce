@@ -10,9 +10,9 @@ import SchemaError from './SchemaError';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
 export type ValueValidatorType = (a, strength?: () => any) => Result<any, string>
-export type PropExtractorType = (path:string[], strength: () => any, val: any[]) => Result<any, string>
-export type ValueExtractorType = (label:string, prop, strength:() => any, obj) => Result<any, string>
-export type ResultOperatorType = {
+export type PropExtractorType = (path:string[], strength: () => any, val: any[]) => Result<any, any>
+export type ValueExtractorType = (label:string, prop:ProcesorType, strength:() => any, obj) => Result<any, string>
+export type ProcesorType = {
   extract: PropExtractorType;
   toString: () => any;
   toDsl: () => any;
@@ -117,7 +117,7 @@ var cExtract = function (path, obj, fields, strength) {
   return ResultCombine.consolidateObj(results, {});
 };
 
-var value = function (validator: ValueValidatorType) {
+var value = function (validator: ValueValidatorType):ProcesorType {
 
   var extract = function (path, strength, val) {
     // NOTE: Intentionally allowing strength to be passed through internally
@@ -210,7 +210,7 @@ var obj = function (fields: ValueAdtType[]) {
   };
 };
 
-var arr = function (prop):ResultOperatorType { // TODO: no test coverage
+var arr = function (prop):ProcesorType { // TODO: no test coverage
   var extract = function (path, strength, array) {
     var results = Arr.map(array, function (a, i) {
       return prop.extract(path.concat(['[' + i + ']' ]), strength, a);
