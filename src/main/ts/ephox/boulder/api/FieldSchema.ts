@@ -3,21 +3,21 @@ import ValueProcessor, { AdtFieldType } from '../core/ValueProcessor';
 import { Result } from '@ephox/katamari';
 import { Type } from '@ephox/katamari';
 
-var strict = function (key:string) {
+var strict = function (key:string):AdtFieldType {
   return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.anyValue());
 };
 
-var strictOf = function (key:string, schema:any) {
+var strictOf = function (key:string, schema:any):AdtFieldType {
   return ValueProcessor.field(key, key, FieldPresence.strict(), schema);
 };
 
-var strictFunction:any = function (key:string) {
+var strictFunction:any = function (key:string):AdtFieldType {
   return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.value(function (f) {
     return Type.isFunction(f) ? Result.value(f) : Result.error('Not a function');
   }));
 };
 
-var forbid = function (key, message) {
+var forbid = function (key:string, message:string):AdtFieldType {
   return ValueProcessor.field(
     key,
     key,
@@ -29,7 +29,7 @@ var forbid = function (key, message) {
 };
 
 // TODO: Deprecate
-var strictArrayOf = function (key, prop) {
+var strictArrayOf = function (key:string, prop) {
   return strictOf(key, prop);
 };
 

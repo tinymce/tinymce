@@ -19,7 +19,6 @@ export interface AdtField {
 export type ValueValidatorType = (a, strength: any) => Result<any, string>
 
 export interface AdtFieldType {
-  // fold_adtfieldtype: any,
   fold: (...args: any[]) => any
 }
 
