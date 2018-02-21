@@ -1,5 +1,5 @@
 import ChoiceProcessor from '../core/ChoiceProcessor';
-import ValueProcessor, { AdtFieldType } from '../core/ValueProcessor';
+import ValueProcessor, { ValueAdtType } from '../core/ValueProcessor';
 import PrettyPrinter from '../format/PrettyPrinter';
 import { Fun } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';

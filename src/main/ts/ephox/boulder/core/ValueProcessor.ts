@@ -8,28 +8,20 @@ import ObjReader from './ObjReader';
 import ObjWriter from './ObjWriter';
 import SchemaError from './SchemaError';
 
-export interface AdtField {
-  key: string;
-  okey: string;
-  presence: any;
-  prop: ValueValidatorType;
-}
-
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
 export type ValueValidatorType = (a, strength: any) => Result<any, string>
 
-export interface AdtFieldType {
+export interface ValueAdtType {
   fold: (...args: any[]) => any
 }
 
-// data AdtFieldType = Field fields | state 
-
-var adt: { field: (...args: any[]) => AdtFieldType, state: (...args: any[]) => AdtFieldType } = Adt.generate([
+// data ValueAdtType = Field fields | state 
+var adt: { field: (...args: any[]) => ValueAdtType, state: (...args: any[]) => ValueAdtType } = Adt.generate([
   { field: [ 'key', 'okey', 'presence', 'prop' ] },
   { state: [ 'okey', 'instantiator' ] }
 ]);
 
-var output = function (okey, value): AdtFieldType {
+var output = function (okey, value): ValueAdtType {
   return adt.state(okey, Fun.constant(value));
 };
 
@@ -147,10 +139,10 @@ var getSetKeys = function (obj) {
   });
 };
 
-var objOnly = function (fields: AdtFieldType[]) {
+var objOnly = function (fields: ValueAdtType[]) {
   var delegate = obj(fields);
 
-  var fieldNames = Arr.foldr(fields, function (acc, f: AdtFieldType) {
+  var fieldNames = Arr.foldr(fields, function (acc, f: ValueAdtType) {
     return f.fold(function (key) {
       return Merger.deepMerge(acc, Objects.wrap(key, true));
     }, Fun.constant(acc));
@@ -173,7 +165,7 @@ var objOnly = function (fields: AdtFieldType[]) {
   };
 };
 
-var obj = function (fields: AdtFieldType[]) {
+var obj = function (fields: ValueAdtType[]) {
   var extract = function (path, strength, o) {
     return cExtract(path, o, fields, strength);
   };
