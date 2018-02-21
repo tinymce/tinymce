@@ -28,12 +28,6 @@ var forbid = function (key:string, message:string):AdtFieldType {
   );
 };
 
-// TODO: Deprecate
-var strictArrayOf = function (key:string, prop) {
-  return strictOf(key, prop);
-};
-
-
 var strictObjOf = function (key, objSchema) {
   return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.obj(objSchema));
 };
@@ -87,7 +81,6 @@ export default <any> {
   strict: strict,
   strictOf: strictOf,
   strictObjOf: strictObjOf,
-  strictArrayOf: strictArrayOf,
   strictArrayOfObj: strictArrayOfObj,
   strictFunction: strictFunction,
 

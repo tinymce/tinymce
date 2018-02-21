@@ -116,13 +116,6 @@ UnitTest.test('ValueSchemaRawTest', function() {
     ])
   ]));
 
-  check('test.5', {
-    urls: [ 'dog', 'cat' ]
-  }, ValueSchema.objOf([
-    FieldSchema.strictArrayOf('urls', ValueSchema.anyValue())
-  ]));
-
-
   checkErr('test.6 should fail because fields do not both start with f', 
     'start-with-f',
     {
