@@ -27,7 +27,7 @@ const traverse = function (json, path) {
 };
 
 const requestUrlAsBlob = function (url, headers) {
-  return new Promise(function (resolve) {
+  return new Promise<{status: number, blob: Blob}>(function (resolve) {
     let xhr;
 
     xhr = new XMLHttpRequest();

@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const flatten = function (arr) {
-  return arr.reduce(function (results, item) {
+const flatten = function (arr: any[]) {
+  return arr.reduce(function (results: any[], item) {
     return Array.isArray(item) ? results.concat(flatten(item)) : results.concat(item);
   }, []);
 };

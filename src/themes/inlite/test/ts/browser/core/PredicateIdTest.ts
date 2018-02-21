@@ -12,8 +12,8 @@ UnitTest.test('browser.core.PredicateIdTest', function () {
     };
 
     const predIds = PredicateId.fromContextToolbars([
-      { toolbar: 'a b c', predicate: isTrue, id: 'a' },
-      { toolbar: 'd e', predicate: isFalse, id: 'b' }
+      { items: 'a b c', predicate: isTrue, id: 'a' },
+      { items: 'd e', predicate: isFalse, id: 'b' }
     ]);
 
     assert.eq([

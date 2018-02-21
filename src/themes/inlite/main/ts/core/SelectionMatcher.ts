@@ -10,12 +10,15 @@
 
 import Matcher from './Matcher';
 import Measure from './Measure';
+import { Editor } from 'tinymce/core/api/Editor';
+import { GeomRect } from 'tinymce/core/api/geom/Rect';
 
 // textSelection :: String -> (Editor -> Matcher.result | Null)
-const textSelection = function (id) {
-  return function (editor) {
+const textSelection = function (id: string) {
+  return function (editor: Editor) {
     if (!editor.selection.isCollapsed()) {
-      return Matcher.result(id, Measure.getSelectionRect(editor));
+      const result: {id: string, rect: GeomRect} = Matcher.result(id, Measure.getSelectionRect(editor));
+      return result;
     }
 
     return null;
@@ -23,7 +26,7 @@ const textSelection = function (id) {
 };
 
 // emptyTextBlock :: [Elements], String -> (Editor -> Matcher.result | Null)
-const emptyTextBlock = function (elements, id) {
+const emptyTextBlock = function (elements: Element[], id: string) {
   return function (editor) {
     let i;
     const textBlockElementsMap = editor.schema.getTextBlockElements();

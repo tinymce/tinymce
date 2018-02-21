@@ -7,8 +7,9 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
+import { GeomRect } from 'tinymce/core/api/geom/Rect';
 
-const fromClientRect = function (clientRect) {
+const fromClientRect = function (clientRect: Partial<ClientRect>): GeomRect {
   return {
     x: clientRect.left,
     y: clientRect.top,
@@ -17,7 +18,7 @@ const fromClientRect = function (clientRect) {
   };
 };
 
-const toClientRect = function (geomRect) {
+const toClientRect = function (geomRect: GeomRect): ClientRect {
   return {
     left: geomRect.x,
     top: geomRect.y,
