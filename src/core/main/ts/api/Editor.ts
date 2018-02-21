@@ -26,6 +26,7 @@ import Uuid from '../util/Uuid';
 import { Selection } from 'tinymce/core/api/dom/Selection';
 import * as EditorContent from 'tinymce/core/EditorContent';
 import * as EditorRemove from '../EditorRemove';
+import SelectionOverrides from 'tinymce/core/SelectionOverrides';
 
 /*jshint scripturl:true */
 
@@ -57,6 +58,7 @@ import * as EditorRemove from '../EditorRemove';
 
 export interface Editor {
   selection: Selection;
+  _selectionOverrides: SelectionOverrides;
   [key: string]: any;
 }
 

@@ -46,7 +46,7 @@ const navigateHorizontally = (editor, forward: boolean, table: HTMLElement, td: 
   const direction = forward ? 1 : -1;
 
   if (isFakeCaretTableBrowser() && isCaretAtStartOrEndOfTable(forward, rng, table)) {
-    const newRng = CefUtils.showCaret(direction, editor, table, !forward);
+    const newRng = CefUtils.showCaret(direction, editor, table, !forward, true);
     editor.selection.setRng(newRng);
     return true;
   }

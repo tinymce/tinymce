@@ -24,19 +24,28 @@ import CefFocus from './focus/CefFocus';
 import * as CefUtils from './keyboard/CefUtils';
 import VK from './api/util/VK';
 import { FakeCaret, isFakeCaretTarget } from './caret/FakeCaret';
+import { Editor } from 'tinymce/core/api/Editor';
+import EditorFocus from 'tinymce/core/focus/EditorFocus';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse;
 const isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse;
 
-const SelectionOverrides = function (editor) {
+interface SelectionOverrides {
+  showCaret: (direction: number, node: Element, before: boolean, scrollIntoView?: boolean) => Range;
+  showBlockCaretContainer: (blockCaretContainer: Element) => void;
+  hideFakeCaret: () => void;
+  destroy: () => void;
+}
+
+const SelectionOverrides = function (editor: Editor): SelectionOverrides {
   const isBlock = function (node) {
     return editor.dom.isBlock(node);
   };
 
   const rootNode = editor.getBody();
-  const fakeCaret = FakeCaret(editor.getBody(), isBlock);
+  const fakeCaret = FakeCaret(editor.getBody(), isBlock, () => EditorFocus.hasFocus(editor));
   const realSelectionId = 'sel-' + editor.dom.uniqueId();
   let selectedContentEditableNode;
 
@@ -49,7 +58,7 @@ const SelectionOverrides = function (editor) {
     return container ? container.getElementsByTagName('*')[0] : container;
   };
 
-  const setRange = function (range) {
+  const setRange = function (range: Range) {
     // console.log('setRange', range);
     if (range) {
       editor.selection.setRng(range);
@@ -60,11 +69,7 @@ const SelectionOverrides = function (editor) {
     return editor.selection.getRng();
   };
 
-  const scrollIntoView = function (node, alignToTop?) {
-    editor.selection.scrollIntoView(node, alignToTop);
-  };
-
-  const showCaret = (direction, node: HTMLElement, before: boolean): Range => {
+  const showCaret = (direction: number, node: Element, before: boolean, scrollIntoView: boolean = true): Range => {
     let e;
 
     e = editor.fire('ShowCaret', {
@@ -77,12 +82,14 @@ const SelectionOverrides = function (editor) {
       return null;
     }
 
-    scrollIntoView(node, direction === -1);
+    if (scrollIntoView) {
+      editor.selection.scrollIntoView(node, direction === -1);
+    }
 
     return fakeCaret.show(before, node);
   };
 
-  const getNormalizedRangeEndPoint = function (direction, range) {
+  const getNormalizedRangeEndPoint = function (direction: number, range: Range): CaretPosition {
     range = CaretUtils.normalizeRange(direction, rootNode, range);
 
     if (direction === -1) {
@@ -92,16 +99,16 @@ const SelectionOverrides = function (editor) {
     return CaretPosition.fromRangeEnd(range);
   };
 
-  const showBlockCaretContainer = function (blockCaretContainer) {
+  const showBlockCaretContainer = function (blockCaretContainer: HTMLElement) {
     if (blockCaretContainer.hasAttribute('data-mce-caret')) {
       CaretContainer.showCaretContainerBlock(blockCaretContainer);
       setRange(getRange()); // Removes control rect on IE
-      scrollIntoView(blockCaretContainer[0]);
+      editor.selection.scrollIntoView(blockCaretContainer[0]);
     }
   };
 
   const registerEvents = function () {
-    const getContentEditableRoot = function (node) {
+    const getContentEditableRoot = function (node: Node): Node {
       const root = editor.getBody();
 
       while (node && node !== root) {
@@ -121,7 +128,7 @@ const SelectionOverrides = function (editor) {
       const range = getRange();
 
       if (range.collapsed && EditorView.isXYInContentArea(editor, e.clientX, e.clientY)) {
-        setRange(CefUtils.renderCaretAtRange(editor, range));
+        setRange(CefUtils.renderCaretAtRange(editor, range, false));
       }
     });
 
@@ -238,8 +245,9 @@ const SelectionOverrides = function (editor) {
         if (caretInfo) {
           if (!hasBetterMouseTarget(e.target, caretInfo.node)) {
             e.preventDefault();
+            const range = showCaret(1, caretInfo.node as HTMLElement, caretInfo.before, false);
             editor.getBody().focus();
-            setRange(showCaret(1, caretInfo.node as HTMLElement, caretInfo.before));
+            setRange(range);
           }
         }
       }
@@ -334,7 +342,7 @@ const SelectionOverrides = function (editor) {
     );
   };
 
-  const isWithinCaretContainer = function (node) {
+  const isWithinCaretContainer = function (node: Node) {
     return (
       CaretContainer.isCaretContainer(node) ||
       CaretContainer.startsWithCaretContainer(node) ||
@@ -342,11 +350,11 @@ const SelectionOverrides = function (editor) {
     );
   };
 
-  const isRangeInCaretContainer = function (rng) {
+  const isRangeInCaretContainer = function (rng: Range) {
     return isWithinCaretContainer(rng.startContainer) || isWithinCaretContainer(rng.endContainer);
   };
 
-  const setContentEditableSelection = function (range, forward?) {
+  const setContentEditableSelection = function (range: Range, forward?: boolean) {
     let node;
     const $ = editor.$;
     const dom = editor.dom;

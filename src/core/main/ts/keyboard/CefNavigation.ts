@@ -55,7 +55,7 @@ const moveToCeFalseHorizontally = (direction: HDirection, editor, getNextPosFn, 
   if (!range.collapsed) {
     node = getSelectedNode(range);
     if (isContentEditableFalse(node)) {
-      return CefUtils.showCaret(direction, editor, node, direction === HDirection.Backwards);
+      return CefUtils.showCaret(direction, editor, node, direction === HDirection.Backwards, true);
     }
   }
 
@@ -76,19 +76,19 @@ const moveToCeFalseHorizontally = (direction: HDirection, editor, getNextPosFn, 
   }
 
   if (isBeforeContentEditableFalseFn(caretPosition)) {
-    return CefUtils.showCaret(direction, editor, caretPosition.getNode(!forwards), forwards);
+    return CefUtils.showCaret(direction, editor, caretPosition.getNode(!forwards), forwards, true);
   }
 
   // Peek ahead for handling of ab|c<span cE=false> -> abc|<span cE=false>
   peekCaretPosition = getNextPosFn(caretPosition);
   if (isBeforeContentEditableFalseFn(peekCaretPosition)) {
     if (isMoveInsideSameBlock(caretPosition, peekCaretPosition)) {
-      return CefUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards), forwards);
+      return CefUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards), forwards, true);
     }
   }
 
   if (rangeIsInContainerBlock) {
-    return CefUtils.renderRangeCaret(editor, caretPosition.toRange());
+    return CefUtils.renderRangeCaret(editor, caretPosition.toRange(), true);
   }
 
   return null;
@@ -125,7 +125,7 @@ const moveToCeFalseVertically = function (direction: LineWalker.VDirection, edit
       dist1 = Math.abs(clientX - closestNextLineRect.left);
       dist2 = Math.abs(clientX - closestNextLineRect.right);
 
-      return CefUtils.showCaret(direction, editor, closestNextLineRect.node, dist1 < dist2);
+      return CefUtils.showCaret(direction, editor, closestNextLineRect.node, dist1 < dist2, true);
     }
   }
 
@@ -134,12 +134,12 @@ const moveToCeFalseVertically = function (direction: LineWalker.VDirection, edit
 
     closestNextLineRect = LineUtils.findClosestClientRect(Arr.filter(caretPositions, LineWalker.isLine(1)), clientX);
     if (closestNextLineRect) {
-      return CefUtils.renderRangeCaret(editor, closestNextLineRect.position.toRange());
+      return CefUtils.renderRangeCaret(editor, closestNextLineRect.position.toRange(), true);
     }
 
     closestNextLineRect = Arr.last(Arr.filter(caretPositions, LineWalker.isLine(0)));
     if (closestNextLineRect) {
-      return CefUtils.renderRangeCaret(editor, closestNextLineRect.position.toRange());
+      return CefUtils.renderRangeCaret(editor, closestNextLineRect.position.toRange(), true);
     }
   }
 };
