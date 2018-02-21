@@ -9,11 +9,21 @@ import ObjWriter from './ObjWriter';
 import SchemaError from './SchemaError';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
-export type ValueValidatorType = (a, strength: any) => Result<any, string>
+export type ValueValidatorType = (a, strength?: () => any) => Result<any, string>
+export type PropExtractorType = (path:string[], strength: () => any, val: any[]) => Result<any, string>
+export type ValueExtractorType = (label:string, prop, strength:() => any, obj) => Result<any, string>
+export type ResultOperatorType = {
+  extract: PropExtractorType;
+  toString: () => any;
+  toDsl: () => any;
+}
 
-export interface ValueAdtType {
+export type ValueAdtType = {
   fold: (...args: any[]) => any
 }
+
+// TODO find me a better name, no idea what these tools do, they appear to operate on Results
+
 
 // data ValueAdtType = Field fields | state 
 var adt: { field: (...args: any[]) => ValueAdtType, state: (...args: any[]) => ValueAdtType } = Adt.generate([
@@ -200,7 +210,7 @@ var obj = function (fields: ValueAdtType[]) {
   };
 };
 
-var arr = function (prop) {
+var arr = function (prop):ResultOperatorType { // TODO: no test coverage
   var extract = function (path, strength, array) {
     var results = Arr.map(array, function (a, i) {
       return prop.extract(path.concat(['[' + i + ']' ]), strength, a);

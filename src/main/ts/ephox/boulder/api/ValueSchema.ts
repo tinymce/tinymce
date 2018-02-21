@@ -1,12 +1,12 @@
 import ChoiceProcessor from '../core/ChoiceProcessor';
-import ValueProcessor, { ValueAdtType } from '../core/ValueProcessor';
+import ValueProcessor, { ValueAdtType, ValueValidatorType, ValueExtractorType, ResultOperatorType } from '../core/ValueProcessor';
 import PrettyPrinter from '../format/PrettyPrinter';
 import { Fun } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 
-var anyValue = ValueProcessor.value(Result.value);
+var anyValue:ResultOperatorType = ValueProcessor.value(Result.value);
 
-var arrOfObj = function (objFields) {
+var arrOfObj = function (objFields:ValueAdtType[]):ValueAdtType[] {
   return ValueProcessor.arrOfObj(objFields);
 };
 
@@ -22,14 +22,14 @@ var objOfOnly = ValueProcessor.objOnly;
 
 var setOf = ValueProcessor.setOf;
 
-var valueOf = function (validator) {
+var valueOf = function (validator:ValueValidatorType) {
   return ValueProcessor.value(function (v) {
     // Intentionally not exposing "strength" at the API level
     return validator(v);
   });
 };
 
-var extract = function (label, prop, strength, obj) {
+var extract = function (label, prop, strength, obj):Result<any, object> {
   return prop.extract([ label ], strength, obj).fold(function (errs) {
     return Result.error({
       input: obj,
