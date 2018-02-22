@@ -1,6 +1,6 @@
 
 import { RawAssertions } from '@ephox/agar';
-import DslType from 'ephox/boulder/api//DslType';
+import DslType from 'ephox/boulder/api/DslType';
 import FieldPresence from 'ephox/boulder/api/FieldPresence';
 import FieldSchema from 'ephox/boulder/api/FieldSchema';
 import { ValueSchema } from 'ephox/boulder/api/ValueSchema';

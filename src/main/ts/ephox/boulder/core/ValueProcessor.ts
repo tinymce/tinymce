@@ -18,7 +18,15 @@ export type Procesor = {
 }
 
 export type ValueAdt = {
-  fold: (...args: any[]) => any
+  fold: (...args: any[]) => any;
+  match: (branches: {any}) => any;
+  log: (label: string) => string;
+}
+
+export type DslAdt = {
+  fold: (...args: any[]) => any;
+  match: (branches: {any}) => any;
+  log: (label: string) => string;
 }
 
 // data ValueAdt = Field fields | state 
@@ -28,7 +36,7 @@ var adt: { field: (...args: any[]) => ValueAdt, state: (...args: any[]) => Value
 ]);
 
 var output = function (okey, value): ValueAdt {
-  return adt.state(okey, Fun.constant(value));
+  return adt.state(okey, Fun.constant(value));;
 };
 
 var snapshot = function (okey) {
