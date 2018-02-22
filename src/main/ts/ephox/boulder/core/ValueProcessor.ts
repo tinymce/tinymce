@@ -139,8 +139,8 @@ var getSetKeys = function (obj) {
   });
 };
 
-var objOnly = function (fields: ValueAdtType[]) {
-  var delegate = obj(fields);
+var objOfOnly = function (fields: ValueAdtType[]) {
+  var delegate = objOf(fields);
 
   var fieldNames = Arr.foldr(fields, function (acc, f: ValueAdtType) {
     return f.fold(function (key) {
@@ -165,7 +165,7 @@ var objOnly = function (fields: ValueAdtType[]) {
   };
 };
 
-var obj = function (fields: ValueAdtType[]) {
+var objOf = function (fields: ValueAdtType[]) {
   var extract = function (path, strength, o) {
     return cExtract(path, o, fields, strength);
   };
@@ -200,7 +200,7 @@ var obj = function (fields: ValueAdtType[]) {
   };
 };
 
-var arr = function (prop) {
+var arrOf = function (prop) {
   var extract = function (path, strength, array) {
     var results = Arr.map(array, function (a, i) {
       return prop.extract(path.concat(['[' + i + ']' ]), strength, a);
@@ -225,7 +225,7 @@ var arr = function (prop) {
 
 var setOf = function (validator, prop) {
   var validateKeys = function (path, keys) {
-    return arr(value(validator)).extract(path, Fun.identity, keys);
+    return arrOf(value(validator)).extract(path, Fun.identity, keys);
   };
   var extract = function (path, strength, o) {
     // 
@@ -235,7 +235,7 @@ var setOf = function (validator, prop) {
         return adt.field(vk, vk, FieldPresence.strict(), prop);
       });
 
-      return obj(schema).extract(path, strength, o);
+      return objOf(schema).extract(path, strength, o);
     });
   };
 
@@ -301,27 +301,25 @@ var thunk = function (desc, processor) {
 }
 
 var anyValue = value(Result.value);
+var arrOfObj = Fun.compose(arrOf, objOf);
 
-var arrOfObj = Fun.compose(arr, obj);
+var state = adt.state;
+var field = adt.field;
 
-export default {
+export const ValueProcessor = {
   anyValue: Fun.constant(anyValue),
-
-  value: value,
-  obj: obj,
-  objOnly: objOnly,
-  arr: arr,
-  setOf: setOf,
-
-  arrOfObj: arrOfObj,
+  value,
+  
+  objOf,
+  objOfOnly,
+  arrOf,
+  setOf,
+  arrOfObj,
 
   state: adt.state,
-
   field: adt.field,
-  
-  output: output,
-  snapshot: snapshot,
-
-  thunk: thunk,
-  func: func
+  output,
+  snapshot,
+  thunk,
+  func
 };
