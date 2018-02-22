@@ -90,31 +90,31 @@ var funcOrDie = function (args: any[], prop: Procesor): Procesor {
   return ValueProcessor.func(args, prop, retriever);
 };
 
-export default  {
+export const ValueSchema = {
   anyValue: Fun.constant(anyValue),
 
-  arrOfObj: arrOfObj,
-  arrOf: arrOf,
-  arrOfVal: arrOfVal,
+  arrOfObj,
+  arrOf,
+  arrOfVal,
 
-  valueOf: valueOf,
-  setOf: setOf,
+  valueOf,
+  setOf,
 
-  objOf: objOf,
-  objOfOnly: objOfOnly,
+  objOf,
+  objOfOnly,
 
-  asStruct: asStruct,
-  asRaw: asRaw,
+  asStruct,
+  asRaw,
 
-  asStructOrDie: asStructOrDie,
-  asRawOrDie: asRawOrDie,
+  asStructOrDie,
+  asRawOrDie,
 
-  getOrDie: getOrDie,
-  formatError: formatError,
+  getOrDie,
+  formatError,
 
-  choose: choose,
-  
-  thunkOf: thunkOf,
+  choose,
+    
+  thunkOf,
 
-  funcOrDie: funcOrDie
+  funcOrDie
 };

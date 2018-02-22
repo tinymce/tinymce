@@ -3,7 +3,7 @@ import { RawAssertions } from '@ephox/agar';
 import FieldPresence from 'ephox/boulder/api/FieldPresence';
 import FieldSchema from 'ephox/boulder/api/FieldSchema';
 import Objects from 'ephox/boulder/api/Objects';
-import ValueSchema from 'ephox/boulder/api/ValueSchema';
+import { ValueSchema } from 'ephox/boulder/api/ValueSchema';
 import { Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import { UnitTest, assert } from '@ephox/bedrock';
