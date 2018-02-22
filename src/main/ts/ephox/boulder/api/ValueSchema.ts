@@ -1,16 +1,16 @@
 import ChoiceProcessor from '../core/ChoiceProcessor';
-import { ValueProcessor, ValueAdtType, ValueValidatorType, ValueExtractorType, ProcesorType, PropExtractorType } from '../core/ValueProcessor';
+import { ValueProcessor, ValueAdt, ValueValidator, ValueExtractor, Procesor, PropExtractor } from '../core/ValueProcessor';
 import PrettyPrinter from '../format/PrettyPrinter';
 import { Fun } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 
-var anyValue:ProcesorType = ValueProcessor.value(Result.value);
+var anyValue: Procesor = ValueProcessor.value(Result.value);
 
-var arrOfObj = function (objFields:ValueAdtType[]):ValueAdtType[] {
+var arrOfObj = function (objFields: ValueAdt[]): ValueAdt[] {
   return ValueProcessor.arrOfObj(objFields);
 };
 
-var arrOfVal = function ():ProcesorType {
+var arrOfVal = function (): Procesor {
   return ValueProcessor.arrOf(anyValue);
 };
 
@@ -22,14 +22,14 @@ var objOfOnly = ValueProcessor.objOfOnly;
 
 var setOf = ValueProcessor.setOf;
 
-var valueOf = function (validator:ValueValidatorType):ProcesorType {
+var valueOf = function (validator: ValueValidator): Procesor {
   return ValueProcessor.value(function (v) {
     // Intentionally not exposing "strength" at the API level
     return validator(v);
   });
 };
 
-var extract = function (label:string, prop:ProcesorType, strength:() => any, obj):Result<any,any>{
+var extract = function (label:string, prop: Procesor, strength:() => any, obj): Result<any,any>{
   return prop.extract([ label ], strength, obj).fold(function (errs) {
     return Result.error({
       input: obj,
@@ -38,11 +38,11 @@ var extract = function (label:string, prop:ProcesorType, strength:() => any, obj
   }, Result.value);
 };
 
-var asStruct = function (label:string, prop:ProcesorType, obj:()=>any):Result<any,any> {
+var asStruct = function (label:string, prop: Procesor, obj:()=>any): Result<any,any> {
   return extract(label, prop, Fun.constant, obj);
 };
 
-var asRaw = function (label:string, prop:ProcesorType, obj:()=>any):Result<any,any> {
+var asRaw = function (label:string, prop: Procesor, obj:()=>any): Result<any,any> {
   return extract(label, prop, Fun.identity, obj);
 };
 

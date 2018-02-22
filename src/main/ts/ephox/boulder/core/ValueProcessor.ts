@@ -9,29 +9,29 @@ import ObjWriter from './ObjWriter';
 import SchemaError from './SchemaError';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
-export type ValueValidatorType = (a, strength?: () => any) => Result<any, string>
-export type PropExtractorType = (path:string[], strength: () => any, val: any[]) => Result<any, any>
-export type ValueExtractorType = (label:string, prop:ProcesorType, strength:() => any, obj) => Result<any, string>
-export type ProcesorType = {
-  extract: PropExtractorType;
+export type ValueValidator = (a, strength?: () => any) => Result<any, string>
+export type PropExtractor = (path:string[], strength: () => any, val: any[]) => Result<any, any>
+export type ValueExtractor = (label:string, prop:Procesor, strength:() => any, obj) => Result<any, string>
+export type Procesor = {
+  extract: PropExtractor;
   toString: () => any;
   toDsl: () => any;
 }
 
-export type ValueAdtType = {
+export type ValueAdt = {
   fold: (...args: any[]) => any
 }
 
 // TODO find me a better name, no idea what these tools do, they appear to operate on Results
 
 
-// data ValueAdtType = Field fields | state 
-var adt: { field: (...args: any[]) => ValueAdtType, state: (...args: any[]) => ValueAdtType } = Adt.generate([
+// data ValueAdt = Field fields | state 
+var adt: { field: (...args: any[]) => ValueAdt, state: (...args: any[]) => ValueAdt } = Adt.generate([
   { field: [ 'key', 'okey', 'presence', 'prop' ] },
   { state: [ 'okey', 'instantiator' ] }
 ]);
 
-var output = function (okey, value): ValueAdtType {
+var output = function (okey, value): ValueAdt {
   return adt.state(okey, Fun.constant(value));
 };
 
@@ -117,7 +117,7 @@ var cExtract = function (path, obj, fields, strength) {
   return ResultCombine.consolidateObj(results, {});
 };
 
-var value = function (validator: ValueValidatorType):ProcesorType {
+var value = function (validator: ValueValidator):Procesor {
 
   var extract = function (path, strength, val) {
     // NOTE: Intentionally allowing strength to be passed through internally
@@ -149,10 +149,10 @@ var getSetKeys = function (obj) {
   });
 };
 
-var objOfOnly = function (fields: ValueAdtType[]) {
+var objOfOnly = function (fields: ValueAdt[]) {
   var delegate = objOf(fields);
 
-  var fieldNames = Arr.foldr(fields, function (acc, f: ValueAdtType) {
+  var fieldNames = Arr.foldr(fields, function (acc, f: ValueAdt) {
     return f.fold(function (key) {
       return Merger.deepMerge(acc, Objects.wrap(key, true));
     }, Fun.constant(acc));
@@ -175,7 +175,7 @@ var objOfOnly = function (fields: ValueAdtType[]) {
   };
 };
 
-var objOf = function (fields: ValueAdtType[]) {
+var objOf = function (fields: ValueAdt[]) {
   var extract = function (path, strength, o) {
     return cExtract(path, o, fields, strength);
   };
@@ -210,7 +210,7 @@ var objOf = function (fields: ValueAdtType[]) {
   };
 };
 
-var arrOf = function (prop):ProcesorType { // TODO: no test coverage
+var arrOf = function (prop):Procesor { // TODO: no test coverage
   var extract = function (path, strength, array) {
     var results = Arr.map(array, function (a, i) {
       return prop.extract(path.concat(['[' + i + ']' ]), strength, a);
