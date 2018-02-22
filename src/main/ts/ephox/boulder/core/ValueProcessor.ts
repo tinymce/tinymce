@@ -17,25 +17,22 @@ export type Procesor = {
   toDsl: () => any;
 }
 
-export type ValueAdt = {
+export type EncodedAdt = {
   fold: (...args: any[]) => any;
   match: (branches: {any}) => any;
   log: (label: string) => string;
 }
+// ^^^ todo , put EncodedAdt as part of Katamari Adt
 
-export type DslAdt = {
-  fold: (...args: any[]) => any;
-  match: (branches: {any}) => any;
-  log: (label: string) => string;
-}
+
 
 // data ValueAdt = Field fields | state 
-var adt: { field: (...args: any[]) => ValueAdt, state: (...args: any[]) => ValueAdt } = Adt.generate([
+var adt: { field: (...args: any[]) => EncodedAdt, state: (...args: any[]) => EncodedAdt } = Adt.generate([
   { field: [ 'key', 'okey', 'presence', 'prop' ] },
   { state: [ 'okey', 'instantiator' ] }
 ]);
 
-var output = function (okey, value): ValueAdt {
+var output = function (okey, value): EncodedAdt {
   return adt.state(okey, Fun.constant(value));;
 };
 
@@ -153,10 +150,10 @@ var getSetKeys = function (obj) {
   });
 };
 
-var objOfOnly = function (fields: ValueAdt[]) {
+var objOfOnly = function (fields: EncodedAdt[]) {
   var delegate = objOf(fields);
 
-  var fieldNames = Arr.foldr(fields, function (acc, f: ValueAdt) {
+  var fieldNames = Arr.foldr(fields, function (acc, f: EncodedAdt) {
     return f.fold(function (key) {
       return Merger.deepMerge(acc, Objects.wrap(key, true));
     }, Fun.constant(acc));
@@ -179,7 +176,7 @@ var objOfOnly = function (fields: ValueAdt[]) {
   };
 };
 
-var objOf = function (fields: ValueAdt[]) {
+var objOf = function (fields: EncodedAdt[]) {
   var extract = function (path, strength, o) {
     return cExtract(path, o, fields, strength);
   };
