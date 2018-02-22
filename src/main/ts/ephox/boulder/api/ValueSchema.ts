@@ -1,5 +1,5 @@
 import ChoiceProcessor from '../core/ChoiceProcessor';
-import ValueProcessor from '../core/ValueProcessor';
+import { ValueProcessor, ValueAdtType } from '../core/ValueProcessor';
 import PrettyPrinter from '../format/PrettyPrinter';
 import { Fun } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
@@ -11,14 +11,14 @@ var arrOfObj = function (objFields) {
 };
 
 var arrOfVal = function () {
-  return ValueProcessor.arr(anyValue);
+  return ValueProcessor.arrOf(anyValue);
 };
 
-var arrOf = ValueProcessor.arr;
+var arrOf = ValueProcessor.arrOf;
 
-var objOf = ValueProcessor.obj;
+var objOf = ValueProcessor.objOf;
 
-var objOfOnly = ValueProcessor.objOnly;
+var objOfOnly = ValueProcessor.objOfOnly;
 
 var setOf = ValueProcessor.setOf;
 
@@ -85,7 +85,7 @@ var funcOrDie = function (args, schema) {
   return ValueProcessor.func(args, schema, retriever);
 };
 
-export default <any> {
+export default  {
   anyValue: Fun.constant(anyValue),
 
   arrOfObj: arrOfObj,

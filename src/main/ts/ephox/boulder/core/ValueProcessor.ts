@@ -8,19 +8,26 @@ import ObjReader from './ObjReader';
 import ObjWriter from './ObjWriter';
 import SchemaError from './SchemaError';
 
-var adt = Adt.generate([
+// TODO: Handle the fact that strength shouldn't be pushed outside this project.
+export type ValueValidatorType = (a, strength: any) => Result<any, string>
+
+export interface ValueAdtType {
+  fold: (...args: any[]) => any
+}
+
+// data ValueAdtType = Field fields | state 
+var adt: { field: (...args: any[]) => ValueAdtType, state: (...args: any[]) => ValueAdtType } = Adt.generate([
   { field: [ 'key', 'okey', 'presence', 'prop' ] },
   { state: [ 'okey', 'instantiator' ] }
 ]);
 
-var output = function (okey, value) {
+var output = function (okey, value): ValueAdtType {
   return adt.state(okey, Fun.constant(value));
 };
 
 var snapshot = function (okey) {
   return adt.state(okey, Fun.identity);
 };
-
 
 var strictAccess = function (path, obj, key) {
   // In strict mode, if it undefined, it is an error.
@@ -100,7 +107,8 @@ var cExtract = function (path, obj, fields, strength) {
   return ResultCombine.consolidateObj(results, {});
 };
 
-var value = function (validator) {
+var value = function (validator: ValueValidatorType) {
+
   var extract = function (path, strength, val) {
     // NOTE: Intentionally allowing strength to be passed through internally
     return validator(val, strength).fold(function (err) {
@@ -131,10 +139,10 @@ var getSetKeys = function (obj) {
   });
 };
 
-var objOnly = function (fields) {
-  var delegate = obj(fields);
+var objOfOnly = function (fields: ValueAdtType[]) {
+  var delegate = objOf(fields);
 
-  var fieldNames = Arr.foldr(fields, function (acc, f) {
+  var fieldNames = Arr.foldr(fields, function (acc, f: ValueAdtType) {
     return f.fold(function (key) {
       return Merger.deepMerge(acc, Objects.wrap(key, true));
     }, Fun.constant(acc));
@@ -157,7 +165,7 @@ var objOnly = function (fields) {
   };
 };
 
-var obj = function (fields) {
+var objOf = function (fields: ValueAdtType[]) {
   var extract = function (path, strength, o) {
     return cExtract(path, o, fields, strength);
   };
@@ -192,7 +200,7 @@ var obj = function (fields) {
   };
 };
 
-var arr = function (prop) {
+var arrOf = function (prop) {
   var extract = function (path, strength, array) {
     var results = Arr.map(array, function (a, i) {
       return prop.extract(path.concat(['[' + i + ']' ]), strength, a);
@@ -217,7 +225,7 @@ var arr = function (prop) {
 
 var setOf = function (validator, prop) {
   var validateKeys = function (path, keys) {
-    return arr(value(validator)).extract(path, Fun.identity, keys);
+    return arrOf(value(validator)).extract(path, Fun.identity, keys);
   };
   var extract = function (path, strength, o) {
     // 
@@ -227,7 +235,7 @@ var setOf = function (validator, prop) {
         return adt.field(vk, vk, FieldPresence.strict(), prop);
       });
 
-      return obj(schema).extract(path, strength, o);
+      return objOf(schema).extract(path, strength, o);
     });
   };
 
@@ -293,27 +301,25 @@ var thunk = function (desc, processor) {
 }
 
 var anyValue = value(Result.value);
+var arrOfObj = Fun.compose(arrOf, objOf);
 
-var arrOfObj = Fun.compose(arr, obj);
+var state = adt.state;
+var field = adt.field;
 
-export default <any> {
+export const ValueProcessor = {
   anyValue: Fun.constant(anyValue),
-
-  value: value,
-  obj: obj,
-  objOnly: objOnly,
-  arr: arr,
-  setOf: setOf,
-
-  arrOfObj: arrOfObj,
+  value,
+  
+  objOf,
+  objOfOnly,
+  arrOf,
+  setOf,
+  arrOfObj,
 
   state: adt.state,
-
   field: adt.field,
-  
-  output: output,
-  snapshot: snapshot,
-
-  thunk: thunk,
-  func: func
+  output,
+  snapshot,
+  thunk,
+  func
 };
