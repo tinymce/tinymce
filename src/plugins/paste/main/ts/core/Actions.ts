@@ -25,11 +25,11 @@ const displayNotification = function (editor: Editor, message: string) {
 };
 
 const togglePlainTextPaste = function (editor: Editor, clipboard: Clipboard, userIsInformedState) {
-  if (clipboard.pasteFormat === 'text') {
-    clipboard.pasteFormat = 'html';
+  if (clipboard.pasteFormat.get() === 'text') {
+    clipboard.pasteFormat.set('html');
     Events.firePastePlainTextToggle(editor, false);
   } else {
-    clipboard.pasteFormat = 'text';
+    clipboard.pasteFormat.set('text');
     Events.firePastePlainTextToggle(editor, true);
 
     if (shouldInformUserAboutPlainText(editor, userIsInformedState)) {

@@ -45,7 +45,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteSettingsTest', function (
         plugins: 'paste'
       }),
       Chain.op(function (editor) {
-        Assertions.assertEq('Should be text format', 'text', editor.plugins.paste.clipboard.pasteFormat);
+        Assertions.assertEq('Should be text format', 'text', editor.plugins.paste.clipboard.pasteFormat.get());
       }),
       cRemoveEditor
     ]))

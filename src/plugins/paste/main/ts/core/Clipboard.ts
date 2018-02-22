@@ -20,6 +20,7 @@ import ProcessFilters from './ProcessFilters';
 import SmartPaste from './SmartPaste';
 import Utils from './Utils';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Cell } from '@ephox/katamari';
 
 declare let window: any;
 
@@ -229,7 +230,7 @@ const isKeyboardPasteEvent = (e: KeyboardEvent) => {
   return (VK.metaKeyPressed(e) && e.keyCode === 86) || (e.shiftKey && e.keyCode === 45);
 };
 
-const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: string) => {
+const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>) => {
   let keyboardPasteTimeStamp = 0;
   let keyboardPastePlainTextState;
 
@@ -344,7 +345,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     const clipboardDelay = new Date().getTime() - clipboardTimer;
 
     const isKeyBoardPaste = (new Date().getTime() - keyboardPasteTimeStamp - clipboardDelay) < 1000;
-    const plainTextMode = pasteFormat === 'text' || keyboardPastePlainTextState;
+    const plainTextMode = pasteFormat.get() === 'text' || keyboardPastePlainTextState;
     let internal = hasContentType(clipboardContent, InternalHtml.internalHtmlMime());
 
     keyboardPastePlainTextState = false;
@@ -414,7 +415,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
  * @private
  */
 
-const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteFormat: string) => {
+const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>) => {
   registerEventHandlers(editor, pasteBin, pasteFormat);
   let src;
 
@@ -469,31 +470,3 @@ export {
   hasHtmlOrText,
   hasContentType
 };
-
-// export interface Clipboard {
-//   pasteFormat: string;
-//   pasteHtml: (html: string, internalFlag: boolean) => void;
-//   pasteText: (text: string) => void;
-//   pasteImageData: (e: ClipboardEvent | DragEvent, rng: Range) => boolean;
-//   getDataTransferItems: (dataTransfer: DataTransfer) => ClipboardContents;
-//   hasHtmlOrText: (content: ClipboardContents) => boolean;
-//   hasContentType: (clipboardContent: ClipboardContents, mimeType: string) => boolean;
-// }
-
-// export const Clipboard = (editor): Clipboard => {
-//   const pasteBin = PasteBin(editor);
-
-//   const pasteFormat = Settings.isPasteAsTextEnabled(editor) ? 'text' : 'html';
-
-//   editor.on('preInit', () => registerEventsAndFilters(editor, pasteBin, pasteFormat));
-
-//   return {
-//     pasteFormat,
-//     pasteHtml: (html: string, internalFlag: boolean) => pasteHtml(editor, html, internalFlag),
-//     pasteText: (text: string) => pasteText(editor, text),
-//     pasteImageData: (e: ClipboardEvent | DragEvent, rng: Range) => pasteImageData(editor, e, rng),
-//     getDataTransferItems,
-//     hasHtmlOrText,
-//     hasContentType
-//   };
-// };

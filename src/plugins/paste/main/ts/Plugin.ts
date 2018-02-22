@@ -21,12 +21,11 @@ import Quirks from './core/Quirks';
 import Buttons from './ui/Buttons';
 import { Editor } from 'tinymce/core/api/Editor';
 
-const userIsInformedState = Cell(false);
-
 PluginManager.add('paste', function (editor: Editor) {
   if (DetectProPlugin.hasProPlugin(editor) === false) {
     const clipboard = Clipboard(editor);
     const quirks = Quirks.setup(editor);
+    const userIsInformedState = Cell(false);
     const draggingInternallyState = Cell(false);
 
     Buttons.register(editor, clipboard);
