@@ -1,6 +1,6 @@
 import Objects from '../api/Objects';
 import SchemaError from './SchemaError';
-import ValueProcessor from './ValueProcessor';
+import { ValueProcessor } from './ValueProcessor';
 import TypeTokens from '../format/TypeTokens';
 import { Obj } from '@ephox/katamari';
 
@@ -9,7 +9,7 @@ var chooseFrom = function (path, strength, input, branches, ch) {
   return fields.fold(function () {
     return SchemaError.missingBranch(path, branches, ch);
   }, function (fs) {
-    return ValueProcessor.obj(fs).extract(path.concat([ 'branch: ' + ch ]), strength, input);  
+    return ValueProcessor.objOf(fs).extract(path.concat([ 'branch: ' + ch ]), strength, input);  
   });         
 };
 

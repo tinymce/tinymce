@@ -1,5 +1,5 @@
 import ChoiceProcessor from '../core/ChoiceProcessor';
-import ValueProcessor, { ValueAdtType, ValueValidatorType, ValueExtractorType, ProcesorType, PropExtractorType } from '../core/ValueProcessor';
+import { ValueProcessor, ValueAdtType, ValueValidatorType, ValueExtractorType, ProcesorType, PropExtractorType } from '../core/ValueProcessor';
 import PrettyPrinter from '../format/PrettyPrinter';
 import { Fun } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
@@ -11,14 +11,14 @@ var arrOfObj = function (objFields:ValueAdtType[]):ValueAdtType[] {
 };
 
 var arrOfVal = function ():ProcesorType {
-  return ValueProcessor.arr(anyValue);
+  return ValueProcessor.arrOf(anyValue);
 };
 
-var arrOf = ValueProcessor.arr;
+var arrOf = ValueProcessor.arrOf;
 
-var objOf = ValueProcessor.obj;
+var objOf = ValueProcessor.objOf;
 
-var objOfOnly = ValueProcessor.objOnly;
+var objOfOnly = ValueProcessor.objOfOnly;
 
 var setOf = ValueProcessor.setOf;
 

@@ -6,6 +6,8 @@ import { Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import { UnitTest, assert } from '@ephox/bedrock';
 
+import { DslType } from 'ephox/boulder/api/Main';
+
 UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function() {
   var checkErr = function (label, expectedPart, v, processor) {
     // NOTE: v is not a function here.
