@@ -102,8 +102,8 @@ const getUiContainerViewPort = (customUiContainer) => {
 
 const getDocumentViewPort = () => {
   return {
-    x: 0,
-    y: 0,
+    x: Math.max(document.body.scrollLeft, document.documentElement.scrollLeft),
+    y: Math.max(document.body.scrollTop, document.documentElement.scrollTop),
     w: Math.max(document.body.scrollWidth, document.documentElement.scrollWidth, document.defaultView.innerWidth),
     h: Math.max(document.body.scrollHeight, document.documentElement.scrollHeight, document.defaultView.innerHeight)
   };
