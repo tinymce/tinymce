@@ -35,10 +35,14 @@ var setRangeFromRelative = function (win, relative) {
     rtl: function (start, soffset, finish, foffset) {
       var selection = win.getSelection();
       // If this selection is backwards, then we need to use extend.
-      if (selection.extend) {
+      if (selection.setBaseAndExtent) {
+        selection.setBaseAndExtent(start.dom(), soffset, finish.dom(), foffset);
+      }
+      else if (selection.extend) {
         selection.collapse(start.dom(), soffset);
         selection.extend(finish.dom(), foffset);
-      } else {
+      }
+      else {
         doSetRange(win, finish, foffset, start, soffset);
       }
     }
