@@ -490,6 +490,10 @@ module.exports = function (grunt) {
             zip.addData('package.json', jsonToBuffer({
               'name': 'tinymce',
               'version': packageData.version,
+              'repository': {
+                'type': 'git',
+                'url': 'https://github.com/tinymce/tinymce-dist.git'
+              },
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
               'author': 'Ephox Corporation',
               'main': 'tinymce.js',
