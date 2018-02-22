@@ -1862,6 +1862,26 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     LegacyUnit.equal(getContent(editor), '<p><span style="font-family: verdana;">a <span style="color: #ff0000;">b</span>c</span></p>');
   });
 
+  suite.test('FontName should not toggle', function (editor) {
+    editor.getBody().innerHTML = '<p>abc</p>';
+    LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
+    editor.formatter.toggle('fontname', { value: 'arial' });
+    LegacyUnit.equal(getContent(editor), '<p><span style="font-family: arial;">abc</span></p>');
+    LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
+    editor.formatter.toggle('fontname', { value: 'arial' });
+    LegacyUnit.equal(getContent(editor), '<p><span style="font-family: arial;">abc</span></p>');
+  });
+
+  suite.test('FontSize should not toggle', function (editor) {
+    editor.getBody().innerHTML = '<p>abc</p>';
+    LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
+    editor.formatter.toggle('fontsize', { value: '14pt' });
+    LegacyUnit.equal(getContent(editor), '<p><span style="font-size: 14pt;">abc</span></p>');
+    LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
+    editor.formatter.toggle('fontsize', { value: '14pt' });
+    LegacyUnit.equal(getContent(editor), '<p><span style="font-size: 14pt;">abc</span></p>');
+  });
+
   suite.test('All the nested childNodes having fontSize should receive backgroundColor as well', function (editor) {
     editor.getBody().innerHTML = '<p>a <span style="font-size: 36pt;">b</span> c</p>';
     editor.selection.select(editor.dom.select('p')[0]);
