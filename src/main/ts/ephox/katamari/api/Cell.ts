@@ -1,4 +1,10 @@
-var Cell = function (initial) {
+export interface Cell<T> {
+  get: () => T;
+  set: (value: T) => void;
+  clone: () => Cell<T>;
+}
+
+export const Cell = <T>(initial: T): Cell<T> => {
   var value = initial;
 
   var get = function () {
@@ -19,5 +25,3 @@ var Cell = function (initial) {
     clone: clone
   };
 };
-
-export default <any> Cell;

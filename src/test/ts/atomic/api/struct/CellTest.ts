@@ -1,4 +1,4 @@
-import Cell from 'ephox/katamari/api/Cell';
+import { Cell } from 'ephox/katamari/api/Cell';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 

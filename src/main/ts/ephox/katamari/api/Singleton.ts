@@ -1,5 +1,5 @@
 import { Option } from './Option';
-import Cell from './Cell';
+import { Cell } from './Cell';
 
 var revocable = function (doRevoke) {
   var subject = Cell(Option.none());

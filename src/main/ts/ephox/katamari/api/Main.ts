@@ -1,6 +1,6 @@
 import Adt from './Adt';
 import Arr from './Arr';
-import Cell from './Cell';
+import { Cell } from './Cell';
 import Contracts from './Contracts';
 import Fun from './Fun';
 import { Future } from './Future';
