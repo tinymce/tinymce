@@ -29,7 +29,7 @@ var valueOf = function (validator: ValueValidator): Procesor {
   });
 };
 
-var extract = function (label:string, prop: Procesor, strength:() => any, obj): Result<any,any>{
+var extract = function (label:string, prop: Procesor, strength: () => any, obj: any): Result<any,any>{
   return prop.extract([ label ], strength, obj).fold(function (errs) {
     return Result.error({
       input: obj,
@@ -38,11 +38,11 @@ var extract = function (label:string, prop: Procesor, strength:() => any, obj): 
   }, Result.value);
 };
 
-var asStruct = function (label:string, prop: Procesor, obj:()=>any): Result<any,any> {
+var asStruct = function (label:string, prop: Procesor, obj: any): Result<any,any> {
   return extract(label, prop, Fun.constant, obj);
 };
 
-var asRaw = function (label:string, prop: Procesor, obj:()=>any): Result<any,any> {
+var asRaw = function (label:string, prop: Procesor, obj: any): Result<any,any> {
   return extract(label, prop, Fun.identity, obj);
 };
 
@@ -55,11 +55,11 @@ var getOrDie = function (extraction) {
   }, Fun.identity);
 };
 
-var asRawOrDie = function (label, prop, obj) {
+var asRawOrDie = function (label:string, prop: Procesor, obj: any) {
   return getOrDie(asRaw(label, prop, obj));
 };
 
-var asStructOrDie = function (label, prop, obj) {
+var asStructOrDie = function (label:string, prop: Procesor, obj: any) {
   return getOrDie(asStruct(label, prop, obj));
 };
 
