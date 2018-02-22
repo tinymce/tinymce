@@ -219,7 +219,33 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', function () {
           sDelete(editor),
           sAssertRawNormalizedContent(editor, '<table class="mce-item-table"><caption><br data-mce-bogus="1"></caption><tbody><tr><td>a</td></tr></tbody></table>')
         ]))
-      ]))
+      ])),
+
+      Logger.t('Delete partially selected tables', GeneralSteps.sequence([
+        Logger.t('Delete from before table into table', GeneralSteps.sequence([
+          tinyApis.sSetContent('<p>a</p><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+          tinyApis.sSetSelection([0, 0], 0, [1, 0, 0, 0, 0], 1),
+          sDelete(editor),
+          tinyApis.sAssertSelection([1, 0, 0, 0], 0, [1, 0, 0, 0], 0),
+          tinyApis.sAssertContent('<p>a</p><table><tbody><tr><td>&nbsp;</td><td>b</td></tr></tbody></table>')
+        ])),
+
+        Logger.t('Delete from after table into table', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>a</p>'),
+          tinyApis.sSetSelection([0, 0, 0, 1, 0], 1, [1, 0], 1),
+          sDelete(editor),
+          tinyApis.sAssertSelection([0, 0, 0, 1], 0, [0, 0, 0, 1], 0),
+          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>&nbsp;</td></tr></tbody></table><p>a</p>')
+        ])),
+
+        Logger.t('Delete from one table into another table', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><table><tbody><tr><td>c</td><td>d</td></tr></tbody></table>'),
+          tinyApis.sSetSelection([0, 0, 0, 1, 0], 1, [1, 0, 0, 0, 0], 1),
+          sDelete(editor),
+          tinyApis.sAssertSelection([0, 0, 0, 1], 0, [0, 0, 0, 1], 0),
+          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>&nbsp;</td></tr></tbody></table><table><tbody><tr><td>c</td><td>d</td></tr></tbody></table>')
+        ]))
+      ])),
     ], onSuccess, onFailure);
   }, {
     indent: false,
