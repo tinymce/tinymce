@@ -4,9 +4,8 @@ import ValueSchema from 'ephox/boulder/api/ValueSchema';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ValueSchemaStuct Test', function() {
-  var actualVal = ValueSchema.asStructOrDie('test.struct.val', ValueSchema.anyValue(), { 'a': 10 });
-  assert.eq({ 'a': 10 }, actualVal);
-
+  var actualVal = ValueSchema.asStructOrDie('test.struct.val', ValueSchema.anyValue(), 10);
+  assert.eq(10, actualVal);
 
   var actualObj = ValueSchema.asStructOrDie('test.struct.obj', ValueSchema.objOf([
     FieldSchema.strict('a')
@@ -70,6 +69,7 @@ UnitTest.test('ValueSchemaStuct Test', function() {
       }
     }
   });
+  
   assert.eq(true, actualComplex.countries().aus !== undefined);
   assert.eq('19', actualComplex.countries().aus().brisbane());
   assert.eq('20', actualComplex.countries().aus().sydney());

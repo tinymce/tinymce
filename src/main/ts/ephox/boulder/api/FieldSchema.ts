@@ -1,5 +1,5 @@
 import FieldPresence from './FieldPresence';
-import { ValueProcessor, ValueAdt } from '../core/ValueProcessor';
+import { ValueProcessor, ValueAdt, Procesor } from '../core/ValueProcessor';
 import { Result } from '@ephox/katamari';
 import { Type } from '@ephox/katamari';
 
@@ -47,31 +47,31 @@ var option = function (key: string): ValueAdt {
   return ValueProcessor.field(key, key, FieldPresence.asOption(), ValueProcessor.anyValue());
 };
 
-var optionOf = function (key: string, schema: ValueAdt[]): ValueAdt { // TODO: no test coverage
+var optionOf = function (key: string, schema: ValueAdt[]): ValueAdt {
    return ValueProcessor.field(key, key, FieldPresence.asOption(), schema);
 };
 
-var optionObjOf = function (key: string, objSchema: ValueAdt[]): ValueAdt { // TODO: no test coverage
+var optionObjOf = function (key: string, objSchema: ValueAdt[]): ValueAdt {
   return ValueProcessor.field(key, key, FieldPresence.asOption(), ValueProcessor.objOf(objSchema));
 };
 
-var optionObjOfOnly = function (key: string, objSchema: ValueAdt[]): ValueAdt { // TODO: no test coverage
+var optionObjOfOnly = function (key: string, objSchema: ValueAdt[]): ValueAdt {
   return ValueProcessor.field(key, key, FieldPresence.asOption(), ValueProcessor.objOfOnly(objSchema));
 };
 
-var defaulted = function (key: string, fallback: string): ValueAdt { // TODO: no test coverage
+var defaulted = function (key: string, fallback: string): ValueAdt {
   return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), ValueProcessor.anyValue());
 };
 
-var defaultedOf = function (key: string, fallback: string, schema: ValueAdt[]): ValueAdt { // TODO: no test coverage
+var defaultedOf = function (key: string, fallback: string, schema: ValueAdt[]): ValueAdt {
   return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), schema);
 };
 
-var defaultedObjOf = function (key: string, fallback: string, objSchema: ValueAdt[]): ValueAdt { // TODO: no test coverage
+var defaultedObjOf = function (key: string, fallback: string, objSchema: ValueAdt[]): ValueAdt {
   return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), ValueProcessor.objOf(objSchema));
 };
 
-var field = function (key: string, okey: string, presence:()=>object, prop): ValueAdt { // TODO: no test coverage
+var field = function (key: string, okey: string, presence: ()=>any, prop: Procesor): ValueAdt {
   return ValueProcessor.field(key, okey, presence, prop);
 };
 

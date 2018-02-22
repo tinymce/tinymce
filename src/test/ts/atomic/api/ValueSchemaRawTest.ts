@@ -187,7 +187,7 @@ UnitTest.test('ValueSchemaRawTest', function() {
   Logger.sync('option, value not supplied', function () {
     var v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
-    ]), {});    
+    ]), {});
     RawAssertions.assertEq('alpha should be none', true, v.alpha.isNone());
   });
 

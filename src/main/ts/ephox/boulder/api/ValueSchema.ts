@@ -4,9 +4,14 @@ import PrettyPrinter from '../format/PrettyPrinter';
 import { Fun } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 
+export interface SchemaError <a> {
+  input: a;
+  errors: any[];
+}
+
 var anyValue: Procesor = ValueProcessor.value(Result.value);
 
-var arrOfObj = function (objFields: ValueAdt[]): ValueAdt[] {
+var arrOfObj = function (objFields: ValueAdt[]): Procesor {
   return ValueProcessor.arrOfObj(objFields);
 };
 
@@ -29,7 +34,7 @@ var valueOf = function (validator: ValueValidator): Procesor {
   });
 };
 
-var extract = function (label:string, prop: Procesor, strength: () => any, obj: any): Result<any,any>{
+var extract = function (label: string, prop: Procesor, strength: () => any, obj: any): Result<any,any>{
   return prop.extract([ label ], strength, obj).fold(function (errs) {
     return Result.error({
       input: obj,
@@ -38,15 +43,15 @@ var extract = function (label:string, prop: Procesor, strength: () => any, obj: 
   }, Result.value);
 };
 
-var asStruct = function (label:string, prop: Procesor, obj: any): Result<any,any> {
+var asStruct = function <a>(label: string, prop: Procesor, obj: any): Result<any,SchemaError<a>> {
   return extract(label, prop, Fun.constant, obj);
 };
 
-var asRaw = function (label:string, prop: Procesor, obj: any): Result<any,any> {
+var asRaw = function <a>(label: string, prop: Procesor, obj: any): Result<any,SchemaError<a>> {
   return extract(label, prop, Fun.identity, obj);
 };
 
-var getOrDie = function (extraction) {
+var getOrDie = function (extraction: Result<any,any>): any {
   return extraction.fold(function (errInfo) {
     // A readable version of the error.
     throw new Error(
@@ -55,34 +60,34 @@ var getOrDie = function (extraction) {
   }, Fun.identity);
 };
 
-var asRawOrDie = function (label:string, prop: Procesor, obj: any) {
+var asRawOrDie = function (label: string, prop: Procesor, obj: any): any {
   return getOrDie(asRaw(label, prop, obj));
 };
 
-var asStructOrDie = function (label:string, prop: Procesor, obj: any) {
+var asStructOrDie = function (label: string, prop: Procesor, obj: any): any {
   return getOrDie(asStruct(label, prop, obj));
 };
 
-var formatError = function (errInfo) {
+var formatError = function (errInfo: SchemaError<any>): string {
   return 'Errors: \n' + PrettyPrinter.formatErrors(errInfo.errors) + 
     '\n\nInput object: ' + PrettyPrinter.formatObj(errInfo.input);
 };
 
-var choose = function (key, branches) {
+var choose = function (key: string, branches: any): Procesor {
   return ChoiceProcessor.choose(key, branches);
 };
 
-var thunkOf = function (desc, schema) {
+var thunkOf = function (desc: string, schema: () => Procesor): Procesor {
   return ValueProcessor.thunk(desc, schema);
 };
 
-var funcOrDie = function (args, schema) {
+var funcOrDie = function (args: any[], prop: Procesor): Procesor {
   var retriever = function (output, strength) {
     return getOrDie(
-      extract('()', schema, strength, output)
+      extract('()', prop, strength, output)
     );
   };
-  return ValueProcessor.func(args, schema, retriever);
+  return ValueProcessor.func(args, prop, retriever);
 };
 
 export default  {
