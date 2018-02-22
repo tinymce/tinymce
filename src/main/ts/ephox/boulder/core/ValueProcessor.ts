@@ -10,8 +10,8 @@ import SchemaError from './SchemaError';
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
 export type ValueValidator = (a, strength?: () => any) => Result<any, string>
 export type PropExtractor = (path: string[], strength: () => any, val: any) => Result<any, any>
-export type ValueExtractor = (label: string, prop: Procesor, strength: () => any, obj: any) => Result<any, string>
-export type Procesor = {
+export type ValueExtractor = (label: string, prop: Processor, strength: () => any, obj: any) => Result<any, string>
+export type Processor = {
   extract: PropExtractor;
   toString: () => any;
   toDsl: () => any;
@@ -23,8 +23,6 @@ export type EncodedAdt = {
   log: (label: string) => string;
 }
 // ^^^ todo , put EncodedAdt as part of Katamari Adt
-
-
 
 // data ValueAdt = Field fields | state 
 var adt: { field: (...args: any[]) => EncodedAdt, state: (...args: any[]) => EncodedAdt } = Adt.generate([
@@ -118,7 +116,7 @@ var cExtract = function (path, obj, fields, strength) {
   return ResultCombine.consolidateObj(results, {});
 };
 
-var value = function (validator: ValueValidator): Procesor {
+var value = function (validator: ValueValidator): Processor {
 
   var extract = function (path, strength, val) {
     // NOTE: Intentionally allowing strength to be passed through internally
@@ -211,7 +209,7 @@ var objOf = function (fields: EncodedAdt[]) {
   };
 };
 
-var arrOf = function (prop): Procesor { // TODO: no test coverage
+var arrOf = function (prop): Processor { // TODO: no test coverage
   var extract = function (path, strength, array) {
     var results = Arr.map(array, function (a, i) {
       return prop.extract(path.concat(['[' + i + ']' ]), strength, a);

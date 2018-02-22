@@ -10,19 +10,20 @@ var adt = Adt.generate([
   { mergeWithThunk: [ 'baseThunk' ] }
 ]);
 
-var defaulted = function <a>(fallback: a): EncodedAdt { 
+var defaulted = function <a>(fallback: a): EncodedAdt {
   return adt.defaultedThunk(
     Fun.constant(fallback)
   );
+
 };
 
-var asDefaultedOption = function (fallback) {
+var asDefaultedOption = function <a>(fallback: a): EncodedAdt {
   return adt.asDefaultedOptionThunk(
     Fun.constant(fallback)
   );
 };
 
-var mergeWith = function (base) {
+var mergeWith = function (base:{}): EncodedAdt {
   return adt.mergeWithThunk(
     Fun.constant(base)
   );
