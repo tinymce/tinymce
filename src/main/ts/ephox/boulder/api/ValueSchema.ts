@@ -1,5 +1,5 @@
 import ChoiceProcessor from '../core/ChoiceProcessor';
-import { ValueProcessor, ValueAdt, ValueValidator, ValueExtractor, Procesor, PropExtractor } from '../core/ValueProcessor';
+import { ValueProcessor, EncodedAdt, ValueValidator, ValueExtractor, Processor, PropExtractor } from '../core/ValueProcessor';
 import PrettyPrinter from '../format/PrettyPrinter';
 import { Fun } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
@@ -9,13 +9,13 @@ export interface SchemaError <a> {
   errors: any[];
 }
 
-var anyValue: Procesor = ValueProcessor.value(Result.value);
+var anyValue: Processor = ValueProcessor.value(Result.value);
 
-var arrOfObj = function (objFields: ValueAdt[]): Procesor {
+var arrOfObj = function (objFields: EncodedAdt[]): Processor {
   return ValueProcessor.arrOfObj(objFields);
 };
 
-var arrOfVal = function (): Procesor {
+var arrOfVal = function (): Processor {
   return ValueProcessor.arrOf(anyValue);
 };
 
@@ -27,14 +27,14 @@ var objOfOnly = ValueProcessor.objOfOnly;
 
 var setOf = ValueProcessor.setOf;
 
-var valueOf = function (validator: ValueValidator): Procesor {
+var valueOf = function (validator: ValueValidator): Processor {
   return ValueProcessor.value(function (v) {
     // Intentionally not exposing "strength" at the API level
     return validator(v);
   });
 };
 
-var extract = function (label: string, prop: Procesor, strength: () => any, obj: any): Result<any,any>{
+var extract = function (label: string, prop: Processor, strength: () => any, obj: any): Result<any,any>{
   return prop.extract([ label ], strength, obj).fold(function (errs) {
     return Result.error({
       input: obj,
@@ -43,11 +43,11 @@ var extract = function (label: string, prop: Procesor, strength: () => any, obj:
   }, Result.value);
 };
 
-var asStruct = function <a>(label: string, prop: Procesor, obj: any): Result<any,SchemaError<a>> {
+var asStruct = function <a>(label: string, prop: Processor, obj: any): Result<any,SchemaError<a>> {
   return extract(label, prop, Fun.constant, obj);
 };
 
-var asRaw = function <a>(label: string, prop: Procesor, obj: any): Result<any,SchemaError<a>> {
+var asRaw = function <a>(label: string, prop: Processor, obj: any): Result<any,SchemaError<a>> {
   return extract(label, prop, Fun.identity, obj);
 };
 
@@ -60,11 +60,11 @@ var getOrDie = function (extraction: Result<any,any>): any {
   }, Fun.identity);
 };
 
-var asRawOrDie = function (label: string, prop: Procesor, obj: any): any {
+var asRawOrDie = function (label: string, prop: Processor, obj: any): any {
   return getOrDie(asRaw(label, prop, obj));
 };
 
-var asStructOrDie = function (label: string, prop: Procesor, obj: any): any {
+var asStructOrDie = function (label: string, prop: Processor, obj: any): any {
   return getOrDie(asStruct(label, prop, obj));
 };
 
@@ -73,15 +73,15 @@ var formatError = function (errInfo: SchemaError<any>): string {
     '\n\nInput object: ' + PrettyPrinter.formatObj(errInfo.input);
 };
 
-var choose = function (key: string, branches: any): Procesor {
+var choose = function (key: string, branches: any): Processor {
   return ChoiceProcessor.choose(key, branches);
 };
 
-var thunkOf = function (desc: string, schema: () => Procesor): Procesor {
+var thunkOf = function (desc: string, schema: () => Processor): Processor {
   return ValueProcessor.thunk(desc, schema);
 };
 
-var funcOrDie = function (args: any[], prop: Procesor): Procesor {
+var funcOrDie = function (args: any[], prop: Processor): Processor {
   var retriever = function (output, strength) {
     return getOrDie(
       extract('()', prop, strength, output)

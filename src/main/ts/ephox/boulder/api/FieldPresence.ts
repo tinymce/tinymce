@@ -1,5 +1,6 @@
 import { Adt } from '@ephox/katamari';
 import { Fun } from '@ephox/katamari';
+import { EncodedAdt } from '../core/ValueProcessor';
 
 var adt = Adt.generate([
   { strict: [ ] },
@@ -9,7 +10,7 @@ var adt = Adt.generate([
   { mergeWithThunk: [ 'baseThunk' ] }
 ]);
 
-var defaulted = function (fallback) {
+var defaulted = function <a>(fallback: a): EncodedAdt { 
   return adt.defaultedThunk(
     Fun.constant(fallback)
   );

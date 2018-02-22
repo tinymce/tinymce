@@ -1,24 +1,24 @@
 import FieldPresence from './FieldPresence';
-import { ValueProcessor, ValueAdt, Procesor } from '../core/ValueProcessor';
+import { ValueProcessor, EncodedAdt, Processor } from '../core/ValueProcessor';
 import { Result } from '@ephox/katamari';
 import { Type } from '@ephox/katamari';
 
-var strict = function (key: string): ValueAdt {
+var strict = function (key: string): EncodedAdt {
   return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.anyValue());
 };
 
-var strictOf = function (key: string, schema: any): ValueAdt {
+var strictOf = function (key: string, schema: any): EncodedAdt {
   return ValueProcessor.field(key, key, FieldPresence.strict(), schema);
 };
 
 
-var strictFunction:any = function (key: string): ValueAdt {
+var strictFunction:any = function (key: string): EncodedAdt {
   return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.value(function (f) {
     return Type.isFunction(f) ? Result.value(f) : Result.error('Not a function');
   }));
 };
 
-var forbid = function (key: string, message: string): ValueAdt {
+var forbid = function (key: string, message: string): EncodedAdt {
   return ValueProcessor.field(
     key,
     key,
@@ -29,12 +29,12 @@ var forbid = function (key: string, message: string): ValueAdt {
   );
 };
 
-var strictObjOf = function (key: string, objSchema: any[]): ValueAdt  {
+var strictObjOf = function (key: string, objSchema: any[]): EncodedAdt  {
   return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.objOf(objSchema));
 };
 
 
-var strictArrayOfObj = function (key: string, objFields: any[]): ValueAdt {
+var strictArrayOfObj = function (key: string, objFields: any[]): EncodedAdt {
   return ValueProcessor.field(
     key,
     key,
@@ -43,39 +43,39 @@ var strictArrayOfObj = function (key: string, objFields: any[]): ValueAdt {
   );
 };
 
-var option = function (key: string): ValueAdt {
+var option = function (key: string): EncodedAdt {
   return ValueProcessor.field(key, key, FieldPresence.asOption(), ValueProcessor.anyValue());
 };
 
-var optionOf = function (key: string, schema: ValueAdt[]): ValueAdt {
+var optionOf = function (key: string, schema: EncodedAdt[]): EncodedAdt {
    return ValueProcessor.field(key, key, FieldPresence.asOption(), schema);
 };
 
-var optionObjOf = function (key: string, objSchema: ValueAdt[]): ValueAdt {
+var optionObjOf = function (key: string, objSchema: EncodedAdt[]): EncodedAdt {
   return ValueProcessor.field(key, key, FieldPresence.asOption(), ValueProcessor.objOf(objSchema));
 };
 
-var optionObjOfOnly = function (key: string, objSchema: ValueAdt[]): ValueAdt {
+var optionObjOfOnly = function (key: string, objSchema: EncodedAdt[]): EncodedAdt {
   return ValueProcessor.field(key, key, FieldPresence.asOption(), ValueProcessor.objOfOnly(objSchema));
 };
 
-var defaulted = function (key: string, fallback: string): ValueAdt {
+var defaulted = function (key: string, fallback: string): EncodedAdt {
   return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), ValueProcessor.anyValue());
 };
 
-var defaultedOf = function (key: string, fallback: string, schema: ValueAdt[]): ValueAdt {
+var defaultedOf = function (key: string, fallback: string, schema: EncodedAdt[]): EncodedAdt {
   return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), schema);
 };
 
-var defaultedObjOf = function (key: string, fallback: string, objSchema: ValueAdt[]): ValueAdt {
+var defaultedObjOf = function (key: string, fallback: string, objSchema: EncodedAdt[]): EncodedAdt {
   return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), ValueProcessor.objOf(objSchema));
 };
 
-var field = function (key: string, okey: string, presence: ()=>any, prop: Procesor): ValueAdt {
+var field = function (key: string, okey: string, presence: ()=>any, prop: Processor): EncodedAdt {
   return ValueProcessor.field(key, okey, presence, prop);
 };
 
-var state = function (okey: string, instantiator: ()=>any): ValueAdt {
+var state = function (okey: string, instantiator: ()=>any): EncodedAdt {
   return ValueProcessor.state(okey, instantiator);
 };
 
