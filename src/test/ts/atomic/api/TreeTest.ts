@@ -1,14 +1,13 @@
-
 import { RawAssertions } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import DslType from 'ephox/boulder/api/DslType';
 import FieldPresence from 'ephox/boulder/api/FieldPresence';
 import FieldSchema from 'ephox/boulder/api/FieldSchema';
 import { ValueSchema } from 'ephox/boulder/api/ValueSchema';
-import { Arr, Fun, Obj } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Atomic Test: api.TreeTest', function() {
-  var schema = ValueSchema.objOf([
+UnitTest.test('Atomic Test: api.TreeTest', function () {
+  const schema = ValueSchema.objOf([
     FieldSchema.strict('value'),
     FieldSchema.defaulted('text', '?'),
     FieldSchema.field(
@@ -21,10 +20,10 @@ UnitTest.test('Atomic Test: api.TreeTest', function() {
     )
   ]);
 
-  var treeDsl = schema.toDsl();
+  const treeDsl = schema.toDsl();
 
   // Just check that all functions are defined (i.e. does not throw an error)
-  var processType = function (dsl) {
+  const processType = function (dsl) {
     DslType.foldType(
       dsl,
       function (validator, valueType) {
@@ -42,7 +41,7 @@ UnitTest.test('Atomic Test: api.TreeTest', function() {
       },
       function (validator) { },
       function (key, branches) {
-        var values = Obj.values(branches);
+        const values = Obj.values(branches);
         Arr.each(values, function (v) {
           Arr.each(v, function (field) {
             DslType.foldField.cata(field, function (name, presence, type) {
@@ -59,8 +58,8 @@ UnitTest.test('Atomic Test: api.TreeTest', function() {
   };
   processType(treeDsl);
 
-  var check = function (label, expected, input) {
-    var actual = ValueSchema.asRawOrDie(label, schema, input);
+  const check = function (label, expected, input) {
+    const actual = ValueSchema.asRawOrDie(label, schema, input);
     RawAssertions.assertEq(label, expected, actual);
   };
 

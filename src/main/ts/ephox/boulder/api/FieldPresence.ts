@@ -1,8 +1,7 @@
-import { Adt } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Adt, Fun } from '@ephox/katamari';
 import { EncodedAdt } from '../core/ValueProcessor';
 
-var adt = Adt.generate([
+const adt = Adt.generate([
   { strict: [ ] },
   { defaultedThunk: [ 'fallbackThunk' ] },
   { asOption: [ ] },
@@ -10,20 +9,19 @@ var adt = Adt.generate([
   { mergeWithThunk: [ 'baseThunk' ] }
 ]);
 
-var defaulted = function <a>(fallback: a): EncodedAdt {
+const defaulted = function <a>(fallback: a): EncodedAdt {
   return adt.defaultedThunk(
     Fun.constant(fallback)
   );
-
 };
 
-var asDefaultedOption = function <a>(fallback: a): EncodedAdt {
+const asDefaultedOption = function <a>(fallback: a): EncodedAdt {
   return adt.asDefaultedOptionThunk(
     Fun.constant(fallback)
   );
 };
 
-var mergeWith = function (base:{}): EncodedAdt {
+const mergeWith = function (base: {}): EncodedAdt {
   return adt.mergeWithThunk(
     Fun.constant(base)
   );
@@ -32,13 +30,13 @@ var mergeWith = function (base:{}): EncodedAdt {
 export default <any> {
   strict: adt.strict,
   asOption: adt.asOption,
-  
-  defaulted: defaulted,
+
+  defaulted,
   defaultedThunk: adt.defaultedThunk,
-  
-  asDefaultedOption: asDefaultedOption,      
+
+  asDefaultedOption,
   asDefaultedOptionThunk: adt.asDefaultedOptionThunk,
 
-  mergeWith: mergeWith,
+  mergeWith,
   mergeWithThunk: adt.mergeWithThunk
 };

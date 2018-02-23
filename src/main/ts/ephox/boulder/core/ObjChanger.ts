@@ -1,27 +1,26 @@
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 
-var narrow = function (obj, fields) {
-  var r = { };
+const narrow = function (obj, fields) {
+  const r = { };
   Arr.each(fields, function (field) {
-    if (obj[field] !== undefined && obj.hasOwnProperty(field)) r[field] = obj[field];
+    if (obj[field] !== undefined && obj.hasOwnProperty(field)) { r[field] = obj[field]; }
   });
 
   return r;
 };
 
-var indexOnKey = function (array, key) {
-  var obj = { };
+const indexOnKey = function (array, key) {
+  const obj = { };
   Arr.each(array, function (a) {
     // FIX: Work out what to do here.
-    var keyValue = a[key];
+    const keyValue = a[key];
     obj[keyValue] = a;
   });
   return obj;
 };
 
-var exclude = function (obj, fields) {
-  var r = { };
+const exclude = function (obj, fields) {
+  const r = { };
   Obj.each(obj, function (v, k) {
     if (! Arr.contains(fields, k)) {
       r[k] = v;
@@ -31,7 +30,7 @@ var exclude = function (obj, fields) {
 };
 
 export default <any> {
-  narrow: narrow,
-  exclude: exclude,
-  indexOnKey: indexOnKey
+  narrow,
+  exclude,
+  indexOnKey
 };

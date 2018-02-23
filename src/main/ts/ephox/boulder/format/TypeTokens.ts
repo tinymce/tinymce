@@ -1,6 +1,6 @@
 import { Adt } from '@ephox/katamari';
 
-var typeAdt = Adt.generate([
+const typeAdt = Adt.generate([
   { setOf: [ 'validator', 'valueType' ] },
   { arrOf: [ 'valueType' ] },
   { objOf: [ 'fields' ] },
@@ -10,12 +10,12 @@ var typeAdt = Adt.generate([
   { func: [ 'args', 'outputSchema' ] }
 ]);
 
-var fieldAdt = Adt.generate([
+const fieldAdt = Adt.generate([
   { field: [ 'name', 'presence', 'type' ] },
   { state: [ 'name' ] }
 ]);
 
 export default <any> {
-  typeAdt: typeAdt,
-  fieldAdt: fieldAdt
+  typeAdt,
+  fieldAdt
 };

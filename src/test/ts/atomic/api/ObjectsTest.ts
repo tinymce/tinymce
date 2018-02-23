@@ -1,73 +1,72 @@
-import Objects from 'ephox/boulder/api/Objects';
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Arr, Obj, Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+import Objects from 'ephox/boulder/api/Objects';
 
-UnitTest.test('ObjectsTest', function() {
-  var smallSet = Jsc.nestring;
+UnitTest.test('ObjectsTest', function () {
+  const smallSet = Jsc.nestring;
 
-  var check = function (label, arb, checker) {
+  const check = function (label, arb, checker) {
     Jsc.syncProperty(label, [ arb ], checker, { });
   };
 
-  var testNarrow = function () {
-    var narrowGen = Jsc.bless({
+  const testNarrow = function () {
+    const narrowGen = Jsc.bless({
       generator: Jsc.dict(smallSet).generator.flatMap(function (obj) {
-        var keys = Obj.keys(obj);
-        return keys.length === 0 ? Jsc.constant( { obj: obj, fields: [ ] }).generator : Jsc.array(Jsc.elements(keys)).generator.map(function (fields) {
+        const keys = Obj.keys(obj);
+        return keys.length === 0 ? Jsc.constant( { obj, fields: [ ] }).generator : Jsc.array(Jsc.elements(keys)).generator.map(function (fields) {
           return {
-            obj: obj,
-            fields: fields
+            obj,
+            fields
           };
         });
       })
     });
 
     check('Testing narrow', narrowGen, function (input) {
-      var narrowed = Objects.narrow(input.obj, input.fields);
-      Obj.each(narrowed, function (_, k) {        
-        if (!Arr.contains(input.fields, k)) throw 'Narrowed object contained property: ' + k + ' which was not in fields: [' + input.fields.join(', ') + ']';
+      const narrowed = Objects.narrow(input.obj, input.fields);
+      Obj.each(narrowed, function (_, k) {
+        if (!Arr.contains(input.fields, k)) { throw new Error('Narrowed object contained property: ' + k + ' which was not in fields: [' + input.fields.join(', ') + ']'); }
       });
       return true;
     });
 
     // Sanity test.
-    var actual = Objects.narrow({ a: 'a', b: 'b', c: 'c' }, [ 'a', 'c', 'e' ]);
+    const actual = Objects.narrow({ a: 'a', b: 'b', c: 'c' }, [ 'a', 'c', 'e' ]);
     assert.eq({ a: 'a', c: 'c' }, actual);
   };
 
-  var testExclude = function () {
-    var excludeGen = Jsc.bless({
+  const testExclude = function () {
+    const excludeGen = Jsc.bless({
       generator: Jsc.dict(smallSet).generator.flatMap(function (obj) {
-        var keys = Obj.keys(obj);
-        return keys.length === 0 ? Jsc.constant( { obj: obj, fields: [ ] }).generator : Jsc.array(Jsc.elements(keys)).generator.map(function (fields) {
+        const keys = Obj.keys(obj);
+        return keys.length === 0 ? Jsc.constant( { obj, fields: [ ] }).generator : Jsc.array(Jsc.elements(keys)).generator.map(function (fields) {
           return {
-            obj: obj,
-            fields: fields
+            obj,
+            fields
           };
         });
       })
     });
 
     check('Testing exclude', excludeGen, function (input) {
-      var excluded = Objects.exclude(input.obj, input.fields);
+      const excluded = Objects.exclude(input.obj, input.fields);
       Obj.each(excluded, function (_, k) {
-        if (Arr.contains(input.fields, k)) throw 'Excluded object contained property: ' + ' which should have been excluded by: [' +
-          input.fields.join(', ') + ']';
+        if (Arr.contains(input.fields, k)) { throw new Error('Excluded object contained property: ' + ' which should have been excluded by: [' +
+          input.fields.join(', ') + ']');
+        }
       });
       return true;
-    })
+    });
 
-    var actual = Objects.exclude({ a: 'a', b: 'b', c: 'c' }, [ 'b' ]);
+    const actual = Objects.exclude({ a: 'a', b: 'b', c: 'c' }, [ 'b' ]);
     assert.eq({ a: 'a', c: 'c' }, actual);
   };
 
-  var testReaders = function () {
+  const testReaders = function () {
     // TODO: Think of a good way to property test.
-    var subject = { alpha: 'Alpha' };
+    const subject = { alpha: 'Alpha' };
 
     assert.eq('Alpha', Objects.readOpt('alpha')(subject).getOrDie('readOpt(alpha) => some(Alpha)'), 'readOpt(alpha) => some(Alpha)');
     assert.eq(true, Objects.readOpt('beta')(subject).isNone(), 'readOpt(beta) => none');
@@ -79,8 +78,8 @@ UnitTest.test('ObjectsTest', function() {
     assert.eq(true, Objects.readOptFrom(subject, 'beta').isNone(), 'readOptFrom(beta) => none');
   };
 
-  var testConsolidate = function () {
-    var checkErr = function (label, expected, objs, base) {
+  const testConsolidate = function () {
+    const checkErr = function (label, expected, objs, base) {
       Objects.consolidate(objs, base).fold(function (err) {
         assert.eq(expected, err);
       }, function (val) {
@@ -88,7 +87,7 @@ UnitTest.test('ObjectsTest', function() {
       });
     };
 
-    var checkVal = function (label, expected, objs, base) {
+    const checkVal = function (label, expected, objs, base) {
       Objects.consolidate(objs, base).fold(function (err) {
         assert.fail(label + '\nExpected value(' + Json.stringify(expected) + '), but was error(' + Json.stringify(err) + ')');
       }, function (val) {
@@ -171,9 +170,8 @@ UnitTest.test('ObjectsTest', function() {
       ], {}
     );
 
-
     // some property-based tests
-    var resultList = Jsc.bless({
+    const resultList = Jsc.bless({
       generator: Jsc.dict(smallSet).generator.flatMap(function (obj) {
         return Jsc.bool.generator.flatMap(function (flag) {
           return flag ? Jsc.constant(Result.value(obj)).generator : (function () {
@@ -183,26 +181,25 @@ UnitTest.test('ObjectsTest', function() {
       })
     });
 
-    var inputList = Jsc.bless({
+    const inputList = Jsc.bless({
       generator: Jsc.array(resultList).generator.flatMap(function (results) {
         return Jsc.dict(smallSet).generator.map(function (base) {
           return {
-            results: results,
-            base: base
+            results,
+            base
           };
         });
       })
     });
 
     check('Testing consolidate', inputList, function (input) {
-      var actual = Objects.consolidate(input.results, input.base);
+      const actual = Objects.consolidate(input.results, input.base);
 
-      var hasError = Arr.exists(input.results, function (res) {
+      const hasError = Arr.exists(input.results, function (res) {
         return res.isError();
       });
 
-      if (hasError) assert.eq(true, actual.isError(), 'Error contained in list, so should be error overall');
-      else assert.eq(true, actual.isValue(), 'No errors in list, so should be value overall');
+      if (hasError) { assert.eq(true, actual.isError(), 'Error contained in list, so should be error overall'); } else { assert.eq(true, actual.isValue(), 'No errors in list, so should be value overall'); }
       return true;
     });
 
@@ -210,13 +207,12 @@ UnitTest.test('ObjectsTest', function() {
       'Testing consolidate with base',
       [ inputList, Jsc.nestring, Jsc.json ],
       function (input, baseKey, baseValue) {
-        var actual = Objects.consolidate(input.results, Objects.wrap(baseKey, baseValue));
-        var hasError = Arr.exists(input.results, function (res) {
+        const actual = Objects.consolidate(input.results, Objects.wrap(baseKey, baseValue));
+        const hasError = Arr.exists(input.results, function (res) {
           return res.isError();
         });
 
-        if (hasError) return Jsc.eq(true, actual.isError()) ? true : 'Error contained in list, so should be error overall';
-        else {
+        if (hasError) { return Jsc.eq(true, actual.isError()) ? true : 'Error contained in list, so should be error overall'; } else {
           assert.eq(true, actual.isValue(), 'No errors in list, so should be value overall');
           return Jsc.eq(true, actual.getOrDie('Must be value').hasOwnProperty(baseKey)) ? true : 'Missing base key: ' + baseKey;
         }
@@ -224,11 +220,8 @@ UnitTest.test('ObjectsTest', function() {
     );
   };
 
-
-
   testNarrow();
   testExclude();
   testReaders();
   testConsolidate();
 });
-

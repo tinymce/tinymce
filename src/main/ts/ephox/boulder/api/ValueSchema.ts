@@ -1,40 +1,40 @@
+import { Fun, Result } from '@ephox/katamari';
+
 import ChoiceProcessor from '../core/ChoiceProcessor';
-import { ValueProcessor, EncodedAdt, ValueValidator, ValueExtractor, Processor, PropExtractor } from '../core/ValueProcessor';
+import { EncodedAdt, Processor, ValueProcessor, ValueValidator } from '../core/ValueProcessor';
 import PrettyPrinter from '../format/PrettyPrinter';
-import { Fun } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
 
 export interface SchemaError <a> {
   input: a;
   errors: any[];
 }
 
-var anyValue: Processor = ValueProcessor.value(Result.value);
+const anyValue: Processor = ValueProcessor.value(Result.value);
 
-var arrOfObj = function (objFields: EncodedAdt[]): Processor {
+const arrOfObj = function (objFields: EncodedAdt[]): Processor {
   return ValueProcessor.arrOfObj(objFields);
 };
 
-var arrOfVal = function (): Processor {
+const arrOfVal = function (): Processor {
   return ValueProcessor.arrOf(anyValue);
 };
 
-var arrOf = ValueProcessor.arrOf;
+const arrOf = ValueProcessor.arrOf;
 
-var objOf = ValueProcessor.objOf;
+const objOf = ValueProcessor.objOf;
 
-var objOfOnly = ValueProcessor.objOfOnly;
+const objOfOnly = ValueProcessor.objOfOnly;
 
-var setOf = ValueProcessor.setOf;
+const setOf = ValueProcessor.setOf;
 
-var valueOf = function (validator: ValueValidator): Processor {
+const valueOf = function (validator: ValueValidator): Processor {
   return ValueProcessor.value(function (v) {
     // Intentionally not exposing "strength" at the API level
     return validator(v);
   });
 };
 
-var extract = function (label: string, prop: Processor, strength: () => any, obj: any): Result<any,any>{
+const extract = function (label: string, prop: Processor, strength: () => any, obj: any): Result<any, any> {
   return prop.extract([ label ], strength, obj).fold(function (errs) {
     return Result.error({
       input: obj,
@@ -43,15 +43,15 @@ var extract = function (label: string, prop: Processor, strength: () => any, obj
   }, Result.value);
 };
 
-var asStruct = function <a>(label: string, prop: Processor, obj: any): Result<any,SchemaError<a>> {
+const asStruct = function <a>(label: string, prop: Processor, obj: any): Result<any, SchemaError<a>> {
   return extract(label, prop, Fun.constant, obj);
 };
 
-var asRaw = function <a>(label: string, prop: Processor, obj: any): Result<any,SchemaError<a>> {
+const asRaw = function <a>(label: string, prop: Processor, obj: any): Result<any, SchemaError<a>> {
   return extract(label, prop, Fun.identity, obj);
 };
 
-var getOrDie = function (extraction: Result<any,any>): any {
+const getOrDie = function (extraction: Result<any, any>): any {
   return extraction.fold(function (errInfo) {
     // A readable version of the error.
     throw new Error(
@@ -60,29 +60,29 @@ var getOrDie = function (extraction: Result<any,any>): any {
   }, Fun.identity);
 };
 
-var asRawOrDie = function (label: string, prop: Processor, obj: any): any {
+const asRawOrDie = function (label: string, prop: Processor, obj: any): any {
   return getOrDie(asRaw(label, prop, obj));
 };
 
-var asStructOrDie = function (label: string, prop: Processor, obj: any): any {
+const asStructOrDie = function (label: string, prop: Processor, obj: any): any {
   return getOrDie(asStruct(label, prop, obj));
 };
 
-var formatError = function (errInfo: SchemaError<any>): string {
-  return 'Errors: \n' + PrettyPrinter.formatErrors(errInfo.errors) + 
+const formatError = function (errInfo: SchemaError<any>): string {
+  return 'Errors: \n' + PrettyPrinter.formatErrors(errInfo.errors) +
     '\n\nInput object: ' + PrettyPrinter.formatObj(errInfo.input);
 };
 
-var choose = function (key: string, branches: any): Processor {
+const choose = function (key: string, branches: any): Processor {
   return ChoiceProcessor.choose(key, branches);
 };
 
-var thunkOf = function (desc: string, schema: () => Processor): Processor {
+const thunkOf = function (desc: string, schema: () => Processor): Processor {
   return ValueProcessor.thunk(desc, schema);
 };
 
-var funcOrDie = function (args: any[], prop: Processor): Processor {
-  var retriever = function (output, strength) {
+const funcOrDie = function (args: any[], prop: Processor): Processor {
+  const retriever = function (output, strength) {
     return getOrDie(
       extract('()', prop, strength, output)
     );
@@ -113,7 +113,7 @@ export const ValueSchema = {
   formatError,
 
   choose,
-    
+
   thunkOf,
 
   funcOrDie

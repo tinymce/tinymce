@@ -1,13 +1,13 @@
 import { Arr } from '@ephox/katamari';
 
-var wrap = function (key, value) {
-  var r = {};
+const wrap = function (key, value) {
+  const r = {};
   r[key] = value;
   return r;
 };
 
-var wrapAll = function (keyvalues) {
-  var r = {};
+const wrapAll = function (keyvalues) {
+  const r = {};
   Arr.each(keyvalues, function (kv) {
     r[kv.key] = kv.value;
   });
@@ -15,6 +15,6 @@ var wrapAll = function (keyvalues) {
 };
 
 export default <any> {
-  wrap: wrap,
-  wrapAll: wrapAll
+  wrap,
+  wrapAll
 };
