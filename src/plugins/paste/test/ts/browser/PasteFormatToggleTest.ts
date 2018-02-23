@@ -2,6 +2,7 @@ import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
+import Env from 'tinymce/core/api/Env';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 
@@ -13,8 +14,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteFormatToggleTest', (succe
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
+    const steps = Env.webkit ? [
       Logger.t('paste plain text',
         GeneralSteps.sequence([
           tinyApis.sExecCommand('mceTogglePlainTextPaste'),
@@ -26,7 +26,9 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteFormatToggleTest', (succe
           tinyApis.sAssertContent('<p><strong>test</strong></p>')
         ])
       )
-    ], onSuccess, onFailure);
+    ] : [];
+
+    Pipeline.async({}, steps, onSuccess, onFailure);
   }, {
     plugins: 'paste',
     toolbar: '',
