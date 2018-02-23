@@ -1,11 +1,11 @@
 import { Adt, Arr, Fun, Merger, Obj, Option, Result, Type, Thunk } from '@ephox/katamari';
-import FieldPresence from '../api/FieldPresence';
-import Objects from '../api/Objects';
-import ResultCombine from '../combine/ResultCombine';
-import TypeTokens from '../format/TypeTokens';
-import ObjReader from './ObjReader';
-import ObjWriter from './ObjWriter';
-import SchemaError from './SchemaError';
+import { FieldPresence } from '../api/FieldPresence';
+import { Objects } from '../api/Objects';
+import { ResultCombine } from '../combine/ResultCombine';
+import { TypeTokens } from '../format/TypeTokens';
+import { ObjReader } from './ObjReader';
+import { ObjWriter } from './ObjWriter';
+import { SchemaError } from './SchemaError';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
 export type ValueValidator = (a, strength?: () => any) => Result<any, string>;

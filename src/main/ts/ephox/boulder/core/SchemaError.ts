@@ -1,4 +1,4 @@
-import PrettyPrinter from '../format/PrettyPrinter';
+import { PrettyPrinter } from '../format/PrettyPrinter';
 import { Result } from '@ephox/katamari';
 
 const nu = function (path, getErrorInfo) {
@@ -41,7 +41,7 @@ const toString = function (error) {
   return 'Failed path: ('  + error.path.join(' > ') + ')\n' + error.getErrorInfo();
 };
 
-export default <any> {
+export const SchemaError = {
   missingStrict,
   missingKey,
   missingBranch,

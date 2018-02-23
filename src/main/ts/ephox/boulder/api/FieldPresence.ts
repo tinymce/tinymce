@@ -9,7 +9,7 @@ const adt = Adt.generate([
   { mergeWithThunk: [ 'baseThunk' ] }
 ]);
 
-const defaulted = function <a>(fallback: a): EncodedAdt {
+const defaulted = function (fallback: any): any {
   return adt.defaultedThunk(
     Fun.constant(fallback)
   );
@@ -27,7 +27,7 @@ const mergeWith = function (base: {}): EncodedAdt {
   );
 };
 
-export default <any> {
+export const FieldPresence = {
   strict: adt.strict,
   asOption: adt.asOption,
 

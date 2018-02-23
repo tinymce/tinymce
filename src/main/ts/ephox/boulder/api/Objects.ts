@@ -1,7 +1,8 @@
-import ResultCombine from '../combine/ResultCombine';
-import ObjChanger from '../core/ObjChanger';
-import ObjReader from '../core/ObjReader';
-import ObjWriter from '../core/ObjWriter';
+import { ResultCombine } from '../combine/ResultCombine';
+import { ObjChanger } from '../core/ObjChanger';
+import { ObjReader } from '../core/ObjReader';
+import { ObjWriter } from '../core/ObjWriter';
+import { Option } from '@ephox/katamari';
 
 // Perhaps this level of indirection is unnecessary.
 const narrow = function (obj, fields) {
@@ -44,7 +45,7 @@ const hasKey = function (obj, key) {
   return ObjReader.hasKey(obj, key);
 };
 
-export default <any> {
+export const Objects = {
   narrow,
   exclude,
   readOpt,

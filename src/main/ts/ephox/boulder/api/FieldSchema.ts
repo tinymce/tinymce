@@ -1,6 +1,6 @@
 import { Result, Type } from '@ephox/katamari';
 import { EncodedAdt, Processor, ValueProcessor } from '../core/ValueProcessor';
-import FieldPresence from './FieldPresence';
+import { FieldPresence } from './FieldPresence';
 
 const strict = function (key: string): EncodedAdt {
   return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.anyValue());
@@ -68,7 +68,7 @@ const defaultedObjOf = function (key: string, fallback: string, objSchema: Encod
   return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), ValueProcessor.objOf(objSchema));
 };
 
-const field = function (key: string, okey: string, presence: () => any, prop: Processor): EncodedAdt {
+const field = function (key: string, okey: string, presence: any, prop: Processor): EncodedAdt {
   return ValueProcessor.field(key, okey, presence, prop);
 };
 
@@ -76,7 +76,7 @@ const state = function (okey: string, instantiator: () => any): EncodedAdt {
   return ValueProcessor.state(okey, instantiator);
 };
 
-export default {
+export const FieldSchema = {
   strict,
   strictOf,
   strictObjOf,

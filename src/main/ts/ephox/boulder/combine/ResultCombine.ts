@@ -20,7 +20,7 @@ const consolidateArr = function (objects) {
   return partitions.errors.length > 0 ? mergeErrors(partitions.errors) : Result.value(partitions.values);
 };
 
-export default <any> {
+export const ResultCombine = {
   consolidateObj,
   consolidateArr
 };

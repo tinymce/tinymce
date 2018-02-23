@@ -1,8 +1,8 @@
 import { Fun, Result } from '@ephox/katamari';
 
-import ChoiceProcessor from '../core/ChoiceProcessor';
+import { ChoiceProcessor } from '../core/ChoiceProcessor';
 import { EncodedAdt, Processor, ValueProcessor, ValueValidator } from '../core/ValueProcessor';
-import PrettyPrinter from '../format/PrettyPrinter';
+import { PrettyPrinter } from '../format/PrettyPrinter';
 
 export interface SchemaError <a> {
   input: a;

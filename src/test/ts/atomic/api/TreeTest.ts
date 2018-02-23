@@ -1,9 +1,9 @@
 import { RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Fun, Obj } from '@ephox/katamari';
-import DslType from 'ephox/boulder/api/DslType';
-import FieldPresence from 'ephox/boulder/api/FieldPresence';
-import FieldSchema from 'ephox/boulder/api/FieldSchema';
+import { DslType } from 'ephox/boulder/api/DslType';
+import { FieldPresence } from 'ephox/boulder/api/FieldPresence';
+import { FieldSchema } from 'ephox/boulder/api/FieldSchema';
 import { ValueSchema } from 'ephox/boulder/api/ValueSchema';
 
 UnitTest.test('Atomic Test: api.TreeTest', function () {
@@ -34,21 +34,14 @@ UnitTest.test('Atomic Test: api.TreeTest', function () {
       },
       function (fields) {
         Arr.each(fields, function (field) {
-          DslType.foldField(field, function (name, presence, type) {
+          field.fold(function (name, presence, type) {
             processType(type.toDsl());
           }, Fun.noop);
         });
       },
       function (validator) { },
       function (key, branches) {
-        const values = Obj.values(branches);
-        Arr.each(values, function (v) {
-          Arr.each(v, function (field) {
-            DslType.foldField.cata(field, function (name, presence, type) {
-              processType(type.toDsl());
-            }, Fun.noop);
-          });
-        });
+        throw new Error('Nothing is using a "choice" type here');
       },
       function () { },
       function (args, outputSchema) {

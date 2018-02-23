@@ -20,7 +20,7 @@ const hasKey = function (obj, key) {
   return obj.hasOwnProperty(key) && obj[key] !== undefined && obj[key] !== null;
 };
 
-export default <any> {
+export const ObjReader = {
   readOpt,
   readOr,
   readOptFrom,

@@ -14,7 +14,7 @@ const wrapAll = function (keyvalues) {
   return r;
 };
 
-export default <any> {
+export const ObjWriter = {
   wrap,
   wrapAll
 };

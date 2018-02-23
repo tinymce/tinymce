@@ -15,7 +15,7 @@ const fieldAdt = Adt.generate([
   { state: [ 'name' ] }
 ]);
 
-export default <any> {
+export const TypeTokens = {
   typeAdt,
   fieldAdt
 };

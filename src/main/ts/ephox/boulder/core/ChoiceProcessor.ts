@@ -1,7 +1,7 @@
-import Objects from '../api/Objects';
-import SchemaError from './SchemaError';
+import { Objects } from '../api/Objects';
+import { SchemaError } from './SchemaError';
 import { ValueProcessor } from './ValueProcessor';
-import TypeTokens from '../format/TypeTokens';
+import { TypeTokens } from '../format/TypeTokens';
 import { Obj } from '@ephox/katamari';
 
 const chooseFrom = function (path, strength, input, branches, ch) {
@@ -40,6 +40,6 @@ const choose = function (key, branches) {
   };
 };
 
-export default <any> {
+export const ChoiceProcessor = {
   choose
 };

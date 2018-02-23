@@ -22,7 +22,7 @@ const formatErrors = function (errors) {
   });
 };
 
-export default <any> {
+export const PrettyPrinter = {
   formatObj,
   formatErrors
 };

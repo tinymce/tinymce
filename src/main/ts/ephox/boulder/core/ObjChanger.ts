@@ -29,7 +29,7 @@ const exclude = function (obj, fields) {
   return r;
 };
 
-export default <any> {
+export const ObjChanger = {
   narrow,
   exclude,
   indexOnKey
