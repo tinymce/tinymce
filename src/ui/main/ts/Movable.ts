@@ -23,7 +23,7 @@ const isFixed = (ctrl) => ctrl.state.get('fixed');
 function calculateRelativePosition(ctrl, targetElm, rel) {
   let ctrlElm, pos, x, y, selfW, selfH, targetW, targetH, viewport, size;
 
-  viewport = getDocumentViewPort();
+  viewport = getWindowViewPort();
 
   // Get pos of target
   pos = DomUtils.getPos(targetElm, UiContainer.getUiContainer(ctrl));
@@ -100,18 +100,34 @@ const getUiContainerViewPort = (customUiContainer) => {
   };
 };
 
-const getDocumentViewPort = () => {
+// It seems that people are relying on the fact that we contrain to the visible window viewport instead of the document viewport
+// const getDocumentViewPort = () => {
+//   return {
+//     x: Math.max(document.body.scrollLeft, document.documentElement.scrollLeft),
+//     y: Math.max(document.body.scrollTop, document.documentElement.scrollTop),
+//     w: Math.max(document.body.scrollWidth, document.documentElement.scrollWidth, document.defaultView.innerWidth),
+//     h: Math.max(document.body.scrollHeight, document.documentElement.scrollHeight, document.defaultView.innerHeight)
+//   };
+// };
+
+const getWindowViewPort = () => {
+  const win = window;
+  const x = Math.max(win.pageXOffset, document.body.scrollLeft, document.documentElement.scrollLeft);
+  const y = Math.max(win.pageYOffset, document.body.scrollTop, document.documentElement.scrollTop);
+  const w = win.innerWidth || document.documentElement.clientWidth;
+  const h = win.innerHeight || document.documentElement.clientHeight;
+
   return {
-    x: Math.max(document.body.scrollLeft, document.documentElement.scrollLeft),
-    y: Math.max(document.body.scrollTop, document.documentElement.scrollTop),
-    w: Math.max(document.body.scrollWidth, document.documentElement.scrollWidth, document.defaultView.innerWidth),
-    h: Math.max(document.body.scrollHeight, document.documentElement.scrollHeight, document.defaultView.innerHeight)
+    x,
+    y,
+    w: x + w,
+    h: y + h
   };
 };
 
 const getViewPortRect = (ctrl) => {
   const customUiContainer = UiContainer.getUiContainer(ctrl);
-  return customUiContainer && !isFixed(ctrl) ? getUiContainerViewPort(customUiContainer) : getDocumentViewPort();
+  return customUiContainer && !isFixed(ctrl) ? getUiContainerViewPort(customUiContainer) : getWindowViewPort();
 };
 
 export default {
