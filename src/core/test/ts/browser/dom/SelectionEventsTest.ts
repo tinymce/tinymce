@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function () {
 
   const mBindEventMutator = function (editor, eventName, mutator) {
     return Step.stateful(function (value, next, die) {
-      const eventArgs = Cell();
+      const eventArgs = Cell(null);
 
       const handler = function (e) {
         mutator(editor, e);

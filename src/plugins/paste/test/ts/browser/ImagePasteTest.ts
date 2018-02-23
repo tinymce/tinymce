@@ -1,6 +1,6 @@
 import { Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Arr } from '@ephox/katamari';
+import { Arr, Cell } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import { Blob, Uint8Array, Window } from '@ephox/sand';
 
@@ -104,7 +104,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
 
   suite.asyncTest('dropImages', function (editor, done, die) {
     let rng, event;
-    const clipboard = Clipboard(editor);
+    const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
     rng = setupContent(editor);
@@ -122,7 +122,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
 
   suite.asyncTest('pasteImages', function (editor, done, die) {
     let rng, event;
-    const clipboard = Clipboard(editor);
+    const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
     rng = setupContent(editor);
@@ -140,7 +140,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
 
   suite.asyncTest('dropImages - images_dataimg_filter', function (editor, done, die) {
     let rng, event;
-    const clipboard = Clipboard(editor);
+    const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
     editor.settings.images_dataimg_filter = function (img) {
@@ -162,7 +162,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
 
   suite.asyncTest('pasteImages - images_dataimg_filter', function (editor, done, die) {
     let rng, event;
-    const clipboard = Clipboard(editor);
+    const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
     editor.settings.images_dataimg_filter = function (img) {

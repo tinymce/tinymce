@@ -94,7 +94,7 @@ const moveWord = function (forward, editor, caret) {
 };
 
 const setupSelectedState = function (editor) {
-  const caret = new Cell(null);
+  const caret = Cell(null);
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
 
   editor.on('NodeChange', function (e) {

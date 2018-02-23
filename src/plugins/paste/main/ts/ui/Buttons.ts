@@ -15,7 +15,7 @@ import { Clipboard } from '../api/Clipboard';
 const stateChange = function (editor: Editor, clipboard: Clipboard, e) {
   const ctrl = e.control;
 
-  ctrl.active(clipboard.pasteFormat === 'text');
+  ctrl.active(clipboard.pasteFormat.get() === 'text');
 
   editor.on('PastePlainTextToggle', function (e) {
     ctrl.active(e.state);
