@@ -7,7 +7,7 @@ import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FitmentIVTest', function() {
   // Note: cycles 500, min 1, max 200 ~ 22secs
-  var CYCLES = 500;
+  var CYCLES = 250;
   var GRID_MIN = 1;   // 1x1 grid is the min
   var GRID_MAX = 200;
 
