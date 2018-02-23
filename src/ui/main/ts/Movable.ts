@@ -134,8 +134,7 @@ export default {
           return rels[i];
         }
       } else {
-        if (pos.x > viewPortRect.x && pos.x + pos.w < viewPortRect.w + viewPortRect.x &&
-          pos.y > viewPortRect.y && pos.y + pos.h < viewPortRect.h + viewPortRect.y) {
+        if (pos.x > viewPortRect.x && pos.x + pos.w < viewPortRect.w && pos.y > viewPortRect.y && pos.y + pos.h < viewPortRect.h) {
           return rels[i];
         }
       }
@@ -206,8 +205,8 @@ export default {
       const viewPortRect = getViewPortRect(this);
       const layoutRect = self.layoutRect();
 
-      x = constrain(x, viewPortRect.w + viewPortRect.x, layoutRect.w);
-      y = constrain(y, viewPortRect.h + viewPortRect.y, layoutRect.h);
+      x = constrain(x, viewPortRect.w, layoutRect.w);
+      y = constrain(y, viewPortRect.h, layoutRect.h);
     }
 
     const uiContainer = UiContainer.getUiContainer(self);
