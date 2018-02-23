@@ -4,10 +4,13 @@ import Structs from 'ephox/snooker/api/Structs';
 import Fitment from 'ephox/snooker/test/Fitment';
 import TableMerge from 'ephox/snooker/test/TableMerge';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { PlatformDetection } from '@ephox/sand';
 
 UnitTest.test('FitmentIVTest', function() {
-  // Note: cycles 500, min 1, max 200 ~ 22secs
-  var CYCLES = 250;
+  const browser = PlatformDetection.detect().browser;
+
+  // Note: cycles 500, min 1, max 200 ~ 22secs (on nodejs, anyway)
+  var CYCLES = browser.isIE() || browser.isEdge() || browser.isFirefox() ? 1 : 250;
   var GRID_MIN = 1;   // 1x1 grid is the min
   var GRID_MAX = 200;
 
