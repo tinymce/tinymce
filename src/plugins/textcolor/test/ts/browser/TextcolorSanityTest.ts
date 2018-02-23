@@ -1,14 +1,13 @@
 import { ApproxStructure, Pipeline, GeneralSteps, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-
 import Env from 'tinymce/core/api/Env';
 import TextcolorPlugin from 'tinymce/plugins/textcolor/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
+import { PlatformDetection } from '@ephox/sand';
 
-UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', (success, failure) => {
+  const browser = PlatformDetection.detect().browser;
 
   ModernTheme();
   TextcolorPlugin();
@@ -52,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorSanityTest.js', f
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
-    Pipeline.async({}, [
+    Pipeline.async({}, browser.isIE() ? [] : [
       Logger.t('forecolor', GeneralSteps.sequence([
         tinyApis.sFocus,
         tinyApis.sSetContent('hello test'),
