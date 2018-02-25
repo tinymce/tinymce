@@ -1,10 +1,10 @@
 import { RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Fun, Obj } from '@ephox/katamari';
-import { DslType } from 'ephox/boulder/api/DslType';
-import { FieldPresence } from 'ephox/boulder/api/FieldPresence';
-import { FieldSchema } from 'ephox/boulder/api/FieldSchema';
-import { ValueSchema } from 'ephox/boulder/api/ValueSchema';
+import * as DslType from 'ephox/boulder/api/DslType';
+import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
+import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
+import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 
 UnitTest.test('Atomic Test: api.TreeTest', function () {
   const schema = ValueSchema.objOf([

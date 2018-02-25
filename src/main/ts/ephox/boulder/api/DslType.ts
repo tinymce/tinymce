@@ -19,7 +19,7 @@ const foldField = function (subject: EncodedAdt, onField: () => any, onState: ()
   return subject.fold(onField, onState);
 };
 
-export const DslType = {
+export {
   foldType,
   foldField
 };

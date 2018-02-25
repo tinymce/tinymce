@@ -2,9 +2,9 @@ import { Logger, RawAssertions } from '@ephox/agar';
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
-import { FieldSchema } from 'ephox/boulder/api/FieldSchema';
-import { Objects } from 'ephox/boulder/api/Objects';
-import { ValueSchema } from 'ephox/boulder/api/ValueSchema';
+import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
+import * as Objects from 'ephox/boulder/api/Objects';
+import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 
 UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
   const checkErr = function (label, expectedPart, v, processor) {

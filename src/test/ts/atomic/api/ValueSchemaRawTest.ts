@@ -2,10 +2,10 @@ import { Logger, RawAssertions } from '@ephox/agar';
 import { assert, UnitTest } from '@ephox/bedrock';
 import { Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
-import { FieldPresence } from 'ephox/boulder/api/FieldPresence';
-import { FieldSchema } from 'ephox/boulder/api/FieldSchema';
-import { Objects } from 'ephox/boulder/api/Objects';
-import { ValueSchema } from 'ephox/boulder/api/ValueSchema';
+import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
+import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
+import * as Objects from 'ephox/boulder/api/Objects';
+import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 
 UnitTest.test('ValueSchemaRawTest', function () {
   const checkErr = function (label, expectedPart, input, processor) {

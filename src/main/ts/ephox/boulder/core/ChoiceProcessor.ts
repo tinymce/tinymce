@@ -1,4 +1,4 @@
-import { Objects } from '../api/Objects';
+import * as Objects from '../api/Objects';
 import { SchemaError } from './SchemaError';
 import { ValueProcessor } from './ValueProcessor';
 import { TypeTokens } from '../format/TypeTokens';

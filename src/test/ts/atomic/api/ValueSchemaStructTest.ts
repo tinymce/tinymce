@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock';
-import { FieldPresence } from 'ephox/boulder/api/FieldPresence';
-import { FieldSchema } from 'ephox/boulder/api/FieldSchema';
-import { ValueSchema } from 'ephox/boulder/api/ValueSchema';
+import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
+import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
+import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 
 UnitTest.test('ValueSchemaStuct Test', function () {
   const actualVal = ValueSchema.asStructOrDie('test.struct.val', ValueSchema.anyValue(), 10);

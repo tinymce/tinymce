@@ -1,6 +1,6 @@
 import { Adt, Arr, Fun, Merger, Obj, Option, Result, Type, Thunk } from '@ephox/katamari';
-import { FieldPresence } from '../api/FieldPresence';
-import { Objects } from '../api/Objects';
+import * as FieldPresence from '../api/FieldPresence';
+import * as Objects from '../api/Objects';
 import { ResultCombine } from '../combine/ResultCombine';
 import { TypeTokens } from '../format/TypeTokens';
 import { ObjReader } from './ObjReader';

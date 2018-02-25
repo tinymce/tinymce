@@ -1,6 +1,6 @@
 import { Result, Type } from '@ephox/katamari';
 import { EncodedAdt, Processor, ValueProcessor } from '../core/ValueProcessor';
-import { FieldPresence } from './FieldPresence';
+import * as FieldPresence from './FieldPresence';
 
 const strict = function (key: string): EncodedAdt {
   return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.anyValue());
@@ -76,7 +76,7 @@ const state = function (okey: string, instantiator: () => any): EncodedAdt {
   return ValueProcessor.state(okey, instantiator);
 };
 
-export const FieldSchema = {
+export {
   strict,
   strictOf,
   strictObjOf,

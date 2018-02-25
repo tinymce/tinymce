@@ -15,7 +15,7 @@ const defaulted = function (fallback: any): any {
   );
 };
 
-const asDefaultedOption = function <a>(fallback: a): EncodedAdt {
+const asDefaultedOption = function <T>(fallback: T): EncodedAdt {
   return adt.asDefaultedOptionThunk(
     Fun.constant(fallback)
   );
@@ -27,16 +27,22 @@ const mergeWith = function (base: {}): EncodedAdt {
   );
 };
 
-export const FieldPresence = {
-  strict: adt.strict,
-  asOption: adt.asOption,
+const strict = adt.strict;
+const asOption = adt.asOption;
+const defaultedThunk = adt.defaultedThunk;
+const asDefaultedOptionThunk = adt.asDefaultedOptionThunk;
+const mergeWithThunk = adt.mergeWithThunk;
+
+export {
+  strict,
+  asOption,
 
   defaulted,
-  defaultedThunk: adt.defaultedThunk,
+  defaultedThunk,
 
   asDefaultedOption,
-  asDefaultedOptionThunk: adt.asDefaultedOptionThunk,
+  asDefaultedOptionThunk,
 
   mergeWith,
-  mergeWithThunk: adt.mergeWithThunk
+  mergeWithThunk
 };

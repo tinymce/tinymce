@@ -4,19 +4,19 @@ import { ChoiceProcessor } from '../core/ChoiceProcessor';
 import { EncodedAdt, Processor, ValueProcessor, ValueValidator } from '../core/ValueProcessor';
 import { PrettyPrinter } from '../format/PrettyPrinter';
 
-export interface SchemaError <a> {
-  input: a;
+export interface SchemaError <T> {
+  input: T;
   errors: any[];
 }
 
-const anyValue: Processor = ValueProcessor.value(Result.value);
+const _anyValue: Processor = ValueProcessor.value(Result.value);
 
 const arrOfObj = function (objFields: EncodedAdt[]): Processor {
   return ValueProcessor.arrOfObj(objFields);
 };
 
 const arrOfVal = function (): Processor {
-  return ValueProcessor.arrOf(anyValue);
+  return ValueProcessor.arrOf(_anyValue);
 };
 
 const arrOf = ValueProcessor.arrOf;
@@ -90,8 +90,10 @@ const funcOrDie = function (args: any[], prop: Processor): Processor {
   return ValueProcessor.func(args, prop, retriever);
 };
 
-export const ValueSchema = {
-  anyValue: Fun.constant(anyValue),
+const anyValue = Fun.constant(_anyValue);
+
+export {
+  anyValue,
 
   arrOfObj,
   arrOf,

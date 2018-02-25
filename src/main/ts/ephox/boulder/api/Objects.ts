@@ -45,7 +45,7 @@ const hasKey = function (obj, key) {
   return ObjReader.hasKey(obj, key);
 };
 
-export const Objects = {
+export {
   narrow,
   exclude,
   readOpt,

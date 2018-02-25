@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock';
 import { Arr, Obj, Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import Jsc from '@ephox/wrap-jsverify';
-import { Objects } from 'ephox/boulder/api/Objects';
+import * as Objects from 'ephox/boulder/api/Objects';
 
 UnitTest.test('ObjectsTest', function () {
   const smallSet = Jsc.nestring;
