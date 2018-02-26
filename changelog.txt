@@ -1,3 +1,16 @@
+Version 4.7.8 (2018-02-26)
+    Fixed an issue with the Help Plugin where the menuitem name wasn't lowercase.
+    Fixed an issue on MacOS where text and bold text did not have the same line-height in the autocomplete dropdown in the Link Plugin dialog.
+    Fixed a bug where the "paste as text" option in the Paste Plugin didn't work.
+    Fixed a bug where dialog list boxes didn't get positioned correctly in documents with scroll.
+    Fixed a bug where the Inlite Theme didn't use the Table Plugin api to insert correct tables.
+    Fixed a bug where the Inlite Theme panel didn't hide on blur in a correct way.
+    Fixed a bug where placing the cursor before a table in Firefox would scroll to the bottom of the table.
+    Fixed a bug where selecting partial text in table cells with rowspans and deleting would produce faulty tables.
+    Fixed a bug where the Preview Plugin didn't work on Safari due to sandbox security.
+    Fixed a bug where table cell selection using the keyboard threw an error.
+    Fixed so the font size and font family doesn't toggle the text but only sets the selected format on the selected text.
+    Fixed so the built-in spellchecking on Chrome and Safari creates an undo level when replacing words.
 Version 4.7.7 (2018-02-19)
     Added a border style selector to the advanced tab of the Image Plugin.
     Added better controls for default table inserted by the Table Plugin.
