@@ -1,7 +1,7 @@
 import { Fun, Result } from '@ephox/katamari';
 
 import { ChoiceProcessor } from '../core/ChoiceProcessor';
-import { EncodedAdt, Processor, ValueProcessor, ValueValidator } from '../core/ValueProcessor';
+import * as ValueProcessor from '../core/ValueProcessor';
 import { PrettyPrinter } from '../format/PrettyPrinter';
 
 export interface SchemaError <T> {
@@ -9,13 +9,13 @@ export interface SchemaError <T> {
   errors: any[];
 }
 
-const _anyValue: Processor = ValueProcessor.value(Result.value);
+const _anyValue: ValueProcessor.Processor = ValueProcessor.value(Result.value);
 
-const arrOfObj = function (objFields: EncodedAdt[]): Processor {
+const arrOfObj = function (objFields: ValueProcessor.EncodedAdt[]): ValueProcessor.Processor {
   return ValueProcessor.arrOfObj(objFields);
 };
 
-const arrOfVal = function (): Processor {
+const arrOfVal = function (): ValueProcessor.Processor {
   return ValueProcessor.arrOf(_anyValue);
 };
 
@@ -27,14 +27,14 @@ const objOfOnly = ValueProcessor.objOfOnly;
 
 const setOf = ValueProcessor.setOf;
 
-const valueOf = function (validator: ValueValidator): Processor {
+const valueOf = function (validator: ValueProcessor.ValueValidator): ValueProcessor.Processor {
   return ValueProcessor.value(function (v) {
     // Intentionally not exposing "strength" at the API level
     return validator(v);
   });
 };
 
-const extract = function (label: string, prop: Processor, strength: () => any, obj: any): Result<any, any> {
+const extract = function (label: string, prop: ValueProcessor.Processor, strength: () => any, obj: any): Result<any, any> {
   return prop.extract([ label ], strength, obj).fold(function (errs) {
     return Result.error({
       input: obj,
@@ -43,11 +43,11 @@ const extract = function (label: string, prop: Processor, strength: () => any, o
   }, Result.value);
 };
 
-const asStruct = function <a>(label: string, prop: Processor, obj: any): Result<any, SchemaError<a>> {
+const asStruct = function <a>(label: string, prop: ValueProcessor.Processor, obj: any): Result<any, SchemaError<a>> {
   return extract(label, prop, Fun.constant, obj);
 };
 
-const asRaw = function <a>(label: string, prop: Processor, obj: any): Result<any, SchemaError<a>> {
+const asRaw = function <a>(label: string, prop: ValueProcessor.Processor, obj: any): Result<any, SchemaError<a>> {
   return extract(label, prop, Fun.identity, obj);
 };
 
@@ -60,11 +60,11 @@ const getOrDie = function (extraction: Result<any, any>): any {
   }, Fun.identity);
 };
 
-const asRawOrDie = function (label: string, prop: Processor, obj: any): any {
+const asRawOrDie = function (label: string, prop: ValueProcessor.Processor, obj: any): any {
   return getOrDie(asRaw(label, prop, obj));
 };
 
-const asStructOrDie = function (label: string, prop: Processor, obj: any): any {
+const asStructOrDie = function (label: string, prop: ValueProcessor.Processor, obj: any): any {
   return getOrDie(asStruct(label, prop, obj));
 };
 
@@ -73,15 +73,15 @@ const formatError = function (errInfo: SchemaError<any>): string {
     '\n\nInput object: ' + PrettyPrinter.formatObj(errInfo.input);
 };
 
-const choose = function (key: string, branches: any): Processor {
+const choose = function (key: string, branches: any): ValueProcessor.Processor {
   return ChoiceProcessor.choose(key, branches);
 };
 
-const thunkOf = function (desc: string, schema: () => Processor): Processor {
+const thunkOf = function (desc: string, schema: () => ValueProcessor.Processor): ValueProcessor.Processor {
   return ValueProcessor.thunk(desc, schema);
 };
 
-const funcOrDie = function (args: any[], prop: Processor): Processor {
+const funcOrDie = function (args: any[], prop: ValueProcessor.Processor): ValueProcessor.Processor {
   const retriever = function (output, strength) {
     return getOrDie(
       extract('()', prop, strength, output)

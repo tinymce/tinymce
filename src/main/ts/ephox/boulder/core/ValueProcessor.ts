@@ -309,14 +309,14 @@ const thunk = function (desc, processor) {
   };
 };
 
-const anyValue = value(Result.value);
+const anyValue = Fun.constant(value(Result.value));
 const arrOfObj = Fun.compose(arrOf, objOf);
 
 const state = adt.state;
 const field = adt.field;
 
-export const ValueProcessor = {
-  anyValue: Fun.constant(anyValue),
+export {
+  anyValue,
   value,
 
   objOf,
@@ -325,8 +325,8 @@ export const ValueProcessor = {
   setOf,
   arrOfObj,
 
-  state: adt.state,
-  field: adt.field,
+  state,
+  field,
   output,
   snapshot,
   thunk,
