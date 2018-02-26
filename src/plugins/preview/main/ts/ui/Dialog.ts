@@ -14,7 +14,7 @@ import IframeContent from './IframeContent';
 
 const open = function (editor) {
   const sandbox = !Env.ie;
-  const dialogHtml = '<iframe src="javascript:\'\'" frameborder="0"' + (sandbox ? ' sandbox="allow-scripts"' : '') + '></iframe>';
+  const dialogHtml = '<iframe src="" frameborder="0"' + (sandbox ? ' sandbox="allow-scripts"' : '') + '></iframe>';
   const dialogWidth = Settings.getPreviewDialogWidth(editor);
   const dialogHeight = Settings.getPreviewDialogHeight(editor);
 
