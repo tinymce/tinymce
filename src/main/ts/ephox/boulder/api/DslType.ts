@@ -1,21 +1,24 @@
-import { EncodedAdt, Processor } from '../core/ValueProcessor';
+import { EncodedAdt, Processor, ValueValidator, FieldProcessorAdt } from '../core/ValueProcessor';
 import { Result } from '@ephox/katamari';
 
 // NOTE: This provides cata functions for the ADTs in TypeTokens
 // This Typing is based on whats in TreeTest.ts, it may not be 100% correct, update as necessary.
-const foldType = function (subject: EncodedAdt,
-                           onSet: (validator: any, valueType: any) => any,
-                           onArr: (a: any) => any,
-                           onObj: (fields: any) => any,
-                           onItem: (validator: Result <any, any>) => any,
-                           onChoice: (key: any, branches: any) => any,
-                           onThunk: () => void,
-                           onFunc: (a: any, b: any) => any
-                          ): any {
+
+import { ProcessorType } from '../format/TypeTokens';
+
+const foldType = function <T> (subject: EncodedAdt,
+                               onSet: (validator: ValueValidator, valueType: Processor) => T,
+                               onArr: (prop: Processor) => T,
+                               onObj: (fields: EncodedAdt) => T,
+                               onItem: (validator: ValueValidator) => T,
+                               onChoice: (key: string, branches: { [key: string]: FieldProcessorAdt[]; }) => T,
+                               onThunk: (description: string) => T,
+                               onFunc: (args: string[], schema: Processor) => T
+                          ): T {
   return subject.fold(onSet, onArr, onObj, onItem, onChoice, onThunk, onFunc);
 };
 
-const foldField = function (subject: EncodedAdt, onField: () => any, onState: () => any): any {
+const foldField = function <T> (subject: EncodedAdt, onField: () => T, onState: () => T): T {
   return subject.fold(onField, onState);
 };
 
