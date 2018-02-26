@@ -11,8 +11,10 @@
 import Render from '../core/Render';
 import NotificationManagerImpl from 'tinymce/ui/NotificationManagerImpl';
 import WindowManagerImpl from 'tinymce/ui/WindowManagerImpl';
+import { Editor } from 'tinymce/core/api/Editor';
+import { InlitePanel } from 'tinymce/themes/inlite/ui/Panel';
 
-const get = function (editor, panel) {
+const get = function (editor: Editor, panel: InlitePanel) {
   const renderUI = function () {
     return Render.renderUI(editor, panel);
   };

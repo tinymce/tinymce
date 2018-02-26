@@ -10,12 +10,14 @@
 
 import Matcher from 'tinymce/themes/inlite/core/Matcher';
 import Measure from 'tinymce/themes/inlite/core/Measure';
+import { GeomRect } from 'tinymce/core/api/geom/Rect';
 
 // textSelection :: String -> (Editor -> Matcher.result | Null)
 const textSelection = function (id) {
   return function (editor) {
     if (!editor.selection.isCollapsed()) {
-      return Matcher.result(id, Measure.getSelectionRect(editor));
+      const result: {id: string, rect: GeomRect} = Matcher.result(id, Measure.getSelectionRect(editor));
+      return result;
     }
 
     return null;

@@ -11,7 +11,7 @@
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 import ThemeApi from './api/ThemeApi';
 import Buttons from './ui/Buttons';
-import Panel from './ui/Panel';
+import * as Panel from './ui/Panel';
 import Api from 'tinymce/ui/Api';
 import FormatControls from 'tinymce/ui/FormatControls';
 
@@ -21,7 +21,7 @@ Api.registerToFactory();
 Api.appendTo(window.tinymce ? window.tinymce : {});
 
 ThemeManager.add('inlite', function (editor) {
-  const panel = Panel();
+  const panel = Panel.create();
 
   FormatControls.setup(editor);
   Buttons.addToEditor(editor, panel);

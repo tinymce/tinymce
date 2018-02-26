@@ -23,7 +23,7 @@ const seed = function () {
   return 's' + Date.now().toString(36) + rnd() + rnd() + rnd();
 };
 
-const uuid = function (prefix) {
+const uuid = function (prefix: string) {
   return prefix + (count++) + seed();
 };
 
