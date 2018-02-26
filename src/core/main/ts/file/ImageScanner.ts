@@ -144,7 +144,7 @@ export default function (uploadStatus, blobCache) {
         });
       }
 
-      const newPromise = new Promise<{image, blogIfo}>(function (resolve, reject) {
+      const newPromise = new Promise<{image, blobInfo}>(function (resolve, reject) {
         imageToBlobInfo(blobCache, img, resolve, reject);
       }).then(function (result) {
         delete cachedPromises[result.image.src];
