@@ -9,6 +9,7 @@ import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
 import { Element } from '@ephox/sugar';
 import { isFakeCaretTableBrowser } from 'tinymce/core/keyboard/TableNavigation';
+import { Fun } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function () {
   const success = arguments[arguments.length - 2];
@@ -27,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function () {
   };
 
   const setup = function () {
-    fakeCaret = FakeCaret(getRoot(), isBlock);
+    fakeCaret = FakeCaret(getRoot(), isBlock, Fun.constant(true));
   };
 
   const teardown = function () {
