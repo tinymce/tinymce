@@ -1,4 +1,5 @@
 Version 4.7.8 (2018-02-26)
+    Fixed an issue with the Help Plugin where the menuitem name wasn't lowercase.
     Fixed an issue on MacOS where text and bold text did not have the same line-height in the autocomplete dropdown in the Link Plugin dialog.
     Fixed a bug where the "paste as text" option in the Paste Plugin didn't work.
     Fixed a bug where dialog list boxes didn't get positioned correctly in documents with scroll.
