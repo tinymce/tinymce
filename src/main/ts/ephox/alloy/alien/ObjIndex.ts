@@ -20,12 +20,11 @@ import { Obj } from '@ephox/katamari';
  * }
  */
 
-
-var byInnerKey = function (data, tuple) {
-  var r = {};
+const byInnerKey = function (data, tuple) {
+  const r = {};
   Obj.each(data, function (detail, key) {
     Obj.each(detail, function (value, indexKey) {
-      var chain = Objects.readOr(indexKey, [ ])(r);
+      const chain = Objects.readOr(indexKey, [ ])(r);
       r[indexKey] = chain.concat([
         tuple(key, value)
       ]);
@@ -34,6 +33,6 @@ var byInnerKey = function (data, tuple) {
   return r;
 };
 
-export default <any> {
-  byInnerKey: byInnerKey
+export {
+  byInnerKey
 };

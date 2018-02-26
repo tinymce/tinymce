@@ -1,25 +1,26 @@
+import { Arr } from '@ephox/katamari';
+import { Attr } from '@ephox/sugar';
+
+import * as AlloyParts from '../../parts/AlloyParts';
+import TabSectionSchema from '../../ui/schema/TabSectionSchema';
 import Highlighting from '../behaviour/Highlighting';
 import Replacing from '../behaviour/Replacing';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
-import AlloyEvents from '../events/AlloyEvents';
+import * as AlloyEvents from '../events/AlloyEvents';
 import SystemEvents from '../events/SystemEvents';
-import Sketcher from './Sketcher';
-import AlloyParts from '../../parts/AlloyParts';
-import TabSectionSchema from '../../ui/schema/TabSectionSchema';
-import { Arr } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
+import * as Sketcher from './Sketcher';
 
-var factory = function (detail, components, spec, externals) {
-  var changeTab = function (button) {
-    var tabValue = Representing.getValue(button);
+const factory = function (detail, components, spec, externals) {
+  const changeTab = function (button) {
+    const tabValue = Representing.getValue(button);
     AlloyParts.getPart(button, detail, 'tabview').each(function (tabview) {
-      var tabWithValue = Arr.find(detail.tabs(), function (t) {
+      const tabWithValue = Arr.find(detail.tabs(), function (t) {
         return t.value === tabValue;
       });
 
       tabWithValue.each(function (tabData) {
-        var panel = tabData.view();
+        const panel = tabData.view();
 
         // Update the tabview to refer to the current tab.
         Attr.set(tabview.element(), 'aria-labelledby', Attr.get(button.element(), 'id'));
@@ -32,7 +33,7 @@ var factory = function (detail, components, spec, externals) {
   return {
     uid: detail.uid(),
     dom: detail.dom(),
-    components: components,
+    components,
     behaviours: SketchBehaviours.get(detail.tabSectionBehaviours()),
 
     events: AlloyEvents.derive(
@@ -51,11 +52,11 @@ var factory = function (detail, components, spec, externals) {
 
         [
           AlloyEvents.run(SystemEvents.changeTab(), function (section, simulatedEvent) {
-            var button = simulatedEvent.event().button();
+            const button = simulatedEvent.event().button();
             changeTab(button);
           }),
           AlloyEvents.run(SystemEvents.dismissTab(), function (section, simulatedEvent) {
-            var button = simulatedEvent.event().button();
+            const button = simulatedEvent.event().button();
             detail.onDismissTab()(section, button);
           })
         ]
@@ -69,5 +70,5 @@ export default <any> Sketcher.composite({
   name: 'TabSection',
   configFields: TabSectionSchema.schema(),
   partFields: TabSectionSchema.parts(),
-  factory: factory
+  factory
 });

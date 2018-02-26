@@ -1,11 +1,11 @@
-import BehaviourBlob from '../../behaviour/common/BehaviourBlob';
 import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 
-var getBehaviours = function (spec) {
-  var behaviours = Objects.readOptFrom(spec, 'behaviours').getOr({ });
-  var keys = Arr.filter(
+import BehaviourBlob from '../../behaviour/common/BehaviourBlob';
+
+const getBehaviours = function (spec) {
+  const behaviours = Objects.readOptFrom(spec, 'behaviours').getOr({ });
+  const keys = Arr.filter(
     Obj.keys(behaviours),
     function (k) { return behaviours[k] !== undefined; }
   );
@@ -14,16 +14,16 @@ var getBehaviours = function (spec) {
   });
 };
 
-var generateFrom = function (spec, all) {
+const generateFrom = function (spec, all) {
   return BehaviourBlob.generateFrom(spec, all);
 };
 
-var generate = function (spec) {
-  var all = getBehaviours(spec);
+const generate = function (spec) {
+  const all = getBehaviours(spec);
   return generateFrom(spec, all);
 };
 
-export default <any> {
-  generate: generate,
-  generateFrom: generateFrom
+export {
+  generate,
+  generateFrom
 };

@@ -1,53 +1,52 @@
+import { FieldSchema } from '@ephox/boulder';
+import { Fun, Option } from '@ephox/katamari';
+import { SelectorFind } from '@ephox/sugar';
+
 import Keys from '../alien/Keys';
-import NoState from '../behaviour/common/NoState';
-import KeyingType from './KeyingType';
-import KeyingTypes from './KeyingTypes';
+import * as NoState from '../behaviour/common/NoState';
 import DomMovement from '../navigation/DomMovement';
 import DomNavigation from '../navigation/DomNavigation';
 import KeyMatch from '../navigation/KeyMatch';
 import KeyRules from '../navigation/KeyRules';
-import { FieldSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
+import * as KeyingType from './KeyingType';
+import * as KeyingTypes from './KeyingTypes';
 
-var schema = [
+const schema = [
   FieldSchema.strict('selector'),
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
   FieldSchema.defaulted('moveOnTab', false)
 ];
 
-var execute = function (component, simulatedEvent, menuConfig) {
+const execute = function (component, simulatedEvent, menuConfig) {
   return menuConfig.focusManager().get(component).bind(function (focused) {
     return menuConfig.execute()(component, simulatedEvent, focused);
   });
 };
 
-var focusIn = function (component, menuConfig, simulatedEvent) {
+const focusIn = function (component, menuConfig, simulatedEvent) {
   // Maybe keep selection if it was there before
   SelectorFind.descendant(component.element(), menuConfig.selector()).each(function (first) {
     menuConfig.focusManager().set(component, first);
   });
 };
 
-var moveUp = function (element, focused, info) {
+const moveUp = function (element, focused, info) {
   return DomNavigation.horizontal(element, info.selector(), focused, -1);
 };
 
-var moveDown = function (element, focused, info) {
+const moveDown = function (element, focused, info) {
   return DomNavigation.horizontal(element, info.selector(), focused, +1);
 };
 
-var fireShiftTab = function (component, simulatedEvent, menuConfig) {
+const fireShiftTab = function (component, simulatedEvent, menuConfig) {
   return menuConfig.moveOnTab() ? DomMovement.move(moveUp)(component, simulatedEvent, menuConfig) : Option.none();
 };
 
-var fireTab = function (component, simulatedEvent, menuConfig) {
+const fireTab = function (component, simulatedEvent, menuConfig) {
   return menuConfig.moveOnTab() ? DomMovement.move(moveDown)(component, simulatedEvent, menuConfig) : Option.none();
 };
 
-var getRules = Fun.constant([
+const getRules = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.move(moveUp)),
   KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), DomMovement.move(moveDown)),
   KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), fireShiftTab),
@@ -56,8 +55,8 @@ var getRules = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), execute)
 ]);
 
-var getEvents = Fun.constant({ });
+const getEvents = Fun.constant({ });
 
-var getApis = Fun.constant({ });
+const getApis = Fun.constant({ });
 
 export default <any> KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));

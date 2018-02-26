@@ -1,21 +1,18 @@
-import NoState from './NoState';
-import { FieldPresence } from '@ephox/boulder';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
+import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import { JSON } from '@ephox/sand';
 
-var generateFrom = function (spec, all) {
-  var schema = Arr.map(all, function (a) {
+import NoState from './NoState';
+
+const generateFrom = function (spec, all) {
+  const schema = Arr.map(all, function (a) {
     return FieldSchema.field(a.name(), a.name(), FieldPresence.asOption(), ValueSchema.objOf([
       FieldSchema.strict('config'),
       FieldSchema.defaulted('state', NoState)
     ]));
   });
 
-  var validated = ValueSchema.asStruct('component.behaviours', ValueSchema.objOf(schema), spec.behaviours).fold(function (errInfo) {
+  const validated = ValueSchema.asStruct('component.behaviours', ValueSchema.objOf(schema), spec.behaviours).fold(function (errInfo) {
     throw new Error(
       ValueSchema.formatError(errInfo) + '\nComplete spec:\n' +
         JSON.stringify(spec, null, 2)
@@ -25,7 +22,7 @@ var generateFrom = function (spec, all) {
   return {
     list: all,
     data: Obj.map(validated, function (blobOptionThunk/*, rawK */) {
-      var blobOption = blobOptionThunk();
+      const blobOption = blobOptionThunk();
       return Fun.constant(blobOption.map(function (blob) {
         return {
           config: blob.config(),
@@ -36,16 +33,16 @@ var generateFrom = function (spec, all) {
   };
 };
 
-var getBehaviours = function (bData) {
+const getBehaviours = function (bData) {
   return bData.list;
 };
 
-var getData = function (bData) {
+const getData = function (bData) {
   return bData.data;
 };
 
 export default <any> {
-  generateFrom: generateFrom,
-  getBehaviours: getBehaviours,
-  getData: getData
+  generateFrom,
+  getBehaviours,
+  getData
 };

@@ -1,19 +1,14 @@
-import DomDefinition from './DomDefinition';
 import { Arr } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { Classes } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-import { Value } from '@ephox/sugar';
+import { Attr, Classes, Css, Element, Html, InsertAll, Value } from '@ephox/sugar';
 
-var getChildren = function (definition) {
+import * as DomDefinition from './DomDefinition';
+
+const getChildren = function (definition) {
   if (definition.domChildren().isSome() && definition.defChildren().isSome()) {
     throw new Error('Cannot specify children and child specs! Must be one or the other.\nDef: ' + DomDefinition.defToStr(definition));
   } else {
     return definition.domChildren().fold(function () {
-      var defChildren = definition.defChildren().getOr([ ]);
+      const defChildren = definition.defChildren().getOr([ ]);
       return Arr.map(defChildren, renderDef);
     }, function (domChildren) {
       return domChildren;
@@ -21,8 +16,8 @@ var getChildren = function (definition) {
   }
 };
 
-var renderToDom = function (definition) {
-  var subject = Element.fromTag(definition.tag());
+const renderToDom = function (definition) {
+  const subject = Element.fromTag(definition.tag());
   Attr.setAll(subject, definition.attributes().getOr({ }));
   Classes.add(subject, definition.classes().getOr([ ]));
   Css.setAll(subject, definition.styles().getOr({ }));
@@ -30,7 +25,7 @@ var renderToDom = function (definition) {
   Html.set(subject, definition.innerHtml().getOr(''));
 
   // Children are already elements.
-  var children = getChildren(definition);
+  const children = getChildren(definition);
   InsertAll.append(subject, children);
 
   definition.value().each(function (value) {
@@ -40,11 +35,11 @@ var renderToDom = function (definition) {
   return subject;
 };
 
-var renderDef = function (spec) {
-  var definition = DomDefinition.nu(spec);
+const renderDef = function (spec) {
+  const definition = DomDefinition.nu(spec);
   return renderToDom(definition);
 };
 
-export default <any> {
-  renderToDom: renderToDom
+export {
+  renderToDom
 };

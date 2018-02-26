@@ -1,19 +1,18 @@
+import { FieldSchema } from '@ephox/boulder';
+import { Fun } from '@ephox/katamari';
+import { Class, Focus } from '@ephox/sugar';
+
 import Behaviour from '../../api/behaviour/Behaviour';
 import Keying from '../../api/behaviour/Keying';
 import Representing from '../../api/behaviour/Representing';
 import Sliding from '../../api/behaviour/Sliding';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
 import Button from '../../api/ui/Button';
-import Form from '../../api/ui/Form';
-import Fields from '../../data/Fields';
-import AlloyParts from '../../parts/AlloyParts';
+import * as Fields from '../../data/Fields';
+import * as AlloyParts from '../../parts/AlloyParts';
 import PartType from '../../parts/PartType';
-import { FieldSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
 
-var schema = [
+const schema = Fun.constant([
   Fields.markers([
     'closedClass',
     'openClass',
@@ -28,16 +27,16 @@ var schema = [
   Fields.onHandler('onShrunk'),
   Fields.onHandler('onGrown'),
   SketchBehaviours.field('expandableBehaviours', [ Representing ])
-];
+]);
 
 // TODO: Remove dupe with ExpandableForm
-var runOnExtra = function (detail, operation) {
+const runOnExtra = function (detail, operation) {
   return function (anyComp) {
     AlloyParts.getPart(anyComp, detail, 'extra').each(operation);
   };
 };
 
-var partTypes = [
+const parts = Fun.constant([
   PartType.required({
     // factory: Form,
     schema: [ FieldSchema.strict('dom') ],
@@ -48,7 +47,7 @@ var partTypes = [
     // factory: Form,
     schema: [ FieldSchema.strict('dom') ],
     name: 'extra',
-    overrides: function (detail) {
+    overrides (detail) {
       return {
         behaviours: Behaviour.derive([
           Sliding.config({
@@ -60,10 +59,10 @@ var partTypes = [
             shrinkingClass: detail.markers().shrinkingClass(),
             growingClass: detail.markers().growingClass(),
             expanded: true,
-            onStartShrink: function (extra) {
+            onStartShrink (extra) {
               // If the focus is inside the extra part, move the focus to the expander button
               Focus.search(extra.element()).each(function (_) {
-                var comp = extra.getSystem().getByUid(detail.uid()).getOrDie();
+                const comp = extra.getSystem().getByUid(detail.uid()).getOrDie();
                 Keying.focusIn(comp);
               });
 
@@ -72,19 +71,19 @@ var partTypes = [
                 Class.add(form.element(), detail.markers().collapsedClass());
               });
             },
-            onStartGrow: function (extra) {
+            onStartGrow (extra) {
               extra.getSystem().getByUid(detail.uid()).each(function (form) {
                 Class.add(form.element(), detail.markers().expandedClass());
                 Class.remove(form.element(), detail.markers().collapsedClass());
               });
             },
-            onShrunk: function (extra) {
+            onShrunk (extra) {
               detail.onShrunk()(extra);
             },
-            onGrown: function (extra) {
+            onGrown (extra) {
               detail.onGrown()(extra);
             },
-            getAnimationRoot: function (extra) {
+            getAnimationRoot (extra) {
               return extra.getSystem().getByUid(detail.uid()).getOrDie().element();
             }
           })
@@ -97,7 +96,7 @@ var partTypes = [
     factory: Button,
     schema: [ FieldSchema.strict('dom') ],
     name: 'expander',
-    overrides: function (detail) {
+    overrides (detail) {
       return {
         action: runOnExtra(detail, Sliding.toggleGrow)
       };
@@ -108,10 +107,12 @@ var partTypes = [
     schema: [ FieldSchema.strict('dom') ],
     name: 'controls'
   })
-];
+]);
 
-export default <any> {
-  name: Fun.constant('ExpandableForm'),
-  schema: Fun.constant(schema),
-  parts: Fun.constant(partTypes)
+const name = Fun.constant('ExpandableForm');
+
+export {
+  name,
+  schema,
+  parts
 };

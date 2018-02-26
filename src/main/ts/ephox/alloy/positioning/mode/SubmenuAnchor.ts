@@ -1,17 +1,17 @@
-import Fields from '../../data/Fields';
-import Bubble from '../layout/Bubble';
-import LinkedLayout from '../layout/LinkedLayout';
-import Origins from '../layout/Origins';
-import Anchoring from './Anchoring';
-import AnchorLayouts from './AnchorLayouts';
 import { FieldSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 
-var placement = function (component, posInfo, submenuInfo, origin) {
-  var anchorBox = Origins.toBox(origin, submenuInfo.item().element());
+import * as Fields from '../../data/Fields';
+import Bubble from '../layout/Bubble';
+import * as LinkedLayout from '../layout/LinkedLayout';
+import * as Origins from '../layout/Origins';
+import Anchoring from './Anchoring';
+import * as AnchorLayouts from './AnchorLayouts';
 
-  var layouts = AnchorLayouts.get(component, submenuInfo, LinkedLayout.all(), LinkedLayout.allRtl());
+const placement = function (component, posInfo, submenuInfo, origin) {
+  const anchorBox = Origins.toBox(origin, submenuInfo.item().element());
+
+  const layouts = AnchorLayouts.get(component, submenuInfo, LinkedLayout.all(), LinkedLayout.allRtl());
 
   return Option.some(
     Anchoring({

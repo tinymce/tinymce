@@ -1,31 +1,34 @@
-import Focusing from '../../api/behaviour/Focusing';
-import AlloyTriggers from '../../api/events/AlloyTriggers';
 import { Fun } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 
-var hoverEvent = 'alloy.item-hover';
-var focusEvent = 'alloy.item-focus';
+import Focusing from '../../api/behaviour/Focusing';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 
-var onHover = function (item) {
+const hoverEvent = 'alloy.item-hover';
+const focusEvent = 'alloy.item-focus';
+
+const onHover = function (item) {
   // Firstly, check that the focus isn't already inside the item. This
   // is to handle situations like widgets where the widget is inside the item
   // and it has the focus, so as you slightly adjust the mouse, you don't
   // want to lose focus on the widget. Note, that because this isn't API based
   // (i.e. we are manually searching for focus), it may not be that flexible.
   if (Focus.search(item.element()).isNone() || Focusing.isFocused(item)) {
-    if (! Focusing.isFocused(item)) Focusing.focus(item);
-    AlloyTriggers.emitWith(item, hoverEvent, { item: item });
+    if (! Focusing.isFocused(item)) { Focusing.focus(item); }
+    AlloyTriggers.emitWith(item, hoverEvent, { item });
   }
 };
 
-var onFocus = function (item) {
-  AlloyTriggers.emitWith(item, focusEvent, { item: item });
+const onFocus = function (item) {
+  AlloyTriggers.emitWith(item, focusEvent, { item });
 };
 
-export default <any> {
-  hover: Fun.constant(hoverEvent),
-  focus: Fun.constant(focusEvent),
+const hover = Fun.constant(hoverEvent);
+const focus = Fun.constant(focusEvent);
 
-  onHover: onHover,
-  onFocus: onFocus
+export {
+  hover,
+  focus,
+  onHover,
+  onFocus
 };

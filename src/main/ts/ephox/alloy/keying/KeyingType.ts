@@ -1,14 +1,15 @@
-import AlloyEvents from '../api/events/AlloyEvents';
-import NativeEvents from '../api/events/NativeEvents';
-import SystemEvents from '../api/events/SystemEvents';
-import FocusManagers from '../api/focus/FocusManagers';
-import Fields from '../data/Fields';
-import KeyRules from '../navigation/KeyRules';
 import { FieldSchema } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
 
-var typical = function (infoSchema, stateInit, getRules, getEvents, getApis, optFocusIn) {
-  var schema = function () {
+import * as AlloyEvents from '../api/events/AlloyEvents';
+import NativeEvents from '../api/events/NativeEvents';
+import SystemEvents from '../api/events/SystemEvents';
+import * as FocusManagers from '../api/focus/FocusManagers';
+import * as Fields from '../data/Fields';
+import KeyRules from '../navigation/KeyRules';
+
+const typical = function (infoSchema, stateInit, getRules, getEvents, getApis, optFocusIn) {
+  const schema = function () {
     return infoSchema.concat([
       FieldSchema.defaulted('focusManager', FocusManagers.dom()),
       Fields.output('handler', me),
@@ -16,17 +17,17 @@ var typical = function (infoSchema, stateInit, getRules, getEvents, getApis, opt
     ]);
   };
 
-  var processKey = function (component, simulatedEvent, keyingConfig, keyingState) {
-    var rules = getRules(component, simulatedEvent, keyingConfig, keyingState);
+  const processKey = function (component, simulatedEvent, keyingConfig, keyingState) {
+    const rules = getRules(component, simulatedEvent, keyingConfig, keyingState);
 
     return KeyRules.choose(rules, simulatedEvent.event()).bind(function (rule) {
       return rule(component, simulatedEvent, keyingConfig, keyingState);
     });
   };
 
-  var toEvents = function (keyingConfig, keyingState) {
-    var otherEvents = getEvents(keyingConfig, keyingState);
-    var keyEvents = AlloyEvents.derive(
+  const toEvents = function (keyingConfig, keyingState) {
+    const otherEvents = getEvents(keyingConfig, keyingState);
+    const keyEvents = AlloyEvents.derive(
       optFocusIn.map(function (focusIn) {
         return AlloyEvents.run(SystemEvents.focus(), function (component, simulatedEvent) {
           focusIn(component, keyingConfig, keyingState, simulatedEvent);
@@ -43,16 +44,16 @@ var typical = function (infoSchema, stateInit, getRules, getEvents, getApis, opt
     return Merger.deepMerge(otherEvents, keyEvents);
   };
 
-  var me = {
-    schema: schema,
-    processKey: processKey,
-    toEvents: toEvents,
+  const me = {
+    schema,
+    processKey,
+    toEvents,
     toApis: getApis
   };
 
   return me;
 };
 
-export default <any> {
-  typical: typical
+export {
+  typical
 };

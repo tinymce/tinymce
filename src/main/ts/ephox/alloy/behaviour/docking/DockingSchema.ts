@@ -1,9 +1,9 @@
-import Boxes from '../../alien/Boxes';
+import * as Boxes from '../../alien/Boxes';
 import { FieldSchema } from '@ephox/boulder';
 import { Scroll } from '@ephox/sugar';
 
-var defaultLazyViewport = function (_component) {
-  var scroll = Scroll.get();
+const defaultLazyViewport = function (_component) {
+  const scroll = Scroll.get();
   return Boxes.bounds(scroll.left(), scroll.top(), window.innerWidth, window.innerHeight);
 };
 

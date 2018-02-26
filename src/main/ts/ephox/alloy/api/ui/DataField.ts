@@ -1,14 +1,14 @@
+import { FieldSchema } from '@ephox/boulder';
+import { Merger, Option } from '@ephox/katamari';
+
 import Behaviour from '../behaviour/Behaviour';
 import Composing from '../behaviour/Composing';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
-import AlloyEvents from '../events/AlloyEvents';
+import * as AlloyEvents from '../events/AlloyEvents';
 import Sketcher from './Sketcher';
-import { FieldSchema } from '@ephox/boulder';
-import { Merger } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
 
-var factory = function (detail, spec) {
+const factory = function (detail, spec) {
   return {
     uid: detail.uid(),
     dom: detail.dom(),
@@ -36,7 +36,7 @@ var factory = function (detail, spec) {
 
 export default <any> Sketcher.single({
   name: 'DataField',
-  factory: factory,
+  factory,
   configFields: [
     FieldSchema.strict('uid'),
     FieldSchema.strict('dom'),

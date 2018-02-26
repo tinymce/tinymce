@@ -1,64 +1,64 @@
+import { ValueSchema } from '@ephox/boulder';
+import { Css, Location } from '@ephox/sugar';
+
 import Anchor from '../../positioning/layout/Anchor';
 import Boxes from '../../positioning/layout/Boxes';
 import Origins from '../../positioning/layout/Origins';
 import SimpleLayout from '../../positioning/layout/SimpleLayout';
 import AnchorSchema from '../../positioning/mode/AnchorSchema';
-import { ValueSchema } from '@ephox/boulder';
-import { Css } from '@ephox/sugar';
-import { Location } from '@ephox/sugar';
 
-var getFixedOrigin = function () {
+const getFixedOrigin = function () {
   return Origins.fixed(0, 0, window.innerWidth, window.innerHeight);
 };
 
-var getRelativeOrigin = function (component) {
+const getRelativeOrigin = function (component) {
   // This container is the origin.
-  var position = Location.absolute(component.element());
+  const position = Location.absolute(component.element());
   return Origins.relative(position.left(), position.top());
 };
 
-var placeFixed = function (_component, origin, anchoring, posConfig, placee) {
-  var anchor = Anchor.box(anchoring.anchorBox());
+const placeFixed = function (_component, origin, anchoring, posConfig, placee) {
+  const anchor = Anchor.box(anchoring.anchorBox());
   // TODO: Overrides for expanding panel
   SimpleLayout.fixed(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), anchoring.overrides());
 };
 
-var placeRelative = function (component, origin, anchoring, posConfig, placee) {
-  var bounds = posConfig.bounds().getOr(Boxes.view());
+const placeRelative = function (component, origin, anchoring, posConfig, placee) {
+  const bounds = posConfig.bounds().getOr(Boxes.view());
 
   SimpleLayout.relative(
     anchoring.anchorBox(),
     placee.element(),
     anchoring.bubble(),
     {
-      bounds: bounds,
-      origin: origin,
+      bounds,
+      origin,
       preference: anchoring.layouts(),
-      maxHeightFunction: function () { }
+      maxHeightFunction () { }
     }
   );
 };
 
-var place = function (component, origin, anchoring, posConfig, placee) {
-  var f = posConfig.useFixed() ? placeFixed : placeRelative;
+const place = function (component, origin, anchoring, posConfig, placee) {
+  const f = posConfig.useFixed() ? placeFixed : placeRelative;
   f(component, origin, anchoring, posConfig, placee);
 };
 
-var position = function (component, posConfig, posState, anchor, placee) {
-  var anchorage = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
-  var origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
+const position = function (component, posConfig, posState, anchor, placee) {
+  const anchorage = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
+  const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
   // We set it to be fixed, so that it doesn't interfere with the layout of anything
   // when calculating anchors
   Css.set(placee.element(), 'position', 'fixed');
 
-  var oldVisibility = Css.getRaw(placee.element(), 'visibility');
+  const oldVisibility = Css.getRaw(placee.element(), 'visibility');
   // INVESTIGATE: Will hiding the popup cause issues for focus?
   Css.set(placee.element(), 'visibility', 'hidden');
 
-  var placer = anchorage.placement();
+  const placer = anchorage.placement();
   placer(component, posConfig, anchorage, origin).each(function (anchoring) {
-    var doPlace = anchoring.placer().getOr(place);
+    const doPlace = anchoring.placer().getOr(place);
     doPlace(component, origin, anchoring, posConfig, placee);
   });
 
@@ -75,14 +75,14 @@ var position = function (component, posConfig, posState, anchor, placee) {
     Css.getRaw(placee.element(), 'right').isNone() &&
     Css.getRaw(placee.element(), 'bottom').isNone() &&
     Css.getRaw(placee.element(), 'position').is('fixed')
-  ) Css.remove(placee.element(), 'position');
+  ) { Css.remove(placee.element(), 'position'); }
 };
 
-var getMode = function (component, pConfig, pState) {
+const getMode = function (component, pConfig, pState) {
   return pConfig.useFixed() ? 'fixed' : 'absolute';
 };
 
-export default <any> {
-  position: position,
-  getMode: getMode
+export {
+  position,
+  getMode
 };

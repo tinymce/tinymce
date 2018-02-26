@@ -1,10 +1,10 @@
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
-var iframeDoc = function (element) {
-  var dom = element.dom();
+const iframeDoc = function (element) {
+  const dom = element.dom();
   try {
-    var idoc = dom.contentWindow ? dom.contentWindow.document : dom.contentDocument;
+    const idoc = dom.contentWindow ? dom.contentWindow.document : dom.contentDocument;
     return idoc !== undefined && idoc !== null ? Option.some(Element.fromDom(idoc)) : Option.none();
   } catch (err) {
     // ASSUMPTION: Permission errors result in an unusable iframe.
@@ -14,8 +14,8 @@ var iframeDoc = function (element) {
   }
 };
 
-var doc = function (element) {
-  var optDoc = iframeDoc(element);
+const doc = function (element) {
+  const optDoc = iframeDoc(element);
   return optDoc.fold(function () {
     return element;
   }, function (v) {
@@ -23,6 +23,6 @@ var doc = function (element) {
   });
 };
 
-export default <any> {
-  doc: doc
+export {
+  doc
 };

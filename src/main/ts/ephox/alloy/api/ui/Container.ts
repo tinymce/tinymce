@@ -4,7 +4,7 @@ import Fields from '../../data/Fields';
 import { FieldSchema } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
 
-var factory = function (detail, spec) {
+const factory = function (detail, spec) {
   return {
     uid: detail.uid(),
     dom: Merger.deepMerge(
@@ -26,7 +26,7 @@ var factory = function (detail, spec) {
 
 export default <any> Sketcher.single({
   name: 'Container',
-  factory: factory,
+  factory,
   configFields: [
     FieldSchema.defaulted('components', [ ]),
     SketchBehaviours.field('containerBehaviours', [ ]),

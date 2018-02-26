@@ -3,15 +3,13 @@ import DraggingBranches from '../../behaviour/dragging/DraggingBranches';
 import DragState from '../../dragging/common/DragState';
 import { Struct } from '@ephox/katamari';
 
-
-
 export default <any> Behaviour.createModes({
   branchKey: 'mode',
   branches: DraggingBranches,
   name: 'dragging',
   active: {
     events: function (dragConfig, dragState) {
-      var dragger = dragConfig.dragger();
+      let dragger = dragConfig.dragger();
       return dragger.handlers(dragConfig, dragState);
     }
   },

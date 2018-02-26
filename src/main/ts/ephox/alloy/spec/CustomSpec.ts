@@ -1,8 +1,7 @@
-var make = function (spec) {
-  // Maybe default some arguments here
-  return spec;
-};
+import { Fun } from '@ephox/katamari';
 
-export default <any> {
-  make: make
+const make = Fun.constant;
+
+export {
+  make
 };

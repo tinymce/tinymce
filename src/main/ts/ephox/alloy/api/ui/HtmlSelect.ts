@@ -1,16 +1,15 @@
+import { FieldSchema, Objects } from '@ephox/boulder';
+import { Arr, Merger } from '@ephox/katamari';
+import { Value } from '@ephox/sugar';
+
 import Behaviour from '../behaviour/Behaviour';
 import Focusing from '../behaviour/Focusing';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Value } from '@ephox/sugar';
+import * as Sketcher from './Sketcher';
 
-var factory = function (detail, spec) {
-  var options = Arr.map(detail.options(), function (option) {
+const factory = function (detail, spec) {
+  const options = Arr.map(detail.options(), function (option) {
     return {
       dom: {
         tag: 'option',
@@ -20,7 +19,7 @@ var factory = function (detail, spec) {
     };
   });
 
-  var initialValues = detail.data().map(function (v) {
+  const initialValues = detail.data().map(function (v) {
     return Objects.wrap('initialValue', v);
   }).getOr({ });
 
@@ -38,15 +37,15 @@ var factory = function (detail, spec) {
             store: Merger.deepMerge(
               {
                 mode: 'manual',
-                getValue: function (select) {
+                getValue (select) {
                   return Value.get(select.element());
                 },
-                setValue: function (select, newValue) {
+                setValue (select, newValue) {
                   // This is probably generically useful ... may become a part of Representing.
-                  var found = Arr.find(detail.options(), function (opt) {
+                  const found = Arr.find(detail.options(), function (opt) {
                     return opt.value === newValue;
                   });
-                  if (found.isSome()) Value.set(select.element(), newValue);
+                  if (found.isSome()) { Value.set(select.element(), newValue); }
                 }
               },
               initialValues
@@ -66,5 +65,5 @@ export default <any> Sketcher.single({
     SketchBehaviours.field('selectBehaviours', [ Focusing, Representing ]),
     FieldSchema.option('data')
   ],
-  factory: factory
+  factory
 });

@@ -1,3 +1,6 @@
+import { Fun, Merger, Option } from '@ephox/katamari';
+import { Value } from '@ephox/sugar';
+
 import Behaviour from '../../api/behaviour/Behaviour';
 import Composing from '../../api/behaviour/Composing';
 import Coupling from '../../api/behaviour/Coupling';
@@ -9,19 +12,15 @@ import Sandboxing from '../../api/behaviour/Sandboxing';
 import Streaming from '../../api/behaviour/Streaming';
 import Toggling from '../../api/behaviour/Toggling';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
-import AlloyEvents from '../../api/events/AlloyEvents';
-import AlloyTriggers from '../../api/events/AlloyTriggers';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import SystemEvents from '../../api/events/SystemEvents';
-import DropdownUtils from '../../dropdown/DropdownUtils';
-import InputBase from '../common/InputBase';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Value } from '@ephox/sugar';
+import * as DropdownUtils from '../../dropdown/DropdownUtils';
+import * as InputBase from '../common/InputBase';
 
-var make = function (detail, components, spec, externals) {
-  var navigateList = function (comp, simulatedEvent, highlighter) {
-    var sandbox = Coupling.getCoupled(comp, 'sandbox');
+const make = function (detail, components, spec, externals) {
+  const navigateList = function (comp, simulatedEvent, highlighter) {
+    const sandbox = Coupling.getCoupled(comp, 'sandbox');
     if (Sandboxing.isOpen(sandbox)) {
       Composing.getCurrent(sandbox).each(function (menu) {
         Highlighting.getHighlighted(menu).fold(function () {
@@ -31,8 +30,8 @@ var make = function (detail, components, spec, externals) {
         });
       });
     } else {
-      var anchor = { anchor: 'hotspot', hotspot: comp };
-      var onOpenSync = function (sandbox) {
+      const anchor = { anchor: 'hotspot', hotspot: comp };
+      const onOpenSync = function (sandbox) {
         Composing.getCurrent(sandbox).each(highlighter);
       };
       DropdownUtils.open(detail, anchor, comp, sandbox, externals, onOpenSync).get(Fun.noop);
@@ -41,21 +40,21 @@ var make = function (detail, components, spec, externals) {
 
   // Due to the fact that typeahead probably need to separate value from text, they can't reuse
   // (easily) the same representing logic as input fields.
-  var inputBehaviours = InputBase.behaviours(detail);
+  const inputBehaviours = InputBase.behaviours(detail);
 
-  var behaviours = Behaviour.derive([
+  const behaviours = Behaviour.derive([
     Focusing.config({ }),
     Representing.config({
       store: {
         mode: 'dataset',
-        getDataKey: function (typeahead) {
+        getDataKey (typeahead) {
           return Value.get(typeahead.element());
         },
         initialValue: detail.data().getOr(undefined),
-        getFallbackEntry: function (key) {
+        getFallbackEntry (key) {
           return { value: key, text: key };
         },
-        setData: function (typeahead, data) {
+        setData (typeahead, data) {
           Value.set(typeahead.element(), data.text);
         }
       }
@@ -65,21 +64,21 @@ var make = function (detail, components, spec, externals) {
         mode: 'throttle',
         delay: 1000
       },
-      onStream: function (component, simulatedEvent) {
+      onStream (component, simulatedEvent) {
 
-        var sandbox = Coupling.getCoupled(component, 'sandbox');
-        var focusInInput = Focusing.isFocused(component);
+        const sandbox = Coupling.getCoupled(component, 'sandbox');
+        const focusInInput = Focusing.isFocused(component);
         // You don't want it to change when something else has triggered the change.
         if (focusInInput) {
           if (Value.get(component.element()).length >= detail.minChars()) {
 
-            var previousValue = Composing.getCurrent(sandbox).bind(function (menu) {
+            const previousValue = Composing.getCurrent(sandbox).bind(function (menu) {
               return Highlighting.getHighlighted(menu).map(Representing.getValue);
             });
 
             detail.previewing().set(true);
 
-            var onOpenSync = function (_sandbox) {
+            const onOpenSync = function (_sandbox) {
               Composing.getCurrent(sandbox).each(function (menu) {
                 previousValue.fold(function () {
                   Highlighting.highlightFirst(menu);
@@ -95,8 +94,8 @@ var make = function (detail, components, spec, externals) {
                 });
               });
             };
-            
-            var anchor = { anchor: 'hotspot', hotspot: component };
+
+            const anchor = { anchor: 'hotspot', hotspot: component };
             DropdownUtils.open(detail, anchor, component, sandbox, externals, onOpenSync).get(Fun.noop);
           }
         }
@@ -105,24 +104,24 @@ var make = function (detail, components, spec, externals) {
 
     Keying.config({
       mode: 'special',
-      onDown: function (comp, simulatedEvent) {
+      onDown (comp, simulatedEvent) {
         navigateList(comp, simulatedEvent, Highlighting.highlightFirst);
         return Option.some(true);
       },
-      onEscape: function (comp) {
-        var sandbox = Coupling.getCoupled(comp, 'sandbox');
-        if (Sandboxing.isOpen(sandbox)) Sandboxing.close(sandbox);
+      onEscape (comp) {
+        const sandbox = Coupling.getCoupled(comp, 'sandbox');
+        if (Sandboxing.isOpen(sandbox)) { Sandboxing.close(sandbox); }
         return Option.some(true);
       },
-      onUp: function (comp, simulatedEvent) {
+      onUp (comp, simulatedEvent) {
         navigateList(comp, simulatedEvent, Highlighting.highlightLast);
         return Option.some(true);
       },
-      onEnter: function (comp, simulatedEvent) {
-        var sandbox = Coupling.getCoupled(comp, 'sandbox');
-        if (Sandboxing.isOpen(sandbox)) Sandboxing.close(sandbox);
+      onEnter (comp, simulatedEvent) {
+        const sandbox = Coupling.getCoupled(comp, 'sandbox');
+        if (Sandboxing.isOpen(sandbox)) { Sandboxing.close(sandbox); }
         detail.onExecute()(sandbox, comp);
-        var currentValue = Representing.getValue(comp);
+        const currentValue = Representing.getValue(comp);
         comp.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);
         return Option.some(true);
       }
@@ -139,10 +138,10 @@ var make = function (detail, components, spec, externals) {
 
     Coupling.config({
       others: {
-        sandbox: function (hotspot) {
+        sandbox (hotspot) {
           return DropdownUtils.makeSandbox(detail, {
             anchor: 'hotspot',
-            hotspot: hotspot
+            hotspot
           }, hotspot, {
             onOpen: Fun.identity,
             onClose: Fun.identity
@@ -163,19 +162,19 @@ var make = function (detail, components, spec, externals) {
 
     events: AlloyEvents.derive([
       AlloyEvents.runOnExecute(function (comp) {
-        var anchor = { anchor: 'hotspot', hotspot: comp };
-        var onOpenSync = Fun.noop;
+        const anchor = { anchor: 'hotspot', hotspot: comp };
+        const onOpenSync = Fun.noop;
         DropdownUtils.togglePopup(detail, anchor, comp, externals, onOpenSync).get(Fun.noop);
       })
     ].concat(detail.dismissOnBlur() ? [
       AlloyEvents.run(SystemEvents.postBlur(), function (typeahead) {
-        var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
+        const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
         Sandboxing.close(sandbox);
       })
     ] : [ ]))
   };
 };
 
-export default <any> {
-  make: make
+export {
+  make
 };

@@ -1,17 +1,19 @@
-import Styles from '../layout/Styles';
 import { Fun } from '@ephox/katamari';
 
-var south = Styles.resolve('caret-top-align');
-var north = Styles.resolve('caret-bottom-align');
-var west = Styles.resolve('caret-right-align');
-var east = Styles.resolve('caret-left-align');
-var middle = Styles.resolve('caret-middle-align');
+import * as Styles from '../layout/Styles';
 
-export default <any> {
-  east: Fun.constant(east),
-  south: Fun.constant(south),
-  west: Fun.constant(west),
-  north: Fun.constant(north),
-  middle: Fun.constant(middle),
-  all: Fun.constant([ south, north, east, west, middle ])
+const south = Fun.constant(Styles.resolve('caret-top-align'));
+const north = Fun.constant(Styles.resolve('caret-bottom-align'));
+const west = Fun.constant(Styles.resolve('caret-right-align'));
+const east = Fun.constant(Styles.resolve('caret-left-align'));
+const middle = Fun.constant(Styles.resolve('caret-middle-align'));
+const all = Fun.constant([ south(), north(), east(), west(), middle() ]);
+
+export {
+  east,
+  south,
+  west,
+  north,
+  middle,
+  all
 };

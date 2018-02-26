@@ -5,14 +5,14 @@ import RepresentSchema from '../../behaviour/representing/RepresentSchema';
 import RepresentState from '../../behaviour/representing/RepresentState';
 
 // The self-reference is clumsy.
-var me = Behaviour.create({
+const me = Behaviour.create({
   fields: RepresentSchema,
   name: 'representing',
   active: ActiveRepresenting,
   apis: RepresentApis,
   extra: {
-    setValueFrom: function (component, source) {
-      var value = me.getValue(source);
+    setValueFrom (component, source) {
+      const value = me.getValue(source);
       me.setValue(component, value);
     }
   },

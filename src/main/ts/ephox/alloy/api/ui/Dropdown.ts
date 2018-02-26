@@ -1,3 +1,8 @@
+import { Fun, Merger, Option } from '@ephox/katamari';
+
+import DropdownUtils from '../../dropdown/DropdownUtils';
+import ButtonBase from '../../ui/common/ButtonBase';
+import DropdownSchema from '../../ui/schema/DropdownSchema';
 import Behaviour from '../behaviour/Behaviour';
 import Composing from '../behaviour/Composing';
 import Coupling from '../behaviour/Coupling';
@@ -7,24 +12,18 @@ import Keying from '../behaviour/Keying';
 import Toggling from '../behaviour/Toggling';
 import SketchBehaviours from '../component/SketchBehaviours';
 import Sketcher from './Sketcher';
-import DropdownUtils from '../../dropdown/DropdownUtils';
-import ButtonBase from '../../ui/common/ButtonBase';
-import DropdownSchema from '../../ui/schema/DropdownSchema';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
 
-var factory = function (detail, components, spec, externals) {
-  var switchToMenu = function (sandbox) {
+const factory = function (detail, components, spec, externals) {
+  const switchToMenu = function (sandbox) {
     Composing.getCurrent(sandbox).each(function (current) {
       Highlighting.highlightFirst(current);
       Keying.focusIn(current);
     });
   };
 
-  var action = function (component) {
-    var anchor = { anchor: 'hotspot', hotspot: component };
-    var onOpenSync = switchToMenu;
+  const action = function (component) {
+    const anchor = { anchor: 'hotspot', hotspot: component };
+    const onOpenSync = switchToMenu;
     DropdownUtils.togglePopup(detail, anchor, component, externals, onOpenSync).get(Fun.noop);
   };
 
@@ -37,7 +36,7 @@ var factory = function (detail, components, spec, externals) {
     {
       uid: detail.uid(),
       dom: detail.dom(),
-      components: components,
+      components,
       behaviours: Merger.deepMerge(
         Behaviour.derive([
           Toggling.config({
@@ -50,13 +49,13 @@ var factory = function (detail, components, spec, externals) {
           }),
           Coupling.config({
             others: {
-              sandbox: function (hotspot) {
+              sandbox (hotspot) {
                 return DropdownUtils.makeSandbox(detail, {
                   anchor: 'hotspot',
-                  hotspot: hotspot
+                  hotspot
                 }, hotspot, {
-                  onOpen: function () { Toggling.on(hotspot); },
-                  onClose: function () { Toggling.off(hotspot); }
+                  onOpen () { Toggling.on(hotspot); },
+                  onClose () { Toggling.off(hotspot); }
                 });
               }
             }
@@ -78,7 +77,7 @@ var factory = function (detail, components, spec, externals) {
     {
       dom: {
         attributes: {
-          role: detail.role().getOr('button'),
+          'role': detail.role().getOr('button'),
           'aria-haspopup': 'true'
         }
       }
@@ -90,5 +89,5 @@ export default <any> Sketcher.composite({
   name: 'Dropdown',
   configFields: DropdownSchema.schema(),
   partFields: DropdownSchema.parts(),
-  factory: factory
+  factory
 });

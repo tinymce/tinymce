@@ -1,19 +1,19 @@
+import { FieldSchema } from '@ephox/boulder';
+import { Fun, Option } from '@ephox/katamari';
+import { SelectorFind } from '@ephox/sugar';
+
 import Keys from '../alien/Keys';
-import KeyingState from '../behaviour/keyboard/KeyingState';
-import Fields from '../data/Fields';
-import KeyingType from './KeyingType';
-import KeyingTypes from './KeyingTypes';
+import * as KeyingState from '../behaviour/keyboard/KeyingState';
+import * as Fields from '../data/Fields';
 import DomMovement from '../navigation/DomMovement';
 import DomPinpoint from '../navigation/DomPinpoint';
 import KeyMatch from '../navigation/KeyMatch';
 import KeyRules from '../navigation/KeyRules';
 import WrapArrNavigation from '../navigation/WrapArrNavigation';
-import { FieldSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { SelectorFind } from '@ephox/sugar';
+import * as KeyingType from './KeyingType';
+import * as KeyingTypes from './KeyingTypes';
 
-var schema = [
+const schema = [
   FieldSchema.strict('selector'),
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
   Fields.onKeyboardHandler('onEscape'),
@@ -21,25 +21,25 @@ var schema = [
   Fields.initSize()
 ];
 
-var focusIn = function (component, gridConfig, gridState) {
+const focusIn = function (component, gridConfig, gridState) {
   SelectorFind.descendant(component.element(), gridConfig.selector()).each(function (first) {
     gridConfig.focusManager().set(component, first);
   });
 };
 
-var findCurrent = function (component, gridConfig) {
+const findCurrent = function (component, gridConfig) {
   return gridConfig.focusManager().get(component).bind(function (elem) {
     return SelectorFind.closest(elem, gridConfig.selector());
   });
 };
 
-var execute = function (component, simulatedEvent, gridConfig, gridState) {
+const execute = function (component, simulatedEvent, gridConfig, gridState) {
   return findCurrent(component, gridConfig).bind(function (focused) {
     return gridConfig.execute()(component, simulatedEvent, focused);
   });
 };
 
-var doMove = function (cycle) {
+const doMove = function (cycle) {
   return function (element, focused, gridConfig, gridState) {
     return DomPinpoint.locateVisible(element, focused, gridConfig.selector()).bind(function (identified) {
       return cycle(
@@ -52,21 +52,21 @@ var doMove = function (cycle) {
   };
 };
 
-var handleTab = function (component, simulatedEvent, gridConfig, gridState) {
+const handleTab = function (component, simulatedEvent, gridConfig, gridState) {
   return gridConfig.captureTab() ? Option.some(true) : Option.none();
 };
 
-var doEscape = function (component, simulatedEvent, gridConfig, gridState) {
+const doEscape = function (component, simulatedEvent, gridConfig, gridState) {
   return gridConfig.onEscape()(component, simulatedEvent);
 };
 
-var moveLeft = doMove(WrapArrNavigation.cycleLeft);
-var moveRight = doMove(WrapArrNavigation.cycleRight);
+const moveLeft = doMove(WrapArrNavigation.cycleLeft);
+const moveRight = doMove(WrapArrNavigation.cycleRight);
 
-var moveNorth = doMove(WrapArrNavigation.cycleUp);
-var moveSouth = doMove(WrapArrNavigation.cycleDown);
+const moveNorth = doMove(WrapArrNavigation.cycleUp);
+const moveSouth = doMove(WrapArrNavigation.cycleDown);
 
-var getRules = Fun.constant([
+const getRules = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
   KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),
@@ -78,8 +78,8 @@ var getRules = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE().concat(Keys.ENTER())), execute)
 ]);
 
-var getEvents = Fun.constant({ });
+const getEvents = Fun.constant({ });
 
-var getApis = {};
+const getApis = {};
 
 export default <any> KeyingType.typical(schema, KeyingState.flatgrid, getRules, getEvents, getApis, Option.some(focusIn));

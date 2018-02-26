@@ -1,8 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 
-var field = function (name, forbidden) {
+const field = function (name, forbidden) {
   return FieldSchema.defaultedObjOf(name, { }, Arr.map(forbidden, function (f) {
     return FieldSchema.forbid(f.name(), 'Cannot configure ' + f.name() + ' for ' + name);
   }).concat([
@@ -10,11 +9,11 @@ var field = function (name, forbidden) {
   ]));
 };
 
-var get = function (data) {
+const get = function (data) {
   return data.dump();
 };
 
 export default <any> {
-  field: field,
-  get: get
+  field,
+  get
 };

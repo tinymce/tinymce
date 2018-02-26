@@ -1,47 +1,45 @@
-import AlloyTags from '../ephemera/AlloyTags';
-import { Id } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
+import { Fun, Id, Option } from '@ephox/katamari';
+import { Attr, Node, SelectorFind } from '@ephox/sugar';
 
-var prefix = AlloyTags.prefix();
-var idAttr = AlloyTags.idAttr();
+import * as AlloyTags from '../ephemera/AlloyTags';
 
-var write = function (label, elem) {
-  var id = Id.generate(prefix + label);
+const prefix = AlloyTags.prefix();
+const idAttr = AlloyTags.idAttr();
+
+const write = function (label, elem) {
+  const id = Id.generate(prefix + label);
   Attr.set(elem, idAttr, id);
   return id;
 };
 
-var writeOnly = function (elem, uid) {
+const writeOnly = function (elem, uid) {
   Attr.set(elem, idAttr, uid);
 };
 
-var read = function (elem) {
-  var id = Node.isElement(elem) ? Attr.get(elem, idAttr) : null;
+const read = function (elem) {
+  const id = Node.isElement(elem) ? Attr.get(elem, idAttr) : null;
   return Option.from(id);
 };
 
-var find = function (container, id) {
+const find = function (container, id) {
   return SelectorFind.descendant(container, id);
 };
 
-var generate = function (prefix) {
+const generate = function (prefix) {
   return Id.generate(prefix);
 };
 
-var revoke = function (elem) {
+const revoke = function (elem) {
   Attr.remove(elem, idAttr);
 };
 
-export default <any> {
-  revoke: revoke,
-  write: write,
-  writeOnly: writeOnly,
-  read: read,
-  find: find,
-  generate: generate,
-  attribute: Fun.constant(idAttr)
+const attribute = Fun.constant(idAttr);
+export {
+  revoke,
+  write,
+  writeOnly,
+  read,
+  find,
+  generate,
+  attribute
 };

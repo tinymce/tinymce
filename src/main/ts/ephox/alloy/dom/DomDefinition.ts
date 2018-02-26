@@ -1,7 +1,7 @@
 import { JSON as Json } from '@ephox/sand';
 import { Struct } from '@ephox/katamari';
 
-var nu = Struct.immutableBag([ 'tag' ], [
+const nu = Struct.immutableBag([ 'tag' ], [
   'classes',
   'attributes',
   'styles',
@@ -11,12 +11,12 @@ var nu = Struct.immutableBag([ 'tag' ], [
   'defChildren'
 ]);
 
-var defToStr = function (defn) {
-  var raw = defToRaw(defn);
+const defToStr = function (defn) {
+  const raw = defToRaw(defn);
   return Json.stringify(raw, null, 2);
 };
 
-var defToRaw = function (defn) {
+const defToRaw = function (defn) {
   return {
     tag: defn.tag(),
     classes: defn.classes().getOr([ ]),
@@ -33,8 +33,8 @@ var defToRaw = function (defn) {
   };
 };
 
-export default <any> {
-  nu: nu,
-  defToStr: defToStr,
-  defToRaw: defToRaw
+export {
+  nu,
+  defToStr,
+  defToRaw
 };

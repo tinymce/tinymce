@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
-var focusEvent = 'alloy.menu-focus';
+const focus = Fun.constant('alloy.menu-focus');
 
-export default <any> {
-  focus: Fun.constant(focusEvent)
+export {
+  focus
 };

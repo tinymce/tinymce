@@ -1,47 +1,48 @@
-import BehaviourState from '../common/BehaviourState';
 import { Cell } from '@ephox/katamari';
 
-var memory = function () {
-  var data = Cell(null);
+import BehaviourState from '../common/BehaviourState';
 
-  var readState = function () {
+const memory = function () {
+  const data = Cell(null);
+
+  const readState = function () {
     return {
       mode: 'memory',
       value: data.get()
     };
   };
 
-  var isNotSet = function () {
+  const isNotSet = function () {
     return data.get() === null;
   };
 
-  var clear = function () {
+  const clear = function () {
     data.set(null);
   };
 
   return BehaviourState({
     set: data.set,
     get: data.get,
-    isNotSet: isNotSet,
-    clear: clear,
-    readState: readState
+    isNotSet,
+    clear,
+    readState
   });
 };
 
-var manual = function () {
-  var readState = function () {
+const manual = function () {
+  const readState = function () {
 
   };
 
   return BehaviourState({
-    readState: readState
+    readState
   });
 };
 
-var dataset = function () {
-  var data = Cell({ });
+const dataset = function () {
+  const data = Cell({ });
 
-  var readState = function () {
+  const readState = function () {
     return {
       mode: 'dataset',
       dataset: data.get()
@@ -49,20 +50,20 @@ var dataset = function () {
   };
 
   return BehaviourState({
-    readState: readState,
+    readState,
     set: data.set,
     get: data.get
   });
 };
 
-var init = function (spec) {
+const init = function (spec) {
   return spec.store().manager().state(spec);
 };
 
-export default <any> {
-  memory: memory,
-  dataset: dataset,
-  manual: manual,
+export {
+  memory,
+  dataset,
+  manual,
 
-  init: init
+  init
 };

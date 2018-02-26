@@ -1,17 +1,16 @@
 
-
 export default <any> function (fun, delay) {
-  var ref = null;
+  let ref = null;
 
-  var schedule = function () {
-    var args = arguments;
+  const schedule = function () {
+    const args = arguments;
     ref = setTimeout(function () {
       fun.apply(null, args);
       ref = null;
     }, delay);
   };
 
-  var cancel = function () {
+  const cancel = function () {
     if (ref !== null) {
       clearTimeout(ref);
       ref = null;
@@ -19,7 +18,7 @@ export default <any> function (fun, delay) {
   };
 
   return {
-    cancel: cancel,
-    schedule: schedule
+    cancel,
+    schedule
   };
 };
