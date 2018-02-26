@@ -1,5 +1,10 @@
 import { Adt, Fun } from '@ephox/katamari';
-import { EncodedAdt } from '../core/ValueProcessor';
+
+export interface FieldPresenceAdt {
+  fold: (...args: any[]) => any;
+  match: (branches: {any}) => any;
+  log: (label: string) => string;
+}
 
 const adt = Adt.generate([
   { strict: [ ] },
@@ -9,19 +14,19 @@ const adt = Adt.generate([
   { mergeWithThunk: [ 'baseThunk' ] }
 ]);
 
-const defaulted = function (fallback: any): any {
+const defaulted = function (fallback: any): FieldPresenceAdt {
   return adt.defaultedThunk(
     Fun.constant(fallback)
   );
 };
 
-const asDefaultedOption = function <T>(fallback: T): EncodedAdt {
+const asDefaultedOption = function <T>(fallback: T): FieldPresenceAdt {
   return adt.asDefaultedOptionThunk(
     Fun.constant(fallback)
   );
 };
 
-const mergeWith = function (base: {}): EncodedAdt {
+const mergeWith = function (base: {}): FieldPresenceAdt {
   return adt.mergeWithThunk(
     Fun.constant(base)
   );

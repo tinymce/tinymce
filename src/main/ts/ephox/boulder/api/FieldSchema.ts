@@ -1,6 +1,7 @@
 import { Result, Type } from '@ephox/katamari';
-import { EncodedAdt, FieldProcessorAdt, value, objOf, arrOf, arrOfObj, anyValue, objOfOnly, Processor, field } from '../core/ValueProcessor';
+import { value, objOf, arrOf, arrOfObj, anyValue, objOfOnly, Processor, field } from '../core/ValueProcessor';
 import * as FieldPresence from './FieldPresence';
+import { FieldProcessorAdt } from '../format/TypeTokens';
 
 const strict = function (key: string): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), anyValue());

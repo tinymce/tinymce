@@ -1,6 +1,6 @@
 import { Fun, Result } from '@ephox/katamari';
 
-import { arrOf, EncodedAdt, func, Processor, thunk, value, ValueValidator, setOf, objOf, objOfOnly, arrOfObj as _arrOfObj } from '../core/ValueProcessor';
+import { arrOf, ValueProcessorAdt, func, Processor, thunk, value, ValueValidator, setOf, objOf, objOfOnly, arrOfObj as _arrOfObj } from '../core/ValueProcessor';
 import { formatErrors, formatObj} from '../format/PrettyPrinter';
 import { choose as _choose } from '../core/ChoiceProcessor';
 
@@ -11,7 +11,7 @@ export interface SchemaError <T> {
 
 const _anyValue: Processor = value(Result.value);
 
-const arrOfObj = function (objFields: EncodedAdt[]): Processor {
+const arrOfObj = function (objFields: ValueProcessorAdt[]): Processor {
   return _arrOfObj(objFields);
 };
 

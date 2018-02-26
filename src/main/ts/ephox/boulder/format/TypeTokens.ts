@@ -1,5 +1,11 @@
 import { Adt } from '@ephox/katamari';
-export interface ProcessorType {
+export interface TypeProcessorAdt {
+  fold: (...args: any[]) => any;
+  match: (branches: {any}) => any;
+  log: (label: string) => string;
+}
+
+export interface FieldProcessorAdt {
   fold: (...args: any[]) => any;
   match: (branches: {any}) => any;
   log: (label: string) => string;
