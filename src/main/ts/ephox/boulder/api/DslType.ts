@@ -1,4 +1,4 @@
-import { EncodedAdt } from '../core/ValueProcessor';
+import { EncodedAdt, Processor } from '../core/ValueProcessor';
 import { Result } from '@ephox/katamari';
 
 // NOTE: This provides cata functions for the ADTs in TypeTokens
@@ -21,5 +21,8 @@ const foldField = function (subject: EncodedAdt, onField: () => any, onState: ()
 
 export {
   foldType,
-  foldField
+  foldField,
+
+  EncodedAdt,
+  Processor
 };
