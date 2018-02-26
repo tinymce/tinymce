@@ -1,22 +1,19 @@
-import ObjIndex from '../alien/ObjIndex';
-import DomModification from '../dom/DomModification';
 import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import { Arr, Fun, Merger, Obj, Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
-import { Fun } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
 
-var behaviourDom = function (name, modification) {
+import * as ObjIndex from '../alien/ObjIndex';
+import DomModification from '../dom/DomModification';
+
+const behaviourDom = function (name, modification) {
   return {
     name: Fun.constant(name),
-    modification: modification
+    modification
   };
 };
 
-var concat = function (chain, aspect) {
-  var values = Arr.bind(chain, function (c) {
+const concat = function (chain, aspect) {
+  const values = Arr.bind(chain, function (c) {
     return c.modification().getOr([ ]);
   });
   return Result.value(
@@ -24,23 +21,23 @@ var concat = function (chain, aspect) {
   );
 };
 
-var onlyOne = function (chain, aspect, order) {
-  if (chain.length > 1) return Result.error(
+const onlyOne = function (chain, aspect, order) {
+  if (chain.length > 1) { return Result.error(
     'Multiple behaviours have tried to change DOM "' + aspect + '". The guilty behaviours are: ' +
       Json.stringify(Arr.map(chain, function (b) { return b.name(); })) + '. At this stage, this ' +
       'is not supported. Future releases might provide strategies for resolving this.'
   );
-  else if (chain.length === 0) return Result.value({ });
-  else return Result.value(
+  } else if (chain.length === 0) { return Result.value({ }); } else { return Result.value(
     chain[0].modification().fold(function () {
       return { };
     }, function (m) {
       return Objects.wrap(aspect, m);
     })
   );
+       }
 };
 
-var duplicate = function (aspect, k, obj, behaviours) {
+const duplicate = function (aspect, k, obj, behaviours) {
   return Result.error('Mulitple behaviours have tried to change the _' + k + '_ "' + aspect + '"' +
     '. The guilty behaviours are: ' + Json.stringify(Arr.bind(behaviours, function (b) {
       return b.modification().getOr({})[k] !== undefined ? [ b.name() ] : [ ];
@@ -48,12 +45,12 @@ var duplicate = function (aspect, k, obj, behaviours) {
   );
 };
 
-var safeMerge = function (chain, aspect) {
+const safeMerge = function (chain, aspect) {
   // return unsafeMerge(chain, aspect);
-  var y = Arr.foldl(chain, function (acc, c) {
-    var obj = c.modification().getOr({});
+  const y = Arr.foldl(chain, function (acc, c) {
+    const obj = c.modification().getOr({});
     return acc.bind(function (accRest) {
-      var parts = Obj.mapToArray(obj, function (v, k) {
+      const parts = Obj.mapToArray(obj, function (v, k) {
         return accRest[k] !== undefined ? duplicate(aspect, k, obj, chain) :
           Result.value(Objects.wrap(k, v));
       });
@@ -66,7 +63,7 @@ var safeMerge = function (chain, aspect) {
   });
 };
 
-var mergeTypes = {
+const mergeTypes = {
   classes: concat,
   attributes: safeMerge,
   styles: safeMerge,
@@ -79,17 +76,17 @@ var mergeTypes = {
   value: onlyOne
 };
 
-var combine = function (info, baseMod, behaviours, base) {
+const combine = function (info, baseMod, behaviours, base) {
   // Get the Behaviour DOM modifications
-  var behaviourDoms = Merger.deepMerge({ }, baseMod);
+  const behaviourDoms = Merger.deepMerge({ }, baseMod);
   Arr.each(behaviours, function (behaviour) {
     behaviourDoms[behaviour.name()] = behaviour.exhibit(info, base);
   });
 
-  var byAspect = ObjIndex.byInnerKey(behaviourDoms, behaviourDom);
+  const byAspect = ObjIndex.byInnerKey(behaviourDoms, behaviourDom);
   // byAspect format: { classes: [ { name: Toggling, modification: [ 'selected' ] } ] }
 
-  var usedAspect = Obj.map(byAspect, function (values, aspect) {
+  const usedAspect = Obj.map(byAspect, function (values, aspect) {
     return Arr.bind(values, function (value) {
       return value.modification().fold(function () {
         return [ ];
@@ -99,7 +96,7 @@ var combine = function (info, baseMod, behaviours, base) {
     });
   });
 
-  var modifications = Obj.mapToArray(usedAspect, function (values, aspect) {
+  const modifications = Obj.mapToArray(usedAspect, function (values, aspect) {
     return Objects.readOptFrom(mergeTypes, aspect).fold(function () {
       return Result.error('Unknown field type: ' + aspect);
     }, function (merger) {
@@ -107,11 +104,11 @@ var combine = function (info, baseMod, behaviours, base) {
     });
   });
 
-  var consolidated = Objects.consolidate(modifications, {});
+  const consolidated = Objects.consolidate(modifications, {});
 
   return consolidated.map(DomModification.nu);
 };
 
-export default <any> {
-  combine: combine
+export {
+  combine
 };

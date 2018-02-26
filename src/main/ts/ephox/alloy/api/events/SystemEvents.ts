@@ -2,7 +2,7 @@ import NativeEvents from './NativeEvents';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
-var alloy = { tap: Fun.constant('alloy.tap') };
+const alloy = { tap: Fun.constant('alloy.tap') };
 
 export default <any> {
   // This is used to pass focus to a component. A component might interpret

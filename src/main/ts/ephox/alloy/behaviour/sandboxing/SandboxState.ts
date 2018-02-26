@@ -1,38 +1,37 @@
+import { Cell, Fun, Option } from '@ephox/katamari';
+
 import BehaviourState from '../common/BehaviourState';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
 
-var init = function () {
-  var contents = Cell(Option.none());
+const init = function () {
+  const contents = Cell(Option.none());
 
-  var readState = Fun.constant('not-implemented');
+  const readState = Fun.constant('not-implemented');
 
-  var isOpen = function () {
+  const isOpen = function () {
     return contents.get().isSome();
   };
 
-  var set = function (c) {
+  const set = function (c) {
     contents.set(Option.some(c));
   };
 
-  var get = function (c) {
+  const get = function (c) {
     return contents.get();
   };
 
-  var clear = function () {
+  const clear = function () {
     contents.set(Option.none());
   };
 
   return BehaviourState({
-    readState: readState,
-    isOpen: isOpen,
-    clear: clear,
-    set: set,
-    get: get
+    readState,
+    isOpen,
+    clear,
+    set,
+    get
   });
 };
 
-export default <any> {
-  init: init
+export {
+  init
 };

@@ -1,7 +1,7 @@
-var getCurrent = function (component, composeConfig, composeState) {
+const getCurrent = function (component, composeConfig, composeState) {
   return composeConfig.find()(component);
 };
 
-export default <any> {
-  getCurrent: getCurrent
+export {
+  getCurrent
 };

@@ -1,22 +1,21 @@
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Cell, Fun } from '@ephox/katamari';
 
-var fromSource = function (event, source) {
-  var stopper = Cell(false);
+const fromSource = function (event, source) {
+  const stopper = Cell(false);
 
-  var cutter = Cell(false);
+  const cutter = Cell(false);
 
-  var stop = function () {
+  const stop = function () {
     stopper.set(true);
   };
 
-  var cut = function () {
+  const cut = function () {
     cutter.set(true);
   };
 
   return {
-    stop: stop,
-    cut: cut,
+    stop,
+    cut,
     isStopped: stopper.get,
     isCut: cutter.get,
     event: Fun.constant(event),
@@ -27,15 +26,15 @@ var fromSource = function (event, source) {
 };
 
 // Events that come from outside of the alloy root (e.g. window scroll)
-var fromExternal = function (event) {
-  var stopper = Cell(false);
+const fromExternal = function (event) {
+  const stopper = Cell(false);
 
-  var stop = function () {
+  const stop = function () {
     stopper.set(true);
   };
 
   return {
-    stop: stop,
+    stop,
     cut: Fun.noop, // cutting has no meaning for a broadcasted event
     isStopped: stopper.get,
     isCut: Fun.constant(false),
@@ -50,13 +49,13 @@ var fromExternal = function (event) {
   };
 };
 
-var fromTarget = function (event, target) {
-  var source = Cell(target);
+const fromTarget = function (event, target) {
+  const source = Cell(target);
   return fromSource(event, source);
 };
 
-export default <any> {
-  fromSource: fromSource,
-  fromExternal: fromExternal,
-  fromTarget: fromTarget
+export {
+  fromSource,
+  fromExternal,
+  fromTarget
 };

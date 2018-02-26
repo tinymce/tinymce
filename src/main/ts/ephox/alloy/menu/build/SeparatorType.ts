@@ -1,9 +1,10 @@
-import AlloyEvents from '../../api/events/AlloyEvents';
-import SystemEvents from '../../api/events/SystemEvents';
-import Fields from '../../data/Fields';
 import { FieldSchema } from '@ephox/boulder';
 
-var builder = function (detail) {
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import SystemEvents from '../../api/events/SystemEvents';
+import * as Fields from '../../data/Fields';
+
+const builder = function (detail) {
   return {
     dom: detail.dom(),
     components: detail.components(),
@@ -13,7 +14,7 @@ var builder = function (detail) {
   };
 };
 
-var schema = [
+const schema = [
   FieldSchema.strict('dom'),
   FieldSchema.strict('components'),
   Fields.output('builder', builder)

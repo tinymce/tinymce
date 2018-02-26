@@ -1,3 +1,9 @@
+import { Fun, Merger, Option } from '@ephox/katamari';
+
+import DropdownUtils from '../../dropdown/DropdownUtils';
+import * as AlloyParts from '../../parts/AlloyParts';
+import ButtonBase from '../../ui/common/ButtonBase';
+import SplitDropdownSchema from '../../ui/schema/SplitDropdownSchema';
 import Behaviour from '../behaviour/Behaviour';
 import Composing from '../behaviour/Composing';
 import Coupling from '../behaviour/Coupling';
@@ -6,44 +12,37 @@ import Highlighting from '../behaviour/Highlighting';
 import Keying from '../behaviour/Keying';
 import Toggling from '../behaviour/Toggling';
 import SketchBehaviours from '../component/SketchBehaviours';
-import AlloyTriggers from '../events/AlloyTriggers';
-import Sketcher from './Sketcher';
-import DropdownUtils from '../../dropdown/DropdownUtils';
-import AlloyParts from '../../parts/AlloyParts';
-import ButtonBase from '../../ui/common/ButtonBase';
-import SplitDropdownSchema from '../../ui/schema/SplitDropdownSchema';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import * as AlloyTriggers from '../events/AlloyTriggers';
+import * as Sketcher from './Sketcher';
 
-var factory = function (detail, components, spec, externals) {
+const factory = function (detail, components, spec, externals) {
 
-  var switchToMenu = function (sandbox) {
+  const switchToMenu = function (sandbox) {
     Composing.getCurrent(sandbox).each(function (current) {
       Highlighting.highlightFirst(current);
       Keying.focusIn(current);
     });
   };
 
-  var action = function (component) {
-    var anchor = { anchor: 'hotspot', hotspot: component };
-    var onOpenSync = switchToMenu;
+  const action = function (component) {
+    const anchor = { anchor: 'hotspot', hotspot: component };
+    const onOpenSync = switchToMenu;
     DropdownUtils.togglePopup(detail, anchor, component, externals, onOpenSync).get(Fun.noop);
   };
 
-  var executeOnButton = function (comp) {
-    var button = AlloyParts.getPartOrDie(comp, detail, 'button');
+  const executeOnButton = function (comp) {
+    const button = AlloyParts.getPartOrDie(comp, detail, 'button');
     AlloyTriggers.emitExecute(button);
     return Option.some(true);
   };
 
-  var buttonEvents = ButtonBase.events(Option.some(action));
+  const buttonEvents = ButtonBase.events(Option.some(action));
 
   return Merger.deepMerge(
     {
       uid: detail.uid(),
       dom: detail.dom(),
-      components: components,
+      components,
       eventOrder: {
         // Order, the button state is toggled first, so assumed !selected means close.
         'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
@@ -55,20 +54,20 @@ var factory = function (detail, components, spec, externals) {
         Behaviour.derive([
           Coupling.config({
             others: {
-              sandbox: function (hotspot) {
-                var arrow = AlloyParts.getPartOrDie(hotspot, detail, 'arrow');
-                var extras = {
-                  onOpen: function () {
+              sandbox (hotspot) {
+                const arrow = AlloyParts.getPartOrDie(hotspot, detail, 'arrow');
+                const extras = {
+                  onOpen () {
                     Toggling.on(arrow);
                   },
-                  onClose: function () {
+                  onClose () {
                     Toggling.off(arrow);
                   }
                 };
 
                 return DropdownUtils.makeSandbox(detail, {
                   anchor: 'hotspot',
-                  hotspot: hotspot
+                  hotspot
                 }, hotspot, extras);
               }
             }
@@ -77,7 +76,7 @@ var factory = function (detail, components, spec, externals) {
             mode: 'special',
             onSpace: executeOnButton,
             onEnter: executeOnButton,
-            onDown: function (comp) {
+            onDown (comp) {
               action(comp);
               return Option.some(true);
             }
@@ -101,5 +100,5 @@ export default <any> Sketcher.composite({
   name: 'SplitDropdown',
   configFields: SplitDropdownSchema.schema(),
   partFields: SplitDropdownSchema.parts(),
-  factory: factory
+  factory
 });

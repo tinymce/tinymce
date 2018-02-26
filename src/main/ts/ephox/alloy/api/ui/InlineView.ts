@@ -1,20 +1,19 @@
-import ComponentStructure from '../../alien/ComponentStructure';
+import { FieldSchema } from '@ephox/boulder';
+import { Fun, Merger, Option } from '@ephox/katamari';
+
+import * as ComponentStructure from '../../alien/ComponentStructure';
+import Fields from '../../data/Fields';
+import Dismissal from '../../sandbox/Dismissal';
 import Behaviour from '../behaviour/Behaviour';
 import Positioning from '../behaviour/Positioning';
 import Receiving from '../behaviour/Receiving';
 import Sandboxing from '../behaviour/Sandboxing';
 import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
-import Fields from '../../data/Fields';
-import Dismissal from '../../sandbox/Dismissal';
-import { FieldSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import * as Sketcher from './Sketcher';
 
-var factory = function (detail, spec) {
-  var isPartOfRelated = function (container, queryElem) {
-    var related = detail.getRelated()(container);
+const factory = function (detail, spec) {
+  const isPartOfRelated = function (container, queryElem) {
+    const related = detail.getRelated()(container);
     return related.exists(function (rel) {
       return ComponentStructure.isPartOf(rel, queryElem);
     });
@@ -27,10 +26,10 @@ var factory = function (detail, spec) {
       behaviours: Merger.deepMerge(
         Behaviour.derive([
           Sandboxing.config({
-            isPartOf: function (container, data, queryElem) {
+            isPartOf (container, data, queryElem) {
               return ComponentStructure.isPartOf(data, queryElem) || isPartOfRelated(container, queryElem);
             },
-            getAttachPoint: function () {
+            getAttachPoint () {
               return detail.lazySink()().getOrDie();
             }
           }),
@@ -43,15 +42,15 @@ var factory = function (detail, spec) {
       eventOrder: detail.eventOrder(),
 
       apis: {
-        showAt: function (sandbox, anchor, thing) {
-          var sink = detail.lazySink()().getOrDie();
+        showAt (sandbox, anchor, thing) {
+          const sink = detail.lazySink()().getOrDie();
           Sandboxing.cloak(sandbox);
           Sandboxing.open(sandbox, thing);
           Positioning.position(sink, anchor, sandbox);
           Sandboxing.decloak(sandbox);
           detail.onShow()(sandbox);
         },
-        hide: function (sandbox) {
+        hide (sandbox) {
           Sandboxing.close(sandbox);
           detail.onHide()(sandbox);
         },
@@ -71,15 +70,15 @@ export default <any> Sketcher.single({
     FieldSchema.defaulted('getRelated', Option.none),
     FieldSchema.defaulted('eventOrder')
   ],
-  factory: factory,
+  factory,
   apis: {
-    showAt: function (apis, component, anchor, thing) {
+    showAt (apis, component, anchor, thing) {
       apis.showAt(component, anchor, thing);
     },
-    hide: function (apis, component) {
+    hide (apis, component) {
       apis.hide(component);
     },
-    isOpen: function (apis, component) {
+    isOpen (apis, component) {
       return apis.isOpen(component);
     }
   }

@@ -6,26 +6,26 @@ import { Struct } from '@ephox/katamari';
  *
  * It is only useful for fixed origins; relative needs to do everything the old way.
  */
-var anchor = Struct.immutable('anchorBox', 'origin');
+const anchor = Struct.immutable('anchorBox', 'origin');
 
-var fixedOrigin = function () {
+const fixedOrigin = function () {
   return Origins.fixed(0, 0, window.innerWidth, window.innerHeight);
 };
 
-var element = function (anchorElement) {
-  var origin = fixedOrigin();
-  var anchorBox = Origins.toBox(origin, anchorElement);
+const element = function (anchorElement) {
+  const origin = fixedOrigin();
+  const anchorBox = Origins.toBox(origin, anchorElement);
 
   return anchor(anchorBox, origin);
 };
 
-var box = function (anchorBox) {
-  var origin = fixedOrigin();
+const box = function (anchorBox) {
+  const origin = fixedOrigin();
 
   return anchor(anchorBox, origin);
 };
 
-export default <any> {
-  box: box,
-  element: element
+export {
+  box,
+  element
 };

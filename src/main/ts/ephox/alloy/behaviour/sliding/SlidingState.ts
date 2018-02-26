@@ -1,23 +1,23 @@
+import { Cell, Fun } from '@ephox/katamari';
+
 import BehaviourState from '../common/BehaviourState';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
 
-var init = function (spec) {
-  var state = Cell(spec.expanded());
+const init = function (spec) {
+  const state = Cell(spec.expanded());
 
-  var readState = function () {
+  const readState = function () {
     return 'expanded: ' + state.get();
   };
 
   return BehaviourState({
-    isExpanded: function () { return state.get() === true; },
-    isCollapsed: function () { return state.get() === false; },
+    isExpanded () { return state.get() === true; },
+    isCollapsed () { return state.get() === false; },
     setCollapsed: Fun.curry(state.set, false),
     setExpanded: Fun.curry(state.set, true),
-    readState: readState
+    readState
   });
 };
 
-export default <any> {
-  init: init
+export {
+  init
 };

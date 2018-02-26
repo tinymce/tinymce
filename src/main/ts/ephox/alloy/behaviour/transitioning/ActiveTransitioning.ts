@@ -1,11 +1,11 @@
-import AlloyEvents from '../../api/events/AlloyEvents';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
 import NativeEvents from '../../api/events/NativeEvents';
 import TransitionApis from './TransitionApis';
 
-var events = function (transConfig, transState) {
+const events = function (transConfig, transState) {
   return AlloyEvents.derive([
     AlloyEvents.run(NativeEvents.transitionend(), function (component, simulatedEvent) {
-      var raw = simulatedEvent.event().raw();
+      const raw = simulatedEvent.event().raw();
       TransitionApis.getCurrentRoute(component, transConfig, transState).each(function (route) {
         TransitionApis.findRoute(component, transConfig, transState, route).each(function (rInfo) {
           rInfo.transition().each(function (rTransition) {
@@ -24,6 +24,6 @@ var events = function (transConfig, transState) {
   ]);
 };
 
-export default <any> {
-  events: events
+export {
+  events
 };

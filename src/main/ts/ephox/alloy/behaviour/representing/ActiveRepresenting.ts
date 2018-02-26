@@ -1,9 +1,9 @@
-import AlloyEvents from '../../api/events/AlloyEvents';
-import Behaviour from '../common/Behaviour';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import * as Behaviour from '../common/Behaviour';
 import RepresentApis from './RepresentApis';
 
-var events = function (repConfig, repState) {
-  var es = repConfig.resetOnDom() ? [
+const events = function (repConfig, repState) {
+  const es = repConfig.resetOnDom() ? [
     AlloyEvents.runOnAttached(function (comp, se) {
       RepresentApis.onLoad(comp, repConfig, repState);
     }),
@@ -17,6 +17,6 @@ var events = function (repConfig, repState) {
   return AlloyEvents.derive(es);
 };
 
-export default <any> {
-  events: events
+export {
+  events
 };

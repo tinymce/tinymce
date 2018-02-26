@@ -1,8 +1,6 @@
-import { Class } from '@ephox/sugar';
-import { Classes } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
+import { Class, Classes, Css } from '@ephox/sugar';
 
-var getAnimationRoot = function (component, slideConfig) {
+const getAnimationRoot = function (component, slideConfig) {
   return slideConfig.getAnimationRoot().fold(function () {
     return component.element();
   }, function (get) {
@@ -10,20 +8,20 @@ var getAnimationRoot = function (component, slideConfig) {
   });
 };
 
-var getDimensionProperty = function (slideConfig) {
+const getDimensionProperty = function (slideConfig) {
   return slideConfig.dimension().property();
 };
 
-var getDimension = function (slideConfig, elem) {
+const getDimension = function (slideConfig, elem) {
   return slideConfig.dimension().getDimension()(elem);
 };
 
-var disableTransitions = function (component, slideConfig) {
-  var root = getAnimationRoot(component, slideConfig);
+const disableTransitions = function (component, slideConfig) {
+  const root = getAnimationRoot(component, slideConfig);
   Classes.remove(root, [ slideConfig.shrinkingClass(), slideConfig.growingClass() ]);
 };
 
-var setShrunk = function (component, slideConfig) {
+const setShrunk = function (component, slideConfig) {
   Class.remove(component.element(), slideConfig.openClass());
   Class.add(component.element(), slideConfig.closedClass());
   Css.set(component.element(), getDimensionProperty(slideConfig), '0px');
@@ -31,20 +29,20 @@ var setShrunk = function (component, slideConfig) {
 };
 
 // Note, this is without transitions, so we can measure the size instantaneously
-var measureTargetSize = function (component, slideConfig) {
+const measureTargetSize = function (component, slideConfig) {
   setGrown(component, slideConfig);
-  var expanded = getDimension(slideConfig, component.element());
+  const expanded = getDimension(slideConfig, component.element());
   setShrunk(component, slideConfig);
   return expanded;
 };
 
-var setGrown = function (component, slideConfig) {
+const setGrown = function (component, slideConfig) {
   Class.remove(component.element(), slideConfig.closedClass());
   Class.add(component.element(), slideConfig.openClass());
   Css.remove(component.element(), getDimensionProperty(slideConfig));
 };
 
-var doImmediateShrink = function (component, slideConfig, slideState) {
+const doImmediateShrink = function (component, slideConfig, slideState) {
   slideState.setCollapsed();
 
   // Force current dimension to begin transition
@@ -58,14 +56,14 @@ var doImmediateShrink = function (component, slideConfig, slideState) {
   slideConfig.onShrunk()(component);
 };
 
-var doStartShrink = function (component, slideConfig, slideState) {
+const doStartShrink = function (component, slideConfig, slideState) {
   slideState.setCollapsed();
 
   // Force current dimension to begin transition
   Css.set(component.element(), getDimensionProperty(slideConfig), getDimension(slideConfig, component.element()));
   Css.reflow(component.element());
 
-  var root = getAnimationRoot(component, slideConfig);
+  const root = getAnimationRoot(component, slideConfig);
   Class.add(root, slideConfig.shrinkingClass()); // enable transitions
   setShrunk(component, slideConfig);
   slideConfig.onStartShrink()(component);
@@ -73,11 +71,11 @@ var doStartShrink = function (component, slideConfig, slideState) {
 
 // Showing is complex due to the inability to transition to "auto".
 // We also can't cache the dimension as the parents may have resized since it was last shown.
-var doStartGrow = function (component, slideConfig, slideState) {
-  var fullSize = measureTargetSize(component, slideConfig);
+const doStartGrow = function (component, slideConfig, slideState) {
+  const fullSize = measureTargetSize(component, slideConfig);
 
   // Start the growing animation styles
-  var root = getAnimationRoot(component, slideConfig);
+  const root = getAnimationRoot(component, slideConfig);
   Class.add(root, slideConfig.growingClass());
 
   setGrown(component, slideConfig);
@@ -90,54 +88,54 @@ var doStartGrow = function (component, slideConfig, slideState) {
   slideConfig.onStartGrow()(component);
 };
 
-var grow = function (component, slideConfig, slideState) {
-  if (! slideState.isExpanded()) doStartGrow(component, slideConfig, slideState);
+const grow = function (component, slideConfig, slideState) {
+  if (! slideState.isExpanded()) { doStartGrow(component, slideConfig, slideState); }
 };
 
-var shrink = function (component, slideConfig, slideState) {
-  if (slideState.isExpanded()) doStartShrink(component, slideConfig, slideState);
+const shrink = function (component, slideConfig, slideState) {
+  if (slideState.isExpanded()) { doStartShrink(component, slideConfig, slideState); }
 };
 
-var immediateShrink = function (component, slideConfig, slideState) {
-  if (slideState.isExpanded()) doImmediateShrink(component, slideConfig, slideState);
+const immediateShrink = function (component, slideConfig, slideState) {
+  if (slideState.isExpanded()) { doImmediateShrink(component, slideConfig, slideState); }
 };
 
-var hasGrown = function (component, slideConfig, slideState) {
+const hasGrown = function (component, slideConfig, slideState) {
   return slideState.isExpanded();
 };
 
-var hasShrunk = function (component, slideConfig, slideState) {
+const hasShrunk = function (component, slideConfig, slideState) {
   return slideState.isCollapsed();
 };
 
-var isGrowing = function (component, slideConfig, slideState) {
-  var root = getAnimationRoot(component, slideConfig);
+const isGrowing = function (component, slideConfig, slideState) {
+  const root = getAnimationRoot(component, slideConfig);
   return Class.has(root, slideConfig.growingClass()) === true;
 };
 
-var isShrinking = function (component, slideConfig, slideState) {
-  var root = getAnimationRoot(component, slideConfig);
+const isShrinking = function (component, slideConfig, slideState) {
+  const root = getAnimationRoot(component, slideConfig);
   return Class.has(root, slideConfig.shrinkingClass()) === true;
 };
 
-var isTransitioning = function (component, slideConfig, slideState) {
+const isTransitioning = function (component, slideConfig, slideState) {
   return isGrowing(component, slideConfig, slideState) === true || isShrinking(component, slideConfig, slideState) === true;
 };
 
-var toggleGrow = function (component, slideConfig, slideState) {
-  var f = slideState.isExpanded() ? doStartShrink : doStartGrow;
+const toggleGrow = function (component, slideConfig, slideState) {
+  const f = slideState.isExpanded() ? doStartShrink : doStartGrow;
   f(component, slideConfig, slideState);
 };
 
-export default <any> {
-  grow: grow,
-  shrink: shrink,
-  immediateShrink: immediateShrink,
-  hasGrown: hasGrown,
-  hasShrunk: hasShrunk,
-  isGrowing: isGrowing,
-  isShrinking: isShrinking,
-  isTransitioning: isTransitioning,
-  toggleGrow: toggleGrow,
-  disableTransitions: disableTransitions
+export {
+  grow,
+  shrink,
+  immediateShrink,
+  hasGrown,
+  hasShrunk,
+  isGrowing,
+  isShrinking,
+  isTransitioning,
+  toggleGrow,
+  disableTransitions
 };

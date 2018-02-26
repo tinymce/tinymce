@@ -5,24 +5,24 @@ import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';
 import { Objects } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
 
-var createRoutes = function (routes) {
-  var r = { };
+const createRoutes = function (routes) {
+  const r = { };
   Obj.each(routes, function (v, k) {
-    var waypoints = k.split('<->');
+    const waypoints = k.split('<->');
     r[waypoints[0]] = Objects.wrap(waypoints[1], v);
     r[waypoints[1]] = Objects.wrap(waypoints[0], v);
   });
   return r;
 };
 
-var createBistate = function (first, second, transitions) {
+const createBistate = function (first, second, transitions) {
   return Objects.wrapAll([
     { key: first, value: Objects.wrap(second, transitions) },
     { key: second, value: Objects.wrap(first, transitions) }
   ]);
 };
 
-var createTristate = function (first, second, third, transitions) {
+const createTristate = function (first, second, third, transitions) {
   return Objects.wrapAll([
     {
       key: first,
@@ -54,8 +54,8 @@ export default <any> Behaviour.create({
   active: ActiveTransitioning,
   apis: TransitionApis,
   extra: {
-    createRoutes: createRoutes,
-    createBistate: createBistate,
-    createTristate: createTristate
+    createRoutes,
+    createBistate,
+    createTristate
   }
 });

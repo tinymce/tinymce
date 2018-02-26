@@ -1,12 +1,11 @@
-import PartType from './PartType';
-import UiSubstitutes from '../spec/UiSubstitutes';
 import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import { Arr, Fun, Merger } from '@ephox/katamari';
 
-var combine:any = function (detail, data, partSpec, partValidated) {
-  var spec = partSpec;
+import UiSubstitutes from '../spec/UiSubstitutes';
+import PartType from './PartType';
+
+const combine: any = function (detail, data, partSpec, partValidated) {
+  const spec = partSpec;
 
   return Merger.deepMerge(
     data.defaults()(detail, partSpec, partValidated),
@@ -19,9 +18,9 @@ var combine:any = function (detail, data, partSpec, partValidated) {
   );
 };
 
-var subs = function (owner, detail, parts) {
-  var internals = { };
-  var externals = { };
+const subs = function (owner, detail, parts) {
+  const internals = { };
+  const externals = { };
 
   Arr.each(parts, function (part) {
     part.fold(
@@ -36,7 +35,7 @@ var subs = function (owner, detail, parts) {
 
       // External
       function (data) {
-        var partSpec = detail.parts()[data.name()]();
+        const partSpec = detail.parts()[data.name()]();
         externals[data.name()] = Fun.constant(
           combine(detail, data, partSpec[PartType.original()]()) // This is missing partValidated
         );
@@ -55,7 +54,7 @@ var subs = function (owner, detail, parts) {
       // Group
       function (data) {
         internals[data.pname()] = UiSubstitutes.multiple(true, function (detail, _partSpec, _partValidated) {
-          var units = detail[data.name()]();
+          const units = detail[data.name()]();
           return Arr.map(units, function (u) {
             // Group multiples do not take the uid because there is more than one.
             return data.factory().sketch(
@@ -77,6 +76,6 @@ var subs = function (owner, detail, parts) {
   };
 };
 
-export default <any> {
-  subs: subs
+export {
+  subs
 };

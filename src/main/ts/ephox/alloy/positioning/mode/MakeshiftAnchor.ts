@@ -1,17 +1,17 @@
-import Fields from '../../data/Fields';
-import Bounds from '../layout/Bounds';
-import Bubble from '../layout/Bubble';
-import Layout from '../layout/Layout';
-import Anchoring from './Anchoring';
 import { FieldSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Direction } from '@ephox/sugar';
 
-var placement = function (component, posInfo, anchorInfo, origin) {
-  var anchorBox = Bounds(anchorInfo.x(), anchorInfo.y(), anchorInfo.width(), anchorInfo.height());
+import * as Fields from '../../data/Fields';
+import Bounds from '../layout/Bounds';
+import Bubble from '../layout/Bubble';
+import * as Layout from '../layout/Layout';
+import Anchoring from './Anchoring';
 
-  var layouts = anchorInfo.layouts().getOrThunk(function () {
+const placement = function (component, posInfo, anchorInfo, origin) {
+  const anchorBox = Bounds(anchorInfo.x(), anchorInfo.y(), anchorInfo.width(), anchorInfo.height());
+
+  const layouts = anchorInfo.layouts().getOrThunk(function () {
     return Direction.onDirection(Layout.all(), Layout.allRtl())(component.element());
   });
 

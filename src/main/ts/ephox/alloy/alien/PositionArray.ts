@@ -1,5 +1,4 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 
 /**
  * Generate a PositionArray
@@ -8,15 +7,15 @@ import { Fun } from '@ephox/katamari';
  * f:      thing -> Optional unit
  * _start: sets the start position to search at
  */
-var generate = function (xs, f) {
+const generate = function (xs, f) {
 
-  var init = {
+  const init = {
     len: 0,
     list: []
   };
 
-  var r = Arr.foldl(xs, function (b, a) {
-    var value = f(a, b.len);
+  const r = Arr.foldl(xs, function (b, a) {
+    const value = f(a, b.len);
     return value.fold(Fun.constant(b), function (v) {
       return {
         len: v.finish(),
@@ -28,6 +27,6 @@ var generate = function (xs, f) {
   return r.list;
 };
 
-export default <any> {
-  generate: generate
+export {
+  generate
 };

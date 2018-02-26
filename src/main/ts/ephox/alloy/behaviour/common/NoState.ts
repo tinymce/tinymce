@@ -1,13 +1,13 @@
 import BehaviourState from './BehaviourState';
 
-var init = function () {
+const init = function () {
   return BehaviourState({
-    readState: function () {
+    readState () {
       return 'No State required';
     }
   });
 };
 
-export default <any> {
-  init: init
+export {
+  init
 };

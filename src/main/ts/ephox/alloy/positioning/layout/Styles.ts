@@ -1,7 +1,7 @@
-var resolve = function (rest) {
+const resolve = function (rest) {
   return 'ephox-alloy-position-' + rest;
 };
 
-export default <any> {
-  resolve: resolve
+export {
+  resolve
 };

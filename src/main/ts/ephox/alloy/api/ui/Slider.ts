@@ -1,9 +1,7 @@
-import Sketcher from './Sketcher';
 import SliderParts from '../../ui/slider/SliderParts';
 import SliderSchema from '../../ui/slider/SliderSchema';
 import SliderUi from '../../ui/slider/SliderUi';
-
-
+import * as Sketcher from './Sketcher';
 
 export default <any> Sketcher.composite({
   name: 'Slider',
@@ -11,13 +9,13 @@ export default <any> Sketcher.composite({
   partFields: SliderParts,
   factory: SliderUi.sketch,
   apis: {
-    resetToMin: function (apis, slider) {
+    resetToMin (apis, slider) {
       apis.resetToMin(slider);
     },
-    resetToMax: function (apis, slider) {
+    resetToMax (apis, slider) {
       apis.resetToMax(slider);
     },
-    refresh: function (apis, slider) {
+    refresh (apis, slider) {
       apis.refresh(slider);
     }
   }

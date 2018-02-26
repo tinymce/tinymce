@@ -1,70 +1,68 @@
-import Direction from '../layout/Direction';
-import Reposition from './Reposition';
-import { Adt } from '@ephox/katamari';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Adt, Arr, Fun } from '@ephox/katamari';
 
-var adt = Adt.generate([
+import * as Direction from '../layout/Direction';
+import Reposition from './Reposition';
+
+const adt = Adt.generate([
   { fit:   [ 'reposition' ] },
   { nofit: [ 'reposition', 'deltaW', 'deltaH' ] }
 ]);
 
-var attempt = function (candidate, width, height, bounds) {
-  var candidateX = candidate.x();
-  var candidateY = candidate.y();
-  var bubbleLeft = candidate.bubble().left();
-  var bubbleTop = candidate.bubble().top();
+const attempt = function (candidate, width, height, bounds) {
+  const candidateX = candidate.x();
+  const candidateY = candidate.y();
+  const bubbleLeft = candidate.bubble().left();
+  const bubbleTop = candidate.bubble().top();
 
-  var boundsX = bounds.x();
-  var boundsY = bounds.y();
-  var boundsWidth = bounds.width();
-  var boundsHeight = bounds.height();
+  const boundsX = bounds.x();
+  const boundsY = bounds.y();
+  const boundsWidth = bounds.width();
+  const boundsHeight = bounds.height();
 
   // candidate position is excluding the bubble, so add those values as well
-  var newX = candidateX + bubbleLeft;
-  var newY = candidateY + bubbleTop;
+  const newX = candidateX + bubbleLeft;
+  const newY = candidateY + bubbleTop;
 
   // simple checks for "is the top left inside the view"
-  var xInBounds = newX >= boundsX;
-  var yInBounds = newY >= boundsY;
-  var originInBounds = xInBounds && yInBounds;
+  const xInBounds = newX >= boundsX;
+  const yInBounds = newY >= boundsY;
+  const originInBounds = xInBounds && yInBounds;
 
   // simple checks for "is the bottom right inside the view"
-  var xFit = (newX + width) <= (boundsX + boundsWidth);
-  var yFit = (newY + height) <= (boundsY + boundsHeight);
-  var sizeInBounds = xFit && yFit;
+  const xFit = (newX + width) <= (boundsX + boundsWidth);
+  const yFit = (newY + height) <= (boundsY + boundsHeight);
+  const sizeInBounds = xFit && yFit;
 
   // measure how much of the width and height are visible. deltaW isn't necessary in the fit case but it's cleaner to read here.
-  var deltaW = xInBounds ? Math.min(width, boundsX + boundsWidth - newX)
+  const deltaW = xInBounds ? Math.min(width, boundsX + boundsWidth - newX)
                          : Math.abs(boundsX - (newX + width));
-  var deltaH = yInBounds ? Math.min(height, boundsY + boundsHeight - newY)
+  const deltaH = yInBounds ? Math.min(height, boundsY + boundsHeight - newY)
                          : Math.abs(boundsY - (newY + height));
-
 
   // TBIO-3366 + TBIO-4236:
   // Futz with the X position to ensure that x is positive, but not off the right side of the screen.
-  var maxX = bounds.width() - width;
-  var minX = Math.max(0, newX);
-  var limitX = Math.min(minX, maxX);
+  const maxX = bounds.width() - width;
+  const minX = Math.max(0, newX);
+  const limitX = Math.min(minX, maxX);
 
   // Futz with the Y value to ensure that we're not off the top of the screen
-  var limitY = yInBounds ? newY : newY + (height - deltaH);
+  const limitY = yInBounds ? newY : newY + (height - deltaH);
 
   // TBIO-3367 + TBIO-3387:
   // Futz with the "height" of the popup to ensure if it doesn't fit it's capped at the available height.
   // As of TBIO-4291, we provide all available space for both up and down.
-  var upAvailable = Fun.constant((limitY + deltaH) - boundsY);
-  var downAvailable = Fun.constant((boundsY + boundsHeight) - limitY);
-  var maxHeight = Direction.cata(candidate.direction(), downAvailable, downAvailable, upAvailable, upAvailable);
+  const upAvailable = Fun.constant((limitY + deltaH) - boundsY);
+  const downAvailable = Fun.constant((boundsY + boundsHeight) - limitY);
+  const maxHeight = Direction.cata(candidate.direction(), downAvailable, downAvailable, upAvailable, upAvailable);
 
   // We don't futz with the width.
 
-  var reposition = Reposition.decision({
+  const reposition = Reposition.decision({
     x: limitX,
     y: limitY,
     width: deltaW,
     height: deltaH,
-    maxHeight: maxHeight,
+    maxHeight,
     direction: candidate.direction(),
     classes: candidate.anchors(),
     label: candidate.label(),
@@ -97,16 +95,16 @@ var attempt = function (candidate, width, height, bounds) {
  * bubbles: the bubbles for the popup (see api.Bubble)
  * bounds: the screen
  */
-var attempts = function (candidates, anchorBox, elementBox, bubbles, bounds) {
-  var panelWidth = elementBox.width();
-  var panelHeight = elementBox.height();
-  var attemptBestFit = function (layout, reposition, deltaW, deltaH) {
-    var next = layout(anchorBox, elementBox, bubbles);
-    var attemptLayout = attempt(next, panelWidth, panelHeight, bounds);
+const attempts = function (candidates, anchorBox, elementBox, bubbles, bounds) {
+  const panelWidth = elementBox.width();
+  const panelHeight = elementBox.height();
+  const attemptBestFit = function (layout, reposition, deltaW, deltaH) {
+    const next = layout(anchorBox, elementBox, bubbles);
+    const attemptLayout = attempt(next, panelWidth, panelHeight, bounds);
 
     // unwrapping fit only to rewrap seems... silly
     return attemptLayout.fold(adt.fit, function (newReposition, newDeltaW, newDeltaH) {
-      var improved = newDeltaW > deltaW || newDeltaH > deltaH;
+      const improved = newDeltaW > deltaW || newDeltaH > deltaH;
       // console.log('improved? ', improved);
       // re-wrap in the ADT either way
       return improved ? adt.nofit(newReposition, newDeltaW, newDeltaH)
@@ -114,8 +112,8 @@ var attempts = function (candidates, anchorBox, elementBox, bubbles, bounds) {
     });
   };
 
-  var abc = Arr.foldl(candidates, function (b, a) {
-    var bestNext = Fun.curry(attemptBestFit, a);
+  const abc = Arr.foldl(candidates, function (b, a) {
+    const bestNext = Fun.curry(attemptBestFit, a);
     // unwrapping fit only to rewrap seems... silly
     return b.fold(adt.fit, bestNext);
   },
@@ -138,6 +136,6 @@ var attempts = function (candidates, anchorBox, elementBox, bubbles, bounds) {
   return abc.fold(Fun.identity, Fun.identity);
 };
 
-export default <any> {
-  attempts: attempts
+export {
+  attempts
 };

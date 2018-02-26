@@ -1,14 +1,14 @@
+import { FieldSchema } from '@ephox/boulder';
+import { Fun, Option } from '@ephox/katamari';
+
 import Keys from '../alien/Keys';
-import NoState from '../behaviour/common/NoState';
-import Fields from '../data/Fields';
-import KeyingType from './KeyingType';
+import * as NoState from '../behaviour/common/NoState';
+import * as Fields from '../data/Fields';
 import KeyMatch from '../navigation/KeyMatch';
 import KeyRules from '../navigation/KeyRules';
-import { FieldSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import * as KeyingType from './KeyingType';
 
-var schema = [
+const schema = [
   Fields.onKeyboardHandler('onSpace'),
   Fields.onKeyboardHandler('onEnter'),
   Fields.onKeyboardHandler('onShiftEnter'),
@@ -22,7 +22,7 @@ var schema = [
   FieldSchema.option('focusIn')
 ];
 
-var getRules = function (component, simulatedEvent, executeInfo) {
+const getRules = function (component, simulatedEvent, executeInfo) {
   return [
     KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), executeInfo.onSpace()),
     KeyRules.rule(
@@ -47,13 +47,13 @@ var getRules = function (component, simulatedEvent, executeInfo) {
   ];
 };
 
-var focusIn = function (component, executeInfo) {
+const focusIn = function (component, executeInfo) {
   return executeInfo.focusIn().bind(function (f) {
     return f(component, executeInfo);
   });
 };
 
-var getEvents = Fun.constant({ });
-var getApis = Fun.constant({ });
+const getEvents = Fun.constant({ });
+const getApis = Fun.constant({ });
 
 export default <any> KeyingType.typical(schema, NoState.init, getRules, getEvents, getApis, Option.some(focusIn));

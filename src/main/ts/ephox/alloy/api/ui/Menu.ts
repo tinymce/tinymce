@@ -1,8 +1,6 @@
-import Sketcher from './Sketcher';
 import MenuSchema from '../../ui/schema/MenuSchema';
 import MenuSpec from '../../ui/single/MenuSpec';
-
-
+import * as Sketcher from './Sketcher';
 
 export default <any> Sketcher.composite({
   name: 'Menu',

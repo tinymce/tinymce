@@ -1,24 +1,22 @@
+import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Id, Merger } from '@ephox/katamari';
+
+import ButtonBase from '../../ui/common/ButtonBase';
 import Behaviour from '../behaviour/Behaviour';
 import Focusing from '../behaviour/Focusing';
 import Keying from '../behaviour/Keying';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
-import ButtonBase from '../../ui/common/ButtonBase';
-import { FieldPresence } from '@ephox/boulder';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
-import { Id } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import * as Sketcher from './Sketcher';
 
-var factory = function (detail, spec) {
-  var events = ButtonBase.events(detail.action());
+const factory = function (detail, spec) {
+  const events = ButtonBase.events(detail.action());
 
   return {
     uid: detail.uid(),
     dom: detail.dom(),
     components: detail.components(),
-    events: events,
+    events,
     behaviours: Merger.deepMerge(
       Behaviour.derive([
         Focusing.config({ }),
@@ -49,9 +47,9 @@ export default <any> Sketcher.single({
     FieldSchema.field('dom', 'dom', FieldPresence.mergeWithThunk(function (spec) {
       return {
         attributes: {
-          role: 'tab',
+          'role': 'tab',
           // NOTE: This is used in TabSection to connect "labelledby"
-          id: Id.generate('aria'),
+          'id': Id.generate('aria'),
           'aria-selected': 'false'
         }
       };
@@ -62,5 +60,5 @@ export default <any> Sketcher.single({
 
     FieldSchema.strict('view')
   ],
-  factory: factory
+  factory
 });

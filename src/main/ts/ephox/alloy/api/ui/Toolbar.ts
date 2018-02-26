@@ -1,14 +1,14 @@
+import { Merger, Option } from '@ephox/katamari';
+
+import * as AlloyParts from '../../parts/AlloyParts';
+import ToolbarSchema from '../../ui/schema/ToolbarSchema';
 import Behaviour from '../behaviour/Behaviour';
 import Replacing from '../behaviour/Replacing';
 import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
-import AlloyParts from '../../parts/AlloyParts';
-import ToolbarSchema from '../../ui/schema/ToolbarSchema';
-import { Merger } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import * as Sketcher from './Sketcher';
 
-var factory = function (detail, components, spec, _externals) {
-  var setGroups = function (toolbar, groups) {
+const factory = function (detail, components, spec, _externals) {
+  const setGroups = function (toolbar, groups) {
     getGroupContainer(toolbar).fold(function () {
       // check that the group container existed. It may not have if the components
       // did not list anything, and shell was false.
@@ -19,13 +19,13 @@ var factory = function (detail, components, spec, _externals) {
     });
   };
 
-  var getGroupContainer = function (component) {
+  const getGroupContainer = function (component) {
     return detail.shell() ? Option.some(component) : AlloyParts.getPart(component, detail, 'groups');
   };
 
   // In shell mode, the group overrides need to be added to the main container, and there can be no children
-  var extra = detail.shell() ? { behaviours: [ Replacing.config({ }) ], components: [ ] } :
-    { behaviours: [ ], components: components };
+  const extra = detail.shell() ? { behaviours: [ Replacing.config({ }) ], components: [ ] } :
+    { behaviours: [ ], components };
 
   return {
     uid: detail.uid(),
@@ -37,7 +37,7 @@ var factory = function (detail, components, spec, _externals) {
       SketchBehaviours.get(detail.toolbarBehaviours())
     ),
     apis: {
-      setGroups: setGroups
+      setGroups
     },
     domModification: {
       attributes: {
@@ -51,9 +51,9 @@ export default <any> Sketcher.composite({
   name: 'Toolbar',
   configFields: ToolbarSchema.schema(),
   partFields: ToolbarSchema.parts(),
-  factory: factory,
+  factory,
   apis: {
-    setGroups: function (apis, toolbar, groups) {
+    setGroups (apis, toolbar, groups) {
       apis.setGroups(toolbar, groups);
     }
   }

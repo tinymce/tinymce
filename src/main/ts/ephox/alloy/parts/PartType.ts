@@ -1,22 +1,17 @@
-import { FieldPresence } from '@ephox/boulder';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
-import { Adt } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Id } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Adt, Fun, Id, Option } from '@ephox/katamari';
 
-var adt = Adt.generate([
+const adt = Adt.generate([
   { required: [ 'data' ] },
   { external: [ 'data' ] },
   { optional: [ 'data' ] },
   { group: [ 'data' ] }
 ]);
 
-var fFactory = FieldSchema.defaulted('factory', { sketch: Fun.identity });
-var fSchema = FieldSchema.defaulted('schema', [ ]);
-var fName = FieldSchema.strict('name');
-var fPname = FieldSchema.field(
+const fFactory = FieldSchema.defaulted('factory', { sketch: Fun.identity });
+const fSchema = FieldSchema.defaulted('schema', [ ]);
+const fName = FieldSchema.strict('name');
+const fPname = FieldSchema.field(
   'pname',
   'pname',
   FieldPresence.defaultedThunk(function (typeSpec) {
@@ -25,46 +20,46 @@ var fPname = FieldSchema.field(
   ValueSchema.anyValue()
 );
 
-var fDefaults = FieldSchema.defaulted('defaults', Fun.constant({ }));
-var fOverrides = FieldSchema.defaulted('overrides', Fun.constant({ }));
+const fDefaults = FieldSchema.defaulted('defaults', Fun.constant({ }));
+const fOverrides = FieldSchema.defaulted('overrides', Fun.constant({ }));
 
-var requiredSpec = ValueSchema.objOf([
+const requiredSpec = ValueSchema.objOf([
   fFactory, fSchema, fName, fPname, fDefaults, fOverrides
 ]);
 
-var externalSpec = ValueSchema.objOf([
+const externalSpec = ValueSchema.objOf([
   fFactory, fSchema, fName, fDefaults, fOverrides
 ]);
 
-var optionalSpec = ValueSchema.objOf([
+const optionalSpec = ValueSchema.objOf([
   fFactory, fSchema, fName, fPname, fDefaults, fOverrides
 ]);
 
-var groupSpec = ValueSchema.objOf([
+const groupSpec = ValueSchema.objOf([
   fFactory, fSchema, fName,
   FieldSchema.strict('unit'),
   fPname, fDefaults, fOverrides
 ]);
 
-var asNamedPart = function (part) {
+const asNamedPart = function (part) {
   return part.fold(Option.some, Option.none, Option.some, Option.some);
 };
 
-var name = function (part) {
-  var get = function (data) {
+const name = function (part) {
+  const get = function (data) {
     return data.name();
   };
 
   return part.fold(get, get, get, get);
 };
 
-var asCommon = function (part) {
+const asCommon = function (part) {
   return part.fold(Fun.identity, Fun.identity, Fun.identity, Fun.identity);
 };
 
-var convert = function (adtConstructor, partSpec) {
+const convert = function (adtConstructor, partSpec) {
   return function (spec) {
-    var data = ValueSchema.asStructOrDie('Converting part type', partSpec, spec);
+    const data = ValueSchema.asStructOrDie('Converting part type', partSpec, spec);
     return adtConstructor(data);
   };
 };
@@ -74,9 +69,9 @@ export default <any> {
   external: convert(adt.external, externalSpec),
   optional: convert(adt.optional, optionalSpec),
   group: convert(adt.group, groupSpec),
-  asNamedPart: asNamedPart,
-  name: name,
-  asCommon: asCommon,
+  asNamedPart,
+  name,
+  asCommon,
 
   original: Fun.constant('entirety')
 };

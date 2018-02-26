@@ -1,18 +1,19 @@
+import { FieldSchema } from '@ephox/boulder';
+import { Merger } from '@ephox/katamari';
+
 import Behaviour from '../../api/behaviour/Behaviour';
 import Focusing from '../../api/behaviour/Focusing';
 import Keying from '../../api/behaviour/Keying';
 import Representing from '../../api/behaviour/Representing';
 import Toggling from '../../api/behaviour/Toggling';
-import AlloyEvents from '../../api/events/AlloyEvents';
-import AlloyTriggers from '../../api/events/AlloyTriggers';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import NativeEvents from '../../api/events/NativeEvents';
 import SystemEvents from '../../api/events/SystemEvents';
-import Fields from '../../data/Fields';
+import * as Fields from '../../data/Fields';
 import ItemEvents from '../util/ItemEvents';
-import { FieldSchema } from '@ephox/boulder';
-import { Merger } from '@ephox/katamari';
 
-var builder = function (info) {
+const builder = function (info) {
   return {
     dom: Merger.deepMerge(
       info.dom(),
@@ -35,7 +36,7 @@ var builder = function (info) {
         }),
         Focusing.config({
           ignore: info.ignoreFocus(),
-          onFocus: function (component) {
+          onFocus (component) {
             ItemEvents.onFocus(component);
           }
         }),
@@ -68,7 +69,7 @@ var builder = function (info) {
   };
 };
 
-var schema = [
+const schema = [
   FieldSchema.strict('data'),
   FieldSchema.strict('components'),
   FieldSchema.strict('dom'),

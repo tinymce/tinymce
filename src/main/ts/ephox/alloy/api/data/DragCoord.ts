@@ -1,5 +1,4 @@
-import { Arr } from '@ephox/katamari';
-import { Adt } from '@ephox/katamari';
+import { Adt, Arr } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 
 /*
@@ -10,25 +9,25 @@ import { Position } from '@ephox/sugar';
  * offset: the absolute coordinates to show for css when inside an offset parent
  * absolute: the absolute coordinates to show before considering the offset parent
  */
-var adt = Adt.generate([
+const adt = Adt.generate([
   { offset: [ 'x', 'y' ] },
   { absolute: [ 'x', 'y' ] },
   { fixed: [ 'x', 'y' ] }
 ]);
 
-var subtract = function (change) {
+const subtract = function (change) {
   return function (point) {
     return point.translate(-change.left(), -change.top());
   };
 };
 
-var add = function (change) {
+const add = function (change) {
   return function (point) {
     return point.translate(change.left(), change.top());
   };
 };
 
-var transform = function (changes) {
+const transform = function (changes) {
   return function (x, y) {
     return Arr.foldl(changes, function (rest, f) {
       return f(rest);
@@ -36,7 +35,7 @@ var transform = function (changes) {
   };
 };
 
-var asFixed = function (coord, scroll, origin) {
+const asFixed = function (coord, scroll, origin) {
   return coord.fold(
     // offset to fixed
     transform([ add(origin), subtract(scroll) ]),
@@ -47,7 +46,7 @@ var asFixed = function (coord, scroll, origin) {
   );
 };
 
-var asAbsolute = function (coord, scroll, origin) {
+const asAbsolute = function (coord, scroll, origin) {
   return coord.fold(
     // offset to absolute
     transform([ add(origin) ]),
@@ -58,7 +57,7 @@ var asAbsolute = function (coord, scroll, origin) {
   );
 };
 
-var asOffset = function (coord, scroll, origin) {
+const asOffset = function (coord, scroll, origin) {
   return coord.fold(
     // offset to offset
     transform([ ]),
@@ -69,7 +68,7 @@ var asOffset = function (coord, scroll, origin) {
   );
 };
 
-var toString = function (coord) {
+const toString = function (coord) {
   return coord.fold(
     function (x, y) {
       return 'offset(' + x + ', ' + y + ')';
@@ -83,14 +82,14 @@ var toString = function (coord) {
   );
 };
 
-var withinRange = function (coord1, coord2, xRange, yRange, scroll, origin) {
-  var a1 = asAbsolute(coord1, scroll, origin);
-  var a2 = asAbsolute(coord2, scroll, origin);
+const withinRange = function (coord1, coord2, xRange, yRange, scroll, origin) {
+  const a1 = asAbsolute(coord1, scroll, origin);
+  const a2 = asAbsolute(coord2, scroll, origin);
   return Math.abs(a1.left() - a2.left()) <= xRange &&
     Math.abs(a1.top() - a2.top()) <= yRange;
 };
 
-var toStyles = function (coord, scroll, origin) {
+const toStyles = function (coord, scroll, origin) {
   return coord.fold(
     function (x, y) {
       // offset
@@ -107,7 +106,7 @@ var toStyles = function (coord, scroll, origin) {
   );
 };
 
-var translate = function (coord, deltaX, deltaY) {
+const translate = function (coord, deltaX, deltaY) {
   return coord.fold(
     function (x, y) {
       return adt.offset(x + deltaX, y + deltaY);
@@ -121,10 +120,10 @@ var translate = function (coord, deltaX, deltaY) {
   );
 };
 
-var absorb = function (partialCoord, originalCoord, scroll, origin) {
-  var absorbOne = function (stencil, nu) {
+const absorb = function (partialCoord, originalCoord, scroll, origin) {
+  const absorbOne = function (stencil, nu) {
     return function (optX, optY) {
-      var original = stencil(originalCoord, scroll, origin);
+      const original = stencil(originalCoord, scroll, origin);
       return nu(optX.getOr(original.left()), optY.getOr(original.top()));
     };
   };
@@ -136,18 +135,22 @@ var absorb = function (partialCoord, originalCoord, scroll, origin) {
   );
 };
 
-export default <any> {
-  offset: adt.offset,
-  absolute: adt.absolute,
-  fixed: adt.fixed,
+const offset = adt.offset;
+const absolute = adt.absolute;
+const fixed = adt.fixed;
 
-  asFixed: asFixed,
-  asAbsolute: asAbsolute,
-  asOffset: asOffset,
-  withinRange: withinRange,
-  toStyles: toStyles,
-  translate: translate,
+export {
+  offset,
+  absolute,
+  fixed,
 
-  absorb: absorb,
-  toString: toString
+  asFixed,
+  asAbsolute,
+  asOffset,
+  withinRange,
+  toStyles,
+  translate,
+
+  absorb,
+  toString
 };

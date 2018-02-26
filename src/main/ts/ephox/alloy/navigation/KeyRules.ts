@@ -1,22 +1,23 @@
-import KeyMatch from './KeyMatch';
 import { Arr } from '@ephox/katamari';
 
-var basic = function (key, action) {
+import * as KeyMatch from './KeyMatch';
+
+const basic = function (key, action) {
   return {
     matches: KeyMatch.is(key),
     classification: action
   };
 };
 
-var rule = function (matches, action) {
+const rule = function (matches, action) {
   return {
-    matches: matches,
+    matches,
     classification: action
   };
 };
 
-var choose = function (transitions, event) {
-  var transition = Arr.find(transitions, function (t) {
+const choose = function (transitions, event) {
+  const transition = Arr.find(transitions, function (t) {
     return t.matches(event);
   });
 
@@ -25,8 +26,8 @@ var choose = function (transitions, event) {
   });
 };
 
-export default <any> {
-  basic: basic,
-  rule: rule,
-  choose: choose
+export {
+  basic,
+  rule,
+  choose
 };

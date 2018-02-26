@@ -1,16 +1,17 @@
+import { Merger } from '@ephox/katamari';
+import { Attr } from '@ephox/sugar';
+
+import TabbarSchema from '../../ui/schema/TabbarSchema';
 import Behaviour from '../behaviour/Behaviour';
 import Highlighting from '../behaviour/Highlighting';
 import Keying from '../behaviour/Keying';
 import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
-import TabbarSchema from '../../ui/schema/TabbarSchema';
-import { Merger } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
+import * as Sketcher from './Sketcher';
 
-var factory = function (detail, components, spec, externals) {
+const factory = function (detail, components, spec, externals) {
   return {
-    uid: detail.uid(),
-    dom: Merger.deepMerge(
+    'uid': detail.uid(),
+    'dom': Merger.deepMerge(
       {
         tag: 'div',
         attributes: {
@@ -19,10 +20,10 @@ var factory = function (detail, components, spec, externals) {
       },
       detail.dom()
     ),
-    components: components,
+    'components': components,
     'debug.sketcher': 'Tabbar',
 
-    behaviours: Merger.deepMerge(
+    'behaviours': Merger.deepMerge(
       Behaviour.derive([
         Highlighting.config({
           highlightClass: detail.markers().selectedClass(),
@@ -30,18 +31,18 @@ var factory = function (detail, components, spec, externals) {
 
           // https://www.w3.org/TR/2010/WD-wai-aria-practices-20100916/#tabpanel
           // Consider a more seam-less way of combining highlighting and toggling
-          onHighlight: function (tabbar, tab) {
+          onHighlight (tabbar, tab) {
             // TODO: Integrate highlighting and toggling in a nice way
             Attr.set(tab.element(), 'aria-selected', 'true');
           },
-          onDehighlight: function (tabbar, tab) {
+          onDehighlight (tabbar, tab) {
             Attr.set(tab.element(), 'aria-selected', 'false');
           }
         }),
 
         Keying.config({
           mode: 'flow',
-          getInitial: function (tabbar) {
+          getInitial (tabbar) {
             // Restore focus to the previously highlighted tab.
             return Highlighting.getHighlighted(tabbar).map(function (tab) {
               return tab.element();
@@ -61,5 +62,5 @@ export default <any> Sketcher.composite({
   name: 'Tabbar',
   configFields: TabbarSchema.schema(),
   partFields: TabbarSchema.parts(),
-  factory: factory
+  factory
 });

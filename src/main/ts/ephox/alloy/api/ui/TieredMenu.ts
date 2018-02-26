@@ -1,24 +1,24 @@
+import { FieldSchema, Objects } from '@ephox/boulder';
+import { Id } from '@ephox/katamari';
+
+import Fields from '../../data/Fields';
+import TieredMenuSpec from '../../ui/single/TieredMenuSpec';
 import Composing from '../behaviour/Composing';
 import Highlighting from '../behaviour/Highlighting';
 import Keying from '../behaviour/Keying';
 import Replacing from '../behaviour/Replacing';
 import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
-import Fields from '../../data/Fields';
-import TieredMenuSpec from '../../ui/single/TieredMenuSpec';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
-import { Id } from '@ephox/katamari';
+import * as Sketcher from './Sketcher';
 
-var tieredData = function (primary, menus, expansions) {
+const tieredData = function (primary, menus, expansions) {
   return {
-    primary: primary,
-    menus: menus,
-    expansions: expansions
+    primary,
+    menus,
+    expansions
   };
 };
 
-var singleData = function (name, menu) {
+const singleData = function (name, menu) {
   return {
     primary: name,
     menus: Objects.wrap(name, menu),
@@ -26,10 +26,10 @@ var singleData = function (name, menu) {
   };
 };
 
-var collapseItem = function (text) {
+const collapseItem = function (text) {
   return {
     value: Id.generate(TieredMenuSpec.collapseItem()),
-    text: text
+    text
   };
 };
 
@@ -56,7 +56,6 @@ export default <any> Sketcher.single({
     Fields.onHandler('onHover'),
     Fields.tieredMenuMarkers(),
 
-
     FieldSchema.strict('dom'),
 
     FieldSchema.defaulted('navigateOnHover', true),
@@ -67,7 +66,7 @@ export default <any> Sketcher.single({
   ],
 
   apis: {
-    collapseMenu: function (apis, tmenu) {
+    collapseMenu (apis, tmenu) {
       apis.collapseMenu(tmenu);
     }
   },
@@ -75,8 +74,8 @@ export default <any> Sketcher.single({
   factory: TieredMenuSpec.make,
 
   extraApis: {
-    tieredData: tieredData,
-    singleData: singleData,
-    collapseItem: collapseItem
+    tieredData,
+    singleData,
+    collapseItem
   }
 });

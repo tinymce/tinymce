@@ -1,16 +1,12 @@
+import { FieldPresence, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { Arr, Fun, Merger } from '@ephox/katamari';
+
 import Fields from '../data/Fields';
 import DomDefinition from '../dom/DomDefinition';
 import DomModification from '../dom/DomModification';
 import AlloyTags from '../ephemera/AlloyTags';
-import { FieldPresence } from '@ephox/boulder';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
 
-var toInfo = function (spec) {
+const toInfo = function (spec) {
   return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([
     FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOfOnly([
       // Note, no children.
@@ -50,12 +46,12 @@ var toInfo = function (spec) {
   ]), spec);
 };
 
-var getUid = function (info) {
+const getUid = function (info) {
   return Objects.wrap(AlloyTags.idAttr(), info.uid());
 };
 
-var toDefinition = function (info) {
-  var base = {
+const toDefinition = function (info) {
+  const base = {
     tag: info.dom().tag(),
     classes: info.dom().classes(),
     attributes: Merger.deepMerge(
@@ -72,25 +68,25 @@ var toDefinition = function (info) {
   ));
 };
 
-var toModification = function (info) {
+const toModification = function (info) {
   return info.domModification().fold(function () {
     return DomModification.nu({ });
   }, DomModification.nu);
 };
 
 // Probably want to pass info to these at some point.
-var toApis = function (info) {
+const toApis = function (info) {
   return info.apis();
 };
 
-var toEvents = function (info) {
+const toEvents = function (info) {
   return info.events();
 };
 
-export default <any> {
-  toInfo: toInfo,
-  toDefinition: toDefinition,
-  toModification: toModification,
-  toApis: toApis,
-  toEvents: toEvents
+export {
+  toInfo,
+  toDefinition,
+  toModification,
+  toApis,
+  toEvents
 };

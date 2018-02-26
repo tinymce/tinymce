@@ -1,32 +1,33 @@
+import { Fun } from '@ephox/katamari';
+
 import Behaviour from '../../api/behaviour/Behaviour';
 import Representing from '../../api/behaviour/Representing';
 import PartType from '../../parts/PartType';
-import { Fun } from '@ephox/katamari';
 
-var owner = 'item-widget';
+const owner = Fun.constant('item-widget');
 
-var partTypes = [
+const parts = Fun.constant([
   PartType.required({
     name: 'widget',
-    overrides: function (detail) {
+    overrides (detail) {
       return {
         behaviours: Behaviour.derive([
           Representing.config({
             store: {
               mode: 'manual',
-              getValue: function (component) {
+              getValue (component) {
                 return detail.data();
               },
-              setValue: function () { }
+              setValue () { }
             }
           })
         ])
       };
     }
   })
-];
+]);
 
-export default <any> {
-  owner: Fun.constant(owner),
-  parts: Fun.constant(partTypes)
+export {
+  owner,
+  parts
 };

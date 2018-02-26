@@ -1,22 +1,22 @@
 import { Option } from '@ephox/katamari';
 
-var markAsBehaviourApi = function (f, apiName, apiFunction) {
+const markAsBehaviourApi = function (f, apiName, apiFunction) {
   return f;
 };
 
-var markAsExtraApi = function (f, extraName) {
+const markAsExtraApi = function (f, extraName) {
   return f;
 };
 
-var markAsSketchApi = function (f, apiFunction) {
+const markAsSketchApi = function (f, apiFunction) {
   return f;
 };
 
-var getAnnotation = Option.none;
+const getAnnotation = Option.none;
 
-export default <any> {
-  markAsBehaviourApi: markAsBehaviourApi,
-  markAsExtraApi: markAsExtraApi,
-  markAsSketchApi: markAsSketchApi,
-  getAnnotation: getAnnotation
+export {
+  markAsBehaviourApi,
+  markAsExtraApi,
+  markAsSketchApi,
+  getAnnotation
 };

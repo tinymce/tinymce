@@ -1,29 +1,27 @@
-import Replacing from '../behaviour/Replacing';
-import Sliding from '../behaviour/Sliding';
-import GuiFactory from '../component/GuiFactory';
-import SketchBehaviours from '../component/SketchBehaviours';
-import Button from './Button';
-import Sketcher from './Sketcher';
-import Toolbar from './Toolbar';
-import ToolbarGroup from './ToolbarGroup';
-import AlloyParts from '../../parts/AlloyParts';
-import PartType from '../../parts/PartType';
+import { Arr, Merger } from '@ephox/katamari';
+import { Css, Width } from '@ephox/sugar';
+
+import * as AlloyParts from '../../parts/AlloyParts';
 import Overflows from '../../toolbar/Overflows';
 import SplitToolbarSchema from '../../ui/schema/SplitToolbarSchema';
-import { Arr } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Css } from '@ephox/sugar';
-import { Width } from '@ephox/sugar';
+import Replacing from '../behaviour/Replacing';
+import Sliding from '../behaviour/Sliding';
+import * as GuiFactory from '../component/GuiFactory';
+import SketchBehaviours from '../component/SketchBehaviours';
+import Button from './Button';
+import * as Sketcher from './Sketcher';
+import Toolbar from './Toolbar';
+import ToolbarGroup from './ToolbarGroup';
 
-var setStoredGroups = function (bar, storedGroups) {
-  var bGroups = Arr.map(storedGroups, function (g) { return GuiFactory.premade(g); });
+const setStoredGroups = function (bar, storedGroups) {
+  const bGroups = Arr.map(storedGroups, function (g) { return GuiFactory.premade(g); });
   Toolbar.setGroups(bar, bGroups);
 };
 
-var refresh = function (toolbar, detail, externals) {
-  var ps = AlloyParts.getPartsOrDie(toolbar, detail, [ 'primary', 'overflow' ]);
-  var primary = ps.primary();
-  var overflow = ps.overflow();
+const refresh = function (toolbar, detail, externals) {
+  const ps = AlloyParts.getPartsOrDie(toolbar, detail, [ 'primary', 'overflow' ]);
+  const primary = ps.primary();
+  const overflow = ps.overflow();
 
   // Set the primary toolbar to have visibilty hidden;
   Css.set(primary.element(), 'visibility', 'hidden');
@@ -32,9 +30,9 @@ var refresh = function (toolbar, detail, externals) {
   Toolbar.setGroups(overflow, [ ]);
 
   // Put all the groups inside the primary toolbar
-  var groups = detail.builtGroups().get();
+  const groups = detail.builtGroups().get();
 
-  var overflowGroupSpec = ToolbarGroup.sketch(
+  const overflowGroupSpec = ToolbarGroup.sketch(
     Merger.deepMerge(
       externals['overflow-group'](),
       {
@@ -43,7 +41,7 @@ var refresh = function (toolbar, detail, externals) {
             Merger.deepMerge(
               externals['overflow-button'](),
               {
-                action: function (button) {
+                action (button) {
                   // This used to look up the overflow again ... we may need to do that.
                   Sliding.toggleGrow(ps.overflow());
                 }
@@ -54,14 +52,13 @@ var refresh = function (toolbar, detail, externals) {
       }
     )
   );
-  var overflowGroup = toolbar.getSystem().build(overflowGroupSpec);
+  const overflowGroup = toolbar.getSystem().build(overflowGroupSpec);
 
   setStoredGroups(primary, groups.concat([ overflowGroup ]));
 
+  const total = Width.get(primary.element());
 
-  var total = Width.get(primary.element());
-
-  var overflows = Overflows.partition(total, groups, function (comp) {
+  const overflows = Overflows.partition(total, groups, function (comp) {
     return Width.get(comp.element());
   }, overflowGroup);
 
@@ -82,14 +79,13 @@ var refresh = function (toolbar, detail, externals) {
 
 };
 
-
-var factory = function (detail, components, spec, externals) {
-  var doSetGroups = function (toolbar, groups) {
-    var built = Arr.map(groups, toolbar.getSystem().build);
+const factory = function (detail, components, spec, externals) {
+  const doSetGroups = function (toolbar, groups) {
+    const built = Arr.map(groups, toolbar.getSystem().build);
     detail.builtGroups().set(built);
   };
 
-  var setGroups = function (toolbar, groups) {
+  const setGroups = function (toolbar, groups) {
     doSetGroups(toolbar, groups);
     refresh(toolbar, detail, externals);
   };
@@ -105,11 +101,11 @@ var factory = function (detail, components, spec, externals) {
     {
       uid: detail.uid(),
       dom: detail.dom(),
-      components: components,
+      components,
       behaviours: SketchBehaviours.get(detail.splitToolbarBehaviours()),
       apis: {
-        setGroups: setGroups,
-        refresh: function (toolbar) {
+        setGroups,
+        refresh (toolbar) {
           refresh(toolbar, detail, externals);
         }
       }
@@ -121,12 +117,12 @@ export default <any> Sketcher.composite({
   name: 'SplitToolbar',
   configFields: SplitToolbarSchema.schema(),
   partFields: SplitToolbarSchema.parts(),
-  factory: factory,
+  factory,
   apis: {
-    setGroups: function (apis, toolbar, groups) {
+    setGroups (apis, toolbar, groups) {
       apis.setGroups(toolbar, groups);
     },
-    refresh: function (apis, toolbar) {
+    refresh (apis, toolbar) {
       apis.refresh(toolbar);
     }
   }

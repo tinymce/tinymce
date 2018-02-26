@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
+const dismissPopups = Fun.constant('dismiss.popups');
 
-
-export default <any> {
-  dismissPopups: Fun.constant('dismiss.popups')
+export {
+  dismissPopups
 };

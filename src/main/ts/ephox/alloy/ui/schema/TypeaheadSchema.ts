@@ -1,3 +1,6 @@
+import { FieldSchema } from '@ephox/boulder';
+import { Cell, Fun, Option } from '@ephox/katamari';
+
 import Strings from '../../alien/Strings';
 import Coupling from '../../api/behaviour/Coupling';
 import Focusing from '../../api/behaviour/Focusing';
@@ -7,15 +10,11 @@ import Sandboxing from '../../api/behaviour/Sandboxing';
 import Streaming from '../../api/behaviour/Streaming';
 import Toggling from '../../api/behaviour/Toggling';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
-import Fields from '../../data/Fields';
+import * as Fields from '../../data/Fields';
 import PartType from '../../parts/PartType';
-import InputBase from '../common/InputBase';
-import { FieldSchema } from '@ephox/boulder';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import * as InputBase from '../common/InputBase';
 
-var schema = [
+const schema = Fun.constant([
   FieldSchema.option('lazySink'),
   FieldSchema.strict('fetch'),
   FieldSchema.defaulted('minChars', 5),
@@ -35,18 +34,18 @@ var schema = [
   })
 ].concat(
   InputBase.schema()
-);
+));
 
-var partTypes = [
+const parts = Fun.constant([
   PartType.external({
     schema: [
       Fields.tieredMenuMarkers()
     ],
     name: 'menu',
-    overrides: function (detail) {
+    overrides (detail) {
       return {
         fakeFocus: true,
-        onHighlight: function (menu, item) {
+        onHighlight (menu, item) {
           if (! detail.previewing().get()) {
             menu.getSystem().getByUid(detail.uid()).each(function (input) {
               Representing.setValueFrom(input, item);
@@ -54,8 +53,8 @@ var partTypes = [
           } else {
             // Highlight the rest of the text so that the user types over it.
             menu.getSystem().getByUid(detail.uid()).each(function (input) {
-              var currentValue = Representing.getValue(input).text;
-              var nextValue = Representing.getValue(item);
+              const currentValue = Representing.getValue(input).text;
+              const nextValue = Representing.getValue(item);
               if (Strings.startsWith(nextValue.text, currentValue)) {
                 Representing.setValue(input, nextValue);
                 input.element().dom().setSelectionRange(currentValue.length, nextValue.text.length);
@@ -65,15 +64,15 @@ var partTypes = [
           }
           detail.previewing().set(false);
         },
-        onExecute: function (menu, item) {
+        onExecute (menu, item) {
           return menu.getSystem().getByUid(detail.uid()).bind(function (typeahead) {
-            var sandbox = Coupling.getCoupled(typeahead, 'sandbox');
-            var system = item.getSystem();
+            const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
+            const system = item.getSystem();
             // Closing the sandbox takes the item out of the system, so keep a reference.
             Sandboxing.close(sandbox);
             return system.getByUid(detail.uid()).bind(function (input) {
               Representing.setValueFrom(input, item);
-              var currentValue = Representing.getValue(input);
+              const currentValue = Representing.getValue(input);
               input.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);
               // Should probably streamline this one.
               detail.onExecute()(sandbox, input);
@@ -82,7 +81,7 @@ var partTypes = [
           });
         },
 
-        onHover: function (menu, item) {
+        onHover (menu, item) {
           menu.getSystem().getByUid(detail.uid()).each(function (input) {
             Representing.setValueFrom(input, item);
           });
@@ -90,10 +89,12 @@ var partTypes = [
       };
     }
   })
-];
+]);
 
-export default <any> {
-  name: Fun.constant('Typeahead'),
-  schema: Fun.constant(schema),
-  parts: Fun.constant(partTypes)
+const name = Fun.constant('Typeahead');
+
+export {
+  name,
+  schema,
+  parts
 };

@@ -1,7 +1,5 @@
 import { Fun } from '@ephox/katamari';
 
-
-
 export default <any> {
   contextmenu: Fun.constant('contextmenu'),
   touchstart: Fun.constant('touchstart'),
