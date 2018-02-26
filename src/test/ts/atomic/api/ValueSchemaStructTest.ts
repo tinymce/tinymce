@@ -1,26 +1,25 @@
-import FieldPresence from 'ephox/boulder/api/FieldPresence';
-import FieldSchema from 'ephox/boulder/api/FieldSchema';
-import ValueSchema from 'ephox/boulder/api/ValueSchema';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock';
+import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
+import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
+import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 
-UnitTest.test('ValueSchemaStuct Test', function() {
-  var actualVal = ValueSchema.asStructOrDie('test.struct.val', ValueSchema.anyValue(), 10);
+UnitTest.test('ValueSchemaStuct Test', function () {
+  const actualVal = ValueSchema.asStructOrDie('test.struct.val', ValueSchema.anyValue(), 10);
   assert.eq(10, actualVal);
 
-
-  var actualObj = ValueSchema.asStructOrDie('test.struct.obj', ValueSchema.objOf([
+  const actualObj = ValueSchema.asStructOrDie('test.struct.obj', ValueSchema.objOf([
     FieldSchema.strict('a')
   ]), {
     a: 'alpha'
   });
   assert.eq('alpha', actualObj.a());
 
-  var actualArray = ValueSchema.asStructOrDie('test.struct.arr', ValueSchema.arrOf(
+  const actualArray = ValueSchema.asStructOrDie('test.struct.arr', ValueSchema.arrOf(
     ValueSchema.anyValue()
   ), [ 'a', 'b', 'c' ]);
   assert.eq('c', actualArray[2]);
 
-  var actualArrayOfObj = ValueSchema.asStructOrDie('test.struct.arrof.obj', ValueSchema.arrOf(
+  const actualArrayOfObj = ValueSchema.asStructOrDie('test.struct.arrof.obj', ValueSchema.arrOf(
     ValueSchema.objOf([
       FieldSchema.strict('a'),
       FieldSchema.strict('b')
@@ -30,7 +29,7 @@ UnitTest.test('ValueSchemaStuct Test', function() {
   ]);
   assert.eq('Beta', actualArrayOfObj[0].b());
 
-  var nestedObj = ValueSchema.asStructOrDie('test.struct.nested.obj', ValueSchema.objOf([
+  const nestedObj = ValueSchema.asStructOrDie('test.struct.nested.obj', ValueSchema.objOf([
     FieldSchema.field('first', 'first', FieldPresence.strict(), ValueSchema.objOf([
       FieldSchema.strict('first.a')
     ])),
@@ -54,7 +53,7 @@ UnitTest.test('ValueSchemaStuct Test', function() {
   assert.eq(true, nestedObj.fourth().isSome());
   assert.eq('Fourth-a-value', nestedObj.fourth().getOrDie()['fourth.a']());
 
-  var actualComplex = ValueSchema.asStructOrDie('test.struct.complex', ValueSchema.objOf([
+  const actualComplex = ValueSchema.asStructOrDie('test.struct.complex', ValueSchema.objOf([
     FieldSchema.field('countries', 'countries', FieldPresence.strict(), ValueSchema.objOf([
       FieldSchema.field('aus', 'aus', FieldPresence.strict(), ValueSchema.objOf([
         FieldSchema.strict('brisbane'),
@@ -70,8 +69,8 @@ UnitTest.test('ValueSchemaStuct Test', function() {
       }
     }
   });
+
   assert.eq(true, actualComplex.countries().aus !== undefined);
   assert.eq('19', actualComplex.countries().aus().brisbane());
   assert.eq('20', actualComplex.countries().aus().sydney());
 });
-

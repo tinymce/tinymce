@@ -1,102 +1,96 @@
-import FieldPresence from './FieldPresence';
-import { ValueProcessor, ValueAdtType } from '../core/ValueProcessor';
-import { Result } from '@ephox/katamari';
-import { Type } from '@ephox/katamari';
+import { Result, Type } from '@ephox/katamari';
+import { value, objOf, arrOf, arrOfObj, anyValue, objOfOnly, Processor, field } from '../core/ValueProcessor';
+import * as FieldPresence from './FieldPresence';
+import { FieldProcessorAdt } from '../format/TypeTokens';
 
-var strict = function (key: string): ValueAdtType {
-  return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.anyValue());
+const strict = function (key: string): FieldProcessorAdt {
+  return field(key, key, FieldPresence.strict(), anyValue());
 };
 
-var strictOf = function (key: string, schema: any): ValueAdtType {
-  return ValueProcessor.field(key, key, FieldPresence.strict(), schema);
+const strictOf = function (key: string, schema: any): FieldProcessorAdt {
+  return field(key, key, FieldPresence.strict(), schema);
 };
 
-
-var strictFunction:any = function (key: string): ValueAdtType {
-  return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.value(function (f) {
+const strictFunction: any = function (key: string): FieldProcessorAdt {
+  return field(key, key, FieldPresence.strict(), value(function (f) {
     return Type.isFunction(f) ? Result.value(f) : Result.error('Not a function');
   }));
 };
 
-var forbid = function (key: string, message: string): ValueAdtType {
-  return ValueProcessor.field(
+const forbid = function (key: string, message: string): FieldProcessorAdt {
+  return field(
     key,
     key,
     FieldPresence.asOption(),
-    ValueProcessor.value(function (v) {
+    value(function (v) {
       return Result.error('The field: ' + key + ' is forbidden. ' + message);
     })
   );
 };
 
-var strictObjOf = function (key: string, objSchema: any[]): ValueAdtType  {
-  return ValueProcessor.field(key, key, FieldPresence.strict(), ValueProcessor.objOf(objSchema));
+const strictObjOf = function (key: string, objSchema: any[]): FieldProcessorAdt  {
+  return field(key, key, FieldPresence.strict(), objOf(objSchema));
 };
 
-
-var strictArrayOfObj = function (key: string, objFields: any[]): ValueAdtType {
-  return ValueProcessor.field(
+const strictArrayOfObj = function (key: string, objFields: any[]): FieldProcessorAdt {
+  return field(
     key,
     key,
     FieldPresence.strict(),
-    ValueProcessor.arrOfObj(objFields)
+    arrOfObj(objFields)
   );
 };
 
-var option = function (key: string): ValueAdtType {
-  return ValueProcessor.field(key, key, FieldPresence.asOption(), ValueProcessor.anyValue());
+const option = function (key: string): FieldProcessorAdt {
+  return field(key, key, FieldPresence.asOption(), anyValue());
 };
 
-var optionOf = function (key: string, schema: ValueAdtType[]): ValueAdtType { // TODO: no test coverage
-   return ValueProcessor.field(key, key, FieldPresence.asOption(), schema);
+const optionOf = function (key: string, schema: Processor): FieldProcessorAdt {
+   return field(key, key, FieldPresence.asOption(), schema);
 };
 
-var optionObjOf = function (key: string, objSchema: ValueAdtType[]): ValueAdtType { // TODO: no test coverage
-  return ValueProcessor.field(key, key, FieldPresence.asOption(), ValueProcessor.objOf(objSchema));
+const optionObjOf = function (key: string, objSchema: FieldProcessorAdt[]): FieldProcessorAdt {
+  return field(key, key, FieldPresence.asOption(), objOf(objSchema));
 };
 
-var optionObjOfOnly = function (key: string, objSchema: ValueAdtType[]): ValueAdtType { // TODO: no test coverage
-  return ValueProcessor.field(key, key, FieldPresence.asOption(), ValueProcessor.objOfOnly(objSchema));
+const optionObjOfOnly = function (key: string, objSchema: FieldProcessorAdt[]): FieldProcessorAdt {
+  return field(key, key, FieldPresence.asOption(), objOfOnly(objSchema));
 };
 
-var defaulted = function (key: string, fallback: string): ValueAdtType { // TODO: no test coverage
-  return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), ValueProcessor.anyValue());
+const defaulted = function (key: string, fallback: any): FieldProcessorAdt {
+  return field(key, key, FieldPresence.defaulted(fallback), anyValue());
 };
 
-var defaultedOf = function (key: string, fallback: string, schema: ValueAdtType[]): ValueAdtType { // TODO: no test coverage
-  return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), schema);
+const defaultedOf = function (key: string, fallback: any, schema: Processor): FieldProcessorAdt {
+  return field(key, key, FieldPresence.defaulted(fallback), schema);
 };
 
-var defaultedObjOf = function (key: string, fallback: string, objSchema: ValueAdtType[]): ValueAdtType { // TODO: no test coverage
-  return ValueProcessor.field(key, key, FieldPresence.defaulted(fallback), ValueProcessor.objOf(objSchema));
+const defaultedObjOf = function (key: string, fallback: object, objSchema: FieldProcessorAdt[]): FieldProcessorAdt {
+  return field(key, key, FieldPresence.defaulted(fallback), objOf(objSchema));
 };
 
-var field = function (key: string, okey: string, presence:()=>object, prop): ValueAdtType { // TODO: no test coverage
-  return ValueProcessor.field(key, okey, presence, prop);
+const state = function (okey: string, instantiator: ({}) => any): FieldProcessorAdt {
+  return state(okey, instantiator);
 };
 
-var state = function (okey: string, instantiator: ()=>any): ValueAdtType {
-  return ValueProcessor.state(okey, instantiator);
-};
+export {
+  strict,
+  strictOf,
+  strictObjOf,
+  strictArrayOfObj,
+  strictFunction,
 
-export default {
-  strict: strict,
-  strictOf: strictOf,
-  strictObjOf: strictObjOf,
-  strictArrayOfObj: strictArrayOfObj,
-  strictFunction: strictFunction,
+  forbid,
 
-  forbid: forbid,
+  option,
+  optionOf,
+  optionObjOf,
+  optionObjOfOnly,
 
-  option: option,
-  optionOf: optionOf,
-  optionObjOf: optionObjOf,
-  optionObjOfOnly: optionObjOfOnly,
+  defaulted,
+  defaultedOf,
+  defaultedObjOf,
 
-  defaulted: defaulted,
-  defaultedOf: defaultedOf,
-  defaultedObjOf: defaultedObjOf,
-
-  field: field,
-  state: state
+  field,
+  state
 };

@@ -1,28 +1,28 @@
 import { Option } from '@ephox/katamari';
 
-var readOpt = function (key) {
+const readOpt = function (key) {
   return function (obj) {
     return obj.hasOwnProperty(key) ? Option.from(obj[key]) : Option.none();
   };
 };
 
-var readOr = function (key, fallback) {
+const readOr = function (key, fallback) {
   return function (obj) {
     return readOpt(key)(obj).getOr(fallback);
   };
 };
 
-var readOptFrom = function (obj, key) {
+const readOptFrom = function (obj, key) {
   return readOpt(key)(obj);
 };
 
-var hasKey = function (obj, key) {
+const hasKey = function (obj, key) {
   return obj.hasOwnProperty(key) && obj[key] !== undefined && obj[key] !== null;
 };
 
-export default <any> {
-  readOpt: readOpt,
-  readOr: readOr,
-  readOptFrom: readOptFrom,
-  hasKey: hasKey
+export {
+  readOpt,
+  readOr,
+  readOptFrom,
+  hasKey
 };

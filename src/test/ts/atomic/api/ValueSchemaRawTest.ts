@@ -1,30 +1,29 @@
-import { Logger } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import FieldPresence from 'ephox/boulder/api/FieldPresence';
-import FieldSchema from 'ephox/boulder/api/FieldSchema';
-import Objects from 'ephox/boulder/api/Objects';
-import ValueSchema from 'ephox/boulder/api/ValueSchema';
+import { Logger, RawAssertions } from '@ephox/agar';
+import { assert, UnitTest } from '@ephox/bedrock';
 import { Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
-import { UnitTest, assert } from '@ephox/bedrock';
+import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
+import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
+import * as Objects from 'ephox/boulder/api/Objects';
+import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 
-UnitTest.test('ValueSchemaRawTest', function() {
-  var checkErr = function (label, expectedPart, input, processor) {
+UnitTest.test('ValueSchemaRawTest', function () {
+  const checkErr = function (label, expectedPart, input, processor) {
     ValueSchema.asRaw(label, processor, input).fold(function (err) {
-      var message = ValueSchema.formatError(err);
+      const message = ValueSchema.formatError(err);
       RawAssertions.assertEq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
     }, function (val) {
       assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + Json.stringify(val, null, 2) + ')');
     });
   };
 
-  var check = function (label, input, processor) {
-    var actual = ValueSchema.asRawOrDie(label, processor, input);
+  const check = function (label, input, processor) {
+    const actual = ValueSchema.asRawOrDie(label, processor, input);
     RawAssertions.assertEq(label, input, actual);
   };
 
-  var checkIs = function (label, expected, input, processor) {
-    var actual = ValueSchema.asRawOrDie(label, processor, input);
+  const checkIs = function (label, expected, input, processor) {
+    const actual = ValueSchema.asRawOrDie(label, processor, input);
     RawAssertions.assertEq(label, expected, actual);
   };
 
@@ -73,7 +72,7 @@ UnitTest.test('ValueSchemaRawTest', function() {
       aa: 'aa'
     },
     ValueSchema.objOfOnly([
-      
+
     ])
   );
 
@@ -116,11 +115,11 @@ UnitTest.test('ValueSchemaRawTest', function() {
     ])
   ]));
 
-  checkErr('test.6 should fail because fields do not both start with f', 
+  checkErr('test.6 should fail because fields do not both start with f',
     'start-with-f',
     {
-      'fieldA': { val: 'a' },
-      'cieldB': { val: 'b' }
+      fieldA: { val: 'a' },
+      cieldB: { val: 'b' }
     }, ValueSchema.setOf(function (key) {
       return key.indexOf('f') > -1 ? Result.value(key) : Result.error('start-with-f error');
     }, ValueSchema.objOf([
@@ -128,29 +127,29 @@ UnitTest.test('ValueSchemaRawTest', function() {
     ]))
   );
 
-  checkErr('test.6b should fail because values do not contain "val"', 
+  checkErr('test.6b should fail because values do not contain "val"',
     'val',
     {
-      'fieldA': { val2: 'a' },
-      'fieldB': { val2: 'b' }
+      fieldA: { val2: 'a' },
+      fieldB: { val2: 'b' }
     }, ValueSchema.setOf(Result.value, ValueSchema.objOf([
       FieldSchema.strict('val')
     ]))
   );
 
-  check('test.7', 
+  check('test.7',
     {
-      'fieldA': { val: 'a' },
-      'fieldB': { val: 'b' }
+      fieldA: { val: 'a' },
+      fieldB: { val: 'b' }
     }, ValueSchema.setOf(Result.value, ValueSchema.objOf([
       FieldSchema.strict('val')
     ]))
   );
 
-  check('test.8', 
+  check('test.8',
     {
       prop: {
-        'merged': true,
+        merged: true,
         other: 'yes'
       }
     }, ValueSchema.objOf([
@@ -185,42 +184,42 @@ UnitTest.test('ValueSchemaRawTest', function() {
   );
 
   Logger.sync('option, value not supplied', function () {
-    var v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
+    const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
-    ]), {});    
+    ]), {});
     RawAssertions.assertEq('alpha should be none', true, v.alpha.isNone());
   });
 
   Logger.sync('option, value supplied', function () {
-    var v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
+    const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
-    ]), { alpha: 'beta' });    
+    ]), { alpha: 'beta' });
     RawAssertions.assertEq('alpha should be some(beta)', 'beta', v.alpha.getOrDie('expected some'));
   });
 
   Logger.sync('defaulted option(fallback), value supplied', function () {
-    var v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
+    const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
     ]), { alpha: 'beta' });
     RawAssertions.assertEq('fallback.opt: alpha:beta should be some(beta)', 'beta', v.alpha.getOrDie());
   });
 
   Logger.sync('defaulted option(fallback), value supplied as true', function () {
-    var v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
+    const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
     ]), { alpha: true });
     RawAssertions.assertEq('fallback.opt: alpha:true should be some(fallback)', 'fallback', v.alpha.getOrDie());
   });
 
   Logger.sync('defaulted option(fallback), value not supplied', function () {
-    var v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
+    const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
-    ]), {  });    
+    ]), {  });
     RawAssertions.assertEq('fallback.opt: no alpha should be none', true, v.alpha.isNone());
   });
 
   Logger.sync('asDefaultedOptionThunk not supplied', function () {
-    var v = ValueSchema.asRawOrDie(
+    const v = ValueSchema.asRawOrDie(
       'test.option',
       ValueSchema.objOf([
         FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk(function (s) {
@@ -233,7 +232,7 @@ UnitTest.test('ValueSchemaRawTest', function() {
   });
 
   Logger.sync('asDefaultedOptionThunk supplied as true', function () {
-    var v = ValueSchema.asRawOrDie(
+    const v = ValueSchema.asRawOrDie(
       'test.option',
       ValueSchema.objOf([
         FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk(function (s) {
@@ -248,7 +247,7 @@ UnitTest.test('ValueSchemaRawTest', function() {
   });
 
   Logger.sync('asDefaultedOptionThunk supplied', function () {
-    var v = ValueSchema.asRawOrDie(
+    const v = ValueSchema.asRawOrDie(
       'test.option',
       ValueSchema.objOf([
         FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk(function (s) {
@@ -263,7 +262,7 @@ UnitTest.test('ValueSchemaRawTest', function() {
   });
 
   Logger.sync('mergeWithThunk({ extra: s.label }), value supplied', function () {
-    var v = ValueSchema.asRawOrDie(
+    const v = ValueSchema.asRawOrDie(
       'test.mergeWith',
       ValueSchema.objOf([
         FieldSchema.field('alpha', 'alpha', FieldPresence.mergeWithThunk(function (s) {
@@ -281,7 +280,7 @@ UnitTest.test('ValueSchemaRawTest', function() {
   });
 
   Logger.sync('mergeWithThunk({ extra: s.label }), no value supplied', function () {
-    var v = ValueSchema.asRawOrDie(
+    const v = ValueSchema.asRawOrDie(
       'test.mergeWith',
       ValueSchema.objOf([
         FieldSchema.field('alpha', 'alpha', FieldPresence.mergeWithThunk(function (s) {
@@ -299,13 +298,13 @@ UnitTest.test('ValueSchemaRawTest', function() {
     'Checking choose',
     function () {
 
-      var processor = ValueSchema.choose(
+      const processor = ValueSchema.choose(
         'type',
         {
-          'general': [
+          general: [
             FieldSchema.strict('cards')
           ],
-          'other': [
+          other: [
             FieldSchema.strict('houses')
           ]
         }
@@ -384,4 +383,3 @@ UnitTest.test('ValueSchemaRawTest', function() {
     }
   );
 });
-
