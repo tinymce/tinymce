@@ -1,4 +1,9 @@
 import { Adt } from '@ephox/katamari';
+export interface ProcessorType {
+  fold: (...args: any[]) => any;
+  match: (branches: {any}) => any;
+  log: (label: string) => string;
+}
 
 const typeAdt = Adt.generate([
   { setOf: [ 'validator', 'valueType' ] },
@@ -15,7 +20,7 @@ const fieldAdt = Adt.generate([
   { state: [ 'name' ] }
 ]);
 
-export const TypeTokens = {
+export {
   typeAdt,
   fieldAdt
 };

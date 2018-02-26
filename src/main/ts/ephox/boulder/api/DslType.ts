@@ -1,10 +1,7 @@
-import { EncodedAdt, Processor, ValueValidator, FieldProcessorAdt } from '../core/ValueProcessor';
-import { Result } from '@ephox/katamari';
+import { EncodedAdt, FieldProcessorAdt, Processor, ValueValidator } from '../core/ValueProcessor';
 
 // NOTE: This provides cata functions for the ADTs in TypeTokens
 // This Typing is based on whats in TreeTest.ts, it may not be 100% correct, update as necessary.
-
-import { ProcessorType } from '../format/TypeTokens';
 
 const foldType = function <T> (subject: EncodedAdt,
                                onSet: (validator: ValueValidator, valueType: Processor) => T,

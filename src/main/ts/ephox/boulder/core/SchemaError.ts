@@ -1,4 +1,4 @@
-import { PrettyPrinter } from '../format/PrettyPrinter';
+import { formatObj } from '../format/PrettyPrinter';
 import { Result } from '@ephox/katamari';
 
 const nu = function (path, getErrorInfo) {
@@ -11,7 +11,7 @@ const nu = function (path, getErrorInfo) {
 
 const missingStrict = function (path, key, obj) {
   return nu(path, function () {
-    return 'Could not find valid *strict* value for "' + key + '" in ' + PrettyPrinter.formatObj(obj);
+    return 'Could not find valid *strict* value for "' + key + '" in ' + formatObj(obj);
   });
 };
 
@@ -23,7 +23,7 @@ const missingKey = function (path, key) {
 
 const missingBranch = function (path, branches, branch) {
   return nu(path, function () {
-    return 'The chosen schema: "' + branch + '" did not exist in branches: ' + PrettyPrinter.formatObj(branches);
+    return 'The chosen schema: "' + branch + '" did not exist in branches: ' + formatObj(branches);
   });
 };
 
@@ -41,7 +41,7 @@ const toString = function (error) {
   return 'Failed path: ('  + error.path.join(' > ') + ')\n' + error.getErrorInfo();
 };
 
-export const SchemaError = {
+export {
   missingStrict,
   missingKey,
   missingBranch,

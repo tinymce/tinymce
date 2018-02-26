@@ -1,11 +1,12 @@
-import { Adt, Arr, Fun, Merger, Obj, Option, Result, Type, Thunk } from '@ephox/katamari';
+import { Adt, Arr, Fun, Merger, Obj, Option, Result, Thunk, Type } from '@ephox/katamari';
+
 import * as FieldPresence from '../api/FieldPresence';
 import * as Objects from '../api/Objects';
 import { ResultCombine } from '../combine/ResultCombine';
-import { TypeTokens } from '../format/TypeTokens';
-import { ObjReader } from './ObjReader';
-import { ObjWriter } from './ObjWriter';
-import { SchemaError } from './SchemaError';
+import { fieldAdt, ProcessorType, typeAdt } from '../format/TypeTokens';
+import * as ObjReader from './ObjReader';
+import * as ObjWriter from './ObjWriter';
+import * as SchemaError from './SchemaError';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
 export type ValueValidator = (a, strength?: () => any) => Result<any, string>;
@@ -14,7 +15,7 @@ export type ValueExtractor = (label: string, prop: Processor, strength: () => an
 export interface Processor {
   extract: PropExtractor;
   toString: () => any;
-  toDsl: () => any;
+  toDsl: () => ProcessorType;
 }
 
 export interface EncodedAdt {
@@ -23,6 +24,17 @@ export interface EncodedAdt {
   log: (label: string) => string;
 }
 // ^^^ todo , put EncodedAdt as part of Katamari Adt
+
+export interface FieldProcessorAdt {
+  fold: (...args: any[]) => any;
+  match: (branches: {any}) => any;
+  log: (label: string) => string;
+}
+export interface StateProcessorAdt {
+  fold: (...args: any[]) => any;
+  match: (branches: {any}) => any;
+  log: (label: string) => string;
+}
 
 // data ValueAdt = Field fields | state
 const adt: { field: (...args: any[]) => EncodedAdt, state: (...args: any[]) => EncodedAdt } = Adt.generate([
@@ -130,7 +142,7 @@ const value = function (validator: ValueValidator): Processor {
   };
 
   const toDsl = function () {
-    return TypeTokens.typeAdt.itemOf(validator);
+    return typeAdt.itemOf(validator);
   };
 
   return {
@@ -174,7 +186,7 @@ const objOfOnly = function (fields: EncodedAdt[]) {
   };
 };
 
-const objOf = function (fields: EncodedAdt[]) {
+const objOf = function (fields: FieldProcessorAdt[]): Processor {
   const extract = function (path, strength, o) {
     return cExtract(path, o, fields, strength);
   };
@@ -191,12 +203,12 @@ const objOf = function (fields: EncodedAdt[]) {
   };
 
   const toDsl = function () {
-    return TypeTokens.typeAdt.objOf(
+    return typeAdt.objOf(
       Arr.map(fields, function (f) {
         return f.fold(function (key, okey, presence, prop) {
-          return TypeTokens.fieldAdt.field(key, presence, prop);
+          return fieldAdt.field(key, presence, prop);
         }, function (okey, instantiator) {
-          return TypeTokens.fieldAdt.state(okey);
+          return fieldAdt.state(okey);
         });
       })
     );
@@ -209,7 +221,7 @@ const objOf = function (fields: EncodedAdt[]) {
   };
 };
 
-const arrOf = function (prop): Processor { // TODO: no test coverage
+const arrOf = function (prop: Processor): Processor {
   const extract = function (path, strength, array) {
     const results = Arr.map(array, function (a, i) {
       return prop.extract(path.concat(['[' + i + ']' ]), strength, a);
@@ -222,7 +234,7 @@ const arrOf = function (prop): Processor { // TODO: no test coverage
   };
 
   const toDsl = function () {
-    return TypeTokens.typeAdt.arrOf(prop);
+    return typeAdt.arrOf(prop);
   };
 
   return {
@@ -232,7 +244,7 @@ const arrOf = function (prop): Processor { // TODO: no test coverage
   };
 };
 
-const setOf = function (validator, prop) {
+const setOf = function (validator: ValueValidator, prop: Processor): Processor {
   const validateKeys = function (path, keys) {
     return arrOf(value(validator)).extract(path, Fun.identity, keys);
   };
@@ -253,7 +265,7 @@ const setOf = function (validator, prop) {
   };
 
   const toDsl = function () {
-    return TypeTokens.typeAdt.setOf(validator, prop);
+    return typeAdt.setOf(validator, prop);
   };
 
   return {
@@ -280,7 +292,7 @@ const func = function (args, schema, retriever) {
       return 'function';
     },
     toDsl () {
-      return TypeTokens.typeAdt.func(args, schema);
+      return typeAdt.func(args, schema);
     }
   };
 };
@@ -299,7 +311,7 @@ const thunk = function (desc, processor) {
   };
 
   const toDsl = function () {
-    return TypeTokens.typeAdt.thunk(desc);
+    return typeAdt.thunk(desc);
   };
 
   return {

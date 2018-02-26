@@ -1,7 +1,7 @@
 import { ResultCombine } from '../combine/ResultCombine';
-import { ObjChanger } from '../core/ObjChanger';
-import { ObjReader } from '../core/ObjReader';
-import { ObjWriter } from '../core/ObjWriter';
+import * as ObjChanger from '../core/ObjChanger';
+import * as ObjReader from '../core/ObjReader';
+import * as ObjWriter from '../core/ObjWriter';
 import { Option } from '@ephox/katamari';
 
 // Perhaps this level of indirection is unnecessary.

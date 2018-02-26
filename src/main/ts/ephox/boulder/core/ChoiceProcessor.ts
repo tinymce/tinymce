@@ -1,13 +1,14 @@
+import { Obj, Result } from '@ephox/katamari';
+
 import * as Objects from '../api/Objects';
-import { SchemaError } from './SchemaError';
+import { typeAdt } from '../format/TypeTokens';
+import { missingBranch, missingKey } from './SchemaError';
 import * as ValueProcessor from './ValueProcessor';
-import { TypeTokens } from '../format/TypeTokens';
-import { Obj } from '@ephox/katamari';
 
 const chooseFrom = function (path, strength, input, branches, ch) {
   const fields = Objects.readOptFrom(branches, ch);
   return fields.fold(function () {
-    return SchemaError.missingBranch(path, branches, ch);
+    return missingBranch(path, branches, ch);
   }, function (fs) {
     return ValueProcessor.objOf(fs).extract(path.concat([ 'branch: ' + ch ]), strength, input);
   });
@@ -19,7 +20,7 @@ const choose = function (key, branches) {
   const extract = function (path, strength, input) {
     const choice = Objects.readOptFrom(input, key);
     return choice.fold(function () {
-      return SchemaError.missingKey(path, key);
+      return missingKey(path, key);
     }, function (chosen) {
       return chooseFrom(path, strength, input, branches, chosen);
     });
@@ -30,7 +31,7 @@ const choose = function (key, branches) {
   };
 
   const toDsl = function () {
-    return TypeTokens.typeAdt.choiceOf(key, branches);
+    return typeAdt.choiceOf(key, branches);
   };
 
   return {
@@ -40,6 +41,6 @@ const choose = function (key, branches) {
   };
 };
 
-export const ChoiceProcessor = {
+export {
   choose
 };
