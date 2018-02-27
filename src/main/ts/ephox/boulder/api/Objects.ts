@@ -2,46 +2,46 @@ import { ResultCombine } from '../combine/ResultCombine';
 import * as ObjChanger from '../core/ObjChanger';
 import * as ObjReader from '../core/ObjReader';
 import * as ObjWriter from '../core/ObjWriter';
-import { Option } from '@ephox/katamari';
+import { Option, Result } from '@ephox/katamari';
 
 // Perhaps this level of indirection is unnecessary.
-const narrow = function (obj, fields) {
+const narrow = function (obj: {}, fields: any[]): {} {
   return ObjChanger.narrow(obj, fields);
 };
 
-const exclude = function (obj, fields) {
+const exclude = function (obj: {}, fields: any[]): {} {
   return ObjChanger.exclude(obj, fields);
 };
 
-const readOpt = function (key) {
+const readOpt = function <T>(key: string): ({}) => Option <T> {
   return ObjReader.readOpt(key);
 };
 
-const readOr = function (key, fallback) {
+const readOr = function <T>(key: string, fallback: any): ({}) => Option <T> {
   return ObjReader.readOr(key, fallback);
 };
 
-const readOptFrom = function (obj, key) {
+const readOptFrom = function (obj: {}, key: string): Option<any> {
   return ObjReader.readOptFrom(obj, key);
 };
 
-const wrap = function (key, value) {
+const wrap = function (key: string, value: {}): {} {
   return ObjWriter.wrap(key, value);
 };
 
-const wrapAll = function (keyvalues) {
+const wrapAll = function (keyvalues: Array<{key: string; value: any}>): {} {
   return ObjWriter.wrapAll(keyvalues);
 };
 
-const indexOnKey = function (array, key) {
+const indexOnKey = function <T> (array: [{[T: string]: any}], key: string): {[T: string]: any} {
   return ObjChanger.indexOnKey(array, key);
 };
 
-const consolidate = function (objs, base) {
+const consolidate = function (objs: [{}], base: {}): Result <{}, string> {
   return ResultCombine.consolidateObj(objs, base);
 };
 
-const hasKey = function (obj, key) {
+const hasKey = function (obj: {}, key: string): boolean {
   return ObjReader.hasKey(obj, key);
 };
 

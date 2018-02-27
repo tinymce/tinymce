@@ -35,11 +35,11 @@ const extract = function (label: string, prop: Processor, strength: () => any, o
   }, Result.value);
 };
 
-const asStruct = function <a>(label: string, prop: Processor, obj: any): Result<any, SchemaError<a>> {
+const asStruct = function <T>(label: string, prop: Processor, obj: any): Result<any, SchemaError<T>> {
   return extract(label, prop, Fun.constant, obj);
 };
 
-const asRaw = function <a>(label: string, prop: Processor, obj: any): Result<any, SchemaError<a>> {
+const asRaw = function <T>(label: string, prop: Processor, obj: any): Result<any, SchemaError <T>> {
   return extract(label, prop, Fun.identity, obj);
 };
 

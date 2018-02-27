@@ -1,14 +1,13 @@
 import { Adt } from '@ephox/katamari';
-export interface TypeProcessorAdt {
-  fold: (...args: any[]) => any;
-  match: (branches: {any}) => any;
-  log: (label: string) => string;
+import { AdtInterface } from '../alien/AdtDefinition';
+export interface TypeProcessorAdt extends AdtInterface {
+  // TODO: extend the correct fold type
+  // fold: <T>(...fn: Array<(...x: any[]) => T>) => T;
 }
 
-export interface FieldProcessorAdt {
-  fold: (...args: any[]) => any;
-  match: (branches: {any}) => any;
-  log: (label: string) => string;
+export interface FieldProcessorAdt extends AdtInterface {
+  // TODO: extend the correct fold type
+  // fold: <T>(...fn: Array<(...x: any[]) => T>) => T;
 }
 
 const typeAdt = Adt.generate([

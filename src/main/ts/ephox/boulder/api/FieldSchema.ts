@@ -11,7 +11,7 @@ const strictOf = function (key: string, schema: any): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), schema);
 };
 
-const strictFunction: any = function (key: string): FieldProcessorAdt {
+const strictFunction = function (key: string): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), value(function (f) {
     return Type.isFunction(f) ? Result.value(f) : Result.error('Not a function');
   }));
