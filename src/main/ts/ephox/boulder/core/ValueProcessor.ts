@@ -30,11 +30,11 @@ const adt: { field: (...args: any[]) => FieldProcessorAdt, state: (...args: any[
   { state: [ 'okey', 'instantiator' ] }
 ]);
 
-const output = function (okey, value): ValueProcessorAdt {
+const output = function (okey, value): FieldProcessorAdt {
   return adt.state(okey, Fun.constant(value));
 };
 
-const snapshot = function (okey): ValueProcessorAdt {
+const snapshot = function (okey): FieldProcessorAdt {
   return adt.state(okey, Fun.identity);
 };
 

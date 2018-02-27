@@ -214,7 +214,7 @@ UnitTest.test('ObjectsTest', function () {
 
         if (hasError) { return Jsc.eq(true, actual.isError()) ? true : 'Error contained in list, so should be error overall'; } else {
           assert.eq(true, actual.isValue(), 'No errors in list, so should be value overall');
-          return Jsc.eq(true, actual.getOrDie('Must be value').hasOwnProperty(baseKey)) ? true : 'Missing base key: ' + baseKey;
+          return Jsc.eq(true, actual.getOrDie().hasOwnProperty(baseKey)) ? true : 'Missing base key: ' + baseKey;
         }
       }
     );

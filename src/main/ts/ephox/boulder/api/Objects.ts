@@ -17,7 +17,7 @@ const readOpt = function <T>(key: string): ({}) => Option <T> {
   return ObjReader.readOpt(key);
 };
 
-const readOr = function <T>(key: string, fallback: any): ({T}) => Option <T> {
+const readOr = function <T>(key: string, fallback: any): ({}) => Option <T> {
   return ObjReader.readOr(key, fallback);
 };
 
@@ -25,11 +25,11 @@ const readOptFrom = function (obj: {}, key: string): Option<any> {
   return ObjReader.readOptFrom(obj, key);
 };
 
-const wrap = function <T, U>(key: T, value: U): {[T: string]: U} {
+const wrap = function (key: string, value: {}): {} {
   return ObjWriter.wrap(key, value);
 };
 
-const wrapAll = function <T, U>(keyvalues: [{[T: string]: U}]): {[T: string]: U} {
+const wrapAll = function (keyvalues: Array<{key: string; value: any}>): {} {
   return ObjWriter.wrapAll(keyvalues);
 };
 
@@ -37,7 +37,7 @@ const indexOnKey = function <T> (array: [{[T: string]: any}], key: string): {[T:
   return ObjChanger.indexOnKey(array, key);
 };
 
-const consolidate = function <T, U>(objs: T[], base: {U}): () => Result <{U}, string> {
+const consolidate = function (objs: [{}], base: {}): Result <{}, string> {
   return ResultCombine.consolidateObj(objs, base);
 };
 
