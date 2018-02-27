@@ -15,14 +15,12 @@ import FormatControls from 'tinymce/ui/FormatControls';
 
 declare let window: any;
 
-const init = function () {
-  Api.registerToFactory();
-  Api.appendTo(window.tinymce ? window.tinymce : {});
+Api.registerToFactory();
+Api.appendTo(window.tinymce ? window.tinymce : {});
 
-  ThemeManager.add('modern', function (editor) {
-    FormatControls.setup(editor);
-    return ThemeApi.get(editor);
-  });
-};
+ThemeManager.add('modern', function (editor) {
+  FormatControls.setup(editor);
+  return ThemeApi.get(editor);
+});
 
-export default { init };
+export default function () { }
