@@ -371,21 +371,21 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
           caretPosition = getNormalizedRangeEndPoint(-1, range);
 
           if (isFakeCaretTarget(caretPosition.getNode(true))) {
-            return showCaret(-1, caretPosition.getNode(true), false);
+            return showCaret(-1, caretPosition.getNode(true), false, false);
           }
 
           if (isFakeCaretTarget(caretPosition.getNode())) {
-            return showCaret(-1, caretPosition.getNode(), !caretPosition.isAtEnd());
+            return showCaret(-1, caretPosition.getNode(), !caretPosition.isAtEnd(), false);
           }
         } else {
           caretPosition = getNormalizedRangeEndPoint(1, range);
 
           if (isFakeCaretTarget(caretPosition.getNode())) {
-            return showCaret(1, caretPosition.getNode(), !caretPosition.isAtEnd());
+            return showCaret(1, caretPosition.getNode(), !caretPosition.isAtEnd(), false);
           }
 
           if (isFakeCaretTarget(caretPosition.getNode(true))) {
-            return showCaret(1, caretPosition.getNode(true), false);
+            return showCaret(1, caretPosition.getNode(true), false, false);
           }
         }
       }
