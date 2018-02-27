@@ -1,3 +1,5 @@
+Version 4.7.9 (2018-02-27)
+    Fixed a bug where the editor target element didn't get the correct style when removing the editor.
 Version 4.7.8 (2018-02-26)
     Fixed an issue with the Help Plugin where the menuitem name wasn't lowercase.
     Fixed an issue on MacOS where text and bold text did not have the same line-height in the autocomplete dropdown in the Link Plugin dialog.
