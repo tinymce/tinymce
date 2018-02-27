@@ -326,7 +326,7 @@ module.exports = function (grunt) {
       },
 
 
-      /* Copy ts directories to root to remove fix the import issue, so that 
+      /* Copy folders to the root dir to fix the import issue, so that 
           'tinymce/core/.....'
           'tinymce/plugins...' etc. imports will work 
       */
