@@ -14,11 +14,7 @@ import { Element } from '@ephox/sugar';
 
 import InsertTable from '../actions/InsertTable';
 import TableTargets from '../queries/TableTargets';
-<<<<<<< HEAD
-=======
-import TableDialog from './TableDialog';
 import { hasTableGrid } from '../api/Settings';
->>>>>>> upstream/master
 
 const addMenuItems = function (editor, selections) {
   let targets = Option.none();

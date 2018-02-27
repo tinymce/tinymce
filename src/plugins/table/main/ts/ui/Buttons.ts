@@ -9,11 +9,7 @@
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
-<<<<<<< HEAD
-=======
-import TableDialog from './TableDialog';
 import { getToolbar } from '../api/Settings';
->>>>>>> upstream/master
 
 const each = Tools.each;
 
