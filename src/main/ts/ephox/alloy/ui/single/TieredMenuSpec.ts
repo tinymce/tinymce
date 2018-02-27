@@ -180,7 +180,7 @@ const make = function (detail, rawUiSpec) {
     AlloyEvents.runOnExecute(function (sandbox, simulatedEvent) {
       // Trigger on execute on the targeted element
       // I.e. clicking on menu item
-      constst; target = simulatedEvent.event().target();
+      const target = simulatedEvent.event().target();
       return sandbox.getSystem().getByDom(target).bind(function (item) {
         const itemValue = getItemValue(item);
         if (itemValue.indexOf('collapse-item') === 0) {

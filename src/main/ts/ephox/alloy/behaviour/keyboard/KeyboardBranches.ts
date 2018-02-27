@@ -7,7 +7,7 @@ import MatrixType from '../../keying/MatrixType';
 import MenuType from '../../keying/MenuType';
 import SpecialType from '../../keying/SpecialType';
 
-export default <any> {
+export default {
   acyclic: AcyclicType.schema(),
   cyclic: CyclicType.schema(),
   flow: FlowType.schema(),

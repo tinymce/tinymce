@@ -1,6 +1,6 @@
 import * as Sketcher from './Sketcher';
-import TypeaheadSpec from '../../ui/composite/TypeaheadSpec';
-import TypeaheadSchema from '../../ui/schema/TypeaheadSchema';
+import * as TypeaheadSpec from '../../ui/composite/TypeaheadSpec';
+import * as TypeaheadSchema from '../../ui/schema/TypeaheadSchema';
 
 export default <any> Sketcher.composite({
   name: 'Typeahead',

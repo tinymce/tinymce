@@ -3,9 +3,9 @@ import { Fun, Option } from '@ephox/katamari';
 import Keys from '../alien/Keys';
 import * as NoState from '../behaviour/common/NoState';
 import * as Fields from '../data/Fields';
-import KeyMatch from '../navigation/KeyMatch';
-import KeyRules from '../navigation/KeyRules';
-import KeyingType from './KeyingType';
+import * as KeyMatch from '../navigation/KeyMatch';
+import * as KeyRules from '../navigation/KeyRules';
+import * as KeyingType from './KeyingType';
 
 const schema = [
   Fields.onStrictKeyboardHandler('onEscape')

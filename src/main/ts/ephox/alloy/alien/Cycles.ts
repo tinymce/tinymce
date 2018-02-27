@@ -1,4 +1,4 @@
-let cycleBy = function (value, delta, min, max) {
+const cycleBy = function (value, delta, min, max) {
   const r = value + delta;
   if (r > max) { return min; } else { return r < min ? max : r; }
 };

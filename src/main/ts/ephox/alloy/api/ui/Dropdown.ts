@@ -1,7 +1,7 @@
 import { Fun, Merger, Option } from '@ephox/katamari';
 
-import DropdownUtils from '../../dropdown/DropdownUtils';
-import ButtonBase from '../../ui/common/ButtonBase';
+import * as DropdownUtils from '../../dropdown/DropdownUtils';
+import * as ButtonBase from '../../ui/common/ButtonBase';
 import DropdownSchema from '../../ui/schema/DropdownSchema';
 import Behaviour from '../behaviour/Behaviour';
 import Composing from '../behaviour/Composing';
@@ -11,7 +11,7 @@ import Highlighting from '../behaviour/Highlighting';
 import Keying from '../behaviour/Keying';
 import Toggling from '../behaviour/Toggling';
 import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
+import * as Sketcher from './Sketcher';
 
 const factory = function (detail, components, spec, externals) {
   const switchToMenu = function (sandbox) {

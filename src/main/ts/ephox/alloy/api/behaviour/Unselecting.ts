@@ -1,5 +1,5 @@
 import Behaviour from './Behaviour';
-import ActiveUnselecting from '../../behaviour/unselecting/ActiveUnselecting';
+import * as ActiveUnselecting from '../../behaviour/unselecting/ActiveUnselecting';
 
 export default <any> Behaviour.create({
   fields: [ ],

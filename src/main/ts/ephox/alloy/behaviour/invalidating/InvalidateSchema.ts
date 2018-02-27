@@ -1,7 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
 
-import Fields from '../../data/Fields';
+import * as Fields from '../../data/Fields';
 
 export default <any> [
   FieldSchema.strict('invalidClass'),

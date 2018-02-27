@@ -2,7 +2,7 @@ import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import { JSON } from '@ephox/sand';
 
-import NoState from './NoState';
+import * as NoState from './NoState';
 
 const generateFrom = function (spec, all) {
   const schema = Arr.map(all, function (a) {

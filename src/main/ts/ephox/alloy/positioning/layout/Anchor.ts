@@ -1,4 +1,4 @@
-import Origins from './Origins';
+import * as Origins from './Origins';
 import { Struct } from '@ephox/katamari';
 
 /*

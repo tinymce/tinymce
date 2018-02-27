@@ -1,5 +1,5 @@
 
-export default <any> function (fun, delay) {
+export default function (fun: () => void, delay: number): { cancel: () => void; schedule: () => void } {
   let ref = null;
 
   const schedule = function () {
@@ -21,4 +21,4 @@ export default <any> function (fun, delay) {
     cancel,
     schedule
   };
-};
+}

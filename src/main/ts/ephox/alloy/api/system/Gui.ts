@@ -1,12 +1,12 @@
-import { Arr, Fun, Result } from '@ephox/katamari';
+import { Arr, Fun, Result, Option } from '@ephox/katamari';
 import { Compare, Focus, Node, Remove, Traverse } from '@ephox/sugar';
 
-import Debugging from '../../debugging/Debugging';
-import DescribedHandler from '../../events/DescribedHandler';
-import GuiEvents from '../../events/GuiEvents';
-import Triggers from '../../events/Triggers';
+import * as Debugging from '../../debugging/Debugging';
+import * as DescribedHandler from '../../events/DescribedHandler';
+import * as GuiEvents from '../../events/GuiEvents';
+import * as Triggers from '../../events/Triggers';
 import Registry from '../../registry/Registry';
-import Tagger from '../../registry/Tagger';
+import * as Tagger from '../../registry/Tagger';
 import * as GuiFactory from '../component/GuiFactory';
 import SystemEvents from '../events/SystemEvents';
 import Container from '../ui/Container';

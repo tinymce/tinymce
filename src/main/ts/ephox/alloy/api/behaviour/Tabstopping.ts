@@ -1,5 +1,5 @@
 import Behaviour from './Behaviour';
-import ActiveTabstopping from '../../behaviour/tabstopping/ActiveTabstopping';
+import * as ActiveTabstopping from '../../behaviour/tabstopping/ActiveTabstopping';
 import TabstopSchema from '../../behaviour/tabstopping/TabstopSchema';
 
 export default <any> Behaviour.create({

@@ -2,8 +2,8 @@ import { FieldSchema } from '@ephox/boulder';
 import { Fun, Merger, Option } from '@ephox/katamari';
 
 import * as ComponentStructure from '../../alien/ComponentStructure';
-import Fields from '../../data/Fields';
-import Dismissal from '../../sandbox/Dismissal';
+import * as Fields from '../../data/Fields';
+import * as Dismissal from '../../sandbox/Dismissal';
 import Behaviour from '../behaviour/Behaviour';
 import Positioning from '../behaviour/Positioning';
 import Receiving from '../behaviour/Receiving';
@@ -68,7 +68,7 @@ export default <any> Sketcher.single({
     Fields.onHandler('onHide'),
     SketchBehaviours.field('inlineBehaviours', [ Sandboxing, Receiving ]),
     FieldSchema.defaulted('getRelated', Option.none),
-    FieldSchema.defaulted('eventOrder')
+    FieldSchema.defaulted('eventOrder', Option.none)
   ],
   factory,
   apis: {

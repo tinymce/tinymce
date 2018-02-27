@@ -1,7 +1,7 @@
 import { Adt, Option } from '@ephox/katamari';
 
-import OriginsUI from '../view/OriginsUI';
-import Reposition from '../view/Reposition';
+import * as OriginsUI from '../view/OriginsUI';
+import * as Reposition from '../view/Reposition';
 import * as Direction from './Direction';
 
 const adt = Adt.generate([

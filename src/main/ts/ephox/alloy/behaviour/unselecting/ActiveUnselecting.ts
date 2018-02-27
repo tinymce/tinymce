@@ -2,7 +2,7 @@ import { Fun } from '@ephox/katamari';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import NativeEvents from '../../api/events/NativeEvents';
-import DomModification from '../../dom/DomModification';
+import * as DomModification from '../../dom/DomModification';
 
 const exhibit = function (base, unselectConfig) {
   return DomModification.nu({

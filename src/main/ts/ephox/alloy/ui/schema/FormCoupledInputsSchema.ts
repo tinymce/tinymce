@@ -1,7 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-import AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
+import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import Behaviour from '../../api/behaviour/Behaviour';
 import Composing from '../../api/behaviour/Composing';
 import Toggling from '../../api/behaviour/Toggling';

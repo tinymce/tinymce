@@ -2,8 +2,8 @@ import { Arr, Merger } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
-import Overflows from '../../toolbar/Overflows';
-import SplitToolbarSchema from '../../ui/schema/SplitToolbarSchema';
+import * as Overflows from '../../toolbar/Overflows';
+import * as SplitToolbarSchema from '../../ui/schema/SplitToolbarSchema';
 import Replacing from '../behaviour/Replacing';
 import Sliding from '../behaviour/Sliding';
 import * as GuiFactory from '../component/GuiFactory';

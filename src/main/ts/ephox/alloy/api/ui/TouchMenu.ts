@@ -3,9 +3,9 @@ import { Cell, Fun, Merger } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 
 import ElementFromPoint from '../../alien/ElementFromPoint';
-import DropdownUtils from '../../dropdown/DropdownUtils';
-import TouchMenuSchema from '../../ui/schema/TouchMenuSchema';
-import AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
+import * as DropdownUtils from '../../dropdown/DropdownUtils';
+import * as TouchMenuSchema from '../../ui/schema/TouchMenuSchema';
+import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
 import Behaviour from '../behaviour/Behaviour';
 import Coupling from '../behaviour/Coupling';
 import Highlighting from '../behaviour/Highlighting';

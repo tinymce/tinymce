@@ -1,5 +1,5 @@
 import Behaviour from './Behaviour';
-import ActiveFocus from '../../behaviour/focusing/ActiveFocus';
+import * as ActiveFocus from '../../behaviour/focusing/ActiveFocus';
 import FocusApis from '../../behaviour/focusing/FocusApis';
 import FocusSchema from '../../behaviour/focusing/FocusSchema';
 

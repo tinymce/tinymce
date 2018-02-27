@@ -1,4 +1,4 @@
-import AddEventsBehaviour from './behaviour/AddEventsBehaviour';
+import * as AddEventsBehaviour from './behaviour/AddEventsBehaviour';
 import Behaviour from './behaviour/Behaviour';
 import Composing from './behaviour/Composing';
 import Coupling from './behaviour/Coupling';
@@ -22,29 +22,29 @@ import Tabstopping from './behaviour/Tabstopping';
 import Toggling from './behaviour/Toggling';
 import Transitioning from './behaviour/Transitioning';
 import Unselecting from './behaviour/Unselecting';
-import CompBehaviours from './component/CompBehaviours';
-import Component from './component/Component';
+import * as CompBehaviours from './component/CompBehaviours';
+import * as Component from './component/Component';
 import ComponentApi from './component/ComponentApi';
-import ComponentUtil from './component/ComponentUtil';
+import * as ComponentUtil from './component/ComponentUtil';
 import DomFactory from './component/DomFactory';
-import GuiFactory from './component/GuiFactory';
-import GuiTemplate from './component/GuiTemplate';
-import Memento from './component/Memento';
+import * as GuiFactory from './component/GuiFactory';
+import * as GuiTemplate from './component/GuiTemplate';
+import * as Memento from './component/Memento';
 import SketchBehaviours from './component/SketchBehaviours';
-import DragCoord from './data/DragCoord';
-import AlloyEvents from './events/AlloyEvents';
-import AlloyTriggers from './events/AlloyTriggers';
+import * as DragCoord from './data/DragCoord';
+import * as AlloyEvents from './events/AlloyEvents';
+import * as AlloyTriggers from './events/AlloyTriggers';
 import NativeEvents from './events/NativeEvents';
 import SystemEvents from './events/SystemEvents';
-import FocusManagers from './focus/FocusManagers';
-import Channels from './messages/Channels';
-import Attachment from './system/Attachment';
-import ForeignGui from './system/ForeignGui';
-import Gui from './system/Gui';
+import * as FocusManagers from './focus/FocusManagers';
+import * as Channels from './messages/Channels';
+import * as Attachment from './system/Attachment';
+import * as ForeignGui from './system/ForeignGui';
+import * as Gui from './system/Gui';
 import NoContextApi from './system/NoContextApi';
 import SystemApi from './system/SystemApi';
 import Button from './ui/Button';
-import Composite from './composite/Parts';
+import * as Composite from './composite/Parts';
 import Container from './ui/Container';
 import DataField from './ui/DataField';
 import Dropdown from './ui/Dropdown';
@@ -53,14 +53,14 @@ import Form from './ui/Form';
 import FormChooser from './ui/FormChooser';
 import FormCoupledInputs from './ui/FormCoupledInputs';
 import FormField from './ui/FormField';
-import GuiTypes from './ui/GuiTypes';
+import * as GuiTypes from './ui/GuiTypes';
 import HtmlSelect from './ui/HtmlSelect';
 import InlineView from './ui/InlineView';
 import Input from './ui/Input';
-import ItemWidget from './ui/ItemWidget';
+import * as ItemWidget from './ui/ItemWidget';
 import Menu from './ui/Menu';
 import ModalDialog from './ui/ModalDialog';
-import Sketcher from './ui/Sketcher';
+import * as Sketcher from './ui/Sketcher';
 import Slider from './ui/Slider';
 import SplitDropdown from './ui/SplitDropdown';
 import SplitToolbar from './ui/SplitToolbar';
@@ -73,10 +73,10 @@ import Toolbar from './ui/Toolbar';
 import ToolbarGroup from './ui/ToolbarGroup';
 import TouchMenu from './ui/TouchMenu';
 import Typeahead from './ui/Typeahead';
-import UiSketcher from './ui/UiSketcher';
-import TapEvent from '../events/TapEvent'; // Used directly by mobile theme
-import AlloyLogger from '../log/AlloyLogger'; // Used directly by mobile theme
-import Debugging from '../debugging/Debugging'; // Used directly by mobile theme
+import * as UiSketcher from './ui/UiSketcher';
+import * as TapEvent from '../events/TapEvent'; // Used directly by mobile theme
+import * as AlloyLogger from '../log/AlloyLogger'; // Used directly by mobile theme
+import * as Debugging from '../debugging/Debugging'; // Used directly by mobile theme
 
 export {
   AddEventsBehaviour,

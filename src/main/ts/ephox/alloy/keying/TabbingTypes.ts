@@ -4,9 +4,9 @@ import { Compare, Height, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
 import Keys from '../alien/Keys';
 import * as NoState from '../behaviour/common/NoState';
-import ArrNavigation from '../navigation/ArrNavigation';
-import KeyMatch from '../navigation/KeyMatch';
-import KeyRules from '../navigation/KeyRules';
+import * as ArrNavigation from '../navigation/ArrNavigation';
+import * as KeyMatch from '../navigation/KeyMatch';
+import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 
 const create = function (cyclicField) {

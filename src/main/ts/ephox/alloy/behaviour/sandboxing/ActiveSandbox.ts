@@ -1,6 +1,6 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import SystemEvents from '../../api/events/SystemEvents';
-import SandboxApis from './SandboxApis';
+import * as SandboxApis from './SandboxApis';
 
 const events = function (sandboxConfig, sandboxState) {
   return AlloyEvents.derive([

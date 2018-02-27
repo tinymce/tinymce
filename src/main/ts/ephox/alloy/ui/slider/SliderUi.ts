@@ -1,35 +1,32 @@
+import { Arr, Fun, Merger, Option } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+import { Css, Width } from '@ephox/sugar';
+
 import Behaviour from '../../api/behaviour/Behaviour';
 import Keying from '../../api/behaviour/Keying';
 import Representing from '../../api/behaviour/Representing';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
-import AlloyEvents from '../../api/events/AlloyEvents';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
 import NativeEvents from '../../api/events/NativeEvents';
-import AlloyParts from '../../parts/AlloyParts';
-import SliderActions from './SliderActions';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
-import { Css } from '@ephox/sugar';
-import { Width } from '@ephox/sugar';
+import * as AlloyParts from '../../parts/AlloyParts';
+import * as SliderActions from './SliderActions';
 
-var isTouch = PlatformDetection.detect().deviceType.isTouch();
+const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
-var sketch = function (detail, components, spec, externals) {
-  var range = detail.max() - detail.min();
+const sketch = function (detail, components, spec, externals) {
+  const range = detail.max() - detail.min();
 
-  var getXCentre = function (component) {
-    var rect = component.element().dom().getBoundingClientRect();
+  const getXCentre = function (component) {
+    const rect = component.element().dom().getBoundingClientRect();
     return (rect.left + rect.right) / 2;
   };
 
-  var getThumb = function (component) {
+  const getThumb = function (component) {
     return AlloyParts.getPartOrDie(component, detail, 'thumb');
   };
 
-  var getXOffset = function (slider, spectrumBounds, detail) {
-    var v = detail.value().get();
+  const getXOffset = function (slider, spectrumBounds, detail) {
+    const v = detail.value().get();
     if (v < detail.min()) {
       return AlloyParts.getPart(slider, detail, 'left-edge').fold(function () {
         return 0;
@@ -49,25 +46,25 @@ var sketch = function (detail, components, spec, externals) {
     }
   };
 
-  var getXPos = function (slider) {
-    var spectrum = AlloyParts.getPartOrDie(slider, detail, 'spectrum');
-    var spectrumBounds = spectrum.element().dom().getBoundingClientRect();
-    var sliderBounds = slider.element().dom().getBoundingClientRect();
+  const getXPos = function (slider) {
+    const spectrum = AlloyParts.getPartOrDie(slider, detail, 'spectrum');
+    const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
+    const sliderBounds = slider.element().dom().getBoundingClientRect();
 
-    var xOffset = getXOffset(slider, spectrumBounds, detail);
+    const xOffset = getXOffset(slider, spectrumBounds, detail);
     return (spectrumBounds.left - sliderBounds.left) + xOffset;
   };
 
-  var refresh = function (component) {
-    var pos = getXPos(component);
-    var thumb = getThumb(component);
-    var thumbRadius = Width.get(thumb.element()) / 2;
+  const refresh = function (component) {
+    const pos = getXPos(component);
+    const thumb = getThumb(component);
+    const thumbRadius = Width.get(thumb.element()) / 2;
     Css.set(thumb.element(), 'left', (pos - thumbRadius) + 'px');
   };
 
-  var changeValue = function (component, newValue) {
-    var oldValue = detail.value().get();
-    var thumb = getThumb(component);
+  const changeValue = function (component, newValue) {
+    const oldValue = detail.value().get();
+    const thumb = getThumb(component);
     // The left check is used so that the first click calls refresh
     if (oldValue !== newValue || Css.getRaw(thumb.element(), 'left').isNone()) {
       detail.value().set(newValue);
@@ -79,15 +76,15 @@ var sketch = function (detail, components, spec, externals) {
     }
   };
 
-  var resetToMin = function (slider) {
+  const resetToMin = function (slider) {
     changeValue(slider, detail.min());
   };
 
-  var resetToMax = function (slider) {
+  const resetToMax = function (slider) {
     changeValue(slider, detail.max());
   };
 
-  var uiEventsArr = isTouch ? [
+  const uiEventsArr = isTouch ? [
     AlloyEvents.run(NativeEvents.touchstart(), function (slider, simulatedEvent) {
       detail.onDragStart()(slider, getThumb(slider));
     }),
@@ -109,7 +106,7 @@ var sketch = function (detail, components, spec, externals) {
   return {
     uid: detail.uid(),
     dom: detail.dom(),
-    components: components,
+    components,
 
     behaviours: Merger.deepMerge(
       Behaviour.derive(
@@ -117,7 +114,7 @@ var sketch = function (detail, components, spec, externals) {
           !isTouch ? [
             Keying.config({
               mode: 'special',
-              focusIn: function (slider) {
+              focusIn (slider) {
                 return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.constant(true));
               }
             })
@@ -126,7 +123,7 @@ var sketch = function (detail, components, spec, externals) {
             Representing.config({
               store: {
                 mode: 'manual',
-                getValue: function (_) {
+                getValue (_) {
                   return detail.value().get();
                 }
               }
@@ -144,7 +141,7 @@ var sketch = function (detail, components, spec, externals) {
         }),
         AlloyEvents.runOnAttached(function (slider, simulatedEvent) {
           detail.value().set(detail.getInitialValue()());
-          var thumb = getThumb(slider);
+          const thumb = getThumb(slider);
           // Call onInit instead of onChange for the first value.
           refresh(slider);
           detail.onInit()(slider, thumb, detail.value().get());
@@ -153,9 +150,9 @@ var sketch = function (detail, components, spec, externals) {
     ),
 
     apis: {
-      resetToMin: resetToMin,
-      resetToMax: resetToMax,
-      refresh: refresh
+      resetToMin,
+      resetToMax,
+      refresh
     },
 
     domModification: {
@@ -166,6 +163,6 @@ var sketch = function (detail, components, spec, externals) {
   };
 };
 
-export default <any> {
-  sketch: sketch
+export {
+  sketch
 };

@@ -4,11 +4,11 @@ import { Focus, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
 import Keys from '../alien/Keys';
 import * as NoState from '../behaviour/common/NoState';
-import DomMovement from '../navigation/DomMovement';
-import DomPinpoint from '../navigation/DomPinpoint';
-import KeyMatch from '../navigation/KeyMatch';
-import KeyRules from '../navigation/KeyRules';
-import MatrixNavigation from '../navigation/MatrixNavigation';
+import * as DomMovement from '../navigation/DomMovement';
+import * as DomPinpoint from '../navigation/DomPinpoint';
+import * as KeyMatch from '../navigation/KeyMatch';
+import * as KeyRules from '../navigation/KeyRules';
+import * as MatrixNavigation from '../navigation/MatrixNavigation';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 

@@ -1,7 +1,7 @@
 import { Option } from '@ephox/katamari';
 import { Compare, Element, Location, Scroll, Traverse } from '@ephox/sugar';
 
-import CssPosition from '../../alien/CssPosition';
+import * as CssPosition from '../../alien/CssPosition';
 
 // In one mode, the window is inside an iframe. If that iframe is in the
 // same document as the positioning element (component), then identify the offset

@@ -1,7 +1,7 @@
 import { FieldSchema, Objects } from '@ephox/boulder';
 
-import Fields from '../../data/Fields';
-import RepresentState from './RepresentState';
+import * as Fields from '../../data/Fields';
+import * as RepresentState from './RepresentState';
 
 const setValue = function (component, repConfig, repState, data) {
   // TODO: Really rethink this mode.

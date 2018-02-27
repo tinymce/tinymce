@@ -25,6 +25,6 @@ const preserve = function (f, container) {
   return result;
 };
 
-export default <any> {
+export {
   preserve
 };

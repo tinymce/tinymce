@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
 
 import * as EventRoot from '../../alien/EventRoot';
-import EventHandler from '../../construct/EventHandler';
+import * as EventHandler from '../../construct/EventHandler';
 import * as AlloyTriggers from './AlloyTriggers';
 import SystemEvents from './SystemEvents';
 

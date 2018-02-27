@@ -4,8 +4,8 @@ import { JSON as Json } from '@ephox/sand';
 
 import * as ObjIndex from '../alien/ObjIndex';
 import PrioritySort from '../alien/PrioritySort';
-import DescribedHandler from '../events/DescribedHandler';
-import EventHandler from './EventHandler';
+import * as DescribedHandler from '../events/DescribedHandler';
+import * as EventHandler from './EventHandler';
 
 /*
  * The process of combining a component's events

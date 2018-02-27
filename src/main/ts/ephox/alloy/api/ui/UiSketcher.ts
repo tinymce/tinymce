@@ -2,8 +2,8 @@ import { Objects } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
-import Tagger from '../../registry/Tagger';
-import SpecSchema from '../../spec/SpecSchema';
+import * as Tagger from '../../registry/Tagger';
+import * as SpecSchema from '../../spec/SpecSchema';
 
 const single = function (owner, schema, factory, spec) {
   const specWithUid = supplyUid(spec);

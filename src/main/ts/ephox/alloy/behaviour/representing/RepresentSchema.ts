@@ -1,6 +1,6 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 
-import Fields from '../../data/Fields';
+import * as Fields from '../../data/Fields';
 import DatasetStore from './DatasetStore';
 import ManualStore from './ManualStore';
 import MemoryStore from './MemoryStore';

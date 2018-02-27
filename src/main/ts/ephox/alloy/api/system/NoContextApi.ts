@@ -1,5 +1,5 @@
 import SystemApi from './SystemApi';
-import AlloyLogger from '../../log/AlloyLogger';
+import * as AlloyLogger from '../../log/AlloyLogger';
 import { Fun } from '@ephox/katamari';
 
 export default <any> function (getComp) {

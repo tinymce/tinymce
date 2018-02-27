@@ -1,7 +1,7 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Throttler } from '@ephox/katamari';
 
-import Fields from '../../data/Fields';
+import * as Fields from '../../data/Fields';
 
 const setup = function (streamInfo) {
   const sInfo = streamInfo.stream();

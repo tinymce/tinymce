@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import { Compare, PredicateExists } from '@ephox/sugar';
 
-import AriaOwner from '../aria/AriaOwner';
+import * as AriaOwner from '../aria/AriaOwner';
 
 const isAriaPartOf = function (component, queryElem) {
   return AriaOwner.find(queryElem).exists(function (owner) {

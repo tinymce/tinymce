@@ -1,7 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-import Fields from '../../data/Fields';
+import * as Fields from '../../data/Fields';
 import * as NoState from '../common/NoState';
 
 const getValue = function (component, repConfig, repState) {

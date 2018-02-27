@@ -41,9 +41,12 @@ const sumAsAbsolute = function (positions) {
   return sum(points);
 };
 
-export default <any> {
+const screen = adt.screen;
+const absolute = adt.absolute;
+
+export {
   sumAsFixed,
   sumAsAbsolute,
-  screen: adt.screen,
-  absolute: adt.absolute
+  screen,
+  absolute
 };

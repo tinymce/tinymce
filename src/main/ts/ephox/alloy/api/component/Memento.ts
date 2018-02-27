@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Merger, Option } from '@ephox/katamari';
 
-import Tagger from '../../registry/Tagger';
+import * as Tagger from '../../registry/Tagger';
 
 const record = function (spec) {
   const uid = Objects.hasKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');

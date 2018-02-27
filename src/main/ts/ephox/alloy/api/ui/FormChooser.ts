@@ -1,7 +1,7 @@
 import { Arr, Merger, Option } from '@ephox/katamari';
 import { Attr, SelectorFilter } from '@ephox/sugar';
 
-import FormChooserSchema from '../../ui/schema/FormChooserSchema';
+import * as FormChooserSchema from '../../ui/schema/FormChooserSchema';
 import Behaviour from '../behaviour/Behaviour';
 import Composing from '../behaviour/Composing';
 import Highlighting from '../behaviour/Highlighting';
@@ -10,7 +10,7 @@ import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import SystemEvents from '../events/SystemEvents';
-import Sketcher from './Sketcher';
+import * as Sketcher from './Sketcher';
 
 const factory = function (detail, components, spec, externals) {
   const findByValue = function (chooser, value) {

@@ -1,4 +1,4 @@
-import DomModification from '../../dom/DomModification';
+import * as DomModification from '../../dom/DomModification';
 
 const exhibit = function (base, posConfig/*, posState */) {
   return DomModification.nu({

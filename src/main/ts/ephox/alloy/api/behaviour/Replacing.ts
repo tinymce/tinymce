@@ -1,5 +1,5 @@
 import Behaviour from './Behaviour';
-import ReplaceApis from '../../behaviour/replacing/ReplaceApis';
+import * as ReplaceApis from '../../behaviour/replacing/ReplaceApis';
 
 export default <any> Behaviour.create({
   fields: [ ],

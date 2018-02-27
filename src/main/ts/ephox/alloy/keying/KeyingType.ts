@@ -6,7 +6,7 @@ import NativeEvents from '../api/events/NativeEvents';
 import SystemEvents from '../api/events/SystemEvents';
 import * as FocusManagers from '../api/focus/FocusManagers';
 import * as Fields from '../data/Fields';
-import KeyRules from '../navigation/KeyRules';
+import * as KeyRules from '../navigation/KeyRules';
 
 const typical = function (infoSchema, stateInit, getRules, getEvents, getApis, optFocusIn) {
   const schema = function () {

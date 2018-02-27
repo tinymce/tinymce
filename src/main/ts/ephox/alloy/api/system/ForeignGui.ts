@@ -2,10 +2,10 @@ import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Options } from '@ephox/katamari';
 import { DomEvent, Insert } from '@ephox/sugar';
 
-import DescribedHandler from '../../events/DescribedHandler';
-import SimulatedEvent from '../../events/SimulatedEvent';
+import * as DescribedHandler from '../../events/DescribedHandler';
+import * as SimulatedEvent from '../../events/SimulatedEvent';
 import ForeignCache from '../../foreign/ForeignCache';
-import Tagger from '../../registry/Tagger';
+import * as Tagger from '../../registry/Tagger';
 import * as GuiFactory from '../component/GuiFactory';
 import * as Gui from './Gui';
 
