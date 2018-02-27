@@ -1,9 +1,9 @@
 import { Adt, Fun } from '@ephox/katamari';
+import { AdtInterface } from '../alien/AdtDefinition';
 
-export interface FieldPresenceAdt {
-  fold: (...args: any[]) => any;
-  match: (branches: {any}) => any;
-  log: (label: string) => string;
+export interface FieldPresenceAdt extends AdtInterface {
+  // TODO: extend the correct fold type
+  // fold: <T>(...fn: Array<(...x: any[]) => T>) => T;
 }
 
 const adt = Adt.generate([

@@ -7,6 +7,7 @@ import { fieldAdt, TypeProcessorAdt, FieldProcessorAdt, typeAdt } from '../forma
 import * as ObjReader from './ObjReader';
 import * as ObjWriter from './ObjWriter';
 import * as SchemaError from './SchemaError';
+import { AdtInterface } from '../alien/AdtDefinition';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
 export type ValueValidator = (a, strength?: () => any) => Result<any, string>;
@@ -18,10 +19,9 @@ export interface Processor {
   toDsl: () => TypeProcessorAdt;
 }
 
-export interface ValueProcessorAdt {
-  fold: (...args: any[]) => any;
-  match: (branches: {any}) => any;
-  log: (label: string) => string;
+export interface ValueProcessorAdt extends AdtInterface {
+  // TODO: extend the correct fold type
+  // fold: <T>(...fn: Array<(...x: any[]) => T>) => T;
 }
 
 // data ValueAdt = Field fields | state
