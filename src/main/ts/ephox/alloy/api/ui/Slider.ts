@@ -1,6 +1,6 @@
 import SliderParts from '../../ui/slider/SliderParts';
-import SliderSchema from '../../ui/slider/SliderSchema';
-import SliderUi from '../../ui/slider/SliderUi';
+import * as SliderSchema from '../../ui/slider/SliderSchema';
+import * as SliderUi from '../../ui/slider/SliderUi';
 import * as Sketcher from './Sketcher';
 
 export default <any> Sketcher.composite({

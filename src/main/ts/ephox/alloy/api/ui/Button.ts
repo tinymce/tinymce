@@ -1,12 +1,12 @@
 import { Objects, FieldSchema } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
 
-import ButtonBase from '../../ui/common/ButtonBase';
+import * as ButtonBase from '../../ui/common/ButtonBase';
 import Behaviour from '../behaviour/Behaviour';
 import Focusing from '../behaviour/Focusing';
 import Keying from '../behaviour/Keying';
 import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
+import * as Sketcher from './Sketcher';
 
 const factory = function (detail, spec) {
   const events = ButtonBase.events(detail.action());

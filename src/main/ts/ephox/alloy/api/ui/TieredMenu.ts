@@ -1,8 +1,8 @@
 import { FieldSchema, Objects } from '@ephox/boulder';
 import { Id } from '@ephox/katamari';
 
-import Fields from '../../data/Fields';
-import TieredMenuSpec from '../../ui/single/TieredMenuSpec';
+import * as Fields from '../../data/Fields';
+import * as TieredMenuSpec from '../../ui/single/TieredMenuSpec';
 import Composing from '../behaviour/Composing';
 import Highlighting from '../behaviour/Highlighting';
 import Keying from '../behaviour/Keying';

@@ -3,7 +3,7 @@ import { Arr, Fun, Merger, Obj, Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
 import * as ObjIndex from '../alien/ObjIndex';
-import DomModification from '../dom/DomModification';
+import * as DomModification from '../dom/DomModification';
 
 const behaviourDom = function (name, modification) {
   return {

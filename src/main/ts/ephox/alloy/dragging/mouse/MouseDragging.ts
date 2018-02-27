@@ -9,7 +9,7 @@ import * as Fields from '../../data/Fields';
 import * as BlockerUtils from '../common/BlockerUtils';
 import * as DragMovement from '../common/DragMovement';
 import SnapSchema from '../common/SnapSchema';
-import Snappables from '../snap/Snappables';
+import * as Snappables from '../snap/Snappables';
 import * as BlockerEvents from './BlockerEvents';
 import * as MouseData from './MouseData';
 

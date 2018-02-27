@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Cell, Fun, Obj, Option } from '@ephox/katamari';
 
-import MenuPathing from './MenuPathing';
+import * as MenuPathing from './MenuPathing';
 
 export default <any> function () {
   const expansions = Cell({ });

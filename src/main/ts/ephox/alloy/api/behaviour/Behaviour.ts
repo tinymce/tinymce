@@ -1,8 +1,8 @@
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-import Behaviour from '../../behaviour/common/Behaviour';
-import NoState from '../../behaviour/common/NoState';
+import * as Behaviour from '../../behaviour/common/Behaviour';
+import * as NoState from '../../behaviour/common/NoState';
 
 const derive = function (capabilities) {
   return Objects.wrapAll(capabilities);

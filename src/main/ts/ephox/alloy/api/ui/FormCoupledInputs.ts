@@ -1,9 +1,9 @@
 import Behaviour from '../behaviour/Behaviour';
 import Composing from '../behaviour/Composing';
 import Representing from '../behaviour/Representing';
-import Sketcher from './Sketcher';
+import * as Sketcher from './Sketcher';
 import * as AlloyParts from '../../parts/AlloyParts';
-import FormCoupledInputsSchema from '../../ui/schema/FormCoupledInputsSchema';
+import * as FormCoupledInputsSchema from '../../ui/schema/FormCoupledInputsSchema';
 import { Objects } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
 

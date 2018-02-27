@@ -1,10 +1,10 @@
 import { FieldPresence, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Merger } from '@ephox/katamari';
+import { Arr, Fun, Merger, Result } from '@ephox/katamari';
 
-import Fields from '../data/Fields';
-import DomDefinition from '../dom/DomDefinition';
-import DomModification from '../dom/DomModification';
-import AlloyTags from '../ephemera/AlloyTags';
+import * as Fields from '../data/Fields';
+import * as DomDefinition from '../dom/DomDefinition';
+import * as DomModification from '../dom/DomModification';
+import * as AlloyTags from '../ephemera/AlloyTags';
 
 const toInfo = function (spec) {
   return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([

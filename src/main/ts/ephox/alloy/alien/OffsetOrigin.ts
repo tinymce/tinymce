@@ -20,6 +20,6 @@ const getOrigin = function (element, scroll) {
   });
 };
 
-export default <any> {
+export {
   getOrigin
 };

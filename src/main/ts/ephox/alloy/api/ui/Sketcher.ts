@@ -1,10 +1,10 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Obj } from '@ephox/katamari';
 
-import FunctionAnnotator from '../../debugging/FunctionAnnotator';
+import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
-import UiSketcher from './UiSketcher';
+import * as UiSketcher from './UiSketcher';
 
 const singleSchema = ValueSchema.objOfOnly([
   FieldSchema.strict('name'),

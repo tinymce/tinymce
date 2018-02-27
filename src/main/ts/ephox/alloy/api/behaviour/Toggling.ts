@@ -1,6 +1,6 @@
 import Behaviour from './Behaviour';
-import ActiveToggle from '../../behaviour/toggling/ActiveToggle';
-import ToggleApis from '../../behaviour/toggling/ToggleApis';
+import * as ActiveToggle from '../../behaviour/toggling/ActiveToggle';
+import * as ToggleApis from '../../behaviour/toggling/ToggleApis';
 import ToggleSchema from '../../behaviour/toggling/ToggleSchema';
 
 export default <any> Behaviour.create({

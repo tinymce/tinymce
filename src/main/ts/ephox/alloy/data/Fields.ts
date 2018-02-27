@@ -2,7 +2,7 @@ import { FieldPresence, FieldSchema, ValueSchema, DslType } from '@ephox/boulder
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
 
 import * as Debugging from '../debugging/Debugging';
-import MenuMarkers from '../menu/util/MenuMarkers';
+import * as MenuMarkers from '../menu/util/MenuMarkers';
 
 const _initSize = FieldSchema.strictObjOf('initSize', [
   FieldSchema.strict('numColumns'),

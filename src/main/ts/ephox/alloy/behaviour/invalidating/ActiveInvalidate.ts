@@ -1,5 +1,5 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import InvalidateApis from './InvalidateApis';
+import * as InvalidateApis from './InvalidateApis';
 import { Fun } from '@ephox/katamari';
 
 const events = function (invalidConfig, invalidState) {

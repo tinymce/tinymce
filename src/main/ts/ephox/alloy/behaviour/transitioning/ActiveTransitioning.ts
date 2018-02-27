@@ -1,6 +1,6 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import NativeEvents from '../../api/events/NativeEvents';
-import TransitionApis from './TransitionApis';
+import * as TransitionApis from './TransitionApis';
 
 const events = function (transConfig, transState) {
   return AlloyEvents.derive([

@@ -1,6 +1,6 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as Behaviour from '../common/Behaviour';
-import RepresentApis from './RepresentApis';
+import * as RepresentApis from './RepresentApis';
 
 const events = function (repConfig, repState) {
   const es = repConfig.resetOnDom() ? [

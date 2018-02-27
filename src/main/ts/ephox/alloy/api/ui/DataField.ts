@@ -6,7 +6,7 @@ import Composing from '../behaviour/Composing';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
-import Sketcher from './Sketcher';
+import * as Sketcher from './Sketcher';
 
 const factory = function (detail, spec) {
   return {

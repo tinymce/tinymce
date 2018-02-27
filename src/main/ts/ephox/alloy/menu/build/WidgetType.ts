@@ -11,7 +11,7 @@ import NativeEvents from '../../api/events/NativeEvents';
 import SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
-import ItemEvents from '../util/ItemEvents';
+import * as ItemEvents from '../util/ItemEvents';
 import * as WidgetParts from './WidgetParts';
 
 const builder = function (info) {

@@ -2,7 +2,7 @@ import { Merger } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
-import ModalDialogSchema from '../../ui/schema/ModalDialogSchema';
+import * as ModalDialogSchema from '../../ui/schema/ModalDialogSchema';
 import Behaviour from '../behaviour/Behaviour';
 import Keying from '../behaviour/Keying';
 import * as GuiFactory from '../component/GuiFactory';

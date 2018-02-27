@@ -2,8 +2,8 @@ import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Obj, Option, Thunk } from '@ephox/katamari';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import FunctionAnnotator from '../../debugging/FunctionAnnotator';
-import DomModification from '../../dom/DomModification';
+import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
+import * as DomModification from '../../dom/DomModification';
 
 const executeEvent = function (bConfig, bState, executor) {
   return AlloyEvents.runOnExecute(function (component) {

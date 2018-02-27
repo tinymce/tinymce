@@ -3,7 +3,7 @@ import { Arr, Obj } from '@ephox/katamari';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import SystemEvents from '../../api/events/SystemEvents';
-import AlloyLogger from '../../log/AlloyLogger';
+import * as AlloyLogger from '../../log/AlloyLogger';
 
 const chooseChannels = function (channels, message) {
   return message.universal() ? channels : Arr.filter(channels, function (ch) {

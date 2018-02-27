@@ -5,11 +5,11 @@ import { SelectorFind } from '@ephox/sugar';
 import Keys from '../alien/Keys';
 import * as KeyingState from '../behaviour/keyboard/KeyingState';
 import * as Fields from '../data/Fields';
-import DomMovement from '../navigation/DomMovement';
-import DomPinpoint from '../navigation/DomPinpoint';
-import KeyMatch from '../navigation/KeyMatch';
-import KeyRules from '../navigation/KeyRules';
-import WrapArrNavigation from '../navigation/WrapArrNavigation';
+import * as DomMovement from '../navigation/DomMovement';
+import * as DomPinpoint from '../navigation/DomPinpoint';
+import * as KeyMatch from '../navigation/KeyMatch';
+import * as KeyRules from '../navigation/KeyRules';
+import * as WrapArrNavigation from '../navigation/WrapArrNavigation';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 

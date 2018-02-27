@@ -1,4 +1,4 @@
-import InputBase from '../../ui/common/InputBase';
+import * as InputBase from '../../ui/common/InputBase';
 import * as Sketcher from './Sketcher';
 
 const factory = function (detail, spec) {

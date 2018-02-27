@@ -63,7 +63,7 @@ const triggerHandler = function (lookup, eventType, rawEvent, target, logger) {
   return doTriggerHandler(lookup, eventType, rawEvent, target, source, logger);
 };
 
-const broadcast = function (listeners, rawEvent, logger) {
+const broadcast = function (listeners, rawEvent, logger?) {
   const simulatedEvent = SimulatedEvent.fromExternal(rawEvent);
 
   Arr.each(listeners, function (listener) {

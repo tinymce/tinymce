@@ -1,7 +1,7 @@
 import { Future, Result } from '@ephox/katamari';
 import { Body, Class, Html } from '@ephox/sugar';
 
-import AriaVoice from '../../alien/AriaVoice';
+import * as AriaVoice from '../../alien/AriaVoice';
 
 const markValid = function (component, invalidConfig/*, invalidState */) {
   const elem = invalidConfig.getRoot()(component).getOr(component.element());

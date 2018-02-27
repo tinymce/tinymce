@@ -1,6 +1,6 @@
 import * as AlloyEvents from '../api/events/AlloyEvents';
 import SystemEvents from '../api/events/SystemEvents';
-import AlloyLogger from '../log/AlloyLogger';
+import * as AlloyLogger from '../log/AlloyLogger';
 import { Compare } from '@ephox/sugar';
 
 // The purpose of this check is to ensure that a simulated focus call is not going

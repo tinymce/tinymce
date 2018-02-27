@@ -1,5 +1,5 @@
 import Behaviour from './Behaviour';
-import AlloyEvents from '../events/AlloyEvents';
+import * as AlloyEvents from '../events/AlloyEvents';
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
@@ -32,7 +32,7 @@ const config = function (name, eventHandlers) {
   };
 };
 
-export default <any> {
+export {
   events,
   config
 };

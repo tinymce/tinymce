@@ -1,6 +1,6 @@
 import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
-import Fields from '../../data/Fields';
+import * as Sketcher from './Sketcher';
+import * as Fields from '../../data/Fields';
 import { FieldSchema } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
 

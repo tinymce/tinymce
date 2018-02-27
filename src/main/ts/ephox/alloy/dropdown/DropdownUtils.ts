@@ -10,9 +10,9 @@ import Positioning from '../api/behaviour/Positioning';
 import Sandboxing from '../api/behaviour/Sandboxing';
 import TieredMenu from '../api/ui/TieredMenu';
 import * as AriaOwner from '../aria/AriaOwner';
-import InternalSink from '../parts/InternalSink';
-import Tagger from '../registry/Tagger';
-import Dismissal from '../sandbox/Dismissal';
+import * as InternalSink from '../parts/InternalSink';
+import * as Tagger from '../registry/Tagger';
+import * as Dismissal from '../sandbox/Dismissal';
 
 const fetch = function (detail, component) {
   const fetcher = detail.fetch();

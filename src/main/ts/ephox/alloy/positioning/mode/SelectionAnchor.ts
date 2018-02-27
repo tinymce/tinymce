@@ -3,7 +3,7 @@ import { Fun, Option, Struct, Unicode } from '@ephox/katamari';
 import { Direction, Element, Insert, Node, Position, Remove, Selection, Traverse, WindowSelection } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
-import CssPosition from '../../alien/CssPosition';
+import * as CssPosition from '../../alien/CssPosition';
 import * as Descend from '../../alien/Descend';
 import * as Fields from '../../data/Fields';
 import Bubble from '../layout/Bubble';

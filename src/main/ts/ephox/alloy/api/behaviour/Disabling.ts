@@ -1,6 +1,6 @@
 import Behaviour from './Behaviour';
-import ActiveDisable from '../../behaviour/disabling/ActiveDisable';
-import DisableApis from '../../behaviour/disabling/DisableApis';
+import * as ActiveDisable from '../../behaviour/disabling/ActiveDisable';
+import * as DisableApis from '../../behaviour/disabling/DisableApis';
 import DisableSchema from '../../behaviour/disabling/DisableSchema';
 
 export default <any> Behaviour.create({

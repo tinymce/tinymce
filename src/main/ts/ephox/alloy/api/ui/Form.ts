@@ -6,8 +6,8 @@ import Behaviour from '../behaviour/Behaviour';
 import Composing from '../behaviour/Composing';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
-import GuiTypes from './GuiTypes';
-import UiSketcher from './UiSketcher';
+import * as GuiTypes from './GuiTypes';
+import * as UiSketcher from './UiSketcher';
 
 const owner = 'form';
 

@@ -1,7 +1,7 @@
 import { Fun, Option } from '@ephox/katamari';
 
 import * as Cycles from '../alien/Cycles';
-import DomPinpoint from './DomPinpoint';
+import * as DomPinpoint from './DomPinpoint';
 
 const horizontal = function (container, selector, current, delta) {
   // I wonder if this will be a problem when the focused element is invisible (shouldn't happen)

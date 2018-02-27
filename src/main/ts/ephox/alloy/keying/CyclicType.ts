@@ -1,4 +1,4 @@
-import TabbingTypes from './TabbingTypes';
+import * as TabbingTypes from './TabbingTypes';
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 

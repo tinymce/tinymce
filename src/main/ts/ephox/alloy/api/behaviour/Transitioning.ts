@@ -1,6 +1,6 @@
 import Behaviour from './Behaviour';
-import ActiveTransitioning from '../../behaviour/transitioning/ActiveTransitioning';
-import TransitionApis from '../../behaviour/transitioning/TransitionApis';
+import * as ActiveTransitioning from '../../behaviour/transitioning/ActiveTransitioning';
+import * as TransitionApis from '../../behaviour/transitioning/TransitionApis';
 import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';
 import { Objects } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';

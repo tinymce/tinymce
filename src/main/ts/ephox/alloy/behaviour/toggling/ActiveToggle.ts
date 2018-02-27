@@ -1,9 +1,9 @@
 import { Arr } from '@ephox/katamari';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import DomModification from '../../dom/DomModification';
+import * as DomModification from '../../dom/DomModification';
 import * as Behaviour from '../common/Behaviour';
-import ToggleApis from './ToggleApis';
+import * as ToggleApis from './ToggleApis';
 
 const exhibit = function (base, toggleConfig, toggleState) {
   return DomModification.nu({ });

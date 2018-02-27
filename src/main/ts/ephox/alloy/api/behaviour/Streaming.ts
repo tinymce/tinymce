@@ -1,6 +1,6 @@
 import Behaviour from './Behaviour';
-import NoState from '../../behaviour/common/NoState';
-import ActiveStreaming from '../../behaviour/streaming/ActiveStreaming';
+import * as NoState from '../../behaviour/common/NoState';
+import * as ActiveStreaming from '../../behaviour/streaming/ActiveStreaming';
 import StreamingSchema from '../../behaviour/streaming/StreamingSchema';
 
 export default <any> Behaviour.create({

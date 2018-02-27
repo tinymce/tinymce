@@ -1,9 +1,9 @@
 import { Fun, Merger, Option } from '@ephox/katamari';
 
-import DropdownUtils from '../../dropdown/DropdownUtils';
+import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as AlloyParts from '../../parts/AlloyParts';
-import ButtonBase from '../../ui/common/ButtonBase';
-import SplitDropdownSchema from '../../ui/schema/SplitDropdownSchema';
+import * as ButtonBase from '../../ui/common/ButtonBase';
+import * as SplitDropdownSchema from '../../ui/schema/SplitDropdownSchema';
 import Behaviour from '../behaviour/Behaviour';
 import Composing from '../behaviour/Composing';
 import Coupling from '../behaviour/Coupling';

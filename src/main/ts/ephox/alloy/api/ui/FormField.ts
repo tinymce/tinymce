@@ -2,13 +2,13 @@ import { Id, Merger } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
-import FormFieldSchema from '../../ui/schema/FormFieldSchema';
+import * as FormFieldSchema from '../../ui/schema/FormFieldSchema';
 import Behaviour from '../behaviour/Behaviour';
 import Composing from '../behaviour/Composing';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
-import Sketcher from './Sketcher';
+import * as Sketcher from './Sketcher';
 
 const factory = function (detail, components, spec, externals) {
   const behaviours = Merger.deepMerge(

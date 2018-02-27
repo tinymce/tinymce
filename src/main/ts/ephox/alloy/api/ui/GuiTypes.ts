@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Fun, Id, Option } from '@ephox/katamari';
 
-import FunctionAnnotator from '../../debugging/FunctionAnnotator';
+import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 
 const premadeTag = Id.generate('alloy-premade');
 const _apiConfig = Id.generate('api');

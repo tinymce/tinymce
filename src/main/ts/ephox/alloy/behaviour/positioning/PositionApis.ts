@@ -1,10 +1,10 @@
 import { ValueSchema } from '@ephox/boulder';
 import { Css, Location } from '@ephox/sugar';
 
-import Anchor from '../../positioning/layout/Anchor';
-import Boxes from '../../positioning/layout/Boxes';
-import Origins from '../../positioning/layout/Origins';
-import SimpleLayout from '../../positioning/layout/SimpleLayout';
+import * as Anchor from '../../positioning/layout/Anchor';
+import * as Boxes from '../../positioning/layout/Boxes';
+import * as Origins from '../../positioning/layout/Origins';
+import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
 import AnchorSchema from '../../positioning/mode/AnchorSchema';
 
 const getFixedOrigin = function () {

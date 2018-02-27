@@ -1,8 +1,8 @@
 import { Css, Location, Scroll, Traverse } from '@ephox/sugar';
 
-import OffsetOrigin from '../../alien/OffsetOrigin';
+import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import * as DragCoord from '../../api/data/DragCoord';
-import Snappables from '../snap/Snappables';
+import * as Snappables from '../snap/Snappables';
 
 const getCurrentCoord = function (target) {
   return Css.getRaw(target, 'left').bind(function (left) {

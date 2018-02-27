@@ -2,10 +2,18 @@ import { Objects } from '@ephox/boulder';
 import { Arr, Fun, Obj, Options } from '@ephox/katamari';
 
 import SystemEvents from '../api/events/SystemEvents';
-import AlloyLogger from '../log/AlloyLogger';
+import * as AlloyLogger from '../log/AlloyLogger';
 
 const unknown = 'unknown';
-const debugging: boolean = true;
+
+/*
+  typescipt qwerk:
+  const debugging: boolean = true;
+  if (boolean === false) {  -> this throws a type error! // TS2365:Operator '===' cannot be applied to types 'false' and 'true'
+    https://www.typescriptlang.org/play/#src=const%20foo%3A%20boolean%20%3D%20true%3B%0D%0A%0D%0Aif%20(foo%20%3D%3D%3D%20false)%20%7B%0D%0A%20%20%20%20%0D%0A%7D
+  }
+*/
+const debugging: any = true;
 
 const CHROME_INSPECTOR_GLOBAL = '__CHROME_INSPECTOR_CONNECTION_TO_ALLOY__';
 

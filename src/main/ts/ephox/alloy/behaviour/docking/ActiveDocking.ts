@@ -1,7 +1,7 @@
 import { Class, Compare, Css, Scroll, Traverse } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
-import OffsetOrigin from '../../alien/OffsetOrigin';
+import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import NativeEvents from '../../api/events/NativeEvents';

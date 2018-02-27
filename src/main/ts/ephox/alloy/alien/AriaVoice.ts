@@ -80,7 +80,7 @@ const shout = Fun.curry(base, Fun.constant({
   'role': 'alert'
 }));
 
-export default <any> {
+export {
   describe,
   speak,
   shout,

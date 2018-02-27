@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { Compare, Insert } from '@ephox/sugar';
 
-import AriaFocus from '../../alien/AriaFocus';
+import * as AriaFocus from '../../alien/AriaFocus';
 import * as Attachment from '../../api/system/Attachment';
 
 const set = function (component, replaceConfig, replaceState, data) {

@@ -1,6 +1,6 @@
 import { Option, Struct } from '@ephox/katamari';
 
-import Callouts from '../view/Callouts';
+import * as Callouts from '../view/Callouts';
 import * as Boxes from './Boxes';
 import * as Layout from './Layout';
 import * as MaxHeight from './MaxHeight';

@@ -1,6 +1,6 @@
 import Behaviour from './Behaviour';
 import KeyboardBranches from '../../behaviour/keyboard/KeyboardBranches';
-import KeyingState from '../../behaviour/keyboard/KeyingState';
+import * as KeyingState from '../../behaviour/keyboard/KeyingState';
 import { Objects } from '@ephox/boulder';
 
 export default <any> Behaviour.createModes({

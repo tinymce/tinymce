@@ -3,10 +3,10 @@ import { Arr, Cell, Fun, Merger, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 import DefaultEvents from '../../events/DefaultEvents';
-import Tagger from '../../registry/Tagger';
-import CustomSpec from '../../spec/CustomSpec';
+import * as Tagger from '../../registry/Tagger';
+import * as CustomSpec from '../../spec/CustomSpec';
 import NoContextApi from '../system/NoContextApi';
-import GuiTypes from '../ui/GuiTypes';
+import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
 import ComponentApi from './ComponentApi';
 

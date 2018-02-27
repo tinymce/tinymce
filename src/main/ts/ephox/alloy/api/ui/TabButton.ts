@@ -1,7 +1,7 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Id, Merger } from '@ephox/katamari';
 
-import ButtonBase from '../../ui/common/ButtonBase';
+import { events } from '../../ui/common/ButtonBase';
 import Behaviour from '../behaviour/Behaviour';
 import Focusing from '../behaviour/Focusing';
 import Keying from '../behaviour/Keying';
@@ -10,13 +10,12 @@ import SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 
 const factory = function (detail, spec) {
-  const events = ButtonBase.events(detail.action());
 
   return {
     uid: detail.uid(),
     dom: detail.dom(),
     components: detail.components(),
-    events,
+    events: events(detail.action()),
     behaviours: Merger.deepMerge(
       Behaviour.derive([
         Focusing.config({ }),

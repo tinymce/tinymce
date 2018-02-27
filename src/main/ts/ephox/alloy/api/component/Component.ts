@@ -4,13 +4,13 @@ import { JSON as Json } from '@ephox/sand';
 import { Traverse } from '@ephox/sugar';
 
 import BehaviourBlob from '../../behaviour/common/BehaviourBlob';
-import ComponentDom from '../../construct/ComponentDom';
-import ComponentEvents from '../../construct/ComponentEvents';
-import CustomDefinition from '../../construct/CustomDefinition';
-import DomModification from '../../dom/DomModification';
-import DomRender from '../../dom/DomRender';
+import * as ComponentDom from '../../construct/ComponentDom';
+import * as ComponentEvents from '../../construct/ComponentEvents';
+import * as CustomDefinition from '../../construct/CustomDefinition';
+import * as DomModification from '../../dom/DomModification';
+import * as DomRender from '../../dom/DomRender';
 import NoContextApi from '../system/NoContextApi';
-import GuiTypes from '../ui/GuiTypes';
+import * as GuiTypes from '../ui/GuiTypes';
 import * as CompBehaviours from './CompBehaviours';
 import ComponentApi from './ComponentApi';
 

@@ -1,6 +1,6 @@
 import Behaviour from './Behaviour';
-import ActivePosition from '../../behaviour/positioning/ActivePosition';
-import PositionApis from '../../behaviour/positioning/PositionApis';
+import * as ActivePosition from '../../behaviour/positioning/ActivePosition';
+import * as PositionApis from '../../behaviour/positioning/PositionApis';
 import PositionSchema from '../../behaviour/positioning/PositionSchema';
 
 export default <any> Behaviour.create({

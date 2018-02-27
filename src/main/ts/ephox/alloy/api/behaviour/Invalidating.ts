@@ -1,7 +1,7 @@
 import Behaviour from './Behaviour';
 import Representing from './Representing';
-import ActiveInvalidate from '../../behaviour/invalidating/ActiveInvalidate';
-import InvalidateApis from '../../behaviour/invalidating/InvalidateApis';
+import * as ActiveInvalidate from '../../behaviour/invalidating/ActiveInvalidate';
+import * as InvalidateApis from '../../behaviour/invalidating/InvalidateApis';
 import InvalidateSchema from '../../behaviour/invalidating/InvalidateSchema';
 import { Future } from '@ephox/katamari';
 

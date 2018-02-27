@@ -4,10 +4,10 @@ import { SelectorFind } from '@ephox/sugar';
 
 import Keys from '../alien/Keys';
 import * as NoState from '../behaviour/common/NoState';
-import DomMovement from '../navigation/DomMovement';
-import DomNavigation from '../navigation/DomNavigation';
-import KeyMatch from '../navigation/KeyMatch';
-import KeyRules from '../navigation/KeyRules';
+import * as DomMovement from '../navigation/DomMovement';
+import * as DomNavigation from '../navigation/DomNavigation';
+import * as KeyMatch from '../navigation/KeyMatch';
+import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 

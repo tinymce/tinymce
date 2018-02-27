@@ -1,5 +1,5 @@
 import * as Direction from './Direction';
-import Anchors from '../view/Anchors';
+import * as Anchors from '../view/Anchors';
 import SpotInfo from '../view/SpotInfo';
 
 /*

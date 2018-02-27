@@ -4,10 +4,10 @@ import { Fun, Option } from '@ephox/katamari';
 import * as EditableFields from '../alien/EditableFields';
 import Keys from '../alien/Keys';
 import * as NoState from '../behaviour/common/NoState';
-import KeyMatch from '../navigation/KeyMatch';
-import KeyRules from '../navigation/KeyRules';
-import KeyingType from './KeyingType';
-import KeyingTypes from './KeyingTypes';
+import * as KeyMatch from '../navigation/KeyMatch';
+import * as KeyRules from '../navigation/KeyRules';
+import * as KeyingType from './KeyingType';
+import * as KeyingTypes from './KeyingTypes';
 
 const schema = [
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),

@@ -2,7 +2,7 @@ import { Objects } from '@ephox/boulder';
 import { Fun, Obj, Option, Struct } from '@ephox/katamari';
 
 import * as TransformFind from '../alien/TransformFind';
-import Tagger from '../registry/Tagger';
+import * as Tagger from '../registry/Tagger';
 import * as DescribedHandler from './DescribedHandler';
 
 const eventHandler = Struct.immutable('element', 'descHandler');

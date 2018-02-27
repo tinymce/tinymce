@@ -1,7 +1,7 @@
 import { Adt, Arr, Fun } from '@ephox/katamari';
 
 import * as Direction from '../layout/Direction';
-import Reposition from './Reposition';
+import * as Reposition from './Reposition';
 
 const adt = Adt.generate([
   { fit:   [ 'reposition' ] },

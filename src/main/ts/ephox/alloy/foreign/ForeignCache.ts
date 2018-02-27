@@ -9,7 +9,7 @@ import * as CompBehaviours from '../api/component/CompBehaviours';
 import BehaviourBlob from '../behaviour/common/BehaviourBlob';
 import * as ComponentEvents from '../construct/ComponentEvents';
 
-export default <any> function () {
+export default function (): { getEvents: (elem: {}, spec: {}) => { elem: () => any, evts: () => any } } {
   const getEvents = function (elem, spec) {
     const evts = DomState.getOrCreate(elem, function () {
       // If we haven't already setup this particular element, then generate any state and config
@@ -45,4 +45,4 @@ export default <any> function () {
   return {
     getEvents
   };
-};
+}

@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
-import TabSectionSchema from '../../ui/schema/TabSectionSchema';
+import * as TabSectionSchema from '../../ui/schema/TabSectionSchema';
 import Highlighting from '../behaviour/Highlighting';
 import Replacing from '../behaviour/Replacing';
 import Representing from '../behaviour/Representing';
