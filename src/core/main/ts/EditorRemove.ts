@@ -6,9 +6,7 @@ import Events from 'tinymce/core/api/Events';
 const DOM = DOMUtils.DOM;
 
 const restoreOriginalStyles = (editor: Editor) => {
-  if (editor.orgDisplay) {
-    DOM.setStyle(editor.id, 'display', editor.orgDisplay);
-  }
+  DOM.setStyle(editor.id, 'display', editor.orgDisplay);
 };
 
 const safeDestroy = (x: any) => Option.from(x).each((x) => x.destroy());
