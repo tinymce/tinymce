@@ -27,6 +27,11 @@ UnitTest.asynctest('browser.tinymce.core.EditorContentNotInitializedTest', (succ
     RawAssertions.assertEq('content should be equal', expected, actual);
   });
 
+  const cRemoveBodyElement = Chain.op((editor) => {
+    const body = editor.getBody();
+    body.parentNode.removeChild(body);
+  });
+
   Pipeline.async({}, [
     Logger.t('set content on editor without initializing it', Chain.asStep({}, [
       cCreateEditor,
@@ -36,11 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorContentNotInitializedTest', (succ
 
     Logger.t('set content on editor where the body has been removed', Chain.asStep({}, [
       McEditor.cFromHtml('<textarea></textarea>', settings),
-      Chain.mapper((editor) => {
-        const body = editor.getBody();
-        body.parentNode.removeChild(body);
-        return editor;
-      }),
+      cRemoveBodyElement,
       cSetContentAndAssertReturn('hello'),
       McEditor.cRemove
     ])),
@@ -53,11 +54,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorContentNotInitializedTest', (succ
 
     Logger.t('get content on editor where the body has been removed', Chain.asStep({}, [
       McEditor.cFromHtml('<textarea></textarea>', settings),
-      Chain.mapper((editor) => {
-        const body = editor.getBody();
-        body.parentNode.removeChild(body);
-        return editor;
-      }),
+      cRemoveBodyElement,
       cGetAndAssertContent(''),
       McEditor.cRemove
     ])),
@@ -70,11 +67,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorContentNotInitializedTest', (succ
 
     Logger.t('set tree content on editor where the body has been removed', Chain.asStep({}, [
       McEditor.cFromHtml('<textarea></textarea>', settings),
-      Chain.mapper((editor) => {
-        const body = editor.getBody();
-        body.parentNode.removeChild(body);
-        return editor;
-      }),
+      cRemoveBodyElement,
       cSetContentAndAssertReturn(new Node('p', 1)),
       McEditor.cRemove
     ])),
@@ -87,11 +80,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorContentNotInitializedTest', (succ
 
     Logger.t('get tree content on editor where the body has been removed', Chain.asStep({}, [
       McEditor.cFromHtml('<textarea></textarea>', settings),
-      Chain.mapper((editor) => {
-        const body = editor.getBody();
-        body.parentNode.removeChild(body);
-        return editor;
-      }),
+      cRemoveBodyElement,
       cGetAndAssertContent(new Node('body', 11), true),
       McEditor.cRemove
     ]))
