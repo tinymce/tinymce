@@ -14,14 +14,12 @@ import Api from './api/Api';
 import Settings from './api/Settings';
 import Keyboard from './core/Keyboard';
 
-const init = function () {
-  PluginManager.add('textpattern', function (editor) {
-    const patternsState = Cell(Settings.getPatterns(editor.settings));
+PluginManager.add('textpattern', function (editor) {
+  const patternsState = Cell(Settings.getPatterns(editor.settings));
 
-    Keyboard.setup(editor, patternsState);
+  Keyboard.setup(editor, patternsState);
 
-    return Api.get(patternsState);
-  });
-};
+  return Api.get(patternsState);
+});
 
-export default { init };
+export default function () { }
