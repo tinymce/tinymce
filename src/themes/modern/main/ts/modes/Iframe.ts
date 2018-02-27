@@ -20,6 +20,7 @@ import Resize from '../ui/Resize';
 import Sidebar from '../ui/Sidebar';
 import SkinLoaded from '../ui/SkinLoaded';
 import Toolbar from '../ui/Toolbar';
+import UiContainer from 'tinymce/ui/UiContainer';
 
 const DOM = DOMUtils.DOM;
 
@@ -81,6 +82,8 @@ const render = function (editor, theme, args) {
       Sidebar.hasSidebar(editor) ? editAreaContainer(editor) : editArea('1 0 0 0')
     ]
   });
+
+  UiContainer.setUiContainer(editor, panel);
 
   if (Settings.getResize(editor) !== 'none') {
     resizeHandleCtrl = {

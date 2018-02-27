@@ -13,6 +13,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Utils from './Utils';
 import WordFilter from './WordFilter';
+import { Editor } from 'tinymce/core/api/Editor';
 
 /**
  * This class contains various fixes for browsers. These issues can not be feature
@@ -23,13 +24,13 @@ import WordFilter from './WordFilter';
  * @private
  */
 
-function addPreProcessFilter(editor, filterFunc) {
+function addPreProcessFilter(editor: Editor, filterFunc) {
   editor.on('PastePreProcess', function (e) {
     e.content = filterFunc(editor, e.content, e.internal, e.wordContent);
   });
 }
 
-function addPostProcessFilter(editor, filterFunc) {
+function addPostProcessFilter(editor: Editor, filterFunc) {
   editor.on('PastePostProcess', function (e) {
     filterFunc(editor, e.node);
   });
@@ -45,7 +46,7 @@ function addPostProcessFilter(editor, filterFunc) {
  * Becomes:
  *  <p>a</p><p>b</p>
  */
-function removeExplorerBrElementsAfterBlocks(editor, html) {
+function removeExplorerBrElementsAfterBlocks(editor: Editor, html: string) {
   // Only filter word specific content
   if (!WordFilter.isWordContent(html)) {
     return html;
@@ -54,7 +55,7 @@ function removeExplorerBrElementsAfterBlocks(editor, html) {
   // Produce block regexp based on the block elements in schema
   const blockElements = [];
 
-  Tools.each(editor.schema.getBlockElements(), function (block, blockName) {
+  Tools.each(editor.schema.getBlockElements(), function (block: Element, blockName: string) {
     blockElements.push(blockName);
   });
 
@@ -87,21 +88,22 @@ function removeExplorerBrElementsAfterBlocks(editor, html) {
  *  paste_webkit_styles: "all", // Keep all of them
  *  paste_webkit_styles: "font-weight color" // Keep specific ones
  */
-function removeWebKitStyles(editor, content, internal, isWordHtml) {
+function removeWebKitStyles(editor: Editor, content: string, internal: boolean, isWordHtml: boolean) {
   // WordFilter has already processed styles at this point and internal doesn't need any processing
   if (isWordHtml || internal) {
     return content;
   }
 
   // Filter away styles that isn't matching the target node
-  let webKitStyles = Settings.getWebkitStyles(editor);
+  const webKitStylesSetting = Settings.getWebkitStyles(editor);
+  let webKitStyles: string[] | string;
 
-  if (Settings.shouldRemoveWebKitStyles(editor) === false || webKitStyles === 'all') {
+  if (Settings.shouldRemoveWebKitStyles(editor) === false || webKitStylesSetting === 'all') {
     return content;
   }
 
-  if (webKitStyles) {
-    webKitStyles = webKitStyles.split(/[, ]/);
+  if (webKitStylesSetting) {
+    webKitStyles = webKitStylesSetting.split(/[, ]/);
   }
 
   // Keep specific styles that doesn't match the current node computed style
@@ -149,13 +151,13 @@ function removeWebKitStyles(editor, content, internal, isWordHtml) {
   return content;
 }
 
-function removeUnderlineAndFontInAnchor(editor, root) {
+function removeUnderlineAndFontInAnchor(editor: Editor, root: Element) {
   editor.$('a', root).find('font,u').each(function (i, node) {
     editor.dom.remove(node, true);
   });
 }
 
-const setup = function (editor) {
+const setup = function (editor: Editor) {
   if (Env.webkit) {
     addPreProcessFilter(editor, removeWebKitStyles);
   }

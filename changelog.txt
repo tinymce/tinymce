@@ -1,3 +1,42 @@
+Version 4.7.9 (2018-02-27)
+    Fixed a bug where the editor target element didn't get the correct style when removing the editor.
+Version 4.7.8 (2018-02-26)
+    Fixed an issue with the Help Plugin where the menuitem name wasn't lowercase.
+    Fixed an issue on MacOS where text and bold text did not have the same line-height in the autocomplete dropdown in the Link Plugin dialog.
+    Fixed a bug where the "paste as text" option in the Paste Plugin didn't work.
+    Fixed a bug where dialog list boxes didn't get positioned correctly in documents with scroll.
+    Fixed a bug where the Inlite Theme didn't use the Table Plugin api to insert correct tables.
+    Fixed a bug where the Inlite Theme panel didn't hide on blur in a correct way.
+    Fixed a bug where placing the cursor before a table in Firefox would scroll to the bottom of the table.
+    Fixed a bug where selecting partial text in table cells with rowspans and deleting would produce faulty tables.
+    Fixed a bug where the Preview Plugin didn't work on Safari due to sandbox security.
+    Fixed a bug where table cell selection using the keyboard threw an error.
+    Fixed so the font size and font family doesn't toggle the text but only sets the selected format on the selected text.
+    Fixed so the built-in spellchecking on Chrome and Safari creates an undo level when replacing words.
+Version 4.7.7 (2018-02-19)
+    Added a border style selector to the advanced tab of the Image Plugin.
+    Added better controls for default table inserted by the Table Plugin.
+    Added new `table_responsive_width` option to the Table Plugin that controls whether to use pixel or percentage widths.
+    Fixed a bug where the Link Plugin text didn't update when a URL was pasted using the context menu.
+    Fixed a bug with the Spellchecker Plugin where using "Add to dictionary" in the context menu threw an error.
+    Fixed a bug in the Media Plugin where the preview node for iframes got default width and height attributes that interfered with width/height styles.
+    Fixed a bug where backslashes were being added to some font family names in Firefox in the fontselect toolbar item.
+    Fixed a bug where errors would be thrown when trying to remove an editor that had not yet been fully initialized.
+    Fixed a bug where the Imagetools Plugin didn't update the images atomically.
+    Fixed a bug where the Fullscreen Plugin was throwing errors when being used on an inline editor.
+    Fixed a bug where drop down menus weren't positioned correctly in inline editors on scroll.
+    Fixed a bug with a semicolon missing at the end of the bundled javascript files.
+    Fixed a bug in the Table Plugin with cursor navigation inside of tables where the cursor would sometimes jump into an incorrect table cells.
+    Fixed a bug where indenting a table that is a list item using the "Increase indent" button would create a nested table.
+    Fixed a bug where text nodes containing only whitespace were being wrapped by paragraph elements.
+    Fixed a bug where whitespace was being inserted after br tags inside of paragraph tags.
+    Fixed a bug where converting an indented paragraph to a list item would cause the list item to have extra padding.
+    Fixed a bug where Copy/Paste in an editor with a lot of content would cause the editor to scroll to the top of the content in IE11.
+    Fixed a bug with a memory leak in the DragHelper. Path contributed by ben-mckernan.
+    Fixed a bug where the advanced tab in the Media Plugin was being shown even if it didn't contain anything. Patch contributed by gabrieeel.
+    Fixed an outdated eventname in the EventUtils. Patch contributed by nazar-pc.
+    Fixed an issue where the Json.parse function would throw an error when being used on a page with strict CSP settings.
+    Fixed so you can place the curser before and after table elements within the editor in Firefox and Edge/IE.
 Version 4.7.6 (2018-01-29)
     Fixed a bug in the jquery integration where it threw an error saying that "global is not defined".
     Fixed a bug where deleting a table cell whose previous sibling was set to contenteditable false would create a corrupted table.

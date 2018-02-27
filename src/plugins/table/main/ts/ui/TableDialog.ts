@@ -15,11 +15,7 @@ import InsertTable from '../actions/InsertTable';
 import Styles from '../actions/Styles';
 import Util from '../alien/Util';
 import Helpers from './Helpers';
-
-/**
- * @class tinymce.table.ui.TableDialog
- * @private
- */
+import { hasAdvancedTableTab, hasAppearanceOptions, shouldStyleWithCss, getTableClassList } from '../api/Settings';
 
 // Explore the layers of the table till we find the first layer of tds or ths
 function styleTDTH(dom, elm, name, value?) {
@@ -53,7 +49,7 @@ const extractDataFromElement = function (editor, tableElm) {
     }
   });
 
-  if (editor.settings.table_advtab !== false) {
+  if (hasAdvancedTableTab(editor)) {
     Tools.extend(data, Helpers.extractAdvancedStyles(dom, tableElm));
   }
   return data;
@@ -68,13 +64,13 @@ const applyDataToElement = function (editor, tableElm, data) {
 
   styles.height = Util.addSizeSuffix(data.height);
 
-  if (dom.getAttrib(tableElm, 'width') && !editor.settings.table_style_by_css) {
+  if (dom.getAttrib(tableElm, 'width') && !shouldStyleWithCss(editor)) {
     attrs.width = Util.removePxSuffix(data.width);
   } else {
     styles.width = Util.addSizeSuffix(data.width);
   }
 
-  if (editor.settings.table_style_by_css) {
+  if (shouldStyleWithCss(editor)) {
     styles['border-width'] = Util.addSizeSuffix(data.border);
     styles['border-spacing'] = Util.addSizeSuffix(data.cellspacing);
 
@@ -93,7 +89,7 @@ const applyDataToElement = function (editor, tableElm, data) {
 
   // TODO: this has to be reworked somehow, for example by introducing dedicated option, which
   // will control whether child TD/THs should be processed or not
-  if (editor.settings.table_style_by_css) {
+  if (shouldStyleWithCss(editor)) {
     if (tableElm.children) {
       for (let i = 0; i < tableElm.children.length; i++) {
         styleTDTH(dom, tableElm.children[i], {
@@ -173,7 +169,7 @@ const open = function (editor, isProps?) {
     rowsCtrl = { label: 'Rows', name: 'rows' };
   }
 
-  if (editor.settings.table_class_list) {
+  if (getTableClassList(editor).length > 0) {
     if (data.class) {
       data.class = data.class.replace(/\s*mce\-item\-table\s*/g, '');
     }
@@ -183,7 +179,7 @@ const open = function (editor, isProps?) {
       type: 'listbox',
       label: 'Class',
       values: Helpers.buildListItems(
-        editor.settings.table_class_list,
+        getTableClassList(editor),
         function (item) {
           if (item.value) {
             item.textStyle = function () {
@@ -212,7 +208,7 @@ const open = function (editor, isProps?) {
           type: 'textbox',
           maxWidth: 50
         },
-        items: (editor.settings.table_appearance_options !== false) ? [
+        items: (hasAppearanceOptions(editor)) ? [
           colsCtrl,
           rowsCtrl,
           { label: 'Width', name: 'width', onchange: Fun.curry(Helpers.updateStyleField, editor) },
@@ -246,7 +242,7 @@ const open = function (editor, isProps?) {
     ]
   };
 
-  if (editor.settings.table_advtab !== false) {
+  if (hasAdvancedTableTab(editor)) {
     editor.windowManager.open({
       title: 'Table properties',
       data,

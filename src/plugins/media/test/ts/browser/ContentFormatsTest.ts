@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
     );
 
     LegacyUnit.equal(editor.getContent(),
-      '<p><iframe src="320x240.ogg" width="300" height="150" allowfullscreen="allowfullscreen">text<a href="#">link</a></iframe></p>'
+      '<p><iframe src="320x240.ogg" allowfullscreen="allowfullscreen">text<a href="#">link</a></iframe></p>'
     );
   });
 

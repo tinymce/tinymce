@@ -7,12 +7,13 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
+import { Editor } from 'tinymce/core/api/Editor';
 
-const fireSkinLoaded = function (editor) {
+const fireSkinLoaded = function (editor: Editor) {
   editor.fire('SkinLoaded');
 };
 
-const fireBeforeRenderUI = function (editor) {
+const fireBeforeRenderUI = function (editor: Editor) {
   return editor.fire('BeforeRenderUI');
 };
 

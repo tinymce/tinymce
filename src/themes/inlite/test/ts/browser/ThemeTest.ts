@@ -1,5 +1,5 @@
 import {
-    Chain, FocusTools, GeneralSteps, Keys, Mouse, Pipeline, UiControls, UiFinder, Waiter
+    Assertions, Chain, FocusTools, GeneralSteps, Keys, Mouse, Step, Pipeline, UiControls, UiFinder, Waiter, ApproxStructure
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyActions, TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
@@ -13,6 +13,12 @@ import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import InliteTheme from 'tinymce/themes/inlite/Theme';
 
 import Toolbar from '../module/test/Toolbar';
+import { SelectorFind, Element } from '@ephox/sugar';
+
+const sAssertTableStructure = (editor, structure) => Step.sync(() => {
+  const table = SelectorFind.descendant(Element.fromDom(editor.getBody()), 'table').getOrDie('Should exist a table');
+  Assertions.assertStructure('Should be a table the expected structure', structure, table);
+});
 
 UnitTest.asynctest('browser.core.ThemeTest', function () {
   const success = arguments[arguments.length - 2];
@@ -143,26 +149,25 @@ UnitTest.asynctest('browser.core.ThemeTest', function () {
     ]);
   };
 
-  const sInsertTableTests = function (tinyApis) {
+  const sInsertTableTests = function (editor, tinyApis) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent('<p><br></p><p>b</p>'),
       tinyApis.sSetCursor([0], 0),
       Toolbar.sClickButton('Insert table'),
-      tinyApis.sAssertContent([
-        '<table style="width: 100%;">',
+      sAssertTableStructure(editor, ApproxStructure.fromHtml([
+        '<table style="border-collapse: collapse; width: 100%;" border="1">',
         '<tbody>',
         '<tr>',
-        '<td>&nbsp;</td>',
-        '<td>&nbsp;</td>',
+        '<td style="width: 50%;"><br></td>',
+        '<td style="width: 50%;"><br></td>',
         '</tr>',
         '<tr>',
-        '<td>&nbsp;</td>',
-        '<td>&nbsp;</td>',
+        '<td style="width: 50%;"><br></td>',
+        '<td style="width: 50%;"><br></td>',
         '</tr>',
         '</tbody>',
-        '</table>',
-        '<p>b</p>'
-      ].join('\n')
+        '</table>'
+      ].join(''))
       )
     ]);
   };
@@ -186,7 +191,7 @@ UnitTest.asynctest('browser.core.ThemeTest', function () {
       sBoldTests(tinyApis),
       sH2Tests(tinyApis),
       sLinkTests(tinyApis, tinyActions),
-      sInsertTableTests(tinyApis),
+      sInsertTableTests(editor, tinyApis),
       sAriaTests(tinyApis, tinyActions)
     ], onSuccess, onFailure);
   }, {

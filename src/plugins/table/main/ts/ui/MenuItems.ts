@@ -14,6 +14,11 @@ import { Element } from '@ephox/sugar';
 
 import InsertTable from '../actions/InsertTable';
 import TableTargets from '../queries/TableTargets';
+<<<<<<< HEAD
+=======
+import TableDialog from './TableDialog';
+import { hasTableGrid } from '../api/Settings';
+>>>>>>> upstream/master
 
 const addMenuItems = function (editor, selections) {
   let targets = Option.none();
@@ -154,7 +159,7 @@ const addMenuItems = function (editor, selections) {
     return focusCell.parentNode;
   };
 
-  const insertTable = editor.settings.table_grid === false ? {
+  const insertTable = hasTableGrid(editor) === false ? {
     text: 'Table',
     icon: 'table',
     context: 'table',

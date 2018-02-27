@@ -9,6 +9,11 @@
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
+<<<<<<< HEAD
+=======
+import TableDialog from './TableDialog';
+import { getToolbar } from '../api/Settings';
+>>>>>>> upstream/master
 
 const each = Tools.each;
 
@@ -123,22 +128,13 @@ const addToolbars = function (editor) {
     return selectorMatched;
   };
 
-  let toolbarItems = editor.settings.table_toolbar;
-
-  if (toolbarItems === '' || toolbarItems === false) {
-    return;
+  const toolbar = getToolbar(editor);
+  if (toolbar.length > 0) {
+    editor.addContextToolbar(
+      isTable,
+      toolbar.join(' ')
+    );
   }
-
-  if (!toolbarItems) {
-    toolbarItems = 'tableprops tabledelete | ' +
-      'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
-      'tableinsertcolbefore tableinsertcolafter tabledeletecol';
-  }
-
-  editor.addContextToolbar(
-    isTable,
-    toolbarItems
-  );
 };
 
 export default {

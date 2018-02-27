@@ -91,7 +91,7 @@ export default function (uploadStatus, blobCache) {
   const cachedPromises = {};
 
   const findAll = function (elm, predicate?) {
-    let images, promises;
+    let images;
 
     if (!predicate) {
       predicate = Fun.constant(true);
@@ -127,9 +127,7 @@ export default function (uploadStatus, blobCache) {
       return false;
     });
 
-    promises = Arr.map(images, function (img) {
-      let newPromise;
-
+    const promises = Arr.map(images, function (img) {
       if (cachedPromises[img.src]) {
         // Since the cached promise will return the cached image
         // We need to wrap it and resolve with the actual image
@@ -146,7 +144,7 @@ export default function (uploadStatus, blobCache) {
         });
       }
 
-      newPromise = new Promise(function (resolve, reject) {
+      const newPromise = new Promise<{image, blobInfo}>(function (resolve, reject) {
         imageToBlobInfo(blobCache, img, resolve, reject);
       }).then(function (result) {
         delete cachedPromises[result.image.src];

@@ -17,15 +17,16 @@ import Mode from '../Mode';
 import Shortcuts from './Shortcuts';
 import DOMUtils from './dom/DOMUtils';
 import DomQuery from './dom/DomQuery';
-import TrimHtml from '../dom/TrimHtml';
 import EditorFocus from '../focus/EditorFocus';
-import Serializer from './html/Serializer';
 import Render from '../init/Render';
 import Sidebar from '../ui/Sidebar';
 import Tools from './util/Tools';
 import URI from './util/URI';
 import Uuid from '../util/Uuid';
 import { Selection } from 'tinymce/core/api/dom/Selection';
+import * as EditorContent from 'tinymce/core/EditorContent';
+import * as EditorRemove from '../EditorRemove';
+import SelectionOverrides from 'tinymce/core/SelectionOverrides';
 
 /*jshint scripturl:true */
 
@@ -57,13 +58,14 @@ import { Selection } from 'tinymce/core/api/dom/Selection';
 
 export interface Editor {
   selection: Selection;
+  _selectionOverrides: SelectionOverrides;
   [key: string]: any;
 }
 
 // Shorten these names
 const DOM = DOMUtils.DOM;
 const extend = Tools.extend, each = Tools.each;
-const trim = Tools.trim, resolve = Tools.resolve;
+const resolve = Tools.resolve;
 const ie = Env.ie;
 
 /**
@@ -811,79 +813,8 @@ Editor.prototype = {
    * // Sets the bbcode contents of the activeEditor editor if the bbcode plugin was added
    * tinymce.activeEditor.setContent('[b]some[/b] html', {format: 'bbcode'});
    */
-  setContent (content, args) {
-    const self = this;
-    const body = self.getBody();
-    let forcedRootBlockName, padd;
-
-    // Setup args object
-    args = args || {};
-    args.format = args.format || 'html';
-    args.set = true;
-    args.content = content;
-
-    // Do preprocessing
-    if (!args.no_events) {
-      self.fire('BeforeSetContent', args);
-    }
-
-    content = args.content;
-
-    // Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
-    // It will also be impossible to place the caret in the editor unless there is a BR element present
-    if (content.length === 0 || /^\s+$/.test(content)) {
-      padd = ie && ie < 11 ? '' : '<br data-mce-bogus="1">';
-
-      // Todo: There is a lot more root elements that need special padding
-      // so separate this and add all of them at some point.
-      if (body.nodeName === 'TABLE') {
-        content = '<tr><td>' + padd + '</td></tr>';
-      } else if (/^(UL|OL)$/.test(body.nodeName)) {
-        content = '<li>' + padd + '</li>';
-      }
-
-      forcedRootBlockName = self.settings.forced_root_block;
-
-      // Check if forcedRootBlock is configured and that the block is a valid child of the body
-      if (forcedRootBlockName && self.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
-        // Padd with bogus BR elements on modern browsers and IE 7 and 8 since they don't render empty P tags properly
-        content = padd;
-        content = self.dom.createHTML(forcedRootBlockName, self.settings.forced_root_block_attrs, content);
-      } else if (!ie && !content) {
-        // We need to add a BR when forced_root_block is disabled on non IE browsers to place the caret
-        content = '<br data-mce-bogus="1">';
-      }
-
-      self.dom.setHTML(body, content);
-
-      self.fire('SetContent', args);
-    } else {
-      // Parse and serialize the html
-      if (args.format !== 'raw') {
-        content = Serializer({
-          validate: self.validate
-        }, self.schema).serialize(
-          self.parser.parse(content, { isRootContent: true, insert: true })
-        );
-      }
-
-      // Set the new cleaned contents to the editor
-      args.content = trim(content);
-      self.dom.setHTML(body, args.content);
-
-      // Do post processing
-      if (!args.no_events) {
-        self.fire('SetContent', args);
-      }
-
-      // Don't normalize selection if the focused element isn't the body in
-      // content editable mode since it will steal focus otherwise
-      /*if (!self.settings.content_editable || document.activeElement === self.getBody()) {
-        self.selection.normalize();
-      }*/
-    }
-
-    return args.content;
+  setContent (content: EditorContent.Content, args?: EditorContent.SetContentArgs): EditorContent.Content {
+    return EditorContent.setContent(this, content, args);
   },
 
   /**
@@ -903,50 +834,8 @@ Editor.prototype = {
    * // Get content of a specific editor:
    * tinymce.get('content id').getContent()
    */
-  getContent (args) {
-    const self = this;
-    let content;
-    const body = self.getBody();
-
-    if (self.removed) {
-      return '';
-    }
-
-    // Setup args object
-    args = args || {};
-    args.format = args.format || 'html';
-    args.get = true;
-    args.getInner = true;
-
-    // Do preprocessing
-    if (!args.no_events) {
-      self.fire('BeforeGetContent', args);
-    }
-
-    // Get raw contents or by default the cleaned contents
-    if (args.format === 'raw') {
-      content = Tools.trim(TrimHtml.trimExternal(self.serializer, body.innerHTML));
-    } else if (args.format === 'text') {
-      content = body.innerText || body.textContent;
-    } else if (args.format === 'tree') {
-      return self.serializer.serialize(body, args);
-    } else {
-      content = self.serializer.serialize(body, args);
-    }
-
-    // Trim whitespace in beginning/end of HTML
-    if (args.format !== 'text') {
-      args.content = trim(content);
-    } else {
-      args.content = content;
-    }
-
-    // Do post processing
-    if (!args.no_events) {
-      self.fire('GetContent', args);
-    }
-
-    return args.content;
+  getContent (args?: EditorContent.GetContentArgs): EditorContent.Content {
+    return EditorContent.getContent(this, args);
   },
 
   /**
@@ -1207,37 +1096,7 @@ Editor.prototype = {
    * @method remove
    */
   remove () {
-    const self = this;
-
-    if (!self.removed) {
-      self.save();
-      self.removed = 1;
-      self.unbindAllNativeEvents();
-
-      // Remove any hidden input
-      if (self.hasHiddenInput) {
-        DOM.remove(self.getElement().nextSibling);
-      }
-
-      if (!self.inline) {
-        // IE 9 has a bug where the selection stops working if you place the
-        // caret inside the editor then remove the iframe
-        if (ie && ie < 10) {
-          self.getDoc().execCommand('SelectAll', false, null);
-        }
-
-        DOM.setStyle(self.id, 'display', self.orgDisplay);
-        self.getBody().onload = null; // Prevent #6816
-      }
-
-      self.fire('remove');
-
-      self.editorManager.remove(self);
-      DOM.remove(self.getContainer());
-      self._selectionOverrides.destroy();
-      self.editorUpload.destroy();
-      self.destroy();
-    }
+    EditorRemove.remove(this);
   },
 
   /**
@@ -1248,54 +1107,8 @@ Editor.prototype = {
    * @method destroy
    * @param {Boolean} automatic Optional state if the destroy is an automatic destroy or user called one.
    */
-  destroy (automatic) {
-    const self = this;
-    let form;
-
-    // One time is enough
-    if (self.destroyed) {
-      return;
-    }
-
-    // If user manually calls destroy and not remove
-    // Users seems to have logic that calls destroy instead of remove
-    if (!automatic && !self.removed) {
-      self.remove();
-      return;
-    }
-
-    if (!automatic) {
-      self.editorManager.off('beforeunload', self._beforeUnload);
-
-      // Manual destroy
-      if (self.theme && self.theme.destroy) {
-        self.theme.destroy();
-      }
-
-      // Destroy controls, selection and dom
-      self.selection.destroy();
-      self.dom.destroy();
-    }
-
-    form = self.formElement;
-    if (form) {
-      if (form._mceOldSubmit) {
-        form.submit = form._mceOldSubmit;
-        form._mceOldSubmit = null;
-      }
-
-      DOM.unbind(form, 'submit reset', self.formEventDelegate);
-    }
-
-    self.contentAreaContainer = self.formElement = self.container = self.editorContainer = null;
-    self.bodyElement = self.contentDocument = self.contentWindow = null;
-    self.iframeElement = self.targetElm = null;
-
-    if (self.selection) {
-      self.selection = self.selection.win = self.selection.dom = self.selection.dom.doc = null;
-    }
-
-    self.destroyed = 1;
+  destroy (automatic?: boolean) {
+    EditorRemove.destroy(this, automatic);
   },
 
   /**

@@ -14,10 +14,10 @@ import DomQuery from '../api/dom/DomQuery';
 import NodeType from '../dom/NodeType';
 import * as ClientRect from '../geom/ClientRect';
 import Delay from '../api/util/Delay';
-import { isTableNavigationBrowser } from '../keyboard/TableNavigation';
+import { isFakeCaretTableBrowser } from '../keyboard/TableNavigation';
 
 export interface FakeCaret {
-  show: (before: boolean, element: HTMLElement) => Range;
+  show: (before: boolean, element: Element) => Range;
   hide: () => void;
   getCss: () => string;
   destroy: () => void;
@@ -25,7 +25,6 @@ export interface FakeCaret {
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isTableCell = (node: Node) => NodeType.isElement(node) && /^(TD|TH)$/i.test(node.tagName);
-const hasFocus = (root: Node) => root.ownerDocument.activeElement === root;
 
 const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: boolean): ClientRect => {
   const clientRect = ClientRect.collapse(element.getBoundingClientRect(), before);
@@ -92,7 +91,7 @@ const trimInlineCaretContainers = (root: Node): void => {
   }
 };
 
-export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean): FakeCaret => {
+export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, hasFocus: () => boolean): FakeCaret => {
   let cursorInterval, $lastVisualCaret = null, caretContainerNode;
 
   const show = (before: boolean, element: HTMLElement): Range => {
@@ -156,7 +155,7 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean): 
 
   const startBlink = () => {
     cursorInterval = Delay.setInterval(() => {
-      if (hasFocus(root)) {
+      if (hasFocus()) {
         DomQuery('div.mce-visual-caret', root).toggleClass('mce-visual-caret-hidden');
       } else {
         DomQuery('div.mce-visual-caret', root).addClass('mce-visual-caret-hidden');
@@ -196,4 +195,4 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean): 
   };
 };
 
-export const isFakeCaretTarget = (node: Node) => isContentEditableFalse(node) || (NodeType.isTable(node) && isTableNavigationBrowser());
+export const isFakeCaretTarget = (node: Node) => isContentEditableFalse(node) || (NodeType.isTable(node) && isFakeCaretTableBrowser());

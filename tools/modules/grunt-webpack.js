@@ -4,6 +4,19 @@ let { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader'
 let LiveReloadPlugin = require('webpack-livereload-plugin');
 var HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 let path = require('path');
+let fs = require('fs');
+
+let getCurrentGitBranch = () => {
+  let filePath = path.resolve('.git/HEAD');
+  if (fs.existsSync(filePath)) {
+    let fqdn = fs.readFileSync(filePath).toString();
+    let m = fqdn.match(/\/([^\/]+)$/);
+    if (m) {
+      return m[1].trim();
+    }
+  }
+  return 'master';
+};
 
 let create = (entries, tsConfig, outDir, filename) => {
   return {
@@ -44,7 +57,13 @@ let create = (entries, tsConfig, outDir, filename) => {
     },
     plugins: [
       new LiveReloadPlugin(),
-      new HardSourceWebpackPlugin()
+      new HardSourceWebpackPlugin({
+        cacheDirectory: path.resolve(`scratch/cache/hard-source/[confighash]`),
+        recordsPath: path.resolve(`scratch/cache/hard-source/[confighash]/records.json`),
+        configHash: function(webpackConfig) {
+          return require('node-object-hash')({sort: false}).hash({ gitBranch: getCurrentGitBranch(), webpackConfig });
+        }
+      })
     ],
     output: {
       filename: typeof entries === 'string' ? filename : "[name]/" + filename,

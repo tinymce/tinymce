@@ -10,7 +10,7 @@
 
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
-import CaretUtils from '../caret/CaretUtils';
+import * as CaretUtils from '../caret/CaretUtils';
 
 const createRange = function (sc, so, ec, eo) {
   const rng = document.createRange();

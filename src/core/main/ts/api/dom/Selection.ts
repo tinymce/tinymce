@@ -589,7 +589,7 @@ export const Selection = function (dom, win: Window, serializer, editor: Editor)
   };
 
   const destroy = () => {
-    win = null;
+    win = selectedRange = explicitRange = null;
     controlSelection.destroy();
   };
 

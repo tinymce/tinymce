@@ -11,8 +11,8 @@
 import Arr from '../util/Arr';
 import * as Dimensions from '../dom/Dimensions';
 import * as CaretCandidate from './CaretCandidate';
-import CaretUtils from './CaretUtils';
-import CaretWalker from './CaretWalker';
+import * as CaretUtils from './CaretUtils';
+import { CaretWalker } from './CaretWalker';
 import CaretPosition from './CaretPosition';
 import * as ClientRect from '../geom/ClientRect';
 import { Fun } from '@ephox/katamari';
@@ -27,7 +27,7 @@ export enum VDirection {
 }
 
 type PosPredicate = (rect1: ClientRect, rect2: ClientRect) => boolean;
-type RectPredicate = (rect: ClientRect) => boolean;
+type RectPredicate = (rect: ClientRectLine) => boolean;
 
 const findUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) => boolean, node: Node): void => {
   while ((node = CaretUtils.findNode(node, direction, CaretCandidate.isEditableCaretCandidate, root))) {

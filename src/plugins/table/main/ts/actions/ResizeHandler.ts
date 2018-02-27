@@ -10,11 +10,10 @@
 import { Arr, Option } from '@ephox/katamari';
 import { ResizeWire, TableDirection, TableResize } from '@ephox/snooker';
 import { Attr, Element, SelectorFilter } from '@ephox/sugar';
-
 import Tools from 'tinymce/core/api/util/Tools';
-
 import Direction from '../queries/Direction';
 import TableWire from './TableWire';
+import { hasTableResizeBars, hasObjectResizing } from '../api/Settings';
 
 export default function (editor) {
   let selectionRng = Option.none();
@@ -53,8 +52,7 @@ export default function (editor) {
     const direction = TableDirection(Direction.directionAt);
     const rawWire = TableWire.get(editor);
     wire = Option.some(rawWire);
-    if (editor.settings.object_resizing && editor.settings.table_resize_bars !== false &&
-      (editor.settings.object_resizing === true || editor.settings.object_resizing === 'table')) {
+    if (hasObjectResizing(editor) && hasTableResizeBars(editor)) {
       const sz = TableResize(rawWire, direction);
       sz.on();
       sz.events.startDrag.bind(function (event) {

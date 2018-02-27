@@ -18,6 +18,7 @@ import {
 import Util from '../alien/Util';
 import Direction from '../queries/Direction';
 import Ephemera from './Ephemera';
+import { getForcedRootBlock, getForcedRootBlockAttrs } from '../api/Settings';
 
 export default function (editor, lazyResize) {
   const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
@@ -48,8 +49,14 @@ export default function (editor, lazyResize) {
 
     const mouseHandlers = InputHandlers.mouse(win, body, isRoot, annotations);
     const keyHandlers = InputHandlers.keyboard(win, body, isRoot, annotations);
+    const hasShiftKey = (event) => event.raw().shiftKey === true;
 
     const handleResponse = function (event, response) {
+      // Only handle shift key non shiftkey cell navigation is handled by core
+      if (!hasShiftKey(event)) {
+        return;
+      }
+
       if (response.kill()) {
         event.kill();
       }
@@ -102,11 +109,11 @@ export default function (editor, lazyResize) {
       if (event.which === 40) {
         getLast().each(function (last) {
           if (Node.name(last) === 'table') {
-            if (editor.settings.forced_root_block) {
+            if (getForcedRootBlock(editor)) {
               editor.dom.add(
                 editor.getBody(),
-                editor.settings.forced_root_block,
-                editor.settings.forced_root_block_attrs,
+                getForcedRootBlock(editor),
+                getForcedRootBlockAttrs(editor),
                 '<br/>'
               );
             } else {

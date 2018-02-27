@@ -14,9 +14,7 @@ const isType = function (type) {
   };
 };
 
-const isArray = function (value) {
-  return Array.isArray(value);
-};
+const isArray = (value: any): value is any[] => Array.isArray(value);
 
 const isNull = function (value) {
   return value === null;
@@ -27,12 +25,16 @@ const isObject = function (predicate) {
     return !isNull(value) && !isArray(value) && predicate(value);
   };
 };
+const isString = (value: any): value is string => isType('string')(value);
+const isNumber = (value: any): value is number => isType('number')(value);
+const isFunction = (value: any): value is Function => isType('function')(value);
+const isBoolean = (value: any): value is boolean => isType('boolean')(value);
 
 export default {
-  isString: isType('string'),
-  isNumber: isType('number'),
-  isBoolean: isType('boolean'),
-  isFunction: isType('function'),
+  isString,
+  isNumber,
+  isBoolean,
+  isFunction,
   isObject: isObject(isType('object')),
   isNull,
   isArray

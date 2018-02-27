@@ -2,56 +2,64 @@
  * InsertTable.js
  *
  * Released under LGPL License.
- * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+ * Copyright (c) 1999-2018 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-import { Fun } from '@ephox/katamari';
-import { TableRender } from '@ephox/snooker';
-import { Attr, Element, Html, SelectorFind } from '@ephox/sugar';
 
-const placeCaretInCell = function (editor, cell) {
+import { Fun, Arr, Type } from '@ephox/katamari';
+import { TableRender } from '@ephox/snooker';
+import { Attr, Html, SelectorFind, SelectorFilter, Css } from '@ephox/sugar';
+import { getDefaultAttributes, getDefaultStyles, isPixelsForced } from '../api/Settings';
+import { fireNewRow, fireNewCell } from '../api/Events';
+import Util from '../alien/Util';
+import { Editor } from 'tinymce/core/api/Editor';
+
+const placeCaretInCell = (editor: Editor, cell) => {
   editor.selection.select(cell.dom(), true);
   editor.selection.collapse(true);
 };
 
-const selectFirstCellInTable = function (editor, tableElm) {
+const selectFirstCellInTable = (editor: Editor, tableElm) => {
   SelectorFind.descendant(tableElm, 'td,th').each(Fun.curry(placeCaretInCell, editor));
 };
 
-const insert = function (editor, columns, rows) {
-  let tableElm;
+const fireEvents = (editor: Editor, table) => {
+  Arr.each(SelectorFilter.descendants(table, 'tr'), (row) => {
+    fireNewRow(editor, row.dom());
 
-  const renderedHtml = TableRender.render(rows, columns, 0, 0);
-
-  Attr.set(renderedHtml, 'id', '__mce');
-
-  const html = Html.getOuter(renderedHtml);
-
-  editor.insertContent(html);
-
-  tableElm = editor.dom.get('__mce');
-  editor.dom.setAttrib(tableElm, 'id', null);
-
-  editor.$('tr', tableElm).each(function (index, row) {
-    editor.fire('newrow', {
-      node: row
-    });
-
-    editor.$('th,td', row).each(function (index, cell) {
-      editor.fire('newcell', {
-        node: cell
-      });
+    Arr.each(SelectorFilter.descendants(row, 'th,td'), (cell) => {
+      fireNewCell(editor, cell.dom());
     });
   });
+};
 
-  editor.dom.setAttribs(tableElm, editor.settings.table_default_attributes || {});
-  editor.dom.setStyles(tableElm, editor.settings.table_default_styles || {});
+const isPercentage = (width) => Type.isString(width) && width.indexOf('%') !== -1;
 
-  selectFirstCellInTable(editor, Element.fromDom(tableElm));
+const insert = (editor: Editor, columns: number, rows: number): HTMLElement => {
+  const defaultStyles = getDefaultStyles(editor);
+  const options: TableRender.RenderOptions = {
+    styles: defaultStyles,
+    attributes: getDefaultAttributes(editor),
+    percentages: isPercentage(defaultStyles.width) && !isPixelsForced(editor)
+  };
 
-  return tableElm;
+  const table = TableRender.render(rows, columns, 0, 0, options);
+  Attr.set(table, 'data-mce-id', '__mce');
+
+  const html = Html.getOuter(table);
+  editor.insertContent(html);
+
+  return SelectorFind.descendant(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
+    if (isPixelsForced(editor)) {
+      Css.set(table, 'width', Css.get(table, 'width'));
+    }
+    Attr.remove(table, 'data-mce-id');
+    fireEvents(editor, table);
+    selectFirstCellInTable(editor, table);
+    return table.dom();
+  }).getOr(null);
 };
 
 export default {
