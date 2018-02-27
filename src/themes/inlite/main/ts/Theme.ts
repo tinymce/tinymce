@@ -17,16 +17,18 @@ import FormatControls from 'tinymce/ui/FormatControls';
 
 declare let window: any;
 
-Api.registerToFactory();
-Api.appendTo(window.tinymce ? window.tinymce : {});
+const init = function () {
+  Api.registerToFactory();
+  Api.appendTo(window.tinymce ? window.tinymce : {});
 
-ThemeManager.add('inlite', function (editor) {
-  const panel = Panel.create();
+  ThemeManager.add('inlite', function (editor) {
+    const panel = Panel.create();
 
-  FormatControls.setup(editor);
-  Buttons.addToEditor(editor, panel);
+    FormatControls.setup(editor);
+    Buttons.addToEditor(editor, panel);
 
-  return ThemeApi.get(editor, panel);
-});
+    return ThemeApi.get(editor, panel);
+  });
+};
 
-export default function () { }
+export default { init };

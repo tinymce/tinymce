@@ -323,7 +323,25 @@ module.exports = function (grunt) {
         files: [
           { src: 'src/plugins/visualblocks/main/css/visualblocks.css', dest: 'js/tinymce/plugins/visualblocks/css/visualblocks.css' }
         ]
-      }
+      },
+
+
+      /* Copy ts directories to root to remove fix the import issue, so that 
+          'tinymce/core/.....'
+          'tinymce/plugins...' etc. imports will work 
+      */
+
+      // Core
+      distCore: { expand: true, cwd: 'src/core/main/ts/',src: '**', dest: 'core', },
+      distUi: { expand: true, cwd: 'src/ui/main/ts/', src: '**', dest: 'ui', },
+
+      // Plugins
+      textpattern: { expand: true, cwd: 'src/plugins/textpattern/main/ts/', src: '**', dest: 'plugins/textpattern'},
+      textcolor: { expand: true, cwd: 'src/plugins/textcolor/main/ts/', src: '**', dest: 'plugins/textcolor'},
+
+      // Themes
+      inlight: { expand: true, cwd: 'src/themes/inlite/main/ts/', src: '**', dest: 'themes/inlite'},
+      modern: { expand: true, cwd: 'src/themes/modern/main/ts/', src: '**', dest: 'themes/modern'},
     },
 
     moxiezip: {
@@ -775,7 +793,8 @@ module.exports = function (grunt) {
           spawn: false
         }
       }
-    }
+    },
+
   });
 
   grunt.registerTask('version', 'Creates a version file', function () {

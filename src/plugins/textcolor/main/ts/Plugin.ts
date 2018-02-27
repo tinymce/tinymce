@@ -12,9 +12,11 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import Commands from './api/Commands';
 import Buttons from './ui/Buttons';
 
-PluginManager.add('textcolor', function (editor) {
-  Commands.register(editor);
-  Buttons.register(editor);
-});
+const init = function () {
+  PluginManager.add('textcolor', function (editor) {
+    Commands.register(editor);
+    Buttons.register(editor);
+  });
+};
 
-export default function () { }
+export default { init };
