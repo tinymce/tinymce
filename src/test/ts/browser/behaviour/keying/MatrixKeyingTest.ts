@@ -1,23 +1,21 @@
-import { FocusTools } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
+import { FocusTools, Keyboard, Keys } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Objects } from '@ephox/boulder';
+import { Arr } from '@ephox/katamari';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Focusing from 'ephox/alloy/api/behaviour/Focusing';
 import Keying from 'ephox/alloy/api/behaviour/Keying';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
-import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Matrix Keying Test', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Matrix Keying Test', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var cells = [
+  const cells = [
     'c01', 'c02', 'c03', 'c04', 'c05', 'c06',
     'c07', 'c08', 'c09', 'c10', 'c11', 'c12',
     'c13', 'c14', 'c15', 'c16', 'c17', 'c18',
@@ -25,9 +23,9 @@ UnitTest.asynctest('Matrix Keying Test', function() {
   ];
 
   GuiSetup.setup(function (store, doc, body) {
-    var rows = Arr.chunk(cells, 6);
+    const rows = Arr.chunk(cells, 6);
 
-    var item = function (classes) {
+    const item = function (classes) {
       return Container.sketch({
         dom: {
           tag: 'span',
@@ -88,7 +86,7 @@ UnitTest.asynctest('Matrix Keying Test', function() {
 
   }, function (doc, body, gui, component, store) {
 
-    var targets = Objects.wrapAll(
+    const targets: any = Objects.wrapAll(
       Arr.map(cells, function (sq) {
         return {
           key: sq,
@@ -190,4 +188,3 @@ UnitTest.asynctest('Matrix Keying Test', function() {
     success();
   }, failure);
 });
-

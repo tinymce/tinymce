@@ -1,26 +1,26 @@
 import { Logger } from '@ephox/agar';
-import DomDefinition from 'ephox/alloy/dom/DomDefinition';
-import DomModification from 'ephox/alloy/dom/DomModification';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock';
+import * as DomDefinition from 'ephox/alloy/dom/DomDefinition';
+import * as DomModification from 'ephox/alloy/dom/DomModification';
 
-UnitTest.test('DomDefinitionTest', function() {
+UnitTest.test('DomDefinitionTest', function () {
   /* global assert */
   // TODO: Add property based tests.
 
   Logger.sync(
     'Testing definition without any children or childspecs',
     function () {
-      var definition = DomDefinition.nu({
+      const definition = DomDefinition.nu({
         tag: 'person',
         attributes: {
-          'name': 'john',
-          'age': '14'
+          name: 'john',
+          age: '14'
         }
       });
 
-      var addStyles = DomModification.nu({
+      const addStyles = DomModification.nu({
         styles: {
-          'fighting': 'drunken'
+          fighting: 'drunken'
         }
       });
 
@@ -47,17 +47,17 @@ UnitTest.test('DomDefinitionTest', function() {
   Logger.sync(
     'Testing definition without any children or childspecs, but innerHtml',
     function () {
-      var definition = DomDefinition.nu({
+      const definition = DomDefinition.nu({
         tag: 'person',
         attributes: {
-          'name': 'john',
-          'age': '14'
+          name: 'john',
+          age: '14'
         }
       });
 
-      var addInnerHtml = DomModification.nu({
+      const addInnerHtml = DomModification.nu({
         styles: {
-          'fighting': 'drunken'
+          fighting: 'drunken'
         },
         innerHtml: 'sailor'
       });
@@ -85,17 +85,17 @@ UnitTest.test('DomDefinitionTest', function() {
   Logger.sync(
     'Testing definition without any children or childspecs, but value',
     function () {
-      var definition = DomDefinition.nu({
+      const definition = DomDefinition.nu({
         tag: 'person',
         attributes: {
-          'name': 'john',
-          'age': '14'
+          name: 'john',
+          age: '14'
         }
       });
 
-      var addValue = DomModification.nu({
+      const addValue = DomModification.nu({
         styles: {
-          'fighting': 'drunken'
+          fighting: 'drunken'
         },
         value: 'sailor'
       });
@@ -127,4 +127,3 @@ UnitTest.test('DomDefinitionTest', function() {
     }
   );
 });
-

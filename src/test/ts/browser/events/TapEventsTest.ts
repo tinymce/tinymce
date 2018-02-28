@@ -1,33 +1,30 @@
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import TapEvent from 'ephox/alloy/events/TapEvent';
-import TestStore from 'ephox/alloy/test/TestStore';
+import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
+import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
+import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import * as TapEvent from 'ephox/alloy/events/TapEvent';
+import TestStore from 'ephox/alloy/test/TestStore';
 
-UnitTest.asynctest('browser events.TapEventsTest', function() {
+UnitTest.asynctest('browser events.TapEventsTest', function () {
   // Needs to be browser because it uses DOM comparison
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var store = TestStore();
+  const store = TestStore();
 
-  var monitor = TapEvent.monitor({
-    triggerEvent: function (name) {
+  const monitor = TapEvent.monitor({
+    triggerEvent (name) {
       store.adder(name)();
     }
   });
 
-  var alpha = Element.fromText('alpha');
-  var beta = Element.fromText('beta');
-  var gamma = Element.fromText('gamma');
+  const alpha = Element.fromText('alpha');
+  const beta = Element.fromText('beta');
+  const gamma = Element.fromText('gamma');
 
-  var touches = function (x, y, target) {
+  const touches = function (x, y, target) {
     return {
       raw: Fun.constant({
         touches: [
@@ -38,7 +35,7 @@ UnitTest.asynctest('browser events.TapEventsTest', function() {
     };
   };
 
-  var sFireIfReady = function (event, type) {
+  const sFireIfReady = function (event, type) {
     return Step.sync(function () {
       monitor.fireIfReady(event, type);
     });
@@ -110,7 +107,6 @@ UnitTest.asynctest('browser events.TapEventsTest', function() {
           NativeEvents.touchmove()
         ),
         store.sAssertEq('After touch move 2, empty', [ ]),
-
 
         sFireIfReady(
           touches(0, 0, alpha),
@@ -185,4 +181,3 @@ UnitTest.asynctest('browser events.TapEventsTest', function() {
     )
   ], function () { success(); }, failure);
 });
-

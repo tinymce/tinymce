@@ -1,20 +1,17 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Value } from '@ephox/sugar';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Representing from 'ephox/alloy/api/behaviour/Representing';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Value } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('RepresentingTest (mode: dataset)', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('RepresentingTest (mode: dataset)', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -30,13 +27,13 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', function() {
                 value: 'dog',
                 text: 'Dog'
               },
-              setData: function (component, data) {
+              setData (component, data) {
                 Value.set(component.element(), data.text);
               },
-              getDataKey: function (component) {
+              getDataKey (component) {
                 return Value.get(component.element());
               },
-              getFallbackEntry: function (key) {
+              getFallbackEntry (key) {
                 return { value: key.toLowerCase(), text: key };
               }
             }
@@ -45,9 +42,9 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', function() {
       })
     );
   }, function (doc, body, gui, component, store) {
-    var sAssertValue = function (label, expected) {
+    const sAssertValue = function (label, expected) {
       return Step.sync(function () {
-        var v = Representing.getValue(component);
+        const v = Representing.getValue(component);
         Assertions.assertEq(label, expected, v);
       });
     };
@@ -94,4 +91,3 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', function() {
     ];
   }, function () { success(); }, failure);
 });
-

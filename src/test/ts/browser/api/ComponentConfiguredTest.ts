@@ -1,22 +1,19 @@
-import { Assertions } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Element } from '@ephox/sugar';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Toggling from 'ephox/alloy/api/behaviour/Toggling';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Element } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 
-UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   Pipeline.async({}, [
     Logger.t(
       'Checking basic component without any behaviour',
       Step.sync(function () {
-        var behaviourLess = GuiFactory.build({
+        const behaviourLess = GuiFactory.build({
           dom: {
             tag: 'div'
           }
@@ -29,7 +26,7 @@ UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', function() {
     Logger.t(
       'Checking basic component with toggling',
       Step.sync(function () {
-        var toggler = GuiFactory.build({
+        const toggler = GuiFactory.build({
           dom: {
             tag: 'div'
           },
@@ -47,7 +44,7 @@ UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', function() {
     Logger.t(
       'Checking text component',
       Step.sync(function () {
-        var toggler = GuiFactory.build(
+        const toggler = GuiFactory.build(
           GuiFactory.text('nothing')
         );
 
@@ -58,7 +55,7 @@ UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', function() {
     Logger.t(
       'Checking external component',
       Step.sync(function () {
-        var toggler = GuiFactory.build(
+        const toggler = GuiFactory.build(
           GuiFactory.external({ element: Element.fromTag('div') })
         );
 
@@ -67,4 +64,3 @@ UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', function() {
     )
   ], function () { success(); }, failure);
 });
-

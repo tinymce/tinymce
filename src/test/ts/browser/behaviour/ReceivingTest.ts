@@ -1,17 +1,16 @@
 import { Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Keying from 'ephox/alloy/api/behaviour/Keying';
 import Receiving from 'ephox/alloy/api/behaviour/Receiving';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('ReceivingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ReceivingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -30,7 +29,7 @@ UnitTest.asynctest('ReceivingTest', function() {
                 schema: ValueSchema.objOfOnly([
                   FieldSchema.strict('dummy')
                 ]),
-                onReceive: function (component, data) {
+                onReceive (component, data) {
                   store.adder('received: ' + data.dummy())();
                 }
               }
@@ -60,4 +59,3 @@ UnitTest.asynctest('ReceivingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

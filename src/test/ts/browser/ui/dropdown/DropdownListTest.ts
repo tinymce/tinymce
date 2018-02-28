@@ -1,16 +1,10 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr, Future, Result } from '@ephox/katamari';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Positioning from 'ephox/alloy/api/behaviour/Positioning';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Memento from 'ephox/alloy/api/component/Memento';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as Memento from 'ephox/alloy/api/component/Memento';
 import Container from 'ephox/alloy/api/ui/Container';
 import Dropdown from 'ephox/alloy/api/ui/Dropdown';
 import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
@@ -19,16 +13,12 @@ import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 import TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
-import { Arr } from '@ephox/katamari';
-import { Future } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Dropdown List', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Dropdown List', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var sink = Memento.record(
+  const sink = Memento.record(
     Container.sketch({
       containerBehaviours: Behaviour.derive([
         Positioning.config({
@@ -39,7 +29,7 @@ UnitTest.asynctest('Dropdown List', function() {
   );
 
   GuiSetup.setup(function (store, doc, body) {
-    var c = GuiFactory.build(
+    const c = GuiFactory.build(
       Dropdown.sketch({
         dom: {
           tag: 'button'
@@ -54,7 +44,7 @@ UnitTest.asynctest('Dropdown List', function() {
           }
         ],
 
-        lazySink: function () {
+        lazySink () {
           return Result.value(sink.get(c));
         },
 
@@ -66,8 +56,8 @@ UnitTest.asynctest('Dropdown List', function() {
           menu: TestDropdownMenu.part(store)
         },
 
-        fetch: function () {
-          var future = Future.pure([
+        fetch () {
+          const future = Future.pure([
             { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
             { type: 'item', data: { value: 'beta', text: 'Beta' } },
             { type: 'item', data: { value: 'gamma', text: 'Gamma' } },
@@ -75,7 +65,7 @@ UnitTest.asynctest('Dropdown List', function() {
           ]);
 
           return future.map(function (f) {
-            var menu = TestDropdownMenu.renderMenu({
+            const menu = TestDropdownMenu.renderMenu({
               value: 'v',
               items: Arr.map(f, TestDropdownMenu.renderItem)
             });
@@ -93,8 +83,8 @@ UnitTest.asynctest('Dropdown List', function() {
       GuiFactory.build(sink.asSpec())
     );
 
-    var focusables = {
-      button: { label: 'dropdown-button', 'selector': 'button' },
+    const focusables = {
+      button: { label: 'dropdown-button', selector: 'button' },
       alpha: { label: 'alpha-item', selector: 'li:contains(Alpha)' },
       beta: { label: 'beta-item', selector: 'li:contains(Beta)' },
       gamma: { label: 'gamma-item', selector: 'li:contains(Gamma)' },
@@ -231,4 +221,3 @@ UnitTest.asynctest('Dropdown List', function() {
     ];
   }, function () { success(); }, failure);
 });
-

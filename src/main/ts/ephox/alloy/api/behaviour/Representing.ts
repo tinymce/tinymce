@@ -1,8 +1,8 @@
 import Behaviour from './Behaviour';
-import ActiveRepresenting from '../../behaviour/representing/ActiveRepresenting';
-import RepresentApis from '../../behaviour/representing/RepresentApis';
+import * as ActiveRepresenting from '../../behaviour/representing/ActiveRepresenting';
+import * as RepresentApis from '../../behaviour/representing/RepresentApis';
 import RepresentSchema from '../../behaviour/representing/RepresentSchema';
-import RepresentState from '../../behaviour/representing/RepresentState';
+import * as RepresentState from '../../behaviour/representing/RepresentState';
 
 // The self-reference is clumsy.
 const me = Behaviour.create({

@@ -1,16 +1,14 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { ApproxStructure, Assertions } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Unselecting from 'ephox/alloy/api/behaviour/Unselecting';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Objects } from '@ephox/boulder';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('UnselectingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('UnselectingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -46,4 +44,3 @@ UnitTest.asynctest('UnselectingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

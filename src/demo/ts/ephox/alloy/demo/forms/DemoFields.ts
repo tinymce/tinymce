@@ -1,9 +1,10 @@
+import { Arr, Future, Result } from '@ephox/katamari';
+import { Value } from '@ephox/sugar';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
 import Invalidating from 'ephox/alloy/api/behaviour/Invalidating';
 import Representing from 'ephox/alloy/api/behaviour/Representing';
 import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
-import ComponentUtil from 'ephox/alloy/api/component/ComponentUtil';
+import * as ComponentUtil from 'ephox/alloy/api/component/ComponentUtil';
 import DomFactory from 'ephox/alloy/api/component/DomFactory';
 import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import Container from 'ephox/alloy/api/ui/Container';
@@ -14,18 +15,14 @@ import HtmlSelect from 'ephox/alloy/api/ui/HtmlSelect';
 import Input from 'ephox/alloy/api/ui/Input';
 import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import Typeahead from 'ephox/alloy/api/ui/Typeahead';
+import * as Tagger from 'ephox/alloy/registry/Tagger';
 import DemoRenders from './DemoRenders';
-import Tagger from 'ephox/alloy/registry/Tagger';
-import { Arr } from '@ephox/katamari';
-import { Future } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Value } from '@ephox/sugar';
 
-var invalidation = function (validate, invalidUid) {
+const invalidation = function (validate, invalidUid) {
   return Invalidating.config({
     invalidClass: 'invalid-input',
     notify: {
-      getContainer: function (input) {
+      getContainer (input) {
         return ComponentUtil.getByUid(input, invalidUid).map(ComponentUtil.toElem);
       }
     },
@@ -36,14 +33,14 @@ var invalidation = function (validate, invalidUid) {
   });
 };
 
-var rawTextMunger = function (spec) {
-  var invalidUid = Tagger.generate('demo-invalid-uid');
+const rawTextMunger = function (spec) {
+  const invalidUid = Tagger.generate('demo-invalid-uid');
 
-  var pLabel = FormField.parts().label({
+  const pLabel = FormField.parts().label({
     dom: { tag: 'label', innerHtml: spec.label }
   });
 
-  var pField = FormField.parts().field({
+  const pField = FormField.parts().field({
     factory: Input,
     inputBehaviours: Behaviour.derive([
       invalidation(function (v) {
@@ -65,18 +62,17 @@ var rawTextMunger = function (spec) {
   };
 };
 
-var textMunger = function (spec) {
-  var m = rawTextMunger(spec);
+const textMunger = function (spec) {
+  const m = rawTextMunger(spec);
   return FormField.sketch(m);
 };
 
-
-var selectMunger = function (spec) {
-  var pLabel = FormField.parts().label({
+const selectMunger = function (spec) {
+  const pLabel = FormField.parts().label({
     dom: { tag: 'label', innerHtml: spec.label }
   });
 
-  var pField = FormField.parts().field({
+  const pField = FormField.parts().field({
     factory: HtmlSelect,
     dom: {
       classes: [ 'ephox-select-wrapper' ]
@@ -101,14 +97,14 @@ var selectMunger = function (spec) {
   });
 };
 
-var chooserMunger = function (spec) {
-  var pLegend = FormChooser.parts().legend({
+const chooserMunger = function (spec) {
+  const pLegend = FormChooser.parts().legend({
     dom: {
       innerHtml: spec.legend
     }
   });
 
-  var pChoices = FormChooser.parts().choices({ });
+  const pChoices = FormChooser.parts().choices({ });
 
   return FormChooser.sketch({
     markers: {
@@ -130,15 +126,15 @@ var chooserMunger = function (spec) {
   });
 };
 
-var coupledTextMunger = function (spec) {
-  var pField1 = FormCoupledInputs.parts().field1(
+const coupledTextMunger = function (spec) {
+  const pField1 = FormCoupledInputs.parts().field1(
     rawTextMunger(spec.field1)
   );
-  var pField2 = FormCoupledInputs.parts().field2(
+  const pField2 = FormCoupledInputs.parts().field2(
     rawTextMunger(spec.field2)
   );
 
-  var pLock = FormCoupledInputs.parts().lock({
+  const pLock = FormCoupledInputs.parts().lock({
     dom: { tag: 'button', innerHtml: 'x' },
     buttonBehaviours: Behaviour.derive([
       Tabstopping.config({ })
@@ -152,8 +148,8 @@ var coupledTextMunger = function (spec) {
     markers: {
       lockClass: 'demo-selected'
     },
-    onLockedChange: function (current, other) {
-      var cValue = Representing.getValue(current);
+    onLockedChange (current, other) {
+      const cValue = Representing.getValue(current);
       Representing.setValue(other, cValue);
     },
 
@@ -165,41 +161,41 @@ var coupledTextMunger = function (spec) {
   });
 };
 
-var typeaheadMunger = function (spec) {
-  var pLabel = FormField.parts().label({
+const typeaheadMunger = function (spec) {
+  const pLabel = FormField.parts().label({
     dom: {
       tag: 'label',
       innerHtml: spec.label
     }
   });
 
-  var pField = FormField.parts().field({
+  const pField = FormField.parts().field({
     factory: Typeahead,
     minChars: 1,
 
     lazySink: spec.lazySink,
 
-    fetch: function (input) {
+    fetch (input) {
 
-      var text = Value.get(input.element());
-      var matching = Arr.bind(spec.dataset, function (d) {
-        var index = d.indexOf(text.toLowerCase());
+      const text = Value.get(input.element());
+      const matching = Arr.bind(spec.dataset, function (d) {
+        const index = d.indexOf(text.toLowerCase());
         if (index > -1) {
-          var html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
+          const html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
             d.substring(index + text.length);
-          return [ { type: 'item', data: { value: d, text: d, html: html }, 'item-class': 'class-' + d } ];
+          return [ { 'type': 'item', 'data': { value: d, text: d, html }, 'item-class': 'class-' + d } ];
         } else {
           return [ ];
         }
       });
 
-      var matches = matching.length > 0 ? matching : [
+      const matches = matching.length > 0 ? matching : [
         { type: 'separator', text: 'No items' }
       ];
 
-      var future = Future.pure(matches);
+      const future = Future.pure(matches);
       return future.map(function (items) {
-        var menu = DemoRenders.menu({
+        const menu = DemoRenders.menu({
           value: 'typeahead-menu-blah',
           items: Arr.map(items, DemoRenders.item)
         });
@@ -223,7 +219,7 @@ var typeaheadMunger = function (spec) {
       Tabstopping.config({ })
     ])
   });
-  
+
   return FormField.sketch({
     dom: {
       tag: 'div'
@@ -236,9 +232,9 @@ var typeaheadMunger = function (spec) {
 };
 
 export default <any> {
-  textMunger: textMunger,
-  selectMunger: selectMunger,
-  chooserMunger: chooserMunger,
-  coupledTextMunger: coupledTextMunger,
-  typeaheadMunger: typeaheadMunger
+  textMunger,
+  selectMunger,
+  chooserMunger,
+  coupledTextMunger,
+  typeaheadMunger
 };

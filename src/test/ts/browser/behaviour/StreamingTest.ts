@@ -1,17 +1,14 @@
-import { GeneralSteps } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { GeneralSteps, Mouse, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Streaming from 'ephox/alloy/api/behaviour/Streaming';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Objects } from '@ephox/boulder';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('StreamingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('StreamingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -57,4 +54,3 @@ UnitTest.asynctest('StreamingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

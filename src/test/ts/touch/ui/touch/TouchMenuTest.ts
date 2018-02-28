@@ -1,27 +1,21 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import { ApproxStructure, Assertions, Chain, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Future } from '@ephox/katamari';
+import { Class } from '@ephox/sugar';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import Menu from 'ephox/alloy/api/ui/Menu';
 import TouchMenu from 'ephox/alloy/api/ui/TouchMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Future } from '@ephox/katamari';
-import { Class } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
-    var menuPart = {
+    const menuPart = {
       value: 'touchmenu1',
       dom: {
         tag: 'div',
@@ -35,12 +29,12 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function() {
       ],
 
       markers: {
-        'item': 'test-item',
+        item: 'test-item',
         selectedItem: 'test-selected-item'
       },
       members: {
         item: {
-          munge: function (i) {
+          munge (i) {
             return {
               dom: {
                 tag: 'div', innerHtml: i.data.text,
@@ -54,7 +48,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function() {
       }
     };
 
-    var viewPart = {
+    const viewPart = {
       dom: {
         tag: 'div'
       }
@@ -89,7 +83,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function() {
           }
         },
 
-        fetch: function () {
+        fetch () {
           return Future.pure([
             { type: 'item', data: { value: 'dog', text: 'Dog' } },
             { type: 'item', data: { value: 'elephant', text: 'Elephant' } }
@@ -99,13 +93,12 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function() {
         onHoverOn: store.adder('onHoverOn'),
         onHoverOff: store.adder('onHoverOff'),
 
-
         toggleClass: 'touch-menu-open'
       })
     );
   }, function (doc, body, gui, component, store) {
 
-    var fireTouchstart = function (target, x, y) {
+    const fireTouchstart = function (target, x, y) {
       AlloyTriggers.dispatchWith(component, target, NativeEvents.touchstart(), {
         raw: {
           touches: [
@@ -115,19 +108,19 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function() {
       });
     };
 
-    var fireTouchend = function (target, x, y) {
+    const fireTouchend = function (target, x, y) {
       AlloyTriggers.dispatch(component, target, NativeEvents.touchend());
     };
 
-    var fireLongpress = function (target) {
+    const fireLongpress = function (target) {
       AlloyTriggers.dispatch(component, target, SystemEvents.longpress());
     };
 
-    var sFireTouchmoveOn = function (container, selector) {
+    const sFireTouchmoveOn = function (container, selector) {
       return Chain.asStep(gui.element(), [
         UiFinder.cFindIn(selector),
         Chain.op(function (target) {
-          var rect = target.dom().getBoundingClientRect();
+          const rect = target.dom().getBoundingClientRect();
           AlloyTriggers.dispatchWith(component, container, NativeEvents.touchmove(), {
             raw: {
               touches: [
@@ -139,7 +132,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function() {
       ]);
     };
 
-    var sAssertMenuStructure = function (label, structure) {
+    const sAssertMenuStructure = function (label, structure) {
       return Logger.t(label, Chain.asStep(gui.element(), [
         UiFinder.cFindIn('[role=menu]'),
         Chain.op(function (menu) {
@@ -156,7 +149,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function() {
       Step.sync(function () {
         store.assertEq('Checking no messages', [ ]);
         Assertions.assertEq('Checking selected class should be off initially', false, Class.has(component.element(), 'touch-menu-open'));
-        var rect = component.element().dom().getBoundingClientRect();
+        const rect = component.element().dom().getBoundingClientRect();
         fireTouchstart(component.element(), rect.x, rect.y);
         Assertions.assertEq('Checking selected class should be on', true, Class.has(component.element(), 'touch-menu-open'));
         store.assertEq('Checking no hovering messages until menu appears', [ ]);
@@ -172,7 +165,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function() {
 
       Step.sync(function () {
         store.assertEq('Checking no messages', [ ]);
-        var rect = component.element().dom().getBoundingClientRect();
+        const rect = component.element().dom().getBoundingClientRect();
         fireTouchstart(component.element(), rect.x, rect.y);
         Step.wait(300);
         fireLongpress(component.element());
@@ -262,4 +255,3 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function() {
     ];
   }, success, failure);
 });
-

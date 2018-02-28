@@ -1,24 +1,21 @@
-import { FocusTools } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Objects } from '@ephox/boulder';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Focusing from 'ephox/alloy/api/behaviour/Focusing';
 import Keying from 'ephox/alloy/api/behaviour/Keying';
 import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Button from 'ephox/alloy/api/ui/Button';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Objects } from '@ephox/boulder';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Cyclic Keying Test', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Cyclic Keying Test', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
-    var makeButton = function (v, t) {
+    const makeButton = function (v, t) {
       return Button.sketch({
         dom: { tag: 'button', innerHtml: t },
         action: store.adder(v + '.clicked'),
@@ -53,9 +50,9 @@ UnitTest.asynctest('Cyclic Keying Test', function() {
               tag: 'span',
               classes: [ 'focusable-span' ],
               styles: {
-                'display': 'inline-block',
-                'width': '200px',
-                'border': '1px solid green',
+                display: 'inline-block',
+                width: '200px',
+                border: '1px solid green',
                 background: 'white',
                 height: '20px'
               }
@@ -126,4 +123,3 @@ UnitTest.asynctest('Cyclic Keying Test', function() {
     success();
   }, failure);
 });
-

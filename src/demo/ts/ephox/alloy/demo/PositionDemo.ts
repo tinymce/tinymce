@@ -1,42 +1,37 @@
+import { Class, Css, DomEvent, Element } from '@ephox/sugar';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Positioning from 'ephox/alloy/api/behaviour/Positioning';
 import Toggling from 'ephox/alloy/api/behaviour/Toggling';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
 import Button from 'ephox/alloy/api/ui/Button';
 import Container from 'ephox/alloy/api/ui/Container';
 import DemoContent from 'ephox/alloy/demo/DemoContent';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import Writer from 'ephox/alloy/frame/Writer';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-
-
+import * as Writer from 'ephox/alloy/frame/Writer';
 
 export default <any> function () {
-  var gui = Gui.create();
-  var body = Element.fromDom(document.body);
+  const gui = Gui.create();
+  const body = Element.fromDom(document.body);
   Css.set(gui.element(), 'direction', 'rtl');
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  var sink = DemoSink.make();
+  const sink = DemoSink.make();
 
   gui.add(sink);
 
-  var popup = GuiFactory.build(
+  const popup = GuiFactory.build(
     Container.sketch({
       components: [
         Container.sketch({
           dom: {
             styles: {
-              'padding': '10px',
+              padding: '10px',
               background: 'white',
               border: '2px solid black'
             }
@@ -49,7 +44,7 @@ export default <any> function () {
     })
   );
 
-  var section1 = HtmlDisplay.section(
+  const section1 = HtmlDisplay.section(
     gui,
     'Position anchoring to button',
     Button.sketch({
@@ -60,7 +55,7 @@ export default <any> function () {
       eventOrder: {
         'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
       },
-      action: function (comp) {
+      action (comp) {
         if (Toggling.isOn(comp)) {
           Attachment.attach(sink, popup);
           Positioning.position(sink, {
@@ -83,7 +78,7 @@ export default <any> function () {
     })
   );
 
-  var section2 = HtmlDisplay.section(
+  const section2 = HtmlDisplay.section(
     gui,
     'Position anchoring to menu',
     Container.sketch({
@@ -108,7 +103,7 @@ export default <any> function () {
               Attachment.attach(sink, popup);
               Positioning.position(sink, {
                 anchor: 'submenu',
-                item: item
+                item
               }, popup);
             })
           ])
@@ -117,7 +112,7 @@ export default <any> function () {
     })
   );
 
-  var section3 = HtmlDisplay.section(
+  const section3 = HtmlDisplay.section(
     gui,
     'Position anchoring to text selection',
     Container.sketch({
@@ -128,14 +123,14 @@ export default <any> function () {
         Container.sketch({
           dom: {
             attributes: {
-              'contenteditable': 'true'
+              contenteditable: 'true'
             },
             styles: {
-              border: '1px solid green',
-              width: '300px',
-              height: '200px',
+              'border': '1px solid green',
+              'width': '300px',
+              'height': '200px',
               'overflow-y': 'scroll',
-              display: 'inline-block'
+              'display': 'inline-block'
             },
             innerHtml: DemoContent.generate(20)
           },
@@ -146,7 +141,7 @@ export default <any> function () {
             tag: 'button',
             innerHtml: 'Show popup at cursor'
           },
-          action: function (button) {
+          action (button) {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
               anchor: 'selection',
@@ -161,15 +156,15 @@ export default <any> function () {
   );
 
   // Maybe make a component.
-  var frame = Element.fromTag('iframe');
-  var onLoad = DomEvent.bind(frame, 'load', function () {
+  const frame = Element.fromTag('iframe');
+  const onLoad = DomEvent.bind(frame, 'load', function () {
     onLoad.unbind();
 
-    var html = '<!doctype html><html><body contenteditable="true">' + DemoContent.generate(20) + '</body></html>';
+    const html = '<!doctype html><html><body contenteditable="true">' + DemoContent.generate(20) + '</body></html>';
     Writer.write(frame, html);
   });
 
-  var section4 = HtmlDisplay.section(
+  const section4 = HtmlDisplay.section(
     gui,
     'Position anchoring to text selection [iframe]',
     Container.sketch({
@@ -183,7 +178,7 @@ export default <any> function () {
             tag: 'button',
             innerHtml: 'Show popup at cursor'
           },
-          action: function (button) {
+          action (button) {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
               anchor: 'selection',

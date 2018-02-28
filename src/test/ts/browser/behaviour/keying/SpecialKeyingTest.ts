@@ -1,19 +1,15 @@
-import { FocusTools } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { FocusTools, GeneralSteps, Keyboard, Keys } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Focusing from 'ephox/alloy/api/behaviour/Focusing';
 import Keying from 'ephox/alloy/api/behaviour/Keying';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Objects } from '@ephox/boulder';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('SpecialKeyingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SpecialKeyingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -39,7 +35,7 @@ UnitTest.asynctest('SpecialKeyingTest', function() {
     );
 
   }, function (doc, body, gui, component, store) {
-    var press = function (expected, key, modifiers) {
+    const press = function (expected, key, modifiers) {
       return GeneralSteps.sequence([
         store.sClear,
         Keyboard.sKeydown(doc, key, modifiers),
@@ -62,4 +58,3 @@ UnitTest.asynctest('SpecialKeyingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

@@ -1,32 +1,16 @@
-import { Chain } from '@ephox/agar';
-import { Cursors } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import DomDefinition from 'ephox/alloy/dom/DomDefinition';
-import DomRender from 'ephox/alloy/dom/DomRender';
-import GuiEvents from 'ephox/alloy/events/GuiEvents';
-import TestStore from 'ephox/alloy/test/TestStore';
-import { Insert } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Text } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
+import { Chain, Cursors, FocusTools, GeneralSteps, Keyboard, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Attr, Css, Element, Insert, Node, Remove, Text } from '@ephox/sugar';
+import * as DomDefinition from 'ephox/alloy/dom/DomDefinition';
+import * as DomRender from 'ephox/alloy/dom/DomRender';
+import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
+import TestStore from 'ephox/alloy/test/TestStore';
 
-UnitTest.asynctest('GuiEventsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('GuiEventsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var page = DomRender.renderToDom(
+  const page = DomRender.renderToDom(
     DomDefinition.nu({
       tag: 'div',
       classes: [ 'gui-events-test-container' ],
@@ -43,7 +27,7 @@ UnitTest.asynctest('GuiEventsTest', function() {
               tag: 'span',
               classes: [ 'focusable-span' ],
               attributes: {
-                'tabindex': '-1'
+                tabindex: '-1'
               },
               styles: {
                 width: '200px',
@@ -64,24 +48,23 @@ UnitTest.asynctest('GuiEventsTest', function() {
     })
   );
 
-  var doc = Element.fromDom(document);
-  var body = Element.fromDom(document.body);
+  const doc = Element.fromDom(document);
+  const body = Element.fromDom(document.body);
   Insert.append(body, page);
 
-  var store = TestStore();
+  const store = TestStore();
 
-
-  var triggerEvent = function (eventName, event) {
-    var target = event.target();
-    var targetValue = Node.isText(target) ? 'text(' + Text.get(target) + ')' : Attr.get(target, 'class');
-    store.adder({ eventName: eventName, target: targetValue })();
+  const triggerEvent = function (eventName, event) {
+    const target = event.target();
+    const targetValue = Node.isText(target) ? 'text(' + Text.get(target) + ')' : Attr.get(target, 'class');
+    store.adder({ eventName, target: targetValue })();
   };
 
-  var broadcastEvent = function (eventName, event) {
+  const broadcastEvent = function (eventName, event) {
     store.adder({ broadcastEventName: eventName })();
   };
 
-  var sTestFocusInput = GeneralSteps.sequence([
+  const sTestFocusInput = GeneralSteps.sequence([
     FocusTools.sSetFocus(
       'Focusing test input',
       page,
@@ -98,7 +81,7 @@ UnitTest.asynctest('GuiEventsTest', function() {
     store.sClear
   ]);
 
-  var sTestFocusSpan = GeneralSteps.sequence([
+  const sTestFocusSpan = GeneralSteps.sequence([
     FocusTools.sSetFocus(
       'Focusing span',
       page,
@@ -120,7 +103,7 @@ UnitTest.asynctest('GuiEventsTest', function() {
     store.sClear
   ]);
 
-  var sTestKeydown = GeneralSteps.sequence([
+  const sTestKeydown = GeneralSteps.sequence([
     Keyboard.sKeydown(doc, 'A'.charCodeAt(0), { }),
     store.sAssertEq(
       'Checking event log after keydown',
@@ -131,7 +114,7 @@ UnitTest.asynctest('GuiEventsTest', function() {
     store.sClear
   ]);
 
-  var sTestClick = GeneralSteps.sequence([
+  const sTestClick = GeneralSteps.sequence([
     Mouse.sClickOn(page, '.test-button'),
     store.sAssertEq(
       'Checking event log after clicking on test-button',
@@ -155,12 +138,12 @@ UnitTest.asynctest('GuiEventsTest', function() {
   ]);
 
   // TODO: VAN-12: Add agar support for input events.
-  var sTestInput = Step.pass;
+  const sTestInput = Step.pass;
 
   // TODO: VAN-13: Add agar support for selectstart events
-  var sTestSelectStart = Step.pass;
+  const sTestSelectStart = Step.pass;
 
-  var sTestMouseover = GeneralSteps.sequence([
+  const sTestMouseover = GeneralSteps.sequence([
     Mouse.sHoverOn(page, '.focusable-span'),
     store.sAssertEq(
       'Checking event log after hovering on focusable span',
@@ -171,20 +154,20 @@ UnitTest.asynctest('GuiEventsTest', function() {
     store.sClear
   ]);
 
-  var sTestMouseOperation = function (eventName, op) {
+  const sTestMouseOperation = function (eventName, op) {
     return GeneralSteps.sequence([
       Chain.asStep(page, [ op ]),
       store.sAssertEq(
         'Checking event log after ' + eventName + ' on root',
         [
-          { eventName: eventName, target: 'gui-events-test-container' }
+          { eventName, target: 'gui-events-test-container' }
         ]
       ),
       store.sClear
     ]);
   };
 
-  var sTestWindowScroll = GeneralSteps.sequence([
+  const sTestWindowScroll = GeneralSteps.sequence([
     store.sClear,
     Step.sync(function () {
       Css.set(page, 'margin-top', '2000px');
@@ -204,7 +187,7 @@ UnitTest.asynctest('GuiEventsTest', function() {
     store.sClear
   ]);
 
-  var sTestUnbind = GeneralSteps.sequence([
+  const sTestUnbind = GeneralSteps.sequence([
     Step.sync(function () {
       gui.unbind();
     }),
@@ -234,12 +217,12 @@ UnitTest.asynctest('GuiEventsTest', function() {
     // TODO: Any other event triggers here.
   ]);
 
-  var sTestChange = Step.pass;
-  var sTestTransitionEnd = Step.pass;
+  const sTestChange = Step.pass;
+  const sTestTransitionEnd = Step.pass;
 
-  var gui = GuiEvents.setup(page, {
-    triggerEvent: triggerEvent,
-    broadcastEvent: broadcastEvent
+  const gui = GuiEvents.setup(page, {
+    triggerEvent,
+    broadcastEvent
   });
 
   Pipeline.async({}, [
@@ -269,4 +252,3 @@ UnitTest.asynctest('GuiEventsTest', function() {
     success();
   }, failure);
 });
-

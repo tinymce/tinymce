@@ -1,11 +1,10 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr, Fun } from '@ephox/katamari';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Composing from 'ephox/alloy/api/behaviour/Composing';
 import Replacing from 'ephox/alloy/api/behaviour/Replacing';
 import Representing from 'ephox/alloy/api/behaviour/Representing';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Container from 'ephox/alloy/api/ui/Container';
 import DataField from 'ephox/alloy/api/ui/DataField';
 import FormChooser from 'ephox/alloy/api/ui/FormChooser';
@@ -13,17 +12,14 @@ import FormCoupledInputs from 'ephox/alloy/api/ui/FormCoupledInputs';
 import FormField from 'ephox/alloy/api/ui/FormField';
 import HtmlSelect from 'ephox/alloy/api/ui/HtmlSelect';
 import Input from 'ephox/alloy/api/ui/Input';
-import RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
+import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('FieldsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('FieldsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var renderChoice = function (choiceSpec) {
+  const renderChoice = function (choiceSpec) {
     return {
       value: choiceSpec.value,
       dom: {
@@ -37,7 +33,7 @@ UnitTest.asynctest('FieldsTest', function() {
     };
   };
 
-  var labelSpec = {
+  const labelSpec = {
     dom: {
       tag: 'label',
       innerHtml: 'Label'
@@ -46,7 +42,7 @@ UnitTest.asynctest('FieldsTest', function() {
   };
 
   GuiSetup.setup(function (store, doc, body) {
-    var inputA = FormField.sketch({
+    const inputA = FormField.sketch({
       uid: 'input-a',
       dom: {
         tag: 'div'
@@ -60,7 +56,7 @@ UnitTest.asynctest('FieldsTest', function() {
       ]
     });
 
-    var selectB = FormField.sketch({
+    const selectB = FormField.sketch({
       uid: 'select-b',
       dom: {
         tag: 'div'
@@ -77,7 +73,7 @@ UnitTest.asynctest('FieldsTest', function() {
       ]
     });
 
-    var chooserC = FormChooser.sketch({
+    const chooserC = FormChooser.sketch({
       uid: 'chooser-c',
       dom: {
         tag: 'div'
@@ -86,7 +82,7 @@ UnitTest.asynctest('FieldsTest', function() {
         FormChooser.parts().legend({ }),
         FormChooser.parts().choices({ })
       ],
-      
+
       markers: {
         choiceClass: 'test-choice',
         selectedClass: 'test-selected-choice'
@@ -98,7 +94,7 @@ UnitTest.asynctest('FieldsTest', function() {
       ], renderChoice)
     });
 
-    var coupledDText = {
+    const coupledDText = {
       dom: {
         tag: 'div'
       },
@@ -110,7 +106,7 @@ UnitTest.asynctest('FieldsTest', function() {
       ]
     };
 
-    var coupledD = FormCoupledInputs.sketch({
+    const coupledD = FormCoupledInputs.sketch({
       dom: {
         tag: 'div',
         classes: [ 'coupled-group' ]
@@ -126,7 +122,7 @@ UnitTest.asynctest('FieldsTest', function() {
         })
       ],
 
-      onLockedChange: function (current, other) {
+      onLockedChange (current, other) {
         Representing.setValueFrom(other, current);
       },
       markers: {
@@ -134,7 +130,7 @@ UnitTest.asynctest('FieldsTest', function() {
       }
     });
 
-    var dataE = DataField.sketch({
+    const dataE = DataField.sketch({
       uid: 'data-e',
       dom: {
         tag: 'span'
@@ -160,10 +156,10 @@ UnitTest.asynctest('FieldsTest', function() {
 
   }, function (doc, body, gui, component, store) {
 
-    var inputA = component.getSystem().getByUid('input-a').getOrDie();
-    var selectB = component.getSystem().getByUid('select-b').getOrDie();
-    var chooserC = component.getSystem().getByUid('chooser-c').getOrDie();
-    var dataE = component.getSystem().getByUid('data-e').getOrDie();
+    const inputA = component.getSystem().getByUid('input-a').getOrDie();
+    const selectB = component.getSystem().getByUid('select-b').getOrDie();
+    const chooserC = component.getSystem().getByUid('chooser-c').getOrDie();
+    const dataE = component.getSystem().getByUid('data-e').getOrDie();
 
     return [
       GuiSetup.mAddStyles(doc, [
@@ -204,21 +200,20 @@ UnitTest.asynctest('FieldsTest', function() {
       RepresentPipes.sAssertValue('Checking select-b value', 'select-b-init', selectB),
 
       Step.sync(function () {
-        var val = Representing.getValue(chooserC).getOrDie();
+        const val = Representing.getValue(chooserC).getOrDie();
         Assertions.assertEq('Checking chooser-c value', 'choice1', val);
 
         Representing.setValue(chooserC, 'choice3');
-        var val2 = Representing.getValue(chooserC).getOrDie();
+        const val2 = Representing.getValue(chooserC).getOrDie();
         Assertions.assertEq('Checking chooser-c value after set', 'choice3', val2);
       }),
-
 
       Assertions.sAssertStructure('Checking the data field (E)', ApproxStructure.build(function (s, str, arr) {
         return s.element('span', { children: [ ] });
       }), dataE.element()),
 
       Step.sync(function () {
-        var val = Representing.getValue(dataE);
+        const val = Representing.getValue(dataE);
         Assertions.assertEq('Checking data-e value', 'data-e-init', val);
 
         Representing.setValue(dataE, 'data-e-new');
@@ -232,9 +227,7 @@ UnitTest.asynctest('FieldsTest', function() {
         Assertions.assertEq('Checking data-e value was reset when added back to DOM', 'data-e-init', Representing.getValue(dataE));
       }),
 
-
       GuiSetup.mRemoveStyles
     ];
   }, function () { success(); }, failure);
 });
-

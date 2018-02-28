@@ -1,20 +1,16 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { ApproxStructure, Assertions, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr } from '@ephox/katamari';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Button from 'ephox/alloy/api/ui/Button';
 import Container from 'ephox/alloy/api/ui/Container';
 import Toolbar from 'ephox/alloy/api/ui/Toolbar';
-import ToolbarGroup from 'ephox/alloy/api/ui/ToolbarGroup';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('BasicToolbarTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('BasicToolbarTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -53,7 +49,7 @@ UnitTest.asynctest('BasicToolbarTest', function() {
     );
 
   }, function (doc, body, gui, component, store) {
-    var makeButton = function (itemSpec) {
+    const makeButton = function (itemSpec) {
       return Button.sketch({
         dom: {
           tag: 'button',
@@ -62,8 +58,8 @@ UnitTest.asynctest('BasicToolbarTest', function() {
       });
     };
 
-    var t1 = component.getSystem().getByUid('shell-toolbar').getOrDie();
-    var t2 = component.getSystem().getByUid('not-shell-toolbar').getOrDie();
+    const t1 = component.getSystem().getByUid('shell-toolbar').getOrDie();
+    const t2 = component.getSystem().getByUid('not-shell-toolbar').getOrDie();
 
     return [
       GuiSetup.mAddStyles(doc, [
@@ -201,4 +197,3 @@ UnitTest.asynctest('BasicToolbarTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

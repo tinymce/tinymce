@@ -1,13 +1,13 @@
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Representing from 'ephox/alloy/api/behaviour/Representing';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('RepresentingTest (mode: memory)', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('RepresentingTest (mode: memory)', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build({
@@ -32,4 +32,3 @@ UnitTest.asynctest('RepresentingTest (mode: memory)', function() {
     ];
   }, function () { success(); }, failure);
 });
-

@@ -2,7 +2,7 @@
 
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.domtest('ToggleModesTest', function() {
+UnitTest.domtest('ToggleModesTest', function () {
   /*
    * This is not working yet because wrap-sizzle is using an incompatible with jsdom
    * means of getting the global exports
@@ -10,4 +10,3 @@ UnitTest.domtest('ToggleModesTest', function() {
 
   return Promise.resolve();
 });
-

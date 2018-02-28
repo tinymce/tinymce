@@ -1,26 +1,24 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { ApproxStructure, Assertions, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr } from '@ephox/katamari';
+import { Css } from '@ephox/sugar';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Button from 'ephox/alloy/api/ui/Button';
 import SplitToolbar from 'ephox/alloy/api/ui/SplitToolbar';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
-import { Arr } from '@ephox/katamari';
-import { Css } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('SplitToolbarTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SplitToolbarTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
   // viewed as an invalid value.
-  if (PhantomSkipper.skip()) return success();
+  if (PhantomSkipper.skip()) { return success(); }
 
   GuiSetup.setup(function (store, doc, body) {
-    var pPrimary = SplitToolbar.parts().primary({
+    const pPrimary = SplitToolbar.parts().primary({
       dom: {
         tag: 'div',
         classes: [ 'test-toolbar-primary' ]
@@ -28,7 +26,7 @@ UnitTest.asynctest('SplitToolbarTest', function() {
       shell: true
     });
 
-    var pOverflow = SplitToolbar.parts().overflow({
+    const pOverflow = SplitToolbar.parts().overflow({
       dom: {
         tag: 'div',
         classes: [ 'test-toolbar-overflow' ]
@@ -75,7 +73,7 @@ UnitTest.asynctest('SplitToolbarTest', function() {
 
   }, function (doc, body, gui, component, store) {
 
-    var makeButton = function (itemSpec) {
+    const makeButton = function (itemSpec) {
       return Button.sketch({
         dom: {
           tag: 'button',
@@ -84,14 +82,14 @@ UnitTest.asynctest('SplitToolbarTest', function() {
       });
     };
 
-    var sResetWidth = function (px) {
+    const sResetWidth = function (px) {
       return Step.sync(function () {
         Css.set(component.element(), 'width', px);
         SplitToolbar.refresh(component);
       });
     };
 
-    var group1 = ApproxStructure.build(function (s, str, arr) {
+    const group1 = ApproxStructure.build(function (s, str, arr) {
       return s.element('div', {
         classes: [ arr.has('test-toolbar-group') ],
         children: [
@@ -101,7 +99,7 @@ UnitTest.asynctest('SplitToolbarTest', function() {
       });
     });
 
-    var group2 = ApproxStructure.build(function (s, str, arr) {
+    const group2 = ApproxStructure.build(function (s, str, arr) {
       return s.element('div', {
         classes: [ arr.has('test-toolbar-group') ],
         children: [
@@ -111,7 +109,7 @@ UnitTest.asynctest('SplitToolbarTest', function() {
       });
     });
 
-    var group3 = ApproxStructure.build(function (s, str, arr) {
+    const group3 = ApproxStructure.build(function (s, str, arr) {
       return s.element('div', {
         classes: [ arr.has('test-toolbar-group') ],
         children: [
@@ -122,7 +120,7 @@ UnitTest.asynctest('SplitToolbarTest', function() {
       });
     });
 
-    var oGroup = ApproxStructure.build(function (s, str, arr) {
+    const oGroup = ApproxStructure.build(function (s, str, arr) {
       return s.element('div', {
         classes: [ arr.has('test-toolbar-group') ],
         children: [
@@ -131,7 +129,7 @@ UnitTest.asynctest('SplitToolbarTest', function() {
       });
     });
 
-    var sAssertGroups = function (label, pGroups, oGroups) {
+    const sAssertGroups = function (label, pGroups, oGroups) {
       return Assertions.sAssertStructure(
         label,
         ApproxStructure.build(function (s, str, arr) {
@@ -167,7 +165,7 @@ UnitTest.asynctest('SplitToolbarTest', function() {
       ]),
 
       Step.sync(function () {
-        var groups = TestPartialToolbarGroup.createGroups([
+        const groups = TestPartialToolbarGroup.createGroups([
           { items: Arr.map([ { text: 'A' }, { text: 'B' } ], makeButton) },
           { items: Arr.map([ { text: 'C' }, { text: 'D' } ], makeButton) },
           { items: Arr.map([ { text: 'E' }, { text: 'F' }, { text: 'G' } ], makeButton) }
@@ -176,7 +174,6 @@ UnitTest.asynctest('SplitToolbarTest', function() {
       }),
 
       sAssertGroups('width=400px (1 +)', [ group1, oGroup ], [ group2, group3 ]),
-
 
       sResetWidth('250px'),
 
@@ -205,4 +202,3 @@ UnitTest.asynctest('SplitToolbarTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

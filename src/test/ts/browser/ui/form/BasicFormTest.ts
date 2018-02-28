@@ -1,23 +1,19 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Value } from '@ephox/sugar';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Form from 'ephox/alloy/api/ui/Form';
 import FormField from 'ephox/alloy/api/ui/FormField';
 import HtmlSelect from 'ephox/alloy/api/ui/HtmlSelect';
 import Input from 'ephox/alloy/api/ui/Input';
 import TestForm from 'ephox/alloy/test/form/TestForm';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Value } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Basic Form', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Basic Form', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var formAntSpec = {
+  const formAntSpec = {
     uid: 'input-ant',
     dom: {
       tag: 'div'
@@ -34,7 +30,7 @@ UnitTest.asynctest('Basic Form', function() {
     ]
   };
 
-  var formBullSpec = {
+  const formBullSpec = {
     uid: 'select-bull',
     dom: {
       tag: 'div'
@@ -67,9 +63,9 @@ UnitTest.asynctest('Basic Form', function() {
     );
 
   }, function (doc, body, gui, component, store) {
-    var helper = TestForm.helper(component);
+    const helper = TestForm.helper(component);
 
-    var sAssertDisplay = function (inputText, selectValue) {
+    const sAssertDisplay = function (inputText, selectValue) {
       return Step.sync(function () {
         Assertions.assertStructure(
           'Checking that HTML select and text input have right contents',
@@ -134,7 +130,7 @@ UnitTest.asynctest('Basic Form', function() {
 
           helper.sAssertRep({
             'form.ant': 'ant-value',
-            'form.bull':'select-b-init'
+            'form.bull': 'select-b-init'
           }),
 
           sAssertDisplay('ant-value', 'select-b-init')
@@ -146,7 +142,7 @@ UnitTest.asynctest('Basic Form', function() {
         GeneralSteps.sequence([
           helper.sSetRep({
             'form.ant': 'ant-value',
-            'form.bull':'select-b-other'
+            'form.bull': 'select-b-other'
           }),
 
           helper.sAssertRep({
@@ -162,7 +158,7 @@ UnitTest.asynctest('Basic Form', function() {
         'Retrieve the bull field directly and check its value',
         GeneralSteps.sequence([
           Step.sync(function () {
-            var field = Form.getField(component, 'form.bull').getOrDie('Could not find field');
+            const field = Form.getField(component, 'form.bull').getOrDie('Could not find field');
             Assertions.assertEq('Checking value', 'select-b-other', Value.get(field.element()));
           })
         ])
@@ -170,4 +166,3 @@ UnitTest.asynctest('Basic Form', function() {
     ];
   }, function () { success(); }, failure);
 });
-

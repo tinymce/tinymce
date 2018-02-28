@@ -25,6 +25,9 @@ const byInnerKey = function (data, tuple) {
   Obj.each(data, function (detail, key) {
     Obj.each(detail, function (value, indexKey) {
       const chain = Objects.readOr(indexKey, [ ])(r);
+
+      // TODO: fix this, chain is a ({}) => Option
+
       r[indexKey] = chain.concat([
         tuple(key, value)
       ]);

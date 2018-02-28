@@ -1,32 +1,28 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import Container from 'ephox/alloy/api/ui/Container';
-import DomModification from 'ephox/alloy/dom/DomModification';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { FieldSchema, Objects } from '@ephox/boulder';
+import { Cell, Fun } from '@ephox/katamari';
+import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import Container from 'ephox/alloy/api/ui/Container';
+import * as DomModification from 'ephox/alloy/dom/DomModification';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('CustomComponentTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('CustomComponentTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var bA = Cell(null);
-  var bB = Cell(null);
+  const bA = Cell(null);
+  const bB = Cell(null);
 
   GuiSetup.setup(function (store, doc, body) {
-    var behaviourA = Behaviour.create({
+    const behaviourA = Behaviour.create({
       fields: [ ],
       name: 'behaviourA',
       active: {
-        exhibit: function (base, info) {
+        exhibit (base, info) {
           return DomModification.nu({
             classes: [ 'behaviour-a-exhibit' ]
           });
@@ -38,7 +34,7 @@ UnitTest.asynctest('CustomComponentTest', function() {
         )
       },
       apis: {
-        behaveA: function (comp) {
+        behaveA (comp) {
           store.adder('behaveA')();
         }
       }
@@ -46,14 +42,14 @@ UnitTest.asynctest('CustomComponentTest', function() {
 
     bA.set(behaviourA);
 
-    var behaviourB = Behaviour.create({
+    const behaviourB = Behaviour.create({
       fields: [
         FieldSchema.strict('attr')
       ],
       name: 'behaviourB',
       active: {
-        exhibit: function (base, info) {
-          var extra = {
+        exhibit (base, info) {
+          const extra = {
             attributes: {
               'behaviour-b-exhibit': info.attr()
             }
@@ -143,4 +139,3 @@ UnitTest.asynctest('CustomComponentTest', function() {
     ];
   }, success, failure);
 });
-

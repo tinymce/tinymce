@@ -1,30 +1,24 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Step, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Fun } from '@ephox/katamari';
+import { Node } from '@ephox/sugar';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Sandboxing from 'ephox/alloy/api/behaviour/Sandboxing';
-import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import Container from 'ephox/alloy/api/ui/Container';
 import Input from 'ephox/alloy/api/ui/Input';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import Sinks from 'ephox/alloy/test/Sinks';
-import { Fun } from '@ephox/katamari';
-import { LazyValue } from '@ephox/katamari';
-import { Node } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('SandboxingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SandboxingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return Sinks.fixedSink();
   }, function (doc, body, gui, sink, store) {
-    var sandbox = sink.getSystem().build(
+    const sandbox = sink.getSystem().build(
       Container.sketch({
         dom: {
           classes: [ 'test-sandbox' ]
@@ -32,7 +26,7 @@ UnitTest.asynctest('SandboxingTest', function() {
         uid: 'no-duplicates',
         containerBehaviours: Behaviour.derive([
           Sandboxing.config({
-            getAttachPoint: function () {
+            getAttachPoint () {
               return sink;
             },
 
@@ -45,17 +39,17 @@ UnitTest.asynctest('SandboxingTest', function() {
       })
     );
 
-    var sOpenWith = function (data) {
+    const sOpenWith = function (data) {
       return Step.sync(function () {
         Sandboxing.open(sandbox, data);
       });
     };
 
-    var sClose = Step.sync(function () {
+    const sClose = Step.sync(function () {
       Sandboxing.close(sandbox);
     });
 
-    var sCheckShowing = function (label, expected) {
+    const sCheckShowing = function (label, expected) {
       return Step.sync(function () {
         Assertions.assertEq(
           label + '\nSandbox should ' + (expected === false ? '*not* ' : '') + 'be open',
@@ -65,7 +59,7 @@ UnitTest.asynctest('SandboxingTest', function() {
       });
     };
 
-    var sCheckOpenState = function (label, expected) {
+    const sCheckOpenState = function (label, expected) {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -75,14 +69,14 @@ UnitTest.asynctest('SandboxingTest', function() {
           store.sAssertEq('Checking store', expected.store),
           store.sClear,
           Step.sync(function () {
-            var state = Sandboxing.getState(sandbox);
+            const state = Sandboxing.getState(sandbox);
             Assertions.assertEq(label + '\nChecking state node name', 'input', Node.name(state.getOrDie().element()));
           })
         ])
       );
     };
 
-    var sCheckClosedState = function (label, expected) {
+    const sCheckClosedState = function (label, expected) {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -92,14 +86,14 @@ UnitTest.asynctest('SandboxingTest', function() {
           store.sAssertEq(label, expected.store),
           store.sClear,
           Step.sync(function () {
-            var state = Sandboxing.getState(sandbox);
+            const state = Sandboxing.getState(sandbox);
             Assertions.assertEq(label + '\nChecking state is not set', true, state.isNone());
           })
         ])
       );
     };
 
-    var makeData = function (rawData) {
+    const makeData = function (rawData) {
       return Input.sketch({
         uid: rawData,
         inputAttributes: {
@@ -108,8 +102,8 @@ UnitTest.asynctest('SandboxingTest', function() {
       });
     };
 
-    var firstOpening = makeData('first-opening');
-    var secondOpening = makeData('second-opening');
+    const firstOpening = makeData('first-opening');
+    const secondOpening = makeData('second-opening');
 
     return [
       // initially
@@ -152,4 +146,3 @@ UnitTest.asynctest('SandboxingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

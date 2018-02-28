@@ -1,19 +1,18 @@
-import { Chain } from '@ephox/agar';
-import { NamedChain } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Chain, NamedChain } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Container from 'ephox/alloy/api/ui/Container';
 import ChainUtils from 'ephox/alloy/test/ChainUtils';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import Sinks from 'ephox/alloy/test/Sinks';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('SubmenuPositionTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SubmenuPositionTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
-    var item = GuiFactory.build(
+    const item = GuiFactory.build(
       Container.sketch({
         dom: {
           tag: 'li',
@@ -24,7 +23,7 @@ UnitTest.asynctest('SubmenuPositionTest', function() {
       })
     );
 
-    var list = GuiFactory.build(
+    const list = GuiFactory.build(
       Container.sketch({
         dom: {
           tag: 'ol',
@@ -53,10 +52,10 @@ UnitTest.asynctest('SubmenuPositionTest', function() {
     );
 
   }, function (doc, body, gui, component, store) {
-    var cSetupAnchor = Chain.mapper(function (item) {
+    const cSetupAnchor = Chain.mapper(function (item) {
       return {
         anchor: 'submenu',
-        item: item
+        item
       };
     });
 
@@ -64,11 +63,11 @@ UnitTest.asynctest('SubmenuPositionTest', function() {
       Chain.asStep({}, [
         NamedChain.asChain([
           ChainUtils.cFindUids(gui, {
-            'fixed': 'fixed-sink',
-            'relative': 'relative-sink',
-            'popup': 'popup',
-            'item': 'test-item',
-            'list': 'test-list'
+            fixed: 'fixed-sink',
+            relative: 'relative-sink',
+            popup: 'popup',
+            item: 'test-item',
+            list: 'test-list'
           }),
 
           NamedChain.direct('item', cSetupAnchor, 'anchor'),
@@ -84,4 +83,3 @@ UnitTest.asynctest('SubmenuPositionTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

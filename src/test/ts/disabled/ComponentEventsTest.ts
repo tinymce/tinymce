@@ -1,21 +1,18 @@
 import { Logger } from '@ephox/agar';
-import ComponentEvents from 'ephox/alloy/construct/ComponentEvents';
-import EventHandler from 'ephox/alloy/construct/EventHandler';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr, Fun, Obj, Struct } from '@ephox/katamari';
+import * as ComponentEvents from 'ephox/alloy/construct/ComponentEvents';
+import * as EventHandler from 'ephox/alloy/construct/EventHandler';
 import ResultAssertions from 'ephox/alloy/test/ResultAssertions';
 import TestStore from 'ephox/alloy/test/TestStore';
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('ComponentEventsTest', function() {
+UnitTest.test('ComponentEventsTest', function () {
   // TODO: This needs to be restructured because events and behaviours have changed.
-  var behaviour = Struct.immutable('name', 'handlers');
+  const behaviour = Struct.immutable('name', 'handlers');
 
-  var store = TestStore();
+  const store = TestStore();
 
-  var base = {
+  const base = {
     'base.behaviour': {
       'event.0': EventHandler.nu({
         run: store.adder('base.0')
@@ -23,17 +20,17 @@ UnitTest.test('ComponentEventsTest', function() {
     }
   };
 
-  var checkErr = function (expectedPart, info, behaviours) {
+  const checkErr = function (expectedPart, info, behaviours) {
     ResultAssertions.checkErr(
       'Checking error combined events',
       expectedPart,
       function () {
-        return ComponentEvents.combine(info, behaviours, base);
+        return ComponentEvents.combine(info, info.eventOrder(), behaviours, base);
       }
     );
   };
 
-  var check = function (expected, info, behaviours) {
+  const check = function (expected, info, behaviours) {
     ResultAssertions.checkVal(
       'Checking value of combined events',
       function () {
@@ -41,7 +38,7 @@ UnitTest.test('ComponentEventsTest', function() {
         return ComponentEvents.combine(info, info.eventOrder(), behaviours, base);
       },
       function (value) {
-        var events = Obj.keys(value).sort();
+        const events = Obj.keys(value).sort();
         Arr.each(events, function (eventName) {
           value[eventName].handler('component', {
             stop: store.adder(eventName + '.stop')
@@ -53,7 +50,7 @@ UnitTest.test('ComponentEventsTest', function() {
     );
   };
 
-  var eo = function (eventOrder) {
+  const eo = function (eventOrder) {
     return {
       eventOrder: Fun.constant(eventOrder)
     };
@@ -118,7 +115,7 @@ UnitTest.test('ComponentEventsTest', function() {
               run: store.adder('a.two')
             }),
             'event.3': EventHandler.nu({
-              can: function () {
+              can () {
                 store.adder('a.three.cannot')();
                 return false;
               },
@@ -128,7 +125,7 @@ UnitTest.test('ComponentEventsTest', function() {
           behaviour('b.behaviour', {
             'event.3': EventHandler.nu({
               run: store.adder('b.three'),
-              abort: function () {
+              abort () {
                 store.adder('b.three.abort')();
                 return true;
               }
@@ -155,7 +152,7 @@ UnitTest.test('ComponentEventsTest', function() {
               run: store.adder('a.two')
             }),
             'event.3': EventHandler.nu({
-              can: function () {
+              can () {
                 store.adder('a.three.cannot')();
                 return false;
               },
@@ -165,7 +162,7 @@ UnitTest.test('ComponentEventsTest', function() {
           behaviour('b.behaviour', {
             'event.3': EventHandler.nu({
               run: store.adder('b.three'),
-              abort: function () {
+              abort () {
                 store.adder('b.three.abort')();
                 return true;
               }
@@ -192,7 +189,7 @@ UnitTest.test('ComponentEventsTest', function() {
               run: store.adder('a.two')
             }),
             'event.3': EventHandler.nu({
-              can: function () {
+              can () {
                 store.adder('a.three.cannot')();
                 return false;
               },
@@ -202,7 +199,7 @@ UnitTest.test('ComponentEventsTest', function() {
           behaviour('b.behaviour', {
             'event.3': EventHandler.nu({
               run: store.adder('b.three'),
-              abort: function () {
+              abort () {
                 store.adder('b.three.abort')();
                 return true;
               }
@@ -213,4 +210,3 @@ UnitTest.test('ComponentEventsTest', function() {
     }
   );
 });
-

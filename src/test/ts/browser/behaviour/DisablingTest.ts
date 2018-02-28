@@ -1,26 +1,20 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Focus } from '@ephox/sugar';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Disabling from 'ephox/alloy/api/behaviour/Disabling';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Memento from 'ephox/alloy/api/component/Memento';
-import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as Memento from 'ephox/alloy/api/component/Memento';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import Button from 'ephox/alloy/api/ui/Button';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Focus } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('DisablingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('DisablingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var subject = Memento.record(
+  const subject = Memento.record(
     Button.sketch({
       dom: {
         tag: 'button',
@@ -33,7 +27,6 @@ UnitTest.asynctest('DisablingTest', function() {
       ])
     })
   );
-
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -48,14 +41,14 @@ UnitTest.asynctest('DisablingTest', function() {
     ));
   }, function (doc, body, gui, component, store) {
 
-    var sClickButton = Chain.asStep({ }, [
+    const sClickButton = Chain.asStep({ }, [
       Chain.mapper(function () {
         return subject.get(component).element();
       }),
       Mouse.cClick
     ]);
 
-    var button = subject.get(component);
+    const button = subject.get(component);
     return [
       Assertions.sAssertStructure(
         'Disabled should have a disabled attribute',
@@ -80,7 +73,6 @@ UnitTest.asynctest('DisablingTest', function() {
           store.sAssertEq('Execute did not get past disabled button', [ ])
         ])
       ),
-
 
       Logger.t(
         'Re-enable button',
@@ -116,4 +108,3 @@ UnitTest.asynctest('DisablingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

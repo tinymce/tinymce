@@ -1,30 +1,25 @@
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Attachment from 'ephox/alloy/api/system/Attachment';
+import { Id, Thunk } from '@ephox/katamari';
+import { DomEvent, Element, Html, TextContent } from '@ephox/sugar';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Container from 'ephox/alloy/api/ui/Container';
-import Debugging from 'ephox/alloy/debugging/Debugging';
-import { Id } from '@ephox/katamari';
-import { Thunk } from '@ephox/katamari';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { TextContent } from '@ephox/sugar';
+import * as Debugging from 'ephox/alloy/debugging/Debugging';
 
-var register = Thunk.cached(function (gui) {
+const register = Thunk.cached(function (gui) {
   Debugging.registerInspector('htmldisplay', gui);
 });
 
-var section = function (gui, instructions, spec) {
+const section = function (gui, instructions, spec) {
   register(gui);
-  var information = Container.sketch({
+  const information = Container.sketch({
     dom: {
       tag: 'p',
       innerHtml: instructions
     }
   });
 
-  var component = GuiFactory.build(spec);
+  const component = GuiFactory.build(spec);
 
-  var display = GuiFactory.build(
+  const display = GuiFactory.build(
     Container.sketch({
       dom: {
         styles: {
@@ -41,10 +36,10 @@ var section = function (gui, instructions, spec) {
     })
   );
 
-  var dumpUid = Id.generate('html-dump');
+  const dumpUid = Id.generate('html-dump');
 
-  var htmlDump = Html.getOuter(component.element());
-  var dump = Container.sketch({
+  const htmlDump = Html.getOuter(component.element());
+  const dump = Container.sketch({
     uid: dumpUid,
     dom: {
       tag: 'p',
@@ -55,20 +50,20 @@ var section = function (gui, instructions, spec) {
     ]
   });
 
-  var updateHtml = function () {
+  const updateHtml = function () {
     gui.getByUid(dumpUid).each(function (dumpC) {
       // NOTE: Use Body.body() here for more information.
       TextContent.set(dumpC.element(), Html.getOuter(component.element()));
     });
   };
 
-  var observer = new MutationObserver(function (mutations) {
+  const observer = new MutationObserver(function (mutations) {
     updateHtml();
   });
 
   observer.observe(component.element().dom(), { attributes: true, childList: true, characterData: true, subtree: true });
 
-  var all = GuiFactory.build(
+  const all = GuiFactory.build(
     Container.sketch({
       components: [
         Container.sketch({ dom: { tag: 'hr' } }),
@@ -82,7 +77,7 @@ var section = function (gui, instructions, spec) {
 
   gui.add(all);
 
-  var onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
+  const onMousedown = DomEvent.bind(Element.fromDom(document), 'mousedown', function (evt) {
     if (evt.raw().button === 0) {
       gui.broadcastOn([ 'dismiss.popups' ], {
         target: evt.target()
@@ -95,5 +90,5 @@ var section = function (gui, instructions, spec) {
 };
 
 export default <any> {
-  section: section
+  section
 };
