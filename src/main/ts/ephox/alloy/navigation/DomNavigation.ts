@@ -5,7 +5,7 @@ import * as DomPinpoint from './DomPinpoint';
 
 const horizontal = function (container, selector, current, delta) {
   // I wonder if this will be a problem when the focused element is invisible (shouldn't happen)
-  return DomPinpoint.locateVisible(container, current, selector, Fun.constant(true)).bind(function (identified) {
+  return DomPinpoint.locateVisible(container, current, selector).bind(function (identified) {
     const index = identified.index();
     const candidates = identified.candidates();
     const newIndex = Cycles.cycleBy(index, delta, 0, candidates.length - 1);

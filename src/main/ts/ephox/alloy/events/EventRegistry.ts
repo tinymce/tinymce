@@ -26,7 +26,7 @@ export default <any> function () {
   };
 
   const findHandler = function (handlers, elem) {
-    return Tagger.read(elem).fold(function (err) {
+    return Tagger.read(elem).fold(function () {
       return Option.none();
     }, function (id) {
       const reader = Objects.readOpt(id);

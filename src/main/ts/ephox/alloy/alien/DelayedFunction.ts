@@ -1,5 +1,5 @@
 
-export default function (fun: () => void, delay: number): { cancel: () => void; schedule: () => void } {
+export default function (fun: (any) => void, delay: number): { cancel: () => void; schedule: () => void } {
   let ref = null;
 
   const schedule = function () {

@@ -1,4 +1,4 @@
-import { Objects } from '@ephox/boulder';
+import { FieldSchema, Objects, DslType } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
 
 /*
@@ -21,19 +21,17 @@ import { Obj } from '@ephox/katamari';
  */
 
 const byInnerKey = function (data, tuple) {
-  const r = {};
-  Obj.each(data, function (detail, key) {
+
+const r = {};
+Obj.each(data, function (detail, key) {
     Obj.each(detail, function (value, indexKey) {
       const chain = Objects.readOr(indexKey, [ ])(r);
-
-      // TODO: fix this, chain is a ({}) => Option
-
       r[indexKey] = chain.concat([
         tuple(key, value)
       ]);
     });
   });
-  return r;
+return r;
 };
 
 export {

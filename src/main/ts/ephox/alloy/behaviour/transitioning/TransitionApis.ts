@@ -2,8 +2,10 @@ import { Objects } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { Attr, Class } from '@ephox/sugar';
 
-const findRoute = function (component, transConfig, transState, route) {
+const findRoute = function (component, transConfig, transState, route): any {
   return Objects.readOptFrom(transConfig.routes(), route.start()).map(Fun.apply).bind(function (sConfig) {
+    const foo = Objects.readOptFrom(sConfig, route.destination()).map(Fun.apply);
+    debugger;
     return Objects.readOptFrom(sConfig, route.destination()).map(Fun.apply);
   });
 };

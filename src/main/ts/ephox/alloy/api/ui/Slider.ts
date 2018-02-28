@@ -3,7 +3,7 @@ import * as SliderSchema from '../../ui/slider/SliderSchema';
 import * as SliderUi from '../../ui/slider/SliderUi';
 import * as Sketcher from './Sketcher';
 
-export default <any> Sketcher.composite({
+export default Sketcher.composite({
   name: 'Slider',
   configFields: SliderSchema,
   partFields: SliderParts,
