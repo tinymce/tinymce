@@ -323,7 +323,26 @@ module.exports = function (grunt) {
         files: [
           { src: 'src/plugins/visualblocks/main/css/visualblocks.css', dest: 'js/tinymce/plugins/visualblocks/css/visualblocks.css' }
         ]
-      }
+      },
+
+
+      /* Copy folders to the ./build dir and remove /main/ts/ dir , so that 
+          'tinymce/core/.....'
+          'tinymce/plugins...' etc. imports will work 
+      */
+
+      // Core and UI
+      distCore: { expand: true, cwd: 'src/core/main/ts/',src: '**', dest: 'build/core', },
+      distUi: { expand: true, cwd: 'src/ui/main/ts/', src: '**', dest: 'build/ui', },
+
+      // Plugins
+      textpattern: { expand: true, cwd: 'src/plugins/textpattern/main/ts/', src: '**', dest: 'build/plugins/textpattern'},
+      textcolor: { expand: true, cwd: 'src/plugins/textcolor/main/ts/', src: '**', dest: 'build/plugins/textcolor'},
+      textcolor: { expand: true, cwd: 'src/plugins/colorpicker/main/ts/', src: '**', dest: 'build/plugins/colorpicker'},
+
+      // Themes
+      inlight: { expand: true, cwd: 'src/themes/inlite/main/ts/', src: '**', dest: 'build/themes/inlite'},
+      modern: { expand: true, cwd: 'src/themes/modern/main/ts/', src: '**', dest: 'build/themes/modern'},
     },
 
     moxiezip: {
@@ -775,7 +794,8 @@ module.exports = function (grunt) {
           spawn: false
         }
       }
-    }
+    },
+
   });
 
   grunt.registerTask('version', 'Creates a version file', function () {
