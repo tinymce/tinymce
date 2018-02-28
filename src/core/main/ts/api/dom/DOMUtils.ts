@@ -149,7 +149,6 @@ export interface DOMUtilsSettings {
  * @param {settings} settings Optional settings collection.
  */
 export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}) {
-  let blockElementsMap;
   let attrHooks;
   const addedStyles = {};
 
@@ -167,7 +166,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
   }, settings.schema);
 
   const events = settings.ownEvents ? new EventUtils(settings.proxy) : EventUtils.Event;
-  blockElementsMap = schema.getBlockElements();
+  const blockElementsMap = schema.getBlockElements();
 
   const $ = DomQuery.overrideDefaults(function () {
     return {
@@ -1028,6 +1027,130 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     }
   };
 
+  const bind = (target: Node | Window | Array<Node | Window>, name, func, scope?: any) => {
+    if (Tools.isArray(target)) {
+      let i = target.length;
+
+      while (i--) {
+        target[i] = bind(target[i], name, func, scope);
+      }
+
+      return target;
+    }
+
+    // Collect all window/document events bound by editor instance
+    if (settings.collect && (target === doc || target === win)) {
+      boundEvents.push([target, name, func, scope]);
+    }
+
+    return events.bind(target, name, func, scope || self);
+  };
+
+  const unbind = (target, name: string, func?) => {
+    let i;
+
+    if (Tools.isArray(target)) {
+      i = target.length;
+
+      while (i--) {
+        target[i] = unbind(target[i], name, func);
+      }
+
+      return target;
+    }
+
+    // Remove any bound events matching the input
+    if (boundEvents && (target === doc || target === win)) {
+      i = boundEvents.length;
+
+      while (i--) {
+        const item = boundEvents[i];
+
+        if (target === item[0] && (!name || name === item[1]) && (!func || func === item[2])) {
+          events.unbind(item[0], item[1], item[2]);
+        }
+      }
+    }
+
+    return events.unbind(target, name, func);
+  };
+
+  const fire = (target, name, evt?) => {
+    return events.fire(target, name, evt);
+  };
+
+  const getContentEditable = (node: HTMLElement) => {
+    let contentEditable;
+
+    // Check type
+    if (!node || node.nodeType !== 1) {
+      return null;
+    }
+
+    // Check for fake content editable
+    contentEditable = node.getAttribute('data-mce-contenteditable');
+    if (contentEditable && contentEditable !== 'inherit') {
+      return contentEditable;
+    }
+
+    // Check for real content editable
+    return node.contentEditable !== 'inherit' ? node.contentEditable : null;
+  };
+
+  const getContentEditableParent = (node) => {
+    const root = getRoot();
+    let state = null;
+
+    for (; node && node !== root; node = node.parentNode) {
+      state = getContentEditable(node);
+
+      if (state !== null) {
+        break;
+      }
+    }
+
+    return state;
+  };
+
+  const destroy = () => {
+    // Unbind all events bound to window/document by editor instance
+    if (boundEvents) {
+      let i = boundEvents.length;
+
+      while (i--) {
+        const item = boundEvents[i];
+        events.unbind(item[0], item[1], item[2]);
+      }
+    }
+
+    // Restore sizzle document to window.document
+    // Since the current document might be removed producing "Permission denied" on IE see #6325
+    if (Sizzle.setDocument) {
+      Sizzle.setDocument();
+    }
+  };
+
+  const isChildOf = (node: Node, parent: Node) => {
+    while (node) {
+      if (parent === node) {
+        return true;
+      }
+
+      node = node.parentNode;
+    }
+
+    return false;
+  };
+
+  const dumpRng = (r: Range) => {
+    return (
+      'startContainer: ' + r.startContainer.nodeName +
+      ', startOffset: ' + r.startOffset +
+      ', endContainer: ' + r.endContainer.nodeName +
+      ', endOffset: ' + r.endOffset
+    );
+  };
+
   const self = {
     doc,
     settings,
@@ -1677,26 +1800,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Object} scope Optional scope to execute the function in.
      * @return {function} Function callback handler the same as the one passed in.
      */
-    bind (target, name, func, scope?: any) {
-      const self = this;
-
-      if (Tools.isArray(target)) {
-        let i = target.length;
-
-        while (i--) {
-          target[i] = self.bind(target[i], name, func, scope);
-        }
-
-        return target;
-      }
-
-      // Collect all window/document events bound by editor instance
-      if (self.settings.collect && (target === self.doc || target === self.win)) {
-        self.boundEvents.push([target, name, func, scope]);
-      }
-
-      return self.events.bind(target, name, func, scope || self);
-    },
+    bind,
 
     /**
      * Removes the specified event handler by name and function from an element or collection of elements.
@@ -1708,35 +1812,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @return {bool/Array} Bool state of true if the handler was removed, or an array of states if multiple input elements
      * were passed in.
      */
-    unbind (target, name: string, func?) {
-      const self = this;
-      let i;
-
-      if (Tools.isArray(target)) {
-        i = target.length;
-
-        while (i--) {
-          target[i] = self.unbind(target[i], name, func);
-        }
-
-        return target;
-      }
-
-      // Remove any bound events matching the input
-      if (self.boundEvents && (target === self.doc || target === self.win)) {
-        i = self.boundEvents.length;
-
-        while (i--) {
-          const item = self.boundEvents[i];
-
-          if (target === item[0] && (!name || name === item[1]) && (!func || func === item[2])) {
-            this.events.unbind(item[0], item[1], item[2]);
-          }
-        }
-      }
-
-      return this.events.unbind(target, name, func);
-    },
+    unbind,
 
     /**
      * Fires the specified event name with object on target.
@@ -1747,95 +1823,25 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Object} evt Event object to send.
      * @return {Event} Event object.
      */
-    fire (target, name, evt?) {
-      return this.events.fire(target, name, evt);
-    },
+    fire,
 
     // Returns the content editable state of a node
-    getContentEditable (node) {
-      let contentEditable;
+    getContentEditable,
 
-      // Check type
-      if (!node || node.nodeType !== 1) {
-        return null;
-      }
-
-      // Check for fake content editable
-      contentEditable = node.getAttribute('data-mce-contenteditable');
-      if (contentEditable && contentEditable !== 'inherit') {
-        return contentEditable;
-      }
-
-      // Check for real content editable
-      return node.contentEditable !== 'inherit' ? node.contentEditable : null;
-    },
-
-    getContentEditableParent (node) {
-      const root = this.getRoot();
-      let state = null;
-
-      for (; node && node !== root; node = node.parentNode) {
-        state = this.getContentEditable(node);
-
-        if (state !== null) {
-          break;
-        }
-      }
-
-      return state;
-    },
+    getContentEditableParent,
 
     /**
      * Destroys all internal references to the DOM to solve IE leak issues.
      *
      * @method destroy
      */
-    destroy () {
-      const self = this;
+    destroy,
 
-      // Unbind all events bound to window/document by editor instance
-      if (self.boundEvents) {
-        let i = self.boundEvents.length;
-
-        while (i--) {
-          const item = self.boundEvents[i];
-          this.events.unbind(item[0], item[1], item[2]);
-        }
-
-        self.boundEvents = null;
-      }
-
-      // Restore sizzle document to window.document
-      // Since the current document might be removed producing "Permission denied" on IE see #6325
-      if (Sizzle.setDocument) {
-        Sizzle.setDocument();
-      }
-
-      self.win = self.doc = self.root = self.events = self.frag = null;
-    },
-
-    isChildOf (node, parent) {
-      while (node) {
-        if (parent === node) {
-          return true;
-        }
-
-        node = node.parentNode;
-      }
-
-      return false;
-    },
+    isChildOf,
 
     // #ifdef debug
 
-    dumpRng (r) {
-      return (
-        'startContainer: ' + r.startContainer.nodeName +
-        ', startOffset: ' + r.startOffset +
-        ', endContainer: ' + r.endContainer.nodeName +
-        ', endOffset: ' + r.endOffset
-      );
-    },
+    dumpRng,
 
     // #endif
 
