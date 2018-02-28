@@ -200,6 +200,137 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return !!blockElementsMap[node];
   };
 
+  const get = (elm) => {
+    let name;
+
+    if (elm && doc && typeof elm === 'string') {
+      name = elm;
+      elm = doc.getElementById(elm);
+
+      // IE and Opera returns meta elements when they match the specified input ID, but getElementsByName seems to do the trick
+      if (elm && elm.id !== name) {
+        return doc.getElementsByName(name)[1];
+      }
+    }
+
+    return elm;
+  };
+
+  const $$ =  (elm) => {
+    if (typeof elm === 'string') {
+      elm = get(elm);
+    }
+
+    return $(elm);
+  };
+
+  const getAttrib = (elm, name, defaultVal?: string) => {
+    let hook, value;
+
+    elm = $$(elm);
+
+    if (elm.length) {
+      hook = attrHooks[name];
+
+      if (hook && hook.get) {
+        value = hook.get(elm, name);
+      } else {
+        value = elm.attr(name);
+      }
+    }
+
+    if (typeof value === 'undefined') {
+      value = defaultVal || '';
+    }
+
+    return value;
+  };
+
+  const getAttribs = (elm) => {
+    let attrs;
+
+    elm = get(elm);
+
+    if (!elm) {
+      return [];
+    }
+
+    if (isIE) {
+      attrs = [];
+
+      // Object will throw exception in IE
+      if (elm.nodeName === 'OBJECT') {
+        return elm.attributes;
+      }
+
+      // IE doesn't keep the selected attribute if you clone option elements
+      if (elm.nodeName === 'OPTION' && getAttrib(elm, 'selected')) {
+        attrs.push({ specified: 1, nodeName: 'selected' });
+      }
+
+      // It's crazy that this is faster in IE but it's because it returns all attributes all the time
+      const attrRegExp = /<\/?[\w:\-]+ ?|=[\"][^\"]+\"|=\'[^\']+\'|=[\w\-]+|>/gi;
+      elm.cloneNode(false).outerHTML.replace(attrRegExp, '').replace(/[\w:\-]+/gi, function (a) {
+        attrs.push({ specified: 1, nodeName: a });
+      });
+
+      return attrs;
+    }
+
+    return elm.attributes;
+  };
+
+  const setAttrib = (elm, name, value) => {
+    let originalValue, hook;
+
+    if (value === '') {
+      value = null;
+    }
+
+    elm = $$(elm);
+    originalValue = elm.attr(name);
+
+    if (!elm.length) {
+      return;
+    }
+
+    hook = attrHooks[name];
+    if (hook && hook.set) {
+      hook.set(elm, value, name);
+    } else {
+      elm.attr(name, value);
+    }
+
+    if (originalValue !== value && settings.onSetAttrib) {
+      settings.onSetAttrib({
+        attrElm: elm,
+        attrName: name,
+        attrValue: value
+      });
+    }
+  };
+
+  const clone = (node, deep) => {
+    // TODO: Add feature detection here in the future
+    if (!isIE || node.nodeType !== 1 || deep) {
+      return node.cloneNode(deep);
+    }
+
+    // Make a HTML5 safe shallow copy
+    if (!deep) {
+      const clone = doc.createElement(node.nodeName);
+
+      // Copy attribs
+      each(getAttribs(node), function (attr) {
+        setAttrib(clone, attr.nodeName, getAttrib(node, attr.nodeName));
+      });
+
+      return clone;
+    }
+
+    return null;
+  };
+
   const self = {
     doc,
     settings,
@@ -215,41 +346,11 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     events,
     isBlock,
     $,
-    $$ (elm) {
-      if (typeof elm === 'string') {
-        elm = this.get(elm);
-      }
-
-      return this.$(elm);
-    },
+    $$,
 
     root: null,
 
-    clone (node, deep) {
-      const self = this;
-      let clone, doc;
-
-      // TODO: Add feature detection here in the future
-      if (!isIE || node.nodeType !== 1 || deep) {
-        return node.cloneNode(deep);
-      }
-
-      doc = self.doc;
-
-      // Make a HTML5 safe shallow copy
-      if (!deep) {
-        clone = doc.createElement(node.nodeName);
-
-        // Copy attribs
-        each(self.getAttribs(node), function (attr) {
-          self.setAttrib(clone, attr.nodeName, self.getAttrib(node, attr.nodeName));
-        });
-
-        return clone;
-      }
-
-      return clone.firstChild;
-    },
+    clone,
 
     /**
      * Returns the root node of the document. This is normally the body but might be a DIV. Parents like getParent will not
@@ -417,21 +518,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String/Element} n Element id to look for or element to just pass though.
      * @return {Element} Element matching the specified id or null if it wasn't found.
      */
-    get (elm) {
-      let name;
-
-      if (elm && this.doc && typeof elm === 'string') {
-        name = elm;
-        elm = this.doc.getElementById(elm);
-
-        // IE and Opera returns meta elements when they match the specified input ID, but getElementsByName seems to do the trick
-        if (elm && elm.id !== name) {
-          return this.doc.getElementsByName(name)[1];
-        }
-      }
-
-      return elm;
-    },
+    get,
 
     /**
      * Returns the next node that matches selector or function
@@ -782,37 +869,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Sets class attribute on a specific element in the current page
      * tinymce.dom.setAttrib('mydiv', 'class', 'myclass');
      */
-    setAttrib (elm, name, value) {
-      const self = this;
-      let originalValue, hook;
-      const settings = self.settings;
-
-      if (value === '') {
-        value = null;
-      }
-
-      elm = self.$$(elm);
-      originalValue = elm.attr(name);
-
-      if (!elm.length) {
-        return;
-      }
-
-      hook = attrHooks[name];
-      if (hook && hook.set) {
-        hook.set(elm, value, name);
-      } else {
-        elm.attr(name, value);
-      }
-
-      if (originalValue !== value && settings.onSetAttrib) {
-        settings.onSetAttrib({
-          attrElm: elm,
-          attrName: name,
-          attrValue: value
-        });
-      }
-    },
+    setAttrib,
 
     /**
      * Sets two or more specified attributes of an element or elements.
@@ -846,28 +903,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String} defaultVal Optional default value to return if the attribute didn't exist.
      * @return {String} Attribute value string, default value or null if the attribute wasn't found.
      */
-    getAttrib (elm, name, defaultVal?: string) {
-      const self = this;
-      let hook, value;
-
-      elm = self.$$(elm);
-
-      if (elm.length) {
-        hook = attrHooks[name];
-
-        if (hook && hook.get) {
-          value = hook.get(elm, name);
-        } else {
-          value = elm.attr(name);
-        }
-      }
-
-      if (typeof value === 'undefined') {
-        value = defaultVal || '';
-      }
-
-      return value;
-    },
+    getAttrib,
 
     /**
      * Returns the absolute x, y position of a node. The position will be returned in an object with x, y fields.
@@ -1410,39 +1446,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {HTMLElement/string} elm Element node or string id to get attributes from.
      * @return {NodeList} NodeList with attributes.
      */
-    getAttribs (elm) {
-      let attrs;
-
-      elm = this.get(elm);
-
-      if (!elm) {
-        return [];
-      }
-
-      if (isIE) {
-        attrs = [];
-
-        // Object will throw exception in IE
-        if (elm.nodeName === 'OBJECT') {
-          return elm.attributes;
-        }
-
-        // IE doesn't keep the selected attribute if you clone option elements
-        if (elm.nodeName === 'OPTION' && this.getAttrib(elm, 'selected')) {
-          attrs.push({ specified: 1, nodeName: 'selected' });
-        }
-
-        // It's crazy that this is faster in IE but it's because it returns all attributes all the time
-        const attrRegExp = /<\/?[\w:\-]+ ?|=[\"][^\"]+\"|=\'[^\']+\'|=[\w\-]+|>/gi;
-        elm.cloneNode(false).outerHTML.replace(attrRegExp, '').replace(/[\w:\-]+/gi, function (a) {
-          attrs.push({ specified: 1, nodeName: a });
-        });
-
-        return attrs;
-      }
-
-      return elm.attributes;
-    },
+    getAttribs,
 
     /**
      * Returns true/false if the specified node is to be considered empty or not.
