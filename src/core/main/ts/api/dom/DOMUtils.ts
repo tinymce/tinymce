@@ -92,10 +92,10 @@ const setupAttrHooks = function (styles, settings, getContext) {
   return attrHooks;
 };
 
-const updateInternalStyleAttr = function (domUtils, $elm) {
+const updateInternalStyleAttr = function (styles, $elm) {
   let value = $elm.attr('style');
 
-  value = domUtils.serializeStyle(domUtils.parseStyle(value), $elm[0].nodeName);
+  value = styles.serialize(styles.parse(value), $elm[0].nodeName);
 
   if (!value) {
     value = null;
@@ -353,6 +353,22 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return Position.getPos(doc.body, get(elm), rootElm);
   };
 
+  const setStyle = (elm: string | Node, name, value) => {
+    const $elm = $$(elm).css(name, value);
+
+    if (settings.update_styles) {
+      updateInternalStyleAttr(styles, $elm);
+    }
+  };
+
+  const setStyles = (elm: string | Node, stylesArg) => {
+    const $elm = $$(elm).css(stylesArg);
+
+    if (settings.update_styles) {
+      updateInternalStyleAttr(styles, $elm);
+    }
+  };
+
   const getStyle = (elm, name, computed?: boolean) => {
     elm = $$(elm);
 
@@ -531,6 +547,174 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return Sizzle(selector, get(scope) || settings.root_element || doc, []);
   };
 
+  const run = (elm: string | Node, func, scope?) => {
+    let result;
+    const node = typeof elm === 'string' ? get(elm) : elm;
+
+    if (!node) {
+      return false;
+    }
+
+    if (!node.nodeType && (node.length || node.length === 0)) {
+      result = [];
+
+      each(node, function (elm, i) {
+        if (elm) {
+          if (typeof elm === 'string') {
+            elm = get(elm);
+          }
+
+          result.push(func.call(scope, elm, i));
+        }
+      });
+
+      return result;
+    }
+
+    const context = scope ? scope : this;
+
+    return func.call(context, node);
+  };
+
+  const setAttribs = (elm, attrs) => {
+    $$(elm).each(function (i, node) {
+      each(attrs, function (value, name) {
+        setAttrib(node, name, value);
+      });
+    });
+  };
+
+  const setHTML = (elm: string | Node, html) => {
+    const $elm = $$(elm);
+
+    if (isIE) {
+      $elm.each(function (i, target) {
+        if (target.canHaveHTML === false) {
+          return;
+        }
+
+        // Remove all child nodes, IE keeps empty text nodes in DOM
+        while (target.firstChild) {
+          target.removeChild(target.firstChild);
+        }
+
+        try {
+          // IE will remove comments from the beginning
+          // unless you padd the contents with something
+          target.innerHTML = '<br>' + html;
+          target.removeChild(target.firstChild);
+        } catch (ex) {
+          // IE sometimes produces an unknown runtime error on innerHTML if it's a div inside a p
+          DomQuery('<div></div>').html('<br>' + html).contents().slice(1).appendTo(target);
+        }
+
+        return html;
+      });
+    } else {
+      $elm.html(html);
+    }
+  };
+
+  const add = (parentElm, name, attrs?: Record<string, any>, html?: string | Node, create?: boolean) => {
+    return run(parentElm, function (parentElm) {
+      const newElm = Tools.is(name, 'string') ? doc.createElement(name) : name;
+      setAttribs(newElm, attrs);
+
+      if (html) {
+        if (typeof html !== 'string' && html.nodeType) {
+          newElm.appendChild(html);
+        } else {
+          setHTML(newElm, html);
+        }
+      }
+
+      return !create ? parentElm.appendChild(newElm) : newElm;
+    });
+  };
+
+  const create = (name, attrs?: Record<string, any>, html?: string | Node) => {
+    return add(doc.createElement(name), name, attrs, html, true);
+  };
+
+  const decode = Entities.decode;
+  const encode = Entities.encodeAllRaw;
+
+  const createHTML = (name, attrs?: Record<string, any>, html?: string) => {
+    let outHtml = '', key;
+
+    outHtml += '<' + name;
+
+    for (key in attrs) {
+      if (attrs.hasOwnProperty(key) && attrs[key] !== null && typeof attrs[key] !== 'undefined') {
+        outHtml += ' ' + key + '="' + encode(attrs[key]) + '"';
+      }
+    }
+
+    // A call to tinymce.is doesn't work for some odd reason on IE9 possible bug inside their JS runtime
+    if (typeof html !== 'undefined') {
+      return outHtml + '>' + html + '</' + name + '>';
+    }
+
+    return outHtml + ' />';
+  };
+
+  const createFragment = (html?: string) => {
+    let node;
+
+    const container = doc.createElement('div');
+    const frag = doc.createDocumentFragment();
+
+    if (html) {
+      container.innerHTML = html;
+    }
+
+    while ((node = container.firstChild)) {
+      frag.appendChild(node);
+    }
+
+    return frag;
+  };
+
+  const remove = (node: string | Node, keepChildren?: boolean) => {
+    const $node = $$(node);
+
+    if (keepChildren) {
+      $node.each(function () {
+        let child;
+
+        while ((child = this.firstChild)) {
+          if (child.nodeType === 3 && child.data.length === 0) {
+            this.removeChild(child);
+          } else {
+            this.parentNode.insertBefore(child, this);
+          }
+        }
+      }).remove();
+    } else {
+      $node.remove();
+    }
+
+    return $node.length > 1 ? $node.toArray() : $node[0];
+  };
+
+  const removeAllAttribs = (e) => {
+    return run(e, function (e) {
+      let i;
+      const attrs = e.attributes;
+      for (i = attrs.length - 1; i >= 0; i--) {
+        e.removeAttributeNode(attrs.item(i));
+      }
+    });
+  };
+
+  const parseStyle = (cssText: string): StyleMap => {
+    return styles.parse(cssText);
+  };
+
+  const serializeStyle = (stylesArg: StyleMap, name: string) => {
+    return styles.serialize(stylesArg, name);
+  };
+
   const self = {
     doc,
     settings,
@@ -689,26 +873,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Adds a new paragraph to the end of the active editor
      * tinymce.activeEditor.dom.add(tinymce.activeEditor.getBody(), 'p', {title: 'my title'}, 'Some content');
      */
-    add (parentElm, name, attrs?: Record<string, any>, html?: string | Node, create?: boolean) {
-      const self = this;
-
-      return this.run(parentElm, function (parentElm) {
-        let newElm;
-
-        newElm = Tools.is(name, 'string') ? self.doc.createElement(name) : name;
-        self.setAttribs(newElm, attrs);
-
-        if (html) {
-          if (typeof html !== 'string' && html.nodeType) {
-            newElm.appendChild(html);
-          } else {
-            self.setHTML(newElm, html);
-          }
-        }
-
-        return !create ? parentElm.appendChild(newElm) : newElm;
-      });
-    },
+    add,
 
     /**
      * Creates a new element.
@@ -723,9 +888,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * var el = tinymce.activeEditor.dom.create('div', {id: 'test', 'class': 'myclass'}, 'some content');
      * tinymce.activeEditor.selection.setNode(el);
      */
-    create (name, attrs?: Record<string, any>, html?: string | Node) {
-      return this.add(this.doc.createElement(name), name, attrs, html, 1);
-    },
+    create,
 
     /**
      * Creates HTML string for element. The element will be closed unless an empty inner HTML string is passed in.
@@ -739,24 +902,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Creates a html chunk and inserts it at the current selection/caret location
      * tinymce.activeEditor.selection.setContent(tinymce.activeEditor.dom.createHTML('a', {href: 'test.html'}, 'some line'));
      */
-    createHTML (name, attrs?: Record<string, any>, html?: string) {
-      let outHtml = '', key;
-
-      outHtml += '<' + name;
-
-      for (key in attrs) {
-        if (attrs.hasOwnProperty(key) && attrs[key] !== null && typeof attrs[key] !== 'undefined') {
-          outHtml += ' ' + key + '="' + this.encode(attrs[key]) + '"';
-        }
-      }
-
-      // A call to tinymce.is doesn't work for some odd reason on IE9 possible bug inside their JS runtime
-      if (typeof html !== 'undefined') {
-        return outHtml + '>' + html + '</' + name + '>';
-      }
-
-      return outHtml + ' />';
-    },
+    createHTML,
 
     /**
      * Creates a document fragment out of the specified HTML string.
@@ -765,24 +911,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String} html Html string to create fragment from.
      * @return {DocumentFragment} Document fragment node.
      */
-    createFragment (html?: string) {
-      let frag, node;
-      const doc = this.doc;
-      let container;
-
-      container = doc.createElement('div');
-      frag = doc.createDocumentFragment();
-
-      if (html) {
-        container.innerHTML = html;
-      }
-
-      while ((node = container.firstChild)) {
-        frag.appendChild(node);
-      }
-
-      return frag;
-    },
+    createFragment,
 
     /**
      * Removes/deletes the specified element(s) from the DOM.
@@ -800,27 +929,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Removes an element by id in the document
      * tinymce.DOM.remove('mydiv');
      */
-    remove (node, keepChildren?: boolean) {
-      node = this.$$(node);
-
-      if (keepChildren) {
-        node.each(function () {
-          let child;
-
-          while ((child = this.firstChild)) {
-            if (child.nodeType === 3 && child.data.length === 0) {
-              this.removeChild(child);
-            } else {
-              this.parentNode.insertBefore(child, this);
-            }
-          }
-        }).remove();
-      } else {
-        node.remove();
-      }
-
-      return node.length > 1 ? node.toArray() : node[0];
-    },
+    remove,
 
     /**
      * Sets the CSS style value on a HTML element. The name can be a camelcase string
@@ -837,13 +946,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Sets a style value to an element by id in the current document
      * tinymce.DOM.setStyle('mydiv', 'background-color', 'red');
      */
-    setStyle (elm, name, value) {
-      elm = this.$$(elm).css(name, value);
-
-      if (this.settings.update_styles) {
-        updateInternalStyleAttr(this, elm);
-      }
-    },
+    setStyle,
 
     /**
      * Returns the current style or runtime/computed value of an element.
@@ -869,13 +972,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Sets styles to an element by id in the current document
      * tinymce.DOM.setStyles('mydiv', {'background-color': 'red', 'color': 'green'});
      */
-    setStyles (elm, styles) {
-      elm = this.$$(elm).css(styles);
-
-      if (this.settings.update_styles) {
-        updateInternalStyleAttr(this, elm);
-      }
-    },
+    setStyles,
 
     /**
      * Removes all attributes from an element or elements.
@@ -883,15 +980,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @method removeAllAttribs
      * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to remove attributes from.
      */
-    removeAllAttribs (e) {
-      return this.run(e, function (e) {
-        let i;
-        const attrs = e.attributes;
-        for (i = attrs.length - 1; i >= 0; i--) {
-          e.removeAttributeNode(attrs.item(i));
-        }
-      });
-    },
+    removeAllAttribs,
 
     /**
      * Sets the specified attribute of an element or elements.
@@ -923,15 +1012,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Sets class and title attributes on a specific element in the current page
      * tinymce.DOM.setAttribs('mydiv', {'class': 'myclass', title: 'some title'});
      */
-    setAttribs (elm, attrs) {
-      const self = this;
-
-      self.$$(elm).each(function (i, node) {
-        each(attrs, function (value, name) {
-          self.setAttrib(node, name, value);
-        });
-      });
-    },
+    setAttribs,
 
     /**
      * Returns the specified attribute by name.
@@ -963,9 +1044,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String} cssText Style value to parse, for example: border:1px solid red;.
      * @return {Object} Object representation of that style, for example: {border: '1px solid red'}
      */
-    parseStyle (cssText): StyleMap {
-      return this.styles.parse(cssText);
-    },
+    parseStyle,
 
     /**
      * Serializes the specified style object into a string.
@@ -975,9 +1054,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String} name Optional element name.
      * @return {String} String representation of the style object, for example: border: 1px solid red.
      */
-    serializeStyle (styles, name) {
-      return this.styles.serialize(styles, name);
-    },
+    serializeStyle,
 
     /**
      * Adds a style element at the top of the document with the specified cssText content.
@@ -1211,36 +1288,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Sets the inner HTML of an element by id in the document
      * tinymce.DOM.setHTML('mydiv', 'some inner html');
      */
-    setHTML (elm, html) {
-      elm = this.$$(elm);
-
-      if (isIE) {
-        elm.each(function (i, target) {
-          if (target.canHaveHTML === false) {
-            return;
-          }
-
-          // Remove all child nodes, IE keeps empty text nodes in DOM
-          while (target.firstChild) {
-            target.removeChild(target.firstChild);
-          }
-
-          try {
-            // IE will remove comments from the beginning
-            // unless you padd the contents with something
-            target.innerHTML = '<br>' + html;
-            target.removeChild(target.firstChild);
-          } catch (ex) {
-            // IE sometimes produces an unknown runtime error on innerHTML if it's a div inside a p
-            DomQuery('<div></div>').html('<br>' + html).contents().slice(1).appendTo(target);
-          }
-
-          return html;
-        });
-      } else {
-        elm.html(html);
-      }
-    },
+    setHTML,
 
     /**
      * Returns the outer HTML of an element.
@@ -1298,7 +1346,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String} s String to decode entities on.
      * @return {String} Entity decoded string.
      */
-    decode: Entities.decode,
+    decode,
 
     /**
      * Entity encodes a string. This method encodes the most common entities, such as <>"&.
@@ -1307,7 +1355,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String} text String to encode with entities.
      * @return {String} Entity encoded string.
      */
-    encode: Entities.encodeAllRaw,
+    encode,
 
     /**
      * Inserts an element after the reference element.
@@ -1444,37 +1492,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Object} scope Optional scope to execute the function in.
      * @return {Object/Array} Single object, or an array of objects if multiple input elements were passed in.
      */
-    run (elm, func, scope) {
-      const self = this;
-      let result;
-
-      if (typeof elm === 'string') {
-        elm = self.get(elm);
-      }
-
-      if (!elm) {
-        return false;
-      }
-
-      scope = scope || this;
-      if (!elm.nodeType && (elm.length || elm.length === 0)) {
-        result = [];
-
-        each(elm, function (elm, i) {
-          if (elm) {
-            if (typeof elm === 'string') {
-              elm = self.get(elm);
-            }
-
-            result.push(func.call(scope, elm, i));
-          }
-        });
-
-        return result;
-      }
-
-      return func.call(scope, elm);
-    },
+    run,
 
     /**
      * Returns a NodeList with attributes for the element.
