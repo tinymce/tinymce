@@ -338,6 +338,7 @@ module.exports = function (grunt) {
       // Plugins
       textpattern: { expand: true, cwd: 'src/plugins/textpattern/main/ts/', src: '**', dest: 'plugins/textpattern'},
       textcolor: { expand: true, cwd: 'src/plugins/textcolor/main/ts/', src: '**', dest: 'plugins/textcolor'},
+      textcolor: { expand: true, cwd: 'src/plugins/colorpicker/main/ts/', src: '**', dest: 'plugins/colorpicker'},
 
       // Themes
       inlight: { expand: true, cwd: 'src/themes/inlite/main/ts/', src: '**', dest: 'themes/inlite'},

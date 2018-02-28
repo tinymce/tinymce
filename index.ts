@@ -10,3 +10,4 @@ export { default as Inlite } from './themes/inlite/Theme';
 // Plugins
 export { default as TextPattern } from './plugins/textpattern/Plugin';
 export { default as Textcolor } from './plugins/textcolor/Plugin';
+export { default as ColorPicker } from './plugins/colorpicker/Plugin';
