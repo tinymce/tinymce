@@ -29,7 +29,7 @@
 
 import Schema from './Schema';
 
-export interface Styles { [s: string]: string; }
+export interface StyleMap { [s: string]: string; }
 
 const toHex = (match: string, r: string, g: string, b: string) => {
   const hex = (val: string) => {
@@ -89,7 +89,7 @@ export default function (settings?, schema?: Schema) {
      * @param {String} css Style value to parse for example: border:1px solid red;.
      * @return {Object} Object representation of that style like {border: '1px solid red'}
      */
-    parse (css: string): Styles {
+    parse (css: string): StyleMap {
       const styles: any = {};
       let matches, name, value, isEncoded;
       const urlConverter = settings.url_converter;
@@ -325,7 +325,7 @@ export default function (settings?, schema?: Schema) {
      * @param {String} elementName Optional element name, if specified only the styles that matches the schema will be serialized.
      * @return {String} String representation of the style object for example: border: 1px solid red.
      */
-    serialize (styles: Styles, elementName?: string): string {
+    serialize (styles: StyleMap, elementName?: string): string {
       let css = '', name, value;
 
       const serializeStyles = (name: string) => {

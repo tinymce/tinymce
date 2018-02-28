@@ -39,7 +39,7 @@ export default function (document, settings?) {
    * @param {Function} loadedCallback Callback to be executed when loaded.
    * @param {Function} errorCallback Callback to be executed when failed loading.
    */
-  const load = function (url, loadedCallback, errorCallback) {
+  const load = function (url, loadedCallback, errorCallback?) {
     let link, style, startTime, state;
 
     const passed = function () {

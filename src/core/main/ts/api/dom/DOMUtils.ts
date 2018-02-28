@@ -18,7 +18,7 @@ import TreeWalker from './TreeWalker';
 import TrimNode from '../../dom/TrimNode';
 import Entities from '../html/Entities';
 import Schema from '../html/Schema';
-import Styles from '../html/Styles';
+import Styles, { StyleMap } from '../html/Styles';
 import Tools from '../util/Tools';
 
 /**
@@ -41,7 +41,7 @@ const isIE = Env.ie;
 const simpleSelectorRe = /^([a-z0-9],?)+$/i;
 const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
-const setupAttrHooks = function (domUtils, settings) {
+const setupAttrHooks = function (styles, settings, getContext) {
   let attrHooks: any = {};
   const keepValues = settings.keep_values;
   let keepUrlHook;
@@ -49,7 +49,7 @@ const setupAttrHooks = function (domUtils, settings) {
   keepUrlHook = {
     set ($elm, value, name) {
       if (settings.url_converter) {
-        value = settings.url_converter.call(settings.url_converter_scope || domUtils, value, name, $elm[0]);
+        value = settings.url_converter.call(settings.url_converter_scope || getContext(), value, name, $elm[0]);
       }
 
       $elm.attr('data-mce-' + name, value).attr(name, value);
@@ -78,7 +78,7 @@ const setupAttrHooks = function (domUtils, settings) {
       get ($elm) {
         let value = $elm.attr('data-mce-style') || $elm.attr('style');
 
-        value = domUtils.serializeStyle(domUtils.parseStyle(value), $elm[0].nodeName);
+        value = styles.serialize(styles.parse(value), $elm[0].nodeName);
 
         return value;
       }
@@ -148,28 +148,26 @@ export interface DOMUtilsSettings {
  * @param {Document} doc Document reference to bind the utility class to.
  * @param {settings} settings Optional settings collection.
  */
-export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
-  const self: any = {};
+export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}) {
   let blockElementsMap;
+  let attrHooks;
+  const addedStyles = {};
 
-  self.doc = doc;
-  self.win = window;
-  self.files = {};
-  self.counter = 0;
-  self.stdMode = true;
-  self.boxModel = !isIE || doc.compatMode === 'CSS1Compat' || self.stdMode;
-  self.styleSheetLoader = StyleSheetLoader(doc);
-  self.boundEvents = [];
-  self.settings = settings = settings || {};
-  self.schema = settings.schema ? settings.schema : Schema({});
-  self.styles = Styles({
+  const win = window;
+  const files = {};
+  const counter = 0;
+  const stdMode = true;
+  const boxModel = true;
+  const styleSheetLoader = StyleSheetLoader(doc);
+  const boundEvents = [];
+  const schema = settings.schema ? settings.schema : Schema({});
+  const styles = Styles({
     url_converter: settings.url_converter,
     url_converter_scope: settings.url_converter_scope
   }, settings.schema);
 
-  self.events = settings.ownEvents ? new EventUtils(settings.proxy) : EventUtils.Event;
-  self.attrHooks = setupAttrHooks(self, settings);
-  blockElementsMap = self.schema.getBlockElements();
+  const events = settings.ownEvents ? new EventUtils(settings.proxy) : EventUtils.Event;
+  blockElementsMap = schema.getBlockElements();
 
   const $ = DomQuery.overrideDefaults(function () {
     return {
@@ -202,7 +200,19 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
     return !!blockElementsMap[node];
   };
 
-  Tools.extend(self, {
+  const self = {
+    doc,
+    settings,
+    win,
+    files,
+    counter,
+    stdMode,
+    boxModel,
+    styleSheetLoader,
+    boundEvents,
+    styles,
+    schema,
+    events,
     isBlock,
     $,
     $$ (elm) {
@@ -261,7 +271,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {Window} win Optional window to get viewport of.
      * @return {Object} Viewport object with fields x, y, w and h.
      */
-    getViewPort (win) {
+    getViewPort (win?: Window) {
       let doc, rootElm;
 
       win = !win ? this.win : win;
@@ -341,7 +351,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {Node} root Optional root element, never go beyond this point.
      * @return {Node} DOM Node or null if it wasn't found.
      */
-    getParent (node, selector, root) {
+    getParent (node, selector, root?: Node) {
       return this.getParents(node, selector, root, false);
     },
 
@@ -355,12 +365,12 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {Node} root Optional root element, never go beyond this point.
      * @return {Array} Array of nodes or null if it wasn't found.
      */
-    getParents (node, selector, root, collect) {
+    getParents (elm: Node | string, selector: string | Function, root?: HTMLElement, collect?: boolean) {
       const self = this;
       let selectorVal;
       const result = [];
 
-      node = self.get(node);
+      let node = self.get(elm);
       collect = collect === undefined;
 
       // Default root on inline mode
@@ -386,7 +396,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
           break;
         }
 
-        if (!selector || selector(node)) {
+        if (!selector || (typeof selector === 'function' && selector(node))) {
           if (collect) {
             result.push(node);
           } else {
@@ -465,7 +475,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * // Adds a class to all spans that have the test class in the currently active editor
      * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('span.test'), 'someclass')
      */
-    select (selector, scope) {
+    select (selector, scope?: HTMLElement | string) {
       const self = this;
 
       /*eslint new-cap:0 */
@@ -536,7 +546,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * // Adds a new paragraph to the end of the active editor
      * tinymce.activeEditor.dom.add(tinymce.activeEditor.getBody(), 'p', {title: 'my title'}, 'Some content');
      */
-    add (parentElm, name, attrs, html, create) {
+    add (parentElm, name, attrs?: Record<string, any>, html?: string | Node, create?: boolean) {
       const self = this;
 
       return this.run(parentElm, function (parentElm) {
@@ -546,7 +556,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
         self.setAttribs(newElm, attrs);
 
         if (html) {
-          if (html.nodeType) {
+          if (typeof html !== 'string' && html.nodeType) {
             newElm.appendChild(html);
           } else {
             self.setHTML(newElm, html);
@@ -570,7 +580,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * var el = tinymce.activeEditor.dom.create('div', {id: 'test', 'class': 'myclass'}, 'some content');
      * tinymce.activeEditor.selection.setNode(el);
      */
-    create (name, attrs, html) {
+    create (name, attrs?: Record<string, any>, html?: string | Node) {
       return this.add(this.doc.createElement(name), name, attrs, html, 1);
     },
 
@@ -586,7 +596,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * // Creates a html chunk and inserts it at the current selection/caret location
      * tinymce.activeEditor.selection.setContent(tinymce.activeEditor.dom.createHTML('a', {href: 'test.html'}, 'some line'));
      */
-    createHTML (name, attrs, html) {
+    createHTML (name, attrs?: Record<string, any>, html?: string) {
       let outHtml = '', key;
 
       outHtml += '<' + name;
@@ -612,7 +622,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {String} html Html string to create fragment from.
      * @return {DocumentFragment} Document fragment node.
      */
-    createFragment (html) {
+    createFragment (html?: string) {
       let frag, node;
       const doc = this.doc;
       let container;
@@ -647,7 +657,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * // Removes an element by id in the document
      * tinymce.DOM.remove('mydiv');
      */
-    remove (node, keepChildren) {
+    remove (node, keepChildren?: boolean) {
       node = this.$$(node);
 
       if (keepChildren) {
@@ -701,7 +711,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {Boolean} computed Computed style.
      * @return {String} Current style or computed style value of an element.
      */
-    getStyle (elm, name, computed) {
+    getStyle (elm, name, computed?: boolean) {
       elm = this.$$(elm);
 
       if (computed) {
@@ -788,7 +798,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
         return;
       }
 
-      hook = self.attrHooks[name];
+      hook = attrHooks[name];
       if (hook && hook.set) {
         hook.set(elm, value, name);
       } else {
@@ -836,14 +846,14 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {String} defaultVal Optional default value to return if the attribute didn't exist.
      * @return {String} Attribute value string, default value or null if the attribute wasn't found.
      */
-    getAttrib (elm, name, defaultVal) {
+    getAttrib (elm, name, defaultVal?: string) {
       const self = this;
       let hook, value;
 
       elm = self.$$(elm);
 
       if (elm.length) {
-        hook = self.attrHooks[name];
+        hook = attrHooks[name];
 
         if (hook && hook.get) {
           value = hook.get(elm, name);
@@ -867,7 +877,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {Element} rootElm Optional root element to stop calculations at.
      * @return {object} Absolute position of the specified element object with x, y fields.
      */
-    getPos (elm, rootElm) {
+    getPos (elm, rootElm?: Node) {
       return Position.getPos(this.doc.body, this.get(elm), rootElm);
     },
 
@@ -880,7 +890,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {String} cssText Style value to parse, for example: border:1px solid red;.
      * @return {Object} Object representation of that style, for example: {border: '1px solid red'}
      */
-    parseStyle (cssText) {
+    parseStyle (cssText): StyleMap {
       return this.styles.parse(cssText);
     },
 
@@ -909,15 +919,11 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
 
       // Prevent inline from loading the same styles twice
       if (self !== DOMUtils.DOM && doc === document) {
-        let addedStyles = DOMUtils.DOM.addedStyles;
-
-        addedStyles = addedStyles || [];
         if (addedStyles[cssText]) {
           return;
         }
 
         addedStyles[cssText] = true;
-        DOMUtils.DOM.addedStyles = addedStyles;
       }
 
       // Create style element if needed
@@ -1114,7 +1120,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {String} prefix Optional prefix to add in front of all ids - defaults to "mce_".
      * @return {String} Unique id.
      */
-    uniqueId (prefix) {
+    uniqueId (prefix?: string) {
       return (!prefix ? 'mce_' : prefix) + (this.counter++);
     },
 
@@ -1267,7 +1273,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {Boolean} keepChildren Optional keep children state, if set to true child nodes from the old object will be added
      * to new ones.
      */
-    replace (newElm, oldElm, keepChildren) {
+    replace (newElm, oldElm, keepChildren?: boolean) {
       const self = this;
 
       return self.run(oldElm, function (oldElm) {
@@ -1447,7 +1453,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {Object} elements Optional name/value object with elements that are automatically treated as non-empty elements.
      * @return {Boolean} true/false if the node is empty or not.
      */
-    isEmpty (node, elements) {
+    isEmpty (node, elements?: Record<string, any>) {
       const self = this;
       let i, attributes, type, whitespace, walker, name, brCount = 0;
 
@@ -1549,7 +1555,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {Element} replacementElm Optional replacement element to replace the split element with.
      * @return {Element} Returns the split element or the replacement element if that is specified.
      */
-    split (parentElm, splitElm, replacementElm) {
+    split (parentElm, splitElm, replacementElm?: Node) {
       const self = this;
       let r = self.createRng(), bef, aft, pa;
 
@@ -1596,7 +1602,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {Object} scope Optional scope to execute the function in.
      * @return {function} Function callback handler the same as the one passed in.
      */
-    bind (target, name, func, scope) {
+    bind (target, name, func, scope?: any) {
       const self = this;
 
       if (Tools.isArray(target)) {
@@ -1627,7 +1633,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @return {bool/Array} Bool state of true if the handler was removed, or an array of states if multiple input elements
      * were passed in.
      */
-    unbind (target, name, func) {
+    unbind (target, name: string, func?) {
       const self = this;
       let i;
 
@@ -1666,7 +1672,7 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
      * @param {Object} evt Event object to send.
      * @return {Event} Event object.
      */
-    fire (target, name, evt) {
+    fire (target, name, evt?) {
       return this.events.fire(target, name, evt);
     },
 
@@ -1780,7 +1786,9 @@ export function DOMUtils(doc: Document, settings?: Partial<DOMUtilsSettings>) {
 
       return null;
     }
-  });
+  };
+
+  attrHooks = setupAttrHooks(styles, settings, () => self);
 
   return self;
 }

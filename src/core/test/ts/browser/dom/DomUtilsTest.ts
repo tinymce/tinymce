@@ -265,7 +265,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
     LegacyUnit.equal(DOM.getAttrib('test', 'class'), '123');
     LegacyUnit.equal(DOM.getAttrib('test', 'title'), 'abc');
 
-    DOM.setAttribs('test');
+    DOM.setAttribs('test', {});
     LegacyUnit.equal(DOM.getAttrib('test', 'class'), '123');
     LegacyUnit.equal(DOM.getAttrib('test', 'title'), 'abc');
 
@@ -286,7 +286,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
 
   suite.test('setGetAttrib on null', function () {
     LegacyUnit.equal(DOM.getAttrib(null, 'test'), '');
-    DOM.setAttrib(null, 'test');
+    DOM.setAttrib(null, 'test', null);
   });
 
   suite.test('getAttribs', function () {
@@ -518,7 +518,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
-    DOM.remove('test2', 1);
+    DOM.remove('test2', true);
     LegacyUnit.equal(DOM.get('test').innerHTML.toLowerCase(), '<span>test</span><span>test2</span>');
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
@@ -531,7 +531,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
-    DOM.replace(DOM.create('div', { id : 'test2' }), 'test2', 1);
+    DOM.replace(DOM.create('div', { id : 'test2' }), 'test2', true);
     LegacyUnit.equal(DOM.get('test2').innerHTML.toLowerCase(), '<span>test</span><span>test2</span>');
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
