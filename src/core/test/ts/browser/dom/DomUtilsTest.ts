@@ -7,7 +7,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
-  const DOM = new DOMUtils(document, { keep_values : true, schema : Schema() });
+  const DOM = DOMUtils(document, { keep_values : true, schema : Schema() });
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
   const suite = LegacyUnit.createSuite();
@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
 
     DOM.add(document.body, 'div', { id : 'test' });
 
-    dom = new DOMUtils(document, { hex_colors : true, keep_values : true, url_converter (u) {
+    dom = DOMUtils(document, { hex_colors : true, keep_values : true, url_converter (u) {
       return 'X' + u + 'Y';
     } });
 
@@ -269,7 +269,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
     LegacyUnit.equal(DOM.getAttrib('test', 'class'), '123');
     LegacyUnit.equal(DOM.getAttrib('test', 'title'), 'abc');
 
-    dom = new DOMUtils(document, { keep_values : true, url_converter (u, n) {
+    dom = DOMUtils(document, { keep_values : true, url_converter (u, n) {
       return '&<>"' + u + '&<>"' + n;
     } });
 
@@ -618,7 +618,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
   suite.test('isEmpty without defined schema', function () {
     DOM.add(document.body, 'div', { id : 'test' }, '');
 
-    const domUtils = new DOMUtils(document);
+    const domUtils = DOMUtils(document);
 
     DOM.setHTML('test', '<hr>');
     LegacyUnit.equal(domUtils.isEmpty(DOM.get('test')), false, 'Should be false since hr is something');
@@ -712,7 +712,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
   });
 
   suite.test('isEmpty with list of elements considered non-empty without schema', function () {
-    const domWithoutSchema = new DOMUtils(document, { keep_values: true });
+    const domWithoutSchema = DOMUtils(document, { keep_values: true });
 
     const elm = domWithoutSchema.create('p', null, '<img>');
     LegacyUnit.equal(false, domWithoutSchema.isEmpty(elm, { img: true }));

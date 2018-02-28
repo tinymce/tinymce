@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
       rng.setStart(sc.dom(), startOffset);
       rng.setEnd(ec.dom(), endOffset);
 
-      return NormalizeRange.normalize(new DOMUtils(document, { root_element: viewBlock.get() }), rng);
+      return NormalizeRange.normalize(DOMUtils(document, { root_element: viewBlock.get() }), rng);
     });
   };
 
@@ -293,7 +293,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
     Logger.t('Normalize on document', Step.sync(function () {
       const doc = document.implementation.createHTMLDocument('');
       const rng = document.createRange();
-      const dom = new DOMUtils(doc, { root_element: doc.body });
+      const dom = DOMUtils(doc, { root_element: doc.body });
 
       doc.body.innerHTML = '<p>a</p>';
 
