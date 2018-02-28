@@ -1,5 +1,5 @@
 import { Result, Type } from '@ephox/katamari';
-import { value, objOf, arrOf, arrOfObj, anyValue, objOfOnly, Processor, field } from '../core/ValueProcessor';
+import { value, objOf, arrOf, arrOfObj, anyValue, objOfOnly, Processor, field, state as _state } from '../core/ValueProcessor';
 import * as FieldPresence from './FieldPresence';
 import { FieldProcessorAdt } from '../format/TypeTokens';
 
@@ -69,8 +69,8 @@ const defaultedObjOf = function (key: string, fallback: object, objSchema: Field
   return field(key, key, FieldPresence.defaulted(fallback), objOf(objSchema));
 };
 
-const state = function (okey: string, instantiator: ({}) => any): FieldProcessorAdt {
-  return state(okey, instantiator);
+const state = function (okey: string, instantiator: any): FieldProcessorAdt {
+  return _state(okey, instantiator);
 };
 
 export {
