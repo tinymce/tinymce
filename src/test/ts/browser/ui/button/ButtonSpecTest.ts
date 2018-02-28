@@ -1,24 +1,26 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Cursors } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import {
+  ApproxStructure,
+  Assertions,
+  Chain,
+  Cursors,
+  FocusTools,
+  GeneralSteps,
+  Keyboard,
+  Keys,
+  Logger,
+  Mouse,
+  Step,
+  UiFinder,
+} from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import Button from 'ephox/alloy/api/ui/Button';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('ButtonSpecTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ButtonSpecTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -33,7 +35,7 @@ UnitTest.asynctest('ButtonSpecTest', function() {
       })
     );
   }, function (doc, body, gui, component, store) {
-    var testStructure = Step.sync(function () {
+    const testStructure = Step.sync(function () {
       Assertions.assertStructure(
         'Checking initial structure of button',
         ApproxStructure.build(function (s, str, arr) {
@@ -42,9 +44,9 @@ UnitTest.asynctest('ButtonSpecTest', function() {
               arr.has('test-button')
             ],
             attrs: {
-              type: str.is('button'),
+              'type': str.is('button'),
               'data-alloy-id': str.is('test-button-id'),
-              role: str.is('button')
+              'role': str.is('button')
             },
             html: str.is('ButtonSpecTest.button')
           });
@@ -53,7 +55,7 @@ UnitTest.asynctest('ButtonSpecTest', function() {
       );
     });
 
-    var testButtonClick = Logger.t(
+    const testButtonClick = Logger.t(
       'testing button click',
       GeneralSteps.sequence([
         store.sAssertEq('step 1: no clicks', [ ]),
@@ -70,7 +72,7 @@ UnitTest.asynctest('ButtonSpecTest', function() {
       ])
     );
 
-    var testExecuting = Logger.t(
+    const testExecuting = Logger.t(
       'testing dispatching execute',
       GeneralSteps.sequence([
         Step.sync(function () {
@@ -83,7 +85,7 @@ UnitTest.asynctest('ButtonSpecTest', function() {
       ])
     );
 
-    var testFocusing = Logger.t(
+    const testFocusing = Logger.t(
       'test focusing',
       GeneralSteps.sequence([
         FocusTools.sSetFocus('Setting focus on button', gui.element(), '.test-button'),
@@ -91,7 +93,7 @@ UnitTest.asynctest('ButtonSpecTest', function() {
       ])
     );
 
-    var testKeyboard = Logger.t(
+    const testKeyboard = Logger.t(
       'test keyboard',
       GeneralSteps.sequence([
         store.sAssertEq('pre-enter', [ ]),
@@ -118,4 +120,3 @@ UnitTest.asynctest('ButtonSpecTest', function() {
     ];
   }, success, failure);
 });
-

@@ -1,50 +1,50 @@
-import ArrNavigation from 'ephox/alloy/navigation/ArrNavigation';
+import * as ArrNavigation from 'ephox/alloy/navigation/ArrNavigation';
 import { Fun } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('ArrNavigationTest', function() {
-  var genUniqueArray = function (min, max) {
+UnitTest.test('ArrNavigationTest', function () {
+  const genUniqueArray = function (min, max) {
     return Jsc.integer(min, max).generator.map(function (num) {
-      var r = [ ];
-      for (var i = 0; i < num; i++) {
+      const r = [ ];
+      for (let i = 0; i < num; i++) {
         r[i] = i;
       }
       return r;
     });
   };
 
-  var genIndexInArray = function (array) {
+  const genIndexInArray = function (array) {
     return Jsc.integer(0, array.length - 1).generator;
   };
 
-  var genTestCase = Jsc.nearray(Jsc.integer).generator.flatMap(function (values1) {
+  const genTestCase = Jsc.nearray(Jsc.integer).generator.flatMap(function (values1) {
     return Jsc.nearray(Jsc.integer).generator.flatMap(function (values2) {
-      var combined = values1.concat(values2);
+      const combined = values1.concat(values2);
       return genIndexInArray(combined).map(function (index) {
         return {
           values: combined,
-          index: index
+          index
         };
       });
     });
   });
 
-  var genUniqueNumTestCase = genUniqueArray(2, 10).flatMap(function (values) {
+  const genUniqueNumTestCase = genUniqueArray(2, 10).flatMap(function (values) {
     return genIndexInArray(values).map(function (index) {
       return {
-        values: values,
-        index: index
+        values,
+        index
       };
     });
   });
 
-  var arbTestCase = Jsc.bless({
+  const arbTestCase = Jsc.bless({
     generator: genTestCase
   });
 
   // Each value in the array matches its index
-  var arbUniqueNumTestCase = Jsc.bless({
+  const arbUniqueNumTestCase = Jsc.bless({
     generator: genUniqueNumTestCase
   });
 
@@ -74,12 +74,12 @@ UnitTest.test('ArrNavigationTest', function() {
     'Cycling across a list of unique numbers of size 2 or greater should be symmetric: after(before(x)) === x',
     arbUniqueNumTestCase,
     function (testCase) {
-      var initial = testCase.index;
-      var before = ArrNavigation.cyclePrev(testCase.values, initial, Fun.constant(true)).getOrDie(
+      const initial = testCase.index;
+      const before = ArrNavigation.cyclePrev(testCase.values, initial, Fun.constant(true)).getOrDie(
         'Should always be able to cycle prev on a >= 2 length array'
       );
       // Note, the index is the same as the value, so we can do this.
-      var after = ArrNavigation.cycleNext(testCase.values, before, Fun.constant(true)).getOrDie(
+      const after = ArrNavigation.cycleNext(testCase.values, before, Fun.constant(true)).getOrDie(
         'Should always be able to cycle next on a >= 2 length array'
       );
 
@@ -91,12 +91,12 @@ UnitTest.test('ArrNavigationTest', function() {
     'Cycling across a list of unique numbers of size 2 or greater should be symmetric: before(after(x)) === x',
     arbUniqueNumTestCase,
     function (testCase) {
-      var initial = testCase.index;
-      var after = ArrNavigation.cycleNext(testCase.values, initial, Fun.constant(true)).getOrDie(
+      const initial = testCase.index;
+      const after = ArrNavigation.cycleNext(testCase.values, initial, Fun.constant(true)).getOrDie(
         'Should always be able to cycle next on a >= 2 length array'
       );
       // Note, the index is the same as the value, so we can do this.
-      var before = ArrNavigation.cyclePrev(testCase.values, after, Fun.constant(true)).getOrDie(
+      const before = ArrNavigation.cyclePrev(testCase.values, after, Fun.constant(true)).getOrDie(
         'Should always be able to cycle prev on a >= 2 length array'
       );
 
@@ -108,7 +108,7 @@ UnitTest.test('ArrNavigationTest', function() {
     'Cycling next makes an index of 0, or one higher',
     arbUniqueNumTestCase,
     function (testCase) {
-      var after = ArrNavigation.cycleNext(testCase.values, testCase.index, Fun.constant(true)).getOrDie(
+      const after = ArrNavigation.cycleNext(testCase.values, testCase.index, Fun.constant(true)).getOrDie(
         'Should always be able to cycle next on a >= 2 length array'
       );
 
@@ -120,7 +120,7 @@ UnitTest.test('ArrNavigationTest', function() {
     'Cycling prev makes an index of values.length - 1, or one lower',
     arbUniqueNumTestCase,
     function (testCase) {
-      var before = ArrNavigation.cyclePrev(testCase.values, testCase.index, Fun.constant(true)).getOrDie(
+      const before = ArrNavigation.cyclePrev(testCase.values, testCase.index, Fun.constant(true)).getOrDie(
         'Should always be able to cycle prev on a >= 2 length array'
       );
 
@@ -154,4 +154,3 @@ UnitTest.test('ArrNavigationTest', function() {
     }
   );
 });
-

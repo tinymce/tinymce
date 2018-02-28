@@ -1,21 +1,18 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr, Fun } from '@ephox/katamari';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Swapping from 'ephox/alloy/api/behaviour/Swapping';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('SwappingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SwappingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var ALPHA_CLS = Fun.constant('i-am-the-alpha');
-  var OMEGA_CLS = Fun.constant('and-the-omega');
+  const ALPHA_CLS = Fun.constant('i-am-the-alpha');
+  const OMEGA_CLS = Fun.constant('and-the-omega');
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -39,7 +36,7 @@ UnitTest.asynctest('SwappingTest', function() {
     );
   }, function (doc, body, gui, component, store) {
     /// string -> [string] -> [string] -> ()
-    var assertClasses = function (label, has, not) {
+    const assertClasses = function (label, has, not) {
       Assertions.assertStructure(
         'Asserting structure after: ' + label,
         ApproxStructure.build(function (s, str, arr) {
@@ -48,46 +45,46 @@ UnitTest.asynctest('SwappingTest', function() {
             attrs: {
               'data-alloy-id': str.is('wat-uid')
             }
-          })
+          });
         }),
         component.element()
-      )
+      );
     };
 
-    var testHasNoClass = function (label) {
+    const testHasNoClass = function (label) {
       return Step.sync(function () {
         assertClasses(label, [], [ ALPHA_CLS(), OMEGA_CLS() ]);
       });
     };
 
-    var testHasAlpha = function (label) {
+    const testHasAlpha = function (label) {
       return Step.sync(function () {
         assertClasses(label, [ALPHA_CLS()], [OMEGA_CLS()]);
       });
     };
 
-    var testHasOmega = function (label) {
+    const testHasOmega = function (label) {
       return Step.sync(function () {
         assertClasses(label, [OMEGA_CLS()], [ALPHA_CLS()]);
       });
     };
 
-    var testPredicates = function (label, isAlpha, isOmega) {
+    const testPredicates = function (label, isAlpha, isOmega) {
       return Step.sync(function () {
         Assertions.assertEq(label, isAlpha, Swapping.isAlpha(component));
         Assertions.assertEq(label, isOmega, Swapping.isOmega(component));
       });
     };
 
-    var sAlpha = Step.sync(function () {
+    const sAlpha = Step.sync(function () {
       Swapping.toAlpha(component);
     });
 
-    var sOmega = Step.sync(function () {
+    const sOmega = Step.sync(function () {
       Swapping.toOmega(component);
     });
 
-    var sClear = Step.sync(function () {
+    const sClear = Step.sync(function () {
       Swapping.clear(component);
     });
 
@@ -129,4 +126,3 @@ UnitTest.asynctest('SwappingTest', function() {
     ];
   }, success, failure);
 });
-

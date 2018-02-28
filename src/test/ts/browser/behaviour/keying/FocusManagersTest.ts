@@ -1,59 +1,49 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
+import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Step, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr } from '@ephox/katamari';
+import { Attr, Focus, SelectorFind } from '@ephox/sugar';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Focusing from 'ephox/alloy/api/behaviour/Focusing';
 import Keying from 'ephox/alloy/api/behaviour/Keying';
 import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Memento from 'ephox/alloy/api/component/Memento';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as Memento from 'ephox/alloy/api/component/Memento';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Arr } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var manager = function (prefix) {
-    var active = '';
+  const manager = function (prefix) {
+    let active = '';
 
-    var set = function (component, focusee) {
+    const set = function (component, focusee) {
       active = Attr.get(focusee, 'class');
     };
 
-    var get = function (component) {
+    const get = function (component) {
       return SelectorFind.descendant(component.element(), '.' + active);
     };
 
     // Test only method
-    var sAssert = function (label, expected) {
+    const sAssert = function (label, expected) {
       return Step.sync(function () {
         Assertions.assertEq(prefix + ' ' + label, expected, active);
       });
     };
 
     return {
-      set: set,
-      get: get,
-      sAssert: sAssert
+      set,
+      get,
+      sAssert
     };
   };
 
-  var makeItems = function (tag, prefix, haveTabstop, firstNum) {
+  const makeItems = function (tag, prefix, haveTabstop, firstNum) {
     return Arr.map([ firstNum, firstNum + 1, firstNum + 2 ], function (num) {
       return {
         dom: {
-          tag: tag,
+          tag,
           classes: [ prefix + '-' + num ],
           innerHtml: prefix + '-' + num
         },
@@ -64,8 +54,8 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function(
     });
   };
 
-  var acyclicManager = manager('acyclic');
-  var memAcyclic = Memento.record({
+  const acyclicManager = manager('acyclic');
+  const memAcyclic = Memento.record({
     dom: {
       tag: 'div',
       classes: [ 'acyclic' ]
@@ -79,8 +69,8 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function(
     ])
   });
 
-  var cyclicManager = manager('cyclic');
-  var memCyclic = Memento.record({
+  const cyclicManager = manager('cyclic');
+  const memCyclic = Memento.record({
     dom: {
       tag: 'div',
       classes: [ 'cyclic' ]
@@ -94,8 +84,8 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function(
     ])
   });
 
-  var flatgridManager = manager('flatgrid');
-  var memFlatgrid = Memento.record({
+  const flatgridManager = manager('flatgrid');
+  const memFlatgrid = Memento.record({
     dom: {
       tag: 'div',
       classes: [ 'flatgrid' ]
@@ -114,8 +104,8 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function(
     ])
   });
 
-  var flowManager = manager('flow');
-  var memFlow = Memento.record({
+  const flowManager = manager('flow');
+  const memFlow = Memento.record({
     dom: {
       tag: 'div',
       classes: [ 'flow' ]
@@ -130,8 +120,8 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function(
     ])
   });
 
-  var matrixManager = manager('matrix');
-  var memMatrix = Memento.record({
+  const matrixManager = manager('matrix');
+  const memMatrix = Memento.record({
     dom: {
       tag: 'table',
       classes: [ 'matrix' ]
@@ -158,8 +148,8 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function(
     ])
   });
 
-  var menuManager = manager('menu');
-  var memMenu = Memento.record({
+  const menuManager = manager('menu');
+  const memMenu = Memento.record({
     dom: {
       tag: 'div',
       classes: [ 'menu' ]
@@ -198,20 +188,20 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function(
 
     function (doc, body, gui, component, store) {
 
-      var sFocusStillUnmoved = function (label) {
+      const sFocusStillUnmoved = function (label) {
         return Logger.t(
           label,
           FocusTools.sTryOnSelector('Focus always stays on outer container', doc, '.container')
         );
       };
 
-      var sFocusIn = function (component) {
+      const sFocusIn = function (component) {
         return Step.sync(function () {
           Keying.focusIn(component);
         });
       };
 
-      var sKeyInside = function (comp, selector, key, modifiers) {
+      const sKeyInside = function (comp, selector, key, modifiers) {
         return Chain.asStep(comp.element(), [
           UiFinder.cFindIn(selector),
           Chain.op(function (inside) {
@@ -220,14 +210,14 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function(
         ]);
       };
 
-      var acyclic = memAcyclic.get(component);
-      var cyclic = memCyclic.get(component);
-      var flatgrid = memFlatgrid.get(component);
-      var flow = memFlow.get(component);
-      var matrix = memMatrix.get(component);
-      var menu = memMenu.get(component);
+      const acyclic = memAcyclic.get(component);
+      const cyclic = memCyclic.get(component);
+      const flatgrid = memFlatgrid.get(component);
+      const flow = memFlow.get(component);
+      const matrix = memMatrix.get(component);
+      const menu = memMenu.get(component);
 
-      var sTestKeying = function (label, comp, manager, keyName) {
+      const sTestKeying = function (label, comp, manager, keyName) {
         return Logger.t(
           label + ' Keying',
           GeneralSteps.sequence([
@@ -298,4 +288,3 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', function(
     failure
   );
 });
-

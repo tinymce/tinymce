@@ -1,18 +1,14 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Css } from '@ephox/sugar';
-import { Width } from '@ephox/sugar';
+import { Assertions, Chain, Logger, UiFinder } from '@ephox/agar';
+import { Css, Width } from '@ephox/sugar';
 
-var sSameWidth = function (label, gui, dropdown, menuSelector) {
+const sSameWidth = function (label, gui, dropdown, menuSelector) {
   return Logger.t(
     label + '\nChecking that the hotspot width is passed onto the menu width',
     Chain.asStep(gui.element(), [
       UiFinder.cFindIn(menuSelector),
       Chain.op(function (menu) {
-        var dropdownWidth = Width.get(dropdown.element());
-        var menuWidth = parseInt(
+        const dropdownWidth = Width.get(dropdown.element());
+        const menuWidth = parseInt(
           Css.getRaw(menu, 'width').getOrDie('Menu must have a width property'),
           10
         );
@@ -28,5 +24,5 @@ var sSameWidth = function (label, gui, dropdown, menuSelector) {
 };
 
 export default <any> {
-  sSameWidth: sSameWidth
+  sSameWidth
 };

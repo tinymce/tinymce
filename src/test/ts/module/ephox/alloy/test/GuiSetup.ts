@@ -1,27 +1,21 @@
-import { Assertions } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
-import TestStore from 'ephox/alloy/test/TestStore';
+import { Assertions, Pipeline, Step } from '@ephox/agar';
 import { Merger } from '@ephox/katamari';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
+import { DomEvent, Element, Html, Insert, Remove } from '@ephox/sugar';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
+import TestStore from 'ephox/alloy/test/TestStore';
 
-var setup = function (createComponent, f, success, failure) {
-  var store = TestStore();
+const setup = function (createComponent, f, success, failure) {
+  const store = TestStore();
 
-  var gui = Gui.create();
+  const gui = Gui.create();
 
-  var doc = Element.fromDom(document);
-  var body = Element.fromDom(document.body);
+  const doc = Element.fromDom(document);
+  const body = Element.fromDom(document.body);
 
   Attachment.attachSystem(body, gui);
 
-  var component = createComponent(store, doc, body);
+  const component = createComponent(store, doc, body);
   gui.add(component);
 
   Pipeline.async({}, f(doc, body, gui, component, store), function () {
@@ -33,22 +27,22 @@ var setup = function (createComponent, f, success, failure) {
   });
 };
 
-var mSetupKeyLogger = function (body) {
+const mSetupKeyLogger = function (body) {
   return Step.stateful(function (_, next, die) {
-    var onKeydown = DomEvent.bind(body, 'keydown', function (event) {
+    const onKeydown = DomEvent.bind(body, 'keydown', function (event) {
       newState.log.push('keydown.to.body: ' + event.raw().which);
     });
 
-    var log = [ ];
-    var newState = {
-      log: log,
-      onKeydown: onKeydown
+    const log = [ ];
+    const newState = {
+      log,
+      onKeydown
     };
     next(newState);
   });
 };
 
-var mTeardownKeyLogger = function (body, expected) {
+const mTeardownKeyLogger = function (body, expected) {
   return Step.stateful(function (state, next, die) {
     Assertions.assertEq('Checking key log outside context (on teardown)', expected, state.log);
     state.onKeydown.unbind();
@@ -56,29 +50,29 @@ var mTeardownKeyLogger = function (body, expected) {
   });
 };
 
-var mAddStyles = function (doc, styles) {
+const mAddStyles = function (doc, styles) {
   return Step.stateful(function (value, next, die) {
-    var style = Element.fromTag('style');
-    var head = Element.fromDom(doc.dom().head);
+    const style = Element.fromTag('style');
+    const head = Element.fromDom(doc.dom().head);
     Insert.append(head, style);
     Html.set(style, styles.join('\n'));
 
     next(Merger.deepMerge(value, {
-      style: style
+      style
     }));
   });
 };
 
-var mRemoveStyles = Step.stateful(function (value, next, die) {
+const mRemoveStyles = Step.stateful(function (value, next, die) {
   Remove.remove(value.style);
   next(value);
 });
 
 export default <any> {
-  setup: setup,
-  mSetupKeyLogger: mSetupKeyLogger,
-  mTeardownKeyLogger: mTeardownKeyLogger,
+  setup,
+  mSetupKeyLogger,
+  mTeardownKeyLogger,
 
-  mAddStyles: mAddStyles,
-  mRemoveStyles: mRemoveStyles
+  mAddStyles,
+  mRemoveStyles
 };

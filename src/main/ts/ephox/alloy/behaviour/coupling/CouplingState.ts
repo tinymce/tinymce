@@ -11,7 +11,7 @@ const init = function (spec) {
     const available = Obj.keys(coupleConfig.others());
     if (! available) { throw new Error('Cannot find coupled component: ' + name + '. Known coupled components: ' + JSON.stringify(available, null, 2)); } else { return Objects.readOptFrom(coupled, name).getOrThunk(function () {
       const builder = Objects.readOptFrom(coupleConfig.others(), name).getOrDie(
-        new Error('No information found for coupled component: ' + name)
+        'No information found for coupled component: ' + name
       );
       const spec = builder()(component);
       const built = component.getSystem().build(spec);

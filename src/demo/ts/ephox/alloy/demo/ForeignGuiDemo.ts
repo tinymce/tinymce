@@ -1,61 +1,51 @@
+import { Option } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+import { Css, DomEvent, Element, Elements, Height, Insert, InsertAll, Node, SelectorFind, Width } from '@ephox/sugar';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Dragging from 'ephox/alloy/api/behaviour/Dragging';
 import Pinching from 'ephox/alloy/api/behaviour/Pinching';
 import Toggling from 'ephox/alloy/api/behaviour/Toggling';
-import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import ForeignGui from 'ephox/alloy/api/system/ForeignGui';
-import Reader from 'ephox/alloy/frame/Reader';
-import Writer from 'ephox/alloy/frame/Writer';
-import { Option } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
-import { Insert } from '@ephox/sugar';
-import { InsertAll } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Elements } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { Height } from '@ephox/sugar';
-import { Width } from '@ephox/sugar';
+import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
+import * as Reader from 'ephox/alloy/frame/Reader';
+import * as Writer from 'ephox/alloy/frame/Writer';
 
-var resize = function (element, changeX, changeY) {
+const resize = function (element, changeX, changeY) {
   document.querySelector('h2').innerHTML = 'resizing';
-  var width = Css.getRaw(element, 'width').map(function (w) {
+  const width = Css.getRaw(element, 'width').map(function (w) {
     return parseInt(w, 10);
   }).getOrThunk(function () {
     return Width.get(element);
   });
 
-  var height = Css.getRaw(element, 'height').map(function (h) {
+  const height = Css.getRaw(element, 'height').map(function (h) {
     return parseInt(h, 10);
   }).getOrThunk(function () {
     return Height.get(element);
   });
-
 
   Css.set(element, 'width', (width + changeX) + 'px');
   Css.set(element, 'height', (height + changeY) + 'px');
 };
 
 export default <any> function () {
-  var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
-  var platform = PlatformDetection.detect();
+  const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
+  const platform = PlatformDetection.detect();
 
-  var onNode = function (name) {
+  const onNode = function (name) {
     return function (elem) {
       return Node.name(elem) === name ? Option.some(elem) : Option.none();
     };
   };
 
-  var contents = '<div><strong>drag1</strong> and <code>click1</code> and <strong>drag2</strong> ' +
+  const contents = '<div><strong>drag1</strong> and <code>click1</code> and <strong>drag2</strong> ' +
     'and <code>click2</code> and <img style="width: 140px; height: 130px;" /></div>';
 
-  var frame = Element.fromTag('iframe');
+  const frame = Element.fromTag('iframe');
   Css.set(frame, 'min-width', '80%');
-  var onload = DomEvent.bind(frame, 'load', function () {
+  const onload = DomEvent.bind(frame, 'load', function () {
     onload.unbind();
     Writer.write(
       frame,
@@ -72,21 +62,19 @@ export default <any> function () {
         '</body>' +
       '</html>'
     );
-    var root = Element.fromDom(Reader.doc(frame).dom().documentElement);
+    const root = Element.fromDom(Reader.doc(frame).dom().documentElement);
     addAsForeign(root, function (gui) {
       Insert.append(root, gui.element());
     });
   });
 
-  var inlineContainer = Element.fromHtml(
+  const inlineContainer = Element.fromHtml(
     contents
   );
 
-
-
-  var addAsForeign = function (root, doInsert) {
-    var connection = ForeignGui.engage({
-      root: root,
+  const addAsForeign = function (root, doInsert) {
+    const connection = ForeignGui.engage({
+      root,
       dispatchers: [
         {
           getTarget: onNode('code'),
@@ -151,7 +139,6 @@ export default <any> function () {
   Insert.append(ephoxUi, frame);
   Insert.append(ephoxUi, Element.fromHtml('<h3>Div Editor</h3>'));
   Insert.append(ephoxUi, inlineContainer);
-
 
   addAsForeign(inlineContainer, function (gui) {
     Insert.after(inlineContainer, gui.element());

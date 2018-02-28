@@ -1,24 +1,20 @@
-import { Pipeline } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import EventRoot from 'ephox/alloy/alien/EventRoot';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import { Pipeline, RawAssertions, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Attr, Body, Traverse } from '@ephox/sugar';
+import * as EventRoot from 'ephox/alloy/alien/EventRoot';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
 import Container from 'ephox/alloy/api/ui/Container';
 import TestStore from 'ephox/alloy/test/TestStore';
-import { Body } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: events.AttachingEventTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: events.AttachingEventTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var gui = Gui.takeover(
+  const gui = Gui.takeover(
     GuiFactory.build(
       Container.sketch({
         dom: {
@@ -28,9 +24,9 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', function() {
     )
   );
 
-  var store = TestStore();
+  const store = TestStore();
 
-  var wrapper = GuiFactory.build({
+  const wrapper = GuiFactory.build({
     dom: {
       tag: 'div',
       classes: [ 'main-container' ],
@@ -44,7 +40,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', function() {
         events: AlloyEvents.derive([
           AlloyEvents.runOnAttached(function (comp, simulatedEvent) {
             simulatedEvent.stop();
-            var parent = Traverse.parent(comp.element()).getOrDie(
+            const parent = Traverse.parent(comp.element()).getOrDie(
               'At attachedToDom, a DOM parent must exist'
             );
             store.adder('attached-to:' + Attr.get(parent, 'class'))();
@@ -52,7 +48,7 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', function() {
 
           AlloyEvents.runOnDetached(function (comp, simulatedEvent) {
             simulatedEvent.stop();
-            var parent = Traverse.parent(comp.element()).getOrDie(
+            const parent = Traverse.parent(comp.element()).getOrDie(
               'At detachedFromDom, a DOM parent must exist'
             );
             store.adder('detached-from:' + Attr.get(parent, 'class'))();
@@ -119,4 +115,3 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', function() {
     store.sAssertEq('After detaching from the DOM, should have fired detached', [ 'detached-from:main-container' ])
   ], function () { success(); }, failure);
 });
-

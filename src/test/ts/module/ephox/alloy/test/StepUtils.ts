@@ -1,11 +1,9 @@
-import { Assertions } from '@ephox/agar';
-import { Guard } from '@ephox/agar';
-import { Step } from '@ephox/agar';
+import { Assertions, Guard, Step } from '@ephox/agar';
 
-var sAssertFailIs = function (label, expected, f) {
+const sAssertFailIs = function (label, expected, f) {
   return Step.control(
     Step.sync(function () {
-      var passed = false;
+      let passed = false;
       try {
         f();
         passed = true;
@@ -14,16 +12,16 @@ var sAssertFailIs = function (label, expected, f) {
         Assertions.assertEq('Checking exist error match', expected, err.message);
       }
 
-      if (passed) throw new Error('Expected error: ' + expected + ' was not thrown');
+      if (passed) { throw new Error('Expected error: ' + expected + ' was not thrown'); }
     }),
     Guard.addLogging(label)
   );
 };
 
-var sAssertFailContains = function (label, expected, f) {
+const sAssertFailContains = function (label, expected, f) {
   return Step.control(
     Step.sync(function () {
-      var passed = false;
+      let passed = false;
       try {
         f();
         passed = true;
@@ -31,13 +29,13 @@ var sAssertFailContains = function (label, expected, f) {
         Assertions.assertEq('Checking err message contains: ' + expected, true, err.message.indexOf(expected) > -1);
       }
 
-      if (passed) throw new Error('Expected error: ' + expected + ' was not thrown');
+      if (passed) { throw new Error('Expected error: ' + expected + ' was not thrown'); }
     }),
     Guard.addLogging(label)
   );
 };
 
 export default <any> {
-  sAssertFailIs: sAssertFailIs,
-  sAssertFailContains: sAssertFailContains
+  sAssertFailIs,
+  sAssertFailContains
 };

@@ -1,56 +1,54 @@
-import { Logger } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import AlloyParts from 'ephox/alloy/parts/AlloyParts';
-import PartType from 'ephox/alloy/parts/PartType';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
-import { Obj } from '@ephox/katamari';
+import { Logger, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { FieldSchema, Objects } from '@ephox/boulder';
+import { Obj } from '@ephox/katamari';
+import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
+import PartType from 'ephox/alloy/parts/PartType';
 
-UnitTest.test('Atomic Test: parts.GenerateTest', function() {
-  var schema = [
+UnitTest.test('Atomic Test: parts.GenerateTest', function () {
+  const schema = [
     FieldSchema.strict('test-data'),
     FieldSchema.state('state', function () {
       return 'state';
     })
   ];
 
-  var internal = PartType.required({
+  const internal = PartType.required({
     name: 'name.1',
     pname: 'name.part.1',
-    schema: schema
+    schema
   });
 
-  var external = PartType.external({
+  const external = PartType.external({
     name: 'name.2',
-    schema: schema
+    schema
   });
 
-  var optional = PartType.optional({
+  const optional = PartType.optional({
     name: 'name.3',
     pname: 'name.part.3',
-    schema: schema
+    schema
   });
 
-  var group = PartType.group({
+  const group = PartType.group({
     name: 'name.4',
     unit: 'unit.4',
     pname: 'name.part.4',
-    schema: schema
+    schema
   });
 
-  var check = function (label, expected, parts) {
+  const check = function (label, expected, parts) {
     Logger.sync(label, function () {
-      var data = { 'test-data': label };
-      var generated = AlloyParts.generate('owner', parts);
+      const data = { 'test-data': label };
+      const generated = AlloyParts.generate('owner', parts);
 
       // Check that config and validated match what was passed through
       Obj.each(generated, function (g, k) {
-        var output = g(data);
+        const output = g(data);
         RawAssertions.assertEq('Checking config', data, output.config);
         RawAssertions.assertEq('Checking validated', {
           'test-data': data['test-data'],
-          state: 'state'
+          'state': 'state'
         }, output.validated);
       });
 
@@ -58,7 +56,7 @@ UnitTest.test('Atomic Test: parts.GenerateTest', function() {
         'Checking PartType.generate',
         expected,
         Obj.map(generated, function (g) {
-          var output = g(data);
+          const output = g(data);
           return Objects.exclude(output, [ 'config', 'validated' ]);
         })
       );
@@ -107,4 +105,3 @@ UnitTest.test('Atomic Test: parts.GenerateTest', function() {
     [ group ]
   );
 });
-

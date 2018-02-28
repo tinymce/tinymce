@@ -1,31 +1,25 @@
-import { Chain } from '@ephox/agar';
-import { Guard } from '@ephox/agar';
-import { NamedChain } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Memento from 'ephox/alloy/api/component/Memento';
+import { Chain, Guard, Mouse, NamedChain, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Option, Result } from '@ephox/katamari';
+import { JSON as Json } from '@ephox/sand';
+import { Css, Position } from '@ephox/sugar';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Dragging from 'ephox/alloy/api/behaviour/Dragging';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as Memento from 'ephox/alloy/api/component/Memento';
+import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 import Container from 'ephox/alloy/api/ui/Container';
-import DragCoord from 'ephox/alloy/api/data/DragCoord';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { JSON as Json } from '@ephox/sand';
-import { Option } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Position } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('MouseDraggingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('MouseDraggingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var subject = Memento.record(
+  const subject = Memento.record(
     Container.sketch({
       dom: {
         styles: {
-          'width': '100px',
+          width: '100px',
           height: '100px',
           border: '1px solid green'
         }
@@ -35,7 +29,7 @@ UnitTest.asynctest('MouseDraggingTest', function() {
           mode: 'mouse',
           blockerClass: 'test-blocker',
           snaps: {
-            getSnapPoints: function () {
+            getSnapPoints () {
               return [
                 Dragging.snap({
                   sensor: DragCoord.fixed(300, 10),
@@ -62,11 +56,11 @@ UnitTest.asynctest('MouseDraggingTest', function() {
     );
   }, function (doc, body, gui, component, store) {
 
-    var cSubject = Chain.mapper(function () {
+    const cSubject = Chain.mapper(function () {
       return subject.get(component).element();
     });
 
-    var cEnsurePositionChanged = Chain.control(
+    const cEnsurePositionChanged = Chain.control(
       Chain.binder(function (all) {
         return all.box_position1.left !== all.box_position2.left &&
           all.box_position2.left !== all.box_position3.left ? Result.value({}) :
@@ -78,9 +72,9 @@ UnitTest.asynctest('MouseDraggingTest', function() {
       }),
       Guard.addLogging('Ensuring that the position information read from the different stages was different')
     );
-    var cEnsurePinned = Chain.control(
+    const cEnsurePinned = Chain.control(
       Chain.binder(function (all) {
-        var pinned = all.box_position4.top !== all.box_position5_pinned.top &&
+        const pinned = all.box_position4.top !== all.box_position5_pinned.top &&
           all.box_position5_pinned.top === all.box_position6_pinned.top &&
           all.box_position5_pinned.top === '10px';
         return pinned ? Result.value({ }) : Result.error(
@@ -94,14 +88,14 @@ UnitTest.asynctest('MouseDraggingTest', function() {
       Guard.addLogging('Checking pinning behaviour to top of screen')
     );
 
-    var cRecordPosition = Chain.fromChains([
+    const cRecordPosition = Chain.fromChains([
       Chain.control(
         Chain.binder(function (box) {
           return Css.getRaw(box, 'left').bind(function (left) {
             return Css.getRaw(box, 'top').map(function (top) {
               return Result.value({
-                left: left,
-                top: top
+                left,
+                top
               });
             });
           }).getOrThunk(function () {
@@ -140,7 +134,7 @@ UnitTest.asynctest('MouseDraggingTest', function() {
           // so we know what we are dealing with
           NamedChain.direct('box', Chain.op(function (elem) {
             Css.setAll(elem, {
-              'left': '50px',
+              left: '50px',
               top: '100px'
             });
           }), '_'),
@@ -168,4 +162,3 @@ UnitTest.asynctest('MouseDraggingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

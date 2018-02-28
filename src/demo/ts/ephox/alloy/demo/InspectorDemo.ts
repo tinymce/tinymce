@@ -1,19 +1,17 @@
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
+import { Body } from '@ephox/sugar';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
 import Button from 'ephox/alloy/api/ui/Button';
 import Form from 'ephox/alloy/api/ui/Form';
 import Input from 'ephox/alloy/api/ui/Input';
-import Debugging from 'ephox/alloy/debugging/Debugging';
+import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { Body } from '@ephox/sugar';
-
-
 
 export default <any> function () {
-  var gui = Gui.create();
+  const gui = Gui.create();
 
-  var body = Body.body();
+  const body = Body.body();
   Attachment.attachSystem(body, gui);
 
   Debugging.registerInspector('inspector-demo', gui);
@@ -32,7 +30,7 @@ export default <any> function () {
             tag: 'button',
             innerHtml: 'Button'
           },
-          action: function () {
+          action () {
             console.log('clicked on a button');
           }
         }),

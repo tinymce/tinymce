@@ -1,5 +1,5 @@
 import Behaviour from './Behaviour';
-import DraggingBranches from '../../behaviour/dragging/DraggingBranches';
+import * as DraggingBranches from '../../behaviour/dragging/DraggingBranches';
 import * as DragState from '../../dragging/common/DragState';
 import { Struct } from '@ephox/katamari';
 

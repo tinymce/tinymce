@@ -1,21 +1,17 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Memento from 'ephox/alloy/api/component/Memento';
+import { ApproxStructure, Assertions, Logger, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Docking from 'ephox/alloy/api/behaviour/Docking';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as Memento from 'ephox/alloy/api/component/Memento';
 import Container from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('DockingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('DockingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var subject = Memento.record(
+  const subject = Memento.record(
     Container.sketch({
       dom: {
         styles: {
@@ -49,9 +45,9 @@ UnitTest.asynctest('DockingTest', function() {
     );
 
   }, function (doc, body, gui, component, store) {
-    var box = subject.get(component);
+    const box = subject.get(component);
 
-    var boxWithNoPosition = function () {
+    const boxWithNoPosition = function () {
       return ApproxStructure.build(function (s, str, arr) {
         return s.element('div', {
           styles: {
@@ -61,7 +57,7 @@ UnitTest.asynctest('DockingTest', function() {
       });
     };
 
-    var boxWithPosition = function (position) {
+    const boxWithPosition = function (position) {
       return ApproxStructure.build(function (s, str, arr) {
         return s.element('div', {
           styles: {
@@ -117,4 +113,3 @@ UnitTest.asynctest('DockingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

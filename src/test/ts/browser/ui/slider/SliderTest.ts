@@ -1,30 +1,20 @@
-import { Chain } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { NamedChain } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
+import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, RawAssertions, Step, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Fun, Result } from '@ephox/katamari';
 import Keying from 'ephox/alloy/api/behaviour/Keying';
 import Representing from 'ephox/alloy/api/behaviour/Representing';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Slider from 'ephox/alloy/api/ui/Slider';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
-import { Fun } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
   // viewed as an invalid value.
-  if (PhantomSkipper.skip()) return success();
+  if (PhantomSkipper.skip()) { return success(); }
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
       Slider.sketch({
@@ -49,15 +39,15 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function() {
     );
   }, function (doc, body, gui, component, store) {
 
-    var cGetBounds = Chain.mapper(function (elem) {
+    const cGetBounds = Chain.mapper(function (elem) {
       return elem.dom().getBoundingClientRect();
     });
 
-    var cGetComponent = Chain.binder(function (elem) {
+    const cGetComponent = Chain.binder(function (elem) {
       return component.getSystem().getByDom(elem);
     });
 
-    var cGetParts = NamedChain.asChain([
+    const cGetParts = NamedChain.asChain([
       NamedChain.writeValue('slider', component.element()),
       NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-thumb'), 'thumb'),
       NamedChain.direct('slider', UiFinder.cFindIn('.slider-test-left-edge'), 'ledge'),
@@ -78,7 +68,7 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function() {
       NamedChain.bundle(Result.value)
     ]);
 
-    var cCheckThumbAtLeft = Chain.op(function (parts) {
+    const cCheckThumbAtLeft = Chain.op(function (parts) {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Left-Edge: (' + parts.ledgeRect.left + '->' + parts.ledgeRect.right + ')',
@@ -87,7 +77,7 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function() {
       );
     });
 
-    var cCheckThumbAtRight = Chain.op(function (parts) {
+    const cCheckThumbAtRight = Chain.op(function (parts) {
       RawAssertions.assertEq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Right-Edge: (' + parts.redgeRect.left + '->' + parts.redgeRect.right + ')',
@@ -96,26 +86,26 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function() {
       );
     });
 
-    var cCheckThumbPastRight = Chain.op(function (parts) {
+    const cCheckThumbPastRight = Chain.op(function (parts) {
       RawAssertions.assertEq('Checking thumb past end of spectrum', true,
         parts.thumbRect.left > parts.spectrumRect.right
       );
     });
 
-    var cCheckThumbBeforeLeft = Chain.op(function (parts) {
+    const cCheckThumbBeforeLeft = Chain.op(function (parts) {
       RawAssertions.assertEq('Checking thumb before start of spectrum', true,
         parts.thumbRect.right < parts.spectrumRect.left
       );
     });
 
-    var cCheckValue = function (expected) {
+    const cCheckValue = function (expected) {
       return Chain.op(function (parts) {
-        var v = Representing.getValue(parts.sliderComp);
+        const v = Representing.getValue(parts.sliderComp);
         RawAssertions.assertEq('Checking slider value', expected, v);
       });
     };
 
-    var sAssertValue = function (label, expected) {
+    const sAssertValue = function (label, expected) {
       return Logger.t(label, Step.sync(function () {
         RawAssertions.assertEq(label, expected, Representing.getValue(component));
       }));
@@ -259,4 +249,3 @@ UnitTest.asynctest('Browser Test: ui.slider.SliderTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

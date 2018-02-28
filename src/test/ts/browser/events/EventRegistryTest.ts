@@ -1,32 +1,17 @@
-import { Truncate } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { NamedChain } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import DescribedHandler from 'ephox/alloy/events/DescribedHandler';
-import EventRegistry from 'ephox/alloy/events/EventRegistry';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
-import { Compare } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
+import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, Truncate, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Arr, Fun, Result } from '@ephox/katamari';
+import { JSON as Json } from '@ephox/sand';
+import { Attr, Compare, Element, Html, Insert } from '@ephox/sugar';
+import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
+import EventRegistry from 'ephox/alloy/events/EventRegistry';
 
-UnitTest.asynctest('EventRegistryTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('EventRegistryTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-
-  var body = Element.fromDom(document.body);
-  var page = Element.fromTag('div');
+  const body = Element.fromDom(document.body);
+  const page = Element.fromTag('div');
 
   Html.set(page,
     '<div data-alloy-id="comp-1">' +
@@ -40,11 +25,11 @@ UnitTest.asynctest('EventRegistryTest', function() {
     '</div>'
   );
 
-  var isRoot = Fun.curry(Compare.eq, page);
+  const isRoot = Fun.curry(Compare.eq, page);
 
   Insert.append(body, page);
 
-  var events = EventRegistry();
+  const events = EventRegistry();
 
   events.registerId([ 'extra-args' ], 'comp-1', {
     'event.alpha': DescribedHandler.nu(
@@ -70,29 +55,27 @@ UnitTest.asynctest('EventRegistryTest', function() {
     )
   });
 
-  var sAssertFilterByType = function (expected, type) {
+  const sAssertFilterByType = function (expected, type) {
     return Step.sync(function () {
-      var filtered = events.filterByType(type);
-      var raw = Arr.map(filtered, function (f) {
+      const filtered = events.filterByType(type);
+      const raw = Arr.map(filtered, function (f) {
         return { handler: f.descHandler().handler(), purpose: f.descHandler().purpose(), id: f.id() };
       }).sort(function (f, g) {
-        if (f.id < g.id) return -1;
-        else if (f.id > g.id) return +1;
-        else return 0;
+        if (f.id < g.id) { return -1; } else if (f.id > g.id) { return +1; } else { return 0; }
       });
 
       Assertions.assertEq('filter(' + type + ') = ' + Json.stringify(expected), expected, raw);
     });
   };
 
-  var sAssertNotFound = function (label, type, id) {
+  const sAssertNotFound = function (label, type, id) {
     return Logger.t(
       'Test: ' + label + '\nLooking for handlers for  id = ' + id + ' and event = ' + type + '. Should not find any',
       GeneralSteps.sequence([
         Chain.asStep(page, [
           UiFinder.cFindIn('[data-alloy-id="' + id + '"]'),
           Chain.binder(function (target) {
-            var handler = events.find(isRoot, type, target);
+            const handler = events.find(isRoot, type, target);
             return handler.fold(function () {
               return Result.value({ });
             }, function (h) {
@@ -109,8 +92,8 @@ UnitTest.asynctest('EventRegistryTest', function() {
     );
   };
 
-  var sAssertFind = function (label, expected, type, id) {
-    var cFindHandler = Chain.binder(function (target) {
+  const sAssertFind = function (label, expected, type, id) {
+    const cFindHandler = Chain.binder(function (target) {
       return events.find(isRoot, type, target);
     });
 
@@ -125,7 +108,7 @@ UnitTest.asynctest('EventRegistryTest', function() {
             NamedChain.bundle(Result.value)
           ]),
           Chain.op(function (actual) {
-            var section = actual.handler;
+            const section = actual.handler;
             Assertions.assertEq(
               'find(' + type + ', ' + id + ') = true',
               expected.target,
@@ -171,4 +154,3 @@ UnitTest.asynctest('EventRegistryTest', function() {
     )
   ], function () { success(); }, failure);
 });
-

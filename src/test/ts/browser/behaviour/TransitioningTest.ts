@@ -1,19 +1,16 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Transitioning from 'ephox/alloy/api/behaviour/Transitioning';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('TransitioningTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('TransitioningTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  if (PhantomSkipper.skip()) return success();
+  if (PhantomSkipper.skip()) { return success(); }
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build({
@@ -31,10 +28,10 @@ UnitTest.asynctest('TransitioningTest', function() {
               transitionClass: 'transitioning'
             }
           }),
-          onTransition: function (comp, route) {
+          onTransition (comp, route) {
             store.adder(route.start() + '->' + route.destination())();
           },
-          onFinish: function (comp, finishState) {
+          onFinish (comp, finishState) {
             store.adder('finish: ' + finishState)();
           }
         })
@@ -120,4 +117,3 @@ UnitTest.asynctest('TransitioningTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

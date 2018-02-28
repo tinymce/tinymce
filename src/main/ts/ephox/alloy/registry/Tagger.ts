@@ -16,7 +16,7 @@ const writeOnly = function (elem, uid) {
   Attr.set(elem, idAttr, uid);
 };
 
-const read = function (elem) {
+const read = function (elem: SugarElement): Option<any> {
   const id = Node.isElement(elem) ? Attr.get(elem, idAttr) : null;
   return Option.from(id);
 };

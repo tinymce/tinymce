@@ -1,21 +1,21 @@
 import Bounds from 'ephox/alloy/positioning/layout/Bounds';
 import Bubble from 'ephox/alloy/positioning/layout/Bubble';
-import Layout from 'ephox/alloy/positioning/layout/Layout';
-import Bounder from 'ephox/alloy/positioning/view/Bounder';
+import * as Layout from 'ephox/alloy/positioning/layout/Layout';
+import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('BounderCursorTest', function() {
+UnitTest.test('BounderCursorTest', function () {
   /* global assert */
-  var check = function (expected, preference, anchor, panel, bubbles, bounds) {
-    var actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
+  const check = function (expected, preference, anchor, panel, bubbles, bounds) {
+    const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
     assert.eq(expected.label, actual.label());
     assert.eq(expected.x, actual.x());
     assert.eq(expected.y, actual.y());
-    if (expected.candidateYforTest !== undefined) assert.eq(expected.candidateYforTest, actual.candidateYforTest());
+    if (expected.candidateYforTest !== undefined) { assert.eq(expected.candidateYforTest, actual.candidateYforTest()); }
   };
 
   // Layout is for boxes with a bubble pointing to a cursor position (vertically aligned to nearest side)
-  var four = [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest ];
+  const four = [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest ];
 
   // empty input array is now invalid, just returns anchor coordinates
   check({
@@ -30,11 +30,11 @@ UnitTest.test('BounderCursorTest', function() {
     y: 0
   }, [], Bounds(100, 0, 200, 50), Bounds(0, 0, 150, 25), Bubble(10, 0), Bounds(0, 0, 1000, 1000));
 
-  var panelBox = Bounds(0, 0, 100, 75);
-  var bigPanel = Bounds(0, 0, 75, 500);
-  var widePanel = Bounds(0, 0, 350, 500);
-  var view = Bounds(50, 50, 350, 220);
-  var bubb = Bubble(0, 0);
+  const panelBox = Bounds(0, 0, 100, 75);
+  const bigPanel = Bounds(0, 0, 75, 500);
+  const widePanel = Bounds(0, 0, 350, 500);
+  const view = Bounds(50, 50, 350, 220);
+  const bubb = Bubble(0, 0);
 
   /*
    * The expected values include the calculations that layout and bounder are doing
@@ -157,4 +157,3 @@ UnitTest.test('BounderCursorTest', function() {
     y: 220 + 50 - 2 - 74 - 75
   }, four, Bounds(350 + 50 - 99, 220 + 50 - 2 - 74, 2, 2), panelBox, bubb, view);
 });
-
