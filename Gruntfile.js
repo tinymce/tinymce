@@ -326,22 +326,23 @@ module.exports = function (grunt) {
       },
 
 
-      /* Copy ts directories to root to remove fix the import issue, so that 
+      /* Copy folders to the ./build dir and remove /main/ts/ dir , so that 
           'tinymce/core/.....'
           'tinymce/plugins...' etc. imports will work 
       */
 
-      // Core
-      distCore: { expand: true, cwd: 'src/core/main/ts/',src: '**', dest: 'core', },
-      distUi: { expand: true, cwd: 'src/ui/main/ts/', src: '**', dest: 'ui', },
+      // Core and UI
+      distCore: { expand: true, cwd: 'src/core/main/ts/',src: '**', dest: 'build/core', },
+      distUi: { expand: true, cwd: 'src/ui/main/ts/', src: '**', dest: 'build/ui', },
 
       // Plugins
-      textpattern: { expand: true, cwd: 'src/plugins/textpattern/main/ts/', src: '**', dest: 'plugins/textpattern'},
-      textcolor: { expand: true, cwd: 'src/plugins/textcolor/main/ts/', src: '**', dest: 'plugins/textcolor'},
+      textpattern: { expand: true, cwd: 'src/plugins/textpattern/main/ts/', src: '**', dest: 'build/plugins/textpattern'},
+      textcolor: { expand: true, cwd: 'src/plugins/textcolor/main/ts/', src: '**', dest: 'build/plugins/textcolor'},
+      textcolor: { expand: true, cwd: 'src/plugins/colorpicker/main/ts/', src: '**', dest: 'build/plugins/colorpicker'},
 
       // Themes
-      inlight: { expand: true, cwd: 'src/themes/inlite/main/ts/', src: '**', dest: 'themes/inlite'},
-      modern: { expand: true, cwd: 'src/themes/modern/main/ts/', src: '**', dest: 'themes/modern'},
+      inlight: { expand: true, cwd: 'src/themes/inlite/main/ts/', src: '**', dest: 'build/themes/inlite'},
+      modern: { expand: true, cwd: 'src/themes/modern/main/ts/', src: '**', dest: 'build/themes/modern'},
     },
 
     moxiezip: {
