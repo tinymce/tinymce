@@ -155,7 +155,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
 
   const win = window;
   const files = {};
-  const counter = 0;
+  let counter = 0;
   const stdMode = true;
   const boxModel = true;
   const styleSheetLoader = StyleSheetLoader(doc);
@@ -715,6 +715,319 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return styles.serialize(stylesArg, name);
   };
 
+  const addStyle = (cssText) => {
+    let head, styleElm;
+
+    // Prevent inline from loading the same styles twice
+    if (self !== DOMUtils.DOM && doc === document) {
+      if (addedStyles[cssText]) {
+        return;
+      }
+
+      addedStyles[cssText] = true;
+    }
+
+    // Create style element if needed
+    styleElm = doc.getElementById('mceDefaultStyles');
+    if (!styleElm) {
+      styleElm = doc.createElement('style');
+      styleElm.id = 'mceDefaultStyles';
+      styleElm.type = 'text/css';
+
+      head = doc.getElementsByTagName('head')[0];
+      if (head.firstChild) {
+        head.insertBefore(styleElm, head.firstChild);
+      } else {
+        head.appendChild(styleElm);
+      }
+    }
+
+    // Append style data to old or new style element
+    if (styleElm.styleSheet) {
+      styleElm.styleSheet.cssText += cssText;
+    } else {
+      styleElm.appendChild(doc.createTextNode(cssText));
+    }
+  };
+
+  const loadCSS = (url) => {
+    let head;
+
+    // Prevent inline from loading the same CSS file twice
+    if (self !== DOMUtils.DOM && doc === document) {
+      DOMUtils.DOM.loadCSS(url);
+      return;
+    }
+
+    if (!url) {
+      url = '';
+    }
+
+    head = doc.getElementsByTagName('head')[0];
+
+    each(url.split(','), function (url) {
+      let link;
+
+      url = Tools._addCacheSuffix(url);
+
+      if (files[url]) {
+        return;
+      }
+
+      files[url] = true;
+      link = create('link', { rel: 'stylesheet', href: url });
+
+      head.appendChild(link);
+    });
+  };
+
+  const toggleClass = (elm: string | Node, cls: string, state: boolean) => {
+    $$(elm).toggleClass(cls, state).each(function () {
+      if (this.className === '') {
+        DomQuery(this).attr('class', null);
+      }
+    });
+  };
+
+  const addClass = (elm: string | Node, cls: string) => {
+    $$(elm).addClass(cls);
+  };
+
+  const removeClass = (elm, cls) => {
+    toggleClass(elm, cls, false);
+  };
+
+  const hasClass = (elm: string | Node, cls: string) => {
+    return $$(elm).hasClass(cls);
+  };
+
+  const show = (elm: string | Node) => {
+    $$(elm).show();
+  };
+
+  const hide = (elm: string | Node) => {
+    $$(elm).hide();
+  };
+
+  const isHidden = (elm: string | Node) => {
+    return $$(elm).css('display') === 'none';
+  };
+
+  const uniqueId = (prefix?: string) => {
+    return (!prefix ? 'mce_' : prefix) + (counter++);
+  };
+
+  const getOuterHTML = (elm) => {
+    elm = get(elm);
+
+    // Older FF doesn't have outerHTML 3.6 is still used by some orgaizations
+    return elm.nodeType === 1 && 'outerHTML' in elm ? elm.outerHTML : DomQuery('<div></div>').append(DomQuery(elm).clone()).html();
+  };
+
+  const setOuterHTML = (elm, html) => {
+    $$(elm).each(function () {
+      try {
+        // Older FF doesn't have outerHTML 3.6 is still used by some organizations
+        if ('outerHTML' in this) {
+          this.outerHTML = html;
+          return;
+        }
+      } catch (ex) {
+        // Ignore
+      }
+
+      // OuterHTML for IE it sometimes produces an "unknown runtime error"
+      remove(DomQuery(this).html(html), true);
+    });
+  };
+
+  const insertAfter = (node: Node, reference: string | Node) => {
+    const referenceNode = get(reference);
+
+    return run(node, function (node) {
+      let parent, nextSibling;
+
+      parent = referenceNode.parentNode;
+      nextSibling = referenceNode.nextSibling;
+
+      if (nextSibling) {
+        parent.insertBefore(node, nextSibling);
+      } else {
+        parent.appendChild(node);
+      }
+
+      return node;
+    });
+  };
+
+  const replace = (newElm, oldElm, keepChildren?: boolean) => {
+    return run(oldElm, function (oldElm) {
+      if (Tools.is(oldElm, 'array')) {
+        newElm = newElm.cloneNode(true);
+      }
+
+      if (keepChildren) {
+        each(grep(oldElm.childNodes), function (node) {
+          newElm.appendChild(node);
+        });
+      }
+
+      return oldElm.parentNode.replaceChild(newElm, oldElm);
+    });
+  };
+
+  const rename = (elm: Node, name: string) => {
+    let newElm;
+
+    if (elm.nodeName !== name.toUpperCase()) {
+      // Rename block element
+      newElm = create(name);
+
+      // Copy attribs to new block
+      each(getAttribs(elm), function (attrNode) {
+        setAttrib(newElm, attrNode.nodeName, getAttrib(elm, attrNode.nodeName));
+      });
+
+      // Replace block
+      replace(newElm, elm, true);
+    }
+
+    return newElm || elm;
+  };
+
+  const findCommonAncestor = (a: Node, b: Node) => {
+    let ps = a, pe;
+
+    while (ps) {
+      pe = b;
+
+      while (pe && ps !== pe) {
+        pe = pe.parentNode;
+      }
+
+      if (ps === pe) {
+        break;
+      }
+
+      ps = ps.parentNode;
+    }
+
+    if (!ps && a.ownerDocument) {
+      return a.ownerDocument.documentElement;
+    }
+
+    return ps;
+  };
+
+  const toHex = (rgbVal: string) => {
+    return styles.toHex(Tools.trim(rgbVal));
+  };
+
+  const isEmpty = (node, elements?: Record<string, any>) => {
+    let i, attributes, type, whitespace, walker, name, brCount = 0;
+
+    node = node.firstChild;
+    if (node) {
+      walker = new TreeWalker(node, node.parentNode);
+      elements = elements || (schema ? schema.getNonEmptyElements() : null);
+      whitespace = schema ? schema.getWhiteSpaceElements() : {};
+
+      do {
+        type = node.nodeType;
+
+        if (type === 1) {
+          // Ignore bogus elements
+          const bogusVal = node.getAttribute('data-mce-bogus');
+          if (bogusVal) {
+            node = walker.next(bogusVal === 'all');
+            continue;
+          }
+
+          // Keep empty elements like <img />
+          name = node.nodeName.toLowerCase();
+          if (elements && elements[name]) {
+            // Ignore single BR elements in blocks like <p><br /></p> or <p><span><br /></span></p>
+            if (name === 'br') {
+              brCount++;
+              node = walker.next();
+              continue;
+            }
+
+            return false;
+          }
+
+          // Keep elements with data-bookmark attributes or name attribute like <a name="1"></a>
+          attributes = getAttribs(node);
+          i = attributes.length;
+          while (i--) {
+            name = attributes[i].nodeName;
+            if (name === 'name' || name === 'data-mce-bookmark') {
+              return false;
+            }
+          }
+        }
+
+        // Keep comment nodes
+        if (type === 8) {
+          return false;
+        }
+
+        // Keep non whitespace text nodes
+        if (type === 3 && !whiteSpaceRegExp.test(node.nodeValue)) {
+          return false;
+        }
+
+        // Keep whitespace preserve elements
+        if (type === 3 && node.parentNode && whitespace[node.parentNode.nodeName] && whiteSpaceRegExp.test(node.nodeValue)) {
+          return false;
+        }
+
+        node = walker.next();
+      } while (node);
+    }
+
+    return brCount <= 1;
+  };
+
+  const createRng = () => {
+    return doc.createRange();
+  };
+
+  const split = (parentElm, splitElm, replacementElm?: Node) => {
+    let r = createRng(), bef, aft, pa;
+
+    if (parentElm && splitElm) {
+      // Get before chunk
+      r.setStart(parentElm.parentNode, findNodeIndex(parentElm));
+      r.setEnd(splitElm.parentNode, findNodeIndex(splitElm));
+      bef = r.extractContents();
+
+      // Get after chunk
+      r = createRng();
+      r.setStart(splitElm.parentNode, findNodeIndex(splitElm) + 1);
+      r.setEnd(parentElm.parentNode, findNodeIndex(parentElm) + 1);
+      aft = r.extractContents();
+
+      // Insert before chunk
+      pa = parentElm.parentNode;
+      pa.insertBefore(TrimNode.trimNode(self, bef), parentElm);
+
+      // Insert middle chunk
+      if (replacementElm) {
+        pa.insertBefore(replacementElm, parentElm);
+        // pa.replaceChild(replacementElm, splitElm);
+      } else {
+        pa.insertBefore(splitElm, parentElm);
+      }
+
+      // Insert after chunk
+      pa.insertBefore(TrimNode.trimNode(self, aft), parentElm);
+      remove(parentElm);
+
+      return replacementElm || splitElm;
+    }
+  };
+
   const self = {
     doc,
     settings,
@@ -1062,42 +1375,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @method addStyle
      * @param {String} cssText CSS Text style to add to top of head of document.
      */
-    addStyle (cssText) {
-      const self = this;
-      const doc = self.doc;
-      let head, styleElm;
-
-      // Prevent inline from loading the same styles twice
-      if (self !== DOMUtils.DOM && doc === document) {
-        if (addedStyles[cssText]) {
-          return;
-        }
-
-        addedStyles[cssText] = true;
-      }
-
-      // Create style element if needed
-      styleElm = doc.getElementById('mceDefaultStyles');
-      if (!styleElm) {
-        styleElm = doc.createElement('style');
-        styleElm.id = 'mceDefaultStyles';
-        styleElm.type = 'text/css';
-
-        head = doc.getElementsByTagName('head')[0];
-        if (head.firstChild) {
-          head.insertBefore(styleElm, head.firstChild);
-        } else {
-          head.appendChild(styleElm);
-        }
-      }
-
-      // Append style data to old or new style element
-      if (styleElm.styleSheet) {
-        styleElm.styleSheet.cssText += cssText;
-      } else {
-        styleElm.appendChild(doc.createTextNode(cssText));
-      }
-    },
+    addStyle,
 
     /**
      * Imports/loads the specified CSS file into the document bound to the class.
@@ -1117,51 +1395,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Loads multiple CSS files into the current document
      * tinymce.DOM.loadCSS('somepath/some.css,somepath/someother.css');
      */
-    loadCSS (url) {
-      const self = this;
-      const doc = self.doc;
-      let head;
-
-      // Prevent inline from loading the same CSS file twice
-      if (self !== DOMUtils.DOM && doc === document) {
-        DOMUtils.DOM.loadCSS(url);
-        return;
-      }
-
-      if (!url) {
-        url = '';
-      }
-
-      head = doc.getElementsByTagName('head')[0];
-
-      each(url.split(','), function (url) {
-        let link;
-
-        url = Tools._addCacheSuffix(url);
-
-        if (self.files[url]) {
-          return;
-        }
-
-        self.files[url] = true;
-        link = self.create('link', { rel: 'stylesheet', href: url });
-
-        // IE 8 has a bug where dynamically loading stylesheets would produce a 1 item remaining bug
-        // This fix seems to resolve that issue by recalcing the document once a stylesheet finishes loading
-        // It's ugly but it seems to work fine.
-        if (isIE && doc.documentMode && doc.recalc) {
-          link.onload = function () {
-            if (doc.recalc) {
-              doc.recalc();
-            }
-
-            link.onload = null;
-          };
-        }
-
-        head.appendChild(link);
-      });
-    },
+    loadCSS,
 
     /**
      * Adds a class to the specified element or elements.
@@ -1177,9 +1411,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Adds a class to a specific element in the current page
      * tinymce.DOM.addClass('mydiv', 'myclass');
      */
-    addClass (elm, cls) {
-      this.$$(elm).addClass(cls);
-    },
+    addClass,
 
     /**
      * Removes a class from the specified element or elements.
@@ -1196,9 +1428,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Removes a class from a specific element in the current page
      * tinymce.DOM.removeClass('mydiv', 'myclass');
      */
-    removeClass (elm, cls) {
-      this.toggleClass(elm, cls, false);
-    },
+    removeClass,
 
     /**
      * Returns true if the specified element has the specified class.
@@ -1208,9 +1438,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String} cls CSS class to check for.
      * @return {Boolean} true/false if the specified element has the specified class.
      */
-    hasClass (elm, cls) {
-      return this.$$(elm).hasClass(cls);
-    },
+    hasClass,
 
     /**
      * Toggles the specified class on/off.
@@ -1220,13 +1448,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {[type]} cls Class to toggle on/off.
      * @param {[type]} state Optional state to set.
      */
-    toggleClass (elm, cls, state) {
-      this.$$(elm).toggleClass(cls, state).each(function () {
-        if (this.className === '') {
-          DomQuery(this).attr('class', null);
-        }
-      });
-    },
+    toggleClass,
 
     /**
      * Shows the specified element(s) by ID by setting the "display" style.
@@ -1234,9 +1456,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @method show
      * @param {String/Element/Array} elm ID of DOM element or DOM element or array with elements or IDs to show.
      */
-    show (elm) {
-      this.$$(elm).show();
-    },
+    show,
 
     /**
      * Hides the specified element(s) by ID by setting the "display" style.
@@ -1247,9 +1467,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Hides an element by id in the document
      * tinymce.DOM.hide('myid');
      */
-    hide (elm) {
-      this.$$(elm).hide();
-    },
+    hide,
 
     /**
      * Returns true/false if the element is hidden or not by checking the "display" style.
@@ -1258,9 +1476,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String/Element} elm Id or element to check display state on.
      * @return {Boolean} true/false if the element is hidden or not.
      */
-    isHidden (elm) {
-      return this.$$(elm).css('display') === 'none';
-    },
+    isHidden,
 
     /**
      * Returns a unique id. This can be useful when generating elements on the fly.
@@ -1270,9 +1486,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String} prefix Optional prefix to add in front of all ids - defaults to "mce_".
      * @return {String} Unique id.
      */
-    uniqueId (prefix?: string) {
-      return (!prefix ? 'mce_' : prefix) + (this.counter++);
-    },
+    uniqueId,
 
     /**
      * Sets the specified HTML content inside the element or elements. The HTML will first be processed. This means
@@ -1300,12 +1514,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * tinymce.DOM.getOuterHTML(editorElement);
      * tinymce.activeEditor.getOuterHTML(tinymce.activeEditor.getBody());
      */
-    getOuterHTML (elm) {
-      elm = this.get(elm);
-
-      // Older FF doesn't have outerHTML 3.6 is still used by some orgaizations
-      return elm.nodeType === 1 && 'outerHTML' in elm ? elm.outerHTML : DomQuery('<div></div>').append(DomQuery(elm).clone()).html();
-    },
+    getOuterHTML,
 
     /**
      * Sets the specified outer HTML on an element or elements.
@@ -1320,24 +1529,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Sets the outer HTML of an element by id in the document
      * tinymce.DOM.setOuterHTML('mydiv', '<div>some html</div>');
      */
-    setOuterHTML (elm, html) {
-      const self = this;
-
-      self.$$(elm).each(function () {
-        try {
-          // Older FF doesn't have outerHTML 3.6 is still used by some organizations
-          if ('outerHTML' in this) {
-            this.outerHTML = html;
-            return;
-          }
-        } catch (ex) {
-          // Ignore
-        }
-
-        // OuterHTML for IE it sometimes produces an "unknown runtime error"
-        self.remove(DomQuery(this).html(html), true);
-      });
-    },
+    setOuterHTML,
 
     /**
      * Entity decodes a string. This method decodes any HTML entities, such as &aring;.
@@ -1365,24 +1557,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Element/String/Array} referenceNode Reference element, element id or array of elements to insert after.
      * @return {Element/Array} Element that got added or an array with elements.
      */
-    insertAfter (node, referenceNode) {
-      referenceNode = this.get(referenceNode);
-
-      return this.run(node, function (node) {
-        let parent, nextSibling;
-
-        parent = referenceNode.parentNode;
-        nextSibling = referenceNode.nextSibling;
-
-        if (nextSibling) {
-          parent.insertBefore(node, nextSibling);
-        } else {
-          parent.appendChild(node);
-        }
-
-        return node;
-      });
-    },
+    insertAfter,
 
     /**
      * Replaces the specified element or elements with the new element specified. The new element will
@@ -1394,23 +1569,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Boolean} keepChildren Optional keep children state, if set to true child nodes from the old object will be added
      * to new ones.
      */
-    replace (newElm, oldElm, keepChildren?: boolean) {
-      const self = this;
-
-      return self.run(oldElm, function (oldElm) {
-        if (Tools.is(oldElm, 'array')) {
-          newElm = newElm.cloneNode(true);
-        }
-
-        if (keepChildren) {
-          each(grep(oldElm.childNodes), function (node) {
-            newElm.appendChild(node);
-          });
-        }
-
-        return oldElm.parentNode.replaceChild(newElm, oldElm);
-      });
-    },
+    replace,
 
     /**
      * Renames the specified element and keeps its attributes and children.
@@ -1420,25 +1579,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String} name Name of the new element.
      * @return {Element} New element or the old element if it needed renaming.
      */
-    rename (elm, name) {
-      const self = this;
-      let newElm;
-
-      if (elm.nodeName !== name.toUpperCase()) {
-        // Rename block element
-        newElm = self.create(name);
-
-        // Copy attribs to new block
-        each(self.getAttribs(elm), function (attrNode) {
-          self.setAttrib(newElm, attrNode.nodeName, self.getAttrib(elm, attrNode.nodeName));
-        });
-
-        // Replace block
-        self.replace(newElm, elm, 1);
-      }
-
-      return newElm || elm;
-    },
+    rename,
 
     /**
      * Find the common ancestor of two elements. This is a shorter method than using the DOM Range logic.
@@ -1448,29 +1589,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Element} b Element to find common ancestor of.
      * @return {Element} Common ancestor element of the two input elements.
      */
-    findCommonAncestor (a, b) {
-      let ps = a, pe;
-
-      while (ps) {
-        pe = b;
-
-        while (pe && ps !== pe) {
-          pe = pe.parentNode;
-        }
-
-        if (ps === pe) {
-          break;
-        }
-
-        ps = ps.parentNode;
-      }
-
-      if (!ps && a.ownerDocument) {
-        return a.ownerDocument.documentElement;
-      }
-
-      return ps;
-    },
+    findCommonAncestor,
 
     /**
      * Parses the specified RGB color value and returns a hex version of that color.
@@ -1479,9 +1598,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String} rgbVal RGB string value like rgb(1,2,3)
      * @return {String} Hex version of that RGB value like #FF00FF.
      */
-    toHex (rgbVal) {
-      return this.styles.toHex(Tools.trim(rgbVal));
-    },
+    toHex,
 
     /**
      * Executes the specified function on the element by id or dom element node or array of elements/id.
@@ -1512,72 +1629,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Object} elements Optional name/value object with elements that are automatically treated as non-empty elements.
      * @return {Boolean} true/false if the node is empty or not.
      */
-    isEmpty (node, elements?: Record<string, any>) {
-      const self = this;
-      let i, attributes, type, whitespace, walker, name, brCount = 0;
-
-      node = node.firstChild;
-      if (node) {
-        walker = new TreeWalker(node, node.parentNode);
-        elements = elements || (self.schema ? self.schema.getNonEmptyElements() : null);
-        whitespace = self.schema ? self.schema.getWhiteSpaceElements() : {};
-
-        do {
-          type = node.nodeType;
-
-          if (type === 1) {
-            // Ignore bogus elements
-            const bogusVal = node.getAttribute('data-mce-bogus');
-            if (bogusVal) {
-              node = walker.next(bogusVal === 'all');
-              continue;
-            }
-
-            // Keep empty elements like <img />
-            name = node.nodeName.toLowerCase();
-            if (elements && elements[name]) {
-              // Ignore single BR elements in blocks like <p><br /></p> or <p><span><br /></span></p>
-              if (name === 'br') {
-                brCount++;
-                node = walker.next();
-                continue;
-              }
-
-              return false;
-            }
-
-            // Keep elements with data-bookmark attributes or name attribute like <a name="1"></a>
-            attributes = self.getAttribs(node);
-            i = attributes.length;
-            while (i--) {
-              name = attributes[i].nodeName;
-              if (name === 'name' || name === 'data-mce-bookmark') {
-                return false;
-              }
-            }
-          }
-
-          // Keep comment nodes
-          if (type === 8) {
-            return false;
-          }
-
-          // Keep non whitespace text nodes
-          if (type === 3 && !whiteSpaceRegExp.test(node.nodeValue)) {
-            return false;
-          }
-
-          // Keep whitespace preserve elements
-          if (type === 3 && node.parentNode && whitespace[node.parentNode.nodeName] && whiteSpaceRegExp.test(node.nodeValue)) {
-            return false;
-          }
-
-          node = walker.next();
-        } while (node);
-      }
-
-      return brCount <= 1;
-    },
+    isEmpty,
 
     /**
      * Creates a new DOM Range object. This will use the native DOM Range API if it's
@@ -1589,9 +1641,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * var rng = tinymce.DOM.createRng();
      * alert(rng.startContainer + "," + rng.startOffset);
      */
-    createRng () {
-      return this.doc.createRange();
-    },
+    createRng,
 
     /**
      * Returns the index of the specified node within its parent.
@@ -1614,41 +1664,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Element} replacementElm Optional replacement element to replace the split element with.
      * @return {Element} Returns the split element or the replacement element if that is specified.
      */
-    split (parentElm, splitElm, replacementElm?: Node) {
-      const self = this;
-      let r = self.createRng(), bef, aft, pa;
-
-      if (parentElm && splitElm) {
-        // Get before chunk
-        r.setStart(parentElm.parentNode, self.nodeIndex(parentElm));
-        r.setEnd(splitElm.parentNode, self.nodeIndex(splitElm));
-        bef = r.extractContents();
-
-        // Get after chunk
-        r = self.createRng();
-        r.setStart(splitElm.parentNode, self.nodeIndex(splitElm) + 1);
-        r.setEnd(parentElm.parentNode, self.nodeIndex(parentElm) + 1);
-        aft = r.extractContents();
-
-        // Insert before chunk
-        pa = parentElm.parentNode;
-        pa.insertBefore(TrimNode.trimNode(self, bef), parentElm);
-
-        // Insert middle chunk
-        if (replacementElm) {
-          pa.insertBefore(replacementElm, parentElm);
-          // pa.replaceChild(replacementElm, splitElm);
-        } else {
-          pa.insertBefore(splitElm, parentElm);
-        }
-
-        // Insert after chunk
-        pa.insertBefore(TrimNode.trimNode(self, aft), parentElm);
-        self.remove(parentElm);
-
-        return replacementElm || splitElm;
-      }
-    },
+    split,
 
     /**
      * Adds an event handler to the specified object.
