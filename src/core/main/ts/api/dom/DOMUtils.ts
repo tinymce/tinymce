@@ -20,6 +20,7 @@ import Entities from '../html/Entities';
 import Schema from '../html/Schema';
 import Styles, { StyleMap } from '../html/Styles';
 import Tools from '../util/Tools';
+import { GeomRect } from 'tinymce/core/api/geom/Rect';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.
@@ -35,7 +36,6 @@ import Tools from '../util/Tools';
 
 // Shorten names
 const each = Tools.each;
-const is = Tools.is;
 const grep = Tools.grep;
 const isIE = Env.ie;
 const simpleSelectorRe = /^([a-z0-9],?)+$/i;
@@ -216,7 +216,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return elm;
   };
 
-  const $$ =  (elm) => {
+  const $$ =  (elm: string | Node) => {
     if (typeof elm === 'string') {
       elm = get(elm);
     }
@@ -224,18 +224,18 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return $(elm);
   };
 
-  const getAttrib = (elm, name, defaultVal?: string) => {
+  const getAttrib = (elm: string | Node, name, defaultVal?: string) => {
     let hook, value;
 
-    elm = $$(elm);
+    const $elm = $$(elm);
 
-    if (elm.length) {
+    if ($elm.length) {
       hook = attrHooks[name];
 
       if (hook && hook.get) {
-        value = hook.get(elm, name);
+        value = hook.get($elm, name);
       } else {
-        value = elm.attr(name);
+        value = $elm.attr(name);
       }
     }
 
@@ -280,37 +280,37 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return elm.attributes;
   };
 
-  const setAttrib = (elm, name, value) => {
+  const setAttrib = (elm: string | Node, name: string, value: string) => {
     let originalValue, hook;
 
     if (value === '') {
       value = null;
     }
 
-    elm = $$(elm);
-    originalValue = elm.attr(name);
+    const $elm = $$(elm);
+    originalValue = $elm.attr(name);
 
-    if (!elm.length) {
+    if (!$elm.length) {
       return;
     }
 
     hook = attrHooks[name];
     if (hook && hook.set) {
-      hook.set(elm, value, name);
+      hook.set($elm, value, name);
     } else {
-      elm.attr(name, value);
+      $elm.attr(name, value);
     }
 
     if (originalValue !== value && settings.onSetAttrib) {
       settings.onSetAttrib({
-        attrElm: elm,
+        attrElm: $elm,
         attrName: name,
         attrValue: value
       });
     }
   };
 
-  const clone = (node, deep) => {
+  const clone = (node: Node, deep: boolean) => {
     // TODO: Add feature detection here in the future
     if (!isIE || node.nodeType !== 1 || deep) {
       return node.cloneNode(deep);
@@ -329,6 +329,206 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     }
 
     return null;
+  };
+
+  const getRoot = (): Node => {
+    return settings.root_element || doc.body;
+  };
+
+  const getViewPort = (argWin?: Window): GeomRect => {
+    const actWin = !argWin ? win : argWin;
+    const doc = actWin.document;
+    const rootElm = boxModel ? doc.documentElement : doc.body;
+
+    // Returns viewport size excluding scrollbars
+    return {
+      x: actWin.pageXOffset || rootElm.scrollLeft,
+      y: actWin.pageYOffset || rootElm.scrollTop,
+      w: actWin.innerWidth || rootElm.clientWidth,
+      h: actWin.innerHeight || rootElm.clientHeight
+    };
+  };
+
+  const getPos = (elm, rootElm?: Node) => {
+    return Position.getPos(doc.body, get(elm), rootElm);
+  };
+
+  const getStyle = (elm, name, computed?: boolean) => {
+    elm = $$(elm);
+
+    if (computed) {
+      return elm.css(name);
+    }
+
+    // Camelcase it, if needed
+    name = name.replace(/-(\D)/g, function (a, b) {
+      return b.toUpperCase();
+    });
+
+    if (name === 'float') {
+      name = Env.ie && Env.ie < 12 ? 'styleFloat' : 'cssFloat';
+    }
+
+    return elm[0] && elm[0].style ? elm[0].style[name] : undefined;
+  };
+
+  const getSize = (elm): {w: number, h: number} => {
+    let w, h;
+
+    elm = get(elm);
+    w = getStyle(elm, 'width');
+    h = getStyle(elm, 'height');
+
+    // Non pixel value, then force offset/clientWidth
+    if (w.indexOf('px') === -1) {
+      w = 0;
+    }
+
+    // Non pixel value, then force offset/clientWidth
+    if (h.indexOf('px') === -1) {
+      h = 0;
+    }
+
+    return {
+      w: parseInt(w, 10) || elm.offsetWidth || elm.clientWidth,
+      h: parseInt(h, 10) || elm.offsetHeight || elm.clientHeight
+    };
+  };
+
+  const getRect = (elm: string | Node): GeomRect => {
+    let pos, size;
+
+    elm = get(elm);
+    pos = getPos(elm);
+    size = getSize(elm);
+
+    return {
+      x: pos.x, y: pos.y,
+      w: size.w, h: size.h
+    };
+  };
+
+  const is = (elm, selector: string) => {
+    let i;
+
+    if (!elm) {
+      return false;
+    }
+
+    // If it isn't an array then try to do some simple selectors instead of Sizzle for to boost performance
+    if (elm.length === undefined) {
+      // Simple all selector
+      if (selector === '*') {
+        return elm.nodeType === 1;
+      }
+
+      // Simple selector just elements
+      if (simpleSelectorRe.test(selector)) {
+        const selectors = selector.toLowerCase().split(/,/);
+        const elmName = elm.nodeName.toLowerCase();
+
+        for (i = selectors.length - 1; i >= 0; i--) {
+          if (selectors[i] === elmName) {
+            return true;
+          }
+        }
+
+        return false;
+      }
+    }
+
+    // Is non element
+    if (elm.nodeType && elm.nodeType !== 1) {
+      return false;
+    }
+
+    const elms = elm.nodeType ? [elm] : elm;
+
+    /*eslint new-cap:0 */
+    return Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;
+  };
+
+  const getParents = (elm: Node | string, selector: string | Function, root?: Node, collect?: boolean) => {
+    const result = [];
+    let selectorVal;
+
+    let node = get(elm);
+    collect = collect === undefined;
+
+    // debugger;
+    // Default root on inline mode
+    root = root || (getRoot().nodeName !== 'BODY' ? getRoot().parentNode : null);
+
+    // Wrap node name as func
+    if (Tools.is(selector, 'string')) {
+      selectorVal = selector;
+
+      if (selector === '*') {
+        selector = function (node) {
+          return node.nodeType === 1;
+        };
+      } else {
+        selector = function (node) {
+          return is(node, selectorVal);
+        };
+      }
+    }
+
+    while (node) {
+      if (node === root || !node.nodeType || node.nodeType === 9) {
+        break;
+      }
+
+      if (!selector || (typeof selector === 'function' && selector(node))) {
+        if (collect) {
+          result.push(node);
+        } else {
+          return node;
+        }
+      }
+
+      node = node.parentNode;
+    }
+
+    return collect ? result : null;
+  };
+
+  const getParent = (node: Node | string, selector, root?: Node) => {
+    return getParents(node, selector, root, false);
+  };
+
+  const _findSib = (node: Node, selector: string | Function, name: string) => {
+    let func = selector;
+
+    if (node) {
+      // If expression make a function of it using is
+      if (typeof selector === 'string') {
+        func = function (node) {
+          return is(node, selector);
+        };
+      }
+
+      // Loop all siblings
+      for (node = node[name]; node; node = node[name]) {
+        if (typeof func === 'function' && func(node)) {
+          return node;
+        }
+      }
+    }
+
+    return null;
+  };
+
+  const getNext = (node, selector) => {
+    return _findSib(node, selector, 'nextSibling');
+  };
+
+  const getPrev = (node, selector) => {
+    return _findSib(node, selector, 'previousSibling');
+  };
+
+  const select = (selector, scope?: HTMLElement | string) => {
+    return Sizzle(selector, get(scope) || settings.root_element || doc, []);
   };
 
   const self = {
@@ -359,11 +559,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @method getRoot
      * @return {Element} Root element for the utility class.
      */
-    getRoot () {
-      const self = this;
-
-      return self.settings.root_element || self.doc.body;
-    },
+    getRoot,
 
     /**
      * Returns the viewport of the window.
@@ -372,21 +568,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Window} win Optional window to get viewport of.
      * @return {Object} Viewport object with fields x, y, w and h.
      */
-    getViewPort (win?: Window) {
-      let doc, rootElm;
-
-      win = !win ? this.win : win;
-      doc = win.document;
-      rootElm = this.boxModel ? doc.documentElement : doc.body;
-
-      // Returns viewport size excluding scrollbars
-      return {
-        x: win.pageXOffset || rootElm.scrollLeft,
-        y: win.pageYOffset || rootElm.scrollTop,
-        w: win.innerWidth || rootElm.clientWidth,
-        h: win.innerHeight || rootElm.clientHeight
-      };
-    },
+    getViewPort,
 
     /**
      * Returns the rectangle for a specific element.
@@ -395,19 +577,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Element/String} elm Element object or element ID to get rectangle from.
      * @return {object} Rectangle for specified element object with x, y, w, h fields.
      */
-    getRect (elm) {
-      const self = this;
-      let pos, size;
-
-      elm = self.get(elm);
-      pos = self.getPos(elm);
-      size = self.getSize(elm);
-
-      return {
-        x: pos.x, y: pos.y,
-        w: size.w, h: size.h
-      };
-    },
+    getRect,
 
     /**
      * Returns the size dimensions of the specified element.
@@ -416,29 +586,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Element/String} elm Element object or element ID to get rectangle from.
      * @return {object} Rectangle for specified element object with w, h fields.
      */
-    getSize (elm) {
-      const self = this;
-      let w, h;
-
-      elm = self.get(elm);
-      w = self.getStyle(elm, 'width');
-      h = self.getStyle(elm, 'height');
-
-      // Non pixel value, then force offset/clientWidth
-      if (w.indexOf('px') === -1) {
-        w = 0;
-      }
-
-      // Non pixel value, then force offset/clientWidth
-      if (h.indexOf('px') === -1) {
-        h = 0;
-      }
-
-      return {
-        w: parseInt(w, 10) || elm.offsetWidth || elm.clientWidth,
-        h: parseInt(h, 10) || elm.offsetHeight || elm.clientHeight
-      };
-    },
+    getSize,
 
     /**
      * Returns a node by the specified selector function. This function will
@@ -452,9 +600,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Node} root Optional root element, never go beyond this point.
      * @return {Node} DOM Node or null if it wasn't found.
      */
-    getParent (node, selector, root?: Node) {
-      return this.getParents(node, selector, root, false);
-    },
+    getParent,
 
     /**
      * Returns a node list of all parents matching the specified selector function or pattern.
@@ -466,50 +612,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Node} root Optional root element, never go beyond this point.
      * @return {Array} Array of nodes or null if it wasn't found.
      */
-    getParents (elm: Node | string, selector: string | Function, root?: HTMLElement, collect?: boolean) {
-      const self = this;
-      let selectorVal;
-      const result = [];
-
-      let node = self.get(elm);
-      collect = collect === undefined;
-
-      // Default root on inline mode
-      root = root || (self.getRoot().nodeName !== 'BODY' ? self.getRoot().parentNode : null);
-
-      // Wrap node name as func
-      if (is(selector, 'string')) {
-        selectorVal = selector;
-
-        if (selector === '*') {
-          selector = function (node) {
-            return node.nodeType === 1;
-          };
-        } else {
-          selector = function (node) {
-            return self.is(node, selectorVal);
-          };
-        }
-      }
-
-      while (node) {
-        if (node === root || !node.nodeType || node.nodeType === 9) {
-          break;
-        }
-
-        if (!selector || (typeof selector === 'function' && selector(node))) {
-          if (collect) {
-            result.push(node);
-          } else {
-            return node;
-          }
-        }
-
-        node = node.parentNode;
-      }
-
-      return collect ? result : null;
-    },
+    getParents,
 
     /**
      * Returns the specified element by ID or the input element if it isn't a string.
@@ -528,9 +631,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String/function} selector Selector CSS expression or function.
      * @return {Node} Next node item matching the selector or null if it wasn't found.
      */
-    getNext (node, selector) {
-      return this._findSib(node, selector, 'nextSibling');
-    },
+    getNext,
 
     /**
      * Returns the previous node that matches selector or function
@@ -540,9 +641,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {String/function} selector Selector CSS expression or function.
      * @return {Node} Previous node item matching the selector or null if it wasn't found.
      */
-    getPrev (node, selector) {
-      return this._findSib(node, selector, 'previousSibling');
-    },
+    getPrev,
 
     // #ifndef jquery
 
@@ -562,12 +661,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * // Adds a class to all spans that have the test class in the currently active editor
      * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('span.test'), 'someclass')
      */
-    select (selector, scope?: HTMLElement | string) {
-      const self = this;
-
-      /*eslint new-cap:0 */
-      return Sizzle(selector, self.get(scope) || self.settings.root_element || self.doc, []);
-    },
+    select,
 
     /**
      * Returns true/false if the specified element matches the specified css pattern.
@@ -576,45 +670,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Node/NodeList} elm DOM node to match or an array of nodes to match.
      * @param {String} selector CSS pattern to match the element against.
      */
-    is (elm, selector) {
-      let i;
-
-      if (!elm) {
-        return false;
-      }
-
-      // If it isn't an array then try to do some simple selectors instead of Sizzle for to boost performance
-      if (elm.length === undefined) {
-        // Simple all selector
-        if (selector === '*') {
-          return elm.nodeType === 1;
-        }
-
-        // Simple selector just elements
-        if (simpleSelectorRe.test(selector)) {
-          selector = selector.toLowerCase().split(/,/);
-          elm = elm.nodeName.toLowerCase();
-
-          for (i = selector.length - 1; i >= 0; i--) {
-            if (selector[i] === elm) {
-              return true;
-            }
-          }
-
-          return false;
-        }
-      }
-
-      // Is non element
-      if (elm.nodeType && elm.nodeType !== 1) {
-        return false;
-      }
-
-      const elms = elm.nodeType ? [elm] : elm;
-
-      /*eslint new-cap:0 */
-      return Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;
-    },
+    is,
 
     // #endif
 
@@ -639,7 +695,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
       return this.run(parentElm, function (parentElm) {
         let newElm;
 
-        newElm = is(name, 'string') ? self.doc.createElement(name) : name;
+        newElm = Tools.is(name, 'string') ? self.doc.createElement(name) : name;
         self.setAttribs(newElm, attrs);
 
         if (html) {
@@ -798,24 +854,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Boolean} computed Computed style.
      * @return {String} Current style or computed style value of an element.
      */
-    getStyle (elm, name, computed?: boolean) {
-      elm = this.$$(elm);
-
-      if (computed) {
-        return elm.css(name);
-      }
-
-      // Camelcase it, if needed
-      name = name.replace(/-(\D)/g, function (a, b) {
-        return b.toUpperCase();
-      });
-
-      if (name === 'float') {
-        name = Env.ie && Env.ie < 12 ? 'styleFloat' : 'cssFloat';
-      }
-
-      return elm[0] && elm[0].style ? elm[0].style[name] : undefined;
-    },
+    getStyle,
 
     /**
      * Sets multiple styles on the specified element(s).
@@ -913,9 +952,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @param {Element} rootElm Optional root element to stop calculations at.
      * @return {object} Absolute position of the specified element object with x, y fields.
      */
-    getPos (elm, rootElm?: Node) {
-      return Position.getPos(this.doc.body, this.get(elm), rootElm);
-    },
+    getPos,
 
     /**
      * Parses the specified style value into an object collection. This parser will also
@@ -1313,7 +1350,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
       const self = this;
 
       return self.run(oldElm, function (oldElm) {
-        if (is(oldElm, 'array')) {
+        if (Tools.is(oldElm, 'array')) {
           newElm = newElm.cloneNode(true);
         }
 
@@ -1768,28 +1805,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
 
     // #endif
 
-    _findSib (node, selector, name) {
-      const self = this;
-      let func = selector;
-
-      if (node) {
-        // If expression make a function of it using is
-        if (typeof func === 'string') {
-          func = function (node) {
-            return self.is(node, selector);
-          };
-        }
-
-        // Loop all siblings
-        for (node = node[name]; node; node = node[name]) {
-          if (func(node)) {
-            return node;
-          }
-        }
-      }
-
-      return null;
-    }
+    _findSib
   };
 
   attrHooks = setupAttrHooks(styles, settings, () => self);
