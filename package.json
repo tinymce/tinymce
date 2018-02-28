@@ -1,9 +1,9 @@
 {
-  "name": "tinymce",
+  "name": "@creately/tinymce",
   "version": "4.7.8",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinymce/tinymce.git"
+    "url": "https://github.com/creately/tinymce.git"
   },
   "description": "TinyMCE rich text editor",
   "author": "Ephox Corporation",
@@ -11,7 +11,6 @@
     "url": "https://github.com/tinymce/tinymce/issues"
   },
   "license": "LGPL-2.1",
-  "private": true,
   "engines": {
     "node": ">=0.10.26"
   },
