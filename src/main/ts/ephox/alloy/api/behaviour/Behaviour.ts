@@ -3,9 +3,11 @@ import { Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../../behaviour/common/Behaviour';
 import * as NoState from '../../behaviour/common/NoState';
-import { Processor } from '../../../../../../../../boulder/lib/main/ts/ephox/boulder/core/ValueProcessor';
+
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { ComposingCreateConfig } from 'ephox/alloy/api/behaviour/Composing';
+import { DockingBehaviour } from 'ephox/alloy/api/behaviour/Docking';
+import { Processor } from '@ephox/boulder/lib/main/ts/ephox/boulder/api/DslType';
 
 const derive = function (capabilities): {} {
   return Objects.wrapAll(capabilities);
@@ -20,7 +22,7 @@ const simpleSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.defaulted('state', NoState)
 ]);
 
-const create = function (data: AlloyBehaviourConfig | ComposingCreateConfig): AlloyBehaviour {
+const create = function (data: AlloyBehaviourConfig | ComposingCreateConfig | DockingBehaviour): AlloyBehaviour {
   const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, simpleSchema, data);
   return Behaviour.create(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };

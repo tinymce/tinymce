@@ -1,7 +1,7 @@
 import { Option } from '@ephox/katamari';
 import { Class, Css, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Docking from 'ephox/alloy/api/behaviour/Docking';
+import { Docking } from 'ephox/alloy/api/behaviour/Docking';
 import Dragging from 'ephox/alloy/api/behaviour/Dragging';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';

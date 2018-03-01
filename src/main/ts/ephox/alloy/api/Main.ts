@@ -3,7 +3,7 @@ import * as Behaviour from './behaviour/Behaviour';
 import { Composing } from './behaviour/Composing';
 import { Coupling } from './behaviour/Coupling';
 import { Disabling } from './behaviour/Disabling';
-import Docking from './behaviour/Docking';
+import { Docking } from './behaviour/Docking';
 import Dragging from './behaviour/Dragging';
 import Focusing from './behaviour/Focusing';
 import Highlighting from './behaviour/Highlighting';
@@ -77,9 +77,6 @@ import * as UiSketcher from './ui/UiSketcher';
 import * as TapEvent from '../events/TapEvent'; // Used directly by mobile theme
 import * as AlloyLogger from '../log/AlloyLogger'; // Used directly by mobile theme
 import * as Debugging from '../debugging/Debugging'; // Used directly by mobile theme
-
-const c = Composing;
-debugger;
 
 export {
   AddEventsBehaviour,
