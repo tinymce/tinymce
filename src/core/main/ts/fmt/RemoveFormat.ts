@@ -13,6 +13,7 @@ import NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
 import CaretFormat from './CaretFormat';
 import ExpandRange from './ExpandRange';
+import EditorManager from '../api/EditorManager';
 import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 import RangeWalk from '../selection/RangeWalk';
@@ -510,7 +511,7 @@ const remove = function (ed, name, vars?, node?, similar?) {
     return;
   }
 
-  if (dom.getContentEditable(selection.getNode()) === 'false') {
+  if (dom.getContentEditable(selection.getNode()) === 'false' && EditorManager.settings.makeNonEditableStylable == 'undefined') {
     node = selection.getNode();
     for (let i = 0, l = formatList.length; i < l; i++) {
       if (formatList[i].ceFalseOverride) {
