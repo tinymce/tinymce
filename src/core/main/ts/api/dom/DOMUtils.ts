@@ -158,7 +158,7 @@ export interface DOMUtils {
   events: any;
   isBlock: (node: string | Node) => boolean;
   $: any;
-  $$: (elm: string | Node) => any;
+  $$: (elm: string | Node | Node[]) => any;
   root: any;
   clone: (node: Node, deep: boolean) => Node;
   getRoot: () => Node;
@@ -179,7 +179,7 @@ export interface DOMUtils {
   create: (name: string, attrs?: Record<string, any>, html?: string | Node) => any;
   createHTML: (name: string, attrs?: Record<string, any>, html?: string) => string;
   createFragment: (html?: string) => DocumentFragment;
-  remove: (node: string | Node, keepChildren?: boolean) => any;
+  remove: (node: string | Node | Node[], keepChildren?: boolean) => any;
   setStyle: (elm: string | Node, name: any, value: any) => void;
   getStyle: (elm: any, name: any, computed?: boolean) => any;
   setStyles: (elm: string | Node, stylesArg: any) => void;
@@ -219,7 +219,7 @@ export interface DOMUtils {
   createRng: () => Range;
   nodeIndex: (node: Node, normalized?: boolean) => number;
   split: (parentElm: Node, splitElm: Node, replacementElm?: Node) => Node;
-  bind: (target: Window | Node | Array<Window | Node>, name: any, func: any, scope?: any) => any;
+  bind: (target: Node | Window | Array<Node | Window>, name: any, func: any, scope?: any) => any;
   unbind: (target: any, name: string, func?: any) => any;
   fire: (target: any, name: string, evt?: any) => any;
   getContentEditable: (node: Node) => string;
@@ -302,7 +302,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return elm as HTMLElement;
   };
 
-  const $$ =  (elm: string | Node) => {
+  const $$ =  (elm: string | Node | Node[]) => {
     if (typeof elm === 'string') {
       elm = get(elm);
     }
@@ -761,7 +761,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return frag;
   };
 
-  const remove = (node: string | Node, keepChildren?: boolean) => {
+  const remove = (node: string | Node | Node[], keepChildren?: boolean) => {
     const $node = $$(node);
 
     if (keepChildren) {

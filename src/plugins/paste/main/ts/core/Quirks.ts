@@ -111,7 +111,7 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
     const dom = editor.dom, node = editor.selection.getNode();
 
     content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, function (all, before, value, after) {
-      const inputStyles = dom.parseStyle(dom.decode(value), 'span');
+      const inputStyles = dom.parseStyle(dom.decode(value));
       let outputStyles = {};
 
       if (webKitStyles === 'none') {

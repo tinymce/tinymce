@@ -57,6 +57,7 @@ import SelectionOverrides from 'tinymce/core/SelectionOverrides';
  */
 
 export interface Editor {
+  dom: DOMUtils;
   selection: Selection;
   _selectionOverrides: SelectionOverrides;
   [key: string]: any;
