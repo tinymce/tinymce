@@ -148,7 +148,7 @@ const getSetKeys = function (obj) {
   });
 };
 
-const objOfOnly = function (fields: ValueProcessorAdt[]) {
+const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
   const delegate = objOf(fields);
 
   const fieldNames = Arr.foldr(fields, function (acc, f: ValueProcessorAdt) {
