@@ -6,7 +6,7 @@ import * as AlloyTriggers from './AlloyTriggers';
 import SystemEvents from './SystemEvents';
 import { AlloyComponent } from 'ephox/alloy/api/component/Component';
 
-export interface EventHandler {
+export interface EventHandlerConfig {
   key: string;
   value: {
     can: () => boolean;
