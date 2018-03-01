@@ -2,7 +2,7 @@ import * as AddEventsBehaviour from './behaviour/AddEventsBehaviour';
 import * as Behaviour from './behaviour/Behaviour';
 import { Composing } from './behaviour/Composing';
 import Coupling from './behaviour/Coupling';
-import Disabling from './behaviour/Disabling';
+import { Disabling } from './behaviour/Disabling';
 import Docking from './behaviour/Docking';
 import Dragging from './behaviour/Dragging';
 import Focusing from './behaviour/Focusing';
