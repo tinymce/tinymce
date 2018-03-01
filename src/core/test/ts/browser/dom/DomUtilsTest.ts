@@ -191,8 +191,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
   });
 
   suite.test('uniqueId', function () {
-    DOM.counter = 0;
-
     LegacyUnit.equal(DOM.uniqueId(), 'mce_0');
     LegacyUnit.equal(DOM.uniqueId(), 'mce_1');
     LegacyUnit.equal(DOM.uniqueId(), 'mce_2');

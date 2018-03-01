@@ -18,9 +18,10 @@ import TreeWalker from './TreeWalker';
 import TrimNode from '../../dom/TrimNode';
 import Entities from '../html/Entities';
 import Schema from '../html/Schema';
-import Styles, { StyleMap } from '../html/Styles';
+import { StyleMap, Styles } from '../html/Styles';
 import Tools from '../util/Tools';
 import { GeomRect } from 'tinymce/core/api/geom/Rect';
+import NodeType from 'tinymce/core/dom/NodeType';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.
@@ -140,6 +141,94 @@ export interface DOMUtilsSettings {
   onSetAttrib: Function;
 }
 
+export interface DOMUtils {
+  doc: Document;
+  settings: Partial<DOMUtilsSettings>;
+  win: Window;
+  files: {};
+  stdMode: boolean;
+  boxModel: boolean;
+  styleSheetLoader: {
+      load: (url: any, loadedCallback: any, errorCallback?: any) => void;
+      loadAll: (urls: any, success: any, failure: any) => void;
+  };
+  boundEvents: any[];
+  styles: Styles;
+  schema: Schema;
+  events: any;
+  isBlock: (node: string | Node) => boolean;
+  $: any;
+  $$: (elm: string | Node) => any;
+  root: any;
+  clone: (node: Node, deep: boolean) => Node;
+  getRoot: () => Node;
+  getViewPort: (argWin?: Window) => GeomRect;
+  getRect: (elm: string | HTMLElement) => GeomRect;
+  getSize: (elm: string | HTMLElement) => {
+      w: number;
+      h: number;
+  };
+  getParent: (node: string | Node, selector: any, root?: Node) => Node;
+  getParents: (elm: string | Node, selector: string | Function, root?: Node, collect?: boolean) => Node[];
+  get: (elm: string | Node) => HTMLElement;
+  getNext: (node: Node, selector: string | Function) => Node;
+  getPrev: (node: Node, selector: string | Function) => Node;
+  select: (selector: string, scope?: string | Element) => any;
+  is: (elm: any, selector: string) => boolean;
+  add: (parentElm: any, name: any, attrs?: Record<string, any>, html?: string | Node, create?: boolean) => any;
+  create: (name: string, attrs?: Record<string, any>, html?: string | Node) => any;
+  createHTML: (name: string, attrs?: Record<string, any>, html?: string) => string;
+  createFragment: (html?: string) => DocumentFragment;
+  remove: (node: string | Node, keepChildren?: boolean) => any;
+  setStyle: (elm: string | Node, name: any, value: any) => void;
+  getStyle: (elm: any, name: any, computed?: boolean) => any;
+  setStyles: (elm: string | Node, stylesArg: any) => void;
+  removeAllAttribs: (e: any) => any;
+  setAttrib: (elm: string | Node, name: string, value: string) => void;
+  setAttribs: (elm: any, attrs: any) => void;
+  getAttrib: (elm: string | Node, name: any, defaultVal?: string) => any;
+  getPos: (elm: any, rootElm?: Node) => {
+      x: number;
+      y: number;
+  };
+  parseStyle: (cssText: string) => StyleMap;
+  serializeStyle: (stylesArg: StyleMap, name: string) => string;
+  addStyle: (cssText: string) => void;
+  loadCSS: (url: any) => void;
+  addClass: (elm: string | Node, cls: string) => void;
+  removeClass: (elm: string | Node, cls: string) => void;
+  hasClass: (elm: string | Node, cls: string) => any;
+  toggleClass: (elm: string | Node, cls: string, state: boolean) => void;
+  show: (elm: string | Node) => void;
+  hide: (elm: string | Node) => void;
+  isHidden: (elm: string | Node) => boolean;
+  uniqueId: (prefix?: string) => string;
+  setHTML: (elm: string | Node, html: string) => void;
+  getOuterHTML: (elm: string | Node) => any;
+  setOuterHTML: (elm: string | Node, html: string) => void;
+  decode: (text: string) => string;
+  encode: (text: string) => string;
+  insertAfter: (node: Node, reference: string | Node) => any;
+  replace: (newElm: Node, oldElm: string | Node, keepChildren?: boolean) => any;
+  rename: (elm: Node, name: string) => any;
+  findCommonAncestor: (a: Node, b: Node) => Node;
+  toHex: (rgbVal: string) => string;
+  run: (elm: string | Node, func: (node: HTMLElement) => any, scope?: any) => any;
+  getAttribs: (elm: any) => any;
+  isEmpty: (node: any, elements?: Record<string, any>) => boolean;
+  createRng: () => Range;
+  nodeIndex: (node: Node, normalized?: boolean) => number;
+  split: (parentElm: Node, splitElm: Node, replacementElm?: Node) => Node;
+  bind: (target: Window | Node | Array<Window | Node>, name: any, func: any, scope?: any) => any;
+  unbind: (target: any, name: string, func?: any) => any;
+  fire: (target: any, name: string, evt?: any) => any;
+  getContentEditable: (node: Node) => string;
+  getContentEditableParent: (node: Node) => any;
+  destroy: () => void;
+  isChildOf: (node: Node, parent: Node) => boolean;
+  dumpRng: (r: Range) => string;
+}
+
 /**
  * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
  *
@@ -148,7 +237,7 @@ export interface DOMUtilsSettings {
  * @param {Document} doc Document reference to bind the utility class to.
  * @param {settings} settings Optional settings collection.
  */
-export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}) {
+export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMUtils {
   let attrHooks;
   const addedStyles = {};
 
@@ -182,37 +271,35 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
    * @param {Node/String} node Element/Node to check.
    * @return {Boolean} True/False state if the node is a block element or not.
    */
-  const isBlock = (node) => {
-    // Fix for #5446
-    if (!node) {
-      return false;
-    }
+  const isBlock = (node: Node | string) => {
+    if (typeof node === 'string') {
+      return !!blockElementsMap[node];
+    } else if (node) {
+      // This function is called in module pattern style since it might be executed with the wrong this scope
+      const type = node.nodeType;
 
-    // This function is called in module pattern style since it might be executed with the wrong this scope
-    const type = node.nodeType;
-
-    // If it's a node then check the type and use the nodeName
-    if (type) {
-      return !!(type === 1 && blockElementsMap[node.nodeName]);
-    }
-
-    return !!blockElementsMap[node];
-  };
-
-  const get = (elm) => {
-    let name;
-
-    if (elm && doc && typeof elm === 'string') {
-      name = elm;
-      elm = doc.getElementById(elm);
-
-      // IE and Opera returns meta elements when they match the specified input ID, but getElementsByName seems to do the trick
-      if (elm && elm.id !== name) {
-        return doc.getElementsByName(name)[1];
+      // If it's a node then check the type and use the nodeName
+      if (type) {
+        return !!(type === 1 && blockElementsMap[node.nodeName]);
       }
     }
 
-    return elm;
+    return false;
+  };
+
+  const get = (elm: Node | string): HTMLElement => {
+    if (elm && doc && typeof elm === 'string') {
+      const node = doc.getElementById(elm);
+
+      // IE and Opera returns meta elements when they match the specified input ID, but getElementsByName seems to do the trick
+      if (node && node.id !== elm) {
+        return doc.getElementsByName(elm)[1];
+      } else {
+        return node;
+      }
+    }
+
+    return elm as HTMLElement;
   };
 
   const $$ =  (elm: string | Node) => {
@@ -387,7 +474,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return elm[0] && elm[0].style ? elm[0].style[name] : undefined;
   };
 
-  const getSize = (elm): {w: number, h: number} => {
+  const getSize = (elm: HTMLElement | string): {w: number, h: number} => {
     let w, h;
 
     elm = get(elm);
@@ -410,7 +497,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     };
   };
 
-  const getRect = (elm: string | Node): GeomRect => {
+  const getRect = (elm: string | HTMLElement): GeomRect => {
     let pos, size;
 
     elm = get(elm);
@@ -463,14 +550,13 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;
   };
 
-  const getParents = (elm: Node | string, selector: string | Function, root?: Node, collect?: boolean) => {
+  const getParents = (elm: Node | string, selector: string | Function, root?: Node, collect?: boolean): Node[] => {
     const result = [];
     let selectorVal;
 
-    let node = get(elm);
+    let node: Node = get(elm);
     collect = collect === undefined;
 
-    // debugger;
     // Default root on inline mode
     root = root || (getRoot().nodeName !== 'BODY' ? getRoot().parentNode : null);
 
@@ -498,7 +584,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
         if (collect) {
           result.push(node);
         } else {
-          return node;
+          return [node];
         }
       }
 
@@ -508,8 +594,9 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return collect ? result : null;
   };
 
-  const getParent = (node: Node | string, selector, root?: Node) => {
-    return getParents(node, selector, root, false);
+  const getParent = (node: Node | string, selector, root?: Node): Node => {
+    const parents = getParents(node, selector, root, false);
+    return parents && parents.length > 0 ? parents[0] : null;
   };
 
   const _findSib = (node: Node, selector: string | Function, name: string) => {
@@ -534,19 +621,19 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return null;
   };
 
-  const getNext = (node, selector) => {
+  const getNext = (node: Node, selector: string | Function) => {
     return _findSib(node, selector, 'nextSibling');
   };
 
-  const getPrev = (node, selector) => {
+  const getPrev = (node: Node, selector: string | Function) => {
     return _findSib(node, selector, 'previousSibling');
   };
 
-  const select = (selector, scope?: HTMLElement | string) => {
+  const select = (selector: string, scope?: Element | string) => {
     return Sizzle(selector, get(scope) || settings.root_element || doc, []);
   };
 
-  const run = (elm: string | Node, func, scope?) => {
+  const run = (elm: string | Node, func: (node: HTMLElement) => any, scope?) => {
     let result;
     const node = typeof elm === 'string' ? get(elm) : elm;
 
@@ -554,7 +641,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
       return false;
     }
 
-    if (!node.nodeType && (node.length || node.length === 0)) {
+    if (Tools.isArray(node) && (node.length || node.length === 0)) {
       result = [];
 
       each(node, function (elm, i) {
@@ -583,7 +670,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     });
   };
 
-  const setHTML = (elm: string | Node, html) => {
+  const setHTML = (elm: string | Node, html: string) => {
     const $elm = $$(elm);
 
     if (isIE) {
@@ -622,7 +709,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
       if (html) {
         if (typeof html !== 'string' && html.nodeType) {
           newElm.appendChild(html);
-        } else {
+        } else if (typeof html === 'string') {
           setHTML(newElm, html);
         }
       }
@@ -631,14 +718,14 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     });
   };
 
-  const create = (name, attrs?: Record<string, any>, html?: string | Node) => {
+  const create = (name: string, attrs?: Record<string, any>, html?: string | Node) => {
     return add(doc.createElement(name), name, attrs, html, true);
   };
 
   const decode = Entities.decode;
   const encode = Entities.encodeAllRaw;
 
-  const createHTML = (name, attrs?: Record<string, any>, html?: string) => {
+  const createHTML = (name: string, attrs?: Record<string, any>, html?: string) => {
     let outHtml = '', key;
 
     outHtml += '<' + name;
@@ -714,7 +801,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return styles.serialize(stylesArg, name);
   };
 
-  const addStyle = (cssText) => {
+  const addStyle = (cssText: string) => {
     let head, styleElm;
 
     // Prevent inline from loading the same styles twice
@@ -792,7 +879,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     $$(elm).addClass(cls);
   };
 
-  const removeClass = (elm, cls) => {
+  const removeClass = (elm: string | Node, cls: string) => {
     toggleClass(elm, cls, false);
   };
 
@@ -816,14 +903,13 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return (!prefix ? 'mce_' : prefix) + (counter++);
   };
 
-  const getOuterHTML = (elm) => {
-    elm = get(elm);
+  const getOuterHTML = (elm: string | Node) => {
+    const node = typeof elm === 'string' ? get(elm) : elm;
 
-    // Older FF doesn't have outerHTML 3.6 is still used by some orgaizations
-    return elm.nodeType === 1 && 'outerHTML' in elm ? elm.outerHTML : DomQuery('<div></div>').append(DomQuery(elm).clone()).html();
+    return NodeType.isElement(node) ? node.outerHTML : DomQuery('<div></div>').append(DomQuery(node).clone()).html();
   };
 
-  const setOuterHTML = (elm, html) => {
+  const setOuterHTML = (elm: string | Node, html: string) => {
     $$(elm).each(function () {
       try {
         // Older FF doesn't have outerHTML 3.6 is still used by some organizations
@@ -859,7 +945,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     });
   };
 
-  const replace = (newElm, oldElm, keepChildren?: boolean) => {
+  const replace = (newElm: Node, oldElm: string | Node, keepChildren?: boolean) => {
     return run(oldElm, function (oldElm) {
       if (Tools.is(oldElm, 'array')) {
         newElm = newElm.cloneNode(true);
@@ -992,7 +1078,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return doc.createRange();
   };
 
-  const split = (parentElm, splitElm, replacementElm?: Node) => {
+  const split = (parentElm: Node, splitElm: Node, replacementElm?: Node) => {
     let r = createRng(), bef, aft, pa;
 
     if (parentElm && splitElm) {
@@ -1075,29 +1161,26 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return events.unbind(target, name, func);
   };
 
-  const fire = (target, name, evt?) => {
+  const fire = (target, name: string, evt?) => {
     return events.fire(target, name, evt);
   };
 
-  const getContentEditable = (node: HTMLElement) => {
-    let contentEditable;
+  const getContentEditable = (node: Node) => {
+    if (node && NodeType.isElement(node)) {
+      // Check for fake content editable
+      const contentEditable = node.getAttribute('data-mce-contenteditable');
+      if (contentEditable && contentEditable !== 'inherit') {
+        return contentEditable;
+      }
 
-    // Check type
-    if (!node || node.nodeType !== 1) {
+      // Check for real content editable
+      return node.contentEditable !== 'inherit' ? node.contentEditable : null;
+    } else {
       return null;
     }
-
-    // Check for fake content editable
-    contentEditable = node.getAttribute('data-mce-contenteditable');
-    if (contentEditable && contentEditable !== 'inherit') {
-      return contentEditable;
-    }
-
-    // Check for real content editable
-    return node.contentEditable !== 'inherit' ? node.contentEditable : null;
   };
 
-  const getContentEditableParent = (node) => {
+  const getContentEditableParent = (node: Node) => {
     const root = getRoot();
     let state = null;
 
@@ -1156,7 +1239,6 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     settings,
     win,
     files,
-    counter,
     stdMode,
     boxModel,
     styleSheetLoader,
@@ -1827,7 +1909,6 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
 
     // Returns the content editable state of a node
     getContentEditable,
-
     getContentEditableParent,
 
     /**
@@ -1836,16 +1917,8 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
      * @method destroy
      */
     destroy,
-
     isChildOf,
-
-    // #ifdef debug
-
-    dumpRng,
-
-    // #endif
-
-    _findSib
+    dumpRng
   };
 
   attrHooks = setupAttrHooks(styles, settings, () => self);

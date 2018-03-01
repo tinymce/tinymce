@@ -30,6 +30,11 @@
 import Schema from './Schema';
 
 export interface StyleMap { [s: string]: string; }
+export interface Styles {
+  toHex(color: string): string;
+  parse(css: string): StyleMap;
+  serialize(styles: StyleMap, elementName?: string): string;
+}
 
 const toHex = (match: string, r: string, g: string, b: string) => {
   const hex = (val: string) => {
@@ -41,7 +46,7 @@ const toHex = (match: string, r: string, g: string, b: string) => {
   return '#' + hex(r) + hex(g) + hex(b);
 };
 
-export default function (settings?, schema?: Schema) {
+export function Styles(settings?, schema?: Schema): Styles {
   /*jshint maxlen:255 */
   /*eslint max-len:0 */
   const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
