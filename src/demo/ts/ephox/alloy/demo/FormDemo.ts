@@ -1,6 +1,6 @@
 import { Obj, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Keying from 'ephox/alloy/api/behaviour/Keying';
 import Representing from 'ephox/alloy/api/behaviour/Representing';
 import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';

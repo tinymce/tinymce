@@ -1,4 +1,4 @@
-import Behaviour from '../behaviour/Behaviour';
+import * as Behaviour from '../behaviour/Behaviour';
 import Keying from '../behaviour/Keying';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';

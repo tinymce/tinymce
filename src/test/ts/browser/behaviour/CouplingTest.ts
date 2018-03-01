@@ -1,7 +1,7 @@
 import { Assertions, Logger, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Attr, Node } from '@ephox/sugar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Coupling from 'ephox/alloy/api/behaviour/Coupling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Button from 'ephox/alloy/api/ui/Button';

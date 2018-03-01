@@ -1,4 +1,4 @@
-import Behaviour from './Behaviour';
+import * as Behaviour from './Behaviour';
 import ActiveSandbox from '../../behaviour/sandboxing/ActiveSandbox';
 import * as SandboxApis from '../../behaviour/sandboxing/SandboxApis';
 import SandboxSchema from '../../behaviour/sandboxing/SandboxSchema';

@@ -1,4 +1,4 @@
-import Behaviour from './Behaviour';
+import * as Behaviour from './Behaviour';
 import * as HighlightApis from '../../behaviour/highlighting/HighlightApis';
 import HighlightSchema from '../../behaviour/highlighting/HighlightSchema';
 

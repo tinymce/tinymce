@@ -1,4 +1,4 @@
-import Behaviour from './Behaviour';
+import * as Behaviour from './Behaviour';
 import * as ActiveRepresenting from '../../behaviour/representing/ActiveRepresenting';
 import * as RepresentApis from '../../behaviour/representing/RepresentApis';
 import RepresentSchema from '../../behaviour/representing/RepresentSchema';

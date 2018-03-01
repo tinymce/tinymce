@@ -1,4 +1,4 @@
-import Behaviour from './Behaviour';
+import * as Behaviour from './Behaviour';
 import * as CouplingApis from '../../behaviour/coupling/CouplingApis';
 import CouplingSchema from '../../behaviour/coupling/CouplingSchema';
 import CouplingState from '../../behaviour/coupling/CouplingState';

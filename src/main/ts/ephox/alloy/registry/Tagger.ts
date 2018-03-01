@@ -2,6 +2,7 @@ import { Fun, Id, Option } from '@ephox/katamari';
 import { Attr, Node, SelectorFind } from '@ephox/sugar';
 
 import * as AlloyTags from '../ephemera/AlloyTags';
+import { SugarElement } from '../alien/TypeDefinitions';
 
 const prefix = AlloyTags.prefix();
 const idAttr = AlloyTags.idAttr();

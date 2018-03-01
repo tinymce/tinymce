@@ -3,8 +3,10 @@ import { Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../../behaviour/common/Behaviour';
 import * as NoState from '../../behaviour/common/NoState';
+import { Processor } from '../../../../../../../../boulder/lib/main/ts/ephox/boulder/core/ValueProcessor';
+import { AlloyBehaviour, AlloyBehaviourCreateConfig } from 'ephox/alloy/alien/TypeDefinitions';
 
-const derive = function (capabilities) {
+const derive = function (capabilities): {} {
   return Objects.wrapAll(capabilities);
 };
 
@@ -17,12 +19,12 @@ const simpleSchema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('state', NoState)
 ]);
 
-const create = function (data) {
+const create = function (data: AlloyBehaviourCreateConfig): AlloyBehaviour {
   const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, simpleSchema, data);
   return Behaviour.create(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
 
-const modeSchema = ValueSchema.objOfOnly([
+const modeSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('branchKey'),
   FieldSchema.strict('branches'),
   FieldSchema.strict('name'),
@@ -40,13 +42,19 @@ const createModes = function (data) {
   );
 };
 
-export default <any> {
+const revoke: () => undefined = Fun.constant(undefined);
+const noActive: () => {} = Fun.constant({ });
+const noApis: () => {} = Fun.constant({ });
+const noExtra: () => {} = Fun.constant({ });
+const noState: () => {} = Fun.constant(NoState);
+
+export {
   derive,
-  revoke: Fun.constant(undefined),
-  noActive: Fun.constant({ }),
-  noApis: Fun.constant({ }),
-  noExtra: Fun.constant({ }),
-  noState: Fun.constant(NoState),
+  revoke,
+  noActive,
+  noApis,
+  noExtra,
+  noState,
   create,
   createModes
 };

@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 
-import Behaviour from '../../api/behaviour/Behaviour';
+import * as Behaviour from '../../api/behaviour/Behaviour';
 import Representing from '../../api/behaviour/Representing';
 import PartType from '../../parts/PartType';
 

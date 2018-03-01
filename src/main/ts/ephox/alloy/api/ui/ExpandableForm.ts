@@ -2,7 +2,7 @@ import { Merger } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ExpandableFormSchema from '../../ui/schema/ExpandableFormSchema';
-import Behaviour from '../behaviour/Behaviour';
+import * as Behaviour from '../behaviour/Behaviour';
 import Representing from '../behaviour/Representing';
 import Sliding from '../behaviour/Sliding';
 import SketchBehaviours from '../component/SketchBehaviours';

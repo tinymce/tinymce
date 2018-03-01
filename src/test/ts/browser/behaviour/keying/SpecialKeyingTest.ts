@@ -1,6 +1,6 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Focusing from 'ephox/alloy/api/behaviour/Focusing';
 import Keying from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';

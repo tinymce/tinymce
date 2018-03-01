@@ -1,8 +1,8 @@
 import { Fun, Merger, Option } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
-import Behaviour from '../../api/behaviour/Behaviour';
-import Composing from '../../api/behaviour/Composing';
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { Composing } from '../../api/behaviour/Composing';
 import Coupling from '../../api/behaviour/Coupling';
 import Focusing from '../../api/behaviour/Focusing';
 import Highlighting from '../../api/behaviour/Highlighting';

@@ -1,7 +1,7 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger } from '@ephox/katamari';
 
-import Composing from '../../api/behaviour/Composing';
+import { Composing } from '../../api/behaviour/Composing';
 import Highlighting from '../../api/behaviour/Highlighting';
 import Keying from '../../api/behaviour/Keying';
 import Representing from '../../api/behaviour/Representing';

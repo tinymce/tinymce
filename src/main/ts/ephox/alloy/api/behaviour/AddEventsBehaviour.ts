@@ -1,7 +1,8 @@
-import Behaviour from './Behaviour';
+import * as Behaviour from './Behaviour';
 import * as AlloyEvents from '../events/AlloyEvents';
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
+import { AlloyBehaviour } from 'ephox/alloy/alien/TypeDefinitions';
 
 const events = function (name, eventHandlers) {
   const events = AlloyEvents.derive(eventHandlers);
@@ -17,9 +18,8 @@ const events = function (name, eventHandlers) {
   });
 };
 
-const config = function (name, eventHandlers) {
+const config = function (name: string, eventHandlers: [{key: string, value: number}]) {
   const me = events(name, eventHandlers);
-
   return {
     key: name,
     value: {

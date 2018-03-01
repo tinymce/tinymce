@@ -1,5 +1,5 @@
-import Behaviour from '../behaviour/Behaviour';
-import Composing from '../behaviour/Composing';
+import * as Behaviour from '../behaviour/Behaviour';
+import { Composing } from '../behaviour/Composing';
 import Representing from '../behaviour/Representing';
 import * as Sketcher from './Sketcher';
 import * as AlloyParts from '../../parts/AlloyParts';

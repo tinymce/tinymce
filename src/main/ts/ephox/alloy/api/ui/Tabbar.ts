@@ -2,7 +2,7 @@ import { Merger } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
 
 import * as TabbarSchema from '../../ui/schema/TabbarSchema';
-import Behaviour from '../behaviour/Behaviour';
+import * as Behaviour from '../behaviour/Behaviour';
 import Highlighting from '../behaviour/Highlighting';
 import Keying from '../behaviour/Keying';
 import SketchBehaviours from '../component/SketchBehaviours';

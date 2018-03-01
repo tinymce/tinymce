@@ -4,7 +4,7 @@ import { Fun, Merger, Option } from '@ephox/katamari';
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import * as Fields from '../../data/Fields';
 import * as Dismissal from '../../sandbox/Dismissal';
-import Behaviour from '../behaviour/Behaviour';
+import * as Behaviour from '../behaviour/Behaviour';
 import Positioning from '../behaviour/Positioning';
 import Receiving from '../behaviour/Receiving';
 import Sandboxing from '../behaviour/Sandboxing';

@@ -1,8 +1,8 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Merger, Option } from '@ephox/katamari';
 
-import Behaviour from '../behaviour/Behaviour';
-import Composing from '../behaviour/Composing';
+import * as Behaviour from '../behaviour/Behaviour';
+import { Composing } from '../behaviour/Composing';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';

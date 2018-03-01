@@ -1,4 +1,4 @@
-import Behaviour from './Behaviour';
+import * as Behaviour from './Behaviour';
 import * as ActiveTabstopping from '../../behaviour/tabstopping/ActiveTabstopping';
 import TabstopSchema from '../../behaviour/tabstopping/TabstopSchema';
 

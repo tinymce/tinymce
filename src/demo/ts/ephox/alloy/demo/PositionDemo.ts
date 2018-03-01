@@ -1,5 +1,5 @@
 import { Class, Css, DomEvent, Element } from '@ephox/sugar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Positioning from 'ephox/alloy/api/behaviour/Positioning';
 import Toggling from 'ephox/alloy/api/behaviour/Toggling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';

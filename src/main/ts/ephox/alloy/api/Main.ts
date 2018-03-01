@@ -1,6 +1,6 @@
 import * as AddEventsBehaviour from './behaviour/AddEventsBehaviour';
-import Behaviour from './behaviour/Behaviour';
-import Composing from './behaviour/Composing';
+import * as Behaviour from './behaviour/Behaviour';
+import { Composing } from './behaviour/Composing';
 import Coupling from './behaviour/Coupling';
 import Disabling from './behaviour/Disabling';
 import Docking from './behaviour/Docking';
@@ -77,6 +77,9 @@ import * as UiSketcher from './ui/UiSketcher';
 import * as TapEvent from '../events/TapEvent'; // Used directly by mobile theme
 import * as AlloyLogger from '../log/AlloyLogger'; // Used directly by mobile theme
 import * as Debugging from '../debugging/Debugging'; // Used directly by mobile theme
+
+const c = Composing;
+debugger;
 
 export {
   AddEventsBehaviour,

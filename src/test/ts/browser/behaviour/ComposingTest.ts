@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Composing from 'ephox/alloy/api/behaviour/Composing';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Composing } from 'ephox/alloy/api/behaviour/Composing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';

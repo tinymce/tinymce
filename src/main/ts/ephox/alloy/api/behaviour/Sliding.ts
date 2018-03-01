@@ -1,4 +1,4 @@
-import Behaviour from './Behaviour';
+import * as Behaviour from './Behaviour';
 import * as ActiveSliding from '../../behaviour/sliding/ActiveSliding';
 import * as SlidingApis from '../../behaviour/sliding/SlidingApis';
 import SlidingSchema from '../../behaviour/sliding/SlidingSchema';

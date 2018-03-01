@@ -2,7 +2,7 @@ import { FieldSchema } from '@ephox/boulder';
 import { Cell, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
-import Behaviour from '../../api/behaviour/Behaviour';
+import * as Behaviour from '../../api/behaviour/Behaviour';
 import Focusing from '../../api/behaviour/Focusing';
 import Keying from '../../api/behaviour/Keying';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
