@@ -10,7 +10,7 @@ export interface CouplingBehaviour extends AlloyBehaviour {
 }
 
 export interface CouplingConfig<T> extends AlloyBehaviourConfig {
-
+  others: () => any;
 }
 
 const Coupling: CouplingBehaviour = Behaviour.create({

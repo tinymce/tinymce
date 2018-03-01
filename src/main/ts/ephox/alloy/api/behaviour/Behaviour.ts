@@ -11,7 +11,7 @@ const derive = function (capabilities): {} {
   return Objects.wrapAll(capabilities);
 };
 
-const simpleSchema = ValueSchema.objOfOnly([
+const simpleSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('fields'),
   FieldSchema.strict('name'),
   FieldSchema.defaulted('active', { }),

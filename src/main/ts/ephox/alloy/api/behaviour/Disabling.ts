@@ -21,7 +21,7 @@ export interface DisablingConfig<T> extends AlloyBehaviourConfig {
 
 export interface DisableConfig {
   disabled: () => boolean;
-  disableClass: () => string;
+  disableClass?: () => string;
 }
 
 const Disabling: DisableBehaviour = Behaviour.create({
