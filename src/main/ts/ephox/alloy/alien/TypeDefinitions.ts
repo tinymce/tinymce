@@ -1,5 +1,6 @@
 import { FieldProcessorAdt } from '@ephox/boulder/lib/main/ts/ephox/boulder/api/DslType';
 import { Option } from '@ephox/boulder/node_modules/@ephox/katamari';
+import { isDisabled } from 'ephox/alloy/behaviour/disabling/DisableApis';
 
 // TODO move these to the correct village
 
@@ -20,25 +21,29 @@ export interface AlloyBehaviour {
   name: () => string;
   revoke: () => { key: string, value: undefined };
   schema: () => SchemaSchema;
+
+  getValue: (any) => any;
+  setValue: (...any) => any;
 }
 
-export interface ComposingBehaviour extends AlloyBehaviour {
-  config: (Composing) => any;
-}
-
-export interface AlloyBehaviourCreateConfig {
+export interface AlloyBehaviourConfig {
   fields: FieldProcessorAdt[];
   name: string;
-  active?: {
-    exhibit?: (base, info) => any,
-    events?: () => {}
-  };
-  apis?: blah;
-  extra?: any;
-  state?: any;
-
+  active?: {};
+  apis?: {};
+  extra?: {};
+  state?: {};
 }
 
-export interface blah {
+export interface ComposingApi {
+  // TODO: this is defined by Composing, how to move this into Composing, and overried AlloyBehaviourConfig from Behaviour.create()
   getCurrent: (component, componentConfig, composeState) => any;
+}
+
+export interface DisablingApi {
+  // TODO: this is defined by DisablingApi, how to move this into Composing, and overried AlloyBehaviourConfig from Behaviour.create()
+  enable: (component, disableConfig, disableState) => void;
+  disable: (component, disableConfig, disableState) => void;
+  isDisabled: (component) => boolean;
+  onLoad: (component, disableConfig, disableState) => void;
 }

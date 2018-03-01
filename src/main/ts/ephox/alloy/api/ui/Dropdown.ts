@@ -5,7 +5,7 @@ import * as ButtonBase from '../../ui/common/ButtonBase';
 import DropdownSchema from '../../ui/schema/DropdownSchema';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';
-import Coupling from '../behaviour/Coupling';
+import { Coupling } from '../behaviour/Coupling';
 import Focusing from '../behaviour/Focusing';
 import Highlighting from '../behaviour/Highlighting';
 import Keying from '../behaviour/Keying';

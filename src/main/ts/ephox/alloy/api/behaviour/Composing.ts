@@ -6,6 +6,7 @@ import { Option } from '@ephox/boulder/node_modules/@ephox/katamari';
 
 export interface ComposingBehaviour extends AlloyBehaviour {
   config: (ComposingConfig) => any;
+  getCurrent?: (any) => any; // TODO any : whats sandbox
 }
 export interface ComposingConfig<T> {
   find: Option<T>;

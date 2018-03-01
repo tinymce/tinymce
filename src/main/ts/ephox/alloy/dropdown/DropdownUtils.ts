@@ -4,7 +4,7 @@ import { Width } from '@ephox/sugar';
 import * as ComponentStructure from '../alien/ComponentStructure';
 import * as Behaviour from '../api/behaviour/Behaviour';
 import { Composing } from '../api/behaviour/Composing';
-import Coupling from '../api/behaviour/Coupling';
+import { Coupling } from '../api/behaviour/Coupling';
 import Focusing from '../api/behaviour/Focusing';
 import Positioning from '../api/behaviour/Positioning';
 import Sandboxing from '../api/behaviour/Sandboxing';

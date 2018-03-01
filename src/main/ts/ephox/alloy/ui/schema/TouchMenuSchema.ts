@@ -2,7 +2,7 @@ import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Height, Location, Width } from '@ephox/sugar';
 
-import Coupling from '../../api/behaviour/Coupling';
+import { Coupling } from '../../api/behaviour/Coupling';
 import Toggling from '../../api/behaviour/Toggling';
 import Unselecting from '../../api/behaviour/Unselecting';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
