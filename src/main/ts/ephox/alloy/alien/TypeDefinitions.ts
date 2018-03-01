@@ -34,16 +34,3 @@ export interface AlloyBehaviourConfig {
   extra?: {};
   state?: {};
 }
-
-export interface ComposingApi {
-  // TODO: this is defined by Composing, how to move this into Composing, and overried AlloyBehaviourConfig from Behaviour.create()
-  getCurrent: (component, componentConfig, composeState) => any;
-}
-
-export interface DisablingApi {
-  // TODO: this is defined by DisablingApi, how to move this into Composing, and overried AlloyBehaviourConfig from Behaviour.create()
-  enable: (component, disableConfig, disableState) => void;
-  disable: (component, disableConfig, disableState) => void;
-  isDisabled: (component) => boolean;
-  onLoad: (component, disableConfig, disableState) => void;
-}

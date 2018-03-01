@@ -15,8 +15,8 @@ import * as CompBehaviours from './CompBehaviours';
 import ComponentApi from './ComponentApi';
 import { AlloyBehaviour, AlloyBehaviourConfig, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
-export interface ComponentApiType {
-  getSystem: () => ComponentApiType;
+export interface AlloyComponent {
+  getSystem: () => AlloyComponent;
   config: (config: AlloyBehaviourConfig) => AlloyBehaviour;
   hasConfigured: (behaviour) => boolean;
   spec: () => any;
@@ -29,7 +29,7 @@ export interface ComponentApiType {
   events: () => {};
 }
 
-const build = function (spec): ComponentApiType {
+const build = function (spec): AlloyComponent {
   const getMe = function () {
     return me;
   };
