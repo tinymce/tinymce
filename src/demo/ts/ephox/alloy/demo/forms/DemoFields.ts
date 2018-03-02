@@ -1,7 +1,7 @@
 import { Arr, Future, Result } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Invalidating from 'ephox/alloy/api/behaviour/Invalidating';
+import { Invalidating } from 'ephox/alloy/api/behaviour/Invalidating';
 import Representing from 'ephox/alloy/api/behaviour/Representing';
 import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as ComponentUtil from 'ephox/alloy/api/component/ComponentUtil';
