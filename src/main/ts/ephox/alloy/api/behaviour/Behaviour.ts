@@ -20,7 +20,7 @@ const simpleSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.defaulted('state', NoState)
 ]);
 
-const create = function (data: AlloyBehaviourConfig | ComposingCreateConfig | DockingBehaviour): AlloyBehaviour {
+const create = function (data: AlloyBehaviourConfig): AlloyBehaviour {
   const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, simpleSchema, data);
   return Behaviour.create(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
