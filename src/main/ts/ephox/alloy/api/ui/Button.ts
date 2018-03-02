@@ -3,7 +3,7 @@ import { Merger } from '@ephox/katamari';
 
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import * as Behaviour from '../behaviour/Behaviour';
-import Focusing from '../behaviour/Focusing';
+import { Focusing } from '../behaviour/Focusing';
 import Keying from '../behaviour/Keying';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';

@@ -4,7 +4,7 @@ import { Result } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
 import Toggling from 'ephox/alloy/api/behaviour/Toggling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';

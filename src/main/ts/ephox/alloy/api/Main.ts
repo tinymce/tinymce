@@ -5,7 +5,7 @@ import { Coupling } from './behaviour/Coupling';
 import { Disabling } from './behaviour/Disabling';
 import { Docking } from './behaviour/Docking';
 import { Dragging } from './behaviour/Dragging';
-import Focusing from './behaviour/Focusing';
+import { Focusing } from './behaviour/Focusing';
 import Highlighting from './behaviour/Highlighting';
 import Invalidating from './behaviour/Invalidating';
 import Keying from './behaviour/Keying';
