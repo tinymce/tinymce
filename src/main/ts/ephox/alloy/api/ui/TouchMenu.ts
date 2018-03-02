@@ -8,7 +8,7 @@ import * as TouchMenuSchema from '../../ui/schema/TouchMenuSchema';
 import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Coupling } from '../behaviour/Coupling';
-import Highlighting from '../behaviour/Highlighting';
+import { Highlighting } from '../behaviour/Highlighting';
 import Representing from '../behaviour/Representing';
 import Sandboxing from '../behaviour/Sandboxing';
 import Toggling from '../behaviour/Toggling';

@@ -2,7 +2,7 @@ import * as Behaviour from './Behaviour';
 import * as ActiveDocking from '../../behaviour/docking/ActiveDocking';
 import DockingSchema from '../../behaviour/docking/DockingSchema';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
-import { Option } from '@ephox/boulder/node_modules/@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import { AlloyComponent } from 'ephox/alloy/api/component/Component';
 
 export interface DockingBehaviour extends AlloyBehaviour {

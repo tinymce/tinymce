@@ -1,4 +1,4 @@
-import { Option } from '@ephox/boulder/node_modules/@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import { AlloyComponent } from 'ephox/alloy/api/component/Component';
 import { ComposingConfig } from 'ephox/alloy/api/behaviour/Composing';
 

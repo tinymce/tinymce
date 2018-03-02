@@ -1,7 +1,8 @@
-import { Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 
-import Highlighting from '../behaviour/Highlighting';
+import { Highlighting } from '../behaviour/Highlighting';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
 const dom = function () {
   const get = function (component) {

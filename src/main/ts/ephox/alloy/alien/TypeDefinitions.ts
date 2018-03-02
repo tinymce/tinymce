@@ -1,6 +1,7 @@
 import { FieldProcessorAdt } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
 import { isDisabled } from 'ephox/alloy/behaviour/disabling/DisableApis';
+import { value } from '@ephox/boulder/lib/main/ts/ephox/boulder/core/ValueProcessor';
 
 // TODO move these to the correct village
 
@@ -15,7 +16,7 @@ export interface SchemaSchema {
 
 // Behaviours
 export interface AlloyBehaviour {
-  config: (spec: any) => any;
+  config: (spec: any) => { key: string, value: any };
   exhibit: (info: any, base: any) => {};
   handlers: (info: any) => {};
   name: () => string;
@@ -25,6 +26,15 @@ export interface AlloyBehaviour {
   getValue: (any) => any;
   setValue: (...any) => any;
 }
+
+// WIP
+// export interface AlloyBehaviourSchema {
+//   config: {};
+//   configAsRaw: () => {};
+//   initialConfig: any;
+//   me: any;
+//   state: any;
+// }
 
 export interface AlloyBehaviourConfig {
   fields: FieldProcessorAdt[];
