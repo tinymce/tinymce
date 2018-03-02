@@ -1,13 +1,11 @@
-import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, Objects, Processor, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-
-import * as Behaviour from '../../behaviour/common/Behaviour';
-import * as NoState from '../../behaviour/common/NoState';
-
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { ComposingCreateConfig } from 'ephox/alloy/api/behaviour/Composing';
 import { DockingBehaviour } from 'ephox/alloy/api/behaviour/Docking';
-import { Processor } from '@ephox/boulder/lib/main/ts/ephox/boulder/api/DslType';
+
+import * as Behaviour from '../../behaviour/common/Behaviour';
+import * as NoState from '../../behaviour/common/NoState';
 
 const derive = function (capabilities): {} {
   return Objects.wrapAll(capabilities);

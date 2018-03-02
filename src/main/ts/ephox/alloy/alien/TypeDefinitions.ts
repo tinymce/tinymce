@@ -1,5 +1,5 @@
-import { FieldProcessorAdt } from '@ephox/boulder/lib/main/ts/ephox/boulder/api/DslType';
-import { Option } from '@ephox/boulder/node_modules/@ephox/katamari';
+import { FieldProcessorAdt } from '@ephox/boulder';
+import { Option } from '@ephox/katamari';
 import { isDisabled } from 'ephox/alloy/behaviour/disabling/DisableApis';
 
 // TODO move these to the correct village
