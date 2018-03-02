@@ -11,6 +11,7 @@
 import { Arr } from '@ephox/katamari';
 import ScriptLoader from './dom/ScriptLoader';
 import Tools from './util/Tools';
+import { Editor } from 'tinymce/core/api/Editor';
 
 /**
  * This class handles the loading of themes/plugins or other add-ons and their language packs.
@@ -80,15 +81,31 @@ import Tools from './util/Tools';
 
 const each = Tools.each;
 
-const AddOnManager: any = function () {
-  // const self = this;
+export interface UrlObject { prefix: string; resource: string; suffix: string; }
 
+export interface AddOnManager {
+  items: any[];
+  urls: Record<string, string>;
+  lookup: {};
+  _listeners: any[];
+  get: (name: string) => any;
+  dependencies: (name: string) => any;
+  requireLangPack: (name: string, languages: string) => void;
+  add: (id: string, addOn: (editor: Editor, url: string) => any, dependencies?: any) => (editor: Editor, url: string) => any;
+  remove: (name: string) => void;
+  createUrl: (baseUrl: UrlObject, dep: string | UrlObject) => UrlObject;
+  addComponents: (pluginName: string, scripts: string[]) => void;
+  load: (name: string, addOnUrl: string | UrlObject, success?: any, scope?: any, failure?: any) => void;
+  waitFor: (name: string, callback: Function) => void;
+}
+
+export function AddOnManager(): AddOnManager {
   const items = [];
-  const urls = {};
+  const urls: Record<string, string> = {};
   const lookup = {};
   let _listeners = [];
 
-  const get = (name) => {
+  const get = (name: string) => {
     if (lookup[name]) {
       return lookup[name].instance;
     }
@@ -96,7 +113,7 @@ const AddOnManager: any = function () {
     return undefined;
   };
 
-  const dependencies = (name) => {
+  const dependencies = (name: string) => {
     let result;
 
     if (lookup[name]) {
@@ -106,7 +123,7 @@ const AddOnManager: any = function () {
     return result || [];
   };
 
-  const requireLangPack = (name, languages) => {
+  const requireLangPack = (name: string, languages: string) => {
     let language = AddOnManager.language;
 
     if (language && AddOnManager.languageLoad !== false) {
@@ -125,7 +142,7 @@ const AddOnManager: any = function () {
     }
   };
 
-  const add = (id, addOn, dependencies) => {
+  const add = (id: string, addOn: (editor: Editor, url: string) => any, dependencies?) => {
     items.push(addOn);
     lookup[id] = { instance: addOn, dependencies };
     const result = Arr.partition(_listeners, function (listener) {
@@ -141,20 +158,22 @@ const AddOnManager: any = function () {
     return addOn;
   };
 
-  const remove = (name) => {
+  const remove = (name: string) => {
     delete urls[name];
     delete lookup[name];
   };
 
-  const createUrl = (baseUrl, dep) => {
+  const createUrl = (baseUrl: string | UrlObject, dep: string | UrlObject): UrlObject => {
     if (typeof dep === 'object') {
       return dep;
     }
 
-    return { prefix: baseUrl.prefix, resource: dep, suffix: baseUrl.suffix };
+    return typeof baseUrl === 'string' ?
+      { prefix: '', resource: dep, suffix: '' } :
+      { prefix: baseUrl.prefix, resource: dep, suffix: baseUrl.suffix };
   };
 
-  const addComponents = (pluginName, scripts) => {
+  const addComponents = (pluginName: string, scripts: string[]) => {
     const pluginUrl = this.urls[pluginName];
 
     each(scripts, function (script) {
@@ -162,49 +181,45 @@ const AddOnManager: any = function () {
     });
   };
 
-  const load = (name, addOnUrl, success, scope, failure?) => {
-    let url = addOnUrl;
+  const loadDependencies = function (addOnUrl: string | UrlObject, success: Function, scope: any) {
+    const deps = dependencies(name);
 
-    const loadDependencies = function () {
-      const deps = dependencies(name);
+    each(deps, function (dep) {
+      const newUrl = createUrl(addOnUrl, dep);
 
-      each(deps, function (dep) {
-        const newUrl = createUrl(addOnUrl, dep);
+      load(newUrl.resource, newUrl, undefined, undefined);
+    });
 
-        load(newUrl.resource, newUrl, undefined, undefined);
-      });
-
-      if (success) {
-        if (scope) {
-          success.call(scope);
-        } else {
-          success.call(ScriptLoader);
-        }
+    if (success) {
+      if (scope) {
+        success.call(scope);
+      } else {
+        success.call(ScriptLoader);
       }
-    };
+    }
+  };
 
+  const load = (name: string, addOnUrl: string | UrlObject, success?: Function, scope?: any, failure?: Function) => {
     if (urls[name]) {
       return;
     }
 
-    if (typeof addOnUrl === 'object') {
-      url = addOnUrl.prefix + addOnUrl.resource + addOnUrl.suffix;
+    let urlString = typeof addOnUrl === 'string' ? addOnUrl : addOnUrl.prefix + addOnUrl.resource + addOnUrl.suffix;
+
+    if (urlString.indexOf('/') !== 0 && urlString.indexOf('://') === -1) {
+      urlString = AddOnManager.baseURL + '/' + urlString;
     }
 
-    if (url.indexOf('/') !== 0 && url.indexOf('://') === -1) {
-      url = AddOnManager.baseURL + '/' + url;
-    }
-
-    urls[name] = url.substring(0, url.lastIndexOf('/'));
+    urls[name] = urlString.substring(0, urlString.lastIndexOf('/'));
 
     if (lookup[name]) {
-      loadDependencies();
+      loadDependencies(addOnUrl, success, scope);
     } else {
-      ScriptLoader.ScriptLoader.add(url, loadDependencies, scope, failure);
+      ScriptLoader.ScriptLoader.add(urlString, () => loadDependencies(addOnUrl, success, scope), scope, failure);
     }
   };
 
-  const waitFor = (name, callback) => {
+  const waitFor = (name: string, callback: Function) => {
     if (lookup.hasOwnProperty(name)) {
       callback();
     } else {
@@ -303,9 +318,12 @@ const AddOnManager: any = function () {
 
     waitFor
   };
-};
+}
 
-AddOnManager.PluginManager = new AddOnManager();
-AddOnManager.ThemeManager = new AddOnManager();
-
-export default AddOnManager;
+export namespace AddOnManager {
+  export let language;
+  export let languageLoad;
+  export let baseURL;
+  export const PluginManager = AddOnManager();
+  export const ThemeManager = AddOnManager();
+}
