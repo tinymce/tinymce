@@ -16,7 +16,7 @@ export interface DockingConfig<T> extends AlloyBehaviourConfig {
     transitionClass: string;
     lazyContext: (component: AlloyComponent) => Option<T>;
   };
-  lazyViewport: any;
+  lazyViewport: (component?: AlloyComponent) => any;
   leftAttr: string;
   topAttr: string;
 }

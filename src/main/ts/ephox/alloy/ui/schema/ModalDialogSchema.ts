@@ -4,7 +4,7 @@ import { JSON as Json } from '@ephox/sand';
 import { SelectorFind } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
-import Dragging from '../../api/behaviour/Dragging';
+import { Dragging } from '../../api/behaviour/Dragging';
 import Keying from '../../api/behaviour/Keying';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
