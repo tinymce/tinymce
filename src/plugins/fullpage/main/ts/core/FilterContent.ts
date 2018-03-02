@@ -12,6 +12,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Settings from '../api/Settings';
 import Parser from './Parser';
 import Protect from './Protect';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const each = Tools.each;
 
@@ -21,7 +22,7 @@ const low = function (s) {
   });
 };
 
-const handleSetContent = function (editor, headState, footState, evt) {
+const handleSetContent = function (editor: Editor, headState, footState, evt) {
   let startPos, endPos, content, headerFragment, styles = '';
   const dom = editor.dom;
   let elm;
@@ -169,13 +170,13 @@ const getDefaultHeader = function (editor) {
   return header;
 };
 
-const handleGetContent = function (editor, head, foot, evt) {
+const handleGetContent = function (editor: Editor, head, foot, evt) {
   if (!evt.selection && (!evt.source_view || !Settings.shouldHideInSourceView(editor))) {
     evt.content = Protect.unprotectHtml(Tools.trim(head) + '\n' + Tools.trim(evt.content) + '\n' + Tools.trim(foot));
   }
 };
 
-const setup = function (editor, headState, footState) {
+const setup = function (editor: Editor, headState, footState) {
   editor.on('BeforeSetContent', function (evt) {
     handleSetContent(editor, headState, footState, evt);
   });

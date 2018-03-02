@@ -13,7 +13,7 @@ import DomQuery from './DomQuery';
 import EventUtils from './EventUtils';
 import Position from '../../dom/Position';
 import Sizzle from './Sizzle';
-import StyleSheetLoader from '../../dom/StyleSheetLoader';
+import { StyleSheetLoader } from '../../dom/StyleSheetLoader';
 import TreeWalker from './TreeWalker';
 import TrimNode from '../../dom/TrimNode';
 import Entities from '../html/Entities';
@@ -148,10 +148,7 @@ export interface DOMUtils {
   files: {};
   stdMode: boolean;
   boxModel: boolean;
-  styleSheetLoader: {
-      load: (url: any, loadedCallback: any, errorCallback?: any) => void;
-      loadAll: (urls: any, success: any, failure: any) => void;
-  };
+  styleSheetLoader: StyleSheetLoader;
   boundEvents: any[];
   styles: Styles;
   schema: Schema;
@@ -161,7 +158,7 @@ export interface DOMUtils {
   $$: (elm: string | Node | Node[]) => any;
   root: any;
   clone: (node: Node, deep: boolean) => Node;
-  getRoot: () => Node;
+  getRoot: () => HTMLElement;
   getViewPort: (argWin?: Window) => GeomRect;
   getRect: (elm: string | HTMLElement) => GeomRect;
   getSize: (elm: string | HTMLElement) => {
@@ -176,7 +173,7 @@ export interface DOMUtils {
   select: (selector: string, scope?: string | Element) => any;
   is: (elm: any, selector: string) => boolean;
   add: (parentElm: any, name: any, attrs?: Record<string, any>, html?: string | Node, create?: boolean) => any;
-  create: (name: string, attrs?: Record<string, any>, html?: string | Node) => any;
+  create: (name: string, attrs?: Record<string, any>, html?: string | Node) => HTMLElement;
   createHTML: (name: string, attrs?: Record<string, any>, html?: string) => string;
   createFragment: (html?: string) => DocumentFragment;
   remove: (node: string | Node | Node[], keepChildren?: boolean) => any;
@@ -194,7 +191,7 @@ export interface DOMUtils {
   parseStyle: (cssText: string) => StyleMap;
   serializeStyle: (stylesArg: StyleMap, name: string) => string;
   addStyle: (cssText: string) => void;
-  loadCSS: (url: any) => void;
+  loadCSS: (url: string) => void;
   addClass: (elm: string | Node, cls: string) => void;
   removeClass: (elm: string | Node, cls: string) => void;
   hasClass: (elm: string | Node, cls: string) => any;
@@ -214,13 +211,13 @@ export interface DOMUtils {
   findCommonAncestor: (a: Node, b: Node) => Node;
   toHex: (rgbVal: string) => string;
   run: (elm: string | Node, func: (node: HTMLElement) => any, scope?: any) => any;
-  getAttribs: (elm: any) => any;
+  getAttribs: (elm: string | Node) => NamedNodeMap | undefined[];
   isEmpty: (node: any, elements?: Record<string, any>) => boolean;
   createRng: () => Range;
   nodeIndex: (node: Node, normalized?: boolean) => number;
   split: (parentElm: Node, splitElm: Node, replacementElm?: Node) => Node;
   bind: (target: Node | Window | Array<Node | Window>, name: any, func: any, scope?: any) => any;
-  unbind: (target: any, name: string, func?: any) => any;
+  unbind: (target: any, name?: string, func?: any) => any;
   fire: (target: any, name: string, evt?: any) => any;
   getContentEditable: (node: Node) => string;
   getContentEditableParent: (node: Node) => any;
@@ -332,38 +329,14 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return value;
   };
 
-  const getAttribs = (elm) => {
-    let attrs;
+  const getAttribs = (elm: string | Node): NamedNodeMap | undefined[] => {
+    const node = get(elm);
 
-    elm = get(elm);
-
-    if (!elm) {
+    if (!node) {
       return [];
     }
 
-    if (isIE) {
-      attrs = [];
-
-      // Object will throw exception in IE
-      if (elm.nodeName === 'OBJECT') {
-        return elm.attributes;
-      }
-
-      // IE doesn't keep the selected attribute if you clone option elements
-      if (elm.nodeName === 'OPTION' && getAttrib(elm, 'selected')) {
-        attrs.push({ specified: 1, nodeName: 'selected' });
-      }
-
-      // It's crazy that this is faster in IE but it's because it returns all attributes all the time
-      const attrRegExp = /<\/?[\w:\-]+ ?|=[\"][^\"]+\"|=\'[^\']+\'|=[\w\-]+|>/gi;
-      elm.cloneNode(false).outerHTML.replace(attrRegExp, '').replace(/[\w:\-]+/gi, function (a) {
-        attrs.push({ specified: 1, nodeName: a });
-      });
-
-      return attrs;
-    }
-
-    return elm.attributes;
+    return node.attributes;
   };
 
   const setAttrib = (elm: string | Node, name: string, value: string) => {
@@ -417,7 +390,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return null;
   };
 
-  const getRoot = (): Node => {
+  const getRoot = (): HTMLElement => {
     return settings.root_element || doc.body;
   };
 
@@ -718,7 +691,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     });
   };
 
-  const create = (name: string, attrs?: Record<string, any>, html?: string | Node) => {
+  const create = (name: string, attrs?: Record<string, any>, html?: string | Node): HTMLElement => {
     return add(doc.createElement(name), name, attrs, html, true);
   };
 
@@ -836,7 +809,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     }
   };
 
-  const loadCSS = (url) => {
+  const loadCSS = (url: string) => {
     let head;
 
     // Prevent inline from loading the same CSS file twice
@@ -1132,7 +1105,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return events.bind(target, name, func, scope || self);
   };
 
-  const unbind = (target, name: string, func?) => {
+  const unbind = (target, name?: string, func?) => {
     let i;
 
     if (Tools.isArray(target)) {

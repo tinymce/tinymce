@@ -11,6 +11,7 @@
 import Observable from './util/Observable';
 import DOMUtils from './dom/DOMUtils';
 import Tools from './util/Tools';
+import { Editor } from 'tinymce/core/api/Editor';
 
 /**
  * This mixin contains the event logic for the tinymce.Editor class.
@@ -63,7 +64,7 @@ const getEventTarget = function (editor, eventName) {
  * @param {tinymce.Editor} editor Editor instance to get event target from.
  * @param {String} eventName Name of the event for example "click".
  */
-const bindEventDelegate = function (editor, eventName) {
+const bindEventDelegate = function (editor: Editor, eventName) {
   let eventRootElm, delegate;
 
   const isListening = function (editor) {
@@ -184,7 +185,7 @@ let EditorObservable = {
   unbindAllNativeEvents () {
     const self = this;
     const body = self.getBody();
-    const dom = self.dom;
+    const dom: DOMUtils = self.dom;
     let name;
 
     if (self.delegates) {

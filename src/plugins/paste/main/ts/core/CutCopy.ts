@@ -57,11 +57,11 @@ const setClipboardData = (evt: ClipboardEvent, data: SelectionContentData, fallb
 
 const fallback = (editor: Editor): FallbackFn => (html, done) => {
   const markedHtml = InternalHtml.mark(html);
-  const outer: HTMLDivElement = editor.dom.create('div', {
+  const outer = editor.dom.create('div', {
     'contenteditable': 'false',
     'data-mce-bogus': 'all'
   });
-  const inner: HTMLDivElement = editor.dom.create('div', { contenteditable: 'true' }, markedHtml);
+  const inner = editor.dom.create('div', { contenteditable: 'true' }, markedHtml);
   editor.dom.setStyles(outer, {
     position: 'fixed',
     top: '0',

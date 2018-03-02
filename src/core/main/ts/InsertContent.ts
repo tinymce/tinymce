@@ -21,6 +21,7 @@ import Serializer from './api/html/Serializer';
 import RangeNormalizer from './selection/RangeNormalizer';
 import Tools from './api/util/Tools';
 import { Selection } from './api/dom/Selection';
+import { Editor } from 'tinymce/core/api/Editor';
 
 /**
  * Handles inserts of contents into the editor instance.
@@ -31,7 +32,7 @@ import { Selection } from './api/dom/Selection';
 
 const isTableCell = NodeType.matchNodeNames('td th');
 
-const validInsertion = function (editor, value, parentNode) {
+const validInsertion = function (editor: Editor, value, parentNode) {
   // Should never insert content into bogus elements, since these can
   // be resize handles or similar
   if (parentNode.getAttribute('data-mce-bogus') === 'all') {
@@ -52,7 +53,7 @@ const trimBrsFromTableCell = function (dom, elm) {
   Option.from(dom.getParent(elm, 'td,th')).map(Element.fromDom).each(PaddingBr.trimBlockTrailingBr);
 };
 
-const insertHtmlAtCaret = function (editor, value, details) {
+const insertHtmlAtCaret = function (editor: Editor, value, details) {
   let parser, serializer, parentNode, rootNode, fragment, args;
   let marker, rng, node, node2, bookmarkHtml, merge;
   const textInlineElements = editor.schema.getTextInlineElements();
@@ -293,7 +294,7 @@ const insertHtmlAtCaret = function (editor, value, details) {
 
   // Custom handling of lists
   if (details.paste === true && InsertList.isListFragment(editor.schema, fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
-    rng = InsertList.insertAtCaret(serializer, dom, editor.selection.getRng(true), fragment);
+    rng = InsertList.insertAtCaret(serializer, dom, editor.selection.getRng(), fragment);
     editor.selection.setRng(rng);
     editor.fire('SetContent', args);
     return;
