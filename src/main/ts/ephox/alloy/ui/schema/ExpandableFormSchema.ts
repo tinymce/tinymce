@@ -2,7 +2,7 @@ import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Class, Focus } from '@ephox/sugar';
 
-import Behaviour from '../../api/behaviour/Behaviour';
+import * as Behaviour from '../../api/behaviour/Behaviour';
 import Keying from '../../api/behaviour/Keying';
 import Representing from '../../api/behaviour/Representing';
 import Sliding from '../../api/behaviour/Sliding';

@@ -1,7 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 
-import Behaviour from '../../api/behaviour/Behaviour';
+import * as Behaviour from '../../api/behaviour/Behaviour';
 import Sliding from '../../api/behaviour/Sliding';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
 import Toolbar from '../../api/ui/Toolbar';

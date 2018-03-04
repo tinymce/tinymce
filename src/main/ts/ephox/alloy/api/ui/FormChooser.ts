@@ -2,9 +2,9 @@ import { Arr, Merger, Option } from '@ephox/katamari';
 import { Attr, SelectorFilter } from '@ephox/sugar';
 
 import * as FormChooserSchema from '../../ui/schema/FormChooserSchema';
-import Behaviour from '../behaviour/Behaviour';
-import Composing from '../behaviour/Composing';
-import Highlighting from '../behaviour/Highlighting';
+import * as Behaviour from '../behaviour/Behaviour';
+import { Composing } from '../behaviour/Composing';
+import { Highlighting } from '../behaviour/Highlighting';
 import Keying from '../behaviour/Keying';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';

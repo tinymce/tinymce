@@ -1,7 +1,7 @@
 import { Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Keying from 'ephox/alloy/api/behaviour/Keying';
 import Receiving from 'ephox/alloy/api/behaviour/Receiving';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';

@@ -2,8 +2,8 @@ import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Logger, Step, 
 import { UnitTest } from '@ephox/bedrock';
 import { Cell, Future, Option, Result } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Invalidating from 'ephox/alloy/api/behaviour/Invalidating';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Invalidating } from 'ephox/alloy/api/behaviour/Invalidating';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import Container from 'ephox/alloy/api/ui/Container';

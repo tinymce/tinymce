@@ -1,4 +1,4 @@
-import Behaviour from './Behaviour';
+import * as Behaviour from './Behaviour';
 import * as ActiveTransitioning from '../../behaviour/transitioning/ActiveTransitioning';
 import * as TransitionApis from '../../behaviour/transitioning/TransitionApis';
 import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';

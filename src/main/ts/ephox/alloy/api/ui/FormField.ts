@@ -3,8 +3,8 @@ import { Attr } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as FormFieldSchema from '../../ui/schema/FormFieldSchema';
-import Behaviour from '../behaviour/Behaviour';
-import Composing from '../behaviour/Composing';
+import * as Behaviour from '../behaviour/Behaviour';
+import { Composing } from '../behaviour/Composing';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';

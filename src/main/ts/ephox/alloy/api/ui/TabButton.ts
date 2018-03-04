@@ -2,8 +2,8 @@ import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Id, Merger } from '@ephox/katamari';
 
 import { events } from '../../ui/common/ButtonBase';
-import Behaviour from '../behaviour/Behaviour';
-import Focusing from '../behaviour/Focusing';
+import * as Behaviour from '../behaviour/Behaviour';
+import { Focusing } from '../behaviour/Focusing';
 import Keying from '../behaviour/Keying';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';

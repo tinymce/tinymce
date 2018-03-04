@@ -1,8 +1,8 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Focus } from '@ephox/sugar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Disabling from 'ephox/alloy/api/behaviour/Disabling';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Disabling } from 'ephox/alloy/api/behaviour/Disabling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';

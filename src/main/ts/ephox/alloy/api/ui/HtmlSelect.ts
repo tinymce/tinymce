@@ -2,8 +2,8 @@ import { FieldSchema, Objects } from '@ephox/boulder';
 import { Arr, Merger } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
-import Behaviour from '../behaviour/Behaviour';
-import Focusing from '../behaviour/Focusing';
+import * as Behaviour from '../behaviour/Behaviour';
+import { Focusing } from '../behaviour/Focusing';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';

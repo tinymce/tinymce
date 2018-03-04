@@ -1,8 +1,8 @@
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Class, Css, Element, Position } from '@ephox/sugar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Dragging from 'ephox/alloy/api/behaviour/Dragging';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import Unselecting from 'ephox/alloy/api/behaviour/Unselecting';
 import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';

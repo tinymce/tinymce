@@ -3,9 +3,9 @@ import { Arr, Fun, Merger, Obj, Option, Options } from '@ephox/katamari';
 import { Body, Class, Classes, SelectorFind } from '@ephox/sugar';
 
 import * as EditableFields from '../../alien/EditableFields';
-import Behaviour from '../../api/behaviour/Behaviour';
-import Composing from '../../api/behaviour/Composing';
-import Highlighting from '../../api/behaviour/Highlighting';
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { Composing } from '../../api/behaviour/Composing';
+import { Highlighting } from '../../api/behaviour/Highlighting';
 import Keying from '../../api/behaviour/Keying';
 import Replacing from '../../api/behaviour/Replacing';
 import Representing from '../../api/behaviour/Representing';

@@ -1,9 +1,9 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-import Behaviour from '../../api/behaviour/Behaviour';
-import Coupling from '../../api/behaviour/Coupling';
-import Focusing from '../../api/behaviour/Focusing';
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { Coupling } from '../../api/behaviour/Coupling';
+import { Focusing } from '../../api/behaviour/Focusing';
 import Keying from '../../api/behaviour/Keying';
 import Toggling from '../../api/behaviour/Toggling';
 import SketchBehaviours from '../../api/component/SketchBehaviours';

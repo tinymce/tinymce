@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Logger, RawAssertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Replacing from 'ephox/alloy/api/behaviour/Replacing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Container from 'ephox/alloy/api/ui/Container';

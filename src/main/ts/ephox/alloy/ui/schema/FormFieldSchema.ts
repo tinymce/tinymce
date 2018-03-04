@@ -1,7 +1,7 @@
 import { FieldSchema, Objects } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-import Composing from '../../api/behaviour/Composing';
+import { Composing } from '../../api/behaviour/Composing';
 import Representing from '../../api/behaviour/Representing';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
 import PartType from '../../parts/PartType';

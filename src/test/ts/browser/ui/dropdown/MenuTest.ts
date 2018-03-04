@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, NamedChain, UiFinder } from '@ephox
 import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';

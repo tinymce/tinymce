@@ -3,8 +3,8 @@ import { Id } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
 import * as TieredMenuSpec from '../../ui/single/TieredMenuSpec';
-import Composing from '../behaviour/Composing';
-import Highlighting from '../behaviour/Highlighting';
+import { Composing } from '../behaviour/Composing';
+import { Highlighting } from '../behaviour/Highlighting';
 import Keying from '../behaviour/Keying';
 import Replacing from '../behaviour/Replacing';
 import SketchBehaviours from '../component/SketchBehaviours';

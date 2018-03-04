@@ -1,9 +1,42 @@
-import Behaviour from './Behaviour';
+import * as Behaviour from './Behaviour';
 import * as DraggingBranches from '../../behaviour/dragging/DraggingBranches';
 import * as DragState from '../../dragging/common/DragState';
-import { Struct } from '@ephox/katamari';
+import { Struct, Option } from '@ephox/katamari';
+import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
+import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
+import { AlloyComponent } from 'ephox/alloy/api/component/Component';
 
-export default <any> Behaviour.createModes({
+export interface DraggingBehaviour extends AlloyBehaviour {
+  config: (DraggingConfig) => any;
+  snap: (SnapConfig) => any;
+}
+
+export type DraggingMode = 'touch' | 'mouse';
+export interface SnapConfig {
+  sensor: (x, y) => any;
+  range: (x, y) => any;
+  output: (x, y) => any;
+}
+
+export interface SchnappsConfig {
+  getSnapPoints: () => any[];
+  leftAttr: string;
+  topAttr: string;
+  onSensor: () => (component: AlloyComponent, extra: {}) => void;
+  lazyViewport: (component?: AlloyComponent) => any;
+}
+
+export interface DraggingConfig<T> extends AlloyBehaviourConfig {
+  mode: DraggingMode;
+  blockerClass?: string[];
+  snaps: (SchnappsConfig) => Option<T>;
+  getTarget: (handle: EventHandlerConfig) => any;
+  useFixed: boolean;
+  onDrop: () => any;
+  dragger: () => any;
+}
+
+const Dragging: DraggingBehaviour = Behaviour.createModes({
   branchKey: 'mode',
   branches: DraggingBranches,
   name: 'dragging',
@@ -20,3 +53,7 @@ export default <any> Behaviour.createModes({
   },
   state: DragState
 });
+
+export {
+  Dragging
+};

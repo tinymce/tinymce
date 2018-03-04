@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Class, Css, DomEvent, Element, Insert } from '@ephox/sugar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Keying from 'ephox/alloy/api/behaviour/Keying';
 import Replacing from 'ephox/alloy/api/behaviour/Replacing';
 import Toggling from 'ephox/alloy/api/behaviour/Toggling';

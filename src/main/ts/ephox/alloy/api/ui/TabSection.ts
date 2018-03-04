@@ -3,7 +3,7 @@ import { Attr } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as TabSectionSchema from '../../ui/schema/TabSectionSchema';
-import Highlighting from '../behaviour/Highlighting';
+import { Highlighting } from '../behaviour/Highlighting';
 import Replacing from '../behaviour/Replacing';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';

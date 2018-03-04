@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Logger, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Docking from 'ephox/alloy/api/behaviour/Docking';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Docking } from 'ephox/alloy/api/behaviour/Docking';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import Container from 'ephox/alloy/api/ui/Container';

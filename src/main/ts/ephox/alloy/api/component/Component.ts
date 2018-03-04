@@ -13,8 +13,23 @@ import NoContextApi from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as CompBehaviours from './CompBehaviours';
 import ComponentApi from './ComponentApi';
+import { AlloyBehaviour, AlloyBehaviourConfig, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
-const build = function (spec) {
+export interface AlloyComponent {
+  getSystem: () => AlloyComponent;
+  config: (config: AlloyBehaviourConfig) => AlloyBehaviour;
+  hasConfigured: (behaviour) => boolean;
+  spec: () => any;
+  readState: (behaviourName: string) => any;
+  connect: (newApi) => void;
+  disconnect: () => void;
+  element: () => SugarElement;
+  syncComponents: () => void;
+  components: () => any;
+  events: () => {};
+}
+
+const build = function (spec): AlloyComponent {
   const getMe = function () {
     return me;
   };

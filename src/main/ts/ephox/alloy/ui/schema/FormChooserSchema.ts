@@ -1,10 +1,10 @@
 import { FieldSchema, Objects } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
-import Behaviour from '../../api/behaviour/Behaviour';
-import Composing from '../../api/behaviour/Composing';
-import Focusing from '../../api/behaviour/Focusing';
-import Highlighting from '../../api/behaviour/Highlighting';
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { Composing } from '../../api/behaviour/Composing';
+import { Focusing } from '../../api/behaviour/Focusing';
+import { Highlighting } from '../../api/behaviour/Highlighting';
 import Keying from '../../api/behaviour/Keying';
 import Representing from '../../api/behaviour/Representing';
 import SketchBehaviours from '../../api/component/SketchBehaviours';

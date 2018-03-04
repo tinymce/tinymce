@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Logger, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Future, Result } from '@ephox/katamari';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import Positioning from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';

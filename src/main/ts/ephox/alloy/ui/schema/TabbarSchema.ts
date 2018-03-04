@@ -1,7 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-import Highlighting from '../../api/behaviour/Highlighting';
+import { Highlighting } from '../../api/behaviour/Highlighting';
 import Keying from '../../api/behaviour/Keying';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';

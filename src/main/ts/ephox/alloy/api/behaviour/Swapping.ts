@@ -1,4 +1,4 @@
-import Behaviour from './Behaviour';
+import * as Behaviour from './Behaviour';
 import * as SwapApis from '../../behaviour/swapping/SwapApis';
 import SwapSchema from '../../behaviour/swapping/SwapSchema';
 

@@ -2,8 +2,8 @@ import { Arr, Merger, Obj } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import PartType from '../../parts/PartType';
-import Behaviour from '../behaviour/Behaviour';
-import Composing from '../behaviour/Composing';
+import * as Behaviour from '../behaviour/Behaviour';
+import { Composing } from '../behaviour/Composing';
 import Representing from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';

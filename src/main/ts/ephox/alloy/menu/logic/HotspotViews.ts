@@ -1,6 +1,6 @@
 import { Option } from '@ephox/katamari';
 
-import Focusing from '../../api/behaviour/Focusing';
+import { Focusing } from '../../api/behaviour/Focusing';
 import Sandboxing from '../../api/behaviour/Sandboxing';
 
 const onEscape = function (anchor, sandbox) {

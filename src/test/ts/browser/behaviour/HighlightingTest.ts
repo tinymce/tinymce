@@ -2,8 +2,8 @@ import { Assertions, Chain, NamedChain, Truncate, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Result } from '@ephox/katamari';
 import { Attr, Class } from '@ephox/sugar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Highlighting from 'ephox/alloy/api/behaviour/Highlighting';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Highlighting } from 'ephox/alloy/api/behaviour/Highlighting';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Container from 'ephox/alloy/api/ui/Container';
 import ChainUtils from 'ephox/alloy/test/ChainUtils';
@@ -31,7 +31,6 @@ UnitTest.asynctest('HighlightingTest', function () {
         }
       });
     };
-
     return GuiFactory.build(
       Container.sketch({
         containerBehaviours: Behaviour.derive([

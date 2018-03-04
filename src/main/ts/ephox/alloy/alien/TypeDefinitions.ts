@@ -1,5 +1,46 @@
+import { FieldProcessorAdt } from '@ephox/boulder';
+import { Option } from '@ephox/katamari';
+import { isDisabled } from 'ephox/alloy/behaviour/disabling/DisableApis';
+import { value } from '@ephox/boulder/lib/main/ts/ephox/boulder/core/ValueProcessor';
+
 // TODO move these to the correct village
 
-interface SugarElement {
+export interface SugarElement {
   dom: () => HTMLElement;
+}
+
+// Schema
+export interface SchemaSchema {
+  any;  // todo what is this
+}
+
+// Behaviours
+export interface AlloyBehaviour {
+  config: (spec: any) => { key: string, value: any };
+  exhibit: (info: any, base: any) => {};
+  handlers: (info: any) => {};
+  name: () => string;
+  revoke: () => { key: string, value: undefined };
+  schema: () => SchemaSchema;
+
+  getValue: (any) => any;
+  setValue: (...any) => any;
+}
+
+// WIP
+// export interface AlloyBehaviourSchema {
+//   config: {};
+//   configAsRaw: () => {};
+//   initialConfig: any;
+//   me: any;
+//   state: any;
+// }
+
+export interface AlloyBehaviourConfig {
+  fields: FieldProcessorAdt[];
+  name: string;
+  active?: {};
+  apis?: {};
+  extra?: {};
+  state?: {};
 }

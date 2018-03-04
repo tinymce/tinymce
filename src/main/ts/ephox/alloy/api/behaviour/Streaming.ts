@@ -1,4 +1,4 @@
-import Behaviour from './Behaviour';
+import * as Behaviour from './Behaviour';
 import * as NoState from '../../behaviour/common/NoState';
 import * as ActiveStreaming from '../../behaviour/streaming/ActiveStreaming';
 import StreamingSchema from '../../behaviour/streaming/StreamingSchema';

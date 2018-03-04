@@ -1,5 +1,9 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 
-export default <any> [
+const ComposeSchema: FieldProcessorAdt[] = [
   FieldSchema.strict('find')
 ];
+
+export {
+  ComposeSchema
+};

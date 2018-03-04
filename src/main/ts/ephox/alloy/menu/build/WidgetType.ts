@@ -2,8 +2,8 @@ import { FieldSchema } from '@ephox/boulder';
 import { Merger, Option } from '@ephox/katamari';
 
 import * as EditableFields from '../../alien/EditableFields';
-import Behaviour from '../../api/behaviour/Behaviour';
-import Focusing from '../../api/behaviour/Focusing';
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { Focusing } from '../../api/behaviour/Focusing';
 import Keying from '../../api/behaviour/Keying';
 import Representing from '../../api/behaviour/Representing';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
