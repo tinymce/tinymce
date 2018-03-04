@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Objects } from '@ephox/boulder';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Button from 'ephox/alloy/api/ui/Button';

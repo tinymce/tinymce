@@ -1,7 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-import Keying from '../../api/behaviour/Keying';
+import { Keying } from '../../api/behaviour/Keying';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import PartType from '../../parts/PartType';

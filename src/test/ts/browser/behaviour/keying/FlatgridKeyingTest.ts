@@ -4,7 +4,7 @@ import { Objects } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import Container from 'ephox/alloy/api/ui/Container';
@@ -94,6 +94,8 @@ UnitTest.asynctest('Flat Grid Keying Test', function () {
       GuiSetup.mSetupKeyLogger(body),
       FocusTools.sSetFocus('Initial focus', gui.element(), '.s11'),
       Step.sync(function () {
+        const k = Keying;
+        debugger;
         Keying.setGridSize(component, 4, 6);
       }),
       NavigationUtils.sequence(

@@ -4,7 +4,7 @@ import { PlatformDetection } from '@ephox/sand';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
-import Keying from '../../api/behaviour/Keying';
+import { Keying } from '../../api/behaviour/Keying';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import NativeEvents from '../../api/events/NativeEvents';
 import PartType from '../../parts/PartType';

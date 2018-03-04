@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
-import Keying from '../../api/behaviour/Keying';
+import { Keying } from '../../api/behaviour/Keying';
 import Toggling from '../../api/behaviour/Toggling';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';

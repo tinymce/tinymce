@@ -8,7 +8,7 @@ import { Dragging } from './behaviour/Dragging';
 import { Focusing } from './behaviour/Focusing';
 import { Highlighting } from './behaviour/Highlighting';
 import { Invalidating } from './behaviour/Invalidating';
-import Keying from './behaviour/Keying';
+import { Keying } from './behaviour/Keying';
 import Pinching from './behaviour/Pinching';
 import Positioning from './behaviour/Positioning';
 import Receiving from './behaviour/Receiving';
