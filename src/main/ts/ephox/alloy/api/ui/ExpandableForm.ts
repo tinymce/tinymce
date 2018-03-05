@@ -4,7 +4,7 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as ExpandableFormSchema from '../../ui/schema/ExpandableFormSchema';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Representing } from '../behaviour/Representing';
-import Sliding from '../behaviour/Sliding';
+import { Sliding } from '../behaviour/Sliding';
 import SketchBehaviours from '../component/SketchBehaviours';
 import Form from './Form';
 import * as Sketcher from './Sketcher';
