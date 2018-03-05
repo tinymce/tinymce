@@ -7,7 +7,7 @@ import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as ComponentUtil from 'ephox/alloy/api/component/ComponentUtil';
 import DomFactory from 'ephox/alloy/api/component/DomFactory';
 import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import FormChooser from 'ephox/alloy/api/ui/FormChooser';
 import FormCoupledInputs from 'ephox/alloy/api/ui/FormCoupledInputs';
 import FormField from 'ephox/alloy/api/ui/FormField';

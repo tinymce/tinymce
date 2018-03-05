@@ -5,7 +5,7 @@ import * as InvalidateApis from '../../behaviour/invalidating/InvalidateApis';
 import InvalidateSchema from '../../behaviour/invalidating/InvalidateSchema';
 import { Future, Result } from '@ephox/katamari';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/Component';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { Component } from 'ephox/alloy/api/Main';
 
 export interface InvalidatingBehaviour extends AlloyBehaviour {

@@ -3,7 +3,7 @@ import * as ComposeApis from '../../behaviour/composing/ComposeApis';
 import { ComposeSchema } from '../../behaviour/composing/ComposeSchema';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { Option } from '@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/Component';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface ComposingBehaviour extends AlloyBehaviour {
   config: (ComposingConfig) => any;

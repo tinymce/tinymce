@@ -3,7 +3,7 @@ import * as ActiveFocus from '../../behaviour/focusing/ActiveFocus';
 import * as FocusApis from '../../behaviour/focusing/FocusApis';
 import FocusSchema from '../../behaviour/focusing/FocusSchema';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/Component';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface FocusingBehaviour extends AlloyBehaviour {
   config: (FocusingConfig) => any;

@@ -10,7 +10,7 @@ import * as Behaviour from '../behaviour/Behaviour';
 import { Coupling } from '../behaviour/Coupling';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Representing } from '../behaviour/Representing';
-import Sandboxing from '../behaviour/Sandboxing';
+import { Sandboxing } from '../behaviour/Sandboxing';
 import Toggling from '../behaviour/Toggling';
 import Transitioning from '../behaviour/Transitioning';
 import Unselecting from '../behaviour/Unselecting';

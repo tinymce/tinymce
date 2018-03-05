@@ -12,22 +12,7 @@ import * as DomRender from '../../dom/DomRender';
 import NoContextApi from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as CompBehaviours from './CompBehaviours';
-import ComponentApi from './ComponentApi';
-import { AlloyBehaviour, AlloyBehaviourConfig, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-
-export interface AlloyComponent {
-  getSystem: () => AlloyComponent;
-  config: (config: AlloyBehaviourConfig) => AlloyBehaviour;
-  hasConfigured: (behaviour) => boolean;
-  spec: () => any;
-  readState: (behaviourName: string) => any;
-  connect: (newApi) => void;
-  disconnect: () => void;
-  element: () => SugarElement;
-  syncComponents: () => void;
-  components: () => any;
-  events: () => {};
-}
+import { ComponentApi, AlloyComponent } from './ComponentApi';
 
 const build = function (spec): AlloyComponent {
   const getMe = function () {
@@ -98,7 +83,6 @@ const build = function (spec): AlloyComponent {
       throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));
     };
     return f();
-    // });
   };
 
   const hasConfigured = function (behaviour) {
@@ -124,7 +108,7 @@ const build = function (spec): AlloyComponent {
     syncComponents,
     components: subcomponents.get,
     events: Fun.constant(events)
-  });
+  }) as AlloyComponent;
 
   return me;
 };

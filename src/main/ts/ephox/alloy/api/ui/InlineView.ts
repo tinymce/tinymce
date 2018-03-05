@@ -7,7 +7,7 @@ import * as Dismissal from '../../sandbox/Dismissal';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Positioning } from '../behaviour/Positioning';
 import { Receiving } from '../behaviour/Receiving';
-import Sandboxing from '../behaviour/Sandboxing';
+import { Sandboxing } from '../behaviour/Sandboxing';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 

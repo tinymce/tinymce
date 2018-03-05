@@ -4,7 +4,7 @@ import * as DragState from '../../dragging/common/DragState';
 import { Struct, Option } from '@ephox/katamari';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
-import { AlloyComponent } from 'ephox/alloy/api/component/Component';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface DraggingBehaviour extends AlloyBehaviour {
   config: (DraggingConfig) => any;

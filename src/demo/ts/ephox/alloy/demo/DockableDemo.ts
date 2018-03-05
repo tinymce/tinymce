@@ -5,7 +5,7 @@ import { Docking } from 'ephox/alloy/api/behaviour/Docking';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default <any> function () {

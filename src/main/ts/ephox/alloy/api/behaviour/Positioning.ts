@@ -2,7 +2,7 @@ import * as Behaviour from './Behaviour';
 import * as ActivePosition from '../../behaviour/positioning/ActivePosition';
 import * as PositionApis from '../../behaviour/positioning/PositionApis';
 import PositionSchema from '../../behaviour/positioning/PositionSchema';
-import { AlloyComponent } from 'ephox/alloy/api/component/Component';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { Option } from '@ephox/boulder/node_modules/@ephox/katamari';
 

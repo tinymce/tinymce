@@ -9,7 +9,7 @@ import Registry from '../../registry/Registry';
 import * as Tagger from '../../registry/Tagger';
 import * as GuiFactory from '../component/GuiFactory';
 import SystemEvents from '../events/SystemEvents';
-import Container from '../ui/Container';
+import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
 import SystemApi from './SystemApi';
 

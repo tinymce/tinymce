@@ -6,7 +6,7 @@ import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
-import Sandboxing from '../../api/behaviour/Sandboxing';
+import { Sandboxing } from '../../api/behaviour/Sandboxing';
 import Streaming from '../../api/behaviour/Streaming';
 import Toggling from '../../api/behaviour/Toggling';
 import SketchBehaviours from '../../api/component/SketchBehaviours';

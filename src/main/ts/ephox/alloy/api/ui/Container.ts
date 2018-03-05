@@ -24,7 +24,7 @@ const factory = function (detail, spec) {
   };
 };
 
-export default <any> Sketcher.single({
+const Container = Sketcher.single({
   name: 'Container',
   factory,
   configFields: [
@@ -36,3 +36,7 @@ export default <any> Sketcher.single({
     FieldSchema.defaulted('eventOrder', { })
   ]
 });
+
+export {
+  Container
+};

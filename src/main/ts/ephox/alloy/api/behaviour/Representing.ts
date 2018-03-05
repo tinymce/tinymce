@@ -5,7 +5,7 @@ import RepresentSchema from '../../behaviour/representing/RepresentSchema';
 import * as RepresentState from '../../behaviour/representing/RepresentState';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { FieldProcessorAdt } from '@ephox/boulder';
-import { AlloyComponent } from 'ephox/alloy/api/component/Component';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface RepresentingBehaviour extends AlloyBehaviour {
   config: (RepresentingConfig) => any;

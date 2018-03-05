@@ -3,7 +3,7 @@ import KeyboardBranches from '../../behaviour/keyboard/KeyboardBranches';
 import * as KeyingState from '../../behaviour/keyboard/KeyingState';
 import { Objects } from '@ephox/boulder';
 import { AlloyBehaviour, AlloyBehaviourConfig, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/Component';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface KeyingBehaviour extends AlloyBehaviour {
   config: (KeyingConfig) => any;
@@ -15,6 +15,7 @@ export interface KeyingBehaviour extends AlloyBehaviour {
   ) => void;
 }
 
+// TODO: dynamic type
 export interface KeyingConfig extends AlloyBehaviourConfig {
   mode: KeyingModes;
   selector: string;

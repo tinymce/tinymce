@@ -1,7 +1,7 @@
 import * as Behaviour from './Behaviour';
 import * as ReplaceApis from '../../behaviour/replacing/ReplaceApis';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/Component';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface ReplacingBehaviour extends AlloyBehaviour {
   config: (ReplacingConfig) => any;

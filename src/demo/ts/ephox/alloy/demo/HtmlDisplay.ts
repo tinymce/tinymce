@@ -1,7 +1,7 @@
 import { Id, Thunk } from '@ephox/katamari';
 import { DomEvent, Element, Html, TextContent } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 
 const register = Thunk.cached(function (gui) {

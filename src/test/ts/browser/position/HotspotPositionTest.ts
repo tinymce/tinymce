@@ -2,7 +2,7 @@ import { Chain, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Button from 'ephox/alloy/api/ui/Button';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import ChainUtils from 'ephox/alloy/test/ChainUtils';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';

@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import DelayedFunction from '../../alien/DelayedFunction';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import NativeEvents from '../../api/events/NativeEvents';
-import Container from '../../api/ui/Container';
+import { Container } from '../../api/ui/Container';
 import * as Fields from '../../data/Fields';
 import * as BlockerUtils from '../common/BlockerUtils';
 import * as DragMovement from '../common/DragMovement';

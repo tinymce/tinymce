@@ -4,7 +4,7 @@ import * as EventRoot from '../../alien/EventRoot';
 import * as EventHandler from '../../construct/EventHandler';
 import * as AlloyTriggers from './AlloyTriggers';
 import SystemEvents from './SystemEvents';
-import { AlloyComponent } from 'ephox/alloy/api/component/Component';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface EventHandlerConfig {
   key: string;
