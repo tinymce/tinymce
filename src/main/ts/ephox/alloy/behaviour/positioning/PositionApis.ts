@@ -45,7 +45,6 @@ const place = function (component, origin, anchoring, posConfig, placee) {
 };
 
 const position = function (component, posConfig, posState, anchor, placee) {
-  debugger;
   const anchorage = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
   const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
