@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 
 import * as DomState from '../alien/DomState';
 import { Dragging } from '../api/behaviour/Dragging';
-import Pinching from '../api/behaviour/Pinching';
+import { Pinching } from '../api/behaviour/Pinching';
 import Toggling from '../api/behaviour/Toggling';
 import * as CompBehaviours from '../api/component/CompBehaviours';
 import BehaviourBlob from '../behaviour/common/BehaviourBlob';

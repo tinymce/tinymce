@@ -1,6 +1,6 @@
 import { Css, Height, SelectorFind, Width } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Pinching from 'ephox/alloy/api/behaviour/Pinching';
+import { Pinching } from 'ephox/alloy/api/behaviour/Pinching';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
