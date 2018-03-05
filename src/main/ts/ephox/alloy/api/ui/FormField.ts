@@ -5,7 +5,7 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as FormFieldSchema from '../../ui/schema/FormFieldSchema';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';
-import Representing from '../behaviour/Representing';
+import { Representing } from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as Sketcher from './Sketcher';

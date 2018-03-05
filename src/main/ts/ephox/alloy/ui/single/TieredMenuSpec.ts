@@ -8,7 +8,7 @@ import { Composing } from '../../api/behaviour/Composing';
 import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Replacing } from '../../api/behaviour/Replacing';
-import Representing from '../../api/behaviour/Representing';
+import { Representing } from '../../api/behaviour/Representing';
 import * as GuiFactory from '../../api/component/GuiFactory';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';

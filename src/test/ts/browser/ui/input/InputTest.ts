@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, GeneralSteps, Logger, Step } from '@ephox/
 import { UnitTest } from '@ephox/bedrock';
 import { PlatformDetection } from '@ephox/sand';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Input from 'ephox/alloy/api/ui/Input';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';

@@ -1,5 +1,5 @@
 import { Assertions, Chain, Step } from '@ephox/agar';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 
 const cGetValue = Chain.mapper(function (component) {
   return Representing.getValue(component);

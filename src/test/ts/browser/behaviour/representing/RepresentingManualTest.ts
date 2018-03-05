@@ -1,5 +1,5 @@
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';

@@ -25,6 +25,7 @@ export interface AlloyBehaviour {
 
   getValue: (any) => any;
   setValue: (...any) => any;
+  fields: FieldProcessorAdt[];
 }
 
 // WIP

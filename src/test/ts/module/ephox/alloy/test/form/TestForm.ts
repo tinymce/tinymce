@@ -1,6 +1,6 @@
 import { Assertions, Step } from '@ephox/agar';
 import { Obj } from '@ephox/katamari';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 
 const helper = function (component) {
   const sAssertRep = function (expected) {

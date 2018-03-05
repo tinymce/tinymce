@@ -13,7 +13,7 @@ import { Pinching } from './behaviour/Pinching';
 import { Positioning } from './behaviour/Positioning';
 import { Receiving } from './behaviour/Receiving';
 import { Replacing } from './behaviour/Replacing';
-import Representing from './behaviour/Representing';
+import { Representing } from './behaviour/Representing';
 import Sandboxing from './behaviour/Sandboxing';
 import Sliding from './behaviour/Sliding';
 import Streaming from './behaviour/Streaming';

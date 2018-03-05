@@ -1,5 +1,5 @@
 import * as Behaviour from './Behaviour';
-import Representing from './Representing';
+import { Representing } from './Representing';
 import * as ActiveInvalidate from '../../behaviour/invalidating/ActiveInvalidate';
 import * as InvalidateApis from '../../behaviour/invalidating/InvalidateApis';
 import InvalidateSchema from '../../behaviour/invalidating/InvalidateSchema';
