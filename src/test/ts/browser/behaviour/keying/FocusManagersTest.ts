@@ -5,7 +5,7 @@ import { Attr, Focus, SelectorFind } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
-import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
+import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';

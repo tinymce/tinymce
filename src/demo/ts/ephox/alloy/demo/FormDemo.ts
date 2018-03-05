@@ -3,7 +3,7 @@ import { Class, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
-import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
+import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import Button from 'ephox/alloy/api/ui/Button';
