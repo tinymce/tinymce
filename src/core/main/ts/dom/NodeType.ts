@@ -97,8 +97,8 @@ const isText = isNodeType(3) as (node: Node) => node is Text;
 const isComment = isNodeType(8) as (node: Node) => node is Comment;
 const isDocument = isNodeType(9) as (node: Node) => node is Document;
 const isBr = matchNodeNames('br') as (node: Node) => node is Element;
-const isContentEditableTrue = hasContentEditableState('true') as (node: Node) => node is Element;
-const isContentEditableFalse = hasContentEditableState('false') as (node: Node) => node is Element;
+const isContentEditableTrue = hasContentEditableState('true') as (node: Node) => node is HTMLElement;
+const isContentEditableFalse = hasContentEditableState('false') as (node: Node) => node is HTMLElement;
 
 export default {
   isText,

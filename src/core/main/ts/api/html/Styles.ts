@@ -29,7 +29,7 @@
 
 import Schema from './Schema';
 
-export interface StyleMap { [s: string]: string; }
+export interface StyleMap { [s: string]: string | number; }
 export interface Styles {
   toHex(color: string): string;
   parse(css: string): StyleMap;
