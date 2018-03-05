@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
 import { Body, Element, Html, Insert, Node, Remove } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Toggling from 'ephox/alloy/api/behaviour/Toggling';
+import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import SystemEvents from 'ephox/alloy/api/events/SystemEvents';

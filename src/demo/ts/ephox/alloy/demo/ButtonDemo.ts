@@ -1,6 +1,6 @@
 import { Class, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Toggling from 'ephox/alloy/api/behaviour/Toggling';
+import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import Button from 'ephox/alloy/api/ui/Button';
@@ -88,7 +88,7 @@ export default <any> function () {
         Toggling.config({
           toggleClass: 'demo-selected',
           aria: {
-            mode: 'pressed'
+            mode: 'fuzzed'
           }
         })
       ])

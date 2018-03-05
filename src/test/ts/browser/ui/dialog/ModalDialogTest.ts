@@ -6,7 +6,7 @@ import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviou
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
-import Toggling from 'ephox/alloy/api/behaviour/Toggling';
+import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';

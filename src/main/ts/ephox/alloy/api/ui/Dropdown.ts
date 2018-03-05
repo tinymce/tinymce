@@ -9,7 +9,7 @@ import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
-import Toggling from '../behaviour/Toggling';
+import { Toggling } from '../behaviour/Toggling';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 

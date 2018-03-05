@@ -4,7 +4,7 @@ import { Class, Css, DomEvent, Element, Insert } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
-import Toggling from 'ephox/alloy/api/behaviour/Toggling';
+import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
