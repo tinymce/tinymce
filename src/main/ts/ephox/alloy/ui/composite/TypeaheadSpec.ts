@@ -9,7 +9,7 @@ import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import { Sandboxing } from '../../api/behaviour/Sandboxing';
-import Streaming from '../../api/behaviour/Streaming';
+import { Streaming } from '../../api/behaviour/Streaming';
 import Toggling from '../../api/behaviour/Toggling';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';

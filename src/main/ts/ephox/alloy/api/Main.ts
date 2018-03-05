@@ -16,7 +16,7 @@ import { Replacing } from './behaviour/Replacing';
 import { Representing } from './behaviour/Representing';
 import { Sandboxing } from './behaviour/Sandboxing';
 import { Sliding } from './behaviour/Sliding';
-import Streaming from './behaviour/Streaming';
+import { Streaming } from './behaviour/Streaming';
 import Swapping from './behaviour/Swapping';
 import Tabstopping from './behaviour/Tabstopping';
 import Toggling from './behaviour/Toggling';
