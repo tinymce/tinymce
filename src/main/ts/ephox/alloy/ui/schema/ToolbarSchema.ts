@@ -2,7 +2,7 @@ import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
-import Replacing from '../../api/behaviour/Replacing';
+import { Replacing } from '../../api/behaviour/Replacing';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
 import PartType from '../../parts/PartType';
 

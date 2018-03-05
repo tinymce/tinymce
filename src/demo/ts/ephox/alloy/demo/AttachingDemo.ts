@@ -1,6 +1,6 @@
 import { Class, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Replacing from 'ephox/alloy/api/behaviour/Replacing';
+import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';

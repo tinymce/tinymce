@@ -4,7 +4,7 @@ import { Css, Width } from '@ephox/sugar';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Overflows from '../../toolbar/Overflows';
 import * as SplitToolbarSchema from '../../ui/schema/SplitToolbarSchema';
-import Replacing from '../behaviour/Replacing';
+import { Replacing } from '../behaviour/Replacing';
 import Sliding from '../behaviour/Sliding';
 import * as GuiFactory from '../component/GuiFactory';
 import SketchBehaviours from '../component/SketchBehaviours';

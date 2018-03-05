@@ -1,5 +1,5 @@
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Replacing from 'ephox/alloy/api/behaviour/Replacing';
+import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import Representing from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiTemplate from 'ephox/alloy/api/component/GuiTemplate';
