@@ -13,7 +13,7 @@ export interface PinchingConfig extends AlloyBehaviourConfig {
   onPunch: (element: SugarElement, changeX: number, changeY: number) => void;
 }
 
-const Pinching = Behaviour.create({
+const Pinching: PinchingBehaviour = Behaviour.create({
   fields: PinchingSchema,
   name: 'pinching',
   active: ActivePinching,

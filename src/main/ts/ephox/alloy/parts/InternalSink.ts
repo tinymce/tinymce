@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../api/behaviour/Behaviour';
-import Positioning from '../api/behaviour/Positioning';
+import { Positioning } from '../api/behaviour/Positioning';
 import * as AlloyEvents from '../api/events/AlloyEvents';
 import NativeEvents from '../api/events/NativeEvents';
 import PartType from './PartType';
