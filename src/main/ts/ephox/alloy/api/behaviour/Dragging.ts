@@ -18,7 +18,7 @@ export interface SnapConfig {
   output: (x, y) => any;
 }
 
-export interface SchnappsConfig {
+export interface SnapBehaviour {
   getSnapPoints: () => any[];
   leftAttr: string;
   topAttr: string;
@@ -29,7 +29,7 @@ export interface SchnappsConfig {
 export interface DraggingConfig<T> extends AlloyBehaviourConfig {
   mode: DraggingMode;
   blockerClass?: string[];
-  snaps: (SchnappsConfig) => Option<T>;
+  snaps: (SnapBehaviour) => Option<T>;
   getTarget: (handle: EventHandlerConfig) => any;
   useFixed: boolean;
   onDrop: () => any;
