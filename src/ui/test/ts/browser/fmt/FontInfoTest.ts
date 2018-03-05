@@ -112,6 +112,31 @@ UnitTest.asynctest('browser.tinymce.ui.fmt.FontInfoTest', function () {
     iframe.contentDocument.close();
   });
 
+  suite.asyncTest('getFontFamily should return a string when run on element in removed iframe', function (_, done, die) {
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    iframe.addEventListener('load', function () {
+      const body = iframe.contentDocument.body;
+      const firstChildElement = iframe.contentDocument.body.firstChild;
+
+      iframe.parentNode.removeChild(iframe);
+
+      try {
+        const fontFamily = FontInfo.getFontFamily(body, firstChildElement);
+        LegacyUnit.equal(typeof fontFamily, 'string', 'Should return a string');
+        done();
+      } catch (error) {
+        die('getFontFamily did not return a string');
+      }
+    }, false);
+
+    iframe.contentDocument.open();
+    iframe.contentDocument.write('<html><body><p>a</p></body></html>');
+    iframe.contentDocument.close();
+  });
+
   suite.test('comments should always return empty string', function () {
     assertComputedFontProp('fontFamily', '<!-- comment -->', [0], '');
     assertComputedFontProp('fontSize', '<!-- comment -->', [0], '');
