@@ -8,9 +8,10 @@ import { Toggling } from '../api/behaviour/Toggling';
 import * as CompBehaviours from '../api/component/CompBehaviours';
 import BehaviourBlob from '../behaviour/common/BehaviourBlob';
 import * as ComponentEvents from '../construct/ComponentEvents';
+import { SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
 
-export default function (): { getEvents: (elem: {}, spec: {}) => { elem: () => any, evts: () => any } } {
-  const getEvents = function (elem, spec) {
+export default function () {
+  const getEvents = function (elem, spec: SketchSpec) {
     const evts = DomState.getOrCreate(elem, function () {
       // If we haven't already setup this particular element, then generate any state and config
       // required by its behaviours and put it in the cache.
@@ -27,7 +28,6 @@ export default function (): { getEvents: (elem: {}, spec: {}) => { elem: () => a
       ]), Objects.narrow(spec, [ 'events', 'eventOrder' ]));
 
       const bInfo = CompBehaviours.generateFrom(spec, [ Toggling, Dragging, Pinching ]);
-
       const baseEvents = {
         'alloy.base.behaviour': info.events()
       };

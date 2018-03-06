@@ -13,8 +13,9 @@ import NoContextApi from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as CompBehaviours from './CompBehaviours';
 import { ComponentApi, AlloyComponent } from './ComponentApi';
+import { SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
 
-const build = function (spec): AlloyComponent {
+const build = function (spec: SketchSpec): AlloyComponent {
   const getMe = function () {
     return me;
   };
@@ -108,7 +109,7 @@ const build = function (spec): AlloyComponent {
     syncComponents,
     components: subcomponents.get,
     events: Fun.constant(events)
-  }) as AlloyComponent;
+  });
 
   return me;
 };
