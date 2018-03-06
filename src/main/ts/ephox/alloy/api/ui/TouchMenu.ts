@@ -12,7 +12,7 @@ import { Highlighting } from '../behaviour/Highlighting';
 import { Representing } from '../behaviour/Representing';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
-import Transitioning from '../behaviour/Transitioning';
+import { Transitioning } from '../behaviour/Transitioning';
 import Unselecting from '../behaviour/Unselecting';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';

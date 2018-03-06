@@ -1,9 +1,43 @@
-import * as Behaviour from './Behaviour';
+import { Objects } from '@ephox/boulder';
+import { Obj, Option } from '@ephox/katamari';
+import { AlloyBehaviour } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+
 import * as ActiveTransitioning from '../../behaviour/transitioning/ActiveTransitioning';
 import * as TransitionApis from '../../behaviour/transitioning/TransitionApis';
 import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';
-import { Objects } from '@ephox/boulder';
-import { Obj } from '@ephox/katamari';
+import * as Behaviour from './Behaviour';
+
+export interface TransitioningBehaviour extends AlloyBehaviour {
+  config: (TransitioningConfig) => { key: string, value: any };
+  findRoute?: <T>(comp: AlloyComponent, route: TransitionApis.TransitionRoute) => Option<T>;
+  disableTransition?: (comp: AlloyComponent) => void;
+  getCurrentRoute?: any;
+  jumpTo?: (comp: AlloyComponent, destination: string) => void;
+  progressTo?: (comp: AlloyComponent, destination: string) => void;
+  getState?: any;
+
+  createRoutes?: any;
+  createBistate?: (first: string, second: string, transitions: TransitionProperties) => { key: string, value: any};
+  createTristate?: (first: string, second: string, third: string, transitions: TransitionProperties) => { key: string, value: any};
+}
+
+export interface TransitioningConfig {
+  destinationAttr: () => string;
+  stateAttr: () => string;
+  initialState: () => string;
+  routes: () => { key: string, value: () => any };
+  onTransition: () => (comp: AlloyComponent, route) => void;
+  onFinish: () => (comp: AlloyComponent, route) => void;
+}
+export interface TransitionProperties {
+  transition: {
+    property: string,
+    transitionClass: string
+  };
+}
+
+export type TransitioningInitialState = 'before' | 'current' | 'after';
 
 const createRoutes = function (routes) {
   const r = { };
@@ -48,7 +82,7 @@ const createTristate = function (first, second, third, transitions) {
   ]);
 };
 
-export default <any> Behaviour.create({
+const Transitioning: TransitioningBehaviour = Behaviour.create({
   fields: TransitionSchema,
   name: 'transitioning',
   active: ActiveTransitioning,
@@ -59,3 +93,7 @@ export default <any> Behaviour.create({
     createTristate
   }
 });
+
+export {
+  Transitioning
+};
