@@ -65,7 +65,7 @@ const toHtml = function (editor, settings, schema: Schema, rootNode, args) {
 };
 
 export default function (settings, editor) {
-  let dom, schema: Schema, htmlParser;
+  let dom: DOMUtils, schema: Schema, htmlParser;
   const tempAttrs = ['data-mce-selected'];
 
   dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;

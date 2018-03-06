@@ -17,6 +17,8 @@ import SelectionBookmark from '../selection/SelectionBookmark';
 import Tools from './util/Tools';
 import { Selection } from './dom/Selection';
 import * as IndentOutdent from 'tinymce/core/commands/IndentOutdent';
+import { Editor } from 'tinymce/core/api/Editor';
+import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 
 /**
  * This class enables you to add custom editor commands and it contains
@@ -30,8 +32,8 @@ const each = Tools.each, extend = Tools.extend;
 const map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
 const TRUE = true, FALSE = false;
 
-export default function (editor) {
-  let dom, selection: Selection, formatter;
+export default function (editor: Editor) {
+  let dom: DOMUtils, selection: Selection, formatter;
   const commands = { state: {}, exec: {}, value: {} };
   let settings = editor.settings,
     bookmark;
@@ -583,7 +585,7 @@ export default function (editor) {
     },
 
     'InsertUnorderedList,InsertOrderedList' (command) {
-      const list = dom.getParent(selection.getNode(), 'ul,ol');
+      const list = dom.getParent(selection.getNode(), 'ul,ol') as HTMLElement;
 
       return list &&
         (

@@ -1,6 +1,6 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit } from '@ephox/mcagar';
-import AddOnManager from 'tinymce/core/api/AddOnManager';
+import { AddOnManager } from 'tinymce/core/api/AddOnManager';
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import { UnitTest } from '@ephox/bedrock';

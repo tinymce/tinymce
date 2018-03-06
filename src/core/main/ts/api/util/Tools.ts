@@ -39,7 +39,7 @@ const trim = function (str) {
  * @param {string} type Optional type to check for.
  * @return {Boolean} true/false if the object is of the specified type.
  */
-const is = function (obj, type) {
+const is = function (obj: Record<string, any> | {}, type: string) {
   if (!type) {
     return obj !== undefined;
   }

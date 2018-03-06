@@ -37,7 +37,7 @@ export interface GetContentArgs {
 
 const isTreeNode = (content: any): content is Node => content instanceof Node;
 
-const setContentString = (editor, body: HTMLElement, content: string, args: SetContentArgs): string => {
+const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): string => {
   let forcedRootBlockName, padd;
 
   // Padd empty content in Gecko and Safari. Commands will otherwise fail on the content

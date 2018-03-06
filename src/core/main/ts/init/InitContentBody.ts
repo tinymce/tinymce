@@ -206,7 +206,7 @@ const initContentBody = function (editor, skipWrite?) {
 
   editor.editorUpload = EditorUpload(editor);
   editor.schema = Schema(settings);
-  editor.dom = new DOMUtils(doc, {
+  editor.dom = DOMUtils(doc, {
     keep_values: true,
     url_converter: editor.convertURL,
     url_converter_scope: editor,

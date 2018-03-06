@@ -27,6 +27,7 @@ import * as ElementSelection from '../../selection/ElementSelection';
 import { moveEndPoint } from 'tinymce/core/selection/SelectionUtils';
 import { NativeSelection } from './NativeTypes';
 import { Editor } from 'tinymce/core/api/Editor';
+import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -67,7 +68,7 @@ export interface Selection {
   editor: any;
   collapse: (toStart?: boolean) => void;
   setCursorLocation: (node?: Node, offset?: number) => void;
-  getContent: (args: any) => any;
+  getContent: (args?: any) => any;
   setContent: (content: any, args?: any) => void;
   getBookmark: (type?: number, normalized?: boolean) => any;
   moveToBookmark: (bookmark: any) => boolean;
@@ -105,7 +106,7 @@ export interface Selection {
  * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
  * @param {tinymce.Editor} editor Editor instance of the selection.
  */
-export const Selection = function (dom, win: Window, serializer, editor: Editor): Selection {
+export const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Editor): Selection {
   let bookmarkManager, controlSelection: ControlSelection;
   let selectedRange, explicitRange, selectorChangedData;
 
@@ -566,7 +567,8 @@ export const Selection = function (dom, win: Window, serializer, editor: Editor)
   };
 
   const getScrollContainer = (): Element => {
-    let scrollContainer, node = dom.getRoot();
+    let scrollContainer;
+    let node = dom.getRoot();
 
     while (node && node.nodeName !== 'BODY') {
       if (node.scrollHeight > node.clientHeight) {
@@ -574,7 +576,7 @@ export const Selection = function (dom, win: Window, serializer, editor: Editor)
         break;
       }
 
-      node = node.parentNode;
+      node = node.parentNode as HTMLElement;
     }
 
     return scrollContainer;

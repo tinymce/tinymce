@@ -14,6 +14,7 @@ import NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
 import CaretFormat from '../fmt/CaretFormat';
 import RangeCompare from './RangeCompare';
+import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 
 const position = Struct.immutable('container', 'offset');
 
@@ -51,7 +52,7 @@ const isCeFalseCaretContainer = function (node, rootNode) {
   return CaretContainer.isCaretContainer(node) && hasParent(node, rootNode, CaretFormat.isCaretNode) === false;
 };
 
-const hasBrBeforeAfter = function (dom, node, left) {
+const hasBrBeforeAfter = function (dom: DOMUtils, node, left) {
   const walker = new TreeWalker(node, dom.getParent(node.parentNode, dom.isBlock) || dom.getRoot());
 
   while ((node = walker[left ? 'prev' : 'next']())) {
@@ -79,7 +80,7 @@ const hasContentEditableFalseParent = function (body, node) {
 
 // Walks the dom left/right to find a suitable text node to move the endpoint into
 // It will only walk within the current parent block or body and will stop if it hits a block or a BR/IMG
-const findTextNodeRelative = function (dom, isAfterNode, collapsed, left, startNode) {
+const findTextNodeRelative = function (dom: DOMUtils, isAfterNode, collapsed, left, startNode) {
   let walker, lastInlineElement, parentBlockContainer;
   const body = dom.getRoot();
   let node;
@@ -126,7 +127,7 @@ const findTextNodeRelative = function (dom, isAfterNode, collapsed, left, startN
   return Option.none();
 };
 
-const normalizeEndPoint = function (dom, collapsed, start, rng) {
+const normalizeEndPoint = function (dom: DOMUtils, collapsed, start, rng) {
   let container, offset, walker;
   const body = dom.getRoot();
   let node, nonEmptyElementsMap;
@@ -273,7 +274,7 @@ const normalizeEndPoint = function (dom, collapsed, start, rng) {
   return normalized ? Option.some(position(container, offset)) : Option.none();
 };
 
-const normalize = function (dom, rng) {
+const normalize = function (dom: DOMUtils, rng) {
   const collapsed = rng.collapsed, normRng = rng.cloneRange();
 
   normalizeEndPoint(dom, collapsed, true, normRng).each(function (pos) {

@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import AddOnManager from './AddOnManager';
+import { AddOnManager } from './AddOnManager';
 import EditorCommands from './EditorCommands';
 import EditorObservable from './EditorObservable';
 import * as EditorSettings from '../EditorSettings';
@@ -57,6 +57,7 @@ import SelectionOverrides from 'tinymce/core/SelectionOverrides';
  */
 
 export interface Editor {
+  dom: DOMUtils;
   selection: Selection;
   _selectionOverrides: SelectionOverrides;
   [key: string]: any;
@@ -1046,7 +1047,7 @@ Editor.prototype = {
   addVisual (elm) {
     const self = this;
     const settings = self.settings;
-    const dom = self.dom;
+    const dom: DOMUtils = self.dom;
     let cls;
 
     elm = elm || self.getBody();
@@ -1072,7 +1073,7 @@ Editor.prototype = {
           return;
 
         case 'A':
-          if (!dom.getAttrib(elm, 'href', false)) {
+          if (!dom.getAttrib(elm, 'href')) {
             value = dom.getAttrib(elm, 'name') || elm.id;
             cls = settings.visual_anchor_class || 'mce-item-anchor';
 

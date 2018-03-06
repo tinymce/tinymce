@@ -15,8 +15,9 @@ import BoundaryCaret from './BoundaryCaret';
 import BoundaryLocation from './BoundaryLocation';
 import InlineUtils from './InlineUtils';
 import WordSelection from '../selection/WordSelection';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const setCaretPosition = function (editor, pos) {
+const setCaretPosition = function (editor: Editor, pos) {
   const rng = editor.dom.createRng();
   rng.setStart(pos.container(), pos.offset());
   rng.setEnd(pos.container(), pos.offset());
