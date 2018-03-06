@@ -9,7 +9,7 @@ import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { Component } from 'ephox/alloy/api/Main';
 
 export interface InvalidatingBehaviour extends AlloyBehaviour {
-  config: (InvalidatingConfig) => any;
+  config: (InvalidatingConfig) => { key: string, value: any };
   markValid?: (Component: AlloyComponent) => void;
   markInvalid?: (Component: AlloyComponent) => void;
   query?: <T>(Component: AlloyComponent) => Future<T>;

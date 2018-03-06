@@ -5,7 +5,7 @@ import * as DragState from '../../dragging/common/DragState';
 import { AlloyBehaviour, AlloyBehaviourConfig, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface PinchingBehaviour extends AlloyBehaviour {
-  config: (PinchingConfig) => any;
+  config: (PinchingConfig) => { key: string, value: any };
 }
 
 export interface PinchingConfig extends AlloyBehaviourConfig {

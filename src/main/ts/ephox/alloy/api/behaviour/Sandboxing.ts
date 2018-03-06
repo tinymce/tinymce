@@ -9,7 +9,7 @@ import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
 
 export interface SandboxingBehaviour extends AlloyBehaviour {
-  config: (SandboxingConfig) => any;
+  config: (SandboxingConfig) => { key: string, value: any };
   cloak?: (sandbox: AlloyComponent) => void;
   decloak?: (sandbox: AlloyComponent) => void;
   open?: (sandbox: AlloyComponent, thing: SketchSpec) => AlloyComponent;

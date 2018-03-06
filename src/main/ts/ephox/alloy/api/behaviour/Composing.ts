@@ -6,7 +6,7 @@ import { Option } from '@ephox/katamari';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface ComposingBehaviour extends AlloyBehaviour {
-  config: (ComposingConfig) => any;
+  config: (ComposingConfig) => { key: string, value: any };
   getCurrent?: (any) => any; // TODO any : whats sandbox
 }
 export interface ComposingConfig<T> {

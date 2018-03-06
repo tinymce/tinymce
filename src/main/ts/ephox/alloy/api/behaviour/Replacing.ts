@@ -4,7 +4,7 @@ import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefi
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface ReplacingBehaviour extends AlloyBehaviour {
-  config: (ReplacingConfig) => any;
+  config: (ReplacingConfig) => { key: string, value: any };
   append?: (compontent: AlloyComponent, replaceConfig: {}) => void;
   prepend?: (compontent: AlloyComponent, replaceConfig: {}) => void;
   remove?: (compontent: AlloyComponent, replaceConfig: {}) => void;

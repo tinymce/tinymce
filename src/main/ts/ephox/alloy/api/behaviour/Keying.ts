@@ -6,7 +6,7 @@ import { AlloyBehaviour, AlloyBehaviourConfig, SugarElement } from 'ephox/alloy/
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface KeyingBehaviour extends AlloyBehaviour {
-  config: (KeyingConfig) => any;
+  config: (KeyingConfig) => { key: string, value: any };
   focusIn: (component: AlloyComponent) => void;
   setGridSize: (
     component: AlloyComponent,

@@ -7,7 +7,7 @@ import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface DraggingBehaviour extends AlloyBehaviour {
-  config: (DraggingConfig) => any;
+  config: (DraggingConfig) => { key: string, value: any };
   snap: (SnapConfig) => any;
 }
 

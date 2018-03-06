@@ -6,7 +6,7 @@ import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefi
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface FocusingBehaviour extends AlloyBehaviour {
-  config: (FocusingConfig) => any;
+  config: (FocusingConfig) => { key: string, value: any };
   focus?: (component: AlloyComponent) => void;
   isFocused?: (component: AlloyComponent) => boolean;
 }

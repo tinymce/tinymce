@@ -5,7 +5,7 @@ import StreamingSchema from '../../behaviour/streaming/StreamingSchema';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface StreamingBehaviour extends AlloyBehaviour {
-  config: (StreamingConfig) => any;
+  config: (StreamingConfig) => { key: string, value: any };
 }
 
 export interface StreamingConfig extends AlloyBehaviourConfig {

@@ -5,7 +5,7 @@ import DisableSchema from '../../behaviour/disabling/DisableSchema';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface DisableBehaviour extends AlloyBehaviour {
-  config: (DisablingConfig) => any;
+  config: (DisablingConfig) => { key: string, value: any };
   enable?: (component, disableConfig?, disableState?) => void;
   disable?: (component, disableConfig?, disableState?) => void;
   isDisabled?: (component) => boolean;

@@ -6,7 +6,7 @@ import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 
 export interface HighlightingBehaviour extends AlloyBehaviour {
-  config: (HighlightingConfig) => any;
+  config: (HighlightingConfig) => { key: string, value: any };
   dehighlightAll?: (component: AlloyComponent) => void;
   dehighlight?: (component: AlloyComponent, target: AlloyComponent) => void;
   highlight?: (component: AlloyComponent, target: AlloyComponent) => void;

@@ -8,7 +8,7 @@ import { FieldProcessorAdt } from '@ephox/boulder';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface RepresentingBehaviour extends AlloyBehaviour {
-  config: (RepresentingConfig) => any;
+  config: (RepresentingConfig) => { key: string, value: any };
   setValueFrom?: (component: AlloyComponent, source: AlloyComponent) => void;
 }
 

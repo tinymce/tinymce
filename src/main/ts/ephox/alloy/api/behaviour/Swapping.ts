@@ -5,7 +5,7 @@ import { AlloyBehaviourConfig, AlloyBehaviour } from 'ephox/alloy/alien/TypeDefi
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface SwappingBehaviour extends AlloyBehaviour {
-  config: (SwappingConfig) => any;
+  config: (SwappingConfig) => { key: string, value: any };
   toAlpha?: (componenet: AlloyComponent) => void;
   toOmega?: (componenet: AlloyComponent) => void;
   isAlpha?: (componenet: AlloyComponent) => boolean;

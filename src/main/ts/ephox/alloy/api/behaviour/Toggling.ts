@@ -6,7 +6,7 @@ import { AlloyBehaviourConfig, AlloyBehaviour } from 'ephox/alloy/alien/TypeDefi
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface TogglingBehaviour extends AlloyBehaviour {
-  config: (TogglingConfig) => any;
+  config: (TogglingConfig) => { key: string, value: any };
   onLoad?: (component: AlloyComponent) => void;
   toggle?: (component: AlloyComponent) => void;
   isOn?: (component: AlloyComponent) => boolean;

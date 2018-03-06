@@ -4,9 +4,8 @@ import TabstopSchema from '../../behaviour/tabstopping/TabstopSchema';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface TabstoppingBehaviour extends AlloyBehaviour {
-  config: (TabstoppingConfig) => any;
+  config: (TabstoppingConfig) => { key: string, value: any };
 }
-
 export interface TabstoppingConfig extends AlloyBehaviourConfig {
   // intentionally blank
 }

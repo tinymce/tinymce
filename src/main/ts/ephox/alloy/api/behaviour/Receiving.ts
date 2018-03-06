@@ -4,7 +4,7 @@ import ReceivingSchema from '../../behaviour/receiving/ReceivingSchema';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface ReceivingBehaviour extends AlloyBehaviour {
-  config: (ReceivingConfig) => any;
+  config: (ReceivingConfig) => { key: string, value: any };
 }
 
 export interface ReceivingConfig extends AlloyBehaviourConfig {

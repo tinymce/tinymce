@@ -7,7 +7,7 @@ import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefi
 import { Option } from '@ephox/boulder/node_modules/@ephox/katamari';
 
 export interface PositioningBehaviour extends AlloyBehaviour {
-  config: (PositioningConfig) => any;
+  config: (PositioningConfig) => { key: string, value: any };
   position?: <T>(component: AlloyComponent, anchor: AnchorPositioningConfig<T>, placee: AlloyComponent) => void;
   getMode?: (component: AlloyComponent) => any;
 }

@@ -7,7 +7,7 @@ import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefi
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface SlidingBehaviour extends AlloyBehaviour {
-  config: (SlidingConfig) => any;
+  config: (SlidingConfig) => { key: string, value: any };
   grow?: (component: AlloyComponent) => boolean;
   shrink?: (component: AlloyComponent) => void;
   immediateShrink?: (component: AlloyComponent) => void;
