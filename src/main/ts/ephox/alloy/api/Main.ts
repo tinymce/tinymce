@@ -21,7 +21,7 @@ import { Swapping } from './behaviour/Swapping';
 import { Tabstopping } from './behaviour/Tabstopping';
 import { Toggling } from './behaviour/Toggling';
 import { Transitioning } from './behaviour/Transitioning';
-import Unselecting from './behaviour/Unselecting';
+import { Unselecting } from './behaviour/Unselecting';
 import * as CompBehaviours from './component/CompBehaviours';
 import * as Component from './component/Component';
 import { ComponentApi } from './component/ComponentApi';
