@@ -2,6 +2,7 @@ import { Objects } from '@ephox/boulder';
 import { Arr, Merger } from '@ephox/katamari';
 import { Element, Html, Node, Traverse } from '@ephox/sugar';
 import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
+import { SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
 
 // TODO: relocate me
 export interface RawElementSchema {
@@ -13,12 +14,16 @@ export interface RawElementSchema {
     [key: string]: string
   };
   innerHtml?: string;
+  classes?: string[];
 }
 
 export interface RawDomSchema {
-  dom: RawElementSchema;
+  dom?: RawElementSchema;
   events?: EventHandlerConfig;
+  components?: AlloyComponentsSpec;
 }
+
+export type AlloyComponentsSpec = RawDomSchema[] | SketchSpec[];
 
 const getAttrs = function (elem) {
   const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];

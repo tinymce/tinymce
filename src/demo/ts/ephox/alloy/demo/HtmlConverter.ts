@@ -33,7 +33,7 @@ export default <any> function () {
             display: 'block'
           }
         },
-        data: '<div class="cat dog elephant" data-ephox="this is">Hello<span>hi</span>there</div>',
+        data: '<div class="cat dog elephant" data-ephox="this is"><div id="mike">chau</div></div>',
         uid: 'textarea-input'
       }),
       Button.sketch({
@@ -44,10 +44,7 @@ export default <any> function () {
         action (button) {
           const textarea = button.getSystem().getByUid('textarea-input').getOrDie();
           const value = Representing.getValue(textarea);
-
           const output = GuiTemplate.readHtml(value).getOrDie();
-
-          console.log('output', output);
           const display = button.getSystem().getByUid('pre-output').getOrDie();
           const prettyprint = Json.stringify(output, null, 2);
 
