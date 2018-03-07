@@ -1,4 +1,4 @@
-import SystemApi from './SystemApi';
+import { SystemApi } from './SystemApi';
 import * as AlloyLogger from '../../log/AlloyLogger';
 import { Fun } from '@ephox/katamari';
 

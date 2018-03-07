@@ -9,6 +9,14 @@ export interface SugarElement {
   dom: () => HTMLElement;
 }
 
+// Config
+export interface RawUserSpec {
+  any;
+}
+
+// simulatedEvent
+
+
 // Behaviours
 export interface AlloyBehaviour {
   config: (spec: any) => { key: string, value: any };

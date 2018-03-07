@@ -11,7 +11,7 @@ import * as GuiFactory from '../component/GuiFactory';
 import SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
-import SystemApi from './SystemApi';
+import { SystemApi, AlloySystemApi } from './SystemApi';
 
 const create = function () {
   const root = GuiFactory.build(
@@ -62,10 +62,10 @@ const takeover = function (root) {
   const systemApi = SystemApi({
     // This is a real system
     debugInfo: Fun.constant('real'),
-    triggerEvent (customType, target, data) {
-      Debugging.monitorEvent(customType, target, function (logger) {
+    triggerEvent (eventName, target, data) {
+      Debugging.monitorEvent(eventName, target, function (logger) {
         // The return value is not used because this is a fake event.
-        Triggers.triggerOnUntilStopped(lookup, customType, data, target, logger);
+        Triggers.triggerOnUntilStopped(lookup, eventName, data, target, logger);
       });
     },
     triggerFocus (target, originator) {
@@ -105,7 +105,7 @@ const takeover = function (root) {
     broadcastOn (channels, message) {
       broadcastOn(channels, message);
     }
-  });
+  }) as AlloySystemApi;
 
   const addToWorld = function (component) {
     component.connect(systemApi);

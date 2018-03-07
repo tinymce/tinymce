@@ -122,7 +122,6 @@ export default <any> function () {
       const w = Width.get(container.element());
       const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
       const menuComp = container.getSystem().getByDom(menu).getOrDie();
-
       Width.set(submenu.element(), w);
 
       Transitioning.progressTo(menuComp, 'before');

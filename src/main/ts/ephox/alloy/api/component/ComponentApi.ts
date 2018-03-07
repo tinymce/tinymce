@@ -1,8 +1,9 @@
-import { Contracts } from '@ephox/katamari';
+import { Contracts, Result } from '@ephox/katamari';
+import { AlloySystemApi } from 'ephox/alloy/api/system/SystemApi';
 import { AlloyBehaviour, AlloyBehaviourConfig, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface AlloyComponent {
-  getSystem: () => AlloyComponent;
+  getSystem: () => AlloySystemApi;
   config: (config: AlloyBehaviourConfig) => AlloyBehaviour;
   hasConfigured: (behaviour) => boolean;
   spec: () => any;
