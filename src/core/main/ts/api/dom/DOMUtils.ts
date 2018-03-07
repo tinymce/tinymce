@@ -178,7 +178,7 @@ export interface DOMUtils {
   createHTML: (name: string, attrs?: Record<string, any>, html?: string) => string;
   createFragment: (html?: string) => DocumentFragment;
   remove: (node: string | Node | Node[], keepChildren?: boolean) => any;
-  setStyle: (elm: string | Node, name: string, value: string | number) => void;
+  setStyle: (elm: string | Node, name: string | StyleMap, value: string | number | StyleMap) => void;
   getStyle: (elm: string | Node, name: string, computed?: boolean) => string;
   setStyles: (elm: string | Node, stylesArg: StyleMap) => void;
   removeAllAttribs: (e: RunArguments) => any;
@@ -190,7 +190,7 @@ export interface DOMUtils {
       y: number;
   };
   parseStyle: (cssText: string) => StyleMap;
-  serializeStyle: (stylesArg: StyleMap, name: string) => string;
+  serializeStyle: (stylesArg: StyleMap, name?: string) => string;
   addStyle: (cssText: string) => void;
   loadCSS: (url: string) => void;
   addClass: (elm: string | Node | Node[], cls: string) => void;
@@ -413,7 +413,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return Position.getPos(doc.body, get(elm), rootElm);
   };
 
-  const setStyle = (elm: string | Node, name: string, value: string) => {
+  const setStyle = (elm: string | Node, name: string | StyleMap, value: string | number | StyleMap) => {
     const $elm = $$(elm).css(name, value);
 
     if (settings.update_styles) {
@@ -771,7 +771,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return styles.parse(cssText);
   };
 
-  const serializeStyle = (stylesArg: StyleMap, name: string) => {
+  const serializeStyle = (stylesArg: StyleMap, name?: string) => {
     return styles.serialize(stylesArg, name);
   };
 

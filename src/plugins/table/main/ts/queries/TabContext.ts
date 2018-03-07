@@ -19,6 +19,7 @@ import VK from 'tinymce/core/api/util/VK';
 import Util from '../alien/Util';
 import TableTargets from './TableTargets';
 import { Editor } from 'tinymce/core/api/Editor';
+import { TableActions } from 'tinymce/plugins/table/actions/TableActions';
 
 const forward = function (editor: Editor, isRoot, cell, lazyWire) {
   return go(editor, isRoot, CellNavigation.next(cell), lazyWire);
@@ -60,7 +61,7 @@ const go: any = function (editor: Editor, isRoot, cell, actions, lazyWire) { // 
 
 const rootElements = ['table', 'li', 'dl'];
 
-const handle = function (event, editor: Editor, actions, lazyWire) {
+const handle = function (event: KeyboardEvent, editor: Editor, actions: TableActions, lazyWire) {
   if (event.keyCode === VK.TAB) {
     const body = Util.getBody(editor);
     const isRoot = function (element) {

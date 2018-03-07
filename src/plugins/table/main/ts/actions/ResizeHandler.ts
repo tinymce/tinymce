@@ -16,7 +16,13 @@ import TableWire from './TableWire';
 import { hasTableResizeBars, hasObjectResizing } from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
 
-export default function (editor: Editor) {
+export interface ResizeHandler {
+  lazyResize: () => Option<any>;
+  lazyWire: () => any;
+  destroy: () => void;
+}
+
+export const ResizeHandler = function (editor: Editor): ResizeHandler {
   let selectionRng = Option.none();
   let resize = Option.none();
   let wire = Option.none();
@@ -123,4 +129,4 @@ export default function (editor: Editor) {
     lazyWire,
     destroy
   };
-}
+};

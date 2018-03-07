@@ -100,7 +100,7 @@ export default function (editor, lazyResize) {
       });
     };
 
-    const keydown = function (event) {
+    const keydown = function (event: KeyboardEvent) {
       const wrappedEvent = wrapEvent(event);
       lazyResize().each(function (resize) {
         resize.hideBars();
@@ -136,7 +136,9 @@ export default function (editor, lazyResize) {
       });
     };
 
-    const wrapEvent = function (event) {
+    const isMouseEvent = (event: any): event is MouseEvent => event.hasOwnProperty('x') && event.hasOwnProperty('y');
+
+    const wrapEvent = function (event: MouseEvent | KeyboardEvent) {
       // IE9 minimum
       const target = Element.fromDom(event.target);
 
@@ -153,8 +155,8 @@ export default function (editor, lazyResize) {
       // FIX: Don't just expose the raw event. Need to identify what needs standardisation.
       return {
         target:  Fun.constant(target),
-        x:       Fun.constant(event.x),
-        y:       Fun.constant(event.y),
+        x:       Fun.constant(isMouseEvent(event) ? event.x : null),
+        y:       Fun.constant(isMouseEvent(event) ? event.y : null),
         stop,
         prevent,
         kill,
@@ -162,12 +164,12 @@ export default function (editor, lazyResize) {
       };
     };
 
-    const isLeftMouse = function (raw) {
+    const isLeftMouse = function (raw: MouseEvent) {
       return raw.button === 0;
     };
 
     // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
-    const isLeftButtonPressed = function (raw) {
+    const isLeftButtonPressed = function (raw: MouseEvent) {
       // Only added by Chrome/Firefox in June 2015.
       // This is only to fix a 1px bug (TBIO-2836) so return true if we're on an older browser
       if (raw.buttons === undefined) {
@@ -178,18 +180,18 @@ export default function (editor, lazyResize) {
       return (raw.buttons & 1) !== 0;
     };
 
-    const mouseDown = function (e) {
+    const mouseDown = function (e: MouseEvent) {
       if (isLeftMouse(e)) {
         mouseHandlers.mousedown(wrapEvent(e));
       }
     };
-    const mouseOver = function (e) {
+    const mouseOver = function (e: MouseEvent) {
       if (isLeftButtonPressed(e)) {
         mouseHandlers.mouseover(wrapEvent(e));
       }
     };
-    const mouseUp = function (e) {
-      if (isLeftMouse) {
+    const mouseUp = function (e: MouseEvent) {
+      if (isLeftMouse(e)) {
         mouseHandlers.mouseup(wrapEvent(e));
       }
     };

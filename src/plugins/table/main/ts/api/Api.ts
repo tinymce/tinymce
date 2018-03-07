@@ -10,7 +10,7 @@
 
 import { Editor } from 'tinymce/core/api/Editor';
 import InsertTable from '../actions/InsertTable';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Option, Cell } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 const getClipboardRows = (clipboardRows): HTMLElement[] => {
@@ -28,7 +28,7 @@ const setClipboardRows = (rows: HTMLElement[], clipboardRows) => {
   clipboardRows.set(Option.from(sugarRows));
 };
 
-const getApi = (editor: Editor, clipboardRows) => {
+const getApi = (editor: Editor, clipboardRows: Cell<Option<any>>) => {
   return {
     insertTable: (columns: number, rows: number) => {
       return InsertTable.insert(editor, columns, rows);
