@@ -1,6 +1,24 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Merger } from '@ephox/katamari';
 import { Element, Html, Node, Traverse } from '@ephox/sugar';
+import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
+
+// TODO: relocate me
+export interface RawElementSchema {
+  tag: string;
+  attributes?: {
+    [key: string]: any
+  };
+  styles?: {
+    [key: string]: string
+  };
+  innerHtml?: string;
+}
+
+export interface RawDomSchema {
+  dom: RawElementSchema;
+  events?: EventHandlerConfig;
+}
 
 const getAttrs = function (elem) {
   const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
@@ -14,7 +32,7 @@ const getClasses = function (elem) {
   return Array.prototype.slice.call(elem.dom().classList, 0);
 };
 
-const fromHtml = function (html) {
+const fromHtml = function (html: string): RawElementSchema {
   const elem = Element.fromHtml(html);
 
   const children = Traverse.children(elem);
@@ -37,7 +55,7 @@ const sketch = function (sketcher, html, config) {
   );
 };
 
-export default <any> {
+export {
   fromHtml,
   sketch
 };

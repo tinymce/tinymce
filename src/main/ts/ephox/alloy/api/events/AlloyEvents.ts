@@ -11,7 +11,7 @@ export interface EventHandlerConfig {
   value: {
     can: () => boolean;
     abort: () => boolean;
-    run: (component, simulatedEvent: (any) => any) => any;
+    run: (component: AlloyComponent, simulatedEvent: (any) => any) => any;
   };
 }
 

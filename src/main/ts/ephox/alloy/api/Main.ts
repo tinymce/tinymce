@@ -26,7 +26,7 @@ import * as CompBehaviours from './component/CompBehaviours';
 import * as Component from './component/Component';
 import { ComponentApi } from './component/ComponentApi';
 import * as ComponentUtil from './component/ComponentUtil';
-import DomFactory from './component/DomFactory';
+import * as DomFactory from './component/DomFactory';
 import * as GuiFactory from './component/GuiFactory';
 import * as GuiTemplate from './component/GuiTemplate';
 import * as Memento from './component/Memento';

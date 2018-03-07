@@ -5,7 +5,7 @@ import { Invalidating } from 'ephox/alloy/api/behaviour/Invalidating';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as ComponentUtil from 'ephox/alloy/api/component/ComponentUtil';
-import DomFactory from 'ephox/alloy/api/component/DomFactory';
+import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import FormChooser from 'ephox/alloy/api/ui/FormChooser';

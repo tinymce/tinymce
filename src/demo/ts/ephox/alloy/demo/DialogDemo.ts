@@ -1,6 +1,6 @@
 import { Option, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
-import DomFactory from 'ephox/alloy/api/component/DomFactory';
+import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
