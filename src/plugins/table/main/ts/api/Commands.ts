@@ -17,10 +17,11 @@ import TableTargets from '../queries/TableTargets';
 import CellDialog from '../ui/CellDialog';
 import RowDialog from '../ui/RowDialog';
 import TableDialog from '../ui/TableDialog';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const each = Tools.each;
 
-const registerCommands = function (editor, actions, cellSelection, selections, clipboardRows) {
+const registerCommands = function (editor: Editor, actions, cellSelection, selections, clipboardRows) {
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = function () {
     const cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));

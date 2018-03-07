@@ -18,9 +18,10 @@ import Util from '../alien/Util';
 import Direction from '../queries/Direction';
 import { getCloneElements } from '../api/Settings';
 import { fireNewCell, fireNewRow } from '../api/Events';
+import { Editor } from 'tinymce/core/api/Editor';
 
-export default function (editor, lazyWire) {
-  const isTableBody = function (editor) {
+export default function (editor: Editor, lazyWire) {
+  const isTableBody = function (editor: Editor) {
     return Node.name(Util.getBody(editor)) === 'table';
   };
 
