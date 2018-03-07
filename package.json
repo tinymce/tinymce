@@ -18,13 +18,13 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/katamari": "*",
-    "@ephox/sugar": "*",
-    "@ephox/porkbun": "*"
+    "@ephox/katamari": "latest",
+    "@ephox/sugar": "latest",
+    "@ephox/porkbun": "latest"
   },
   "devDependencies": {
-    "@ephox/photon": "*",
-    "@ephox/bedrock": "*",
+    "@ephox/photon": "latest",
+    "@ephox/bedrock": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2",
