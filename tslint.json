@@ -18,6 +18,7 @@
       "jsdoc-format": false,
       "forin": false,
       "no-empty": false,
+      "no-empty-interface": false,
       "no-conditional-assignment": false,
       "variable-name": false,
       "interface-name": false,
