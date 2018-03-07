@@ -4,6 +4,26 @@ import { JSON as Json } from '@ephox/sand';
 
 import * as Fields from '../data/Fields';
 import UiSubstitutes from './UiSubstitutes';
+import { AlloyComponentsSpec, RawDomSchema, AlloyMixedSpec } from 'ephox/alloy/api/ui/Sketcher';
+import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
+import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
+
+export interface SpecSchemaStruct {
+  components: () => AlloyComponentsSpec;
+  containerBehaviours: () => ContainerBehaviours;
+  dom: () => RawDomSchema;
+  domModification: () => {};
+  eventOrder: () => {};
+  events: () => EventHandlerConfig;
+  originalSpec: () => AlloyMixedSpec;
+  uid: () => string;
+  'debug.sketcher': () => {};
+}
+
+export interface ContainerBehaviours {
+  dump: () => {};
+  [key: string]: any;
+}
 
 const getPartsSchema = function (partNames, _optPartNames, _owner) {
   const owner = _owner !== undefined ? _owner : 'Unknown owner';
@@ -85,12 +105,12 @@ const base = function (label, partSchemas, partUidsSchemas, spec) {
 };
 
 const asRawOrDie = function (label, schema, spec, partSchemas, partUidsSchemas) {
-
+  debugger;
   const baseS = base(label, partSchemas, spec, partUidsSchemas);
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
-const asStructOrDie = function (label, schema, spec, partSchemas, partUidsSchemas) {
+const asStructOrDie = function (label: string, schema: AdtInterface, spec: AlloyMixedSpec, partSchemas: any[], partUidsSchemas: any[]): SpecSchemaStruct {
   const baseS = base(label, partSchemas, partUidsSchemas, spec);
   return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };

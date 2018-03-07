@@ -7,7 +7,7 @@ import * as SplitToolbarSchema from '../../ui/schema/SplitToolbarSchema';
 import { Replacing } from '../behaviour/Replacing';
 import { Sliding } from '../behaviour/Sliding';
 import * as GuiFactory from '../component/GuiFactory';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import Button from './Button';
 import * as Sketcher from './Sketcher';
 import Toolbar from './Toolbar';

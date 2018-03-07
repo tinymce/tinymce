@@ -7,7 +7,7 @@ import { Composing } from '../behaviour/Composing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import { Replacing } from '../behaviour/Replacing';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 
 const tieredData = function (primary, menus, expansions) {

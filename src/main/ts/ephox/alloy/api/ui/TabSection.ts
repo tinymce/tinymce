@@ -6,7 +6,7 @@ import * as TabSectionSchema from '../../ui/schema/TabSectionSchema';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Replacing } from '../behaviour/Replacing';
 import { Representing } from '../behaviour/Representing';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';

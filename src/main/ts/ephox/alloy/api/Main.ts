@@ -30,7 +30,7 @@ import * as DomFactory from './component/DomFactory';
 import * as GuiFactory from './component/GuiFactory';
 import * as GuiTemplate from './component/GuiTemplate';
 import * as Memento from './component/Memento';
-import SketchBehaviours from './component/SketchBehaviours';
+import * as SketchBehaviours from './component/SketchBehaviours';
 import * as DragCoord from './data/DragCoord';
 import * as AlloyEvents from './events/AlloyEvents';
 import * as AlloyTriggers from './events/AlloyTriggers';

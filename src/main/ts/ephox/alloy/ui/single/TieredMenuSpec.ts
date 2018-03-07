@@ -10,7 +10,7 @@ import { Keying } from '../../api/behaviour/Keying';
 import { Replacing } from '../../api/behaviour/Replacing';
 import { Representing } from '../../api/behaviour/Representing';
 import * as GuiFactory from '../../api/component/GuiFactory';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import SystemEvents from '../../api/events/SystemEvents';

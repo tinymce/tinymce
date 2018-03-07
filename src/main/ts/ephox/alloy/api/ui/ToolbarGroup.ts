@@ -1,6 +1,6 @@
 import * as Behaviour from '../behaviour/Behaviour';
 import { Keying } from '../behaviour/Keying';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import * as ToolbarGroupSchema from '../../ui/schema/ToolbarGroupSchema';
 import { Merger } from '@ephox/katamari';

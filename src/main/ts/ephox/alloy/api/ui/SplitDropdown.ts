@@ -11,7 +11,7 @@ import { Focusing } from '../behaviour/Focusing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import { Toggling } from '../behaviour/Toggling';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as Sketcher from './Sketcher';
 

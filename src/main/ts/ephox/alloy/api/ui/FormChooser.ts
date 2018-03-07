@@ -7,7 +7,7 @@ import { Composing } from '../behaviour/Composing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import { Representing } from '../behaviour/Representing';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';

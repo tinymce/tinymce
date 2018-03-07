@@ -1,4 +1,4 @@
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import * as Fields from '../../data/Fields';
 import { FieldSchema } from '@ephox/boulder';

@@ -4,7 +4,7 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as ToolbarSchema from '../../ui/schema/ToolbarSchema';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Replacing } from '../behaviour/Replacing';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 
 const factory = function (detail, components, spec, _externals) {
