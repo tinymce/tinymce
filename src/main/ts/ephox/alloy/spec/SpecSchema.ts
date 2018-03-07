@@ -12,8 +12,8 @@ export interface SpecSchemaStruct {
   components: () => AlloyComponentsSpec;
   containerBehaviours: () => ContainerBehaviours;
   dom: () => RawDomSchema;
-  domModification: () => {};
-  eventOrder: () => {};
+  domModification: () => {}; // TODO
+  eventOrder: () => {}; // TODO
   events: () => EventHandlerConfig;
   originalSpec: () => AlloyMixedSpec;
   uid: () => string;
@@ -105,7 +105,6 @@ const base = function (label, partSchemas, partUidsSchemas, spec) {
 };
 
 const asRawOrDie = function (label, schema, spec, partSchemas, partUidsSchemas) {
-  debugger;
   const baseS = base(label, partSchemas, spec, partUidsSchemas);
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
