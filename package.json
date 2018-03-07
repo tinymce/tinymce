@@ -18,17 +18,17 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/boss": "*",
-    "@ephox/katamari": "*",
-    "@ephox/phoenix": "*",
-    "@ephox/polaris": "*"
+    "@ephox/boss": "latest",
+    "@ephox/katamari": "latest",
+    "@ephox/phoenix": "latest",
+    "@ephox/polaris": "latest"
   },
   "devDependencies": {
-    "@ephox/agar": "*",
-    "@ephox/bedrock": "*",
-    "@ephox/sand": "*",
-    "@ephox/sugar": "*",
-    "@ephox/wrap-jsverify": "*",
+    "@ephox/agar": "latest",
+    "@ephox/bedrock": "latest",
+    "@ephox/sand": "latest",
+    "@ephox/sugar": "latest",
+    "@ephox/wrap-jsverify": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2"
