@@ -30,7 +30,7 @@
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2",
     "webpack": "^3.10.0",
-    "chromedriver": "*"
+    "chromedriver": "latest"
   },
   "dependencies": {
     "@ephox/katamari": "latest"
