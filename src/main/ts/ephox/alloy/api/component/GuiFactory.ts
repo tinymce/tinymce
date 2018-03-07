@@ -9,9 +9,8 @@ import NoContextApi from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
 import { ComponentApi, AlloyComponent } from './ComponentApi';
-import { SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
+import { SketchSpec, RawDomSchema } from 'ephox/alloy/api/ui/Sketcher';
 import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { RawDomSchema } from 'ephox/alloy/api/component/DomFactory';
 
 export interface AlloyPremadeComponent {
   [key: string]: AlloyComponent;

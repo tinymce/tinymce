@@ -6,6 +6,22 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
+
+export interface RawElementSchema {
+  tag: string;
+  attributes?: {
+    [key: string]: any
+  };
+  styles?: {
+    [key: string]: string
+  };
+  innerHtml?: string;
+  classes?: string[];
+}
+
+export type AlloyComponentsSpec = RawDomSchema[] | SketchSpec[];
+export type AlloyMixedSpec = RawDomSchema | SketchSpec;
 
 export interface SingleSketch {
   name: () => string;
@@ -19,15 +35,22 @@ export interface CompositeSketch extends SingleSketch {
   [key: string]: Function;
 }
 
-export interface SketchSpec {
+export interface RawDomSchema {
+  dom: RawElementSchema;
+  components?: AlloyComponentsSpec;
+}
+
+export interface SketchSpec extends RawDomSchema {
   behaviours: {};
   domModification: {};
   eventOrder: {};
-  events: {};
-  components: AlloyComponent[];
-  dom: { tag: string };
+  events: EventHandlerConfig;
   uid: string;
   'debug.sketcher': {};
+}
+
+export function isSketchSpec(spec: RawDomSchema | SketchSpec): spec is SketchSpec {
+  return (<SketchSpec> spec).uid !== undefined;
 }
 
 const singleSchema = ValueSchema.objOfOnly([
