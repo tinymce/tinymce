@@ -18,12 +18,12 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@ephox/sand": "*",
-    "@ephox/katamari": "*",
-    "@ephox/phoenix": "*",
-    "@ephox/robin": "*",
-    "@ephox/snooker": "*",
-    "@ephox/sugar": "*"
+    "@ephox/sand": "latest",
+    "@ephox/katamari": "latest",
+    "@ephox/phoenix": "latest",
+    "@ephox/robin": "latest",
+    "@ephox/snooker": "latest",
+    "@ephox/sugar": "latest"
   },
   "devDependencies": {
     "awesome-typescript-loader": "^3.4.1",
