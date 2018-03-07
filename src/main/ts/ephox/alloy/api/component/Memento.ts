@@ -2,7 +2,7 @@ import { Objects } from '@ephox/boulder';
 import { Merger, Option } from '@ephox/katamari';
 
 import * as Tagger from '../../registry/Tagger';
-import { AlloyMixedSpec, isSketchSpec } from 'ephox/alloy/api/ui/Sketcher';
+import { AlloyMixedSpec, SketchSpec, RawDomSchema, isSketchSpec } from 'ephox/alloy/api/ui/Sketcher';
 
 export interface MomentoRecord {
   get: () => any;
