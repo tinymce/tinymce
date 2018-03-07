@@ -15,13 +15,13 @@
     "url": "https://github.com/ephox/echo"
   },
   "dependencies": {
-    "@ephox/sand": "*",
-    "@ephox/katamari": "*",
-    "@ephox/sugar": "*"
+    "@ephox/sand": "latest",
+    "@ephox/katamari": "latest",
+    "@ephox/sugar": "latest"
   },
   "devDependencies": {
-    "@ephox/agar": "*",
-    "@ephox/bedrock": "*",
+    "@ephox/agar": "latest",
+    "@ephox/bedrock": "latest",
     "awesome-typescript-loader": "^3.4.1",
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2"
