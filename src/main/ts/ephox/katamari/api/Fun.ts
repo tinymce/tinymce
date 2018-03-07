@@ -1,33 +1,35 @@
 var noop = function () { };
 
-var noarg = function (f) {
-  return function () {
+var noarg = function (f: Function) {
+  return function (...x: any[]) {
     return f();
   };
 };
 
-var compose = function (fa, fb) {
-  return function () {
+type AnyFunction = (...x: any[]) => any;
+
+var compose = function (fa: AnyFunction, fb: AnyFunction): AnyFunction {
+  return function (...x: any[]) {
     return fa(fb.apply(null, arguments));
   };
 };
 
-var constant = function (value) {
+var constant = function <T>(value?: T): () => T {
   return function () {
     return value;
   };
 };
 
-var identity = function (x) {
+var identity = function <T>(x: T): T {
   return x;
 };
 
-var tripleEquals = function(a, b) {
+var tripleEquals = function <T>(a: T, b: T): boolean {
   return a === b;
 };
 
 // Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
-var curry = function (f) {
+var curry = function (f, ...x: any[]): AnyFunction {
   // equivalent to arguments.slice(1)
   // starting at 1 because 0 is the f, makes things tricky.
   // Pay attention to what variable is where, and the -1 magic.
@@ -35,7 +37,7 @@ var curry = function (f) {
   var args = new Array(arguments.length - 1);
   for (var i = 1; i < arguments.length; i++) args[i-1] = arguments[i];
 
-  return function () {
+  return function (...x: any[]) {
     var newArgs = new Array(arguments.length);
     for (var j = 0; j < newArgs.length; j++) newArgs[j] = arguments[j];
 
@@ -44,41 +46,43 @@ var curry = function (f) {
   };
 };
 
-var not = function (f) {
-  return function () {
+type PredicateFn = (...x: any[]) => boolean;
+
+var not = (f: PredicateFn): PredicateFn => {
+  return function (...x: any[]) {
     return !f.apply(null, arguments);
   };
 };
 
-var die = function (msg) {
+var die = function (msg: string) {
   return function () {
     throw new Error(msg);
   };
 };
 
-var apply = function (f) {
+var apply = function <T>(f: (...x: any[]) => T): T  {
   return f();
 };
 
-var call = function(f) {
+var call = function(f: AnyFunction) {
   f();
 };
 
-var never = constant(false);
-var always = constant(true);
+var never = constant<false>(false);
+var always = constant<true>(true);
 
-export default <any> {
-  noop: noop,
-  noarg: noarg,
-  compose: compose,
-  constant: constant,
-  identity: identity,
-  tripleEquals: tripleEquals,
-  curry: curry,
-  not: not,
-  die: die,
-  apply: apply,
-  call: call,
-  never: never,
-  always: always
+export default {
+  noop,
+  noarg,
+  compose,
+  constant,
+  identity,
+  tripleEquals,
+  curry,
+  not,
+  die,
+  apply,
+  call,
+  never,
+  always
 };

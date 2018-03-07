@@ -44,6 +44,9 @@ UnitTest.test('Function tests', function() {
     assert.eq(['a', 'b', 'c'], Fun.curry(c)('a', 'b', 'c'));
     assert.eq(['a', 'b', 'c'], Fun.curry(c, 'a', 'b')('c'));
 
+    assert.eq(true, Fun.always());
+    assert.eq(false, Fun.never());
+
     assert.eq(false, Fun.not(function () { return true; })());
     assert.eq(true, Fun.not(function () { return false; })());
 
@@ -73,14 +76,6 @@ UnitTest.test('Function tests', function() {
 
     Jsc.property('Check identity :: identity(a) === a', 'json', function (json) {
       return Jsc.eq(json, Fun.identity(json));
-    });
-
-    Jsc.property('Check always :: f(x) === true', 'json', function (json) {
-      return Jsc.eq(true, Fun.always(json));
-    });
-
-    Jsc.property('Check never :: f(x) === false', 'json', function (json) {
-      return Jsc.eq(false, Fun.never(json));
     });
 
     Jsc.property('Check curry :: curry(f, x)(y) = f(x, y)', Jsc.array(Jsc.json), Jsc.array(Jsc.json), function (extra1, extra2) {
