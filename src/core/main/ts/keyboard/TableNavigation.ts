@@ -18,7 +18,7 @@ import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from '
 import Fun from 'tinymce/core/util/Fun';
 
 const browser = PlatformDetection.detect().browser;
-const isFakeCaretTableBrowser = () => browser.isIE() || browser.isEdge() || browser.isFirefox();
+const isFakeCaretTableBrowser = (): boolean => browser.isIE() || browser.isEdge() || browser.isFirefox();
 
 const isAtTableCellLine = (getPositionsUntil, scope: HTMLElement, pos: CaretPosition) => {
   const lineInfo = getPositionsUntil(scope, pos);

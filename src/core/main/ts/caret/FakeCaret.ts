@@ -195,4 +195,4 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, h
   };
 };
 
-export const isFakeCaretTarget = (node: Node) => isContentEditableFalse(node) || (NodeType.isTable(node) && isFakeCaretTableBrowser());
+export const isFakeCaretTarget = (node: Node): boolean => isContentEditableFalse(node) || (NodeType.isTable(node) && isFakeCaretTableBrowser());

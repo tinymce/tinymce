@@ -89,7 +89,7 @@ export interface Selection {
       selector: String;
       parents: Element[];
   }) => void) => any;
-  getScrollContainer: () => Element;
+  getScrollContainer: () => HTMLElement;
   scrollIntoView: (elm: Element, alignToTop?: boolean) => void;
   placeCaretAt: (clientX: number, clientY: number) => void;
   getBoundingClientRect: () => ClientRect;
@@ -566,7 +566,7 @@ export const Selection = function (dom: DOMUtils, win: Window, serializer, edito
     return exports;
   };
 
-  const getScrollContainer = (): Element => {
+  const getScrollContainer = (): HTMLElement => {
     let scrollContainer;
     let node = dom.getRoot();
 
@@ -582,7 +582,7 @@ export const Selection = function (dom: DOMUtils, win: Window, serializer, edito
     return scrollContainer;
   };
 
-  const scrollIntoView = (elm: Element, alignToTop?: boolean) => ScrollIntoView.scrollIntoView(editor, elm, alignToTop);
+  const scrollIntoView = (elm: HTMLElement, alignToTop?: boolean) => ScrollIntoView.scrollIntoView(editor, elm, alignToTop);
   const placeCaretAt = (clientX: number, clientY: number) => setRng(CaretRangeFromPoint.fromPoint(clientX, clientY, editor.getDoc()));
 
   const getBoundingClientRect = (): ClientRect => {

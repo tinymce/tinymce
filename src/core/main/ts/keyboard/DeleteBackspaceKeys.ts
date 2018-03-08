@@ -16,8 +16,11 @@ import InlineFormatDelete from '../delete/InlineFormatDelete';
 import TableDelete from '../delete/TableDelete';
 import MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Cell } from '@ephox/katamari';
+import { EditorEvent } from 'tinymce/core/api/dom/EventUtils';
 
-const executeKeydownOverride = function (editor, caret, evt) {
+const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) {
   MatchKeys.execute([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, true) },
@@ -36,21 +39,21 @@ const executeKeydownOverride = function (editor, caret, evt) {
   });
 };
 
-const executeKeyupOverride = function (editor, evt) {
+const executeKeyupOverride = function (editor: Editor, evt: KeyboardEvent) {
   MatchKeys.execute([
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
     { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) }
   ], evt);
 };
 
-const setup = function (editor, caret) {
-  editor.on('keydown', function (evt) {
+const setup = function (editor: Editor, caret: Cell<Text>) {
+  editor.on('keydown', function (evt: EditorEvent<KeyboardEvent>) {
     if (evt.isDefaultPrevented() === false) {
       executeKeydownOverride(editor, caret, evt);
     }
   });
 
-  editor.on('keyup', function (evt) {
+  editor.on('keyup', function (evt: EditorEvent<KeyboardEvent>) {
     if (evt.isDefaultPrevented() === false) {
       executeKeyupOverride(editor, evt);
     }
