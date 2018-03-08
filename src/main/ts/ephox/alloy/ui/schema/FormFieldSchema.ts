@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { Composing } from '../../api/behaviour/Composing';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
-import PartType from '../../parts/PartType';
+import * as PartType from '../../parts/PartType';
 
 const schema = Fun.constant([
   FieldSchema.defaulted('prefix', 'form-field'),

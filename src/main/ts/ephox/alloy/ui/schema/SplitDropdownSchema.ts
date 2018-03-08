@@ -11,7 +11,7 @@ import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import Button from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
 import * as InternalSink from '../../parts/InternalSink';
-import PartType from '../../parts/PartType';
+import * as PartType from '../../parts/PartType';
 
 const schema = Fun.constant([
   FieldSchema.strict('toggleClass'),

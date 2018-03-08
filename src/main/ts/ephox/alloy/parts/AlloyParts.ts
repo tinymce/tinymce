@@ -4,7 +4,7 @@ import { Arr, Fun, Merger, Obj, Option, Result } from '@ephox/katamari';
 import * as Fields from '../data/Fields';
 import UiSubstitutes from '../spec/UiSubstitutes';
 import * as PartSubstitutes from './PartSubstitutes';
-import PartType from './PartType';
+import * as PartType from './PartType';
 import { SketchSpec, RawDomSchema } from 'ephox/alloy/api/ui/Sketcher';
 import { SpecSchemaStruct } from 'ephox/alloy/spec/SpecSchema';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';

@@ -8,7 +8,7 @@ import { Toggling } from '../../api/behaviour/Toggling';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as InternalSink from '../../parts/InternalSink';
-import PartType from '../../parts/PartType';
+import * as PartType from '../../parts/PartType';
 
 const schema = Fun.constant([
   FieldSchema.strict('dom'),

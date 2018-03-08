@@ -10,7 +10,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import Button from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
-import PartType from '../../parts/PartType';
+import * as PartType from '../../parts/PartType';
 
 const schema = Fun.constant([
   Fields.markers([

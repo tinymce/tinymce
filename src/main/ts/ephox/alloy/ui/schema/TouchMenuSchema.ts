@@ -8,7 +8,7 @@ import { Unselecting } from '../../api/behaviour/Unselecting';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as InternalSink from '../../parts/InternalSink';
-import PartType from '../../parts/PartType';
+import * as PartType from '../../parts/PartType';
 import * as Layout from '../../positioning/layout/Layout';
 
 const anchorAtCentre = function (component) {

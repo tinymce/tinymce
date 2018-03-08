@@ -11,7 +11,7 @@ import * as Fields from '../../data/Fields';
 import ItemType from '../../menu/build/ItemType';
 import SeparatorType from '../../menu/build/SeparatorType';
 import WidgetType from '../../menu/build/WidgetType';
-import PartType from '../../parts/PartType';
+import * as PartType from '../../parts/PartType';
 import * as Tagger from '../../registry/Tagger';
 
 const itemSchema = ValueSchema.choose(

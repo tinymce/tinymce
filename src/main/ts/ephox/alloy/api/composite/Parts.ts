@@ -1,5 +1,5 @@
 import * as AlloyParts from '../../parts/AlloyParts';
-import PartType from '../../parts/PartType';
+import * as PartType from '../../parts/PartType';
 // TODO: ^ rename the parts/ api to composites, it will break mobile alloy now if we do
 
 const parts = AlloyParts;

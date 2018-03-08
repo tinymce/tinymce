@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Replacing } from '../../api/behaviour/Replacing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
-import PartType from '../../parts/PartType';
+import * as PartType from '../../parts/PartType';
 
 const schema = Fun.constant([
   FieldSchema.defaulted('shell', true),
