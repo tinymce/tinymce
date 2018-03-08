@@ -13,8 +13,16 @@ export interface AdtInterface {
   log: (label: string) => string;
 }
 
+// Sugar Dom
 export interface SugarElement {
   dom: () => HTMLElement;
+}
+
+// Sugar Position
+export interface PositionCoordinates {
+  left: () => number;
+  top: () => number;
+  translate: (x: number, y: number) => PositionCoordinates;
 }
 
 // Config

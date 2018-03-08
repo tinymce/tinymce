@@ -1,18 +1,12 @@
 import { Adt, Arr, Option } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
-import { AdtInterface } from 'ephox/alloy/alien/TypeDefinitions';
+import { AdtInterface, PositionCoordinates } from 'ephox/alloy/alien/TypeDefinitions';
 
 // TODO: check why and how this type can take both a number or an option.
 export type DragCoords = (x: number | Option<number>, y: number | Option<number>) => CoordAdt;
 
 export interface CoordAdt extends AdtInterface {
   // TODO
-}
-
-export interface DragCoord {
-  left: () => number;
-  top: () => number;
-  translate: (x: number, y: number) => DragCoord;
 }
 
 export interface StylesCoord {
@@ -55,7 +49,7 @@ const transform = function (changes) {
   };
 };
 
-const asFixed = function (coord: CoordAdt, scroll: DragCoord, origin: DragCoord): DragCoord {
+const asFixed = function (coord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates): PositionCoordinates {
   return coord.fold(
     // offset to fixed
     transform([ add(origin), subtract(scroll) ]),
@@ -66,7 +60,7 @@ const asFixed = function (coord: CoordAdt, scroll: DragCoord, origin: DragCoord)
   );
 };
 
-const asAbsolute = function (coord: CoordAdt, scroll: DragCoord, origin: DragCoord): DragCoord  {
+const asAbsolute = function (coord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates): PositionCoordinates  {
   return coord.fold(
     // offset to absolute
     transform([ add(origin) ]),
@@ -77,7 +71,7 @@ const asAbsolute = function (coord: CoordAdt, scroll: DragCoord, origin: DragCoo
   );
 };
 
-const asOffset = function (coord: CoordAdt, scroll: DragCoord, origin: DragCoord): DragCoord  {
+const asOffset = function (coord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates): PositionCoordinates  {
   return coord.fold(
     // offset to offset
     transform([ ]),
@@ -102,14 +96,14 @@ const toString = function (coord) {
   );
 };
 
-const withinRange = function (coord1: CoordAdt, coord2: CoordAdt, xRange: number, yRange: number, scroll: DragCoord, origin: DragCoord): boolean {
+const withinRange = function (coord1: CoordAdt, coord2: CoordAdt, xRange: number, yRange: number, scroll: PositionCoordinates, origin: PositionCoordinates): boolean {
   const a1 = asAbsolute(coord1, scroll, origin);
   const a2 = asAbsolute(coord2, scroll, origin);
   return Math.abs(a1.left() - a2.left()) <= xRange &&
     Math.abs(a1.top() - a2.top()) <= yRange;
 };
 
-const toStyles = function (coord: CoordAdt, scroll: DragCoord, origin: DragCoord): StylesCoord {
+const toStyles = function (coord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates): StylesCoord {
   return coord.fold(
     function (x, y) {
       // offset
@@ -140,7 +134,7 @@ const translate = function (coord: CoordAdt, deltaX, deltaY) {
   );
 };
 
-const absorb = function (partialCoord, originalCoord, scroll: DragCoord, origin: DragCoord) {
+const absorb = function (partialCoord, originalCoord, scroll: PositionCoordinates, origin: PositionCoordinates) {
   const absorbOne = function (stencil, nu) {
     return function (optX, optY) {
       const original = stencil(originalCoord, scroll, origin);

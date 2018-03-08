@@ -1,10 +1,12 @@
-import * as Behaviour from './Behaviour';
+import { Option, Struct } from '@ephox/katamari';
+import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { CoordAdt } from 'ephox/alloy/api/data/DragCoord';
+import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
+
 import * as DraggingBranches from '../../behaviour/dragging/DraggingBranches';
 import * as DragState from '../../dragging/common/DragState';
-import { Struct, Option } from '@ephox/katamari';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
-import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import * as Behaviour from './Behaviour';
 
 export interface DraggingBehaviour extends AlloyBehaviour {
   config: (DraggingConfig) => { key: string, value: any };
@@ -12,10 +14,13 @@ export interface DraggingBehaviour extends AlloyBehaviour {
 }
 
 export type DraggingMode = 'touch' | 'mouse';
+export type SensorCoords = (x: number, y: number) => CoordAdt;
+export type OutputCoords = (x: Option<number>, y: Option<number>) => CoordAdt;
+
 export interface SnapConfig {
-  sensor: (x, y) => any;
-  range: (x, y) => any;
-  output: (x, y) => any;
+  sensor: SensorCoords;
+  range: (x, y) => Coordinates;
+  output: OutputCoords;
 }
 
 export interface SnapBehaviour {
@@ -49,7 +54,6 @@ const Dragging: DraggingBehaviour = Behaviour.createModes({
   extra: {
     // Extra. Does not need component as input.
     snap: Struct.immutableBag([ 'sensor', 'range', 'output' ], [ 'extra' ])
-
   },
   state: DragState
 });
