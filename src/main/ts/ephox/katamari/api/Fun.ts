@@ -14,7 +14,7 @@ var compose = function (fa: AnyFunction, fb: AnyFunction): AnyFunction {
   };
 };
 
-var constant = function <T>(value?: T): () => T {
+var constant = function <T>(value?: T): (...x: any[]) => T {
   return function () {
     return value;
   };
