@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function () 
   const createFakeEditor = function (settings) {
     return {
       settings
-    };
+    } as any;
   };
 
   Pipeline.async({}, [
