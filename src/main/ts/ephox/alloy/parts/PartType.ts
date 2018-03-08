@@ -2,7 +2,7 @@ import { FieldPresence, FieldSchema, ValueSchema, FieldProcessorAdt } from '@eph
 import { Adt, Fun, Id, Option } from '@ephox/katamari';
 import { DetailedSpec } from 'ephox/alloy/parts/AlloyParts';
 import { RawDomSchema } from 'ephox/alloy/api/ui/Sketcher';
-import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
+import { AdtInterface } from 'ephox/alloy/alien/TypeDefinitions';
 
 export type PartType = (spec: { [key: string]: any }) => FieldProcessorAdt;
 export interface BuildSpec {

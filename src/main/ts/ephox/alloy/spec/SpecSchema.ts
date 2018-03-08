@@ -6,7 +6,7 @@ import * as Fields from '../data/Fields';
 import UiSubstitutes from './UiSubstitutes';
 import { AlloyComponentsSpec, RawDomSchema, AlloyMixedSpec } from 'ephox/alloy/api/ui/Sketcher';
 import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
-import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
+import { AdtInterface } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface SpecSchemaStruct {
   components: () => AlloyComponentsSpec;
