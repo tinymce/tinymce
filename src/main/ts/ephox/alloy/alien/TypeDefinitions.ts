@@ -16,7 +16,6 @@ export interface RawUserSpec {
 
 // simulatedEvent
 
-
 // Behaviours
 export interface AlloyBehaviour {
   config: (spec: any) => { key: string, value: any };
@@ -32,13 +31,15 @@ export interface AlloyBehaviour {
 }
 
 // WIP
-// export interface AlloyBehaviourSchema {
-//   config: {};
-//   configAsRaw: () => {};
-//   initialConfig: any;
-//   me: any;
-//   state: any;
-// }
+export interface AlloyBehaviourSchema {
+  config: { [key: string]: () => any};
+  configAsRaw: () => {
+    [key: string]: any;
+  };
+  initialConfig: {};
+  me: AlloyBehaviour;
+  state: any;
+}
 
 export interface AlloyBehaviourConfig {
   fields: FieldProcessorAdt[];

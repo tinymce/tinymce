@@ -18,8 +18,9 @@ export interface SpecSchemaStruct {
   originalSpec: () => AlloyMixedSpec;
   uid: () => string;
   'debug.sketcher': () => {};
+  // ... optional
+  // some items are optional
 }
-
 export interface ContainerBehaviours {
   dump: () => {};
   [key: string]: any;

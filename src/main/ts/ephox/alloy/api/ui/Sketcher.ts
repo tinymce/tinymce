@@ -7,6 +7,7 @@ import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
+import { AlloyBehaviourSchema } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface RawElementSchema {
   tag: string;
@@ -41,7 +42,7 @@ export interface RawDomSchema {
 }
 
 export interface SketchSpec extends RawDomSchema {
-  behaviours: {};
+  behaviours: { [key: string]: AlloyBehaviourSchema };
   domModification: {};
   eventOrder: {};
   events: EventHandlerConfig;
