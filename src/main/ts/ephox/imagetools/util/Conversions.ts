@@ -23,19 +23,13 @@ function loadImage(image) {
 }
 
 function imageToBlob(image) {
-  return loadImage(image).then(function (image) {
-    var src = image.src;
+  var src = image.src;
 
-    if (src.indexOf('blob:') === 0) {
-      return anyUriToBlob(src);
-    }
+  if (src.indexOf('data:') === 0) {
+    return dataUriToBlob(src);
+  }
 
-    if (src.indexOf('data:') === 0) {
-      return dataUriToBlob(src);
-    }
-
-    return anyUriToBlob(src);
-  });
+  return anyUriToBlob(src);
 }
 
 function blobToImage(blob) {
