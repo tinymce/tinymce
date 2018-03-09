@@ -85,7 +85,7 @@ const open = function (editor, currentIndexState) {
       },
       {
         text: 'Replace', disabled: true, onclick () {
-          if (!Actions.replace(editor, currentIndexState, win.find('#replace').value())) {
+          if (!Actions.replace(editor, currentIndexState, win.find('#replace').value(), undefined, undefined, win.find('#style').value())) {
             win.statusbar.items().slice(1).disabled(true);
             currentIndexState.set(-1);
             last = {};
@@ -94,7 +94,7 @@ const open = function (editor, currentIndexState) {
       },
       {
         text: 'Replace all', disabled: true, onclick () {
-          Actions.replace(editor, currentIndexState, win.find('#replace').value(), true, true);
+          Actions.replace(editor, currentIndexState, win.find('#replace').value(), true, true, win.find('#style').value());
           win.statusbar.items().slice(1).disabled(true);
           last = {};
         }
@@ -123,7 +123,22 @@ const open = function (editor, currentIndexState) {
         { type: 'textbox', name: 'find', size: 40, label: 'Find', value: selectedText },
         { type: 'textbox', name: 'replace', size: 40, label: 'Replace with' },
         { type: 'checkbox', name: 'case', text: 'Match case', label: ' ' },
-        { type: 'checkbox', name: 'words', text: 'Whole words', label: ' ' }
+        { type: 'checkbox', name: 'words', text: 'Whole words', label: ' ' },
+        {
+          type: 'listbox',
+          name: 'style',
+          label: 'Style',
+          values : [
+              { text: 'None', value: 'none' },
+              { text: 'Add Bold', value: 'a#bold' },
+              { text: 'Add Italic', value: 'a#italic' },
+              { text: 'Add Underline', value: 'a#underline' },
+              { text: 'Remove Bold', value: 'r#bold' },
+              { text: 'Remove Italic', value: 'r#italic' },
+              { text: 'Remove Underline', value: 'r#underline' }
+          ],
+          value: 'none'
+        }
       ]
     }
   });
