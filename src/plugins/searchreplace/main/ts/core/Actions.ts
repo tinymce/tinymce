@@ -152,7 +152,7 @@ const replace = function (editor, currentIndexState, text, forward?, all?, style
     matchIndex = currentMatchIndex = parseInt(nodeIndex, 10);
     if (all || matchIndex === currentIndexState.get()) {
       if (text.length) {
-        if (style !== 'none') {
+        if (style && style !== 'none') {
           const st = style.split('#');
           editor.formatter[st[0] === 'a' ? 'apply' : 'remove'](st[1], undefined, nodes[i]);
         }

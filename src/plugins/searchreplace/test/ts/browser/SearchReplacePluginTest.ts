@@ -129,11 +129,31 @@ UnitTest.asynctest(
       ));
     });
 
+    suite.test('Replace with adding style', function (editor) {
+      editor.getBody().innerHTML = 'abc123abc';
+      editor.formatter.register('italic', {
+        inline: 'span', classes: 'italic'
+      });
+      editor.plugins.searchreplace.find('abc');
+      LegacyUnit.equal(editor.plugins.searchreplace.replace('abc', true, true, 'a#italic'), false);
+      LegacyUnit.equal(editor.getContent(), '<p><span class="italic">abc</span>123<span class="italic">abc</span></p>');
+    });
+
+    suite.test('Replace with removing style', function (editor) {
+      editor.getBody().innerHTML = '<p><span class="italic bold">abc</span>123<span class="italic">abc</span></p>';
+      editor.formatter.register('italic', {
+        inline: 'span', classes: 'italic'
+      });
+      editor.plugins.searchreplace.find('abc');
+      LegacyUnit.equal(editor.plugins.searchreplace.replace('abc', true, true, 'r#italic'), false);
+      LegacyUnit.equal(editor.getContent(), '<p><span class="bold">abc</span>123abc</p>');
+    });
+
     TinyLoader.setup(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     }, {
       plugins: 'searchreplace',
-      valid_elements: 'b,i',
+      valid_elements: 'b,i,span[class]',
       indent: false,
       skin_url: '/project/js/tinymce/skins/lightgray'
     }, success, failure);
