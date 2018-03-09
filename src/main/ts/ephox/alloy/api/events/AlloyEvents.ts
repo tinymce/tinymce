@@ -6,6 +6,7 @@ import * as AlloyTriggers from './AlloyTriggers';
 import SystemEvents from './SystemEvents';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { SimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
+import { SpecSchemaStruct } from 'ephox/alloy/spec/SpecSchema';
 
 export interface EventHandlerConfig {
   key: string;
@@ -16,7 +17,10 @@ export interface EventHandlerConfig {
   };
 }
 
+// TODO we can tighten this up alot further, it should take a simulatedEvent, however SimulatedEvent.event() can return 2 types, need to solve that issue first (SugarEvent or SimulatedEventTargets)
+// export type EventRunHandler = (component: AlloyComponent, action: SimulatedEvent) => any;
 export type EventRunHandler = (component: AlloyComponent, action: { [eventName: string]: () => any }) => any;
+export type RunOnSourceName = (handler: EventRunHandler) => EventHandlerConfig;
 
 const derive = Objects.wrapAll;
 
@@ -58,7 +62,7 @@ const run = function (name: string, handler: EventRunHandler): EventHandlerConfi
   };
 };
 
-const runActionExtra = function (name, action, extra) {
+const runActionExtra = function (name: string, action: (t: any, u: any) => void, extra: SpecSchemaStruct[]): EventHandlerConfig {
   return {
     key: name,
     value: EventHandler.nu({
@@ -121,10 +125,10 @@ const stopper = function (name) {
   });
 };
 
-const runOnAttached = runOnSourceName(SystemEvents.attachedToDom());
-const runOnDetached = runOnSourceName(SystemEvents.detachedFromDom());
-const runOnInit = runOnSourceName(SystemEvents.systemInit());
-const runOnExecute = runOnName(SystemEvents.execute());
+const runOnAttached = runOnSourceName(SystemEvents.attachedToDom()) as RunOnSourceName;
+const runOnDetached = runOnSourceName(SystemEvents.detachedFromDom()) as RunOnSourceName;
+const runOnInit = runOnSourceName(SystemEvents.systemInit()) as RunOnSourceName;
+const runOnExecute = runOnName(SystemEvents.execute()) as RunOnSourceName;
 
 export {
   derive,
