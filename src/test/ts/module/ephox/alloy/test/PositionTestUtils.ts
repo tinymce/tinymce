@@ -1,7 +1,7 @@
 import { Chain, Guard, NamedChain } from '@ephox/agar';
 import { Result } from '@ephox/katamari';
 import { Css, Scroll, Traverse } from '@ephox/sugar';
-import Positioning from 'ephox/alloy/api/behaviour/Positioning';
+import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import ChainUtils from 'ephox/alloy/test/ChainUtils';
 import Sinks from 'ephox/alloy/test/Sinks';

@@ -1,8 +1,8 @@
 import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, RawAssertions, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Fun, Result } from '@ephox/katamari';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Slider from 'ephox/alloy/api/ui/Slider';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';

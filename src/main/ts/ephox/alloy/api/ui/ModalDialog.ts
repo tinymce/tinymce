@@ -4,7 +4,7 @@ import { Traverse } from '@ephox/sugar';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ModalDialogSchema from '../../ui/schema/ModalDialogSchema';
 import * as Behaviour from '../behaviour/Behaviour';
-import Keying from '../behaviour/Keying';
+import { Keying } from '../behaviour/Keying';
 import * as GuiFactory from '../component/GuiFactory';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as Attachment from '../system/Attachment';

@@ -1,8 +1,8 @@
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-import Receiving from '../api/behaviour/Receiving';
-import Sandboxing from '../api/behaviour/Sandboxing';
+import { Receiving } from '../api/behaviour/Receiving';
+import { Sandboxing } from '../api/behaviour/Sandboxing';
 import * as Channels from '../api/messages/Channels';
 
 const schema = ValueSchema.objOfOnly([

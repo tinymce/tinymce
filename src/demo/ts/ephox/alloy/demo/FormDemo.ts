@@ -1,13 +1,13 @@
 import { Obj, Result } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
-import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import Button from 'ephox/alloy/api/ui/Button';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import ExpandableForm from 'ephox/alloy/api/ui/ExpandableForm';
 import Form from 'ephox/alloy/api/ui/Form';
 import DemoDataset from 'ephox/alloy/demo/DemoDataset';

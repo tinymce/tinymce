@@ -8,7 +8,7 @@ import * as CustomSpec from '../../spec/CustomSpec';
 import NoContextApi from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
-import ComponentApi from './ComponentApi';
+import { ComponentApi, AlloyComponent } from './ComponentApi';
 
 const buildSubcomponents = function (spec) {
   const components = Objects.readOr('components', [ ])(spec);
@@ -74,7 +74,7 @@ const external = function (spec) {
     syncComponents: Fun.noop,
     components: Fun.constant([ ]),
     events: Fun.constant({ })
-  });
+  }) as AlloyComponent;
 
   return GuiTypes.premade(me);
 };

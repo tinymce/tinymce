@@ -2,8 +2,37 @@ import * as Behaviour from './Behaviour';
 import KeyboardBranches from '../../behaviour/keyboard/KeyboardBranches';
 import * as KeyingState from '../../behaviour/keyboard/KeyingState';
 import { Objects } from '@ephox/boulder';
+import { AlloyBehaviour, AlloyBehaviourConfig, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-export default <any> Behaviour.createModes({
+export interface KeyingBehaviour extends AlloyBehaviour {
+  config: (KeyingConfig) => { key: string, value: any };
+  focusIn: (component: AlloyComponent) => void;
+  setGridSize: (
+    component: AlloyComponent,
+    numRows: number,
+    numColumns: number,
+  ) => void;
+}
+
+// TODO: dynamic type
+export interface KeyingConfig extends AlloyBehaviourConfig {
+  mode: KeyingModes;
+  selector: string;
+  visibilitySelector: string;
+  useSpace: boolean;
+  useEnter: boolean;
+  executeOnMove: boolean;
+  getInitial: (chooser) => SugarElement;
+  execute: (any) => any;
+  onEnter: () => () => any;
+  onEscape: () => () => any;
+  useTabstopAt: () => () => any;
+}
+
+export type KeyingModes = 'acyclic' | 'cyclic' | 'flow' | 'flatgrid' | 'matrix' | 'execution' | 'menu' | 'special';
+
+const Keying: KeyingBehaviour = Behaviour.createModes({
   branchKey: 'mode',
   branches: KeyboardBranches,
   name: 'keying',
@@ -31,3 +60,7 @@ export default <any> Behaviour.createModes({
   },
   state: KeyingState
 });
+
+export {
+  Keying
+};

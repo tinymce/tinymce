@@ -7,7 +7,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import Button from 'ephox/alloy/api/ui/Button';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('DisablingTest', function () {

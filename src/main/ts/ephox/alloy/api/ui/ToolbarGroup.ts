@@ -1,5 +1,5 @@
 import * as Behaviour from '../behaviour/Behaviour';
-import Keying from '../behaviour/Keying';
+import { Keying } from '../behaviour/Keying';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import * as ToolbarGroupSchema from '../../ui/schema/ToolbarGroupSchema';

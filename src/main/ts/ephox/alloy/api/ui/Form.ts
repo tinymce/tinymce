@@ -4,7 +4,7 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import PartType from '../../parts/PartType';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';
-import Representing from '../behaviour/Representing';
+import { Representing } from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';

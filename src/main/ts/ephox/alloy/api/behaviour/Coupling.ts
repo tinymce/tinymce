@@ -5,7 +5,7 @@ import CouplingState from '../../behaviour/coupling/CouplingState';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface CouplingBehaviour extends AlloyBehaviour {
-  config: (CouplingConfig) => any;
+  config: (CouplingConfig) => { key: string, value: any };
   getCoupled?: (component, coupleConfig, coupleState?, name?) => any;
 }
 

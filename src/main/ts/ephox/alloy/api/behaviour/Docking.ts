@@ -3,10 +3,10 @@ import * as ActiveDocking from '../../behaviour/docking/ActiveDocking';
 import DockingSchema from '../../behaviour/docking/DockingSchema';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { Option } from '@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/Component';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface DockingBehaviour extends AlloyBehaviour {
-  config: (DockingConfig) => any;
+  config: (DockingConfig) => { key: string, value: any };
 }
 
 export interface DockingConfig<T> extends AlloyBehaviourConfig {

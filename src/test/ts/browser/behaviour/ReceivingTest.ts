@@ -2,10 +2,10 @@ import { Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Receiving from 'ephox/alloy/api/behaviour/Receiving';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import { Receiving } from 'ephox/alloy/api/behaviour/Receiving';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('ReceivingTest', function () {

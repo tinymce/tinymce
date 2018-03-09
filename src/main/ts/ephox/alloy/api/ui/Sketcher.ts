@@ -1,10 +1,34 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Merger, Obj } from '@ephox/katamari';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+
+export interface SingleSketch {
+  name: () => string;
+  configFields: () => FieldProcessorAdt[];
+  partFields: () => FieldProcessorAdt[];
+  sketch: (spec) => SketchSpec;
+}
+
+export interface CompositeSketch extends SingleSketch {
+  parts: () => any;
+  [key: string]: Function;
+}
+
+export interface SketchSpec {
+  behaviours: {};
+  domModification: {};
+  eventOrder: {};
+  events: {};
+  components: AlloyComponent[];
+  dom: { tag: string };
+  uid: string;
+  'debug.sketcher': {};
+}
 
 const singleSchema = ValueSchema.objOfOnly([
   FieldSchema.strict('name'),
@@ -45,7 +69,7 @@ const single = function (rawConfig) {
     },
     apis,
     extraApis
-  );
+  ) as SingleSketch;
 };
 
 const composite = function (rawConfig) {
@@ -73,7 +97,7 @@ const composite = function (rawConfig) {
     },
     apis,
     extraApis
-  );
+  ) as CompositeSketch;
 };
 
 export {

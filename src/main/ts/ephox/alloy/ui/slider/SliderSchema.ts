@@ -2,8 +2,8 @@ import { FieldSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
-import Keying from '../../api/behaviour/Keying';
-import Representing from '../../api/behaviour/Representing';
+import { Keying } from '../../api/behaviour/Keying';
+import { Representing } from '../../api/behaviour/Representing';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();

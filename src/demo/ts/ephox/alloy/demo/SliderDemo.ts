@@ -2,12 +2,12 @@ import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Class, Css, DomEvent, Element, Insert } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Replacing from 'ephox/alloy/api/behaviour/Replacing';
-import Toggling from 'ephox/alloy/api/behaviour/Toggling';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
+import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import Slider from 'ephox/alloy/api/ui/Slider';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 

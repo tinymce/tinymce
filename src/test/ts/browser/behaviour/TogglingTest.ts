@@ -1,10 +1,10 @@
 import { ApproxStructure, Assertions, Logger, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Toggling from 'ephox/alloy/api/behaviour/Toggling';
+import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('TogglingTest', function () {

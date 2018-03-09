@@ -1,6 +1,6 @@
 import { Attr, Css } from '@ephox/sugar';
 
-import Positioning from '../../api/behaviour/Positioning';
+import { Positioning } from '../../api/behaviour/Positioning';
 import * as Attachment from '../../api/system/Attachment';
 
 // NOTE: A sandbox should not start as part of the world. It is expected to be

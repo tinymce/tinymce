@@ -4,7 +4,7 @@ import { Value } from '@ephox/sugar';
 
 import * as Behaviour from '../behaviour/Behaviour';
 import { Focusing } from '../behaviour/Focusing';
-import Representing from '../behaviour/Representing';
+import { Representing } from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 

@@ -4,8 +4,8 @@ import { Id, Merger } from '@ephox/katamari';
 import { events } from '../../ui/common/ButtonBase';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Focusing } from '../behaviour/Focusing';
-import Keying from '../behaviour/Keying';
-import Representing from '../behaviour/Representing';
+import { Keying } from '../behaviour/Keying';
+import { Representing } from '../behaviour/Representing';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 

@@ -6,7 +6,7 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 

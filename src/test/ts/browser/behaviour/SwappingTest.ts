@@ -2,9 +2,9 @@ import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr, Fun } from '@ephox/katamari';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Swapping from 'ephox/alloy/api/behaviour/Swapping';
+import { Swapping } from 'ephox/alloy/api/behaviour/Swapping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('SwappingTest', function () {

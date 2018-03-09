@@ -1,6 +1,6 @@
 import { Step } from '@ephox/agar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Pinching from 'ephox/alloy/api/behaviour/Pinching';
+import { Pinching } from 'ephox/alloy/api/behaviour/Pinching';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import NativeEvents from 'ephox/alloy/api/events/NativeEvents';

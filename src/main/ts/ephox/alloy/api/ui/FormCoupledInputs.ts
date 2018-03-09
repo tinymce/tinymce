@@ -1,6 +1,6 @@
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';
-import Representing from '../behaviour/Representing';
+import { Representing } from '../behaviour/Representing';
 import * as Sketcher from './Sketcher';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as FormCoupledInputsSchema from '../../ui/schema/FormCoupledInputsSchema';

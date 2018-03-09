@@ -4,10 +4,10 @@ import * as DragState from '../../dragging/common/DragState';
 import { Struct, Option } from '@ephox/katamari';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
-import { AlloyComponent } from 'ephox/alloy/api/component/Component';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface DraggingBehaviour extends AlloyBehaviour {
-  config: (DraggingConfig) => any;
+  config: (DraggingConfig) => { key: string, value: any };
   snap: (SnapConfig) => any;
 }
 
@@ -18,7 +18,7 @@ export interface SnapConfig {
   output: (x, y) => any;
 }
 
-export interface SchnappsConfig {
+export interface SnapBehaviour {
   getSnapPoints: () => any[];
   leftAttr: string;
   topAttr: string;
@@ -29,7 +29,7 @@ export interface SchnappsConfig {
 export interface DraggingConfig<T> extends AlloyBehaviourConfig {
   mode: DraggingMode;
   blockerClass?: string[];
-  snaps: (SchnappsConfig) => Option<T>;
+  snaps: (SnapBehaviour) => Option<T>;
   getTarget: (handle: EventHandlerConfig) => any;
   useFixed: boolean;
   onDrop: () => any;

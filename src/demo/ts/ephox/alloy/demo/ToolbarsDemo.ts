@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Class, Element } from '@ephox/sugar';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import SplitToolbar from 'ephox/alloy/api/ui/SplitToolbar';
 import Toolbar from 'ephox/alloy/api/ui/Toolbar';
 import ToolbarGroup from 'ephox/alloy/api/ui/ToolbarGroup';

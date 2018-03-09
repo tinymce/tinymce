@@ -1,15 +1,15 @@
 import * as Behaviour from './Behaviour';
-import Representing from './Representing';
+import { Representing } from './Representing';
 import * as ActiveInvalidate from '../../behaviour/invalidating/ActiveInvalidate';
 import * as InvalidateApis from '../../behaviour/invalidating/InvalidateApis';
 import InvalidateSchema from '../../behaviour/invalidating/InvalidateSchema';
 import { Future, Result } from '@ephox/katamari';
 import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/Component';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { Component } from 'ephox/alloy/api/Main';
 
 export interface InvalidatingBehaviour extends AlloyBehaviour {
-  config: (InvalidatingConfig) => any;
+  config: (InvalidatingConfig) => { key: string, value: any };
   markValid?: (Component: AlloyComponent) => void;
   markInvalid?: (Component: AlloyComponent) => void;
   query?: <T>(Component: AlloyComponent) => Future<T>;

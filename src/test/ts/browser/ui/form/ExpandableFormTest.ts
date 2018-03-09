@@ -2,11 +2,11 @@ import { Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, St
 import { UnitTest } from '@ephox/bedrock';
 import { Focus, Value } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import Button from 'ephox/alloy/api/ui/Button';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import ExpandableForm from 'ephox/alloy/api/ui/ExpandableForm';
 import Form from 'ephox/alloy/api/ui/Form';
 import FormField from 'ephox/alloy/api/ui/FormField';

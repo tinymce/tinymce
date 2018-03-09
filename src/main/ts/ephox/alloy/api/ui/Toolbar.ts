@@ -3,7 +3,7 @@ import { Merger, Option } from '@ephox/katamari';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ToolbarSchema from '../../ui/schema/ToolbarSchema';
 import * as Behaviour from '../behaviour/Behaviour';
-import Replacing from '../behaviour/Replacing';
+import { Replacing } from '../behaviour/Replacing';
 import SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 

@@ -3,8 +3,8 @@ import { Fun } from '@ephox/katamari';
 import { Height, Location, Width } from '@ephox/sugar';
 
 import { Coupling } from '../../api/behaviour/Coupling';
-import Toggling from '../../api/behaviour/Toggling';
-import Unselecting from '../../api/behaviour/Unselecting';
+import { Toggling } from '../../api/behaviour/Toggling';
+import { Unselecting } from '../../api/behaviour/Unselecting';
 import SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as InternalSink from '../../parts/InternalSink';

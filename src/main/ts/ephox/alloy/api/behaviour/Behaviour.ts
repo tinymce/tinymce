@@ -43,11 +43,11 @@ const createModes = function (data) {
   );
 };
 
-const revoke: () => undefined = Fun.constant(undefined);
-const noActive: () => {} = Fun.constant({ });
-const noApis: () => {} = Fun.constant({ });
-const noExtra: () => {} = Fun.constant({ });
-const noState: () => {} = Fun.constant(NoState);
+const revoke = Fun.constant(undefined) as () => undefined;
+const noActive = Fun.constant({ }) as () => {};
+const noApis = Fun.constant({ }) as () => {};
+const noExtra = Fun.constant({ }) as () => {};
+const noState = Fun.constant(NoState) as () => {};
 
 export {
   derive,

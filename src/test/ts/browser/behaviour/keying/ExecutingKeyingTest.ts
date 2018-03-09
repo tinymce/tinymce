@@ -2,10 +2,10 @@ import { Keyboard, Keys, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('ExecutingKeyingTest', function () {

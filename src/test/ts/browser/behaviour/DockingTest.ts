@@ -4,7 +4,7 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Docking } from 'ephox/alloy/api/behaviour/Docking';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('DockingTest', function () {

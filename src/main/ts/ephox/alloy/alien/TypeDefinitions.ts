@@ -9,11 +9,6 @@ export interface SugarElement {
   dom: () => HTMLElement;
 }
 
-// Schema
-export interface SchemaSchema {
-  any;  // todo what is this
-}
-
 // Behaviours
 export interface AlloyBehaviour {
   config: (spec: any) => { key: string, value: any };
@@ -21,10 +16,11 @@ export interface AlloyBehaviour {
   handlers: (info: any) => {};
   name: () => string;
   revoke: () => { key: string, value: undefined };
-  schema: () => SchemaSchema;
+  schema: () => FieldProcessorAdt;
 
   getValue: (any) => any;
   setValue: (...any) => any;
+  fields?: FieldProcessorAdt[];
 }
 
 // WIP

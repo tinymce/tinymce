@@ -1,9 +1,9 @@
 import { GeneralSteps, Mouse, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Streaming from 'ephox/alloy/api/behaviour/Streaming';
+import { Streaming } from 'ephox/alloy/api/behaviour/Streaming';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('StreamingTest', function () {
