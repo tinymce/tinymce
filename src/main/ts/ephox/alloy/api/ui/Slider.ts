@@ -1,5 +1,5 @@
 import SliderParts from '../../ui/slider/SliderParts';
-import * as SliderSchema from '../../ui/slider/SliderSchema';
+import { SliderSchema } from '../../ui/slider/SliderSchema';
 import * as SliderUi from '../../ui/slider/SliderUi';
 import * as Sketcher from './Sketcher';
 
