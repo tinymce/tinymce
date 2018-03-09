@@ -1,13 +1,14 @@
 import { Contracts, Result } from '@ephox/katamari';
-import { RawUserSpec, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
 
 export interface AlloySystemApi {
   addToGui: (AlloyComponent) => void;
   addToWorld: (AlloyComponent) => void;
   broadcast: (message: string) => void;
   broadcastOn: (channels: string, message: string) => void;
-  build: (rawUserSpec: RawUserSpec) => AlloyComponent;
+  build: (rawUserSpec: SketchSpec) => AlloyComponent;
   debugInfo: () => string;
   getByDom: <SugarElement>(element: SugarElement) => Result<SugarElement, string>;
   getByUid: (uid: string) => Result<AlloyComponent, string>;

@@ -6,6 +6,7 @@ import { DomEvent, Node, Traverse } from '@ephox/sugar';
 import Keys from '../alien/Keys';
 import SystemEvents from '../api/events/SystemEvents';
 import * as TapEvent from './TapEvent';
+import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 
 const isDangerous = function (event) {
   // Will trigger the Back button in the browser
@@ -72,7 +73,7 @@ const setup = function (container, rawSettings) {
       'drop'
     ]),
     function (type) {
-      return DomEvent.bind(container, type, function (event) {
+      return DomEvent.bind(container, type, function (event: SugarEvent) {
         tapEvent.fireIfReady(event, type).each(function (tapStopped) {
           if (tapStopped) { event.kill(); }
         });

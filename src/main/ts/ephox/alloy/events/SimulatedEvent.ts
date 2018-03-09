@@ -1,4 +1,24 @@
 import { Cell, Fun } from '@ephox/katamari';
+import { SugarElement, SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+
+export interface SimulatedEvent {
+  stop: () => void;
+  cut: () => void;
+  isStopped: () => boolean;
+  isCut: () => boolean;
+  event: () => AnyEvent;
+
+  getSource: () => AlloyComponent;
+  setSource: (component: AlloyComponent) => void;
+}
+
+export type AnyEvent = SimulatedEventTargets | SugarEvent;
+
+export interface SimulatedEventTargets {
+  target: () => SugarElement;
+  [key: string]: () => any;
+}
 
 const fromSource = function (event, source) {
   const stopper = Cell(false);

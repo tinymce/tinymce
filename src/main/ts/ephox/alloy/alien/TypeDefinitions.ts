@@ -18,6 +18,17 @@ export interface SugarElement {
   dom: () => HTMLElement;
 }
 
+// Sugar Event
+export interface SugarEvent {
+  kill: () => void;
+  prevent: () => void;
+  raw: () => any;
+  stop: () => void;
+  target: () => SugarElement;
+  x: () => number;
+  y: () => number;
+}
+
 // Sugar Position
 export interface PositionCoordinates {
   left: () => number;
@@ -26,11 +37,6 @@ export interface PositionCoordinates {
 }
 
 // Config
-export interface RawUserSpec {
-  any;
-}
-
-// simulatedEvent
 
 // Behaviours
 export interface AlloyBehaviour {

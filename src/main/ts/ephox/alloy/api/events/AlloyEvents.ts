@@ -5,15 +5,18 @@ import * as EventHandler from '../../construct/EventHandler';
 import * as AlloyTriggers from './AlloyTriggers';
 import SystemEvents from './SystemEvents';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
 
 export interface EventHandlerConfig {
   key: string;
   value: {
     can: () => boolean;
     abort: () => boolean;
-    run: (component: AlloyComponent, simulatedEvent: (any) => any) => any;
+    run: EventRunHandler
   };
 }
+
+export type EventRunHandler = (component: AlloyComponent, action: { [eventName: string]: () => any }) => any;
 
 const derive = Objects.wrapAll;
 
@@ -35,7 +38,7 @@ const can = function (name, predicate) {
   };
 };
 
-const preventDefault = function (name) {
+const preventDefault = function (name: string): EventHandlerConfig {
   return {
     key: name,
     value: EventHandler.nu({
@@ -46,7 +49,7 @@ const preventDefault = function (name) {
   };
 };
 
-const run = function (name, handler) {
+const run = function (name: string, handler: EventRunHandler): EventHandlerConfig {
   return {
     key: name,
     value: EventHandler.nu({

@@ -1,5 +1,7 @@
 import { Arr, Fun, Result, Option } from '@ephox/katamari';
 import { Compare, Focus, Node, Remove, Traverse } from '@ephox/sugar';
+import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { SimulatedEventTargets } from 'ephox/alloy/events/SimulatedEvent';
 
 import * as Debugging from '../../debugging/Debugging';
 import * as DescribedHandler from '../../events/DescribedHandler';
@@ -11,7 +13,7 @@ import * as GuiFactory from '../component/GuiFactory';
 import SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
-import { SystemApi, AlloySystemApi } from './SystemApi';
+import { AlloySystemApi, SystemApi } from './SystemApi';
 
 const create = function () {
   const root = GuiFactory.build(
@@ -43,7 +45,7 @@ const takeover = function (root) {
   };
 
   const domEvents = GuiEvents.setup(root.element(), {
-    triggerEvent (eventName, event) {
+    triggerEvent (eventName: string, event: SugarEvent) {
       return Debugging.monitorEvent(eventName, event.target(), function (logger) {
         return Triggers.triggerUntilStopped(lookup, eventName, event, logger);
       });
@@ -53,7 +55,7 @@ const takeover = function (root) {
     // targets that have the event. It is the general case of the more specialised
     // "message". "messages" may actually just go away. This is used for things
     // like window scroll.
-    broadcastEvent (eventName, event) {
+    broadcastEvent (eventName: string, event: SugarEvent) {
       const listeners = registry.filter(eventName);
       return Triggers.broadcast(listeners, event);
     }

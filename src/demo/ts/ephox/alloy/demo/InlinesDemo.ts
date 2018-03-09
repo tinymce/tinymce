@@ -117,7 +117,6 @@ export default <any> function () {
       events: AlloyEvents.derive([
         AlloyEvents.run(NativeEvents.contextmenu(), function (component, simulatedEvent) {
           simulatedEvent.event().kill();
-          console.log('inlineMenu', inlineMenu);
           InlineView.showAt(inlineComp, {
             anchor: 'makeshift',
             x: simulatedEvent.event().x(),

@@ -33,12 +33,12 @@ export interface SnapBehaviour {
 
 export interface DraggingConfig<T> extends AlloyBehaviourConfig {
   mode: DraggingMode;
-  blockerClass?: string[];
-  snaps: (SnapBehaviour) => Option<T>;
-  getTarget: (handle: EventHandlerConfig) => any;
-  useFixed: boolean;
-  onDrop: () => any;
-  dragger: () => any;
+  blockerClass?: string[];                            // modes: mouse
+  snaps: (SnapBehaviour) => Option<T>;                // modes: touch, mouse
+  getTarget: (handle: EventHandlerConfig) => any;     // modes: touch, mouse
+  useFixed: boolean;                                  // modes: touch, mouse
+  onDrop: () => any;                                  // modes: touch, mouse
+  dragger: () => any;                                 // modes: touch, mouse
 }
 
 const Dragging: DraggingBehaviour = Behaviour.createModes({
