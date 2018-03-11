@@ -1,35 +1,38 @@
 import { Fun, Merger, Obj } from '@ephox/katamari';
 
 import SystemEvents from './SystemEvents';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { SimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
 
-const emit = function (component, event) {
+const emit = function (component: AlloyComponent, event: string): void {
   dispatchWith(component, component.element(), event, { });
 };
 
-const emitWith = function (component, event, properties) {
+const emitWith = function (component: AlloyComponent, event: string, properties: {}): void {
   dispatchWith(component, component.element(), event, properties);
 };
 
-const emitExecute = function (component) {
+const emitExecute = function (component: AlloyComponent): void {
   emit(component, SystemEvents.execute());
 };
 
-const dispatch = function (component, target, event) {
+const dispatch = function (component: AlloyComponent, target: SugarElement, event: string): void {
   dispatchWith(component, target, event, { });
 };
 
-const dispatchWith = function (component, target, event, properties) {
+const dispatchWith = function (component: AlloyComponent, target: SugarElement, event: string, properties: {}): void {
   const data = Merger.deepMerge({
     target
   }, properties);
   component.getSystem().triggerEvent(event, target, Obj.map(data, Fun.constant));
 };
 
-const dispatchEvent = function (component, target, event, simulatedEvent) {
+const dispatchEvent = function (component: AlloyComponent, target: SugarElement, event: string, simulatedEvent: SimulatedEvent): void {
   component.getSystem().triggerEvent(event, target, simulatedEvent.event());
 };
 
-const dispatchFocus = function (component, target) {
+const dispatchFocus = function (component: AlloyComponent, target: SugarElement): void {
   component.getSystem().triggerFocus(target, component.element());
 };
 

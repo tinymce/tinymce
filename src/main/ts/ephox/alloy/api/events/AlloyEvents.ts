@@ -19,7 +19,7 @@ export interface EventHandlerConfig {
 
 // TODO we can tighten this up alot further, it should take a simulatedEvent, however SimulatedEvent.event() can return 2 types, need to solve that issue first (SugarEvent or SimulatedEventTargets)
 // export type EventRunHandler = (component: AlloyComponent, action: SimulatedEvent) => any;
-export type EventRunHandler = (component: AlloyComponent, action: { [eventName: string]: () => any }) => any;
+export type EventRunHandler = (component: AlloyComponent, action: { [eventName: string]: any }) => any;
 export type RunOnSourceName = (handler: EventRunHandler) => EventHandlerConfig;
 
 const derive = Objects.wrapAll;
@@ -93,7 +93,7 @@ const runOnSourceName = function (name) {
 };
 
 const redirectToUid = function (name, uid) {
-  return run(name, function (component, simulatedEvent) {
+  return run(name, function (component: AlloyComponent, simulatedEvent: SimulatedEvent) {
     component.getSystem().getByUid(uid).each(function (redirectee) {
       AlloyTriggers.dispatchEvent(redirectee, redirectee.element(), name, simulatedEvent);
     });
