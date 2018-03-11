@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import NativeEvents from '../../api/events/NativeEvents';
+import * as NativeEvents from '../../api/events/NativeEvents';
 import * as DomModification from '../../dom/DomModification';
 
 const exhibit = function (base, unselectConfig) {

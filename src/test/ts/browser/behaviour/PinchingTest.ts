@@ -3,7 +3,7 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Pinching } from 'ephox/alloy/api/behaviour/Pinching';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
+import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Fun } from '@ephox/katamari';
 import { UnitTest } from '@ephox/bedrock';

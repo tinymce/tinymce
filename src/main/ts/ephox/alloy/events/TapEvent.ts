@@ -3,7 +3,7 @@ import { Cell, Fun, Option } from '@ephox/katamari';
 import { Compare } from '@ephox/sugar';
 
 import DelayedFunction from '../alien/DelayedFunction';
-import NativeEvents from '../api/events/NativeEvents';
+import * as NativeEvents from '../api/events/NativeEvents';
 import SystemEvents from '../api/events/SystemEvents';
 
 const SIGNIFICANT_MOVE = 5;

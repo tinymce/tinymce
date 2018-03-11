@@ -17,7 +17,7 @@ import { Unselecting } from '../behaviour/Unselecting';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as AlloyTriggers from '../events/AlloyTriggers';
-import NativeEvents from '../events/NativeEvents';
+import * as NativeEvents from '../events/NativeEvents';
 import SystemEvents from '../events/SystemEvents';
 import InlineView from './InlineView';
 import Menu from './Menu';

@@ -2,7 +2,7 @@ import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import NativeEvents from '../../api/events/NativeEvents';
+import * as NativeEvents from '../../api/events/NativeEvents';
 import * as Fields from '../../data/Fields';
 import * as DragMovement from '../common/DragMovement';
 import SnapSchema from '../common/SnapSchema';

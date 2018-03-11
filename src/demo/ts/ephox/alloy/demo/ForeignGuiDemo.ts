@@ -6,7 +6,7 @@ import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import { Pinching } from 'ephox/alloy/api/behaviour/Pinching';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
+import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
 import * as Reader from 'ephox/alloy/frame/Reader';

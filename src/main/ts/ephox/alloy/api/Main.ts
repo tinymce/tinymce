@@ -34,7 +34,7 @@ import * as SketchBehaviours from './component/SketchBehaviours';
 import * as DragCoord from './data/DragCoord';
 import * as AlloyEvents from './events/AlloyEvents';
 import * as AlloyTriggers from './events/AlloyTriggers';
-import NativeEvents from './events/NativeEvents';
+import * as NativeEvents from './events/NativeEvents';
 import SystemEvents from './events/SystemEvents';
 import * as FocusManagers from './focus/FocusManagers';
 import * as Channels from './messages/Channels';

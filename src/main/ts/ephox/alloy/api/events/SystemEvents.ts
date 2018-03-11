@@ -1,4 +1,4 @@
-import NativeEvents from './NativeEvents';
+import * as NativeEvents from './NativeEvents';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 

@@ -36,6 +36,9 @@ export interface PositionCoordinates {
   translate: (x: number, y: number) => PositionCoordinates;
 }
 
+// Fun.constant
+export type Constant = () => any;
+
 // Config
 
 // Behaviours
