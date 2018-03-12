@@ -136,8 +136,9 @@ const extractFilename = (editor: Editor, str: string) => {
   return m ? editor.dom.encode(m[1]) : null;
 };
 
+const uniqueId = Utils.createIdGenerator('mceclip');
+
 const pasteImage = (editor: Editor, rng: Range, reader, blob) => {
-  const uniqueId = Utils.createIdGenerator('mceclip');
   if (rng) {
     editor.selection.setRng(rng);
     rng = null;
