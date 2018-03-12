@@ -4,28 +4,26 @@ import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import KeyUtils from '../../module/test/KeyUtils';
-import { Cell } from '@ephox/katamari';
 import Env from 'tinymce/core/api/Env';
+import { Editor } from 'tinymce/core/api/Editor';
+
+const sAssertUndoManagerDataLength = (editor: Editor, expected: number) =>
+  Step.sync(() => RawAssertions.assertEq('should have correct length', expected, editor.undoManager.data.length));
 
 UnitTest.asynctest('browser.tinymce.core.FirefoxFakeCaretBeforeTableTypeTest', (success, failure) => {
   Theme();
   Plugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
-    const undoCount: Cell<number> = Cell(null);
 
     Pipeline.async({}, Env.gecko ? [ // This test is only relevant on Firefox
       Logger.t('cursor before table type', GeneralSteps.sequence([
         tinyApis.sSetContent('<table style="border-collapse: collapse; width: 100%;" border="1"><tbody><tr><td style="width: 50%;">&nbsp;</td><td style="width: 50%;">&nbsp;</td></tr><tr><td style="width: 50%;">&nbsp;</td><td style="width: 50%;">&nbsp;</td></tr></tbody></table>'),
         tinyApis.sSetCursor([], 0),
-        Step.sync(() => undoCount.set(editor.undoManager.data.length)),
+        sAssertUndoManagerDataLength(editor, 1),
         Step.sync(() => KeyUtils.type(editor, 'a')),
-        Step.sync(() => {
-          const undoData = editor.undoManager.data;
-
-          RawAssertions.assertEq('should have correct length', undoCount.get() + 2, undoData.length);
-        })
+        sAssertUndoManagerDataLength(editor, 3)
       ]))
     ] : [], onSuccess, onFailure);
   }, {
