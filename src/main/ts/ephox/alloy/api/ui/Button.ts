@@ -46,7 +46,7 @@ const factory = function (detail, spec) {
   };
 };
 
-export default <any> Sketcher.single({
+const Button = Sketcher.single({
   name: 'Button',
   factory,
   configFields: [
@@ -59,3 +59,7 @@ export default <any> Sketcher.single({
     FieldSchema.defaulted('eventOrder', { })
   ]
 });
+
+export {
+  Button
+};

@@ -9,7 +9,7 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import Button from 'ephox/alloy/api/ui/Button';
+import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import InlineView from 'ephox/alloy/api/ui/InlineView';
 import Input from 'ephox/alloy/api/ui/Input';

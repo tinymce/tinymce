@@ -5,7 +5,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiTemplate from 'ephox/alloy/api/component/GuiTemplate';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import Button from 'ephox/alloy/api/ui/Button';
+import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import Input from 'ephox/alloy/api/ui/Input';
 import { JSON as Json } from '@ephox/sand';

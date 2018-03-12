@@ -9,7 +9,7 @@ import * as ComponentEvents from '../../construct/ComponentEvents';
 import * as CustomDefinition from '../../construct/CustomDefinition';
 import * as DomModification from '../../dom/DomModification';
 import * as DomRender from '../../dom/DomRender';
-import NoContextApi from '../system/NoContextApi';
+import { NoContextApi } from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as CompBehaviours from './CompBehaviours';
 import { ComponentApi, AlloyComponent } from './ComponentApi';

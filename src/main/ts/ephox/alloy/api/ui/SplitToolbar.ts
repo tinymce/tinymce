@@ -8,7 +8,7 @@ import { Replacing } from '../behaviour/Replacing';
 import { Sliding } from '../behaviour/Sliding';
 import * as GuiFactory from '../component/GuiFactory';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import Button from './Button';
+import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import Toolbar from './Toolbar';
 import ToolbarGroup from './ToolbarGroup';

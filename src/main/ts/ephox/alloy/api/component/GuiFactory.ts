@@ -5,7 +5,7 @@ import { Element } from '@ephox/sugar';
 import DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';
 import * as CustomSpec from '../../spec/CustomSpec';
-import NoContextApi from '../system/NoContextApi';
+import { NoContextApi } from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
 import { ComponentApi, AlloyComponent } from './ComponentApi';

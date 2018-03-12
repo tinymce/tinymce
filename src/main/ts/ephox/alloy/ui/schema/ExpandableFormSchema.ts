@@ -7,7 +7,7 @@ import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import { Sliding } from '../../api/behaviour/Sliding';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
-import Button from '../../api/ui/Button';
+import { Button } from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';

@@ -8,7 +8,7 @@ import { Keying } from '../../api/behaviour/Keying';
 import { Toggling } from '../../api/behaviour/Toggling';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import Button from '../../api/ui/Button';
+import { Button } from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
