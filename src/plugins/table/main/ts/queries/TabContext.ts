@@ -18,21 +18,23 @@ import VK from 'tinymce/core/api/util/VK';
 
 import Util from '../alien/Util';
 import TableTargets from './TableTargets';
+import { Editor } from 'tinymce/core/api/Editor';
+import { TableActions } from 'tinymce/plugins/table/actions/TableActions';
 
-const forward = function (editor, isRoot, cell, lazyWire) {
+const forward = function (editor: Editor, isRoot, cell, lazyWire) {
   return go(editor, isRoot, CellNavigation.next(cell), lazyWire);
 };
 
-const backward = function (editor, isRoot, cell, lazyWire) {
+const backward = function (editor: Editor, isRoot, cell, lazyWire) {
   return go(editor, isRoot, CellNavigation.prev(cell), lazyWire);
 };
 
-const getCellFirstCursorPosition = function (editor, cell) {
+const getCellFirstCursorPosition = function (editor: Editor, cell) {
   const selection = Selection.exact(cell, 0, cell, 0);
   return WindowSelection.toNative(selection);
 };
 
-const getNewRowCursorPosition = function (editor, table) {
+const getNewRowCursorPosition = function (editor: Editor, table) {
   const rows = SelectorFilter.descendants(table, 'tr');
   return Arr.last(rows).bind(function (last) {
     return SelectorFind.descendant(last, 'td,th').map(function (first) {
@@ -41,7 +43,7 @@ const getNewRowCursorPosition = function (editor, table) {
   });
 };
 
-const go: any = function (editor, isRoot, cell, actions, lazyWire) { // TODO: forwars/backward is calling without actions
+const go: any = function (editor: Editor, isRoot, cell, actions, lazyWire) { // TODO: forwars/backward is calling without actions
   return cell.fold(Option.none, Option.none, function (current, next) {
     return CursorPosition.first(next).map(function (cell) {
       return getCellFirstCursorPosition(editor, cell);
@@ -59,7 +61,7 @@ const go: any = function (editor, isRoot, cell, actions, lazyWire) { // TODO: fo
 
 const rootElements = ['table', 'li', 'dl'];
 
-const handle = function (event, editor, actions, lazyWire) {
+const handle = function (event: KeyboardEvent, editor: Editor, actions: TableActions, lazyWire) {
   if (event.keyCode === VK.TAB) {
     const body = Util.getBody(editor);
     const isRoot = function (element) {

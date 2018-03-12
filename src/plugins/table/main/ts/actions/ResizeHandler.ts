@@ -14,19 +14,26 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Direction from '../queries/Direction';
 import TableWire from './TableWire';
 import { hasTableResizeBars, hasObjectResizing } from '../api/Settings';
+import { Editor } from 'tinymce/core/api/Editor';
 
-export default function (editor) {
+export interface ResizeHandler {
+  lazyResize: () => Option<any>;
+  lazyWire: () => any;
+  destroy: () => void;
+}
+
+export const ResizeHandler = function (editor: Editor): ResizeHandler {
   let selectionRng = Option.none();
   let resize = Option.none();
   let wire = Option.none();
   const percentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
   let startW, startRawW;
 
-  const isTable = function (elm) {
+  const isTable = function (elm: Node): elm is HTMLTableElement {
     return elm.nodeName === 'TABLE';
   };
 
-  const getRawWidth = function (elm) {
+  const getRawWidth = function (elm: Node) {
     return editor.dom.getStyle(elm, 'width') || editor.dom.getAttrib(elm, 'width');
   };
 
@@ -79,24 +86,28 @@ export default function (editor) {
 
   // If we're updating the table width via the old mechanic, we need to update the constituent cells' widths/heights too.
   editor.on('ObjectResizeStart', function (e) {
-    if (isTable(e.target)) {
+    const targetElm = e.target;
+    if (isTable(targetElm)) {
       startW = e.width;
-      startRawW = getRawWidth(e.target);
+      startRawW = getRawWidth(targetElm);
     }
   });
 
+  interface CellSize { cell: HTMLTableCellElement; width: string; }
+
   editor.on('ObjectResized', function (e) {
-    if (isTable(e.target)) {
-      const table = e.target;
+    const targetElm = e.target;
+    if (isTable(targetElm)) {
+      const table = targetElm;
 
       if (percentageBasedSizeRegex.test(startRawW)) {
         const percentW = parseFloat(percentageBasedSizeRegex.exec(startRawW)[1]);
         const targetPercentW = e.width * percentW / startW;
         editor.dom.setStyle(table, 'width', targetPercentW + '%');
       } else {
-        const newCellSizes = [];
-        Tools.each(table.rows, function (row) {
-          Tools.each(row.cells, function (cell) {
+        const newCellSizes: CellSize[] = [];
+        Tools.each(table.rows, function (row: HTMLTableRowElement) {
+          Tools.each(row.cells, function (cell: HTMLTableCellElement) {
             const width = editor.dom.getStyle(cell, 'width', true);
             newCellSizes.push({
               cell,
@@ -105,7 +116,7 @@ export default function (editor) {
           });
         });
 
-        Tools.each(newCellSizes, function (newCellSize) {
+        Tools.each(newCellSizes, function (newCellSize: CellSize) {
           editor.dom.setStyle(newCellSize.cell, 'width', newCellSize.width);
           editor.dom.setAttrib(newCellSize.cell, 'width', null);
         });
@@ -118,4 +129,4 @@ export default function (editor) {
     lazyWire,
     destroy
   };
-}
+};
