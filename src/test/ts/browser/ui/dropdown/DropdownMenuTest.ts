@@ -8,7 +8,7 @@ import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import Dropdown from 'ephox/alloy/api/ui/Dropdown';
+import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';

@@ -34,7 +34,7 @@ const factory = function (detail, spec) {
   };
 };
 
-export default <any> Sketcher.single({
+const DataField = Sketcher.single({
   name: 'DataField',
   factory,
   configFields: [
@@ -44,3 +44,7 @@ export default <any> Sketcher.single({
     SketchBehaviours.field('dataBehaviours', [ Representing, Composing ])
   ]
 });
+
+export {
+  DataField
+};

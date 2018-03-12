@@ -4,7 +4,7 @@ import { Arr, Future, Option, Result } from '@ephox/katamari';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import Dropdown from 'ephox/alloy/api/ui/Dropdown';
+import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import InlineView from 'ephox/alloy/api/ui/InlineView';
 import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';

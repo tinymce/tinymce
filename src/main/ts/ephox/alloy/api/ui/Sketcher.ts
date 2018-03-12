@@ -31,6 +31,12 @@ export interface SingleSketch {
   sketch: (spec) => SketchSpec;
 }
 
+export interface FormSketch {
+  // why do forms not use the SingleSketch Type?
+  sketch: (spec) => SketchSpec;
+  getField: (component: AlloyComponent) => AlloyComponent;
+}
+
 export interface CompositeSketch extends SingleSketch {
   parts: () => any;
   [key: string]: Function;

@@ -85,9 +85,13 @@ const factory = function (detail, components, spec, externals) {
   );
 };
 
-export default <any> Sketcher.composite({
+const Dropdown = Sketcher.composite({
   name: 'Dropdown',
   configFields: DropdownSchema.schema(),
   partFields: DropdownSchema.parts(),
   factory
 });
+
+export {
+  Dropdown
+};

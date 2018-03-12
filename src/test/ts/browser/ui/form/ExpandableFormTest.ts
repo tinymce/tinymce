@@ -7,7 +7,7 @@ import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import ExpandableForm from 'ephox/alloy/api/ui/ExpandableForm';
+import { ExpandableForm } from 'ephox/alloy/api/ui/ExpandableForm';
 import Form from 'ephox/alloy/api/ui/Form';
 import FormField from 'ephox/alloy/api/ui/FormField';
 import HtmlSelect from 'ephox/alloy/api/ui/HtmlSelect';

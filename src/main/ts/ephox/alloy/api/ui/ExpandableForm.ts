@@ -70,7 +70,7 @@ const factory = function (detail, components, spec, _externals) {
 
 };
 
-export default <any> Sketcher.composite({
+const ExpandableForm = Sketcher.composite({
   name: 'ExpandableForm',
   configFields: ExpandableFormSchema.schema(),
   partFields: ExpandableFormSchema.parts(),
@@ -93,3 +93,7 @@ export default <any> Sketcher.composite({
     }
   }
 });
+
+export {
+  ExpandableForm
+};
