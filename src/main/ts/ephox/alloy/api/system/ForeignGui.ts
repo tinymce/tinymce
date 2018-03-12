@@ -14,6 +14,7 @@ import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 export interface ForeignGuiSpec {
   root: () => SugarElement;
   dispatchers: any[];
+  insertion?: (root: AlloyComponent, system: Gui.GuiSystem) => void;
 }
 
 const schema = ValueSchema.objOfOnly([
