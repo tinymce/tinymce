@@ -24,8 +24,8 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function () {
 
     Pipeline.async({}, [
       Logger.t('Font family and font size on initial page load', GeneralSteps.sequence([
-        sAssertSelectBoxDisplayValue(editor, 'Font Sizes', '32pt'),
-        sAssertSelectBoxDisplayValue(editor, 'Font Family', 'Helvetica')
+        sAssertSelectBoxDisplayValue(editor, 'Font Sizes', '24pt'),
+        sAssertSelectBoxDisplayValue(editor, 'Font Family', 'Arial')
       ])),
 
       Logger.t('Font family and font size on paragraph', GeneralSteps.sequence([

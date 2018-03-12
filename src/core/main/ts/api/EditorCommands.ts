@@ -11,6 +11,7 @@
 import Env from './Env';
 import InsertContent from '../InsertContent';
 import DeleteCommands from '../delete/DeleteCommands';
+import * as FontCommands from '../commands/FontCommands';
 import NodeType from '../dom/NodeType';
 import InsertBr from '../newline/InsertBr';
 import SelectionBookmark from '../selection/SelectionBookmark';
@@ -29,7 +30,7 @@ import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 
 // Added for compression purposes
 const each = Tools.each, extend = Tools.extend;
-const map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
+const map = Tools.map, inArray = Tools.inArray;
 const TRUE = true, FALSE = false;
 
 export default function (editor: Editor) {
@@ -385,26 +386,16 @@ export default function (editor: Editor) {
     },
 
     // Override commands to use the text formatter engine
-    'ForeColor,HiliteColor,FontName' (command, ui, value) {
+    'ForeColor,HiliteColor' (command, ui, value) {
       toggleFormat(command, value);
     },
 
+    'FontName' (command, ui, value) {
+      FontCommands.fontNameAction(editor, value);
+    },
+
     'FontSize' (command, ui, value) {
-      let fontClasses, fontSizes;
-
-      // Convert font size 1-7 to styles
-      if (value >= 1 && value <= 7) {
-        fontSizes = explode(settings.font_size_style_values);
-        fontClasses = explode(settings.font_size_classes);
-
-        if (fontClasses) {
-          value = fontClasses[value - 1] || value;
-        } else {
-          value = fontSizes[value - 1] || value;
-        }
-      }
-
-      toggleFormat(command, value);
+      FontCommands.fontSizeAction(editor, value);
     },
 
     'RemoveFormat' (command) {
@@ -595,23 +586,6 @@ export default function (editor: Editor) {
     }
   }, 'state');
 
-  // Add queryCommandValue overrides
-  addCommands({
-    'FontSize,FontName' (command) {
-      let value = 0, parent;
-
-      if ((parent = dom.getParent(selection.getNode(), 'span'))) {
-        if (command === 'fontsize') {
-          value = parent.style.fontSize;
-        } else {
-          value = parent.style.fontFamily.replace(/, /g, ',').replace(/[\'\"]/g, '').toLowerCase();
-        }
-      }
-
-      return value;
-    }
-  }, 'value');
-
   // Add undo manager logic
   addCommands({
     Undo () {
@@ -622,4 +596,7 @@ export default function (editor: Editor) {
       editor.undoManager.redo();
     }
   });
+
+  addQueryValueHandler('FontName', () => FontCommands.fontNameQuery(editor), this);
+  addQueryValueHandler('FontSize', () => FontCommands.fontSizeQuery(editor), this);
 }

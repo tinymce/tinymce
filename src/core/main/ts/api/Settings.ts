@@ -8,6 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { Editor } from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
+
 const getBodySetting = function (editor, name, defaultValue) {
   const value = editor.getParam(name, defaultValue);
 
@@ -77,6 +80,9 @@ const shouldEndContainerOnEmtpyBlock = function (editor) {
   return editor.getParam('end_container_on_empty_block', false);
 };
 
+const getFontStyleValues = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_style_values', ''));
+const getFontSizeClasses = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_classes', ''));
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -90,5 +96,7 @@ export default {
   getBrNewLineSelector,
   getNoNewLineSelector,
   shouldKeepStyles,
-  shouldEndContainerOnEmtpyBlock
+  shouldEndContainerOnEmtpyBlock,
+  getFontStyleValues,
+  getFontSizeClasses
 };
