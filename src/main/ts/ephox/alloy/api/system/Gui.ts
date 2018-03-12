@@ -1,7 +1,7 @@
-import { Arr, Fun, Result, Option } from '@ephox/katamari';
+import { Arr, Fun, Result } from '@ephox/katamari';
 import { Compare, Focus, Node, Remove, Traverse } from '@ephox/sugar';
-import { SugarEvent, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { SimulatedEventTargets } from 'ephox/alloy/events/SimulatedEvent';
+import { SugarElement, SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 import * as Debugging from '../../debugging/Debugging';
 import * as DescribedHandler from '../../events/DescribedHandler';
@@ -14,7 +14,6 @@ import * as SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
 import { AlloySystemApi, SystemApi } from './SystemApi';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface GuiSystem {
   root: () => AlloyComponent;
@@ -43,7 +42,7 @@ const create = function (): GuiSystem {
   return takeover(root);
 };
 
-const takeover = function (root) {
+const takeover = function (root: AlloyComponent): GuiSystem {
   const isAboveRoot = function (el) {
     return Traverse.parent(root.element()).fold(
       function () {
