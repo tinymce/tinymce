@@ -70,7 +70,7 @@ UnitTest.test('Function tests', function() {
     Jsc.property('Check constant :: constant(a)() === a', 'json', function (json) {
       return Jsc.eq(json, Fun.constant(json)());
     });
-    
+
     Jsc.property('Check identity :: identity(a) === a', 'json', function (json) {
       return Jsc.eq(json, Fun.identity(json));
     });
