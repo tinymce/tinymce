@@ -9,7 +9,7 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
-import Input from 'ephox/alloy/api/ui/Input';
+import { Input } from 'ephox/alloy/api/ui/Input';
 import SplitDropdown from 'ephox/alloy/api/ui/SplitDropdown';
 import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import DemoSink from 'ephox/alloy/demo/DemoSink';

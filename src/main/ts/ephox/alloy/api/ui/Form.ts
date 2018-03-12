@@ -1,4 +1,4 @@
-import { Arr, Merger, Obj } from '@ephox/katamari';
+import { Arr, Merger, Obj, Option } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
@@ -8,8 +8,16 @@ import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
+import { SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const owner = 'form';
+
+export interface FormSketch {
+  // why do forms not use the SingleSketch Type?
+  sketch: (spec) => SketchSpec;
+  getField: (component: AlloyComponent, key: string) => Option<AlloyComponent>;
+}
 
 const schema = [
   SketchBehaviours.field('formBehaviours', [ Representing ])
@@ -93,9 +101,13 @@ const make = function (detail, components, spec) {
   );
 };
 
-export default <any> {
+const Form = {
   getField: GuiTypes.makeApi(function (apis, component, key) {
     return apis.getField(component, key);
   }),
   sketch
+} as FormSketch;
+
+export {
+  Form
 };

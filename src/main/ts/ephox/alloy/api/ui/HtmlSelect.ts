@@ -58,7 +58,7 @@ const factory = function (detail, spec) {
   );
 };
 
-export default <any> Sketcher.single({
+const HtmlSelect = Sketcher.single({
   name: 'HtmlSelect',
   configFields: [
     FieldSchema.strict('options'),
@@ -67,3 +67,7 @@ export default <any> Sketcher.single({
   ],
   factory
 });
+
+export {
+  HtmlSelect
+};

@@ -12,8 +12,12 @@ const factory = function (detail, spec) {
   };
 };
 
-export default <any> Sketcher.single({
+const Input = Sketcher.single({
   name: 'Input',
   configFields: InputBase.schema(),
   factory
 });
+
+export {
+  Input
+};

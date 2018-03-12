@@ -1,4 +1,4 @@
-import { Merger } from '@ephox/katamari';
+import { Merger, Option } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ExpandableFormSchema from '../../ui/schema/ExpandableFormSchema';
@@ -6,8 +6,9 @@ import * as Behaviour from '../behaviour/Behaviour';
 import { Representing } from '../behaviour/Representing';
 import { Sliding } from '../behaviour/Sliding';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import Form from './Form';
+import { Form } from './Form';
 import * as Sketcher from './Sketcher';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const runOnExtra = function (detail, operation) {
   return function (anyComp) {
@@ -70,6 +71,14 @@ const factory = function (detail, components, spec, _externals) {
 
 };
 
+export interface ExpandableFormSketch extends Sketcher.CompositeSketch {
+  toggleForm: (component: AlloyComponent) => void;
+  getField: (component: AlloyComponent, key: string) => Option<AlloyComponent>;
+  collapseForm: (component: AlloyComponent) => void;
+  collapseFormImmediately: (component: AlloyComponent) => void;
+  expandForm: (component: AlloyComponent) => void;
+}
+
 const ExpandableForm = Sketcher.composite({
   name: 'ExpandableForm',
   configFields: ExpandableFormSchema.schema(),
@@ -92,7 +101,7 @@ const ExpandableForm = Sketcher.composite({
       apis.expandForm(component);
     }
   }
-});
+}) as ExpandableFormSketch;
 
 export {
   ExpandableForm

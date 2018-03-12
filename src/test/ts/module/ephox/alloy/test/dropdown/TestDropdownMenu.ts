@@ -3,7 +3,7 @@ import { Fun, Merger } from '@ephox/katamari';
 import { Attr, SelectorFind } from '@ephox/sugar';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
-import Menu from 'ephox/alloy/api/ui/Menu';
+import { Menu } from 'ephox/alloy/api/ui/Menu';
 
 const renderMenu = function (spec) {
   return {

@@ -61,9 +61,13 @@ const factory = function (detail, components, spec, externals) {
   };
 };
 
-export default <any> Sketcher.composite({
+const FormField =  Sketcher.composite({
   name: 'FormField',
   configFields: FormFieldSchema.schema(),
   partFields: FormFieldSchema.parts(),
   factory
 });
+
+export {
+  FormField
+};

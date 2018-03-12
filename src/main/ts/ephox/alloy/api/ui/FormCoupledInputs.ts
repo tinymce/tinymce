@@ -37,9 +37,13 @@ const factory = function (detail, components, spec, externals) {
   };
 };
 
-export default <any> Sketcher.composite({
+const FormCoupledInputs = Sketcher.composite({
   name: 'FormCoupledInputs',
   configFields: FormCoupledInputsSchema.schema(),
   partFields: FormCoupledInputsSchema.parts(),
   factory
 });
+
+export {
+  FormCoupledInputs
+};

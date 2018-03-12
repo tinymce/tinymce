@@ -19,8 +19,8 @@ import * as AlloyEvents from '../events/AlloyEvents';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as NativeEvents from '../events/NativeEvents';
 import * as SystemEvents from '../events/SystemEvents';
-import InlineView from './InlineView';
-import Menu from './Menu';
+import { InlineView } from './InlineView';
+import { Menu } from './Menu';
 import * as Sketcher from './Sketcher';
 
 const factory = function (detail, components, spec, externals) {

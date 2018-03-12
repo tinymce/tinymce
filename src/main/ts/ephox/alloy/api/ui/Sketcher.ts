@@ -1,13 +1,12 @@
-import { FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Obj } from '@ephox/katamari';
+import { AlloyBehaviourSchema } from 'ephox/alloy/alien/TypeDefinitions';
+import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
-import { AlloyBehaviourSchema } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface RawElementSchema {
   tag: string;
@@ -29,12 +28,6 @@ export interface SingleSketch {
   configFields: () => FieldProcessorAdt[];
   partFields: () => FieldProcessorAdt[];
   sketch: (spec) => SketchSpec;
-}
-
-export interface FormSketch {
-  // why do forms not use the SingleSketch Type?
-  sketch: (spec) => SketchSpec;
-  getField: (component: AlloyComponent) => AlloyComponent;
 }
 
 export interface CompositeSketch extends SingleSketch {

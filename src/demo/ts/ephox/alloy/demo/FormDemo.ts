@@ -9,7 +9,7 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { ExpandableForm } from 'ephox/alloy/api/ui/ExpandableForm';
-import Form from 'ephox/alloy/api/ui/Form';
+import { Form } from 'ephox/alloy/api/ui/Form';
 import DemoDataset from 'ephox/alloy/demo/DemoDataset';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';

@@ -4,7 +4,7 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Transitioning } from 'ephox/alloy/api/behaviour/Transitioning';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import Menu from 'ephox/alloy/api/ui/Menu';
+import { Menu } from 'ephox/alloy/api/ui/Menu';
 import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 

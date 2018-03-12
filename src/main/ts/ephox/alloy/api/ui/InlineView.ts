@@ -10,6 +10,24 @@ import { Receiving } from '../behaviour/Receiving';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+
+export interface InlineViewSketch extends Sketcher.SingleSketch {
+  // InlineViewApis;
+  showAt: (component: AlloyComponent, anchor: InlineViewAnchor, thing: Sketcher.SketchSpec) => void;
+  hide: (component: AlloyComponent) => void;
+  isOpen: (component: AlloyComponent) => boolean;
+}
+
+// TODO: anchor appears to be a generic concept, move this when a consistent usage pattern is found
+export interface InlineViewAnchor {
+  anchor: string;
+  x?: number;
+  y?: number;
+  item?: AlloyComponent;
+  root?: SugarElement;
+}
 
 const factory = function (detail, spec) {
   const isPartOfRelated = function (container, queryElem) {
@@ -60,7 +78,7 @@ const factory = function (detail, spec) {
   );
 };
 
-export default <any> Sketcher.single({
+const InlineView = Sketcher.single({
   name: 'InlineView',
   configFields: [
     FieldSchema.strict('lazySink'),
@@ -82,4 +100,8 @@ export default <any> Sketcher.single({
       return apis.isOpen(component);
     }
   }
-});
+}) as InlineViewSketch;
+
+export {
+  InlineView
+};

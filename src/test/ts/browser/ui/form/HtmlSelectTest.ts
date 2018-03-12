@@ -1,7 +1,7 @@
 import { Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import HtmlSelect from 'ephox/alloy/api/ui/HtmlSelect';
+import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
