@@ -5,8 +5,8 @@ import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import Tabbar from 'ephox/alloy/api/ui/Tabbar';
-import TabSection from 'ephox/alloy/api/ui/TabSection';
+import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
+import { TabSection } from 'ephox/alloy/api/ui/TabSection';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('TabSection Test', function () {

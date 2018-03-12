@@ -3,8 +3,8 @@ import { Class, Element } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import Tabbar from 'ephox/alloy/api/ui/Tabbar';
-import TabSection from 'ephox/alloy/api/ui/TabSection';
+import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
+import { TabSection } from 'ephox/alloy/api/ui/TabSection';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default <any> function () {

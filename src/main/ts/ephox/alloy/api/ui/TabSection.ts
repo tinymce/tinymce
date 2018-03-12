@@ -66,9 +66,13 @@ const factory = function (detail, components, spec, externals) {
 
 };
 
-export default <any> Sketcher.composite({
+const TabSection = Sketcher.composite({
   name: 'TabSection',
   configFields: TabSectionSchema.schema(),
   partFields: TabSectionSchema.parts(),
   factory
 });
+
+export {
+  TabSection
+};

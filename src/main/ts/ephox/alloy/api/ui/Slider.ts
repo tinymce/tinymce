@@ -1,9 +1,17 @@
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+
 import SliderParts from '../../ui/slider/SliderParts';
 import { SliderSchema } from '../../ui/slider/SliderSchema';
 import * as SliderUi from '../../ui/slider/SliderUi';
 import * as Sketcher from './Sketcher';
 
-export default Sketcher.composite({
+export interface SliderSketch extends Sketcher.CompositeSketch {
+  resetToMin: (slider: AlloyComponent) => void;
+  resetToMax: (slider: AlloyComponent) => void;
+  refresh: (slider: AlloyComponent) => void;
+}
+
+const Slider = Sketcher.composite({
   name: 'Slider',
   configFields: SliderSchema,
   partFields: SliderParts,
@@ -19,4 +27,8 @@ export default Sketcher.composite({
       apis.refresh(slider);
     }
   }
-});
+}) as SliderSketch;
+
+export {
+  Slider
+};

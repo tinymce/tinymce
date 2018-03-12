@@ -96,9 +96,13 @@ const factory = function (detail, components, spec, externals) {
   );
 };
 
-export default <any> Sketcher.composite({
+const SplitDropdown = Sketcher.composite({
   name: 'SplitDropdown',
   configFields: SplitDropdownSchema.schema(),
   partFields: SplitDropdownSchema.parts(),
   factory
 });
+
+export {
+  SplitDropdown
+};

@@ -38,7 +38,7 @@ const factory = function (detail, spec) {
   };
 };
 
-export default <any> Sketcher.single({
+const TabButton = Sketcher.single({
   name: 'TabButton',
   configFields: [
     FieldSchema.defaulted('uid', undefined),
@@ -61,3 +61,7 @@ export default <any> Sketcher.single({
   ],
   factory
 });
+
+export {
+  TabButton
+};

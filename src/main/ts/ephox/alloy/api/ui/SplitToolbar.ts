@@ -12,6 +12,7 @@ import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import Toolbar from './Toolbar';
 import ToolbarGroup from './ToolbarGroup';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const setStoredGroups = function (bar, storedGroups) {
   const bGroups = Arr.map(storedGroups, function (g) { return GuiFactory.premade(g); });
@@ -113,7 +114,12 @@ const factory = function (detail, components, spec, externals) {
   );
 };
 
-export default <any> Sketcher.composite({
+export interface SplitToolbarSketch extends Sketcher.CompositeSketch {
+  setGroups: (toolbar: AlloyComponent, groups: [{}]) => void;
+  refresh: (toolbar: AlloyComponent) => void;
+}
+
+const SplitToolbar = Sketcher.composite({
   name: 'SplitToolbar',
   configFields: SplitToolbarSchema.schema(),
   partFields: SplitToolbarSchema.parts(),
@@ -126,4 +132,8 @@ export default <any> Sketcher.composite({
       apis.refresh(toolbar);
     }
   }
-});
+}) as SplitToolbarSketch;
+
+export {
+  SplitToolbar
+};

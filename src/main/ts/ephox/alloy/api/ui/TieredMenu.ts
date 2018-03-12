@@ -11,6 +11,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 
 const tieredData = function (primary, menus, expansions) {
+  debugger;
   return {
     primary,
     menus,
@@ -27,13 +28,21 @@ const singleData = function (name, menu) {
 };
 
 const collapseItem = function (text) {
+  debugger;
   return {
     value: Id.generate(TieredMenuSpec.collapseItem()),
     text
   };
 };
 
-export default <any> Sketcher.single({
+export interface TieredMenuSketch extends Sketcher.SingleSketch {
+  collapseMenu: (menu: any) => void;
+  tieredData: (primary: string, menus, expansions: Record<string, string>) => void;
+  singleData: (name: string, menu: Sketcher.RawDomSchema) => void;
+  collapseItem: (text: string) => void;
+}
+
+const TieredMenu = Sketcher.single({
   name: 'TieredMenu',
   configFields: [
     Fields.onStrictKeyboardHandler('onExecute'),
@@ -78,4 +87,8 @@ export default <any> Sketcher.single({
     singleData,
     collapseItem
   }
-});
+}) as TieredMenuSketch;
+
+export {
+  TieredMenu
+};

@@ -58,9 +58,13 @@ const factory = function (detail, components, spec, externals) {
   };
 };
 
-export default <any> Sketcher.composite({
+const Tabbar = Sketcher.composite({
   name: 'Tabbar',
   configFields: TabbarSchema.schema(),
   partFields: TabbarSchema.parts(),
   factory
 });
+
+export {
+  Tabbar
+};

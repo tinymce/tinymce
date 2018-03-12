@@ -26,10 +26,14 @@ const factory = function (detail, spec) {
   };
 };
 
-export default <any> Sketcher.single({
+const Tabview = Sketcher.single({
   name: 'Tabview',
   configFields: [
     SketchBehaviours.field('tabviewBehaviours', [ Replacing ])
   ],
   factory
 });
+
+export {
+  Tabview
+};
