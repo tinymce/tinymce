@@ -1,6 +1,6 @@
 import { Arr, Fun, Result, Option } from '@ephox/katamari';
 import { Compare, Focus, Node, Remove, Traverse } from '@ephox/sugar';
-import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarEvent, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 import { SimulatedEventTargets } from 'ephox/alloy/events/SimulatedEvent';
 
 import * as Debugging from '../../debugging/Debugging';
@@ -14,8 +14,25 @@ import * as SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
 import { AlloySystemApi, SystemApi } from './SystemApi';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-const create = function () {
+export interface GuiSystem {
+  root: () => AlloyComponent;
+  element: () => SugarElement;
+  destroy: () => void;
+  add: (component: AlloyComponent) => void;
+  remove: (component: AlloyComponent) => void;
+  getByUid: (uid: string) => Result<AlloyComponent, string>;
+  getByDom: (element: SugarElement) => Result<AlloyComponent, string>;
+
+  addToWorld: (AlloyComponent) => void;
+  removeFromWorld: (AlloyComponent) => void;
+
+  broadcast: (message: string) => void;
+  broadcastOn: (channels: string, message: string) => void;
+}
+
+const create = function (): GuiSystem {
   const root = GuiFactory.build(
     Container.sketch({
       dom: {
@@ -172,8 +189,8 @@ const takeover = function (root) {
     }, Result.value);
   };
 
-  const getByDom = function (elem) {
-    return Tagger.read(elem).bind(getByUid);
+  const getByDom = function (elem: SugarElement): Result<AlloyComponent, string> {
+    return Tagger.read(elem).fold(() => 'could not find element', getByUid);
   };
 
   addToWorld(root);
