@@ -2,7 +2,7 @@ import { Arr, Option } from '@ephox/katamari';
 import { Body, Insert, Remove, Traverse } from '@ephox/sugar';
 
 import * as AlloyTriggers from '../events/AlloyTriggers';
-import SystemEvents from '../events/SystemEvents';
+import * as SystemEvents from '../events/SystemEvents';
 
 const fireDetaching = function (component) {
   AlloyTriggers.emit(component, SystemEvents.detachedFromDom());

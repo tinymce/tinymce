@@ -8,7 +8,7 @@ import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import Menu from 'ephox/alloy/api/ui/Menu';
 import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';

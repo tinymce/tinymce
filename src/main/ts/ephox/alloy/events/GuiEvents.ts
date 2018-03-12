@@ -4,7 +4,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, Node, Traverse } from '@ephox/sugar';
 
 import Keys from '../alien/Keys';
-import SystemEvents from '../api/events/SystemEvents';
+import * as SystemEvents from '../api/events/SystemEvents';
 import * as TapEvent from './TapEvent';
 import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 

@@ -8,7 +8,7 @@ import { Replacing } from '../behaviour/Replacing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
-import SystemEvents from '../events/SystemEvents';
+import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 
 const factory = function (detail, components, spec, externals) {

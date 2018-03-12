@@ -37,7 +37,7 @@ export interface PositionCoordinates {
 }
 
 // Fun.constant
-export type Constant = () => any;
+export type StringConstant = () => string;
 
 // Config
 

@@ -1,6 +1,6 @@
 import { Fun, Merger, Obj } from '@ephox/katamari';
 
-import SystemEvents from './SystemEvents';
+import * as SystemEvents from './SystemEvents';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 import { SimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';

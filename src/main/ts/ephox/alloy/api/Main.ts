@@ -35,7 +35,7 @@ import * as DragCoord from './data/DragCoord';
 import * as AlloyEvents from './events/AlloyEvents';
 import * as AlloyTriggers from './events/AlloyTriggers';
 import * as NativeEvents from './events/NativeEvents';
-import SystemEvents from './events/SystemEvents';
+import * as SystemEvents from './events/SystemEvents';
 import * as FocusManagers from './focus/FocusManagers';
 import * as Channels from './messages/Channels';
 import * as Attachment from './system/Attachment';

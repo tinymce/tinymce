@@ -1,5 +1,5 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import SystemEvents from '../../api/events/SystemEvents';
+import * as SystemEvents from '../../api/events/SystemEvents';
 import * as FocusApis from './FocusApis';
 import * as DomModification from '../../dom/DomModification';
 

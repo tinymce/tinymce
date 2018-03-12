@@ -5,7 +5,7 @@ import { Class } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import Menu from 'ephox/alloy/api/ui/Menu';
 import TouchMenu from 'ephox/alloy/api/ui/TouchMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';

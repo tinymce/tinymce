@@ -1,25 +1,25 @@
 import { Fun } from '@ephox/katamari';
-import { Constant } from 'ephox/alloy/alien/TypeDefinitions';
+import { StringConstant } from 'ephox/alloy/alien/TypeDefinitions';
 
-const contextmenu = Fun.constant('contextmenu') as Constant;
-const touchstart = Fun.constant('touchstart') as Constant;
-const touchmove = Fun.constant('touchmove') as Constant;
-const touchend = Fun.constant('touchend') as Constant;
-const gesturestart = Fun.constant('gesturestart') as Constant;
-const mousedown = Fun.constant('mousedown') as Constant;
-const mousemove = Fun.constant('mousemove') as Constant;
-const mouseout = Fun.constant('mouseout') as Constant;
-const mouseup = Fun.constant('mouseup') as Constant;
-const mouseover = Fun.constant('mouseover') as Constant;
+const contextmenu = Fun.constant('contextmenu') as StringConstant;
+const touchstart = Fun.constant('touchstart') as StringConstant;
+const touchmove = Fun.constant('touchmove') as StringConstant;
+const touchend = Fun.constant('touchend') as StringConstant;
+const gesturestart = Fun.constant('gesturestart') as StringConstant;
+const mousedown = Fun.constant('mousedown') as StringConstant;
+const mousemove = Fun.constant('mousemove') as StringConstant;
+const mouseout = Fun.constant('mouseout') as StringConstant;
+const mouseup = Fun.constant('mouseup') as StringConstant;
+const mouseover = Fun.constant('mouseover') as StringConstant;
 // Not really a native event as it has to be simulated
-const focusin = Fun.constant('focusin') as Constant;
-const keydown = Fun.constant('keydown') as Constant;
-const input = Fun.constant('input') as Constant;
-const change = Fun.constant('change') as Constant;
-const focus = Fun.constant('focus') as Constant;
-const click = Fun.constant('click') as Constant;
-const transitionend = Fun.constant('transitionend') as Constant;
-const selectstart = Fun.constant('selectstart') as Constant;
+const focusin = Fun.constant('focusin') as StringConstant;
+const keydown = Fun.constant('keydown') as StringConstant;
+const input = Fun.constant('input') as StringConstant;
+const change = Fun.constant('change') as StringConstant;
+const focus = Fun.constant('focus') as StringConstant;
+const click = Fun.constant('click') as StringConstant;
+const transitionend = Fun.constant('transitionend') as StringConstant;
+const selectstart = Fun.constant('selectstart') as StringConstant;
 
 export {
   contextmenu,

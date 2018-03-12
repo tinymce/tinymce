@@ -13,7 +13,7 @@ import * as GuiFactory from '../../api/component/GuiFactory';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import SystemEvents from '../../api/events/SystemEvents';
+import * as SystemEvents from '../../api/events/SystemEvents';
 import * as FocusManagers from '../../api/focus/FocusManagers';
 import Menu from '../../api/ui/Menu';
 import LayeredState from '../../menu/layered/LayeredState';

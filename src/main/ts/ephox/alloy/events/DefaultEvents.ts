@@ -1,5 +1,5 @@
 import * as AlloyEvents from '../api/events/AlloyEvents';
-import SystemEvents from '../api/events/SystemEvents';
+import * as SystemEvents from '../api/events/SystemEvents';
 import * as AlloyLogger from '../log/AlloyLogger';
 import { Compare } from '@ephox/sugar';
 

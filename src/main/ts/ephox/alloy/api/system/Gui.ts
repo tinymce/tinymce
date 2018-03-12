@@ -10,7 +10,7 @@ import * as Triggers from '../../events/Triggers';
 import Registry from '../../registry/Registry';
 import * as Tagger from '../../registry/Tagger';
 import * as GuiFactory from '../component/GuiFactory';
-import SystemEvents from '../events/SystemEvents';
+import * as SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
 import { AlloySystemApi, SystemApi } from './SystemApi';

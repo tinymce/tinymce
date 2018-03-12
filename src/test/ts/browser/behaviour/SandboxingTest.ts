@@ -5,7 +5,7 @@ import { Node } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Sandboxing } from 'ephox/alloy/api/behaviour/Sandboxing';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import Input from 'ephox/alloy/api/ui/Input';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';

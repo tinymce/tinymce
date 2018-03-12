@@ -14,7 +14,7 @@ import { Toggling } from '../../api/behaviour/Toggling';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import SystemEvents from '../../api/events/SystemEvents';
+import * as SystemEvents from '../../api/events/SystemEvents';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as InputBase from '../common/InputBase';
 

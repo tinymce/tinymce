@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as TapEvent from 'ephox/alloy/events/TapEvent';
 import TestStore from 'ephox/alloy/test/TestStore';
 

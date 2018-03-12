@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Fun, Obj, Options } from '@ephox/katamari';
 
-import SystemEvents from '../api/events/SystemEvents';
+import * as SystemEvents from '../api/events/SystemEvents';
 import * as AlloyLogger from '../log/AlloyLogger';
 
 const unknown = 'unknown';

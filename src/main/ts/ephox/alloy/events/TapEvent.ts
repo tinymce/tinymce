@@ -4,7 +4,7 @@ import { Compare } from '@ephox/sugar';
 
 import DelayedFunction from '../alien/DelayedFunction';
 import * as NativeEvents from '../api/events/NativeEvents';
-import SystemEvents from '../api/events/SystemEvents';
+import * as SystemEvents from '../api/events/SystemEvents';
 
 const SIGNIFICANT_MOVE = 5;
 

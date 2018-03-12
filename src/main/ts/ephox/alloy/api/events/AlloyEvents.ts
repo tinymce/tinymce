@@ -3,7 +3,7 @@ import { Objects } from '@ephox/boulder';
 import * as EventRoot from '../../alien/EventRoot';
 import * as EventHandler from '../../construct/EventHandler';
 import * as AlloyTriggers from './AlloyTriggers';
-import SystemEvents from './SystemEvents';
+import * as SystemEvents from './SystemEvents';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { SimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
 import { SpecSchemaStruct } from 'ephox/alloy/spec/SpecSchema';
