@@ -67,7 +67,7 @@ export default <any> function () {
           }
         });
       })
-    ]) as AlloyEvents.EventHandlerConfig // need to cast the Type due to lazy initialisation from runOnInit
+    ])
   });
 
   setTimeout(function () {

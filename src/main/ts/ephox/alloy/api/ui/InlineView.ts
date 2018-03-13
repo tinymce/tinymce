@@ -1,5 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun, Merger, Option } from '@ephox/katamari';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import * as Fields from '../../data/Fields';
@@ -10,10 +12,8 @@ import { Receiving } from '../behaviour/Receiving';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
-export interface InlineViewSketch extends Sketcher.SingleSketch {
+export interface InlineViewSketch extends Sketcher.CompositeSketch {
   // InlineViewApis;
   showAt: (component: AlloyComponent, anchor: InlineViewAnchor, thing: Sketcher.SketchSpec) => void;
   hide: (component: AlloyComponent) => void;

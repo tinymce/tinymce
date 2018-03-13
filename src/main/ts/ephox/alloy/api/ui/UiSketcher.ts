@@ -1,14 +1,14 @@
 import { Objects } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
 import { AdtInterface } from 'ephox/alloy/alien/TypeDefinitions';
-import { RawDomSchema, RawDomSchemaUid, SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
+import { RawDomSchema, RawDomSchemaUid, SketchSpec, CompositeSketch } from 'ephox/alloy/api/ui/Sketcher';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Tagger from '../../registry/Tagger';
 import * as SpecSchema from '../../spec/SpecSchema';
 
 export type SingleFactory = (detail: SpecSchema.SpecSchemaStruct, specWithUid: RawDomSchemaUid) => SketchSpec;
-export type CompositeFactory = (detail: SpecSchema.SpecSchemaStruct, components: SketchSpec[], spec: RawDomSchemaUid, _externals?: {}) => SketchSpec;
+export type CompositeFactory = (detail: SpecSchema.SpecSchemaStruct, components: SketchSpec[], spec: RawDomSchemaUid, _externals?: any) => SketchSpec;
 
 const single = function (owner: string, schema: AdtInterface[], factory: SingleFactory, spec: RawDomSchema): SketchSpec {
   const specWithUid = supplyUid(spec);

@@ -23,6 +23,6 @@ const sortKeys = function (label, keyName, array, order) {
   }
 };
 
-export default <any> {
+export default {
   sortKeys
 };

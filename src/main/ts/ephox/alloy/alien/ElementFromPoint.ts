@@ -25,6 +25,6 @@ const insideComponent = function (component, x, y) {
   return elementFromPoint(doc, x, y).filter(isInside).filter(hasValidRect);
 };
 
-export default <any> {
+export default {
   insideComponent
 };

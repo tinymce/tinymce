@@ -42,6 +42,8 @@ export interface RawDomSchema {
   type?: string;
   data?: {};
   markers?: {};
+  behaviours?: { [key: string]: AlloyBehaviourSchema };
+  events?: EventHandlerConfig | {};
 }
 
 export interface RawDomSchemaUid extends RawDomSchema {
@@ -49,10 +51,8 @@ export interface RawDomSchemaUid extends RawDomSchema {
 }
 
 export interface SketchSpec extends RawDomSchema {
-  behaviours: { [key: string]: AlloyBehaviourSchema };
   domModification: {};
   eventOrder: {};
-  events: EventHandlerConfig;
   uid: string;
   'debug.sketcher': {};
 }

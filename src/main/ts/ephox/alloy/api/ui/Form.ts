@@ -1,4 +1,6 @@
 import { Arr, Merger, Obj, Option } from '@ephox/katamari';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { CompositeSketch, SketchSpec, RawDomSchema } from 'ephox/alloy/api/ui/Sketcher';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
@@ -8,16 +10,21 @@ import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const owner = 'form';
 
 export interface FormSketch {
-  // why do forms not use the SingleSketch Type?
-  sketch: (spec) => SketchSpec;
+  // why do forms not use or follow the Single or compositeSketch Type signature?
+  sketch: (fSpec: FormfSpec) => SketchSpec;
   getField: (component: AlloyComponent, key: string) => Option<AlloyComponent>;
 }
+
+export interface FormParts {
+  field: (name: string, config: SketchSpec) => AlloyParts.GeneratedSinglePart;
+  record(): string[];
+}
+
+export type FormfSpec = (FormParts) => RawDomSchema;
 
 const schema = [
   SketchBehaviours.field('formBehaviours', [ Representing ])
@@ -27,11 +34,11 @@ const getPartName = function (name) {
   return '<alloy.field.' + name + '>';
 };
 
-const sketch = function (fSpec) {
+const sketch = function (fSpec: FormfSpec): SketchSpec {
   const parts = (function () {
-    const record = [ ];
+    const record: string[] = [ ];
 
-    const field = function (name, config) {
+    const field = function (name: string, config: SketchSpec): AlloyParts.GeneratedSinglePart {
       record.push(name);
       return AlloyParts.generateOne(owner, getPartName(name), config);
     };

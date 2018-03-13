@@ -13,7 +13,7 @@ import * as GuiFactory from '../component/GuiFactory';
 import * as SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
-import { AlloySystemApi, SystemApi } from './SystemApi';
+import { SystemApi } from './SystemApi';
 
 export interface GuiSystem {
   root: () => AlloyComponent;
@@ -123,7 +123,7 @@ const takeover = function (root: AlloyComponent): GuiSystem {
     broadcastOn (channels, message) {
       broadcastOn(channels, message);
     }
-  }) as AlloySystemApi;
+  });
 
   const addToWorld = function (component) {
     component.connect(systemApi);

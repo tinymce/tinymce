@@ -20,6 +20,8 @@ export interface AlloySystemApi {
   triggerFocus: (target: SugarElement, originator: SugarElement) => void;
 }
 
+export type AlloySystem = (AlloySystemApi) => AlloySystemApi;
+
 const SystemApi = Contracts.exactly([
   'debugInfo',
   'triggerFocus',
@@ -38,7 +40,7 @@ const SystemApi = Contracts.exactly([
 
   'broadcast',
   'broadcastOn'
-]);
+]) as AlloySystem;
 
 export {
   SystemApi

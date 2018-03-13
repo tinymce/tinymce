@@ -13,7 +13,6 @@ export interface ToolbarSketch extends CompositeSketch {
 }
 
 const factory = function (detail, components, spec, _externals) {
-  debugger;
   const setGroups = function (toolbar, groups) {
     getGroupContainer(toolbar).fold(function () {
       // check that the group container existed. It may not have if the components

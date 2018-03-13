@@ -1,6 +1,8 @@
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun, Merger, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { RawDomSchema, SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
 
 import DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';
@@ -8,9 +10,7 @@ import * as CustomSpec from '../../spec/CustomSpec';
 import { NoContextApi } from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
-import { ComponentApi, AlloyComponent } from './ComponentApi';
-import { SketchSpec, RawDomSchema } from 'ephox/alloy/api/ui/Sketcher';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent, ComponentApi } from './ComponentApi';
 
 export interface AlloyPremadeComponent {
   [key: string]: AlloyComponent;
