@@ -223,9 +223,13 @@ const factory = function (detail, components, spec, externals) {
   );
 };
 
-export default <any> Sketcher.composite({
+const TouchMenu = Sketcher.composite({
   name: 'TouchMenu',
   configFields: TouchMenuSchema.schema(),
   partFields: TouchMenuSchema.parts(),
   factory
 });
+
+export {
+  TouchMenu
+};

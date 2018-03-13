@@ -9,7 +9,7 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
-import Typeahead from 'ephox/alloy/api/ui/Typeahead';
+import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import DropdownAssertions from 'ephox/alloy/test/dropdown/DropdownAssertions';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';

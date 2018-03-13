@@ -8,10 +8,16 @@ import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import * as Sketcher from './Sketcher';
+import { RawDomSchema, SingleSketch, single} from './Sketcher';
 
-const tieredData = function (primary, menus, expansions) {
-  debugger;
+export interface TieredMenuSketch extends SingleSketch {
+  collapseMenu: (menu: any) => void;
+  tieredData: (primary: string, menus, expansions: Record<string, string>) => void;
+  singleData: (name: string, menu: RawDomSchema) => void;
+  collapseItem: (text: string) => void;
+}
+
+const tieredData = function (primary: string, menus: { [key: string]: RawDomSchema }, expansions: { [key: string]: string }) {
   return {
     primary,
     menus,
@@ -19,7 +25,7 @@ const tieredData = function (primary, menus, expansions) {
   };
 };
 
-const singleData = function (name, menu) {
+const singleData = function (name: string, menu: RawDomSchema) {
   return {
     primary: name,
     menus: Objects.wrap(name, menu),
@@ -27,22 +33,14 @@ const singleData = function (name, menu) {
   };
 };
 
-const collapseItem = function (text) {
-  debugger;
+const collapseItem = function (text: string) {
   return {
     value: Id.generate(TieredMenuSpec.collapseItem()),
     text
   };
 };
 
-export interface TieredMenuSketch extends Sketcher.SingleSketch {
-  collapseMenu: (menu: any) => void;
-  tieredData: (primary: string, menus, expansions: Record<string, string>) => void;
-  singleData: (name: string, menu: Sketcher.RawDomSchema) => void;
-  collapseItem: (text: string) => void;
-}
-
-const TieredMenu = Sketcher.single({
+const TieredMenu = single({
   name: 'TieredMenu',
   configFields: [
     Fields.onStrictKeyboardHandler('onExecute'),

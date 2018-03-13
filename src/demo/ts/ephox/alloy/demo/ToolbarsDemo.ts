@@ -4,8 +4,8 @@ import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { SplitToolbar } from 'ephox/alloy/api/ui/SplitToolbar';
-import Toolbar from 'ephox/alloy/api/ui/Toolbar';
-import ToolbarGroup from 'ephox/alloy/api/ui/ToolbarGroup';
+import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
+import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import DemoRenders from './forms/DemoRenders';
@@ -109,6 +109,7 @@ export default <any> function () {
 
   const toolbar1 = subject.components()[0];
   const gps = Arr.map(groups(), ToolbarGroup.sketch);
+
   Toolbar.setGroups(toolbar1, gps);
 
   const subject2 = HtmlDisplay.section(

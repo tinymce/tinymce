@@ -10,8 +10,8 @@ import * as GuiFactory from '../component/GuiFactory';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { Button } from './Button';
 import * as Sketcher from './Sketcher';
-import Toolbar from './Toolbar';
-import ToolbarGroup from './ToolbarGroup';
+import { Toolbar } from './Toolbar';
+import { ToolbarGroup } from './ToolbarGroup';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const setStoredGroups = function (bar, storedGroups) {

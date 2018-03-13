@@ -3,7 +3,7 @@ import { Arr, Merger, Obj } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 
 import * as Fields from '../data/Fields';
-import UiSubstitutes from './UiSubstitutes';
+import * as UiSubstitutes from './UiSubstitutes';
 import { AlloyComponentsSpec, RawDomSchema, AlloyMixedSpec } from 'ephox/alloy/api/ui/Sketcher';
 import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
 import { AdtInterface } from 'ephox/alloy/alien/TypeDefinitions';
@@ -110,7 +110,7 @@ const asRawOrDie = function (label, schema, spec, partSchemas, partUidsSchemas) 
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
-const asStructOrDie = function (label: string, schema: AdtInterface, spec: AlloyMixedSpec, partSchemas: any[], partUidsSchemas: any[]): SpecSchemaStruct {
+const asStructOrDie = function (label: string, schema: AdtInterface[], spec: AlloyMixedSpec, partSchemas: any[], partUidsSchemas: any[]): SpecSchemaStruct {
   const baseS = base(label, partSchemas, partUidsSchemas, spec);
   return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };

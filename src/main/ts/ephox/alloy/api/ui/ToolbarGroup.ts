@@ -34,9 +34,13 @@ const factory = function (detail, components, spec, _externals) {
   );
 };
 
-export default <any> Sketcher.composite({
+const ToolbarGroup = Sketcher.composite({
   name: 'ToolbarGroup',
   configFields: ToolbarGroupSchema.schema(),
   partFields: ToolbarGroupSchema.parts(),
   factory
 });
+
+export {
+  ToolbarGroup
+};

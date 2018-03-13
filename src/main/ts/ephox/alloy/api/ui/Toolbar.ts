@@ -5,9 +5,15 @@ import * as ToolbarSchema from '../../ui/schema/ToolbarSchema';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import * as Sketcher from './Sketcher';
+import { CompositeSketch, RawDomSchema, composite } from './Sketcher';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+
+export interface ToolbarSketch extends CompositeSketch {
+  setGroups: (toolbar: AlloyComponent, groups: RawDomSchema[]) => void;
+}
 
 const factory = function (detail, components, spec, _externals) {
+  debugger;
   const setGroups = function (toolbar, groups) {
     getGroupContainer(toolbar).fold(function () {
       // check that the group container existed. It may not have if the components
@@ -47,7 +53,7 @@ const factory = function (detail, components, spec, _externals) {
   };
 };
 
-export default <any> Sketcher.composite({
+const Toolbar = composite({
   name: 'Toolbar',
   configFields: ToolbarSchema.schema(),
   partFields: ToolbarSchema.parts(),
@@ -57,4 +63,8 @@ export default <any> Sketcher.composite({
       apis.setGroups(toolbar, groups);
     }
   }
-});
+}) as ToolbarSketch;
+
+export {
+  Toolbar
+};

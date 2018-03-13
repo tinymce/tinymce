@@ -4,7 +4,7 @@ import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
-import Typeahead from 'ephox/alloy/api/ui/Typeahead';
+import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 

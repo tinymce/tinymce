@@ -2,7 +2,7 @@ import { FieldPresence, FieldProcessorAdt, FieldSchema, Objects, ValueSchema } f
 import { Arr, Fun, Merger, Obj, Option, Result } from '@ephox/katamari';
 
 import * as Fields from '../data/Fields';
-import UiSubstitutes from '../spec/UiSubstitutes';
+import * as UiSubstitutes from '../spec/UiSubstitutes';
 import * as PartSubstitutes from './PartSubstitutes';
 import * as PartType from './PartType';
 import { SketchSpec, RawDomSchema } from 'ephox/alloy/api/ui/Sketcher';
@@ -97,7 +97,7 @@ const substitutes = function (owner: string, detail: DetailedSpec, parts: FieldP
   return PartSubstitutes.subs(owner, detail, parts);
 };
 
-const components = function (owner: string, detail: DetailedSpec, internals: { [key: string]: FieldProcessorAdt }): SketchSpec {
+const components = function (owner: string, detail: DetailedSpec, internals: { [key: string]: FieldProcessorAdt }): SketchSpec[] {
   return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), internals);
 };
 

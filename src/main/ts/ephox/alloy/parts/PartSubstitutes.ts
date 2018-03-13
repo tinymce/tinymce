@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Fun, Merger } from '@ephox/katamari';
 
-import UiSubstitutes from '../spec/UiSubstitutes';
+import * as UiSubstitutes from '../spec/UiSubstitutes';
 import * as PartType from './PartType';
 
 const combine: any = function (detail, data, partSpec, partValidated) {

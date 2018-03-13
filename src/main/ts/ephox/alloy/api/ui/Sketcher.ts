@@ -38,6 +38,14 @@ export interface CompositeSketch extends SingleSketch {
 export interface RawDomSchema {
   dom: RawElementSchema;
   components?: AlloyComponentsSpec;
+  items?: RawDomSchema[];
+  type?: string;
+  data?: {};
+  markers?: {};
+}
+
+export interface RawDomSchemaUid extends RawDomSchema {
+  uid: string;
 }
 
 export interface SketchSpec extends RawDomSchema {

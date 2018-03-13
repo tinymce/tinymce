@@ -1,7 +1,7 @@
 import { Logger, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Option } from '@ephox/katamari';
-import UiSubstitutes from 'ephox/alloy/spec/UiSubstitutes';
+import * as UiSubstitutes from 'ephox/alloy/spec/UiSubstitutes';
 
 UnitTest.test('UiSubstitutesTest', function () {
   Logger.sync(

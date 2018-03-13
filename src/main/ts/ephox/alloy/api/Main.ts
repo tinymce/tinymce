@@ -69,10 +69,10 @@ import { TabButton } from './ui/TabButton';
 import { TabSection } from './ui/TabSection';
 import { Tabview } from './ui/Tabview';
 import { TieredMenu } from './ui/TieredMenu';
-import Toolbar from './ui/Toolbar';
-import ToolbarGroup from './ui/ToolbarGroup';
-import TouchMenu from './ui/TouchMenu';
-import Typeahead from './ui/Typeahead';
+import { Toolbar } from './ui/Toolbar';
+import { ToolbarGroup } from './ui/ToolbarGroup';
+import { TouchMenu } from './ui/TouchMenu';
+import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
 import * as TapEvent from '../events/TapEvent'; // Used directly by mobile theme
 import * as AlloyLogger from '../log/AlloyLogger'; // Used directly by mobile theme

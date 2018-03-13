@@ -4,7 +4,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
-import TouchMenu from 'ephox/alloy/api/ui/TouchMenu';
+import { TouchMenu } from 'ephox/alloy/api/ui/TouchMenu';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';

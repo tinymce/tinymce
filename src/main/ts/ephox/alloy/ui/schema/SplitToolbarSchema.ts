@@ -4,7 +4,7 @@ import { Cell, Fun } from '@ephox/katamari';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Sliding } from '../../api/behaviour/Sliding';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
-import Toolbar from '../../api/ui/Toolbar';
+import { Toolbar } from '../../api/ui/Toolbar';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 
