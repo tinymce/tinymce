@@ -1,4 +1,4 @@
-var noop = function () { };
+var noop = function (...x: any[]) { };
 
 var noarg = function (f: Function) {
   return function (...x: any[]) {
