@@ -15,6 +15,7 @@ const register = function (editor) {
   });
 
   editor.addMenuItem('nonbreaking', {
+    icon: 'nonbreaking',
     text: 'Nonbreaking space',
     cmd: 'mceNonBreaking',
     context: 'insert'
