@@ -3,16 +3,15 @@ import * as ActiveRepresenting from '../../behaviour/representing/ActiveRepresen
 import * as RepresentApis from '../../behaviour/representing/RepresentApis';
 import RepresentSchema from '../../behaviour/representing/RepresentSchema';
 import * as RepresentState from '../../behaviour/representing/RepresentState';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { FieldProcessorAdt } from '@ephox/boulder';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-export interface RepresentingBehaviour extends AlloyBehaviour {
+export interface RepresentingBehaviour extends Behaviour.AlloyBehaviour {
   config: (RepresentingConfig) => { key: string, value: any };
   setValueFrom?: (component: AlloyComponent, source: AlloyComponent) => void;
 }
 
-export interface RepresentingConfig extends AlloyBehaviourConfig {
+export interface RepresentingConfig extends Behaviour.AlloyBehaviourConfig {
   store: {
     mode: string,
     initialValue: string

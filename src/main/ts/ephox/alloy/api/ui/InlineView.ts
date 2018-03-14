@@ -20,7 +20,7 @@ export interface InlineViewSketch extends Sketcher.CompositeSketch {
   isOpen: (component: AlloyComponent) => boolean;
 }
 
-// TODO: anchor appears to be a generic concept, move this when a consistent usage pattern is found
+// TODO: Morgan anchor appears to be a generic concept, move this when a consistent usage pattern is found
 export interface InlineViewAnchor {
   anchor: string;
   x?: number;

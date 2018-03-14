@@ -1,9 +1,8 @@
 import * as Behaviour from './Behaviour';
 import * as ReplaceApis from '../../behaviour/replacing/ReplaceApis';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-export interface ReplacingBehaviour extends AlloyBehaviour {
+export interface ReplacingBehaviour extends Behaviour.AlloyBehaviour {
   config: (ReplacingConfig) => { key: string, value: any };
   append?: (compontent: AlloyComponent, replaceConfig: {}) => void;
   prepend?: (compontent: AlloyComponent, replaceConfig: {}) => void;
@@ -12,7 +11,7 @@ export interface ReplacingBehaviour extends AlloyBehaviour {
   contents?: (compontent: AlloyComponent, replaceConfig?: {}) => AlloyComponent[];
 }
 
-export interface ReplacingConfig extends AlloyBehaviourConfig {
+export interface ReplacingConfig extends Behaviour.AlloyBehaviourConfig {
   // Intentionally Blank
 }
 

@@ -2,7 +2,6 @@ import * as Behaviour from './Behaviour';
 import { EventHandlerConfig, derive } from '../events/AlloyEvents';
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { AlloyBehaviour } from 'ephox/alloy/alien/TypeDefinitions';
 
 const events = function (name, eventHandlers) {
   const events = derive(eventHandlers);

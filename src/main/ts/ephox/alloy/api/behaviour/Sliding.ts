@@ -3,10 +3,9 @@ import * as ActiveSliding from '../../behaviour/sliding/ActiveSliding';
 import * as SlidingApis from '../../behaviour/sliding/SlidingApis';
 import SlidingSchema from '../../behaviour/sliding/SlidingSchema';
 import * as SlidingState from '../../behaviour/sliding/SlidingState';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-export interface SlidingBehaviour extends AlloyBehaviour {
+export interface SlidingBehaviour extends Behaviour.AlloyBehaviour {
   config: (SlidingConfig) => { key: string, value: any };
   grow?: (component: AlloyComponent) => boolean;
   shrink?: (component: AlloyComponent) => void;
@@ -20,7 +19,7 @@ export interface SlidingBehaviour extends AlloyBehaviour {
   disableTransitions?: (component: AlloyComponent) => void;
 }
 
-export interface SlidingConfig extends AlloyBehaviourConfig {
+export interface SlidingConfig extends Behaviour.AlloyBehaviourConfig {
   dimension: {
     property: string
   };

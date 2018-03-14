@@ -2,13 +2,12 @@ import * as Behaviour from './Behaviour';
 import * as NoState from '../../behaviour/common/NoState';
 import * as ActiveStreaming from '../../behaviour/streaming/ActiveStreaming';
 import StreamingSchema from '../../behaviour/streaming/StreamingSchema';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 
-export interface StreamingBehaviour extends AlloyBehaviour {
+export interface StreamingBehaviour extends Behaviour.AlloyBehaviour {
   config: (StreamingConfig) => { key: string, value: any };
 }
 
-export interface StreamingConfig extends AlloyBehaviourConfig {
+export interface StreamingConfig extends Behaviour.AlloyBehaviourConfig {
   stream: {
     mode: StreamMode,
     delay: number

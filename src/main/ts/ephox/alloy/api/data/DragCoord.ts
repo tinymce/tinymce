@@ -2,7 +2,7 @@ import { Adt, Arr, Option } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 import { AdtInterface, PositionCoordinates } from 'ephox/alloy/alien/TypeDefinitions';
 
-// TODO: check why and how this type can take both a number or an option.
+// TODO: Morgan, check why and how this type can take both a number or an option.
 export type DragCoords = (x: number | Option<number>, y: number | Option<number>) => CoordAdt;
 
 export interface CoordAdt extends AdtInterface {

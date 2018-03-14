@@ -1,11 +1,11 @@
 import * as Behaviour from './Behaviour';
 import * as HighlightApis from '../../behaviour/highlighting/HighlightApis';
 import HighlightSchema from '../../behaviour/highlighting/HighlightSchema';
-import { AlloyBehaviour, AlloyBehaviourConfig, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 
-export interface HighlightingBehaviour extends AlloyBehaviour {
+export interface HighlightingBehaviour extends Behaviour.AlloyBehaviour {
   config: (HighlightingConfig) => { key: string, value: any };
   dehighlightAll?: (component: AlloyComponent) => void;
   dehighlight?: (component: AlloyComponent, target: AlloyComponent) => void;
@@ -22,7 +22,7 @@ export interface HighlightingBehaviour extends AlloyBehaviour {
   getNext?: (component: AlloyComponent) => Option<AlloyComponent>;
 }
 
-export interface HighlightingConfig extends AlloyBehaviourConfig {
+export interface HighlightingConfig extends Behaviour.AlloyBehaviourConfig {
   itemClass: string;
   highlightClass: string;
   onHighlight: () => (chooser, choice) => void;

@@ -1,6 +1,5 @@
 import { Objects } from '@ephox/boulder';
 import { Obj, Option } from '@ephox/katamari';
-import { AlloyBehaviour } from 'ephox/alloy/alien/TypeDefinitions';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 import * as ActiveTransitioning from '../../behaviour/transitioning/ActiveTransitioning';
@@ -8,7 +7,7 @@ import * as TransitionApis from '../../behaviour/transitioning/TransitionApis';
 import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';
 import * as Behaviour from './Behaviour';
 
-export interface TransitioningBehaviour extends AlloyBehaviour {
+export interface TransitioningBehaviour extends Behaviour.AlloyBehaviour {
   config: (TransitioningConfig) => { key: string, value: any };
   findRoute?: <T>(comp: AlloyComponent, route: TransitionApis.TransitionRoute) => Option<T>;
   disableTransition?: (comp: AlloyComponent) => void;

@@ -1,13 +1,12 @@
 import * as Behaviour from './Behaviour';
 import * as ActiveReceiving from '../../behaviour/receiving/ActiveReceiving';
 import ReceivingSchema from '../../behaviour/receiving/ReceivingSchema';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 
-export interface ReceivingBehaviour extends AlloyBehaviour {
+export interface ReceivingBehaviour extends Behaviour.AlloyBehaviour {
   config: (ReceivingConfig) => { key: string, value: any };
 }
 
-export interface ReceivingConfig extends AlloyBehaviourConfig {
+export interface ReceivingConfig extends Behaviour.AlloyBehaviourConfig {
   // Intentionally Blank
 }
 

@@ -2,16 +2,15 @@ import * as Behaviour from './Behaviour';
 import * as ActiveFocus from '../../behaviour/focusing/ActiveFocus';
 import * as FocusApis from '../../behaviour/focusing/FocusApis';
 import FocusSchema from '../../behaviour/focusing/FocusSchema';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-export interface FocusingBehaviour extends AlloyBehaviour {
+export interface FocusingBehaviour extends Behaviour.AlloyBehaviour {
   config: (FocusingConfig) => { key: string, value: any };
   focus?: (component: AlloyComponent) => void;
   isFocused?: (component: AlloyComponent) => boolean;
 }
 
-export interface FocusingConfig extends AlloyBehaviourConfig {
+export interface FocusingConfig extends Behaviour.AlloyBehaviourConfig {
   onFocus?: (any) => any;
   ignore?: boolean;
 }

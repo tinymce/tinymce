@@ -1,5 +1,4 @@
 import { Option, Struct } from '@ephox/katamari';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { CoordAdt } from 'ephox/alloy/api/data/DragCoord';
 import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
@@ -8,7 +7,7 @@ import * as DraggingBranches from '../../behaviour/dragging/DraggingBranches';
 import * as DragState from '../../dragging/common/DragState';
 import * as Behaviour from './Behaviour';
 
-export interface DraggingBehaviour extends AlloyBehaviour {
+export interface DraggingBehaviour extends Behaviour.AlloyBehaviour {
   config: (DraggingConfig) => { key: string, value: any };
   snap: (SnapConfig) => any;
 }
@@ -31,7 +30,7 @@ export interface SnapBehaviour {
   lazyViewport: (component?: AlloyComponent) => any;
 }
 
-export interface DraggingConfig<T> extends AlloyBehaviourConfig {
+export interface DraggingConfig<T> extends Behaviour.AlloyBehaviourConfig {
   mode: DraggingMode;
   blockerClass?: string[];                            // modes: mouse
   snaps: (SnapBehaviour) => Option<T>;                // modes: touch, mouse

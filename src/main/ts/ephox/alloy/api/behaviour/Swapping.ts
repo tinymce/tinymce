@@ -1,10 +1,9 @@
 import * as Behaviour from './Behaviour';
 import * as SwapApis from '../../behaviour/swapping/SwapApis';
 import SwapSchema from '../../behaviour/swapping/SwapSchema';
-import { AlloyBehaviourConfig, AlloyBehaviour } from 'ephox/alloy/alien/TypeDefinitions';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-export interface SwappingBehaviour extends AlloyBehaviour {
+export interface SwappingBehaviour extends Behaviour.AlloyBehaviour {
   config: (SwappingConfig) => { key: string, value: any };
   toAlpha?: (componenet: AlloyComponent) => void;
   toOmega?: (componenet: AlloyComponent) => void;
@@ -13,7 +12,7 @@ export interface SwappingBehaviour extends AlloyBehaviour {
   clear?: (componenet: AlloyComponent) => void;
 }
 
-export interface SwappingConfig extends AlloyBehaviourConfig {
+export interface SwappingConfig extends Behaviour.AlloyBehaviourConfig {
   alpha: string;
   omega: string;
 }

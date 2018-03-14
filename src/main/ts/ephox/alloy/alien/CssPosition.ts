@@ -1,5 +1,10 @@
 import { Adt, Arr, Fun } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
+import { PositionCoordinates, AdtInterface } from 'ephox/alloy/alien/TypeDefinitions';
+
+export interface CssPositionAdt extends AdtInterface {
+
+}
 
 const adt = Adt.generate([
   { screen: [ 'point' ] },
@@ -25,18 +30,18 @@ const toAbsolute = function (pos) {
   );
 };
 
-const sum = function (points) {
+const sum = function (points: PositionCoordinates[]): PositionCoordinates {
   return Arr.foldl(points, function (b, a) {
     return b.translate(a.left(), a.top());
   }, Position(0, 0));
 };
 
-const sumAsFixed = function (positions) {
+const sumAsFixed = function (positions: CssPositionAdt[]) {
   const points = Arr.map(positions, toFixed);
   return sum(points);
 };
 
-const sumAsAbsolute = function (positions) {
+const sumAsAbsolute = function (positions: CssPositionAdt[]) {
   const points = Arr.map(positions, toAbsolute);
   return sum(points);
 };

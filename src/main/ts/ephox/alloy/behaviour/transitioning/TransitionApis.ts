@@ -1,7 +1,6 @@
 import { Objects } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { Attr, Class } from '@ephox/sugar';
-import { AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface TransitionRoute {

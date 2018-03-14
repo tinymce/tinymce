@@ -2,13 +2,13 @@ import * as Behaviour from './Behaviour';
 import ActivePinching from '../../behaviour/pinching/ActivePinching';
 import PinchingSchema from '../../behaviour/pinching/PinchingSchema';
 import * as DragState from '../../dragging/common/DragState';
-import { AlloyBehaviour, AlloyBehaviourConfig, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
-export interface PinchingBehaviour extends AlloyBehaviour {
+export interface PinchingBehaviour extends Behaviour.AlloyBehaviour {
   config: (PinchingConfig) => { key: string, value: any };
 }
 
-export interface PinchingConfig extends AlloyBehaviourConfig {
+export interface PinchingConfig extends Behaviour.AlloyBehaviourConfig {
   onPinch: (element: SugarElement, changeX: number, changeY: number) => void;
   onPunch: (element: SugarElement, changeX: number, changeY: number) => void;
 }

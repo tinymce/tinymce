@@ -1,12 +1,11 @@
 import * as Behaviour from './Behaviour';
 import * as ActiveTabstopping from '../../behaviour/tabstopping/ActiveTabstopping';
 import TabstopSchema from '../../behaviour/tabstopping/TabstopSchema';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 
-export interface TabstoppingBehaviour extends AlloyBehaviour {
+export interface TabstoppingBehaviour extends Behaviour.AlloyBehaviour {
   config: (TabstoppingConfig) => { key: string, value: any };
 }
-export interface TabstoppingConfig extends AlloyBehaviourConfig {
+export interface TabstoppingConfig extends Behaviour.AlloyBehaviourConfig {
   // intentionally blank
 }
 

@@ -42,35 +42,3 @@ export type StringConstant = () => string;
 // Config
 
 // Behaviours
-export interface AlloyBehaviour {
-  config: (spec: any) => { key: string, value: any };
-  exhibit: (info: any, base: any) => {};
-  handlers: (info: any) => {};
-  name: () => string;
-  revoke: () => { key: string, value: undefined };
-  schema: () => FieldProcessorAdt;
-
-  getValue: (any) => any;
-  setValue: (...any) => any;
-  fields?: FieldProcessorAdt[];
-}
-
-// WIP
-export interface AlloyBehaviourSchema {
-  config: { [key: string]: () => any};
-  configAsRaw: () => {
-    [key: string]: any;
-  };
-  initialConfig: {};
-  me: AlloyBehaviour;
-  state: any;
-}
-
-export interface AlloyBehaviourConfig {
-  fields: FieldProcessorAdt[];
-  name: string;
-  active?: {};
-  apis?: {};
-  extra?: {};
-  state?: {};
-}

@@ -2,10 +2,9 @@ import * as Behaviour from './Behaviour';
 import * as ActiveToggle from '../../behaviour/toggling/ActiveToggle';
 import * as ToggleApis from '../../behaviour/toggling/ToggleApis';
 import ToggleSchema from '../../behaviour/toggling/ToggleSchema';
-import { AlloyBehaviourConfig, AlloyBehaviour } from 'ephox/alloy/alien/TypeDefinitions';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-export interface TogglingBehaviour extends AlloyBehaviour {
+export interface TogglingBehaviour extends Behaviour.AlloyBehaviour {
   config: (TogglingConfig) => { key: string, value: any };
   onLoad?: (component: AlloyComponent) => void;
   toggle?: (component: AlloyComponent) => void;
@@ -14,7 +13,7 @@ export interface TogglingBehaviour extends AlloyBehaviour {
   off?: (component: AlloyComponent) => void;
 }
 
-export interface TogglingConfig extends AlloyBehaviourConfig {
+export interface TogglingConfig extends Behaviour.AlloyBehaviourConfig {
   toggleClass: string;
   aria: {
     mode: TogglingMode;

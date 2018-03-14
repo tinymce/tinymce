@@ -1,21 +1,17 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Obj } from '@ephox/katamari';
-import { AlloyBehaviourSchema } from 'ephox/alloy/alien/TypeDefinitions';
 import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
+import { AlloyBehaviourSchema } from 'ephox/alloy/api/behaviour/Behaviour';
 
 export interface RawElementSchema {
   tag: string;
-  attributes?: {
-    [key: string]: any
-  };
-  styles?: {
-    [key: string]: string
-  };
+  attributes?: Record<string, any>;
+  styles?: Record<string, string>;
   innerHtml?: string;
   classes?: string[];
 }
@@ -35,6 +31,7 @@ export interface CompositeSketch extends SingleSketch {
   [key: string]: Function;
 }
 
+// TODO: Morgan -> check these
 export interface RawDomSchema {
   dom: RawElementSchema;
   components?: AlloyComponentsSpec;
@@ -42,7 +39,7 @@ export interface RawDomSchema {
   type?: string;
   data?: {};
   markers?: {};
-  behaviours?: { [key: string]: AlloyBehaviourSchema };
+  behaviours?: Record<string, AlloyBehaviourSchema>;
   events?: EventHandlerConfig | {};
 }
 
@@ -50,6 +47,7 @@ export interface RawDomSchemaUid extends RawDomSchema {
   uid: string;
 }
 
+// TODO: Morgan -> check these, should domModification and eventOrder be part of RawDomSchema too?
 export interface SketchSpec extends RawDomSchema {
   domModification: {};
   eventOrder: {};

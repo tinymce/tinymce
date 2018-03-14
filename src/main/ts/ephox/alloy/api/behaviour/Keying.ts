@@ -2,10 +2,10 @@ import * as Behaviour from './Behaviour';
 import KeyboardBranches from '../../behaviour/keyboard/KeyboardBranches';
 import * as KeyingState from '../../behaviour/keyboard/KeyingState';
 import { Objects } from '@ephox/boulder';
-import { AlloyBehaviour, AlloyBehaviourConfig, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-export interface KeyingBehaviour extends AlloyBehaviour {
+export interface KeyingBehaviour extends Behaviour.AlloyBehaviour {
   config: (KeyingConfig) => { key: string, value: any };
   focusIn: (component: AlloyComponent) => void;
   setGridSize: (
@@ -16,7 +16,7 @@ export interface KeyingBehaviour extends AlloyBehaviour {
 }
 
 // TODO: dynamic type
-export interface KeyingConfig extends AlloyBehaviourConfig {
+export interface KeyingConfig extends Behaviour.AlloyBehaviourConfig {
   mode: KeyingModes;
   selector: string;
   visibilitySelector: string;

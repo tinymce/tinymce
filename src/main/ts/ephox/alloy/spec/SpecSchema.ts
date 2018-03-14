@@ -12,8 +12,8 @@ export interface SpecSchemaStruct {
   components: () => AlloyComponentsSpec;
   containerBehaviours: () => ContainerBehaviours;
   dom: () => RawDomSchema;
-  domModification: () => {}; // TODO
-  eventOrder: () => {}; // TODO
+  domModification: () => {}; // TODO: Mike
+  eventOrder: () => EventHandlerConfig; // TODO: Mike test this
   events: () => EventHandlerConfig;
   originalSpec: () => AlloyMixedSpec;
   uid: () => string;

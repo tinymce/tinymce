@@ -1,12 +1,11 @@
 import * as Behaviour from './Behaviour';
 import * as ActiveUnselecting from '../../behaviour/unselecting/ActiveUnselecting';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 
-export interface UnselectingBehaviour extends AlloyBehaviour {
+export interface UnselectingBehaviour extends Behaviour.AlloyBehaviour {
   config: (UnselectingConfig) => { key: string, value: any };
 }
 
-export interface UnselectingConfig extends AlloyBehaviourConfig {
+export interface UnselectingConfig extends Behaviour.AlloyBehaviourConfig {
   // intentionally blank
 }
 

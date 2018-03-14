@@ -3,16 +3,15 @@ import * as ActivePosition from '../../behaviour/positioning/ActivePosition';
 import * as PositionApis from '../../behaviour/positioning/PositionApis';
 import PositionSchema from '../../behaviour/positioning/PositionSchema';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { Option } from '@ephox/boulder/node_modules/@ephox/katamari';
 
-export interface PositioningBehaviour extends AlloyBehaviour {
+export interface PositioningBehaviour extends Behaviour.AlloyBehaviour {
   config: (PositioningConfig) => { key: string, value: any };
   position?: <T>(component: AlloyComponent, anchor: AnchorPositioningConfig<T>, placee: AlloyComponent) => void;
   getMode?: (component: AlloyComponent) => any;
 }
 
-export interface PositioningConfig extends AlloyBehaviourConfig {
+export interface PositioningConfig extends Behaviour.AlloyBehaviourConfig {
   useFixed: boolean;
 }
 

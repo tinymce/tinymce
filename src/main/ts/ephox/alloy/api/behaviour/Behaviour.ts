@@ -1,11 +1,42 @@
-import { FieldSchema, Objects, Processor, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, Objects, Processor, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { ComposingCreateConfig } from 'ephox/alloy/api/behaviour/Composing';
 import { DockingBehaviour } from 'ephox/alloy/api/behaviour/Docking';
 
 import * as Behaviour from '../../behaviour/common/Behaviour';
 import * as NoState from '../../behaviour/common/NoState';
+
+export interface AlloyBehaviour {
+  config: (spec: any) => { key: string, value: any };
+  exhibit: (info: any, base: any) => {};
+  handlers: (info: any) => {};
+  name: () => string;
+  revoke: () => { key: string, value: undefined };
+  schema: () => FieldProcessorAdt;
+
+  getValue: (any) => any;
+  setValue: (...any) => any;
+  fields?: FieldProcessorAdt[];
+}
+
+export interface AlloyBehaviourSchema {
+  config: { [key: string]: () => any};
+  configAsRaw: () => {
+    [key: string]: any;
+  };
+  initialConfig: {};
+  me: AlloyBehaviour;
+  state: any;
+}
+
+export interface AlloyBehaviourConfig {
+  fields: FieldProcessorAdt[];
+  name: string;
+  active?: {};
+  apis?: {};
+  extra?: {};
+  state?: {};
+}
 
 const derive = function (capabilities): {} {
   return Objects.wrapAll(capabilities);

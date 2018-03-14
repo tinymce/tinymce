@@ -2,8 +2,8 @@ import { Objects } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
 
 import BehaviourBlob from '../../behaviour/common/BehaviourBlob';
-import { AlloyBehaviour } from 'ephox/alloy/alien/TypeDefinitions';
 import { SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
+import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
 
 export interface ComponentBehaviour {
   data: {
