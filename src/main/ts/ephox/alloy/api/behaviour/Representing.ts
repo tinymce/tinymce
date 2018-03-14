@@ -7,31 +7,34 @@ import { FieldProcessorAdt } from '@ephox/boulder';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface RepresentingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (RepresentingConfig) => { key: string, value: any };
-  setValueFrom?: (component: AlloyComponent, source: AlloyComponent) => void;
+  config: (config: RepresentingConfig) => { [key: string]: (any) => any };
+  setValueFrom: (component: AlloyComponent, source: AlloyComponent) => void;
 }
 
-export interface RepresentingConfig extends Behaviour.AlloyBehaviourConfig {
+export interface RepresentingConfig {
   store: {
     mode: string,
-    initialValue: string
+    initialValue?: any,
+    getFallbackEntry?: (key: string) => { value: string, text: string },
+    getDataKey?: (typeAhead: AlloyComponent) => string,
+    setData?: (typeAhead: AlloyComponent, data: { text, value: string } ) => void;
   };
 }
 
 // The self-reference is clumsy.
-const Representing: RepresentingBehaviour = Behaviour.create({
+const Representing = Behaviour.create({
   fields: RepresentSchema,
   name: 'representing',
   active: ActiveRepresenting,
   apis: RepresentApis,
   extra: {
-    setValueFrom (component, source) {
+    setValueFrom (component: AlloyComponent, source: AlloyComponent) {
       const value = Representing.getValue(source);
       Representing.setValue(component, value);
     }
   },
   state: RepresentState
-});
+}) as RepresentingBehaviour;
 
 export {
   Representing

@@ -4,7 +4,7 @@ import SwapSchema from '../../behaviour/swapping/SwapSchema';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface SwappingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (SwappingConfig) => { key: string, value: any };
+  config: (config: SwappingConfig) => { [key: string]: (any) => any };
   toAlpha?: (componenet: AlloyComponent) => void;
   toOmega?: (componenet: AlloyComponent) => void;
   isAlpha?: (componenet: AlloyComponent) => boolean;

@@ -5,7 +5,7 @@ import ToggleSchema from '../../behaviour/toggling/ToggleSchema';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface TogglingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (TogglingConfig) => { key: string, value: any };
+  config: (config: TogglingConfig) => { [key: string]: (any) => any };
   onLoad?: (component: AlloyComponent) => void;
   toggle?: (component: AlloyComponent) => void;
   isOn?: (component: AlloyComponent) => boolean;
@@ -13,9 +13,9 @@ export interface TogglingBehaviour extends Behaviour.AlloyBehaviour {
   off?: (component: AlloyComponent) => void;
 }
 
-export interface TogglingConfig extends Behaviour.AlloyBehaviourConfig {
+export interface TogglingConfig {
   toggleClass: string;
-  aria: {
+  aria?: {
     mode: TogglingMode;
     syncWithExpanded?: boolean;
   };

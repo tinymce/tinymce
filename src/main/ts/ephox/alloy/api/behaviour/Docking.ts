@@ -5,7 +5,7 @@ import { Option } from '@ephox/katamari';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface DockingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (DockingConfig) => { key: string, value: any };
+  config: <T>(config: DockingConfig<T>) => { [key: string]: (any) => any };
 }
 
 export interface DockingConfig<T> extends Behaviour.AlloyBehaviourConfig {
@@ -20,11 +20,11 @@ export interface DockingConfig<T> extends Behaviour.AlloyBehaviourConfig {
   topAttr: string;
 }
 
-const Docking: DockingBehaviour = Behaviour.create({
+const Docking = Behaviour.create({
   fields: DockingSchema,
   name: 'docking',
   active: ActiveDocking
-});
+}) as DockingBehaviour;
 
 export {
   Docking

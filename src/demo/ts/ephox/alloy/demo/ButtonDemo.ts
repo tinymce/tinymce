@@ -88,7 +88,7 @@ export default <any> function () {
         Toggling.config({
           toggleClass: 'demo-selected',
           aria: {
-            mode: 'fuzzed'
+            mode: 'pressed'
           }
         })
       ])

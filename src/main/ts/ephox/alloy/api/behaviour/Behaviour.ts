@@ -7,7 +7,7 @@ import * as Behaviour from '../../behaviour/common/Behaviour';
 import * as NoState from '../../behaviour/common/NoState';
 
 export interface AlloyBehaviour {
-  config: (spec: any) => { key: string, value: any };
+  config: (spec: any) => { [key: string]: (any) => any };
   exhibit: (info: any, base: any) => {};
   handlers: (info: any) => {};
   name: () => string;
@@ -21,9 +21,7 @@ export interface AlloyBehaviour {
 
 export interface AlloyBehaviourSchema {
   config: { [key: string]: () => any};
-  configAsRaw: () => {
-    [key: string]: any;
-  };
+  configAsRaw: () => Record<string, any>;
   initialConfig: {};
   me: AlloyBehaviour;
   state: any;

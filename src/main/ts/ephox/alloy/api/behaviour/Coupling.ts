@@ -4,20 +4,20 @@ import CouplingSchema from '../../behaviour/coupling/CouplingSchema';
 import CouplingState from '../../behaviour/coupling/CouplingState';
 
 export interface CouplingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (CouplingConfig) => { key: string, value: any };
-  getCoupled?: (component, coupleConfig, coupleState?, name?) => any;
+  config: <T>(config: CouplingConfig<T>) => { [key: string]: (any) => any };
+  getCoupled: (component, coupleConfig, coupleState?, name?) => any;
 }
 
-export interface CouplingConfig<T> extends Behaviour.AlloyBehaviourConfig {
-  others: () => any;
+export interface CouplingConfig<T> {
+  others: { [key: string]: (any) => any };
 }
 
-const Coupling: CouplingBehaviour = Behaviour.create({
+const Coupling = Behaviour.create({
   fields: CouplingSchema,
   name: 'coupling',
   apis: CouplingApis,
   state: CouplingState
-});
+}) as CouplingBehaviour;
 
 export {
   Coupling

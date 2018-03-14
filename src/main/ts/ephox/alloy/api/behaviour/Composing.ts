@@ -5,23 +5,23 @@ import { Option } from '@ephox/katamari';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface ComposingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (ComposingConfig) => { key: string, value: any };
-  getCurrent?: (any) => any; // TODO any : whats sandbox
+  config: (config: ComposingConfig) => { [key: string]: (any) => any };
+  getCurrent: (any) => any; // TODO any : whats sandbox
 }
-export interface ComposingConfig<T> {
-  find: () => (AlloyComponent) => Option<T>;
+export interface ComposingConfig {
+  find: (container: AlloyComponent) => Option<AlloyComponent>;
 }
 export interface ComposingCreateConfig extends Behaviour.AlloyBehaviourConfig {
   apis: {
-    getCurrent: <T>(component: AlloyComponent, componentConfig: ComposingConfig<T>, composeState: {}) => any
+    getCurrent: (component: AlloyComponent, componentConfig: ComposingConfig, composeState: {}) => any
   };
 }
 
-const Composing: ComposingBehaviour = Behaviour.create({
+const Composing = Behaviour.create({
   fields: ComposeSchema,
   name: 'composing',
   apis: ComposeApis
-});
+}) as ComposingBehaviour;
 
 export {
   Composing

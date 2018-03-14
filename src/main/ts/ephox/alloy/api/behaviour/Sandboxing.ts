@@ -9,31 +9,32 @@ import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
 
 export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (SandboxingConfig) => { key: string, value: any };
-  cloak?: (sandbox: AlloyComponent) => void;
-  decloak?: (sandbox: AlloyComponent) => void;
-  open?: (sandbox: AlloyComponent, thing: SketchSpec) => AlloyComponent;
-  close?: (sandbox: AlloyComponent) => void;
-  isOpen?: (sandbox: AlloyComponent) => boolean;
-  isPartOf?: (sandbox: AlloyComponent, candidate: () => SugarElement) => boolean;
-  getState?: (sandbox: AlloyComponent) => Option<AlloyComponent>;
-  closeSandbox?: (sandbox: AlloyComponent) => void;
+  config: (config: SandboxingConfig) => { [key: string]: (any) => any };
+  cloak: (sandbox: AlloyComponent) => void;
+  decloak: (sandbox: AlloyComponent) => void;
+  open: (sandbox: AlloyComponent, thing: SketchSpec) => AlloyComponent;
+  close: (sandbox: AlloyComponent) => void;
+  isOpen: (sandbox: AlloyComponent) => boolean;
+  isPartOf: (sandbox: AlloyComponent, candidate: () => SugarElement) => boolean;
+  getState: (sandbox: AlloyComponent) => Option<AlloyComponent>;
+  closeSandbox: (sandbox: AlloyComponent) => void;
 }
 
 export interface SandboxingConfig extends Behaviour.AlloyBehaviourConfig {
   getAttachPoint: () => AlloyComponent;
-  onOpen: () => any;
-  onClose: () => any;
-  isPartOf: () => boolean;
+  isPartOf: (container: AlloyComponent, data: AlloyComponent, queryElem: SugarElement) => boolean;
+  onOpen?: () => any;
+  onClose?: () => any;
+  cloakVisibilityAttr?: string;
 }
 
-const Sandboxing: SandboxingBehaviour = Behaviour.create({
+const Sandboxing = Behaviour.create({
   fields: SandboxSchema,
   name: 'sandboxing',
   active: ActiveSandbox,
   apis: SandboxApis,
   state: SandboxState
-});
+}) as SandboxingBehaviour;
 
 export {
   Sandboxing

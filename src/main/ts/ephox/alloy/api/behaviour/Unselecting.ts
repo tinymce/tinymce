@@ -2,10 +2,10 @@ import * as Behaviour from './Behaviour';
 import * as ActiveUnselecting from '../../behaviour/unselecting/ActiveUnselecting';
 
 export interface UnselectingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (UnselectingConfig) => { key: string, value: any };
+  config: (config: UnselectingConfig) => { [key: string]: (any) => any };
 }
 
-export interface UnselectingConfig extends Behaviour.AlloyBehaviourConfig {
+export interface UnselectingConfig {
   // intentionally blank
 }
 

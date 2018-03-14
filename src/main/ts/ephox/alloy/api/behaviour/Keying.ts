@@ -4,9 +4,12 @@ import * as KeyingState from '../../behaviour/keyboard/KeyingState';
 import { Objects } from '@ephox/boulder';
 import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { Option } from '@ephox/boulder/node_modules/@ephox/katamari';
+import { SimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
+import { FocusManagers } from 'ephox/alloy/api/Main';
 
 export interface KeyingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (KeyingConfig) => { key: string, value: any };
+  config: (config: KeyingConfig) => { [key: string]: (any) => any };
   focusIn: (component: AlloyComponent) => void;
   setGridSize: (
     component: AlloyComponent,
@@ -15,21 +18,60 @@ export interface KeyingBehaviour extends Behaviour.AlloyBehaviour {
   ) => void;
 }
 
-// TODO: dynamic type
-export interface KeyingConfig extends Behaviour.AlloyBehaviourConfig {
-  mode: KeyingModes;
-  selector: string;
-  visibilitySelector: string;
-  useSpace: boolean;
-  useEnter: boolean;
-  executeOnMove: boolean;
-  getInitial: (chooser) => SugarElement;
-  execute: (any) => any;
-  onEnter: () => () => any;
-  onEscape: () => () => any;
-  useTabstopAt: () => () => any;
+export interface KeyingInfo {
+  focusIn: () => any;
+  focusManager: () => any;
+  handler: () => any;
+  onDown: () => any;
+  onEnter: () => any;
+  onEscape: () => any;
+  onLeft: () => any;
+  onRight: () => any;
+  onShiftEnter: () => any;
+  onShiftTab: () => any;
+  onSpace: () => any;
+  onTab: () => any;
+  onUp: () => any;
+  state: () => any;
 }
 
+export interface KeyingFocusManager {
+  set: (component: AlloyComponent, focusee: any) => void;
+  get: (component: AlloyComponent) => AlloyComponent;
+}
+
+// TODO: dynamic type, TODO: group these into their KeyingModes
+export interface KeyingConfig {
+  mode: KeyingModes;
+  selector?: string;
+  visibilitySelector?: string;
+
+  initSize?: {
+    numColumns: number,
+    numRows: number
+  };
+  getInitial?: (chooser) => SugarElement;
+  execute?: (any) => any;
+
+  useSpace?: boolean;
+  useEnter?: boolean;
+  useControlEnter?: boolean;
+  executeOnMove?: boolean;
+  focusIn?: (comp: AlloyComponent, keyInfo: KeyingInfo) => void;
+
+  focusManager?: KeyingFocusManager;
+  selectors?: { row: string, cell: string };
+
+  onSpace?: (comp: AlloyComponent) => Option<boolean>;
+  onDown?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+  onUp?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+  onLeft?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+  onRight?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+  onEnter?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+  onEscape?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+  useTabstopAt?: (comp: AlloyComponent) => Option<boolean>;
+}
+// TODO: Morgan, perhaps try a Partial<Record <'mode', KeyingModes>>
 export type KeyingModes = 'acyclic' | 'cyclic' | 'flow' | 'flatgrid' | 'matrix' | 'execution' | 'menu' | 'special';
 
 const Keying: KeyingBehaviour = Behaviour.createModes({

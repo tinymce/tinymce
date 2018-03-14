@@ -6,9 +6,9 @@ import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { Option } from '@ephox/boulder/node_modules/@ephox/katamari';
 
 export interface PositioningBehaviour extends Behaviour.AlloyBehaviour {
-  config: (PositioningConfig) => { key: string, value: any };
-  position?: <T>(component: AlloyComponent, anchor: AnchorPositioningConfig<T>, placee: AlloyComponent) => void;
-  getMode?: (component: AlloyComponent) => any;
+  config: (config: PositioningConfig) => { [key: string]: (any) => any };
+  position: <T>(component: AlloyComponent, anchor: AnchorPositioningConfig<T>, placee: AlloyComponent) => void;
+  getMode: (component: AlloyComponent) => any;
 }
 
 export interface PositioningConfig extends Behaviour.AlloyBehaviourConfig {
@@ -17,18 +17,18 @@ export interface PositioningConfig extends Behaviour.AlloyBehaviourConfig {
 
 export interface AnchorPositioningConfig <T> {
   anchor: string;
-  item?: AlloyComponent;
-  bubble?: Option<T>;
-  root?: Element;
+  item?: AlloyComponent;  // TODO: Option type, {} empty works with Obj or change the scheme
+  bubble?: Option<T>;     // This is correctly implemented, bubble? value is Option<T>
+  root?: Element;         // TODO: Option type
   hotspot?: AlloyComponent;
 }
 
-const Positioning: PositioningBehaviour = Behaviour.create({
+const Positioning = Behaviour.create({
   fields: PositionSchema,
   name: 'positioning',
   active: ActivePosition,
   apis: PositionApis
-});
+}) as PositioningBehaviour;
 
 export {
   Positioning

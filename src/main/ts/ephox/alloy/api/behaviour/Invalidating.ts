@@ -3,29 +3,34 @@ import { Representing } from './Representing';
 import * as ActiveInvalidate from '../../behaviour/invalidating/ActiveInvalidate';
 import * as InvalidateApis from '../../behaviour/invalidating/InvalidateApis';
 import InvalidateSchema from '../../behaviour/invalidating/InvalidateSchema';
-import { Future, Result } from '@ephox/katamari';
+import { Future, Result, Option } from '@ephox/katamari';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { Component } from 'ephox/alloy/api/Main';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (InvalidatingConfig) => { key: string, value: any };
-  markValid?: (Component: AlloyComponent) => void;
-  markInvalid?: (Component: AlloyComponent) => void;
-  query?: <T>(Component: AlloyComponent) => Future<T>;
-  run?: <T>(Component: AlloyComponent) => Future<T>;
-  validation?: (validate: (v: string) => Result<any, string>) => (component: AlloyComponent) => any;
+  config: <T>(config: InvalidatingConfig<T>) => { [key: string]: (any) => any };
+  markValid: (Component: AlloyComponent) => void;
+  markInvalid: (Component: AlloyComponent) => void;
+  query: <T>(Component: AlloyComponent) => Future<T>;
+  run: <T>(Component: AlloyComponent) => Future<T>;
+  validation: (validate: (v: string) => Result<any, string>) => (component: AlloyComponent) => any;
 }
 
-export interface InvalidatingConfig extends Behaviour.AlloyBehaviourConfig {
+export interface InvalidatingConfig<T> {
   invalidClass: string;
-  onEvent: string;
-  getRoot: () => any;
+  notify: {
+    getContainer: (input: AlloyComponent) => Option<SugarElement>;
+  };
+  onEvent?: string;
+  getRoot?: () => any;
   validator: {
     validate: <T>(input: AlloyComponent) => Future<T>
+    onEvent: string;
   };
 }
 
-const Invalidating: InvalidatingBehaviour = Behaviour.create({
+const Invalidating = Behaviour.create({
   fields: InvalidateSchema,
   name: 'invalidating',
   active: ActiveInvalidate,
@@ -40,7 +45,7 @@ const Invalidating: InvalidatingBehaviour = Behaviour.create({
       };
     }
   }
-});
+}) as InvalidatingBehaviour;
 
 export {
   Invalidating

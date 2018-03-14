@@ -4,11 +4,11 @@ import * as DisableApis from '../../behaviour/disabling/DisableApis';
 import DisableSchema from '../../behaviour/disabling/DisableSchema';
 
 export interface DisableBehaviour extends Behaviour.AlloyBehaviour {
-  config: (DisablingConfig) => { key: string, value: any };
-  enable?: (component, disableConfig?, disableState?) => void;
-  disable?: (component, disableConfig?, disableState?) => void;
-  isDisabled?: (component) => boolean;
-  onLoad?: (component, disableConfig, disableState) => void;
+  config: <T>(config: DisablingConfig<T>) => { [key: string]: (any) => any };
+  enable: (component, disableConfig?, disableState?) => void;
+  disable: (component, disableConfig?, disableState?) => void;
+  isDisabled: (component) => boolean;
+  onLoad: (component, disableConfig, disableState) => void;
 }
 
 export interface DisablingConfig<T> extends Behaviour.AlloyBehaviourConfig {
@@ -23,12 +23,12 @@ export interface DisableConfig {
   disableClass?: () => string;
 }
 
-const Disabling: DisableBehaviour = Behaviour.create({
+const Disabling = Behaviour.create({
   fields: DisableSchema,
   name: 'disabling',
   active: ActiveDisable,
   apis: DisableApis
-});
+}) as DisableBehaviour;
 
 export {
   Disabling

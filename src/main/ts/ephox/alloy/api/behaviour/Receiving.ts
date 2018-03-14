@@ -3,18 +3,18 @@ import * as ActiveReceiving from '../../behaviour/receiving/ActiveReceiving';
 import ReceivingSchema from '../../behaviour/receiving/ReceivingSchema';
 
 export interface ReceivingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (ReceivingConfig) => { key: string, value: any };
+  config: (config: ReceivingConfig) => { [key: string]: (any) => any };
 }
 
 export interface ReceivingConfig extends Behaviour.AlloyBehaviourConfig {
   // Intentionally Blank
 }
 
-const Receiving: ReceivingBehaviour = Behaviour.create({
+const Receiving = Behaviour.create({
   fields: ReceivingSchema,
   name: 'receiving',
   active: ActiveReceiving
-});
+}) as ReceivingBehaviour;
 
 export {
   Receiving

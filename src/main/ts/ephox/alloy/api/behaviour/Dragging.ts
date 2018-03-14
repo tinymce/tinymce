@@ -8,7 +8,7 @@ import * as DragState from '../../dragging/common/DragState';
 import * as Behaviour from './Behaviour';
 
 export interface DraggingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (DraggingConfig) => { key: string, value: any };
+  config: <T>(config: DraggingConfig<T>) => { [key: string]: (any) => any };
   snap: (SnapConfig) => any;
 }
 
@@ -26,21 +26,21 @@ export interface SnapBehaviour {
   getSnapPoints: () => any[];
   leftAttr: string;
   topAttr: string;
-  onSensor: () => (component: AlloyComponent, extra: {}) => void;
-  lazyViewport: (component?: AlloyComponent) => any;
+  onSensor?: () => (component: AlloyComponent, extra: {}) => void;
+  lazyViewport?: (component: AlloyComponent) => any;
 }
 
-export interface DraggingConfig<T> extends Behaviour.AlloyBehaviourConfig {
+export interface DraggingConfig<T> {
   mode: DraggingMode;
-  blockerClass?: string[];                            // modes: mouse
-  snaps: (SnapBehaviour) => Option<T>;                // modes: touch, mouse
-  getTarget: (handle: EventHandlerConfig) => any;     // modes: touch, mouse
-  useFixed: boolean;                                  // modes: touch, mouse
-  onDrop: () => any;                                  // modes: touch, mouse
-  dragger: () => any;                                 // modes: touch, mouse
+  blockerClass?: string[];                              // modes: mouse
+  snaps?: SnapBehaviour;                                // modes: touch, mouse
+  getTarget?: (handle: EventHandlerConfig) => any;      // modes: touch, mouse
+  useFixed?: boolean;                                   // modes: touch, mouse
+  onDrop?: () => any;                                   // modes: touch, mouse
+  dragger?: () => any;                                  // modes: touch, mouse
 }
 
-const Dragging: DraggingBehaviour = Behaviour.createModes({
+const Dragging = Behaviour.createModes({
   branchKey: 'mode',
   branches: DraggingBranches,
   name: 'dragging',
@@ -55,7 +55,7 @@ const Dragging: DraggingBehaviour = Behaviour.createModes({
     snap: Struct.immutableBag([ 'sensor', 'range', 'output' ], [ 'extra' ])
   },
   state: DragState
-});
+}) as DraggingBehaviour;
 
 export {
   Dragging

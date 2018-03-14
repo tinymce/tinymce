@@ -36,9 +36,5 @@ export interface PositionCoordinates {
   translate: (x: number, y: number) => PositionCoordinates;
 }
 
-// Fun.constant, Rather than => any, we will have explicit return types
+// Fun.constant, Rather than => T, we will have explicit return types
 export type StringConstant = () => string;
-
-// Config
-
-// Behaviours

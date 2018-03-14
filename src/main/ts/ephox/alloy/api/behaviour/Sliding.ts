@@ -6,7 +6,7 @@ import * as SlidingState from '../../behaviour/sliding/SlidingState';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export interface SlidingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (SlidingConfig) => { key: string, value: any };
+  config: (config: SlidingConfig) => { [key: string]: (any) => any };
   grow?: (component: AlloyComponent) => boolean;
   shrink?: (component: AlloyComponent) => void;
   immediateShrink?: (component: AlloyComponent) => void;
