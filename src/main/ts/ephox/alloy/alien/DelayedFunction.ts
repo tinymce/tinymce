@@ -1,8 +1,8 @@
 
-export default function (fun: (any) => void, delay: number): { cancel: () => void; schedule: () => void } {
+export default function (fun: (any) => void, delay: number): { cancel: () => void; schedule: (...any) => void } {
   let ref = null;
 
-  const schedule = function (...any) {
+  const schedule = function (...any): void {
     const args = arguments;
     ref = setTimeout(function () {
       fun.apply(null, args);
@@ -10,7 +10,7 @@ export default function (fun: (any) => void, delay: number): { cancel: () => voi
     }, delay);
   };
 
-  const cancel = function () {
+  const cancel = function (): void {
     if (ref !== null) {
       clearTimeout(ref);
       ref = null;

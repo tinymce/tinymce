@@ -22,6 +22,9 @@ import * as SystemEvents from '../events/SystemEvents';
 import { InlineView } from './InlineView';
 import { Menu } from './Menu';
 import * as Sketcher from './Sketcher';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+
+type TouchHoverState = (AlloyComponent) => void;
 
 const factory = function (detail, components, spec, externals) {
 
@@ -172,7 +175,8 @@ const factory = function (detail, components, spec, externals) {
               const hoverF = ElementFromPoint.insideComponent(component, e.clientX, e.clientY).fold(
                 Fun.constant(hoverOff),
                 Fun.constant(hoverOn)
-              );
+              ) as TouchHoverState;
+
               hoverF(component);
             }, function (elem) {
               AlloyTriggers.dispatchWith(component, elem, NativeEvents.mouseover(), {
