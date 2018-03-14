@@ -88,13 +88,9 @@ export default <any> function (wire, direction, hdirection) {
 
   var isRoot = function (e) { return Compare.eq(e, wire.view()); };
 
-  var hasTableAncestor = function (element) {
-    return !isRoot(element) && SelectorExists.ancestor(element, 'table', isRoot)
-  }
-
   /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
   var mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
-    if (Node.name(event.target()) === 'table' || hasTableAncestor(event.target())) {
+    if (Node.name(event.target()) === 'table' || SelectorExists.closest(event.target(), 'table', isRoot)) {
       hoverTable = Node.name(event.target()) === 'table' ? Option.some(event.target()) : SelectorFind.ancestor(event.target(), 'table', isRoot);
       hoverTable.each(function (ht) {
         Bars.refresh(wire, ht, hdirection, direction);
