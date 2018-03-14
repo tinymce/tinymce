@@ -8,7 +8,10 @@
   },
   "files": [
     "lib/main",
-    "src/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
     "readme.md",
     "LEGAL.txt",
     "CHANGELOG.txt",
