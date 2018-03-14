@@ -46,7 +46,7 @@ const monitor = function (settings) {
         target: event.target
       };
 
-      longpress.schedule();
+      longpress.schedule(event);
       startData.set(Option.some(data));
     });
     return Option.none();

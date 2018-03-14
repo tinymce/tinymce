@@ -2,7 +2,7 @@
 export default function (fun: (any) => void, delay: number): { cancel: () => void; schedule: () => void } {
   let ref = null;
 
-  const schedule = function () {
+  const schedule = function (...any) {
     const args = arguments;
     ref = setTimeout(function () {
       fun.apply(null, args);
