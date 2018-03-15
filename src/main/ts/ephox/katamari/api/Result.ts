@@ -103,7 +103,7 @@ var error = function <T=any, E=any>(message: E): Result<T, E> {
   };
 
   var getOrDie = function (): T {
-    return Fun.die(message)();
+    return Fun.die(String(message))();
   };
 
   var or = function (opt: Result<T, E>) {
