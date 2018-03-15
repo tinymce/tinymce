@@ -41,12 +41,8 @@ var fromExternal = function (event) {
     isCut: Fun.constant(false),
     event: Fun.constant(event),
     // Nor do targets really
-    setTarget: Fun.die(
-      new Error('Cannot set target of a broadcasted event')
-    ),
-    getTarget: Fun.die(
-      new Error('Cannot get target of a broadcasted event')
-    )
+    setTarget: Fun.die('Cannot set target of a broadcasted event'),
+    getTarget: Fun.die('Cannot get target of a broadcasted event')
   };
 };
 
