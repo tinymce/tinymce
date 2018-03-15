@@ -48,8 +48,7 @@ UnitTest.asynctest('Browser Test: behaviour.ComposingTest', function () {
           component.element()
         ),
         Step.sync(function () {
-          const current = Composing.getCurrent(component);
-          const delegate = current(component).getOrDie('Could not find delegate');
+          const delegate = Composing.getCurrent(component).getOrDie('Could not find delegate');
           Assertions.assertStructure(
             'Checking delegate structure',
             ApproxStructure.build(function (s, str, arr) {

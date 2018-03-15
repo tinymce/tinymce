@@ -7,10 +7,10 @@ import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface ComposingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: ComposingConfig) => { [key: string]: (any) => any };
-  getCurrent: (sandbox: AlloyComponent) => any;
+  getCurrent: (sandbox: AlloyComponent | any) => Option<AlloyComponent>;
 }
 export interface ComposingConfig {
-  find: (container: AlloyComponent) => Option<AlloyComponent>;
+  find: any;
 }
 export interface ComposingCreateConfig {
   apis: {
