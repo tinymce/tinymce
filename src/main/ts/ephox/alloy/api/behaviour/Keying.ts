@@ -85,13 +85,15 @@ export interface KeyingConfig {
 // eg: if mode = special, then we expect the config to only contain members defined in SpecialConfig
 // The current implementation does a catch all KeyingConfig, which defeats the point of typescript.
 // I have not found a pattern that does this kind of evaluation matching, maybe we have to re-structure the config tree
-
 //           const config = {
 //             mode: 'special',
 //             cfg: SpecialConfig
 //           }
+// The Typescript/Boulder relationship also adds additional complexity where Typescript is Parse time and Boulder is a Runtime compiler.
+// Boulder will use defaulted fallbacks to populate the configs at runtime where as Typescript will complain and we have to use optional?
+// which can mask issues.
+// I will leave the succinct configs in comments, until we find a better solution
 
-//
 // export interface SpecialConfig {
 //   onSpace: (comp: AlloyComponent) => Option<boolean>;
 //   onEnter: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
