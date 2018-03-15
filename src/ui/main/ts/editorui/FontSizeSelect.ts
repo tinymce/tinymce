@@ -9,7 +9,19 @@
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
-import FontInfo from '../fmt/FontInfo';
+
+const round = (number: number, precision: number) => {
+  const factor = Math.pow(10, precision);
+  return Math.round(number * factor) / factor;
+};
+
+const toPt = (fontSize: string, precision?: number) => {
+  if (/[0-9.]+px$/.test(fontSize)) {
+    // Round to the nearest 0.5
+    return round(parseInt(fontSize, 10) * 72 / 96, precision || 0) + 'pt';
+  }
+  return fontSize;
+};
 
 const findMatchingValue = function (items, pt, px) {
   let value;
@@ -32,11 +44,11 @@ const createFontSizeListBoxChangeHandler = function (editor, items) {
     editor.on('init nodeChange', function (e) {
       let px, pt, precision, match;
 
-      px = FontInfo.getFontSize(editor.getBody(), e.element);
+      px = editor.queryCommandValue('FontSize');
       if (px) {
         // checking for three digits after decimal point, should be precise enough
         for (precision = 3; !match && precision >= 0; precision--) {
-          pt = FontInfo.toPt(px, precision);
+          pt = toPt(px, precision);
           match = findMatchingValue(items, pt, px);
         }
       }

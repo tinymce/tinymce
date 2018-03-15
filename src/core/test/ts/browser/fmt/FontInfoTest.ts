@@ -2,10 +2,9 @@ import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { LegacyUnit } from '@ephox/mcagar';
 import { Element, Hierarchy } from '@ephox/sugar';
+import FontInfo from 'tinymce/core/fmt/FontInfo';
 
-import FontInfo from 'tinymce/ui/fmt/FontInfo';
-
-UnitTest.asynctest('browser.tinymce.ui.fmt.FontInfoTest', function () {
+UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
   const suite = LegacyUnit.createSuite();
