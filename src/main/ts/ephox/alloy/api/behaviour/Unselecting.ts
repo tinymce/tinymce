@@ -9,11 +9,11 @@ export interface UnselectingConfig {
   // intentionally blank
 }
 
-const Unselecting: UnselectingBehaviour = Behaviour.create({
+const Unselecting = Behaviour.create({
   fields: [ ],
   name: 'unselecting',
   active: ActiveUnselecting
-});
+}) as UnselectingBehaviour;
 
 export {
   Unselecting

@@ -17,11 +17,11 @@ export interface SwappingConfig {
   omega: string;
 }
 
-const Swapping: SwappingBehaviour = Behaviour.create({
+const Swapping = Behaviour.create({
   fields: SwapSchema,
   name: 'swapping',
   apis: SwapApis
-});
+}) as SwappingBehaviour;
 
 export {
   Swapping

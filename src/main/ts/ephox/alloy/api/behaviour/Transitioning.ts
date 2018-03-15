@@ -80,7 +80,7 @@ const createTristate = function (first, second, third, transitions) {
   ]);
 };
 
-const Transitioning: TransitioningBehaviour = Behaviour.create({
+const Transitioning = Behaviour.create({
   fields: TransitionSchema,
   name: 'transitioning',
   active: ActiveTransitioning,
@@ -90,7 +90,7 @@ const Transitioning: TransitioningBehaviour = Behaviour.create({
     createBistate,
     createTristate
   }
-});
+}) as TransitioningBehaviour;
 
 export {
   Transitioning

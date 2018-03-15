@@ -13,12 +13,12 @@ export interface PinchingConfig {
   onPunch: (element: SugarElement, changeX: number, changeY: number) => void;
 }
 
-const Pinching: PinchingBehaviour = Behaviour.create({
+const Pinching = Behaviour.create({
   fields: PinchingSchema,
   name: 'pinching',
   active: ActivePinching,
   state: DragState
-});
+}) as PinchingBehaviour;
 
 export {
   Pinching

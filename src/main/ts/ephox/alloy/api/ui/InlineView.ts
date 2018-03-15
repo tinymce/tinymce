@@ -13,14 +13,13 @@ import { Sandboxing } from '../behaviour/Sandboxing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 
-export interface InlineViewSketch extends Sketcher.CompositeSketch {
+export interface InlineViewSketch extends Sketcher.SingleSketch {
   // InlineViewApis;
   showAt: (component: AlloyComponent, anchor: InlineViewAnchor, thing: Sketcher.SketchSpec) => void;
   hide: (component: AlloyComponent) => void;
   isOpen: (component: AlloyComponent) => boolean;
 }
 
-// TODO: Morgan anchor appears to be a generic concept, move this when a consistent usage pattern is found
 export interface InlineViewAnchor {
   anchor: string;
   x?: number;

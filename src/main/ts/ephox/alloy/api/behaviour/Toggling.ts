@@ -25,12 +25,12 @@ export interface TogglingConfig {
 
 export type TogglingMode = 'pressed' | 'checked' | 'toggled' | 'selected';
 
-const Toggling: TogglingBehaviour = Behaviour.create({
+const Toggling = Behaviour.create({
   fields: ToggleSchema,
   name: 'toggling',
   active: ActiveToggle,
   apis: ToggleApis
-});
+}) as TogglingBehaviour;
 
 export {
   Toggling

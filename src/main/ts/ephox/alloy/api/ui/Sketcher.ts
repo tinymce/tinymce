@@ -24,11 +24,18 @@ export interface SingleSketch {
   configFields: () => FieldProcessorAdt[];
   partFields: () => FieldProcessorAdt[];
   sketch: (spec: Record<string, any>) => SketchSpec;
+  factory: UiSketcher.SingleFactory;
 }
 
-export interface CompositeSketch extends SingleSketch {
+export interface CompositeSketch  {
+  name: () => string;
+  configFields: () => FieldProcessorAdt[];
+  partFields: () => FieldProcessorAdt[];
+  sketch: (spec: Record<string, any>) => SketchSpec;
+
   parts: () => any;
-  [key: string]: Function;
+  factory: UiSketcher.CompositeFactory;
+  // [key: string]: Function;
 }
 
 // TODO: Morgan -> check these

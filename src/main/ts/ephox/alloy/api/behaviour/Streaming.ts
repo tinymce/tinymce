@@ -20,12 +20,12 @@ export interface StreamingConfig {
 
 export type StreamMode = 'throttle';
 
-const Streaming: StreamingBehaviour = Behaviour.create({
+const Streaming = Behaviour.create({
   fields: StreamingSchema,
   name: 'streaming',
   active: ActiveStreaming,
   state: NoState
-});
+}) as StreamingBehaviour;
 
 export {
   Streaming

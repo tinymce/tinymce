@@ -74,10 +74,11 @@ export interface KeyingConfig {
   onShiftEnter?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
   useTabstopAt?: (comp: AlloyComponent) => Option<boolean>;
 }
+
 // TODO: Morgan, perhaps try a Partial<Record <'mode', KeyingModes>>
 export type KeyingModes = 'acyclic' | 'cyclic' | 'flow' | 'flatgrid' | 'matrix' | 'execution' | 'menu' | 'special';
 
-const Keying: KeyingBehaviour = Behaviour.createModes({
+const Keying = Behaviour.createModes({
   branchKey: 'mode',
   branches: KeyboardBranches,
   name: 'keying',
@@ -104,7 +105,7 @@ const Keying: KeyingBehaviour = Behaviour.createModes({
     }
   },
   state: KeyingState
-});
+}) as KeyingBehaviour;
 
 export {
   Keying
