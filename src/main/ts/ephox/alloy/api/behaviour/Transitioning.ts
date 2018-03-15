@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Obj, Option } from '@ephox/katamari';
+import { Obj, Option, Result } from '@ephox/katamari';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 import * as ActiveTransitioning from '../../behaviour/transitioning/ActiveTransitioning';
@@ -15,19 +15,18 @@ export interface TransitioningBehaviour extends Behaviour.AlloyBehaviour {
   jumpTo?: (comp: AlloyComponent, destination: string) => void;
   progressTo?: (comp: AlloyComponent, destination: string) => void;
   getState?: any;
-
-  createRoutes?: any;
+  createRoutes?: (route: TransitionApis.TransitionRoute) => {};
   createBistate?: (first: string, second: string, transitions: TransitionProperties) => { key: string, value: any};
   createTristate?: (first: string, second: string, third: string, transitions: TransitionProperties) => { key: string, value: any};
 }
 
 export interface TransitioningConfig {
-  destinationAttr: string;
-  stateAttr: string;
+  destinationAttr?: string;
+  stateAttr?: string;
   initialState: string;
-  routes: { key: string; value: any; };
-  onTransition?: (comp: AlloyComponent, route: string) => void;
-  onFinish?: (comp: AlloyComponent, route: string) => void;
+  routes: Record<string, any>;
+  onTransition?: (comp: AlloyComponent, route: TransitionApis.TransitionRoute) => void;
+  onFinish?: (comp: AlloyComponent, destination: string) => void;
 }
 export interface TransitionProperties {
   transition: {

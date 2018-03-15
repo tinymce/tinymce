@@ -123,7 +123,8 @@ const make = function (detail, components, spec, externals) {
         if (Sandboxing.isOpen(sandbox)) { Sandboxing.close(sandbox); }
         detail.onExecute()(sandbox, comp);
         const currentValue = Representing.getValue(comp);
-        comp.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);
+        const input = comp.element().dom() as HTMLInputElement;
+        input.setSelectionRange(currentValue.text.length, currentValue.text.length);
         return Option.some(true);
       }
     }),

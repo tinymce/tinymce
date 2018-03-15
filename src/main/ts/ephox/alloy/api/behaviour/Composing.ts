@@ -3,17 +3,18 @@ import * as ComposeApis from '../../behaviour/composing/ComposeApis';
 import { ComposeSchema } from '../../behaviour/composing/ComposeSchema';
 import { Option } from '@ephox/katamari';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface ComposingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: ComposingConfig) => { [key: string]: (any) => any };
-  getCurrent: (any) => any; // TODO any : whats sandbox
+  getCurrent: (sandbox: AlloyComponent) => any;
 }
 export interface ComposingConfig {
   find: (container: AlloyComponent) => Option<AlloyComponent>;
 }
-export interface ComposingCreateConfig extends Behaviour.AlloyBehaviourConfig {
+export interface ComposingCreateConfig {
   apis: {
-    getCurrent: (component: AlloyComponent, componentConfig: ComposingConfig, composeState: {}) => any
+    getCurrent: (component: AlloyComponent, componentConfig: ComposingConfig, composeState: {}) => Option<AlloyComponent>
   };
 }
 

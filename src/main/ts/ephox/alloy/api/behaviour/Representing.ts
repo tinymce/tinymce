@@ -5,6 +5,7 @@ import RepresentSchema from '../../behaviour/representing/RepresentSchema';
 import * as RepresentState from '../../behaviour/representing/RepresentState';
 import { FieldProcessorAdt } from '@ephox/boulder';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { Result } from '@ephox/boulder/node_modules/@ephox/katamari';
 
 export interface RepresentingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: RepresentingConfig) => { [key: string]: (any) => any };
@@ -18,7 +19,10 @@ export interface RepresentingConfig {
     getFallbackEntry?: (key: string) => { value: string, text: string },
     getDataKey?: (typeAhead: AlloyComponent) => string,
     setData?: (typeAhead: AlloyComponent, data: { text, value: string } ) => void;
+    getValue?: (any) => any;
+    setValue?: (...any) => any;
   };
+  onSetValue?: <T, E>() => Result<T, E>;
 }
 
 // The self-reference is clumsy.

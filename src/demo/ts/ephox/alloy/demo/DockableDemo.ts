@@ -49,7 +49,7 @@ export default <any> function () {
           containerBehaviours: Behaviour.derive([
             Dragging.config({
               mode: 'mouse',
-              blockerClass: [ 'blocker' ]
+              blockerClass: 'blocker'
             }),
 
             Docking.config({

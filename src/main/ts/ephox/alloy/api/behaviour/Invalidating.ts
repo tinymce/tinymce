@@ -19,13 +19,13 @@ export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour {
 
 export interface InvalidatingConfig<T> {
   invalidClass: string;
-  notify: {
+  notify?: {
     getContainer: (input: AlloyComponent) => Option<SugarElement>;
   };
   onEvent?: string;
   getRoot?: () => any;
   validator: {
-    validate: <T>(input: AlloyComponent) => Future<T>
+    validate: (input: AlloyComponent) => Future<Result<any, string> | Result<string, any>>
     onEvent: string;
   };
 }

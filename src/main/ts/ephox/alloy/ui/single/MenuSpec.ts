@@ -38,7 +38,6 @@ const make = function (detail, components, spec, externals) {
               initialValue: detail.value()
             }
           }),
-          // FIX: Is this used? It has the wrong return type.
           Composing.config({
             find: Fun.identity
           }),

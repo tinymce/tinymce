@@ -11,11 +11,12 @@ export interface DisableBehaviour extends Behaviour.AlloyBehaviour {
   onLoad: (component, disableConfig, disableState) => void;
 }
 
-export interface DisablingConfig<T> extends Behaviour.AlloyBehaviourConfig {
-  active: {
+export interface DisablingConfig<T> {
+  active?: {
     exhibit: (base: {}, disableConfig: {DisableConfig}, disableState?) => any,
     events: (disableConfig, disableState) => any
   };
+  disabled: boolean;
 }
 
 export interface DisableConfig {

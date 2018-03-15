@@ -23,7 +23,7 @@ export interface SingleSketch {
   name: () => string;
   configFields: () => FieldProcessorAdt[];
   partFields: () => FieldProcessorAdt[];
-  sketch: (spec) => SketchSpec;
+  sketch: (spec: Record<string, any>) => SketchSpec;
 }
 
 export interface CompositeSketch extends SingleSketch {

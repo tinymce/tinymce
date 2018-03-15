@@ -9,8 +9,8 @@ export interface SimulatedEvent {
   isCut: () => boolean;
   event: () => AnyEvent;
 
-  getSource: () => AlloyComponent;
-  setSource: (component: AlloyComponent) => void;
+  getSource: (element: SugarElement) => AlloyComponent;
+  setSource: (element: SugarElement) => void;
 }
 
 export type AnyEvent = SimulatedEventTargets | SugarEvent;

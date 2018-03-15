@@ -89,7 +89,7 @@ export default <any> function () {
                 snaps: snapData
               } : {
                 mode: 'mouse',
-                blockerClass: [ 'blocker' ],
+                blockerClass: 'blocker',
                 snaps: snapData
               }
             ),

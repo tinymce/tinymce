@@ -20,11 +20,11 @@ export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour {
   closeSandbox: (sandbox: AlloyComponent) => void;
 }
 
-export interface SandboxingConfig extends Behaviour.AlloyBehaviourConfig {
+export interface SandboxingConfig {
   getAttachPoint: () => AlloyComponent;
   isPartOf: (container: AlloyComponent, data: AlloyComponent, queryElem: SugarElement) => boolean;
-  onOpen?: () => any;
-  onClose?: () => any;
+  onOpen?: (component: AlloyComponent, menu: AlloyComponent) => void;
+  onClose?: (component: AlloyComponent, menu: AlloyComponent) => void;
   cloakVisibilityAttr?: string;
 }
 

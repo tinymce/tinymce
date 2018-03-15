@@ -8,14 +8,14 @@ export interface DockingBehaviour extends Behaviour.AlloyBehaviour {
   config: <T>(config: DockingConfig<T>) => { [key: string]: (any) => any };
 }
 
-export interface DockingConfig<T> extends Behaviour.AlloyBehaviourConfig {
-  contextual: {
+export interface DockingConfig<T> {
+  contextual?: {
     fadeInClass: string;
     fadeOutClass: string;
     transitionClass: string;
     lazyContext: (component: AlloyComponent) => Option<T>;
   };
-  lazyViewport: (component?: AlloyComponent) => any;
+  lazyViewport?: (component?: AlloyComponent) => Option<T>;
   leftAttr: string;
   topAttr: string;
 }

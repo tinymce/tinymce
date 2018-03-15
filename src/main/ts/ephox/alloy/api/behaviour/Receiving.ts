@@ -6,7 +6,7 @@ export interface ReceivingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: ReceivingConfig) => { [key: string]: (any) => any };
 }
 
-export interface ReceivingConfig extends Behaviour.AlloyBehaviourConfig {
+export interface ReceivingConfig {
   // Intentionally Blank
 }
 

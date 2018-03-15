@@ -32,7 +32,7 @@ export interface SnapBehaviour {
 
 export interface DraggingConfig<T> {
   mode: DraggingMode;
-  blockerClass?: string[];                              // modes: mouse
+  blockerClass?: string;                                // modes: mouse
   snaps?: SnapBehaviour;                                // modes: touch, mouse
   getTarget?: (handle: EventHandlerConfig) => any;      // modes: touch, mouse
   useFixed?: boolean;                                   // modes: touch, mouse

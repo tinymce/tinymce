@@ -12,7 +12,7 @@ export interface SwappingBehaviour extends Behaviour.AlloyBehaviour {
   clear?: (componenet: AlloyComponent) => void;
 }
 
-export interface SwappingConfig extends Behaviour.AlloyBehaviourConfig {
+export interface SwappingConfig {
   alpha: string;
   omega: string;
 }

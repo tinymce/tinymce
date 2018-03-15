@@ -11,7 +11,7 @@ export interface PositioningBehaviour extends Behaviour.AlloyBehaviour {
   getMode: (component: AlloyComponent) => any;
 }
 
-export interface PositioningConfig extends Behaviour.AlloyBehaviourConfig {
+export interface PositioningConfig {
   useFixed: boolean;
 }
 

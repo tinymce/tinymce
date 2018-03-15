@@ -25,8 +25,8 @@ export interface HighlightingBehaviour extends Behaviour.AlloyBehaviour {
 export interface HighlightingConfig {
   itemClass: string;
   highlightClass: string;
-  onHighlight?: () => (chooser, choice) => void;
-  onDehighlight?: () => (chooser, choice) => void;
+  onHighlight?: (chooser, choice) => void;
+  onDehighlight?: (chooser, choice) => void;
 }
 
 const Highlighting = Behaviour.create({

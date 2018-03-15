@@ -19,6 +19,8 @@ export interface TogglingConfig {
     mode: TogglingMode;
     syncWithExpanded?: boolean;
   };
+  toggleOnExecute?: boolean;
+  selected?: boolean;
 }
 
 export type TogglingMode = 'pressed' | 'checked' | 'toggled' | 'selected';

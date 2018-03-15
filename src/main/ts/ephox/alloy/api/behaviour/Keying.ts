@@ -50,8 +50,8 @@ export interface KeyingConfig {
     numColumns: number,
     numRows: number
   };
-  getInitial?: (chooser) => SugarElement;
-  execute?: (any) => any;
+  getInitial?: (chooser) => Option<SugarElement>;
+  execute?: (chooser, simulatedEvent, focused) => boolean;
 
   useSpace?: boolean;
   useEnter?: boolean;
@@ -62,6 +62,8 @@ export interface KeyingConfig {
   focusManager?: KeyingFocusManager;
   selectors?: { row: string, cell: string };
 
+  moveOnTab?: boolean;
+
   onSpace?: (comp: AlloyComponent) => Option<boolean>;
   onDown?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
   onUp?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
@@ -69,6 +71,7 @@ export interface KeyingConfig {
   onRight?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
   onEnter?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
   onEscape?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+  onShiftEnter?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
   useTabstopAt?: (comp: AlloyComponent) => Option<boolean>;
 }
 // TODO: Morgan, perhaps try a Partial<Record <'mode', KeyingModes>>

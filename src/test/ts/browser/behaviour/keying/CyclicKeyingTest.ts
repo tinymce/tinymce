@@ -57,7 +57,7 @@ UnitTest.asynctest('Cyclic Keying Test', function () {
                 height: '20px'
               }
             },
-            containerBehaviours: Objects.wrapAll([
+            containerBehaviours: Behaviour.derive([
               Tabstopping.config({ }),
               Focusing.config({ })
             ])

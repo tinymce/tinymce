@@ -8,7 +8,7 @@ export interface PinchingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: PinchingConfig) => { [key: string]: (any) => any };
 }
 
-export interface PinchingConfig extends Behaviour.AlloyBehaviourConfig {
+export interface PinchingConfig {
   onPinch: (element: SugarElement, changeX: number, changeY: number) => void;
   onPunch: (element: SugarElement, changeX: number, changeY: number) => void;
 }

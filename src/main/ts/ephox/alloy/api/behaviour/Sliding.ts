@@ -4,6 +4,7 @@ import * as SlidingApis from '../../behaviour/sliding/SlidingApis';
 import SlidingSchema from '../../behaviour/sliding/SlidingSchema';
 import * as SlidingState from '../../behaviour/sliding/SlidingState';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
 export interface SlidingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: SlidingConfig) => { [key: string]: (any) => any };
@@ -19,7 +20,7 @@ export interface SlidingBehaviour extends Behaviour.AlloyBehaviour {
   disableTransitions?: (component: AlloyComponent) => void;
 }
 
-export interface SlidingConfig extends Behaviour.AlloyBehaviourConfig {
+export interface SlidingConfig {
   dimension: {
     property: string
   };
@@ -27,17 +28,21 @@ export interface SlidingConfig extends Behaviour.AlloyBehaviourConfig {
   openClass: string;
   shrinkingClass: string;
   growingClass: string;
-  onShrunk: () => void;
-  onGrown: () => void;
+  onStartGrow?: (component: AlloyComponent) => void;
+  getAnimationRoot?: (component: AlloyComponent) => SugarElement;
+  onStartShrink?: (component: AlloyComponent) => void;
+  onShrunk?: (component: AlloyComponent) => void;
+  onGrown?: (component: AlloyComponent) => void;
+  expanded?: boolean;
 }
 
-const Sliding: SlidingBehaviour = Behaviour.create({
+const Sliding = Behaviour.create({
   fields: SlidingSchema,
   name: 'sliding',
   active: ActiveSliding,
   apis: SlidingApis,
   state: SlidingState
-});
+}) as SlidingBehaviour;
 
 export {
   Sliding
