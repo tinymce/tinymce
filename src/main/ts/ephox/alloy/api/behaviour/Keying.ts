@@ -41,8 +41,11 @@ export interface KeyingFocusManager {
 }
 
 // TODO: dynamic type, TODO: group these into their KeyingModes
+export type KeyingModes = 'acyclic' | 'cyclic' | 'flow' | 'flatgrid' | 'matrix' | 'execution' | 'menu' | 'special';
+
 export interface KeyingConfig {
   mode: KeyingModes;
+
   selector?: string;
   visibilitySelector?: string;
 
@@ -52,11 +55,14 @@ export interface KeyingConfig {
   };
   getInitial?: (chooser) => Option<SugarElement>;
   execute?: (chooser, simulatedEvent, focused) => boolean;
+  executeOnMove?: boolean;
 
+  cycles?: boolean;
   useSpace?: boolean;
   useEnter?: boolean;
   useControlEnter?: boolean;
-  executeOnMove?: boolean;
+  captureTab?: boolean;
+
   focusIn?: (comp: AlloyComponent, keyInfo: KeyingInfo) => void;
 
   focusManager?: KeyingFocusManager;
@@ -75,8 +81,77 @@ export interface KeyingConfig {
   useTabstopAt?: (comp: AlloyComponent) => Option<boolean>;
 }
 
-// TODO: Morgan, perhaps try a Partial<Record <'mode', KeyingModes>>
-export type KeyingModes = 'acyclic' | 'cyclic' | 'flow' | 'flatgrid' | 'matrix' | 'execution' | 'menu' | 'special';
+// This commented out section is a more concise schema of what should be the configuration item, based on the KeyingConfig.mode
+// eg: if mode = special, then we expect the config to only contain members defined in SpecialConfig
+// The current implementation does a catch all KeyingConfig, which defeats the point of typescript.
+// I have not found a pattern that does this kind of evaluation matching, maybe we have to re-structure the config tree
+
+//           const config = {
+//             mode: 'special',
+//             cfg: SpecialConfig
+//           }
+
+//
+// export interface SpecialConfig {
+//   onSpace: (comp: AlloyComponent) => Option<boolean>;
+//   onEnter: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+//   onShiftEnter: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+//   onLeft: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+//   onRight: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+//   onTab: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+//   onShiftTab: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+//   onUp: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+//   onDown: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+//   onEscape: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+//   focusIn?: (comp: AlloyComponent, keyInfo: KeyingInfo) => void;
+// }
+
+// export interface MenuConfig {
+//   selector: string;
+//   execute: (chooser, simulatedEvent, focused) => boolean;
+//   moveOnTab?: boolean;
+// }
+
+// export interface ExecutionConfig {
+//   execute: (chooser, simulatedEvent, focused) => boolean;
+//   useSpace?: boolean;
+//   useEnter?: boolean;
+//   useControlEnter?: boolean;
+//   useDown?: boolean;
+// }
+// export interface MatrixConfig<T> {
+//   selectors: { row: string, cell: string };
+//   cycles: boolean;
+//   previousSelector: Option<T>;
+//   execute: (chooser, simulatedEvent, focused) => boolean;
+// }
+// export interface FlatgridConfig {
+//   selector: string;
+//   execute: (chooser, simulatedEvent, focused) => boolean;
+//   onEscape: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+//   captureTab: boolean;
+// }
+// export interface FlowConfig {
+//   selector: string;
+//   getInitial: (chooser) => Option<SugarElement>;
+//   execute: (chooser, simulatedEvent, focused) => boolean;
+//   executeOnMove: boolean;
+// }
+// export interface TabbingConfig {
+//   onEscape: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+//   onEnter: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+//   selector: string;
+//   visibilitySelector: string;
+//   firstTabstop: any;
+//   useTabstopAt: (comp: AlloyComponent) => Option<boolean>;
+// }
+// export interface AcyclicConfig extends TabbingConfig {
+//   cyclic: 'false';
+// }
+
+// export interface CyclicConfig extends TabbingConfig {
+//   cyclic: 'true';
+// }
 
 const Keying = Behaviour.createModes({
   branchKey: 'mode',
