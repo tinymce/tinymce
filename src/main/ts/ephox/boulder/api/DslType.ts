@@ -1,10 +1,10 @@
 import { Processor, ValueValidator } from '../core/ValueProcessor';
-import { FieldProcessorAdt, SetOfTypeProcessor, ArrOfTypeProcessor, ObjOfTypeProcessor, ItemOfTypeProcessor, ChoiceOfTypeProcessor, ThunkTypeProcessor, FuncTypeProcessor } from '../format/TypeTokens';
+import { TypeProcessorAdt, SetOfTypeProcessor, ArrOfTypeProcessor, ObjOfTypeProcessor, ItemOfTypeProcessor, ChoiceOfTypeProcessor, ThunkTypeProcessor, FuncTypeProcessor, FieldProcessorAdt } from '../format/TypeTokens';
 
 // NOTE: This provides cata functions for the ADTs in TypeTokens
 // This Typing is based on whats in TreeTest.ts, it may not be 100% correct, update as necessary.
 
-const foldType = function <T> (subject: FieldProcessorAdt,
+const foldType = function <T> (subject: TypeProcessorAdt,
                                onSet: SetOfTypeProcessor,
                                onArr: ArrOfTypeProcessor,
                                onObj: ObjOfTypeProcessor,
