@@ -28,11 +28,11 @@ const isRtl = function (element: Node) {
   return DOMUtils.DOM.getStyle(element, 'direction', true) === 'rtl' || Bidi.hasStrongRtl(element.textContent);
 };
 
-const findInlineParents = function (isInlineTarget: boolean, rootNode: Node, pos: CaretPosition) {
+const findInlineParents = function (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: CaretPosition) {
   return Arr.filter(DOMUtils.DOM.getParents(pos.container(), '*', rootNode), isInlineTarget);
 };
 
-const findRootInline = function (isInlineTarget: boolean, rootNode: Node, pos: CaretPosition) {
+const findRootInline = function (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: CaretPosition) {
   const parents = findInlineParents(isInlineTarget, rootNode, pos);
   return Option.from(parents[parents.length - 1]);
 };
