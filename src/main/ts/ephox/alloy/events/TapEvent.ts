@@ -80,7 +80,7 @@ const monitor = function (settings) {
     { key: NativeEvents.touchend(), value: handleTouchend }
   ]);
 
-  const fireIfReady = function (event, type) {
+  const fireIfReady = function (event, type): Option<any> {
     return Objects.readOptFrom(handlers, type).bind(function (handler) {
       return handler(event);
     });

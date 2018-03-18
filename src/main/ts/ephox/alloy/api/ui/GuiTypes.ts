@@ -12,7 +12,7 @@ const premade = function (comp: AlloyComponent): AlloyPremadeComponent {
   return Objects.wrap(premadeTag, comp);
 };
 
-const getPremade = function (spec) {
+const getPremade = function (spec): Option<AlloyComponent> {
   return Objects.readOptFrom(spec, premadeTag);
 };
 
