@@ -17,7 +17,7 @@ const readOpt = function <T>(key: string): ({}) => Option <T> {
   return ObjReader.readOpt(key);
 };
 
-const readOr = function (key: string, fallback: any): ({}) => any {
+const readOr = function <T>(key: string, fallback: T): ({}) => T {
   return ObjReader.readOr(key, fallback);
 };
 
