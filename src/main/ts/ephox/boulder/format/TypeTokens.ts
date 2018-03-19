@@ -1,8 +1,8 @@
 import { Adt } from '@ephox/katamari';
 import { AdtInterface } from '../alien/AdtDefinition';
-import { Processor } from 'ephox/boulder/api/Main';
-import { ValueValidator } from 'ephox/boulder/core/ValueProcessor';
-import { FieldPresenceAdt } from 'ephox/boulder/api/FieldPresence';
+import { Processor } from '../api/Main';
+import { ValueValidator } from '../core/ValueProcessor';
+import { FieldPresenceAdt } from '../api/FieldPresence';
 
 export type SetOfTypeProcessor = (validator: ValueValidator, valueType: Processor) => any;
 export type ArrOfTypeProcessor = (prop: Processor) => any;
