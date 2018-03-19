@@ -148,7 +148,7 @@ const getSetKeys = function (obj) {
   });
 };
 
-const objOfOnly = function (fields: ValueProcessorAdt[]) {
+const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
   const delegate = objOf(fields);
 
   const fieldNames = Arr.foldr(fields, function (acc, f: ValueProcessorAdt) {
@@ -264,7 +264,7 @@ const setOf = function (validator: ValueValidator, prop: Processor): Processor {
 };
 
 // retriever is passed in. See funcOrDie in ValueSchema
-const func = function (args, schema, retriever) {
+const func = function (args: string[], schema: Processor, retriever): Processor {
   const delegate = value(function (f, strength) {
     return Type.isFunction(f) ? Result.value(function () {
       const gArgs = Array.prototype.slice.call(arguments, 0);
@@ -285,7 +285,7 @@ const func = function (args, schema, retriever) {
   };
 };
 
-const thunk = function (desc, processor) {
+const thunk = function (desc: string, processor: () => Processor): Processor {
   const getP = Thunk.cached(function () {
     return processor();
   });
