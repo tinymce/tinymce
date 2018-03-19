@@ -6,7 +6,7 @@ import { DomEvent, Node, Traverse } from '@ephox/sugar';
 import Keys from '../alien/Keys';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as TapEvent from './TapEvent';
-import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarEvent } from '../alien/TypeDefinitions';
 
 const isDangerous = function (event) {
   // Will trigger the Back button in the browser

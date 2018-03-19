@@ -2,8 +2,8 @@ import * as Behaviour from './Behaviour';
 import * as NoState from '../../behaviour/common/NoState';
 import * as ActiveStreaming from '../../behaviour/streaming/ActiveStreaming';
 import StreamingSchema from '../../behaviour/streaming/StreamingSchema';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SimulatedEvent } from '../../events/SimulatedEvent';
 
 export interface StreamingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: StreamingConfig) => { [key: string]: (any) => any };

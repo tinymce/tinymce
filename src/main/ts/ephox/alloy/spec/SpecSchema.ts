@@ -4,9 +4,9 @@ import { JSON as Json } from '@ephox/sand';
 
 import * as Fields from '../data/Fields';
 import * as UiSubstitutes from './UiSubstitutes';
-import { AlloyComponentsSpec, RawDomSchema, AlloyMixedSpec } from 'ephox/alloy/api/ui/Sketcher';
-import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
-import { AdtInterface } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponentsSpec, RawDomSchema, AlloyMixedSpec } from '../api/ui/Sketcher';
+import { EventHandlerConfig } from '../api/events/AlloyEvents';
+import { AdtInterface } from '../alien/TypeDefinitions';
 
 export interface SpecSchemaStruct {
   components: () => AlloyComponentsSpec;

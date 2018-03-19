@@ -4,8 +4,8 @@ import * as RepresentApis from '../../behaviour/representing/RepresentApis';
 import RepresentSchema from '../../behaviour/representing/RepresentSchema';
 import * as RepresentState from '../../behaviour/representing/RepresentState';
 import { FieldProcessorAdt } from '@ephox/boulder';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { Result } from '@ephox/boulder/node_modules/@ephox/katamari';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { Result } from '@ephox/katamari';
 
 export interface RepresentingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: RepresentingConfig) => { [key: string]: (any) => any };

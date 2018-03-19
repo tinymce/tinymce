@@ -1,12 +1,12 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Obj } from '@ephox/katamari';
-import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
+import { EventHandlerConfig } from '../../api/events/AlloyEvents';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { AlloyBehaviourSchema } from 'ephox/alloy/api/behaviour/Behaviour';
+import { AlloyBehaviourSchema } from '../../api/behaviour/Behaviour';
 
 export interface RawElementSchema {
   tag: string;

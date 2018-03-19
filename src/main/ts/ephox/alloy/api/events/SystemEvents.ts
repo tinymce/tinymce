@@ -1,7 +1,7 @@
 import * as NativeEvents from './NativeEvents';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { StringConstant } from 'ephox/alloy/alien/TypeDefinitions';
+import { StringConstant } from '../../alien/TypeDefinitions';
 
 const alloy = { tap: Fun.constant('alloy.tap') };
 

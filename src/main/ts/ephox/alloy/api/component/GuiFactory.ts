@@ -1,8 +1,8 @@
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun, Merger, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { RawDomSchema, SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { RawDomSchema, SketchSpec } from '../../api/ui/Sketcher';
 
 import DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';

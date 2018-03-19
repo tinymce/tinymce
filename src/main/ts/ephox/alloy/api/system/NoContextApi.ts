@@ -1,7 +1,7 @@
 import { SystemApi, AlloySystemApi } from './SystemApi';
 import * as AlloyLogger from '../../log/AlloyLogger';
 import { Fun } from '@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const NoContextApi = function (getComp?: () => AlloyComponent): AlloySystemApi {
   const fail = function (event) {

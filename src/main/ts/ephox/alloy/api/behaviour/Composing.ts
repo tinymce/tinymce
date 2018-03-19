@@ -2,8 +2,8 @@ import * as Behaviour from './Behaviour';
 import * as ComposeApis from '../../behaviour/composing/ComposeApis';
 import { ComposeSchema } from '../../behaviour/composing/ComposeSchema';
 import { Option } from '@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SugarElement } from '../../alien/TypeDefinitions';
 
 export interface ComposingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: ComposingConfig) => { [key: string]: (any) => any };

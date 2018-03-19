@@ -1,8 +1,8 @@
 import { Arr, Option } from '@ephox/katamari';
 import { Body, Insert, Remove, Traverse } from '@ephox/sugar';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { GuiSystem } from 'ephox/alloy/api/system/Gui';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { GuiSystem } from '../../api/system/Gui';
 
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as SystemEvents from '../events/SystemEvents';

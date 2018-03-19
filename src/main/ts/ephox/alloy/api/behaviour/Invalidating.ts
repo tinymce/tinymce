@@ -4,9 +4,9 @@ import * as ActiveInvalidate from '../../behaviour/invalidating/ActiveInvalidate
 import * as InvalidateApis from '../../behaviour/invalidating/InvalidateApis';
 import InvalidateSchema from '../../behaviour/invalidating/InvalidateSchema';
 import { Future, Result, Option } from '@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { Component } from 'ephox/alloy/api/Main';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { Component } from '../../api/Main';
+import { SugarElement } from '../../alien/TypeDefinitions';
 
 export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour {
   config: <T>(config: InvalidatingConfig<T>) => { [key: string]: (any) => any };

@@ -1,7 +1,7 @@
 import { Option } from '@ephox/katamari';
 import { Element, Node, Traverse } from '@ephox/sugar';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SugarElement } from './TypeDefinitions';
+import { AlloyComponent } from '../api/component/ComponentApi';
 
 // Note, elementFromPoint gives a different answer than caretRangeFromPoint
 const elementFromPoint = function (doc, x, y): Option<SugarElement> {

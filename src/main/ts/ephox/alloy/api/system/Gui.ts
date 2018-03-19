@@ -1,7 +1,7 @@
 import { Arr, Fun, Result } from '@ephox/katamari';
 import { Compare, Focus, Node, Remove, Traverse } from '@ephox/sugar';
-import { SugarElement, SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SugarElement, SugarEvent } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 import * as Debugging from '../../debugging/Debugging';
 import * as DescribedHandler from '../../events/DescribedHandler';

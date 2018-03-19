@@ -5,7 +5,7 @@ import * as Fields from '../data/Fields';
 import * as DomDefinition from '../dom/DomDefinition';
 import * as DomModification from '../dom/DomModification';
 import * as AlloyTags from '../ephemera/AlloyTags';
-import { SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
+import { SketchSpec } from '../api/ui/Sketcher';
 
 const toInfo = function (spec): Result<SketchSpec, any> {
   return ValueSchema.asStruct('custom.definition', ValueSchema.objOfOnly([

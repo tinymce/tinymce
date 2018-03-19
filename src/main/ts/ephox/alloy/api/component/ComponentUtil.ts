@@ -1,6 +1,6 @@
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { Option } from '@ephox/boulder/node_modules/@ephox/katamari';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { Option } from '@ephox/katamari';
 
 const toElem = function (component: AlloyComponent): SugarElement {
   return component.element();

@@ -1,6 +1,6 @@
 import { FieldProcessorAdt } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
-import { isDisabled } from 'ephox/alloy/behaviour/disabling/DisableApis';
+import { isDisabled } from '../behaviour/disabling/DisableApis';
 import { value } from '@ephox/boulder/lib/main/ts/ephox/boulder/core/ValueProcessor';
 
 // TODO move these to the correct village

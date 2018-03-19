@@ -1,8 +1,8 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Merger } from '@ephox/katamari';
 import { Element, Html, Node, Traverse } from '@ephox/sugar';
-import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
-import { RawElementSchema } from 'ephox/alloy/api/ui/Sketcher';
+import { EventHandlerConfig } from '../../api/events/AlloyEvents';
+import { RawElementSchema } from '../../api/ui/Sketcher';
 
 const getAttrs = function (elem) {
   const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];

@@ -2,7 +2,7 @@ import * as Behaviour from './Behaviour';
 import * as ActiveToggle from '../../behaviour/toggling/ActiveToggle';
 import * as ToggleApis from '../../behaviour/toggling/ToggleApis';
 import ToggleSchema from '../../behaviour/toggling/ToggleSchema';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface TogglingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: TogglingConfig) => { [key: string]: (any) => any };

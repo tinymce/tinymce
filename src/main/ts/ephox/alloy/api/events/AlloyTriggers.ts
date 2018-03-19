@@ -1,9 +1,9 @@
 import { Fun, Merger, Obj } from '@ephox/katamari';
 
 import * as SystemEvents from './SystemEvents';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { SimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { SimulatedEvent } from '../../events/SimulatedEvent';
 
 const emit = function (component: AlloyComponent, event: string): void {
   dispatchWith(component, component.element(), event, { });

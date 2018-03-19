@@ -3,10 +3,10 @@ import ActiveSandbox from '../../behaviour/sandboxing/ActiveSandbox';
 import * as SandboxApis from '../../behaviour/sandboxing/SandboxApis';
 import SandboxSchema from '../../behaviour/sandboxing/SandboxSchema';
 import * as SandboxState from '../../behaviour/sandboxing/SandboxState';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { Option } from '@ephox/boulder/node_modules/@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { Option } from '@ephox/katamari';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SketchSpec } from '../../api/ui/Sketcher';
 
 export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: SandboxingConfig) => { [key: string]: (any) => any };

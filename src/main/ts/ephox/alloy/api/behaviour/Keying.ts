@@ -2,11 +2,11 @@ import * as Behaviour from './Behaviour';
 import KeyboardBranches from '../../behaviour/keyboard/KeyboardBranches';
 import * as KeyingState from '../../behaviour/keyboard/KeyingState';
 import { Objects } from '@ephox/boulder';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { Option } from '@ephox/boulder/node_modules/@ephox/katamari';
-import { SimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
-import { FocusManagers } from 'ephox/alloy/api/Main';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { Option } from '@ephox/katamari';
+import { SimulatedEvent } from '../../events/SimulatedEvent';
+import { FocusManagers } from '../../api/Main';
 
 export interface KeyingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: KeyingConfig) => { [key: string]: (any) => any };

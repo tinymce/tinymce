@@ -8,8 +8,8 @@ import ForeignCache from '../../foreign/ForeignCache';
 import * as Tagger from '../../registry/Tagger';
 import * as GuiFactory from '../component/GuiFactory';
 import * as Gui from './Gui';
-import { SugarElement, SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SugarElement, SugarEvent } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface ForeignGuiSpec {
   root: () => SugarElement;

@@ -1,7 +1,7 @@
 import * as Behaviour from './Behaviour';
 import * as SwapApis from '../../behaviour/swapping/SwapApis';
 import SwapSchema from '../../behaviour/swapping/SwapSchema';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface SwappingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: SwappingConfig) => { [key: string]: (any) => any };

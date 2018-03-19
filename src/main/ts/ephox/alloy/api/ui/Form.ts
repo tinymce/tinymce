@@ -1,6 +1,6 @@
 import { Arr, Merger, Obj, Option } from '@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { CompositeSketch, SketchSpec, RawDomSchema } from 'ephox/alloy/api/ui/Sketcher';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { CompositeSketch, SketchSpec, RawDomSchema } from '../../api/ui/Sketcher';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';

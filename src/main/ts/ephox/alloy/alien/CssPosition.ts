@@ -1,6 +1,6 @@
 import { Adt, Arr, Fun } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
-import { PositionCoordinates, AdtInterface } from 'ephox/alloy/alien/TypeDefinitions';
+import { PositionCoordinates, AdtInterface } from './TypeDefinitions';
 
 export interface CssPositionAdt extends AdtInterface {
 

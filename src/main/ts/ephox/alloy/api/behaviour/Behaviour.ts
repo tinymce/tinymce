@@ -1,7 +1,7 @@
 import { FieldSchema, Objects, Processor, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { ComposingCreateConfig } from 'ephox/alloy/api/behaviour/Composing';
-import { DockingBehaviour } from 'ephox/alloy/api/behaviour/Docking';
+import { ComposingCreateConfig } from '../../api/behaviour/Composing';
+import { DockingBehaviour } from '../../api/behaviour/Docking';
 
 import * as Behaviour from '../../behaviour/common/Behaviour';
 import * as NoState from '../../behaviour/common/NoState';

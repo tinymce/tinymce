@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { StringConstant } from 'ephox/alloy/alien/TypeDefinitions';
+import { StringConstant } from '../../alien/TypeDefinitions';
 
 const contextmenu = Fun.constant('contextmenu') as StringConstant;
 const touchstart = Fun.constant('touchstart') as StringConstant;

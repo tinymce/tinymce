@@ -5,9 +5,9 @@ import * as Fields from '../data/Fields';
 import * as UiSubstitutes from '../spec/UiSubstitutes';
 import * as PartSubstitutes from './PartSubstitutes';
 import * as PartType from './PartType';
-import { SketchSpec, RawDomSchema } from 'ephox/alloy/api/ui/Sketcher';
-import { SpecSchemaStruct } from 'ephox/alloy/spec/SpecSchema';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SketchSpec, RawDomSchema } from '../api/ui/Sketcher';
+import { SpecSchemaStruct } from '../spec/SpecSchema';
+import { AlloyComponent } from '../api/component/ComponentApi';
 
 export interface GeneratedParts {
   [key: string]: (config: RawDomSchema) => GeneratedSinglePart;

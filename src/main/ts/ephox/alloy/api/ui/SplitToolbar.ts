@@ -12,7 +12,7 @@ import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const setStoredGroups = function (bar, storedGroups) {
   const bGroups = Arr.map(storedGroups, function (g) { return GuiFactory.premade(g); });

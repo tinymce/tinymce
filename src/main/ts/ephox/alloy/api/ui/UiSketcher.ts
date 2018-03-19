@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
-import { AdtInterface } from 'ephox/alloy/alien/TypeDefinitions';
-import { RawDomSchema, RawDomSchemaUid, SketchSpec, CompositeSketch } from 'ephox/alloy/api/ui/Sketcher';
+import { AdtInterface } from '../../alien/TypeDefinitions';
+import { RawDomSchema, RawDomSchemaUid, SketchSpec, CompositeSketch } from '../../api/ui/Sketcher';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Tagger from '../../registry/Tagger';

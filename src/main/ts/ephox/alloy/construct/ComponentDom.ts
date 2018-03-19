@@ -4,7 +4,7 @@ import { JSON as Json } from '@ephox/sand';
 
 import * as ObjIndex from '../alien/ObjIndex';
 import * as DomModification from '../dom/DomModification';
-import { DomDefinition } from 'ephox/alloy/dom/DomDefinition';
+import { DomDefinition } from '../dom/DomDefinition';
 
 const behaviourDom = function (name, modification) {
   return {

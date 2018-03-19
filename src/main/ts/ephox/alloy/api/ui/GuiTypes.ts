@@ -2,8 +2,8 @@ import { Objects } from '@ephox/boulder';
 import { Fun, Id, Option } from '@ephox/katamari';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { AlloyPremadeComponent } from 'ephox/alloy/api/component/GuiFactory';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloyPremadeComponent } from '../../api/component/GuiFactory';
 
 const premadeTag = Id.generate('alloy-premade');
 const _apiConfig = Id.generate('api');

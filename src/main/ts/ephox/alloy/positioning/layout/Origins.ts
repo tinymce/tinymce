@@ -3,7 +3,7 @@ import { Adt, Option } from '@ephox/katamari';
 import * as OriginsUI from '../view/OriginsUI';
 import * as Reposition from '../view/Reposition';
 import * as Direction from './Direction';
-import { AdtInterface } from 'ephox/alloy/alien/TypeDefinitions';
+import { AdtInterface } from '../../alien/TypeDefinitions';
 
 export interface Origins extends AdtInterface {
   // TODO

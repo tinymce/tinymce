@@ -1,8 +1,8 @@
 import { Contracts, Result } from '@ephox/katamari';
-import { AlloySystemApi } from 'ephox/alloy/api/system/SystemApi';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
-import { AlloyBehaviourConfig, AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
+import { AlloySystemApi } from '../../api/system/SystemApi';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { EventHandlerConfig } from '../../api/events/AlloyEvents';
+import { AlloyBehaviourConfig, AlloyBehaviour } from '../../api/behaviour/Behaviour';
 
 export interface AlloyComponent {
   getSystem: () => AlloySystemApi;

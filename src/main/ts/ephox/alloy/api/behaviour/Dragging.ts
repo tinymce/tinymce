@@ -1,7 +1,7 @@
 import { Option, Struct } from '@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { CoordAdt } from 'ephox/alloy/api/data/DragCoord';
-import { EventHandlerConfig } from 'ephox/alloy/api/events/AlloyEvents';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { CoordAdt } from '../../api/data/DragCoord';
+import { EventHandlerConfig } from '../../api/events/AlloyEvents';
 
 import * as DraggingBranches from '../../behaviour/dragging/DraggingBranches';
 import * as DragState from '../../dragging/common/DragState';

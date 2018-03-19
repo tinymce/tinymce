@@ -1,6 +1,6 @@
 import * as Behaviour from './Behaviour';
 import * as ReplaceApis from '../../behaviour/replacing/ReplaceApis';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface ReplacingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: ReplacingConfig) => { [key: string]: (any) => any };

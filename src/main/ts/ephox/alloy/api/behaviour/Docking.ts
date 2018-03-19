@@ -2,7 +2,7 @@ import * as Behaviour from './Behaviour';
 import * as ActiveDocking from '../../behaviour/docking/ActiveDocking';
 import DockingSchema from '../../behaviour/docking/DockingSchema';
 import { Option } from '@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface DockingBehaviour extends Behaviour.AlloyBehaviour {
   config: <T>(config: DockingConfig<T>) => { [key: string]: (any) => any };

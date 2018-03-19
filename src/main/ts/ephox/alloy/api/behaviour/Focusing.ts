@@ -2,7 +2,7 @@ import * as Behaviour from './Behaviour';
 import * as ActiveFocus from '../../behaviour/focusing/ActiveFocus';
 import * as FocusApis from '../../behaviour/focusing/FocusApis';
 import FocusSchema from '../../behaviour/focusing/FocusSchema';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface FocusingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: FocusingConfig) => { [key: string]: (any) => any };

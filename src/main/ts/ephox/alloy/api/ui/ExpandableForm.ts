@@ -8,7 +8,7 @@ import { Sliding } from '../behaviour/Sliding';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { Form } from './Form';
 import * as Sketcher from './Sketcher';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const runOnExtra = function (detail, operation) {
   return function (anyComp) {

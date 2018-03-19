@@ -6,7 +6,7 @@ import * as Behaviour from '../behaviour/Behaviour';
 import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { CompositeSketch, RawDomSchema, composite } from './Sketcher';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface ToolbarSketch extends CompositeSketch {
   setGroups: (toolbar: AlloyComponent, groups: RawDomSchema[]) => void;

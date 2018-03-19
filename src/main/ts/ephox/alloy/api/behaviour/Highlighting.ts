@@ -1,8 +1,8 @@
 import * as Behaviour from './Behaviour';
 import * as HighlightApis from '../../behaviour/highlighting/HighlightApis';
 import HighlightSchema from '../../behaviour/highlighting/HighlightSchema';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 
 export interface HighlightingBehaviour extends Behaviour.AlloyBehaviour {

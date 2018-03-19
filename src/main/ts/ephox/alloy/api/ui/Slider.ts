@@ -1,4 +1,4 @@
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 import SliderParts from '../../ui/slider/SliderParts';
 import { SliderSchema } from '../../ui/slider/SliderSchema';

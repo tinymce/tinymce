@@ -1,7 +1,7 @@
 import { Contracts, Result } from '@ephox/katamari';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SketchSpec } from '../../api/ui/Sketcher';
 
 export interface AlloySystemApi {
   addToGui: (AlloyComponent) => void;

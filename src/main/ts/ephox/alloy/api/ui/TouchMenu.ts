@@ -22,7 +22,7 @@ import * as SystemEvents from '../events/SystemEvents';
 import { InlineView } from './InlineView';
 import { Menu } from './Menu';
 import * as Sketcher from './Sketcher';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 type TouchHoverState = (AlloyComponent) => void;
 
