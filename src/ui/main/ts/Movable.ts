@@ -218,7 +218,9 @@ export default {
       return value;
     }
 
-    if (self.settings.constrainToViewport) {
+    const uiContainer = UiContainer.getUiContainer(self);
+    // Fix the floatMenu position issue, skip constraint when using a ui container
+    if (!uiContainer && self.settings.constrainToViewport) {
       const viewPortRect = getViewPortRect(this);
       const layoutRect = self.layoutRect();
 
@@ -226,7 +228,6 @@ export default {
       y = constrain(y, viewPortRect.h + viewPortRect.y, layoutRect.h);
     }
 
-    const uiContainer = UiContainer.getUiContainer(self);
     if (uiContainer && isStatic(uiContainer) && !isFixed(self)) {
       x -= uiContainer.scrollLeft;
       y -= uiContainer.scrollTop;

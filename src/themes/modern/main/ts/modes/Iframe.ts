@@ -55,7 +55,12 @@ const editAreaContainer = function (editor) {
 };
 
 const render = function (editor, theme, args) {
-  let panel, resizeHandleCtrl, startSize;
+  let panel, toolbarPanel, standaloneToolbarContainer, resizeHandleCtrl, startSize;
+
+  const fixedToolbarContainer = Settings.getFixedToolbarContainer(editor);
+  if (fixedToolbarContainer) {
+    standaloneToolbarContainer = DOM.select(fixedToolbarContainer)[0];
+  }
 
   if (Settings.isSkinDisabled(editor) === false && args.skinUiCss) {
     DOM.styleSheetLoader.load(args.skinUiCss, SkinLoaded.fireSkinLoaded(editor));
@@ -69,21 +74,23 @@ const render = function (editor, theme, args) {
     classes: 'tinymce',
     style: 'visibility: hidden',
     layout: 'stack',
-    border: 1,
-    items: [
-      {
-        type: 'container',
-        classes: 'top-part',
-        items: [
-          Settings.hasMenubar(editor) === false ? null : { type: 'menubar', border: '0 0 1 0', items: Menubar.createMenuButtons(editor) },
-          Toolbar.createToolbars(editor, Settings.getToolbarSize(editor))
-        ]
-      },
-      Sidebar.hasSidebar(editor) ? editAreaContainer(editor) : editArea('1 0 0 0')
-    ]
+    border: 1
   });
 
-  UiContainer.setUiContainer(editor, panel);
+  // Use main panel for toolbar, or create separate panel if needed
+  toolbarPanel = theme.toolbarPanel = standaloneToolbarContainer ? Factory.create(panel.settings) : panel;
+
+  toolbarPanel.add({
+    type: 'container',
+    classes: 'top-part',
+    items: [
+      Settings.hasMenubar(editor) === false ? null : { type: 'menubar', border: '0 0 1 0', items: Menubar.createMenuButtons(editor) },
+      Toolbar.createToolbars(editor, Settings.getToolbarSize(editor))
+    ]
+  });
+  panel.add(Sidebar.hasSidebar(editor) ? editAreaContainer(editor) : editArea('1 0 0 0'));
+
+  UiContainer.setUiContainer(editor, toolbarPanel);
 
   if (Settings.getResize(editor) !== 'none') {
     resizeHandleCtrl = {
@@ -125,6 +132,12 @@ const render = function (editor, theme, args) {
 
   Events.fireBeforeRenderUI(editor);
   editor.on('SwitchMode', switchMode(panel));
+  editor.on('SwitchMode', switchMode(toolbarPanel));
+
+  if (standaloneToolbarContainer) {
+    toolbarPanel.renderTo(standaloneToolbarContainer).reflow();
+  }
+
   panel.renderBefore(args.targetNode).reflow();
 
   if (Settings.isReadOnly(editor)) {
@@ -137,11 +150,18 @@ const render = function (editor, theme, args) {
 
   // Remove the panel when the editor is removed
   editor.on('remove', function () {
+    if (standaloneToolbarContainer) {
+      toolbarPanel.remove();
+      toolbarPanel = null;
+    }
     panel.remove();
     panel = null;
   });
 
   // Add accesibility shortcuts
+  if (standaloneToolbarContainer) {
+    A11y.addKeys(editor, toolbarPanel);
+  }
   A11y.addKeys(editor, panel);
   ContextToolbars.addContextualToolbars(editor);
 
