@@ -1,6 +1,6 @@
 import {
     AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Button, Container, Disabling, Form,
-    Highlighting, Keying, Memento, NativeEvents, Representing
+    Highlighting, Keying, Memento, NativeEvents, Representing, Sketcher
 } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Cell, Option, Singleton } from '@ephox/katamari';
@@ -9,9 +9,9 @@ import { Css, SelectorFilter, SelectorFind, Width } from '@ephox/sugar';
 import Receivers from '../channels/Receivers';
 import SwipingModel from '../model/SwipingModel';
 import Styles from '../style/Styles';
-import UiDomFactory from '../util/UiDomFactory';
+import * as UiDomFactory from '../util/UiDomFactory';
 
-const sketch = function (rawSpec) {
+const sketch = function (rawSpec): Sketcher.RawDomSchema {
   const navigateEvent = 'navigateEvent';
 
   const wrapperAdhocEvents = 'serializer-wrapper-events';
@@ -212,6 +212,6 @@ const sketch = function (rawSpec) {
   };
 };
 
-export default {
+export {
   sketch
 };

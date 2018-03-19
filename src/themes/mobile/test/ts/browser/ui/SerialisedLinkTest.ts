@@ -10,7 +10,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Body, Class, Element, Focus, Traverse } from '@ephox/sugar';
 
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
-import LinkButton from 'tinymce/themes/mobile/ui/LinkButton';
+import * as LinkButton from 'tinymce/themes/mobile/ui/LinkButton';
 
 import GuiSetup from '../../module/test/GuiSetup';
 import TestEditor from '../../module/test/ui/TestEditor';

@@ -1,10 +1,10 @@
-import { Behaviour, Slider, Toggling } from '@ephox/alloy';
+import { Behaviour, Slider, Toggling, Sketcher } from '@ephox/alloy';
 import { Css } from '@ephox/sugar';
 
 import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
-import UiDomFactory from '../util/UiDomFactory';
-import ToolbarWidgets from './ToolbarWidgets';
+import * as UiDomFactory from '../util/UiDomFactory';
+import * as ToolbarWidgets from './ToolbarWidgets';
 
 const BLACK = -1;
 
@@ -77,7 +77,7 @@ const makeSlider = function (spec) {
   });
 };
 
-const makeItems = function (spec) {
+const makeItems = function (spec): Sketcher.SketchSpec[] {
   return [
     makeSlider(spec)
   ];

@@ -1,7 +1,8 @@
 import SizeSlider from './SizeSlider';
-import ToolbarWidgets from './ToolbarWidgets';
+import * as ToolbarWidgets from './ToolbarWidgets';
 import FontSizes from '../util/FontSizes';
-import UiDomFactory from '../util/UiDomFactory';
+import * as UiDomFactory from '../util/UiDomFactory';
+import { Sketcher } from '@ephox/alloy';
 
 const sizes = FontSizes.candidates();
 
@@ -22,7 +23,7 @@ const makeItems = function (spec) {
   ];
 };
 
-const sketch = function (realm, editor) {
+const sketch = function (realm, editor): Sketcher.SketchSpec {
   const spec = {
     onChange (value) {
       FontSizes.apply(editor, value);
@@ -37,7 +38,7 @@ const sketch = function (realm, editor) {
   });
 };
 
-export default {
+export {
   makeItems,
   sketch
 };

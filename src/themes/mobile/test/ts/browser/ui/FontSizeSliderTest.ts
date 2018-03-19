@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { PlatformDetection } from '@ephox/sand';
 import { Body, Class } from '@ephox/sugar';
 
-import FontSizeSlider from 'tinymce/themes/mobile/ui/FontSizeSlider';
+import * as FontSizeSlider from 'tinymce/themes/mobile/ui/FontSizeSlider';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 
 import TestFrameEditor from '../../module/test/ui/TestFrameEditor';
