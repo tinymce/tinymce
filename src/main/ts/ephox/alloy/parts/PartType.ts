@@ -1,17 +1,17 @@
-import { FieldPresence, FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, ValueSchema, DslType } from '@ephox/boulder';
 import { Adt, Fun, Id, Option } from '@ephox/katamari';
 import { DetailedSpec } from '../parts/AlloyParts';
 import { RawDomSchema } from '../api/ui/Sketcher';
 import { AdtInterface } from '../alien/TypeDefinitions';
 
-export type PartType = (spec: { [key: string]: any }) => FieldProcessorAdt;
+export type PartType = (spec: { [key: string]: any }) => DslType.FieldProcessorAdt;
 export interface BuildSpec {
   defaults: () => () => {};
   factory: () => any;
   name: () => string;
   overrides: () => OverrideHandler;
   pname: () => string;
-  schema: () => FieldProcessorAdt[];
+  schema: () => DslType.FieldProcessorAdt[];
 }
 
 export type OverrideHandler = (detail: DetailedSpec, spec?: RawDomSchema, partValidated?: any) => OverrideSpec;

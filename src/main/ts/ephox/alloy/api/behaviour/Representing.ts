@@ -3,7 +3,6 @@ import * as ActiveRepresenting from '../../behaviour/representing/ActiveRepresen
 import * as RepresentApis from '../../behaviour/representing/RepresentApis';
 import RepresentSchema from '../../behaviour/representing/RepresentSchema';
 import * as RepresentState from '../../behaviour/representing/RepresentState';
-import { FieldProcessorAdt } from '@ephox/boulder';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Result } from '@ephox/katamari';
 
