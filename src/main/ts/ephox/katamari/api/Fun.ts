@@ -20,7 +20,7 @@ var constant = function <T>(value?: T): (...x: any[]) => T {
   };
 };
 
-var identity = function <T = any>(x?: T): T {
+var identity = function <T = any>(x: T): T {
   return x;
 };
 
