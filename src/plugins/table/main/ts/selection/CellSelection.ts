@@ -12,13 +12,12 @@ import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin
 import { Fun, Option, Struct } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import {
-    Attr, Compare, Element, Node, Selection, SelectionDirection, Text, Traverse
+    Compare, Element, Selection, SelectionDirection
 } from '@ephox/sugar';
 
 import Util from '../alien/Util';
 import Direction from '../queries/Direction';
 import Ephemera from './Ephemera';
-import { getForcedRootBlock, getForcedRootBlockAttrs } from '../api/Settings';
 
 export default function (editor, lazyResize) {
   const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
@@ -80,48 +79,11 @@ export default function (editor, lazyResize) {
       }
     };
 
-    const checkLast = function (last) {
-      return !Attr.has(last, 'data-mce-bogus') && Node.name(last) !== 'br' && !(Node.isText(last) && Text.get(last).length === 0);
-    };
-
-    const getLast = function () {
-      const body = Element.fromDom(editor.getBody());
-
-      const lastChild = Traverse.lastChild(body);
-
-      const getPrevLast = function (last) {
-        return Traverse.prevSibling(last).bind(function (prevLast) {
-          return checkLast(prevLast) ? Option.some(prevLast) : getPrevLast(prevLast);
-        });
-      };
-
-      return lastChild.bind(function (last) {
-        return checkLast(last) ? Option.some(last) : getPrevLast(last);
-      });
-    };
-
     const keydown = function (event: KeyboardEvent) {
       const wrappedEvent = wrapEvent(event);
       lazyResize().each(function (resize) {
         resize.hideBars();
       });
-
-      if (event.which === 40) {
-        getLast().each(function (last) {
-          if (Node.name(last) === 'table') {
-            if (getForcedRootBlock(editor)) {
-              editor.dom.add(
-                editor.getBody(),
-                getForcedRootBlock(editor),
-                getForcedRootBlockAttrs(editor),
-                '<br/>'
-              );
-            } else {
-              editor.dom.add(editor.getBody(), 'br');
-            }
-          }
-        });
-      }
 
       const rng = editor.selection.getRng();
       const startContainer = Element.fromDom(editor.selection.getStart());

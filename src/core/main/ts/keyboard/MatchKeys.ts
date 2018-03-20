@@ -56,9 +56,7 @@ const action = function (f, ...x: any[]) {
 };
 
 const execute = function (patterns: KeyPattern[], evt: KeyboardEvent) {
-  return Arr.find(match(patterns, evt), (pattern) => {
-    return pattern.action();
-  });
+  return Arr.find(match(patterns, evt), (pattern) => pattern.action());
 };
 
 export default {
