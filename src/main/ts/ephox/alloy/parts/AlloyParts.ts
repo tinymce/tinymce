@@ -1,4 +1,4 @@
-import { FieldPresence, FieldProcessorAdt, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, DslType, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Merger, Obj, Option, Result } from '@ephox/katamari';
 
 import * as Fields from '../data/Fields';
@@ -36,7 +36,7 @@ export interface DetailedSpec extends SpecSchemaStruct {
 }
 
 // TODO: Make more functional if performance isn't an issue.
-const generate = function (owner: string, parts: FieldProcessorAdt[]): GeneratedParts {
+const generate = function (owner: string, parts: DslType.FieldProcessorAdt[]): GeneratedParts {
   const r = { };
   Arr.each(parts, function (part) {
     PartType.asNamedPart(part).each(function (np) {
@@ -72,7 +72,7 @@ const generateOne = function (owner: string, pname: string, config: SketchSpec):
   };
 };
 
-const schemas = function (parts: FieldProcessorAdt[]): FieldProcessorAdt[] {
+const schemas = function (parts: DslType.FieldProcessorAdt[]): DslType.FieldProcessorAdt[] {
   // This actually has to change. It needs to return the schemas for things that will
   // not appear in the components list, which is only externals
   return Arr.bind(parts, function (part) {
@@ -93,11 +93,11 @@ const names = function (parts) {
   return Arr.map(parts, PartType.name);
 };
 
-const substitutes = function (owner: string, detail: DetailedSpec, parts: FieldProcessorAdt[]): { internals: () => {}, externals: () => {} } {
+const substitutes = function (owner: string, detail: DetailedSpec, parts: DslType.FieldProcessorAdt[]): { internals: () => {}, externals: () => {} } {
   return PartSubstitutes.subs(owner, detail, parts);
 };
 
-const components = function (owner: string, detail: DetailedSpec, internals: { [key: string]: FieldProcessorAdt }): SketchSpec[] {
+const components = function (owner: string, detail: DetailedSpec, internals: { [key: string]: DslType.FieldProcessorAdt }): SketchSpec[] {
   return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), internals);
 };
 

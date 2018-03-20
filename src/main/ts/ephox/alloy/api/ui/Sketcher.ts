@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { DslType, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Obj } from '@ephox/katamari';
 import { EventHandlerConfig } from '../../api/events/AlloyEvents';
 
@@ -21,16 +21,16 @@ export type AlloyMixedSpec = RawDomSchema | SketchSpec;
 
 export interface SingleSketch {
   name: () => string;
-  configFields: () => FieldProcessorAdt[];
-  partFields: () => FieldProcessorAdt[];
+  configFields: () => DslType.FieldProcessorAdt[];
+  partFields: () => DslType.FieldProcessorAdt[];
   sketch: (spec: Record<string, any>) => SketchSpec;
   factory: UiSketcher.SingleFactory;
 }
 
 export interface CompositeSketch  {
   name: () => string;
-  configFields: () => FieldProcessorAdt[];
-  partFields: () => FieldProcessorAdt[];
+  configFields: () => DslType.FieldProcessorAdt[];
+  partFields: () => DslType.FieldProcessorAdt[];
   sketch: (spec: Record<string, any>) => SketchSpec;
 
   parts: () => any;
