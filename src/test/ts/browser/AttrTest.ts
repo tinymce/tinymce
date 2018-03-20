@@ -49,7 +49,7 @@ UnitTest.test('AttrTest', function() {
   // passing things that don't have attributes
   checkTypeErr(Element.fromText(''));
   checkTypeErr(Element.fromHtml('<!--a-->'));
-  checkTypeErr(Element.fromDom({}));
+  checkTypeErr(Element.fromDom({} as Node));
 
 
   check('name', 'black', 'blue');
