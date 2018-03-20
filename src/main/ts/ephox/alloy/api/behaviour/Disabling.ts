@@ -17,6 +17,7 @@ export interface DisablingConfig<T> {
     events: (disableConfig, disableState) => any
   };
   disabled: boolean;
+  disableClass?: string;
 }
 
 export interface DisableConfig {

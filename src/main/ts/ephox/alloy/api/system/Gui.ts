@@ -22,13 +22,13 @@ export interface GuiSystem {
   add: (component: AlloyComponent) => void;
   remove: (component: AlloyComponent) => void;
   getByUid: (uid: string) => Result<AlloyComponent, string>;
-  getByDom: (element: SugarElement) => Result<AlloyComponent, string>;
+  getByDom: (element: SugarElement) => Result<AlloyComponent, any>;
 
   addToWorld: (AlloyComponent) => void;
   removeFromWorld: (AlloyComponent) => void;
 
   broadcast: (message: string) => void;
-  broadcastOn: (channels: string, message: string) => void;
+  broadcastOn: (channels: string[], message: any) => void;
 }
 
 const create = function (): GuiSystem {
