@@ -15,6 +15,7 @@ import TrimHtml from 'tinymce/core/dom/TrimHtml';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import * as FilterNode from './html/FilterNode';
 import { Option, Fun } from '@ephox/katamari';
+import Zwsp from 'tinymce/core/text/Zwsp';
 
 const defaultFormat = 'html';
 
@@ -116,7 +117,7 @@ const getContentFromBody = (editor, args, body) => {
   if (args.format === 'raw') {
     content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
   } else if (args.format === 'text') {
-    content = body.innerText || body.textContent;
+    content = Zwsp.trim(body.innerText || body.textContent);
   } else if (args.format === 'tree') {
     return editor.serializer.serialize(body, args);
   } else {
