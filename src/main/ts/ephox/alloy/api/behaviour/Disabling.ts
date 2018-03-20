@@ -2,21 +2,21 @@ import * as Behaviour from './Behaviour';
 import * as ActiveDisable from '../../behaviour/disabling/ActiveDisable';
 import * as DisableApis from '../../behaviour/disabling/DisableApis';
 import DisableSchema from '../../behaviour/disabling/DisableSchema';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 
-export interface DisableBehaviour extends AlloyBehaviour {
-  config: (DisablingConfig) => { key: string, value: any };
-  enable?: (component, disableConfig?, disableState?) => void;
-  disable?: (component, disableConfig?, disableState?) => void;
-  isDisabled?: (component) => boolean;
-  onLoad?: (component, disableConfig, disableState) => void;
+export interface DisableBehaviour extends Behaviour.AlloyBehaviour {
+  config: <T>(config: DisablingConfig<T>) => { [key: string]: (any) => any };
+  enable: (component, disableConfig?, disableState?) => void;
+  disable: (component, disableConfig?, disableState?) => void;
+  isDisabled: (component) => boolean;
+  onLoad: (component, disableConfig, disableState) => void;
 }
 
-export interface DisablingConfig<T> extends AlloyBehaviourConfig {
-  active: {
+export interface DisablingConfig<T> {
+  active?: {
     exhibit: (base: {}, disableConfig: {DisableConfig}, disableState?) => any,
     events: (disableConfig, disableState) => any
   };
+  disabled: boolean;
 }
 
 export interface DisableConfig {
@@ -24,12 +24,12 @@ export interface DisableConfig {
   disableClass?: () => string;
 }
 
-const Disabling: DisableBehaviour = Behaviour.create({
+const Disabling = Behaviour.create({
   fields: DisableSchema,
   name: 'disabling',
   active: ActiveDisable,
   apis: DisableApis
-});
+}) as DisableBehaviour;
 
 export {
   Disabling

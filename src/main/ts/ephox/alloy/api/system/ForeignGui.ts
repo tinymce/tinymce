@@ -1,5 +1,5 @@
 import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Options } from '@ephox/katamari';
+import { Arr, Fun, Options, Option } from '@ephox/katamari';
 import { DomEvent, Insert } from '@ephox/sugar';
 
 import * as DescribedHandler from '../../events/DescribedHandler';
@@ -8,6 +8,14 @@ import ForeignCache from '../../foreign/ForeignCache';
 import * as Tagger from '../../registry/Tagger';
 import * as GuiFactory from '../component/GuiFactory';
 import * as Gui from './Gui';
+import { SugarElement, SugarEvent } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+
+export interface ForeignGuiSpec {
+  root: () => SugarElement;
+  dispatchers: any[];
+  insertion?: (root: AlloyComponent, system: Gui.GuiSystem) => void;
+}
 
 const schema = ValueSchema.objOfOnly([
   FieldSchema.strict('root'),
@@ -87,7 +95,7 @@ const getProxy = function (event, target) {
   };
 };
 
-const engage = function (spec) {
+const engage = function (spec: ForeignGuiSpec) {
   const detail = ValueSchema.asStructOrDie('ForeignGui', schema, spec);
 
   // Creates an inner GUI and inserts it appropriately. This will be used
@@ -116,7 +124,7 @@ const engage = function (spec) {
     unproxy(component);
   };
 
-  const dispatchTo = function (type, event) {
+  const dispatchTo = function (type: string, event: SugarEvent): void {
     /*
      * 1. Check that the event did not originate in our internal alloy root. If it did,
      * we don't need to handle it here. The alloy root will handle it as usual.
@@ -130,7 +138,6 @@ const engage = function (spec) {
      * c) execute the event handler
      * d) remove it from the internal system and clear any DOM markers (alloy-ids etc)
      */
-
     if (gui.element().dom().contains(event.target().dom())) { return; }
 
     // Find if the target has an assigned dispatcher
@@ -149,13 +156,13 @@ const engage = function (spec) {
   };
 
   // Remove any traces of the foreign component from the internal alloy system.
-  const unproxy = function (component) {
+  const unproxy = function (component: AlloyComponent): void {
     gui.removeFromWorld(component);
     Tagger.revoke(component.element());
   };
 
   // Disconnect the foreign GUI
-  const disengage = function () {
+  const disengage = function (): void {
     Arr.each(domEvents, function (e) {
       e.unbind();
     });

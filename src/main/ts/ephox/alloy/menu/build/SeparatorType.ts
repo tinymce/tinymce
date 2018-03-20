@@ -1,7 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import SystemEvents from '../../api/events/SystemEvents';
+import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 
 const builder = function (detail) {

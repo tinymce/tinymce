@@ -1,5 +1,15 @@
 import { JSON as Json } from '@ephox/sand';
-import { Struct } from '@ephox/katamari';
+import { Struct, Option } from '@ephox/katamari';
+
+export interface DomDefinition {
+  attributes(): Option<{}>;
+  classes(): Option<string[]>;
+  styles(): Option<{}>;
+  value(): Option<string>;
+  innerHtml(): Option<string>;
+  domChildren(): Option<string>;
+  defChildren(): Option<string>;
+}
 
 const nu = Struct.immutableBag([ 'tag' ], [
   'classes',

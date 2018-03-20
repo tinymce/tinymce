@@ -6,14 +6,14 @@ import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
+import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import Button from 'ephox/alloy/api/ui/Button';
+import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import InlineView from 'ephox/alloy/api/ui/InlineView';
-import Input from 'ephox/alloy/api/ui/Input';
-import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
+import { InlineView } from 'ephox/alloy/api/ui/InlineView';
+import { Input } from 'ephox/alloy/api/ui/Input';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
@@ -117,7 +117,6 @@ export default <any> function () {
       events: AlloyEvents.derive([
         AlloyEvents.run(NativeEvents.contextmenu(), function (component, simulatedEvent) {
           simulatedEvent.event().kill();
-          console.log('inlineMenu', inlineMenu);
           InlineView.showAt(inlineComp, {
             anchor: 'makeshift',
             x: simulatedEvent.event().x(),

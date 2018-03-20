@@ -1,6 +1,8 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Merger } from '@ephox/katamari';
 import { Element, Html, Node, Traverse } from '@ephox/sugar';
+import { EventHandlerConfig } from '../../api/events/AlloyEvents';
+import { RawElementSchema } from '../../api/ui/Sketcher';
 
 const getAttrs = function (elem) {
   const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
@@ -14,7 +16,7 @@ const getClasses = function (elem) {
   return Array.prototype.slice.call(elem.dom().classList, 0);
 };
 
-const fromHtml = function (html) {
+const fromHtml = function (html: string): RawElementSchema {
   const elem = Element.fromHtml(html);
 
   const children = Traverse.children(elem);
@@ -37,7 +39,7 @@ const sketch = function (sketcher, html, config) {
   );
 };
 
-export default <any> {
+export {
   fromHtml,
   sketch
 };

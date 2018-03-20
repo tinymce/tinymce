@@ -4,7 +4,7 @@ import { Attr, Node } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Coupling } from 'ephox/alloy/api/behaviour/Coupling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Button from 'ephox/alloy/api/ui/Button';
+import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';

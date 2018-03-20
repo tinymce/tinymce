@@ -6,8 +6,8 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import NativeEvents from '../../api/events/NativeEvents';
-import PartType from '../../parts/PartType';
+import * as NativeEvents from '../../api/events/NativeEvents';
+import * as PartType from '../../parts/PartType';
 import * as SliderActions from './SliderActions';
 
 const platform = PlatformDetection.detect();

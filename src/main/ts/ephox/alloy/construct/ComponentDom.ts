@@ -4,6 +4,7 @@ import { JSON as Json } from '@ephox/sand';
 
 import * as ObjIndex from '../alien/ObjIndex';
 import * as DomModification from '../dom/DomModification';
+import { DomDefinition } from '../dom/DomDefinition';
 
 const behaviourDom = function (name, modification) {
   return {
@@ -76,7 +77,7 @@ const mergeTypes = {
   value: onlyOne
 };
 
-const combine = function (info, baseMod, behaviours, base) {
+const combine = function (info, baseMod, behaviours, base): Result<DomDefinition, any> {
   // Get the Behaviour DOM modifications
   const behaviourDoms = Merger.deepMerge({ }, baseMod);
   Arr.each(behaviours, function (behaviour) {

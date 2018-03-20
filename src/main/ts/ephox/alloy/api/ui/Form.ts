@@ -1,15 +1,30 @@
-import { Arr, Merger, Obj } from '@ephox/katamari';
+import { Arr, Merger, Obj, Option } from '@ephox/katamari';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { CompositeSketch, SketchSpec, RawDomSchema } from '../../api/ui/Sketcher';
 
 import * as AlloyParts from '../../parts/AlloyParts';
-import PartType from '../../parts/PartType';
+import * as PartType from '../../parts/PartType';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
 
 const owner = 'form';
+
+export interface FormSketch {
+  // why do forms not use or follow the Single or compositeSketch Type signature?
+  sketch: (fSpec: FormfSpec) => SketchSpec;
+  getField: (component: AlloyComponent, key: string) => Option<AlloyComponent>;
+}
+
+export interface FormParts {
+  field: (name: string, config: SketchSpec) => AlloyParts.GeneratedSinglePart;
+  record(): string[];
+}
+
+export type FormfSpec = (FormParts) => RawDomSchema;
 
 const schema = [
   SketchBehaviours.field('formBehaviours', [ Representing ])
@@ -19,11 +34,11 @@ const getPartName = function (name) {
   return '<alloy.field.' + name + '>';
 };
 
-const sketch = function (fSpec) {
+const sketch = function (fSpec: FormfSpec): SketchSpec {
   const parts = (function () {
-    const record = [ ];
+    const record: string[] = [ ];
 
-    const field = function (name, config) {
+    const field = function (name: string, config: SketchSpec): AlloyParts.GeneratedSinglePart {
       record.push(name);
       return AlloyParts.generateOne(owner, getPartName(name), config);
     };
@@ -93,9 +108,13 @@ const make = function (detail, components, spec) {
   );
 };
 
-export default <any> {
+const Form = {
   getField: GuiTypes.makeApi(function (apis, component, key) {
     return apis.getField(component, key);
   }),
   sketch
+} as FormSketch;
+
+export {
+  Form
 };

@@ -3,8 +3,8 @@ import { Cell, Fun, Option } from '@ephox/katamari';
 import { Compare } from '@ephox/sugar';
 
 import DelayedFunction from '../alien/DelayedFunction';
-import NativeEvents from '../api/events/NativeEvents';
-import SystemEvents from '../api/events/SystemEvents';
+import * as NativeEvents from '../api/events/NativeEvents';
+import * as SystemEvents from '../api/events/SystemEvents';
 
 const SIGNIFICANT_MOVE = 5;
 
@@ -46,7 +46,7 @@ const monitor = function (settings) {
         target: event.target
       };
 
-      longpress.schedule();
+      longpress.schedule(event);
       startData.set(Option.some(data));
     });
     return Option.none();
@@ -80,7 +80,7 @@ const monitor = function (settings) {
     { key: NativeEvents.touchend(), value: handleTouchend }
   ]);
 
-  const fireIfReady = function (event, type) {
+  const fireIfReady = function (event, type): Option<any> {
     return Objects.readOptFrom(handlers, type).bind(function (handler) {
       return handler(event);
     });

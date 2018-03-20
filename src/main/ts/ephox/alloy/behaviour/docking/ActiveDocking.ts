@@ -4,8 +4,8 @@ import * as Boxes from '../../alien/Boxes';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import NativeEvents from '../../api/events/NativeEvents';
-import SystemEvents from '../../api/events/SystemEvents';
+import * as NativeEvents from '../../api/events/NativeEvents';
+import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Dockables from './Dockables';
 
 const events = function (dockInfo) {

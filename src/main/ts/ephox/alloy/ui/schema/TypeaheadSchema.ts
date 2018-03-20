@@ -9,9 +9,9 @@ import { Representing } from '../../api/behaviour/Representing';
 import { Sandboxing } from '../../api/behaviour/Sandboxing';
 import { Streaming } from '../../api/behaviour/Streaming';
 import { Toggling } from '../../api/behaviour/Toggling';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
-import PartType from '../../parts/PartType';
+import * as PartType from '../../parts/PartType';
 import * as InputBase from '../common/InputBase';
 
 const schema = Fun.constant([

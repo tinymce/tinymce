@@ -1,31 +1,30 @@
 import * as Behaviour from './Behaviour';
 import * as ActiveDocking from '../../behaviour/docking/ActiveDocking';
 import DockingSchema from '../../behaviour/docking/DockingSchema';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
 import { Option } from '@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
-export interface DockingBehaviour extends AlloyBehaviour {
-  config: (DockingConfig) => { key: string, value: any };
+export interface DockingBehaviour extends Behaviour.AlloyBehaviour {
+  config: <T>(config: DockingConfig<T>) => { [key: string]: (any) => any };
 }
 
-export interface DockingConfig<T> extends AlloyBehaviourConfig {
-  contextual: {
+export interface DockingConfig<T> {
+  contextual?: {
     fadeInClass: string;
     fadeOutClass: string;
     transitionClass: string;
     lazyContext: (component: AlloyComponent) => Option<T>;
   };
-  lazyViewport: (component?: AlloyComponent) => any;
+  lazyViewport?: (component?: AlloyComponent) => Option<T>;
   leftAttr: string;
   topAttr: string;
 }
 
-const Docking: DockingBehaviour = Behaviour.create({
+const Docking = Behaviour.create({
   fields: DockingSchema,
   name: 'docking',
   active: ActiveDocking
-});
+}) as DockingBehaviour;
 
 export {
   Docking

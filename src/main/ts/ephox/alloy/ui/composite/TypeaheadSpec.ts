@@ -11,10 +11,10 @@ import { Representing } from '../../api/behaviour/Representing';
 import { Sandboxing } from '../../api/behaviour/Sandboxing';
 import { Streaming } from '../../api/behaviour/Streaming';
 import { Toggling } from '../../api/behaviour/Toggling';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import SystemEvents from '../../api/events/SystemEvents';
+import * as SystemEvents from '../../api/events/SystemEvents';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as InputBase from '../common/InputBase';
 
@@ -123,7 +123,8 @@ const make = function (detail, components, spec, externals) {
         if (Sandboxing.isOpen(sandbox)) { Sandboxing.close(sandbox); }
         detail.onExecute()(sandbox, comp);
         const currentValue = Representing.getValue(comp);
-        comp.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);
+        const input = comp.element().dom() as HTMLInputElement;
+        input.setSelectionRange(currentValue.text.length, currentValue.text.length);
         return Option.some(true);
       }
     }),

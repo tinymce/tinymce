@@ -3,7 +3,7 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import Button from 'ephox/alloy/api/ui/Button';
+import { Button } from 'ephox/alloy/api/ui/Button';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
 
@@ -88,7 +88,7 @@ export default <any> function () {
         Toggling.config({
           toggleClass: 'demo-selected',
           aria: {
-            mode: 'fuzzed'
+            mode: 'pressed'
           }
         })
       ])

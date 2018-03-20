@@ -7,11 +7,12 @@ import * as SplitToolbarSchema from '../../ui/schema/SplitToolbarSchema';
 import { Replacing } from '../behaviour/Replacing';
 import { Sliding } from '../behaviour/Sliding';
 import * as GuiFactory from '../component/GuiFactory';
-import SketchBehaviours from '../component/SketchBehaviours';
-import Button from './Button';
+import * as SketchBehaviours from '../component/SketchBehaviours';
+import { Button } from './Button';
 import * as Sketcher from './Sketcher';
-import Toolbar from './Toolbar';
-import ToolbarGroup from './ToolbarGroup';
+import { Toolbar } from './Toolbar';
+import { ToolbarGroup } from './ToolbarGroup';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const setStoredGroups = function (bar, storedGroups) {
   const bGroups = Arr.map(storedGroups, function (g) { return GuiFactory.premade(g); });
@@ -113,7 +114,12 @@ const factory = function (detail, components, spec, externals) {
   );
 };
 
-export default <any> Sketcher.composite({
+export interface SplitToolbarSketch extends Sketcher.CompositeSketch {
+  setGroups: (toolbar: AlloyComponent, groups: [{}]) => void;
+  refresh: (toolbar: AlloyComponent) => void;
+}
+
+const SplitToolbar = Sketcher.composite({
   name: 'SplitToolbar',
   configFields: SplitToolbarSchema.schema(),
   partFields: SplitToolbarSchema.parts(),
@@ -126,4 +132,8 @@ export default <any> Sketcher.composite({
       apis.refresh(toolbar);
     }
   }
-});
+}) as SplitToolbarSketch;
+
+export {
+  SplitToolbar
+};

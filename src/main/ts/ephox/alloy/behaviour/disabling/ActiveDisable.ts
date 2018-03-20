@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import SystemEvents from '../../api/events/SystemEvents';
+import * as SystemEvents from '../../api/events/SystemEvents';
 import * as DomModification from '../../dom/DomModification';
 import * as Behaviour from '../common/Behaviour';
 import * as DisableApis from './DisableApis';

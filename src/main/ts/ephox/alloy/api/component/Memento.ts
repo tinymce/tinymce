@@ -2,9 +2,16 @@ import { Objects } from '@ephox/boulder';
 import { Merger, Option } from '@ephox/katamari';
 
 import * as Tagger from '../../registry/Tagger';
+import { AlloyMixedSpec, SketchSpec, RawDomSchema, isSketchSpec } from '../../api/ui/Sketcher';
 
-const record = function (spec) {
-  const uid = Objects.hasKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');
+export interface MomentoRecord {
+  get: () => any;
+  getOpt: () => any;
+  asSpec: () => any;
+}
+
+const record = function (spec: AlloyMixedSpec) {
+  const uid = isSketchSpec(spec) && Objects.hasKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');
 
   const get = function (any) {
     return any.getSystem().getByUid(uid).getOrDie();

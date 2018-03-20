@@ -1,18 +1,31 @@
 import { ApproxStructure, Assertions, Chain, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { Future } from '@ephox/katamari';
+import { Arr, Future } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import Menu from 'ephox/alloy/api/ui/Menu';
-import TouchMenu from 'ephox/alloy/api/ui/TouchMenu';
+import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import { Menu } from 'ephox/alloy/api/ui/Menu';
+import { TouchMenu } from 'ephox/alloy/api/ui/TouchMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
+
+  const munge = function (i) {
+    return {
+      type: 'item',
+      data: i.data,
+      dom: {
+        tag: 'div', innerHtml: i.data.text,
+        attributes: { 'data-value': i.data.value },
+        styles: { display: 'inline-block', padding: '10px' }
+      },
+      components: [ ]
+    };
+  };
 
   GuiSetup.setup(function (store, doc, body) {
     const menuPart = {
@@ -31,20 +44,6 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function () {
       markers: {
         item: 'test-item',
         selectedItem: 'test-selected-item'
-      },
-      members: {
-        item: {
-          munge (i) {
-            return {
-              dom: {
-                tag: 'div', innerHtml: i.data.text,
-                attributes: { 'data-value': i.data.value },
-                styles: { display: 'inline-block', padding: '10px' }
-              },
-              components: [ ]
-            };
-          }
-        }
       }
     };
 
@@ -84,10 +83,12 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function () {
         },
 
         fetch () {
-          return Future.pure([
-            { type: 'item', data: { value: 'dog', text: 'Dog' } },
-            { type: 'item', data: { value: 'elephant', text: 'Elephant' } }
-          ]);
+          return Future.pure(
+            Arr.map([
+              { type: 'item', data: { value: 'dog', text: 'Dog' } },
+              { type: 'item', data: { value: 'elephant', text: 'Elephant' } }
+            ], munge)
+          );
         },
 
         onHoverOn: store.adder('onHoverOn'),
@@ -180,7 +181,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function () {
       ),
       store.sAssertEq('Hover on should be fired immediately after longpress menu appears', [ 'onHoverOn' ]),
 
-      sFireTouchmoveOn(component, '[role="menu"] [data-value="dog"]'),
+      sFireTouchmoveOn(component.element(), '[role="menu"] [data-value="dog"]'),
       sAssertMenuStructure('Checking menu structure with hover over first item', ApproxStructure.build(function (s, str, arr) {
         return s.element('div', {
           children: [
@@ -194,7 +195,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function () {
         });
       })),
       store.sAssertEq('Hover off should be fire when an item gets focus', [ 'onHoverOn', 'onHoverOff' ]),
-      sFireTouchmoveOn(component, '[role="menu"] [data-value="elephant"]'),
+      sFireTouchmoveOn(component.element(), '[role="menu"] [data-value="elephant"]'),
       sAssertMenuStructure('Checking menu structure with hover over first item', ApproxStructure.build(function (s, str, arr) {
         return s.element('div', {
           children: [
@@ -209,7 +210,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function () {
       })),
 
       store.sAssertEq('Hover off should not fire again until hover on has fired', [ 'onHoverOn', 'onHoverOff' ]),
-      sFireTouchmoveOn(component, '.touch-menu-button'),
+      sFireTouchmoveOn(component.element(), '.touch-menu-button'),
       sAssertMenuStructure('Checking menu structure with hover over the touch button (so nothing selected)',
         ApproxStructure.build(function (s, str, arr) {
           return s.element('div', {
@@ -226,14 +227,14 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function () {
       ),
       store.sAssertEq('Hover on should fire again now the button is under the "touch"', [ 'onHoverOn', 'onHoverOff', 'onHoverOn' ]),
 
-      sFireTouchmoveOn(component, '.touch-menu-button'),
+      sFireTouchmoveOn(component.element(), '.touch-menu-button'),
       store.sAssertEq(
         'Hover on should not fire again because hover off has not yet',
         [ 'onHoverOn', 'onHoverOff', 'onHoverOn' ]
       ),
 
       // Entire component, so inside the menu part
-      sFireTouchmoveOn(component, '.touch-menu'),
+      sFireTouchmoveOn(component.element(), '.touch-menu'),
       store.sAssertEq(
         'Hover off should fire because nothing under "touch"',
         [ 'onHoverOn', 'onHoverOff', 'onHoverOn', 'onHoverOff' ]

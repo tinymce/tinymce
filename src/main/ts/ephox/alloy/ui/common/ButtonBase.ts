@@ -3,8 +3,8 @@ import { PlatformDetection } from '@ephox/sand';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import NativeEvents from '../../api/events/NativeEvents';
-import SystemEvents from '../../api/events/SystemEvents';
+import * as NativeEvents from '../../api/events/NativeEvents';
+import * as SystemEvents from '../../api/events/SystemEvents';
 
 const events = function (optAction) {
   const executeHandler = function (action) {

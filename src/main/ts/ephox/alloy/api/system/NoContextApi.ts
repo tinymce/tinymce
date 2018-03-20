@@ -1,8 +1,9 @@
-import SystemApi from './SystemApi';
+import { SystemApi, AlloySystemApi } from './SystemApi';
 import * as AlloyLogger from '../../log/AlloyLogger';
 import { Fun } from '@ephox/katamari';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
-export default <any> function (getComp) {
+const NoContextApi = function (getComp?: () => AlloyComponent): AlloySystemApi {
   const fail = function (event) {
     return function () {
       throw new Error('The component must be in a context to send: ' + event + '\n' +
@@ -26,4 +27,8 @@ export default <any> function (getComp) {
     broadcast: fail('broadcast'),
     broadcastOn: fail('broadcastOn')
   });
+};
+
+export {
+  NoContextApi
 };

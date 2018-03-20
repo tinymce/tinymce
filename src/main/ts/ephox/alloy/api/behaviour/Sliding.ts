@@ -3,11 +3,11 @@ import * as ActiveSliding from '../../behaviour/sliding/ActiveSliding';
 import * as SlidingApis from '../../behaviour/sliding/SlidingApis';
 import SlidingSchema from '../../behaviour/sliding/SlidingSchema';
 import * as SlidingState from '../../behaviour/sliding/SlidingState';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SugarElement } from '../../alien/TypeDefinitions';
 
-export interface SlidingBehaviour extends AlloyBehaviour {
-  config: (SlidingConfig) => { key: string, value: any };
+export interface SlidingBehaviour extends Behaviour.AlloyBehaviour {
+  config: (config: SlidingConfig) => { [key: string]: (any) => any };
   grow?: (component: AlloyComponent) => boolean;
   shrink?: (component: AlloyComponent) => void;
   immediateShrink?: (component: AlloyComponent) => void;
@@ -20,7 +20,7 @@ export interface SlidingBehaviour extends AlloyBehaviour {
   disableTransitions?: (component: AlloyComponent) => void;
 }
 
-export interface SlidingConfig extends AlloyBehaviourConfig {
+export interface SlidingConfig {
   dimension: {
     property: string
   };
@@ -28,17 +28,21 @@ export interface SlidingConfig extends AlloyBehaviourConfig {
   openClass: string;
   shrinkingClass: string;
   growingClass: string;
-  onShrunk: () => void;
-  onGrown: () => void;
+  onStartGrow?: (component: AlloyComponent) => void;
+  getAnimationRoot?: (component: AlloyComponent) => SugarElement;
+  onStartShrink?: (component: AlloyComponent) => void;
+  onShrunk?: (component: AlloyComponent) => void;
+  onGrown?: (component: AlloyComponent) => void;
+  expanded?: boolean;
 }
 
-const Sliding: SlidingBehaviour = Behaviour.create({
+const Sliding = Behaviour.create({
   fields: SlidingSchema,
   name: 'sliding',
   active: ActiveSliding,
   apis: SlidingApis,
   state: SlidingState
-});
+}) as SlidingBehaviour;
 
 export {
   Sliding

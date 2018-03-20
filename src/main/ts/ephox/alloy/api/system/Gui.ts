@@ -1,5 +1,7 @@
-import { Arr, Fun, Result, Option } from '@ephox/katamari';
+import { Arr, Fun, Result } from '@ephox/katamari';
 import { Compare, Focus, Node, Remove, Traverse } from '@ephox/sugar';
+import { SugarElement, SugarEvent } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 import * as Debugging from '../../debugging/Debugging';
 import * as DescribedHandler from '../../events/DescribedHandler';
@@ -8,12 +10,28 @@ import * as Triggers from '../../events/Triggers';
 import Registry from '../../registry/Registry';
 import * as Tagger from '../../registry/Tagger';
 import * as GuiFactory from '../component/GuiFactory';
-import SystemEvents from '../events/SystemEvents';
+import * as SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
-import SystemApi from './SystemApi';
+import { SystemApi } from './SystemApi';
 
-const create = function () {
+export interface GuiSystem {
+  root: () => AlloyComponent;
+  element: () => SugarElement;
+  destroy: () => void;
+  add: (component: AlloyComponent) => void;
+  remove: (component: AlloyComponent) => void;
+  getByUid: (uid: string) => Result<AlloyComponent, string>;
+  getByDom: (element: SugarElement) => Result<AlloyComponent, string>;
+
+  addToWorld: (AlloyComponent) => void;
+  removeFromWorld: (AlloyComponent) => void;
+
+  broadcast: (message: string) => void;
+  broadcastOn: (channels: string, message: string) => void;
+}
+
+const create = function (): GuiSystem {
   const root = GuiFactory.build(
     Container.sketch({
       dom: {
@@ -24,7 +42,7 @@ const create = function () {
   return takeover(root);
 };
 
-const takeover = function (root) {
+const takeover = function (root: AlloyComponent): GuiSystem {
   const isAboveRoot = function (el) {
     return Traverse.parent(root.element()).fold(
       function () {
@@ -43,7 +61,7 @@ const takeover = function (root) {
   };
 
   const domEvents = GuiEvents.setup(root.element(), {
-    triggerEvent (eventName, event) {
+    triggerEvent (eventName: string, event: SugarEvent) {
       return Debugging.monitorEvent(eventName, event.target(), function (logger) {
         return Triggers.triggerUntilStopped(lookup, eventName, event, logger);
       });
@@ -53,7 +71,7 @@ const takeover = function (root) {
     // targets that have the event. It is the general case of the more specialised
     // "message". "messages" may actually just go away. This is used for things
     // like window scroll.
-    broadcastEvent (eventName, event) {
+    broadcastEvent (eventName: string, event: SugarEvent) {
       const listeners = registry.filter(eventName);
       return Triggers.broadcast(listeners, event);
     }
@@ -62,10 +80,10 @@ const takeover = function (root) {
   const systemApi = SystemApi({
     // This is a real system
     debugInfo: Fun.constant('real'),
-    triggerEvent (customType, target, data) {
-      Debugging.monitorEvent(customType, target, function (logger) {
+    triggerEvent (eventName, target, data) {
+      Debugging.monitorEvent(eventName, target, function (logger) {
         // The return value is not used because this is a fake event.
-        Triggers.triggerOnUntilStopped(lookup, customType, data, target, logger);
+        Triggers.triggerOnUntilStopped(lookup, eventName, data, target, logger);
       });
     },
     triggerFocus (target, originator) {
@@ -170,8 +188,8 @@ const takeover = function (root) {
     }, Result.value);
   };
 
-  const getByDom = function (elem) {
-    return Tagger.read(elem).bind(getByUid);
+  const getByDom = function (elem: SugarElement): Result<AlloyComponent, string> {
+    return Tagger.read(elem).fold(() => 'could not find element', getByUid);
   };
 
   addToWorld(root);

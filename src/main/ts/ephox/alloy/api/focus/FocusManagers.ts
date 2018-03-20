@@ -2,9 +2,20 @@ import { Fun, Option } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 
 import { Highlighting } from '../behaviour/Highlighting';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const dom = function () {
+export interface FocusDom {
+  get: (component: AlloyComponent) => any;
+  set: (component: AlloyComponent, focusee: SugarElement) => void;
+}
+
+export interface FocusHighlights {
+  get: (component: AlloyComponent) => Option<SugarElement>;
+  set: (component: AlloyComponent, element: SugarElement) => void;
+}
+
+const dom = function (): FocusDom {
   const get = function (component) {
     return Focus.search(component.element());
   };
@@ -19,7 +30,7 @@ const dom = function () {
   };
 };
 
-const highlights = function () {
+const highlights = function (): FocusHighlights {
   const get = function (component) {
     return Highlighting.getHighlighted(component).map(function (item) {
       return item.element();

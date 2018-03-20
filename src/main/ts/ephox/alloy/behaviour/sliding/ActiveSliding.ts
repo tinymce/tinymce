@@ -2,7 +2,7 @@ import { Objects } from '@ephox/boulder';
 import { Css } from '@ephox/sugar';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import NativeEvents from '../../api/events/NativeEvents';
+import * as NativeEvents from '../../api/events/NativeEvents';
 import * as DomModification from '../../dom/DomModification';
 import * as SlidingApis from './SlidingApis';
 

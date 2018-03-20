@@ -2,8 +2,8 @@ import { FieldSchema } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
 
 import * as AlloyEvents from '../api/events/AlloyEvents';
-import NativeEvents from '../api/events/NativeEvents';
-import SystemEvents from '../api/events/SystemEvents';
+import * as NativeEvents from '../api/events/NativeEvents';
+import * as SystemEvents from '../api/events/SystemEvents';
 import * as FocusManagers from '../api/focus/FocusManagers';
 import * as Fields from '../data/Fields';
 import * as KeyRules from '../navigation/KeyRules';

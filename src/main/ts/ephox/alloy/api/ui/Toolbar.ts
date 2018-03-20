@@ -4,8 +4,13 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as ToolbarSchema from '../../ui/schema/ToolbarSchema';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Replacing } from '../behaviour/Replacing';
-import SketchBehaviours from '../component/SketchBehaviours';
-import * as Sketcher from './Sketcher';
+import * as SketchBehaviours from '../component/SketchBehaviours';
+import { CompositeSketch, RawDomSchema, composite } from './Sketcher';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+
+export interface ToolbarSketch extends CompositeSketch {
+  setGroups: (toolbar: AlloyComponent, groups: RawDomSchema[]) => void;
+}
 
 const factory = function (detail, components, spec, _externals) {
   const setGroups = function (toolbar, groups) {
@@ -47,7 +52,7 @@ const factory = function (detail, components, spec, _externals) {
   };
 };
 
-export default <any> Sketcher.composite({
+const Toolbar = composite({
   name: 'Toolbar',
   configFields: ToolbarSchema.schema(),
   partFields: ToolbarSchema.parts(),
@@ -57,4 +62,8 @@ export default <any> Sketcher.composite({
       apis.setGroups(toolbar, groups);
     }
   }
-});
+}) as ToolbarSketch;
+
+export {
+  Toolbar
+};

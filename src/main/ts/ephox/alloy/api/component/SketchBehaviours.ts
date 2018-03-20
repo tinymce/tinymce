@@ -1,7 +1,9 @@
-import { FieldSchema } from '@ephox/boulder';
+import { DslType, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun } from '@ephox/katamari';
+import { ContainerBehaviours } from '../../spec/SpecSchema';
+import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 
-const field = function (name, forbidden) {
+const field = function (name: string, forbidden: AlloyBehaviour[]): DslType.FieldProcessorAdt {
   return FieldSchema.defaultedObjOf(name, { }, Arr.map(forbidden, function (f) {
     return FieldSchema.forbid(f.name(), 'Cannot configure ' + f.name() + ' for ' + name);
   }).concat([
@@ -9,11 +11,11 @@ const field = function (name, forbidden) {
   ]));
 };
 
-const get = function (data) {
+const get = function (data: ContainerBehaviours): {} {
   return data.dump();
 };
 
-export default <any> {
+export {
   field,
   get
 };

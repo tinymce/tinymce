@@ -1,34 +1,32 @@
 import { Objects } from '@ephox/boulder';
-import { Obj, Option } from '@ephox/katamari';
-import { AlloyBehaviour } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { Obj, Option, Result } from '@ephox/katamari';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 import * as ActiveTransitioning from '../../behaviour/transitioning/ActiveTransitioning';
 import * as TransitionApis from '../../behaviour/transitioning/TransitionApis';
 import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';
 import * as Behaviour from './Behaviour';
 
-export interface TransitioningBehaviour extends AlloyBehaviour {
-  config: (TransitioningConfig) => { key: string, value: any };
+export interface TransitioningBehaviour extends Behaviour.AlloyBehaviour {
+  config: (config: TransitioningConfig) => { [key: string]: (any) => any };
   findRoute?: <T>(comp: AlloyComponent, route: TransitionApis.TransitionRoute) => Option<T>;
   disableTransition?: (comp: AlloyComponent) => void;
   getCurrentRoute?: any;
   jumpTo?: (comp: AlloyComponent, destination: string) => void;
   progressTo?: (comp: AlloyComponent, destination: string) => void;
   getState?: any;
-
-  createRoutes?: any;
+  createRoutes?: (route: TransitionApis.TransitionRoute) => {};
   createBistate?: (first: string, second: string, transitions: TransitionProperties) => { key: string, value: any};
   createTristate?: (first: string, second: string, third: string, transitions: TransitionProperties) => { key: string, value: any};
 }
 
 export interface TransitioningConfig {
-  destinationAttr: () => string;
-  stateAttr: () => string;
-  initialState: () => string;
-  routes: () => { key: string, value: () => any };
-  onTransition: () => (comp: AlloyComponent, route) => void;
-  onFinish: () => (comp: AlloyComponent, route) => void;
+  destinationAttr?: string;
+  stateAttr?: string;
+  initialState: string;
+  routes: Record<string, any>;
+  onTransition?: (comp: AlloyComponent, route: TransitionApis.TransitionRoute) => void;
+  onFinish?: (comp: AlloyComponent, destination: string) => void;
 }
 export interface TransitionProperties {
   transition: {
@@ -82,7 +80,7 @@ const createTristate = function (first, second, third, transitions) {
   ]);
 };
 
-const Transitioning: TransitioningBehaviour = Behaviour.create({
+const Transitioning = Behaviour.create({
   fields: TransitionSchema,
   name: 'transitioning',
   active: ActiveTransitioning,
@@ -92,7 +90,7 @@ const Transitioning: TransitioningBehaviour = Behaviour.create({
     createBistate,
     createTristate
   }
-});
+}) as TransitioningBehaviour;
 
 export {
   Transitioning

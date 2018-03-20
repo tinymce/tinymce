@@ -5,7 +5,7 @@ import { Value } from '@ephox/sugar';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Representing } from '../../api/behaviour/Representing';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 
 const schema = Fun.constant([

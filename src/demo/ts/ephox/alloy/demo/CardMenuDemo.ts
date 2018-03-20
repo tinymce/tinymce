@@ -4,8 +4,8 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Transitioning } from 'ephox/alloy/api/behaviour/Transitioning';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import Menu from 'ephox/alloy/api/ui/Menu';
-import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
+import { Menu } from 'ephox/alloy/api/ui/Menu';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default <any> function () {
@@ -122,7 +122,6 @@ export default <any> function () {
       const w = Width.get(container.element());
       const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
       const menuComp = container.getSystem().getByDom(menu).getOrDie();
-
       Width.set(submenu.element(), w);
 
       Transitioning.progressTo(menuComp, 'before');

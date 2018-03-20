@@ -1,11 +1,16 @@
 import { Objects } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
+import { AdtInterface } from '../../alien/TypeDefinitions';
+import { RawDomSchema, RawDomSchemaUid, SketchSpec, CompositeSketch } from '../../api/ui/Sketcher';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Tagger from '../../registry/Tagger';
 import * as SpecSchema from '../../spec/SpecSchema';
 
-const single = function (owner, schema, factory, spec) {
+export type SingleFactory = (detail: SpecSchema.SpecSchemaStruct, specWithUid: RawDomSchemaUid) => SketchSpec;
+export type CompositeFactory = (detail: SpecSchema.SpecSchemaStruct, components: SketchSpec[], spec: RawDomSchemaUid, _externals?: any) => SketchSpec;
+
+const single = function (owner: string, schema: AdtInterface[], factory: SingleFactory, spec: RawDomSchema): SketchSpec {
   const specWithUid = supplyUid(spec);
   const detail = SpecSchema.asStructOrDie(owner, schema, specWithUid, [ ], [ ]);
   return Merger.deepMerge(
@@ -14,7 +19,7 @@ const single = function (owner, schema, factory, spec) {
   );
 };
 
-const composite = function (owner, schema, partTypes, factory, spec) {
+const composite = function (owner: string, schema: AdtInterface[], partTypes: AdtInterface[], factory: CompositeFactory, spec: RawDomSchema): SketchSpec {
   const specWithUid = supplyUid(spec);
 
   // Identify any information required for external parts
@@ -38,7 +43,7 @@ const composite = function (owner, schema, partTypes, factory, spec) {
   );
 };
 
-const supplyUid = function (spec) {
+const supplyUid = function (spec: RawDomSchema): RawDomSchemaUid {
   return Merger.deepMerge(
     {
       uid: Tagger.generate('uid')

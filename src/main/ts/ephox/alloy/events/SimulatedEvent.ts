@@ -1,4 +1,24 @@
 import { Cell, Fun } from '@ephox/katamari';
+import { SugarElement, SugarEvent } from '../alien/TypeDefinitions';
+import { AlloyComponent } from '../api/component/ComponentApi';
+
+export interface SimulatedEvent {
+  stop: () => void;
+  cut: () => void;
+  isStopped: () => boolean;
+  isCut: () => boolean;
+  event: () => AnyEvent;
+
+  getSource: (element: SugarElement) => AlloyComponent;
+  setSource: (element: SugarElement) => void;
+}
+
+export type AnyEvent = SimulatedEventTargets | SugarEvent;
+
+export interface SimulatedEventTargets {
+  target: () => SugarElement;
+  [key: string]: () => any;
+}
 
 const fromSource = function (event, source) {
   const stopper = Cell(false);
@@ -40,12 +60,8 @@ const fromExternal = function (event) {
     isCut: Fun.constant(false),
     event: Fun.constant(event),
     // Nor do targets really
-    setTarget: Fun.die(
-      new Error('Cannot set target of a broadcasted event')
-    ),
-    getTarget: Fun.die(
-      new Error('Cannot get target of a broadcasted event')
-    )
+    setTarget: Fun.die('Cannot set target of a broadcasted event'),
+    getTarget: Fun.die('Cannot get target of a broadcasted event')
   };
 };
 

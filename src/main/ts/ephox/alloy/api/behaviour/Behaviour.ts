@@ -1,17 +1,46 @@
-import { FieldSchema, Objects, Processor, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, Objects, DslType, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
-import { ComposingCreateConfig } from 'ephox/alloy/api/behaviour/Composing';
-import { DockingBehaviour } from 'ephox/alloy/api/behaviour/Docking';
+import { ComposingCreateConfig } from '../../api/behaviour/Composing';
+import { DockingBehaviour } from '../../api/behaviour/Docking';
 
 import * as Behaviour from '../../behaviour/common/Behaviour';
 import * as NoState from '../../behaviour/common/NoState';
+
+export interface AlloyBehaviour {
+  config: (spec: any) => { [key: string]: (any) => any };
+  exhibit: (info: any, base: any) => {};
+  handlers: (info: any) => {};
+  name: () => string;
+  revoke: () => { key: string, value: undefined };
+  schema: () => DslType.FieldProcessorAdt;
+
+  getValue: (any) => any;
+  setValue: (...any) => any;
+  fields?: DslType.FieldProcessorAdt[];
+}
+
+export interface AlloyBehaviourSchema {
+  config: { [key: string]: () => any};
+  configAsRaw: () => Record<string, any>;
+  initialConfig: {};
+  me: AlloyBehaviour;
+  state: any;
+}
+
+export interface AlloyBehaviourConfig {
+  fields: DslType.FieldProcessorAdt[];
+  name: string;
+  active?: {};
+  apis?: {};
+  extra?: {};
+  state?: {};
+}
 
 const derive = function (capabilities): {} {
   return Objects.wrapAll(capabilities);
 };
 
-const simpleSchema: Processor = ValueSchema.objOfOnly([
+const simpleSchema: DslType.Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('fields'),
   FieldSchema.strict('name'),
   FieldSchema.defaulted('active', { }),
@@ -25,7 +54,7 @@ const create = function (data: AlloyBehaviourConfig): AlloyBehaviour {
   return Behaviour.create(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
 
-const modeSchema: Processor = ValueSchema.objOfOnly([
+const modeSchema: DslType.Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('branchKey'),
   FieldSchema.strict('branches'),
   FieldSchema.strict('name'),

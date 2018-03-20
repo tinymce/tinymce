@@ -6,12 +6,12 @@ import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import Button from 'ephox/alloy/api/ui/Button';
+import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import Dropdown from 'ephox/alloy/api/ui/Dropdown';
-import Input from 'ephox/alloy/api/ui/Input';
-import SplitDropdown from 'ephox/alloy/api/ui/SplitDropdown';
-import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
+import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
+import { Input } from 'ephox/alloy/api/ui/Input';
+import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 

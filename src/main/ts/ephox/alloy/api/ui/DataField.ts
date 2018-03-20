@@ -4,7 +4,7 @@ import { Merger, Option } from '@ephox/katamari';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as Sketcher from './Sketcher';
 
@@ -34,7 +34,7 @@ const factory = function (detail, spec) {
   };
 };
 
-export default <any> Sketcher.single({
+const DataField = Sketcher.single({
   name: 'DataField',
   factory,
   configFields: [
@@ -44,3 +44,7 @@ export default <any> Sketcher.single({
     SketchBehaviours.field('dataBehaviours', [ Representing, Composing ])
   ]
 });
+
+export {
+  DataField
+};

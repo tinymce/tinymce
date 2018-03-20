@@ -3,36 +3,41 @@ import * as ActiveRepresenting from '../../behaviour/representing/ActiveRepresen
 import * as RepresentApis from '../../behaviour/representing/RepresentApis';
 import RepresentSchema from '../../behaviour/representing/RepresentSchema';
 import * as RepresentState from '../../behaviour/representing/RepresentState';
-import { AlloyBehaviour, AlloyBehaviourConfig } from 'ephox/alloy/alien/TypeDefinitions';
-import { FieldProcessorAdt } from '@ephox/boulder';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { Result } from '@ephox/katamari';
 
-export interface RepresentingBehaviour extends AlloyBehaviour {
-  config: (RepresentingConfig) => { key: string, value: any };
-  setValueFrom?: (component: AlloyComponent, source: AlloyComponent) => void;
+export interface RepresentingBehaviour extends Behaviour.AlloyBehaviour {
+  config: (config: RepresentingConfig) => { [key: string]: (any) => any };
+  setValueFrom: (component: AlloyComponent, source: AlloyComponent) => void;
 }
 
-export interface RepresentingConfig extends AlloyBehaviourConfig {
+export interface RepresentingConfig {
   store: {
     mode: string,
-    initialValue: string
+    initialValue?: any,
+    getFallbackEntry?: (key: string) => { value: string, text: string },
+    getDataKey?: (typeAhead: AlloyComponent) => string,
+    setData?: (typeAhead: AlloyComponent, data: { text, value: string } ) => void;
+    getValue?: (any) => any;
+    setValue?: (...any) => any;
   };
+  onSetValue?: <T, E>() => Result<T, E>;
 }
 
 // The self-reference is clumsy.
-const Representing: RepresentingBehaviour = Behaviour.create({
+const Representing = Behaviour.create({
   fields: RepresentSchema,
   name: 'representing',
   active: ActiveRepresenting,
   apis: RepresentApis,
   extra: {
-    setValueFrom (component, source) {
+    setValueFrom (component: AlloyComponent, source: AlloyComponent) {
       const value = Representing.getValue(source);
       Representing.setValue(component, value);
     }
   },
   state: RepresentState
-});
+}) as RepresentingBehaviour;
 
 export {
   Representing

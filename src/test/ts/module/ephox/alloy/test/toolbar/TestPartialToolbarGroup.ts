@@ -1,8 +1,8 @@
 import { Arr, Fun, Merger } from '@ephox/katamari';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
-import Toolbar from 'ephox/alloy/api/ui/Toolbar';
-import ToolbarGroup from 'ephox/alloy/api/ui/ToolbarGroup';
+import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
+import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 
 const mungeItem = function (itemSpec) {
   return Merger.deepMerge(

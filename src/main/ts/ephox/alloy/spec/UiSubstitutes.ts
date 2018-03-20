@@ -129,7 +129,7 @@ const single = adt.single;
 const multiple = adt.multiple;
 const placeholder = Fun.constant(_placeholder);
 
-export default {
+export {
   single,
   multiple,
   isSubstitute,

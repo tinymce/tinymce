@@ -2,9 +2,9 @@ import { Body } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import Button from 'ephox/alloy/api/ui/Button';
-import Form from 'ephox/alloy/api/ui/Form';
-import Input from 'ephox/alloy/api/ui/Input';
+import { Button } from 'ephox/alloy/api/ui/Button';
+import { Form } from 'ephox/alloy/api/ui/Form';
+import { Input } from 'ephox/alloy/api/ui/Input';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 

@@ -6,12 +6,12 @@ import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import DataField from 'ephox/alloy/api/ui/DataField';
-import FormChooser from 'ephox/alloy/api/ui/FormChooser';
-import FormCoupledInputs from 'ephox/alloy/api/ui/FormCoupledInputs';
-import FormField from 'ephox/alloy/api/ui/FormField';
-import HtmlSelect from 'ephox/alloy/api/ui/HtmlSelect';
-import Input from 'ephox/alloy/api/ui/Input';
+import { DataField } from 'ephox/alloy/api/ui/DataField';
+import { FormChooser } from 'ephox/alloy/api/ui/FormChooser';
+import { FormCoupledInputs } from 'ephox/alloy/api/ui/FormCoupledInputs';
+import { FormField } from 'ephox/alloy/api/ui/FormField';
+import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
+import { Input } from 'ephox/alloy/api/ui/Input';
 import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 

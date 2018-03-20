@@ -1,5 +1,5 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import NativeEvents from '../../api/events/NativeEvents';
+import * as NativeEvents from '../../api/events/NativeEvents';
 
 const init = function (dragApi) {
   return AlloyEvents.derive([

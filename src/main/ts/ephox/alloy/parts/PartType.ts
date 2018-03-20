@@ -1,5 +1,28 @@
-import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, ValueSchema, DslType } from '@ephox/boulder';
 import { Adt, Fun, Id, Option } from '@ephox/katamari';
+import { DetailedSpec } from '../parts/AlloyParts';
+import { RawDomSchema } from '../api/ui/Sketcher';
+import { AdtInterface } from '../alien/TypeDefinitions';
+
+export type PartType = (spec: { [key: string]: any }) => DslType.FieldProcessorAdt;
+export interface BuildSpec {
+  defaults: () => () => {};
+  factory: () => any;
+  name: () => string;
+  overrides: () => OverrideHandler;
+  pname: () => string;
+  schema: () => DslType.FieldProcessorAdt[];
+}
+
+export type OverrideHandler = (detail: DetailedSpec, spec?: RawDomSchema, partValidated?: any) => OverrideSpec;
+
+export interface OverrideSpec {
+  [key: string]: any;
+}
+
+export interface PartTypeAdt extends AdtInterface {
+  // TODO, def this out
+}
 
 const adt = Adt.generate([
   { required: [ 'data' ] },
@@ -41,19 +64,18 @@ const groupSpec = ValueSchema.objOf([
   fPname, fDefaults, fOverrides
 ]);
 
-const asNamedPart = function (part) {
+const asNamedPart = function (part: PartTypeAdt): Option<BuildSpec> {
   return part.fold(Option.some, Option.none, Option.some, Option.some);
 };
 
-const name = function (part) {
+const name = function (part: PartTypeAdt): string {
   const get = function (data) {
     return data.name();
   };
-
   return part.fold(get, get, get, get);
 };
 
-const asCommon = function (part) {
+const asCommon = function (part: PartTypeAdt): BuildSpec {
   return part.fold(Fun.identity, Fun.identity, Fun.identity, Fun.identity);
 };
 
@@ -64,14 +86,20 @@ const convert = function (adtConstructor, partSpec) {
   };
 };
 
-export default <any> {
-  required: convert(adt.required, requiredSpec),
-  external: convert(adt.external, externalSpec),
-  optional: convert(adt.optional, optionalSpec),
-  group: convert(adt.group, groupSpec),
+const required = convert(adt.required, requiredSpec) as PartType;
+const external = convert(adt.external, externalSpec) as PartType;
+const optional = convert(adt.optional, optionalSpec) as PartType;
+const group = convert(adt.group, groupSpec) as PartType;
+const original = Fun.constant('entirety');
+
+export {
+  required,
+  external,
+  optional,
+  group,
   asNamedPart,
   name,
   asCommon,
 
-  original: Fun.constant('entirety')
+  original
 };

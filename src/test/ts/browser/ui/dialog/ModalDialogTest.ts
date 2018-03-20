@@ -10,7 +10,7 @@ import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import ModalDialog from 'ephox/alloy/api/ui/ModalDialog';
+import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import Sinks from 'ephox/alloy/test/Sinks';
 

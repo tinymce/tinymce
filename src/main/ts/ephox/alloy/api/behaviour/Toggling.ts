@@ -2,11 +2,10 @@ import * as Behaviour from './Behaviour';
 import * as ActiveToggle from '../../behaviour/toggling/ActiveToggle';
 import * as ToggleApis from '../../behaviour/toggling/ToggleApis';
 import ToggleSchema from '../../behaviour/toggling/ToggleSchema';
-import { AlloyBehaviourConfig, AlloyBehaviour } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
-export interface TogglingBehaviour extends AlloyBehaviour {
-  config: (TogglingConfig) => { key: string, value: any };
+export interface TogglingBehaviour extends Behaviour.AlloyBehaviour {
+  config: (config: TogglingConfig) => { [key: string]: (any) => any };
   onLoad?: (component: AlloyComponent) => void;
   toggle?: (component: AlloyComponent) => void;
   isOn?: (component: AlloyComponent) => boolean;
@@ -14,22 +13,24 @@ export interface TogglingBehaviour extends AlloyBehaviour {
   off?: (component: AlloyComponent) => void;
 }
 
-export interface TogglingConfig extends AlloyBehaviourConfig {
+export interface TogglingConfig {
   toggleClass: string;
-  aria: {
+  aria?: {
     mode: TogglingMode;
     syncWithExpanded?: boolean;
   };
+  toggleOnExecute?: boolean;
+  selected?: boolean;
 }
 
 export type TogglingMode = 'pressed' | 'checked' | 'toggled' | 'selected';
 
-const Toggling: TogglingBehaviour = Behaviour.create({
+const Toggling = Behaviour.create({
   fields: ToggleSchema,
   name: 'toggling',
   active: ActiveToggle,
   apis: ToggleApis
-});
+}) as TogglingBehaviour;
 
 export {
   Toggling

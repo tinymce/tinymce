@@ -2,9 +2,9 @@ import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Arr } from '@ephox/katamari';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Button from 'ephox/alloy/api/ui/Button';
+import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import Toolbar from 'ephox/alloy/api/ui/Toolbar';
+import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 

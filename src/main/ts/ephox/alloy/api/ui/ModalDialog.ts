@@ -6,9 +6,10 @@ import * as ModalDialogSchema from '../../ui/schema/ModalDialogSchema';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Keying } from '../behaviour/Keying';
 import * as GuiFactory from '../component/GuiFactory';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const factory = function (detail, components, spec, externals) {
   const showDialog = function (dialog) {
@@ -67,7 +68,13 @@ const factory = function (detail, components, spec, externals) {
   };
 };
 
-export default <any> Sketcher.composite({
+export interface ModalDialogSketch extends Sketcher.CompositeSketch {
+  show: (dialog: AlloyComponent) => any;
+  hide: (dialog: AlloyComponent) => any;
+  getBody: (dialog: AlloyComponent) => AlloyComponent;
+}
+
+const ModalDialog = Sketcher.composite({
   name: 'ModalDialog',
   configFields: ModalDialogSchema.schema(),
   partFields: ModalDialogSchema.parts(),
@@ -83,4 +90,8 @@ export default <any> Sketcher.composite({
       return apis.getBody(dialog);
     }
   }
-});
+}) as ModalDialogSketch;
+
+export {
+  ModalDialog
+};

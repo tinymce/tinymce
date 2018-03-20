@@ -1,6 +1,6 @@
 import * as Behaviour from '../behaviour/Behaviour';
 import { Replacing } from '../behaviour/Replacing';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { Merger } from '@ephox/katamari';
 
@@ -26,10 +26,14 @@ const factory = function (detail, spec) {
   };
 };
 
-export default <any> Sketcher.single({
+const Tabview = Sketcher.single({
   name: 'Tabview',
   configFields: [
     SketchBehaviours.field('tabviewBehaviours', [ Replacing ])
   ],
   factory
 });
+
+export {
+  Tabview
+};

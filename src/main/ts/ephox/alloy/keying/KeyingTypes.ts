@@ -1,7 +1,7 @@
 import * as EditableFields from '../alien/EditableFields';
 import Keys from '../alien/Keys';
 import * as AlloyTriggers from '../api/events/AlloyTriggers';
-import SystemEvents from '../api/events/SystemEvents';
+import * as SystemEvents from '../api/events/SystemEvents';
 import * as KeyMatch from '../navigation/KeyMatch';
 import { Option } from '@ephox/katamari';
 

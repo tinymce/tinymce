@@ -1,11 +1,11 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-import SketchBehaviours from '../../api/component/SketchBehaviours';
-import Tabbar from '../../api/ui/Tabbar';
-import Tabview from '../../api/ui/Tabview';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import { Tabbar } from '../../api/ui/Tabbar';
+import { Tabview } from '../../api/ui/Tabview';
 import * as Fields from '../../data/Fields';
-import PartType from '../../parts/PartType';
+import * as PartType from '../../parts/PartType';
 
 const schema = Fun.constant([
   FieldSchema.defaulted('selectFirst', true),

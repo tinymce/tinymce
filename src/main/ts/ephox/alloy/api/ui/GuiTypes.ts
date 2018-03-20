@@ -2,15 +2,17 @@ import { Objects } from '@ephox/boulder';
 import { Fun, Id, Option } from '@ephox/katamari';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloyPremadeComponent } from '../../api/component/GuiFactory';
 
 const premadeTag = Id.generate('alloy-premade');
 const _apiConfig = Id.generate('api');
 
-const premade = function (comp) {
+const premade = function (comp: AlloyComponent): AlloyPremadeComponent {
   return Objects.wrap(premadeTag, comp);
 };
 
-const getPremade = function (spec) {
+const getPremade = function (spec): Option<AlloyComponent> {
   return Objects.readOptFrom(spec, premadeTag);
 };
 

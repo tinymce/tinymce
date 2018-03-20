@@ -4,7 +4,7 @@ import { ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
-import PartType from 'ephox/alloy/parts/PartType';
+import * as PartType from 'ephox/alloy/parts/PartType';
 
 UnitTest.test('Atomic Test: parts.SchemasTest', function () {
   const internal = PartType.required({

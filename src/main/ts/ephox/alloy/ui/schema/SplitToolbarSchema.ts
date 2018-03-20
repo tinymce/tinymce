@@ -3,10 +3,10 @@ import { Cell, Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Sliding } from '../../api/behaviour/Sliding';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
-import Toolbar from '../../api/ui/Toolbar';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import { Toolbar } from '../../api/ui/Toolbar';
 import * as Fields from '../../data/Fields';
-import PartType from '../../parts/PartType';
+import * as PartType from '../../parts/PartType';
 
 const schema = Fun.constant([
   Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass' ]),

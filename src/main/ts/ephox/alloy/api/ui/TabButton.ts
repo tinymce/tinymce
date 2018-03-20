@@ -6,7 +6,7 @@ import * as Behaviour from '../behaviour/Behaviour';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Representing } from '../behaviour/Representing';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 
 const factory = function (detail, spec) {
@@ -38,7 +38,7 @@ const factory = function (detail, spec) {
   };
 };
 
-export default <any> Sketcher.single({
+const TabButton = Sketcher.single({
   name: 'TabButton',
   configFields: [
     FieldSchema.defaulted('uid', undefined),
@@ -61,3 +61,7 @@ export default <any> Sketcher.single({
   ],
   factory
 });
+
+export {
+  TabButton
+};

@@ -6,9 +6,9 @@ import * as TabSectionSchema from '../../ui/schema/TabSectionSchema';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Replacing } from '../behaviour/Replacing';
 import { Representing } from '../behaviour/Representing';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
-import SystemEvents from '../events/SystemEvents';
+import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 
 const factory = function (detail, components, spec, externals) {
@@ -66,9 +66,13 @@ const factory = function (detail, components, spec, externals) {
 
 };
 
-export default <any> Sketcher.composite({
+const TabSection = Sketcher.composite({
   name: 'TabSection',
   configFields: TabSectionSchema.schema(),
   partFields: TabSectionSchema.parts(),
   factory
 });
+
+export {
+  TabSection
+};

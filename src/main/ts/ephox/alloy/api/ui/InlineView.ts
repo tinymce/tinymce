@@ -1,5 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun, Merger, Option } from '@ephox/katamari';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import * as Fields from '../../data/Fields';
@@ -8,8 +10,23 @@ import * as Behaviour from '../behaviour/Behaviour';
 import { Positioning } from '../behaviour/Positioning';
 import { Receiving } from '../behaviour/Receiving';
 import { Sandboxing } from '../behaviour/Sandboxing';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
+
+export interface InlineViewSketch extends Sketcher.SingleSketch {
+  // InlineViewApis;
+  showAt: (component: AlloyComponent, anchor: InlineViewAnchor, thing: Sketcher.SketchSpec) => void;
+  hide: (component: AlloyComponent) => void;
+  isOpen: (component: AlloyComponent) => boolean;
+}
+
+export interface InlineViewAnchor {
+  anchor: string;
+  x?: number;
+  y?: number;
+  item?: AlloyComponent;
+  root?: SugarElement;
+}
 
 const factory = function (detail, spec) {
   const isPartOfRelated = function (container, queryElem) {
@@ -60,7 +77,7 @@ const factory = function (detail, spec) {
   );
 };
 
-export default <any> Sketcher.single({
+const InlineView = Sketcher.single({
   name: 'InlineView',
   configFields: [
     FieldSchema.strict('lazySink'),
@@ -82,4 +99,8 @@ export default <any> Sketcher.single({
       return apis.isOpen(component);
     }
   }
-});
+}) as InlineViewSketch;
+
+export {
+  InlineView
+};

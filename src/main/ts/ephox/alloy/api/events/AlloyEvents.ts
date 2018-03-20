@@ -3,17 +3,24 @@ import { Objects } from '@ephox/boulder';
 import * as EventRoot from '../../alien/EventRoot';
 import * as EventHandler from '../../construct/EventHandler';
 import * as AlloyTriggers from './AlloyTriggers';
-import SystemEvents from './SystemEvents';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import * as SystemEvents from './SystemEvents';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SimulatedEvent } from '../../events/SimulatedEvent';
+import { SpecSchemaStruct } from '../../spec/SpecSchema';
 
 export interface EventHandlerConfig {
   key: string;
   value: {
     can: () => boolean;
     abort: () => boolean;
-    run: (component, simulatedEvent: (any) => any) => any;
+    run: EventRunHandler
   };
 }
+
+// TODO we can tighten this up alot further, it should take a simulatedEvent, however SimulatedEvent.event() can return 2 types, need to solve that issue first (SugarEvent or SimulatedEventTargets)
+// export type EventRunHandler = (component: AlloyComponent, action: SimulatedEvent) => any;
+export type EventRunHandler = (component: AlloyComponent, action: { [eventName: string]: any }) => any;
+export type RunOnSourceName = (handler: EventRunHandler) => EventHandlerConfig;
 
 const derive = Objects.wrapAll;
 
@@ -35,7 +42,7 @@ const can = function (name, predicate) {
   };
 };
 
-const preventDefault = function (name) {
+const preventDefault = function (name: string): EventHandlerConfig {
   return {
     key: name,
     value: EventHandler.nu({
@@ -46,7 +53,7 @@ const preventDefault = function (name) {
   };
 };
 
-const run = function (name, handler) {
+const run = function (name: string, handler: EventRunHandler): EventHandlerConfig {
   return {
     key: name,
     value: EventHandler.nu({
@@ -55,7 +62,7 @@ const run = function (name, handler) {
   };
 };
 
-const runActionExtra = function (name, action, extra) {
+const runActionExtra = function (name: string, action: (t: any, u: any) => void, extra: SpecSchemaStruct[]): EventHandlerConfig {
   return {
     key: name,
     value: EventHandler.nu({
@@ -86,7 +93,7 @@ const runOnSourceName = function (name) {
 };
 
 const redirectToUid = function (name, uid) {
-  return run(name, function (component, simulatedEvent) {
+  return run(name, function (component: AlloyComponent, simulatedEvent: SimulatedEvent) {
     component.getSystem().getByUid(uid).each(function (redirectee) {
       AlloyTriggers.dispatchEvent(redirectee, redirectee.element(), name, simulatedEvent);
     });
@@ -118,10 +125,10 @@ const stopper = function (name) {
   });
 };
 
-const runOnAttached = runOnSourceName(SystemEvents.attachedToDom());
-const runOnDetached = runOnSourceName(SystemEvents.detachedFromDom());
-const runOnInit = runOnSourceName(SystemEvents.systemInit());
-const runOnExecute = runOnName(SystemEvents.execute());
+const runOnAttached = runOnSourceName(SystemEvents.attachedToDom()) as RunOnSourceName;
+const runOnDetached = runOnSourceName(SystemEvents.detachedFromDom()) as RunOnSourceName;
+const runOnInit = runOnSourceName(SystemEvents.systemInit()) as RunOnSourceName;
+const runOnExecute = runOnName(SystemEvents.execute()) as RunOnSourceName;
 
 export {
   derive,

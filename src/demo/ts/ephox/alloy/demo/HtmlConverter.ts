@@ -5,9 +5,9 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiTemplate from 'ephox/alloy/api/component/GuiTemplate';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import Button from 'ephox/alloy/api/ui/Button';
+import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import Input from 'ephox/alloy/api/ui/Input';
+import { Input } from 'ephox/alloy/api/ui/Input';
 import { JSON as Json } from '@ephox/sand';
 import { SelectorFind } from '@ephox/sugar';
 
@@ -33,7 +33,7 @@ export default <any> function () {
             display: 'block'
           }
         },
-        data: '<div class="cat dog elephant" data-ephox="this is">Hello<span>hi</span>there</div>',
+        data: '<div class="cat dog elephant" data-ephox="this is"><div id="mike">chau</div></div>',
         uid: 'textarea-input'
       }),
       Button.sketch({
@@ -44,10 +44,7 @@ export default <any> function () {
         action (button) {
           const textarea = button.getSystem().getByUid('textarea-input').getOrDie();
           const value = Representing.getValue(textarea);
-
           const output = GuiTemplate.readHtml(value).getOrDie();
-
-          console.log('output', output);
           const display = button.getSystem().getByUid('pre-output').getOrDie();
           const prettyprint = Json.stringify(output, null, 2);
 

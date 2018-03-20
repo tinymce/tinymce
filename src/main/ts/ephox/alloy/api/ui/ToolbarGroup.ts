@@ -1,6 +1,6 @@
 import * as Behaviour from '../behaviour/Behaviour';
 import { Keying } from '../behaviour/Keying';
-import SketchBehaviours from '../component/SketchBehaviours';
+import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import * as ToolbarGroupSchema from '../../ui/schema/ToolbarGroupSchema';
 import { Merger } from '@ephox/katamari';
@@ -34,9 +34,13 @@ const factory = function (detail, components, spec, _externals) {
   );
 };
 
-export default <any> Sketcher.composite({
+const ToolbarGroup = Sketcher.composite({
   name: 'ToolbarGroup',
   configFields: ToolbarGroupSchema.schema(),
   partFields: ToolbarGroupSchema.parts(),
   factory
 });
+
+export {
+  ToolbarGroup
+};

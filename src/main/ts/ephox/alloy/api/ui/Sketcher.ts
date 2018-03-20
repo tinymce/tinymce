@@ -1,33 +1,69 @@
-import { FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { DslType, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Obj } from '@ephox/katamari';
+import { EventHandlerConfig } from '../../api/events/AlloyEvents';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyBehaviourSchema } from '../../api/behaviour/Behaviour';
+
+export interface RawElementSchema {
+  tag: string;
+  attributes?: Record<string, any>;
+  styles?: Record<string, string>;
+  innerHtml?: string;
+  classes?: string[];
+}
+
+export type AlloyComponentsSpec = RawDomSchema[] | SketchSpec[];
+export type AlloyMixedSpec = RawDomSchema | SketchSpec;
 
 export interface SingleSketch {
   name: () => string;
-  configFields: () => FieldProcessorAdt[];
-  partFields: () => FieldProcessorAdt[];
-  sketch: (spec) => SketchSpec;
+  configFields: () => DslType.FieldProcessorAdt[];
+  partFields: () => DslType.FieldProcessorAdt[];
+  sketch: (spec: Record<string, any>) => SketchSpec;
+  factory: UiSketcher.SingleFactory;
 }
 
-export interface CompositeSketch extends SingleSketch {
+export interface CompositeSketch  {
+  name: () => string;
+  configFields: () => DslType.FieldProcessorAdt[];
+  partFields: () => DslType.FieldProcessorAdt[];
+  sketch: (spec: Record<string, any>) => SketchSpec;
+
   parts: () => any;
-  [key: string]: Function;
+  factory: UiSketcher.CompositeFactory;
+  // [key: string]: Function;
 }
 
-export interface SketchSpec {
-  behaviours: {};
+// TODO: Morgan -> check these
+export interface RawDomSchema {
+  dom: RawElementSchema;
+  components?: AlloyComponentsSpec;
+  items?: RawDomSchema[];
+  type?: string;
+  data?: {};
+  markers?: {};
+  behaviours?: Record<string, AlloyBehaviourSchema>;
+  events?: EventHandlerConfig | {};
+}
+
+export interface RawDomSchemaUid extends RawDomSchema {
+  uid: string;
+}
+
+// TODO: Morgan -> check these, should domModification and eventOrder be part of RawDomSchema too?
+export interface SketchSpec extends RawDomSchema {
   domModification: {};
   eventOrder: {};
-  events: {};
-  components: AlloyComponent[];
-  dom: { tag: string };
   uid: string;
   'debug.sketcher': {};
+}
+
+export function isSketchSpec(spec: RawDomSchema | SketchSpec): spec is SketchSpec {
+  return (<SketchSpec> spec).uid !== undefined;
 }
 
 const singleSchema = ValueSchema.objOfOnly([

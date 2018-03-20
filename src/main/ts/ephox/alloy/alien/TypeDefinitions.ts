@@ -1,42 +1,35 @@
-import { FieldProcessorAdt } from '@ephox/boulder';
-import { Option } from '@ephox/katamari';
-import { isDisabled } from 'ephox/alloy/behaviour/disabling/DisableApis';
-import { value } from '@ephox/boulder/lib/main/ts/ephox/boulder/core/ValueProcessor';
-
 // TODO move these to the correct village
 
+// TODO move this generic into Katamari Adt
+// All Alloy and Boulder adts extend this generic interface
+export interface AdtInterface {
+  fold: <T>(...fn: Array<(...x: any[]) => T>) => T;
+  match: <T>(branches: { [k: string]: (...x: any[]) => T }) => T;
+  log: (label: string) => string;
+}
+
+// Sugar Dom
 export interface SugarElement {
   dom: () => HTMLElement;
 }
 
-// Behaviours
-export interface AlloyBehaviour {
-  config: (spec: any) => { key: string, value: any };
-  exhibit: (info: any, base: any) => {};
-  handlers: (info: any) => {};
-  name: () => string;
-  revoke: () => { key: string, value: undefined };
-  schema: () => FieldProcessorAdt;
-
-  getValue: (any) => any;
-  setValue: (...any) => any;
-  fields?: FieldProcessorAdt[];
+// Sugar Event
+export interface SugarEvent {
+  kill: () => void;
+  prevent: () => void;
+  raw: () => any;
+  stop: () => void;
+  target: () => SugarElement;
+  x: () => number;
+  y: () => number;
 }
 
-// WIP
-// export interface AlloyBehaviourSchema {
-//   config: {};
-//   configAsRaw: () => {};
-//   initialConfig: any;
-//   me: any;
-//   state: any;
-// }
-
-export interface AlloyBehaviourConfig {
-  fields: FieldProcessorAdt[];
-  name: string;
-  active?: {};
-  apis?: {};
-  extra?: {};
-  state?: {};
+// Sugar Position
+export interface PositionCoordinates {
+  left: () => number;
+  top: () => number;
+  translate: (x: number, y: number) => PositionCoordinates;
 }
+
+// Fun.constant, Rather than => T, we will have explicit return types
+export type StringConstant = () => string;
