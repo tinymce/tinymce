@@ -1,7 +1,11 @@
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 
-var fromHtml = function (html, scope) {
+export interface SugarElement {
+  dom: () => any;
+}
+
+var fromHtml = function (html: string, scope?): SugarElement {
   var doc = scope || document;
   var div = doc.createElement('div');
   div.innerHTML = html;
@@ -12,30 +16,31 @@ var fromHtml = function (html, scope) {
   return fromDom(div.childNodes[0]);
 };
 
-var fromTag = function (tag, scope) {
+var fromTag = function (tag: string, scope?): SugarElement {
   var doc = scope || document;
   var node = doc.createElement(tag);
   return fromDom(node);
 };
 
-var fromText = function (text, scope) {
+var fromText = function (text: string, scope?): SugarElement {
   var doc = scope || document;
   var node = doc.createTextNode(text);
   return fromDom(node);
 };
 
-var fromDom = function (node) {
+var fromDom = function (node: Node | Window): SugarElement {
   if (node === null || node === undefined) throw new Error('Node cannot be null or undefined');
   return {
     dom: Fun.constant(node)
   };
 };
 
-var fromPoint = function (doc, x, y) {
-  return Option.from(doc.dom().elementFromPoint(x, y)).map(fromDom);
+var fromPoint = function (docElm: SugarElement, x, y): Option<SugarElement> {
+  const doc = docElm.dom() as Document;
+  return Option.from(doc.elementFromPoint(x, y)).map(fromDom);
 };
 
-export default <any> {
+export default {
   fromHtml: fromHtml,
   fromTag: fromTag,
   fromText: fromText,
