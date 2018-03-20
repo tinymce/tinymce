@@ -19,7 +19,7 @@ export interface Processor {
   toDsl: () => TypeProcessorAdt;
 }
 
-export type FieldValueProcessor = <T>(key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => T;
+export type FieldValueProcessor = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => FieldProcessorAdt;
 export type StateValueProcessor = <T>(okey: string, instantiator: () => any) => T;
 
 export interface ValueProcessorAdt extends AdtInterface {
@@ -181,7 +181,7 @@ const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
   };
 };
 
-const objOf = function (fields: ValueProcessorAdt[]): Processor {
+const objOf = function (fields: FieldProcessorAdt[]): Processor {
   const extract = function (path, strength, o) {
     return cExtract(path, o, fields, strength);
   };
