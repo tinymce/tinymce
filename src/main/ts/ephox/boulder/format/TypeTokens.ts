@@ -1,7 +1,6 @@
 import { Adt } from '@ephox/katamari';
 import { AdtInterface } from '../alien/AdtDefinition';
-import { Processor } from '../api/Main';
-import { ValueValidator } from '../core/ValueProcessor';
+import { ValueValidator, Processor } from '../core/ValueProcessor';
 import { FieldPresenceAdt } from '../api/FieldPresence';
 
 export type SetOfTypeProcessor = (validator: ValueValidator, valueType: Processor) => any;
@@ -13,14 +12,14 @@ export type ThunkTypeProcessor = (description: string) => any;
 export type FuncTypeProcessor = (args: string[], schema: Processor) => any;
 
 export interface TypeProcessorAdt extends AdtInterface {
-  fold(SetOfTypeProcessor, ArrOfTypeProcessor, ObjOfTypeProcessor, ItemOfTypeProcessor, ChoiceOfTypeProcessor, ThunkTypeProcessor, FuncTypeProcessor): any;
+  fold<T>(SetOfTypeProcessor, ArrOfTypeProcessor, ObjOfTypeProcessor, ItemOfTypeProcessor, ChoiceOfTypeProcessor, ThunkTypeProcessor, FuncTypeProcessor): T;
 }
 
 export type OnFieldFieldProcessor = (name: string, presence: FieldPresenceAdt, type: Processor) => any;
 export type StateFieldProcessor = (name: string) => any;
 
 export interface FieldProcessorAdt extends AdtInterface {
-  fold(OnFieldFieldProcessor, StateFieldProcessor): any;
+  fold<T>(OnFieldFieldProcessor, StateFieldProcessor): T;
 }
 
 const typeAdt = Adt.generate([

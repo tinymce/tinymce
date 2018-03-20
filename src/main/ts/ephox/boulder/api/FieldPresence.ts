@@ -8,7 +8,7 @@ export type AsDefaultedOptionThunkField = (fallbackThunk: (any) => any) => any;
 export type MergeWithThunkField = (baseThunk: (any) => {any}) => any;
 export interface FieldPresenceAdt extends AdtInterface {
   // TODO: extend the correct fold type
-  fold(StrictField, DefaultedThunkField, AsOptionField, AsDefaultedOptionThunkField, MergeWithThunkField): any;
+  fold<T>(StrictField, DefaultedThunkField, AsOptionField, AsDefaultedOptionThunkField, MergeWithThunkField): T;
 }
 
 const adt = Adt.generate([

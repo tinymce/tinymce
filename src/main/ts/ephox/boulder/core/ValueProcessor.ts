@@ -19,8 +19,8 @@ export interface Processor {
   toDsl: () => TypeProcessorAdt;
 }
 
-export type FieldValueProcessor = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => any;
-export type StateValueProcessor = (okey: string, instantiator: () => any) => any;
+export type FieldValueProcessor = <T>(key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => T;
+export type StateValueProcessor = <T>(okey: string, instantiator: () => any) => T;
 
 export interface ValueProcessorAdt extends AdtInterface {
   fold: (FieldValueProcessor, StateValueProcessor) => any;
