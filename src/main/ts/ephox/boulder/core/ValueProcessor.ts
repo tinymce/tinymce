@@ -19,22 +19,29 @@ export interface Processor {
   toDsl: () => TypeProcessorAdt;
 }
 
+export type FieldValueProcessor = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => FieldProcessorAdt;
+export type StateValueProcessor = <T>(okey: string, instantiator: () => any) => T;
+
 export interface ValueProcessorAdt extends AdtInterface {
-  // TODO: extend the correct fold type
-  // fold: <T>(...fn: Array<(...x: any[]) => T>) => T;
+  fold: (FieldValueProcessor, StateValueProcessor) => any;
+}
+
+export interface ValueProcessor {
+  field: FieldValueProcessor;
+  state: StateValueProcessor;
 }
 
 // data ValueAdt = Field fields | state
-const adt: { field: (...args: any[]) => FieldProcessorAdt, state: (...args: any[]) => FieldProcessorAdt } = Adt.generate([
+const adt = Adt.generate([
   { field: [ 'key', 'okey', 'presence', 'prop' ] },
   { state: [ 'okey', 'instantiator' ] }
-]);
+]) as ValueProcessor;
 
-const output = function (okey, value): FieldProcessorAdt {
+const output = function (okey, value): ValueProcessorAdt {
   return adt.state(okey, Fun.constant(value));
 };
 
-const snapshot = function (okey): FieldProcessorAdt {
+const snapshot = function (okey): ValueProcessorAdt {
   return adt.state(okey, Fun.identity);
 };
 
@@ -174,7 +181,7 @@ const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
   };
 };
 
-const objOf = function (fields: ValueProcessorAdt[]): Processor {
+const objOf = function (fields: FieldProcessorAdt[]): Processor {
   const extract = function (path, strength, o) {
     return cExtract(path, o, fields, strength);
   };

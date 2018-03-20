@@ -28,7 +28,7 @@ const forbid = function (key: string, message: string): FieldProcessorAdt {
   );
 };
 
-const strictObjOf = function (key: string, objSchema: any[]): FieldProcessorAdt  {
+const strictObjOf = function (key: string, objSchema: FieldProcessorAdt[]): FieldProcessorAdt  {
   return field(key, key, FieldPresence.strict(), objOf(objSchema));
 };
 

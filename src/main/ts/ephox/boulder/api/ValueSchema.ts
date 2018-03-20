@@ -3,7 +3,7 @@ import { Fun, Result } from '@ephox/katamari';
 import { arrOf, ValueProcessorAdt, func, Processor, thunk, value, ValueValidator, setOf, objOf, objOfOnly, arrOfObj as _arrOfObj } from '../core/ValueProcessor';
 import { formatErrors, formatObj} from '../format/PrettyPrinter';
 import { choose as _choose } from '../core/ChoiceProcessor';
-import { FieldProcessorAdt } from 'ephox/boulder/api/DslType';
+import { FieldProcessorAdt } from './DslType';
 
 export interface SchemaError <T> {
   input: T;
