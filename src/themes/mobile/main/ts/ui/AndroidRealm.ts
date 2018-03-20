@@ -8,8 +8,9 @@ import CommonRealm from './CommonRealm';
 import * as Dropup from './Dropup';
 import OuterContainer from './OuterContainer';
 import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
+import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
 
-export default function (scrollIntoView) {
+export default function (scrollIntoView: () => void) {
   const alloy = OuterContainer({
     classes: [ Styles.resolve('android-container') ]
   }) as Gui.GuiSystem;
@@ -76,5 +77,5 @@ export default function (scrollIntoView) {
     updateMode,
     socket: Fun.constant(socket),
     dropup: Fun.constant(dropup)
-  };
+  } as MobileRealm;
 }

@@ -23,7 +23,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', function () {
   const failure = arguments[arguments.length - 1];
   const detection = PlatformDetection.detect();
 
-  const realm = IosRealm();
+  const realm = IosRealm(Fun.noop);
   // Make toolbar appear
   Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
 

@@ -7,9 +7,23 @@ import ScrollingToolbar from '../toolbar/ScrollingToolbar';
 import CommonRealm from './CommonRealm';
 import * as Dropup from './Dropup';
 import OuterContainer from './OuterContainer';
-import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
+import { SugarElement } from '../alien/TypeDefinitions';
 
-export default function (scrollIntoView?) { // unsure if this should be optional?
+export interface MobileRealm {
+  system(): Gui.GuiSystem;
+  element(): SugarElement;
+  init(spec): void;
+  exit(): void;
+  setToolbarGroups(rawGroups): void;
+  setContextToolbar(rawGroups): void;
+  focusToolbar(): void;
+  restoreToolbar(): void;
+  updateMode(readOnly: boolean): void;
+  socket(): ComponentApi.AlloyComponent;
+  dropup(): Dropup.DropUp;
+}
+
+export default function (scrollIntoView: () => void) {
   const alloy = OuterContainer({
     classes: [ Styles.resolve('ios-container') ]
   }) as Gui.GuiSystem;
@@ -79,5 +93,5 @@ export default function (scrollIntoView?) { // unsure if this should be optional
     updateMode,
     socket: Fun.constant(socket),
     dropup: Fun.constant(dropup)
-  };
+  } as MobileRealm;
 }
