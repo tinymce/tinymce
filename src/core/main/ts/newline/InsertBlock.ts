@@ -329,7 +329,7 @@ const insert = function (editor, evt) {
     }
 
     // Split the current container block element if enter is pressed inside an empty inner block element
-    if (Settings.shouldEndContainerOnEmtpyBlock(editor) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
+    if (Settings.shouldEndContainerOnEmptyBlock(editor) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
       // Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
       newBlock = dom.split(containerBlock, parentBlock);
     } else {
