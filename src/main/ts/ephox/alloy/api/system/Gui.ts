@@ -188,8 +188,9 @@ const takeover = function (root: AlloyComponent): GuiSystem {
     }, Result.value);
   };
 
-  const getByDom = function (elem: SugarElement): Result<AlloyComponent, string> {
-    return Tagger.read(elem).fold(() => 'could not find element', getByUid);
+  const getByDom = function (elem: SugarElement): Result<AlloyComponent, any> {
+    const uid = Tagger.read(elem).getOr('not found');
+    return getByUid(uid);
   };
 
   addToWorld(root);
