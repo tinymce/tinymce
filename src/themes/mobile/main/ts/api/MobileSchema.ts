@@ -1,5 +1,3 @@
-
-// Before deleting { Processor } see bug https://github.com/palantir/tslint/issues/3463
 import { FieldSchema, ValueSchema, DslType } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Element, Traverse } from '@ephox/sugar';
