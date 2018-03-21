@@ -406,6 +406,7 @@ export namespace CaretPosition {
   export const isAtStart = (pos: CaretPosition) => pos ? pos.isAtStart() : false;
   export const isAtEnd = (pos: CaretPosition) => pos ? pos.isAtEnd() : false;
   export const isTextPosition = (pos: CaretPosition) => pos ? NodeType.isText(pos.container()) : false;
+  export const isElementPosition = (pos: CaretPosition) => isTextPosition(pos) === false;
 }
 
 export default CaretPosition;
