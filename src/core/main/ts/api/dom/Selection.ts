@@ -582,7 +582,7 @@ export const Selection = function (dom: DOMUtils, win: Window, serializer, edito
     return scrollContainer;
   };
 
-  const scrollIntoView = (elm: HTMLElement, alignToTop?: boolean) => ScrollIntoView.scrollIntoView(editor, elm, alignToTop);
+  const scrollIntoView = (elm: HTMLElement, alignToTop?: boolean) => ScrollIntoView.scrollElementIntoView(editor, elm, alignToTop);
   const placeCaretAt = (clientX: number, clientY: number) => setRng(CaretRangeFromPoint.fromPoint(clientX, clientY, editor.getDoc()));
 
   const getBoundingClientRect = (): ClientRect => {

@@ -213,7 +213,7 @@ export interface DOMUtils {
   toHex: (rgbVal: string) => string;
   run: (elm: RunArguments, func: (node: HTMLElement) => any, scope?: any) => any;
   getAttribs: (elm: string | Node) => NamedNodeMap | undefined[];
-  isEmpty: (node: HTMLElement, elements?: Record<string, any>) => boolean;
+  isEmpty: (node: Node, elements?: Record<string, any>) => boolean;
   createRng: () => Range;
   nodeIndex: (node: Node, normalized?: boolean) => number;
   split: (parentElm: Node, splitElm: Node, replacementElm?: Node) => Node;
@@ -982,7 +982,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     return styles.toHex(Tools.trim(rgbVal));
   };
 
-  const isEmpty = (node: HTMLElement, elements?: Record<string, any>) => {
+  const isEmpty = (node: Node, elements?: Record<string, any>) => {
     let i, attributes, type, whitespace, walker, name, brCount = 0;
 
     node = node.firstChild as HTMLElement;
@@ -994,7 +994,7 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
       do {
         type = node.nodeType;
 
-        if (type === 1) {
+        if (NodeType.isElement(node)) {
           // Ignore bogus elements
           const bogusVal = node.getAttribute('data-mce-bogus');
           if (bogusVal) {

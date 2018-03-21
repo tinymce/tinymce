@@ -413,8 +413,7 @@ export default function (editor: Editor) {
     'mceCleanup' () {
       const bookmark = selection.getBookmark();
 
-      editor.setContent(editor.getContent({ cleanup: TRUE }), { cleanup: TRUE });
-
+      editor.setContent(editor.getContent());
       selection.moveToBookmark(bookmark);
     },
 
@@ -449,12 +448,9 @@ export default function (editor: Editor) {
     },
 
     'mceInsertRawHTML' (command, ui, value) {
+      const content = editor.getContent() as string;
       selection.setContent('tiny_mce_marker');
-      editor.setContent(
-        editor.getContent().replace(/tiny_mce_marker/g, function () {
-          return value;
-        })
-      );
+      editor.setContent(content.replace(/tiny_mce_marker/g, () => value));
     },
 
     'mceToggleFormat' (command, ui, value) {
