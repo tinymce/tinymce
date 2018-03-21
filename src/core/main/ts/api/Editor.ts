@@ -61,7 +61,7 @@ export interface Editor {
   $: any;
   baseURI: any;
   bodyElement: HTMLElement;
-  bookmark: undefined;
+  bookmark: any;
   buttons: any;
   composing: boolean;
   container: HTMLElement;
@@ -100,7 +100,7 @@ export interface Editor {
   parser: any;
   plugins: any;
   quirks: any;
-  readonly: undefined;
+  readonly: boolean;
   removed: boolean;
   rtl: boolean;
   schema: Schema;

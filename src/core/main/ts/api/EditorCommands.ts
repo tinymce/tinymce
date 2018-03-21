@@ -31,7 +31,6 @@ import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 // Added for compression purposes
 const each = Tools.each, extend = Tools.extend;
 const map = Tools.map, inArray = Tools.inArray;
-const TRUE = true, FALSE = false;
 
 export default function (editor: Editor) {
   let dom: DOMUtils, selection: Selection, formatter;
@@ -255,7 +254,7 @@ export default function (editor: Editor) {
 
   const execNativeCommand = function (command, ui?, value?) {
     if (ui === undefined) {
-      ui = FALSE;
+      ui = false;
     }
 
     if (value === undefined) {
@@ -301,7 +300,7 @@ export default function (editor: Editor) {
         execNativeCommand(command);
       } catch (ex) {
         // Command failed
-        failed = TRUE;
+        failed = true;
       }
 
       // Chrome reports the paste command as supported however older IE:s will return false for cut/paste
@@ -423,7 +422,7 @@ export default function (editor: Editor) {
       // Make sure that the body node isn't removed
       if (node !== editor.getBody()) {
         storeSelection();
-        editor.dom.remove(node, TRUE);
+        editor.dom.remove(node, true);
         restoreSelection();
       }
     },
@@ -434,7 +433,7 @@ export default function (editor: Editor) {
       dom.getParent(selection.getNode(), function (node) {
         if (node.nodeType === 1 && counter++ === value) {
           selection.select(node);
-          return FALSE;
+          return false;
         }
       }, editor.getBody());
     },
@@ -540,7 +539,7 @@ export default function (editor: Editor) {
       const matches = map(nodes, function (node) {
         return !!formatter.matchNode(node, name);
       });
-      return inArray(matches, TRUE) !== -1;
+      return inArray(matches, true) !== -1;
     },
 
     'Bold,Italic,Underline,Strikethrough,Superscript,Subscript' (command) {
@@ -556,11 +555,11 @@ export default function (editor: Editor) {
 
       if (settings.inline_styles) {
         if ((node = dom.getParent(selection.getStart(), dom.isBlock)) && parseInt(node.style.paddingLeft, 10) > 0) {
-          return TRUE;
+          return true;
         }
 
         if ((node = dom.getParent(selection.getEnd(), dom.isBlock)) && parseInt(node.style.paddingLeft, 10) > 0) {
-          return TRUE;
+          return true;
         }
       }
 
