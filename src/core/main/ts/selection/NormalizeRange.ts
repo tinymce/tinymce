@@ -8,17 +8,16 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Option, Struct } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import * as CaretContainer from '../caret/CaretContainer';
 import NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
 import CaretFormat from '../fmt/CaretFormat';
 import RangeCompare from './RangeCompare';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 
-const position = Struct.immutable('container', 'offset');
-
-const findParent = function (node, rootNode, predicate) {
+const findParent = (node: Node, rootNode: Node, predicate: (node: Node) => boolean) => {
   while (node && node !== rootNode) {
     if (predicate(node)) {
       return node;
@@ -30,29 +29,29 @@ const findParent = function (node, rootNode, predicate) {
   return null;
 };
 
-const hasParent = function (node, rootNode, predicate) {
+const hasParent = (node: Node, rootNode: Node, predicate: (node: Node) => boolean) => {
   return findParent(node, rootNode, predicate) !== null;
 };
 
-const hasParentWithName = function (node, rootNode, name) {
+const hasParentWithName = (node: Node, rootNode: Node, name: string) => {
   return hasParent(node, rootNode, function (node) {
     return node.nodeName === name;
   });
 };
 
-const isTable = function (node) {
+const isTable = (node: Node) => {
   return node && node.nodeName === 'TABLE';
 };
 
-const isTableCell = function (node) {
+const isTableCell = (node: Node) => {
   return node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
 };
 
-const isCeFalseCaretContainer = function (node, rootNode) {
+const isCeFalseCaretContainer = (node: Node, rootNode: Node) => {
   return CaretContainer.isCaretContainer(node) && hasParent(node, rootNode, CaretFormat.isCaretNode) === false;
 };
 
-const hasBrBeforeAfter = function (dom: DOMUtils, node, left) {
+const hasBrBeforeAfter = (dom: DOMUtils, node: Node, left: boolean) => {
   const walker = new TreeWalker(node, dom.getParent(node.parentNode, dom.isBlock) || dom.getRoot());
 
   while ((node = walker[left ? 'prev' : 'next']())) {
@@ -62,11 +61,11 @@ const hasBrBeforeAfter = function (dom: DOMUtils, node, left) {
   }
 };
 
-const isPrevNode = function (node, name) {
+const isPrevNode = (node: Node, name: string) => {
   return node.previousSibling && node.previousSibling.nodeName === name;
 };
 
-const hasContentEditableFalseParent = function (body, node) {
+const hasContentEditableFalseParent = (body: HTMLElement, node: Node) => {
   while (node && node !== body) {
     if (NodeType.isContentEditableFalse(node)) {
       return true;
@@ -80,7 +79,7 @@ const hasContentEditableFalseParent = function (body, node) {
 
 // Walks the dom left/right to find a suitable text node to move the endpoint into
 // It will only walk within the current parent block or body and will stop if it hits a block or a BR/IMG
-const findTextNodeRelative = function (dom: DOMUtils, isAfterNode, collapsed, left, startNode) {
+const findTextNodeRelative = (dom: DOMUtils, isAfterNode: boolean, collapsed: boolean, left: boolean, startNode: Node): Option<CaretPosition> => {
   let walker, lastInlineElement, parentBlockContainer;
   const body = dom.getRoot();
   let node;
@@ -91,7 +90,7 @@ const findTextNodeRelative = function (dom: DOMUtils, isAfterNode, collapsed, le
   // Lean left before the BR element if it's the only BR within a block element. Gecko bug: #6680
   // This: <p><br>|</p> becomes <p>|<br></p>
   if (left && NodeType.isBr(startNode) && isAfterNode && dom.isEmpty(parentBlockContainer)) {
-    return Option.some(position(startNode.parentNode, dom.nodeIndex(startNode)));
+    return Option.some(CaretPosition(startNode.parentNode, dom.nodeIndex(startNode)));
   }
 
   // Walk left until we hit a text node we can move to or a block/br/img
@@ -105,7 +104,7 @@ const findTextNodeRelative = function (dom: DOMUtils, isAfterNode, collapsed, le
     // Found text node that has a length
     if (NodeType.isText(node) && node.nodeValue.length > 0) {
       if (hasParentWithName(node, body, 'A') === false) {
-        return Option.some(position(node, left ? node.nodeValue.length : 0));
+        return Option.some(CaretPosition(node, left ? node.nodeValue.length : 0));
       }
 
       return Option.none();
@@ -121,13 +120,13 @@ const findTextNodeRelative = function (dom: DOMUtils, isAfterNode, collapsed, le
 
   // Only fetch the last inline element when in caret mode for now
   if (collapsed && lastInlineElement) {
-    return Option.some(position(lastInlineElement, 0));
+    return Option.some(CaretPosition(lastInlineElement, 0));
   }
 
   return Option.none();
 };
 
-const normalizeEndPoint = function (dom: DOMUtils, collapsed, start, rng) {
+const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rng: Range): Option<CaretPosition> => {
   let container, offset, walker;
   const body = dom.getRoot();
   let node, nonEmptyElementsMap;
@@ -271,14 +270,18 @@ const normalizeEndPoint = function (dom: DOMUtils, collapsed, start, rng) {
     });
   }
 
-  return normalized ? Option.some(position(container, offset)) : Option.none();
+  return normalized ? Option.some(CaretPosition(container, offset)) : Option.none();
 };
 
-const normalize = function (dom: DOMUtils, rng) {
+const normalize = (dom: DOMUtils, rng: Range): Option<Range> => {
   const collapsed = rng.collapsed, normRng = rng.cloneRange();
+  const startPos = CaretPosition.fromRangeStart(rng);
 
   normalizeEndPoint(dom, collapsed, true, normRng).each(function (pos) {
-    normRng.setStart(pos.container(), pos.offset());
+    // #TINY-1595: Do not move the caret to previous line
+    if (!collapsed || !CaretPosition.isAbove(startPos, pos)) {
+      normRng.setStart(pos.container(), pos.offset());
+    }
   });
 
   if (!collapsed) {
