@@ -7,7 +7,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 
 import TinyCodeDupe from './alien/TinyCodeDupe';
-import Settings from './api/Settings';
+import * as Settings from './api/Settings';
 import TinyChannels from './channels/TinyChannels';
 import Features from './features/Features';
 import Styles from './style/Styles';
@@ -154,6 +154,10 @@ ThemeManager.add('mobile', function (editor) {
 
         setReadOnly (ro) {
           setReadOnly(readOnlyGroups, mainGroups, ro);
+        },
+
+        readOnlyOnInit () {
+          return Settings.readOnlyOnInit(editor);
         }
       });
 
@@ -162,8 +166,6 @@ ThemeManager.add('mobile', function (editor) {
           realm.system().broadcastOn([ TinyChannels.dropupDismissed() ], { });
         });
       };
-
-      Debugging.registerInspector('remove this', realm.system());
 
       const backToMaskGroup = {
         label: 'The first group',

@@ -15,10 +15,10 @@ const produce = function (raw) {
 
   /* Make the toolbar */
   Css.set(mobile.toolstrip, 'width', '100%');
-
   Css.set(mobile.container, 'position', 'relative');
+
   const onView = function () {
-    mobile.setReadOnly(true);
+    mobile.setReadOnly(mobile.readOnlyOnInit());
     mode.enter();
   };
 
