@@ -1,8 +1,7 @@
-import { AlloyTriggers, Attachment, Debugging, Swapping } from '@ephox/alloy';
+import { AlloyTriggers, Attachment, Swapping } from '@ephox/alloy';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Element, Focus, Insert, Node } from '@ephox/sugar';
-
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 
