@@ -58,14 +58,31 @@ ThemeManager.add('mobile', function (editor) {
       onReady: Fun.noop
     });
 
-    const setReadOnly = function (readOnlyGroups, mainGroups, ro) {
+    const setReadOnly = function (dynamicGroup, readOnlyGroups, mainGroups, ro) {
       if (ro === false) {
         editor.selection.collapse();
       }
-      realm.setToolbarGroups(ro ? readOnlyGroups.get() : mainGroups.get());
+      const toolbars = configureToolbar(dynamicGroup, readOnlyGroups, mainGroups);
+      realm.setToolbarGroups(ro === true ? toolbars.readOnly : toolbars.main);
+
       editor.setMode(ro === true ? 'readonly' : 'design');
       editor.fire(ro === true ? READING() : EDITING());
       realm.updateMode(ro);
+    };
+
+    const configureToolbar = function (dynamicGroup, readOnlyGroups, mainGroups) {
+      const dynamic = dynamicGroup.get();
+      const toolbars = {
+        readOnly: dynamic.backToMask.concat(readOnlyGroups.get()),
+        main: dynamic.backToMask.concat(mainGroups.get())
+      };
+
+      if (Settings.readOnlyOnInit(editor)) {
+        toolbars.readOnly = dynamic.backToMask.concat(readOnlyGroups.get());
+        toolbars.main = dynamic.backToReadOnly.concat(mainGroups.get());
+      }
+
+      return toolbars;
     };
 
     const bindHandler = function (label, handler) {
@@ -153,7 +170,7 @@ ThemeManager.add('mobile', function (editor) {
         translate: Fun.noop,
 
         setReadOnly (ro) {
-          setReadOnly(readOnlyGroups, mainGroups, ro);
+          setReadOnly(dynamicGroup, readOnlyGroups, mainGroups, ro);
         },
 
         readOnlyOnInit () {
@@ -183,7 +200,7 @@ ThemeManager.add('mobile', function (editor) {
         scrollable: false,
         items: [
           Buttons.forToolbar('readonly-back', function (/* btn */) {
-            setReadOnly(readOnlyGroups, mainGroups, true);
+            setReadOnly(dynamicGroup, readOnlyGroups, mainGroups, true);
           }, {})
         ]
       };
@@ -211,9 +228,12 @@ ThemeManager.add('mobile', function (editor) {
         ]
       };
 
-      const mainGroups = Cell([ backToReadOnlyGroup, actionGroup, extraGroup ]);
-      const readOnlyGroups = Cell([ backToMaskGroup, readOnlyGroup, extraGroup ]);
-
+      const mainGroups = Cell([ actionGroup, extraGroup ]);
+      const readOnlyGroups = Cell([ readOnlyGroup, extraGroup ]);
+      const dynamicGroup = Cell({
+        backToMask: [ backToMaskGroup ],
+        backToReadOnly: [ backToReadOnlyGroup ]
+      });
       // Investigate ways to keep in sync with the ui
       FormatChangers.init(realm, editor);
     });
