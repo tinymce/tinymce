@@ -5,7 +5,7 @@ export interface SugarElement {
   dom: () => any;
 }
 
-var fromHtml = function (html: string, scope?): SugarElement {
+var fromHtml = function (html: string, scope?: HTMLDocument): SugarElement {
   var doc = scope || document;
   var div = doc.createElement('div');
   div.innerHTML = html;
@@ -16,13 +16,13 @@ var fromHtml = function (html: string, scope?): SugarElement {
   return fromDom(div.childNodes[0]);
 };
 
-var fromTag = function (tag: string, scope?): SugarElement {
+var fromTag = function (tag: string, scope?: HTMLDocument): SugarElement {
   var doc = scope || document;
   var node = doc.createElement(tag);
   return fromDom(node);
 };
 
-var fromText = function (text: string, scope?): SugarElement {
+var fromText = function (text: string, scope?: HTMLDocument): SugarElement {
   var doc = scope || document;
   var node = doc.createTextNode(text);
   return fromDom(node);
