@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { DslType, FieldSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';

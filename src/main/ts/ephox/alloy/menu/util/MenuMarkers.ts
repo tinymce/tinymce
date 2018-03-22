@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, DslType } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 const menuFields = Fun.constant([

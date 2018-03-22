@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { DslType, FieldSchema } from '@ephox/boulder';
 import { Cell, Fun, Option } from '@ephox/katamari';
 
 import Strings from '../../alien/Strings';

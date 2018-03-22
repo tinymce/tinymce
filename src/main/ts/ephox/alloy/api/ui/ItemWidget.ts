@@ -9,7 +9,9 @@ export interface ItemWidget {
 
 export type ItemWidgetParts = () => ItemWidget;
 
-const parts = Fun.constant(AlloyParts.generate(WidgetParts.owner(), WidgetParts.parts())) as ItemWidgetParts;
+const parts = function () {
+  return AlloyParts.generate(WidgetParts.owner(), WidgetParts.parts());
+};
 
 export {
   parts

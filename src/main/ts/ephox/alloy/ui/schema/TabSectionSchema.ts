@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { DslType, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
