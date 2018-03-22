@@ -27,7 +27,7 @@ const valueOf = function (validator: ValueValidator): Processor {
   });
 };
 
-const extract = function (label: string, prop: Processor, strength: () => any, obj: any): Result<any, any> {
+const extract = function (label: string, prop: Processor, strength, obj: any): Result<any, any> {
   return prop.extract([ label ], strength, obj).fold(function (errs) {
     return Result.error({
       input: obj,

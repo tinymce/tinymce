@@ -11,16 +11,16 @@ import { AdtInterface } from '../alien/AdtDefinition';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
 export type ValueValidator = (a, strength?: () => any) => Result<any, string>;
-export type PropExtractor = (path: string[], strength: () => any, val: any) => Result<any, any>;
+export type PropExtractor = (path: string[], strength, val: any) => Result<any, any>;
 export type ValueExtractor = (label: string, prop: Processor, strength: () => any, obj: any) => Result<any, string>;
 export interface Processor {
   extract: PropExtractor;
-  toString: () => any;
+  toString: () => string;
   toDsl: () => TypeProcessorAdt;
 }
 
 export type FieldValueProcessor = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => FieldProcessorAdt;
-export type StateValueProcessor = <T>(okey: string, instantiator: () => any) => T;
+export type StateValueProcessor = <T>(okey: string, instantiator) => T;
 
 export interface ValueProcessorAdt extends AdtInterface {
   fold: (FieldValueProcessor, StateValueProcessor) => any;
