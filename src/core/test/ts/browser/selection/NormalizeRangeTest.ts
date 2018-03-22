@@ -74,6 +74,11 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
         cNormalizeRange([], 0, [], 1),
         cAssertRangeNone
       ])),
+      Logger.t('Should not normalize into code', Chain.asStep(viewBlock, [
+        cSetHtml('<code>a</code>'),
+        cNormalizeRange([], 0, [], 1),
+        cAssertRangeNone
+      ])),
       Logger.t('Should not normalize to before/after table', Chain.asStep(viewBlock, [
         cSetHtml('<table><tr><td>a</td></tr></table>'),
         cNormalizeRange([], 0, [], 1),
