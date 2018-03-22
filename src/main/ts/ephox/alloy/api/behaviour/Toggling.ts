@@ -23,7 +23,7 @@ export interface TogglingConfig {
   selected?: boolean;
 }
 
-export type TogglingMode = 'pressed' | 'checked' | 'toggled' | 'selected';
+export type TogglingMode = 'pressed' | 'checked' | 'toggled' | 'selected' | 'none';
 
 const Toggling = Behaviour.create({
   fields: ToggleSchema,

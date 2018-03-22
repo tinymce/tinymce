@@ -78,6 +78,8 @@ export interface KeyingConfig {
   onEnter?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
   onEscape?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
   onShiftEnter?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+  onShiftTab?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+  onTab?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
   useTabstopAt?: (comp: AlloyComponent) => Option<boolean>;
 }
 

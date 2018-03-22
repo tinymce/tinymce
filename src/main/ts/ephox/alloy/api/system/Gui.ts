@@ -22,13 +22,13 @@ export interface GuiSystem {
   add: (component: AlloyComponent) => void;
   remove: (component: AlloyComponent) => void;
   getByUid: (uid: string) => Result<AlloyComponent, string>;
-  getByDom: (element: SugarElement) => Result<AlloyComponent, string>;
+  getByDom: (element: SugarElement) => Result<AlloyComponent, any>;
 
   addToWorld: (AlloyComponent) => void;
   removeFromWorld: (AlloyComponent) => void;
 
   broadcast: (message: string) => void;
-  broadcastOn: (channels: string, message: string) => void;
+  broadcastOn: (channels: string[], message: any) => void;
 }
 
 const create = function (): GuiSystem {
@@ -188,8 +188,9 @@ const takeover = function (root: AlloyComponent): GuiSystem {
     }, Result.value);
   };
 
-  const getByDom = function (elem: SugarElement): Result<AlloyComponent, string> {
-    return Tagger.read(elem).fold(() => 'could not find element', getByUid);
+  const getByDom = function (elem: SugarElement): Result<AlloyComponent, any> {
+    const uid = Tagger.read(elem).getOr('not found');
+    return getByUid(uid);
   };
 
   addToWorld(root);

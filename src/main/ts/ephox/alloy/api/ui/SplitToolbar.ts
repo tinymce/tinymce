@@ -14,6 +14,11 @@ import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
+export interface SplitToolbarSketch extends Sketcher.CompositeSketch {
+  setGroups: (toolbar: AlloyComponent, groups: [{}]) => void;
+  refresh: (toolbar: AlloyComponent) => void;
+}
+
 const setStoredGroups = function (bar, storedGroups) {
   const bGroups = Arr.map(storedGroups, function (g) { return GuiFactory.premade(g); });
   Toolbar.setGroups(bar, bGroups);
@@ -113,11 +118,6 @@ const factory = function (detail, components, spec, externals) {
     }
   );
 };
-
-export interface SplitToolbarSketch extends Sketcher.CompositeSketch {
-  setGroups: (toolbar: AlloyComponent, groups: [{}]) => void;
-  refresh: (toolbar: AlloyComponent) => void;
-}
 
 const SplitToolbar = Sketcher.composite({
   name: 'SplitToolbar',

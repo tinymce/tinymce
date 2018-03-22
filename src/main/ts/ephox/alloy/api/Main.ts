@@ -24,7 +24,7 @@ import { Transitioning } from './behaviour/Transitioning';
 import { Unselecting } from './behaviour/Unselecting';
 import * as CompBehaviours from './component/CompBehaviours';
 import * as Component from './component/Component';
-import { ComponentApi } from './component/ComponentApi';
+import * as ComponentApi from './component/ComponentApi';
 import * as ComponentUtil from './component/ComponentUtil';
 import * as DomFactory from './component/DomFactory';
 import * as GuiFactory from './component/GuiFactory';
