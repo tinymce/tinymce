@@ -62,6 +62,17 @@ const tryFindRangePosition = (node: Element, rng: Range) => {
   );
 };
 
+// Since we trim zwsp from undo levels the caret format containers
+// may be empty if so pad them with a zwsp and move caret there
+const padEmptyCaretContainer = (root: HTMLElement, node: Node, rng: Range): boolean => {
+  if (isEmpty(node) && getParentCaretContainer(root, node)) {
+    insertZwsp(node, rng);
+    return true;
+  } else {
+    return false;
+  }
+};
+
 const setEndPoint = (dom: DOMUtils, start: boolean, bookmark, rng: Range) => {
   const point = bookmark[start ? 'start' : 'end'];
   let i, node, offset, children;
@@ -74,18 +85,12 @@ const setEndPoint = (dom: DOMUtils, start: boolean, bookmark, rng: Range) => {
     for (node = root, i = point.length - 1; i >= 1; i--) {
       children = node.childNodes;
 
-      // Since we trim zwsp. Caret format containers may be empty
-      // if so pad them with a zwsp and move caret there
-      if (isEmpty(node) && getParentCaretContainer(root, node)) {
-        insertZwsp(node, rng);
+      if (padEmptyCaretContainer(root, node, rng)) {
         return true;
       }
 
       if (point[i] > children.length - 1) {
-        // Since we trim zwsp. Caret format containers may be empty
-        // if so pad them with a zwsp and move caret there
-        if (isEmpty(node) && getParentCaretContainer(root, node)) {
-          insertZwsp(node, rng);
+        if (padEmptyCaretContainer(root, node, rng)) {
           return true;
         }
 

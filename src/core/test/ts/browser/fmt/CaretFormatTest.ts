@@ -310,7 +310,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
       ])),
       Logger.t('isCaretNode', Step.sync(function () {
         Assertions.assertEq('Should be false since it is not a caret node', false, isCaretNode(editor.dom.create('b')));
-        Assertions.assertEq('Should be false since it ia caret node', true, isCaretNode(editor.dom.create('span', { id: '_mce_caret' })));
+        Assertions.assertEq('Should be true since it is a caret node', true, isCaretNode(editor.dom.create('span', { id: '_mce_caret' })));
       })),
       Logger.t('Apply some format to the empty editor and make sure that the content didn\'t mutate after serialization (TINY-1288)', GeneralSteps.sequence([
         tinyApis.sSetContent(''),
