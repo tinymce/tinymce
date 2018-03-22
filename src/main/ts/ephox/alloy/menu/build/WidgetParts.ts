@@ -3,6 +3,7 @@ import { Fun } from '@ephox/katamari';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Representing } from '../../api/behaviour/Representing';
 import * as PartType from '../../parts/PartType';
+import { DslType } from '@ephox/boulder';
 
 const owner = Fun.constant('item-widget');
 
@@ -24,7 +25,7 @@ const parts = Fun.constant([
         ])
       };
     }
-  })
+  }) as DslType.FieldProcessorAdt
 ]);
 
 export {

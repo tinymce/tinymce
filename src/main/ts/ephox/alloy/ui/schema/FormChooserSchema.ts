@@ -1,4 +1,4 @@
-import { FieldSchema, Objects } from '@ephox/boulder';
+import { FieldSchema, Objects, DslType } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';

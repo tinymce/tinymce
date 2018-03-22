@@ -1,4 +1,4 @@
-import { FieldSchema, Objects } from '@ephox/boulder';
+import { FieldSchema, Objects, DslType } from '@ephox/boulder';
 import { Fun, Merger } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
