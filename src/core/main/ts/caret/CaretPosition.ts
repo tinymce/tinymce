@@ -409,7 +409,7 @@ export namespace CaretPosition {
   };
 
   export const isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean => {
-    return Options.liftN([Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects())], (r1, r2) => ClientRect.isBelow(r1, r2)).getOr(false);
+    return Options.liftN([Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects())], ClientRect.isBelow).getOr(false);
   };
 
   export const isAtStart = (pos: CaretPosition) => pos ? pos.isAtStart() : false;
