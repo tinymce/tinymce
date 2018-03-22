@@ -1,8 +1,8 @@
-import { Behaviour, Button, Container, GuiFactory, Replacing, Swapping } from '@ephox/alloy';
+import { Behaviour, Button, Container, GuiFactory, Replacing, Swapping, ComponentApi } from '@ephox/alloy';
 
-import UiDomFactory from '../util/UiDomFactory';
+import * as UiDomFactory from '../util/UiDomFactory';
 
-const makeEditSwitch = function (webapp) {
+const makeEditSwitch = function (webapp): ComponentApi.AlloyComponent {
   return GuiFactory.build(
     Button.sketch({
       dom: UiDomFactory.dom('<div class="${prefix}-mask-edit-icon ${prefix}-icon"></div>'),
