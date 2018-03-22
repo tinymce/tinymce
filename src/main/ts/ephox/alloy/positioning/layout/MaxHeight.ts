@@ -1,21 +1,19 @@
 import { Fun } from '@ephox/katamari';
-import { Css } from '@ephox/sugar';
-import { Height } from '@ephox/sugar';
+import { Css, Height } from '@ephox/sugar';
 
 // applies the max-height as determined by Bounder
-var setMaxHeight = function (element, maxHeight) {
+const setMaxHeight = function (element, maxHeight) {
   Height.setMax(element, Math.floor(maxHeight));
 };
 
-
 // adds both max-height and overflow to constrain it
-var anchored = function (element, available) {
+const anchored = Fun.constant(function (element, available) {
   setMaxHeight(element, available);
   Css.setAll(element, {
     'overflow-x': 'hidden',
     'overflow-y': 'auto'
   });
-};
+});
 
 /*
  * This adds max height, but not overflow - the effect of this is that elements can grow beyond the max height,
@@ -23,11 +21,11 @@ var anchored = function (element, available) {
  *
  * If the element expands below the screen height it will be cut off, but we were already doing that.
  */
-var expandable = function (element, available) {
+const expandable = Fun.constant(function (element, available) {
   setMaxHeight(element, available);
-};
+});
 
-export default <any> {
-  anchored: Fun.constant(anchored),
-  expandable: Fun.constant(expandable)
+export {
+  anchored,
+  expandable
 };

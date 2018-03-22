@@ -1,43 +1,43 @@
-import AlloyTriggers from '../events/AlloyTriggers';
-import SystemEvents from '../events/SystemEvents';
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Body } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Arr, Option } from '@ephox/katamari';
+import { Body, Insert, Remove, Traverse } from '@ephox/sugar';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { GuiSystem } from '../../api/system/Gui';
 
-var fireDetaching = function (component) {
+import * as AlloyTriggers from '../events/AlloyTriggers';
+import * as SystemEvents from '../events/SystemEvents';
+
+const fireDetaching = function (component) {
   AlloyTriggers.emit(component, SystemEvents.detachedFromDom());
-  var children = component.components();
+  const children = component.components();
   Arr.each(children, fireDetaching);
 };
 
-var fireAttaching = function (component) {
-  var children = component.components();
+const fireAttaching = function (component) {
+  const children = component.components();
   Arr.each(children, fireAttaching);
   AlloyTriggers.emit(component, SystemEvents.attachedToDom());
 };
 
-var attach = function (parent, child) {
+const attach = function (parent: AlloyComponent, child: AlloyComponent): void {
   attachWith(parent, child, Insert.append);
 };
 
-var attachWith = function (parent, child, insertion) {
+const attachWith = function (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: SugarElement, child: SugarElement) => void): void {
   parent.getSystem().addToWorld(child);
   insertion(parent.element(), child.element());
-  if (Body.inBody(parent.element())) fireAttaching(child);
+  if (Body.inBody(parent.element())) { fireAttaching(child); }
   parent.syncComponents();
 };
 
-var doDetach = function (component) {
+const doDetach = function (component) {
   fireDetaching(component);
   Remove.remove(component.element());
   component.getSystem().removeFromWorld(component);
 };
 
-var detach = function (component) {
-  var parent = Traverse.parent(component.element()).bind(function (p) {
+const detach = function (component: AlloyComponent): void {
+  const parent = Traverse.parent(component.element()).bind(function (p) {
     return component.getSystem().getByDom(p).fold(Option.none, Option.some);
   });
 
@@ -47,37 +47,37 @@ var detach = function (component) {
   });
 };
 
-var detachChildren = function (component) {
+const detachChildren = function (component: AlloyComponent): void {
   // This will not detach the component, but will detach its children and sync at the end.
-  var subs = component.components();
+  const subs = component.components();
   Arr.each(subs, doDetach);
   // Clear the component also.
   Remove.empty(component.element());
   component.syncComponents();
 };
 
-var attachSystem = function (element, guiSystem) {
+const attachSystem = function (element: SugarElement, guiSystem: GuiSystem): void {
   Insert.append(element, guiSystem.element());
-  var children = Traverse.children(guiSystem.element());
+  const children = Traverse.children(guiSystem.element());
   Arr.each(children, function (child) {
     guiSystem.getByDom(child).each(fireAttaching);
   });
 };
 
-var detachSystem = function (guiSystem) {
-  var children = Traverse.children(guiSystem.element());
+const detachSystem = function (guiSystem: GuiSystem): void {
+  const children = Traverse.children(guiSystem.element());
   Arr.each(children, function (child) {
     guiSystem.getByDom(child).each(fireDetaching);
   });
   Remove.remove(guiSystem.element());
 };
 
-export default <any> {
-  attach: attach,
-  attachWith: attachWith,
-  detach: detach,
-  detachChildren: detachChildren,
+export {
+  attach,
+  attachWith,
+  detach,
+  detachChildren,
 
-  attachSystem: attachSystem,
-  detachSystem: detachSystem
+  attachSystem,
+  detachSystem
 };

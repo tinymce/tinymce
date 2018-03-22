@@ -1,16 +1,16 @@
-import Reader from './Reader';
+import * as Reader from './Reader';
 import { Body } from '@ephox/sugar';
 
-var write = function (element, content) {
-  if (!Body.inBody(element)) throw 'Internal error: attempted to write to an iframe that is not in the DOM';
+const write = function (element, content) {
+  if (!Body.inBody(element)) { throw new Error('Internal error: attempted to write to an iframe that is not in the DOM'); }
 
-  var doc = Reader.doc(element);
-  var dom = doc.dom();
+  const doc = Reader.doc(element);
+  const dom = doc.dom();
   dom.open();
   dom.writeln(content);
   dom.close();
 };
 
-export default <any> {
-  write: write
+export {
+  write
 };

@@ -1,24 +1,21 @@
-import Behaviour from '../behaviour/Behaviour';
-import Focusing from '../behaviour/Focusing';
-import Keying from '../behaviour/Keying';
-import Representing from '../behaviour/Representing';
-import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
-import ButtonBase from '../../ui/common/ButtonBase';
-import { FieldPresence } from '@ephox/boulder';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
-import { Id } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Id, Merger } from '@ephox/katamari';
 
-var factory = function (detail, spec) {
-  var events = ButtonBase.events(detail.action());
+import { events } from '../../ui/common/ButtonBase';
+import * as Behaviour from '../behaviour/Behaviour';
+import { Focusing } from '../behaviour/Focusing';
+import { Keying } from '../behaviour/Keying';
+import { Representing } from '../behaviour/Representing';
+import * as SketchBehaviours from '../component/SketchBehaviours';
+import * as Sketcher from './Sketcher';
+
+const factory = function (detail, spec) {
 
   return {
     uid: detail.uid(),
     dom: detail.dom(),
     components: detail.components(),
-    events: events,
+    events: events(detail.action()),
     behaviours: Merger.deepMerge(
       Behaviour.derive([
         Focusing.config({ }),
@@ -41,7 +38,7 @@ var factory = function (detail, spec) {
   };
 };
 
-export default <any> Sketcher.single({
+const TabButton = Sketcher.single({
   name: 'TabButton',
   configFields: [
     FieldSchema.defaulted('uid', undefined),
@@ -49,9 +46,9 @@ export default <any> Sketcher.single({
     FieldSchema.field('dom', 'dom', FieldPresence.mergeWithThunk(function (spec) {
       return {
         attributes: {
-          role: 'tab',
+          'role': 'tab',
           // NOTE: This is used in TabSection to connect "labelledby"
-          id: Id.generate('aria'),
+          'id': Id.generate('aria'),
           'aria-selected': 'false'
         }
       };
@@ -62,5 +59,9 @@ export default <any> Sketcher.single({
 
     FieldSchema.strict('view')
   ],
-  factory: factory
+  factory
 });
+
+export {
+  TabButton
+};

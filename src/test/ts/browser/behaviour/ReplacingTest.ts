@@ -1,19 +1,14 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Replacing from 'ephox/alloy/api/behaviour/Replacing';
-import Container from 'ephox/alloy/api/ui/Container';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Objects } from '@ephox/boulder';
+import { ApproxStructure, Assertions, Logger, RawAssertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('ReplacingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ReplacingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -107,7 +102,6 @@ UnitTest.asynctest('ReplacingTest', function() {
         RawAssertions.assertEq('Should have 2 children still', 2, Replacing.contents(component).length);
       }),
 
-
       Logger.t(
         'Replacing.append to put a new thing at the end.',
         Step.sync(function () {
@@ -163,7 +157,7 @@ UnitTest.asynctest('ReplacingTest', function() {
       Logger.t(
         'Replacing.remove to remove the second div',
         Step.sync(function () {
-          var second = component.getSystem().getByUid('second').getOrDie();
+          const second = component.getSystem().getByUid('second').getOrDie();
           Replacing.remove(component, second);
         })
       ),
@@ -212,4 +206,3 @@ UnitTest.asynctest('ReplacingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

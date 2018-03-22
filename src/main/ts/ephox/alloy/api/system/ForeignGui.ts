@@ -1,19 +1,23 @@
-import GuiFactory from '../component/GuiFactory';
-import Gui from './Gui';
-import DescribedHandler from '../../events/DescribedHandler';
-import SimulatedEvent from '../../events/SimulatedEvent';
-import ForeignCache from '../../foreign/ForeignCache';
-import Tagger from '../../registry/Tagger';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Options } from '@ephox/katamari';
-import { Insert } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
+import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { Arr, Fun, Options, Option } from '@ephox/katamari';
+import { DomEvent, Insert } from '@ephox/sugar';
 
-var schema = ValueSchema.objOfOnly([
+import * as DescribedHandler from '../../events/DescribedHandler';
+import * as SimulatedEvent from '../../events/SimulatedEvent';
+import ForeignCache from '../../foreign/ForeignCache';
+import * as Tagger from '../../registry/Tagger';
+import * as GuiFactory from '../component/GuiFactory';
+import * as Gui from './Gui';
+import { SugarElement, SugarEvent } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+
+export interface ForeignGuiSpec {
+  root: () => SugarElement;
+  dispatchers: any[];
+  insertion?: (root: AlloyComponent, system: Gui.GuiSystem) => void;
+}
+
+const schema = ValueSchema.objOfOnly([
   FieldSchema.strict('root'),
   FieldSchema.strictArrayOfObj('dispatchers', [
     // Given the initial target, what is the target of this particular behaviour?
@@ -60,13 +64,13 @@ var schema = ValueSchema.objOfOnly([
  */
 
 // Not all events are supported at the moment
-var supportedEvents = [
+const supportedEvents = [
   'click', 'mousedown', 'mousemove', 'touchstart', 'touchend', 'gesturestart', 'touchmove'
 ];
 
 // Find the dispatcher information for the target if available. Note, the
 // dispatcher may also change the target.
-var findDispatcher = function (dispatchers, target): any {
+const findDispatcher = function (dispatchers, target): any {
   return Options.findMap(dispatchers, function (dispatcher: any) {
     return dispatcher.getTarget()(target).map(function (newTarget) {
       return {
@@ -77,13 +81,13 @@ var findDispatcher = function (dispatchers, target): any {
   });
 };
 
-var getProxy = function (event, target) {
+const getProxy = function (event, target) {
   // Setup the component wrapping for the target element
-  var component = GuiFactory.build(
+  const component = GuiFactory.build(
     GuiFactory.external({ element: target })
   );
 
-  var simulatedEvent = SimulatedEvent.fromTarget(event, target);
+  const simulatedEvent = SimulatedEvent.fromTarget(event, target);
 
   return {
     component: Fun.constant(component),
@@ -91,37 +95,36 @@ var getProxy = function (event, target) {
   };
 };
 
-var engage = function (spec) {
-  var detail = ValueSchema.asStructOrDie('ForeignGui', schema, spec);
+const engage = function (spec: ForeignGuiSpec) {
+  const detail = ValueSchema.asStructOrDie('ForeignGui', schema, spec);
 
   // Creates an inner GUI and inserts it appropriately. This will be used
   // as the system for all behaviours
-  var gui = Gui.create();
+  const gui = Gui.create();
   detail.insertion()(detail.root(), gui);
 
-  var cache = ForeignCache();
+  const cache = ForeignCache();
 
-
-  var domEvents = Arr.map(supportedEvents, function (type) {
+  const domEvents = Arr.map(supportedEvents, function (type) {
     return DomEvent.bind(detail.root(), type, function (event) {
       dispatchTo(type, event);
     });
   });
 
-  var proxyFor = function (event, target, descHandler) {
+  const proxyFor = function (event, target, descHandler) {
     // create a simple alloy wrapping around the element, and add it to the world
-    var proxy = getProxy(event, target);
-    var component = proxy.component();
+    const proxy = getProxy(event, target);
+    const component = proxy.component();
     gui.addToWorld(component);
     // fire the event
-    var handler = DescribedHandler.getHandler(descHandler);
+    const handler = DescribedHandler.getHandler(descHandler);
     handler(component, proxy.simulatedEvent());
 
     // now remove from the world and revoke any alloy ids
     unproxy(component);
   };
 
-  var dispatchTo = function (type, event) {
+  const dispatchTo = function (type: string, event: SugarEvent): void {
     /*
      * 1. Check that the event did not originate in our internal alloy root. If it did,
      * we don't need to handle it here. The alloy root will handle it as usual.
@@ -135,44 +138,43 @@ var engage = function (spec) {
      * c) execute the event handler
      * d) remove it from the internal system and clear any DOM markers (alloy-ids etc)
      */
-
-    if (gui.element().dom().contains(event.target().dom())) return;
+    if (gui.element().dom().contains(event.target().dom())) { return; }
 
     // Find if the target has an assigned dispatcher
     findDispatcher(detail.dispatchers(), event.target()).each(function (dispatchData) {
 
-      var target = dispatchData.target();
-      var dispatcher = dispatchData.dispatcher();
+      const target = dispatchData.target();
+      const dispatcher = dispatchData.dispatcher();
 
       // get any info for this current element, creating it if necessary
-      var data = cache.getEvents(target, dispatcher.alloyConfig());
-      var events = data.evts();
+      const data = cache.getEvents(target, dispatcher.alloyConfig());
+      const events = data.evts();
 
       // if this dispatcher defines this event, proxy it and fire the handler
-      if (Objects.hasKey(events, type)) proxyFor(event, target, events[type]);
+      if (Objects.hasKey(events, type)) { proxyFor(event, target, events[type]); }
     });
   };
 
   // Remove any traces of the foreign component from the internal alloy system.
-  var unproxy = function (component) {
+  const unproxy = function (component: AlloyComponent): void {
     gui.removeFromWorld(component);
     Tagger.revoke(component.element());
   };
 
   // Disconnect the foreign GUI
-  var disengage = function () {
+  const disengage = function (): void {
     Arr.each(domEvents, function (e) {
       e.unbind();
     });
   };
 
   return {
-    dispatchTo: dispatchTo,
-    unproxy: unproxy,
-    disengage: disengage
+    dispatchTo,
+    unproxy,
+    disengage
   };
 };
 
-export default <any> {
-  engage: engage
+export {
+  engage
 };

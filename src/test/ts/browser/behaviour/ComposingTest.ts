@@ -1,19 +1,16 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Composing from 'ephox/alloy/api/behaviour/Composing';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Memento from 'ephox/alloy/api/component/Memento';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Option } from '@ephox/katamari';
+import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Composing } from 'ephox/alloy/api/behaviour/Composing';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as Memento from 'ephox/alloy/api/component/Memento';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('Browser Test: behaviour.ComposingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: behaviour.ComposingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var inner = Memento.record({
+  const inner = Memento.record({
     dom: { tag: 'span', innerHtml: 'inner' }
   });
 
@@ -28,7 +25,7 @@ UnitTest.asynctest('Browser Test: behaviour.ComposingTest', function() {
         ],
         behaviours: Behaviour.derive([
           Composing.config({
-            find: function (comp) {
+            find (comp) {
               return inner.getOpt(comp);
             }
           })
@@ -51,7 +48,7 @@ UnitTest.asynctest('Browser Test: behaviour.ComposingTest', function() {
           component.element()
         ),
         Step.sync(function () {
-          var delegate = Composing.getCurrent(component).getOrDie('Could not find delegate');
+          const delegate = Composing.getCurrent(component).getOrDie('Could not find delegate');
           Assertions.assertStructure(
             'Checking delegate structure',
             ApproxStructure.build(function (s, str, arr) {
@@ -66,4 +63,3 @@ UnitTest.asynctest('Browser Test: behaviour.ComposingTest', function() {
     failure
   );
 });
-

@@ -1,7 +1,7 @@
-import DomModification from '../../dom/DomModification';
 import { Objects } from '@ephox/boulder';
 
-var exhibit = function (base, tabConfig) {
+import * as DomModification from '../../dom/DomModification';
+const exhibit = function (base, tabConfig) {
   return DomModification.nu({
     attributes: Objects.wrapAll([
       { key: tabConfig.tabAttr(), value: 'true' }
@@ -9,6 +9,6 @@ var exhibit = function (base, tabConfig) {
   });
 };
 
-export default <any> {
-  exhibit: exhibit
+export {
+  exhibit
 };

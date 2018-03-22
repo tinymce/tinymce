@@ -1,36 +1,24 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Positioning from 'ephox/alloy/api/behaviour/Positioning';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Memento from 'ephox/alloy/api/component/Memento';
-import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import Container from 'ephox/alloy/api/ui/Container';
-import SplitDropdown from 'ephox/alloy/api/ui/SplitDropdown';
-import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr, Future, Result } from '@ephox/katamari';
+import { Attr } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as Memento from 'ephox/alloy/api/component/Memento';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Arr } from '@ephox/katamari';
-import { Future } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('SplitDropdown List', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SplitDropdown List', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var sink = Memento.record(
+  const sink = Memento.record(
     Container.sketch({
       containerBehaviours: Behaviour.derive([
         Positioning.config({
@@ -41,7 +29,7 @@ UnitTest.asynctest('SplitDropdown List', function() {
   );
 
   GuiSetup.setup(function (store, doc, body) {
-    var c = GuiFactory.build(
+    const c = GuiFactory.build(
       SplitDropdown.sketch({
         dom: {
           tag: 'span',
@@ -52,15 +40,15 @@ UnitTest.asynctest('SplitDropdown List', function() {
         },
 
         toggleClass: '.test-selected-dropdown',
-        onExecute: function (dropdown, button) {
-          var arg0Name = Attr.get(dropdown.element(), 'data-test-id');
-          var arg1Name = Attr.get(button.element(), 'data-test-id');
+        onExecute (dropdown, button) {
+          const arg0Name = Attr.get(dropdown.element(), 'data-test-id');
+          const arg1Name = Attr.get(button.element(), 'data-test-id');
           store.adderH('dropdown.execute(' + arg0Name + ', ' + arg1Name + ')')();
         },
-        onItemExecute: function (dropdown, tieredMenu, item) {
-          var arg0Name = Attr.get(dropdown.element(), 'data-test-id');
-          var arg1Name = Attr.get(tieredMenu.element(), 'data-test-id');
-          var arg2Name = Attr.get(item.element(), 'data-test-id');
+        onItemExecute (dropdown, tieredMenu, item) {
+          const arg0Name = Attr.get(dropdown.element(), 'data-test-id');
+          const arg1Name = Attr.get(tieredMenu.element(), 'data-test-id');
+          const arg2Name = Attr.get(item.element(), 'data-test-id');
           AlloyTriggers.emit(item, SystemEvents.sandboxClose());
           store.adderH('dropdown.item.execute(' + [ arg0Name, arg1Name, arg2Name ].join(', ') + ')')();
         },
@@ -95,7 +83,7 @@ UnitTest.asynctest('SplitDropdown List', function() {
           })
         ],
 
-        lazySink: function () {
+        lazySink () {
           return Result.value(sink.get(c));
         },
 
@@ -111,14 +99,14 @@ UnitTest.asynctest('SplitDropdown List', function() {
           }
         },
 
-        fetch: function () {
-          var future = Future.pure([
+        fetch () {
+          const future = Future.pure([
             { type: 'item', data: { value: 'alpha', text: 'Alpha' } },
             { type: 'item', data: { value: 'beta', text: 'Beta' } }
           ]);
 
           return future.map(function (f) {
-            var menu = TestDropdownMenu.renderMenu({
+            const menu = TestDropdownMenu.renderMenu({
               value: 'split-dropdown-test',
               items: Arr.map(f, TestDropdownMenu.renderItem)
             });
@@ -212,4 +200,3 @@ UnitTest.asynctest('SplitDropdown List', function() {
     ];
   }, function () { success(); }, failure);
 });
-

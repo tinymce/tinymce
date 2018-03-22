@@ -1,15 +1,16 @@
-import Coupling from '../../api/behaviour/Coupling';
-import Focusing from '../../api/behaviour/Focusing';
-import Keying from '../../api/behaviour/Keying';
-import Toggling from '../../api/behaviour/Toggling';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
-import Fields from '../../data/Fields';
-import InternalSink from '../../parts/InternalSink';
-import PartType from '../../parts/PartType';
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-var schema = [
+import { Coupling } from '../../api/behaviour/Coupling';
+import { Focusing } from '../../api/behaviour/Focusing';
+import { Keying } from '../../api/behaviour/Keying';
+import { Toggling } from '../../api/behaviour/Toggling';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import * as Fields from '../../data/Fields';
+import * as InternalSink from '../../parts/InternalSink';
+import * as PartType from '../../parts/PartType';
+
+const schema = Fun.constant([
   FieldSchema.strict('dom'),
   FieldSchema.strict('fetch'),
   Fields.onHandler('onOpen'),
@@ -20,15 +21,15 @@ var schema = [
   FieldSchema.option('lazySink'),
   FieldSchema.defaulted('matchWidth', false),
   FieldSchema.option('role')
-];
+]);
 
-var partTypes = [
+const parts = Fun.constant([
   PartType.external({
     schema: [
       Fields.tieredMenuMarkers()
     ],
     name: 'menu',
-    defaults: function (detail) {
+    defaults (detail) {
       return {
         onExecute: detail.onExecute()
       };
@@ -36,10 +37,11 @@ var partTypes = [
   }),
 
   InternalSink.partType()
-];
+]);
 
+const name = Fun.constant('Dropdown');
 export default <any> {
-  name: Fun.constant('Dropdown'),
-  schema: Fun.constant(schema),
-  parts: Fun.constant(partTypes)
+  name,
+  schema,
+  parts
 };

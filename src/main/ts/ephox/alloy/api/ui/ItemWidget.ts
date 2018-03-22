@@ -1,9 +1,16 @@
-import WidgetParts from '../../menu/build/WidgetParts';
-import AlloyParts from '../../parts/AlloyParts';
 import { Fun } from '@ephox/katamari';
 
-var parts = AlloyParts.generate(WidgetParts.owner(), WidgetParts.parts());
+import * as WidgetParts from '../../menu/build/WidgetParts';
+import * as AlloyParts from '../../parts/AlloyParts';
 
-export default <any> {
-  parts: Fun.constant(parts)
+export interface ItemWidget {
+  widget: (config) => any;
+}
+
+export type ItemWidgetParts = () => ItemWidget;
+
+const parts = Fun.constant(AlloyParts.generate(WidgetParts.owner(), WidgetParts.parts())) as ItemWidgetParts;
+
+export {
+  parts
 };

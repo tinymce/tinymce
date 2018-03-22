@@ -1,15 +1,13 @@
-import TransformFind from '../alien/TransformFind';
-import DescribedHandler from './DescribedHandler';
-import Tagger from '../registry/Tagger';
 import { Objects } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Struct } from '@ephox/katamari';
+import { Fun, Obj, Option, Struct } from '@ephox/katamari';
 
-var eventHandler = Struct.immutable('element', 'descHandler');
+import * as TransformFind from '../alien/TransformFind';
+import * as Tagger from '../registry/Tagger';
+import * as DescribedHandler from './DescribedHandler';
 
-var messageHandler = function (id, handler) {
+const eventHandler = Struct.immutable('element', 'descHandler');
+
+const messageHandler = function (id, handler) {
   return {
     id: Fun.constant(id),
     descHandler: Fun.constant(handler)
@@ -17,21 +15,21 @@ var messageHandler = function (id, handler) {
 };
 
 export default <any> function () {
-  var registry = { };
+  const registry = { };
 
-  var registerId = function (extraArgs, id, events) {
+  const registerId = function (extraArgs, id, events) {
     Obj.each(events, function (v, k) {
-      var handlers = registry[k] !== undefined ? registry[k] : { };
+      const handlers = registry[k] !== undefined ? registry[k] : { };
       handlers[id] = DescribedHandler.curryArgs(v, extraArgs);
       registry[k] = handlers;
     });
   };
 
-  var findHandler = function (handlers, elem) {
-    return Tagger.read(elem).fold(function (err) {
+  const findHandler = function (handlers, elem) {
+    return Tagger.read(elem).fold(function () {
       return Option.none();
     }, function (id) {
-      var reader = Objects.readOpt(id);
+      const reader = Objects.readOpt(id);
       return handlers.bind(reader).map(function (descHandler) {
         return eventHandler(elem, descHandler);
       });
@@ -39,7 +37,7 @@ export default <any> function () {
   };
 
   // Given just the event type, find all handlers regardless of element
-  var filterByType = function (type) {
+  const filterByType = function (type) {
     return Objects.readOptFrom(registry, type).map(function (handlers) {
       return Obj.mapToArray(handlers, function (f, id) {
         return messageHandler(id, f);
@@ -48,25 +46,25 @@ export default <any> function () {
   };
 
   // Given event type, and element, find the handler.
-  var find = function (isAboveRoot, type, target) {
-    var readType = Objects.readOpt(type);
-    var handlers = readType(registry);
+  const find = function (isAboveRoot, type, target) {
+    const readType = Objects.readOpt(type);
+    const handlers = readType(registry);
     return TransformFind.closest(target, function (elem) {
       return findHandler(handlers, elem);
     }, isAboveRoot);
   };
 
-  var unregisterId = function (id) {
+  const unregisterId = function (id) {
     // INVESTIGATE: Find a better way than mutation if we can.
     Obj.each(registry, function (handlersById, eventName) {
-      if (handlersById.hasOwnProperty(id)) delete handlersById[id];
+      if (handlersById.hasOwnProperty(id)) { delete handlersById[id]; }
     });
   };
 
   return {
-    registerId: registerId,
-    unregisterId: unregisterId,
-    filterByType: filterByType,
-    find: find
+    registerId,
+    unregisterId,
+    filterByType,
+    find
   };
 };

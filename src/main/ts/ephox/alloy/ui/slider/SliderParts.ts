@@ -1,31 +1,30 @@
-import Behaviour from '../../api/behaviour/Behaviour';
-import Focusing from '../../api/behaviour/Focusing';
-import Keying from '../../api/behaviour/Keying';
-import AlloyEvents from '../../api/events/AlloyEvents';
-import NativeEvents from '../../api/events/NativeEvents';
-import PartType from '../../parts/PartType';
-import SliderActions from './SliderActions';
 import { FieldSchema } from '@ephox/boulder';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Cell, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
-var platform = PlatformDetection.detect();
-var isTouch = platform.deviceType.isTouch();
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { Focusing } from '../../api/behaviour/Focusing';
+import { Keying } from '../../api/behaviour/Keying';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import * as NativeEvents from '../../api/events/NativeEvents';
+import * as PartType from '../../parts/PartType';
+import * as SliderActions from './SliderActions';
 
-var edgePart = function (name, action) {
+const platform = PlatformDetection.detect();
+const isTouch = platform.deviceType.isTouch();
+
+const edgePart = function (name, action) {
   return PartType.optional({
     name: '' + name + '-edge',
-    overrides: function (detail) {
-      var touchEvents = AlloyEvents.derive([
+    overrides (detail) {
+      const touchEvents = AlloyEvents.derive([
         AlloyEvents.runActionExtra(NativeEvents.touchstart(), action, [ detail ])
       ]);
 
-      var mouseEvents = AlloyEvents.derive([
+      const mouseEvents = AlloyEvents.derive([
         AlloyEvents.runActionExtra(NativeEvents.mousedown(), action, [ detail ]),
         AlloyEvents.runActionExtra(NativeEvents.mousemove(), function (l, det) {
-          if (det.mouseIsDown().get()) action (l, det);
+          if (det.mouseIsDown().get()) { action (l, det); }
         }, [ detail ])
       ]);
 
@@ -37,20 +36,20 @@ var edgePart = function (name, action) {
 };
 
 // When the user touches the left edge, it should move the thumb
-var ledgePart = edgePart('left', SliderActions.setToLedge);
+const ledgePart = edgePart('left', SliderActions.setToLedge);
 
 // When the user touches the right edge, it should move the thumb
-var redgePart = edgePart('right', SliderActions.setToRedge);
+const redgePart = edgePart('right', SliderActions.setToRedge);
 
 // The thumb part needs to have position absolute to be positioned correctly
-var thumbPart = PartType.required({
+const thumbPart = PartType.required({
   name: 'thumb',
   defaults: Fun.constant({
     dom: {
       styles: { position: 'absolute' }
     }
   }),
-  overrides: function (detail) {
+  overrides (detail) {
     return {
       events: AlloyEvents.derive([
         // If the user touches the thumb itself, pretend they touched the spectrum instead. This
@@ -63,41 +62,40 @@ var thumbPart = PartType.required({
   }
 });
 
-var spectrumPart = PartType.required({
+const spectrumPart = PartType.required({
   schema: [
     FieldSchema.state('mouseIsDown', function () { return Cell(false); })
   ],
   name: 'spectrum',
-  overrides: function (detail) {
+  overrides (detail) {
 
-    var moveToX = function (spectrum, simulatedEvent) {
-      var spectrumBounds = spectrum.element().dom().getBoundingClientRect();
+    const moveToX = function (spectrum, simulatedEvent) {
+      const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
       SliderActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
     };
 
-    var touchEvents = AlloyEvents.derive([
+    const touchEvents = AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.touchstart(), moveToX),
       AlloyEvents.run(NativeEvents.touchmove(), moveToX)
     ]);
 
-    var mouseEvents = AlloyEvents.derive([
+    const mouseEvents = AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.mousedown(), moveToX),
       AlloyEvents.run(NativeEvents.mousemove(), function (spectrum, se) {
-        if (detail.mouseIsDown().get()) moveToX(spectrum, se);
+        if (detail.mouseIsDown().get()) { moveToX(spectrum, se); }
       })
     ]);
-
 
     return {
       behaviours: Behaviour.derive(isTouch ? [ ] : [
         // Move left and right along the spectrum
         Keying.config({
           mode: 'special',
-          onLeft: function (spectrum) {
+          onLeft (spectrum) {
             SliderActions.moveLeft(spectrum, detail);
             return Option.some(true);
           },
-          onRight: function (spectrum) {
+          onRight (spectrum) {
             SliderActions.moveRight(spectrum, detail);
             return Option.some(true);
           }

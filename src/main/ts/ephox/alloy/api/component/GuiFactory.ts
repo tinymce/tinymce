@@ -1,33 +1,40 @@
-import Component from './Component';
-import ComponentApi from './ComponentApi';
-import NoContextApi from '../system/NoContextApi';
-import GuiTypes from '../ui/GuiTypes';
-import DefaultEvents from '../../events/DefaultEvents';
-import Tagger from '../../registry/Tagger';
-import CustomSpec from '../../spec/CustomSpec';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
+import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { Arr, Cell, Fun, Merger, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { RawDomSchema, SketchSpec } from '../../api/ui/Sketcher';
 
-var buildSubcomponents = function (spec) {
-  var components = Objects.readOr('components', [ ])(spec);
+import DefaultEvents from '../../events/DefaultEvents';
+import * as Tagger from '../../registry/Tagger';
+import * as CustomSpec from '../../spec/CustomSpec';
+import { NoContextApi } from '../system/NoContextApi';
+import * as GuiTypes from '../ui/GuiTypes';
+import * as Component from './Component';
+import { AlloyComponent, ComponentApi } from './ComponentApi';
+
+export interface AlloyPremadeComponent {
+  [key: string]: AlloyComponent;
+}
+
+export type AlloyPremade =  (component: AlloyComponent) => AlloyPremadeComponent;
+
+export interface AlloyExternalSpec {
+  element: SugarElement;
+  [key: string]: any;
+}
+
+const buildSubcomponents = function (spec) {
+  const components = Objects.readOr('components', [ ])(spec);
   return Arr.map(components, build);
 };
 
-var buildFromSpec = function (userSpec) {
-  var spec = CustomSpec.make(userSpec);
+const buildFromSpec = function (userSpec) {
+  const spec = CustomSpec.make(userSpec);
 
   // Build the subcomponents
-  var components = buildSubcomponents(spec);
+  const components = buildSubcomponents(spec);
 
-  var completeSpec = Merger.deepMerge(
+  const completeSpec = Merger.deepMerge(
     DefaultEvents,
     spec,
     Objects.wrap('components', components)
@@ -38,27 +45,27 @@ var buildFromSpec = function (userSpec) {
   );
 };
 
-var text = function (textContent) {
-  var element = Element.fromText(textContent);
+const text = function (textContent: string): AlloyPremadeComponent {
+  const element = Element.fromText(textContent);
 
   return external({
-    element: element
+    element
   });
 };
 
-var external = function (spec) {
-  var extSpec = ValueSchema.asStructOrDie('external.component', ValueSchema.objOfOnly([
+const external = function (spec: AlloyExternalSpec): AlloyPremadeComponent {
+  const extSpec = ValueSchema.asStructOrDie('external.component', ValueSchema.objOfOnly([
     FieldSchema.strict('element'),
     FieldSchema.option('uid')
   ]), spec);
 
-  var systemApi = Cell(NoContextApi());
+  const systemApi = Cell(NoContextApi());
 
-  var connect = function (newApi) {
+  const connect = function (newApi) {
     systemApi.set(newApi);
   };
 
-  var disconnect = function () {
+  const disconnect = function () {
     systemApi.set(NoContextApi(function () {
       return me;
     }));
@@ -68,37 +75,37 @@ var external = function (spec) {
     Tagger.writeOnly(extSpec.element(), uid);
   });
 
-  var me = ComponentApi({
+  const me = ComponentApi({
     getSystem: systemApi.get,
     config: Option.none,
     hasConfigured: Fun.constant(false),
-    connect: connect,
-    disconnect: disconnect,
+    connect,
+    disconnect,
     element: Fun.constant(extSpec.element()),
     spec: Fun.constant(spec),
     readState: Fun.constant('No state'),
     syncComponents: Fun.noop,
     components: Fun.constant([ ]),
     events: Fun.constant({ })
-  });
-
+  }) as AlloyComponent;
   return GuiTypes.premade(me);
 };
 
 // INVESTIGATE: A better way to provide 'meta-specs'
-var build = function (rawUserSpec) {
-
+const build = function (rawUserSpec: AlloyPremadeComponent | SketchSpec | RawDomSchema): AlloyComponent {
   return GuiTypes.getPremade(rawUserSpec).fold(function () {
-    var userSpecWithUid = Merger.deepMerge({ uid: Tagger.generate('') }, rawUserSpec);
+    const userSpecWithUid = Merger.deepMerge({ uid: Tagger.generate('') }, rawUserSpec);
     return buildFromSpec(userSpecWithUid).getOrDie();
   }, function (prebuilt) {
     return prebuilt;
   });
 };
 
-export default <any> {
-  build: build,
-  premade: GuiTypes.premade,
-  external: external,
-  text: text
+const premade = GuiTypes.premade as AlloyPremade;
+
+export {
+  build,
+  premade,
+  external,
+  text
 };

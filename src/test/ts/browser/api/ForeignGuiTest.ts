@@ -1,41 +1,32 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Toggling from 'ephox/alloy/api/behaviour/Toggling';
-import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import ForeignGui from 'ephox/alloy/api/system/ForeignGui';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Option } from '@ephox/katamari';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Body } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
+import { ApproxStructure, Assertions, Mouse, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Option } from '@ephox/katamari';
+import { Body, Element, Html, Insert, Node, Remove } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('Browser Test: api.ForeignGuiTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: api.ForeignGuiTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var root = Element.fromTag('div');
+  const root = Element.fromTag('div');
   Html.set(root, '<span class="clicker">A</span> and <span class="clicker">B</span>');
 
   Insert.append(Body.body(), root);
 
-  var connection = ForeignGui.engage({
-    root: root,
-    insertion: function (parent, system) {
+  const connection = ForeignGui.engage({
+    root,
+    insertion (parent, system) {
       Insert.append(parent, system.element());
     },
     dispatchers: [
       {
-        getTarget: function (elem) { return Node.name(elem) === 'span' ? Option.some(elem) : Option.none(); },
+        getTarget (elem) { return Node.name(elem) === 'span' ? Option.some(elem) : Option.none(); },
         alloyConfig: {
           behaviours: Behaviour.derive([
             Toggling.config({
@@ -82,7 +73,6 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', function() {
     ),
     Mouse.sClickOn(root, 'span.clicker:first'),
 
-
     Assertions.sAssertStructure(
       'Checking structure after the first span is clicked',
       ApproxStructure.build(function (s, str, arr) {
@@ -115,4 +105,3 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', function() {
     })
   ], function () { success(); }, failure);
 });
-

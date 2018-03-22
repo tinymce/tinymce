@@ -1,23 +1,18 @@
-import { FocusTools } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Container from 'ephox/alloy/api/ui/Container';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Objects } from '@ephox/boulder';
+import { FocusTools, GeneralSteps, Keyboard, Keys, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('MenuKeyingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('MenuKeyingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
-    var makeItem = function (name) {
+    const makeItem = function (name) {
       return Container.sketch({
         dom: {
           classes: [ 'test-item', name ],
@@ -57,7 +52,7 @@ UnitTest.asynctest('MenuKeyingTest', function() {
     );
 
   }, function (doc, body, gui, component, store) {
-    var checkStore = function (label, steps, expected) {
+    const checkStore = function (label, steps, expected) {
       return GeneralSteps.sequence([
         store.sClear
       ].concat(steps).concat([
@@ -114,4 +109,3 @@ UnitTest.asynctest('MenuKeyingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

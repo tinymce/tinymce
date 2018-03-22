@@ -1,31 +1,34 @@
-import FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import { Objects } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Id } from '@ephox/katamari';
+import { Fun, Id, Option } from '@ephox/katamari';
 
-var premadeTag = Id.generate('alloy-premade');
-var apiConfig = Id.generate('api');
+import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloyPremadeComponent } from '../../api/component/GuiFactory';
 
+const premadeTag = Id.generate('alloy-premade');
+const _apiConfig = Id.generate('api');
 
-var premade = function (comp) {
+const premade = function (comp: AlloyComponent): AlloyPremadeComponent {
   return Objects.wrap(premadeTag, comp);
 };
 
-var getPremade = function (spec) {
+const getPremade = function (spec): Option<AlloyComponent> {
   return Objects.readOptFrom(spec, premadeTag);
 };
 
-var makeApi = function (f) {
+const makeApi = function (f) {
   return FunctionAnnotator.markAsSketchApi(function (component/*, ... */) {
-    var args = Array.prototype.slice.call(arguments, 0);
-    var spi = component.config(apiConfig);
+    const args = Array.prototype.slice.call(arguments, 0);
+    const spi = component.config(_apiConfig);
     return f.apply(undefined, [ spi ].concat(args));
   }, f);
 };
 
-export default <any> {
-  apiConfig: Fun.constant(apiConfig),
-  makeApi: makeApi,
-  premade: premade,
-  getPremade: getPremade
+const apiConfig = Fun.constant(_apiConfig);
+
+export {
+  apiConfig,
+  makeApi,
+  premade,
+  getPremade
 };

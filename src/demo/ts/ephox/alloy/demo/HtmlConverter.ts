@@ -1,24 +1,22 @@
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Replacing from 'ephox/alloy/api/behaviour/Replacing';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import GuiTemplate from 'ephox/alloy/api/component/GuiTemplate';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
-import Button from 'ephox/alloy/api/ui/Button';
-import Container from 'ephox/alloy/api/ui/Container';
-import Input from 'ephox/alloy/api/ui/Input';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiTemplate from 'ephox/alloy/api/component/GuiTemplate';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Button } from 'ephox/alloy/api/ui/Button';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { Input } from 'ephox/alloy/api/ui/Input';
 import { JSON as Json } from '@ephox/sand';
 import { SelectorFind } from '@ephox/sugar';
 
-
-
 export default <any> function () {
-  var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
+  const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
 // TODO: Change this to match the simplified UI templating model we have now including text
 
-  var page = Container.sketch({
+  const page = Container.sketch({
     components: [
       Container.sketch({
         dom: {
@@ -35,7 +33,7 @@ export default <any> function () {
             display: 'block'
           }
         },
-        data: '<div class="cat dog elephant" data-ephox="this is">Hello<span>hi</span>there</div>',
+        data: '<div class="cat dog elephant" data-ephox="this is"><div id="mike">chau</div></div>',
         uid: 'textarea-input'
       }),
       Button.sketch({
@@ -43,15 +41,12 @@ export default <any> function () {
           tag: 'button',
           innerHtml: 'Convert'
         },
-        action: function (button) {
-          var textarea = button.getSystem().getByUid('textarea-input').getOrDie();
-          var value = Representing.getValue(textarea);
-
-          var output = GuiTemplate.readHtml(value).getOrDie();
-
-          console.log('output', output);
-          var display = button.getSystem().getByUid('pre-output').getOrDie();
-          var prettyprint = Json.stringify(output, null, 2);
+        action (button) {
+          const textarea = button.getSystem().getByUid('textarea-input').getOrDie();
+          const value = Representing.getValue(textarea);
+          const output = GuiTemplate.readHtml(value).getOrDie();
+          const display = button.getSystem().getByUid('pre-output').getOrDie();
+          const prettyprint = Json.stringify(output, null, 2);
 
           Replacing.set(display, [ GuiFactory.text(prettyprint) ]);
         }
@@ -69,8 +64,8 @@ export default <any> function () {
     ]
   });
 
-  var root = GuiFactory.build(page);
-  var gui = Gui.takeover(root);
+  const root = GuiFactory.build(page);
+  const gui = Gui.takeover(root);
 
   Attachment.attachSystem(ephoxUi, gui);
 

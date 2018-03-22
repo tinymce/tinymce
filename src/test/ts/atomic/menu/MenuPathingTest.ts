@@ -1,15 +1,15 @@
 import { RawAssertions } from '@ephox/agar';
-import MenuPathing from 'ephox/alloy/menu/layered/MenuPathing';
+import * as MenuPathing from 'ephox/alloy/menu/layered/MenuPathing';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('MenuPathingTest', function() {
+UnitTest.test('MenuPathingTest', function () {
   /* global assert */
-  var actual = MenuPathing.generate({ }, { });
+  const actual = MenuPathing.generate({ }, { });
   assert.eq({ }, actual);
 
-  var check = function (label, expected, menus, expansions) {
-    var actual = MenuPathing.generate(menus, expansions);
+  const check = function (label, expected, menus, expansions) {
+    const actual = MenuPathing.generate(menus, expansions);
     RawAssertions.assertEq(label, expected, actual);
   };
 
@@ -19,7 +19,7 @@ UnitTest.test('MenuPathingTest', function() {
     'item-2': [ 'm1' ],
     'item-3': [ 'm1' ]
   }, {
-    'm1': [ 'item-1', 'item-2', 'item-3' ]
+    m1: [ 'item-1', 'item-2', 'item-3' ]
   }, { });
 
   check('Simple case: two flat menus', {
@@ -30,8 +30,8 @@ UnitTest.test('MenuPathingTest', function() {
     'item-5': [ 'm2' ],
     'item-6': [ 'm2' ]
   }, {
-    'm1': [ 'item-1', 'item-2', 'item-3' ],
-    'm2': [ 'item-4', 'item-5', 'item-6' ]
+    m1: [ 'item-1', 'item-2', 'item-3' ],
+    m2: [ 'item-4', 'item-5', 'item-6' ]
   }, { });
 
   check('Advanced case: one submenu', {
@@ -45,7 +45,6 @@ UnitTest.test('MenuPathingTest', function() {
     'item-1': 'm2'
   });
 
-
   Jsc.property(
     '*** No property checking anything for MenuPathing yet',
     function () {
@@ -53,4 +52,3 @@ UnitTest.test('MenuPathingTest', function() {
     }
   );
 });
-

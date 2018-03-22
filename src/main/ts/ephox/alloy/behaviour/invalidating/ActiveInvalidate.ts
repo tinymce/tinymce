@@ -1,8 +1,8 @@
-import AlloyEvents from '../../api/events/AlloyEvents';
-import InvalidateApis from './InvalidateApis';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import * as InvalidateApis from './InvalidateApis';
 import { Fun } from '@ephox/katamari';
 
-var events = function (invalidConfig, invalidState) {
+const events = function (invalidConfig, invalidState) {
   return invalidConfig.validator().map(function (validatorInfo) {
     return AlloyEvents.derive([
       AlloyEvents.run(validatorInfo.onEvent(), function (component) {
@@ -16,6 +16,6 @@ var events = function (invalidConfig, invalidState) {
   }).getOr({ });
 };
 
-export default <any> {
-  events: events
+export {
+  events
 };

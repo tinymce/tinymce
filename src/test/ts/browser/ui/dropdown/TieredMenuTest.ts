@@ -1,28 +1,23 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import Menu from 'ephox/alloy/api/ui/Menu';
-import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
-import MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
+import { Assertions, Chain, Keyboard, Keys, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Objects } from '@ephox/boulder';
+import { Arr, Obj } from '@ephox/katamari';
+import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import { Menu } from 'ephox/alloy/api/ui/Menu';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('TieredMenuTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('TieredMenuTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -82,23 +77,23 @@ UnitTest.asynctest('TieredMenuTest', function() {
     );
   }, function (doc, body, gui, component, store) {
     // TODO: Flesh out test.
-    var cAssertStructure = function (label, expected) {
+    const cAssertStructure = function (label, expected) {
       return Chain.op(function (element) {
         Assertions.assertStructure(label, expected, element);
       });
     };
 
-    var cTriggerFocusItem = Chain.op(function (target) {
+    const cTriggerFocusItem = Chain.op(function (target) {
       AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
     });
 
-    var cAssertStore = function (label, expected) {
+    const cAssertStore = function (label, expected) {
       return Chain.op(function () {
         store.assertEq(label, expected);
       });
     };
 
-    var cClearStore = Chain.op(function () {
+    const cClearStore = Chain.op(function () {
       store.clear();
     });
 
@@ -117,4 +112,3 @@ UnitTest.asynctest('TieredMenuTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

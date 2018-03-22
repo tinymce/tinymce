@@ -1,23 +1,20 @@
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Replacing from 'ephox/alloy/api/behaviour/Replacing';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Class, Element } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-
-
 
 export default <any> function () {
-  var gui = Gui.create();
-  var body = Element.fromDom(document.body);
+  const gui = Gui.create();
+  const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  var list = HtmlDisplay.section(
+  const list = HtmlDisplay.section(
     gui,
     'This list will change after three seconds (when the square is added to the page)',
     Container.sketch({
@@ -39,7 +36,7 @@ export default <any> function () {
     })
   );
 
-  var square = GuiFactory.build({
+  const square = GuiFactory.build({
     dom: {
       tag: 'div',
       styles: {
@@ -60,7 +57,7 @@ export default <any> function () {
           }
         });
       }),
-      
+
       AlloyEvents.runOnInit(function (sq, simulatedEvent) {
         simulatedEvent.stop();
         Replacing.append(list, {

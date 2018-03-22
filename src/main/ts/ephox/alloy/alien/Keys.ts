@@ -1,8 +1,6 @@
 import { Fun } from '@ephox/katamari';
 
-
-
-export default <any> {
+export default {
   BACKSPACE : Fun.constant([8]),
   TAB : Fun.constant([9]),
   ENTER : Fun.constant([13]),

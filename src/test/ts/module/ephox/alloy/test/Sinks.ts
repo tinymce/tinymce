@@ -1,11 +1,10 @@
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Positioning from 'ephox/alloy/api/behaviour/Positioning';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Container from 'ephox/alloy/api/ui/Container';
-import { Compare } from '@ephox/sugar';
-import { PredicateExists } from '@ephox/sugar';
+import { Compare, PredicateExists } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
-var fixedSink = function () {
+const fixedSink = function () {
   return GuiFactory.build(
     Container.sketch({
       dom: {
@@ -23,7 +22,7 @@ var fixedSink = function () {
   );
 };
 
-var relativeSink = function () {
+const relativeSink = function () {
   return GuiFactory.build(
     Container.sketch({
       dom: {
@@ -42,7 +41,7 @@ var relativeSink = function () {
   );
 };
 
-var popup = function () {
+const popup = function () {
   return GuiFactory.build(
     Container.sketch({
       dom: {
@@ -58,8 +57,8 @@ var popup = function () {
   );
 };
 
-var isInside = function (sinkComponent, popupComponent) {
-  var isSink = function (el) {
+const isInside = function (sinkComponent, popupComponent) {
+  const isSink = function (el) {
     return Compare.eq(el, sinkComponent.element());
   };
 
@@ -67,8 +66,8 @@ var isInside = function (sinkComponent, popupComponent) {
 };
 
 export default <any> {
-  fixedSink: fixedSink,
-  isInside: isInside,
-  relativeSink: relativeSink,
-  popup: popup
+  fixedSink,
+  isInside,
+  relativeSink,
+  popup
 };

@@ -1,17 +1,16 @@
 import { Step } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Pinching from 'ephox/alloy/api/behaviour/Pinching';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import NativeEvents from 'ephox/alloy/api/events/NativeEvents';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Pinching } from 'ephox/alloy/api/behaviour/Pinching';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Fun } from '@ephox/katamari';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: behaviour.PinchingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('Browser Test: behaviour.PinchingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build({
@@ -24,21 +23,21 @@ UnitTest.asynctest('Browser Test: behaviour.PinchingTest', function() {
       },
       behaviours: Behaviour.derive([
         Pinching.config({
-          onPinch: function (elem, dx, dy) {
-            store.adder({ method: 'pinch', dx: dx, dy: dy })();
+          onPinch (elem, dx, dy) {
+            store.adder({ method: 'pinch', dx, dy })();
           },
-          onPunch: function (elem, dx, dy) {
-            store.adder({ method: 'punch', dx: dx, dy: dy })();
+          onPunch (elem, dx, dy) {
+            store.adder({ method: 'punch', dx, dy })();
           }
         })
       ])
     });
   }, function (doc, body, gui, component, store) {
 
-    var sSendTouchmove = function (touches) {
+    const sSendTouchmove = function (touches) {
       return Step.sync(function () {
         AlloyTriggers.emitWith(component, NativeEvents.touchmove(), {
-          raw: { touches: touches }
+          raw: { touches }
         });
       });
     };
@@ -98,4 +97,3 @@ UnitTest.asynctest('Browser Test: behaviour.PinchingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

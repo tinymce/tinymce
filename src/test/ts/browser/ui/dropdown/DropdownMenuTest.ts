@@ -1,36 +1,24 @@
-import { Assertions } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Positioning from 'ephox/alloy/api/behaviour/Positioning';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Memento from 'ephox/alloy/api/component/Memento';
-import Container from 'ephox/alloy/api/ui/Container';
-import Dropdown from 'ephox/alloy/api/ui/Dropdown';
-import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
+import { Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr, Future, Obj, Result } from '@ephox/katamari';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as Memento from 'ephox/alloy/api/component/Memento';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
-import { Arr } from '@ephox/katamari';
-import { Future } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('DropdownMenuTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('DropdownMenuTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var sink = Memento.record(
+  const sink = Memento.record(
     Container.sketch({
       containerBehaviours: Behaviour.derive([
         Positioning.config({
@@ -41,7 +29,7 @@ UnitTest.asynctest('DropdownMenuTest', function() {
   );
 
   GuiSetup.setup(function (store, doc, body) {
-    var makeFlow = function (v) {
+    const makeFlow = function (v) {
       return Container.sketch({
         dom: {
           tag: 'span',
@@ -54,7 +42,7 @@ UnitTest.asynctest('DropdownMenuTest', function() {
       });
     };
 
-    var widget = Container.sketch({
+    const widget = Container.sketch({
       containerBehaviours: Behaviour.derive([
         Keying.config({
           mode: 'flow',
@@ -68,7 +56,7 @@ UnitTest.asynctest('DropdownMenuTest', function() {
       ], makeFlow)
     });
 
-    var testData = {
+    const testData = {
       primary: 'tools-menu',
       menus: Obj.map({
         'tools-menu': {
@@ -77,7 +65,7 @@ UnitTest.asynctest('DropdownMenuTest', function() {
           items: Arr.map([
             { type: 'item', data: { value: 'packages', text: 'Packages' } },
             { type: 'item', data: { value: 'about', text: 'About' } },
-            { type: 'widget', widget: widget, data: { value: 'widget' } }
+            { type: 'widget', widget, data: { value: 'widget' } }
           ], TestDropdownMenu.renderItem)
         },
         'packages-menu': {
@@ -112,15 +100,14 @@ UnitTest.asynctest('DropdownMenuTest', function() {
         }
       }, TestDropdownMenu.renderMenu),
       expansions: {
-        'packages': 'packages-menu',
-        'sortby': 'sortby-menu',
-        'strings': 'strings-menu',
-        'numbers': 'numbers-menu'
+        packages: 'packages-menu',
+        sortby: 'sortby-menu',
+        strings: 'strings-menu',
+        numbers: 'numbers-menu'
       }
     };
 
-
-    var c = GuiFactory.build(
+    const c = GuiFactory.build(
       Dropdown.sketch({
         uid: 'test-dropdown',
         dom: {
@@ -133,7 +120,7 @@ UnitTest.asynctest('DropdownMenuTest', function() {
 
         components: [ ],
 
-        lazySink: function () {
+        lazySink () {
           return Result.value(sink.get(c));
         },
 
@@ -141,7 +128,7 @@ UnitTest.asynctest('DropdownMenuTest', function() {
           menu: TestDropdownMenu.part(store)
         },
 
-        fetch: function () {
+        fetch () {
           return Future.pure(testData).map(function (d) {
             return TieredMenu.tieredData(d.primary, d.menus, d.expansions);
           });
@@ -156,14 +143,14 @@ UnitTest.asynctest('DropdownMenuTest', function() {
       GuiFactory.build(sink.asSpec())
     );
 
-    var focusables = {
+    const focusables = {
       toolsMenu: { label: 'tools-menu', selector: '.menu[aria-label="Tools Menu"]' },
       packagesMenu: { label: 'packages-menu', selector: '.menu[aria-label="Packages Menu"]' },
       sortbyMenu: { label: 'sortby-menu', selector: '.menu[aria-label="Sortby Menu"]' },
       stringsMenu: { label: 'strings-menu', selector: '.menu[aria-label="Strings Menu"]' },
       numbersMenu: { label: 'numbers-menu', selector: '.menu[aria-label="Numbers Menu"]' },
 
-      button: { label: 'dropdown-button', 'selector': '.dropdown-button' },
+      button: { label: 'dropdown-button', selector: '.dropdown-button' },
 
       packages: { label: 'packages-item', selector: 'li:contains("Packages")' },
       about: { label: 'about-item', selector: 'li:contains("About")' },
@@ -179,8 +166,8 @@ UnitTest.asynctest('DropdownMenuTest', function() {
       widgetThree: { label: 'widget-item:3', selector: '.item-widget .three' }
     };
 
-    var sTestMenus = function (label, stored, focused, active, background, others) {
-      var sCheckBackground = GeneralSteps.sequence(
+    const sTestMenus = function (label, stored, focused, active, background, others) {
+      const sCheckBackground = GeneralSteps.sequence(
         Arr.bind(background, function (bg) {
           return [
             UiFinder.sExists(gui.element(), bg.selector),
@@ -189,13 +176,13 @@ UnitTest.asynctest('DropdownMenuTest', function() {
         })
       );
 
-      var sCheckActive = GeneralSteps.sequence(
+      const sCheckActive = GeneralSteps.sequence(
         Arr.map(active, function (o) {
           return UiFinder.sExists(gui.element(), o.selector + '.selected-menu');
         })
       );
 
-      var sCheckOthers = GeneralSteps.sequence(
+      const sCheckOthers = GeneralSteps.sequence(
         Arr.map(others, function (o) {
           return UiFinder.sNotExists(gui.element(), o.selector);
         })
@@ -467,4 +454,3 @@ UnitTest.asynctest('DropdownMenuTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

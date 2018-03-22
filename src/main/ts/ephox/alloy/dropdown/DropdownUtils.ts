@@ -1,32 +1,28 @@
-import ComponentStructure from '../alien/ComponentStructure';
-import Behaviour from '../api/behaviour/Behaviour';
-import Composing from '../api/behaviour/Composing';
-import Coupling from '../api/behaviour/Coupling';
-import Focusing from '../api/behaviour/Focusing';
-import Positioning from '../api/behaviour/Positioning';
-import Sandboxing from '../api/behaviour/Sandboxing';
-import TieredMenu from '../api/ui/TieredMenu';
-import AriaOwner from '../aria/AriaOwner';
-import InternalSink from '../parts/InternalSink';
-import Tagger from '../registry/Tagger';
-import Dismissal from '../sandbox/Dismissal';
-import { Fun } from '@ephox/katamari';
-import { Future } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Remove } from '@ephox/sugar';
+import { Fun, Future, Merger, Option, Result } from '@ephox/katamari';
 import { Width } from '@ephox/sugar';
 
-var fetch = function (detail, component) {
-  var fetcher = detail.fetch();
+import * as ComponentStructure from '../alien/ComponentStructure';
+import * as Behaviour from '../api/behaviour/Behaviour';
+import { Composing } from '../api/behaviour/Composing';
+import { Coupling } from '../api/behaviour/Coupling';
+import { Focusing } from '../api/behaviour/Focusing';
+import { Positioning } from '../api/behaviour/Positioning';
+import { Sandboxing } from '../api/behaviour/Sandboxing';
+import { TieredMenu } from '../api/ui/TieredMenu';
+import * as AriaOwner from '../aria/AriaOwner';
+import * as InternalSink from '../parts/InternalSink';
+import * as Tagger from '../registry/Tagger';
+import * as Dismissal from '../sandbox/Dismissal';
+
+const fetch = function (detail, component) {
+  const fetcher = detail.fetch();
   return fetcher(component);
 };
 
-var openF = function (detail, anchor, component, sandbox, externals) {
-  var futureData = fetch(detail, component);
+const openF = function (detail, anchor, component, sandbox, externals) {
+  const futureData = fetch(detail, component);
 
-  var lazySink = getSink(component, detail);
+  const lazySink = getSink(component, detail);
 
   // TODO: Make this potentially a single menu also
   return futureData.map(function (data) {
@@ -35,25 +31,25 @@ var openF = function (detail, anchor, component, sandbox, externals) {
         externals.menu(),
         {
           uid: Tagger.generate(''),
-          data: data,
+          data,
 
-          onOpenMenu: function (tmenu, menu) {
-            var sink = lazySink().getOrDie();
+          onOpenMenu (tmenu, menu) {
+            const sink = lazySink().getOrDie();
             Positioning.position(sink, anchor, menu);
             Sandboxing.decloak(sandbox);
           },
 
-          onOpenSubmenu: function (tmenu, item, submenu) {
-            var sink = lazySink().getOrDie();
+          onOpenSubmenu (tmenu, item, submenu) {
+            const sink = lazySink().getOrDie();
             Positioning.position(sink, {
               anchor: 'submenu',
-              item: item,
+              item,
               bubble: Option.none()
             }, submenu);
             Sandboxing.decloak(sandbox);
 
           },
-          onEscape: function () {
+          onEscape () {
             // Focus the triggering component after escaping the menu
             Focusing.focus(component);
             Sandboxing.close(sandbox);
@@ -68,8 +64,8 @@ var openF = function (detail, anchor, component, sandbox, externals) {
 
 // onOpenSync is because some operations need to be applied immediately, not wrapped in a future
 // It can avoid things like flickering due to asynchronous bouncing
-var open = function (detail, anchor, component, sandbox, externals, onOpenSync) {
-  var processed = openF(detail, anchor, component, sandbox, externals);
+const open = function (detail, anchor, component, sandbox, externals, onOpenSync) {
+  const processed = openF(detail, anchor, component, sandbox, externals);
   return processed.map(function (data) {
     Sandboxing.cloak(sandbox);
     Sandboxing.open(sandbox, data);
@@ -78,26 +74,26 @@ var open = function (detail, anchor, component, sandbox, externals, onOpenSync) 
   });
 };
 
-var close = function (detail, anchor, component, sandbox) {
+const close = function (detail, anchor, component, sandbox) {
   Sandboxing.close(sandbox);
   return Future.pure(sandbox);
 };
 
-var togglePopup = function (detail, anchor, hotspot, externals, onOpenSync) {
-  var sandbox = Coupling.getCoupled(hotspot, 'sandbox');
-  var showing = Sandboxing.isOpen(sandbox);
+const togglePopup = function (detail, anchor, hotspot, externals, onOpenSync) {
+  const sandbox = Coupling.getCoupled(hotspot, 'sandbox');
+  const showing = Sandboxing.isOpen(sandbox);
 
-  var action = showing ? close : open;
+  const action = showing ? close : open;
   return action(detail, anchor, hotspot, sandbox, externals, onOpenSync);
 };
 
-var matchWidth = function (hotspot, container) {
-  var menu = Composing.getCurrent(container).getOr(container);
-  var buttonWidth = Width.get(hotspot.element());
+const matchWidth = function (hotspot, container) {
+  const menu = Composing.getCurrent(container).getOr(container);
+  const buttonWidth = Width.get(hotspot.element());
   Width.set(menu.element(), buttonWidth);
 };
 
-var getSink = function (anyInSystem, detail) {
+const getSink = function (anyInSystem, detail) {
   return anyInSystem.getSystem().getByUid(detail.uid() + '-' + InternalSink.suffix()).map(function (internalSink) {
     return Fun.constant(
       Result.value(internalSink)
@@ -113,23 +109,23 @@ var getSink = function (anyInSystem, detail) {
   });
 };
 
-var makeSandbox = function (detail, anchor, anyInSystem, extras) {
-  var ariaOwner = AriaOwner.manager();
+const makeSandbox = function (detail, anchor, anyInSystem, extras) {
+  const ariaOwner = AriaOwner.manager();
 
-  var onOpen = function (component, menu) {
+  const onOpen = function (component, menu) {
     ariaOwner.link(anyInSystem.element());
     // TODO: Reinstate matchWidth
-    if (detail.matchWidth()) matchWidth(anyInSystem, menu);
+    if (detail.matchWidth()) { matchWidth(anyInSystem, menu); }
     detail.onOpen()(anchor, component, menu);
-    if (extras !== undefined && extras.onOpen !== undefined) extras.onOpen(component, menu);
+    if (extras !== undefined && extras.onOpen !== undefined) { extras.onOpen(component, menu); }
   };
 
-  var onClose = function (component, menu) {
+  const onClose = function (component, menu) {
     ariaOwner.unlink(anyInSystem.element());
-    if (extras !== undefined && extras.onClose !== undefined) extras.onClose(component, menu);
+    if (extras !== undefined && extras.onClose !== undefined) { extras.onClose(component, menu); }
   };
 
-  var lazySink = getSink(anyInSystem, detail);
+  const lazySink = getSink(anyInSystem, detail);
 
   return {
     dom: {
@@ -140,17 +136,17 @@ var makeSandbox = function (detail, anchor, anyInSystem, extras) {
     },
     behaviours: Behaviour.derive([
       Sandboxing.config({
-        onOpen: onOpen,
-        onClose: onClose,
-        isPartOf: function (container, data, queryElem) {
+        onOpen,
+        onClose,
+        isPartOf (container, data, queryElem) {
           return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(anyInSystem, queryElem);
         },
-        getAttachPoint: function () {
+        getAttachPoint () {
           return lazySink().getOrDie();
         }
       }),
       Composing.config({
-        find: function (sandbox) {
+        find (sandbox) {
           return Sandboxing.getState(sandbox).bind(function (menu) {
             return Composing.getCurrent(menu);
           });
@@ -164,10 +160,10 @@ var makeSandbox = function (detail, anchor, anyInSystem, extras) {
   };
 };
 
-export default <any> {
-  makeSandbox: makeSandbox,
-  togglePopup: togglePopup,
-  open: open,
+export {
+  makeSandbox,
+  togglePopup,
+  open,
 
-  getSink: getSink
+  getSink
 };

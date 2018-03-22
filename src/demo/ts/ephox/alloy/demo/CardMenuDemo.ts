@@ -1,27 +1,20 @@
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Transitioning from 'ephox/alloy/api/behaviour/Transitioning';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
-import Menu from 'ephox/alloy/api/ui/Menu';
-import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { Objects } from '@ephox/boulder';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { Width } from '@ephox/sugar';
-
-
+import { Class, Element, SelectorFind, Width } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Transitioning } from 'ephox/alloy/api/behaviour/Transitioning';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Menu } from 'ephox/alloy/api/ui/Menu';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default <any> function () {
-  var gui = Gui.create();
-  var body = Element.fromDom(document.body);
+  const gui = Gui.create();
+  const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-
-  var makeBack = function (text) {
+  const makeBack = function (text) {
     return {
       data: TieredMenu.collapseItem(text),
       type: 'item',
@@ -33,11 +26,11 @@ export default <any> function () {
     };
   };
 
-  var makeItem = function (value, text) {
+  const makeItem = function (value, text) {
     return {
       data: {
-        value: value,
-        text: text
+        value,
+        text
       },
       type: 'item',
       dom: {
@@ -48,7 +41,7 @@ export default <any> function () {
     };
   };
 
-  var makeSeparator = function (text) {
+  const makeSeparator = function (text) {
     return {
       type: 'separator',
       dom: {
@@ -66,9 +59,9 @@ export default <any> function () {
     };
   };
 
-  var makeMenu = function (value, items) {
+  const makeMenu = function (value, items) {
     return {
-      value: value,
+      value,
       dom: {
         tag: 'div'
       },
@@ -84,7 +77,7 @@ export default <any> function () {
           ]
         }
       ],
-      items: items,
+      items,
       menuBehaviours: Behaviour.derive([
         Transitioning.config({
           initialState: 'after',
@@ -100,13 +93,13 @@ export default <any> function () {
   };
 
   // https://jsfiddle.net/xuto3by2/1/
-  var tieredMenu = TieredMenu.sketch({
+  const tieredMenu = TieredMenu.sketch({
     dom: {
       tag: 'div',
       classes: [ 'demo-tiered-menu' ]
     },
     components: [
-      
+
     ],
 
     // Focus causes issues when the things being focused are offscreen.
@@ -114,22 +107,21 @@ export default <any> function () {
     // For animations, need things to stay around in the DOM (at least until animation is done)
     stayInDom: true,
 
-    onExecute: function () {
+    onExecute () {
       console.log('Executing');
     },
-    onEscape: function () {
+    onEscape () {
       console.log('Escaping');
     },
-    onOpenMenu: function (container, menu) {
-      var w = Width.get(container.element());
+    onOpenMenu (container, menu) {
+      const w = Width.get(container.element());
       Width.set(menu.element(), w);
       Transitioning.jumpTo(menu, 'current');
     },
-    onOpenSubmenu: function (container, item, submenu) {
-      var w = Width.get(container.element());
-      var menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
-      var menuComp = container.getSystem().getByDom(menu).getOrDie();
-
+    onOpenSubmenu (container, item, submenu) {
+      const w = Width.get(container.element());
+      const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+      const menuComp = container.getSystem().getByDom(menu).getOrDie();
       Width.set(submenu.element(), w);
 
       Transitioning.progressTo(menuComp, 'before');
@@ -137,9 +129,9 @@ export default <any> function () {
       Transitioning.progressTo(submenu, 'current');
     },
 
-    onCollapseMenu: function (container, item, menu) {
-      var submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
-      var submenuComp = container.getSystem().getByDom(submenu).getOrDie();
+    onCollapseMenu (container, item, menu) {
+      const submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+      const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
       Transitioning.progressTo(submenuComp, 'after');
       Transitioning.progressTo(menu, 'current');
     },
@@ -150,43 +142,43 @@ export default <any> function () {
     data: TieredMenu.tieredData(
       'styles',
       {
-        'styles': makeMenu('Styles', [
+        styles: makeMenu('Styles', [
           makeItem('headers', 'Headers'),
           makeItem('inline', 'Inline'),
           makeItem('blocks', 'Blocks'),
           makeItem('alignment', 'Alignment')
         ]),
 
-        'headers': makeMenu('Headers', [
+        headers: makeMenu('Headers', [
           makeBack('< Back'),
           makeItem('h1', 'Header 1'),
           makeItem('h2', 'Header 2'),
           makeItem('h3', 'Header 3')
         ]),
 
-        'inline': makeMenu('Inline', [
+        inline: makeMenu('Inline', [
           makeBack('< Back'),
           makeItem('bold', 'Bold'),
           makeItem('italic', 'Italic')
         ]),
 
-        'blocks': makeMenu('Blocks', [
+        blocks: makeMenu('Blocks', [
           makeBack('< Back'),
           makeItem('p', 'Paragraph'),
           makeItem('blockquote', 'Blockquote'),
           makeItem('div', 'Div')
         ]),
 
-        'alignment': makeMenu('Alignment', [
+        alignment: makeMenu('Alignment', [
           makeBack('< Back'),
           makeItem('alignleft', 'Left')
         ])
       },
       {
-        'headers': 'headers',
-        'inline': 'inline',
-        'blocks': 'blocks',
-        'alignment': 'alignment'
+        headers: 'headers',
+        inline: 'inline',
+        blocks: 'blocks',
+        alignment: 'alignment'
       }
     ),
 
@@ -199,7 +191,7 @@ export default <any> function () {
     }
   });
 
-  var menu = HtmlDisplay.section(
+  const menu = HtmlDisplay.section(
     gui,
     'This menu is a card menu',
     tieredMenu

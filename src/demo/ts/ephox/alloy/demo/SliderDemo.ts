@@ -1,29 +1,23 @@
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Replacing from 'ephox/alloy/api/behaviour/Replacing';
-import Toggling from 'ephox/alloy/api/behaviour/Toggling';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Gui from 'ephox/alloy/api/system/Gui';
-import Container from 'ephox/alloy/api/ui/Container';
-import Slider from 'ephox/alloy/api/ui/Slider';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Insert } from '@ephox/sugar';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-
-
+import { Class, Css, DomEvent, Element, Insert } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
+import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { Slider } from 'ephox/alloy/api/ui/Slider';
+import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default <any> function () {
-  var gui = Gui.create();
-  var body = Element.fromDom(document.body);
+  const gui = Gui.create();
+  const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Insert.append(body, gui.element());
 
-  var slider1 = HtmlDisplay.section(
+  const slider1 = HtmlDisplay.section(
     gui,
     'This is a basic slider from [20, 100] with snapping to grid at 10',
     Slider.sketch({
@@ -51,10 +45,10 @@ export default <any> function () {
           dom: {
             tag: 'div',
             styles: {
-              height: '30px',
-              width: '10px',
-              top: '0px',
-              background: 'black',
+              'height': '30px',
+              'width': '10px',
+              'top': '0px',
+              'background': 'black',
               'padding-top': '-5px'
             }
           }
@@ -63,7 +57,7 @@ export default <any> function () {
     })
   );
 
-  var slider2 = HtmlDisplay.section(
+  const slider2 = HtmlDisplay.section(
     gui,
     'This is a basic slider with two snapping regions [35] and [75]. The minimum value is 0',
     Slider.sketch({
@@ -75,16 +69,16 @@ export default <any> function () {
       stepSize: 40,
       snapStart: 35,
       snapToGrid: true,
-      onDragStart: function (_, thumb) { Toggling.on(thumb); },
-      onDragEnd: function (_, thumb) { Toggling.off(thumb); },
+      onDragStart (_, thumb) { Toggling.on(thumb); },
+      onDragEnd (_, thumb) { Toggling.off(thumb); },
 
-      onInit: function (slider, thumb, value) {
+      onInit (slider, thumb, value) {
         Replacing.set(thumb, [
           GuiFactory.text(value)
         ]);
       },
 
-      onChange: function (slider, thumb, value) {
+      onChange (slider, thumb, value) {
         Replacing.set(thumb, [
           GuiFactory.text(value)
         ]);
@@ -104,11 +98,11 @@ export default <any> function () {
             tag: 'div',
             styles: {
               'border-radius': '20px',
-              width: '25px',
-              height: '25px',
+              'width': '25px',
+              'height': '25px',
               'border': '1px solid green',
-              background: 'transparent',
-              display: 'flex', 'align-items': 'center', 'justify-content': 'center'
+              'background': 'transparent',
+              'display': 'flex', 'align-items': 'center', 'justify-content': 'center'
             }
           },
           behaviours: Behaviour.derive([
@@ -122,7 +116,7 @@ export default <any> function () {
     })
   );
 
-  var hueSlider = HtmlDisplay.section(
+  const hueSlider = HtmlDisplay.section(
     gui,
     'This is a basic color slider with a sliding thumb and edges',
     Slider.sketch({
@@ -137,22 +131,18 @@ export default <any> function () {
       getInitialValue: Fun.constant(120),
       stepSize: 10,
 
-      onChange: function (slider, thumb, value) {
-        var getColor = function (hue) {
-          if (hue < 0) return 'black';
-          else if (hue > 360) return 'white';
-          else return 'hsl(' + hue + ', 100%, 50%)';
+      onChange (slider, thumb, value) {
+        const getColor = function (hue) {
+          if (hue < 0) { return 'black'; } else if (hue > 360) { return 'white'; } else { return 'hsl(' + hue + ', 100%, 50%)'; }
         };
 
         Css.set(thumb.element(), 'background', getColor(value));
       },
 
       // TODO: Remove duplication in demo.
-      onInit: function (slider, thumb, value) {
-        var getColor = function (hue) {
-          if (hue < 0) return 'black';
-          else if (hue > 360) return 'white';
-          else return 'hsl(' + hue + ', 100%, 50%)';
+      onInit (slider, thumb, value) {
+        const getColor = function (hue) {
+          if (hue < 0) { return 'black'; } else if (hue > 360) { return 'white'; } else { return 'hsl(' + hue + ', 100%, 50%)'; }
         };
 
         Css.set(thumb.element(), 'background', getColor(value));
@@ -171,7 +161,7 @@ export default <any> function () {
               dom: {
                 tag: 'div',
                 styles: {
-                  'width': '120px',
+                  width: '120px',
                   height: '20px',
                   background: 'black'
                 }
@@ -181,9 +171,9 @@ export default <any> function () {
               dom: {
                 tag: 'div',
                 styles: {
-                  height: '20px',
-                  background: 'linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%, hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%, hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%)',
-                  display: 'flex',
+                  'height': '20px',
+                  'background': 'linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%, hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%, hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%)',
+                  'display': 'flex',
                   'flex-grow': '1'
                 }
               }
@@ -192,7 +182,7 @@ export default <any> function () {
               dom: {
                 tag: 'div',
                 styles: {
-                  'width': '120px',
+                  width: '120px',
                   height: '20px',
                   background: 'white'
                 }
@@ -205,13 +195,13 @@ export default <any> function () {
             tag: 'div',
             classes: [ 'demo-sliding-thumb' ],
             styles: {
-              height: '30px',
-              width: '10px',
-              top: '0px',
-              background: 'black',
+              'height': '30px',
+              'width': '10px',
+              'top': '0px',
+              'background': 'black',
               'padding-top': '-5px',
-              border: '1px solid black',
-              outline: '1px solid white'
+              'border': '1px solid black',
+              'outline': '1px solid white'
             }
           }
         })
@@ -219,10 +209,10 @@ export default <any> function () {
     })
   );
 
-  var platform = PlatformDetection.detect();
-  var isTouch = platform.deviceType.isTouch();
+  const platform = PlatformDetection.detect();
+  const isTouch = platform.deviceType.isTouch();
 
   DomEvent.bind(body, 'click', function () {
-    if (! isTouch) Keying.focusIn(slider1);
+    if (! isTouch) { Keying.focusIn(slider1); }
   });
 };

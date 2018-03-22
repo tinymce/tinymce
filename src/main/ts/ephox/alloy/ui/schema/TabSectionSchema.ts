@@ -1,20 +1,21 @@
-import SketchBehaviours from '../../api/component/SketchBehaviours';
-import Tabbar from '../../api/ui/Tabbar';
-import Tabview from '../../api/ui/Tabview';
-import Fields from '../../data/Fields';
-import PartType from '../../parts/PartType';
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-var schema = [
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import { Tabbar } from '../../api/ui/Tabbar';
+import { Tabview } from '../../api/ui/Tabview';
+import * as Fields from '../../data/Fields';
+import * as PartType from '../../parts/PartType';
+
+const schema = Fun.constant([
   FieldSchema.defaulted('selectFirst', true),
   Fields.onHandler('onChangeTab'),
   Fields.onHandler('onDismissTab'),
   FieldSchema.defaulted('tabs', [ ]),
   SketchBehaviours.field('tabSectionBehaviours', [ ])
-];
+]);
 
-var barPart = PartType.required({
+const barPart = PartType.required({
   factory: Tabbar,
   schema: [
     FieldSchema.strict('dom'),
@@ -24,25 +25,26 @@ var barPart = PartType.required({
     ])
   ],
   name: 'tabbar',
-  defaults: function (detail) {
+  defaults (detail) {
     return {
       tabs: detail.tabs()
     };
   }
 });
 
-var viewPart = PartType.required({
+const viewPart = PartType.required({
   factory: Tabview,
   name: 'tabview'
 });
 
-var partTypes = [
+const parts = Fun.constant([
   barPart,
   viewPart
-];
+]);
+const name = Fun.constant('TabSection');
 
-export default <any> {
-  name: Fun.constant('TabSection'),
-  schema: Fun.constant(schema),
-  parts: Fun.constant(partTypes)
+export {
+  name,
+  schema,
+  parts
 };

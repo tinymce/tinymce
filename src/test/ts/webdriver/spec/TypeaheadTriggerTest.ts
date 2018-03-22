@@ -1,28 +1,22 @@
-import { FocusTools } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { RealKeys } from '@ephox/agar';
-import { UiControls } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Container from 'ephox/alloy/api/ui/Container';
-import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
-import Typeahead from 'ephox/alloy/api/ui/Typeahead';
+import { FocusTools, Keyboard, Keys, RealKeys, UiControls } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr, Future, Result } from '@ephox/katamari';
+import { Value } from '@ephox/sugar';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import Sinks from 'ephox/alloy/test/Sinks';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
-import { Arr } from '@ephox/katamari';
-import { Future } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Value } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('TypeaheadSpecTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('TypeaheadSpecTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
-    var sink = Sinks.relativeSink();
+    const sink = Sinks.relativeSink();
 
     return GuiFactory.build(
       Container.sketch({
@@ -43,19 +37,19 @@ UnitTest.asynctest('TypeaheadSpecTest', function() {
               openClass: 'test-typeahead-open'
             },
 
-            fetch: function (input) {
-              var text = Value.get(input.element());
-              var future = Future.pure([
+            fetch (input) {
+              const text = Value.get(input.element());
+              const future = Future.pure([
                 { type: 'item', data: { value: text + '1', text: text + '1' } },
                 { type: 'item', data: { value: text + '2', text: text + '2' } }
               ]);
 
               return future.map(function (f) {
                 // TODO: Test this.
-                var items = text === 'no-data' ? [
+                const items = text === 'no-data' ? [
                   { type: 'separator', text: 'No data' }
                 ] : f;
-                var menu = TestDropdownMenu.renderMenu({
+                const menu = TestDropdownMenu.renderMenu({
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
                 });
@@ -63,7 +57,7 @@ UnitTest.asynctest('TypeaheadSpecTest', function() {
               });
             },
 
-            lazySink: function () { return Result.value(sink); },
+            lazySink () { return Result.value(sink); },
 
             parts: {
               menu: TestDropdownMenu.part(store)
@@ -75,8 +69,8 @@ UnitTest.asynctest('TypeaheadSpecTest', function() {
 
   }, function (doc, body, gui, component, store) {
 
-    var typeahead = gui.getByUid('test-type').getOrDie();
-    var steps = TestTypeaheadSteps(doc, gui, typeahead);
+    const typeahead = gui.getByUid('test-type').getOrDie();
+    const steps = TestTypeaheadSteps(doc, gui, typeahead);
 
     return [
       FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
@@ -119,4 +113,3 @@ UnitTest.asynctest('TypeaheadSpecTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

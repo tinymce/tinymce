@@ -1,21 +1,20 @@
-import Coupling from '../../api/behaviour/Coupling';
-import Toggling from '../../api/behaviour/Toggling';
-import Unselecting from '../../api/behaviour/Unselecting';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
-import Fields from '../../data/Fields';
-import InternalSink from '../../parts/InternalSink';
-import PartType from '../../parts/PartType';
-import Layout from '../../positioning/layout/Layout';
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { Height } from '@ephox/sugar';
-import { Location } from '@ephox/sugar';
-import { Width } from '@ephox/sugar';
+import { Height, Location, Width } from '@ephox/sugar';
 
-var anchorAtCentre = function (component) {
-  var pos = Location.absolute(component.element());
-  var w = Width.get(component.element());
-  var h = Height.get(component.element());
+import { Coupling } from '../../api/behaviour/Coupling';
+import { Toggling } from '../../api/behaviour/Toggling';
+import { Unselecting } from '../../api/behaviour/Unselecting';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import * as Fields from '../../data/Fields';
+import * as InternalSink from '../../parts/InternalSink';
+import * as PartType from '../../parts/PartType';
+import * as Layout from '../../positioning/layout/Layout';
+
+const anchorAtCentre = function (component) {
+  const pos = Location.absolute(component.element());
+  const w = Width.get(component.element());
+  const h = Height.get(component.element());
   return {
     anchor: 'makeshift',
     x: pos.left() + w / 2,
@@ -25,7 +24,7 @@ var anchorAtCentre = function (component) {
 };
 
 // Similar to dropdown.
-var schema = [
+const schema = Fun.constant([
   FieldSchema.strict('dom'),
   FieldSchema.strict('fetch'),
   Fields.onHandler('onOpen'),
@@ -45,9 +44,9 @@ var schema = [
   FieldSchema.option('menuTransition'),
 
   FieldSchema.defaulted('getAnchor', anchorAtCentre)
-];
+]);
 
-var partTypes = [
+const parts = Fun.constant([
   PartType.external({
     schema: [
       Fields.itemMarkers()
@@ -61,10 +60,12 @@ var partTypes = [
   }),
 
   InternalSink.partType()
-];
+]);
 
-export default <any> {
-  name: Fun.constant('TouchMenu'),
-  schema: Fun.constant(schema),
-  parts: Fun.constant(partTypes)
+const name = Fun.constant('TouchMenu');
+
+export {
+  name,
+  schema,
+  parts
 };

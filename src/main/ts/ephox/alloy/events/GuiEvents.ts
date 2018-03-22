@@ -1,29 +1,28 @@
-import Keys from '../alien/Keys';
-import SystemEvents from '../api/events/SystemEvents';
-import TapEvent from './TapEvent';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { DomEvent } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { DomEvent, Node, Traverse } from '@ephox/sugar';
 
-var isDangerous = function (event) {
+import Keys from '../alien/Keys';
+import * as SystemEvents from '../api/events/SystemEvents';
+import * as TapEvent from './TapEvent';
+import { SugarEvent } from '../alien/TypeDefinitions';
+
+const isDangerous = function (event) {
   // Will trigger the Back button in the browser
   return event.raw().which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target()));
 };
 
-var isFirefox = PlatformDetection.detect().browser.isFirefox();
+const isFirefox = PlatformDetection.detect().browser.isFirefox();
 
-var settingsSchema = ValueSchema.objOfOnly([
+const settingsSchema = ValueSchema.objOfOnly([
   // triggerEvent(eventName, event)
   FieldSchema.strictFunction('triggerEvent'),
   FieldSchema.strictFunction('broadcastEvent'),
   FieldSchema.defaulted('stopBackspace', true)
 ]);
 
-var bindFocus = function (container, handler) {
+const bindFocus = function (container, handler) {
   if (isFirefox) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'focus', handler);
@@ -32,7 +31,7 @@ var bindFocus = function (container, handler) {
   }
 };
 
-var bindBlur = function (container, handler) {
+const bindBlur = function (container, handler) {
   if (isFirefox) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'blur', handler);
@@ -41,10 +40,10 @@ var bindBlur = function (container, handler) {
   }
 };
 
-var setup = function (container, rawSettings) {
-  var settings = ValueSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
+const setup = function (container, rawSettings) {
+  const settings = ValueSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
 
-  var pointerEvents = PlatformDetection.detect().deviceType.isTouch() ? [
+  const pointerEvents = PlatformDetection.detect().deviceType.isTouch() ? [
     'touchstart',
     'touchmove',
     'touchend',
@@ -58,10 +57,10 @@ var setup = function (container, rawSettings) {
     'click'
   ];
 
-  var tapEvent = TapEvent.monitor(settings);
+  const tapEvent = TapEvent.monitor(settings);
 
   // These events are just passed through ... no additional processing
-  var simpleEvents = Arr.map(
+  const simpleEvents = Arr.map(
     pointerEvents.concat([
       'selectstart',
       'input',
@@ -74,32 +73,31 @@ var setup = function (container, rawSettings) {
       'drop'
     ]),
     function (type) {
-      return DomEvent.bind(container, type, function (event) {
+      return DomEvent.bind(container, type, function (event: SugarEvent) {
         tapEvent.fireIfReady(event, type).each(function (tapStopped) {
-          if (tapStopped) event.kill();
+          if (tapStopped) { event.kill(); }
         });
 
-        var stopped = settings.triggerEvent(type, event);
-        if (stopped) event.kill();
+        const stopped = settings.triggerEvent(type, event);
+        if (stopped) { event.kill(); }
       });
     }
   );
 
-  var onKeydown = DomEvent.bind(container, 'keydown', function (event) {
+  const onKeydown = DomEvent.bind(container, 'keydown', function (event) {
     // Prevent default of backspace when not in input fields.
-    var stopped = settings.triggerEvent('keydown', event);
-    if (stopped) event.kill();
-    else if (settings.stopBackspace === true && isDangerous(event)) { event.prevent(); }
+    const stopped = settings.triggerEvent('keydown', event);
+    if (stopped) { event.kill(); } else if (settings.stopBackspace === true && isDangerous(event)) { event.prevent(); }
   });
 
-  var onFocusIn = bindFocus(container, function (event) {
-    var stopped = settings.triggerEvent('focusin', event);
-    if (stopped) event.kill();
+  const onFocusIn = bindFocus(container, function (event) {
+    const stopped = settings.triggerEvent('focusin', event);
+    if (stopped) { event.kill(); }
   });
 
-  var onFocusOut = bindBlur(container, function (event) {
-    var stopped = settings.triggerEvent('focusout', event);
-    if (stopped) event.kill();
+  const onFocusOut = bindBlur(container, function (event) {
+    const stopped = settings.triggerEvent('focusout', event);
+    if (stopped) { event.kill(); }
 
     // INVESTIGATE: Come up with a better way of doing this. Related target can be used, but not on FF.
     // It allows the active element to change before firing the blur that we will listen to
@@ -109,13 +107,13 @@ var setup = function (container, rawSettings) {
     }, 0);
   });
 
-  var defaultView = Traverse.defaultView(container);
-  var onWindowScroll = DomEvent.bind(defaultView, 'scroll', function (event) {
-    var stopped = settings.broadcastEvent(SystemEvents.windowScroll(), event);
-    if (stopped) event.kill();
+  const defaultView = Traverse.defaultView(container);
+  const onWindowScroll = DomEvent.bind(defaultView, 'scroll', function (event) {
+    const stopped = settings.broadcastEvent(SystemEvents.windowScroll(), event);
+    if (stopped) { event.kill(); }
   });
 
-  var unbind = function () {
+  const unbind = function () {
     Arr.each(simpleEvents, function (e) {
       e.unbind();
     });
@@ -126,10 +124,10 @@ var setup = function (container, rawSettings) {
   };
 
   return {
-    unbind: unbind
+    unbind
   };
 };
 
-export default <any> {
-  setup: setup
+export {
+  setup
 };

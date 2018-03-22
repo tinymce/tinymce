@@ -1,21 +1,21 @@
 import Bounds from 'ephox/alloy/positioning/layout/Bounds';
 import Bubble from 'ephox/alloy/positioning/layout/Bubble';
-import LinkedLayout from 'ephox/alloy/positioning/layout/LinkedLayout';
-import Bounder from 'ephox/alloy/positioning/view/Bounder';
+import * as LinkedLayout from 'ephox/alloy/positioning/layout/LinkedLayout';
+import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('BounderMenuTest', function() {
+UnitTest.test('BounderMenuTest', function () {
   /* global assert */
-  var check = function (expected, preference, anchor, panel, bubbles, bounds) {
-    var actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
+  const check = function (expected, preference, anchor, panel, bubbles, bounds) {
+    const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
     assert.eq(expected.label, actual.label());
     assert.eq(expected.x, actual.x());
     assert.eq(expected.y, actual.y());
-    if (expected.candidateYforTest !== undefined) assert.eq(expected.candidateYforTest, actual.candidateYforTest());
+    if (expected.candidateYforTest !== undefined) { assert.eq(expected.candidateYforTest, actual.candidateYforTest()); }
   };
 
   // LinkedLayout is for submenus (vertically aligned to opposite side of menu)
-  var four = [ LinkedLayout.southeast, LinkedLayout.southwest, LinkedLayout.northeast, LinkedLayout.northwest ];
+  const four = [ LinkedLayout.southeast, LinkedLayout.southwest, LinkedLayout.northeast, LinkedLayout.northwest ];
 
   // empty input array is now invalid, just returns anchor coordinates
   check({
@@ -30,10 +30,10 @@ UnitTest.test('BounderMenuTest', function() {
     y: 0
   }, [], Bounds(100, 0, 200, 50), Bounds(0, 0, 150, 25), Bubble(10, 0), Bounds(0, 0, 1000, 1000));
 
-  var panelBox = Bounds(0, 0, 100, 75);
-  var bigPanel = Bounds(0, 0, 75, 500);
-  var view = Bounds(50, 50, 350, 220);
-  var bubb = Bubble(0, 0);
+  const panelBox = Bounds(0, 0, 100, 75);
+  const bigPanel = Bounds(0, 0, 75, 500);
+  const view = Bounds(50, 50, 350, 220);
+  const bubb = Bubble(0, 0);
 
   // Southeast.
   check({
@@ -100,7 +100,6 @@ UnitTest.test('BounderMenuTest', function() {
     candidateYforTest: 200 + 2 - 500
   }, four, Bounds(350, 200, 2, 2), bigPanel, bubb, view);
 
-
   // Southeast (1px short on x and y).
   check({
     label: 'link-layout-se',
@@ -136,4 +135,3 @@ UnitTest.test('BounderMenuTest', function() {
     y: 220 + 50 - 74 + 2 - 75
   }, four, Bounds(350 + 50 - 2 - 99, 220 + 50 - 74, 2, 2), panelBox, bubb, view);
 });
-

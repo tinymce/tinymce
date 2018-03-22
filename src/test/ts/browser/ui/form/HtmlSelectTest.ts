@@ -1,17 +1,15 @@
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import HtmlSelect from 'ephox/alloy/api/ui/HtmlSelect';
-import RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
+import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('HtmlSelectTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('HtmlSelectTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var sNoInitialValue = Step.async(function (next, die) {
+  const sNoInitialValue = Step.async(function (next, die) {
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
         HtmlSelect.sketch({
@@ -37,7 +35,7 @@ UnitTest.asynctest('HtmlSelectTest', function() {
     }, next, die);
   });
 
-  var sHasInitialValue = Step.async(function (next, die) {
+  const sHasInitialValue = Step.async(function (next, die) {
     GuiSetup.setup(function (store, doc, body) {
       return GuiFactory.build(
         HtmlSelect.sketch({
@@ -70,4 +68,3 @@ UnitTest.asynctest('HtmlSelectTest', function() {
     Logger.t('Scenario: has initial value gamma', sHasInitialValue)
   ], function () { success(); }, failure);
 });
-

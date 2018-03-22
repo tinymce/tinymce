@@ -1,19 +1,14 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { Guard } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
-import Container from 'ephox/alloy/api/ui/Container';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Objects } from '@ephox/boulder';
+import { ApproxStructure, Assertions, FocusTools, Guard, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('FocusingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('FocusingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -40,7 +35,7 @@ UnitTest.asynctest('FocusingTest', function() {
         ApproxStructure.build(function (s, str, arr) {
           return s.element('div', {
             attrs: {
-              'tabindex': str.is('-1')
+              tabindex: str.is('-1')
             }
           });
         }),
@@ -63,4 +58,3 @@ UnitTest.asynctest('FocusingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

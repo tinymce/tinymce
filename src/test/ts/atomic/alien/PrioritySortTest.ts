@@ -1,18 +1,16 @@
-import { Logger } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import PrioritySort from 'ephox/alloy/alien/PrioritySort';
-import { Arr } from '@ephox/katamari';
+import { Logger, RawAssertions } from '@ephox/agar';
+import { assert, UnitTest } from '@ephox/bedrock';
+import { Arr, Struct } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
-import { Struct } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock';
+import PrioritySort from 'ephox/alloy/alien/PrioritySort';
 
-UnitTest.test('PrioritySortTest', function() {
+UnitTest.test('PrioritySortTest', function () {
   /* global assert */
-  var checkErr = function (expected, input, order) {
-    var actual = PrioritySort.sortKeys('test.sort', 'letter', input, order);
+  const checkErr = function (expected, input, order) {
+    const actual = PrioritySort.sortKeys('test.sort', 'letter', input, order);
     // TODO: Use ResultAssertions test?
     actual.fold(function (err) {
-      var errMessage = Arr.map(err, function (e) {
+      const errMessage = Arr.map(err, function (e) {
         return e.message !== undefined ? e.message : e;
       }).join('');
       RawAssertions.assertEq('Checking the error of priority sort', errMessage.indexOf(expected) > -1, true);
@@ -21,8 +19,8 @@ UnitTest.test('PrioritySortTest', function() {
     });
   };
 
-  var checkVal = function (expected, input, order) {
-    var actual = PrioritySort.sortKeys('test.sort', 'letter', input, order);
+  const checkVal = function (expected, input, order) {
+    const actual = PrioritySort.sortKeys('test.sort', 'letter', input, order);
     actual.fold(function (err) {
       assert.fail('Unexpected error: ' + err + '\nWas wanting value(' + Json.stringify(expected, null, 2) + ')');
     }, function (val) {
@@ -30,8 +28,8 @@ UnitTest.test('PrioritySortTest', function() {
     });
   };
 
-  var letter = Struct.immutable('letter');
-  var letters = function (ls) {
+  const letter = Struct.immutable('letter');
+  const letters = function (ls) {
     return Arr.map(ls, function (l) { return letter(l); });
   };
 
@@ -55,4 +53,3 @@ UnitTest.test('PrioritySortTest', function() {
     }
   );
 });
-

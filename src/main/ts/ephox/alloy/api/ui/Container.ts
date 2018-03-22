@@ -1,10 +1,10 @@
-import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
-import Fields from '../../data/Fields';
+import * as SketchBehaviours from '../component/SketchBehaviours';
+import * as Sketcher from './Sketcher';
+import * as Fields from '../../data/Fields';
 import { FieldSchema } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
 
-var factory = function (detail, spec) {
+const factory = function (detail, spec) {
   return {
     uid: detail.uid(),
     dom: Merger.deepMerge(
@@ -24,9 +24,9 @@ var factory = function (detail, spec) {
   };
 };
 
-export default <any> Sketcher.single({
+const Container = Sketcher.single({
   name: 'Container',
-  factory: factory,
+  factory,
   configFields: [
     FieldSchema.defaulted('components', [ ]),
     SketchBehaviours.field('containerBehaviours', [ ]),
@@ -36,3 +36,7 @@ export default <any> Sketcher.single({
     FieldSchema.defaulted('eventOrder', { })
   ]
 });
+
+export {
+  Container
+};

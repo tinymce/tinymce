@@ -1,18 +1,18 @@
-import AlloyEvents from '../../api/events/AlloyEvents';
-import SystemEvents from '../../api/events/SystemEvents';
-import FocusApis from './FocusApis';
-import DomModification from '../../dom/DomModification';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import * as SystemEvents from '../../api/events/SystemEvents';
+import * as FocusApis from './FocusApis';
+import * as DomModification from '../../dom/DomModification';
 
-var exhibit = function (base, focusConfig) {
-  if (focusConfig.ignore()) return DomModification.nu({ });
-  else return DomModification.nu({
+const exhibit = function (base, focusConfig) {
+  if (focusConfig.ignore()) { return DomModification.nu({ }); } else { return DomModification.nu({
     attributes: {
-      'tabindex': '-1'
+      tabindex: '-1'
     }
   });
+  }
 };
 
-var events = function (focusConfig) {
+const events = function (focusConfig) {
   return AlloyEvents.derive([
     AlloyEvents.run(SystemEvents.focus(), function (component, simulatedEvent) {
       FocusApis.focus(component, focusConfig);
@@ -21,7 +21,7 @@ var events = function (focusConfig) {
   ]);
 };
 
-export default <any> {
-  exhibit: exhibit,
-  events: events
+export {
+  exhibit,
+  events
 };

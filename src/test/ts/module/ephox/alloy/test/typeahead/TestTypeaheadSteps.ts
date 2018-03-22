@@ -1,16 +1,8 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { UiControls } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
+import { Assertions, Chain, FocusTools, Logger, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { Focus } from '@ephox/sugar';
 
-
-
 export default <any> function (doc, gui, typeahead) {
-  var sWaitForMenu = function (label) {
+  const sWaitForMenu = function (label) {
     return Logger.t(
       label,
       Waiter.sTryUntil(
@@ -22,7 +14,7 @@ export default <any> function (doc, gui, typeahead) {
     );
   };
 
-  var sWaitForNoMenu = function (label) {
+  const sWaitForNoMenu = function (label) {
     return Logger.t(
       label,
       Waiter.sTryUntil(
@@ -34,7 +26,7 @@ export default <any> function (doc, gui, typeahead) {
     );
   };
 
-  var sAssertFocusOnTypeahead = function (label) {
+  const sAssertFocusOnTypeahead = function (label) {
     return Logger.t(
       label,
       FocusTools.sTryOnSelector(
@@ -45,7 +37,7 @@ export default <any> function (doc, gui, typeahead) {
     );
   };
 
-  var sAssertValue = function (label, expected) {
+  const sAssertValue = function (label, expected) {
     return Logger.t(
       label,
       Chain.asStep(typeahead.element(), [
@@ -59,9 +51,9 @@ export default <any> function (doc, gui, typeahead) {
   };
 
   return {
-    sWaitForMenu: sWaitForMenu,
-    sWaitForNoMenu: sWaitForNoMenu,
-    sAssertFocusOnTypeahead: sAssertFocusOnTypeahead,
-    sAssertValue: sAssertValue
+    sWaitForMenu,
+    sWaitForNoMenu,
+    sAssertFocusOnTypeahead,
+    sAssertValue
   };
 };

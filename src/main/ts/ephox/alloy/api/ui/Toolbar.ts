@@ -1,14 +1,19 @@
-import Behaviour from '../behaviour/Behaviour';
-import Replacing from '../behaviour/Replacing';
-import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
-import AlloyParts from '../../parts/AlloyParts';
-import ToolbarSchema from '../../ui/schema/ToolbarSchema';
-import { Merger } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Merger, Option } from '@ephox/katamari';
 
-var factory = function (detail, components, spec, _externals) {
-  var setGroups = function (toolbar, groups) {
+import * as AlloyParts from '../../parts/AlloyParts';
+import * as ToolbarSchema from '../../ui/schema/ToolbarSchema';
+import * as Behaviour from '../behaviour/Behaviour';
+import { Replacing } from '../behaviour/Replacing';
+import * as SketchBehaviours from '../component/SketchBehaviours';
+import { CompositeSketch, RawDomSchema, composite } from './Sketcher';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+
+export interface ToolbarSketch extends CompositeSketch {
+  setGroups: (toolbar: AlloyComponent, groups: RawDomSchema[]) => void;
+}
+
+const factory = function (detail, components, spec, _externals) {
+  const setGroups = function (toolbar, groups) {
     getGroupContainer(toolbar).fold(function () {
       // check that the group container existed. It may not have if the components
       // did not list anything, and shell was false.
@@ -19,13 +24,13 @@ var factory = function (detail, components, spec, _externals) {
     });
   };
 
-  var getGroupContainer = function (component) {
+  const getGroupContainer = function (component) {
     return detail.shell() ? Option.some(component) : AlloyParts.getPart(component, detail, 'groups');
   };
 
   // In shell mode, the group overrides need to be added to the main container, and there can be no children
-  var extra = detail.shell() ? { behaviours: [ Replacing.config({ }) ], components: [ ] } :
-    { behaviours: [ ], components: components };
+  const extra = detail.shell() ? { behaviours: [ Replacing.config({ }) ], components: [ ] } :
+    { behaviours: [ ], components };
 
   return {
     uid: detail.uid(),
@@ -37,7 +42,7 @@ var factory = function (detail, components, spec, _externals) {
       SketchBehaviours.get(detail.toolbarBehaviours())
     ),
     apis: {
-      setGroups: setGroups
+      setGroups
     },
     domModification: {
       attributes: {
@@ -47,14 +52,18 @@ var factory = function (detail, components, spec, _externals) {
   };
 };
 
-export default <any> Sketcher.composite({
+const Toolbar = composite({
   name: 'Toolbar',
   configFields: ToolbarSchema.schema(),
   partFields: ToolbarSchema.parts(),
-  factory: factory,
+  factory,
   apis: {
-    setGroups: function (apis, toolbar, groups) {
+    setGroups (apis, toolbar, groups) {
       apis.setGroups(toolbar, groups);
     }
   }
-});
+}) as ToolbarSketch;
+
+export {
+  Toolbar
+};

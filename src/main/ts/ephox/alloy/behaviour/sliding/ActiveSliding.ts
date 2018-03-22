@@ -1,12 +1,13 @@
-import AlloyEvents from '../../api/events/AlloyEvents';
-import NativeEvents from '../../api/events/NativeEvents';
-import SlidingApis from './SlidingApis';
-import DomModification from '../../dom/DomModification';
 import { Objects } from '@ephox/boulder';
 import { Css } from '@ephox/sugar';
 
-var exhibit = function (base, slideConfig/*, slideState */) {
-  var expanded = slideConfig.expanded();
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import * as NativeEvents from '../../api/events/NativeEvents';
+import * as DomModification from '../../dom/DomModification';
+import * as SlidingApis from './SlidingApis';
+
+const exhibit = function (base, slideConfig/*, slideState */) {
+  const expanded = slideConfig.expanded();
 
   return expanded ? DomModification.nu({
     classes: [ slideConfig.openClass() ],
@@ -17,22 +18,22 @@ var exhibit = function (base, slideConfig/*, slideState */) {
   });
 };
 
-var events = function (slideConfig, slideState) {
+const events = function (slideConfig, slideState) {
   return AlloyEvents.derive([
     AlloyEvents.run(NativeEvents.transitionend(), function (component, simulatedEvent) {
-      var raw = simulatedEvent.event().raw();
+      const raw = simulatedEvent.event().raw();
       // This will fire for all transitions, we're only interested in the dimension completion
       if (raw.propertyName === slideConfig.dimension().property()) {
-        SlidingApis.disableTransitions(component, slideConfig, slideState); // disable transitions immediately (Safari animates the dimension removal below)
-        if (slideState.isExpanded()) Css.remove(component.element(), slideConfig.dimension().property()); // when showing, remove the dimension so it is responsive
-        var notify = slideState.isExpanded() ? slideConfig.onGrown() : slideConfig.onShrunk();
+        SlidingApis.disableTransitions(component, slideConfig); // disable transitions immediately (Safari animates the dimension removal below)
+        if (slideState.isExpanded()) { Css.remove(component.element(), slideConfig.dimension().property()); } // when showing, remove the dimension so it is responsive
+        const notify = slideState.isExpanded() ? slideConfig.onGrown() : slideConfig.onShrunk();
         notify(component, simulatedEvent);
       }
     })
   ]);
 };
 
-export default <any> {
-  exhibit: exhibit,
-  events: events
+export {
+  exhibit,
+  events
 };

@@ -1,13 +1,12 @@
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 
-var inSet = function (keys) {
+const inSet = function (keys) {
   return function (event) {
     return Arr.contains(keys, event.raw().which);
   };
 };
 
-var and = function (preds) {
+const and = function (preds) {
   return function (event) {
     return Arr.forall(preds, function (pred) {
       return pred(event);
@@ -15,26 +14,29 @@ var and = function (preds) {
   };
 };
 
-var is = function (key) {
+const is = function (key) {
   return function (event) {
     return event.raw().which === key;
   };
 };
 
-var isShift = function (event) {
+const isShift = function (event) {
   return event.raw().shiftKey === true;
 };
 
-var isControl = function (event) {
+const isControl = function (event) {
   return event.raw().ctrlKey === true;
 };
 
-export default <any> {
-  inSet: inSet,
-  and: and,
-  is: is,
-  isShift: isShift,
-  isNotShift: Fun.not(isShift),
-  isControl: isControl,
-  isNotControl: Fun.not(isControl)
+const isNotControl = Fun.not(isControl);
+const isNotShift = Fun.not(isShift);
+
+export {
+  inSet,
+  and,
+  is,
+  isShift,
+  isNotShift,
+  isControl,
+  isNotControl
 };

@@ -1,72 +1,71 @@
-import DelayedFunction from '../alien/DelayedFunction';
-import NativeEvents from '../api/events/NativeEvents';
-import SystemEvents from '../api/events/SystemEvents';
 import { Objects } from '@ephox/boulder';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Cell, Fun, Option } from '@ephox/katamari';
 import { Compare } from '@ephox/sugar';
 
-var SIGNIFICANT_MOVE = 5;
+import DelayedFunction from '../alien/DelayedFunction';
+import * as NativeEvents from '../api/events/NativeEvents';
+import * as SystemEvents from '../api/events/SystemEvents';
 
-var LONGPRESS_DELAY = 400;
+const SIGNIFICANT_MOVE = 5;
 
-var getTouch = function (event) {
-  if (event.raw().touches === undefined || event.raw().touches.length !== 1) return Option.none();
+const LONGPRESS_DELAY = 400;
+
+const getTouch = function (event) {
+  if (event.raw().touches === undefined || event.raw().touches.length !== 1) { return Option.none(); }
   return Option.some(event.raw().touches[0]);
 };
 
 // Check to see if the touch has changed a *significant* amount
-var isFarEnough = function (touch, data) {
-  var distX = Math.abs(touch.clientX - data.x());
-  var distY = Math.abs(touch.clientY - data.y());
+const isFarEnough = function (touch, data) {
+  const distX = Math.abs(touch.clientX - data.x());
+  const distY = Math.abs(touch.clientY - data.y());
   return distX > SIGNIFICANT_MOVE || distY > SIGNIFICANT_MOVE;
 };
 
-var monitor = function (settings) {
+const monitor = function (settings) {
   /* A tap event is a combination of touchstart and touchend on the same element
    * without a *significant* touchmove in between.
    */
 
   // Need a return value, so can't use Singleton.value;
-  var startData = Cell(Option.none());
+  const startData = Cell(Option.none());
 
-  var longpress = DelayedFunction(function (event) {
+  const longpress = DelayedFunction(function (event) {
     // Stop longpress firing a tap
     startData.set(Option.none());
     settings.triggerEvent(SystemEvents.longpress(), event);
   }, LONGPRESS_DELAY);
 
-  var handleTouchstart = function (event) {
+  const handleTouchstart = function (event) {
     getTouch(event).each(function (touch) {
       longpress.cancel();
 
-      var data = {
+      const data = {
         x: Fun.constant(touch.clientX),
         y: Fun.constant(touch.clientY),
         target: event.target
       };
 
-      longpress.schedule(data);
+      longpress.schedule(event);
       startData.set(Option.some(data));
     });
     return Option.none();
   };
 
-  var handleTouchmove = function (event) {
+  const handleTouchmove = function (event) {
     longpress.cancel();
     getTouch(event).each(function (touch) {
       startData.get().each(function (data) {
-        if (isFarEnough(touch, data)) startData.set(Option.none());
+        if (isFarEnough(touch, data)) { startData.set(Option.none()); }
       });
     });
     return Option.none();
   };
 
-  var handleTouchend = function (event) {
+  const handleTouchend = function (event) {
     longpress.cancel();
 
-    var isSame = function (data) {
+    const isSame = function (data) {
       return Compare.eq(data.target(), event.target());
     };
 
@@ -75,23 +74,23 @@ var monitor = function (settings) {
     });
   };
 
-  var handlers = Objects.wrapAll([
+  const handlers = Objects.wrapAll([
     { key: NativeEvents.touchstart(), value: handleTouchstart },
     { key: NativeEvents.touchmove(), value: handleTouchmove },
     { key: NativeEvents.touchend(), value: handleTouchend }
   ]);
 
-  var fireIfReady = function (event, type) {
+  const fireIfReady = function (event, type): Option<any> {
     return Objects.readOptFrom(handlers, type).bind(function (handler) {
       return handler(event);
     });
   };
 
   return {
-    fireIfReady: fireIfReady
+    fireIfReady
   };
 };
 
-export default <any> {
-  monitor: monitor
+export {
+  monitor
 };

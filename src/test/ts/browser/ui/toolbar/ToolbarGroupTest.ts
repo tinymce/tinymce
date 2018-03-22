@@ -1,25 +1,19 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Container from 'ephox/alloy/api/ui/Container';
-import ToolbarGroup from 'ephox/alloy/api/ui/ToolbarGroup';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Arr } from '@ephox/katamari';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Arr } from '@ephox/katamari';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('ToolbarGroupTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ToolbarGroupTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var mungeItem = function (itemSpec) {
+  const mungeItem = function (itemSpec) {
     return {
       dom: {
         tag: 'button',
@@ -66,7 +60,7 @@ UnitTest.asynctest('ToolbarGroupTest', function() {
           return s.element('div', {
             classes: [ arr.not('group-items') ],
             attrs: {
-              role: str.is('toolbar'),
+              'role': str.is('toolbar'),
               'data-alloy-tabstop': str.is('true')
             },
             children: [
@@ -88,4 +82,3 @@ UnitTest.asynctest('ToolbarGroupTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

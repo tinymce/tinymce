@@ -1,9 +1,9 @@
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Positioning from 'ephox/alloy/api/behaviour/Positioning';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Container from 'ephox/alloy/api/ui/Container';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
-var make = function () {
+const make = function () {
   return GuiFactory.build(
     Container.sketch({
       containerBehaviours: Behaviour.derive([
@@ -16,5 +16,5 @@ var make = function () {
 };
 
 export default <any> {
-  make: make
+  make
 };

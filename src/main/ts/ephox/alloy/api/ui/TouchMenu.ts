@@ -1,50 +1,52 @@
-import ElementFromPoint from '../../alien/ElementFromPoint';
-import AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
-import Behaviour from '../behaviour/Behaviour';
-import Coupling from '../behaviour/Coupling';
-import Highlighting from '../behaviour/Highlighting';
-import Representing from '../behaviour/Representing';
-import Sandboxing from '../behaviour/Sandboxing';
-import Toggling from '../behaviour/Toggling';
-import Transitioning from '../behaviour/Transitioning';
-import Unselecting from '../behaviour/Unselecting';
-import SketchBehaviours from '../component/SketchBehaviours';
-import AlloyEvents from '../events/AlloyEvents';
-import AlloyTriggers from '../events/AlloyTriggers';
-import NativeEvents from '../events/NativeEvents';
-import SystemEvents from '../events/SystemEvents';
-import InlineView from './InlineView';
-import Menu from './Menu';
-import Sketcher from './Sketcher';
-import DropdownUtils from '../../dropdown/DropdownUtils';
-import TouchMenuSchema from '../../ui/schema/TouchMenuSchema';
 import { Objects } from '@ephox/boulder';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import { Cell, Fun, Merger } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 
-var factory = function (detail, components, spec, externals) {
+import ElementFromPoint from '../../alien/ElementFromPoint';
+import * as DropdownUtils from '../../dropdown/DropdownUtils';
+import * as TouchMenuSchema from '../../ui/schema/TouchMenuSchema';
+import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
+import * as Behaviour from '../behaviour/Behaviour';
+import { Coupling } from '../behaviour/Coupling';
+import { Highlighting } from '../behaviour/Highlighting';
+import { Representing } from '../behaviour/Representing';
+import { Sandboxing } from '../behaviour/Sandboxing';
+import { Toggling } from '../behaviour/Toggling';
+import { Transitioning } from '../behaviour/Transitioning';
+import { Unselecting } from '../behaviour/Unselecting';
+import * as SketchBehaviours from '../component/SketchBehaviours';
+import * as AlloyEvents from '../events/AlloyEvents';
+import * as AlloyTriggers from '../events/AlloyTriggers';
+import * as NativeEvents from '../events/NativeEvents';
+import * as SystemEvents from '../events/SystemEvents';
+import { InlineView } from './InlineView';
+import { Menu } from './Menu';
+import * as Sketcher from './Sketcher';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
-  var getMenu = function (component) {
-    var sandbox = Coupling.getCoupled(component, 'sandbox');
+type TouchHoverState = (AlloyComponent) => void;
+
+const factory = function (detail, components, spec, externals) {
+
+  const getMenu = function (component) {
+    const sandbox = Coupling.getCoupled(component, 'sandbox');
     return Sandboxing.getState(sandbox);
   };
 
-  var hoveredState = Cell(false);
+  const hoveredState = Cell(false);
 
-  var hoverOn = function (component) {
+  const hoverOn = function (component) {
     if (hoveredState.get() === false) {
       forceHoverOn(component);
     }
   };
 
-  var forceHoverOn = function (component) {
+  const forceHoverOn = function (component) {
     detail.onHoverOn()(component);
     hoveredState.set(true);
   };
 
-  var hoverOff = function (component) {
+  const hoverOff = function (component) {
     if (hoveredState.get() === true) {
       detail.onHoverOff()(component);
       hoveredState.set(false);
@@ -55,7 +57,7 @@ var factory = function (detail, components, spec, externals) {
     {
       uid: detail.uid(),
       dom: detail.dom(),
-      components: components,
+      components,
       behaviours: Merger.deepMerge(
         Behaviour.derive([
           // Button showing the the touch menu is depressed
@@ -70,7 +72,7 @@ var factory = function (detail, components, spec, externals) {
           // Menu that shows up
           Coupling.config({
             others: {
-              sandbox: function (hotspot) {
+              sandbox (hotspot) {
 
                 return InlineView.sketch(
                   Merger.deepMerge(
@@ -80,7 +82,7 @@ var factory = function (detail, components, spec, externals) {
                       inlineBehaviours: Behaviour.derive([
                         AddEventsBehaviour.config('execute-for-menu', [
                           AlloyEvents.runOnExecute(function (c, s) {
-                            var target = s.event().target();
+                            const target = s.event().target();
                             c.getSystem().getByDom(target).each(function (item) {
                               detail.onExecute()(hotspot, c, item, Representing.getValue(item));
                             });
@@ -101,7 +103,7 @@ var factory = function (detail, components, spec, externals) {
                             }).getOr({ })
                           ),
 
-                          onFinish: function (view, destination) {
+                          onFinish (view, destination) {
                             if (destination === 'closed') {
                               InlineView.hide(view);
                               detail.onClosed()(hotspot, view);
@@ -109,10 +111,9 @@ var factory = function (detail, components, spec, externals) {
                           }
                         })
 
-
                       ]),
 
-                      onShow: function (view) {
+                      onShow (view) {
                         Transitioning.progressTo(view, 'open');
                       }
                     }
@@ -141,17 +142,17 @@ var factory = function (detail, components, spec, externals) {
         AlloyEvents.run(SystemEvents.longpress(), function (component, simulatedEvent) {
           detail.fetch()(component).get(function (items) {
             forceHoverOn(component);
-            var iMenu = Menu.sketch(
+            const iMenu = Menu.sketch(
               Merger.deepMerge(
                 externals.menu(),
                 {
-                  items: items
+                  items
                 }
               )
             );
 
-            var sandbox = Coupling.getCoupled(component, 'sandbox');
-            var anchor = detail.getAnchor()(component);
+            const sandbox = Coupling.getCoupled(component, 'sandbox');
+            const anchor = detail.getAnchor()(component);
             InlineView.showAt(sandbox, anchor, iMenu);
           });
         }),
@@ -161,7 +162,7 @@ var factory = function (detail, components, spec, externals) {
         //   - if over button, (dehighlight all items and trigger hoverOn on button if required)
         //   - if over nothing (dehighlight all items and trigger hoverOff on button if required)
         AlloyEvents.run(NativeEvents.touchmove(), function (component, simulatedEvent) {
-          var e = simulatedEvent.event().raw().touches[0];
+          const e = simulatedEvent.event().raw().touches[0];
           getMenu(component).each(function (iMenu) {
             ElementFromPoint.insideComponent(iMenu, e.clientX, e.clientY).fold(function () {
               // No items, so blur everything.
@@ -171,10 +172,11 @@ var factory = function (detail, components, spec, externals) {
               Focus.active().each(Focus.blur);
 
               // could not find an item, so check the button itself
-              var hoverF = ElementFromPoint.insideComponent(component, e.clientX, e.clientY).fold(
+              const hoverF = ElementFromPoint.insideComponent(component, e.clientX, e.clientY).fold(
                 Fun.constant(hoverOff),
                 Fun.constant(hoverOn)
-              );
+              ) as TouchHoverState;
+
               hoverF(component);
             }, function (elem) {
               AlloyTriggers.dispatchWith(component, elem, NativeEvents.mouseover(), {
@@ -196,13 +198,13 @@ var factory = function (detail, components, spec, externals) {
             Highlighting.getHighlighted(iMenu).each(AlloyTriggers.emitExecute);
           });
 
-          var sandbox = Coupling.getCoupled(component, 'sandbox');
+          const sandbox = Coupling.getCoupled(component, 'sandbox');
           Transitioning.progressTo(sandbox, 'closed');
           Toggling.off(component);
         }),
 
         AlloyEvents.runOnDetached(function (component, simulatedEvent) {
-          var sandbox = Coupling.getCoupled(component, 'sandbox');
+          const sandbox = Coupling.getCoupled(component, 'sandbox');
           InlineView.hide(sandbox);
         })
       ]),
@@ -225,9 +227,13 @@ var factory = function (detail, components, spec, externals) {
   );
 };
 
-export default <any> Sketcher.composite({
+const TouchMenu = Sketcher.composite({
   name: 'TouchMenu',
   configFields: TouchMenuSchema.schema(),
   partFields: TouchMenuSchema.parts(),
-  factory: factory
+  factory
 });
+
+export {
+  TouchMenu
+};

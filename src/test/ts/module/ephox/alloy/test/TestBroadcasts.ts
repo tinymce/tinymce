@@ -1,9 +1,6 @@
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
+import { GeneralSteps, Logger, Step, UiFinder } from '@ephox/agar';
 
-var dismiss = function (gui, element) {
+const dismiss = function (gui, element) {
   gui.broadcastOn([
     'dismiss.popups'
   ], {
@@ -11,8 +8,7 @@ var dismiss = function (gui, element) {
   });
 };
 
-
-var sDismiss = function (label, gui, element) {
+const sDismiss = function (label, gui, element) {
   return Logger.t(
     'Broadcast dimiss: ' + label,
     GeneralSteps.sequence([
@@ -23,12 +19,12 @@ var sDismiss = function (label, gui, element) {
   );
 };
 
-var sDismissOn = function (label, gui, selector) {
+const sDismissOn = function (label, gui, selector) {
   return Logger.t(
     'Broadcast dimiss: ' + label,
     GeneralSteps.sequence([
       Step.sync(function () {
-        var item = UiFinder.findIn(gui.element(), selector).getOrDie(
+        const item = UiFinder.findIn(gui.element(), selector).getOrDie(
           new Error('Could not find the item (' + selector + ') for dispatching dismiss')
         );
 
@@ -39,6 +35,6 @@ var sDismissOn = function (label, gui, selector) {
 };
 
 export default <any> {
-  sDismissOn: sDismissOn,
-  sDismiss: sDismiss
+  sDismissOn,
+  sDismiss
 };

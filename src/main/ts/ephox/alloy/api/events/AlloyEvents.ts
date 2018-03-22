@@ -1,12 +1,30 @@
-import EventRoot from '../../alien/EventRoot';
-import AlloyTriggers from './AlloyTriggers';
-import SystemEvents from './SystemEvents';
-import EventHandler from '../../construct/EventHandler';
 import { Objects } from '@ephox/boulder';
 
-var derive = Objects.wrapAll;
+import * as EventRoot from '../../alien/EventRoot';
+import * as EventHandler from '../../construct/EventHandler';
+import * as AlloyTriggers from './AlloyTriggers';
+import * as SystemEvents from './SystemEvents';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SimulatedEvent } from '../../events/SimulatedEvent';
+import { SpecSchemaStruct } from '../../spec/SpecSchema';
 
-var abort = function (name, predicate) {
+export interface EventHandlerConfig {
+  key: string;
+  value: {
+    can: () => boolean;
+    abort: () => boolean;
+    run: EventRunHandler
+  };
+}
+
+// TODO we can tighten this up alot further, it should take a simulatedEvent, however SimulatedEvent.event() can return 2 types, need to solve that issue first (SugarEvent or SimulatedEventTargets)
+// export type EventRunHandler = (component: AlloyComponent, action: SimulatedEvent) => any;
+export type EventRunHandler = (component: AlloyComponent, action: { [eventName: string]: any }) => any;
+export type RunOnSourceName = (handler: EventRunHandler) => EventHandlerConfig;
+
+const derive = Objects.wrapAll;
+
+const abort = function (name, predicate) {
   return {
     key: name,
     value: EventHandler.nu({
@@ -15,7 +33,7 @@ var abort = function (name, predicate) {
   };
 };
 
-var can = function (name, predicate) {
+const can = function (name, predicate) {
   return {
     key: name,
     value: EventHandler.nu({
@@ -24,18 +42,18 @@ var can = function (name, predicate) {
   };
 };
 
-var preventDefault = function (name) {
+const preventDefault = function (name: string): EventHandlerConfig {
   return {
     key: name,
     value: EventHandler.nu({
-      run: function (component, simulatedEvent) {
+      run (component, simulatedEvent) {
         simulatedEvent.event().prevent();
       }
     })
   };
 };
 
-var run = function (name, handler) {
+const run = function (name: string, handler: EventRunHandler): EventHandlerConfig {
   return {
     key: name,
     value: EventHandler.nu({
@@ -44,50 +62,50 @@ var run = function (name, handler) {
   };
 };
 
-var runActionExtra = function (name, action, extra) {
+const runActionExtra = function (name: string, action: (t: any, u: any) => void, extra: SpecSchemaStruct[]): EventHandlerConfig {
   return {
     key: name,
     value: EventHandler.nu({
-      run: function (component) {
+      run (component) {
         action.apply(undefined, [ component ].concat(extra));
       }
     })
   };
 };
 
-var runOnName = function (name) {
+const runOnName = function (name) {
   return function (handler) {
     return run(name, handler);
   };
 };
 
-var runOnSourceName = function (name) {
+const runOnSourceName = function (name) {
   return function (handler) {
     return {
       key: name,
       value: EventHandler.nu({
-        run: function (component, simulatedEvent) {
-          if (EventRoot.isSource(component, simulatedEvent)) handler(component, simulatedEvent);
+        run (component, simulatedEvent) {
+          if (EventRoot.isSource(component, simulatedEvent)) { handler(component, simulatedEvent); }
         }
       })
     };
   };
 };
 
-var redirectToUid = function (name, uid) {
-  return run(name, function (component, simulatedEvent) {
+const redirectToUid = function (name, uid) {
+  return run(name, function (component: AlloyComponent, simulatedEvent: SimulatedEvent) {
     component.getSystem().getByUid(uid).each(function (redirectee) {
       AlloyTriggers.dispatchEvent(redirectee, redirectee.element(), name, simulatedEvent);
     });
   });
 };
 
-var redirectToPart = function (name, detail, partName) {
-  var uid = detail.partUids()[partName];
+const redirectToPart = function (name, detail, partName) {
+  const uid = detail.partUids()[partName];
   return redirectToUid(name, uid);
 };
 
-var runWithTarget = function (name, f) {
+const runWithTarget = function (name, f) {
   return run(name, function (component, simulatedEvent) {
     component.getSystem().getByDom(simulatedEvent.event().target()).each(function (target) {
       f(component, target, simulatedEvent);
@@ -95,33 +113,38 @@ var runWithTarget = function (name, f) {
   });
 };
 
-var cutter = function (name) {
+const cutter = function (name) {
   return run(name, function (component, simulatedEvent) {
     simulatedEvent.cut();
   });
 };
 
-var stopper = function (name) {
+const stopper = function (name) {
   return run(name, function (component, simulatedEvent) {
     simulatedEvent.stop();
   });
 };
 
-export default <any> {
-  derive: derive,
-  run: run,
-  preventDefault: preventDefault,
-  runActionExtra: runActionExtra,
-  runOnAttached: runOnSourceName(SystemEvents.attachedToDom()),
-  runOnDetached: runOnSourceName(SystemEvents.detachedFromDom()),
-  runOnInit: runOnSourceName(SystemEvents.systemInit()),
-  runOnExecute: runOnName(SystemEvents.execute()),
+const runOnAttached = runOnSourceName(SystemEvents.attachedToDom()) as RunOnSourceName;
+const runOnDetached = runOnSourceName(SystemEvents.detachedFromDom()) as RunOnSourceName;
+const runOnInit = runOnSourceName(SystemEvents.systemInit()) as RunOnSourceName;
+const runOnExecute = runOnName(SystemEvents.execute()) as RunOnSourceName;
 
-  redirectToUid: redirectToUid,
-  redirectToPart: redirectToPart,
-  runWithTarget: runWithTarget,
-  abort: abort,
-  can: can,
-  cutter: cutter,
-  stopper: stopper
+export {
+  derive,
+  run,
+  preventDefault,
+  runActionExtra,
+  runOnAttached,
+  runOnDetached,
+  runOnInit,
+  runOnExecute,
+
+  redirectToUid,
+  redirectToPart,
+  runWithTarget,
+  abort,
+  can,
+  cutter,
+  stopper
 };

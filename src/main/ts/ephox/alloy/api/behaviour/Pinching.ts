@@ -1,13 +1,25 @@
-import Behaviour from './Behaviour';
+import * as Behaviour from './Behaviour';
 import ActivePinching from '../../behaviour/pinching/ActivePinching';
 import PinchingSchema from '../../behaviour/pinching/PinchingSchema';
-import DragState from '../../dragging/common/DragState';
+import * as DragState from '../../dragging/common/DragState';
+import { SugarElement } from '../../alien/TypeDefinitions';
 
+export interface PinchingBehaviour extends Behaviour.AlloyBehaviour {
+  config: (config: PinchingConfig) => { [key: string]: (any) => any };
+}
 
+export interface PinchingConfig {
+  onPinch: (element: SugarElement, changeX: number, changeY: number) => void;
+  onPunch: (element: SugarElement, changeX: number, changeY: number) => void;
+}
 
-export default <any> Behaviour.create({
+const Pinching = Behaviour.create({
   fields: PinchingSchema,
   name: 'pinching',
   active: ActivePinching,
   state: DragState
-});
+}) as PinchingBehaviour;
+
+export {
+  Pinching
+};

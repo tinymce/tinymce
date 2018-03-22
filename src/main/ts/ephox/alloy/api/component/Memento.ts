@@ -1,32 +1,39 @@
-import Tagger from '../../registry/Tagger';
 import { Objects } from '@ephox/boulder';
-import { Merger } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Merger, Option } from '@ephox/katamari';
 
-var record = function (spec) {
-  var uid = Objects.hasKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');
+import * as Tagger from '../../registry/Tagger';
+import { AlloyMixedSpec, SketchSpec, RawDomSchema, isSketchSpec } from '../../api/ui/Sketcher';
 
-  var get = function (any) {
+export interface MomentoRecord {
+  get: () => any;
+  getOpt: () => any;
+  asSpec: () => any;
+}
+
+const record = function (spec: AlloyMixedSpec) {
+  const uid = isSketchSpec(spec) && Objects.hasKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');
+
+  const get = function (any) {
     return any.getSystem().getByUid(uid).getOrDie();
   };
 
-  var getOpt = function (any) {
+  const getOpt = function (any) {
     return any.getSystem().getByUid(uid).fold(Option.none, Option.some);
   };
 
-  var asSpec = function () {
+  const asSpec = function () {
     return Merger.deepMerge(spec, {
-      uid: uid
+      uid
     });
   };
 
   return {
-    get: get,
-    getOpt: getOpt,
-    asSpec: asSpec
+    get,
+    getOpt,
+    asSpec
   };
 };
 
-export default <any> {
-  record: record
+export {
+  record
 };

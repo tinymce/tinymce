@@ -1,12 +1,12 @@
-import DomModification from '../../dom/DomModification';
+import * as DomModification from '../../dom/DomModification';
 
-var exhibit = function (base, posConfig/*, posState */) {
+const exhibit = function (base, posConfig/*, posState */) {
   return DomModification.nu({
     classes: [ ],
     styles: posConfig.useFixed() ? { } : { position: 'relative' }
   });
 };
 
-export default <any> {
-  exhibit: exhibit
+export {
+  exhibit
 };

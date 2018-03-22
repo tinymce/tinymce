@@ -1,14 +1,14 @@
-import Keying from '../../api/behaviour/Keying';
-import Representing from '../../api/behaviour/Representing';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
-import { FieldSchema } from '@ephox/boulder';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { FieldSchema, DslType } from '@ephox/boulder';
+import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
-var isTouch = PlatformDetection.detect().deviceType.isTouch();
+import { Keying } from '../../api/behaviour/Keying';
+import { Representing } from '../../api/behaviour/Representing';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 
-export default <any> [
+const isTouch = PlatformDetection.detect().deviceType.isTouch();
+
+const SliderSchema = [
   FieldSchema.strict('min'),
   FieldSchema.strict('max'),
   FieldSchema.defaulted('stepSize', 1),
@@ -26,3 +26,7 @@ export default <any> [
   // Only add if not on a touch device
   FieldSchema.state('mouseIsDown', function () { return Cell(false); })
 ] : [ ]);
+
+export {
+  SliderSchema
+};

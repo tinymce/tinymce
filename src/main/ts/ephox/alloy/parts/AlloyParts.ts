@@ -1,57 +1,78 @@
-import Fields from '../data/Fields';
-import PartSubstitutes from './PartSubstitutes';
-import PartType from './PartType';
-import UiSubstitutes from '../spec/UiSubstitutes';
-import { FieldPresence } from '@ephox/boulder';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { FieldPresence, DslType, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { Arr, Fun, Merger, Obj, Option, Result } from '@ephox/katamari';
+
+import * as Fields from '../data/Fields';
+import * as UiSubstitutes from '../spec/UiSubstitutes';
+import * as PartSubstitutes from './PartSubstitutes';
+import * as PartType from './PartType';
+import { SketchSpec, RawDomSchema } from '../api/ui/Sketcher';
+import { SpecSchemaStruct } from '../spec/SpecSchema';
+import { AlloyComponent } from '../api/component/ComponentApi';
+
+export interface GeneratedParts {
+  [key: string]: (config: RawDomSchema) => GeneratedSinglePart;
+}
+
+export interface GeneratedSinglePart {
+  config: RawDomSchema;
+  name: string;
+  owner: string;
+  uiType: string;
+  validated: {};
+}
+
+export interface DetailedSpec extends SpecSchemaStruct {
+  partUids?: () => { [key: string]: string };
+
+  // Below Are items that maybe required in this type
+  // dragBlockClass
+  // lazySink
+  // modalBehaviours
+  // onEscape
+  // onExecute
+  // partUids
+  // parts
+  // useTabstopAt
+}
 
 // TODO: Make more functional if performance isn't an issue.
-var generate = function (owner, parts) {
-  var r = { };
-
+const generate = function (owner: string, parts: DslType.FieldProcessorAdt[]): GeneratedParts {
+  const r = { };
   Arr.each(parts, function (part) {
     PartType.asNamedPart(part).each(function (np) {
-      var g = doGenerateOne(owner, np.pname());
+      const g = doGenerateOne(owner, np.pname());
       r[np.name()] = function (config) {
-        var validated = ValueSchema.asRawOrDie('Part: ' + np.name() + ' in ' + owner, ValueSchema.objOf(np.schema()), config);
+        const validated = ValueSchema.asRawOrDie('Part: ' + np.name() + ' in ' + owner, ValueSchema.objOf(np.schema()), config);
         return Merger.deepMerge(g, {
-          config: config,
-          validated: validated
+          config,
+          validated
         });
       };
     });
   });
-
   return r;
 };
 
 // Does not have the config.
-var doGenerateOne = function (owner, pname) {
+const doGenerateOne = function (owner, pname) {
   return {
     uiType: UiSubstitutes.placeholder(),
-    owner: owner,
+    owner,
     name: pname
   };
 };
 
-var generateOne = function (owner, pname, config) {
+const generateOne = function (owner: string, pname: string, config: SketchSpec): GeneratedSinglePart {
   return {
     uiType: UiSubstitutes.placeholder(),
-    owner: owner,
+    owner,
     name: pname,
-    config: config,
+    config,
     validated: { }
   };
 };
 
-var schemas = function (parts) {
+const schemas = function (parts: DslType.FieldProcessorAdt[]): DslType.FieldProcessorAdt[] {
   // This actually has to change. It needs to return the schemas for things that will
   // not appear in the components list, which is only externals
   return Arr.bind(parts, function (part) {
@@ -68,32 +89,32 @@ var schemas = function (parts) {
   });
 };
 
-var names = function (parts) {
+const names = function (parts) {
   return Arr.map(parts, PartType.name);
 };
 
-var substitutes = function (owner, detail, parts) {
+const substitutes = function (owner: string, detail: DetailedSpec, parts: DslType.FieldProcessorAdt[]): { internals: () => {}, externals: () => {} } {
   return PartSubstitutes.subs(owner, detail, parts);
 };
 
-var components = function (owner, detail, internals) {
+const components = function (owner: string, detail: DetailedSpec, internals: { [key: string]: DslType.FieldProcessorAdt }): SketchSpec[] {
   return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), internals);
 };
 
-var getPart = function (component, detail, partKey) {
-  var uid = detail.partUids()[partKey];
+const getPart = function (component: AlloyComponent, detail: DetailedSpec, partKey: string): Option<AlloyComponent> {
+  const uid = detail.partUids()[partKey];
   return component.getSystem().getByUid(uid).toOption();
 };
 
-var getPartOrDie = function (component, detail, partKey) {
+const getPartOrDie = function (component: AlloyComponent, detail: DetailedSpec, partKey: string): AlloyComponent {
   return getPart(component, detail, partKey).getOrDie('Could not find part: ' + partKey);
 };
 
-var getParts = function (component, detail, partKeys) {
-  var r = { };
-  var uids = detail.partUids();
+const getParts = function (component: AlloyComponent, detail: DetailedSpec, partKeys: string[]): { [key: string]: () => Result<AlloyComponent, string> } {
+  const r = { };
+  const uids = detail.partUids();
 
-  var system = component.getSystem();
+  const system = component.getSystem();
   Arr.each(partKeys, function (pk) {
     r[pk] = system.getByUid(uids[pk]);
   });
@@ -102,18 +123,18 @@ var getParts = function (component, detail, partKeys) {
   return Obj.map(r, Fun.constant);
 };
 
-var getAllParts = function (component, detail) {
-  var system = component.getSystem();
+const getAllParts = function (component: AlloyComponent, detail: DetailedSpec) {
+  const system = component.getSystem();
   return Obj.map(detail.partUids(), function (pUid, k) {
     return Fun.constant(system.getByUid(pUid));
   });
 };
 
-var getPartsOrDie = function (component, detail, partKeys) {
-  var r = { };
-  var uids = detail.partUids();
+const getPartsOrDie = function (component: AlloyComponent, detail: DetailedSpec, partKeys: string[]): { [key: string]: () => AlloyComponent } {
+  const r = { };
+  const uids = detail.partUids();
 
-  var system = component.getSystem();
+  const system = component.getSystem();
   Arr.each(partKeys, function (pk) {
     r[pk] = system.getByUid(uids[pk]).getOrDie();
   });
@@ -122,17 +143,17 @@ var getPartsOrDie = function (component, detail, partKeys) {
   return Obj.map(r, Fun.constant);
 };
 
-var defaultUids = function (baseUid, partTypes) {
-  var partNames = names(partTypes);
+const defaultUids = function (baseUid: string, partTypes) {
+  const partNames = names(partTypes);
 
   return Objects.wrapAll(
-    Arr.map(partNames, function (pn) { 
+    Arr.map(partNames, function (pn) {
       return { key: pn, value: baseUid + '-' + pn };
     })
   );
 };
 
-var defaultUidsSchema = function (partTypes) {
+const defaultUidsSchema = function (partTypes) {
   return FieldSchema.field(
     'partUids',
     'partUids',
@@ -143,20 +164,20 @@ var defaultUidsSchema = function (partTypes) {
   );
 };
 
-export default <any> {
-  generate: generate,
-  generateOne: generateOne,
-  schemas: schemas,
-  names: names,
-  substitutes: substitutes,
-  components: components,
+export {
+  generate,
+  generateOne,
+  schemas,
+  names,
+  substitutes,
+  components,
 
-  defaultUids: defaultUids,
-  defaultUidsSchema: defaultUidsSchema,
+  defaultUids,
+  defaultUidsSchema,
 
-  getAllParts: getAllParts,
-  getPart: getPart,
-  getPartOrDie: getPartOrDie,
-  getParts: getParts,
-  getPartsOrDie: getPartsOrDie
+  getAllParts,
+  getPart,
+  getPartOrDie,
+  getParts,
+  getPartsOrDie
 };

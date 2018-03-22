@@ -1,12 +1,10 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import ToggleModes from 'ephox/alloy/behaviour/toggling/ToggleModes';
+import { ApproxStructure, Assertions, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as ToggleModes from 'ephox/alloy/behaviour/toggling/ToggleModes';
 
-UnitTest.test('Browser Test: behaviour.ToggleModesTest', function() {
-  var mTag = function (name) {
+UnitTest.test('Browser Test: behaviour.ToggleModesTest', function () {
+  const mTag = function (name) {
     return {
       dom: {
         tag: name
@@ -15,8 +13,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', function() {
   };
 
   Logger.sync('Checking tag=button', function () {
-    var button = GuiFactory.build(mTag('button'));
-
+    const button = GuiFactory.build(mTag('button'));
 
     ToggleModes.updateAuto(button, { }, true);
 
@@ -35,7 +32,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', function() {
   });
 
   Logger.sync('Checking role=listbox and tag=button', function () {
-    var listbox = GuiFactory.build({
+    const listbox = GuiFactory.build({
       dom: {
         tag: 'button',
         attributes: { role: 'listbox' }
@@ -57,7 +54,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', function() {
   });
 
   Logger.sync('Checking role=menuitemcheck and tag=li', function () {
-    var menuitem = GuiFactory.build({
+    const menuitem = GuiFactory.build({
       dom: {
         tag: 'li',
         attributes: { role: 'menuitemcheckbox' }
@@ -78,4 +75,3 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', function() {
     );
   });
 });
-

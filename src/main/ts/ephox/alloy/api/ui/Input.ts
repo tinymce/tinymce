@@ -1,7 +1,7 @@
-import Sketcher from './Sketcher';
-import InputBase from '../../ui/common/InputBase';
+import * as InputBase from '../../ui/common/InputBase';
+import * as Sketcher from './Sketcher';
 
-var factory = function (detail, spec) {
+const factory = function (detail, spec) {
   return {
     uid: detail.uid(),
     dom: InputBase.dom(detail),
@@ -12,8 +12,12 @@ var factory = function (detail, spec) {
   };
 };
 
-export default <any> Sketcher.single({
+const Input = Sketcher.single({
   name: 'Input',
   configFields: InputBase.schema(),
-  factory: factory
+  factory
 });
+
+export {
+  Input
+};

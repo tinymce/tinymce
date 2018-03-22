@@ -1,28 +1,38 @@
-import GuiFactory from '../component/GuiFactory';
-import SystemEvents from '../events/SystemEvents';
-import Attachment from './Attachment';
-import SystemApi from './SystemApi';
-import Container from '../ui/Container';
-import Debugging from '../../debugging/Debugging';
-import DescribedHandler from '../../events/DescribedHandler';
-import GuiEvents from '../../events/GuiEvents';
-import Triggers from '../../events/Triggers';
-import AlloyLogger from '../../log/AlloyLogger';
-import Registry from '../../registry/Registry';
-import Tagger from '../../registry/Tagger';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Compare } from '@ephox/sugar';
-import { Focus } from '@ephox/sugar';
-import { Insert } from '@ephox/sugar';
-import { Remove } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Arr, Fun, Result } from '@ephox/katamari';
+import { Compare, Focus, Node, Remove, Traverse } from '@ephox/sugar';
+import { SugarElement, SugarEvent } from '../../alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
-var create = function () {
-  var root = GuiFactory.build(
+import * as Debugging from '../../debugging/Debugging';
+import * as DescribedHandler from '../../events/DescribedHandler';
+import * as GuiEvents from '../../events/GuiEvents';
+import * as Triggers from '../../events/Triggers';
+import Registry from '../../registry/Registry';
+import * as Tagger from '../../registry/Tagger';
+import * as GuiFactory from '../component/GuiFactory';
+import * as SystemEvents from '../events/SystemEvents';
+import { Container } from '../ui/Container';
+import * as Attachment from './Attachment';
+import { SystemApi } from './SystemApi';
+
+export interface GuiSystem {
+  root: () => AlloyComponent;
+  element: () => SugarElement;
+  destroy: () => void;
+  add: (component: AlloyComponent) => void;
+  remove: (component: AlloyComponent) => void;
+  getByUid: (uid: string) => Result<AlloyComponent, string>;
+  getByDom: (element: SugarElement) => Result<AlloyComponent, any>;
+
+  addToWorld: (AlloyComponent) => void;
+  removeFromWorld: (AlloyComponent) => void;
+
+  broadcast: (message: string) => void;
+  broadcastOn: (channels: string[], message: any) => void;
+}
+
+const create = function (): GuiSystem {
+  const root = GuiFactory.build(
     Container.sketch({
       dom: {
         tag: 'div'
@@ -32,8 +42,8 @@ var create = function () {
   return takeover(root);
 };
 
-var takeover = function (root) {
-  var isAboveRoot = function (el) {
+const takeover = function (root: AlloyComponent): GuiSystem {
+  const isAboveRoot = function (el) {
     return Traverse.parent(root.element()).fold(
       function () {
         return true;
@@ -44,14 +54,14 @@ var takeover = function (root) {
     );
   };
 
-  var registry = Registry();
+  const registry = Registry();
 
-  var lookup = function (eventName, target) {
+  const lookup = function (eventName, target) {
     return registry.find(isAboveRoot, eventName, target);
   };
 
-  var domEvents = GuiEvents.setup(root.element(), {
-    triggerEvent: function (eventName, event) {
+  const domEvents = GuiEvents.setup(root.element(), {
+    triggerEvent (eventName: string, event: SugarEvent) {
       return Debugging.monitorEvent(eventName, event.target(), function (logger) {
         return Triggers.triggerUntilStopped(lookup, eventName, event, logger);
       });
@@ -61,22 +71,22 @@ var takeover = function (root) {
     // targets that have the event. It is the general case of the more specialised
     // "message". "messages" may actually just go away. This is used for things
     // like window scroll.
-    broadcastEvent: function (eventName, event) {
-      var listeners = registry.filter(eventName);
+    broadcastEvent (eventName: string, event: SugarEvent) {
+      const listeners = registry.filter(eventName);
       return Triggers.broadcast(listeners, event);
     }
   });
 
-  var systemApi = SystemApi({
+  const systemApi = SystemApi({
     // This is a real system
     debugInfo: Fun.constant('real'),
-    triggerEvent: function (customType, target, data) {
-      Debugging.monitorEvent(customType, target, function (logger) {
+    triggerEvent (eventName, target, data) {
+      Debugging.monitorEvent(eventName, target, function (logger) {
         // The return value is not used because this is a fake event.
-        Triggers.triggerOnUntilStopped(lookup, customType, data, target, logger);
+        Triggers.triggerOnUntilStopped(lookup, eventName, data, target, logger);
       });
     },
-    triggerFocus: function (target, originator) {
+    triggerFocus (target, originator) {
       Tagger.read(target).fold(function () {
         // When the target is not within the alloy system, dispatch a normal focus event.
         Focus.focus(target);
@@ -92,30 +102,30 @@ var takeover = function (root) {
       });
     },
 
-    triggerEscape: function (comp, simulatedEvent) {
+    triggerEscape (comp, simulatedEvent) {
       systemApi.triggerEvent('keydown', comp.element(), simulatedEvent.event());
     },
 
-    getByUid: function (uid) {
+    getByUid (uid) {
       return getByUid(uid);
     },
-    getByDom: function (elem) {
+    getByDom (elem) {
       return getByDom(elem);
     },
     build: GuiFactory.build,
-    addToGui: function (c) { add(c); },
-    removeFromGui: function (c) { remove(c); },
-    addToWorld: function (c) { addToWorld(c); },
-    removeFromWorld: function (c) { removeFromWorld(c); },
-    broadcast: function (message) {
+    addToGui (c) { add(c); },
+    removeFromGui (c) { remove(c); },
+    addToWorld (c) { addToWorld(c); },
+    removeFromWorld (c) { removeFromWorld(c); },
+    broadcast (message) {
       broadcast(message);
     },
-    broadcastOn: function (channels, message) {
+    broadcastOn (channels, message) {
       broadcastOn(channels, message);
     }
   });
 
-  var addToWorld = function (component) {
+  const addToWorld = function (component) {
     component.connect(systemApi);
     if (!Node.isText(component.element())) {
       registry.register(component);
@@ -124,7 +134,7 @@ var takeover = function (root) {
     }
   };
 
-  var removeFromWorld = function (component) {
+  const removeFromWorld = function (component) {
     if (!Node.isText(component.element())) {
       Arr.each(component.components(), removeFromWorld);
       registry.unregister(component);
@@ -132,37 +142,37 @@ var takeover = function (root) {
     component.disconnect();
   };
 
-  var add = function (component) {
+  const add = function (component) {
     Attachment.attach(root, component);
   };
 
-  var remove = function (component) {
+  const remove = function (component) {
     Attachment.detach(component);
   };
 
-  var destroy = function () {
+  const destroy = function () {
     // INVESTIGATE: something with registry?
     domEvents.unbind();
     Remove.remove(root.element());
   };
 
-  var broadcastData = function (data) {
-    var receivers = registry.filter(SystemEvents.receive());
+  const broadcastData = function (data) {
+    const receivers = registry.filter(SystemEvents.receive());
     Arr.each(receivers, function (receiver) {
-      var descHandler = receiver.descHandler();
-      var handler = DescribedHandler.getHandler(descHandler);
+      const descHandler = receiver.descHandler();
+      const handler = DescribedHandler.getHandler(descHandler);
       handler(data);
     });
   };
 
-  var broadcast = function (message) {
+  const broadcast = function (message) {
     broadcastData({
       universal: Fun.constant(true),
       data: Fun.constant(message)
     });
   };
 
-  var broadcastOn = function (channels, message) {
+  const broadcastOn = function (channels, message) {
     broadcastData({
       universal: Fun.constant(false),
       channels: Fun.constant(channels),
@@ -170,7 +180,7 @@ var takeover = function (root) {
     });
   };
 
-  var getByUid = function (uid) {
+  const getByUid = function (uid) {
     return registry.getById(uid).fold(function () {
       return Result.error(
         new Error('Could not find component with uid: "' + uid + '" in system.')
@@ -178,8 +188,9 @@ var takeover = function (root) {
     }, Result.value);
   };
 
-  var getByDom = function (elem) {
-    return Tagger.read(elem).bind(getByUid);
+  const getByDom = function (elem: SugarElement): Result<AlloyComponent, any> {
+    const uid = Tagger.read(elem).getOr('not found');
+    return getByUid(uid);
   };
 
   addToWorld(root);
@@ -187,21 +198,21 @@ var takeover = function (root) {
   return {
     root: Fun.constant(root),
     element: root.element,
-    destroy: destroy,
-    add: add,
-    remove: remove,
-    getByUid: getByUid,
-    getByDom: getByDom,
+    destroy,
+    add,
+    remove,
+    getByUid,
+    getByDom,
 
-    addToWorld: addToWorld,
-    removeFromWorld: removeFromWorld,
+    addToWorld,
+    removeFromWorld,
 
-    broadcast: broadcast,
-    broadcastOn: broadcastOn
+    broadcast,
+    broadcastOn
   };
 };
 
-export default <any> {
-  create: create,
-  takeover: takeover
+export {
+  create,
+  takeover
 };

@@ -1,10 +1,8 @@
-import ToggleModes from './ToggleModes';
-import Fields from '../../data/Fields';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-
+import * as Fields from '../../data/Fields';
+import * as ToggleModes from './ToggleModes';
 
 export default <any> [
   FieldSchema.defaulted('selected', false),
@@ -15,20 +13,20 @@ export default <any> [
     mode: 'none'
   }, ValueSchema.choose(
     'mode', {
-      'pressed': [
+      pressed: [
         FieldSchema.defaulted('syncWithExpanded', false),
         Fields.output('update', ToggleModes.updatePressed)
       ],
-      'checked': [
+      checked: [
         Fields.output('update', ToggleModes.updateChecked)
       ],
-      'expanded': [
+      expanded: [
         Fields.output('update', ToggleModes.updateExpanded)
       ],
-      'selected': [
+      selected: [
         Fields.output('update', ToggleModes.updateSelected)
       ],
-      'none': [
+      none: [
         Fields.output('update', Fun.noop)
       ]
     }

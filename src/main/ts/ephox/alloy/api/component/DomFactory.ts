@@ -1,40 +1,37 @@
 import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
+import { Arr, Merger } from '@ephox/katamari';
+import { Element, Html, Node, Traverse } from '@ephox/sugar';
+import { EventHandlerConfig } from '../../api/events/AlloyEvents';
+import { RawElementSchema } from '../../api/ui/Sketcher';
 
-var getAttrs = function (elem) {
-  var attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
+const getAttrs = function (elem) {
+  const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
   return Arr.foldl(attributes, function (b, attr) {
     // Make class go through the class path. Do not list it as an attribute.
-    if (attr.name === 'class') return b;
-    else return Merger.deepMerge(b, Objects.wrap(attr.name, attr.value));
+    if (attr.name === 'class') { return b; } else { return Merger.deepMerge(b, Objects.wrap(attr.name, attr.value)); }
   }, {});
 };
 
-var getClasses = function (elem) {
+const getClasses = function (elem) {
   return Array.prototype.slice.call(elem.dom().classList, 0);
 };
 
-var fromHtml = function (html) {
-  var elem = Element.fromHtml(html);
+const fromHtml = function (html: string): RawElementSchema {
+  const elem = Element.fromHtml(html);
 
-  var children = Traverse.children(elem);
-  var attrs = getAttrs(elem);
-  var classes = getClasses(elem);
-  var contents = children.length === 0 ? { } : { innerHtml: Html.get(elem) };
+  const children = Traverse.children(elem);
+  const attrs = getAttrs(elem);
+  const classes = getClasses(elem);
+  const contents = children.length === 0 ? { } : { innerHtml: Html.get(elem) };
 
   return Merger.deepMerge({
     tag: Node.name(elem),
-    classes: classes,
+    classes,
     attributes: attrs
   }, contents);
 };
 
-var sketch = function (sketcher, html, config) {
+const sketch = function (sketcher, html, config) {
   return sketcher.sketch(
     Merger.deepMerge({
       dom: fromHtml(html)
@@ -42,7 +39,7 @@ var sketch = function (sketcher, html, config) {
   );
 };
 
-export default <any> {
-  fromHtml: fromHtml,
-  sketch: sketch
+export {
+  fromHtml,
+  sketch
 };

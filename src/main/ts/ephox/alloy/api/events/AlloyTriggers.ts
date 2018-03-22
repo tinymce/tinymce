@@ -1,45 +1,47 @@
-import SystemEvents from './SystemEvents';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
+import { Fun, Merger, Obj } from '@ephox/katamari';
 
-var emit = function (component, event) {
+import * as SystemEvents from './SystemEvents';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { SimulatedEvent } from '../../events/SimulatedEvent';
+
+const emit = function (component: AlloyComponent, event: string): void {
   dispatchWith(component, component.element(), event, { });
 };
 
-var emitWith = function (component, event, properties) {
+const emitWith = function (component: AlloyComponent, event: string, properties: {}): void {
   dispatchWith(component, component.element(), event, properties);
 };
 
-var emitExecute = function (component) {
+const emitExecute = function (component: AlloyComponent): void {
   emit(component, SystemEvents.execute());
 };
 
-var dispatch = function (component, target, event) {
+const dispatch = function (component: AlloyComponent, target: SugarElement, event: string): void {
   dispatchWith(component, target, event, { });
 };
 
-var dispatchWith = function (component, target, event, properties) {
-  var data = Merger.deepMerge({
-    target: target
+const dispatchWith = function (component: AlloyComponent, target: SugarElement, event: string, properties: {}): void {
+  const data = Merger.deepMerge({
+    target
   }, properties);
   component.getSystem().triggerEvent(event, target, Obj.map(data, Fun.constant));
 };
 
-var dispatchEvent = function (component, target, event, simulatedEvent) {
+const dispatchEvent = function (component: AlloyComponent, target: SugarElement, event: string, simulatedEvent: SimulatedEvent): void {
   component.getSystem().triggerEvent(event, target, simulatedEvent.event());
 };
 
-var dispatchFocus = function (component, target) {
+const dispatchFocus = function (component: AlloyComponent, target: SugarElement): void {
   component.getSystem().triggerFocus(target, component.element());
 };
 
-export default <any> {
-  emit: emit,
-  emitWith: emitWith,
-  emitExecute: emitExecute,
-  dispatch: dispatch,
-  dispatchWith: dispatchWith,
-  dispatchEvent: dispatchEvent,
-  dispatchFocus: dispatchFocus
+export {
+  emit,
+  emitWith,
+  emitExecute,
+  dispatch,
+  dispatchWith,
+  dispatchEvent,
+  dispatchFocus
 };

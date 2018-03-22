@@ -1,10 +1,10 @@
-import Behaviour from '../behaviour/Behaviour';
-import Replacing from '../behaviour/Replacing';
-import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
+import * as Behaviour from '../behaviour/Behaviour';
+import { Replacing } from '../behaviour/Replacing';
+import * as SketchBehaviours from '../component/SketchBehaviours';
+import * as Sketcher from './Sketcher';
 import { Merger } from '@ephox/katamari';
 
-var factory = function (detail, spec) {
+const factory = function (detail, spec) {
   return {
     uid: detail.uid(),
     dom: Merger.deepMerge(
@@ -26,10 +26,14 @@ var factory = function (detail, spec) {
   };
 };
 
-export default <any> Sketcher.single({
+const Tabview = Sketcher.single({
   name: 'Tabview',
   configFields: [
     SketchBehaviours.field('tabviewBehaviours', [ Replacing ])
   ],
-  factory: factory
+  factory
 });
+
+export {
+  Tabview
+};

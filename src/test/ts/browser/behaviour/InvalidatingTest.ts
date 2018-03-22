@@ -1,30 +1,19 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Guard } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiControls } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Invalidating from 'ephox/alloy/api/behaviour/Invalidating';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import Container from 'ephox/alloy/api/ui/Container';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Cell } from '@ephox/katamari';
-import { Future } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Value } from '@ephox/sugar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Logger, Step, UiControls, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Cell, Future, Option, Result } from '@ephox/katamari';
+import { Value } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Invalidating } from 'ephox/alloy/api/behaviour/Invalidating';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('InvalidatingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('InvalidatingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var root = Cell(Option.none());
+  const root = Cell(Option.none());
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -37,9 +26,9 @@ UnitTest.asynctest('InvalidatingTest', function() {
             invalidClass: 'test-invalid',
             getRoot: root.get,
             validator: {
-              validate: function (input) {
-                var value = Value.get(input.element());
-                var res = value === 'good-value' ? Result.value('good-value') : Result.error('bad value: ' + value);
+              validate (input) {
+                const value = Value.get(input.element());
+                const res = value === 'good-value' ? Result.value('good-value') : Result.error('bad value: ' + value);
                 return Future.pure(res);
               },
               onEvent: 'custom.test.validate'
@@ -51,14 +40,14 @@ UnitTest.asynctest('InvalidatingTest', function() {
   }, function (doc, body, gui, component, store) {
 
     // This will be used for the other root.
-    var other = GuiFactory.build({
+    const other = GuiFactory.build({
       dom: {
         tag: 'input'
       }
     });
     gui.add(other);
 
-    var sCheckValidOf = function (label, comp) {
+    const sCheckValidOf = function (label, comp) {
       return Logger.t(
         label,
         Step.control(
@@ -79,7 +68,7 @@ UnitTest.asynctest('InvalidatingTest', function() {
       );
     };
 
-    var sCheckInvalidOf = function (label, comp) {
+    const sCheckInvalidOf = function (label, comp) {
       return Logger.t(
         label,
         Step.control(
@@ -99,15 +88,15 @@ UnitTest.asynctest('InvalidatingTest', function() {
       );
     };
 
-    var sCheckValid = function (label) {
+    const sCheckValid = function (label) {
       return sCheckValidOf(label, component);
     };
 
-    var sCheckInvalid = function (label) {
+    const sCheckInvalid = function (label) {
       return sCheckInvalidOf(label, component);
     };
 
-    var sValidate = GeneralSteps.sequence([
+    const sValidate = GeneralSteps.sequence([
       Step.sync(function () {
         AlloyTriggers.emit(component, 'custom.test.validate');
       }),
@@ -117,20 +106,19 @@ UnitTest.asynctest('InvalidatingTest', function() {
       Step.wait(100)
     ]);
 
-
-    var cQueryApi = Chain.on(function (value, next, die) {
+    const cQueryApi = Chain.on(function (value, next, die) {
       Invalidating.query(component).get(function (res) {
         next(Chain.wrap(res));
       });
     });
 
-    var cRunApi = Chain.on(function (value, next, die) {
+    const cRunApi = Chain.on(function (value, next, die) {
       Invalidating.run(component).get(function (res) {
         next(Chain.wrap(res));
       });
     });
 
-    var cCheckValidationFails = function (label, expected) {
+    const cCheckValidationFails = function (label, expected) {
       return Chain.op(function (res) {
         res.fold(function (err) {
           Assertions.assertEq(label, expected, err);
@@ -140,7 +128,7 @@ UnitTest.asynctest('InvalidatingTest', function() {
       });
     };
 
-    var cCheckValidationPasses = function (label, expected) {
+    const cCheckValidationPasses = function (label, expected) {
       return Chain.op(function (res) {
         res.fold(function (err) {
           throw new Error(label + ': Unexpected error: ' + err);
@@ -154,7 +142,7 @@ UnitTest.asynctest('InvalidatingTest', function() {
       GuiSetup.mAddStyles(doc, [
         '.test-invalid { outline: 3px solid red; }'
       ]),
-      
+
       // Wait for the first thing to be invalid
       Waiter.sTryUntil(
         'A validation on load is configured, so wait for the first failure',
@@ -250,4 +238,3 @@ UnitTest.asynctest('InvalidatingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

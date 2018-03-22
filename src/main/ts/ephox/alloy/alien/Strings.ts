@@ -1,9 +1,9 @@
 // TODO: Migrate to katamari
 
-var checkRange = function (str, substr, start) {
-  if (substr === '') return true;
-  if (str.length < substr.length) return false;
-  var x = str.substr(start, start + substr.length);
+const checkRange = function (str: string, substr: string, start: number): boolean {
+  if (substr === '') { return true; }
+  if (str.length < substr.length) { return false; }
+  const x = str.substr(start, start + substr.length);
   return x === substr;
 };
 
@@ -12,10 +12,10 @@ var checkRange = function (str, substr, start) {
  *        More formally, for all strings x, startsWith(x, "").
  *        This is so that for all strings x and y, startsWith(y + x, y)
  */
-var startsWith = function (str, prefix) {
+const startsWith = function (str: string, prefix: string): boolean {
   return checkRange(str, prefix, 0);
 };
 
-export default <any> {
-  startsWith: startsWith
+export default {
+  startsWith
 };

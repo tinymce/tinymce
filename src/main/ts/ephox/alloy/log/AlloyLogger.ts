@@ -1,9 +1,9 @@
-import Truncate from '../alien/Truncate';
+import * as Truncate from '../alien/Truncate';
 
-var element = function (elem) {
+const element = function (elem) {
   return Truncate.getHtml(elem);
 };
 
-export default <any> {
-  element: element
+export {
+  element
 };

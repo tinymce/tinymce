@@ -1,14 +1,14 @@
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Html } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('RepresentingTest (mode: manual)', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('RepresentingTest (mode: manual)', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build({
@@ -20,11 +20,11 @@ UnitTest.asynctest('RepresentingTest (mode: manual)', function() {
         Representing.config({
           store: {
             mode: 'manual',
-            getValue: function (comp) {
+            getValue (comp) {
               store.adder('getValue')();
               return Html.get(comp.element());
             },
-            setValue: function (comp, v) {
+            setValue (comp, v) {
               Html.set(comp.element(), v);
               store.adder('setValue(' + v + ')')();
             },
@@ -45,4 +45,3 @@ UnitTest.asynctest('RepresentingTest (mode: manual)', function() {
     ];
   }, function () { success(); }, failure);
 });
-

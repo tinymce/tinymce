@@ -1,33 +1,28 @@
-import { Chain } from '@ephox/agar';
-import { Cursors } from '@ephox/agar';
-import { NamedChain } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Chain, Cursors, NamedChain } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Option, Result } from '@ephox/katamari';
+import { Css, Element, Html } from '@ephox/sugar';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import ChainUtils from 'ephox/alloy/test/ChainUtils';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import Sinks from 'ephox/alloy/test/Sinks';
-import { Option } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Css } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('SelectionInDocPositionTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SelectionInDocPositionTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
-    var content = '';
-    for (var i = 0; i < 20; i++) {
+    let content = '';
+    for (let i = 0; i < 20; i++) {
       content += '<p>paragraph ' + i + '</p>';
     }
 
-    var editor = Element.fromTag('div');
+    const editor = Element.fromTag('div');
     Html.set(editor, content);
 
-    var inlineEditor = GuiFactory.build(
+    const inlineEditor = GuiFactory.build(
       GuiFactory.external({
         uid: 'inline-editor',
         element: editor
@@ -36,9 +31,9 @@ UnitTest.asynctest('SelectionInDocPositionTest', function() {
 
     Css.setAll(inlineEditor.element(), {
       'margin-top': '300px',
-      height: '200px',
-      overflow: 'scroll',
-      border: '1px solid red'
+      'height': '200px',
+      'overflow': 'scroll',
+      'border': '1px solid red'
     });
 
     return GuiFactory.build(
@@ -53,11 +48,11 @@ UnitTest.asynctest('SelectionInDocPositionTest', function() {
     );
 
   }, function (doc, body, gui, component, store) {
-    var cSetupAnchor = Chain.mapper(function (data) {
+    const cSetupAnchor = Chain.mapper(function (data) {
       return {
         anchor: 'selection',
         root: data.inline.element(),
-        getSelection: function () {
+        getSelection () {
           return Option.some(
             Cursors.calculate(data.inline.element(), data.path)
           );
@@ -69,10 +64,10 @@ UnitTest.asynctest('SelectionInDocPositionTest', function() {
       Chain.asStep({}, [
         NamedChain.asChain([
           ChainUtils.cFindUids(gui, {
-            'fixed': 'fixed-sink',
-            'relative': 'relative-sink',
-            'popup': 'popup',
-            'inline': 'inline-editor'
+            fixed: 'fixed-sink',
+            relative: 'relative-sink',
+            popup: 'popup',
+            inline: 'inline-editor'
           }),
 
           ChainUtils.cLogging(
@@ -112,7 +107,6 @@ UnitTest.asynctest('SelectionInDocPositionTest', function() {
             'fixed'
           ),
 
-
           ChainUtils.cLogging(
             'Setting selection to 13th paragraph and scrolling there',
             [
@@ -123,9 +117,9 @@ UnitTest.asynctest('SelectionInDocPositionTest', function() {
                 foffset: 0
               })),
               NamedChain.bundle(function (data) {
-                var root = data.inline.element();
-                var path = data.path;
-                var range = Cursors.calculate(root, path);
+                const root = data.inline.element();
+                const path = data.path;
+                const range = Cursors.calculate(root, path);
                 range.start().dom().scrollIntoView();
                 return Result.value(data);
               }),
@@ -148,4 +142,3 @@ UnitTest.asynctest('SelectionInDocPositionTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

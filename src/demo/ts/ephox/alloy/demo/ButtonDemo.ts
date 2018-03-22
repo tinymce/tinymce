@@ -1,26 +1,23 @@
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Toggling from 'ephox/alloy/api/behaviour/Toggling';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
-import Button from 'ephox/alloy/api/ui/Button';
+import { Class, Element } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Button } from 'ephox/alloy/api/ui/Button';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import DomModification from 'ephox/alloy/dom/DomModification';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-
-
+import * as DomModification from 'ephox/alloy/dom/DomModification';
 
 export default <any> function () {
-  var gui = Gui.create();
-  var body = Element.fromDom(document.body);
+  const gui = Gui.create();
+  const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  var redBehaviour = Behaviour.create({
+  const redBehaviour = Behaviour.create({
     fields: [ ],
     name: 'red.behaviour',
     active: {
-      exhibit: function (base, info) {
+      exhibit (base, info) {
         return DomModification.nu({
           classes: [ 'cat' ],
           attributes: {
@@ -34,11 +31,11 @@ export default <any> function () {
     }
   });
 
-  var catBehaviour = Behaviour.create({
+  const catBehaviour = Behaviour.create({
     fields: [ ],
     name: 'cat.behaviour',
     active: {
-      exhibit: function (base, info) {
+      exhibit (base, info) {
         return DomModification.nu({
           classes: [ 'cat' ],
           attributes: {
@@ -53,7 +50,7 @@ export default <any> function () {
     }
   });
 
-  var button1 = HtmlDisplay.section(
+  const button1 = HtmlDisplay.section(
     gui,
     'This button is a <code>button</code> tag with an image',
     Button.sketch({
@@ -62,17 +59,17 @@ export default <any> function () {
         styles: {
           'background-color': 'black',
           'background-image': 'url(http://yamaha/textbox/icons/Transforms13.png)',
-          width: '20px',
-          height: '20px'
+          'width': '20px',
+          'height': '20px'
         }
       },
-      action: function () {
+      action () {
         console.log('*** Image ButtonDemo click ***');
       }
     })
   );
 
-  var button2 = HtmlDisplay.section(
+  const button2 = HtmlDisplay.section(
     gui,
     'This toggle button is a <code>span</code> tag with an font',
     Button.sketch({
@@ -84,7 +81,7 @@ export default <any> function () {
           display: 'inline-block'
         }
       },
-      action: function () {
+      action () {
         console.log('*** Font ButtonDemo click ***');
       },
       buttonBehaviours: Behaviour.derive([
@@ -100,7 +97,7 @@ export default <any> function () {
 
   Toggling.on(button2);
 
-  var customButton = HtmlDisplay.section(
+  const customButton = HtmlDisplay.section(
     gui,
     'This text button has two custom behaviours. One adds (among other things) "data-cat" and ' +
     'background blue, and the other adds color red',
@@ -109,7 +106,7 @@ export default <any> function () {
         tag: 'span',
         innerHtml: 'Button.with.Text'
       },
-      action: function () {
+      action () {
         console.log('*** ButtonDemo click ***');
       },
 

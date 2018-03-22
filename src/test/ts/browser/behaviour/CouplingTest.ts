@@ -1,21 +1,18 @@
-import { Assertions } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Coupling from 'ephox/alloy/api/behaviour/Coupling';
-import Button from 'ephox/alloy/api/ui/Button';
-import Container from 'ephox/alloy/api/ui/Container';
-import Tagger from 'ephox/alloy/registry/Tagger';
+import { Assertions, Logger, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Attr, Node } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Coupling } from 'ephox/alloy/api/behaviour/Coupling';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Button } from 'ephox/alloy/api/ui/Button';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import * as Tagger from 'ephox/alloy/registry/Tagger';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import StepUtils from 'ephox/alloy/test/StepUtils';
-import { Attr } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('CouplingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('CouplingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -24,7 +21,7 @@ UnitTest.asynctest('CouplingTest', function() {
         containerBehaviours: Behaviour.derive([
           Coupling.config({
             others: {
-              'secondary-1': function (primary) {
+              'secondary-1' (primary) {
                 return Button.sketch({
                   dom: {
                     tag: 'button'
@@ -50,8 +47,8 @@ UnitTest.asynctest('CouplingTest', function() {
       Logger.t(
         'Testing getCoupled with valid name: secondary-1',
         Step.sync(function () {
-          var secondary1 = Coupling.getCoupled(component, 'secondary-1');
-          var button1 = secondary1.element();
+          const secondary1 = Coupling.getCoupled(component, 'secondary-1');
+          const button1 = secondary1.element();
           Assertions.assertEq('secondary1 should be a button', 'button', Node.name(button1));
           Attr.set(button1, 'data-test', 'marked');
 
@@ -65,7 +62,7 @@ UnitTest.asynctest('CouplingTest', function() {
 
       store.sAssertEq('Should be nothing on the store', [ ]),
       Step.sync(function () {
-        var secondary1 = Coupling.getCoupled(component, 'secondary-1');
+        const secondary1 = Coupling.getCoupled(component, 'secondary-1');
         gui.add(secondary1);
         secondary1.element().dom().click();
       }),
@@ -76,4 +73,3 @@ UnitTest.asynctest('CouplingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

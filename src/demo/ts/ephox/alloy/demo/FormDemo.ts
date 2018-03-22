@@ -1,46 +1,42 @@
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
-import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
-import Button from 'ephox/alloy/api/ui/Button';
-import Container from 'ephox/alloy/api/ui/Container';
-import ExpandableForm from 'ephox/alloy/api/ui/ExpandableForm';
-import Form from 'ephox/alloy/api/ui/Form';
+import { Obj, Result } from '@ephox/katamari';
+import { Class, Element } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Button } from 'ephox/alloy/api/ui/Button';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { ExpandableForm } from 'ephox/alloy/api/ui/ExpandableForm';
+import { Form } from 'ephox/alloy/api/ui/Form';
 import DemoDataset from 'ephox/alloy/demo/DemoDataset';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
-import DemoFields from './forms/DemoFields';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { Obj } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
 
-
+import DemoFields from './forms/DemoFields';
 
 export default <any> function () {
-  var gui = Gui.create();
-  var body = Element.fromDom(document.body);
+  const gui = Gui.create();
+  const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  var sink = DemoSink.make();
+  const sink = DemoSink.make();
 
   gui.add(sink);
 
-  var lazySink = function () {
+  const lazySink = function () {
     return Result.value(sink);
   };
 
-  var alphaSpec = { label: 'Alpha', inline: false };
-  var betaSpec = { label: 'Beta', inline: false };
-  var gammaSpec = { label: 'Gamma', inline: true };
-  var deltaSpec = { label: 'Delta', inline: false };
-  var epsilonSpec = { label: 'Epsilon' };
+  const alphaSpec = { label: 'Alpha', inline: false };
+  const betaSpec = { label: 'Beta', inline: false };
+  const gammaSpec = { label: 'Gamma', inline: true };
+  const deltaSpec = { label: 'Delta', inline: false };
+  const epsilonSpec = { label: 'Epsilon' };
 
-
-  var thetaSpec = {
+  const thetaSpec = {
     label: 'AA',
     options: [
       { value: 'a.a', text: 'A.A' },
@@ -50,7 +46,7 @@ export default <any> function () {
     ]
   };
 
-  var rhoSpec = {
+  const rhoSpec = {
     legend: 'Rho',
     choices: [
       { value: 'left', text: 'Left' },
@@ -59,18 +55,18 @@ export default <any> function () {
     ]
   };
 
-  var omegaSpec = {
+  const omegaSpec = {
     field1: { label: 'omega-1', inline: false },
     field2: { label: 'omega-2', inline: false }
   };
 
-  var maxiSpec = {
+  const maxiSpec = {
     label: 'Maxis',
     dataset: DemoDataset,
-    lazySink: lazySink
+    lazySink
   };
 
-  var form = HtmlDisplay.section(
+  const form = HtmlDisplay.section(
     gui,
     'This form has many fields',
     Form.sketch(function (parts) {
@@ -106,7 +102,7 @@ export default <any> function () {
               tag: 'button',
               innerHtml: 'OK'
             },
-            action: function (button) {
+            action (button) {
               console.log('Form values', Obj.map(
                 Representing.getValue(form),
                 function (v) {
@@ -132,7 +128,7 @@ export default <any> function () {
     gamma: 'cad'
   });
 
-  var expform = HtmlDisplay.section(
+  const expform = HtmlDisplay.section(
     gui,
     'This form expands',
     ExpandableForm.sketch({
@@ -189,7 +185,7 @@ export default <any> function () {
                 }),
                 parts.field('delta', DemoFields.textMunger(deltaSpec)),
                 parts.field('epsilon', DemoFields.textMunger(epsilonSpec)),
-                parts.field('rho', DemoFields.chooserMunger(rhoSpec))    
+                parts.field('rho', DemoFields.chooserMunger(rhoSpec))
               ]
             };
           })
@@ -218,7 +214,7 @@ export default <any> function () {
             Button.sketch(
               {
                 dom: { tag: 'button', innerHtml: 'OK' },
-                action: function (button) {
+                action (button) {
                   console.log('Exp Form values', Obj.map(
                     Representing.getValue(expform),
                     function (v) {
@@ -254,7 +250,7 @@ export default <any> function () {
     console.log('expform', Obj.map(Representing.getValue(expform), function (v) { return v.getOrDie(); }));
 
     Representing.setValue(expform, {
-      'omega': 'hi'
+      omega: 'hi'
     });
 
     Representing.getValue(expform);

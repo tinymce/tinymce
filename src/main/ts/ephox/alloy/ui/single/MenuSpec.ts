@@ -1,17 +1,17 @@
-import Behaviour from '../../api/behaviour/Behaviour';
-import Composing from '../../api/behaviour/Composing';
-import Highlighting from '../../api/behaviour/Highlighting';
-import Keying from '../../api/behaviour/Keying';
-import Representing from '../../api/behaviour/Representing';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
-import AlloyEvents from '../../api/events/AlloyEvents';
-import AlloyTriggers from '../../api/events/AlloyTriggers';
-import ItemEvents from '../../menu/util/ItemEvents';
-import MenuEvents from '../../menu/util/MenuEvents';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import { Fun, Merger } from '@ephox/katamari';
 
-var make = function (detail, components, spec, externals) {
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { Composing } from '../../api/behaviour/Composing';
+import { Highlighting } from '../../api/behaviour/Highlighting';
+import { Keying } from '../../api/behaviour/Keying';
+import { Representing } from '../../api/behaviour/Representing';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import * as ItemEvents from '../../menu/util/ItemEvents';
+import * as MenuEvents from '../../menu/util/MenuEvents';
+
+const make = function (detail, components, spec, externals) {
   return Merger.deepMerge(
     {
       dom: Merger.deepMerge(
@@ -38,7 +38,6 @@ var make = function (detail, components, spec, externals) {
               initialValue: detail.value()
             }
           }),
-          // FIX: Is this used? It has the wrong return type.
           Composing.config({
             find: Fun.identity
           }),
@@ -50,30 +49,30 @@ var make = function (detail, components, spec, externals) {
         // This is dispatched from a menu to tell an item to be highlighted.
         AlloyEvents.run(ItemEvents.focus(), function (menu, simulatedEvent) {
           // Highlight the item
-          var event = simulatedEvent.event();
+          const event = simulatedEvent.event();
           menu.getSystem().getByDom(event.target()).each(function (item) {
             Highlighting.highlight(menu, item);
 
             simulatedEvent.stop();
 
             // Trigger the focus event on the menu.
-            AlloyTriggers.emitWith(menu, MenuEvents.focus(), { menu: menu, item: item });
+            AlloyTriggers.emitWith(menu, MenuEvents.focus(), { menu, item });
           });
         }),
 
         // Highlight the item that the cursor is over. The onHighlight
         // code needs to handle updating focus if required
         AlloyEvents.run(ItemEvents.hover(), function (menu, simulatedEvent) {
-          var item = simulatedEvent.event().item();
+          const item = simulatedEvent.event().item();
           Highlighting.highlight(menu, item);
         })
       ]),
-      components: components,
+      components,
       eventOrder: detail.eventOrder()
     }
   );
 };
 
-export default <any> {
-  make: make
+export {
+  make
 };

@@ -1,12 +1,14 @@
-import Sketcher from './Sketcher';
-import MenuSchema from '../../ui/schema/MenuSchema';
-import MenuSpec from '../../ui/single/MenuSpec';
+import * as MenuSchema from '../../ui/schema/MenuSchema';
+import * as MenuSpec from '../../ui/single/MenuSpec';
+import * as Sketcher from './Sketcher';
 
-
-
-export default <any> Sketcher.composite({
+const Menu = Sketcher.composite({
   name: 'Menu',
   configFields: MenuSchema.schema(),
   partFields: MenuSchema.parts(),
   factory: MenuSpec.make
 });
+
+export {
+  Menu
+};

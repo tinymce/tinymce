@@ -1,12 +1,10 @@
-import DomDefinition from './DomDefinition';
 import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import { Arr, Merger, Obj, Struct } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
-import { Struct } from '@ephox/katamari';
 
-var fields = [
+import * as DomDefinition from './DomDefinition';
+
+const fields = [
   'classes',
   'attributes',
   'styles',
@@ -16,12 +14,11 @@ var fields = [
   'domChildren'
 ];
 // Maybe we'll need to allow add/remove
-var nu = Struct.immutableBag([ ], fields);
+const nu = Struct.immutableBag([ ], fields);
 
-
-var derive = function (settings) {
-  var r = { };
-  var keys = Obj.keys(settings);
+const derive = function (settings) {
+  const r = { };
+  const keys = Obj.keys(settings);
   Arr.each(keys, function (key) {
     settings[key].each(function (v) {
       r[key] = v;
@@ -31,12 +28,12 @@ var derive = function (settings) {
   return nu(r);
 };
 
-var modToStr = function (mod) {
-  var raw = modToRaw(mod);
+const modToStr = function (mod) {
+  const raw = modToRaw(mod);
   return Json.stringify(raw, null, 2);
 };
 
-var modToRaw = function (mod) {
+const modToRaw = function (mod) {
   return {
     classes: mod.classes().getOr('<none>'),
     attributes: mod.attributes().getOr('<none>'),
@@ -52,7 +49,7 @@ var modToRaw = function (mod) {
   };
 };
 
-var clashingOptArrays = function (key, oArr1, oArr2) {
+const clashingOptArrays = function (key, oArr1, oArr2) {
   return oArr1.fold(function () {
     return oArr2.fold(function () {
       return { };
@@ -68,8 +65,8 @@ var clashingOptArrays = function (key, oArr1, oArr2) {
   });
 };
 
-var merge = function (defnA, mod) {
-  var raw = Merger.deepMerge(
+const merge = function (defnA, mod) {
+  const raw = Merger.deepMerge(
     {
       tag: defnA.tag(),
       classes: mod.classes().getOr([ ]).concat(defnA.classes().getOr([ ])),
@@ -97,12 +94,12 @@ var merge = function (defnA, mod) {
   return DomDefinition.nu(raw);
 };
 
-export default <any> {
-  nu: nu,
-  derive: derive,
+export {
+  nu,
+  derive,
 
-  merge: merge,
+  merge,
   // combine: combine,
-  modToStr: modToStr,
-  modToRaw: modToRaw
+  modToStr,
+  modToRaw
 };

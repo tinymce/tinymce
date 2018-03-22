@@ -1,15 +1,72 @@
-import GuiTypes from './GuiTypes';
-import UiSketcher from './UiSketcher';
-import FunctionAnnotator from '../../debugging/FunctionAnnotator';
-import AlloyParts from '../../parts/AlloyParts';
-import PartType from '../../parts/PartType';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
+import { DslType, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Fun, Merger, Obj } from '@ephox/katamari';
+import { EventHandlerConfig } from '../../api/events/AlloyEvents';
 
-var singleSchema = ValueSchema.objOfOnly([
+import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
+import * as AlloyParts from '../../parts/AlloyParts';
+import * as GuiTypes from './GuiTypes';
+import * as UiSketcher from './UiSketcher';
+import { AlloyBehaviourSchema } from '../../api/behaviour/Behaviour';
+
+export interface RawElementSchema {
+  tag: string;
+  attributes?: Record<string, any>;
+  styles?: Record<string, string>;
+  innerHtml?: string;
+  classes?: string[];
+}
+
+export type AlloyComponentsSpec = RawDomSchema[] | SketchSpec[];
+export type AlloyMixedSpec = RawDomSchema | SketchSpec;
+
+export interface SingleSketch {
+  name: () => string;
+  configFields: () => DslType.FieldProcessorAdt[];
+  partFields: () => DslType.FieldProcessorAdt[];
+  sketch: (spec: Record<string, any>) => SketchSpec;
+  factory: UiSketcher.SingleFactory;
+}
+
+export interface CompositeSketch  {
+  name: () => string;
+  configFields: () => DslType.FieldProcessorAdt[];
+  partFields: () => DslType.FieldProcessorAdt[];
+  sketch: (spec: Record<string, any>) => SketchSpec;
+
+  parts: () => any;
+  factory: UiSketcher.CompositeFactory;
+  // [key: string]: Function;
+}
+
+// TODO: Morgan -> check these
+export interface RawDomSchema {
+  dom: RawElementSchema;
+  components?: AlloyComponentsSpec;
+  items?: RawDomSchema[];
+  type?: string;
+  data?: {};
+  markers?: {};
+  behaviours?: Record<string, AlloyBehaviourSchema>;
+  events?: EventHandlerConfig | {};
+}
+
+export interface RawDomSchemaUid extends RawDomSchema {
+  uid: string;
+}
+
+// TODO: Morgan -> check these, should domModification and eventOrder be part of RawDomSchema too?
+export interface SketchSpec extends RawDomSchema {
+  domModification: {};
+  eventOrder: {};
+  uid: string;
+  'debug.sketcher': {};
+}
+
+export function isSketchSpec(spec: RawDomSchema | SketchSpec): spec is SketchSpec {
+  return (<SketchSpec> spec).uid !== undefined;
+}
+
+const singleSchema = ValueSchema.objOfOnly([
   FieldSchema.strict('name'),
   FieldSchema.strict('factory'),
   FieldSchema.strict('configFields'),
@@ -17,7 +74,7 @@ var singleSchema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('extraApis', { })
 ]);
 
-var compositeSchema = ValueSchema.objOfOnly([
+const compositeSchema = ValueSchema.objOfOnly([
   FieldSchema.strict('name'),
   FieldSchema.strict('factory'),
   FieldSchema.strict('configFields'),
@@ -26,15 +83,15 @@ var compositeSchema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('extraApis', { })
 ]);
 
-var single = function (rawConfig) {
-  var config = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, singleSchema, rawConfig);
+const single = function (rawConfig) {
+  const config = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, singleSchema, rawConfig);
 
-  var sketch = function (spec) {
+  const sketch = function (spec) {
     return UiSketcher.single(config.name, config.configFields, config.factory, spec);
   };
 
-  var apis = Obj.map(config.apis, GuiTypes.makeApi);
-  var extraApis = Obj.map(config.extraApis, function (f, k) {
+  const apis = Obj.map(config.apis, GuiTypes.makeApi);
+  const extraApis = Obj.map(config.extraApis, function (f, k) {
     return FunctionAnnotator.markAsExtraApi(f, k);
   });
 
@@ -44,25 +101,25 @@ var single = function (rawConfig) {
       partFields: Fun.constant([ ]),
       configFields: Fun.constant(config.configFields),
 
-      sketch: sketch
+      sketch
     },
     apis,
     extraApis
-  );
+  ) as SingleSketch;
 };
 
-var composite = function (rawConfig) {
-  var config = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, compositeSchema, rawConfig);
+const composite = function (rawConfig) {
+  const config = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, compositeSchema, rawConfig);
 
-  var sketch = function (spec) {
+  const sketch = function (spec) {
     return UiSketcher.composite(config.name, config.configFields, config.partFields, config.factory, spec);
   };
 
   // These are constructors that will store their configuration.
-  var parts = AlloyParts.generate(config.name, config.partFields);
+  const parts = AlloyParts.generate(config.name, config.partFields);
 
-  var apis = Obj.map(config.apis, GuiTypes.makeApi);
-  var extraApis = Obj.map(config.extraApis, function (f, k) {
+  const apis = Obj.map(config.apis, GuiTypes.makeApi);
+  const extraApis = Obj.map(config.extraApis, function (f, k) {
     return FunctionAnnotator.markAsExtraApi(f, k);
   });
 
@@ -71,15 +128,15 @@ var composite = function (rawConfig) {
       name: Fun.constant(config.name),
       partFields: Fun.constant(config.partFields),
       configFields: Fun.constant(config.configFields),
-      sketch: sketch,
+      sketch,
       parts: Fun.constant(parts)
     },
     apis,
     extraApis
-  );
+  ) as CompositeSketch;
 };
 
-export default <any> {
-  single: single,
-  composite: composite
+export {
+  single,
+  composite
 };

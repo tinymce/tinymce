@@ -1,14 +1,11 @@
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
-import ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
-import Menu from 'ephox/alloy/api/ui/Menu';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Attr } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
+import { Step, Waiter } from '@ephox/agar';
+import { Fun, Merger } from '@ephox/katamari';
+import { Attr, SelectorFind } from '@ephox/sugar';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
+import { Menu } from 'ephox/alloy/api/ui/Menu';
 
-var renderMenu = function (spec) {
+const renderMenu = function (spec) {
   return {
     dom: {
       tag: 'ol',
@@ -24,7 +21,7 @@ var renderMenu = function (spec) {
   };
 };
 
-var renderItem = function (spec) {
+const renderItem = function (spec) {
   return spec.type === 'widget' ? {
     type: 'widget',
     data: spec.data,
@@ -54,36 +51,36 @@ var renderItem = function (spec) {
   };
 };
 
-var part = function (store) {
+const part = function (store) {
   return {
     dom: {
       tag: 'div'
     },
-    markers: markers,
-    onExecute: function (dropdown, item) {
-      var v = Representing.getValue(item);
+    markers,
+    onExecute (dropdown, item) {
+      const v = Representing.getValue(item);
       return store.adderH('dropdown.menu.execute: ' + v.value)();
     }
   };
 };
 
-var mStoreMenuUid = function (component) {
+const mStoreMenuUid = function (component) {
   return Step.stateful(function (value, next, die) {
-    var menu = SelectorFind.descendant(component.element(), '.menu').getOrDie('Could not find menu');
-    var uid = Attr.get(menu, 'data-alloy-id');
+    const menu = SelectorFind.descendant(component.element(), '.menu').getOrDie('Could not find menu');
+    const uid = Attr.get(menu, 'data-alloy-id');
     next(
       Merger.deepMerge(value, { menuUid: uid })
     );
   });
 };
 
-var mWaitForNewMenu = function (component) {
+const mWaitForNewMenu = function (component) {
   return Step.stateful(function (value, next, die) {
     Waiter.sTryUntil(
       'Waiting for a new menu (different uid)',
       Step.sync(function () {
         SelectorFind.descendant(component.element(), '.menu').filter(function (menu) {
-          var uid = Attr.get(menu, 'data-alloy-id');
+          const uid = Attr.get(menu, 'data-alloy-id');
           return value.menuUid !== uid;
         }).getOrDie('New menu has not appeared');
       }),
@@ -93,20 +90,20 @@ var mWaitForNewMenu = function (component) {
   });
 };
 
-var markers = {
+const markers = {
   item: 'item',
   selectedItem: 'selected-item',
   menu: 'menu',
   selectedMenu: 'selected-menu',
-  'backgroundMenu': 'background-menu'
+  backgroundMenu: 'background-menu'
 };
 
 export default <any> {
-  renderItem: renderItem,
-  renderMenu: renderMenu,
-  part: part,
+  renderItem,
+  renderMenu,
+  part,
   markers: Fun.constant(markers),
 
-  mWaitForNewMenu: mWaitForNewMenu,
-  mStoreMenuUid: mStoreMenuUid
+  mWaitForNewMenu,
+  mStoreMenuUid
 };

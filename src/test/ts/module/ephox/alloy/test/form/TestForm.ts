@@ -1,12 +1,11 @@
-import { Assertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
+import { Assertions, Step } from '@ephox/agar';
 import { Obj } from '@ephox/katamari';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 
-var helper = function (component) {
-  var sAssertRep = function (expected) {
+const helper = function (component) {
+  const sAssertRep = function (expected) {
     return Step.sync(function () {
-      var val = Representing.getValue(component);
+      const val = Representing.getValue(component);
       Assertions.assertEq(
         'Checking form value',
         expected,
@@ -18,18 +17,18 @@ var helper = function (component) {
     });
   };
 
-  var sSetRep = function (newValues) {
+  const sSetRep = function (newValues) {
     return Step.sync(function () {
       Representing.setValue(component, newValues);
     });
   };
 
   return {
-    sAssertRep: sAssertRep,
-    sSetRep: sSetRep
+    sAssertRep,
+    sSetRep
   };
 };
 
 export default <any> {
-  helper: helper
+  helper
 };

@@ -1,23 +1,21 @@
-import { FocusTools } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import Container from 'ephox/alloy/api/ui/Container';
+import { FocusTools, Keyboard, Keys } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr } from '@ephox/katamari';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
-import { Arr } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Flow Keying Test', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Flow Keying Test', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
-    var item = function (classes, name) {
+    const item = function (classes, name) {
       return Container.sketch({
         dom: {
           tag: 'span',
@@ -28,7 +26,7 @@ UnitTest.asynctest('Flow Keying Test', function() {
             margin: '2px',
             border: '1px solid ' + (Arr.contains(classes, 'stay') ? 'blue' : 'yellow')
           },
-          classes: classes
+          classes
         },
         events: AlloyEvents.derive([
           AlloyEvents.runOnExecute(
@@ -69,7 +67,7 @@ UnitTest.asynctest('Flow Keying Test', function() {
     );
   }, function (doc, body, gui, component, store) {
 
-    var targets = {
+    const targets = {
       one: { label: 'one', selector: '.one' },
       two: { label: 'two', selector: '.two' },
       five: { label: 'five', selector: '.five' }
@@ -141,4 +139,3 @@ UnitTest.asynctest('Flow Keying Test', function() {
     success();
   }, failure);
 });
-

@@ -1,13 +1,14 @@
-import Behaviour from '../api/behaviour/Behaviour';
-import Positioning from '../api/behaviour/Positioning';
-import AlloyEvents from '../api/events/AlloyEvents';
-import NativeEvents from '../api/events/NativeEvents';
-import PartType from './PartType';
 import { Fun } from '@ephox/katamari';
 
-var suffix = 'sink';
-var partType = PartType.optional({
-  name: suffix,
+import * as Behaviour from '../api/behaviour/Behaviour';
+import { Positioning } from '../api/behaviour/Positioning';
+import * as AlloyEvents from '../api/events/AlloyEvents';
+import * as NativeEvents from '../api/events/NativeEvents';
+import * as PartType from './PartType';
+
+const suffix = Fun.constant('sink');
+const partType = Fun.constant(PartType.optional({
+  name: suffix(),
   overrides: Fun.constant({
     dom: {
       tag: 'div'
@@ -25,9 +26,9 @@ var partType = PartType.optional({
       AlloyEvents.cutter(NativeEvents.click())
     ])
   })
-});
+}));
 
-export default <any> {
-  partType: Fun.constant(partType),
-  suffix: Fun.constant(suffix)
+export {
+  partType,
+  suffix
 };

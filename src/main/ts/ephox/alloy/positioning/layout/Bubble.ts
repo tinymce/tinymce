@@ -1,8 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 
-
-
 export default <any> function (width, yoffset) {
   return {
     southeast: Fun.constant(Position(-width, yoffset)),

@@ -1,32 +1,26 @@
-import Representing from 'ephox/alloy/api/behaviour/Representing';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
-import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
-import Typeahead from 'ephox/alloy/api/ui/Typeahead';
+import { Arr, Future, Option, Result } from '@ephox/katamari';
+import { Class, Element, Value } from '@ephox/sugar';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
-import DemoRenders from './forms/DemoRenders';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { Arr } from '@ephox/katamari';
-import { Future } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Value } from '@ephox/sugar';
 
-
+import DemoRenders from './forms/DemoRenders';
 
 export default <any> function () {
-  var gui = Gui.create();
-  var body = Element.fromDom(document.body);
+  const gui = Gui.create();
+  const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  var sink = DemoSink.make();
+  const sink = DemoSink.make();
 
   gui.add(sink);
 
-  var dataset = [
+  const dataset = [
     'ant',
     'bison',
     'cat',
@@ -55,7 +49,7 @@ export default <any> function () {
     'zebra'
   ];
 
-  var lazySink = function () {
+  const lazySink = function () {
     return Result.value(sink);
   };
 
@@ -63,7 +57,7 @@ export default <any> function () {
     'An example of a typeahead component',
     Typeahead.sketch({
       minChars: 1,
-      lazySink: lazySink,
+      lazySink,
       dom: {
         tag: 'input'
       },
@@ -81,35 +75,35 @@ export default <any> function () {
         openClass: 'demo-typeahead-open'
       },
 
-      fetch: function (input) {
-        var text = Value.get(input.element());
+      fetch (input) {
+        const text = Value.get(input.element());
         console.log('text', text);
-        var matching = Arr.bind(dataset, function (d) {
-          var index = d.indexOf(text.toLowerCase());
+        const matching = Arr.bind(dataset, function (d) {
+          const index = d.indexOf(text.toLowerCase());
           if (index > -1) {
-            var html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
+            const html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
               d.substring(index + text.length);
-            return [ { type: 'item', data: { value: d, text: d, html: html }, 'item-class': 'class-' + d } ];
+            return [ { 'type': 'item', 'data': { value: d, text: d, html }, 'item-class': 'class-' + d } ];
           } else {
             return [ ];
           }
         });
 
-        var matches = matching.length > 0 ? matching : [
+        const matches = matching.length > 0 ? matching : [
           { type: 'separator', text: 'No items' }
         ];
 
-        var future = Future.pure(matches.slice(0, 5));
+        const future = Future.pure(matches.slice(0, 5));
         return future.map(function (items) {
-          var menu = DemoRenders.menu({
+          const menu = DemoRenders.menu({
             value: 'blah.value',
             items: Arr.map(items, DemoRenders.item)
           });
-          return TieredMenu.singleData('blah', menu)
+          return TieredMenu.singleData('blah', menu);
         });
       },
-      onExecute: function (sandbox, item, itemValue) {
-        var value = Representing.getValue(item);
+      onExecute (sandbox, item, itemValue) {
+        const value = Representing.getValue(item);
         console.log('*** typeahead menu demo execute on: ' + value + ' ***');
         return Option.some(true);
       }

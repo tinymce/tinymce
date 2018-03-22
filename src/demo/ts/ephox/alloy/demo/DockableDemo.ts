@@ -1,20 +1,16 @@
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Docking from 'ephox/alloy/api/behaviour/Docking';
-import Dragging from 'ephox/alloy/api/behaviour/Dragging';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
-import Container from 'ephox/alloy/api/ui/Container';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-
-
+import { Class, Css, Element } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Docking } from 'ephox/alloy/api/behaviour/Docking';
+import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default <any> function () {
-  var gui = Gui.create();
-  var body = Element.fromDom(document.body);
+  const gui = Gui.create();
+  const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   // Css.set(gui.element(), 'direction', 'rtl');
 
@@ -22,17 +18,17 @@ export default <any> function () {
   // Css.set(body, 'margin-top', '2000px');
   Css.set(body, 'margin-bottom', '2000px');
 
-  var dockable = HtmlDisplay.section(
+  const dockable = HtmlDisplay.section(
     gui,
     'The blue panel will always stay on screen as long as the red rectangle is on screen',
     Container.sketch({
       uid: 'panel-container',
       dom: {
         styles: {
-          background: 'red',
+          'background': 'red',
           'margin-top': '1400px',
-          width: '500px',
-          height: '3600px',
+          'width': '500px',
+          'height': '3600px',
           'z-index': '50'
         }
       },
@@ -40,20 +36,20 @@ export default <any> function () {
         Container.sketch({
           dom: {
             styles: {
-              background: '#cadbee',
-              width: '400px',
-              height: '50px',
-              border: '2px solid black',
-              position: 'absolute',
-              top: '2500px',
-              left: '150px',
+              'background': '#cadbee',
+              'width': '400px',
+              'height': '50px',
+              'border': '2px solid black',
+              'position': 'absolute',
+              'top': '2500px',
+              'left': '150px',
               'z-index': '100'
             }
           },
           containerBehaviours: Behaviour.derive([
             Dragging.config({
               mode: 'mouse',
-              blockerClass: [ 'blocker' ]
+              blockerClass: 'blocker'
             }),
 
             Docking.config({
@@ -61,7 +57,7 @@ export default <any> function () {
                 transitionClass: 'demo-alloy-dock-transition',
                 fadeOutClass: 'demo-alloy-dock-fade-out',
                 fadeInClass: 'demo-alloy-dock-fade-in',
-                lazyContext: function (component) {
+                lazyContext (component) {
                   return component.getSystem().getByUid('panel-container').fold(Option.none, function (comp) {
                     return Option.some(comp.element());
                   });

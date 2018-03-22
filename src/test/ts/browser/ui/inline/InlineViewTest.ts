@@ -1,54 +1,44 @@
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Button from 'ephox/alloy/api/ui/Button';
-import Container from 'ephox/alloy/api/ui/Container';
-import Dropdown from 'ephox/alloy/api/ui/Dropdown';
-import InlineView from 'ephox/alloy/api/ui/InlineView';
-import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
+import { Assertions, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr, Future, Option, Result } from '@ephox/katamari';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Button } from 'ephox/alloy/api/ui/Button';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
+import { InlineView } from 'ephox/alloy/api/ui/InlineView';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import Sinks from 'ephox/alloy/test/Sinks';
 import TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
-import { Arr } from '@ephox/katamari';
-import { Future } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('InlineViewTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('InlineViewTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return Sinks.relativeSink();
 
-
   }, function (doc, body, gui, component, store) {
-    var inline = GuiFactory.build(
+    const inline = GuiFactory.build(
       InlineView.sketch({
         dom: {
           tag: 'div',
           classes: [ 'test-inline' ]
         },
 
-        lazySink: function () {
+        lazySink () {
           return Result.value(component);
         },
 
-        getRelated: function () {
+        getRelated () {
           return Option.some(related);
         }
         // onEscape: store.adderH('inline.escape')
       })
     );
 
-    var related = GuiFactory.build({
+    const related = GuiFactory.build({
       dom: {
         tag: 'div',
         classes: [ 'related-to-inline' ],
@@ -62,7 +52,7 @@ UnitTest.asynctest('InlineViewTest', function() {
 
     gui.add(related);
 
-    var sCheckOpen = function (label) {
+    const sCheckOpen = function (label) {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -79,7 +69,7 @@ UnitTest.asynctest('InlineViewTest', function() {
       );
     };
 
-    var sCheckClosed = function (label) {
+    const sCheckClosed = function (label) {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -136,18 +126,18 @@ UnitTest.asynctest('InlineViewTest', function() {
 
                 toggleClass: 'alloy-selected',
 
-                lazySink: function () { return Result.value(component); },
+                lazySink () { return Result.value(component); },
                 parts: {
                   menu: TestDropdownMenu.part(store)
                 },
-                fetch: function () {
-                  var future = Future.pure([
+                fetch () {
+                  const future = Future.pure([
                     { type: 'item', data: { value: 'option-1', text: 'Option-1' } },
                     { type: 'item', data: { value: 'option-2', text: 'Option-2' } }
                   ]);
 
                   return future.map(function (f) {
-                    var menu = TestDropdownMenu.renderMenu({
+                    const menu = TestDropdownMenu.renderMenu({
                       value: 'inline-view-test',
                       items: Arr.map(f, TestDropdownMenu.renderItem)
                     });
@@ -173,7 +163,6 @@ UnitTest.asynctest('InlineViewTest', function() {
       store.sAssertEq('Check that the store is empty initially', [ ]),
       Mouse.sClickOn(gui.element(), 'button:contains("B")'),
       store.sAssertEq('Check that bold activated', [ 'bold' ]),
-
 
       // TODO: Make it not close if the inline toolbar had a dropdown, and the dropdown
       // item was selected. Requires composition of "isPartOf"
@@ -215,4 +204,3 @@ UnitTest.asynctest('InlineViewTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

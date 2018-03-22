@@ -1,28 +1,27 @@
-import Behaviour from '../../api/behaviour/Behaviour';
-import Composing from '../../api/behaviour/Composing';
-import Focusing from '../../api/behaviour/Focusing';
-import Highlighting from '../../api/behaviour/Highlighting';
-import Keying from '../../api/behaviour/Keying';
-import Representing from '../../api/behaviour/Representing';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
-import Fields from '../../data/Fields';
-import PartType from '../../parts/PartType';
-import ButtonBase from '../common/ButtonBase';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { FieldSchema, Objects } from '@ephox/boulder';
+import { Fun, Option } from '@ephox/katamari';
 
-var schema = [
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { Composing } from '../../api/behaviour/Composing';
+import { Focusing } from '../../api/behaviour/Focusing';
+import { Highlighting } from '../../api/behaviour/Highlighting';
+import { Keying } from '../../api/behaviour/Keying';
+import { Representing } from '../../api/behaviour/Representing';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import * as Fields from '../../data/Fields';
+import * as PartType from '../../parts/PartType';
+import * as ButtonBase from '../common/ButtonBase';
+
+const schema = Fun.constant([
   FieldSchema.strict('choices'),
   SketchBehaviours.field('chooserBehaviours', [ Keying, Highlighting, Composing, Representing ]),
   Fields.markers([ 'choiceClass', 'selectedClass' ])
-];
+]);
 
-var partTypes = [
+const parts = Fun.constant([
   PartType.required({
     name: 'legend',
-    defaults: function (detail) {
+    defaults (detail) {
       return {
         dom: {
           tag: 'legend'
@@ -33,13 +32,13 @@ var partTypes = [
 
   PartType.group({
     factory: {
-      sketch: function (spec) {
+      sketch (spec) {
         return Objects.exclude(spec, [ 'value' ]);
       }
     },
     name: 'choices',
     unit: 'choice',
-    overrides: function (detail, choiceSpec) {
+    overrides (detail, choiceSpec) {
       return {
         dom: {
           // Consider making a domModification, although we probably do not want it overwritten.
@@ -64,10 +63,12 @@ var partTypes = [
       };
     }
   })
-];
+]);
 
-export default <any> {
-  name: Fun.constant('FormChooser'),
-  schema: Fun.constant(schema),
-  parts: Fun.constant(partTypes)
+const name = Fun.constant('FormChooser');
+
+export {
+  name,
+  schema,
+  parts
 };

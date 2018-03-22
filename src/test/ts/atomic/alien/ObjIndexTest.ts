@@ -1,32 +1,29 @@
-import { Logger } from '@ephox/agar';
-import { RawAssertions } from '@ephox/agar';
-import ObjIndex from 'ephox/alloy/alien/ObjIndex';
-import { Obj } from '@ephox/katamari';
+import { Logger, RawAssertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Obj } from '@ephox/katamari';
+import * as ObjIndex from 'ephox/alloy/alien/ObjIndex';
 
-UnitTest.test('ObjIndexTest', function() {
-  var tuple = function (k, v) {
+UnitTest.test('ObjIndexTest', function () {
+  const tuple = function (k, v) {
     return { country: k, value: v };
   };
 
-  var sortObjValue = function (obj) {
+  const sortObjValue = function (obj) {
     return Obj.map(obj, function (array, k) {
       return array.slice(0).sort(function (a, b) {
-        if (a.country < b.country) return -1;
-        else if (a.country > b.country) return +1;
-        else return 0;
+        if (a.country < b.country) { return -1; } else if (a.country > b.country) { return +1; } else { return 0; }
       });
     });
   };
 
-  var assertSortedEq = function (label, expected, actual) {
+  const assertSortedEq = function (label, expected, actual) {
     RawAssertions.assertEq(label, sortObjValue(expected), sortObjValue(actual));
   };
 
   Logger.sync(
     'Empty test',
     function () {
-      var actual = ObjIndex.byInnerKey({}, tuple);
+      const actual = ObjIndex.byInnerKey({}, tuple);
       assertSortedEq('Checking grouping', { }, actual);
     }
   );
@@ -34,9 +31,9 @@ UnitTest.test('ObjIndexTest', function() {
   Logger.sync(
     'test 1: basic object ... no overlap',
     function () {
-      var actual = ObjIndex.byInnerKey({
-        'aus': {
-          'population': 100
+      const actual = ObjIndex.byInnerKey({
+        aus: {
+          population: 100
         }
       }, tuple);
       assertSortedEq('Checking grouping', {
@@ -48,11 +45,11 @@ UnitTest.test('ObjIndexTest', function() {
   Logger.sync(
     'test 1: basic object ... overlap',
     function () {
-      var actual = ObjIndex.byInnerKey({
-        'aus': {
-          'population': 100
+      const actual = ObjIndex.byInnerKey({
+        aus: {
+          population: 100
         },
-        'canada': {
+        canada: {
           population: 300,
           moose: 'yes'
         }
@@ -71,4 +68,3 @@ UnitTest.test('ObjIndexTest', function() {
 
   // TODO: Add more tests.
 });
-

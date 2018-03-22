@@ -1,21 +1,16 @@
-import { FocusTools } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
+import { FocusTools, GeneralSteps, Keyboard, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
 /* global assert */
 
-var range = function (num, f) {
-  var array = new Array(num);
+const range = function (num, f) {
+  const array = new Array(num);
   return Arr.bind(array, f);
 };
 
-var sequence = function (doc, key, modifiers, identifiers) {
-  var array = range(identifiers.length, function (_, i) {
+const sequence = function (doc, key, modifiers, identifiers) {
+  const array = range(identifiers.length, function (_, i) {
     return [
       Keyboard.sKeydown(doc, key, modifiers),
       FocusTools.sTryOnSelector(
@@ -31,10 +26,10 @@ var sequence = function (doc, key, modifiers, identifiers) {
 };
 
 // Selector based
-var highlights = function (container, key, modifiers, identifiers) {
-  var array = range(identifiers.length, function (_, i) {
-    var msg = 'Highlight should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label;
-    var doc = Traverse.owner(container);
+const highlights = function (container, key, modifiers, identifiers) {
+  const array = range(identifiers.length, function (_, i) {
+    const msg = 'Highlight should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label;
+    const doc = Traverse.owner(container);
     return [
       Keyboard.sKeydown(doc, key, modifiers),
       Waiter.sTryUntil(
@@ -51,6 +46,6 @@ var highlights = function (container, key, modifiers, identifiers) {
 };
 
 export default <any> {
-  sequence: sequence,
-  highlights: highlights
+  sequence,
+  highlights
 };

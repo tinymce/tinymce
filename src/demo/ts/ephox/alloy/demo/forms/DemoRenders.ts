@@ -1,13 +1,11 @@
-import DomFactory from 'ephox/alloy/api/component/DomFactory';
-import FormChooser from 'ephox/alloy/api/ui/FormChooser';
-import ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
-import Menu from 'ephox/alloy/api/ui/Menu';
-import ToolbarGroup from 'ephox/alloy/api/ui/ToolbarGroup';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
+import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
+import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
+import { Menu } from 'ephox/alloy/api/ui/Menu';
+import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 
-var demoItem = ValueSchema.objOf([
+const demoItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
     FieldSchema.strict('value'),
     FieldSchema.strict('text')
@@ -15,7 +13,7 @@ var demoItem = ValueSchema.objOf([
   FieldSchema.strict('type')
 ]);
 
-var demoWidgetItem = ValueSchema.objOf([
+const demoWidgetItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
     FieldSchema.strict('value'),
     FieldSchema.strict('text')
@@ -25,21 +23,21 @@ var demoWidgetItem = ValueSchema.objOf([
   FieldSchema.strict('widget')
 ]);
 
-var demoMenu = ValueSchema.objOf([
+const demoMenu = ValueSchema.objOf([
   FieldSchema.strict('value'),
   FieldSchema.strict('items')
 ]);
 
-var demoGridMenu = ValueSchema.objOf([
+const demoGridMenu = ValueSchema.objOf([
   FieldSchema.strict('columns'),
   FieldSchema.strict('rows'),
   FieldSchema.strict('items')
 ]);
 
-var demoChoice = ValueSchema.objOf([ ]);
+const demoChoice = ValueSchema.objOf([ ]);
 
-var demoChoiceRender = function (choice) {
-  var spec = ValueSchema.asRawOrDie('DemoRenders.choice', demoChoice, choice);
+const demoChoiceRender = function (choice) {
+  const spec = ValueSchema.asRawOrDie('DemoRenders.choice', demoChoice, choice);
   return {
     dom: DomFactory.fromHtml(
       '<span class="ephox-pastry-independent-button" title="' + spec.text + '" style="display: flex;"></span>'
@@ -47,7 +45,7 @@ var demoChoiceRender = function (choice) {
   };
 };
 
-var demoSeparatorRender = function (spec) {
+const demoSeparatorRender = function (spec) {
   return {
     type: spec.type,
     dom: {
@@ -62,10 +60,9 @@ var demoSeparatorRender = function (spec) {
   };
 };
 
-var demoItemRender = function (item) {
-  if (item.type === 'widget') return demoWidgetItemRender(item);
-  else if (item.type === 'separator') return demoSeparatorRender(item);
-  var spec = ValueSchema.asRawOrDie('DemoRenders.item', demoItem, item);
+const demoItemRender = function (item) {
+  if (item.type === 'widget') { return demoWidgetItemRender(item); } else if (item.type === 'separator') { return demoSeparatorRender(item); }
+  const spec = ValueSchema.asRawOrDie('DemoRenders.item', demoItem, item);
   return {
     type: spec.type,
     data: spec.data,
@@ -74,8 +71,8 @@ var demoItemRender = function (item) {
   };
 };
 
-var demoGridItemRender = function (item) {
-  var spec = ValueSchema.asRawOrDie('DemoRenders.gridItem', demoItem, item);
+const demoGridItemRender = function (item) {
+  const spec = ValueSchema.asRawOrDie('DemoRenders.gridItem', demoItem, item);
   return {
     type: spec.type,
     data: spec.data,
@@ -93,8 +90,8 @@ var demoGridItemRender = function (item) {
   };
 };
 
-var demoWidgetItemRender = function (item) {
-  var spec = ValueSchema.asRawOrDie('DemoRenders.widgetItem', demoWidgetItem, item);
+const demoWidgetItemRender = function (item) {
+  const spec = ValueSchema.asRawOrDie('DemoRenders.widgetItem', demoWidgetItem, item);
   return {
     type: spec.type,
     data: spec.data,
@@ -109,8 +106,8 @@ var demoWidgetItemRender = function (item) {
   };
 };
 
-var demoGridMenuRender = function (menu) {
-  var spec = ValueSchema.asRawOrDie('DemoRenders.gridMenu', demoGridMenu, menu);
+const demoGridMenuRender = function (menu) {
+  const spec = ValueSchema.asRawOrDie('DemoRenders.gridMenu', demoGridMenu, menu);
   return {
     movement: {
       mode: 'grid',
@@ -133,8 +130,8 @@ var demoGridMenuRender = function (menu) {
   };
 };
 
-var demoMenuRender = function (menu) {
-  var spec = ValueSchema.asRawOrDie('DemoRenders.menu', demoMenu, menu);
+const demoMenuRender = function (menu) {
+  const spec = ValueSchema.asRawOrDie('DemoRenders.menu', demoMenu, menu);
   return {
     dom: {
       tag: 'div',
@@ -150,15 +147,15 @@ var demoMenuRender = function (menu) {
   };
 };
 
-var demoOrbRender = function (orb) {
-  var spec = orb;
+const demoOrbRender = function (orb) {
+  const spec = orb;
   return {
     type: 'item',
     data: spec.data,
     dom: {
       tag: 'div',
       styles: {
-        display: 'flex',
+        'display': 'flex',
         'justify-content': 'center'
       }
     },
@@ -171,8 +168,8 @@ var demoOrbRender = function (orb) {
   };
 };
 
-var demoToolbarItemRender = function (item) {
-  var spec = item;
+const demoToolbarItemRender = function (item) {
+  const spec = item;
   return {
     dom: {
       tag: 'span',
@@ -182,8 +179,8 @@ var demoToolbarItemRender = function (item) {
   };
 };
 
-var demoToolbarGroupRender = function (group) {
-  var spec = group;
+const demoToolbarGroupRender = function (group) {
+  const spec = group;
   return {
     dom: {
       tag: 'div',
@@ -201,12 +198,12 @@ var demoToolbarGroupRender = function (group) {
   };
 };
 
-var orbMarkers = {
+const orbMarkers = {
   item: 'demo-alloy-orb',
   selectedItem: 'demo-alloy-orb-selected'
 };
 
-var tieredMarkers = {
+const tieredMarkers = {
   item: 'demo-alloy-item',
   selectedItem: 'demo-alloy-item-selected',
   menu: 'demo-alloy-menu',

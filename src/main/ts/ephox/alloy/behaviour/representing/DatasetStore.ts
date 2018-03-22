@@ -1,20 +1,19 @@
-import RepresentState from './RepresentState';
-import Fields from '../../data/Fields';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
+import { FieldSchema, Objects } from '@ephox/boulder';
 
-var setValue = function (component, repConfig, repState, data) {
+import * as Fields from '../../data/Fields';
+import * as RepresentState from './RepresentState';
+
+const setValue = function (component, repConfig, repState, data) {
   // TODO: Really rethink this mode.
-  var dataKey = repConfig.store().getDataKey();
+  const dataKey = repConfig.store().getDataKey();
   repState.set({ });
   repConfig.store().setData()(component, data);
   repConfig.onSetValue()(component, data);
 };
 
-var getValue = function (component, repConfig, repState) {
-  var key = repConfig.store().getDataKey()(component);
-  var dataset = repState.get();
+const getValue = function (component, repConfig, repState) {
+  const key = repConfig.store().getDataKey()(component);
+  const dataset = repState.get();
   return Objects.readOptFrom(dataset, key).fold(function () {
     return repConfig.store().getFallbackEntry()(key);
   }, function (data) {
@@ -22,13 +21,13 @@ var getValue = function (component, repConfig, repState) {
   });
 };
 
-var onLoad = function (component, repConfig, repState) {
+const onLoad = function (component, repConfig, repState) {
   repConfig.store().initialValue().each(function (data) {
     setValue(component, repConfig, repState, data);
   });
 };
 
-var onUnload = function (component, repConfig, repState) {
+const onUnload = function (component, repConfig, repState) {
   repState.set({ });
 };
 
@@ -38,10 +37,10 @@ export default <any> [
   FieldSchema.strict('getDataKey'),
   FieldSchema.strict('setData'),
   Fields.output('manager', {
-    setValue: setValue,
-    getValue: getValue,
-    onLoad: onLoad,
-    onUnload: onUnload,
+    setValue,
+    getValue,
+    onLoad,
+    onUnload,
     state: RepresentState.dataset
   })
 ];

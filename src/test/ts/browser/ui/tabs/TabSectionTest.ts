@@ -1,22 +1,17 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Highlighting from 'ephox/alloy/api/behaviour/Highlighting';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import Container from 'ephox/alloy/api/ui/Container';
-import Tabbar from 'ephox/alloy/api/ui/Tabbar';
-import TabSection from 'ephox/alloy/api/ui/TabSection';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Fun } from '@ephox/katamari';
+import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
+import { TabSection } from 'ephox/alloy/api/ui/TabSection';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('TabSection Test', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('TabSection Test', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -53,7 +48,7 @@ UnitTest.asynctest('TabSection Test', function() {
             uid: 'alpha-tab',
             value: 'alpha',
             dom: { tag: 'button', innerHtml: 'A' },
-            view: function () {
+            view () {
               return [
                 Container.sketch({
                   dom: {
@@ -68,7 +63,7 @@ UnitTest.asynctest('TabSection Test', function() {
             uid: 'beta-tab',
             value: 'beta',
             dom: { tag: 'button', innerHtml: 'B' },
-            view: function () {
+            view () {
               return [
                 Container.sketch({
                   dom: {
@@ -126,9 +121,9 @@ UnitTest.asynctest('TabSection Test', function() {
       }), component.element()),
 
       Step.sync(function () {
-        var alpha = component.getSystem().getByUid('alpha-tab').getOrDie();
+        const alpha = component.getSystem().getByUid('alpha-tab').getOrDie();
         AlloyTriggers.emitExecute(alpha);
-        var beta = component.getSystem().getByUid('beta-tab').getOrDie();
+        const beta = component.getSystem().getByUid('beta-tab').getOrDie();
         Assertions.assertStructure('alpha after execute(alpha)', ApproxStructure.build(function (s, str, arr) {
           return s.element('button', {
             attrs: {
@@ -151,4 +146,3 @@ UnitTest.asynctest('TabSection Test', function() {
     ];
   }, function () { success(); }, failure);
 });
-

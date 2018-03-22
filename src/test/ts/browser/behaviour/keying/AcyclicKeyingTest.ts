@@ -1,20 +1,17 @@
-import { FocusTools } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Container from 'ephox/alloy/api/ui/Container';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { Arr } from '@ephox/katamari';
+import { FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Arr } from '@ephox/katamari';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   // This test will wrap an acyclic section inside a cyclic section, both with enter handlers
 
@@ -25,7 +22,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', function(
           tag: 'div',
           classes: [ 'cyclic-container' ],
           styles: {
-            'width': '400px',
+            width: '400px',
             height: '300px',
             background: 'rgba(100, 100, 0, 0.4)'
           }
@@ -157,4 +154,3 @@ UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', function(
     success();
   }, failure);
 });
-

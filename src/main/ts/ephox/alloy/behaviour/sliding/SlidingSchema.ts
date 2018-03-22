@@ -1,10 +1,7 @@
-import Fields from '../../data/Fields';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
-import { Height } from '@ephox/sugar';
-import { Width } from '@ephox/sugar';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Height, Width } from '@ephox/sugar';
 
-
+import * as Fields from '../../data/Fields';
 
 export default <any> [
   FieldSchema.strict('closedClass'),

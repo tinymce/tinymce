@@ -1,19 +1,15 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Toggling from 'ephox/alloy/api/behaviour/Toggling';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import Container from 'ephox/alloy/api/ui/Container';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { ApproxStructure, Assertions, Logger, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('TogglingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('TogglingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -42,7 +38,7 @@ UnitTest.asynctest('TogglingTest', function() {
 
   }, function (doc, body, gui, component, store) {
 
-    var testIsSelected = function (label) {
+    const testIsSelected = function (label) {
       return Step.sync(function () {
         Assertions.assertStructure(
           'Asserting structure shows selected\n' + label,
@@ -64,7 +60,7 @@ UnitTest.asynctest('TogglingTest', function() {
       });
     };
 
-    var testNotSelected = function (label) {
+    const testNotSelected = function (label) {
       return Step.sync(function () {
         Assertions.assertStructure(
           'Asserting structure shows not selected\n' + label,
@@ -86,25 +82,25 @@ UnitTest.asynctest('TogglingTest', function() {
       });
     };
 
-    var assertIsSelected = function (label, expected) {
+    const assertIsSelected = function (label, expected) {
       return Logger.t(
         'Asserting isSelected()\n' + label,
         Step.sync(function () {
-          var actual = Toggling.isOn(component);
+          const actual = Toggling.isOn(component);
           Assertions.assertEq(label, expected, actual);
         })
       );
     };
 
-    var sSelect = Step.sync(function () {
+    const sSelect = Step.sync(function () {
       Toggling.on(component);
     });
 
-    var sDeselect = Step.sync(function () {
+    const sDeselect = Step.sync(function () {
       Toggling.off(component);
     });
 
-    var sToggle = Step.sync(function () {
+    const sToggle = Step.sync(function () {
       Toggling.toggle(component);
     });
 
@@ -142,4 +138,3 @@ UnitTest.asynctest('TogglingTest', function() {
     ];
   }, success, failure);
 });
-

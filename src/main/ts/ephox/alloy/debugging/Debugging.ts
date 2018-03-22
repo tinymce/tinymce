@@ -1,29 +1,35 @@
-import SystemEvents from '../api/events/SystemEvents';
-import AlloyLogger from '../log/AlloyLogger';
 import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Options } from '@ephox/katamari';
+import { Arr, Fun, Obj, Options } from '@ephox/katamari';
 
-var unknown = 'unknown';
-var debugging = true;
+import * as SystemEvents from '../api/events/SystemEvents';
+import * as AlloyLogger from '../log/AlloyLogger';
 
-var CHROME_INSPECTOR_GLOBAL = '__CHROME_INSPECTOR_CONNECTION_TO_ALLOY__';
+const unknown = 'unknown';
 
-var eventsMonitored:any = [ ];
+/*
+  typescipt qwerk:
+  const debugging: boolean = true;
+  if (boolean === false) {  -> this throws a type error! // TS2365:Operator '===' cannot be applied to types 'false' and 'true'
+    https://www.typescriptlang.org/play/#src=const%20foo%3A%20boolean%20%3D%20true%3B%0D%0A%0D%0Aif%20(foo%20%3D%3D%3D%20false)%20%7B%0D%0A%20%20%20%20%0D%0A%7D
+  }
+*/
+const debugging: any = true;
+
+const CHROME_INSPECTOR_GLOBAL = '__CHROME_INSPECTOR_CONNECTION_TO_ALLOY__';
+
+const eventsMonitored: any = [ ];
 
 // Ignore these files in the error stack
-var path = [
+const path = [
   'alloy/data/Fields',
   'alloy/debugging/Debugging'
 ];
 
-var getTrace = function () {
-  if (debugging === false) return unknown;
-  var err = new Error();
+const getTrace = function () {
+  if (debugging === false) { return unknown; }
+  const err = new Error();
   if (err.stack !== undefined) {
-    var lines = err.stack.split('\n');
+    const lines = err.stack.split('\n');
     return Arr.find(lines, function (line) {
       return line.indexOf('alloy') > 0 && !Arr.exists(path, function (p) { return line.indexOf(p) > -1; });
     }).getOr(unknown);
@@ -32,11 +38,11 @@ var getTrace = function () {
   }
 };
 
-var logHandler = function (label, handlerName, trace) {
+const logHandler = function (label, handlerName, trace) {
   // if (debugging) console.log(label + ' [' + handlerName + ']', trace);
 };
 
-var ignoreEvent = {
+const ignoreEvent = {
   logEventCut: Fun.noop,
   logEventStopped: Fun.noop,
   logNoParent: Fun.noop,
@@ -45,48 +51,47 @@ var ignoreEvent = {
   write: Fun.noop
 };
 
-var monitorEvent = function (eventName, initialTarget, f) {
-  var logger = debugging && (eventsMonitored === '*' || Arr.contains(eventsMonitored, eventName)) ? (function () {
-    var sequence = [ ];
+const monitorEvent = function (eventName, initialTarget, f) {
+  const logger = debugging && (eventsMonitored === '*' || Arr.contains(eventsMonitored, eventName)) ? (function () {
+    const sequence = [ ];
 
     return {
-      logEventCut: function (name, target, purpose) {
-        sequence.push({ outcome: 'cut', target: target, purpose: purpose });
+      logEventCut (name, target, purpose) {
+        sequence.push({ outcome: 'cut', target, purpose });
       },
-      logEventStopped: function (name, target, purpose) {
-        sequence.push({ outcome: 'stopped', target: target, purpose: purpose });
+      logEventStopped (name, target, purpose) {
+        sequence.push({ outcome: 'stopped', target, purpose });
       },
-      logNoParent: function (name, target, purpose) {
-        sequence.push({ outcome: 'no-parent', target: target, purpose: purpose });
+      logNoParent (name, target, purpose) {
+        sequence.push({ outcome: 'no-parent', target, purpose });
       },
-      logEventNoHandlers: function (name, target) {
-        sequence.push({ outcome: 'no-handlers-left', target: target });
+      logEventNoHandlers (name, target) {
+        sequence.push({ outcome: 'no-handlers-left', target });
       },
-      logEventResponse: function (name, target, purpose) {
-        sequence.push({ outcome: 'response', purpose: purpose, target: target });
+      logEventResponse (name, target, purpose) {
+        sequence.push({ outcome: 'response', purpose, target });
       },
-      write: function () {
-        if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) return;
+      write () {
+        if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }
         console.log(eventName, {
           event: eventName,
           target: initialTarget.dom(),
           sequence: Arr.map(sequence, function (s) {
-            if (! Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) return s.outcome;
-            else return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')';
+            if (! Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) { return s.outcome; } else { return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')'; }
           })
         });
       }
     };
   })() : ignoreEvent;
 
-  var output = f(logger);
+  const output = f(logger);
   logger.write();
   return output;
 };
 
-var inspectorInfo = function (comp) {
-  var go = function (c) {
-    var cSpec = c.spec();
+const inspectorInfo = function (comp) {
+  const go = function (c) {
+    const cSpec = c.spec();
 
     return {
       '(original.spec)': cSpec,
@@ -99,9 +104,9 @@ var inspectorInfo = function (comp) {
       }).join(', '),
       '(behaviours)': cSpec.behaviours !== undefined ? Obj.map(cSpec.behaviours, function (v, k) {
         return v === undefined ? '--revoked--' : {
-          config: v.configAsRaw(),
+          'config': v.configAsRaw(),
           'original-config': v.initialConfig,
-          state: c.readState(k)
+          'state': c.readState(k)
         };
       }) : 'none'
     };
@@ -110,19 +115,18 @@ var inspectorInfo = function (comp) {
   return go(comp);
 };
 
-var getOrInitConnection = function () {
+const getOrInitConnection = function () {
   // The format of the global is going to be:
   // lookup(uid) -> Option { name => data }
   // systems: Set AlloyRoots
-  if (window[CHROME_INSPECTOR_GLOBAL] !== undefined) return window[CHROME_INSPECTOR_GLOBAL];
-  else {
+  if (window[CHROME_INSPECTOR_GLOBAL] !== undefined) { return window[CHROME_INSPECTOR_GLOBAL]; } else {
     window[CHROME_INSPECTOR_GLOBAL] = {
       systems: { },
-      lookup: function (uid) {
-        var systems = window[CHROME_INSPECTOR_GLOBAL].systems;
-        var connections: string[] = Obj.keys(systems);
+      lookup (uid) {
+        const systems = window[CHROME_INSPECTOR_GLOBAL].systems;
+        const connections: string[] = Obj.keys(systems);
         return Options.findMap(connections, function (conn) {
-          var connGui = systems[conn];
+          const connGui = systems[conn];
           return connGui.getByUid(uid).toOption().map(function (comp) {
             return Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp));
           });
@@ -133,16 +137,19 @@ var getOrInitConnection = function () {
   }
 };
 
-var registerInspector = function (name, gui) {
-  var connection = getOrInitConnection();
+const registerInspector = function (name, gui) {
+  const connection = getOrInitConnection();
   connection.systems[name] = gui;
 };
 
-export default <any> {
-  logHandler: logHandler,
-  noLogger: Fun.constant(ignoreEvent),
-  getTrace: getTrace,
-  monitorEvent: monitorEvent,
-  isDebugging: Fun.constant(debugging),
-  registerInspector: registerInspector
+const noLogger = Fun.constant(ignoreEvent);
+const isDebugging = Fun.constant(debugging);
+
+export {
+  logHandler,
+  noLogger,
+  getTrace,
+  monitorEvent,
+  isDebugging,
+  registerInspector
 };

@@ -1,12 +1,10 @@
-import AriaVoice from '../../alien/AriaVoice';
-import { Future } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Body } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
+import { Future, Result } from '@ephox/katamari';
+import { Body, Class, Html } from '@ephox/sugar';
 
-var markValid = function (component, invalidConfig/*, invalidState */) {
-  var elem = invalidConfig.getRoot()(component).getOr(component.element());
+import * as AriaVoice from '../../alien/AriaVoice';
+
+const markValid = function (component, invalidConfig/*, invalidState */) {
+  const elem = invalidConfig.getRoot()(component).getOr(component.element());
   Class.remove(elem, invalidConfig.invalidClass());
   invalidConfig.notify().bind(function (notifyInfo) {
     notifyInfo.getContainer()(component).each(function (container) {
@@ -17,8 +15,8 @@ var markValid = function (component, invalidConfig/*, invalidState */) {
   });
 };
 
-var markInvalid = function (component, invalidConfig, invalidState, text) {
-  var elem = invalidConfig.getRoot()(component).getOr(component.element());
+const markInvalid = function (component, invalidConfig, invalidState, text) {
+  const elem = invalidConfig.getRoot()(component).getOr(component.element());
   Class.add(elem, invalidConfig.invalidClass());
   invalidConfig.notify().each(function (notifyInfo) {
     // Probably want to make "Body" configurable as well.
@@ -32,7 +30,7 @@ var markInvalid = function (component, invalidConfig, invalidState, text) {
   });
 };
 
-var query = function (component, invalidConfig, invalidState) {
+const query = function (component, invalidConfig, invalidState) {
   return invalidConfig.validator().fold(function () {
     return Future.pure(Result.value(true));
   }, function (validatorInfo) {
@@ -40,8 +38,7 @@ var query = function (component, invalidConfig, invalidState) {
   });
 };
 
-
-var run = function (component, invalidConfig, invalidState) {
+const run = function (component, invalidConfig, invalidState) {
   invalidConfig.notify().each(function (notifyInfo) {
     notifyInfo.onValidate()(component);
   });
@@ -57,9 +54,9 @@ var run = function (component, invalidConfig, invalidState) {
   });
 };
 
-export default <any> {
-  markValid: markValid,
-  markInvalid: markInvalid,
-  query: query,
-  run: run
+export {
+  markValid,
+  markInvalid,
+  query,
+  run
 };

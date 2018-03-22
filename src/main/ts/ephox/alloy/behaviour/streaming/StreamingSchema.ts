@@ -1,15 +1,15 @@
-import Fields from '../../data/Fields';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Throttler } from '@ephox/katamari';
 
-var setup = function (streamInfo) {
-  var sInfo = streamInfo.stream();
-  var throttler = Throttler.last(streamInfo.onStream(), sInfo.delay());
+import * as Fields from '../../data/Fields';
+
+const setup = function (streamInfo) {
+  const sInfo = streamInfo.stream();
+  const throttler = Throttler.last(streamInfo.onStream(), sInfo.delay());
 
   return function (component, simulatedEvent) {
     throttler.throttle(component, simulatedEvent);
-    if (sInfo.stopEvent()) simulatedEvent.stop();
+    if (sInfo.stopEvent()) { simulatedEvent.stop(); }
   };
 };
 
@@ -17,11 +17,11 @@ export default <any> [
   FieldSchema.strictOf('stream', ValueSchema.choose(
     'mode',
     {
-      'throttle': [
+      throttle: [
         FieldSchema.strict('delay'),
         FieldSchema.defaulted('stopEvent', true),
         Fields.output('streams', {
-          setup: setup
+          setup
         })
       ]
     }

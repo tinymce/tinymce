@@ -1,21 +1,17 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
-import Input from 'ephox/alloy/api/ui/Input';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { PlatformDetection } from '@ephox/sand';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { PlatformDetection } from '@ephox/sand';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Input } from 'ephox/alloy/api/ui/Input';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('InputTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('InputTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var platform = PlatformDetection.detect();
+  const platform = PlatformDetection.detect();
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
@@ -28,15 +24,15 @@ UnitTest.asynctest('InputTest', function() {
     );
 
   }, function (doc, body, gui, component, store) {
-    var testStructure = Step.sync(function () {
+    const testStructure = Step.sync(function () {
       Assertions.assertStructure(
         'Checking initial structure of input',
         ApproxStructure.build(function (s, str, arr) {
           return s.element('input', {
             attrs: {
-              type: str.is('input'),
+              'type': str.is('input'),
               'data-alloy-id': str.is('test-input-id'),
-              placeholder: str.is('placeholder-text')
+              'placeholder': str.is('placeholder-text')
             },
             classes: [
               arr.has('extra-class')
@@ -48,7 +44,7 @@ UnitTest.asynctest('InputTest', function() {
       );
     });
 
-    var sCheckInputSelection = function (label, expected) {
+    const sCheckInputSelection = function (label, expected) {
       return Step.sync(function () {
         Assertions.assertEq(
           label + '\nChecking selectionStart',
@@ -63,9 +59,9 @@ UnitTest.asynctest('InputTest', function() {
       });
     };
 
-    var defaultCursor = platform.browser.isChrome() || platform.browser.isSafari() ? 'Initial Value'.length : 0;
+    const defaultCursor = platform.browser.isChrome() || platform.browser.isSafari() ? 'Initial Value'.length : 0;
 
-    var testFocus = Logger.t(
+    const testFocus = Logger.t(
       'Testing input.focus selects text inside',
       GeneralSteps.sequence([
         sCheckInputSelection('before focus', { start: defaultCursor, end: defaultCursor }),
@@ -77,22 +73,22 @@ UnitTest.asynctest('InputTest', function() {
       ])
     );
 
-    var testRepresenting = Logger.t(
+    const testRepresenting = Logger.t(
       'Checking that representing is working',
       Step.sync(function () {
-        var data = Representing.getValue(component);
+        const data = Representing.getValue(component);
         Assertions.assertEq('Checking getValue', 'initial-value', data);
         Representing.setValue(component, 'v');
-        var newData = Representing.getValue(component);
+        const newData = Representing.getValue(component);
         Assertions.assertEq('Checking getValue after setValue', 'v', newData);
         Assertions.assertStructure(
           'Checking new structure of input',
           ApproxStructure.build(function (s, str, arr) {
             return s.element('input', {
               attrs: {
-                type: str.is('input'),
+                'type': str.is('input'),
                 'data-alloy-id': str.is('test-input-id'),
-                placeholder: str.is('placeholder-text')
+                'placeholder': str.is('placeholder-text')
               },
               value: str.is('v')
             });
@@ -110,4 +106,3 @@ UnitTest.asynctest('InputTest', function() {
     ];
   }, success, failure);
 });
-

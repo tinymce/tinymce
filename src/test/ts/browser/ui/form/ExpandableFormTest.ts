@@ -1,42 +1,31 @@
-import { Assertions } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Mouse } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Button from 'ephox/alloy/api/ui/Button';
-import Container from 'ephox/alloy/api/ui/Container';
-import ExpandableForm from 'ephox/alloy/api/ui/ExpandableForm';
-import Form from 'ephox/alloy/api/ui/Form';
-import FormField from 'ephox/alloy/api/ui/FormField';
-import HtmlSelect from 'ephox/alloy/api/ui/HtmlSelect';
-import Input from 'ephox/alloy/api/ui/Input';
+import { Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Focus, Value } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Button } from 'ephox/alloy/api/ui/Button';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { ExpandableForm } from 'ephox/alloy/api/ui/ExpandableForm';
+import { Form } from 'ephox/alloy/api/ui/Form';
+import { FormField } from 'ephox/alloy/api/ui/FormField';
+import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
+import { Input } from 'ephox/alloy/api/ui/Input';
 import TestForm from 'ephox/alloy/test/form/TestForm';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
-import { Focus } from '@ephox/sugar';
-import { Value } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('ExpandableFormTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ExpandableFormTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   // Seems to have stopped working on phantomjs
-  if (PhantomSkipper.skip()) return success();
-
+  if (PhantomSkipper.skip()) { return success(); }
 
   GuiSetup.setup(function (store, doc, body) {
 
-    var pMinimal = ExpandableForm.parts().minimal(
+    const pMinimal = ExpandableForm.parts().minimal(
       Form.sketch(function (parts) {
         return {
           dom: {
@@ -65,7 +54,7 @@ UnitTest.asynctest('ExpandableFormTest', function() {
       })
     );
 
-    var pExtra = ExpandableForm.parts().extra(
+    const pExtra = ExpandableForm.parts().extra(
       Form.sketch(function (parts) {
         return {
           dom: {
@@ -73,7 +62,7 @@ UnitTest.asynctest('ExpandableFormTest', function() {
             classes: [ 'extra-form', 'form-section' ]
           },
           components: [
-            Container.sketch({ dom: { styles: { 'height': '100px', 'width': '100px', 'background': 'green' } } }),
+            Container.sketch({ dom: { styles: { height: '100px', width: '100px', background: 'green' } } }),
             parts.field('form.bull', FormField.sketch({
               uid: 'select-bull',
               dom: {
@@ -100,7 +89,7 @@ UnitTest.asynctest('ExpandableFormTest', function() {
       })
     );
 
-    var me = GuiFactory.build(
+    const me = GuiFactory.build(
       ExpandableForm.sketch({
         dom: {
           tag: 'div'
@@ -126,7 +115,7 @@ UnitTest.asynctest('ExpandableFormTest', function() {
               tag: 'button',
               innerHtml: 'Shrink!'
             },
-            action: function (button) {
+            action (button) {
               ExpandableForm.collapseFormImmediately(me);
             },
             buttonBehaviours: Behaviour.derive([
@@ -165,7 +154,7 @@ UnitTest.asynctest('ExpandableFormTest', function() {
     return me;
 
   }, function (doc, body, gui, component, store) {
-    var helper = TestForm.helper(component);
+    const helper = TestForm.helper(component);
 
     return [
       GuiSetup.mAddStyles(doc, [
@@ -196,7 +185,7 @@ UnitTest.asynctest('ExpandableFormTest', function() {
         'Retrieve the ant field directly and check its value (in minimal)',
         GeneralSteps.sequence([
           Step.sync(function () {
-            var field = Form.getField(component, 'form.ant').getOrDie('Could not find field for ant');
+            const field = Form.getField(component, 'form.ant').getOrDie('Could not find field for ant');
             Assertions.assertEq('Checking value', 'first.set', Value.get(field.element()));
           })
         ])
@@ -206,7 +195,7 @@ UnitTest.asynctest('ExpandableFormTest', function() {
         'Retrieve the bull field directly and check its value (in extra)',
         GeneralSteps.sequence([
           Step.sync(function () {
-            var field = Form.getField(component, 'form.bull').getOrDie('Could not find field for bull');
+            const field = Form.getField(component, 'form.bull').getOrDie('Could not find field for bull');
             Assertions.assertEq('Checking value', 'select-b-set', Value.get(field.element()));
           })
         ])
@@ -305,4 +294,3 @@ UnitTest.asynctest('ExpandableFormTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

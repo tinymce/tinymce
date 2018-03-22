@@ -1,8 +1,24 @@
-import { Contracts } from '@ephox/katamari';
+import { Contracts, Result } from '@ephox/katamari';
+import { AlloySystemApi } from '../../api/system/SystemApi';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { EventHandlerConfig } from '../../api/events/AlloyEvents';
+import { AlloyBehaviourConfig, AlloyBehaviour } from '../../api/behaviour/Behaviour';
 
+export interface AlloyComponent {
+  getSystem: () => AlloySystemApi;
+  config: (config: AlloyBehaviourConfig) => AlloyBehaviour;
+  hasConfigured: (behaviour) => boolean;
+  spec: () => any;
+  readState: (behaviourName: string) => any;
+  connect: (newApi) => void;
+  disconnect: () => void;
+  element: () => SugarElement;
+  syncComponents: () => void;
+  components: () => any;
+  events: () => EventHandlerConfig;
+}
 
-
-export default <any> Contracts.exactly([
+const ComponentApi = Contracts.exactly([
   'getSystem',
   'config',
   'hasConfigured',
@@ -15,3 +31,7 @@ export default <any> Contracts.exactly([
   'components',
   'events'
 ]);
+
+export {
+  ComponentApi
+};

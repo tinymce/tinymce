@@ -1,24 +1,31 @@
-import Composing from '../behaviour/Composing';
-import Highlighting from '../behaviour/Highlighting';
-import Keying from '../behaviour/Keying';
-import Replacing from '../behaviour/Replacing';
-import SketchBehaviours from '../component/SketchBehaviours';
-import Sketcher from './Sketcher';
-import Fields from '../../data/Fields';
-import TieredMenuSpec from '../../ui/single/TieredMenuSpec';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
+import { FieldSchema, Objects } from '@ephox/boulder';
 import { Id } from '@ephox/katamari';
 
-var tieredData = function (primary, menus, expansions) {
+import * as Fields from '../../data/Fields';
+import * as TieredMenuSpec from '../../ui/single/TieredMenuSpec';
+import { Composing } from '../behaviour/Composing';
+import { Highlighting } from '../behaviour/Highlighting';
+import { Keying } from '../behaviour/Keying';
+import { Replacing } from '../behaviour/Replacing';
+import * as SketchBehaviours from '../component/SketchBehaviours';
+import { RawDomSchema, SingleSketch, single} from './Sketcher';
+
+export interface TieredMenuSketch extends SingleSketch {
+  collapseMenu: (menu: any) => void;
+  tieredData: (primary: string, menus, expansions: Record<string, string>) => void;
+  singleData: (name: string, menu: RawDomSchema) => void;
+  collapseItem: (text: string) => void;
+}
+
+const tieredData = function (primary: string, menus: { [key: string]: RawDomSchema }, expansions: { [key: string]: string }) {
   return {
-    primary: primary,
-    menus: menus,
-    expansions: expansions
+    primary,
+    menus,
+    expansions
   };
 };
 
-var singleData = function (name, menu) {
+const singleData = function (name: string, menu: RawDomSchema) {
   return {
     primary: name,
     menus: Objects.wrap(name, menu),
@@ -26,14 +33,14 @@ var singleData = function (name, menu) {
   };
 };
 
-var collapseItem = function (text) {
+const collapseItem = function (text: string) {
   return {
     value: Id.generate(TieredMenuSpec.collapseItem()),
-    text: text
+    text
   };
 };
 
-export default <any> Sketcher.single({
+const TieredMenu = single({
   name: 'TieredMenu',
   configFields: [
     Fields.onStrictKeyboardHandler('onExecute'),
@@ -56,7 +63,6 @@ export default <any> Sketcher.single({
     Fields.onHandler('onHover'),
     Fields.tieredMenuMarkers(),
 
-
     FieldSchema.strict('dom'),
 
     FieldSchema.defaulted('navigateOnHover', true),
@@ -67,7 +73,7 @@ export default <any> Sketcher.single({
   ],
 
   apis: {
-    collapseMenu: function (apis, tmenu) {
+    collapseMenu (apis, tmenu) {
       apis.collapseMenu(tmenu);
     }
   },
@@ -75,8 +81,12 @@ export default <any> Sketcher.single({
   factory: TieredMenuSpec.make,
 
   extraApis: {
-    tieredData: tieredData,
-    singleData: singleData,
-    collapseItem: collapseItem
+    tieredData,
+    singleData,
+    collapseItem
   }
-});
+}) as TieredMenuSketch;
+
+export {
+  TieredMenu
+};

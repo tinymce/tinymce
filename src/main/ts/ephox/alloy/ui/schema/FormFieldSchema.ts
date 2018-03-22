@@ -1,17 +1,17 @@
-import Composing from '../../api/behaviour/Composing';
-import Representing from '../../api/behaviour/Representing';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
-import PartType from '../../parts/PartType';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
+import { FieldSchema, Objects } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-var schema = [
+import { Composing } from '../../api/behaviour/Composing';
+import { Representing } from '../../api/behaviour/Representing';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import * as PartType from '../../parts/PartType';
+
+const schema = Fun.constant([
   FieldSchema.defaulted('prefix', 'form-field'),
   SketchBehaviours.field('fieldBehaviours', [ Composing, Representing ])
-];
+]);
 
-var parts = [
+const parts = Fun.constant([
   PartType.optional({
     schema: [ FieldSchema.strict('dom') ],
     name: 'label'
@@ -19,17 +19,17 @@ var parts = [
 
   PartType.required({
     factory: {
-      sketch: function (spec) {
-        var excludeFactory = Objects.exclude(spec, [ 'factory' ]);
+      sketch (spec) {
+        const excludeFactory = Objects.exclude(spec, [ 'factory' ]);
         return spec.factory.sketch(excludeFactory);
       }
     },
     schema: [ FieldSchema.strict('factory') ],
     name: 'field'
   })
-];
+]);
 
-export default <any> {
-  schema: Fun.constant(schema),
-  parts: Fun.constant(parts)
+export {
+  schema,
+  parts
 };

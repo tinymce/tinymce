@@ -1,33 +1,27 @@
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Dragging from 'ephox/alloy/api/behaviour/Dragging';
-import Unselecting from 'ephox/alloy/api/behaviour/Unselecting';
-import DragCoord from 'ephox/alloy/api/data/DragCoord';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
-import Button from 'ephox/alloy/api/ui/Button';
-import Container from 'ephox/alloy/api/ui/Container';
-import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { Position } from '@ephox/sugar';
-
-
+import { Class, Css, Element, Position } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
+import { Unselecting } from 'ephox/alloy/api/behaviour/Unselecting';
+import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Button } from 'ephox/alloy/api/ui/Button';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default <any> function () {
-  var gui = Gui.create();
-  var body = Element.fromDom(document.body);
+  const gui = Gui.create();
+  const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   // Css.set(gui.element(), 'direction', 'rtl');
 
   Attachment.attachSystem(body, gui);
   Css.set(body, 'margin-bottom', '2000px');
 
-
-  var snapData = {
-    getSnapPoints: function () {
+  const snapData = {
+    getSnapPoints () {
       return [
         Dragging.snap({
           sensor: DragCoord.fixed(300, 10),
@@ -46,7 +40,7 @@ export default <any> function () {
     topAttr: 'data-drag-top'
   };
 
-  var button1 = HtmlDisplay.section(
+  const button1 = HtmlDisplay.section(
     gui,
     'This button is a <code>button</code> that can be dragged',
     Container.sketch({
@@ -95,7 +89,7 @@ export default <any> function () {
                 snaps: snapData
               } : {
                 mode: 'mouse',
-                blockerClass: [ 'blocker' ],
+                blockerClass: 'blocker',
                 snaps: snapData
               }
             ),

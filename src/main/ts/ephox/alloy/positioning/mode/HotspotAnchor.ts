@@ -1,18 +1,18 @@
-import Fields from '../../data/Fields';
-import Bubble from '../layout/Bubble';
-import Layout from '../layout/Layout';
-import Origins from '../layout/Origins';
-import Anchoring from './Anchoring';
-import AnchorLayouts from './AnchorLayouts';
 import { FieldSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 
-var placement = function (component, posInfo, anchorInfo, origin) {
-  var hotspot = anchorInfo.hotspot();
-  var anchorBox = Origins.toBox(origin, hotspot.element());
+import * as Fields from '../../data/Fields';
+import Bubble from '../layout/Bubble';
+import * as Layout from '../layout/Layout';
+import * as Origins from '../layout/Origins';
+import Anchoring from './Anchoring';
+import * as AnchorLayouts from './AnchorLayouts';
 
-  var layouts = AnchorLayouts.get(component, anchorInfo, Layout.all(), Layout.allRtl());
+const placement = function (component, posInfo, anchorInfo, origin) {
+  const hotspot = anchorInfo.hotspot();
+  const anchorBox = Origins.toBox(origin, hotspot.element());
+
+  const layouts = AnchorLayouts.get(component, anchorInfo, Layout.all(), Layout.allRtl());
 
   return Option.some(
     Anchoring({

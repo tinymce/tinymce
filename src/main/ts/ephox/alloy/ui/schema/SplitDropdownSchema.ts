@@ -1,18 +1,19 @@
-import Behaviour from '../../api/behaviour/Behaviour';
-import Coupling from '../../api/behaviour/Coupling';
-import Focusing from '../../api/behaviour/Focusing';
-import Keying from '../../api/behaviour/Keying';
-import Toggling from '../../api/behaviour/Toggling';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
-import AlloyTriggers from '../../api/events/AlloyTriggers';
-import Button from '../../api/ui/Button';
-import Fields from '../../data/Fields';
-import InternalSink from '../../parts/InternalSink';
-import PartType from '../../parts/PartType';
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-var schema = [
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { Coupling } from '../../api/behaviour/Coupling';
+import { Focusing } from '../../api/behaviour/Focusing';
+import { Keying } from '../../api/behaviour/Keying';
+import { Toggling } from '../../api/behaviour/Toggling';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+import { Button } from '../../api/ui/Button';
+import * as Fields from '../../data/Fields';
+import * as InternalSink from '../../parts/InternalSink';
+import * as PartType from '../../parts/PartType';
+
+const schema = Fun.constant([
   FieldSchema.strict('toggleClass'),
   FieldSchema.strict('fetch'),
 
@@ -23,13 +24,13 @@ var schema = [
   Fields.onHandler('onOpen'),
   SketchBehaviours.field('splitDropdownBehaviours', [ Coupling, Keying, Focusing ]),
   FieldSchema.defaulted('matchWidth', false)
-];
+]);
 
-var arrowPart = PartType.required({
+const arrowPart = PartType.required({
   factory: Button,
   schema: [ FieldSchema.strict('dom') ],
   name: 'arrow',
-  defaults: function (detail) {
+  defaults (detail) {
     return {
       dom: {
         attributes: {
@@ -42,9 +43,9 @@ var arrowPart = PartType.required({
       ])
     };
   },
-  overrides: function (detail) {
+  overrides (detail) {
     return {
-      action: function (arrow) {
+      action (arrow) {
         arrow.getSystem().getByUid(detail.uid()).each(AlloyTriggers.emitExecute);
       },
       buttonBehaviours: Behaviour.derive([
@@ -60,11 +61,11 @@ var arrowPart = PartType.required({
   }
 });
 
-var buttonPart = PartType.required({
+const buttonPart = PartType.required({
   factory: Button,
   schema: [ FieldSchema.strict('dom') ],
   name: 'button',
-  defaults: function (detail) {
+  defaults (detail) {
     return {
       dom: {
         attributes: {
@@ -77,9 +78,9 @@ var buttonPart = PartType.required({
       ])
     };
   },
-  overrides: function (detail) {
+  overrides (detail) {
     return {
-      action: function (btn) {
+      action (btn) {
         btn.getSystem().getByUid(detail.uid()).each(function (splitDropdown) {
           detail.onExecute()(splitDropdown, btn);
         });
@@ -88,7 +89,7 @@ var buttonPart = PartType.required({
   }
 });
 
-var partTypes = [
+const parts = Fun.constant([
   arrowPart,
   buttonPart,
 
@@ -97,9 +98,9 @@ var partTypes = [
       Fields.tieredMenuMarkers()
     ],
     name: 'menu',
-    defaults: function (detail) {
+    defaults (detail) {
       return {
-        onExecute: function (tmenu, item) {
+        onExecute (tmenu, item) {
           tmenu.getSystem().getByUid(detail.uid()).each(function (splitDropdown) {
             detail.onItemExecute()(splitDropdown, tmenu, item);
           });
@@ -109,10 +110,11 @@ var partTypes = [
   }),
 
   InternalSink.partType()
-];
+]);
 
-export default <any> {
-  name: Fun.constant('SplitDropdown'),
-  schema: Fun.constant(schema),
-  parts: Fun.constant(partTypes)
+const name = Fun.constant('SplitDropdown');
+export {
+  name,
+  schema,
+  parts
 };

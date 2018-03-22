@@ -1,48 +1,41 @@
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import Representing from 'ephox/alloy/api/behaviour/Representing';
-import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
-import Button from 'ephox/alloy/api/ui/Button';
-import Container from 'ephox/alloy/api/ui/Container';
-import Dropdown from 'ephox/alloy/api/ui/Dropdown';
-import Input from 'ephox/alloy/api/ui/Input';
-import SplitDropdown from 'ephox/alloy/api/ui/SplitDropdown';
-import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
+import { Arr, Future, Obj, Result } from '@ephox/katamari';
+import { Class, Element } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Button } from 'ephox/alloy/api/ui/Button';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
+import { Input } from 'ephox/alloy/api/ui/Input';
+import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
-import DemoRenders from './forms/DemoRenders';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { Arr } from '@ephox/katamari';
-import { Future } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
 
-
+import DemoRenders from './forms/DemoRenders';
 
 export default <any> function () {
-  var gui = Gui.create();
-  var body = Element.fromDom(document.body);
+  const gui = Gui.create();
+  const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   // Css.set(gui.element(), 'direction', 'rtl');
 
   Attachment.attachSystem(body, gui);
 
-
-  var sink = DemoSink.make();
+  const sink = DemoSink.make();
 
   gui.add(sink);
 
-  var lazySink = function () {
+  const lazySink = function () {
     return Result.value(sink);
   };
 
-  var menuMarkers = DemoRenders.tieredMarkers();
+  const menuMarkers = DemoRenders.tieredMarkers();
 
-  var wDoubleInput = DemoRenders.widgetItem({
+  const wDoubleInput = DemoRenders.widgetItem({
     type: 'widget',
     autofocus: true,
     data: {
@@ -88,8 +81,8 @@ export default <any> function () {
         }),
         SplitDropdown.parts().sink({ })
       ],
-      fetch: function () {
-        var wMenu = DemoRenders.menu({
+      fetch () {
+        const wMenu = DemoRenders.menu({
           value: 'demo.1.widget.menu',
           items: [ wDoubleInput ]
         });
@@ -98,11 +91,11 @@ export default <any> function () {
           TieredMenu.singleData('name', wMenu)
         );
       },
-      lazySink: lazySink,
-      onExecute: function () {
+      lazySink,
+      onExecute () {
         console.log('split-dropdown button clicked');
       },
-      onItemExecute: function () {
+      onItemExecute () {
         console.log('split-dropdown menuitem clicked');
       },
       parts: {
@@ -116,11 +109,11 @@ export default <any> function () {
     })
   );
 
-  var x = HtmlDisplay.section(
+  const x = HtmlDisplay.section(
     gui,
     'This dropdown button shows a widget',
     Dropdown.sketch({
-      lazySink: lazySink,
+      lazySink,
 
       toggleClass: 'demo-selected',
 
@@ -138,8 +131,8 @@ export default <any> function () {
         }
       },
 
-      fetch: function () {
-        var menu = DemoRenders.menu({
+      fetch () {
+        const menu = DemoRenders.menu({
           value: 'demo.2.widget',
           items: [ wDoubleInput ]
         });
@@ -173,20 +166,20 @@ export default <any> function () {
           }
         }
       },
-      fetch: function () {
+      fetch () {
 
-        var data = Arr.map([
+        const data = Arr.map([
           { type: 'item', data: { value: 'alpha', text: '+Alpha' } },
           { type: 'item', data: { value: 'beta', text: '+Beta' } },
           { type: 'item', data: { value: 'gamma', text: '+Gamma' } },
           { type: 'item', data: { value: 'delta', text: '+Delta' } }
         ], DemoRenders.gridItem);
 
-        var future = Future.pure(data);
+        const future = Future.pure(data);
         return future.map(function (items) {
-          var menu = DemoRenders.gridMenu({
+          const menu = DemoRenders.gridMenu({
             value: 'demo.3.menu',
-            items: items,
+            items,
             columns: 2,
             rows: 2
           });
@@ -194,7 +187,7 @@ export default <any> function () {
         });
       },
 
-      lazySink: lazySink
+      lazySink
     })
   );
 
@@ -220,29 +213,29 @@ export default <any> function () {
           }
         }
       },
-      lazySink: lazySink,
+      lazySink,
 
       matchWidth: true,
 
-      fetch: function () {
-        var data = Arr.map([
-          { type: 'item', data: { value: 'alpha', text: 'Alpha' }, 'item-class': 'class-alpha' },
-          { type: 'item', data: { value: 'beta', text: 'Beta' }, 'item-class': 'class-beta' },
+      fetch () {
+        const data = Arr.map([
+          { 'type': 'item', 'data': { value: 'alpha', text: 'Alpha' }, 'item-class': 'class-alpha' },
+          { 'type': 'item', 'data': { value: 'beta', text: 'Beta' }, 'item-class': 'class-beta' },
           { type: 'separator', data: { value: 'text', text: '-- separator --' } },
-          { type: 'item', data: { value: 'gamma', text: 'Gamma' }, 'item-class': 'class-gamma' },
-          { type: 'item', data: { value: 'delta', text: 'Delta' }, 'item-class': 'class-delta' }
+          { 'type': 'item', 'data': { value: 'gamma', text: 'Gamma' }, 'item-class': 'class-gamma' },
+          { 'type': 'item', 'data': { value: 'delta', text: 'Delta' }, 'item-class': 'class-delta' }
         ], DemoRenders.item);
 
-        var future = Future.pure(data);
+        const future = Future.pure(data);
         return future.map(function (items) {
-          var menu = DemoRenders.menu({
+          const menu = DemoRenders.menu({
             value: 'demo.4.menu',
-            items: items
+            items
           });
           return TieredMenu.singleData('basic-list', menu);
         });
       },
-      onExecute: function (sandbox, item, itemValue) {
+      onExecute (sandbox, item, itemValue) {
         console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
       }
     })
@@ -259,7 +252,7 @@ export default <any> function () {
       components: [
 
       ],
-      lazySink: lazySink,
+      lazySink,
       parts: {
         menu: {
           markers: menuMarkers,
@@ -271,20 +264,20 @@ export default <any> function () {
 
       toggleClass: 'demo-selected',
 
-      onExecute: function (sandbox, item, itemValue) {
+      onExecute (sandbox, item, itemValue) {
         console.trace();
         console.log('*** dropdown menu demo execute on: ' + Representing.getValue(item).value + ' ***');
       },
-      fetch: function () {
-        var future = Future.pure({
+      fetch () {
+        const future = Future.pure({
           primary: 'tools-menu',
           menus: Obj.map({
             'tools-menu': {
               value: 'tools-menu',
               text: 'tools-menu',
               items: Arr.map([
-                { type: 'item', data: { value: 'packages', text: 'Packages' }, 'item-class': '' },
-                { type: 'item', data: { value: 'about', text: 'About' }, 'item-class': '' },
+                { 'type': 'item', 'data': { value: 'packages', text: 'Packages' }, 'item-class': '' },
+                { 'type': 'item', 'data': { value: 'about', text: 'About' }, 'item-class': '' },
                 {
                   type: 'widget',
                   data: {
@@ -311,14 +304,14 @@ export default <any> function () {
                       Container.sketch({
                         components: [
                           Button.sketch({
-                            action: function () { console.log('clicked on a button', arguments); },
+                            action () { console.log('clicked on a button', arguments); },
                             dom: {
                               tag: 'button',
                               innerHtml: '-'
                             }
                           }),
                           Button.sketch({
-                            action: function () { console.log('clicked on a button', arguments); },
+                            action () { console.log('clicked on a button', arguments); },
                             dom: {
                               tag: 'button',
                               innerHtml: '+'
@@ -347,38 +340,38 @@ export default <any> function () {
               value: 'packages',
               text: 'packages',
               items: Arr.map([
-                { type: 'item', data: { value: 'sortby', text: 'SortBy' }, 'item-class': '' }
+                { 'type': 'item', 'data': { value: 'sortby', text: 'SortBy' }, 'item-class': '' }
               ], DemoRenders.item)
             },
             'sortby-menu': {
               value: 'sortby',
               text: 'sortby',
               items: Arr.map([
-                { type: 'item', data: { value: 'strings', text: 'Strings' }, 'item-class': '' },
-                { type: 'item', data: { value: 'numbers', text: 'Numbers' }, 'item-class': '' }
+                { 'type': 'item', 'data': { value: 'strings', text: 'Strings' }, 'item-class': '' },
+                { 'type': 'item', 'data': { value: 'numbers', text: 'Numbers' }, 'item-class': '' }
               ], DemoRenders.item)
             },
             'strings-menu': {
               value: 'strings',
               text: 'strings',
               items: Arr.map([
-                { type: 'item', data: { value: 'version', text: 'Versions', html: '<b>V</b>ersions' }, 'item-class': '' },
-                { type: 'item', data: { value: 'alphabetic', text: 'Alphabetic' }, 'item-class': '' }
+                { 'type': 'item', 'data': { value: 'version', text: 'Versions', html: '<b>V</b>ersions' }, 'item-class': '' },
+                { 'type': 'item', 'data': { value: 'alphabetic', text: 'Alphabetic' }, 'item-class': '' }
               ], DemoRenders.item)
             },
             'numbers-menu': {
               value: 'numbers',
               text: 'numbers',
               items: Arr.map([
-                { type: 'item', data: { value: 'doubled', text: 'Double digits' }, 'item-class': '' }
+                { 'type': 'item', 'data': { value: 'doubled', text: 'Double digits' }, 'item-class': '' }
               ], DemoRenders.item)
             }
           }, DemoRenders.menu),
           expansions: {
-            'packages': 'packages-menu',
-            'sortby': 'sortby-menu',
-            'strings': 'strings-menu',
-            'numbers': 'numbers-menu'
+            packages: 'packages-menu',
+            sortby: 'sortby-menu',
+            strings: 'strings-menu',
+            numbers: 'numbers-menu'
           }
         });
 

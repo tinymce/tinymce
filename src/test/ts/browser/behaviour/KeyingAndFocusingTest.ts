@@ -1,24 +1,23 @@
-import { FocusTools } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Memento from 'ephox/alloy/api/component/Memento';
-import AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { FocusTools, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as Memento from 'ephox/alloy/api/component/Memento';
+import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   // The purpose of this test is to check that when a component has
   // keying and focusing, that the keying behaviour's focusIn fires
   // after the focusing
   GuiSetup.setup(
     function (store, doc, body) {
-      var memChild = Memento.record({
+      const memChild = Memento.record({
         uid: 'child',
         dom: {
           tag: 'span',
@@ -52,8 +51,8 @@ UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', function() {
           Focusing.config({ }),
           Keying.config({
             mode: 'special',
-            focusIn: function (comp) {
-              var child = memChild.get(comp);
+            focusIn (comp) {
+              const child = memChild.get(comp);
               Focusing.focus(child);
             }
           })
@@ -75,4 +74,3 @@ UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', function() {
     success, failure
   );
 });
-

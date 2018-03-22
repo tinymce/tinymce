@@ -1,43 +1,32 @@
-import { Chain } from '@ephox/agar';
-import { Cursors } from '@ephox/agar';
-import { Guard } from '@ephox/agar';
-import { NamedChain } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Container from 'ephox/alloy/api/ui/Container';
-import Writer from 'ephox/alloy/frame/Writer';
+import { Chain, Cursors, Guard, NamedChain } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Option, Result } from '@ephox/katamari';
+import { Css, DomEvent, Element, Node, Scroll, SelectorFind, Traverse, WindowSelection } from '@ephox/sugar';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import * as Writer from 'ephox/alloy/frame/Writer';
 import ChainUtils from 'ephox/alloy/test/ChainUtils';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import Sinks from 'ephox/alloy/test/Sinks';
-import { Option } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { DomEvent } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Node } from '@ephox/sugar';
-import { Css } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
-import { Traverse } from '@ephox/sugar';
-import { WindowSelection } from '@ephox/sugar';
-import { Scroll } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('SelectionInFramePositionTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SelectionInFramePositionTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
-    var content = '';
-    for (var i = 0; i < 20; i++) {
+    let content = '';
+    for (let i = 0; i < 20; i++) {
       content += '<p>paragraph ' + i + '</p>';
     }
 
-    var frame = Element.fromTag('iframe');
-    var onload = DomEvent.bind(frame, 'load', function () {
+    const frame = Element.fromTag('iframe');
+    const onload = DomEvent.bind(frame, 'load', function () {
       onload.unbind();
       Writer.write(frame, '<html><body contenteditable="true">' + content + '</body></html>');
     });
 
-    var classicEditor = GuiFactory.build(
+    const classicEditor = GuiFactory.build(
       GuiFactory.external({
         uid: 'classic-editor',
         element: frame
@@ -58,23 +47,23 @@ UnitTest.asynctest('SelectionInFramePositionTest', function() {
     );
 
   }, function (doc, body, gui, component, store) {
-    var cSetupAnchor = Chain.mapper(function (data) {
+    const cSetupAnchor = Chain.mapper(function (data) {
       return {
         anchor: 'selection',
         root: Element.fromDom(data.classic.element().dom().contentWindow.document.body)
       };
     });
 
-    var cGetWin = Chain.mapper(function (frame) {
+    const cGetWin = Chain.mapper(function (frame) {
       return frame.element().dom().contentWindow;
     });
 
-    var cSetPath = function (rawPath) {
-      var path = Cursors.path(rawPath);
+    const cSetPath = function (rawPath) {
+      const path = Cursors.path(rawPath);
 
       return Chain.binder(function (win) {
-        var body = Element.fromDom(win.document.body);
-        var range = Cursors.calculate(body, path);
+        const body = Element.fromDom(win.document.body);
+        const range = Cursors.calculate(body, path);
         WindowSelection.setExact(
           win,
           range.start(),
@@ -92,10 +81,10 @@ UnitTest.asynctest('SelectionInFramePositionTest', function() {
       Chain.asStep({}, [
         NamedChain.asChain([
           ChainUtils.cFindUids(gui, {
-            'fixed': 'fixed-sink',
-            'relative': 'relative-sink',
-            'popup': 'popup',
-            'classic': 'classic-editor'
+            fixed: 'fixed-sink',
+            relative: 'relative-sink',
+            popup: 'popup',
+            classic: 'classic-editor'
           }),
           NamedChain.direct('classic', cGetWin, 'iWin'),
 
@@ -105,7 +94,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', function() {
             [
               Chain.control(
                 Chain.binder(function (data) {
-                  var root = Element.fromDom(data.classic.element().dom().contentWindow.document.body);
+                  const root = Element.fromDom(data.classic.element().dom().contentWindow.document.body);
                   return SelectorFind.descendant(root, 'p').fold(function () {
                     return Result.error('Could not find paragraph yet');
                   }, function (p) {
@@ -149,7 +138,6 @@ UnitTest.asynctest('SelectionInFramePositionTest', function() {
             'fixed'
           ),
 
-
           ChainUtils.cLogging(
             'Selecting 13th paragraph and scrolling to it',
             [
@@ -160,9 +148,9 @@ UnitTest.asynctest('SelectionInFramePositionTest', function() {
                 foffset: 0
               }), 'range2'),
               NamedChain.direct('range2', Chain.binder(function (range2) {
-                var start = range2.start();
+                const start = range2.start();
                 // NOTE: Safari likes to select the text node.
-                var optElement = Node.isText(start) ? Traverse.parent(start) : Option.some(start);
+                const optElement = Node.isText(start) ? Traverse.parent(start) : Option.some(start);
                 return optElement.map(function (elem) {
                   elem.dom().scrollIntoView();
                   return Scroll.get(
@@ -173,7 +161,6 @@ UnitTest.asynctest('SelectionInFramePositionTest', function() {
               NamedChain.write('anchor', cSetupAnchor)
             ]
           ),
-
 
           PositionTestUtils.cTestSink(
             'Relative, Selected: 13rd paragraph, 2000px scroll, no editor scroll',
@@ -188,4 +175,3 @@ UnitTest.asynctest('SelectionInFramePositionTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

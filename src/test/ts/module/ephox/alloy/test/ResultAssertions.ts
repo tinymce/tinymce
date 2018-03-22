@@ -3,16 +3,16 @@ import { Arr } from '@ephox/katamari';
 import { assert } from '@ephox/bedrock';
 
 /* global assert */
-var errsToString = function (err) {
+const errsToString = function (err) {
   return Arr.map(err, function (e) {
     return e.message !== undefined ? e.message : e;
   }).join('');
 };
 
-var checkErr = function (label, expectedPart, f) {
-  var actual = f();
+const checkErr = function (label, expectedPart, f) {
+  const actual = f();
   actual.fold(function (err) {
-    var errMessage = errsToString(err);
+    const errMessage = errsToString(err);
     // Not using message when coming from getOrDie
     RawAssertions.assertEq(
       label + '\nExpecting to contain("' + expectedPart + '")\nActual: ' + errMessage,
@@ -24,8 +24,8 @@ var checkErr = function (label, expectedPart, f) {
   });
 };
 
-var checkErrStr = function (label, expectedPart, f) {
-  var actual = f();
+const checkErrStr = function (label, expectedPart, f) {
+  const actual = f();
   actual.fold(function (err) {
     // Not using message when coming from getOrDie
     RawAssertions.assertEq(
@@ -38,8 +38,8 @@ var checkErrStr = function (label, expectedPart, f) {
   });
 };
 
-var checkVal = function (label, f, assertValue) {
-  var actual = f();
+const checkVal = function (label, f, assertValue) {
+  const actual = f();
   actual.fold(function (err) {
     assert.fail('Unexpected error: ' + errsToString(err));
   }, function (value) {
@@ -48,7 +48,7 @@ var checkVal = function (label, f, assertValue) {
 };
 
 export default <any> {
-  checkErr: checkErr,
-  checkErrStr: checkErrStr,
-  checkVal: checkVal
+  checkErr,
+  checkErrStr,
+  checkVal
 };

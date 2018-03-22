@@ -1,15 +1,16 @@
-import Behaviour from '../../api/behaviour/Behaviour';
-import Dragging from '../../api/behaviour/Dragging';
-import Keying from '../../api/behaviour/Keying';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
-import Fields from '../../data/Fields';
-import PartType from '../../parts/PartType';
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import { SelectorFind } from '@ephox/sugar';
 
-var schema = [
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { Dragging } from '../../api/behaviour/Dragging';
+import { Keying } from '../../api/behaviour/Keying';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import * as Fields from '../../data/Fields';
+import * as PartType from '../../parts/PartType';
+
+const schema = Fun.constant([
   FieldSchema.strict('lazySink'),
   FieldSchema.option('dragBlockClass'),
   FieldSchema.defaulted('useTabstopAt', Fun.constant(true)),
@@ -18,19 +19,19 @@ var schema = [
 
   Fields.onKeyboardHandler('onExecute'),
   Fields.onStrictKeyboardHandler('onEscape')
-];
+]);
 
-var basic = { sketch: Fun.identity };
+const basic = { sketch: Fun.identity };
 
-var partTypes = [
+const parts = Fun.constant([
   PartType.optional({
     name: 'draghandle',
-    overrides: function (detail, spec) {
+    overrides (detail, spec) {
       return {
         behaviours: Behaviour.derive([
           Dragging.config({
             mode: 'mouse',
-            getTarget: function (handle) {
+            getTarget (handle) {
               return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
             },
             blockerClass: detail.dragBlockClass().getOrDie(
@@ -84,10 +85,12 @@ var partTypes = [
       }
     })
   })
-];
+]);
 
-export default <any> {
-  name: Fun.constant('ModalDialog'),
-  schema: Fun.constant(schema),
-  parts: Fun.constant(partTypes)
+const name = Fun.constant('ModalDialog');
+
+export {
+  name,
+  schema,
+  parts
 };

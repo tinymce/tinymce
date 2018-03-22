@@ -1,75 +1,89 @@
-import Behaviour from '../behaviour/Behaviour';
-import Composing from '../behaviour/Composing';
-import Representing from '../behaviour/Representing';
-import SketchBehaviours from '../component/SketchBehaviours';
-import GuiTypes from './GuiTypes';
-import UiSketcher from './UiSketcher';
-import AlloyParts from '../../parts/AlloyParts';
-import PartType from '../../parts/PartType';
-import { Arr } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
-import { Obj } from '@ephox/katamari';
+import { Arr, Merger, Obj, Option } from '@ephox/katamari';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { CompositeSketch, SketchSpec, RawDomSchema } from '../../api/ui/Sketcher';
 
-var owner = 'form';
+import * as AlloyParts from '../../parts/AlloyParts';
+import * as PartType from '../../parts/PartType';
+import * as Behaviour from '../behaviour/Behaviour';
+import { Composing } from '../behaviour/Composing';
+import { Representing } from '../behaviour/Representing';
+import * as SketchBehaviours from '../component/SketchBehaviours';
+import * as GuiTypes from './GuiTypes';
+import * as UiSketcher from './UiSketcher';
 
-var schema = [
+const owner = 'form';
+
+export interface FormSketch {
+  // why do forms not use or follow the Single or compositeSketch Type signature?
+  sketch: (fSpec: FormfSpec) => SketchSpec;
+  getField: (component: AlloyComponent, key: string) => Option<AlloyComponent>;
+}
+
+export interface FormParts {
+  field: (name: string, config: SketchSpec) => AlloyParts.GeneratedSinglePart;
+  record(): string[];
+}
+
+export type FormfSpec = (FormParts) => RawDomSchema;
+
+const schema = [
   SketchBehaviours.field('formBehaviours', [ Representing ])
 ];
 
-var getPartName = function (name) {
+const getPartName = function (name) {
   return '<alloy.field.' + name + '>';
 };
 
-var sketch = function (fSpec) {
-  var parts = (function () {
-    var record = [ ];
+const sketch = function (fSpec: FormfSpec): SketchSpec {
+  const parts = (function () {
+    const record: string[] = [ ];
 
-    var field = function (name, config) {
+    const field = function (name: string, config: SketchSpec): AlloyParts.GeneratedSinglePart {
       record.push(name);
       return AlloyParts.generateOne(owner, getPartName(name), config);
     };
 
     return {
-      field: field,
-      record: function () { return record; }
+      field,
+      record () { return record; }
     };
   })();
 
-  var spec = fSpec(parts);
+  const spec = fSpec(parts);
 
-  var partNames = parts.record();
+  const partNames = parts.record();
   // Unlike other sketches, a form does not know its parts in advance (as they represent each field
   // in a particular form). Therefore, it needs to calculate the part names on the fly
-  var fieldParts = Arr.map(partNames, function (n) {
+  const fieldParts = Arr.map(partNames, function (n) {
     return PartType.required({ name: n, pname: getPartName(n) });
   });
 
   return UiSketcher.composite(owner, schema, fieldParts, make, spec);
 };
 
-var make = function (detail, components, spec) {
+const make = function (detail, components, spec) {
   return Merger.deepMerge(
     {
       'debug.sketcher': {
-        'Form': spec
+        Form: spec
       },
-      uid: detail.uid(),
-      dom: detail.dom(),
-      components: components,
+      'uid': detail.uid(),
+      'dom': detail.dom(),
+      'components': components,
 
       // Form has an assumption that every field must have composing, and that the composed element has representing.
-      behaviours: Merger.deepMerge(
+      'behaviours': Merger.deepMerge(
         Behaviour.derive([
           Representing.config({
             store: {
               mode: 'manual',
-              getValue: function (form) {
-                var optPs = AlloyParts.getAllParts(form, detail);
+              getValue (form) {
+                const optPs = AlloyParts.getAllParts(form, detail);
                 return Obj.map(optPs, function (optPThunk, pName) {
                   return optPThunk().bind(Composing.getCurrent).map(Representing.getValue);
                 });
               },
-              setValue: function (form, values) {
+              setValue (form, values) {
                 Obj.each(values, function (newValue, key) {
                   AlloyParts.getPart(form, detail, key).each(function (wrapper) {
                     Composing.getCurrent(wrapper).each(function (field) {
@@ -84,8 +98,8 @@ var make = function (detail, components, spec) {
         SketchBehaviours.get(detail.formBehaviours())
       ),
 
-      apis: {
-        getField: function (form, key) {
+      'apis': {
+        getField (form, key) {
           // Returns an Option (not a result);
           return AlloyParts.getPart(form, detail, key).bind(Composing.getCurrent);
         }
@@ -94,9 +108,13 @@ var make = function (detail, components, spec) {
   );
 };
 
-export default <any> {
+const Form = {
   getField: GuiTypes.makeApi(function (apis, component, key) {
     return apis.getField(component, key);
   }),
-  sketch: sketch
+  sketch
+} as FormSketch;
+
+export {
+  Form
 };

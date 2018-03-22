@@ -1,32 +1,25 @@
-import { FocusTools } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Container from 'ephox/alloy/api/ui/Container';
-import TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
-import Typeahead from 'ephox/alloy/api/ui/Typeahead';
+import { FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Arr, Future, Result } from '@ephox/katamari';
+import { Focus, Value } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import Sinks from 'ephox/alloy/test/Sinks';
 import TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
-import { Arr } from '@ephox/katamari';
-import { Future } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
-import { Value } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
-    var sink = Sinks.relativeSink();
+    const sink = Sinks.relativeSink();
 
     return GuiFactory.build(
       Container.sketch({
@@ -51,19 +44,19 @@ UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', function() 
               text: 'initial-value'
             },
 
-            fetch: function (input) {
-              var text = Value.get(input.element());
-              var future = Future.pure([
+            fetch (input) {
+              const text = Value.get(input.element());
+              const future = Future.pure([
                 { type: 'item', data: { value: text + '1', text: text + '1' } },
                 { type: 'item', data: { value: text + '2', text: text + '2' } }
               ]);
 
               return future.map(function (f) {
                 // TODO: Test this.
-                var items = text === 'no-data' ? [
+                const items = text === 'no-data' ? [
                   { type: 'separator', text: 'No data' }
                 ] : f;
-                var menu = TestDropdownMenu.renderMenu({
+                const menu = TestDropdownMenu.renderMenu({
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
                 });
@@ -71,7 +64,7 @@ UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', function() 
               });
             },
 
-            lazySink: function () { return Result.value(sink); },
+            lazySink () { return Result.value(sink); },
 
             parts: {
               menu: TestDropdownMenu.part(store)
@@ -87,9 +80,9 @@ UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', function() 
 
   }, function (doc, body, gui, component, store) {
 
-    var typeahead = gui.getByUid('test-type').getOrDie();
+    const typeahead = gui.getByUid('test-type').getOrDie();
 
-    var steps = TestTypeaheadSteps(doc, gui, typeahead);
+    const steps = TestTypeaheadSteps(doc, gui, typeahead);
 
     return [
       GuiSetup.mAddStyles(doc, [
@@ -124,4 +117,3 @@ UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', function() 
     ];
   }, success, failure);
 });
-

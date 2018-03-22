@@ -1,22 +1,21 @@
-import { Chain } from '@ephox/agar';
-import { NamedChain } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Button from 'ephox/alloy/api/ui/Button';
-import Container from 'ephox/alloy/api/ui/Container';
+import { Chain, NamedChain } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Button } from 'ephox/alloy/api/ui/Button';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import ChainUtils from 'ephox/alloy/test/ChainUtils';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import Sinks from 'ephox/alloy/test/Sinks';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('HotspotPositionTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('HotspotPositionTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
-    var hotspot = GuiFactory.build(
+    const hotspot = GuiFactory.build(
       Button.sketch({
-        action: function () { },
+        action () { },
         dom: {
           styles: {
             position: 'absolute',
@@ -42,10 +41,10 @@ UnitTest.asynctest('HotspotPositionTest', function() {
     );
 
   }, function (doc, body, gui, component, store) {
-    var cSetupAnchor = Chain.mapper(function (hotspot) {
+    const cSetupAnchor = Chain.mapper(function (hotspot) {
       return {
         anchor: 'hotspot',
-        hotspot: hotspot
+        hotspot
       };
     });
 
@@ -53,10 +52,10 @@ UnitTest.asynctest('HotspotPositionTest', function() {
       Chain.asStep({}, [
         NamedChain.asChain([
           ChainUtils.cFindUids(gui, {
-            'fixed': 'fixed-sink',
-            'relative': 'relative-sink',
-            'popup': 'popup',
-            'hotspot': 'hotspot'
+            fixed: 'fixed-sink',
+            relative: 'relative-sink',
+            popup: 'popup',
+            hotspot: 'hotspot'
           }),
 
           NamedChain.direct('hotspot', cSetupAnchor, 'anchor'),
@@ -72,4 +71,3 @@ UnitTest.asynctest('HotspotPositionTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

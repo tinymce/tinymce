@@ -1,13 +1,13 @@
-import AlloyEvents from '../api/events/AlloyEvents';
-import SystemEvents from '../api/events/SystemEvents';
-import AlloyLogger from '../log/AlloyLogger';
+import * as AlloyEvents from '../api/events/AlloyEvents';
+import * as SystemEvents from '../api/events/SystemEvents';
+import * as AlloyLogger from '../log/AlloyLogger';
 import { Compare } from '@ephox/sugar';
 
 // The purpose of this check is to ensure that a simulated focus call is not going
 // to recurse infinitely. Essentially, if the originator of the focus call is the same
 // as the element receiving it, and it wasn't its own target, then stop the focus call
 // and log a warning.
-var isRecursive = function (component, originator, target) {
+const isRecursive = function (component, originator, target) {
   return Compare.eq(originator, component.element()) &&
     !Compare.eq(originator, target);
 };
@@ -16,8 +16,8 @@ export default <any> {
   events: AlloyEvents.derive([
     AlloyEvents.can(SystemEvents.focus(), function (component, simulatedEvent) {
       // originator may not always be there. Will need to check this.
-      var originator = simulatedEvent.event().originator();
-      var target = simulatedEvent.event().target();
+      const originator = simulatedEvent.event().originator();
+      const target = simulatedEvent.event().target();
       if (isRecursive(component, originator, target)) {
         console.warn(
           SystemEvents.focus() + ' did not get interpreted by the desired target. ' +

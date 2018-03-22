@@ -1,10 +1,11 @@
-import Fields from '../../data/Fields';
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Scroll } from '@ephox/sugar';
 
-var defaultLazyViewport = function () {
-  var scroll = Scroll.get();
+import * as Fields from '../../data/Fields';
+
+const defaultLazyViewport = function () {
+  const scroll = Scroll.get();
 
   return {
     x: scroll.left,

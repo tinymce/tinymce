@@ -1,48 +1,44 @@
-import DomFactory from 'ephox/alloy/api/component/DomFactory';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Attachment from 'ephox/alloy/api/system/Attachment';
-import Gui from 'ephox/alloy/api/system/Gui';
-import Container from 'ephox/alloy/api/ui/Container';
-import ModalDialog from 'ephox/alloy/api/ui/ModalDialog';
+import { Option, Result } from '@ephox/katamari';
+import { Class, Element } from '@ephox/sugar';
+import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as Attachment from 'ephox/alloy/api/system/Attachment';
+import * as Gui from 'ephox/alloy/api/system/Gui';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { Option } from '@ephox/katamari';
-import { Result } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { Class } from '@ephox/sugar';
-
-
 
 export default <any> function () {
-  var gui = Gui.create();
-  var body = Element.fromDom(document.body);
+  const gui = Gui.create();
+  const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  var sink = DemoSink.make();
+  const sink = DemoSink.make();
 
   gui.add(sink);
 
-  var lazySink = function () {
+  const lazySink = function () {
     return Result.value(sink);
   };
 
-  var pTitle = ModalDialog.parts().title({
+  const pTitle = ModalDialog.parts().title({
     dom: DomFactory.fromHtml('<div class="mce-title">Insert Link</div>')
   });
 
-  var pDraghandle = ModalDialog.parts().draghandle({
+  const pDraghandle = ModalDialog.parts().draghandle({
     dom: DomFactory.fromHtml('<div class="mce-dragh"></div>')
   });
 
-  var pClose = ModalDialog.parts().close({
+  const pClose = ModalDialog.parts().close({
     dom: DomFactory.fromHtml('<button type="button" aria-hidden="true" class="mce-close"></button>'),
     components: [
       Container.sketch({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } })
     ]
   });
 
-  var pBody = ModalDialog.parts().body({
+  const pBody = ModalDialog.parts().body({
     dom: DomFactory.fromHtml('<div></div>'),
     components: [
       Container.sketch({
@@ -51,13 +47,13 @@ export default <any> function () {
     ]
   });
 
-  var pFooter = ModalDialog.parts().footer({
+  const pFooter = ModalDialog.parts().footer({
     dom: {
       tag: 'div'
     }
   });
 
-  var dialog = GuiFactory.build(
+  const dialog = GuiFactory.build(
     ModalDialog.sketch({
       dom: DomFactory.fromHtml('<div class="mce-container mce-panel mce-floatpanel mce-window mce-in"></div>'),
       components: [
@@ -88,8 +84,8 @@ export default <any> function () {
         })
       ],
 
-      lazySink: lazySink,
-      onEscape: function () {
+      lazySink,
+      onEscape () {
         console.log('escaping');
         return Option.some(true);
       },

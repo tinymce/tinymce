@@ -1,12 +1,10 @@
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
-import Toolbar from 'ephox/alloy/api/ui/Toolbar';
-import ToolbarGroup from 'ephox/alloy/api/ui/ToolbarGroup';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Merger } from '@ephox/katamari';
+import { Arr, Fun, Merger } from '@ephox/katamari';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
+import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 
-var mungeItem = function (itemSpec) {
+const mungeItem = function (itemSpec) {
   return Merger.deepMerge(
     itemSpec,
     {
@@ -17,11 +15,11 @@ var mungeItem = function (itemSpec) {
   );
 };
 
-var markers = {
+const markers = {
   itemClass: 'toolbar-item'
 };
 
-var munge = function (spec) {
+const munge = function (spec) {
   return {
     dom: {
       tag: 'div',
@@ -31,22 +29,22 @@ var munge = function (spec) {
       ToolbarGroup.parts().items({ })
     ],
     items: Arr.map(spec.items, mungeItem),
-    markers: markers
+    markers
   };
 };
 
-var setGroups = function (tb, gs) {
-  var gps = createGroups(gs);
+const setGroups = function (tb, gs) {
+  const gps = createGroups(gs);
   Toolbar.setGroups(tb, gps);
 };
 
-var createGroups = function (gs) {
+const createGroups = function (gs) {
   return Arr.map(gs, Fun.compose(ToolbarGroup.sketch, munge));
 };
 
 export default <any> {
   markers: Fun.constant(markers),
-  munge: munge,
-  setGroups: setGroups,
-  createGroups: createGroups
+  munge,
+  setGroups,
+  createGroups
 };

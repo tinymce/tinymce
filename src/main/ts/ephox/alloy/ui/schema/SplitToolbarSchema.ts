@@ -1,26 +1,26 @@
-import Behaviour from '../../api/behaviour/Behaviour';
-import Sliding from '../../api/behaviour/Sliding';
-import SketchBehaviours from '../../api/component/SketchBehaviours';
-import Toolbar from '../../api/ui/Toolbar';
-import Fields from '../../data/Fields';
-import PartType from '../../parts/PartType';
 import { FieldSchema } from '@ephox/boulder';
-import { Cell } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Cell, Fun } from '@ephox/katamari';
 
-var schema = [
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { Sliding } from '../../api/behaviour/Sliding';
+import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import { Toolbar } from '../../api/ui/Toolbar';
+import * as Fields from '../../data/Fields';
+import * as PartType from '../../parts/PartType';
+
+const schema = Fun.constant([
   Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass' ]),
   SketchBehaviours.field('splitToolbarBehaviours', [ ]),
   FieldSchema.state('builtGroups', function () {
     return Cell([ ]);
   })
-];
+]);
 
-var toolbarSchema = [
+const toolbarSchema = [
   FieldSchema.strict('dom')
 ];
 
-var partTypes = [
+const parts = Fun.constant([
   PartType.required({
     factory: Toolbar,
     schema: toolbarSchema,
@@ -31,7 +31,7 @@ var partTypes = [
     factory: Toolbar,
     schema: toolbarSchema,
     name: 'overflow',
-    overrides: function (detail) {
+    overrides (detail) {
       return {
         toolbarBehaviours: Behaviour.derive([
           Sliding.config({
@@ -55,10 +55,12 @@ var partTypes = [
   PartType.external({
     name: 'overflow-group'
   })
-];
+]);
 
-export default <any> {
-  name: Fun.constant('SplitToolbar'),
-  schema: Fun.constant(schema),
-  parts: Fun.constant(partTypes)
+const name = Fun.constant('SplitToolbar');
+
+export {
+  name,
+  schema,
+  parts
 };

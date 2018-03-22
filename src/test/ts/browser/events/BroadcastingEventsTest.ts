@@ -1,17 +1,16 @@
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import Container from 'ephox/alloy/api/ui/Container';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var bodyMargin = [
+  const bodyMargin = [
     'body { margin-top: 2000px; }'
   ];
 
@@ -21,9 +20,9 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', function() {
         dom: {
           styles: {
             'overflow-x': 'hidden',
-            background: 'blue',
+            'background': 'blue',
             'max-width': '300px',
-            height: '20px'
+            'height': '20px'
           }
         },
         events: AlloyEvents.derive([
@@ -62,4 +61,3 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

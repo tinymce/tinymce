@@ -1,26 +1,21 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { GeneralSteps } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Sliding from 'ephox/alloy/api/behaviour/Sliding';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import Container from 'ephox/alloy/api/ui/Container';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
+import { Class } from '@ephox/sugar';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Sliding } from 'ephox/alloy/api/behaviour/Sliding';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
-import { Class } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('SlidingTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('SlidingTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   // Seems to have stopped working on phantomjs
-  if (PhantomSkipper.skip()) return success();
+  if (PhantomSkipper.skip()) { return success(); }
 
-  var slidingStyles = [
+  const slidingStyles = [
     '.test-sliding-closed { visibility: hidden; opacity: 0; }',
     '.test-sliding-open {  visibility: visible; opacity: 1; }',
     '.test-sliding-width-growing { transition: width 0.9s ease, opacity 0.6s linear 0.3s }',
@@ -33,17 +28,17 @@ UnitTest.asynctest('SlidingTest', function() {
         dom: {
           styles: {
             'overflow-x': 'hidden',
-            background: 'blue',
+            'background': 'blue',
             'max-width': '300px',
-            height: '20px'
+            'height': '20px'
           }
         },
         containerBehaviours: Behaviour.derive([
           Sliding.config({
             closedClass: 'test-sliding-closed',
             openClass: 'test-sliding-open',
-            'shrinkingClass': 'test-sliding-width-shrinking',
-            'growingClass': 'test-sliding-width-growing',
+            shrinkingClass: 'test-sliding-width-shrinking',
+            growingClass: 'test-sliding-width-growing',
 
             dimension: {
               property: 'width'
@@ -61,17 +56,15 @@ UnitTest.asynctest('SlidingTest', function() {
 
   }, function (doc, body, gui, component, store) {
 
-    var sIsGrowing = Step.sync(function () {
+    const sIsGrowing = Step.sync(function () {
       Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-growing'));
     });
 
-    var sIsShrinking = Step.sync(function () {
+    const sIsShrinking = Step.sync(function () {
       Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-shrinking'));
     });
 
-
-
-    var sGrowingSteps = function (label) {
+    const sGrowingSteps = function (label) {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -111,7 +104,7 @@ UnitTest.asynctest('SlidingTest', function() {
       );
     };
 
-    var sShrinkingSteps = function (label) {
+    const sShrinkingSteps = function (label) {
       return Logger.t(
         label,
         GeneralSteps.sequence([
@@ -165,7 +158,6 @@ UnitTest.asynctest('SlidingTest', function() {
         }),
         component.element()
       ),
-
 
       store.sClear,
       Step.sync(function () {
@@ -230,4 +222,3 @@ UnitTest.asynctest('SlidingTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

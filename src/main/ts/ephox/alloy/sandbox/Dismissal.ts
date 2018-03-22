@@ -1,22 +1,21 @@
-import Receiving from '../api/behaviour/Receiving';
-import Sandboxing from '../api/behaviour/Sandboxing';
-import Channels from '../api/messages/Channels';
-import { FieldSchema } from '@ephox/boulder';
-import { Objects } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
+import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-var schema = ValueSchema.objOfOnly([
+import { Receiving } from '../api/behaviour/Receiving';
+import { Sandboxing } from '../api/behaviour/Sandboxing';
+import * as Channels from '../api/messages/Channels';
+
+const schema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('isExtraPart', Fun.constant(false))
 ]);
 
-var receivingConfig = function (rawSpec) {
-  var c = receiving(rawSpec);
+const receivingConfig = function (rawSpec) {
+  const c = receiving(rawSpec);
   return Receiving.config(c);
 };
 
-var receiving = function (rawSpec) {
-  var spec = ValueSchema.asRawOrDie('Dismissal', schema, rawSpec);
+const receiving = function (rawSpec) {
+  const spec = ValueSchema.asRawOrDie('Dismissal', schema, rawSpec);
   return {
     channels: Objects.wrap(
       Channels.dismissPopups(),
@@ -24,10 +23,10 @@ var receiving = function (rawSpec) {
         schema: ValueSchema.objOfOnly([
           FieldSchema.strict('target')
         ]),
-        onReceive: function (sandbox, data) {
+        onReceive (sandbox, data) {
           if (Sandboxing.isOpen(sandbox)) {
-            var isPart = Sandboxing.isPartOf(sandbox, data.target()) || spec.isExtraPart(sandbox, data.target());
-            if (! isPart) Sandboxing.close(sandbox);
+            const isPart = Sandboxing.isPartOf(sandbox, data.target()) || spec.isExtraPart(sandbox, data.target());
+            if (! isPart) { Sandboxing.close(sandbox); }
           }
         }
       }
@@ -35,7 +34,7 @@ var receiving = function (rawSpec) {
   };
 };
 
-export default <any> {
-  receiving: receiving,
-  receivingConfig: receivingConfig
+export {
+  receiving,
+  receivingConfig
 };

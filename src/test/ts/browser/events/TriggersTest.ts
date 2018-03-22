@@ -1,80 +1,72 @@
-import { Assertions } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Pipeline } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import Debugging from 'ephox/alloy/debugging/Debugging';
-import Triggers from 'ephox/alloy/events/Triggers';
-import { Objects } from '@ephox/boulder';
-import { Arr } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
-import { Insert } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Attr } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { SelectorFind } from '@ephox/sugar';
+import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
+import { Objects } from '@ephox/boulder';
+import { Arr, Fun } from '@ephox/katamari';
+import { Attr, Element, Html, Insert, SelectorFind } from '@ephox/sugar';
+import * as Debugging from 'ephox/alloy/debugging/Debugging';
+import * as Triggers from 'ephox/alloy/events/Triggers';
 
-UnitTest.asynctest('TriggersTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('TriggersTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var log = [ ];
+  let log = [ ];
 
-  var make = function (stop, message) {
+  const make = function (stop, message) {
     return function (labEvent) {
       log.push(message);
-      if (stop) labEvent.stop();
+      if (stop) { labEvent.stop(); }
     };
   };
 
   // OK for this test, we need to start with a list of events which may or may not stop
-  var domEvents = {
+  const domEvents = {
     'no.stop': {
-      'alpha': make(false, 'alpha'),
-      'beta': make(false, 'beta'),
-      'gamma': make(false, 'gamma')
+      alpha: make(false, 'alpha'),
+      beta: make(false, 'beta'),
+      gamma: make(false, 'gamma')
     },
     'gamma.stop': {
-      'alpha': make(false, 'alpha'),
-      'beta': make(false, 'beta'),
-      'gamma': make(true, 'gamma')
+      alpha: make(false, 'alpha'),
+      beta: make(false, 'beta'),
+      gamma: make(true, 'gamma')
     },
     'beta.stop': {
-      'alpha': make(false, 'alpha'),
-      'beta': make(true, 'beta'),
-      'gamma': make(false, 'gamma')
+      alpha: make(false, 'alpha'),
+      beta: make(true, 'beta'),
+      gamma: make(false, 'gamma')
     },
     'alpha.stop': {
-      'alpha': make(true, 'alpha'),
-      'beta': make(false, 'beta'),
-      'gamma': make(false, 'gamma')
+      alpha: make(true, 'alpha'),
+      beta: make(false, 'beta'),
+      gamma: make(false, 'gamma')
     },
     'gamma.alpha.stop': {
-      'alpha': make(true, 'alpha'),
-      'beta': make(false, 'beta'),
-      'gamma': make(true, 'gamma')
+      alpha: make(true, 'alpha'),
+      beta: make(false, 'beta'),
+      gamma: make(true, 'gamma')
     },
     'gamma.beta.stop': {
-      'alpha': make(false, 'alpha'),
-      'beta': make(true, 'beta'),
-      'gamma': make(true, 'gamma')
+      alpha: make(false, 'alpha'),
+      beta: make(true, 'beta'),
+      gamma: make(true, 'gamma')
     },
     'beta.alpha.stop': {
-      'alpha': make(true, 'alpha'),
-      'beta': make(true, 'beta'),
-      'gamma': make(false, 'gamma')
+      alpha: make(true, 'alpha'),
+      beta: make(true, 'beta'),
+      gamma: make(false, 'gamma')
     },
     'all.stop': {
-      'alpha': make(true, 'alpha'),
-      'beta': make(true, 'beta'),
-      'gamma': make(true, 'gamma')
+      alpha: make(true, 'alpha'),
+      beta: make(true, 'beta'),
+      gamma: make(true, 'gamma')
     }
   };
 
-  var logger = Debugging.noLogger();
+  const logger = Debugging.noLogger();
 
-  var lookup = function (eventType, target) {
-    var targetId = Attr.get(target, 'data-event-id');
+  const lookup = function (eventType, target) {
+    const targetId = Attr.get(target, 'data-event-id');
 
     return Objects.readOptFrom(domEvents, eventType).bind(Objects.readOpt(targetId)).map(function (h) {
       return {
@@ -87,23 +79,22 @@ UnitTest.asynctest('TriggersTest', function() {
     });
   };
 
-  var container = Element.fromTag('div');
-  var body = Element.fromDom(document.body);
+  const container = Element.fromTag('div');
+  const body = Element.fromDom(document.body);
 
-  var sCheck = function (label, expected, target, eventType) {
+  const sCheck = function (label, expected, target, eventType) {
     return Logger.t(label, Step.sync(function () {
       Html.set(container, '<div data-event-id="alpha"><div data-event-id="beta"><div data-event-id="gamma"></div></div></div>');
-      var targetEl = SelectorFind.descendant(container, '[data-event-id="' + target + '"]').getOrDie();
+      const targetEl = SelectorFind.descendant(container, '[data-event-id="' + target + '"]').getOrDie();
       Triggers.triggerOnUntilStopped(lookup, eventType, { }, targetEl, logger);
       Assertions.assertEq(label, expected, log.slice(0));
       log = [ ];
     }));
   };
 
-
   Insert.append(body, container);
 
-  var cases = [
+  const cases = [
     { expected: [ 'gamma', 'beta', 'alpha' ], target: 'gamma', type: 'no.stop' },
     { expected: [ 'beta', 'alpha' ], target: 'beta', type: 'no.stop' },
     { expected: [ 'alpha' ], target: 'alpha', type: 'no.stop' },
@@ -137,7 +128,7 @@ UnitTest.asynctest('TriggersTest', function() {
     { expected: [ 'alpha' ], target: 'alpha', type: 'all.stop' }
   ];
 
-  var steps = Arr.map(cases, function (c) {
+  const steps = Arr.map(cases, function (c) {
     return sCheck(
       'fire(' + c.target + ') using event: ' + c.type,
       c.expected,
@@ -148,4 +139,3 @@ UnitTest.asynctest('TriggersTest', function() {
 
   Pipeline.async({}, steps, function () { success(); }, failure);
 });
-

@@ -1,30 +1,29 @@
-import Behaviour from './Behaviour';
-import AlloyEvents from '../events/AlloyEvents';
+import * as Behaviour from './Behaviour';
+import { EventHandlerConfig, derive } from '../events/AlloyEvents';
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-var events = function (name, eventHandlers) {
-  var events = AlloyEvents.derive(eventHandlers);
+const events = function (name, eventHandlers) {
+  const events = derive(eventHandlers);
 
   return Behaviour.create({
     fields: [
       FieldSchema.strict('enabled')
     ],
-    name: name,
+    name,
     active: {
       events: Fun.constant(events)
     }
   });
 };
 
-var config = function (name, eventHandlers) {
-  var me = events(name, eventHandlers);
-
+const config = function (name: string, eventHandlers: EventHandlerConfig[]): { key: string, value: {} } {
+  const me = events(name, eventHandlers);
   return {
     key: name,
     value: {
       config: { },
-      me: me,
+      me,
       configAsRaw: Fun.constant({ }),
       initialConfig: { },
       state: Behaviour.noState()
@@ -32,7 +31,7 @@ var config = function (name, eventHandlers) {
   };
 };
 
-export default <any> {
-  events: events,
-  config: config
+export {
+  events,
+  config
 };

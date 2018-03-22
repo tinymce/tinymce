@@ -1,42 +1,33 @@
-import { ApproxStructure } from '@ephox/agar';
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Logger } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
-import Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
-import Toggling from 'ephox/alloy/api/behaviour/Toggling';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import Container from 'ephox/alloy/api/ui/Container';
-import ModalDialog from 'ephox/alloy/api/ui/ModalDialog';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import Sinks from 'ephox/alloy/test/Sinks';
+import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Step, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { Result } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
+import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
+import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import Sinks from 'ephox/alloy/test/Sinks';
 
-UnitTest.asynctest('ModalDialogTest', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ModalDialogTest', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
   GuiSetup.setup(function (store, doc, body) {
     return Sinks.relativeSink();
 
   }, function (doc, body, gui, sink, store) {
-    var focusAndTab = Behaviour.derive([
+    const focusAndTab = Behaviour.derive([
       Focusing.config({ }),
       Tabstopping.config({ })
     ]);
 
-
-    var pDraghandle = ModalDialog.parts().draghandle({
+    const pDraghandle = ModalDialog.parts().draghandle({
       dom: {
         tag: 'div',
         styles: {
@@ -47,7 +38,7 @@ UnitTest.asynctest('ModalDialogTest', function() {
       }
     });
 
-    var pTitle = ModalDialog.parts().title({
+    const pTitle = ModalDialog.parts().title({
       dom: {
         tag: 'div',
         innerHtml: 'Title',
@@ -57,7 +48,7 @@ UnitTest.asynctest('ModalDialogTest', function() {
       components: [ ]
     });
 
-    var pClose = ModalDialog.parts().close({
+    const pClose = ModalDialog.parts().close({
       dom: {
         tag: 'div',
         innerHtml: 'X'
@@ -65,7 +56,7 @@ UnitTest.asynctest('ModalDialogTest', function() {
       components: [ ]
     });
 
-    var pBody = ModalDialog.parts().body({
+    const pBody = ModalDialog.parts().body({
       dom: {
         tag: 'div',
         classes: [ 'test-dialog-body' ]
@@ -86,7 +77,7 @@ UnitTest.asynctest('ModalDialogTest', function() {
       ]
     });
 
-    var pFooter = ModalDialog.parts().footer({
+    const pFooter = ModalDialog.parts().footer({
       dom: {
         tag: 'div',
         classes: [ 'test-dialog-footer' ],
@@ -100,7 +91,7 @@ UnitTest.asynctest('ModalDialogTest', function() {
       components: [ ]
     });
 
-    var dialog = GuiFactory.build(
+    const dialog = GuiFactory.build(
       ModalDialog.sketch({
         dom: {
           tag: 'div',
@@ -118,11 +109,11 @@ UnitTest.asynctest('ModalDialogTest', function() {
         ],
 
         dragBlockClass: 'drag-blocker',
-        lazySink: function () {
+        lazySink () {
           return Result.value(sink);
         },
 
-        useTabstopAt: function (elem) {
+        useTabstopAt (elem) {
           return !Class.has(elem, 'untabbable');
         },
 
@@ -140,7 +131,7 @@ UnitTest.asynctest('ModalDialogTest', function() {
             dom: {
               styles: {
                 'z-index': '1000000000',
-                background: 'rgba(0, 0, 100, 0.5)'
+                'background': 'rgba(0, 0, 100, 0.5)'
               },
               classes: [ 'test-dialog-blocker' ]
             }
@@ -149,7 +140,7 @@ UnitTest.asynctest('ModalDialogTest', function() {
       })
     );
 
-    var sCheckDialogStructure = function (label, expected) {
+    const sCheckDialogStructure = function (label, expected) {
       return Logger.t(
         label,
         Chain.asStep({ }, [
@@ -206,7 +197,7 @@ UnitTest.asynctest('ModalDialogTest', function() {
       FocusTools.sTryOnSelector('Focus should be back to title now', doc, '.test-dialog-title'),
 
       Step.sync(function () {
-        var body = ModalDialog.getBody(dialog);
+        const body = ModalDialog.getBody(dialog);
         Toggling.on(body);
       }),
 
@@ -221,7 +212,7 @@ UnitTest.asynctest('ModalDialogTest', function() {
       store.sAssertEq('After pressing <esc>', [ 'dialog.escape' ]),
 
       Step.sync(function () {
-        var body = ModalDialog.getBody(dialog);
+        const body = ModalDialog.getBody(dialog);
         Assertions.assertStructure('Checking body of dialog', ApproxStructure.build(function (s, str, arr) {
           return s.element('div', {
             classes: [ arr.has('test-dialog-body') ]
@@ -237,4 +228,3 @@ UnitTest.asynctest('ModalDialogTest', function() {
     ];
   }, function () { success(); }, failure);
 });
-

@@ -1,24 +1,21 @@
-import { FocusTools } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { Keys } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import Focusing from 'ephox/alloy/api/behaviour/Focusing';
-import Keying from 'ephox/alloy/api/behaviour/Keying';
-import GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import Container from 'ephox/alloy/api/ui/Container';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
-import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
+import { FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock';
 import { Objects } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock';
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
+import { Keying } from 'ephox/alloy/api/behaviour/Keying';
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import { Container } from 'ephox/alloy/api/ui/Container';
+import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
-UnitTest.asynctest('Flat Grid Keying Test', function() {
-  var success = arguments[arguments.length - 2];
-  var failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Flat Grid Keying Test', function () {
+  const success = arguments[arguments.length - 2];
+  const failure = arguments[arguments.length - 1];
 
-  var squares = [
+  const squares = [
     's01', 's02', 's03', 's04', 's05', 's06',
     's07', 's08', 's09', 's10', 's11', 's12',
     's13', 's14', 's15', 's16', 's17', 's18',
@@ -26,7 +23,7 @@ UnitTest.asynctest('Flat Grid Keying Test', function() {
   ];
 
   GuiSetup.setup(function (store, doc, body) {
-    var item = function (classes) {
+    const item = function (classes) {
       return Container.sketch({
         dom: {
           tag: 'span',
@@ -81,7 +78,7 @@ UnitTest.asynctest('Flat Grid Keying Test', function() {
 
   }, function (doc, body, gui, component, store) {
 
-    var targets = Objects.wrapAll(
+    const targets: any = Objects.wrapAll(
       Arr.map(squares, function (sq) {
         return {
           key: sq,
@@ -185,4 +182,3 @@ UnitTest.asynctest('Flat Grid Keying Test', function() {
     success();
   }, failure);
 });
-

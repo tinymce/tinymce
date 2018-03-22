@@ -1,13 +1,37 @@
-import Behaviour from './Behaviour';
-import ActiveToggle from '../../behaviour/toggling/ActiveToggle';
-import ToggleApis from '../../behaviour/toggling/ToggleApis';
+import * as Behaviour from './Behaviour';
+import * as ActiveToggle from '../../behaviour/toggling/ActiveToggle';
+import * as ToggleApis from '../../behaviour/toggling/ToggleApis';
 import ToggleSchema from '../../behaviour/toggling/ToggleSchema';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
+export interface TogglingBehaviour extends Behaviour.AlloyBehaviour {
+  config: (config: TogglingConfig) => { [key: string]: (any) => any };
+  onLoad?: (component: AlloyComponent) => void;
+  toggle?: (component: AlloyComponent) => void;
+  isOn?: (component: AlloyComponent) => boolean;
+  on?: (component: AlloyComponent) => void;
+  off?: (component: AlloyComponent) => void;
+}
 
+export interface TogglingConfig {
+  toggleClass: string;
+  aria?: {
+    mode: TogglingMode;
+    syncWithExpanded?: boolean;
+  };
+  toggleOnExecute?: boolean;
+  selected?: boolean;
+}
 
-export default <any> Behaviour.create({
+export type TogglingMode = 'pressed' | 'checked' | 'toggled' | 'selected' | 'none';
+
+const Toggling = Behaviour.create({
   fields: ToggleSchema,
   name: 'toggling',
   active: ActiveToggle,
   apis: ToggleApis
-});
+}) as TogglingBehaviour;
+
+export {
+  Toggling
+};

@@ -1,9 +1,7 @@
-import Fields from '../../data/Fields';
-import { FieldSchema } from '@ephox/boulder';
-import { ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
-
+import * as Fields from '../../data/Fields';
 
 export default <any> [
   FieldSchema.defaulted('destinationAttr', 'data-transitioning-destination'),
