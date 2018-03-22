@@ -18,7 +18,7 @@ import Viewable from './events/Viewable';
 import Body from './node/Body';
 import Comment from './node/Comment';
 import Comments from './node/Comments';
-import Element, { SugarElement } from './node/Element';
+import Element from './node/Element';
 import Elements from './node/Elements';
 import Fragment from './node/Fragment';
 import Node from './node/Node';
@@ -90,7 +90,6 @@ export {
   Comment,
   Comments,
   Element,
-  SugarElement,
   Elements,
   Fragment,
   Node,
