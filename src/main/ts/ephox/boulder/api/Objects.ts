@@ -1,58 +1,59 @@
-import ResultCombine from '../combine/ResultCombine';
-import ObjChanger from '../core/ObjChanger';
-import ObjReader from '../core/ObjReader';
-import ObjWriter from '../core/ObjWriter';
+import { ResultCombine } from '../combine/ResultCombine';
+import * as ObjChanger from '../core/ObjChanger';
+import * as ObjReader from '../core/ObjReader';
+import * as ObjWriter from '../core/ObjWriter';
+import { Option, Result } from '@ephox/katamari';
 
 // Perhaps this level of indirection is unnecessary.
-var narrow = function (obj, fields) {
+const narrow = function (obj: {}, fields: any[]): {} {
   return ObjChanger.narrow(obj, fields);
 };
 
-var exclude = function (obj, fields) {
+const exclude = function (obj: {}, fields: any[]): {} {
   return ObjChanger.exclude(obj, fields);
 };
 
-var readOpt = function (key) {
+const readOpt = function <T>(key: string): ({}) => Option <T> {
   return ObjReader.readOpt(key);
 };
 
-var readOr = function (key, fallback) {
+const readOr = function <T>(key: string, fallback: T): ({}) => T {
   return ObjReader.readOr(key, fallback);
 };
 
-var readOptFrom = function (obj, key) {
+const readOptFrom = function (obj: {}, key: string): Option<any> {
   return ObjReader.readOptFrom(obj, key);
 };
 
-var wrap = function (key, value) {
+const wrap = function (key: string, value: {}): {} {
   return ObjWriter.wrap(key, value);
 };
 
-var wrapAll = function (keyvalues) {
+const wrapAll = function (keyvalues: Array<{key: string; value: any}>): {} {
   return ObjWriter.wrapAll(keyvalues);
 };
 
-var indexOnKey = function (array, key) {
+const indexOnKey = function <T> (array: [{[T: string]: any}], key: string): {[T: string]: any} {
   return ObjChanger.indexOnKey(array, key);
 };
 
-var consolidate = function (objs, base) {
+const consolidate = function (objs: [{}], base: {}): Result <{}, string> {
   return ResultCombine.consolidateObj(objs, base);
 };
 
-var hasKey = function (obj, key) {
+const hasKey = function (obj: {}, key: string): boolean {
   return ObjReader.hasKey(obj, key);
 };
 
-export default <any> {
-  narrow: narrow,
-  exclude: exclude,
-  readOpt: readOpt,
-  readOr: readOr,
-  readOptFrom: readOptFrom,
-  wrap: wrap,
-  wrapAll: wrapAll,
-  indexOnKey: indexOnKey,
-  hasKey: hasKey,
-  consolidate: consolidate
+export {
+  narrow,
+  exclude,
+  readOpt,
+  readOr,
+  readOptFrom,
+  wrap,
+  wrapAll,
+  indexOnKey,
+  hasKey,
+  consolidate
 };

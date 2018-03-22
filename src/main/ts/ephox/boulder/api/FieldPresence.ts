@@ -1,7 +1,17 @@
-import { Adt } from '@ephox/katamari';
-import { Fun } from '@ephox/katamari';
+import { Adt, Fun } from '@ephox/katamari';
+import { AdtInterface } from '../alien/AdtDefinition';
 
-var adt = Adt.generate([
+export type StrictField = () => any;
+export type DefaultedThunkField = (fallbackThunk: (any) => any) => any;
+export type AsOptionField = () => any;
+export type AsDefaultedOptionThunkField = (fallbackThunk: (any) => any) => any;
+export type MergeWithThunkField = (baseThunk: (any) => {any}) => any;
+export interface FieldPresenceAdt extends AdtInterface {
+  // TODO: extend the correct fold type
+  fold<T>(StrictField, DefaultedThunkField, AsOptionField, AsDefaultedOptionThunkField, MergeWithThunkField): T;
+}
+
+const adt = Adt.generate([
   { strict: [ ] },
   { defaultedThunk: [ 'fallbackThunk' ] },
   { asOption: [ ] },
@@ -9,34 +19,40 @@ var adt = Adt.generate([
   { mergeWithThunk: [ 'baseThunk' ] }
 ]);
 
-var defaulted = function (fallback) {
+const defaulted = function (fallback: any): FieldPresenceAdt {
   return adt.defaultedThunk(
     Fun.constant(fallback)
   );
 };
 
-var asDefaultedOption = function (fallback) {
+const asDefaultedOption = function <T>(fallback: T): FieldPresenceAdt {
   return adt.asDefaultedOptionThunk(
     Fun.constant(fallback)
   );
 };
 
-var mergeWith = function (base) {
+const mergeWith = function (base: {}): FieldPresenceAdt {
   return adt.mergeWithThunk(
     Fun.constant(base)
   );
 };
 
-export default <any> {
-  strict: adt.strict,
-  asOption: adt.asOption,
-  
-  defaulted: defaulted,
-  defaultedThunk: adt.defaultedThunk,
-  
-  asDefaultedOption: asDefaultedOption,      
-  asDefaultedOptionThunk: adt.asDefaultedOptionThunk,
+const strict = adt.strict;
+const asOption = adt.asOption;
+const defaultedThunk = adt.defaultedThunk;
+const asDefaultedOptionThunk = adt.asDefaultedOptionThunk;
+const mergeWithThunk = adt.mergeWithThunk;
 
-  mergeWith: mergeWith,
-  mergeWithThunk: adt.mergeWithThunk
+export {
+  strict,
+  asOption,
+
+  defaulted,
+  defaultedThunk,
+
+  asDefaultedOption,
+  asDefaultedOptionThunk,
+
+  mergeWith,
+  mergeWithThunk
 };

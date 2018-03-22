@@ -1,52 +1,49 @@
-import { RawAssertions, Logger } from '@ephox/agar';
-import FieldSchema from 'ephox/boulder/api/FieldSchema';
-import Objects from 'ephox/boulder/api/Objects';
-import ValueSchema from 'ephox/boulder/api/ValueSchema';
+import { Logger, RawAssertions } from '@ephox/agar';
+import { assert, UnitTest } from '@ephox/bedrock';
 import { Result } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
-import { UnitTest, assert } from '@ephox/bedrock';
+import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
+import * as Objects from 'ephox/boulder/api/Objects';
+import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 
-UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function() {
-  var checkErr = function (label, expectedPart, v, processor) {
+UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
+  const checkErr = function (label, expectedPart, v, processor) {
     // NOTE: v is not a function here.
     ValueSchema.asRaw(label, processor, v).fold(function (err) {
-      var message = ValueSchema.formatError(err);
+      const message = ValueSchema.formatError(err);
       RawAssertions.assertEq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
     }, function (val) {
       assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + Json.stringify(val, null, 2) + ')');
     });
   };
 
-  var checkRawErrIs = function (label, expectedPart, applicator, f, processor) {
+  const checkRawErrIs = function (label, expectedPart, applicator, f, processor) {
     Logger.sync(label, function () {
-      var newF = ValueSchema.asRaw(label, processor, f).getOrDie(
-        'Should validate originally'
-      );
-
-      var passed = null;
+      const newF = ValueSchema.asRaw(label, processor, f).getOrDie();
+      let passed = null;
 
       try {
-        var val = newF(f);
-        passed = val;  
+        const val = newF(f);
+        passed = val;
       } catch (err) {
-        var message = err.message;
+        const message = err.message;
         RawAssertions.assertEq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
       }
 
-      if (passed !== null) assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + Json.stringify(passed, null, 2) + ')');
-    });      
+      if (passed !== null) { assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + Json.stringify(passed, null, 2) + ')'); }
+    });
   };
 
-  var checkRawResultIs = function (label, expected, applicator, f, processor) {
+  const checkRawResultIs = function (label, expected, applicator, f, processor) {
     Logger.sync(label, function () {
-      var actual = ValueSchema.asRawOrDie(label, processor, f);
-      var result = applicator(actual);
+      const actual = ValueSchema.asRawOrDie(label, processor, f);
+      const result = applicator(actual);
       RawAssertions.assertEq(label + ', checking result', expected, result);
     });
   };
 
-  var getter1 = function (a, b, c) {
-    var args = Array.prototype.slice.call(arguments, 0);
+  const getter1 = function (a, b, c) {
+    const args = Array.prototype.slice.call(arguments, 0);
     return args.join('.');
   };
 
@@ -81,7 +78,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function() {
     }))
   );
 
-  var getter2 = function (a) {
+  const getter2 = function (a) {
     return Objects.wrapAll([
       { key: a, value: a + '-value' },
       { key: 'other', value: 'other-value' }
@@ -91,7 +88,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function() {
   checkRawResultIs(
     'Running a schema on the output',
     {
-      'A': 'A-value'
+      A: 'A-value'
     },
     function (f) {
       return f('A');
@@ -102,12 +99,12 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function() {
     ]))
   );
 
-  var getter3 = function (one, two, three) {
+  const getter3 = function (one, two, three) {
     return [
       { firstname: one + '.1', middlename: one + '.2', surname: one + '.3' },
       { firstname: two + '.1', middlename: two + '.2', surname: two + '.3' },
       { firstname: three + '.1', middlename: three + '.2', surname: three + '.3' }
-    ]
+    ];
   };
 
   checkRawResultIs(

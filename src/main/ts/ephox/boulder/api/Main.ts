@@ -1,8 +1,8 @@
-import DslType from './DslType';
-import FieldPresence from './FieldPresence';
-import FieldSchema from './FieldSchema';
-import Objects from './Objects';
-import ValueSchema from './ValueSchema';
+import * as DslType from './DslType';
+import * as FieldPresence from './FieldPresence';
+import * as FieldSchema from './FieldSchema';
+import * as Objects from './Objects';
+import * as ValueSchema from './ValueSchema';
 
 export {
   DslType,
