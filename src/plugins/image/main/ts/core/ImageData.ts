@@ -75,12 +75,6 @@ const setAttrib = (image: HTMLElement, name: string, value: string) => {
   image.setAttribute(name, value);
 };
 
-// const updateAttrib = (image: HTMLElement, oldData: ImageData, newData: ImageData, name: string) => {
-//   if (newData[name] !== oldData[name]) {
-//     image.setAttribute(name, newData[name]);
-//   }
-// };
-
 const wrapInFigure = (image: HTMLElement) => {
   const figureElm = DOM.create('figure', { class: 'image' });
   DOM.insertAfter(figureElm, image);
@@ -113,6 +107,25 @@ const normalizeStyle = (image: HTMLElement, normalizeCss: CssNormalizer) => {
     image.setAttribute('data-mce-style', value);
   } else {
     image.removeAttribute('style');
+  }
+};
+
+const setSize = (name: string, normalizeCss: CssNormalizer) => {
+  return (image: HTMLElement, name: string, value: string) => {
+    if (image.style[name]) {
+      image.style[name] = Utils.addPixelSuffix(value);
+      normalizeStyle(image, normalizeCss);
+    } else {
+      setAttrib(image, name, value);
+    }
+  };
+};
+
+const getSize = (image: HTMLElement, name: string): string => {
+  if (image.style[name]) {
+    return Utils.removePixelSuffix(image.style[name]);
+  } else {
+    return getAttrib(image, name);
   }
 };
 
@@ -205,8 +218,8 @@ const read = (normalizeCss: CssNormalizer, image: HTMLElement): ImageData => {
     src: getAttrib(image, 'src'),
     alt: getAttrib(image, 'alt'),
     title: getAttrib(image, 'title'),
-    width: getAttrib(image, 'width'),
-    height: getAttrib(image, 'height'),
+    width: getSize(image, 'width'),
+    height: getSize(image, 'height'),
     class: getAttrib(image, 'class'),
     style: normalizeCss(getAttrib(image, 'style')),
     caption: hasCaption(image),
@@ -237,8 +250,8 @@ const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLEleme
   updateProp(image, oldData, newData, 'src', setAttrib);
   updateProp(image, oldData, newData, 'alt', setAttrib);
   updateProp(image, oldData, newData, 'title', setAttrib);
-  updateProp(image, oldData, newData, 'width', setAttrib);
-  updateProp(image, oldData, newData, 'height', setAttrib);
+  updateProp(image, oldData, newData, 'width', setSize('width', normalizeCss));
+  updateProp(image, oldData, newData, 'height', setSize('height', normalizeCss));
   updateProp(image, oldData, newData, 'class', setAttrib);
   updateProp(image, oldData, newData, 'style', normalized((image, value) => setAttrib(image, 'style', value), normalizeCss));
   updateProp(image, oldData, newData, 'hspace', normalized(setHspace, normalizeCss));

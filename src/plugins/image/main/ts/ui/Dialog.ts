@@ -17,11 +17,14 @@ import UploadTab from './UploadTab';
 import { Fun, Merger } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
 import { insertOrUpdateImage, readImageDataFromSelection } from 'tinymce/plugins/image/core/ImageSelection';
-import { defaultData } from 'tinymce/plugins/image/core/ImageData';
 
 const submitForm = (editor: Editor, evt) => {
+  const win = evt.control.getRoot();
+
+  SizeManager.updateSize(win);
+
   editor.undoManager.transact(() => {
-    const data = Merger.merge(defaultData(), evt.control.getRoot().toJSON());
+    const data = Merger.merge(readImageDataFromSelection(editor), win.toJSON());
     insertOrUpdateImage(editor, data);
   });
 

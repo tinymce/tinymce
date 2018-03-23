@@ -1,7 +1,7 @@
-import { Chain, Logger, Pipeline, Assertions, ApproxStructure, RawAssertions } from '@ephox/agar';
+import { Chain, Logger, Pipeline, Assertions, ApproxStructure, RawAssertions, Step } from '@ephox/agar';
 import { Element, Html, SelectorFind, Node } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
-import { read, write, create, isImage, isFigure } from 'tinymce/plugins/image/core/ImageData';
+import { read, write, create, isImage, isFigure, defaultData, getStyleValue } from 'tinymce/plugins/image/core/ImageData';
 import { Merger, Obj, Arr } from '@ephox/katamari';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 
@@ -63,6 +63,13 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
   });
 
   Pipeline.async({}, [
+    Logger.t('getStyleValue from image data', Step.sync(() => {
+      RawAssertions.assertEq('Should not produce any styles', '', getStyleValue(normalizeCss, defaultData()));
+      RawAssertions.assertEq('Should produce border width', 'border-width: 1px;', getStyleValue(normalizeCss, Merger.merge(defaultData(), { border: '1' })));
+      RawAssertions.assertEq('Should produce style', 'border-style: solid;', getStyleValue(normalizeCss, Merger.merge(defaultData(), { borderStyle: 'solid' })));
+      RawAssertions.assertEq('Should produce style & border', 'border-style: solid; border-width: 1px;', getStyleValue(normalizeCss, Merger.merge(defaultData(), { border: '1', borderStyle: 'solid' })));
+      RawAssertions.assertEq('Should produce compact border', 'border: 2px dotted red;', getStyleValue(normalizeCss, Merger.merge(defaultData(), { style: 'border: 1px solid red', border: '2', borderStyle: 'dotted' })));
+    })),
     Logger.t('Create image from data', Chain.asStep({}, [
       cCreate({
         src: 'some.gif',
@@ -445,6 +452,100 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
                   ]
                 })
               ]
+            })
+          ]
+        });
+      }))
+    ])),
+    Logger.t('Read/write model to image with style size without change', Chain.asStep(Element.fromTag('div'), [
+      cSetHtml('<img src="some.gif" style="width: 100px; height: 200px">'),
+      cReadFromImage,
+      cAssertModel({
+        src: 'some.gif',
+        alt: '',
+        title: '',
+        width: '100',
+        height: '200',
+        class: '',
+        style: 'height: 200px; width: 100px;',
+        caption: false,
+        hspace: '',
+        vspace: '',
+        border: '',
+        borderStyle: ''
+      }),
+      cWriteToImage,
+      cAssertStructure(ApproxStructure.build(function (s, str) {
+        return s.element('div', {
+          children: [
+            s.element('img', {
+              attrs: {
+                src: str.is('some.gif'),
+                width: str.none('no width'),
+                height: str.none('no height'),
+                alt: str.none('no alt'),
+                title: str.none('no title')
+              },
+              styles: {
+                'width': str.is('100px'),
+                'height': str.is('200px'),
+                'border-width': str.none('no width'),
+                'border-style': str.none('no style'),
+                'border-color': str.none('no color'),
+                'margin-top': str.none('no top'),
+                'margin-bottom': str.none('no bottom'),
+                'margin-left': str.none('no left'),
+                'margin-right': str.none('no right')
+              }
+            })
+          ]
+        });
+      }))
+    ])),
+    Logger.t('Read/write model to image with style size with size change', Chain.asStep(Element.fromTag('div'), [
+      cSetHtml('<img src="some.gif" style="width: 100px; height: 200px">'),
+      cReadFromImage,
+      cAssertModel({
+        src: 'some.gif',
+        alt: '',
+        title: '',
+        width: '100',
+        height: '200',
+        class: '',
+        style: 'height: 200px; width: 100px;',
+        caption: false,
+        hspace: '',
+        vspace: '',
+        border: '',
+        borderStyle: ''
+      }),
+      cUpdateModel({
+        width: '150',
+        height: '250'
+      }),
+      cWriteToImage,
+      cAssertStructure(ApproxStructure.build(function (s, str) {
+        return s.element('div', {
+          children: [
+            s.element('img', {
+              attrs: {
+                src: str.is('some.gif'),
+                width: str.none('no width'),
+                height: str.none('no height'),
+                alt: str.none('no alt'),
+                title: str.none('no title')
+              },
+              styles: {
+                'width': str.is('150px'),
+                'height': str.is('250px'),
+                'border-width': str.none('no width'),
+                'border-style': str.none('no style'),
+                'border-color': str.none('no color'),
+                'margin-top': str.none('no top'),
+                'margin-bottom': str.none('no bottom'),
+                'margin-left': str.none('no left'),
+                'margin-right': str.none('no right')
+              }
             })
           ]
         });

@@ -113,7 +113,7 @@ const insertOrUpdateImage = (editor: Editor, data: ImageData) => {
     } else {
       deleteImage(editor, image);
     }
-  } else {
+  } else if (data.src) {
     insertImageAtCaret(editor, data);
   }
 };
