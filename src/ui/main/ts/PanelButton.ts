@@ -67,10 +67,10 @@ export default Button.extend({
     self.panel.classes.toggle('start', rel.substr(-1) === 'l');
     self.panel.classes.toggle('end', rel.substr(-1) === 'r');
 
-    if (rel.substr(0, 1) === 't') {
-      self.panel.classes.remove('bottom');
-      self.panel.classes.add('top');
-    }
+    const isTop = rel.substr(0, 1) === 't';
+
+    self.panel.classes.toggle('bottom', !isTop);
+    self.panel.classes.toggle('top', isTop);
 
     self.panel.moveRel(self.getEl(), rel);
   },
