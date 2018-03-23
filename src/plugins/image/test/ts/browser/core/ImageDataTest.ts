@@ -1,8 +1,8 @@
 import { Chain, Logger, Pipeline, Assertions, ApproxStructure, RawAssertions } from '@ephox/agar';
-import { Element, Html, SelectorFind } from '@ephox/sugar';
+import { Element, Html, SelectorFind, Node } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
-import { read, write } from 'tinymce/plugins/image/core/ImageData';
-import { Merger } from '@ephox/katamari';
+import { read, write, create, isImage, isFigure } from 'tinymce/plugins/image/core/ImageData';
+import { Merger, Obj, Arr } from '@ephox/katamari';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success, failure) => {
@@ -12,12 +12,23 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
     });
   };
 
-  const normalizeCss = (css: string) => {
-    return DOMUtils.DOM.styles.serialize(DOMUtils.DOM.styles.parse(css));
+  const normalizeCss = (cssText: string) => {
+    const css = DOMUtils.DOM.styles.parse(cssText);
+    const newCss = {};
+
+    Arr.each(Obj.keys(css).sort(), (key) => {
+      newCss[key] = css[key];
+    });
+
+    return DOMUtils.DOM.styles.serialize(newCss);
+  };
+
+  const cCreate = (data) => {
+    return Chain.inject(Element.fromDom(create(normalizeCss, data)));
   };
 
   const cReadFromImage = Chain.mapper(function (elm) {
-    const img = SelectorFind.descendant(elm, 'img').getOrDie('failed to find image');
+    const img = Node.name(elm) === 'img' ? elm : SelectorFind.descendant(elm, 'img').getOrDie('failed to find image');
     return { model: read(normalizeCss, img.dom()), image: img, parent: elm };
   });
 
@@ -43,7 +54,137 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
     });
   };
 
+  const cAssertImage = Chain.op(function (data) {
+    RawAssertions.assertEq('Should be an image', true, isImage(data.image.dom()));
+  });
+
+  const cAssertFigure = Chain.op(function (data) {
+    RawAssertions.assertEq('Parent should be a figure', true, isFigure(data.image.dom().parentNode));
+  });
+
   Pipeline.async({}, [
+    Logger.t('Create image from data', Chain.asStep({}, [
+      cCreate({
+        src: 'some.gif',
+        alt: 'alt',
+        title: 'title',
+        width: '100',
+        height: '200',
+        class: 'class',
+        style: 'border: 1px solid red',
+        caption: false,
+        hspace: '2',
+        vspace: '3',
+        borderWidth: '4',
+        borderStyle: 'dotted'
+      }),
+      cReadFromImage,
+      cAssertModel({
+        src: 'some.gif',
+        alt: 'alt',
+        title: 'title',
+        width: '100',
+        height: '200',
+        class: 'class',
+        style: 'border: 4px dotted red; margin: 3px 2px;',
+        caption: false,
+        hspace: '2',
+        vspace: '3',
+        borderWidth: '4',
+        borderStyle: 'dotted'
+      }),
+      cAssertStructure(ApproxStructure.build(function (s, str) {
+        return s.element('img', {
+          attrs: {
+            src: str.is('some.gif'),
+            alt: str.is('alt'),
+            title: str.is('title'),
+            width: str.is('100'),
+            height: str.is('200'),
+            class: str.is('class')
+          },
+          styles: {
+            'border-width': str.is('4px'),
+            'border-style': str.is('dotted'),
+            'border-color': str.is('red'),
+            'margin-top': str.is('3px'),
+            'margin-bottom': str.is('3px'),
+            'margin-left': str.is('2px'),
+            'margin-right': str.is('2px')
+          }
+        });
+      })),
+      cAssertImage
+    ])),
+    Logger.t('Create figure from data', Chain.asStep({}, [
+      cCreate({
+        src: 'some.gif',
+        alt: 'alt',
+        title: 'title',
+        width: '100',
+        height: '200',
+        class: 'class',
+        style: 'border: 1px solid red',
+        caption: true,
+        hspace: '2',
+        vspace: '3',
+        borderWidth: '4',
+        borderStyle: 'dotted'
+      }),
+      cReadFromImage,
+      cAssertModel({
+        src: 'some.gif',
+        alt: 'alt',
+        title: 'title',
+        width: '100',
+        height: '200',
+        class: 'class',
+        style: 'border: 4px dotted red; margin: 3px 2px;',
+        caption: true,
+        hspace: '2',
+        vspace: '3',
+        borderWidth: '4',
+        borderStyle: 'dotted'
+      }),
+      cAssertStructure(ApproxStructure.build(function (s, str) {
+        return s.element('figure', {
+          attrs: {
+            contenteditable: str.is('false'),
+            class: str.is('image')
+          },
+          children: [
+            s.element('img', {
+              attrs: {
+                src: str.is('some.gif'),
+                alt: str.is('alt'),
+                title: str.is('title'),
+                width: str.is('100'),
+                height: str.is('200'),
+                class: str.is('class')
+              },
+              styles: {
+                'border-width': str.is('4px'),
+                'border-style': str.is('dotted'),
+                'border-color': str.is('red'),
+                'margin-top': str.is('3px'),
+                'margin-bottom': str.is('3px'),
+                'margin-left': str.is('2px'),
+                'margin-right': str.is('2px')
+              }
+            }),
+            s.element('figcaption', {
+              attrs: {
+                contenteditable: str.is('true')
+              },
+              children: [
+                s.text(str.is('Caption'))
+              ]
+            })
+          ]
+        });
+      })),
+      cAssertFigure
+    ])),
     Logger.t('Read/write model to simple image without change', Chain.asStep(Element.fromTag('div'), [
       cSetHtml('<img src="some.gif">'),
       cReadFromImage,
@@ -98,7 +239,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         width: '100',
         height: '200',
         class: 'class',
-        style: 'margin: 1px 2px; border: 1px solid red;',
+        style: 'border: 1px solid red; margin: 1px 2px;',
         caption: false,
         hspace: '2',
         vspace: '1',

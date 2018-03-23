@@ -10,10 +10,11 @@
 
 import Utils from "tinymce/plugins/image/core/Utils";
 import DOMUtils from "tinymce/core/api/dom/DOMUtils";
+import { Merger } from "@ephox/katamari";
 
 const DOM = DOMUtils.DOM;
 
-export interface ImageData {
+interface ImageData {
   src: string;
   alt: string;
   title: string;
@@ -67,7 +68,7 @@ const getStyle = (image: HTMLElement, name: string): string => {
 };
 
 const hasCaption = (image: HTMLElement): boolean => {
-  return image.parentNode && image.parentNode.nodeName === 'FIGURE';
+  return image.parentNode !== null && image.parentNode.nodeName === 'FIGURE';
 };
 
 const updateAttrib = (image: HTMLElement, oldData: ImageData, newData: ImageData, name: string) => {
@@ -76,7 +77,7 @@ const updateAttrib = (image: HTMLElement, oldData: ImageData, newData: ImageData
   }
 };
 
-const createFigure = (image: HTMLElement) => {
+const wrapInFigure = (image: HTMLElement) => {
   const figureElm = DOM.create('figure', { class: 'image' });
   DOM.insertAfter(figureElm, image);
 
@@ -96,7 +97,7 @@ const updateCaption = (image: HTMLElement, oldData: ImageData, newData: ImageDat
     if (hasCaption(image)) {
       removeFigure(image);
     } else {
-      createFigure(image);
+      wrapInFigure(image);
     }
   }
 };
@@ -145,7 +146,27 @@ const updateStyle = (image: HTMLElement, oldData: ImageData, newData: ImageData,
   }
 };
 
-export const read = (normalizeCss: CssNormalizer, image: HTMLElement): ImageData => {
+const isFigure = (elm: HTMLElement) => elm.nodeName === 'FIGURE';
+const isImage = (elm: HTMLElement) => elm.nodeName === 'IMG';
+
+const create = (normalizeCss: CssNormalizer, data: ImageData): HTMLElement => {
+  const image = document.createElement('img');
+  write(normalizeCss, Merger.merge(data, { caption: false }), image);
+
+  if (data.caption) {
+    const figure = DOM.create('figure', { class: 'image' });
+
+    figure.appendChild(image);
+    figure.appendChild(DOM.create('figcaption', { contentEditable: true }, 'Caption'));
+    figure.contentEditable = 'false';
+
+    return figure;
+  } else {
+    return image;
+  }
+};
+
+const read = (normalizeCss: CssNormalizer, image: HTMLElement): ImageData => {
   return {
     src: getAttrib(image, 'src'),
     alt: getAttrib(image, 'alt'),
@@ -162,7 +183,7 @@ export const read = (normalizeCss: CssNormalizer, image: HTMLElement): ImageData
   };
 };
 
-export const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLElement) => {
+const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLElement) => {
   const oldData = read(normalizeCss, image);
 
   updateAttrib(image, oldData, newData, 'src');
@@ -178,4 +199,13 @@ export const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HT
   updateBorder(image, oldData, newData, normalizeCss);
   updateStyle(image, oldData, newData, 'borderHeight', normalizeCss);
   updateStyle(image, oldData, newData, 'borderStyle', normalizeCss);
+};
+
+export {
+  ImageData,
+  isFigure,
+  isImage,
+  create,
+  read,
+  write
 };
