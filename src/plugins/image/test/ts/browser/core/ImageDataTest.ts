@@ -123,6 +123,59 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
       })),
       cAssertImage
     ])),
+    Logger.t('Create image with empty fields except src', Chain.asStep({}, [
+      cCreate({
+        src: 'some.gif',
+        alt: '',
+        title: '',
+        width: '',
+        height: '',
+        class: '',
+        style: '',
+        caption: false,
+        hspace: '',
+        vspace: '',
+        border: '',
+        borderStyle: ''
+      }),
+      cReadFromImage,
+      cAssertModel({
+        src: 'some.gif',
+        alt: '',
+        title: '',
+        width: '',
+        height: '',
+        class: '',
+        style: '',
+        caption: false,
+        hspace: '',
+        vspace: '',
+        border: '',
+        borderStyle: ''
+      }),
+      cAssertStructure(ApproxStructure.build(function (s, str) {
+        return s.element('img', {
+          attrs: {
+            src: str.is('some.gif'),
+            alt: str.is(''),
+            title: str.none('no title'),
+            width: str.none('no width'),
+            height: str.none('no height'),
+            class: str.none('no class')
+          },
+          styles: {
+            'border-width': str.none('no style'),
+            'border-style': str.none('no style'),
+            'border-color': str.none('no style'),
+            'margin-top': str.none('no style'),
+            'margin-bottom': str.none('no style'),
+            'margin-left': str.none('no style'),
+            'margin-right': str.none('no style')
+          }
+        });
+      })),
+      cAssertImage
+    ])),
     Logger.t('Create figure from data', Chain.asStep({}, [
       cCreate({
         src: 'some.gif',

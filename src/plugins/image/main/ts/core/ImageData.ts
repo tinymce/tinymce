@@ -200,6 +200,9 @@ const create = (normalizeCss: CssNormalizer, data: ImageData): HTMLElement => {
   const image = document.createElement('img');
   write(normalizeCss, Merger.merge(data, { caption: false }), image);
 
+  // Always set alt even if data.alt is an empty string
+  setAttrib(image, 'alt', data.alt);
+
   if (data.caption) {
     const figure = DOM.create('figure', { class: 'image' });
 
