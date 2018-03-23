@@ -6,9 +6,10 @@ import { Css, Insert } from '@ephox/sugar';
 import AndroidMode from '../android/core/AndroidMode';
 import TapToEditMask from '../touch/view/TapToEditMask';
 import MobileSchema from './MobileSchema';
+import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
 
 // TODO: Remove dupe with IosWebapp
-const produce = function (raw) {
+const produce = function (raw: {any}): MobileWebApp {
   const mobile = ValueSchema.asRawOrDie(
     'Getting AndroidWebapp schema',
     MobileSchema,

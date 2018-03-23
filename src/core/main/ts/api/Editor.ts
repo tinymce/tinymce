@@ -28,8 +28,6 @@ import * as EditorContent from 'tinymce/core/EditorContent';
 import * as EditorRemove from '../EditorRemove';
 import SelectionOverrides from 'tinymce/core/SelectionOverrides';
 
-/*jshint scripturl:true */
-
 /**
  * Include the base event class documentation.
  *
@@ -238,6 +236,16 @@ Editor.prototype = {
    */
   focus (skipFocus) {
     EditorFocus.focus(this, skipFocus);
+  },
+
+  /**
+   * Returns true/false if the editor has real keyboard focus.
+   *
+   * @method hasFocus
+   * @return {Boolean} Current focus state of the editor.
+   */
+  hasFocus () {
+    return EditorFocus.hasFocus(this);
   },
 
   /**

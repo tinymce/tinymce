@@ -156,6 +156,8 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
       removeContentEditableSelection();
     });
 
+    editor.on('ResizeWindow FullscreenStateChanged', () => fakeCaret.reposition());
+
     const handleTouchSelect = function (editor) {
       let moved = false;
 

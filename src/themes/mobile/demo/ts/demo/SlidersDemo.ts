@@ -3,8 +3,8 @@ import { Fun } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import ColorSlider from 'tinymce/themes/mobile/ui/ColorSlider';
-import FontSizeSlider from 'tinymce/themes/mobile/ui/FontSizeSlider';
-import UiDomFactory from 'tinymce/themes/mobile/util/UiDomFactory';
+import * as FontSizeSlider from 'tinymce/themes/mobile/ui/FontSizeSlider';
+import * as UiDomFactory from 'tinymce/themes/mobile/util/UiDomFactory';
 
 export default function () {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();

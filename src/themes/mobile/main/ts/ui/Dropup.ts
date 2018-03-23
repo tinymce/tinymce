@@ -1,10 +1,18 @@
-import { Behaviour, Container, GuiFactory, Replacing, Sliding } from '@ephox/alloy';
+import { Behaviour, Container, GuiFactory, Replacing, Sliding, ComponentApi } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 
 import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
+import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
 
-const build = function (refresh, scrollIntoView) {
+export interface DropUp {
+  appear: (menu: any, update: any, component: any) => void;
+  disappear: (onReadyToShrink: any) => void;
+  component: () => ComponentApi.AlloyComponent;
+  element: () => SugarElement;
+}
+
+const build = function (refresh, scrollIntoView): DropUp {
   const dropup = GuiFactory.build(
     Container.sketch({
       dom: {
@@ -40,7 +48,7 @@ const build = function (refresh, scrollIntoView) {
         })
       ])
     })
-  );
+  ) as ComponentApi.AlloyComponent;
 
   const appear = function (menu, update, component) {
     if (Sliding.hasShrunk(dropup) === true && Sliding.isTransitioning(dropup) === false) {
@@ -67,6 +75,6 @@ const build = function (refresh, scrollIntoView) {
   };
 };
 
-export default {
+export {
   build
 };

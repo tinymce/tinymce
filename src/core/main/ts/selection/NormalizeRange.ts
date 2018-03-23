@@ -210,7 +210,7 @@ const normalizeEndPoint = function (dom: DOMUtils, collapsed, start, rng) {
             container = node.parentNode;
 
             // Put caret after image and pre tag when moving the end point
-            if ((node.nodeName === 'IMG' || node.nodeName === 'PRE') && !directionLeft) {
+            if (!directionLeft) {
               offset++;
             }
 
