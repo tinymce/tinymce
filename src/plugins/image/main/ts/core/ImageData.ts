@@ -8,9 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Utils from "tinymce/plugins/image/core/Utils";
-import DOMUtils from "tinymce/core/api/dom/DOMUtils";
-import { Merger } from "@ephox/katamari";
+import Utils from 'tinymce/plugins/image/core/Utils';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { Merger } from '@ephox/katamari';
 
 const DOM = DOMUtils.DOM;
 
@@ -25,7 +25,7 @@ interface ImageData {
   caption: boolean;
   hspace: string;
   vspace: string;
-  borderWidth: string;
+  border: string;
   borderStyle: string;
 }
 
@@ -71,11 +71,15 @@ const hasCaption = (image: HTMLElement): boolean => {
   return image.parentNode !== null && image.parentNode.nodeName === 'FIGURE';
 };
 
-const updateAttrib = (image: HTMLElement, oldData: ImageData, newData: ImageData, name: string) => {
-  if (newData[name] !== oldData[name]) {
-    image.setAttribute(name, newData[name]);
-  }
+const setAttrib = (image: HTMLElement, name: string, value: string) => {
+  image.setAttribute(name, value);
 };
+
+// const updateAttrib = (image: HTMLElement, oldData: ImageData, newData: ImageData, name: string) => {
+//   if (newData[name] !== oldData[name]) {
+//     image.setAttribute(name, newData[name]);
+//   }
+// };
 
 const wrapInFigure = (image: HTMLElement) => {
   const figureElm = DOM.create('figure', { class: 'image' });
@@ -92,13 +96,11 @@ const removeFigure = (image: HTMLElement) => {
   DOM.remove(figureElm);
 };
 
-const updateCaption = (image: HTMLElement, oldData: ImageData, newData: ImageData) => {
-  if (newData.caption !== oldData.caption) {
-    if (hasCaption(image)) {
-      removeFigure(image);
-    } else {
-      wrapInFigure(image);
-    }
+const toggleCaption = (image: HTMLElement) => {
+  if (hasCaption(image)) {
+    removeFigure(image);
+  } else {
+    wrapInFigure(image);
   }
 };
 
@@ -108,46 +110,78 @@ const normalizeStyle = (image: HTMLElement, normalizeCss: CssNormalizer) => {
 
   if (value.length > 0) {
     image.setAttribute('style', value);
+    image.setAttribute('data-mce-style', value);
   } else {
     image.removeAttribute('style');
   }
 };
 
-const updateHspace = (image: HTMLElement, oldData: ImageData, newData: ImageData, normalizeCss: CssNormalizer) => {
-  if (newData.hspace !== oldData.hspace) {
-    const value = Utils.addPixelSuffix(newData.hspace);
-    image.style.marginLeft = value;
-    image.style.marginRight = value;
-    normalizeStyle(image, normalizeCss);
-  }
+const setHspace = (image: HTMLElement, value: string) => {
+  const pxValue = Utils.addPixelSuffix(value);
+  image.style.marginLeft = pxValue;
+  image.style.marginRight = pxValue;
 };
 
-const updateVspace = (image: HTMLElement, oldData: ImageData, newData: ImageData, normalizeCss: CssNormalizer) => {
-  if (newData.vspace !== oldData.vspace) {
-    const value = Utils.addPixelSuffix(newData.vspace);
-    image.style.marginTop = value;
-    image.style.marginBottom = value;
-    normalizeStyle(image, normalizeCss);
-  }
+const setVspace = (image: HTMLElement, value: string) => {
+  const pxValue = Utils.addPixelSuffix(value);
+  image.style.marginTop = pxValue;
+  image.style.marginBottom = pxValue;
 };
 
-const updateBorder = (image: HTMLElement, oldData: ImageData, newData: ImageData, normalizeCss: CssNormalizer) => {
-  if (newData.borderWidth !== oldData.borderWidth) {
-    const value = Utils.addPixelSuffix(newData.borderWidth);
-    image.style.borderWidth = value;
-    normalizeStyle(image, normalizeCss);
-  }
+const setBorder = (image: HTMLElement, value: string) => {
+  const pxValue = Utils.addPixelSuffix(value);
+  image.style.borderWidth = pxValue;
 };
 
-const updateStyle = (image: HTMLElement, oldData: ImageData, newData: ImageData, name: string, normalizeCss: CssNormalizer) => {
-  if (newData[name] !== oldData[name]) {
-    image.style[name] = newData[name];
-    normalizeStyle(image, normalizeCss);
-  }
+const setBorderStyle = (image: HTMLElement, value: string) => {
+  image.style.borderStyle = value;
 };
 
-const isFigure = (elm: HTMLElement) => elm.nodeName === 'FIGURE';
-const isImage = (elm: HTMLElement) => elm.nodeName === 'IMG';
+const getBorderStyle = (image: HTMLElement) => getStyle(image, 'borderStyle');
+
+const isFigure = (elm: Node) => elm.nodeName === 'FIGURE';
+const isImage = (elm: Node) => elm.nodeName === 'IMG';
+
+const defaultData = (): ImageData => {
+  return {
+    src: '',
+    alt: '',
+    title: '',
+    width: '',
+    height: '',
+    class: '',
+    style: '',
+    caption: false,
+    hspace: '',
+    vspace: '',
+    border: '',
+    borderStyle: ''
+  };
+};
+
+const getStyleValue = (normalizeCss: CssNormalizer, data: ImageData): string => {
+  const image = document.createElement('img');
+
+  setAttrib(image, 'style', data.style);
+
+  if (getHspace(image) || data.hspace !== '') {
+    setHspace(image, data.hspace);
+  }
+
+  if (getVspace(image) || data.vspace !== '') {
+    setVspace(image, data.vspace);
+  }
+
+  if (getBorder(image) || data.border !== '') {
+    setBorder(image, data.border);
+  }
+
+  if (getBorderStyle(image) || data.borderStyle !== '') {
+    setBorderStyle(image, data.borderStyle);
+  }
+
+  return normalizeCss(image.getAttribute('style'));
+};
 
 const create = (normalizeCss: CssNormalizer, data: ImageData): HTMLElement => {
   const image = document.createElement('img');
@@ -178,31 +212,45 @@ const read = (normalizeCss: CssNormalizer, image: HTMLElement): ImageData => {
     caption: hasCaption(image),
     hspace: getHspace(image),
     vspace: getVspace(image),
-    borderWidth: getBorder(image),
+    border: getBorder(image),
     borderStyle: getStyle(image, 'borderStyle')
+  };
+};
+
+const updateProp = (image: HTMLElement, oldData: ImageData, newData: ImageData, name: string, set: (image: HTMLElement, name: string, value: string) => void) => {
+  if (newData[name] !== oldData[name]) {
+    set(image, name, newData[name]);
+  }
+};
+
+const normalized = (set: (image: HTMLElement, value: string) => void, normalizeCss: CssNormalizer) => {
+  return (image: HTMLElement, name: string, value: string) => {
+    set(image, value);
+    normalizeStyle(image, normalizeCss);
   };
 };
 
 const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLElement) => {
   const oldData = read(normalizeCss, image);
 
-  updateAttrib(image, oldData, newData, 'src');
-  updateAttrib(image, oldData, newData, 'alt');
-  updateAttrib(image, oldData, newData, 'title');
-  updateAttrib(image, oldData, newData, 'width');
-  updateAttrib(image, oldData, newData, 'height');
-  updateAttrib(image, oldData, newData, 'class');
-  updateAttrib(image, oldData, newData, 'style');
-  updateCaption(image, oldData, newData);
-  updateHspace(image, oldData, newData, normalizeCss);
-  updateVspace(image, oldData, newData, normalizeCss);
-  updateBorder(image, oldData, newData, normalizeCss);
-  updateStyle(image, oldData, newData, 'borderHeight', normalizeCss);
-  updateStyle(image, oldData, newData, 'borderStyle', normalizeCss);
+  updateProp(image, oldData, newData, 'caption', (image, _name, _value) => toggleCaption(image));
+  updateProp(image, oldData, newData, 'src', setAttrib);
+  updateProp(image, oldData, newData, 'alt', setAttrib);
+  updateProp(image, oldData, newData, 'title', setAttrib);
+  updateProp(image, oldData, newData, 'width', setAttrib);
+  updateProp(image, oldData, newData, 'height', setAttrib);
+  updateProp(image, oldData, newData, 'class', setAttrib);
+  updateProp(image, oldData, newData, 'style', normalized((image, value) => setAttrib(image, 'style', value), normalizeCss));
+  updateProp(image, oldData, newData, 'hspace', normalized(setHspace, normalizeCss));
+  updateProp(image, oldData, newData, 'vspace', normalized(setVspace, normalizeCss));
+  updateProp(image, oldData, newData, 'border', normalized(setBorder, normalizeCss));
+  updateProp(image, oldData, newData, 'borderStyle', normalized(setBorderStyle, normalizeCss));
 };
 
 export {
   ImageData,
+  getStyleValue,
+  defaultData,
   isFigure,
   isImage,
   create,
