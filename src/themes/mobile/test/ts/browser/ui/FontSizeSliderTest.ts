@@ -46,6 +46,7 @@ UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function () {
 
   Pipeline.async({}, detection.browser.isChrome() ? [
     TestStyles.sWaitForToolstrip(realm),
+    tEditor.sWaitForEditorLoaded,
     Step.sync(function () {
       tEditor.editor().focus();
     }),
