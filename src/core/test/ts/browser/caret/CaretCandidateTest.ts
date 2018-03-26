@@ -32,6 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function () {
 
     LegacyUnit.equal(CaretCandidate.isCaretCandidate(document.createTextNode('text')), true);
     LegacyUnit.equal(CaretCandidate.isCaretCandidate($('<span contentEditable="false"></span>')[0]), true);
+    LegacyUnit.equal(CaretCandidate.isCaretCandidate($('<span contentEditable="false" unselectable="true"></span>')[0]), false);
     LegacyUnit.equal(CaretCandidate.isCaretCandidate($('<div contentEditable="false"></div>')[0]), true);
     LegacyUnit.equal(CaretCandidate.isCaretCandidate($('<table><tr><td>X</td></tr></table>')[0]), true);
     LegacyUnit.equal(CaretCandidate.isCaretCandidate($('<span contentEditable="true"></span>')[0]), false);

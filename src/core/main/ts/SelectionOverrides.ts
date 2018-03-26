@@ -39,6 +39,20 @@ interface SelectionOverrides {
   destroy: () => void;
 }
 
+const getContentEditableRoot = (editor: Editor, node: Node): Node => {
+  const root = editor.getBody();
+
+  while (node && node !== root) {
+    if (isContentEditableTrue(node) || isContentEditableFalse(node)) {
+      return node;
+    }
+
+    node = node.parentNode;
+  }
+
+  return null;
+};
+
 const SelectionOverrides = function (editor: Editor): SelectionOverrides {
   const isBlock = function (node) {
     return editor.dom.isBlock(node);
@@ -108,20 +122,6 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
   };
 
   const registerEvents = function () {
-    const getContentEditableRoot = function (node: Node): Node {
-      const root = editor.getBody();
-
-      while (node && node !== root) {
-        if (isContentEditableTrue(node) || isContentEditableFalse(node)) {
-          return node;
-        }
-
-        node = node.parentNode;
-      }
-
-      return null;
-    };
-
     // Some browsers (Chrome) lets you place the caret after a cE=false
     // Make sure we render the caret container in this case
     editor.on('mouseup', function (e) {
@@ -135,7 +135,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     editor.on('click', function (e) {
       let contentEditableRoot;
 
-      contentEditableRoot = getContentEditableRoot(e.target);
+      contentEditableRoot = getContentEditableRoot(editor, e.target);
       if (contentEditableRoot) {
         // Prevent clicks on links in a cE=false element
         if (isContentEditableFalse(contentEditableRoot)) {
@@ -170,7 +170,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
       });
 
       editor.on('touchend', function (e) {
-        const contentEditableRoot = getContentEditableRoot(e.target);
+        const contentEditableRoot = getContentEditableRoot(editor, e.target);
 
         if (isContentEditableFalse(contentEditableRoot)) {
           if (!moved) {
@@ -207,6 +207,11 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
       const targetBlock = editor.dom.getParent(targetNode, editor.dom.isBlock);
       const caretBlock = editor.dom.getParent(caretNode, editor.dom.isBlock);
 
+      // Click inside the suggested caret element
+      if (targetBlock && editor.dom.isChildOf(targetBlock, caretBlock) && isContentEditableFalse(getContentEditableRoot(editor, targetBlock)) === false) {
+        return true;
+      }
+
       return targetBlock && !isInSameBlock(targetBlock, caretBlock) && hasNormalCaretPosition(targetBlock);
     };
 
@@ -224,7 +229,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
         return;
       }
 
-      contentEditableRoot = getContentEditableRoot(targetElm);
+      contentEditableRoot = getContentEditableRoot(editor, targetElm);
       if (contentEditableRoot) {
         if (isContentEditableFalse(contentEditableRoot)) {
           e.preventDefault();
