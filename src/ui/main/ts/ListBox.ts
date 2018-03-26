@@ -10,6 +10,7 @@
 
 import MenuButton from './MenuButton';
 import Menu from './Menu';
+import Tools from 'tinymce/core/api/util/Tools';
 
 /**
  * Creates a new list box control.
@@ -88,6 +89,28 @@ export default MenuButton.extend({
 
       lastItemCtrl = ctrl;
     });
+  },
+
+  // tslint:disable-next-line:object-literal-shorthand
+  value: function (value) {
+    if (arguments.length === 0) {
+      return this.state.get('value');
+    }
+
+    if (typeof value === 'undefined') {
+      return this;
+    }
+
+    if (this.settings.values) {
+      const matchingValues = Tools.grep(this.settings.values, (a) => a.value === value);
+      if (matchingValues.length > 0) {
+        this.state.set('value', value);
+      }
+    } else {
+      this.state.set('value', value);
+    }
+
+    return this;
   },
 
   /**
