@@ -89,7 +89,9 @@ const MenuButton = Button.extend({
       }
 
       if (!menu.renderTo) {
-        self.menu = Factory.create(menu).parent(self).renderTo();
+        // Render menu to root element if it is inside a dialog
+        const elm = self.getRoot().modal ? self.getRoot().getEl() : undefined;
+        self.menu = Factory.create(menu).parent(self).renderTo(elm);
       } else {
         self.menu = menu.parent(self).show().renderTo();
       }

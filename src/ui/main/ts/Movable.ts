@@ -26,7 +26,9 @@ function calculateRelativePosition(ctrl, targetElm, rel) {
   viewport = getDocumentViewPort();
 
   // Get pos of target
-  pos = DomUtils.getPos(targetElm, UiContainer.getUiContainer(ctrl));
+  // If target is inside a dialog, calculate based on its root element
+  const rootElm = ctrl.getRoot().modal ? ctrl.getRoot().getEl() : UiContainer.getUiContainer(ctrl);
+  pos = DomUtils.getPos(targetElm, rootElm);
   x = pos.x;
   y = pos.y;
 
