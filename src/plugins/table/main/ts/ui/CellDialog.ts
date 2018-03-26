@@ -33,6 +33,7 @@ interface FormData {
 }
 
 const updateStyles = function (elm: HTMLElement, cssText: string) {
+  delete elm.dataset.mceStyle;
   elm.style.cssText += ';' + cssText;
 };
 
