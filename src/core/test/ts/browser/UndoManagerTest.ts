@@ -322,7 +322,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function () {
     );
 
     editor.getBody().innerHTML = (
-      '<span data-mce-bogus="1">\u200B</span>' +
+      '<span data-mce-bogus="1">x</span>' +
       '<span data-mce-bogus="1">\uFEFF</span>' +
       '<div data-mce-bogus="all"></div>' +
       '<div data-mce-bogus="all"><div><b>x</b></div></div>' +
@@ -337,6 +337,8 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function () {
     editor.undoManager.add();
     LegacyUnit.equal(count, 2);
     LegacyUnit.equal(HtmlUtils.cleanHtml(lastLevel.content),
+      '<span data-mce-bogus="1">x</span>' +
+      '<span data-mce-bogus="1"></span>' +
       '<br data-mce-bogus="1">' +
       'test' +
       '\u200B' +

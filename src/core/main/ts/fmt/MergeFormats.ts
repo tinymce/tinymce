@@ -12,16 +12,16 @@ import { Fun } from '@ephox/katamari';
 import Bookmarks from '../dom/Bookmarks';
 import ElementUtils from '../api/dom/ElementUtils';
 import NodeType from '../dom/NodeType';
-import CaretFormat from './CaretFormat';
 import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';
 import RemoveFormat from './RemoveFormat';
 import Tools from '../api/util/Tools';
+import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
 
 const each = Tools.each;
 
 const isElementNode = function (node) {
-  return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !CaretFormat.isCaretNode(node) && !NodeType.isBogus(node);
+  return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
 };
 
 const findElementSibling = function (node, siblingName) {

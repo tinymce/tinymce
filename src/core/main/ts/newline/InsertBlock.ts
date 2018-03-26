@@ -12,12 +12,12 @@ import Settings from '../api/Settings';
 import * as CaretContainer from '../caret/CaretContainer';
 import NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
-import CaretFormat from '../fmt/CaretFormat';
 import InsertLi from './InsertLi';
 import NewLineUtils from './NewLineUtils';
 import NormalizeRange from '../selection/NormalizeRange';
 import Zwsp from '../text/Zwsp';
 import Tools from '../api/util/Tools';
+import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
 
 const isEmptyAnchor = function (elm) {
   return elm && elm.nodeName === 'A' && Tools.trim(Zwsp.trim(elm.innerText || elm.textContent)).length === 0;
@@ -235,7 +235,7 @@ const insert = function (editor, evt) {
       // Clone any parent styles
       do {
         if (textInlineElements[node.nodeName]) {
-          if (CaretFormat.isCaretNode(node)) {
+          if (isCaretNode(node)) {
             continue;
           }
 

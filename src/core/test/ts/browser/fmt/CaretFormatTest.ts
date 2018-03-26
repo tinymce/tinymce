@@ -1,11 +1,12 @@
 import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
-import CaretFormat from 'tinymce/core/fmt/CaretFormat';
+import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
 import TypeText from '../../module/test/TypeText';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { isCaretNode, getParentCaretContainer } from 'tinymce/core/fmt/FormatContainer';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
   const success = arguments[arguments.length - 2];
@@ -308,8 +309,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
         }))
       ])),
       Logger.t('isCaretNode', Step.sync(function () {
-        Assertions.assertEq('Should be false since it is not a caret node', false, CaretFormat.isCaretNode(editor.dom.create('b')));
-        Assertions.assertEq('Should be false since it ia caret node', true, CaretFormat.isCaretNode(editor.dom.create('span', { id: '_mce_caret' })));
+        Assertions.assertEq('Should be false since it is not a caret node', false, isCaretNode(editor.dom.create('b')));
+        Assertions.assertEq('Should be true since it is a caret node', true, isCaretNode(editor.dom.create('span', { id: '_mce_caret' })));
       })),
       Logger.t('Apply some format to the empty editor and make sure that the content didn\'t mutate after serialization (TINY-1288)', GeneralSteps.sequence([
         tinyApis.sSetContent(''),
@@ -349,10 +350,10 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
         const body = Element.fromHtml('<div><span id="_mce_caret">a</span></div>');
         const caret = Element.fromDom(body.dom().firstChild);
 
-        Assertions.assertDomEq('Should be caret element on child', caret, Element.fromDom(CaretFormat.getParentCaretContainer(body.dom(), caret.dom().firstChild)));
-        Assertions.assertDomEq('Should be caret element on self', caret, Element.fromDom(CaretFormat.getParentCaretContainer(body.dom(), caret.dom())));
-        Assertions.assertEq('Should not be caret element', null, CaretFormat.getParentCaretContainer(body, Element.fromTag('span').dom()));
-        Assertions.assertEq('Should not be caret element', null, CaretFormat.getParentCaretContainer(caret.dom(), caret.dom()));
+        Assertions.assertDomEq('Should be caret element on child', caret, Element.fromDom(getParentCaretContainer(body.dom(), caret.dom().firstChild)));
+        Assertions.assertDomEq('Should be caret element on self', caret, Element.fromDom(getParentCaretContainer(body.dom(), caret.dom())));
+        Assertions.assertEq('Should not be caret element', null, getParentCaretContainer(body, Element.fromTag('span').dom()));
+        Assertions.assertEq('Should not be caret element', null, getParentCaretContainer(caret.dom(), caret.dom()));
       })),
       Logger.t('replaceWithCaretFormat', Step.sync(function () {
         const body = Element.fromHtml('<div><br /></div>');

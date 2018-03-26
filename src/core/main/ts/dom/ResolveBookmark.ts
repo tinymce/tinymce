@@ -15,8 +15,12 @@ import CaretPosition from '../caret/CaretPosition';
 import NodeType from './NodeType';
 import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';
+import { getParentCaretContainer } from 'tinymce/core/fmt/FormatContainer';
+import Zwsp from 'tinymce/core/text/Zwsp';
+import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import CaretFinder from 'tinymce/core/caret/CaretFinder';
 
-const addBogus = function (dom, node) {
+const addBogus = (dom: DOMUtils, node: HTMLElement) => {
   // Adds a bogus BR element for empty block elements
   if (dom.isBlock(node) && !node.innerHTML && !Env.ie) {
     node.innerHTML = '<br data-mce-bogus="1" />';
@@ -25,7 +29,7 @@ const addBogus = function (dom, node) {
   return node;
 };
 
-const resolveCaretPositionBookmark = function (dom, bookmark) {
+const resolveCaretPositionBookmark = (dom: DOMUtils, bookmark) => {
   let rng, pos;
 
   rng = dom.createRng();
@@ -38,7 +42,38 @@ const resolveCaretPositionBookmark = function (dom, bookmark) {
   return rng;
 };
 
-const setEndPoint = function (dom, start, bookmark, rng) {
+const insertZwsp = (node: Node, rng: Range) => {
+  const textNode = node.ownerDocument.createTextNode(Zwsp.ZWSP);
+  node.appendChild(textNode);
+  rng.setStart(textNode, 0);
+  rng.setEnd(textNode, 0);
+};
+
+const isEmpty = (node: Node) => node.hasChildNodes() === false;
+
+const tryFindRangePosition = (node: Element, rng: Range) => {
+  return CaretFinder.lastPositionIn(node).fold(
+    () => false,
+    (pos) => {
+      rng.setStart(pos.container(), pos.offset());
+      rng.setEnd(pos.container(), pos.offset());
+      return true;
+    }
+  );
+};
+
+// Since we trim zwsp from undo levels the caret format containers
+// may be empty if so pad them with a zwsp and move caret there
+const padEmptyCaretContainer = (root: HTMLElement, node: Node, rng: Range): boolean => {
+  if (isEmpty(node) && getParentCaretContainer(root, node)) {
+    insertZwsp(node, rng);
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const setEndPoint = (dom: DOMUtils, start: boolean, bookmark, rng: Range) => {
   const point = bookmark[start ? 'start' : 'end'];
   let i, node, offset, children;
   const root = dom.getRoot();
@@ -50,8 +85,16 @@ const setEndPoint = function (dom, start, bookmark, rng) {
     for (node = root, i = point.length - 1; i >= 1; i--) {
       children = node.childNodes;
 
+      if (padEmptyCaretContainer(root, node, rng)) {
+        return true;
+      }
+
       if (point[i] > children.length - 1) {
-        return;
+        if (padEmptyCaretContainer(root, node, rng)) {
+          return true;
+        }
+
+        return tryFindRangePosition(node, rng);
       }
 
       node = children[point[i]];
@@ -78,7 +121,7 @@ const setEndPoint = function (dom, start, bookmark, rng) {
   return true;
 };
 
-const restoreEndPoint = function (dom, suffix, bookmark) {
+const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark) => {
   let marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev;
   const keep = bookmark.keep;
   let container, offset;
@@ -113,7 +156,7 @@ const restoreEndPoint = function (dom, suffix, bookmark) {
       next = marker.nextSibling;
 
       // Remove all marker text nodes
-      Tools.each(Tools.grep(marker.childNodes), function (node) {
+      Tools.each(Tools.grep(marker.childNodes), (node) => {
         if (NodeType.isText(node)) {
           node.nodeValue = node.nodeValue.replace(/\uFEFF/g, '');
         }
@@ -123,7 +166,7 @@ const restoreEndPoint = function (dom, suffix, bookmark) {
       // Also remove duplicated instances of the marker for example by a
       // split operation or by WebKit auto split on paste feature
       while ((marker = dom.get(bookmark.id + '_' + suffix))) {
-        dom.remove(marker, 1);
+        dom.remove(marker, true);
       }
 
       // If siblings are text nodes then merge them unless it's Opera since it some how removes the node
@@ -150,11 +193,9 @@ const restoreEndPoint = function (dom, suffix, bookmark) {
   }
 };
 
-const alt = function (o1, o2) {
-  return o1.isSome() ? o1 : o2;
-};
+const alt = <A>(o1: Option<A>, o2: Option<A>): Option<A> => o1.isSome() ? o1 : o2;
 
-const resolvePaths = function (dom, bookmark) {
+const resolvePaths = (dom: DOMUtils, bookmark) => {
   const rng = dom.createRng();
 
   if (setEndPoint(dom, true, bookmark, rng) && setEndPoint(dom, false, bookmark, rng)) {
@@ -164,14 +205,14 @@ const resolvePaths = function (dom, bookmark) {
   }
 };
 
-const resolveId = function (dom, bookmark) {
+const resolveId = (dom: DOMUtils, bookmark) => {
   const startPos = restoreEndPoint(dom, 'start', bookmark);
   const endPos = restoreEndPoint(dom, 'end', bookmark);
 
   return Options.liftN([
     startPos,
     alt(endPos, startPos)
-  ], function (spos, epos) {
+  ], (spos, epos) => {
     const rng = dom.createRng();
     rng.setStart(addBogus(dom, spos.container()), spos.offset());
     rng.setEnd(addBogus(dom, epos.container()), epos.offset());
@@ -179,15 +220,15 @@ const resolveId = function (dom, bookmark) {
   });
 };
 
-const resolveIndex = function (dom, bookmark) {
-  return Option.from(dom.select(bookmark.name)[bookmark.index]).map(function (elm) {
+const resolveIndex = (dom: DOMUtils, bookmark) => {
+  return Option.from(dom.select(bookmark.name)[bookmark.index]).map((elm) => {
     const rng = dom.createRng();
     rng.selectNode(elm);
     return rng;
   });
 };
 
-const resolve = function (selection: Selection, bookmark) {
+const resolve = (selection: Selection, bookmark) => {
   const dom = selection.dom;
 
   if (bookmark) {

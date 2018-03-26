@@ -43,12 +43,11 @@ const trimInternal = function (serializer, html) {
     bogusAllRegExp.lastIndex = index - matchLength;
   }
 
-  return content;
+  return Zwsp.trim(content);
 };
 
-const trimExternal = function (serializer, html) {
-  return Zwsp.trim(trimInternal(serializer, html));
-};
+// We might need external/internal trimming in the future so lets keep the separation
+const trimExternal = trimInternal;
 
 export default {
   trimExternal,

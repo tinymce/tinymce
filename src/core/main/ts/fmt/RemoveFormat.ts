@@ -11,7 +11,7 @@
 import Bookmarks from '../dom/Bookmarks';
 import NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
-import CaretFormat from './CaretFormat';
+import * as CaretFormat from './CaretFormat';
 import ExpandRange from './ExpandRange';
 import FormatUtils from './FormatUtils';
 import MatchFormat from './MatchFormat';

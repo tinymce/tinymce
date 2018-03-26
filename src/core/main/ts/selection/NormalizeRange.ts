@@ -12,9 +12,9 @@ import { Option } from '@ephox/katamari';
 import * as CaretContainer from '../caret/CaretContainer';
 import NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
-import CaretFormat from '../fmt/CaretFormat';
 import RangeCompare from './RangeCompare';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 
 const findParent = (node: Node, rootNode: Node, predicate: (node: Node) => boolean) => {
@@ -48,7 +48,7 @@ const isTableCell = (node: Node) => {
 };
 
 const isCeFalseCaretContainer = (node: Node, rootNode: Node) => {
-  return CaretContainer.isCaretContainer(node) && hasParent(node, rootNode, CaretFormat.isCaretNode) === false;
+  return CaretContainer.isCaretContainer(node) && hasParent(node, rootNode, isCaretNode) === false;
 };
 
 const hasBrBeforeAfter = (dom: DOMUtils, node: Node, left: boolean) => {

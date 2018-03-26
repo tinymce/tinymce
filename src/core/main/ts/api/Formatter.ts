@@ -10,7 +10,7 @@
 
 import { Cell, Fun } from '@ephox/katamari';
 import ApplyFormat from '../fmt/ApplyFormat';
-import CaretFormat from '../fmt/CaretFormat';
+import * as CaretFormat from '../fmt/CaretFormat';
 import FormatChanged from '../fmt/FormatChanged';
 import FormatRegistry from '../fmt/FormatRegistry';
 import MatchFormat from '../fmt/MatchFormat';
