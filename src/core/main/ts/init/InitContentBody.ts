@@ -26,6 +26,7 @@ import Delay from '../api/util/Delay';
 import Quirks from '../util/Quirks';
 import Tools from '../api/util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
+import TripleClickSelection from 'tinymce/core/selection/TripleClickSelection';
 
 declare const escape: any;
 
@@ -229,6 +230,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   editor._nodeChangeDispatcher = new NodeChange(editor);
   editor._selectionOverrides = SelectionOverrides(editor);
 
+  TripleClickSelection.setup(editor);
   KeyboardOverrides.setup(editor);
   ForceBlocks.setup(editor);
 
