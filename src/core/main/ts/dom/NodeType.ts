@@ -44,7 +44,8 @@ const matchStyleValues = function (name: string, values: string) {
 
     if (isElement(node)) {
       for (i = 0; i < items.length; i++) {
-        cssValue = node.ownerDocument.defaultView.getComputedStyle(node, null).getPropertyValue(name);
+        const computed = node.ownerDocument.defaultView.getComputedStyle(node, null);
+        cssValue = computed ? computed.getPropertyValue(name) : null;
         if (cssValue === items[i]) {
           return true;
         }

@@ -45,7 +45,9 @@ const splitTextBlock = (editor: Editor, figure: HTMLElement) => {
   });
 
   if (textBlock) {
-    dom.split(textBlock, figure);
+    return dom.split(textBlock, figure);
+  } else {
+    return figure;
   }
 };
 
@@ -63,11 +65,12 @@ const insertImageAtCaret = (editor: Editor, data: ImageData) => {
   const insertedElm = editor.dom.select('*[data-mce-id="__mcenew"]')[0];
   editor.dom.setAttrib(insertedElm, 'data-mce-id', null);
 
-  if (isFigure(elm)) {
-    splitTextBlock(editor, elm);
+  if (isFigure(insertedElm)) {
+    const figure = splitTextBlock(editor, insertedElm);
+    editor.selection.select(figure);
+  } else {
+    editor.selection.select(insertedElm);
   }
-
-  editor.selection.select(insertedElm);
 };
 
 const syncSrcAttr = (editor: Editor, image: HTMLElement) => {
@@ -96,7 +99,8 @@ const writeImageDataToSelection = (editor: Editor, data: ImageData) => {
   syncSrcAttr(editor, image);
 
   if (isFigure(image.parentNode)) {
-    splitTextBlock(editor, image.parentNode as HTMLElement);
+    const figure = image.parentNode as HTMLElement;
+    splitTextBlock(editor, figure);
     editor.selection.select(image.parentNode);
   } else {
     editor.selection.select(image);
