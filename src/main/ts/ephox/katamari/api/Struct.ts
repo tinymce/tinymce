@@ -3,7 +3,7 @@ import MixedBag from '../data/MixedBag';
 
 
 
-export default <any> {
+export default {
   immutable: Immutable,
   immutableBag: MixedBag
 };
