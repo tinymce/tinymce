@@ -53,7 +53,7 @@ var rowFill = function (grid, amount, generator) {
   }));
 };
 
-var colFill = function (grid, amount, generator) {
+var colFill = function (grid: any[], amount, generator) {
   return Arr.map(grid, function (row) {
     return GridRow.setCells(row, row.cells().concat(fill(Util.range(0, amount), generator)));
   });
