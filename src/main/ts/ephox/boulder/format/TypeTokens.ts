@@ -5,7 +5,7 @@ import { FieldPresenceAdt } from '../api/FieldPresence';
 
 export type SetOfTypeProcessor = (validator: ValueValidator, valueType: Processor) => any;
 export type ArrOfTypeProcessor = (prop: Processor) => any;
-export type ObjOfTypeProcessor = (fields: FieldProcessorAdt) => any;
+export type ObjOfTypeProcessor = (fields: FieldProcessorAdt[]) => any;
 export type ItemOfTypeProcessor = (validator: ValueValidator) => any;
 export type ChoiceOfTypeProcessor = (key: string, branches: { [key: string]: FieldProcessorAdt[]; }) => any;
 export type ThunkTypeProcessor = (description: string) => any;
