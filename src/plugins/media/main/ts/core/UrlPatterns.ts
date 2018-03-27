@@ -10,19 +10,19 @@
 
 const urlPatterns = [
   {
-    regex: /youtu\.be\/([\w\-.]+)/,
+    regex: /youtu\.be\/([\w\-_\?&=.]+)/i,
     type: 'iframe', w: 560, h: 314,
     url: '//www.youtube.com/embed/$1',
     allowFullscreen: true
   },
   {
-    regex: /youtube\.com(.+)v=([^&]+)/,
+    regex: /youtube\.com(.+)v=([^&]+)(&([a-z0-9&=\-_]+))?/i,
     type: 'iframe', w: 560, h: 314,
-    url: '//www.youtube.com/embed/$2',
+    url: '//www.youtube.com/embed/$2?$4',
     allowFullscreen: true
   },
   {
-    regex: /youtube.com\/embed\/([a-z0-9\-_]+(?:\?.+)?)/i,
+    regex: /youtube.com\/embed\/([a-z0-9\?&=\-_]+)/i,
     type: 'iframe', w: 560, h: 314,
     url: '//www.youtube.com/embed/$1',
     allowFullscreen: true
