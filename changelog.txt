@@ -1,3 +1,27 @@
+Version 4.7.10 (2018-04-03)
+    Removed the "read" step from the mobile theme.
+    Added normalization of triple clicks across browsers in the editor.
+    Added a `hasFocus` method to the editor that checks if the editor has focus.
+    Added correct icon to the Nonbreaking Plugin menu item.
+    Fixed so the `getContent`/`setContent` methods work even if the editor is not initialized.
+    Fixed a bug with the Media Plugin where query strings were being stripped from youtube links.
+    Fixed a bug where image styles were changed/removed when opening and closing the Image Plugin dialog.
+    Fixed a bug in the Table Plugin where some table cell styles were not correctly added to the content html.
+    Fixed a bug in the Spellchecker Plugin where it wasn't possible to change the spellchecker language.
+    Fixed so the the unlink action in the Link Plugin has a menu item and can be added to the contextmenu.
+    Fixed a bug where it wasn't possible to keyboard navigate to the start of an inline element on a new line within the same block element.
+    Fixed a bug with the Text Color Plugin where if used with an inline editor located at the bottom of the screen the colorpicker could appear off screen.
+    Fixed a bug with the UndoManager where undo levels were being added for nbzwsp characters.
+    Fixed a bug with the Table Plugin where the caret would sometimes be lost when keyboard navigating up through a table.
+    Fixed a bug where FontInfo.getFontFamily would throw an error when called on a removed editor.
+    Fixed a bug in Firefox where undo levels were not being added correctly for some specific operations.
+    Fixed a bug where initializing an inline editor inside of a table would make the whole table resizeable.
+    Fixed a bug where the fake cursor that appears next to tables on Firefox was positioned incorrectly when switching to fullscreen.
+    Fixed a bug where zwsp's weren't trimmed from the output from `editor.getContent({ format: 'text' })`.
+    Fixed a bug where the fontsizeselect/fontselect toolbar items showed the body info rather than the first possible caret position info on init.
+    Fixed a bug where it wasn't possible to select all content if the editor only contained an inline boundary element.
+    Fixed a bug where `content_css` urls with query strings wasn't working.
+    Fixed a bug in the Table Plugin where some table row styles were removed when changing other styles in the row properties dialog.
 Version 4.7.9 (2018-02-27)
     Fixed a bug where the editor target element didn't get the correct style when removing the editor.
 Version 4.7.8 (2018-02-26)
