@@ -258,7 +258,7 @@ const head = <T = any>(xs: T[]): Option<T> => xs.length === 0 ? Option.none() : 
 
 const last = <T = any>(xs: T[]): Option<T> => xs.length === 0 ? Option.none() : Option.some(xs[xs.length - 1]);
 
-const from: <T = any>(x: ArrayLike<T>) => T[] = Type.isFunction(Array.from) ? Array.from : (x) => Array.prototype.slice.call(null, x)
+const from: <T = any>(x: ArrayLike<T>) => T[] = Type.isFunction(Array.from) ? Array.from : (x) => slice.call(x)
 
 export default {
   map,
