@@ -1,5 +1,5 @@
 import { Option } from './Option';
-import Type from 'ephox/katamari/api/Type';
+import Type from './Type';
 
 type Morphism<T, U> = (a: T) => U;
 type Catamorphism<T, U> = (acc:U, x:T) => U;
