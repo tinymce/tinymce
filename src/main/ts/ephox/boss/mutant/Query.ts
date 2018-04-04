@@ -17,7 +17,7 @@ var comparePosition = function (item, other) {
   var itemIndex = Arr.findIndex(all, function (x) { return item.id === x; });
   var otherIndex = Arr.findIndex(all, function (x) { return other.id === x; });
   return itemIndex.bind(function (iIndex) {
-    return otherIndex.map(function (oIndex) {
+    return otherIndex.map(function (oIndex): number {
       if (iIndex < oIndex) return 4;
       else return 2;
     });
