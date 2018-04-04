@@ -28,7 +28,7 @@ var gChoose = function (weighted) {
       return w <= d.accWeight;
     });
 
-    var keys = raw.map(Obj.keys).getOr([ ]);
+    var keys = raw.map(Obj.keys).getOr([ ]) as any[];
     return keys.length === [ 'weight', 'accWeight' ].length ? Option.none() : raw;
   });
 };
