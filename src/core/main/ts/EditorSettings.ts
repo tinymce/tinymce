@@ -162,13 +162,13 @@ const getParamObject = (value: string) => {
   let output = {};
 
   if (typeof value === 'string') {
-    Arr.each(value.indexOf('=') > 0 ? value.split(/[;,](?![^=;,]*(?:[;,]|$))/) : value.split(','), function (value) {
-      value = value.split('=');
+    Arr.each(value.indexOf('=') > 0 ? value.split(/[;,](?![^=;,]*(?:[;,]|$))/) : value.split(','), function (val: string) {
+      const arr = val.split('=');
 
-      if (value.length > 1) {
-        output[Tools.trim(value[0])] = Tools.trim(value[1]);
+      if (arr.length > 1) {
+        output[Tools.trim(arr[0])] = Tools.trim(arr[1]);
       } else {
-        output[Tools.trim(value[0])] = Tools.trim(value);
+        output[Tools.trim(arr[0])] = Tools.trim(arr);
       }
     });
   } else {

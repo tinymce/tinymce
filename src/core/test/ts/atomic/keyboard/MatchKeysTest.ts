@@ -55,7 +55,7 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function () {
       state.set([]);
 
       const result = MatchKeys.execute(patterns, event);
-      Assertions.assertEq('Should be expected match', expectedMatch, result.getOr());
+      Assertions.assertEq('Should be expected match', expectedMatch, result.getOrDie());
       Assertions.assertEq('Should have the expected state', expectedData, state.get());
     });
   };
