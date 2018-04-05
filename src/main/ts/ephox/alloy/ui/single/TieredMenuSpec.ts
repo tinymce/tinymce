@@ -85,7 +85,7 @@ const make = function (detail, rawUiSpec) {
   const updateMenuPath = function (container, state, path) {
     return Option.from(path[0]).bind(state.lookupMenu).map(function (activeMenu: any) {
       const rest = getMenus(state, path.slice(1));
-      Arr.each(rest, function (r, i, xs) {
+      Arr.each(rest, function (r) {
         Class.add(r.element(), detail.markers().backgroundMenu());
       });
 
