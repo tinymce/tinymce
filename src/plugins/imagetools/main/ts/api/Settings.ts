@@ -16,15 +16,17 @@ const getToolbarItems = (editor: Editor): string => {
 
 const getProxyUrl = (editor: Editor): string => editor.getParam('imagetools_proxy');
 
-const getCorsHosts = (editor: Editor): string[] => editor.getParam('imagetools_cors_hosts', [], 'array');
+const getCorsHosts = (editor: Editor) => editor.getParam('imagetools_cors_hosts', [], 'string[]');
 
-const getCredentialsHosts = (editor: Editor): string[] => editor.getParam('imagetools_credentials_hosts', [], 'array');
+const getCredentialsHosts = (editor: Editor) => editor.getParam('imagetools_credentials_hosts', [], 'string[]');
 
-const getApiKey = (editor: Editor): string => editor.settings.api_key || editor.settings.imagetools_api_key;
+const getApiKey = (editor: Editor) => {
+  return editor.getParam('api_key', editor.getParam('imagetools_api_key', '', 'string'), 'string');
+};
 
-const getUploadTimeout = (editor: Editor): number => editor.getParam('images_upload_timeout', 30000, 'number');
+const getUploadTimeout = (editor: Editor) => editor.getParam('images_upload_timeout', 30000, 'number');
 
-const shouldReuseFilename = (editor: Editor): boolean => editor.getParam('images_reuse_filename', false, 'boolean');
+const shouldReuseFilename = (editor: Editor) => editor.getParam('images_reuse_filename', false, 'boolean');
 
 export default {
   getToolbarItems,

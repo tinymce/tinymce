@@ -11,7 +11,7 @@
 import { AddOnManager } from './AddOnManager';
 import EditorCommands from './EditorCommands';
 import EditorObservable from './EditorObservable';
-import * as EditorSettings from '../EditorSettings';
+import { ParamTypeMap, getEditorSettings, getParam } from '../EditorSettings';
 import Env from './Env';
 import Mode from '../Mode';
 import Shortcuts from './Shortcuts';
@@ -146,6 +146,8 @@ export interface Editor {
   getDoc(): Document;
   getElement(): HTMLElement;
   getLang(name: string, defaultVal): any;
+  getParam<K extends keyof ParamTypeMap>(name: string, defaultVal: ParamTypeMap[K], type: K): ParamTypeMap[K];
+  getParam<T>(name: string, defaultVal: T, type: string): T;
   getParam(name: string, defaultVal?: any, type?: string): any;
   getWin(): Window;
   hasEventListeners(name: string): boolean;
@@ -211,7 +213,7 @@ export const Editor = function (id, settings, editorManager) {
    * // Get the value of the theme setting
    * tinymce.activeEditor.windowManager.alert("You are using the " + tinymce.activeEditor.settings.theme + " theme");
    */
-  settings = EditorSettings.getEditorSettings(self, id, documentBaseUrl, editorManager.defaultSettings, settings);
+  settings = getEditorSettings(self, id, documentBaseUrl, editorManager.defaultSettings, settings);
   self.settings = settings;
 
   AddOnManager.language = settings.language || 'en';
@@ -444,7 +446,7 @@ Editor.prototype = {
    * var someval2 = tinymce.get('my_editor').getParam('myvalue');
    */
   getParam (name: string, defaultVal?: any, type?: string): any {
-    return EditorSettings.getParam(this, name, defaultVal, type);
+    return getParam(this, name, defaultVal, type);
   },
 
   /**
