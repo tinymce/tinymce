@@ -76,7 +76,7 @@ const make = function (detail, rawUiSpec) {
     });
   };
 
-  const getMenus = function (state, menuValues) {
+  const getMenus = function (state, menuValues): any[] {
     return Options.cat(
       Arr.map(menuValues, state.lookupMenu)
     );
@@ -85,7 +85,7 @@ const make = function (detail, rawUiSpec) {
   const updateMenuPath = function (container, state, path) {
     return Option.from(path[0]).bind(state.lookupMenu).map(function (activeMenu: any) {
       const rest = getMenus(state, path.slice(1));
-      Arr.each(rest, function (r) {
+      Arr.each(rest, function (r, i, xs) {
         Class.add(r.element(), detail.markers().backgroundMenu());
       });
 

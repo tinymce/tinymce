@@ -15,7 +15,7 @@ import { ToolbarGroup } from './ToolbarGroup';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface SplitToolbarSketch extends Sketcher.CompositeSketch {
-  setGroups: (toolbar: AlloyComponent, groups: [{}]) => void;
+  setGroups: (toolbar: AlloyComponent, groups: Sketcher.SketchSpec[]) => void;
   refresh: (toolbar: AlloyComponent) => void;
 }
 

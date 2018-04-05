@@ -7,9 +7,10 @@ import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { CompositeSketch, RawDomSchema, composite } from './Sketcher';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloyPremadeComponent } from '../../api/component/GuiFactory';
 
 export interface ToolbarSketch extends CompositeSketch {
-  setGroups: (toolbar: AlloyComponent, groups: RawDomSchema[]) => void;
+  setGroups: (toolbar: AlloyComponent, groups: RawDomSchema[] | AlloyPremadeComponent []) => void;
 }
 
 const factory = function (detail, components, spec, _externals) {

@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 
 const cyclePrev = function (values, index, predicate) {
   const before = Arr.reverse(values.slice(0, index));

@@ -47,7 +47,7 @@ UnitTest.asynctest('TypeaheadSpecTest', function () {
               return future.map(function (f) {
                 // TODO: Test this.
                 const items = text === 'no-data' ? [
-                  { type: 'separator', text: 'No data' }
+                  { type: 'separator', text: 'No data', data: {value: '', text: 'No data'} }
                 ] : f;
                 const menu = TestDropdownMenu.renderMenu({
                   value: 'blah',

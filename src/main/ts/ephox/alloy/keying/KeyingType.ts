@@ -1,5 +1,5 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Merger } from '@ephox/katamari';
+import { Merger, Option } from '@ephox/katamari';
 
 import * as AlloyEvents from '../api/events/AlloyEvents';
 import * as NativeEvents from '../api/events/NativeEvents';
