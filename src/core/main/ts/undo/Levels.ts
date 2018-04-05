@@ -11,21 +11,29 @@
 import { Arr } from '@ephox/katamari';
 import TrimHtml from '../dom/TrimHtml';
 import Fragments from './Fragments';
+import { Bookmark } from 'tinymce/core/dom/GetBookmark';
+import { Editor } from 'tinymce/core/api/Editor';
 
-/**
- * This module handles getting/setting undo levels to/from editor instances.
- *
- * @class tinymce.undo.Levels
- * @private
- */
+export const enum UndoLevelType {
+  Fragmented = 'fragmented',
+  Complete = 'complete'
+}
 
-const hasIframes = function (html) {
+export interface UndoLevel {
+  type: UndoLevelType;
+  fragments: string[];
+  content: string;
+  bookmark: Bookmark;
+  beforeBookmark: Bookmark;
+}
+
+const hasIframes = function (html: string) {
   return html.indexOf('</iframe>') !== -1;
 };
 
-const createFragmentedLevel = function (fragments) {
+const createFragmentedLevel = function (fragments: string[]): UndoLevel {
   return {
-    type: 'fragmented',
+    type: UndoLevelType.Fragmented,
     fragments,
     content: '',
     bookmark: null,
@@ -33,9 +41,9 @@ const createFragmentedLevel = function (fragments) {
   };
 };
 
-const createCompleteLevel = function (content) {
+const createCompleteLevel = function (content: string): UndoLevel {
   return {
-    type: 'complete',
+    type: UndoLevelType.Complete,
     fragments: null,
     content,
     bookmark: null,
@@ -43,7 +51,7 @@ const createCompleteLevel = function (content) {
   };
 };
 
-const createFromEditor = function (editor) {
+const createFromEditor = function (editor: Editor): UndoLevel {
   let fragments, content, trimmedFragments;
 
   fragments = Fragments.read(editor.getBody());
@@ -56,7 +64,7 @@ const createFromEditor = function (editor) {
   return hasIframes(content) ? createFragmentedLevel(trimmedFragments) : createCompleteLevel(content);
 };
 
-const applyToEditor = function (editor, level, before) {
+const applyToEditor = function (editor: Editor, level: UndoLevel, before: boolean) {
   if (level.type === 'fragmented') {
     Fragments.write(level.fragments, editor.getBody());
   } else {
@@ -66,11 +74,11 @@ const applyToEditor = function (editor, level, before) {
   editor.selection.moveToBookmark(before ? level.beforeBookmark : level.bookmark);
 };
 
-const getLevelContent = function (level) {
-  return level.type === 'fragmented' ? level.fragments.join('') : level.content;
+const getLevelContent = function (level: UndoLevel): string {
+  return level.type === UndoLevelType.Fragmented ? level.fragments.join('') : level.content;
 };
 
-const isEq = function (level1, level2) {
+const isEq = function (level1: UndoLevel, level2: UndoLevel): boolean {
   return !!level1 && !!level2 && getLevelContent(level1) === getLevelContent(level2);
 };
 
