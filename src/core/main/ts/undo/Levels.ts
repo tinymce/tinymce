@@ -13,6 +13,7 @@ import TrimHtml from '../dom/TrimHtml';
 import Fragments from './Fragments';
 import { Bookmark } from 'tinymce/core/dom/GetBookmark';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Element, Html, Remove, SelectorFilter } from '@ephox/sugar';
 
 export const enum UndoLevelType {
   Fragmented = 'fragmented',
@@ -65,7 +66,7 @@ const createFromEditor = function (editor: Editor): UndoLevel {
 };
 
 const applyToEditor = function (editor: Editor, level: UndoLevel, before: boolean) {
-  if (level.type === 'fragmented') {
+  if (level.type === UndoLevelType.Fragmented) {
     Fragments.write(level.fragments, editor.getBody());
   } else {
     editor.setContent(level.content, { format: 'raw' });
@@ -78,8 +79,30 @@ const getLevelContent = function (level: UndoLevel): string {
   return level.type === UndoLevelType.Fragmented ? level.fragments.join('') : level.content;
 };
 
+const getCleanLevelContent = (level: UndoLevel): string => {
+  const elm = Element.fromTag('body');
+  Html.set(elm, getLevelContent(level));
+  Arr.each(SelectorFilter.descendants(elm, '*[data-mce-bogus]'), Remove.unwrap);
+  return Html.get(elm);
+};
+
+const hasEqualContent = (level1: UndoLevel, level2: UndoLevel): boolean => {
+  return getLevelContent(level1) === getLevelContent(level2);
+};
+
+const hasEqualCleanedContent = (level1: UndoLevel, level2: UndoLevel): boolean => {
+  return getCleanLevelContent(level1) === getCleanLevelContent(level2);
+};
+
+// Most of the time the contents is equal so it's faster to first check that using strings then fallback to a cleaned dom comparison
 const isEq = function (level1: UndoLevel, level2: UndoLevel): boolean {
-  return !!level1 && !!level2 && getLevelContent(level1) === getLevelContent(level2);
+  if (!level1 || !level2) {
+    return false;
+  } else if (hasEqualContent(level1, level2)) {
+    return true;
+  } else {
+    return hasEqualCleanedContent(level1, level2);
+  }
 };
 
 export default {
