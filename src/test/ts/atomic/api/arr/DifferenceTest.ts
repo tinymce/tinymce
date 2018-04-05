@@ -3,8 +3,13 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('DifferenceTest', function() {
-  var check = function (expected, a1, a2) {
+  var check = function <T> (expected, a1: T[], a2: T[]) {
+    var readonlyA1 = Object.freeze(a1.slice());
+    var readonlyA2 = Object.freeze(a2.slice());
     assert.eq(expected, Arr.difference(a1, a2));
+    assert.eq(expected, Arr.difference(readonlyA1, a2));
+    assert.eq(expected, Arr.difference(a1, readonlyA2));
+    assert.eq(expected, Arr.difference(readonlyA1, readonlyA2));
   };
 
   check([], [], []);

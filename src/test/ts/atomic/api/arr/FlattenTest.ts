@@ -3,8 +3,9 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FlattenTest', function() {
-  var check = function (expected, input) {
+  var check = function (expected, input: any[]) {
     assert.eq(expected, Arr.flatten(input));
+    assert.eq(expected, Arr.flatten(Object.freeze(input.slice())));
   };
 
   check([], []);

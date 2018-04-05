@@ -20,8 +20,8 @@ UnitTest.test('ReverseTest', function() {
   });
 
   var check = function (expected, input) {
-    var actual = Arr.reverse(input);
-    assert.eq(expected, actual);
+    assert.eq(expected, Arr.reverse(input));
+    assert.eq(expected, Arr.reverse(Object.freeze(input.slice())));
   };
 
 

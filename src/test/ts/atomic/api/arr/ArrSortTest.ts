@@ -5,6 +5,7 @@ import { UnitTest, assert } from '@ephox/bedrock';
 UnitTest.test('ArrSortTest', function() {
   var testSanity = function () {
     assert.eq([1, 2, 3], Arr.sort([1, 3, 2]));
+    assert.eq([1, 2, 3], Arr.sort(Object.freeze([1, 3, 2])));
   };
 
   testSanity();

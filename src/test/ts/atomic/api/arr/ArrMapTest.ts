@@ -16,14 +16,16 @@ UnitTest.test('MapTest', function() {
 
   var checkA = function (expected, input, f) {
     check(expected, Arr, input, f);
+    check(expected, Arr, Object.freeze(input.slice()), f);
   };
 
   checkA([], [], dbl);
   checkA([2], [1], dbl);
   checkA([4, 6, 10], [2, 3, 5], dbl);
 
-  var checkToObject = function(expected, input, f) {
+  var checkToObject = function(expected, input: any[], f) {
     assert.eq(expected, Arr.mapToObject(input, f));
+    assert.eq(expected, Arr.mapToObject(Object.freeze(input.slice()), f));
   };
 
   checkToObject({}, [], function() { throw 'boom'; });

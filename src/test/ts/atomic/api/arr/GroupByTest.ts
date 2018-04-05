@@ -5,8 +5,10 @@ import { UnitTest, assert } from '@ephox/bedrock';
 UnitTest.test('Group By Test', function() {
   (function() {
 
-    var check = function (input, expected) {
-      assert.eq(expected, Arr.groupBy(input, function (b) { return b; }));
+    var check = function (input: any[], expected) {
+      const f = function (b) { return b; };
+      assert.eq(expected, Arr.groupBy(input, f));
+      assert.eq(expected, Arr.groupBy(Object.freeze(input.slice()), f));
     };
 
     check([], []);

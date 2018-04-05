@@ -44,8 +44,9 @@ UnitTest.test('ExistsTest', function() {
   });
 
 
-  var check = function (expected, input, f) {
+  var check = function (expected, input: any[], f) {
     assert.eq(expected, Arr.exists(input, f));
+    assert.eq(expected, Arr.exists(Object.freeze(input.slice()), f));
   };
 
   check(true, [1, 2, 3], eqc(1));

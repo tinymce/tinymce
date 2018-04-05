@@ -5,9 +5,16 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ArrEqualTest', function() {
-  var check = function (expected, a1, a2) {
+  var checkHelper = function (expected, a1, a2) {
     var actual = Arr.equal(a1, a2);
     assert.eq(expected, actual);
+  };
+
+  var check = function (expected, a1, a2) {
+    checkHelper(expected, a1, a2);
+    checkHelper(expected, Object.freeze(a1.slice()), a2);
+    checkHelper(expected, a1, Object.freeze(a2.slice()));
+    checkHelper(expected, Object.freeze(a1.slice()), Object.freeze(a2.slice()));
   };
 
   check(true, [], []);
