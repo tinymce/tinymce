@@ -28,7 +28,7 @@ const getUploadTimeout = (editor: Editor) => editor.getParam('images_upload_time
 
 const shouldReuseFilename = (editor: Editor) => editor.getParam('images_reuse_filename', false, 'boolean');
 
-export default {
+export {
   getToolbarItems,
   getProxyUrl,
   getCorsHosts,

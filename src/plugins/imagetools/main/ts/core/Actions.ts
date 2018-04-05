@@ -17,7 +17,7 @@ import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import URI from 'tinymce/core/api/util/URI';
 
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import Dialog from '../ui/Dialog';
 import ImageSize from './ImageSize';
 import Proxy from './Proxy';
