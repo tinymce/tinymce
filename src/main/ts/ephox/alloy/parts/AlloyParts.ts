@@ -72,10 +72,10 @@ const generateOne = function (owner: string, pname: string, config: SketchSpec):
   };
 };
 
-const schemas = function (parts: DslType.FieldProcessorAdt[]): DslType.FieldProcessorAdt[] {
+const schemas = function (parts: PartType.PartTypeAdt[]): DslType.FieldProcessorAdt[] {
   // This actually has to change. It needs to return the schemas for things that will
   // not appear in the components list, which is only externals
-  return Arr.bind(parts, function (part) {
+  return Arr.bind(parts, function (part: PartType.PartTypeAdt) {
     return part.fold(
       Option.none,
       Option.some,

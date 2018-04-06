@@ -76,7 +76,7 @@ const make = function (detail, rawUiSpec) {
     });
   };
 
-  const getMenus = function (state, menuValues) {
+  const getMenus = function (state, menuValues): any[] {
     return Options.cat(
       Arr.map(menuValues, state.lookupMenu)
     );

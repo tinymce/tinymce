@@ -20,8 +20,12 @@ export interface OverrideSpec {
   [key: string]: any;
 }
 
+export type required<T> = Option<T>;
+export type external<T> = Option<T>;
+export type optional<T> = Option<T>;
+export type group<T> = Option<T>;
 export interface PartTypeAdt extends AdtInterface {
-  // TODO, def this out
+  fold<T>(required, external, optional, group);
 }
 
 const adt = Adt.generate([

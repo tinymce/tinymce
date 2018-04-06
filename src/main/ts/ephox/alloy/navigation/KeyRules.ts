@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 
 import * as KeyMatch from './KeyMatch';
 
