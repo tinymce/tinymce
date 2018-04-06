@@ -285,8 +285,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function () {
         Assertions.assertEq('Should be expected default array', [], EditorSettings.getParam(editor, 'arr_undefined', [], 'array'));
         Assertions.assertEq('Should be expected default function', null, EditorSettings.getParam(editor, 'fun_undefined', null, 'function'));
         Assertions.assertEq('Should be expected string array', ['a', 'b'], EditorSettings.getParam(editor, 'strArr', ['x'], 'string[]'));
-        Assertions.assertEq('Should be expected string array', ['x'], EditorSettings.getParam(editor, 'mixedArr', ['x'], 'string[]'));
-        Assertions.assertEq('Should be expected string array', ['x'], EditorSettings.getParam(editor, 'bool', ['x'], 'string[]'));
+        Assertions.assertEq('Should be expected default array on mixed types', ['x'], EditorSettings.getParam(editor, 'mixedArr', ['x'], 'string[]'));
+        Assertions.assertEq('Should be expected default array on boolean', ['x'], EditorSettings.getParam(editor, 'bool', ['x'], 'string[]'));
       }))
     ], onSuccess, onFailure);
   }, {
