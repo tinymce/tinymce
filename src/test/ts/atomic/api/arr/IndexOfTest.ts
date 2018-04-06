@@ -4,14 +4,24 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('IndexOfTest', function() {
-  var checkNone = function (xs, x) {
+  var checkNoneHelper = function (xs, x) {
     var actual = Arr.indexOf(xs, x);
     assert.eq(true, actual.isNone());
   };
 
-  var check = function (expected, xs, x) {
+  var checkNone = function (xs: any[], x) {
+    checkNoneHelper(xs, x);
+    checkNoneHelper(Object.freeze(xs.slice()), x);
+  };
+
+  var checkHelper = function (expected, xs, x) {
     var actual = Arr.indexOf(xs, x).getOrDie('should have value');
     assert.eq(expected, actual);
+  };
+
+  var check = function (expected, xs: any[], x) {
+    checkHelper(expected, xs, x);
+    checkHelper(expected, Object.freeze(xs.slice()), x);
   };
 
   checkNone([], 'x');

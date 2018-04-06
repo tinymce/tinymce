@@ -8,8 +8,9 @@ UnitTest.test('BindTest', function() {
     return [x.length];
   };
 
-  var check = function (expected, input, f) {
+  var check = function (expected, input: any[], f) {
     assert.eq(expected, Arr.bind(input, f));
+    assert.eq(expected, Arr.bind(Object.freeze(input.slice()), f));
   };
 
   check([], [], len);

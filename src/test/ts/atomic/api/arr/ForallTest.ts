@@ -10,6 +10,7 @@ UnitTest.test('ForallTest', function() {
 
   var check = function (expected, input, f) {
     assert.eq(expected, Arr.forall(input, f));
+    assert.eq(expected, Arr.forall(Object.freeze(input.slice()), f));
   };
 
   check(true, [1, 1, 1], isone);

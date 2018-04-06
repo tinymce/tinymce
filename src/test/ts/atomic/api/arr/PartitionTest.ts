@@ -6,8 +6,10 @@ import { UnitTest, assert } from '@ephox/bedrock';
 UnitTest.test('Partition Test', function() {
   (function() {
 
-    var check = function (input, expected) {
-      assert.eq(expected, Arr.partition(input, function (n) { return n.indexOf('yes') > -1; }));
+    var check = function (input: any[], expected) {
+      const f = function (n) { return n.indexOf('yes') > -1; };
+      assert.eq(expected, Arr.partition(input, f));
+      assert.eq(expected, Arr.partition(Object.freeze(input.slice()), f));
     };
 
     check([], {pass: [], fail:[]});

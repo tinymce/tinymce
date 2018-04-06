@@ -3,8 +3,9 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ChunkTest', function() {
-  var check = function (expected, initial, size) {
+  var check = function (expected, initial: any[], size: number) {
     assert.eq(expected, Arr.chunk(initial, size));
+    assert.eq(expected, Arr.chunk(Object.freeze(initial.slice()), size));
   };
 
   check([[ 1, 2, 3 ], [4, 5, 6 ]],  [ 1, 2, 3, 4, 5, 6 ],  3);

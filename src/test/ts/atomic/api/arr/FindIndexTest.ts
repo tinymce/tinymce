@@ -4,14 +4,24 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FindIndexTest', function() {
-  var checkNone = function (input, pred) {
+  var checkNoneHelper = function (input, pred) {
     var actual = Arr.findIndex(input, pred);
     assert.eq(true, actual.isNone());
   };
 
-  var check = function (expected, input, pred) {
+  var checkNone = function (input: any[], pred) {
+    checkNoneHelper(input, pred);
+    checkNoneHelper(Object.freeze(input.slice()), pred);
+  };
+
+  var checkHelper = function (expected, input, pred) {
     var actual = Arr.findIndex(input, pred).getOrDie('should have found index: ' + input);
     assert.eq(expected, actual);
+  };
+
+  var check = function (expected, input: any[], pred) {
+    checkHelper(expected, input, pred);
+    checkHelper(expected, Object.freeze(input.slice()), pred);
   };
 
   checkNone([], function (x) { return x > 0; });

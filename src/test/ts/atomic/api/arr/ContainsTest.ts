@@ -3,8 +3,9 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('ContainsTest', function() {
-  var check = function (expected, input, value) {
+  var check = function (expected, input: any[], value) {
     assert.eq(expected, Arr.contains(input, value));
+    assert.eq(expected, Arr.contains(Object.freeze(input.slice()), value));
   };
 
   check(false, [], 1);

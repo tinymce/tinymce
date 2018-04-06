@@ -3,12 +3,14 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FoldTest', function() {
-  var checkl = function (expected, input, f, acc) {
+  var checkl = function (expected, input: any[], f, acc) {
     assert.eq(expected, Arr.foldl(input, f, acc));
+    assert.eq(expected, Arr.foldl(Object.freeze(input.slice()), f, acc));
   };
 
   var checkr = function (expected, input, f, acc) {
     assert.eq(expected, Arr.foldr(input, f, acc));
+    assert.eq(expected, Arr.foldr(Object.freeze(input.slice()), f, acc));
   };
 
   checkl(0, [], function () { }, 0);

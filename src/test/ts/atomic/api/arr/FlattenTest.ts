@@ -3,14 +3,15 @@ import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest, assert } from '@ephox/bedrock';
 
 UnitTest.test('FlattenTest', function() {
-  var check = function (expected, input) {
+  var check = function (expected, input: any[]) {
     assert.eq(expected, Arr.flatten(input));
+    assert.eq(expected, Arr.flatten(Object.freeze(input.slice())));
   };
 
   check([], []);
   check([1], [[1]]);
   check([1, 2], [[1], [2]]);
-  check([1, 2, 3, 4, 5], [[1, 2], [], [3], [4, 5], []]);
+  check([1, 2, 3, 4, 5], [[1, 2], [], [3], Object.freeze([4, 5]), []]);
 
   var checkError = function (input) {
     var message = undefined;
