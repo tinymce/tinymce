@@ -36,8 +36,8 @@ const exists = <T = any>(xs: ReadonlyArray<T>, pred:ArrayPredicate<T>): boolean 
   return findIndex(xs, pred).isSome();
 };
 
-const range = <T = any>(num: number, f: Morphism<number, T>) => {
-  const r = [];
+const range = <T = any>(num: number, f: Morphism<number, T>): T[] => {
+  const r: T[] = [];
   for (let i = 0; i < num; i++) {
     r.push(f(i));
   }
