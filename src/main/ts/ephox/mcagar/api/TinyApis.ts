@@ -25,6 +25,12 @@ export default function (editor) {
     });
   };
 
+  var sSetRawContent = function (html: string) {
+    return Step.sync(function () {
+      editor.getBody().innerHTML = html;
+    });
+  };
+
   var lazyBody = function () {
     return Element.fromDom(editor.getBody());
   };
@@ -157,6 +163,7 @@ export default function (editor) {
   return {
     sSetContent: sSetContent,
     cGetContent: cGetContent,
+    sSetRawContent: sSetRawContent,
     cNodeChanged: cNodeChanged,
 
     sAssertContent: sAssertContent,
