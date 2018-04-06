@@ -32,7 +32,7 @@ const readChildren = function (elem) {
 
     return [{
       dom: Objects.wrapAll(
-        Arr.flatten([
+        Arr.flatten<any>([
           [ { key: 'tag', value: Node.name(elem) } ],
           Obj.keys(attrs).length > 0 ? [ { key: 'attributes', value: attrs } ] : [ ],
           classes.length > 0 ? [ { key: 'classes', value: classes } ] : [ ]
@@ -55,7 +55,7 @@ const read = function (elem): RawDomSchema {
 
   return {
     dom: Objects.wrapAll(
-      Arr.flatten([
+      Arr.flatten<any>([
         [ { key: 'tag', value: Node.name(elem) } ],
         Obj.keys(attrs).length > 0 ? [ { key: 'attributes', value: attrs } ] : [ ],
         classes.length > 0 ? [ { key: 'classes', value: classes } ] : [ ]
