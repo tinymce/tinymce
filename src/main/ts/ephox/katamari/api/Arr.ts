@@ -2,11 +2,11 @@ import { Option } from './Option';
 import Type from './Type';
 
 type Morphism<T, U> = (a: T) => U;
-type Catamorphism<T, U> = (acc:U, x:T) => U;
-type ArrayMorphism<T, U> = (x:T, i:number, xs: ReadonlyArray<T>) => U;
+type Catamorphism<T, U> = (acc: U, x: T) => U;
+type ArrayMorphism<T, U> = (x: T, i: number, xs: ReadonlyArray<T>) => U;
 type ArrayPredicate<T> = ArrayMorphism<T, boolean>;
 type Predicate<T> = Morphism<T, boolean>;
-type Comparator<T> = (a:T, b:T) => number;
+type Comparator<T> = (a: T, b: T) => number;
 
 // Use the native Array.indexOf if it is available (IE9+) otherwise fall back to manual iteration
 // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
@@ -32,7 +32,7 @@ const contains = <T = any>(xs: ReadonlyArray<T>, x: T): boolean => {
 
 // Using findIndex is likely less optimal in Chrome (dynamic return type instead of bool)
 // but if we need that micro-optimisation we can inline it later.
-const exists = <T = any>(xs: ReadonlyArray<T>, pred:ArrayPredicate<T>): boolean => {
+const exists = <T = any>(xs: ReadonlyArray<T>, pred: ArrayPredicate<T>): boolean => {
   return findIndex(xs, pred).isSome();
 };
 
@@ -201,7 +201,7 @@ const flatten = <T = any>(xs: T[][]): T[] => {
   const r = [];
   for (let i = 0, len = xs.length; i < len; ++i) {
     // Ensure that each value is an array itself
-    if (! Array.prototype.isPrototypeOf(xs[i])) throw new Error('Arr.flatten item ' + i + ' was not an array, input: ' + xs);
+    if (!Array.prototype.isPrototypeOf(xs[i])) throw new Error('Arr.flatten item ' + i + ' was not an array, input: ' + xs);
     push.apply(r, xs[i]);
   }
   return r;
