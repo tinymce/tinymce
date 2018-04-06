@@ -17,10 +17,38 @@ import * as RangeNodes from '../selection/RangeNodes';
 import Zwsp from '../text/Zwsp';
 import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';
+import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+
+export interface StringPathBookmark {
+  start: string;
+  end?: string;
+}
+
+export interface RangeBookmark {
+  rng: Range;
+}
+
+export interface IdBookmark {
+  id: string;
+}
+
+export interface IndexBookmark {
+  name: string;
+  index: number;
+}
+
+export interface PathBookmark {
+  start: number[];
+  end?: number[];
+}
+
+export type Bookmark = StringPathBookmark | RangeBookmark | IdBookmark | IndexBookmark | PathBookmark;
+
+type TrimFn = (s: string) => string;
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-const getNormalizedTextOffset = function (trim, container, offset) {
+const getNormalizedTextOffset = function (trim: TrimFn, container: Text, offset: number): number {
   let node, trimmedOffset;
 
   trimmedOffset = trim(container.data.slice(0, offset)).length;
@@ -31,7 +59,7 @@ const getNormalizedTextOffset = function (trim, container, offset) {
   return trimmedOffset;
 };
 
-const getPoint = function (dom, trim, normalized, rng, start) {
+const getPoint = function (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng: Range, start: boolean) {
   let container = rng[start ? 'startContainer' : 'endContainer'];
   let offset = rng[start ? 'startOffset' : 'endOffset'];
   const point = [];
@@ -58,7 +86,7 @@ const getPoint = function (dom, trim, normalized, rng, start) {
   return point;
 };
 
-const getLocation = function (trim, selection: Selection, normalized, rng) {
+const getLocation = function (trim: TrimFn, selection: Selection, normalized: boolean, rng: Range): PathBookmark {
   const dom = selection.dom, bookmark: any = {};
 
   bookmark.start = getPoint(dom, trim, normalized, rng, true);
@@ -70,13 +98,13 @@ const getLocation = function (trim, selection: Selection, normalized, rng) {
   return bookmark;
 };
 
-const trimEmptyTextNode = function (node) {
+const trimEmptyTextNode = function (node: Node) {
   if (NodeType.isText(node) && node.data.length === 0) {
     node.parentNode.removeChild(node);
   }
 };
 
-const findIndex = function (dom, name, element) {
+const findIndex = function (dom: DOMUtils, name: string, element: Element) {
   let count = 0;
 
   Tools.each(dom.select(name), function (node) {
@@ -94,7 +122,7 @@ const findIndex = function (dom, name, element) {
   return count;
 };
 
-const moveEndPoint = function (rng, start) {
+const moveEndPoint = function (rng: Range, start: boolean) {
   let container, offset, childNodes;
   const prefix = start ? 'start' : 'end';
 
@@ -111,14 +139,14 @@ const moveEndPoint = function (rng, start) {
   }
 };
 
-const normalizeTableCellSelection = function (rng) {
+const normalizeTableCellSelection = function (rng: Range) {
   moveEndPoint(rng, true);
   moveEndPoint(rng, false);
 
   return rng;
 };
 
-const findSibling = function (node, offset) {
+const findSibling = function (node: Node, offset: number): Element {
   let sibling;
 
   if (NodeType.isElement(node)) {
@@ -145,12 +173,12 @@ const findSibling = function (node, offset) {
   }
 };
 
-const findAdjacentContentEditableFalseElm = function (rng) {
+const findAdjacentContentEditableFalseElm = function (rng: Range) {
   return findSibling(rng.startContainer, rng.startOffset) || findSibling(rng.endContainer, rng.endOffset);
 };
 
-const getOffsetBookmark = function (trim, normalized, selection: Selection) {
-  let element = selection.getNode();
+const getOffsetBookmark = function (trim: TrimFn, normalized: boolean, selection: Selection): IndexBookmark | PathBookmark {
+  const element = selection.getNode();
   let name = element ? element.nodeName : null;
   const rng = selection.getRng();
 
@@ -158,16 +186,16 @@ const getOffsetBookmark = function (trim, normalized, selection: Selection) {
     return { name, index: findIndex(selection.dom, name, element) };
   }
 
-  element = findAdjacentContentEditableFalseElm(rng);
-  if (element) {
-    name = element.tagName;
-    return { name, index: findIndex(selection.dom, name, element) };
+  const sibling = findAdjacentContentEditableFalseElm(rng);
+  if (sibling) {
+    name = sibling.tagName;
+    return { name, index: findIndex(selection.dom, name, sibling) };
   }
 
   return getLocation(trim, selection, normalized, rng);
 };
 
-const getCaretBookmark = function (selection: Selection) {
+const getCaretBookmark = function (selection: Selection): StringPathBookmark {
   const rng = selection.getRng();
 
   return {
@@ -176,11 +204,11 @@ const getCaretBookmark = function (selection: Selection) {
   };
 };
 
-const getRangeBookmark = function (selection: Selection) {
+const getRangeBookmark = function (selection: Selection): RangeBookmark {
   return { rng: selection.getRng() };
 };
 
-const getPersistentBookmark = function (selection: Selection) {
+const getPersistentBookmark = function (selection: Selection): IdBookmark | IndexBookmark {
   const dom = selection.dom;
   let rng = selection.getRng();
   const id = dom.uniqueId();
@@ -216,7 +244,7 @@ const getPersistentBookmark = function (selection: Selection) {
   return { id };
 };
 
-const getBookmark = function (selection: Selection, type, normalized) {
+const getBookmark = function (selection: Selection, type: number, normalized: boolean): Bookmark {
   if (type === 2) {
     return getOffsetBookmark(Zwsp.trim, normalized, selection);
   } else if (type === 3) {
@@ -230,5 +258,5 @@ const getBookmark = function (selection: Selection, type, normalized) {
 
 export default {
   getBookmark,
-  getUndoBookmark: Fun.curry(getOffsetBookmark, Fun.identity, true)
+  getUndoBookmark: Fun.curry(getOffsetBookmark, Fun.identity, true) as (selection: Selection) => IndexBookmark | PathBookmark
 };

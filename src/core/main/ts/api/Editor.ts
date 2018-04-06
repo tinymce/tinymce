@@ -28,6 +28,7 @@ import * as EditorContent from 'tinymce/core/EditorContent';
 import * as EditorRemove from '../EditorRemove';
 import SelectionOverrides from 'tinymce/core/SelectionOverrides';
 import Schema from 'tinymce/core/api/html/Schema';
+import { UndoManager } from 'tinymce/core/api/UndoManager';
 
 /**
  * Include the base event class documentation.
@@ -112,7 +113,7 @@ export interface Editor {
   suffix: string;
   targetElm: HTMLElement;
   theme: any;
-  undoManager: any;
+  undoManager: UndoManager;
   validate: boolean;
   windowManager: any;
   _beforeUnload: AnyFunction;
