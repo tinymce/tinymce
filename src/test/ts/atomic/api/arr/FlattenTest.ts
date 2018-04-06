@@ -11,7 +11,7 @@ UnitTest.test('FlattenTest', function() {
   check([], []);
   check([1], [[1]]);
   check([1, 2], [[1], [2]]);
-  check([1, 2, 3, 4, 5], [[1, 2], [], [3], [4, 5], []]);
+  check([1, 2, 3, 4, 5], [[1, 2], [], [3], Object.freeze([4, 5]), []]);
 
   var checkError = function (input) {
     var message = undefined;
