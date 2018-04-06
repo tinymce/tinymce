@@ -11,9 +11,9 @@
 import { Arr } from '@ephox/katamari';
 import TrimHtml from '../dom/TrimHtml';
 import Fragments from './Fragments';
-import { Bookmark } from 'tinymce/core/dom/GetBookmark';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Element, Html, Remove, SelectorFilter } from '@ephox/sugar';
+import { Bookmark } from 'tinymce/core/dom/BookmarkTypes';
 
 export const enum UndoLevelType {
   Fragmented = 'fragmented',
