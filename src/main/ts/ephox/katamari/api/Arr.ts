@@ -248,8 +248,8 @@ const mapToObject = <T = any, U = any>(xs: ReadonlyArray<T>, f:(x:T, i:number) =
 
 const pure = <T = any>(x: T): T[] => [x];
 
-const sort = <T = any>(xs: ReadonlyArray<any>, comparator?: Comparator<T>): T[] => {
-  const copy: any[] = slice.call(xs, 0);
+const sort = <T = any>(xs: ReadonlyArray<T>, comparator?: Comparator<T>): T[] => {
+  const copy: T[] = slice.call(xs, 0);
   copy.sort(comparator);
   return copy;
 };
