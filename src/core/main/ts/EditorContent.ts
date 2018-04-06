@@ -16,6 +16,7 @@ import Serializer from 'tinymce/core/api/html/Serializer';
 import * as FilterNode from './html/FilterNode';
 import { Option, Fun } from '@ephox/katamari';
 import Zwsp from 'tinymce/core/text/Zwsp';
+import Settings from 'tinymce/core/api/Settings';
 
 const defaultFormat = 'html';
 
@@ -54,7 +55,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
       content = '<li>' + padd + '</li>';
     }
 
-    forcedRootBlockName = editor.settings.forced_root_block;
+    forcedRootBlockName = Settings.getForcedRootBlock(editor);
 
     // Check if forcedRootBlock is configured and that the block is a valid child of the body
     if (forcedRootBlockName && editor.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
@@ -103,6 +104,12 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: Node, args: 
   return content;
 };
 
+const trimEmptyContents = (editor: Editor, html: string): string => {
+  const blockName = Settings.getForcedRootBlock(editor);
+  const emptyRegExp = new RegExp(`^(<${blockName}[^>]*>(&nbsp;|&#160;|\\s|\u00a0|<br \\/>|)<\\/${blockName}>[\r\n]*|<br \\/>[\r\n]*)$`);
+  return html.replace(emptyRegExp, '');
+};
+
 const getContentFromBody = (editor, args, body) => {
   let content;
 
@@ -121,7 +128,7 @@ const getContentFromBody = (editor, args, body) => {
   } else if (args.format === 'tree') {
     return editor.serializer.serialize(body, args);
   } else {
-    content = editor.serializer.serialize(body, args);
+    content = trimEmptyContents(editor, editor.serializer.serialize(body, args));
   }
 
   if (args.format !== 'text') {

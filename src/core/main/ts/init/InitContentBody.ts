@@ -266,13 +266,6 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     editor.addVisual(editor.getBody());
   });
 
-  // Remove empty contents
-  if (settings.padd_empty_editor) {
-    editor.on('PostProcess', function (e) {
-      e.content = e.content.replace(/^(<p[^>]*>(&nbsp;|&#160;|\s|\u00a0|<br \/>|)<\/p>[\r\n]*|<br \/>[\r\n]*)$/, '');
-    });
-  }
-
   editor.load({ initial: true, format: 'html' });
   editor.startContent = editor.getContent({ format: 'raw' }) as string;
 
