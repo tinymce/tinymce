@@ -180,6 +180,14 @@ td[data-mce-selected], th[data-mce-selected] {
   hr {
     cursor: default;
   }
+
+  /* Fixes TINY-1618
+     Safari sets -webkit-nbsp-mode to "space" on contenteditable="true"
+     tables, making it impossible to enter spaces into small table cells
+  */
+  table {
+    -webkit-nbsp-mode: normal;
+  }
 }
 
 
