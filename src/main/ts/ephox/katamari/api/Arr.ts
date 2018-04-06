@@ -237,8 +237,8 @@ const difference = <T = any>(a1: ReadonlyArray<T>, a2: ReadonlyArray<T>): T[] =>
   return filter(a1, (x) => !contains(a2, x));
 };
 
-const mapToObject = <T = any, U = any>(xs: ReadonlyArray<T>, f:(x:T, i:number) => U): Record<string, any> => {
-  const r = {};
+const mapToObject = <T = any, U = any>(xs: ReadonlyArray<T>, f: (x: T, i: number) => U): Record<string, U> => {
+  const r: Record<string, U> = {};
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
     r[String(x)] = f(x, i);
