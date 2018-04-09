@@ -11,8 +11,8 @@
 import GetBookmark from './GetBookmark';
 import ResolveBookmark from './ResolveBookmark';
 import { Selection } from '../api/dom/Selection';
-import NodeType from './NodeType';
-import { Bookmark } from 'tinymce/core/dom/BookmarkTypes';
+import NodeType from '../dom/NodeType';
+import { Bookmark } from './BookmarkTypes';
 
 const getBookmark = function (selection: Selection, type: number, normalized: boolean): Bookmark {
   return GetBookmark.getBookmark(selection, type, normalized);

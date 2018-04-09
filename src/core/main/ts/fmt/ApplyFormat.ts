@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Bookmarks from '../dom/Bookmarks';
+import Bookmarks from '../bookmark/Bookmarks';
 import NodeType from '../dom/NodeType';
 import * as CaretFormat from './CaretFormat';
 import ExpandRange from './ExpandRange';
@@ -21,7 +21,7 @@ import RangeWalk from '../selection/RangeWalk';
 import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';
 import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
-import GetBookmark from 'tinymce/core/dom/GetBookmark';
+import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import { Editor } from 'tinymce/core/api/Editor';
 
 const each = Tools.each;

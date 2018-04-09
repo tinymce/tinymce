@@ -9,16 +9,16 @@
  */
 
 import { Fun } from '@ephox/katamari';
-import * as CaretBookmark from '../caret/CaretBookmark';
+import * as CaretBookmark from './CaretBookmark';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
-import NodeType from './NodeType';
+import NodeType from '../dom/NodeType';
 import * as RangeNodes from '../selection/RangeNodes';
 import Zwsp from '../text/Zwsp';
 import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
-import { PathBookmark, IndexBookmark, StringPathBookmark, RangeBookmark, IdBookmark, Bookmark } from 'tinymce/core/dom/BookmarkTypes';
+import { PathBookmark, IndexBookmark, StringPathBookmark, RangeBookmark, IdBookmark, Bookmark } from './BookmarkTypes';
 
 type TrimFn = (s: string) => string;
 

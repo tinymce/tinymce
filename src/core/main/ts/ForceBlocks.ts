@@ -10,7 +10,7 @@
 
 import { Arr, Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import Bookmarks from './dom/Bookmarks';
+import Bookmarks from './bookmark/Bookmarks';
 import NodeType from './dom/NodeType';
 import Parents from './dom/Parents';
 import EditorFocus from './focus/EditorFocus';

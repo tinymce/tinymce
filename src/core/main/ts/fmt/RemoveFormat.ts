@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Bookmarks from '../dom/Bookmarks';
+import Bookmarks from '../bookmark/Bookmarks';
 import NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
 import * as CaretFormat from './CaretFormat';
@@ -18,7 +18,7 @@ import MatchFormat from './MatchFormat';
 import RangeWalk from '../selection/RangeWalk';
 import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';
-import GetBookmark from 'tinymce/core/dom/GetBookmark';
+import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import { Editor } from 'tinymce/core/api/Editor';
 
 const MCE_ATTR_RE = /^(src|href|style)$/;

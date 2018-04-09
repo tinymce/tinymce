@@ -13,7 +13,7 @@ import TrimHtml from '../dom/TrimHtml';
 import Fragments from './Fragments';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Element, Html, Remove, SelectorFilter } from '@ephox/sugar';
-import { Bookmark } from 'tinymce/core/dom/BookmarkTypes';
+import { Bookmark } from 'tinymce/core/bookmark/BookmarkTypes';
 
 export const enum UndoLevelType {
   Fragmented = 'fragmented',
