@@ -6,7 +6,6 @@ import * as EditorContent from 'tinymce/core/EditorContent';
 import Assertions from '@ephox/agar/lib/main/ts/ephox/agar/api/Assertions';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import Node from 'tinymce/core/api/html/Node';
-import { Editor } from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.EditorGetContentTreeTest', function () {
   const success = arguments[arguments.length - 2];
@@ -30,10 +29,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorGetContentTreeTest', function () 
   const toHtml = (node: Node) => {
     const htmlSerializer = Serializer({});
     return htmlSerializer.serialize(node);
-  };
-
-  const sSetRawContent = (editor: Editor, html: string) => {
-    return Step.sync(() => editor.setContent(html, { format: 'raw' }));
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
@@ -104,9 +99,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorGetContentTreeTest', function () 
       ])),
       Logger.t('getContent empty editor depending on forced_root_block setting', GeneralSteps.sequence([
         tinyApis.sSetSetting('forced_root_block', 'div'),
-        sSetRawContent(editor, '<p><br></p>'),
+        tinyApis.sSetRawContent('<p><br></p>'),
         tinyApis.sAssertContent('<p>&nbsp;</p>'),
-        sSetRawContent(editor, '<div><br></div>'),
+        tinyApis.sSetRawContent('<div><br></div>'),
         tinyApis.sAssertContent(''),
         tinyApis.sSetSetting('forced_root_block', 'p')
       ]))

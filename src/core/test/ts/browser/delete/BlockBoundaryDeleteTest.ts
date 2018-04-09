@@ -38,12 +38,6 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
     });
   };
 
-  const sSetRawContent = function (editor, html) {
-    return Step.sync(function () {
-      editor.getBody().innerHTML = html;
-    });
-  };
-
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
@@ -148,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sAssertSelection([0, 0, 0], 1, [0, 0, 0], 1)
       ])),
       Logger.t('Backspace from block into block with trailing br should merge', GeneralSteps.sequence([
-        sSetRawContent(editor, '<p>a<br></p><p>b</p>'),
+        tinyApis.sSetRawContent('<p>a<br></p><p>b</p>'),
         tinyApis.sSetCursor([1, 0], 0),
         sBackspace(editor),
         tinyApis.sAssertContentStructure(
@@ -168,7 +162,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
       ])),
       Logger.t('Delete from block into block with trailing br should merge', GeneralSteps.sequence([
-        sSetRawContent(editor, '<p>a<br></p><p>b</p>'),
+        tinyApis.sSetRawContent('<p>a<br></p><p>b</p>'),
         tinyApis.sSetCursor([0, 0], 1),
         sDelete(editor),
         tinyApis.sAssertContentStructure(
@@ -188,7 +182,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
       ])),
       Logger.t('Backspace from empty block into content block should merge', GeneralSteps.sequence([
-        sSetRawContent(editor, '<p>a</p><p><br></p>'),
+        tinyApis.sSetRawContent('<p>a</p><p><br></p>'),
         tinyApis.sSetCursor([1], 0),
         sBackspace(editor),
         tinyApis.sAssertContentStructure(
@@ -207,7 +201,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
       ])),
       Logger.t('Delete from empty block into content block should merge', GeneralSteps.sequence([
-        sSetRawContent(editor, '<p><br></p><p>a</p>'),
+        tinyApis.sSetRawContent('<p><br></p><p>a</p>'),
         tinyApis.sSetCursor([0], 0),
         sDelete(editor),
         tinyApis.sAssertContentStructure(
@@ -226,7 +220,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sAssertSelection([0, 0], 0, [0, 0], 0)
       ])),
       Logger.t('Backspace between empty blocks should merge', GeneralSteps.sequence([
-        sSetRawContent(editor, '<p><br></p><p><br></p>'),
+        tinyApis.sSetRawContent('<p><br></p><p><br></p>'),
         tinyApis.sSetCursor([1], 0),
         sBackspace(editor),
         tinyApis.sAssertContentStructure(
@@ -245,7 +239,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sAssertSelection([0], 0, [0], 0)
       ])),
       Logger.t('Delete between empty blocks should merge', GeneralSteps.sequence([
-        sSetRawContent(editor, '<p><br></p><p><br></p>'),
+        tinyApis.sSetRawContent('<p><br></p><p><br></p>'),
         tinyApis.sSetCursor([0], 0),
         sDelete(editor),
         tinyApis.sAssertContentStructure(

@@ -1,6 +1,6 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { LegacyUnit, TinyLoader, TinyApis } from '@ephox/mcagar';
 
 import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -79,12 +79,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', function (
     );
   });
 
-  const sSetRawContent = function (editor, html) {
-    return Step.sync(function () {
-      editor.getBody().innerHTML = html;
-    });
-  };
-
   const sAssertSelectionContent = function (editor, expectedHtml) {
     return Step.sync(function () {
       Assertions.assertHtml('Should be expected content', expectedHtml, editor.selection.getContent());
@@ -92,9 +86,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', function (
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    const tinyApis = TinyApis(editor);
     Pipeline.async({}, suite.toSteps(editor).concat([
       Logger.t('Extracted selection contents should be without internal attributes', GeneralSteps.sequence([
-        sSetRawContent(editor, '<table><tr><td data-mce-selected="1">a</td><td>b</td></tr><tr><td data-mce-selected="1">c</td><td>d</td></tr></table>'),
+        tinyApis.sSetRawContent('<table><tr><td data-mce-selected="1">a</td><td>b</td></tr><tr><td data-mce-selected="1">c</td><td>d</td></tr></table>'),
         sAssertSelectionContent(editor, '<table><tbody><tr><td>a</td></tr><tr><td>c</td></tr></tbody></table>')
       ]))
     ]), onSuccess, onFailure);
