@@ -26,8 +26,14 @@ const removeEmptyLi = function (dom, li) {
 
 const outdent = function (editor, li) {
   let ul = li.parentNode;
-  const ulParent = ul.parentNode;
-  let newBlock;
+  let ulParent, newBlock;
+
+  if (ul) {
+    ulParent = ul.parentNode;
+  } else {
+    removeEmptyLi(editor.dom, li);
+    return true;
+  }
 
   if (ul === editor.getBody()) {
     return true;
