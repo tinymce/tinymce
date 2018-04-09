@@ -22,6 +22,12 @@ var cSetContent = function (html: string) {
   });
 };
 
+var cSetRawContent = function (html: string) {
+  return Chain.op(function (editor) {
+    editor.getBody().innerHTML = html;
+  });
+};
+
 var cSetSelectionFrom = function (spec) {
   var path = Cursors.pathFrom(spec);
   return cSetSelection(path.startPath(), path.soffset(), path.finishPath(), path.foffset());
