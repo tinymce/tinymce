@@ -50,6 +50,8 @@ tinymce.init({
   paste_data_images: true,
   image_caption: true,
   height: 600,
+  // imagetools_cors_hosts: ['localhost', 'moxiecode.cachefly.net'],
+  // imagetools_credentials_hosts: ['localhost'],
   // rtl_ui: true,
   toolbar1: 'undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons',
   images_upload_handler(data, success, failure, progress) {

@@ -17,10 +17,11 @@ import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import URI from 'tinymce/core/api/util/URI';
 
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import Dialog from '../ui/Dialog';
 import ImageSize from './ImageSize';
 import Proxy from './Proxy';
+import { Editor } from 'tinymce/core/api/Editor';
 
 let count = 0;
 
@@ -60,25 +61,25 @@ const isLocalImage = function (editor, img) {
 };
 
 const isCorsImage = function (editor, img) {
-  return Tools.inArray(editor.settings.imagetools_cors_hosts, new URI(img.src).host) !== -1;
+  return Tools.inArray(Settings.getCorsHosts(editor), new URI(img.src).host) !== -1;
 };
 
-const getApiKey = function (editor) {
-  return editor.settings.api_key || editor.settings.imagetools_api_key;
+const isCorsWithCredentialsImage = function (editor, img) {
+  return Tools.inArray(Settings.getCredentialsHosts(editor), new URI(img.src).host) !== -1;
 };
 
-const imageToBlob = function (editor, img) {
+const imageToBlob = function (editor: Editor, img: HTMLImageElement) {
   let src = img.src, apiKey;
 
   if (isCorsImage(editor, img)) {
-    return Proxy.getUrl(img.src, null);
+    return Proxy.getUrl(img.src, null, isCorsWithCredentialsImage(editor, img));
   }
 
   if (!isLocalImage(editor, img)) {
     src = Settings.getProxyUrl(editor);
     src += (src.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
-    apiKey = getApiKey(editor);
-    return Proxy.getUrl(src, apiKey);
+    apiKey = Settings.getApiKey(editor);
+    return Proxy.getUrl(src, apiKey, false);
   }
 
   return BlobConversions.imageToBlob(img);
@@ -97,7 +98,7 @@ const findSelectedBlob = function (editor) {
 const startTimedUpload = function (editor, imageUploadTimerState) {
   const imageUploadTimer = Delay.setEditorTimeout(editor, function () {
     editor.editorUpload.uploadImagesAuto();
-  }, editor.settings.images_upload_timeout || 30000);
+  }, Settings.getUploadTimeout(editor));
 
   imageUploadTimerState.set(imageUploadTimer);
 };
@@ -114,7 +115,7 @@ const updateSelectedImage = function (editor, ir, uploadImmediately, imageUpload
     selectedImage = getSelectedImage(editor);
     uri = selectedImage.src;
 
-    if (editor.settings.images_reuse_filename) {
+    if (Settings.shouldReuseFilename(editor)) {
       blobInfo = blobCache.getByUri(uri);
       if (blobInfo) {
         uri = blobInfo.uri();
