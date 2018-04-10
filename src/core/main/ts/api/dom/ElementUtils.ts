@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Bookmarks from '../../dom/Bookmarks';
+import Bookmarks from '../../bookmark/Bookmarks';
 import Tools from '../util/Tools';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 

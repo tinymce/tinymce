@@ -9,7 +9,7 @@
  */
 
 import { Fun } from '@ephox/katamari';
-import Bookmarks from '../dom/Bookmarks';
+import Bookmarks from '../bookmark/Bookmarks';
 import ElementUtils from '../api/dom/ElementUtils';
 import NodeType from '../dom/NodeType';
 import FormatUtils from './FormatUtils';

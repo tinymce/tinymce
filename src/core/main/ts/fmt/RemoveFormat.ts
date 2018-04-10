@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Bookmarks from '../dom/Bookmarks';
+import Bookmarks from '../bookmark/Bookmarks';
 import NodeType from '../dom/NodeType';
 import TreeWalker from '../api/dom/TreeWalker';
 import * as CaretFormat from './CaretFormat';
@@ -18,6 +18,8 @@ import MatchFormat from './MatchFormat';
 import RangeWalk from '../selection/RangeWalk';
 import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';
+import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const MCE_ATTR_RE = /^(src|href|style)$/;
 const each = Tools.each;
@@ -348,7 +350,7 @@ const wrapAndSplit = function (editor, formatList, formatRoot, container, target
   return container;
 };
 
-const remove = function (ed, name, vars?, node?, similar?) {
+const remove = function (ed: Editor, name: string, vars?, node?, similar?) {
   const formatList = ed.formatter.get(name), format = formatList[0];
   let bookmark, rng, contentEditable = true;
   const dom = ed.dom;
@@ -524,7 +526,7 @@ const remove = function (ed, name, vars?, node?, similar?) {
   }
 
   if (!selection.isCollapsed() || !format.inline || dom.select('td[data-mce-selected],th[data-mce-selected]').length) {
-    bookmark = selection.getBookmark();
+    bookmark = GetBookmark.getPersistentBookmark(ed.selection, true);
     removeRngStyle(selection.getRng());
     selection.moveToBookmark(bookmark);
 

@@ -10,15 +10,16 @@
 
 import { Option, Options } from '@ephox/katamari';
 import Env from '../api/Env';
-import * as CaretBookmark from '../caret/CaretBookmark';
+import * as CaretBookmark from './CaretBookmark';
 import CaretPosition from '../caret/CaretPosition';
-import NodeType from './NodeType';
+import NodeType from '../dom/NodeType';
 import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';
 import { getParentCaretContainer } from 'tinymce/core/fmt/FormatContainer';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 import CaretFinder from 'tinymce/core/caret/CaretFinder';
+import { isPathBookmark, isStringPathBookmark, isIdBookmark, isIndexBookmark, isRangeBookmark, PathBookmark, IdBookmark, Bookmark, IndexBookmark } from './BookmarkTypes';
 
 const addBogus = (dom: DOMUtils, node: HTMLElement) => {
   // Adds a bogus BR element for empty block elements
@@ -73,7 +74,7 @@ const padEmptyCaretContainer = (root: HTMLElement, node: Node, rng: Range): bool
   }
 };
 
-const setEndPoint = (dom: DOMUtils, start: boolean, bookmark, rng: Range) => {
+const setEndPoint = (dom: DOMUtils, start: boolean, bookmark: PathBookmark, rng: Range) => {
   const point = bookmark[start ? 'start' : 'end'];
   let i, node, offset, children;
   const root = dom.getRoot();
@@ -121,7 +122,9 @@ const setEndPoint = (dom: DOMUtils, start: boolean, bookmark, rng: Range) => {
   return true;
 };
 
-const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark) => {
+const isValidTextNode = (node: Node): node is Text => NodeType.isText(node) && node.data.length > 0;
+
+const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark) => {
   let marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev;
   const keep = bookmark.keep;
   let container, offset;
@@ -133,8 +136,19 @@ const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark) => {
       if (!keep) {
         idx = dom.nodeIndex(marker);
       } else {
-        node = marker.firstChild;
-        idx = 1;
+        if (marker.hasChildNodes()) {
+          node = marker.firstChild;
+          idx = 1;
+        } else if (isValidTextNode(marker.nextSibling)) {
+          node = marker.nextSibling;
+          idx = 0;
+        } else if (isValidTextNode(marker.previousSibling)) {
+          node = marker.previousSibling;
+          idx = marker.previousSibling.data.length;
+        } else {
+          node = marker.parentNode;
+          idx = dom.nodeIndex(marker) + 1;
+        }
       }
 
       container = node;
@@ -143,8 +157,16 @@ const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark) => {
       if (!keep) {
         idx = dom.nodeIndex(marker);
       } else {
-        node = marker.firstChild;
-        idx = 1;
+        if (marker.hasChildNodes()) {
+          node = marker.firstChild;
+          idx = 1;
+        } else if (isValidTextNode(marker.previousSibling)) {
+          node = marker.previousSibling;
+          idx = marker.previousSibling.data.length;
+        } else {
+          node = marker.parentNode;
+          idx = dom.nodeIndex(marker);
+        }
       }
 
       container = node;
@@ -195,7 +217,7 @@ const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark) => {
 
 const alt = <A>(o1: Option<A>, o2: Option<A>): Option<A> => o1.isSome() ? o1 : o2;
 
-const resolvePaths = (dom: DOMUtils, bookmark) => {
+const resolvePaths = (dom: DOMUtils, bookmark: PathBookmark): Option<Range> => {
   const rng = dom.createRng();
 
   if (setEndPoint(dom, true, bookmark, rng) && setEndPoint(dom, false, bookmark, rng)) {
@@ -205,7 +227,7 @@ const resolvePaths = (dom: DOMUtils, bookmark) => {
   }
 };
 
-const resolveId = (dom: DOMUtils, bookmark) => {
+const resolveId = (dom: DOMUtils, bookmark: IdBookmark) => {
   const startPos = restoreEndPoint(dom, 'start', bookmark);
   const endPos = restoreEndPoint(dom, 'end', bookmark);
 
@@ -220,7 +242,7 @@ const resolveId = (dom: DOMUtils, bookmark) => {
   });
 };
 
-const resolveIndex = (dom: DOMUtils, bookmark) => {
+const resolveIndex = (dom: DOMUtils, bookmark: IndexBookmark) => {
   return Option.from(dom.select(bookmark.name)[bookmark.index]).map((elm) => {
     const rng = dom.createRng();
     rng.selectNode(elm);
@@ -228,19 +250,19 @@ const resolveIndex = (dom: DOMUtils, bookmark) => {
   });
 };
 
-const resolve = (selection: Selection, bookmark) => {
+const resolve = (selection: Selection, bookmark: Bookmark): Option<Range> => {
   const dom = selection.dom;
 
   if (bookmark) {
-    if (Tools.isArray(bookmark.start)) {
+    if (isPathBookmark(bookmark)) {
       return resolvePaths(dom, bookmark);
-    } else if (typeof bookmark.start === 'string') {
+    } else if (isStringPathBookmark(bookmark)) {
       return Option.some(resolveCaretPositionBookmark(dom, bookmark));
-    } else if (bookmark.id) {
+    } else if (isIdBookmark(bookmark)) {
       return resolveId(dom, bookmark);
-    } else if (bookmark.name) {
+    } else if (isIndexBookmark(bookmark)) {
       return resolveIndex(dom, bookmark);
-    } else if (bookmark.rng) {
+    } else if (isRangeBookmark(bookmark)) {
       return Option.some(bookmark.rng);
     }
   }

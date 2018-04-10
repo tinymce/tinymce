@@ -9,40 +9,16 @@
  */
 
 import { Fun } from '@ephox/katamari';
-import * as CaretBookmark from '../caret/CaretBookmark';
+import * as CaretBookmark from './CaretBookmark';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
-import NodeType from './NodeType';
+import NodeType from '../dom/NodeType';
 import * as RangeNodes from '../selection/RangeNodes';
 import Zwsp from '../text/Zwsp';
 import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
-
-export interface StringPathBookmark {
-  start: string;
-  end?: string;
-}
-
-export interface RangeBookmark {
-  rng: Range;
-}
-
-export interface IdBookmark {
-  id: string;
-}
-
-export interface IndexBookmark {
-  name: string;
-  index: number;
-}
-
-export interface PathBookmark {
-  start: number[];
-  end?: number[];
-}
-
-export type Bookmark = StringPathBookmark | RangeBookmark | IdBookmark | IndexBookmark | PathBookmark;
+import { PathBookmark, IndexBookmark, StringPathBookmark, RangeBookmark, IdBookmark, Bookmark } from './BookmarkTypes';
 
 type TrimFn = (s: string) => string;
 
@@ -208,15 +184,18 @@ const getRangeBookmark = function (selection: Selection): RangeBookmark {
   return { rng: selection.getRng() };
 };
 
-const getPersistentBookmark = function (selection: Selection): IdBookmark | IndexBookmark {
+const createBookmarkSpan = (dom: DOMUtils, id: string, filled: boolean) => {
+  const args = { 'data-mce-type': 'bookmark', 'id': id, 'style': 'overflow:hidden;line-height:0px' };
+  return filled ? dom.create('span', args, '&#xFEFF;') : dom.create('span', args);
+};
+
+const getPersistentBookmark = function (selection: Selection, filled: boolean): IdBookmark | IndexBookmark {
   const dom = selection.dom;
   let rng = selection.getRng();
   const id = dom.uniqueId();
   const collapsed = selection.isCollapsed();
-  const styles = 'overflow:hidden;line-height:0px';
   const element = selection.getNode();
   const name = element.nodeName;
-  const chr = '&#xFEFF;';
 
   if (name === 'IMG') {
     return { name, index: findIndex(dom, name, element) };
@@ -228,14 +207,14 @@ const getPersistentBookmark = function (selection: Selection): IdBookmark | Inde
   // Insert end marker
   if (!collapsed) {
     rng2.collapse(false);
-    const endBookmarkNode = dom.create('span', { 'data-mce-type': 'bookmark', 'id': id + '_end', 'style': styles }, chr);
+    const endBookmarkNode = createBookmarkSpan(dom, id + '_end', filled);
     rng2.insertNode(endBookmarkNode);
     trimEmptyTextNode(endBookmarkNode.nextSibling);
   }
 
   rng = normalizeTableCellSelection(rng);
   rng.collapse(true);
-  const startBookmarkNode = dom.create('span', { 'data-mce-type': 'bookmark', 'id': id + '_start', 'style': styles }, chr);
+  const startBookmarkNode = createBookmarkSpan(dom, id + '_start', filled);
   rng.insertNode(startBookmarkNode);
   trimEmptyTextNode(startBookmarkNode.previousSibling);
 
@@ -252,11 +231,12 @@ const getBookmark = function (selection: Selection, type: number, normalized: bo
   } else if (type) {
     return getRangeBookmark(selection);
   } else {
-    return getPersistentBookmark(selection);
+    return getPersistentBookmark(selection, false);
   }
 };
 
 export default {
   getBookmark,
-  getUndoBookmark: Fun.curry(getOffsetBookmark, Fun.identity, true) as (selection: Selection) => IndexBookmark | PathBookmark
+  getUndoBookmark: Fun.curry(getOffsetBookmark, Fun.identity, true) as (selection: Selection) => IndexBookmark | PathBookmark,
+  getPersistentBookmark
 };

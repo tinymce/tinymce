@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Bookmarks from '../dom/Bookmarks';
+import Bookmarks from '../bookmark/Bookmarks';
 import NodeType from '../dom/NodeType';
 import * as CaretFormat from './CaretFormat';
 import ExpandRange from './ExpandRange';
@@ -21,6 +21,8 @@ import RangeWalk from '../selection/RangeWalk';
 import Tools from '../api/util/Tools';
 import { Selection } from '../api/dom/Selection';
 import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
+import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const each = Tools.each;
 
@@ -41,7 +43,7 @@ const processChildElements = function (node, filter, process) {
   });
 };
 
-const applyFormat = function (ed, name, vars?, node?) {
+const applyFormat = function (ed: Editor, name: string, vars?, node?) {
   const formatList = ed.formatter.get(name);
   const format = formatList[0];
   let bookmark, rng;
@@ -335,7 +337,7 @@ const applyFormat = function (ed, name, vars?, node?) {
 
         // Apply formatting to selection
         ed.selection.setRng(RangeNormalizer.normalize(ed.selection.getRng()));
-        bookmark = selection.getBookmark();
+        bookmark = GetBookmark.getPersistentBookmark(ed.selection, true);
         applyRngStyle(dom, ExpandRange.expandRng(ed, selection.getRng(), formatList), bookmark);
 
         if (format.styles) {

@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import GetBookmark from '../dom/GetBookmark';
+import GetBookmark from '../bookmark/GetBookmark';
 import Levels, { UndoLevel } from '../undo/Levels';
 import Tools from './util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
