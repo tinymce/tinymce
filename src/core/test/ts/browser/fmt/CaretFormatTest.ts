@@ -26,12 +26,6 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
     });
   };
 
-  const sSetRawContent = function (editor, html) {
-    return Step.sync(function () {
-      editor.getBody().innerHTML = html;
-    });
-  };
-
   const sAssertNormalizedContentStructure = function (editor, expected) {
     return Step.sync(function () {
       const rawBody = editor.getBody().cloneNode(true);
@@ -205,7 +199,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
         tinyApis.sAssertSelection([0, 1, 0, 0], 2, [0, 1, 0, 0], 2)
       ])),
       Logger.t('Apply bold format to the end of text and with trailing br', GeneralSteps.sequence([
-        sSetRawContent(editor, '<p>a<br></p>'),
+        tinyApis.sSetRawContent('<p>a<br></p>'),
         tinyApis.sSetCursor([0, 0], 1),
         sApplyCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
@@ -238,7 +232,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
         tinyApis.sAssertSelection([0, 1, 0, 0], 2, [0, 1, 0, 0], 2)
       ])),
       Logger.t('Remove bold format from word with trailing br', GeneralSteps.sequence([
-        sSetRawContent(editor, '<p><strong>a<br></strong></p>'),
+        tinyApis.sSetRawContent('<p><strong>a<br></strong></p>'),
         tinyApis.sSetCursor([0, 0, 0], 1),
         sRemoveCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
@@ -264,7 +258,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function () {
         tinyApis.sAssertSelection([0, 1, 0], 2, [0, 1, 0], 2)
       ])),
       Logger.t('Remove bold format from empty paragraph and move selection', GeneralSteps.sequence([
-        sSetRawContent(editor, '<p>a</p><p><strong><br></strong></p>'),
+        tinyApis.sSetRawContent('<p>a</p><p><strong><br></strong></p>'),
         tinyApis.sSetCursor([1, 0, 0], 0),
         sRemoveCaretFormat(editor, 'bold', {}),
         tinyApis.sAssertContent('<p>a</p>\n<p>&nbsp;</p>'),

@@ -96,6 +96,14 @@ UnitTest.asynctest('browser.tinymce.core.EditorGetContentTreeTest', function () 
           editor.setContent(getFontTree());
           Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', EditorContent.getContent(editor));
         })
+      ])),
+      Logger.t('getContent empty editor depending on forced_root_block setting', GeneralSteps.sequence([
+        tinyApis.sSetSetting('forced_root_block', 'div'),
+        tinyApis.sSetRawContent('<p><br></p>'),
+        tinyApis.sAssertContent('<p>&nbsp;</p>'),
+        tinyApis.sSetRawContent('<div><br></div>'),
+        tinyApis.sAssertContent(''),
+        tinyApis.sSetSetting('forced_root_block', 'p')
       ]))
     ], onSuccess, onFailure);
   }, {

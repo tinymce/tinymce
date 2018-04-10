@@ -82,7 +82,6 @@ const getDefaultSettings = function (id, documentBaseUrl, editor) {
     font_size_legacy_values: 'xx-small,small,medium,large,x-large,xx-large,300%',
     forced_root_block: 'p',
     hidden_input: true,
-    padd_empty_editor: true,
     render_ui: true,
     indentation: '30px',
     inline_styles: true,
