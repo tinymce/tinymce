@@ -60,6 +60,7 @@ const insertImageAtCaret = (editor: Editor, data: ImageData) => {
   const elm = create((css) => normalizeCss(editor, css), data);
 
   editor.dom.setAttrib(elm, 'data-mce-id', '__mcenew');
+  editor.focus();
   editor.selection.setContent(elm.outerHTML);
 
   const insertedElm = editor.dom.select('*[data-mce-id="__mcenew"]')[0];
@@ -110,7 +111,6 @@ const writeImageDataToSelection = (editor: Editor, data: ImageData) => {
 
 const insertOrUpdateImage = (editor: Editor, data: ImageData) => {
   const image = getSelectedImage(editor);
-
   if (image) {
     if (data.src) {
       writeImageDataToSelection(editor, data);
