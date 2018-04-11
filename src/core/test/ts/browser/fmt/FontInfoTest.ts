@@ -143,6 +143,15 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function () {
     assertSpecificFontProp('fontSize', '<!-- comment -->', [0], '');
   });
 
+  suite.test('should not throw error when passed in element without parent', () => {
+    const rootDiv = document.createElement('div');
+    const element = document.createElement('p');
+
+    const actual = FontInfo.getFontSize(rootDiv, element);
+
+    LegacyUnit.equal('string', typeof actual, 'should return always string');
+  });
+
   Pipeline.async({}, suite.toSteps({}), function () {
     success();
   }, failure);

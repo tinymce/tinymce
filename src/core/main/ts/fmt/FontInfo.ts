@@ -9,18 +9,14 @@
  */
 
 import { Fun, Option } from '@ephox/katamari';
-import { Element, Node } from '@ephox/sugar';
+import { Element, Node, PredicateFind, Css, Compare } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 const getSpecifiedFontProp = (propName: string, rootElm: Element, elm: HTMLElement): Option<string> => {
-  while (elm !== rootElm) {
-    if (elm.style[propName]) {
-      const foundStyle = elm.style[propName];
-      return foundStyle !== '' ? Option.some(foundStyle) : Option.none();
-    }
-    elm = elm.parentNode as HTMLElement;
-  }
-  return Option.none();
+  const getProperty = (elm) => Css.getRaw(elm, propName);
+  const isRoot = (elm) => Compare.eq(Element.fromDom(rootElm), elm);
+
+  return PredicateFind.closest(Element.fromDom(elm), (elm) => getProperty(elm).isSome(), isRoot).bind(getProperty);
 };
 
 const round = (number: number, precision: number) => {
@@ -59,7 +55,7 @@ const getFontProp = (propName: string) => {
 };
 
 export default {
-  getFontSize: getFontProp('fontSize'),
-  getFontFamily: Fun.compose(normalizeFontFamily, getFontProp('fontFamily')) as (rootElm: Element, elm: Node) => string,
+  getFontSize: getFontProp('font-size'),
+  getFontFamily: Fun.compose(normalizeFontFamily, getFontProp('font-family')) as (rootElm: Element, elm: Node) => string,
   toPt
 };

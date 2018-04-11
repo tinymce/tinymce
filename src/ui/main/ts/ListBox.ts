@@ -105,6 +105,8 @@ export default MenuButton.extend({
       const matchingValues = Tools.grep(this.settings.values, (a) => a.value === value);
       if (matchingValues.length > 0) {
         this.state.set('value', value);
+      } else if (value === null) {
+        this.state.set('value', null);
       }
     } else {
       this.state.set('value', value);
