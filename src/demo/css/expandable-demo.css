@@ -1,0 +1,30 @@
+/*
+ * The sliding works a little bit like this: http://jsfiddle.net/adambiggs/MAbD3/
+ */
+ .demo-form-closed.demo-form-extra {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.demo-form-open.demo-form-extra {
+  visibility: visible;
+  opacity: 1;
+}
+
+.demo-form-growing .demo-form-extra {
+  /*
+   * Transition the height for 0.3s
+   * After 0.1s, transition opacity for 0.2s
+   * No visibility transition, it needs to show immediately
+   */
+  transition: height 0.3s ease, opacity 0.2s linear 0.1s;
+}
+
+.demo-form-shrinking .demo-form-extra {
+  /*
+   * Transition the opacity for 0.3s
+   * After 0.1s, transition height for 0.2s
+   * After 0.3s, transition visibility for 0s
+   */
+  transition: opacity 0.3s ease, height 0.2s linear 0.1s, visibility 0s linear 0.3s;
+}

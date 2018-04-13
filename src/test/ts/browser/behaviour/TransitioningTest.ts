@@ -42,6 +42,7 @@ UnitTest.asynctest('TransitioningTest', function () {
     return [
       GuiSetup.mAddStyles(doc, [
         '.transitioning { transition: opacity 1s ease; }',
+        // TODO INVESTIGATE: The first part of this selector looks wrong
         '[data-transitioning-state="gamma"], div[data-transitioning-state="gamma"]:not(.transitioning), div[data-transitioning-destination="gamma"] { opacity: 0.5 }',
         '[data-transitioning-state="gamma"], div[data-transitioning-state="alpha"]:not(.transitioning), div[data-transitioning-destination="alpha"] { opacity: 0.8 }',
         '[data-transitioning-state="gamma"], div[data-transitioning-state="beta"]:not(.transitioning), div[data-transitioning-destination="beta"] { opacity: 0.2 }'

@@ -12,6 +12,7 @@ import * as Sketcher from './Sketcher';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const factory = function (detail, components, spec, externals) {
+  // TODO IMPROVEMENT: Make close actually close the dialog by default!
   const showDialog = function (dialog) {
     const sink = detail.lazySink()().getOrDie();
     const blocker = sink.getSystem().build(

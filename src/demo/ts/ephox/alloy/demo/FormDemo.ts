@@ -138,12 +138,12 @@ export default <any> function () {
       },
 
       markers: {
-        expandedClass: 'a',
-        collapsedClass: 'b',
-        closedClass: 'demo-sliding-closed',
-        openClass: 'demo-sliding-open',
-        shrinkingClass: 'demo-sliding-height-shrinking',
-        growingClass: 'demo-sliding-height-growing'
+        expandedClass: 'demo-form-expanded',
+        collapsedClass: 'demo-form-collapsed',
+        closedClass: 'demo-form-closed',
+        openClass: 'demo-form-open',
+        shrinkingClass: 'demo-form-shrinking',
+        growingClass: 'demo-form-growing'
       },
 
       components: [
@@ -152,7 +152,7 @@ export default <any> function () {
             return {
               dom: {
                 tag: 'div',
-                classes: [ 'form-section' ]
+                classes: [ 'demo-form-section', 'demo-form-minimal' ]
               },
 
               components: [
@@ -169,7 +169,7 @@ export default <any> function () {
             return {
               dom: {
                 tag: 'div',
-                classes: [ 'form-section' ]
+                classes: [ 'demo-form-section', 'demo-form-extra' ]
               },
               components: [
                 parts.field('beta', DemoFields.textMunger(betaSpec)),
@@ -230,7 +230,7 @@ export default <any> function () {
       expandableBehaviours: Behaviour.derive([
         Keying.config({
           mode: 'cyclic',
-          visibilitySelector: '.form-section'
+          visibilitySelector: '.demo-form-section'
         })
       ])
     })

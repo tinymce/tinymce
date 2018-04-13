@@ -4,7 +4,7 @@ import * as Fields from '../../data/Fields';
 import * as RepresentState from './RepresentState';
 
 const setValue = function (component, repConfig, repState, data) {
-  // TODO: Really rethink this mode.
+  // TODO FIX: Rewrite this mode. I don't think it makes any sense.
   const dataKey = repConfig.store().getDataKey();
   repState.set({ });
   repConfig.store().setData()(component, data);

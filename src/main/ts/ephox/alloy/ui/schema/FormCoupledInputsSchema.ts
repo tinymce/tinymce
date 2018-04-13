@@ -33,6 +33,7 @@ const coupledPart = function (selfName, otherName) {
             AlloyEvents.run(NativeEvents.input(), function (me) {
               getField(me, detail, otherName).each(function (other) {
                 AlloyParts.getPart(me, detail, 'lock').each(function (lock) {
+                  // TODO IMPROVEMENT: Allow locker to fire onLockedChange if it is turned on after being off.
                   if (Toggling.isOn(lock)) { detail.onLockedChange()(me, other, lock); }
                 });
               });

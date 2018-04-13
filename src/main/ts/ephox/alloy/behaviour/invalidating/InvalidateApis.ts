@@ -44,13 +44,17 @@ const run = function (component, invalidConfig, invalidState) {
   });
 
   return query(component, invalidConfig, invalidState).map(function (valid) {
-    return valid.fold(function (err) {
-      markInvalid(component, invalidConfig, invalidState, err);
-      return Result.error(err);
-    }, function (v) {
-      markValid(component, invalidConfig);
-      return Result.value(v);
-    });
+    if (component.getSystem().isConnected()) {
+      return valid.fold(function (err) {
+        markInvalid(component, invalidConfig, invalidState, err);
+        return Result.error(err);
+      }, function (v) {
+        markValid(component, invalidConfig);
+        return Result.value(v);
+      });
+    } else {
+      return Result.error('No longer in system');
+    }
   });
 };
 

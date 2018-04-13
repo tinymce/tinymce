@@ -69,9 +69,10 @@ const builder = function (info) {
       }),
       Keying.config({
         mode: 'special',
-        // focusIn: info.autofocus() ? function (component) {
-        //   focusWidget(component);
-        // } : Behaviour.revoke(),
+        // This is required as long as Highlighting tries to focus the first thing (after focusItem fires)
+        focusIn: info.autofocus() ? function (component) {
+          focusWidget(component);
+        } : Behaviour.revoke(),
         onLeft: onHorizontalArrow,
         onRight: onHorizontalArrow,
         onEscape (component, simulatedEvent) {

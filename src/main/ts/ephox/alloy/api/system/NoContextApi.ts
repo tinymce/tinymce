@@ -25,7 +25,8 @@ const NoContextApi = function (getComp?: () => AlloyComponent): AlloySystemApi {
     getByUid: fail('getByUid'),
     getByDom: fail('getByDom'),
     broadcast: fail('broadcast'),
-    broadcastOn: fail('broadcastOn')
+    broadcastOn: fail('broadcastOn'),
+    isConnected: Fun.constant(false)
   });
 };
 

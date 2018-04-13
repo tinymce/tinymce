@@ -39,7 +39,8 @@ const SystemApi = Contracts.exactly([
   'getByDom',
 
   'broadcast',
-  'broadcastOn'
+  'broadcastOn',
+  'isConnected'
 ]) as AlloySystem;
 
 export {

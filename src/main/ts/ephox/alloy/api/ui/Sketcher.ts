@@ -35,7 +35,7 @@ export interface CompositeSketch  {
 
   parts: () => any;
   factory: UiSketcher.CompositeFactory;
-  // [key: string]: Function;
+  [key: string]: Function;
 }
 
 // TODO: Morgan -> check these
