@@ -16,9 +16,9 @@
 
 declare const WorkerGlobalScope: any;
 
-const window = {};
-const global = window;
-const module = window;
+const window: any = {};
+const global: any = window;
+const module: any = { exports: {} };
 
 // ------------------ Start wrap
 
