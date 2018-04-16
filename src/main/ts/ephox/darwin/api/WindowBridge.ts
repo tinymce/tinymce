@@ -12,7 +12,7 @@ import { Scroll } from '@ephox/sugar';
 
 export default <any> function (win) {
   var elementFromPoint = function (x, y) {
-    return Element.elementFromPoint(Element.fromDom(win.document), x, y);
+    return Element.fromPoint(Element.fromDom(win.document), x, y);
   };
 
   var getRect = function (element) {
