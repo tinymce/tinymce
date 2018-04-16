@@ -13,7 +13,7 @@ import EditorCommands from './EditorCommands';
 import EditorObservable from './EditorObservable';
 import { ParamTypeMap, getEditorSettings, getParam } from '../EditorSettings';
 import Env from './Env';
-import { setMode } from '../Mode';
+import * as Mode from '../Mode';
 import Shortcuts from './Shortcuts';
 import DOMUtils from './dom/DOMUtils';
 import DomQuery from './dom/DomQuery';
@@ -1029,7 +1029,7 @@ Editor.prototype = {
    * @param {String} mode Mode to set the editor in.
    */
   setMode (mode) {
-    setMode(this, mode);
+    Mode.setMode(this, mode);
   },
 
   /**
