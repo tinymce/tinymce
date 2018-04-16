@@ -13,7 +13,7 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { InlineView } from 'ephox/alloy/api/ui/InlineView';
 import { Input } from 'ephox/alloy/api/ui/Input';
-import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
@@ -43,7 +43,7 @@ export default <any> function () {
     })
   );
 
-  const inlineMenu = TieredMenu.sketch({
+  const inlineMenu = TieredMenu.tieredMenuSketch.sketch({
     dom: {
       tag: 'div'
     },

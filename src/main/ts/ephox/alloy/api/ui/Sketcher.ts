@@ -25,6 +25,7 @@ export interface SingleSketch {
   partFields: () => DslType.FieldProcessorAdt[];
   sketch: (spec: Record<string, any>) => SketchSpec;
   factory: UiSketcher.SingleFactory;
+  [key: string]: Function;
 }
 
 export interface CompositeSketch  {
@@ -43,11 +44,14 @@ export interface RawDomSchema {
   dom: RawElementSchema;
   components?: AlloyComponentsSpec;
   items?: RawDomSchema[];
+  value?: string;
+  autofocus?: boolean;
   type?: string;
   data?: {};
   markers?: {};
   behaviours?: Record<string, AlloyBehaviourSchema>;
   events?: EventHandlerConfig | {};
+  domModification?: {};
 }
 
 export interface RawDomSchemaUid extends RawDomSchema {

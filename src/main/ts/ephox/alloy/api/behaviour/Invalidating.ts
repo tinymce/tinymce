@@ -23,10 +23,11 @@ export interface InvalidatingConfig<T> {
     getContainer: (input: AlloyComponent) => Option<SugarElement>;
   };
   onEvent?: string;
-  getRoot?: () => any;
+  getRoot?: (input: AlloyComponent) => any;
   validator: {
     validate: (input: AlloyComponent) => Future<Result<any, string> | Result<string, any>>
-    onEvent: string;
+    onEvent?: string;
+    validateOnLoad?: boolean
   };
 }
 

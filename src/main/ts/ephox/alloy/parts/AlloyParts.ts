@@ -10,7 +10,7 @@ import { SpecSchemaStruct } from '../spec/SpecSchema';
 import { AlloyComponent } from '../api/component/ComponentApi';
 
 export interface GeneratedParts {
-  [key: string]: (config: RawDomSchema) => GeneratedSinglePart;
+  [key: string]: (config: RawDomSchema) => SketchSpec;
 }
 
 export interface GeneratedSinglePart {
