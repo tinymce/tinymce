@@ -16,7 +16,7 @@ const foldType = function <T> (subject: TypeProcessorAdt,
   return subject.fold(onSet, onArr, onObj, onItem, onChoice, onThunk, onFunc);
 };
 
-const foldField = function <T> (subject: FieldProcessorAdt, onField: () => T, onState: () => T): T {
+const foldField = function <T> (subject: FieldProcessorAdt, onField: (...any) => T, onState: (...any) => T): T {
   return subject.fold(onField, onState);
 };
 
