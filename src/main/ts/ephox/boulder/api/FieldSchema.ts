@@ -60,6 +60,22 @@ const optionOf = function (key: string, schema: Processor): FieldProcessorAdt {
    return field(key, key, FieldPresence.asOption(), schema);
 };
 
+const optionNumber = function (key: string): FieldProcessorAdt {
+  return optionOf(key, ValueSchema.number);
+};
+
+const optionString = function (key: string): FieldProcessorAdt {
+  return optionOf(key, ValueSchema.string);
+};
+
+const optionBoolean = function (key: string): FieldProcessorAdt {
+  return optionOf(key, ValueSchema.boolean);
+};
+
+const optionFunction = function (key: string): FieldProcessorAdt {
+  return optionOf(key, ValueSchema.func);
+};
+
 const optionObjOf = function (key: string, objSchema: FieldProcessorAdt[]): FieldProcessorAdt {
   return field(key, key, FieldPresence.asOption(), objOf(objSchema));
 };
@@ -74,6 +90,22 @@ const defaulted = function (key: string, fallback: any): FieldProcessorAdt {
 
 const defaultedOf = function (key: string, fallback: any, schema: Processor): FieldProcessorAdt {
   return field(key, key, FieldPresence.defaulted(fallback), schema);
+};
+
+const defaultedNumber = function (key: string, fallback: number): FieldProcessorAdt {
+  return defaultedOf(key, fallback, ValueSchema.number);
+};
+
+const defaultedString = function (key: string, fallback: string): FieldProcessorAdt {
+  return defaultedOf(key, fallback, ValueSchema.string);
+};
+
+const defaultedBoolean = function (key: string, fallback: boolean): FieldProcessorAdt {
+  return defaultedOf(key, fallback, ValueSchema.boolean);
+};
+
+const defaultedFunction = function (key: string, fallback: (...x: any[]) => any): FieldProcessorAdt {
+  return defaultedOf(key, fallback, ValueSchema.func);
 };
 
 const defaultedObjOf = function (key: string, fallback: object, objSchema: FieldProcessorAdt[]): FieldProcessorAdt {
@@ -98,11 +130,19 @@ export {
 
   option,
   optionOf,
+  optionNumber,
+  optionString,
+  optionBoolean,
+  optionFunction,
   optionObjOf,
   optionObjOfOnly,
 
   defaulted,
   defaultedOf,
+  defaultedNumber,
+  defaultedString,
+  defaultedBoolean,
+  defaultedFunction,
   defaultedObjOf,
 
   field,
