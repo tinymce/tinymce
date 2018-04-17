@@ -7,7 +7,7 @@ const strict = function (key: string): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), anyValue());
 };
 
-const strictOf = function (key: string, schema: any): FieldProcessorAdt {
+const strictOf = function (key: string, schema: Processor): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), schema);
 };
 

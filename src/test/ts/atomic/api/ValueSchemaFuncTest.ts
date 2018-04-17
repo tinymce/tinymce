@@ -19,7 +19,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
 
   const checkRawErrIs = function (label, expectedPart, applicator, f, processor) {
     Logger.sync(label, function () {
-      const newF = ValueSchema.asRaw(label, processor, f).getOrDie();
+      const newF = ValueSchema.asRaw<any>(label, processor, f).getOrDie();
       let passed = null;
 
       try {
