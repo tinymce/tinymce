@@ -2,6 +2,7 @@ import { Result, Type } from '@ephox/katamari';
 import { value, objOf, arrOf, arrOfObj, anyValue, objOfOnly, Processor, field, state as valueState } from '../core/ValueProcessor';
 import * as FieldPresence from './FieldPresence';
 import { FieldProcessorAdt } from '../format/TypeTokens';
+import { ValueSchema } from 'ephox/boulder/api/Main';
 
 const strict = function (key: string): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), anyValue());
@@ -11,10 +12,20 @@ const strictOf = function (key: string, schema: Processor): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), schema);
 };
 
+const strictNumber = function (key: string): FieldProcessorAdt {
+  return strictOf(key, ValueSchema.number);
+};
+
+const strictString = function (key: string): FieldProcessorAdt {
+  return strictOf(key, ValueSchema.string);
+};
+
+const strictBoolean = function (key: string): FieldProcessorAdt {
+  return strictOf(key, ValueSchema.boolean);
+};
+
 const strictFunction = function (key: string): FieldProcessorAdt {
-  return field(key, key, FieldPresence.strict(), value(function (f) {
-    return Type.isFunction(f) ? Result.value(f) : Result.error('Not a function');
-  }));
+  return strictOf(key, ValueSchema.func);
 };
 
 const forbid = function (key: string, message: string): FieldProcessorAdt {
@@ -78,6 +89,9 @@ export {
   strictOf,
   strictObjOf,
   strictArrayOfObj,
+  strictNumber,
+  strictString,
+  strictBoolean,
   strictFunction,
 
   forbid,
