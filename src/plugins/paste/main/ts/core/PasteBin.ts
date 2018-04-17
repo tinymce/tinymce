@@ -154,7 +154,7 @@ const isDefault = (editor, pasteBinDefaultContent) => {
   return isPasteBin(pasteBinElm) && isDefaultContent(pasteBinDefaultContent, pasteBinElm.innerHTML);
 };
 
-export interface PasteBin {
+interface PasteBin {
   create: () => void;
   remove: () => void;
   getEl: () => HTMLElement;
@@ -169,7 +169,7 @@ export interface PasteBin {
  * @private
  */
 
-export const PasteBin = (editor): PasteBin => {
+const PasteBin = (editor): PasteBin => {
   const lastRng = Cell(null);
   const pasteBinDefaultContent = '%MCEPASTEBIN%';
 
@@ -182,4 +182,9 @@ export const PasteBin = (editor): PasteBin => {
     isDefault: () => isDefault(editor, pasteBinDefaultContent),
     isDefaultContent: (content) => isDefaultContent(pasteBinDefaultContent, content)
   };
+};
+
+export {
+  PasteBin,
+  getPasteBinParent
 };
