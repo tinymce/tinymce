@@ -10,7 +10,7 @@ import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import DropdownAssertions from 'ephox/alloy/test/dropdown/DropdownAssertions';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 import TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 

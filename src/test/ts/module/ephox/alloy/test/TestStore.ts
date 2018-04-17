@@ -1,7 +1,7 @@
 import { RawAssertions, Step } from '@ephox/agar';
 import { Option } from '@ephox/katamari';
 
-export default <any> function () {
+export default function () {
   let array = [ ];
   const adder = function (value) {
     return function () {
@@ -53,4 +53,4 @@ export default <any> function () {
     assertEq,
     sAssertSortedEq
   };
-};
+}

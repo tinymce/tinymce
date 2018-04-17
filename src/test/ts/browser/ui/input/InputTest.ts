@@ -5,7 +5,7 @@ import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Input } from 'ephox/alloy/api/ui/Input';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('InputTest', function () {
   const success = arguments[arguments.length - 2];

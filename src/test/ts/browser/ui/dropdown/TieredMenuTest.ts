@@ -13,7 +13,7 @@ import { Menu } from 'ephox/alloy/api/ui/Menu';
 import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('TieredMenuTest', function () {
   const success = arguments[arguments.length - 2];

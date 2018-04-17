@@ -68,7 +68,7 @@ const mRemoveStyles = Step.stateful(function (value, next, die) {
   next(value);
 });
 
-export default <any> {
+export {
   setup,
   mSetupKeyLogger,
   mTeardownKeyLogger,

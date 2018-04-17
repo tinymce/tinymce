@@ -5,6 +5,7 @@ import { Coupling } from './behaviour/Coupling';
 import { Disabling } from './behaviour/Disabling';
 import { Docking } from './behaviour/Docking';
 import { Dragging } from './behaviour/Dragging';
+
 import { Focusing } from './behaviour/Focusing';
 import { Highlighting } from './behaviour/Highlighting';
 import { Invalidating } from './behaviour/Invalidating';
@@ -74,9 +75,20 @@ import { ToolbarGroup } from './ui/ToolbarGroup';
 import { TouchMenu } from './ui/TouchMenu';
 import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
+
+// TODO: naughty non API's being exported
+import * as AlloyParts from '../parts/AlloyParts';
+import BehaviourState from '../behaviour/common/BehaviourState';
+import * as PartType from '../parts/PartType';
+import * as EventRoot from '../alien/EventRoot';
 import * as TapEvent from '../events/TapEvent'; // Used directly by mobile theme
 import * as AlloyLogger from '../log/AlloyLogger'; // Used directly by mobile theme
 import * as Debugging from '../debugging/Debugging'; // Used directly by mobile theme
+import * as FunctionAnnotator from '../debugging/FunctionAnnotator'; // Used directly by Alloy-docs
+
+// TODO: export test apis, find me a structure
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import TestStore from 'ephox/alloy/test/TestStore';
 
 export {
   AddEventsBehaviour,
@@ -119,6 +131,7 @@ export {
   NativeEvents,
   SystemEvents,
   FocusManagers,
+  FunctionAnnotator,
   Channels,
   Attachment,
   ForeignGui,
