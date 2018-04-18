@@ -18,6 +18,13 @@ import { Keying } from '../../api/behaviour/Keying';
 
 import { Focusing } from '../../api/behaviour/Focusing';
 
+import { Representing } from '../../api/behaviour/Representing';
+
+import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
+
+import * as AlloyEvents from '../../api/events/AlloyEvents';
+import * as NativeEvents from '../../api/events/NativeEvents';
+
 
 import { Option } from '@ephox/katamari';
 
@@ -29,8 +36,8 @@ const schema = Fun.constant([
 
 var makeMeAForm = {
   sketch: function (spec) {
-
-    var renderRawInput = function (spec) {
+    console.log('spec', spec, arguments);
+    var renderRawInput = function (spec, onChange) {
       var pLabel = FormField.parts().label({
         dom: { tag: 'label', innerHtml: spec.label }
       });
@@ -40,7 +47,13 @@ var makeMeAForm = {
 
 
         inputBehaviours: Behaviour.derive([
-          Tabstopping.config({ })
+          Tabstopping.config({ }),
+          AddEventsBehaviour.config('changing-input', [
+            AlloyEvents.run(
+              NativeEvents.input(),
+              onChange
+            )
+          ])
         ])
       });
     
@@ -106,20 +119,64 @@ var makeMeAForm = {
         }),
         Tabstopping.config({ }),
         Focusing.config({ })
-      ])
-    });
-  
+      ]),
 
+      onChange: function (slider) {
+        console.log('changing');
+        const formOpt = memForm.getOpt(slider);
+        formOpt.each((form) => {
+          Representing.setValue(form, {
+            green: Representing.getValue(slider)
+          })
+        })
+      }
+    });
+
+
+    const rgbToHex = function (redValue) {
+      return 'rgb made me: ' + redValue;
+    };
+
+    const form2Form = function (outPart, f) {
+      return (ins) => {
+      
+        const value = Representing.getValue(ins);
+        
+        getFormField(ins, outPart).each(function (hex) {
+          const hexValue = f(value);
+          Representing.setValue(hex, hexValue);
+        })
+      };
+    }
+
+    const hexToRgbFields = function (hexInput) {
+      const formOpt = memForm.getOpt(hexInput);
+      var hexValue = Representing.getValue(hexInput);
+      formOpt.each((form) => {
+        Representing.setValue(form, {
+          green: 'green set to hex: ' + hexValue
+        })
+      });
+    }
+
+    const getFormField = function (anyInSystem, part) {
+      return memForm.getOpt(anyInSystem).bind(function (form) {
+        return Form.getField(form, part);
+      })
+    }
 
 
     console.log('arguments', arguments, spec);
-    return (
+    var memForm = Memento.record(
       Form.sketch((parts) => {
         return {
           uid: spec.uid,
           dom: spec.dom,
           components: [
-            parts.field('green', FormField.sketch(renderRawInput({ label: 'green' }))),
+            parts.field('red', FormField.sketch(renderRawInput({ label: 'red' }, form2Form('hex', rgbToHex) ))),
+            parts.field('green', FormField.sketch(renderRawInput({ label: 'green' }, form2Form('hex', rgbToHex) ))),
+            parts.field('blue', FormField.sketch(renderRawInput({ label: 'blue' }, form2Form('hex', rgbToHex) ))),
+            parts.field('hex', FormField.sketch(renderRawInput({ label: 'hex' }, hexToRgbFields ))),
             parts.field('hue', hue)
           ],
 
@@ -131,6 +188,8 @@ var makeMeAForm = {
         };
       })
     );
+
+    return memForm.asSpec();
   }
 };
 
