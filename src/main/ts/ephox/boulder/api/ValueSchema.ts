@@ -1,4 +1,4 @@
-import { Fun, Result } from '@ephox/katamari';
+import { Fun, Result, Type } from '@ephox/katamari';
 
 import { arrOf, ValueProcessorAdt, func, Processor, thunk, value, ValueValidator, setOf, objOf, objOfOnly, arrOfObj as _arrOfObj } from '../core/ValueProcessor';
 import { formatErrors, formatObj} from '../format/PrettyPrinter';
@@ -36,11 +36,11 @@ const extract = function (label: string, prop: Processor, strength, obj: any): R
   }, Result.value);
 };
 
-const asStruct = function <T>(label: string, prop: Processor, obj: any): Result<any, SchemaError<T>> {
+const asStruct = function <T, U=any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
   return extract(label, prop, Fun.constant, obj);
 };
 
-const asRaw = function <T>(label: string, prop: Processor, obj: any): Result<any, SchemaError <T>> {
+const asRaw = function <T, U=any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
   return extract(label, prop, Fun.identity, obj);
 };
 
@@ -85,6 +85,16 @@ const funcOrDie = function (args: any[], prop: Processor): Processor {
 
 const anyValue = Fun.constant(_anyValue);
 
+const typedValue = (validator: (a: any) => boolean, expectedType: string) => value((a) => {
+  const actualType = typeof a;
+  return validator(a) ? Result.value(a) : Result.error(`Expected type: ${expectedType} but got: ${actualType}`)
+});
+
+const number = typedValue(Type.isNumber, 'number');
+const string = typedValue(Type.isString, 'string');
+const boolean = typedValue(Type.isBoolean, 'boolean');
+const functionProcessor = typedValue(Type.isFunction, 'function');
+
 export {
   anyValue,
 
@@ -111,5 +121,10 @@ export {
 
   thunkOf,
 
-  funcOrDie
+  funcOrDie,
+
+  number,
+  string,
+  boolean,
+  functionProcessor as func
 };
