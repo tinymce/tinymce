@@ -25,7 +25,21 @@ export default <any> function () {
       dom: {
         tag: 'div',
         classes: [ 'example-colour-picker-container' ]
-      }
+      },
+      components: [
+        {
+          dom: {
+            tag: 'h1',
+            innerHtml: 'I am not the body'
+          }
+        },
+        ColourPicker.parts().body({
+          dom: {
+            tag: 'div',
+            classes: [ 'josh' ]
+          }
+        })
+      ]
     })
   );
 };
