@@ -14,18 +14,20 @@ export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour {
   markInvalid: (Component: AlloyComponent) => void;
   query: <T>(Component: AlloyComponent) => Future<T>;
   run: <T>(Component: AlloyComponent) => Future<T>;
-  validation: (validate: (v: string) => Result<any, string>) => (component: AlloyComponent) => any;
+  validation: (validate: <T, E>(v: string) => Result<T, E>) => (component: AlloyComponent) => any;
 }
 
 export interface InvalidatingConfig<T> {
   invalidClass: string;
   notify?: {
-    getContainer: (input: AlloyComponent) => Option<SugarElement>;
+    getContainer?: (input: AlloyComponent) => Option<SugarElement>;
+    onValid?: (comp: AlloyComponent) => void;
+    onInvalid?: (comp: AlloyComponent, err: string) => void;
   };
   onEvent?: string;
   getRoot?: (input: AlloyComponent) => any;
   validator: {
-    validate: (input: AlloyComponent) => Future<Result<any, string> | Result<string, any>>
+    validate: (input: AlloyComponent) => any;
     onEvent?: string;
     validateOnLoad?: boolean
   };
