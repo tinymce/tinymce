@@ -1,6 +1,7 @@
 import AttachingDemo from './AttachingDemo';
 import ButtonDemo from './ButtonDemo';
 import CardMenuDemo from './CardMenuDemo';
+import ColourPickerDemo from './ColourPickerDemo';
 import DemoContent from './DemoContent';
 import DemoDataset from './DemoDataset';
 import DemoSink from './DemoSink';
@@ -30,6 +31,7 @@ window.demos = {
   AttachingDemo,
   ButtonDemo,
   CardMenuDemo,
+  ColourPickerDemo,
   DemoContent,
   DemoDataset,
   DemoSink,
