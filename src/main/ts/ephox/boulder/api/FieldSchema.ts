@@ -2,7 +2,7 @@ import { Result, Type } from '@ephox/katamari';
 import { value, objOf, arrOf, arrOfObj, anyValue, objOfOnly, Processor, field, state as valueState } from '../core/ValueProcessor';
 import * as FieldPresence from './FieldPresence';
 import { FieldProcessorAdt } from '../format/TypeTokens';
-import { ValueSchema } from 'ephox/boulder/api/Main';
+import * as ValueSchema from './ValueSchema';
 
 const strict = function (key: string): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), anyValue());
