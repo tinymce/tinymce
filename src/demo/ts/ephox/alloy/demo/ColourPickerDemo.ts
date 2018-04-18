@@ -10,8 +10,12 @@ import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
-import * as Tabstopping from 'ephox/alloy/api/behaviour/Tabstopping';
+import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
+import { Composing } from 'ephox/alloy/api/behaviour/Composing';
+import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 
+
+import { Obj } from '@ephox/katamari';
 
 export default <any> function () {
   const gui = Gui.create();
@@ -19,7 +23,7 @@ export default <any> function () {
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  HtmlDisplay.section(gui,
+  const picker = HtmlDisplay.section(gui,
     'An example of a colour picker component',
     ColourPicker.sketch({
       dom: {
@@ -42,4 +46,17 @@ export default <any> function () {
       ]
     })
   );
+
+  setInterval(function () {
+    var formOpt = Composing.getCurrent(picker);
+    formOpt.each(function (form) {
+      const values = Representing.getValue(form);
+      Obj.each(values, function (ov, k) {
+        ov.each(function (v) {
+          console.log('k', k, 'v', v);
+        })
+      })
+      console.log('values', values);
+    })
+  }, 5999)
 };

@@ -8,6 +8,19 @@ import * as Memento from 'ephox/alloy/api/component/Memento';
 import { Form } from 'ephox/alloy/api/ui/Form';
 import { Input } from 'ephox/alloy/api/ui/Input';
 
+
+import * as Behaviour from '../../api/behaviour/Behaviour';
+
+import { Composing } from '../../api/behaviour/Composing';
+import { Tabstopping } from '../../api/behaviour/Tabstopping';
+
+import { Keying } from '../../api/behaviour/Keying';
+
+import { Focusing } from '../../api/behaviour/Focusing';
+
+
+import { Option } from '@ephox/katamari';
+
 const schema = Fun.constant([
   
 ]);
@@ -24,9 +37,11 @@ var makeMeAForm = {
     
       var pField = FormField.parts().field({
         factory: Input,
-        // inputBehaviours: Behaviour.derive([
-        //   Tabstopping.config({ })
-        // ])
+
+
+        inputBehaviours: Behaviour.derive([
+          Tabstopping.config({ })
+        ])
       });
     
       return {
@@ -84,21 +99,35 @@ var makeMeAForm = {
       ],
       min: 0,
       max: 100,
-      getInitialValue: function () { return 10; }
+      getInitialValue: function () { return 10; },
+      sliderBehaviours: Behaviour.derive([
+        Composing.config({
+          find: Option.some
+        }),
+        Tabstopping.config({ }),
+        Focusing.config({ })
+      ])
     });
   
 
 
 
-    console.log('arguments', arguments);
+    console.log('arguments', arguments, spec);
     return (
       Form.sketch((parts) => {
         return {
+          uid: spec.uid,
           dom: spec.dom,
           components: [
             parts.field('green', FormField.sketch(renderRawInput({ label: 'green' }))),
-            hue
-          ]
+            parts.field('hue', hue)
+          ],
+
+          formBehaviours: Behaviour.derive([
+            Keying.config({
+              mode: 'cyclic'
+            })
+          ])
         };
       })
     );
