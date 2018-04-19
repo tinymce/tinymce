@@ -1,14 +1,15 @@
 import { Logger, RawAssertions } from '@ephox/agar';
 import { assert, UnitTest } from '@ephox/bedrock';
-import { Result } from '@ephox/katamari';
+import { Result, Fun } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
+import { Processor } from 'ephox/boulder/api/DslType';
 
 UnitTest.test('ValueSchemaRawTest', function () {
-  const checkErr = function (label, expectedPart, input, processor) {
+  const checkErr = function (label: string, expectedPart: string, input: any, processor: Processor) {
     ValueSchema.asRaw(label, processor, input).fold(function (err) {
       const message = ValueSchema.formatError(err);
       RawAssertions.assertEq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
@@ -17,12 +18,12 @@ UnitTest.test('ValueSchemaRawTest', function () {
     });
   };
 
-  const check = function (label, input, processor) {
+  const check = function (label: string, input: any, processor: Processor) {
     const actual = ValueSchema.asRawOrDie(label, processor, input);
     RawAssertions.assertEq(label, input, actual);
   };
 
-  const checkIs = function (label, expected, input, processor) {
+  const checkIs = function (label: string, expected: any, input: any, processor: Processor) {
     const actual = ValueSchema.asRawOrDie(label, processor, input);
     RawAssertions.assertEq(label, expected, actual);
   };
@@ -382,4 +383,46 @@ UnitTest.test('ValueSchemaRawTest', function () {
 
     }
   );
+
+  Logger.sync('Checking basic types', function () {
+    checkIs('Checking valid number', 42, 42, ValueSchema.number);
+    checkErr('Checking invalid number', `Expected type: number but got: string`, 'a', ValueSchema.number);
+
+    checkIs('Checking valid string', 'a', 'a', ValueSchema.string);
+    checkErr('Checking invalid string', `Expected type: string but got: number`, 42, ValueSchema.string);
+
+    checkIs('Checking valid boolean', true, true, ValueSchema.boolean);
+    checkErr('Checking invalid boolean', `Expected type: boolean but got: string`, 'a', ValueSchema.boolean);
+
+    checkIs('Checking valid function', Fun.noop, Fun.noop, ValueSchema.func);
+    checkErr('Checking invalid function', `Expected type: function but got: string`, 'a', ValueSchema.func);
+  });
+
+  Logger.sync('asRaw with type', function () {
+    interface SomeType {
+      num: number;
+      str: string;
+    }
+  
+    const schema = ValueSchema.objOf([
+      FieldSchema.strictOf('num', ValueSchema.number),
+      FieldSchema.strictOf('str', ValueSchema.string)
+    ]);
+
+    ValueSchema.asRaw<SomeType>('SomeType', schema, {
+      num: 42,
+      str: 'a'
+    }).fold(
+      () => assert.fail('Should not fail'),
+      (actual) => RawAssertions.assertEq('Should be expected object', {
+        num: 42,
+        str: 'a'
+      }, actual)
+    );
+
+    ValueSchema.asRaw<SomeType>('SomeType', schema, {}).fold(
+      (err) => RawAssertions.assertEq('Should be two errors', 2, err.errors.length),
+      (actual) => assert.fail('Should not pass')
+    );
+  });
 });
