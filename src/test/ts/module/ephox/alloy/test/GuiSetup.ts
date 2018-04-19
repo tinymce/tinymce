@@ -1,9 +1,9 @@
 import { Assertions, Pipeline, Step } from '@ephox/agar';
 import { Merger } from '@ephox/katamari';
 import { DomEvent, Element, Html, Insert, Remove } from '@ephox/sugar';
-import * as Attachment from 'ephox/alloy/api/system/Attachment';
-import * as Gui from 'ephox/alloy/api/system/Gui';
-import TestStore from 'ephox/alloy/test/TestStore';
+import TestStore from './TestStore';
+import * as Attachment from '../../../../../../main/ts/ephox/alloy/api/system/Attachment';
+import * as Gui from '../../../../../../main/ts/ephox/alloy/api/system/Gui';
 
 const setup = function (createComponent, f, success, failure) {
   const store = TestStore();
