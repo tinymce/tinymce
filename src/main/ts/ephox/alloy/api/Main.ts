@@ -69,7 +69,7 @@ import { Tabbar } from './ui/Tabbar';
 import { TabButton } from './ui/TabButton';
 import { TabSection } from './ui/TabSection';
 import { Tabview } from './ui/Tabview';
-import { TieredMenu } from './ui/TieredMenu';
+import * as TieredMenu from './ui/TieredMenu';
 import { Toolbar } from './ui/Toolbar';
 import { ToolbarGroup } from './ui/ToolbarGroup';
 import { TouchMenu } from './ui/TouchMenu';

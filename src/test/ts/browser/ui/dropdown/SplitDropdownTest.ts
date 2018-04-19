@@ -10,7 +10,7 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
-import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
@@ -110,7 +110,7 @@ UnitTest.asynctest('SplitDropdown List', function () {
               value: 'split-dropdown-test',
               items: Arr.map(f, TestDropdownMenu.renderItem)
             });
-            return TieredMenu.singleData('test', menu);
+            return TieredMenu.tieredMenu.singleData('test', menu);
           });
         }
       })

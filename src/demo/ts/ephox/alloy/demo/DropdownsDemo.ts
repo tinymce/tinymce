@@ -11,7 +11,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
-import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
@@ -88,7 +88,7 @@ export default <any> function () {
         });
 
         return Future.pure(
-          TieredMenu.singleData('name', wMenu)
+          TieredMenu.tieredMenu.singleData('name', wMenu)
         );
       },
       lazySink,
@@ -138,7 +138,7 @@ export default <any> function () {
         });
 
         return Future.pure(menu).map(function (m) {
-          return TieredMenu.singleData('demo.2.menu', menu);
+          return TieredMenu.tieredMenu.singleData('demo.2.menu', menu);
         });
       }
     })
@@ -183,7 +183,7 @@ export default <any> function () {
             columns: 2,
             rows: 2
           });
-          return TieredMenu.singleData('grid-list', menu);
+          return TieredMenu.tieredMenu.singleData('grid-list', menu);
         });
       },
 
@@ -232,7 +232,7 @@ export default <any> function () {
             value: 'demo.4.menu',
             items
           });
-          return TieredMenu.singleData('basic-list', menu);
+          return TieredMenu.tieredMenu.singleData('basic-list', menu);
         });
       },
       onExecute (sandbox, item, itemValue) {
@@ -376,7 +376,7 @@ export default <any> function () {
         });
 
         return future.map(function (f) {
-          return TieredMenu.tieredData(f.primary, f.menus, f.expansions);
+          return TieredMenu.tieredMenu.tieredData(f.primary, f.menus, f.expansions);
         });
       }
     })

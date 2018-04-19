@@ -46,7 +46,7 @@ const collapseItem = function (text: string) {
   };
 };
 
-const TieredMenu = single({
+const tieredMenu = single({
   name: 'TieredMenu',
   configFields: [
     Fields.onStrictKeyboardHandler('onExecute'),
@@ -94,5 +94,5 @@ const TieredMenu = single({
 }) as TieredMenuSketch;
 
 export {
-  TieredMenu
+  tieredMenu
 };
