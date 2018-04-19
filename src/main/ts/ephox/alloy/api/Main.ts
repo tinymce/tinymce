@@ -86,10 +86,6 @@ import * as AlloyLogger from '../log/AlloyLogger'; // Used directly by mobile th
 import * as Debugging from '../debugging/Debugging'; // Used directly by mobile theme
 import * as FunctionAnnotator from '../debugging/FunctionAnnotator'; // Used directly by Alloy-docs
 
-// TODO: export test apis, repackage me
-import * as GuiSetup from '../../../../../test/ts/module/ephox/alloy/test/GuiSetup';
-import TestStore from '../../../../../test/ts/module/ephox/alloy/test/TestStore';
-
 export {
   AddEventsBehaviour,
   Behaviour,
@@ -175,8 +171,5 @@ export {
   TapEvent,
   AlloyLogger,
   Debugging,
-  FunctionAnnotator,
-
-  GuiSetup,
-  TestStore
+  FunctionAnnotator
 };
