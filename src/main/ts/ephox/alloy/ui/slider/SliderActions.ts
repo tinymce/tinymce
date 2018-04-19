@@ -8,23 +8,38 @@ const _changeEvent = 'slider.change.value';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
-const getEventSource = function (simulatedEvent) {
+const getEventSource = function (simulatedEvent, posProp) {
   const evt = simulatedEvent.event().raw();
   if (isTouch && evt.touches !== undefined && evt.touches.length === 1) {
     return Option.some(evt.touches[0]);
   } else if (isTouch && evt.touches !== undefined) {
       return Option.none();
-  } else if (!isTouch && evt.clientX !== undefined) {
+  } else if (!isTouch && evt[posProp] !== undefined) {
       return Option.some(evt);
   } else {
       return Option.none();
   }
 };
 
+const getXEventSource = function (simulatedEvent) {
+  return getEventSource(simulatedEvent, 'clientX')
+};
+
+const getYEventSource = function (simulatedEvent) {
+  return getEventSource(simulatedEvent, 'clientY')
+};
+
 const getEventX = function (simulatedEvent) {
-  const spot = getEventSource(simulatedEvent);
+  const spot = getXEventSource(simulatedEvent);
   return spot.map(function (s) {
     return s.clientX;
+  });
+};
+
+const getEventY = function (simulatedEvent) {
+  const spot = getYEventSource(simulatedEvent);
+  return spot.map(function (s) {
+    return s.clientY;
   });
 };
 
@@ -57,10 +72,26 @@ const setToX = function (spectrum, spectrumBounds, detail, xValue) {
   fireChange(spectrum, value);
 };
 
+const setToY = function (spectrum, spectrumBounds, detail, yValue) {
+  const value = SliderModel.findValueOfY(
+    spectrumBounds, detail.min(), detail.max(),
+    yValue, detail.stepSize(), detail.snapToGrid(), detail.snapStart()
+  );
+
+  fireChange(spectrum, value);
+};
+
 const setXFromEvent = function (spectrum, detail, spectrumBounds, simulatedEvent) {
   return getEventX(simulatedEvent).map(function (xValue) {
     setToX(spectrum, spectrumBounds, detail, xValue);
     return xValue;
+  });
+};
+
+const setYFromEvent = function (spectrum, detail, spectrumBounds, simulatedEvent) {
+  return getEventY(simulatedEvent).map(function (yValue) {
+    setToY(spectrum, spectrumBounds, detail, yValue);
+    return yValue;
   });
 };
 

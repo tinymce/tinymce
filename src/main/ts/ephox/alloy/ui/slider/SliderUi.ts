@@ -1,6 +1,6 @@
 import { Arr, Fun, Merger, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Width } from '@ephox/sugar';
+import { Css, Width, Height } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Keying } from '../../api/behaviour/Keying';
@@ -21,52 +21,80 @@ const sketch = function (detail, components, spec, externals) {
     return (rect.left + rect.right) / 2;
   };
 
+  const getYCentre = function (component) {
+    const rect = component.element().dom().getBoundingClientRect();
+    return (rect.top + rect.bottom) / 2;
+  };
+
   const getThumb = function (component) {
     return AlloyParts.getPartOrDie(component, detail, 'thumb');
   };
 
-  const getXOffset = function (slider, spectrumBounds, detail) {
+  const getOffset = function (slider, spectrumBounds, detail, getCentre, edgeProperty, lengthProperty) {
     const v = detail.value().get();
     if (v < detail.min()) {
       return AlloyParts.getPart(slider, detail, 'left-edge').fold(function () {
         return 0;
       }, function (ledge) {
-        return getXCentre(ledge) - spectrumBounds.left;
+        return getCentre(ledge) - spectrumBounds[edgeProperty];
       });
     } else if (v > detail.max()) {
       // position at right edge
       return AlloyParts.getPart(slider, detail, 'right-edge').fold(function () {
-        return spectrumBounds.width;
+        return spectrumBounds[lengthProperty];
       }, function (redge) {
-        return getXCentre(redge) - spectrumBounds.left;
+        return getCentre(redge) - spectrumBounds[edgeProperty];
       });
     } else {
       // position along the slider
-      return (detail.value().get() - detail.min()) / range * spectrumBounds.width;
+      return (detail.value().get() - detail.min()) / range * spectrumBounds[lengthProperty];
     }
   };
 
-  const getXPos = function (slider) {
+  const getXOffset = function (slider, spectrumBounds, detail) {
+    return getOffset(slider, spectrumBounds, detail, getXCentre, 'left', 'width');
+  }
+
+  const getYOffset = function (slider, spectrumBounds, detail) {
+    return getOffset(slider, spectrumBounds, detail, getXCentre, 'top', 'height');
+  };
+
+  const getPos = function (slider, getOffset, edgeProperty) {
     const spectrum = AlloyParts.getPartOrDie(slider, detail, 'spectrum');
     const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
     const sliderBounds = slider.element().dom().getBoundingClientRect();
 
-    const xOffset = getXOffset(slider, spectrumBounds, detail);
-    return (spectrumBounds.left - sliderBounds.left) + xOffset;
+    const offset = getOffset(slider, spectrumBounds, detail);
+    return (spectrumBounds[edgeProperty] - sliderBounds[edgeProperty]) + offset;
+  };
+
+  const getXPos = function (slider) {
+    return getPos(slider, getXOffset, 'left');
+  }
+
+  const getYPos = function (slider) {
+    return getPos(slider, getYOffset, 'top');
   };
 
   const refresh = function (component) {
-    const pos = getXPos(component);
     const thumb = getThumb(component);
-    const thumbRadius = Width.get(thumb.element()) / 2;
-    Css.set(thumb.element(), 'left', (pos - thumbRadius) + 'px');
+    if (detail.orientation() === 'vertical') {
+      const pos = getYPos(component);
+      const thumbRadius = Height.get(thumb.element()) / 2;
+      Css.set(thumb.element(), 'top', (pos - thumbRadius) + 'px');
+    } else {
+      const pos = getXPos(component);
+      const thumbRadius = Width.get(thumb.element()) / 2;
+      Css.set(thumb.element(), 'left', (pos - thumbRadius) + 'px');
+    }
   };
 
   const changeValue = function (component, newValue) {
     const oldValue = detail.value().get();
     const thumb = getThumb(component);
+    const edgeProp = (detail.orientation() === 'vertical') ? 'top' : 'left';
     // The left check is used so that the first click calls refresh
-    if (oldValue !== newValue || Css.getRaw(thumb.element(), 'left').isNone()) {
+    if (oldValue !== newValue || Css.getRaw(thumb.element(), edgeProp).isNone()) {
       detail.value().set(newValue);
       refresh(component);
       detail.onChange()(component, thumb, newValue);

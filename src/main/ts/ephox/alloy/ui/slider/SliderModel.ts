@@ -63,8 +63,12 @@ const findValueOfX = function (bounds, min, max, xValue, step, snapToGrid, snapS
   }
 };
 
+// TODO: Finish this.
+const findValueOfY = findValueOfX;
+
 export {
   reduceBy,
   increaseBy,
-  findValueOfX
+  findValueOfX,
+  findValueOfY
 };

@@ -32,11 +32,8 @@ const schema = Fun.constant([
   
 ]);
 
-
-
 var makeMeAForm = {
   sketch: function (spec) {
-    console.log('spec', spec, arguments);
     var renderRawInput = function (spec, onChange) {
       var pLabel = FormField.parts().label({
         dom: { tag: 'label', innerHtml: spec.label }
@@ -44,8 +41,6 @@ var makeMeAForm = {
     
       var pField = FormField.parts().field({
         factory: Input,
-
-
         inputBehaviours: Behaviour.derive([
           Tabstopping.config({ }),
           AddEventsBehaviour.config('changing-input', [
@@ -112,6 +107,7 @@ var makeMeAForm = {
       ],
       min: 0,
       max: 100,
+      orientation: 'vertical',
       getInitialValue: function () { return 10; },
       sliderBehaviours: Behaviour.derive([
         Composing.config({
@@ -122,7 +118,6 @@ var makeMeAForm = {
       ]),
 
       onChange: function (slider) {
-        console.log('changing');
         const formOpt = memForm.getOpt(slider);
         formOpt.each((form) => {
           Representing.setValue(form, {
@@ -160,7 +155,7 @@ var makeMeAForm = {
     }
 
     const getFormField = function (anyInSystem, part) {
-      return memForm.getOpt(anyInSystem).bind(function (form) {
+      return memForm.get(anyInSystem).bind(function (form) {
         return Form.getField(form, part);
       })
     }
@@ -196,29 +191,10 @@ var makeMeAForm = {
 
 
 const parts = Fun.constant([
-
-  // PartType.required({
-  //   factory: Slider,
-  //   name: 'hue'
-  // }),
-  // PartType.required({
-  //   factory: FormField,
-  //   name: 'red'
-  // }),
   PartType.required({
-    // factory: FormField,
     name: 'body',
     factory: makeMeAForm
   })
-  //,
-  // PartType.required({
-  //   factory: FormField,
-  //   name: 'blue'
-  // }),
-  // PartType.required({
-  //   factory: FormField,
-  //   name: 'hex'
-  // })
 ]);
 
 const name = Fun.constant('ColourPicker');

@@ -21,7 +21,8 @@ const SliderSchema = [
   FieldSchema.strict('getInitialValue'),
   SketchBehaviours.field('sliderBehaviours', [ Keying, Representing ]),
 
-  FieldSchema.state('value', function (spec) { return Cell(spec.min); })
+  FieldSchema.state('value', function (spec) { return Cell(spec.min); }),
+  FieldSchema.defaulted('orientation', 'horizontal'),
 ].concat(! isTouch ? [
   // Only add if not on a touch device
   FieldSchema.state('mouseIsDown', function () { return Cell(false); })
