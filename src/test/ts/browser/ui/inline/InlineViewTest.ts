@@ -6,7 +6,7 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { InlineView } from 'ephox/alloy/api/ui/InlineView';
-import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import Sinks from 'ephox/alloy/test/Sinks';
@@ -141,7 +141,7 @@ UnitTest.asynctest('InlineViewTest', function () {
                       value: 'inline-view-test',
                       items: Arr.map(f, TestDropdownMenu.renderItem)
                     });
-                    return TieredMenu.tieredMenuSketch.singleData('test', menu);
+                    return TieredMenu.singleData('test', menu);
                   });
                 }
               })

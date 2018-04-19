@@ -3,7 +3,7 @@ import { Class, Element, Value } from '@ephox/sugar';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
@@ -99,7 +99,7 @@ export default <any> function () {
             value: 'blah.value',
             items: Arr.map(items, DemoRenders.item)
           });
-          return TieredMenu.tieredMenuSketch.singleData('blah', menu);
+          return TieredMenu.singleData('blah', menu);
         });
       },
       onExecute (sandbox, item, itemValue) {

@@ -13,7 +13,7 @@ import { FormCoupledInputs } from 'ephox/alloy/api/ui/FormCoupledInputs';
 import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
-import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
+import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 import DemoRenders from './DemoRenders';
@@ -200,7 +200,7 @@ const typeaheadMunger = function (spec): SketchSpec {
           value: 'typeahead-menu-blah',
           items: Arr.map(items, DemoRenders.item)
         });
-        return TieredMenu.tieredMenuSketch.singleData('blah', menu);
+        return TieredMenu.singleData('blah', menu);
       });
     },
     dom: {
