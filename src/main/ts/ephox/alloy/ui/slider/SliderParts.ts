@@ -68,21 +68,27 @@ const spectrumPart = PartType.required({
   ],
   name: 'spectrum',
   overrides (detail) {
-
     const moveToX = function (spectrum, simulatedEvent) {
       const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
       SliderActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
     };
 
+    const moveToY = function (spectrum, simulatedEvent) {
+      const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
+      SliderActions.setYFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
+    };
+
+    const moveTo = detail.orientation() === 'vertical' ? moveToY : moveToX;
+
     const touchEvents = AlloyEvents.derive([
-      AlloyEvents.run(NativeEvents.touchstart(), moveToX),
-      AlloyEvents.run(NativeEvents.touchmove(), moveToX)
+      AlloyEvents.run(NativeEvents.touchstart(), moveTo),
+      AlloyEvents.run(NativeEvents.touchmove(), moveTo)
     ]);
 
     const mouseEvents = AlloyEvents.derive([
-      AlloyEvents.run(NativeEvents.mousedown(), moveToX),
+      AlloyEvents.run(NativeEvents.mousedown(), moveTo),
       AlloyEvents.run(NativeEvents.mousemove(), function (spectrum, se) {
-        if (detail.mouseIsDown().get()) { moveToX(spectrum, se); }
+        if (detail.mouseIsDown().get()) { moveTo(spectrum, se); }
       })
     ]);
 

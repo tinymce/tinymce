@@ -66,8 +66,8 @@ var makeMeAForm = {
   
     const stops = '#ff0000,#ff0080,#ff00ff,#8000ff,#0000ff,#0080ff,#00ffff,#00ff80,#00ff00,#80ff00,#ffff00,#ff8000,#ff0000';
     const gradientCssText = (
-      'background: -ms-linear-gradient(right,' + stops + ');' +
-      'background: linear-gradient(to right,' + stops + ');'
+      'background: -ms-linear-gradient(bottom,' + stops + ');' +
+      'background: linear-gradient(to bottom,' + stops + ');'
     );
   
     var spectrum = Slider.parts().spectrum({
@@ -160,8 +160,6 @@ var makeMeAForm = {
       })
     }
 
-
-    console.log('arguments', arguments, spec);
     var memForm = Memento.record(
       Form.sketch((parts) => {
         return {

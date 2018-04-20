@@ -109,6 +109,7 @@ const changeEvent = Fun.constant(_changeEvent);
 
 export {
   setXFromEvent,
+  setYFromEvent,
   setToLedge,
   setToRedge,
   moveLeftFromRedge,

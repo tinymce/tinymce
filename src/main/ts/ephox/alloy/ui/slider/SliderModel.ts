@@ -29,7 +29,7 @@ const capValue = function (value, min, max) {
   );
 };
 
-const snapValueOfX = function (bounds, value, min, max, step, snapStart) {
+const snapValueOf = function (bounds, value, min, max, step, snapStart) {
   // We are snapping by the step size. Therefore, find the nearest multiple of
   // the step
   return snapStart.fold(function () {
@@ -52,19 +52,24 @@ const snapValueOfX = function (bounds, value, min, max, step, snapStart) {
   });
 };
 
-const findValueOfX = function (bounds, min, max, xValue, step, snapToGrid, snapStart) {
+const findValueOf = function (bounds, min, max, value, step, snapToGrid, snapStart, ledgeProp, redgeProp, lengthProp) {
   const range = max - min;
   // TODO: TM-26 Make this bounding of edges work only occur if there are edges (and work with snapping)
-  if (xValue < bounds.left) { return min - 1; } else if (xValue > bounds.right) { return max + 1; } else {
-    const xOffset = Math.min(bounds.right, Math.max(xValue, bounds.left)) - bounds.left;
-    const newValue = capValue(((xOffset / bounds.width) * range) + min, min - 1, max + 1);
+  if (value < bounds[ledgeProp]) { return min - 1; } else if (value > bounds[redgeProp]) { return max + 1; } else {
+    const offset = Math.min(bounds[redgeProp], Math.max(value, bounds[ledgeProp])) - bounds[ledgeProp];
+    const newValue = capValue(((offset / bounds[lengthProp]) * range) + min, min - 1, max + 1);
     const roundedValue = Math.round(newValue);
-    return snapToGrid && newValue >= min && newValue <= max ? snapValueOfX(bounds, newValue, min, max, step, snapStart) : roundedValue;
+    return snapToGrid && newValue >= min && newValue <= max ? snapValueOf(bounds, newValue, min, max, step, snapStart) : roundedValue;
   }
 };
 
-// TODO: Finish this.
-const findValueOfY = findValueOfX;
+const findValueOfX = function (bounds, min, max, xValue, step, snapToGrid, snapStart) {
+  return findValueOf(bounds, min, max, xValue, step, snapToGrid, snapStart, 'left', 'right', 'width');
+};
+
+const findValueOfY = function (bounds, min, max, xValue, step, snapToGrid, snapStart) {
+  return findValueOf(bounds, min, max, xValue, step, snapToGrid, snapStart, 'top', 'bottom', 'height');
+};
 
 export {
   reduceBy,

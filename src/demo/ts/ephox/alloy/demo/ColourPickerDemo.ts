@@ -47,16 +47,4 @@ export default <any> function () {
     })
   );
 
-  setInterval(function () {
-    var formOpt = Composing.getCurrent(picker);
-    formOpt.each(function (form) {
-      const values = Representing.getValue(form);
-      Obj.each(values, function (ov, k) {
-        ov.each(function (v) {
-          console.log('k', k, 'v', v);
-        })
-      })
-      console.log('values', values);
-    })
-  }, 5999)
 };
