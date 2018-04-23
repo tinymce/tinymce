@@ -81,19 +81,17 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
     return editor.selection.getRng();
   };
 
-  const waitForSelector = function (editor, selector) {
+  const waitFor = function (predicate) {
     return new Promise(function (resolve, reject) {
       const check = function (time, count) {
-        const result = editor.dom.select(selector);
-
-        if (result.length > 0) {
-          resolve(result);
+        if (predicate()) {
+          resolve();
         } else {
           if (count === 0) {
-            reject();
+            reject(new Error('Waited for predicate to be true'));
           } else {
             Delay.setTimeout(function () {
-              check(time, count--);
+              check(time, count - 1);
             }, time);
           }
         }
@@ -103,9 +101,15 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
     });
   };
 
+  const waitForSelector = function (editor, selector) {
+    return waitFor(() => editor.dom.select(selector).length > 0);
+  };
+
   suite.asyncTest('pasteImages should set unique id in blobcache', function (editor, done, die) {
     let rng, event;
     const clipboard = Clipboard(editor, Cell('html'));
+
+    const hasCachedItem = (name) => !!editor.editorUpload.blobCache.get(name);
 
     editor.settings.paste_data_images = true;
     rng = setupContent(editor);
@@ -117,12 +121,14 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
     clipboard.pasteImageData(event, rng);
 
     waitForSelector(editor, 'img').then(function () {
-      const cachedBlob1 = editor.editorUpload.blobCache.get('mceclip0');
-      const cachedBlob2 = editor.editorUpload.blobCache.get('mceclip1');
-      LegacyUnit.equal(base64ImgSrc, cachedBlob1.base64());
-      LegacyUnit.equal(base64ImgSrc2, cachedBlob2.base64());
+      waitFor((editor) => hasCachedItem('mceclip0') && hasCachedItem('mceclip1')).then(() => {
+        const cachedBlob1 = editor.editorUpload.blobCache.get('mceclip0');
+        const cachedBlob2 = editor.editorUpload.blobCache.get('mceclip1');
+        LegacyUnit.equal(base64ImgSrc, cachedBlob1.base64());
+        LegacyUnit.equal(base64ImgSrc2, cachedBlob2.base64());
 
-      done();
+        done();
+      }).catch(die);
     }).catch(die);
   });
 
