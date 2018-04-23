@@ -28,10 +28,6 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 
 import { Option } from '@ephox/katamari';
 
-const schema = Fun.constant([
-  
-]);
-
 var makeMeAForm = {
   sketch: function (spec) {
     var renderRawInput = function (spec, onChange) {
@@ -194,6 +190,8 @@ const parts = Fun.constant([
     factory: makeMeAForm
   })
 ]);
+
+const schema = Fun.constant([]);
 
 const name = Fun.constant('ColourPicker');
 
