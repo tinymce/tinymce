@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Transitioning } from 'ephox/alloy/api/behaviour/Transitioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
 UnitTest.asynctest('TransitioningTest', function () {
@@ -42,6 +42,7 @@ UnitTest.asynctest('TransitioningTest', function () {
     return [
       GuiSetup.mAddStyles(doc, [
         '.transitioning { transition: opacity 1s ease; }',
+        // TODO INVESTIGATE: The first part of this selector looks wrong
         '[data-transitioning-state="gamma"], div[data-transitioning-state="gamma"]:not(.transitioning), div[data-transitioning-destination="gamma"] { opacity: 0.5 }',
         '[data-transitioning-state="gamma"], div[data-transitioning-state="alpha"]:not(.transitioning), div[data-transitioning-destination="alpha"] { opacity: 0.8 }',
         '[data-transitioning-state="gamma"], div[data-transitioning-state="beta"]:not(.transitioning), div[data-transitioning-destination="beta"] { opacity: 0.2 }'

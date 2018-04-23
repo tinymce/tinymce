@@ -12,12 +12,18 @@ import { RawDomSchema, SingleSketch, single} from './Sketcher';
 
 export interface TieredMenuSketch extends SingleSketch {
   collapseMenu: (menu: any) => void;
-  tieredData: (primary: string, menus, expansions: Record<string, string>) => void;
-  singleData: (name: string, menu: RawDomSchema) => void;
+  tieredData: (primary: string, menus, expansions: Record<string, string>) => TieredData;
+  singleData: (name: string, menu: RawDomSchema) => TieredData;
   collapseItem: (text: string) => void;
 }
 
-const tieredData = function (primary: string, menus: { [key: string]: RawDomSchema }, expansions: { [key: string]: string }) {
+export interface TieredData {
+  primary: string;
+  menus: Record<string, RawDomSchema>;
+  expansions: Record<string, string>;
+}
+
+const tieredData = function (primary: string, menus: Record<string, RawDomSchema>, expansions: Record<string, string>): TieredData {
   return {
     primary,
     menus,
@@ -25,7 +31,7 @@ const tieredData = function (primary: string, menus: { [key: string]: RawDomSche
   };
 };
 
-const singleData = function (name: string, menu: RawDomSchema) {
+const singleData = function (name: string, menu: RawDomSchema): TieredData {
   return {
     primary: name,
     menus: Objects.wrap(name, menu),
@@ -40,7 +46,7 @@ const collapseItem = function (text: string) {
   };
 };
 
-const TieredMenu = single({
+const tieredMenu = single({
   name: 'TieredMenu',
   configFields: [
     Fields.onStrictKeyboardHandler('onExecute'),
@@ -88,5 +94,5 @@ const TieredMenu = single({
 }) as TieredMenuSketch;
 
 export {
-  TieredMenu
+  tieredMenu
 };

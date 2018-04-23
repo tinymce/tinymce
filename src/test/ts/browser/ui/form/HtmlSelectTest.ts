@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('HtmlSelectTest', function () {
   const success = arguments[arguments.length - 2];

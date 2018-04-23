@@ -1,4 +1,4 @@
-import { RawElementSchema } from 'ephox/alloy/api/ui/Sketcher';
+import { RawElementSchema, SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';

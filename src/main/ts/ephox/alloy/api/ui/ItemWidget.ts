@@ -2,9 +2,10 @@ import { Fun } from '@ephox/katamari';
 
 import * as WidgetParts from '../../menu/build/WidgetParts';
 import * as AlloyParts from '../../parts/AlloyParts';
+import { AlloyComponentsSpec, SketchSpec } from './Sketcher';
 
 export interface ItemWidget {
-  widget: (config) => any;
+  widget: (config: AlloyComponentsSpec) => SketchSpec;
 }
 
 export type ItemWidgetParts = () => ItemWidget;

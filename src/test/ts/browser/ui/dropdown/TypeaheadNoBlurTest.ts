@@ -6,10 +6,10 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import Sinks from 'ephox/alloy/test/Sinks';
 import TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
@@ -60,7 +60,7 @@ UnitTest.asynctest('Browser Test: .ui.dropdown.TypeaheadNoBlurTest', function ()
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
                 });
-                return TieredMenu.singleData('blah.overall', menu);
+                return TieredMenu.tieredMenu.singleData('blah.overall', menu);
               });
             },
 

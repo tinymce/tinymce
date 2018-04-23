@@ -8,11 +8,11 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import DropdownAssertions from 'ephox/alloy/test/dropdown/DropdownAssertions';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 import Sinks from 'ephox/alloy/test/Sinks';
 import TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
@@ -63,7 +63,7 @@ UnitTest.asynctest('TypeaheadTest', function () {
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
                 });
-                return TieredMenu.singleData('blah.overall', menu);
+                return TieredMenu.tieredMenu.singleData('blah.overall', menu);
               });
             },
 

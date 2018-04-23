@@ -13,7 +13,7 @@ import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import TestForm from 'ephox/alloy/test/form/TestForm';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
 UnitTest.asynctest('ExpandableFormTest', function () {

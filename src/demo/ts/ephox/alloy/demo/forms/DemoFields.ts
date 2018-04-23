@@ -13,10 +13,11 @@ import { FormCoupledInputs } from 'ephox/alloy/api/ui/FormCoupledInputs';
 import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
-import { TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
+import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 import DemoRenders from './DemoRenders';
+import { SketchSpec, RawDomSchema } from 'ephox/alloy/api/ui/Sketcher';
 
 const invalidation = function (validate, invalidUid) {
   return Invalidating.config({
@@ -62,12 +63,12 @@ const rawTextMunger = function (spec) {
   };
 };
 
-const textMunger = function (spec) {
+const textMunger = function (spec): SketchSpec {
   const m = rawTextMunger(spec);
   return FormField.sketch(m);
 };
 
-const selectMunger = function (spec) {
+const selectMunger = function (spec): SketchSpec {
   const pLabel = FormField.parts().label({
     dom: { tag: 'label', innerHtml: spec.label }
   });
@@ -97,7 +98,7 @@ const selectMunger = function (spec) {
   });
 };
 
-const chooserMunger = function (spec) {
+const chooserMunger = function (spec): SketchSpec {
   const pLegend = FormChooser.parts().legend({
     dom: {
       innerHtml: spec.legend
@@ -126,7 +127,7 @@ const chooserMunger = function (spec) {
   });
 };
 
-const coupledTextMunger = function (spec) {
+const coupledTextMunger = function (spec): SketchSpec {
   const pField1 = FormCoupledInputs.parts().field1(
     rawTextMunger(spec.field1)
   );
@@ -161,7 +162,7 @@ const coupledTextMunger = function (spec) {
   });
 };
 
-const typeaheadMunger = function (spec) {
+const typeaheadMunger = function (spec): SketchSpec {
   const pLabel = FormField.parts().label({
     dom: {
       tag: 'label',
@@ -199,7 +200,7 @@ const typeaheadMunger = function (spec) {
           value: 'typeahead-menu-blah',
           items: Arr.map(items, DemoRenders.item)
         });
-        return TieredMenu.singleData('blah', menu);
+        return TieredMenu.tieredMenu.singleData('blah', menu);
       });
     },
     dom: {
@@ -231,7 +232,7 @@ const typeaheadMunger = function (spec) {
   });
 };
 
-export default <any> {
+export default {
   textMunger,
   selectMunger,
   chooserMunger,

@@ -18,8 +18,8 @@ export interface RepresentingConfig {
     getFallbackEntry?: (key: string) => { value: string, text: string },
     getDataKey?: (typeAhead: AlloyComponent) => string,
     setData?: (typeAhead: AlloyComponent, data: { text, value: string } ) => void;
-    getValue?: (any) => any;
-    setValue?: (...any) => any;
+    getValue?: (...any) => any;
+    setValue?: (...any) => void;
   };
   onSetValue?: <T, E>() => Result<T, E>;
 }

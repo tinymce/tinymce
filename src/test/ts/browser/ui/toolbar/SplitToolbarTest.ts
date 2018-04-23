@@ -5,7 +5,7 @@ import { Css } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { SplitToolbar } from 'ephox/alloy/api/ui/SplitToolbar';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 

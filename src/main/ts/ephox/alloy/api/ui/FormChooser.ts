@@ -40,6 +40,7 @@ const factory = function (detail, components, spec, externals) {
               return choice.element();
             });
           },
+          // TODO CLEANUP: See if this execute handler can be removed, because execute is handled by bubbling to formchooser root
           execute (chooser, simulatedEvent, focused) {
             return chooser.getSystem().getByDom(focused).map(function (choice) {
               Highlighting.highlight(chooser, choice);
@@ -84,6 +85,7 @@ const factory = function (detail, components, spec, externals) {
       AlloyEvents.runWithTarget(SystemEvents.execute(), Highlighting.highlight),
       AlloyEvents.runOnAttached(Highlighting.highlightFirst)
     ])
+    // TODO: Add support for eventOrder
   };
 };
 

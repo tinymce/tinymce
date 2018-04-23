@@ -7,7 +7,7 @@ import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', function () {
   const success = arguments[arguments.length - 2];

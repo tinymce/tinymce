@@ -122,7 +122,8 @@ const takeover = function (root: AlloyComponent): GuiSystem {
     },
     broadcastOn (channels, message) {
       broadcastOn(channels, message);
-    }
+    },
+    isConnected: Fun.constant(true)
   });
 
   const addToWorld = function (component) {

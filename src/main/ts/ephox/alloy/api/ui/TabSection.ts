@@ -61,7 +61,15 @@ const factory = function (detail, components, spec, externals) {
           })
         ]
       ])
-    )
+    ),
+
+    apis: {
+      getViewItems (section) {
+        return AlloyParts.getPart(section, detail, 'tabview').map(function (tabview) {
+          return Replacing.contents(tabview);
+        }).getOr([ ]);
+      }
+    }
   };
 
 };
@@ -70,7 +78,12 @@ const TabSection = Sketcher.composite({
   name: 'TabSection',
   configFields: TabSectionSchema.schema(),
   partFields: TabSectionSchema.parts(),
-  factory
+  factory,
+  apis: {
+    getViewItems (apis, component) {
+      return apis.getViewItems(component);
+    }
+  }
 });
 
 export {
