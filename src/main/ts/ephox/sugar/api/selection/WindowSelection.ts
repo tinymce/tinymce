@@ -119,7 +119,7 @@ var forElement = function (win, element) {
 var getExact = function (win) {
   // We want to retrieve the selection as it is.
   var selection = win.getSelection();
-  return selection.rangeCount > 0 ? doGetExact(selection) : Option.none();
+  return selection !== undefined && selection !== null && selection.rangeCount > 0 ? doGetExact(selection) : Option.none();
 };
 
 // TODO: Test this.
