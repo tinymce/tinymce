@@ -48,25 +48,25 @@ const fireChange = function (component, value) {
 };
 
 const moveRightFromLedge = function (ledge, detail) {
-  fireChange(ledge, detail.min());
+  fireChange(ledge, 0);
 };
 
 const moveLeftFromRedge = function (redge, detail) {
-  fireChange(redge, detail.max());
+  fireChange(redge, 100);
 };
 
 const setToRedge = function (redge, detail) {
-  fireChange(redge, detail.max() + 1);
+  fireChange(redge, 100 + 1);
 };
 
 const setToLedge = function (ledge, detail) {
-  fireChange(ledge, detail.min() - 1);
+  fireChange(ledge, 0 - 1);
 };
 
 const setToX = function (spectrum, spectrumBounds, detail, xValue) {
   const value = SliderModel.findValueOfX(
-    spectrumBounds, detail.min(), detail.max(),
-    xValue, detail.stepSize(), detail.snapToGrid(), detail.snapStart()
+    spectrumBounds, 0, 100,
+    xValue, 1
   );
 
   fireChange(spectrum, value);
@@ -74,8 +74,8 @@ const setToX = function (spectrum, spectrumBounds, detail, xValue) {
 
 const setToY = function (spectrum, spectrumBounds, detail, yValue) {
   const value = SliderModel.findValueOfY(
-    spectrumBounds, detail.min(), detail.max(),
-    yValue, detail.stepSize(), detail.snapToGrid(), detail.snapStart()
+    spectrumBounds, 0, 100,
+    yValue, 1
   );
 
   fireChange(spectrum, value);
@@ -96,12 +96,12 @@ const setYFromEvent = function (spectrum, detail, spectrumBounds, simulatedEvent
 };
 
 const moveLeft = function (spectrum, detail) {
-  const newValue = SliderModel.reduceBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
+  const newValue = SliderModel.reduceBy(detail.value().get(), 0, 100, 1);
   fireChange(spectrum, newValue);
 };
 
 const moveRight = function (spectrum, detail) {
-  const newValue = SliderModel.increaseBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
+  const newValue = SliderModel.increaseBy(detail.value().get(), 0, 100, 1);
   fireChange(spectrum, newValue);
 };
 

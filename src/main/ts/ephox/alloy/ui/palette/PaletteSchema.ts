@@ -10,7 +10,12 @@ const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
 const PaletteSchema = [
   FieldSchema.defaulted('onChange', Fun.noop),
-  FieldSchema.state('value', function (spec) { return Cell(spec.min); })
+  FieldSchema.defaulted('onInit', Fun.noop),
+  FieldSchema.defaulted('onDragStart', Fun.noop),
+  FieldSchema.defaulted('onDragEnd', Fun.noop),
+  FieldSchema.state('value', function (spec) { return Cell({x: 0, y: 0}); }),
+  FieldSchema.state('colour', function (spec) { return Cell({r: 255, g: 0, b: 0, a: 1}); }),
+  SketchBehaviours.field('paletteBehaviours', [ Keying, Representing ])
 ].concat(! isTouch ? [
   // Only add if not on a touch device
   FieldSchema.state('mouseIsDown', function () { return Cell(false); })

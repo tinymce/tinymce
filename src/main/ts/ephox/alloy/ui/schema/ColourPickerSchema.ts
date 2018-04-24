@@ -2,6 +2,7 @@ import { DslType } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { FormField } from '../../api/ui/FormField';
 import { Slider } from '../../api/ui/Slider';
+import { Palette } from '../../api/ui/Palette';
 import * as PartType from '../../parts/PartType';
 
 import * as Memento from 'ephox/alloy/api/component/Memento';
@@ -59,6 +60,48 @@ var makeMeAForm = {
         ]
       };
     };
+
+    var palette = Palette.parts().palette({
+      dom: {
+        tag: 'canvas',
+        attributes: {
+          title: 'palette'
+        },
+        classes: [ 'example-palette-palette' ]
+      }
+    });
+
+    var paletteThumb = Palette.parts().thumb({
+      dom: {
+        tag: 'div',
+        innerHtml: 'Thumb',
+        attributes: {
+          title: 'thumb'
+        },
+        classes: [ 'example-slider-thumb' ]
+      }
+    });
+
+    var picker = Palette.sketch({
+      dom: {
+        tag: 'div',
+        attributes: {
+          title: 'picker'
+        },
+        classes: [ 'example-palette' ]
+      },
+      components: [
+        palette,
+        paletteThumb
+      ],
+      paletteBehaviours: Behaviour.derive([
+        Composing.config({
+          find: Option.some
+        }),
+        Tabstopping.config({ }),
+        Focusing.config({ })
+      ])
+    })
   
     const stops = '#ff0000,#ff0080,#ff00ff,#8000ff,#0000ff,#0080ff,#00ffff,#00ff80,#00ff00,#80ff00,#ffff00,#ff8000,#ff0000';
     const gradientCssText = (
@@ -166,7 +209,8 @@ var makeMeAForm = {
             parts.field('green', FormField.sketch(renderRawInput({ label: 'green' }, form2Form('hex', rgbToHex) ))),
             parts.field('blue', FormField.sketch(renderRawInput({ label: 'blue' }, form2Form('hex', rgbToHex) ))),
             parts.field('hex', FormField.sketch(renderRawInput({ label: 'hex' }, hexToRgbFields ))),
-            parts.field('hue', hue)
+            parts.field('hue', hue),
+            parts.field('picker', picker)
           ],
 
           formBehaviours: Behaviour.derive([

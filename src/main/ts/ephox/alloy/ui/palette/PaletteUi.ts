@@ -9,13 +9,11 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as AlloyParts from '../../parts/AlloyParts';
-import * as SliderActions from './SliderActions';
+import * as PaletteActions from './PaletteActions';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
 const sketch = function (detail, components, spec, externals) {
-  const range = detail.max() - detail.min();
-
   const getXCentre = function (component) {
     const rect = component.element().dom().getBoundingClientRect();
     return (rect.left + rect.right) / 2;
@@ -30,25 +28,13 @@ const sketch = function (detail, components, spec, externals) {
     return AlloyParts.getPartOrDie(component, detail, 'thumb');
   };
 
+  const getPalette = function (component) {
+    return AlloyParts.getPartOrDie(component, detail, 'palette');
+  };
+
   const getOffset = function (slider, spectrumBounds, detail, getCentre, edgeProperty, lengthProperty) {
-    const v = detail.value().get();
-    if (v < detail.min()) {
-      return AlloyParts.getPart(slider, detail, 'left-edge').fold(function () {
-        return 0;
-      }, function (ledge) {
-        return getCentre(ledge) - spectrumBounds[edgeProperty];
-      });
-    } else if (v > detail.max()) {
-      // position at right edge
-      return AlloyParts.getPart(slider, detail, 'right-edge').fold(function () {
-        return spectrumBounds[lengthProperty];
-      }, function (redge) {
-        return getCentre(redge) - spectrumBounds[edgeProperty];
-      });
-    } else {
       // position along the slider
-      return (detail.value().get() - detail.min()) / range * spectrumBounds[lengthProperty];
-    }
+      return (detail.value().get() - 0) / 100 * spectrumBounds[lengthProperty];
   };
 
   const getXOffset = function (slider, spectrumBounds, detail) {
@@ -60,7 +46,7 @@ const sketch = function (detail, components, spec, externals) {
   };
 
   const getPos = function (slider, getOffset, edgeProperty) {
-    const spectrum = AlloyParts.getPartOrDie(slider, detail, 'spectrum');
+    const spectrum = AlloyParts.getPartOrDie(slider, detail, 'palette');
     const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
     const sliderBounds = slider.element().dom().getBoundingClientRect();
 
@@ -78,21 +64,40 @@ const sketch = function (detail, components, spec, externals) {
 
   const refresh = function (component) {
     const thumb = getThumb(component);
-    if (detail.orientation() === 'vertical') {
-      const pos = getYPos(component);
-      const thumbRadius = Height.get(thumb.element()) / 2;
-      Css.set(thumb.element(), 'top', (pos - thumbRadius) + 'px');
-    } else {
-      const pos = getXPos(component);
-      const thumbRadius = Width.get(thumb.element()) / 2;
-      Css.set(thumb.element(), 'left', (pos - thumbRadius) + 'px');
-    }
+    const pos = getXPos(component);
+    const thumbRadius = Width.get(thumb.element()) / 2;
+    Css.set(thumb.element(), 'left', (pos - thumbRadius) + 'px');
+  };
+
+  const refreshColour = function (component) {
+    const palette:any = getPalette(component).element().dom();
+
+    var ctx1 = palette.getContext('2d');
+    var width1 = palette.width;
+    var height1 = palette.height;
+
+    var colour = detail.colour().get();
+    var rgba = `rgba(${colour.r},${colour.g},${colour.b},${colour.a})`;
+    ctx1.fillStyle = rgba;
+    ctx1.fillRect(0, 0, width1, height1);
+  
+    var grdWhite = ctx1.createLinearGradient(0, 0, width1, 0);
+    grdWhite.addColorStop(0, 'rgba(255,255,255,1)');
+    grdWhite.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx1.fillStyle = grdWhite;
+    ctx1.fillRect(0, 0, width1, height1);
+  
+    var grdBlack = ctx1.createLinearGradient(0, 0, 0, height1);
+    grdBlack.addColorStop(0, 'rgba(0,0,0,0)');
+    grdBlack.addColorStop(1, 'rgba(0,0,0,1)');
+    ctx1.fillStyle = grdBlack;
+    ctx1.fillRect(0, 0, width1, height1);
   };
 
   const changeValue = function (component, newValue) {
     const oldValue = detail.value().get();
     const thumb = getThumb(component);
-    const edgeProp = (detail.orientation() === 'vertical') ? 'top' : 'left';
+    const edgeProp = 'left';
     // The left check is used so that the first click calls refresh
     if (oldValue !== newValue || Css.getRaw(thumb.element(), edgeProp).isNone()) {
       detail.value().set(newValue);
@@ -102,14 +107,6 @@ const sketch = function (detail, components, spec, externals) {
     } else {
       return Option.none();
     }
-  };
-
-  const resetToMin = function (slider) {
-    changeValue(slider, detail.min());
-  };
-
-  const resetToMax = function (slider) {
-    changeValue(slider, detail.max());
   };
 
   const uiEventsArr = isTouch ? [
@@ -143,7 +140,7 @@ const sketch = function (detail, components, spec, externals) {
             Keying.config({
               mode: 'special',
               focusIn (slider) {
-                return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.constant(true));
+                return AlloyParts.getPart(slider, detail, 'palette').map(Keying.focusIn).map(Fun.constant(true));
               }
             })
           ] : [],
@@ -159,27 +156,35 @@ const sketch = function (detail, components, spec, externals) {
           ]
         ])
       ),
-      SketchBehaviours.get(detail.sliderBehaviours())
+      SketchBehaviours.get(detail.paletteBehaviours())
     ),
 
     events: AlloyEvents.derive(
       [
-        AlloyEvents.run(SliderActions.changeEvent(), function (slider, simulatedEvent) {
+        AlloyEvents.run(PaletteActions.changeEvent(), function (slider, simulatedEvent) {
           changeValue(slider, simulatedEvent.event().value());
         }),
         AlloyEvents.runOnAttached(function (slider, simulatedEvent) {
-          detail.value().set(detail.getInitialValue()());
+          detail.value().set(0);
+          // detail.value().set(detail.getInitialValue()()); 
+
+
+
+          // TODO: ^ Fix above
+
+
+
+
           const thumb = getThumb(slider);
           // Call onInit instead of onChange for the first value.
           refresh(slider);
+          refreshColour(slider);
           detail.onInit()(slider, thumb, detail.value().get());
         })
       ].concat(uiEventsArr)
     ),
 
     apis: {
-      resetToMin,
-      resetToMax,
       refresh
     },
 

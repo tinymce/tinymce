@@ -5,11 +5,11 @@ import { PaletteSchema } from '../../ui/palette/PaletteSchema';
 import * as PaletteUi from '../../ui/palette/PaletteUi';
 import * as Sketcher from './Sketcher';
 
-export interface SliderSketch extends Sketcher.CompositeSketch {
+export interface PaletteSketch extends Sketcher.CompositeSketch {
   refresh: (slider: AlloyComponent) => void;
 }
 
-const Slider = Sketcher.composite({
+const Palette = Sketcher.composite({
   name: 'Palette',
   configFields: PaletteSchema,
   partFields: PaletteParts,
@@ -19,8 +19,8 @@ const Slider = Sketcher.composite({
       apis.refresh(slider);
     }
   }
-}) as SliderSketch;
+}) as PaletteSketch;
 
 export {
-  Slider
+  Palette
 };

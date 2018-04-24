@@ -29,46 +29,23 @@ const capValue = function (value, min, max) {
   );
 };
 
-const snapValueOf = function (bounds, value, min, max, step, snapStart) {
-  // We are snapping by the step size. Therefore, find the nearest multiple of
-  // the step
-  return snapStart.fold(function () {
-    // There is no initial snapping start, so just go from the minimum
-    const initValue = value - min;
-    const extraValue = Math.round(initValue / step) * step;
-    return capValue(min + extraValue, min - 1, max + 1);
-  }, function (start) {
-    // There is an initial snapping start, so using that as the starting point,
-    // calculate the nearest snap position based on the value
-    const remainder = (value - start) % step;
-    const adjustment = Math.round(remainder / step);
-
-    const rawSteps = Math.floor((value - start) / step);
-    const maxSteps = Math.floor((max - start) / step);
-
-    const numSteps = Math.min(maxSteps, rawSteps + adjustment);
-    const r = start + (numSteps * step);
-    return Math.max(start, r);
-  });
-};
-
-const findValueOf = function (bounds, min, max, value, step, snapToGrid, snapStart, ledgeProp, redgeProp, lengthProp) {
+const findValueOf = function (bounds, min, max, value, step, ledgeProp, redgeProp, lengthProp) {
   const range = max - min;
   // TODO: TM-26 Make this bounding of edges work only occur if there are edges (and work with snapping)
   if (value < bounds[ledgeProp]) { return min - 1; } else if (value > bounds[redgeProp]) { return max + 1; } else {
     const offset = Math.min(bounds[redgeProp], Math.max(value, bounds[ledgeProp])) - bounds[ledgeProp];
     const newValue = capValue(((offset / bounds[lengthProp]) * range) + min, min - 1, max + 1);
     const roundedValue = Math.round(newValue);
-    return snapToGrid && newValue >= min && newValue <= max ? snapValueOf(bounds, newValue, min, max, step, snapStart) : roundedValue;
+    return roundedValue;
   }
 };
 
-const findValueOfX = function (bounds, min, max, xValue, step, snapToGrid, snapStart) {
-  return findValueOf(bounds, min, max, xValue, step, snapToGrid, snapStart, 'left', 'right', 'width');
+const findValueOfX = function (bounds, min, max, xValue, step) {
+  return findValueOf(bounds, min, max, xValue, step, 'left', 'right', 'width');
 };
 
-const findValueOfY = function (bounds, min, max, xValue, step, snapToGrid, snapStart) {
-  return findValueOf(bounds, min, max, xValue, step, snapToGrid, snapStart, 'top', 'bottom', 'height');
+const findValueOfY = function (bounds, min, max, xValue, step) {
+  return findValueOf(bounds, min, max, xValue, step, 'top', 'bottom', 'height');
 };
 
 export {

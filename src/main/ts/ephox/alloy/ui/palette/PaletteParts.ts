@@ -8,7 +8,7 @@ import { Keying } from '../../api/behaviour/Keying';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as PartType from '../../parts/PartType';
-import * as SliderActions from './SliderActions';
+import * as PaletteActions from './PaletteActions';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
@@ -34,23 +34,16 @@ const thumbPart = PartType.required({
   }
 });
 
-const spectrumPart = PartType.required({
+const palettePart = PartType.required({
   schema: [
     FieldSchema.state('mouseIsDown', function () { return Cell(false); })
   ],
-  name: 'spectrum',
+  name: 'palette',
   overrides (detail) {
-    const moveToX = function (spectrum, simulatedEvent) {
+    const moveTo = function (spectrum, simulatedEvent) {
       const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
-      SliderActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
+      PaletteActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
     };
-
-    const moveToY = function (spectrum, simulatedEvent) {
-      const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
-      SliderActions.setYFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
-    };
-
-    const moveTo = detail.orientation() === 'vertical' ? moveToY : moveToX;
 
     const touchEvents = AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.touchstart(), moveTo),
@@ -70,11 +63,11 @@ const spectrumPart = PartType.required({
         Keying.config({
           mode: 'special',
           onLeft (spectrum) {
-            SliderActions.moveLeft(spectrum, detail);
+            PaletteActions.moveLeft(spectrum, detail);
             return Option.some(true);
           },
           onRight (spectrum) {
-            SliderActions.moveRight(spectrum, detail);
+            PaletteActions.moveRight(spectrum, detail);
             return Option.some(true);
           }
         }),
@@ -88,5 +81,5 @@ const spectrumPart = PartType.required({
 
 export default <any> [
   thumbPart,
-  spectrumPart
+  palettePart
 ];
