@@ -672,12 +672,32 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     writer.reset();
     parser.parse(
       '<a href="javascript:alert(1)">1</a>' +
-      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>'
+      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>' +
+      '<a href="data:image/svg+xml;base64,x">3</a>'
     );
     LegacyUnit.equal(
       writer.getContent(),
       '<a>1</a>' +
-      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>'
+      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>' +
+      '<a href="data:image/svg+xml;base64,x">3</a>'
+    );
+  });
+
+  suite.test('Parse script urls (disallow svg data image uris)', function () {
+    let counter, parser;
+
+    counter = createCounter(writer);
+    counter.validate = false;
+    counter.allow_html_data_urls = false;
+    counter.allow_svg_data_urls = false;
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse(
+      '<a href="data:image/svg+xml;base64,x">1</a>'
+    );
+    LegacyUnit.equal(
+      writer.getContent(),
+      '<a>1</a>'
     );
   });
 
