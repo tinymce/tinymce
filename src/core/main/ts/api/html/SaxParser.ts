@@ -145,7 +145,7 @@ export function SaxParser(settings, schema = Schema()) {
     let anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
     const decode = Entities.decode;
     let fixSelfClosing;
-    const filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster');
+    const filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster,xlink:href');
     const scriptUriRegExp = /((java|vb)script|mhtml):/i, dataUriRegExp = /^data:/i;
 
     const processEndTag = function (name) {
