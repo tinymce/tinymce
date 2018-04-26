@@ -11,7 +11,6 @@
 import { CaretPosition } from './CaretPosition';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { HDirection, CaretWalker } from 'tinymce/core/caret/CaretWalker';
-import * as ClientRect from 'tinymce/core/geom/ClientRect';
 import CaretFinder from 'tinymce/core/caret/CaretFinder';
 import NodeType from 'tinymce/core/dom/NodeType';
 import { isInSameBlock } from 'tinymce/core/caret/CaretUtils';
@@ -29,17 +28,9 @@ export interface LineInfo {
   breakAt: Option<CaretPosition>;
 }
 
-type CheckerPredicate = typeof isAbove | typeof isBelow;
+type CheckerPredicate = typeof CaretPosition.isAbove | typeof CaretPosition.isBelow;
 type LineInfoFinder = (scope: HTMLElement, start: CaretPosition) => LineInfo;
 type CaretPositionsFinder = (scope: HTMLElement, start: CaretPosition) => CaretPosition[];
-
-const isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean => {
-  return Options.liftN([Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects())], ClientRect.isAbove).getOr(false);
-};
-
-const isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean => {
-  return Options.liftN([Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects())], (r1, r2) => ClientRect.isBelow(r1, r2)).getOr(false);
-};
 
 const flip = (direction: HDirection, positions: CaretPosition[]) => direction === HDirection.Backwards ? positions.reverse() : positions;
 
@@ -122,8 +113,8 @@ const findClosestHorizontalPosition = (positions: CaretPosition[], pos: CaretPos
   });
 };
 
-const getPositionsUntilPreviousLine = Fun.curry(getPositionsUntil, isAbove, -1) as LineInfoFinder;
-const getPositionsUntilNextLine = Fun.curry(getPositionsUntil, isBelow, 1) as LineInfoFinder;
+const getPositionsUntilPreviousLine = Fun.curry(getPositionsUntil, CaretPosition.isAbove, -1) as LineInfoFinder;
+const getPositionsUntilNextLine = Fun.curry(getPositionsUntil, CaretPosition.isBelow, 1) as LineInfoFinder;
 const isAtFirstLine = (scope: HTMLElement, pos: CaretPosition) => getPositionsUntilPreviousLine(scope, pos).breakAt.isNone();
 const isAtLastLine = (scope: HTMLElement, pos: CaretPosition) => getPositionsUntilNextLine(scope, pos).breakAt.isNone();
 const getPositionsAbove = Fun.curry(getAdjacentLinePositions, -1, getPositionsUntilPreviousLine) as CaretPositionsFinder;

@@ -6,9 +6,7 @@ import Events from 'tinymce/core/api/Events';
 const DOM = DOMUtils.DOM;
 
 const restoreOriginalStyles = (editor: Editor) => {
-  if (editor.orgDisplay) {
-    DOM.setStyle(editor.id, 'display', editor.orgDisplay);
-  }
+  DOM.setStyle(editor.id, 'display', editor.orgDisplay);
 };
 
 const safeDestroy = (x: any) => Option.from(x).each((x) => x.destroy());
@@ -24,7 +22,7 @@ const clearDomReferences = (editor: Editor) => {
 };
 
 const restoreForm = (editor: Editor) => {
-  const form = editor.formElement;
+  const form = editor.formElement as any;
   if (form) {
     if (form._mceOldSubmit) {
       form.submit = form._mceOldSubmit;
@@ -43,7 +41,7 @@ const remove =  (editor: Editor): void => {
     if (body) {
       editor.save();
     }
-    editor.removed = 1;
+    editor.removed = true;
     editor.unbindAllNativeEvents();
 
     // Remove any hidden input
@@ -96,7 +94,7 @@ const destroy = (editor: Editor, automatic?: boolean): void => {
   restoreForm(editor);
   clearDomReferences(editor);
 
-  editor.destroyed = 1;
+  editor.destroyed = true;
 };
 
 export {

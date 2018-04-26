@@ -537,6 +537,8 @@ DomQuery.fn = DomQuery.prototype = {
           }
         } else if (elm.currentStyle) {
           return elm.currentStyle[camel(name)];
+        } else {
+          return '';
         }
       }
     }

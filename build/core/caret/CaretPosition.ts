@@ -15,6 +15,7 @@ import * as ClientRect from '../geom/ClientRect';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ExtendingChar from '../text/ExtendingChar';
 import Fun from '../util/Fun';
+import { Arr, Options } from '@ephox/katamari';
 
 /**
  * This module contains logic for creating caret positions within a document a caretposition
@@ -403,9 +404,18 @@ export namespace CaretPosition {
    */
   export const before = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node));
 
+  export const isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean => {
+    return Options.liftN([Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects())], ClientRect.isAbove).getOr(false);
+  };
+
+  export const isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean => {
+    return Options.liftN([Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects())], ClientRect.isBelow).getOr(false);
+  };
+
   export const isAtStart = (pos: CaretPosition) => pos ? pos.isAtStart() : false;
   export const isAtEnd = (pos: CaretPosition) => pos ? pos.isAtEnd() : false;
   export const isTextPosition = (pos: CaretPosition) => pos ? NodeType.isText(pos.container()) : false;
+  export const isElementPosition = (pos: CaretPosition) => isTextPosition(pos) === false;
 }
 
 export default CaretPosition;

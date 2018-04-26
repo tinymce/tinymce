@@ -16,7 +16,6 @@ import SelectionOverrides from '../SelectionOverrides';
 import UndoManager from '../api/UndoManager';
 import Formatter from '../api/Formatter';
 import Serializer from '../api/dom/Serializer';
-import CaretContainerInput from '../caret/CaretContainerInput';
 import DOMUtils from '../api/dom/DOMUtils';
 import { Selection } from '../api/dom/Selection';
 import DomParser from '../api/html/DomParser';
@@ -26,12 +25,14 @@ import KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import Delay from '../api/util/Delay';
 import Quirks from '../util/Quirks';
 import Tools from '../api/util/Tools';
+import { Editor } from 'tinymce/core/api/Editor';
+import TripleClickSelection from 'tinymce/core/selection/TripleClickSelection';
 
 declare const escape: any;
 
 const DOM = DOMUtils.DOM;
 
-const appendStyle = function (editor, text) {
+const appendStyle = function (editor: Editor, text: string) {
   const head = Element.fromDom(editor.getDoc().head);
   const tag = Element.fromTag('style');
   Attr.set(tag, 'type', 'text/css');
@@ -39,7 +40,7 @@ const appendStyle = function (editor, text) {
   Insert.append(head, tag);
 };
 
-const createParser = function (editor) {
+const createParser = function (editor: Editor) {
   const parser = DomParser(editor.settings, editor.schema);
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
@@ -80,7 +81,7 @@ const createParser = function (editor) {
   });
 
   // Keep scripts from executing
-  parser.addNodeFilter('script', function (nodes) {
+  parser.addNodeFilter('script', function (nodes: Node[]) {
     let i = nodes.length, node, type;
 
     while (i--) {
@@ -92,7 +93,7 @@ const createParser = function (editor) {
     }
   });
 
-  parser.addNodeFilter('#cdata', function (nodes) {
+  parser.addNodeFilter('#cdata', function (nodes: Node[]) {
     let i = nodes.length, node;
 
     while (i--) {
@@ -103,7 +104,7 @@ const createParser = function (editor) {
     }
   });
 
-  parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function (nodes) {
+  parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function (nodes: Node[]) {
     let i = nodes.length, node;
     const nonEmptyElements = editor.schema.getNonEmptyElements();
 
@@ -119,7 +120,7 @@ const createParser = function (editor) {
   return parser;
 };
 
-const autoFocus = function (editor) {
+const autoFocus = function (editor: Editor) {
   if (editor.settings.auto_focus) {
     Delay.setEditorTimeout(editor, function () {
       let focusEditor;
@@ -137,7 +138,7 @@ const autoFocus = function (editor) {
   }
 };
 
-const initEditor = function (editor) {
+const initEditor = function (editor: Editor) {
   editor.bindPendingEventDelegates();
   editor.initialized = true;
   editor.fire('init');
@@ -147,11 +148,11 @@ const initEditor = function (editor) {
   autoFocus(editor);
 };
 
-const getStyleSheetLoader = function (editor) {
+const getStyleSheetLoader = function (editor: Editor) {
   return editor.inline ? DOM.styleSheetLoader : editor.dom.styleSheetLoader;
 };
 
-const initContentBody = function (editor, skipWrite?) {
+const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   const settings = editor.settings;
   const targetElm = editor.getElement();
   let doc = editor.getDoc(), body, contentCssText;
@@ -206,7 +207,7 @@ const initContentBody = function (editor, skipWrite?) {
 
   editor.editorUpload = EditorUpload(editor);
   editor.schema = Schema(settings);
-  editor.dom = new DOMUtils(doc, {
+  editor.dom = DOMUtils(doc, {
     keep_values: true,
     url_converter: editor.convertURL,
     url_converter_scope: editor,
@@ -229,7 +230,7 @@ const initContentBody = function (editor, skipWrite?) {
   editor._nodeChangeDispatcher = new NodeChange(editor);
   editor._selectionOverrides = SelectionOverrides(editor);
 
-  CaretContainerInput.setup(editor);
+  TripleClickSelection.setup(editor);
   KeyboardOverrides.setup(editor);
   ForceBlocks.setup(editor);
 
@@ -265,15 +266,8 @@ const initContentBody = function (editor, skipWrite?) {
     editor.addVisual(editor.getBody());
   });
 
-  // Remove empty contents
-  if (settings.padd_empty_editor) {
-    editor.on('PostProcess', function (e) {
-      e.content = e.content.replace(/^(<p[^>]*>(&nbsp;|&#160;|\s|\u00a0|<br \/>|)<\/p>[\r\n]*|<br \/>[\r\n]*)$/, '');
-    });
-  }
-
   editor.load({ initial: true, format: 'html' });
-  editor.startContent = editor.getContent({ format: 'raw' });
+  editor.startContent = editor.getContent({ format: 'raw' }) as string;
 
   editor.on('compositionstart compositionend', function (e) {
     editor.composing = e.type === 'compositionstart';

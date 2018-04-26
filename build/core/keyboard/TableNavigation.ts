@@ -16,9 +16,19 @@ import { PlatformDetection } from '@ephox/sand';
 import { getPositionsAbove, findClosestHorizontalPositionFromPoint, getPositionsBelow, getPositionsUntilPreviousLine, getPositionsUntilNextLine, BreakType } from 'tinymce/core/caret/LineReader';
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from 'tinymce/core/caret/TableCells';
 import Fun from 'tinymce/core/util/Fun';
+import ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
+import { Editor } from 'tinymce/core/api/Editor';
+import NodeType from 'tinymce/core/dom/NodeType';
+import Settings from 'tinymce/core/api/Settings';
+import { Element, Attr, Insert } from '@ephox/sugar';
 
 const browser = PlatformDetection.detect().browser;
-const isFakeCaretTableBrowser = () => browser.isIE() || browser.isEdge() || browser.isFirefox();
+const isFakeCaretTableBrowser = (): boolean => browser.isIE() || browser.isEdge() || browser.isFirefox();
+
+const moveToRange = (editor: Editor, rng: Range) => {
+  editor.selection.setRng(rng);
+  ScrollIntoView.scrollRangeIntoView(editor, rng);
+};
 
 const isAtTableCellLine = (getPositionsUntil, scope: HTMLElement, pos: CaretPosition) => {
   const lineInfo = getPositionsUntil(scope, pos);
@@ -47,7 +57,7 @@ const navigateHorizontally = (editor, forward: boolean, table: HTMLElement, td: 
 
   if (isFakeCaretTableBrowser() && isCaretAtStartOrEndOfTable(forward, rng, table)) {
     const newRng = CefUtils.showCaret(direction, editor, table, !forward, true);
-    editor.selection.setRng(newRng);
+    moveToRange(editor, newRng);
     return true;
   }
 
@@ -74,6 +84,51 @@ const getClosestBelowPosition = (root: HTMLElement, table: HTMLElement, start: C
   ).getOr(CaretPosition.after(table));
 };
 
+const getTable = (previous: boolean, pos: CaretPosition): Option<HTMLElement> => {
+  const node = pos.getNode(previous);
+  return NodeType.isElement(node) && node.nodeName === 'TABLE' ? Option.some(node as HTMLElement) : Option.none();
+};
+
+const renderBlock = (down: boolean, editor: Editor, table: HTMLElement, pos: CaretPosition) => {
+  const forcedRootBlock = Settings.getForcedRootBlock(editor);
+
+  if (forcedRootBlock) {
+    editor.undoManager.transact(() => {
+      const element = Element.fromTag(forcedRootBlock);
+      Attr.setAll(element, Settings.getForcedRootBlockAttrs(editor));
+      Insert.append(element, Element.fromTag('br'));
+
+      if (down) {
+        Insert.after(Element.fromDom(table), element);
+      } else {
+        Insert.before(Element.fromDom(table), element);
+      }
+
+      const rng = editor.dom.createRng();
+      rng.setStart(element.dom(), 0);
+      rng.setEnd(element.dom(), 0);
+      moveToRange(editor, rng);
+    });
+  } else {
+    moveToRange(editor, pos.toRange());
+  }
+};
+
+const moveCaret = (editor: Editor, down: boolean, pos: CaretPosition) => {
+  const table = down ? getTable(true, pos) : getTable(false, pos);
+  const last = down === false;
+
+  table.fold(
+    () => moveToRange(editor, pos.toRange()),
+    (table) => {
+      return CaretFinder.positionIn(last, editor.getBody()).filter((lastPos) => lastPos.isEqual(pos)).fold(
+        () => moveToRange(editor, pos.toRange()),
+        (_) => renderBlock(down, editor, table, pos)
+      );
+    }
+  );
+};
+
 const navigateVertically = (editor, down: boolean, table: HTMLElement, td: HTMLElement): boolean => {
   const rng = editor.selection.getRng();
   const pos = CaretPosition.fromRangeStart(rng);
@@ -81,11 +136,11 @@ const navigateVertically = (editor, down: boolean, table: HTMLElement, td: HTMLE
 
   if (!down && isAtFirstTableCellLine(td, pos)) {
     const newPos = getClosestAbovePosition(root, table, pos);
-    editor.selection.setRng(newPos.toRange());
+    moveCaret(editor, down, newPos);
     return true;
   } else if (down && isAtLastTableCellLine(td, pos)) {
     const newPos = getClosestBelowPosition(root, table, pos);
-    editor.selection.setRng(newPos.toRange());
+    moveCaret(editor, down, newPos);
     return true;
   } else {
     return false;

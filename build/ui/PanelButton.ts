@@ -60,10 +60,17 @@ export default Button.extend({
       self.panel.show();
     }
 
-    const rel = self.panel.testMoveRel(self.getEl(), settings.popoverAlign || (self.isRtl() ? ['bc-tc', 'bc-tl', 'bc-tr'] : ['bc-tc', 'bc-tr', 'bc-tl']));
+    const rtlRels = ['bc-tc', 'bc-tl', 'bc-tr'];
+    const ltrRels = ['bc-tc', 'bc-tr', 'bc-tl', 'tc-bc', 'tc-br', 'tc-bl'];
+    const rel: string = self.panel.testMoveRel(self.getEl(), settings.popoverAlign || (self.isRtl() ? rtlRels : ltrRels));
 
-    self.panel.classes.toggle('start', rel === 'bc-tl');
-    self.panel.classes.toggle('end', rel === 'bc-tr');
+    self.panel.classes.toggle('start', rel.substr(-1) === 'l');
+    self.panel.classes.toggle('end', rel.substr(-1) === 'r');
+
+    const isTop = rel.substr(0, 1) === 't';
+
+    self.panel.classes.toggle('bottom', !isTop);
+    self.panel.classes.toggle('top', isTop);
 
     self.panel.moveRel(self.getEl(), rel);
   },

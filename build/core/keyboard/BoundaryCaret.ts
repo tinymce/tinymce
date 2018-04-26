@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Option } from '@ephox/katamari';
+import { Option, Cell } from '@ephox/katamari';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as CaretContainerInline from '../caret/CaretContainerInline';
 import CaretContainerRemove from '../caret/CaretContainerRemove';
@@ -16,7 +16,7 @@ import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import NodeType from '../dom/NodeType';
 
-const insertInlinePos = function (pos, before) {
+const insertInlinePos = function (pos: CaretPosition, before: boolean) {
   if (NodeType.isText(pos.container())) {
     return CaretContainerInline.insertInline(before, pos.container());
   } else {
@@ -24,12 +24,12 @@ const insertInlinePos = function (pos, before) {
   }
 };
 
-const isPosCaretContainer = function (pos, caret) {
-  const caretNode = caret.get();
+const isPosCaretContainer = function (pos: CaretPosition, caret: Cell<Text>) {
+  const caretNode = (<Cell<any>> caret).get();
   return caretNode && pos.container() === caretNode && CaretContainer.isCaretContainerInline(caretNode);
 };
 
-const renderCaret = function (caret, location) {
+const renderCaret = function (caret: Cell<Text>, location) {
   return location.fold(
     function (element) { // Before
       CaretContainerRemove.remove(caret.get());

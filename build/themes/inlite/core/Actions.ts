@@ -80,7 +80,7 @@ const unlink = function (editor: Editor) {
   collapseSelectionToEnd(editor);
 };
 
-const changeHref = function (editor: Editor, elm: Element, url: string) {
+const changeHref = function (editor: Editor, elm: Node, url: string) {
   editor.focus();
   editor.dom.setAttrib(elm, 'href', url);
   collapseSelectionToEnd(editor);

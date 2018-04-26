@@ -9,27 +9,31 @@
  */
 
 import NodeType from './NodeType';
+import { Editor } from 'tinymce/core/api/Editor';
+import { getOverflow } from 'tinymce/core/geom/ClientRect';
+import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
+import { Arr } from '@ephox/katamari';
 
-const getPos = function (elm) {
+const getPos = function (elm: HTMLElement) {
   let x = 0, y = 0;
 
   let offsetParent = elm;
   while (offsetParent && offsetParent.nodeType) {
     x += offsetParent.offsetLeft || 0;
     y += offsetParent.offsetTop || 0;
-    offsetParent = offsetParent.offsetParent;
+    offsetParent = offsetParent.offsetParent as HTMLElement;
   }
 
   return { x, y };
 };
 
-const fireScrollIntoViewEvent = function (editor, elm, alignToTop) {
+const fireScrollIntoViewEvent = function (editor: Editor, elm: Element, alignToTop: boolean) {
   const scrollEvent: any = { elm, alignToTop };
   editor.fire('scrollIntoView', scrollEvent);
   return scrollEvent.isDefaultPrevented();
 };
 
-const scrollIntoView = function (editor, elm, alignToTop) {
+const scrollElementIntoView = function (editor: Editor, elm: HTMLElement, alignToTop: boolean) {
   let y, viewPort;
   const dom = editor.dom;
   const root = dom.getRoot();
@@ -70,6 +74,45 @@ const scrollIntoView = function (editor, elm, alignToTop) {
   }
 };
 
+const getViewPortRect = (editor: Editor) => {
+  if (editor.inline) {
+    return editor.getBody().getBoundingClientRect();
+  } else {
+    const win = editor.getWin();
+
+    return {
+      left: 0,
+      right: win.innerWidth,
+      top: 0,
+      bottom: win.innerHeight,
+      width: win.innerWidth,
+      height: win.innerHeight
+    };
+  }
+};
+
+const scrollBy = (editor: Editor, dx: number, dy: number) => {
+  if (editor.inline) {
+    editor.getBody().scrollLeft += dx;
+    editor.getBody().scrollTop += dy;
+  } else {
+    editor.getWin().scrollBy(dx, dy);
+  }
+};
+
+const scrollRangeIntoView = (editor: Editor, rng: Range) => {
+  Arr.head(CaretPosition.fromRangeStart(rng).getClientRects()).each((rngRect) => {
+    const bodyRect = getViewPortRect(editor);
+    const overflow = getOverflow(bodyRect, rngRect);
+    const margin = 4;
+    const dx = overflow.x > 0 ? overflow.x + margin : overflow.x - margin;
+    const dy = overflow.y > 0 ? overflow.y + margin : overflow.y - margin;
+
+    scrollBy(editor, overflow.x !== 0 ? dx : 0, overflow.y !== 0 ? dy : 0);
+  });
+};
+
 export default {
-  scrollIntoView
+  scrollElementIntoView,
+  scrollRangeIntoView
 };
