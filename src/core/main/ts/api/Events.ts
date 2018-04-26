@@ -19,9 +19,19 @@ const fireRemove = (editor: Editor) => editor.fire('remove');
 
 const fireSwitchMode = (editor: Editor, mode: EditorMode) => editor.fire('SwitchMode', { mode });
 
+const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number) => {
+  editor.fire('ObjectResizeStart', { target, width, height });
+};
+
+const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, height: number) => {
+  editor.fire('ObjectResized', { target, width, height });
+};
+
 export default {
   firePreProcess,
   firePostProcess,
   fireRemove,
-  fireSwitchMode
+  fireSwitchMode,
+  fireObjectResizeStart,
+  fireObjectResized
 };

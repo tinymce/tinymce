@@ -13,7 +13,7 @@ import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 import InsertTable from '../actions/InsertTable';
 import Styles from '../actions/Styles';
-import Util from '../alien/Util';
+import * as Util from '../alien/Util';
 import Helpers from './Helpers';
 import { hasAdvancedTableTab, hasAppearanceOptions, shouldStyleWithCss, getTableClassList } from '../api/Settings';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';

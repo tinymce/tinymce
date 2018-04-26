@@ -9,7 +9,7 @@
  */
 
 import { TableSelection } from '@ephox/darwin';
-import Util from '../alien/Util';
+import * as Util from '../alien/Util';
 import Ephemera from './Ephemera';
 import SelectionTypes from './SelectionTypes';
 import { Editor } from 'tinymce/core/api/Editor';

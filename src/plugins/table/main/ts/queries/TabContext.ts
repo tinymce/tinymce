@@ -16,7 +16,7 @@ import {
 
 import VK from 'tinymce/core/api/util/VK';
 
-import Util from '../alien/Util';
+import * as Util from '../alien/Util';
 import TableTargets from './TableTargets';
 import { Editor } from 'tinymce/core/api/Editor';
 import { TableActions } from 'tinymce/plugins/table/actions/TableActions';

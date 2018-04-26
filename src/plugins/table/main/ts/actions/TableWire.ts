@@ -11,7 +11,7 @@
 import { ResizeWire } from '@ephox/snooker';
 import { Body, Css, Element, Insert, Remove } from '@ephox/sugar';
 
-import Util from '../alien/Util';
+import * as Util from '../alien/Util';
 import { Editor } from 'tinymce/core/api/Editor';
 
 const createContainer = function () {
