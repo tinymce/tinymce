@@ -182,6 +182,12 @@ const Window = FloatPanel.extend({
       self.close();
     });
 
+    self.on('move', (e) => {
+      if (e.control === self) {
+        FloatPanel.hideAll();
+      }
+    });
+
     self.aria('describedby', self.describedBy || self._id + '-none');
     self.aria('label', settings.title);
     self._fullscreen = false;

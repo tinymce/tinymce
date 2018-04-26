@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr, Fun, Merger } from '@ephox/katamari';
+import { Arr, Fun, Merger, Option } from '@ephox/katamari';
 
 export interface KeyPattern {
   shiftKey?: boolean;
@@ -55,10 +55,8 @@ const action = function (f, ...x: any[]) {
   };
 };
 
-const execute = function (patterns: KeyPattern[], evt: KeyboardEvent) {
-  return Arr.find(match(patterns, evt), (pattern) => {
-    return pattern.action();
-  });
+const execute = function (patterns: KeyPattern[], evt: KeyboardEvent): Option<KeyPattern> {
+  return Arr.find(match(patterns, evt), (pattern) => pattern.action());
 };
 
 export default {

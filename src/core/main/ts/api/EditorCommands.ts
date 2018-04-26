@@ -11,12 +11,15 @@
 import Env from './Env';
 import InsertContent from '../InsertContent';
 import DeleteCommands from '../delete/DeleteCommands';
+import * as FontCommands from '../commands/FontCommands';
 import NodeType from '../dom/NodeType';
 import InsertBr from '../newline/InsertBr';
 import SelectionBookmark from '../selection/SelectionBookmark';
 import Tools from './util/Tools';
 import { Selection } from './dom/Selection';
 import * as IndentOutdent from 'tinymce/core/commands/IndentOutdent';
+import { Editor } from 'tinymce/core/api/Editor';
+import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 
 /**
  * This class enables you to add custom editor commands and it contains
@@ -27,11 +30,10 @@ import * as IndentOutdent from 'tinymce/core/commands/IndentOutdent';
 
 // Added for compression purposes
 const each = Tools.each, extend = Tools.extend;
-const map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;
-const TRUE = true, FALSE = false;
+const map = Tools.map, inArray = Tools.inArray;
 
-export default function (editor) {
-  let dom, selection: Selection, formatter;
+export default function (editor: Editor) {
+  let dom: DOMUtils, selection: Selection, formatter;
   const commands = { state: {}, exec: {}, value: {} };
   let settings = editor.settings,
     bookmark;
@@ -252,7 +254,7 @@ export default function (editor) {
 
   const execNativeCommand = function (command, ui?, value?) {
     if (ui === undefined) {
-      ui = FALSE;
+      ui = false;
     }
 
     if (value === undefined) {
@@ -298,7 +300,7 @@ export default function (editor) {
         execNativeCommand(command);
       } catch (ex) {
         // Command failed
-        failed = TRUE;
+        failed = true;
       }
 
       // Chrome reports the paste command as supported however older IE:s will return false for cut/paste
@@ -383,26 +385,16 @@ export default function (editor) {
     },
 
     // Override commands to use the text formatter engine
-    'ForeColor,HiliteColor,FontName' (command, ui, value) {
+    'ForeColor,HiliteColor' (command, ui, value) {
       toggleFormat(command, value);
     },
 
+    'FontName' (command, ui, value) {
+      FontCommands.fontNameAction(editor, value);
+    },
+
     'FontSize' (command, ui, value) {
-      let fontClasses, fontSizes;
-
-      // Convert font size 1-7 to styles
-      if (value >= 1 && value <= 7) {
-        fontSizes = explode(settings.font_size_style_values);
-        fontClasses = explode(settings.font_size_classes);
-
-        if (fontClasses) {
-          value = fontClasses[value - 1] || value;
-        } else {
-          value = fontSizes[value - 1] || value;
-        }
-      }
-
-      toggleFormat(command, value);
+      FontCommands.fontSizeAction(editor, value);
     },
 
     'RemoveFormat' (command) {
@@ -420,8 +412,7 @@ export default function (editor) {
     'mceCleanup' () {
       const bookmark = selection.getBookmark();
 
-      editor.setContent(editor.getContent({ cleanup: TRUE }), { cleanup: TRUE });
-
+      editor.setContent(editor.getContent());
       selection.moveToBookmark(bookmark);
     },
 
@@ -431,7 +422,7 @@ export default function (editor) {
       // Make sure that the body node isn't removed
       if (node !== editor.getBody()) {
         storeSelection();
-        editor.dom.remove(node, TRUE);
+        editor.dom.remove(node, true);
         restoreSelection();
       }
     },
@@ -442,7 +433,7 @@ export default function (editor) {
       dom.getParent(selection.getNode(), function (node) {
         if (node.nodeType === 1 && counter++ === value) {
           selection.select(node);
-          return FALSE;
+          return false;
         }
       }, editor.getBody());
     },
@@ -456,12 +447,9 @@ export default function (editor) {
     },
 
     'mceInsertRawHTML' (command, ui, value) {
+      const content = editor.getContent() as string;
       selection.setContent('tiny_mce_marker');
-      editor.setContent(
-        editor.getContent().replace(/tiny_mce_marker/g, function () {
-          return value;
-        })
-      );
+      editor.setContent(content.replace(/tiny_mce_marker/g, () => value));
     },
 
     'mceToggleFormat' (command, ui, value) {
@@ -551,7 +539,7 @@ export default function (editor) {
       const matches = map(nodes, function (node) {
         return !!formatter.matchNode(node, name);
       });
-      return inArray(matches, TRUE) !== -1;
+      return inArray(matches, true) !== -1;
     },
 
     'Bold,Italic,Underline,Strikethrough,Superscript,Subscript' (command) {
@@ -567,11 +555,11 @@ export default function (editor) {
 
       if (settings.inline_styles) {
         if ((node = dom.getParent(selection.getStart(), dom.isBlock)) && parseInt(node.style.paddingLeft, 10) > 0) {
-          return TRUE;
+          return true;
         }
 
         if ((node = dom.getParent(selection.getEnd(), dom.isBlock)) && parseInt(node.style.paddingLeft, 10) > 0) {
-          return TRUE;
+          return true;
         }
       }
 
@@ -583,7 +571,7 @@ export default function (editor) {
     },
 
     'InsertUnorderedList,InsertOrderedList' (command) {
-      const list = dom.getParent(selection.getNode(), 'ul,ol');
+      const list = dom.getParent(selection.getNode(), 'ul,ol') as HTMLElement;
 
       return list &&
         (
@@ -592,23 +580,6 @@ export default function (editor) {
         );
     }
   }, 'state');
-
-  // Add queryCommandValue overrides
-  addCommands({
-    'FontSize,FontName' (command) {
-      let value = 0, parent;
-
-      if ((parent = dom.getParent(selection.getNode(), 'span'))) {
-        if (command === 'fontsize') {
-          value = parent.style.fontSize;
-        } else {
-          value = parent.style.fontFamily.replace(/, /g, ',').replace(/[\'\"]/g, '').toLowerCase();
-        }
-      }
-
-      return value;
-    }
-  }, 'value');
 
   // Add undo manager logic
   addCommands({
@@ -620,4 +591,7 @@ export default function (editor) {
       editor.undoManager.redo();
     }
   });
+
+  addQueryValueHandler('FontName', () => FontCommands.fontNameQuery(editor), this);
+  addQueryValueHandler('FontSize', () => FontCommands.fontSizeQuery(editor), this);
 }

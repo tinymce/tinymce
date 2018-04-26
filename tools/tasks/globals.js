@@ -32,7 +32,8 @@ var createTargetInfo = function (filePath, targetId, globalId) {
   return {
     filePath: filePath,
     targetId: targetId,
-    globalId: globalId
+    globalId: globalId,
+    globalName: globalId.split('.').pop()
   };
 };
 
@@ -52,12 +53,9 @@ var replaceVariables = function (str, variables) {
   return str;
 };
 
-var generateGlobaliserModule = function (templateFile, filePath, targetId, globalId) {
+var generateGlobaliserModule = function (templateFile, targetInfo) {
   var template = readFile(templateFile);
-  writeFile(filePath + '.js', replaceVariables(template, {
-    targetId: targetId,
-    globalId: globalId
-  }));
+  writeFile(targetInfo.filePath + '.js', replaceVariables(template, targetInfo));
 };
 
 var replacePrefixes = function (id, search, replace) {
@@ -75,7 +73,7 @@ var replacePrefix = function (grunt, templateFile, outputPath, config) {
     .map(targetIdToTargetInfo(outputPath, id => replacePrefixes(id, search, replace)))
     .forEach(function (targetInfo) {
       mkdirp(grunt, path.dirname(targetInfo.filePath));
-      generateGlobaliserModule(templateFile, targetInfo.filePath, targetInfo.targetId, targetInfo.globalId);
+      generateGlobaliserModule(templateFile, targetInfo);
     });
 };
 

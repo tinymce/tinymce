@@ -424,6 +424,22 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function () {
     LegacyUnit.equal(editor.getContent(), '<pre> </pre>');
   });
 
+  suite.test('hasFocus', function (editor) {
+    editor.focus();
+    LegacyUnit.equal(editor.hasFocus(), true);
+
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+
+    input.focus();
+    LegacyUnit.equal(editor.hasFocus(), false);
+
+    editor.focus();
+    LegacyUnit.equal(editor.hasFocus(), true);
+
+    input.parentNode.removeChild(input);
+  });
+
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), function () {
       onSuccess();

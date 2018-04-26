@@ -22,7 +22,7 @@ import { InlitePanel } from 'tinymce/themes/inlite/ui/Panel';
 
 const getSelectionElements = function (editor: Editor) {
   const node = editor.selection.getNode();
-  const elms = editor.dom.getParents(node);
+  const elms = editor.dom.getParents(node, '*');
   return elms;
 };
 

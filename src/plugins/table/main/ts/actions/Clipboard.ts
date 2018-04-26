@@ -15,6 +15,9 @@ import { Element, Elements, Node, Replication } from '@ephox/sugar';
 import TableTargets from '../queries/TableTargets';
 import Ephemera from '../selection/Ephemera';
 import SelectionTypes from '../selection/SelectionTypes';
+import { Editor } from 'tinymce/core/api/Editor';
+import { TableActions } from 'tinymce/plugins/table/actions/TableActions';
+import { Selections } from 'tinymce/plugins/table/selection/Selections';
 
 const extractSelected = function (cells) {
   // Assume for now that we only have one table (also handles the case where we multi select outside a table)
@@ -23,11 +26,11 @@ const extractSelected = function (cells) {
   });
 };
 
-const serializeElement = function (editor, elm) {
+const serializeElement = function (editor: Editor, elm) {
   return editor.selection.serializer.serialize(elm.dom(), {});
 };
 
-const registerEvents = function (editor, selections, actions, cellSelection) {
+const registerEvents = function (editor: Editor, selections: Selections, actions: TableActions, cellSelection) {
   editor.on('BeforeGetContent', function (e) {
     const multiCellContext = function (cells) {
       e.preventDefault();

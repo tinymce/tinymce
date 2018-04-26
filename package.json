@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "name": "@creately/tinymce",
   "version": "4.7.8",
+=======
+  "name": "tinymce",
+  "version": "4.7.11",
+>>>>>>> d941efc13979b175e6c4c61946b631edc79b75bc
   "repository": {
     "type": "git",
     "url": "https://github.com/creately/tinymce.git"

@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Option, Cell } from '@ephox/katamari';
 import { CopyRows, TableFill, TableLookup } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -17,10 +17,13 @@ import TableTargets from '../queries/TableTargets';
 import CellDialog from '../ui/CellDialog';
 import RowDialog from '../ui/RowDialog';
 import TableDialog from '../ui/TableDialog';
+import { Editor } from 'tinymce/core/api/Editor';
+import { TableActions } from 'tinymce/plugins/table/actions/TableActions';
+import { Selections } from 'tinymce/plugins/table/selection/Selections';
 
 const each = Tools.each;
 
-const registerCommands = function (editor, actions, cellSelection, selections, clipboardRows) {
+const registerCommands = function (editor: Editor, actions: TableActions, cellSelection, selections: Selections, clipboardRows: Cell<Option<any>>) {
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = function () {
     const cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));

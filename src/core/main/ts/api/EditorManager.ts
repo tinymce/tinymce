@@ -9,7 +9,7 @@
  */
 
 import { Arr, Type } from '@ephox/katamari';
-import AddOnManager from './AddOnManager';
+import { AddOnManager } from './AddOnManager';
 import { Editor } from './Editor';
 import Env from './Env';
 import ErrorReporter from '../ErrorReporter';

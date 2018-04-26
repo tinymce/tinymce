@@ -16,9 +16,11 @@ import Styles from '../actions/Styles';
 import Util from '../alien/Util';
 import Helpers from './Helpers';
 import { hasAdvancedTableTab, hasAppearanceOptions, shouldStyleWithCss, getTableClassList } from '../api/Settings';
+import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import { StyleMap } from 'tinymce/core/api/html/Styles';
 
 // Explore the layers of the table till we find the first layer of tds or ths
-function styleTDTH(dom, elm, name, value?) {
+function styleTDTH(dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | StyleMap) {
   if (elm.tagName === 'TD' || elm.tagName === 'TH') {
     dom.setStyle(elm, name, value);
   } else {

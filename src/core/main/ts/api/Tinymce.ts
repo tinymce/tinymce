@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import AddOnManager from './AddOnManager';
+import { AddOnManager } from './AddOnManager';
 import { Editor } from './Editor';
 import EditorCommands from './EditorCommands';
 import EditorManager from './EditorManager';
@@ -38,7 +38,7 @@ import Node from './html/Node';
 import SaxParser from './html/SaxParser';
 import Schema from './html/Schema';
 import HtmlSerializer from './html/Serializer';
-import Styles from './html/Styles';
+import { Styles } from './html/Styles';
 import Writer from './html/Writer';
 import Factory from './ui/Factory';
 import Class from './util/Class';

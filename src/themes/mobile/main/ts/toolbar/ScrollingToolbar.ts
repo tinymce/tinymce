@@ -1,6 +1,14 @@
 import {
-    AddEventsBehaviour, AlloyEvents, Behaviour, Container, GuiFactory, Keying, Toggling, Toolbar,
-    ToolbarGroup
+  AddEventsBehaviour,
+  AlloyEvents,
+  Behaviour,
+  Container,
+  GuiFactory,
+  Keying,
+  Toggling,
+  Toolbar,
+  ToolbarGroup,
+  ComponentApi
 } from '@ephox/alloy';
 import { Arr, Cell, Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
@@ -8,7 +16,7 @@ import { Css } from '@ephox/sugar';
 import Scrollables from '../ios/scroll/Scrollables';
 import Styles from '../style/Styles';
 import Scrollable from '../touch/scroll/Scrollable';
-import UiDomFactory from '../util/UiDomFactory';
+import * as UiDomFactory from '../util/UiDomFactory';
 
 export default function () {
   const makeGroup = function (gSpec) {
@@ -63,7 +71,7 @@ export default function () {
         shell: true
       }
     )
-  );
+  ) as ComponentApi.AlloyComponent;
 
   const wrapper = GuiFactory.build(
     Container.sketch({
@@ -80,7 +88,7 @@ export default function () {
         })
       ])
     })
-  );
+  ) as ComponentApi.AlloyComponent;
 
   const resetGroups = function () {
     Toolbar.setGroups(toolbar, initGroups.get());
@@ -99,7 +107,8 @@ export default function () {
   };
 
   const refresh = function () {
-    Toolbar.refresh(toolbar);
+    // Toolbar.refresh is undefined
+    // Toolbar.refresh(toolbar);
   };
 
   const setContextToolbar = function (gs) {

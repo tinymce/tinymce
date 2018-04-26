@@ -1,17 +1,19 @@
-import { Replacing } from '@ephox/alloy';
+import { Replacing, ComponentApi, Gui } from '@ephox/alloy';
 import { Fun, Singleton } from '@ephox/katamari';
 
 import AndroidWebapp from '../api/AndroidWebapp';
 import Styles from '../style/Styles';
 import ScrollingToolbar from '../toolbar/ScrollingToolbar';
 import CommonRealm from './CommonRealm';
-import Dropup from './Dropup';
+import * as Dropup from './Dropup';
 import OuterContainer from './OuterContainer';
+import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
+import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
 
-export default function (scrollIntoView) {
+export default function (scrollIntoView: () => void) {
   const alloy = OuterContainer({
     classes: [ Styles.resolve('android-container') ]
-  });
+  }) as Gui.GuiSystem;
 
   const toolbar = ScrollingToolbar();
 
@@ -19,7 +21,7 @@ export default function (scrollIntoView) {
 
   const switchToEdit = CommonRealm.makeEditSwitch(webapp);
 
-  const socket = CommonRealm.makeSocket();
+  const socket = CommonRealm.makeSocket() as ComponentApi.AlloyComponent;
 
   const dropup = Dropup.build(Fun.noop, scrollIntoView);
 
@@ -65,7 +67,7 @@ export default function (scrollIntoView) {
 
   return {
     system: Fun.constant(alloy),
-    element: alloy.element,
+    element: alloy.element as () => SugarElement,
     init,
     exit,
     setToolbarGroups,
@@ -75,5 +77,5 @@ export default function (scrollIntoView) {
     updateMode,
     socket: Fun.constant(socket),
     dropup: Fun.constant(dropup)
-  };
+  } as MobileRealm;
 }

@@ -126,7 +126,7 @@ const init = function (editor, boxInfo) {
   }
 
   editor.getElement().style.display = 'none';
-  DOM.setAttrib(editor.id, 'aria-hidden', true);
+  DOM.setAttrib(editor.id, 'aria-hidden', 'true');
 
   if (!isDomainRelaxed) {
     InitContentBody.initContentBody(editor);

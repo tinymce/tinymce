@@ -19,7 +19,12 @@ import Tools from '../api/util/Tools';
  * @private
  */
 
-export default function (document, settings?) {
+export interface StyleSheetLoader {
+  load: (url: string, loadedCallback: Function, errorCallback?: Function) => void;
+  loadAll: (urls: string[], success: Function, failure: Function) => void;
+}
+
+export function StyleSheetLoader(document, settings?): StyleSheetLoader {
   let idCount = 0;
   const loadedStates = {};
   let maxLoadTime;
@@ -39,7 +44,7 @@ export default function (document, settings?) {
    * @param {Function} loadedCallback Callback to be executed when loaded.
    * @param {Function} errorCallback Callback to be executed when failed loading.
    */
-  const load = function (url, loadedCallback, errorCallback) {
+  const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
     let link, style, startTime, state;
 
     const passed = function () {
@@ -203,7 +208,7 @@ export default function (document, settings?) {
     return result.fold(Fun.identity, Fun.identity);
   };
 
-  const loadAll = function (urls, success, failure) {
+  const loadAll = function (urls: string[], success: Function, failure: Function) {
     Futures.par(Arr.map(urls, loadF)).get(function (result) {
       const parts = Arr.partition(result, function (r) {
         return r.isValue();

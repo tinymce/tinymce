@@ -12,12 +12,6 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', function () {
 
   ModernTheme();
 
-  const sSetRawContent = function (editor, content) {
-    return Step.sync(function () {
-      editor.getBody().innerHTML = content;
-    });
-  };
-
   const sAssertRawNormalizedContent = function (editor, expectedContent) {
     return Step.sync(function () {
       const element = Replication.deep(Element.fromDom(editor.getBody()));
@@ -121,7 +115,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', function () {
 
         Logger.t('Delete and empty cells', GeneralSteps.sequence([
           Logger.t('delete weird selection with th', GeneralSteps.sequence([
-            sSetRawContent(editor, '<table><tbody><tr><td><h1><br></h1></td></tr></tbody></table>'),
+            tinyApis.sSetRawContent('<table><tbody><tr><td><h1><br></h1></td></tr></tbody></table>'),
             tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
             sDelete(editor),
             sAssertRawNormalizedContent(editor, '<table><tbody><tr><td><br data-mce-bogus="1"></td></tr></tbody></table>')

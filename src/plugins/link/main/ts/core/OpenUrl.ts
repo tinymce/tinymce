@@ -33,7 +33,7 @@ const open = function (url) {
 
     appendClickRemove(link, evt);
   } else {
-    const win = window.open('', '_blank');
+    const win: any = window.open('', '_blank');
     if (win) {
       win.opener = null;
       const doc = win.document;

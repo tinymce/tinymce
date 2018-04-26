@@ -1,9 +1,9 @@
-import { Behaviour, Slider, Toggling } from '@ephox/alloy';
+import { Behaviour, Slider, Toggling, Sketcher } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 
 import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
-import UiDomFactory from '../util/UiDomFactory';
+import * as UiDomFactory from '../util/UiDomFactory';
 
 const schema = ValueSchema.objOfOnly([
   FieldSchema.strict('getInitialValue'),
@@ -12,7 +12,7 @@ const schema = ValueSchema.objOfOnly([
   FieldSchema.strict('sizes')
 ]);
 
-const sketch = function (rawSpec) {
+const sketch = function (rawSpec): Sketcher.SketchSpec {
   const spec = ValueSchema.asRawOrDie('SizeSlider', schema, rawSpec);
 
   const isValidValue = function (valueIndex) {

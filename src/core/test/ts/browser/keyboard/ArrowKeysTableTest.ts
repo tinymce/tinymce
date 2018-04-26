@@ -11,6 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysTableTest', (success,
     ModernTheme();
 
     const table = (html: string) => ApproxStructure.fromHtml('<table><tbody><tr><td>' + html + '</td></tr></tbody></table>');
+    const block = ApproxStructure.fromHtml('<p><br></p>');
     const caret = (type: string) => {
       return ApproxStructure.fromHtml(`<p data-mce-caret="${type}" data-mce-bogus="all"><br data-mce-bogus="1"></p>`);
     };
@@ -76,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysTableTest', (success,
             ApiChains.cSetCursor([0, 0, 0, 0, 0], 0),
             ApiChains.cAssertContentStructure(buildBody([ table('1') ])),
             ActionChains.cContentKeystroke(Keys.up()),
-            ApiChains.cAssertContentStructure(buildBody([ caretBefore(), table('1'), visualCaretBefore() ])),
+            ApiChains.cAssertContentStructure(buildBody([ block, table('1') ])),
             ApiChains.cAssertSelection([0], 0, [0], 0)
           ])),
           Logger.t('Move fake down for when table is last element', Chain.asStep(editor, [
@@ -85,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysTableTest', (success,
             ApiChains.cSetCursor([0, 0, 0, 0, 0], 1),
             ApiChains.cAssertContentStructure(buildBody([ table('1') ])),
             ActionChains.cContentKeystroke(Keys.down()),
-            ApiChains.cAssertContentStructure(buildBody([ table('1'), caretAfter(), visualCaretAfter() ])),
+            ApiChains.cAssertContentStructure(buildBody([ table('1'), block ])),
             ApiChains.cAssertSelection([1], 0, [1], 0)
           ])),
           Logger.t('Move fake up for when table is first element but not when caret is not as start', Chain.asStep(editor, [
@@ -94,7 +95,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysTableTest', (success,
             ApiChains.cSetCursor([0, 0, 0, 0, 0], 1),
             ApiChains.cAssertContentStructure(buildBody([ table('1') ])),
             ActionChains.cContentKeystroke(Keys.up()),
-            ApiChains.cAssertContentStructure(buildBody([ caretBefore(), table('1'), visualCaretBefore() ])),
+            ApiChains.cAssertContentStructure(buildBody([ block, table('1') ])),
             ApiChains.cAssertSelection([0], 0, [0], 0)
           ])),
           Logger.t('Move fake down for when table is last element but not when caret is not as end', Chain.asStep(editor, [
@@ -103,7 +104,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysTableTest', (success,
             ApiChains.cSetCursor([0, 0, 0, 0, 0], 0),
             ApiChains.cAssertContentStructure(buildBody([ table('1') ])),
             ActionChains.cContentKeystroke(Keys.down()),
-            ApiChains.cAssertContentStructure(buildBody([ table('1'), caretAfter(), visualCaretAfter() ])),
+            ApiChains.cAssertContentStructure(buildBody([ table('1'), block ])),
             ApiChains.cAssertSelection([1], 0, [1], 0)
           ]))] : []
         )),

@@ -55,8 +55,6 @@ declare const unescape: any;
  * @version 3.4
  */
 
-const each = Tools.each;
-
 const isValidPrefixAttrName = function (name) {
   return name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
 };
@@ -120,13 +118,6 @@ export function SaxParser(settings, schema = Schema()) {
   if (settings.fix_self_closing !== false) {
     settings.fix_self_closing = true;
   }
-
-  // Add handler functions from settings and setup default handlers
-  each('comment cdata text start end pi doctype'.split(' '), function (name) {
-    if (name) {
-      self[name] = settings[name] || noop;
-    }
-  });
 
   const comment = settings.comment ? settings.comment : noop;
   const cdata = settings.cdata ? settings.cdata : noop;

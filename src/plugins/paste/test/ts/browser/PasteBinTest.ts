@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import { Id, Merger, Obj } from '@ephox/katamari';
 
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { PasteBin } from 'tinymce/plugins/paste/core/PasteBin';
+import { PasteBin, getPasteBinParent } from 'tinymce/plugins/paste/core/PasteBin';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
 
@@ -70,7 +70,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', function () {
     return Chain.op(function (editor) {
       const pasteBin = PasteBin(editor);
       Obj.each(cases, function (c, i) {
-        editor.getBody().innerHTML = c.content;
+        getPasteBinParent(editor).appendChild(editor.dom.createFragment(c.content));
         Assertions.assertEq(c.label || 'Asserting paste bin case ' + i, c.result, pasteBin.getHtml());
         pasteBin.remove();
       });

@@ -11,11 +11,14 @@
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Factory from 'tinymce/core/api/ui/Factory';
 import Tools from 'tinymce/core/api/util/Tools';
-import Actions from '../core/Actions';
+import Actions, { LastSuggestion } from '../core/Actions';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Cell } from '@ephox/katamari';
+import { DomTextMatcher } from 'tinymce/plugins/spellchecker/core/DomTextMatcher';
 
 let suggestionsMenu;
 
-const showSuggestions = function (editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, currentLanguageState, word, spans) {
+const showSuggestions = function (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, word: string, spans: HTMLElement[]) {
   const items = [], suggestions = lastSuggestionsState.get().suggestions[word];
 
   Tools.each(suggestions, function (suggestion) {
@@ -91,7 +94,7 @@ const showSuggestions = function (editor, pluginUrl, lastSuggestionsState, start
   suggestionsMenu.moveTo(pos.x, pos.y + spans[0].offsetHeight);
 };
 
-const setup = function (editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, currentLanguageState) {
+const setup = function (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>) {
   editor.on('click', function (e) {
     const target = e.target;
 
