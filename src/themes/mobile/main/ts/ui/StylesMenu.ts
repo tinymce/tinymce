@@ -37,7 +37,7 @@ const convert = function (formats, memMenuThunk) {
 
   const menus = Merger.deepMerge(submenus, Objects.wrap('styles', mainMenu));
 
-  const tmenu = TieredMenu.tieredData('styles', menus, formats.expansions);
+  const tmenu = TieredMenu.tieredMenu.tieredData('styles', menus, formats.expansions);
 
   return {
     tmenu
@@ -104,7 +104,7 @@ const makeMenu = function (value, items, memMenuThunk, collapsable) {
         action (item) {
           if (collapsable) {
             const comp = memMenuThunk().get(item);
-            TieredMenu.collapseMenu(comp);
+            TieredMenu.tieredMenu.collapseMenu(comp);
           }
         }
       }),
@@ -155,7 +155,7 @@ const sketch = function (settings) {
   });
   // Turn settings into a tiered menu data.
 
-  const memMenu = Memento.record(TieredMenu.sketch({
+  const memMenu = Memento.record(TieredMenu.tieredMenu.sketch({
     dom: {
       tag: 'div',
       classes: [ Styles.resolve('styles-menu') ]
