@@ -67,14 +67,14 @@ const sketch = function (detail, components, spec, externals) {
     Css.set(thumb.element(), 'top', (yPos - thumbRadiusY) + 'px');
   };
 
-  const refreshColour = function (component) {
+  const refreshColour = function (component, colour) {
     const palette:any = getPalette(component).element().dom();
 
     var ctx1 = palette.getContext('2d');
     var width1 = palette.width;
     var height1 = palette.height;
 
-    var colour = detail.colour().get();
+    // var colour = detail.colour().get();
     var rgba = `rgba(${colour.r},${colour.g},${colour.b},${colour.a})`;
     ctx1.fillStyle = rgba;
     ctx1.fillRect(0, 0, width1, height1);
@@ -165,26 +165,18 @@ const sketch = function (detail, components, spec, externals) {
         }),
         AlloyEvents.runOnAttached(function (slider, simulatedEvent) {
           detail.value().set({x: 0, y:0});
-          // detail.value().set(detail.getInitialValue()()); 
-
-
-
-          // TODO: ^ Fix above
-
-
-
-
           const thumb = getThumb(slider);
           // Call onInit instead of onChange for the first value.
           refresh(slider);
-          refreshColour(slider);
+          refreshColour(slider, detail.colour().get());
           detail.onInit()(slider, thumb, detail.value().get());
         })
       ].concat(uiEventsArr)
     ),
 
     apis: {
-      refresh
+      refresh,
+      refreshColour
     },
 
     domModification: {

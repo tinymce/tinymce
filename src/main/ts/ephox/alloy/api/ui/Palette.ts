@@ -7,6 +7,7 @@ import * as Sketcher from './Sketcher';
 
 export interface PaletteSketch extends Sketcher.CompositeSketch {
   refresh: (slider: AlloyComponent) => void;
+  refreshColour: (slider: AlloyComponent, colour: any) => void;
 }
 
 const Palette = Sketcher.composite({
@@ -17,6 +18,9 @@ const Palette = Sketcher.composite({
   apis: {
     refresh (apis, slider) {
       apis.refresh(slider);
+    },
+    refreshColour (apis, slider, colour) {
+      apis.refreshColour(slider, colour);
     }
   }
 }) as PaletteSketch;

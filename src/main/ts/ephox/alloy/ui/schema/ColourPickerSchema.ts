@@ -179,7 +179,15 @@ var makeMeAForm = {
         getFormField(ins, outPart).each(function (hex) {
           const hexValue = f(value);
           Representing.setValue(hex, hexValue);
-        })
+        });
+        
+        const palette = getFormField(ins, 'picker').getOrDie('We should not say this');
+        Palette.refreshColour(palette, {
+          g: 255,
+          b: 0,
+          r: 0,
+          a: 1
+        });
       };
     }
 
@@ -194,7 +202,7 @@ var makeMeAForm = {
     }
 
     const getFormField = function (anyInSystem, part) {
-      return memForm.get(anyInSystem).bind(function (form) {
+      return memForm.getOpt(anyInSystem).bind(function (form) {
         return Form.getField(form, part);
       })
     }
