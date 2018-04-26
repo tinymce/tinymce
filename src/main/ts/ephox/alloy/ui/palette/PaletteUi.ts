@@ -32,17 +32,12 @@ const sketch = function (detail, components, spec, externals) {
     return AlloyParts.getPartOrDie(component, detail, 'palette');
   };
 
-  const getOffset = function (slider, spectrumBounds, detail, getCentre, edgeProperty, lengthProperty) {
-      // position along the slider
-      return (detail.value().get() - 0) / 100 * spectrumBounds[lengthProperty];
-  };
-
   const getXOffset = function (slider, spectrumBounds, detail) {
-    return getOffset(slider, spectrumBounds, detail, getXCentre, 'left', 'width');
+    return (detail.value().get().x - 0) / 100 * spectrumBounds.width;
   }
 
   const getYOffset = function (slider, spectrumBounds, detail) {
-    return getOffset(slider, spectrumBounds, detail, getYCentre, 'top', 'height');
+    return (detail.value().get().y - 0) / 100 * spectrumBounds.height;
   };
 
   const getPos = function (slider, getOffset, edgeProperty) {
@@ -64,9 +59,12 @@ const sketch = function (detail, components, spec, externals) {
 
   const refresh = function (component) {
     const thumb = getThumb(component);
-    const pos = getXPos(component);
-    const thumbRadius = Width.get(thumb.element()) / 2;
-    Css.set(thumb.element(), 'left', (pos - thumbRadius) + 'px');
+    const xPos = getXPos(component);
+    const yPos = getYPos(component);
+    const thumbRadiusX = Width.get(thumb.element()) / 2;
+    const thumbRadiusY = Height.get(thumb.element()) / 2;
+    Css.set(thumb.element(), 'left', (xPos - thumbRadiusX) + 'px');
+    Css.set(thumb.element(), 'top', (yPos - thumbRadiusY) + 'px');
   };
 
   const refreshColour = function (component) {
@@ -99,7 +97,8 @@ const sketch = function (detail, components, spec, externals) {
     const thumb = getThumb(component);
     const edgeProp = 'left';
     // The left check is used so that the first click calls refresh
-    if (oldValue !== newValue || Css.getRaw(thumb.element(), edgeProp).isNone()) {
+    if ((oldValue.x !== newValue.x && oldValue.y !== newValue.y ) || 
+      (Css.getRaw(thumb.element(), edgeProp).isNone()) || Css.getRaw(thumb.element(), edgeProp).isNone()) {
       detail.value().set(newValue);
       refresh(component);
       detail.onChange()(component, thumb, newValue);
@@ -165,7 +164,7 @@ const sketch = function (detail, components, spec, externals) {
           changeValue(slider, simulatedEvent.event().value());
         }),
         AlloyEvents.runOnAttached(function (slider, simulatedEvent) {
-          detail.value().set(0);
+          detail.value().set({x: 0, y:0});
           // detail.value().set(detail.getInitialValue()()); 
 
 

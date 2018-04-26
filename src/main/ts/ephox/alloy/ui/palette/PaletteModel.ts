@@ -48,9 +48,17 @@ const findValueOfY = function (bounds, min, max, xValue, step) {
   return findValueOf(bounds, min, max, xValue, step, 'top', 'bottom', 'height');
 };
 
+const findValueOfCoords = function (bounds, min, max, coords, step) {
+  return {
+    x: findValueOfX(bounds, min, max, coords.x, step),
+    y: findValueOfY(bounds, min, max, coords.y, step),
+  };
+};
+
 export {
   reduceBy,
   increaseBy,
   findValueOfX,
-  findValueOfY
+  findValueOfY,
+  findValueOfCoords
 };
