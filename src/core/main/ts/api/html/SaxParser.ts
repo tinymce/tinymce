@@ -63,6 +63,16 @@ const trimComments = function (text) {
   return text.replace(/<!--|-->/g, '');
 };
 
+const isInvalidUri = (settings, uri: string) => {
+  if (settings.allow_html_data_urls) {
+    return false;
+  } else if (/^data:image\//i.test(uri)) {
+    return settings.allow_svg_data_urls === false && /^data:image\/svg\+xml/i.test(uri);
+  } else {
+    return /^data:/i.test(uri);
+  }
+};
+
 /**
  * Returns the index of the end tag for a specific start tag. This can be
  * used to skip all children of a parent element from being processed.
@@ -146,7 +156,7 @@ export function SaxParser(settings, schema = Schema()) {
     const decode = Entities.decode;
     let fixSelfClosing;
     const filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster,xlink:href');
-    const scriptUriRegExp = /((java|vb)script|mhtml):/i, dataUriRegExp = /^data:/i;
+    const scriptUriRegExp = /((java|vb)script|mhtml):/i;
 
     const processEndTag = function (name) {
       let pos, i;
@@ -229,7 +239,7 @@ export function SaxParser(settings, schema = Schema()) {
           return;
         }
 
-        if (!settings.allow_html_data_urls && dataUriRegExp.test(uri) && !/^data:image\//i.test(uri)) {
+        if (isInvalidUri(settings, uri)) {
           return;
         }
       }
