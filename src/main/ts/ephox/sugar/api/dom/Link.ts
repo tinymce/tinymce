@@ -1,6 +1,7 @@
 import Attr from '../properties/Attr';
 import Element from '../node/Element';
 import Insert from './Insert';
+import { document } from '@ephox/dom-globals';
 
 var addToHead = function (doc, tag) {
   /*

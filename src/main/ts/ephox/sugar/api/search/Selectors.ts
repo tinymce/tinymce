@@ -2,6 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
 import Element from '../node/Element';
 import NodeTypes from '../node/NodeTypes';
+import { document } from '@ephox/dom-globals';
 
 var ELEMENT = NodeTypes.ELEMENT;
 var DOCUMENT = NodeTypes.DOCUMENT;

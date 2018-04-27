@@ -1,5 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
+import { document, console, HTMLDocument, Node, Window, Document } from '@ephox/dom-globals';
 
 interface Element {
   dom: () => any;

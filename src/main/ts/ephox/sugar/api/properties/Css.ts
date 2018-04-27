@@ -8,6 +8,7 @@ import Element from '../node/Element';
 import Node from '../node/Node';
 import Style from '../../impl/Style';
 import { Strings } from '@ephox/katamari';
+import { console, window } from '@ephox/dom-globals';
 
 var internalSet = function (dom, property, value) {
   // This is going to hurt. Apologies.

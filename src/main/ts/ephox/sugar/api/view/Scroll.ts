@@ -7,6 +7,7 @@ import Body from '../node/Body';
 import Element from '../node/Element';
 import Location from './Location';
 import Position from './Position';
+import { document } from '@ephox/dom-globals';
 
 var isSafari = PlatformDetection.detect().browser.isSafari();
 

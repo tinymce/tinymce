@@ -21,7 +21,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/katamari": "latest",
-    "@ephox/sand": "latest"
+    "@ephox/sand": "latest",
+    "@ephox/dom-globals": "latest"
   },
   "devDependencies": {
     "@ephox/bedrock": "latest",

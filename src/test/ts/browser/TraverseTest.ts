@@ -4,6 +4,7 @@ import Element from 'ephox/sugar/api/node/Element';
 import InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import Traverse from 'ephox/sugar/api/search/Traverse';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { document, window } from '@ephox/dom-globals';
 
 UnitTest.test('TraverseTest', function() {
   var node = function (name) {

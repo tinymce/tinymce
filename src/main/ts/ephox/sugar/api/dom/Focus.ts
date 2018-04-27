@@ -4,6 +4,7 @@ import Compare from './Compare';
 import Element from '../node/Element';
 import PredicateExists from '../search/PredicateExists';
 import Traverse from '../search/Traverse';
+import { document } from '@ephox/dom-globals';
 
 var focus = function (element) {
   element.dom().focus();

@@ -1,5 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import Element from './Element';
+import { document } from '@ephox/dom-globals';
 
 var fromElements = function (elements, scope) {
   var doc = scope || document;

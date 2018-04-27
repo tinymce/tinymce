@@ -7,6 +7,7 @@ import Css from 'ephox/sugar/api/properties/Css';
 import Element from 'ephox/sugar/api/node/Element';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.test('ElementFromPointTest', function() {
   var a = Div();

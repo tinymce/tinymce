@@ -1,5 +1,6 @@
 import Element from 'ephox/sugar/api/node/Element';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.test('ElementTest', function() {
   var checkErr = function (f, val) {

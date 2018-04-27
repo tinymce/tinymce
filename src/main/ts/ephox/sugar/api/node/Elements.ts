@@ -1,6 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import Element from './Element';
 import Traverse from '../search/Traverse';
+import { document } from '@ephox/dom-globals';
 
 var fromHtml = function (html, scope) {
   var doc = scope || document;

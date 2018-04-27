@@ -2,6 +2,7 @@ import { Fun } from '@ephox/katamari';
 import { NodeFilter } from '@ephox/sand';
 import { PlatformDetection } from '@ephox/sand';
 import Element from './Element';
+import { document } from '@ephox/dom-globals';
 
 var regularGetNodes = function (texas) {
   var ret = [];

@@ -2,6 +2,7 @@ import { Type } from '@ephox/katamari';
 import { Arr } from '@ephox/katamari';
 import { Obj } from '@ephox/katamari';
 import Node from '../node/Node';
+import { console } from '@ephox/dom-globals';
 
 var rawSet = function (dom, key, value) {
   /*
@@ -60,7 +61,7 @@ var clone = function (element) {
 
 var transferOne = function (source, destination, attr) {
   // NOTE: We don't want to clobber any existing attributes
-  if (has(source, attr) && !has(destination, attr)) set(destination, attr, get(source, attr));        
+  if (has(source, attr) && !has(destination, attr)) set(destination, attr, get(source, attr));
 };
 
 // Transfer attributes(attrs) from source to destination, unless they are already present

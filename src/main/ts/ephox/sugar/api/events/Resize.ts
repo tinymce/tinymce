@@ -10,6 +10,7 @@ import Height from '../view/Height';
 import Visibility from '../view/Visibility';
 import Width from '../view/Width';
 import Monitors from '../../impl/Monitors';
+import { setTimeout, window } from '@ephox/dom-globals';
 
 var elem = function (element) {
   return {

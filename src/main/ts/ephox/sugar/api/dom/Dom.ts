@@ -3,6 +3,7 @@ import Compare from './Compare';
 import Element from '../node/Element';
 import Node from '../node/Node';
 import PredicateFind from '../search/PredicateFind';
+import { document } from '@ephox/dom-globals';
 
 // TEST: Is this just Body.inBody which doesn't need scope ??
 var attached = function (element, scope) {

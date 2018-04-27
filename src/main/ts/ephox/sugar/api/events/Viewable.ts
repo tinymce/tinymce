@@ -3,6 +3,7 @@ import { Throttler } from '@ephox/katamari';
 import { Window } from '@ephox/sand';
 import Traverse from '../search/Traverse';
 import Visibility from '../view/Visibility';
+import { setInterval, clearInterval } from '@ephox/dom-globals';
 
 declare const window: any;
 

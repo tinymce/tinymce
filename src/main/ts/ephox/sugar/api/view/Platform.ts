@@ -1,6 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Option } from '@ephox/katamari';
+import { window } from '@ephox/dom-globals';
 
 var platform = PlatformDetection.detect();
 var isTouch = platform.deviceType.isTouch;

@@ -12,6 +12,7 @@ import Selection from 'ephox/sugar/api/selection/Selection';
 import Situ from 'ephox/sugar/api/selection/Situ';
 import WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 import { UnitTest, assert } from '@ephox/bedrock';
+import { window } from '@ephox/dom-globals';
 
 UnitTest.test('WindowSelectionTest', function() {
   var container = Element.fromTag('div');

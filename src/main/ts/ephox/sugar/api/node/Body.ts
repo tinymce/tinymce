@@ -1,6 +1,7 @@
 import { Thunk } from '@ephox/katamari';
 import Element from './Element';
 import Node from './Node';
+import { document } from '@ephox/dom-globals';
 
 // Node.contains() is very, very, very good performance
 // http://jsperf.com/closest-vs-contains/5

@@ -2,6 +2,7 @@ import { Future } from '@ephox/katamari';
 import { LazyValue } from '@ephox/katamari';
 import { Result } from '@ephox/katamari';
 import DomEvent from '../events/DomEvent';
+import { clearTimeout, setTimeout } from '@ephox/dom-globals';
 
 var w = function (fType, element, eventType, timeout) {
   return fType(function (callback) {
