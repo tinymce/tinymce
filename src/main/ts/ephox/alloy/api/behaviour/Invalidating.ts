@@ -20,7 +20,9 @@ export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour {
 export interface InvalidatingConfig<T> {
   invalidClass: string;
   notify?: {
-    getContainer: (input: AlloyComponent) => Option<SugarElement>;
+    getContainer?: (input: AlloyComponent) => Option<SugarElement>;
+    onValid?: (input: AlloyComponent) => void;
+    onInvalid?: (input: AlloyComponent) => void;
   };
   onEvent?: string;
   getRoot?: (input: AlloyComponent) => any;

@@ -1,5 +1,5 @@
 import { DslType } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
+import { Fun, Result,Future } from '@ephox/katamari';
 import { FormField } from '../../api/ui/FormField';
 import { Slider } from '../../api/ui/Slider';
 import { Palette } from '../../api/ui/Palette';
@@ -21,13 +21,20 @@ import { Focusing } from '../../api/behaviour/Focusing';
 
 import { Representing } from '../../api/behaviour/Representing';
 
+import { Disabling } from '../../api/behaviour/Disabling';
+
+
+import { Invalidating } from '../../api/behaviour/Invalidating';
+
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 
-
+import { Objects } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
+
+import { HsvColour, RgbColour } from '@ephox/acid';
 
 var makeMeAForm = {
   sketch: function (spec) {
@@ -38,6 +45,9 @@ var makeMeAForm = {
     
       var pField = FormField.parts().field({
         factory: Input,
+        eventOrder: {
+          'input': [ 'alloy-base.behaviour', 'representing', 'streaming', 'invalidating', 'changing-input' ]
+        },
         inputBehaviours: Behaviour.derive([
           Tabstopping.config({ }),
           AddEventsBehaviour.config('changing-input', [
@@ -45,7 +55,45 @@ var makeMeAForm = {
               NativeEvents.input(),
               onChange
             )
-          ])
+          ]),
+
+          Invalidating.config({
+            invalidClass: 'not-a-valid-value',
+
+            notify: {
+              onValid: function (comp) {
+                // NOTE: This isn't correct because it will enable the button if one field is made
+                // valid while others are still invalid. Just for demonstration purposes.
+                comp.getSystem().broadcastOn(
+                  [
+                    'magic-form-string'
+                  ],
+                  Objects.wrap(spec.label, true)
+                );
+                // Disabling.enable(button);
+              },
+
+              onInvalid: function (comp) {
+                comp.getSystem().broadcastOn(
+                  [
+                    'magic-form-string'
+                  ],
+                  Objects.wrap(spec.label, false)
+                );
+              }
+            },
+
+            validator: {
+              validate: function (comp) {
+
+                const value = Representing.getValue(comp);
+                const num = parseInt(value, 10);
+                const res = num.toString() === value && num >= 0 && num <= 255 ? Result.value(true) : Result.error('Invalid value')
+
+                return Future.pure(res);
+              }
+            }
+          })
         ])
       });
     
@@ -162,6 +210,16 @@ var makeMeAForm = {
           Representing.setValue(form, {
             green: Representing.getValue(slider)
           })
+          const palette = getFormField(form, 'picker').getOrDie('We should not say this');
+          var hue = ((100 - Representing.getValue(slider)) / 100) * 360;
+          var hsv = {
+            saturation: 100,
+            value: 100,
+            hue: hue
+          };
+          var rgb = RgbColour.fromHsv(hsv);
+          console.log(rgb);
+          Palette.refreshColour(palette, rgb);
         })
       }
     });
@@ -179,14 +237,6 @@ var makeMeAForm = {
         getFormField(ins, outPart).each(function (hex) {
           const hexValue = f(value);
           Representing.setValue(hex, hexValue);
-        });
-        
-        const palette = getFormField(ins, 'picker').getOrDie('We should not say this');
-        Palette.refreshColour(palette, {
-          g: 255,
-          b: 0,
-          r: 0,
-          a: 1
         });
       };
     }

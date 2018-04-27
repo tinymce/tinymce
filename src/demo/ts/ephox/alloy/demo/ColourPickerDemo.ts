@@ -9,13 +9,19 @@ import { Form } from 'ephox/alloy/api/ui/Form';
 import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
+
+import { Button } from 'ephox/alloy/api/ui/Button';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import { Composing } from 'ephox/alloy/api/behaviour/Composing';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import { Disabling } from 'ephox/alloy/api/behaviour/Disabling';
 
 
-import { Obj } from '@ephox/katamari';
+import { Receiving } from 'ephox/alloy/api/behaviour/Receiving';
+
+import { Obj, Merger, Arr } from '@ephox/katamari';
 
 export default <any> function () {
   const gui = Gui.create();
@@ -42,6 +48,46 @@ export default <any> function () {
             tag: 'div',
             classes: [ 'josh' ]
           }
+        }),
+
+        Button.sketch({
+          dom: {
+            tag: 'button',
+            innerHtml: 'Click'
+          },
+          buttonBehaviours: Behaviour.derive([
+            Disabling.config({
+              disabled: true
+            }),
+
+            Representing.config({
+              store: {
+                mode: 'memory',
+                initialValue: { red: false, green: false, blue: false, hex: false }
+              }
+            }),
+
+            // Showing how message system works (not advocating it in general)
+            Receiving.config({
+              channels: {
+                'magic-form-string': {
+                  onReceive: function (comp, data) {
+                    const value = Representing.getValue(comp);
+                    var merged = Merger.deepMerge(value, data);
+                    Representing.setValue(comp, merged);
+
+                    const values = Obj.values(merged);
+                    const hasFalse = Arr.exists(values, function (v) {
+                      return !v;
+                    });
+
+                    const f = hasFalse ? Disabling.disable : Disabling.enable;
+                    f(comp);
+                  }
+                }
+              }
+            })
+          ])
         })
       ]
     })
