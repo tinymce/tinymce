@@ -13,7 +13,7 @@ import Node from 'tinymce/core/api/html/Node';
 import Tools from 'tinymce/core/api/util/Tools';
 import TrimHtml from 'tinymce/core/dom/TrimHtml';
 import Serializer from 'tinymce/core/api/html/Serializer';
-import * as FilterNode from './html/FilterNode';
+import * as FilterNode from '../html/FilterNode';
 import { Option, Fun } from '@ephox/katamari';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Settings from 'tinymce/core/api/Settings';

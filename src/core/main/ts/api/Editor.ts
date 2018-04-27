@@ -24,7 +24,7 @@ import Tools from './util/Tools';
 import URI from './util/URI';
 import Uuid from '../util/Uuid';
 import { Selection } from 'tinymce/core/api/dom/Selection';
-import * as EditorContent from 'tinymce/core/EditorContent';
+import * as EditorContent from 'tinymce/core/content/EditorContent';
 import * as EditorRemove from '../EditorRemove';
 import SelectionOverrides from 'tinymce/core/SelectionOverrides';
 import Schema from 'tinymce/core/api/html/Schema';

@@ -9,7 +9,7 @@
  */
 
 import Env from './Env';
-import InsertContent from '../InsertContent';
+import InsertContent from '../content/InsertContent';
 import DeleteCommands from '../delete/DeleteCommands';
 import * as FontCommands from '../commands/FontCommands';
 import NodeType from '../dom/NodeType';
