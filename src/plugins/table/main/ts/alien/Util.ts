@@ -14,6 +14,11 @@ import { Editor } from 'tinymce/core/api/Editor';
 const getBody = function (editor: Editor) {
   return Element.fromDom(editor.getBody());
 };
+
+const getPixelWidth = (elm: HTMLElement) => elm.getBoundingClientRect().width;
+
+const getPixelHeight = (elm: HTMLElement) => elm.getBoundingClientRect().height;
+
 const getIsRoot = function (editor: Editor) {
   return function (element) {
     return Compare.eq(element, getBody(editor));
@@ -31,9 +36,11 @@ const addSizeSuffix = function (size: string) {
   return size;
 };
 
-export default {
+export {
   getBody,
   getIsRoot,
   addSizeSuffix,
-  removePxSuffix
+  removePxSuffix,
+  getPixelWidth,
+  getPixelHeight
 };

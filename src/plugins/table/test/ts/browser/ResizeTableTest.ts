@@ -4,10 +4,11 @@ import { Editor, TinyDom, ApiChains } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
+import { Cell } from '@ephox/katamari';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, failure) => {
+  const lastObjectResizeStartEvent = Cell<any>(null);
+  const lastObjectResizedEvent = Cell<any>(null);
 
   Plugin();
   Theme();
@@ -66,21 +67,59 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', function () 
     assertWithin(input.widthAfter.raw, expectedPercent - 1, expectedPercent + 1);
   });
 
+  const cBindResizeEvents = Chain.mapper(function (input) {
+    const objectResizeStart = (e) => {
+      lastObjectResizeStartEvent.set(e);
+    };
+
+    const objectResized = (e) => {
+      lastObjectResizedEvent.set(e);
+    };
+
+    input.editor.on('ObjectResizeStart', objectResizeStart);
+    input.editor.on('ObjectResized', objectResized);
+
+    return {
+      objectResizeStart,
+      objectResized
+    };
+  });
+
+  const cUnbindResizeEvents = Chain.mapper(function (input) {
+    input.editor.off('ObjectResizeStart', input.events.objectResizeStart);
+    input.editor.off('ObjectResized', input.events.objectResized);
+    return {};
+  });
+
+  const cClearResizeEventData = Chain.op(() => {
+    lastObjectResizeStartEvent.set(null);
+    lastObjectResizedEvent.set(null);
+  });
+
   const cTableInsertResizeMeasure = NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.direct('editor', cInsertTable(5, 2), 'element'),
-      NamedChain.write('widthBefore', cGetWidth),
-      NamedChain.read('element', Mouse.cTrueClick),
-      NamedChain.read('editor', cDragHandle('se', -100, 0)),
-      NamedChain.write('widthAfter', cGetWidth),
-      NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
-      NamedChain.output('widths')
+    NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+    NamedChain.write('events', cBindResizeEvents),
+    NamedChain.direct('editor', cInsertTable(5, 2), 'element'),
+    NamedChain.write('widthBefore', cGetWidth),
+    NamedChain.read('element', Mouse.cTrueClick),
+    NamedChain.read('editor', cDragHandle('se', -100, 0)),
+    NamedChain.write('widthAfter', cGetWidth),
+    NamedChain.write('events', cUnbindResizeEvents),
+    NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
+    NamedChain.output('widths')
   ]);
 
   const cAssertWidthsShouldBe = (unit: string) => Chain.op((input) => {
-      const expectingPercent = (unit === '%');
-      Assertions.assertEq(`table width before resizing is in ${unit}`, expectingPercent, input.widthBefore.isPercent);
-      Assertions.assertEq(`table width after resizing is in ${unit}`, expectingPercent, input.widthAfter.isPercent);
+    const expectingPercent = (unit === '%');
+    Assertions.assertEq(`table width before resizing is in ${unit}`, expectingPercent, input.widthBefore.isPercent);
+    Assertions.assertEq(`table width after resizing is in ${unit}`, expectingPercent, input.widthAfter.isPercent);
+  });
+
+  const cAssertEventData = (state, expectedEventName) => Chain.op((_) => {
+    Assertions.assertEq('Should be table element', 'TABLE', state.get().target.nodeName);
+    Assertions.assertEq('Should be expected resize event', expectedEventName, state.get().type);
+    Assertions.assertEq('Should have width', 'number', typeof state.get().width);
+    Assertions.assertEq('Should have height', 'number', typeof state.get().height);
   });
 
   NamedChain.pipeline([
@@ -89,19 +128,29 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', function () 
       width: 400,
       skin_url: '/project/js/tinymce/skins/lightgray'
     })),
+
     // when table is resized by one of the handlers it should retain the dimension units after the resize, be it px or %
+    cClearResizeEventData,
     NamedChain.direct('editor', cTableInsertResizeMeasure, 'widths'),
     NamedChain.read('widths', cAssertWidths),
+    cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+    cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
     // using configuration option [table_responsive_width=true] we are able to control the default units of the table
+    cClearResizeEventData,
     NamedChain.read('editor', ApiChains.cSetContent('')),
     NamedChain.direct('editor', cTableInsertResizeMeasure, 'widths'),
     NamedChain.read('widths', cAssertWidthsShouldBe('%')),
+    cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+    cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
+    cClearResizeEventData,
     NamedChain.read('editor', ApiChains.cSetContent('')),
     NamedChain.read('editor', ApiChains.cSetSetting('table_responsive_width', false)),
     NamedChain.direct('editor', cTableInsertResizeMeasure, 'widths'),
     NamedChain.read('widths', cAssertWidthsShouldBe('px')),
+    cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+    cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
     NamedChain.read('editor', Editor.cRemove)
   ], function () {

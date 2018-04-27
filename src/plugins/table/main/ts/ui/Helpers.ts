@@ -10,7 +10,7 @@
 
 import { Fun } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
-import Util from '../alien/Util';
+import * as Util from '../alien/Util';
 import { getColorPickerCallback } from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';

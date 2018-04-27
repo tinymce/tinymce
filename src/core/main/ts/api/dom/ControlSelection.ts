@@ -17,6 +17,7 @@ import Tools from '../util/Tools';
 import VK from '../util/VK';
 import { Selection } from './Selection';
 import { Editor } from 'tinymce/core/api/Editor';
+import Events from 'tinymce/core/api/Events';
 
 interface ControlSelection {
   isResizable: (elm: Element) => boolean;
@@ -239,7 +240,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     }
 
     if (!resizeStarted) {
-      editor.fire('ObjectResizeStart', { target: selectedElm, width: startW, height: startH });
+      Events.fireObjectResizeStart(editor, selectedElm, startW, startH);
       resizeStarted = true;
     }
   };
@@ -276,7 +277,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
 
     showResizeRect(selectedElm);
 
-    editor.fire('ObjectResized', { target: selectedElm, width, height });
+    Events.fireObjectResized(editor, selectedElm, width, height);
     dom.setAttrib(selectedElm, 'style', dom.getAttrib(selectedElm, 'style'));
     editor.nodeChanged();
   };

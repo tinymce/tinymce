@@ -15,7 +15,7 @@ import {
     Compare, Element, Selection, SelectionDirection
 } from '@ephox/sugar';
 
-import Util from '../alien/Util';
+import * as Util from '../alien/Util';
 import Direction from '../queries/Direction';
 import Ephemera from './Ephemera';
 

@@ -11,7 +11,7 @@
 import { Fun } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 import Styles from '../actions/Styles';
-import Util from '../alien/Util';
+import * as Util from '../alien/Util';
 import Helpers from './Helpers';
 import { hasAdvancedRowTab, getRowClassList } from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';

@@ -15,6 +15,8 @@ import Direction from '../queries/Direction';
 import TableWire from './TableWire';
 import { hasTableResizeBars, hasObjectResizing } from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
+import * as Events from '../api/Events';
+import * as Util from '../alien/Util';
 
 export interface ResizeHandler {
   lazyResize: () => Option<any>;
@@ -65,8 +67,15 @@ export const ResizeHandler = function (editor: Editor): ResizeHandler {
       sz.events.startDrag.bind(function (event) {
         selectionRng = Option.some(editor.selection.getRng());
       });
+
+      sz.events.beforeResize.bind(function (event) {
+        const rawTable = event.table().dom();
+        Events.fireObjectResizeStart(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable));
+      });
+
       sz.events.afterResize.bind(function (event) {
         const table = event.table();
+        const rawTable = table.dom();
         const dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
         Arr.each(dataStyleCells, function (cell) {
           Attr.remove(cell, 'data-mce-style');
@@ -77,6 +86,7 @@ export const ResizeHandler = function (editor: Editor): ResizeHandler {
           editor.focus();
         });
 
+        Events.fireObjectResized(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable));
         editor.undoManager.add();
       });
 
