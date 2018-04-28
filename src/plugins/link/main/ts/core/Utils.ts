@@ -97,6 +97,12 @@ const link = function (editor, attachState) {
         attachState = {};
       }
 
+      if (editor.settings.link_attrs && editor.settings.link_attrs.length) {
+        editor.settings.link_attrs.forEach(function (val) {
+          linkAttrs[val] = data[val] ? data[val] : null;
+        });
+      }
+
       if (anchorElm) {
         editor.focus();
 
