@@ -11,12 +11,6 @@
  */
 
 /**
- * Prevents the default action of an event to be executed.
- *
- * @method preventDefault
- */
-
-/**
  * Stops the event from propagating up to listeners on parent objects.
  *
  * @method stopPropagation
@@ -53,12 +47,4 @@
  * The event type name for example "click".
  *
  * @property {String} type
- */
-
-/**
- * @include tinymce.ContentEvent.js
- * @include tinymce.CommandEvent.js
- * @include tinymce.ProgressStateEvent.js
- * @include tinymce.FocusEvent.js
- * @include tinymce.ResizeEvent.js
  */

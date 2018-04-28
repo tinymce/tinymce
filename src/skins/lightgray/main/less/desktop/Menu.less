@@ -1,0 +1,68 @@
+// Menu
+
+.@{prefix}-menu {
+  position: absolute;
+  left: 0; top: 0;
+  .reset-gradient();
+  z-index: 1000;
+  padding: 5px 0 5px 0;
+  margin: @menu-margin;
+  min-width: @menu-min-width;
+  background: @menu-bg;
+  border: 1px solid mix(rgb(red(@menu-border), green(@menu-border), blue(@menu-border)), @panel-bg, round(alpha(@menu-border) * 200));
+  border: 1px solid @menu-border;
+  z-index: 1002;
+  .border-radius(6px);
+  .box-shadow(@menu-box-shadow);
+  max-height: @menu-max-height;
+  overflow: auto;
+  overflow-x: hidden;
+
+  &.@{prefix}-animate {
+    opacity: 0.01;
+    transform: rotateY(10deg) rotateX(-10deg);
+    transform-origin: left top;
+  }
+
+  &.@{prefix}-menu-align {
+    .@{prefix}-menu-shortcut, .@{prefix}-caret {
+      position: absolute;
+      right: 0;
+    }
+  }
+}
+
+.@{prefix}-menu i {
+  display: none;
+}
+
+.@{prefix}-menu-has-icons i {
+  display: inline-block;
+}
+
+.@{prefix}-menu.@{prefix}-in {
+  &.@{prefix}-animate {
+    opacity: 1;
+    transform: rotateY(0) rotateX(0);
+    transition: opacity .075s ease, transform .1s ease;
+    }
+}
+
+.@{prefix}-menu-sub-tr-tl { margin: -6px 0 0 -1px; }
+.@{prefix}-menu-sub-br-bl { margin: 6px 0 0 -1px; }
+.@{prefix}-menu-sub-tl-tr { margin: -6px 0 0 1px; }
+.@{prefix}-menu-sub-bl-br { margin: 6px 0 0 1px; }
+
+// RTL
+
+.@{prefix}-rtl {
+  .@{prefix}-menu-item .@{prefix}-ico {
+    padding-right: 0;
+    padding-left: 4px;
+  }
+
+  &.@{prefix}-menu-align .@{prefix}-caret, .@{prefix}-menu-shortcut {
+    right: auto;
+    left: 0;
+  }
+}

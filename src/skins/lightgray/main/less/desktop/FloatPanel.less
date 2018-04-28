@@ -1,0 +1,93 @@
+﻿// FloatPanel
+
+.@{prefix}-floatpanel {
+  position: absolute;
+  .box-shadow(@floatpanel-box-shadow);
+}
+
+.@{prefix}-floatpanel.@{prefix}-fixed {
+  position: fixed;
+}
+
+// Popover panel
+
+.@{prefix}-floatpanel .@{prefix}-arrow,
+.@{prefix}-floatpanel .@{prefix}-arrow:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+
+.@{prefix}-floatpanel .@{prefix}-arrow {
+  border-width: @popover-arrow-outer-width;
+}
+
+.@{prefix}-floatpanel .@{prefix}-arrow:after {
+  border-width: @popover-arrow-width;
+  content: "";
+}
+
+.@{prefix}-floatpanel.@{prefix}-popover {
+  .reset-gradient();
+  .border-radius(6px);
+  .box-shadow(@floatpanel-box-shadow);
+  top: 0;
+  left: 0;
+  background: @popover-bg;
+  border: 1px solid @panel-border;
+  border: 1px solid @popover-arrow-outer;
+
+  &.@{prefix}-bottom {
+    margin-top: @popover-arrow-width;
+    *margin-top: 0;
+
+    & > .@{prefix}-arrow {
+      left: 50%;
+      margin-left: -@popover-arrow-outer-width;
+      border-top-width: 0;
+      border-bottom-color: @panel-border;
+      border-bottom-color: @popover-arrow-outer;
+      top: -@popover-arrow-outer-width;
+
+      &:after {
+        top: 1px;
+        margin-left: -@popover-arrow-width;
+        border-top-width: 0;
+        border-bottom-color: @popover-arrow;
+      }
+    }
+  }
+
+  &.@{prefix}-top {
+    margin-top: -@popover-arrow-width;
+    *margin-top: 0;
+
+    & > .@{prefix}-arrow {
+      left: 50%;
+      margin-left: -@popover-arrow-outer-width;
+      border-bottom-width: 0;
+      border-top-color: @panel-border;
+      // border-bottom-color: @popover-arrow-outer;
+      top: auto;
+      bottom: -@popover-arrow-outer-width;
+
+      &:after {
+        bottom: 1px;
+        margin-left: -@popover-arrow-width;
+        border-bottom-width: 0;
+        border-top-color: @popover-arrow;
+      }
+    }
+  }
+
+  &.@{prefix}-bottom, &.@{prefix}-top {
+    &.@{prefix}-start { margin-left: -22px; }
+    &.@{prefix}-start > .@{prefix}-arrow { left: 20px; }
+
+    &.@{prefix}-end { margin-left: 22px; }
+    &.@{prefix}-end > .@{prefix}-arrow { right: 10px; left: auto; }
+  }
+}

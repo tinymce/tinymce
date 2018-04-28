@@ -1,0 +1,147 @@
+// Window
+
+.@{prefix}-fullscreen {
+  border: 0; padding: 0; margin: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+div.@{prefix}-fullscreen {
+  position: fixed;
+  top: 0; left: 0;
+}
+
+#@{prefix}-modal-block {
+  .opacity(0);
+  position: fixed;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: @window-modalblock-bg;
+}
+
+#@{prefix}-modal-block.@{prefix}-in {
+  .opacity(@window-modalblock-opacity);
+}
+
+.@{prefix}-window-move {
+  cursor: move;
+}
+
+.@{prefix}-window {
+  .border-radius(6px);
+  .box-shadow(@window-box-shadow);
+  .reset-gradient();
+  background: @window-bg;
+  position: fixed;
+  top: 0; left: 0;
+  opacity: 0;
+  transform: scale(0.1);
+  transition: transform 100ms ease-in, opacity 150ms ease-in;
+}
+
+.@{prefix}-window.@{prefix}-in {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.@{prefix}-window-head {
+  padding: 9px 15px;
+  border-bottom: 1px solid @window-head-border;
+  position: relative;
+}
+
+.@{prefix}-window-head .@{prefix}-close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 38px;
+  width: 38px;
+  text-align: center;
+  cursor: pointer;
+
+  i {
+    color: @window-head-close;
+  }
+}
+
+.@{prefix}-close:hover i {
+  color: @window-head-close-hover;
+}
+
+.@{prefix}-window-head .@{prefix}-title {
+  line-height: 20px;
+  font-size: @window-title-font-size;
+  font-weight: bold;
+  text-rendering: optimizelegibility;
+  padding-right: 20px;
+}
+
+.@{prefix}-window .@{prefix}-container-body {
+  display: block;
+}
+
+.@{prefix}-foot {
+  display: block;
+  background-color: @window-foot-bg;
+  border-top: 1px solid @window-foot-border;
+  .border-radius(0 0 6px 6px);
+}
+
+.@{prefix}-window-head .@{prefix}-dragh {
+  position: absolute;
+  top: 0; left: 0;
+  cursor: move;
+  width: 90%;
+  height: 100%;
+}
+
+.@{prefix}-window iframe {
+  width: 100%;
+  height: 100%;
+}
+
+.@{prefix}-window.@{prefix}-fullscreen, .@{prefix}-window.@{prefix}-fullscreen .@{prefix}-foot {
+  .border-radius(0);
+}
+
+.@{prefix}-window-body .@{prefix}-listbox {
+  border-color: @btn-border-hover;
+}
+
+.@{prefix}-window {
+  .@{prefix}-btn:hover {
+    border-color: @window-btn-border-hover;
+  }
+
+  .@{prefix}-btn:focus {
+    border-color: @window-btn-border-focus;
+  }
+}
+
+.@{prefix}-window-body .@{prefix}-btn, .@{prefix}-foot .@{prefix}-btn {
+  border-color: @window-btn-border;
+}
+
+.@{prefix}-foot .@{prefix}-btn.@{prefix}-primary {
+  border-color: transparent;
+}
+
+// RTL
+
+.@{prefix}-rtl .@{prefix}-window-head .@{prefix}-close {
+  position: absolute;
+  right: auto;
+  left: 0;
+}
+
+.@{prefix}-rtl .@{prefix}-window-head .@{prefix}-dragh {
+  left: auto;
+  right: 0;
+}
+
+.@{prefix}-rtl .@{prefix}-window-head .@{prefix}-title {
+  direction: rtl;
+  text-align: right;
+  padding-right: 0;
+  padding-left: 20px;
+}

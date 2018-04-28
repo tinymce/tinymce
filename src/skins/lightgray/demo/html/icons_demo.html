@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link id="local" rel="stylesheet" type="text/css" href="../../../../../js/tinymce/skins/lightgray/skin.min.css">
+<link id="cdn" rel="stylesheet" type="text/css" data-href="//cloud.tinymce.com/dev/skins/lightgray/skin.min.css">
+<!-- <link id="old" rel="stylesheet" type="text/css" href="//tinymce.cachefly.net/4/skins/lightgray/skin.min.css"> -->
+<script>
+var toggleHref = function (elm) {
+  var href = local.getAttribute('href');
+
+  if (href) {
+    elm.setAttribute('data-href', elm.getAttribute('href'));
+    elm.removeAttribute('href');
+  } else {
+    elm.setAttribute('href', elm.getAttribute('data-href'));
+    elm.removeAttribute('data-href');
+  }
+};
+
+var toggle = function () {
+  var local = document.getElementById('local');
+  var cdn = document.getElementById('cdn');
+  var status = document.getElementById('status');
+
+  if (local.getAttribute('data-href')) {
+    status.innerHTML = 'local';
+  } else {
+    status.innerHTML = 'cdn';
+  }
+
+  toggleHref(local);
+  toggleHref(cdn);
+};
+</script>
+</head>
+<body>
+<div style="width: 400px; margin: 5px">
+  <i class="mce-ico mce-i-save" title="save"></i>
+  <i class="mce-ico mce-i-newdocument" title="newdocument"></i>
+  <i class="mce-ico mce-i-fullpage" title="fullpage"></i>
+  <i class="mce-ico mce-i-alignleft" title="alignleft"></i>
+  <i class="mce-ico mce-i-aligncenter" title="aligncenter"></i>
+  <i class="mce-ico mce-i-alignright" title="alignright"></i>
+  <i class="mce-ico mce-i-alignjustify" title="alignjustify"></i>
+  <i class="mce-ico mce-i-alignnone" title="alignnone"></i>
+  <i class="mce-ico mce-i-cut" title="cut"></i>
+  <i class="mce-ico mce-i-paste" title="paste"></i>
+  <i class="mce-ico mce-i-searchreplace" title="searchreplace"></i>
+  <i class="mce-ico mce-i-bullist" title="bullist"></i>
+  <i class="mce-ico mce-i-numlist" title="numlist"></i>
+  <i class="mce-ico mce-i-indent" title="indent"></i>
+  <i class="mce-ico mce-i-outdent" title="outdent"></i>
+  <i class="mce-ico mce-i-blockquote" title="blockquote"></i>
+  <i class="mce-ico mce-i-undo" title="undo"></i>
+  <i class="mce-ico mce-i-redo" title="redo"></i>
+  <i class="mce-ico mce-i-link" title="link"></i>
+  <i class="mce-ico mce-i-unlink" title="unlink"></i>
+  <i class="mce-ico mce-i-anchor" title="anchor"></i>
+  <i class="mce-ico mce-i-image" title="image"></i>
+  <i class="mce-ico mce-i-media" title="media"></i>
+  <i class="mce-ico mce-i-help" title="help"></i>
+  <i class="mce-ico mce-i-code" title="code"></i>
+  <i class="mce-ico mce-i-insertdatetime" title="insertdatetime"></i>
+  <i class="mce-ico mce-i-preview" title="preview"></i>
+  <i class="mce-ico mce-i-forecolor" title="forecolor"></i>
+  <i class="mce-ico mce-i-backcolor" title="backcolor"></i>
+  <i class="mce-ico mce-i-table" title="table"></i>
+  <i class="mce-ico mce-i-hr" title="hr"></i>
+  <i class="mce-ico mce-i-removeformat" title="removeformat"></i>
+  <i class="mce-ico mce-i-subscript" title="subscript"></i>
+  <i class="mce-ico mce-i-superscript" title="superscript"></i>
+  <i class="mce-ico mce-i-charmap" title="charmap"></i>
+  <i class="mce-ico mce-i-emoticons" title="emoticons"></i>
+  <i class="mce-ico mce-i-print" title="print"></i>
+  <i class="mce-ico mce-i-fullscreen" title="fullscreen"></i>
+  <i class="mce-ico mce-i-spellchecker" title="spellchecker"></i>
+  <i class="mce-ico mce-i-nonbreaking" title="nonbreaking"></i>
+  <i class="mce-ico mce-i-template" title="template"></i>
+  <i class="mce-ico mce-i-pagebreak" title="pagebreak"></i>
+  <i class="mce-ico mce-i-restoredraft" title="restoredraft"></i>
+  <i class="mce-ico mce-i-bold" title="bold"></i>
+  <i class="mce-ico mce-i-italic" title="italic"></i>
+  <i class="mce-ico mce-i-underline" title="underline"></i>
+  <i class="mce-ico mce-i-strikethrough" title="strikethrough"></i>
+  <i class="mce-ico mce-i-visualchars" title="visualchars"></i>
+  <i class="mce-ico mce-i-visualblocks" title="visualblocks"></i>
+  <i class="mce-ico mce-i-ltr" title="ltr"></i>
+  <i class="mce-ico mce-i-rtl" title="rtl"></i>
+  <i class="mce-ico mce-i-copy" title="copy"></i>
+  <i class="mce-ico mce-i-resize" title="resize"></i>
+  <i class="mce-ico mce-i-browse" title="browse"></i>
+  <i class="mce-ico mce-i-pastetext" title="pastetext"></i>
+  <i class="mce-ico mce-i-rotateleft" title="rotateleft"></i>
+  <i class="mce-ico mce-i-rotateright" title="rotateright"></i>
+  <i class="mce-ico mce-i-crop" title="crop"></i>
+  <i class="mce-ico mce-i-editimage" title="editimage"></i>
+  <i class="mce-ico mce-i-options" title="options"></i>
+  <i class="mce-ico mce-i-flipv" title="flipv"></i>
+  <i class="mce-ico mce-i-fliph" title="fliph"></i>
+  <i class="mce-ico mce-i-zoomin" title="zoomin"></i>
+  <i class="mce-ico mce-i-zoomout" title="zoomout"></i>
+  <i class="mce-ico mce-i-sun" title="sun"></i>
+  <i class="mce-ico mce-i-moon" title="moon"></i>
+  <i class="mce-ico mce-i-arrowleft" title="arrowleft"></i>
+  <i class="mce-ico mce-i-arrowright" title="arrowright"></i>
+  <i class="mce-ico mce-i-drop" title="drop"></i>
+  <i class="mce-ico mce-i-contrast" title="contrast"></i>
+  <i class="mce-ico mce-i-sharpen" title="sharpen"></i>
+  <i class="mce-ico mce-i-resize2" title="resize2"></i>
+  <i class="mce-ico mce-i-orientation" title="orientation"></i>
+  <i class="mce-ico mce-i-invert" title="invert"></i>
+  <i class="mce-ico mce-i-gamma" title="gamma"></i>
+  <i class="mce-ico mce-i-remove" title="remove"></i>
+  <i class="mce-ico mce-i-tablerowprops" title="tablerowprops"></i>
+  <i class="mce-ico mce-i-tablecellprops" title="tablecellprops"></i>
+  <i class="mce-ico mce-i-table2" title="table2"></i>
+  <i class="mce-ico mce-i-tablemergecells" title="tablemergecells"></i>
+  <i class="mce-ico mce-i-tableinsertcolbefore" title="tableinsertcolbefore"></i>
+  <i class="mce-ico mce-i-tableinsertcolafter" title="tableinsertcolafter"></i>
+  <i class="mce-ico mce-i-tableinsertrowbefore" title="tableinsertrowbefore"></i>
+  <i class="mce-ico mce-i-tableinsertrowafter" title="tableinsertrowafter"></i>
+  <i class="mce-ico mce-i-tablesplitcells" title="tablesplitcells"></i>
+  <i class="mce-ico mce-i-tabledelete" title="tabledelete"></i>
+  <i class="mce-ico mce-i-tableleftheader" title="tableleftheader"></i>
+  <i class="mce-ico mce-i-tabletopheader" title="tabletopheader"></i>
+  <i class="mce-ico mce-i-tabledeleterow" title="tabledeleterow"></i>
+  <i class="mce-ico mce-i-tabledeletecol" title="tabledeletecol"></i>
+  <i class="mce-ico mce-i-codesample" title="codesample"></i>
+  <i class="mce-ico mce-i-fill" title="fill"></i>
+  <i class="mce-ico mce-i-borderwidth" title="borderwidth"></i>
+  <i class="mce-ico mce-i-line" title="line"></i>
+  <i class="mce-ico mce-i-count" title="count"></i>
+  <i class="mce-ico mce-i-translate" title="translate"></i>
+  <i class="mce-ico mce-i-drag" title="drag"></i>
+  <i class="mce-ico mce-i-home" title="home"></i>
+  <i class="mce-ico mce-i-upload" title="upload"></i>
+  <i class="mce-ico mce-i-bubble" title="bubble"></i>
+  <i class="mce-ico mce-i-user" title="user"></i>
+  <i class="mce-ico mce-i-lock" title="lock"></i>
+  <i class="mce-ico mce-i-unlock" title="unlock"></i>
+  <i class="mce-ico mce-i-settings" title="settings"></i>
+  <i class="mce-ico mce-i-remove2" title="remove2"></i>
+  <i class="mce-ico mce-i-menu" title="menu"></i>
+  <i class="mce-ico mce-i-warning" title="warning"></i>
+  <i class="mce-ico mce-i-question" title="question"></i>
+  <i class="mce-ico mce-i-pluscircle" title="pluscircle"></i>
+  <i class="mce-ico mce-i-info" title="info"></i>
+  <i class="mce-ico mce-i-notice" title="notice"></i>
+  <i class="mce-ico mce-i-arrowup" title="arrowup"></i>
+  <i class="mce-ico mce-i-arrowdown" title="arrowdown"></i>
+  <i class="mce-ico mce-i-arrowup2" title="arrowup2"></i>
+  <i class="mce-ico mce-i-arrowdown2" title="arrowdown2"></i>
+  <i class="mce-ico mce-i-menu2" title="menu2"></i>
+  <i class="mce-ico mce-i-newtab" title="newtab"></i>
+  <i class="mce-ico mce-i-a11y" title="a11y"></i>
+  <i class="mce-ico mce-i-plus" title="plus"></i>
+  <i class="mce-ico mce-i-minus" title="minus"></i>
+  <i class="mce-ico mce-i-books" title="books"></i>
+  <i class="mce-ico mce-i-toc" title="toc"></i>
+  <i class="mce-ico mce-i-reload" title="reload"></i>
+  <span class="mce-checked"><i class="mce-ico mce-i-checkbox" title="checkbox"></i></span>
+</div>
+<button onclick="toggle()">Toggle cdn/local</button> <span id="status">local</span>
+</body>
+</html>

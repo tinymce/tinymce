@@ -1,0 +1,87 @@
+[
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/json_rpc_ok"
+    },
+
+    "response": {
+      "json": {
+        "result": "Hello JSON-RPC",
+        "error": null,
+        "id": 1
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/json_rpc_fail"
+    },
+
+    "response": {
+      "json": {
+        "result": null,
+        "error": {
+          "message": "General failure",
+          "code": 42
+        },
+        "id": 1
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/404"
+    },
+
+    "response": {
+      "status": 404,
+      "json": {}
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/403"
+    },
+    "response": {
+      "status": 403,
+      "json": {}
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/403data"
+    },
+    "response": {
+      "status": 403,
+      "json": {
+        "error": {
+          "type": "error"
+          }
+        }
+      }
+  },
+
+  {
+    "request": {
+      "method": "post",
+      "path": "/custom/imageUpload"
+    },
+
+    "response": {
+      "status" : 200,
+      "json": {
+        "location": "uploaded_image.jpg"
+      }
+
+    }
+  }
+]

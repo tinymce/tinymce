@@ -1,0 +1,34 @@
+// Progress
+
+.@{prefix}-progress {
+  display: inline-block;
+  position: relative;
+  height: 20px;
+}
+
+.@{prefix}-progress .@{prefix}-bar-container {
+  display: inline-block;
+  width: 100px;
+  height: 100%;
+  margin-right: 8px;
+  border: 1px solid @progress-border;
+  overflow: hidden;
+  .border-radius(4px);
+}
+
+.@{prefix}-progress .@{prefix}-text {
+  display: inline-block;
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 14px;
+  width: 40px;
+  color: @progress-text;
+}
+
+.@{prefix}-bar {
+  display: block;
+  width: 0%;
+  height: 100%;
+  background-color: @progress-bar-bg;
+  .transition(width .2s ease);
+}

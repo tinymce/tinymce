@@ -1,0 +1,49 @@
+// Path
+
+.@{prefix}-path {
+  .inline-block();
+  padding: 8px;
+  white-space: normal;
+  font-size: inherit;
+}
+
+.@{prefix}-path .@{prefix}-txt {
+  display: inline-block;
+  padding-right: 3px;
+}
+
+.@{prefix}-path .@{prefix}-path-body {
+  display: inline-block;
+}
+
+.@{prefix}-path-item {
+  .inline-block();
+  cursor: pointer;
+  color: @path-text;
+  font-size: inherit;
+  text-transform: uppercase;
+}
+
+.@{prefix}-path-item:hover {
+  text-decoration: underline;
+}
+
+.@{prefix}-path-item:focus {
+  background: @path-bg-focus;
+  color: @path-text-focus;
+}
+
+.@{prefix}-path .@{prefix}-divider {
+  display: inline;
+  font-size: inherit;
+}
+
+.@{prefix}-disabled .@{prefix}-path-item {
+  color: @text-disabled;
+}
+
+// RTL
+
+.@{prefix}-rtl .@{prefix}-path {
+  direction: rtl;
+}

@@ -1,0 +1,24 @@
+.tinymce-mobile-toolstrip {
+  background: @toolstrip-background-color;
+  display: flex;
+  z-index: @tinymce-mobile-mask-menu-zindex;
+  flex: 0 0 auto;
+
+  .tinymce-mobile-toolbar {
+    display: flex;
+    flex: 1;
+    /* Make it no larger than the toolstrip, so that it needs to scroll */
+    width: 100%;
+    height: 2.5em;
+    align-items: center;
+    color: @toolstrip-foreground-color;
+
+    &:not(.tinymce-mobile-context-toolbar) {
+      @import "main-toolbar.less";
+    }
+
+    &.tinymce-mobile-context-toolbar {
+      @import "context-toolbar.less";
+    }
+  }
+}

@@ -1,0 +1,19 @@
+// Throbber
+
+.@{prefix}-throbber {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  .opacity(0.6);
+  background: @throbber-bg;
+}
+
+.@{prefix}-throbber-inline {
+  position: static;
+  height: 50px;
+}
+
+.@{prefix}-menu .@{prefix}-throbber-inline {
+  height: 25px;
+  background-size: contain;
+}

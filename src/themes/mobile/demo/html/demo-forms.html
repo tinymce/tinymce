@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+<title>Form Demo Page</title>
+<link rel="StyleSheet" href="../../../../../js/tinymce/skins/lightgray/skin.mobile.min.css">
+<style>
+
+
+.tinymce-mobile-serialised-dialog {
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  height: 30px;
+  background: #333;
+  color: #eee;
+}
+
+.tinymce-mobile-toolstrip {
+  background: #333;
+}
+
+.tinymce-mobile-serialised-dialog-chain {
+  transition: left linear 0.15s;
+  height: 30px;
+  display: flex;
+  width: 100%;
+}
+
+.tinymce-mobile-serialised-dialog-screen {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 30px;
+}
+
+</style>
+
+</head>
+<body>
+<div id="ephox-ui"></div>
+<script src="../../../../../js/tinymce/tinymce.js"></script>
+<script src="../../../../../scratch/demos/themes/mobile/demo.js"></script>
+<script>
+  demos.formDemo();
+</script>
+</body>
+</html>

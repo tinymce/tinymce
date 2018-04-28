@@ -1,0 +1,39 @@
+/* MenuBar */
+
+.@{prefix}-menubar {
+  border: 1px solid @menubar-border;
+}
+
+.@{prefix}-menubar .@{prefix}-menubtn {
+  border-color: transparent;
+  background: transparent;
+  .border-radius(0);
+  .box-shadow(none);
+  filter: none;
+}
+
+.@{prefix}-menubar .@{prefix}-menubtn button span {
+  color: @text;
+}
+
+.@{prefix}-menubar .@{prefix}-caret {
+  border-top-color: @menubar-chevron;
+}
+
+.@{prefix}-menubar .@{prefix}-active, .@{prefix}-menubar .@{prefix}-menubtn:hover {
+  .@{prefix}-caret {
+    border-top-color: @menubar-chevron-active;
+  }
+}
+
+.@{prefix}-menubar .@{prefix}-menubtn:hover, .@{prefix}-menubar .@{prefix}-menubtn.@{prefix}-active, .@{prefix}-menubar .@{prefix}-menubtn:focus {
+  border-color: @btn-border-hover;
+  background: @menu-bg;
+  filter: none;
+  .box-shadow(none);
+}
+
+.@{prefix}-menubar .@{prefix}-menubtn.@{prefix}-active {
+  border-bottom: none;
+  z-index: 65537;
+}

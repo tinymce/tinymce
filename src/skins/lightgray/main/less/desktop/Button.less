@@ -1,0 +1,191 @@
+// Button
+
+.@{prefix}-btn {
+  border: 1px solid mix(rgb(red(@btn-border-right), green(@btn-border-right), blue(@btn-border-right)), @panel-bg, 30%);
+  border-color: @btn-border-top @btn-border-right @btn-border-bottom @btn-border-left;
+  position: relative;
+  text-shadow: @text-shadow;
+  background: @btn-bg;
+
+  .inline-block();
+  .border-radius(3px);
+  .box-shadow(@btn-box-shadow);
+
+  &:hover, &:active {
+    background: @btn-bg-hover;
+    color: @btn-text-hover;
+    border-color: @btn-border-hover;
+  }
+
+  &:focus {
+    background: @btn-bg-focus;
+    color: @btn-text-focus;
+    border-color: @btn-border-focus;
+  }
+
+  &.@{prefix}-disabled button, &.@{prefix}-disabled:hover button {
+    cursor: default;
+    .box-shadow(none);
+    .opacity(@btn-box-disabled-opacity);
+  }
+
+  &.@{prefix}-active,
+  &.@{prefix}-active:hover,
+  &.@{prefix}-active:focus,
+  &.@{prefix}-active:active {
+    .box-shadow(@btn-box-shadow-active);
+    background: @btn-bg-active;
+    color: @btn-text-active;
+    border-color: @btn-border-active;
+  }
+
+  &.@{prefix}-active button, &.@{prefix}-active:hover button,
+  &.@{prefix}-active i, &.@{prefix}-active:hover i {
+    color: @btn-text-active;
+  }
+
+  &:hover .@{prefix}-caret {
+    border-top-color: @btn-chevron-hover;
+  }
+
+  &.@{prefix}-active .@{prefix}-caret, &.@{prefix}-active:hover .@{prefix}-caret {
+    border-top-color: @btn-chevron-active;
+  }
+}
+
+.@{prefix}-btn button {
+  padding: @btn-padding;
+  font-size: @font-size;
+  line-height: @line-height;
+  *line-height: @line-height - 4px;
+  cursor: pointer;
+  color: @btn-text;
+  text-align: center;
+
+  // Fixes for default inner padding of button
+  overflow: visible; // IE7
+  -webkit-appearance: none; // WebKit
+  &::-moz-focus-inner { // Gecko
+    border: 0;
+    padding: 0;
+  }
+}
+
+.@{prefix}-btn i {
+  text-shadow: 1px 1px @btn-text-shadow;
+}
+
+.@{prefix}-primary.@{prefix}-btn-has-text {
+  min-width: 50px;
+}
+
+.@{prefix}-primary {
+  color: @btn-primary-text;
+  border: 1px solid transparent;
+  border-color: @btn-primary-border;
+  background-color: @btn-primary-bg;
+
+  &:hover, &:focus {
+    background-color: @btn-primary-bg-hover;
+    border-color: @btn-primary-border-hover;
+  }
+
+  &.@{prefix}-disabled button, &.@{prefix}-disabled:hover button {
+    cursor: default;
+    .box-shadow(none);
+    .opacity(@btn-box-disabled-opacity);
+  }
+
+  &.@{prefix}-active, &.@{prefix}-active:hover, &:not(.@{prefix}-disabled):active {
+    background-color: @btn-primary-bg-active;
+    .box-shadow(@btn-box-shadow-active);
+  }
+}
+
+.@{prefix}-primary button, .@{prefix}-primary button i {
+  color: @btn-primary-text;
+  text-shadow: 1px 1px @btn-primary-text-shadow;
+}
+
+.@{prefix}-btn .@{prefix}-txt {
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+.@{prefix}-btn-large button {
+  padding: 9px 14px;
+  font-size: @font-size + 2px;
+  line-height: normal;
+  .border-radius(5px);
+}
+
+.@{prefix}-btn-large i {
+  margin-top: 2px;
+}
+
+.@{prefix}-btn-small button {
+  padding: 1px 5px;
+  font-size: @font-size - 2px;
+  *padding-bottom: 2px;
+}
+
+.@{prefix}-btn-small i {
+  line-height: 20px;
+  vertical-align: top;
+  *line-height: 18px;
+}
+
+.@{prefix}-btn .@{prefix}-caret {
+  margin-top: 8px;
+  margin-left: 0;
+}
+
+.@{prefix}-btn-small .@{prefix}-caret {
+  margin-top: 8px;
+  margin-left: 0;
+}
+
+.@{prefix}-caret {
+  .inline-block();
+  width: 0; height: 0;
+  vertical-align: top;
+  border-top: 4px solid @btn-chevron;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  content: "";
+}
+
+.@{prefix}-disabled .@{prefix}-caret {
+  border-top-color: @text-disabled;
+}
+
+.@{prefix}-caret.@{prefix}-up {
+  border-bottom: 4px solid @btn-chevron;
+  border-top: 0;
+}
+
+.@{prefix}-btn-flat {
+  border: 0;
+  background: transparent;
+  .border-radius(0);
+  .box-shadow(none);
+  filter: none;
+}
+
+.@{prefix}-btn-flat:hover, .@{prefix}-btn-flat.@{prefix}-active, .@{prefix}-btn-flat:focus, .@{prefix}-btn-flat:active {
+  border: 0;
+  background: @menubar-bg-active;
+  filter: none;
+  .box-shadow(none);
+}
+
+.@{prefix}-btn-has-text .@{prefix}-ico {
+  padding-right: 5px;
+}
+
+// RTL
+
+.@{prefix}-rtl .@{prefix}-btn button {
+  direction: rtl;
+}

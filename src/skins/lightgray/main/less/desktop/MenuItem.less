@@ -1,0 +1,174 @@
+// MenuItem
+
+.@{prefix}-menu-item {
+  display: block;
+  padding: 6px 4px 6px 4px;
+  clear: both;
+  font-weight: normal;
+  line-height: 20px;
+  color: @menuitem-text;
+  white-space: nowrap;
+  cursor: pointer;
+  line-height: normal;
+  border-left: 4px solid transparent;
+  margin-bottom: 1px;
+
+  .@{prefix}-text, .@{prefix}-text b {
+    line-height: 1;
+    vertical-align: initial;
+  }
+
+  .@{prefix}-caret {
+    margin-top: 4px;
+    margin-right: 6px;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 4px solid @menuitem-chevron;
+  }
+
+  .@{prefix}-menu-shortcut {
+    display: inline-block;
+    padding: 0 10px 0 20px;
+    color: @menuitem-shortcut;
+  }
+
+  .@{prefix}-ico {
+    padding-right: 4px;
+  }
+
+  &:hover, &:focus {
+    background: @menuitem-bg-hover;
+
+    .@{prefix}-menu-shortcut {
+      color: @menuitem-shortcut;
+    }
+
+    .@{prefix}-text, .@{prefix}-ico {
+      color: @menuitem-text-hover;
+    }
+  }
+
+  &.@{prefix}-selected {
+    background: @menuitem-bg-selected;
+
+    .@{prefix}-text, .@{prefix}-ico {
+      color: @menuitem-text-selected;
+    }
+  }
+
+  &.@{prefix}-active.@{prefix}-menu-item-normal {
+    background: @menuitem-bg-active;
+
+    .@{prefix}-text, .@{prefix}-ico {
+      color: @menuitem-text-active;
+    }
+  }
+
+  &.@{prefix}-active.@{prefix}-menu-item-checkbox {
+    .@{prefix}-ico {
+      visibility: visible;
+    }
+  }
+
+  &.@{prefix}-disabled, &.@{prefix}-disabled:hover {
+    background: @menuitem-bg-disabled;
+
+    &:focus {
+      background: @menuitem-bg-hover;
+    }
+
+    .@{prefix}-text, .@{prefix}-ico {
+      color: @menuitem-text-disabled;
+    }
+  }
+
+  &.@{prefix}-menu-item-preview.@{prefix}-active {
+    border-left: 5px solid @menuitem-preview-border-active;
+    background: @menuitem-bg;
+
+    .@{prefix}-text, .@{prefix}-ico {
+      color: @menuitem-text;
+    }
+
+    &:hover {
+      background: @menuitem-bg-hover;
+    }
+  }
+}
+
+.@{prefix}-menu-item-link {
+  color: #093;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  b {
+    color: #093;
+  }
+}
+
+.@{prefix}-menu-item-ellipsis {
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.@{prefix}-menu-item:hover *, .@{prefix}-menu-item.@{prefix}-selected *, .@{prefix}-menu-item:focus * {
+  color: @menuitem-text-inverse;
+}
+
+div.@{prefix}-menu .@{prefix}-menu-item-sep, .@{prefix}-menu-item-sep:hover {
+  border: 0;
+  padding: 0;
+  height: 1px;
+  margin: 9px 1px;
+  overflow: hidden;
+  background: @menuitem-separator-top;
+  border-bottom: 1px solid @menuitem-separator-bottom;
+  cursor: default;
+  filter: none;
+}
+
+div.@{prefix}-menu .@{prefix}-menu-item b {
+  font-weight: bold;
+}
+
+.@{prefix}-menu-item-indent-1 { padding-left: 20px; }
+.@{prefix}-menu-item-indent-2 { padding-left: 35px; }
+.@{prefix}-menu-item-indent-2 { padding-left: 35px; }
+.@{prefix}-menu-item-indent-3 { padding-left: 40px; }
+.@{prefix}-menu-item-indent-4 { padding-left: 45px; }
+.@{prefix}-menu-item-indent-5 { padding-left: 50px; }
+.@{prefix}-menu-item-indent-6 { padding-left: 55px; }
+
+// RTL
+
+.@{prefix}-menu.@{prefix}-rtl {
+  direction: rtl;
+}
+
+.@{prefix}-rtl .@{prefix}-menu-item {
+  text-align: right;
+  direction: rtl;
+  padding: 6px 12px 6px 15px;
+}
+
+.@{prefix}-rtl .@{prefix}-menu-item .@{prefix}-caret {
+  margin-left: 6px;
+  margin-right: 0;
+  border-right: 4px solid @menuitem-chevron;
+  border-left: 0;
+}
+
+.@{prefix}-rtl .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-caret, .@{prefix}-rtl .@{prefix}-menu-item:focus .@{prefix}-caret, .@{prefix}-rtl .@{prefix}-menu-item:hover .@{prefix}-caret {
+  border-left-color: transparent;
+  border-right-color: @menuitem-chevron-selected;
+}
+
+.@{prefix}-rtl {
+  .@{prefix}-menu-item .@{prefix}-ico {
+    padding-right: 0;
+    padding-left: 4px;
+  }
+}

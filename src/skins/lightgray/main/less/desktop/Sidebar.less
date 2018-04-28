@@ -1,0 +1,52 @@
+// Sidebar
+
+.@{prefix}-edit-aria-container > .@{prefix}-container-body {
+  display: flex;
+
+  .@{prefix}-edit-area {
+    flex: 1;
+  }
+
+  .@{prefix}-sidebar > .@{prefix}-container-body {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+  }
+
+  .@{prefix}-sidebar-panel {
+    min-width: 250px;
+    max-width: 250px;
+    position: relative;
+
+    > .@{prefix}-container-body {
+      position: absolute;
+      width: 100%; height: 100%;
+      overflow: auto;
+      top: 0; left: 0;
+    }
+  }
+}
+
+.@{prefix}-sidebar-toolbar {
+  border: 0 solid @panel-border;
+  border-left-width: 1px;
+
+  .@{prefix}-btn {
+    border-left: 0;
+    border-right: 0;
+  }
+
+  .@{prefix}-btn.@{prefix}-active, .@{prefix}-btn.@{prefix}-active:hover {
+    background-color: @btn-bg-active;
+
+    button, button i {
+      color: @btn-primary-text;
+      text-shadow: 1px 1px @btn-primary-text-shadow;
+    }
+  }
+}
+
+.@{prefix}-sidebar-panel {
+  border: 0 solid @panel-border;
+  border-left-width: 1px;
+}

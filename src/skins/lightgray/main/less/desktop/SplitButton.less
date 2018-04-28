@@ -1,0 +1,49 @@
+// SplitButton
+
+.@{prefix}-splitbtn {
+  &:hover .@{prefix}-open {
+    border-left: 1px solid @splitbtn-delimiter-hover;
+  }
+
+  .@{prefix}-open {
+    border-left: 1px solid @splitbtn-delimiter;
+    padding-right: 4px;
+    padding-left: 4px;
+  }
+
+  .@{prefix}-open:focus {
+    border-left: 1px solid @splitbtn-delimiter-focus;
+  }
+
+  .@{prefix}-open:hover, .@{prefix}-open:active {
+    border-left: 1px solid @splitbtn-delimiter-hover;
+  }
+
+  &.@{prefix}-active:hover .@{prefix}-open {
+    border-left: 1px solid @splitbtn-delimiter-active;
+  }
+
+  &.@{prefix}-opened {
+    border-color: @btn-border-hover;
+  }
+}
+
+.@{prefix}-splitbtn.@{prefix}-btn-small .@{prefix}-open {
+  padding: 0 3px 0 3px;
+}
+
+// RTL
+
+.@{prefix}-rtl .@{prefix}-splitbtn {
+  direction: rtl;
+  text-align: right;
+}
+
+.@{prefix}-rtl .@{prefix}-splitbtn button {
+  padding-right: 4px;
+  padding-left: 4px;
+}
+
+.@{prefix}-rtl .@{prefix}-splitbtn .@{prefix}-open {
+  border-left: 0;
+}
