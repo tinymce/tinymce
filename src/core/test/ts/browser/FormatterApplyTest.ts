@@ -1636,7 +1636,10 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
       inline: 'b'
     });
     editor.setContent('<p>abc</p><p contenteditable="false">def</p><p>ghi</p>');
-    LegacyUnit.setSelection(editor, 'p:nth-child(2)', 0, 'p:nth-child(3)', 3);
+    const rng = editor.dom.createRng();
+    rng.setStart(editor.dom.select('p')[2].firstChild, 0);
+    rng.setEnd(editor.dom.select('p')[2].firstChild, 3);
+    editor.selection.setRng(rng);
     editor.formatter.apply('format');
     LegacyUnit.equal(editor.getContent(editor), '<p>abc</p><p contenteditable="false">def</p><p><b>ghi</b></p>', 'Text in last paragraph is bold');
   });

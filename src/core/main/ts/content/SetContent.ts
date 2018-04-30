@@ -15,6 +15,9 @@ import Serializer from 'tinymce/core/api/html/Serializer';
 import * as FilterNode from '../html/FilterNode';
 import { Option, Fun } from '@ephox/katamari';
 import Settings from 'tinymce/core/api/Settings';
+import EditorFocus from 'tinymce/core/focus/EditorFocus';
+import CaretFinder from 'tinymce/core/caret/CaretFinder';
+import NodeType from 'tinymce/core/dom/NodeType';
 
 const defaultFormat = 'html';
 
@@ -28,6 +31,21 @@ export interface SetContentArgs {
 }
 
 const isTreeNode = (content: any): content is Node => content instanceof Node;
+
+const moveSelection = (editor: Editor) => {
+  if (EditorFocus.hasFocus(editor)) {
+    CaretFinder.firstPositionIn(editor.getBody()).each((pos) => {
+      const node = pos.getNode();
+      const caretPos = NodeType.isTable(node) ? CaretFinder.firstPositionIn(node).getOr(pos) : pos;
+      editor.selection.setRng(caretPos.toRange());
+    });
+  }
+};
+
+const setEditorHtml = (editor: Editor, html: string) => {
+  editor.dom.setHTML(editor.getBody(), html);
+  moveSelection(editor);
+};
 
 const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): string => {
   let forcedRootBlockName, padd;
@@ -56,7 +74,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
       content = '<br data-mce-bogus="1">';
     }
 
-    editor.dom.setHTML(body, content);
+    setEditorHtml(editor, content);
 
     editor.fire('SetContent', args);
   } else {
@@ -69,7 +87,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
     }
 
     args.content = Tools.trim(content);
-    editor.dom.setHTML(body, args.content);
+    setEditorHtml(editor, args.content);
 
     if (!args.no_events) {
       editor.fire('SetContent', args);
@@ -85,7 +103,7 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: Node, args: 
   const html = Serializer({ validate: editor.validate }, editor.schema).serialize(content);
 
   args.content = Tools.trim(html);
-  editor.dom.setHTML(body, args.content);
+  setEditorHtml(editor, args.content);
 
   if (!args.no_events) {
     editor.fire('SetContent', args);
