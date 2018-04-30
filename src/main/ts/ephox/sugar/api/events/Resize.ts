@@ -55,9 +55,9 @@ var unbind = function (element, handler) {
   if (index === -1) return;
 
   var handlerIndex = Arr.indexOf(elems[index].handlers, handler);
-  if (handlerIndex === -1) return;
+  if (handlerIndex.isNone()) return;
 
-  elems[index].handlers.splice(handlerIndex, 1);
+  elems[index].handlers.splice(handlerIndex.getOr(0), 1);
   if (elems[index].handlers.length === 0) elems.splice(index, 1);
   if (elems.length === 0) stop();
 };
