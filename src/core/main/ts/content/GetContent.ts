@@ -17,6 +17,7 @@ import Zwsp from 'tinymce/core/text/Zwsp';
 import Settings from 'tinymce/core/api/Settings';
 import { Element } from '@ephox/sugar';
 import { isWsPreserveElement } from 'tinymce/core/dom/ElementType';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const defaultFormat = 'html';
 

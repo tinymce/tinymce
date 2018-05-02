@@ -1,4 +1,5 @@
 import Tools from 'tinymce/core/api/util/Tools';
+import { Range } from '@ephox/dom-globals';
 
 export interface StringPathBookmark {
   start: string;

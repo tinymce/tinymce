@@ -5,6 +5,7 @@ import NormalizeRange from 'tinymce/core/selection/NormalizeRange';
 import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function () {
   const success = arguments[arguments.length - 2];

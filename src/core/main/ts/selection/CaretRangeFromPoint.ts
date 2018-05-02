@@ -10,6 +10,7 @@
 
 import NodeType from '../dom/NodeType';
 import Tools from '../api/util/Tools';
+import { Document, Range } from '@ephox/dom-globals';
 
 const hasCeProperty = function (node) {
   return NodeType.isContentEditableTrue(node) || NodeType.isContentEditableFalse(node);

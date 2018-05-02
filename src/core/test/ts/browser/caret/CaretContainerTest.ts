@@ -7,6 +7,7 @@ import Env from 'tinymce/core/api/Env';
 import ViewBlock from '../../module/test/ViewBlock';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock';
+import { document, Text, HTMLElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.CaretContainerTest', function () {
   const success = arguments[arguments.length - 2];

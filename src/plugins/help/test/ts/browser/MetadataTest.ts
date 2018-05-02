@@ -8,6 +8,7 @@ import ModernTheme from 'tinymce/themes/modern/Theme';
 
 import FakePlugin from '../module/test/FakePlugin';
 import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('Browser Test: .MetadataTest', function () {
   const success = arguments[arguments.length - 2];

@@ -16,8 +16,9 @@ import { CaretWalker } from './CaretWalker';
 import CaretPosition from './CaretPosition';
 import * as ClientRect from '../geom/ClientRect';
 import { Fun } from '@ephox/katamari';
+import { Node } from '@ephox/dom-globals';
 
-export interface ClientRectLine extends ClientRect {
+export interface ClientRectLine extends ClientRect.ClientRect {
   line: number;
 }
 
@@ -26,7 +27,7 @@ export enum VDirection {
   Down = 1
 }
 
-type PosPredicate = (rect1: ClientRect, rect2: ClientRect) => boolean;
+type PosPredicate = (rect1: ClientRect.ClientRect, rect2: ClientRect.ClientRect) => boolean;
 type RectPredicate = (rect: ClientRectLine) => boolean;
 
 const findUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) => boolean, node: Node): void => {

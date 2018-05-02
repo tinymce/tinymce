@@ -8,6 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 import { GeomRect } from 'tinymce/core/api/geom/Rect';
+import { ClientRect } from '@ephox/dom-globals';
 
 const fromClientRect = function (clientRect: Partial<ClientRect>): GeomRect {
   return {

@@ -8,5 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { Selection } from '@ephox/dom-globals';
+
 // tslint:disable-next-line:no-empty-interface
 export interface NativeSelection extends Selection {}

@@ -5,6 +5,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/modern/Theme';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', function () {
   const success = arguments[arguments.length - 2];

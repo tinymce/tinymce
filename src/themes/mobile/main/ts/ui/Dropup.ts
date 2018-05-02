@@ -4,6 +4,7 @@ import { Fun } from '@ephox/katamari';
 import Receivers from '../channels/Receivers';
 import Styles from '../style/Styles';
 import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
+import { window } from '@ephox/dom-globals';
 
 export interface DropUp {
   appear: (menu: any, update: any, component: any) => void;

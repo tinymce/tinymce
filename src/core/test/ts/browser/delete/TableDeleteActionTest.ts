@@ -3,6 +3,7 @@ import { Arr, Fun, Result } from '@ephox/katamari';
 import { Hierarchy,  Element,  Html } from '@ephox/sugar';
 import TableDeleteAction from 'tinymce/core/delete/TableDeleteAction';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function () {
   const success = arguments[arguments.length - 2];

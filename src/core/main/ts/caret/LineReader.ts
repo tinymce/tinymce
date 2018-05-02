@@ -14,6 +14,7 @@ import { HDirection, CaretWalker } from 'tinymce/core/caret/CaretWalker';
 import CaretFinder from 'tinymce/core/caret/CaretFinder';
 import NodeType from 'tinymce/core/dom/NodeType';
 import { isInSameBlock } from 'tinymce/core/caret/CaretUtils';
+import { HTMLElement } from '@ephox/dom-globals';
 
 export enum BreakType {
   Br,

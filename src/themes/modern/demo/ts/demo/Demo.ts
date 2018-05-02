@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { document } from '@ephox/dom-globals';
+
  // tslint:disable:no-console
 
 declare let tinymce: any;

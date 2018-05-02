@@ -11,6 +11,7 @@
 import Promise from 'tinymce/core/api/util/Promise';
 import Errors from './Errors';
 import Utils from './Utils';
+import { Blob } from '@ephox/dom-globals';
 
 /**
  * Handles loading images though a proxy for working around cors.
@@ -43,7 +44,7 @@ function requestBlob(url: string, withCredentials: boolean) {
     });
 }
 
-const getUrl = function (url: string, apiKey: string, withCredentials: boolean) {
+const getUrl = function (url: string, apiKey: string, withCredentials: boolean): Promise<Blob> {
   return apiKey ? requestServiceBlob(url, apiKey) : requestBlob(url, withCredentials);
 };
 

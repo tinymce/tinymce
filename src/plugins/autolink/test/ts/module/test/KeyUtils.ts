@@ -1,5 +1,6 @@
 import { Fun, Arr } from '@ephox/katamari';
 import NodeType from 'tinymce/core/dom/NodeType';
+import { Range } from '@ephox/dom-globals';
 
 const charCodeToKeyCode = function (charCode) {
   const lookup = {

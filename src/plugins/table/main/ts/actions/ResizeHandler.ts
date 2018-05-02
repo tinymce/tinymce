@@ -17,6 +17,7 @@ import { hasTableResizeBars, hasObjectResizing } from '../api/Settings';
 import { Editor } from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Util from '../alien/Util';
+import { Node, HTMLTableElement, HTMLTableCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
 
 export interface ResizeHandler {
   lazyResize: () => Option<any>;

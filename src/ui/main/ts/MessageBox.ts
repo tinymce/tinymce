@@ -9,6 +9,7 @@
  */
 
 import Window from './Window';
+import { document } from '@ephox/dom-globals';
 
 /**
  * This class is used to create MessageBoxes like alerts/confirms etc.

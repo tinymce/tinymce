@@ -12,6 +12,7 @@ import { Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import DOMUtils from '../api/dom/DOMUtils';
 import SelectionBookmark from './SelectionBookmark';
+import { document } from '@ephox/dom-globals';
 
 const isManualNodeChange = function (e) {
   return e.type === 'nodechange' && e.selectionChange;

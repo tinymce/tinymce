@@ -11,6 +11,7 @@ import { FileReader, XMLHttpRequest } from '@ephox/sand';
 
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
+import { Blob } from '@ephox/dom-globals';
 
 const isValue = function (obj) {
   return obj !== null && obj !== undefined;

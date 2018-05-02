@@ -15,6 +15,7 @@ import InternalHtml from './InternalHtml';
 import Utils from './Utils';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Clipboard } from '../api/Clipboard';
+import { MouseEvent, DataTransfer, Range } from '@ephox/dom-globals';
 
 const getCaretRangeFromEvent = function (editor: Editor, e: MouseEvent) {
   return RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());

@@ -9,6 +9,7 @@
  */
 
 import { AddOnManager } from './api/AddOnManager';
+import { window } from '@ephox/dom-globals';
 
 /**
  * Various error reporting helper functions.

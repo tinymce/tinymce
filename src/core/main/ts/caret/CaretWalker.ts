@@ -14,6 +14,7 @@ import CaretPosition from './CaretPosition';
 import { isBackwards, isForwards, isInSameBlock, findNode } from './CaretUtils';
 import Arr from '../util/Arr';
 import Fun from '../util/Fun';
+import { Node } from '@ephox/dom-globals';
 
 export interface CaretWalker {
   next(caretPosition: CaretPosition): CaretPosition;

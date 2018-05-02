@@ -11,6 +11,7 @@
 import Factory from 'tinymce/core/api/ui/Factory';
 import Button from './Button';
 import MenuBar from './MenuBar';
+import { window } from '@ephox/dom-globals';
 
 /**
  * Creates a new menu button.

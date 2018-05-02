@@ -18,6 +18,7 @@ import BoundaryCaret from '../keyboard/BoundaryCaret';
 import BoundaryLocation from '../keyboard/BoundaryLocation';
 import BoundarySelection from '../keyboard/BoundarySelection';
 import InlineUtils from '../keyboard/InlineUtils';
+import { document } from '@ephox/dom-globals';
 
 const isFeatureEnabled = function (editor) {
   return editor.settings.inline_boundaries !== false;

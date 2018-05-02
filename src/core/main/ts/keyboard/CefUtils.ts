@@ -12,6 +12,7 @@ import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
 import NodeType from '../dom/NodeType';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Element, Range } from '@ephox/dom-globals';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;

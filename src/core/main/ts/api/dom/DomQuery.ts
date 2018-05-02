@@ -12,6 +12,7 @@ import EventUtils from './EventUtils';
 import Sizzle from './Sizzle';
 import Env from '../Env';
 import Tools from '../util/Tools';
+import { document } from '@ephox/dom-globals';
 
 /**
  * This class mimics most of the jQuery API:

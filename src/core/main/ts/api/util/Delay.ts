@@ -9,6 +9,7 @@
  */
 
 import Promise from './Promise';
+import { window, document } from '@ephox/dom-globals';
 
 /**
  * Utility class for working with delayed actions like setTimeout.

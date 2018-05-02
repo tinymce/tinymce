@@ -10,6 +10,7 @@ import IosKeyboard from '../view/IosKeyboard';
 import IosEvents from './IosEvents';
 import IosSetup from './IosSetup';
 import PlatformEditor from './PlatformEditor';
+import { document } from '@ephox/dom-globals';
 
 const create = function (platform, mask) {
   const meta = MetaViewport.tag();

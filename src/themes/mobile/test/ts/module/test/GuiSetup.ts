@@ -4,6 +4,7 @@ import { Merger } from '@ephox/katamari';
 import { DomEvent, Element, Html, Insert, Remove } from '@ephox/sugar';
 
 import TestStore from './TestStore';
+import { document } from '@ephox/dom-globals';
 
 const setup = function (createComponent, f, success, failure) {
   const store = TestStore();

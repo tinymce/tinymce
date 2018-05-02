@@ -5,6 +5,7 @@ import Schema from 'tinymce/core/api/html/Schema';
 import HtmlUtils from '../../module/test/HtmlUtils';
 import Tools from 'tinymce/core/api/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
+import { document, window } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
   const DOM = DOMUtils(document, { keep_values : true, schema : Schema() });

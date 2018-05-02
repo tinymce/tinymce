@@ -9,6 +9,7 @@
  */
 
 import Env from '../Env';
+import { KeyboardEvent } from '@ephox/dom-globals';
 
 /**
  * This file exposes a set of the common KeyCodes for use. Please grow it as needed.

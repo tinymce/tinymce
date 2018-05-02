@@ -2,6 +2,7 @@ import { ClipboardContents, registerEventsAndFilters, pasteHtml, pasteText, past
 import { PasteBin } from '../core/PasteBin';
 import { Cell } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
+import { ClipboardEvent, DragEvent, Range, DataTransfer } from '@ephox/dom-globals';
 
 export interface Clipboard {
   pasteFormat: Cell<string>;

@@ -11,6 +11,7 @@
 import TreeWalker from '../api/dom/TreeWalker';
 import { Selection } from '../api/dom/Selection';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import { Range } from '@ephox/dom-globals';
 
 const isInlineBlock = function (node) {
   return node && /^(IMG)$/.test(node.nodeName);

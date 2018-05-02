@@ -22,6 +22,7 @@ import Dialog from '../ui/Dialog';
 import ImageSize from './ImageSize';
 import Proxy from './Proxy';
 import { Editor } from 'tinymce/core/api/Editor';
+import { HTMLImageElement } from '@ephox/dom-globals';
 
 let count = 0;
 

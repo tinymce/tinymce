@@ -1,5 +1,6 @@
 import { GeneralSteps, Keyboard, Step } from '@ephox/agar';
 import { Arr, Fun } from '@ephox/katamari';
+import { document } from '@ephox/dom-globals';
 
 const insertCharAtRange = function (rng, chr) {
   const outRng = rng.cloneRange();

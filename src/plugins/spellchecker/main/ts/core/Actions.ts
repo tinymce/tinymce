@@ -16,6 +16,7 @@ import Settings from '../api/Settings';
 import { DomTextMatcher } from './DomTextMatcher';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
+import { Element, HTMLElement } from '@ephox/dom-globals';
 
 export type Data = string | {words: Record<string, string[]>, dictionary?: any};
 

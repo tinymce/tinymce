@@ -12,6 +12,7 @@ import Entities from '../api/html/Entities';
 import Diff from './Diff';
 import Arr from '../util/Arr';
 import NodeType from 'tinymce/core/dom/NodeType';
+import { Node, DocumentFragment, document, Element } from '@ephox/dom-globals';
 
 /**
  * This module reads and applies html fragments from/to dom nodes.

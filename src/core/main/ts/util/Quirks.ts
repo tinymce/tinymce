@@ -17,6 +17,7 @@ import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import { Selection } from '../api/dom/Selection';
+import { Range, document } from '@ephox/dom-globals';
 
 declare const escape: any;
 declare const unescape: any;

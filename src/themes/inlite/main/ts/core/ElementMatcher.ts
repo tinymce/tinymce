@@ -11,6 +11,7 @@
 import Matcher from './Matcher';
 import Measure from './Measure';
 import { GeomRect } from 'tinymce/core/api/geom/Rect';
+import { HTMLElement } from '@ephox/dom-globals';
 
 // element :: Element, [PredicateId] -> (Editor -> Matcher.result | Null)
 const element = function (element: HTMLElement, predicateIds) {

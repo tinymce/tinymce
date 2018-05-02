@@ -10,6 +10,7 @@
 
 import { Editor } from 'tinymce/core/api/Editor';
 import { EditorMode } from 'tinymce/core/Mode';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const firePreProcess = (editor: Editor, args) => editor.fire('PreProcess', args);
 

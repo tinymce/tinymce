@@ -11,6 +11,7 @@
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Tools from 'tinymce/core/api/util/Tools';
 import Patterns from './Patterns';
+import { document } from '@ephox/dom-globals';
 
 const splitContainer = function (container, pattern, endOffset, startOffset, space) {
 

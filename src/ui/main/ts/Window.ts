@@ -16,6 +16,7 @@ import DomUtils from './DomUtils';
 import DragHelper from './DragHelper';
 import FloatPanel from './FloatPanel';
 import Panel from './Panel';
+import { document, window } from '@ephox/dom-globals';
 
 /**
  * Creates a new window.

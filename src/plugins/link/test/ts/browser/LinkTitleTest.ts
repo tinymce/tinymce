@@ -4,6 +4,7 @@ import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.link.LinkTitleTest', function () {
   const success = arguments[arguments.length - 2];

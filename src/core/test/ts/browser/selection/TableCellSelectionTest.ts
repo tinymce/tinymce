@@ -4,6 +4,7 @@ import { Hierarchy, Element, Html } from '@ephox/sugar';
 import TableCellSelection from 'tinymce/core/selection/TableCellSelection';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', function () {
   const success = arguments[arguments.length - 2];

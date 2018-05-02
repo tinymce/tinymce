@@ -10,6 +10,7 @@
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
+import { document, window } from '@ephox/dom-globals';
 
 const appendClickRemove = function (link, evt) {
   document.body.appendChild(link);

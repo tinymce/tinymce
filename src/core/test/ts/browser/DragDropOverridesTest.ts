@@ -4,6 +4,7 @@ import { Cell } from '@ephox/katamari';
 import { Hierarchy, Element } from '@ephox/sugar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failure) => {
   Theme();

@@ -11,6 +11,7 @@
 import Uuid from '../alien/Uuid';
 import Unlink from '../alien/Unlink';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Blob, Node } from '@ephox/dom-globals';
 
 const createTableHtml = function (cols: number, rows: number) {
   let x, y, html;

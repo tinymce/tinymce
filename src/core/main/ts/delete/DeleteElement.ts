@@ -9,12 +9,13 @@
  */
 
 import { Fun, Option, Options } from '@ephox/katamari';
-import { Insert, Remove, Element, Node, PredicateFind, Traverse } from '@ephox/sugar';
+import { Insert, Remove, Element, Node as SugarNode, PredicateFind, Traverse } from '@ephox/sugar';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import Empty from '../dom/Empty';
 import NodeType from '../dom/NodeType';
+import { Node } from '@ephox/dom-globals';
 
 const needsReposition = function (pos, elm) {
   const container = pos.container();
@@ -111,7 +112,7 @@ const eqRawNode = function (rawNode: Node) {
 };
 
 const isBlock = function (editor, elm) {
-  return elm && editor.schema.getBlockElements().hasOwnProperty(Node.name(elm));
+  return elm && editor.schema.getBlockElements().hasOwnProperty(SugarNode.name(elm));
 };
 
 const paddEmptyBlock = function (elm) {

@@ -9,6 +9,7 @@
  */
 
 import { URL } from '@ephox/sand';
+import { navigator, window, matchMedia, document } from '@ephox/dom-globals';
 
 /**
  * This class contains various environment constants like browser versions etc.

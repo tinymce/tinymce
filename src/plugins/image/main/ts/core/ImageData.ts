@@ -11,6 +11,7 @@
 import Utils from 'tinymce/plugins/image/core/Utils';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { Merger } from '@ephox/katamari';
+import { HTMLElement, Node, document } from '@ephox/dom-globals';
 
 const DOM = DOMUtils.DOM;
 

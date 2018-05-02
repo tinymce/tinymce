@@ -2,6 +2,7 @@ import { Pipeline, RawAssertions, Step } from '@ephox/agar';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function () {
   const success = arguments[arguments.length - 2];

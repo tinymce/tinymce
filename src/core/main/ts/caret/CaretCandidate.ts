@@ -11,6 +11,7 @@
 import NodeType from '../dom/NodeType';
 import Arr from '../util/Arr';
 import * as CaretContainer from './CaretContainer';
+import { Node, HTMLElement } from '@ephox/dom-globals';
 
 /**
  * This module contains logic for handling caret candidates. A caret candidate is

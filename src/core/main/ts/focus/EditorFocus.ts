@@ -18,6 +18,7 @@ import SelectionBookmark from '../selection/SelectionBookmark';
 import { Selection } from '../api/dom/Selection';
 import { CaretPosition } from '../caret/CaretPosition';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Node, Range } from '@ephox/dom-globals';
 
 const getContentEditableHost = (editor: Editor, node: Node) => {
   return editor.dom.getParent(node, function (node) {

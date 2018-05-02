@@ -29,6 +29,7 @@ import * as EditorRemove from '../EditorRemove';
 import SelectionOverrides from 'tinymce/core/SelectionOverrides';
 import Schema from 'tinymce/core/api/html/Schema';
 import { UndoManager } from 'tinymce/core/api/UndoManager';
+import { HTMLElement, Document, Window } from '@ephox/dom-globals';
 
 /**
  * Include the base event class documentation.

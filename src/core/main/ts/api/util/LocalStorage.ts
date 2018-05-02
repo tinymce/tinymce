@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { window, Storage } from '@ephox/dom-globals';
+
 /**
  * This class will simulate LocalStorage on IE 7 and return the native version on modern browsers.
  * Storage is done using userData on IE 7 and a special serialization format. The format is designed
@@ -28,6 +30,6 @@
  * var value = tinymce.util.LocalStorage.getItem('key');
  */
 
-const localStorage = window.localStorage;
+const localStorage: Storage = window.localStorage;
 
 export default localStorage;

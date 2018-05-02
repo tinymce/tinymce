@@ -1,5 +1,6 @@
 import { RawAssertions, Step, Waiter } from '@ephox/agar';
 import { Cell } from '@ephox/katamari';
+import { Image } from '@ephox/dom-globals';
 
 const sExecCommand = function (editor, cmd, value?) {
   return Step.sync(function () {

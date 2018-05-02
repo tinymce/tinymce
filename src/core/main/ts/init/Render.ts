@@ -20,6 +20,7 @@ import Init from './Init';
 import PluginManager from '../api/PluginManager';
 import ThemeManager from '../api/ThemeManager';
 import Tools from '../api/util/Tools';
+import { window } from '@ephox/dom-globals';
 
 const DOM = DOMUtils.DOM;
 

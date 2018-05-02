@@ -24,6 +24,7 @@
     "@ephox/alloy": "latest",
     "@ephox/boulder": "latest",
     "@ephox/darwin": "latest",
+    "@ephox/dom-globals": "latest",
     "@ephox/imagetools": "latest",
     "@ephox/katamari": "latest",
     "@ephox/robin": "latest",

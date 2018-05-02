@@ -9,14 +9,15 @@
  */
 
 import { Fun, Option } from '@ephox/katamari';
-import { Element, Node, PredicateFind, Css, Compare } from '@ephox/sugar';
+import { Element as SugarElement, Node as SugarNode, PredicateFind, Css, Compare } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { Element, HTMLElement, Node } from '@ephox/dom-globals';
 
 const getSpecifiedFontProp = (propName: string, rootElm: Element, elm: HTMLElement): Option<string> => {
   const getProperty = (elm) => Css.getRaw(elm, propName);
-  const isRoot = (elm) => Compare.eq(Element.fromDom(rootElm), elm);
+  const isRoot = (elm) => Compare.eq(SugarElement.fromDom(rootElm), elm);
 
-  return PredicateFind.closest(Element.fromDom(elm), (elm) => getProperty(elm).isSome(), isRoot).bind(getProperty);
+  return PredicateFind.closest(SugarElement.fromDom(elm), (elm) => getProperty(elm).isSome(), isRoot).bind(getProperty);
 };
 
 const round = (number: number, precision: number) => {
@@ -44,8 +45,8 @@ const getComputedFontProp = (propName: string, elm: HTMLElement): Option<string>
 const getFontProp = (propName: string) => {
   return (rootElm: Element, elm: Node): string => {
     return Option.from(elm)
-      .map(Element.fromDom)
-      .filter(Node.isElement)
+      .map(SugarElement.fromDom)
+      .filter(SugarNode.isElement)
       .bind((element: any) => {
         return getSpecifiedFontProp(propName, rootElm, element.dom())
           .or(getComputedFontProp(propName, element.dom()));

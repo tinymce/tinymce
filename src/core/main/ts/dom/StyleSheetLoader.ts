@@ -11,6 +11,7 @@
 import { Arr, Fun, Future, Futures, Result } from '@ephox/katamari';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
+import { navigator } from '@ephox/dom-globals';
 
 /**
  * This class handles loading of external stylesheets and fires events when these are loaded.

@@ -16,6 +16,7 @@ import MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
+import { Text, KeyboardEvent } from '@ephox/dom-globals';
 
 const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) {
   const os = PlatformDetection.detect().os;

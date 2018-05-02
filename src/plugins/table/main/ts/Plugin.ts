@@ -23,6 +23,7 @@ import { hasTabNavigation } from './api/Settings';
 import { getApi } from './api/Api';
 import { Cell, Option } from '@ephox/katamari';
 import { Editor } from 'tinymce/core/api/Editor';
+import { KeyboardEvent } from '@ephox/dom-globals';
 
 function Plugin(editor: Editor) {
   const resizeHandler = ResizeHandler(editor);

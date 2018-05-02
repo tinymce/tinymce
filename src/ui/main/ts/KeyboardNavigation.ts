@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { document } from '@ephox/dom-globals';
+
 /**
  * This class handles keyboard navigation of controls and elements.
  *

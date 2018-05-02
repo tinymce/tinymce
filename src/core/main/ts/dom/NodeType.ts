@@ -8,6 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+import { Text, Comment, Document, Element, Node, HTMLElement } from '@ephox/dom-globals';
+
 const isNodeType = function (type) {
   return function (node: Node) {
     return !!node && node.nodeType === type;

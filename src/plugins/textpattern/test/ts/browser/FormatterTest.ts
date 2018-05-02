@@ -3,6 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 
 import Settings from 'tinymce/plugins/textpattern/api/Settings';
 import Formatter from 'tinymce/plugins/textpattern/core/Formatter';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('Browser Test: .FormatterTest', function () {
   const success = arguments[arguments.length - 2];

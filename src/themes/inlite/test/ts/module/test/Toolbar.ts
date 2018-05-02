@@ -1,5 +1,6 @@
 import { Chain, Mouse, UiFinder } from '@ephox/agar';
 import { TinyDom } from '@ephox/mcagar';
+import { document } from '@ephox/dom-globals';
 
 const dialogRoot = TinyDom.fromDom(document.body);
 

@@ -15,6 +15,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
 import Settings from '../api/Settings';
+import { window } from '@ephox/dom-globals';
 
 const DOM = DOMUtils.DOM;
 

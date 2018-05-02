@@ -9,6 +9,7 @@
  */
 
 import { Arr, Fun, Merger, Option } from '@ephox/katamari';
+import { KeyboardEvent } from '@ephox/dom-globals';
 
 export interface KeyPattern {
   shiftKey?: boolean;

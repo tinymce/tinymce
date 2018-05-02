@@ -11,6 +11,7 @@
 import Tools from 'tinymce/core/api/util/Tools';
 import { Editor } from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import { Element } from '@ephox/dom-globals';
 
 const getTDTHOverallStyle = function (dom: DOMUtils, elm: Element, name: string): string {
   const cells = dom.select('td,th', elm);

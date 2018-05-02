@@ -3,6 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import EventUtils from 'tinymce/core/api/dom/EventUtils';
 import { UnitTest } from '@ephox/bedrock';
+import { window } from '@ephox/dom-globals';
 
 declare const document: any;
 

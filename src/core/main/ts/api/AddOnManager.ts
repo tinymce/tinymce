@@ -96,7 +96,7 @@ export interface AddOnManager {
   createUrl: (baseUrl: UrlObject, dep: string | UrlObject) => UrlObject;
   addComponents: (pluginName: string, scripts: string[]) => void;
   load: (name: string, addOnUrl: string | UrlObject, success?: any, scope?: any, failure?: any) => void;
-  waitFor: (name: string, callback: Function) => void;
+  waitFor: (name: string, callback: (...x: any[]) => any) => void;
 }
 
 export function AddOnManager(): AddOnManager {
@@ -181,7 +181,7 @@ export function AddOnManager(): AddOnManager {
     });
   };
 
-  const loadDependencies = function (addOnUrl: string | UrlObject, success: Function, scope: any) {
+  const loadDependencies = function (name: string, addOnUrl: string | UrlObject, success: Function, scope: any) {
     const deps = dependencies(name);
 
     each(deps, function (dep) {
@@ -213,9 +213,9 @@ export function AddOnManager(): AddOnManager {
     urls[name] = urlString.substring(0, urlString.lastIndexOf('/'));
 
     if (lookup[name]) {
-      loadDependencies(addOnUrl, success, scope);
+      loadDependencies(name, addOnUrl, success, scope);
     } else {
-      ScriptLoader.ScriptLoader.add(urlString, () => loadDependencies(addOnUrl, success, scope), scope, failure);
+      ScriptLoader.ScriptLoader.add(urlString, () => loadDependencies(name, addOnUrl, success, scope), scope, failure);
     }
   };
 

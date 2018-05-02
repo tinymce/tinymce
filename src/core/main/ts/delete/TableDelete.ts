@@ -20,6 +20,7 @@ import PaddingBr from '../dom/PaddingBr';
 import Parents from '../dom/Parents';
 import TableCellSelection from '../selection/TableCellSelection';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Range } from '@ephox/dom-globals';
 
 const emptyCells = (editor: Editor, cells) => {
   Arr.each(cells, PaddingBr.fillWithPaddingBr);

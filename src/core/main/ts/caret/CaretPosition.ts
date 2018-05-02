@@ -11,11 +11,12 @@
 import * as CaretCandidate from './CaretCandidate';
 import DOMUtils from '../api/dom/DOMUtils';
 import NodeType from '../dom/NodeType';
-import * as ClientRect from '../geom/ClientRect';
+import * as GeomClientRect from '../geom/ClientRect';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ExtendingChar from '../text/ExtendingChar';
 import Fun from '../util/Fun';
 import { Arr, Options } from '@ephox/katamari';
+import { Document, Range, Element, ClientRect, Node } from '@ephox/dom-globals';
 
 /**
  * This module contains logic for creating caret positions within a document a caretposition
@@ -71,7 +72,7 @@ const getBrClientRect = (brNode: Element): ClientRect => {
   parentNode.insertBefore(nbsp, brNode);
   rng.setStart(nbsp, 0);
   rng.setEnd(nbsp, 1);
-  clientRect = ClientRect.clone(rng.getBoundingClientRect());
+  clientRect = GeomClientRect.clone(rng.getBoundingClientRect());
   parentNode.removeChild(nbsp);
 
   return clientRect;
@@ -99,9 +100,9 @@ const getBoundingClientRect = (item: Element | Range): ClientRect => {
 
   clientRects = item.getClientRects();
   if (clientRects.length > 0) {
-    clientRect = ClientRect.clone(clientRects[0]);
+    clientRect = GeomClientRect.clone(clientRects[0]);
   } else {
-    clientRect = ClientRect.clone(item.getBoundingClientRect());
+    clientRect = GeomClientRect.clone(item.getBoundingClientRect());
   }
 
   if (!isRange(item) && isBr(item) && isZeroRect(clientRect)) {
@@ -115,8 +116,8 @@ const getBoundingClientRect = (item: Element | Range): ClientRect => {
   return clientRect;
 };
 
-const collapseAndInflateWidth = (clientRect: ClientRect, toStart: boolean): ClientRect.ClientRect => {
-  const newClientRect = ClientRect.collapse(clientRect, toStart);
+const collapseAndInflateWidth = (clientRect: ClientRect, toStart: boolean): GeomClientRect.ClientRect => {
+  const newClientRect = GeomClientRect.collapse(clientRect, toStart);
   newClientRect.width = 1;
   newClientRect.right = newClientRect.left + 1;
 
@@ -133,7 +134,7 @@ const getCaretPositionClientRects = (caretPosition: CaretPosition): ClientRect[]
     }
 
     if (clientRects.length > 0) {
-      if (ClientRect.isEqual(clientRect, clientRects[clientRects.length - 1])) {
+      if (GeomClientRect.isEqual(clientRect, clientRects[clientRects.length - 1])) {
         return;
       }
     }
@@ -405,11 +406,11 @@ export namespace CaretPosition {
   export const before = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node));
 
   export const isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean => {
-    return Options.liftN([Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects())], ClientRect.isAbove).getOr(false);
+    return Options.liftN([Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects())], GeomClientRect.isAbove).getOr(false);
   };
 
   export const isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean => {
-    return Options.liftN([Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects())], ClientRect.isBelow).getOr(false);
+    return Options.liftN([Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects())], GeomClientRect.isBelow).getOr(false);
   };
 
   export const isAtStart = (pos: CaretPosition) => pos ? pos.isAtStart() : false;

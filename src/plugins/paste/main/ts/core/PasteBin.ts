@@ -12,6 +12,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Env from 'tinymce/core/api/Env';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
+import { Element, document, HTMLElement, Range } from '@ephox/dom-globals';
 
 // We can't attach the pastebin to a H1 inline element on IE since it won't allow H1 or other
 // non valid parents to be pasted into the pastebin so we need to attach it to the body

@@ -22,6 +22,7 @@ import { Element } from '@ephox/sugar';
 import { isWsPreserveElement } from 'tinymce/core/dom/ElementType';
 import Node from 'tinymce/core/api/html/Node';
 import { Editor } from 'tinymce/core/api/Editor';
+import { HTMLElement } from '@ephox/dom-globals';
 
 const addTempAttr = function (htmlParser, tempAttrs, name) {
   if (Tools.inArray(tempAttrs, name) === -1) {

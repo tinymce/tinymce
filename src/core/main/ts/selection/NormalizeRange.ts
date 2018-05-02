@@ -16,6 +16,7 @@ import RangeCompare from './RangeCompare';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 import { isCaretNode } from 'tinymce/core/fmt/FormatContainer';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
+import { Node, HTMLElement, Range } from '@ephox/dom-globals';
 
 const findParent = (node: Node, rootNode: Node, predicate: (node: Node) => boolean) => {
   while (node && node !== rootNode) {

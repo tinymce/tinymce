@@ -9,6 +9,7 @@
  */
 
 import Widget from './Widget';
+import { document } from '@ephox/dom-globals';
 
 /**
  * This control creates a custom checkbox.

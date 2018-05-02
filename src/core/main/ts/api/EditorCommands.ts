@@ -20,6 +20,7 @@ import { Selection } from './dom/Selection';
 import * as IndentOutdent from 'tinymce/core/commands/IndentOutdent';
 import { Editor } from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
+import { HTMLElement } from '@ephox/dom-globals';
 
 /**
  * This class enables you to add custom editor commands and it contains

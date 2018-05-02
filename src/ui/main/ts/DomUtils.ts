@@ -12,6 +12,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 import { GeomRect } from 'tinymce/core/api/geom/Rect';
+import { document, DocumentFragment, HTMLElement } from '@ephox/dom-globals';
 
 /**
  * Private UI DomUtils proxy.
@@ -27,7 +28,7 @@ const funcs = {
     return 'mceu_' + (count++);
   },
 
-  create (name, attrs, children?) {
+  create (name, attrs, children?): HTMLElement {
     const elm = document.createElement(name);
 
     DOMUtils.DOM.setAttribs(elm, attrs);
@@ -45,7 +46,7 @@ const funcs = {
     return elm;
   },
 
-  createFragment (html) {
+  createFragment (html): DocumentFragment {
     return DOMUtils.DOM.createFragment(html);
   },
 

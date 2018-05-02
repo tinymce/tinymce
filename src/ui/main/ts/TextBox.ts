@@ -11,6 +11,7 @@
 import Tools from 'tinymce/core/api/util/Tools';
 import DomUtils from './DomUtils';
 import Widget from './Widget';
+import { document } from '@ephox/dom-globals';
 
 /**
  * Creates a new textbox.

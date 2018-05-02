@@ -23,6 +23,7 @@ import { DomParent } from '@ephox/robin';
 const hasInternalTarget = (e: Event) => {
   return Class.has(Element.fromDom(e.target), 'ephox-snooker-resizer-bar') === false;
 };
+import { KeyboardEvent, MouseEvent, Event } from '@ephox/dom-globals';
 
 export default function (editor, lazyResize) {
   const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);

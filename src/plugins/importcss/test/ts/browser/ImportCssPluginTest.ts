@@ -7,6 +7,7 @@ import Factory from 'tinymce/core/api/ui/Factory';
 import ImportCssPlugin from 'tinymce/plugins/importcss/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { Editor } from 'tinymce/core/api/Editor';
+import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssPluginTest.js', function () {
   const success = arguments[arguments.length - 2];
