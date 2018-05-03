@@ -9,7 +9,7 @@ Version 4.7.12 (2018-05-03)
     Fixed so links with xlink:href attributes are filtered correctly to prevent XSS.
     Fixed a bug on IE11 where pasting content into an inline editor initialized on a heading element would create new editable elements.
     Fixed a bug where readonly mode would not work as expected when the editor contained contentEditable=true elements.
-    Fixed a bug where the Link Plugin would throw an error is used together with the webcomponents polyfill. Patch contributed by 4esnog.
+    Fixed a bug where the Link Plugin would throw an error when used together with the webcomponents polyfill. Patch contributed by 4esnog.
     Fixed a bug where the "Powered by TinyMCE" branding link would break on XHTML pages. Patch contributed by tistre.
     Fixed a bug where the same id would be used in the blobcache for all pasted images. Patch contributed by thorn0.
 Version 4.7.11 (2018-04-11)
