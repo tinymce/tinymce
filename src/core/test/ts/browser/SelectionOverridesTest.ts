@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
 
   suite.test('left/right over cE=false block', function (editor) {
     editor.setContent('<p contenteditable="false">1</p>');
-    editor.selection.select(editor.$('p')[0]);
+    editor.selection.select(editor.$('p[contenteditable=false]')[0]);
 
     leftArrow(editor);
     LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p>');
@@ -75,7 +75,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
 
     rightArrow(editor);
     LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p>');
-    LegacyUnit.equalDom(editor.selection.getNode(), editor.$('p')[0]);
+    LegacyUnit.equalDom(editor.selection.getNode(), editor.$('p[contenteditable=false]')[0]);
 
     rightArrow(editor);
     LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">1</p>');
@@ -94,7 +94,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
 
   suite.test('right after cE=false block and type', function (editor) {
     editor.setContent('<p contenteditable="false">1</p>');
-    editor.selection.select(editor.$('p')[0]);
+    editor.selection.select(editor.$('p[contenteditable=false]')[0]);
 
     rightArrow(editor);
     KeyUtils.type(editor, 'a');
@@ -183,8 +183,8 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
     editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
 
     const rng = document.createRange();
-    rng.setStartBefore(editor.dom.select('p')[1]);
-    rng.setEndBefore(editor.dom.select('p')[1]);
+    rng.setStartBefore(editor.dom.select('p[contenteditable=false]')[1]);
+    rng.setEndBefore(editor.dom.select('p[contenteditable=false]')[1]);
 
     editor.selection.setRng(rng, false);
     LegacyUnit.equal(editor.selection.getNode().getAttribute('data-mce-caret'), 'after');
@@ -194,8 +194,8 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
     editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
 
     const rng = document.createRange();
-    rng.setStartBefore(editor.dom.select('p')[1]);
-    rng.setEndBefore(editor.dom.select('p')[1]);
+    rng.setStartBefore(editor.dom.select('p[contenteditable=false]')[1]);
+    rng.setEndBefore(editor.dom.select('p[contenteditable=false]')[1]);
 
     editor.selection.setRng(rng, true);
     LegacyUnit.equal(editor.selection.getNode().getAttribute('data-mce-caret'), 'before');
@@ -228,11 +228,11 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function () {
 
     editor.setContent('<p contenteditable="false">a</p><p contenteditable="false" data-no-cef="true">b</p>');
 
-    rng = editor._selectionOverrides.showCaret(1, editor.dom.select('p')[0], true);
+    rng = editor._selectionOverrides.showCaret(1, editor.dom.select('p[contenteditable=false]')[0], true);
     LegacyUnit.equal(true, rng !== null, 'Should return a range');
     editor._selectionOverrides.hideFakeCaret();
 
-    rng = editor._selectionOverrides.showCaret(1, editor.dom.select('p')[1], false);
+    rng = editor._selectionOverrides.showCaret(1, editor.dom.select('p[contenteditable=false]')[1], false);
     LegacyUnit.equal(true, rng === null, 'Should not return a range excluded by ShowCaret event');
     editor._selectionOverrides.hideFakeCaret();
   });

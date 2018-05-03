@@ -1,5 +1,5 @@
 /**
- * EditorContent.ts
+ * SetContent.ts
  *
  * Released under LGPL License.
  * Copyright (c) 1999-2018 Ephox Corp. All rights reserved
@@ -11,16 +11,17 @@
 import { Editor } from 'tinymce/core/api/Editor';
 import Node from 'tinymce/core/api/html/Node';
 import Tools from 'tinymce/core/api/util/Tools';
-import TrimHtml from 'tinymce/core/dom/TrimHtml';
 import Serializer from 'tinymce/core/api/html/Serializer';
-import * as FilterNode from './html/FilterNode';
+import * as FilterNode from '../html/FilterNode';
 import { Option, Fun } from '@ephox/katamari';
-import Zwsp from 'tinymce/core/text/Zwsp';
 import Settings from 'tinymce/core/api/Settings';
+import EditorFocus from 'tinymce/core/focus/EditorFocus';
+import CaretFinder from 'tinymce/core/caret/CaretFinder';
+import NodeType from 'tinymce/core/dom/NodeType';
 
 const defaultFormat = 'html';
 
-export type Content = string | Node;
+type Content = string | Node;
 
 export interface SetContentArgs {
   format?: string;
@@ -29,15 +30,22 @@ export interface SetContentArgs {
   no_events?: boolean;
 }
 
-export interface GetContentArgs {
-  format?: string;
-  get?: boolean;
-  content?: string;
-  getInner?: boolean;
-  no_events?: boolean;
-}
-
 const isTreeNode = (content: any): content is Node => content instanceof Node;
+
+const moveSelection = (editor: Editor) => {
+  if (EditorFocus.hasFocus(editor)) {
+    CaretFinder.firstPositionIn(editor.getBody()).each((pos) => {
+      const node = pos.getNode();
+      const caretPos = NodeType.isTable(node) ? CaretFinder.firstPositionIn(node).getOr(pos) : pos;
+      editor.selection.setRng(caretPos.toRange());
+    });
+  }
+};
+
+const setEditorHtml = (editor: Editor, html: string) => {
+  editor.dom.setHTML(editor.getBody(), html);
+  moveSelection(editor);
+};
 
 const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): string => {
   let forcedRootBlockName, padd;
@@ -66,7 +74,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
       content = '<br data-mce-bogus="1">';
     }
 
-    editor.dom.setHTML(body, content);
+    setEditorHtml(editor, content);
 
     editor.fire('SetContent', args);
   } else {
@@ -79,7 +87,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
     }
 
     args.content = Tools.trim(content);
-    editor.dom.setHTML(body, args.content);
+    setEditorHtml(editor, args.content);
 
     if (!args.no_events) {
       editor.fire('SetContent', args);
@@ -95,53 +103,13 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: Node, args: 
   const html = Serializer({ validate: editor.validate }, editor.schema).serialize(content);
 
   args.content = Tools.trim(html);
-  editor.dom.setHTML(body, args.content);
+  setEditorHtml(editor, args.content);
 
   if (!args.no_events) {
     editor.fire('SetContent', args);
   }
 
   return content;
-};
-
-const trimEmptyContents = (editor: Editor, html: string): string => {
-  const blockName = Settings.getForcedRootBlock(editor);
-  const emptyRegExp = new RegExp(`^(<${blockName}[^>]*>(&nbsp;|&#160;|\\s|\u00a0|<br \\/>|)<\\/${blockName}>[\r\n]*|<br \\/>[\r\n]*)$`);
-  return html.replace(emptyRegExp, '');
-};
-
-const getContentFromBody = (editor, args, body) => {
-  let content;
-
-  args.format = args.format ? args.format : defaultFormat;
-  args.get = true;
-  args.getInner = true;
-
-  if (!args.no_events) {
-    editor.fire('BeforeGetContent', args);
-  }
-
-  if (args.format === 'raw') {
-    content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
-  } else if (args.format === 'text') {
-    content = Zwsp.trim(body.innerText || body.textContent);
-  } else if (args.format === 'tree') {
-    return editor.serializer.serialize(body, args);
-  } else {
-    content = trimEmptyContents(editor, editor.serializer.serialize(body, args));
-  }
-
-  if (args.format !== 'text') {
-    args.content = Tools.trim(content);
-  } else {
-    args.content = content;
-  }
-
-  if (!args.no_events) {
-    editor.fire('GetContent', args);
-  }
-
-  return args.content;
 };
 
 const setContent = (editor: Editor, content: Content, args: SetContentArgs = {}): Content => {
@@ -154,23 +122,12 @@ const setContent = (editor: Editor, content: Content, args: SetContentArgs = {})
     content = args.content;
   }
 
-  return Option.from(editor.getBody())
-    .fold(
-      Fun.constant(content),
-      (body) => isTreeNode(content) ? setContentTree(editor, body, content, args) : setContentString(editor, body, content, args)
-    );
-
-};
-
-const getContent = (editor: Editor, args: GetContentArgs = {}): Content => {
-  return Option.from(editor.getBody())
-    .fold(
-      Fun.constant(args.format === 'tree' ? new Node('body', 11) : ''),
-      (body) => getContentFromBody(editor, args, body)
-    );
+  return Option.from(editor.getBody()).fold(
+    Fun.constant(content),
+    (body) => isTreeNode(content) ? setContentTree(editor, body, content, args) : setContentString(editor, body, content, args)
+  );
 };
 
 export {
-  setContent,
-  getContent
+  setContent
 };

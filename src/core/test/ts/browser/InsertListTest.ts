@@ -3,7 +3,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
-import InsertList from 'tinymce/core/InsertList';
+import InsertList from 'tinymce/core/content/InsertList';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.InsertListTest', function () {

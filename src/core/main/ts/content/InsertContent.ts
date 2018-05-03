@@ -10,17 +10,17 @@
 
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import Env from './api/Env';
+import Env from '../api/Env';
 import InsertList from './InsertList';
-import CaretPosition from './caret/CaretPosition';
-import { CaretWalker } from './caret/CaretWalker';
-import ElementUtils from './api/dom/ElementUtils';
-import NodeType from './dom/NodeType';
-import PaddingBr from './dom/PaddingBr';
-import Serializer from './api/html/Serializer';
-import RangeNormalizer from './selection/RangeNormalizer';
-import Tools from './api/util/Tools';
-import { Selection } from './api/dom/Selection';
+import CaretPosition from '../caret/CaretPosition';
+import { CaretWalker } from '../caret/CaretWalker';
+import ElementUtils from '../api/dom/ElementUtils';
+import NodeType from '../dom/NodeType';
+import PaddingBr from '../dom/PaddingBr';
+import Serializer from '../api/html/Serializer';
+import RangeNormalizer from '../selection/RangeNormalizer';
+import Tools from '../api/util/Tools';
+import { Selection } from '../api/dom/Selection';
 import { Editor } from 'tinymce/core/api/Editor';
 
 /**

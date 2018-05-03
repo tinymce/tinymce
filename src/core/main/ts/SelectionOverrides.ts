@@ -239,6 +239,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
 
           // Check that we're not attempting a shift + click select within a contenteditable='true' element
           if (!(isContentEditableTrue(contentEditableRoot) && e.shiftKey) && !RangePoint.isXYWithinRange(e.clientX, e.clientY, editor.selection.getRng())) {
+            hideFakeCaret();
             editor.selection.placeCaretAt(e.clientX, e.clientY);
           }
         }
@@ -485,9 +486,10 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
   const removeContentEditableSelection = function () {
     if (selectedContentEditableNode) {
       selectedContentEditableNode.removeAttribute('data-mce-selected');
-      SelectorFind.descendant(Element.fromDom(editor.getBody()), '#' + realSelectionId).each(Remove.remove);
-      selectedContentEditableNode = null;
     }
+
+    SelectorFind.descendant(Element.fromDom(editor.getBody()), '#' + realSelectionId).each(Remove.remove);
+    selectedContentEditableNode = null;
   };
 
   const destroy = function () {
