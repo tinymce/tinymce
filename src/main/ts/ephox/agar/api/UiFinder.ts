@@ -51,11 +51,11 @@ var cFindWithState = function (selector, predicate) {
   ]);
 };
 
-// Wait for a selector to have state. Max wait time: 3 seconds.
+// Wait for a selector to have state. Max wait time: 10 seconds.
 var cWaitForState = function (message, selector, predicate) {
   return Chain.control(
     cFindWithState(selector, predicate),
-    Guard.tryUntil(message, 10, 3000)
+    Guard.tryUntil(message, 10, 10000)
   );
 };
 
