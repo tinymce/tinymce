@@ -6,9 +6,7 @@ import Schema from 'tinymce/core/api/html/Schema';
 import InsertList from 'tinymce/core/content/InsertList';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.InsertListTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.content.InsertListTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
   const schema = Schema({});
 

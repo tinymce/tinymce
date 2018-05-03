@@ -7,7 +7,7 @@ import EditorManager from 'tinymce/core/api/EditorManager';
 import Theme from 'tinymce/themes/modern/Theme';
 import Node from 'tinymce/core/api/html/Node';
 
-UnitTest.asynctest('browser.tinymce.core.EditorContentNotInitializedTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.core.content.EditorContentNotInitializedTest', (success, failure) => {
   Theme();
 
   const settings = {

@@ -15,6 +15,8 @@ import TrimHtml from 'tinymce/core/dom/TrimHtml';
 import { Option, Fun } from '@ephox/katamari';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import Settings from 'tinymce/core/api/Settings';
+import { Element } from '@ephox/sugar';
+import { isWsPreserveElement } from 'tinymce/core/dom/ElementType';
 
 const defaultFormat = 'html';
 
@@ -34,7 +36,7 @@ const trimEmptyContents = (editor: Editor, html: string): string => {
   return html.replace(emptyRegExp, '');
 };
 
-const getContentFromBody = (editor, args, body) => {
+const getContentFromBody = (editor: Editor, args: GetContentArgs, body: HTMLElement): Content => {
   let content;
 
   args.format = args.format ? args.format : defaultFormat;
@@ -55,7 +57,7 @@ const getContentFromBody = (editor, args, body) => {
     content = trimEmptyContents(editor, editor.serializer.serialize(body, args));
   }
 
-  if (args.format !== 'text') {
+  if (args.format !== 'text' && !isWsPreserveElement(Element.fromDom(body))) {
     args.content = Tools.trim(content);
   } else {
     args.content = content;

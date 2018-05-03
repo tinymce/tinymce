@@ -4,7 +4,7 @@ import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 import Zwsp from 'tinymce/core/text/Zwsp';
 
-UnitTest.asynctest('browser.tinymce.core.EditorGetContentTextFormatTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTextFormatTest', (success, failure) => {
   Theme();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
