@@ -21,7 +21,7 @@ const produce = function (raw: {any}): MobileWebApp {
 
   // We do not make the Android container relative, because we aren't positioning the toolbar absolutely.
   const onTap = function () {
-    mobile.setReadOnly(true);
+    mobile.setReadOnly(mobile.readOnlyOnInit());
     mode.enter();
   };
 
