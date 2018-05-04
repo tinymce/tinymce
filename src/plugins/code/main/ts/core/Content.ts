@@ -19,7 +19,7 @@ const setContent = function (editor, html) {
   if (!args.isDefaultPrevented()) {
 
       editor.undoManager.transact(function () {
-          editor.setContent(html);
+          editor.setContent(args.content);
       });
 
       editor.selection.setCursorLocation();
