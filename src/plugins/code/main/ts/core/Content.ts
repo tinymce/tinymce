@@ -14,12 +14,17 @@ const setContent = function (editor, html) {
   // transation since it tries to make a bookmark for the current selection
   editor.focus();
 
-  editor.undoManager.transact(function () {
-    editor.setContent(html);
-  });
+  const args = editor.fire('PreCodeEditorInsert', {content: html});
 
-  editor.selection.setCursorLocation();
-  editor.nodeChanged();
+  if (!args.isDefaultPrevented()) {
+
+      editor.undoManager.transact(function () {
+          editor.setContent(html);
+      });
+
+      editor.selection.setCursorLocation();
+      editor.nodeChanged();
+  }
 };
 
 const getContent = function (editor) {
