@@ -7,10 +7,7 @@ import Assertions from '@ephox/agar/lib/main/ts/ephox/agar/api/Assertions';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import Node from 'tinymce/core/api/html/Node';
 
-UnitTest.asynctest('browser.tinymce.core.EditorGetContentTreeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (success, failure) => {
   const getFontTree = () => {
     const body = new Node('body', 1);
     const font = new Node('font', 1);
