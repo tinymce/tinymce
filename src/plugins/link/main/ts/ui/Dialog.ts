@@ -275,30 +275,43 @@ const showDialog = function (editor, linkList) {
     };
   }
 
+  const body = [
+    {
+      name: 'href',
+      type: 'filepicker',
+      filetype: 'file',
+      size: 40,
+      autofocus: true,
+      label: 'Url',
+      onchange: urlChange,
+      onkeyup: updateText,
+      onpaste: updateText,
+      onbeforecall: onBeforeCall
+    },
+    textListCtrl,
+    linkTitleCtrl,
+    buildAnchorListControl(data.href),
+    linkListCtrl,
+    relListCtrl,
+    targetListCtrl,
+    classListCtrl
+  ];
+
+  if (editor.settings.link_attrs && editor.settings.link_attrs.length) {
+    editor.settings.link_attrs.forEach(function (val) {
+      body.push({
+        name: val,
+        type: 'textbox',
+        label: val,
+        value: dom.getAttrib(anchorElm, val)
+      });
+    });
+  }
+
   win = editor.windowManager.open({
     title: 'Insert link',
     data,
-    body: [
-      {
-        name: 'href',
-        type: 'filepicker',
-        filetype: 'file',
-        size: 40,
-        autofocus: true,
-        label: 'Url',
-        onchange: urlChange,
-        onkeyup: updateText,
-        onpaste: updateText,
-        onbeforecall: onBeforeCall
-      },
-      textListCtrl,
-      linkTitleCtrl,
-      buildAnchorListControl(data.href),
-      linkListCtrl,
-      relListCtrl,
-      targetListCtrl,
-      classListCtrl
-    ],
+    body,
     onSubmit (e) {
       const assumeExternalTargets = Settings.assumeExternalTargets(editor.settings);
       const insertLink = Utils.link(editor, attachState);
