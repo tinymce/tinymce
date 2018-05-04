@@ -8,32 +8,36 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const toggleFormat = function (editor, fmt) {
+import { Editor } from 'tinymce/core/api/Editor';
+
+const toggleFormat = (editor: Editor, fmt: string) => {
   return function () {
     editor.execCommand('mceToggleFormat', false, fmt);
   };
 };
 
-const postRenderFormat = function (editor, name) {
-  return function () {
-    const self = this;
-
-    // TODO: Fix this
-    if (editor.formatter) {
-      editor.formatter.formatChanged(name, function (state) {
-        self.active(state);
-      });
-    } else {
-      editor.on('init', function () {
-        editor.formatter.formatChanged(name, function (state) {
-          self.active(state);
-        });
-      });
-    }
+const addFormatChangedListener = (editor: Editor, name: string, changed: (state: boolean, name: string) => void) => {
+  const handler = (state) => {
+    changed(state, name);
   };
+
+  if (editor.formatter) {
+    editor.formatter.formatChanged(name, handler);
+  } else {
+    editor.on('init', () => {
+      editor.formatter.formatChanged(name, handler);
+    });
+  }
 };
 
-export default {
+const postRenderFormatToggle = (editor: Editor, name: string) => (e) => {
+  addFormatChangedListener(editor, name, (state) => {
+    e.control.active(state);
+  });
+};
+
+export {
   toggleFormat,
-  postRenderFormat
+  addFormatChangedListener,
+  postRenderFormatToggle
 };
