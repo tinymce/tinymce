@@ -9,7 +9,6 @@
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
-import FontInfo from '../fmt/FontInfo';
 
 const getFirstFont = function (fontFamily) {
   return fontFamily ? fontFamily.split(',')[0] : '';
@@ -38,7 +37,7 @@ const createFontNameListBoxChangeHandler = function (editor, items) {
     const self = this;
 
     editor.on('init nodeChange', function (e) {
-      const fontFamily = FontInfo.getFontFamily(editor.getBody(), e.element);
+      const fontFamily = editor.queryCommandValue('FontName');
       const match = findMatchingValue(items, fontFamily);
 
       self.value(match ? match : null);

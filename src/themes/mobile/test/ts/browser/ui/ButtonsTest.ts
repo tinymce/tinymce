@@ -11,6 +11,7 @@ import GuiSetup from '../../module/test/GuiSetup';
 import TestEditor from '../../module/test/ui/TestEditor';
 import TestStyles from '../../module/test/ui/TestStyles';
 import TestUi from '../../module/test/ui/TestUi';
+import { Fun } from '@ephox/katamari';
 
 UnitTest.asynctest('Browser Test: ui.ButtonsTest', function () {
   const success = arguments[arguments.length - 2];
@@ -23,7 +24,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function () {
    * Ensure that they all fire the right actions and get updated appropriately based on broadcasts.
    */
 
-  const realm = IosRealm();
+  const realm = IosRealm(Fun.noop);
 
   const body = Body.body();
   Attachment.attachSystem(body, realm.system());

@@ -37,6 +37,7 @@ const textBlocks = [
 const headings = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 const listItems = ['li', 'dd', 'dt'];
 const lists = ['ul', 'ol', 'dl'];
+const wsElements = ['pre', 'script', 'textarea', 'style'];
 
 const lazyLookup = function (items) {
   let lookup;
@@ -56,6 +57,7 @@ const isListItem = lazyLookup(listItems);
 const isVoid = lazyLookup(voids);
 const isTableSection = lazyLookup(tableSections);
 const isTableCell = lazyLookup(tableCells);
+const isWsPreserveElement = lazyLookup(wsElements);
 
 export {
   isBlock,
@@ -67,5 +69,6 @@ export {
   isVoid,
   isTableSection,
   isTableCell,
-  isBr
+  isBr,
+  isWsPreserveElement
 };

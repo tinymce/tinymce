@@ -8,7 +8,7 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Bookmarks from '../dom/Bookmarks';
+import Bookmarks from '../bookmark/Bookmarks';
 import TreeWalker from '../api/dom/TreeWalker';
 import FormatUtils from './FormatUtils';
 import * as RangeNodes from '../selection/RangeNodes';

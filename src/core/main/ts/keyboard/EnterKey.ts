@@ -10,6 +10,8 @@
 
 import InsertNewLine from '../newline/InsertNewLine';
 import VK from '../api/util/VK';
+import { Editor } from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/dom/EventUtils';
 
 const endTypingLevel = function (undoManager) {
   if (undoManager.typing) {
@@ -18,7 +20,7 @@ const endTypingLevel = function (undoManager) {
   }
 };
 
-const handleEnterKeyEvent = function (editor, event) {
+const handleEnterKeyEvent = function (editor: Editor, event: EditorEvent<KeyboardEvent>) {
   if (event.isDefaultPrevented()) {
     return;
   }
@@ -35,8 +37,8 @@ const handleEnterKeyEvent = function (editor, event) {
   });
 };
 
-const setup = function (editor) {
-  editor.on('keydown', function (event) {
+const setup = function (editor: Editor) {
+  editor.on('keydown', function (event: EditorEvent<KeyboardEvent>) {
     if (event.keyCode === VK.ENTER) {
       handleEnterKeyEvent(editor, event);
     }

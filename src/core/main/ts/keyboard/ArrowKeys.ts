@@ -14,8 +14,10 @@ import * as CefNavigation from './CefNavigation';
 import * as TableNavigation from './TableNavigation';
 import MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Cell } from '@ephox/katamari';
 
-const executeKeydownOverride = function (editor, caret, evt: KeyboardEvent) {
+const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) {
   const os = PlatformDetection.detect().os;
 
   MatchKeys.execute([
@@ -36,7 +38,7 @@ const executeKeydownOverride = function (editor, caret, evt: KeyboardEvent) {
   });
 };
 
-const setup = function (editor, caret) {
+const setup = function (editor: Editor, caret: Cell<Text>) {
   editor.on('keydown', function (evt) {
     if (evt.isDefaultPrevented() === false) {
       executeKeydownOverride(editor, caret, evt);

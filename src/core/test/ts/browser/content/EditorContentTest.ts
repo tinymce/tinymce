@@ -2,15 +2,12 @@ import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
-import * as EditorContent from 'tinymce/core/EditorContent';
+import * as EditorContent from 'tinymce/core/content/EditorContent';
 import Assertions from '@ephox/agar/lib/main/ts/ephox/agar/api/Assertions';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import Node from 'tinymce/core/api/html/Node';
 
-UnitTest.asynctest('browser.tinymce.core.EditorGetContentTreeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-
+UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (success, failure) => {
   const getFontTree = () => {
     const body = new Node('body', 1);
     const font = new Node('font', 1);
@@ -96,6 +93,14 @@ UnitTest.asynctest('browser.tinymce.core.EditorGetContentTreeTest', function () 
           editor.setContent(getFontTree());
           Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', EditorContent.getContent(editor));
         })
+      ])),
+      Logger.t('getContent empty editor depending on forced_root_block setting', GeneralSteps.sequence([
+        tinyApis.sSetSetting('forced_root_block', 'div'),
+        tinyApis.sSetRawContent('<p><br></p>'),
+        tinyApis.sAssertContent('<p>&nbsp;</p>'),
+        tinyApis.sSetRawContent('<div><br></div>'),
+        tinyApis.sAssertContent(''),
+        tinyApis.sSetSetting('forced_root_block', 'p')
       ]))
     ], onSuccess, onFailure);
   }, {

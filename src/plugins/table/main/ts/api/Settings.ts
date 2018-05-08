@@ -37,14 +37,12 @@ const getDefaultAttributes = (editor: Editor): StringMap => editor.getParam('tab
 const getDefaultStyles = (editor: Editor): StringMap => editor.getParam('table_default_styles', defaultStyles, 'object');
 const hasTableResizeBars = (editor: Editor): boolean => editor.getParam('table_resize_bars', true, 'boolean');
 const hasTabNavigation = (editor: Editor): boolean => editor.getParam('table_tab_navigation', true, 'boolean');
-const getForcedRootBlock = (editor: Editor): string => editor.getParam('forced_root_block', 'p', 'string');
 const hasAdvancedCellTab = (editor: Editor): boolean => editor.getParam('table_cell_advtab', true, 'boolean');
 const hasAdvancedRowTab = (editor: Editor): boolean => editor.getParam('table_row_advtab', true, 'boolean');
 const hasAdvancedTableTab = (editor: Editor): boolean => editor.getParam('table_advtab', true, 'boolean');
 const hasAppearanceOptions = (editor: Editor): boolean => editor.getParam('table_appearance_options', true, 'boolean');
 const hasTableGrid = (editor: Editor): boolean => editor.getParam('table_grid', true, 'boolean');
 const shouldStyleWithCss = (editor: Editor): boolean => editor.getParam('table_style_by_css', false, 'boolean');
-const getForcedRootBlockAttrs = (editor: Editor): StringMap => editor.getParam('forced_block_attrs', {}, 'object');
 const getCellClassList = (editor: Editor): ClassList => editor.getParam('table_cell_class_list', [], 'array');
 const getRowClassList = (editor: Editor): ClassList => editor.getParam('table_row_class_list', [], 'array');
 const getTableClassList = (editor: Editor): ClassList => editor.getParam('table_class_list', [], 'array');
@@ -88,14 +86,12 @@ export {
   getDefaultStyles,
   hasTableResizeBars,
   hasTabNavigation,
-  getForcedRootBlock,
   hasAdvancedCellTab,
   hasAdvancedRowTab,
   hasAdvancedTableTab,
   hasAppearanceOptions,
   hasTableGrid,
   shouldStyleWithCss,
-  getForcedRootBlockAttrs,
   getCellClassList,
   getRowClassList,
   getTableClassList,

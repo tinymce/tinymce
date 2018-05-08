@@ -191,7 +191,7 @@ const isEphoxEmbed = function (html) {
 
 const updateEphoxEmbed = function (html, data) {
   const fragment = DOM.createFragment(html);
-  const div = fragment.firstChild;
+  const div = fragment.firstChild as Element;
 
   Size.setMaxWidth(div, data.width);
   Size.setMaxHeight(div, data.height);

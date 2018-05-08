@@ -8,19 +8,23 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Fun, Option, Cell } from '@ephox/katamari';
 import { CopyRows, TableFill, TableLookup } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
-import Util from '../alien/Util';
+import * as Util from '../alien/Util';
 import TableTargets from '../queries/TableTargets';
 import CellDialog from '../ui/CellDialog';
 import RowDialog from '../ui/RowDialog';
 import TableDialog from '../ui/TableDialog';
+import { Editor } from 'tinymce/core/api/Editor';
+import { TableActions } from 'tinymce/plugins/table/actions/TableActions';
+import { Selections } from 'tinymce/plugins/table/selection/Selections';
+import * as Events from '../api/Events';
 
 const each = Tools.each;
 
-const registerCommands = function (editor, actions, cellSelection, selections, clipboardRows) {
+const registerCommands = function (editor: Editor, actions: TableActions, cellSelection, selections: Selections, clipboardRows: Cell<Option<any>>) {
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = function () {
     const cell = Element.fromDom(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
@@ -44,12 +48,30 @@ const registerCommands = function (editor, actions, cellSelection, selections, c
     return TableLookup.table(cell, isRoot);
   };
 
+  const getSize = (table) => {
+    return {
+      width: Util.getPixelWidth(table.dom()),
+      height: Util.getPixelWidth(table.dom())
+    };
+  };
+
+  const resizeChange = (editor: Editor, oldSize, table) => {
+    const newSize = getSize(table);
+
+    if (oldSize.width !== newSize.width || oldSize.height !== newSize.height) {
+      Events.fireObjectResizeStart(editor, table.dom(), oldSize.width, oldSize.height);
+      Events.fireObjectResized(editor, table.dom(), newSize.width, newSize.height);
+    }
+  };
+
   const actOnSelection = function (execute) {
     const cell = getSelectionStartCell();
     const table = getTableFromCell(cell);
     table.each(function (table) {
       const targets = TableTargets.forMenu(selections, table, cell);
+      const beforeSize = getSize(table);
       execute(table, targets).each(function (rng) {
+        resizeChange(editor, beforeSize, table);
         editor.selection.setRng(rng);
         editor.focus();
         cellSelection.clear(table);

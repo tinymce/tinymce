@@ -16,6 +16,8 @@ import Delay from '../util/Delay';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
 import { Selection } from './Selection';
+import { Editor } from 'tinymce/core/api/Editor';
+import Events from 'tinymce/core/api/Events';
 
 interface ControlSelection {
   isResizable: (elm: Element) => boolean;
@@ -48,7 +50,7 @@ const getContentEditableRoot = function (root: Node, node: Node) {
   return null;
 };
 
-const ControlSelection = (selection: Selection, editor): ControlSelection => {
+const ControlSelection = (selection: Selection, editor: Editor): ControlSelection => {
   const dom = editor.dom, each = Tools.each;
   let selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
   let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
@@ -238,7 +240,7 @@ const ControlSelection = (selection: Selection, editor): ControlSelection => {
     }
 
     if (!resizeStarted) {
-      editor.fire('ObjectResizeStart', { target: selectedElm, width: startW, height: startH });
+      Events.fireObjectResizeStart(editor, selectedElm, startW, startH);
       resizeStarted = true;
     }
   };
@@ -275,7 +277,7 @@ const ControlSelection = (selection: Selection, editor): ControlSelection => {
 
     showResizeRect(selectedElm);
 
-    editor.fire('ObjectResized', { target: selectedElm, width, height });
+    Events.fireObjectResized(editor, selectedElm, width, height);
     dom.setAttrib(selectedElm, 'style', dom.getAttrib(selectedElm, 'style'));
     editor.nodeChanged();
   };

@@ -13,7 +13,7 @@ import { TableRender } from '@ephox/snooker';
 import { Attr, Html, SelectorFind, SelectorFilter, Css } from '@ephox/sugar';
 import { getDefaultAttributes, getDefaultStyles, isPixelsForced } from '../api/Settings';
 import { fireNewRow, fireNewCell } from '../api/Events';
-import Util from '../alien/Util';
+import * as Util from '../alien/Util';
 import { Editor } from 'tinymce/core/api/Editor';
 
 const placeCaretInCell = (editor: Editor, cell) => {
@@ -35,7 +35,7 @@ const fireEvents = (editor: Editor, table) => {
   });
 };
 
-const isPercentage = (width) => Type.isString(width) && width.indexOf('%') !== -1;
+const isPercentage = (width: string) => Type.isString(width) && width.indexOf('%') !== -1;
 
 const insert = (editor: Editor, columns: number, rows: number): HTMLElement => {
   const defaultStyles = getDefaultStyles(editor);

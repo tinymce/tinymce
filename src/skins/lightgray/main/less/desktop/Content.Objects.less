@@ -169,6 +169,12 @@ td[data-mce-selected], th[data-mce-selected] {
     outline: 2px solid @content-block-selected;
   }
 
+  &.mce-content-readonly {
+    *[contentEditable=true]:focus, *[contentEditable=true]:hover {
+      outline: none;
+    }
+  }
+
   *[data-mce-selected="inline-boundary"] {
     background: @content-boundary-bg;
   }
@@ -180,8 +186,15 @@ td[data-mce-selected], th[data-mce-selected] {
   hr {
     cursor: default;
   }
-}
 
+  /* Fixes TINY-1618
+     Safari sets -webkit-nbsp-mode to "space" on contenteditable="true"
+     tables, making it impossible to enter spaces into small table cells
+  */
+  table {
+    -webkit-nbsp-mode: normal;
+  }
+}
 
 /* Table Resizing */
 .ephox-snooker-resizer-bar {

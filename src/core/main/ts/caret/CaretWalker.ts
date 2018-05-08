@@ -171,6 +171,10 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
     if (isForwards(direction) && offset < container.childNodes.length) {
       nextNode = nodeAtIndex(container, offset);
       if (isCaretCandidate(nextNode)) {
+        if (isBr(nextNode) && root.lastChild === nextNode) {
+          return null;
+        }
+
         if (isBrBeforeBlock(nextNode, root)) {
           return findCaretPosition(direction, CaretPosition.after(nextNode), root);
         }

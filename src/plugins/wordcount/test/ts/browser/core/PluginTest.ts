@@ -62,12 +62,6 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function () {
     });
   };
 
-  const sSetRawContent = function (editor, content) {
-    return Step.sync(function () {
-      editor.getBody().innerHTML = content;
-    });
-  };
-
   const sTestUndoRedo = function (editor, tinyApis) {
     return GeneralSteps.sequence([
       sReset(tinyApis),
@@ -77,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', function () {
       sWaitForWordcount(0),
       sExecCommand(editor, 'redo'),
       sWaitForWordcount(3),
-      sSetRawContent(editor, '<p>hello world</p>'),
+      tinyApis.sSetRawContent('<p>hello world</p>'),
       sExecCommand(editor, 'mceAddUndoLevel'),
       sWaitForWordcount(2)
     ], 0);

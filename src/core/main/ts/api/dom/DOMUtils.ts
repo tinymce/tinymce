@@ -13,13 +13,15 @@ import DomQuery from './DomQuery';
 import EventUtils from './EventUtils';
 import Position from '../../dom/Position';
 import Sizzle from './Sizzle';
-import StyleSheetLoader from '../../dom/StyleSheetLoader';
+import { StyleSheetLoader } from '../../dom/StyleSheetLoader';
 import TreeWalker from './TreeWalker';
 import TrimNode from '../../dom/TrimNode';
 import Entities from '../html/Entities';
 import Schema from '../html/Schema';
-import Styles from '../html/Styles';
+import { StyleMap, Styles } from '../html/Styles';
 import Tools from '../util/Tools';
+import { GeomRect } from 'tinymce/core/api/geom/Rect';
+import NodeType from 'tinymce/core/dom/NodeType';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.
@@ -34,33 +36,32 @@ import Tools from '../util/Tools';
  */
 
 // Shorten names
-const each = Tools.each, is = Tools.is, grep = Tools.grep;
+const each = Tools.each;
+const grep = Tools.grep;
 const isIE = Env.ie;
 const simpleSelectorRe = /^([a-z0-9],?)+$/i;
 const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
-const setupAttrHooks = function (domUtils, settings) {
-  let attrHooks: any = {};
-  const keepValues = settings.keep_values;
-  let keepUrlHook;
-
-  keepUrlHook = {
-    set ($elm, value, name) {
+const setupAttrHooks = function (styles: Styles, settings: Record<string, any>, getContext) {
+  let attrHooks: Record<string, any> = {};
+  const keepValues: boolean = settings.keep_values;
+  const keepUrlHook = {
+    set ($elm, value: string, name: string) {
       if (settings.url_converter) {
-        value = settings.url_converter.call(settings.url_converter_scope || domUtils, value, name, $elm[0]);
+        value = settings.url_converter.call(settings.url_converter_scope || getContext(), value, name, $elm[0]);
       }
 
       $elm.attr('data-mce-' + name, value).attr(name, value);
     },
 
-    get ($elm, name) {
+    get ($elm, name: string) {
       return $elm.attr('data-mce-' + name) || $elm.attr(name);
     }
   };
 
   attrHooks = {
     style: {
-      set ($elm, value) {
+      set ($elm, value: string | {}) {
         if (value !== null && typeof value === 'object') {
           $elm.css(value);
           return;
@@ -76,7 +77,7 @@ const setupAttrHooks = function (domUtils, settings) {
       get ($elm) {
         let value = $elm.attr('data-mce-style') || $elm.attr('style');
 
-        value = domUtils.serializeStyle(domUtils.parseStyle(value), $elm[0].nodeName);
+        value = styles.serialize(styles.parse(value), $elm[0].nodeName);
 
         return value;
       }
@@ -90,10 +91,10 @@ const setupAttrHooks = function (domUtils, settings) {
   return attrHooks;
 };
 
-const updateInternalStyleAttr = function (domUtils, $elm) {
-  let value = $elm.attr('style');
+const updateInternalStyleAttr = function (styles: Styles, $elm) {
+  const rawValue = $elm.attr('style');
 
-  value = domUtils.serializeStyle(domUtils.parseStyle(value), $elm[0].nodeName);
+  let value = styles.serialize(styles.parse(rawValue), $elm[0].nodeName);
 
   if (!value) {
     value = null;
@@ -102,7 +103,7 @@ const updateInternalStyleAttr = function (domUtils, $elm) {
   $elm.attr('data-mce-style', value);
 };
 
-const nodeIndex = function (node, normalized) {
+const findNodeIndex = function (node: Node, normalized?: boolean) {
   let idx = 0, lastNodeType, nodeType;
 
   if (node) {
@@ -123,6 +124,109 @@ const nodeIndex = function (node, normalized) {
   return idx;
 };
 
+export interface DOMUtilsSettings {
+  schema: Schema;
+  url_converter: Function;
+  url_converter_scope: any;
+  ownEvents: boolean;
+  proxy: any;
+  keep_values: boolean;
+  hex_colors: boolean;
+  class_filter: Function;
+  update_styles: boolean;
+  root_element: HTMLElement;
+  collect: Function;
+  onSetAttrib: Function;
+}
+
+export type Target = Node | Window | Array<Node | Window>;
+export type RunArguments = string | Node | Array<string | Node>;
+
+export interface DOMUtils {
+  doc: Document;
+  settings: Partial<DOMUtilsSettings>;
+  win: Window;
+  files: {};
+  stdMode: boolean;
+  boxModel: boolean;
+  styleSheetLoader: StyleSheetLoader;
+  boundEvents: any[];
+  styles: Styles;
+  schema: Schema;
+  events: any;
+  isBlock: (node: string | Node) => boolean;
+  $: any;
+  $$: (elm: string | Node | Node[]) => any;
+  root: any;
+  clone: (node: Node, deep: boolean) => Node;
+  getRoot: () => HTMLElement;
+  getViewPort: (argWin?: Window) => GeomRect;
+  getRect: (elm: string | HTMLElement) => GeomRect;
+  getSize: (elm: string | HTMLElement) => {
+      w: number;
+      h: number;
+  };
+  getParent: (node: string | Node, selector: string | Function, root?: Node) => Node;
+  getParents: (elm: string | Node, selector: string | Function, root?: Node, collect?: boolean) => Node[];
+  get: (elm: string | Node) => HTMLElement;
+  getNext: (node: Node, selector: string | Function) => Node;
+  getPrev: (node: Node, selector: string | Function) => Node;
+  select: (selector: string, scope?: string | Element) => HTMLElement[];
+  is: (elm: Node | Node[], selector: string) => boolean;
+  add: (parentElm: RunArguments, name: string | Node, attrs?: Record<string, any>, html?: string | Node, create?: boolean) => HTMLElement;
+  create: (name: string, attrs?: Record<string, any>, html?: string | Node) => HTMLElement;
+  createHTML: (name: string, attrs?: Record<string, any>, html?: string) => string;
+  createFragment: (html?: string) => DocumentFragment;
+  remove: (node: string | Node | Node[], keepChildren?: boolean) => any;
+  setStyle: (elm: string | Node, name: string | StyleMap, value: string | number | StyleMap) => void;
+  getStyle: (elm: string | Node, name: string, computed?: boolean) => string;
+  setStyles: (elm: string | Node, stylesArg: StyleMap) => void;
+  removeAllAttribs: (e: RunArguments) => any;
+  setAttrib: (elm: string | Node, name: string, value: string) => void;
+  setAttribs: (elm: string | Node, attrs: Record<string, string>) => void;
+  getAttrib: (elm: string | Node, name: string, defaultVal?: string) => string;
+  getPos: (elm: string | Node, rootElm?: Node) => {
+      x: number;
+      y: number;
+  };
+  parseStyle: (cssText: string) => StyleMap;
+  serializeStyle: (stylesArg: StyleMap, name?: string) => string;
+  addStyle: (cssText: string) => void;
+  loadCSS: (url: string) => void;
+  addClass: (elm: string | Node | Node[], cls: string) => void;
+  removeClass: (elm: string | Node | Node[], cls: string) => void;
+  hasClass: (elm: string | Node, cls: string) => any;
+  toggleClass: (elm: string | Node | Node[], cls: string, state: boolean) => void;
+  show: (elm: string | Node) => void;
+  hide: (elm: string | Node) => void;
+  isHidden: (elm: string | Node) => boolean;
+  uniqueId: (prefix?: string) => string;
+  setHTML: (elm: string | Node, html: string) => void;
+  getOuterHTML: (elm: string | Node) => string;
+  setOuterHTML: (elm: string | Node, html: string) => void;
+  decode: (text: string) => string;
+  encode: (text: string) => string;
+  insertAfter: (node: RunArguments, reference: string | Node) => any;
+  replace: (newElm: Node, oldElm: RunArguments, keepChildren?: boolean) => any;
+  rename: (elm: Node, name: string) => Node;
+  findCommonAncestor: (a: Node, b: Node) => Node;
+  toHex: (rgbVal: string) => string;
+  run: (elm: RunArguments, func: (node: HTMLElement) => any, scope?: any) => any;
+  getAttribs: (elm: string | Node) => NamedNodeMap | undefined[];
+  isEmpty: (node: Node, elements?: Record<string, any>) => boolean;
+  createRng: () => Range;
+  nodeIndex: (node: Node, normalized?: boolean) => number;
+  split: (parentElm: Node, splitElm: Node, replacementElm?: Node) => Node;
+  bind: (target: Target, name: string, func: Function, scope?: any) => any;
+  unbind: (target: Target, name?: string, func?: Function) => any;
+  fire: (target: Target, name: string, evt?: any) => any;
+  getContentEditable: (node: Node) => string;
+  getContentEditableParent: (node: Node) => any;
+  destroy: () => void;
+  isChildOf: (node: Node, parent: Node) => boolean;
+  dumpRng: (r: Range) => string;
+}
+
 /**
  * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
  *
@@ -131,30 +235,27 @@ const nodeIndex = function (node, normalized) {
  * @param {Document} doc Document reference to bind the utility class to.
  * @param {settings} settings Optional settings collection.
  */
-const DOMUtils: any = function (doc, settings) {
-  const self = this;
-  let blockElementsMap;
+export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMUtils {
+  let attrHooks;
+  const addedStyles = {};
 
-  self.doc = doc;
-  self.win = window;
-  self.files = {};
-  self.counter = 0;
-  self.stdMode = !isIE || doc.documentMode >= 8;
-  self.boxModel = !isIE || doc.compatMode === 'CSS1Compat' || self.stdMode;
-  self.styleSheetLoader = StyleSheetLoader(doc);
-  self.boundEvents = [];
-  self.settings = settings = settings || {};
-  self.schema = settings.schema ? settings.schema : Schema({});
-  self.styles = Styles({
+  const win = window;
+  const files = {};
+  let counter = 0;
+  const stdMode = true;
+  const boxModel = true;
+  const styleSheetLoader = StyleSheetLoader(doc);
+  const boundEvents = [];
+  const schema = settings.schema ? settings.schema : Schema({});
+  const styles = Styles({
     url_converter: settings.url_converter,
     url_converter_scope: settings.url_converter_scope
   }, settings.schema);
 
-  self.fixDoc(doc);
-  self.events = settings.ownEvents ? new EventUtils(settings.proxy) : EventUtils.Event;
-  self.attrHooks = setupAttrHooks(self, settings);
-  blockElementsMap = self.schema.getBlockElements();
-  self.$ = DomQuery.overrideDefaults(function () {
+  const events = settings.ownEvents ? new EventUtils(settings.proxy) : EventUtils.Event;
+  const blockElementsMap = schema.getBlockElements();
+
+  const $ = DomQuery.overrideDefaults(function () {
     return {
       context: doc,
       element: self.getRoot()
@@ -168,135 +269,191 @@ const DOMUtils: any = function (doc, settings) {
    * @param {Node/String} node Element/Node to check.
    * @return {Boolean} True/False state if the node is a block element or not.
    */
-  self.isBlock = function (node) {
-    // Fix for #5446
-    if (!node) {
-      return false;
+  const isBlock = (node: Node | string) => {
+    if (typeof node === 'string') {
+      return !!blockElementsMap[node];
+    } else if (node) {
+      // This function is called in module pattern style since it might be executed with the wrong this scope
+      const type = node.nodeType;
+
+      // If it's a node then check the type and use the nodeName
+      if (type) {
+        return !!(type === 1 && blockElementsMap[node.nodeName]);
+      }
     }
 
-    // This function is called in module pattern style since it might be executed with the wrong this scope
-    const type = node.nodeType;
-
-    // If it's a node then check the type and use the nodeName
-    if (type) {
-      return !!(type === 1 && blockElementsMap[node.nodeName]);
-    }
-
-    return !!blockElementsMap[node];
+    return false;
   };
-};
 
-DOMUtils.prototype = {
-  $$ (elm) {
-    if (typeof elm === 'string') {
-      elm = this.get(elm);
+  const get = (elm: Node | string): HTMLElement => {
+    if (elm && doc && typeof elm === 'string') {
+      const node = doc.getElementById(elm);
+
+      // IE and Opera returns meta elements when they match the specified input ID, but getElementsByName seems to do the trick
+      if (node && node.id !== elm) {
+        return doc.getElementsByName(elm)[1];
+      } else {
+        return node;
+      }
     }
 
-    return this.$(elm);
-  },
+    return elm as HTMLElement;
+  };
 
-  root: null,
+  const $$ =  (elm: string | Node | Node[]) => {
+    if (typeof elm === 'string') {
+      elm = get(elm);
+    }
 
-  fixDoc (doc) {
-  },
+    return $(elm);
+  };
 
-  clone (node, deep) {
-    const self = this;
-    let clone, doc;
+  const getAttrib = (elm: string | Node, name: string, defaultVal?: string): string => {
+    let hook, value;
 
+    const $elm = $$(elm);
+
+    if ($elm.length) {
+      hook = attrHooks[name];
+
+      if (hook && hook.get) {
+        value = hook.get($elm, name);
+      } else {
+        value = $elm.attr(name);
+      }
+    }
+
+    if (typeof value === 'undefined') {
+      value = defaultVal || '';
+    }
+
+    return value;
+  };
+
+  const getAttribs = (elm: string | Node): NamedNodeMap | undefined[] => {
+    const node = get(elm);
+
+    if (!node) {
+      return [];
+    }
+
+    return node.attributes;
+  };
+
+  const setAttrib = (elm: string | Node, name: string, value: string) => {
+    let originalValue, hook;
+
+    if (value === '') {
+      value = null;
+    }
+
+    const $elm = $$(elm);
+    originalValue = $elm.attr(name);
+
+    if (!$elm.length) {
+      return;
+    }
+
+    hook = attrHooks[name];
+    if (hook && hook.set) {
+      hook.set($elm, value, name);
+    } else {
+      $elm.attr(name, value);
+    }
+
+    if (originalValue !== value && settings.onSetAttrib) {
+      settings.onSetAttrib({
+        attrElm: $elm,
+        attrName: name,
+        attrValue: value
+      });
+    }
+  };
+
+  const clone = (node: Node, deep: boolean) => {
     // TODO: Add feature detection here in the future
     if (!isIE || node.nodeType !== 1 || deep) {
       return node.cloneNode(deep);
     }
 
-    doc = self.doc;
-
     // Make a HTML5 safe shallow copy
     if (!deep) {
-      clone = doc.createElement(node.nodeName);
+      const clone = doc.createElement(node.nodeName);
 
       // Copy attribs
-      each(self.getAttribs(node), function (attr) {
-        self.setAttrib(clone, attr.nodeName, self.getAttrib(node, attr.nodeName));
+      each(getAttribs(node), function (attr) {
+        setAttrib(clone, attr.nodeName, getAttrib(node, attr.nodeName));
       });
 
       return clone;
     }
 
-    return clone.firstChild;
-  },
+    return null;
+  };
 
-  /**
-   * Returns the root node of the document. This is normally the body but might be a DIV. Parents like getParent will not
-   * go above the point of this root node.
-   *
-   * @method getRoot
-   * @return {Element} Root element for the utility class.
-   */
-  getRoot () {
-    const self = this;
+  const getRoot = (): HTMLElement => {
+    return settings.root_element || doc.body;
+  };
 
-    return self.settings.root_element || self.doc.body;
-  },
-
-  /**
-   * Returns the viewport of the window.
-   *
-   * @method getViewPort
-   * @param {Window} win Optional window to get viewport of.
-   * @return {Object} Viewport object with fields x, y, w and h.
-   */
-  getViewPort (win) {
-    let doc, rootElm;
-
-    win = !win ? this.win : win;
-    doc = win.document;
-    rootElm = this.boxModel ? doc.documentElement : doc.body;
+  const getViewPort = (argWin?: Window): GeomRect => {
+    const actWin = !argWin ? win : argWin;
+    const doc = actWin.document;
+    const rootElm = boxModel ? doc.documentElement : doc.body;
 
     // Returns viewport size excluding scrollbars
     return {
-      x: win.pageXOffset || rootElm.scrollLeft,
-      y: win.pageYOffset || rootElm.scrollTop,
-      w: win.innerWidth || rootElm.clientWidth,
-      h: win.innerHeight || rootElm.clientHeight
+      x: actWin.pageXOffset || rootElm.scrollLeft,
+      y: actWin.pageYOffset || rootElm.scrollTop,
+      w: actWin.innerWidth || rootElm.clientWidth,
+      h: actWin.innerHeight || rootElm.clientHeight
     };
-  },
+  };
 
-  /**
-   * Returns the rectangle for a specific element.
-   *
-   * @method getRect
-   * @param {Element/String} elm Element object or element ID to get rectangle from.
-   * @return {object} Rectangle for specified element object with x, y, w, h fields.
-   */
-  getRect (elm) {
-    const self = this;
-    let pos, size;
+  const getPos = (elm: string | Node, rootElm?: Node) => {
+    return Position.getPos(doc.body, get(elm), rootElm);
+  };
 
-    elm = self.get(elm);
-    pos = self.getPos(elm);
-    size = self.getSize(elm);
+  const setStyle = (elm: string | Node, name: string | StyleMap, value: string | number | StyleMap) => {
+    const $elm = $$(elm).css(name, value);
 
-    return {
-      x: pos.x, y: pos.y,
-      w: size.w, h: size.h
-    };
-  },
+    if (settings.update_styles) {
+      updateInternalStyleAttr(styles, $elm);
+    }
+  };
 
-  /**
-   * Returns the size dimensions of the specified element.
-   *
-   * @method getSize
-   * @param {Element/String} elm Element object or element ID to get rectangle from.
-   * @return {object} Rectangle for specified element object with w, h fields.
-   */
-  getSize (elm) {
-    const self = this;
+  const setStyles = (elm: string | Node, stylesArg: StyleMap) => {
+    const $elm = $$(elm).css(stylesArg);
+
+    if (settings.update_styles) {
+      updateInternalStyleAttr(styles, $elm);
+    }
+  };
+
+  const getStyle = (elm: string | Node, name: string, computed?: boolean): string => {
+    const $elm = $$(elm);
+
+    if (computed) {
+      return $elm.css(name);
+    }
+
+    // Camelcase it, if needed
+    name = name.replace(/-(\D)/g, function (a, b) {
+      return b.toUpperCase();
+    });
+
+    if (name === 'float') {
+      name = Env.ie && Env.ie < 12 ? 'styleFloat' : 'cssFloat';
+    }
+
+    return $elm[0] && $elm[0].style ? $elm[0].style[name] : undefined;
+  };
+
+  const getSize = (elm: HTMLElement | string): {w: number, h: number} => {
     let w, h;
 
-    elm = self.get(elm);
-    w = self.getStyle(elm, 'width');
-    h = self.getStyle(elm, 'height');
+    elm = get(elm);
+    w = getStyle(elm, 'width');
+    h = getStyle(elm, 'height');
 
     // Non pixel value, then force offset/clientWidth
     if (w.indexOf('px') === -1) {
@@ -312,47 +469,73 @@ DOMUtils.prototype = {
       w: parseInt(w, 10) || elm.offsetWidth || elm.clientWidth,
       h: parseInt(h, 10) || elm.offsetHeight || elm.clientHeight
     };
-  },
+  };
 
-  /**
-   * Returns a node by the specified selector function. This function will
-   * loop through all parent nodes and call the specified function for each node.
-   * If the function then returns true indicating that it has found what it was looking for, the loop execution will then end
-   * and the node it found will be returned.
-   *
-   * @method getParent
-   * @param {Node/String} node DOM node to search parents on or ID string.
-   * @param {function} selector Selection function or CSS selector to execute on each node.
-   * @param {Node} root Optional root element, never go beyond this point.
-   * @return {Node} DOM Node or null if it wasn't found.
-   */
-  getParent (node, selector, root) {
-    return this.getParents(node, selector, root, false);
-  },
+  const getRect = (elm: string | HTMLElement): GeomRect => {
+    let pos, size;
 
-  /**
-   * Returns a node list of all parents matching the specified selector function or pattern.
-   * If the function then returns true indicating that it has found what it was looking for and that node will be collected.
-   *
-   * @method getParents
-   * @param {Node/String} node DOM node to search parents on or ID string.
-   * @param {function} selector Selection function to execute on each node or CSS pattern.
-   * @param {Node} root Optional root element, never go beyond this point.
-   * @return {Array} Array of nodes or null if it wasn't found.
-   */
-  getParents (node, selector, root, collect) {
-    const self = this;
-    let selectorVal;
+    elm = get(elm);
+    pos = getPos(elm);
+    size = getSize(elm);
+
+    return {
+      x: pos.x, y: pos.y,
+      w: size.w, h: size.h
+    };
+  };
+
+  const is = (elm: Node | Node[], selector: string) => {
+    let i;
+
+    if (!elm) {
+      return false;
+    }
+
+    // If it isn't an array then try to do some simple selectors instead of Sizzle for to boost performance
+    if (!Array.isArray(elm)) {
+      // Simple all selector
+      if (selector === '*') {
+        return elm.nodeType === 1;
+      }
+
+      // Simple selector just elements
+      if (simpleSelectorRe.test(selector)) {
+        const selectors = selector.toLowerCase().split(/,/);
+        const elmName = elm.nodeName.toLowerCase();
+
+        for (i = selectors.length - 1; i >= 0; i--) {
+          if (selectors[i] === elmName) {
+            return true;
+          }
+        }
+
+        return false;
+      }
+
+      // Is non element
+      if (elm.nodeType && elm.nodeType !== 1) {
+        return false;
+      }
+    }
+
+    const elms = !Array.isArray(elm) ? [elm] : elm;
+
+    /*eslint new-cap:0 */
+    return Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;
+  };
+
+  const getParents = (elm: Node | string, selector: string | Function, root?: Node, collect?: boolean): Node[] => {
     const result = [];
+    let selectorVal;
 
-    node = self.get(node);
+    let node: Node = get(elm);
     collect = collect === undefined;
 
     // Default root on inline mode
-    root = root || (self.getRoot().nodeName !== 'BODY' ? self.getRoot().parentNode : null);
+    root = root || (getRoot().nodeName !== 'BODY' ? getRoot().parentNode : null);
 
     // Wrap node name as func
-    if (is(selector, 'string')) {
+    if (Tools.is(selector, 'string')) {
       selectorVal = selector;
 
       if (selector === '*') {
@@ -361,7 +544,7 @@ DOMUtils.prototype = {
         };
       } else {
         selector = function (node) {
-          return self.is(node, selectorVal);
+          return is(node, selectorVal);
         };
       }
     }
@@ -371,11 +554,11 @@ DOMUtils.prototype = {
         break;
       }
 
-      if (!selector || selector(node)) {
+      if (!selector || (typeof selector === 'function' && selector(node))) {
         if (collect) {
           result.push(node);
         } else {
-          return node;
+          return [node];
         }
       }
 
@@ -383,202 +566,147 @@ DOMUtils.prototype = {
     }
 
     return collect ? result : null;
-  },
+  };
 
-  /**
-   * Returns the specified element by ID or the input element if it isn't a string.
-   *
-   * @method get
-   * @param {String/Element} n Element id to look for or element to just pass though.
-   * @return {Element} Element matching the specified id or null if it wasn't found.
-   */
-  get (elm) {
-    let name;
+  const getParent = (node: Node | string, selector, root?: Node): Node => {
+    const parents = getParents(node, selector, root, false);
+    return parents && parents.length > 0 ? parents[0] : null;
+  };
 
-    if (elm && this.doc && typeof elm === 'string') {
-      name = elm;
-      elm = this.doc.getElementById(elm);
+  const _findSib = (node: Node, selector: string | Function, name: string) => {
+    let func = selector;
 
-      // IE and Opera returns meta elements when they match the specified input ID, but getElementsByName seems to do the trick
-      if (elm && elm.id !== name) {
-        return this.doc.getElementsByName(name)[1];
+    if (node) {
+      // If expression make a function of it using is
+      if (typeof selector === 'string') {
+        func = function (node) {
+          return is(node, selector);
+        };
+      }
+
+      // Loop all siblings
+      for (node = node[name]; node; node = node[name]) {
+        if (typeof func === 'function' && func(node)) {
+          return node;
+        }
       }
     }
 
-    return elm;
-  },
+    return null;
+  };
 
-  /**
-   * Returns the next node that matches selector or function
-   *
-   * @method getNext
-   * @param {Node} node Node to find siblings from.
-   * @param {String/function} selector Selector CSS expression or function.
-   * @return {Node} Next node item matching the selector or null if it wasn't found.
-   */
-  getNext (node, selector) {
-    return this._findSib(node, selector, 'nextSibling');
-  },
+  const getNext = (node: Node, selector: string | Function) => {
+    return _findSib(node, selector, 'nextSibling');
+  };
 
-  /**
-   * Returns the previous node that matches selector or function
-   *
-   * @method getPrev
-   * @param {Node} node Node to find siblings from.
-   * @param {String/function} selector Selector CSS expression or function.
-   * @return {Node} Previous node item matching the selector or null if it wasn't found.
-   */
-  getPrev (node, selector) {
-    return this._findSib(node, selector, 'previousSibling');
-  },
+  const getPrev = (node: Node, selector: string | Function) => {
+    return _findSib(node, selector, 'previousSibling');
+  };
 
-  // #ifndef jquery
+  const select = (selector: string, scope?: Element | string) => {
+    return Sizzle(selector, get(scope) || settings.root_element || doc, []);
+  };
 
-  /**
-   * Selects specific elements by a CSS level 3 pattern. For example "div#a1 p.test".
-   * This function is optimized for the most common patterns needed in TinyMCE but it also performs well enough
-   * on more complex patterns.
-   *
-   * @method select
-   * @param {String} selector CSS level 3 pattern to select/find elements by.
-   * @param {Object} scope Optional root element/scope element to search in.
-   * @return {Array} Array with all matched elements.
-   * @example
-   * // Adds a class to all paragraphs in the currently active editor
-   * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('p'), 'someclass');
-   *
-   * // Adds a class to all spans that have the test class in the currently active editor
-   * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('span.test'), 'someclass')
-   */
-  select (selector, scope) {
-    const self = this;
+  const run = (elm: string | Node | Array<string | Node>, func: (node: HTMLElement) => any, scope?) => {
+    let result;
+    const node = typeof elm === 'string' ? get(elm) : elm;
 
-    /*eslint new-cap:0 */
-    return Sizzle(selector, self.get(scope) || self.settings.root_element || self.doc, []);
-  },
-
-  /**
-   * Returns true/false if the specified element matches the specified css pattern.
-   *
-   * @method is
-   * @param {Node/NodeList} elm DOM node to match or an array of nodes to match.
-   * @param {String} selector CSS pattern to match the element against.
-   */
-  is (elm, selector) {
-    let i;
-
-    if (!elm) {
+    if (!node) {
       return false;
     }
 
-    // If it isn't an array then try to do some simple selectors instead of Sizzle for to boost performance
-    if (elm.length === undefined) {
-      // Simple all selector
-      if (selector === '*') {
-        return elm.nodeType === 1;
-      }
+    if (Tools.isArray(node) && (node.length || node.length === 0)) {
+      result = [];
 
-      // Simple selector just elements
-      if (simpleSelectorRe.test(selector)) {
-        selector = selector.toLowerCase().split(/,/);
-        elm = elm.nodeName.toLowerCase();
-
-        for (i = selector.length - 1; i >= 0; i--) {
-          if (selector[i] === elm) {
-            return true;
+      each(node, function (elm, i) {
+        if (elm) {
+          if (typeof elm === 'string') {
+            elm = get(elm);
           }
+
+          result.push(func.call(scope, elm, i));
+        }
+      });
+
+      return result;
+    }
+
+    const context = scope ? scope : this;
+
+    return func.call(context, node);
+  };
+
+  const setAttribs = (elm: string | Node, attrs: Record<string, string>) => {
+    $$(elm).each(function (i, node) {
+      each(attrs, function (value, name) {
+        setAttrib(node, name, value);
+      });
+    });
+  };
+
+  const setHTML = (elm: string | Node, html: string) => {
+    const $elm = $$(elm);
+
+    if (isIE) {
+      $elm.each(function (i, target) {
+        if (target.canHaveHTML === false) {
+          return;
         }
 
-        return false;
-      }
+        // Remove all child nodes, IE keeps empty text nodes in DOM
+        while (target.firstChild) {
+          target.removeChild(target.firstChild);
+        }
+
+        try {
+          // IE will remove comments from the beginning
+          // unless you padd the contents with something
+          target.innerHTML = '<br>' + html;
+          target.removeChild(target.firstChild);
+        } catch (ex) {
+          // IE sometimes produces an unknown runtime error on innerHTML if it's a div inside a p
+          DomQuery('<div></div>').html('<br>' + html).contents().slice(1).appendTo(target);
+        }
+
+        return html;
+      });
+    } else {
+      $elm.html(html);
     }
+  };
 
-    // Is non element
-    if (elm.nodeType && elm.nodeType !== 1) {
-      return false;
-    }
-
-    const elms = elm.nodeType ? [elm] : elm;
-
-    /*eslint new-cap:0 */
-    return Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;
-  },
-
-  // #endif
-
-  /**
-   * Adds the specified element to another element or elements.
-   *
-   * @method add
-   * @param {String/Element/Array} parentElm Element id string, DOM node element or array of ids or elements to add to.
-   * @param {String/Element} name Name of new element to add or existing element to add.
-   * @param {Object} attrs Optional object collection with arguments to add to the new element(s).
-   * @param {String} html Optional inner HTML contents to add for each element.
-   * @param {Boolean} create Optional flag if the element should be created or added.
-   * @return {Element/Array} Element that got created, or an array of created elements if multiple input elements
-   * were passed in.
-   * @example
-   * // Adds a new paragraph to the end of the active editor
-   * tinymce.activeEditor.dom.add(tinymce.activeEditor.getBody(), 'p', {title: 'my title'}, 'Some content');
-   */
-  add (parentElm, name, attrs, html, create) {
-    const self = this;
-
-    return this.run(parentElm, function (parentElm) {
-      let newElm;
-
-      newElm = is(name, 'string') ? self.doc.createElement(name) : name;
-      self.setAttribs(newElm, attrs);
+  const add = (parentElm: RunArguments, name: string | Node, attrs?: Record<string, any>, html?: string | Node, create?: boolean): HTMLElement => {
+    return run(parentElm, function (parentElm) {
+      const newElm = typeof name  === 'string' ? doc.createElement(name) : name;
+      setAttribs(newElm, attrs);
 
       if (html) {
-        if (html.nodeType) {
+        if (typeof html !== 'string' && html.nodeType) {
           newElm.appendChild(html);
-        } else {
-          self.setHTML(newElm, html);
+        } else if (typeof html === 'string') {
+          setHTML(newElm, html);
         }
       }
 
       return !create ? parentElm.appendChild(newElm) : newElm;
     });
-  },
+  };
 
-  /**
-   * Creates a new element.
-   *
-   * @method create
-   * @param {String} name Name of new element.
-   * @param {Object} attrs Optional object name/value collection with element attributes.
-   * @param {String} html Optional HTML string to set as inner HTML of the element.
-   * @return {Element} HTML DOM node element that got created.
-   * @example
-   * // Adds an element where the caret/selection is in the active editor
-   * var el = tinymce.activeEditor.dom.create('div', {id: 'test', 'class': 'myclass'}, 'some content');
-   * tinymce.activeEditor.selection.setNode(el);
-   */
-  create (name, attrs, html) {
-    return this.add(this.doc.createElement(name), name, attrs, html, 1);
-  },
+  const create = (name: string, attrs?: Record<string, any>, html?: string | Node): HTMLElement => {
+    return add(doc.createElement(name), name, attrs, html, true);
+  };
 
-  /**
-   * Creates HTML string for element. The element will be closed unless an empty inner HTML string is passed in.
-   *
-   * @method createHTML
-   * @param {String} name Name of new element.
-   * @param {Object} attrs Optional object name/value collection with element attributes.
-   * @param {String} html Optional HTML string to set as inner HTML of the element.
-   * @return {String} String with new HTML element, for example: <a href="#">test</a>.
-   * @example
-   * // Creates a html chunk and inserts it at the current selection/caret location
-   * tinymce.activeEditor.selection.setContent(tinymce.activeEditor.dom.createHTML('a', {href: 'test.html'}, 'some line'));
-   */
-  createHTML (name, attrs, html) {
+  const decode = Entities.decode;
+  const encode = Entities.encodeAllRaw;
+
+  const createHTML = (name: string, attrs?: Record<string, any>, html?: string): string => {
     let outHtml = '', key;
 
     outHtml += '<' + name;
 
     for (key in attrs) {
       if (attrs.hasOwnProperty(key) && attrs[key] !== null && typeof attrs[key] !== 'undefined') {
-        outHtml += ' ' + key + '="' + this.encode(attrs[key]) + '"';
+        outHtml += ' ' + key + '="' + encode(attrs[key]) + '"';
       }
     }
 
@@ -588,22 +716,13 @@ DOMUtils.prototype = {
     }
 
     return outHtml + ' />';
-  },
+  };
 
-  /**
-   * Creates a document fragment out of the specified HTML string.
-   *
-   * @method createFragment
-   * @param {String} html Html string to create fragment from.
-   * @return {DocumentFragment} Document fragment node.
-   */
-  createFragment (html) {
-    let frag, node;
-    const doc = this.doc;
-    let container;
+  const createFragment = (html?: string): DocumentFragment => {
+    let node;
 
-    container = doc.createElement('div');
-    frag = doc.createDocumentFragment();
+    const container = doc.createElement('div');
+    const frag = doc.createDocumentFragment();
 
     if (html) {
       container.innerHTML = html;
@@ -614,29 +733,13 @@ DOMUtils.prototype = {
     }
 
     return frag;
-  },
+  };
 
-  /**
-   * Removes/deletes the specified element(s) from the DOM.
-   *
-   * @method remove
-   * @param {String/Element/Array} node ID of element or DOM element object or array containing multiple elements/ids.
-   * @param {Boolean} keepChildren Optional state to keep children or not. If set to true all children will be
-   * placed at the location of the removed element.
-   * @return {Element/Array} HTML DOM element that got removed, or an array of removed elements if multiple input elements
-   * were passed in.
-   * @example
-   * // Removes all paragraphs in the active editor
-   * tinymce.activeEditor.dom.remove(tinymce.activeEditor.dom.select('p'));
-   *
-   * // Removes an element by id in the document
-   * tinymce.DOM.remove('mydiv');
-   */
-  remove (node, keepChildren) {
-    node = this.$$(node);
+  const remove = (node: string | Node | Node[], keepChildren?: boolean) => {
+    const $node = $$(node);
 
     if (keepChildren) {
-      node.each(function () {
+      $node.each(function () {
         let child;
 
         while ((child = this.firstChild)) {
@@ -648,261 +751,40 @@ DOMUtils.prototype = {
         }
       }).remove();
     } else {
-      node.remove();
+      $node.remove();
     }
 
-    return node.length > 1 ? node.toArray() : node[0];
-  },
+    return $node.length > 1 ? $node.toArray() : $node[0];
+  };
 
-  /**
-   * Sets the CSS style value on a HTML element. The name can be a camelcase string
-   * or the CSS style name like background-color.
-   *
-   * @method setStyle
-   * @param {String/Element/Array} elm HTML element/Array of elements to set CSS style value on.
-   * @param {String} name Name of the style value to set.
-   * @param {String} value Value to set on the style.
-   * @example
-   * // Sets a style value on all paragraphs in the currently active editor
-   * tinymce.activeEditor.dom.setStyle(tinymce.activeEditor.dom.select('p'), 'background-color', 'red');
-   *
-   * // Sets a style value to an element by id in the current document
-   * tinymce.DOM.setStyle('mydiv', 'background-color', 'red');
-   */
-  setStyle (elm, name, value) {
-    elm = this.$$(elm).css(name, value);
-
-    if (this.settings.update_styles) {
-      updateInternalStyleAttr(this, elm);
-    }
-  },
-
-  /**
-   * Returns the current style or runtime/computed value of an element.
-   *
-   * @method getStyle
-   * @param {String/Element} elm HTML element or element id string to get style from.
-   * @param {String} name Style name to return.
-   * @param {Boolean} computed Computed style.
-   * @return {String} Current style or computed style value of an element.
-   */
-  getStyle (elm, name, computed) {
-    elm = this.$$(elm);
-
-    if (computed) {
-      return elm.css(name);
-    }
-
-    // Camelcase it, if needed
-    name = name.replace(/-(\D)/g, function (a, b) {
-      return b.toUpperCase();
-    });
-
-    if (name === 'float') {
-      name = Env.ie && Env.ie < 12 ? 'styleFloat' : 'cssFloat';
-    }
-
-    return elm[0] && elm[0].style ? elm[0].style[name] : undefined;
-  },
-
-  /**
-   * Sets multiple styles on the specified element(s).
-   *
-   * @method setStyles
-   * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set styles on.
-   * @param {Object} styles Name/Value collection of style items to add to the element(s).
-   * @example
-   * // Sets styles on all paragraphs in the currently active editor
-   * tinymce.activeEditor.dom.setStyles(tinymce.activeEditor.dom.select('p'), {'background-color': 'red', 'color': 'green'});
-   *
-   * // Sets styles to an element by id in the current document
-   * tinymce.DOM.setStyles('mydiv', {'background-color': 'red', 'color': 'green'});
-   */
-  setStyles (elm, styles) {
-    elm = this.$$(elm).css(styles);
-
-    if (this.settings.update_styles) {
-      updateInternalStyleAttr(this, elm);
-    }
-  },
-
-  /**
-   * Removes all attributes from an element or elements.
-   *
-   * @method removeAllAttribs
-   * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to remove attributes from.
-   */
-  removeAllAttribs (e) {
-    return this.run(e, function (e) {
+  const removeAllAttribs = (e: RunArguments) => {
+    return run(e, function (e) {
       let i;
       const attrs = e.attributes;
       for (i = attrs.length - 1; i >= 0; i--) {
         e.removeAttributeNode(attrs.item(i));
       }
     });
-  },
+  };
 
-  /**
-   * Sets the specified attribute of an element or elements.
-   *
-   * @method setAttrib
-   * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set attribute on.
-   * @param {String} name Name of attribute to set.
-   * @param {String} value Value to set on the attribute - if this value is falsy like null, 0 or '' it will remove
-   * the attribute instead.
-   * @example
-   * // Sets class attribute on all paragraphs in the active editor
-   * tinymce.activeEditor.dom.setAttrib(tinymce.activeEditor.dom.select('p'), 'class', 'myclass');
-   *
-   * // Sets class attribute on a specific element in the current page
-   * tinymce.dom.setAttrib('mydiv', 'class', 'myclass');
-   */
-  setAttrib (elm, name, value) {
-    const self = this;
-    let originalValue, hook;
-    const settings = self.settings;
+  const parseStyle = (cssText: string): StyleMap => {
+    return styles.parse(cssText);
+  };
 
-    if (value === '') {
-      value = null;
-    }
+  const serializeStyle = (stylesArg: StyleMap, name?: string) => {
+    return styles.serialize(stylesArg, name);
+  };
 
-    elm = self.$$(elm);
-    originalValue = elm.attr(name);
-
-    if (!elm.length) {
-      return;
-    }
-
-    hook = self.attrHooks[name];
-    if (hook && hook.set) {
-      hook.set(elm, value, name);
-    } else {
-      elm.attr(name, value);
-    }
-
-    if (originalValue !== value && settings.onSetAttrib) {
-      settings.onSetAttrib({
-        attrElm: elm,
-        attrName: name,
-        attrValue: value
-      });
-    }
-  },
-
-  /**
-   * Sets two or more specified attributes of an element or elements.
-   *
-   * @method setAttribs
-   * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set attributes on.
-   * @param {Object} attrs Name/Value collection of attribute items to add to the element(s).
-   * @example
-   * // Sets class and title attributes on all paragraphs in the active editor
-   * tinymce.activeEditor.dom.setAttribs(tinymce.activeEditor.dom.select('p'), {'class': 'myclass', title: 'some title'});
-   *
-   * // Sets class and title attributes on a specific element in the current page
-   * tinymce.DOM.setAttribs('mydiv', {'class': 'myclass', title: 'some title'});
-   */
-  setAttribs (elm, attrs) {
-    const self = this;
-
-    self.$$(elm).each(function (i, node) {
-      each(attrs, function (value, name) {
-        self.setAttrib(node, name, value);
-      });
-    });
-  },
-
-  /**
-   * Returns the specified attribute by name.
-   *
-   * @method getAttrib
-   * @param {String/Element} elm Element string id or DOM element to get attribute from.
-   * @param {String} name Name of attribute to get.
-   * @param {String} defaultVal Optional default value to return if the attribute didn't exist.
-   * @return {String} Attribute value string, default value or null if the attribute wasn't found.
-   */
-  getAttrib (elm, name, defaultVal) {
-    const self = this;
-    let hook, value;
-
-    elm = self.$$(elm);
-
-    if (elm.length) {
-      hook = self.attrHooks[name];
-
-      if (hook && hook.get) {
-        value = hook.get(elm, name);
-      } else {
-        value = elm.attr(name);
-      }
-    }
-
-    if (typeof value === 'undefined') {
-      value = defaultVal || '';
-    }
-
-    return value;
-  },
-
-  /**
-   * Returns the absolute x, y position of a node. The position will be returned in an object with x, y fields.
-   *
-   * @method getPos
-   * @param {Element/String} elm HTML element or element id to get x, y position from.
-   * @param {Element} rootElm Optional root element to stop calculations at.
-   * @return {object} Absolute position of the specified element object with x, y fields.
-   */
-  getPos (elm, rootElm) {
-    return Position.getPos(this.doc.body, this.get(elm), rootElm);
-  },
-
-  /**
-   * Parses the specified style value into an object collection. This parser will also
-   * merge and remove any redundant items that browsers might have added. It will also convert non-hex
-   * colors to hex values. Urls inside the styles will also be converted to absolute/relative based on settings.
-   *
-   * @method parseStyle
-   * @param {String} cssText Style value to parse, for example: border:1px solid red;.
-   * @return {Object} Object representation of that style, for example: {border: '1px solid red'}
-   */
-  parseStyle (cssText) {
-    return this.styles.parse(cssText);
-  },
-
-  /**
-   * Serializes the specified style object into a string.
-   *
-   * @method serializeStyle
-   * @param {Object} styles Object to serialize as string, for example: {border: '1px solid red'}
-   * @param {String} name Optional element name.
-   * @return {String} String representation of the style object, for example: border: 1px solid red.
-   */
-  serializeStyle (styles, name) {
-    return this.styles.serialize(styles, name);
-  },
-
-  /**
-   * Adds a style element at the top of the document with the specified cssText content.
-   *
-   * @method addStyle
-   * @param {String} cssText CSS Text style to add to top of head of document.
-   */
-  addStyle (cssText) {
-    const self = this;
-    const doc = self.doc;
+  const addStyle = (cssText: string) => {
     let head, styleElm;
 
     // Prevent inline from loading the same styles twice
     if (self !== DOMUtils.DOM && doc === document) {
-      let addedStyles = DOMUtils.DOM.addedStyles;
-
-      addedStyles = addedStyles || [];
       if (addedStyles[cssText]) {
         return;
       }
 
       addedStyles[cssText] = true;
-      DOMUtils.DOM.addedStyles = addedStyles;
     }
 
     // Create style element if needed
@@ -926,29 +808,9 @@ DOMUtils.prototype = {
     } else {
       styleElm.appendChild(doc.createTextNode(cssText));
     }
-  },
+  };
 
-  /**
-   * Imports/loads the specified CSS file into the document bound to the class.
-   *
-   * @method loadCSS
-   * @param {String} url URL to CSS file to load.
-   * @example
-   * // Loads a CSS file dynamically into the current document
-   * tinymce.DOM.loadCSS('somepath/some.css');
-   *
-   * // Loads a CSS file into the currently active editor instance
-   * tinymce.activeEditor.dom.loadCSS('somepath/some.css');
-   *
-   * // Loads a CSS file into an editor instance by id
-   * tinymce.get('someid').dom.loadCSS('somepath/some.css');
-   *
-   * // Loads multiple CSS files into the current document
-   * tinymce.DOM.loadCSS('somepath/some.css,somepath/someother.css');
-   */
-  loadCSS (url) {
-    const self = this;
-    const doc = self.doc;
+  const loadCSS = (url: string) => {
     let head;
 
     // Prevent inline from loading the same CSS file twice
@@ -968,220 +830,61 @@ DOMUtils.prototype = {
 
       url = Tools._addCacheSuffix(url);
 
-      if (self.files[url]) {
+      if (files[url]) {
         return;
       }
 
-      self.files[url] = true;
-      link = self.create('link', { rel: 'stylesheet', href: url });
-
-      // IE 8 has a bug where dynamically loading stylesheets would produce a 1 item remaining bug
-      // This fix seems to resolve that issue by recalcing the document once a stylesheet finishes loading
-      // It's ugly but it seems to work fine.
-      if (isIE && doc.documentMode && doc.recalc) {
-        link.onload = function () {
-          if (doc.recalc) {
-            doc.recalc();
-          }
-
-          link.onload = null;
-        };
-      }
+      files[url] = true;
+      link = create('link', { rel: 'stylesheet', href: url });
 
       head.appendChild(link);
     });
-  },
+  };
 
-  /**
-   * Adds a class to the specified element or elements.
-   *
-   * @method addClass
-   * @param {String/Element/Array} elm Element ID string or DOM element or array with elements or IDs.
-   * @param {String} cls Class name to add to each element.
-   * @return {String/Array} String with new class value or array with new class values for all elements.
-   * @example
-   * // Adds a class to all paragraphs in the active editor
-   * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('p'), 'myclass');
-   *
-   * // Adds a class to a specific element in the current page
-   * tinymce.DOM.addClass('mydiv', 'myclass');
-   */
-  addClass (elm, cls) {
-    this.$$(elm).addClass(cls);
-  },
-
-  /**
-   * Removes a class from the specified element or elements.
-   *
-   * @method removeClass
-   * @param {String/Element/Array} elm Element ID string or DOM element or array with elements or IDs.
-   * @param {String} cls Class name to remove from each element.
-   * @return {String/Array} String of remaining class name(s), or an array of strings if multiple input elements
-   * were passed in.
-   * @example
-   * // Removes a class from all paragraphs in the active editor
-   * tinymce.activeEditor.dom.removeClass(tinymce.activeEditor.dom.select('p'), 'myclass');
-   *
-   * // Removes a class from a specific element in the current page
-   * tinymce.DOM.removeClass('mydiv', 'myclass');
-   */
-  removeClass (elm, cls) {
-    this.toggleClass(elm, cls, false);
-  },
-
-  /**
-   * Returns true if the specified element has the specified class.
-   *
-   * @method hasClass
-   * @param {String/Element} elm HTML element or element id string to check CSS class on.
-   * @param {String} cls CSS class to check for.
-   * @return {Boolean} true/false if the specified element has the specified class.
-   */
-  hasClass (elm, cls) {
-    return this.$$(elm).hasClass(cls);
-  },
-
-  /**
-   * Toggles the specified class on/off.
-   *
-   * @method toggleClass
-   * @param {Element} elm Element to toggle class on.
-   * @param {[type]} cls Class to toggle on/off.
-   * @param {[type]} state Optional state to set.
-   */
-  toggleClass (elm, cls, state) {
-    this.$$(elm).toggleClass(cls, state).each(function () {
+  const toggleClass = (elm: string | Node | Node[], cls: string, state: boolean) => {
+    $$(elm).toggleClass(cls, state).each(function () {
       if (this.className === '') {
         DomQuery(this).attr('class', null);
       }
     });
-  },
+  };
 
-  /**
-   * Shows the specified element(s) by ID by setting the "display" style.
-   *
-   * @method show
-   * @param {String/Element/Array} elm ID of DOM element or DOM element or array with elements or IDs to show.
-   */
-  show (elm) {
-    this.$$(elm).show();
-  },
+  const addClass = (elm: string | Node | Node[], cls: string) => {
+    $$(elm).addClass(cls);
+  };
 
-  /**
-   * Hides the specified element(s) by ID by setting the "display" style.
-   *
-   * @method hide
-   * @param {String/Element/Array} elm ID of DOM element or DOM element or array with elements or IDs to hide.
-   * @example
-   * // Hides an element by id in the document
-   * tinymce.DOM.hide('myid');
-   */
-  hide (elm) {
-    this.$$(elm).hide();
-  },
+  const removeClass = (elm: string | Node, cls: string) => {
+    toggleClass(elm, cls, false);
+  };
 
-  /**
-   * Returns true/false if the element is hidden or not by checking the "display" style.
-   *
-   * @method isHidden
-   * @param {String/Element} elm Id or element to check display state on.
-   * @return {Boolean} true/false if the element is hidden or not.
-   */
-  isHidden (elm) {
-    return this.$$(elm).css('display') === 'none';
-  },
+  const hasClass = (elm: string | Node, cls: string) => {
+    return $$(elm).hasClass(cls);
+  };
 
-  /**
-   * Returns a unique id. This can be useful when generating elements on the fly.
-   * This method will not check if the element already exists.
-   *
-   * @method uniqueId
-   * @param {String} prefix Optional prefix to add in front of all ids - defaults to "mce_".
-   * @return {String} Unique id.
-   */
-  uniqueId (prefix) {
-    return (!prefix ? 'mce_' : prefix) + (this.counter++);
-  },
+  const show = (elm: string | Node) => {
+    $$(elm).show();
+  };
 
-  /**
-   * Sets the specified HTML content inside the element or elements. The HTML will first be processed. This means
-   * URLs will get converted, hex color values fixed etc. Check processHTML for details.
-   *
-   * @method setHTML
-   * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set HTML inside of.
-   * @param {String} html HTML content to set as inner HTML of the element.
-   * @example
-   * // Sets the inner HTML of all paragraphs in the active editor
-   * tinymce.activeEditor.dom.setHTML(tinymce.activeEditor.dom.select('p'), 'some inner html');
-   *
-   * // Sets the inner HTML of an element by id in the document
-   * tinymce.DOM.setHTML('mydiv', 'some inner html');
-   */
-  setHTML (elm, html) {
-    elm = this.$$(elm);
+  const hide = (elm: string | Node) => {
+    $$(elm).hide();
+  };
 
-    if (isIE) {
-      elm.each(function (i, target) {
-        if (target.canHaveHTML === false) {
-          return;
-        }
+  const isHidden = (elm: string | Node) => {
+    return $$(elm).css('display') === 'none';
+  };
 
-        // Remove all child nodes, IE keeps empty text nodes in DOM
-        while (target.firstChild) {
-          target.removeChild(target.firstChild);
-        }
+  const uniqueId = (prefix?: string) => {
+    return (!prefix ? 'mce_' : prefix) + (counter++);
+  };
 
-        try {
-          // IE will remove comments from the beginning
-          // unless you padd the contents with something
-          target.innerHTML = '<br>' + html;
-          target.removeChild(target.firstChild);
-        } catch (ex) {
-          // IE sometimes produces an unknown runtime error on innerHTML if it's a div inside a p
-          DomQuery('<div></div>').html('<br>' + html).contents().slice(1).appendTo(target);
-        }
+  const getOuterHTML = (elm: string | Node): string => {
+    const node = typeof elm === 'string' ? get(elm) : elm;
 
-        return html;
-      });
-    } else {
-      elm.html(html);
-    }
-  },
+    return NodeType.isElement(node) ? node.outerHTML : DomQuery('<div></div>').append(DomQuery(node).clone()).html();
+  };
 
-  /**
-   * Returns the outer HTML of an element.
-   *
-   * @method getOuterHTML
-   * @param {String/Element} elm Element ID or element object to get outer HTML from.
-   * @return {String} Outer HTML string.
-   * @example
-   * tinymce.DOM.getOuterHTML(editorElement);
-   * tinymce.activeEditor.getOuterHTML(tinymce.activeEditor.getBody());
-   */
-  getOuterHTML (elm) {
-    elm = this.get(elm);
-
-    // Older FF doesn't have outerHTML 3.6 is still used by some orgaizations
-    return elm.nodeType === 1 && 'outerHTML' in elm ? elm.outerHTML : DomQuery('<div></div>').append(DomQuery(elm).clone()).html();
-  },
-
-  /**
-   * Sets the specified outer HTML on an element or elements.
-   *
-   * @method setOuterHTML
-   * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set outer HTML on.
-   * @param {Object} html HTML code to set as outer value for the element.
-   * @example
-   * // Sets the outer HTML of all paragraphs in the active editor
-   * tinymce.activeEditor.dom.setOuterHTML(tinymce.activeEditor.dom.select('p'), '<div>some html</div>');
-   *
-   * // Sets the outer HTML of an element by id in the document
-   * tinymce.DOM.setOuterHTML('mydiv', '<div>some html</div>');
-   */
-  setOuterHTML (elm, html) {
-    const self = this;
-
-    self.$$(elm).each(function () {
+  const setOuterHTML = (elm: string | Node, html: string) => {
+    $$(elm).each(function () {
       try {
         // Older FF doesn't have outerHTML 3.6 is still used by some organizations
         if ('outerHTML' in this) {
@@ -1193,40 +896,14 @@ DOMUtils.prototype = {
       }
 
       // OuterHTML for IE it sometimes produces an "unknown runtime error"
-      self.remove(DomQuery(this).html(html), true);
+      remove(DomQuery(this).html(html), true);
     });
-  },
+  };
 
-  /**
-   * Entity decodes a string. This method decodes any HTML entities, such as &aring;.
-   *
-   * @method decode
-   * @param {String} s String to decode entities on.
-   * @return {String} Entity decoded string.
-   */
-  decode: Entities.decode,
+  const insertAfter = (node: RunArguments, reference: string | Node) => {
+    const referenceNode = get(reference);
 
-  /**
-   * Entity encodes a string. This method encodes the most common entities, such as <>"&.
-   *
-   * @method encode
-   * @param {String} text String to encode with entities.
-   * @return {String} Entity encoded string.
-   */
-  encode: Entities.encodeAllRaw,
-
-  /**
-   * Inserts an element after the reference element.
-   *
-   * @method insertAfter
-   * @param {Element} node Element to insert after the reference.
-   * @param {Element/String/Array} referenceNode Reference element, element id or array of elements to insert after.
-   * @return {Element/Array} Element that got added or an array with elements.
-   */
-  insertAfter (node, referenceNode) {
-    referenceNode = this.get(referenceNode);
-
-    return this.run(node, function (node) {
+    return run(node, function (node) {
       let parent, nextSibling;
 
       parent = referenceNode.parentNode;
@@ -1240,23 +917,11 @@ DOMUtils.prototype = {
 
       return node;
     });
-  },
+  };
 
-  /**
-   * Replaces the specified element or elements with the new element specified. The new element will
-   * be cloned if multiple input elements are passed in.
-   *
-   * @method replace
-   * @param {Element} newElm New element to replace old ones with.
-   * @param {Element/String/Array} oldElm Element DOM node, element id or array of elements or ids to replace.
-   * @param {Boolean} keepChildren Optional keep children state, if set to true child nodes from the old object will be added
-   * to new ones.
-   */
-  replace (newElm, oldElm, keepChildren) {
-    const self = this;
-
-    return self.run(oldElm, function (oldElm) {
-      if (is(oldElm, 'array')) {
+  const replace = (newElm: Node, oldElm: RunArguments, keepChildren?: boolean) => {
+    return run(oldElm, function (oldElm) {
+      if (Tools.is(oldElm, 'array')) {
         newElm = newElm.cloneNode(true);
       }
 
@@ -1268,45 +933,28 @@ DOMUtils.prototype = {
 
       return oldElm.parentNode.replaceChild(newElm, oldElm);
     });
-  },
+  };
 
-  /**
-   * Renames the specified element and keeps its attributes and children.
-   *
-   * @method rename
-   * @param {Element} elm Element to rename.
-   * @param {String} name Name of the new element.
-   * @return {Element} New element or the old element if it needed renaming.
-   */
-  rename (elm, name) {
-    const self = this;
+  const rename = (elm: Node, name: string): Node => {
     let newElm;
 
     if (elm.nodeName !== name.toUpperCase()) {
       // Rename block element
-      newElm = self.create(name);
+      newElm = create(name);
 
       // Copy attribs to new block
-      each(self.getAttribs(elm), function (attrNode) {
-        self.setAttrib(newElm, attrNode.nodeName, self.getAttrib(elm, attrNode.nodeName));
+      each(getAttribs(elm), function (attrNode) {
+        setAttrib(newElm, attrNode.nodeName, getAttrib(elm, attrNode.nodeName));
       });
 
       // Replace block
-      self.replace(newElm, elm, 1);
+      replace(newElm, elm, true);
     }
 
     return newElm || elm;
-  },
+  };
 
-  /**
-   * Find the common ancestor of two elements. This is a shorter method than using the DOM Range logic.
-   *
-   * @method findCommonAncestor
-   * @param {Element} a Element to find common ancestor of.
-   * @param {Element} b Element to find common ancestor of.
-   * @return {Element} Common ancestor element of the two input elements.
-   */
-  findCommonAncestor (a, b) {
+  const findCommonAncestor = (a: Node, b: Node) => {
     let ps = a, pe;
 
     while (ps) {
@@ -1328,124 +976,25 @@ DOMUtils.prototype = {
     }
 
     return ps;
-  },
+  };
 
-  /**
-   * Parses the specified RGB color value and returns a hex version of that color.
-   *
-   * @method toHex
-   * @param {String} rgbVal RGB string value like rgb(1,2,3)
-   * @return {String} Hex version of that RGB value like #FF00FF.
-   */
-  toHex (rgbVal) {
-    return this.styles.toHex(Tools.trim(rgbVal));
-  },
+  const toHex = (rgbVal: string) => {
+    return styles.toHex(Tools.trim(rgbVal));
+  };
 
-  /**
-   * Executes the specified function on the element by id or dom element node or array of elements/id.
-   *
-   * @method run
-   * @param {String/Element/Array} elm ID or DOM element object or array with ids or elements.
-   * @param {function} func Function to execute for each item.
-   * @param {Object} scope Optional scope to execute the function in.
-   * @return {Object/Array} Single object, or an array of objects if multiple input elements were passed in.
-   */
-  run (elm, func, scope) {
-    const self = this;
-    let result;
-
-    if (typeof elm === 'string') {
-      elm = self.get(elm);
-    }
-
-    if (!elm) {
-      return false;
-    }
-
-    scope = scope || this;
-    if (!elm.nodeType && (elm.length || elm.length === 0)) {
-      result = [];
-
-      each(elm, function (elm, i) {
-        if (elm) {
-          if (typeof elm === 'string') {
-            elm = self.get(elm);
-          }
-
-          result.push(func.call(scope, elm, i));
-        }
-      });
-
-      return result;
-    }
-
-    return func.call(scope, elm);
-  },
-
-  /**
-   * Returns a NodeList with attributes for the element.
-   *
-   * @method getAttribs
-   * @param {HTMLElement/string} elm Element node or string id to get attributes from.
-   * @return {NodeList} NodeList with attributes.
-   */
-  getAttribs (elm) {
-    let attrs;
-
-    elm = this.get(elm);
-
-    if (!elm) {
-      return [];
-    }
-
-    if (isIE) {
-      attrs = [];
-
-      // Object will throw exception in IE
-      if (elm.nodeName === 'OBJECT') {
-        return elm.attributes;
-      }
-
-      // IE doesn't keep the selected attribute if you clone option elements
-      if (elm.nodeName === 'OPTION' && this.getAttrib(elm, 'selected')) {
-        attrs.push({ specified: 1, nodeName: 'selected' });
-      }
-
-      // It's crazy that this is faster in IE but it's because it returns all attributes all the time
-      const attrRegExp = /<\/?[\w:\-]+ ?|=[\"][^\"]+\"|=\'[^\']+\'|=[\w\-]+|>/gi;
-      elm.cloneNode(false).outerHTML.replace(attrRegExp, '').replace(/[\w:\-]+/gi, function (a) {
-        attrs.push({ specified: 1, nodeName: a });
-      });
-
-      return attrs;
-    }
-
-    return elm.attributes;
-  },
-
-  /**
-   * Returns true/false if the specified node is to be considered empty or not.
-   *
-   * @example
-   * tinymce.DOM.isEmpty(node, {img: true});
-   * @method isEmpty
-   * @param {Object} elements Optional name/value object with elements that are automatically treated as non-empty elements.
-   * @return {Boolean} true/false if the node is empty or not.
-   */
-  isEmpty (node, elements) {
-    const self = this;
+  const isEmpty = (node: Node, elements?: Record<string, any>) => {
     let i, attributes, type, whitespace, walker, name, brCount = 0;
 
-    node = node.firstChild;
+    node = node.firstChild as HTMLElement;
     if (node) {
       walker = new TreeWalker(node, node.parentNode);
-      elements = elements || (self.schema ? self.schema.getNonEmptyElements() : null);
-      whitespace = self.schema ? self.schema.getWhiteSpaceElements() : {};
+      elements = elements || (schema ? schema.getNonEmptyElements() : null);
+      whitespace = schema ? schema.getWhiteSpaceElements() : {};
 
       do {
         type = node.nodeType;
 
-        if (type === 1) {
+        if (NodeType.isElement(node)) {
           // Ignore bogus elements
           const bogusVal = node.getAttribute('data-mce-bogus');
           if (bogusVal) {
@@ -1467,7 +1016,7 @@ DOMUtils.prototype = {
           }
 
           // Keep elements with data-bookmark attributes or name attribute like <a name="1"></a>
-          attributes = self.getAttribs(node);
+          attributes = getAttribs(node);
           i = attributes.length;
           while (i--) {
             name = attributes[i].nodeName;
@@ -1497,57 +1046,25 @@ DOMUtils.prototype = {
     }
 
     return brCount <= 1;
-  },
+  };
 
-  /**
-   * Creates a new DOM Range object. This will use the native DOM Range API if it's
-   * available. If it's not, it will fall back to the custom TinyMCE implementation.
-   *
-   * @method createRng
-   * @return {DOMRange} DOM Range object.
-   * @example
-   * var rng = tinymce.DOM.createRng();
-   * alert(rng.startContainer + "," + rng.startOffset);
-   */
-  createRng () {
-    return this.doc.createRange();
-  },
+  const createRng = () => {
+    return doc.createRange();
+  };
 
-  /**
-   * Returns the index of the specified node within its parent.
-   *
-   * @method nodeIndex
-   * @param {Node} node Node to look for.
-   * @param {boolean} normalized Optional true/false state if the index is what it would be after a normalization.
-   * @return {Number} Index of the specified node.
-   */
-  nodeIndex,
-
-  /**
-   * Splits an element into two new elements and places the specified split
-   * element or elements between the new ones. For example splitting the paragraph at the bold element in
-   * this example <p>abc<b>abc</b>123</p> would produce <p>abc</p><b>abc</b><p>123</p>.
-   *
-   * @method split
-   * @param {Element} parentElm Parent element to split.
-   * @param {Element} splitElm Element to split at.
-   * @param {Element} replacementElm Optional replacement element to replace the split element with.
-   * @return {Element} Returns the split element or the replacement element if that is specified.
-   */
-  split (parentElm, splitElm, replacementElm) {
-    const self = this;
-    let r = self.createRng(), bef, aft, pa;
+  const split = (parentElm: Node, splitElm: Node, replacementElm?: Node) => {
+    let r = createRng(), bef, aft, pa;
 
     if (parentElm && splitElm) {
       // Get before chunk
-      r.setStart(parentElm.parentNode, self.nodeIndex(parentElm));
-      r.setEnd(splitElm.parentNode, self.nodeIndex(splitElm));
+      r.setStart(parentElm.parentNode, findNodeIndex(parentElm));
+      r.setEnd(splitElm.parentNode, findNodeIndex(splitElm));
       bef = r.extractContents();
 
       // Get after chunk
-      r = self.createRng();
-      r.setStart(splitElm.parentNode, self.nodeIndex(splitElm) + 1);
-      r.setEnd(parentElm.parentNode, self.nodeIndex(parentElm) + 1);
+      r = createRng();
+      r.setStart(splitElm.parentNode, findNodeIndex(splitElm) + 1);
+      r.setEnd(parentElm.parentNode, findNodeIndex(parentElm) + 1);
       aft = r.extractContents();
 
       // Insert before chunk
@@ -1564,122 +1081,85 @@ DOMUtils.prototype = {
 
       // Insert after chunk
       pa.insertBefore(TrimNode.trimNode(self, aft), parentElm);
-      self.remove(parentElm);
+      remove(parentElm);
 
       return replacementElm || splitElm;
     }
-  },
+  };
 
-  /**
-   * Adds an event handler to the specified object.
-   *
-   * @method bind
-   * @param {Element/Document/Window/Array} target Target element to bind events to.
-   * handler to or an array of elements/ids/documents.
-   * @param {String} name Name of event handler to add, for example: click.
-   * @param {function} func Function to execute when the event occurs.
-   * @param {Object} scope Optional scope to execute the function in.
-   * @return {function} Function callback handler the same as the one passed in.
-   */
-  bind (target, name, func, scope) {
-    const self = this;
-
+  const bind = (target: Target, name: string, func: Function, scope?: any) => {
     if (Tools.isArray(target)) {
       let i = target.length;
 
       while (i--) {
-        target[i] = self.bind(target[i], name, func, scope);
+        target[i] = bind(target[i], name, func, scope);
       }
 
       return target;
     }
 
     // Collect all window/document events bound by editor instance
-    if (self.settings.collect && (target === self.doc || target === self.win)) {
-      self.boundEvents.push([target, name, func, scope]);
+    if (settings.collect && (target === doc || target === win)) {
+      boundEvents.push([target, name, func, scope]);
     }
 
-    return self.events.bind(target, name, func, scope || self);
-  },
+    return events.bind(target, name, func, scope || self);
+  };
 
-  /**
-   * Removes the specified event handler by name and function from an element or collection of elements.
-   *
-   * @method unbind
-   * @param {Element/Document/Window/Array} target Target element to unbind events on.
-   * @param {String} name Event handler name, for example: "click"
-   * @param {function} func Function to remove.
-   * @return {bool/Array} Bool state of true if the handler was removed, or an array of states if multiple input elements
-   * were passed in.
-   */
-  unbind (target, name, func) {
-    const self = this;
+  const unbind = (target: Target, name?: string, func?: Function) => {
     let i;
 
     if (Tools.isArray(target)) {
       i = target.length;
 
       while (i--) {
-        target[i] = self.unbind(target[i], name, func);
+        target[i] = unbind(target[i], name, func);
       }
 
       return target;
     }
 
     // Remove any bound events matching the input
-    if (self.boundEvents && (target === self.doc || target === self.win)) {
-      i = self.boundEvents.length;
+    if (boundEvents && (target === doc || target === win)) {
+      i = boundEvents.length;
 
       while (i--) {
-        const item = self.boundEvents[i];
+        const item = boundEvents[i];
 
         if (target === item[0] && (!name || name === item[1]) && (!func || func === item[2])) {
-          this.events.unbind(item[0], item[1], item[2]);
+          events.unbind(item[0], item[1], item[2]);
         }
       }
     }
 
-    return this.events.unbind(target, name, func);
-  },
+    return events.unbind(target, name, func);
+  };
 
-  /**
-   * Fires the specified event name with object on target.
-   *
-   * @method fire
-   * @param {Node/Document/Window} target Target element or object to fire event on.
-   * @param {String} name Name of the event to fire.
-   * @param {Object} evt Event object to send.
-   * @return {Event} Event object.
-   */
-  fire (target, name, evt) {
-    return this.events.fire(target, name, evt);
-  },
+  const fire = (target: Target, name: string, evt?) => {
+    return events.fire(target, name, evt);
+  };
 
-  // Returns the content editable state of a node
-  getContentEditable (node) {
-    let contentEditable;
+  const getContentEditable = (node: Node) => {
+    if (node && NodeType.isElement(node)) {
+      // Check for fake content editable
+      const contentEditable = node.getAttribute('data-mce-contenteditable');
+      if (contentEditable && contentEditable !== 'inherit') {
+        return contentEditable;
+      }
 
-    // Check type
-    if (!node || node.nodeType !== 1) {
+      // Check for real content editable
+      return node.contentEditable !== 'inherit' ? node.contentEditable : null;
+    } else {
       return null;
     }
+  };
 
-    // Check for fake content editable
-    contentEditable = node.getAttribute('data-mce-contenteditable');
-    if (contentEditable && contentEditable !== 'inherit') {
-      return contentEditable;
-    }
-
-    // Check for real content editable
-    return node.contentEditable !== 'inherit' ? node.contentEditable : null;
-  },
-
-  getContentEditableParent (node) {
-    const root = this.getRoot();
+  const getContentEditableParent = (node: Node) => {
+    const root = getRoot();
     let state = null;
 
     for (; node && node !== root; node = node.parentNode) {
-      state = this.getContentEditable(node);
+      state = getContentEditable(node);
 
       if (state !== null) {
         break;
@@ -1687,26 +1167,17 @@ DOMUtils.prototype = {
     }
 
     return state;
-  },
+  };
 
-  /**
-   * Destroys all internal references to the DOM to solve IE leak issues.
-   *
-   * @method destroy
-   */
-  destroy () {
-    const self = this;
-
+  const destroy = () => {
     // Unbind all events bound to window/document by editor instance
-    if (self.boundEvents) {
-      let i = self.boundEvents.length;
+    if (boundEvents) {
+      let i = boundEvents.length;
 
       while (i--) {
-        const item = self.boundEvents[i];
-        this.events.unbind(item[0], item[1], item[2]);
+        const item = boundEvents[i];
+        events.unbind(item[0], item[1], item[2]);
       }
-
-      self.boundEvents = null;
     }
 
     // Restore sizzle document to window.document
@@ -1714,11 +1185,9 @@ DOMUtils.prototype = {
     if (Sizzle.setDocument) {
       Sizzle.setDocument();
     }
+  };
 
-    self.win = self.doc = self.root = self.events = self.frag = null;
-  },
-
-  isChildOf (node, parent) {
+  const isChildOf = (node: Node, parent: Node) => {
     while (node) {
       if (parent === node) {
         return true;
@@ -1728,56 +1197,722 @@ DOMUtils.prototype = {
     }
 
     return false;
-  },
+  };
 
-  // #ifdef debug
-
-  dumpRng (r) {
+  const dumpRng = (r: Range) => {
     return (
       'startContainer: ' + r.startContainer.nodeName +
       ', startOffset: ' + r.startOffset +
       ', endContainer: ' + r.endContainer.nodeName +
       ', endOffset: ' + r.endOffset
     );
-  },
+  };
 
-  // #endif
+  const self = {
+    doc,
+    settings,
+    win,
+    files,
+    stdMode,
+    boxModel,
+    styleSheetLoader,
+    boundEvents,
+    styles,
+    schema,
+    events,
+    isBlock,
+    $,
+    $$,
 
-  _findSib (node, selector, name) {
-    const self = this;
-    let func = selector;
+    root: null,
 
-    if (node) {
-      // If expression make a function of it using is
-      if (typeof func === 'string') {
-        func = function (node) {
-          return self.is(node, selector);
-        };
-      }
+    clone,
 
-      // Loop all siblings
-      for (node = node[name]; node; node = node[name]) {
-        if (func(node)) {
-          return node;
-        }
-      }
-    }
+    /**
+     * Returns the root node of the document. This is normally the body but might be a DIV. Parents like getParent will not
+     * go above the point of this root node.
+     *
+     * @method getRoot
+     * @return {Element} Root element for the utility class.
+     */
+    getRoot,
 
-    return null;
-  }
-};
+    /**
+     * Returns the viewport of the window.
+     *
+     * @method getViewPort
+     * @param {Window} win Optional window to get viewport of.
+     * @return {Object} Viewport object with fields x, y, w and h.
+     */
+    getViewPort,
 
-/**
- * Instance of DOMUtils for the current document.
- *
- * @static
- * @property DOM
- * @type tinymce.dom.DOMUtils
- * @example
- * // Example of how to add a class to some element by id
- * tinymce.DOM.addClass('someid', 'someclass');
- */
-DOMUtils.DOM = new DOMUtils(document);
-DOMUtils.nodeIndex = nodeIndex;
+    /**
+     * Returns the rectangle for a specific element.
+     *
+     * @method getRect
+     * @param {Element/String} elm Element object or element ID to get rectangle from.
+     * @return {object} Rectangle for specified element object with x, y, w, h fields.
+     */
+    getRect,
+
+    /**
+     * Returns the size dimensions of the specified element.
+     *
+     * @method getSize
+     * @param {Element/String} elm Element object or element ID to get rectangle from.
+     * @return {object} Rectangle for specified element object with w, h fields.
+     */
+    getSize,
+
+    /**
+     * Returns a node by the specified selector function. This function will
+     * loop through all parent nodes and call the specified function for each node.
+     * If the function then returns true indicating that it has found what it was looking for, the loop execution will then end
+     * and the node it found will be returned.
+     *
+     * @method getParent
+     * @param {Node/String} node DOM node to search parents on or ID string.
+     * @param {function} selector Selection function or CSS selector to execute on each node.
+     * @param {Node} root Optional root element, never go beyond this point.
+     * @return {Node} DOM Node or null if it wasn't found.
+     */
+    getParent,
+
+    /**
+     * Returns a node list of all parents matching the specified selector function or pattern.
+     * If the function then returns true indicating that it has found what it was looking for and that node will be collected.
+     *
+     * @method getParents
+     * @param {Node/String} node DOM node to search parents on or ID string.
+     * @param {function} selector Selection function to execute on each node or CSS pattern.
+     * @param {Node} root Optional root element, never go beyond this point.
+     * @return {Array} Array of nodes or null if it wasn't found.
+     */
+    getParents,
+
+    /**
+     * Returns the specified element by ID or the input element if it isn't a string.
+     *
+     * @method get
+     * @param {String/Element} n Element id to look for or element to just pass though.
+     * @return {Element} Element matching the specified id or null if it wasn't found.
+     */
+    get,
+
+    /**
+     * Returns the next node that matches selector or function
+     *
+     * @method getNext
+     * @param {Node} node Node to find siblings from.
+     * @param {String/function} selector Selector CSS expression or function.
+     * @return {Node} Next node item matching the selector or null if it wasn't found.
+     */
+    getNext,
+
+    /**
+     * Returns the previous node that matches selector or function
+     *
+     * @method getPrev
+     * @param {Node} node Node to find siblings from.
+     * @param {String/function} selector Selector CSS expression or function.
+     * @return {Node} Previous node item matching the selector or null if it wasn't found.
+     */
+    getPrev,
+
+    // #ifndef jquery
+
+    /**
+     * Selects specific elements by a CSS level 3 pattern. For example "div#a1 p.test".
+     * This function is optimized for the most common patterns needed in TinyMCE but it also performs well enough
+     * on more complex patterns.
+     *
+     * @method select
+     * @param {String} selector CSS level 3 pattern to select/find elements by.
+     * @param {Object} scope Optional root element/scope element to search in.
+     * @return {Array} Array with all matched elements.
+     * @example
+     * // Adds a class to all paragraphs in the currently active editor
+     * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('p'), 'someclass');
+     *
+     * // Adds a class to all spans that have the test class in the currently active editor
+     * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('span.test'), 'someclass')
+     */
+    select,
+
+    /**
+     * Returns true/false if the specified element matches the specified css pattern.
+     *
+     * @method is
+     * @param {Node/NodeList} elm DOM node to match or an array of nodes to match.
+     * @param {String} selector CSS pattern to match the element against.
+     */
+    is,
+
+    // #endif
+
+    /**
+     * Adds the specified element to another element or elements.
+     *
+     * @method add
+     * @param {String/Element/Array} parentElm Element id string, DOM node element or array of ids or elements to add to.
+     * @param {String/Element} name Name of new element to add or existing element to add.
+     * @param {Object} attrs Optional object collection with arguments to add to the new element(s).
+     * @param {String} html Optional inner HTML contents to add for each element.
+     * @param {Boolean} create Optional flag if the element should be created or added.
+     * @return {Element/Array} Element that got created, or an array of created elements if multiple input elements
+     * were passed in.
+     * @example
+     * // Adds a new paragraph to the end of the active editor
+     * tinymce.activeEditor.dom.add(tinymce.activeEditor.getBody(), 'p', {title: 'my title'}, 'Some content');
+     */
+    add,
+
+    /**
+     * Creates a new element.
+     *
+     * @method create
+     * @param {String} name Name of new element.
+     * @param {Object} attrs Optional object name/value collection with element attributes.
+     * @param {String} html Optional HTML string to set as inner HTML of the element.
+     * @return {Element} HTML DOM node element that got created.
+     * @example
+     * // Adds an element where the caret/selection is in the active editor
+     * var el = tinymce.activeEditor.dom.create('div', {id: 'test', 'class': 'myclass'}, 'some content');
+     * tinymce.activeEditor.selection.setNode(el);
+     */
+    create,
+
+    /**
+     * Creates HTML string for element. The element will be closed unless an empty inner HTML string is passed in.
+     *
+     * @method createHTML
+     * @param {String} name Name of new element.
+     * @param {Object} attrs Optional object name/value collection with element attributes.
+     * @param {String} html Optional HTML string to set as inner HTML of the element.
+     * @return {String} String with new HTML element, for example: <a href="#">test</a>.
+     * @example
+     * // Creates a html chunk and inserts it at the current selection/caret location
+     * tinymce.activeEditor.selection.setContent(tinymce.activeEditor.dom.createHTML('a', {href: 'test.html'}, 'some line'));
+     */
+    createHTML,
+
+    /**
+     * Creates a document fragment out of the specified HTML string.
+     *
+     * @method createFragment
+     * @param {String} html Html string to create fragment from.
+     * @return {DocumentFragment} Document fragment node.
+     */
+    createFragment,
+
+    /**
+     * Removes/deletes the specified element(s) from the DOM.
+     *
+     * @method remove
+     * @param {String/Element/Array} node ID of element or DOM element object or array containing multiple elements/ids.
+     * @param {Boolean} keepChildren Optional state to keep children or not. If set to true all children will be
+     * placed at the location of the removed element.
+     * @return {Element/Array} HTML DOM element that got removed, or an array of removed elements if multiple input elements
+     * were passed in.
+     * @example
+     * // Removes all paragraphs in the active editor
+     * tinymce.activeEditor.dom.remove(tinymce.activeEditor.dom.select('p'));
+     *
+     * // Removes an element by id in the document
+     * tinymce.DOM.remove('mydiv');
+     */
+    remove,
+
+    /**
+     * Sets the CSS style value on a HTML element. The name can be a camelcase string
+     * or the CSS style name like background-color.
+     *
+     * @method setStyle
+     * @param {String/Element/Array} elm HTML element/Array of elements to set CSS style value on.
+     * @param {String} name Name of the style value to set.
+     * @param {String} value Value to set on the style.
+     * @example
+     * // Sets a style value on all paragraphs in the currently active editor
+     * tinymce.activeEditor.dom.setStyle(tinymce.activeEditor.dom.select('p'), 'background-color', 'red');
+     *
+     * // Sets a style value to an element by id in the current document
+     * tinymce.DOM.setStyle('mydiv', 'background-color', 'red');
+     */
+    setStyle,
+
+    /**
+     * Returns the current style or runtime/computed value of an element.
+     *
+     * @method getStyle
+     * @param {String/Element} elm HTML element or element id string to get style from.
+     * @param {String} name Style name to return.
+     * @param {Boolean} computed Computed style.
+     * @return {String} Current style or computed style value of an element.
+     */
+    getStyle,
+
+    /**
+     * Sets multiple styles on the specified element(s).
+     *
+     * @method setStyles
+     * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set styles on.
+     * @param {Object} styles Name/Value collection of style items to add to the element(s).
+     * @example
+     * // Sets styles on all paragraphs in the currently active editor
+     * tinymce.activeEditor.dom.setStyles(tinymce.activeEditor.dom.select('p'), {'background-color': 'red', 'color': 'green'});
+     *
+     * // Sets styles to an element by id in the current document
+     * tinymce.DOM.setStyles('mydiv', {'background-color': 'red', 'color': 'green'});
+     */
+    setStyles,
+
+    /**
+     * Removes all attributes from an element or elements.
+     *
+     * @method removeAllAttribs
+     * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to remove attributes from.
+     */
+    removeAllAttribs,
+
+    /**
+     * Sets the specified attribute of an element or elements.
+     *
+     * @method setAttrib
+     * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set attribute on.
+     * @param {String} name Name of attribute to set.
+     * @param {String} value Value to set on the attribute - if this value is falsy like null, 0 or '' it will remove
+     * the attribute instead.
+     * @example
+     * // Sets class attribute on all paragraphs in the active editor
+     * tinymce.activeEditor.dom.setAttrib(tinymce.activeEditor.dom.select('p'), 'class', 'myclass');
+     *
+     * // Sets class attribute on a specific element in the current page
+     * tinymce.dom.setAttrib('mydiv', 'class', 'myclass');
+     */
+    setAttrib,
+
+    /**
+     * Sets two or more specified attributes of an element or elements.
+     *
+     * @method setAttribs
+     * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set attributes on.
+     * @param {Object} attrs Name/Value collection of attribute items to add to the element(s).
+     * @example
+     * // Sets class and title attributes on all paragraphs in the active editor
+     * tinymce.activeEditor.dom.setAttribs(tinymce.activeEditor.dom.select('p'), {'class': 'myclass', title: 'some title'});
+     *
+     * // Sets class and title attributes on a specific element in the current page
+     * tinymce.DOM.setAttribs('mydiv', {'class': 'myclass', title: 'some title'});
+     */
+    setAttribs,
+
+    /**
+     * Returns the specified attribute by name.
+     *
+     * @method getAttrib
+     * @param {String/Element} elm Element string id or DOM element to get attribute from.
+     * @param {String} name Name of attribute to get.
+     * @param {String} defaultVal Optional default value to return if the attribute didn't exist.
+     * @return {String} Attribute value string, default value or null if the attribute wasn't found.
+     */
+    getAttrib,
+
+    /**
+     * Returns the absolute x, y position of a node. The position will be returned in an object with x, y fields.
+     *
+     * @method getPos
+     * @param {Element/String} elm HTML element or element id to get x, y position from.
+     * @param {Element} rootElm Optional root element to stop calculations at.
+     * @return {object} Absolute position of the specified element object with x, y fields.
+     */
+    getPos,
+
+    /**
+     * Parses the specified style value into an object collection. This parser will also
+     * merge and remove any redundant items that browsers might have added. It will also convert non-hex
+     * colors to hex values. Urls inside the styles will also be converted to absolute/relative based on settings.
+     *
+     * @method parseStyle
+     * @param {String} cssText Style value to parse, for example: border:1px solid red;.
+     * @return {Object} Object representation of that style, for example: {border: '1px solid red'}
+     */
+    parseStyle,
+
+    /**
+     * Serializes the specified style object into a string.
+     *
+     * @method serializeStyle
+     * @param {Object} styles Object to serialize as string, for example: {border: '1px solid red'}
+     * @param {String} name Optional element name.
+     * @return {String} String representation of the style object, for example: border: 1px solid red.
+     */
+    serializeStyle,
+
+    /**
+     * Adds a style element at the top of the document with the specified cssText content.
+     *
+     * @method addStyle
+     * @param {String} cssText CSS Text style to add to top of head of document.
+     */
+    addStyle,
+
+    /**
+     * Imports/loads the specified CSS file into the document bound to the class.
+     *
+     * @method loadCSS
+     * @param {String} url URL to CSS file to load.
+     * @example
+     * // Loads a CSS file dynamically into the current document
+     * tinymce.DOM.loadCSS('somepath/some.css');
+     *
+     * // Loads a CSS file into the currently active editor instance
+     * tinymce.activeEditor.dom.loadCSS('somepath/some.css');
+     *
+     * // Loads a CSS file into an editor instance by id
+     * tinymce.get('someid').dom.loadCSS('somepath/some.css');
+     *
+     * // Loads multiple CSS files into the current document
+     * tinymce.DOM.loadCSS('somepath/some.css,somepath/someother.css');
+     */
+    loadCSS,
+
+    /**
+     * Adds a class to the specified element or elements.
+     *
+     * @method addClass
+     * @param {String/Element/Array} elm Element ID string or DOM element or array with elements or IDs.
+     * @param {String} cls Class name to add to each element.
+     * @return {String/Array} String with new class value or array with new class values for all elements.
+     * @example
+     * // Adds a class to all paragraphs in the active editor
+     * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('p'), 'myclass');
+     *
+     * // Adds a class to a specific element in the current page
+     * tinymce.DOM.addClass('mydiv', 'myclass');
+     */
+    addClass,
+
+    /**
+     * Removes a class from the specified element or elements.
+     *
+     * @method removeClass
+     * @param {String/Element/Array} elm Element ID string or DOM element or array with elements or IDs.
+     * @param {String} cls Class name to remove from each element.
+     * @return {String/Array} String of remaining class name(s), or an array of strings if multiple input elements
+     * were passed in.
+     * @example
+     * // Removes a class from all paragraphs in the active editor
+     * tinymce.activeEditor.dom.removeClass(tinymce.activeEditor.dom.select('p'), 'myclass');
+     *
+     * // Removes a class from a specific element in the current page
+     * tinymce.DOM.removeClass('mydiv', 'myclass');
+     */
+    removeClass,
+
+    /**
+     * Returns true if the specified element has the specified class.
+     *
+     * @method hasClass
+     * @param {String/Element} elm HTML element or element id string to check CSS class on.
+     * @param {String} cls CSS class to check for.
+     * @return {Boolean} true/false if the specified element has the specified class.
+     */
+    hasClass,
+
+    /**
+     * Toggles the specified class on/off.
+     *
+     * @method toggleClass
+     * @param {Element} elm Element to toggle class on.
+     * @param {[type]} cls Class to toggle on/off.
+     * @param {[type]} state Optional state to set.
+     */
+    toggleClass,
+
+    /**
+     * Shows the specified element(s) by ID by setting the "display" style.
+     *
+     * @method show
+     * @param {String/Element/Array} elm ID of DOM element or DOM element or array with elements or IDs to show.
+     */
+    show,
+
+    /**
+     * Hides the specified element(s) by ID by setting the "display" style.
+     *
+     * @method hide
+     * @param {String/Element/Array} elm ID of DOM element or DOM element or array with elements or IDs to hide.
+     * @example
+     * // Hides an element by id in the document
+     * tinymce.DOM.hide('myid');
+     */
+    hide,
+
+    /**
+     * Returns true/false if the element is hidden or not by checking the "display" style.
+     *
+     * @method isHidden
+     * @param {String/Element} elm Id or element to check display state on.
+     * @return {Boolean} true/false if the element is hidden or not.
+     */
+    isHidden,
+
+    /**
+     * Returns a unique id. This can be useful when generating elements on the fly.
+     * This method will not check if the element already exists.
+     *
+     * @method uniqueId
+     * @param {String} prefix Optional prefix to add in front of all ids - defaults to "mce_".
+     * @return {String} Unique id.
+     */
+    uniqueId,
+
+    /**
+     * Sets the specified HTML content inside the element or elements. The HTML will first be processed. This means
+     * URLs will get converted, hex color values fixed etc. Check processHTML for details.
+     *
+     * @method setHTML
+     * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set HTML inside of.
+     * @param {String} html HTML content to set as inner HTML of the element.
+     * @example
+     * // Sets the inner HTML of all paragraphs in the active editor
+     * tinymce.activeEditor.dom.setHTML(tinymce.activeEditor.dom.select('p'), 'some inner html');
+     *
+     * // Sets the inner HTML of an element by id in the document
+     * tinymce.DOM.setHTML('mydiv', 'some inner html');
+     */
+    setHTML,
+
+    /**
+     * Returns the outer HTML of an element.
+     *
+     * @method getOuterHTML
+     * @param {String/Element} elm Element ID or element object to get outer HTML from.
+     * @return {String} Outer HTML string.
+     * @example
+     * tinymce.DOM.getOuterHTML(editorElement);
+     * tinymce.activeEditor.getOuterHTML(tinymce.activeEditor.getBody());
+     */
+    getOuterHTML,
+
+    /**
+     * Sets the specified outer HTML on an element or elements.
+     *
+     * @method setOuterHTML
+     * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set outer HTML on.
+     * @param {Object} html HTML code to set as outer value for the element.
+     * @example
+     * // Sets the outer HTML of all paragraphs in the active editor
+     * tinymce.activeEditor.dom.setOuterHTML(tinymce.activeEditor.dom.select('p'), '<div>some html</div>');
+     *
+     * // Sets the outer HTML of an element by id in the document
+     * tinymce.DOM.setOuterHTML('mydiv', '<div>some html</div>');
+     */
+    setOuterHTML,
+
+    /**
+     * Entity decodes a string. This method decodes any HTML entities, such as &aring;.
+     *
+     * @method decode
+     * @param {String} s String to decode entities on.
+     * @return {String} Entity decoded string.
+     */
+    decode,
+
+    /**
+     * Entity encodes a string. This method encodes the most common entities, such as <>"&.
+     *
+     * @method encode
+     * @param {String} text String to encode with entities.
+     * @return {String} Entity encoded string.
+     */
+    encode,
+
+    /**
+     * Inserts an element after the reference element.
+     *
+     * @method insertAfter
+     * @param {Element} node Element to insert after the reference.
+     * @param {Element/String/Array} referenceNode Reference element, element id or array of elements to insert after.
+     * @return {Element/Array} Element that got added or an array with elements.
+     */
+    insertAfter,
+
+    /**
+     * Replaces the specified element or elements with the new element specified. The new element will
+     * be cloned if multiple input elements are passed in.
+     *
+     * @method replace
+     * @param {Element} newElm New element to replace old ones with.
+     * @param {Element/String/Array} oldElm Element DOM node, element id or array of elements or ids to replace.
+     * @param {Boolean} keepChildren Optional keep children state, if set to true child nodes from the old object will be added
+     * to new ones.
+     */
+    replace,
+
+    /**
+     * Renames the specified element and keeps its attributes and children.
+     *
+     * @method rename
+     * @param {Element} elm Element to rename.
+     * @param {String} name Name of the new element.
+     * @return {Element} New element or the old element if it needed renaming.
+     */
+    rename,
+
+    /**
+     * Find the common ancestor of two elements. This is a shorter method than using the DOM Range logic.
+     *
+     * @method findCommonAncestor
+     * @param {Element} a Element to find common ancestor of.
+     * @param {Element} b Element to find common ancestor of.
+     * @return {Element} Common ancestor element of the two input elements.
+     */
+    findCommonAncestor,
+
+    /**
+     * Parses the specified RGB color value and returns a hex version of that color.
+     *
+     * @method toHex
+     * @param {String} rgbVal RGB string value like rgb(1,2,3)
+     * @return {String} Hex version of that RGB value like #FF00FF.
+     */
+    toHex,
+
+    /**
+     * Executes the specified function on the element by id or dom element node or array of elements/id.
+     *
+     * @method run
+     * @param {String/Element/Array} elm ID or DOM element object or array with ids or elements.
+     * @param {function} func Function to execute for each item.
+     * @param {Object} scope Optional scope to execute the function in.
+     * @return {Object/Array} Single object, or an array of objects if multiple input elements were passed in.
+     */
+    run,
+
+    /**
+     * Returns a NodeList with attributes for the element.
+     *
+     * @method getAttribs
+     * @param {HTMLElement/string} elm Element node or string id to get attributes from.
+     * @return {NodeList} NodeList with attributes.
+     */
+    getAttribs,
+
+    /**
+     * Returns true/false if the specified node is to be considered empty or not.
+     *
+     * @example
+     * tinymce.DOM.isEmpty(node, {img: true});
+     * @method isEmpty
+     * @param {Object} elements Optional name/value object with elements that are automatically treated as non-empty elements.
+     * @return {Boolean} true/false if the node is empty or not.
+     */
+    isEmpty,
+
+    /**
+     * Creates a new DOM Range object. This will use the native DOM Range API if it's
+     * available. If it's not, it will fall back to the custom TinyMCE implementation.
+     *
+     * @method createRng
+     * @return {DOMRange} DOM Range object.
+     * @example
+     * var rng = tinymce.DOM.createRng();
+     * alert(rng.startContainer + "," + rng.startOffset);
+     */
+    createRng,
+
+    /**
+     * Returns the index of the specified node within its parent.
+     *
+     * @method nodeIndex
+     * @param {Node} node Node to look for.
+     * @param {boolean} normalized Optional true/false state if the index is what it would be after a normalization.
+     * @return {Number} Index of the specified node.
+     */
+    nodeIndex: findNodeIndex,
+
+    /**
+     * Splits an element into two new elements and places the specified split
+     * element or elements between the new ones. For example splitting the paragraph at the bold element in
+     * this example <p>abc<b>abc</b>123</p> would produce <p>abc</p><b>abc</b><p>123</p>.
+     *
+     * @method split
+     * @param {Element} parentElm Parent element to split.
+     * @param {Element} splitElm Element to split at.
+     * @param {Element} replacementElm Optional replacement element to replace the split element with.
+     * @return {Element} Returns the split element or the replacement element if that is specified.
+     */
+    split,
+
+    /**
+     * Adds an event handler to the specified object.
+     *
+     * @method bind
+     * @param {Element/Document/Window/Array} target Target element to bind events to.
+     * handler to or an array of elements/ids/documents.
+     * @param {String} name Name of event handler to add, for example: click.
+     * @param {function} func Function to execute when the event occurs.
+     * @param {Object} scope Optional scope to execute the function in.
+     * @return {function} Function callback handler the same as the one passed in.
+     */
+    bind,
+
+    /**
+     * Removes the specified event handler by name and function from an element or collection of elements.
+     *
+     * @method unbind
+     * @param {Element/Document/Window/Array} target Target element to unbind events on.
+     * @param {String} name Event handler name, for example: "click"
+     * @param {function} func Function to remove.
+     * @return {bool/Array} Bool state of true if the handler was removed, or an array of states if multiple input elements
+     * were passed in.
+     */
+    unbind,
+
+    /**
+     * Fires the specified event name with object on target.
+     *
+     * @method fire
+     * @param {Node/Document/Window} target Target element or object to fire event on.
+     * @param {String} name Name of the event to fire.
+     * @param {Object} evt Event object to send.
+     * @return {Event} Event object.
+     */
+    fire,
+
+    // Returns the content editable state of a node
+    getContentEditable,
+    getContentEditableParent,
+
+    /**
+     * Destroys all internal references to the DOM to solve IE leak issues.
+     *
+     * @method destroy
+     */
+    destroy,
+    isChildOf,
+    dumpRng
+  };
+
+  attrHooks = setupAttrHooks(styles, settings, () => self);
+
+  return self;
+}
+
+export namespace DOMUtils {
+  /**
+   * Instance of DOMUtils for the current document.
+   *
+   * @static
+   * @property DOM
+   * @type tinymce.dom.DOMUtils
+   * @example
+   * // Example of how to add a class to some element by id
+   * tinymce.DOM.addClass('someid', 'someclass');
+   */
+  export const DOM = DOMUtils(document);
+  export const nodeIndex = findNodeIndex;
+}
 
 export default DOMUtils;

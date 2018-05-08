@@ -111,7 +111,7 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
     const dom = editor.dom, node = editor.selection.getNode();
 
     content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, function (all, before, value, after) {
-      const inputStyles = dom.parseStyle(dom.decode(value), 'span');
+      const inputStyles = dom.parseStyle(dom.decode(value));
       let outputStyles = {};
 
       if (webKitStyles === 'none') {
@@ -122,7 +122,7 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
         let inputValue = inputStyles[webKitStyles[i]], currentValue = dom.getStyle(node, webKitStyles[i], true);
 
         if (/color/.test(webKitStyles[i])) {
-          inputValue = dom.toHex(inputValue);
+          inputValue = dom.toHex(inputValue as string);
           currentValue = dom.toHex(currentValue);
         }
 

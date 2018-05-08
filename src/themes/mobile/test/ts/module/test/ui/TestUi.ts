@@ -57,7 +57,7 @@ const sWaitForToggledState = function (label, state, realm, memento) {
       );
     }),
     100,
-    1000
+    8000
   );
 };
 

@@ -310,8 +310,8 @@ const getCssText = function (editor, format) {
         }
 
         // Convert font size from em/% to px
-        value = parseFloat(value) / (/%$/.test(value) ? 100 : 1);
-        value = (value * parentFontSize) + 'px';
+        const numValue = parseFloat(value) / (/%$/.test(value) ? 100 : 1);
+        value = (numValue * parentFontSize) + 'px';
       }
     }
 

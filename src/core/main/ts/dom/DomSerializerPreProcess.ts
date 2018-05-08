@@ -11,8 +11,9 @@
 import { Merger } from '@ephox/katamari';
 import Events from '../api/Events';
 import Tools from '../api/util/Tools';
+import { Editor } from 'tinymce/core/api/Editor';
 
-const preProcess = function (editor, node, args) {
+const preProcess = function (editor: Editor, node, args) {
   let impl, doc, oldDoc;
   const dom = editor.dom;
 

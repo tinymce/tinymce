@@ -51,6 +51,8 @@ const loadSkinAndOverride = function (viewBlock, done) {
     '/project/src/core/test/css/ui-overrides.css'
   ], function () {
     done();
+  }, () => {
+    throw new Error('error');
   });
 };
 

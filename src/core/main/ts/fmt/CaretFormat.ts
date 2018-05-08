@@ -21,15 +21,13 @@ import SplitRange from '../selection/SplitRange';
 import Zwsp from '../text/Zwsp';
 import Fun from '../util/Fun';
 import { Selection } from '../api/dom/Selection';
+import { Editor } from 'tinymce/core/api/Editor';
+import { isCaretNode, getParentCaretContainer } from './FormatContainer';
 
 const ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret';
 
 const importNode = function (ownerDocument, node) {
   return ownerDocument.importNode(node, true);
-};
-
-const isCaretNode = function (node) {
-  return node.nodeType === 1 && node.id === CARET_ID;
 };
 
 const getEmptyCaretContainers = function (node) {
@@ -86,18 +84,6 @@ const createCaretContainer = function (fill) {
   }
 
   return caretContainer;
-};
-
-const getParentCaretContainer = function (body, node) {
-  while (node && node !== body) {
-    if (node.id === CARET_ID) {
-      return node;
-    }
-
-    node = node.parentNode;
-  }
-
-  return null;
 };
 
 const trimZwspFromCaretContainer = function (caretContainerNode) {
@@ -238,7 +224,7 @@ const applyCaretFormat = function (editor, name, vars) {
   }
 };
 
-const removeCaretFormat = function (editor, name, vars, similar) {
+const removeCaretFormat = function (editor: Editor, name, vars, similar) {
   const dom = editor.dom, selection: Selection = editor.selection;
   let container, offset, bookmark;
   let hasContentAfter, node, formatNode;
@@ -346,12 +332,10 @@ const isFormatElement = function (editor, element) {
   return inlineElements.hasOwnProperty(Node.name(element)) && !isCaretNode(element.dom()) && !NodeType.isBogus(element.dom());
 };
 
-export default {
+export {
   setup,
   applyCaretFormat,
   removeCaretFormat,
-  isCaretNode,
-  getParentCaretContainer,
   replaceWithCaretFormat,
   isFormatElement
 };

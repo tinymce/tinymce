@@ -85,7 +85,7 @@ const onPanelClick = function (editor, cols) {
     value = e.target.getAttribute('data-mce-color');
     if (value) {
       if (this.lastId) {
-        DOMUtils.DOM.get(this.lastId).setAttribute('aria-selected', false);
+        DOMUtils.DOM.get(this.lastId).setAttribute('aria-selected', 'false');
       }
 
       e.target.setAttribute('aria-selected', true);

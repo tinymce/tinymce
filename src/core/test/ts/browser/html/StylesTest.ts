@@ -1,6 +1,6 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Styles from 'tinymce/core/api/html/Styles';
+import { Styles } from 'tinymce/core/api/html/Styles';
 import Schema from 'tinymce/core/api/html/Schema';
 import { UnitTest } from '@ephox/bedrock';
 

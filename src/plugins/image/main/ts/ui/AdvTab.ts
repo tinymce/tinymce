@@ -1,5 +1,9 @@
 import Settings from '../api/Settings';
 import Utils from '../core/Utils';
+import { Editor } from 'tinymce/core/api/Editor';
+import { normalizeCss } from 'tinymce/plugins/image/core/ImageSelection';
+import { defaultData, getStyleValue } from 'tinymce/plugins/image/core/ImageData';
+import { Merger } from '@ephox/katamari';
 
 const updateVSpaceHSpaceBorder = function (editor) {
   return function (evt) {
@@ -18,7 +22,7 @@ const updateVSpaceHSpaceBorder = function (editor) {
 
     css = Utils.mergeMargins(css);
 
-      // Move opposite equal margins to vspace/hspace field
+    // Move opposite equal margins to vspace/hspace field
     if ((css['margin-top'] && css['margin-bottom']) || (css['margin-right'] && css['margin-left'])) {
       if (css['margin-top'] === css['margin-bottom']) {
         rootControl.find('#vspace').value(Utils.removePixelSuffix(css['margin-top']));
@@ -32,16 +36,32 @@ const updateVSpaceHSpaceBorder = function (editor) {
       }
     }
 
-      // Move border-width
+    // Move border-width
     if (css['border-width']) {
       rootControl.find('#border').value(Utils.removePixelSuffix(css['border-width']));
+    } else {
+      rootControl.find('#border').value('');
+    }
+
+    // Move border-style
+    if (css['border-style']) {
+      rootControl.find('#borderStyle').value(css['border-style']);
+    } else {
+      rootControl.find('#borderStyle').value('');
     }
 
     rootControl.find('#style').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
   };
 };
 
-const makeTab = function (editor, updateStyle) {
+const updateStyle = (editor: Editor, win) => {
+  win.find('#style').each((ctrl) => {
+    const value = getStyleValue((css) => normalizeCss(editor, css), Merger.merge(defaultData(), win.toJSON()));
+    ctrl.value(value);
+  });
+};
+
+const makeTab = function (editor) {
   return {
     title: 'Advanced',
     type: 'form',

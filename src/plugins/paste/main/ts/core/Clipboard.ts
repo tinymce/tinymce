@@ -102,7 +102,7 @@ const getDataTransferItems = (dataTransfer: DataTransfer): ClipboardContents => 
  * @return {Object} Object with mime types and data for those mime types.
  */
 const getClipboardContent = (editor: Editor, clipboardEvent: ClipboardEvent) => {
-  const content = getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);
+  const content = getDataTransferItems(clipboardEvent.clipboardData || (editor.getDoc() as any).dataTransfer);
 
   // Edge 15 has a broken HTML Clipboard API see https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11877517/
   return Utils.isMsEdge() ? Tools.extend(content, { 'text/html': '' }) : content;
@@ -136,8 +136,9 @@ const extractFilename = (editor: Editor, str: string) => {
   return m ? editor.dom.encode(m[1]) : null;
 };
 
+const uniqueId = Utils.createIdGenerator('mceclip');
+
 const pasteImage = (editor: Editor, rng: Range, reader, blob) => {
-  const uniqueId = Utils.createIdGenerator('mceclip');
   if (rng) {
     editor.selection.setRng(rng);
     rng = null;

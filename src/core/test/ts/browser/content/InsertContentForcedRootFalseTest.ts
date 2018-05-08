@@ -1,12 +1,10 @@
 import { Pipeline } from '@ephox/agar';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import InsertContent from 'tinymce/core/InsertContent';
+import InsertContent from 'tinymce/core/content/InsertContent';
 import Theme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.InsertContentForcedRootBlockFalseTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.content.InsertContentForcedRootBlockFalseTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
   Theme();

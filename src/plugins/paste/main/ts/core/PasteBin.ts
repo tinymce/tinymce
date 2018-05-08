@@ -13,6 +13,24 @@ import Env from 'tinymce/core/api/Env';
 import { Editor } from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
 
+// We can't attach the pastebin to a H1 inline element on IE since it won't allow H1 or other
+// non valid parents to be pasted into the pastebin so we need to attach it to the body
+const getPasteBinParent = (editor: Editor): Element => {
+  return Env.ie && editor.inline ? document.body : editor.getBody();
+};
+
+const isExternalPasteBin = (editor: Editor) => getPasteBinParent(editor) !== editor.getBody();
+
+const delegatePasteEvents = (editor: Editor, pasteBinElm: Element) => {
+  if (isExternalPasteBin(editor)) {
+    editor.dom.bind(pasteBinElm, 'paste keyup', function (e) {
+      setTimeout(() => {
+        editor.fire('paste');
+      }, 0);
+    });
+  }
+};
+
 /**
  * Creates a paste bin element as close as possible to the current caret location and places the focus inside that element
  * so that when the real paste event occurs the contents gets inserted into this element
@@ -20,106 +38,17 @@ import { Cell } from '@ephox/katamari';
  */
 const create = (editor: Editor, lastRngCell, pasteBinDefaultContent: string) => {
   const dom = editor.dom, body = editor.getBody();
-  const viewport = editor.dom.getViewPort(editor.getWin());
-  let scrollTop = viewport.y, top = 20;
   let pasteBinElm;
-  let scrollContainer;
 
   lastRngCell.set(editor.selection.getRng());
 
-  const lastRng = lastRngCell.get();
-
-  if (editor.inline) {
-    scrollContainer = editor.selection.getScrollContainer();
-
-    // Can't always rely on scrollTop returning a useful value.
-    // It returns 0 if the browser doesn't support scrollTop for the element or is non-scrollable
-    if (scrollContainer && scrollContainer.scrollTop > 0) {
-      scrollTop = scrollContainer.scrollTop;
-    }
-  }
-
-  /**
-   * Returns the rect of the current caret if the caret is in an empty block before a
-   * BR we insert a temporary invisible character that we get the rect this way we always get a proper rect.
-   *
-   * TODO: This might be useful in core.
-   */
-  function getCaretRect(rng) {
-    let rects, textNode, node;
-    const container = rng.startContainer;
-
-    rects = rng.getClientRects();
-    if (rects.length) {
-      return rects[0];
-    }
-
-    if (!rng.collapsed || container.nodeType !== 1) {
-      return;
-    }
-
-    node = container.childNodes[lastRng.startOffset];
-
-    // Skip empty whitespace nodes
-    while (node && node.nodeType === 3 && !node.data.length) {
-      node = node.nextSibling;
-    }
-
-    if (!node) {
-      return;
-    }
-
-    // Check if the location is |<br>
-    // TODO: Might need to expand this to say |<table>
-    if (node.tagName === 'BR') {
-      textNode = dom.doc.createTextNode('\uFEFF');
-      node.parentNode.insertBefore(textNode, node);
-
-      rng = dom.createRng();
-      rng.setStartBefore(textNode);
-      rng.setEndAfter(textNode);
-
-      rects = rng.getClientRects();
-      dom.remove(textNode);
-    }
-
-    if (rects.length) {
-      return rects[0];
-    }
-  }
-
-  // Calculate top cordinate this is needed to avoid scrolling to top of document
-  // We want the paste bin to be as close to the caret as possible to avoid scrolling
-  if (lastRng.getClientRects) {
-    const rect = getCaretRect(lastRng);
-
-    if (rect) {
-      // Client rects gets us closes to the actual
-      // caret location in for example a wrapped paragraph block
-      top = scrollTop + (rect.top - dom.getPos(body).y);
-    } else {
-      top = scrollTop;
-
-      // Check if we can find a closer location by checking the range element
-      let container = lastRng.startContainer;
-      if (container) {
-        if (container.nodeType === 3 && container.parentNode !== body) {
-          container = container.parentNode;
-        }
-
-        if (container.nodeType === 1) {
-          top = dom.getPos(container, scrollContainer || body).y;
-        }
-      }
-    }
-  }
-
   // Create a pastebin
-  pasteBinElm = editor.dom.add(editor.getBody(), 'div', {
+  pasteBinElm = editor.dom.add(getPasteBinParent(editor), 'div', {
     'id': 'mcepastebin',
+    'class': 'mce-pastebin',
     'contentEditable': true,
     'data-mce-bogus': 'all',
-    'style': 'position: absolute; top: ' + top + 'px; width: 10px; height: 10px; overflow: hidden; opacity: 0'
+    'style': 'position: fixed; top: 50%; width: 10px; height: 10px; overflow: hidden; opacity: 0'
   }, pasteBinDefaultContent);
 
   // Move paste bin out of sight since the controlSelection rect gets displayed otherwise on IE and Gecko
@@ -131,6 +60,8 @@ const create = (editor: Editor, lastRngCell, pasteBinDefaultContent: string) => 
   dom.bind(pasteBinElm, 'beforedeactivate focusin focusout', function (e) {
     e.stopPropagation();
   });
+
+  delegatePasteEvents(editor, pasteBinElm);
 
   pasteBinElm.focus();
   editor.selection.select(pasteBinElm, true);
@@ -182,7 +113,7 @@ const getHtml = (editor: Editor) => {
   };
 
   // find only top level elements (there might be more nested inside them as well, see TINY-1162)
-  pasteBinClones = Tools.grep(editor.getBody().childNodes, function (elm) {
+  pasteBinClones = Tools.grep(getPasteBinParent(editor).childNodes, function (elm) {
     return elm.id === 'mcepastebin';
   });
   pasteBinElm = pasteBinClones.shift();
@@ -223,7 +154,7 @@ const isDefault = (editor, pasteBinDefaultContent) => {
   return isPasteBin(pasteBinElm) && isDefaultContent(pasteBinDefaultContent, pasteBinElm.innerHTML);
 };
 
-export interface PasteBin {
+interface PasteBin {
   create: () => void;
   remove: () => void;
   getEl: () => HTMLElement;
@@ -238,7 +169,7 @@ export interface PasteBin {
  * @private
  */
 
-export const PasteBin = (editor): PasteBin => {
+const PasteBin = (editor): PasteBin => {
   const lastRng = Cell(null);
   const pasteBinDefaultContent = '%MCEPASTEBIN%';
 
@@ -251,4 +182,9 @@ export const PasteBin = (editor): PasteBin => {
     isDefault: () => isDefault(editor, pasteBinDefaultContent),
     isDefaultContent: (content) => isDefaultContent(pasteBinDefaultContent, content)
   };
+};
+
+export {
+  PasteBin,
+  getPasteBinParent
 };

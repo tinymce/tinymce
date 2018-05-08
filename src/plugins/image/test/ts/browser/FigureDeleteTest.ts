@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', function ()
       tinyApis.sFocus,
       Logger.t('removing src in dialog should remove figure element', GeneralSteps.sequence([
         tinyApis.sSetContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>'),
-        tinyApis.sSetSelection([0], 0, [0], 1),
+        tinyApis.sSetSelection([], 1, [], 2),
         tinyUi.sClickOnToolbar('click on image button', 'div[aria-label="Insert/edit image"] button'),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', function ()
 
       Logger.t('clicking caption textbox removes figure and adds image only', GeneralSteps.sequence([
         tinyApis.sSetContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>'),
-        tinyApis.sSetSelection([0], 0, [0], 1),
+        tinyApis.sSetSelection([], 1, [], 2),
         tinyUi.sClickOnToolbar('click on image button', 'div[aria-label="Insert/edit image"] button'),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),

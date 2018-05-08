@@ -7,7 +7,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
-  const DOM = new DOMUtils(document, { keep_values : true, schema : Schema() });
+  const DOM = DOMUtils(document, { keep_values : true, schema : Schema() });
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
   const suite = LegacyUnit.createSuite();
@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
 
     DOM.add(document.body, 'div', { id : 'test' });
 
-    dom = new DOMUtils(document, { hex_colors : true, keep_values : true, url_converter (u) {
+    dom = DOMUtils(document, { hex_colors : true, keep_values : true, url_converter (u) {
       return 'X' + u + 'Y';
     } });
 
@@ -191,8 +191,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
   });
 
   suite.test('uniqueId', function () {
-    DOM.counter = 0;
-
     LegacyUnit.equal(DOM.uniqueId(), 'mce_0');
     LegacyUnit.equal(DOM.uniqueId(), 'mce_1');
     LegacyUnit.equal(DOM.uniqueId(), 'mce_2');
@@ -265,11 +263,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
     LegacyUnit.equal(DOM.getAttrib('test', 'class'), '123');
     LegacyUnit.equal(DOM.getAttrib('test', 'title'), 'abc');
 
-    DOM.setAttribs('test');
+    DOM.setAttribs('test', {});
     LegacyUnit.equal(DOM.getAttrib('test', 'class'), '123');
     LegacyUnit.equal(DOM.getAttrib('test', 'title'), 'abc');
 
-    dom = new DOMUtils(document, { keep_values : true, url_converter (u, n) {
+    dom = DOMUtils(document, { keep_values : true, url_converter (u, n) {
       return '&<>"' + u + '&<>"' + n;
     } });
 
@@ -286,7 +284,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
 
   suite.test('setGetAttrib on null', function () {
     LegacyUnit.equal(DOM.getAttrib(null, 'test'), '');
-    DOM.setAttrib(null, 'test');
+    DOM.setAttrib(null, 'test', null);
   });
 
   suite.test('getAttribs', function () {
@@ -518,7 +516,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
-    DOM.remove('test2', 1);
+    DOM.remove('test2', true);
     LegacyUnit.equal(DOM.get('test').innerHTML.toLowerCase(), '<span>test</span><span>test2</span>');
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
@@ -531,7 +529,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
-    DOM.replace(DOM.create('div', { id : 'test2' }), 'test2', 1);
+    DOM.replace(DOM.create('div', { id : 'test2' }), 'test2', true);
     LegacyUnit.equal(DOM.get('test2').innerHTML.toLowerCase(), '<span>test</span><span>test2</span>');
 
     DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
@@ -618,7 +616,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
   suite.test('isEmpty without defined schema', function () {
     DOM.add(document.body, 'div', { id : 'test' }, '');
 
-    const domUtils = new DOMUtils(document);
+    const domUtils = DOMUtils(document);
 
     DOM.setHTML('test', '<hr>');
     LegacyUnit.equal(domUtils.isEmpty(DOM.get('test')), false, 'Should be false since hr is something');
@@ -712,7 +710,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function () {
   });
 
   suite.test('isEmpty with list of elements considered non-empty without schema', function () {
-    const domWithoutSchema = new DOMUtils(document, { keep_values: true });
+    const domWithoutSchema = DOMUtils(document, { keep_values: true });
 
     const elm = domWithoutSchema.create('p', null, '<img>');
     LegacyUnit.equal(false, domWithoutSchema.isEmpty(elm, { img: true }));

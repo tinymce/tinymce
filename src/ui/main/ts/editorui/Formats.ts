@@ -9,7 +9,7 @@
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
-import FormatUtils from './FormatUtils';
+import * as FormatUtils from './FormatUtils';
 
 const hideMenuObjects = function (editor, menu) {
   let count = menu.length;

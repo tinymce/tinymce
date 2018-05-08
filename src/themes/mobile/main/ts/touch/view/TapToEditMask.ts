@@ -1,10 +1,10 @@
-import { Behaviour, Button, Container, Memento, Toggling } from '@ephox/alloy';
+import { Behaviour, Button, Container, Memento, Toggling, Sketcher } from '@ephox/alloy';
 import { Throttler } from '@ephox/katamari';
 
 import Styles from '../../style/Styles';
-import UiDomFactory from '../../util/UiDomFactory';
+import * as UiDomFactory from '../../util/UiDomFactory';
 
-const sketch = function (onView, translate) {
+const sketch = function (onView, translate): Sketcher.SketchSpec {
 
   const memIcon = Memento.record(
     Container.sketch({

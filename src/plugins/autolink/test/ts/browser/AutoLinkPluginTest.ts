@@ -38,15 +38,15 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', functi
 
   suite.test('Urls ended with space', function (editor) {
     editor.focus();
-    LegacyUnit.equal(typeUrl(editor, 'http://www.domain.com'), '<p><a href="http://www.domain.com">http://www.domain.com</a></p>');
-    LegacyUnit.equal(typeUrl(editor, 'https://www.domain.com'), '<p><a href="https://www.domain.com">https://www.domain.com</a></p>');
-    LegacyUnit.equal(typeUrl(editor, 'ssh://www.domain.com'), '<p><a href="ssh://www.domain.com">ssh://www.domain.com</a></p>');
-    LegacyUnit.equal(typeUrl(editor, 'ftp://www.domain.com'), '<p><a href="ftp://www.domain.com">ftp://www.domain.com</a></p>');
-    LegacyUnit.equal(typeUrl(editor, 'www.domain.com'), '<p><a href="http://www.domain.com">www.domain.com</a></p>');
-    LegacyUnit.equal(typeUrl(editor, 'www.domain.com.'), '<p><a href="http://www.domain.com">www.domain.com</a>.</p>');
-    LegacyUnit.equal(typeUrl(editor, 'user@domain.com'), '<p><a href="mailto:user@domain.com">user@domain.com</a></p>');
-    LegacyUnit.equal(typeUrl(editor, 'mailto:user@domain.com'), '<p><a href="mailto:user@domain.com">mailto:user@domain.com</a></p>');
-    LegacyUnit.equal(typeUrl(editor, 'first-last@domain.com'), '<p><a href="mailto:first-last@domain.com">first-last@domain.com</a></p>');
+    LegacyUnit.equal(typeUrl(editor, 'http://www.domain.com'), '<p><a href="http://www.domain.com">http://www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'https://www.domain.com'), '<p><a href="https://www.domain.com">https://www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'ssh://www.domain.com'), '<p><a href="ssh://www.domain.com">ssh://www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'ftp://www.domain.com'), '<p><a href="ftp://www.domain.com">ftp://www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'www.domain.com'), '<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'www.domain.com.'), '<p><a href="http://www.domain.com">www.domain.com</a>.&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'user@domain.com'), '<p><a href="mailto:user@domain.com">user@domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'mailto:user@domain.com'), '<p><a href="mailto:user@domain.com">mailto:user@domain.com</a>&nbsp;</p>');
+    LegacyUnit.equal(typeUrl(editor, 'first-last@domain.com'), '<p><a href="mailto:first-last@domain.com">first-last@domain.com</a>&nbsp;</p>');
   });
 
   suite.test('Urls ended with )', function (editor) {
@@ -106,7 +106,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', functi
     KeyUtils.typeString(editor, 'http://www.domain.com ');
     LegacyUnit.equal(
       editor.getContent(),
-      '<p><strong><a href="http://www.domain.com">http://www.domain.com</a> </strong></p>'
+      '<p><strong><a href="http://www.domain.com">http://www.domain.com</a>&nbsp;</strong></p>'
     );
   });
 
@@ -114,7 +114,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', functi
     editor.settings.default_link_target = '_self';
     LegacyUnit.equal(
       typeUrl(editor, 'http://www.domain.com'),
-      '<p><a href="http://www.domain.com" target="_self">http://www.domain.com</a></p>'
+      '<p><a href="http://www.domain.com" target="_self">http://www.domain.com</a>&nbsp;</p>'
     );
     delete editor.settings.default_link_target;
   });

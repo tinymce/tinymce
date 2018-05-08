@@ -15,13 +15,14 @@ import RangeCompare from '../../selection/RangeCompare';
 import * as RangeNodes from '../../selection/RangeNodes';
 import RangeWalk from '../../selection/RangeWalk';
 import SplitRange from '../../selection/SplitRange';
+import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 
 /**
  * This class contains a few utility methods for ranges.
  *
  * @class tinymce.dom.RangeUtils
  */
-export function RangeUtils(dom) {
+export function RangeUtils(dom: DOMUtils) {
   /**
    * Walks the specified range like object and executes the callback for each sibling collection it finds.
    *

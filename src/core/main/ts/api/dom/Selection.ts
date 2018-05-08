@@ -27,6 +27,7 @@ import * as ElementSelection from '../../selection/ElementSelection';
 import { moveEndPoint } from 'tinymce/core/selection/SelectionUtils';
 import { NativeSelection } from './NativeTypes';
 import { Editor } from 'tinymce/core/api/Editor';
+import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -67,7 +68,7 @@ export interface Selection {
   editor: any;
   collapse: (toStart?: boolean) => void;
   setCursorLocation: (node?: Node, offset?: number) => void;
-  getContent: (args: any) => any;
+  getContent: (args?: any) => any;
   setContent: (content: any, args?: any) => void;
   getBookmark: (type?: number, normalized?: boolean) => any;
   moveToBookmark: (bookmark: any) => boolean;
@@ -88,7 +89,7 @@ export interface Selection {
       selector: String;
       parents: Element[];
   }) => void) => any;
-  getScrollContainer: () => Element;
+  getScrollContainer: () => HTMLElement;
   scrollIntoView: (elm: Element, alignToTop?: boolean) => void;
   placeCaretAt: (clientX: number, clientY: number) => void;
   getBoundingClientRect: () => ClientRect;
@@ -105,7 +106,7 @@ export interface Selection {
  * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
  * @param {tinymce.Editor} editor Editor instance of the selection.
  */
-export const Selection = function (dom, win: Window, serializer, editor: Editor): Selection {
+export const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Editor): Selection {
   let bookmarkManager, controlSelection: ControlSelection;
   let selectedRange, explicitRange, selectorChangedData;
 
@@ -565,8 +566,9 @@ export const Selection = function (dom, win: Window, serializer, editor: Editor)
     return exports;
   };
 
-  const getScrollContainer = (): Element => {
-    let scrollContainer, node = dom.getRoot();
+  const getScrollContainer = (): HTMLElement => {
+    let scrollContainer;
+    let node = dom.getRoot();
 
     while (node && node.nodeName !== 'BODY') {
       if (node.scrollHeight > node.clientHeight) {
@@ -574,13 +576,13 @@ export const Selection = function (dom, win: Window, serializer, editor: Editor)
         break;
       }
 
-      node = node.parentNode;
+      node = node.parentNode as HTMLElement;
     }
 
     return scrollContainer;
   };
 
-  const scrollIntoView = (elm: Element, alignToTop?: boolean) => ScrollIntoView.scrollIntoView(editor, elm, alignToTop);
+  const scrollIntoView = (elm: HTMLElement, alignToTop?: boolean) => ScrollIntoView.scrollElementIntoView(editor, elm, alignToTop);
   const placeCaretAt = (clientX: number, clientY: number) => setRng(CaretRangeFromPoint.fromPoint(clientX, clientY, editor.getDoc()));
 
   const getBoundingClientRect = (): ClientRect => {

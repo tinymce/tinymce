@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', funct
         Step.sync(function () {
           KeyUtils.type(editor, ' ');
         }),
-        tinyApis.sAssertContent('<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;<a href="http://www.domain.com">www.domain.com</a></p>')
+        tinyApis.sAssertContent('<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;<a href="http://www.domain.com">www.domain.com</a>&nbsp;</p>')
       ])),
       Logger.t('FireFox does not seem to add a nbsp between link and text', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><a href="http://www.domain.com">www.domain.com</a> www.domain.com</p>'),
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', funct
         Step.sync(function () {
           KeyUtils.type(editor, ' ');
         }),
-        tinyApis.sAssertContent('<p><a href="http://www.domain.com">www.domain.com</a> <a href="http://www.domain.com">www.domain.com</a></p>')
+        tinyApis.sAssertContent('<p><a href="http://www.domain.com">www.domain.com</a> <a href="http://www.domain.com">www.domain.com</a>&nbsp;</p>')
       ]))
     ];
 

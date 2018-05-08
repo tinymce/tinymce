@@ -16,19 +16,20 @@ import Commands from './api/Commands';
 import Settings from './api/Settings';
 import Buttons from './ui/Buttons';
 import SuggestionsMenu from './ui/SuggestionsMenu';
+import { LastSuggestion } from 'tinymce/plugins/spellchecker/core/Actions';
 
 PluginManager.add('spellchecker', function (editor, pluginUrl) {
   if (DetectProPlugin.hasProPlugin(editor) === false) {
     const startedState = Cell(false);
-    const currentLanguageState = Cell(Settings.getLanguage(editor));
+    const currentLanguageState = Cell<string>(Settings.getLanguage(editor));
     const textMatcherState = Cell(null);
-    const lastSuggestionsState = Cell({});
+    const lastSuggestionsState = Cell<LastSuggestion>(null);
 
     Buttons.register(editor, pluginUrl, startedState, textMatcherState, currentLanguageState, lastSuggestionsState);
     SuggestionsMenu.setup(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, currentLanguageState);
     Commands.register(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
 
-    return Api.get(editor, startedState, lastSuggestionsState, textMatcherState, pluginUrl);
+    return Api.get(editor, startedState, lastSuggestionsState, textMatcherState, currentLanguageState, pluginUrl);
   }
 });
 

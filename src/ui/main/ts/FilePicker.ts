@@ -146,7 +146,7 @@ const addToHistory = function (url, fileType) {
   }
 
   if (items) {
-    if (Arr.indexOf(items, url) === -1) {
+    if (Arr.indexOf(items, url).isNone()) {
       history[fileType] = items.slice(0, HISTORY_LENGTH).concat(url);
     }
   } else {
