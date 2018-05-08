@@ -14,11 +14,28 @@ import {
 } from '@ephox/snooker';
 import { Attr, Element, Node, SelectorFilter } from '@ephox/sugar';
 
-import Util from '../alien/Util';
+import * as Util from '../alien/Util';
 import Direction from '../queries/Direction';
+import { getCloneElements } from '../api/Settings';
+import { fireNewCell, fireNewRow } from '../api/Events';
+import { Editor } from 'tinymce/core/api/Editor';
 
-export default function (editor, lazyWire) {
-  const isTableBody = function (editor) {
+export interface TableActions {
+  deleteRow: (table: any, target: any) => any;
+  deleteColumn: (table: any, target: any) => any;
+  insertRowsBefore: (table: any, target: any) => any;
+  insertRowsAfter: (table: any, target: any) => any;
+  insertColumnsBefore: (table: any, target: any) => any;
+  insertColumnsAfter: (table: any, target: any) => any;
+  mergeCells: (table: any, target: any) => any;
+  unmergeCells: (table: any, target: any) => any;
+  pasteRowsBefore: (table: any, target: any) => any;
+  pasteRowsAfter: (table: any, target: any) => any;
+  pasteCells: (table: any, target: any) => any;
+}
+
+export const TableActions = function (editor: Editor, lazyWire) {
+  const isTableBody = function (editor: Editor) {
     return Node.name(Util.getBody(editor)) === 'table';
   };
 
@@ -32,30 +49,8 @@ export default function (editor, lazyWire) {
     return isTableBody(editor) === false || size.columns() > 1;
   };
 
-  const fireNewRow = function (node) {
-    editor.fire('newrow', {
-      node: node.dom()
-    });
-    return node.dom();
-  };
-
-  const fireNewCell = function (node) {
-    editor.fire('newcell', {
-      node: node.dom()
-    });
-    return node.dom();
-  };
-
-  let cloneFormatsArray;
-  if (editor.settings.table_clone_elements !== false) {
-    if (typeof editor.settings.table_clone_elements === 'string') {
-      cloneFormatsArray = editor.settings.table_clone_elements.split(/[ ,]/);
-    } else if (Array.isArray(editor.settings.table_clone_elements)) {
-      cloneFormatsArray = editor.settings.table_clone_elements;
-    }
-  }
   // Option.none gives the default cloneFormats.
-  const cloneFormats = Option.from(cloneFormatsArray);
+  const cloneFormats = getCloneElements(editor);
 
   const execute = function (operation, guard, mutate, lazyWire) {
     return function (table, target) {
@@ -69,10 +64,10 @@ export default function (editor, lazyWire) {
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       return guard(table) ? operation(wire, table, target, generators, direction).bind(function (result) {
         Arr.each(result.newRows(), function (row) {
-          fireNewRow(row);
+          fireNewRow(editor, row.dom());
         });
         Arr.each(result.newCells(), function (cell) {
-          fireNewCell(cell);
+          fireNewCell(editor, cell.dom());
         });
         return result.cursor().map(function (cell) {
           const rng = editor.dom.createRng();
@@ -119,4 +114,4 @@ export default function (editor, lazyWire) {
     pasteRowsAfter,
     pasteCells
   };
-}
+};

@@ -75,7 +75,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     return Logger.t(
       'sTestEnterAtEndOfAnchorZwsp',
       GeneralSteps.sequence([
-        sSetup(tinyApis, '<p><a href="#">a' + Zwsp.ZWSP + '</a></p>', [0, 0, 0], 1),
+        sSetup(tinyApis, '<p><a href="#">a' + Zwsp.ZWSP + '</a></p>', [0, 0, 0], 2),
         sEnterKey(tinyActions),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {

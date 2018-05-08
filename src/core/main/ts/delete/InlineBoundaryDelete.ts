@@ -12,7 +12,7 @@ import { Fun, Option, Options } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
-import CaretUtils from '../caret/CaretUtils';
+import * as CaretUtils from '../caret/CaretUtils';
 import DeleteElement from './DeleteElement';
 import BoundaryCaret from '../keyboard/BoundaryCaret';
 import BoundaryLocation from '../keyboard/BoundaryLocation';

@@ -1,5 +1,5 @@
-import { Cursors } from '@ephox/agar';
-import { GuiFactory } from '@ephox/alloy';
+import { Cursors, Waiter, Step, Assertions } from '@ephox/agar';
+import { GuiFactory, ComponentApi } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 import { Attr, Element, Focus, WindowSelection } from '@ephox/sugar';
 
@@ -8,6 +8,15 @@ import TestEditor from './TestEditor';
 export default function () {
   const frame = Element.fromTag('iframe');
   Attr.set(frame, 'src', '/project/src/themes/mobile/test/html/editor.html');
+
+  const sWaitForEditorLoaded = Waiter.sTryUntil(
+    'Waiting for iframe to load',
+    Step.sync(() => {
+      Assertions.assertEq('Check for a content editable body', 'true', frame.dom().contentWindow.document.body.contentEditable);
+    }),
+    100,
+    8000
+  );
 
   const config = {
     getFrame () {
@@ -60,12 +69,13 @@ export default function () {
   );
 
   return {
-    component: Fun.constant(component),
+    component: Fun.constant(component) as () => ComponentApi.AlloyComponent,
     config: Fun.constant(config),
     editor: Fun.constant(editor),
     adder: delegate.adder,
     assertEq: delegate.assertEq,
     sAssertEq: delegate.sAssertEq,
+    sWaitForEditorLoaded,
     sClear: delegate.sClear,
     sPrepareState: delegate.sPrepareState
   };

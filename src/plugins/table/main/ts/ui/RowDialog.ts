@@ -11,41 +11,49 @@
 import { Fun } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 import Styles from '../actions/Styles';
-import Util from '../alien/Util';
+import * as Util from '../alien/Util';
 import Helpers from './Helpers';
+import { hasAdvancedRowTab, getRowClassList } from '../api/Settings';
+import { Editor } from 'tinymce/core/api/Editor';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
-/**
- * @class tinymce.table.ui.RowDialog
- * @private
- */
+interface FormData {
+  height: string;
+  scope: string;
+  class: string;
+  align: string;
+  style: string;
+  type: string;
+}
 
-const extractDataFromElement = function (editor, elm) {
+const extractDataFromElement = function (editor: Editor, elm: Node): FormData {
   const dom = editor.dom;
-  const data: any = {
+  const data: FormData = {
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
     scope: dom.getAttrib(elm, 'scope'),
-    class: dom.getAttrib(elm, 'class')
+    class: dom.getAttrib(elm, 'class'),
+    align: '',
+    style: '',
+    type: elm.parentNode.nodeName.toLowerCase()
   };
 
-  data.type = elm.parentNode.nodeName.toLowerCase();
-
-  Tools.each('left center right'.split(' '), function (name) {
+  Tools.each('left center right'.split(' '), function (name: string) {
     if (editor.formatter.matchNode(elm, 'align' + name)) {
       data.align = name;
     }
   });
 
-  if (editor.settings.table_row_advtab !== false) {
+  if (hasAdvancedRowTab(editor)) {
     Tools.extend(data, Helpers.extractAdvancedStyles(dom, elm));
   }
 
   return data;
 };
 
-const switchRowType = function (dom, rowElm, toType) {
+const switchRowType = function (dom: DOMUtils, rowElm: HTMLElement, toType) {
   const tableElm = dom.getParent(rowElm, 'table');
   const oldParentElm = rowElm.parentNode;
-  let parentElm = dom.select(toType, tableElm)[0];
+  let parentElm = dom.select(toType, tableElm as Element)[0];
 
   if (!parentElm) {
     parentElm = dom.create(toType);
@@ -68,27 +76,26 @@ const switchRowType = function (dom, rowElm, toType) {
   }
 };
 
-function onSubmitRowForm(editor, rows, evt) {
+function onSubmitRowForm(editor: Editor, rows: HTMLElement[], oldData: FormData, evt) {
   const dom = editor.dom;
-  let data;
 
-  function setAttrib(elm, name, value) {
+  function setAttrib(elm: Node, name: string, value: string) {
     if (value) {
       dom.setAttrib(elm, name, value);
     }
   }
 
-  function setStyle(elm, name, value) {
+  function setStyle(elm: Node, name: string, value: string) {
     if (value) {
       dom.setStyle(elm, name, value);
     }
   }
 
   Helpers.updateStyleField(editor, evt);
-  data = evt.control.rootControl.toJSON();
+  const data: FormData = evt.control.rootControl.toJSON();
 
   editor.undoManager.transact(function () {
-    Tools.each(rows, function (rowElm) {
+    Tools.each(rows, function (rowElm: HTMLElement) {
       setAttrib(rowElm, 'scope', data.scope);
       setAttrib(rowElm, 'style', data.style);
       setAttrib(rowElm, 'class', data.class);
@@ -98,12 +105,8 @@ function onSubmitRowForm(editor, rows, evt) {
         switchRowType(editor.dom, rowElm, data.type);
       }
 
-      // Apply/remove alignment
-      if (rows.length === 1) {
+      if (data.align !== oldData.align) {
         Styles.unApplyAlign(editor, rowElm);
-      }
-
-      if (data.align) {
         Styles.applyAlign(editor, rowElm, data.align);
       }
     });
@@ -112,9 +115,9 @@ function onSubmitRowForm(editor, rows, evt) {
   });
 }
 
-const open = function (editor) {
+const open = function (editor: Editor) {
   const dom = editor.dom;
-  let tableElm, cellElm, rowElm, classListCtrl, data;
+  let tableElm, cellElm, rowElm, classListCtrl, data: FormData;
   const rows = [];
   let generalRowForm;
 
@@ -140,6 +143,7 @@ const open = function (editor) {
     data = {
       height: '',
       scope: '',
+      style: '',
       class: '',
       align: '',
       type: rowElm.parentNode.nodeName.toLowerCase()
@@ -148,13 +152,13 @@ const open = function (editor) {
     data = extractDataFromElement(editor, rowElm);
   }
 
-  if (editor.settings.table_row_class_list) {
+  if (getRowClassList(editor).length > 0) {
     classListCtrl = {
       name: 'class',
       type: 'listbox',
       label: 'Class',
       values: Helpers.buildListItems(
-        editor.settings.table_row_class_list,
+        getRowClassList(editor),
         function (item) {
           if (item.value) {
             item.textStyle = function () {
@@ -204,7 +208,7 @@ const open = function (editor) {
     ]
   };
 
-  if (editor.settings.table_row_advtab !== false) {
+  if (hasAdvancedRowTab(editor)) {
     editor.windowManager.open({
       title: 'Row properties',
       data,
@@ -217,14 +221,14 @@ const open = function (editor) {
         },
         Helpers.createStyleForm(editor)
       ],
-      onsubmit: Fun.curry(onSubmitRowForm, editor, rows)
+      onsubmit: Fun.curry(onSubmitRowForm, editor, rows, data)
     });
   } else {
     editor.windowManager.open({
       title: 'Row properties',
       data,
       body: generalRowForm,
-      onsubmit: Fun.curry(onSubmitRowForm, editor, rows)
+      onsubmit: Fun.curry(onSubmitRowForm, editor, rows, data)
     });
   }
 };

@@ -484,12 +484,14 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', function () {
     LegacyUnit.equal(editor.getContent(), '<p>1</p><p>2</p>');
   });
 
-  suite.test('Paste part of list from IE', function (editor) {
-    editor.setContent('');
-    editor.execCommand('SelectAll');
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<li>item2</li><li>item3</li>' });
-    LegacyUnit.equal(trimContent(editor.getContent()), '<ul><li>item2</li><li>item3</li></ul>', 'List tags are inferred when pasting LI');
-  });
+  if (Env.ie) {
+    suite.test('Paste part of list from IE', function (editor) {
+      editor.setContent('');
+      editor.execCommand('SelectAll');
+      editor.execCommand('mceInsertClipboardContent', false, { content: '<li>item2</li><li>item3</li>' });
+      LegacyUnit.equal(trimContent(editor.getContent()), '<ul><li>item2</li><li>item3</li></ul>', 'List tags are inferred when pasting LI');
+    });
+  }
 
   suite.test('Disable default filters', function (editor) {
     editor.settings.paste_enable_default_filters = false;

@@ -8,15 +8,30 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-const firePreProcess = function (editor, args) {
-  return editor.fire('PreProcess', args);
+import { Editor } from 'tinymce/core/api/Editor';
+import { EditorMode } from 'tinymce/core/Mode';
+
+const firePreProcess = (editor: Editor, args) => editor.fire('PreProcess', args);
+
+const firePostProcess = (editor: Editor, args) => editor.fire('PostProcess', args);
+
+const fireRemove = (editor: Editor) => editor.fire('remove');
+
+const fireSwitchMode = (editor: Editor, mode: EditorMode) => editor.fire('SwitchMode', { mode });
+
+const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number) => {
+  editor.fire('ObjectResizeStart', { target, width, height });
 };
 
-const firePostProcess = function (editor, args) {
-  return editor.fire('PostProcess', args);
+const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, height: number) => {
+  editor.fire('ObjectResized', { target, width, height });
 };
 
 export default {
   firePreProcess,
-  firePostProcess
+  firePostProcess,
+  fireRemove,
+  fireSwitchMode,
+  fireObjectResizeStart,
+  fireObjectResized
 };

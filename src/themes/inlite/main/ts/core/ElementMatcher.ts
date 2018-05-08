@@ -10,13 +10,15 @@
 
 import Matcher from './Matcher';
 import Measure from './Measure';
+import { GeomRect } from 'tinymce/core/api/geom/Rect';
 
 // element :: Element, [PredicateId] -> (Editor -> Matcher.result | Null)
-const element = function (element, predicateIds) {
+const element = function (element: HTMLElement, predicateIds) {
   return function (editor) {
     for (let i = 0; i < predicateIds.length; i++) {
       if (predicateIds[i].predicate(element)) {
-        return Matcher.result(predicateIds[i].id, Measure.getElementRect(editor, element));
+        const result: {id: string, rect: GeomRect} = Matcher.result(predicateIds[i].id, Measure.getElementRect(editor, element));
+        return result;
       }
     }
 
@@ -25,7 +27,7 @@ const element = function (element, predicateIds) {
 };
 
 // parent :: [Elements], [PredicateId] -> (Editor -> Matcher.result | Null)
-const parent = function (elements, predicateIds) {
+const parent = function (elements: HTMLElement[], predicateIds) {
   return function (editor) {
     for (let i = 0; i < elements.length; i++) {
       for (let x = 0; x < predicateIds.length; x++) {

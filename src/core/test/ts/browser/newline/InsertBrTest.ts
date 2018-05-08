@@ -16,12 +16,6 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function () {
     });
   };
 
-  const sSetRawContent = function (editor, html) {
-    return Step.sync(function () {
-      editor.getBody().innerHTML = html;
-    });
-  };
-
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
@@ -56,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function () {
         ])),
         Logger.t('Insert br at end of inline boundary link with trailing br', GeneralSteps.sequence([
           tinyApis.sFocus,
-          sSetRawContent(editor, '<p>a<a href="#">b</a><br /></p>'),
+          tinyApis.sSetRawContent('<p>a<a href="#">b</a><br /></p>'),
           tinyApis.sSetCursor([0, 1, 0], 1),
           tinyApis.sNodeChanged,
           sInsertBr(editor),

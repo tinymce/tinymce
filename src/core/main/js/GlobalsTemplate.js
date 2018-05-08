@@ -1,1 +1,4 @@
-export default tinymce.util.Tools.resolve('{$globalId}');
+var global = tinymce.util.Tools.resolve('{$globalId}');
+
+export default global;
+export var {$globalName} = global;

@@ -4,12 +4,10 @@ import { TinyApis, TinyLoader, TinyUi  } from '@ephox/mcagar';
 import TextcolorPlugin from 'tinymce/plugins/textcolor/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
 import { UnitTest } from '@ephox/bedrock';
+import { PlatformDetection } from '@ephox/sand';
 
-UnitTest.asynctest(
-  'browser.tinymce.plugins.textcolor.TextcolorCommandsTest',
-  function () {
-    const success = arguments[arguments.length - 2];
-    const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.textcolor.TextcolorCommandsTest', (success, failure) => {
+    const browser = PlatformDetection.detect().browser;
 
     ModernTheme();
     TextcolorPlugin();
@@ -35,8 +33,9 @@ UnitTest.asynctest(
       const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);
 
-      Pipeline.async({}, [
+      Pipeline.async({}, browser.isIE() ? [] : [
         Logger.t('apply and remove forecolor and make sure of the right command has been executed', GeneralSteps.sequence([
+          tinyApis.sFocus,
           tinyApis.sSetContent('hello test'),
           tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
           tinyUi.sClickOnToolbar('click forecolor', 'div[aria-label="Text color"] > button.mce-open'),
@@ -49,6 +48,7 @@ UnitTest.asynctest(
           sResetState
         ])),
         Logger.t('apply and remove forecolor and make sure of the right command has been executed', GeneralSteps.sequence([
+          tinyApis.sFocus,
           tinyApis.sSetContent('hello test'),
           tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
           tinyUi.sClickOnToolbar('click backcolor', 'div[aria-label="Background color"] > button.mce-open'),

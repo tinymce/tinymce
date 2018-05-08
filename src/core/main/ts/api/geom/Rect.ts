@@ -14,6 +14,13 @@
  * @class tinymce.geom.Rect
  */
 
+export interface GeomRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 const min = Math.min, max = Math.max, round = Math.round;
 
 /**

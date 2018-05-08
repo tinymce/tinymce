@@ -9,11 +9,16 @@
  */
 
 import { TableSelection } from '@ephox/darwin';
-import Util from '../alien/Util';
+import * as Util from '../alien/Util';
 import Ephemera from './Ephemera';
 import SelectionTypes from './SelectionTypes';
+import { Editor } from 'tinymce/core/api/Editor';
 
-export default function (editor) {
+export interface Selections {
+  get: () => any;
+}
+
+export const Selections = function (editor: Editor) {
   const get = function () {
     const body = Util.getBody(editor);
 
@@ -31,4 +36,4 @@ export default function (editor) {
   return {
     get
   };
-}
+};

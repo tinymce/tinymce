@@ -1,7 +1,7 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Env from 'tinymce/core/api/Env';
-import CaretUtils from 'tinymce/core/caret/CaretUtils';
+import * as CaretUtils from 'tinymce/core/caret/CaretUtils';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import Zwsp from 'tinymce/core/text/Zwsp';
 import $ from 'tinymce/core/api/dom/DomQuery';

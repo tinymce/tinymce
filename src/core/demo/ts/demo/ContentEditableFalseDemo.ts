@@ -9,6 +9,7 @@
  */
 
 // tslint:disable:no-console
+import { Editor } from 'tinymce/core/api/Editor';
 
 declare const window: any;
 declare let tinymce: any;
@@ -16,7 +17,7 @@ declare let tinymce: any;
 export default function () {
 
   const paintClientRect = function (rect, color, id) {
-    const editor = tinymce.activeEditor;
+    const editor: Editor = tinymce.activeEditor;
     const $ = editor.$;
     let rectDiv;
     const viewPort = editor.dom.getViewPort();

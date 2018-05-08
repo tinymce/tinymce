@@ -12,7 +12,26 @@ function isContentEditableFalse(node) {
   return node && node.nodeType === 1 && node.contentEditable === 'false';
 }
 
-export default function (node, editor) {
+export type Match = Record<string, string>;
+
+export interface DomTextMatcher {
+    text: string;
+    matches: string[];
+    each: (cb: Function) => DomTextMatcher;
+    filter: (cb: Function) => DomTextMatcher;
+    reset: () => DomTextMatcher;
+    matchFromElement: (element: HTMLElement) => Match;
+    elementFromMatch: (match: Match) => HTMLElement;
+    find: (regex: RegExp, data: Record<string, string>) => DomTextMatcher;
+    add: (start: number, length: number, data: Record<string, string>) => DomTextMatcher;
+    wrap: (cb: Function) => DomTextMatcher;
+    unwrap: (match?: Match) => DomTextMatcher;
+    replace: (match: Match, text: string) => Range;
+    rangeFromMatch: (match: Match) => Range;
+    indexOf: (match: Match) => number;
+}
+
+export const DomTextMatcher = function (node, editor): DomTextMatcher {
   let m, matches = [], text;
   const dom = editor.dom;
   let blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;
@@ -473,4 +492,4 @@ export default function (node, editor) {
     rangeFromMatch,
     indexOf
   };
-}
+};

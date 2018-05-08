@@ -1,5 +1,5 @@
 import {
-    Chain, FocusTools, GeneralSteps, Keys, Mouse, Pipeline, UiControls, UiFinder, Waiter
+    Assertions, Chain, FocusTools, GeneralSteps, Keys, Mouse, Step, Pipeline, UiControls, UiFinder, Waiter, ApproxStructure, Logger
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyActions, TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
@@ -13,10 +13,14 @@ import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import InliteTheme from 'tinymce/themes/inlite/Theme';
 
 import Toolbar from '../module/test/Toolbar';
+import { SelectorFind, Element } from '@ephox/sugar';
 
-UnitTest.asynctest('browser.core.ThemeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+const sAssertTableStructure = (editor, structure) => Step.sync(() => {
+  const table = SelectorFind.descendant(Element.fromDom(editor.getBody()), 'table').getOrDie('Should exist a table');
+  Assertions.assertStructure('Should be a table the expected structure', structure, table);
+});
+
+UnitTest.asynctest('browser.themes.inlite.ThemeTest', (success, failure) => {
   const dialogRoot = TinyDom.fromDom(document.body);
 
   InliteTheme();
@@ -109,7 +113,7 @@ UnitTest.asynctest('browser.core.ThemeTest', function () {
   const sLinkTests = function (tinyApis, tinyActions) {
     const sContentActionTest = function (inputHtml, spath, soffset, fpath, foffset, expectedHtml, sAction) {
       return GeneralSteps.sequence([
-        tinyApis.sSetContent(inputHtml),
+        tinyApis.sSetRawContent(inputHtml),
         tinyApis.sSetSelection(spath, soffset, fpath, foffset),
         tinyActions.sContentKeystroke(Keys.space(), {}),
         sAction,
@@ -133,36 +137,35 @@ UnitTest.asynctest('browser.core.ThemeTest', function () {
       return sContentActionTest(inputHtml, spath, soffset, fpath, foffset, expectedHtml, sInsertLinkConfirmPrefix(url, 'Cancel'));
     };
 
-    return GeneralSteps.sequence([
+    return Logger.t('sLinkTests', GeneralSteps.sequence([
       sLinkWithConfirmOkTest('<p>a</p>', [0, 0], 0, [0, 0], 1, 'www.site.com', '<p><a href="http://www.site.com">a</a></p>'),
       sLinkWithConfirmCancelTest('<p>a</p>', [0, 0], 0, [0, 0], 1, 'www.site.com', '<p><a href="www.site.com">a</a></p>'),
       sLinkTest('<p>a</p>', [0, 0], 0, [0, 0], 1, '#1', '<p><a href="#1">a</a></p>'),
       sLinkTest('<p><a id="x" href="#1">a</a></p>', [0, 0, 0], 0, [0, 0, 0], 1, '#2', '<p><a id="x" href="#2">a</a></p>'),
       sLinkTest('<p><a href="#3">a</a></p>', [0, 0, 0], 0, [0, 0, 0], 1, '', '<p>a</p>'),
       sUnlinkTest('<p><a id="x" href="#1">a</a></p>', [0, 0, 0], 0, [0, 0, 0], 1, '<p>a</p>')
-    ]);
+    ]));
   };
 
-  const sInsertTableTests = function (tinyApis) {
+  const sInsertTableTests = function (editor, tinyApis) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent('<p><br></p><p>b</p>'),
       tinyApis.sSetCursor([0], 0),
       Toolbar.sClickButton('Insert table'),
-      tinyApis.sAssertContent([
-        '<table style="width: 100%;">',
+      sAssertTableStructure(editor, ApproxStructure.fromHtml([
+        '<table style="border-collapse: collapse; width: 100%;" border="1">',
         '<tbody>',
         '<tr>',
-        '<td>&nbsp;</td>',
-        '<td>&nbsp;</td>',
+        '<td style="width: 50%;"><br></td>',
+        '<td style="width: 50%;"><br></td>',
         '</tr>',
         '<tr>',
-        '<td>&nbsp;</td>',
-        '<td>&nbsp;</td>',
+        '<td style="width: 50%;"><br></td>',
+        '<td style="width: 50%;"><br></td>',
         '</tr>',
         '</tbody>',
-        '</table>',
-        '<p>b</p>'
-      ].join('\n')
+        '</table>'
+      ].join(''))
       )
     ]);
   };
@@ -186,7 +189,7 @@ UnitTest.asynctest('browser.core.ThemeTest', function () {
       sBoldTests(tinyApis),
       sH2Tests(tinyApis),
       sLinkTests(tinyApis, tinyActions),
-      sInsertTableTests(tinyApis),
+      sInsertTableTests(editor, tinyApis),
       sAriaTests(tinyApis, tinyActions)
     ], onSuccess, onFailure);
   }, {

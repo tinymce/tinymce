@@ -147,7 +147,7 @@ export default Widget.extend({
 
     elm = DomUtils.create(settings.multiline ? 'textarea' : 'input', attrs);
     elm.value = self.state.get('value');
-    elm.className = self.classes;
+    elm.className = self.classes.toString();
 
     return elm.outerHTML;
   },

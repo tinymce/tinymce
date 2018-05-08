@@ -55,6 +55,13 @@ const setupMenuItems = function (editor) {
     context: 'insert',
     prependToContext: true
   });
+
+  editor.addMenuItem('unlink', {
+    icon: 'unlink',
+    text: 'Remove link',
+    onclick: Utils.unlink(editor),
+    stateSelector: 'a[href]'
+  });
 };
 
 const setupContextToolbars = function (editor) {

@@ -116,7 +116,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
             init_instance_callback (editor2) {
               LegacyUnit.equal(EditorManager.get().length, 1);
               LegacyUnit.equal(editor1.id, editor2.id);
-              LegacyUnit.equal(editor1.destroyed, 1, 'First editor instance should be destroyed');
+              LegacyUnit.equal(editor1.destroyed, true, 'First editor instance should be destroyed');
 
               teardown(done);
             }

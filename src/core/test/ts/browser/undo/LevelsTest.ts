@@ -130,6 +130,15 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', function () {
     LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createFragmentedLevel(['a'])), true);
   });
 
+  suite.test('isEq ignore bogus elements', function () {
+    LegacyUnit.strictEqual(Levels.isEq(Levels.createFragmentedLevel(['a', '<span data-mce-bogus="1">b</span>']), Levels.createFragmentedLevel(['a', 'b'])), true);
+    LegacyUnit.strictEqual(Levels.isEq(Levels.createFragmentedLevel(['a', 'b']), Levels.createFragmentedLevel(['a', '<span data-mce-bogus="1">b</span>'])), true);
+    LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>')), true);
+    LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>'), Levels.createCompleteLevel('a')), true);
+    LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createFragmentedLevel(['<span data-mce-bogus="1">a</span>'])), true);
+    LegacyUnit.strictEqual(Levels.isEq(Levels.createFragmentedLevel(['<span data-mce-bogus="1">a</span>']), Levels.createCompleteLevel('a')), true);
+  });
+
   suite.test('isEq passed undefined', function () {
     LegacyUnit.strictEqual(Levels.isEq(undefined, Levels.createFragmentedLevel(['a', 'b'])), false);
     LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), undefined), false);

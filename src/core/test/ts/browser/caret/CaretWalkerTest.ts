@@ -1,7 +1,7 @@
 import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
 import Env from 'tinymce/core/api/Env';
-import CaretWalker from 'tinymce/core/caret/CaretWalker';
+import { CaretWalker } from 'tinymce/core/caret/CaretWalker';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import CaretAsserts from '../../module/test/CaretAsserts';
@@ -133,7 +133,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', function () {
     setupHtml('<br><br><br>');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), CaretPosition(getRoot(), 1));
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(getRoot(), 2));
-    CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 2)), CaretPosition(getRoot(), 3));
+    CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 2)), null);
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 3)), null);
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 3)), CaretPosition(getRoot(), 2));
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), CaretPosition(getRoot(), 1));

@@ -18,6 +18,10 @@ import Schema from '../api/html/Schema';
 import Serializer from '../api/html/Serializer';
 import Zwsp from '../text/Zwsp';
 import Tools from '../api/util/Tools';
+import { Element } from '@ephox/sugar';
+import { isWsPreserveElement } from 'tinymce/core/dom/ElementType';
+import Node from 'tinymce/core/api/html/Node';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const addTempAttr = function (htmlParser, tempAttrs, name) {
   if (Tools.inArray(tempAttrs, name) === -1) {
@@ -42,30 +46,30 @@ const postProcess = function (editor, args, content) {
   }
 };
 
-const getHtmlFromNode = function (dom, node, args) {
+const getHtmlFromNode = function (dom: DOMUtils, node: HTMLElement, args) {
   const html = Zwsp.trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node));
-  return args.selection ? html : Tools.trim(html);
+  return args.selection || isWsPreserveElement(Element.fromDom(node)) ? html : Tools.trim(html);
 };
 
-const parseHtml = function (htmlParser, dom, html, args) {
+const parseHtml = function (htmlParser, html: string, args) {
   const parserArgs = args.selection ? Merger.merge({ forced_root_block: false }, args) : args;
   const rootNode = htmlParser.parse(html, parserArgs);
   DomSerializerFilters.trimTrailingBr(rootNode);
   return rootNode;
 };
 
-const serializeNode = function (settings, schema: Schema, node) {
+const serializeNode = function (settings, schema: Schema, node: Node) {
   const htmlSerializer = Serializer(settings, schema);
   return htmlSerializer.serialize(node);
 };
 
-const toHtml = function (editor, settings, schema: Schema, rootNode, args) {
+const toHtml = function (editor: Editor, settings, schema: Schema, rootNode: Node, args) {
   const content = serializeNode(settings, schema, rootNode);
   return postProcess(editor, args, content);
 };
 
-export default function (settings, editor) {
-  let dom, schema: Schema, htmlParser;
+export default function (settings, editor: Editor) {
+  let dom: DOMUtils, schema: Schema, htmlParser;
   const tempAttrs = ['data-mce-selected'];
 
   dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
@@ -80,7 +84,7 @@ export default function (settings, editor) {
     const args = Merger.merge({ format: 'html' }, parserArgs ? parserArgs : {});
     const targetNode = DomSerializerPreProcess.process(editor, node, args);
     const html = getHtmlFromNode(dom, targetNode, args);
-    const rootNode = parseHtml(htmlParser, dom, html, args);
+    const rootNode = parseHtml(htmlParser, html, args);
     return args.format === 'tree' ? rootNode : toHtml(editor, settings, schema, rootNode, args);
   };
 

@@ -168,6 +168,14 @@ UnitTest.asynctest('browser.tinymce.core.CaretPositionTest', function () {
     LegacyUnit.equal(CaretPosition(getRoot().firstChild, 5).getClientRects().length, 0);
   });
 
+  suite.test('getClientRects at only one text node should return client rects', function () {
+    setupHtml('<p>a<br>b</p>');
+    LegacyUnit.equal(CaretPosition(getRoot().firstChild.firstChild, 0).getClientRects().length > 0, true);
+    LegacyUnit.equal(CaretPosition(getRoot().firstChild.firstChild, 1).getClientRects().length > 0, true);
+    LegacyUnit.equal(CaretPosition(getRoot().firstChild.lastChild, 0).getClientRects().length > 0, true);
+    LegacyUnit.equal(CaretPosition(getRoot().firstChild.lastChild, 1).getClientRects().length > 0, true);
+  });
+
   suite.test('getNode', function () {
     setupHtml('<b>abc</b><input><input>');
 

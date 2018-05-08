@@ -672,12 +672,32 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     writer.reset();
     parser.parse(
       '<a href="javascript:alert(1)">1</a>' +
-      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>'
+      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>' +
+      '<a href="data:image/svg+xml;base64,x">3</a>'
     );
     LegacyUnit.equal(
       writer.getContent(),
       '<a>1</a>' +
-      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>'
+      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>' +
+      '<a href="data:image/svg+xml;base64,x">3</a>'
+    );
+  });
+
+  suite.test('Parse script urls (disallow svg data image uris)', function () {
+    let counter, parser;
+
+    counter = createCounter(writer);
+    counter.validate = false;
+    counter.allow_html_data_urls = false;
+    counter.allow_svg_data_urls = false;
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse(
+      '<a href="data:image/svg+xml;base64,x">1</a>'
+    );
+    LegacyUnit.equal(
+      writer.getContent(),
+      '<a>1</a>'
     );
   });
 
@@ -703,6 +723,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
       '<button formaction="javascript:alert(11)">11</button>' +
       '<table background="javascript:alert(12)"><tr><tr>12</tr></tr></table>' +
       '<a href="mhtml:13">13</a>' +
+      '<a xlink:href="jAvaScript:alert(1)">14</a>' +
       '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">' +
       '<a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>'
     );
@@ -710,7 +731,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
     LegacyUnit.equal(
       writer.getContent(),
       '<a>1</a><a>2</a><a>3</a><a>4</a><a>5</a><a>6</a><a>7</a><a>8</a><a>9</a>' +
-      '<object>10</object><button>11</button><table><tr></tr><tr>12</tr></table><a>13</a>' +
+      '<object>10</object><button>11</button><table><tr></tr><tr>12</tr></table><a>13</a><a>14</a>' +
       '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />' +
       '<a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>'
     );

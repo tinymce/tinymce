@@ -84,6 +84,15 @@ UnitTest.asynctest('browser.tinymce.core.geom.ClientRectTest', function () {
     LegacyUnit.equal(ClientRect.containsXY(rect(10, 70, 10, 40), 15, 75), true);
   });
 
+  suite.test('getOverflow', function () {
+    LegacyUnit.equal(ClientRect.getOverflow(rect(10, 10, 10, 10), rect(10, 10, 10, 10)), { x: 0, y: 0 });
+    LegacyUnit.equal(ClientRect.getOverflow(rect(10, 10, 20, 20), rect(15, 15, 10, 10)), { x: 0, y: 0 });
+    LegacyUnit.equal(ClientRect.getOverflow(rect(10, 10, 10, 10), rect(5, 10, 10, 10)), { x: -5, y: 0 });
+    LegacyUnit.equal(ClientRect.getOverflow(rect(10, 10, 10, 10), rect(10, 5, 10, 10)), { x: 0, y: -5 });
+    LegacyUnit.equal(ClientRect.getOverflow(rect(10, 10, 10, 10), rect(15, 10, 10, 10)), { x: 5, y: 0 });
+    LegacyUnit.equal(ClientRect.getOverflow(rect(10, 10, 10, 10), rect(10, 15, 10, 10)), { x: 0, y: 5 });
+  });
+
   Pipeline.async({}, suite.toSteps({}), function () {
     success();
   }, failure);

@@ -77,14 +77,14 @@ const buildListItems = function (inputList, itemCallback, startItems?) {
   return appendItems(inputList, startItems || []);
 };
 
-const removePixelSuffix = function (value) {
+const removePixelSuffix = (value: string): string => {
   if (value) {
     value = value.replace(/px$/, '');
   }
   return value;
 };
 
-const addPixelSuffix = function (value) {
+const addPixelSuffix = (value: string): string => {
   if (value.length > 0 && /^[0-9]+$/.test(value)) {
     value += 'px';
   }
@@ -168,7 +168,7 @@ const waitLoadImage = function (editor, data, imgElm) {
 };
 
 const blobToDataUri = function (blob) {
-  return new Promise(function (resolve, reject) {
+  return new Promise<string>(function (resolve, reject) {
     const reader = new FileReader();
     reader.onload = function () {
       resolve(reader.result);

@@ -309,7 +309,12 @@ const getNormalizedRangeEndPoint = (direction: number, root: Node, range: Range)
   return CaretPosition.fromRangeEnd(normalizedRange);
 };
 
-export default {
+const isBeforeContentEditableFalse = curry(isNextToContentEditableFalse, 0) as (caretPosition: CaretPosition) => boolean;
+const isAfterContentEditableFalse = curry(isNextToContentEditableFalse, -1) as (caretPosition: CaretPosition) => boolean;
+const isBeforeTable = curry(isNextToTable, 0) as (caretPosition: CaretPosition) => boolean;
+const isAfterTable = curry(isNextToTable, -1) as (caretPosition: CaretPosition) => boolean;
+
+export {
   isForwards,
   isBackwards,
   findNode,
@@ -317,10 +322,10 @@ export default {
   getParentBlock,
   isInSameBlock,
   isInSameEditingHost,
-  isBeforeContentEditableFalse: curry(isNextToContentEditableFalse, 0) as (caretPosition: CaretPosition) => boolean,
-  isAfterContentEditableFalse: curry(isNextToContentEditableFalse, -1) as (caretPosition: CaretPosition) => boolean,
-  isBeforeTable: curry(isNextToTable, 0) as (caretPosition: CaretPosition) => boolean,
-  isAfterTable: curry(isNextToTable, -1) as (caretPosition: CaretPosition) => boolean,
+  isBeforeContentEditableFalse,
+  isAfterContentEditableFalse,
+  isBeforeTable,
+  isAfterTable,
   normalizeRange,
   getRelativeCefElm,
   getNormalizedRangeEndPoint

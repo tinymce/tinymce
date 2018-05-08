@@ -15,8 +15,8 @@ import EditorView from './EditorView';
 import Env from './api/Env';
 import * as CaretContainer from './caret/CaretContainer';
 import CaretPosition from './caret/CaretPosition';
-import CaretUtils from './caret/CaretUtils';
-import CaretWalker from './caret/CaretWalker';
+import * as CaretUtils from './caret/CaretUtils';
+import { CaretWalker } from './caret/CaretWalker';
 import * as LineUtils from './caret/LineUtils';
 import NodeType from './dom/NodeType';
 import RangePoint from './dom/RangePoint';
@@ -24,19 +24,42 @@ import CefFocus from './focus/CefFocus';
 import * as CefUtils from './keyboard/CefUtils';
 import VK from './api/util/VK';
 import { FakeCaret, isFakeCaretTarget } from './caret/FakeCaret';
+import { Editor } from 'tinymce/core/api/Editor';
+import EditorFocus from 'tinymce/core/focus/EditorFocus';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isAfterContentEditableFalse = CaretUtils.isAfterContentEditableFalse;
 const isBeforeContentEditableFalse = CaretUtils.isBeforeContentEditableFalse;
 
-const SelectionOverrides = function (editor) {
+interface SelectionOverrides {
+  showCaret: (direction: number, node: Element, before: boolean, scrollIntoView?: boolean) => Range;
+  showBlockCaretContainer: (blockCaretContainer: Element) => void;
+  hideFakeCaret: () => void;
+  destroy: () => void;
+}
+
+const getContentEditableRoot = (editor: Editor, node: Node): Node => {
+  const root = editor.getBody();
+
+  while (node && node !== root) {
+    if (isContentEditableTrue(node) || isContentEditableFalse(node)) {
+      return node;
+    }
+
+    node = node.parentNode;
+  }
+
+  return null;
+};
+
+const SelectionOverrides = function (editor: Editor): SelectionOverrides {
   const isBlock = function (node) {
     return editor.dom.isBlock(node);
   };
 
   const rootNode = editor.getBody();
-  const fakeCaret = FakeCaret(editor.getBody(), isBlock);
+  const fakeCaret = FakeCaret(editor.getBody(), isBlock, () => EditorFocus.hasFocus(editor));
   const realSelectionId = 'sel-' + editor.dom.uniqueId();
   let selectedContentEditableNode;
 
@@ -46,10 +69,10 @@ const SelectionOverrides = function (editor) {
 
   const getRealSelectionElement = function () {
     const container = editor.dom.get(realSelectionId);
-    return container ? container.getElementsByTagName('*')[0] : container;
+    return container ? container.getElementsByTagName('*')[0] as HTMLElement : container;
   };
 
-  const setRange = function (range) {
+  const setRange = function (range: Range) {
     // console.log('setRange', range);
     if (range) {
       editor.selection.setRng(range);
@@ -60,11 +83,7 @@ const SelectionOverrides = function (editor) {
     return editor.selection.getRng();
   };
 
-  const scrollIntoView = function (node, alignToTop?) {
-    editor.selection.scrollIntoView(node, alignToTop);
-  };
-
-  const showCaret = (direction, node: HTMLElement, before: boolean): Range => {
+  const showCaret = (direction: number, node: Element, before: boolean, scrollIntoView: boolean = true): Range => {
     let e;
 
     e = editor.fire('ShowCaret', {
@@ -77,12 +96,14 @@ const SelectionOverrides = function (editor) {
       return null;
     }
 
-    scrollIntoView(node, direction === -1);
+    if (scrollIntoView) {
+      editor.selection.scrollIntoView(node, direction === -1);
+    }
 
     return fakeCaret.show(before, node);
   };
 
-  const getNormalizedRangeEndPoint = function (direction, range) {
+  const getNormalizedRangeEndPoint = function (direction: number, range: Range): CaretPosition {
     range = CaretUtils.normalizeRange(direction, rootNode, range);
 
     if (direction === -1) {
@@ -92,43 +113,29 @@ const SelectionOverrides = function (editor) {
     return CaretPosition.fromRangeEnd(range);
   };
 
-  const showBlockCaretContainer = function (blockCaretContainer) {
+  const showBlockCaretContainer = function (blockCaretContainer: HTMLElement) {
     if (blockCaretContainer.hasAttribute('data-mce-caret')) {
       CaretContainer.showCaretContainerBlock(blockCaretContainer);
       setRange(getRange()); // Removes control rect on IE
-      scrollIntoView(blockCaretContainer[0]);
+      editor.selection.scrollIntoView(blockCaretContainer[0]);
     }
   };
 
   const registerEvents = function () {
-    const getContentEditableRoot = function (node) {
-      const root = editor.getBody();
-
-      while (node && node !== root) {
-        if (isContentEditableTrue(node) || isContentEditableFalse(node)) {
-          return node;
-        }
-
-        node = node.parentNode;
-      }
-
-      return null;
-    };
-
     // Some browsers (Chrome) lets you place the caret after a cE=false
     // Make sure we render the caret container in this case
     editor.on('mouseup', function (e) {
       const range = getRange();
 
       if (range.collapsed && EditorView.isXYInContentArea(editor, e.clientX, e.clientY)) {
-        setRange(CefUtils.renderCaretAtRange(editor, range));
+        setRange(CefUtils.renderCaretAtRange(editor, range, false));
       }
     });
 
     editor.on('click', function (e) {
       let contentEditableRoot;
 
-      contentEditableRoot = getContentEditableRoot(e.target);
+      contentEditableRoot = getContentEditableRoot(editor, e.target);
       if (contentEditableRoot) {
         // Prevent clicks on links in a cE=false element
         if (isContentEditableFalse(contentEditableRoot)) {
@@ -149,6 +156,8 @@ const SelectionOverrides = function (editor) {
       removeContentEditableSelection();
     });
 
+    editor.on('ResizeWindow FullscreenStateChanged', () => fakeCaret.reposition());
+
     const handleTouchSelect = function (editor) {
       let moved = false;
 
@@ -161,7 +170,7 @@ const SelectionOverrides = function (editor) {
       });
 
       editor.on('touchend', function (e) {
-        const contentEditableRoot = getContentEditableRoot(e.target);
+        const contentEditableRoot = getContentEditableRoot(editor, e.target);
 
         if (isContentEditableFalse(contentEditableRoot)) {
           if (!moved) {
@@ -198,6 +207,11 @@ const SelectionOverrides = function (editor) {
       const targetBlock = editor.dom.getParent(targetNode, editor.dom.isBlock);
       const caretBlock = editor.dom.getParent(caretNode, editor.dom.isBlock);
 
+      // Click inside the suggested caret element
+      if (targetBlock && editor.dom.isChildOf(targetBlock, caretBlock) && isContentEditableFalse(getContentEditableRoot(editor, targetBlock)) === false) {
+        return true;
+      }
+
       return targetBlock && !isInSameBlock(targetBlock, caretBlock) && hasNormalCaretPosition(targetBlock);
     };
 
@@ -215,7 +229,7 @@ const SelectionOverrides = function (editor) {
         return;
       }
 
-      contentEditableRoot = getContentEditableRoot(targetElm);
+      contentEditableRoot = getContentEditableRoot(editor, targetElm);
       if (contentEditableRoot) {
         if (isContentEditableFalse(contentEditableRoot)) {
           e.preventDefault();
@@ -225,6 +239,7 @@ const SelectionOverrides = function (editor) {
 
           // Check that we're not attempting a shift + click select within a contenteditable='true' element
           if (!(isContentEditableTrue(contentEditableRoot) && e.shiftKey) && !RangePoint.isXYWithinRange(e.clientX, e.clientY, editor.selection.getRng())) {
+            hideFakeCaret();
             editor.selection.placeCaretAt(e.clientX, e.clientY);
           }
         }
@@ -238,8 +253,9 @@ const SelectionOverrides = function (editor) {
         if (caretInfo) {
           if (!hasBetterMouseTarget(e.target, caretInfo.node)) {
             e.preventDefault();
+            const range = showCaret(1, caretInfo.node as HTMLElement, caretInfo.before, false);
             editor.getBody().focus();
-            setRange(showCaret(1, caretInfo.node as HTMLElement, caretInfo.before));
+            setRange(range);
           }
         }
       }
@@ -334,7 +350,7 @@ const SelectionOverrides = function (editor) {
     );
   };
 
-  const isWithinCaretContainer = function (node) {
+  const isWithinCaretContainer = function (node: Node) {
     return (
       CaretContainer.isCaretContainer(node) ||
       CaretContainer.startsWithCaretContainer(node) ||
@@ -342,11 +358,11 @@ const SelectionOverrides = function (editor) {
     );
   };
 
-  const isRangeInCaretContainer = function (rng) {
+  const isRangeInCaretContainer = function (rng: Range) {
     return isWithinCaretContainer(rng.startContainer) || isWithinCaretContainer(rng.endContainer);
   };
 
-  const setContentEditableSelection = function (range, forward?) {
+  const setContentEditableSelection = function (range: Range, forward?: boolean) {
     let node;
     const $ = editor.$;
     const dom = editor.dom;
@@ -363,21 +379,21 @@ const SelectionOverrides = function (editor) {
           caretPosition = getNormalizedRangeEndPoint(-1, range);
 
           if (isFakeCaretTarget(caretPosition.getNode(true))) {
-            return showCaret(-1, caretPosition.getNode(true), false);
+            return showCaret(-1, caretPosition.getNode(true), false, false);
           }
 
           if (isFakeCaretTarget(caretPosition.getNode())) {
-            return showCaret(-1, caretPosition.getNode(), !caretPosition.isAtEnd());
+            return showCaret(-1, caretPosition.getNode(), !caretPosition.isAtEnd(), false);
           }
         } else {
           caretPosition = getNormalizedRangeEndPoint(1, range);
 
           if (isFakeCaretTarget(caretPosition.getNode())) {
-            return showCaret(1, caretPosition.getNode(), !caretPosition.isAtEnd());
+            return showCaret(1, caretPosition.getNode(), !caretPosition.isAtEnd(), false);
           }
 
           if (isFakeCaretTarget(caretPosition.getNode(true))) {
-            return showCaret(1, caretPosition.getNode(true), false);
+            return showCaret(1, caretPosition.getNode(true), false, false);
           }
         }
       }
@@ -470,9 +486,10 @@ const SelectionOverrides = function (editor) {
   const removeContentEditableSelection = function () {
     if (selectedContentEditableNode) {
       selectedContentEditableNode.removeAttribute('data-mce-selected');
-      SelectorFind.descendant(Element.fromDom(editor.getBody()), '#' + realSelectionId).each(Remove.remove);
-      selectedContentEditableNode = null;
     }
+
+    SelectorFind.descendant(Element.fromDom(editor.getBody()), '#' + realSelectionId).each(Remove.remove);
+    selectedContentEditableNode = null;
   };
 
   const destroy = function () {

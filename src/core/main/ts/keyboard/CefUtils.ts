@@ -9,15 +9,16 @@
  */
 
 import CaretPosition from '../caret/CaretPosition';
-import CaretUtils from '../caret/CaretUtils';
+import * as CaretUtils from '../caret/CaretUtils';
 import NodeType from '../dom/NodeType';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-const showCaret = (direction, editor, node: Node, before: boolean): Range => {
+const showCaret = (direction, editor: Editor, node: Element, before: boolean, scrollIntoView: boolean): Range => {
   // TODO: Figure out a better way to handle this dependency
-  return editor._selectionOverrides.showCaret(direction, node, before);
+  return editor._selectionOverrides.showCaret(direction, node, before, scrollIntoView);
 };
 
 const getNodeRange = (node: Element): Range => {
@@ -27,9 +28,7 @@ const getNodeRange = (node: Element): Range => {
 };
 
 const selectNode = (editor, node: Element): Range => {
-  let e;
-
-  e = editor.fire('BeforeObjectSelected', { target: node });
+  const e = editor.fire('BeforeObjectSelected', { target: node });
   if (e.isDefaultPrevented()) {
     return null;
   }
@@ -37,37 +36,37 @@ const selectNode = (editor, node: Element): Range => {
   return getNodeRange(node);
 };
 
-const renderCaretAtRange = (editor, range: Range): Range => {
-  let caretPosition, ceRoot;
+const renderCaretAtRange = (editor: Editor, range: Range, scrollIntoView: boolean): Range => {
+  const normalizedRange = CaretUtils.normalizeRange(1, editor.getBody(), range);
+  const caretPosition = CaretPosition.fromRangeStart(normalizedRange);
 
-  range = CaretUtils.normalizeRange(1, editor.getBody(), range);
-  caretPosition = CaretPosition.fromRangeStart(range);
+  const caretPositionNode = caretPosition.getNode();
 
-  if (isContentEditableFalse(caretPosition.getNode())) {
-    return showCaret(1, editor, caretPosition.getNode(), !caretPosition.isAtEnd());
+  if (isContentEditableFalse(caretPositionNode)) {
+    return showCaret(1, editor, caretPositionNode, !caretPosition.isAtEnd(), false);
   }
 
-  if (isContentEditableFalse(caretPosition.getNode(true))) {
-    return showCaret(1, editor, caretPosition.getNode(true), false);
+  const caretPositionBeforeNode = caretPosition.getNode(true);
+
+  if (isContentEditableFalse(caretPositionBeforeNode)) {
+    return showCaret(1, editor, caretPositionBeforeNode, false, false);
   }
 
   // TODO: Should render caret before/after depending on where you click on the page forces after now
-  ceRoot = editor.dom.getParent(caretPosition.getNode(), (node) => isContentEditableFalse(node) || isContentEditableTrue(node));
+  const ceRoot = editor.dom.getParent(caretPosition.getNode(), (node) => isContentEditableFalse(node) || isContentEditableTrue(node));
   if (isContentEditableFalse(ceRoot)) {
-    return showCaret(1, editor, ceRoot, false);
+    return showCaret(1, editor, ceRoot, false, scrollIntoView);
   }
 
   return null;
 };
 
-const renderRangeCaret = (editor, range: Range): Range => {
-  let caretRange;
-
+const renderRangeCaret = (editor: Editor, range: Range, scrollIntoView: boolean): Range => {
   if (!range || !range.collapsed) {
     return range;
   }
 
-  caretRange = renderCaretAtRange(editor, range);
+  const caretRange = renderCaretAtRange(editor, range, scrollIntoView);
   if (caretRange) {
     return caretRange;
   }

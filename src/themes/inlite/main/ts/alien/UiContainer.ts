@@ -12,7 +12,7 @@ import { Option } from '@ephox/katamari';
 import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
-const getUiContainerDelta = function () {
+const getUiContainerDelta = function (): Option<{x: number, y: number}> {
   const uiContainer = Env.container;
   if (uiContainer && DOMUtils.DOM.getStyle(uiContainer, 'position', true) !== 'static') {
     const containerPos = DOMUtils.DOM.getPos(uiContainer);

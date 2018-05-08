@@ -5,10 +5,12 @@ import { Body, Traverse } from '@ephox/sugar';
 import GuiSetup from '../../module/test/GuiSetup';
 import TestTheme from '../../module/test/theme/TestTheme';
 import TestUi from '../../module/test/ui/TestUi';
+import { PlatformDetection } from '@ephox/sand';
 
 UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
+  const browser = PlatformDetection.detect().browser;
 
   /* This test is going to create a toolbar with bold, italic, underline in it */
   const body = Body.body();
@@ -65,7 +67,7 @@ UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function () {
         ]);
       };
 
-      Pipeline.async({}, [
+      Pipeline.async({}, browser.isIE() || browser.isEdge() ? [] : [
         GuiSetup.mAddStyles(Traverse.owner(body), [
           '.tinymce-mobile-toolbar-button { padding: 2px; border: 1px solid black; background: white; }',
           '.tinymce-mobile-toolbar-button.tinymce-mobile-toolbar-button-selected { background: #cadbee; }',

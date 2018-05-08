@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import StylesMenu from 'tinymce/themes/mobile/ui/StylesMenu';
-import UiDomFactory from 'tinymce/themes/mobile/util/UiDomFactory';
+import * as UiDomFactory from 'tinymce/themes/mobile/util/UiDomFactory';
 
 export default function () {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();

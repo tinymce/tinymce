@@ -55,14 +55,22 @@ declare const unescape: any;
  * @version 3.4
  */
 
-const each = Tools.each;
-
 const isValidPrefixAttrName = function (name) {
   return name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
 };
 
 const trimComments = function (text) {
   return text.replace(/<!--|-->/g, '');
+};
+
+const isInvalidUri = (settings, uri: string) => {
+  if (settings.allow_html_data_urls) {
+    return false;
+  } else if (/^data:image\//i.test(uri)) {
+    return settings.allow_svg_data_urls === false && /^data:image\/svg\+xml/i.test(uri);
+  } else {
+    return /^data:/i.test(uri);
+  }
 };
 
 /**
@@ -121,13 +129,6 @@ export function SaxParser(settings, schema = Schema()) {
     settings.fix_self_closing = true;
   }
 
-  // Add handler functions from settings and setup default handlers
-  each('comment cdata text start end pi doctype'.split(' '), function (name) {
-    if (name) {
-      self[name] = settings[name] || noop;
-    }
-  });
-
   const comment = settings.comment ? settings.comment : noop;
   const cdata = settings.cdata ? settings.cdata : noop;
   const text = settings.text ? settings.text : noop;
@@ -154,8 +155,8 @@ export function SaxParser(settings, schema = Schema()) {
     let anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
     const decode = Entities.decode;
     let fixSelfClosing;
-    const filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster');
-    const scriptUriRegExp = /((java|vb)script|mhtml):/i, dataUriRegExp = /^data:/i;
+    const filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster,xlink:href');
+    const scriptUriRegExp = /((java|vb)script|mhtml):/i;
 
     const processEndTag = function (name) {
       let pos, i;
@@ -238,7 +239,7 @@ export function SaxParser(settings, schema = Schema()) {
           return;
         }
 
-        if (!settings.allow_html_data_urls && dataUriRegExp.test(uri) && !/^data:image\//i.test(uri)) {
+        if (isInvalidUri(settings, uri)) {
           return;
         }
       }

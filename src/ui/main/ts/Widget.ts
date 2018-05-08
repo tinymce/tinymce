@@ -10,6 +10,7 @@
 
 import Control from './Control';
 import Tooltip from './Tooltip';
+import UiContainer from 'tinymce/ui/UiContainer';
 
 /**
  * Widget base class a widget is a control that has a tooltip and some basic states.
@@ -17,8 +18,6 @@ import Tooltip from './Tooltip';
  * @class tinymce.ui.Widget
  * @extends tinymce.ui.Control
  */
-
-let tooltip;
 
 const Widget = Control.extend({
   /**
@@ -55,7 +54,8 @@ const Widget = Control.extend({
       });
 
       self.on('mouseleave mousedown click', function () {
-        self.tooltip().hide();
+        self.tooltip().remove();
+        self._tooltip = null;
       });
     }
 
@@ -69,12 +69,13 @@ const Widget = Control.extend({
    * @return {tinymce.ui.Tooltip} Tooltip instance.
    */
   tooltip () {
-    if (!tooltip) {
-      tooltip = new Tooltip({ type: 'tooltip' });
-      tooltip.renderTo();
+    if (!this._tooltip) {
+      this._tooltip = new Tooltip({ type: 'tooltip' });
+      UiContainer.inheritUiContainer(this, this._tooltip);
+      this._tooltip.renderTo();
     }
 
-    return tooltip;
+    return this._tooltip;
   },
 
   /**
@@ -138,9 +139,9 @@ const Widget = Control.extend({
   remove () {
     this._super();
 
-    if (tooltip) {
-      tooltip.remove();
-      tooltip = null;
+    if (this._tooltip) {
+      this._tooltip.remove();
+      this._tooltip = null;
     }
   }
 });

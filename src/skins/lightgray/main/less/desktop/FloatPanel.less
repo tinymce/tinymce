@@ -59,7 +59,31 @@
         border-bottom-color: @popover-arrow;
       }
     }
+  }
 
+  &.@{prefix}-top {
+    margin-top: -@popover-arrow-width;
+    *margin-top: 0;
+
+    & > .@{prefix}-arrow {
+      left: 50%;
+      margin-left: -@popover-arrow-outer-width;
+      border-bottom-width: 0;
+      border-top-color: @panel-border;
+      // border-bottom-color: @popover-arrow-outer;
+      top: auto;
+      bottom: -@popover-arrow-outer-width;
+
+      &:after {
+        bottom: 1px;
+        margin-left: -@popover-arrow-width;
+        border-bottom-width: 0;
+        border-top-color: @popover-arrow;
+      }
+    }
+  }
+
+  &.@{prefix}-bottom, &.@{prefix}-top {
     &.@{prefix}-start { margin-left: -22px; }
     &.@{prefix}-start > .@{prefix}-arrow { left: 20px; }
 

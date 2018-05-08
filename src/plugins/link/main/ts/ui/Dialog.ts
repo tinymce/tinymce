@@ -288,6 +288,7 @@ const showDialog = function (editor, linkList) {
         label: 'Url',
         onchange: urlChange,
         onkeyup: updateText,
+        onpaste: updateText,
         onbeforecall: onBeforeCall
       },
       textListCtrl,

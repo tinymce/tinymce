@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', fu
       const p = Element.fromDom(editor.getBody().firstChild);
       const background = Css.get(p, 'background-image');
       Assertions.assertEq('Paragraph should have a url background', true, background.indexOf('url(') === 0);
-    }), 10, 1000);
+    }), 10, 10000);
   };
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {

@@ -9,8 +9,9 @@
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
+import { ContextToolbar } from 'tinymce/themes/inlite/core/Render';
 
-const create = function (id, predicate) {
+const create = function (id: string, predicate: Function) {
   return {
     id,
     predicate
@@ -18,8 +19,8 @@ const create = function (id, predicate) {
 };
 
 // fromContextToolbars :: [ContextToolbar] -> [PredicateId]
-const fromContextToolbars = function (toolbars) {
-  return Tools.map(toolbars, function (toolbar) {
+const fromContextToolbars = function (toolbars: ContextToolbar[]) {
+  return Tools.map(toolbars, function (toolbar: ContextToolbar) {
     return create(toolbar.id, toolbar.predicate);
   });
 };

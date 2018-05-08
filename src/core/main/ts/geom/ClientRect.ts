@@ -118,6 +118,26 @@ const containsXY = (rect: ClientRect, clientX: number, clientY: number): boolean
   );
 };
 
+const overflowX = (outer: ClientRect, inner: ClientRect) => {
+  if (inner.left > outer.left && inner.right < outer.right) {
+    return 0;
+  } else {
+    return inner.left < outer.left ? inner.left - outer.left : inner.right - outer.right;
+  }
+};
+
+const overflowY = (outer: ClientRect, inner: ClientRect) => {
+  if (inner.top > outer.top && inner.bottom < outer.bottom) {
+    return 0;
+  } else {
+    return inner.top < outer.top ? inner.top - outer.top : inner.bottom - outer.bottom;
+  }
+};
+
+const getOverflow = (outer: ClientRect, inner: ClientRect) => {
+  return { x: overflowX(outer, inner), y: overflowY(outer, inner) };
+};
+
 export {
   clone,
   collapse,
@@ -127,5 +147,6 @@ export {
   isLeft,
   isRight,
   compare,
-  containsXY
+  containsXY,
+  getOverflow
 };

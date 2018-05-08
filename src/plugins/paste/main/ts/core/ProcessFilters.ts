@@ -10,18 +10,19 @@
 
 import Events from '../api/Events';
 import WordFilter from './WordFilter';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const processResult = function (content, cancelled) {
   return { content, cancelled };
 };
 
-const postProcessFilter = function (editor, html, internal, isWordHtml) {
+const postProcessFilter = function (editor: Editor, html: string, internal: boolean, isWordHtml: boolean) {
   const tempBody = editor.dom.create('div', { style: 'display:none' }, html);
   const postProcessArgs = Events.firePastePostProcess(editor, tempBody, internal, isWordHtml);
   return processResult(postProcessArgs.node.innerHTML, postProcessArgs.isDefaultPrevented());
 };
 
-const filterContent = function (editor, content, internal, isWordHtml) {
+const filterContent = function (editor: Editor, content: string, internal: boolean, isWordHtml: boolean) {
   const preProcessArgs = Events.firePastePreProcess(editor, content, internal, isWordHtml);
 
   if (editor.hasEventListeners('PastePostProcess') && !preProcessArgs.isDefaultPrevented()) {
@@ -31,7 +32,7 @@ const filterContent = function (editor, content, internal, isWordHtml) {
   }
 };
 
-const process = function (editor, html, internal) {
+const process = function (editor: Editor, html: string, internal: boolean) {
   const isWordHtml = WordFilter.isWordContent(html);
   const content = isWordHtml ? WordFilter.preProcess(editor, html) : html;
 

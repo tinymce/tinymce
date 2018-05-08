@@ -1,3 +1,91 @@
+Version 4.7.12 (2018-05-03)
+    Added an option to filter out image svg data urls.
+    Added support for html5 details and summary elements.
+    Changed so the mce-abs-layout-item css rule targets html instead of body. Patch contributed by nazar-pc.
+    Fixed a bug where the "read" step on the mobile theme was still present on android mobile browsers.
+    Fixed a bug where all images in the editor document would reload on any editor change.
+    Fixed a bug with the Table Plugin where ObjectResized event wasn't being triggered on column resize.
+    Fixed so the selection is set to the first suitable caret position after editor.setContent called.
+    Fixed so links with xlink:href attributes are filtered correctly to prevent XSS.
+    Fixed a bug on IE11 where pasting content into an inline editor initialized on a heading element would create new editable elements.
+    Fixed a bug where readonly mode would not work as expected when the editor contained contentEditable=true elements.
+    Fixed a bug where the Link Plugin would throw an error when used together with the webcomponents polyfill. Patch contributed by 4esnog.
+    Fixed a bug where the "Powered by TinyMCE" branding link would break on XHTML pages. Patch contributed by tistre.
+    Fixed a bug where the same id would be used in the blobcache for all pasted images. Patch contributed by thorn0.
+Version 4.7.11 (2018-04-11)
+    Added a new imagetools_credentials_hosts option to the Imagetools Plugin.
+    Fixed a bug where toggling a list containing empty LIs would throw an error. Patch contributed by bradleyke.
+    Fixed a bug where applying block styles to a text with the caret at the end of the paragraph would select all text in the paragraph.
+    Fixed a bug where toggling on the Spellchecker Plugin would trigger isDirty on the editor.
+    Fixed a bug where it was possible to enter content into selection bookmark spans.
+    Fixed a bug where if a non paragraph block was configured in forced_root_block the editor.getContent method would return incorrect values with an empty editor.
+    Fixed a bug where dropdown menu panels stayed open and fixed in position when dragging dialog windows.
+    Fixed a bug where it wasn't possible to extend table cells with the space button in Safari.
+    Fixed a bug where the setupeditor event would thrown an error when using the Compat3x Plugin.
+    Fixed a bug where an error was thrown in FontInfo when called on a detached element.
+Version 4.7.10 (2018-04-03)
+    Removed the "read" step from the mobile theme.
+    Added normalization of triple clicks across browsers in the editor.
+    Added a `hasFocus` method to the editor that checks if the editor has focus.
+    Added correct icon to the Nonbreaking Plugin menu item.
+    Fixed so the `getContent`/`setContent` methods work even if the editor is not initialized.
+    Fixed a bug with the Media Plugin where query strings were being stripped from youtube links.
+    Fixed a bug where image styles were changed/removed when opening and closing the Image Plugin dialog.
+    Fixed a bug in the Table Plugin where some table cell styles were not correctly added to the content html.
+    Fixed a bug in the Spellchecker Plugin where it wasn't possible to change the spellchecker language.
+    Fixed so the the unlink action in the Link Plugin has a menu item and can be added to the contextmenu.
+    Fixed a bug where it wasn't possible to keyboard navigate to the start of an inline element on a new line within the same block element.
+    Fixed a bug with the Text Color Plugin where if used with an inline editor located at the bottom of the screen the colorpicker could appear off screen.
+    Fixed a bug with the UndoManager where undo levels were being added for nbzwsp characters.
+    Fixed a bug with the Table Plugin where the caret would sometimes be lost when keyboard navigating up through a table.
+    Fixed a bug where FontInfo.getFontFamily would throw an error when called on a removed editor.
+    Fixed a bug in Firefox where undo levels were not being added correctly for some specific operations.
+    Fixed a bug where initializing an inline editor inside of a table would make the whole table resizeable.
+    Fixed a bug where the fake cursor that appears next to tables on Firefox was positioned incorrectly when switching to fullscreen.
+    Fixed a bug where zwsp's weren't trimmed from the output from `editor.getContent({ format: 'text' })`.
+    Fixed a bug where the fontsizeselect/fontselect toolbar items showed the body info rather than the first possible caret position info on init.
+    Fixed a bug where it wasn't possible to select all content if the editor only contained an inline boundary element.
+    Fixed a bug where `content_css` urls with query strings wasn't working.
+    Fixed a bug in the Table Plugin where some table row styles were removed when changing other styles in the row properties dialog.
+Version 4.7.9 (2018-02-27)
+    Fixed a bug where the editor target element didn't get the correct style when removing the editor.
+Version 4.7.8 (2018-02-26)
+    Fixed an issue with the Help Plugin where the menuitem name wasn't lowercase.
+    Fixed an issue on MacOS where text and bold text did not have the same line-height in the autocomplete dropdown in the Link Plugin dialog.
+    Fixed a bug where the "paste as text" option in the Paste Plugin didn't work.
+    Fixed a bug where dialog list boxes didn't get positioned correctly in documents with scroll.
+    Fixed a bug where the Inlite Theme didn't use the Table Plugin api to insert correct tables.
+    Fixed a bug where the Inlite Theme panel didn't hide on blur in a correct way.
+    Fixed a bug where placing the cursor before a table in Firefox would scroll to the bottom of the table.
+    Fixed a bug where selecting partial text in table cells with rowspans and deleting would produce faulty tables.
+    Fixed a bug where the Preview Plugin didn't work on Safari due to sandbox security.
+    Fixed a bug where table cell selection using the keyboard threw an error.
+    Fixed so the font size and font family doesn't toggle the text but only sets the selected format on the selected text.
+    Fixed so the built-in spellchecking on Chrome and Safari creates an undo level when replacing words.
+Version 4.7.7 (2018-02-19)
+    Added a border style selector to the advanced tab of the Image Plugin.
+    Added better controls for default table inserted by the Table Plugin.
+    Added new `table_responsive_width` option to the Table Plugin that controls whether to use pixel or percentage widths.
+    Fixed a bug where the Link Plugin text didn't update when a URL was pasted using the context menu.
+    Fixed a bug with the Spellchecker Plugin where using "Add to dictionary" in the context menu threw an error.
+    Fixed a bug in the Media Plugin where the preview node for iframes got default width and height attributes that interfered with width/height styles.
+    Fixed a bug where backslashes were being added to some font family names in Firefox in the fontselect toolbar item.
+    Fixed a bug where errors would be thrown when trying to remove an editor that had not yet been fully initialized.
+    Fixed a bug where the Imagetools Plugin didn't update the images atomically.
+    Fixed a bug where the Fullscreen Plugin was throwing errors when being used on an inline editor.
+    Fixed a bug where drop down menus weren't positioned correctly in inline editors on scroll.
+    Fixed a bug with a semicolon missing at the end of the bundled javascript files.
+    Fixed a bug in the Table Plugin with cursor navigation inside of tables where the cursor would sometimes jump into an incorrect table cells.
+    Fixed a bug where indenting a table that is a list item using the "Increase indent" button would create a nested table.
+    Fixed a bug where text nodes containing only whitespace were being wrapped by paragraph elements.
+    Fixed a bug where whitespace was being inserted after br tags inside of paragraph tags.
+    Fixed a bug where converting an indented paragraph to a list item would cause the list item to have extra padding.
+    Fixed a bug where Copy/Paste in an editor with a lot of content would cause the editor to scroll to the top of the content in IE11.
+    Fixed a bug with a memory leak in the DragHelper. Path contributed by ben-mckernan.
+    Fixed a bug where the advanced tab in the Media Plugin was being shown even if it didn't contain anything. Patch contributed by gabrieeel.
+    Fixed an outdated eventname in the EventUtils. Patch contributed by nazar-pc.
+    Fixed an issue where the Json.parse function would throw an error when being used on a page with strict CSP settings.
+    Fixed so you can place the curser before and after table elements within the editor in Firefox and Edge/IE.
 Version 4.7.6 (2018-01-29)
     Fixed a bug in the jquery integration where it threw an error saying that "global is not defined".
     Fixed a bug where deleting a table cell whose previous sibling was set to contenteditable false would create a corrupted table.

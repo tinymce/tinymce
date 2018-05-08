@@ -15,6 +15,7 @@ import * as ClientRect from '../geom/ClientRect';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ExtendingChar from '../text/ExtendingChar';
 import Fun from '../util/Fun';
+import { Arr, Options } from '@ephox/katamari';
 
 /**
  * This module contains logic for creating caret positions within a document a caretposition
@@ -76,6 +77,23 @@ const getBrClientRect = (brNode: Element): ClientRect => {
   return clientRect;
 };
 
+// Safari will not return a rect for <p>a<br>|b</p> for some odd reason
+const getBoundingClientRectWebKitText = (rng: Range): ClientRect => {
+  const sc = rng.startContainer;
+  const ec = rng.endContainer;
+  const so = rng.startOffset;
+  const eo = rng.endOffset;
+  if (sc === ec && NodeType.isText(ec) && so === 0 && eo === 1) {
+    const newRng = rng.cloneRange();
+    newRng.setEndAfter(ec);
+    return getBoundingClientRect(newRng);
+  } else {
+    return null;
+  }
+};
+
+const isZeroRect = (r) => r.left === 0 && r.right === 0 && r.top === 0 && r.bottom === 0;
+
 const getBoundingClientRect = (item: Element | Range): ClientRect => {
   let clientRect, clientRects;
 
@@ -86,8 +104,12 @@ const getBoundingClientRect = (item: Element | Range): ClientRect => {
     clientRect = ClientRect.clone(item.getBoundingClientRect());
   }
 
-  if (!isRange(item) && isBr(item) && clientRect.left === 0) {
+  if (!isRange(item) && isBr(item) && isZeroRect(clientRect)) {
     return getBrClientRect(item);
+  }
+
+  if (isZeroRect(clientRect) && isRange(item)) {
+    return getBoundingClientRectWebKitText(item);
   }
 
   return clientRect;
@@ -382,9 +404,18 @@ export namespace CaretPosition {
    */
   export const before = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node));
 
+  export const isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean => {
+    return Options.liftN([Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects())], ClientRect.isAbove).getOr(false);
+  };
+
+  export const isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean => {
+    return Options.liftN([Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects())], ClientRect.isBelow).getOr(false);
+  };
+
   export const isAtStart = (pos: CaretPosition) => pos ? pos.isAtStart() : false;
   export const isAtEnd = (pos: CaretPosition) => pos ? pos.isAtEnd() : false;
   export const isTextPosition = (pos: CaretPosition) => pos ? NodeType.isText(pos.container()) : false;
+  export const isElementPosition = (pos: CaretPosition) => isTextPosition(pos) === false;
 }
 
 export default CaretPosition;

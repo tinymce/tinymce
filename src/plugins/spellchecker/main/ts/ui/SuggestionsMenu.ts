@@ -11,11 +11,14 @@
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Factory from 'tinymce/core/api/ui/Factory';
 import Tools from 'tinymce/core/api/util/Tools';
-import Actions from '../core/Actions';
+import Actions, { LastSuggestion } from '../core/Actions';
+import { Editor } from 'tinymce/core/api/Editor';
+import { Cell } from '@ephox/katamari';
+import { DomTextMatcher } from 'tinymce/plugins/spellchecker/core/DomTextMatcher';
 
 let suggestionsMenu;
 
-const showSuggestions = function (editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, word, spans) {
+const showSuggestions = function (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, word: string, spans: HTMLElement[]) {
   const items = [], suggestions = lastSuggestionsState.get().suggestions[word];
 
   Tools.each(suggestions, function (suggestion) {
@@ -35,7 +38,7 @@ const showSuggestions = function (editor, pluginUrl, lastSuggestionsState, start
   if (hasDictionarySupport) {
     items.push({
       text: 'Add to Dictionary', onclick () {
-        Actions.addToDictionary(editor, pluginUrl, startedState, textMatcherState, word, spans);
+        Actions.addToDictionary(editor, pluginUrl, startedState, textMatcherState, currentLanguageState, word, spans);
       }
     });
   }
@@ -91,7 +94,7 @@ const showSuggestions = function (editor, pluginUrl, lastSuggestionsState, start
   suggestionsMenu.moveTo(pos.x, pos.y + spans[0].offsetHeight);
 };
 
-const setup = function (editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState) {
+const setup = function (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>) {
   editor.on('click', function (e) {
     const target = e.target;
 
@@ -105,7 +108,7 @@ const setup = function (editor, pluginUrl, lastSuggestionsState, startedState, t
         rng.setStartBefore(spans[0]);
         rng.setEndAfter(spans[spans.length - 1]);
         editor.selection.setRng(rng);
-        showSuggestions(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, target.getAttribute('data-mce-word'), spans);
+        showSuggestions(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, currentLanguageState, target.getAttribute('data-mce-word'), spans);
       }
     }
   });

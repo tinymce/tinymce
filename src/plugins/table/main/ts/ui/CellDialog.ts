@@ -11,59 +11,75 @@
 import { Fun } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 import Styles from '../actions/Styles';
-import Util from '../alien/Util';
+import * as Util from '../alien/Util';
 import Helpers from './Helpers';
+import { hasAdvancedCellTab, getCellClassList } from '../api/Settings';
+import { Editor } from 'tinymce/core/api/Editor';
 
 /**
  * @class tinymce.table.ui.CellDialog
  * @private
  */
 
-const updateStyles = function (elm, cssText) {
+interface FormData {
+  width: string;
+  height: string;
+  scope: string;
+  class: string;
+  align: string;
+  valign: string;
+  style: string;
+  type: string;
+}
+
+const updateStyles = function (elm: HTMLElement, cssText: string) {
+  delete elm.dataset.mceStyle;
   elm.style.cssText += ';' + cssText;
 };
 
-const extractDataFromElement = function (editor, elm) {
+const extractDataFromElement = function (editor: Editor, elm: HTMLElement) {
   const dom = editor.dom;
-  const data: any = {
+  const data: FormData = {
     width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
     scope: dom.getAttrib(elm, 'scope'),
-    class: dom.getAttrib(elm, 'class')
+    class: dom.getAttrib(elm, 'class'),
+    type: elm.nodeName.toLowerCase(),
+    style: '',
+    align: '',
+    valign: ''
   };
 
-  data.type = elm.nodeName.toLowerCase();
-
-  Tools.each('left center right'.split(' '), function (name) {
+  Tools.each('left center right'.split(' '), function (name: string) {
     if (editor.formatter.matchNode(elm, 'align' + name)) {
       data.align = name;
     }
   });
 
-  Tools.each('top middle bottom'.split(' '), function (name) {
+  Tools.each('top middle bottom'.split(' '), function (name: string) {
     if (editor.formatter.matchNode(elm, 'valign' + name)) {
       data.valign = name;
     }
   });
 
-  if (editor.settings.table_cell_advtab !== false) {
+  if (hasAdvancedCellTab(editor)) {
     Tools.extend(data, Helpers.extractAdvancedStyles(dom, elm));
   }
 
   return data;
 };
 
-const onSubmitCellForm = function (editor, cells, evt) {
+const onSubmitCellForm = function (editor: Editor, cells: Node[], evt) {
   const dom = editor.dom;
-  let data;
+  let data: FormData;
 
-  function setAttrib(elm, name, value) {
+  function setAttrib(elm: Node, name: string, value: string) {
     if (value) {
       dom.setAttrib(elm, name, value);
     }
   }
 
-  function setStyle(elm, name, value) {
+  function setStyle(elm: Node, name: string, value: string) {
     if (value) {
       dom.setStyle(elm, name, value);
     }
@@ -73,7 +89,7 @@ const onSubmitCellForm = function (editor, cells, evt) {
   data = evt.control.rootControl.toJSON();
 
   editor.undoManager.transact(function () {
-    Tools.each(cells, function (cellElm) {
+    Tools.each(cells, function (cellElm: HTMLTableCellElement) {
       setAttrib(cellElm, 'scope', data.scope);
 
       if (cells.length === 1) {
@@ -88,7 +104,7 @@ const onSubmitCellForm = function (editor, cells, evt) {
 
       // Switch cell type
       if (data.type && cellElm.nodeName.toLowerCase() !== data.type) {
-        cellElm = dom.rename(cellElm, data.type);
+        cellElm = dom.rename(cellElm, data.type) as HTMLTableCellElement;
       }
 
       // Remove alignment
@@ -112,8 +128,8 @@ const onSubmitCellForm = function (editor, cells, evt) {
   });
 };
 
-const open = function (editor) {
-  let cellElm, data, classListCtrl, cells = [];
+const open = function (editor: Editor) {
+  let cellElm, data: FormData, classListCtrl, cells = [];
 
   // Get selected cells or the current cell
   cells = editor.dom.select('td[data-mce-selected],th[data-mce-selected]');
@@ -136,6 +152,7 @@ const open = function (editor) {
       scope: '',
       class: '',
       align: '',
+      valign: '',
       style: '',
       type: cellElm.nodeName.toLowerCase()
     };
@@ -143,13 +160,13 @@ const open = function (editor) {
     data = extractDataFromElement(editor, cellElm);
   }
 
-  if (editor.settings.table_cell_class_list) {
+  if (getCellClassList(editor).length > 0) {
     classListCtrl = {
       name: 'class',
       type: 'listbox',
       label: 'Class',
       values: Helpers.buildListItems(
-        editor.settings.table_cell_class_list,
+        getCellClassList(editor),
         function (item) {
           if (item.value) {
             item.textStyle = function () {
@@ -243,7 +260,7 @@ const open = function (editor) {
     ]
   };
 
-  if (editor.settings.table_cell_advtab !== false) {
+  if (hasAdvancedCellTab(editor)) {
     editor.windowManager.open({
       title: 'Cell properties',
       bodyType: 'tabpanel',

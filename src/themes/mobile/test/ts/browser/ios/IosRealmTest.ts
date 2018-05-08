@@ -14,7 +14,7 @@ UnitTest.asynctest('Browser Test: ios.IosRealmTest', function () {
   const failure = arguments[arguments.length - 1];
   const detection = PlatformDetection.detect();
 
-  const realm = IosRealm();
+  const realm = IosRealm(Fun.noop);
 
   const unload = function () {
     Remove.remove(iframe);

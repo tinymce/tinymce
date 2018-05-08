@@ -287,7 +287,10 @@
     });
   }
 
-  tinymce.on('SetupEditor', patchEditor);
+  tinymce.on('SetupEditor', function (e) {
+    patchEditor(e.editor);
+  });
+
   tinymce.PluginManager.add("compat3x", patchEditor);
 
   tinymce.addI18n = function (prefix, o) {

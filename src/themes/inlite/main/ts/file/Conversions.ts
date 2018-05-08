@@ -11,8 +11,8 @@
 import { FileReader } from '@ephox/sand';
 import Promise from 'tinymce/core/api/util/Promise';
 
-const blobToBase64 = function (blob) {
-  return new Promise(function (resolve) {
+const blobToBase64 = function (blob: Blob) {
+  return new Promise<string>(function (resolve) {
     const reader = new FileReader();
 
     reader.onloadend = function () {

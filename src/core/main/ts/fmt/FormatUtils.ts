@@ -10,27 +10,20 @@
 
 import TreeWalker from '../api/dom/TreeWalker';
 import { Selection } from '../api/dom/Selection';
+import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
 
 const isInlineBlock = function (node) {
   return node && /^(IMG)$/.test(node.nodeName);
 };
 
-const moveStart = function (dom, selection: Selection, rng) {
-  let container = rng.startContainer,
-    offset = rng.startOffset,
-    walker, node, nodes;
+const moveStart = function (dom: DOMUtils, selection: Selection, rng: Range) {
+  const offset = rng.startOffset;
+  let container = rng.startContainer, walker, node, nodes;
 
   if (rng.startContainer === rng.endContainer) {
     if (isInlineBlock(rng.startContainer.childNodes[rng.startOffset])) {
       return;
     }
-  }
-
-  // Convert text node into index if possible
-  if (container.nodeType === 3 && offset >= container.nodeValue.length) {
-    // Get the parent container location and walk from there
-    offset = dom.nodeIndex(container);
-    container = container.parentNode;
   }
 
   // Move startContainer/startOffset in to a suitable node

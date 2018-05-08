@@ -11,9 +11,11 @@
 import Conversions from '../file/Conversions';
 import Picker from '../file/Picker';
 import Actions from '../core/Actions';
+import { Editor } from 'tinymce/core/api/Editor';
+import { InlitePanel } from 'tinymce/themes/inlite/ui/Panel';
 
-const addHeaderButtons = function (editor) {
-  const formatBlock = function (name) {
+const addHeaderButtons = function (editor: Editor) {
+  const formatBlock = function (name: string) {
     return function () {
       Actions.formatBlock(editor, name);
     };
@@ -36,7 +38,7 @@ const addHeaderButtons = function (editor) {
   }
 };
 
-const addToEditor = function (editor, panel) {
+const addToEditor = function (editor: Editor, panel: InlitePanel) {
   editor.addButton('quicklink', {
     icon: 'link',
     tooltip: 'Insert/Edit link',

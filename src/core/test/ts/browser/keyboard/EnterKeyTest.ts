@@ -686,6 +686,13 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     LegacyUnit.equal(editor.getContent(), '<ul><li>a</li><li>b</li></ul><p>\u00a0</p>');
   });
 
+  suite.test('Enter inside summary element', function (editor) {
+    editor.getBody().innerHTML = '<details><summary>ab</summary></details>';
+    LegacyUnit.setSelection(editor, 'summary', 1);
+    pressEnter(editor);
+    LegacyUnit.equal(editor.getContent(), '<details><summary>a<br />b</summary></details>');
+  });
+
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {

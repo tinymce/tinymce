@@ -8,8 +8,8 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import Env from 'tinymce/core/api/Env';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { getUiContainer } from 'tinymce/plugins/contextmenu/core/UiContainer';
 
 const nu = function (x, y) {
   return { x, y };
@@ -41,10 +41,6 @@ const transposeUiContainer = function (element, pos) {
 const transposeContentAreaContainer = function (element, pos) {
   const containerPos = DOMUtils.DOM.getPos(element);
   return transpose(pos, containerPos.x, containerPos.y);
-};
-
-const getUiContainer = function (editor) {
-  return Env.container;
 };
 
 const getPos = function (editor, e) {

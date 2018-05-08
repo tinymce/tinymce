@@ -1636,7 +1636,10 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
       inline: 'b'
     });
     editor.setContent('<p>abc</p><p contenteditable="false">def</p><p>ghi</p>');
-    LegacyUnit.setSelection(editor, 'p:nth-child(2)', 0, 'p:nth-child(3)', 3);
+    const rng = editor.dom.createRng();
+    rng.setStart(editor.dom.select('p')[2].firstChild, 0);
+    rng.setEnd(editor.dom.select('p')[2].firstChild, 3);
+    editor.selection.setRng(rng);
     editor.formatter.apply('format');
     LegacyUnit.equal(editor.getContent(editor), '<p>abc</p><p contenteditable="false">def</p><p><b>ghi</b></p>', 'Text in last paragraph is bold');
   });
@@ -1860,6 +1863,26 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function () {
     LegacyUnit.setSelection(editor, 'span span', 0, 'span span', 1);
     editor.formatter.apply('fontname', { value: 'verdana' });
     LegacyUnit.equal(getContent(editor), '<p><span style="font-family: verdana;">a <span style="color: #ff0000;">b</span>c</span></p>');
+  });
+
+  suite.test('FontName should not toggle', function (editor) {
+    editor.getBody().innerHTML = '<p>abc</p>';
+    LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
+    editor.formatter.toggle('fontname', { value: 'arial' });
+    LegacyUnit.equal(getContent(editor), '<p><span style="font-family: arial;">abc</span></p>');
+    LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
+    editor.formatter.toggle('fontname', { value: 'arial' });
+    LegacyUnit.equal(getContent(editor), '<p><span style="font-family: arial;">abc</span></p>');
+  });
+
+  suite.test('FontSize should not toggle', function (editor) {
+    editor.getBody().innerHTML = '<p>abc</p>';
+    LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
+    editor.formatter.toggle('fontsize', { value: '14pt' });
+    LegacyUnit.equal(getContent(editor), '<p><span style="font-size: 14pt;">abc</span></p>');
+    LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
+    editor.formatter.toggle('fontsize', { value: '14pt' });
+    LegacyUnit.equal(getContent(editor), '<p><span style="font-size: 14pt;">abc</span></p>');
   });
 
   suite.test('All the nested childNodes having fontSize should receive backgroundColor as well', function (editor) {

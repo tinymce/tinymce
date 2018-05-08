@@ -1,11 +1,11 @@
-import { Representing } from '@ephox/alloy';
+import { Representing, Sketcher } from '@ephox/alloy';
 import { Option, Thunk } from '@ephox/katamari';
 
 import LinkBridge from '../bridge/LinkBridge';
 import RangePreserver from '../util/RangePreserver';
 import Buttons from './Buttons';
-import Inputs from './Inputs';
-import SerialisedDialog from './SerialisedDialog';
+import * as Inputs from './Inputs';
+import * as SerialisedDialog from './SerialisedDialog';
 
 const getGroups = Thunk.cached(function (realm, editor) {
   return [
@@ -41,7 +41,7 @@ const getGroups = Thunk.cached(function (realm, editor) {
   ];
 });
 
-const sketch = function (realm, editor) {
+const sketch = function (realm, editor): Sketcher.SketchSpec {
   return Buttons.forToolbarStateAction(editor, 'link', 'link', function () {
     const groups = getGroups(realm, editor);
 
@@ -62,6 +62,6 @@ const sketch = function (realm, editor) {
   });
 };
 
-export default {
+export {
   sketch
 };

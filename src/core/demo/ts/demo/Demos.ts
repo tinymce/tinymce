@@ -3,6 +3,7 @@ import ContentEditableFalseDemo from './ContentEditableFalseDemo';
 import CustomThemeDemo from './CustomThemeDemo';
 import FullDemo from './FullDemo';
 import TinyMceDemo from './TinyMceDemo';
+import UiContainerDemo from './UiContainerDemo';
 
 declare const window: any;
 
@@ -11,5 +12,6 @@ window.demos = {
   ContentEditableFalseDemo,
   CustomThemeDemo,
   FullDemo,
-  TinyMceDemo
+  TinyMceDemo,
+  UiContainerDemo
 };
