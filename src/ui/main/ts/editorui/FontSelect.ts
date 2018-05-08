@@ -15,16 +15,17 @@ const getFirstFont = function (fontFamily) {
 };
 
 const findMatchingValue = function (items, fontFamily) {
+  const font = fontFamily ? fontFamily.toLowerCase() : '';
   let value;
 
   Tools.each(items, function (item) {
-    if (item.value.toLowerCase() === fontFamily.toLowerCase()) {
+    if (item.value.toLowerCase() === font) {
       value = item.value;
     }
   });
 
   Tools.each(items, function (item) {
-    if (!value && getFirstFont(item.value).toLowerCase() === getFirstFont(fontFamily).toLowerCase()) {
+    if (!value && getFirstFont(item.value).toLowerCase() === getFirstFont(font).toLowerCase()) {
       value = item.value;
     }
   });
