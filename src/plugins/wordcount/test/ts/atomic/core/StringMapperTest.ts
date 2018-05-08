@@ -32,7 +32,7 @@ UnitTest.test('atomic.core.StringMapperTest', function () {
     assert.eq([OTHER, KATAKANA, KATAKANA], classify('愛ラブ'));
     assert.eq([OTHER, OTHER], classify('ねこ'));
     assert.eq([MIDLETTER], classify('·'));
-    assert.eq([EXTENDNUMLET, MIDNUMLET, MIDNUM, MIDNUM, MIDNUM, EXTENDNUMLET, EXTENDNUMLET], classify('=-+*/⋉≥'));
+    assert.eq([EXTENDNUMLET, MIDNUMLET, MIDNUM, MIDNUM, MIDNUM, MIDNUM, EXTENDNUMLET, EXTENDNUMLET], classify('=-+±*/⋉≥'));
     assert.eq([CR], classify('\r'));
     assert.eq([EXTEND], classify('̀'));
     assert.eq([NEWLINE], classify('\x0B'));
