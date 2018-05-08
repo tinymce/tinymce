@@ -18,7 +18,7 @@ const defaultMenus = {
   view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen' },
   insert: { title: 'Insert', items: 'image link media template codesample inserttable | charmap hr | pagebreak nonbreaking anchor toc | insertdatetime' },
   format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | blockformats align | removeformat' },
-  tools: { title: 'Tools', items: 'spellchecker spellcheckerlanguage | a11ycheck' },
+  tools: { title: 'Tools', items: 'spellchecker spellcheckerlanguage | a11ycheck code' },
   table: { title: 'Table' },
   help: { title: 'Help' }
 };
