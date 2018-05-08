@@ -15,6 +15,7 @@ export interface AlloySystemApi {
   removeFromGui: (component: AlloyComponent) => void;
   removeFromWorld: (component: AlloyComponent) => void;
 
+  isConnected: () => boolean;
   triggerEscape: (component: AlloyComponent, simulatedEvent: {}) => void;
   triggerEvent: (eventName: string, target: SugarElement, data: {}) => void;
   triggerFocus: (target: SugarElement, originator: SugarElement) => void;

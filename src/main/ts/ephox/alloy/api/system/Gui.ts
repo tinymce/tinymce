@@ -27,9 +27,11 @@ export interface GuiSystem {
   addToWorld: (AlloyComponent) => void;
   removeFromWorld: (AlloyComponent) => void;
 
-  broadcast: (message: string) => void;
-  broadcastOn: (channels: string[], message: any) => void;
+  broadcast: (message: message) => void;
+  broadcastOn: (channels: string[], message: message) => void;
 }
+
+export type message = Record<string, string>;
 
 const create = function (): GuiSystem {
   const root = GuiFactory.build(
