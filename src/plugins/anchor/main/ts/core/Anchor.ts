@@ -26,6 +26,7 @@ const insert = function (editor, id) {
   if (isAnchor) {
     selectedNode.removeAttribute('name');
     selectedNode.id = id;
+    editor.undoManager.add();
   } else {
     editor.focus();
     editor.selection.collapse(true);
