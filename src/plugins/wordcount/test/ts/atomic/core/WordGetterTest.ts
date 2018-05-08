@@ -38,6 +38,7 @@ UnitTest.test('atomic.core.WordGetterTest', function () {
     assert.eq(['1≥13'], getWords('1≥13'));
     assert.eq(['n≤13'], getWords('n≤13'));
     assert.eq(['1≤13'], getWords('1≤13'));
+    assert.eq(['42.6±4.2'], getWords('42.6±4.2'));
   };
 
   testGetWords();
