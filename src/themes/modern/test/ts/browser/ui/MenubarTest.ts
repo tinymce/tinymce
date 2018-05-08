@@ -174,7 +174,8 @@ UnitTest.test('browser.tinymce.themes.modern.test.ui.MenubarTest', function () {
           menuItem('spellchecker'),
           menuItem('spellcheckerlanguage'),
           menuSeparator(),
-          menuItem('a11ycheck')
+          menuItem('a11ycheck'),
+          menuItem('code')
         ]
       }
     ],
