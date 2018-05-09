@@ -1,10 +1,10 @@
 import {
-    Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter
+    Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, RawAssertions
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element, Height, Hierarchy, Width } from '@ephox/sugar';
+import { Element, Height, Hierarchy, Width, Attr } from '@ephox/sugar';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import ModernTheme from 'tinymce/themes/modern/Theme';
@@ -72,6 +72,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
     return Math.abs(exp - act) <= loose;
   };
 
+  const sAssertNoDataStyle = (editor, path) => Step.sync(() => {
+    const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
+    const hasDataStyle = Attr.has(element, 'data-mce-style');
+
+    RawAssertions.assertEq('should not have data style', false, hasDataStyle);
+  });
+
   const sAssertSizeChange = function (editor, path, change) {
     return Step.sync(function () {
       const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
@@ -122,6 +129,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
         sMouseover(Element.fromDom(editor.getBody()), 'td'),
         sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
         sAssertSizeChange(editor, [0, 0, 0, 0], { dh: 50, dw: 0 }),
+        sAssertNoDataStyle(editor, [0]),
         sResetState
       ])),
 
@@ -132,6 +140,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
         sMouseover(Element.fromDom(editor.getBody()), 'td'),
         sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
         sAssertSizeChange(editor, [0, 0, 0, 0], { dh: 0, dw: 50 }),
+        sAssertNoDataStyle(editor, [0]),
         sResetState
       ])),
 
@@ -143,6 +152,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
         sMouseover(Element.fromDom(editor.getBody()), 'td'),
         sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
         sAssertSizeChange(editor, [0], { dh: 100, dw: 50 }),
+        sAssertNoDataStyle(editor, [0]),
         sResetState
       ])),
 
@@ -154,6 +164,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
         sMouseover(Element.fromDom(editor.getBody()), 'td'),
         sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -30),
         sAssertSizeChange(editor, [0], { dh: 20, dw: 50 }),
+        sAssertNoDataStyle(editor, [0]),
         sResetState
       ])),
 
@@ -165,6 +176,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
         sMouseover(Element.fromDom(editor.getBody()), 'td'),
         sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
         sAssertSizeChange(editor, [0], { dh: 50, dw: 50 }),
+        sAssertNoDataStyle(editor, [0]),
         sResetState
       ])),
 
@@ -176,6 +188,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
         sMouseover(Element.fromDom(editor.getBody()), 'td'),
         sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -30, 0),
         sAssertSizeChange(editor, [0], { dh: 50, dw: 50 }),
+        sAssertNoDataStyle(editor, [0]),
         sResetState
       ])),
 
@@ -187,6 +200,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
         sMouseover(Element.fromDom(editor.getBody()), 'td'),
         sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
         sAssertSizeChange(editor, [0], { dh: 40, dw: -10 }),
+        sAssertNoDataStyle(editor, [0]),
         sResetState
       ])),
 
@@ -198,6 +212,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
         sMouseover(Element.fromDom(editor.getBody()), 'td'),
         sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -20),
         sAssertSizeChange(editor, [0], { dh: -30, dw: -10 }),
+        sAssertNoDataStyle(editor, [0]),
         sResetState
       ])),
 
@@ -209,6 +224,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
         sMouseover(Element.fromDom(editor.getBody()), 'td'),
         sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
         sAssertSizeChange(editor, [0], { dh: -10, dw: -10 }),
+        sAssertNoDataStyle(editor, [0]),
         sResetState
       ])),
 
@@ -220,6 +236,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', function () {
         sMouseover(Element.fromDom(editor.getBody()), 'td'),
         sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -20, 0),
         sAssertSizeChange(editor, [0], { dh: -10, dw: -10 }),
+        sAssertNoDataStyle(editor, [0]),
         sResetState
       ]))
     ], onSuccess, onFailure);
