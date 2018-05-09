@@ -58,6 +58,11 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function () {
 
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
+    editor.execCommand('FontSize', false, '7pt');
+    LegacyUnit.equal(editor.getContent(), '<p><span style="font-size: 7pt;">test 123</span></p>');
+
+    editor.setContent('test 123');
+    editor.execCommand('SelectAll');
     editor.execCommand('ForeColor', false, '#FF0000');
     LegacyUnit.equal(editor.getContent(), '<p><span style="color: #ff0000;">test 123</span></p>');
 
