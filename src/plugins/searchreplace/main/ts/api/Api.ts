@@ -27,8 +27,8 @@ const get = function (editor, currentIndexState) {
     return Actions.prev(editor, currentIndexState);
   };
 
-  const replace = function (text, forward, all) {
-    return Actions.replace(editor, currentIndexState, text, forward, all);
+  const replace = function (text, forward, all, style) {
+    return Actions.replace(editor, currentIndexState, text, forward, all, style);
   };
 
   return {

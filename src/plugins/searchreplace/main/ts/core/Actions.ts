@@ -139,7 +139,7 @@ const isMatchSpan = function (node) {
   return matchIndex !== null && matchIndex.length > 0;
 };
 
-const replace = function (editor, currentIndexState, text, forward?, all?) {
+const replace = function (editor, currentIndexState, text, forward?, all?, style?) {
   let i, nodes, node, matchIndex, currentMatchIndex, nextIndex = currentIndexState.get(), hasMore;
 
   forward = forward !== false;
@@ -152,6 +152,10 @@ const replace = function (editor, currentIndexState, text, forward?, all?) {
     matchIndex = currentMatchIndex = parseInt(nodeIndex, 10);
     if (all || matchIndex === currentIndexState.get()) {
       if (text.length) {
+        if (style && style !== 'none') {
+          const st = style.split('#');
+          editor.formatter[st[0] === 'a' ? 'apply' : 'remove'](st[1], undefined, nodes[i]);
+        }
         nodes[i].firstChild.nodeValue = text;
         unwrap(nodes[i]);
       } else {
