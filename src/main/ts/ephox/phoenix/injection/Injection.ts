@@ -12,7 +12,10 @@ var insertAtText = function (universe, element, offset) {
 
 var insertAtElement = function (universe, parent, offset) {
   var children = universe.property().children(parent);
-  if (offset === children.length) return InjectPosition.last(parent);
+  var isEmptyTag = universe.property().isEmptyTag(parent);
+
+  if (isEmptyTag) return InjectPosition.before(parent);
+  else if (offset === children.length) return InjectPosition.last(parent);
   else if (offset < children.length) return InjectPosition.rest(children[offset]);
   else return InjectPosition.invalid(parent, offset);
 };
@@ -52,6 +55,6 @@ var atStartOf = function (universe, element, offset, injection) {
   position.fold(onBefore, onAfter, onRest, onLast, onInvalid);
 };
 
-export default <any> {
+export default {
   atStartOf: atStartOf
 };
