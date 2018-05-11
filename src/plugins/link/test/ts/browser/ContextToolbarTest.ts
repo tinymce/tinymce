@@ -1,4 +1,4 @@
-import { Mouse, Pipeline, UiFinder } from '@ephox/agar';
+import { Mouse, Pipeline, UiFinder, Logger, GeneralSteps } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 
@@ -17,17 +17,19 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ContextToolbarTest', function (
     const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
-      // no toolbar on by default
-      tinyApis.sSetContent('<a href="http://www.google.com">google</a>'),
-      Mouse.sTrueClickOn(TinyDom.fromDom(editor.getBody()), 'a'),
-      UiFinder.sNotExists(TinyDom.fromDom(editor.getBody()), 'div[aria-label="Open link"]'),
-      tinyApis.sSetContent(''),
-
-      // only after setting set to true
-      tinyApis.sSetSetting('link_context_toolbar', true),
-      tinyApis.sSetContent('<a href="http://www.google.com">google</a>'),
-      Mouse.sTrueClickOn(TinyDom.fromDom(editor.getBody()), 'a'),
-      tinyUi.sWaitForUi('wait for open button', 'div[aria-label="Open link"]')
+      tinyApis.sFocus,
+      Logger.t('no toolbar on by default', GeneralSteps.sequence([
+        tinyApis.sSetContent('<a href="http://www.google.com">google</a>'),
+        Mouse.sTrueClickOn(TinyDom.fromDom(editor.getBody()), 'a'),
+        UiFinder.sNotExists(TinyDom.fromDom(editor.getBody()), 'div[aria-label="Open link"]'),
+        tinyApis.sSetContent('')
+      ])),
+      Logger.t('only after setting set to true', GeneralSteps.sequence([
+        tinyApis.sSetSetting('link_context_toolbar', true),
+        tinyApis.sSetContent('<a href="http://www.google.com">google</a>'),
+        Mouse.sTrueClickOn(TinyDom.fromDom(editor.getBody()), 'a'),
+        tinyUi.sWaitForUi('wait for open button', 'div[aria-label="Open link"]')
+      ]))
     ], onSuccess, onFailure);
   }, {
     plugins: 'link',
