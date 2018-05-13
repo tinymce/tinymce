@@ -24,11 +24,10 @@ import SelectionBookmark from '../../selection/SelectionBookmark';
 import SetSelectionContent from '../../selection/SetSelectionContent';
 import Tools from '../util/Tools';
 import * as ElementSelection from '../../selection/ElementSelection';
-import { moveEndPoint } from 'tinymce/core/selection/SelectionUtils';
+import { moveEndPoint, hasAnyRanges } from 'tinymce/core/selection/SelectionUtils';
 import { NativeSelection } from './NativeTypes';
 import { Editor } from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
-import * as EditorSelection from '../../selection/EditorSelection';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -495,7 +494,7 @@ export const Selection = function (dom: DOMUtils, win: Window, serializer, edito
     const rng = getRng();
     const sel = getSel();
 
-    if (!MultiRange.hasMultipleRanges(sel) && EditorSelection.hasAnyRanges(editor)) {
+    if (!MultiRange.hasMultipleRanges(sel) && hasAnyRanges(editor)) {
       const normRng = NormalizeRange.normalize(dom, rng);
 
       normRng.each(function (normRng) {

@@ -11,7 +11,7 @@
 import Env from './api/Env';
 import RangeCompare from './selection/RangeCompare';
 import Delay from './api/util/Delay';
-import * as EditorSelection from './selection/EditorSelection';
+import { hasAnyRanges } from 'tinymce/core/selection/SelectionUtils';
 
 /**
  * This class handles the nodechange event dispatching both manual and through selection change events.
@@ -93,14 +93,14 @@ export default function (editor) {
       return;
     }
 
-    if (EditorSelection.hasAnyRanges(editor) && !isSameElementPath(startElm) && editor.dom.isChildOf(startElm, editor.getBody())) {
+    if (hasAnyRanges(editor) && !isSameElementPath(startElm) && editor.dom.isChildOf(startElm, editor.getBody())) {
       editor.nodeChanged({ selectionChange: true });
     }
   });
 
   // Fire an extra nodeChange on mouseup for compatibility reasons
   editor.on('MouseUp', function (e) {
-    if (!e.isDefaultPrevented() && EditorSelection.hasAnyRanges(editor)) {
+    if (!e.isDefaultPrevented() && hasAnyRanges(editor)) {
       // Delay nodeChanged call for WebKit edge case issue where the range
       // isn't updated until after you click outside a selected image
       if (editor.selection.getNode().nodeName === 'IMG') {
