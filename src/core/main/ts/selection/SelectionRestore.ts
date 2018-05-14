@@ -44,7 +44,7 @@ const registerMouseUp = function (editor, throttledStore) {
 const registerEditorEvents = function (editor, throttledStore) {
   const browser = PlatformDetection.detect().browser;
 
-  if (browser.isIE() || browser.isEdge()) {
+  if (browser.isIE()) {
     registerFocusOut(editor);
   } else {
     registerMouseUp(editor, throttledStore);

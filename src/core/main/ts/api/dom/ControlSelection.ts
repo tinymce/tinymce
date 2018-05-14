@@ -369,7 +369,8 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
 
         // Hides IE move layer cursor
         // If we set it on Chrome we get this wounderful bug: #6725
-        if (Env.ie) {
+        // Edge doesn't have this issue however setting contenteditable will move the selection to that element on Edge 17 see #TINY-1679
+        if (Env.ie === 11) {
           handleElm.contentEditable = false;
         }
 
