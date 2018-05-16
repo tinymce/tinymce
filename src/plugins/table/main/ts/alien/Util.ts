@@ -8,8 +8,9 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
-import { Compare, Element } from '@ephox/sugar';
+import { Compare, Element, Attr, SelectorFilter } from '@ephox/sugar';
 import { Editor } from 'tinymce/core/api/Editor';
+import { Arr } from '@ephox/katamari';
 
 const getBody = function (editor: Editor) {
   return Element.fromDom(editor.getBody());
@@ -36,11 +37,20 @@ const addSizeSuffix = function (size: string) {
   return size;
 };
 
+const removeDataStyle = (table) => {
+  const dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
+  Attr.remove(table, 'data-mce-style');
+  Arr.each(dataStyleCells, function (cell) {
+    Attr.remove(cell, 'data-mce-style');
+  });
+};
+
 export {
   getBody,
   getIsRoot,
   addSizeSuffix,
   removePxSuffix,
   getPixelWidth,
-  getPixelHeight
+  getPixelHeight,
+  removeDataStyle
 };

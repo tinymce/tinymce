@@ -75,6 +75,7 @@ const registerCommands = function (editor: Editor, actions: TableActions, cellSe
         editor.selection.setRng(rng);
         editor.focus();
         cellSelection.clear(table);
+        Util.removeDataStyle(table);
       });
     });
   };

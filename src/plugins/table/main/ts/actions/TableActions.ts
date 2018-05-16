@@ -12,7 +12,7 @@ import { Arr, Fun, Option } from '@ephox/katamari';
 import {
     CellMutations, TableDirection, TableFill, TableGridSize, TableOperations
 } from '@ephox/snooker';
-import { Attr, Element, Node, SelectorFilter } from '@ephox/sugar';
+import { Element, Node } from '@ephox/sugar';
 
 import * as Util from '../alien/Util';
 import Direction from '../queries/Direction';
@@ -54,10 +54,7 @@ export const TableActions = function (editor: Editor, lazyWire) {
 
   const execute = function (operation, guard, mutate, lazyWire) {
     return function (table, target) {
-      const dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
-      Arr.each(dataStyleCells, function (cell) {
-        Attr.remove(cell, 'data-mce-style');
-      });
+      Util.removeDataStyle(table);
       const wire = lazyWire();
       const doc = Element.fromDom(editor.getDoc());
       const direction = TableDirection(Direction.directionAt);

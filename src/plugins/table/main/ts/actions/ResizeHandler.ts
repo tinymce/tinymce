@@ -7,9 +7,9 @@
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
  */
-import { Arr, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import { ResizeWire, TableDirection, TableResize } from '@ephox/snooker';
-import { Attr, Element, SelectorFilter } from '@ephox/sugar';
+import { Element } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
 import Direction from '../queries/Direction';
 import TableWire from './TableWire';
@@ -76,10 +76,7 @@ export const ResizeHandler = function (editor: Editor): ResizeHandler {
       sz.events.afterResize.bind(function (event) {
         const table = event.table();
         const rawTable = table.dom();
-        const dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
-        Arr.each(dataStyleCells, function (cell) {
-          Attr.remove(cell, 'data-mce-style');
-        });
+        Util.removeDataStyle(table);
 
         selectionRng.each(function (rng) {
           editor.selection.setRng(rng);
