@@ -119,7 +119,10 @@ const moveEndPoint = (dom, rng: Range, node, start: boolean): void => {
   }
 };
 
-const hasAnyRanges = (editor: Editor) => editor.selection.getSel().rangeCount > 0;
+const hasAnyRanges = (editor: Editor) => {
+  const sel = editor.selection.getSel();
+  return sel && sel.rangeCount > 0;
+};
 
 export {
   hasAllContentsSelected,
