@@ -15,7 +15,8 @@ const schema = [
   FieldSchema.strict('selector'),
   FieldSchema.defaulted('getInitial', Option.none),
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
-  FieldSchema.defaulted('executeOnMove', false)
+  FieldSchema.defaulted('executeOnMove', false),
+  FieldSchema.defaulted('allowVertical', true)
 ];
 
 // TODO: Remove dupe.
@@ -53,10 +54,12 @@ const doMove = function (movement) {
   };
 };
 
-const getRules = function (_) {
+const getRules = function (_component, _se, flowConfig, _flowState) {
+  const westMovers = Keys.LEFT().concat(flowConfig.allowVertical() ? Keys.UP() : [ ]);
+  const eastMovers = Keys.RIGHT().concat(flowConfig.allowVertical() ? Keys.DOWN() : [ ]);
   return [
-    KeyRules.rule(KeyMatch.inSet(Keys.LEFT().concat(Keys.UP())), doMove(DomMovement.west(moveLeft, moveRight))),
-    KeyRules.rule(KeyMatch.inSet(Keys.RIGHT().concat(Keys.DOWN())), doMove(DomMovement.east(moveLeft, moveRight))),
+    KeyRules.rule(KeyMatch.inSet(westMovers), doMove(DomMovement.west(moveLeft, moveRight))),
+    KeyRules.rule(KeyMatch.inSet(eastMovers), doMove(DomMovement.east(moveLeft, moveRight))),
     KeyRules.rule(KeyMatch.inSet(Keys.ENTER()), execute),
     KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), execute)
   ];
