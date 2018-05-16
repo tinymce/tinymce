@@ -110,21 +110,25 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function () {
     editor.execCommand('SelectAll');
     editor.execCommand('JustifyLeft');
     LegacyUnit.equal(editor.getContent(), '<p style="text-align: left;">test 123</p>');
+    LegacyUnit.equal(true, editor.queryCommandState('JustifyLeft'), 'should have JustifyLeft state true');
 
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('JustifyCenter');
     LegacyUnit.equal(editor.getContent(), '<p style="text-align: center;">test 123</p>');
+    LegacyUnit.equal(true, editor.queryCommandState('JustifyCenter'), 'should have JustifyCenter state true');
 
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('JustifyRight');
     LegacyUnit.equal(editor.getContent(), '<p style="text-align: right;">test 123</p>');
+    LegacyUnit.equal(true, editor.queryCommandState('JustifyRight'), 'should have JustifyRight state true');
 
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('JustifyFull');
     LegacyUnit.equal(editor.getContent(), '<p style="text-align: justify;">test 123</p>');
+    LegacyUnit.equal(true, editor.queryCommandState('JustifyFull'), 'should have JustifyFull state true');
 
     editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
     editor.selection.select(editor.dom.select('img')[0]);
