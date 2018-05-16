@@ -38,15 +38,15 @@ const onPanelClick = function (editor, cols) {
     const currentColor = TextColor.getCurrentColor(editor, buttonCtrl.settings.format);
 
     const selectColor = function (value) {
+      editor.execCommand('mceApplyTextcolor', buttonCtrl.settings.format, value);
       buttonCtrl.hidePanel();
       buttonCtrl.color(value);
-      editor.execCommand('mceApplyTextcolor', buttonCtrl.settings.format, value);
     };
 
     const resetColor = function () {
+      editor.execCommand('mceRemoveTextcolor', buttonCtrl.settings.format);
       buttonCtrl.hidePanel();
       buttonCtrl.resetColor();
-      editor.execCommand('mceRemoveTextcolor', buttonCtrl.settings.format);
     };
 
     if (DOMUtils.DOM.getParent(e.target, '.mce-custom-color-btn')) {
