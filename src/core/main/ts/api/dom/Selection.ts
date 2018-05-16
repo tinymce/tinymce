@@ -24,7 +24,7 @@ import SelectionBookmark from '../../selection/SelectionBookmark';
 import SetSelectionContent from '../../selection/SetSelectionContent';
 import Tools from '../util/Tools';
 import * as ElementSelection from '../../selection/ElementSelection';
-import { moveEndPoint } from 'tinymce/core/selection/SelectionUtils';
+import { moveEndPoint, hasAnyRanges } from 'tinymce/core/selection/SelectionUtils';
 import { NativeSelection } from './NativeTypes';
 import { Editor } from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/dom/DOMUtils';
@@ -492,8 +492,9 @@ export const Selection = function (dom: DOMUtils, win: Window, serializer, edito
 
   const normalize = (): Range => {
     const rng = getRng();
+    const sel = getSel();
 
-    if (!MultiRange.hasMultipleRanges(getSel())) {
+    if (!MultiRange.hasMultipleRanges(sel) && hasAnyRanges(editor)) {
       const normRng = NormalizeRange.normalize(dom, rng);
 
       normRng.each(function (normRng) {

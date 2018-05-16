@@ -14,6 +14,7 @@ import NodeType from '../dom/NodeType';
 import Env from '../api/Env';
 import TreeWalker from '../api/dom/TreeWalker';
 import Tools from '../api/util/Tools';
+import { Editor } from 'tinymce/core/api/Editor';
 
 const getStartNode = function (rng) {
   const sc = rng.startContainer, so = rng.startOffset;
@@ -118,7 +119,10 @@ const moveEndPoint = (dom, rng: Range, node, start: boolean): void => {
   }
 };
 
+const hasAnyRanges = (editor: Editor) => editor.selection.getSel().rangeCount > 0;
+
 export {
   hasAllContentsSelected,
-  moveEndPoint
+  moveEndPoint,
+  hasAnyRanges
 };
