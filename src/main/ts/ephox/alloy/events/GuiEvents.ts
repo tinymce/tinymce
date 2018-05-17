@@ -70,6 +70,7 @@ const setup = function (container, rawSettings) {
       // Test the drag events
       'dragstart',
       'dragend',
+      'dragenter',
       'dragleave',
       'dragover',
       'drop'
