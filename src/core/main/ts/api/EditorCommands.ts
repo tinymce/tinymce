@@ -447,8 +447,8 @@ export default function (editor: Editor) {
     },
 
     'mceInsertRawHTML' (command, ui, value) {
-      const content = editor.getContent() as string;
       selection.setContent('tiny_mce_marker');
+      const content = editor.getContent() as string;
       editor.setContent(content.replace(/tiny_mce_marker/g, () => value));
     },
 
