@@ -25,6 +25,7 @@
     "@ephox/darwin": "latest",
     "@ephox/imagetools": "latest",
     "@ephox/katamari": "latest",
+    "@ephox/robin": "latest",
     "@ephox/sand": "latest",
     "@ephox/snooker": "latest",
     "@ephox/sugar": "latest"
