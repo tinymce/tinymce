@@ -8,6 +8,7 @@ import { Css } from '@ephox/sugar';
 import * as ColourEvents from 'ephox/alloy/demo/colourpicker/ColourEvents';
 import { Palette } from 'ephox/alloy/api/ui/Palette';
 import { convertHexToRgb, convertRgbToHex } from 'ephox/alloy/demo/colourpicker/ColourChanges';
+import { Arr } from '@ephox/katamari';
 
 const factory = (detail) => {
   // Making this a simple spec and then we'll introduce where they put the body
@@ -35,13 +36,45 @@ const factory = (detail) => {
       onChange: (palette, thumb, xyValue, imageData) => {
         const rgb = { red: imageData[0], green: imageData[1], blue: imageData[2] };
         const hex = convertRgbToHex(rgb);
-        AlloyTriggers.emitWith(palette, ColourEvents.updatePreview(), {
+        AlloyTriggers.emitWith(palette, ColourEvents.paletteUpdate(), {
           hex: hex
         })
       }
 
     })
   );
+
+  const updateFields = (form, hex) => {
+    memRgb.getOpt(form).each((form) => {
+      RgbForm.updateHex(form, hex);
+    });
+  }
+
+  const updatePalette = (anyInSystem, hex) => {
+    memPalette.getOpt(anyInSystem).each((palette) => {
+      const rgb = convertHexToRgb(hex);
+      // Groan.
+      if (rgb !== null) {
+        console.log('refreshing colour');
+        Palette.refreshColour(palette, { red: rgb.r, green: rgb.g, blue: rgb.b, alpha: 1.0 });
+      }
+    })
+  }
+
+  const updatePreview = (anyInSystem, hex) => {
+    memPreview.getOpt(anyInSystem).each((preview) => {
+      Css.set(preview.element(), 'background-color', '#' + hex);
+    })
+  }
+
+  const runUpdates = (updates) => {
+    return (form, simulatedEvent) => {
+      const hex = simulatedEvent.event().hex();
+      Arr.each(updates, (update) => {
+        update(form, hex);
+      })
+    }
+  }
 
   return {
     uid: detail.uid(),
@@ -55,24 +88,9 @@ const factory = (detail) => {
     
     behaviours: Behaviour.derive([
       AddEventsBehaviour.config('colour-picker-events', [
-        AlloyEvents.run(ColourEvents.updatePreview(), (comp, simulatedEvent) => {
-          const hex = simulatedEvent.event().hex();
-          memPreview.getOpt(comp).each((preview) => {
-            Css.set(preview.element(), 'background-color', '#' + hex);
-          })
-
-          memRgb.getOpt(comp).each((form) => {
-            RgbForm.updateHex(form, hex);
-          });
-
-          memPalette.getOpt(comp).each((palette) => {
-            const rgb = convertHexToRgb(hex);
-            // Groan.
-            if (rgb !== null) {
-              Palette.refreshColour(palette, { red: rgb.r, green: rgb.g, blue: rgb.b, alpha: 1.0 });
-            }
-          })
-        })
+        AlloyEvents.run(ColourEvents.fieldsUpdate(), runUpdates([ updatePreview ])),
+        AlloyEvents.run(ColourEvents.paletteUpdate(), runUpdates([ updateFields, updatePreview ])),
+        AlloyEvents.run(ColourEvents.sliderUpdate(), runUpdates([ updatePalette, updateFields, updatePreview ]))
       ])
     ])
   };

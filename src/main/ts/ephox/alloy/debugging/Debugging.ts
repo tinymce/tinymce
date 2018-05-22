@@ -3,6 +3,7 @@ import { Arr, Fun, Obj, Options } from '@ephox/katamari';
 
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as AlloyLogger from '../log/AlloyLogger';
+import { updatePreview } from 'ephox/alloy/demo/colourpicker/ColourEvents';
 
 const unknown = 'unknown';
 
@@ -17,7 +18,9 @@ const debugging: any = true;
 
 const CHROME_INSPECTOR_GLOBAL = '__CHROME_INSPECTOR_CONNECTION_TO_ALLOY__';
 
-const eventsMonitored: any = [ ];
+const eventsMonitored: any = [
+  
+];
 
 // Ignore these files in the error stack
 const path = [

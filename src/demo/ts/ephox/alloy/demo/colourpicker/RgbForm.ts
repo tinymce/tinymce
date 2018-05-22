@@ -97,7 +97,7 @@ const factory = () => {
     console.log('here', data);
     if (data.type() === 'hex') {
       copyHexToRgb(form, data.value());
-      AlloyTriggers.emitWith(form, ColourEvents.updatePreview(), {
+      AlloyTriggers.emitWith(form, ColourEvents.fieldsUpdate(), {
         hex: data.value()
       });
     } else {
@@ -105,7 +105,7 @@ const factory = () => {
       state[data.type()].set(Option.some(value));
       getValueRgb().each((rgb) => {
         const hex = copyRgbToHex(form, rgb)
-        AlloyTriggers.emitWith(form, ColourEvents.updatePreview(), {
+        AlloyTriggers.emitWith(form, ColourEvents.fieldsUpdate(), {
           hex: hex
         });
       })

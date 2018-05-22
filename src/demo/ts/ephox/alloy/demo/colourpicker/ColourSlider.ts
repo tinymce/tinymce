@@ -1,7 +1,7 @@
 import { Option } from '@ephox/katamari';
 import { Slider, Behaviour, Composing, Focusing, Tabstopping, AlloyTriggers, Representing } from "ephox/alloy/api/Main";
 import { convertRgbToHex } from 'ephox/alloy/demo/colourpicker/ColourChanges';
-import { updatePreview } from 'ephox/alloy/demo/colourpicker/ColourEvents';
+import { sliderUpdate } from 'ephox/alloy/demo/colourpicker/ColourEvents';
 import { RgbColour } from '@ephox/acid';
 
 const renderSlider = () => {
@@ -71,7 +71,7 @@ const renderSlider = () => {
       })();
 
       const hex = convertRgbToHex(rgb);
-      AlloyTriggers.emitWith(slider, updatePreview(), {
+      AlloyTriggers.emitWith(slider, sliderUpdate(), {
         hex
       })
     }
