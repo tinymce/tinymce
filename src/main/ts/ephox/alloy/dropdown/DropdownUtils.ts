@@ -26,7 +26,7 @@ const openF = function (detail, anchor, component, sandbox, externals) {
 
   // TODO: Make this potentially a single menu also
   return futureData.map(function (data) {
-    return TieredMenu.tieredMenuSketch.sketch(
+    return TieredMenu.tieredMenu.sketch(
       Merger.deepMerge(
         externals.menu(),
         {

@@ -12,7 +12,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
 import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('SplitDropdown List', function () {
   const success = arguments[arguments.length - 2];
@@ -110,7 +110,7 @@ UnitTest.asynctest('SplitDropdown List', function () {
               value: 'split-dropdown-test',
               items: Arr.map(f, TestDropdownMenu.renderItem)
             });
-            return TieredMenu.tieredMenuSketch.singleData('test', menu);
+            return TieredMenu.tieredMenu.singleData('test', menu);
           });
         }
       })

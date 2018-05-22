@@ -43,7 +43,7 @@ export default <any> function () {
     })
   );
 
-  const inlineMenu = TieredMenu.tieredMenuSketch.sketch({
+  const inlineMenu = TieredMenu.tieredMenu.sketch({
     dom: {
       tag: 'div'
     },

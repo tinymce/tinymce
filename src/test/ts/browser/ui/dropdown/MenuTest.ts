@@ -10,7 +10,7 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('MenuTest', function () {
   const success = arguments[arguments.length - 2];

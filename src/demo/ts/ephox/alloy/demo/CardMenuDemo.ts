@@ -16,7 +16,7 @@ export default <any> function () {
 
   const makeBack = function (text) {
     return {
-      data: TieredMenu.tieredMenuSketch.collapseItem(text),
+      data: TieredMenu.tieredMenu.collapseItem(text),
       type: 'item',
       dom: {
         tag: 'div',
@@ -93,7 +93,7 @@ export default <any> function () {
   };
 
   // https://jsfiddle.net/xuto3by2/1/
-  const tieredMenu = TieredMenu.tieredMenuSketch.sketch({
+  const tieredMenu = TieredMenu.tieredMenu.sketch({
     dom: {
       tag: 'div',
       classes: [ 'demo-tiered-menu' ]
@@ -139,7 +139,7 @@ export default <any> function () {
     navigateOnHover: false,
 
     openImmediately: true,
-    data: TieredMenu.tieredMenuSketch.tieredData(
+    data: TieredMenu.tieredMenu.tieredData(
       'styles',
       {
         styles: makeMenu('Styles', [

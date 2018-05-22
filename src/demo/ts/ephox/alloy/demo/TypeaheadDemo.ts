@@ -99,7 +99,7 @@ export default <any> function () {
             value: 'blah.value',
             items: Arr.map(items, DemoRenders.item)
           });
-          return TieredMenu.tieredMenuSketch.singleData('blah', menu);
+          return TieredMenu.tieredMenu.singleData('blah', menu);
         });
       },
       onExecute (sandbox, item, itemValue) {

@@ -4,7 +4,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', function () {
   const success = arguments[arguments.length - 2];

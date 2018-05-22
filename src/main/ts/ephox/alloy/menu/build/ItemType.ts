@@ -65,7 +65,9 @@ const builder = function (info) {
     ]),
     components: info.components(),
 
-    domModification: info.domModification()
+    domModification: info.domModification(),
+
+    eventOrder: info.eventOrder()
   };
 };
 
@@ -81,7 +83,8 @@ const schema = [
 
   FieldSchema.defaulted('ignoreFocus', false),
   FieldSchema.defaulted('domModification', { }),
-  Fields.output('builder', builder)
+  Fields.output('builder', builder),
+  FieldSchema.defaulted('eventOrder', { })
 ];
 
 export default <any> schema;

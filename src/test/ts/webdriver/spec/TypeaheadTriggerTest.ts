@@ -7,7 +7,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import Sinks from 'ephox/alloy/test/Sinks';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 
@@ -53,7 +53,7 @@ UnitTest.asynctest('TypeaheadSpecTest', function () {
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
                 });
-                return TieredMenu.tieredMenuSketch.singleData('blah.overall', menu);
+                return TieredMenu.tieredMenu.singleData('blah.overall', menu);
               });
             },
 

@@ -7,7 +7,7 @@ import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('ToolbarGroupTest', function () {
   const success = arguments[arguments.length - 2];

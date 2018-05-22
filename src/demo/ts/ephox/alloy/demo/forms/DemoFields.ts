@@ -200,7 +200,7 @@ const typeaheadMunger = function (spec): SketchSpec {
           value: 'typeahead-menu-blah',
           items: Arr.map(items, DemoRenders.item)
         });
-        return TieredMenu.tieredMenuSketch.singleData('blah', menu);
+        return TieredMenu.tieredMenu.singleData('blah', menu);
       });
     },
     dom: {

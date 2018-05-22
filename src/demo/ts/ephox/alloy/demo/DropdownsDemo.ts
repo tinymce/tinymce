@@ -88,7 +88,7 @@ export default <any> function () {
         });
 
         return Future.pure(
-          TieredMenu.tieredMenuSketch.singleData('name', wMenu)
+          TieredMenu.tieredMenu.singleData('name', wMenu)
         );
       },
       lazySink,
@@ -138,7 +138,7 @@ export default <any> function () {
         });
 
         return Future.pure(menu).map(function (m) {
-          return TieredMenu.tieredMenuSketch.singleData('demo.2.menu', menu);
+          return TieredMenu.tieredMenu.singleData('demo.2.menu', menu);
         });
       }
     })
@@ -183,7 +183,7 @@ export default <any> function () {
             columns: 2,
             rows: 2
           });
-          return TieredMenu.tieredMenuSketch.singleData('grid-list', menu);
+          return TieredMenu.tieredMenu.singleData('grid-list', menu);
         });
       },
 
@@ -232,7 +232,7 @@ export default <any> function () {
             value: 'demo.4.menu',
             items
           });
-          return TieredMenu.tieredMenuSketch.singleData('basic-list', menu);
+          return TieredMenu.tieredMenu.singleData('basic-list', menu);
         });
       },
       onExecute (sandbox, item, itemValue) {
@@ -376,7 +376,7 @@ export default <any> function () {
         });
 
         return future.map(function (f) {
-          return TieredMenu.tieredMenuSketch.tieredData(f.primary, f.menus, f.expansions);
+          return TieredMenu.tieredMenu.tieredData(f.primary, f.menus, f.expansions);
         });
       }
     })

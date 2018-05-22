@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Transitioning } from 'ephox/alloy/api/behaviour/Transitioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
 UnitTest.asynctest('TransitioningTest', function () {

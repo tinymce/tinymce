@@ -9,7 +9,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('MouseDraggingTest', function () {
   const success = arguments[arguments.length - 2];

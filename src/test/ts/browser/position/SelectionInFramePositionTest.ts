@@ -6,7 +6,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as Writer from 'ephox/alloy/frame/Writer';
 import ChainUtils from 'ephox/alloy/test/ChainUtils';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import Sinks from 'ephox/alloy/test/Sinks';
 

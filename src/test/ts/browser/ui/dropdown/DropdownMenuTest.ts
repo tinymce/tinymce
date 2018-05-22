@@ -11,7 +11,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
 import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import GuiSetup from 'ephox/alloy/test/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
 UnitTest.asynctest('DropdownMenuTest', function () {
@@ -130,7 +130,7 @@ UnitTest.asynctest('DropdownMenuTest', function () {
 
         fetch () {
           return Future.pure(testData).map(function (d) {
-            return TieredMenu.tieredMenuSketch.tieredData(d.primary, d.menus, d.expansions);
+            return TieredMenu.tieredMenu.tieredData(d.primary, d.menus, d.expansions);
           });
         }
       })
