@@ -20,6 +20,7 @@ const schema = [
 ];
 
 // TODO: Remove dupe.
+// TODO: Probably use this for not just execution.
 const findCurrent = function (component, flowConfig) {
   return flowConfig.focusManager().get(component).bind(function (elem) {
     return SelectorFind.closest(elem, flowConfig.selector());
