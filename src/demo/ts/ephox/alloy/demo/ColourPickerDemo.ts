@@ -41,61 +41,12 @@ export default <any> function () {
     dom: {
       tag: 'div',
       classes: [ 'example-colour-picker-container' ]
-    },
-    components: [
-      header,
-      ColourPicker.parts().body({
-        dom: {
-          tag: 'div',
-          classes: [ 'josh' ]
-        }
-      }),
-
-      Button.sketch({
-        dom: {
-          tag: 'button',
-          innerHtml: 'Click'
-        },
-        buttonBehaviours: Behaviour.derive([
-          Disabling.config({
-            disabled: true
-          }),
-
-          Representing.config({
-            store: {
-              mode: 'memory',
-              initialValue: { red: false, green: false, blue: false, hex: false }
-            }
-          }),
-
-          // Showing how message system works (not advocating it in general)
-          Receiving.config({
-            channels: {
-              'magic-form-string': {
-                onReceive: function (comp, data) {
-                  const value = Representing.getValue(comp);
-                  var merged = Merger.deepMerge(value, data);
-                  Representing.setValue(comp, merged);
-
-                  const values = Obj.values(merged);
-                  const hasFalse = Arr.exists(values, function (v) {
-                    return !v;
-                  });
-
-                  const f = hasFalse ? Disabling.disable : Disabling.enable;
-                  f(comp);
-                }
-              }
-            }
-          })
-        ])
-      })
-    ]
+    }
   });
 
   const picker = HtmlDisplay.section(gui,
     'An example of a colour picker component',
-    RgbForm.sketch({})
+    colourPicker
   );
 
 };
