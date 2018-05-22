@@ -140,6 +140,13 @@ const factory = () => {
     );
   }
 
+  const onInvalidInput = (form, simulatedEvent) => {
+    const data = simulatedEvent.event();
+    if (data.type() !== 'hex') {
+      state[data.type()].set(Option.none());
+    }
+  }
+
   const onValidInput = (form, simulatedEvent) => {
     const data = simulatedEvent.event();
     console.log('here', data);
@@ -172,12 +179,8 @@ const factory = () => {
 
         AddEventsBehaviour.config('rgb-form-events', [
           AlloyEvents.run(validInput, onValidInput),
-          AlloyEvents.run(invalidInput, (form) => {
-
-          }),
-          AlloyEvents.run(validatingInput, (form) => {
-
-          })
+          AlloyEvents.run(invalidInput, onInvalidInput),
+          AlloyEvents.run(validatingInput, onInvalidInput)
         ])
       ])
     };
@@ -190,7 +193,9 @@ const invalidation = (label: string, isValid: (value: string) => boolean) => {
 
     notify: {
       onValidate: (comp) => {
-        AlloyTriggers.emit(comp, validatingInput);
+        AlloyTriggers.emitWith(comp, validatingInput, {
+          type: label
+        });
       },
       onValid: (comp) => {
         AlloyTriggers.emitWith(comp, validInput, {
