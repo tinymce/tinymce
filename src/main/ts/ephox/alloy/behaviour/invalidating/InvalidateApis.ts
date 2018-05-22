@@ -38,6 +38,11 @@ const query = function (component, invalidConfig, invalidState) {
   });
 };
 
+const isInvalid = function (component, invalidConfig) {
+  const elem = invalidConfig.getRoot()(component).getOr(component.element());
+  return Class.has(elem, invalidConfig.invalidClass());
+}
+
 const run = function (component, invalidConfig, invalidState) {
   invalidConfig.notify().each(function (notifyInfo) {
     notifyInfo.onValidate()(component);
@@ -59,6 +64,7 @@ const run = function (component, invalidConfig, invalidState) {
 };
 
 export {
+  isInvalid,
   markValid,
   markInvalid,
   query,

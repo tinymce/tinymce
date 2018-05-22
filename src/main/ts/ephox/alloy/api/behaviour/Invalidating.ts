@@ -11,6 +11,7 @@ import { SugarElement } from '../../alien/TypeDefinitions';
 export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour {
   config: <T>(config: InvalidatingConfig<T>) => { [key: string]: (any) => any };
   markValid: (Component: AlloyComponent) => void;
+  isInvalid: (Component: AlloyComponent) => boolean;
   markInvalid: (Component: AlloyComponent) => void;
   query: <T>(Component: AlloyComponent) => Future<T>;
   run: <T>(Component: AlloyComponent) => Future<T>;
@@ -21,12 +22,13 @@ export interface InvalidatingConfig<T> {
   invalidClass: string;
   notify?: {
     getContainer?: (input: AlloyComponent) => Option<SugarElement>;
+    onValidate?: (input: AlloyComponent) => void;
     onValid?: (comp: AlloyComponent) => void;
     onInvalid?: (comp: AlloyComponent, err: string) => void;
   };
   onEvent?: string;
   getRoot?: (input: AlloyComponent) => any;
-  validator: {
+  validator?: {
     validate: (input: AlloyComponent) => any;
     onEvent?: string;
     validateOnLoad?: boolean
