@@ -23,13 +23,14 @@ const thumbPart = PartType.required({
   }),
   overrides (detail) {
     return {
-      events: AlloyEvents.derive([
+      events: AlloyEvents.derive(
         // If the user touches the thumb itself, pretend they touched the spectrum instead. This
         // allows sliding even when they touchstart the current value
-        AlloyEvents.redirectToPart(NativeEvents.touchstart(), detail, 'spectrum'),
-        AlloyEvents.redirectToPart(NativeEvents.touchmove(), detail, 'spectrum'),
-        AlloyEvents.redirectToPart(NativeEvents.touchend(), detail, 'spectrum')
-      ])
+        AlloyEvents.partRedirects([
+          NativeEvents.touchstart(), NativeEvents.touchmove(), NativeEvents.touchend(),
+          NativeEvents.mousedown(), NativeEvents.mousemove(), NativeEvents.mouseup()
+        ], detail, 'spectrum')
+      )
     };
   }
 });

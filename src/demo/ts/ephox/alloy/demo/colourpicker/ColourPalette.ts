@@ -45,7 +45,7 @@ var picker = Palette.sketch({
   ])
 })
 
-const renderPalette = (): SketchSpec => {
+const renderPalette = ({ onChange }): SketchSpec => {
   return Palette.sketch({
     dom: {
       tag: 'div',
@@ -58,6 +58,7 @@ const renderPalette = (): SketchSpec => {
       palette,
       paletteThumb
     ],
+    onChange: onChange,
     paletteBehaviours: Behaviour.derive([
       Composing.config({
         find: Option.some

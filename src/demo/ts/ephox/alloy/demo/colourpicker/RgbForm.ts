@@ -5,6 +5,7 @@ import { Css, Element } from "@ephox/sugar";
 import { RgbColour } from '@ephox/acid';
 
 import { isHex, isRgb, convertHexToRgb, convertRgbToHex } from './ColourChanges';
+import * as ColourEvents from './ColourEvents';
 
 const validInput = Id.generate('valid-input');
 const invalidInput = Id.generate('invalid-input');
@@ -44,31 +45,32 @@ const renderTextField = (label: string, isValid: (value: string) => boolean) => 
   };
 }
 
+const copyRgbToHex = (form, rgb) => {
+  const hex = convertRgbToHex(rgb);
+  Representing.setValue(form, {
+    hex: hex
+  });
+  return hex;
+}
+
+const copyHexToRgb = (form, value) => {
+  var rgb = convertHexToRgb(value);
+  // Groan.
+  if (rgb !== null) {
+    Representing.setValue(form, {
+      red: rgb.r,
+      green: rgb.g,
+      blue: rgb.b
+    })
+  }
+}
+
 const factory = () => {
   const state = {
     red: Cell(Option.none()),
     green: Cell(Option.none()),
     blue: Cell(Option.none())
   };
-
-  const copyHexToRgb = (form, value) => {
-    var rgb = convertHexToRgb(value);
-    // Groan.
-    if (rgb !== null) {
-      Representing.setValue(form, {
-        red: rgb.r,
-        green: rgb.g,
-        blue: rgb.b
-      })
-    }
-  }
-
-  const copyRgbToHex = (form, rgb) => {
-    const hex = convertRgbToHex(rgb);
-    Representing.setValue(form, {
-      hex: hex
-    });
-  }
 
   const getValueRgb = () => {
     // Generalise
@@ -95,10 +97,18 @@ const factory = () => {
     console.log('here', data);
     if (data.type() === 'hex') {
       copyHexToRgb(form, data.value());
+      AlloyTriggers.emitWith(form, ColourEvents.updatePreview(), {
+        hex: data.value()
+      });
     } else {
       const value = parseInt(data.value(), 10);
       state[data.type()].set(Option.some(value));
-      getValueRgb().each((rgb) => copyRgbToHex(form, rgb))
+      getValueRgb().each((rgb) => {
+        const hex = copyRgbToHex(form, rgb)
+        AlloyTriggers.emitWith(form, ColourEvents.updatePreview(), {
+          hex: hex
+        });
+      })
     }
   }
 
@@ -169,7 +179,15 @@ const RgbForm = Sketcher.single({
   factory: factory,
   name: 'RgbForm',
   configFields: [ ],
-  apis: { },
+  apis: {
+    updateHex (apis, form, hex) {
+      Representing.setValue(form, {
+        hex: hex
+      });
+
+      copyHexToRgb(form, hex);
+    }
+  },
   extraApis: { }
 });
 

@@ -7,6 +7,8 @@ import * as SystemEvents from './SystemEvents';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
 import { SpecSchemaStruct } from '../../spec/SpecSchema';
+import { AlloyEvents } from 'ephox/alloy/api/Main';
+import { Arr } from '@ephox/katamari';
 
 export interface EventHandlerConfig {
   key: string;
@@ -125,6 +127,12 @@ const stopper = function (name) {
   });
 };
 
+const partRedirects = (events, detail, part) => {
+  return Arr.map(events, (evt) => {
+    return redirectToPart(evt, detail, part);
+  })
+}
+
 const runOnAttached = runOnSourceName(SystemEvents.attachedToDom()) as RunOnSourceName;
 const runOnDetached = runOnSourceName(SystemEvents.detachedFromDom()) as RunOnSourceName;
 const runOnInit = runOnSourceName(SystemEvents.systemInit()) as RunOnSourceName;
@@ -146,5 +154,7 @@ export {
   abort,
   can,
   cutter,
-  stopper
+  stopper,
+
+  partRedirects
 };

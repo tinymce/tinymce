@@ -100,8 +100,11 @@ const sketch = function (detail, components, spec, externals) {
     if ((oldValue.x !== newValue.x && oldValue.y !== newValue.y ) || 
       (Css.getRaw(thumb.element(), edgeProp).isNone()) || Css.getRaw(thumb.element(), edgeProp).isNone()) {
       detail.value().set(newValue);
+
+      var imageData = getPalette(component).element().dom().getContext('2d').getImageData(newValue.x, newValue.y, 1, 1).data;
+      
       refresh(component);
-      detail.onChange()(component, thumb, newValue);
+      detail.onChange()(component, thumb, newValue, imageData);
       return Option.some(true);
     } else {
       return Option.none();
