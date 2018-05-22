@@ -138,12 +138,7 @@ const extractFilename = (editor: Editor, str: string) => {
 
 const uniqueId = Utils.createIdGenerator('mceclip');
 
-const pasteImage = (editor: Editor, rng: Range, reader, blob) => {
-  if (rng) {
-    editor.selection.setRng(rng);
-    rng = null;
-  }
-
+const pasteImage = (editor: Editor, reader, blob) => {
   const dataUri = reader.result;
   const base64 = getBase64FromUri(dataUri);
   const id = uniqueId();
@@ -191,6 +186,11 @@ const pasteImageData = (editor, e: ClipboardEvent | DragEvent, rng: Range) => {
     let i, item, reader, hadImage = false;
 
     if (items) {
+      if (rng) {
+        editor.selection.setRng(rng);
+        rng = null;
+      }
+
       for (i = 0; i < items.length; i++) {
         item = items[i];
 
@@ -198,7 +198,7 @@ const pasteImageData = (editor, e: ClipboardEvent | DragEvent, rng: Range) => {
           const blob = item.getAsFile ? item.getAsFile() : item;
 
           reader = new window.FileReader();
-          reader.onload = pasteImage.bind(null, editor, rng, reader, blob);
+          reader.onload = pasteImage.bind(null, editor, reader, blob);
           reader.readAsDataURL(blob);
 
           e.preventDefault();
