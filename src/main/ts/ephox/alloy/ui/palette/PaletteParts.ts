@@ -29,7 +29,7 @@ const thumbPart = PartType.required({
         AlloyEvents.partRedirects([
           NativeEvents.touchstart(), NativeEvents.touchmove(), NativeEvents.touchend(),
           NativeEvents.mousedown(), NativeEvents.mousemove(), NativeEvents.mouseup()
-        ], detail, 'spectrum')
+        ], detail, 'palette')
       )
     };
   }

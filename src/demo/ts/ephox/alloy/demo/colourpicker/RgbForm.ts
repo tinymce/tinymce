@@ -94,7 +94,6 @@ const factory = () => {
 
   const onValidInput = (form, simulatedEvent) => {
     const data = simulatedEvent.event();
-    console.log('here', data);
     if (data.type() === 'hex') {
       copyHexToRgb(form, data.value());
       AlloyTriggers.emitWith(form, ColourEvents.fieldsUpdate(), {

@@ -35,7 +35,6 @@ const convertHexToRgb = (hex) => {
 const convertRgbToHex = (rgb) => {
   function toHex(c) {
     var hex = c.toString(16);
-    console.log('c', c, 'hex', hex);
     return hex.length == 1 ? "0" + hex : hex;
   }
 
