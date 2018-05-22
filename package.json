@@ -47,7 +47,6 @@
     "grunt-shell": "^2.1.0",
     "grunt-tslint": "^5.0.1",
     "grunt-webpack": "^3.1.2",
-    "hard-source-webpack-plugin": "^0.6.9",
     "less-plugin-autoprefix": "^1.5.1",
     "load-grunt-tasks": "^4.0.0",
     "moxie-zip": "~0.0.3",
