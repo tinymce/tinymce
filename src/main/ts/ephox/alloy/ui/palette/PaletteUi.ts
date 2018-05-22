@@ -101,7 +101,8 @@ const sketch = function (detail, components, spec, externals) {
       (Css.getRaw(thumb.element(), edgeProp).isNone()) || Css.getRaw(thumb.element(), edgeProp).isNone()) {
       detail.value().set(newValue);
 
-      var imageData = getPalette(component).element().dom().getContext('2d').getImageData(newValue.x, newValue.y, 1, 1).data;
+      const canvas: HTMLCanvasElement = <HTMLCanvasElement>getPalette(component).element().dom();
+      var imageData = canvas.getContext('2d').getImageData(newValue.x, newValue.y, 1, 1).data;
       
       refresh(component);
       detail.onChange()(component, thumb, newValue, imageData);
