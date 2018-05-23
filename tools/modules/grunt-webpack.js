@@ -2,32 +2,13 @@
 
 let { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
 let LiveReloadPlugin = require('webpack-livereload-plugin');
-var HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 let path = require('path');
 let fs = require('fs');
-
-let getCurrentGitBranch = () => {
-  let filePath = path.resolve('.git/HEAD');
-  if (fs.existsSync(filePath)) {
-    let fqdn = fs.readFileSync(filePath).toString();
-    let m = fqdn.match(/\/([^\/]+)$/);
-    if (m) {
-      return m[1].trim();
-    }
-  }
-  return 'master';
-};
-
-const getLastMasterCommitSha = () => {
-  const currentBranch = getCurrentGitBranch();
-  const commitPath =  path.resolve('.git/refs/heads/master');
-
-  return fs.readFileSync(commitPath, 'utf-8');
-}
 
 let create = (entries, tsConfig, outDir, filename) => {
   return {
     entry: entries,
+    mode: 'development',
     devtool: 'source-map',
     resolve: {
       extensions: ['.ts', '.js'],
@@ -63,15 +44,7 @@ let create = (entries, tsConfig, outDir, filename) => {
       ]
     },
     plugins: [
-      new LiveReloadPlugin(),
-      new HardSourceWebpackPlugin({
-        cacheDirectory: path.resolve(`scratch/cache/hard-source/[confighash]`),
-        recordsPath: path.resolve(`scratch/cache/hard-source/[confighash]/records.json`),
-        configHash: function(webpackConfig) {
-          const branchName = getCurrentGitBranch();
-          return require('node-object-hash')({sort: false}).hash({ gitBranch: branchName === 'master' ? getLastMasterCommitSha() : branchName, webpackConfig });
-        }
-      })
+      new LiveReloadPlugin()
     ],
     output: {
       filename: typeof entries === 'string' ? filename : "[name]/" + filename,
