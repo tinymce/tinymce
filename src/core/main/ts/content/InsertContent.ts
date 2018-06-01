@@ -318,7 +318,6 @@ const insertHtmlAtCaret = function (editor: Editor, value, details) {
   }
 
   editor._selectionOverrides.showBlockCaretContainer(parentNode);
-
   // If parser says valid we can insert the contents into that parent
   if (!parserArgs.invalid) {
     value = serializer.serialize(fragment);

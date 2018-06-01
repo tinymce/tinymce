@@ -12,7 +12,7 @@ let plugins = [
   'fullscreen', 'hr', 'image', 'imagetools', 'importcss', 'insertdatetime', 'legacyoutput', 'link',
   'lists', 'media', 'nonbreaking', 'noneditable', 'pagebreak', 'paste', 'preview', 'print', 'save',
   'searchreplace', 'spellchecker', 'tabfocus', 'table', 'template', 'textcolor', 'textpattern', 'toc',
-  'visualblocks', 'visualchars', 'wordcount',
+  'visualblocks', 'visualchars', 'wordcount', 'mathtools',
 ];
 
 let themes = [
