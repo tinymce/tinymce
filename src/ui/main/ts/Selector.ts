@@ -75,7 +75,7 @@ const expression = /^([\w\\*]+)?(?:#([\w\-\\]+))?(?:\.([\w\\\.]+))?(?:\[\@?([\w\
 /*jshint maxlen:255 */
 /*eslint max-len:0 */
 const chunker = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^\[\]]*\]|['"][^'"]*['"]|[^\[\]'"]+)+\]|\\.|[^ >+~,(\[\\]+)+|[>+~])(\s*,\s*)?((?:.|\r|\n)*)/g;
-const whiteSpace = /^\s*|\s*$/g;
+// const whiteSpace = /^\s*|\s*$/g;
 let Collection;
 
 const Selector = Class.extend({
@@ -180,7 +180,7 @@ const Selector = Class.extend({
       }
 
       // Parse expression into parts
-      parts = expression.exec(selector.replace(whiteSpace, ''));
+      parts = expression.exec(selector.replace(/^\s\s*/, '').replace(/^\s\s*$/, ''));
 
       add(compileNameFilter(parts[1]));
       add(compileIdFilter(parts[2]));

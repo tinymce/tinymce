@@ -22,13 +22,13 @@ import Arr from '../../util/Arr';
  * Removes whitespace from the beginning and end of a string.
  *
  * @method trim
- * @param {String} s String to remove whitespace from.
+ * @param {String} str String to remove whitespace from.
  * @return {String} New string with removed whitespace.
  */
-const whiteSpaceRegExp = /^\s*|\s*$/g;
+// const whiteSpaceRegExp = /^\s*|\s*$/g;
 
 const trim = function (str) {
-  return (str === null || str === undefined) ? '' : ('' + str).replace(whiteSpaceRegExp, '');
+  return (str === null || str === undefined) ? '' : ('' + str).replace(/^\s\s*/, '').replace(/^\s\s*$/, '');
 };
 
 /**

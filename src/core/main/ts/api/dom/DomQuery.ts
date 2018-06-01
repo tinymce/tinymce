@@ -158,10 +158,10 @@ const inArray = function (item, array) {
   return -1;
 };
 
-const whiteSpaceRegExp = /^\s*|\s*$/g;
+// const whiteSpaceRegExp = /^\s*|\s*$/g;
 
 const trim = function (str) {
-  return (str === null || str === undefined) ? '' : ('' + str).replace(whiteSpaceRegExp, '');
+  return (str === null || str === undefined) ? '' : ('' + str).replace(/^\s\s*/, '').replace(/^\s\s*$/, '');
 };
 
 const each = function (obj, callback) {
