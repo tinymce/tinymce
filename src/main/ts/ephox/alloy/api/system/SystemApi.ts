@@ -6,8 +6,8 @@ import { SketchSpec } from '../../api/ui/Sketcher';
 export interface AlloySystemApi {
   addToGui: (AlloyComponent) => void;
   addToWorld: (AlloyComponent) => void;
-  broadcast: (message: string) => void;
-  broadcastOn: (channels: string, message: string) => void;
+  broadcast: (message: any) => void;
+  broadcastOn: (channels: string[], message: any) => void;
   build: (rawUserSpec: SketchSpec) => AlloyComponent;
   debugInfo: () => string;
   getByDom: <SugarElement>(element: SugarElement) => Result<SugarElement, string>;

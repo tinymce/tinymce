@@ -75,6 +75,7 @@ import { ToolbarGroup } from './ui/ToolbarGroup';
 import { TouchMenu } from './ui/TouchMenu';
 import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
+import * as Fields from '../data/Fields';
 
 // TODO: naughty non API's being exported
 import * as AlloyParts from '../parts/AlloyParts';
@@ -163,6 +164,7 @@ export {
   TouchMenu,
   Typeahead,
   UiSketcher,
+  Fields,
 
   AlloyParts,
   BehaviourState,
