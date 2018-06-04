@@ -2,44 +2,46 @@ import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import * as SliderModel from './SliderModel';
+import * as GradientModel from './GradientModel';
 
 const _changeEvent = 'slider.change.value';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
-const getEventSource = function (simulatedEvent, posProp) {
+const getEventSource = function (simulatedEvent) {
   const evt = simulatedEvent.event().raw();
   if (isTouch && evt.touches !== undefined && evt.touches.length === 1) {
     return Option.some(evt.touches[0]);
   } else if (isTouch && evt.touches !== undefined) {
       return Option.none();
-  } else if (!isTouch && evt[posProp] !== undefined) {
+  } else if (!isTouch && evt.clientX !== undefined && evt.clientY !== undefined) {
       return Option.some(evt);
   } else {
       return Option.none();
   }
 };
 
-const getXEventSource = function (simulatedEvent) {
-  return getEventSource(simulatedEvent, 'clientX')
-};
-
-const getYEventSource = function (simulatedEvent) {
-  return getEventSource(simulatedEvent, 'clientY')
-};
-
 const getEventX = function (simulatedEvent) {
-  const spot = getXEventSource(simulatedEvent);
+  const spot = getEventSource(simulatedEvent);
   return spot.map(function (s) {
     return s.clientX;
   });
 };
 
 const getEventY = function (simulatedEvent) {
-  const spot = getYEventSource(simulatedEvent);
+  const spot = getEventSource(simulatedEvent);
   return spot.map(function (s) {
     return s.clientY;
+  });
+};
+
+const getEventCoords = function (simulatedEvent) {
+  const spot = getEventSource(simulatedEvent);
+  return spot.map(function (s) {
+    return {
+      x: s.clientX, 
+      y: s.clientY
+    };
   });
 };
 
@@ -64,7 +66,7 @@ const setToLedge = function (ledge, detail) {
 };
 
 const setToX = function (spectrum, spectrumBounds, detail, xValue) {
-  const value = SliderModel.findValueOfX(
+  const value = GradientModel.findValueOfX(
     spectrumBounds, detail.min(), detail.max(),
     xValue, detail.stepSize(), detail.snapToGrid(), detail.snapStart()
   );
@@ -73,9 +75,18 @@ const setToX = function (spectrum, spectrumBounds, detail, xValue) {
 };
 
 const setToY = function (spectrum, spectrumBounds, detail, yValue) {
-  const value = SliderModel.findValueOfY(
+  const value = GradientModel.findValueOfY(
     spectrumBounds, detail.min(), detail.max(),
     yValue, detail.stepSize(), detail.snapToGrid(), detail.snapStart()
+  );
+
+  fireChange(spectrum, value);
+};
+
+const setToCoords = function (spectrum, spectrumBounds, detail, coords) {
+  const value = GradientModel.findValueOfCoords(
+    spectrumBounds, detail.minX(), detail.minY(), detail.maxX(), detail.maxY(),
+    coords, 1, false, 0
   );
 
   fireChange(spectrum, value);
@@ -95,13 +106,20 @@ const setYFromEvent = function (spectrum, detail, spectrumBounds, simulatedEvent
   });
 };
 
+const setCoordsFromEvent = function (spectrum, detail, spectrumBounds, simulatedEvent) {
+  return getEventCoords(simulatedEvent).map(function (coords) {
+    setToCoords(spectrum, spectrumBounds, detail, coords);
+    return coords;
+  });
+};
+
 const moveLeft = function (spectrum, detail) {
-  const newValue = SliderModel.reduceBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
+  const newValue = GradientModel.reduceBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
   fireChange(spectrum, newValue);
 };
 
 const moveRight = function (spectrum, detail) {
-  const newValue = SliderModel.increaseBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
+  const newValue = GradientModel.increaseBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
   fireChange(spectrum, newValue);
 };
 
@@ -110,6 +128,7 @@ const changeEvent = Fun.constant(_changeEvent);
 export {
   setXFromEvent,
   setYFromEvent,
+  setCoordsFromEvent,
   setToLedge,
   setToRedge,
   moveLeftFromRedge,

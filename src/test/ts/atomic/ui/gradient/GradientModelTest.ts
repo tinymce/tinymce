@@ -1,10 +1,10 @@
 import { RawAssertions } from '@ephox/agar';
-import * as SliderModel from 'ephox/alloy/ui/slider/SliderModel';
+import * as GradientModel from 'ephox/alloy/ui/common/GradientModel';
 import { Option } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.test('Atomic Test: ui.slider.SliderModelTest', function () {
+UnitTest.test('Atomic Test: ui.slider.GradientModelTest', function () {
   const arb1Up = Jsc.nat.smap(function (num) { return num + 1; }, function (num) { return num - 1; });
 
   const arbRanged = Jsc.bless({
@@ -60,7 +60,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', function () {
     [
       arbData
     ], function (data) {
-      const newValue = SliderModel.reduceBy(data.value, data.min, data.max, data.stepSize);
+      const newValue = GradientModel.reduceBy(data.value, data.min, data.max, data.stepSize);
       RawAssertions.assertEq('Checking value', true, newValue <= data.value && newValue >= data.min - 1);
       return true;
     },
@@ -72,7 +72,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', function () {
     [
       arbData
     ], function (data) {
-      const newValue = SliderModel.increaseBy(data.value, data.min, data.max, data.stepSize);
+      const newValue = GradientModel.increaseBy(data.value, data.min, data.max, data.stepSize);
       RawAssertions.assertEq('Checking value', true, newValue >= data.value && newValue <= data.max + 1);
       return true;
     },
@@ -87,7 +87,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', function () {
       Jsc.nat
     ],
     function (data, bounds, xValue) {
-      const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.none());
+      const newValue = GradientModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.none());
       const f = Math.abs((newValue - data.min) / data.stepSize);
       RawAssertions.assertEq('Checking factors correctly: ' + newValue, true,
         Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
@@ -106,7 +106,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', function () {
       Jsc.nat
     ],
     function (data, bounds, xValue, snapOffset) {
-      const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.some(snapOffset + data.min));
+      const newValue = GradientModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, true, Option.some(snapOffset + data.min));
       const f = Math.abs((newValue - (data.min + snapOffset)) / data.stepSize);
       RawAssertions.assertEq('Checking factors correctly: ' + newValue, true,
         Math.floor(f) === f || newValue === data.min - 1 || newValue === data.max + 1
@@ -124,7 +124,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', function () {
       Jsc.nat
     ],
     function (data, bounds, xValue) {
-      const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.none());
+      const newValue = GradientModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.none());
       RawAssertions.assertEq(
         'Assert within range: ' + newValue, true,
         newValue >= data.min - 1 && newValue <= data.max + 1
@@ -142,7 +142,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', function () {
       Jsc.nat
     ],
     function (data, bounds, xValue, snapOffset) {
-      const newValue = SliderModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.some(snapOffset + data.min <= data.max ? snapOffset + data.min : data.max));
+      const newValue = GradientModel.findValueOfX(bounds, data.min, data.max, xValue, data.stepSize, data.snapToGrid, Option.some(snapOffset + data.min <= data.max ? snapOffset + data.min : data.max));
       RawAssertions.assertEq(
         'Assert within range: ' + newValue, true,
         newValue >= data.min - 1 && newValue <= data.max + 1

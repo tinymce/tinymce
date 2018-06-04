@@ -8,7 +8,7 @@ import { Keying } from '../../api/behaviour/Keying';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as PartType from '../../parts/PartType';
-import * as SliderActions from './SliderActions';
+import * as GradientActions from '../common/GradientActions';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
@@ -36,10 +36,10 @@ const edgePart = function (name, action) {
 };
 
 // When the user touches the left edge, it should move the thumb
-const ledgePart = edgePart('left', SliderActions.setToLedge);
+const ledgePart = edgePart('left', GradientActions.setToLedge);
 
 // When the user touches the right edge, it should move the thumb
-const redgePart = edgePart('right', SliderActions.setToRedge);
+const redgePart = edgePart('right', GradientActions.setToRedge);
 
 // The thumb part needs to have position absolute to be positioned correctly
 const thumbPart = PartType.required({
@@ -75,12 +75,12 @@ const spectrumPart = PartType.required({
   overrides (detail) {
     const moveToX = function (spectrum, simulatedEvent) {
       const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
-      SliderActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
+      GradientActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
     };
 
     const moveToY = function (spectrum, simulatedEvent) {
       const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
-      SliderActions.setYFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
+      GradientActions.setYFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
     };
 
     const moveTo = detail.orientation() === 'vertical' ? moveToY : moveToX;
@@ -103,11 +103,11 @@ const spectrumPart = PartType.required({
         Keying.config({
           mode: 'special',
           onLeft (spectrum) {
-            SliderActions.moveLeft(spectrum, detail);
+            GradientActions.moveLeft(spectrum, detail);
             return Option.some(true);
           },
           onRight (spectrum) {
-            SliderActions.moveRight(spectrum, detail);
+            GradientActions.moveRight(spectrum, detail);
             return Option.some(true);
           }
         }),

@@ -8,7 +8,7 @@ import { Keying } from '../../api/behaviour/Keying';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as PartType from '../../parts/PartType';
-import * as PaletteActions from './PaletteActions';
+import * as GradientActions from '../common/GradientActions';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
@@ -43,7 +43,7 @@ const palettePart = PartType.required({
   overrides (detail) {
     const moveTo = function (spectrum, simulatedEvent) {
       const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
-      PaletteActions.setCoordsFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
+      GradientActions.setCoordsFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
     };
 
     const touchEvents = AlloyEvents.derive([
@@ -64,11 +64,11 @@ const palettePart = PartType.required({
         Keying.config({
           mode: 'special',
           onLeft (spectrum) {
-            PaletteActions.moveLeft(spectrum, detail);
+            GradientActions.moveLeft(spectrum, detail);
             return Option.some(true);
           },
           onRight (spectrum) {
-            PaletteActions.moveRight(spectrum, detail);
+            GradientActions.moveRight(spectrum, detail);
             return Option.some(true);
           }
         }),

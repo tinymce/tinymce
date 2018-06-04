@@ -9,7 +9,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as AlloyParts from '../../parts/AlloyParts';
-import * as SliderActions from './SliderActions';
+import * as GradientActions from '../common/GradientActions';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
@@ -164,7 +164,7 @@ const sketch = function (detail, components, spec, externals) {
 
     events: AlloyEvents.derive(
       [
-        AlloyEvents.run(SliderActions.changeEvent(), function (slider, simulatedEvent) {
+        AlloyEvents.run(GradientActions.changeEvent(), function (slider, simulatedEvent) {
           changeValue(slider, simulatedEvent.event().value());
         }),
         AlloyEvents.runOnAttached(function (slider, simulatedEvent) {

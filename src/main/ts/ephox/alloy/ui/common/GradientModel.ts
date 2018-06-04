@@ -71,9 +71,17 @@ const findValueOfY = function (bounds, min, max, xValue, step, snapToGrid, snapS
   return findValueOf(bounds, min, max, xValue, step, snapToGrid, snapStart, 'top', 'bottom', 'height');
 };
 
+const findValueOfCoords = function (bounds, minX, minY, maxX, maxY, coords, step, snapToGrid, snapStart) {
+  return {
+    x: findValueOfX(bounds, minX, maxX, coords.x, step, snapToGrid, snapStart),
+    y: findValueOfY(bounds, minY, maxY, coords.y, step, snapToGrid, snapStart)
+  };
+};
+
 export {
   reduceBy,
   increaseBy,
   findValueOfX,
-  findValueOfY
+  findValueOfY,
+  findValueOfCoords
 };
