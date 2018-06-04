@@ -56,6 +56,7 @@ export interface KeyingConfig {
   getInitial?: (chooser) => Option<SugarElement>;
   execute?: (chooser, simulatedEvent, focused) => boolean;
   executeOnMove?: boolean;
+  allowVertical?: boolean;
 
   cycles?: boolean;
   useSpace?: boolean;
@@ -140,6 +141,7 @@ export interface KeyingConfig {
 //   getInitial: (chooser) => Option<SugarElement>;
 //   execute: (chooser, simulatedEvent, focused) => boolean;
 //   executeOnMove: boolean;
+//   allowVertical: boolean;
 // }
 // export interface TabbingConfig {
 //   onEscape: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;

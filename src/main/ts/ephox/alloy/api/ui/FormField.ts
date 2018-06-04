@@ -58,9 +58,9 @@ const factory = function (detail, components, spec, externals) {
     },
     getLabel: (container) => {
       // TODO: Use constants for part names
-      return AlloyParts.getPart(container, detail, 'label')
+      return AlloyParts.getPart(container, detail, 'label');
     }
-  }
+  };
 
   return {
     uid: detail.uid(),
