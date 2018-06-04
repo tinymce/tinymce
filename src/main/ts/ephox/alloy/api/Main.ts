@@ -69,7 +69,8 @@ import { Tabbar } from './ui/Tabbar';
 import { TabButton } from './ui/TabButton';
 import { TabSection } from './ui/TabSection';
 import { Tabview } from './ui/Tabview';
-import * as TieredMenu from './ui/TieredMenu';
+import { tieredMenu as TieredMenu, TieredMenuSketch, TieredData } from './ui/TieredMenu';
+
 import { Toolbar } from './ui/Toolbar';
 import { ToolbarGroup } from './ui/ToolbarGroup';
 import { TouchMenu } from './ui/TouchMenu';
@@ -159,6 +160,8 @@ export {
   TabSection,
   Tabview,
   TieredMenu,
+  TieredMenuSketch,
+  TieredData,
   Toolbar,
   ToolbarGroup,
   TouchMenu,

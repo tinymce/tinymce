@@ -5,7 +5,7 @@ import { Transitioning } from 'ephox/alloy/api/behaviour/Transitioning';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
-import * as TieredMenu from 'ephox/alloy/api/ui/TieredMenu';
+import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default <any> function () {
@@ -16,7 +16,7 @@ export default <any> function () {
 
   const makeBack = function (text) {
     return {
-      data: TieredMenu.tieredMenu.collapseItem(text),
+      data: TieredMenu.collapseItem(text),
       type: 'item',
       dom: {
         tag: 'div',
@@ -93,7 +93,7 @@ export default <any> function () {
   };
 
   // https://jsfiddle.net/xuto3by2/1/
-  const tieredMenu = TieredMenu.tieredMenu.sketch({
+  const tieredMenu = TieredMenu.sketch({
     dom: {
       tag: 'div',
       classes: [ 'demo-tiered-menu' ]
@@ -139,7 +139,7 @@ export default <any> function () {
     navigateOnHover: false,
 
     openImmediately: true,
-    data: TieredMenu.tieredMenu.tieredData(
+    data: TieredMenu.tieredData(
       'styles',
       {
         styles: makeMenu('Styles', [

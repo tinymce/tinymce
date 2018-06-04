@@ -8,7 +8,7 @@ import { Coupling } from '../api/behaviour/Coupling';
 import { Focusing } from '../api/behaviour/Focusing';
 import { Positioning } from '../api/behaviour/Positioning';
 import { Sandboxing } from '../api/behaviour/Sandboxing';
-import * as TieredMenu from '../api/ui/TieredMenu';
+import { tieredMenu as TieredMenu } from '../api/ui/TieredMenu';
 import * as AriaOwner from '../aria/AriaOwner';
 import * as InternalSink from '../parts/InternalSink';
 import * as Tagger from '../registry/Tagger';
@@ -26,7 +26,7 @@ const openF = function (detail, anchor, component, sandbox, externals) {
 
   // TODO: Make this potentially a single menu also
   return futureData.map(function (data) {
-    return TieredMenu.tieredMenu.sketch(
+    return TieredMenu.sketch(
       Merger.deepMerge(
         externals.menu(),
         {
