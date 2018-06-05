@@ -10,9 +10,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
-UnitTest.asynctest('Flow Keying Skip Element Test', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Flow Keying Allow Vertical Test', function (success, failure) {
 
   GuiSetup.setup(function (store, doc, body) {
     const item = function (classes, name) {
@@ -24,7 +22,7 @@ UnitTest.asynctest('Flow Keying Skip Element Test', function () {
             width: '20px',
             height: '20px',
             margin: '2px',
-            border: '1px solid ' + (Arr.contains(classes, 'stay') ? 'blue' : 'yellow')
+            border: '1px solid blue'
           },
           classes
         },
@@ -53,14 +51,15 @@ UnitTest.asynctest('Flow Keying Skip Element Test', function () {
         containerBehaviours: Behaviour.derive([
           Keying.config({
             mode: 'flow',
-            selector: '.stay'
+            selector: '.stay',
+            allowVertical: false
           })
         ]),
         components: [
           item([ 'stay', 'one' ], 'one'),
           item([ 'stay', 'two' ], 'two'),
-          item([ 'skip', 'three' ], 'three'),
-          item([ 'skip', 'four' ], 'four'),
+          item([ 'stay', 'three' ], 'three'),
+          item([ 'stay', 'four' ], 'four'),
           item([ 'stay', 'five' ], 'five')
         ]
       })
@@ -70,6 +69,8 @@ UnitTest.asynctest('Flow Keying Skip Element Test', function () {
     const targets = {
       one: { label: 'one', selector: '.one' },
       two: { label: 'two', selector: '.two' },
+      three: { label: 'three', selector: '.three' },
+      four: { label: 'four', selector: '.four' },
       five: { label: 'five', selector: '.five' }
     };
 
@@ -82,24 +83,11 @@ UnitTest.asynctest('Flow Keying Skip Element Test', function () {
         {},
         [
           targets.two,
+          targets.three,
+          targets.four,
           targets.five,
           targets.one,
-          targets.two,
-          targets.five,
-          targets.one
-        ]
-      ),
-      NavigationUtils.sequence(
-        doc,
-        Keys.left(),
-        { },
-        [
-          targets.five,
-          targets.two,
-          targets.one,
-          targets.five,
-          targets.two,
-          targets.one
+          targets.two
         ]
       ),
       NavigationUtils.sequence(
@@ -107,12 +95,21 @@ UnitTest.asynctest('Flow Keying Skip Element Test', function () {
         Keys.up(),
         { },
         [
-          targets.five,
           targets.two,
+          targets.two,
+          targets.two,
+          targets.two
+        ]
+      ),
+      NavigationUtils.sequence(
+        doc,
+        Keys.left(),
+        { },
+        [
           targets.one,
           targets.five,
-          targets.two,
-          targets.one
+          targets.four,
+          targets.three
         ]
       ),
       NavigationUtils.sequence(
@@ -120,20 +117,26 @@ UnitTest.asynctest('Flow Keying Skip Element Test', function () {
         Keys.down(),
         { },
         [
-          targets.two,
-          targets.five,
-          targets.one,
-          targets.two,
-          targets.five,
-          targets.one
+          targets.three,
+          targets.three,
+          targets.three
         ]
       ),
 
       // Test execute
       Keyboard.sKeydown(doc, Keys.enter(), {}),
-      store.sAssertEq('Check that execute has fired on the right target', [ 'item.execute: one' ]),
-
-      GuiSetup.mTeardownKeyLogger(body, [ ])
+      store.sAssertEq('Check that execute has fired on the right target', [ 'item.execute: three' ]),
+      GuiSetup.mTeardownKeyLogger(body, [
+        // 4x Keyup, ignored by alloy on Keys.up()
+        'keydown.to.body: 38',
+        'keydown.to.body: 38',
+        'keydown.to.body: 38',
+        'keydown.to.body: 38',
+        // 3x Keydown, ignored by alloy on Keys.down()
+        'keydown.to.body: 40',
+        'keydown.to.body: 40',
+        'keydown.to.body: 40',
+      ])
     ];
   }, function () {
     success();

@@ -69,12 +69,14 @@ import { Tabbar } from './ui/Tabbar';
 import { TabButton } from './ui/TabButton';
 import { TabSection } from './ui/TabSection';
 import { Tabview } from './ui/Tabview';
-import * as TieredMenu from './ui/TieredMenu';
+import { tieredMenu as TieredMenu, TieredMenuSketch, TieredData } from './ui/TieredMenu';
+
 import { Toolbar } from './ui/Toolbar';
 import { ToolbarGroup } from './ui/ToolbarGroup';
 import { TouchMenu } from './ui/TouchMenu';
 import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
+import * as Fields from '../data/Fields';
 
 // TODO: naughty non API's being exported
 import * as AlloyParts from '../parts/AlloyParts';
@@ -158,11 +160,14 @@ export {
   TabSection,
   Tabview,
   TieredMenu,
+  TieredMenuSketch,
+  TieredData,
   Toolbar,
   ToolbarGroup,
   TouchMenu,
   Typeahead,
   UiSketcher,
+  Fields,
 
   AlloyParts,
   BehaviourState,

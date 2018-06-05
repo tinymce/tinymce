@@ -14,10 +14,10 @@ import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+import { input } from 'ephox/alloy/api/events/NativeEvents';
+import { Attr } from '@ephox/sugar';
 
-UnitTest.asynctest('FieldsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('FieldsTest', function (success, failure) {
 
   const renderChoice = function (choiceSpec) {
     return {
@@ -225,6 +225,20 @@ UnitTest.asynctest('FieldsTest', function () {
         // Add it back the the container
         Replacing.append(component, GuiFactory.premade(dataE));
         Assertions.assertEq('Checking data-e value was reset when added back to DOM', 'data-e-init', Representing.getValue(dataE));
+      }),
+
+      Step.sync(function () {
+        FormField.getField(inputA).fold(() => {
+          throw new Error('The input Field could not be found');
+        },  (comp) => {
+          Assertions.assertEq('FormField should have an api that returns the input field', 'input-a-field', Attr.get(comp.element(), 'data-alloy-id'));
+        });
+
+        FormField.getLabel(inputA).fold(() => {
+          throw new Error('The input Label could not be found');
+        },  (comp) => {
+          Assertions.assertEq('FormField should have an api that returns the input Label', 'input-a-label', Attr.get(comp.element(), 'data-alloy-id'));
+        });
       }),
 
       GuiSetup.mRemoveStyles

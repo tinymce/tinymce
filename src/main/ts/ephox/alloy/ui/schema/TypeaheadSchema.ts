@@ -19,6 +19,7 @@ const schema = Fun.constant([
   FieldSchema.strict('fetch'),
   FieldSchema.defaulted('minChars', 5),
   Fields.onHandler('onOpen'),
+  FieldSchema.defaulted('eventOrder', { }),
 
   Fields.onKeyboardHandler('onExecute'),
   FieldSchema.defaulted('matchWidth', true),

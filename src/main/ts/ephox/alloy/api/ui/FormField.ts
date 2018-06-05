@@ -52,12 +52,23 @@ const factory = function (detail, components, spec, externals) {
     })
   ]);
 
+  const apis = {
+    getField: (container) => {
+      return AlloyParts.getPart(container, detail, 'field');
+    },
+    getLabel: (container) => {
+      // TODO: Use constants for part names
+      return AlloyParts.getPart(container, detail, 'label');
+    }
+  };
+
   return {
     uid: detail.uid(),
     dom: detail.dom(),
     components,
     behaviours,
-    events
+    events,
+    apis
   };
 };
 
@@ -65,7 +76,11 @@ const FormField =  Sketcher.composite({
   name: 'FormField',
   configFields: FormFieldSchema.schema(),
   partFields: FormFieldSchema.parts(),
-  factory
+  factory,
+  apis: {
+    getField: (apis, comp) => apis.getField(comp),
+    getLabel: (apis, comp) => apis.getLabel(comp)
+  }
 });
 
 export {

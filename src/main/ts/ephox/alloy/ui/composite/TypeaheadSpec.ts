@@ -162,6 +162,8 @@ const make = function (detail, components, spec, externals) {
       SketchBehaviours.get(detail.typeaheadBehaviours())
     ),
 
+    eventOrder: detail.eventOrder(),
+
     events: AlloyEvents.derive([
       AlloyEvents.runOnExecute(function (comp) {
         const anchor = { anchor: 'hotspot', hotspot: comp };
