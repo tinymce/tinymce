@@ -4,9 +4,11 @@ import { Option } from '@ephox/katamari';
 
 
 export interface UnselectingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: UnselectingConfig) => Behaviour.NamedConfiguredBehaviour;
+  config: (config: UnselectingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
 }
 
-export interface UnselectingConfig {
+export interface UnselectingConfigSpec {
   // intentionally blank
 }
+
+export interface UnselectingConfig { };

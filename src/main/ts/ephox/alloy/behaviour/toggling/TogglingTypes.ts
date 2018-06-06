@@ -4,7 +4,7 @@ import { Option } from '@ephox/katamari';
 
 
 export interface TogglingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: TogglingConfig) => Behaviour.NamedConfiguredBehaviour;
+  config: (config: TogglingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
   onLoad?: (component: AlloyComponent) => void;
   toggle?: (component: AlloyComponent) => void;
   isOn?: (component: AlloyComponent) => boolean;
@@ -12,7 +12,19 @@ export interface TogglingBehaviour extends Behaviour.AlloyBehaviour {
   off?: (component: AlloyComponent) => void;
 }
 
+export interface AriaTogglingConfig {
+  update: () => (AlloyComponent, AriaTogglingConfig, boolean) => void;
+  syncWithExpanded: () => boolean;
+}
+
 export interface TogglingConfig {
+  toggleClass: () => string;
+  aria: () => AriaTogglingConfig;
+  toggleOnExecute: () => boolean;
+  selected: () => boolean;
+}
+
+export interface TogglingConfigSpec {
   toggleClass: string;
   aria?: {
     mode: TogglingMode;

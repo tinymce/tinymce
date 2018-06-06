@@ -6,6 +6,7 @@ import * as ActiveTransitioning from '../../behaviour/transitioning/ActiveTransi
 import * as TransitionApis from '../../behaviour/transitioning/TransitionApis';
 import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';
 import * as Behaviour from './Behaviour';
+import { TransitioningBehaviour } from 'ephox/alloy/behaviour/transitioning/TransitioningTypes';
 
 const createRoutes = function (routes) {
   const r = { };

@@ -3,8 +3,12 @@ import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 
 export interface TabstoppingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: TabstoppingConfig) => Behaviour.NamedConfiguredBehaviour;
+  config: (config: TabstoppingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
 }
-export interface TabstoppingConfig {
+export interface TabstoppingConfigSpec {
   // intentionally blank
 }
+
+export interface TabstoppingConfig {
+  tabAttr: () => string;
+};

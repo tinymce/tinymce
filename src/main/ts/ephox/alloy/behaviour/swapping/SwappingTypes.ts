@@ -4,15 +4,20 @@ import { Option } from '@ephox/katamari';
 
 
 export interface SwappingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: SwappingConfig) => Behaviour.NamedConfiguredBehaviour;
-  toAlpha?: (componenet: AlloyComponent) => void;
-  toOmega?: (componenet: AlloyComponent) => void;
-  isAlpha?: (componenet: AlloyComponent) => boolean;
-  isOmega?: (componenet: AlloyComponent) => boolean;
-  clear?: (componenet: AlloyComponent) => void;
+  config: (config: SwappingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
+  toAlpha?: (component: AlloyComponent) => void;
+  toOmega?: (component: AlloyComponent) => void;
+  isAlpha?: (component: AlloyComponent) => boolean;
+  isOmega?: (component: AlloyComponent) => boolean;
+  clear?: (component: AlloyComponent) => void;
 }
 
 export interface SwappingConfig {
+  alpha: () => string;
+  omega: () => string;
+};
+
+export interface SwappingConfigSpec {
   alpha: string;
   omega: string;
 }

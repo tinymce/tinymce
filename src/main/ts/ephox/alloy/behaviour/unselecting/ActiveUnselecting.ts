@@ -3,8 +3,9 @@ import { Fun } from '@ephox/katamari';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as DomModification from '../../dom/DomModification';
+import { UnselectingConfig } from 'ephox/alloy/behaviour/unselecting/UnselectingTypes';
 
-const exhibit = function (base, unselectConfig) {
+const exhibit = function (base: { }, unselectConfig: UnselectingConfig): { } {
   return DomModification.nu({
     styles: {
       '-webkit-user-select': 'none',
@@ -18,7 +19,7 @@ const exhibit = function (base, unselectConfig) {
   });
 };
 
-const events = function (unselectConfig) {
+const events = function (unselectConfig: UnselectingConfig): AlloyEvents.EventHandlerConfigRecord {
   return AlloyEvents.derive([
     AlloyEvents.abort(NativeEvents.selectstart(), Fun.constant(true))
   ]);

@@ -1,28 +1,31 @@
 import { Class } from '@ephox/sugar';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SwappingConfig } from 'ephox/alloy/behaviour/swapping/SwappingTypes';
+import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
 
 const swap = function (element, addCls, removeCls) {
   Class.remove(element, removeCls);
   Class.add(element, addCls);
 };
 
-const toAlpha = function (component, swapConfig, swapState) {
+const toAlpha = function (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) {
   swap(component.element(), swapConfig.alpha(), swapConfig.omega());
 };
 
-const toOmega = function (component, swapConfig, swapState) {
+const toOmega = function (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) {
   swap(component.element(), swapConfig.omega(), swapConfig.alpha());
 };
 
-const clear = function (component, swapConfig, swapState) {
+const clear = function (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) {
   Class.remove(component.element(), swapConfig.alpha());
   Class.remove(component.element(), swapConfig.omega());
 };
 
-const isAlpha = function (component, swapConfig, swapState) {
+const isAlpha = function (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) {
   return Class.has(component.element(), swapConfig.alpha());
 };
 
-const isOmega = function (component, swapConfig, swapState) {
+const isOmega = function (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) {
   return Class.has(component.element(), swapConfig.omega());
 };
 
