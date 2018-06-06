@@ -1,5 +1,8 @@
 import { Arr } from '@ephox/katamari';
 import { Attr, Class, Node } from '@ephox/sugar';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
+import { DisableConfig } from 'ephox/alloy/behaviour/disabling/DisableTypes';
 
 // Just use "disabled" attribute for these, not "aria-disabled"
 const nativeDisabled = [
@@ -8,39 +11,39 @@ const nativeDisabled = [
   'textarea'
 ];
 
-const onLoad = function (component, disableConfig, disableState) {
+const onLoad = function (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void {
   if (disableConfig.disabled()) { disable(component, disableConfig, disableState); }
 };
 
-const hasNative = function (component) {
+const hasNative = function (component: AlloyComponent): boolean {
   return Arr.contains(nativeDisabled, Node.name(component.element()));
 };
 
-const nativeIsDisabled = function (component) {
+const nativeIsDisabled = function (component: AlloyComponent): boolean {
   return Attr.has(component.element(), 'disabled');
 };
 
-const nativeDisable = function (component) {
+const nativeDisable = function (component: AlloyComponent): void {
   Attr.set(component.element(), 'disabled', 'disabled');
 };
 
-const nativeEnable = function (component) {
+const nativeEnable = function (component: AlloyComponent): void {
   Attr.remove(component.element(), 'disabled');
 };
 
-const ariaIsDisabled = function (component) {
+const ariaIsDisabled = function (component: AlloyComponent): boolean {
   return Attr.get(component.element(), 'aria-disabled') === 'true';
 };
 
-const ariaDisable = function (component) {
+const ariaDisable = function (component: AlloyComponent): void {
   Attr.set(component.element(), 'aria-disabled', 'true');
 };
 
-const ariaEnable = function (component) {
+const ariaEnable = function (component: AlloyComponent): void {
   Attr.set(component.element(), 'aria-disabled', 'false');
 };
 
-const disable = function (component, disableConfig, disableState) {
+const disable = function (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void {
   disableConfig.disableClass().each(function (disableClass) {
     Class.add(component.element(), disableClass);
   });
@@ -48,7 +51,7 @@ const disable = function (component, disableConfig, disableState) {
   f(component);
 };
 
-const enable = function (component, disableConfig, disableState) {
+const enable = function (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void {
   disableConfig.disableClass().each(function (disableClass) {
     Class.remove(component.element(), disableClass);
   });
@@ -56,7 +59,7 @@ const enable = function (component, disableConfig, disableState) {
   f(component);
 };
 
-const isDisabled = function (component) {
+const isDisabled = function (component: AlloyComponent): boolean {
   return hasNative(component) ? nativeIsDisabled(component) : ariaIsDisabled(component);
 };
 
