@@ -12,8 +12,9 @@ import { Button } from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
+import { PartTypeAdt } from '../../parts/PartType';
 
-const schema = Fun.constant([
+const schema: () => DslType.FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('toggleClass'),
   FieldSchema.strict('fetch'),
 
@@ -89,7 +90,7 @@ const buttonPart = PartType.required({
   }
 });
 
-const parts = Fun.constant([
+const parts: () => PartTypeAdt[] = Fun.constant([
   arrowPart,
   buttonPart,
 

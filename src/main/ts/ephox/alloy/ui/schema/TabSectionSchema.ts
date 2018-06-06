@@ -6,8 +6,9 @@ import { Tabbar } from '../../api/ui/Tabbar';
 import { Tabview } from '../../api/ui/Tabview';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
+import { PartTypeAdt } from '../../parts/PartType';
 
-const schema = Fun.constant([
+const schema: () => DslType.FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('selectFirst', true),
   Fields.onHandler('onChangeTab'),
   Fields.onHandler('onDismissTab'),
@@ -37,7 +38,7 @@ const viewPart = PartType.required({
   name: 'tabview'
 });
 
-const parts = Fun.constant([
+const parts: () => PartTypeAdt[] = Fun.constant([
   barPart,
   viewPart
 ]);

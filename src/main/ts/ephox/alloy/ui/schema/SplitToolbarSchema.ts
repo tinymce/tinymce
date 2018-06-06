@@ -7,8 +7,9 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import { Toolbar } from '../../api/ui/Toolbar';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
+import { PartTypeAdt } from '../../parts/PartType';
 
-const schema = Fun.constant([
+const schema: () => DslType.FieldProcessorAdt[] = Fun.constant([
   Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass' ]),
   SketchBehaviours.field('splitToolbarBehaviours', [ ]),
   FieldSchema.state('builtGroups', function () {
@@ -20,7 +21,7 @@ const toolbarSchema = [
   FieldSchema.strict('dom')
 ];
 
-const parts = Fun.constant([
+const parts: () => PartTypeAdt[] = Fun.constant([
   PartType.required({
     factory: Toolbar,
     schema: toolbarSchema,
