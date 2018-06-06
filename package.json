@@ -20,7 +20,7 @@
     "lint": "tslint src/**/*.ts"
   },
   "dependencies": {
-    "@ephox/alloy": "latest",
+    "@ephox/alloy": "2.0.6",
     "@ephox/boulder": "latest",
     "@ephox/darwin": "latest",
     "@ephox/imagetools": "latest",
