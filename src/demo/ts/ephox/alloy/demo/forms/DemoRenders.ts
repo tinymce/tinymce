@@ -4,7 +4,8 @@ import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
-import { GeneratedSinglePart } from 'ephox/alloy/parts/AlloyParts';
+
+import { PremadeSpec, SimpleOrSketchSpec, AlloySpec, RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
 
 const demoItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [

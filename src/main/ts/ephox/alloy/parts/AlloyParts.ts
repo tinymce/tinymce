@@ -1,4 +1,4 @@
-import { FieldPresence, DslType, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, DslType, FieldSchema, Objects, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Arr, Fun, Merger, Obj, Option, Result } from '@ephox/katamari';
 
 import * as Fields from '../data/Fields';
@@ -9,16 +9,10 @@ import { SpecSchemaStruct } from '../spec/SpecSchema';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { RawDomSchema, SketchSpec, AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 
-export interface GeneratedParts {
-  [key: string]: (config: any) => AlloySpec;
-}
+export type PartialSpec = { }
 
-export interface GeneratedSinglePart {
-  config: RawDomSchema;
-  name: string;
-  owner: string;
-  uiType: string;
-  validated: {};
+export interface GeneratedParts {
+  [key: string]: (config: PartialSpec) => AlloySpec;
 }
 
 export interface UnconfiguredPart {
@@ -39,20 +33,10 @@ export interface Substitutions {
 
 export interface DetailedSpec extends SpecSchemaStruct {
   partUids?: () => { [key: string]: string };
-
-  // Below Are items that maybe required in this type
-  // dragBlockClass
-  // lazySink
-  // modalBehaviours
-  // onEscape
-  // onExecute
-  // partUids
-  // parts
-  // useTabstopAt
 }
 
 // TODO: Make more functional if performance isn't an issue.
-const generate = function (owner: string, parts: DslType.FieldProcessorAdt[]): GeneratedParts {
+const generate = function (owner: string, parts: PartType.PartTypeAdt[]): GeneratedParts {
   const r = { };
   Arr.each(parts, function (part) {
     PartType.asNamedPart(part).each(function (np) {
@@ -109,7 +93,7 @@ const names = function (parts): string[] {
   return Arr.map(parts, PartType.name);
 };
 
-const substitutes = function (owner: string, detail: DetailedSpec, parts: DslType.FieldProcessorAdt[]): Substitutions {
+const substitutes = function (owner: string, detail: DetailedSpec, parts: PartType.PartTypeAdt[]): Substitutions {
   return PartSubstitutes.subs(owner, detail, parts);
 };
 

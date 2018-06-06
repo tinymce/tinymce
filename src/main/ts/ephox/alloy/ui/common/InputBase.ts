@@ -8,7 +8,7 @@ import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 
-const schema = Fun.constant([
+const schema: () => DslType.FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('data'),
   FieldSchema.defaulted('inputAttributes', { }),
   FieldSchema.defaulted('inputStyles', { }),

@@ -9,8 +9,9 @@ import { Keying } from '../../api/behaviour/Keying';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
+import { PartTypeAdt } from '../../parts/PartType';
 
-const schema = Fun.constant([
+const schema: () => DslType.FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('lazySink'),
   FieldSchema.option('dragBlockClass'),
   FieldSchema.defaulted('useTabstopAt', Fun.constant(true)),
@@ -23,7 +24,7 @@ const schema = Fun.constant([
 
 const basic = { sketch: Fun.identity };
 
-const parts = Fun.constant([
+const parts: () => PartTypeAdt[] = Fun.constant([
   PartType.optional({
     name: 'draghandle',
     overrides (detail, spec) {

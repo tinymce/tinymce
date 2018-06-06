@@ -12,8 +12,9 @@ import { FormField } from '../../api/ui/FormField';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
+import { PartTypeAdt } from '../../parts/PartType';
 
-const schema = Fun.constant([
+const schema: () => DslType.FieldProcessorAdt[] = Fun.constant([
   Fields.onStrictHandler('onLockedChange'),
   Fields.markers([ 'lockClass' ])
 ]);
@@ -45,7 +46,7 @@ const coupledPart = function (selfName, otherName) {
   });
 };
 
-const parts = Fun.constant([
+const parts: () => PartTypeAdt[] = Fun.constant([
   coupledPart('field1', 'field2'),
   coupledPart('field2', 'field1'),
 

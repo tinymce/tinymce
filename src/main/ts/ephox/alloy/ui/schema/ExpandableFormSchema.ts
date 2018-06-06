@@ -11,8 +11,9 @@ import { Button } from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
+import { PartTypeAdt } from '../../parts/PartType';
 
-const schema = Fun.constant([
+const schema: () => DslType.FieldProcessorAdt[] = Fun.constant([
   Fields.markers([
     'closedClass',
     'openClass',
@@ -36,7 +37,7 @@ const runOnExtra = function (detail, operation) {
   };
 };
 
-const parts = Fun.constant([
+const parts: () => PartTypeAdt[] = Fun.constant([
   PartType.required({
     // factory: Form,
     schema: [ FieldSchema.strict('dom') ],

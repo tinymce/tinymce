@@ -1,4 +1,4 @@
-import { FieldSchema, Objects, ValueSchema, DslType } from '@ephox/boulder';
+import { FieldSchema, Objects, ValueSchema, DslType, FieldProcessorAdt } from '@ephox/boulder';
 import { Arr, Merger, Obj } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
 import { AlloySpec, ComponentSpec, RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
@@ -10,7 +10,6 @@ import * as UiSubstitutes from './UiSubstitutes';
 
 export interface SpecSchemaStruct {
   components: () => ComponentSpec;
-  containerBehaviours: () => ContainerBehaviours;
   dom: () => RawDomSchema;
   domModification: () => {}; // TODO: Mike
   eventOrder: () => EventHandlerConfig; // TODO: Mike test this
@@ -26,7 +25,7 @@ export interface ContainerBehaviours {
   [key: string]: any;
 }
 
-const getPartsSchema = function (partNames, _optPartNames, _owner) {
+const getPartsSchema = function (partNames, _optPartNames, _owner): DslType.FieldProcessorAdt[] {
   const owner = _owner !== undefined ? _owner : 'Unknown owner';
   const fallbackThunk = function () {
     return [
@@ -71,7 +70,7 @@ const getPartsSchema = function (partNames, _optPartNames, _owner) {
   return [ partsSchema, partUidsSchema ];
 };
 
-const getPartUidsSchema = function (label, spec) {
+const getPartUidsSchema = function (label, spec): DslType.FieldProcessorAdt {
   return FieldSchema.state(
     'partUids',
     function (spec) {
