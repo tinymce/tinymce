@@ -5,9 +5,9 @@ import * as Fields from '../data/Fields';
 import * as UiSubstitutes from '../spec/UiSubstitutes';
 import * as PartSubstitutes from './PartSubstitutes';
 import * as PartType from './PartType';
-import { SketchSpec, RawDomSchema } from '../api/ui/Sketcher';
 import { SpecSchemaStruct } from '../spec/SpecSchema';
 import { AlloyComponent } from '../api/component/ComponentApi';
+import { RawDomSchema, SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 
 export interface GeneratedParts {
   [key: string]: (config: RawDomSchema) => SketchSpec;
@@ -62,7 +62,7 @@ const doGenerateOne = function (owner, pname) {
   };
 };
 
-const generateOne = function (owner: string, pname: string, config: SketchSpec): GeneratedSinglePart {
+const generateOne = function (owner: string, pname: string, config: RawDomSchema): GeneratedSinglePart {
   return {
     uiType: UiSubstitutes.placeholder(),
     owner,

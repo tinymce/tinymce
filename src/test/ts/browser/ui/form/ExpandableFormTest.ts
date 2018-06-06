@@ -26,6 +26,7 @@ UnitTest.asynctest('ExpandableFormTest', function () {
   GuiSetup.setup(function (store, doc, body) {
 
     const pMinimal = ExpandableForm.parts().minimal(
+      // TODO: FIXTYPES
       Form.sketch(function (parts) {
         return {
           dom: {

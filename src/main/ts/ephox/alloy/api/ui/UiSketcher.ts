@@ -1,14 +1,14 @@
 import { Objects } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
-import { AdtInterface } from '../../alien/TypeDefinitions';
-import { RawDomSchema, RawDomSchemaUid, SketchSpec, CompositeSketch } from '../../api/ui/Sketcher';
 
+import { AdtInterface } from '../../alien/TypeDefinitions';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Tagger from '../../registry/Tagger';
 import * as SpecSchema from '../../spec/SpecSchema';
+import { SimpleSpec, SketchSpec, RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
 
-export type SingleFactory = (detail: SpecSchema.SpecSchemaStruct, specWithUid: RawDomSchemaUid) => SketchSpec;
-export type CompositeFactory = (detail: SpecSchema.SpecSchemaStruct, components: SketchSpec[], spec: RawDomSchemaUid, _externals?: any) => SketchSpec;
+export type SingleFactory = (detail: SpecSchema.SpecSchemaStruct, specWithUid: SimpleSpec) => SketchSpec;
+export type CompositeFactory = (detail: SpecSchema.SpecSchemaStruct, components: SketchSpec[], spec: SimpleSpec, _externals?: any) => SketchSpec;
 
 const single = function (owner: string, schema: AdtInterface[], factory: SingleFactory, spec: RawDomSchema): SketchSpec {
   const specWithUid = supplyUid(spec);
@@ -43,7 +43,7 @@ const composite = function (owner: string, schema: AdtInterface[], partTypes: Ad
   );
 };
 
-const supplyUid = function (spec: RawDomSchema): RawDomSchemaUid {
+const supplyUid = function (spec: RawDomSchema): SimpleSpec {
   return Merger.deepMerge(
     {
       uid: Tagger.generate('uid')

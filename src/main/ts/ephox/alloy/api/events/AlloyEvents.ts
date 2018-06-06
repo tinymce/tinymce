@@ -8,23 +8,33 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
 import { SpecSchemaStruct } from '../../spec/SpecSchema';
 
+// TODO: Fix types.
+export type EventHandlerConfigRecord = Record<string, AlloyEventHandler>;
+
+export interface AlloyEventHandler {
+  can: () => boolean;
+  abort: () => boolean;
+  run: EventRunHandler;
+}
+
 export interface EventHandlerConfig {
   key: string;
-  value: {
-    can: () => boolean;
-    abort: () => boolean;
-    run: EventRunHandler
-  };
+  value: AlloyEventHandler;
 }
 
 // TODO we can tighten this up alot further, it should take a simulatedEvent, however SimulatedEvent.event() can return 2 types, need to solve that issue first (SugarEvent or SimulatedEventTargets)
 // export type EventRunHandler = (component: AlloyComponent, action: SimulatedEvent) => any;
+type RunOnName = (handler: EventRunHandler) => EventHandlerConfig;
+type RunOnSourceName = (handler: EventRunHandler) => EventHandlerConfig;
 export type EventRunHandler = (component: AlloyComponent, action: { [eventName: string]: any }) => any;
-export type RunOnSourceName = (handler: EventRunHandler) => EventHandlerConfig;
 
-const derive = Objects.wrapAll;
+const derive = (configs: EventHandlerConfig[]): EventHandlerConfigRecord => {
+  return Objects.wrapAll(configs) as EventHandlerConfigRecord;
+};
 
-const abort = function (name, predicate) {
+// const combine = (configs...);
+
+const abort = function (name, predicate): EventHandlerConfig {
   return {
     key: name,
     value: EventHandler.nu({
@@ -33,7 +43,7 @@ const abort = function (name, predicate) {
   };
 };
 
-const can = function (name, predicate) {
+const can = function (name, predicate): EventHandlerConfig {
   return {
     key: name,
     value: EventHandler.nu({
@@ -73,13 +83,13 @@ const runActionExtra = function (name: string, action: (t: any, u: any) => void,
   };
 };
 
-const runOnName = function (name) {
+const runOnName = function (name): RunOnName {
   return function (handler) {
     return run(name, handler);
   };
 };
 
-const runOnSourceName = function (name) {
+const runOnSourceName = function (name): RunOnSourceName {
   return function (handler) {
     return {
       key: name,
@@ -92,7 +102,7 @@ const runOnSourceName = function (name) {
   };
 };
 
-const redirectToUid = function (name, uid) {
+const redirectToUid = function (name, uid): EventHandlerConfig {
   return run(name, function (component: AlloyComponent, simulatedEvent: SimulatedEvent) {
     component.getSystem().getByUid(uid).each(function (redirectee) {
       AlloyTriggers.dispatchEvent(redirectee, redirectee.element(), name, simulatedEvent);
@@ -100,12 +110,12 @@ const redirectToUid = function (name, uid) {
   });
 };
 
-const redirectToPart = function (name, detail, partName) {
+const redirectToPart = function (name, detail, partName): EventHandlerConfig {
   const uid = detail.partUids()[partName];
   return redirectToUid(name, uid);
 };
 
-const runWithTarget = function (name, f) {
+const runWithTarget = function (name, f): EventHandlerConfig {
   return run(name, function (component, simulatedEvent) {
     component.getSystem().getByDom(simulatedEvent.event().target()).each(function (target) {
       f(component, target, simulatedEvent);
@@ -113,13 +123,13 @@ const runWithTarget = function (name, f) {
   });
 };
 
-const cutter = function (name) {
+const cutter = function (name): EventHandlerConfig {
   return run(name, function (component, simulatedEvent) {
     simulatedEvent.cut();
   });
 };
 
-const stopper = function (name) {
+const stopper = function (name): EventHandlerConfig {
   return run(name, function (component, simulatedEvent) {
     simulatedEvent.stop();
   });
@@ -128,7 +138,7 @@ const stopper = function (name) {
 const runOnAttached = runOnSourceName(SystemEvents.attachedToDom()) as RunOnSourceName;
 const runOnDetached = runOnSourceName(SystemEvents.detachedFromDom()) as RunOnSourceName;
 const runOnInit = runOnSourceName(SystemEvents.systemInit()) as RunOnSourceName;
-const runOnExecute = runOnName(SystemEvents.execute()) as RunOnSourceName;
+const runOnExecute = runOnName(SystemEvents.execute()) as RunOnName;
 
 export {
   derive,

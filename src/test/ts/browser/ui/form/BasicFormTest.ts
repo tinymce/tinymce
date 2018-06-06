@@ -49,6 +49,7 @@ UnitTest.asynctest('Basic Form', function () {
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
+      // TODO: FIXTYPES
       Form.sketch(function (parts) {
         return {
           dom: {

@@ -17,7 +17,7 @@ import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 import DemoRenders from './DemoRenders';
-import { SketchSpec, RawDomSchema } from 'ephox/alloy/api/ui/Sketcher';
+import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 
 const invalidation = function (validate, invalidUid) {
   return Invalidating.config({

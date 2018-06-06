@@ -3,7 +3,7 @@ import * as ActiveTabstopping from '../../behaviour/tabstopping/ActiveTabstoppin
 import TabstopSchema from '../../behaviour/tabstopping/TabstopSchema';
 
 export interface TabstoppingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: TabstoppingConfig) => { [key: string]: (any) => any };
+  config: (config: TabstoppingConfig) => Behaviour.NamedConfiguredBehaviour;
 }
 export interface TabstoppingConfig {
   // intentionally blank

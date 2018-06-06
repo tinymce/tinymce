@@ -6,7 +6,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 
 export interface PositioningBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: PositioningConfig) => { [key: string]: (any) => any };
+  config: (config: PositioningConfig) => Behaviour.NamedConfiguredBehaviour;
   position: <T>(component: AlloyComponent, anchor: AnchorPositioningConfig<T>, placee: AlloyComponent) => void;
   getMode: (component: AlloyComponent) => any;
 }

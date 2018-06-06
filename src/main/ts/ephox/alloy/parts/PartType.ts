@@ -1,8 +1,8 @@
 import { FieldPresence, FieldSchema, ValueSchema, DslType } from '@ephox/boulder';
 import { Adt, Fun, Id, Option } from '@ephox/katamari';
 import { DetailedSpec } from '../parts/AlloyParts';
-import { RawDomSchema } from '../api/ui/Sketcher';
 import { AdtInterface } from '../alien/TypeDefinitions';
+import { RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
 
 export type PartType = (spec: { [key: string]: any }) => DslType.FieldProcessorAdt;
 export interface BuildSpec {

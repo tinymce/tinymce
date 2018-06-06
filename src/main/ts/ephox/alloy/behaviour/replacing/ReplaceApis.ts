@@ -3,8 +3,10 @@ import { Compare, Insert } from '@ephox/sugar';
 
 import * as AriaFocus from '../../alien/AriaFocus';
 import * as Attachment from '../../api/system/Attachment';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 
-const set = function (component, replaceConfig, replaceState, data) {
+const set = function (component: AlloyComponent, replaceConfig: {}, replaceState: {}, data: AlloySpec[]) {
   Attachment.detachChildren(component);
 
   // NOTE: we may want to create a behaviour which allows you to switch

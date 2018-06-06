@@ -6,7 +6,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SugarElement } from '../../alien/TypeDefinitions';
 
 export interface ComposingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: ComposingConfig) => { [key: string]: (any) => any };
+  config: (config: ComposingConfig) => Behaviour.NamedConfiguredBehaviour;
   getCurrent: (sandbox: AlloyComponent | any) => Option<AlloyComponent>;
 }
 export interface ComposingConfig {

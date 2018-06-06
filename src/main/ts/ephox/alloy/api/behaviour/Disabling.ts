@@ -4,14 +4,14 @@ import * as DisableApis from '../../behaviour/disabling/DisableApis';
 import DisableSchema from '../../behaviour/disabling/DisableSchema';
 
 export interface DisableBehaviour extends Behaviour.AlloyBehaviour {
-  config: <T>(config: DisablingConfig<T>) => { [key: string]: (any) => any };
+  config: (config: DisablingConfig) =>  Behaviour.NamedConfiguredBehaviour;
   enable: (component, disableConfig?, disableState?) => void;
   disable: (component, disableConfig?, disableState?) => void;
   isDisabled: (component) => boolean;
   onLoad: (component, disableConfig, disableState) => void;
 }
 
-export interface DisablingConfig<T> {
+export interface DisablingConfig {
   active?: {
     exhibit: (base: {}, disableConfig: {DisableConfig}, disableState?) => any,
     events: (disableConfig, disableState) => any

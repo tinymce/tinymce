@@ -5,7 +5,7 @@ import FocusSchema from '../../behaviour/focusing/FocusSchema';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface FocusingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: FocusingConfig) => { [key: string]: (any) => any };
+  config: (config: FocusingConfig) => Behaviour.NamedConfiguredBehaviour;
   focus: (component: AlloyComponent) => void;
   isFocused: (component: AlloyComponent) => boolean;
 }

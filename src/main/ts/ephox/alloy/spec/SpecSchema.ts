@@ -1,21 +1,21 @@
 import { FieldSchema, Objects, ValueSchema, DslType } from '@ephox/boulder';
 import { Arr, Merger, Obj } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
+import { AlloySpec, ComponentSpec, RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
 
+import { AdtInterface } from '../alien/TypeDefinitions';
+import { EventHandlerConfig } from '../api/events/AlloyEvents';
 import * as Fields from '../data/Fields';
 import * as UiSubstitutes from './UiSubstitutes';
-import { AlloyComponentsSpec, RawDomSchema, AlloyMixedSpec } from '../api/ui/Sketcher';
-import { EventHandlerConfig } from '../api/events/AlloyEvents';
-import { AdtInterface } from '../alien/TypeDefinitions';
 
 export interface SpecSchemaStruct {
-  components: () => AlloyComponentsSpec;
+  components: () => ComponentSpec;
   containerBehaviours: () => ContainerBehaviours;
   dom: () => RawDomSchema;
   domModification: () => {}; // TODO: Mike
   eventOrder: () => EventHandlerConfig; // TODO: Mike test this
   events: () => EventHandlerConfig;
-  originalSpec: () => AlloyMixedSpec;
+  originalSpec: () => any; // For debugging purposes only
   uid: () => string;
   'debug.sketcher': () => {};
   // ... optional
@@ -110,7 +110,7 @@ const asRawOrDie = function (label, schema, spec, partSchemas, partUidsSchemas) 
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
-const asStructOrDie = function (label: string, schema: AdtInterface[], spec: AlloyMixedSpec, partSchemas: any[], partUidsSchemas: any[]): SpecSchemaStruct {
+const asStructOrDie = function (label: string, schema: AdtInterface[], spec: AlloySpec, partSchemas: any[], partUidsSchemas: any[]): SpecSchemaStruct {
   const baseS = base(label, partSchemas, partUidsSchemas, spec);
   return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };

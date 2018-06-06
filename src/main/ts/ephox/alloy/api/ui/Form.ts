@@ -1,6 +1,6 @@
 import { Arr, Merger, Obj, Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { CompositeSketch, SketchSpec, RawDomSchema } from '../../api/ui/Sketcher';
+import { CompositeSketch } from '../../api/ui/Sketcher';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
@@ -10,9 +10,10 @@ import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
+import { SketchSpec, RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
 
 const owner = 'form';
-
+// TODO: FIXTYPES
 export interface FormSketch {
   // why do forms not use or follow the Single or compositeSketch Type signature?
   sketch: (fSpec: FormfSpec) => SketchSpec;

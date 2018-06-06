@@ -7,7 +7,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SugarElement } from '../../alien/TypeDefinitions';
 
 export interface SlidingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: SlidingConfig) => { [key: string]: (any) => any };
+  config: (config: SlidingConfig) => Behaviour.NamedConfiguredBehaviour;
   grow?: (component: AlloyComponent) => boolean;
   shrink?: (component: AlloyComponent) => void;
   immediateShrink?: (component: AlloyComponent) => void;

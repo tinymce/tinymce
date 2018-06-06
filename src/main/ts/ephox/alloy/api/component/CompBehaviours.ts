@@ -2,8 +2,8 @@ import { Objects } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
 
 import BehaviourBlob from '../../behaviour/common/BehaviourBlob';
-import { SketchSpec } from '../../api/ui/Sketcher';
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { AlloySpec, SimpleOrSketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 
 export interface ComponentBehaviour {
   data: {
@@ -24,7 +24,7 @@ const getBehaviours = function (spec) {
   });
 };
 
-const generateFrom = function (spec: SketchSpec, all: AlloyBehaviour[]): ComponentBehaviour {
+const generateFrom = function (spec: SimpleOrSketchSpec, all: AlloyBehaviour[]): ComponentBehaviour {
   return BehaviourBlob.generateFrom(spec, all);
 };
 

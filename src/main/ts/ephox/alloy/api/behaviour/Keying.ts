@@ -9,7 +9,7 @@ import { SimulatedEvent } from '../../events/SimulatedEvent';
 import { FocusManagers } from '../../api/Main';
 
 export interface KeyingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: KeyingConfig) => { [key: string]: (any) => any };
+  config: (config: KeyingConfig) => Behaviour.NamedConfiguredBehaviour;
   focusIn: (component: AlloyComponent) => void;
   setGridSize: (
     component: AlloyComponent,

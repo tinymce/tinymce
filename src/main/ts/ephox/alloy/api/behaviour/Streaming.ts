@@ -6,7 +6,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
 
 export interface StreamingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: StreamingConfig) => { [key: string]: (any) => any };
+  config: (config: StreamingConfig) => Behaviour.NamedConfiguredBehaviour;
 }
 
 export interface StreamingConfig {

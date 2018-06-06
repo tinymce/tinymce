@@ -9,7 +9,7 @@ import { Component } from '../../api/Main';
 import { SugarElement } from '../../alien/TypeDefinitions';
 
 export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour {
-  config: <T>(config: InvalidatingConfig<T>) => { [key: string]: (any) => any };
+  config: (config: InvalidatingConfig) => Behaviour.NamedConfiguredBehaviour;
   markValid: (Component: AlloyComponent) => void;
   markInvalid: (Component: AlloyComponent) => void;
   query: <T>(Component: AlloyComponent) => Future<T>;
@@ -17,7 +17,7 @@ export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour {
   validation: (validate: <T, E>(v: string) => Result<T, E>) => (component: AlloyComponent) => any;
 }
 
-export interface InvalidatingConfig<T> {
+export interface InvalidatingConfig {
   invalidClass: string;
   notify?: {
     getContainer?: (input: AlloyComponent) => Option<SugarElement>;

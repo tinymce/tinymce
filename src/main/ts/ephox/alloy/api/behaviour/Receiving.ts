@@ -3,7 +3,7 @@ import * as ActiveReceiving from '../../behaviour/receiving/ActiveReceiving';
 import ReceivingSchema from '../../behaviour/receiving/ReceivingSchema';
 
 export interface ReceivingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: ReceivingConfig) => { [key: string]: (any) => any };
+  config: (config: ReceivingConfig) => Behaviour.NamedConfiguredBehaviour;
 }
 
 export interface ReceivingConfig {

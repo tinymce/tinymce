@@ -5,7 +5,7 @@ import * as DragState from '../../dragging/common/DragState';
 import { SugarElement } from '../../alien/TypeDefinitions';
 
 export interface PinchingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: PinchingConfig) => { [key: string]: (any) => any };
+  config: (config: PinchingConfig) => Behaviour.NamedConfiguredBehaviour;
 }
 
 export interface PinchingConfig {

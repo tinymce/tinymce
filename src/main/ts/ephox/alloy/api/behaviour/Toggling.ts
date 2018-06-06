@@ -5,7 +5,7 @@ import ToggleSchema from '../../behaviour/toggling/ToggleSchema';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface TogglingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: TogglingConfig) => { [key: string]: (any) => any };
+  config: (config: TogglingConfig) => Behaviour.NamedConfiguredBehaviour;
   onLoad?: (component: AlloyComponent) => void;
   toggle?: (component: AlloyComponent) => void;
   isOn?: (component: AlloyComponent) => boolean;

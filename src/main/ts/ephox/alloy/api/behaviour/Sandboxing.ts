@@ -6,13 +6,13 @@ import * as SandboxState from '../../behaviour/sandboxing/SandboxState';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SketchSpec } from '../../api/ui/Sketcher';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 
 export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: SandboxingConfig) => { [key: string]: (any) => any };
+  config: (config: SandboxingConfig) => Behaviour.NamedConfiguredBehaviour;
   cloak: (sandbox: AlloyComponent) => void;
   decloak: (sandbox: AlloyComponent) => void;
-  open: (sandbox: AlloyComponent, thing: SketchSpec) => AlloyComponent;
+  open: (sandbox: AlloyComponent, thing: AlloySpec) => AlloyComponent;
   close: (sandbox: AlloyComponent) => void;
   isOpen: (sandbox: AlloyComponent) => boolean;
   isPartOf: (sandbox: AlloyComponent, candidate: () => SugarElement) => boolean;

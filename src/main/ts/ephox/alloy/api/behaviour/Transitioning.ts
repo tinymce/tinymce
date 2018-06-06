@@ -8,7 +8,7 @@ import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';
 import * as Behaviour from './Behaviour';
 
 export interface TransitioningBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: TransitioningConfig) => { [key: string]: (any) => any };
+  config: (config: TransitioningConfig) => Behaviour.NamedConfiguredBehaviour;
   findRoute?: <T>(comp: AlloyComponent, route: TransitionApis.TransitionRoute) => Option<T>;
   disableTransition?: (comp: AlloyComponent) => void;
   getCurrentRoute?: any;

@@ -7,21 +7,26 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Result } from '@ephox/katamari';
 
 export interface RepresentingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: RepresentingConfig) => { [key: string]: (any) => any };
+  config: (config: RepresentingConfig) => Behaviour.NamedConfiguredBehaviour;
   setValueFrom: (component: AlloyComponent, source: AlloyComponent) => void;
+  setValue: (component: AlloyComponent, value: any) => void;
+  getValue: (component: AlloyComponent) => any;
 }
+
+// NOTE: I'm not sure we have any guarantees on what this can be.
+export type RepresentingData = any;
 
 export interface RepresentingConfig {
   store: {
     mode: string,
     initialValue?: any,
-    getFallbackEntry?: (key: string) => { value: string, text: string },
+    getFallbackEntry?: (key: string) => RepresentingData,
     getDataKey?: (typeAhead: AlloyComponent) => string,
-    setData?: (typeAhead: AlloyComponent, data: { text, value: string } ) => void;
+    setData?: (typeAhead: AlloyComponent, data: RepresentingData ) => void;
     getValue?: (...any) => any;
     setValue?: (...any) => void;
   };
-  onSetValue?: <T, E>() => Result<T, E>;
+  onSetValue?: (comp: AlloyComponent, data: RepresentingData) => void;
 }
 
 // The self-reference is clumsy.

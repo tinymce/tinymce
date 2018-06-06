@@ -4,7 +4,7 @@ import SwapSchema from '../../behaviour/swapping/SwapSchema';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface SwappingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: SwappingConfig) => { [key: string]: (any) => any };
+  config: (config: SwappingConfig) => Behaviour.NamedConfiguredBehaviour;
   toAlpha?: (componenet: AlloyComponent) => void;
   toOmega?: (componenet: AlloyComponent) => void;
   isAlpha?: (componenet: AlloyComponent) => boolean;

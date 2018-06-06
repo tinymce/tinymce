@@ -8,7 +8,7 @@ import * as DragState from '../../dragging/common/DragState';
 import * as Behaviour from './Behaviour';
 
 export interface DraggingBehaviour extends Behaviour.AlloyBehaviour {
-  config: <T>(config: DraggingConfig<T>) => { [key: string]: (any) => any };
+  config: (config: DraggingConfig) => Behaviour.NamedConfiguredBehaviour;
   snap: (SnapConfig) => any;
 }
 
@@ -30,7 +30,7 @@ export interface SnapBehaviour {
   lazyViewport?: (component: AlloyComponent) => any;
 }
 
-export interface DraggingConfig<T> {
+export interface DraggingConfig {
   mode: DraggingMode;
   blockerClass?: string;                                // modes: mouse
   snaps?: SnapBehaviour;                                // modes: touch, mouse
