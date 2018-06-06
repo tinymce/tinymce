@@ -3,34 +3,38 @@ import { Attr, Class, Css, Height, Location, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as DragCoord from '../../api/data/DragCoord';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { DockingContext, ViewportBox, DockingConfig } from 'ephox/alloy/behaviour/docking/DockingTypes';
+import { SugarElement, PositionCoordinates } from 'ephox/alloy/alien/TypeDefinitions';
+import { Origins } from 'ephox/alloy/positioning/layout/Origins';
 
-const appear = function (component, contextualInfo) {
+const appear = function (component: AlloyComponent, contextualInfo: DockingContext): void {
   Class.add(component.element(), contextualInfo.transitionClass());
   Class.remove(component.element(), contextualInfo.fadeOutClass());
   Class.add(component.element(), contextualInfo.fadeInClass());
 };
 
-const disappear = function (component, contextualInfo) {
+const disappear = function (component: AlloyComponent, contextualInfo: DockingContext): void {
   Class.add(component.element(), contextualInfo.transitionClass());
   Class.remove(component.element(), contextualInfo.fadeInClass());
   Class.add(component.element(), contextualInfo.fadeOutClass());
 };
 
-const isPartiallyVisible = function (box, viewport) {
+const isPartiallyVisible = function (box: ViewportBox, viewport: ViewportBox): boolean {
   return box.y() < viewport.bottom() && box.bottom() > viewport.y();
 };
 
-const isCompletelyVisible = function (box, viewport) {
+const isCompletelyVisible = function (box: ViewportBox, viewport: ViewportBox): boolean {
   return box.y() >= viewport.y() && box.bottom() <= viewport.bottom();
 };
 
-const getAttr = function (elem, attr) {
+const getAttr = function (elem: SugarElement, attr: string): Option<number> {
   return Attr.has(elem, attr) ? Option.some(
     parseInt(Attr.get(elem, attr), 10)
   ) : Option.none();
 };
 
-const getPrior = function (component, dockInfo) {
+const getPrior = function (component: AlloyComponent, dockInfo: DockingConfig): Option<ViewportBox> {
   const elem = component.element();
   return getAttr(elem, dockInfo.leftAttr()).bind(function (left) {
     return getAttr(elem, dockInfo.topAttr()).map(function (top) {
@@ -42,19 +46,19 @@ const getPrior = function (component, dockInfo) {
   });
 };
 
-const setPrior = function (component, dockInfo, absLeft, absTop) {
+const setPrior = function (component: AlloyComponent, dockInfo: DockingConfig, absLeft: string, absTop: string): void {
   const elem = component.element();
   Attr.set(elem, dockInfo.leftAttr(), absLeft);
   Attr.set(elem, dockInfo.topAttr(), absTop);
 };
 
-const clearPrior = function (component, dockInfo) {
+const clearPrior = function (component: AlloyComponent, dockInfo: DockingConfig): void {
   const elem = component.element();
   Attr.remove(elem, dockInfo.leftAttr());
   Attr.remove(elem, dockInfo.topAttr());
 };
 
-const morphToAbsolute = function (component, dockInfo, viewport) {
+const morphToAbsolute = function (component: AlloyComponent, dockInfo: DockingConfig, viewport: ViewportBox): Option<DragCoord.CoordAdt> {
   return getPrior(component, dockInfo).bind(function (box) {
     if (isCompletelyVisible(box, viewport)) {
       // Revert it back to absolute
@@ -68,7 +72,7 @@ const morphToAbsolute = function (component, dockInfo, viewport) {
   });
 };
 
-const morphToFixed = function (component, dockInfo, viewport, scroll, origin) {
+const morphToFixed = function (component: AlloyComponent, dockInfo: DockingConfig, viewport: ViewportBox, scroll: PositionCoordinates, origin: PositionCoordinates): Option<DragCoord.CoordAdt> {
   const loc = Location.absolute(component.element());
   const box = Boxes.bounds(loc.left(), loc.top(), Width.get(component.element()), Height.get(component.element()));
   if (! isCompletelyVisible(box, viewport)) {
@@ -88,7 +92,7 @@ const morphToFixed = function (component, dockInfo, viewport, scroll, origin) {
   }
 };
 
-const getMorph = function (component, dockInfo, viewport, scroll, origin) {
+const getMorph = function (component: AlloyComponent, dockInfo: DockingConfig, viewport: ViewportBox, scroll: PositionCoordinates, origin: PositionCoordinates): Option<DragCoord.CoordAdt> {
   const isDocked = Css.getRaw(component.element(), 'position').is('fixed');
   return isDocked ? morphToAbsolute(component, dockInfo, viewport) : morphToFixed(component, dockInfo, viewport, scroll, origin);
 };
