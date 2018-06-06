@@ -189,7 +189,7 @@ const demoToolbarGroupRender = function (group) {
     },
 
     components: [
-      ToolbarGroup.parts().items()
+      ToolbarGroup.parts().items({ })
     ],
 
     items: spec.items,

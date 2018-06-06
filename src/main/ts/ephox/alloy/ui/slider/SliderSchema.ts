@@ -8,7 +8,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
-const SliderSchema = [
+const SliderSchema :DslType.FieldProcessorAdt[] = [
   FieldSchema.strict('min'),
   FieldSchema.strict('max'),
   FieldSchema.defaulted('stepSize', 1),
@@ -25,7 +25,7 @@ const SliderSchema = [
 ].concat(! isTouch ? [
   // Only add if not on a touch device
   FieldSchema.state('mouseIsDown', function () { return Cell(false); })
-] : [ ]);
+] : [ ])
 
 export {
   SliderSchema

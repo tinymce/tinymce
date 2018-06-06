@@ -7,10 +7,10 @@ import * as PartSubstitutes from './PartSubstitutes';
 import * as PartType from './PartType';
 import { SpecSchemaStruct } from '../spec/SpecSchema';
 import { AlloyComponent } from '../api/component/ComponentApi';
-import { RawDomSchema, SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { RawDomSchema, SketchSpec, AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 
 export interface GeneratedParts {
-  [key: string]: (config: RawDomSchema) => SketchSpec;
+  [key: string]: (config: any) => AlloySpec;
 }
 
 export interface GeneratedSinglePart {
@@ -19,6 +19,22 @@ export interface GeneratedSinglePart {
   owner: string;
   uiType: string;
   validated: {};
+}
+
+export interface UnconfiguredPart {
+  name: string;
+  owner: string;
+  uiType: string;
+}
+
+export interface ConfiguredPart extends UnconfiguredPart {
+  config: { };
+  validated: { }
+}
+
+export interface Substitutions {
+  internals: () => any; // TODO FIXTYPES
+  externals: () => any;
 }
 
 export interface DetailedSpec extends SpecSchemaStruct {
@@ -40,13 +56,13 @@ const generate = function (owner: string, parts: DslType.FieldProcessorAdt[]): G
   const r = { };
   Arr.each(parts, function (part) {
     PartType.asNamedPart(part).each(function (np) {
-      const g = doGenerateOne(owner, np.pname());
+      const g: UnconfiguredPart = doGenerateOne(owner, np.pname());
       r[np.name()] = function (config) {
         const validated = ValueSchema.asRawOrDie('Part: ' + np.name() + ' in ' + owner, ValueSchema.objOf(np.schema()), config);
         return Merger.deepMerge(g, {
           config,
           validated
-        });
+        }) as ConfiguredPart;
       };
     });
   });
@@ -54,7 +70,7 @@ const generate = function (owner: string, parts: DslType.FieldProcessorAdt[]): G
 };
 
 // Does not have the config.
-const doGenerateOne = function (owner, pname) {
+const doGenerateOne = function (owner, pname): UnconfiguredPart {
   return {
     uiType: UiSubstitutes.placeholder(),
     owner,
@@ -62,7 +78,7 @@ const doGenerateOne = function (owner, pname) {
   };
 };
 
-const generateOne = function (owner: string, pname: string, config: RawDomSchema): GeneratedSinglePart {
+const generateOne = function (owner: string, pname: string, config: RawDomSchema): ConfiguredPart {
   return {
     uiType: UiSubstitutes.placeholder(),
     owner,
@@ -89,15 +105,15 @@ const schemas = function (parts: PartType.PartTypeAdt[]): DslType.FieldProcessor
   });
 };
 
-const names = function (parts) {
+const names = function (parts): string[] {
   return Arr.map(parts, PartType.name);
 };
 
-const substitutes = function (owner: string, detail: DetailedSpec, parts: DslType.FieldProcessorAdt[]): { internals: () => {}, externals: () => {} } {
+const substitutes = function (owner: string, detail: DetailedSpec, parts: DslType.FieldProcessorAdt[]): Substitutions {
   return PartSubstitutes.subs(owner, detail, parts);
 };
 
-const components = function (owner: string, detail: DetailedSpec, internals: { [key: string]: DslType.FieldProcessorAdt }): SketchSpec[] {
+const components = function (owner: string, detail: DetailedSpec, internals: { [key: string]: DslType.FieldProcessorAdt }): AlloySpec[] {
   return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), internals);
 };
 
@@ -123,14 +139,14 @@ const getParts = function (component: AlloyComponent, detail: DetailedSpec, part
   return Obj.map(r, Fun.constant);
 };
 
-const getAllParts = function (component: AlloyComponent, detail: DetailedSpec) {
+const getAllParts = (component: AlloyComponent, detail: DetailedSpec): Record<string, () => Result<AlloyComponent, string>> => {
   const system = component.getSystem();
   return Obj.map(detail.partUids(), function (pUid, k) {
     return Fun.constant(system.getByUid(pUid));
   });
 };
 
-const getPartsOrDie = function (component: AlloyComponent, detail: DetailedSpec, partKeys: string[]): { [key: string]: () => AlloyComponent } {
+const getPartsOrDie = (component: AlloyComponent, detail: DetailedSpec, partKeys: string[]): Record<string, () => AlloyComponent> => {
   const r = { };
   const uids = detail.partUids();
 
@@ -143,7 +159,7 @@ const getPartsOrDie = function (component: AlloyComponent, detail: DetailedSpec,
   return Obj.map(r, Fun.constant);
 };
 
-const defaultUids = function (baseUid: string, partTypes) {
+const defaultUids = function (baseUid: string, partTypes): Record<string, string> {
   const partNames = names(partTypes);
 
   return Objects.wrapAll(
@@ -153,7 +169,7 @@ const defaultUids = function (baseUid: string, partTypes) {
   );
 };
 
-const defaultUidsSchema = function (partTypes) {
+const defaultUidsSchema = function (partTypes): DslType.FieldProcessorAdt {
   return FieldSchema.field(
     'partUids',
     'partUids',

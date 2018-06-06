@@ -71,7 +71,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', function () {
               innerHtml: 'Touch button'
             }
           },
-          TouchMenu.parts().sink()
+          TouchMenu.parts().sink({ })
         ],
 
         parts: {

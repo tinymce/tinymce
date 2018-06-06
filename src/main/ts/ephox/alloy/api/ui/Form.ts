@@ -10,22 +10,22 @@ import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { SketchSpec, RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
+import { SketchSpec, RawDomSchema, SimpleOrSketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 
 const owner = 'form';
 // TODO: FIXTYPES
 export interface FormSketch {
   // why do forms not use or follow the Single or compositeSketch Type signature?
-  sketch: (fSpec: FormfSpec) => SketchSpec;
+  sketch: (fSpec: FormSpecBuilder) => SketchSpec;
   getField: (component: AlloyComponent, key: string) => Option<AlloyComponent>;
 }
 
 export interface FormParts {
-  field: (name: string, config: SketchSpec) => AlloyParts.GeneratedSinglePart;
+  field: (name: string, config: SimpleOrSketchSpec) => AlloyParts.ConfiguredPart;
   record(): string[];
 }
 
-export type FormfSpec = (FormParts) => RawDomSchema;
+export type FormSpecBuilder = (FormParts) => any;
 
 const schema = [
   SketchBehaviours.field('formBehaviours', [ Representing ])
@@ -35,11 +35,12 @@ const getPartName = function (name) {
   return '<alloy.field.' + name + '>';
 };
 
-const sketch = function (fSpec: FormfSpec): SketchSpec {
+// TODO: FIXTYPES
+const sketch = function (fSpec: FormSpecBuilder): SketchSpec {
   const parts = (function () {
     const record: string[] = [ ];
 
-    const field = function (name: string, config: SketchSpec): AlloyParts.GeneratedSinglePart {
+    const field = function (name: string, config: any): AlloyParts.ConfiguredPart {
       record.push(name);
       return AlloyParts.generateOne(owner, getPartName(name), config);
     };

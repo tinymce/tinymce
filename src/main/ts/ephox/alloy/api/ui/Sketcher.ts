@@ -7,11 +7,11 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
 import { SketchSpec, AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import { GeneratedParts } from '../../parts/AlloyParts';
 
 export interface SingleSketch {
   name: () => string;
   configFields: () => DslType.FieldProcessorAdt[];
-  partFields: () => DslType.FieldProcessorAdt[];
   sketch: (spec: Record<string, any>) => SketchSpec;
   factory: UiSketcher.SingleFactory;
   [key: string]: Function;
@@ -22,13 +22,10 @@ export interface CompositeSketch  {
   configFields: () => DslType.FieldProcessorAdt[];
   partFields: () => DslType.FieldProcessorAdt[];
   sketch: (spec: Record<string, any>) => SketchSpec;
-
-  parts: () => any;
+  parts: () => GeneratedParts;
   factory: UiSketcher.CompositeFactory;
   [key: string]: Function;
 }
-
-// TODO: Morgan -> check these, should domModification and eventOrder be part of RawDomSchema too?
 
 export function isSketchSpec(spec: AlloySpec): spec is SketchSpec {
   return (<SketchSpec> spec).uid !== undefined;
@@ -84,7 +81,7 @@ const composite = function (rawConfig) {
   };
 
   // These are constructors that will store their configuration.
-  const parts = AlloyParts.generate(config.name, config.partFields);
+  const parts: GeneratedParts = AlloyParts.generate(config.name, config.partFields);
 
   const apis = Obj.map(config.apis, GuiTypes.makeApi);
   const extraApis = Obj.map(config.extraApis, function (f, k) {
