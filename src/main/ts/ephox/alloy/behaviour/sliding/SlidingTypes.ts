@@ -1,10 +1,11 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
 
 export interface SlidingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: SlidingConfig) => Behaviour.NamedConfiguredBehaviour;
+  config: (config: SlidingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
   grow?: (component: AlloyComponent) => boolean;
   shrink?: (component: AlloyComponent) => void;
   immediateShrink?: (component: AlloyComponent) => void;
@@ -18,6 +19,27 @@ export interface SlidingBehaviour extends Behaviour.AlloyBehaviour {
 }
 
 export interface SlidingConfig {
+  expanded: () => boolean;
+  openClass: () => string;
+  closedClass: () => string;
+  dimension: () => {
+    property: () => string;
+  };
+  onGrown: () => (AlloyComponent) => void;
+  onShrunk: () => (AlloyComponent) => void;
+  shrinkingClass: () => string;
+  growingClass: () => string;
+  onStartGrow: () => (AlloyComponent) => void;
+  onStartShrink: () => (AlloyComponent) => void;
+  getAnimationRoot: () => Option<(AlloyComponent) => SugarElement>;
+    
+};
+
+export interface SlidingState {
+  isExpanded: () => boolean;
+};
+
+export interface SlidingConfigSpec {
   dimension: {
     property: string
   };
