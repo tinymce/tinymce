@@ -9,6 +9,7 @@
  */
 
 import { AddOnManager } from './AddOnManager';
+import Annotator from './Annotator';
 import { Editor } from './Editor';
 import EditorCommands from './EditorCommands';
 import EditorManager from './EditorManager';
@@ -117,6 +118,7 @@ const publicApi = {
 
   Env,
   AddOnManager,
+  Annotator,
   Formatter,
   UndoManager,
   EditorCommands,

@@ -33,7 +33,7 @@ const each = Tools.each, extend = Tools.extend;
 const map = Tools.map, inArray = Tools.inArray;
 
 export default function (editor: Editor) {
-  let dom: DOMUtils, selection: Selection, formatter;
+  let dom: DOMUtils, selection: Selection, formatter, annotator;
   const commands = { state: {}, exec: {}, value: {} };
   let settings = editor.settings,
     bookmark;
@@ -43,6 +43,7 @@ export default function (editor: Editor) {
     selection = editor.selection;
     settings = editor.settings;
     formatter = editor.formatter;
+    annotator = editor.annotator;
   });
 
   /**
@@ -414,6 +415,10 @@ export default function (editor: Editor) {
 
       editor.setContent(editor.getContent());
       selection.moveToBookmark(bookmark);
+    },
+
+    'mceAnnotation' (command, ui, value) {
+      annotator.register();
     },
 
     'mceRemoveNode' (command, ui, value) {

@@ -60,6 +60,7 @@ export type AnyFunction = (...x: any[]) => any;
 
 export interface Editor {
   $: any;
+  annotator: any;
   baseURI: any;
   bodyElement: HTMLElement;
   bookmark: any;

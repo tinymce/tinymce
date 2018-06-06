@@ -6,6 +6,7 @@
       "tinymce.core.api.AddOnManager",
       "tinymce.core.api.dom.BookmarkManager",
       "tinymce.core.api.dom.RangeUtils",
+      "tinymce.core.api.Annotator",
       "tinymce.core.api.FocusManager",
       "tinymce.core.api.Formatter",
       "tinymce.core.api.WindowManager",
