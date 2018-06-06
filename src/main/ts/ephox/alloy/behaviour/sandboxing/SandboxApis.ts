@@ -1,11 +1,15 @@
 import { Attr, Css } from '@ephox/sugar';
-
+import { Option } from '@ephox/katamari';
 import { Positioning } from '../../api/behaviour/Positioning';
 import * as Attachment from '../../api/system/Attachment';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SandboxingConfig, SandboxingState } from 'ephox/alloy/behaviour/sandboxing/SandboxingTypes';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
 // NOTE: A sandbox should not start as part of the world. It is expected to be
 // added to the sink on rebuild.
-const rebuild = function (sandbox, sConfig, sState, data) {
+const rebuild = function (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data: AlloySpec) {
   sState.get().each(function (data) {
     // If currently has data, so it hasn't been removed yet. It is
     // being "re-opened"
@@ -23,13 +27,13 @@ const rebuild = function (sandbox, sConfig, sState, data) {
 };
 
 // Open sandbox transfers focus to the opened menu
-const open = function (sandbox, sConfig, sState, data) {
+const open = function (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data) {
   const state = rebuild(sandbox, sConfig, sState, data);
   sConfig.onOpen()(sandbox, state);
   return state;
 };
 
-const close = function (sandbox, sConfig, sState) {
+const close = function (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) {
   sState.get().each(function (data) {
     Attachment.detachChildren(sandbox);
     Attachment.detach(sandbox);
@@ -38,17 +42,17 @@ const close = function (sandbox, sConfig, sState) {
   });
 };
 
-const isOpen = function (sandbox, sConfig, sState) {
+const isOpen = function (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) {
   return sState.isOpen();
 };
 
-const isPartOf = function (sandbox, sConfig, sState, queryElem) {
+const isPartOf = function (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, queryElem: SugarElement) {
   return isOpen(sandbox, sConfig, sState) && sState.get().exists(function (data) {
     return sConfig.isPartOf()(sandbox, data, queryElem);
   });
 };
 
-const getState = function (sandbox, sConfig, sState) {
+const getState = function (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) {
   return sState.get();
 };
 
@@ -70,7 +74,7 @@ const restore = function (sandbox, cssKey, attr) {
   }
 };
 
-const cloak = function (sandbox, sConfig, sState) {
+const cloak = function (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) {
   const sink = sConfig.getAttachPoint()();
   // Use the positioning mode of the sink, so that it does not interfere with the sink's positioning
   // We add it here to stop it causing layout problems.
@@ -78,7 +82,7 @@ const cloak = function (sandbox, sConfig, sState) {
   store(sandbox, 'visibility', sConfig.cloakVisibilityAttr(), 'hidden');
 };
 
-const decloak = function (sandbox, sConfig, sState) {
+const decloak = function (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) {
   restore(sandbox, 'visibility', sConfig.cloakVisibilityAttr());
 };
 

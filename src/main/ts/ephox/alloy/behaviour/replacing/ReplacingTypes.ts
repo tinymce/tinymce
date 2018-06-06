@@ -4,13 +4,15 @@ import { Option } from '@ephox/katamari';
 
 
 export interface ReplacingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: ReplacingConfig) => Behaviour.NamedConfiguredBehaviour;
+  config: (config: ReplacingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
   append: (compontent: AlloyComponent, replaceConfig: {}) => void;
   prepend: (compontent: AlloyComponent, replaceConfig: {}) => void;
   remove: (compontent: AlloyComponent, replaceConfig: {}) => void;
   set: (compontent: AlloyComponent, replaceConfig: {}) => void;
   contents: (compontent: AlloyComponent, replaceConfig?: {}) => AlloyComponent[];
 }
+
+export interface ReplacingConfigSpec { };
 
 export interface ReplacingConfig {
   // Intentionally Blank
