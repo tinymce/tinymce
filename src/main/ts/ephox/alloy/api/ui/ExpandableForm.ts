@@ -9,6 +9,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import { Form } from './Form';
 import * as Sketcher from './Sketcher';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 
 const runOnExtra = function (detail, operation) {
   return function (anyComp) {
@@ -16,7 +17,7 @@ const runOnExtra = function (detail, operation) {
   };
 };
 
-const factory = function (detail, components, spec, _externals) {
+const factory = function (detail, components, spec, _externals): SketchSpec {
   const getParts = function (form) {
     return AlloyParts.getPartsOrDie(form, detail, [ 'minimal', 'extra' ]);
   };
