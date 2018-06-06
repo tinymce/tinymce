@@ -29,7 +29,7 @@ export interface InlineViewAnchor {
   root?: SugarElement;
 }
 
-const factory = function (detail, spec) {
+const factory = function (detail, spec): SketchSpec {
   const isPartOfRelated = function (container, queryElem) {
     const related = detail.getRelated()(container);
     return related.exists(function (rel) {
