@@ -8,8 +8,10 @@ import * as DragMovement from '../common/DragMovement';
 import SnapSchema from '../common/SnapSchema';
 import * as Snappables from '../snap/Snappables';
 import * as TouchData from './TouchData';
+import { TouchDraggingConfigSpec, TouchDraggingConfig } from 'ephox/alloy/dragging/touch/TouchDraggingTypes';
+import { DraggingState } from 'ephox/alloy/dragging/common/DraggingTypes';
 
-const handlers = function (dragConfig, dragState) {
+const handlers = function (dragConfig: TouchDraggingConfig, dragState: DraggingState): AlloyEvents.EventHandlerConfigRecord {
 
   return AlloyEvents.derive([
     AlloyEvents.stopper(NativeEvents.touchstart()),

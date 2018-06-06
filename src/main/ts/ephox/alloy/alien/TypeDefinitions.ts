@@ -17,7 +17,7 @@ export interface SugarElement {
 export interface SugarEvent {
   kill: () => void;
   prevent: () => void;
-  raw: () => Event;
+  raw: () => Event | any; // any used for things like "touches"
   stop: () => void;
   target: () => SugarElement;
   x: () => number;

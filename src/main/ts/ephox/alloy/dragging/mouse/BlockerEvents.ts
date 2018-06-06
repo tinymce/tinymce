@@ -1,7 +1,8 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
+import { DragApi } from 'ephox/alloy/dragging/mouse/MouseDraggingTypes';
 
-const init = function (dragApi) {
+const init = function (dragApi: DragApi): AlloyEvents.EventHandlerConfigRecord {
   return AlloyEvents.derive([
     // When the user clicks on the blocker, something has probably gone slightly
     // wrong, so we'll just drop for safety. The blocker should really only

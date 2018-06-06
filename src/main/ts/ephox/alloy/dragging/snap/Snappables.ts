@@ -2,6 +2,10 @@ import { Fun, Option, Options } from '@ephox/katamari';
 
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Presnaps from './Presnaps';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SnapsConfig, SnapConfig, SnapOutput, SnapPin } from 'ephox/alloy/dragging/common/DraggingTypes';
+import { PositionCoordinates } from 'ephox/alloy/alien/TypeDefinitions';
+import { CoordAdt } from '../../api/data/DragCoord';
 
 // Types of coordinates
 // Location: This is the position on the screen including scroll.
@@ -35,7 +39,7 @@ import * as Presnaps from './Presnaps';
 // that we put on it before we snapped it into place (before dropping). Once it's dropped, the presnap
 // position will go away. It is used to avoid the situation where you can't escape the snap unless you
 // move the mouse really quickly :)
-const getCoords = function (component, snapInfo, coord, delta) {
+const getCoords = function (component: AlloyComponent, snapInfo: SnapsConfig, coord: CoordAdt, delta: PositionCoordinates): CoordAdt {
   return Presnaps.get(component, snapInfo).fold(function () {
     return coord;
   }, function (fixed) {
@@ -44,7 +48,7 @@ const getCoords = function (component, snapInfo, coord, delta) {
   });
 };
 
-const moveOrSnap = function (component, snapInfo, coord, delta, scroll, origin) {
+const moveOrSnap = function (component, snapInfo, coord, delta, scroll, origin): SnapPin {
   const newCoord = getCoords(component, snapInfo, coord, delta);
   const snap = findSnap(component, snapInfo, newCoord, scroll, origin);
 
@@ -60,7 +64,7 @@ const moveOrSnap = function (component, snapInfo, coord, delta, scroll, origin) 
     // var newfixed = graph.boundToFixed(theatre, element, loc.left(), loc.top(), fixed.left(), fixed.top(), height);
     // presnaps.set(element, 'fixed', newfixed.left(), newfixed.top());
     // return { position: 'fixed', left: newfixed.left() + 'px', top: newfixed.top() + 'px' };
-  }, function (spanned) {
+  }, function (spanned: SnapOutput) {
     return {
       coord: spanned.output(),
       extra: spanned.extra()
@@ -68,7 +72,7 @@ const moveOrSnap = function (component, snapInfo, coord, delta, scroll, origin) 
   });
 };
 
-const stopDrag = function (component, snapInfo) {
+const stopDrag = function (component: AlloyComponent, snapInfo: SnapsConfig): void {
   Presnaps.clear(component, snapInfo);
 };
 
@@ -76,7 +80,7 @@ const stopDrag = function (component, snapInfo) {
 // y: the absolute position.top of the draggable element
 // deltaX: the amount the mouse has moved horizontally
 // deltaY: the amount the mouse has moved vertically
-const findSnap = function (component, snapInfo, newCoord, scroll, origin) {
+const findSnap = function (component: AlloyComponent, snapInfo: SnapsConfig, newCoord: DragCoord.CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates): Option<SnapOutput> {
   // You need to pass in the absX and absY so that they can be used for things which only care about snapping one axis and keeping the other one.
   const snaps = snapInfo.getSnapPoints()(component);
 

@@ -3,17 +3,17 @@ import { Fun } from '@ephox/katamari';
 import { Scroll } from '@ephox/sugar';
 
 import * as Fields from '../../data/Fields';
+import { ViewportBox } from 'ephox/alloy/behaviour/docking/DockingTypes';
 
-const defaultLazyViewport = function () {
+const defaultLazyViewport = (): ViewportBox => {
   const scroll = Scroll.get();
 
   return {
     x: scroll.left,
     y: scroll.top,
-    w: Fun.constant(window.innerWidth),
-    h: Fun.constant(window.innerHeight),
-    fx: Fun.constant(0),
-    fy: Fun.constant(0)
+    width: Fun.constant(window.innerWidth),
+    height: Fun.constant(window.innerHeight),
+    bottom: Fun.constant(scroll.top + window.innerHeight)
   };
 };
 
