@@ -1,4 +1,4 @@
-import { FieldSchema, Objects, DslType } from '@ephox/boulder';
+import { FieldSchema, Objects, DslType, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
@@ -7,7 +7,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as PartType from '../../parts/PartType';
 import { PartTypeAdt } from '../../parts/PartType';
 
-const schema: () => DslType.FieldProcessorAdt[] = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('prefix', 'form-field'),
   SketchBehaviours.field('fieldBehaviours', [ Composing, Representing ])
 ]);

@@ -1,4 +1,4 @@
-import { DslType, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { DslType, FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Merger, Obj } from '@ephox/katamari';
 import { EventHandlerConfig } from '../../api/events/AlloyEvents';
 
@@ -11,7 +11,7 @@ import { GeneratedParts } from '../../parts/AlloyParts';
 
 export interface SingleSketch {
   name: () => string;
-  configFields: () => DslType.FieldProcessorAdt[];
+  configFields: () => FieldProcessorAdt[];
   sketch: (spec: Record<string, any>) => SketchSpec;
   factory: UiSketcher.SingleFactory;
   [key: string]: Function;
@@ -19,8 +19,8 @@ export interface SingleSketch {
 
 export interface CompositeSketch  {
   name: () => string;
-  configFields: () => DslType.FieldProcessorAdt[];
-  partFields: () => DslType.FieldProcessorAdt[];
+  configFields: () => FieldProcessorAdt[];
+  partFields: () => FieldProcessorAdt[];
   sketch: (spec: Record<string, any>) => SketchSpec;
   parts: () => GeneratedParts;
   factory: UiSketcher.CompositeFactory;

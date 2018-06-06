@@ -1,4 +1,4 @@
-import { DslType, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { DslType, FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Merger } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
@@ -76,7 +76,7 @@ const parts: () => PartTypeAdt[] = Fun.constant([
   })
 ]);
 
-const schema: () => DslType.FieldProcessorAdt[] = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('value'),
   FieldSchema.strict('items'),
   FieldSchema.strict('dom'),

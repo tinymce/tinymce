@@ -1,6 +1,6 @@
-import { DslType, FieldSchema } from '@ephox/boulder';
+import { DslType, FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 
-const ComposeSchema: DslType.FieldProcessorAdt[] = [
+const ComposeSchema: FieldProcessorAdt[] = [
   FieldSchema.strict('find')
 ];
 

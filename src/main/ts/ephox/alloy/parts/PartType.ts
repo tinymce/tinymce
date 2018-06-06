@@ -1,4 +1,4 @@
-import { FieldPresence, FieldSchema, ValueSchema, DslType } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, ValueSchema, DslType, FieldProcessorAdt, Processor } from '@ephox/boulder';
 import { Adt, Fun, Id, Option } from '@ephox/katamari';
 import { DetailedSpec } from '../parts/AlloyParts';
 import { AdtInterface } from '../alien/TypeDefinitions';
@@ -13,7 +13,7 @@ export interface PartSpec {
   name: () => string;
   overrides: () => OverrideHandler;
   pname: () => string;
-  schema: () => DslType.FieldProcessorAdt[];
+  schema: () => FieldProcessorAdt[];
 }
 
 export type OverrideHandler = (detail: DetailedSpec, spec?: PartialSpec, partValidated?: any) => OverrideSpec;
@@ -85,7 +85,7 @@ const asCommon = function (part: PartTypeAdt): PartSpec {
   return part.fold(Fun.identity, Fun.identity, Fun.identity, Fun.identity);
 };
 
-const convert = (adtConstructor, partSchema: DslType.Processor):
+const convert = (adtConstructor, partSchema: Processor):
                   (PartialSpec) => PartTypeAdt => {
   return function (spec) {
     const data = ValueSchema.asStructOrDie('Converting part type', partSchema, spec);

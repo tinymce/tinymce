@@ -25,7 +25,7 @@ export interface ContainerBehaviours {
   [key: string]: any;
 }
 
-const getPartsSchema = function (partNames, _optPartNames, _owner): DslType.FieldProcessorAdt[] {
+const getPartsSchema = function (partNames, _optPartNames, _owner): FieldProcessorAdt[] {
   const owner = _owner !== undefined ? _owner : 'Unknown owner';
   const fallbackThunk = function () {
     return [
@@ -70,7 +70,7 @@ const getPartsSchema = function (partNames, _optPartNames, _owner): DslType.Fiel
   return [ partsSchema, partUidsSchema ];
 };
 
-const getPartUidsSchema = function (label, spec): DslType.FieldProcessorAdt {
+const getPartUidsSchema = function (label, spec): FieldProcessorAdt {
   return FieldSchema.state(
     'partUids',
     function (spec) {

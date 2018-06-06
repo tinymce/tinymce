@@ -1,4 +1,4 @@
-import { DslType, FieldSchema } from '@ephox/boulder';
+import { DslType, FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -9,7 +9,7 @@ import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import { PartTypeAdt } from '../../parts/PartType';
 
-const schema: () => DslType.FieldProcessorAdt[] = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass' ]),
   SketchBehaviours.field('splitToolbarBehaviours', [ ]),
   FieldSchema.state('builtGroups', function () {

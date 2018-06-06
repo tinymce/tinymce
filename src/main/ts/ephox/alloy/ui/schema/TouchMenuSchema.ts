@@ -1,4 +1,4 @@
-import { DslType, FieldSchema } from '@ephox/boulder';
+import { DslType, FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Height, Location, Width } from '@ephox/sugar';
 
@@ -25,7 +25,7 @@ const anchorAtCentre = function (component) {
 };
 
 // Similar to dropdown.
-const schema: () => DslType.FieldProcessorAdt[] = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('dom'),
   FieldSchema.strict('fetch'),
   Fields.onHandler('onOpen'),

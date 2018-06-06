@@ -1,4 +1,4 @@
-import { FieldSchema, Objects, DslType } from '@ephox/boulder';
+import { FieldSchema, Objects, DslType, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun, Merger } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
@@ -8,7 +8,7 @@ import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 
-const schema: () => DslType.FieldProcessorAdt[] = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('data'),
   FieldSchema.defaulted('inputAttributes', { }),
   FieldSchema.defaulted('inputStyles', { }),

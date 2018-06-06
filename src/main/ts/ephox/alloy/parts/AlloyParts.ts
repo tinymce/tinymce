@@ -72,7 +72,7 @@ const generateOne = function (owner: string, pname: string, config: RawDomSchema
   };
 };
 
-const schemas = function (parts: PartType.PartTypeAdt[]): DslType.FieldProcessorAdt[] {
+const schemas = function (parts: PartType.PartTypeAdt[]): FieldProcessorAdt[] {
   // This actually has to change. It needs to return the schemas for things that will
   // not appear in the components list, which is only externals
   return Arr.bind(parts, function (part: PartType.PartTypeAdt) {
@@ -97,7 +97,7 @@ const substitutes = function (owner: string, detail: DetailedSpec, parts: PartTy
   return PartSubstitutes.subs(owner, detail, parts);
 };
 
-const components = function (owner: string, detail: DetailedSpec, internals: { [key: string]: DslType.FieldProcessorAdt }): AlloySpec[] {
+const components = function (owner: string, detail: DetailedSpec, internals: { [key: string]: FieldProcessorAdt }): AlloySpec[] {
   return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), internals);
 };
 
@@ -153,7 +153,7 @@ const defaultUids = function (baseUid: string, partTypes): Record<string, string
   );
 };
 
-const defaultUidsSchema = function (partTypes): DslType.FieldProcessorAdt {
+const defaultUidsSchema = function (partTypes): FieldProcessorAdt {
   return FieldSchema.field(
     'partUids',
     'partUids',

@@ -1,4 +1,4 @@
-import { FieldSchema, DslType } from '@ephox/boulder';
+import { FieldSchema, DslType, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
@@ -14,7 +14,7 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
 import { PartTypeAdt } from '../../parts/PartType';
 
-const schema: () => DslType.FieldProcessorAdt[] = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onStrictHandler('onLockedChange'),
   Fields.markers([ 'lockClass' ])
 ]);

@@ -8,7 +8,7 @@ const field = function (name: string, forbidden: AlloyBehaviour[]): FieldProcess
     return FieldSchema.forbid(f.name(), 'Cannot configure ' + f.name() + ' for ' + name);
   }).concat([
     FieldSchema.state('dump', Fun.identity)
-  ])) as DslType.FieldProcessorAdt;
+  ]));
 };
 
 const get = function (data: ContainerBehaviours): {} {

@@ -1,4 +1,4 @@
-import { FieldSchema, Objects, DslType, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, Processor, Objects, DslType, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { ComposingCreateConfig } from '../../api/behaviour/Composing';
 import { DockingBehaviour } from '../../api/behaviour/Docking';
@@ -19,8 +19,8 @@ export interface AlloyBehaviour {
   handlers: (info: any) => {};
   name: () => string;
   revoke: () => { key: string, value: undefined };
-  schema: () => DslType.FieldProcessorAdt;
-  fields?: DslType.FieldProcessorAdt[];
+  schema: () => FieldProcessorAdt;
+  fields?: FieldProcessorAdt[];
 }
 
 export interface ConfiguredBehaviour {
@@ -32,7 +32,7 @@ export interface ConfiguredBehaviour {
 }
 
 export interface AlloyBehaviourConfig {
-  fields: DslType.FieldProcessorAdt[];
+  fields: FieldProcessorAdt[];
   name: string;
   active?: {};
   apis?: {};
@@ -44,7 +44,7 @@ const derive = function (capabilities): AlloyBehaviourRecord {
   return Objects.wrapAll(capabilities);
 };
 
-const simpleSchema: DslType.Processor = ValueSchema.objOfOnly([
+const simpleSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('fields'),
   FieldSchema.strict('name'),
   FieldSchema.defaulted('active', { }),
@@ -58,7 +58,7 @@ const create = function (data: AlloyBehaviourConfig): AlloyBehaviour {
   return Behaviour.create(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
 
-const modeSchema: DslType.Processor = ValueSchema.objOfOnly([
+const modeSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('branchKey'),
   FieldSchema.strict('branches'),
   FieldSchema.strict('name'),
