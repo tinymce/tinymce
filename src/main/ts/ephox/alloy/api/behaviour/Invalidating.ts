@@ -7,31 +7,7 @@ import { Future, Result, Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Component } from '../../api/Main';
 import { SugarElement } from '../../alien/TypeDefinitions';
-
-export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: InvalidatingConfig) => Behaviour.NamedConfiguredBehaviour;
-  markValid: (Component: AlloyComponent) => void;
-  markInvalid: (Component: AlloyComponent) => void;
-  query: <T>(Component: AlloyComponent) => Future<T>;
-  run: <T>(Component: AlloyComponent) => Future<T>;
-  validation: (validate: <T, E>(v: string) => Result<T, E>) => (component: AlloyComponent) => any;
-}
-
-export interface InvalidatingConfig {
-  invalidClass: string;
-  notify?: {
-    getContainer?: (input: AlloyComponent) => Option<SugarElement>;
-    onValid?: (comp: AlloyComponent) => void;
-    onInvalid?: (comp: AlloyComponent, err: string) => void;
-  };
-  onEvent?: string;
-  getRoot?: (input: AlloyComponent) => any;
-  validator: {
-    validate: (input: AlloyComponent) => any;
-    onEvent?: string;
-    validateOnLoad?: boolean
-  };
-}
+import { InvalidatingBehaviour } from 'ephox/alloy/behaviour/invalidating/InvalidateTypes';
 
 const Invalidating = Behaviour.create({
   fields: InvalidateSchema,

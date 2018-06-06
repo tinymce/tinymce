@@ -15,19 +15,19 @@ export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour {
 
 export interface InvalidatingConfigSpec {
   invalidClass: string;
-  getRoot?: any;
+  getRoot?: (AlloyComponent) => Option<SugarElement>;
   notify?: {
     aria?: string;
-    getContainer?: any;
-    validHtml: string;
-    onValid?: any;
-    onInvalid?: any;
+    getContainer?: (input: AlloyComponent) => Option<SugarElement>;
+    validHtml?: string;
+    onValid?: (comp: AlloyComponent) => void;
+    onInvalid?: (comp: AlloyComponent, err: string) => void;
     onValidate?: (comp: AlloyComponent) => void;
   }
   validator?: {
     validate: (input: AlloyComponent) => Future<Result<any, string>>;
     onEvent?: string;
-    validateOnLoad: boolean;
+    validateOnLoad?: boolean;
   }
 }
 
@@ -41,7 +41,7 @@ export interface InvalidatingConfig {
     onValidate: () => (comp: AlloyComponent) => void;
   }>;
   onEvent?: () => string;
-  getRoot?: () => (input: AlloyComponent) => any;
+  getRoot?: () => (AlloyComponent) => Option<SugarElement>
   validator: () => Option<{
     validate: () => (input: AlloyComponent) => Future<Result<any, string>>;
     onEvent?: () => string;
