@@ -4,6 +4,7 @@ import { Arr, Obj } from '@ephox/katamari';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as AlloyLogger from '../../log/AlloyLogger';
+import { ReceivingConfig } from 'ephox/alloy/behaviour/receiving/ReceivingTypes';
 
 const chooseChannels = function (channels, message) {
   return message.universal() ? channels : Arr.filter(channels, function (ch) {
@@ -11,7 +12,7 @@ const chooseChannels = function (channels, message) {
   });
 };
 
-const events = function (receiveConfig/*, receiveState */) {
+const events = function (receiveConfig: ReceivingConfig/*, receiveState */) {
   return AlloyEvents.derive([
     AlloyEvents.run(SystemEvents.receive(), function (component, message) {
       const channelMap = receiveConfig.channels();
