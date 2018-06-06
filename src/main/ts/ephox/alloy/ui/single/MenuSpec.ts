@@ -1,4 +1,4 @@
-import { Fun, Merger } from '@ephox/katamari';
+import { Fun, Option, Merger } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Composing } from '../../api/behaviour/Composing';
@@ -39,7 +39,7 @@ const make = function (detail, components, spec, externals) {
             }
           }),
           Composing.config({
-            find: Fun.identity
+            find: Option.some
           }),
           Keying.config(detail.movement().config()(detail, detail.movement()))
         ]),

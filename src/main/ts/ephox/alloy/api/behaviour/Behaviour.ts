@@ -1,6 +1,5 @@
 import { FieldSchema, Processor, Objects, DslType, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { ComposingCreateConfig } from '../../api/behaviour/Composing';
 import { DockingBehaviour } from '../../api/behaviour/Docking';
 
 import * as Behaviour from '../../behaviour/common/Behaviour';
