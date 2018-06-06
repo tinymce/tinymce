@@ -2,10 +2,15 @@ import { Fun, Option } from '@ephox/katamari';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
+import { PinchingConfig, PinchingState, PinchDragData } from 'ephox/alloy/behaviour/pinching/PinchingTypes';
+import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
+import { DraggingState, DragModeDeltas } from 'ephox/alloy/dragging/common/DraggingTypes';
+import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
 
-const mode = {
-  getData (e) {
-    const touches = e.raw().touches;
+const mode: DragModeDeltas<PinchDragData> = {
+  getData (e: SugarEvent)  {
+    const raw = e.raw() as any;
+    const touches = raw.touches;
     if (touches.length < 2) { return Option.none(); }
 
     const deltaX = Math.abs(touches[0].clientX - touches[1].clientX);
@@ -33,7 +38,7 @@ const mode = {
   }
 };
 
-const events = function (pinchConfig, pinchState) {
+const events = function (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEvents.EventHandlerConfigRecord {
   return AlloyEvents.derive([
     // TODO: Only run on iOS. It prevents default behaviour like zooming and showing all the tabs.
     // Note: in testing, it didn't seem to cause problems on Android. Check.

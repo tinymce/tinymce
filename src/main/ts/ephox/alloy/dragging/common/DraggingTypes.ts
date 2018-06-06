@@ -74,12 +74,12 @@ export interface CommonDraggingConfigSpec {
 
 export type DraggingConfigSpec = MouseDraggingConfigSpec | TouchDraggingConfigSpec;
 
-export interface DragModeDeltas {
-  getData: (event: SugarEvent) => Option<PositionCoordinates>;
-  getDelta: (old: PositionCoordinates, nu: PositionCoordinates) => PositionCoordinates;
+export interface DragModeDeltas<T> {
+  getData: (event: SugarEvent) => Option<T>;
+  getDelta: (old: T, nu: T) => T;
 }
 
-export interface DraggingState {
-  update: (mode: DragModeDeltas, dragEvent: SugarEvent) => Option<PositionCoordinates>
+export interface DraggingState<T> {
+  update: (mode: DragModeDeltas<T>, dragEvent: SugarEvent) => Option<T>
   reset: () => void;
 }

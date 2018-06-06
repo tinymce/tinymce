@@ -18,7 +18,7 @@ const init = function () {
 
   // Return position delta between previous position and nu position,
   // or None if this is the first. Set the previous position to nu.
-  const calculateDelta = (mode: DragModeDeltas, nu: PositionCoordinates): Option<PositionCoordinates> => {
+  const calculateDelta = <T>(mode: DragModeDeltas<T>, nu: T): Option<T> => {
     const result = previous.map(function (old) {
       return mode.getDelta(old, nu);
     });
@@ -28,7 +28,7 @@ const init = function () {
   };
 
   // NOTE: This dragEvent is the DOM touch event or mouse event
-  const update = (mode: DragModeDeltas, dragEvent: SugarEvent): Option<PositionCoordinates> => {
+  const update = <T>(mode: DragModeDeltas<T>, dragEvent: SugarEvent): Option<T> => {
     return mode.getData(dragEvent).bind(function (nuData) {
       return calculateDelta(mode, nuData);
     });

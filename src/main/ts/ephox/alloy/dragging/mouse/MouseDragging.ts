@@ -13,10 +13,10 @@ import * as Snappables from '../snap/Snappables';
 import * as BlockerEvents from './BlockerEvents';
 import * as MouseData from './MouseData';
 import { MouseDraggingConfig, DragApi } from 'ephox/alloy/dragging/mouse/MouseDraggingTypes';
-import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarEvent, PositionCoordinates } from 'ephox/alloy/alien/TypeDefinitions';
 import { DraggingState } from 'ephox/alloy/dragging/common/DraggingTypes';
 
-const handlers = function (dragConfig: MouseDraggingConfig, dragState: DraggingState): AlloyEvents.EventHandlerConfigRecord {
+const handlers = function (dragConfig: MouseDraggingConfig, dragState: DraggingState<PositionCoordinates>): AlloyEvents.EventHandlerConfigRecord {
   return AlloyEvents.derive([
     AlloyEvents.run(NativeEvents.mousedown(), function (component, simulatedEvent) {
       if (simulatedEvent.event().raw().button !== 0) { return; }
