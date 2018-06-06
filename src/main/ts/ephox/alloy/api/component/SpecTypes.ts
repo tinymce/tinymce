@@ -27,7 +27,6 @@ export interface ComponentSpec {
 
 export interface SketchSpec extends ComponentSpec {
   uid: string;
-  'debug.sketcher': {};
 }
 
 export interface SimpleSpec extends ComponentSpec {
