@@ -17,7 +17,6 @@ export interface AlloyBehaviour {
   name: () => string;
   revoke: () => { key: string, value: undefined };
   schema: () => FieldProcessorAdt;
-  fields?: FieldProcessorAdt[];
 }
 
 export interface ConfiguredBehaviour {

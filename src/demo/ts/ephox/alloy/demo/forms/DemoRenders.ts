@@ -212,7 +212,7 @@ const tieredMarkers = {
   selectedMenu: 'demo-alloy-menu-selected',
   backgroundMenu: 'demo-alloy-menu-background'
 };
-// TODO: FIXTYPES
+
 export default {
   item: demoItemRender,
   gridItem: demoGridItemRender,
