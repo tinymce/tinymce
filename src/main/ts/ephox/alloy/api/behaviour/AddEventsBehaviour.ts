@@ -3,6 +3,7 @@ import { EventHandlerConfig, derive, EventHandlerConfigRecord } from '../events/
 import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { create as createBehaviour, noState, ConfiguredBehaviour, AlloyBehaviour, NamedConfiguredBehaviour } from './Behaviour';
+import { EventFormat } from 'ephox/alloy/events/SimulatedEvent';
 
 const events = function (name, eventHandlers): AlloyBehaviour {
   const events: EventHandlerConfigRecord = derive(eventHandlers);
@@ -18,7 +19,7 @@ const events = function (name, eventHandlers): AlloyBehaviour {
   });
 };
 
-const config = function (name: string, eventHandlers: EventHandlerConfig[]): NamedConfiguredBehaviour {
+const config = function <T extends EventFormat>(name: string, eventHandlers: EventHandlerConfig<T>[]): NamedConfiguredBehaviour {
   const me = events(name, eventHandlers);
   return {
     key: name,

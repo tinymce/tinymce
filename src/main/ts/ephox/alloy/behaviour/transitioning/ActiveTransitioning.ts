@@ -4,6 +4,8 @@ import * as TransitionApis from './TransitionApis';
 import { TransitioningConfig } from 'ephox/alloy/behaviour/transitioning/TransitioningTypes';
 import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
 
+import { EventFormat } from '../../events/SimulatedEvent';
+
 const events = function (transConfig: TransitioningConfig, transState: Stateless): AlloyEvents.EventHandlerConfigRecord {
   return AlloyEvents.derive([
     AlloyEvents.run(NativeEvents.transitionend(), function (component, simulatedEvent) {

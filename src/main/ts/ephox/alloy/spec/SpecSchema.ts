@@ -4,7 +4,7 @@ import { JSON as Json } from '@ephox/sand';
 import { AlloySpec, ComponentSpec, RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
 
 import { AdtInterface } from '../alien/TypeDefinitions';
-import { EventHandlerConfig } from '../api/events/AlloyEvents';
+import { EventHandlerConfig, EventHandlerConfigRecord } from '../api/events/AlloyEvents';
 import * as Fields from '../data/Fields';
 import * as UiSubstitutes from './UiSubstitutes';
 
@@ -12,8 +12,8 @@ export interface SpecSchemaStruct {
   components: () => ComponentSpec;
   dom: () => RawDomSchema;
   domModification: () => {}; // TODO: Mike
-  eventOrder: () => EventHandlerConfig; // TODO: Mike test this
-  events: () => EventHandlerConfig;
+  eventOrder: () => { [key: string]: string[] }; // TODO: Mike test this
+  events: () => EventHandlerConfigRecord;
   originalSpec: () => any; // For debugging purposes only
   uid: () => string;
   'debug.sketcher': () => {};

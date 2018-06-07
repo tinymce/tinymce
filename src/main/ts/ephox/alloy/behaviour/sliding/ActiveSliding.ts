@@ -6,6 +6,7 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 import * as DomModification from '../../dom/DomModification';
 import * as SlidingApis from './SlidingApis';
 import { SlidingConfig, SlidingState } from 'ephox/alloy/behaviour/sliding/SlidingTypes';
+import { EventFormat } from '../../events/SimulatedEvent';
 
 const exhibit = function (base: { }, slideConfig: SlidingConfig/*, slideState */): { } {
   const expanded = slideConfig.expanded();

@@ -1,7 +1,7 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
-import { SimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
+import { SimulatedEvent, EventFormat } from 'ephox/alloy/events/SimulatedEvent';
 
 
 export interface StreamingBehaviour extends Behaviour.AlloyBehaviour {
@@ -23,7 +23,7 @@ export interface StreamingConfigSpec {
     delay: number
   };
   event?: any;
-  onStream: (component: AlloyComponent, simulatedEvent: SimulatedEvent) => void;
+  onStream: (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventFormat>) => void;
 }
 
 export type StreamMode = 'throttle';

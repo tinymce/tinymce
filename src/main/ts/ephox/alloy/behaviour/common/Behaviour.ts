@@ -5,14 +5,15 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as DomModification from '../../dom/DomModification';
 import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
+import { CustomEvent } from '../../events/SimulatedEvent';
 
-const executeEvent = function (bConfig, bState, executor): AlloyEvents.EventHandlerConfig {
+const executeEvent = function (bConfig, bState, executor): AlloyEvents.EventHandlerConfig<CustomEvent> {
   return AlloyEvents.runOnExecute(function (component) {
     executor(component, bConfig, bState);
   });
 };
 
-const loadEvent = function (bConfig, bState, f): AlloyEvents.EventHandlerConfig {
+const loadEvent = function (bConfig, bState, f): AlloyEvents.EventHandlerConfig<CustomEvent> {
   return AlloyEvents.runOnInit(function (component, simulatedEvent) {
     f(component, bConfig, bState);
   });

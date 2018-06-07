@@ -8,6 +8,7 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Dockables from './Dockables';
 import { DockingConfig } from 'ephox/alloy/behaviour/docking/DockingTypes';
+import { EventFormat } from '../../events/SimulatedEvent';
 
 const events = function (dockInfo: DockingConfig) {
   return AlloyEvents.derive([

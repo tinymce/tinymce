@@ -6,6 +6,7 @@ import * as Behaviour from '../common/Behaviour';
 import * as ToggleApis from './ToggleApis';
 import { TogglingConfig } from 'ephox/alloy/behaviour/toggling/TogglingTypes';
 import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
+import { EventFormat } from '../../events/SimulatedEvent';
 
 const exhibit = function (base: { }, toggleConfig: TogglingConfig, toggleState: Stateless): { } {
   return DomModification.nu({ });

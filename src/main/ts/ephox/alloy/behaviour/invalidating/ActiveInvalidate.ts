@@ -3,6 +3,7 @@ import * as InvalidateApis from './InvalidateApis';
 import { Fun } from '@ephox/katamari';
 import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
 import { InvalidatingConfig } from 'ephox/alloy/behaviour/invalidating/InvalidateTypes';
+import { EventFormat } from '../../events/SimulatedEvent';
 
 const events = function (invalidConfig: InvalidatingConfig, invalidState: Stateless): AlloyEvents.EventHandlerConfigRecord {
   return invalidConfig.validator().map(function (validatorInfo) {

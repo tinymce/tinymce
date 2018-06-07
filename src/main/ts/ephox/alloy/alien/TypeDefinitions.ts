@@ -1,3 +1,5 @@
+import { EventFormat } from "ephox/alloy/events/SimulatedEvent";
+
 // TODO move these to the correct village
 
 // TODO move this generic into Katamari Adt
@@ -14,10 +16,10 @@ export interface SugarElement {
 }
 
 // Sugar Event
-export interface SugarEvent {
+export interface SugarEvent extends EventFormat {
   kill: () => void;
   prevent: () => void;
-  raw: () => Event | any; // any used for things like "touches"
+  raw: () => Event | TouchEvent;
   stop: () => void;
   target: () => SugarElement;
   x: () => number;

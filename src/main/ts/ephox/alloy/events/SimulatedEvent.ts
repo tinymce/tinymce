@@ -2,22 +2,34 @@ import { Cell, Fun } from '@ephox/katamari';
 import { SugarElement, SugarEvent } from '../alien/TypeDefinitions';
 import { AlloyComponent } from '../api/component/ComponentApi';
 
-export interface SimulatedEvent {
+export interface EventFormat {
+  target: () => SugarElement;
+  kill: () => void;
+  prevent: () => void;
+}
+
+export interface SimulatedEvent<T extends EventFormat> {
   stop: () => void;
   cut: () => void;
   isStopped: () => boolean;
   isCut: () => boolean;
-  event: () => AnyEvent;
+  event: () => T;
 
-  getSource: (element: SugarElement) => AlloyComponent;
-  setSource: (element: SugarElement) => void;
+  getSource: () => SugarElement;
+  setSource: (SugarElement) => void;
 }
 
-export type AnyEvent = SimulatedEventTargets | SugarEvent;
+export type NativeSimulatedEvent = SimulatedEvent<SugarEvent>;
+export type CustomSimulatedEvent = SimulatedEvent<CustomEvent>;
 
-export interface SimulatedEventTargets {
-  target: () => SugarElement;
+export interface CustomEvent extends EventFormat {
+  // General properties on a custom event.
+  // TODO: Maybe separate them from target and kill to allow for overlap?
   [key: string]: () => any;
+}
+
+export interface ReceivingEvent extends EventFormat {
+  data: () => any;
 }
 
 const fromSource = function (event, source) {

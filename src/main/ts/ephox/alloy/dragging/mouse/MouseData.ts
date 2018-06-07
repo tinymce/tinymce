@@ -1,6 +1,5 @@
 import { Option } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
-import { AnyEvent } from 'ephox/alloy/events/SimulatedEvent';
 import { SugarEvent, PositionCoordinates } from 'ephox/alloy/alien/TypeDefinitions';
 
 const getData = function (event: SugarEvent): Option<PositionCoordinates> {

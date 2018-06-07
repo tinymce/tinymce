@@ -8,7 +8,8 @@ const getDataFrom = function (touches): Option<PositionCoordinates> {
 };
 
 const getData = function (event: SugarEvent): Option<PositionCoordinates> {
-  const touches = event.raw().touches;
+  const raw = event.raw() as TouchEvent;
+  const touches = raw.touches;
   return touches.length === 1 ? getDataFrom(touches) : Option.none();
 };
 

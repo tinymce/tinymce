@@ -4,6 +4,7 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as DomModification from '../../dom/DomModification';
 import { UnselectingConfig } from 'ephox/alloy/behaviour/unselecting/UnselectingTypes';
+import { EventFormat } from '../../events/SimulatedEvent';
 
 const exhibit = function (base: { }, unselectConfig: UnselectingConfig): { } {
   return DomModification.nu({

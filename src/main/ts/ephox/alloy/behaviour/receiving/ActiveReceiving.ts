@@ -5,6 +5,8 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as AlloyLogger from '../../log/AlloyLogger';
 import { ReceivingConfig } from 'ephox/alloy/behaviour/receiving/ReceivingTypes';
+import { EventFormat, ReceivingEvent } from '../../events/SimulatedEvent';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const chooseChannels = function (channels, message) {
   return message.universal() ? channels : Arr.filter(channels, function (ch) {
@@ -14,7 +16,8 @@ const chooseChannels = function (channels, message) {
 
 const events = function (receiveConfig: ReceivingConfig/*, receiveState */) {
   return AlloyEvents.derive([
-    AlloyEvents.run(SystemEvents.receive(), function (component, message) {
+    // FIX: Recieving data.
+    AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), function (component: AlloyComponent, message: any) {
       const channelMap = receiveConfig.channels();
       const channels = Obj.keys(channelMap);
 
@@ -24,6 +27,7 @@ const events = function (receiveConfig: ReceivingConfig/*, receiveState */) {
         const channelSchema = channelInfo.schema();
         const data = ValueSchema.asStructOrDie(
           'channel[' + ch + '] data\nReceiver: ' + AlloyLogger.element(component.element()),
+          // FIX: Recieving event ignores the whole simulated event part.
           channelSchema, message.data()
         );
         channelInfo.onReceive()(component, data);

@@ -1,7 +1,7 @@
 import { Contracts, Result } from '@ephox/katamari';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
+import { SimulatedEvent, NativeSimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 
 export interface AlloySystemApi {
@@ -17,7 +17,10 @@ export interface AlloySystemApi {
   removeFromWorld: (component: AlloyComponent) => void;
 
   isConnected: () => boolean;
-  triggerEscape: (component: AlloyComponent, simulatedEvent: SimulatedEvent) => void;
+  // Weird method. Required?
+  triggerEscape: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+
+  
   triggerEvent: (eventName: string, target: SugarElement, data: {}) => void;
   triggerFocus: (target: SugarElement, originator: SugarElement) => void;
 }
