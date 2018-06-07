@@ -88,6 +88,9 @@ import * as AlloyLogger from '../log/AlloyLogger'; // Used directly by mobile th
 import * as Debugging from '../debugging/Debugging'; // Used directly by mobile theme
 import * as FunctionAnnotator from '../debugging/FunctionAnnotator'; // Used directly by Alloy-docs
 
+// Type Def Exports
+import { AlloySpec, SimpleOrSketchSpec, LooseSpec, RawDomSchema, ComponentSpec, SketchSpec, SimpleSpec, PremadeSpec } from './component/SpecTypes';
+
 export {
   AddEventsBehaviour,
   Behaviour,
@@ -176,5 +179,14 @@ export {
   TapEvent,
   AlloyLogger,
   Debugging,
-  FunctionAnnotator
+  FunctionAnnotator,
+
+  AlloySpec,
+  SimpleOrSketchSpec,
+  LooseSpec,
+  RawDomSchema,
+  ComponentSpec,
+  SketchSpec,
+  SimpleSpec,
+  PremadeSpec
 };
