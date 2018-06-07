@@ -1,7 +1,7 @@
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloyBehaviourRecord } from 'ephox/alloy/api/behaviour/Behaviour';
-import { EventHandlerConfig, EventHandlerConfigRecord } from 'ephox/alloy/api/events/AlloyEvents';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import { EventHandlerConfig, EventHandlerConfigRecord } from '../../api/events/AlloyEvents';
 
 export type AlloySpec = SimpleOrSketchSpec | PremadeSpec;
 

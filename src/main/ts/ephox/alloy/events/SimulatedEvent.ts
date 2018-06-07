@@ -1,6 +1,6 @@
 import { Cell, Fun } from '@ephox/katamari';
+
 import { SugarElement, SugarEvent } from '../alien/TypeDefinitions';
-import { AlloyComponent } from '../api/component/ComponentApi';
 
 export interface EventFormat {
   target: () => SugarElement;

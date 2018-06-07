@@ -6,7 +6,7 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as FormCoupledInputsSchema from '../../ui/schema/FormCoupledInputsSchema';
 import { Objects } from '@ephox/boulder';
 import { Option } from '@ephox/katamari';
-import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SketchSpec } from '../../api/component/SpecTypes';
 
 const factory = function (detail, components, spec, externals): SketchSpec {
   return {

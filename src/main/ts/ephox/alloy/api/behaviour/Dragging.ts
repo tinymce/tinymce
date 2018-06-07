@@ -6,7 +6,7 @@ import { EventHandlerConfig } from '../../api/events/AlloyEvents';
 import * as DraggingBranches from '../../behaviour/dragging/DraggingBranches';
 import * as DragState from '../../dragging/common/DragState';
 import * as Behaviour from './Behaviour';
-import { DraggingBehaviour } from 'ephox/alloy/dragging/common/DraggingTypes';
+import { DraggingBehaviour } from '../../dragging/common/DraggingTypes';
 
 const Dragging = Behaviour.createModes({
   branchKey: 'mode',

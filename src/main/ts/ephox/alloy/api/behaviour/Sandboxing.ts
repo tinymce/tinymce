@@ -6,8 +6,8 @@ import * as SandboxState from '../../behaviour/sandboxing/SandboxState';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
-import { SandboxingBehaviour } from 'ephox/alloy/behaviour/sandboxing/SandboxingTypes';
+import { AlloySpec } from '../../api/component/SpecTypes';
+import { SandboxingBehaviour } from '../../behaviour/sandboxing/SandboxingTypes';
 
 
 const Sandboxing = Behaviour.create({

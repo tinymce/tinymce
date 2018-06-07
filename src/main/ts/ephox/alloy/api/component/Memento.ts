@@ -1,10 +1,10 @@
 import { Objects } from '@ephox/boulder';
 import { Merger, Option } from '@ephox/katamari';
-import { SimpleOrSketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
 import { isSketchSpec } from '../../api/ui/Sketcher';
 import * as Tagger from '../../registry/Tagger';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface MomentoRecord {
   get: (AlloyComponent) => AlloyComponent;

@@ -4,7 +4,7 @@ import HighlightSchema from '../../behaviour/highlighting/HighlightSchema';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
-import { HighlightingBehaviour } from 'ephox/alloy/behaviour/highlighting/HighlightingTypes';
+import { HighlightingBehaviour } from '../../behaviour/highlighting/HighlightingTypes';
 
 const Highlighting = Behaviour.create({
   fields: HighlightSchema,

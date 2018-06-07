@@ -11,7 +11,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
-import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SketchSpec } from '../../api/component/SpecTypes';
 
 const factory = function (detail, components, spec, externals): SketchSpec {
   const findByValue = function (chooser, value) {

@@ -1,6 +1,6 @@
 import * as Behaviour from './Behaviour';
 import * as ActiveUnselecting from '../../behaviour/unselecting/ActiveUnselecting';
-import { UnselectingBehaviour } from 'ephox/alloy/behaviour/unselecting/UnselectingTypes';
+import { UnselectingBehaviour } from '../../behaviour/unselecting/UnselectingTypes';
 
 
 const Unselecting = Behaviour.create({

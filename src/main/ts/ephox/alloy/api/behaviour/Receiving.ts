@@ -1,7 +1,7 @@
 import * as Behaviour from './Behaviour';
 import * as ActiveReceiving from '../../behaviour/receiving/ActiveReceiving';
 import ReceivingSchema from '../../behaviour/receiving/ReceivingSchema';
-import { ReceivingBehaviour } from 'ephox/alloy/behaviour/receiving/ReceivingTypes';
+import { ReceivingBehaviour } from '../../behaviour/receiving/ReceivingTypes';
 
 
 const Receiving = Behaviour.create({

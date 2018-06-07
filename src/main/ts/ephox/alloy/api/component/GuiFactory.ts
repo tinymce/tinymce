@@ -10,7 +10,7 @@ import { NoContextApi } from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
 import { AlloyComponent, ComponentApi } from './ComponentApi';
-import { SimpleSpec, SimpleOrSketchSpec, AlloySpec, PremadeSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SimpleSpec, SimpleOrSketchSpec, AlloySpec, PremadeSpec } from '../../api/component/SpecTypes';
 
 const buildSubcomponents = function (spec: SimpleOrSketchSpec): AlloyComponent[] {
   const components = Objects.readOr('components', [ ])(spec);

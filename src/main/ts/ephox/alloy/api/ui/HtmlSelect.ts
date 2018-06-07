@@ -7,7 +7,7 @@ import { Focusing } from '../behaviour/Focusing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SketchSpec } from '../../api/component/SpecTypes';
 
 const factory = function (detail, spec): SketchSpec {
   const options = Arr.map(detail.options(), function (option) {

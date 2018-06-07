@@ -4,7 +4,7 @@ import * as ActiveStreaming from '../../behaviour/streaming/ActiveStreaming';
 import StreamingSchema from '../../behaviour/streaming/StreamingSchema';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
-import { StreamingBehaviour } from 'ephox/alloy/behaviour/streaming/StreamingTypes';
+import { StreamingBehaviour } from '../../behaviour/streaming/StreamingTypes';
 
 const Streaming = Behaviour.create({
   fields: StreamingSchema,

@@ -13,7 +13,7 @@ import { NoContextApi } from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as CompBehaviours from './CompBehaviours';
 import { ComponentApi, AlloyComponent } from './ComponentApi';
-import { SimpleOrSketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
 const build = function (spec: SimpleOrSketchSpec): AlloyComponent {
   const getMe = function () {

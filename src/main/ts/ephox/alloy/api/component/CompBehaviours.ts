@@ -3,7 +3,7 @@ import { Arr, Obj } from '@ephox/katamari';
 
 import BehaviourBlob from '../../behaviour/common/BehaviourBlob';
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
-import { AlloySpec, SimpleOrSketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { AlloySpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
 export interface ComponentBehaviour {
   data: {

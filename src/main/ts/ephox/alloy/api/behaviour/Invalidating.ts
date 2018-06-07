@@ -7,7 +7,7 @@ import { Future, Result, Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Component } from '../../api/Main';
 import { SugarElement } from '../../alien/TypeDefinitions';
-import { InvalidatingBehaviour } from 'ephox/alloy/behaviour/invalidating/InvalidateTypes';
+import { InvalidatingBehaviour } from '../../behaviour/invalidating/InvalidateTypes';
 
 const Invalidating = Behaviour.create({
   fields: InvalidateSchema,

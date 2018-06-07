@@ -3,7 +3,7 @@ import * as ActiveToggle from '../../behaviour/toggling/ActiveToggle';
 import * as ToggleApis from '../../behaviour/toggling/ToggleApis';
 import ToggleSchema from '../../behaviour/toggling/ToggleSchema';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { TogglingBehaviour } from 'ephox/alloy/behaviour/toggling/TogglingTypes';
+import { TogglingBehaviour } from '../../behaviour/toggling/TogglingTypes';
 
 const Toggling = Behaviour.create({
   fields: ToggleSchema,

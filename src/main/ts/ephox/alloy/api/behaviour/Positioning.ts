@@ -4,7 +4,7 @@ import * as PositionApis from '../../behaviour/positioning/PositionApis';
 import PositionSchema from '../../behaviour/positioning/PositionSchema';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
-import { PositioningBehaviour } from 'ephox/alloy/behaviour/positioning/PositioningTypes';
+import { PositioningBehaviour } from '../../behaviour/positioning/PositioningTypes';
 
 const Positioning = Behaviour.create({
   fields: PositionSchema,

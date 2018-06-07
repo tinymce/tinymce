@@ -6,8 +6,7 @@ import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { SketchSpec, AlloySpec } from '../component/SpecTypes';
-import { GeneratedParts } from '../../parts/AlloyParts';
+import { SketchSpec, AlloySpec } from '../../api/component/SpecTypes';
 
 export interface SingleSketch {
   name: () => string;
@@ -22,7 +21,7 @@ export interface CompositeSketch  {
   configFields: () => FieldProcessorAdt[];
   partFields: () => FieldProcessorAdt[];
   sketch: (spec: Record<string, any>) => SketchSpec;
-  parts: () => GeneratedParts;
+  parts: () => AlloyParts.GeneratedParts;
   factory: UiSketcher.CompositeFactory;
   [key: string]: Function;
 }
@@ -81,7 +80,7 @@ const composite = function (rawConfig) {
   };
 
   // These are constructors that will store their configuration.
-  const parts: GeneratedParts = AlloyParts.generate(config.name, config.partFields);
+  const parts: AlloyParts.GeneratedParts = AlloyParts.generate(config.name, config.partFields);
 
   const apis = Obj.map(config.apis, GuiTypes.makeApi);
   const extraApis = Obj.map(config.extraApis, function (f, k) {

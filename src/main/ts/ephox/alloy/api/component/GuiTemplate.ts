@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Merger, Obj, Result, Option } from '@ephox/katamari';
 import { Element, Node, Text, Traverse } from '@ephox/sugar';
-import { RawDomSchema, SimpleOrSketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
 const getAttrs = function (elem) {
   const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];

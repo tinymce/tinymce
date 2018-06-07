@@ -3,7 +3,7 @@ import ActivePinching from '../../behaviour/pinching/ActivePinching';
 import PinchingSchema from '../../behaviour/pinching/PinchingSchema';
 import * as DragState from '../../dragging/common/DragState';
 import { SugarElement } from '../../alien/TypeDefinitions';
-import { PinchingBehaviour } from 'ephox/alloy/behaviour/pinching/PinchingTypes';
+import { PinchingBehaviour } from '../../behaviour/pinching/PinchingTypes';
 
 
 const Pinching = Behaviour.create({

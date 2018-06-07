@@ -1,6 +1,6 @@
 import * as InputBase from '../../ui/common/InputBase';
 import * as Sketcher from './Sketcher';
-import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SketchSpec } from '../../api/component/SpecTypes';
 
 const factory = function (detail, spec): SketchSpec {
   return {

@@ -3,7 +3,7 @@ import * as Sketcher from './Sketcher';
 import * as Fields from '../../data/Fields';
 import { FieldSchema } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
-import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SketchSpec } from '../../api/component/SpecTypes';
 
 const factory = function (detail, spec): SketchSpec {
   return {

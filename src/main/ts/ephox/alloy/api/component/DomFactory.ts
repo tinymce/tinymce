@@ -2,7 +2,7 @@ import { Objects } from '@ephox/boulder';
 import { Arr, Merger } from '@ephox/katamari';
 import { Element, Html, Node, Traverse } from '@ephox/sugar';
 import { EventHandlerConfig } from '../../api/events/AlloyEvents';
-import { RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
+import { RawDomSchema } from '../../api/component/SpecTypes';
 
 const getAttrs = function (elem) {
   const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];

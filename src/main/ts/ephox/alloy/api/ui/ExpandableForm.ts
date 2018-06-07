@@ -9,7 +9,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import { Form } from './Form';
 import * as Sketcher from './Sketcher';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SketchSpec } from '../../api/component/SpecTypes';
 
 const runOnExtra = function (detail, operation) {
   return function (anyComp) {

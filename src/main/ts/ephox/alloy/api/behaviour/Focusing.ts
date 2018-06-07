@@ -3,7 +3,7 @@ import * as ActiveFocus from '../../behaviour/focusing/ActiveFocus';
 import * as FocusApis from '../../behaviour/focusing/FocusApis';
 import FocusSchema from '../../behaviour/focusing/FocusSchema';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { FocusingBehaviour } from 'ephox/alloy/behaviour/focusing/FocusingTypes';
+import { FocusingBehaviour } from '../../behaviour/focusing/FocusingTypes';
 
 const Focusing = Behaviour.create({
   fields: FocusSchema,

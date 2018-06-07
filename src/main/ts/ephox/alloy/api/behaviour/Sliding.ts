@@ -5,7 +5,7 @@ import SlidingSchema from '../../behaviour/sliding/SlidingSchema';
 import * as SlidingState from '../../behaviour/sliding/SlidingState';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SugarElement } from '../../alien/TypeDefinitions';
-import { SlidingBehaviour } from 'ephox/alloy/behaviour/sliding/SlidingTypes';
+import { SlidingBehaviour } from '../../behaviour/sliding/SlidingTypes';
 
 
 const Sliding = Behaviour.create({

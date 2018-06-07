@@ -7,7 +7,7 @@ import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { SimpleOrSketchSpec, SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
 
 const factory = function (detail, spec): SketchSpec {
   const events = ButtonBase.events(detail.action());

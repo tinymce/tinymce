@@ -5,7 +5,7 @@ import RepresentSchema from '../../behaviour/representing/RepresentSchema';
 import * as RepresentState from '../../behaviour/representing/RepresentState';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Result } from '@ephox/katamari';
-import { RepresentingBehaviour } from 'ephox/alloy/behaviour/representing/RepresentingTypes';
+import { RepresentingBehaviour } from '../../behaviour/representing/RepresentingTypes';
 
 
 
