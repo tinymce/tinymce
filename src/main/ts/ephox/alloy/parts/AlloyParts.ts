@@ -57,7 +57,7 @@ const generate = function (owner: string, parts: PartType.PartTypeAdt[]): Genera
 };
 
 // Does not have the config.
-const doGenerateOne = function (owner, pname): UnconfiguredPart {
+const doGenerateOne = function (owner: string, pname: string): UnconfiguredPart {
   return {
     uiType: UiSubstitutes.placeholder(),
     owner,

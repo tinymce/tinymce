@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, GeneralSteps, Logger, Step } from '@ephox/
 import { UnitTest } from '@ephox/bedrock';
 import { Value } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Form } from 'ephox/alloy/api/ui/Form';
+import { Form, FormParts } from 'ephox/alloy/api/ui/Form';
 import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
@@ -49,8 +49,7 @@ UnitTest.asynctest('Basic Form', function () {
 
   GuiSetup.setup(function (store, doc, body) {
     return GuiFactory.build(
-      // TODO: FIXTYPES
-      Form.sketch(function (parts) {
+      Form.sketch(function (parts: FormParts) {
         return {
           dom: {
             tag: 'div'

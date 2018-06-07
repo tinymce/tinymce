@@ -8,7 +8,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { ExpandableForm } from 'ephox/alloy/api/ui/ExpandableForm';
-import { Form } from 'ephox/alloy/api/ui/Form';
+import { Form, FormParts } from 'ephox/alloy/api/ui/Form';
 import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
@@ -26,8 +26,7 @@ UnitTest.asynctest('ExpandableFormTest', function () {
   GuiSetup.setup(function (store, doc, body) {
 
     const pMinimal = ExpandableForm.parts().minimal(
-      // TODO: FIXTYPES
-      Form.sketch(function (parts) {
+      Form.sketch(function (parts: FormParts) {
         return {
           dom: {
             tag: 'div',
@@ -56,7 +55,7 @@ UnitTest.asynctest('ExpandableFormTest', function () {
     );
 
     const pExtra = ExpandableForm.parts().extra(
-      Form.sketch(function (parts) {
+      Form.sketch(function (parts: FormParts) {
         return {
           dom: {
             tag: 'div',

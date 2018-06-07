@@ -148,7 +148,7 @@ export default <any> function () {
 
       components: [
         ExpandableForm.parts().minimal(
-          Form.sketch(function (parts) {
+          Form.sketch(function (parts: FormParts) {
             return {
               dom: {
                 tag: 'div',
@@ -165,7 +165,7 @@ export default <any> function () {
         ),
 
         ExpandableForm.parts().extra(
-          Form.sketch(function (parts) {
+          Form.sketch(function (parts: FormParts) {
             return {
               dom: {
                 tag: 'div',
