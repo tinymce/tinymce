@@ -9,17 +9,18 @@ import { Keying } from '../behaviour/Keying';
 import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { single, SingleSketch } from './Sketcher';
-import { RawDomSchema } from '../component/SpecTypes';
+import { RawDomSchema, LooseSpec } from '../component/SpecTypes';
+
+export type ItemSpec = { value: string; text: string };
 
 export interface TieredMenuSketch extends SingleSketch {
   collapseMenu: (menu: any) => void;
   tieredData: (primary: string, menus, expansions: Record<string, string>) => TieredData;
   singleData: (name: string, menu: MenuSpec) => TieredData;
-  collapseItem: (text: string) => void;
+  collapseItem: (text: string) => ItemSpec;
 }
 
-// TODO: FIXTYPES
-export type MenuSpec = any;
+export type MenuSpec = LooseSpec;
 export type TieredMenuRecord = Record<string, MenuSpec>;
 
 export interface TieredData {
@@ -44,7 +45,7 @@ const singleData = function (name: string, menu: MenuSpec): TieredData {
   };
 };
 
-const collapseItem = function (text: string) {
+const collapseItem = function (text: string): ItemSpec {
   return {
     value: Id.generate(TieredMenuSpec.collapseItem()),
     text

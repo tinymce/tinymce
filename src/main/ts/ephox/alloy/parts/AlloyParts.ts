@@ -8,6 +8,7 @@ import * as PartType from './PartType';
 import { SpecSchemaStruct } from '../spec/SpecSchema';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { RawDomSchema, SketchSpec, AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import { GeneralStruct } from 'ephox/alloy/alien/TypeDefinitions';
 
 export type PartialSpec = { }
 
@@ -26,13 +27,15 @@ export interface ConfiguredPart extends UnconfiguredPart {
   validated: { }
 }
 
+export type Substition = { [ key: string ]: FieldProcessorAdt };
+
 export interface Substitutions {
-  internals: () => any; // TODO FIXTYPES
-  externals: () => any;
+  internals: () => Substition;
+  externals: () => Substition;
 }
 
 export interface DetailedSpec extends SpecSchemaStruct {
-  partUids?: () => { [key: string]: string };
+  partUids?: () => Record<string, string>
 }
 
 // TODO: Make more functional if performance isn't an issue.
@@ -97,7 +100,7 @@ const substitutes = function (owner: string, detail: DetailedSpec, parts: PartTy
   return PartSubstitutes.subs(owner, detail, parts);
 };
 
-const components = function (owner: string, detail: DetailedSpec, internals: { [key: string]: FieldProcessorAdt }): AlloySpec[] {
+const components = function (owner: string, detail: DetailedSpec, internals: Substition): AlloySpec[] {
   return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), internals);
 };
 

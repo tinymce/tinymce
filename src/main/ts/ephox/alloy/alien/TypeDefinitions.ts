@@ -35,3 +35,5 @@ export interface PositionCoordinates {
 
 // Fun.constant, Rather than => T, we will have explicit return types
 export type StringConstant = () => string;
+
+export type GeneralStruct = () => { [ key: string ]: () => any };
