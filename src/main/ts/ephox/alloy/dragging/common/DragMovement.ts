@@ -3,10 +3,10 @@ import { Css, Location, Scroll, Traverse } from '@ephox/sugar';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
-import { PositionCoordinates, SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { PositionCoordinates, SugarElement } from '../../alien/TypeDefinitions';
 import { Option } from '@ephox/katamari';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { DraggingConfig, SnapsConfig } from 'ephox/alloy/dragging/common/DraggingTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { DraggingConfig, SnapsConfig } from '../../dragging/common/DraggingTypes';
 import { CoordAdt } from '../../api/data/DragCoord';
 
 const getCurrentCoord = (target: SugarElement): CoordAdt => {

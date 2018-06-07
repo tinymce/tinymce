@@ -12,9 +12,9 @@ import SnapSchema from '../common/SnapSchema';
 import * as Snappables from '../snap/Snappables';
 import * as BlockerEvents from './BlockerEvents';
 import * as MouseData from './MouseData';
-import { MouseDraggingConfig, DragApi } from 'ephox/alloy/dragging/mouse/MouseDraggingTypes';
-import { SugarEvent, PositionCoordinates } from 'ephox/alloy/alien/TypeDefinitions';
-import { DraggingState } from 'ephox/alloy/dragging/common/DraggingTypes';
+import { MouseDraggingConfig, DragApi } from '../../dragging/mouse/MouseDraggingTypes';
+import { SugarEvent, PositionCoordinates } from '../../alien/TypeDefinitions';
+import { DraggingState } from '../../dragging/common/DraggingTypes';
 
 const handlers = function (dragConfig: MouseDraggingConfig, dragState: DraggingState<PositionCoordinates>): AlloyEvents.EventHandlerConfigRecord {
   return AlloyEvents.derive([

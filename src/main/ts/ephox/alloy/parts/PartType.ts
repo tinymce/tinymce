@@ -2,7 +2,7 @@ import { FieldPresence, FieldSchema, ValueSchema, DslType, FieldProcessorAdt, Pr
 import { Adt, Fun, Id, Option } from '@ephox/katamari';
 import { DetailedSpec } from '../parts/AlloyParts';
 import { AdtInterface } from '../alien/TypeDefinitions';
-import { RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
+import { RawDomSchema } from '../api/component/SpecTypes';
 
 export type PartType = (PartialSpec) => PartTypeAdt
 export type PartialSpec = { };

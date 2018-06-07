@@ -1,8 +1,8 @@
 import { Fun, Option } from '@ephox/katamari';
 
 import BehaviourState from '../../behaviour/common/BehaviourState';
-import { DragModeDeltas } from 'ephox/alloy/dragging/common/DraggingTypes';
-import { SugarEvent, PositionCoordinates } from 'ephox/alloy/alien/TypeDefinitions';
+import { DragModeDeltas } from '../../dragging/common/DraggingTypes';
+import { SugarEvent, PositionCoordinates } from '../../alien/TypeDefinitions';
 
 // NOTE: mode refers to the way that information is retrieved from
 // the user interaction. It can be things like MouseData, TouchData etc.

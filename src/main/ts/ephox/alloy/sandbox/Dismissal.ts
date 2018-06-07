@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { Receiving } from '../api/behaviour/Receiving';
 import { Sandboxing } from '../api/behaviour/Sandboxing';
 import * as Channels from '../api/messages/Channels';
-import { NamedConfiguredBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
+import { NamedConfiguredBehaviour } from '../api/behaviour/Behaviour';
 
 const schema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('isExtraPart', Fun.constant(false))

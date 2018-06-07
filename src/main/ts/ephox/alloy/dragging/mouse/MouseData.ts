@@ -1,6 +1,6 @@
 import { Option } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
-import { SugarEvent, PositionCoordinates } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarEvent, PositionCoordinates } from '../../alien/TypeDefinitions';
 
 const getData = function (event: SugarEvent): Option<PositionCoordinates> {
   return Option.from(Position(event.x(), event.y()));

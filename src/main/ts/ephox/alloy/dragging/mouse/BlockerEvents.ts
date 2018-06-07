@@ -1,6 +1,6 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { DragApi } from 'ephox/alloy/dragging/mouse/MouseDraggingTypes';
+import { DragApi } from '../../dragging/mouse/MouseDraggingTypes';
 
 import { EventFormat } from '../../events/SimulatedEvent';
 

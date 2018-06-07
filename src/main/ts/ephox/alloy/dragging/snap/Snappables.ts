@@ -2,9 +2,9 @@ import { Fun, Option, Options } from '@ephox/katamari';
 
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Presnaps from './Presnaps';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SnapsConfig, SnapConfig, SnapOutput, SnapPin } from 'ephox/alloy/dragging/common/DraggingTypes';
-import { PositionCoordinates } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SnapsConfig, SnapConfig, SnapOutput, SnapPin } from '../../dragging/common/DraggingTypes';
+import { PositionCoordinates } from '../../alien/TypeDefinitions';
 import { CoordAdt } from '../../api/data/DragCoord';
 
 // Types of coordinates

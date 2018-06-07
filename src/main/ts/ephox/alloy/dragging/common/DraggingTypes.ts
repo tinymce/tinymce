@@ -1,10 +1,10 @@
-import { CoordAdt } from "ephox/alloy/api/data/DragCoord";
-import * as Behaviour from "ephox/alloy/api/behaviour/Behaviour";
+import { CoordAdt } from "../../api/data/DragCoord";
+import * as Behaviour from "../../api/behaviour/Behaviour";
 import { Option } from '@ephox/katamari';
-import { AlloyComponent } from "ephox/alloy/api/component/ComponentApi";
-import { PositionCoordinates, SugarEvent, SugarElement } from "ephox/alloy/alien/TypeDefinitions";
-import { MouseDraggingConfigSpec } from "ephox/alloy/dragging/mouse/MouseDraggingTypes";
-import { TouchDraggingConfigSpec } from "ephox/alloy/dragging/touch/TouchDraggingTypes";
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { PositionCoordinates, SugarEvent, SugarElement } from "../../alien/TypeDefinitions";
+import { MouseDraggingConfigSpec } from "../mouse/MouseDraggingTypes";
+import { TouchDraggingConfigSpec } from "../touch/TouchDraggingTypes";
 
 export interface DraggingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: DraggingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
