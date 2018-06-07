@@ -1,7 +1,8 @@
 import { Option } from '@ephox/katamari';
 import { Compare, Focus, PredicateFind, Traverse } from '@ephox/sugar';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
-const preserve = function (f, container) {
+const preserve = <T>(f: (SugarElement) => T, container: SugarElement): T => {
   const ownerDoc = Traverse.owner(container);
 
   const refocus = Focus.active(ownerDoc).bind(function (focused) {

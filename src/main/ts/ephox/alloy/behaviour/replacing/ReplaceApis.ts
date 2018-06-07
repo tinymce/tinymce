@@ -15,7 +15,7 @@ const set = function (component: AlloyComponent, replaceConfig: ReplacingConfig,
   // NOTE: we may want to create a behaviour which allows you to switch
   // between predefined layouts, which would make a noop detection easier.
   // Until then, we'll just use AriaFocus like redesigning does.
-  AriaFocus.preserve(function () {
+  AriaFocus.preserve(() => {
     const children = Arr.map(data, component.getSystem().build);
 
     Arr.each(children, function (l) {

@@ -1,10 +1,20 @@
 import { Fun, Struct } from '@ephox/katamari';
 import { Height, Location, Width } from '@ephox/sugar';
+import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
 
 const pointed = Struct.immutable('point', 'width', 'height');
 const rect = Struct.immutable('x', 'y', 'width', 'height');
 
-const bounds = function (x, y, width, height) {
+export interface Bounds {
+  x: () => number;
+  y: () => number;
+  width: () => number;
+  height: () => number;
+  right: () => number;
+  bottom: () => number;
+}
+
+const bounds = function (x: number, y: number, width: number, height: number): Bounds {
   return {
     x: Fun.constant(x),
     y: Fun.constant(y),
@@ -15,7 +25,7 @@ const bounds = function (x, y, width, height) {
   };
 };
 
-const box = function (element) {
+const box = function (element: SugarElement): Bounds {
   const xy = Location.absolute(element);
   const w = Width.getOuter(element);
   const h = Height.getOuter(element);
