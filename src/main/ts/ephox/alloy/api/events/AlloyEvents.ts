@@ -1,12 +1,11 @@
 import { Objects } from '@ephox/boulder';
 
 import * as EventRoot from '../../alien/EventRoot';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as EventHandler from '../../construct/EventHandler';
+import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
 import * as AlloyTriggers from './AlloyTriggers';
 import * as SystemEvents from './SystemEvents';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
-import { SpecSchemaStruct } from '../../spec/SpecSchema';
 
 // TODO: Fix types.
 export type EventHandlerConfigRecord = Record<string, AlloyEventHandler<EventFormat>>;
@@ -28,7 +27,7 @@ type RunOnName<T extends EventFormat> = (handler: EventRunHandler<T>) => EventHa
 type RunOnSourceName<T extends EventFormat> = (handler: EventRunHandler<T>) => EventHandlerConfig<T>;
 export type EventRunHandler<T extends EventFormat> = (component: AlloyComponent, se: SimulatedEvent<T>, ...others) => void;
 
-const derive = (configs: EventHandlerConfig<any>[]): EventHandlerConfigRecord => {
+const derive = (configs: Array<EventHandlerConfig<any>>): EventHandlerConfigRecord => {
   return Objects.wrapAll(configs) as EventHandlerConfigRecord;
 };
 
@@ -138,7 +137,7 @@ const stopper = function <T>(name): EventHandlerConfig<T> {
 };
 
 const runOnAttached = runOnSourceName(SystemEvents.attachedToDom());
-const runOnDetached = runOnSourceName(SystemEvents.detachedFromDom())
+const runOnDetached = runOnSourceName(SystemEvents.detachedFromDom());
 const runOnInit = runOnSourceName(SystemEvents.systemInit());
 const runOnExecute = runOnName(SystemEvents.execute());
 export {

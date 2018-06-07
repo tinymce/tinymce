@@ -1,4 +1,4 @@
-import { EventFormat } from "../events/SimulatedEvent";
+import { EventFormat } from '../events/SimulatedEvent';
 
 // TODO move these to the correct village
 
@@ -19,7 +19,7 @@ export interface SugarElement {
 export interface SugarEvent extends EventFormat {
   kill: () => void;
   prevent: () => void;
-  raw: () => Event | TouchEvent;
+  raw: () => Event | TouchEvent | TransitionEvent;
   stop: () => void;
   target: () => SugarElement;
   x: () => number;
