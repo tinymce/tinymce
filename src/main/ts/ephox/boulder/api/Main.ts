@@ -1,9 +1,13 @@
-import * as DslType from './DslType';
 import * as FieldPresence from './FieldPresence';
 import * as FieldSchema from './FieldSchema';
 import * as Objects from './Objects';
 import * as ValueSchema from './ValueSchema';
-import { Processor, FieldProcessorAdt } from './DslType';
+import { foldType, foldField, Processor, FieldProcessorAdt } from './DslType';
+
+const DslType = {
+  foldType,
+  foldField
+};
 
 export {
   DslType,
@@ -11,6 +15,8 @@ export {
   FieldSchema,
   Objects,
   ValueSchema,
+
+  // Types
   Processor,
   FieldProcessorAdt
 };
