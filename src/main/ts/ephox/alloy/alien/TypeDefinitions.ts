@@ -1,4 +1,4 @@
-import { EventFormat } from "ephox/alloy/events/SimulatedEvent";
+import { EventFormat } from "../events/SimulatedEvent";
 
 // TODO move these to the correct village
 

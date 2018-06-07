@@ -1,6 +1,6 @@
 import { Fun, Struct } from '@ephox/katamari';
 import { Height, Location, Width } from '@ephox/sugar';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarElement } from '../alien/TypeDefinitions';
 
 const pointed = Struct.immutable('point', 'width', 'height');
 const rect = Struct.immutable('x', 'y', 'width', 'height');

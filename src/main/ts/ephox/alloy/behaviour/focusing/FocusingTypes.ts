@@ -1,5 +1,5 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface FocusingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: FocusingConfigSpec) => Behaviour.NamedConfiguredBehaviour;

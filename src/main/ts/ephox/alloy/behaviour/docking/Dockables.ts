@@ -3,10 +3,10 @@ import { Attr, Class, Css, Height, Location, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as DragCoord from '../../api/data/DragCoord';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { DockingContext, ViewportBox, DockingConfig } from 'ephox/alloy/behaviour/docking/DockingTypes';
-import { SugarElement, PositionCoordinates } from 'ephox/alloy/alien/TypeDefinitions';
-import { Origins } from 'ephox/alloy/positioning/layout/Origins';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { DockingContext, ViewportBox, DockingConfig } from '../../behaviour/docking/DockingTypes';
+import { SugarElement, PositionCoordinates } from '../../alien/TypeDefinitions';
+import { Origins } from '../../positioning/layout/Origins';
 
 const appear = function (component: AlloyComponent, contextualInfo: DockingContext): void {
   Class.add(component.element(), contextualInfo.transitionClass());

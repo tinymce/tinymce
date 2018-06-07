@@ -1,7 +1,7 @@
-import * as Behaviour from "ephox/alloy/api/behaviour/Behaviour";
+import * as Behaviour from "../../api/behaviour/Behaviour";
 import { Option } from '@ephox/katamari';
-import { AlloyComponent } from "ephox/alloy/api/component/ComponentApi";
-import { SugarElement } from "ephox/alloy/alien/TypeDefinitions";
+import { AlloyComponent } from "../../api/component/ComponentApi";
+import { SugarElement } from "../../alien/TypeDefinitions";
 
 export interface DockingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: DockingConfigSpec) => Behaviour.NamedConfiguredBehaviour;

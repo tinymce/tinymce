@@ -6,10 +6,10 @@ import * as Boxes from '../../positioning/layout/Boxes';
 import * as Origins from '../../positioning/layout/Origins';
 import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
 import AnchorSchema from '../../positioning/mode/AnchorSchema';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { PositioningConfig } from 'ephox/alloy/behaviour/positioning/PositioningTypes';
-import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
-import { PositionCoordinates } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
+import { Stateless } from '../../behaviour/common/NoState';
+import { PositionCoordinates } from '../../alien/TypeDefinitions';
 import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
 
 export interface OriginAdt extends AdtInterface { };

@@ -1,7 +1,7 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
-import { TransitionRoute } from 'ephox/alloy/behaviour/transitioning/TransitionApis';
+import { TransitionRoute } from '../../behaviour/transitioning/TransitionApis';
 
 
 export interface TransitioningBehaviour extends Behaviour.AlloyBehaviour {

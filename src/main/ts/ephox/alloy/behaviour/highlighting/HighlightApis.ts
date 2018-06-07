@@ -2,10 +2,10 @@ import { Arr, Option, Options, Result } from '@ephox/katamari';
 import { Class, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
 import * as Cycles from '../../alien/Cycles';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { HighlightingConfig } from 'ephox/alloy/behaviour/highlighting/HighlightingTypes';
-import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { HighlightingConfig } from '../../behaviour/highlighting/HighlightingTypes';
+import { Stateless } from '../../behaviour/common/NoState';
+import { SugarElement } from '../../alien/TypeDefinitions';
 
 const dehighlightAll = function (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): void {
   const highlighted = SelectorFilter.descendants(component.element(), '.' + hConfig.highlightClass());

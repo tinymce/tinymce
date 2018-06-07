@@ -4,9 +4,9 @@ import { Arr, Obj } from '@ephox/katamari';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as AlloyLogger from '../../log/AlloyLogger';
-import { ReceivingConfig } from 'ephox/alloy/behaviour/receiving/ReceivingTypes';
+import { ReceivingConfig } from '../../behaviour/receiving/ReceivingTypes';
 import { EventFormat, ReceivingEvent } from '../../events/SimulatedEvent';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const chooseChannels = function (channels, message) {
   return message.universal() ? channels : Arr.filter(channels, function (ch) {

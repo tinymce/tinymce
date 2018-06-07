@@ -2,7 +2,7 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as FocusApis from './FocusApis';
 import * as DomModification from '../../dom/DomModification';
-import { FocusingConfig } from 'ephox/alloy/behaviour/focusing/FocusingTypes';
+import { FocusingConfig } from '../../behaviour/focusing/FocusingTypes';
 import { EventFormat } from '../../events/SimulatedEvent';
 
 // TODO: DomModification types

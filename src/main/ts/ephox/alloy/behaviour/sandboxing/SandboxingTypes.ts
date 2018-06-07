@@ -1,8 +1,8 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { AlloySpec } from '../../api/component/SpecTypes';
 
 
 export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour {

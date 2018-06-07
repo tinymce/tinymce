@@ -2,10 +2,10 @@ import { Attr, Css } from '@ephox/sugar';
 import { Option } from '@ephox/katamari';
 import { Positioning } from '../../api/behaviour/Positioning';
 import * as Attachment from '../../api/system/Attachment';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SandboxingConfig, SandboxingState } from 'ephox/alloy/behaviour/sandboxing/SandboxingTypes';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SandboxingConfig, SandboxingState } from '../../behaviour/sandboxing/SandboxingTypes';
+import { AlloySpec } from '../../api/component/SpecTypes';
+import { SugarElement } from '../../alien/TypeDefinitions';
 
 // NOTE: A sandbox should not start as part of the world. It is expected to be
 // added to the sink on rebuild.

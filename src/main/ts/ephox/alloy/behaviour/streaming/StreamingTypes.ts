@@ -1,7 +1,7 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
-import { SimulatedEvent, EventFormat } from 'ephox/alloy/events/SimulatedEvent';
+import { SimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
 
 
 export interface StreamingBehaviour extends Behaviour.AlloyBehaviour {

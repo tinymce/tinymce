@@ -1,7 +1,7 @@
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
-import { DraggingState } from 'ephox/alloy/dragging/common/DraggingTypes';
+import { SugarElement } from '../../alien/TypeDefinitions';
+import { DraggingState } from '../../dragging/common/DraggingTypes';
 
 export interface PinchDragData {
   deltaX: () => number;

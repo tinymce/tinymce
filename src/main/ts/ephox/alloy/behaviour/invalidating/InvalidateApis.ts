@@ -2,9 +2,9 @@ import { Future, Result } from '@ephox/katamari';
 import { Body, Class, Html } from '@ephox/sugar';
 
 import * as AriaVoice from '../../alien/AriaVoice';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { InvalidatingConfig } from 'ephox/alloy/behaviour/invalidating/InvalidateTypes';
-import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { InvalidatingConfig } from '../../behaviour/invalidating/InvalidateTypes';
+import { Stateless } from '../../behaviour/common/NoState';
 
 const markValid = function (component: AlloyComponent, invalidConfig: InvalidatingConfig/*, invalidState */): void {
   const elem = invalidConfig.getRoot()(component).getOr(component.element());

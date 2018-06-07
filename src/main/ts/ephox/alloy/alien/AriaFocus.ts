@@ -1,6 +1,6 @@
 import { Option } from '@ephox/katamari';
 import { Compare, Focus, PredicateFind, Traverse } from '@ephox/sugar';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarElement } from '../alien/TypeDefinitions';
 
 const preserve = <T>(f: (SugarElement) => T, container: SugarElement): T => {
   const ownerDoc = Traverse.owner(container);

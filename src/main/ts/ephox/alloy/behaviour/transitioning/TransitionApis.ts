@@ -2,8 +2,8 @@ import { Objects } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 import { Attr, Class } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
-import { TransitioningConfig } from 'ephox/alloy/behaviour/transitioning/TransitioningTypes';
+import { Stateless } from '../../behaviour/common/NoState';
+import { TransitioningConfig } from '../../behaviour/transitioning/TransitioningTypes';
 
 export interface TransitionRoute {
   destination: () => string;

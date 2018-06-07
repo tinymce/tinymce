@@ -1,5 +1,5 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import { StreamingConfig } from 'ephox/alloy/behaviour/streaming/StreamingTypes';
+import { StreamingConfig } from '../../behaviour/streaming/StreamingTypes';
 import { EventFormat } from '../../events/SimulatedEvent';
 
 const events = function (streamConfig: StreamingConfig): AlloyEvents.EventHandlerConfigRecord {

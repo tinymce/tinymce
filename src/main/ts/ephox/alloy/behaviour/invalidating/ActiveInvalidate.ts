@@ -1,8 +1,8 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as InvalidateApis from './InvalidateApis';
 import { Fun } from '@ephox/katamari';
-import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
-import { InvalidatingConfig } from 'ephox/alloy/behaviour/invalidating/InvalidateTypes';
+import { Stateless } from '../../behaviour/common/NoState';
+import { InvalidatingConfig } from '../../behaviour/invalidating/InvalidateTypes';
 import { EventFormat } from '../../events/SimulatedEvent';
 
 const events = function (invalidConfig: InvalidatingConfig, invalidState: Stateless): AlloyEvents.EventHandlerConfigRecord {

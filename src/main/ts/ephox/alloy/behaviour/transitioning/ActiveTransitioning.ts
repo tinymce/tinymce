@@ -1,8 +1,8 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as TransitionApis from './TransitionApis';
-import { TransitioningConfig } from 'ephox/alloy/behaviour/transitioning/TransitioningTypes';
-import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
+import { TransitioningConfig } from '../../behaviour/transitioning/TransitioningTypes';
+import { Stateless } from '../../behaviour/common/NoState';
 
 import { EventFormat } from '../../events/SimulatedEvent';
 

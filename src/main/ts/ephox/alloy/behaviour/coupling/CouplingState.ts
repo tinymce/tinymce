@@ -3,7 +3,7 @@ import { Fun, Obj } from '@ephox/katamari';
 import { JSON } from '@ephox/sand';
 import { CouplingConfig } from './CouplingTypes';
 import BehaviourState from '../common/BehaviourState';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const init = function (spec) {
   const coupled = { };

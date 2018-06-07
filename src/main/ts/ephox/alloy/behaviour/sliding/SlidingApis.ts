@@ -1,6 +1,6 @@
 import { Class, Classes, Css } from '@ephox/sugar';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SlidingConfig } from 'ephox/alloy/behaviour/sliding/SlidingTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SlidingConfig } from '../../behaviour/sliding/SlidingTypes';
 
 const getAnimationRoot = function (component: AlloyComponent, slideConfig: SlidingConfig) {
   return slideConfig.getAnimationRoot().fold(function () {

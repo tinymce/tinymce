@@ -1,7 +1,7 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as SandboxApis from './SandboxApis';
-import { SandboxingConfig, SandboxingState } from 'ephox/alloy/behaviour/sandboxing/SandboxingTypes';
+import { SandboxingConfig, SandboxingState } from '../../behaviour/sandboxing/SandboxingTypes';
 
 const events = function (sandboxConfig: SandboxingConfig, sandboxState: SandboxingState): AlloyEvents.EventHandlerConfigRecord {
   return AlloyEvents.derive([

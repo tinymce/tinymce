@@ -1,8 +1,8 @@
 import { Arr } from '@ephox/katamari';
 import { Attr, Class, Node } from '@ephox/sugar';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
-import { DisableConfig } from 'ephox/alloy/behaviour/disabling/DisableTypes';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { Stateless } from '../../behaviour/common/NoState';
+import { DisableConfig } from '../../behaviour/disabling/DisableTypes';
 
 // Just use "disabled" attribute for these, not "aria-disabled"
 const nativeDisabled = [

@@ -2,10 +2,10 @@ import { Fun, Option } from '@ephox/katamari';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { PinchingConfig, PinchingState, PinchDragData } from 'ephox/alloy/behaviour/pinching/PinchingTypes';
-import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
-import { DraggingState, DragModeDeltas } from 'ephox/alloy/dragging/common/DraggingTypes';
-import { SugarEvent } from 'ephox/alloy/alien/TypeDefinitions';
+import { PinchingConfig, PinchingState, PinchDragData } from '../../behaviour/pinching/PinchingTypes';
+import { Stateless } from '../../behaviour/common/NoState';
+import { DraggingState, DragModeDeltas } from '../../dragging/common/DraggingTypes';
+import { SugarEvent } from '../../alien/TypeDefinitions';
 
 const mode: DragModeDeltas<PinchDragData> = {
   getData (e: SugarEvent)  {

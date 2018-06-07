@@ -3,7 +3,7 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SugarElement } from '../../alien/TypeDefinitions';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import { AlloySpec } from '../../api/component/SpecTypes';
 
 
 export interface CouplingBehaviour extends Behaviour.AlloyBehaviour {

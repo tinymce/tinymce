@@ -1,5 +1,5 @@
-import { AlloyComponent } from "ephox/alloy/api/component/ComponentApi";
-import { RepresentingConfig, RepresentingState } from "ephox/alloy/behaviour/representing/RepresentingTypes";
+import { AlloyComponent } from "../../api/component/ComponentApi";
+import { RepresentingConfig, RepresentingState } from "../../behaviour/representing/RepresentingTypes";
 
 const onLoad = function (component: AlloyComponent, repConfig, repState) {
   repConfig.store().manager().onLoad(component, repConfig, repState);

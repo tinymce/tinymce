@@ -4,7 +4,7 @@ import { Fun, Merger, Obj, Option, Thunk } from '@ephox/katamari';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as DomModification from '../../dom/DomModification';
-import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
+import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
 import { CustomEvent } from '../../events/SimulatedEvent';
 
 const executeEvent = function (bConfig, bState, executor): AlloyEvents.EventHandlerConfig<CustomEvent> {

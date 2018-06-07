@@ -1,7 +1,7 @@
 import { Class } from '@ephox/sugar';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { TogglingConfig } from 'ephox/alloy/behaviour/toggling/TogglingTypes';
-import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { TogglingConfig } from '../../behaviour/toggling/TogglingTypes';
+import { Stateless } from '../../behaviour/common/NoState';
 
 const updateAriaState = function (component: AlloyComponent, toggleConfig: TogglingConfig) {
   const pressed = isOn(component, toggleConfig);

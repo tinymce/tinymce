@@ -3,11 +3,11 @@ import { Compare, Insert } from '@ephox/sugar';
 
 import * as AriaFocus from '../../alien/AriaFocus';
 import * as Attachment from '../../api/system/Attachment';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
-import { ReplacingConfig } from 'ephox/alloy/behaviour/replacing/ReplacingTypes';
-import { Stateless } from 'ephox/alloy/behaviour/common/NoState';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloySpec } from '../../api/component/SpecTypes';
+import { ReplacingConfig } from '../../behaviour/replacing/ReplacingTypes';
+import { Stateless } from '../../behaviour/common/NoState';
+import { SugarElement } from '../../alien/TypeDefinitions';
 
 const set = function (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, data: AlloySpec[]): void {
   Attachment.detachChildren(component);
