@@ -10,7 +10,7 @@ import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { SketchSpec, RawDomSchema, SimpleOrSketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SketchSpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
 const owner = 'form';
 export interface FormSketch {

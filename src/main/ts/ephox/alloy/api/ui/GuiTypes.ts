@@ -3,7 +3,7 @@ import { Fun, Id, Option } from '@ephox/katamari';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { PremadeSpec, AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import { PremadeSpec, AlloySpec } from '../../api/component/SpecTypes';
 
 const premadeTag = Id.generate('alloy-premade');
 const _apiConfig = Id.generate('api');

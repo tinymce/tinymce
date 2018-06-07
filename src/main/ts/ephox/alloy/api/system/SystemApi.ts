@@ -2,7 +2,7 @@ import { Contracts, Result } from '@ephox/katamari';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SimulatedEvent, NativeSimulatedEvent } from 'ephox/alloy/events/SimulatedEvent';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import { AlloySpec } from '../component/SpecTypes';
 
 export interface AlloySystemApi {
   addToGui: (AlloyComponent) => void;
