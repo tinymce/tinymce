@@ -7,8 +7,8 @@ import * as PartSubstitutes from './PartSubstitutes';
 import * as PartType from './PartType';
 import { SpecSchemaStruct } from '../spec/SpecSchema';
 import { AlloyComponent } from '../api/component/ComponentApi';
-import { RawDomSchema, SketchSpec, AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
-import { GeneralStruct } from 'ephox/alloy/alien/TypeDefinitions';
+import { RawDomSchema, SketchSpec, AlloySpec } from '../api/component/SpecTypes';
+import { GeneralStruct } from '../alien/TypeDefinitions';
 
 export type PartialSpec = { }
 

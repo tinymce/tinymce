@@ -1,7 +1,7 @@
 import { FieldSchema, Objects, ValueSchema, DslType, FieldProcessorAdt } from '@ephox/boulder';
 import { Arr, Merger, Obj } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
-import { AlloySpec, ComponentSpec, RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
+import { AlloySpec, ComponentSpec, RawDomSchema } from '../api/component/SpecTypes';
 
 import { AdtInterface } from '../alien/TypeDefinitions';
 import { EventHandlerConfig, EventHandlerConfigRecord } from '../api/events/AlloyEvents';

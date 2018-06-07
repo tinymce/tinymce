@@ -1,5 +1,5 @@
 import { Merger, Option } from '@ephox/katamari';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import { AlloySpec } from '../../api/component/SpecTypes';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyParts from '../../parts/AlloyParts';

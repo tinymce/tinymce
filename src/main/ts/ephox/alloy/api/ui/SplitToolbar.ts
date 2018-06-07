@@ -1,6 +1,6 @@
 import { Arr, Merger } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
-import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SketchSpec } from '../../api/component/SpecTypes';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyParts from '../../parts/AlloyParts';

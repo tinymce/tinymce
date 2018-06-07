@@ -5,7 +5,7 @@ import { AdtInterface } from '../../alien/TypeDefinitions';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Tagger from '../../registry/Tagger';
 import * as SpecSchema from '../../spec/SpecSchema';
-import { SimpleSpec, SketchSpec, RawDomSchema, SimpleOrSketchSpec, AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SimpleSpec, SketchSpec, RawDomSchema, SimpleOrSketchSpec, AlloySpec } from '../../api/component/SpecTypes';
 
 export type SingleFactory = (detail: SpecSchema.SpecSchemaStruct, specWithUid: SimpleSpec) => SketchSpec;
 export type CompositeFactory = (

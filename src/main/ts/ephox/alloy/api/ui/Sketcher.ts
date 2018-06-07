@@ -6,7 +6,7 @@ import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { SketchSpec, AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import { SketchSpec, AlloySpec } from '../component/SpecTypes';
 import { GeneratedParts } from '../../parts/AlloyParts';
 
 export interface SingleSketch {
