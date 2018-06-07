@@ -92,7 +92,7 @@ const schemas = function (parts: PartType.PartTypeAdt[]): FieldProcessorAdt[] {
   });
 };
 
-const names = function (parts): string[] {
+const names = function (parts: PartType.PartTypeAdt[]): string[] {
   return Arr.map(parts, PartType.name);
 };
 
@@ -146,7 +146,7 @@ const getPartsOrDie = (component: AlloyComponent, detail: DetailedSpec, partKeys
   return Obj.map(r, Fun.constant);
 };
 
-const defaultUids = function (baseUid: string, partTypes): Record<string, string> {
+const defaultUids = function (baseUid: string, partTypes: PartType.PartTypeAdt[]): Record<string, string> {
   const partNames = names(partTypes);
 
   return Objects.wrapAll(
@@ -156,7 +156,7 @@ const defaultUids = function (baseUid: string, partTypes): Record<string, string
   );
 };
 
-const defaultUidsSchema = function (partTypes): FieldProcessorAdt {
+const defaultUidsSchema = function (partTypes: PartType.PartTypeAdt[]): FieldProcessorAdt {
   return FieldSchema.field(
     'partUids',
     'partUids',
