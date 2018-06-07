@@ -13,7 +13,6 @@ import * as UiSketcher from './UiSketcher';
 import { SketchSpec, RawDomSchema, SimpleOrSketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 
 const owner = 'form';
-// TODO: FIXTYPES
 export interface FormSketch {
   // why do forms not use or follow the Single or compositeSketch Type signature?
   sketch: (fSpec: FormSpecBuilder) => SketchSpec;
@@ -35,7 +34,6 @@ const getPartName = function (name) {
   return '<alloy.field.' + name + '>';
 };
 
-// TODO: FIXTYPES
 const sketch = function (fSpec: FormSpecBuilder): SketchSpec {
   const parts = (function () {
     const record: string[] = [ ];
