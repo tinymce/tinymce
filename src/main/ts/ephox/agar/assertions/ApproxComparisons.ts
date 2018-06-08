@@ -54,6 +54,23 @@ var startsWith = function (target) {
   };
 };
 
+var contains = function (target) {
+  var compare = function (actual) {
+    return Strings.contains(actual, target);
+  };
+
+  var strAssert = function (label, actual) {
+    var c = compare(actual);
+    assertOnBool(c, label + '\nExpected value: ' +  'contains(' + target + ')', actual);
+  };
+
+  return {
+    show: Fun.constant('contains("' + target + '")'),
+    strAssert: strAssert,
+    arrAssert: dieWith('"contains" is not an array assertion. Perhaps you wanted "has"?')
+  };
+};
+
 var none = function (message) {
   var compare = function (actual) {
     return actual === missing;
@@ -126,6 +143,7 @@ var not = function (target) {
 export default {
   is: is,
   startsWith: startsWith,
+  contains: contains,
   none: none,
 
   has: has,
