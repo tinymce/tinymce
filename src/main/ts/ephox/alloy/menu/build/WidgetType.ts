@@ -13,7 +13,7 @@ import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ItemEvents from '../util/ItemEvents';
 import * as WidgetParts from './WidgetParts';
-import { SimulatedEvent } from '../../events/SimulatedEvent';
+import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const builder = function (info) {
@@ -27,7 +27,7 @@ const builder = function (info) {
     });
   };
 
-  const onHorizontalArrow = function (component: AlloyComponent, simulatedEvent: SimulatedEvent) {
+  const onHorizontalArrow = function (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) {
     return EditableFields.inside(simulatedEvent.event().target()) ? Option.none() : (function () {
       if (info.autofocus()) {
         simulatedEvent.setSource(component.element());

@@ -4,10 +4,11 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Representing } from '../../api/behaviour/Representing';
 import * as PartType from '../../parts/PartType';
 import { DslType } from '@ephox/boulder';
+import { PartTypeAdt } from '../../parts/PartType';
 
 const owner = Fun.constant('item-widget');
 
-const parts = Fun.constant([
+const parts: () => PartTypeAdt[] = Fun.constant([
   PartType.required({
     name: 'widget',
     overrides (detail) {
@@ -25,7 +26,7 @@ const parts = Fun.constant([
         ])
       };
     }
-  }) as DslType.FieldProcessorAdt
+  })
 ]);
 
 export {

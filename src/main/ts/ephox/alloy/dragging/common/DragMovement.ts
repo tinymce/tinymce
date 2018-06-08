@@ -3,8 +3,13 @@ import { Css, Location, Scroll, Traverse } from '@ephox/sugar';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
+import { PositionCoordinates, SugarElement } from '../../alien/TypeDefinitions';
+import { Option } from '@ephox/katamari';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { DraggingConfig, SnapsConfig } from '../../dragging/common/DraggingTypes';
+import { CoordAdt } from '../../api/data/DragCoord';
 
-const getCurrentCoord = function (target) {
+const getCurrentCoord = (target: SugarElement): CoordAdt => {
   return Css.getRaw(target, 'left').bind(function (left) {
     return Css.getRaw(target, 'top').bind(function (top) {
       return Css.getRaw(target, 'position').map(function (position) {
@@ -21,7 +26,8 @@ const getCurrentCoord = function (target) {
   });
 };
 
-const calcNewCoord = function (component, optSnaps, currentCoord, scroll, origin, delta) {
+
+const calcNewCoord = function (component: AlloyComponent, optSnaps: Option<SnapsConfig>, currentCoord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates, delta: PositionCoordinates): DragCoord.CoordAdt {
   return optSnaps.fold(function () {
     // When not docking, use fixed coordinates.
     const translated = DragCoord.translate(currentCoord, delta.left(), delta.top());
@@ -36,7 +42,7 @@ const calcNewCoord = function (component, optSnaps, currentCoord, scroll, origin
   });
 };
 
-const dragBy = function (component, dragConfig, delta) {
+const dragBy = function (component: AlloyComponent, dragConfig: DraggingConfig, delta: PositionCoordinates): void {
   const doc = Traverse.owner(component.element());
   const scroll = Scroll.get(doc);
 

@@ -1,7 +1,7 @@
 import { Contracts, Result } from '@ephox/katamari';
 import { AlloySystemApi } from '../../api/system/SystemApi';
 import { SugarElement } from '../../alien/TypeDefinitions';
-import { EventHandlerConfig } from '../../api/events/AlloyEvents';
+import { EventHandlerConfig, EventHandlerConfigRecord } from '../../api/events/AlloyEvents';
 import { AlloyBehaviourConfig, AlloyBehaviour } from '../../api/behaviour/Behaviour';
 
 export interface AlloyComponent {
@@ -15,7 +15,7 @@ export interface AlloyComponent {
   element: () => SugarElement;
   syncComponents: () => void;
   components: () => any;
-  events: () => EventHandlerConfig;
+  events: () => EventHandlerConfigRecord;
 }
 
 const ComponentApi = Contracts.exactly([

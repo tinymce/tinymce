@@ -1,8 +1,11 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as InvalidateApis from './InvalidateApis';
 import { Fun } from '@ephox/katamari';
+import { Stateless } from '../../behaviour/common/NoState';
+import { InvalidatingConfig } from '../../behaviour/invalidating/InvalidateTypes';
+import { EventFormat } from '../../events/SimulatedEvent';
 
-const events = function (invalidConfig, invalidState) {
+const events = function (invalidConfig: InvalidatingConfig, invalidState: Stateless): AlloyEvents.EventHandlerConfigRecord {
   return invalidConfig.validator().map(function (validatorInfo) {
     return AlloyEvents.derive([
       AlloyEvents.run(validatorInfo.onEvent(), function (component) {

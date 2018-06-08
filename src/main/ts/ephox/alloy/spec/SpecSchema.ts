@@ -1,21 +1,20 @@
-import { FieldSchema, Objects, ValueSchema, DslType } from '@ephox/boulder';
+import { FieldSchema, Objects, ValueSchema, DslType, FieldProcessorAdt } from '@ephox/boulder';
 import { Arr, Merger, Obj } from '@ephox/katamari';
 import { JSON as Json } from '@ephox/sand';
+import { AlloySpec, ComponentSpec, RawDomSchema } from '../api/component/SpecTypes';
 
+import { AdtInterface } from '../alien/TypeDefinitions';
+import { EventHandlerConfig, EventHandlerConfigRecord } from '../api/events/AlloyEvents';
 import * as Fields from '../data/Fields';
 import * as UiSubstitutes from './UiSubstitutes';
-import { AlloyComponentsSpec, RawDomSchema, AlloyMixedSpec } from '../api/ui/Sketcher';
-import { EventHandlerConfig } from '../api/events/AlloyEvents';
-import { AdtInterface } from '../alien/TypeDefinitions';
 
 export interface SpecSchemaStruct {
-  components: () => AlloyComponentsSpec;
-  containerBehaviours: () => ContainerBehaviours;
+  components: () => ComponentSpec;
   dom: () => RawDomSchema;
   domModification: () => {}; // TODO: Mike
-  eventOrder: () => EventHandlerConfig; // TODO: Mike test this
-  events: () => EventHandlerConfig;
-  originalSpec: () => AlloyMixedSpec;
+  eventOrder: () => { [key: string]: string[] }; // TODO: Mike test this
+  events: () => EventHandlerConfigRecord;
+  originalSpec: () => any; // For debugging purposes only
   uid: () => string;
   'debug.sketcher': () => {};
   // ... optional
@@ -26,7 +25,7 @@ export interface ContainerBehaviours {
   [key: string]: any;
 }
 
-const getPartsSchema = function (partNames, _optPartNames, _owner) {
+const getPartsSchema = function (partNames, _optPartNames, _owner): FieldProcessorAdt[] {
   const owner = _owner !== undefined ? _owner : 'Unknown owner';
   const fallbackThunk = function () {
     return [
@@ -71,7 +70,7 @@ const getPartsSchema = function (partNames, _optPartNames, _owner) {
   return [ partsSchema, partUidsSchema ];
 };
 
-const getPartUidsSchema = function (label, spec) {
+const getPartUidsSchema = function (label, spec): FieldProcessorAdt {
   return FieldSchema.state(
     'partUids',
     function (spec) {
@@ -110,7 +109,7 @@ const asRawOrDie = function (label, schema, spec, partSchemas, partUidsSchemas) 
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
-const asStructOrDie = function (label: string, schema: AdtInterface[], spec: AlloyMixedSpec, partSchemas: any[], partUidsSchemas: any[]): SpecSchemaStruct {
+const asStructOrDie = function (label: string, schema: AdtInterface[], spec: AlloySpec, partSchemas: any[], partUidsSchemas: any[]): SpecSchemaStruct {
   const baseS = base(label, partSchemas, partUidsSchemas, spec);
   return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };

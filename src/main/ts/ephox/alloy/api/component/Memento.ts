@@ -1,27 +1,29 @@
 import { Objects } from '@ephox/boulder';
 import { Merger, Option } from '@ephox/katamari';
+import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
+import { isSketchSpec } from '../../api/ui/Sketcher';
 import * as Tagger from '../../registry/Tagger';
-import { AlloyMixedSpec, SketchSpec, RawDomSchema, isSketchSpec } from '../../api/ui/Sketcher';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface MomentoRecord {
-  get: () => any;
-  getOpt: () => any;
-  asSpec: () => any;
+  get: (AlloyComponent) => AlloyComponent;
+  getOpt: (AlloyComponent) => Option<AlloyComponent>;
+  asSpec: () => SimpleOrSketchSpec;
 }
 
-const record = function (spec: AlloyMixedSpec) {
+const record = function (spec: SimpleOrSketchSpec) {
   const uid = isSketchSpec(spec) && Objects.hasKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');
 
-  const get = function (any) {
-    return any.getSystem().getByUid(uid).getOrDie();
+  const get = function (anyInSystem: AlloyComponent): AlloyComponent {
+    return anyInSystem.getSystem().getByUid(uid).getOrDie();
   };
 
-  const getOpt = function (any) {
-    return any.getSystem().getByUid(uid).fold(Option.none, Option.some);
+  const getOpt = function (anyInSystem: AlloyComponent): Option<AlloyComponent> {
+    return anyInSystem.getSystem().getByUid(uid).fold(Option.none, Option.some);
   };
 
-  const asSpec = function () {
+  const asSpec = function (): SimpleOrSketchSpec {
     return Merger.deepMerge(spec, {
       uid
     });

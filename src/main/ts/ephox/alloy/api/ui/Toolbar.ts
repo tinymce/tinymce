@@ -1,16 +1,16 @@
 import { Merger, Option } from '@ephox/katamari';
+import { AlloySpec } from '../../api/component/SpecTypes';
 
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ToolbarSchema from '../../ui/schema/ToolbarSchema';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { CompositeSketch, RawDomSchema, composite } from './Sketcher';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloyPremadeComponent } from '../../api/component/GuiFactory';
+import { composite, CompositeSketch } from './Sketcher';
 
 export interface ToolbarSketch extends CompositeSketch {
-  setGroups: (toolbar: AlloyComponent, groups: RawDomSchema[] | AlloyPremadeComponent []) => void;
+  setGroups: (toolbar: AlloyComponent, groups: AlloySpec []) => void;
 }
 
 const factory = function (detail, components, spec, _externals) {

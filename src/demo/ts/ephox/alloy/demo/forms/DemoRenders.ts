@@ -1,11 +1,11 @@
-import { RawElementSchema, SketchSpec } from 'ephox/alloy/api/ui/Sketcher';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
-import { GeneratedSinglePart } from 'ephox/alloy/parts/AlloyParts';
+
+import { PremadeSpec, SimpleOrSketchSpec, AlloySpec, RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
 
 const demoItem = ValueSchema.objOf([
   FieldSchema.strictObjOf('data', [
@@ -190,7 +190,7 @@ const demoToolbarGroupRender = function (group) {
     },
 
     components: [
-      ToolbarGroup.parts().items()
+      ToolbarGroup.parts().items({ })
     ],
 
     items: spec.items,

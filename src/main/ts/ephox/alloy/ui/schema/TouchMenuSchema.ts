@@ -1,4 +1,4 @@
-import { DslType, FieldSchema } from '@ephox/boulder';
+import { DslType, FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Height, Location, Width } from '@ephox/sugar';
 
@@ -10,6 +10,7 @@ import * as Fields from '../../data/Fields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 import * as Layout from '../../positioning/layout/Layout';
+import { PartTypeAdt } from '../../parts/PartType';
 
 const anchorAtCentre = function (component) {
   const pos = Location.absolute(component.element());
@@ -24,7 +25,7 @@ const anchorAtCentre = function (component) {
 };
 
 // Similar to dropdown.
-const schema = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('dom'),
   FieldSchema.strict('fetch'),
   Fields.onHandler('onOpen'),
@@ -46,7 +47,7 @@ const schema = Fun.constant([
   FieldSchema.defaulted('getAnchor', anchorAtCentre)
 ]);
 
-const parts = Fun.constant([
+const parts: () => PartTypeAdt[] = Fun.constant([
   PartType.external({
     schema: [
       Fields.itemMarkers()

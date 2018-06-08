@@ -1,16 +1,21 @@
 import { Objects } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
-import { AdtInterface } from '../../alien/TypeDefinitions';
-import { RawDomSchema, RawDomSchemaUid, SketchSpec, CompositeSketch } from '../../api/ui/Sketcher';
 
+import { AdtInterface } from '../../alien/TypeDefinitions';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Tagger from '../../registry/Tagger';
 import * as SpecSchema from '../../spec/SpecSchema';
+import { SimpleSpec, SketchSpec, RawDomSchema, SimpleOrSketchSpec, AlloySpec } from '../../api/component/SpecTypes';
 
-export type SingleFactory = (detail: SpecSchema.SpecSchemaStruct, specWithUid: RawDomSchemaUid) => SketchSpec;
-export type CompositeFactory = (detail: SpecSchema.SpecSchemaStruct, components: SketchSpec[], spec: RawDomSchemaUid, _externals?: any) => SketchSpec;
+export type SingleFactory = (detail: SpecSchema.SpecSchemaStruct, specWithUid: SimpleSpec) => SketchSpec;
+export type CompositeFactory = (
+  detail: SpecSchema.SpecSchemaStruct,
+  components: AlloySpec[],
+  spec: SimpleSpec,
+  _externals?: any
+) => SketchSpec;
 
-const single = function (owner: string, schema: AdtInterface[], factory: SingleFactory, spec: RawDomSchema): SketchSpec {
+const single = function (owner: string, schema: AdtInterface[], factory: SingleFactory, spec: SimpleOrSketchSpec): SketchSpec {
   const specWithUid = supplyUid(spec);
   const detail = SpecSchema.asStructOrDie(owner, schema, specWithUid, [ ], [ ]);
   return Merger.deepMerge(
@@ -19,7 +24,7 @@ const single = function (owner: string, schema: AdtInterface[], factory: SingleF
   );
 };
 
-const composite = function (owner: string, schema: AdtInterface[], partTypes: AdtInterface[], factory: CompositeFactory, spec: RawDomSchema): SketchSpec {
+const composite = function (owner: string, schema: AdtInterface[], partTypes: AdtInterface[], factory: CompositeFactory, spec: SimpleOrSketchSpec): SketchSpec {
   const specWithUid = supplyUid(spec);
 
   // Identify any information required for external parts
@@ -43,7 +48,7 @@ const composite = function (owner: string, schema: AdtInterface[], partTypes: Ad
   );
 };
 
-const supplyUid = function (spec: RawDomSchema): RawDomSchemaUid {
+const supplyUid = function (spec: SimpleOrSketchSpec): SketchSpec {
   return Merger.deepMerge(
     {
       uid: Tagger.generate('uid')

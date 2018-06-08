@@ -15,7 +15,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', function () {
   Logger.sync('Checking tag=button', function () {
     const button = GuiFactory.build(mTag('button'));
 
-    ToggleModes.updateAuto(button, { }, true);
+    ToggleModes.updateAuto(button, undefined, true);
 
     Assertions.assertStructure(
       'Button should have aria-pressed role',
@@ -38,7 +38,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', function () {
         attributes: { role: 'listbox' }
       }
     });
-    ToggleModes.updateAuto(listbox, {}, true);
+    ToggleModes.updateAuto(listbox, undefined, true);
     Assertions.assertStructure(
       'Listbox should have aria-pressed and aria-expanded role',
       ApproxStructure.build(function (s, str, arr) {
@@ -60,7 +60,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', function () {
         attributes: { role: 'menuitemcheckbox' }
       }
     });
-    ToggleModes.updateAuto(menuitem, {}, true);
+    ToggleModes.updateAuto(menuitem, undefined, true);
     Assertions.assertStructure(
       'Menu Item Checkbox should have aria-checked role',
       ApproxStructure.build(function (s, str, arr) {

@@ -5,11 +5,11 @@ import { Objects } from '@ephox/boulder';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
-import { SimulatedEvent } from '../../events/SimulatedEvent';
+import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { FocusManagers } from '../../api/Main';
 
 export interface KeyingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: KeyingConfig) => { [key: string]: (any) => any };
+  config: (config: KeyingConfig) => Behaviour.NamedConfiguredBehaviour;
   focusIn: (component: AlloyComponent) => void;
   setGridSize: (
     component: AlloyComponent,
@@ -56,6 +56,7 @@ export interface KeyingConfig {
   getInitial?: (chooser) => Option<SugarElement>;
   execute?: (chooser, simulatedEvent, focused) => boolean;
   executeOnMove?: boolean;
+  allowVertical?: boolean;
 
   cycles?: boolean;
   useSpace?: boolean;
@@ -71,15 +72,15 @@ export interface KeyingConfig {
   moveOnTab?: boolean;
 
   onSpace?: (comp: AlloyComponent) => Option<boolean>;
-  onDown?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
-  onUp?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
-  onLeft?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
-  onRight?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
-  onEnter?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
-  onEscape?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
-  onShiftEnter?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
-  onShiftTab?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
-  onTab?: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;
+  onDown?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  onUp?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  onLeft?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  onRight?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  onEnter?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  onEscape?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  onShiftEnter?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  onShiftTab?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  onTab?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   useTabstopAt?: (comp: AlloyComponent) => Option<boolean>;
 }
 
@@ -140,6 +141,7 @@ export interface KeyingConfig {
 //   getInitial: (chooser) => Option<SugarElement>;
 //   execute: (chooser, simulatedEvent, focused) => boolean;
 //   executeOnMove: boolean;
+//   allowVertical: boolean;
 // }
 // export interface TabbingConfig {
 //   onEscape: (comp: AlloyComponent, simulatedEvent: SimulatedEvent) => Option<boolean>;

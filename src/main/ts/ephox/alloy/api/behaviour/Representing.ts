@@ -5,24 +5,9 @@ import RepresentSchema from '../../behaviour/representing/RepresentSchema';
 import * as RepresentState from '../../behaviour/representing/RepresentState';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Result } from '@ephox/katamari';
+import { RepresentingBehaviour } from '../../behaviour/representing/RepresentingTypes';
 
-export interface RepresentingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: RepresentingConfig) => { [key: string]: (any) => any };
-  setValueFrom: (component: AlloyComponent, source: AlloyComponent) => void;
-}
 
-export interface RepresentingConfig {
-  store: {
-    mode: string,
-    initialValue?: any,
-    getFallbackEntry?: (key: string) => { value: string, text: string },
-    getDataKey?: (typeAhead: AlloyComponent) => string,
-    setData?: (typeAhead: AlloyComponent, data: { text, value: string } ) => void;
-    getValue?: (...any) => any;
-    setValue?: (...any) => void;
-  };
-  onSetValue?: <T, E>() => Result<T, E>;
-}
 
 // The self-reference is clumsy.
 const Representing = Behaviour.create({

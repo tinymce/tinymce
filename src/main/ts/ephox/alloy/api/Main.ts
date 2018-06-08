@@ -70,12 +70,14 @@ import { Tabbar } from './ui/Tabbar';
 import { TabButton } from './ui/TabButton';
 import { TabSection } from './ui/TabSection';
 import { Tabview } from './ui/Tabview';
-import * as TieredMenu from './ui/TieredMenu';
+import { tieredMenu as TieredMenu, TieredMenuSketch, TieredData } from './ui/TieredMenu';
+
 import { Toolbar } from './ui/Toolbar';
 import { ToolbarGroup } from './ui/ToolbarGroup';
 import { TouchMenu } from './ui/TouchMenu';
 import { Typeahead } from './ui/Typeahead';
 import * as UiSketcher from './ui/UiSketcher';
+import * as Fields from '../data/Fields';
 
 // TODO: naughty non API's being exported
 import * as AlloyParts from '../parts/AlloyParts';
@@ -86,6 +88,11 @@ import * as TapEvent from '../events/TapEvent'; // Used directly by mobile theme
 import * as AlloyLogger from '../log/AlloyLogger'; // Used directly by mobile theme
 import * as Debugging from '../debugging/Debugging'; // Used directly by mobile theme
 import * as FunctionAnnotator from '../debugging/FunctionAnnotator'; // Used directly by Alloy-docs
+
+// Type Def Exports
+import { SugarEvent, SugarElement } from '../alien/TypeDefinitions'; // TODO FIX this when we fix SUGARE types
+import { AlloySpec, SimpleOrSketchSpec, LooseSpec, RawDomSchema, ComponentSpec, SketchSpec, SimpleSpec, PremadeSpec } from './component/SpecTypes';
+import { CustomEvent, EventFormat, SimulatedEvent, NativeSimulatedEvent, CustomSimulatedEvent, ReceivingEvent } from '../events/SimulatedEvent';
 
 export {
   AddEventsBehaviour,
@@ -160,11 +167,14 @@ export {
   TabSection,
   Tabview,
   TieredMenu,
+  TieredMenuSketch,
+  TieredData,
   Toolbar,
   ToolbarGroup,
   TouchMenu,
   Typeahead,
   UiSketcher,
+  Fields,
 
   AlloyParts,
   BehaviourState,
@@ -173,5 +183,22 @@ export {
   TapEvent,
   AlloyLogger,
   Debugging,
-  FunctionAnnotator
+  FunctionAnnotator,
+
+  AlloySpec,
+  SimpleOrSketchSpec,
+  LooseSpec,
+  RawDomSchema,
+  ComponentSpec,
+  SketchSpec,
+  SimpleSpec,
+  PremadeSpec,
+  CustomEvent,
+  EventFormat,
+  SimulatedEvent,
+  NativeSimulatedEvent,
+  CustomSimulatedEvent,
+  ReceivingEvent,
+  SugarEvent,
+  SugarElement
 };

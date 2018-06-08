@@ -1,13 +1,7 @@
 import * as Behaviour from './Behaviour';
 import * as ActiveUnselecting from '../../behaviour/unselecting/ActiveUnselecting';
+import { UnselectingBehaviour } from '../../behaviour/unselecting/UnselectingTypes';
 
-export interface UnselectingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: UnselectingConfig) => { [key: string]: (any) => any };
-}
-
-export interface UnselectingConfig {
-  // intentionally blank
-}
 
 const Unselecting = Behaviour.create({
   fields: [ ],

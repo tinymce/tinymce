@@ -1,13 +1,8 @@
 import * as Behaviour from './Behaviour';
 import * as ActiveTabstopping from '../../behaviour/tabstopping/ActiveTabstopping';
 import TabstopSchema from '../../behaviour/tabstopping/TabstopSchema';
+import { TabstoppingBehaviour } from '../../behaviour/tabstopping/TabstoppingTypes';
 
-export interface TabstoppingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: TabstoppingConfig) => { [key: string]: (any) => any };
-}
-export interface TabstoppingConfig {
-  // intentionally blank
-}
 
 const Tabstopping = Behaviour.create({
   fields: TabstopSchema,

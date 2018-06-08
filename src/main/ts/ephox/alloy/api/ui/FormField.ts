@@ -9,8 +9,9 @@ import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as Sketcher from './Sketcher';
+import { SketchSpec } from '../../api/component/SpecTypes';
 
-const factory = function (detail, components, spec, externals) {
+const factory = function (detail, components, spec, externals): SketchSpec {
   const behaviours = Merger.deepMerge(
     Behaviour.derive([
       Composing.config({
@@ -52,12 +53,23 @@ const factory = function (detail, components, spec, externals) {
     })
   ]);
 
+  const apis = {
+    getField: (container) => {
+      return AlloyParts.getPart(container, detail, 'field');
+    },
+    getLabel: (container) => {
+      // TODO: Use constants for part names
+      return AlloyParts.getPart(container, detail, 'label');
+    }
+  };
+
   return {
     uid: detail.uid(),
     dom: detail.dom(),
     components,
     behaviours,
-    events
+    events,
+    apis
   };
 };
 
@@ -65,7 +77,11 @@ const FormField =  Sketcher.composite({
   name: 'FormField',
   configFields: FormFieldSchema.schema(),
   partFields: FormFieldSchema.parts(),
-  factory
+  factory,
+  apis: {
+    getField: (apis, comp) => apis.getField(comp),
+    getLabel: (apis, comp) => apis.getLabel(comp)
+  }
 });
 
 export {

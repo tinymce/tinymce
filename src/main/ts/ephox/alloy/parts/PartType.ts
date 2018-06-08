@@ -1,20 +1,22 @@
-import { FieldPresence, FieldSchema, ValueSchema, DslType } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, ValueSchema, DslType, FieldProcessorAdt, Processor } from '@ephox/boulder';
 import { Adt, Fun, Id, Option } from '@ephox/katamari';
 import { DetailedSpec } from '../parts/AlloyParts';
-import { RawDomSchema } from '../api/ui/Sketcher';
 import { AdtInterface } from '../alien/TypeDefinitions';
+import { RawDomSchema } from '../api/component/SpecTypes';
 
-export type PartType = (spec: { [key: string]: any }) => DslType.FieldProcessorAdt;
-export interface BuildSpec {
+export type PartType = (PartialSpec) => PartTypeAdt
+export type PartialSpec = { };
+
+export interface PartSpec {
   defaults: () => () => {};
   factory: () => any;
   name: () => string;
   overrides: () => OverrideHandler;
   pname: () => string;
-  schema: () => DslType.FieldProcessorAdt[];
+  schema: () => FieldProcessorAdt[];
 }
 
-export type OverrideHandler = (detail: DetailedSpec, spec?: RawDomSchema, partValidated?: any) => OverrideSpec;
+export type OverrideHandler = (detail: DetailedSpec, spec?: PartialSpec, partValidated?: any) => OverrideSpec;
 
 export interface OverrideSpec {
   [key: string]: any;
@@ -68,7 +70,7 @@ const groupSpec = ValueSchema.objOf([
   fPname, fDefaults, fOverrides
 ]);
 
-const asNamedPart = function (part: PartTypeAdt): Option<BuildSpec> {
+const asNamedPart = function (part: PartTypeAdt): Option<PartSpec> {
   return part.fold(Option.some, Option.none, Option.some, Option.some);
 };
 
@@ -79,13 +81,14 @@ const name = function (part: PartTypeAdt): string {
   return part.fold(get, get, get, get);
 };
 
-const asCommon = function (part: PartTypeAdt): BuildSpec {
+const asCommon = function (part: PartTypeAdt): PartSpec {
   return part.fold(Fun.identity, Fun.identity, Fun.identity, Fun.identity);
 };
 
-const convert = function (adtConstructor, partSpec) {
+const convert = (adtConstructor, partSchema: Processor):
+                  (PartialSpec) => PartTypeAdt => {
   return function (spec) {
-    const data = ValueSchema.asStructOrDie('Converting part type', partSpec, spec);
+    const data = ValueSchema.asStructOrDie('Converting part type', partSchema, spec);
     return adtConstructor(data);
   };
 };

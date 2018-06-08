@@ -4,20 +4,22 @@ import { Fun, Merger, Obj, Option, Thunk } from '@ephox/katamari';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as DomModification from '../../dom/DomModification';
+import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { CustomEvent } from '../../events/SimulatedEvent';
 
-const executeEvent = function (bConfig, bState, executor) {
+const executeEvent = function (bConfig, bState, executor): AlloyEvents.EventHandlerConfig<CustomEvent> {
   return AlloyEvents.runOnExecute(function (component) {
     executor(component, bConfig, bState);
   });
 };
 
-const loadEvent = function (bConfig, bState, f) {
+const loadEvent = function (bConfig, bState, f): AlloyEvents.EventHandlerConfig<CustomEvent> {
   return AlloyEvents.runOnInit(function (component, simulatedEvent) {
     f(component, bConfig, bState);
   });
 };
 
-const create = function (schema, name, active, apis, extra, state) {
+const create = function (schema, name, active, apis, extra, state): AlloyBehaviour {
   const configSchema = ValueSchema.objOfOnly(schema);
   const schemaSchema = FieldSchema.optionObjOf(name, [
     FieldSchema.optionObjOfOnly('config', schema)
@@ -25,7 +27,7 @@ const create = function (schema, name, active, apis, extra, state) {
   return doCreate(configSchema, schemaSchema, name, active, apis, extra, state);
 };
 
-const createModes = function (modes, name, active, apis, extra, state) {
+const createModes = function (modes, name, active, apis, extra, state): AlloyBehaviour {
   const configSchema = modes;
   const schemaSchema = FieldSchema.optionObjOf(name, [
     FieldSchema.optionOf('config', modes)
@@ -59,7 +61,7 @@ const revokeBehaviour = function (name) {
   };
 };
 
-const doCreate = function (configSchema, schemaSchema, name, active, apis, extra, state) {
+const doCreate = function (configSchema, schemaSchema, name, active, apis, extra, state): AlloyBehaviour {
   const getConfig = function (info) {
     return Objects.hasKey(info, name) ? info[name]() : Option.none();
   };

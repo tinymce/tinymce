@@ -10,7 +10,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
-UnitTest.asynctest('Flow Keying Test', function () {
+UnitTest.asynctest('Flow Keying Skip Element Test', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
 

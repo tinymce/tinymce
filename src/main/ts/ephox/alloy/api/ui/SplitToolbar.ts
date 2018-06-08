@@ -1,6 +1,8 @@
 import { Arr, Merger } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
+import { SketchSpec } from '../../api/component/SpecTypes';
 
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Overflows from '../../toolbar/Overflows';
 import * as SplitToolbarSchema from '../../ui/schema/SplitToolbarSchema';
@@ -12,10 +14,9 @@ import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface SplitToolbarSketch extends Sketcher.CompositeSketch {
-  setGroups: (toolbar: AlloyComponent, groups: Sketcher.SketchSpec[]) => void;
+  setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
   refresh: (toolbar: AlloyComponent) => void;
 }
 

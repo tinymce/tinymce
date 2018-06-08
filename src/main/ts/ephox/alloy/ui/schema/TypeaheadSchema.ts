@@ -1,4 +1,4 @@
-import { DslType, FieldSchema } from '@ephox/boulder';
+import { DslType, FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Cell, Fun, Option } from '@ephox/katamari';
 
 import Strings from '../../alien/Strings';
@@ -13,12 +13,14 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import * as InputBase from '../common/InputBase';
+import { PartTypeAdt } from '../../parts/PartType';
 
-const schema = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),
   FieldSchema.strict('fetch'),
   FieldSchema.defaulted('minChars', 5),
   Fields.onHandler('onOpen'),
+  FieldSchema.defaulted('eventOrder', { }),
 
   Fields.onKeyboardHandler('onExecute'),
   FieldSchema.defaulted('matchWidth', true),
@@ -36,7 +38,7 @@ const schema = Fun.constant([
   InputBase.schema()
 ));
 
-const parts = Fun.constant([
+const parts: () => PartTypeAdt[] = Fun.constant([
   PartType.external({
     schema: [
       Fields.tieredMenuMarkers()

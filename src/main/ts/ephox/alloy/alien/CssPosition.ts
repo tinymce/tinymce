@@ -2,31 +2,25 @@ import { Adt, Arr, Fun } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 import { PositionCoordinates, AdtInterface } from './TypeDefinitions';
 
-export interface CssPositionAdt extends AdtInterface {
-
-}
+export interface CssPositionAdt extends AdtInterface { }
 
 const adt = Adt.generate([
   { screen: [ 'point' ] },
   { absolute: [ 'point', 'scrollLeft', 'scrollTop' ] }
 ]);
 
-const toFixed = function (pos) {
+const toFixed = function (pos: CssPositionAdt): PositionCoordinates {
   // TODO: Use new ADT methods
   return pos.fold(
-    Fun.identity,
-    function (point, scrollLeft, scrollTop) {
-      return point.translate(-scrollLeft, -scrollTop);
-    }
+    (point: PositionCoordinates) => point,
+    (point: PositionCoordinates, scrollLeft: number, scrollTop: number) => point.translate(-scrollLeft, -scrollTop)
   );
 };
 
-const toAbsolute = function (pos) {
+const toAbsolute = function (pos: CssPositionAdt): PositionCoordinates {
   return pos.fold(
-    Fun.identity,
-    function (point, scrollLeft, scrollTop) {
-      return point;
-    }
+    (point: PositionCoordinates) => point,
+    (point: PositionCoordinates, scrollLeft: number, scrollTop: number) => point
   );
 };
 
@@ -36,18 +30,18 @@ const sum = function (points: PositionCoordinates[]): PositionCoordinates {
   }, Position(0, 0));
 };
 
-const sumAsFixed = function (positions: CssPositionAdt[]) {
+const sumAsFixed = function (positions: CssPositionAdt[]): PositionCoordinates {
   const points = Arr.map(positions, toFixed);
   return sum(points);
 };
 
-const sumAsAbsolute = function (positions: CssPositionAdt[]) {
+const sumAsAbsolute = function (positions: CssPositionAdt[]): PositionCoordinates {
   const points = Arr.map(positions, toAbsolute);
   return sum(points);
 };
 
-const screen = adt.screen;
-const absolute = adt.absolute;
+const screen: (point: PositionCoordinates) => CssPositionAdt = adt.screen;
+const absolute: (point: PositionCoordinates, sx: number, sy: number) => CssPositionAdt = adt.absolute;
 
 export {
   sumAsFixed,

@@ -1,25 +1,25 @@
-import { FieldSchema, Objects, DslType, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, Processor, Objects, DslType, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { ComposingCreateConfig } from '../../api/behaviour/Composing';
-import { DockingBehaviour } from '../../api/behaviour/Docking';
-
 import * as Behaviour from '../../behaviour/common/Behaviour';
 import * as NoState from '../../behaviour/common/NoState';
 
+export type AlloyBehaviourRecord = Record<string, ConfiguredBehaviour>;
+
+export interface NamedConfiguredBehaviour {
+  key: string;
+  value: ConfiguredBehaviour;
+}
+
 export interface AlloyBehaviour {
-  config: (spec: any) => { [key: string]: (any) => any };
+  config: (spec: any) => NamedConfiguredBehaviour;
   exhibit: (info: any, base: any) => {};
   handlers: (info: any) => {};
   name: () => string;
   revoke: () => { key: string, value: undefined };
-  schema: () => DslType.FieldProcessorAdt;
-
-  getValue: (any) => any;
-  setValue: (...any) => any;
-  fields?: DslType.FieldProcessorAdt[];
+  schema: () => FieldProcessorAdt;
 }
 
-export interface AlloyBehaviourSchema {
+export interface ConfiguredBehaviour {
   config: { [key: string]: () => any};
   configAsRaw: () => Record<string, any>;
   initialConfig: {};
@@ -28,7 +28,7 @@ export interface AlloyBehaviourSchema {
 }
 
 export interface AlloyBehaviourConfig {
-  fields: DslType.FieldProcessorAdt[];
+  fields: FieldProcessorAdt[];
   name: string;
   active?: {};
   apis?: {};
@@ -36,11 +36,11 @@ export interface AlloyBehaviourConfig {
   state?: {};
 }
 
-const derive = function (capabilities): {} {
+const derive = function (capabilities): AlloyBehaviourRecord {
   return Objects.wrapAll(capabilities);
 };
 
-const simpleSchema: DslType.Processor = ValueSchema.objOfOnly([
+const simpleSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('fields'),
   FieldSchema.strict('name'),
   FieldSchema.defaulted('active', { }),
@@ -54,7 +54,7 @@ const create = function (data: AlloyBehaviourConfig): AlloyBehaviour {
   return Behaviour.create(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
 
-const modeSchema: DslType.Processor = ValueSchema.objOfOnly([
+const modeSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('branchKey'),
   FieldSchema.strict('branches'),
   FieldSchema.strict('name'),
@@ -64,7 +64,7 @@ const modeSchema: DslType.Processor = ValueSchema.objOfOnly([
   FieldSchema.defaulted('state', NoState)
 ]);
 
-const createModes = function (data) {
+const createModes = function (data): AlloyBehaviour {
   const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, modeSchema, data);
   return Behaviour.createModes(
     ValueSchema.choose(value.branchKey, value.branches),

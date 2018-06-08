@@ -12,8 +12,9 @@ import { Keying } from '../behaviour/Keying';
 import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
+import { SketchSpec } from '../../api/component/SpecTypes';
 
-const factory = function (detail, components, spec, externals) {
+const factory = function (detail, components, spec, externals): SketchSpec {
   const switchToMenu = function (sandbox) {
     Composing.getCurrent(sandbox).each(function (current) {
       Highlighting.highlightFirst(current);

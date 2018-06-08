@@ -1,52 +1,55 @@
-import { FieldPresence, DslType, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, DslType, FieldSchema, Objects, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Arr, Fun, Merger, Obj, Option, Result } from '@ephox/katamari';
 
 import * as Fields from '../data/Fields';
 import * as UiSubstitutes from '../spec/UiSubstitutes';
 import * as PartSubstitutes from './PartSubstitutes';
 import * as PartType from './PartType';
-import { SketchSpec, RawDomSchema } from '../api/ui/Sketcher';
 import { SpecSchemaStruct } from '../spec/SpecSchema';
 import { AlloyComponent } from '../api/component/ComponentApi';
+import { RawDomSchema, SketchSpec, AlloySpec } from '../api/component/SpecTypes';
+import { GeneralStruct } from '../alien/TypeDefinitions';
+
+export type PartialSpec = { }
 
 export interface GeneratedParts {
-  [key: string]: (config: RawDomSchema) => SketchSpec;
+  [key: string]: (config: PartialSpec) => AlloySpec;
 }
 
-export interface GeneratedSinglePart {
-  config: RawDomSchema;
+export interface UnconfiguredPart {
   name: string;
   owner: string;
   uiType: string;
-  validated: {};
+}
+
+export interface ConfiguredPart extends UnconfiguredPart {
+  config: { };
+  validated: { }
+}
+
+export type Substition = { [ key: string ]: FieldProcessorAdt };
+
+export interface Substitutions {
+  internals: () => Substition;
+  externals: () => Substition;
 }
 
 export interface DetailedSpec extends SpecSchemaStruct {
-  partUids?: () => { [key: string]: string };
-
-  // Below Are items that maybe required in this type
-  // dragBlockClass
-  // lazySink
-  // modalBehaviours
-  // onEscape
-  // onExecute
-  // partUids
-  // parts
-  // useTabstopAt
+  partUids?: () => Record<string, string>
 }
 
 // TODO: Make more functional if performance isn't an issue.
-const generate = function (owner: string, parts: DslType.FieldProcessorAdt[]): GeneratedParts {
+const generate = function (owner: string, parts: PartType.PartTypeAdt[]): GeneratedParts {
   const r = { };
   Arr.each(parts, function (part) {
     PartType.asNamedPart(part).each(function (np) {
-      const g = doGenerateOne(owner, np.pname());
+      const g: UnconfiguredPart = doGenerateOne(owner, np.pname());
       r[np.name()] = function (config) {
         const validated = ValueSchema.asRawOrDie('Part: ' + np.name() + ' in ' + owner, ValueSchema.objOf(np.schema()), config);
         return Merger.deepMerge(g, {
           config,
           validated
-        });
+        }) as ConfiguredPart;
       };
     });
   });
@@ -54,7 +57,7 @@ const generate = function (owner: string, parts: DslType.FieldProcessorAdt[]): G
 };
 
 // Does not have the config.
-const doGenerateOne = function (owner, pname) {
+const doGenerateOne = function (owner: string, pname: string): UnconfiguredPart {
   return {
     uiType: UiSubstitutes.placeholder(),
     owner,
@@ -62,7 +65,7 @@ const doGenerateOne = function (owner, pname) {
   };
 };
 
-const generateOne = function (owner: string, pname: string, config: SketchSpec): GeneratedSinglePart {
+const generateOne = function (owner: string, pname: string, config: RawDomSchema): ConfiguredPart {
   return {
     uiType: UiSubstitutes.placeholder(),
     owner,
@@ -72,7 +75,7 @@ const generateOne = function (owner: string, pname: string, config: SketchSpec):
   };
 };
 
-const schemas = function (parts: PartType.PartTypeAdt[]): DslType.FieldProcessorAdt[] {
+const schemas = function (parts: PartType.PartTypeAdt[]): FieldProcessorAdt[] {
   // This actually has to change. It needs to return the schemas for things that will
   // not appear in the components list, which is only externals
   return Arr.bind(parts, function (part: PartType.PartTypeAdt) {
@@ -89,15 +92,15 @@ const schemas = function (parts: PartType.PartTypeAdt[]): DslType.FieldProcessor
   });
 };
 
-const names = function (parts) {
+const names = function (parts: PartType.PartTypeAdt[]): string[] {
   return Arr.map(parts, PartType.name);
 };
 
-const substitutes = function (owner: string, detail: DetailedSpec, parts: DslType.FieldProcessorAdt[]): { internals: () => {}, externals: () => {} } {
+const substitutes = function (owner: string, detail: DetailedSpec, parts: PartType.PartTypeAdt[]): Substitutions {
   return PartSubstitutes.subs(owner, detail, parts);
 };
 
-const components = function (owner: string, detail: DetailedSpec, internals: { [key: string]: DslType.FieldProcessorAdt }): SketchSpec[] {
+const components = function (owner: string, detail: DetailedSpec, internals: Substition): AlloySpec[] {
   return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), internals);
 };
 
@@ -123,14 +126,14 @@ const getParts = function (component: AlloyComponent, detail: DetailedSpec, part
   return Obj.map(r, Fun.constant);
 };
 
-const getAllParts = function (component: AlloyComponent, detail: DetailedSpec) {
+const getAllParts = (component: AlloyComponent, detail: DetailedSpec): Record<string, () => Result<AlloyComponent, string>> => {
   const system = component.getSystem();
   return Obj.map(detail.partUids(), function (pUid, k) {
     return Fun.constant(system.getByUid(pUid));
   });
 };
 
-const getPartsOrDie = function (component: AlloyComponent, detail: DetailedSpec, partKeys: string[]): { [key: string]: () => AlloyComponent } {
+const getPartsOrDie = (component: AlloyComponent, detail: DetailedSpec, partKeys: string[]): Record<string, () => AlloyComponent> => {
   const r = { };
   const uids = detail.partUids();
 
@@ -143,7 +146,7 @@ const getPartsOrDie = function (component: AlloyComponent, detail: DetailedSpec,
   return Obj.map(r, Fun.constant);
 };
 
-const defaultUids = function (baseUid: string, partTypes) {
+const defaultUids = function (baseUid: string, partTypes: PartType.PartTypeAdt[]): Record<string, string> {
   const partNames = names(partTypes);
 
   return Objects.wrapAll(
@@ -153,7 +156,7 @@ const defaultUids = function (baseUid: string, partTypes) {
   );
 };
 
-const defaultUidsSchema = function (partTypes) {
+const defaultUidsSchema = function (partTypes: PartType.PartTypeAdt[]): FieldProcessorAdt {
   return FieldSchema.field(
     'partUids',
     'partUids',

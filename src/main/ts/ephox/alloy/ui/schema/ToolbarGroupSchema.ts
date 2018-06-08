@@ -1,18 +1,19 @@
-import { DslType, FieldSchema } from '@ephox/boulder';
+import { DslType, FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import { Keying } from '../../api/behaviour/Keying';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
+import { PartTypeAdt } from '../../parts/PartType';
 
-const schema = Fun.constant([
+const schema: () => FieldProcessorAdt[]  = Fun.constant([
   FieldSchema.strict('items'),
   Fields.markers([ 'itemClass' ]),
   SketchBehaviours.field('tgroupBehaviours', [ Keying ])
 ]);
 
-const parts = Fun.constant([
+const parts: () => PartTypeAdt[] = Fun.constant([
   PartType.group({
     name: 'items',
     unit: 'item',

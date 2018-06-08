@@ -1,8 +1,12 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as TransitionApis from './TransitionApis';
+import { TransitioningConfig } from '../../behaviour/transitioning/TransitioningTypes';
+import { Stateless } from '../../behaviour/common/NoState';
 
-const events = function (transConfig, transState) {
+import { EventFormat } from '../../events/SimulatedEvent';
+
+const events = function (transConfig: TransitioningConfig, transState: Stateless): AlloyEvents.EventHandlerConfigRecord {
   return AlloyEvents.derive([
     AlloyEvents.run(NativeEvents.transitionend(), function (component, simulatedEvent) {
       const raw = simulatedEvent.event().raw();
