@@ -7,7 +7,7 @@ import * as Markings from './Markings';
 
 // Given the current editor selection, identify the uid of any current
 // annotation
-const identify = (editor): Option<string> => {
+const identify = (editor): Option<{uid: string, name: string}> => {
   const rng = editor.selection.getRng();
 
   const start = Element.fromDom(rng.startContainer);
@@ -18,8 +18,20 @@ const identify = (editor): Option<string> => {
     return Compare.eq(n, root);
   });
 
+  const getAttr = (c, property: string): Option<any> => {
+    if (Attr.has(c, property)) {
+      return Option.some(Attr.get(c, property));
+    } else {
+      return Option.none();
+    }
+  };
+
   return closest.bind((c) => {
-    return Attr.has(c, 'data-uid') ? Option.some(Attr.get(c, 'data-uid')) : Option.none();
+    return getAttr(c, 'data-mce-annotation-uid').bind(
+      (uid) => getAttr(c, 'data-mce-annotation').map((name) => ({
+        uid, name
+      }))
+    );
   });
 };
 
@@ -36,7 +48,7 @@ const updateActive = (editor: any, optActiveUid: Option<string>) => {
   );
 
   Arr.each(allMarkers, (m) => {
-    const isCurrent = optActiveUid.exists((uid) => Attr.get(m, 'data-uid') === uid);
+    const isCurrent = optActiveUid.exists((uid) => Attr.get(m, 'data-mce-annotation-uid') === uid);
     const f = isCurrent ? Class.add : Class.remove;
     f(m, Markings.activeAnnotation());
   });
@@ -44,7 +56,7 @@ const updateActive = (editor: any, optActiveUid: Option<string>) => {
 
 const findMarkers = (editor, uid) => {
   const body = Element.fromDom(editor.getBody());
-  return SelectorFilter.descendants(body, `[data-uid="${uid}"]`);
+  return SelectorFilter.descendants(body, `[data-mce-annotation-uid="${uid}"]`);
 };
 
 export {

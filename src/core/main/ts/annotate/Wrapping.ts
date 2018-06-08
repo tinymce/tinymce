@@ -1,5 +1,5 @@
-import { Arr, Cell, Option } from '@ephox/katamari';
-import { Attr, Class, Element, Insert, Node, Remove, Replication, Traverse } from '@ephox/sugar';
+import { Arr, Cell, Option, Id } from '@ephox/katamari';
+import { Attr, Class, Element, Insert, Node, Remove, Replication, Traverse, Classes } from '@ephox/sugar';
 
 import { ChildContext, context } from './AnnotationContext';
 
@@ -9,11 +9,12 @@ import GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import RangeWalk from '../selection/RangeWalk';
 
 import * as Markings from './Markings';
+import { Editor } from 'tinymce/core/api/Editor';
 
 // import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
 // import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 
-const annotate = (editor, uid, bookmark): any[] => {
+const annotate = (editor, decorate, { uid = Id.generate('mce-annotation'), ...data }, bookmark): any[] => {
   // Setup all the wrappers that are going to be used.
   const newWrappers = [ ];
 
@@ -25,6 +26,10 @@ const annotate = (editor, uid, bookmark): any[] => {
   const master = Element.fromTag('span');
   Class.add(master, Markings.annotation());
   Attr.set(master, 'data-uid', uid);
+
+  const { attributes = { }, classes = [ ] } = decorate(uid, data);
+  Attr.setAll(master, attributes);
+  Classes.add(master, classes);
 
   // Set the current wrapping element
   const wrapper = Cell(Option.none());
@@ -89,13 +94,13 @@ const annotate = (editor, uid, bookmark): any[] => {
   return newWrappers;
 };
 
-const annotateWithBookmark = (editor, cUid) => {
+const annotateWithBookmark = (editor: Editor, settings: { decorate: (string, { }) => { } }, data: { }): void => {
   const bookmark = GetBookmark.getPersistentBookmark(editor.selection, true);
-  annotate(editor, cUid, bookmark);
+  annotate(editor, settings.decorate, data, bookmark);
   editor.selection.moveToBookmark(bookmark);
 };
 
-const remove = (editor, cUid) => {
+const remove = (editor, cUid): void => {
   const wrappers = findMarkers(editor, cUid);
   Arr.each(wrappers, Remove.unwrap);
 };
