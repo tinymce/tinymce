@@ -7,7 +7,6 @@ import * as SystemEvents from './SystemEvents';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
 import { SpecSchemaStruct } from '../../spec/SpecSchema';
-import { AlloyEvents } from 'ephox/alloy/api/Main';
 import { Arr } from '@ephox/katamari';
 
 export interface EventHandlerConfig {
