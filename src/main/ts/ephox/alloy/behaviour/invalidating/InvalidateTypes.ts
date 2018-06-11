@@ -7,6 +7,7 @@ import { SugarElement } from '../../alien/TypeDefinitions';
 export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: InvalidatingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
   markValid: (Component: AlloyComponent) => void;
+  isInvalid: (Component: AlloyComponent) => boolean;
   markInvalid: (Component: AlloyComponent) => void;
   query: <T>(Component: AlloyComponent) => Future<T>;
   run: <T>(Component: AlloyComponent) => Future<T>;

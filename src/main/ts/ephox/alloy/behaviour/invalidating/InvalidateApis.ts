@@ -61,9 +61,15 @@ const run = function (component: AlloyComponent, invalidConfig: InvalidatingConf
   });
 };
 
+const isInvalid = function (component, invalidConfig) {
+  const elem = invalidConfig.getRoot()(component).getOr(component.element());
+  return Class.has(elem, invalidConfig.invalidClass());
+};
+
 export {
   markValid,
   markInvalid,
   query,
-  run
+  run,
+  isInvalid
 };
