@@ -20,9 +20,15 @@ const foldField = function <T> (subject: FieldProcessorAdt, onField: (...any) =>
   return subject.fold(onField, onState);
 };
 
+const DslType = {
+  foldType,
+  foldField
+};
+
 export {
   foldType,
   foldField,
+  DslType,
 
   FieldProcessorAdt,
   Processor
