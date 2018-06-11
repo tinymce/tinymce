@@ -1,4 +1,4 @@
-import { FieldSchema, DslType, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
@@ -12,7 +12,6 @@ import { FormField } from '../../api/ui/FormField';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { PartTypeAdt } from '../../parts/PartType';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onStrictHandler('onLockedChange'),
@@ -46,7 +45,7 @@ const coupledPart = function (selfName, otherName) {
   });
 };
 
-const parts: () => PartTypeAdt[] = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   coupledPart('field1', 'field2'),
   coupledPart('field2', 'field1'),
 

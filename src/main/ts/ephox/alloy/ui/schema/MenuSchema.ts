@@ -1,4 +1,4 @@
-import { DslType, FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
@@ -13,7 +13,6 @@ import SeparatorType from '../../menu/build/SeparatorType';
 import WidgetType from '../../menu/build/WidgetType';
 import * as PartType from '../../parts/PartType';
 import * as Tagger from '../../registry/Tagger';
-import { PartTypeAdt } from '../../parts/PartType';
 
 const itemSchema = ValueSchema.choose(
   'type',
@@ -45,7 +44,7 @@ const configureMenu = function (detail, movementInfo) {
   };
 };
 
-const parts: () => PartTypeAdt[] = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.group({
     factory: {
       sketch (spec) {

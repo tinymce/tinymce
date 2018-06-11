@@ -1,11 +1,11 @@
-import { FieldPresence, FieldSchema, ValueSchema, DslType, FieldProcessorAdt, Processor } from '@ephox/boulder';
+import { FieldPresence, FieldProcessorAdt, FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
 import { Adt, Fun, Id, Option } from '@ephox/katamari';
-import { DetailedSpec } from '../parts/AlloyParts';
-import { AdtInterface } from '../alien/TypeDefinitions';
-import { RawDomSchema } from '../api/component/SpecTypes';
 
-export type PartType = (PartialSpec) => PartTypeAdt
-export type PartialSpec = { };
+import { AdtInterface } from '../alien/TypeDefinitions';
+import { DetailedSpec } from '../parts/AlloyParts';
+
+export type PartType = (PartialSpec) => PartTypeAdt;
+export interface PartialSpec { }
 
 export interface PartSpec {
   defaults: () => () => {};

@@ -1,4 +1,4 @@
-import { FieldSchema, DslType, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Class, Focus } from '@ephox/sugar';
 
@@ -11,7 +11,6 @@ import { Button } from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { PartTypeAdt } from '../../parts/PartType';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([
@@ -37,7 +36,7 @@ const runOnExtra = function (detail, operation) {
   };
 };
 
-const parts: () => PartTypeAdt[] = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.required({
     // factory: Form,
     schema: [ FieldSchema.strict('dom') ],

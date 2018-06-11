@@ -1,4 +1,4 @@
-import { FieldSchema, Objects, DslType, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema, Objects } from '@ephox/boulder';
 import { Fun, Merger } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 

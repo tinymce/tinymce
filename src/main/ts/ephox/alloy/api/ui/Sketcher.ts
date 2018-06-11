@@ -1,12 +1,11 @@
-import { DslType, FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Obj } from '@ephox/katamari';
-import { EventHandlerConfig } from '../../api/events/AlloyEvents';
 
+import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { SketchSpec, AlloySpec } from '../../api/component/SpecTypes';
 
 export interface SingleSketch {
   name: () => string;

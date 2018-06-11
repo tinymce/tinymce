@@ -1,16 +1,15 @@
-import { FieldPresence, DslType, FieldSchema, Objects, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldPresence, FieldProcessorAdt, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Merger, Obj, Option, Result } from '@ephox/katamari';
 
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { AlloySpec, RawDomSchema } from '../api/component/SpecTypes';
 import * as Fields from '../data/Fields';
+import { SpecSchemaStruct } from '../spec/SpecSchema';
 import * as UiSubstitutes from '../spec/UiSubstitutes';
 import * as PartSubstitutes from './PartSubstitutes';
 import * as PartType from './PartType';
-import { SpecSchemaStruct } from '../spec/SpecSchema';
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { RawDomSchema, SketchSpec, AlloySpec } from '../api/component/SpecTypes';
-import { GeneralStruct } from '../alien/TypeDefinitions';
 
-export type PartialSpec = { }
+export interface PartialSpec { }
 
 export interface GeneratedParts {
   [key: string]: (config: PartialSpec) => AlloySpec;
@@ -24,10 +23,10 @@ export interface UnconfiguredPart {
 
 export interface ConfiguredPart extends UnconfiguredPart {
   config: { };
-  validated: { }
+  validated: { };
 }
 
-export type Substition = { [ key: string ]: FieldProcessorAdt };
+export interface Substition { [ key: string ]: FieldProcessorAdt; }
 
 export interface Substitutions {
   internals: () => Substition;
@@ -35,7 +34,7 @@ export interface Substitutions {
 }
 
 export interface DetailedSpec extends SpecSchemaStruct {
-  partUids?: () => Record<string, string>
+  partUids?: () => Record<string, string>;
 }
 
 // TODO: Make more functional if performance isn't an issue.

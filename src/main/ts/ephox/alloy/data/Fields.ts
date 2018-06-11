@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldPresence, FieldSchema, ValueSchema, DslType } from '@ephox/boulder';
+import { FieldPresence, FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Option, Result } from '@ephox/katamari';
 
 import * as Debugging from '../debugging/Debugging';

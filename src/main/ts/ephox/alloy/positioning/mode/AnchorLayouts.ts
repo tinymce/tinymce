@@ -1,4 +1,4 @@
-import { FieldSchema, DslType, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Direction } from '@ephox/sugar';
 
 const schema: () => FieldProcessorAdt = function () {
