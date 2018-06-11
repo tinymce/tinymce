@@ -18,6 +18,8 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as InputBase from '../common/InputBase';
 
+import { EventFormat } from '../../events/SimulatedEvent';
+
 const make = function (detail, components, spec, externals) {
   const navigateList = function (comp, simulatedEvent, highlighter) {
     const sandbox = Coupling.getCoupled(comp, 'sandbox');

@@ -1,4 +1,4 @@
-import { DslType, FieldSchema } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
@@ -7,7 +7,7 @@ import { Tabview } from '../../api/ui/Tabview';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 
-const schema = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('selectFirst', true),
   Fields.onHandler('onChangeTab'),
   Fields.onHandler('onDismissTab'),
@@ -37,7 +37,7 @@ const viewPart = PartType.required({
   name: 'tabview'
 });
 
-const parts = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   barPart,
   viewPart
 ]);

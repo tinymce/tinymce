@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import DelayedFunction from '../../alien/DelayedFunction';
@@ -12,14 +12,17 @@ import SnapSchema from '../common/SnapSchema';
 import * as Snappables from '../snap/Snappables';
 import * as BlockerEvents from './BlockerEvents';
 import * as MouseData from './MouseData';
+import { MouseDraggingConfig, DragApi } from '../../dragging/mouse/MouseDraggingTypes';
+import { SugarEvent, PositionCoordinates } from '../../alien/TypeDefinitions';
+import { DraggingState } from '../../dragging/common/DraggingTypes';
 
-const handlers = function (dragConfig, dragState) {
+const handlers = function (dragConfig: MouseDraggingConfig, dragState: DraggingState<PositionCoordinates>): AlloyEvents.EventHandlerConfigRecord {
   return AlloyEvents.derive([
     AlloyEvents.run(NativeEvents.mousedown(), function (component, simulatedEvent) {
       if (simulatedEvent.event().raw().button !== 0) { return; }
       simulatedEvent.stop();
 
-      const dragApi = {
+      const dragApi: DragApi = {
         drop () {
           stop();
         },
@@ -29,7 +32,7 @@ const handlers = function (dragConfig, dragState) {
         forceDrop () {
           stop();
         },
-        move (event) {
+        move (event: SugarEvent) {
           // Stop any pending drops caused by mouseout
           delayDrop.cancel();
           const delta = dragState.update(MouseData, event);
@@ -40,6 +43,7 @@ const handlers = function (dragConfig, dragState) {
       const blocker = component.getSystem().build(
         Container.sketch({
           dom: {
+            // Probably consider doing with classes?
             styles: {
               'left': '0px',
               'top': '0px',
@@ -82,7 +86,7 @@ const handlers = function (dragConfig, dragState) {
   ]);
 };
 
-const schema = [
+const schema: FieldProcessorAdt[] = [
   // TODO: Is this used?
   FieldSchema.defaulted('useFixed', false),
   FieldSchema.strict('blockerClass'),

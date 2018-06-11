@@ -100,7 +100,7 @@ export default <any> function () {
             }
           },
           components: [
-            Toolbar.parts().groups()
+            Toolbar.parts().groups({ })
           ]
         })
       ]

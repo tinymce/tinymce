@@ -6,6 +6,8 @@ import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 
+import { EventFormat } from '../../events/SimulatedEvent';
+
 const events = function (optAction) {
   const executeHandler = function (action) {
     return AlloyEvents.run(SystemEvents.execute(), function (component, simulatedEvent) {

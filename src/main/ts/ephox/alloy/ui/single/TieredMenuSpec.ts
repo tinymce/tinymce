@@ -20,6 +20,8 @@ import LayeredState from '../../menu/layered/LayeredState';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
 
+import { EventFormat, CustomEvent } from '../../events/SimulatedEvent';
+
 const make = function (detail, rawUiSpec) {
   const buildMenus = function (container, menus) {
     return Obj.map(menus, function (spec, name) {
@@ -172,7 +174,7 @@ const make = function (detail, rawUiSpec) {
 
   const events = AlloyEvents.derive([
     // Set "active-menu" for the menu with focus
-    AlloyEvents.run(MenuEvents.focus(), function (sandbox, simulatedEvent) {
+    AlloyEvents.run<CustomEvent>(MenuEvents.focus(), function (sandbox, simulatedEvent) {
       const menu = simulatedEvent.event().menu();
       Highlighting.highlight(sandbox, menu);
     }),
@@ -207,7 +209,7 @@ const make = function (detail, rawUiSpec) {
   ].concat(detail.navigateOnHover() ? [
     // Hide any irrelevant submenus and expand any submenus based
     // on hovered item
-    AlloyEvents.run(ItemEvents.hover(), function (sandbox, simulatedEvent) {
+    AlloyEvents.run<CustomEvent>(ItemEvents.hover(), function (sandbox, simulatedEvent) {
       const item = simulatedEvent.event().item();
       updateView(sandbox, item);
       expandRight(sandbox, item);

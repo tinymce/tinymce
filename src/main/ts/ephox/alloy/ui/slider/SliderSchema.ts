@@ -1,4 +1,4 @@
-import { FieldSchema, DslType } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
@@ -8,7 +8,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
-const SliderSchema = [
+const SliderSchema: FieldProcessorAdt[] = [
   FieldSchema.strict('min'),
   FieldSchema.strict('max'),
   FieldSchema.defaulted('stepSize', 1),

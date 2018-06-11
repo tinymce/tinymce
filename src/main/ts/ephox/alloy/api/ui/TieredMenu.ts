@@ -8,22 +8,28 @@ import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { RawDomSchema, SingleSketch, single} from './Sketcher';
+import { single, SingleSketch } from './Sketcher';
+import { RawDomSchema, LooseSpec } from '../component/SpecTypes';
+
+export type ItemSpec = { value: string; text: string };
 
 export interface TieredMenuSketch extends SingleSketch {
   collapseMenu: (menu: any) => void;
   tieredData: (primary: string, menus, expansions: Record<string, string>) => TieredData;
-  singleData: (name: string, menu: RawDomSchema) => TieredData;
-  collapseItem: (text: string) => void;
+  singleData: (name: string, menu: MenuSpec) => TieredData;
+  collapseItem: (text: string) => ItemSpec;
 }
+
+export type MenuSpec = LooseSpec;
+export type TieredMenuRecord = Record<string, MenuSpec>;
 
 export interface TieredData {
   primary: string;
-  menus: Record<string, RawDomSchema>;
+  menus: TieredMenuRecord;
   expansions: Record<string, string>;
 }
 
-const tieredData = function (primary: string, menus: Record<string, RawDomSchema>, expansions: Record<string, string>): TieredData {
+const tieredData = function (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>): TieredData {
   return {
     primary,
     menus,
@@ -31,7 +37,7 @@ const tieredData = function (primary: string, menus: Record<string, RawDomSchema
   };
 };
 
-const singleData = function (name: string, menu: RawDomSchema): TieredData {
+const singleData = function (name: string, menu: MenuSpec): TieredData {
   return {
     primary: name,
     menus: Objects.wrap(name, menu),
@@ -39,7 +45,7 @@ const singleData = function (name: string, menu: RawDomSchema): TieredData {
   };
 };
 
-const collapseItem = function (text: string) {
+const collapseItem = function (text: string): ItemSpec {
   return {
     value: Id.generate(TieredMenuSpec.collapseItem()),
     text

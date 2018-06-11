@@ -2,15 +2,10 @@ import { Fun } from '@ephox/katamari';
 
 import * as WidgetParts from '../../menu/build/WidgetParts';
 import * as AlloyParts from '../../parts/AlloyParts';
-import { AlloyComponentsSpec, SketchSpec } from './Sketcher';
+import { PartTypeAdt } from '../../parts/PartType';
+import { LooseSpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
-export interface ItemWidget {
-  widget: (config: AlloyComponentsSpec) => SketchSpec;
-}
-
-export type ItemWidgetParts = () => ItemWidget;
-
-const parts = Fun.constant(AlloyParts.generate(WidgetParts.owner(), WidgetParts.parts()));
+const parts: () => AlloyParts.GeneratedParts = Fun.constant(AlloyParts.generate(WidgetParts.owner(), WidgetParts.parts()));
 
 export {
   parts

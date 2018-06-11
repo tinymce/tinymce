@@ -2,12 +2,14 @@ import * as AlloyEvents from '../api/events/AlloyEvents';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as AlloyLogger from '../log/AlloyLogger';
 import { Compare } from '@ephox/sugar';
+import { SugarElement } from '../alien/TypeDefinitions';
+import { AlloyComponent } from '../api/component/ComponentApi';
 
 // The purpose of this check is to ensure that a simulated focus call is not going
 // to recurse infinitely. Essentially, if the originator of the focus call is the same
 // as the element receiving it, and it wasn't its own target, then stop the focus call
 // and log a warning.
-const isRecursive = function (component, originator, target) {
+const isRecursive = function (component: AlloyComponent, originator: SugarElement, target: SugarElement) {
   return Compare.eq(originator, component.element()) &&
     !Compare.eq(originator, target);
 };
@@ -30,5 +32,5 @@ export default <any> {
         return true;
       }
     })
-  ])
+  ]) as AlloyEvents.EventHandlerConfigRecord
 };

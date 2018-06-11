@@ -4,12 +4,13 @@ import { Fun } from '@ephox/katamari';
 import { Receiving } from '../api/behaviour/Receiving';
 import { Sandboxing } from '../api/behaviour/Sandboxing';
 import * as Channels from '../api/messages/Channels';
+import { NamedConfiguredBehaviour } from '../api/behaviour/Behaviour';
 
 const schema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('isExtraPart', Fun.constant(false))
 ]);
 
-const receivingConfig = function (rawSpec) {
+const receivingConfig = function (rawSpec): NamedConfiguredBehaviour {
   const c = receiving(rawSpec);
   return Receiving.config(c);
 };

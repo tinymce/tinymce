@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { DslType } from '@ephox/boulder';
+
 import * as Behaviour from '../api/behaviour/Behaviour';
 import { Positioning } from '../api/behaviour/Positioning';
 import * as AlloyEvents from '../api/events/AlloyEvents';

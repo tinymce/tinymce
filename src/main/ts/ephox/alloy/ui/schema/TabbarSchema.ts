@@ -1,4 +1,4 @@
-import { DslType, FieldSchema } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import { Highlighting } from '../../api/behaviour/Highlighting';
@@ -10,7 +10,7 @@ import { TabButton } from '../../api/ui/TabButton';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 
-const schema = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('tabs'),
 
   FieldSchema.strict('dom'),
@@ -60,7 +60,7 @@ const tabsPart = PartType.group({
   }
 });
 
-const parts = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   tabsPart
 ]);
 

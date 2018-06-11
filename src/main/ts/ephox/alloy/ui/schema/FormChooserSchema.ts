@@ -1,4 +1,4 @@
-import { FieldSchema, Objects, DslType } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema, Objects } from '@ephox/boulder';
 import { Fun, Option } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -12,13 +12,13 @@ import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import * as ButtonBase from '../common/ButtonBase';
 
-const schema = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('choices'),
   SketchBehaviours.field('chooserBehaviours', [ Keying, Highlighting, Composing, Representing ]),
   Fields.markers([ 'choiceClass', 'selectedClass' ])
 ]);
 
-const parts = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.required({
     name: 'legend',
     defaults (detail) {

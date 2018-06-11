@@ -1,4 +1,4 @@
-import { DslType, FieldSchema } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -8,7 +8,7 @@ import { Toolbar } from '../../api/ui/Toolbar';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 
-const schema = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass' ]),
   SketchBehaviours.field('splitToolbarBehaviours', [ ]),
   FieldSchema.state('builtGroups', function () {
@@ -20,7 +20,7 @@ const toolbarSchema = [
   FieldSchema.strict('dom')
 ];
 
-const parts = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.required({
     factory: Toolbar,
     schema: toolbarSchema,

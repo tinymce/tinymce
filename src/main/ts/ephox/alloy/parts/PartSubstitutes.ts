@@ -3,6 +3,8 @@ import { Arr, Fun, Merger } from '@ephox/katamari';
 
 import * as UiSubstitutes from '../spec/UiSubstitutes';
 import * as PartType from './PartType';
+import { PartTypeAdt } from './PartType';
+import { Substitutions } from './AlloyParts';
 
 const combine: any = function (detail, data, partSpec, partValidated) {
   const spec = partSpec;
@@ -17,7 +19,7 @@ const combine: any = function (detail, data, partSpec, partValidated) {
   );
 };
 
-const subs = function (owner, detail, parts) {
+const subs = function (owner, detail, parts: PartTypeAdt[]): Substitutions {
   const internals = { };
   const externals = { };
 

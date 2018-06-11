@@ -1,9 +1,9 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun, Merger, Option } from '@ephox/katamari';
+import { SketchSpec } from '../../api/component/SpecTypes';
+import * as ComponentStructure from '../../alien/ComponentStructure';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-
-import * as ComponentStructure from '../../alien/ComponentStructure';
 import * as Fields from '../../data/Fields';
 import * as Dismissal from '../../sandbox/Dismissal';
 import * as Behaviour from '../behaviour/Behaviour';
@@ -15,7 +15,7 @@ import * as Sketcher from './Sketcher';
 
 export interface InlineViewSketch extends Sketcher.SingleSketch {
   // InlineViewApis;
-  showAt: (component: AlloyComponent, anchor: InlineViewAnchor, thing: Sketcher.SketchSpec) => void;
+  showAt: (component: AlloyComponent, anchor: InlineViewAnchor, thing: SketchSpec) => void;
   hide: (component: AlloyComponent) => void;
   isOpen: (component: AlloyComponent) => boolean;
 }
@@ -28,7 +28,7 @@ export interface InlineViewAnchor {
   root?: SugarElement;
 }
 
-const factory = function (detail, spec) {
+const factory = function (detail, spec): SketchSpec {
   const isPartOfRelated = function (container, queryElem) {
     const related = detail.getRelated()(container);
     return related.exists(function (rel) {

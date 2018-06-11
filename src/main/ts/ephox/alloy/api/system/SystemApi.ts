@@ -1,27 +1,31 @@
 import { Contracts, Result } from '@ephox/katamari';
+
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SketchSpec } from '../../api/ui/Sketcher';
+import { AlloySpec } from '../../api/component/SpecTypes';
+import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 export interface AlloySystemApi {
   addToGui: (AlloyComponent) => void;
   addToWorld: (AlloyComponent) => void;
   broadcast: (message: any) => void;
   broadcastOn: (channels: string[], message: any) => void;
-  build: (rawUserSpec: SketchSpec) => AlloyComponent;
+  build: (spec: AlloySpec) => AlloyComponent;
   debugInfo: () => string;
-  getByDom: <SugarElement>(element: SugarElement) => Result<SugarElement, string>;
+  getByDom: (element: SugarElement) => Result<AlloyComponent, string>;
   getByUid: (uid: string) => Result<AlloyComponent, string>;
   removeFromGui: (component: AlloyComponent) => void;
   removeFromWorld: (component: AlloyComponent) => void;
 
   isConnected: () => boolean;
-  triggerEscape: (component: AlloyComponent, simulatedEvent: {}) => void;
+  // Weird method. Required?
+  triggerEscape: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+
   triggerEvent: (eventName: string, target: SugarElement, data: {}) => void;
   triggerFocus: (target: SugarElement, originator: SugarElement) => void;
 }
 
-export type AlloySystem = (AlloySystemApi) => AlloySystemApi;
+export type ContractAlloySystem = (AlloySystemApi) => AlloySystemApi;
 
 const SystemApi = Contracts.exactly([
   'debugInfo',
@@ -42,7 +46,7 @@ const SystemApi = Contracts.exactly([
   'broadcast',
   'broadcastOn',
   'isConnected'
-]) as AlloySystem;
+]) as ContractAlloySystem;
 
 export {
   SystemApi

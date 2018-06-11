@@ -1,4 +1,4 @@
-import { FieldSchema, Objects, DslType } from '@ephox/boulder';
+import { Objects } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
 
 /*

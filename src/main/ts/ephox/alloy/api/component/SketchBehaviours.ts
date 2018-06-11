@@ -1,7 +1,8 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun } from '@ephox/katamari';
-import { ContainerBehaviours } from '../../spec/SpecSchema';
+
 import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { ContainerBehaviours } from '../../spec/SpecSchema';
 
 const field = function (name: string, forbidden: AlloyBehaviour[]): FieldProcessorAdt {
   return FieldSchema.defaultedObjOf(name, { }, Arr.map(forbidden, function (f) {

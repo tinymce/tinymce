@@ -1,4 +1,4 @@
-import { DslType, FieldSchema } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Cell, Fun, Option } from '@ephox/katamari';
 
 import Strings from '../../alien/Strings';
@@ -14,7 +14,7 @@ import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import * as InputBase from '../common/InputBase';
 
-const schema = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),
   FieldSchema.strict('fetch'),
   FieldSchema.defaulted('minChars', 5),
@@ -37,7 +37,7 @@ const schema = Fun.constant([
   InputBase.schema()
 ));
 
-const parts = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.external({
     schema: [
       Fields.tieredMenuMarkers()

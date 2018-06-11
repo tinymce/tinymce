@@ -13,9 +13,9 @@ import { NoContextApi } from '../system/NoContextApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as CompBehaviours from './CompBehaviours';
 import { ComponentApi, AlloyComponent } from './ComponentApi';
-import { SketchSpec } from '../../api/ui/Sketcher';
+import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
-const build = function (spec: SketchSpec): AlloyComponent {
+const build = function (spec: SimpleOrSketchSpec): AlloyComponent {
   const getMe = function () {
     return me;
   };

@@ -1,4 +1,4 @@
-import { DslType, FieldSchema } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -13,7 +13,7 @@ import * as Fields from '../../data/Fields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 
-const schema = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('toggleClass'),
   FieldSchema.strict('fetch'),
 
@@ -89,7 +89,7 @@ const buttonPart = PartType.required({
   }
 });
 
-const parts = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   arrowPart,
   buttonPart,
 

@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Merger, Obj, Result, Option } from '@ephox/katamari';
 import { Element, Node, Text, Traverse } from '@ephox/sugar';
-import { RawDomSchema, RawElementSchema } from '../../api/ui/Sketcher';
+import { RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
 const getAttrs = function (elem) {
   const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
@@ -43,7 +43,7 @@ const readChildren = function (elem) {
   }
 };
 
-const read = function (elem): RawDomSchema {
+const read = function (elem): SimpleOrSketchSpec {
   const attrs = getAttrs(elem);
   const classes = getClasses(elem);
 
@@ -51,7 +51,7 @@ const read = function (elem): RawDomSchema {
 
   const components = Arr.bind(children, function (child) {
     return readChildren(child);
-  }) as RawDomSchema[];
+  }) as SimpleOrSketchSpec[];
 
   return {
     dom: Objects.wrapAll(
@@ -60,12 +60,12 @@ const read = function (elem): RawDomSchema {
         Obj.keys(attrs).length > 0 ? [ { key: 'attributes', value: attrs } ] : [ ],
         classes.length > 0 ? [ { key: 'classes', value: classes } ] : [ ]
       ])
-    ) as RawElementSchema,
+    ) as RawDomSchema,
     components
   };
 };
 
-const readHtml = function (html: string): Result<RawDomSchema, string> {
+const readHtml = function (html: string): Result<SimpleOrSketchSpec, string> {
   const elem = Element.fromHtml(html);
   return Node.isText(elem) ? Result.error('Template text must contain an element!') : Result.value(
     read(elem)

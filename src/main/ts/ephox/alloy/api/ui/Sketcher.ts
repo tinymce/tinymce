@@ -1,28 +1,15 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Obj } from '@ephox/katamari';
-import { EventHandlerConfig } from '../../api/events/AlloyEvents';
 
+import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { AlloyBehaviourSchema } from '../../api/behaviour/Behaviour';
-
-export interface RawElementSchema {
-  tag: string;
-  attributes?: Record<string, any>;
-  styles?: Record<string, string>;
-  innerHtml?: string;
-  classes?: string[];
-}
-
-export type AlloyComponentsSpec = RawDomSchema[] | SketchSpec[];
-export type AlloyMixedSpec = RawDomSchema | SketchSpec;
 
 export interface SingleSketch {
   name: () => string;
   configFields: () => FieldProcessorAdt[];
-  partFields: () => FieldProcessorAdt[];
   sketch: (spec: Record<string, any>) => SketchSpec;
   factory: UiSketcher.SingleFactory;
   [key: string]: Function;
@@ -33,40 +20,12 @@ export interface CompositeSketch  {
   configFields: () => FieldProcessorAdt[];
   partFields: () => FieldProcessorAdt[];
   sketch: (spec: Record<string, any>) => SketchSpec;
-
-  parts: () => any;
+  parts: () => AlloyParts.GeneratedParts;
   factory: UiSketcher.CompositeFactory;
   [key: string]: Function;
 }
 
-// TODO: Morgan -> check these
-export interface RawDomSchema {
-  dom: RawElementSchema;
-  components?: AlloyComponentsSpec;
-  items?: RawDomSchema[];
-  value?: string;
-  autofocus?: boolean;
-  type?: string;
-  data?: {};
-  markers?: {};
-  behaviours?: Record<string, AlloyBehaviourSchema>;
-  events?: EventHandlerConfig | {};
-  domModification?: {};
-}
-
-export interface RawDomSchemaUid extends RawDomSchema {
-  uid: string;
-}
-
-// TODO: Morgan -> check these, should domModification and eventOrder be part of RawDomSchema too?
-export interface SketchSpec extends RawDomSchema {
-  domModification: {};
-  eventOrder: {};
-  uid: string;
-  'debug.sketcher': {};
-}
-
-export function isSketchSpec(spec: RawDomSchema | SketchSpec): spec is SketchSpec {
+export function isSketchSpec(spec: AlloySpec): spec is SketchSpec {
   return (<SketchSpec> spec).uid !== undefined;
 }
 
@@ -120,7 +79,7 @@ const composite = function (rawConfig) {
   };
 
   // These are constructors that will store their configuration.
-  const parts = AlloyParts.generate(config.name, config.partFields);
+  const parts: AlloyParts.GeneratedParts = AlloyParts.generate(config.name, config.partFields);
 
   const apis = Obj.map(config.apis, GuiTypes.makeApi);
   const extraApis = Obj.map(config.extraApis, function (f, k) {

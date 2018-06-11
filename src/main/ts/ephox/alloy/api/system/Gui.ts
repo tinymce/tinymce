@@ -88,7 +88,7 @@ const takeover = function (root: AlloyComponent): GuiSystem {
         Triggers.triggerOnUntilStopped(lookup, eventName, data, target, logger);
       });
     },
-    triggerFocus (target, originator) {
+    triggerFocus (target: SugarElement, originator: SugarElement) {
       Tagger.read(target).fold(function () {
         // When the target is not within the alloy system, dispatch a normal focus event.
         Focus.focus(target);

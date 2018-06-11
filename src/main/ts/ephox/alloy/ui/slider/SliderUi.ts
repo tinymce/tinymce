@@ -11,6 +11,8 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as SliderActions from './SliderActions';
 
+import { EventFormat, CustomEvent } from '../../events/SimulatedEvent';
+
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
 const sketch = function (detail, components, spec, externals) {
@@ -136,7 +138,7 @@ const sketch = function (detail, components, spec, externals) {
 
     events: AlloyEvents.derive(
       [
-        AlloyEvents.run(SliderActions.changeEvent(), function (slider, simulatedEvent) {
+        AlloyEvents.run<CustomEvent>(SliderActions.changeEvent(), function (slider, simulatedEvent) {
           changeValue(slider, simulatedEvent.event().value());
         }),
         AlloyEvents.runOnAttached(function (slider, simulatedEvent) {

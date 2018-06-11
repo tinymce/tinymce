@@ -1,5 +1,5 @@
 import * as Boxes from '../../alien/Boxes';
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Scroll } from '@ephox/sugar';
 
 const defaultLazyViewport = function (_component) {
@@ -17,4 +17,4 @@ export default <any> [
   FieldSchema.defaulted('lazyViewport', defaultLazyViewport),
   FieldSchema.strict('leftAttr'),
   FieldSchema.strict('topAttr')
-];
+] as FieldProcessorAdt[];

@@ -1,4 +1,4 @@
-import { DslType, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
@@ -44,7 +44,7 @@ const configureMenu = function (detail, movementInfo) {
   };
 };
 
-const parts = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.group({
     factory: {
       sketch (spec) {
@@ -75,7 +75,7 @@ const parts = Fun.constant([
   })
 ]);
 
-const schema = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('value'),
   FieldSchema.strict('items'),
   FieldSchema.strict('dom'),

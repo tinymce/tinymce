@@ -15,6 +15,9 @@ export interface StylesCoord {
   position: string;
 }
 
+type CoordTransform = (PositionCoordinates) => PositionCoordinates;
+
+export type CoordStencil = (coord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates) => PositionCoordinates
 /*
  * origin: the position (without scroll) of the offset parent
  * scroll: the scrolling position of the window
@@ -29,27 +32,25 @@ const adt = Adt.generate([
   { fixed: [ 'x', 'y' ] }
 ]);
 
-const subtract = function (change) {
+const subtract = function (change: PositionCoordinates): CoordTransform {
   return function (point) {
     return point.translate(-change.left(), -change.top());
   };
 };
 
-const add = function (change) {
+const add = function (change: PositionCoordinates): CoordTransform {
   return function (point) {
     return point.translate(change.left(), change.top());
   };
 };
 
-const transform = function (changes) {
-  return function (x, y) {
-    return Arr.foldl(changes, function (rest, f) {
-      return f(rest);
-    }, Position(x, y));
-  };
+const transform = (changes: CoordTransform[]) => (x: number, y: number): PositionCoordinates => {
+  return Arr.foldl(changes, function (rest, f) {
+    return f(rest);
+  }, Position(x, y));
 };
 
-const asFixed = function (coord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates): PositionCoordinates {
+const asFixed: CoordStencil = (coord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates) => {
   return coord.fold(
     // offset to fixed
     transform([ add(origin), subtract(scroll) ]),
@@ -60,7 +61,7 @@ const asFixed = function (coord: CoordAdt, scroll: PositionCoordinates, origin: 
   );
 };
 
-const asAbsolute = function (coord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates): PositionCoordinates  {
+const asAbsolute: CoordStencil = (coord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates) => {
   return coord.fold(
     // offset to absolute
     transform([ add(origin) ]),
@@ -71,7 +72,7 @@ const asAbsolute = function (coord: CoordAdt, scroll: PositionCoordinates, origi
   );
 };
 
-const asOffset = function (coord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates): PositionCoordinates  {
+const asOffset: CoordStencil = (coord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates) => {
   return coord.fold(
     // offset to offset
     transform([ ]),
@@ -82,7 +83,7 @@ const asOffset = function (coord: CoordAdt, scroll: PositionCoordinates, origin:
   );
 };
 
-const toString = function (coord) {
+const toString = function (coord: CoordAdt): string {
   return coord.fold(
     function (x, y) {
       return 'offset(' + x + ', ' + y + ')';
@@ -120,7 +121,7 @@ const toStyles = function (coord: CoordAdt, scroll: PositionCoordinates, origin:
   );
 };
 
-const translate = function (coord: CoordAdt, deltaX, deltaY) {
+const translate = function (coord: CoordAdt, deltaX: number, deltaY: number): CoordAdt {
   return coord.fold(
     function (x, y) {
       return adt.offset(x + deltaX, y + deltaY);
@@ -134,9 +135,9 @@ const translate = function (coord: CoordAdt, deltaX, deltaY) {
   );
 };
 
-const absorb = function (partialCoord, originalCoord, scroll: PositionCoordinates, origin: PositionCoordinates) {
-  const absorbOne = function (stencil, nu) {
-    return function (optX, optY) {
+const absorb = function (partialCoord: CoordAdt, originalCoord: CoordAdt, scroll: PositionCoordinates, origin: PositionCoordinates): CoordAdt {
+  const absorbOne = function (stencil: CoordStencil, nu: DragCoords) {
+    return function (optX, optY): CoordAdt {
       const original = stencil(originalCoord, scroll, origin);
       return nu(optX.getOr(original.left()), optY.getOr(original.top()));
     };

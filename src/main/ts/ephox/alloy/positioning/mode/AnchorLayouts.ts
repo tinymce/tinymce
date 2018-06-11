@@ -1,7 +1,7 @@
-import { FieldSchema, DslType } from '@ephox/boulder';
+import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Direction } from '@ephox/sugar';
 
-const schema = function () {
+const schema: () => FieldProcessorAdt = function () {
   return FieldSchema.optionObjOf('layouts', [
     FieldSchema.strict('onLtr'),
     FieldSchema.strict('onRtl')

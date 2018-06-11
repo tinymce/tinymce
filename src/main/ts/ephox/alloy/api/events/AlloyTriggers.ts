@@ -3,7 +3,7 @@ import { Fun, Merger, Obj } from '@ephox/katamari';
 import * as SystemEvents from './SystemEvents';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SugarElement } from '../../alien/TypeDefinitions';
-import { SimulatedEvent } from '../../events/SimulatedEvent';
+import { SimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
 
 const emit = function (component: AlloyComponent, event: string): void {
   dispatchWith(component, component.element(), event, { });
@@ -28,7 +28,7 @@ const dispatchWith = function (component: AlloyComponent, target: SugarElement, 
   component.getSystem().triggerEvent(event, target, Obj.map(data, Fun.constant));
 };
 
-const dispatchEvent = function (component: AlloyComponent, target: SugarElement, event: string, simulatedEvent: SimulatedEvent): void {
+const dispatchEvent = function <T extends EventFormat>(component: AlloyComponent, target: SugarElement, event: string, simulatedEvent: SimulatedEvent<T>): void {
   component.getSystem().triggerEvent(event, target, simulatedEvent.event());
 };
 

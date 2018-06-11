@@ -8,8 +8,11 @@ import * as DragMovement from '../common/DragMovement';
 import SnapSchema from '../common/SnapSchema';
 import * as Snappables from '../snap/Snappables';
 import * as TouchData from './TouchData';
+import { TouchDraggingConfigSpec, TouchDraggingConfig } from '../../dragging/touch/TouchDraggingTypes';
+import { DraggingState } from '../../dragging/common/DraggingTypes';
+import { PositionCoordinates } from '../../alien/TypeDefinitions';
 
-const handlers = function (dragConfig, dragState) {
+const handlers = function (dragConfig: TouchDraggingConfig, dragState: DraggingState<PositionCoordinates>): AlloyEvents.EventHandlerConfigRecord {
 
   return AlloyEvents.derive([
     AlloyEvents.stopper(NativeEvents.touchstart()),

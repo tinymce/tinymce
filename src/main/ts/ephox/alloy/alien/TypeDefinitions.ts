@@ -1,3 +1,5 @@
+import { EventFormat } from '../events/SimulatedEvent';
+
 // TODO move these to the correct village
 
 // TODO move this generic into Katamari Adt
@@ -14,10 +16,10 @@ export interface SugarElement {
 }
 
 // Sugar Event
-export interface SugarEvent {
+export interface SugarEvent extends EventFormat {
   kill: () => void;
   prevent: () => void;
-  raw: () => Event;
+  raw: () => Event | TouchEvent | TransitionEvent;
   stop: () => void;
   target: () => SugarElement;
   x: () => number;
@@ -33,3 +35,5 @@ export interface PositionCoordinates {
 
 // Fun.constant, Rather than => T, we will have explicit return types
 export type StringConstant = () => string;
+
+export type GeneralStruct = () => { [ key: string ]: () => any };

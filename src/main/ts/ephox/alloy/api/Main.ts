@@ -88,6 +88,11 @@ import * as AlloyLogger from '../log/AlloyLogger'; // Used directly by mobile th
 import * as Debugging from '../debugging/Debugging'; // Used directly by mobile theme
 import * as FunctionAnnotator from '../debugging/FunctionAnnotator'; // Used directly by Alloy-docs
 
+// Type Def Exports
+import { SugarEvent, SugarElement } from '../alien/TypeDefinitions'; // TODO FIX this when we fix SUGARE types
+import { AlloySpec, SimpleOrSketchSpec, LooseSpec, RawDomSchema, ComponentSpec, SketchSpec, SimpleSpec, PremadeSpec } from './component/SpecTypes';
+import { CustomEvent, EventFormat, SimulatedEvent, NativeSimulatedEvent, CustomSimulatedEvent, ReceivingEvent } from '../events/SimulatedEvent';
+
 export {
   AddEventsBehaviour,
   Behaviour,
@@ -176,5 +181,22 @@ export {
   TapEvent,
   AlloyLogger,
   Debugging,
-  FunctionAnnotator
+  FunctionAnnotator,
+
+  AlloySpec,
+  SimpleOrSketchSpec,
+  LooseSpec,
+  RawDomSchema,
+  ComponentSpec,
+  SketchSpec,
+  SimpleSpec,
+  PremadeSpec,
+  CustomEvent,
+  EventFormat,
+  SimulatedEvent,
+  NativeSimulatedEvent,
+  CustomSimulatedEvent,
+  ReceivingEvent,
+  SugarEvent,
+  SugarElement
 };

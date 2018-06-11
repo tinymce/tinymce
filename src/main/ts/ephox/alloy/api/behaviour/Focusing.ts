@@ -3,17 +3,7 @@ import * as ActiveFocus from '../../behaviour/focusing/ActiveFocus';
 import * as FocusApis from '../../behaviour/focusing/FocusApis';
 import FocusSchema from '../../behaviour/focusing/FocusSchema';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-
-export interface FocusingBehaviour extends Behaviour.AlloyBehaviour {
-  config: (config: FocusingConfig) => { [key: string]: (any) => any };
-  focus: (component: AlloyComponent) => void;
-  isFocused: (component: AlloyComponent) => boolean;
-}
-
-export interface FocusingConfig {
-  onFocus?: (any) => any;
-  ignore?: boolean;
-}
+import { FocusingBehaviour } from '../../behaviour/focusing/FocusingTypes';
 
 const Focusing = Behaviour.create({
   fields: FocusSchema,

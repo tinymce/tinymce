@@ -1,30 +1,39 @@
 import { Objects } from '@ephox/boulder';
 
 import * as EventRoot from '../../alien/EventRoot';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as EventHandler from '../../construct/EventHandler';
+import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
 import * as AlloyTriggers from './AlloyTriggers';
 import * as SystemEvents from './SystemEvents';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SimulatedEvent } from '../../events/SimulatedEvent';
-import { SpecSchemaStruct } from '../../spec/SpecSchema';
 
-export interface EventHandlerConfig {
+// TODO: Fix types.
+export type EventHandlerConfigRecord = Record<string, AlloyEventHandler<EventFormat>>;
+
+export interface AlloyEventHandler<T extends EventFormat> {
+  can: () => boolean;
+  abort: () => boolean;
+  run: EventRunHandler<T>;
+}
+
+export interface EventHandlerConfig<T> {
   key: string;
-  value: {
-    can: () => boolean;
-    abort: () => boolean;
-    run: EventRunHandler
-  };
+  value: AlloyEventHandler<EventFormat>;
 }
 
 // TODO we can tighten this up alot further, it should take a simulatedEvent, however SimulatedEvent.event() can return 2 types, need to solve that issue first (SugarEvent or SimulatedEventTargets)
 // export type EventRunHandler = (component: AlloyComponent, action: SimulatedEvent) => any;
-export type EventRunHandler = (component: AlloyComponent, action: { [eventName: string]: any }) => any;
-export type RunOnSourceName = (handler: EventRunHandler) => EventHandlerConfig;
+type RunOnName<T extends EventFormat> = (handler: EventRunHandler<T>) => EventHandlerConfig<T>;
+type RunOnSourceName<T extends EventFormat> = (handler: EventRunHandler<T>) => EventHandlerConfig<T>;
+export type EventRunHandler<T extends EventFormat> = (component: AlloyComponent, se: SimulatedEvent<T>, ...others) => void;
 
-const derive = Objects.wrapAll;
+const derive = (configs: Array<EventHandlerConfig<any>>): EventHandlerConfigRecord => {
+  return Objects.wrapAll(configs) as EventHandlerConfigRecord;
+};
 
-const abort = function (name, predicate) {
+// const combine = (configs...);
+
+const abort = function <T>(name, predicate): EventHandlerConfig<T> {
   return {
     key: name,
     value: EventHandler.nu({
@@ -33,7 +42,7 @@ const abort = function (name, predicate) {
   };
 };
 
-const can = function (name, predicate) {
+const can = function <T>(name, predicate): EventHandlerConfig<T> {
   return {
     key: name,
     value: EventHandler.nu({
@@ -42,7 +51,7 @@ const can = function (name, predicate) {
   };
 };
 
-const preventDefault = function (name: string): EventHandlerConfig {
+const preventDefault = function <T>(name: string): EventHandlerConfig<T> {
   return {
     key: name,
     value: EventHandler.nu({
@@ -53,7 +62,7 @@ const preventDefault = function (name: string): EventHandlerConfig {
   };
 };
 
-const run = function (name: string, handler: EventRunHandler): EventHandlerConfig {
+const run = function <T extends EventFormat>(name: string, handler: EventRunHandler<T>): EventHandlerConfig<T> {
   return {
     key: name,
     value: EventHandler.nu({
@@ -62,7 +71,8 @@ const run = function (name: string, handler: EventRunHandler): EventHandlerConfi
   };
 };
 
-const runActionExtra = function (name: string, action: (t: any, u: any) => void, extra: SpecSchemaStruct[]): EventHandlerConfig {
+// FIX: What is the extra here?
+const runActionExtra = function <T>(name: string, action: (t: AlloyComponent, u: any) => void, extra: any): EventHandlerConfig<T> {
   return {
     key: name,
     value: EventHandler.nu({
@@ -73,18 +83,18 @@ const runActionExtra = function (name: string, action: (t: any, u: any) => void,
   };
 };
 
-const runOnName = function (name) {
+const runOnName = function <T extends EventFormat>(name): RunOnName<T> {
   return function (handler) {
     return run(name, handler);
   };
 };
 
-const runOnSourceName = function (name) {
-  return function (handler) {
+const runOnSourceName = function <T extends EventFormat>(name): RunOnSourceName<T> {
+  return function (handler: (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) => void): EventHandlerConfig<T> {
     return {
       key: name,
       value: EventHandler.nu({
-        run (component, simulatedEvent) {
+        run (component, simulatedEvent: SimulatedEvent<T>) {
           if (EventRoot.isSource(component, simulatedEvent)) { handler(component, simulatedEvent); }
         }
       })
@@ -92,44 +102,44 @@ const runOnSourceName = function (name) {
   };
 };
 
-const redirectToUid = function (name, uid) {
-  return run(name, function (component: AlloyComponent, simulatedEvent: SimulatedEvent) {
+const redirectToUid = function <T extends EventFormat>(name, uid): EventHandlerConfig<T> {
+  return run(name, function (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) {
     component.getSystem().getByUid(uid).each(function (redirectee) {
       AlloyTriggers.dispatchEvent(redirectee, redirectee.element(), name, simulatedEvent);
     });
   });
 };
 
-const redirectToPart = function (name, detail, partName) {
+const redirectToPart = function <T>(name, detail, partName): EventHandlerConfig<T> {
   const uid = detail.partUids()[partName];
   return redirectToUid(name, uid);
 };
 
-const runWithTarget = function (name, f) {
+const runWithTarget = function <T extends EventFormat>(name, f): EventHandlerConfig<T> {
   return run(name, function (component, simulatedEvent) {
-    component.getSystem().getByDom(simulatedEvent.event().target()).each(function (target) {
+    const ev: T = simulatedEvent.event();
+    component.getSystem().getByDom(ev.target()).each(function (target) {
       f(component, target, simulatedEvent);
     });
   });
 };
 
-const cutter = function (name) {
+const cutter = function <T>(name): EventHandlerConfig<T> {
   return run(name, function (component, simulatedEvent) {
     simulatedEvent.cut();
   });
 };
 
-const stopper = function (name) {
+const stopper = function <T>(name): EventHandlerConfig<T> {
   return run(name, function (component, simulatedEvent) {
     simulatedEvent.stop();
   });
 };
 
-const runOnAttached = runOnSourceName(SystemEvents.attachedToDom()) as RunOnSourceName;
-const runOnDetached = runOnSourceName(SystemEvents.detachedFromDom()) as RunOnSourceName;
-const runOnInit = runOnSourceName(SystemEvents.systemInit()) as RunOnSourceName;
-const runOnExecute = runOnName(SystemEvents.execute()) as RunOnSourceName;
-
+const runOnAttached = runOnSourceName(SystemEvents.attachedToDom());
+const runOnDetached = runOnSourceName(SystemEvents.detachedFromDom());
+const runOnInit = runOnSourceName(SystemEvents.systemInit());
+const runOnExecute = runOnName(SystemEvents.execute());
 export {
   derive,
   run,

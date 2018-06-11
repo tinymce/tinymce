@@ -6,24 +6,31 @@ import * as Boxes from '../../positioning/layout/Boxes';
 import * as Origins from '../../positioning/layout/Origins';
 import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
 import AnchorSchema from '../../positioning/mode/AnchorSchema';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { PositioningConfig } from '../../behaviour/positioning/PositioningTypes';
+import { Stateless } from '../../behaviour/common/NoState';
+import { PositionCoordinates } from '../../alien/TypeDefinitions';
+import { AdtInterface } from '@ephox/boulder/lib/main/ts/ephox/boulder/alien/AdtDefinition';
 
-const getFixedOrigin = function () {
+export interface OriginAdt extends AdtInterface { };
+
+const getFixedOrigin = function (): OriginAdt {
   return Origins.fixed(0, 0, window.innerWidth, window.innerHeight);
 };
 
-const getRelativeOrigin = function (component) {
+const getRelativeOrigin = function (component: AlloyComponent): OriginAdt {
   // This container is the origin.
   const position = Location.absolute(component.element());
   return Origins.relative(position.left(), position.top());
 };
 
-const placeFixed = function (_component, origin, anchoring, posConfig, placee) {
+const placeFixed = function (_component: AlloyComponent, origin: PositionCoordinates, anchoring: any, posConfig: PositioningConfig, placee: AlloyComponent): void {
   const anchor = Anchor.box(anchoring.anchorBox());
   // TODO: Overrides for expanding panel
   SimpleLayout.fixed(anchor, placee.element(), anchoring.bubble(), anchoring.layouts(), anchoring.overrides());
 };
 
-const placeRelative = function (component, origin, anchoring, posConfig, placee) {
+const placeRelative = function (component: AlloyComponent, origin: PositionCoordinates, anchoring: any, posConfig: PositioningConfig, placee: AlloyComponent): void {
   const bounds = posConfig.bounds().getOr(Boxes.view());
 
   SimpleLayout.relative(
@@ -39,12 +46,12 @@ const placeRelative = function (component, origin, anchoring, posConfig, placee)
   );
 };
 
-const place = function (component, origin, anchoring, posConfig, placee) {
+const place = function (component: AlloyComponent, origin: PositionCoordinates, anchoring: any, posConfig: PositioningConfig, placee: AlloyComponent): void {
   const f = posConfig.useFixed() ? placeFixed : placeRelative;
   f(component, origin, anchoring, posConfig, placee);
 };
 
-const position = function (component, posConfig, posState, anchor, placee) {
+const position = function (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: any, placee: AlloyComponent): void {
   const anchorage = ValueSchema.asStructOrDie('positioning anchor.info', AnchorSchema, anchor);
   const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
 
@@ -78,7 +85,7 @@ const position = function (component, posConfig, posState, anchor, placee) {
   ) { Css.remove(placee.element(), 'position'); }
 };
 
-const getMode = function (component, pConfig, pState) {
+const getMode = function (component: AlloyComponent, pConfig: PositioningConfig, pState: Stateless): string {
   return pConfig.useFixed() ? 'fixed' : 'absolute';
 };
 
