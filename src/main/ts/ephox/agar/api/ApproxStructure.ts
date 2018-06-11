@@ -13,6 +13,7 @@ var build = function (f) {
   var strApi = {
     is: ApproxComparisons.is,
     startsWith: ApproxComparisons.startsWith,
+    contains: ApproxComparisons.contains,
     none: ApproxComparisons.none
   };
 
