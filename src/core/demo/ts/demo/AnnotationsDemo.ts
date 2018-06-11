@@ -27,6 +27,20 @@ export default function () {
           ed.annotator.apply('alpha', {
             comment
           });
+        },
+
+        onpostrender: (ctrl) => {
+          const button = ctrl.control;
+          ed.on('init', () => {
+            ed.annotator.annotationChanged((uid, name) => {
+              console.log('annotation changed', uid, name);
+              if (uid === null || name === null) {
+                button.active(false);
+              } else {
+                button.active(name === 'alpha');
+              }
+            });
+          });
         }
       });
 
@@ -40,6 +54,7 @@ export default function () {
             };
           }
         });
+
       });
     },
 

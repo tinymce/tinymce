@@ -55,7 +55,10 @@ export default function (editor) {
      * @param {Object/Array} format ""
      */
     register: (name: string, settings: { }) => {
-      annotations[name] = settings;
+      annotations[name] = {
+        name,
+        settings
+      };
     },
 
     apply: (name: string, data: { }) => {

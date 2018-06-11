@@ -14,7 +14,7 @@ import { Editor } from 'tinymce/core/api/Editor';
 // import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
 // import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 
-const annotate = (editor, decorate, { uid = Id.generate('mce-annotation'), ...data }, bookmark): any[] => {
+const annotate = (editor, annotationName: string, decorate, { uid = Id.generate('mce-annotation'), ...data }, bookmark): any[] => {
   // Setup all the wrappers that are going to be used.
   const newWrappers = [ ];
 
@@ -25,7 +25,8 @@ const annotate = (editor, decorate, { uid = Id.generate('mce-annotation'), ...da
   // Setup the spans for the comments
   const master = Element.fromTag('span');
   Class.add(master, Markings.annotation());
-  Attr.set(master, 'data-uid', uid);
+  Attr.set(master, 'data-mce-annotation-uid', uid);
+  Attr.set(master, 'data-mce-annotation', annotationName);
 
   const { attributes = { }, classes = [ ] } = decorate(uid, data);
   Attr.setAll(master, attributes);
@@ -94,9 +95,16 @@ const annotate = (editor, decorate, { uid = Id.generate('mce-annotation'), ...da
   return newWrappers;
 };
 
-const annotateWithBookmark = (editor: Editor, settings: { decorate: (string, { }) => { } }, data: { }): void => {
+export interface Annotation {
+  name: string;
+  settings: {
+    decorate: (string, { }) => { attributes: { }, classes: string[] }
+  };
+}
+
+const annotateWithBookmark = (editor: Editor, { name, settings }: Annotation, data: { }): void => {
   const bookmark = GetBookmark.getPersistentBookmark(editor.selection, true);
-  annotate(editor, settings.decorate, data, bookmark);
+  annotate(editor, name, settings.decorate, data, bookmark);
   editor.selection.moveToBookmark(bookmark);
 };
 
