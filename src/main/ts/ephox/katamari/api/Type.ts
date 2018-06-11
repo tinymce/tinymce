@@ -14,7 +14,7 @@ var isType = function (type: string) {
 
 export default {
   isString: <(value: any) => value is string>isType('string'),
-  isObject: <(value: any) => value is object>isType('object'),
+  isObject: isType('object'),
   isArray: <(value: any) => value is Array<any>>isType('array'),
   isNull: <(value: any) => value is null>isType('null'),
   isBoolean: <(value: any) => value is boolean>isType('boolean'),
