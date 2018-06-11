@@ -192,8 +192,8 @@ var some = function <T> (a: T): Option<T> {
 };
 
 /** from :: undefined|null|a -> Option a */
-var from = function <T> (value: T) {
-  return value === null || value === undefined ? <Option<T>>NONE : some(value);
+var from = function <T> (value: T | undefined | null) {
+  return value === null || value === undefined ? <Option<NonNullable<T>>>NONE : some<NonNullable<T>>(value as NonNullable<T>);
 };
 
 export const Option = {
