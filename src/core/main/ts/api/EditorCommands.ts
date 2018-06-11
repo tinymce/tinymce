@@ -417,10 +417,6 @@ export default function (editor: Editor) {
       selection.moveToBookmark(bookmark);
     },
 
-    'mceAnnotation' (command, ui, value) {
-      annotator.register();
-    },
-
     'mceRemoveNode' (command, ui, value) {
       const node = value || selection.getNode();
 
