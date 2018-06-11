@@ -7,14 +7,19 @@ import * as Markings from './Markings';
 
 // Given the current editor selection, identify the uid of any current
 // annotation
-const identify = (editor): Option<{uid: string, name: string}> => {
+const identify = (editor, annotationName: Option<string>): Option<{uid: string, name: string}> => {
   const rng = editor.selection.getRng();
 
   const start = Element.fromDom(rng.startContainer);
   const root = Element.fromDom(editor.getBody());
 
+  const selector = annotationName.fold(
+    () => '.' + Markings.annotation(),
+    (an) => `[data-mce-annotation="${an}"]`
+  );
+
   const newStart = Traverse.child(start, rng.startOffset).getOr(start);
-  const closest = SelectorFind.closest(newStart, '.' + Markings.annotation(), (n) => {
+  const closest = SelectorFind.closest(newStart, selector, (n) => {
     return Compare.eq(n, root);
   });
 

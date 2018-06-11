@@ -1,10 +1,9 @@
+import { Arr, Cell, Option, Throttler } from '@ephox/katamari';
+import { Remove } from '@ephox/sugar';
+import { findMarkers, identify } from 'tinymce/core/annotate/Identification';
 import { annotateWithBookmark } from 'tinymce/core/annotate/Wrapping';
-import { Editor } from 'tinymce/core/api/Editor';
-import { Cell, Option, Throttler, Arr } from '@ephox/katamari';
-import { Attr, Element, SelectorFind } from '@ephox/sugar';
-import { identify } from 'tinymce/core/annotate/Identification';
 
-export default function (editor: Editor) {
+export default function (editor) {
 
   const annotations = { };
 
@@ -12,57 +11,40 @@ export default function (editor: Editor) {
 
   const changeCallbacks = Cell([ ]);
 
-  const fireCallbacks = (name, uid) => {
+  const fireCallbacks = (name: string, uid: string): void => {
     Arr.each(changeCallbacks.get(), (f) => f(name, uid));
   };
 
-  const fireNoAnnotation = () => {
-
+  const fireNoAnnotation = (): void => {
+    // Surely there is a better API choice than this.
+    fireCallbacks(null, null);
   };
 
-  const fireAnnotation = (uid, name) => {
-    // Firstly, check that it is a new annotation.
-    lastAnnotation.get().filter();
+  const isDifferent = ({ uid, name }): boolean => {
+    return lastAnnotation.get().forall(({ lastUid, lastName }) => {
+      return uid !== lastName || name !== lastName;
+    });
   };
+
+  const onNodeChange = Throttler.last(() => {
+    identify(editor, Option.none()).fold(
+      () => fireNoAnnotation(),
+      ({ uid, name }) => {
+        if (isDifferent({ uid, name })) {
+          lastAnnotation.set(Option.some({ uid, name }));
+          fireCallbacks(uid, name);
+        }
+      }
+    );
+  }, 200);
 
   editor.on('remove', () => {
     onNodeChange.cancel();
   });
 
   editor.on('nodeChange', () => {
-    const node: Node = editor.selection.getNode();
-    SelectorFind.closest(node, '.mce-annotation');
+    onNodeChange.throttle();
   });
-
-  const onNodeChange = Throttler.last(() => {
-    identify(editor).fold(
-      () =>
-      ({ uid, name }) => {
-
-    });
-    const node: Element = editor.selection.getNode();
-    SelectorFind.closest(
-      Element.fromDom(node),
-      '.mce-annotation'
-    ).each((marker) => {
-      Attr.has;
-
-    });
-
-    const optAnnotation = bridge.identify(editor);
-    const isDisabled = optAnnotation.fold(
-      () => {
-        return editor.selection.isCollapsed();
-      },
-      Fun.constant(false)
-    );
-
-    const control = ctrl.control;
-    control.active(optAnnotation.isSome());
-    control.disabled(isDisabled);
-
-    bridge.refreshView(optAnnotation);
-  }, 50);
 
   return {
     /**
@@ -72,11 +54,11 @@ export default function (editor: Editor) {
      * @param {Object/String} name ""
      * @param {Object/Array} format ""
      */
-    register: (name, settings) => {
+    register: (name: string, settings: { }) => {
       annotations[name] = settings;
     },
 
-    apply: (name, data) => {
+    apply: (name: string, data: { }) => {
       // Doesn't work for non collapsed selections.
       if (! editor.selection.isCollapsed()) {
         if (annotations.hasOwnProperty(name)) {
@@ -86,16 +68,17 @@ export default function (editor: Editor) {
       }
     },
 
-    annotationChanged: (f: (uid, name) => void): void => {
-      editor.on('nodeChanged', (.) => {
-
-      });
+    annotationChanged: (f: (uid: string, name: string) => void): void => {
+      changeCallbacks.set(
+        changeCallbacks.get().concat([ f ])
+      );
     },
 
-    annotationMoved: (): void => { },
-
-    remove: (name) => {
-      // Remove the annotation at the cursor.
+    remove: (name: string): void => {
+      identify(editor, Option.some(name)).each(({ uid }) => {
+        const markers = findMarkers(editor, uid);
+        Arr.each(markers, Remove.unwrap);
+      });
     }
   };
 }

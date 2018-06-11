@@ -176,7 +176,7 @@ module.exports = function (grunt) {
         webpack: gruntWebPack.all(plugins, themes),
         publicPath: '/',
         inline: false,
-        port: 3000,
+        port: grunt.option('webpack-port') !== undefined ? grunt.option('webpack-port') : 3000,
         host: '0.0.0.0',
         disableHostCheck: true,
         before: app => gruntWebPack.generateDemoIndex(grunt, app, plugins, themes)
