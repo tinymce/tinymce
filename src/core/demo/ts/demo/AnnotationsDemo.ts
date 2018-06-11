@@ -24,7 +24,7 @@ export default function () {
         text: 'Annotate',
         onclick: () => {
           const comment = prompt('Comment with?');
-          ed.annotator.apply('alpha', {
+          ed.annotator.annotate('alpha', {
             comment
           });
         },
@@ -33,7 +33,6 @@ export default function () {
           const button = ctrl.control;
           ed.on('init', () => {
             ed.annotator.annotationChanged((uid, name) => {
-              console.log('annotation changed', uid, name);
               if (uid === null || name === null) {
                 button.active(false);
               } else {

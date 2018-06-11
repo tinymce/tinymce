@@ -29,6 +29,7 @@ import * as EditorRemove from '../EditorRemove';
 import SelectionOverrides from 'tinymce/core/SelectionOverrides';
 import Schema from 'tinymce/core/api/html/Schema';
 import { UndoManager } from 'tinymce/core/api/UndoManager';
+import { Annotator } from 'tinymce/core/api/Annotator';
 
 /**
  * Include the base event class documentation.
@@ -60,7 +61,7 @@ export type AnyFunction = (...x: any[]) => any;
 
 export interface Editor {
   $: any;
-  annotator: any;
+  annotator: Annotator;
   baseURI: any;
   bodyElement: HTMLElement;
   bookmark: any;

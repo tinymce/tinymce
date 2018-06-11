@@ -46,14 +46,15 @@ const isAnnotation = (elem) => {
 
 // Update the 'mce-active-annotation' to only be on an annotation that is
 // currently selected
-const updateActive = (editor: any, optActiveUid: Option<string>) => {
+const updateActive = (editor: any, optActive: Option<{uid: string, name: string}> => {
   const allMarkers = SelectorFilter.descendants(
     Element.fromDom(editor.getBody()),
     '.' + Markings.annotation()
   );
 
   Arr.each(allMarkers, (m) => {
-    const isCurrent = optActiveUid.exists((uid) => Attr.get(m, 'data-mce-annotation-uid') === uid);
+    const isCurrent = optActive.exists(({ uid, name }) =>
+      Attr.get(m, 'data-mce-annotation-uid') === uid && Attr.get(m, 'data-mce-annotation') === name);
     const f = isCurrent ? Class.add : Class.remove;
     f(m, Markings.activeAnnotation());
   });

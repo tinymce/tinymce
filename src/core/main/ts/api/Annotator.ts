@@ -1,9 +1,17 @@
 import { Arr, Cell, Option, Throttler } from '@ephox/katamari';
 import { Remove } from '@ephox/sugar';
-import { findMarkers, identify } from 'tinymce/core/annotate/Identification';
+import { findMarkers, identify, updateActive } from 'tinymce/core/annotate/Identification';
 import { annotateWithBookmark } from 'tinymce/core/annotate/Wrapping';
 
-export default function (editor) {
+export interface Annotator {
+  register: (name: string, settings: { }) => void;
+  annotate: (name: string, data: { }) => void;
+  annotationChanged: (f: (uid: string, name: string) => void) => void;
+  remove: (name: string) => void;
+  setToActive: (uid: string, name: string) => void;
+}
+
+export default function (editor): Annotator {
 
   const annotations = { };
 
@@ -28,15 +36,19 @@ export default function (editor) {
 
   const onNodeChange = Throttler.last(() => {
     identify(editor, Option.none()).fold(
-      () => fireNoAnnotation(),
+      () => {
+        fireNoAnnotation();
+        updateActive(editor, Option.none());
+      },
       ({ uid, name }) => {
         if (isDifferent({ uid, name })) {
           lastAnnotation.set(Option.some({ uid, name }));
+          updateActive(editor, Option.some({ uid, name }));
           fireCallbacks(uid, name);
         }
       }
     );
-  }, 200);
+  }, 30);
 
   editor.on('remove', () => {
     onNodeChange.cancel();
@@ -61,7 +73,7 @@ export default function (editor) {
       };
     },
 
-    apply: (name: string, data: { }) => {
+    annotate: (name: string, data: { }) => {
       // Doesn't work for non collapsed selections.
       if (! editor.selection.isCollapsed()) {
         if (annotations.hasOwnProperty(name)) {
@@ -82,6 +94,10 @@ export default function (editor) {
         const markers = findMarkers(editor, uid);
         Arr.each(markers, Remove.unwrap);
       });
+    },
+
+    setToActive: (uid, name) => {
+      updateActive(editor, Option.some({ uid, name }));
     }
-  };
+  } as Annotator;
 }
