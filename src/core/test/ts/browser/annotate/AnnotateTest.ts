@@ -1,15 +1,34 @@
-import { Pipeline, Step, ApproxStructure, GeneralSteps } from '@ephox/agar';
+import { Pipeline, Step, ApproxStructure, GeneralSteps, Logger, Assertions, Waiter, Chain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Editor } from 'tinymce/core/api/Editor';
 import ModernTheme from 'tinymce/themes/modern/Theme';
-import { Arr } from '@ephox/katamari';
+import { Arr, Cell } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotateTest', function () {
   const success = arguments[arguments.length - 2];
   const failure = arguments[arguments.length - 1];
 
   ModernTheme();
+
+  const changes = Cell([ ]);
+
+  const sAssertChanges = (message, expected) => Logger.t(
+    message,
+    // Use a chain so that changes.get() can be evaluated at run-time.
+    Chain.asStep({ }, [
+      Chain.mapper((_) => {
+        return changes.get();
+      }),
+      Chain.op((cs) => {
+        Assertions.assertEq('Checking changes', expected, cs);
+      })
+    ])
+  );
+
+  const sClearChanges = Step.sync(() => {
+    changes.set([ ]);
+  });
 
   TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
@@ -69,7 +88,17 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotateTest', function () {
         `<p><span data-mce-annotation="test-annotation" data-test-anything="three-paragraphs" data-mce-annotation-uid="test-uid" class="mce-annotation">This is the second.</span></p>`,
         `<p><span data-mce-annotation="test-annotation" data-test-anything="three-paragraphs" data-mce-annotation-uid="test-uid" class="mce-annotation">This is</span> the third.</p>`
       ]),
-      tinyApis.sAssertSelection([ 0 ], 1, [ 2 ], 1)
+      tinyApis.sAssertSelection([ 0 ], 1, [ 2 ], 1),
+      sClearChanges,
+
+      tinyApis.sSetSelection([ 0, 0 ], 'T'.length, [ 0, 0 ], 'T'.length),
+
+      Waiter.sTryUntil(
+        'Waiting until annotation event comes through',
+        sAssertChanges('Should have received annotation null', [ { uid: null, name: null } ]),
+        10,
+        1000
+      )
     ]);
 
     Pipeline.async({}, [
@@ -91,6 +120,14 @@ UnitTest.asynctest('browser.tinymce.plugins.remark.AnnotateTest', function () {
               classes: [ ]
             };
           }
+        });
+
+        ed.annotator.annotationChanged((uid, name) => {
+          changes.set(
+            changes.get().concat([
+              { uid, name }
+            ])
+          );
         });
       });
     }
