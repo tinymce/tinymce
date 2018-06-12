@@ -3,8 +3,6 @@ import { Attr, Class, Compare, Element, Node, SelectorFilter, SelectorFind, Trav
 
 import * as Markings from './Markings';
 
-// import * as Markings from '../style/Markings';
-
 // Given the current editor selection, identify the uid of any current
 // annotation
 const identify = (editor, annotationName: Option<string>): Option<{uid: string, name: string}> => {
@@ -15,7 +13,7 @@ const identify = (editor, annotationName: Option<string>): Option<{uid: string, 
 
   const selector = annotationName.fold(
     () => '.' + Markings.annotation(),
-    (an) => `[data-mce-annotation="${an}"]`
+    (an) => `[${Markings.dataAnnotation()}="${an}"]`
   );
 
   const newStart = Traverse.child(start, rng.startOffset).getOr(start);
@@ -32,8 +30,8 @@ const identify = (editor, annotationName: Option<string>): Option<{uid: string, 
   };
 
   return closest.bind((c) => {
-    return getAttr(c, 'data-mce-annotation-uid').bind(
-      (uid) => getAttr(c, 'data-mce-annotation').map((name) => ({
+    return getAttr(c, `${Markings.dataAnnotationId()}`).bind(
+      (uid) => getAttr(c, `${Markings.dataAnnotation()}`).map((name) => ({
         uid, name
       }))
     );
@@ -46,7 +44,7 @@ const isAnnotation = (elem) => {
 
 // Update the 'mce-active-annotation' to only be on an annotation that is
 // currently selected
-const updateActive = (editor: any, optActive: Option<{uid: string, name: string}> => {
+const updateActive = (editor: any, optActive: Option<{uid: string, name: string}>) => {
   const allMarkers = SelectorFilter.descendants(
     Element.fromDom(editor.getBody()),
     '.' + Markings.annotation()
@@ -54,7 +52,7 @@ const updateActive = (editor: any, optActive: Option<{uid: string, name: string}
 
   Arr.each(allMarkers, (m) => {
     const isCurrent = optActive.exists(({ uid, name }) =>
-      Attr.get(m, 'data-mce-annotation-uid') === uid && Attr.get(m, 'data-mce-annotation') === name);
+      Attr.get(m, `${Markings.dataAnnotationId()}`) === uid && Attr.get(m, `${Markings.dataAnnotation()}`) === name);
     const f = isCurrent ? Class.add : Class.remove;
     f(m, Markings.activeAnnotation());
   });
@@ -62,7 +60,7 @@ const updateActive = (editor: any, optActive: Option<{uid: string, name: string}
 
 const findMarkers = (editor, uid) => {
   const body = Element.fromDom(editor.getBody());
-  return SelectorFilter.descendants(body, `[data-mce-annotation-uid="${uid}"]`);
+  return SelectorFilter.descendants(body, `[${Markings.dataAnnotationId()}="${uid}"]`);
 };
 
 export {

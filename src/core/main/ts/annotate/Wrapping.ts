@@ -25,8 +25,8 @@ const annotate = (editor, annotationName: string, decorate, { uid = Id.generate(
   // Setup the spans for the comments
   const master = Element.fromTag('span');
   Class.add(master, Markings.annotation());
-  Attr.set(master, 'data-mce-annotation-uid', uid);
-  Attr.set(master, 'data-mce-annotation', annotationName);
+  Attr.set(master, `${Markings.dataAnnotationId()}`, uid);
+  Attr.set(master, `${Markings.dataAnnotation()}`, annotationName);
 
   const { attributes = { }, classes = [ ] } = decorate(uid, data);
   Attr.setAll(master, attributes);
