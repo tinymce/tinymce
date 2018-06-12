@@ -8,6 +8,8 @@ export interface Option<T> {
   getOr: (value: T) => T;
   getOrThunk: (makeValue: () => T) => T;
   getOrDie: (msg?: string) => T;
+  getOrNull: () => T | null;
+  getOrUndefined: () => T | undefined;
   or: (opt: Option<T>) => Option<T>;
   orThunk: (makeOption: () => Option<T>) => Option<T>;
   map: <T2> (mapper: (x: T) => T2) => Option<T2>;
@@ -96,6 +98,8 @@ var NONE: Option<any> = (function () {
   var call = function (thunk) { return thunk(); };
   var id = function (n) { return n; };
   var noop = function () { };
+  var nul = function() { return null; };
+  var undef = function() { return undefined; };
 
   var me: Option<any> = {
     fold: function (n, s) { return n(); },
@@ -107,6 +111,8 @@ var NONE: Option<any> = (function () {
     getOrDie: function (msg) {
       throw new Error(msg || 'error: getOrDie called on none.');
     },
+    getOrNull: nul,
+    getOrUndefined: undef,
     or: id,
     orThunk: call,
     map: none,
@@ -154,6 +160,8 @@ var some = function <T> (a: T): Option<T> {
     getOr: constant_a,
     getOrThunk: constant_a,
     getOrDie: constant_a,
+    getOrNull: constant_a,
+    getOrUndefined: constant_a,
     or: self,
     orThunk: self,
     map: map,
