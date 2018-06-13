@@ -10,6 +10,8 @@ UnitTest.test('OptionApiTest', function() {
     'getOr',
     'getOrThunk',
     'getOrDie',
+    'getOrNull',
+    'getOrUndefined',
     'or',
     'orThunk',
     'map',
