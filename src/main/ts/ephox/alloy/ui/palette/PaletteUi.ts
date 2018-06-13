@@ -76,8 +76,7 @@ const sketch = function (detail, components, spec, externals) {
     var width1 = palette.width;
     var height1 = palette.height;
 
-    // var colour = detail.colour().get();
-    var rgba = `rgba(${colour.red},${colour.green},${colour.blue},${colour.alpha})`;
+    var rgba = `rgba(${colour.red()},${colour.green()},${colour.blue()},${colour.alpha()})`;
     ctx1.fillStyle = rgba;
     ctx1.fillRect(0, 0, width1, height1);
   
