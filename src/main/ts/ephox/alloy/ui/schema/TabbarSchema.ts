@@ -9,6 +9,7 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import { TabButton } from '../../api/ui/TabButton';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
+import { TabbarDetail } from '../../ui/types/TabbarTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('tabs'),
@@ -24,7 +25,7 @@ const tabsPart = PartType.group({
   factory: TabButton,
   name: 'tabs',
   unit: 'tab',
-  overrides (barDetail, tabSpec) {
+  overrides (barDetail: TabbarDetail, tabSpec) {
     const dismissTab = function (tabbar, button) {
       Highlighting.dehighlight(tabbar, button);
       AlloyTriggers.emitWith(tabbar, SystemEvents.dismissTab(), {

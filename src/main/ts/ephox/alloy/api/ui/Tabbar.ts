@@ -7,8 +7,10 @@ import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
+import { TabbarSketcher, TabbarDetail } from '../../ui/types/TabbarTypes';
+import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<TabbarDetail> = function (detail, components, spec, externals) {
   return {
     'uid': detail.uid(),
     'dom': Merger.deepMerge(
@@ -63,7 +65,7 @@ const Tabbar = Sketcher.composite({
   configFields: TabbarSchema.schema(),
   partFields: TabbarSchema.parts(),
   factory
-});
+}) as TabbarSketcher;
 
 export {
   Tabbar
