@@ -10,8 +10,10 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as Sketcher from './Sketcher';
 import { SketchSpec } from '../../api/component/SpecTypes';
+import { FormFieldDetail, FormFieldSketcher } from 'ephox/alloy/ui/types/FormFieldTypes';
+import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory = function (detail, components, spec, externals): SketchSpec {
+const factory: CompositeSketchFactory<FormFieldDetail> = function (detail, components, spec, externals): SketchSpec {
   const behaviours = Merger.deepMerge(
     Behaviour.derive([
       Composing.config({
@@ -82,7 +84,7 @@ const FormField =  Sketcher.composite({
     getField: (apis, comp) => apis.getField(comp),
     getLabel: (apis, comp) => apis.getLabel(comp)
   }
-});
+}) as FormFieldSketcher;
 
 export {
   FormField

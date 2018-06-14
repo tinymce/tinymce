@@ -1,0 +1,29 @@
+import { Option } from '@ephox/katamari';
+
+import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import { AlloySpec, RawDomSchema, SketchSpec } from '../../api/component/SpecTypes';
+import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
+
+export interface FormFieldDetail extends CompositeSketchDetail {
+  uid: () => string;
+  // FIX: Completed DOM tpye.
+  dom: () => any;
+  components: () => AlloySpec[ ];
+  fieldBehaviours: () => SketchBehaviours;
+  prefix: () => string;
+}
+
+export interface FormFieldSpec extends CompositeSketchSpec {
+  uid?: string;
+  dom: RawDomSchema;
+  components?: AlloySpec[];
+  fieldBehaviours?: AlloyBehaviourRecord;
+  prefix?: string;
+}
+
+export interface FormFieldSketcher extends CompositeSketch<FormFieldSpec, FormFieldDetail> {
+  getField: (container: AlloyComponent) => Option<AlloyComponent>;
+  getLabel: (container: AlloyComponent) => Option<AlloyComponent>;
+}
