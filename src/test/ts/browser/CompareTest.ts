@@ -11,10 +11,6 @@ UnitTest.test('CompareTest', function() {
     assert.eq(expected, Compare.eq(e1, e2));
   };
 
-  var checkMask = function (mask, e1, e2) {
-    assert.eq(mask, Compare.compareDocumentPosition(e1, e2));
-  };
-
   check(true, TestPage.p1, TestPage.p1);
   check(false, TestPage.p1, TestPage.p2);
   check(true, TestPage.s1, TestPage.s1);
