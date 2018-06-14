@@ -11,9 +11,10 @@ import * as UiSubstitutes from './UiSubstitutes';
 export interface SpecSchemaStruct {
   components: () => ComponentSpec;
   dom: () => RawDomSchema;
-  domModification: () => {}; // TODO: Mike
-  eventOrder: () => { [key: string]: string[] }; // TODO: Mike test this
-  events: () => EventHandlerConfigRecord;
+  domModification?: () => {}; // TODO: Mike
+  eventOrder?: () => { [key: string]: string[] }; // TODO: Mike test this
+  // Deprecate
+  events?: () => EventHandlerConfigRecord;
   originalSpec: () => any; // For debugging purposes only
   uid: () => string;
   'debug.sketcher': () => {};
@@ -109,7 +110,7 @@ const asRawOrDie = function (label, schema, spec, partSchemas, partUidsSchemas) 
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
-const asStructOrDie = function (label: string, schema: AdtInterface[], spec: AlloySpec, partSchemas: any[], partUidsSchemas: any[]): SpecSchemaStruct {
+const asStructOrDie = function <D>(label: string, schema: AdtInterface[], spec: AlloySpec, partSchemas: any[], partUidsSchemas: any[]): D {
   const baseS = base(label, partSchemas, partUidsSchemas, spec);
   return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };

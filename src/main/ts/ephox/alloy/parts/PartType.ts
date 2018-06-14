@@ -2,7 +2,7 @@ import { FieldPresence, FieldProcessorAdt, FieldSchema, Processor, ValueSchema }
 import { Adt, Fun, Id, Option } from '@ephox/katamari';
 
 import { AdtInterface } from '../alien/TypeDefinitions';
-import { DetailedSpec } from '../parts/AlloyParts';
+import { CompositeDetail } from '../parts/AlloyParts';
 
 export type PartType = (PartialSpec) => PartTypeAdt;
 export interface PartialSpec { }
@@ -16,7 +16,7 @@ export interface PartSpec {
   schema: () => FieldProcessorAdt[];
 }
 
-export type OverrideHandler = (detail: DetailedSpec, spec?: PartialSpec, partValidated?: any) => OverrideSpec;
+export type OverrideHandler = (detail: CompositeDetail, spec?: PartialSpec, partValidated?: any) => OverrideSpec;
 
 export interface OverrideSpec {
   [key: string]: any;

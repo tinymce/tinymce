@@ -4,9 +4,9 @@ import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SketchSpec } from '../../api/component/SpecTypes';
-import { SingleSketch } from '../../api/ui/Sketcher';
+import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 
-export interface ButtonDetail {
+export interface ButtonDetail extends SingleSketchDetail {
   uid: () => string;
   // FIX: Completed DOM tpye.
   dom: () => any;
@@ -19,7 +19,7 @@ export interface ButtonDetail {
 
 export type ButtonAction = (AlloyComponent) => void;
 
-export interface ButtonSpec {
+export interface ButtonSpec extends SingleSketchSpec {
   uid?: string;
   dom: RawDomSchema;
   components?: AlloySpec[];
@@ -29,6 +29,4 @@ export interface ButtonSpec {
   eventOrder?: Record<string, string[]>
 }
 
-export interface ButtonSketcher extends SingleSketch {
-  sketch: (spec: ButtonSpec) => SketchSpec;
-}
+export interface ButtonSketcher extends SingleSketch<ButtonSpec, ButtonDetail> { };

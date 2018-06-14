@@ -31,6 +31,4 @@ export interface ContainerSpec {
   eventOrder?: Record<string, string[]>
 }
 
-export interface ContainerSketcher extends SingleSketch {
-  sketch: (spec: ContainerSpec) => SketchSpec;
-}
+export interface ContainerSketcher extends SingleSketch<ContainerSpec, ContainerDetail> { };

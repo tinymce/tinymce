@@ -8,6 +8,7 @@ import { SpecSchemaStruct } from '../spec/SpecSchema';
 import * as UiSubstitutes from '../spec/UiSubstitutes';
 import * as PartSubstitutes from './PartSubstitutes';
 import * as PartType from './PartType';
+import { CompositeSketchDetail } from '../api/ui/Sketcher';
 
 export interface PartialSpec { }
 
@@ -31,10 +32,6 @@ export interface Substition { [ key: string ]: FieldProcessorAdt; }
 export interface Substitutions {
   internals: () => Substition;
   externals: () => Substition;
-}
-
-export interface DetailedSpec extends SpecSchemaStruct {
-  partUids?: () => Record<string, string>;
 }
 
 // TODO: Make more functional if performance isn't an issue.
@@ -95,24 +92,24 @@ const names = function (parts: PartType.PartTypeAdt[]): string[] {
   return Arr.map(parts, PartType.name);
 };
 
-const substitutes = function (owner: string, detail: DetailedSpec, parts: PartType.PartTypeAdt[]): Substitutions {
+const substitutes = function (owner: string, detail: CompositeSketchDetail, parts: PartType.PartTypeAdt[]): Substitutions {
   return PartSubstitutes.subs(owner, detail, parts);
 };
 
-const components = function (owner: string, detail: DetailedSpec, internals: Substition): AlloySpec[] {
+const components = function (owner: string, detail: CompositeSketchDetail, internals: Substition): AlloySpec[] {
   return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components(), internals);
 };
 
-const getPart = function (component: AlloyComponent, detail: DetailedSpec, partKey: string): Option<AlloyComponent> {
+const getPart = function (component: AlloyComponent, detail: CompositeSketchDetail, partKey: string): Option<AlloyComponent> {
   const uid = detail.partUids()[partKey];
   return component.getSystem().getByUid(uid).toOption();
 };
 
-const getPartOrDie = function (component: AlloyComponent, detail: DetailedSpec, partKey: string): AlloyComponent {
+const getPartOrDie = function (component: AlloyComponent, detail: CompositeSketchDetail, partKey: string): AlloyComponent {
   return getPart(component, detail, partKey).getOrDie('Could not find part: ' + partKey);
 };
 
-const getParts = function (component: AlloyComponent, detail: DetailedSpec, partKeys: string[]): { [key: string]: () => Result<AlloyComponent, string> } {
+const getParts = function (component: AlloyComponent, detail: CompositeSketchDetail, partKeys: string[]): { [key: string]: () => Result<AlloyComponent, string> } {
   const r = { };
   const uids = detail.partUids();
 
@@ -125,14 +122,14 @@ const getParts = function (component: AlloyComponent, detail: DetailedSpec, part
   return Obj.map(r, Fun.constant);
 };
 
-const getAllParts = (component: AlloyComponent, detail: DetailedSpec): Record<string, () => Result<AlloyComponent, string>> => {
+const getAllParts = (component: AlloyComponent, detail: CompositeSketchDetail): Record<string, () => Result<AlloyComponent, string>> => {
   const system = component.getSystem();
   return Obj.map(detail.partUids(), function (pUid, k) {
     return Fun.constant(system.getByUid(pUid));
   });
 };
 
-const getPartsOrDie = (component: AlloyComponent, detail: DetailedSpec, partKeys: string[]): Record<string, () => AlloyComponent> => {
+const getPartsOrDie = (component: AlloyComponent, detail: CompositeSketchDetail, partKeys: string[]): Record<string, () => AlloyComponent> => {
   const r = { };
   const uids = detail.partUids();
 

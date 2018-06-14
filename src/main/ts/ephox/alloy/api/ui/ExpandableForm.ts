@@ -10,6 +10,7 @@ import { Form } from './Form';
 import * as Sketcher from './Sketcher';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchSpec } from '../../api/component/SpecTypes';
+import { ExpandableFormSketcher, ExpandableFormDetail } from '../../ui/types/ExpandableFormTypes';
 
 const runOnExtra = function (detail, operation) {
   return function (anyComp) {
@@ -17,7 +18,7 @@ const runOnExtra = function (detail, operation) {
   };
 };
 
-const factory = function (detail, components, spec, _externals): SketchSpec {
+const factory = function (detail: ExpandableFormDetail, components, spec, _externals): SketchSpec {
   const getParts = function (form) {
     return AlloyParts.getPartsOrDie(form, detail, [ 'minimal', 'extra' ]);
   };
@@ -72,13 +73,6 @@ const factory = function (detail, components, spec, _externals): SketchSpec {
 
 };
 
-export interface ExpandableFormSketch extends Sketcher.CompositeSketch {
-  toggleForm: (component: AlloyComponent) => void;
-  getField: (component: AlloyComponent, key: string) => Option<AlloyComponent>;
-  collapseForm: (component: AlloyComponent) => void;
-  collapseFormImmediately: (component: AlloyComponent) => void;
-  expandForm: (component: AlloyComponent) => void;
-}
 
 const ExpandableForm = Sketcher.composite({
   name: 'ExpandableForm',
@@ -102,7 +96,7 @@ const ExpandableForm = Sketcher.composite({
       apis.expandForm(component);
     }
   }
-}) as ExpandableFormSketch;
+}) as ExpandableFormSketcher;
 
 export {
   ExpandableForm

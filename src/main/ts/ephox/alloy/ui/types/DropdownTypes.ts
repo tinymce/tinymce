@@ -4,15 +4,14 @@ import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SketchSpec, LooseSpec } from '../../api/component/SpecTypes';
-import { SingleSketch, CompositeSketch } from '../../api/ui/Sketcher';
+import { SingleSketch, CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
-export interface DropdownDetail {
+export interface DropdownDetail extends CompositeSketchDetail {
   uid: () => string;
   // TYPIFY: Completed DOM tpye.
   dom: () => any;
   components: () => AlloySpec[ ];
   dropdownBehaviours: () => SketchBehaviours;
-  action: () => Option<() => DropdownAction>;
   role: () => Option<string>;
   eventOrder: () => Record<string, string[]>
   // TYPIFY: Types
@@ -26,9 +25,7 @@ export interface DropdownDetail {
   matchWidth: () => boolean;
 }
 
-export type DropdownAction = (AlloyComponent) => void;
-
-export interface DropdownSpec {
+export interface DropdownSpec extends CompositeSketchSpec {
   uid?: string;
   dom: RawDomSchema;
   components?: AlloySpec[];
@@ -40,12 +37,11 @@ export interface DropdownSpec {
   toggleClass: string;
   lazySink?: any;
   parts: {
+    // INVESTIGATE using Partial<TieredMenuSpec> here.
     menu: LooseSpec;
   }
   matchWidth?: boolean;
   role?: string;
 }
 
-export interface DropdownSketcher extends CompositeSketch {
-  sketch: (spec: DropdownSpec) => SketchSpec;
-}
+export interface DropdownSketcher extends CompositeSketch<CompositeSketchSpec, CompositeSketchDetail> { }

@@ -1,27 +1,36 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Obj } from '@ephox/katamari';
 
-import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
+import { AlloySpec, SketchSpec, LooseSpec } from '../../api/component/SpecTypes';
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
+import { SingleFactory, CompositeSketchFactory } from './UiSketcher';
 
-export interface SingleSketch {
+// TYPIFY: Not sure what goes in this yet.
+export interface SingleSketchSpec { };
+export interface SingleSketchDetail { };
+
+export interface SingleSketch<S extends SingleSketchSpec, D extends SingleSketchDetail> {
   name: () => string;
   configFields: () => FieldProcessorAdt[];
-  sketch: (spec: Record<string, any>) => SketchSpec;
-  factory: UiSketcher.SingleFactory;
+  sketch: (spec: S) => SketchSpec;
+  factory: SingleFactory<D>;
   [key: string]: Function;
 }
 
-export interface CompositeSketch  {
+export interface CompositeSketchSpec { };
+export interface CompositeSketchDetail { };
+
+export interface CompositeSketch<S extends CompositeSketchSpec, D extends CompositeSketchDetail>  {
   name: () => string;
   configFields: () => FieldProcessorAdt[];
   partFields: () => FieldProcessorAdt[];
-  sketch: (spec: Record<string, any>) => SketchSpec;
+  sketch: (spec: S) => SketchSpec;
   parts: () => AlloyParts.GeneratedParts;
-  factory: UiSketcher.CompositeFactory;
+  // TYPIFY externals
+  factory: CompositeSketchFactory<D>;
   [key: string]: Function;
 }
 
@@ -46,7 +55,7 @@ const compositeSchema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('extraApis', { })
 ]);
 
-const single = function (rawConfig) {
+const single = function <S extends SingleSketchSpec, D extends SingleSketchDetail>(rawConfig) {
   const config = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, singleSchema, rawConfig);
 
   const sketch = function (spec) {
@@ -68,10 +77,10 @@ const single = function (rawConfig) {
     },
     apis,
     extraApis
-  ) as SingleSketch;
+  ) as SingleSketch<S, D>;
 };
 
-const composite = function (rawConfig) {
+const composite = function <S extends CompositeSketchSpec, D extends CompositeSketchDetail>(rawConfig) {
   const config = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, compositeSchema, rawConfig);
 
   const sketch = function (spec) {
@@ -96,7 +105,7 @@ const composite = function (rawConfig) {
     },
     apis,
     extraApis
-  ) as CompositeSketch;
+  ) as CompositeSketch<S, D>;
 };
 
 export {

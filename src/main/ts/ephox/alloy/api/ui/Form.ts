@@ -11,20 +11,9 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
 import { SketchSpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import { FormSpecBuilder, FormDetail, FormSketcher } from '../../ui/types/FormTypes';
 
 const owner = 'form';
-export interface FormSketch {
-  // why do forms not use or follow the Single or compositeSketch Type signature?
-  sketch: (fSpec: FormSpecBuilder) => SketchSpec;
-  getField: (component: AlloyComponent, key: string) => Option<AlloyComponent>;
-}
-
-export interface FormParts {
-  field: (name: string, config: SimpleOrSketchSpec) => AlloyParts.ConfiguredPart;
-  record(): string[];
-}
-
-export type FormSpecBuilder = (FormParts) => any;
 
 const schema = [
   SketchBehaviours.field('formBehaviours', [ Representing ])
@@ -61,7 +50,7 @@ const sketch = function (fSpec: FormSpecBuilder): SketchSpec {
   return UiSketcher.composite(owner, schema, fieldParts, make, spec);
 };
 
-const make = function (detail, components, spec) {
+const make = function (detail: FormDetail, components, spec) {
   return Merger.deepMerge(
     {
       'debug.sketcher': {
@@ -113,7 +102,7 @@ const Form = {
     return apis.getField(component, key);
   }),
   sketch
-} as FormSketch;
+} as FormSketcher;
 
 export {
   Form
