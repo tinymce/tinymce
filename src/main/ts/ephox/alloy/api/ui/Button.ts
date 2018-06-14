@@ -8,7 +8,7 @@ import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
-import { ButtonDetail } from 'ephox/alloy/ui/types/ButtonTypes';
+import { ButtonDetail, ButtonSketcher } from 'ephox/alloy/ui/types/ButtonTypes';
 
 const factory = function (detail: ButtonDetail): SketchSpec {
   const events = ButtonBase.events(detail.action());
@@ -60,7 +60,7 @@ const Button = Sketcher.single({
     FieldSchema.option('role'),
     FieldSchema.defaulted('eventOrder', { })
   ]
-});
+}) as ButtonSketcher;
 
 export {
   Button

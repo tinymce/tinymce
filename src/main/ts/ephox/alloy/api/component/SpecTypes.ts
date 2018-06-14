@@ -10,12 +10,16 @@ export type SimpleOrSketchSpec = SketchSpec | SimpleSpec;
 // This is used or partial specs and things like that.
 export type LooseSpec = { };
 
-export interface RawDomSchema {
-  tag: string;
+export interface OptionalDomSchema {
+  tag?: string;
   attributes?: Record<string, any>;
   styles?: Record<string, string>;
   innerHtml?: string;
   classes?: string[];
+}
+
+export interface RawDomSchema extends OptionalDomSchema {
+  tag: string;
 }
 
 export interface ComponentSpec {

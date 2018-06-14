@@ -1,9 +1,10 @@
-import { AlloyBehaviourRecord } from 'ephox/alloy/api/behaviour/Behaviour';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-
-import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { SketchBehaviours } from 'ephox/alloy/api/component/SketchBehaviours';
 import { Option } from '@ephox/katamari';
+
+import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import { AlloySpec, RawDomSchema, SketchSpec } from '../../api/component/SpecTypes';
+import { SingleSketch } from '../../api/ui/Sketcher';
 
 export interface ButtonDetail {
   uid: () => string;
@@ -22,8 +23,12 @@ export interface ButtonSpec {
   uid?: string;
   dom: RawDomSchema;
   components?: AlloySpec[];
-  buttonBehaviours: AlloyBehaviourRecord;
+  buttonBehaviours?: AlloyBehaviourRecord;
   action?: ButtonAction;
   role?: string;
   eventOrder?: Record<string, string[]>
+}
+
+export interface ButtonSketcher extends SingleSketch {
+  sketch: (spec: ButtonSpec) => SketchSpec;
 }
