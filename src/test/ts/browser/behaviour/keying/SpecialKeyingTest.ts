@@ -15,7 +15,7 @@ UnitTest.asynctest('SpecialKeyingTest', function () {
     return GuiFactory.build(
       Container.sketch({
         dom: {
-          classes: 'special-keying'
+          classes: [ 'special-keying' ]
         },
         containerBehaviours: Behaviour.derive([
           Focusing.config({ }),

@@ -4,8 +4,9 @@ import * as Fields from '../../data/Fields';
 import { FieldSchema } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
 import { SketchSpec } from '../../api/component/SpecTypes';
+import { ContainerDetail, ContainerSketcher } from 'ephox/alloy/ui/types/ContainerTypes';
 
-const factory = function (detail, spec): SketchSpec {
+const factory = function (detail: ContainerDetail): SketchSpec {
   return {
     uid: detail.uid(),
     dom: Merger.deepMerge(
@@ -36,7 +37,7 @@ const Container = Sketcher.single({
     FieldSchema.defaulted('domModification', { }),
     FieldSchema.defaulted('eventOrder', { })
   ]
-});
+}) as ContainerSketcher;
 
 export {
   Container
