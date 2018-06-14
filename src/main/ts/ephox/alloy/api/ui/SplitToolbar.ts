@@ -14,18 +14,15 @@ import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
-
-export interface SplitToolbarSketch extends Sketcher.CompositeSketch {
-  setGroups: (toolbar: AlloyComponent, groups: SketchSpec[]) => void;
-  refresh: (toolbar: AlloyComponent) => void;
-}
+import { SplitToolbarSketcher, SplitToolbarDetail } from '../../ui/types/SplitToolbarTypes';
+import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
 const setStoredGroups = function (bar, storedGroups) {
   const bGroups = Arr.map(storedGroups, function (g) { return GuiFactory.premade(g); });
   Toolbar.setGroups(bar, bGroups);
 };
 
-const refresh = function (toolbar, detail, externals) {
+const refresh = function (toolbar, detail: SplitToolbarDetail, externals) {
   const ps = AlloyParts.getPartsOrDie(toolbar, detail, [ 'primary', 'overflow' ]);
   const primary = ps.primary();
   const overflow = ps.overflow();
@@ -86,7 +83,7 @@ const refresh = function (toolbar, detail, externals) {
 
 };
 
-const factory = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<SplitToolbarDetail> = function (detail, components, spec, externals) {
   const doSetGroups = function (toolbar, groups) {
     const built = Arr.map(groups, toolbar.getSystem().build);
     detail.builtGroups().set(built);
@@ -133,7 +130,7 @@ const SplitToolbar = Sketcher.composite({
       apis.refresh(toolbar);
     }
   }
-}) as SplitToolbarSketch;
+}) as SplitToolbarSketcher;
 
 export {
   SplitToolbar

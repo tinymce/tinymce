@@ -7,6 +7,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import { Toolbar } from '../../api/ui/Toolbar';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
+import { SplitToolbarDetail } from 'ephox/alloy/ui/types/SplitToolbarTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass' ]),
@@ -31,7 +32,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     factory: Toolbar,
     schema: toolbarSchema,
     name: 'overflow',
-    overrides (detail) {
+    overrides (detail: SplitToolbarDetail) {
       return {
         toolbarBehaviours: Behaviour.derive([
           Sliding.config({
