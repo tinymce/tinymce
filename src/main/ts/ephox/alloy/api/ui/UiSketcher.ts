@@ -20,7 +20,7 @@ const single = function <D extends SingleSketchDetail>(owner: string, schema: Ad
   );
 };
 
-const composite = function <D extends CompositeSketchDetail>(owner: string, schema: AdtInterface[], partTypes: AdtInterface[], factory: CompositeSketchFactory<D>, spec: SimpleOrSketchSpec): SketchSpec {
+const composite = function <D extends CompositeSketchDetail>(owner: string, schema: AdtInterface[], partTypes: AdtInterface[], factory: CompositeSketchFactory<D>, spec: LooseSpec): SketchSpec {
   const specWithUid = supplyUid(spec);
 
   // Identify any information required for external parts
@@ -44,7 +44,7 @@ const composite = function <D extends CompositeSketchDetail>(owner: string, sche
   );
 };
 
-const supplyUid = function (spec: SimpleOrSketchSpec): SketchSpec {
+const supplyUid = function (spec: LooseSpec): SketchSpec {
   return Merger.deepMerge(
     {
       uid: Tagger.generate('uid')
