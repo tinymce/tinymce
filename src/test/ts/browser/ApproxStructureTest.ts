@@ -24,7 +24,8 @@ UnitTest.asynctest('ApproxStructureTest', function() {
     return s.element('div', {
       attrs: {
         selected: str.is('double'),
-        car: str.none('no car attribute')
+        car: str.none('no car attribute'),
+        "data-key": str.contains('test')
       },
       classes: [
         arr.has('test1'),

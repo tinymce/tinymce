@@ -5,7 +5,7 @@ import { JSON as Json } from '@ephox/sand';
 import { Fun } from '@ephox/katamari';
 import { Strings } from '@ephox/katamari';
 
-var missing = Id.generate('missing');
+var missing: string = Id.generate('missing');
 
 var dieWith = function (message) {
   return Fun.die(message);
@@ -20,12 +20,12 @@ var assertOnBool = function (c, label, value) {
   );
 };
 
-var is = function (target) {
-  var compare = function (actual) {
+var is = function (target: string) {
+  var compare = function (actual: string) {
     return target === actual;
   };
 
-  var strAssert = function (label, actual) {
+  var strAssert = function (label: string, actual: string) {
     var c = compare(actual);
     assertOnBool(c, label + '\nExpected value: ' + target, actual);
   };
@@ -37,12 +37,12 @@ var is = function (target) {
   };
 };
 
-var startsWith = function (target) {
-  var compare = function (actual) {
+var startsWith = function (target: string) {
+  var compare = function (actual: string) {
     return Strings.startsWith(actual, target);
   };
 
-  var strAssert = function (label, actual) {
+  var strAssert = function (label: string, actual: string) {
     var c = compare(actual);
     assertOnBool(c, label + '\nExpected value: ' +  'startsWith(' + target + ')', actual);
   };
@@ -54,12 +54,29 @@ var startsWith = function (target) {
   };
 };
 
-var none = function (message) {
-  var compare = function (actual) {
+var contains = function (target: string) {
+  var compare = function (actual: string) {
+    return Strings.contains(actual, target);
+  };
+
+  var strAssert = function (label: string, actual: string) {
+    var c = compare(actual);
+    assertOnBool(c, label + '\nExpected value: ' +  'contains(' + target + ')', actual);
+  };
+
+  return {
+    show: Fun.constant('contains("' + target + '")'),
+    strAssert: strAssert,
+    arrAssert: dieWith('"contains" is not an array assertion. Perhaps you wanted "has"?')
+  };
+};
+
+var none = function (message: string) {
+  var compare = function (actual: string) {
     return actual === missing;
   };
 
-  var strAssert = function (label, actual) {
+  var strAssert = function (label: string, actual) {
     var c = compare(actual);
     assertOnBool(c, label + '\nExpected ' + message, actual);
   };
@@ -124,13 +141,14 @@ var not = function (target) {
 };
 
 export default {
-  is: is,
-  startsWith: startsWith,
-  none: none,
+  is,
+  startsWith,
+  contains,
+  none,
 
-  has: has,
-  hasPrefix: hasPrefix,
-  not: not,
+  has,
+  hasPrefix,
+  not,
 
   missing: Fun.constant(missing)
 };
