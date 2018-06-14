@@ -1,3 +1,5 @@
+import { Option } from "@ephox/katamari";
+
 const reduceBy = function (value, min, max, step) {
   if (value < min) {
     return value;
@@ -29,7 +31,7 @@ const capValue = function (value, min, max) {
   );
 };
 
-const snapValueOfX = function (bounds, value, min, max, step, snapStart) {
+const snapValueOfX = function (bounds, value, min, max, step, snapStart: Option<number>) {
   // We are snapping by the step size. Therefore, find the nearest multiple of
   // the step
   return snapStart.fold(function () {
@@ -52,7 +54,7 @@ const snapValueOfX = function (bounds, value, min, max, step, snapStart) {
   });
 };
 
-const findValueOfX = function (bounds, min, max, xValue, step, snapToGrid, snapStart) {
+const findValueOfX = function (bounds, min, max, xValue, step, snapToGrid: boolean, snapStart: Option<number>) {
   const range = max - min;
   // TODO: TM-26 Make this bounding of edges work only occur if there are edges (and work with snapping)
   if (xValue < bounds.left) { return min - 1; } else if (xValue > bounds.right) { return max + 1; } else {

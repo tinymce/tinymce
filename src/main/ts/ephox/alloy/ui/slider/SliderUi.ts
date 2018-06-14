@@ -12,10 +12,12 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as SliderActions from './SliderActions';
 
 import { EventFormat, CustomEvent } from '../../events/SimulatedEvent';
+import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { SliderDetail } from '../../ui/types/SliderTypes';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
-const sketch = function (detail, components, spec, externals) {
+const sketch: CompositeSketchFactory<SliderDetail> = function (detail, components, spec, externals) {
   const range = detail.max() - detail.min();
 
   const getXCentre = function (component) {

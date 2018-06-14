@@ -20,7 +20,7 @@ export interface SugarElement {
 export interface SugarEvent extends EventFormat {
   kill: () => void;
   prevent: () => void;
-  raw: () => Event | TouchEvent | TransitionEvent;
+  raw: () => Event | TouchEvent | TransitionEvent | MouseEvent;
   stop: () => void;
   target: () => SugarElement;
   x: () => number;

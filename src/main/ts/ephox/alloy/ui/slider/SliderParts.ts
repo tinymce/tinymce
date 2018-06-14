@@ -9,6 +9,7 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as PartType from '../../parts/PartType';
 import * as SliderActions from './SliderActions';
+import { SliderDetail } from '../../ui/types/SliderTypes';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
@@ -16,7 +17,7 @@ const isTouch = platform.deviceType.isTouch();
 const edgePart = function (name, action) {
   return PartType.optional({
     name: '' + name + '-edge',
-    overrides (detail) {
+    overrides (detail: SliderDetail) {
       const touchEvents = AlloyEvents.derive([
         AlloyEvents.runActionExtra(NativeEvents.touchstart(), action, [ detail ])
       ]);
@@ -49,7 +50,7 @@ const thumbPart = PartType.required({
       styles: { position: 'absolute' }
     }
   }),
-  overrides (detail) {
+  overrides (detail: SliderDetail) {
     return {
       events: AlloyEvents.derive([
         // If the user touches the thumb itself, pretend they touched the spectrum instead. This
@@ -67,7 +68,7 @@ const spectrumPart = PartType.required({
     FieldSchema.state('mouseIsDown', function () { return Cell(false); })
   ],
   name: 'spectrum',
-  overrides (detail) {
+  overrides (detail: SliderDetail) {
 
     const moveToX = function (spectrum, simulatedEvent) {
       const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
