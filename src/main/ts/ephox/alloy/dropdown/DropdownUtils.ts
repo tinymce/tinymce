@@ -13,13 +13,15 @@ import * as AriaOwner from '../aria/AriaOwner';
 import * as InternalSink from '../parts/InternalSink';
 import * as Tagger from '../registry/Tagger';
 import * as Dismissal from '../sandbox/Dismissal';
+import { DropdownDetail } from '../ui/types/DropdownTypes';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-const fetch = function (detail, component) {
+const fetch = function (detail: DropdownDetail, component) {
   const fetcher = detail.fetch();
   return fetcher(component);
 };
 
-const openF = function (detail, anchor, component, sandbox, externals) {
+const openF = function (detail: DropdownDetail, anchor, component, sandbox, externals) {
   const futureData = fetch(detail, component);
 
   const lazySink = getSink(component, detail);
@@ -64,7 +66,7 @@ const openF = function (detail, anchor, component, sandbox, externals) {
 
 // onOpenSync is because some operations need to be applied immediately, not wrapped in a future
 // It can avoid things like flickering due to asynchronous bouncing
-const open = function (detail, anchor, component, sandbox, externals, onOpenSync) {
+const open = function (detail: DropdownDetail, anchor, component, sandbox, externals, onOpenSync) {
   const processed = openF(detail, anchor, component, sandbox, externals);
   return processed.map(function (data) {
     Sandboxing.cloak(sandbox);
@@ -74,12 +76,12 @@ const open = function (detail, anchor, component, sandbox, externals, onOpenSync
   });
 };
 
-const close = function (detail, anchor, component, sandbox) {
+const close = function (detail: DropdownDetail, anchor, component, sandbox) {
   Sandboxing.close(sandbox);
   return Future.pure(sandbox);
 };
 
-const togglePopup = function (detail, anchor, hotspot, externals, onOpenSync) {
+const togglePopup = function (detail: DropdownDetail, anchor, hotspot, externals, onOpenSync) {
   const sandbox = Coupling.getCoupled(hotspot, 'sandbox');
   const showing = Sandboxing.isOpen(sandbox);
 
@@ -109,12 +111,12 @@ const getSink = function (anyInSystem, detail) {
   });
 };
 
-const makeSandbox = function (detail, anchor, anyInSystem, extras) {
+// TYPIFY: anchor type
+const makeSandbox = function (detail: DropdownDetail, anchor: any, anyInSystem: AlloyComponent, extras) {
   const ariaOwner = AriaOwner.manager();
 
   const onOpen = function (component, menu) {
     ariaOwner.link(anyInSystem.element());
-    // TODO: Reinstate matchWidth
     if (detail.matchWidth()) { matchWidth(anyInSystem, menu); }
     detail.onOpen()(anchor, component, menu);
     if (extras !== undefined && extras.onOpen !== undefined) { extras.onOpen(component, menu); }

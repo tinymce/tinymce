@@ -113,7 +113,7 @@ UnitTest.asynctest('DropdownMenuTest', function () {
         dom: {
           tag: 'div',
           innerHtml: '+',
-          classes: 'dropdown-button'
+          classes: [ 'dropdown-button' ]
         },
 
         toggleClass: 'alloy-selected',

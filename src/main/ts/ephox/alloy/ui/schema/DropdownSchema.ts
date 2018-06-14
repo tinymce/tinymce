@@ -9,6 +9,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
+import { DropdownDetail } from '../types/DropdownTypes';
 
 const schema = Fun.constant([
   FieldSchema.strict('dom'),
@@ -17,7 +18,6 @@ const schema = Fun.constant([
   Fields.onKeyboardHandler('onExecute'),
   SketchBehaviours.field('dropdownBehaviours', [ Toggling, Coupling, Keying, Focusing ]),
   FieldSchema.strict('toggleClass'),
-  FieldSchema.defaulted('displayer', Fun.identity),
   FieldSchema.option('lazySink'),
   FieldSchema.defaulted('matchWidth', false),
   FieldSchema.option('role')
@@ -29,7 +29,7 @@ const parts = Fun.constant([
       Fields.tieredMenuMarkers()
     ],
     name: 'menu',
-    defaults (detail) {
+    defaults (detail: DropdownDetail) {
       return {
         onExecute: detail.onExecute()
       };
