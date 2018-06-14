@@ -9,6 +9,7 @@ import { Keying } from '../../api/behaviour/Keying';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
+import { ModalDialogDetail } from 'ephox/alloy/ui/types/ModalDialogTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('lazySink'),
@@ -26,7 +27,7 @@ const basic = { sketch: Fun.identity };
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.optional({
     name: 'draghandle',
-    overrides (detail, spec) {
+    overrides (detail: ModalDialogDetail, spec) {
       return {
         behaviours: Behaviour.derive([
           Dragging.config({
@@ -35,10 +36,11 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
             },
             blockerClass: detail.dragBlockClass().getOrDie(
+              // TODO: Support errors in Option getOrDie.
               new Error(
                 'The drag blocker class was not specified for a dialog with a drag handle: \n' +
                 Json.stringify(spec, null, 2)
-              )
+              ).message
             )
           })
         ])

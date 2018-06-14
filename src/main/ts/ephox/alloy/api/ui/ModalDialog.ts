@@ -10,8 +10,10 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { ModalDialogSketcher, ModalDialogDetail } from '../../ui/types/ModalDialogTypes';
+import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<ModalDialogDetail> = function (detail, components, spec, externals) {
   // TODO IMPROVEMENT: Make close actually close the dialog by default!
   const showDialog = function (dialog) {
     const sink = detail.lazySink()().getOrDie();
@@ -43,6 +45,7 @@ const factory = function (detail, components, spec, externals) {
   };
 
   return {
+    uid: detail.uid(),
     dom: Merger.deepMerge({
       attributes: {
         role: 'dialog'
@@ -68,13 +71,6 @@ const factory = function (detail, components, spec, externals) {
     )
   };
 };
-
-export interface ModalDialogSketch extends Sketcher.CompositeSketch {
-  show: (dialog: AlloyComponent) => any;
-  hide: (dialog: AlloyComponent) => any;
-  getBody: (dialog: AlloyComponent) => AlloyComponent;
-}
-
 const ModalDialog = Sketcher.composite({
   name: 'ModalDialog',
   configFields: ModalDialogSchema.schema(),
@@ -91,7 +87,7 @@ const ModalDialog = Sketcher.composite({
       return apis.getBody(dialog);
     }
   }
-}) as ModalDialogSketch;
+}) as ModalDialogSketcher;
 
 export {
   ModalDialog
