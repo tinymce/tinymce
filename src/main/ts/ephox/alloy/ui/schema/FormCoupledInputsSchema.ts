@@ -12,13 +12,14 @@ import { FormField } from '../../api/ui/FormField';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
+import { FormCoupledInputsDetail } from 'ephox/alloy/ui/types/FormCoupledInputsTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onStrictHandler('onLockedChange'),
   Fields.markers([ 'lockClass' ])
 ]);
 
-const getField = function (comp, detail, partName) {
+const getField = function (comp, detail: FormCoupledInputsDetail, partName) {
   return AlloyParts.getPart(comp, detail, partName).bind(Composing.getCurrent);
 };
 
@@ -26,7 +27,7 @@ const coupledPart = function (selfName, otherName) {
   return PartType.required({
     factory: FormField,
     name: selfName,
-    overrides (detail) {
+    overrides (detail: FormCoupledInputsDetail) {
       return {
         fieldBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('coupled-input-behaviour', [
@@ -55,7 +56,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       FieldSchema.strict('dom')
     ],
     name: 'lock',
-    overrides (detail) {
+    overrides (detail: FormCoupledInputsDetail) {
       return {
         buttonBehaviours: Behaviour.derive([
           Toggling.config({

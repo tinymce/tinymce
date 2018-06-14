@@ -2,21 +2,21 @@ import { FieldPresence, FieldProcessorAdt, FieldSchema, Processor, ValueSchema }
 import { Adt, Fun, Id, Option } from '@ephox/katamari';
 
 import { AdtInterface } from '../alien/TypeDefinitions';
-import { CompositeDetail } from '../parts/AlloyParts';
+import { CompositeSketchDetail } from 'ephox/alloy/api/ui/Sketcher';
 
 export type PartType = (PartialSpec) => PartTypeAdt;
 export interface PartialSpec { }
 
-export interface PartSpec {
+export interface PartSpec<D> {
   defaults: () => () => {};
   factory: () => any;
   name: () => string;
-  overrides: () => OverrideHandler;
+  overrides: () => OverrideHandler<D>;
   pname: () => string;
   schema: () => FieldProcessorAdt[];
 }
 
-export type OverrideHandler = (detail: CompositeDetail, spec?: PartialSpec, partValidated?: any) => OverrideSpec;
+export type OverrideHandler<D extends CompositeSketchDetail> = (detail: D, spec?: PartialSpec, partValidated?: any) => OverrideSpec;
 
 export interface OverrideSpec {
   [key: string]: any;
@@ -70,7 +70,7 @@ const groupSpec = ValueSchema.objOf([
   fPname, fDefaults, fOverrides
 ]);
 
-const asNamedPart = function (part: PartTypeAdt): Option<PartSpec> {
+const asNamedPart = function <D>(part: PartTypeAdt): Option<PartSpec<D>> {
   return part.fold(Option.some, Option.none, Option.some, Option.some);
 };
 
@@ -81,7 +81,7 @@ const name = function (part: PartTypeAdt): string {
   return part.fold(get, get, get, get);
 };
 
-const asCommon = function (part: PartTypeAdt): PartSpec {
+const asCommon = function <D>(part: PartTypeAdt): PartSpec<D> {
   return part.fold(Fun.identity, Fun.identity, Fun.identity, Fun.identity);
 };
 
