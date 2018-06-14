@@ -38,12 +38,12 @@ export default function (editor): Annotator {
     identify(editor, Option.none()).fold(
       () => {
         fireNoAnnotation();
-        updateActive(editor, Option.none());
+        updateActive(editor, name, Option.none());
       },
       ({ uid, name }) => {
         if (isDifferent({ uid, name })) {
           lastAnnotation.set(Option.some({ uid, name }));
-          updateActive(editor, Option.some({ uid, name }));
+          updateActive(editor, name, Option.some(uid));
           fireCallbacks(uid, name);
         }
       }
@@ -96,8 +96,15 @@ export default function (editor): Annotator {
       });
     },
 
+    // TODO: Test this
     setToActive: (uid, name) => {
-      updateActive(editor, Option.some({ uid, name }));
+      updateActive(editor, name, Option.some(uid));
+    },
+
+    // TODO Test this
+    clearActive: (name) => {
+      // Not sure if the name here needs to be considered. Probably does.
+      updateActive(editor, name, Option.none());
     }
   } as Annotator;
 }
