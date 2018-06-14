@@ -93,9 +93,9 @@ UnitTest.test('ElementAddressTest', function() {
     assert.eq(expected.index, actual.index());
   };
 
-  var checkNoneInParentOfSelector = function (startPath, ancestorSelector, descendantSelector) {
+  var checkNoneInParentOfSelector = function (startPath, ancestorSelector) {
     var element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
-    var actual = ElementAddress.selectorsInParent(element, ancestorSelector, descendantSelector);
+    var actual = ElementAddress.selectorsInParent(element, ancestorSelector);
     if (actual.isSome()) assert.fail('Expected none for parent: Was: ' + actual.getOrDie().index());
     else assert.eq(true, actual.isNone());
   };
@@ -131,7 +131,7 @@ UnitTest.test('ElementAddressTest', function() {
   );
 
   checkNoneInParentOfSelector(
-    [ 1, 1, 1, 2], 'th', 'th'
+    [ 1, 1, 1, 2], 'th'
   );
 
   checkInParentOfAny(

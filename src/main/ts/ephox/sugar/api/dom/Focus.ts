@@ -6,25 +6,25 @@ import PredicateExists from '../search/PredicateExists';
 import Traverse from '../search/Traverse';
 import { document } from '@ephox/dom-globals';
 
-var focus = function (element) {
+var focus = function (element: Element) {
   element.dom().focus();
 };
 
-var blur = function (element) {
+var blur = function (element: Element) {
   element.dom().blur();
 };
 
-var hasFocus = function (element) {
+var hasFocus = function (element: Element) {
   var doc = Traverse.owner(element).dom();
   return element.dom() === doc.activeElement;
 };
 
-var active = function (_doc) {
+var active = function (_doc?) {
   var doc = _doc !== undefined ? _doc.dom() : document;
   return Option.from(doc.activeElement).map(Element.fromDom);
 };
 
-var focusInside = function (element) {
+var focusInside = function (element: Element) {
   // Only call focus if the focus is not already inside it.
   var doc = Traverse.owner(element);
   var inside = active(doc).filter(function (a) {
@@ -41,17 +41,17 @@ var focusInside = function (element) {
  * Use instead of SelectorFind.descendant(container, ':focus')
  *  because the :focus selector relies on keyboard focus.
  */
-var search = function (element) {
-  return active(Traverse.owner(element)).filter(function (e:any) {
+var search = function (element: Element) {
+  return active(Traverse.owner(element)).filter(function (e: any) {
     return element.dom().contains(e.dom());
   });
 };
 
-export default <any> {
-  hasFocus: hasFocus,
-  focus: focus,
-  blur: blur,
-  active: active,
-  search: search,
-  focusInside: focusInside
+export default {
+  hasFocus,
+  focus,
+  blur,
+  active,
+  search,
+  focusInside,
 };
