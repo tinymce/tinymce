@@ -13,6 +13,7 @@ import SeparatorType from '../../menu/build/SeparatorType';
 import WidgetType from '../../menu/build/WidgetType';
 import * as PartType from '../../parts/PartType';
 import * as Tagger from '../../registry/Tagger';
+import { MenuDetail, MenuMovement } from '../../ui/types/MenuTypes';
 
 const itemSchema = ValueSchema.choose(
   'type',
@@ -23,7 +24,7 @@ const itemSchema = ValueSchema.choose(
   }
 );
 
-const configureGrid = function (detail, movementInfo) {
+const configureGrid = function (detail: MenuDetail, movementInfo: MenuMovement) {
   return {
     mode: 'flatgrid',
     selector: '.' + detail.markers().item(),
@@ -35,7 +36,7 @@ const configureGrid = function (detail, movementInfo) {
   };
 };
 
-const configureMenu = function (detail, movementInfo) {
+const configureMenu = function (detail: MenuDetail, movementInfo: MenuMovement) {
   return {
     mode: 'menu',
     selector: '.' + detail.markers().item(),
@@ -54,7 +55,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     },
     name: 'items',
     unit: 'item',
-    defaults (detail, u) {
+    defaults (detail: MenuDetail, u) {
       const fallbackUid = Tagger.generate('');
       return Merger.deepMerge(
         {
@@ -63,7 +64,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         u
       );
     },
-    overrides (detail, u) {
+    overrides (detail: MenuDetail, u) {
       return {
         type: u.type,
         ignoreFocus: detail.fakeFocus(),
