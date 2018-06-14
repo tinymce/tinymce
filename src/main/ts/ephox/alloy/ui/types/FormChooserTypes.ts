@@ -1,3 +1,4 @@
+
 import { Option } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
@@ -10,8 +11,11 @@ export interface FormChooserDetail extends CompositeSketchDetail {
   uid: () => string;
   // FIX: Completed DOM tpye.
   dom: () => any;
-  components: () => AlloySpec[ ];
   chooserBehaviours: () => SketchBehaviours;
+  markers: () => {
+    choiceClass: () => string;
+    selectedClass: () => string;
+  }
 }
 
 export interface FormChooserSpec extends CompositeSketchSpec {
@@ -19,6 +23,10 @@ export interface FormChooserSpec extends CompositeSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   chooserBehaviours?: AlloyBehaviourRecord;
+  markers: {
+    choiceClass: string;
+    selectedClass: string;
+  }
 }
 
 export interface FormChooserSketcher extends CompositeSketch<FormChooserSpec, FormChooserDetail> { }
