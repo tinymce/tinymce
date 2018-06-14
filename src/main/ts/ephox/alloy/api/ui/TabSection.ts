@@ -10,8 +10,10 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
+import { TabSectionSketcher, TabSectionDetail } from '../../ui/types/TabSectionTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<TabSectionDetail> = function (detail, components, spec, externals) {
   const changeTab = function (button) {
     const tabValue = Representing.getValue(button);
     AlloyParts.getPart(button, detail, 'tabview').each(function (tabview) {
@@ -84,7 +86,7 @@ const TabSection = Sketcher.composite({
       return apis.getViewItems(component);
     }
   }
-});
+}) as TabSectionSketcher;
 
 export {
   TabSection

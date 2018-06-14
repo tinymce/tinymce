@@ -6,6 +6,7 @@ import { Tabbar } from '../../api/ui/Tabbar';
 import { Tabview } from '../../api/ui/Tabview';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
+import { TabSectionDetail } from '../../ui/types/TabSectionTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('selectFirst', true),
@@ -25,7 +26,7 @@ const barPart = PartType.required({
     ])
   ],
   name: 'tabbar',
-  defaults (detail) {
+  defaults (detail: TabSectionDetail) {
     return {
       tabs: detail.tabs()
     };
