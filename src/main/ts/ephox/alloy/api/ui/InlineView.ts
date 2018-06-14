@@ -12,23 +12,10 @@ import { Receiving } from '../behaviour/Receiving';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
+import { InlineViewSketcher, InlineViewDetail } from '../../ui/types/InlineViewTypes';
+import { SingleSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-export interface InlineViewSketch extends Sketcher.SingleSketch {
-  // InlineViewApis;
-  showAt: (component: AlloyComponent, anchor: InlineViewAnchor, thing: SketchSpec) => void;
-  hide: (component: AlloyComponent) => void;
-  isOpen: (component: AlloyComponent) => boolean;
-}
-
-export interface InlineViewAnchor {
-  anchor: string;
-  x?: number;
-  y?: number;
-  item?: AlloyComponent;
-  root?: SugarElement;
-}
-
-const factory = function (detail, spec): SketchSpec {
+const factory: SingleSketchFactory<InlineViewDetail> = function (detail, spec): SketchSpec {
   const isPartOfRelated = function (container, queryElem) {
     const related = detail.getRelated()(container);
     return related.exists(function (rel) {
@@ -99,7 +86,7 @@ const InlineView = Sketcher.single({
       return apis.isOpen(component);
     }
   }
-}) as InlineViewSketch;
+}) as InlineViewSketcher;
 
 export {
   InlineView
