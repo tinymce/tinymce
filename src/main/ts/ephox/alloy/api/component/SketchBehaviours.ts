@@ -1,10 +1,14 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun } from '@ephox/katamari';
 
-import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { AlloyBehaviour, AlloyBehaviourRecord, ConfiguredBehaviour } from '../../api/behaviour/Behaviour';
 import { ContainerBehaviours } from '../../spec/SpecSchema';
 
-const field = function (name: string, forbidden: AlloyBehaviour[]): FieldProcessorAdt {
+export interface SketchBehaviours {
+  dump: () => AlloyBehaviourRecord;
+}
+
+const field = (name: string, forbidden: AlloyBehaviour[]): FieldProcessorAdt => {
   return FieldSchema.defaultedObjOf(name, { }, Arr.map(forbidden, function (f) {
     return FieldSchema.forbid(f.name(), 'Cannot configure ' + f.name() + ' for ' + name);
   }).concat([
@@ -12,7 +16,7 @@ const field = function (name: string, forbidden: AlloyBehaviour[]): FieldProcess
   ]));
 };
 
-const get = function (data: ContainerBehaviours): {} {
+const get = (data: SketchBehaviours): AlloyBehaviourRecord => {
   return data.dump();
 };
 

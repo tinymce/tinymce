@@ -20,7 +20,7 @@ export interface RawDomSchema {
 
 export interface ComponentSpec {
   dom: RawDomSchema;
-  components?: ComponentSpec[];
+  components?: AlloySpec[];
   events?: EventHandlerConfigRecord;
   apis?: {};
   behaviours?: AlloyBehaviourRecord;
