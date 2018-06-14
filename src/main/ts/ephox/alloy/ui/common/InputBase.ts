@@ -7,6 +7,7 @@ import { Focusing } from '../../api/behaviour/Focusing';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
+import { InputDetail } from '../../ui/types/InputTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('data'),
@@ -23,7 +24,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('selectOnFocus', true)
 ]);
 
-const behaviours = function (detail) {
+const behaviours = function (detail: InputDetail) {
   return Merger.deepMerge(
     Behaviour.derive([
       Representing.config({
@@ -56,7 +57,7 @@ const behaviours = function (detail) {
   );
 };
 
-const dom = function (detail) {
+const dom = function (detail: InputDetail) {
   return {
     tag: detail.tag(),
     attributes: Merger.deepMerge(
