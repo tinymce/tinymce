@@ -8,8 +8,10 @@ import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { SketchSpec } from '../../api/component/SpecTypes';
+import { HtmlSelectSketcher, HtmlSelectDetail } from '../../ui/types/HtmlSelectTypes';
+import { SingleSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory = function (detail, spec): SketchSpec {
+const factory: SingleSketchFactory<HtmlSelectDetail> = function (detail, spec): SketchSpec {
   const options = Arr.map(detail.options(), function (option) {
     return {
       dom: {
@@ -67,7 +69,7 @@ const HtmlSelect = Sketcher.single({
     FieldSchema.option('data')
   ],
   factory
-});
+}) as HtmlSelectSketcher;
 
 export {
   HtmlSelect

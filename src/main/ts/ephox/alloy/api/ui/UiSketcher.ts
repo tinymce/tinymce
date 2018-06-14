@@ -8,10 +8,10 @@ import * as SpecSchema from '../../spec/SpecSchema';
 import { SimpleSpec, SketchSpec, RawDomSchema, SimpleOrSketchSpec, AlloySpec, LooseSpec } from '../../api/component/SpecTypes';
 import { SingleSketchDetail, CompositeSketchDetail } from 'ephox/alloy/api/ui/Sketcher';
 
-export type SingleFactory<D extends SingleSketchDetail> = (detail: D, specWithUid: LooseSpec) => SketchSpec;
+export type SingleSketchFactory<D extends SingleSketchDetail> = (detail: D, specWithUid: LooseSpec) => SketchSpec;
 export type CompositeSketchFactory<D extends CompositeSketchDetail> = (detail: D, components: AlloySpec[], spec: LooseSpec, externals: any) => SketchSpec;
 
-const single = function <D extends SingleSketchDetail>(owner: string, schema: AdtInterface[], factory: SingleFactory<D>, spec: SimpleOrSketchSpec): SketchSpec {
+const single = function <D extends SingleSketchDetail>(owner: string, schema: AdtInterface[], factory: SingleSketchFactory<D>, spec: SimpleOrSketchSpec): SketchSpec {
   const specWithUid = supplyUid(spec);
   const detail = SpecSchema.asStructOrDie<D>(owner, schema, specWithUid, [ ], [ ]);
   return Merger.deepMerge(
