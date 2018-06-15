@@ -8,6 +8,7 @@ import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import { InputDetail } from '../../ui/types/InputTypes';
+import { RawDomSchema } from 'ephox/alloy/api/component/SpecTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('data'),
@@ -24,7 +25,20 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('selectOnFocus', true)
 ]);
 
-const behaviours = (detail: InputDetail) => {
+const focusBehaviours = <V>(detail: InputDetail<V>): Behaviour.AlloyBehaviourRecord => {
+  return Behaviour.derive([
+    Focusing.config({
+      onFocus: detail.selectOnFocus() === false ? Fun.noop : (component) => {
+        const input = component.element();
+        const value = Value.get(input);
+        input.dom().setSelectionRange(0, value.length);
+      }
+    })
+  ])
+};
+
+
+const behaviours = <V>(detail: InputDetail<V>): Behaviour.AlloyBehaviourRecord => {
   return Merger.deepMerge(
     Behaviour.derive([
       Representing.config({
@@ -44,20 +58,14 @@ const behaviours = (detail: InputDetail) => {
           }
         },
         onSetValue: detail.onSetValue()
-      }),
-      Focusing.config({
-        onFocus: detail.selectOnFocus() === false ? Fun.noop : (component) => {
-          const input = component.element();
-          const value = Value.get(input);
-          input.dom().setSelectionRange(0, value.length);
-        }
       })
     ]),
+    focusBehaviours(detail),
     SketchBehaviours.get(detail.inputBehaviours())
   );
 };
 
-const dom = (detail: InputDetail) => {
+const dom = (detail: InputDetail<any>): RawDomSchema => {
   return {
     tag: detail.tag(),
     attributes: Merger.deepMerge(
@@ -82,5 +90,6 @@ const dom = (detail: InputDetail) => {
 export {
   schema,
   behaviours,
+  focusBehaviours,
   dom
 };

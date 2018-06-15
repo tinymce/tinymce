@@ -8,7 +8,7 @@ import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDeta
 import { DropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
 import { InputDetail } from 'ephox/alloy/ui/types/InputTypes';
 
-export interface TypeaheadDetail extends DropdownDetail, InputDetail {
+export interface TypeaheadDetail extends DropdownDetail, InputDetail<TypeaheadData> {
   uid: () => string;
   dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
@@ -17,10 +17,17 @@ export interface TypeaheadDetail extends DropdownDetail, InputDetail {
   typeaheadBehaviours: () => SketchBehaviours;
   dismissOnBlur: () => boolean;
 
+  data: () => Option<TypeaheadData>;
+
   markers: () => {
     openClass: () => string;
   };
   previewing: () => Cell<boolean>;
+}
+
+export interface TypeaheadData {
+  value: string;
+  text: string;
 }
 
 export interface TypeaheadSpec extends CompositeSketchSpec {
@@ -46,10 +53,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   dismissOnBlur?: boolean;
   onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
 
-  data?: {
-    value: string;
-    text: string;
-  }
+  data?: TypeaheadData;
 }
 
 export interface TypeaheadSketcher extends CompositeSketch<TypeaheadSpec, TypeaheadDetail> { }

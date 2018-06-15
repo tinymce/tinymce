@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -6,9 +6,10 @@ import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 
-import { EventFormat } from '../../events/SimulatedEvent';
+import { EventFormat, SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-const events = (optAction) => {
+const events = (optAction: Option<(comp: AlloyComponent) => void>): AlloyEvents.EventHandlerConfigRecord => {
   const executeHandler = (action) => {
     return AlloyEvents.run(SystemEvents.execute(), (component, simulatedEvent) => {
       action(component);
@@ -16,13 +17,13 @@ const events = (optAction) => {
     });
   };
 
-  const onClick = (component, simulatedEvent) => {
+  const onClick = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent): void => {
     simulatedEvent.stop();
     AlloyTriggers.emitExecute(component);
   };
 
   // Other mouse down listeners above this one should not get mousedown behaviour (like dragging)
-  const onMousedown = (component, simulatedEvent) => {
+  const onMousedown = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent): void => {
     simulatedEvent.cut();
   };
 

@@ -18,13 +18,19 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as InputBase from '../common/InputBase';
 
-import { EventFormat } from '../../events/SimulatedEvent';
+import { EventFormat, SimulatedEvent, CustomEvent } from '../../events/SimulatedEvent';
 import { HTMLInputElement } from '@ephox/dom-globals';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
+import { TypeaheadDetail, TypeaheadSpec, TypeaheadData } from '../../ui/types/TypeaheadTypes';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SugarEvent } from 'ephox/alloy/api/Main';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
-  const navigateList = (comp, simulatedEvent, highlighter) => {
+  const navigateList = (
+    comp: AlloyComponent,
+    simulatedEvent: SimulatedEvent<SugarEvent>,
+    highlighter: (comp: AlloyComponent) => void
+  ) => {
     const sandbox = Coupling.getCoupled(comp, 'sandbox');
     if (Sandboxing.isOpen(sandbox)) {
       Composing.getCurrent(sandbox).each((menu) => {
@@ -45,21 +51,21 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
 
   // Due to the fact that typeahead probably need to separate value from text, they can't reuse
   // (easily) the same representing logic as input fields.
-  const inputBehaviours = InputBase.behaviours(detail);
+  const focusBehaviours = InputBase.focusBehaviours(detail);
 
   const behaviours = Behaviour.derive([
     Focusing.config({ }),
     Representing.config({
       store: {
         mode: 'dataset',
-        getDataKey (typeahead) {
+        getDataKey (typeahead: AlloyComponent): string {
           return Value.get(typeahead.element());
         },
         initialValue: detail.data().getOr(undefined),
-        getFallbackEntry (key) {
+        getFallbackEntry (key: string): TypeaheadData {
           return { value: key, text: key };
         },
-        setData (typeahead, data) {
+        setData (typeahead: AlloyComponent, data: TypeaheadData) {
           Value.set(typeahead.element(), data.text);
         }
       }
@@ -78,7 +84,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
           if (Value.get(component.element()).length >= detail.minChars()) {
 
             const previousValue = Composing.getCurrent(sandbox).bind((menu) => {
-              return Highlighting.getHighlighted(menu).map(Representing.getValue);
+              return Highlighting.getHighlighted(menu).map(Representing.getValue) as Option<TypeaheadData>;
             });
 
             detail.previewing().set(true);
@@ -89,7 +95,8 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
                   Highlighting.highlightFirst(menu);
                 }, (pv) => {
                   Highlighting.highlightBy(menu, (item) => {
-                    return Representing.getValue(item).value === pv.value;
+                    const itemData = Representing.getValue(item) as TypeaheadData;
+                    return itemData.value === pv.value;
                   });
 
                   // Highlight first if could not find it?
@@ -126,7 +133,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
       onEnter (comp, simulatedEvent) {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
         if (Sandboxing.isOpen(sandbox)) { Sandboxing.close(sandbox); }
-        const currentValue = Representing.getValue(comp);
+        const currentValue = Representing.getValue(comp) as TypeaheadData;
         detail.onExecute()(sandbox, comp, currentValue);
         const input = comp.element().dom() as HTMLInputElement;
         input.setSelectionRange(currentValue.text.length, currentValue.text.length);
@@ -162,7 +169,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     uid: detail.uid(),
     dom: InputBase.dom(detail),
     behaviours: Merger.deepMerge(
-      inputBehaviours,
+      focusBehaviours,
       behaviours,
       SketchBehaviours.get(detail.typeaheadBehaviours())
     ),

@@ -6,7 +6,8 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SketchSpec } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchSpec, SingleSketchDetail } from '../../api/ui/Sketcher';
 
-export interface InputDetail extends SingleSketchDetail {
+// The V is because this is shared with Typeahead.
+export interface InputDetail<V> extends SingleSketchDetail {
   uid: () => string;
   dom: () => RawDomSchema;
   inputBehaviours: () => SketchBehaviours;
@@ -17,8 +18,8 @@ export interface InputDetail extends SingleSketchDetail {
   inputAttributes: () => { };
   type: () => string;
   tag: () => string;
-  data: () => Option<string>;
-  onSetValue: () => (comp: AlloyComponent, data: string) => void;
+  data: () => Option<V>;
+  onSetValue: () => (comp: AlloyComponent, data: V) => void;
   selectOnFocus: () => boolean;
   eventOrder: () => Record<string, string[]>;
 }
@@ -33,7 +34,9 @@ export interface InputSpec extends SingleSketchSpec {
   placeholder?: string;
   data?: string;
 
-  // FIX: Add the things detail is getting.
+  selectOnFocus?: boolean;
+  eventOrder?: Record<string, string[]>;
+  onSetValue?: (comp: AlloyComponent, data: string) => void;
 }
 
-export interface InputSketcher extends SingleSketch<InputSpec, InputDetail> { }
+export interface InputSketcher extends SingleSketch<InputSpec, InputDetail<string>> { }
