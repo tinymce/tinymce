@@ -9,12 +9,11 @@ import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { composite, CompositeSketch } from './Sketcher';
 import { console } from '@ephox/dom-globals';
+import { ToolbarSketcher, ToolbarDetail, ToolbarSpec } from '../../ui/types/ToolbarTypes';
+import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-export interface ToolbarSketch extends CompositeSketch {
-  setGroups: (toolbar: AlloyComponent, groups: AlloySpec []) => void;
-}
 
-const factory = function (detail, components, spec, _externals) {
+const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = function (detail, components, spec, _externals) {
   const setGroups = function (toolbar, groups) {
     getGroupContainer(toolbar).fold(function () {
       // check that the group container existed. It may not have if the components
@@ -64,7 +63,7 @@ const Toolbar = composite({
       apis.setGroups(toolbar, groups);
     }
   }
-}) as ToolbarSketch;
+}) as ToolbarSketcher;
 
 export {
   Toolbar
