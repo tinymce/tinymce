@@ -9,8 +9,7 @@ import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
-import * as Reader from 'ephox/alloy/frame/Reader';
-import * as Writer from 'ephox/alloy/frame/Writer';
+import * as Frames from './frames/Frames';
 import { document } from '@ephox/dom-globals';
 
 const resize = (element, changeX, changeY) => {
@@ -48,7 +47,7 @@ export default (): void => {
   Css.set(frame, 'min-width', '80%');
   const onload = DomEvent.bind(frame, 'load', () => {
     onload.unbind();
-    Writer.write(
+    Frames.write(
       frame,
       '<html>' +
         '<head>' +
@@ -63,7 +62,7 @@ export default (): void => {
         '</body>' +
       '</html>'
     );
-    const root = Element.fromDom(Reader.doc(frame).dom().documentElement);
+    const root = Element.fromDom(Frames.readDoc(frame).dom().documentElement);
     addAsForeign(root, (gui) => {
       Insert.append(root, gui.element());
     });

@@ -4,11 +4,12 @@ import { Option, Result } from '@ephox/katamari';
 import { Css, DomEvent, Element, Node, Scroll, SelectorFind, Traverse, WindowSelection } from '@ephox/sugar';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import * as Writer from 'ephox/alloy/frame/Writer';
 import ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import Sinks from 'ephox/alloy/test/Sinks';
+
+import * as Frames from '../../../../demo/ts/ephox/alloy/demo/frames/Frames';
 
 UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
 
@@ -23,7 +24,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
     const frame = Element.fromTag('iframe');
     const onload = DomEvent.bind(frame, 'load', () => {
       onload.unbind();
-      Writer.write(frame, '<html><body contenteditable="true">' + content + '</body></html>');
+      Frames.write(frame, '<html><body contenteditable="true">' + content + '</body></html>');
     });
 
     const classicEditor = GuiFactory.build(

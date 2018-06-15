@@ -12,7 +12,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import DemoContent from 'ephox/alloy/demo/DemoContent';
 import DemoSink from 'ephox/alloy/demo/DemoSink';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import * as Writer from 'ephox/alloy/frame/Writer';
+import * as Frames from './frames/Frames';
 import { document } from '@ephox/dom-globals';
 
 export default (): void => {
@@ -162,7 +162,7 @@ export default (): void => {
     onLoad.unbind();
 
     const html = '<!doctype html><html><body contenteditable="true">' + DemoContent.generate(20) + '</body></html>';
-    Writer.write(frame, html);
+    Frames.write(frame, html);
   });
 
   const section4 = HtmlDisplay.section(
