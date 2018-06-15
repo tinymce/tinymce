@@ -5,12 +5,16 @@ import EventRegistry from '../events/EventRegistry';
 import * as AlloyLogger from '../log/AlloyLogger';
 import * as Tagger from './Tagger';
 
-export default <any> () => {
+import { Option } from '@ephox/katamari';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+
+export default () => {
   const events = EventRegistry();
 
-  const components = { };
+  // An index of uid -> built components
+  const components: Record<string, AlloyComponent> = { };
 
-  const readOrTag = (component) => {
+  const readOrTag = (component: AlloyComponent): string => {
     const elem = component.element();
     return Tagger.read(elem).fold(() => {
       // No existing tag, so add one.
@@ -20,7 +24,7 @@ export default <any> () => {
     });
   };
 
-  const failOnDuplicate = (component, tagId) => {
+  const failOnDuplicate = (component: AlloyComponent, tagId: string): void => {
     const conflict = components[tagId];
     if (conflict === component) { unregister(component); } else { throw new Error(
       'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element()) + '\nCannot use it for: ' + AlloyLogger.element(component.element()) + '\n' +
@@ -29,7 +33,7 @@ export default <any> () => {
     }
   };
 
-  const register = (component) => {
+  const register = (component: AlloyComponent): void => {
     const tagId = readOrTag(component);
     if (Objects.hasKey(components, tagId)) { failOnDuplicate(component, tagId); }
     // Component is passed through an an extra argument to all events
@@ -38,14 +42,14 @@ export default <any> () => {
     components[tagId] = component;
   };
 
-  const unregister = (component) => {
+  const unregister = (component: AlloyComponent): void => {
     Tagger.read(component.element()).each((tagId) => {
       components[tagId] = undefined;
       events.unregisterId(tagId);
     });
   };
 
-  const filter = (type) => {
+  const filter = (type: string) => {
     return events.filterByType(type);
   };
 
@@ -53,8 +57,8 @@ export default <any> () => {
     return events.find(isAboveRoot, type, target);
   };
 
-  const getById = (id) => {
-    return Objects.readOpt(id)(components);
+  const getById = (id: string): Option<AlloyComponent> => {
+    return Objects.readOpt(id)(components) as Option<AlloyComponent>;
   };
 
   return {
