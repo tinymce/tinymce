@@ -59,13 +59,13 @@ export interface TieredMenuSpec extends SingleSketchSpec {
   onCollapseMenu?: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent) => void;
   onHover?: (comp: AlloyComponent, item: AlloyComponent) => void;
 
-  navigateOnHover: boolean;
-  stayInDom: boolean;
-  openImmediately: boolean;
-  fakeFocus: boolean;
-  onHighlight: (comp: AlloyComponent, target: AlloyComponent) => void;
+  navigateOnHover?: boolean;
+  stayInDom?: boolean;
+  openImmediately?: boolean;
+  fakeFocus?: boolean;
+  onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
 
-  eventOrder: Record<string, string[]>;
+  eventOrder?: Record<string, string[]>;
 
   data: {
     primary: string;
@@ -75,6 +75,9 @@ export interface TieredMenuSpec extends SingleSketchSpec {
 
   markers: {
     item: string;
+    menu: string;
+    backgroundMenu: string;
+    selectedMenu: string;
     selectedItem: string;
   }
 }

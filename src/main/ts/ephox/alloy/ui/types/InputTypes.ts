@@ -26,8 +26,13 @@ export interface InputDetail extends SingleSketchDetail {
 
 export interface InputSpec extends SingleSketchSpec {
   uid?: string;
-  dom?: Partial<RawDomSchema>;
+  tag?: string;
+  inputClasses?: string[];
+  inputAttributes?: { };
+  inputStyles?: { };
   inputBehaviours?: AlloyBehaviourRecord;
+  placeholder?: string;
+  data?: string;
 
   // FIX: Add the things detail is getting.
 }

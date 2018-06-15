@@ -84,5 +84,6 @@ const tieredMenu = single({
 }) as TieredMenuSketcher;
 
 export {
-  tieredMenu
+  tieredMenu,
+  TieredData
 };

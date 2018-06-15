@@ -21,7 +21,7 @@ export interface DropdownDetail extends CompositeSketchDetail {
   onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
 
   toggleClass: () => string;
-  lazySink?: () => Option<Result<AlloyComponent, Error>>
+  lazySink?: () => Option<() => Result<AlloyComponent, Error>>
   matchWidth: () => boolean;
 }
 
@@ -31,7 +31,7 @@ export interface DropdownSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   // TYPIFY
   fetch: (comp: AlloyComponent) => Future<LooseSpec>;
-  onOpen?: () => void;
+  onOpen?: (anchor, comp: AlloyComponent, menu: AlloyComponent) => void;
   dropdownBehaviours?: AlloyBehaviourRecord;
   onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
 

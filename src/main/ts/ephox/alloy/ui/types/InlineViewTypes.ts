@@ -26,10 +26,10 @@ export interface InlineViewSpec extends SingleSketchSpec {
   components?: AlloySpec[];
   inlineBehaviours?: AlloyBehaviourRecord;
   lazySink: () => Result<AlloyComponent, Error>;
-  onShow: (component: AlloyComponent) => void;
-  onHide: (component: AlloyComponent) => void;
-  getRelated: (component: AlloyComponent) => Option<AlloyComponent>;
-  eventOrder: Record<string, string[]>
+  onShow?: (component: AlloyComponent) => void;
+  onHide?: (component: AlloyComponent) => void;
+  getRelated?: (component: AlloyComponent) => Option<AlloyComponent>;
+  eventOrder?: Record<string, string[]>
 }
 
 // TYPIFY

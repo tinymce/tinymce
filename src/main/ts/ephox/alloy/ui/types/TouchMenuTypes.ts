@@ -1,4 +1,4 @@
-import { Option, Future } from '@ephox/katamari';
+import { Option, Future, Result } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -18,7 +18,7 @@ export interface TouchMenuDetail extends CompositeSketchDetail {
   onHoverOff: () => (comp: AlloyComponent) => void;
   toggleClass: () => string;
 
-  onExecute: () => (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: string) => void;
+  onExecute: () => (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: { value: string, text: string }) => void;
   onTap: () => (comp: AlloyComponent) => void;
 
   menuTransition: () => Option<{ property: string; transitionClass: string }>;
@@ -29,6 +29,7 @@ export interface TouchMenuDetail extends CompositeSketchDetail {
 
   // FIX: TYPIFY
   getAnchor: () => (comp: AlloyComponent) => any;
+  lazySink?: () => Option<() => Result<AlloyComponent, Error>>;
 
   // FIX: TYPIFY
   fetch: () => (comp: AlloyComponent) => Future<Array<LooseSpec>>;
@@ -40,11 +41,11 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   touchmenuBehaviours?: AlloyBehaviourRecord;
 
-  onHoverOn: (comp: AlloyComponent) => void;
-  onHoverOff: (comp: AlloyComponent) => void;
+  onHoverOn?: (comp: AlloyComponent) => void;
+  onHoverOff?: (comp: AlloyComponent) => void;
   toggleClass: string;
 
-  onExecute?: (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: string) => void;
+  onExecute?: (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: { value: string, text: string }) => void;
   onTap?: (comp: AlloyComponent) => void;
 
   menuTransition?: { property: string, transitionClass: string };
@@ -52,6 +53,8 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   onClosed?: (sandbox: AlloyComponent, inline: AlloyComponent) => void;
   eventOrder?: Record<string, string[]>;
   role?: string;
+
+  lazySink?: () => Result<AlloyComponent, Error>;
 
   // FIX: TYPIFY
   fetch: (comp: AlloyComponent) => Future<Array<LooseSpec>>;

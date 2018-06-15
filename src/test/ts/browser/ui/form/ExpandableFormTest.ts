@@ -8,13 +8,14 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { ExpandableForm } from 'ephox/alloy/api/ui/ExpandableForm';
-import { Form, FormParts } from 'ephox/alloy/api/ui/Form';
+import { Form } from 'ephox/alloy/api/ui/Form';
 import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import TestForm from 'ephox/alloy/test/form/TestForm';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
+import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
 UnitTest.asynctest('ExpandableFormTest', function () {
   const success = arguments[arguments.length - 2];

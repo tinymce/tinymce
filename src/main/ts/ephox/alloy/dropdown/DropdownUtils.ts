@@ -76,12 +76,12 @@ const open = function (detail: DropdownDetail, anchor, component: AlloyComponent
   });
 };
 
-const close = function (detail: DropdownDetail, anchor, component, sandbox) {
+const close = function (detail: DropdownDetail, anchor, component, sandbox, _externals, _onOpenSync) {
   Sandboxing.close(sandbox);
   return Future.pure(sandbox);
 };
 
-const togglePopup = function (detail: DropdownDetail, anchor, hotspot, externals, onOpenSync) {
+const togglePopup = function (detail: DropdownDetail, anchor, hotspot: AlloyComponent, externals, onOpenSync) {
   const sandbox = Coupling.getCoupled(hotspot, 'sandbox');
   const showing = Sandboxing.isOpen(sandbox);
 

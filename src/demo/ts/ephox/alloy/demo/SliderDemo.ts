@@ -75,13 +75,13 @@ export default <any> function () {
 
       onInit (slider, thumb, value) {
         Replacing.set(thumb, [
-          GuiFactory.text(value)
+          GuiFactory.text(value.toString())
         ]);
       },
 
       onChange (slider, thumb, value) {
         Replacing.set(thumb, [
-          GuiFactory.text(value)
+          GuiFactory.text(value.toString())
         ]);
       },
 

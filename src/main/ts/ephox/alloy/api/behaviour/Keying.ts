@@ -82,7 +82,7 @@ export interface KeyingConfig {
   onShiftEnter?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   onShiftTab?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
   onTab?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
-  useTabstopAt?: (comp: AlloyComponent) => Option<boolean>;
+  useTabstopAt?: (comp: AlloyComponent) => boolean;
 }
 
 // This commented out section is a more concise schema of what should be the configuration item, based on the KeyingConfig.mode

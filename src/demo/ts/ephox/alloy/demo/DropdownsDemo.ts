@@ -51,8 +51,8 @@ export default <any> function () {
         Keying.config({ mode: 'cyclic' })
       ]),
       components: [
-        Input.sketch({ dom: { tag: 'input' } }),
-        Input.sketch({ dom: { tag: 'input' } })
+        Input.sketch({ tag: 'input' }),
+        Input.sketch({ tag: 'input' })
       ]
     })
 
@@ -291,12 +291,10 @@ export default <any> function () {
                     },
                     components: [
                       Input.sketch({
-                        dom: {
-                          tag: 'input',
-                          styles: {
-                            display: 'inline-block',
-                            width: '50px'
-                          }
+                        tag: 'input',
+                        inputStyles: {
+                          display: 'inline-block',
+                          width: '50px'
                         },
                         inputBehaviours: Behaviour.derive([
                           Tabstopping.config({ })

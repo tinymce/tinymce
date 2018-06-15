@@ -46,7 +46,19 @@ export interface MenuSpec extends CompositeSketchSpec {
   menuBehaviours?: AlloyBehaviourRecord;
 
   // TYPIFY
+  value: string;
   items: any[];
+
+  fakeFocus?: boolean;
+  markers: {
+    item: string;
+    selectedItem: string;
+  };
+
+  // Movement?
+
+  onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
+  eventOrder?: Record<string, string[]>;
 }
 
 export interface MenuSketcher extends CompositeSketch<MenuSpec, MenuDetail> { }

@@ -90,7 +90,7 @@ export default <any> function () {
         console.log('escaping');
         return Option.some(true);
       },
-      dragBlockClass: [ 'blocker-class' ],
+      dragBlockClass: 'blocker-class',
 
       parts: {
         blocker: { }

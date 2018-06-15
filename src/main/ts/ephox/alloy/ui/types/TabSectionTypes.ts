@@ -3,7 +3,7 @@ import { Option } from '@ephox/katamari';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SketchSpec } from '../../api/component/SpecTypes';
+import { AlloySpec, RawDomSchema, SketchSpec, LooseSpec } from '../../api/component/SpecTypes';
 import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
 
 export interface TabSectionDetail extends CompositeSketchDetail {
@@ -25,6 +25,10 @@ export interface TabSectionSpec extends CompositeSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   tabSectionBehaviours?: AlloyBehaviourRecord;
+
+  // TODO: Make this nicer.
+  tabs: LooseSpec;
+  selectFirst?: boolean;
 }
 
 export interface TabSectionSketcher extends CompositeSketch<TabSectionSpec, TabSectionDetail> {

@@ -29,7 +29,7 @@ const composite = function <D extends CompositeSketchDetail, S extends Composite
   // Generate partUids for all parts (external and otherwise)
   const partUidsSchema = AlloyParts.defaultUidsSchema(partTypes);
 
-  const detail = SpecSchema.asStructOrDie<D>(owner, schema, specWithUid, partSchemas, [ partUidsSchema ]);
+  const detail = SpecSchema.asStructOrDie<D, S>(owner, schema, specWithUid, partSchemas, [ partUidsSchema ]);
 
   // Create (internals, externals) substitutions
   const subs = AlloyParts.substitutes(owner, detail, partTypes);

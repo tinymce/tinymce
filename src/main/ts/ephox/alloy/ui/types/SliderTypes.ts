@@ -36,6 +36,19 @@ export interface SliderSpec extends CompositeSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   sliderBehaviours?: AlloyBehaviourRecord;
+
+  min: number;
+  max: number;
+  stepSize?: number;
+  snapToGrid?: boolean;
+  snapStart?: number;
+
+  onChange?: (component: AlloyComponent, thumb: AlloyComponent, value: number) => void;
+  onDragStart?: (component: AlloyComponent, thumb: AlloyComponent) => void;
+  onDragEnd?: (component: AlloyComponent, thumb: AlloyComponent) => void;
+
+  getInitialValue: () => number;
+  onInit?: (component: AlloyComponent, thumb: AlloyComponent, value: Number) => void;
 }
 
 export interface SliderSketcher extends CompositeSketch<SliderSpec, SliderDetail> {

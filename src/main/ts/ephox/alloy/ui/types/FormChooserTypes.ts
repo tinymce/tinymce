@@ -4,7 +4,7 @@ import { Option } from '@ephox/katamari';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SketchSpec } from '../../api/component/SpecTypes';
+import { AlloySpec, RawDomSchema, SketchSpec, SimpleOrSketchSpec, LooseSpec } from '../../api/component/SpecTypes';
 import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
 
 export interface FormChooserDetail extends CompositeSketchDetail {
@@ -18,6 +18,7 @@ export interface FormChooserDetail extends CompositeSketchDetail {
   }
 }
 
+
 export interface FormChooserSpec extends CompositeSketchSpec {
   uid?: string;
   dom: RawDomSchema;
@@ -26,7 +27,9 @@ export interface FormChooserSpec extends CompositeSketchSpec {
   markers: {
     choiceClass: string;
     selectedClass: string;
-  }
+  };
+
+  choices: Array<LooseSpec>;
 }
 
 export interface FormChooserSketcher extends CompositeSketch<FormChooserSpec, FormChooserDetail> { }

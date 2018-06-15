@@ -26,12 +26,10 @@ export default <any> function () {
       }),
       Input.sketch({
         tag: 'textarea',
-        dom: {
-          styles: {
-            width: '90%',
-            height: '300px',
-            display: 'block'
-          }
+        inputStyles: {
+          width: '90%',
+          height: '300px',
+          display: 'block'
         },
         data: '<div class="cat dog elephant" data-ephox="this is"><div id="mike">chau</div></div>',
         uid: 'textarea-input'

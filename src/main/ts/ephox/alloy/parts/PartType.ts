@@ -7,7 +7,7 @@ import { CompositeSketchDetail } from 'ephox/alloy/api/ui/Sketcher';
 export type PartType = (PartialSpec) => PartTypeAdt;
 export interface PartialSpec { }
 
-export interface PartSpec<D> {
+export interface PartSpec<D extends CompositeSketchDetail> {
   defaults: () => () => {};
   factory: () => any;
   name: () => string;
@@ -70,7 +70,7 @@ const groupSpec = ValueSchema.objOf([
   fPname, fDefaults, fOverrides
 ]);
 
-const asNamedPart = function <D>(part: PartTypeAdt): Option<PartSpec<D>> {
+const asNamedPart = function <D extends CompositeSketchDetail>(part: PartTypeAdt): Option<PartSpec<D>> {
   return part.fold(Option.some, Option.none, Option.some, Option.some);
 };
 
@@ -81,7 +81,7 @@ const name = function (part: PartTypeAdt): string {
   return part.fold(get, get, get, get);
 };
 
-const asCommon = function <D>(part: PartTypeAdt): PartSpec<D> {
+const asCommon = function <D extends CompositeSketchDetail>(part: PartTypeAdt): PartSpec<D> {
   return part.fold(Fun.identity, Fun.identity, Fun.identity, Fun.identity);
 };
 

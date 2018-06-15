@@ -45,6 +45,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   }
 
   dismissOnBlur?: boolean;
+  onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
 
   data?: {
     value: string;

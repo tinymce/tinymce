@@ -21,7 +21,10 @@ export interface SingleSketch<S extends SingleSketchSpec, D extends SingleSketch
 }
 
 export interface CompositeSketchSpec { };
-export interface CompositeSketchDetail { };
+export interface CompositeSketchDetail {
+  partUids: () => Record<string, string>;
+  components: () => AlloySpec[];
+};
 
 export interface CompositeSketch<S extends CompositeSketchSpec, D extends CompositeSketchDetail>  {
   name: () => string;

@@ -56,6 +56,7 @@ export default <any> function () {
 
     onExecute () {
       console.log('inline.menu.execute');
+      return Option.some(true);
     },
 
     onOpenMenu (sandbox, menu) {
@@ -142,14 +143,10 @@ export default <any> function () {
       ]),
       components: [
         Input.sketch({
-          dom: {
-            styles: { 'display': 'block', 'margin-bottom': '50px' }
-          }
+          inputStyles: { 'display': 'block', 'margin-bottom': '50px' }
         }),
         Input.sketch({
-          dom: {
-            styles: { display: 'block' }
-          },
+          inputStyles: { display: 'block' },
 
           inputBehaviours: Behaviour.derive([
             AddEventsBehaviour.config('adhoc-show-popup', [

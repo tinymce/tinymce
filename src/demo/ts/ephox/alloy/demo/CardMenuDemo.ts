@@ -9,6 +9,8 @@ import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { document, console } from '@ephox/dom-globals';
 
+import { Option } from '@ephox/katamari';
+
 export default <any> function () {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
@@ -110,9 +112,11 @@ export default <any> function () {
 
     onExecute () {
       console.log('Executing');
+      return Option.some(true);
     },
     onEscape () {
       console.log('Escaping');
+      return Option.some(true);
     },
     onOpenMenu (container, menu) {
       const w = Width.get(container.element());
