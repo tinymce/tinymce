@@ -1,8 +1,8 @@
-import { DomFactory, Sketcher } from '@ephox/alloy';
+import { DomFactory, RawDomSchema } from '@ephox/alloy';
 import { Strings } from '@ephox/katamari';
 import Styles from '../style/Styles';
 
-const dom = function (rawHtml): Sketcher.RawElementSchema {
+const dom = function (rawHtml): RawDomSchema {
   const html = Strings.supplant(rawHtml, {
     prefix: Styles.prefix()
   });

@@ -1,4 +1,4 @@
-import { Behaviour, Slider, Toggling, Sketcher } from '@ephox/alloy';
+import { Behaviour, Slider, Toggling, SketchSpec } from '@ephox/alloy';
 import { Css } from '@ephox/sugar';
 
 import Receivers from '../channels/Receivers';
@@ -77,7 +77,7 @@ const makeSlider = function (spec) {
   });
 };
 
-const makeItems = function (spec): Sketcher.SketchSpec[] {
+const makeItems = function (spec): SketchSpec[] {
   return [
     makeSlider(spec)
   ];
