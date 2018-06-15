@@ -6,10 +6,7 @@ import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { Html } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('RepresentingTest (mode: manual)', () => {
-
-
-
+UnitTest.asynctest('RepresentingTest (mode: manual)', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build({
       dom: {

@@ -8,9 +8,6 @@ import EventRegistry from 'ephox/alloy/events/EventRegistry';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('EventRegistryTest', (success, failure) => {
-
-
-
   const body = Element.fromDom(document.body);
   const page = Element.fromTag('div');
 
@@ -83,6 +80,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
               return Result.error(
                 'Unexpected handler found: ' + Json.stringify({
                   element: Truncate.getHtml(h.element()),
+
                   handler: h.handler()
                 })
               );

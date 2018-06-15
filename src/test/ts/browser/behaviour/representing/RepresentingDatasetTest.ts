@@ -9,10 +9,7 @@ import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
-UnitTest.asynctest('RepresentingTest (mode: dataset)', () => {
-
-
-
+UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build(
       Container.sketch({

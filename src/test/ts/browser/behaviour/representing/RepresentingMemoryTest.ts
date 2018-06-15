@@ -5,10 +5,7 @@ import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('RepresentingTest (mode: memory)', () => {
-
-
-
+UnitTest.asynctest('RepresentingTest (mode: memory)', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build({
       dom: {
