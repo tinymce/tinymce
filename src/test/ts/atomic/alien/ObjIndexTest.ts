@@ -33,7 +33,7 @@ UnitTest.test('ObjIndexTest', () => {
     () => {
       const actual = ObjIndex.byInnerKey({
         aus: {
-          population: [ 100 ]
+          population: 100
         }
       }, tuple);
       assertSortedEq('Checking grouping', {
