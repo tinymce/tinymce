@@ -10,10 +10,10 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { ModalDialogSketcher, ModalDialogDetail } from '../../ui/types/ModalDialogTypes';
+import { ModalDialogSketcher, ModalDialogDetail, ModalDialogSpec } from '../../ui/types/ModalDialogTypes';
 import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory: CompositeSketchFactory<ModalDialogDetail> = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = function (detail, components, spec, externals) {
   // TODO IMPROVEMENT: Make close actually close the dialog by default!
   const showDialog = function (dialog) {
     const sink = detail.lazySink()().getOrDie();

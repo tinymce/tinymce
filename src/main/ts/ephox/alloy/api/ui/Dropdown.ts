@@ -13,9 +13,10 @@ import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { SketchSpec, LooseSpec, AlloySpec } from '../../api/component/SpecTypes';
-import { DropdownSketcher, DropdownDetail } from '../../ui/types/DropdownTypes';
+import { DropdownSketcher, DropdownDetail, DropdownSpec } from '../../ui/types/DropdownTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory = function (detail: DropdownDetail, components: AlloySpec[], _spec: LooseSpec, externals): SketchSpec {
+const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = function (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec {
   const switchToMenu = function (sandbox) {
     Composing.getCurrent(sandbox).each(function (current) {
       Highlighting.highlightFirst(current);

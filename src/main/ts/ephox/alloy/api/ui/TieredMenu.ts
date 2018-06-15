@@ -10,7 +10,8 @@ import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { single, SingleSketch } from './Sketcher';
 import { RawDomSchema, LooseSpec } from '../component/SpecTypes';
-import { TieredMenuSketcher, MenuSpec, TieredMenuRecord, TieredData, ItemSpec } from '../../ui/types/TieredMenuTypes';
+import { TieredMenuSketcher, TieredMenuRecord, TieredData, ItemSpec } from '../../ui/types/TieredMenuTypes';
+import { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
 
 const tieredData = function (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>): TieredData {
   return {

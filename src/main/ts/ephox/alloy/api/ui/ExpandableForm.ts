@@ -10,7 +10,8 @@ import { Form } from './Form';
 import * as Sketcher from './Sketcher';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchSpec } from '../../api/component/SpecTypes';
-import { ExpandableFormSketcher, ExpandableFormDetail } from '../../ui/types/ExpandableFormTypes';
+import { ExpandableFormSketcher, ExpandableFormDetail, ExpandableFormSpec } from '../../ui/types/ExpandableFormTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
 const runOnExtra = function (detail, operation) {
   return function (anyComp) {
@@ -18,7 +19,7 @@ const runOnExtra = function (detail, operation) {
   };
 };
 
-const factory = function (detail: ExpandableFormDetail, components, spec, _externals): SketchSpec {
+const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> = function (detail, components, spec, _externals): SketchSpec {
   const getParts = function (form) {
     return AlloyParts.getPartsOrDie(form, detail, [ 'minimal', 'extra' ]);
   };

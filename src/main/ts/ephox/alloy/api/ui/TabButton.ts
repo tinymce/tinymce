@@ -8,10 +8,10 @@ import { Keying } from '../behaviour/Keying';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { TabButtonSketcher, TabButtonDetail } from '../../ui/types/TabButtonTypes';
+import { TabButtonSketcher, TabButtonDetail, TabButtonSpec } from '../../ui/types/TabButtonTypes';
 import { SingleSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory: SingleSketchFactory<TabButtonDetail> = function (detail, spec) {
+const factory: SingleSketchFactory<TabButtonDetail, TabButtonSpec> = function (detail, spec) {
 
   return {
     uid: detail.uid(),

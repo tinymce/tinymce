@@ -14,10 +14,10 @@ import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as Sketcher from './Sketcher';
-import { SplitDropdownSketcher, SplitDropdownDetail } from '../../ui/types/SplitDropdownTypes';
+import { SplitDropdownSketcher, SplitDropdownDetail, SplitDropdownSpec } from '../../ui/types/SplitDropdownTypes';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory: CompositeSketchFactory<SplitDropdownDetail> = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = function (detail, components, spec, externals) {
 
   const switchToMenu = function (sandbox) {
     Composing.getCurrent(sandbox).each(function (current) {

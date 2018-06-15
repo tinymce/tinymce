@@ -1,10 +1,10 @@
 import * as InputBase from '../../ui/common/InputBase';
 import * as Sketcher from './Sketcher';
 import { SketchSpec } from '../../api/component/SpecTypes';
-import { InputSketcher, InputDetail } from '../../ui/types/InputTypes';
+import { InputSketcher, InputDetail, InputSpec } from '../../ui/types/InputTypes';
 import { SingleSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory: SingleSketchFactory<InputDetail> = function (detail, spec): SketchSpec {
+const factory: SingleSketchFactory<InputDetail, InputSpec> = function (detail, spec): SketchSpec {
   return {
     uid: detail.uid(),
     dom: InputBase.dom(detail),

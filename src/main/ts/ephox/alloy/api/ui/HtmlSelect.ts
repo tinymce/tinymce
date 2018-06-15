@@ -8,10 +8,10 @@ import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { SketchSpec } from '../../api/component/SpecTypes';
-import { HtmlSelectSketcher, HtmlSelectDetail } from '../../ui/types/HtmlSelectTypes';
-import { SingleSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { HtmlSelectSketcher, HtmlSelectDetail, HtmlSelectSpec } from '../../ui/types/HtmlSelectTypes';
+import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory: SingleSketchFactory<HtmlSelectDetail> = function (detail, spec): SketchSpec {
+const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = function (detail, spec): SketchSpec {
   const options = Arr.map(detail.options(), function (option) {
     return {
       dom: {

@@ -8,9 +8,10 @@ import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
-import { ButtonDetail, ButtonSketcher } from 'ephox/alloy/ui/types/ButtonTypes';
+import { ButtonDetail, ButtonSketcher, ButtonSpec } from 'ephox/alloy/ui/types/ButtonTypes';
+import { SingleSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory = function (detail: ButtonDetail): SketchSpec {
+const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = function (detail): SketchSpec {
   const events = ButtonBase.events(detail.action());
 
   const optType = Objects.readOptFrom(detail.dom(), 'attributes').bind(Objects.readOpt('type'));

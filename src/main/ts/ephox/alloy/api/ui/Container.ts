@@ -4,9 +4,10 @@ import * as Fields from '../../data/Fields';
 import { FieldSchema } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
 import { SketchSpec } from '../../api/component/SpecTypes';
-import { ContainerDetail, ContainerSketcher } from 'ephox/alloy/ui/types/ContainerTypes';
+import { ContainerDetail, ContainerSketcher, ContainerSpec } from '../../ui/types/ContainerTypes';
+import { SingleSketchFactory } from '../../api/ui/UiSketcher';
 
-const factory = function (detail: ContainerDetail): SketchSpec {
+const factory: SingleSketchFactory<ContainerDetail, ContainerSpec> = function (detail): SketchSpec {
   return {
     uid: detail.uid(),
     dom: Merger.deepMerge(

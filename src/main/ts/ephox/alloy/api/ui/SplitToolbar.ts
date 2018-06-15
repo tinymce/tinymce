@@ -14,7 +14,7 @@ import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
-import { SplitToolbarSketcher, SplitToolbarDetail } from '../../ui/types/SplitToolbarTypes';
+import { SplitToolbarSketcher, SplitToolbarDetail, SplitToolbarSpec } from '../../ui/types/SplitToolbarTypes';
 import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
 const setStoredGroups = function (bar, storedGroups) {
@@ -83,7 +83,7 @@ const refresh = function (toolbar, detail: SplitToolbarDetail, externals) {
 
 };
 
-const factory: CompositeSketchFactory<SplitToolbarDetail> = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<SplitToolbarDetail, SplitToolbarSpec> = function (detail, components, spec, externals) {
   const doSetGroups = function (toolbar, groups) {
     const built = Arr.map(groups, toolbar.getSystem().build);
     detail.builtGroups().set(built);

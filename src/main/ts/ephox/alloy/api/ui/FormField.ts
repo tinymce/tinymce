@@ -10,10 +10,11 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as Sketcher from './Sketcher';
 import { SketchSpec } from '../../api/component/SpecTypes';
-import { FormFieldDetail, FormFieldSketcher } from 'ephox/alloy/ui/types/FormFieldTypes';
-import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { FormFieldDetail, FormFieldSketcher, FormFieldSpec } from '../../ui/types/FormFieldTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const factory: CompositeSketchFactory<FormFieldDetail> = function (detail, components, spec, externals): SketchSpec {
+const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = function (detail, components, spec, externals): SketchSpec {
   const behaviours = Merger.deepMerge(
     Behaviour.derive([
       Composing.config({
@@ -56,10 +57,10 @@ const factory: CompositeSketchFactory<FormFieldDetail> = function (detail, compo
   ]);
 
   const apis = {
-    getField: (container) => {
+    getField: (container: AlloyComponent) => {
       return AlloyParts.getPart(container, detail, 'field');
     },
-    getLabel: (container) => {
+    getLabel: (container: AlloyComponent) => {
       // TODO: Use constants for part names
       return AlloyParts.getPart(container, detail, 'label');
     }

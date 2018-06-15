@@ -11,9 +11,9 @@ import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { MenuDetail } from '../../ui/types/MenuTypes';
+import { MenuDetail, MenuSpec } from '../../ui/types/MenuTypes';
 
-const make: CompositeSketchFactory<MenuDetail> = function (detail, components, spec, externals) {
+const make: CompositeSketchFactory<MenuDetail, MenuSpec> = function (detail, components, spec, externals) {
   return Merger.deepMerge(
     {
       dom: Merger.deepMerge(

@@ -12,10 +12,10 @@ import * as AlloyEvents from '../events/AlloyEvents';
 import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 import { SketchSpec, AlloySpec } from '../../api/component/SpecTypes';
-import { FormChooserSketcher, FormChooserDetail } from '../../ui/types/FormChooserTypes';
+import { FormChooserSketcher, FormChooserDetail, FormChooserSpec } from '../../ui/types/FormChooserTypes';
 import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 
-const factory: CompositeSketchFactory<FormChooserDetail> = function (detail: FormChooserDetail, components: AlloySpec[], spec, externals): SketchSpec {
+const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = function (detail, components: AlloySpec[], spec, externals): SketchSpec {
   const findByValue = function (chooser, value) {
     const choices = SelectorFilter.descendants(chooser.element(), '.' + detail.markers().choiceClass());
     const choiceComps = Arr.map(choices, function (c) {
