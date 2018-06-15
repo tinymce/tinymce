@@ -7,8 +7,8 @@ import * as Sketcher from './Sketcher';
 import { RgbaColour } from '@ephox/acid';
 
 export interface PaletteSketch extends Sketcher.CompositeSketch {
-  refresh: (slider: AlloyComponent) => void;
-  refreshColour: (slider: AlloyComponent, colour: RgbaColour) => void;
+  refresh: (palette: AlloyComponent) => void;
+  refreshColour: (palette: AlloyComponent, colour: RgbaColour) => void;
 }
 
 const Palette = Sketcher.composite({
@@ -17,11 +17,11 @@ const Palette = Sketcher.composite({
   partFields: PaletteParts,
   factory: PaletteUi.sketch,
   apis: {
-    refresh (apis, slider) {
-      apis.refresh(slider);
+    refresh (apis, palette) {
+      apis.refresh(palette);
     },
-    refreshColour (apis, slider, colour) {
-      apis.refreshColour(slider, colour);
+    refreshColour (apis, palette, colour) {
+      apis.refreshColour(palette, colour);
     }
   }
 }) as PaletteSketch;

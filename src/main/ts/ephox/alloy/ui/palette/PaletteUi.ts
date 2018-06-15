@@ -12,6 +12,7 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as GradientActions from '../common/GradientActions';
 
 import { EventFormat, CustomEvent } from '../../events/SimulatedEvent';
+import { HsvColour, RgbaColour } from '@ephox/acid';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
@@ -70,6 +71,8 @@ const sketch = function (detail, components, spec, externals) {
   };
 
   const refreshColour = function (component, colour) {
+    detail.colour().set(colour);
+
     const palette:any = getPalette(component).element().dom();
 
     var ctx1 = palette.getContext('2d');
@@ -98,15 +101,16 @@ const sketch = function (detail, components, spec, externals) {
     const thumb = getThumb(component);
     const edgeProp = 'left';
     // The left check is used so that the first click calls refresh
-    if ((oldValue.x !== newValue.x && oldValue.y !== newValue.y ) || 
+    if ((oldValue.x !== newValue.x || oldValue.y !== newValue.y ) || 
       (Css.getRaw(thumb.element(), edgeProp).isNone()) || Css.getRaw(thumb.element(), edgeProp).isNone()) {
       detail.value().set(newValue);
 
-      const canvas: HTMLCanvasElement = <HTMLCanvasElement>getPalette(component).element().dom();
-      var imageData = canvas.getContext('2d').getImageData(newValue.x, newValue.y, 1, 1).data;
+      const hsvColour = HsvColour.fromRgb(detail.colour().get());
+      const newHsvColour = HsvColour.hsvColour(hsvColour.hue(), newValue.x, (100 - newValue.y));
+      const rgb = RgbaColour.fromHsv(newHsvColour);
       
       refresh(component);
-      detail.onChange()(component, thumb, newValue, imageData);
+      detail.onChange()(component, thumb, newValue, rgb);
       return Option.some(true);
     } else {
       return Option.none();
