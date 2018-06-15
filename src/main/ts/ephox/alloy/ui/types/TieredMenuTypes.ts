@@ -5,6 +5,7 @@ import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { Option } from '@ephox/katamari';
 import { MenuSpec } from './MenuTypes';
+import { ItemDataTuple } from './ItemTypes';
 
 export interface TieredMenuDetail extends SingleSketchDetail {
   uid: () => string;
@@ -89,13 +90,11 @@ export interface TieredData {
   expansions: Record<string, string>;
 }
 
-export type ItemSpec = { value: string; text: string };
-
 export type PartialMenuSpec = Partial<MenuSpec>;
 
 export interface TieredMenuSketcher extends SingleSketch<TieredMenuSpec, TieredMenuDetail> {
   collapseMenu: (menu: any) => void;
   tieredData: (primary: string, menus, expansions: Record<string, string>) => TieredData;
   singleData: (name: string, menu: PartialMenuSpec) => TieredData;
-  collapseItem: (text: string) => ItemSpec;
+  collapseItem: (text: string) => ItemDataTuple;
 }

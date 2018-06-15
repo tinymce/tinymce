@@ -6,6 +6,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SketchSpec } from '../../api/component/SpecTypes';
 import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
 import { KeyingConfig } from '../../api/behaviour/Keying';
+import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 // FIX: Do this (Fix KeyingConfig here)
 export interface MenuMovement {
@@ -46,7 +47,7 @@ export interface MenuSpec extends CompositeSketchSpec {
 
   // TYPIFY
   value: string;
-  items: any[];
+  items: ItemSpec[];
 
   fakeFocus?: boolean;
   markers: {
