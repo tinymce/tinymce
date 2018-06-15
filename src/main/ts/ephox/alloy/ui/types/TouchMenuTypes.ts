@@ -9,8 +9,7 @@ import { PartialMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
 export interface TouchMenuDetail extends CompositeSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   touchmenuBehaviours: () => SketchBehaviours;
 

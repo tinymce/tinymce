@@ -5,8 +5,7 @@ import { SingleSketch, SingleSketchSpec, SingleSketchDetail } from '../../api/ui
 
 export interface DataFieldDetail extends SingleSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   dataBehaviours: () => SketchBehaviours;
   getInitialValue: () => () => any;
 }

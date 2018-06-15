@@ -8,8 +8,7 @@ import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui
 
 export interface TabviewDetail extends SingleSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   tabviewBehaviours: () => SketchBehaviours;
 }
 

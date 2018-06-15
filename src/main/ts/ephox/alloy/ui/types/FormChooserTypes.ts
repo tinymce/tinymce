@@ -9,8 +9,7 @@ import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDeta
 
 export interface FormChooserDetail extends CompositeSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   chooserBehaviours: () => SketchBehaviours;
   markers: () => {
     choiceClass: () => string;

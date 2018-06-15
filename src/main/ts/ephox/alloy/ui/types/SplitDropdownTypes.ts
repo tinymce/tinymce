@@ -9,8 +9,7 @@ import { DropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
 
 export interface SplitDropdownDetail extends DropdownDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   splitDropdownBehaviours: () => SketchBehaviours;
 

@@ -6,8 +6,7 @@ import { Option } from '@ephox/katamari';
 
 export interface HtmlSelectDetail extends SingleSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   selectBehaviours: () => SketchBehaviours;
   options: () => [{ value: string; text: string }];

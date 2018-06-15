@@ -9,8 +9,7 @@ import { CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
 
 export interface ExpandableFormDetail extends CompositeSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   expandableBehaviours: () => SketchBehaviours;
   action: () => Option<() => ExpandableFormAction>;

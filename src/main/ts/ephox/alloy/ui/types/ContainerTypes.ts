@@ -10,8 +10,7 @@ import { EventHandlerConfigRecord } from '../../api/events/AlloyEvents';
 
 export interface ContainerDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   containerBehaviours: () => SketchBehaviours;
   // DEPRECATE:

@@ -8,7 +8,6 @@ import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui
 
 export interface ButtonDetail extends SingleSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
   dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   buttonBehaviours: () => SketchBehaviours;

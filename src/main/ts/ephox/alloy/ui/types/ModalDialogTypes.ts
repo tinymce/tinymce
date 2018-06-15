@@ -9,8 +9,7 @@ import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 export interface ModalDialogDetail extends CompositeSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   modalBehaviours: () => SketchBehaviours;
 

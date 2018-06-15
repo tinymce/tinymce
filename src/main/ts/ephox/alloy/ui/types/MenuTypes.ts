@@ -19,8 +19,7 @@ export interface MenuMovement {
 
 export interface MenuDetail extends CompositeSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   menuBehaviours: () => SketchBehaviours;
 

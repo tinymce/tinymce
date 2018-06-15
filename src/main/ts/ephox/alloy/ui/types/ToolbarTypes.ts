@@ -8,8 +8,7 @@ import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDeta
 
 export interface ToolbarDetail extends CompositeSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   toolbarBehaviours: () => SketchBehaviours;
 
   shell: () => boolean;

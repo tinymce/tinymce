@@ -8,8 +8,7 @@ import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDeta
 
 export interface FormCoupledInputsDetail extends CompositeSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   onLockedChange: () => (me: AlloyComponent, other: AlloyComponent, lock: AlloyComponent) => void;
   markers: () => {

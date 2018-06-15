@@ -10,8 +10,7 @@ export type ButtonAction = (AlloyComponent) => void;
 
 export interface TabButtonDetail extends SingleSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   action: () => Option<ButtonAction>;
   tabButtonBehaviours: () => SketchBehaviours;

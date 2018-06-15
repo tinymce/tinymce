@@ -8,8 +8,7 @@ import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDeta
 
 export interface TabSectionDetail extends CompositeSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   tabSectionBehaviours: () => SketchBehaviours;
 

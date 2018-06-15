@@ -10,8 +10,7 @@ import { InputDetail } from 'ephox/alloy/ui/types/InputTypes';
 
 export interface TypeaheadDetail extends DropdownDetail, InputDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   minChars: () => number;
 

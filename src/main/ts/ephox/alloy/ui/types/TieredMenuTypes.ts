@@ -8,8 +8,7 @@ import { MenuSpec } from './MenuTypes';
 
 export interface TieredMenuDetail extends SingleSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   tmenuBehaviours: () => SketchBehaviours;
 

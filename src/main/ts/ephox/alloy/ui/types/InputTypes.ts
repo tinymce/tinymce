@@ -8,8 +8,7 @@ import { SingleSketch, SingleSketchSpec, SingleSketchDetail } from '../../api/ui
 
 export interface InputDetail extends SingleSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   inputBehaviours: () => SketchBehaviours;
 
   placeholder: () => Option<string>;

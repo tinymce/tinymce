@@ -14,8 +14,7 @@ export interface FormSpec extends CompositeSketchSpec {
 
 export interface FormDetail extends CompositeSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   formBehaviours: () => SketchBehaviours;
 }
 

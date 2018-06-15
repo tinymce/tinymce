@@ -9,8 +9,7 @@ import { ToolbarGroupSpec } from '../../ui/types/ToolbarGroupTypes';
 
 export interface SplitToolbarDetail extends CompositeSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   splitToolbarBehaviours: () => SketchBehaviours;
 

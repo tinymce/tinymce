@@ -9,8 +9,7 @@ import { SugarElement } from '../../alien/TypeDefinitions';
 
 export interface InlineViewDetail extends SingleSketchDetail {
   uid: () => string;
-  // FIX: Completed DOM tpye.
-  dom: () => any;
+  dom: () => RawDomSchema;
   components: () => AlloySpec[ ];
   inlineBehaviours: () => SketchBehaviours;
   onShow: () => (component: AlloyComponent) => void;
