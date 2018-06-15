@@ -9,7 +9,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { document, setTimeout } from '@ephox/dom-globals';
 
-export default <any> () => {
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');

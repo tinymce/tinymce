@@ -20,8 +20,7 @@ const nu = (parts) => {
 };
 
 const all = (handlers, f) => {
-  return () => {
-    const args = Array.prototype.slice.call(arguments, 0);
+  return (...args) => {
     return Arr.foldl(handlers, (acc, handler) => {
       return acc && f(handler).apply(undefined, args);
     }, true);
@@ -29,8 +28,7 @@ const all = (handlers, f) => {
 };
 
 const any = (handlers, f) => {
-  return () => {
-    const args = Array.prototype.slice.call(arguments, 0);
+  return (...args) => {
     return Arr.foldl(handlers, (acc, handler) => {
       return acc || f(handler).apply(undefined, args);
     }, false);
@@ -54,8 +52,7 @@ const fuse = (handlers) => {
     return handler.abort;
   });
 
-  const run = () => {
-    const args = Array.prototype.slice.call(arguments, 0);
+  const run = (...args) => {
     Arr.each(handlers, (handler) => {
       // ASSUMPTION: Return value is unimportant.
       handler.run.apply(undefined, args);

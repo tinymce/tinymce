@@ -8,7 +8,7 @@ import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
 import { document, console } from '@ephox/dom-globals';
 
-export default <any> () => {
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');

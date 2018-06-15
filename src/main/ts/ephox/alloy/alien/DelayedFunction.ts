@@ -3,8 +3,7 @@ import { setTimeout, clearTimeout } from "@ephox/dom-globals";
 export default (fun: (any) => void, delay: number): { cancel: () => void; schedule: (...any) => void } => {
   let ref = null;
 
-  const schedule = function (...any): void {
-    const args = arguments;
+  const schedule = (...args): void => {
     ref = setTimeout(() => {
       fun.apply(null, args);
       ref = null;

@@ -36,12 +36,12 @@ const onPresenceHandler = (label: string, fieldName: string, presence: any): Fie
     presence,
     // Apply some wrapping to their supplied function
     ValueSchema.valueOf((f) => {
-      return Result.value(() => {
+      return Result.value((...args) => {
         /*
          * This line is just for debugging information
          */
         Debugging.logHandler(label, fieldName, trace);
-        return f.apply(undefined, arguments);
+        return f.apply(undefined, ...args);
       });
     })
   );

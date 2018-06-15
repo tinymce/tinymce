@@ -36,8 +36,8 @@ const createModes = (modes, name, active, apis, extra, state): AlloyBehaviour =>
 };
 
 const wrapApi = (bName, apiFunction, apiName) => {
-  const f = (component) => {
-    const args = arguments;
+  const f = (component, ...rest) => {
+    const args = [ component ].concat(rest);
     return component.config({
       name: Fun.constant(bName)
     }).fold(

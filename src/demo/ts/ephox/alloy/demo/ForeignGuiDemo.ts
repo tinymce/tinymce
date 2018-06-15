@@ -31,7 +31,7 @@ const resize = (element, changeX, changeY) => {
   Css.set(element, 'height', (height + changeY) + 'px');
 };
 
-export default <any> () => {
+export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
   const platform = PlatformDetection.detect();
 

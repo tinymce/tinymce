@@ -15,7 +15,7 @@ import HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as Writer from 'ephox/alloy/frame/Writer';
 import { document } from '@ephox/dom-globals';
 
-export default <any> () => {
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Css.set(gui.element(), 'direction', 'rtl');

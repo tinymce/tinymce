@@ -21,8 +21,8 @@ export interface GuiSystem {
   destroy: () => void;
   add: (component: AlloyComponent) => void;
   remove: (component: AlloyComponent) => void;
-  getByUid: (uid: string) => Result<AlloyComponent, string>;
-  getByDom: (element: SugarElement) => Result<AlloyComponent, any>;
+  getByUid: (uid: string) => Result<AlloyComponent, string | Error>;
+  getByDom: (element: SugarElement) => Result<AlloyComponent, string | Error>;
 
   addToWorld: (AlloyComponent) => void;
   removeFromWorld: (AlloyComponent) => void;

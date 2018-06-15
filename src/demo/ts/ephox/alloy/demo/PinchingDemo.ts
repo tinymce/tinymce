@@ -5,7 +5,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 
-export default <any> () => {
+export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
   // Naive resize handler

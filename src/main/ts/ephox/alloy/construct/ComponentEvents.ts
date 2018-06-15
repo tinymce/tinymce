@@ -50,8 +50,8 @@ const combine = (info, eventOrder, behaviours, base): Result<{[key: string]: { [
 
 const assemble = (rawHandler) => {
   const handler = EventHandler.read(rawHandler);
-  return (component, simulatedEvent/*, others */) => {
-    const args = Array.prototype.slice.call(arguments, 0);
+  return (component, simulatedEvent, ...rest) => {
+    const args = [ component, simulatedEvent ].concat(rest);
     if (handler.abort.apply(undefined, args)) {
       simulatedEvent.stop();
     } else if (handler.can.apply(undefined, args)) {

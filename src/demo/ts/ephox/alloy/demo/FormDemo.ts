@@ -18,7 +18,7 @@ import DemoFields from './forms/DemoFields';
 import { document, console, setTimeout } from '@ephox/dom-globals';
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
-export default <any> () => {
+export default (): void => {
   const gui = Gui.create();
   const body = Element.fromDom(document.body);
   Class.add(gui.element(), 'gui-root-demo-container');

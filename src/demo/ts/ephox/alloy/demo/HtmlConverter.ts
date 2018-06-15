@@ -11,7 +11,7 @@ import { Input } from 'ephox/alloy/api/ui/Input';
 import { JSON as Json } from '@ephox/sand';
 import { SelectorFind } from '@ephox/sugar';
 
-export default <any> () => {
+export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
 // TODO: Change this to match the simplified UI templating model we have now including text

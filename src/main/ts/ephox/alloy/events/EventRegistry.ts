@@ -14,7 +14,7 @@ const messageHandler = (id, handler) => {
   };
 };
 
-export default <any> () => {
+export default () => {
   const registry = { };
 
   const registerId = (extraArgs, id, events) => {
