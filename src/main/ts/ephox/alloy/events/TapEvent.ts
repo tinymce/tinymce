@@ -19,7 +19,7 @@ const getTouch = (event: SugarEvent): Option<Touch> => {
 };
 
 // Check to see if the touch has changed a *significant* amount
-const isFarEnough = (touch: Touch, data: TouchHistoryData) => {
+const isFarEnough = (touch: Touch, data: TouchHistoryData): boolean => {
   const distX = Math.abs(touch.clientX - data.x());
   const distY = Math.abs(touch.clientY - data.y());
   return distX > SIGNIFICANT_MOVE || distY > SIGNIFICANT_MOVE;

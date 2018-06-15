@@ -1,9 +1,12 @@
 import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { console } from '@ephox/dom-globals';
 
-const iframeDoc = (element) => {
-  const dom = element.dom();
+import { console, HTMLFrameElement } from '@ephox/dom-globals';
+import { Element, Traverse } from '@ephox/sugar';
+import { SugarElement } from 'ephox/alloy/api/Main';
+import { SugarDocument } from 'ephox/alloy/alien/TypeDefinitions';
+
+const iframeDoc = (element: SugarElement): Option<SugarDocument> => {
+  const dom = element.dom() as HTMLFrameElement;
   try {
     const idoc = dom.contentWindow ? dom.contentWindow.document : dom.contentDocument;
     return idoc !== undefined && idoc !== null ? Option.some(Element.fromDom(idoc)) : Option.none();
@@ -15,12 +18,11 @@ const iframeDoc = (element) => {
   }
 };
 
-const doc = (element) => {
+const doc = (element: SugarElement): SugarDocument => {
   const optDoc = iframeDoc(element);
-  return optDoc.fold(() => {
-    return element;
-  }, (v) => {
-    return v;
+  return optDoc.getOrThunk(() => {
+    // INVESTIGATE: This is new, but there is nothing else than can be done here atm. Rethink.
+    return Traverse.owner(element) as SugarDocument;
   });
 };
 

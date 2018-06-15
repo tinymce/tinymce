@@ -9,9 +9,10 @@ import * as CompBehaviours from '../api/component/CompBehaviours';
 import BehaviourBlob from '../behaviour/common/BehaviourBlob';
 import * as ComponentEvents from '../construct/ComponentEvents';
 import { SketchSpec } from '../api/component/SpecTypes';
+import { SugarElement } from 'ephox/alloy/api/Main';
 
 export default () => {
-  const getEvents = (elem, spec: SketchSpec) => {
+  const getEvents = (elem: SugarElement, spec: SketchSpec) => {
     const evts = DomState.getOrCreate(elem, () => {
       // If we haven't already setup this particular element, then generate any state and config
       // required by its behaviours and put it in the cache.

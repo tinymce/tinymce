@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, Height, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
@@ -10,7 +10,7 @@ import * as KeyRules from '../navigation/KeyRules';
 import * as KeyingType from './KeyingType';
 
 const create = (cyclicField) => {
-  const schema = [
+  const schema: FieldProcessorAdt[] = [
     FieldSchema.option('onEscape'),
     FieldSchema.option('onEnter'),
     FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]'),
