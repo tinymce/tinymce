@@ -1,8 +1,11 @@
 import { Fun, Merger, Option } from '@ephox/katamari';
 
+import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import DropdownSchema from '../../ui/schema/DropdownSchema';
+import { DropdownDetail, DropdownSketcher, DropdownSpec } from '../../ui/types/DropdownTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Composing } from '../behaviour/Composing';
 import { Coupling } from '../behaviour/Coupling';
@@ -12,9 +15,6 @@ import { Keying } from '../behaviour/Keying';
 import { Toggling } from '../behaviour/Toggling';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
-import { SketchSpec, LooseSpec, AlloySpec } from '../../api/component/SpecTypes';
-import { DropdownSketcher, DropdownDetail, DropdownSpec } from '../../ui/types/DropdownTypes';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
   const switchToMenu = (sandbox) => {

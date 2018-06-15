@@ -1,12 +1,13 @@
-import { Option, Cell, Result, Future } from '@ephox/katamari';
+import { Cell, Future, Option, Result } from '@ephox/katamari';
+import { DropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
+import { InputDetail } from 'ephox/alloy/ui/types/InputTypes';
+import { TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SketchSpec, LooseSpec } from '../../api/component/SpecTypes';
-import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
-import { DropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
-import { InputDetail } from 'ephox/alloy/ui/types/InputTypes';
+import { AlloySpec, LooseSpec, RawDomSchema } from '../../api/component/SpecTypes';
+import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 export interface TypeaheadDetail extends DropdownDetail, InputDetail<TypeaheadData> {
   uid: () => string;
@@ -46,8 +47,7 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   }
 
   parts: {
-    // INVESTIGATE using Partial<TieredMenuSpec> here.
-    menu: LooseSpec;
+    menu: Partial<TieredMenuSpec>;
   }
 
   dismissOnBlur?: boolean;

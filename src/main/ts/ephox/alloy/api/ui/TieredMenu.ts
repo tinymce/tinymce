@@ -1,18 +1,17 @@
 import { FieldSchema, Objects } from '@ephox/boulder';
 import { Id } from '@ephox/katamari';
+import { ItemDataTuple } from 'ephox/alloy/ui/types/ItemTypes';
+import { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
 
 import * as Fields from '../../data/Fields';
 import * as TieredMenuSpec from '../../ui/single/TieredMenuSpec';
+import { TieredData, TieredMenuRecord, TieredMenuSketcher } from '../../ui/types/TieredMenuTypes';
 import { Composing } from '../behaviour/Composing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { single, SingleSketch } from './Sketcher';
-import { RawDomSchema, LooseSpec } from '../component/SpecTypes';
-import { TieredMenuSketcher, TieredMenuRecord, TieredData } from '../../ui/types/TieredMenuTypes';
-import { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
-import { ItemDataTuple } from 'ephox/alloy/ui/types/ItemTypes';
+import { single } from './Sketcher';
 
 const tieredData = (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>): TieredData => {
   return {

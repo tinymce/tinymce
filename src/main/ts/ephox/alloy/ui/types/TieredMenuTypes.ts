@@ -1,11 +1,12 @@
+import { Option } from '@ephox/katamari';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, LooseSpec, RawDomSchema } from '../../api/component/SpecTypes';
+import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { Option } from '@ephox/katamari';
-import { MenuSpec } from './MenuTypes';
 import { ItemDataTuple } from './ItemTypes';
+import { MenuSpec } from './MenuTypes';
 
 export interface TieredMenuDetail extends SingleSketchDetail {
   uid: () => string;

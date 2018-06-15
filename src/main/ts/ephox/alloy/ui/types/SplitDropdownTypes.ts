@@ -6,6 +6,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SketchSpec, LooseSpec } from '../../api/component/SpecTypes';
 import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
 import { DropdownDetail } from 'ephox/alloy/ui/types/DropdownTypes';
+import { TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
 export interface SplitDropdownDetail extends DropdownDetail {
   uid: () => string;
@@ -33,8 +34,7 @@ export interface SplitDropdownSpec extends CompositeSketchSpec {
   toggleClass: string;
 
   parts: {
-    // INVESTIGATE using Partial<TieredMenuSpec> here.
-    menu: LooseSpec;
+    menu: Partial<TieredMenuSpec>;
   }
 }
 

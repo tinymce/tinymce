@@ -1,12 +1,17 @@
 import { Objects } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
+import {
+  CompositeSketchDetail,
+  CompositeSketchSpec,
+  SingleSketchDetail,
+  SingleSketchSpec,
+} from 'ephox/alloy/api/ui/Sketcher';
 
 import { AdtInterface } from '../../alien/TypeDefinitions';
+import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as Tagger from '../../registry/Tagger';
 import * as SpecSchema from '../../spec/SpecSchema';
-import { SimpleSpec, SketchSpec, RawDomSchema, SimpleOrSketchSpec, AlloySpec, LooseSpec } from '../../api/component/SpecTypes';
-import { SingleSketchDetail, CompositeSketchDetail, SingleSketchSpec, CompositeSketchSpec } from 'ephox/alloy/api/ui/Sketcher';
 
 export type SingleSketchFactory<D extends SingleSketchDetail, S extends SingleSketchSpec> = (detail: D, specWithUid: S) => SketchSpec;
 export type CompositeSketchFactory<D extends CompositeSketchDetail, S extends CompositeSketchSpec> = (detail: D, components: AlloySpec[], spec: S, externals: any) => SketchSpec;

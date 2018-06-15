@@ -1,10 +1,11 @@
-import { Option } from '@ephox/katamari';
+import { TabButtonSpec } from 'ephox/alloy/ui/types/TabButtonTypes';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SketchSpec, LooseSpec } from '../../api/component/SpecTypes';
-import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
+import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
+import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import { TabButtonWithViewSpec } from 'ephox/alloy/ui/types/TabbarTypes';
 
 export interface TabSectionDetail extends CompositeSketchDetail {
   uid: () => string;
@@ -25,8 +26,7 @@ export interface TabSectionSpec extends CompositeSketchSpec {
   components?: AlloySpec[];
   tabSectionBehaviours?: AlloyBehaviourRecord;
 
-  // TODO: Make this nicer.
-  tabs: LooseSpec;
+  tabs: Partial<TabButtonWithViewSpec>[];
   selectFirst?: boolean;
 }
 

@@ -9,6 +9,7 @@ import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Replacing } from '../../api/behaviour/Replacing';
 import { Representing } from '../../api/behaviour/Representing';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as GuiFactory from '../../api/component/GuiFactory';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -16,15 +17,12 @@ import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as FocusManagers from '../../api/focus/FocusManagers';
 import { Menu } from '../../api/ui/Menu';
+import { SingleSketchFactory } from '../../api/ui/UiSketcher';
+import { CustomEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { LayeredState } from '../../menu/layered/LayeredState';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
-
-import { EventFormat, CustomEvent, NativeSimulatedEvent, CustomSimulatedEvent } from '../../events/SimulatedEvent';
-import { TieredMenuDetail, TieredMenuSpec, PartialMenuSpec } from '../../ui/types/TieredMenuTypes';
-import { SingleSketchFactory } from '../../api/ui/UiSketcher';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { LooseSpec } from '../../api/component/SpecTypes';
+import { PartialMenuSpec, TieredMenuDetail, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
 
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, rawUiSpec) => {
   const buildMenus = (container: AlloyComponent, menus: Record<string, PartialMenuSpec>): Record<string, AlloyComponent> => {

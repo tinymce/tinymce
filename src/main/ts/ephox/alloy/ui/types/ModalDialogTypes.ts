@@ -3,8 +3,8 @@ import { Option, Result } from '@ephox/katamari';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SketchSpec, LooseSpec } from '../../api/component/SpecTypes';
-import { SingleSketch, CompositeSketchSpec, CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
+import { AlloySpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 export interface ModalDialogDetail extends CompositeSketchDetail {
@@ -35,7 +35,9 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
   dragBlockClass?: string;
 
   parts: {
-    blocker?: LooseSpec;
+    blocker: {
+      dom?: Partial<RawDomSchema>;
+    }
   }
 }
 

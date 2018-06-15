@@ -1,7 +1,7 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Merger, Obj } from '@ephox/katamari';
 
-import { AlloySpec, SketchSpec, LooseSpec } from '../../api/component/SpecTypes';
+import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
