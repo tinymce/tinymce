@@ -10,7 +10,7 @@ export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour {
   markInvalid: (Component: AlloyComponent) => void;
   query: <T>(Component: AlloyComponent) => Future<T>;
   run: <T>(Component: AlloyComponent) => Future<T>;
-  validation: (validate: <T, E>(v: string) => Result<T, E>) => (component: AlloyComponent) => any;
+  validation: <T>(validate: (v: string) => Result<T, string>) => (component: AlloyComponent) => Future<Result<T, string>>;
 }
 
 export interface InvalidatingConfigSpec {

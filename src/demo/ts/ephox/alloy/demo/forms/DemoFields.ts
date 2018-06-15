@@ -19,7 +19,7 @@ import * as Tagger from 'ephox/alloy/registry/Tagger';
 import DemoRenders from './DemoRenders';
 import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 
-const invalidation = function (validate, invalidUid) {
+const invalidation = function (validate: (v: string) => Result<Record<string, string>, string>, invalidUid: string) {
   return Invalidating.config({
     invalidClass: 'invalid-input',
     notify: {
@@ -28,7 +28,7 @@ const invalidation = function (validate, invalidUid) {
       }
     },
     validator: {
-      validate: Invalidating.validation(validate),
+      validate: Invalidating.validation<Record<string, string>>(validate),
       onEvent: NativeEvents.input()
     }
   });
