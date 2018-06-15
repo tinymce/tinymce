@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import { Coupling } from '../../api/behaviour/Coupling';
@@ -11,7 +11,7 @@ import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 import { DropdownDetail } from '../types/DropdownTypes';
 
-const schema = Fun.constant([
+const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('dom'),
   FieldSchema.strict('fetch'),
   Fields.onHandler('onOpen'),
@@ -23,7 +23,7 @@ const schema = Fun.constant([
   FieldSchema.option('role')
 ]);
 
-const parts = Fun.constant([
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.external({
     schema: [
       Fields.tieredMenuMarkers()
@@ -39,7 +39,7 @@ const parts = Fun.constant([
   InternalSink.partType()
 ]);
 
-const name = Fun.constant('Dropdown');
+const name = () => 'Dropdown';
 export default <any> {
   name,
   schema,

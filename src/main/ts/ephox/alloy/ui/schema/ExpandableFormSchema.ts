@@ -11,6 +11,8 @@ import { Button } from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
+import { ExpandableFormDetail } from 'ephox/alloy/ui/types/ExpandableFormTypes';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.markers([
@@ -29,8 +31,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   SketchBehaviours.field('expandableBehaviours', [ Representing ])
 ]);
 
-// TODO: Remove dupe with ExpandableForm
-const runOnExtra = (detail, operation) => {
+const runOnExtra = (detail: ExpandableFormDetail, operation: (AlloyComponent) => void): (AlloyComponent) => void => {
   return (anyComp) => {
     AlloyParts.getPart(anyComp, detail, 'extra').each(operation);
   };
@@ -47,7 +48,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     // factory: Form,
     schema: [ FieldSchema.strict('dom') ],
     name: 'extra',
-    overrides (detail) {
+    overrides (detail: ExpandableFormDetail) {
       return {
         behaviours: Behaviour.derive([
           Sliding.config({
@@ -59,7 +60,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             shrinkingClass: detail.markers().shrinkingClass(),
             growingClass: detail.markers().growingClass(),
             expanded: true,
-            onStartShrink (extra) {
+            onStartShrink (extra: AlloyComponent) {
               // If the focus is inside the extra part, move the focus to the expander button
               Focus.search(extra.element()).each((_) => {
                 const comp = extra.getSystem().getByUid(detail.uid()).getOrDie();
@@ -71,19 +72,19 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
                 Class.add(form.element(), detail.markers().collapsedClass());
               });
             },
-            onStartGrow (extra) {
+            onStartGrow (extra: AlloyComponent) {
               extra.getSystem().getByUid(detail.uid()).each((form) => {
                 Class.add(form.element(), detail.markers().expandedClass());
                 Class.remove(form.element(), detail.markers().collapsedClass());
               });
             },
-            onShrunk (extra) {
+            onShrunk (extra: AlloyComponent) {
               detail.onShrunk()(extra);
             },
-            onGrown (extra) {
+            onGrown (extra: AlloyComponent) {
               detail.onGrown()(extra);
             },
-            getAnimationRoot (extra) {
+            getAnimationRoot (extra: AlloyComponent) {
               return extra.getSystem().getByUid(detail.uid()).getOrDie().element();
             }
           })
@@ -109,7 +110,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   })
 ]);
 
-const name = Fun.constant('ExpandableForm');
+const name = () => 'ExpandableForm';
 
 export {
   name,

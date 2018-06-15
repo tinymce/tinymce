@@ -13,17 +13,18 @@ import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
 import { FormCoupledInputsDetail } from 'ephox/alloy/ui/types/FormCoupledInputsTypes';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onStrictHandler('onLockedChange'),
   Fields.markers([ 'lockClass' ])
 ]);
 
-const getField = (comp, detail: FormCoupledInputsDetail, partName) => {
+const getField = (comp: AlloyComponent, detail: FormCoupledInputsDetail, partName: string) => {
   return AlloyParts.getPart(comp, detail, partName).bind(Composing.getCurrent);
 };
 
-const coupledPart = (selfName, otherName) => {
+const coupledPart = (selfName: string, otherName: string) => {
   return PartType.required({
     factory: FormField,
     name: selfName,
@@ -71,7 +72,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   })
 ]);
 
-const name = Fun.constant('CoupledInputs');
+const name = () => 'CoupledInputs';
 
 export {
   name,

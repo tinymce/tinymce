@@ -15,6 +15,18 @@ export interface ExpandableFormDetail extends CompositeSketchDetail {
   action: () => Option<() => ExpandableFormAction>;
   role: () => Option<string>;
   eventOrder: () => Record<string, string[]>
+
+  markers: () => {
+    closedClass: () => string;
+    openClass: () => string;
+    shrinkingClass: () => string;
+    growingClass: () => string;
+    expandedClass: () => string;
+    collapsedClass: () => string;
+  };
+
+  onShrunk: () => (extra: AlloyComponent) => void;
+  onGrown: () => (extra: AlloyComponent) => void;
 }
 
 export type ExpandableFormAction = (AlloyComponent) => void;
@@ -35,8 +47,8 @@ export interface ExpandableFormSpec {
     collapsedClass: string;
   };
 
-  onShrunk?: () => any;
-  onGrown?: () => any;
+  onShrunk?: (extra: AlloyComponent) => void;
+  onGrown?: (extra: AlloyComponent) => void;
 }
 
 export interface ExpandableFormSketcher extends CompositeSketch<ExpandableFormSpec, ExpandableFormDetail> {

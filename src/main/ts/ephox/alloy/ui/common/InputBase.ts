@@ -65,7 +65,7 @@ const behaviours = <V>(detail: InputDetail<V>): Behaviour.AlloyBehaviourRecord =
   );
 };
 
-const dom = (detail: InputDetail<any>): RawDomSchema => {
+const dom = <V>(detail: InputDetail<V>): RawDomSchema => {
   return {
     tag: detail.tag(),
     attributes: Merger.deepMerge(
