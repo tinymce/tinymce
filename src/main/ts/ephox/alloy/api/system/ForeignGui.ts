@@ -10,6 +10,7 @@ import * as GuiFactory from '../component/GuiFactory';
 import * as Gui from './Gui';
 import { SugarElement, SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { UncurriedHandler } from 'ephox/alloy/events/EventRegistry';
 
 export interface ForeignGuiSpec {
   root: () => SugarElement;
@@ -111,13 +112,13 @@ const engage = (spec: ForeignGuiSpec) => {
     });
   });
 
-  const proxyFor = (event, target, descHandler) => {
+  const proxyFor = (event, target, descHandler: UncurriedHandler) => {
     // create a simple alloy wrapping around the element, and add it to the world
     const proxy = getProxy(event, target);
     const component = proxy.component();
     gui.addToWorld(component);
     // fire the event
-    const handler = DescribedHandler.getHandler(descHandler);
+    const handler = descHandler.handler;
     handler(component, proxy.simulatedEvent());
 
     // now remove from the world and revoke any alloy ids
