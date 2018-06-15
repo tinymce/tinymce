@@ -178,7 +178,7 @@ UnitTest.test('DimensionTest', function() {
   // Aggregator test
   // Dimension.agregate takes an element and a list of propeties that return measurement values.
   // it will accumulatively add all the properties and return a cumulative total.
-  var dim = Dimension();
+  var dim = Dimension('internal', () => 1);
   var ctotal = dim.aggregate(container, [ 'padding-top', 'margin-bottom', 'border-top-width', 'border-bottom-width' ]);
   assert.eq( ( paddingTop + marginBottom + borderWidth + borderWidth ), ctotal);
 

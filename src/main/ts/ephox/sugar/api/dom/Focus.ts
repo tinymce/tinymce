@@ -4,18 +4,18 @@ import Compare from './Compare';
 import Element from '../node/Element';
 import PredicateExists from '../search/PredicateExists';
 import Traverse from '../search/Traverse';
-import { document } from '@ephox/dom-globals';
+import { document, HTMLElement, Document } from '@ephox/dom-globals';
 
 var focus = function (element: Element) {
-  element.dom().focus();
+  (element.dom() as HTMLElement).focus();
 };
 
 var blur = function (element: Element) {
-  element.dom().blur();
+  (element.dom() as HTMLElement).blur();
 };
 
 var hasFocus = function (element: Element) {
-  var doc = Traverse.owner(element).dom();
+  var doc = Traverse.owner(element).dom() as Document;
   return element.dom() === doc.activeElement;
 };
 

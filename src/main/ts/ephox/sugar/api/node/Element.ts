@@ -1,12 +1,12 @@
 import { Fun } from '@ephox/katamari';
 import { Option } from '@ephox/katamari';
-import { document, console, HTMLDocument, Node, Window, Document } from '@ephox/dom-globals';
+import { document, console, Node, Window, Document } from '@ephox/dom-globals';
 
 interface Element {
   dom: () => any;
 }
 
-const fromHtml = function (html: string, scope?: HTMLDocument): Element {
+const fromHtml = function (html: string, scope?: Document): Element {
   const doc = scope || document;
   const div = doc.createElement('div');
   div.innerHTML = html;
@@ -17,13 +17,13 @@ const fromHtml = function (html: string, scope?: HTMLDocument): Element {
   return fromDom(div.childNodes[0]);
 };
 
-const fromTag = function (tag: string, scope?: HTMLDocument): Element {
+const fromTag = function (tag: string, scope?: Document): Element {
   const doc = scope || document;
   const node = doc.createElement(tag);
   return fromDom(node);
 };
 
-const fromText = function (text: string, scope?: HTMLDocument): Element {
+const fromText = function (text: string, scope?: Document): Element {
   const doc = scope || document;
   const node = doc.createTextNode(text);
   return fromDom(node);

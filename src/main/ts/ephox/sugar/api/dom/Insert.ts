@@ -41,7 +41,7 @@ const appendAt = function (parent: Element, element: Element, index: number) {
   });
 };
 
-const wrap = function (element, wrapper) {
+const wrap = function (element: Element, wrapper: Element) {
   before(element, wrapper);
   append(wrapper, element);
 };

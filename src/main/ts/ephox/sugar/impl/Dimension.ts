@@ -2,11 +2,10 @@ import { Type } from '@ephox/katamari';
 import { Arr } from '@ephox/katamari';
 import Css from '../api/properties/Css';
 import Style from './Style';
+import Element from '../api/node/Element';
 
-
-
-export default <any> function (name, getOffset) {
-  var set = function (element, h) {
+export default function (name: string, getOffset: (e: Element) => number) {
+  var set = function (element: Element, h: number | string) {
     if (!Type.isNumber(h) && !h.match(/^[0-9]+$/)) throw name + '.set accepts only positive integer values. Value was ' + h;
     var dom = element.dom();
     if (Style.isSupported(dom)) dom.style[name] = h + 'px';
@@ -43,7 +42,7 @@ export default <any> function (name, getOffset) {
 */
 
 
-  var get = function (element) {
+  var get = function (element: Element) {
     var r = getOffset(element);
 
     // zero or null means non-standard or disconnected, fall back to CSS
@@ -59,7 +58,7 @@ export default <any> function (name, getOffset) {
   // although these calculations only seem relevant for quirks mode, and edge cases TBIO doesn't rely on
   var getOuter = get;
 
-  var aggregate = function (element, properties) {
+  var aggregate = function (element: Element, properties) {
     return Arr.foldl(properties, function (acc, property) {
       var val = Css.get(element, property);
       var value = val === undefined ? 0: parseInt(val, 10);
@@ -67,7 +66,7 @@ export default <any> function (name, getOffset) {
     }, 0);
   };
 
-  var max = function (element, value, properties) {
+  var max = function (element: Element, value, properties) {
     var cumulativeInclusions = aggregate(element, properties);
     // if max-height is 100px and your cumulativeInclusions is 150px, there is no way max-height can be 100px, so we return 0.
     var absoluteMax = value > cumulativeInclusions ? value - cumulativeInclusions : 0;
@@ -75,10 +74,10 @@ export default <any> function (name, getOffset) {
   };
 
   return {
-    set: set,
-    get: get,
-    getOuter: getOuter,
-    aggregate: aggregate,
-    max: max
+    set,
+    get,
+    getOuter,
+    aggregate,
+    max,
   };
 };

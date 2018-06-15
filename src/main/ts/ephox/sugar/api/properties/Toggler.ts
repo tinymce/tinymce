@@ -1,6 +1,6 @@
 
 
-export default <any> function (turnOff, turnOn, initial) {
+export default function (turnOff: () => void, turnOn: () => void, initial: boolean) {
   var active = initial || false;
 
   var on = function () {

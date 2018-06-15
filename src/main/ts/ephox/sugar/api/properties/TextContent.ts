@@ -1,13 +1,16 @@
+import Element from "../node/Element";
+import { Node } from "@ephox/dom-globals";
+
 // REQUIRES IE9
-var get = function (element) {
-  return element.dom().textContent;
+var get = function (element: Element) {
+  return (element.dom() as Node).textContent;
 };
 
-var set = function (element, value) {
-  element.dom().textContent = value;
+var set = function (element: Element, value: string) {
+  (element.dom() as Node).textContent = value;
 };
 
-export default <any> {
-  get: get,
-  set: set
+export default {
+  get,
+  set,
 };

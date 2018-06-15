@@ -1,59 +1,61 @@
 import { Arr } from '@ephox/katamari';
 import Class from './Class';
 import ClassList from '../../impl/ClassList';
+import Element from '../node/Element';
+import { Element as DomElement } from '@ephox/dom-globals';
 
 /*
  * ClassList is IE10 minimum:
  * https://developer.mozilla.org/en-US/docs/Web/API/Element.classList
  */
-var add = function (element, classes) {
+var add = function (element: Element, classes: string[]) {
   Arr.each(classes, function (x) {
     Class.add(element, x);
   });
 };
 
-var remove = function (element, classes) {
+var remove = function (element: Element, classes: string[]) {
   Arr.each(classes, function (x) {
     Class.remove(element, x);
   });
 };
 
-var toggle = function (element, classes) {
+var toggle = function (element: Element, classes: string[]) {
   Arr.each(classes, function (x) {
     Class.toggle(element, x);
   });
 };
 
-var hasAll = function (element, classes) {
+var hasAll = function (element: Element, classes: string[]) {
   return Arr.forall(classes, function (clazz) {
     return Class.has(element, clazz);
   });
 };
 
-var hasAny = function (element, classes) {
+var hasAny = function (element: Element, classes: string[]) {
   return Arr.exists(classes, function (clazz) {
     return Class.has(element, clazz);
   });
 };
 
-var getNative = function (element) {
-  var classList = element.dom().classList;
-  var r = new Array(classList.length);
+var getNative = function (element: Element) {
+  var classList = (element.dom() as DomElement).classList;
+  var r: string[] = new Array(classList.length);
   for (var i = 0; i < classList.length; i++) {
     r[i] = classList.item(i);
   }
   return r;
 };
 
-var get = function (element) {
+var get = function (element: Element) {
   return ClassList.supports(element) ? getNative(element) : ClassList.get(element);
 };
 
-export default <any> {
-  add: add,
-  remove: remove,
-  toggle: toggle,
-  hasAll: hasAll,
-  hasAny: hasAny,
-  get: get
+export default {
+  add,
+  remove,
+  toggle,
+  hasAll,
+  hasAny,
+  get,
 };

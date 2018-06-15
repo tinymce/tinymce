@@ -1,6 +1,8 @@
 import Toggler from './Toggler';
 import Attr from './Attr';
 import ClassList from '../../impl/ClassList';
+import Element from '../node/Element';
+import { Element as DomElement } from '@ephox/dom-globals';
 
 /*
  * ClassList is IE10 minimum:
@@ -10,12 +12,12 @@ import ClassList from '../../impl/ClassList';
  * If it did, the toggler could be better.
  */
 
-var add = function (element, clazz) {
+var add = function (element: Element, clazz: string) {
   if (ClassList.supports(element)) element.dom().classList.add(clazz);
   else ClassList.add(element, clazz);
 };
 
-var cleanClass = function (element) {
+var cleanClass = function (element: Element) {
   var classList = ClassList.supports(element) ? element.dom().classList : ClassList.get(element);
   // classList is a "live list", so this is up to date already
   if (classList.length === 0) {
@@ -24,7 +26,7 @@ var cleanClass = function (element) {
   }
 };
 
-var remove = function (element, clazz) {
+var remove = function (element: Element, clazz: string) {
   if (ClassList.supports(element)) {
     var classList = element.dom().classList;
     classList.remove(clazz);
@@ -34,12 +36,12 @@ var remove = function (element, clazz) {
   cleanClass(element);
 };
 
-var toggle = function (element, clazz) {
-  return ClassList.supports(element) ? element.dom().classList.toggle(clazz) :
+var toggle = function (element: Element, clazz: string) {
+  return ClassList.supports(element) ? (element.dom() as DomElement).classList.toggle(clazz) :
                                        ClassList.toggle(element, clazz);
 };
 
-var toggler = function (element, clazz) {
+var toggler = function (element: Element, clazz: string) {
   var hasClasslist = ClassList.supports(element);
   var classList = element.dom().classList;
   var off = function () {
@@ -53,15 +55,15 @@ var toggler = function (element, clazz) {
   return Toggler(off, on, has(element, clazz));
 };
 
-var has = function (element, clazz) {
+var has = function (element: Element, clazz: string) {
   // Cereal has a nasty habit of calling this with a text node >.<
-  return ClassList.supports(element) && element.dom().classList.contains(clazz);
+  return ClassList.supports(element) && (element.dom() as DomElement).classList.contains(clazz);
 };
 
-export default <any> {
-  add: add,
-  remove: remove,
-  toggle: toggle,
-  toggler: toggler,
-  has: has
+export default {
+  add,
+  remove,
+  toggle,
+  toggler,
+  has,
 };

@@ -72,13 +72,13 @@ var transfer = function (source, destination, attrs) {
   });
 };
 
-export default <any> {
-  clone: clone,
-  set: set,
-  setAll: setAll,
-  get: get,
-  has: has,
-  remove: remove,
-  hasNone: hasNone,
-  transfer: transfer
+export default {
+  clone,
+  set,
+  setAll,
+  get,
+  has,
+  remove,
+  hasNone,
+  transfer,
 };

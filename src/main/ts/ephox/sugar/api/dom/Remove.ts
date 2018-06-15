@@ -2,6 +2,7 @@ import { Arr } from '@ephox/katamari';
 import InsertAll from './InsertAll';
 import Traverse from '../search/Traverse';
 import Element from '../node/Element';
+import { Node } from '@ephox/dom-globals';
 
 const empty = function (element: Element) {
   // shortcut "empty node" trick. Requires IE 9.
@@ -17,7 +18,7 @@ const empty = function (element: Element) {
 };
 
 const remove = function (element: Element) {
-  const dom = element.dom();
+  const dom: Node = element.dom();
   if (dom.parentNode !== null)
     dom.parentNode.removeChild(dom);
 };
