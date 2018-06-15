@@ -6,7 +6,7 @@ import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
-import { SingleFactory, CompositeSketchFactory } from './UiSketcher';
+import { SingleSketchFactory, CompositeSketchFactory } from './UiSketcher';
 
 // TYPIFY: Not sure what goes in this yet.
 export interface SingleSketchSpec { };
@@ -16,7 +16,7 @@ export interface SingleSketch<S extends SingleSketchSpec, D extends SingleSketch
   name: () => string;
   configFields: () => FieldProcessorAdt[];
   sketch: (spec: S) => SketchSpec;
-  factory: SingleFactory<D>;
+  factory: SingleSketchFactory<D>;
   [key: string]: Function;
 }
 

@@ -10,24 +10,7 @@ import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { single, SingleSketch } from './Sketcher';
 import { RawDomSchema, LooseSpec } from '../component/SpecTypes';
-
-export type ItemSpec = { value: string; text: string };
-
-export interface TieredMenuSketch extends SingleSketch {
-  collapseMenu: (menu: any) => void;
-  tieredData: (primary: string, menus, expansions: Record<string, string>) => TieredData;
-  singleData: (name: string, menu: MenuSpec) => TieredData;
-  collapseItem: (text: string) => ItemSpec;
-}
-
-export type MenuSpec = LooseSpec;
-export type TieredMenuRecord = Record<string, MenuSpec>;
-
-export interface TieredData {
-  primary: string;
-  menus: TieredMenuRecord;
-  expansions: Record<string, string>;
-}
+import { TieredMenuSketcher, MenuSpec, TieredMenuRecord, TieredData, ItemSpec } from '../../ui/types/TieredMenuTypes';
 
 const tieredData = function (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>): TieredData {
   return {
@@ -97,7 +80,7 @@ const tieredMenu = single({
     singleData,
     collapseItem
   }
-}) as TieredMenuSketch;
+}) as TieredMenuSketcher;
 
 export {
   tieredMenu

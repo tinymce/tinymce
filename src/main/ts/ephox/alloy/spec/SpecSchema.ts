@@ -110,7 +110,7 @@ const asRawOrDie = function (label, schema, spec, partSchemas, partUidsSchemas) 
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
-const asStructOrDie = function <D>(label: string, schema: AdtInterface[], spec: AlloySpec, partSchemas: any[], partUidsSchemas: any[]): D {
+const asStructOrDie = function <D, S>(label: string, schema: AdtInterface[], spec: S, partSchemas: any[], partUidsSchemas: any[]): D {
   const baseS = base(label, partSchemas, partUidsSchemas, spec);
   return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };

@@ -44,6 +44,9 @@ export interface MenuSpec extends CompositeSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   menuBehaviours?: AlloyBehaviourRecord;
+
+  // TYPIFY
+  items: any[];
 }
 
 export interface MenuSketcher extends CompositeSketch<MenuSpec, MenuDetail> { }

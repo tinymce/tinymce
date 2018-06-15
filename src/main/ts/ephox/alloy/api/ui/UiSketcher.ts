@@ -6,21 +6,21 @@ import * as AlloyParts from '../../parts/AlloyParts';
 import * as Tagger from '../../registry/Tagger';
 import * as SpecSchema from '../../spec/SpecSchema';
 import { SimpleSpec, SketchSpec, RawDomSchema, SimpleOrSketchSpec, AlloySpec, LooseSpec } from '../../api/component/SpecTypes';
-import { SingleSketchDetail, CompositeSketchDetail } from 'ephox/alloy/api/ui/Sketcher';
+import { SingleSketchDetail, CompositeSketchDetail, SingleSketchSpec, CompositeSketchSpec } from 'ephox/alloy/api/ui/Sketcher';
 
-export type SingleSketchFactory<D extends SingleSketchDetail> = (detail: D, specWithUid: LooseSpec) => SketchSpec;
-export type CompositeSketchFactory<D extends CompositeSketchDetail> = (detail: D, components: AlloySpec[], spec: LooseSpec, externals: any) => SketchSpec;
+export type SingleSketchFactory<D extends SingleSketchDetail, S extends SingleSketchSpec> = (detail: D, specWithUid: S) => SketchSpec;
+export type CompositeSketchFactory<D extends CompositeSketchDetail, S extends CompositeSketchSpec> = (detail: D, components: AlloySpec[], spec: S, externals: any) => SketchSpec;
 
-const single = function <D extends SingleSketchDetail>(owner: string, schema: AdtInterface[], factory: SingleSketchFactory<D>, spec: SimpleOrSketchSpec): SketchSpec {
-  const specWithUid = supplyUid(spec);
-  const detail = SpecSchema.asStructOrDie<D>(owner, schema, specWithUid, [ ], [ ]);
+const single = function <D extends SingleSketchDetail, S extends SingleSketchSpec>(owner: string, schema: AdtInterface[], factory: SingleSketchFactory<D, S>, spec: S): SketchSpec {
+  const specWithUid = supplyUid<S>(spec);
+  const detail = SpecSchema.asStructOrDie<D, S>(owner, schema, specWithUid, [ ], [ ]);
   return Merger.deepMerge(
     factory(detail, specWithUid),
     { 'debug.sketcher': Objects.wrap(owner, spec) }
   );
 };
 
-const composite = function <D extends CompositeSketchDetail>(owner: string, schema: AdtInterface[], partTypes: AdtInterface[], factory: CompositeSketchFactory<D>, spec: LooseSpec): SketchSpec {
+const composite = function <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(owner: string, schema: AdtInterface[], partTypes: AdtInterface[], factory: CompositeSketchFactory<D, S>, spec: S): SketchSpec {
   const specWithUid = supplyUid(spec);
 
   // Identify any information required for external parts
@@ -44,7 +44,7 @@ const composite = function <D extends CompositeSketchDetail>(owner: string, sche
   );
 };
 
-const supplyUid = function (spec: LooseSpec): SketchSpec {
+const supplyUid = function <S>(spec: S): S {
   return Merger.deepMerge(
     {
       uid: Tagger.generate('uid')
