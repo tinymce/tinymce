@@ -2,8 +2,8 @@ import { Fun } from '@ephox/katamari';
 import { Compare, PredicateExists } from '@ephox/sugar';
 
 import * as AriaOwner from '../aria/AriaOwner';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SugarElement } from 'ephox/alloy/api/Main';
+import { AlloyComponent } from '../api/component/ComponentApi';
+import { SugarElement } from '../api/Main';
 
 const isAriaPartOf = (component: AlloyComponent, queryElem: SugarElement): boolean => {
   return AriaOwner.find(queryElem).exists((owner: SugarElement) => {

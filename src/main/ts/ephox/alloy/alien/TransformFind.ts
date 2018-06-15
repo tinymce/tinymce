@@ -1,6 +1,6 @@
 import { Option } from '@ephox/katamari';
 import { PredicateFind } from '@ephox/sugar';
-import { SugarElement } from 'ephox/alloy/api/Main';
+import { SugarElement } from '../api/Main';
 
 const closest = <T>(target: SugarElement, transform: (SugarElement) => Option<T>, isRoot: (SugarElement) => boolean): Option<T> => {
   // TODO: Sugar method is inefficient ... .need to write something new which allows me to keep the optional

@@ -49,7 +49,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     overrides (detail: TypeaheadDetail) {
       return {
         fakeFocus: true,
-        onHighlight (menu: AlloyComponent, item: AlloyComponent) {
+        onHighlight (menu: AlloyComponent, item: AlloyComponent): void {
           if (! detail.previewing().get()) {
             menu.getSystem().getByUid(detail.uid()).each((input) => {
               Representing.setValueFrom(input, item);
@@ -69,7 +69,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           }
           detail.previewing().set(false);
         },
-        onExecute (menu: AlloyComponent, item: AlloyComponent) {
+        onExecute (menu: AlloyComponent, item: AlloyComponent): Option<boolean> {
           return menu.getSystem().getByUid(detail.uid()).toOption().bind((typeahead) => {
             const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
             const system = item.getSystem();
@@ -80,7 +80,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               const currentValue: { value: string, text: string } = Representing.getValue(input);
 
               // Typeaheads, really shouldn't be textareas.
-              const inputEl = input.element().dom() as HTMLInputElement;
+              const inputEl = input.element().dom() as HTMLInputElement | HTMLTextAreaElement;
               inputEl.setSelectionRange(currentValue.text.length, currentValue.text.length);
               detail.onExecute()(sandbox, input, currentValue);
               return Option.some(true);
@@ -88,7 +88,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           });
         },
 
-        onHover (menu: AlloyComponent, item: AlloyComponent) {
+        onHover (menu: AlloyComponent, item: AlloyComponent): void {
           menu.getSystem().getByUid(detail.uid()).each((input) => {
             Representing.setValueFrom(input, item);
           });

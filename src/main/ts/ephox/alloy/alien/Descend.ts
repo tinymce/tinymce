@@ -1,6 +1,6 @@
 import { Struct } from '@ephox/katamari';
 import { Node, Text, Traverse } from '@ephox/sugar';
-import { SugarElement } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarElement } from '../alien/TypeDefinitions';
 
 export interface ElementAndOffset {
   element: () => SugarElement;

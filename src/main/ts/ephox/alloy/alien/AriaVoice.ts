@@ -1,9 +1,9 @@
 import { Fun, Id } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr, Css, Element, Insert, Remove, Traverse } from '@ephox/sugar';
-import { setTimeout } from '@ephox/dom-globals';
-import { SugarElement } from 'ephox/alloy/api/Main';
-import { SugarDocument } from 'ephox/alloy/alien/TypeDefinitions';
+import { SugarElement } from '../api/Main';
+import { SugarDocument } from '../alien/TypeDefinitions';
+import { setTimeout } from '@ephox/dom-globals'
 
 const isFirefox: boolean = PlatformDetection.detect().browser.isFirefox();
 

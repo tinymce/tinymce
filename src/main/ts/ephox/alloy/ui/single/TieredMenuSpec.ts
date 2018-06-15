@@ -50,7 +50,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     });
   };
 
-  const layeredState = LayeredState.init();
+  const layeredState: LayeredState = LayeredState.init();
 
   const setup = (container: AlloyComponent): Option<AlloyComponent> => {
     const componentMap = buildMenus(container, detail.data().menus());
@@ -224,7 +224,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     })
   ] : [ ]));
 
-  const collapseMenuApi = (container) => {
+  const collapseMenuApi = (container: AlloyComponent) => {
     Highlighting.getHighlighted(container).each((currentMenu) => {
       Highlighting.getHighlighted(currentMenu).each((currentItem) => {
         collapseLeft(container, currentItem);

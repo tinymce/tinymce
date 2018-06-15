@@ -10,8 +10,9 @@ import * as Fields from '../../data/Fields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 import * as Layout from '../../positioning/layout/Layout';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-const anchorAtCentre = (component) => {
+const anchorAtCentre = (component: AlloyComponent) => {
   const pos = Location.absolute(component.element());
   const w = Width.get(component.element());
   const h = Height.get(component.element());
