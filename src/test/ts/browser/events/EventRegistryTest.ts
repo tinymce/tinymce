@@ -30,13 +30,13 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   const events = EventRegistry();
 
   events.registerId([ 'extra-args' ], 'comp-1', {
-    'event.alpha': DescribedHandler.nu(
+    'event.alpha': DescribedHandler.uncurried(
       (extra) => {
         return 'event.alpha.1(' + extra + ')';
       },
       'event.alpha.1.handler'
     ),
-    'event.only': DescribedHandler.nu(
+    'event.only': DescribedHandler.uncurried(
       (extra) => {
         return 'event.only(' + extra + ')';
       },
@@ -45,7 +45,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   });
 
   events.registerId([ 'extra-args' ], 'comp-4', {
-    'event.alpha': DescribedHandler.nu(
+    'event.alpha': DescribedHandler.uncurried(
       (extra) => {
         return 'event.alpha.4(' + extra + ')';
       },
@@ -57,7 +57,12 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
     return Step.sync(() => {
       const filtered = events.filterByType(type);
       const raw = Arr.map(filtered, (f) => {
-        return { handler: DescribedHandler.getHandler(f.descHandler()), purpose: f.descHandler().purpose(), id: f.id() };
+        return {
+          // Invoke the handler
+          handler: f.descHandler().cHandler(),
+          purpose: f.descHandler().purpose(),
+          id: f.id()
+        };
       }).sort((f, g) => {
         if (f.id < g.id) { return -1; } else if (f.id > g.id) { return +1; } else { return 0; }
       });
@@ -116,7 +121,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
             Assertions.assertEq(
               'find(' + type + ', ' + id + ') = ' + Json.stringify(expected.handler),
               expected.handler,
-              section.descHandler().handler()
+              section.descHandler().cHandler()
             );
           })
         ])

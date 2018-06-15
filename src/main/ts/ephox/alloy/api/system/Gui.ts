@@ -168,7 +168,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     const receivers = registry.filter(SystemEvents.receive());
     Arr.each(receivers, (receiver) => {
       const descHandler = receiver.descHandler();
-      const handler = DescribedHandler.getHandler(descHandler);
+      const handler = DescribedHandler.getCurried(descHandler);
       handler(data);
     });
   };

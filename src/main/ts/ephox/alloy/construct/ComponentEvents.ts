@@ -86,7 +86,7 @@ const combineGroups = (byEventName, eventOrder) => {
       const purpose = tuples.length > 1 ? Arr.filter(eventOrder, (o) => {
         return Arr.contains(tuples, (t) => { return t.name() === o; });
       }).join(' > ') : tuples[0].name();
-      return Objects.wrap(eventName, DescribedHandler.nu(assembled, purpose));
+      return Objects.wrap(eventName, DescribedHandler.uncurried(assembled, purpose));
     });
   });
 

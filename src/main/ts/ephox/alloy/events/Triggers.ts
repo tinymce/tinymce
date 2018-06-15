@@ -34,7 +34,7 @@ const doTriggerHandler = (lookup: LookupEvent, eventType: string, rawEvent: Even
     return adt.complete();
   }, (handlerInfo) => {
     const descHandler = handlerInfo.descHandler();
-    const eventHandler = DescribedHandler.getHandler(descHandler);
+    const eventHandler = DescribedHandler.getCurried(descHandler);
     eventHandler(simulatedEvent);
 
     // Now, check if the event was stopped.
@@ -81,7 +81,7 @@ const broadcast = (listeners: UidAndHandler[], rawEvent: EventFormat, logger?: D
 
   Arr.each(listeners, (listener) => {
     const descHandler = listener.descHandler();
-    const handler = DescribedHandler.getHandler(descHandler);
+    const handler = DescribedHandler.getCurried(descHandler);
     handler(simulatedEvent);
   });
 
