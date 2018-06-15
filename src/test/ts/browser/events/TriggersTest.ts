@@ -8,9 +8,6 @@ import * as Triggers from 'ephox/alloy/events/Triggers';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('TriggersTest', (success, failure) => {
-
-
-
   let log = [ ];
 
   const make = (stop, message) => {
@@ -69,10 +66,10 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
   const lookup = (eventType, target) => {
     const targetId = Attr.get(target, 'data-event-id');
 
-    return Objects.readOptFrom(domEvents, eventType).bind(Objects.readOpt(targetId)).map((h) => {
+    return Objects.readOptFrom(domEvents, eventType).bind(Objects.readOpt(targetId)).map((h: Function) => {
       return {
         descHandler: Fun.constant({
-          handler: h,
+          cHandler: h,
           purpose: Fun.constant('purpose')
         }),
         element: Fun.constant(target)
@@ -87,7 +84,7 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
     return Logger.t(label, Step.sync(() => {
       Html.set(container, '<div data-event-id="alpha"><div data-event-id="beta"><div data-event-id="gamma"></div></div></div>');
       const targetEl = SelectorFind.descendant(container, '[data-event-id="' + target + '"]').getOrDie();
-      Triggers.triggerOnUntilStopped(lookup, eventType, { }, targetEl, logger);
+      Triggers.triggerOnUntilStopped(lookup, eventType, { } as any, targetEl, logger);
       Assertions.assertEq(label, expected, log.slice(0));
       log = [ ];
     }));

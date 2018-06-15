@@ -15,6 +15,7 @@ import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
 import { SystemApi } from './SystemApi';
 import { ElementAndHandler } from 'ephox/alloy/events/EventRegistry';
+import { FocusingEvent } from 'ephox/alloy/events/SimulatedEvent';
 
 export interface GuiSystem {
   root: () => AlloyComponent;
@@ -59,7 +60,6 @@ const takeover = (root: AlloyComponent): GuiSystem => {
 
   const registry = Registry();
 
-  type LookupEvent = (eventName: string, event: SugarEvent) => Option<ElementAndHandler>;
   const lookup = (eventName: string, target: SugarElement) => {
     return registry.find(isAboveRoot, eventName, target);
   };
@@ -96,10 +96,13 @@ const takeover = (root: AlloyComponent): GuiSystem => {
         Focus.focus(target);
       }, (_alloyId) => {
         Debugging.monitorEvent(SystemEvents.focus(), target, (logger) => {
-          Triggers.triggerHandler(lookup, SystemEvents.focus(), {
+          // NOTE: This will stop at first handler.
+          Triggers.triggerHandler<FocusingEvent>(lookup, SystemEvents.focus(), {
             // originator is used by the default events to ensure that focus doesn't
             // get called infinitely
             originator: Fun.constant(originator),
+            kill: Fun.noop,
+            prevent: Fun.noop,
             target: Fun.constant(target)
           }, target, logger);
         });

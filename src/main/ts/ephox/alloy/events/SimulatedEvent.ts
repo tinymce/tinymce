@@ -32,6 +32,10 @@ export interface ReceivingEvent extends EventFormat {
   data: () => any;
 }
 
+export interface FocusingEvent extends EventFormat {
+  originator: () => SugarElement;
+}
+
 const fromSource = <T extends EventFormat>(event: T, source: Cell<SugarElement>): SimulatedEvent<T> => {
   const stopper = Cell(false);
 
