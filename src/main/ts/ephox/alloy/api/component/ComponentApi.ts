@@ -3,6 +3,7 @@ import { AlloySystemApi } from '../../api/system/SystemApi';
 import { SugarElement } from '../../alien/TypeDefinitions';
 import { EventHandlerConfig, EventHandlerConfigRecord } from '../../api/events/AlloyEvents';
 import { AlloyBehaviourConfig, AlloyBehaviour } from '../../api/behaviour/Behaviour';
+import { UncurriedHandler } from 'ephox/alloy/events/EventRegistry';
 
 export interface AlloyComponent {
   getSystem: () => AlloySystemApi;
@@ -15,7 +16,7 @@ export interface AlloyComponent {
   element: () => SugarElement;
   syncComponents: () => void;
   components: () => any;
-  events: () => EventHandlerConfigRecord;
+  events: () => Record<string, UncurriedHandler>;
 }
 
 const ComponentApi = Contracts.exactly([

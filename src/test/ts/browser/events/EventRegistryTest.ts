@@ -57,7 +57,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
     return Step.sync(() => {
       const filtered = events.filterByType(type);
       const raw = Arr.map(filtered, (f) => {
-        return { handler: f.descHandler().handler(), purpose: f.descHandler().purpose(), id: f.id() };
+        return { handler: DescribedHandler.getHandler(f.descHandler()), purpose: f.descHandler().purpose(), id: f.id() };
       }).sort((f, g) => {
         if (f.id < g.id) { return -1; } else if (f.id > g.id) { return +1; } else { return 0; }
       });
@@ -80,8 +80,8 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
               return Result.error(
                 'Unexpected handler found: ' + Json.stringify({
                   element: Truncate.getHtml(h.element()),
-
-                  handler: h.handler()
+                  // INVESTIGATE: Should this have changed?
+                  handler: h.descHandler()
                 })
               );
             });

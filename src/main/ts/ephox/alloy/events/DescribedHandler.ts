@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import { UncurriedHandler, CurriedHandler } from 'ephox/alloy/events/EventRegistry';
 
-const nu = (handler, purpose) => {
+const nu = (handler: Function, purpose: string): UncurriedHandler => {
   return {
     handler,
     purpose: Fun.constant(purpose)

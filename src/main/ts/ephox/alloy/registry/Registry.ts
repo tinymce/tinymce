@@ -2,6 +2,7 @@ import { Objects } from '@ephox/boulder';
 import { Body } from '@ephox/sugar';
 
 import EventRegistry from '../events/EventRegistry';
+import { ElementAndHandler, UidAndHandler} from '../events/EventRegistry';
 import * as AlloyLogger from '../log/AlloyLogger';
 import * as Tagger from './Tagger';
 
