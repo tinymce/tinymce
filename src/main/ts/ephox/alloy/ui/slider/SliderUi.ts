@@ -14,22 +14,23 @@ import * as SliderActions from './SliderActions';
 import { EventFormat, CustomEvent } from '../../events/SimulatedEvent';
 import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
 import { SliderDetail, SliderSpec } from '../../ui/types/SliderTypes';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
 const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, components, spec, externals) => {
   const range = detail.max() - detail.min();
 
-  const getXCentre = (component) => {
+  const getXCentre = (component: AlloyComponent): number => {
     const rect = component.element().dom().getBoundingClientRect();
     return (rect.left + rect.right) / 2;
   };
 
-  const getThumb = (component) => {
+  const getThumb = (component: AlloyComponent): AlloyComponent => {
     return AlloyParts.getPartOrDie(component, detail, 'thumb');
   };
 
-  const getXOffset = (slider, spectrumBounds, detail) => {
+  const getXOffset = (slider: AlloyComponent, spectrumBounds: ClientRect, detail: SliderDetail): number => {
     const v = detail.value().get();
     if (v < detail.min()) {
       return AlloyParts.getPart(slider, detail, 'left-edge').fold(() => {
@@ -50,7 +51,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, compon
     }
   };
 
-  const getXPos = (slider) => {
+  const getXPos = (slider: AlloyComponent): number => {
     const spectrum = AlloyParts.getPartOrDie(slider, detail, 'spectrum');
     const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
     const sliderBounds = slider.element().dom().getBoundingClientRect();
@@ -59,14 +60,14 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, compon
     return (spectrumBounds.left - sliderBounds.left) + xOffset;
   };
 
-  const refresh = (component) => {
+  const refresh = (component: AlloyComponent): void => {
     const pos = getXPos(component);
     const thumb = getThumb(component);
     const thumbRadius = Width.get(thumb.element()) / 2;
     Css.set(thumb.element(), 'left', (pos - thumbRadius) + 'px');
   };
 
-  const changeValue = (component, newValue) => {
+  const changeValue = (component: AlloyComponent, newValue: number): Option<boolean> => {
     const oldValue = detail.value().get();
     const thumb = getThumb(component);
     // The left check is used so that the first click calls refresh
@@ -80,11 +81,11 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail, compon
     }
   };
 
-  const resetToMin = (slider) => {
+  const resetToMin = (slider: AlloyComponent) => {
     changeValue(slider, detail.min());
   };
 
-  const resetToMax = (slider) => {
+  const resetToMax = (slider: AlloyComponent) => {
     changeValue(slider, detail.max());
   };
 

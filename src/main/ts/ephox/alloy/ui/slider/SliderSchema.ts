@@ -5,6 +5,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import { SliderSpec } from 'ephox/alloy/ui/types/SliderTypes';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
@@ -21,7 +22,7 @@ const SliderSchema: FieldProcessorAdt[] = [
   FieldSchema.strict('getInitialValue'),
   SketchBehaviours.field('sliderBehaviours', [ Keying, Representing ]),
 
-  FieldSchema.state('value', (spec) => { return Cell(spec.min); })
+  FieldSchema.state('value', (spec: SliderSpec) => { return Cell(spec.min); })
 ].concat(! isTouch ? [
   // Only add if not on a touch device
   FieldSchema.state('mouseIsDown', () => { return Cell(false); })

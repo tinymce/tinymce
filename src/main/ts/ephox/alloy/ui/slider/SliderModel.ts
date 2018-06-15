@@ -1,6 +1,6 @@
 import { Option } from "@ephox/katamari";
 
-const reduceBy = (value, min, max, step) => {
+const reduceBy = (value: number, min: number, max: number, step: number): number => {
   if (value < min) {
     return value;
   } else if (value > max) {
@@ -12,7 +12,7 @@ const reduceBy = (value, min, max, step) => {
   }
 };
 
-const increaseBy = (value, min, max, step) => {
+const increaseBy = (value: number, min: number, max: number, step: number): number => {
   if (value > max) {
     return value;
   } else if (value < min) {
@@ -24,14 +24,14 @@ const increaseBy = (value, min, max, step) => {
   }
 };
 
-const capValue = (value, min, max) => {
+const capValue = (value: number, min: number, max: number): number => {
   return Math.max(
     min,
     Math.min(max, value)
   );
 };
 
-const snapValueOfX = (bounds, value, min, max, step, snapStart: Option<number>) => {
+const snapValueOfX = (bounds: ClientRect, value: number, min: number, max: number, step: number, snapStart: Option<number>) => {
   // We are snapping by the step size. Therefore, find the nearest multiple of
   // the step
   return snapStart.fold(() => {
@@ -54,14 +54,19 @@ const snapValueOfX = (bounds, value, min, max, step, snapStart: Option<number>) 
   });
 };
 
-const findValueOfX = (bounds, min, max, xValue, step, snapToGrid: boolean, snapStart: Option<number>) => {
+const findValueOfX = (bounds: ClientRect, min: number, max: number, xValue: number, step: number, snapToGrid: boolean, snapStart: Option<number>): number => {
   const range = max - min;
   // TODO: TM-26 Make this bounding of edges work only occur if there are edges (and work with snapping)
-  if (xValue < bounds.left) { return min - 1; } else if (xValue > bounds.right) { return max + 1; } else {
+  if (xValue < bounds.left) {
+    return min - 1;
+  } else if (xValue > bounds.right) {
+    return max + 1;
+  } else {
     const xOffset = Math.min(bounds.right, Math.max(xValue, bounds.left)) - bounds.left;
     const newValue = capValue(((xOffset / bounds.width) * range) + min, min - 1, max + 1);
     const roundedValue = Math.round(newValue);
-    return snapToGrid && newValue >= min && newValue <= max ? snapValueOfX(bounds, newValue, min, max, step, snapStart) : roundedValue;
+    return snapToGrid && newValue >= min && newValue <= max ?
+      snapValueOfX(bounds, newValue, min, max, step, snapStart) : roundedValue;
   }
 };
 

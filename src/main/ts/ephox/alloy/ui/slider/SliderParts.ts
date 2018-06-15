@@ -10,11 +10,13 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 import * as PartType from '../../parts/PartType';
 import * as SliderActions from './SliderActions';
 import { SliderDetail } from '../../ui/types/SliderTypes';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { NativeSimulatedEvent, SimulatedEvent } from 'ephox/alloy/api/Main';
 
 const platform = PlatformDetection.detect();
 const isTouch = platform.deviceType.isTouch();
 
-const edgePart = (name, action) => {
+const edgePart = (name: string, action: (comp: AlloyComponent, d: SliderDetail) => void) => {
   return PartType.optional({
     name: '' + name + '-edge',
     overrides (detail: SliderDetail) {
@@ -70,8 +72,9 @@ const spectrumPart = PartType.required({
   name: 'spectrum',
   overrides (detail: SliderDetail) {
 
-    const moveToX = (spectrum, simulatedEvent) => {
-      const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
+    const moveToX = (spectrum: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
+      const domElem = spectrum.element().dom() as HTMLElement;
+      const spectrumBounds: ClientRect = domElem.getBoundingClientRect();
       SliderActions.setXFromEvent(spectrum, detail, spectrumBounds, simulatedEvent);
     };
 
@@ -109,9 +112,9 @@ const spectrumPart = PartType.required({
   }
 });
 
-export default <any> [
+export default [
   ledgePart,
   redgePart,
   thumbPart,
   spectrumPart
-];
+] as PartType.PartTypeAdt[]
