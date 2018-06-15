@@ -37,6 +37,10 @@ const createFontNameListBoxChangeHandler = function (editor, items) {
   return function () {
     const self = this;
 
+    // We need to remove the initial value since since the display text will
+    // not be updated if we set it to the same initial value on post render.
+    self.state.set('value', null);
+
     editor.on('init nodeChange', function (e) {
       const fontFamily = editor.queryCommandValue('FontName');
       const match = findMatchingValue(items, fontFamily);
