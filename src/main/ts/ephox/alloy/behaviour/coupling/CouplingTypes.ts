@@ -8,11 +8,11 @@ import { AlloySpec } from '../../api/component/SpecTypes';
 
 export interface CouplingBehaviour extends Behaviour.AlloyBehaviour {
   config: (config: CouplingConfigSpec) => Behaviour.NamedConfiguredBehaviour;
-  getCoupled: (component, coupleConfig, coupleState?, name?) => AlloyComponent;
+  getCoupled: (component: AlloyComponent, name: string) => AlloyComponent;
 }
 
 export interface CouplingConfigSpec {
-  others: { [key: string]: (AlloyComponent) => AlloySpec };
+  others: { [key: string]: (comp: AlloyComponent) => AlloySpec };
 }
 
 export interface CouplingState {
@@ -20,5 +20,5 @@ export interface CouplingState {
 }
 
 export interface CouplingConfig {
-  others: () => { [key: string]: () => ((AlloyComponent) => AlloySpec) };
+  others: () => { [key: string]: () => ((comp: AlloyComponent) => AlloySpec) };
 }

@@ -23,30 +23,34 @@ import { InlineView } from './InlineView';
 import { Menu } from './Menu';
 import * as Sketcher from './Sketcher';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { TouchMenuSketcher, TouchMenuDetail, TouchMenuSpec } from '../../ui/types/TouchMenuTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { TransitionProperties } from '../../behaviour/transitioning/TransitioningTypes';
 
 type TouchHoverState = (AlloyComponent) => void;
 
-const factory = function (detail, components, spec, externals) {
+const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = function (detail, components, spec, externals) {
 
-  const getMenu = function (component) {
+  // FIX: Typify
+  const getMenu = function (component: AlloyComponent): any {
     const sandbox = Coupling.getCoupled(component, 'sandbox');
     return Sandboxing.getState(sandbox);
   };
 
-  const hoveredState = Cell(false);
+  const hoveredState: Cell<boolean> = Cell(false);
 
-  const hoverOn = function (component) {
+  const hoverOn = function (component: AlloyComponent): void {
     if (hoveredState.get() === false) {
       forceHoverOn(component);
     }
   };
 
-  const forceHoverOn = function (component) {
+  const forceHoverOn = function (component: AlloyComponent): void {
     detail.onHoverOn()(component);
     hoveredState.set(true);
   };
 
-  const hoverOff = function (component) {
+  const hoverOff = function (component: AlloyComponent): void {
     if (hoveredState.get() === true) {
       detail.onHoverOff()(component);
       hoveredState.set(false);
@@ -99,7 +103,7 @@ const factory = function (detail, components, spec, externals) {
                             'open',
                             'closed',
                             detail.menuTransition().map(function (t) {
-                              return Objects.wrap('transition', t);
+                              return Objects.wrap('transition', t) as TransitionProperties;
                             }).getOr({ })
                           ),
 
@@ -113,7 +117,7 @@ const factory = function (detail, components, spec, externals) {
 
                       ]),
 
-                      onShow (view) {
+                      onShow (view: AlloyComponent) {
                         Transitioning.progressTo(view, 'open');
                       }
                     }
@@ -232,7 +236,7 @@ const TouchMenu = Sketcher.composite({
   configFields: TouchMenuSchema.schema(),
   partFields: TouchMenuSchema.parts(),
   factory
-});
+}) as TouchMenuSketcher;
 
 export {
   TouchMenu

@@ -34,11 +34,13 @@ export interface TransitioningConfigSpec {
   onTransition?: (comp: AlloyComponent, route: TransitionRoute) => void;
   onFinish?: (comp: AlloyComponent, destination: string) => void;
 }
-export interface TransitionProperties {
+export interface SpecifiedTransitionProperties {
   transition: {
     property: string,
     transitionClass: string
   };
 }
+
+export type TransitionProperties = SpecifiedTransitionProperties | { };
 
 export type TransitioningInitialState = 'before' | 'current' | 'after';

@@ -16,7 +16,7 @@ export interface SingleSketch<S extends SingleSketchSpec, D extends SingleSketch
   name: () => string;
   configFields: () => FieldProcessorAdt[];
   sketch: (spec: S) => SketchSpec;
-  factory: SingleSketchFactory<D>;
+  factory: SingleSketchFactory<D, S>;
   [key: string]: Function;
 }
 
@@ -30,7 +30,7 @@ export interface CompositeSketch<S extends CompositeSketchSpec, D extends Compos
   sketch: (spec: S) => SketchSpec;
   parts: () => AlloyParts.GeneratedParts;
   // TYPIFY externals
-  factory: CompositeSketchFactory<D>;
+  factory: CompositeSketchFactory<D, S>;
   [key: string]: Function;
 }
 
