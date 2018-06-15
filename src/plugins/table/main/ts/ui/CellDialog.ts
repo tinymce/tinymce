@@ -74,13 +74,13 @@ const onSubmitCellForm = function (editor: Editor, cells: Node[], evt) {
   let data: FormData;
 
   function setAttrib(elm: Node, name: string, value: string) {
-    if (value) {
+    if (cells.length === 1 || value) {
       dom.setAttrib(elm, name, value);
     }
   }
 
   function setStyle(elm: Node, name: string, value: string) {
-    if (value) {
+    if (cells.length === 1 || value) {
       dom.setStyle(elm, name, value);
     }
   }
