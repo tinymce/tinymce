@@ -10,10 +10,6 @@ import { RgbaColour } from '@ephox/acid';
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
 const PaletteSchema : FieldProcessorAdt[] = [
-  FieldSchema.strict('minX'),
-  FieldSchema.strict('maxX'),
-  FieldSchema.strict('minY'),
-  FieldSchema.strict('maxY'),
   FieldSchema.defaulted('onChange', Fun.noop),
   FieldSchema.defaulted('onInit', Fun.noop),
   FieldSchema.defaulted('onDragStart', Fun.noop),

@@ -166,7 +166,7 @@ const sketch = function (detail, components, spec, externals) {
 
     events: AlloyEvents.derive(
       [
-        AlloyEvents.run<CustomEvent>(GradientActions.changeEvent(), function (slider, simulatedEvent) {
+        AlloyEvents.run<CustomEvent>(GradientActions.sliderChangeEvent(), function (slider, simulatedEvent) {
           changeValue(slider, simulatedEvent.event().value());
         }),
         AlloyEvents.runOnAttached(function (slider, simulatedEvent) {

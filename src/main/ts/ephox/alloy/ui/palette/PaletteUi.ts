@@ -35,39 +35,12 @@ const sketch = function (detail, components, spec, externals) {
     return AlloyParts.getPartOrDie(component, detail, 'palette');
   };
 
-  const getXOffset = function (slider, spectrumBounds, detail) {
-    return (detail.value().get().x - 0) / 100 * spectrumBounds.width;
-  }
-
-  const getYOffset = function (slider, spectrumBounds, detail) {
-    return (detail.value().get().y - 0) / 100 * spectrumBounds.height;
-  };
-
-  const getPos = function (slider, getOffset, edgeProperty) {
-    const spectrum = AlloyParts.getPartOrDie(slider, detail, 'palette');
-    const spectrumBounds = spectrum.element().dom().getBoundingClientRect();
-    const sliderBounds = slider.element().dom().getBoundingClientRect();
-
-    const offset = getOffset(slider, spectrumBounds, detail);
-    return (spectrumBounds[edgeProperty] - sliderBounds[edgeProperty]) + offset;
-  };
-
-  const getXPos = function (slider) {
-    return getPos(slider, getXOffset, 'left');
-  }
-
-  const getYPos = function (slider) {
-    return getPos(slider, getYOffset, 'top');
-  };
-
   const refresh = function (component) {
     const thumb = getThumb(component);
-    const xPos = getXPos(component);
-    const yPos = getYPos(component);
     const thumbRadiusX = Width.get(thumb.element()) / 2;
     const thumbRadiusY = Height.get(thumb.element()) / 2;
-    Css.set(thumb.element(), 'left', (xPos - thumbRadiusX) + 'px');
-    Css.set(thumb.element(), 'top', (yPos - thumbRadiusY) + 'px');
+    Css.set(thumb.element(), 'left', (detail.value().get().x - thumbRadiusX) + 'px');
+    Css.set(thumb.element(), 'top', (detail.value().get().y - thumbRadiusY) + 'px');
   };
 
   const refreshColour = function (component, colour) {
@@ -106,7 +79,7 @@ const sketch = function (detail, components, spec, externals) {
       detail.value().set(newValue);
 
       const hsvColour = HsvColour.fromRgb(detail.colour().get());
-      const newHsvColour = HsvColour.hsvColour(hsvColour.hue(), newValue.x, (100 - newValue.y));
+      const newHsvColour = HsvColour.hsvColour(hsvColour.hue(), newValue.percentX, (100 - newValue.percentY));
       const rgb = RgbaColour.fromHsv(newHsvColour);
       
       refresh(component);
@@ -169,7 +142,7 @@ const sketch = function (detail, components, spec, externals) {
 
     events: AlloyEvents.derive(
       [
-        AlloyEvents.run<CustomEvent>(GradientActions.changeEvent(), function (slider, simulatedEvent) {
+        AlloyEvents.run<CustomEvent>(GradientActions.paletteChangeEvent(), function (slider, simulatedEvent) {
           changeValue(slider, simulatedEvent.event().value());
         }),
         AlloyEvents.runOnAttached(function (slider, simulatedEvent) {

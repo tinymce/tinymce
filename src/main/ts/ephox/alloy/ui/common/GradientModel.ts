@@ -55,7 +55,11 @@ const snapValueOf = function (bounds, value, min, max, step, snapStart) {
 const findValueOf = function (bounds, min, max, value, step, snapToGrid, snapStart, ledgeProp, redgeProp, lengthProp) {
   const range = max - min;
   // TODO: TM-26 Make this bounding of edges work only occur if there are edges (and work with snapping)
-  if (value < bounds[ledgeProp]) { return min - 1; } else if (value > bounds[redgeProp]) { return max + 1; } else {
+  if (value < bounds[ledgeProp]) { 
+    return min - 1; 
+  } else if (value > bounds[redgeProp]) { 
+    return max + 1; 
+  } else {
     const offset = Math.min(bounds[redgeProp], Math.max(value, bounds[ledgeProp])) - bounds[ledgeProp];
     const newValue = capValue(((offset / bounds[lengthProp]) * range) + min, min - 1, max + 1);
     const roundedValue = Math.round(newValue);
@@ -67,14 +71,29 @@ const findValueOfX = function (bounds, min, max, xValue, step, snapToGrid, snapS
   return findValueOf(bounds, min, max, xValue, step, snapToGrid, snapStart, 'left', 'right', 'width');
 };
 
-const findValueOfY = function (bounds, min, max, xValue, step, snapToGrid, snapStart) {
-  return findValueOf(bounds, min, max, xValue, step, snapToGrid, snapStart, 'top', 'bottom', 'height');
+const findValueOfY = function (bounds, min, max, yValue, step, snapToGrid, snapStart) {
+  return findValueOf(bounds, min, max, yValue, step, snapToGrid, snapStart, 'top', 'bottom', 'height');
 };
 
-const findValueOfCoords = function (bounds, minX, minY, maxX, maxY, coords, step, snapToGrid, snapStart) {
+const findUnroundedOf = function (bounds, value, ledgeProp, redgeProp, lengthProp) {
+  if (value < bounds[ledgeProp]) {
+    return 0;
+  } else if (value > bounds[redgeProp]) {
+    return bounds[redgeProp];
+  } else {
+    const offset = Math.min(bounds[redgeProp], Math.max(value, bounds[ledgeProp])) - bounds[ledgeProp];
+    return offset;
+  }
+};
+
+const findPercentageValueOfCoords = function (bounds, coords) {
+  const x = findUnroundedOf(bounds, coords.x, 'left', 'right', 'width');
+  const y = findUnroundedOf(bounds, coords.y, 'top', 'bottom', 'height');
   return {
-    x: findValueOfX(bounds, minX, maxX, coords.x, step, snapToGrid, snapStart),
-    y: findValueOfY(bounds, minY, maxY, coords.y, step, snapToGrid, snapStart)
+    x,
+    y,
+    percentX: x / bounds.width * 100,
+    percentY: y / bounds.height * 100
   };
 };
 
@@ -83,5 +102,5 @@ export {
   increaseBy,
   findValueOfX,
   findValueOfY,
-  findValueOfCoords
+  findPercentageValueOfCoords
 };

@@ -4,7 +4,8 @@ import { PlatformDetection } from '@ephox/sand';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as GradientModel from './GradientModel';
 
-const _changeEvent = 'slider.change.value';
+const _sliderChangeEvent = 'slider.change.value';
+const _paletteChangeEvent = 'palette.change.value';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch();
 
@@ -45,24 +46,28 @@ const getEventCoords = function (simulatedEvent) {
   });
 };
 
-const fireChange = function (component, value) {
-  AlloyTriggers.emitWith(component, _changeEvent, { value });
+const fireSliderChange = function (component, value) {
+  AlloyTriggers.emitWith(component, _sliderChangeEvent, { value });
+};
+
+const firePaletteChange = function (component, value) {
+  AlloyTriggers.emitWith(component, _paletteChangeEvent, { value });
 };
 
 const moveRightFromLedge = function (ledge, detail) {
-  fireChange(ledge, detail.min());
+  fireSliderChange(ledge, detail.min());
 };
 
 const moveLeftFromRedge = function (redge, detail) {
-  fireChange(redge, detail.max());
+  fireSliderChange(redge, detail.max());
 };
 
 const setToRedge = function (redge, detail) {
-  fireChange(redge, detail.max() + 1);
+  fireSliderChange(redge, detail.max() + 1);
 };
 
 const setToLedge = function (ledge, detail) {
-  fireChange(ledge, detail.min() - 1);
+  fireSliderChange(ledge, detail.min() - 1);
 };
 
 const setToX = function (spectrum, spectrumBounds, detail, xValue) {
@@ -71,7 +76,7 @@ const setToX = function (spectrum, spectrumBounds, detail, xValue) {
     xValue, detail.stepSize(), detail.snapToGrid(), detail.snapStart()
   );
 
-  fireChange(spectrum, value);
+  fireSliderChange(spectrum, value);
 };
 
 const setToY = function (spectrum, spectrumBounds, detail, yValue) {
@@ -80,16 +85,13 @@ const setToY = function (spectrum, spectrumBounds, detail, yValue) {
     yValue, detail.stepSize(), detail.snapToGrid(), detail.snapStart()
   );
 
-  fireChange(spectrum, value);
+  fireSliderChange(spectrum, value);
 };
 
 const setToCoords = function (spectrum, spectrumBounds, detail, coords) {
-  const value = GradientModel.findValueOfCoords(
-    spectrumBounds, detail.minX(), detail.minY(), detail.maxX(), detail.maxY(),
-    coords, 1, false, 0
-  );
+  const value = GradientModel.findPercentageValueOfCoords(spectrumBounds, coords);
 
-  fireChange(spectrum, value);
+  firePaletteChange(spectrum, value);
 };
 
 const setXFromEvent = function (spectrum, detail, spectrumBounds, simulatedEvent) {
@@ -115,15 +117,16 @@ const setCoordsFromEvent = function (spectrum, detail, spectrumBounds, simulated
 
 const moveLeft = function (spectrum, detail) {
   const newValue = GradientModel.reduceBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
-  fireChange(spectrum, newValue);
+  fireSliderChange(spectrum, newValue);
 };
 
 const moveRight = function (spectrum, detail) {
   const newValue = GradientModel.increaseBy(detail.value().get(), detail.min(), detail.max(), detail.stepSize());
-  fireChange(spectrum, newValue);
+  fireSliderChange(spectrum, newValue);
 };
 
-const changeEvent = Fun.constant(_changeEvent);
+const sliderChangeEvent = Fun.constant(_sliderChangeEvent);
+const paletteChangeEvent = Fun.constant(_paletteChangeEvent);
 
 export {
   setXFromEvent,
@@ -135,5 +138,6 @@ export {
   moveRightFromLedge,
   moveLeft,
   moveRight,
-  changeEvent
+  sliderChangeEvent,
+  paletteChangeEvent
 };
