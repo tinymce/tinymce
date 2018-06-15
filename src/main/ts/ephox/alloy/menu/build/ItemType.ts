@@ -1,4 +1,4 @@
-import { FieldSchema } from '@ephox/boulder';
+import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
 import { Merger } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -12,20 +12,22 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
 import * as ItemEvents from '../util/ItemEvents';
+import { AlloySpec } from 'ephox/alloy/api/Main';
+import { NormalItemDetail } from 'ephox/alloy/ui/types/ItemTypes';
 
-const builder = (info) => {
+const builder = (detail: NormalItemDetail): AlloySpec => {
   return {
     dom: Merger.deepMerge(
-      info.dom(),
+      detail.dom(),
       {
         attributes: {
-          role: info.toggling().isSome() ? 'menuitemcheckbox' : 'menuitem'
+          role: detail.toggling().isSome() ? 'menuitemcheckbox' : 'menuitem'
         }
       }
     ),
     behaviours: Merger.deepMerge(
       Behaviour.derive([
-        info.toggling().fold(Toggling.revoke, (tConfig) => {
+        detail.toggling().fold(Toggling.revoke, (tConfig) => {
           return Toggling.config(
             Merger.deepMerge({
               aria: {
@@ -35,7 +37,7 @@ const builder = (info) => {
           );
         }),
         Focusing.config({
-          ignore: info.ignoreFocus(),
+          ignore: detail.ignoreFocus(),
           onFocus (component) {
             ItemEvents.onFocus(component);
           }
@@ -46,11 +48,11 @@ const builder = (info) => {
         Representing.config({
           store: {
             mode: 'memory',
-            initialValue: info.data()
+            initialValue: detail.data()
           }
         })
       ]),
-      info.itemBehaviours()
+      detail.itemBehaviours()
     ),
     events: AlloyEvents.derive([
       // Trigger execute when clicked
@@ -63,15 +65,15 @@ const builder = (info) => {
 
       AlloyEvents.run(SystemEvents.focusItem(), Focusing.focus)
     ]),
-    components: info.components(),
+    components: detail.components(),
 
-    domModification: info.domModification(),
+    domModification: detail.domModification(),
 
-    eventOrder: info.eventOrder()
+    eventOrder: detail.eventOrder()
   };
 };
 
-const schema = [
+const schema: FieldProcessorAdt[] = [
   FieldSchema.strict('data'),
   FieldSchema.strict('components'),
   FieldSchema.strict('dom'),
@@ -87,4 +89,4 @@ const schema = [
   FieldSchema.defaulted('eventOrder', { })
 ];
 
-export default <any> schema;
+export default schema;

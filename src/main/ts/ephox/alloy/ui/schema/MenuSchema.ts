@@ -17,6 +17,7 @@ import * as Tagger from '../../registry/Tagger';
 import { MenuDetail, MenuMovement } from '../../ui/types/MenuTypes';
 import { AlloySpec, RawDomSchema } from 'ephox/alloy/api/Main';
 import { TogglingConfigSpec } from 'ephox/alloy/behaviour/toggling/TogglingTypes';
+import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 const itemSchema = ValueSchema.choose(
   'type',
@@ -26,8 +27,6 @@ const itemSchema = ValueSchema.choose(
     separator: SeparatorType
   }
 );
-
-
 
 const configureGrid = (detail: MenuDetail, movementInfo: MenuMovement) => {
   return {
@@ -53,7 +52,7 @@ const configureMenu = (detail: MenuDetail, movementInfo: MenuMovement) => {
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.group({
     factory: {
-      sketch (spec) {
+      sketch (spec: ItemSpec) {
         const itemInfo = ValueSchema.asStructOrDie('menu.spec item', itemSchema, spec);
         return itemInfo.builder()(itemInfo);
       }

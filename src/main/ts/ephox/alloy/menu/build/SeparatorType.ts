@@ -3,8 +3,9 @@ import { FieldSchema } from '@ephox/boulder';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
+import { SeparatorItemDetail } from 'ephox/alloy/ui/types/ItemTypes';
 
-const builder = (detail) => {
+const builder = (detail: SeparatorItemDetail) => {
   return {
     dom: detail.dom(),
     components: detail.components(),

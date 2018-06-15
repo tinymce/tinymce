@@ -15,13 +15,14 @@ import * as ItemEvents from '../util/ItemEvents';
 import * as WidgetParts from './WidgetParts';
 import { SimulatedEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { WidgetItemDetail } from 'ephox/alloy/ui/types/ItemTypes';
 
-const builder = (info) => {
-  const subs = AlloyParts.substitutes(WidgetParts.owner(), info, WidgetParts.parts());
-  const components = AlloyParts.components(WidgetParts.owner(), info, subs.internals());
+const builder = (detail: WidgetItemDetail) => {
+  const subs = AlloyParts.substitutes(WidgetParts.owner(), detail, WidgetParts.parts());
+  const components = AlloyParts.components(WidgetParts.owner(), detail, subs.internals());
 
   const focusWidget = (component) => {
-    return AlloyParts.getPart(component, info, 'widget').map((widget) => {
+    return AlloyParts.getPart(component, detail, 'widget').map((widget) => {
       Keying.focusIn(widget);
       return widget;
     });
@@ -29,7 +30,7 @@ const builder = (info) => {
 
   const onHorizontalArrow = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
     return EditableFields.inside(simulatedEvent.event().target()) ? Option.none() : (() => {
-      if (info.autofocus()) {
+      if (detail.autofocus()) {
         simulatedEvent.setSource(component.element());
         return Option.none();
       } else {
@@ -39,9 +40,9 @@ const builder = (info) => {
   };
 
   return Merger.deepMerge({
-    dom: info.dom(),
+    dom: detail.dom(),
     components,
-    domModification: info.domModification(),
+    domModification: detail.domModification(),
     events: AlloyEvents.derive([
       AlloyEvents.runOnExecute((component, simulatedEvent) => {
         focusWidget(component).each((widget) => {
@@ -52,14 +53,14 @@ const builder = (info) => {
       AlloyEvents.run(NativeEvents.mouseover(), ItemEvents.onHover),
 
       AlloyEvents.run(SystemEvents.focusItem(), (component, simulatedEvent) => {
-        if (info.autofocus()) { focusWidget(component); } else { Focusing.focus(component); }
+        if (detail.autofocus()) { focusWidget(component); } else { Focusing.focus(component); }
       })
     ]),
     behaviours: Behaviour.derive([
       Representing.config({
         store: {
           mode: 'memory',
-          initialValue: info.data()
+          initialValue: detail.data()
         }
       }),
       Focusing.config({
@@ -70,7 +71,7 @@ const builder = (info) => {
       Keying.config({
         mode: 'special',
         // This is required as long as Highlighting tries to focus the first thing (after focusItem fires)
-        focusIn: info.autofocus() ? (component) => {
+        focusIn: detail.autofocus() ? (component) => {
           focusWidget(component);
         } : Behaviour.revoke(),
         onLeft: onHorizontalArrow,
@@ -80,10 +81,10 @@ const builder = (info) => {
           // then focus it (i.e. escape the inner widget). Only do if not autofocusing
           // Autofocusing should treat the widget like it is the only item, so it should
           // let its outer menu handle escape
-          if (! Focusing.isFocused(component) && !info.autofocus()) {
+          if (! Focusing.isFocused(component) && !detail.autofocus()) {
             Focusing.focus(component);
             return Option.some(true);
-          } else if (info.autofocus()) {
+          } else if (detail.autofocus()) {
             simulatedEvent.setSource(component.element());
             return Option.none();
           } else {

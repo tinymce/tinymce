@@ -1,6 +1,8 @@
 import { RawDomSchema, AlloySpec } from "../../api/component/SpecTypes";
 import { TogglingConfigSpec } from "../../behaviour/toggling/TogglingTypes";
 import { SketchBehaviours } from "../../api/component/SketchBehaviours";
+import { Option } from "@ephox/katamari";
+import { CompositeSketchDetail } from "ephox/alloy/api/ui/Sketcher";
 
 export interface ItemDataTuple {
   value: string;
@@ -18,10 +20,26 @@ export interface WidgetItemSpec {
   domModification?: any;
 }
 
+export interface WidgetItemDetail extends ItemDetail, CompositeSketchDetail {
+  dom: () => RawDomSchema;
+  components: () => AlloySpec[];
+  builder: () => <WidgetItemInfo>(buildInfo: WidgetItemInfo) => AlloySpec;
+  autofocus: () => boolean;
+  domModification: () => { };
+  data: () => ItemDataTuple;
+}
+
 export interface SeparatorItemSpec {
   type: 'separator';
   components: AlloySpec[];
   dom: RawDomSchema;
+}
+
+
+export interface SeparatorItemDetail extends ItemDetail {
+  dom: () => RawDomSchema;
+  components: () => AlloySpec[];
+  builder: () => <SeparatorItemInfo>(buildInfo: SeparatorItemInfo) => AlloySpec;
 }
 
 export interface NormalItemSpec {
@@ -30,10 +48,32 @@ export interface NormalItemSpec {
   components: AlloySpec[];
   dom: RawDomSchema;
   // INVESTIGATE: this might not be right
-  toggling?: TogglingConfigSpec;
+  toggling?: Partial<TogglingConfigSpec>;
   itemBehaviours: SketchBehaviours;
   ignoreFocus?: boolean;
   // TYPIFY
   domModification?: any;
   eventOrder: Record<string, string[]>;
+}
+
+export interface NormalItemDetail extends ItemDetail {
+  data: () => ItemDataTuple;
+  components: () => AlloySpec[];
+  dom: () => RawDomSchema;
+  // INVESTIGATE: () => this might not be right
+  toggling: () => Option<Partial<TogglingConfigSpec>>;
+  itemBehaviours: () => SketchBehaviours;
+  ignoreFocus?: () => boolean;
+  // TYPIFY
+  domModification: () => { };
+  eventOrder: () => Record<string, string[]>;
+  builder: () => <NormalItemInfo>(buildInfo: NormalItemInfo) => AlloySpec;
+}
+
+export interface ItemDetail {
+  builder: () => <B extends ItemDetail>(buildInfo: B) => AlloySpec;
+}
+
+export interface ItemBuilder<B extends ItemDetail> {
+  builder: () => (buildInfo: B) => AlloySpec;
 }
