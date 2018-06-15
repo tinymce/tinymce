@@ -7,18 +7,36 @@ import * as DescribedHandler from './DescribedHandler';
 
 const eventHandler = Struct.immutable('element', 'descHandler');
 
-const messageHandler = (id, handler) => {
+export interface CurriedHandler {
+  purpose: string;
+  cHandler: Function;
+}
+
+export class UncurriedHandler {
+  purpose: string;
+  handler: Function;
+}
+
+export interface MessageHandler {
+  id: () => string;
+  descHandler: () => any;
+}
+
+const messageHandler = (id: string, handler): MessageHandler => {
   return {
     id: Fun.constant(id),
     descHandler: Fun.constant(handler)
   };
 };
 
-export default () => {
-  const registry = { };
+export type EventName = string;
+export type Uid = string;
 
-  const registerId = (extraArgs, id, events) => {
-    Obj.each(events, (v, k) => {
+export default () => {
+  const registry: Record<EventName, Record<Uid, CurriedHandler>> = { };
+
+  const registerId = (extraArgs: any[], id: string, events: Record<EventName, UncurriedHandler>) => {
+    Obj.each(events, (v: UncurriedHandler, k: EventName) => {
       const handlers = registry[k] !== undefined ? registry[k] : { };
       handlers[id] = DescribedHandler.curryArgs(v, extraArgs);
       registry[k] = handlers;
@@ -54,7 +72,7 @@ export default () => {
     }, isAboveRoot);
   };
 
-  const unregisterId = (id) => {
+  const unregisterId = (id: string): void => {
     // INVESTIGATE: Find a better way than mutation if we can.
     Obj.each(registry, (handlersById, eventName) => {
       if (handlersById.hasOwnProperty(id)) { delete handlersById[id]; }

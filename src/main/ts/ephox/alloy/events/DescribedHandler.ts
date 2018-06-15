@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+import { UncurriedHandler, CurriedHandler } from 'ephox/alloy/events/EventRegistry';
 
 const nu = (handler, purpose) => {
   return {
@@ -7,15 +8,15 @@ const nu = (handler, purpose) => {
   };
 };
 
-const curryArgs = (descHandler, extraArgs) => {
+const curryArgs = (descHandler: UncurriedHandler, extraArgs: any[]): CurriedHandler => {
   return {
-    handler: Fun.curry.apply(undefined, [ descHandler.handler ].concat(extraArgs)),
+    cHandler: Fun.curry.apply(undefined, [ descHandler.handler ].concat(extraArgs)),
     purpose: descHandler.purpose
   };
 };
 
-const getHandler = (descHandler) => {
-  return descHandler.handler;
+const getHandler = (descHandler: CurriedHandler) => {
+  return descHandler.cHandler;
 };
 
 export {
