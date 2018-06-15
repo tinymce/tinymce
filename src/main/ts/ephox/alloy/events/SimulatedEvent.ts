@@ -32,7 +32,7 @@ export interface ReceivingEvent extends EventFormat {
   data: () => any;
 }
 
-const fromSource = (event, source) => {
+const fromSource = <T extends EventFormat>(event: T, source: Cell<SugarElement>): SimulatedEvent<T> => {
   const stopper = Cell(false);
 
   const cutter = Cell(false);

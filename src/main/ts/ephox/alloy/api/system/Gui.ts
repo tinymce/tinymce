@@ -1,4 +1,4 @@
-import { Arr, Fun, Result } from '@ephox/katamari';
+import { Arr, Fun, Result, Option } from '@ephox/katamari';
 import { Compare, Focus, Node, Remove, Traverse } from '@ephox/sugar';
 import { SugarElement, SugarEvent } from '../../alien/TypeDefinitions';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -14,6 +14,7 @@ import * as SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
 import * as Attachment from './Attachment';
 import { SystemApi } from './SystemApi';
+import { ElementAndHandler } from 'ephox/alloy/events/EventRegistry';
 
 export interface GuiSystem {
   root: () => AlloyComponent;
@@ -45,7 +46,7 @@ const create = (): GuiSystem => {
 };
 
 const takeover = (root: AlloyComponent): GuiSystem => {
-  const isAboveRoot = (el) => {
+  const isAboveRoot = (el: SugarElement): boolean => {
     return Traverse.parent(root.element()).fold(
       () => {
         return true;
@@ -58,7 +59,8 @@ const takeover = (root: AlloyComponent): GuiSystem => {
 
   const registry = Registry();
 
-  const lookup = (eventName, target) => {
+  type LookupEvent = (eventName: string, event: SugarEvent) => Option<ElementAndHandler>;
+  const lookup = (eventName: string, target: SugarElement) => {
     return registry.find(isAboveRoot, eventName, target);
   };
 
@@ -82,7 +84,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
   const systemApi = SystemApi({
     // This is a real system
     debugInfo: Fun.constant('real'),
-    triggerEvent (eventName, target, data) {
+    triggerEvent (eventName: string, target: SugarElement, data: any) {
       Debugging.monitorEvent(eventName, target, (logger) => {
         // The return value is not used because this is a fake event.
         Triggers.triggerOnUntilStopped(lookup, eventName, data, target, logger);

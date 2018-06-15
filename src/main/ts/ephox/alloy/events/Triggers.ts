@@ -1,9 +1,13 @@
-import { Adt, Arr } from '@ephox/katamari';
+import { Adt, Arr, Option, Cell } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
 import * as DescribedHandler from './DescribedHandler';
 import * as EventSource from './EventSource';
-import * as SimulatedEvent from './SimulatedEvent';
+import { SugarElement } from '../alien/TypeDefinitions';
+import { SimulatedEvent, EventFormat, fromSource, fromExternal } from './SimulatedEvent';
+import { ElementAndHandler } from './EventRegistry';
+
+type LookupEvent = (eventName: string, event: SimulatedEvent<EventFormat>) => Option<ElementAndHandler>;
 
 const adt = Adt.generate([
   { stopped: [ ] },
@@ -11,10 +15,10 @@ const adt = Adt.generate([
   { complete: [ ] }
 ]);
 
-const doTriggerHandler = (lookup, eventType, rawEvent, target, source, logger) => {
+const doTriggerHandler = (lookup, eventType: string, rawEvent: EventFormat, target: SugarElement, source: Cell<SugarElement>, logger) => {
   const handler = lookup(eventType, target);
 
-  const simulatedEvent = SimulatedEvent.fromSource(rawEvent, source);
+  const simulatedEvent = fromSource(rawEvent, source);
 
   return handler.fold(() => {
     // No handler, so complete.
@@ -64,7 +68,7 @@ const triggerHandler = (lookup, eventType, rawEvent, target, logger) => {
 };
 
 const broadcast = (listeners, rawEvent, logger?) => {
-  const simulatedEvent = SimulatedEvent.fromExternal(rawEvent);
+  const simulatedEvent = fromExternal(rawEvent);
 
   Arr.each(listeners, (listener) => {
     const descHandler = listener.descHandler();

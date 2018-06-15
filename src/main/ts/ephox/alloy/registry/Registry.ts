@@ -8,6 +8,7 @@ import * as Tagger from './Tagger';
 
 import { Option } from '@ephox/katamari';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import { SugarElement } from 'ephox/alloy/api/Main';
 
 export default () => {
   const events = EventRegistry();
@@ -50,11 +51,11 @@ export default () => {
     });
   };
 
-  const filter = (type: string) => {
+  const filter = (type: string): UidAndHandler[] => {
     return events.filterByType(type);
   };
 
-  const find = (isAboveRoot, type, target) => {
+  const find = (isAboveRoot: (SugarElement) => boolean, type: string, target: SugarElement): Option<ElementAndHandler> => {
     return events.find(isAboveRoot, type, target);
   };
 

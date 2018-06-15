@@ -15,7 +15,7 @@ const curryArgs = (descHandler: UncurriedHandler, extraArgs: any[]): CurriedHand
   };
 };
 
-const getHandler = (descHandler: CurriedHandler) => {
+const getHandler = (descHandler: CurriedHandler): Function => {
   return descHandler.cHandler;
 };
 
