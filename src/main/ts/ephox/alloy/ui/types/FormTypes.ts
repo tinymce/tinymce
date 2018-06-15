@@ -2,12 +2,13 @@ import { Option } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { LooseSpec } from '../../api/component/SpecTypes';
+import { LooseSpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { ConfiguredPart } from '../../parts/AlloyParts';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 
 export interface FormSpec extends CompositeSketchSpec {
+  dom: RawDomSchema;
   formBehaviours?: AlloyBehaviourRecord;
 }
 

@@ -20,6 +20,8 @@ export interface ToolbarSpec extends CompositeSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   toolbarBehaviours?: AlloyBehaviourRecord;
+
+  shell?: boolean;
 }
 
 export interface ToolbarSketcher extends CompositeSketch<ToolbarSpec, ToolbarDetail> {

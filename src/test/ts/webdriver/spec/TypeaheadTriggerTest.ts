@@ -10,6 +10,7 @@ import TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import Sinks from 'ephox/alloy/test/Sinks';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('TypeaheadSpecTest', function () {
   const success = arguments[arguments.length - 2];
@@ -37,7 +38,7 @@ UnitTest.asynctest('TypeaheadSpecTest', function () {
               openClass: 'test-typeahead-open'
             },
 
-            fetch (input) {
+            fetch (input: AlloyComponent) {
               const text = Value.get(input.element());
               const future = Future.pure([
                 { type: 'item', data: { value: text + '1', text: text + '1' } },

@@ -52,6 +52,27 @@ export interface TieredMenuSpec extends SingleSketchSpec {
   components?: AlloySpec[];
   tmenuBehaviours?: AlloyBehaviourRecord;
 
+  onEscape?: (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
+  onExecute?: (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
+  onOpenMenu?: (comp: AlloyComponent, menu: AlloyComponent) => void;
+  onOpenSubmenu?: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent) => void;
+  onCollapseMenu?: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent) => void;
+  onHover?: (comp: AlloyComponent, item: AlloyComponent) => void;
+
+  navigateOnHover: boolean;
+  stayInDom: boolean;
+  openImmediately: boolean;
+  fakeFocus: boolean;
+  onHighlight: (comp: AlloyComponent, target: AlloyComponent) => void;
+
+  eventOrder: Record<string, string[]>;
+
+  data: {
+    primary: string;
+    expansions: Record<string, string>;
+    menus: Record<string, PartialMenuSpec>;
+  }
+
   markers: {
     item: string;
     selectedItem: string;

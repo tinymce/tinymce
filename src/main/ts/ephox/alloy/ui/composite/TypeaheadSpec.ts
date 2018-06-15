@@ -20,8 +20,8 @@ import * as InputBase from '../common/InputBase';
 
 import { EventFormat } from '../../events/SimulatedEvent';
 import { HTMLInputElement } from '@ephox/dom-globals';
-import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
-import { TypeaheadDetail, TypeaheadSpec } from 'ephox/alloy/ui/types/TypeaheadTypes';
+import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 
 const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = function (detail, components, spec, externals) {
   const navigateList = function (comp, simulatedEvent, highlighter) {

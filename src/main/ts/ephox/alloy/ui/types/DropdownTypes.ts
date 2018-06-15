@@ -29,7 +29,8 @@ export interface DropdownSpec extends CompositeSketchSpec {
   uid?: string;
   dom: RawDomSchema;
   components?: AlloySpec[];
-  fetch: () => any;
+  // TYPIFY
+  fetch: (comp: AlloyComponent) => Future<LooseSpec>;
   onOpen?: () => void;
   dropdownBehaviours?: AlloyBehaviourRecord;
   onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;

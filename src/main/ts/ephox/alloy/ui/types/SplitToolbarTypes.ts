@@ -27,6 +27,13 @@ export interface SplitToolbarSpec extends CompositeSketchSpec {
   dom: RawDomSchema;
   components?: AlloySpec[];
   splitToolbarBehaviours?: AlloyBehaviourRecord;
+
+  markers: {
+    closedClass: string;
+    openClass: string;
+    shrinkingClass: string;
+    growingClass: string;
+  }
 }
 
 export interface SplitToolbarSketcher extends CompositeSketch<SplitToolbarSpec, SplitToolbarDetail> {
