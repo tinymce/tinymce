@@ -1,11 +1,13 @@
 import { Element, Insert, Location, Position, Remove, Traverse } from '@ephox/sugar';
+import { SugarElement } from 'ephox/alloy/api/Main';
+import { SugarPosition } from 'ephox/alloy/alien/TypeDefinitions';
 
 /*
  * This returns the position of the offset parent excluding any scroll. That
  * means that the absolute coordinates can be obtained by adding the origin
  * to the offset coordinates and not needing to know scroll.
  */
-const getOrigin = (element, scroll) => {
+const getOrigin = (element: SugarElement, scroll: SugarPosition): SugarPosition => {
   return Traverse.offsetParent(element).orThunk(() => {
     const marker = Element.fromTag('span');
     Insert.before(element, marker);

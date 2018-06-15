@@ -1,6 +1,6 @@
 import { setTimeout, clearTimeout } from "@ephox/dom-globals";
 
-export default (fun: (any) => void, delay: number): { cancel: () => void; schedule: (...any) => void } => {
+export default (fun: (any) => void, delay: number) => {
   let ref = null;
 
   const schedule = (...args): void => {

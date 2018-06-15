@@ -1,17 +1,13 @@
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 
-/**
- * Generate a PositionArray
- *
- * xs:     list of thing
- * f:      thing -> Optional unit
- * _start: sets the start position to search at
- */
-const generate = (xs, f) => {
+export interface PositionableUnit {
+  finish: () => number;
+}
 
+const generate = <T, U extends PositionableUnit>(xs: T[], f: (T, number) => Option<U>): U[] => {
   const init = {
     len: 0,
-    list: []
+    list: [] as U[]
   };
 
   const r = Arr.foldl(xs, (b, a) => {

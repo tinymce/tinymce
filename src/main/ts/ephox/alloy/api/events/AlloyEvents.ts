@@ -16,9 +16,9 @@ export interface AlloyEventHandler<T extends EventFormat> {
   run: EventRunHandler<T>;
 }
 
-export interface EventHandlerConfig<T> {
+export interface EventHandlerConfig<T extends EventFormat> {
   key: string;
-  value: AlloyEventHandler<EventFormat>;
+  value: AlloyEventHandler<T>;
 }
 
 // TODO we can tighten this up alot further, it should take a simulatedEvent, however SimulatedEvent.event() can return 2 types, need to solve that issue first (SugarEvent or SimulatedEventTargets)
@@ -27,13 +27,17 @@ type RunOnName<T extends EventFormat> = (handler: EventRunHandler<T>) => EventHa
 type RunOnSourceName<T extends EventFormat> = (handler: EventRunHandler<T>) => EventHandlerConfig<T>;
 export type EventRunHandler<T extends EventFormat> = (component: AlloyComponent, se: SimulatedEvent<T>, ...others) => void;
 
+export type EventAbortHandler<T extends EventFormat> = (comp: AlloyComponent, se: SimulatedEvent<T>) => boolean;
+
+export type EventCanHandler<T extends EventFormat> = (comp: AlloyComponent, se: SimulatedEvent<T>) => boolean;
+
 const derive = (configs: Array<EventHandlerConfig<any>>): EventHandlerConfigRecord => {
   return Objects.wrapAll(configs) as EventHandlerConfigRecord;
 };
 
 // const combine = (configs...);
 
-const abort = function <T>(name, predicate): EventHandlerConfig<T> {
+const abort = function <T extends EventFormat>(name: string, predicate: EventAbortHandler<T>): EventHandlerConfig<T> {
   return {
     key: name,
     value: EventHandler.nu({
@@ -42,7 +46,7 @@ const abort = function <T>(name, predicate): EventHandlerConfig<T> {
   };
 };
 
-const can = function <T>(name, predicate): EventHandlerConfig<T> {
+const can = function <T extends EventFormat>(name: string, predicate: EventCanHandler<T>): EventHandlerConfig<T> {
   return {
     key: name,
     value: EventHandler.nu({
@@ -51,7 +55,7 @@ const can = function <T>(name, predicate): EventHandlerConfig<T> {
   };
 };
 
-const preventDefault = function <T>(name: string): EventHandlerConfig<T> {
+const preventDefault = function <T extends EventFormat>(name: string): EventHandlerConfig<T> {
   return {
     key: name,
     value: EventHandler.nu({
@@ -72,7 +76,7 @@ const run = function <T extends EventFormat>(name: string, handler: EventRunHand
 };
 
 // FIX: What is the extra here?
-const runActionExtra = function <T>(name: string, action: (t: AlloyComponent, u: any) => void, extra: any): EventHandlerConfig<T> {
+const runActionExtra = function <T extends EventFormat>(name: string, action: (t: AlloyComponent, u: any) => void, extra: any): EventHandlerConfig<T> {
   return {
     key: name,
     value: EventHandler.nu({
@@ -110,7 +114,7 @@ const redirectToUid = function <T extends EventFormat>(name, uid): EventHandlerC
   });
 };
 
-const redirectToPart = function <T>(name, detail, partName): EventHandlerConfig<T> {
+const redirectToPart = function <T extends EventFormat>(name, detail, partName): EventHandlerConfig<T> {
   const uid = detail.partUids()[partName];
   return redirectToUid(name, uid);
 };
@@ -124,13 +128,13 @@ const runWithTarget = function <T extends EventFormat>(name, f): EventHandlerCon
   });
 };
 
-const cutter = function <T>(name): EventHandlerConfig<T> {
+const cutter = function <T extends EventFormat>(name): EventHandlerConfig<T> {
   return run(name, (component, simulatedEvent) => {
     simulatedEvent.cut();
   });
 };
 
-const stopper = function <T>(name): EventHandlerConfig<T> {
+const stopper = function <T extends EventFormat>(name): EventHandlerConfig<T> {
   return run(name, (component, simulatedEvent) => {
     simulatedEvent.stop();
   });
