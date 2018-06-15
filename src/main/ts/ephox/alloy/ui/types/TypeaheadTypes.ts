@@ -1,4 +1,4 @@
-import { Option, Cell } from '@ephox/katamari';
+import { Option, Cell, Result } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -13,16 +13,15 @@ export interface TypeaheadDetail extends DropdownDetail, InputDetail {
   // FIX: Completed DOM tpye.
   dom: () => any;
   components: () => AlloySpec[ ];
-  typeaheadBehaviours: () => SketchBehaviours;
+  minChars: () => number;
 
+  typeaheadBehaviours: () => SketchBehaviours;
   dismissOnBlur: () => boolean;
 
   markers: () => {
     openClass: () => string;
   };
-
   previewing: () => Cell<boolean>;
-  minChars: () => number;
 }
 
 export interface TypeaheadSpec extends CompositeSketchSpec {

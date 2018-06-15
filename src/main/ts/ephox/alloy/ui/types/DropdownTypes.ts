@@ -21,7 +21,7 @@ export interface DropdownDetail extends CompositeSketchDetail {
   onExecute: () => (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
 
   toggleClass: () => string;
-  lazySink?: () => Result<AlloyComponent, Error>
+  lazySink?: () => Option<Result<AlloyComponent, Error>>
   matchWidth: () => boolean;
 }
 
