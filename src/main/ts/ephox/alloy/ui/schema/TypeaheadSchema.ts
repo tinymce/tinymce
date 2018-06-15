@@ -13,6 +13,9 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import * as InputBase from '../common/InputBase';
+import { TypeaheadDetail } from 'ephox/alloy/ui/types/TypeaheadTypes';
+import { AlloyBehaviour } from 'ephox/alloy/api/behaviour/Behaviour';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),
@@ -43,10 +46,10 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       Fields.tieredMenuMarkers()
     ],
     name: 'menu',
-    overrides (detail) {
+    overrides (detail: TypeaheadDetail) {
       return {
         fakeFocus: true,
-        onHighlight (menu, item) {
+        onHighlight (menu: AlloyComponent, item: AlloyComponent) {
           if (! detail.previewing().get()) {
             menu.getSystem().getByUid(detail.uid()).each(function (input) {
               Representing.setValueFrom(input, item);
@@ -58,31 +61,34 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               const nextValue = Representing.getValue(item);
               if (Strings.startsWith(nextValue.text, currentValue)) {
                 Representing.setValue(input, nextValue);
-                input.element().dom().setSelectionRange(currentValue.length, nextValue.text.length);
+                const inputEl = input.element().dom() as HTMLInputElement;
+                inputEl.setSelectionRange(currentValue.length, nextValue.text.length);
               }
 
             });
           }
           detail.previewing().set(false);
         },
-        onExecute (menu, item) {
-          return menu.getSystem().getByUid(detail.uid()).bind(function (typeahead) {
+        onExecute (menu: AlloyComponent, item: AlloyComponent) {
+          return menu.getSystem().getByUid(detail.uid()).toOption().bind((typeahead) => {
             const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
             const system = item.getSystem();
             // Closing the sandbox takes the item out of the system, so keep a reference.
             Sandboxing.close(sandbox);
-            return system.getByUid(detail.uid()).bind(function (input) {
+            return system.getByUid(detail.uid()).toOption().bind((input) => {
               Representing.setValueFrom(input, item);
-              const currentValue = Representing.getValue(input);
-              input.element().dom().setSelectionRange(currentValue.text.length, currentValue.text.length);
-              // Should probably streamline this one.
-              detail.onExecute()(sandbox, input);
+              const currentValue: { value: string, text: string } = Representing.getValue(input);
+
+              // Typeaheads, really shouldn't be textareas.
+              const inputEl = input.element().dom() as HTMLInputElement;
+              inputEl.setSelectionRange(currentValue.text.length, currentValue.text.length);
+              detail.onExecute()(sandbox, input, currentValue);
               return Option.some(true);
             });
           });
         },
 
-        onHover (menu, item) {
+        onHover (menu: AlloyComponent, item: AlloyComponent) {
           menu.getSystem().getByUid(detail.uid()).each(function (input) {
             Representing.setValueFrom(input, item);
           });

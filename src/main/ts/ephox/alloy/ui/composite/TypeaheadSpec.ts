@@ -20,8 +20,10 @@ import * as InputBase from '../common/InputBase';
 
 import { EventFormat } from '../../events/SimulatedEvent';
 import { HTMLInputElement } from '@ephox/dom-globals';
+import { CompositeSketchFactory } from 'ephox/alloy/api/ui/UiSketcher';
+import { TypeaheadDetail, TypeaheadSpec } from 'ephox/alloy/ui/types/TypeaheadTypes';
 
-const make = function (detail, components, spec, externals) {
+const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = function (detail, components, spec, externals) {
   const navigateList = function (comp, simulatedEvent, highlighter) {
     const sandbox = Coupling.getCoupled(comp, 'sandbox');
     if (Sandboxing.isOpen(sandbox)) {
@@ -124,8 +126,8 @@ const make = function (detail, components, spec, externals) {
       onEnter (comp, simulatedEvent) {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
         if (Sandboxing.isOpen(sandbox)) { Sandboxing.close(sandbox); }
-        detail.onExecute()(sandbox, comp);
         const currentValue = Representing.getValue(comp);
+        detail.onExecute()(sandbox, comp, currentValue);
         const input = comp.element().dom() as HTMLInputElement;
         input.setSelectionRange(currentValue.text.length, currentValue.text.length);
         return Option.some(true);

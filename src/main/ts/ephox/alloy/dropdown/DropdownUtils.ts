@@ -66,7 +66,7 @@ const openF = function (detail: DropdownDetail, anchor, component, sandbox, exte
 
 // onOpenSync is because some operations need to be applied immediately, not wrapped in a future
 // It can avoid things like flickering due to asynchronous bouncing
-const open = function (detail: DropdownDetail, anchor, component, sandbox, externals, onOpenSync) {
+const open = function (detail: DropdownDetail, anchor, component: AlloyComponent, sandbox: AlloyComponent, externals, onOpenSync) {
   const processed = openF(detail, anchor, component, sandbox, externals);
   return processed.map(function (data) {
     Sandboxing.cloak(sandbox);
